@@ -35,15 +35,24 @@ ParameterInfoList EffectParametersProvider::parameters(EffectInstanceId instance
 
 ParameterInfo EffectParametersProvider::parameter(EffectInstanceId instanceId, const String& parameterId) const
 {
-    const ParameterInfoList params = parameters(instanceId);
-    for (const auto& param : params) {
-        if (param.id == parameterId) {
-            return param;
-        }
+    EffectInstance* instance = instancesRegister()->instanceById(instanceId).get();
+    if (!instance) {
+        LOGE() << "Effect instance not found: " << instanceId;
+        return {};
     }
 
-    LOGW() << "Parameter not found: " << parameterId;
-    return ParameterInfo(); // Return invalid parameter
+    const EffectId effectId = instancesRegister()->effectIdByInstanceId(instanceId);
+    EffectFamily family = getEffectFamily(effectId);
+
+    const IParameterExtractorService* extractor = parameterExtractorRegistry()
+                                                  ? parameterExtractorRegistry()->extractorForFamily(family)
+                                                  : nullptr;
+    if (!extractor) {
+        LOGW() << "No parameter extractor registered for effect family: " << static_cast<int>(family);
+        return {};
+    }
+
+    return extractor->getParameter(instance, parameterId);
 }
 
 double EffectParametersProvider::parameterValue(EffectInstanceId instanceId, const String& parameterId) const

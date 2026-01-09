@@ -15,6 +15,8 @@ public:
 
     ParameterInfoList extractParameters(EffectInstance* instance, EffectSettingsAccessPtr settingsAccess = nullptr) const override;
 
+    ParameterInfo getParameter(EffectInstance* instance, const muse::String& parameterId) const override;
+
     double getParameterValue(EffectInstance* instance, const muse::String& parameterId) const override;
 
     bool setParameterValue(EffectInstance* instance, const muse::String& parameterId, double normalizedValue,

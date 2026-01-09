@@ -122,7 +122,7 @@ std::vector<ParamInfo> VST3ParameterExtraction::extractParameters(EffectInstance
     }
 
     // Get the edit controller
-    auto editController = vst3Instance->vstEditController();
+    const auto editController = vst3Instance->vstEditController();
     if (!editController) {
         return {};
     }
@@ -167,8 +167,8 @@ std::vector<ParamInfo> VST3ParameterExtraction::extractParameters(EffectInstance
                 }
 
                 // Get normalized values first
-                double normalizedDefault = vst3Info.defaultNormalizedValue;
-                double normalizedCurrent = editController->getParamNormalized(vst3Info.id);
+                const double normalizedDefault = vst3Info.defaultNormalizedValue;
+                const double normalizedCurrent = editController->getParamNormalized(vst3Info.id);
 
                 // Get formatted value string from plugin (e.g., "440 Hz", "3.5 dB")
                 Steinberg::Vst::String128 stringValue;
@@ -208,18 +208,76 @@ std::vector<ParamInfo> VST3ParameterExtraction::extractParameters(EffectInstance
     return result;
 }
 
+ParamInfo VST3ParameterExtraction::getParameter(EffectInstanceEx* instance, uint32_t parameterId)
+{
+    if (!instance) {
+        return {};
+    }
+
+    const auto vst3Instance = dynamic_cast<VST3Instance*>(instance);
+    if (!vst3Instance) {
+        return {};
+    }
+
+    const auto editController = vst3Instance->vstEditController();
+    if (!editController) {
+        return {};
+    }
+
+    Steinberg::Vst::ParameterInfo vstParamInfo;
+    if (editController->getParameterInfo(parameterId, vstParamInfo) != Steinberg::kResultOk) {
+        return {};
+    }
+
+    // Build the ParamInfo - similar to extractParameters but for a single parameter
+    ParamInfo paramInfo;
+    paramInfo.id = vstParamInfo.id;
+    paramInfo.name = VST3Utils::UTF16ToStdString(vstParamInfo.title);
+    paramInfo.units = VST3Utils::UTF16ToStdString(vstParamInfo.units);
+    paramInfo.type = getParameterType(vstParamInfo);
+    paramInfo.stepCount = vstParamInfo.stepCount;
+    paramInfo.isReadOnly = (vstParamInfo.flags & Steinberg::Vst::ParameterInfo::kIsReadOnly) != 0;
+    paramInfo.isHidden = (vstParamInfo.flags & Steinberg::Vst::ParameterInfo::kIsHidden) != 0;
+    paramInfo.canAutomate = (vstParamInfo.flags & Steinberg::Vst::ParameterInfo::kCanAutomate) != 0;
+
+    // Get current normalized value and convert to plain
+    const double normalizedValue = editController->getParamNormalized(parameterId);
+    paramInfo.defaultValue = normalizedToFullRange(instance, parameterId, vstParamInfo.defaultNormalizedValue);
+    paramInfo.minValue = normalizedToFullRange(instance, parameterId, 0.0);
+    paramInfo.maxValue = normalizedToFullRange(instance, parameterId, 1.0);
+    paramInfo.currentValue = normalizedToFullRange(instance, parameterId, normalizedValue);
+
+    // Get formatted string
+    Steinberg::Vst::String128 stringValue;
+    if (editController->getParamStringByValue(parameterId, normalizedValue, stringValue) == Steinberg::kResultOk) {
+        paramInfo.currentValueString = VST3Utils::UTF16ToStdString(stringValue);
+    }
+
+    // Calculate step size for discrete parameters
+    if (vstParamInfo.stepCount > 0) {
+        paramInfo.stepSize = (paramInfo.maxValue - paramInfo.minValue) / vstParamInfo.stepCount;
+    }
+
+    // Get enum values for dropdown parameters
+    if (paramInfo.type == ParamType::Dropdown) {
+        getEnumValues(editController, vstParamInfo, paramInfo);
+    }
+
+    return paramInfo;
+}
+
 double VST3ParameterExtraction::getParameterValue(EffectInstanceEx* instance, uint32_t parameterId)
 {
     if (!instance) {
         return 0.0;
     }
 
-    auto vst3Instance = dynamic_cast<VST3Instance*>(instance);
+    const auto vst3Instance = dynamic_cast<VST3Instance*>(instance);
     if (!vst3Instance) {
         return 0.0;
     }
 
-    auto editController = vst3Instance->vstEditController();
+    const auto editController = vst3Instance->vstEditController();
     if (!editController) {
         return 0.0;
     }
@@ -234,13 +292,13 @@ bool VST3ParameterExtraction::setParameterValue(EffectInstanceEx* instance, uint
         return false;
     }
 
-    auto vst3Instance = dynamic_cast<VST3Instance*>(instance);
+    const auto vst3Instance = dynamic_cast<VST3Instance*>(instance);
     if (!vst3Instance) {
         return false;
     }
 
     auto& wrapper = vst3Instance->GetWrapper();
-    auto editController = wrapper.mEditController;
+    const auto editController = wrapper.mEditController;
     if (!editController) {
         return false;
     }
@@ -278,15 +336,15 @@ bool VST3ParameterExtraction::setParameterValue(EffectInstanceEx* instance, uint
 std::string VST3ParameterExtraction::getParameterValueString(EffectInstanceEx* instance, uint32_t parameterId, double value)
 {
     if (!instance) {
-        return std::string();
+        return {};
     }
 
-    auto vst3Instance = dynamic_cast<VST3Instance*>(instance);
+    const auto vst3Instance = dynamic_cast<VST3Instance*>(instance);
     if (!vst3Instance) {
-        return std::string();
+        return {};
     }
 
-    auto editController = vst3Instance->vstEditController();
+    const auto editController = vst3Instance->vstEditController();
     if (!editController) {
         return std::string();
     }
@@ -309,12 +367,12 @@ double VST3ParameterExtraction::normalizedToFullRange(EffectInstanceEx* instance
         return normalizedValue;
     }
 
-    auto vst3Instance = dynamic_cast<VST3Instance*>(instance);
+    const auto vst3Instance = dynamic_cast<VST3Instance*>(instance);
     if (!vst3Instance) {
         return normalizedValue;
     }
 
-    auto editController = vst3Instance->vstEditController();
+    const auto editController = vst3Instance->vstEditController();
     if (!editController) {
         return normalizedValue;
     }
@@ -338,18 +396,18 @@ double VST3ParameterExtraction::plainToNormalized(EffectInstanceEx* instance, ui
         return std::clamp(plainValue, 0.0, 1.0);
     }
 
-    auto vst3Instance = dynamic_cast<VST3Instance*>(instance);
+    const auto vst3Instance = dynamic_cast<VST3Instance*>(instance);
     if (!vst3Instance) {
         return std::clamp(plainValue, 0.0, 1.0);
     }
 
-    auto editController = vst3Instance->vstEditController();
+    const auto editController = vst3Instance->vstEditController();
     if (!editController) {
         return std::clamp(plainValue, 0.0, 1.0);
     }
 
     try {
-        double normalized = editController->plainParamToNormalized(parameterId, plainValue);
+        const double normalized = editController->plainParamToNormalized(parameterId, plainValue);
         return std::clamp(normalized, 0.0, 1.0);
     } catch (const std::exception& e) {
         wxLogDebug("VST3ParameterExtraction: exception in plainToNormalized for param %u: %s",

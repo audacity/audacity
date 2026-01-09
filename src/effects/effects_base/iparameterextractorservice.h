@@ -22,6 +22,10 @@ public:
     //! @param settingsAccess Optional settings access to apply stored settings before extraction
     virtual ParameterInfoList extractParameters(EffectInstance* instance, EffectSettingsAccessPtr settingsAccess = nullptr) const = 0;
 
+    //! Get a single parameter by ID
+    //! @return ParameterInfo for the parameter, or invalid ParameterInfo if not found
+    virtual ParameterInfo getParameter(EffectInstance* instance, const muse::String& parameterId) const = 0;
+
     //! Get the current value of a parameter
     virtual double getParameterValue(EffectInstance* instance, const muse::String& parameterId) const = 0;
 

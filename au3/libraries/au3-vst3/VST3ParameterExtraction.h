@@ -97,6 +97,10 @@ struct ParamInfo {
 //! Returns empty vector if instance is not a VST3 instance or on error
 std::vector<ParamInfo> extractParameters(EffectInstanceEx* instance, EffectSettingsAccess* settingsAccess = nullptr);
 
+//! Get a single parameter by ID
+//! Returns default ParamInfo with id=0 if parameter not found or on error
+ParamInfo getParameter(EffectInstanceEx* instance, uint32_t parameterId);
+
 //! Get the current normalized value [0,1] of a VST3 parameter
 //! Returns 0.0 if parameter not found or on error
 double getParameterValue(EffectInstanceEx* instance, uint32_t parameterId);
