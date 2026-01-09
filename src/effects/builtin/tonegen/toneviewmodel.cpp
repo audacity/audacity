@@ -3,11 +3,8 @@
  */
 #include "toneviewmodel.h"
 #include "toneeffect.h"
-#include "log.h"
 
-#include "global/translation.h"
-
-#include "au3-components/EffectInterface.h"
+#include "framework/global/translation.h"
 
 using namespace au::effects;
 
@@ -27,23 +24,9 @@ void ToneViewModel::doEmitSignals()
     emit isApplyAllowedChanged();
 }
 
-ToneEffect* ToneViewModel::effect() const
-{
-    EffectId effectId = this->effectId();
-    Effect* e = effectsProvider()->effect(effectId);
-    ToneEffect* te = dynamic_cast<ToneEffect*>(e);
-    return te;
-}
-
 bool ToneViewModel::isApplyAllowed() const
 {
-    const ToneEffect* const te = effect();
-
-    if (!te) {
-        return false;
-    }
-
-    return te->isApplyAllowed() && GeneratorEffectModel::isApplyAllowed();
+    return effect<ToneEffect>().isApplyAllowed() && GeneratorEffectModel::isApplyAllowed();
 }
 
 QList<QString> ToneViewModel::waveforms() const
@@ -56,30 +39,18 @@ QList<QString> ToneViewModel::waveforms() const
 
 double ToneViewModel::amplitudeStart() const
 {
-    const ToneEffect* const te = effect();
-
-    if (!te) {
-        return 0.0;
-    }
-
-    return te->amplitudeStart();
+    return effect<ToneEffect>().amplitudeStart();
 }
 
 void ToneViewModel::prop_setAmplitudeStart(double newAmplitude)
 {
     const auto wasAllowed = isApplyAllowed();
 
-    ToneEffect* const te = effect();
-
-    IF_ASSERT_FAILED(te) {
+    if (effect<ToneEffect>().amplitudeStart() == newAmplitude) {
         return;
     }
 
-    if (te->amplitudeStart() == newAmplitude) {
-        return;
-    }
-
-    te->setAmplitudeStart(newAmplitude);
+    effect<ToneEffect>().setAmplitudeStart(newAmplitude);
     emit amplitudeStartChanged();
 
     if (wasAllowed != isApplyAllowed()) {
@@ -89,30 +60,22 @@ void ToneViewModel::prop_setAmplitudeStart(double newAmplitude)
 
 double ToneViewModel::amplitudeEnd() const
 {
-    const ToneEffect* const te = effect();
-
-    if (!te) {
-        return 0.0;
-    }
-
-    return te->amplitudeEnd();
+    return effect<ToneEffect>().amplitudeEnd();
 }
 
 void ToneViewModel::prop_setAmplitudeEnd(double newAmplitude)
 {
     const auto wasAllowed = isApplyAllowed();
 
-    ToneEffect* const te = effect();
-
-    IF_ASSERT_FAILED(te) {
+    if (effect<ToneEffect>().amplitudeEnd() == newAmplitude) {
         return;
     }
 
-    if (te->amplitudeEnd() == newAmplitude) {
+    if (effect<ToneEffect>().amplitudeEnd() == newAmplitude) {
         return;
     }
 
-    te->setAmplitudeEnd(newAmplitude);
+    effect<ToneEffect>().setAmplitudeEnd(newAmplitude);
     emit amplitudeEndChanged();
 
     if (wasAllowed != isApplyAllowed()) {
@@ -122,30 +85,18 @@ void ToneViewModel::prop_setAmplitudeEnd(double newAmplitude)
 
 double ToneViewModel::frequencyStart() const
 {
-    const ToneEffect* const te = effect();
-
-    if (!te) {
-        return 0.0;
-    }
-
-    return te->frequencyStart();
+    return effect<ToneEffect>().frequencyStart();
 }
 
 void ToneViewModel::prop_setFrequencyStart(double newFrequency)
 {
     const auto wasAllowed = isApplyAllowed();
 
-    ToneEffect* const te = effect();
-
-    IF_ASSERT_FAILED(te) {
+    if (effect<ToneEffect>().frequencyStart() == newFrequency) {
         return;
     }
 
-    if (te->frequencyStart() == newFrequency) {
-        return;
-    }
-
-    te->setFrequencyStart(newFrequency);
+    effect<ToneEffect>().setFrequencyStart(newFrequency);
     emit frequencyStartChanged();
 
     if (wasAllowed != isApplyAllowed()) {
@@ -155,30 +106,18 @@ void ToneViewModel::prop_setFrequencyStart(double newFrequency)
 
 double ToneViewModel::frequencyEnd() const
 {
-    const ToneEffect* const te = effect();
-
-    if (!te) {
-        return 0.0;
-    }
-
-    return te->frequencyEnd();
+    return effect<ToneEffect>().frequencyEnd();
 }
 
 void ToneViewModel::prop_setFrequencyEnd(double newFrequency)
 {
     const auto wasAllowed = isApplyAllowed();
 
-    ToneEffect* const te = effect();
-
-    IF_ASSERT_FAILED(te) {
+    if (effect<ToneEffect>().frequencyEnd() == newFrequency) {
         return;
     }
 
-    if (te->frequencyEnd() == newFrequency) {
-        return;
-    }
-
-    te->setFrequencyEnd(newFrequency);
+    effect<ToneEffect>().setFrequencyEnd(newFrequency);
     emit frequencyEndChanged();
 
     if (wasAllowed != isApplyAllowed()) {
@@ -188,54 +127,30 @@ void ToneViewModel::prop_setFrequencyEnd(double newFrequency)
 
 int ToneViewModel::waveform() const
 {
-    const ToneEffect* const te = effect();
-
-    if (!te) {
-        return 0;
-    }
-
-    return static_cast<int>(te->waveform());
+    return static_cast<int>(effect<ToneEffect>().waveform());
 }
 
 void ToneViewModel::prop_setWaveform(int newWaveform)
 {
-    ToneEffect* const te = effect();
-
-    IF_ASSERT_FAILED(te) {
+    if (effect<ToneEffect>().waveform() == newWaveform) {
         return;
     }
 
-    if (te->waveform() == newWaveform) {
-        return;
-    }
-
-    te->setWaveform(static_cast<ToneEffect::Waveform>(newWaveform));
+    effect<ToneEffect>().setWaveform(static_cast<ToneEffect::Waveform>(newWaveform));
     emit waveformChanged();
 }
 
 int ToneViewModel::interpolation() const
 {
-    const ToneEffect* const te = effect();
-
-    if (!te) {
-        return 0;
-    }
-
-    return static_cast<int>(te->interpolation());
+    return static_cast<int>(effect<ToneEffect>().interpolation());
 }
 
 void ToneViewModel::prop_setInterpolation(int newInterpolation)
 {
-    ToneEffect* const te = effect();
-
-    IF_ASSERT_FAILED(te) {
+    if (effect<ToneEffect>().interpolation() == newInterpolation) {
         return;
     }
 
-    if (te->interpolation() == newInterpolation) {
-        return;
-    }
-
-    te->setInterpolation(static_cast<ToneEffect::Interpolation>(newInterpolation));
+    effect<ToneEffect>().setInterpolation(static_cast<ToneEffect::Interpolation>(newInterpolation));
     emit interpolationChanged();
 }
