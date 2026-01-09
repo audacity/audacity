@@ -3,7 +3,7 @@
 */
 #include "framework/global/modularity/ioc.h"
 
-#include "internal/toast.h"
+#include "internal/toastservice.h"
 #include "internal/toastprovider.h"
 #include "view/toastlistmodel.h"
 
@@ -25,15 +25,11 @@ std::string ToastModule::moduleName() const
 
 void ToastModule::registerExports()
 {
-    m_toast = std::make_shared<Toast>();
+    m_toastService = std::make_shared<ToastService>();
     m_toastProvider = std::make_shared<ToastProvider>();
 
-    ioc()->registerExport<IToast>(moduleName(), m_toast);
+    ioc()->registerExport<IToastService>(moduleName(), m_toastService);
     ioc()->registerExport<IToastProvider>(moduleName(), m_toastProvider);
-}
-
-void ToastModule::resolveImports()
-{
 }
 
 void ToastModule::registerResources()
@@ -48,7 +44,7 @@ void ToastModule::registerUiTypes()
 
 void ToastModule::onInit(const IApplication::RunMode&)
 {
-    m_toast->init();
+    m_toastService->init();
 }
 
 void ToastModule::onDeinit()

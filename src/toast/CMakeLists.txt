@@ -7,9 +7,9 @@ declare_module(toast)
 set(MODULE_QRC toast.qrc)
 
 set(MODULE_SRC
-    ${CMAKE_CURRENT_LIST_DIR}/itoast.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/toast.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/toast.h
+    ${CMAKE_CURRENT_LIST_DIR}/itoastservice.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/toastservice.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/toastservice.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/toastprovider.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/toastprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/toastitem.cpp

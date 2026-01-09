@@ -9,21 +9,20 @@
 #include "modularity/imodulesetup.h"
 
 namespace au::toast {
-class Toast;
+class ToastService;
 class ToastProvider;
 class ToastModule : public muse::modularity::IModuleSetup
 {
 public:
     std::string moduleName() const override;
     void registerExports() override;
-    void resolveImports() override;
     void registerResources() override;
     void registerUiTypes() override;
     void onInit(const muse::IApplication::RunMode& mode) override;
     void onDeinit() override;
 
 private:
-    std::shared_ptr<Toast> m_toast;
+    std::shared_ptr<ToastService> m_toastService;
     std::shared_ptr<ToastProvider> m_toastProvider;
 };
 }
