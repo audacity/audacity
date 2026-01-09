@@ -176,7 +176,7 @@ std::vector<ParamInfo> VST3ParameterExtraction::extractParameters(EffectInstance
                     paramInfo.currentValueString = VST3Utils::UTF16ToStdString(stringValue);
                 }
 
-                // Convert to plain (display) values via normalizedParamToPlain
+                // Convert to "Full Range" (display) values via normalizedParamToFullRange
                 // For plugins that don't implement proper conversions, these will be 0.0 to 1.0
                 try {
                     paramInfo.minValue = editController->normalizedParamToPlain(vst3Info.id, 0.0);
@@ -303,7 +303,7 @@ std::string VST3ParameterExtraction::getParameterValueString(EffectInstanceEx* i
     return oss.str();
 }
 
-double VST3ParameterExtraction::normalizedToPlain(EffectInstanceEx* instance, uint32_t parameterId, double normalizedValue)
+double VST3ParameterExtraction::normalizedToFullRange(EffectInstanceEx* instance, uint32_t parameterId, double normalizedValue)
 {
     if (!instance) {
         return normalizedValue;
@@ -322,11 +322,11 @@ double VST3ParameterExtraction::normalizedToPlain(EffectInstanceEx* instance, ui
     try {
         return editController->normalizedParamToPlain(parameterId, normalizedValue);
     } catch (const std::exception& e) {
-        wxLogDebug("VST3ParameterExtraction: exception in normalizedToPlain for param %u: %s",
+        wxLogDebug("VST3ParameterExtraction: exception in normalizedToFullRange for param %u: %s",
                    parameterId, e.what());
         return normalizedValue;
     } catch (...) {
-        wxLogDebug("VST3ParameterExtraction: unknown exception in normalizedToPlain for param %u",
+        wxLogDebug("VST3ParameterExtraction: unknown exception in normalizedToFullRange for param %u",
                    parameterId);
         return normalizedValue;
     }

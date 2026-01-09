@@ -146,7 +146,7 @@ void GeneratedEffectViewerModel::load()
         }
 
         // Update the cached values
-        m_parameters[idx].currentValue = data.newPlainValue;
+        m_parameters[idx].currentValue = data.newFullRangeValue;
         m_parameters[idx].currentValueString = data.newValueString;
 
         // Emit dataChanged for just this row

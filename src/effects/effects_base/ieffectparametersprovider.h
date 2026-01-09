@@ -13,7 +13,7 @@ namespace au::effects {
 struct ParameterChangedData {
     EffectInstanceId instanceId = -1;
     muse::String parameterId;
-    double newPlainValue = 0.0;       // New value in plain/display units
+    double newFullRangeValue = 0.0;       // New value in "full range"/display units
     muse::String newValueString;      // Formatted string representation
 };
 

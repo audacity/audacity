@@ -84,7 +84,7 @@ bool EffectParametersProvider::setParameterValue(EffectInstanceId instanceId, co
         ParameterChangedData data;
         data.instanceId = instanceId;
         data.parameterId = parameterId;
-        data.newPlainValue = param.currentValue;
+        data.newFullRangeValue = param.currentValue;
         data.newValueString = param.currentValueString;
 
         m_parameterChanged.send(data);
