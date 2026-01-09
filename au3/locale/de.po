@@ -11362,7 +11362,7 @@ msgstr "Kompressor"
 
 #: src/effects/Compressor.cpp
 msgid "Reduces \"dynamic range\", or differences between loud and quiet parts."
-msgstr "Reduziert den „dynamische Reichweite“ oder Unterschiede zwischen lauten und leisen Teilen."
+msgstr "Reduziert die „dynamische Reichweite“ oder Unterschiede zwischen lauten und leisen Teilen."
 
 #: src/effects/Contrast.cpp
 msgid "You can only measure one track at a time."
