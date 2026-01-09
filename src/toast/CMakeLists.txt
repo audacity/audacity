@@ -16,6 +16,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/toastitem.h
     ${CMAKE_CURRENT_LIST_DIR}/view/toastlistmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/toastlistmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/dev/toasttestsmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/dev/toasttestsmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/toastmodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/toastmodule.h
 )

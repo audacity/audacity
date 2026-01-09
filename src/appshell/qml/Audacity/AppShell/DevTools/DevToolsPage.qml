@@ -27,6 +27,7 @@ import Muse.Dock 1.0
 
 import "./Gallery"
 import "./Interactive"
+import "./ToastNotification"
 import "./CrashHandler"
 import "./KeyNav"
 import "./Preferences"
@@ -42,6 +43,7 @@ DockPage {
         case "settings": root.central = settingsComp; break
         case "gallery": root.central = galleryComp; break
         case "interactive": root.central = interactiveComp; break
+        case "toastnotification": root.central = toastNotificationComp; break
         case "crashhandler": root.central = crashhandlerComp; break
         case "extensions": root.central = extensionsComp; break
         case "navigation": root.central = keynavComp; break
@@ -72,6 +74,7 @@ DockPage {
                         { "name": "settings", "title": "Settings" },
                         { "name": "gallery", "title": "UI Gallery" },
                         { "name": "interactive", "title": "Interactive" },
+                        { "name": "toastnotification", "title": "Toast Notification" },
                         { "name": "crashhandler", "title": "Crash handler" },
                         { "name": "extensions", "title": "Extensions" },
                         { "name": "navigation", "title": "KeyNav" }
@@ -103,6 +106,12 @@ DockPage {
         id: interactiveComp
 
         InteractiveTests {}
+    }
+
+    Component {
+        id: toastNotificationComp
+
+        ToastNotificationTests {}
     }
 
     Component {
