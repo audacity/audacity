@@ -2,26 +2,33 @@
 * Audacity: A Digital Audio Editor
 */
 #include "toastprovider.h"
-#include <memory>
 
 using namespace au::toast;
 
-void ToastProvider::show(ToastItem item)
+muse::async::Promise<ToastActionCode> ToastProvider::show(ToastItem item)
 {
     if (static_cast<int>(m_toasts.size()) >= m_maxItems) {
         int dismissedId = m_toasts.front()->id();
+
+        resolveToast(dismissedId, ToastActionCode::None);
 
         m_toastDismissed.send(dismissedId);
         m_toasts.erase(m_toasts.begin());
         cleanup(dismissedId);
     }
 
-    int id = item.id();
-    m_toasts.emplace_back(std::make_shared<ToastItem>(item));
-    m_toastAdded.send(m_toasts.back());
+    return muse::async::make_promise<ToastActionCode>([this, item](auto resolve, auto) {
+        int id = item.id();
+        m_toasts.emplace_back(std::make_shared<ToastItem>(item));
+        m_toastAdded.send(m_toasts.back());
 
-    checkProgress(id);
-    checkTimer(id);
+        m_resolvers[id] = std::move(resolve);
+
+        checkProgress(id);
+        checkTimer(id);
+
+        return muse::async::Promise<ToastActionCode>::dummy_result();
+    }, muse::async::PromiseType::AsyncByBody);
 }
 
 void ToastProvider::setMaxItems(int maxItems)
@@ -52,6 +59,12 @@ void ToastProvider::dismissToast(int id)
     }
 }
 
+void ToastProvider::executeAction(int id, ToastActionCode actionCode)
+{
+    resolveToast(id, actionCode);
+    dismissToast(id);
+}
+
 void ToastProvider::cleanup(int id)
 {
     auto timerIt = m_progressTimers.find(id);
@@ -62,6 +75,11 @@ void ToastProvider::cleanup(int id)
     auto progressIt = m_progresses.find(id);
     if (progressIt != m_progresses.end()) {
         m_progresses.erase(progressIt);
+    }
+
+    auto resolverIt = m_resolvers.find(id);
+    if (resolverIt != m_resolvers.end()) {
+        resolveToast(id, ToastActionCode::None);
     }
 }
 
@@ -121,5 +139,14 @@ void ToastProvider::checkTimer(int id)
 
             m_progressTimers[item->id()] = std::move(timer);
         }
+    }
+}
+
+void ToastProvider::resolveToast(int id, ToastActionCode actionCode)
+{
+    auto promiseIt = m_resolvers.find(id);
+    if (promiseIt != m_resolvers.end()) {
+        (void)promiseIt->second(actionCode);
+        m_resolvers.erase(promiseIt);
     }
 }

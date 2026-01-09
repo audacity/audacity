@@ -6,8 +6,14 @@
 #include <string>
 
 namespace au::toast {
+enum class ToastActionCode {
+    None = 0,
+    Action1,
+    Action2,
+    Action3
+};
 struct ToastAction {
     std::string text;
-    std::function<void()> callback;
+    ToastActionCode code = ToastActionCode::None;
 };
 }

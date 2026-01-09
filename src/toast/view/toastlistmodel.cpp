@@ -73,16 +73,16 @@ void ToastListModel::executeAction(int id, QString actionStr)
                 return;
             }
 
-            m_toasts.at(i)->actions()
-            .at(std::distance(m_toasts.at(i)->actions().cbegin(),
-                              std::find_if(m_toasts.at(i)->actions().cbegin(),
-                                           m_toasts.at(i)->actions().cend(),
-                                           [actionStr](const ToastAction& action) {
+            const auto action = m_toasts.at(i)->actions()
+                                .at(std::distance(m_toasts.at(i)->actions().cbegin(),
+                                                  std::find_if(m_toasts.at(i)->actions().cbegin(),
+                                                               m_toasts.at(i)->actions().cend(),
+                                                               [actionStr](const ToastAction& action) {
                 return action.text == actionStr.toStdString();
-            })))
-            .callback();
+            })));
 
-            break;
+            toastProvider()->executeAction(id, action.code);
+            return;
         }
     }
 }

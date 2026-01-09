@@ -5,8 +5,10 @@
 
 #include "framework/global/modularity/imoduleinterface.h"
 #include "framework/global/async/channel.h"
+#include "framework/global/async/promise.h"
 
 #include "internal/toastitem.h"
+#include "toast/toasttypes.h"
 
 namespace au::toast {
 class IToastProvider : MODULE_EXPORT_INTERFACE
@@ -15,7 +17,7 @@ class IToastProvider : MODULE_EXPORT_INTERFACE
 public:
     virtual ~IToastProvider() = default;
 
-    virtual void show(ToastItem item) = 0;
+    virtual muse::async::Promise<ToastActionCode> show(ToastItem item) = 0;
 
     virtual void setMaxItems(int maxItems) = 0;
 
@@ -23,5 +25,6 @@ public:
     virtual muse::async::Channel<int> toastDismissed() const = 0;
 
     virtual void dismissToast(int id) = 0;
+    virtual void executeAction(int id, ToastActionCode actionCode) = 0;
 };
 }
