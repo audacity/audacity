@@ -18,6 +18,19 @@ StyledListView {
 
     spacing: 20
 
+    x: parent.width - width - 20
+    y: parent.height - height - 50
+
+    model: toastmodel
+
+    ToastListModel {
+        id: toastmodel
+    }
+
+    Component.onCompleted: {
+        toastmodel.init()
+    }
+
     function dismissToast(id) {
         root.model.dismissToast(id);
     }

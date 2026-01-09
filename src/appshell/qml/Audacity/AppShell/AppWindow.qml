@@ -81,22 +81,7 @@ ApplicationWindow {
         anchors.fill: parent
     }
 
-    Toast {
-        id: toast
-
-        ToastListModel {
-            id: toastmodel
-        }
-
-        Component.onCompleted: {
-            toastmodel.init();
-        }
-
-        model: toastmodel
-
-        x: parent.width - width - 20
-        y: parent.height - height - 50
-    }
+    ToastProvider { }
 
     function showMinimizedWithSavePreviousState() {
         bridge.showMinimizedWithSavePreviousState()

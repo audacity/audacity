@@ -1,2 +1,2 @@
 module Audacity.Toast
-Toast 1.0 Toast.qml
+ToastProvider 1.0 ToastProvider.qml
