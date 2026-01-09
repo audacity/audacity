@@ -1,5 +1,5 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Audacity Team
+# Copyright (C) 2026 Audacity Team
 # This file is distributed under the same license as the audacity package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
@@ -11,6 +11,7 @@
 # jhuffer <joachim.huffer@gmail.com>, 2024
 # Michał Trzebiatowski <michtrz@gmail.com>, 2024
 # Grzegorz Pruchniakowski <grzegorz.pruchniakowski@gmail.com>, 2024
+# Benedikt Hofer <coden.mit.benni@gmail.com>, 2026.
 #
 #, fuzzy
 msgid ""
