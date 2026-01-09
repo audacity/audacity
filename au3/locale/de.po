@@ -11670,12 +11670,12 @@ msgstr "Harter Limiter 1413"
 #: src/effects/Distortion.cpp
 #, no-c-format
 msgid "Hard clip -12dB, 80% make-up gain"
-msgstr "Hartes Abschneiden - 12dB, 80% Makeup gain"
+msgstr "Hartes Abschneiden - 12dB, 80% Verstärkung"
 
 #: src/effects/Distortion.cpp
 #, no-c-format
 msgid "Soft clip -12dB, 80% make-up gain"
-msgstr "Sanftes Abschneiden - 12dB, 80% Makeup gain"
+msgstr "Sanftes Abschneiden - 12dB, 80% Verstärkung"
 
 #: src/effects/Distortion.cpp
 msgid "Fuzz Box"
