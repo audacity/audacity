@@ -20,6 +20,9 @@ public:
     static ParameterInfoList extractParameters(EffectInstanceEx* instance,
                                                const std::shared_ptr<EffectSettingsAccess>& settingsAccess = nullptr);
 
+    //! Get a single parameter by ID
+    static ParameterInfo getParameter(EffectInstanceEx* instance, const muse::String& parameterId);
+
     //! Get the current value of a VST3 parameter
     static double getParameterValue(EffectInstanceEx* instance, const muse::String& parameterId);
 

@@ -93,6 +93,25 @@ ParameterInfoList VST3ParametersExtractor::extractParameters(EffectInstanceEx* i
     return result;
 }
 
+ParameterInfo VST3ParametersExtractor::getParameter(EffectInstanceEx* instance, const String& parameterId)
+{
+    // Convert parameter ID string to uint32_t (matches VST3 ParamID type)
+    bool ok = false;
+    const uint32_t paramId = parameterId.toUInt(&ok);
+    if (!ok) {
+        LOGW() << "VST3ParametersExtractor: invalid parameter ID: " << parameterId;
+        return {};
+    }
+
+    // Delegate to AU3 bridge function and convert result
+    VST3ParameterExtraction::ParamInfo au3Param = VST3ParameterExtraction::getParameter(instance, paramId);
+    if (au3Param.id == 0 && au3Param.name.empty()) {
+        return {}; // Not found
+    }
+
+    return convertParamInfo(au3Param);
+}
+
 double VST3ParametersExtractor::getParameterValue(EffectInstanceEx* instance, const String& parameterId)
 {
     // Convert parameter ID string to uint32_t (matches VST3 ParamID type)

@@ -12,6 +12,11 @@ ParameterInfoList VstParameterExtractorService::extractParameters(EffectInstance
     return VST3ParametersExtractor::extractParameters(instance, settingsAccess);
 }
 
+ParameterInfo VstParameterExtractorService::getParameter(EffectInstance* instance, const muse::String& parameterId) const
+{
+    return VST3ParametersExtractor::getParameter(instance, parameterId);
+}
+
 double VstParameterExtractorService::getParameterValue(EffectInstance* instance, const muse::String& parameterId) const
 {
     return VST3ParametersExtractor::getParameterValue(instance, parameterId);
