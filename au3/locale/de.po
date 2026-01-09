@@ -10196,7 +10196,7 @@ msgstr "Sehen Sie sich das [[%s|Release-Video]] an oder lesen Sie das [[https://
 
 #: src/WhatsNewDialog.cpp
 msgid "Get free plugins & sounds"
-msgstr "Kostenlose Erweiterungen und Geräuschen holen"
+msgstr "Kostenlose Erweiterungen und Geräusche holen"
 
 #: src/WhatsNewDialog.cpp
 #, c-format
