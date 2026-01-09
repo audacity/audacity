@@ -17649,7 +17649,7 @@ msgstr "Die Minimalfrequenz muss ganzzahlig sein"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "The gain must be an integer"
-msgstr "Die Anhebung muss aus ganzzahlig sein"
+msgstr "Die Anhebung muss ganzzahlig sein"
 
 #: src/prefs/SpectrumPrefs.cpp
 msgid "The range must be a positive integer"
@@ -17699,7 +17699,7 @@ msgstr ""
 "Themefähigkeit ist ein experimentelles Feature.\n"
 "\n"
 "Um es zu testen, klicken Sie auf „Themencache speichern“. Danach können Sie die Bilder und Farben in\n"
-"ImageCacheVxx.png finden und mit einen Editor wie Gimp bearbeiten.\n"
+"ImageCacheVxx.png finden und mit einem Editor wie Gimp bearbeiten.\n"
 "\n"
 "Klicken Sie „Themencache laden“, um die veränderten Bilder und Farben wieder in Audacity zu laden."
 
@@ -19066,7 +19066,7 @@ msgstr ""
 "Spuren gerendert.\n"
 "\n"
 "Dadurch werden alle Echtzeiteffekte auf die Wellenform angewendet\n"
-"und verborgene Daten entfernt. Darüber hinaus wird der gesamte\n"
+"und verborgene Daten entfernt. Darüber hinaus wird die gesamte\n"
 "Spur zu einem großen Clip.\n"
 "\n"
 "Möchten Sie fortfahren?"
