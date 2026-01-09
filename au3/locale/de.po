@@ -9841,7 +9841,7 @@ msgid ""
 msgstr ""
 "%s\n"
 "\n"
-"„%s“ wurde abgerochen weil die Aufnahme angehalten wurde."
+"„%s“ wurde abgebrochen weil die Aufnahme angehalten wurde."
 
 #: src/TimerRecordDialog.cpp
 msgid "Timer Recording"
