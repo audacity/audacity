@@ -2940,7 +2940,7 @@ msgstr "Es ist nicht ausreichend Platz vorhanden, um die Auswahl einzufügen"
 
 #: libraries/lib-wave-track/WaveTrack.cpp
 msgid "A track has a corrupted sample sequence."
-msgstr "Ein Spur hat eine beschädigte Sample-Sequenz."
+msgstr "Eine Spur hat eine beschädigte Sample-Sequenz."
 
 #: libraries/lib-wave-track/WaveTrackUtilities.cpp
 msgid "There is not enough room available to expand the cut line"
