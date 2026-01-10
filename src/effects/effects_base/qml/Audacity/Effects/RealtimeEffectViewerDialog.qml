@@ -6,12 +6,13 @@ import QtQuick.Layouts
 
 import Muse.Ui
 import Muse.UiComponents
+import Muse.Vst
 
 import Audacity.Effects
 import Audacity.BuiltinEffects
 import Audacity.Lv2
-import Audacity.Vst
 import Audacity.AudioUnit
+import Audacity.Vst
 
 EffectStyledDialogView {
     id: root

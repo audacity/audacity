@@ -34,7 +34,7 @@ class UpdatePreferencesModel : public QObject
     Q_OBJECT
     QML_ELEMENT
 
-    INJECT(muse::update::IUpdateConfiguration, updateConfiguration)
+    muse::Inject<muse::update::IUpdateConfiguration> updateConfiguration;
 
     Q_PROPERTY(
         bool needCheckForNewAppVersion READ needCheckForNewAppVersion WRITE setNeedCheckForNewAppVersion NOTIFY needCheckForNewAppVersionChanged)

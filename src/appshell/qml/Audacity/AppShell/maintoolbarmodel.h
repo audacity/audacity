@@ -38,8 +38,8 @@ class MainToolBarModel : public QAbstractListModel, public muse::async::Asyncabl
     Q_OBJECT
     QML_ELEMENT
 
-    INJECT(au::context::IGlobalContext, context)
-    INJECT(muse::IGlobalConfiguration, globalConfiguration)
+    muse::Inject<au::context::IGlobalContext> context;
+    muse::Inject<muse::IGlobalConfiguration> globalConfiguration;
 
 public:
     explicit MainToolBarModel(QObject* parent = nullptr);

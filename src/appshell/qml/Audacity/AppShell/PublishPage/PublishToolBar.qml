@@ -63,7 +63,7 @@ Rectangle {
         model: toolBarModel
 
         delegate: FlatButton {
-            property var item: Boolean(model) ? model.itemRole : null
+            property var item: Boolean(model) ? model.item : null
 
             text: Boolean(item) ? item.title : ""
             icon: Boolean(item) ? item.icon : IconCode.NONE

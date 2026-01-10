@@ -33,6 +33,7 @@ static void vst_init_qrc()
 VstEffectsModule::VstEffectsModule()
     : m_vstMetaReader(std::make_shared<Vst3PluginsMetaReader>())
 {
+    vst_init_qrc();
 }
 
 std::string VstEffectsModule::moduleName() const

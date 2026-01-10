@@ -33,7 +33,7 @@ namespace au::appshell {
 class NavigableAppMenuModel : public AppMenuModel
 {
     Q_OBJECT
-    QML_ELEMENT
+    QML_NAMED_ELEMENT(AppMenuModel)
 
     Q_PROPERTY(bool isNavigationStarted READ isNavigationStarted NOTIFY highlightedMenuIdChanged)
     Q_PROPERTY(QString highlightedMenuId READ highlightedMenuId NOTIFY highlightedMenuIdChanged)

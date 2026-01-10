@@ -33,22 +33,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/musevstmodulesrepository.h
 )
 
-if (OS_IS_WIN)
-    set(MODULE_SRC
-        ${MODULE_SRC}
-       ${MUSE_FRAMEWORK_SRC_PATH}/vst/view/platform/windows/flickeringworkaround.cpp
-       ${MUSE_FRAMEWORK_SRC_PATH}/vst/view/platform/windows/flickeringworkaround.h
-    )
-endif()
-
-if(OS_IS_LIN OR OS_IS_FBSD)
-    set(MODULE_SRC
-        ${MODULE_SRC}
-        ${MUSE_FRAMEWORK_SRC_PATH}/vst/view/platform/linux/runloop.cpp
-        ${MUSE_FRAMEWORK_SRC_PATH}/vst/view/platform/linux/runloop.h
-    )
-endif()
-
 # AU3
 include(${CMAKE_CURRENT_LIST_DIR}/../../au3wrap/au3wrapDefs.cmake)
 

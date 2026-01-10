@@ -57,11 +57,10 @@ class AppMenuModel : public muse::uicomponents::AbstractMenuModel, public effect
 {
     Q_OBJECT
 #ifdef Q_OS_WIN
-    QML_ANONYMOUS;
+    QML_ANONYMOUS
 #else
-    QML_NAMED_ELEMENT(PlatformAppMenuModel);
+    QML_NAMED_ELEMENT(PlatformAppMenuModel)
 #endif
-
 
 public:
     muse::Inject<muse::ui::IMainWindow> mainWindow = { this };

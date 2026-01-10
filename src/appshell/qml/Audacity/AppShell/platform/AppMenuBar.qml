@@ -113,7 +113,7 @@ ListView {
     delegate: FlatButton {
         id: radioButtonDelegate
 
-        property var item: model ? model.itemRole : null
+        property var item: model ? model.item : null
         property string menuId: Boolean(item) ? item.id : ""
         property string title: Boolean(item) ? item.title : ""
         property string titleWithMnemonicUnderline: Boolean(item) ? item.titleWithMnemonicUnderline : ""

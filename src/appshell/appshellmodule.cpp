@@ -37,6 +37,8 @@
 
 #ifdef Q_OS_MAC
 #include "internal/platform/macos/macosappmenumodelhook.h"
+#else
+#include "internal/iappmenumodelhook.h"
 #endif
 
 using namespace au::appshell;
