@@ -17,7 +17,7 @@ class CustomFFmpegPreferencesModel : public QObject, public muse::async::Asyncab
 {
     Q_OBJECT
 
-    muse::Inject<IExportConfiguration> exportConfiguration;
+    muse::GlobalInject<IExportConfiguration> exportConfiguration;
     muse::Inject<IExporter> exporter;
     muse::Inject<IFFmpegOptionsAccessor> ffmpegOptionsAccessor;
 

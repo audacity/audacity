@@ -22,13 +22,14 @@ using Au3TrackDataPtr = std::shared_ptr<Au3TrackData>;
 
 class Au3TracksInteraction : public ITracksInteraction
 {
+    muse::GlobalInject<au::trackedit::ITrackeditConfiguration> configuration;
+    muse::GlobalInject<au::playback::IPlaybackConfiguration> playbackConfiguration;
+
     muse::Inject<muse::IInteractive> interactive;
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<au::trackedit::ISelectionController> selectionController;
-    muse::Inject<au::trackedit::ITrackeditConfiguration> configuration;
     muse::Inject<au::trackedit::IProjectHistory> projectHistory;
     muse::Inject<au::trackedit::IClipsInteraction> clipsInteraction;
-    muse::Inject<au::playback::IPlaybackConfiguration> playbackConfiguration;
 
 public:
     Au3TracksInteraction();

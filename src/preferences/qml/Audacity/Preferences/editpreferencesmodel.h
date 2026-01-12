@@ -20,10 +20,11 @@ class EditPreferencesModel : public QObject, public muse::async::Asyncable
     Q_OBJECT
     QML_ELEMENT
 
-    muse::Inject<au::trackedit::ITrackeditConfiguration> trackeditConfiguration;
-    muse::Inject<au::projectscene::IProjectSceneConfiguration> projectsceneConfiguration;
+    muse::GlobalInject<au::trackedit::ITrackeditConfiguration> trackeditConfiguration;
+    muse::GlobalInject<au::projectscene::IProjectSceneConfiguration> projectsceneConfiguration;
+    muse::GlobalInject<au::effects::IEffectsConfiguration> effectsConfiguration;
+
     muse::Inject<muse::workspace::IWorkspaceManager> workspacesManager;
-    muse::Inject<au::effects::IEffectsConfiguration> effectsConfiguration;
 
     Q_PROPERTY(bool applyEffectToAllAudio READ applyEffectToAllAudio NOTIFY applyEffectToAllAudioChanged)
     Q_PROPERTY(

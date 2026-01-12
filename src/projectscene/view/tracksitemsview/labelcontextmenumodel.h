@@ -14,8 +14,9 @@ class LabelContextMenuModel : public muse::uicomponents::AbstractMenuModel
 {
     Q_OBJECT
 
+    muse::GlobalInject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
+
     muse::Inject<context::IGlobalContext> globalContext;
-    muse::Inject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
 
     Q_PROPERTY(LabelKey labelKey READ labelKey WRITE setLabelKey NOTIFY labelKeyChanged FINAL)
 

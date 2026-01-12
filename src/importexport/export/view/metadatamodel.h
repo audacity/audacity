@@ -21,11 +21,12 @@ class MetadataModel : public QAbstractListModel, public muse::async::Asyncable
 {
     Q_OBJECT
 
+    muse::GlobalInject<project::IProjectConfiguration> projectConfiguration;
+    muse::GlobalInject<importexport::IExportConfiguration> exportConfiguration;
+    muse::GlobalInject<appshell::IAppShellConfiguration> configuration;
+
     muse::Inject<muse::IInteractive> interactive;
     muse::Inject<project::IMetadata> metadata;
-    muse::Inject<project::IProjectConfiguration> projectConfiguration;
-    muse::Inject<importexport::IExportConfiguration> exportConfiguration;
-    muse::Inject<appshell::IAppShellConfiguration> configuration;
 
 public:
     explicit MetadataModel(QObject* parent = nullptr);

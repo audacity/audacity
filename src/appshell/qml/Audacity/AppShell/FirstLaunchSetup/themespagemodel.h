@@ -63,7 +63,7 @@ class ThemesPageModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(QString highContrastPreferencesHint READ highContrastPreferencesHint CONSTANT)
     Q_PROPERTY(QString themeConfigurationText READ themeConfigurationText CONSTANT)
 
-    INJECT(muse::ui::IUiConfiguration, uiConfiguration)
+    muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
 
 public:
     explicit ThemesPageModel(QObject* parent = nullptr);

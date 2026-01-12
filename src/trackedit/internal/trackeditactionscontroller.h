@@ -25,14 +25,15 @@
 namespace au::trackedit {
 class TrackeditActionsController : public ITrackeditActionsController, public muse::actions::Actionable, public muse::async::Asyncable
 {
+    muse::GlobalInject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
+    muse::GlobalInject<trackedit::ITrackeditConfiguration> configuration;
+
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider;
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
     muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
     muse::Inject<trackedit::ISelectionController> selectionController;
-    muse::Inject<trackedit::ITrackeditConfiguration> configuration;
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
 
 public:

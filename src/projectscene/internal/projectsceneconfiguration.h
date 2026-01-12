@@ -14,7 +14,8 @@ namespace au::projectscene {
 class ProjectSceneConfiguration : public IProjectSceneConfiguration
 {
 public:
-    muse::Inject<muse::ui::IUiConfiguration> uiConfiguration;
+    muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
+
     muse::Inject<muse::workspace::IWorkspaceManager> workspaceManager;
 
 public:

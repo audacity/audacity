@@ -29,8 +29,9 @@ class ProgressDialog;
 namespace au::effects {
 class EffectsProvider : public IEffectsProvider, public muse::async::Asyncable
 {
+    muse::GlobalInject<IEffectsConfiguration> configuration;
+
     muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<IEffectsConfiguration> configuration;
     muse::Inject<IBuiltinEffectsRepository> builtinEffectsRepository;
     muse::Inject<ILv2EffectsRepository> lv2EffectsRepository;
     muse::Inject<IVstEffectsRepository> vstEffectsRepository;

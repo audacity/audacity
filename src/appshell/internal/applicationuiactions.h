@@ -36,14 +36,13 @@
 // #include "view/preferences/braillepreferencesmodel.h"
 
 namespace au::appshell {
-class ApplicationUiActions : public muse::ui::IUiActionsModule, public muse::async::Asyncable
+class ApplicationUiActions : public muse::ui::IUiActionsModule, public muse::async::Asyncable, public muse::Injectable
 {
-    INJECT(muse::ui::IMainWindow, mainWindow)
-    INJECT(muse::dock::IDockWindowProvider, dockWindowProvider)
-    INJECT(IAppShellConfiguration, configuration)
-    INJECT(record::IRecordController, recordController)
-//! TODO AU4
-//    INJECT(braille::IBrailleConfiguration, brailleConfiguration)
+    muse::GlobalInject <IAppShellConfiguration> configuration;
+
+    muse::Inject <muse::ui::IMainWindow> mainWindow { this };
+    muse::Inject <muse::dock::IDockWindowProvider> dockWindowProvider { this };
+    muse::Inject <record::IRecordController> recordController { this };
 
 public:
     ApplicationUiActions(std::shared_ptr<ApplicationActionController> controller);

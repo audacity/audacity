@@ -33,8 +33,9 @@ class MeterModel : public QObject, public muse::async::Asyncable
 
     Q_PROPERTY(float position READ position NOTIFY positionChanged FINAL)
 
+    muse::GlobalInject<IPlaybackConfiguration> configuration;
+
     muse::Inject<IPlaybackMeterController> meterController;
-    muse::Inject<IPlaybackConfiguration> configuration;
 
 public:
     explicit MeterModel(QObject* parent = nullptr);

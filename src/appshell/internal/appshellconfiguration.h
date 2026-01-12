@@ -39,15 +39,9 @@
 namespace au::appshell {
 class AppShellConfiguration : public IAppShellConfiguration, public muse::async::Asyncable
 {
-    muse::Inject<muse::IGlobalConfiguration> globalConfiguration;
-    muse::Inject<muse::io::IFileSystem> fileSystem;
-    muse::Inject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
-    // INJECT(mi::IMultiInstancesProvider, multiInstancesProvider)
-    // INJECT(ui::IUiConfiguration, uiConfiguration)
-    // INJECT(project::IProjectConfiguration, projectConfiguration)
-    // INJECT(notation::INotationConfiguration, notationConfiguration)
-    // INJECT(playback::IPlaybackConfiguration, playbackConfiguration)
-    // INJECT(languages::ILanguagesConfiguration, languagesConfiguration)
+    muse::GlobalInject<muse::IGlobalConfiguration> globalConfiguration;
+    muse::GlobalInject<muse::io::IFileSystem> fileSystem;
+    muse::GlobalInject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
 
 public:
     void init();

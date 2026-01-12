@@ -35,7 +35,8 @@ class CloudProjectsModel : public AbstractProjectsModel, public muse::async::Asy
 {
     Q_OBJECT
 
-    muse::Inject<au::project::IProjectConfiguration> configuration;
+    muse::GlobalInject<au::project::IProjectConfiguration> configuration;
+
     muse::Inject<muse::cloud::IMuseScoreComService> museScoreComService;
 
     Q_PROPERTY(State state READ state NOTIFY stateChanged)

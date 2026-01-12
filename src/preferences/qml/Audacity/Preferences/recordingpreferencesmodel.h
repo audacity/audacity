@@ -20,7 +20,7 @@ class RecordingPreferencesModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(bool isInputMonitoringOn READ isInputMonitoringOn WRITE setIsInputMonitoringOn NOTIFY isInputMonitoringOnChanged)
     Q_PROPERTY(bool isMicMeteringOn READ isMicMeteringOn WRITE setIsMicMeteringOn NOTIFY isMicMeteringOnChanged)
 
-    muse::Inject<record::IRecordConfiguration> recordConfiguration;
+    muse::GlobalInject<record::IRecordConfiguration> recordConfiguration;
 
 public:
     explicit RecordingPreferencesModel(QObject* parent = nullptr);

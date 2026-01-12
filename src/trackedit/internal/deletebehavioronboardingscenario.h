@@ -13,9 +13,10 @@
 namespace au::trackedit {
 class DeleteBehaviorOnboardingScenario
 {
+    muse::GlobalInject<ITrackeditConfiguration> configuration;
+
     muse::Inject<muse::IInteractive> interactive;
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
-    muse::Inject<ITrackeditConfiguration> configuration;
 
 public:
     bool showOnboardingDialog() const;

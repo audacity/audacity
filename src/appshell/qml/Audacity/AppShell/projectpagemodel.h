@@ -27,12 +27,13 @@ class ProjectPageModel : public QObject, public muse::async::Asyncable, public m
     Q_OBJECT
     QML_ELEMENT
 
+    muse::GlobalInject<IAppShellConfiguration> configuration;
+    muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
+    muse::GlobalInject<playback::IPlaybackConfiguration> playbackConfiguration;
+
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<muse::dock::IDockWindowProvider> dockWindowProvider;
-    muse::Inject<IAppShellConfiguration> configuration;
-    muse::Inject<muse::ui::IUiConfiguration> uiConfiguration;
-    muse::Inject<playback::IPlaybackConfiguration> playbackConfiguration;
 
 //! TODO AU4
 //    INJECT(braille::IBrailleConfiguration, brailleConfiguration)

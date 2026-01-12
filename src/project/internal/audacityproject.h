@@ -43,16 +43,17 @@ namespace au::project {
 //! * Thanks to this wrapper we will see exactly what we are using from AU3
 class Audacity4Project : public IAudacityProject, public muse::async::Asyncable
 {
+    muse::GlobalInject<muse::io::IFileSystem> fileSystem;
+    muse::GlobalInject<IProjectConfiguration> configuration;
+
     muse::Inject<au3::IAu3ProjectCreator> au3ProjectCreator;
     muse::Inject<trackedit::ITrackeditProjectCreator> trackeditProjectCreator;
-    muse::Inject<muse::io::IFileSystem> fileSystem;
     muse::Inject<projectscene::IProjectViewStateCreator> viewStateCreator;
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<au::trackedit::IProjectHistory> projectHistory;
     muse::Inject<au::trackedit::ITrackeditClipboard> clipboard;
     muse::Inject<IThumbnailCreator> thumbnailCreator;
     muse::Inject<importexport::IImporter> importer;
-    muse::Inject<IProjectConfiguration> configuration;
 
 public:
     Audacity4Project();

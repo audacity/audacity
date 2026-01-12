@@ -11,7 +11,7 @@
 namespace au::importexport {
 class ExportConfiguration : public IExportConfiguration
 {
-    muse::Inject<muse::IGlobalConfiguration> globalConfiguration;
+    muse::GlobalInject<muse::IGlobalConfiguration> globalConfiguration;
 
 public:
     ExportConfiguration() = default;

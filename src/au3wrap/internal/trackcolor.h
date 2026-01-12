@@ -10,7 +10,7 @@
 namespace au::au3 {
 class TrackColor : public TrackAttachment
 {
-    muse::Inject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
+    muse::GlobalInject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
 
 public:
     static TrackColor& Get(const Track* track);

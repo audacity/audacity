@@ -23,12 +23,13 @@ class ExportPreferencesModel : public QObject, public muse::async::Asyncable
 {
     Q_OBJECT
 
+    muse::GlobalInject<muse::io::IFileSystem> fileSystem;
+    muse::GlobalInject<appshell::IAppShellConfiguration> configuration;
+    muse::GlobalInject<IExportConfiguration> exportConfiguration;
+
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
     muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<muse::io::IFileSystem> fileSystem;
-    muse::Inject<appshell::IAppShellConfiguration> configuration;
     muse::Inject<context::IGlobalContext> globalContext;
-    muse::Inject<IExportConfiguration> exportConfiguration;
     muse::Inject<IExporter> exporter;
     muse::Inject<au::playback::IPlaybackController> playbackController;
     muse::Inject<trackedit::ISelectionController> selectionController;

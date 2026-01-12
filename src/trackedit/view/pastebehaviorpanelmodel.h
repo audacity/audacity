@@ -23,7 +23,7 @@ class PasteBehaviorPanelModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(QVariantList pasteBehaviors READ pasteBehaviors NOTIFY uiThemeChanged FINAL)
     Q_PROPERTY(QVariantList pasteInsertBehaviors READ pasteInsertBehaviors CONSTANT FINAL)
 
-    muse::Inject<muse::ui::IUiConfiguration> uiConfiguration;
+    muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
 
 public:
     explicit PasteBehaviorPanelModel(QObject* parent = nullptr);

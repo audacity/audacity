@@ -31,9 +31,10 @@ class PlaybackPreferencesModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(double shortSkip READ shortSkip NOTIFY shortSkipChanged)
     Q_PROPERTY(double longSkip READ longSkip NOTIFY longSkipChanged)
 
+    muse::GlobalInject<muse::audio::IAudioConfiguration> audioConfiguration;
+    muse::GlobalInject<playback::IPlaybackConfiguration> playbackConfiguration;
+
     muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider;
-    muse::Inject<muse::audio::IAudioConfiguration> audioConfiguration;
-    muse::Inject<playback::IPlaybackConfiguration> playbackConfiguration;
 
 public:
     explicit PlaybackPreferencesModel(QObject* parent = nullptr);

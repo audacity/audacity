@@ -27,10 +27,11 @@ class PlaybackToolBarCustomiseModel : public muse::uicomponents::SelectableItemL
 {
     Q_OBJECT
 
-    muse::Inject<muse::ui::IUiConfiguration> uiConfiguration;
+    muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
+    muse::GlobalInject<au::playback::IPlaybackConfiguration> configuration;
+    muse::GlobalInject<au::record::IRecordConfiguration> recordConfiguration;
+
     muse::Inject<muse::ui::IUiActionsRegister> actionsRegister;
-    muse::Inject<au::playback::IPlaybackConfiguration> configuration;
-    muse::Inject<au::record::IRecordConfiguration> recordConfiguration;
 
     Q_PROPERTY(QItemSelectionModel * selectionModel READ selectionModel NOTIFY selectionChanged)
     Q_PROPERTY(bool isAddSeparatorAvailable READ isAddSeparatorAvailable NOTIFY isAddSeparatorAvailableChanged)

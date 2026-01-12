@@ -31,8 +31,8 @@ class TimelineRuler : public QQuickPaintedItem, public muse::async::Asyncable
 
     Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
 
-    muse::Inject<muse::ui::IUiConfiguration> uiconfiguration;
-    muse::Inject<IProjectSceneConfiguration> configuration;
+    muse::GlobalInject<muse::ui::IUiConfiguration> uiconfiguration;
+    muse::GlobalInject<IProjectSceneConfiguration> configuration;
 
 signals:
     void offsetChanged();

@@ -22,7 +22,7 @@ class DeleteBehaviorPanelModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(QVariantList deleteBehaviors READ deleteBehaviors NOTIFY uiThemeChanged FINAL)
     Q_PROPERTY(QVariantList closeGapBehaviors READ closeGapBehaviors CONSTANT FINAL)
 
-    muse::Inject<muse::ui::IUiConfiguration> uiConfiguration;
+    muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
 
 public:
     explicit DeleteBehaviorPanelModel(QObject* parent = nullptr);

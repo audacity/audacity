@@ -61,7 +61,7 @@ private:
 
 class Au3ProjectCreator : public IAu3ProjectCreator
 {
-    muse::Inject<muse::io::IFileSystem> fileSystem;
+    muse::GlobalInject<muse::io::IFileSystem> fileSystem;
 
 public:
 

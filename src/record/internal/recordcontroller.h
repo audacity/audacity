@@ -20,12 +20,13 @@
 namespace au::record {
 class RecordController : public IRecordController, public muse::actions::Actionable, public muse::async::Asyncable, public muse::Injectable
 {
+    muse::GlobalInject<record::IRecordConfiguration> configuration;
+
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<muse::IInteractive> interactive;
     muse::Inject<IRecord> record;
     muse::Inject<playback::IPlaybackController> playbackController;
-    muse::Inject<record::IRecordConfiguration> configuration;
 
 public:
     void init();

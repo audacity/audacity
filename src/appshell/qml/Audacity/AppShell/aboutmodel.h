@@ -41,12 +41,13 @@ class AboutModel : public QObject
     Q_OBJECT
     QML_ELEMENT
 
-    muse::Inject<IAppShellConfiguration> configuration;
-    muse::Inject<muse::IGlobalConfiguration> globalConfiguration;
+    muse::GlobalInject<IAppShellConfiguration> configuration;
+    muse::GlobalInject<muse::IGlobalConfiguration> globalConfiguration;
+
     muse::Inject<muse::IApplication> application;
 
 //! TODO AU4
-//     muse::Inject<update::IUpdateConfiguration> updateConfiguration;
+//     muse::GlobalInject<update::IUpdateConfiguration> updateConfiguration;
 
 public:
     explicit AboutModel(QObject* parent = nullptr);

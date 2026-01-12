@@ -23,11 +23,12 @@ class ProjectViewState : public QObject, public IProjectViewState, public muse::
 {
     Q_OBJECT
 
+    muse::GlobalInject<IProjectSceneConfiguration> configuration;
+    muse::GlobalInject<au::playback::IPlaybackConfiguration> playbackConfiguration;
+
     muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<IProjectSceneConfiguration> configuration;
     muse::Inject<trackedit::ISelectionController> selectionController;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
-    muse::Inject<au::playback::IPlaybackConfiguration> playbackConfiguration;
 
 public:
     ProjectViewState(std::shared_ptr<au::au3::IAu3Project> project);

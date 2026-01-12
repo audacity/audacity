@@ -18,7 +18,8 @@ class RealtimeEffectSectionModel : public QObject, public muse::actions::Actiona
 
     Q_PROPERTY(bool showEffectsSection READ prop_showEffectsSection WRITE prop_setShowEffectsSection NOTIFY showEffectsSectionChanged)
 
-    muse::Inject<IProjectSceneConfiguration> configuration;
+    muse::GlobalInject<IProjectSceneConfiguration> configuration;
+
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
 
 public:

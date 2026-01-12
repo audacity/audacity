@@ -56,10 +56,11 @@ class TimelineContext : public QObject, public muse::async::Asyncable, public mu
 
     Q_PROPERTY(bool playbackOnRulerClickEnabled READ playbackOnRulerClickEnabled NOTIFY playbackOnRulerClickEnabledChanged FINAL)
 
+    muse::GlobalInject<IProjectSceneConfiguration> configuration;
+
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<trackedit::ISelectionController> selectionController;
-    muse::Inject<IProjectSceneConfiguration> configuration;
     muse::Inject<playback::IPlayback> playback;
 
 public:

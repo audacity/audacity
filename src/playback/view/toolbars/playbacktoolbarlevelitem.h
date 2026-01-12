@@ -33,8 +33,9 @@ class PlaybackToolBarLevelItem : public muse::uicomponents::ToolBarItem
 
     Q_PROPERTY(bool isPlaying READ isPlaying NOTIFY isPlayingChanged FINAL)
 
+    muse::GlobalInject<IPlaybackConfiguration> configuration;
+
     muse::Inject<IPlayback> playback;
-    muse::Inject<IPlaybackConfiguration> configuration;
     muse::Inject<IPlaybackController> playbackController;
 
 public:

@@ -20,7 +20,7 @@ class ProjectSceneActionsController : public IProjectSceneActionsController, pub
     INJECT_STATIC(muse::actions::IActionsDispatcher, dispatcher)
     INJECT_STATIC(au::context::IGlobalContext, globalContext)
     INJECT_STATIC(muse::IInteractive, interactive)
-    muse::Inject<IProjectSceneConfiguration> configuration;
+    muse::GlobalInject<IProjectSceneConfiguration> configuration;
 
 public:
     void init();

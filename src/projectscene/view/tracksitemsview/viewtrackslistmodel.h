@@ -28,13 +28,13 @@ class ViewTracksListModel : public QAbstractListModel, public muse::async::Async
     Q_PROPERTY(int verticalRulerWidth READ verticalRulerWidth NOTIFY verticalRulerWidthChanged FINAL)
     Q_PROPERTY(int totalTracksHeight READ totalTracksHeight NOTIFY totalTracksHeightChanged FINAL)
 
+    muse::GlobalInject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
+    muse::GlobalInject<playback::IPlaybackConfiguration> playbackConfiguration;
+
     muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
     muse::Inject<trackedit::ISelectionController> selectionController;
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
     muse::Inject<playback::ITrackPlaybackControl> trackPlaybackControl;
-    muse::Inject<playback::IPlaybackConfiguration> playbackConfiguration;
-
 public:
     explicit ViewTracksListModel(QObject* parent = nullptr);
 

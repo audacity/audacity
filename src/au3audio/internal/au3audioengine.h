@@ -13,7 +13,7 @@ class Au3AudioEngine final : public au::audio::IAudioEngine
 public:
     Au3AudioEngine() = default;
 
-    muse::Inject<au::record::IRecordConfiguration> recordConfiguration;
+    muse::GlobalInject<au::record::IRecordConfiguration> recordConfiguration;
 
     void init();
     void deinit();

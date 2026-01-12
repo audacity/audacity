@@ -57,25 +57,25 @@ class AppMenuModel : public muse::uicomponents::AbstractMenuModel, public effect
 {
     Q_OBJECT
 public:
+    muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
+    muse::GlobalInject<muse::IGlobalConfiguration> globalConfiguration;
+    muse::GlobalInject<IAppShellConfiguration> configuration;
+    muse::GlobalInject<effects::IEffectsConfiguration> effectsConfiguration;
 
     muse::Inject<muse::ui::IMainWindow> mainWindow { this };
     muse::Inject<muse::ui::IUiActionsRegister> uiActionsRegister = { this };
     muse::Inject<muse::ui::INavigationController> navigationController = { this };
-    muse::Inject<muse::ui::IUiConfiguration> uiConfiguration = { this };
     muse::Inject<muse::actions::IActionsDispatcher> actionsDispatcher = { this };
-    muse::Inject<muse::IGlobalConfiguration> globalConfiguration = { this };
-    muse::Inject<IAppShellConfiguration> configuration = { this };
     muse::Inject<IAppMenuModelHook> appMenuModelHook = { this };
     muse::Inject<effects::IEffectsProvider> effectsProvider = { this };
     muse::Inject<effects::IEffectsMenuProvider> effectsMenuProvider = { this };
-    muse::Inject<effects::IEffectsConfiguration> effectsConfiguration = { this };
     muse::Inject<trackedit::IProjectHistory> projectHistory = { this };
 
     //! TODO AU4
     // muse::Inject<workspace::IWorkspaceManager> workspacesManager = { this };
     muse::Inject<au::project::IRecentFilesController> recentFilesController = { this };
     // muse::Inject<extensions::IExtensionsProvider> extensionsProvider = { this };
-    // muse::Inject<update::IUpdateConfiguration> updateConfiguration = { this };
+    // muse::GlobalInject<update::IUpdateConfiguration> updateConfiguration = { this };
 
 public:
     explicit AppMenuModel(QObject* parent = nullptr);

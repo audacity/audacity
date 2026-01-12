@@ -39,10 +39,11 @@
 namespace au::project {
 class RecentFilesController : public IRecentFilesController, public muse::async::Asyncable
 {
-    muse::Inject<IProjectConfiguration> configuration;
+    muse::GlobalInject<IProjectConfiguration> configuration;
+    muse::GlobalInject<muse::io::IFileSystem> fileSystem;
+    muse::GlobalInject<muse::mi::IMultiInstancesProvider> multiInstancesProvider;
+
     muse::Inject<IMscMetaReader> mscMetaReader;
-    muse::Inject<muse::io::IFileSystem> fileSystem;
-    INJECT(muse::mi::IMultiInstancesProvider, multiInstancesProvider)
 
 public:
     void init();

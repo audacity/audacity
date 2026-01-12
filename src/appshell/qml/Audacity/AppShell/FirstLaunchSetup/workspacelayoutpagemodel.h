@@ -50,7 +50,7 @@ class WorkspaceLayoutPageModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(QString previewAccessibleName READ previewAccessibleName CONSTANT)
     Q_PROPERTY(QString previewAccessibleDescription READ previewAccessibleDescription CONSTANT)
 
-    muse::Inject<muse::ui::IUiConfiguration> m_uiConfiguration;
+    muse::GlobalInject<muse::ui::IUiConfiguration> m_uiConfiguration;
 
 #ifdef MUSE_MODULE_WORKSPACE
     muse::Inject<muse::workspace::IWorkspaceManager> m_workspaceManager;

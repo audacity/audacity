@@ -34,7 +34,7 @@ class ClipVisualizationPageModel : public QObject, public muse::async::Asyncable
     Q_OBJECT
     QML_ELEMENT
 
-    muse::Inject<projectscene::IProjectSceneConfiguration> m_projectSceneConfiguration;
+    muse::GlobalInject<projectscene::IProjectSceneConfiguration> m_projectSceneConfiguration;
 
     Q_PROPERTY(QVariantList clipStyles READ clipStyles NOTIFY clipStylesChanged)
     Q_PROPERTY(int currentClipStyle READ currentClipStyle NOTIFY currentClipStyleChanged)
