@@ -94,6 +94,8 @@ set(MUSE_MODULE_UI ON)
 set(MUSE_MODULE_UI_TESTS OFF)
 set(MUSE_MODULE_UPDATE OFF)
 set(MUSE_MODULE_WORKSPACE ON)
+set(MUSE_MODULE_VST ON)
+set(MUSE_MODULE_VST_QML ON)
 
 # Modules (alphabetical order please)
 option(AU_BUILD_APPSHELL_MODULE "Build appshell module" ON)

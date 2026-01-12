@@ -56,14 +56,9 @@ namespace au::appshell {
 class AppMenuModel : public muse::uicomponents::AbstractMenuModel, public effects::IEffectMenuItemFactory
 {
     Q_OBJECT
-#ifdef Q_OS_WIN
-    QML_ANONYMOUS
-#else
-    QML_NAMED_ELEMENT(PlatformAppMenuModel)
-#endif
-
 public:
-    muse::Inject<muse::ui::IMainWindow> mainWindow = { this };
+
+    muse::Inject<muse::ui::IMainWindow> mainWindow { this };
     muse::Inject<muse::ui::IUiActionsRegister> uiActionsRegister = { this };
     muse::Inject<muse::ui::INavigationController> navigationController = { this };
     muse::Inject<muse::ui::IUiConfiguration> uiConfiguration = { this };
@@ -142,6 +137,13 @@ private:
     void updateUndoRedoItems();
 
     std::shared_ptr<muse::uicomponents::AbstractMenuModel> m_workspacesMenuModel;
+
+// Moved to the bottom of the class definition because of the code formatter bug
+#ifdef Q_OS_WIN
+    QML_ANONYMOUS
+#else
+    QML_NAMED_ELEMENT(PlatformAppMenuModel)
+#endif
 };
 }
 
