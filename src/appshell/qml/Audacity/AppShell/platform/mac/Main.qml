@@ -23,9 +23,6 @@ import QtQuick 2.15
 
 import Audacity.AppShell
 
-import "../"
-import "../../"
-
 AppWindow {
     id: root
 

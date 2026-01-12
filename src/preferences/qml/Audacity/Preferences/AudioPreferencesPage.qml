@@ -22,9 +22,7 @@
 import QtQuick 2.15
 
 import Muse.UiComponents
-import Audacity.AppShell
-
-import "internal"
+import Audacity.Preferences
 
 PreferencesPage {
     id: root

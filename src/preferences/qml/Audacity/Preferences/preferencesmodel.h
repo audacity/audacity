@@ -29,7 +29,6 @@
 #include "modularity/ioc.h"
 #include "ui/iuiactionsregister.h"
 #include "ui/view/iconcodes.h"
-
 #include "appshell/iappshellconfiguration.h"
 #include "preferencepageitem.h"
 
@@ -39,9 +38,9 @@ class PreferencesModel : public QAbstractItemModel
     Q_OBJECT
     QML_ELEMENT
 
-                                INJECT(muse::actions::IActionsDispatcher, dispatcher)
-    INJECT(IAppShellConfiguration, configuration)
-    INJECT(muse::ui::IUiActionsRegister, actionsRegister)
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
+    muse::Inject<IAppShellConfiguration> configuration;
+    muse::Inject<muse::ui::IUiActionsRegister> actionsRegister;
 
     Q_PROPERTY(QString currentPageId READ currentPageId WRITE setCurrentPageId NOTIFY currentPageIdChanged)
 

@@ -19,13 +19,12 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import QtQuick 2.15
-import QtQuick.Window 2.15
+import QtQuick
+import QtQuick.Window
 
-import MuseScore.UiComponents 1.0
-import MuseScore.AppShell 1.0
+import MuseScore.UiComponents
 
-import "../.."
+import MuseScore.AppShell
 
 AppWindow {
     id: root

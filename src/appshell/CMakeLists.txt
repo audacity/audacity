@@ -76,11 +76,9 @@ qt_add_resources(appshell appshell_resources
     PREFIX
         /
     FILES
-        resources/AsymmetricStereoHeights.svg
         resources/Classic.svg
         resources/Colorful.svg
         resources/LoadingScreen.svg
-        resources/StereoHeightsCursor.png
         resources/win_opengl_buglist.json
 )
 

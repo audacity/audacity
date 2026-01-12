@@ -28,8 +28,6 @@ import Audacity.UiComponents
 import Audacity.AppShell
 import Audacity.Preferences
 
-// import "../../shared"
-
 BaseSection {
     id: root
 

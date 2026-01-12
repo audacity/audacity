@@ -24,9 +24,6 @@ import QtQuick.Layouts 1.15
 
 import Muse.Ui 1.0
 import Muse.UiComponents
-import Audacity.AppShell
-
-import "internal"
 
 StyledDialogView {
     id: root

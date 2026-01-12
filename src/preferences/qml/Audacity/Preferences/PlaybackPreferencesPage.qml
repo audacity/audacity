@@ -1,13 +1,12 @@
 /*
  * Audacity: A Digital Audio Editor
  */
-import QtQuick 2.15
+import QtQuick
 
 import Muse.UiComponents
-import Audacity.Playback 1.0
-import Audacity.AppShell
 
-import "internal"
+import Audacity.AppShell
+import Audacity.Playback
 
 PreferencesPage {
     id: root

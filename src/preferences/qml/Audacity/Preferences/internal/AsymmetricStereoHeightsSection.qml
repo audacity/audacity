@@ -34,13 +34,13 @@ BaseSection {
         }
 
         Image {
-            source: "qrc:/resources/AsymmetricStereoHeights.svg"
+            source: "../resources/AsymmetricStereoHeights.svg"
 
             width: svgImg.width
             height: svgImg.height
 
             Image {
-                source: "qrc:/resources/StereoHeightsCursor.png"
+                source: "../resources/StereoHeightsCursor.png"
 
                 width: 19
                 height: 21

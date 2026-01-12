@@ -1,14 +1,12 @@
 /*
  * Audacity: A Digital Audio Editor
  */
-import QtQuick 2.15
+import QtQuick
 
 import Muse.UiComponents
 
 import Audacity.AppShell
-import Audacity.Spectrogram 1.0
-
-import "internal"
+import Audacity.Spectrogram
 
 PreferencesPage {
     id: root

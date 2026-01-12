@@ -28,7 +28,6 @@
 #include "progress.h"
 
 #include "modularity/ioc.h"
-#include "appshell/iappshellconfiguration.h"
 #include "async/asyncable.h"
 
 #include "global/iinteractive.h"
@@ -43,7 +42,6 @@ class GeneralPreferencesModel : public QObject, public muse::async::Asyncable
     Q_OBJECT
     QML_ELEMENT
 
-    muse::Inject<IAppShellConfiguration> configuration;
     muse::Inject<muse::IInteractive> interactive;
     muse::Inject<muse::languages::ILanguagesConfiguration> languagesConfiguration;
     muse::Inject<muse::languages::ILanguagesService> languagesService;

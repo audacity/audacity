@@ -19,18 +19,14 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick
+import QtQuick.Controls
 
-import Audacity.AppShell
-import Muse.Dock 1.0
-import Muse.Ui 1.0
+import Muse.Dock
+import Muse.Ui
 import Muse.UiComponents
 
-import "./HomePage"
-import "./ProjectPage"
-import "./PublishPage"
-import "./DevTools"
+import Audacity.AppShell
 
 DockWindow {
     id: root

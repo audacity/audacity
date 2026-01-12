@@ -27,8 +27,6 @@ import Muse.UiComponents
 
 import Audacity.Preferences
 
-import "internal"
-
 PreferencesPage {
     id: root
 

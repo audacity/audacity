@@ -91,6 +91,9 @@ qt_add_qml_module(preferences_qml
         ShortcutsPreferencesPage.qml
         SpectrogramPreferencesPage.qml
         UpdatePreferencesPage.qml
+    RESOURCES
+        resources/AsymmetricStereoHeights.svg
+        resources/StereoHeightsCursor.png
     IMPORTS
         TARGET muse_ui_qml
         TARGET muse_uicomponents_qml
