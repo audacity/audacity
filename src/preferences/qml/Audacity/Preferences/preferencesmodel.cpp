@@ -163,6 +163,9 @@ void PreferencesModel::load(const QString& currentPageId)
         makeItem("audio-settings", QT_TRANSLATE_NOOP("appshell/preferences", "Audio settings"), IconCode::Code::AUDIO,
                  "Preferences/AudioPreferencesPage.qml"),
 
+        makeItem("editing", QT_TRANSLATE_NOOP("appshell/preferences",
+                                              "Audio editing"), IconCode::Code::WAVEFORM, "Preferences/EditPreferencesPage.qml"),
+
         makeItem("playback-recording", QT_TRANSLATE_NOOP("appshell/preferences",
                                                          "Playback/Recording"), IconCode::Code::MICROPHONE,
                  "Preferences/PlaybackPreferencesPage.qml"),
@@ -171,18 +174,15 @@ void PreferencesModel::load(const QString& currentPageId)
                                                        "Spectral display"), IconCode::Code::SPECTROGRAM,
                  "Preferences/SpectrogramPreferencesPage.qml"),
 
-        makeItem("editing", QT_TRANSLATE_NOOP("appshell/preferences",
-                                              "Editing"), IconCode::Code::EDIT, "Preferences/EditPreferencesPage.qml"),
-
-        makeItem("plugin", QT_TRANSLATE_NOOP("appshell/preferences",
-                                             "Plugins"), IconCode::Code::PLUGIN, "Preferences/PluginPreferencesPage.qml"),
-
         makeItem("music", QT_TRANSLATE_NOOP("appshell/preferences", "Music"), IconCode::Code::METRONOME, ""),
 
         makeItem("cloud", QT_TRANSLATE_NOOP("appshell/preferences", "Cloud"), IconCode::Code::CLOUD, ""),
 
         makeItem("shortcuts", QT_TRANSLATE_NOOP("appshell/preferences", "Shortcuts"), IconCode::Code::SHORTCUTS,
                  "Preferences/ShortcutsPreferencesPage.qml"),
+
+        makeItem("plugin", QT_TRANSLATE_NOOP("appshell/preferences",
+                                             "Plugins"), IconCode::Code::PLUGIN, "Preferences/PluginPreferencesPage.qml"),
 
         makeItem("advanced", QT_TRANSLATE_NOOP("appshell/preferences", "Advanced options"), IconCode::Code::SETTINGS_COG, ""),
     };
