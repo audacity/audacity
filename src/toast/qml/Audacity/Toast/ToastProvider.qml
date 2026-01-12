@@ -31,6 +31,13 @@ StyledListView {
         toastmodel.init()
     }
 
+    MouseArea {
+        // Disable interaction with elements below toast
+        anchors.fill: parent
+        hoverEnabled: true
+        acceptedButtons: Qt.NoButton
+    }
+
     delegate: ToastItem {
         id: itemRect
 
