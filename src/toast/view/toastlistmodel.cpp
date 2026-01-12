@@ -11,6 +11,10 @@
 
 using namespace au::toast;
 
+namespace {
+constexpr int MAX_VISIBLE_TOASTS = 5;
+}
+
 ToastListModel::ToastListModel(QObject* parent)
     : QAbstractListModel(parent)
 {
@@ -19,6 +23,10 @@ ToastListModel::ToastListModel(QObject* parent)
 void ToastListModel::init()
 {
     toastProvider()->toastAdded().onReceive(this, [this](std::shared_ptr<ToastItem> toast) {
+        if (m_toasts.size() >= MAX_VISIBLE_TOASTS) {
+            toastProvider()->dismissToast(m_toasts.front()->id());
+        }
+
         beginInsertRows(QModelIndex(), static_cast<int>(m_toasts.size()), static_cast<int>(m_toasts.size()));
         m_toasts.emplace_back(toast);
         endInsertRows();

@@ -9,15 +9,6 @@
 using namespace muse::ui;
 using namespace au::toast;
 
-namespace {
-constexpr int DEFAULT_MAX_ITEMS = 5;
-}
-
-void ToastService::init()
-{
-    toastProvider()->setMaxItems(DEFAULT_MAX_ITEMS);
-}
-
 muse::async::Promise<ToastActionCode> ToastService::show(const std::string& title, const std::string& message,
                                                          muse::ui::IconCode::Code iconCode, bool dismissible,
                                                          const std::vector<ToastAction>& actions)

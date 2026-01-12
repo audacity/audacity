@@ -19,8 +19,6 @@ public:
 
     virtual muse::async::Promise<ToastActionCode> show(ToastItem item) = 0;
 
-    virtual void setMaxItems(int maxItems) = 0;
-
     virtual muse::async::Channel<std::shared_ptr<ToastItem> > toastAdded() const = 0;
     virtual muse::async::Channel<int> toastDismissed() const = 0;
 

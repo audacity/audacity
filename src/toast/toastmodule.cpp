@@ -43,12 +43,3 @@ void ToastModule::registerUiTypes()
     qmlRegisterType<ToastListModel>("Audacity.Toast", 1, 0, "ToastListModel");
     qmlRegisterType<ToastTestsModel>("Audacity.Toast", 1, 0, "ToastTestsModel");
 }
-
-void ToastModule::onInit(const IApplication::RunMode&)
-{
-    m_toastService->init();
-}
-
-void ToastModule::onDeinit()
-{
-}

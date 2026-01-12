@@ -18,7 +18,6 @@ class IToastService : MODULE_EXPORT_INTERFACE
     INTERFACE_ID(IToast)
 public:
     virtual ~IToastService() = default;
-    virtual void init() = 0;
     virtual muse::async::Promise<ToastActionCode> show(const std::string& title, const std::string& message,
                                                        muse::ui::IconCode::Code iconCode = muse::ui::IconCode::Code::NONE,
                                                        bool dismissible = true, const std::vector<ToastAction>& actions = {}) = 0;

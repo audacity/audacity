@@ -17,7 +17,6 @@ class ToastService : public IToastService, public muse::Injectable
     muse::Inject<IToastProvider> toastProvider;
 
 public:
-    void init() override;
     muse::async::Promise<ToastActionCode> show(const std::string& title, const std::string& message, muse::ui::IconCode::Code iconCode,
                                                bool dismissible, const std::vector<ToastAction>& actions) override;
     muse::async::Promise<ToastActionCode> showWithTimeout(const std::string& title, const std::string& message,

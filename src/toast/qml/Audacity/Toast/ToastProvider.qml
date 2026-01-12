@@ -31,10 +31,6 @@ StyledListView {
         toastmodel.init()
     }
 
-    function dismissToast(id) {
-        root.model.dismissToast(id);
-    }
-
     delegate: ToastItem {
         id: itemRect
 
@@ -52,7 +48,7 @@ StyledListView {
         progress: model.progress
  
         onActionTriggered: function(actionStr) {
-            root.model.executeAction(model.id, actionStr);
+            toastmodel.executeAction(model.id, actionStr);
         }
         
         Component.onCompleted: {
@@ -70,7 +66,7 @@ StyledListView {
         Behavior on opacity { OpacityAnimator { duration: root.animationDuration } }
 
         onDismissed: {
-            root.dismissToast(model.id);
+            toastmodel.dismissToast(model.id);
         }
     }
 

@@ -21,8 +21,6 @@ class ToastProvider : public IToastProvider, public muse::async::Asyncable
 public:
     muse::async::Promise<ToastActionCode> show(ToastItem item) override;
 
-    void setMaxItems(int maxItems) override;
-
     muse::async::Channel <std::shared_ptr<ToastItem> > toastAdded() const override;
     muse::async::Channel<int> toastDismissed() const override;
 
@@ -43,7 +41,5 @@ private:
     std::map<int, std::unique_ptr<QTimer> > m_progressTimers;
     std::map<int, std::shared_ptr<muse::Progress> > m_progresses;
     std::map<int, muse::async::Promise<ToastActionCode>::Resolve> m_resolvers;
-
-    int m_maxItems = 0;
 };
 }

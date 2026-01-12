@@ -7,16 +7,6 @@ using namespace au::toast;
 
 muse::async::Promise<ToastActionCode> ToastProvider::show(ToastItem item)
 {
-    if (static_cast<int>(m_toasts.size()) >= m_maxItems) {
-        int dismissedId = m_toasts.front()->id();
-
-        resolveToast(dismissedId, ToastActionCode::None);
-
-        m_toastDismissed.send(dismissedId);
-        m_toasts.erase(m_toasts.begin());
-        cleanup(dismissedId);
-    }
-
     return muse::async::make_promise<ToastActionCode>([this, item](auto resolve, auto) {
         int id = item.id();
         m_toasts.emplace_back(std::make_shared<ToastItem>(item));
@@ -29,11 +19,6 @@ muse::async::Promise<ToastActionCode> ToastProvider::show(ToastItem item)
 
         return muse::async::Promise<ToastActionCode>::dummy_result();
     }, muse::async::PromiseType::AsyncByBody);
-}
-
-void ToastProvider::setMaxItems(int maxItems)
-{
-    m_maxItems = maxItems;
 }
 
 muse::async::Channel<std::shared_ptr<ToastItem> > ToastProvider::toastAdded() const
