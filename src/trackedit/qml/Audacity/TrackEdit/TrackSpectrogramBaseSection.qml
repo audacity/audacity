@@ -3,7 +3,7 @@
  */
 import QtQuick 2.15
 
-import Preferences
+import Audacity.Preferences
 
 SpectrogramBaseSection {
     prefsColumnWidth: 68

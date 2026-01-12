@@ -7,7 +7,8 @@ import QtQuick.Layouts 1.15
 
 import Muse.Ui 1.0
 import Muse.UiComponents
-import Preferences
+
+import Audacity.Preferences
 
 StyledDialogView {
     id: root

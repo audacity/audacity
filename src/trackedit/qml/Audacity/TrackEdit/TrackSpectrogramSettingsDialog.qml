@@ -4,7 +4,7 @@
 import QtQuick
 import Muse.UiComponents
 import Audacity.TrackEdit
-import Preferences
+import Audacity.Preferences
 
 import "."
 

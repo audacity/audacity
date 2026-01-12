@@ -30,7 +30,7 @@
 #include "ui/iuiactionsregister.h"
 #include "ui/view/iconcodes.h"
 
-#include "iappshellconfiguration.h"
+#include "appshell/iappshellconfiguration.h"
 #include "preferencepageitem.h"
 
 namespace au::appshell {
@@ -39,7 +39,7 @@ class PreferencesModel : public QAbstractItemModel
     Q_OBJECT
     QML_ELEMENT
 
-    INJECT(muse::actions::IActionsDispatcher, dispatcher)
+                                INJECT(muse::actions::IActionsDispatcher, dispatcher)
     INJECT(IAppShellConfiguration, configuration)
     INJECT(muse::ui::IUiActionsRegister, actionsRegister)
 

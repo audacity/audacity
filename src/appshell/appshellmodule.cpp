@@ -90,7 +90,6 @@ void AppShellModule::resolveImports()
         ir->registerQmlUri(Uri("audacity://about/audacity"), "Audacity.AppShell", "AboutDialog");
         ir->registerQmlUri(Uri("audacity://firstLaunchSetup"), "Audacity.AppShell", "FirstLaunchSetupDialog");
         ir->registerQmlUri(Uri("audacity://alphaWelcomePopup"), "Audacity.AppShell", "AlphaWelcomePopupDialog");
-        ir->registerQmlUri(Uri("audacity://preferences"), "Audacity.AppShell", "PreferencesDialog");
     }
 }
 

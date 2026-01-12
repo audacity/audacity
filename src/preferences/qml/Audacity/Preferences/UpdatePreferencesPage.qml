@@ -23,7 +23,8 @@ import QtQuick 2.15
 
 import Muse.Ui 1.0
 import Muse.UiComponents
-import MuseScore.Preferences 1.0
+
+import Audacity.Preferences
 
 import "internal"
 

@@ -100,6 +100,8 @@ set(LINK_LIB
     effects_audio_unit
     effects_lv2
     effects_vst
+    preferences
+    preferences_qml
     project
     projectscene
     playback

@@ -25,28 +25,6 @@ qt_add_qml_module(appshell_qml
         maintoolbarmodel.h
         mainwindowtitleprovider.cpp
         mainwindowtitleprovider.h
-        Preferences/advancedpreferencesmodel.cpp
-        Preferences/advancedpreferencesmodel.h
-        Preferences/appearancepreferencesmodel.cpp
-        Preferences/appearancepreferencesmodel.h
-        Preferences/commonaudioapiconfigurationmodel.cpp
-        Preferences/commonaudioapiconfigurationmodel.h
-        Preferences/editpreferencesmodel.cpp
-        Preferences/editpreferencesmodel.h
-        Preferences/generalpreferencesmodel.cpp
-        Preferences/generalpreferencesmodel.h
-        Preferences/playbackpreferencesmodel.cpp
-        Preferences/playbackpreferencesmodel.h
-        Preferences/pluginpreferencesmodel.cpp
-        Preferences/pluginpreferencesmodel.h
-        Preferences/preferencepageitem.cpp
-        Preferences/preferencepageitem.h
-        Preferences/preferencesmodel.cpp
-        Preferences/preferencesmodel.h
-        Preferences/recordingpreferencesmodel.cpp
-        Preferences/recordingpreferencesmodel.h
-        Preferences/updatepreferencesmodel.cpp
-        Preferences/updatepreferencesmodel.h
         projectpagemodel.cpp
         projectpagemodel.h
         PublishPage/publishtoolbarmodel.cpp
@@ -86,70 +64,6 @@ qt_add_qml_module(appshell_qml
         platform/AppButtonBackground.qml
         platform/AppMenuBar.qml
         platform/PlatformMenuBar.qml
-        Preferences/AdvancedPreferencesPage.qml
-        Preferences/AppearancePreferencesPage.qml
-        Preferences/AudioPreferencesPage.qml
-        Preferences/EditPreferencesPage.qml
-        Preferences/GeneralPreferencesPage.qml
-        Preferences/internal/AccentColorsSection.qml
-        Preferences/internal/AdvancedTopSection.qml
-        Preferences/internal/AsymmetricStereoHeightsSection.qml
-        Preferences/internal/AudioApiSection.qml
-        Preferences/internal/AudioEngineSection.qml
-        Preferences/internal/AutomaticUpdateSection.qml
-        Preferences/internal/AutoSaveSection.qml
-        Preferences/internal/BufferAndLatencySection.qml
-        Preferences/internal/CharsetsSection.qml
-        Preferences/internal/ClipStyleSection.qml
-        Preferences/internal/ColorAndWallpaperSection.qml
-        Preferences/internal/ComboBoxWithTitle.qml
-        Preferences/internal/CommonAudioApiConfiguration.qml
-        Preferences/internal/CursorSection.qml
-        Preferences/internal/DefaultFilesSection.qml
-        Preferences/internal/DeleteBehaviorSection.qml
-        Preferences/internal/EffectBehaviorSection.qml
-        Preferences/internal/EffectOptionsSection.qml
-        Preferences/internal/FoldersSection.qml
-        Preferences/internal/FreeSpaceSection.qml
-        Preferences/internal/IncrementalPropertyControlWithTitle.qml
-        Preferences/internal/KeyboardLayoutsSection.qml
-        Preferences/internal/LanguagesSection.qml
-        Preferences/internal/MeiSection.qml
-        Preferences/internal/MeterDbRangeSection.qml
-        Preferences/internal/MiscellaneousSection.qml
-        Preferences/internal/MixerSection.qml
-        Preferences/internal/MonoStereoConversionSection.qml
-        Preferences/internal/NumberFormatSection.qml
-        Preferences/internal/PasteBehaviorSection.qml
-        Preferences/internal/PlaybackPerformanceSection.qml
-        Preferences/internal/PreferencesButtonsPanel.qml
-        Preferences/internal/PreferencesMenu.qml
-        Preferences/internal/ProgramStartSection.qml
-        Preferences/internal/RecordingBehaviorSection.qml
-        Preferences/internal/RemoteControlSection.qml
-        Preferences/internal/SampleRateSection.qml
-        Preferences/internal/SaveToCloudSection.qml
-        Preferences/internal/ScrollPagesSection.qml
-        Preferences/internal/SoloButtonSection.qml
-        Preferences/internal/SpectrogramAlgorithmSection.qml
-        Preferences/internal/SpectrogramBaseSection.qml
-        Preferences/internal/SpectrogramColorsSection.qml
-        Preferences/internal/SpectrogramScaleSection.qml
-        Preferences/internal/SpectrogramSelectionSection.qml
-        Preferences/internal/TemporaryFilesSection.qml
-        Preferences/internal/ThemeAdditionalOptionsSection.qml
-        Preferences/internal/ThemesSection.qml
-        Preferences/internal/UiColorsSection.qml
-        Preferences/internal/UiFontSection.qml
-        Preferences/internal/WorkspacesAsymmetricChannelsSection.qml
-        Preferences/internal/ZoomSection.qml
-        Preferences/PlaybackPreferencesPage.qml
-        Preferences/PluginPreferencesPage.qml
-        Preferences/PreferencesDialog.qml
-        Preferences/PreferencesPage.qml
-        Preferences/ShortcutsPreferencesPage.qml
-        Preferences/SpectrogramPreferencesPage.qml
-        Preferences/UpdatePreferencesPage.qml
         ProjectPage/ProjectPage.qml
         ProjectPage/ProjectStatusBar.qml
         PublishPage/PublishPage.qml

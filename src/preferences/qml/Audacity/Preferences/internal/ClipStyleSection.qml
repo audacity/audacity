@@ -27,10 +27,11 @@ import Muse.UiComponents
 import Muse.GraphicalEffects
 
 import Audacity.UiComponents 1.0
+import Audacity.AppShell
+import Audacity.Preferences
 import Audacity.ProjectScene
 import Audacity.TrackEdit
 
-import "../../shared/internal"
 
 BaseSection {
     id: root

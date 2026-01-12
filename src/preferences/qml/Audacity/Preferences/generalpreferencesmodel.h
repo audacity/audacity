@@ -28,7 +28,7 @@
 #include "progress.h"
 
 #include "modularity/ioc.h"
-#include "iappshellconfiguration.h"
+#include "appshell/iappshellconfiguration.h"
 #include "async/asyncable.h"
 
 #include "global/iinteractive.h"
