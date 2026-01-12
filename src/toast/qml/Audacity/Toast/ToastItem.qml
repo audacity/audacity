@@ -15,14 +15,18 @@ Item {
     property int progress: 0
     property var actions: []
 
-    property int margins: 12
-    property int spacing: 12
-    property int dismissButtonSize: 16
-    property int iconSize: 16
-    property int titlePixelSize: 12
-    property int messagePixelSize: 12
-    property int actionButtonHeight: 24
-    property int actionButtonMargins: 8
+    property int verticalMargin: 12
+    property int rightMargin: 12
+    property int leftMargin: 24
+    property int titleMessageSpacing: 4
+    property int iconContentSpacing: 12
+    property int textContentSpacing: 12
+    property int dismissButtonSize: 14
+    property int iconSize: 12
+    property int titlePixelSize: 14
+    property int messagePixelSize: 14
+    property int actionButtonHeight: 28
+    property int actionButtonMargins: 6
     property int actionButtonsSpacing: 8
 
     signal dismissed()
@@ -31,7 +35,7 @@ Item {
     width: 360
     height: implicitHeight
 
-    implicitHeight: contentContainer.childrenRect.height + 24
+    implicitHeight: mainContainer.childrenRect.height + 24
 
     Rectangle {
         id: backgroundRect
@@ -59,19 +63,21 @@ Item {
         from: 0
         to: 100
 
-        visible: root.progress > 0
-        value: 100 - root.progress
+        value: root.progress
     }
 
     Row {
-        id: contentContainer
+        id: mainContainer
 
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
 
-        anchors.margins: root.margins
-        spacing: root.spacing
+        anchors.topMargin: root.verticalMargin
+        anchors.bottomMargin: root.verticalMargin
+        anchors.rightMargin: root.rightMargin
+        anchors.leftMargin: root.leftMargin
+        spacing: root.iconContentSpacing
 
         StyledIconLabel {
             id: iconLabel
@@ -82,45 +88,44 @@ Item {
         }
 
         Column {
-            id: textColumn
+            width: parent.width - iconLabel.width - mainContainer.spacing - (root.dismissable ? dismissButton.width + mainContainer.spacing : 0)
+            spacing: root.textContentSpacing
 
-            width: parent.width - iconLabel.width - contentContainer.spacing - (root.dismissable ? dismissButton.width + contentContainer.spacing : 0)
-            spacing: 4
-
-            StyledTextLabel {
-                id: titleLabel
+            Column {
+                id: textColumn
 
                 width: parent.width
-                wrapMode: Text.WordWrap
-                horizontalAlignment: Text.AlignLeft
+                spacing: root.titleMessageSpacing
 
-                font.pixelSize: root.titlePixelSize
-                font.bold: true
+                StyledTextLabel {
+                    id: titleLabel
 
-                text: root.title
-            }
+                    width: parent.width
+                    wrapMode: Text.WordWrap
+                    horizontalAlignment: Text.AlignLeft
 
-            StyledTextLabel {
-                id: messageLabel
+                    font.pixelSize: root.titlePixelSize
+                    font.bold: true
 
-                width: parent.width
-                wrapMode: Text.WordWrap
-                horizontalAlignment: Text.AlignLeft
+                    text: root.title
+                }
 
-                font.pixelSize: root.messagePixelSize
-                font.bold: false
+                StyledTextLabel {
+                    id: messageLabel
 
-                text: root.message
-            }
+                    width: parent.width
+                    wrapMode: Text.Wrap
+                    horizontalAlignment: Text.AlignLeft
+                    textFormat: Text.PlainText
 
-            Item {
-                id: spacerItem
+                    font.pixelSize: root.messagePixelSize
+                    font.bold: false
 
-                visible: root.actions && root.actions.length > 0
+                    visible: root.message.length > 0
 
-                width: parent.width
-                height: 4
-            }
+                    text: root.message
+                }
+            }    
 
             Row {
                 id: actionsRow
