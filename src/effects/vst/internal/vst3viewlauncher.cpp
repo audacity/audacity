@@ -10,7 +10,7 @@
 #include "au3-vst3/VST3Instance.h"
 
 #include "au3wrap/internal/wxtypes_convert.h"
-#include "log.h"
+#include "framework/global/log.h"
 
 using namespace au::effects;
 
