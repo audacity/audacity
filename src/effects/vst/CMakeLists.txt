@@ -22,8 +22,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/vst3viewlauncher.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/vstparameterextractorservice.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/vstparameterextractorservice.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/vst3parametersextractor.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/vst3parametersextractor.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/vstviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/vstviewmodel.h
