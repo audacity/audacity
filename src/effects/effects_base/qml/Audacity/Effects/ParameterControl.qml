@@ -79,11 +79,20 @@ Item {
         id: toggleControl
 
         CheckBox {
-            checked: parameterData ? (parameterData.currentValue > 0.5) : false
+            checked: {
+                if (!parameterData) {
+                    return false
+                }
+                var midpoint = (parameterData.minValue + parameterData.maxValue) / 2
+                return parameterData.currentValue > midpoint
+            }
             enabled: parameterData ? !parameterData.isReadOnly : false
 
             onClicked: {
-                root.valueChanged(checked ? 1.0 : 0.0)
+                // Send the opposite of current value (toggle)
+                var midpoint = (parameterData.minValue + parameterData.maxValue) / 2
+                var isCurrentlyOn = parameterData.currentValue > midpoint
+                root.valueChanged(isCurrentlyOn ? parameterData.minValue : parameterData.maxValue)
             }
         }
     }
