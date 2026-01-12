@@ -49,21 +49,24 @@ Item {
         border.width: 1
 
         opacity: 0.95
-    }
 
-    ProgressBar {
-        id: progressBar
+        Rectangle {
+            id: progressBar
 
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
+            anchors.left: parent.left
+            anchors.bottom: parent.bottom
+            anchors.leftMargin: 2
+            anchors.bottomMargin: 1
 
-        height: 4
+            visible: root.progress > 0
 
-        from: 0
-        to: 100
+            height: 4
+            width: (parent.width - 3) * (root.progress / 100)
 
-        value: root.progress
+            color: ui.theme.accentColor
+
+            bottomLeftRadius: parent.radius - parent.border.width
+        }
     }
 
     Row {
