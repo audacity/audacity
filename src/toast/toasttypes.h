@@ -8,9 +8,7 @@
 namespace au::toast {
 enum class ToastActionCode {
     None = 0,
-    Action1,
-    Action2,
-    Action3
+    Custom,
 };
 struct ToastAction {
     std::string text;

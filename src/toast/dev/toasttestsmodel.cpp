@@ -53,9 +53,9 @@ void ToastTestsModel::showToastWithAction(const QString& title, const QString& m
         static_cast<muse::ui::IconCode::Code>(iconCode),
         true,
     {
-        { "Open info dialog", ToastActionCode::Action1 },
+        { "Open info dialog", ToastActionCode::Custom },
     }).onResolve(this, [this](ToastActionCode actionCode) {
-        if (actionCode == ToastActionCode::Action1) {
+        if (actionCode == ToastActionCode::Custom) {
             interactive()->info("Info Dialog", "Info dialog action triggered from toast");
         }
     });
