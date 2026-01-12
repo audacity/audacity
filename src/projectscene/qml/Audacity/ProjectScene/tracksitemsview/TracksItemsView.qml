@@ -469,17 +469,7 @@ Rectangle {
                         }
 
                         if (!splitToolController.active) {
-                            var spectrogramHit = null
-                            tracksItemsView.checkIfAnyTrack(function (trackItem) {
-                                if (trackItem.getSpectrogramHit) {
-                                    const y = trackItem.mapFromItem(tracksItemsView, 0, e.y).y
-                                    spectrogramHit = trackItem.getSpectrogramHit(y)
-                                    if (spectrogramHit) {
-                                        return true
-                                    }
-                                }
-                                return false
-                            })
+                            const spectrogramHit = tracksItemsView.getSpectrogramHit(e.y)
                             selectionController.onPressed(e.x, e.y, spectrogramHit)
                             selectionController.resetSelectedItems()
                             itemsSelection.visible = true
@@ -628,6 +618,21 @@ Rectangle {
                     return false
                 }
 
+                function getSpectrogramHit(y) {
+                    var spectrogramHit = null
+                    checkIfAnyTrack(function (trackItem) {
+                        if (trackItem.getSpectrogramHit) {
+                            const yy = trackItem.mapFromItem(tracksItemsView, 0, y).y
+                            spectrogramHit = trackItem.getSpectrogramHit(yy)
+                            if (spectrogramHit) {
+                                return true
+                            }
+                        }
+                        return false
+                    })
+                    return spectrogramHit
+                }
+
                 signal itemMoveRequested(var itemKey, bool completed)
                 signal itemStartEditRequested(var itemKey)
                 signal itemEndEditRequested(var itemKey)
@@ -748,6 +753,7 @@ Rectangle {
 
                             selectionStartFrequency: itemData.frequencySelection.startFrequency
                             selectionEndFrequency: itemData.frequencySelection.endFrequency
+                            pressedSpectrogram: selectionController.pressedSpectrogram
 
                             navigationPanel: navPanels && navPanels[index] ? navPanels[index] : null
 

@@ -459,7 +459,7 @@ double Au3SelectionController::selectedLabelStartTime() const
     auto labelKey = labelKeyList.at(0);
 
     Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), ::TrackId(labelKey.trackId));
-    IF_ASSERT_FAILED(labelTrack) {
+    if (!labelTrack) {
         return -1.0;
     }
 
@@ -886,6 +886,18 @@ void Au3SelectionController::setFrequencySelection(trackedit::TrackId trackId, c
     }
     m_frequencySelection.emplace(trackFrequencySelection);
     m_frequencySelectionChanged.send(trackId);
+}
+
+void Au3SelectionController::resetFrequencySelection()
+{
+    if (!m_frequencySelection.has_value()) {
+        return;
+    }
+
+    const trackedit::TrackId previousTrackId = m_frequencySelection->trackId;
+
+    m_frequencySelection.reset();
+    m_frequencySelectionChanged.send(previousTrackId);
 }
 
 muse::async::Channel<au::trackedit::TrackId> Au3SelectionController::frequencySelectionChanged() const

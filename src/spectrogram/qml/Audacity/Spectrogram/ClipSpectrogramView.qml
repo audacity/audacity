@@ -10,6 +10,7 @@ Item {
     required property double channelHeightRatio
     required property int clipId
     required property int trackId
+    required property var pressedSpectrogram
     required property int timelineIndentWidth
     required property double zoom
     required property double frameStartTime
@@ -24,12 +25,6 @@ Item {
         const spectrogramY = channel === 0 ? y : y - height * channelHeightRatio
         const spectrogramHeight = channel === 0 ? height * channelHeightRatio : height * (1.0 - channelHeightRatio)
         return SpectrogramHitFactory.createSpectrogramHit(root.trackId, channel, spectrogramY, spectrogramHeight)
-    }
-
-    MouseArea {
-        anchors.fill: parent
-        cursorShape: Qt.CrossCursor
-        acceptedButtons: Qt.NoButton // Don't consume mouse events
     }
 
     ColumnLayout {
@@ -62,6 +57,15 @@ Item {
                 selectionEndTime: root.selectionEndTime
                 selectionStartFrequency: root.selectionStartFrequency
                 selectionEndFrequency: root.selectionEndFrequency
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    visible: root.pressedSpectrogram.trackId === -1 || (root.pressedSpectrogram.trackId === root.trackId && root.pressedSpectrogram.channel === index)
+
+                    cursorShape: Qt.CrossCursor
+                    acceptedButtons: Qt.NoButton // Don't consume mouse events
+                }
             }
         }
     }

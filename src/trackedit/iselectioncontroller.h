@@ -90,6 +90,7 @@ public:
 
     virtual std::pair<double, double> frequencySelection(trackedit::TrackId trackId) const = 0;
     virtual void setFrequencySelection(trackedit::TrackId, const std::pair<double, double>& selection) = 0;
+    virtual void resetFrequencySelection() = 0;
     virtual muse::async::Channel<trackedit::TrackId> frequencySelectionChanged() const = 0;
 
     virtual trackedit::secs_t selectionStartTime() const = 0;

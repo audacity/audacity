@@ -87,6 +87,7 @@ public:
 
     std::pair<double, double> frequencySelection(trackedit::TrackId trackId) const override;
     void setFrequencySelection(trackedit::TrackId, const std::pair<double, double>& selection) override;
+    void resetFrequencySelection() override;
     muse::async::Channel<trackedit::TrackId> frequencySelectionChanged() const override;
 
     // grouping
