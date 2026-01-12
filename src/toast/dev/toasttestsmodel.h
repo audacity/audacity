@@ -29,7 +29,7 @@ public:
 
     Q_INVOKABLE void showToastWithAction(const QString& title, const QString& message, int iconCode);
     Q_INVOKABLE void showToastWithTimeout(const QString& title, const QString& message, int iconCode, int timeout, bool dismissible);
-    Q_INVOKABLE void showWithProgress(const QString& title, const QString& message, int iconCode, bool dismissible);
+    Q_INVOKABLE void showWithProgress(const QString& title, const QString& message, int iconCode, bool dismissible, bool showProgressInfo);
     Q_INVOKABLE void updateProgress(int progressValue);
 
 private:

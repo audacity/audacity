@@ -40,7 +40,9 @@ private:
         MessageRole,
         ActionRole,
         DismissableRole,
-        ProgressRole
+        ProgressRole,
+        TimeElapsedRole,
+        ShowProgressInfoRole
     };
 
     std::vector<std::shared_ptr<ToastItem> > m_toasts;

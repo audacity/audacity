@@ -1,9 +1,14 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
 import Muse.Ui 1.0
 import Muse.UiComponents 1.0
+
+import "."
 
 Item {
     id: root
@@ -12,12 +17,15 @@ Item {
     property string title: ""
     property string message: ""
     property bool dismissable: true
-    property int progress: 0
     property var actions: []
 
+    property int progress: 0
+    property bool showProgressInfo: false
+    property int timeElapsed: 0
+
     property int verticalMargin: 12
-    property int rightMargin: 12
-    property int leftMargin: 24
+    property int rightMargin: root.dismissable ? 12 : 24
+    property int leftMargin: 12
     property int titleMessageSpacing: 4
     property int iconContentSpacing: 12
     property int textContentSpacing: 12
@@ -58,7 +66,7 @@ Item {
             anchors.leftMargin: 2
             anchors.bottomMargin: 1
 
-            visible: root.progress > 0
+            visible: root.progress > 0 && !root.showProgressInfo
 
             height: 4
             width: (parent.width - 3) * (root.progress / 100)
@@ -128,7 +136,19 @@ Item {
 
                     text: root.message
                 }
-            }    
+            }
+
+            ToastProgressBar {
+                id: progressBarItem
+
+                anchors.left: parent.left
+                anchors.right: parent.right
+
+                visible: root.showProgressInfo
+
+                progress: root.progress
+                timeElapsed: root.timeElapsed
+            }
 
             Row {
                 id: actionsRow

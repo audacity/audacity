@@ -61,7 +61,7 @@ void ToastTestsModel::showToastWithAction(const QString& title, const QString& m
     });
 }
 
-void ToastTestsModel::showWithProgress(const QString& title, const QString& message, int iconCode, bool dismissible)
+void ToastTestsModel::showWithProgress(const QString& title, const QString& message, int iconCode, bool dismissible, bool showProgressInfo)
 {
     if (m_progress) {
         //Just to make things easy on testing
@@ -75,7 +75,9 @@ void ToastTestsModel::showWithProgress(const QString& title, const QString& mess
         message.toStdString(),
         m_progress,
         static_cast<muse::ui::IconCode::Code>(iconCode),
-        dismissible
+        dismissible,
+        {},
+        showProgressInfo
         );
 
     m_progress->start();

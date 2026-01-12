@@ -17,12 +17,13 @@ ToastItem::ToastItem(const std::string& title, const std::string& message, muse:
     m_iconCode(iconCode),
     m_dismissible(dismissible),
     m_timeout(timeout),
-    m_actions(std::move(actions))
+    m_actions(std::move(actions)),
+    m_showProgressInfo(false)
 {
 }
 
 ToastItem::ToastItem(const std::string& title, const std::string& message, muse::ui::IconCode::Code iconCode, bool dismissible,
-                     std::vector<ToastAction> actions, std::shared_ptr<muse::Progress> progress)
+                     std::vector<ToastAction> actions, std::shared_ptr<muse::Progress> progress, bool showProgressInfo)
     : m_id(CURRENT_TOAST_ID++),
     m_title(title),
     m_message(message),
@@ -30,7 +31,8 @@ ToastItem::ToastItem(const std::string& title, const std::string& message, muse:
     m_dismissible(dismissible),
     m_timeout(std::chrono::seconds(0)),
     m_actions(std::move(actions)),
-    m_progress(std::move(progress))
+    m_progress(std::move(progress)),
+    m_showProgressInfo(showProgressInfo)
 {
 }
 
@@ -88,4 +90,16 @@ void ToastItem::setCurrentProgress(double progress)
 muse::async::Notification ToastItem::progressChanged() const
 {
     return m_progressChanged;
+}
+
+bool ToastItem::showProgressInfo() const
+{
+    return m_showProgressInfo;
+}
+
+int ToastItem::timeElapsed() const
+{
+    auto now = std::chrono::steady_clock::now();
+    auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - m_creationTime).count();
+    return static_cast<int>(elapsed);
 }

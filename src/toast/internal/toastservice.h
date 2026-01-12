@@ -28,6 +28,7 @@ public:
     void showWarning(const std::string& title, const std::string& message) override;
     muse::async::Promise<ToastActionCode> showWithProgress(const std::string& title, const std::string& message,
                                                            std::shared_ptr<muse::Progress> progress, muse::ui::IconCode::Code iconCode,
-                                                           bool dismissible, const std::vector<ToastAction>& actions) override;
+                                                           bool dismissible, const std::vector<ToastAction>& actions,
+                                                           bool showProgressInfo) override;
 };
 }

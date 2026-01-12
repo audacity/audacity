@@ -33,7 +33,7 @@ public:
     virtual muse::async::Promise<ToastActionCode> showWithProgress(const std::string& title, const std::string& message,
                                                                    std::shared_ptr<muse::Progress> progress,
                                                                    muse::ui::IconCode::Code iconCode = muse::ui::IconCode::Code::NONE,
-                                                                   bool dismissible = false,
-                                                                   const std::vector<ToastAction>& actions = {}) = 0;
+                                                                   bool dismissible = false, const std::vector<ToastAction>& actions = {},
+                                                                   bool showProgressInfo = false) = 0;
 };
 }

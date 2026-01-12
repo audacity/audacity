@@ -1,3 +1,6 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
@@ -52,7 +55,10 @@ StyledListView {
         message: model.message
         actions: model.actions
         dismissable: model.dismissable
+
         progress: model.progress
+        showProgressInfo: model.showProgressInfo
+        timeElapsed: model.timeElapsed
  
         onActionTriggered: function(actionStr) {
             toastmodel.executeAction(model.id, actionStr);

@@ -45,7 +45,7 @@ void ToastListModel::init()
                 return;
             }
 
-            emit dataChanged(index(toastIndex), this->index(toastIndex), { ProgressRole });
+            emit dataChanged(index(toastIndex), this->index(toastIndex), { ProgressRole, TimeElapsedRole });
         });
     }, muse::async::Asyncable::Mode::SetReplace);
 
@@ -134,6 +134,10 @@ QVariant ToastListModel::data(const QModelIndex& index, int role) const
     }
     case ProgressRole:
         return static_cast<int>(toast->currentProgress());
+    case ShowProgressInfoRole:
+        return toast->showProgressInfo();
+    case TimeElapsedRole:
+        return toast->timeElapsed();
     default:
         return QVariant();
     }
@@ -148,7 +152,9 @@ QHash<int, QByteArray> ToastListModel::roleNames() const
         { MessageRole, "message" },
         { DismissableRole, "dismissable" },
         { ActionRole, "actions" },
-        { ProgressRole, "progress" }
+        { ProgressRole, "progress" },
+        { TimeElapsedRole, "timeElapsed" },
+        { ShowProgressInfoRole, "showProgressInfo" },
     };
     return roles;
 }

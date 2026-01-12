@@ -382,9 +382,19 @@ Rectangle {
                         }
                         
                         CheckBox {
+                            id: progressShowInfo
+                            text: "Show progress info"
+                            checked: false
+
+                            onClicked: function() {
+                                progressShowInfo.checked = !progressShowInfo.checked
+                            }
+                        }
+
+                        CheckBox {
                             id: progressDismissible
                             text: "Dismissible"
-                            checked: true
+                            checked: false
 
                             onClicked: function() {
                                 progressDismissible.checked = !progressDismissible.checked
@@ -428,7 +438,8 @@ Rectangle {
                                 progressTitle.currentText,
                                 progressMessage.currentText,
                                 parseInt(progressIconCode.currentText),
-                                progressDismissible.checked
+                                progressDismissible.checked,
+                                progressShowInfo.checked
                             )
                             toastModel.updateProgress(progressSlider.value)
                         }
