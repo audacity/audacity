@@ -146,6 +146,11 @@ ParamInfo buildParamInfo(Steinberg::Vst::IEditController* editController,
     // For list/dropdown parameters, get the enum values
     if (paramInfo.type == ParamType::Dropdown && paramInfo.stepCount > 0) {
         getEnumValues(editController, vstInfo, paramInfo);
+
+        // Convert enum indices from normalized to plain values
+        for (double& idx : paramInfo.enumIndices) {
+            idx = editController->normalizedParamToPlain(vstInfo.id, idx);
+        }
     }
 
     return paramInfo;
