@@ -90,6 +90,66 @@ void getEnumValues(Steinberg::Vst::IEditController* controller,
                    info.id, e.what());
     }
 }
+
+//! Build a ParamInfo from VST3 ParameterInfo
+//! @param editController The VST3 edit controller
+//! @param vstInfo The VST3 parameter info
+//! @return Populated ParamInfo structure
+ParamInfo buildParamInfo(Steinberg::Vst::IEditController* editController,
+                         const Steinberg::Vst::ParameterInfo& vstInfo)
+{
+    ParamInfo paramInfo;
+
+    // Basic info
+    paramInfo.id = vstInfo.id;
+    paramInfo.name = VST3Utils::UTF16ToStdString(vstInfo.title);
+    paramInfo.units = VST3Utils::GetParameterUnitStdString(editController, vstInfo);
+
+    // Type and flags
+    paramInfo.type = getParameterType(vstInfo);
+    paramInfo.isReadOnly = (vstInfo.flags & Steinberg::Vst::ParameterInfo::kIsReadOnly) != 0;
+    paramInfo.isHidden = (vstInfo.flags & Steinberg::Vst::ParameterInfo::kIsHidden) != 0;
+    paramInfo.canAutomate = (vstInfo.flags & Steinberg::Vst::ParameterInfo::kCanAutomate) != 0;
+
+    // Get normalized values
+    const double normalizedDefault = vstInfo.defaultNormalizedValue;
+    const double normalizedCurrent = editController->getParamNormalized(vstInfo.id);
+
+    // Get formatted value string from plugin (e.g., "440 Hz", "3.5 dB")
+    Steinberg::Vst::String128 stringValue;
+    if (editController->getParamStringByValue(vstInfo.id, normalizedCurrent, stringValue) == Steinberg::kResultOk) {
+        paramInfo.currentValueString = VST3Utils::UTF16ToStdString(stringValue);
+    }
+
+    // Convert to "Full Range" (display) values via normalizedParamToPlain
+    // For plugins that don't implement proper conversions, these will be 0.0 to 1.0
+    try {
+        paramInfo.minValue = editController->normalizedParamToPlain(vstInfo.id, 0.0);
+        paramInfo.maxValue = editController->normalizedParamToPlain(vstInfo.id, 1.0);
+        paramInfo.defaultValue = editController->normalizedParamToPlain(vstInfo.id, normalizedDefault);
+        paramInfo.currentValue = editController->normalizedParamToPlain(vstInfo.id, normalizedCurrent);
+    } catch (...) {
+        // Fallback to normalized values if conversion fails
+        paramInfo.minValue = 0.0;
+        paramInfo.maxValue = 1.0;
+        paramInfo.defaultValue = normalizedDefault;
+        paramInfo.currentValue = normalizedCurrent;
+    }
+
+    // Step count
+    paramInfo.stepCount = vstInfo.stepCount;
+    // calculate step size using plain values for discrete parameters
+    if (paramInfo.stepCount > 0) {
+        paramInfo.stepSize = (paramInfo.maxValue - paramInfo.minValue) / paramInfo.stepCount;
+    }
+
+    // For list/dropdown parameters, get the enum values
+    if (paramInfo.type == ParamType::Dropdown && paramInfo.stepCount > 0) {
+        getEnumValues(editController, vstInfo, paramInfo);
+    }
+
+    return paramInfo;
+}
 } // anonymous namespace
 
 std::vector<ParamInfo> VST3ParameterExtraction::extractParameters(EffectInstanceEx* instance, EffectSettingsAccess* settingsAccess)
@@ -134,69 +194,17 @@ std::vector<ParamInfo> VST3ParameterExtraction::extractParameters(EffectInstance
 
         for (Steinberg::int32 i = 0; i < paramCount; ++i) {
             try {
-                Steinberg::Vst::ParameterInfo vst3Info;
-                if (editController->getParameterInfo(i, vst3Info) != Steinberg::kResultOk) {
+                Steinberg::Vst::ParameterInfo vstInfo;
+                if (editController->getParameterInfo(i, vstInfo) != Steinberg::kResultOk) {
                     continue;
                 }
 
                 // Skip hidden parameters
-                if (vst3Info.flags & Steinberg::Vst::ParameterInfo::kIsHidden) {
+                if (vstInfo.flags & Steinberg::Vst::ParameterInfo::kIsHidden) {
                     continue;
                 }
 
-                // Create parameter info
-                ParamInfo paramInfo;
-
-                // Basic info
-                paramInfo.id = vst3Info.id;
-                paramInfo.name = VST3Utils::UTF16ToStdString(vst3Info.title);
-
-                // Get units
-                paramInfo.units = VST3Utils::GetParameterUnitStdString(editController.get(), vst3Info);
-
-                // Type and flags
-                paramInfo.type = getParameterType(vst3Info);
-                paramInfo.isReadOnly = (vst3Info.flags & Steinberg::Vst::ParameterInfo::kIsReadOnly) != 0;
-                // Note: isHidden is always false here since hidden parameters are filtered above
-                paramInfo.canAutomate = (vst3Info.flags & Steinberg::Vst::ParameterInfo::kCanAutomate) != 0;
-
-                // Step count
-                paramInfo.stepCount = vst3Info.stepCount;
-                if (paramInfo.stepCount > 0) {
-                    paramInfo.stepSize = 1.0 / static_cast<double>(paramInfo.stepCount);
-                }
-
-                // Get normalized values first
-                const double normalizedDefault = vst3Info.defaultNormalizedValue;
-                const double normalizedCurrent = editController->getParamNormalized(vst3Info.id);
-
-                // Get formatted value string from plugin (e.g., "440 Hz", "3.5 dB")
-                Steinberg::Vst::String128 stringValue;
-                if (editController->getParamStringByValue(vst3Info.id, normalizedCurrent, stringValue) == Steinberg::kResultOk) {
-                    paramInfo.currentValueString = VST3Utils::UTF16ToStdString(stringValue);
-                }
-
-                // Convert to "Full Range" (display) values via normalizedParamToFullRange
-                // For plugins that don't implement proper conversions, these will be 0.0 to 1.0
-                try {
-                    paramInfo.minValue = editController->normalizedParamToPlain(vst3Info.id, 0.0);
-                    paramInfo.maxValue = editController->normalizedParamToPlain(vst3Info.id, 1.0);
-                    paramInfo.defaultValue = editController->normalizedParamToPlain(vst3Info.id, normalizedDefault);
-                    paramInfo.currentValue = editController->normalizedParamToPlain(vst3Info.id, normalizedCurrent);
-                } catch (...) {
-                    // Fallback to normalized values if conversion fails
-                    paramInfo.minValue = 0.0;
-                    paramInfo.maxValue = 1.0;
-                    paramInfo.defaultValue = normalizedDefault;
-                    paramInfo.currentValue = normalizedCurrent;
-                }
-
-                // For list/dropdown parameters, get the enum values
-                if (paramInfo.type == ParamType::Dropdown && paramInfo.stepCount > 0) {
-                    getEnumValues(editController.get(), vst3Info, paramInfo);
-                }
-
-                result.push_back(paramInfo);
+                result.push_back(buildParamInfo(editController.get(), vstInfo));
             } catch (const std::exception& e) {
                 wxLogDebug("VST3ParameterExtraction: exception processing param %d: %s", i, e.what());
             }
@@ -224,46 +232,12 @@ ParamInfo VST3ParameterExtraction::getParameter(EffectInstanceEx* instance, uint
         return {};
     }
 
-    Steinberg::Vst::ParameterInfo vstParamInfo;
-    if (editController->getParameterInfo(parameterId, vstParamInfo) != Steinberg::kResultOk) {
+    Steinberg::Vst::ParameterInfo vstInfo;
+    if (editController->getParameterInfo(parameterId, vstInfo) != Steinberg::kResultOk) {
         return {};
     }
 
-    // Build the ParamInfo - similar to extractParameters but for a single parameter
-    ParamInfo paramInfo;
-    paramInfo.id = vstParamInfo.id;
-    paramInfo.name = VST3Utils::UTF16ToStdString(vstParamInfo.title);
-    paramInfo.units = VST3Utils::UTF16ToStdString(vstParamInfo.units);
-    paramInfo.type = getParameterType(vstParamInfo);
-    paramInfo.stepCount = vstParamInfo.stepCount;
-    paramInfo.isReadOnly = (vstParamInfo.flags & Steinberg::Vst::ParameterInfo::kIsReadOnly) != 0;
-    paramInfo.isHidden = (vstParamInfo.flags & Steinberg::Vst::ParameterInfo::kIsHidden) != 0;
-    paramInfo.canAutomate = (vstParamInfo.flags & Steinberg::Vst::ParameterInfo::kCanAutomate) != 0;
-
-    // Get current normalized value and convert to plain
-    const double normalizedValue = editController->getParamNormalized(parameterId);
-    paramInfo.defaultValue = normalizedToFullRange(instance, parameterId, vstParamInfo.defaultNormalizedValue);
-    paramInfo.minValue = normalizedToFullRange(instance, parameterId, 0.0);
-    paramInfo.maxValue = normalizedToFullRange(instance, parameterId, 1.0);
-    paramInfo.currentValue = normalizedToFullRange(instance, parameterId, normalizedValue);
-
-    // Get formatted string
-    Steinberg::Vst::String128 stringValue;
-    if (editController->getParamStringByValue(parameterId, normalizedValue, stringValue) == Steinberg::kResultOk) {
-        paramInfo.currentValueString = VST3Utils::UTF16ToStdString(stringValue);
-    }
-
-    // Calculate step size for discrete parameters
-    if (vstParamInfo.stepCount > 0) {
-        paramInfo.stepSize = (paramInfo.maxValue - paramInfo.minValue) / vstParamInfo.stepCount;
-    }
-
-    // Get enum values for dropdown parameters
-    if (paramInfo.type == ParamType::Dropdown) {
-        getEnumValues(editController, vstParamInfo, paramInfo);
-    }
-
-    return paramInfo;
+    return buildParamInfo(editController.get(), vstInfo);
 }
 
 double VST3ParameterExtraction::getParameterValue(EffectInstanceEx* instance, uint32_t parameterId)
