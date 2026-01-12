@@ -1,0 +1,77 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
+import QtQuick 2.15
+
+import Muse.UiComponents
+import Audacity.Playback 1.0
+import Audacity.AppShell
+
+import "internal"
+
+PreferencesPage {
+    id: root
+
+    property int navigationOrderStart: 0
+
+    PlaybackPreferencesModel {
+        id: playbackPreferencesModel
+    }
+
+    RecordingPreferencesModel {
+        id: recordingPreferencesModel
+    }
+
+    PlaybackStateModel {
+        id: playbackState
+    }
+
+    Component.onCompleted: {
+        playbackPreferencesModel.init()
+    }
+
+    Column {
+        width: parent.width
+        spacing: root.sectionsSpacing
+
+        PlaybackPerformanceSection {
+            playbackPreferencesModel: playbackPreferencesModel
+
+            enabled: !(playbackState.isPaused || playbackState.isPlaying)
+
+            navigation.section: root.navigationSection
+            navigation.order: root.navigationOrderStart
+        }
+
+        SeparatorLine {}
+
+        SoloButtonSection {
+            playbackPreferencesModel: playbackPreferencesModel
+
+            navigation.section: root.navigationSection
+            navigation.order: root.navigationOrderStart + 1
+        }
+
+        SeparatorLine {}
+
+        CursorSection {
+            playbackPreferencesModel: playbackPreferencesModel
+
+            enabled: !(playbackState.isPaused || playbackState.isPlaying)
+
+            navigation.section: root.navigationSection
+            navigation.order: root.navigationOrderStart + 2
+        }
+
+        SeparatorLine {}
+
+        RecordingBehaviorSection {
+            recordingPreferencesModel: recordingPreferencesModel
+
+            enabled: !(playbackState.isPaused || playbackState.isPlaying)
+
+            navigation.section: root.navigationSection
+            navigation.order: root.navigationOrderStart + 3
+        }
+    }
+}

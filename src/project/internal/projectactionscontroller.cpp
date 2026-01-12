@@ -17,7 +17,7 @@ using namespace muse;
 using namespace au::project;
 
 static const muse::Uri PROJECT_PAGE_URI("audacity://project");
-static const muse::Uri HOME_PAGE_URI("musescore://home");
+static const muse::Uri HOME_PAGE_URI("audacity://home");
 static const muse::Uri NEW_PROJECT_URI("audacity://project/new");
 
 static const muse::Uri EXPORT_URI("audacity://project/export");

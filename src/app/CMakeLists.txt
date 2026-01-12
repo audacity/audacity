@@ -84,9 +84,15 @@ set(LINK_LIB
     muse::learn_qml
     muse::languages
     muse::diagnostics
+    muse::diagnostics_qml
     muse::audioplugins
+    muse::tours
+    muse::tours_qml
+    muse::cloud_qml
+    muse::extensions_qml
 
     appshell
+    appshell_qml
     au3wrap
     au3audio
     audio
@@ -131,7 +137,7 @@ endif()
 if (MUSE_MODULE_SHORTCUTS)
     list(APPEND LINK_LIB muse::shortcuts muse::shortcuts_qml)
 endif()
-    
+    list(APPEND LINK_LIB muse::shortcuts muse::legacytreeview_qml)
 set (AUDACITY_APPEND_SRC)
 
 if (OS_IS_WIN)

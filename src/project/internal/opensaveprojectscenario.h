@@ -33,7 +33,7 @@
 
 #include "cloud/musescorecom/imusescorecomservice.h"
 #include "cloud/audiocom/iaudiocomservice.h"
-#include "cloud/cloudqmltypes.h"
+#include "cloud/qml/Muse/Cloud/enums.h"
 
 namespace au::project {
 class OpenSaveProjectScenario : public IOpenSaveProjectScenario

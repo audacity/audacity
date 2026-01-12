@@ -198,7 +198,7 @@ RetVal<CloudAudioInfo> OpenSaveProjectScenario::askShareAudioLocation(IAudacityP
     QUrl uploadUrl = QUrl();
     cloud::Visibility defaultVisibility = cloud::Visibility::Public;
 
-    UriQuery query("musescore://project/savetocloud");
+    UriQuery query("audacity://project/savetocloud");
     query.addParam("isPublishShare", Val(true));
     query.addParam("name", Val(defaultName));
     query.addParam("visibility", Val(defaultVisibility));
@@ -215,7 +215,7 @@ RetVal<CloudAudioInfo> OpenSaveProjectScenario::askShareAudioLocation(IAudacityP
     }
 
     QVariantMap vals = rv.val.toQVariant().toMap();
-    using Response = cloud::QMLSaveToCloudResponse::SaveToCloudResponse;
+    using Response = cloud::SaveToCloudResponse::SaveToCloudResponse;
     auto response = static_cast<Response>(vals["response"].toInt());
     switch (response) {
     case Response::Cancel:

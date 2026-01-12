@@ -30,10 +30,10 @@
 #include <QThreadPool>
 #endif
 
-#include "appshell/view/internal/splashscreen/splashscreen.h"
-
 #include "modularity/ioc.h"
 #include "ui/internal/uiengine.h"
+
+#include "appshell/internal/splashscreen/splashscreen.h"
 
 #include "framework/global/globalmodule.h"
 #include "framework/global/internal/baseapplication.h"
@@ -198,50 +198,36 @@ int App::run(QCoreApplication& app, CommandLineParser& commandLineParser)
         // ====================================================
         QQmlApplicationEngine* engine = modularity::_ioc()->resolve<muse::ui::IUiEngine>("app")->qmlAppEngine();
 
-#if defined(Q_OS_WIN)
-        const QString mainQmlFile = "/platform/win/Main.qml";
-#elif defined(Q_OS_MACOS)
-        const QString mainQmlFile = "/platform/mac/Main.qml";
-#elif defined(Q_OS_LINUX) || defined(Q_OS_FREEBSD)
-        const QString mainQmlFile = "/platform/linux/Main.qml";
-#elif defined(Q_OS_WASM)
-        const QString mainQmlFile = "/Main.wasm.qml";
-#endif
-
-        const QUrl url(QStringLiteral("qrc:/qml") + mainQmlFile);
-
         QObject::connect(engine, &QQmlApplicationEngine::objectCreated,
-                         &app, [this, url, splashScreen](QObject* obj, const QUrl& objUrl) {
-                if (!obj && url == objUrl) {
+                         &app, [this, splashScreen](QObject* obj, const QUrl& objUrl) {
+                if (!obj) {
                     LOGE() << "failed Qml load\n";
                     QCoreApplication::exit(-1);
                     return;
                 }
 
-                if (url == objUrl) {
-                    // ====================================================
-                    // Setup modules: onDelayedInit
-                    // ====================================================
+                // ====================================================
+                // Setup modules: onDelayedInit
+                // ====================================================
 
-                    startupScenario()->runOnSplashScreen();
+                startupScenario()->runOnSplashScreen();
 
-                    globalModule.onDelayedInit();
-                    for (modularity::IModuleSetup* m : m_modules) {
-                        m->onDelayedInit();
-                    }
-
-                    if (splashScreen) {
-                        splashScreen->close();
-                        delete splashScreen;
-                    }
-
-                    // The main window must be shown at this point so KDDockWidgets can read its size correctly
-                    // and scale all sizes properly. https://github.com/musescore/MuseScore/issues/21148
-                    QQuickWindow* w = dynamic_cast<QQuickWindow*>(obj);
-                    w->setVisible(true);
-
-                    startupScenario()->runAfterSplashScreen();
+                globalModule.onDelayedInit();
+                for (modularity::IModuleSetup* m : m_modules) {
+                    m->onDelayedInit();
                 }
+
+                if (splashScreen) {
+                    splashScreen->close();
+                    delete splashScreen;
+                }
+
+                // The main window must be shown at this point so KDDockWidgets can read its size correctly
+                // and scale all sizes properly. https://github.com/musescore/MuseScore/issues/21148
+                QQuickWindow* w = dynamic_cast<QQuickWindow*>(obj);
+                w->setVisible(true);
+
+                startupScenario()->runAfterSplashScreen();
             }, Qt::QueuedConnection);
 
         QObject::connect(engine, &QQmlEngine::warnings, [](const QList<QQmlError>& warnings) {
@@ -258,7 +244,7 @@ int App::run(QCoreApplication& app, CommandLineParser& commandLineParser)
         //! Needs to be called before any QQuickWindows are shown.
         QQuickWindow::setDefaultAlphaBuffer(true);
 
-        engine->load(url);
+        engine->loadFromModule("Audacity.AppShell", "Main");
 #endif // MUE_BUILD_APPSHELL_MODULE
     } break;
     case IApplication::RunMode::AudioPluginRegistration: {

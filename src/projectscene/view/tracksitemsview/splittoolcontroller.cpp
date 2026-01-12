@@ -6,6 +6,8 @@
 
 #include <cmath>
 
+#include <QApplication>
+
 #include "internal/tapholdshortcut.h"
 #include "log.h"
 

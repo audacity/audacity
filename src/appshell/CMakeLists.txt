@@ -18,153 +18,79 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-declare_module(appshell)
+muse_create_module(appshell)
 
-set(MODULE_QRC appshell.qrc)
-set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml)
+target_sources(appshell PRIVATE
+    appshellmodule.cpp
+    appshellmodule.h
+    iappshellconfiguration.h
+    iapplicationactioncontroller.h
+    istartupscenario.h
+    appshelltypes.h
+    internal/applicationuiactions.cpp
+    internal/applicationuiactions.h
+    internal/appshellconfiguration.cpp
+    internal/appshellconfiguration.h
+    internal/applicationactioncontroller.cpp
+    internal/applicationactioncontroller.h
+    internal/framelesswindowcontroller.cpp
+    internal/framelesswindowcontroller.h
+    internal/startupscenario.cpp
+    internal/startupscenario.h
+    internal/isessionsmanager.h
+    internal/sessionsmanager.cpp
+    internal/sessionsmanager.h
 
-set(MODULE_SRC
-    ${CMAKE_CURRENT_LIST_DIR}/appshellmodule.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/appshellmodule.h
-    ${CMAKE_CURRENT_LIST_DIR}/iappshellconfiguration.h
-    ${CMAKE_CURRENT_LIST_DIR}/iapplicationactioncontroller.h
-    ${CMAKE_CURRENT_LIST_DIR}/istartupscenario.h
-    ${CMAKE_CURRENT_LIST_DIR}/appshelltypes.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/applicationuiactions.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/applicationuiactions.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/appshellconfiguration.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/appshellconfiguration.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/applicationactioncontroller.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/applicationactioncontroller.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/framelesswindowcontroller.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/framelesswindowcontroller.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/startupscenario.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/startupscenario.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/isessionsmanager.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/sessionsmanager.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/sessionsmanager.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/devtools/settingslistmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/devtools/settingslistmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/appmenumodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/appmenumodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/mainwindowtitleprovider.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/mainwindowtitleprovider.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/projectpagemodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/projectpagemodel.h
-    # TODO AU4
-    # ${CMAKE_CURRENT_LIST_DIR}/view/notationstatusbarmodel.cpp
-    # ${CMAKE_CURRENT_LIST_DIR}/view/notationstatusbarmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/aboutmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/aboutmodel.h
-
-    ${CMAKE_CURRENT_LIST_DIR}/view/firstlaunchsetup/firstlaunchsetupmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/firstlaunchsetup/firstlaunchsetupmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/firstlaunchsetup/themespagemodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/firstlaunchsetup/themespagemodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/firstlaunchsetup/clipvisualizationpagemodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/firstlaunchsetup/clipvisualizationpagemodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/firstlaunchsetup/workspacelayoutpagemodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/firstlaunchsetup/workspacelayoutpagemodel.h
-
-    # TODO AU4
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/preferencesmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/preferencesmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/preferencepageitem.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/preferencepageitem.h
-    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/folderspreferencesmodel.cpp
-    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/folderspreferencesmodel.h
-    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/canvaspreferencesmodel.cpp
-    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/canvaspreferencesmodel.h
-    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/saveandpublishpreferencesmodel.cpp
-    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/saveandpublishpreferencesmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/generalpreferencesmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/generalpreferencesmodel.h
-    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/updatepreferencesmodel.cpp
-    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/updatepreferencesmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/appearancepreferencesmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/appearancepreferencesmodel.h
-    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/noteinputpreferencesmodel.cpp
-    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/noteinputpreferencesmodel.h
-    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/advancedpreferencesmodel.cpp
-    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/advancedpreferencesmodel.h
-    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/scorepreferencesmodel.cpp
-    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/scorepreferencesmodel.h
-    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/importpreferencesmodel.cpp
-    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/importpreferencesmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/playbackpreferencesmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/playbackpreferencesmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/pluginpreferencesmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/pluginpreferencesmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/commonaudioapiconfigurationmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/commonaudioapiconfigurationmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/editpreferencesmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/editpreferencesmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/recordingpreferencesmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/preferences/recordingpreferencesmodel.h
-    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/braillepreferencesmodel.cpp
-    # ${CMAKE_CURRENT_LIST_DIR}/view/preferences/braillepreferencesmodel.h
-
-    ${CMAKE_CURRENT_LIST_DIR}/view/framelesswindow/framelesswindowmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/framelesswindow/framelesswindowmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/publish/publishtoolbarmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/publish/publishtoolbarmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/windowdroparea.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/windowdroparea.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/internal/iappmenumodelhook.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/internal/maintoolbarmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/internal/maintoolbarmodel.h
-
-    ${CMAKE_CURRENT_LIST_DIR}/view/internal/splashscreen/splashscreen.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/internal/splashscreen/splashscreen.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/internal/splashscreen/loadingscreenview.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/internal/splashscreen/loadingscreenview.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/internal/splashscreen/newinstanceloadingscreenview.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/internal/splashscreen/newinstanceloadingscreenview.h
-    )
-
-set(MODULE_LINK
-    muse::uicomponents
-    muse::ui
-    muse::dockwindow
-    )
-
-if(MUSE_MODULE_WORKSPACE)
-    set(MODULE_LINK ${MODULE_LINK} muse::workspace_qml)
-endif()   
+    internal/splashscreen/splashscreen.cpp
+    internal/splashscreen/splashscreen.h
+    internal/splashscreen/loadingscreenview.cpp
+    internal/splashscreen/loadingscreenview.h
+    internal/splashscreen/newinstanceloadingscreenview.cpp
+    internal/splashscreen/newinstanceloadingscreenview.h
+)
 
 if (OS_IS_MAC)
-    set(MODULE_SRC ${MODULE_SRC}
-        ${CMAKE_CURRENT_LIST_DIR}/view/internal/platform/macos/macosappmenumodelhook.mm
-        ${CMAKE_CURRENT_LIST_DIR}/view/internal/platform/macos/macosappmenumodelhook.h
+    target_sources(appshell PRIVATE
+        internal/platform/macos/macosappmenumodelhook.mm
+        internal/platform/macos/macosappmenumodelhook.h
     )
+
     set_source_files_properties(
-        ${CMAKE_CURRENT_LIST_DIR}/view/internal/platform/macos/macosappmenumodelhook.mm
+        internal/platform/macos/macosappmenumodelhook.mm
         PROPERTIES
         SKIP_UNITY_BUILD_INCLUSION ON
         SKIP_PRECOMPILE_HEADERS ON
-        )
+    )
 endif(OS_IS_MAC)
 
 if (OS_IS_WIN)
-    set(MODULE_SRC ${MODULE_SRC}
-        ${CMAKE_CURRENT_LIST_DIR}/internal/platform/win/winframelesswindowcontroller.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/internal/platform/win/winframelesswindowcontroller.h
+    target_sources(appshell PRIVATE
+        internal/platform/win/winframelesswindowcontroller.cpp
+        internal/platform/win/winframelesswindowcontroller.h
     )
 
     set(MODULE_LINK ${MODULE_LINK} dwmapi)
 endif(OS_IS_WIN)
 
-if (NOT OS_IS_MAC)
-    set(MODULE_SRC ${MODULE_SRC}
-        ${CMAKE_CURRENT_LIST_DIR}/view/navigableappmenumodel.cpp
-        ${CMAKE_CURRENT_LIST_DIR}/view/navigableappmenumodel.h
-    )
+qt_add_resources(appshell appshell_resources
+    PREFIX
+        /
+    FILES
+        resources/AsymmetricStereoHeights.svg
+        resources/Classic.svg
+        resources/Colorful.svg
+        resources/LoadingScreen.svg
+        resources/StereoHeightsCursor.png
+        resources/win_opengl_buglist.json
+)
 
-    # we use QKeyMapper to fix https://github.com/musescore/MuseScore/issues/10181
-    find_package(Qt6 REQUIRED COMPONENTS GuiPrivate)
-    set(MODULE_LINK ${MODULE_LINK} Qt6::GuiPrivate)
-endif(NOT OS_IS_MAC)
+target_link_libraries(appshell PRIVATE
+    muse::ui
+    muse::uicomponents
+    muse::dockwindow
+    Qt::Quick
+    Qt::Svg
+    Qt::Widgets
+)
 
-list(APPEND MODULE_LINK Qt::Svg)
-
-setup_module()
+add_subdirectory(qml/Audacity/AppShell)

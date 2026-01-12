@@ -5,6 +5,8 @@
 
 #include <cmath>
 
+#include <QApplication>
+
 #include "framework/global/log.h"
 
 namespace au::projectscene {
