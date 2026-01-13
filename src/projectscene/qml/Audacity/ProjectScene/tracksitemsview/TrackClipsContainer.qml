@@ -521,6 +521,8 @@ TrackItemsContainer {
                     visible: false
                     clipColor: root.trackColor
 
+                    currentClipStyle: clipsModel.clipStyle
+
                     Connections {
                         target: root
 
