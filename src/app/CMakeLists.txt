@@ -72,6 +72,7 @@ set(LINK_LIB
     muse::ui_dialogs_qml
     muse::uicomponents
     muse::uicomponents_qml
+    muse::legacytreeview_qml
     muse::graphicaleffects_qml
     muse::dockwindow
     muse::dockwindow_qml
@@ -84,9 +85,15 @@ set(LINK_LIB
     muse::learn_qml
     muse::languages
     muse::diagnostics
+    muse::diagnostics_qml
     muse::audioplugins
+    muse::tours
+    muse::tours_qml
+    muse::cloud_qml
+    muse::extensions_qml
 
     appshell
+    appshell_qml
     au3wrap
     au3audio
     audio
@@ -94,6 +101,8 @@ set(LINK_LIB
     effects_audio_unit
     effects_lv2
     effects_vst
+    preferences
+    preferences_qml
     project
     projectscene
     playback
@@ -108,7 +117,7 @@ set(LINK_LIB
 )
 
 if (AU_MODULE_EFFECTS_VST)
-    list(APPEND LINK_LIB muse::vst)
+    list(APPEND LINK_LIB muse::vst muse::vst_qml)
     add_definitions(-DAU_MODULE_EFFECTS_VST)
 endif()
 
@@ -131,7 +140,7 @@ endif()
 if (MUSE_MODULE_SHORTCUTS)
     list(APPEND LINK_LIB muse::shortcuts muse::shortcuts_qml)
 endif()
-    
+
 set (AUDACITY_APPEND_SRC)
 
 if (OS_IS_WIN)

@@ -30,9 +30,9 @@ using namespace au::appshell;
 using namespace muse::actions;
 using namespace au::project;
 
-static const muse::UriQuery FIRST_LAUNCH_SETUP_URI("musescore://firstLaunchSetup?floating=true");
+static const muse::UriQuery FIRST_LAUNCH_SETUP_URI("audacity://firstLaunchSetup?floating=true");
 static const muse::Uri ALPHA_WELCOME_POPUP("audacity://alphaWelcomePopup");
-static const muse::Uri HOME_URI("musescore://home");
+static const muse::Uri HOME_URI("audacity://home");
 static const muse::Uri PROJECT_URI("audacity://project");
 
 static StartupModeType modeTypeTromString(const std::string& str)

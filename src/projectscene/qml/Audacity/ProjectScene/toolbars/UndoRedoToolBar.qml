@@ -34,7 +34,6 @@ StyledToolBarView {
             height: width
 
             navigation.panel: root.navigationPanel
-            navigation.order: model.index
         }
     }
 }

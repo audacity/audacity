@@ -7,7 +7,7 @@ import Audacity.BuiltinEffects
 import Audacity.UiComponents
 
 // TODO: move to common controls
-import Preferences
+import Audacity.Preferences
 
 BuiltinEffectBase {
     id: root

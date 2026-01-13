@@ -1,6 +1,8 @@
 /*
 * Audacity: A Digital Audio Editor
 */
+#include <QApplication>
+
 #include "selectionviewcontroller.h"
 
 #include "log.h"

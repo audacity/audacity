@@ -53,6 +53,7 @@
 // -----
 #include "appshell/appshellmodule.h"
 #include "context/contextmodule.h"
+#include "preferences/preferencesmodule.h"
 #include "project/projectmodule.h"
 #include "projectscene/projectscenemodule.h"
 #include "audio/audiomodule.h"
@@ -251,6 +252,7 @@ int main(int argc, char** argv)
 
     // modules
     app.addModule(new au::appshell::AppShellModule());
+    app.addModule(new au::preferences::PreferencesModule());
     app.addModule(new muse::extensions::ExtensionsModule());
 #ifdef MUSE_MODULE_AUTOBOT
     app.addModule(new muse::autobot::AutobotModule());

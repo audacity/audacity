@@ -28,7 +28,7 @@ using namespace au::context;
 using namespace muse;
 using namespace muse::ui;
 
-static const Uri HOME_PAGE_URI("musescore://home");
+static const Uri HOME_PAGE_URI("audacity://home");
 static const Uri PROJECT_PAGE_URI("audacity://project");
 
 //! TODO AU4: this should point to sth like ProjectView

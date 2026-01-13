@@ -9,7 +9,7 @@ import Muse.Ui 1.0
 import Muse.UiComponents
 
 import Audacity.TrackEdit 1.0
-import Audacity.Preferences 1.0
+import Audacity.AppShell
 
 StyledDialogView {
     id: root

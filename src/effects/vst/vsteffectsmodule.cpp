@@ -4,7 +4,6 @@
 #include "vsteffectsmodule.h"
 
 #include "ui/iinteractiveuriregister.h"
-#include "vst/view/vstview.h"
 
 #include "audioplugins/iaudiopluginsscannerregister.h"
 #include "audioplugins/iaudiopluginmetareaderregister.h"
@@ -34,6 +33,7 @@ static void vst_init_qrc()
 VstEffectsModule::VstEffectsModule()
     : m_vstMetaReader(std::make_shared<Vst3PluginsMetaReader>())
 {
+    vst_init_qrc();
 }
 
 std::string VstEffectsModule::moduleName() const
@@ -73,12 +73,10 @@ void VstEffectsModule::resolveImports()
 
 void VstEffectsModule::registerResources()
 {
-    vst_init_qrc();
 }
 
 void VstEffectsModule::registerUiTypes()
 {
-    qmlRegisterType<muse::vst::VstView>("Audacity.Vst", 1, 0, "VstView");
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(VstViewModelFactory);
 }
 
