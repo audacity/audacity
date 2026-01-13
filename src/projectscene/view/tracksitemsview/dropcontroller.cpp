@@ -9,17 +9,13 @@ auto isAudioTrack = [](au::trackedit::TrackType type) {
 }
 
 DropController::DropController(QObject* parent)
+    : QObject(parent)
 {}
 
 void DropController::probeAudioFilesLength(const QStringList& fileUrls)
 {
-    if (fileUrls == m_lastDraggedUrls) {
-        return;
-    }
-
-    m_lastDraggedUrls = fileUrls;
+    m_lastDraggedUrls.clear();
     m_lastDraggedFilesInfo.clear();
-    m_lastDraggedFilesInfo.reserve(fileUrls.size());
 
     std::vector<muse::io::path_t> localPaths;
     localPaths.reserve(fileUrls.size());
@@ -30,14 +26,13 @@ void DropController::probeAudioFilesLength(const QStringList& fileUrls)
         muse::io::path_t path = muse::io::path_t(url.toLocalFile());
         if (muse::contains(exts, muse::io::suffix(path))) {
             localPaths.push_back(path);
+            m_lastDraggedUrls.push_back(fileUrl);
         }
     }
 
     if (localPaths.empty()) {
         return;
     }
-
-    project::IAudacityProjectPtr prj = globalContext()->currentProject();
 
     for (const auto& path : localPaths) {
         au::importexport::FileInfo fileInfo = importer()->fileInfo(path);

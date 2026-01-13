@@ -251,11 +251,11 @@ int PCMImportFileHandle::GetRequiredTrackCount() const
 {
     const int channels = mInfo.channels;
 
-    if (channels <= 0) {
-        return 0;
+    if (channels <= 2) {
+        return 1;
     }
 
-    return (channels <= 2) ? 1 : static_cast<size_t>(channels);
+    return channels;
 }
 
 auto PCMImportFileHandle::GetFileUncompressedBytes() -> ByteCount

@@ -31,15 +31,15 @@ Rectangle {
     property alias isSplitMode: splitToolController.active
 
     signal externalDropAreaEntered(var drop)
-    signal externalDropAreaExitted()
+    signal externalDropAreaExited()
     signal externalDropAreaDropped(var drop)
 
     onExternalDropAreaEntered: drop => {
         importDropArea.externalDropAreaEntered(drop)
     }
 
-    onExternalDropAreaExitted: {
-        importDropArea.externalDropAreaExitted()
+    onExternalDropAreaExited: {
+        importDropArea.externalDropAreaExited()
     }
 
     onExternalDropAreaDropped: drop => {
