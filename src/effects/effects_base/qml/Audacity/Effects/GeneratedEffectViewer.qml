@@ -31,13 +31,10 @@ Rectangle {
         readonly property int borderRadius: 4
     }
 
-    GeneratedEffectViewerModel {
-        id: viewModel
-        instanceId: root.instanceId
-    }
+    property var viewModel: GeneratedEffectViewerModelFactory.createModel(root, root.instanceId)
 
     Component.onCompleted: {
-        viewModel.load()
+        viewModel.init()
     }
 
     ColumnLayout {
@@ -81,14 +78,14 @@ Rectangle {
 
                     // Parameter controls
                     Repeater {
-                        model: viewModel
+                        model: viewModel.parametersModel
 
                         delegate: ParameterControl {
                             Layout.fillWidth: true
                             parameterData: model
 
                             onValueChanged: function (value) {
-                                viewModel.setParameterValue(index, value)
+                                viewModel.parametersModel.setParameterValue(index, value)
                             }
                         }
                     }

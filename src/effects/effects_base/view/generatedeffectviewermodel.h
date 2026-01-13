@@ -3,99 +3,52 @@
  */
 #pragma once
 
-#include "ieffectinstancesregister.h"
-#include "ieffectparametersprovider.h"
+#include "abstracteffectviewmodel.h"
 #include "ieffectsprovider.h"
-#include "effectstypes.h"
-
-#include "framework/global/modularity/ioc.h"
-#include "framework/global/async/asyncable.h"
-
-#include <QAbstractListModel>
-#include <QHash>
 
 namespace au::effects {
-class EffectPreviewHelper;
+class EffectParametersListModel;
 
-class GeneratedEffectViewerModel : public QAbstractListModel, public muse::Injectable, public muse::async::Asyncable
+//! ViewModel for auto-generated effect UI (fallback when no custom UI is available)
+class GeneratedEffectViewerModel : public AbstractEffectViewModel
 {
     Q_OBJECT
 
-    Q_PROPERTY(int instanceId READ instanceId WRITE setInstanceId NOTIFY instanceIdChanged FINAL)
-    Q_PROPERTY(QString effectName READ effectName NOTIFY effectNameChanged FINAL)
-    Q_PROPERTY(QString title READ title NOTIFY titleChanged FINAL)
+    Q_PROPERTY(EffectParametersListModel * parametersModel READ parametersModel CONSTANT FINAL)
+    Q_PROPERTY(QString effectName READ effectName CONSTANT FINAL)
+    Q_PROPERTY(QString title READ title CONSTANT FINAL)
     Q_PROPERTY(QString noParametersMessage READ noParametersMessage CONSTANT FINAL)
     Q_PROPERTY(bool hasParameters READ hasParameters NOTIFY hasParametersChanged FINAL)
-    Q_PROPERTY(bool isPreviewing READ isPreviewing NOTIFY isPreviewingChanged FINAL)
 
-    muse::Inject<IEffectInstancesRegister> instancesRegister;
-    muse::Inject<IEffectParametersProvider> parametersProvider;
     muse::Inject<IEffectsProvider> effectsProvider;
 
 public:
-    // Roles for QML access
-    enum Roles {
-        IdRole = Qt::UserRole + 1,
-        NameRole,
-        UnitsRole,
-        TypeRole,
-        MinValueRole,
-        MaxValueRole,
-        DefaultValueRole,
-        CurrentValueRole,
-        StepSizeRole,
-        StepCountRole,
-        CurrentValueStringRole,
-        EnumValuesRole,
-        EnumIndicesRole,
-        IsReadOnlyRole,
-        IsHiddenRole,
-        IsLogarithmicRole,
-        IsIntegerRole,
-        CanAutomateRole,
-    };
-    Q_ENUM(Roles)
-
-    explicit GeneratedEffectViewerModel(QObject* parent = nullptr);
+    explicit GeneratedEffectViewerModel(QObject* parent, EffectInstanceId instanceId);
     ~GeneratedEffectViewerModel() override = default;
 
-    // QAbstractListModel interface
-    int rowCount(const QModelIndex& parent = QModelIndex()) const override;
-    QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
-    bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) override;
-    QHash<int, QByteArray> roleNames() const override;
-
-    Q_INVOKABLE void load();
-    Q_INVOKABLE void setParameterValue(int index, double plainValue);
-    Q_INVOKABLE QString getParameterValueString(int index, double normalizedValue) const;
-    Q_INVOKABLE void startPreview();
-    Q_INVOKABLE void stopPreview();
-
-    int instanceId() const;
-    void setInstanceId(int newInstanceId);
-
-    QString effectName() const;
-    QString title() const;
+    EffectParametersListModel* parametersModel() const { return m_parametersModel; }
+    QString effectName() const { return m_effectName; }
+    QString title() const { return m_title; }
     QString noParametersMessage() const;
     bool hasParameters() const;
-    bool isPreviewing() const;
 
 signals:
-    void instanceIdChanged();
-    void effectNameChanged();
-    void titleChanged();
     void hasParametersChanged();
-    void isPreviewingChanged();
+
+protected:
+    void doInit() override;
+    void doStartPreview() override;
 
 private:
-    void reloadParameters();
-    void updateEffectName();
-    void initPreviewHelper();
-    int findParameterIndex(const muse::String& parameterId) const;
+    static QString computeEffectName(EffectInstanceId instanceId, IEffectsProvider* provider, IEffectInstancesRegister* instancesRegister);
+    static QString computeTitle(const QString& effectName);
 
-    int m_instanceId = -1;
-    QString m_effectName;
-    ParameterInfoList m_parameters;
-    EffectPreviewHelper* m_previewHelper = nullptr;
+    EffectParametersListModel* const m_parametersModel;
+    const QString m_effectName;
+    const QString m_title;
+};
+
+class GeneratedEffectViewerModelFactory : public EffectViewModelFactory<GeneratedEffectViewerModel>
+{
 };
 }
