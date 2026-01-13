@@ -297,6 +297,8 @@ EffectStyledDialogView {
             instanceId: root.instanceId
             dialogView: root
             usedDestructively: true
+            navigationPanel: root.navigationPanel
+            navigationOrder: prv.showPresets ? presetsBar.navigationOrderEnd : 0
         }
     }
 

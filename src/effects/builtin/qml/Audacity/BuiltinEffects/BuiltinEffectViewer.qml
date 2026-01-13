@@ -4,6 +4,7 @@
 import QtQuick
 
 import Audacity.BuiltinEffects
+import Muse.Ui
 
 Rectangle {
     id: root
@@ -11,6 +12,10 @@ Rectangle {
     required property int instanceId
     property var dialogView: null
     required property bool usedDestructively
+
+    required property NavigationPanel navigationPanel
+    required property int navigationOrder
+    property int navigationOrderEnd: builder.contentItem ? builder.contentItem.navigationOrderEnd : navigationOrder
 
     property string title: builder.contentItem ? builder.contentItem.title : ""
     property bool isApplyAllowed: builder.contentItem ? builder.contentItem.isApplyAllowed : false
@@ -30,6 +35,8 @@ Rectangle {
     Component.onCompleted: {
         builder.load(instanceId, root, dialogView, usedDestructively)
         builder.contentItem.init()
+        builder.contentItem.navigationPanel = root.navigationPanel
+        builder.contentItem.navigationOrder = root.navigationOrder
     }
 
     function manage(parent) {
