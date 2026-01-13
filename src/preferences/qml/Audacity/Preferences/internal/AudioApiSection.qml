@@ -29,7 +29,7 @@ import Audacity.Playback 1.0
 BaseSection {
     id: root
 
-    title: qsTrc("appshell/preferences", "Inputs and outputs")
+    title: qsTrc("preferences", "Inputs and outputs")
     spacing: 16
 
     property int currentAudioApiIndex: -1
@@ -47,7 +47,7 @@ BaseSection {
     ComboBoxWithTitle {
         id: apiComboBox
 
-        title: qsTrc("appshell/preferences", "Host")
+        title: qsTrc("preferences", "Host")
         columnWidth: root.columnWidth
 
         enabled: !playbackState.isPlaying

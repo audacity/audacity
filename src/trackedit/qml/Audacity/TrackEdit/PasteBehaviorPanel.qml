@@ -12,7 +12,7 @@ Column {
     id: root
 
     required property NavigationPanel navigation
-    readonly property string title: qsTrc("appshell/preferences", "Choose behavior when pasting audio")
+    readonly property string title: qsTrc("trackedit/preferences", "Choose behavior when pasting audio")
     required property color parentBackgroundColor
 
     property alias pasteBehavior: pasteBehaviorModel.pasteBehavior

@@ -37,7 +37,7 @@ BaseSection {
         id: scoreInversionEnable
         width: parent.width
 
-        text: qsTrc("appshell/preferences", "Invert score")
+        text: qsTrc("preferences", "Invert score")
 
         navigation.name: "ScoreInversionBox"
         navigation.panel: root.navigation
@@ -49,7 +49,7 @@ BaseSection {
     }
 
     FlatButton {
-        text: qsTrc("appshell/preferences", "Reset to default")
+        text: qsTrc("preferences", "Reset to default")
 
         navigation.name: "ResetButton"
         navigation.panel: root.navigation

@@ -43,7 +43,7 @@ BaseSection {
         FlatButton {
             Layout.alignment: Qt.AlignVCenter
 
-            text: qsTrc("appshell/preferences", "Reset to default")
+            text: qsTrc("preferences", "Reset to default")
 
             navigation.name: "ResetToDefaultButton"
             navigation.panel: root.navigation
@@ -66,7 +66,7 @@ BaseSection {
             Layout.preferredWidth: 160
 
             //: Search advanced preferences
-            hint: qsTrc("appshell/preferences", "Search advanced")
+            hint: qsTrc("preferences", "Search advanced")
 
             navigation.name: "SearchAdvancedField"
             navigation.panel: root.navigation

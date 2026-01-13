@@ -28,7 +28,7 @@ import Muse.UiComponents
 StyledDialogView {
     id: root
 
-    title: qsTrc("appshell/preferences", "Preferences")
+    title: qsTrc("preferences", "Preferences")
 
     contentWidth: 880
     contentHeight: 640

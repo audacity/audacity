@@ -11,7 +11,7 @@ import Audacity.AppShell
 BaseSection {
     id: root
 
-    title: qsTrc("appshell/preferences", "Effect menu organization")
+    title: qsTrc("preferences", "Effect menu organization")
     spacing: 16
 
     property var pluginPreferencesModel: null
@@ -31,7 +31,7 @@ BaseSection {
             RoundedRadioButton {
 
                 checked: pluginPreferencesModel.effectMenuOrganization == 0
-                text: qsTrc("appshell/preferences", "Group effects")
+                text: qsTrc("preferences", "Group effects")
 
                 navigation.name: "GroupEffects"
                 navigation.panel: root.navigation
@@ -44,7 +44,7 @@ BaseSection {
 
             RoundedRadioButton {
                 checked: pluginPreferencesModel.effectMenuOrganization == 1
-                text: qsTrc("appshell/preferences", "Display effects in one flat list")
+                text: qsTrc("preferences", "Display effects in one flat list")
 
                 navigation.name: "DoNotGroupEffects"
                 navigation.panel: root.navigation

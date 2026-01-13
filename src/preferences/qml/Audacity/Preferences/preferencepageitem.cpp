@@ -44,7 +44,7 @@ QString PreferencePageItem::id() const
 
 QString PreferencePageItem::title() const
 {
-    return muse::qtrc("appshell/preferences", m_title.toUtf8());
+    return muse::qtrc("preferences", m_title.toUtf8());
 }
 
 int PreferencePageItem::icon() const

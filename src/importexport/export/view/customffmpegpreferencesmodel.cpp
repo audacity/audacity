@@ -142,16 +142,16 @@ void CustomFFmpegPreferencesModel::locateFFmpegLibrary()
 {
     QString libraryPath = ffmpegLibraryPath();
     if (!libraryPath.isEmpty()) {
-        auto ret = interactive()->questionSync(muse::trc("appshell/preferences", "Success"),
+        auto ret = interactive()->questionSync(muse::trc("preferences", "Success"),
                                                muse::trc(
-                                                   "appshell/preferences",
+                                                   "preferences",
                                                    "Audacity already has detected a valid FFmpeg version. Do you want to choose another FFmpeg installation instead?"),
         {
             muse::IInteractive::ButtonData(
-                muse::IInteractive::Button::Cancel, muse::trc("appshell/preferences", "Cancel"),
+                muse::IInteractive::Button::Cancel, muse::trc("preferences", "Cancel"),
                 false),
             muse::IInteractive::ButtonData(
-                muse::IInteractive::Button::Apply, muse::trc("appshell/preferences", "Change FFmpeg"), true)
+                muse::IInteractive::Button::Apply, muse::trc("preferences", "Change FFmpeg"), true)
         }
                                                );
 
@@ -178,7 +178,7 @@ void CustomFFmpegPreferencesModel::locateFFmpegLibrary()
 #endif
     const std::string filter
         =libFileName.replace(libFileName.find('.'), 0, "*");
-    muse::io::path_t directory = interactive()->selectOpeningFileSync(muse::qtrc("appshell/preferences",
+    muse::io::path_t directory = interactive()->selectOpeningFileSync(muse::qtrc("preferences",
                                                                                  "Locate %1").arg(
                                                                           libFileName).toStdString(), initialPath, { filter });
 
@@ -188,8 +188,8 @@ void CustomFFmpegPreferencesModel::locateFFmpegLibrary()
 
     ffmpegOptionsAccessor()->setFFmpegLibraryPath(directory);
 
-    interactive()->info(muse::trc("appshell/preferences", "Success"),
-                        muse::trc("appshell/preferences", "Please restart the application for the changes to take effect."));
+    interactive()->info(muse::trc("preferences", "Success"),
+                        muse::trc("preferences", "Please restart the application for the changes to take effect."));
 }
 
 int CustomFFmpegPreferencesModel::ffmpegFormatIndex() const

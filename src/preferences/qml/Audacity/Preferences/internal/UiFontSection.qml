@@ -28,7 +28,7 @@ import Audacity.UiComponents 1.0
 BaseSection {
     id: root
 
-    title: qsTrc("appshell/preferences", "Appearance")
+    title: qsTrc("preferences", "Appearance")
 
     property alias allFonts: selectFontControl.model
 
@@ -41,7 +41,7 @@ BaseSection {
     ComboBoxWithTitle {
         id: selectFontControl
 
-        title: qsTrc("appshell/preferences", "Font face:")
+        title: qsTrc("preferences", "Font face:")
         columnWidth: root.columnWidth
 
         navigation.name: "FontFaceBox"
@@ -56,7 +56,7 @@ BaseSection {
     IncrementalPropertyControlWithTitle {
         id: bodyTextSizeControl
 
-        title: qsTrc("appshell/preferences", "Body text size:")
+        title: qsTrc("preferences", "Body text size:")
         columnWidth: root.columnWidth
         control.width: 112
 

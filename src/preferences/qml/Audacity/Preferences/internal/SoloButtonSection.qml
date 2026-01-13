@@ -12,7 +12,7 @@ import Audacity.Playback
 BaseSection {
     id: root
 
-    title: qsTrc("appshell/preferences", "Solo button behavior")
+    title: qsTrc("preferences", "Solo button behavior")
 
     navigation.direction: NavigationPanel.Vertical
 
@@ -37,7 +37,7 @@ BaseSection {
                 width: parent.width
 
                 checked: playbackPreferencesModel.soloBehavior == SoloBehavior.SoloBehaviorMulti
-                text: qsTrc("appshell/preferences", "Solo can be activated for multiple tracks at the same time")
+                text: qsTrc("preferences", "Solo can be activated for multiple tracks at the same time")
 
                 navigation.name: "SoloBehaviorMultiBox"
                 navigation.panel: root.navigation
@@ -52,7 +52,7 @@ BaseSection {
                 width: parent.width
 
                 checked: playbackPreferencesModel.soloBehavior == SoloBehavior.SoloBehaviorSimple
-                text: qsTrc("appshell/preferences", "When solo is activated, it deactivates solo for all other tracks")
+                text: qsTrc("preferences", "When solo is activated, it deactivates solo for all other tracks")
 
                 navigation.name: "SoloBehaviorSimpleBox"
                 navigation.panel: root.navigation

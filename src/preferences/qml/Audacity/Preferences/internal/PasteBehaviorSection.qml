@@ -55,7 +55,7 @@ BaseSection {
 
                 width: parent.width
 
-                text: qsTrc("appshell/preferences", "Always paste audio as a new clip")
+                text: qsTrc("preferences", "Always paste audio as a new clip")
 
                 checked: editPreferencesModel.pasteAsNewClip
 

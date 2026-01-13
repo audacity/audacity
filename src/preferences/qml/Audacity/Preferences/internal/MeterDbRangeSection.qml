@@ -12,7 +12,7 @@ import Audacity.AppShell
 BaseSection {
     id: root
 
-    title: qsTrc("appshell/preferences", "Meter dB range")
+    title: qsTrc("preferences", "Meter dB range")
     spacing: 16
 
     MeterModel {
@@ -24,7 +24,7 @@ BaseSection {
     }
 
     ComboBoxWithTitle {
-        title: qsTrc("appshell/preferences", "dB range")
+        title: qsTrc("preferences", "dB range")
 
         columnWidth: 320
 

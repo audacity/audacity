@@ -41,7 +41,7 @@ BaseSection {
         spacing: 12
 
         StyledTextLabel {
-            text: qsTrc("appshell/preferences", "Number format")
+            text: qsTrc("preferences", "Number format")
         }
 
         StyledDropdown {
@@ -66,7 +66,7 @@ BaseSection {
         }
 
         StyledTextLabel {
-            text: qsTrc("appshell/preferences", "Example: 1,000,000.99")
+            text: qsTrc("preferences", "Example: 1,000,000.99")
             color: ui.theme.fontSecondaryColor
         }
     }

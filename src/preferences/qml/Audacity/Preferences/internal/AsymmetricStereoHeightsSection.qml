@@ -13,7 +13,7 @@ import Audacity.ProjectScene
 BaseSection {
     id: root
 
-    title: qsTrc("appshell/preferences", "Asymmetric stereo heights")
+    title: qsTrc("preferences", "Asymmetric stereo heights")
 
     navigation.direction: NavigationPanel.Both
 
@@ -52,7 +52,7 @@ BaseSection {
     }
 
     StyledTextLabel {
-        text: qsTrc("appshell/preferences", "Dragging on the center line may adjust the height of the channel:")
+        text: qsTrc("preferences", "Dragging on the center line may adjust the height of the channel:")
     }
 
     RadioButtonGroup {
@@ -70,7 +70,7 @@ BaseSection {
             RoundedRadioButton {
 
                 checked: editPreferencesModel.stereoHeightsPref === AsymmetricStereoHeights.ALWAYS
-                text: qsTrc("appshell/preferences", "Always")
+                text: qsTrc("preferences", "Always")
 
                 navigation.name: "AlwaysRadioBtn"
                 navigation.panel: root.navigation
@@ -85,7 +85,7 @@ BaseSection {
                 id: workspaceRadioBtn
 
                 checked: editPreferencesModel.stereoHeightsPref === AsymmetricStereoHeights.WORKSPACE_DEPENDENT
-                text: qsTrc("appshell/preferences", "Depending on workspace")
+                text: qsTrc("preferences", "Depending on workspace")
 
                 navigation.name: "WorkspaceDependentRadioBtn"
                 navigation.panel: root.navigation
@@ -111,7 +111,7 @@ BaseSection {
 
             RoundedRadioButton {
                 checked: editPreferencesModel.stereoHeightsPref === AsymmetricStereoHeights.NEVER
-                text: qsTrc("appshell/preferences", "Never")
+                text: qsTrc("preferences", "Never")
 
                 navigation.name: "NeverRadioBtn"
                 navigation.panel: root.navigation
