@@ -77,16 +77,16 @@ struct ParamInfo {
     }
 
     //! Convert a "Full Range" value to normalized [0,1]
-    double toNormalized(double plainValue) const
+    double toNormalized(double fullRangeValue) const
     {
         if (maxValue == minValue) {
             return 0.0;
         }
-        return (plainValue - minValue) / (maxValue - minValue);
+        return (fullRangeValue - minValue) / (maxValue - minValue);
     }
 
-    //! Convert a normalized [0,1] value to plain
-    double toPlain(double normalizedValue) const
+    //! Convert a normalized [0,1] value to fullRange
+    double toFullRange(double normalizedValue) const
     {
         return minValue + normalizedValue * (maxValue - minValue);
     }
@@ -124,5 +124,5 @@ double normalizedToFullRange(EffectInstanceEx* instance, uint32_t parameterId, d
 
 //! Convert "Full Range" value (actual display value) to normalized value (0.0-1.0)
 //! Returns the normalized value, or the "Full Range" value clamped to 0.0-1.0 if conversion is not supported
-double plainToNormalized(EffectInstanceEx* instance, uint32_t parameterId, double plainValue);
+double fullRangeToNormalized(EffectInstanceEx* instance, uint32_t parameterId, double fullRangeValue);
 } // namespace VST3ParameterExtraction

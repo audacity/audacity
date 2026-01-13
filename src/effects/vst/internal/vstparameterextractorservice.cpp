@@ -45,7 +45,7 @@ ParameterInfo convertParamInfo(const VST3ParameterExtraction::ParamInfo& au3Info
 
     au4Info.type = convertParamType(au3Info.type);
 
-    // Plain (display) values - already converted from normalized in AU3
+    // "Full Range" (display) values - already converted from normalized in AU3
     au4Info.minValue = au3Info.minValue;
     au4Info.maxValue = au3Info.maxValue;
     au4Info.defaultValue = au3Info.defaultValue;
@@ -128,13 +128,16 @@ double VstParameterExtractorService::getParameterValue(EffectInstance* instance,
 
 bool VstParameterExtractorService::setParameterValue(EffectInstance* instance,
                                                      const String& parameterId,
-                                                     double normalizedValue,
+                                                     double fullRangeValue,
                                                      EffectSettingsAccessPtr settingsAccess)
 {
     uint32_t paramId = 0;
     if (!parseParameterId(parameterId, paramId)) {
         return false;
     }
+
+    // Convert "Full Range" value to normalized [0,1] for VST3 API
+    double normalizedValue = VST3ParameterExtraction::fullRangeToNormalized(instance, paramId, fullRangeValue);
 
     return VST3ParameterExtraction::setParameterValue(instance, paramId, normalizedValue, settingsAccess.get());
 }

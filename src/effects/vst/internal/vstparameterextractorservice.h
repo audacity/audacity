@@ -19,7 +19,7 @@ public:
 
     double getParameterValue(EffectInstance* instance, const muse::String& parameterId) const override;
 
-    bool setParameterValue(EffectInstance* instance, const muse::String& parameterId, double normalizedValue,
+    bool setParameterValue(EffectInstance* instance, const muse::String& parameterId, double fullRangeValue,
                            EffectSettingsAccessPtr settingsAccess = nullptr) override;
 
     muse::String getParameterValueString(EffectInstance* instance, const muse::String& parameterId, double value) const override;
