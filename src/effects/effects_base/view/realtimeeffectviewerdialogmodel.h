@@ -52,9 +52,10 @@ class RealtimeEffectViewerDialogModel : public QObject, public muse::Injectable,
     Q_PROPERTY(bool useVendorUI READ useVendorUI NOTIFY useVendorUIChanged FINAL);
     Q_PROPERTY(ViewerComponentType viewerComponentType READ viewerComponentType NOTIFY viewerComponentTypeChanged FINAL);
 
+    muse::GlobalInject<IEffectsConfiguration> configuration;
+
     muse::Inject<IEffectInstancesRegister> instancesRegister;
     muse::Inject<IEffectsProvider> effectsProvider;
-    muse::Inject<IEffectsConfiguration> configuration;
     muse::Inject<effects::IRealtimeEffectService> realtimeEffectService;
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<muse::ui::INavigationController> navigationController;

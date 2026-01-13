@@ -15,8 +15,9 @@
 namespace au::projectscene {
 class ProjectSceneUiActions : public muse::ui::IUiActionsModule, public muse::async::Asyncable
 {
+    muse::GlobalInject<IProjectSceneConfiguration> configuration;
+
     muse::Inject<context::IUiContextResolver> uicontextResolver;
-    muse::Inject<IProjectSceneConfiguration> configuration;
 
 public:
     ProjectSceneUiActions(std::shared_ptr<ProjectSceneActionsController> controller);

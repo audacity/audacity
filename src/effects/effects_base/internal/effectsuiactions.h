@@ -15,10 +15,11 @@
 namespace au::effects {
 class EffectsUiActions : public muse::ui::IUiActionsModule, public muse::async::Asyncable
 {
+    muse::GlobalInject<IEffectsConfiguration> configuration;
+
     muse::Inject<context::IUiContextResolver> uicontextResolver;
     muse::Inject<IEffectsProvider> effectsProvider;
     muse::Inject<IEffectExecutionScenario> effectExecutionScenario;
-    muse::Inject<IEffectsConfiguration> configuration;
 
 public:
     EffectsUiActions(std::shared_ptr<EffectsActionsController> controller);

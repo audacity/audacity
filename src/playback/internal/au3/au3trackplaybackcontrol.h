@@ -20,9 +20,10 @@ using au::audio::pan_t;
 
 class Au3TrackPlaybackControl : public ITrackPlaybackControl
 {
+    muse::GlobalInject<au::playback::IPlaybackConfiguration> playbackConfiguration;
+
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<au::trackedit::IProjectHistory> projectHistory;
-    muse::Inject<au::playback::IPlaybackConfiguration> playbackConfiguration;
 
 public:
     Au3TrackPlaybackControl() = default;

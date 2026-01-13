@@ -25,8 +25,9 @@ class PlaybackUiActions;
 class PlaybackController : public IPlaybackController, public muse::actions::Actionable, public muse::async::Asyncable
 {
 public:
+    muse::GlobalInject<au::playback::IPlaybackConfiguration> playbackConfiguration;
+
     muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<au::playback::IPlaybackConfiguration> playbackConfiguration;
     muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider;
     muse::Inject<IPlayback> playback;
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;

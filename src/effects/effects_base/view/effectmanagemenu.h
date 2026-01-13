@@ -18,9 +18,10 @@ class EffectManageMenu : public muse::uicomponents::AbstractMenuModel
     Q_PROPERTY(bool enabled READ enabled NOTIFY presetsChanged FINAL)
     Q_PROPERTY(bool useVendorUI READ useVendorUI WRITE setUseVendorUI NOTIFY useVendorUIChanged FINAL)
 
+    muse::GlobalInject<IEffectsConfiguration> configuration;
+
     muse::Inject<IEffectPresetsProvider> presetsController;
     muse::Inject<IEffectInstancesRegister> instancesRegister;
-    muse::Inject<IEffectsConfiguration> configuration;
     muse::Inject<IEffectsProvider> effectsProvider;
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
 

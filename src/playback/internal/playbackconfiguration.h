@@ -11,7 +11,7 @@
 namespace au::playback {
 class PlaybackConfiguration : public IPlaybackConfiguration
 {
-    muse::Inject<muse::ui::IUiConfiguration> uiConfiguration;
+    muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
 
 public:
     void init();

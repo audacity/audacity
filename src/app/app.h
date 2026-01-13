@@ -36,10 +36,11 @@
 namespace au::app {
 class App
 {
+    muse::GlobalInject<appshell::IAppShellConfiguration> appshellConfiguration;
+
     muse::Inject<muse::IApplication> muapplication;
     muse::Inject<appshell::IStartupScenario> startupScenario;
     muse::Inject<muse::audioplugins::IRegisterAudioPluginsScenario> registerAudioPluginsScenario;
-    muse::Inject<appshell::IAppShellConfiguration> appshellConfiguration;
 
 public:
     App();

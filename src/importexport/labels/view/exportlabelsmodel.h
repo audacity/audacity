@@ -27,10 +27,11 @@ class ExportLabelsModel : public QObject, public muse::async::Asyncable, public 
     Q_PROPERTY(QVariantList labelTracks READ labelTracks NOTIFY labelTracksChanged FINAL)
     Q_PROPERTY(QVariantList selectedTracks READ selectedTracks NOTIFY selectedTracksChanged FINAL)
 
+    muse::GlobalInject<ILabelsConfiguration> configuration;
+
     muse::Inject<muse::IInteractive> interactive = { this };
     muse::Inject<context::IGlobalContext> globalContext = { this };
     muse::Inject<ILabelsExporter> labelExporter = { this };
-    muse::Inject<ILabelsConfiguration> configuration = { this };
 
 public:
     explicit ExportLabelsModel(QObject* parent = nullptr);

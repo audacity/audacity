@@ -37,9 +37,10 @@ class WaveView : public QQuickPaintedItem, public muse::async::Asyncable
     Q_PROPERTY(double dbRange READ dbRange WRITE setDbRange FINAL)
     Q_PROPERTY(QVariant displayBounds READ displayBounds WRITE setDisplayBounds FINAL)
 
+    muse::GlobalInject<IProjectSceneConfiguration> configuration;
+
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<au::projectscene::IWavePainter> wavePainter;
-    muse::Inject<IProjectSceneConfiguration> configuration;
     muse::Inject<au::trackedit::IProjectHistory> projectHistory;
 
 public:

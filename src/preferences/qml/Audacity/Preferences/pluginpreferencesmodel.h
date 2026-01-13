@@ -20,7 +20,7 @@ class PluginPreferencesModel : public QObject, public muse::async::Asyncable
 
     Q_PROPERTY(effects::EffectMenuOrganization effectMenuOrganization READ effectMenuOrganization NOTIFY effectMenuOrganizationChanged)
 
-    muse::Inject<effects::IEffectsConfiguration> effectsConfiguration;
+    muse::GlobalInject<effects::IEffectsConfiguration> effectsConfiguration;
 
 public:
     explicit PluginPreferencesModel(QObject* parent = nullptr);

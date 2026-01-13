@@ -13,7 +13,7 @@
 namespace au::playback {
 class PlaybackMeterController : public IPlaybackMeterController, public muse::async::Asyncable
 {
-    muse::Inject<IPlaybackConfiguration> configuration;
+    muse::GlobalInject<IPlaybackConfiguration> configuration;
 
 public:
     PlaybackMeterController();

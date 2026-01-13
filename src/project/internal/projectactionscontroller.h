@@ -22,16 +22,17 @@
 namespace au::project {
 class ProjectActionsController : public IProjectFilesController, public muse::actions::Actionable, public muse::async::Asyncable
 {
+    muse::GlobalInject<IProjectConfiguration> configuration;
+    muse::GlobalInject<muse::io::IFileSystem> fileSystem;
+    muse::GlobalInject<importexport::ExportConfiguration> exportConfiguration;
+
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<IProjectConfiguration> configuration;
-    muse::Inject<muse::io::IFileSystem> fileSystem;
     muse::Inject<IRecentFilesController> recentFilesController;
     muse::Inject<IOpenSaveProjectScenario> openSaveProjectScenario;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
     muse::Inject<record::IRecordController> recordController;
-    muse::Inject<importexport::ExportConfiguration> exportConfiguration;
 
 public:
     ProjectActionsController() = default;

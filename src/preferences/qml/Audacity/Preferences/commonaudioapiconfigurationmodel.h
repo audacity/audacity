@@ -60,8 +60,9 @@ class CommonAudioApiConfigurationModel : public QObject, public muse::async::Asy
 
     Q_PROPERTY(double longestDeviceNameLength READ longestDeviceNameLength NOTIFY longestDeviceNameLengthChanged)
 
+    muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
+
     muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider;
-    muse::Inject<muse::ui::IUiConfiguration> uiConfiguration;
 
 public:
     explicit CommonAudioApiConfigurationModel(QObject* parent = nullptr);

@@ -8,7 +8,7 @@
 #include "framework/global/modularity/imoduleinterface.h"
 
 namespace au::effects {
-class IEffectsConfiguration : MODULE_EXPORT_INTERFACE
+class IEffectsConfiguration : MODULE_GLOBAL_EXPORT_INTERFACE
 {
     INTERFACE_ID(IEffectsConfiguration)
 public:

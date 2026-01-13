@@ -22,10 +22,11 @@ class TrackClipsListModel : public TrackItemsListModel
         bool asymmetricStereoHeightsPossible READ asymmetricStereoHeightsPossible NOTIFY asymmetricStereoHeightsPossibleChanged)
     Q_PROPERTY(bool isContrastFocusBorderEnabled READ isContrastFocusBorderEnabled NOTIFY isContrastFocusBorderEnabledChanged FINAL)
 
-    muse::Inject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
+    muse::GlobalInject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
+    muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
+
     muse::Inject<muse::workspace::IWorkspaceManager> workspacesManager;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
-    muse::Inject<muse::ui::IUiConfiguration> uiConfiguration;
 
 public:
     explicit TrackClipsListModel(QObject* parent = nullptr);

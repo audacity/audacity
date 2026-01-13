@@ -40,12 +40,12 @@
 namespace au::appshell {
 class StartupScenario : public au::appshell::IStartupScenario, public muse::async::Asyncable
 {
+    muse::GlobalInject<IAppShellConfiguration> configuration;
+
     muse::Inject<muse::IInteractive> interactive;
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
-    muse::Inject<IAppShellConfiguration> configuration;
     muse::Inject<ISessionsManager> sessionsManager;
     muse::Inject<muse::audioplugins::IRegisterAudioPluginsScenario> registerAudioPluginsScenario;
-    // muse::Inject<au::project::IProjectAutoSaver> projectAutoSaver; // we don't use at the moment 01/09/2025 the project auto saver as we already have the autosave table
 
 //! TODO AU4
     // INJECT(mi::IMultiInstancesProvider, multiInstancesProvider)

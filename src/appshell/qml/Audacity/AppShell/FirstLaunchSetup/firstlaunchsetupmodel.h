@@ -49,8 +49,9 @@ class FirstLaunchSetupModel : public QObject, public muse::async::Asyncable
     Q_PROPERTY(QString nextButtonText READ nextButtonText CONSTANT)
     Q_PROPERTY(QString doneButtonText READ doneButtonText CONSTANT)
 
-    INJECT(IAppShellConfiguration, configuration)
-    INJECT(muse::IInteractive, interactive)
+    muse::GlobalInject<IAppShellConfiguration> configuration;
+
+    muse::Inject<muse::IInteractive> interactive;
 
 public:
     explicit FirstLaunchSetupModel(QObject* parent = nullptr);

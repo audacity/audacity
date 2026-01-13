@@ -34,7 +34,7 @@ class WindowDropArea : public QQuickItem
 {
     Q_OBJECT
     QML_ELEMENT
-    INJECT(IApplicationActionController, applicationActionController)
+    muse::Inject<IApplicationActionController> applicationActionController;
 public:
     explicit WindowDropArea(QQuickItem* parent = nullptr);
 

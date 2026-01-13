@@ -33,9 +33,10 @@ class TrackViewStateModel : public QObject, public muse::async::Asyncable
 
     Q_PROPERTY(playback::PlaybackMeterModel * meterModel READ meterModel NOTIFY meterModelChanged FINAL)
 
+    muse::GlobalInject<playback::IPlaybackConfiguration> playbackConfiguration;
+
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<playback::IPlaybackController> playbackController;
-    muse::Inject<playback::IPlaybackConfiguration> playbackConfiguration;
     muse::Inject<record::IRecordController> recordController;
 
 public:

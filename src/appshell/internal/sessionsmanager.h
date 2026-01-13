@@ -38,15 +38,16 @@
 #include "project/iprojectconfiguration.h"
 
 namespace au::appshell {
-class SessionsManager : public ISessionsManager, public muse::async::Asyncable
+class SessionsManager : public ISessionsManager, public muse::async::Asyncable, public muse::Injectable
 {
-    INJECT(muse::actions::IActionsDispatcher, dispatcher)
-    INJECT(au::context::IGlobalContext, globalContext)
-    INJECT(IAppShellConfiguration, configuration)
-    INJECT(muse::mi::IMultiInstancesProvider, multiInstancesProvider)
-    INJECT(project::IProjectConfiguration, projectConfiguration)
-    INJECT(muse::io::IFileSystem, fileSystem)
-    INJECT(au::au3::IAu3ProjectCreator, au3ProjectCreator)
+    muse::GlobalInject<muse::io::IFileSystem> fileSystem;
+    muse::GlobalInject<project::IProjectConfiguration> projectConfiguration;
+    muse::GlobalInject<IAppShellConfiguration> configuration;
+    muse::GlobalInject<muse::mi::IMultiInstancesProvider> multiInstancesProvider;
+
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::Inject<au::context::IGlobalContext> globalContext { this };
+    muse::Inject<au::au3::IAu3ProjectCreator> au3ProjectCreator { this };
 
 public:
     void init();

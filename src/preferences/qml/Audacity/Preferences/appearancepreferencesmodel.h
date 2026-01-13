@@ -39,8 +39,8 @@ class AppearancePreferencesModel : public QObject, public muse::async::Asyncable
     Q_OBJECT
     QML_ELEMENT
 
-    muse::Inject<muse::ui::IUiConfiguration> uiConfiguration;
-    muse::Inject<projectscene::ProjectSceneConfiguration> projectSceneConfiguration;
+    muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
+    muse::GlobalInject<projectscene::ProjectSceneConfiguration> projectSceneConfiguration;
 
     Q_PROPERTY(bool isFollowSystemThemeAvailable READ isFollowSystemThemeAvailable CONSTANT)
     Q_PROPERTY(bool isFollowSystemTheme READ isFollowSystemTheme WRITE setFollowSystemTheme NOTIFY isFollowSystemThemeChanged)

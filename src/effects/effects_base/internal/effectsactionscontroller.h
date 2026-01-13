@@ -24,12 +24,13 @@ class EffectsUiActions;
 class EffectsActionsController : public muse::actions::Actionable, public muse::async::Asyncable,
     public std::enable_shared_from_this<EffectsActionsController>
 {
+    muse::GlobalInject<IEffectsConfiguration> configuration;
+
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
     muse::Inject<muse::ui::IUiActionsRegister> uiActionsRegister;
     muse::Inject<IEffectExecutionScenario> effectExecutionScenario;
     muse::Inject<IEffectsProvider> effectsProvider;
     muse::Inject<IEffectPresetsScenario> presetsScenario;
-    muse::Inject<IEffectsConfiguration> configuration;
     muse::Inject<IEffectInstancesRegister> instancesRegister;
     muse::Inject<muse::IInteractive> interactive;
     muse::Inject<au::playback::IPlaybackController> playbackController;

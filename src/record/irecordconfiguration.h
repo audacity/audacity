@@ -8,7 +8,7 @@
 #include "draw/types/color.h"
 
 namespace au::record {
-class IRecordConfiguration : MODULE_EXPORT_INTERFACE
+class IRecordConfiguration : MODULE_GLOBAL_EXPORT_INTERFACE
 {
     INTERFACE_ID(IRecordConfiguration)
 

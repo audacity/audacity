@@ -23,9 +23,10 @@ using Au3TrackDataPtr = std::shared_ptr<Au3TrackData>;
 
 class Au3ClipsInteraction : public IClipsInteraction
 {
+    muse::GlobalInject<au::trackedit::ITrackeditConfiguration> configuration;
+
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<au::trackedit::ISelectionController> selectionController;
-    muse::Inject<au::trackedit::ITrackeditConfiguration> configuration;
     muse::Inject<au::trackedit::IProjectHistory> projectHistory;
     muse::Inject<muse::IInteractive> interactive;
     muse::Inject<ITracksInteraction> tracksInteraction;

@@ -27,13 +27,14 @@ class SimpleEffectSettingsAccess;
 namespace au::effects {
 class EffectExecutionScenario : public IEffectExecutionScenario
 {
+    muse::GlobalInject<IEffectsConfiguration> effectsConfiguration;
+
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<IEffectsProvider> effectsProvider;
     muse::Inject<IEffectInstancesRegister> effectInstancesRegister;
     muse::Inject<trackedit::ISelectionController> selectionController;
     muse::Inject<muse::IInteractive> interactive;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
-    muse::Inject<IEffectsConfiguration> effectsConfiguration;
 
 public:
     EffectExecutionScenario() = default;

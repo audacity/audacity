@@ -12,8 +12,8 @@
 namespace au::project {
 class ProjectConfiguration final : public IProjectConfiguration
 {
-    muse::Inject<muse::IGlobalConfiguration> globalConfiguration;
-    muse::Inject<muse::io::IFileSystem> fileSystem;
+    muse::GlobalInject<muse::IGlobalConfiguration> globalConfiguration;
+    muse::GlobalInject<muse::io::IFileSystem> fileSystem;
 
 public:
     ProjectConfiguration() = default;

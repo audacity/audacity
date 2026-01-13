@@ -37,9 +37,10 @@
 namespace au::project {
 class ProjectAutoSaver : public IProjectAutoSaver, public muse::async::Asyncable
 {
+    muse::GlobalInject<muse::io::IFileSystem> fileSystem;
+    muse::GlobalInject<IProjectConfiguration> configuration;
+
     muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<muse::io::IFileSystem> fileSystem;
-    muse::Inject<IProjectConfiguration> configuration;
     muse::Inject<au::au3::IAu3ProjectCreator> au3ProjectCreator;
     // maybe use the muse::Inject<au::appshell::ISessionsManager> sessionsManager;
 

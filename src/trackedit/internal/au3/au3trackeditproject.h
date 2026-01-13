@@ -15,7 +15,8 @@ struct TrackListEvent;
 namespace au::trackedit {
 class Au3TrackeditProject : public ITrackeditProject
 {
-    muse::Inject<muse::IGlobalConfiguration> globalConfiguration;
+    muse::GlobalInject<muse::IGlobalConfiguration> globalConfiguration;
+
     muse::Inject<trackedit::IProjectHistory> projectHistory;
 
 public:

@@ -22,11 +22,12 @@
 namespace au::record {
 class Au3AudioInput : public IAudioInput, public muse::async::Asyncable
 {
+    muse::GlobalInject<record::IRecordConfiguration> configuration;
+
     muse::Inject<au::audio::IAudioEngine> audioEngine;
     muse::Inject<au::context::IGlobalContext> globalContext;
     muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider;
     muse::Inject<playback::IPlaybackController> playbackController;
-    muse::Inject<record::IRecordConfiguration> configuration;
     muse::Inject<record::IRecordController> controller;
     muse::Inject<record::IRecordMeterController> meterController;
     muse::Inject<trackedit::ISelectionController> selectionController;

@@ -42,11 +42,12 @@ class GeneralPreferencesModel : public QObject, public muse::async::Asyncable
     Q_OBJECT
     QML_ELEMENT
 
+    muse::GlobalInject<muse::languages::ILanguagesConfiguration> languagesConfiguration;
+    muse::GlobalInject<muse::languages::ILanguagesService> languagesService;
+    muse::GlobalInject<muse::shortcuts::IShortcutsConfiguration> shortcutsConfiguration;
+    muse::GlobalInject<au::project::IProjectConfiguration> projectConfiguration;
+
     muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<muse::languages::ILanguagesConfiguration> languagesConfiguration;
-    muse::Inject<muse::languages::ILanguagesService> languagesService;
-    muse::Inject<muse::shortcuts::IShortcutsConfiguration> shortcutsConfiguration;
-    muse::Inject<au::project::IProjectConfiguration> projectConfiguration;
 
     Q_PROPERTY(QVariantList languages READ languages NOTIFY languagesChanged)
     Q_PROPERTY(QString currentLanguageCode READ currentLanguageCode WRITE setCurrentLanguageCode NOTIFY currentLanguageCodeChanged)

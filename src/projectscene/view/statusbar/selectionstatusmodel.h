@@ -31,10 +31,11 @@ class SelectionStatusModel : public QObject, public muse::async::Asyncable
 
     Q_PROPERTY(bool isEnabled READ isEnabled NOTIFY isEnabledChanged)
 
+    muse::GlobalInject<IProjectSceneConfiguration> configuration;
+
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<trackedit::ISelectionController> selectionController;
     muse::Inject<playback::IPlayback> playback;
-    muse::Inject<IProjectSceneConfiguration> configuration;
 
 public:
     Q_INVOKABLE void init();

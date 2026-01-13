@@ -16,8 +16,9 @@
 namespace au::effects {
 class EffectPresetsScenario : public IEffectPresetsScenario
 {
+    muse::GlobalInject<muse::IGlobalConfiguration> globalConfiguration;
+
     muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<muse::IGlobalConfiguration> globalConfiguration;
     muse::Inject<IEffectPresetsProvider> presetsProvider;
     muse::Inject<IEffectInstancesRegister> instancesRegister;
 

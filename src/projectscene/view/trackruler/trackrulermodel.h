@@ -21,8 +21,9 @@ class TrackRulerModel : public QObject, public muse::async::Asyncable
 {
     Q_OBJECT
 
+    muse::GlobalInject<au::playback::IPlaybackConfiguration> configuration;
+
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
-    muse::Inject<au::playback::IPlaybackConfiguration> configuration;
     muse::Inject<au::context::IGlobalContext> globalContext;
 
     Q_PROPERTY(std::vector<QVariantMap> fullSteps READ fullSteps NOTIFY fullStepsChanged)

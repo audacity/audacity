@@ -58,7 +58,7 @@ class ApplicationActionController : public QObject, public IApplicationActionCon
 
     muse::Inject<muse::IInteractive> interactive;
     muse::Inject<muse::IApplication> application;
-    muse::Inject<IAppShellConfiguration> configuration;
+    muse::GlobalInject<IAppShellConfiguration> configuration;
     muse::Inject<project::IProjectFilesController> projectFilesController;
     muse::Inject<record::IRecordController> recordController;
 

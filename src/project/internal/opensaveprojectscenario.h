@@ -38,10 +38,11 @@
 namespace au::project {
 class OpenSaveProjectScenario : public IOpenSaveProjectScenario
 {
-    muse::Inject<IProjectConfiguration> configuration;
+    muse::GlobalInject<IProjectConfiguration> configuration;
+    muse::GlobalInject<muse::io::IFileSystem> fileSystem;
+
     muse::Inject<IProjectFilesController> projectFilesController;
     muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<muse::io::IFileSystem> fileSystem;
     muse::Inject<muse::cloud::IMuseScoreComService> museScoreComService;
     muse::Inject<muse::cloud::IAudioComService> audioComService;
 

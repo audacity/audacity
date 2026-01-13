@@ -38,7 +38,8 @@ class ProjectsPageModel : public QObject
 {
     Q_OBJECT
 
-    muse::Inject<IProjectConfiguration> configuration;
+    muse::GlobalInject<IProjectConfiguration> configuration;
+
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
     muse::Inject<muse::IInteractive> interactive;
     muse::Inject<muse::cloud::IAudioComService> audioComService;

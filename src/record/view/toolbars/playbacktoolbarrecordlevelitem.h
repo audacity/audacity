@@ -39,10 +39,11 @@ class PlaybackToolBarRecordLevelItem : public muse::uicomponents::ToolBarItem
 
     Q_PROPERTY(playback::PlaybackMeterStyle::MeterStyle meterStyle READ meterStyle NOTIFY meterStyleChanged FINAL)
 
+    muse::GlobalInject<playback::IPlaybackConfiguration> playbackConfiguration;
+    muse::GlobalInject<record::IRecordConfiguration> recordConfiguration;
+
     muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider;
-    muse::Inject<playback::IPlaybackConfiguration> playbackConfiguration;
     muse::Inject<record::IRecord> record;
-    muse::Inject<record::IRecordConfiguration> recordConfiguration;
     muse::Inject<record::IRecordController> recordController;
     muse::Inject<record::IRecordMeterController> recordMeterController;
 

@@ -12,7 +12,7 @@
 #include "trackedit/trackedittypes.h"
 
 namespace au::playback {
-class IPlaybackConfiguration : MODULE_EXPORT_INTERFACE
+class IPlaybackConfiguration : MODULE_GLOBAL_EXPORT_INTERFACE
 {
     INTERFACE_ID(IPlaybackConfiguration)
 
