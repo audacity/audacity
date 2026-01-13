@@ -87,8 +87,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/effectparameterslistmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/generatedeffectviewermodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/generatedeffectviewermodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/effectpreviewhelper.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/effectpreviewhelper.h
     )
 
 # AU3
