@@ -83,6 +83,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/destructiveeffectviewerdialogmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/realtimeeffectviewerdialogmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/realtimeeffectviewerdialogmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/effectparameterslistmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/effectparameterslistmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/generatedeffectviewermodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/generatedeffectviewermodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/effectpreviewhelper.cpp
