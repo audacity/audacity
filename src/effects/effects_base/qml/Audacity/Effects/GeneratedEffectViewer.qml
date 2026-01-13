@@ -14,7 +14,7 @@ Rectangle {
 
     required property int instanceId
 
-    implicitWidth: 480
+    implicitWidth: 640
     implicitHeight: 640
 
     color: ui.theme.backgroundPrimaryColor
@@ -26,6 +26,7 @@ Rectangle {
         readonly property int spaceM: 8
         readonly property int spaceL: 12
         readonly property int spaceXL: 16
+        readonly property int spaceXXL: 24
 
         readonly property int borderWidth: 1
         readonly property int borderRadius: 4
@@ -64,8 +65,9 @@ Rectangle {
 
                 ColumnLayout {
                     id: parametersColumn
-                    width: parent.width
-                    spacing: prv.spaceL
+                    width: Math.min(parent.width, 512)
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    spacing: prv.spaceXXL
 
                     // Show message if no parameters
                     StyledTextLabel {

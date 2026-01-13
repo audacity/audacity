@@ -25,10 +25,10 @@ Item {
         readonly property int spaceM: 8
         readonly property int spaceL: 12
 
-        readonly property int labelWidth: 120
-        readonly property int controlWidth: 144
-        readonly property int numericControlWidth: 200
-        readonly property int valueDisplayWidth: 80
+        readonly property int labelWidth: 192
+        readonly property int controlWidth: 160
+        readonly property int numericControlWidth: 160
+        readonly property int valueDisplayWidth: 160
     }
 
     RowLayout {
