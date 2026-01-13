@@ -49,7 +49,7 @@ BaseSection {
         spacing: 12
 
         StyledTextLabel {
-            text: qsTrc("appshell/preferences", "Language")
+            text: qsTrc("preferences", "Language")
         }
 
         StyledDropdown {
@@ -76,7 +76,7 @@ BaseSection {
     }
 
     StyledTextLabel {
-        text: qsTrc("appshell/preferences", "Restart required")
+        text: qsTrc("preferences", "Restart required")
         visible: root.isNeedRestart
     }
 }

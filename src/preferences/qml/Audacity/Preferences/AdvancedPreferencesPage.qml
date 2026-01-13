@@ -63,9 +63,9 @@ PreferencesPage {
             Layout.fillHeight: true
 
             keyRoleName: "descriptionRole"
-            keyTitle: qsTrc("appshell/preferences", "Preference")
+            keyTitle: qsTrc("preferences", "Preference")
             valueRoleName: "valueRole"
-            valueTitle: qsTrc("appshell/preferences", "Value")
+            valueTitle: qsTrc("preferences", "Value")
             valueTypeRole: "typeRole"
             minValueRoleName: "minValueRole"
             maxValueRoleName: "maxValueRole"

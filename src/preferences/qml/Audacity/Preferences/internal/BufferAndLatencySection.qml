@@ -30,7 +30,7 @@ import Audacity.AppShell
 BaseSection {
     id: root
 
-    title: qsTrc("appshell/preferences", "Buffer and latency")
+    title: qsTrc("preferences", "Buffer and latency")
     spacing: 16
 
     property var apiModel: null
@@ -40,7 +40,7 @@ BaseSection {
     }
 
     IncrementalPropertyControlWithTitle {
-        title: qsTrc("appshell/preferences", "Buffer length")
+        title: qsTrc("preferences", "Buffer length")
 
         currentValue: apiModel.bufferLength
 
@@ -62,7 +62,7 @@ BaseSection {
     }
 
     IncrementalPropertyControlWithTitle {
-        title: qsTrc("appshell/preferences", "Latency compensation")
+        title: qsTrc("preferences", "Latency compensation")
 
         currentValue: apiModel.latencyCompensation
 

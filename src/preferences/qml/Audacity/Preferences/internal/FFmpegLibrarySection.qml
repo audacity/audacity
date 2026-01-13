@@ -23,7 +23,7 @@ BaseSection {
 
         Row {
             StyledTextLabel {
-                text: qsTrc("appshell/preferences", "FFmpeg library version: ")
+                text: qsTrc("preferences", "FFmpeg library version: ")
             }
 
             StyledTextLabel {
@@ -39,7 +39,7 @@ BaseSection {
 
                 width: 223
 
-                currentText: ffmpegPrefModel.ffmpegLibraryPath ?? qsTrc("appshell/preferences", "FFmpeg library not found")
+                currentText: ffmpegPrefModel.ffmpegLibraryPath ?? qsTrc("preferences", "FFmpeg library not found")
 
                 property var newLibPath
 

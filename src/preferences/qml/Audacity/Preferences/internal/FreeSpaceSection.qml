@@ -37,7 +37,7 @@ BaseSection {
         spacing: 12
 
         StyledTextLabel {
-            text: qsTrc("appshell/preferences", "Free space")
+            text: qsTrc("preferences", "Free space")
         }
 
         StyledTextLabel {

@@ -11,7 +11,7 @@ import Audacity.AppShell
 BaseSection {
     id: root
 
-    title: qsTrc("appshell/preferences", "Playback performance")
+    title: qsTrc("preferences", "Playback performance")
     spacing: 16
 
     property var playbackPreferencesModel: null
@@ -31,7 +31,7 @@ BaseSection {
     ]
 
     ComboBoxWithTitle {
-        title: qsTrc("appshell/preferences", "Playback quality")
+        title: qsTrc("preferences", "Playback quality")
         columnWidth: root.columnWidth
 
         currentIndex: playbackPreferencesModel.currentPlaybackQuality
@@ -47,7 +47,7 @@ BaseSection {
     }
 
     ComboBoxWithTitle {
-        title: qsTrc("appshell/preferences", "Dithering")
+        title: qsTrc("preferences", "Dithering")
         columnWidth: root.columnWidth
 
         currentIndex: playbackPreferencesModel.currentDithering

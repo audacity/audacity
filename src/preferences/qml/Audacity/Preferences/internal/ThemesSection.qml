@@ -31,7 +31,7 @@ import Audacity.Preferences
 BaseSection {
     id: root
 
-    title: highContrastEnabled ? qsTrc("appshell/preferences", "High contrast themes") : qsTrc("appshell/preferences", "Themes")
+    title: highContrastEnabled ? qsTrc("preferences", "High contrast themes") : qsTrc("preferences", "Themes")
     navigation.direction: NavigationPanel.Both
 
     property bool highContrastEnabled: false
@@ -77,7 +77,7 @@ BaseSection {
                 id: followSystemThemeCheckBox
                 width: parent.width
 
-                text: qsTrc("appshell/preferences", "Follow system theme")
+                text: qsTrc("preferences", "Follow system theme")
 
                 navigation.name: "FollowSystemThemeBox"
                 navigation.panel: root.navigation
@@ -92,7 +92,7 @@ BaseSection {
             CheckBox {
                 width: parent.width
 
-                text: qsTrc("appshell/preferences", "Enable high-contrast")
+                text: qsTrc("preferences", "Enable high-contrast")
 
                 checked: root.highContrastEnabled
 

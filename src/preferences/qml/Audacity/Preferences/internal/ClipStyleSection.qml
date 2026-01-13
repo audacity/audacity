@@ -36,7 +36,7 @@ import Audacity.TrackEdit
 BaseSection {
     id: root
 
-    title: qsTrc("appshell/preferences", "Clip style")
+    title: qsTrc("preferences", "Clip style")
 
     property int imgWidth: 196
     property int imgHeight: 88
@@ -67,7 +67,7 @@ BaseSection {
             }
 
             RoundedRadioButton {
-                text: qsTrc("appshell/preferences", "Colorful")
+                text: qsTrc("preferences", "Colorful")
 
                 checked: root.currentClipStyle == ClipStyle.COLORFUL
 
@@ -98,7 +98,7 @@ BaseSection {
             }
 
             RoundedRadioButton {
-                text: qsTrc("appshell/preferences", "Classic")
+                text: qsTrc("preferences", "Classic")
 
                 checked: root.currentClipStyle == ClipStyle.CLASSIC
 
