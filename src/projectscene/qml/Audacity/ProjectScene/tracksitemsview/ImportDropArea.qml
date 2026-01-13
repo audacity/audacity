@@ -18,14 +18,14 @@ DropArea {
     signal setGuidelineRequested(var pos, bool visibility)
 
     signal externalDropAreaEntered(var drop)
-    signal externalDropAreaExitted()
+    signal externalDropAreaExited()
     signal externalDropAreaDropped(var drop)
 
     onExternalDropAreaEntered: drop => {
         handleOnEntered(drop, true)
     }
 
-    onExternalDropAreaExitted: {
+    onExternalDropAreaExited: {
         clearPreviewClipsTimer.start()
     }
 

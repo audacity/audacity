@@ -107,7 +107,7 @@ int OpusImportFileHandle::GetRequiredTrackCount() const
     if (mNumChannels <= 2) {
         return 1;
     }
-    return static_cast<size_t>(mNumChannels);
+    return mNumChannels;
 }
 
 auto OpusImportFileHandle::GetFileUncompressedBytes() -> ByteCount

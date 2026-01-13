@@ -212,11 +212,11 @@ int MP3ImportFileHandle::GetRequiredTrackCount() const
 {
     const int channels = mNumChannels;
 
-    if (channels <= 0) {
-        return 0;
+    if (channels <= 2) {
+        return 1;
     }
 
-    return (channels <= 2) ? 1 : static_cast<size_t>(channels);
+    return channels;
 }
 
 auto MP3ImportFileHandle::GetFileUncompressedBytes() -> ByteCount
