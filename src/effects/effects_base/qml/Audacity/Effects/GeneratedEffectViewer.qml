@@ -15,7 +15,22 @@ Rectangle {
     required property int instanceId
 
     implicitWidth: 640
-    implicitHeight: 640
+    implicitHeight: {
+        // why 5 times spaceXL?
+        // Calculate total height needed:
+        // - Top margin: prv.spaceXL (1)
+        // - Title height: titleLabel.height
+        // - Spacing after title: prv.spaceXL (2)
+        // - Flickable top margin: prv.spaceXL (3)
+        // - Content: parametersColumn.height
+        // - Flickable bottom margin: prv.spaceXL (4)
+        // - Bottom margin: prv.spaceXL (5)
+        // - Border: 2 * prv.borderWidth
+        var totalHeight = prv.spaceXL * 5 + titleLabel.height + parametersColumn.height + 2 * prv.borderWidth
+        // we automatically size the height to fit the content for plugins with few parameters
+        // we limit the height to 640 to avoid making the dialog too tall
+        return Math.min(totalHeight, 640)
+    }
 
     color: ui.theme.backgroundPrimaryColor
 
@@ -39,11 +54,13 @@ Rectangle {
     }
 
     ColumnLayout {
+        id: mainLayout
         anchors.fill: parent
         anchors.margins: prv.spaceXL
         spacing: prv.spaceXL
 
         StyledTextLabel {
+            id: titleLabel
             Layout.fillWidth: true
             text: viewModel.title
             font: ui.theme.headerBoldFont
