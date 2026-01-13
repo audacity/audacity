@@ -170,9 +170,10 @@ bool au::importexport::Au3Importer::importIntoTrack(const muse::io::path_t& file
     std::optional<LibFileFormats::AcidizerTags> acidTags;
     TranslatableString errorMessage;
 
+    const wxString wxPath = filePath.toString().toUtf8().constData();
     const bool ok = Importer::Get().Import(
         *project,
-        wxFromString(filePath.toString()),
+        wxPath,
         &importProgressListener,
         &WaveTrackFactory::Get(*project),
         tmpTracks,
