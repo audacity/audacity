@@ -123,30 +123,29 @@ PreferencesPage {
             }
         }
 
-        //! NOTE: hide font settings for now
-        // SeparatorLine {}
+        SeparatorLine {}
 
-        // UiFontSection {
-        //     allFonts: appearanceModel.allFonts()
-        //     currentFontIndex: appearanceModel.currentFontIndex
-        //     bodyTextSize: appearanceModel.bodyTextSize
+        UiFontSection {
+            allFonts: appearanceModel.allFonts()
+            currentFontIndex: appearanceModel.currentFontIndex
+            bodyTextSize: appearanceModel.bodyTextSize
 
-        //     navigation.section: root.navigationSection
-        //     navigation.order: root.navigationOrderStart + 4
+            navigation.section: root.navigationSection
+            navigation.order: root.navigationOrderStart + 4
 
-        //     onFontChangeRequested: function(newFontIndex) {
-        //         appearanceModel.currentFontIndex = newFontIndex
-        //     }
+            onFontChangeRequested: function(newFontIndex) {
+                appearanceModel.currentFontIndex = newFontIndex
+            }
 
-        //     onBodyTextSizeChangeRequested: function(newBodyTextSize) {
-        //         appearanceModel.bodyTextSize = newBodyTextSize
-        //     }
+            onBodyTextSizeChangeRequested: function(newBodyTextSize) {
+                appearanceModel.bodyTextSize = newBodyTextSize
+            }
 
-        //     onFocusChanged: {
-        //         if (activeFocus) {
-        //             root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
-        //         }
-        //     }
-        // }
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
+        }
     }
 }
