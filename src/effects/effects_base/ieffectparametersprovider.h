@@ -47,7 +47,7 @@ public:
     //! Set value of a parameter
     //! @param instanceId The effect instance ID
     //! @param parameterId The parameter identifier
-    //! @param value The new value to set (normalized 0-1)
+    //! @param value The new value to set (in plain/"Full Range" units, e.g., -60 to +6 for dB)
     //! @return true if successful
     virtual bool setParameterValue(EffectInstanceId instanceId, const muse::String& parameterId, double value) = 0;
 

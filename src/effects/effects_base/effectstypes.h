@@ -64,7 +64,7 @@ enum class ParameterType {
 };
 
 // Parameter metadata for auto-generated UI
-// Values are stored in plain (display) representation, e.g., -60 to +6 for dB.
+// Values are stored in "Full Range" (display) representation, e.g., -60 to +6 for dB.
 // Use getNormalizedValue() to convert to normalized [0,1] for plugin API calls.
 struct ParameterInfo {
     muse::String id;              // Unique parameter identifier
@@ -75,7 +75,7 @@ struct ParameterInfo {
 
     ParameterType type = ParameterType::Unknown;
 
-    // Value range in plain (display) values, e.g., -60 to +6 for dB, 20 to 20000 for Hz
+    // Value range in "Full Range" (display) values, e.g., -60 to +6 for dB, 20 to 20000 for Hz
     // For plugins that don't implement proper conversions, these will be 0.0 to 1.0.
     double minValue = 0.0;
     double maxValue = 0.0;
@@ -102,7 +102,7 @@ struct ParameterInfo {
 
     bool isValid() const { return !id.empty(); }
 
-    //! Convert current plain value to normalized [0,1] for plugin API calls
+    //! Convert current "Full Range" value to normalized [0,1] for plugin API calls
     double getNormalizedValue() const
     {
         if (maxValue == minValue) {
@@ -111,17 +111,17 @@ struct ParameterInfo {
         return (currentValue - minValue) / (maxValue - minValue);
     }
 
-    //! Convert a plain value to normalized [0,1]
-    double toNormalized(double plainValue) const
+    //! Convert a "Full Range" value to normalized [0,1]
+    double toNormalized(double fullRangeValue) const
     {
         if (maxValue == minValue) {
             return 0.0;
         }
-        return (plainValue - minValue) / (maxValue - minValue);
+        return (fullRangeValue - minValue) / (maxValue - minValue);
     }
 
-    //! Convert a normalized [0,1] value to plain
-    double toPlain(double normalizedValue) const
+    //! Convert a normalized [0,1] value to "Full Range"
+    double toFullRange(double normalizedValue) const
     {
         return minValue + normalizedValue * (maxValue - minValue);
     }

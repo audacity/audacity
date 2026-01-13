@@ -64,7 +64,7 @@ double EffectParametersProvider::parameterValue(EffectInstanceId instanceId, con
     return param.currentValue;
 }
 
-bool EffectParametersProvider::setParameterValue(EffectInstanceId instanceId, const String& parameterId, double normalizedValue)
+bool EffectParametersProvider::setParameterValue(EffectInstanceId instanceId, const String& parameterId, double fullRangeValue)
 {
     EffectInstance* instance = instancesRegister()->instanceById(instanceId).get();
     if (!instance) {
@@ -84,10 +84,11 @@ bool EffectParametersProvider::setParameterValue(EffectInstanceId instanceId, co
     }
 
     const EffectSettingsAccessPtr settingsAccess = instancesRegister()->settingsAccessById(instanceId);
-    const bool success = extractor->setParameterValue(instance, parameterId, normalizedValue, settingsAccess);
+    // Note: extractor service is responsible for converting plain/"Full Range" value to normalized if needed
+    const bool success = extractor->setParameterValue(instance, parameterId, fullRangeValue, settingsAccess);
 
     if (success) {
-        // Get the updated parameter info to send plain value and formatted string
+        // Get the updated parameter info to send plain/"Full Range" value and formatted string
         const ParameterInfo param = parameter(instanceId, parameterId);
 
         ParameterChangedData data;

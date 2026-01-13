@@ -32,9 +32,9 @@ public:
     //! Set the value of a parameter
     //! @param instance The effect instance
     //! @param parameterId The parameter identifier
-    //! @param normalizedValue Value in [0,1] range
+    //! @param fullRangeValue Value in plain/"Full Range" units (implementation converts to plugin-specific format)
     //! @param settingsAccess Optional settings access to persist the change
-    virtual bool setParameterValue(EffectInstance* instance, const muse::String& parameterId, double normalizedValue,
+    virtual bool setParameterValue(EffectInstance* instance, const muse::String& parameterId, double fullRangeValue,
                                    EffectSettingsAccessPtr settingsAccess = nullptr) = 0;
 
     //! Get formatted string representation of a parameter value

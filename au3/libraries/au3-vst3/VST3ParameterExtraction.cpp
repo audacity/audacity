@@ -369,32 +369,32 @@ double VST3ParameterExtraction::normalizedToFullRange(EffectInstanceEx* instance
     }
 }
 
-double VST3ParameterExtraction::plainToNormalized(EffectInstanceEx* instance, uint32_t parameterId, double plainValue)
+double VST3ParameterExtraction::fullRangeToNormalized(EffectInstanceEx* instance, uint32_t parameterId, double fullRangeValue)
 {
     if (!instance) {
-        return std::clamp(plainValue, 0.0, 1.0);
+        return std::clamp(fullRangeValue, 0.0, 1.0);
     }
 
     const auto vst3Instance = dynamic_cast<VST3Instance*>(instance);
     if (!vst3Instance) {
-        return std::clamp(plainValue, 0.0, 1.0);
+        return std::clamp(fullRangeValue, 0.0, 1.0);
     }
 
     const auto editController = vst3Instance->vstEditController();
     if (!editController) {
-        return std::clamp(plainValue, 0.0, 1.0);
+        return std::clamp(fullRangeValue, 0.0, 1.0);
     }
 
     try {
-        const double normalized = editController->plainParamToNormalized(parameterId, plainValue);
+        const double normalized = editController->plainParamToNormalized(parameterId, fullRangeValue);
         return std::clamp(normalized, 0.0, 1.0);
     } catch (const std::exception& e) {
-        wxLogDebug("VST3ParameterExtraction: exception in plainToNormalized for param %u: %s",
+        wxLogDebug("VST3ParameterExtraction: exception in fullRangeToNormalized for param %u: %s",
                    parameterId, e.what());
-        return std::clamp(plainValue, 0.0, 1.0);
+        return std::clamp(fullRangeValue, 0.0, 1.0);
     } catch (...) {
-        wxLogDebug("VST3ParameterExtraction: unknown exception in plainToNormalized for param %u",
+        wxLogDebug("VST3ParameterExtraction: unknown exception in fullRangeToNormalized for param %u",
                    parameterId);
-        return std::clamp(plainValue, 0.0, 1.0);
+        return std::clamp(fullRangeValue, 0.0, 1.0);
     }
 }
