@@ -10,9 +10,12 @@ class AudacityProject;
 
 namespace au::trackedit {
 struct ClipAndTimeSelection {
+    const TrackIdList selectedTracks;
     const ClipKeyList selectedClips;
-    const secs_t dataSelectedStartTime;
-    const secs_t dataSelectedEndTime;
+    const LabelKeyList selectedLabels;
+    const secs_t dataSelectedStartTime = 0.;
+    const secs_t dataSelectedEndTime = 0.;
+    // TODO frequency selection
 };
 
 struct SelectionRestorer : public ClientData::Base
