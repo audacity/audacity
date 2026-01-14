@@ -30,11 +30,11 @@
 #include "iapplicationactioncontroller.h"
 
 namespace au::appshell {
-class WindowDropArea : public QQuickItem
+class WindowDropArea : public QQuickItem, public muse::Injectable
 {
     Q_OBJECT
     QML_ELEMENT
-    muse::Inject<IApplicationActionController> applicationActionController;
+    muse::Inject<IApplicationActionController> applicationActionController { this };
 public:
     explicit WindowDropArea(QQuickItem* parent = nullptr);
 

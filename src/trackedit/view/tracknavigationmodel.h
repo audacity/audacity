@@ -10,13 +10,13 @@
 #include "ui/inavigationcontroller.h"
 
 namespace au::trackedit {
-class TrackNavigationModel : public QObject, public muse::async::Asyncable
+class TrackNavigationModel : public QObject, public muse::async::Asyncable, public muse::Injectable
 {
     Q_OBJECT
 
-    muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
-    muse::Inject<muse::ui::INavigationController> navigationController;
+    muse::Inject<au::context::IGlobalContext> globalContext{ this };
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::Inject<muse::ui::INavigationController> navigationController{ this };
 
     Q_PROPERTY(QList<muse::ui::NavigationPanel*> trackItemPanels READ trackItemPanels NOTIFY trackItemPanelsChanged)
     Q_PROPERTY(QList<muse::ui::NavigationPanel*> viewItemPanels READ viewItemPanels NOTIFY viewItemPanelsChanged)

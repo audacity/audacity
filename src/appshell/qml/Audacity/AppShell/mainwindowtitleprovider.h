@@ -32,12 +32,12 @@
 #include "context/iglobalcontext.h"
 
 namespace au::appshell {
-class MainWindowTitleProvider : public QObject, public muse::async::Asyncable
+class MainWindowTitleProvider : public QObject, public muse::async::Asyncable, public muse::Injectable
 {
     Q_OBJECT
     QML_ELEMENT
 
-    muse::Inject<au::context::IGlobalContext> context;
+    muse::Inject<au::context::IGlobalContext> context { this };
 
     Q_PROPERTY(QString title READ title NOTIFY titleChanged)
     Q_PROPERTY(QString filePath READ filePath NOTIFY filePathChanged)

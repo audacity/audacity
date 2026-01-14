@@ -37,13 +37,13 @@
 #include "multiinstances/imultiinstancesprovider.h"
 
 namespace au::project {
-class RecentFilesController : public IRecentFilesController, public muse::async::Asyncable
+class RecentFilesController : public IRecentFilesController, public muse::async::Asyncable, public muse::Injectable
 {
     muse::GlobalInject<IProjectConfiguration> configuration;
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
     muse::GlobalInject<muse::mi::IMultiInstancesProvider> multiInstancesProvider;
 
-    muse::Inject<IMscMetaReader> mscMetaReader;
+    muse::Inject<IMscMetaReader> mscMetaReader { this };
 
 public:
     void init();

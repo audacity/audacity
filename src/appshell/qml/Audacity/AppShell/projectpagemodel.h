@@ -22,7 +22,7 @@
 // #include "braille/ibrailleconfiguration.h"
 
 namespace au::appshell {
-class ProjectPageModel : public QObject, public muse::async::Asyncable, public muse::actions::Actionable
+class ProjectPageModel : public QObject, public muse::async::Asyncable, public muse::actions::Actionable, public muse::Injectable
 {
     Q_OBJECT
     QML_ELEMENT
@@ -31,9 +31,9 @@ class ProjectPageModel : public QObject, public muse::async::Asyncable, public m
     muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
     muse::GlobalInject<playback::IPlaybackConfiguration> playbackConfiguration;
 
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
-    muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<muse::dock::IDockWindowProvider> dockWindowProvider;
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::Inject<au::context::IGlobalContext> globalContext { this };
+    muse::Inject<muse::dock::IDockWindowProvider> dockWindowProvider { this };
 
 //! TODO AU4
 //    INJECT(braille::IBrailleConfiguration, brailleConfiguration)

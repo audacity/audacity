@@ -20,16 +20,16 @@ namespace au::trackedit {
 class Au3TrackData;
 using Au3TrackDataPtr = std::shared_ptr<Au3TrackData>;
 
-class Au3TracksInteraction : public ITracksInteraction
+class Au3TracksInteraction : public ITracksInteraction, public muse::Injectable
 {
     muse::GlobalInject<au::trackedit::ITrackeditConfiguration> configuration;
     muse::GlobalInject<au::playback::IPlaybackConfiguration> playbackConfiguration;
 
-    muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<au::trackedit::ISelectionController> selectionController;
-    muse::Inject<au::trackedit::IProjectHistory> projectHistory;
-    muse::Inject<au::trackedit::IClipsInteraction> clipsInteraction;
+    muse::Inject<muse::IInteractive> interactive{ this };
+    muse::Inject<au::context::IGlobalContext> globalContext{ this };
+    muse::Inject<au::trackedit::ISelectionController> selectionController{ this };
+    muse::Inject<au::trackedit::IProjectHistory> projectHistory{ this };
+    muse::Inject<au::trackedit::IClipsInteraction> clipsInteraction{ this };
 
 public:
     Au3TracksInteraction();

@@ -12,10 +12,10 @@
 #include "../../ilabelsinteraction.h"
 
 namespace au::trackedit {
-class Au3LabelsInteraction : public ILabelsInteraction
+class Au3LabelsInteraction : public ILabelsInteraction, public muse::Injectable
 {
-    muse::Inject<context::IGlobalContext> globalContext;
-    muse::Inject<ISelectionController> selectionController;
+    muse::Inject<context::IGlobalContext> globalContext{ this };
+    muse::Inject<ISelectionController> selectionController{ this };
 
 public:
     Au3LabelsInteraction();

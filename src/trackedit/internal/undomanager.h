@@ -14,8 +14,8 @@ namespace au::trackedit {
 class UndoManager : public IUndoManager, public muse::Injectable
 {
 private:
-    muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<au::trackedit::IProjectHistory> projectHistory;
+    muse::Inject<au::context::IGlobalContext> globalContext { this };
+    muse::Inject<au::trackedit::IProjectHistory> projectHistory { this };
 
 public:
     bool undo() override;

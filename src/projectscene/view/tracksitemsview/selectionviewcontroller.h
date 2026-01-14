@@ -19,7 +19,7 @@
 #include "../timeline/timelinecontext.h"
 
 namespace au::projectscene {
-class SelectionViewController : public QObject, public muse::async::Asyncable
+class SelectionViewController : public QObject, public muse::async::Asyncable, public muse::Injectable
 {
     Q_OBJECT
     Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
@@ -30,11 +30,12 @@ class SelectionViewController : public QObject, public muse::async::Asyncable
     Q_PROPERTY(bool spectralSelectionEnabled READ spectralSelectionEnabled NOTIFY spectralSelectionEnabledChanged FINAL)
     Q_PROPERTY(QVariantMap pressedSpectrogram READ pressedSpectrogram NOTIFY pressedSpectrogramChanged FINAL)
 
-    muse::Inject<context::IGlobalContext> globalContext;
-    muse::Inject<trackedit::ISelectionController> selectionController;
-    muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
-    muse::Inject<spectrogram::ISpectrogramService> spectrogramService;
-    muse::Inject<spectrogram::IGlobalSpectrogramConfiguration> spectrogramConfiguration;
+	muse::GlobalInject<spectrogram::IGlobalSpectrogramConfiguration> spectrogramConfiguration;
+    
+    muse::Inject<context::IGlobalContext> globalContext { this };
+    muse::Inject<trackedit::ISelectionController> selectionController { this };
+    muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction { this };
+    muse::Inject<spectrogram::ISpectrogramService> spectrogramService { this };
 
 public:
     SelectionViewController(QObject* parent = nullptr);

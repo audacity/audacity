@@ -29,9 +29,9 @@ class PlaybackToolBarTimeItem : public muse::uicomponents::ToolBarItem
 
     muse::GlobalInject<IPlaybackConfiguration> configuration;
 
-    muse::Inject<context::IGlobalContext> globalContext;
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
-    muse::Inject<IPlayback> playback;
+    muse::Inject<context::IGlobalContext> globalContext{ this };
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::Inject<IPlayback> playback{ this };
 
 public:
     explicit PlaybackToolBarTimeItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,

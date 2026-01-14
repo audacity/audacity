@@ -19,7 +19,7 @@
 #include "trackedit/iselectioncontroller.h"
 
 namespace au::importexport {
-class ExportPreferencesModel : public QObject, public muse::async::Asyncable
+class ExportPreferencesModel : public QObject, public muse::async::Asyncable, public muse::Injectable
 {
     Q_OBJECT
 
@@ -27,12 +27,12 @@ class ExportPreferencesModel : public QObject, public muse::async::Asyncable
     muse::GlobalInject<appshell::IAppShellConfiguration> configuration;
     muse::GlobalInject<IExportConfiguration> exportConfiguration;
 
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
-    muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<context::IGlobalContext> globalContext;
-    muse::Inject<IExporter> exporter;
-    muse::Inject<au::playback::IPlaybackController> playbackController;
-    muse::Inject<trackedit::ISelectionController> selectionController;
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::Inject<muse::IInteractive> interactive{ this };
+    muse::Inject<context::IGlobalContext> globalContext{ this };
+    muse::Inject<IExporter> exporter{ this };
+    muse::Inject<au::playback::IPlaybackController> playbackController{ this };
+    muse::Inject<trackedit::ISelectionController> selectionController{ this };
 
     Q_PROPERTY(QString currentProcess READ currentProcess NOTIFY currentProcessChanged)
     Q_PROPERTY(QVariantList processList READ processList NOTIFY processListChanged)

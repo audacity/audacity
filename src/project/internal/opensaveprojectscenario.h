@@ -36,15 +36,15 @@
 #include "cloud/qml/Muse/Cloud/enums.h"
 
 namespace au::project {
-class OpenSaveProjectScenario : public IOpenSaveProjectScenario
+class OpenSaveProjectScenario : public IOpenSaveProjectScenario, public muse::Injectable
 {
     muse::GlobalInject<IProjectConfiguration> configuration;
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
 
-    muse::Inject<IProjectFilesController> projectFilesController;
-    muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<muse::cloud::IMuseScoreComService> museScoreComService;
-    muse::Inject<muse::cloud::IAudioComService> audioComService;
+    muse::Inject<IProjectFilesController> projectFilesController { this };
+    muse::Inject<muse::IInteractive> interactive { this };
+    muse::Inject<muse::cloud::IMuseScoreComService> museScoreComService { this };
+    muse::Inject<muse::cloud::IAudioComService> audioComService { this };
 
 public:
     OpenSaveProjectScenario() = default;

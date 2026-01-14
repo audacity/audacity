@@ -18,12 +18,12 @@ namespace au::playback {
 using au::audio::volume_dbfs_t;
 using au::audio::pan_t;
 
-class Au3TrackPlaybackControl : public ITrackPlaybackControl
+class Au3TrackPlaybackControl : public ITrackPlaybackControl, public muse::Injectable
 {
     muse::GlobalInject<au::playback::IPlaybackConfiguration> playbackConfiguration;
 
-    muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<au::trackedit::IProjectHistory> projectHistory;
+    muse::Inject<au::context::IGlobalContext> globalContext { this };
+    muse::Inject<au::trackedit::IProjectHistory> projectHistory { this };
 
 public:
     Au3TrackPlaybackControl() = default;

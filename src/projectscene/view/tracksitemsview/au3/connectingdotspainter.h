@@ -9,9 +9,9 @@
 #include "WaveMetrics.h"
 
 namespace au::projectscene {
-class ConnectingDotsPainter : public IConnectingDotsPainter
+class ConnectingDotsPainter : public IConnectingDotsPainter, public muse::Injectable
 {
-    muse::Inject<au::context::IGlobalContext> globalContext;
+    muse::Inject<au::context::IGlobalContext> globalContext{ this };
 
 public:
     ConnectingDotsPainter() = default;

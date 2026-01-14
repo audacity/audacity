@@ -10,9 +10,9 @@
 
 #include "au3-basic-ui/BasicUI.h"
 
-class Au3BasicUI final : public BasicUI::Services, public muse::async::Asyncable
+class Au3BasicUI final : public BasicUI::Services, public muse::async::Asyncable, public muse::Injectable
 {
-    muse::Inject<muse::IInteractive> interactive;
+    muse::Inject<muse::IInteractive> interactive { this };
 
 protected:
     void DoCallAfter(const BasicUI::Action& action) override;

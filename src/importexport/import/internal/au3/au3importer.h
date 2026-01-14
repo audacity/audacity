@@ -13,11 +13,11 @@
 #include "../../iimporter.h"
 
 namespace au::importexport {
-class Au3Importer : public IImporter
+class Au3Importer : public IImporter, public muse::Injectable
 {
-    muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<trackedit::ITracksInteraction> tracksInteraction;
-    muse::Inject<trackedit::ISelectionController> selectionController;
+    muse::Inject<au::context::IGlobalContext> globalContext{ this };
+    muse::Inject<trackedit::ITracksInteraction> tracksInteraction{ this };
+    muse::Inject<trackedit::ISelectionController> selectionController{ this };
 
 public:
     Au3Importer() = default;

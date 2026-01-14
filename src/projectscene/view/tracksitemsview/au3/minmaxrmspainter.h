@@ -9,9 +9,9 @@
 #include "WaveMetrics.h"
 
 namespace au::projectscene {
-class MinMaxRMSPainter : public IMinMaxRMSPainter
+class MinMaxRMSPainter : public IMinMaxRMSPainter, public muse::Injectable
 {
-    muse::Inject<au::context::IGlobalContext> globalContext;
+    muse::Inject<au::context::IGlobalContext> globalContext{ this };
 
 public:
     MinMaxRMSPainter() = default;

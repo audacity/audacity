@@ -38,14 +38,14 @@
 // #include "multiinstances/imultiinstancesprovider.h"
 
 namespace au::appshell {
-class StartupScenario : public au::appshell::IStartupScenario, public muse::async::Asyncable
+class StartupScenario : public au::appshell::IStartupScenario, public muse::async::Asyncable, public muse::Injectable
 {
     muse::GlobalInject<IAppShellConfiguration> configuration;
 
-    muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
-    muse::Inject<ISessionsManager> sessionsManager;
-    muse::Inject<muse::audioplugins::IRegisterAudioPluginsScenario> registerAudioPluginsScenario;
+    muse::Inject<muse::IInteractive> interactive { this };
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::Inject<ISessionsManager> sessionsManager { this };
+    muse::Inject<muse::audioplugins::IRegisterAudioPluginsScenario> registerAudioPluginsScenario { this };
 
 //! TODO AU4
     // INJECT(mi::IMultiInstancesProvider, multiInstancesProvider)

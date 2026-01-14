@@ -23,18 +23,18 @@
 #include "../itrackeditactionscontroller.h"
 
 namespace au::trackedit {
-class TrackeditActionsController : public ITrackeditActionsController, public muse::actions::Actionable, public muse::async::Asyncable
+class TrackeditActionsController : public ITrackeditActionsController, public muse::actions::Actionable, public muse::async::Asyncable, public muse::Injectable
 {
     muse::GlobalInject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
     muse::GlobalInject<trackedit::ITrackeditConfiguration> configuration;
 
-    muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider;
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
-    muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<trackedit::IProjectHistory> projectHistory;
-    muse::Inject<trackedit::ISelectionController> selectionController;
-    muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
+    muse::Inject<au::context::IGlobalContext> globalContext { this };
+    muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider { this };
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::Inject<muse::IInteractive> interactive { this };
+    muse::Inject<trackedit::IProjectHistory> projectHistory { this };
+    muse::Inject<trackedit::ISelectionController> selectionController { this };
+    muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction { this };
 
 public:
     void init();

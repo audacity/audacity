@@ -31,7 +31,7 @@ class NoiseReductionViewModel : public BuiltinEffectModel
 
     Q_PROPERTY(int reductionMode READ reductionMode WRITE setReductionMode NOTIFY reductionModeChanged FINAL)
 
-    muse::Inject<muse::IInteractive> interactive;
+    muse::Inject<muse::IInteractive> interactive{ this };
 
 public:
     NoiseReductionViewModel(QObject* parent, int instanceId);

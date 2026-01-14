@@ -12,10 +12,10 @@
 #include "internal/playbackcontroller.h"
 
 namespace au::playback {
-class PlaybackUiActions : public muse::ui::IUiActionsModule, public muse::async::Asyncable
+class PlaybackUiActions : public muse::ui::IUiActionsModule, public muse::async::Asyncable, public muse::Injectable
 {
-    muse::Inject<context::IUiContextResolver> uiContextResolver;
-    muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider;
+    muse::Inject<context::IUiContextResolver> uiContextResolver{ this };
+    muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider{ this };
 
 public:
     PlaybackUiActions(std::shared_ptr<PlaybackController> controller);

@@ -11,12 +11,12 @@
 #include "trackedit/trackedittypes.h"
 
 namespace au::trackedit {
-class DeleteBehaviorOnboardingScenario
+class DeleteBehaviorOnboardingScenario : public muse::Injectable
 {
     muse::GlobalInject<ITrackeditConfiguration> configuration;
 
-    muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
+    muse::Inject<muse::IInteractive> interactive { this };
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
 
 public:
     bool showOnboardingDialog() const;

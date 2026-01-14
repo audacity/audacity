@@ -12,7 +12,7 @@
 #include "uicomponents/qml/Muse/UiComponents/internal/tableviewcell.h" // todo: public?
 
 namespace au::projectscene {
-class LabelsTableViewTimecodeCell : public muse::uicomponents::TableViewCell
+class LabelsTableViewTimecodeCell : public muse::uicomponents::TableViewCell, public muse::Injectable
 {
     Q_OBJECT
     QML_ELEMENT;
@@ -22,8 +22,8 @@ class LabelsTableViewTimecodeCell : public muse::uicomponents::TableViewCell
     Q_PROPERTY(int upperTimeSignature READ upperTimeSignature NOTIFY timeSignatureChanged FINAL)
     Q_PROPERTY(int lowerTimeSignature READ lowerTimeSignature NOTIFY timeSignatureChanged FINAL)
 
-    muse::Inject<context::IGlobalContext> globalContext;
-    muse::Inject<playback::IPlayback> playback;
+    muse::Inject<context::IGlobalContext> globalContext{ this };
+    muse::Inject<playback::IPlayback> playback{ this };
 
 public:
     explicit LabelsTableViewTimecodeCell(QObject* parent = nullptr);

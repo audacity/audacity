@@ -13,10 +13,10 @@
 #include "project/imetadata.h"
 
 namespace au::project {
-class Au3Metadata : public IMetadata
+class Au3Metadata : public IMetadata, public muse::Injectable
 {
-    muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<muse::IInteractive> interactive;
+    muse::Inject<au::context::IGlobalContext> globalContext { this };
+    muse::Inject<muse::IInteractive> interactive { this };
 
 public:
     void init();

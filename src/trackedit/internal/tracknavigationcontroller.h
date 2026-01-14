@@ -22,13 +22,13 @@ enum class SelectionDirection {
     Down
 };
 
-class TrackNavigationController : public ITrackNavigationController, public muse::actions::Actionable, public muse::async::Asyncable
+class TrackNavigationController : public ITrackNavigationController, public muse::actions::Actionable, public muse::async::Asyncable, public muse::Injectable
 {
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
-    muse::Inject<muse::ui::INavigationController> navigationController;
-    muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<au::trackedit::ISelectionController> selectionController;
-    muse::Inject<au::trackedit::ITrackeditInteraction> trackeditInteraction;
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::Inject<muse::ui::INavigationController> navigationController{ this };
+    muse::Inject<au::context::IGlobalContext> globalContext{ this };
+    muse::Inject<au::trackedit::ISelectionController> selectionController{ this };
+    muse::Inject<au::trackedit::ITrackeditInteraction> trackeditInteraction{ this };
 
 public:
     void init();

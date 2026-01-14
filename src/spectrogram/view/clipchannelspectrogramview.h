@@ -13,7 +13,7 @@
 #include <QQuickPaintedItem>
 
 namespace au::spectrogram {
-class ClipChannelSpectrogramView : public QQuickPaintedItem, public muse::async::Asyncable
+class ClipChannelSpectrogramView : public QQuickPaintedItem, public muse::async::Asyncable, public muse::Injectable
 {
     Q_OBJECT
     Q_PROPERTY(int clipId READ clipId WRITE setClipId NOTIFY clipIdChanged FINAL)
@@ -30,8 +30,8 @@ class ClipChannelSpectrogramView : public QQuickPaintedItem, public muse::async:
     Q_PROPERTY(
         double selectionEndFrequency READ selectionEndFrequency WRITE setSelectionEndFrequency NOTIFY selectionFrequencyChanged FINAL)
 
-    muse::Inject<ISpectrogramPainter> spectrogramPainter;
-    muse::Inject<au::context::IGlobalContext> globalContext;
+    muse::Inject<ISpectrogramPainter> spectrogramPainter { this };
+    muse::Inject<au::context::IGlobalContext> globalContext { this };
 
 public:
     ClipChannelSpectrogramView(QQuickItem* parent = nullptr);

@@ -11,7 +11,7 @@
 namespace au::context {
 class GlobalContext : public au::context::IGlobalContext, public muse::Injectable
 {
-    muse::Inject<au::record::IRecordController> recordController;
+    muse::Inject<au::record::IRecordController> recordController { this };
 
 public:
 

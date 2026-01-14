@@ -18,10 +18,10 @@ class TrackContextMenuModel : public muse::uicomponents::AbstractMenuModel
 
     muse::GlobalInject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
 
-    muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider;
-    muse::Inject<context::IGlobalContext> globalContext;
-    muse::Inject<trackedit::IProjectHistory> projectHistory;
-    muse::Inject<trackedit::ISelectionController> selectionController;
+    muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider{ this };
+    muse::Inject<context::IGlobalContext> globalContext{ this };
+    muse::Inject<trackedit::IProjectHistory> projectHistory{ this };
+    muse::Inject<trackedit::ISelectionController> selectionController{ this };
 
     Q_PROPERTY(trackedit::TrackId trackId READ trackId WRITE setTrackId NOTIFY trackIdChanged FINAL)
 

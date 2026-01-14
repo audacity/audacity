@@ -16,7 +16,7 @@ class PlaybackToolBarTimeSignatureItem : public muse::uicomponents::ToolBarItem
     Q_PROPERTY(int upper READ upper WRITE setUpper NOTIFY upperChanged FINAL)
     Q_PROPERTY(int lower READ lower WRITE setLower NOTIFY lowerChanged FINAL)
 
-    muse::Inject<context::IGlobalContext> globalContext;
+    muse::Inject<context::IGlobalContext> globalContext{ this };
 
 public:
     explicit PlaybackToolBarTimeSignatureItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,

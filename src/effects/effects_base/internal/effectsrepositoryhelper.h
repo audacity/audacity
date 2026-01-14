@@ -14,7 +14,7 @@ namespace au::effects {
 class EffectsRepositoryHelper final : public muse::Injectable
 {
 public:
-    muse::Inject<muse::audioplugins::IKnownAudioPluginsRegister> knownPlugins;
+    muse::Inject<muse::audioplugins::IKnownAudioPluginsRegister> knownPlugins{ this };
 
 public:
     using GetTitleFunc = std::function<muse::String (const muse::io::path_t&)>;

@@ -14,11 +14,12 @@
 
 namespace au::trackedit {
 class Au3TrackSpectrogramConfiguration;
-class TrackSpectrogramSettingsUpdater : public muse::async::Asyncable
+class TrackSpectrogramSettingsUpdater : public muse::async::Asyncable, public muse::Injectable
 {
-    muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<spectrogram::IGlobalSpectrogramConfiguration> globalSpectrogramConfiguration;
-    muse::Inject<spectrogram::ISpectrogramService> spectrogramService;
+	muse::GlobalInject<spectrogram::IGlobalSpectrogramConfiguration> globalSpectrogramConfiguration;
+
+    muse::Inject<au::context::IGlobalContext> globalContext { this };
+    muse::Inject<spectrogram::ISpectrogramService> spectrogramService { this };
 
 public:
     void init();

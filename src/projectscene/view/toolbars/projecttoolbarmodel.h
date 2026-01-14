@@ -16,8 +16,8 @@ class ProjectToolBarModel : public muse::uicomponents::AbstractToolBarModel, pub
 
     Q_PROPERTY(bool isCompactMode READ isCompactMode WRITE setIsCompactMode NOTIFY isCompactModeChanged)
 
-    muse::Inject<au::context::IGlobalContext> context;
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
+    muse::Inject<au::context::IGlobalContext> context { this };
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
 
 public:
     Q_INVOKABLE void load() override;

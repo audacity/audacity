@@ -18,12 +18,12 @@
 namespace au::trackedit {
 class TrackeditOperationController : public ITrackeditInteraction, public muse::Injectable, public muse::async::Asyncable
 {
-    muse::Inject<ITracksInteraction> tracksInteraction;
-    muse::Inject<IClipsInteraction> clipsInteraction;
-    muse::Inject<ILabelsInteraction> labelsInteraction;
-    muse::Inject<ITrackeditClipboard> clipboard;
-    muse::Inject<IProjectHistory> projectHistory;
-    muse::Inject<au::context::IGlobalContext> globalContext;
+    muse::Inject<ITracksInteraction> tracksInteraction { this };
+    muse::Inject<IClipsInteraction> clipsInteraction { this };
+    muse::Inject<ILabelsInteraction> labelsInteraction { this };
+    muse::Inject<ITrackeditClipboard> clipboard { this };
+    muse::Inject<IProjectHistory> projectHistory { this };
+    muse::Inject<au::context::IGlobalContext> globalContext { this };
 
 public:
     TrackeditOperationController(std::unique_ptr<IUndoManager> undoManager);

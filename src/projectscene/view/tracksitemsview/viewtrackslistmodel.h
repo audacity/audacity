@@ -20,7 +20,7 @@
 #include "trackedit/dom/track.h"
 
 namespace au::projectscene {
-class ViewTracksListModel : public QAbstractListModel, public muse::async::Asyncable, public muse::actions::Actionable
+class ViewTracksListModel : public QAbstractListModel, public muse::async::Asyncable, public muse::actions::Actionable, public muse::Injectable
 {
     Q_OBJECT
 
@@ -31,10 +31,10 @@ class ViewTracksListModel : public QAbstractListModel, public muse::async::Async
     muse::GlobalInject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
     muse::GlobalInject<playback::IPlaybackConfiguration> playbackConfiguration;
 
-    muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<trackedit::ISelectionController> selectionController;
-    muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
-    muse::Inject<playback::ITrackPlaybackControl> trackPlaybackControl;
+    muse::Inject<au::context::IGlobalContext> globalContext{ this };
+    muse::Inject<trackedit::ISelectionController> selectionController{ this };
+    muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
+    muse::Inject<playback::ITrackPlaybackControl> trackPlaybackControl{ this };
 public:
     explicit ViewTracksListModel(QObject* parent = nullptr);
 

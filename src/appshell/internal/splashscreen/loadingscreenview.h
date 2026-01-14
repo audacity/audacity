@@ -35,13 +35,13 @@
 class QSvgRenderer;
 
 namespace au::appshell {
-class LoadingScreenView : public QWidget
+class LoadingScreenView : public QWidget, public muse::Injectable
 {
     Q_OBJECT
 
     muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
 
-    muse::Inject<muse::IApplication> application;
+    muse::Inject<muse::IApplication> application { this };
 //! TODO AU4
 //    INJECT(languages::ILanguagesService, languagesService)
 

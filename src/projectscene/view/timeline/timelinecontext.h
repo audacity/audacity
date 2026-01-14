@@ -25,7 +25,7 @@ namespace au::projectscene {
 using Direction = DirectionType::Direction;
 
 class SnapTimeFormatter;
-class TimelineContext : public QObject, public muse::async::Asyncable, public muse::actions::Actionable
+class TimelineContext : public QObject, public muse::async::Asyncable, public muse::actions::Actionable, public muse::Injectable
 {
     Q_OBJECT
 
@@ -58,10 +58,10 @@ class TimelineContext : public QObject, public muse::async::Asyncable, public mu
 
     muse::GlobalInject<IProjectSceneConfiguration> configuration;
 
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
-    muse::Inject<context::IGlobalContext> globalContext;
-    muse::Inject<trackedit::ISelectionController> selectionController;
-    muse::Inject<playback::IPlayback> playback;
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::Inject<context::IGlobalContext> globalContext{ this };
+    muse::Inject<trackedit::ISelectionController> selectionController{ this };
+    muse::Inject<playback::IPlayback> playback{ this };
 
 public:
 

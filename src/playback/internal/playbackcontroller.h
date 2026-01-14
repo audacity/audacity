@@ -22,19 +22,19 @@
 
 namespace au::playback {
 class PlaybackUiActions;
-class PlaybackController : public IPlaybackController, public muse::actions::Actionable, public muse::async::Asyncable
+class PlaybackController : public IPlaybackController, public muse::actions::Actionable, public muse::async::Asyncable, public muse::Injectable
 {
 public:
     muse::GlobalInject<au::playback::IPlaybackConfiguration> playbackConfiguration;
 
-    muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider;
-    muse::Inject<IPlayback> playback;
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
-    muse::Inject<muse::IApplication> application;
-    muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<record::IRecordController> recordController;
-    muse::Inject<trackedit::ISelectionController> selectionController;
+    muse::Inject<au::context::IGlobalContext> globalContext { this };
+    muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider { this };
+    muse::Inject<IPlayback> playback { this };
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::Inject<muse::IApplication> application { this };
+    muse::Inject<muse::IInteractive> interactive { this };
+    muse::Inject<record::IRecordController> recordController{ this };
+    muse::Inject<trackedit::ISelectionController> selectionController{ this };
 
 public:
     void init();
