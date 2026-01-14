@@ -107,7 +107,7 @@ std::shared_ptr<WaveClip> DomAccessor::findWaveClip(Au3Project& prj, const track
 size_t DomAccessor::findClipIndexById(const Au3WaveTrack* track, const trackedit::ClipId& clipId)
 {
     size_t index = 0;
-    for (const auto& interval : track->Intervals()) {
+    for (const auto& interval : track->SortedIntervalArray()) {
         if (interval->GetId() == clipId) {
             return index;
         }
