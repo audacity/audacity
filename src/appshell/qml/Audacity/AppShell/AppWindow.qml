@@ -24,7 +24,9 @@ import QtQuick.Controls 2.15
 
 import Muse.Ui 1.0
 import Muse.Shortcuts 1.0
-import Audacity.AppShell
+
+import Audacity.AppShell 1.0
+import Audacity.Toast 1.0
 
 ApplicationWindow {
     id: root
@@ -78,6 +80,8 @@ ApplicationWindow {
     WindowDropArea {
         anchors.fill: parent
     }
+
+    ToastProvider { }
 
     function showMinimizedWithSavePreviousState() {
         bridge.showMinimizedWithSavePreviousState()

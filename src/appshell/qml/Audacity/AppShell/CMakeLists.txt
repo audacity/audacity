@@ -46,6 +46,7 @@ qt_add_qml_module(appshell_qml
         DevTools/KeyNav/KeyNavSection.qml
         DevTools/KeyNav/KeyNavSubSection.qml
         DevTools/Preferences/SettingsPage.qml
+        DevTools/ToastNotification/ToastNotificationTests.qml
         FirstLaunchSetup/ClipVisualizationPage.qml
         FirstLaunchSetup/DoublePage.qml
         FirstLaunchSetup/FirstLaunchSetupDialog.qml

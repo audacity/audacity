@@ -108,6 +108,7 @@ set(LINK_LIB
     playback
     record
     spectrogram
+    toast
     effects_base
     effects_builtin
     effects_nyquist

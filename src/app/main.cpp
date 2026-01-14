@@ -63,6 +63,7 @@
 #include "spectrogram/spectrogrammodule.h"
 #include "record/recordmodule.h"
 #include "uicomponents/uicomponentsmodule.h"
+#include "toast/toastmodule.h"
 #include "effects/effects_base/effectsmodule.h"
 #include "effects/builtin/builtineffectsmodule.h"
 #ifdef AU_MODULE_EFFECTS_LV2
@@ -271,6 +272,7 @@ int main(int argc, char** argv)
         app.addModule(new au::record::RecordModule());
         app.addModule(new au::trackedit::TrackeditModule());
         app.addModule(new au::spectrogram::SpectrogramModule());
+        app.addModule(new au::toast::ToastModule());
         app.addModule(new au::project::ProjectModule());
         app.addModule(new au::importexport::ExporterModule());
         app.addModule(new au::importexport::ImporterModule());

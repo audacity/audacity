@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/Audacity/Toast/qmldir</file>
+        <file>qml/Audacity/Toast/ToastProgressBar.qml</file>
+        <file>qml/Audacity/Toast/ToastProvider.qml</file>
+        <file>qml/Audacity/Toast/ToastItem.qml</file>
+    </qresource>
+</RCC>
