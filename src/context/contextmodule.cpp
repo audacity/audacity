@@ -37,8 +37,8 @@ std::string ContextModule::moduleName() const
 
 void ContextModule::registerExports()
 {
-    m_globalContext = std::make_shared<GlobalContext>();
-    m_uicontextResolver = std::make_shared<UiContextResolver>();
+    m_globalContext = std::make_shared<GlobalContext>(iocContext());
+    m_uicontextResolver = std::make_shared<UiContextResolver>(iocContext());
 
     ioc()->registerExport<IGlobalContext>(moduleName(), m_globalContext);
     ioc()->registerExport<IUiContextResolver>(moduleName(), m_uicontextResolver);

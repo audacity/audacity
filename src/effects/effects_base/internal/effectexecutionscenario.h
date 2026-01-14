@@ -37,7 +37,7 @@ class EffectExecutionScenario : public IEffectExecutionScenario, public muse::In
     muse::Inject<trackedit::IProjectHistory> projectHistory{ this };
 
 public:
-    EffectExecutionScenario() = default;
+    EffectExecutionScenario(const muse::modularity::ContextPtr& ctx) : muse::Injectable(ctx) {}
 
     muse::Ret performEffect(const EffectId& effectId) override;
     bool lastProcessorIsAvailable() const override;

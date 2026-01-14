@@ -18,6 +18,8 @@ class SpectrogramService final : public ISpectrogramService, public muse::Inject
     muse::Inject<context::IGlobalContext> globalContext { this };
 
 public:
+    SpectrogramService(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
     ~SpectrogramService() override = default;
 
     void init();

@@ -18,7 +18,7 @@ const muse::actions::ActionQuery TOGGLE_TRACK_HALF_WAVE("action://projectscene/t
 }
 
 TrackRulerModel::TrackRulerModel(QObject* parent)
-    : QObject(parent)
+    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
 {
     m_model = buildRulerModel();
 }

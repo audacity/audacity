@@ -20,7 +20,7 @@ class ProjectSceneUiActions : public muse::ui::IUiActionsModule, public muse::In
     muse::Inject<context::IUiContextResolver> uicontextResolver{ this };
 
 public:
-    ProjectSceneUiActions(std::shared_ptr<ProjectSceneActionsController> controller);
+    ProjectSceneUiActions(const muse::modularity::ContextPtr& ctx, std::shared_ptr<ProjectSceneActionsController> controller);
 
     void init();
 

@@ -455,8 +455,8 @@ UiActionList STATIC_ACTIONS = {
 };
 }
 
-TrackeditUiActions::TrackeditUiActions(std::shared_ptr<TrackeditActionsController> controller)
-    : m_actions(STATIC_ACTIONS), m_controller(controller)
+TrackeditUiActions::TrackeditUiActions(const muse::modularity::ContextPtr& ctx, std::shared_ptr<TrackeditActionsController> controller)
+    : muse::Injectable(ctx), m_actions(STATIC_ACTIONS), m_controller(controller)
 {
 }
 

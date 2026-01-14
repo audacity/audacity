@@ -46,7 +46,7 @@ class LoadingScreenView : public QWidget, public muse::Injectable
 //    INJECT(languages::ILanguagesService, languagesService)
 
 public:
-    explicit LoadingScreenView(QWidget* parent = nullptr);
+    explicit LoadingScreenView(const muse::modularity::ContextPtr& ctx, QWidget* parent = nullptr);
 
 private:
     bool event(QEvent* event) override;

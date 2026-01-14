@@ -25,7 +25,8 @@ class Au3Exporter : public IExporter, public muse::Injectable
     muse::Inject<au::playback::IPlaybackController> playbackController{ this };
 
 public:
-    Au3Exporter() = default;
+    Au3Exporter(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
 
     void init() override;
     muse::Ret exportData(std::string filename) override;

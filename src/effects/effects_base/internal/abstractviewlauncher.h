@@ -14,6 +14,10 @@ protected:
     muse::Inject<muse::IInteractive> interactive{ this };
     muse::Inject<IEffectInstancesRegister> instancesRegister{ this };
 
+public:
+    AbstractViewLauncher(const muse::modularity::ContextPtr& ctx) : muse::Injectable(ctx) {}
+
+protected:
     muse::Ret doShowEffect(int instanceId, EffectFamily) const;
     void doShowRealtimeEffect(const RealtimeEffectStatePtr& state) const;
 

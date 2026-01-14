@@ -45,7 +45,8 @@ class ProjectAutoSaver : public IProjectAutoSaver, public muse::async::Asyncable
     // maybe use the muse::Inject<au::appshell::ISessionsManager> sessionsManager;
 
 public:
-    ProjectAutoSaver() = default;
+    ProjectAutoSaver(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
 
     void init();
 

@@ -9,7 +9,7 @@ auto isAudioTrack = [](au::trackedit::TrackType type) {
 }
 
 DropController::DropController(QObject* parent)
-    : QObject(parent)
+    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
 {}
 
 void DropController::probeAudioFilesLength(const QStringList& fileUrls)

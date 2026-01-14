@@ -24,7 +24,7 @@ static const ActionQuery PLAYBACK_PLAY_QUERY("action://playback/play");
 static const ActionQuery RECORD_START_QUERY("action://record/start");
 
 PlaybackToolBarCustomiseModel::PlaybackToolBarCustomiseModel(QObject* parent)
-    : SelectableItemListModel(parent)
+    : SelectableItemListModel(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
 {
 }
 

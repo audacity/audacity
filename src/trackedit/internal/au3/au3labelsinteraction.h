@@ -18,7 +18,7 @@ class Au3LabelsInteraction : public ILabelsInteraction, public muse::Injectable
     muse::Inject<ISelectionController> selectionController{ this };
 
 public:
-    Au3LabelsInteraction();
+    Au3LabelsInteraction(const muse::modularity::ContextPtr& ctx);
 
     muse::RetVal<LabelKey> addLabel(const TrackId& toTrackId) override;
     bool addLabelToSelection() override;

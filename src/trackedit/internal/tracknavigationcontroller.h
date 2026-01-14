@@ -31,6 +31,9 @@ class TrackNavigationController : public ITrackNavigationController, public muse
     muse::Inject<au::trackedit::ITrackeditInteraction> trackeditInteraction{ this };
 
 public:
+    TrackNavigationController(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
+
     void init();
 
     void focusTrackByIndex(const muse::actions::ActionData& args) override;

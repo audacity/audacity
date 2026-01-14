@@ -214,8 +214,8 @@ const UiActionList PlaybackUiActions::m_settingsActions = {
              ),
 };
 
-PlaybackUiActions::PlaybackUiActions(std::shared_ptr<PlaybackController> controller)
-    : m_controller(controller)
+PlaybackUiActions::PlaybackUiActions(const muse::modularity::ContextPtr& ctx, std::shared_ptr<PlaybackController> controller)
+    : muse::Injectable(ctx), m_controller(controller)
 {
 }
 

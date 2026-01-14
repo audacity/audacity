@@ -18,6 +18,9 @@ class Au3AudioDevicesProvider : public audio::IAudioDevicesProvider, public muse
     muse::Inject<au::audio::IAudioEngine> audioEngine { this };
 
 public:
+    Au3AudioDevicesProvider(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
+
     void init();
 
     std::vector<std::string> outputDevices() const override;

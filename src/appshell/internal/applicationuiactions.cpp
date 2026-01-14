@@ -267,8 +267,8 @@ const UiActionList ApplicationUiActions::m_actions = {
              ),
 };
 
-ApplicationUiActions::ApplicationUiActions(std::shared_ptr<ApplicationActionController> controller)
-    : m_controller(controller)
+ApplicationUiActions::ApplicationUiActions(const muse::modularity::ContextPtr& ctx, std::shared_ptr<ApplicationActionController> controller)
+    : muse::Injectable(ctx), m_controller(controller)
 {
 }
 

@@ -20,7 +20,8 @@ class Au3Importer : public IImporter, public muse::Injectable
     muse::Inject<trackedit::ISelectionController> selectionController{ this };
 
 public:
-    Au3Importer() = default;
+    Au3Importer(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
 
     void init() override;
 

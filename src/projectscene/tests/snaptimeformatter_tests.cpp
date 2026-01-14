@@ -12,7 +12,7 @@ public:
 
     void SetUp() override
     {
-        m_formatter = std::make_shared<SnapTimeFormatter>();
+        m_formatter = std::make_shared<SnapTimeFormatter>(muse::modularity::globalCtx());
         m_timeSignature = { 120, 4, 4 };
     }
 

@@ -46,7 +46,8 @@ namespace {
 const std::string mixingDownToMonoLabel = muse::trc("trackedit", "Mixing down to mono...");
 }
 
-Au3TracksInteraction::Au3TracksInteraction()
+Au3TracksInteraction::Au3TracksInteraction(const muse::modularity::ContextPtr& ctx)
+    : muse::Injectable(ctx)
 {
     m_progress.setMaxNumIncrements(200);
 }

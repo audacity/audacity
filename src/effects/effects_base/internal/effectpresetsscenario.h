@@ -23,7 +23,7 @@ class EffectPresetsScenario : public IEffectPresetsScenario, public muse::Inject
     muse::Inject<IEffectInstancesRegister> instancesRegister{ this };
 
 public:
-    EffectPresetsScenario() = default;
+    EffectPresetsScenario(const muse::modularity::ContextPtr& ctx) : muse::Injectable(ctx) {}
 
     void applyPreset(const EffectInstanceId& effectInstanceId, const PresetId& presetId) override;
     void saveCurrentAsPreset(const EffectInstanceId& effectInstanceId) override;

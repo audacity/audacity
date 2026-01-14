@@ -23,7 +23,7 @@ class Au3AudioOutput : public IAudioOutput, public muse::async::Asyncable, publi
     muse::Inject<au::audio::IAudioEngine> audioEngine{ this };
 
 public:
-    Au3AudioOutput();
+    Au3AudioOutput(const muse::modularity::ContextPtr& ctx);
 
     muse::async::Promise<float> playbackVolume() const override;
     void setPlaybackVolume(float volume) override;

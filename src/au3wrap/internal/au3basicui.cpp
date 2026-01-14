@@ -101,7 +101,7 @@ std::unique_ptr<BasicUI::ProgressDialog> Au3BasicUI::DoMakeProgress(const Transl
 {
     Q_UNUSED(flags);
     Q_UNUSED(remainingLabelText);
-    auto dialog = std::make_unique<ProgressDialog>();
+    auto dialog = std::make_unique<ProgressDialog>(iocContext());
     dialog->SetDialogTitle(title);
     dialog->SetMessage(message);
     return dialog;

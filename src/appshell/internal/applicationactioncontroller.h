@@ -59,7 +59,7 @@ class ApplicationActionController : public QObject, public IApplicationActionCon
     muse::Inject<muse::IInteractive> interactive { this };
     muse::Inject<muse::IApplication> application { this };
     muse::GlobalInject<IAppShellConfiguration> configuration;
-    muse::Inject<project::IProjectFilesController> projectFilesController { this };
+    muse::GlobalInject<project::IProjectFilesController> projectFilesController;
     muse::Inject<record::IRecordController> recordController { this };
 
     muse::Inject<context::IUiContextResolver> uiContextResolver { this };
@@ -71,6 +71,9 @@ class ApplicationActionController : public QObject, public IApplicationActionCon
     // INJECT(audio::ISoundFontRepository, soundFontRepository)
     // INJECT(IStartupScenario, startupScenario)
 public:
+    ApplicationActionController(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
+
     void preInit();
     void init();
     const std::vector<muse::actions::ActionCode>& prohibitedActionsWhileRecording() const;

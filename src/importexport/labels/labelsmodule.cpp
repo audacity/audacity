@@ -33,8 +33,8 @@ void LabelsModule::registerExports()
 {
     m_configuration = std::make_shared<LabelsConfiguration>();
 
-    ioc()->registerExport<ILabelsImporter>(moduleName(), new Au3LabelsImporter());
-    ioc()->registerExport<ILabelsExporter>(moduleName(), new Au3LabelsExporter());
+    ioc()->registerExport<ILabelsImporter>(moduleName(), new Au3LabelsImporter(iocContext()));
+    ioc()->registerExport<ILabelsExporter>(moduleName(), new Au3LabelsExporter(iocContext()));
     ioc()->registerExport<ILabelsConfiguration>(moduleName(), m_configuration);
 }
 

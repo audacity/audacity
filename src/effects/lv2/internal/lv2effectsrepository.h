@@ -9,10 +9,10 @@
 #include "au3-lv2/LoadLV2.h"
 
 namespace au::effects {
-class Lv2EffectsRepository final : public ILv2EffectsRepository
+class Lv2EffectsRepository final : public ILv2EffectsRepository, public muse::Injectable
 {
 public:
-    Lv2EffectsRepository();
+    Lv2EffectsRepository(const muse::modularity::ContextPtr& ctx);
 
     EffectMetaList effectMetaList() const override;
     bool ensurePluginIsLoaded(const EffectId& effectId) const override;

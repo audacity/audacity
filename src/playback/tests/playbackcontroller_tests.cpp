@@ -34,7 +34,7 @@ class PlaybackControllerTests : public ::testing::Test
 public:
     void SetUp() override
     {
-        m_controller = new PlaybackController();
+        m_controller = new PlaybackController(muse::modularity::globalCtx());
 
         m_application = std::make_shared<muse::ApplicationMock>();
         m_controller->application.set(m_application);

@@ -24,11 +24,12 @@
 #define AU_APPSHELL_SPLASHSCREEN_H
 
 #include <QWidget>
+#include "modularity/ioc.h"
 
 class QSvgRenderer;
 
 namespace au::appshell {
-class SplashScreen : public QWidget
+class SplashScreen : public QWidget, public muse::Injectable
 {
 public:
     enum SplashScreenType {
@@ -36,7 +37,7 @@ public:
         ForNewInstance
     };
 
-    explicit SplashScreen(SplashScreenType type, bool forNewScore = false, const QString& openingFileName = QString());
+    explicit SplashScreen(const muse::modularity::ContextPtr& ctx, SplashScreenType type, bool forNewScore = false, const QString& openingFileName = QString());
 
 private:
     bool event(QEvent* event) override;

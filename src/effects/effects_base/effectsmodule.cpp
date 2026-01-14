@@ -42,21 +42,21 @@ std::string EffectsModule::moduleName() const
 
 void EffectsModule::registerExports()
 {
-    m_effectsProvider = std::make_shared<EffectsProvider>();
-    m_effectsMenuProvider = std::make_shared<EffectsMenuProvider>();
+    m_effectsProvider = std::make_shared<EffectsProvider>(iocContext());
+    m_effectsMenuProvider = std::make_shared<EffectsMenuProvider>(iocContext());
     m_configuration = std::make_shared<EffectsConfiguration>();
-    m_actionsController = std::make_shared<EffectsActionsController>();
-    m_realtimeEffectService = std::make_shared<RealtimeEffectService>();
+    m_actionsController = std::make_shared<EffectsActionsController>(iocContext());
+    m_realtimeEffectService = std::make_shared<RealtimeEffectService>(iocContext());
 
     ioc()->registerExport<IEffectsProvider>(moduleName(), m_effectsProvider);
     ioc()->registerExport<IEffectsMenuProvider>(moduleName(), m_effectsMenuProvider);
     ioc()->registerExport<IEffectsConfiguration>(moduleName(), m_configuration);
-    ioc()->registerExport<IEffectsUiEngine>(moduleName(), new EffectsUiEngine());
+    ioc()->registerExport<IEffectsUiEngine>(moduleName(), std::make_shared<EffectsUiEngine>(iocContext()));
     ioc()->registerExport<IEffectInstancesRegister>(moduleName(), new EffectInstancesRegister());
-    ioc()->registerExport<IEffectExecutionScenario>(moduleName(), new EffectExecutionScenario());
+    ioc()->registerExport<IEffectExecutionScenario>(moduleName(), std::make_shared<EffectExecutionScenario>(iocContext()));
     ioc()->registerExport<IRealtimeEffectService>(moduleName(), m_realtimeEffectService);
-    ioc()->registerExport<IEffectPresetsProvider>(moduleName(), new EffectPresetsProvider());
-    ioc()->registerExport<IEffectPresetsScenario>(moduleName(), new EffectPresetsScenario());
+    ioc()->registerExport<IEffectPresetsProvider>(moduleName(), std::make_shared<EffectPresetsProvider>(iocContext()));
+    ioc()->registerExport<IEffectPresetsScenario>(moduleName(), std::make_shared<EffectPresetsScenario>(iocContext()));
     ioc()->registerExport<IEffectViewLaunchRegister>(moduleName(), new EffectViewLaunchRegister());
 }
 

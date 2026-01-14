@@ -42,7 +42,7 @@ static const float SAMPLE_STALK_CLIP_SELECTED_ALPHA = 0.6;
 static const float SAMPLE_STALK_DATA_SELECTED_ALPHA = 0.7;
 
 WaveView::WaveView(QQuickItem* parent)
-    : QQuickPaintedItem(parent)
+    : QQuickPaintedItem(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
 {
     //! NOTE: Push history state after edit is completed to avoid multiple unecessary calls.
     connect(this, &WaveView::isIsolationModeChanged, [this]() {

@@ -60,7 +60,7 @@ static bool valuesEqual(const au::importexport::OptionValue& a, const au::import
 }
 
 DynamicExportOptionsModel::DynamicExportOptionsModel(QObject* parent)
-    : QAbstractListModel(parent)
+    : QAbstractListModel(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
 {
 }
 

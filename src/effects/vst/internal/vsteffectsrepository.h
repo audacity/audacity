@@ -9,10 +9,10 @@
 #include "au3-vst3/VST3EffectsModule.h"
 
 namespace au::effects {
-class VstEffectsRepository final : public IVstEffectsRepository
+class VstEffectsRepository final : public IVstEffectsRepository, public muse::Injectable
 {
 public:
-    VstEffectsRepository();
+    VstEffectsRepository(const muse::modularity::ContextPtr& ctx);
 
     EffectMetaList effectMetaList() const override;
     bool ensurePluginIsLoaded(const EffectId&) const override;

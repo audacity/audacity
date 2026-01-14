@@ -28,7 +28,7 @@ std::string BuiltinEffectsModule::moduleName() const
 
 void BuiltinEffectsModule::registerExports()
 {
-    m_builtinEffectsRepository = std::make_shared<BuiltinEffectsRepository>();
+    m_builtinEffectsRepository = std::make_shared<BuiltinEffectsRepository>(iocContext());
 
     ioc()->registerExport<IBuiltinEffectsRepository>(moduleName(), m_builtinEffectsRepository);
     ioc()->registerExport<IEffectsViewRegister>(moduleName(), new EffectsViewRegister());
@@ -38,7 +38,7 @@ void BuiltinEffectsModule::resolveImports()
 {
     auto lr = ioc()->resolve<IEffectViewLaunchRegister>(moduleName());
     if (lr) {
-        lr->regLauncher("Audacity" /*builtin*/, std::make_shared<BuiltinViewLauncher>());
+        lr->regLauncher("Audacity" /*builtin*/, std::make_shared<BuiltinViewLauncher>(iocContext()));
     }
 }
 

@@ -23,6 +23,8 @@ class ProjectSceneActionsController : public IProjectSceneActionsController, pub
     muse::GlobalInject<IProjectSceneConfiguration> configuration;
 
 public:
+    ProjectSceneActionsController(const muse::modularity::ContextPtr& ctx) : muse::Injectable(ctx) {}
+
     void init();
 
     bool actionChecked(const muse::actions::ActionCode& actionCode) const override;

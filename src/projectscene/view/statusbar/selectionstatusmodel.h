@@ -38,6 +38,8 @@ class SelectionStatusModel : public QObject, public muse::async::Asyncable, publ
     muse::Inject<playback::IPlayback> playback { this };
 
 public:
+    explicit SelectionStatusModel(QObject* parent = nullptr);
+
     Q_INVOKABLE void init();
 
     double startTime() const;

@@ -31,7 +31,7 @@ class ProjectViewState : public QObject, public IProjectViewState, public muse::
     muse::Inject<trackedit::IProjectHistory> projectHistory{ this };
 
 public:
-    ProjectViewState(std::shared_ptr<au::au3::IAu3Project> project);
+    ProjectViewState(const muse::modularity::ContextPtr& ctx, std::shared_ptr<au::au3::IAu3Project> project);
 
     // State of elements
     muse::ValCh<int> totalTrackHeight() const override;

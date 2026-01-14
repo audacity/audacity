@@ -44,7 +44,8 @@ void CloudProjectsModel::load()
         }
     };
 
-    ValCh<bool> authorized = museScoreComService()->authorization()->userAuthorized();
+    // TODO: update when audio.com integration is in place
+    ValCh<bool> authorized = { false };
 
     onUserAuthorizedChanged(authorized.val);
 

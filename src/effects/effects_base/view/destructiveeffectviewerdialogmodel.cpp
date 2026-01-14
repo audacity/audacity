@@ -6,7 +6,7 @@
 
 namespace au::effects {
 DestructiveEffectViewerDialogModel::DestructiveEffectViewerDialogModel(QObject* parent)
-    : QObject(parent)
+    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
 {
 }
 

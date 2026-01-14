@@ -56,7 +56,8 @@ class Audacity4Project : public IAudacityProject, public muse::async::Asyncable,
     muse::Inject<importexport::IImporter> importer { this };
 
 public:
-    Audacity4Project();
+    Audacity4Project(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
 
     muse::Ret createNew() override;
 

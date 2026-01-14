@@ -50,6 +50,7 @@ using namespace au::appshell;
 static GlobalModule globalModule;
 
 App::App()
+    : muse::Injectable(muse::modularity::globalCtx())
 {
 }
 
@@ -63,6 +64,7 @@ int App::run(QCoreApplication& app, CommandLineParser& commandLineParser)
     // ====================================================
     // Setup modules: Resources, Exports, Imports, UiTypes
     // ====================================================
+    globalModule.setApplication(muapplication());
     globalModule.registerResources();
     globalModule.registerExports();
     globalModule.registerUiTypes();
@@ -104,22 +106,22 @@ int App::run(QCoreApplication& app, CommandLineParser& commandLineParser)
 #ifdef AU_BUILD_APPSHELL_MODULE
     au::appshell::SplashScreen* splashScreen = nullptr;
     if (runMode == IApplication::RunMode::GuiApp) {
-        splashScreen = new SplashScreen(SplashScreen::Default);
+        splashScreen = new SplashScreen(iocContext(), SplashScreen::Default);
 
         // if (multiInstancesProvider()->isMainInstance()) {
-        //     splashScreen = new SplashScreen(SplashScreen::Default);
+        //     splashScreen = new SplashScreen(iocContext(), SplashScreen::Default);
         // } else {
         //     const project::ProjectFile& file = startupScenario()->startupScoreFile();
         //     if (file.isValid()) {
         //         if (file.hasDisplayName()) {
-        //             splashScreen = new SplashScreen(SplashScreen::ForNewInstance, false, file.displayName(true /* includingExtension */));
+        //             splashScreen = new SplashScreen(iocContext(), SplashScreen::ForNewInstance, false, file.displayName(true /* includingExtension */));
         //         } else {
-        //             splashScreen = new SplashScreen(SplashScreen::ForNewInstance, false);
+        //             splashScreen = new SplashScreen(iocContext(), SplashScreen::ForNewInstance, false);
         //         }
         //     } else if (startupScenario()->isStartWithNewFileAsSecondaryInstance()) {
-        //         splashScreen = new SplashScreen(SplashScreen::ForNewInstance, true);
+        //         splashScreen = new SplashScreen(iocContext(), SplashScreen::ForNewInstance, true);
         //     } else {
-        //         splashScreen = new SplashScreen(SplashScreen::Default);
+        //         splashScreen = new SplashScreen(iocContext(), SplashScreen::Default);
         //     }
         // }
     }

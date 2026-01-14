@@ -32,7 +32,7 @@ class Au3ClipsInteraction : public IClipsInteraction, public muse::Injectable
     muse::Inject<ITracksInteraction> tracksInteraction{ this };
 
 public:
-    Au3ClipsInteraction();
+    Au3ClipsInteraction(const muse::modularity::ContextPtr& ctx);
 
     muse::secs_t clipStartTime(const trackedit::ClipKey& clipKey) const override;
     muse::secs_t clipEndTime(const trackedit::ClipKey& clipKey) const override;

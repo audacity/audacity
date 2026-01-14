@@ -18,7 +18,7 @@ class PlaybackUiActions : public muse::ui::IUiActionsModule, public muse::async:
     muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider{ this };
 
 public:
-    PlaybackUiActions(std::shared_ptr<PlaybackController> controller);
+    PlaybackUiActions(const muse::modularity::ContextPtr& ctx, std::shared_ptr<PlaybackController> controller);
 
     void init();
 

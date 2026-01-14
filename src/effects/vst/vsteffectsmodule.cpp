@@ -43,7 +43,7 @@ std::string VstEffectsModule::moduleName() const
 
 void VstEffectsModule::registerExports()
 {
-    m_vstEffectsRepository = std::make_shared<VstEffectsRepository>();
+    m_vstEffectsRepository = std::make_shared<VstEffectsRepository>(iocContext());
     m_museVstModulesRepository = std::make_shared<MuseVstModulesRepository>();
 
     ioc()->registerExport<IVstEffectsRepository>(moduleName(), m_vstEffectsRepository);
@@ -67,7 +67,7 @@ void VstEffectsModule::resolveImports()
 
     auto lr = ioc()->resolve<IEffectViewLaunchRegister>(moduleName());
     if (lr) {
-        lr->regLauncher("VST3", std::make_shared<Vst3ViewLauncher>());
+        lr->regLauncher("VST3", std::make_shared<Vst3ViewLauncher>(iocContext()));
     }
 }
 

@@ -19,7 +19,8 @@ class Vst3ViewLauncher final : public AbstractViewLauncher
     muse::Inject<muse::vst::IVstInstancesRegister> museInstancesRegister{ this };
 
 public:
-    Vst3ViewLauncher() = default;
+    Vst3ViewLauncher(const muse::modularity::ContextPtr& ctx)
+        : AbstractViewLauncher(ctx) {}
 
     muse::Ret showEffect(const EffectInstanceId& instanceId) const override;
     void showRealtimeEffect(const RealtimeEffectStatePtr& state) const override;

@@ -41,13 +41,15 @@ class OpenSaveProjectScenario : public IOpenSaveProjectScenario, public muse::In
     muse::GlobalInject<IProjectConfiguration> configuration;
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
 
-    muse::Inject<IProjectFilesController> projectFilesController { this };
+    muse::GlobalInject<IProjectFilesController> projectFilesController;
+
     muse::Inject<muse::IInteractive> interactive { this };
     muse::Inject<muse::cloud::IMuseScoreComService> museScoreComService { this };
     muse::Inject<muse::cloud::IAudioComService> audioComService { this };
 
 public:
-    OpenSaveProjectScenario() = default;
+    OpenSaveProjectScenario(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
 
     muse::RetVal<SaveLocation> askSaveLocation(IAudacityProjectPtr project, SaveMode mode,
                                                SaveLocationType preselectedType = SaveLocationType::Undefined) const override;

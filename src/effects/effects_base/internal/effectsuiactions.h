@@ -22,7 +22,7 @@ class EffectsUiActions : public muse::ui::IUiActionsModule, public muse::async::
     muse::Inject<IEffectExecutionScenario> effectExecutionScenario{ this };
 
 public:
-    EffectsUiActions(std::shared_ptr<EffectsActionsController> controller);
+    EffectsUiActions(const muse::modularity::ContextPtr& ctx, std::shared_ptr<EffectsActionsController> controller);
 
     void reload();
 

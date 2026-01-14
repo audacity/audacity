@@ -26,7 +26,7 @@ class Au3TrackPlaybackControl : public ITrackPlaybackControl, public muse::Injec
     muse::Inject<au::trackedit::IProjectHistory> projectHistory { this };
 
 public:
-    Au3TrackPlaybackControl() = default;
+    Au3TrackPlaybackControl(const muse::modularity::ContextPtr& ctx) : muse::Injectable(ctx) {}
     volume_dbfs_t volume(long trackId) const override;
     void setVolume(long trackId, volume_dbfs_t vol, bool completed) override;
 

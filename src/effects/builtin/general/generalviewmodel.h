@@ -10,7 +10,7 @@ class GeneralViewModel : public BuiltinEffectModel
 {
     Q_OBJECT
 public:
-    GeneralViewModel() = default;
+    GeneralViewModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void init();
 

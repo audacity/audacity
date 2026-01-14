@@ -8,7 +8,7 @@
 
 namespace au {
 PlayRegionModel::PlayRegionModel(QObject* parent)
-    : QObject{parent}
+    : QObject{parent}, muse::Injectable(muse::iocCtxForQmlObject(this))
 {
     playbackController()->loopRegionChanged().onNotify(this, [this]() {
         onLoopRegionChanged();

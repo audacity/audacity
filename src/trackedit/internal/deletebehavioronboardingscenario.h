@@ -19,6 +19,8 @@ class DeleteBehaviorOnboardingScenario : public muse::Injectable
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
 
 public:
+    DeleteBehaviorOnboardingScenario(const muse::modularity::ContextPtr& ctx) : muse::Injectable(ctx) {}
+
     bool showOnboardingDialog() const;
     void showFollowupDialog() const;
 

@@ -18,7 +18,7 @@ class WavePainterProxy : public IWavePainter, public muse::Injectable
     muse::Inject<ISamplesPainter> samplesPainter{ this };
 
 public:
-    WavePainterProxy() = default;
+    WavePainterProxy(const muse::modularity::ContextPtr& ctx) : muse::Injectable(ctx) {}
     void paint(QPainter& painter, const trackedit::ClipKey& clipKey, const Params& params, std::optional<PlotType> plotType) override;
 };
 }

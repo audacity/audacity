@@ -3,15 +3,17 @@
 */
 #pragma once
 
+#include "modularity/ioc.h"
+
 #include "../../iplayback.h"
 
 namespace au::playback {
 class Au3Player;
 class Au3AudioOutput;
-class Au3Playback : public IPlayback
+class Au3Playback : public IPlayback, public muse::Injectable
 {
 public:
-    Au3Playback() = default;
+    Au3Playback(const muse::modularity::ContextPtr& ctx) : muse::Injectable(ctx) {}
 
     std::shared_ptr<playback::IPlayer> player(TrackSequenceId id = -1) const override;
 

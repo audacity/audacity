@@ -50,6 +50,9 @@ class SessionsManager : public ISessionsManager, public muse::async::Asyncable, 
     muse::Inject<au::au3::IAu3ProjectCreator> au3ProjectCreator { this };
 
 public:
+    SessionsManager(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
+
     void init();
     void deinit();
 

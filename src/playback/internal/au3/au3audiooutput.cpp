@@ -20,8 +20,8 @@ using namespace muse::async;
 using namespace au::playback;
 using namespace au::au3;
 
-Au3AudioOutput::Au3AudioOutput()
-    : m_outputMeter{au::au3::createAudioMeter()}
+Au3AudioOutput::Au3AudioOutput(const muse::modularity::ContextPtr& ctx)
+    : muse::Injectable(ctx), m_outputMeter{au::au3::createAudioMeter()}
 {
     globalContext()->currentProjectChanged().onNotify(this, [this](){
         auto currentProject = globalContext()->currentProject();
