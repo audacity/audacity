@@ -13,7 +13,7 @@
 using namespace au::importexport;
 
 ExportLabelsModel::ExportLabelsModel(QObject* parent)
-    : QObject(parent)
+    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
 {
 }
 

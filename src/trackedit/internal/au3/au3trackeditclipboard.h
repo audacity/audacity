@@ -17,6 +17,9 @@ class Au3TrackeditClipboard : public ITrackeditClipboard, public muse::Injectabl
     muse::Inject<au::context::IGlobalContext> globalContext { this };
 
 public:
+    Au3TrackeditClipboard(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
+
     std::vector<ITrackDataPtr> trackDataCopy() const override;
     void clearTrackData() override;
     bool trackDataEmpty() const override;

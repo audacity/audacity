@@ -50,6 +50,8 @@ class StartupScenario : public au::appshell::IStartupScenario, public muse::asyn
 //! TODO AU4
     // INJECT(mi::IMultiInstancesProvider, multiInstancesProvider)
 public:
+    StartupScenario(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
 
     void setStartupType(const std::optional<std::string>& type) override;
 

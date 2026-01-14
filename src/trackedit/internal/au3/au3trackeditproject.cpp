@@ -27,7 +27,8 @@ struct Au3TrackeditProject::Au3Impl
     Observer::Subscription projectTimeSignatureSubscription;
 };
 
-Au3TrackeditProject::Au3TrackeditProject(const std::shared_ptr<IAu3Project>& au3project)
+Au3TrackeditProject::Au3TrackeditProject(const muse::modularity::ContextPtr& ctx, const std::shared_ptr<IAu3Project>& au3project)
+    : muse::Injectable(ctx)
 {
     m_impl = std::make_shared<Au3Impl>();
     m_impl->prj = reinterpret_cast<Au3Project*>(au3project->au3ProjectPtr());
@@ -462,7 +463,7 @@ TracksAndItems Au3TrackeditProject::buildTracksAndItems() const
 
 ITrackeditProjectPtr Au3TrackeditProjectCreator::create(const std::shared_ptr<IAu3Project>& au3project) const
 {
-    return std::make_shared<Au3TrackeditProject>(au3project);
+    return std::make_shared<Au3TrackeditProject>(iocContext(), au3project);
 }
 
 TimeSignatureRestorer::TimeSignatureRestorer(AudacityProject& project)

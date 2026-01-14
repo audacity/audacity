@@ -15,7 +15,7 @@ using namespace au::effects;
 
 void EffectsActionsController::init()
 {
-    m_uiActions = std::make_shared<EffectsUiActions>(shared_from_this());
+    m_uiActions = std::make_shared<EffectsUiActions>(iocContext(), shared_from_this());
 
     effectsProvider()->effectMetaListChanged().onNotify(this, [this](){
         registerActions();

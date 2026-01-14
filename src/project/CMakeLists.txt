@@ -56,7 +56,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/iprojectcreator.h
     ${CMAKE_CURRENT_LIST_DIR}/iprojectfilescontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/irecentfilescontroller.h
-    ${CMAKE_CURRENT_LIST_DIR}/imscmetareader.h
     ${CMAKE_CURRENT_LIST_DIR}/iprojectautosaver.h
     ${CMAKE_CURRENT_LIST_DIR}/ithumbnailcreator.h
     ${CMAKE_CURRENT_LIST_DIR}/imetadata.h

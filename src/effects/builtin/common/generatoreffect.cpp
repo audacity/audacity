@@ -10,7 +10,7 @@
 using namespace au::effects;
 
 GeneratorEffect::GeneratorEffect(const double& t0, double& t1)
-    : m_t0{t0}
+    : muse::Injectable(muse::modularity::globalCtx()), m_t0{t0}
     , m_t1{t1}
 {
 }

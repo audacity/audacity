@@ -44,7 +44,7 @@ class UiContextResolver : public muse::ui::IUiContextResolver, public muse::asyn
     muse::Inject<playback::IPlaybackController> playbackController { this };
 #endif
 public:
-    UiContextResolver() = default;
+    UiContextResolver(const muse::modularity::ContextPtr& ctx);
 
     void init();
 

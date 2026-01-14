@@ -16,6 +16,8 @@ class RealtimeEffectPanelTrackSelection : public IRealtimeEffectPanelTrackSelect
     muse::Inject<context::IGlobalContext> globalContext{ this };
 
 public:
+    RealtimeEffectPanelTrackSelection(const muse::modularity::ContextPtr& ctx) : muse::Injectable(ctx) {}
+
     void init();
 
     std::optional<au::trackedit::TrackId> selectedTrackId() const override;

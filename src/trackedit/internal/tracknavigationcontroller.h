@@ -27,6 +27,9 @@ class TrackNavigationController : public ITrackNavigationController, public muse
     muse::Inject<muse::ui::INavigationController> navigationController { this };
 
 public:
+    TrackNavigationController(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
+
     void init();
     void focusTrackByIndex(const muse::actions::ActionData& args) override;
     void focusPrevTrack() override;

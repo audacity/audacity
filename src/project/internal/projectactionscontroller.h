@@ -27,16 +27,17 @@ class ProjectActionsController : public IProjectFilesController, public muse::ac
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
     muse::GlobalInject<importexport::ExportConfiguration> exportConfiguration;
 
+    muse::GlobalInject<IRecentFilesController> recentFilesController;
+
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::Inject<au::context::IGlobalContext> globalContext { this };
     muse::Inject<muse::IInteractive> interactive { this };
-    muse::Inject<IRecentFilesController> recentFilesController { this };
     muse::Inject<IOpenSaveProjectScenario> openSaveProjectScenario { this };
     muse::Inject<trackedit::IProjectHistory> projectHistory { this };
     muse::Inject<record::IRecordController> recordController { this };
 
 public:
-    ProjectActionsController() = default;
+    ProjectActionsController(muse::modularity::ContextPtr ctx = nullptr);
 
     void init();
 

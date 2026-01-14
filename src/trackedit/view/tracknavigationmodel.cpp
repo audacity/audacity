@@ -3,7 +3,7 @@
 using namespace au::trackedit;
 
 TrackNavigationModel::TrackNavigationModel(QObject* parent)
-    : QObject(parent)
+    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
 {
 }
 

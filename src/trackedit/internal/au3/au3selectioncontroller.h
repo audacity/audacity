@@ -22,7 +22,8 @@ class Au3SelectionController : public ISelectionController, public muse::async::
     muse::Inject<au::context::IGlobalContext> globalContext { this };
 
 public:
-    Au3SelectionController() = default;
+    Au3SelectionController(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
 
     void init();
 

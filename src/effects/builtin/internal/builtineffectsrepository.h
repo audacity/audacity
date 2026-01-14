@@ -18,7 +18,7 @@ class BuiltinEffectsRepository : public IBuiltinEffectsRepository, public muse::
     muse::Inject<IEffectsViewRegister> effectsViewRegister{ this };
 
 public:
-    BuiltinEffectsRepository() = default;
+    BuiltinEffectsRepository(const muse::modularity::ContextPtr& ctx) : muse::Injectable(ctx) {}
 
     void preInit();
     void init();

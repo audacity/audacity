@@ -26,7 +26,7 @@ class TrackeditOperationController : public ITrackeditInteraction, public muse::
     muse::Inject<au::context::IGlobalContext> globalContext { this };
 
 public:
-    TrackeditOperationController(std::unique_ptr<IUndoManager> undoManager);
+    TrackeditOperationController(const muse::modularity::ContextPtr& ctx, std::unique_ptr<IUndoManager> undoManager);
     ~TrackeditOperationController() override = default;
 
     secs_t clipStartTime(const ClipKey& clipKey) const override;

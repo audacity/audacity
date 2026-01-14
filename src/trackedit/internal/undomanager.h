@@ -18,6 +18,9 @@ private:
     muse::Inject<au::trackedit::IProjectHistory> projectHistory { this };
 
 public:
+    UndoManager(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
+
     bool undo() override;
     bool canUndo() override;
     bool redo() override;

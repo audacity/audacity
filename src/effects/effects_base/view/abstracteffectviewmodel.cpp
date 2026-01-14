@@ -9,7 +9,7 @@
 
 namespace au::effects {
 AbstractEffectViewModel::AbstractEffectViewModel(QObject* parent, int instanceId)
-    : QObject(parent), m_instanceId{instanceId}
+    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this)), m_instanceId{instanceId}
 {
     assert(m_instanceId != -1);
 }

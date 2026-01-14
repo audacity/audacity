@@ -32,14 +32,13 @@
 #include "io/ifilesystem.h"
 
 namespace au::project {
-class RecentProjectsModel : public AbstractProjectsModel, public muse::async::Asyncable, public muse::Injectable
+class RecentProjectsModel : public AbstractProjectsModel, public muse::async::Asyncable
 {
     Q_OBJECT
 
     muse::GlobalInject<IProjectConfiguration> configuration;
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
-
-    muse::Inject<IRecentFilesController> recentFilesController { this };
+    muse::GlobalInject<IRecentFilesController> recentFilesController;
 
 public:
     RecentProjectsModel(QObject* parent = nullptr);

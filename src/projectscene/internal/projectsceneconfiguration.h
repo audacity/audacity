@@ -19,7 +19,7 @@ public:
     muse::Inject<muse::workspace::IWorkspaceManager> workspaceManager { this };
 
 public:
-    ProjectSceneConfiguration() = default;
+    ProjectSceneConfiguration(const muse::modularity::ContextPtr& ctx) : muse::Injectable(ctx) {}
 
     void init();
 

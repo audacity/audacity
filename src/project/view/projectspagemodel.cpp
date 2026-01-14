@@ -32,7 +32,7 @@ using namespace au::project;
 using namespace muse::actions;
 
 ProjectsPageModel::ProjectsPageModel(QObject* parent)
-    : QObject(parent)
+    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
 {
 }
 

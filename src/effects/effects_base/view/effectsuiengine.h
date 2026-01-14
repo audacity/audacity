@@ -19,6 +19,7 @@ class EffectsUiEngine : public QObject, public IEffectsUiEngine, public muse::In
     muse::Inject<muse::ui::IUiEngine> uiEngine{ this };
 
 public:
+    EffectsUiEngine(const muse::modularity::ContextPtr& ctx) : muse::Injectable(ctx) {}
     ~EffectsUiEngine() override;
 
     QQmlEngine* qmlEngine() const override;

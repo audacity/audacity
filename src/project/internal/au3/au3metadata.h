@@ -19,6 +19,9 @@ class Au3Metadata : public IMetadata, public muse::Injectable
     muse::Inject<muse::IInteractive> interactive { this };
 
 public:
+    Au3Metadata(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
+
     void init();
 
     project::ProjectMeta tags() const override;

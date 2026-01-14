@@ -30,7 +30,7 @@ class Au3Player : public IPlayer, public muse::async::Asyncable, public muse::In
 
 public:
 
-    Au3Player();
+    Au3Player(const muse::modularity::ContextPtr& ctx);
 
     bool isBusy() const override;
 

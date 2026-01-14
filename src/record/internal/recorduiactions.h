@@ -18,7 +18,7 @@ class RecordUiActions : public muse::ui::IUiActionsModule, public muse::async::A
     muse::Inject<context::IUiContextResolver> uicontextResolver{ this };
 
 public:
-    RecordUiActions(std::shared_ptr<RecordController> controller);
+    RecordUiActions(const muse::modularity::ContextPtr& ctx, std::shared_ptr<RecordController> controller);
 
     void init();
 

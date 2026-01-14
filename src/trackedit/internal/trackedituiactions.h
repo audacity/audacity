@@ -18,7 +18,7 @@ class TrackeditUiActions : public muse::ui::IUiActionsModule, public muse::async
     muse::Inject<context::IUiContextResolver> uicontextResolver { this };
 
 public:
-    TrackeditUiActions(std::shared_ptr<TrackeditActionsController> controller);
+    TrackeditUiActions(const muse::modularity::ContextPtr& ctx, std::shared_ptr<TrackeditActionsController> controller);
 
     void init();
 

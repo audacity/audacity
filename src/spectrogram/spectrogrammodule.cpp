@@ -19,9 +19,9 @@ static void spectrogram_init_qrc()
 
 namespace au::spectrogram {
 SpectrogramModule::SpectrogramModule()
-    : m_au3SpectrogramPainter(std::make_shared<Au3SpectrogramPainter>()),
+    : m_au3SpectrogramPainter(std::make_shared<Au3SpectrogramPainter>(iocContext())),
     m_configuration(std::make_shared<GlobalSpectrogramConfiguration>()),
-    m_spectrogramService(std::make_shared<SpectrogramService>())
+    m_spectrogramService(std::make_shared<SpectrogramService>(iocContext()))
 {
 }
 

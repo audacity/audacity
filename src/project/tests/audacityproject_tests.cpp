@@ -83,7 +83,7 @@ protected:
 
     void SetUp() override
     {
-        m_currentProject = std::make_unique<Audacity4Project>();
+        m_currentProject = std::make_unique<Audacity4Project>(muse::modularity::globalCtx());
         m_currentProject->trackeditProjectCreator.set(m_trackeditProjectCreator);
         m_currentProject->viewStateCreator.set(m_projectViewStateCreator);
         m_currentProject->clipboard.set(m_clipboard);

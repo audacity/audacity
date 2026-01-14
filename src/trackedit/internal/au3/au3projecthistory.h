@@ -17,6 +17,9 @@ class Au3ProjectHistory : public IProjectHistory, public muse::Injectable
     muse::Inject<context::IGlobalContext> globalContext { this };
 
 public:
+    Au3ProjectHistory(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
+
     void init() override;
 
     bool undoAvailable() const override;

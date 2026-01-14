@@ -246,8 +246,8 @@ static UiActionList STATIC_ACTIONS = {
              )
 };
 
-ProjectSceneUiActions::ProjectSceneUiActions(std::shared_ptr<ProjectSceneActionsController> controller)
-    : m_controller(controller)
+ProjectSceneUiActions::ProjectSceneUiActions(const muse::modularity::ContextPtr& ctx, std::shared_ptr<ProjectSceneActionsController> controller)
+    : muse::Injectable(ctx), m_controller(controller)
 {
     m_actions = STATIC_ACTIONS;
 }

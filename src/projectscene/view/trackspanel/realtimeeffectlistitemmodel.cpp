@@ -6,7 +6,7 @@
 
 namespace au::projectscene {
 RealtimeEffectListItemModel::RealtimeEffectListItemModel(QObject* parent, effects::RealtimeEffectStatePtr effectState)
-    : QObject{parent}, m_effectState{effectState}
+    : QObject{parent}, muse::Injectable(muse::iocCtxForQmlObject(this)), m_effectState{effectState}
 {
     realtimeEffectService()->isActiveChanged().onReceive(this, [this](effects::RealtimeEffectStatePtr state)
     {

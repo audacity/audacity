@@ -14,7 +14,7 @@ class ConnectingDotsPainter : public IConnectingDotsPainter, public muse::Inject
     muse::Inject<au::context::IGlobalContext> globalContext{ this };
 
 public:
-    ConnectingDotsPainter() = default;
+    ConnectingDotsPainter(const muse::modularity::ContextPtr& ctx) : muse::Injectable(ctx) {}
     void paint(QPainter& painter, const trackedit::ClipKey& clipKey, const IWavePainter::Params& params) override;
 };
 }

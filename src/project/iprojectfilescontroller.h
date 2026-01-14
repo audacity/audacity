@@ -31,7 +31,7 @@
 class QUrl;
 
 namespace au::project {
-class IProjectFilesController : MODULE_EXPORT_INTERFACE
+class IProjectFilesController : MODULE_GLOBAL_EXPORT_INTERFACE
 {
     INTERFACE_ID(IProjectFilesController)
 

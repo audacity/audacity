@@ -19,7 +19,7 @@ class EffectPresetsProvider : public IEffectPresetsProvider, public muse::Inject
     muse::Inject<IEffectInstancesRegister> instancesRegister{ this };
 
 public:
-    EffectPresetsProvider() = default;
+    EffectPresetsProvider(const muse::modularity::ContextPtr& ctx) : muse::Injectable(ctx) {}
 
     PresetIdList factoryPresets(const EffectId& effectId) const override;
     PresetIdList userPresets(const EffectId& effectId) const override;

@@ -33,7 +33,7 @@ class Au3AudioInput : public IAudioInput, public muse::async::Asyncable, public 
     muse::Inject<trackedit::ISelectionController> selectionController{ this };
 
 public:
-    Au3AudioInput();
+    Au3AudioInput(const muse::modularity::ContextPtr& ctx);
 
     muse::async::Promise<float> recordVolume() const override;
     void setRecordVolume(float volume) override;

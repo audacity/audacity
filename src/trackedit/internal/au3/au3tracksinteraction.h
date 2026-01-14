@@ -32,7 +32,7 @@ class Au3TracksInteraction : public ITracksInteraction, public muse::Injectable
     muse::Inject<au::trackedit::IClipsInteraction> clipsInteraction{ this };
 
 public:
-    Au3TracksInteraction();
+    Au3TracksInteraction(const muse::modularity::ContextPtr& ctx);
 
     bool trimTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) override;
     bool silenceTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) override;

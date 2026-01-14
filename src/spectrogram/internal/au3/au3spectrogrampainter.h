@@ -17,6 +17,8 @@ class Au3SpectrogramPainter final : public ISpectrogramPainter, public muse::asy
     muse::Inject<context::IGlobalContext> globalContext { this };
 
 public:
+    Au3SpectrogramPainter(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
     ~Au3SpectrogramPainter() override = default;
 
     void init();

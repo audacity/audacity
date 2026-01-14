@@ -14,6 +14,10 @@ class Au3BasicUI final : public BasicUI::Services, public muse::async::Asyncable
 {
     muse::Inject<muse::IInteractive> interactive { this };
 
+public:
+    Au3BasicUI(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
+
 protected:
     void DoCallAfter(const BasicUI::Action& action) override;
     void DoYield() override;

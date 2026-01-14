@@ -37,6 +37,9 @@ class TrackeditActionsController : public ITrackeditActionsController, public mu
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction { this };
 
 public:
+    TrackeditActionsController(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx), m_deleteBehaviorOnboardingScenario(ctx) {}
+
     void init();
 
     bool actionEnabled(const muse::actions::ActionCode& actionCode) const override;

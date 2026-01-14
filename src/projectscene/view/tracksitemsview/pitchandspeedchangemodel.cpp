@@ -6,7 +6,7 @@
 using namespace au::projectscene;
 
 PitchAndSpeedChangeModel::PitchAndSpeedChangeModel(QObject* parent)
-    : QObject(parent)
+    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
 {
 }
 

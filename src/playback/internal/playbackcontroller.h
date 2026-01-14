@@ -37,6 +37,8 @@ public:
     muse::Inject<trackedit::ISelectionController> selectionController{ this };
 
 public:
+    PlaybackController(const muse::modularity::ContextPtr& ctx) : muse::Injectable(ctx) {}
+
     void init();
     void deinit();
 

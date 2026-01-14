@@ -69,10 +69,10 @@ std::string ProjectModule::moduleName() const
 void ProjectModule::registerExports()
 {
     m_configuration = std::make_shared<ProjectConfiguration>();
-    m_actionsController = std::make_shared<ProjectActionsController>();
+    m_actionsController = std::make_shared<ProjectActionsController>(iocContext());
     m_uiActions = std::make_shared<ProjectUiActions>(m_actionsController);
     m_thumbnailCreator = std::make_shared<ThumbnailCreator>();
-    m_tagsAccessor = std::make_shared<Au3Metadata>();
+    m_tagsAccessor = std::make_shared<Au3Metadata>(iocContext());
     // m_projectAutoSaver = std::make_shared<ProjectAutoSaver>(); // we don't use at the moment 01/09/2025 the project auto saver as we already have the autosave table
 
 #ifdef Q_OS_MAC
@@ -85,7 +85,7 @@ void ProjectModule::registerExports()
 
     ioc()->registerExport<IProjectConfiguration>(moduleName(), m_configuration);
     ioc()->registerExport<IRecentFilesController>(moduleName(), m_recentFilesController);
-    ioc()->registerExport<IOpenSaveProjectScenario>(moduleName(), new OpenSaveProjectScenario());
+    ioc()->registerExport<IOpenSaveProjectScenario>(moduleName(), new OpenSaveProjectScenario(iocContext()));
     ioc()->registerExport<IProjectFilesController>(moduleName(), m_actionsController);
     ioc()->registerExport<IThumbnailCreator>(moduleName(), m_thumbnailCreator);
     ioc()->registerExport<IMetadata>(moduleName(), m_tagsAccessor);

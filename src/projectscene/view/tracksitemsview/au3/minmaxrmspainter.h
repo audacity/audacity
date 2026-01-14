@@ -14,7 +14,7 @@ class MinMaxRMSPainter : public IMinMaxRMSPainter, public muse::Injectable
     muse::Inject<au::context::IGlobalContext> globalContext{ this };
 
 public:
-    MinMaxRMSPainter() = default;
+    MinMaxRMSPainter(const muse::modularity::ContextPtr& ctx) : muse::Injectable(ctx) {}
     void paint(QPainter& painter, const trackedit::ClipKey& clipKey, const IWavePainter::Params& params) override;
 };
 }

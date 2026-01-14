@@ -9,7 +9,7 @@ namespace au::effects {
 class BuiltinViewLauncher final : public AbstractViewLauncher
 {
 public:
-    BuiltinViewLauncher() = default;
+    BuiltinViewLauncher(const muse::modularity::ContextPtr& ctx) : AbstractViewLauncher(ctx) {}
 
     muse::Ret showEffect(const EffectInstanceId& instanceId) const override;
     void showRealtimeEffect(const RealtimeEffectStatePtr& state) const override;
