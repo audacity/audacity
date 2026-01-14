@@ -99,7 +99,14 @@ Item {
     }
 
     NavigationFocusBorder {
+        anchors.leftMargin: -leftEar.width - border.width
+        anchors.rightMargin: -rightEar.width - border.width
+
         navigationCtrl: navCtrl
+
+        border.color: ui.theme.fontPrimaryColor
+        border.width: 2
+        radius: 4
     }
 
     // panel for navigating within the label's items
