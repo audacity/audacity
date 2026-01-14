@@ -55,17 +55,17 @@ struct SelectionInfo {
 };
 
 struct ClipChannelInfo {
-    const int clipId;
-    const int trackId;
-    const int channel;
-    const int xPaintBegin;
-    const int xPaintEnd;
+    const int clipId = -1;
+    const int trackId = -1;
+    const int channel = -1;
+    const int xPaintBegin = 0;
+    const int xPaintEnd = 0;
 };
 
 struct ViewInfo {
-    const double channelHeight;
-    const double viewportStartTime;
-    const double viewportEndTime;
-    const double pixelsPerSecond; // aka zoom
+    const double channelHeight = 0.;
+    const double viewportStartTime = 0.;
+    const double viewportEndTime = 0.;
+    const double pixelsPerSecond = 0.; // aka zoom
 };
 }
