@@ -9,9 +9,9 @@
 #include "WaveMetrics.h"
 
 namespace au::projectscene {
-class SamplesPainter : public ISamplesPainter
+class SamplesPainter : public ISamplesPainter, public muse::Injectable
 {
-    muse::Inject<au::context::IGlobalContext> globalContext;
+    muse::Inject<au::context::IGlobalContext> globalContext{ this };
 
 public:
     SamplesPainter() = default;

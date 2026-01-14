@@ -19,7 +19,7 @@ class GlobalSpectrogramSettingsModel : public AbstractSpectrogramSettingsModel, 
     Q_PROPERTY(
         bool spectralSelectionEnabled READ spectralSelectionEnabled WRITE setSpectralSelectionEnabled NOTIFY spectralSelectionEnabledChanged)
 
-    muse::Inject<IGlobalSpectrogramConfiguration> configuration;
+    muse::Inject<IGlobalSpectrogramConfiguration> configuration{ this };
 
 public:
     GlobalSpectrogramSettingsModel(QObject* parent = nullptr);

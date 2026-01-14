@@ -31,13 +31,13 @@
 #include "cloud/musescorecom/imusescorecomservice.h"
 
 namespace au::project {
-class CloudProjectsModel : public AbstractProjectsModel, public muse::async::Asyncable
+class CloudProjectsModel : public AbstractProjectsModel, public muse::async::Asyncable, public muse::Injectable
 {
     Q_OBJECT
 
     muse::GlobalInject<au::project::IProjectConfiguration> configuration;
 
-    muse::Inject<muse::cloud::IMuseScoreComService> museScoreComService;
+    muse::Inject<muse::cloud::IMuseScoreComService> museScoreComService { this };
 
     Q_PROPERTY(State state READ state NOTIFY stateChanged)
     Q_PROPERTY(bool hasMore READ hasMore NOTIFY hasMoreChanged)

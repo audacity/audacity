@@ -13,8 +13,8 @@
 namespace au::trackedit {
 class TrackeditInteraction : public ITrackeditInteraction, public muse::Injectable
 {
-    muse::Inject<au::record::IRecordController> recordController;
-    muse::Inject<au::playback::IPlaybackController> playbackController;
+    muse::Inject<au::record::IRecordController> recordController { this };
+    muse::Inject<au::playback::IPlaybackController> playbackController { this };
 
 public:
     TrackeditInteraction(std::unique_ptr<ITrackeditInteraction> interaction);

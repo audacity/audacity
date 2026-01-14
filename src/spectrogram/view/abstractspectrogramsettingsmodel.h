@@ -10,7 +10,7 @@
 #include <QObject>
 
 namespace au::spectrogram {
-class AbstractSpectrogramSettingsModel : public QObject
+class AbstractSpectrogramSettingsModel : public QObject, public muse::Injectable
 {
     Q_OBJECT
 
@@ -38,7 +38,7 @@ class AbstractSpectrogramSettingsModel : public QObject
     Q_PROPERTY(int windowSize READ windowSize WRITE setWindowSize NOTIFY windowSizeChanged)
     Q_PROPERTY(int zeroPaddingFactor READ zeroPaddingFactor WRITE setZeroPaddingFactor NOTIFY zeroPaddingFactorChanged)
 
-    muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider;
+    muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider{ this };
 
 public:
     explicit AbstractSpectrogramSettingsModel(QObject* parent = nullptr);

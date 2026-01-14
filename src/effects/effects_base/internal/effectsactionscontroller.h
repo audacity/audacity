@@ -21,19 +21,19 @@
 
 namespace au::effects {
 class EffectsUiActions;
-class EffectsActionsController : public muse::actions::Actionable, public muse::async::Asyncable,
+class EffectsActionsController : public muse::actions::Actionable, public muse::async::Asyncable, public muse::Injectable,
     public std::enable_shared_from_this<EffectsActionsController>
 {
     muse::GlobalInject<IEffectsConfiguration> configuration;
 
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
-    muse::Inject<muse::ui::IUiActionsRegister> uiActionsRegister;
-    muse::Inject<IEffectExecutionScenario> effectExecutionScenario;
-    muse::Inject<IEffectsProvider> effectsProvider;
-    muse::Inject<IEffectPresetsScenario> presetsScenario;
-    muse::Inject<IEffectInstancesRegister> instancesRegister;
-    muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<au::playback::IPlaybackController> playbackController;
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::Inject<muse::ui::IUiActionsRegister> uiActionsRegister{ this };
+    muse::Inject<IEffectExecutionScenario> effectExecutionScenario{ this };
+    muse::Inject<IEffectsProvider> effectsProvider{ this };
+    muse::Inject<IEffectPresetsScenario> presetsScenario{ this };
+    muse::Inject<IEffectInstancesRegister> instancesRegister{ this };
+    muse::Inject<muse::IInteractive> interactive{ this };
+    muse::Inject<au::playback::IPlaybackController> playbackController{ this };
 
 public:
     void init();

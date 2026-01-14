@@ -13,13 +13,13 @@
 
 using namespace au::importexport;
 
-class DynamicExportOptionsModel : public QAbstractListModel, public muse::async::Asyncable
+class DynamicExportOptionsModel : public QAbstractListModel, public muse::async::Asyncable, public muse::Injectable
 {
     Q_OBJECT
 
     muse::GlobalInject<IExportConfiguration> exportConfiguration;
 
-    muse::Inject<IExporter> exporter;
+    muse::Inject<IExporter> exporter{ this };
 
 public:
     explicit DynamicExportOptionsModel(QObject* parent = nullptr);

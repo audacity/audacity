@@ -13,11 +13,11 @@
 
 struct TrackListEvent;
 namespace au::trackedit {
-class Au3TrackeditProject : public ITrackeditProject
+class Au3TrackeditProject : public ITrackeditProject, public muse::Injectable
 {
     muse::GlobalInject<muse::IGlobalConfiguration> globalConfiguration;
 
-    muse::Inject<trackedit::IProjectHistory> projectHistory;
+    muse::Inject<trackedit::IProjectHistory> projectHistory { this };
 
 public:
     explicit Au3TrackeditProject(const std::shared_ptr<au::au3::IAu3Project>& au3project);

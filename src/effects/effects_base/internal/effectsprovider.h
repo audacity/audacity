@@ -27,20 +27,20 @@ class ProgressDialog;
 }
 
 namespace au::effects {
-class EffectsProvider : public IEffectsProvider, public muse::async::Asyncable
+class EffectsProvider : public IEffectsProvider, public muse::async::Asyncable, public muse::Injectable
 {
     muse::GlobalInject<IEffectsConfiguration> configuration;
 
-    muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<IBuiltinEffectsRepository> builtinEffectsRepository;
-    muse::Inject<ILv2EffectsRepository> lv2EffectsRepository;
-    muse::Inject<IVstEffectsRepository> vstEffectsRepository;
-    muse::Inject<INyquistEffectsRepository> nyquistEffectsRepository;
-    muse::Inject<IAudioUnitEffectsRepository> audioUnitEffectsRepository;
-    muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<playback::IPlayback> playback;
-    muse::Inject<IEffectViewLaunchRegister> viewLaunchRegister;
-    muse::Inject<muse::audioplugins::IKnownAudioPluginsRegister> knownPluginsRegister;
+    muse::Inject<au::context::IGlobalContext> globalContext{ this };
+    muse::Inject<IBuiltinEffectsRepository> builtinEffectsRepository{ this };
+    muse::Inject<ILv2EffectsRepository> lv2EffectsRepository{ this };
+    muse::Inject<IVstEffectsRepository> vstEffectsRepository{ this };
+    muse::Inject<INyquistEffectsRepository> nyquistEffectsRepository{ this };
+    muse::Inject<IAudioUnitEffectsRepository> audioUnitEffectsRepository{ this };
+    muse::Inject<muse::IInteractive> interactive{ this };
+    muse::Inject<playback::IPlayback> playback{ this };
+    muse::Inject<IEffectViewLaunchRegister> viewLaunchRegister{ this };
+    muse::Inject<muse::audioplugins::IKnownAudioPluginsRegister> knownPluginsRegister{ this };
 
 public:
     void init();

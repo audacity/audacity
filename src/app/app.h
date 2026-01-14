@@ -34,13 +34,13 @@
 #include "commandlineparser.h"
 
 namespace au::app {
-class App
+class App : public muse::Injectable
 {
     muse::GlobalInject<appshell::IAppShellConfiguration> appshellConfiguration;
 
-    muse::Inject<muse::IApplication> muapplication;
-    muse::Inject<appshell::IStartupScenario> startupScenario;
-    muse::Inject<muse::audioplugins::IRegisterAudioPluginsScenario> registerAudioPluginsScenario;
+    muse::Inject<muse::IApplication> muapplication{ this };
+    muse::Inject<appshell::IStartupScenario> startupScenario{ this };
+    muse::Inject<muse::audioplugins::IRegisterAudioPluginsScenario> registerAudioPluginsScenario{ this };
 
 public:
     App();

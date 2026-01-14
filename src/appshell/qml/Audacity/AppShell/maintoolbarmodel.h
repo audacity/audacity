@@ -33,14 +33,14 @@
 #include "context/iglobalcontext.h"
 
 namespace au::appshell {
-class MainToolBarModel : public QAbstractListModel, public muse::async::Asyncable
+class MainToolBarModel : public QAbstractListModel, public muse::async::Asyncable, public muse::Injectable
 {
     Q_OBJECT
     QML_ELEMENT
 
     muse::GlobalInject<muse::IGlobalConfiguration> globalConfiguration;
 
-    muse::Inject<au::context::IGlobalContext> context;
+    muse::Inject<au::context::IGlobalContext> context { this };
 
 public:
     explicit MainToolBarModel(QObject* parent = nullptr);

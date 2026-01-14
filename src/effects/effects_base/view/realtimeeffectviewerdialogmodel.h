@@ -54,11 +54,11 @@ class RealtimeEffectViewerDialogModel : public QObject, public muse::Injectable,
 
     muse::GlobalInject<IEffectsConfiguration> configuration;
 
-    muse::Inject<IEffectInstancesRegister> instancesRegister;
-    muse::Inject<IEffectsProvider> effectsProvider;
-    muse::Inject<effects::IRealtimeEffectService> realtimeEffectService;
-    muse::Inject<context::IGlobalContext> globalContext;
-    muse::Inject<muse::ui::INavigationController> navigationController;
+    muse::Inject<IEffectInstancesRegister> instancesRegister{ this };
+    muse::Inject<IEffectsProvider> effectsProvider{ this };
+    muse::Inject<effects::IRealtimeEffectService> realtimeEffectService{ this };
+    muse::Inject<context::IGlobalContext> globalContext{ this };
+    muse::Inject<muse::ui::INavigationController> navigationController{ this };
 
 public:
     Q_INVOKABLE void load();

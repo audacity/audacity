@@ -17,8 +17,7 @@ static QString projectDefaultTitle()
     return muse::qtrc("project", "Untitled project");
 }
 
-Audacity4Project::Audacity4Project()
-= default;
+Audacity4Project::Audacity4Project() = default;
 
 Ret Audacity4Project::createNew()
 {

@@ -10,12 +10,12 @@
 #include "au3/isamplespainter.h"
 
 namespace au::projectscene {
-class WavePainterProxy : public IWavePainter
+class WavePainterProxy : public IWavePainter, public muse::Injectable
 {
-    muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<IConnectingDotsPainter> connectingDotsPainter;
-    muse::Inject<IMinMaxRMSPainter> minMaxRMSPainter;
-    muse::Inject<ISamplesPainter> samplesPainter;
+    muse::Inject<au::context::IGlobalContext> globalContext{ this };
+    muse::Inject<IConnectingDotsPainter> connectingDotsPainter{ this };
+    muse::Inject<IMinMaxRMSPainter> minMaxRMSPainter{ this };
+    muse::Inject<ISamplesPainter> samplesPainter{ this };
 
 public:
     WavePainterProxy() = default;

@@ -13,7 +13,7 @@ class UndoRedoToolBarModel : public muse::uicomponents::AbstractToolBarModel
 {
     Q_OBJECT
 
-    muse::Inject<au::context::IGlobalContext> context;
+    muse::Inject<au::context::IGlobalContext> context { this };
 
 public:
 

@@ -34,15 +34,15 @@
 class QString;
 
 namespace au::project {
-class ProjectsPageModel : public QObject
+class ProjectsPageModel : public QObject, public muse::Injectable
 {
     Q_OBJECT
 
     muse::GlobalInject<IProjectConfiguration> configuration;
 
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
-    muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<muse::cloud::IAudioComService> audioComService;
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::Inject<muse::IInteractive> interactive { this };
+    muse::Inject<muse::cloud::IAudioComService> audioComService { this };
 
     Q_PROPERTY(int tabIndex READ tabIndex WRITE setTabIndex NOTIFY tabIndexChanged)
     Q_PROPERTY(ViewType viewType READ viewType WRITE setViewType NOTIFY viewTypeChanged)

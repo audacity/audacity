@@ -12,9 +12,9 @@
 
 using ProgressResult = BasicUI::ProgressResult;
 
-class ProgressDialog : public BasicUI::ProgressDialog, public muse::async::Asyncable
+class ProgressDialog : public BasicUI::ProgressDialog, public muse::async::Asyncable, public muse::Injectable
 {
-    muse::Inject<muse::IInteractive> interactive;
+    muse::Inject<muse::IInteractive> interactive { this };
 
 public:
     ProgressDialog(const TranslatableString& title = {});

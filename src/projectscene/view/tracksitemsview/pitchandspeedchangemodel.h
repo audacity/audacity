@@ -13,13 +13,13 @@
 #include "trackedit/iselectioncontroller.h"
 
 namespace au::projectscene {
-class PitchAndSpeedChangeModel : public QObject, public muse::async::Asyncable
+class PitchAndSpeedChangeModel : public QObject, public muse::async::Asyncable, public muse::Injectable
 {
     Q_OBJECT
 
-    muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
-    muse::Inject<trackedit::ISelectionController> selectionController;
+    muse::Inject<au::context::IGlobalContext> globalContext{ this };
+    muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
+    muse::Inject<trackedit::ISelectionController> selectionController{ this };
 
     Q_PROPERTY(QString clipTitle READ clipTitle NOTIFY clipTitleChanged FINAL)
 

@@ -20,11 +20,11 @@ enum class SelectionDirection {
     Down
 };
 
-class TrackNavigationController : public ITrackNavigationController, public muse::actions::Actionable, public muse::async::Asyncable
+class TrackNavigationController : public ITrackNavigationController, public muse::actions::Actionable, public muse::async::Asyncable, public muse::Injectable
 {
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
-    muse::Inject<au::trackedit::ISelectionController> selectionController;
-    muse::Inject<muse::ui::INavigationController> navigationController;
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::Inject<au::trackedit::ISelectionController> selectionController { this };
+    muse::Inject<muse::ui::INavigationController> navigationController { this };
 
 public:
     void init();

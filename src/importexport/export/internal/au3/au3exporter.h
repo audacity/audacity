@@ -16,13 +16,13 @@
 namespace au::importexport {
 using OptionsEditorUPtr = std::unique_ptr<ExportOptionsEditor>;
 
-class Au3Exporter : public IExporter
+class Au3Exporter : public IExporter, public muse::Injectable
 {
     muse::GlobalInject<au::importexport::ExportConfiguration> exportConfiguration;
 
-    muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<au::trackedit::ISelectionController> selectionController;
-    muse::Inject<au::playback::IPlaybackController> playbackController;
+    muse::Inject<au::context::IGlobalContext> globalContext{ this };
+    muse::Inject<au::trackedit::ISelectionController> selectionController{ this };
+    muse::Inject<au::playback::IPlaybackController> playbackController{ this };
 
 public:
     Au3Exporter() = default;

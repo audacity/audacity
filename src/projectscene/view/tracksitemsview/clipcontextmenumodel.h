@@ -16,7 +16,7 @@ class ClipContextMenuModel : public muse::uicomponents::AbstractMenuModel
 
     muse::GlobalInject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
 
-    muse::Inject<context::IGlobalContext> globalContext;
+    muse::Inject<context::IGlobalContext> globalContext{ this };
 
     Q_PROPERTY(ClipKey clipKey READ clipKey WRITE setClipKey NOTIFY clipKeyChanged FINAL)
 

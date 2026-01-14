@@ -37,7 +37,7 @@
 #include "project/iprojectconfiguration.h"
 
 namespace au::appshell {
-class GeneralPreferencesModel : public QObject, public muse::async::Asyncable
+class GeneralPreferencesModel : public QObject, public muse::async::Asyncable, public muse::Injectable
 {
     Q_OBJECT
     QML_ELEMENT
@@ -47,7 +47,7 @@ class GeneralPreferencesModel : public QObject, public muse::async::Asyncable
     muse::GlobalInject<muse::shortcuts::IShortcutsConfiguration> shortcutsConfiguration;
     muse::GlobalInject<au::project::IProjectConfiguration> projectConfiguration;
 
-    muse::Inject<muse::IInteractive> interactive;
+    muse::Inject<muse::IInteractive> interactive { this };
 
     Q_PROPERTY(QVariantList languages READ languages NOTIFY languagesChanged)
     Q_PROPERTY(QString currentLanguageCode READ currentLanguageCode WRITE setCurrentLanguageCode NOTIFY currentLanguageCodeChanged)

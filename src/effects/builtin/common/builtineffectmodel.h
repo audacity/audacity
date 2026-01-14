@@ -21,9 +21,9 @@ class BuiltinEffectModel : public AbstractEffectViewModel
     Q_PROPERTY(bool usesPresets READ usesPresets CONSTANT FINAL)
 
 public:
-    muse::Inject<IRealtimeEffectService> realtimeEffectService;
-    muse::Inject<trackedit::IProjectHistory> projectHistory;
-    muse::Inject<IEffectsProvider> effectsProvider;
+    muse::Inject<IRealtimeEffectService> realtimeEffectService{ this };
+    muse::Inject<trackedit::IProjectHistory> projectHistory{ this };
+    muse::Inject<IEffectsProvider> effectsProvider{ this };
 
 public:
     BuiltinEffectModel(QObject* parent, int instanceId);

@@ -35,13 +35,13 @@
 // maybe use the #include "appshell/internal/isessionsmanager.h"
 
 namespace au::project {
-class ProjectAutoSaver : public IProjectAutoSaver, public muse::async::Asyncable
+class ProjectAutoSaver : public IProjectAutoSaver, public muse::async::Asyncable, public muse::Injectable
 {
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
     muse::GlobalInject<IProjectConfiguration> configuration;
 
-    muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<au::au3::IAu3ProjectCreator> au3ProjectCreator;
+    muse::Inject<au::context::IGlobalContext> globalContext { this };
+    muse::Inject<au::au3::IAu3ProjectCreator> au3ProjectCreator { this };
     // maybe use the muse::Inject<au::appshell::ISessionsManager> sessionsManager;
 
 public:
