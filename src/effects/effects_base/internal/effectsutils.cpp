@@ -162,6 +162,7 @@ constexpr const char* effectFamiliyString(EffectFamily family)
     case EffectFamily::VST3: return "VST3";
     case EffectFamily::LV2: return "LV2";
     case EffectFamily::AudioUnit: return "AudioUnit";
+    case EffectFamily::Nyquist: return "Nyquist";
     default:
         assert(false);
         return "Unknown";
