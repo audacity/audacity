@@ -41,6 +41,8 @@ public:
 
     static void ShowMessageBox(const TranslatableString& message, const TranslatableString& caption = XO("Import Project"));
 
+    static int RequiredTrackCountFromChannels(int channels) noexcept;
+
     //! Iterates over channels in each wave track from the list
     static
     void ForEachChannel(TrackList& trackList, const std::function<void(WaveChannel&)>& op);

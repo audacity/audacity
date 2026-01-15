@@ -101,20 +101,23 @@ double OggImportFileHandle::GetDuration() const
 
 int OggImportFileHandle::GetRequiredTrackCount() const
 {
+    // This function looks different because OGG is fundamentally different
+    // from the other formats. OGG is a container, not a codec.
+    // It can contain:
+    // * Multiple logical bitstreams
+    // * Each bitstream can have different channel counts
+    // * Streams can be enabled/disabled individually
+
     if (!mVorbisFile) {
         return 0;
     }
 
     size_t tracks = 0;
-
     for (int i = 0; i < mVorbisFile->links; ++i) {
-        const int channels = mVorbisFile->vi[i].channels;
-
-        if (channels <= 2) {
-            tracks += 1;
-        } else {
-            tracks += channels;
+        if (mStreamUsage[i] == 0) {
+            continue;
         }
+        tracks += ImportUtils::RequiredTrackCountFromChannels(mVorbisFile->vi[i].channels);
     }
 
     return tracks;

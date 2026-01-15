@@ -249,13 +249,7 @@ double PCMImportFileHandle::GetDuration() const
 
 int PCMImportFileHandle::GetRequiredTrackCount() const
 {
-    const int channels = mInfo.channels;
-
-    if (channels <= 2) {
-        return 1;
-    }
-
-    return channels;
+    return ImportUtils::RequiredTrackCountFromChannels(mInfo.channels);
 }
 
 auto PCMImportFileHandle::GetFileUncompressedBytes() -> ByteCount
