@@ -94,6 +94,8 @@ EffectFamily RealtimeEffectViewerDialogModel::prop_effectFamily() const
         return EffectFamily::AudioUnit;
     } else if (family == "Audacity") {
         return EffectFamily::Builtin;
+    } else if (family == "Nyquist") {
+        return EffectFamily::Nyquist;
     } else {
         assert(false);
         return EffectFamily::Unknown;

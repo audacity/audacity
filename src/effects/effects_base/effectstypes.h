@@ -139,6 +139,7 @@ public:
         VST3,
         LV2,
         AudioUnit,
+        Nyquist,
     };
     Q_ENUM(EffectFamily)
 };
