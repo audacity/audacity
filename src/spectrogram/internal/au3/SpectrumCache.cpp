@@ -353,6 +353,12 @@ void SpecCache::Populate(
     const Au3SpectrogramSettings& settings, const WaveChannelInterval& clip,
     int copyBegin, int copyEnd, size_t numPixels, double pixelsPerSecond)
 {
+    if (settings.isConstantQ()) {
+        // divert to dedicated method
+        PopulateConstantQ(settings, clip, copyBegin, copyEnd, numPixels, pixelsPerSecond);
+        return;
+    }
+
     const auto sampleRate = clip.GetRate();
     const int& frequencyGainSetting = settings.frequencyGain;
     const size_t windowSizeSetting = settings.WindowSize();
@@ -476,6 +482,148 @@ void SpecCache::Populate(
                 }
             });
         }
+    }
+}
+
+void SpecCache::PopulateConstantQ(const Au3SpectrogramSettings& settings, const WaveChannelInterval& clip,
+                                  int copyBegin, int copyEnd, size_t numPixels, double pixelsPerSecond)
+{
+    // Various variables
+    const auto sampleRate = clip.GetRate();
+    const int& frequencyGainSetting = settings.frequencyGain;
+    const size_t windowSizeSetting = settings.WindowSize();
+    const size_t zeroPaddingFactorSetting = settings.ZeroPaddingFactor();
+    const size_t fftLen = windowSizeSetting * zeroPaddingFactorSetting;
+    const auto nBins = settings.NBins();
+    std::vector<float> gainFactors;
+    const auto stretchRatio = clip.GetStretchRatio();
+    const auto samplesPerPixel = sampleRate / pixelsPerSecond / stretchRatio;
+
+    assert(pixelsPerSecond > 0);
+    assert(numPixels > 0);
+    ComputeSpectrogramGainFactors(fftLen, sampleRate, frequencyGainSetting, gainFactors);
+    const auto numSamplesInClip = clip.GetSequence().GetNumSamples();
+
+    // Loop over the ranges before and after the copied portion and compute anew.
+    // One of the ranges may be empty.
+    for (int jj = 0; jj < 2; ++jj) {
+        const int lowerBoundX = jj == 0 ? 0 : copyEnd;
+        const int upperBoundX = jj == 0 ? copyBegin : numPixels;
+
+        if (lowerBoundX >= upperBoundX) {
+            continue;
+        }
+        assert(lowerBoundX >= 0 && lowerBoundX < numPixels);
+        assert(upperBoundX > 0 && upperBoundX <= numPixels);
+        // Calculate number of samples needed to cover range
+        // Easy as subtracting where[] locations of extremes
+        // Get rid of bias on "where" array
+        const sampleCount fromView = where[lowerBoundX] - 1;
+        const sampleCount toView = where[upperBoundX] - 1;
+        const auto numSamples = toView - fromView + 1;
+        auto myBufferLen = numSamples.as_size_t();
+
+        // Prepare the buffer of samples we will be working on
+        // In principle, we have 6 different situations for View relative to Clip
+        // All situations do not occur, but it is nice to make robust code
+        // Missing samples in left end or right end of working buffer will be zero-padded
+        // 0: Clip empty
+        // 1; EmpptyL
+        // 2: EmptyR
+        if (numSamplesInClip == 0 || toView < 0 || fromView > numSamplesInClip - 1) {
+            // In this case simpy put "zeroes" into result and we are done
+            memset(&freq[lowerBoundX * nBins], 0, sizeof(float) * (upperBoundX - lowerBoundX) * nBins);
+            continue;
+        }
+
+        // Prepare our calculator
+        unsigned int nPre = 0;
+        unsigned int nPost = 0;
+        unsigned int missingLeft = 0;
+        unsigned int missingRight = 0;
+        settings.pTFCalculator->prepare(numSamples.as_size_t(), samplesPerPixel, nPre, nPost);
+
+        // 3: OverlapL
+        if (fromView < 0 && toView <= numSamplesInClip - 1) {
+            missingLeft = -fromView.as_size_t();
+            nPre = 0;
+            nPost = std::min(nPost, (unsigned int)((numSamplesInClip - 1 - toView).as_size_t()));
+        }
+        // 4: OverlapR
+        else if (toView > numSamplesInClip - 1 && fromView >= 0) {
+            missingRight = (toView - (numSamplesInClip - 1)).as_size_t();
+            nPost = 0;
+            nPre = std::min(nPre, (unsigned int)(fromView.as_size_t()));
+        }
+        // 5: Within
+        else if (toView <= numSamplesInClip - 1 && fromView >= 0) {
+            nPre = std::min(nPre, (unsigned int)(fromView.as_size_t()));
+            nPost = std::min(nPost, (unsigned int)((numSamplesInClip - 1 - toView).as_size_t()));
+        }
+        // 6: Enclosing
+        else if (fromView < 0 && toView > numSamplesInClip - 1) {
+            missingLeft = -fromView.as_size_t();
+            missingRight = (toView - (numSamplesInClip - 1)).as_size_t();
+            nPre = 0;
+            nPost = 0;
+        } else {
+            assert(0); // logic WRONG
+        }
+        myBufferLen += nPre + nPost;
+
+        // Get those samples into a buffer of mine
+        std::vector<float> floats;
+        floats.resize(myBufferLen);
+        constexpr auto mayThrow = false; // Don't throw just for display
+
+        if (missingRight > 0) {
+            memset(&floats[myBufferLen - missingRight], 0, missingRight * sizeof(float));
+        }
+        if (missingLeft > 0) {
+            memset(&floats[0], 0, missingLeft * sizeof(float));
+        }
+        Au3ClipChannelReader reader(clip);
+        reader.readSamples((fromView - nPre).as_long_long(), myBufferLen - missingRight - missingLeft, &floats[missingLeft], mayThrow);
+
+        // do transform in parallel sequences
+        // Lambda to sampleCount int to double
+        auto transformer = [](sampleCount s, sampleCount b) { return (s - b).as_double(); };
+
+        // Create a transforming iterator. This requires C++17 for std::transform_iterator
+        std::vector<double> timestamps;
+        auto from = where.cbegin() + lowerBoundX;
+        auto to = where.cbegin() + upperBoundX;
+        for (auto it = from; it != to; it++) {
+            timestamps.push_back(transformer(*it, *from));
+        }
+
+        int N = settings.pTFCalculator->prepareSequences(
+            &floats[nPre],
+            numSamples.as_size_t(),
+            nPre,
+            nPost,
+            timestamps,
+            nBins,
+            true,
+            &freq[lowerBoundX * nBins]
+            );
+        std::vector<int> xRange(N);
+        std::iota(xRange.begin(), xRange.end(), 0);
+
+        QtConcurrent::blockingMap(xRange, [&](int xx) {
+            settings.pTFCalculator->executeSequence(xx);
+        });
+
+        // Do the log thing
+        xRange.resize(timestamps.size());
+        std::iota(xRange.begin(), xRange.end(), lowerBoundX);
+        QtConcurrent::blockingMap(xRange, [&](int xx) {
+            for (size_t inx = 0; inx < nBins; inx++) {
+                float correction = (gainFactors.empty()) ? 0.0 : gainFactors[inx];
+                float result = freq[inx + xx * nBins];
+                freq[inx + xx * nBins] = (result <= 0) ? -160.0 : 10.0 * log10f(result) + correction;
+            }
+        });
     }
 }
 

@@ -3,8 +3,11 @@
  */
 #pragma once
 
+#include <memory>
+
 #include "iglobalspectrogramconfiguration.h"
 #include "spectrogramtypes.h"
+#include "tft/TimeFrequencyCalculator.h"
 
 #include "au3-math/SampleFormat.h"
 #include "au3-fft/RealFFTf.h"
@@ -47,6 +50,8 @@ public:
     SpectrogramScale scaleType = static_cast<SpectrogramScale>(0);
     SpectrogramAlgorithm algorithm = static_cast<SpectrogramAlgorithm>(0);
 
+    bool isConstantQ() const { return false; }  // If you want to play around with ConstantQ analysis, you can Change to for instance WindowType() == SpectrogramWindowType::Gaussian45
+
     SpectrogramWindowType WindowType() const { return m_windowType; }
     void SetWindowType(SpectrogramWindowType type);
 
@@ -66,6 +71,9 @@ public:
     // Two other windows for computing reassigned spectrogram
     Floats tWindow;        // Window times time parameter
     Floats dWindow;        // Derivative of window
+
+    // calculator needed for constant-Q spectrogram
+    std::unique_ptr<TFT::ITimeFrequencyCalculator> pTFCalculator;
 
 private:
     enum {

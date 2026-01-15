@@ -68,6 +68,6 @@ set(MODULE_SRC
 
 set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml)
 set(MODULE_USE_UNITY OFF)
-set(MODULE_LINK au3wrap Qt6::Concurrent)
+set(MODULE_LINK au3wrap Qt6::Concurrent tft)
 
 setup_module()

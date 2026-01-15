@@ -14,8 +14,11 @@
 
 #include "framework/global/log.h"
 
+#include "tft/WaveletCalculator.h"
+
 #include <algorithm>
 #include <cmath>
+#include <memory>
 
 namespace au::spectrogram {
 namespace {
@@ -181,6 +184,7 @@ void Au3SpectrogramSettings::DestroyWindows()
     window.reset();
     dWindow.reset();
     tWindow.reset();
+    pTFCalculator.reset(nullptr);
 }
 
 namespace {
@@ -248,7 +252,13 @@ void RecreateWindow(
 
 void Au3SpectrogramSettings::CacheWindows()
 {
-    if (hFFT == NULL || window == NULL || (algorithm == SpectrogramAlgorithm::Reassignment && (tWindow == NULL || dWindow == NULL))) {
+    if (isConstantQ()) {
+        if (pTFCalculator == nullptr) {
+            // JUST USING CONSTANT PARAMETERS FOR NOW. @todo : Should be inferred from settings
+            pTFCalculator = std::make_unique<TFT::WaveletCalculator>(10 /*octaves*/, 0.4 /*fmax*/, 18 /*Q*/, 50 /*overlap*/);
+        }
+    } else if (hFFT == nullptr || window == nullptr
+               || (algorithm == SpectrogramAlgorithm::Reassignment && (tWindow == nullptr || dWindow == nullptr))) {
         double scale;
         auto factor = ZeroPaddingFactor();
         const auto fftLen = WindowSize() * factor;
