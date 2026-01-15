@@ -34,6 +34,7 @@ Rectangle {
     property int groupId: -1
     property bool clipSelected: false
     property bool clipIntersectsSelection: false
+    property bool clipFocused: false
     property bool isDataSelected: false
     property bool isMultiSelectionActive: false
     property bool multiClipsSelected: root.isMultiSelectionActive && root.clipSelected
@@ -300,6 +301,12 @@ Rectangle {
         root.leftTrimContainsMouse = false
         root.rightTrimContainsMouse = false
         root.headerHovered = false
+    }
+
+    onClipFocusedChanged: function () {
+        if (root.clipFocused && !navCtrl.active) {
+            navCtrl.requestActive()
+        }
     }
 
     MouseArea {

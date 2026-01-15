@@ -12,6 +12,7 @@ Item {
     property string title: ""
     property bool isSelected: false
     property bool selectionInProgress: false
+    property bool isFocused: false
     property bool enableCursorInteraction: !selectionInProgress
     property var labelKey: null
 
@@ -76,6 +77,12 @@ Item {
 
     function editTitle() {
         header.edit()
+    }
+
+    onIsFocusedChanged: function () {
+        if (root.isFocused && !navCtrl.active) {
+            navCtrl.requestActive()
+        }
     }
 
     // Navigation support

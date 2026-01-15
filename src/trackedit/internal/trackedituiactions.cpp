@@ -388,6 +388,56 @@ UiActionList STATIC_ACTIONS = {
              au::context::CTX_ANY,
              TranslatableString("action", "Ungroup clips"),
              TranslatableString("action", "Ungroup clips")
+             ),
+
+    // track view navigation
+    UiAction("track-view-item-move-left",
+             au::context::UiCtxProjectPlayback, // TODO: change to UiCtxProjectFocused
+             au::context::CTX_PROJECT_PLAYBACK,
+             TranslatableString("action", "Move item left"),
+             TranslatableString("action", "Move item left")
+             ),
+    UiAction("track-view-item-move-right",
+             au::context::UiCtxProjectPlayback, // TODO: change to UiCtxProjectFocused
+             au::context::CTX_PROJECT_PLAYBACK,
+             TranslatableString("action", "Move item right"),
+             TranslatableString("action", "Move item right")
+             ),
+    UiAction("track-view-item-extend-left",
+             au::context::UiCtxProjectPlayback, // TODO: change to UiCtxProjectFocused
+             au::context::CTX_PROJECT_PLAYBACK,
+             TranslatableString("action", "Extend item left"),
+             TranslatableString("action", "Extend item left")
+             ),
+    UiAction("track-view-item-extend-right",
+             au::context::UiCtxProjectPlayback, // TODO: change to UiCtxProjectFocused
+             au::context::CTX_PROJECT_PLAYBACK,
+             TranslatableString("action", "Extend item right"),
+             TranslatableString("action", "Extend item right")
+             ),
+    UiAction("track-view-item-reduce-left",
+             au::context::UiCtxProjectPlayback, // TODO: change to UiCtxProjectFocused
+             au::context::CTX_PROJECT_PLAYBACK,
+             TranslatableString("action", "Reduce item left"),
+             TranslatableString("action", "Reduce item left")
+             ),
+    UiAction("track-view-item-reduce-right",
+             au::context::UiCtxProjectPlayback, // TODO: change to UiCtxProjectFocused
+             au::context::CTX_PROJECT_PLAYBACK,
+             TranslatableString("action", "Reduce item right"),
+             TranslatableString("action", "Reduce item right")
+             ),
+    UiAction("track-view-item-move-up",
+             au::context::UiCtxProjectPlayback, // TODO: change to UiCtxProjectFocused
+             au::context::CTX_PROJECT_PLAYBACK,
+             TranslatableString("action", "Move item up"),
+             TranslatableString("action", "Move item up")
+             ),
+    UiAction("track-view-item-move-down",
+             au::context::UiCtxProjectPlayback, // TODO: change to UiCtxProjectFocused
+             au::context::CTX_PROJECT_PLAYBACK,
+             TranslatableString("action", "Move item down"),
+             TranslatableString("action", "Move item down")
              )
 };
 }

@@ -217,6 +217,16 @@ QVariant TrackItemsListModel::findGuideline(const TrackItemKey& key, DirectionTy
     return QVariant(-1.0);
 }
 
+void TrackItemsListModel::setFocusedItem(const TrackItemKey& key)
+{
+    trackNavigationController()->setFocusedItem(key.key);
+}
+
+void TrackItemsListModel::resetFocusedItem()
+{
+    trackNavigationController()->setFocusedItem({});
+}
+
 QVariant TrackItemsListModel::neighbor(const TrackItemKey& key, int offset) const
 {
     auto it = std::find_if(m_items.begin(), m_items.end(), [key](ViewTrackItem* viewItem) {
@@ -517,6 +527,17 @@ void TrackItemsListModel::init()
         updateItemsMetrics();
     });
 
+    trackNavigationController()->focusedItemChanged().onReceive(this, [this](const TrackItemKey& key) {
+        if (key.trackId() != m_trackId) {
+            return;
+        }
+
+        ViewTrackItem* item = itemByKey(key.key);
+        if (item) {
+            item->setFocused(true);
+        }
+    });
+
     onInit();
 
     reload();
@@ -572,6 +593,8 @@ void TrackItemsListModel::startEditItem(const TrackItemKey& key)
     if (vs) {
         vs->updateItemsBoundaries(true, key.key);
     }
+
+    item->setFocused(true);
 }
 
 void TrackItemsListModel::endEditItem(const TrackItemKey& key)
@@ -593,6 +616,8 @@ void TrackItemsListModel::endEditItem(const TrackItemKey& key)
     disconnectAutoScroll();
 
     projectHistory()->endUserInteraction();
+
+    item->setFocused(false);
 }
 
 bool TrackItemsListModel::cancelItemDragEdit(const TrackItemKey& key)

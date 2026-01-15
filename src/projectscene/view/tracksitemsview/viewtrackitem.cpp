@@ -149,3 +149,18 @@ void ViewTrackItem::setTime(const TrackItemTime& newTime)
         emit endTimeChanged();
     }
 }
+
+bool ViewTrackItem::focused() const
+{
+    return m_focused;
+}
+
+void ViewTrackItem::setFocused(bool focused)
+{
+    if (m_focused == focused) {
+        return;
+    }
+
+    m_focused = focused;
+    emit focusedChanged();
+}
