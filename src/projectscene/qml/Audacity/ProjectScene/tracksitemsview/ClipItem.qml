@@ -28,8 +28,8 @@ Rectangle {
     property color selectedHeaderColor: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors("#ffffff", root.clipColor, 0.3) : classicHeaderColor
     property color normalHeaderHoveredColor: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors("#ffffff", root.clipColor, 0.8) : classicHeaderHoveredColor
     property color selectedHeaderHoveredColor: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors("#ffffff", root.clipColor, 0.2) : classicHeaderHoveredColor
-    readonly property color classicHeaderColor: "#D0D6F2"
-    readonly property color classicHeaderHoveredColor: "#B0B6D8"
+    readonly property color classicHeaderColor: ui.theme.extra["classic_clip_header_color"]
+    readonly property color classicHeaderHoveredColor: ui.theme.extra["classic_clip_header_hover_color"]
     property int currentClipStyle: ClipStyle.COLORFUL
     property int groupId: -1
     property bool clipSelected: false
