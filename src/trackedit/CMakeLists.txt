@@ -60,6 +60,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackeditproject.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3selectioncontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3selectioncontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3selectionsaver.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3selectionsaver.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3interactiontypes.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3interactionutils.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3interactionutils.h

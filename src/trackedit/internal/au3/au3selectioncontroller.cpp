@@ -2,12 +2,15 @@
 * Audacity: A Digital Audio Editor
 */
 #include "au3selectioncontroller.h"
-#include "selectionrestorer.h"
+
+#include "./selectionrestorer.h"
+#include "./au3selectionsaver.h"
 
 #include "global/containers.h"
 #include "global/realfn.h"
 
 #include "au3-track/Track.h"
+#include "au3-wave-track/WaveTrack.h"
 #include "au3-time-frequency-selection/ViewInfo.h"
 #include "au3-track-selection/TrackFocus.h"
 
@@ -16,6 +19,7 @@
 #include "au3wrap/internal/domaccessor.h"
 
 #include "log.h"
+#include "trackedittypes.h"
 
 //#define DEBUG_SELECTION
 #ifdef DEBUG_SELECTION
@@ -47,7 +51,9 @@ void Au3SelectionController::init()
             auto& restorer = SelectionRestorer::Get(projectRef());
             restorer.selectionGetter = [this] {
                 return ClipAndTimeSelection {
+                    m_selectedTracks.val,
                     m_selectedClips.val,
+                    m_selectedLabels.val,
                     m_selectedStartTime.val,
                     m_selectedEndTime.val
                 };
@@ -57,11 +63,7 @@ void Au3SelectionController::init()
                 restoreSelection(selection);
             };
 
-            auto& tracks = ::TrackList::Get(projectRef());
-            if (!tracks.empty()) {
-                const auto it = tracks.begin();
-                setFocusedTrack(TrackId((*it)->GetId()));
-            }
+            Au3SelectionSaver::Get(projectRef()).onOpen(this);
         } else {
             m_tracksSubc.Reset();
         }
@@ -255,7 +257,7 @@ double Au3SelectionController::selectedClipStartTime() const
     auto clipKey = clipKeyList.at(0);
 
     WaveTrack* waveTrack = au3::DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    if (!waveTrack) {
         return -1.0;
     }
 
@@ -277,7 +279,7 @@ double Au3SelectionController::selectedClipEndTime() const
     auto clipKey = clipKeyList.at(0);
 
     WaveTrack* waveTrack = au3::DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    if (!waveTrack) {
         return -1.0;
     }
 
@@ -700,12 +702,12 @@ bool Au3SelectionController::selectionContainsGroup() const
 
     for (const auto& clipKey : clipKeyList) {
         WaveTrack* waveTrack = au3::DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
-        IF_ASSERT_FAILED(waveTrack) {
+        if (!waveTrack) {
             return false;
         }
 
         std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
-        IF_ASSERT_FAILED(clip) {
+        if (!clip) {
             return false;
         }
 
@@ -728,12 +730,12 @@ bool Au3SelectionController::isSelectionGrouped() const
 
     for (const auto& clipKey : clipKeyList) {
         WaveTrack* waveTrack = au3::DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
-        IF_ASSERT_FAILED(waveTrack) {
+        if (!waveTrack) {
             return false;
         }
 
         std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
-        IF_ASSERT_FAILED(clip) {
+        if (!clip) {
             return false;
         }
 
