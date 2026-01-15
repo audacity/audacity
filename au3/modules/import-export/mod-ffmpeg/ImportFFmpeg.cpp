@@ -473,18 +473,16 @@ double FFmpegImportFileHandle::GetDuration() const
 
 int FFmpegImportFileHandle::GetRequiredTrackCount() const
 {
-    size_t tracks = 0;
+    // FFmpeg can expose multiple audio streams,
+    // and each stream can have its own channel count
 
+    size_t tracks = 0;
     for (const auto& sc : mStreamContexts) {
         if (!sc.Use) {
             continue;
         }
 
-        if (sc.InitialChannels <= 2) {
-            tracks += 1;
-        } else {
-            tracks += sc.InitialChannels;
-        }
+        tracks += ImportUtils::RequiredTrackCountFromChannels(sc.InitialChannels);
     }
 
     return tracks;

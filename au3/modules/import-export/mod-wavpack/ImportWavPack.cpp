@@ -121,11 +121,7 @@ double WavPackImportFileHandle::GetDuration() const
 
 int WavPackImportFileHandle::GetRequiredTrackCount() const
 {
-    if (mNumChannels <= 2) {
-        return 1;
-    }
-
-    return mNumChannels;
+    return ImportUtils::RequiredTrackCountFromChannels(mNumChannels);
 }
 
 auto WavPackImportFileHandle::GetFileUncompressedBytes() -> ByteCount

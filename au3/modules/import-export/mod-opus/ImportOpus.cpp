@@ -104,10 +104,7 @@ double OpusImportFileHandle::GetDuration() const
 
 int OpusImportFileHandle::GetRequiredTrackCount() const
 {
-    if (mNumChannels <= 2) {
-        return 1;
-    }
-    return mNumChannels;
+    return ImportUtils::RequiredTrackCountFromChannels(mNumChannels);
 }
 
 auto OpusImportFileHandle::GetFileUncompressedBytes() -> ByteCount

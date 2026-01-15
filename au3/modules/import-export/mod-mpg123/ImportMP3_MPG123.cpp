@@ -210,13 +210,7 @@ double MP3ImportFileHandle::GetDuration() const
 
 int MP3ImportFileHandle::GetRequiredTrackCount() const
 {
-    const int channels = mNumChannels;
-
-    if (channels <= 2) {
-        return 1;
-    }
-
-    return channels;
+    return ImportUtils::RequiredTrackCountFromChannels(mNumChannels);
 }
 
 auto MP3ImportFileHandle::GetFileUncompressedBytes() -> ByteCount
