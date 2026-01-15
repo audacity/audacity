@@ -233,9 +233,9 @@ int main(int argc, char** argv)
 
 // framework
     app.addModule(new muse::audioplugins::AudioPluginsModule());
+    app.addModule(new muse::actions::ActionsModule());
     if (!isPluginRegistration) {
         app.addModule(new muse::draw::DrawModule());
-        app.addModule(new muse::actions::ActionsModule());
         app.addModule(new muse::workspace::WorkspaceModule());
         app.addModule(new muse::accessibility::AccessibilityModule());
         app.addModule(new muse::mi::MultiInstancesModule());
@@ -249,15 +249,15 @@ int main(int argc, char** argv)
 #endif
         app.addModule(new muse::cloud::CloudModule());
         app.addModule(new muse::network::NetworkModule());
+        app.addModule(new muse::extensions::ExtensionsModule());
+#ifdef MUSE_MODULE_AUTOBOT
+        app.addModule(new muse::autobot::AutobotModule());
+#endif
     }
 
     // modules
     app.addModule(new au::appshell::AppShellModule());
     app.addModule(new au::preferences::PreferencesModule());
-    app.addModule(new muse::extensions::ExtensionsModule());
-#ifdef MUSE_MODULE_AUTOBOT
-    app.addModule(new muse::autobot::AutobotModule());
-#endif
     app.addModule(new au::uicomponents::UiComponentsModule());
     app.addModule(new au::effects::AudioUnitEffectsModule());
     app.addModule(new au::effects::Lv2EffectsModule());
