@@ -136,13 +136,16 @@ bool TrackeditInteraction::removeTracksData(const TrackIdList& tracksIds, secs_t
     return withPlaybackStop(&ITrackeditInteraction::removeTracksData, tracksIds, begin, end, moveClips);
 }
 
-bool TrackeditInteraction::moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed, bool& clipsMovedToOtherTrack)
+muse::RetVal<ClipKeyList> TrackeditInteraction::moveClips(const ClipKeyList& clipKeyList, secs_t timePositionOffset,
+                                                          int trackPositionOffset, bool completed,
+                                                          bool& clipsMovedToOtherTrack)
 {
-    return withPlaybackStop(&ITrackeditInteraction::moveClips,
-                            timePositionOffset,
-                            trackPositionOffset,
-                            completed,
-                            clipsMovedToOtherTrack);
+    return withPlaybackStopRetVal(&ITrackeditInteraction::moveClips,
+                                  clipKeyList,
+                                  timePositionOffset,
+                                  trackPositionOffset,
+                                  completed,
+                                  clipsMovedToOtherTrack);
 }
 
 void TrackeditInteraction::cancelItemDragEdit()
