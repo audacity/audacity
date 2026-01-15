@@ -17,8 +17,8 @@ Rectangle {
     property real desiredWidth: -1
 
     property int currentClipStyle: ClipStyle.COLORFUL
-    property color classicThemeBackground: "#F0F3FF"
-    property color classicThemeHeader: "#D0D6F2"
+    property color classicThemeBackground: ui.theme.extra["classic_clip_background_color"]
+    property color classicThemeHeader: ui.theme.extra["classic_clip_header_color"]
 
     property color classicThemeGradient: ui.blendColors(ui.blendColors("transparent", "white", 0.3), ui.blendColors("transparent", root.classicThemeBackground, 0.4), 0.5)
     property color colorfulThemeGradient: ui.blendColors(ui.blendColors("transparent", "white", 0.3), ui.blendColors("transparent", root.clipColor, 0.4), 0.5)
