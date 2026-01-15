@@ -5,6 +5,7 @@
 
 #include <QObject>
 
+#include "framework/global/async/async.h"
 #include "framework/global/modularity/ioc.h"
 
 #include "context/iglobalcontext.h"
@@ -12,12 +13,13 @@
 #include "trackedit/itrackeditinteraction.h"
 #include "spectrogram/view/spectrogramhit.h"
 #include "spectrogram/ispectrogramservice.h"
+#include "spectrogram/iglobalspectrogramconfiguration.h"
 
 #include "types/projectscenetypes.h"
 #include "../timeline/timelinecontext.h"
 
 namespace au::projectscene {
-class SelectionViewController : public QObject
+class SelectionViewController : public QObject, public muse::async::Asyncable
 {
     Q_OBJECT
     Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
@@ -25,12 +27,14 @@ class SelectionViewController : public QObject
     Q_PROPERTY(bool selectionActive READ selectionActive NOTIFY selectionActiveChanged FINAL)
     Q_PROPERTY(bool selectionEditInProgress READ selectionEditInProgress NOTIFY selectionEditInProgressChanged FINAL)
     Q_PROPERTY(bool selectionInProgress READ selectionInProgress NOTIFY selectionInProgressChanged FINAL)
+    Q_PROPERTY(bool spectralSelectionEnabled READ spectralSelectionEnabled NOTIFY spectralSelectionEnabledChanged FINAL)
     Q_PROPERTY(QVariantMap pressedSpectrogram READ pressedSpectrogram NOTIFY pressedSpectrogramChanged FINAL)
 
     muse::Inject<context::IGlobalContext> globalContext;
     muse::Inject<trackedit::ISelectionController> selectionController;
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
     muse::Inject<spectrogram::ISpectrogramService> spectrogramService;
+    muse::Inject<spectrogram::IGlobalSpectrogramConfiguration> spectrogramConfiguration;
 
 public:
     SelectionViewController(QObject* parent = nullptr);
@@ -61,6 +65,7 @@ public:
     bool selectionActive() const;
     bool selectionEditInProgress() const;
     bool selectionInProgress() const;
+    bool spectralSelectionEnabled() const;
     void setSelectionActive(bool newSelectionActive);
     QVariantMap pressedSpectrogram() const;
 
@@ -69,6 +74,7 @@ signals:
     void selectionActiveChanged();
     void selectionEditInProgressChanged();
     void selectionInProgressChanged();
+    void spectralSelectionEnabledChanged();
     void pressedSpectrogramChanged();
 
     void selectionStarted();

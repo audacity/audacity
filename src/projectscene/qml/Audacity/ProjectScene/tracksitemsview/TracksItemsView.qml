@@ -754,6 +754,7 @@ Rectangle {
                             selectionStartFrequency: itemData.frequencySelection.startFrequency
                             selectionEndFrequency: itemData.frequencySelection.endFrequency
                             pressedSpectrogram: selectionController.pressedSpectrogram
+                            spectralSelectionEnabled: selectionController.spectralSelectionEnabled
 
                             navigationPanel: navPanels && navPanels[index] ? navPanels[index] : null
 

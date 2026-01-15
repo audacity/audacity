@@ -53,6 +53,7 @@ Rectangle {
 
     required property real selectionStartFrequency
     required property real selectionEndFrequency
+    required property bool spectralSelectionEnabled
     required property var pressedSpectrogram
 
     property real distanceToLeftNeighbor: -1
@@ -849,6 +850,7 @@ Rectangle {
 
                 clipId: root.clipKey.itemId()
                 trackId: root.clipKey.trackId()
+                spectralSelectionEnabled: root.spectralSelectionEnabled
                 pressedSpectrogram: root.pressedSpectrogram
                 isStereo: root.showChannelSplitter
                 channelHeightRatio: showChannelSplitter ? root.channelHeightRatio : 1

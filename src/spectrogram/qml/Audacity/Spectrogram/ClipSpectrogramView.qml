@@ -6,6 +6,7 @@ import Audacity.Spectrogram 1.0
 Item {
     id: root
 
+    required property bool spectralSelectionEnabled
     required property bool isStereo
     required property double channelHeightRatio
     required property int clipId
@@ -61,7 +62,7 @@ Item {
                 MouseArea {
                     anchors.fill: parent
 
-                    visible: root.pressedSpectrogram.trackId === -1 || (root.pressedSpectrogram.trackId === root.trackId && root.pressedSpectrogram.channel === index)
+                    visible: spectralSelectionEnabled && (root.pressedSpectrogram.trackId === -1 || (root.pressedSpectrogram.trackId === root.trackId && root.pressedSpectrogram.channel === index))
 
                     cursorShape: Qt.CrossCursor
                     acceptedButtons: Qt.NoButton // Don't consume mouse events

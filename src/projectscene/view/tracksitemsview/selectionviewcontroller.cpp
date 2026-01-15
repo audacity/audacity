@@ -28,6 +28,10 @@ void SelectionViewController::load()
             onReleased(m_startPoint.x(), m_startPoint.y());
         }
     });
+
+    spectrogramConfiguration()->spectralSelectionEnabledChanged().onReceive(this, [this] (auto) {
+        emit spectralSelectionEnabledChanged();
+    });
 }
 
 void SelectionViewController::onPressed(double x, double y, const spectrogram::SpectrogramHit* spectrogramHit)
@@ -86,7 +90,7 @@ void SelectionViewController::onPressed(double x, double y, const spectrogram::S
         selectionController()->setDataSelectedEndTime(m_context->positionToTime(x2, true /*withSnap*/), false);
     }
 
-    if (spectrogramHit) {
+    if (spectralSelectionEnabled() && spectrogramHit) {
         m_spectrogramMousePress.emplace(*spectrogramHit, spectrogramHitFrequency(*spectrogramHit, y));
     } else {
         m_spectrogramMousePress.reset();
@@ -391,6 +395,11 @@ bool SelectionViewController::selectionEditInProgress() const
 bool SelectionViewController::selectionInProgress() const
 {
     return m_selectionStarted;
+}
+
+bool SelectionViewController::spectralSelectionEnabled() const
+{
+    return spectrogramConfiguration()->spectralSelectionEnabled();
 }
 
 QVariantMap SelectionViewController::pressedSpectrogram() const

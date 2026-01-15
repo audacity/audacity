@@ -22,6 +22,7 @@ TrackItemsContainer {
     required property bool isSpectrogramViewVisible
     required property double selectionStartFrequency
     required property double selectionEndFrequency
+    required property bool spectralSelectionEnabled
     required property var pressedSpectrogram
 
     signal movePreviewClip(int x, int width, string title)
@@ -304,6 +305,7 @@ TrackItemsContainer {
                                 selectionStartFrequency: root.selectionStartFrequency
                                 selectionEndFrequency: root.selectionEndFrequency
                                 pressedSpectrogram: root.pressedSpectrogram
+                                spectralSelectionEnabled: root.spectralSelectionEnabled
 
                                 leftVisibleMargin: itemData.leftVisibleMargin
                                 rightVisibleMargin: itemData.rightVisibleMargin
