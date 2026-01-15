@@ -134,8 +134,8 @@ public:
     bool cutLabel(const LabelKey& labelKey) override;
     bool copyLabel(const LabelKey& labelKey) override;
 
-    bool moveLabels(secs_t timePositionOffset, bool completed) override;
-    muse::RetVal<LabelKeyList> moveLabels(const LabelKeyList& labelKeys, const TrackId& toTrackId, bool completed) override;
+    bool moveLabels(const LabelKeyList& labelKeys, secs_t timePositionOffset, bool completed) override;
+    muse::RetVal<LabelKeyList> moveLabelsToTrack(const LabelKeyList& labelKeys, const TrackId& toTrackId, bool completed) override;
 
     bool stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed) override;
     bool stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed) override;

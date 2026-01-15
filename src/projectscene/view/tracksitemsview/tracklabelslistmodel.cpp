@@ -300,7 +300,8 @@ bool TrackLabelsListModel::moveSelectedLabels(const LabelKey& key, bool complete
     // Labels can only be moved to label tracks
     TrackItemsListModel::MoveOffset moveOffset = calculateMoveOffset(item, key, { trackedit::TrackType::Label }, completed);
     if (vs->moveInitiated()) {
-        ok = trackeditInteraction()->moveLabels(moveOffset.timeOffset, completed);
+        auto selectedLabels = selectionController()->selectedLabels();
+        ok = trackeditInteraction()->moveLabels(selectedLabels, moveOffset.timeOffset, completed);
     }
 
     if (ok && isTrackDataSelected()) {

@@ -467,14 +467,14 @@ bool TrackeditInteraction::copyLabel(const LabelKey& labelKey)
     return m_interaction->copyLabel(labelKey);
 }
 
-bool TrackeditInteraction::moveLabels(secs_t timePositionOffset, bool completed)
+bool TrackeditInteraction::moveLabels(const LabelKeyList& labelKeys, secs_t timePositionOffset, bool completed)
 {
-    return m_interaction->moveLabels(timePositionOffset, completed);
+    return m_interaction->moveLabels(labelKeys, timePositionOffset, completed);
 }
 
-muse::RetVal<LabelKeyList> TrackeditInteraction::moveLabels(const LabelKeyList& labelKeys, const TrackId& toTrackId, bool completed)
+muse::RetVal<LabelKeyList> TrackeditInteraction::moveLabelsToTrack(const LabelKeyList& labelKeys, const TrackId& toTrackId, bool completed)
 {
-    return m_interaction->moveLabels(labelKeys, toTrackId, completed);
+    return m_interaction->moveLabelsToTrack(labelKeys, toTrackId, completed);
 }
 
 bool TrackeditInteraction::stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed)

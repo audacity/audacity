@@ -737,18 +737,18 @@ bool TrackeditOperationController::removeLabels(const LabelKeyList& labelKeys, b
     return false;
 }
 
-bool TrackeditOperationController::moveLabels(secs_t timePositionOffset, bool completed)
+bool TrackeditOperationController::moveLabels(const LabelKeyList& labelKeys, secs_t timePositionOffset, bool completed)
 {
-    bool success = labelsInteraction()->moveLabels(timePositionOffset);
+    bool success = labelsInteraction()->moveLabels(labelKeys, timePositionOffset);
     if (success && completed) {
         projectHistory()->pushHistoryState("Labels moved", "Move labels");
     }
     return success;
 }
 
-muse::RetVal<LabelKeyList> TrackeditOperationController::moveLabels(const LabelKeyList& labelKeys, const TrackId& toTrackId, bool completed)
+muse::RetVal<LabelKeyList> TrackeditOperationController::moveLabelsToTrack(const LabelKeyList& labelKeys, const TrackId& toTrackId, bool completed)
 {
-    muse::RetVal<LabelKeyList> retVal = labelsInteraction()->moveLabels(labelKeys, toTrackId);
+    muse::RetVal<LabelKeyList> retVal = labelsInteraction()->moveLabelsToTrack(labelKeys, toTrackId);
     if (retVal.ret && completed) {
         projectHistory()->pushHistoryState("Labels moved", "Move labels");
     }
