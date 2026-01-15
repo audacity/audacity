@@ -266,7 +266,7 @@ FocusScope {
 
         Rectangle {
             anchors.fill: parent
-            color: "white"
+            color: ui.theme.extra["white_color"]
 
             StyledIconLabel {
                 anchors.centerIn: parent
@@ -274,7 +274,7 @@ FocusScope {
                 iconCode: IconCode.PLUS
 
                 font.pixelSize: 50
-                color: "black"
+                color: ui.theme.extra["black_color"]
             }
         }
     }

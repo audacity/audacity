@@ -20,14 +20,16 @@ Rectangle {
     property color classicThemeBackground: ui.theme.extra["classic_clip_background_color"]
     property color classicThemeHeader: ui.theme.extra["classic_clip_header_color"]
 
-    property color classicThemeGradient: ui.blendColors(ui.blendColors("transparent", "white", 0.3), ui.blendColors("transparent", root.classicThemeBackground, 0.4), 0.5)
-    property color colorfulThemeGradient: ui.blendColors(ui.blendColors("transparent", "white", 0.3), ui.blendColors("transparent", root.clipColor, 0.4), 0.5)
+    property color classicThemeGradient: ui.blendColors(ui.blendColors("transparent", ui.theme.extra["white_color"], 0.3),
+                                                        ui.blendColors("transparent", root.classicThemeBackground, 0.4), 0.5)
+    property color colorfulThemeGradient: ui.blendColors(ui.blendColors("transparent", ui.theme.extra["white_color"], 0.3),
+                                                         ui.blendColors("transparent", root.clipColor, 0.4), 0.5)
 
     width: desiredWidth <= 0 ? titleLabel.implicitWidth + 20 : desiredWidth
 
     radius: 4
     border.width: 1
-    border.color: "black"
+    border.color: ui.theme.extra["black_color"]
 
     color: "transparent"
 
@@ -39,7 +41,7 @@ Rectangle {
         color: "transparent"
 
         border.width:  1
-        border.color: "white"
+        border.color: ui.theme.extra["white_color"]
         radius: 4
 
         Rectangle {
@@ -47,7 +49,7 @@ Rectangle {
 
             anchors.fill: parent
             anchors.margins: 1
-            color: "white"
+            color: ui.theme.extra["white_color"]
             opacity: 0.3
 
             radius: 4
@@ -118,7 +120,8 @@ Rectangle {
 
         height: 20
 
-        color: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors("white", root.clipColor, 0.3) : ui.blendColors("white", root.classicThemeHeader, 0.3)
+        color: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors(ui.theme.extra["white_color"], root.clipColor, 0.3)
+                                                           : ui.blendColors(ui.theme.extra["white_color"], root.classicThemeHeader, 0.3)
 
         visible: !root.collapsed
 
@@ -130,7 +133,7 @@ Rectangle {
             anchors.rightMargin: 8
             horizontalAlignment: Qt.AlignLeft
 
-            color: "black"
+            color: ui.theme.extra["black_color"]
         }
 
         Rectangle {
@@ -145,7 +148,8 @@ Rectangle {
             gradient: Gradient {
                 orientation: Qt.Horizontal
                 GradientStop { position: 0.0; color: "#00FFFFFF" }
-                GradientStop { position: 0.4; color: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors("white", root.clipColor, 0.3) : ui.blendColors("white", root.classicThemeHeader, 0.3)}
+                GradientStop { position: 0.4; color: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors(ui.theme.extra["white_color"], root.clipColor, 0.3)
+                                                                                                 : ui.blendColors(ui.theme.extra["white_color"], root.classicThemeHeader, 0.3)}
                 GradientStop { position: 1.0; color: "#00FFFFFF" }
             }
         }

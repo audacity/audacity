@@ -42,7 +42,6 @@ static constexpr QRectF messageRect(loadingScreenSize.width() / 2, 269, 0, 0);
 static const QString website("www.audacityteam.org");
 static constexpr QRectF websiteRect(76, 240, 0, 0);
 
-static const QColor versionNumberColor("#EB4859");
 static constexpr qreal versionNumberSpacing = 5.0;
 
 LoadingScreenView::LoadingScreenView(QWidget* parent)
@@ -94,7 +93,7 @@ void LoadingScreenView::draw(QPainter* painter)
     painter->drawText(websiteRect, Qt::AlignBottom | alignment | Qt::TextDontClip, website, &websiteBoundingRect);
 
     // Draw version number
-    pen.setColor(versionNumberColor);
+    pen.setColor(uiConfiguration()->currentTheme().extra["logo_main_color"].value<QColor>());
     painter->setPen(pen);
 
     painter->drawText(websiteRect.translated(0.0, -websiteBoundingRect.height() - versionNumberSpacing),

@@ -177,11 +177,11 @@ void PlaybackToolBarModel::updatePlayState()
 
     item->setSelected(isPlaying);
 
-    QColor iconColor = QColor(configuration()->playColor().toQColor());
+    QColor iconColor = uiConfiguration()->currentTheme().values.value(muse::ui::PLAY_COLOR).value<QColor>();
     QColor backgroundColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::BUTTON_COLOR).toString());
     if (isPlaying) {
         iconColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::FONT_PRIMARY_COLOR).toString());
-        backgroundColor = QColor(configuration()->playColor().toQColor());
+        backgroundColor = uiConfiguration()->currentTheme().values.value(muse::ui::PLAY_COLOR).value<QColor>();
     } else if (isRecording) {
         iconColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::FONT_PRIMARY_COLOR).toString());
     }
@@ -218,11 +218,11 @@ void PlaybackToolBarModel::updateRecordState()
 
     item->setSelected(isRecording);
 
-    QColor iconColor = QColor(recordConfiguration()->recordColor().toQColor());
+    QColor iconColor = uiConfiguration()->currentTheme().values.value(muse::ui::RECORD_COLOR).value<QColor>();
     QColor backgroundColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::BUTTON_COLOR).toString());
     if (isRecording) {
         iconColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::BACKGROUND_PRIMARY_COLOR).toString());
-        backgroundColor = QColor(recordConfiguration()->recordColor().toQColor());
+        backgroundColor = uiConfiguration()->currentTheme().values.value(muse::ui::RECORD_COLOR).value<QColor>();
     }
 
     item->setIconColor(iconColor);

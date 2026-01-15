@@ -181,15 +181,15 @@ muse::async::Notification ProjectSceneConfiguration::isEffectsPanelVisibleChange
 const std::vector<std::pair<std::string, std::string> >& ProjectSceneConfiguration::clipColors() const
 {
     static std::vector<std::pair<std::string /*name*/, std::string /*color*/> > colors = {
-        { "Blue", "#66A3FF" },
-        { "Violet", "#9996FC" },
-        { "Magenta", "#DA8CCC" },
-        { "Red", "#F08080" },
-        { "Orange", "#FF9E65" },
-        { "Yellow", "#E8C050" },
-        { "Green", "#74BE59" },
-        { "Turquoise", "#34B494" },
-        { "Cyan", "#48BECF" }
+        { "Blue", uiConfiguration()->currentTheme().extra["clip_color_1"].toString().toStdString() },
+        { "Violet", uiConfiguration()->currentTheme().extra["clip_color_2"].toString().toStdString() },
+        { "Magenta", uiConfiguration()->currentTheme().extra["clip_color_3"].toString().toStdString() },
+        { "Red", uiConfiguration()->currentTheme().extra["clip_color_4"].toString().toStdString() },
+        { "Orange", uiConfiguration()->currentTheme().extra["clip_color_5"].toString().toStdString() },
+        { "Yellow", uiConfiguration()->currentTheme().extra["clip_color_6"].toString().toStdString() },
+        { "Green", uiConfiguration()->currentTheme().extra["clip_color_7"].toString().toStdString() },
+        { "Turquoise", uiConfiguration()->currentTheme().extra["clip_color_8"].toString().toStdString() },
+        { "Cyan", uiConfiguration()->currentTheme().extra["clip_color_9"].toString().toStdString() }
     };
 
     return colors;

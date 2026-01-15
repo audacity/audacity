@@ -47,7 +47,7 @@ ColumnLayout {
         Layout.fillWidth: true
         implicitHeight: 208
 
-        color: ui.theme.isDark ? "#44495A" : "#D7DEE5"
+        color: ui.theme.extra["save_option_background_color"]
 
         topLeftRadius: root.radius
         topRightRadius: root.radius

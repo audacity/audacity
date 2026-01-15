@@ -18,10 +18,7 @@ Rectangle {
     y: 0
     height: parent.height / 2
 
-    color: if (ui.theme.isDark)
-               return active ? "#5d6ca5" : "#4b535b"
-           else
-               return active ? "#A0A9DC" : "#d0d0d7"
+    color: active ? ui.theme.extra["play_region_active_color"] : ui.theme.extra["play_region_inactive_color"]
 
     function updatePosition() {
         let newX = context.timeToPosition(start)

@@ -48,7 +48,7 @@ BaseSection {
             model: [
                 { textRole: qsTrc("appshell/preferences", "Accent color:"), colorRole: ui.theme.accentColor, typeRole: AppearancePreferencesModel.AccentColor},
                 { textRole: qsTrc("appshell/preferences", "Text and icons:"), colorRole: ui.theme.fontPrimaryColor, typeRole: AppearancePreferencesModel.TextAndIconsColor},
-                { textRole: qsTrc("appshell/preferences", "Disabled text:"), colorRole: "#000000", typeRole: AppearancePreferencesModel.DisabledColor},
+                { textRole: qsTrc("appshell/preferences", "Disabled text:"), colorRole: ui.theme.extra["black_color"], typeRole: AppearancePreferencesModel.DisabledColor},
                 { textRole: qsTrc("appshell/preferences", "Border color:"), colorRole: ui.theme.strokeColor, typeRole: AppearancePreferencesModel.BorderColor}
             ]
 

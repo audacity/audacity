@@ -15,8 +15,6 @@ class IRecordConfiguration : MODULE_GLOBAL_EXPORT_INTERFACE
 public:
     virtual ~IRecordConfiguration() = default;
 
-    virtual muse::draw::Color recordColor() const = 0;
-
     virtual bool isMicMeteringOn() const = 0;
     virtual void setIsMicMeteringOn(bool enable) = 0;
     virtual muse::async::Notification isMicMeteringOnChanged() const = 0;

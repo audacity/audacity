@@ -3,15 +3,18 @@
 */
 #pragma once
 
+#include "framework/global/modularity/ioc.h"
+#include "framework/ui/iuiconfiguration.h"
+
 #include "../irecordconfiguration.h"
 
 namespace au::record {
 class RecordConfiguration : public IRecordConfiguration
 {
+    muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
+
 public:
     void init();
-
-    muse::draw::Color recordColor() const override;
 
     bool isMicMeteringOn() const override;
     void setIsMicMeteringOn(bool enable) override;

@@ -290,7 +290,7 @@ ListItemBlank {
 
         color: "transparent"
 
-        border.color: "#7EB1FF"
+        border.color: ui.theme.extra["focus_state_color"]
         border.width: 2
 
         radius: 6
