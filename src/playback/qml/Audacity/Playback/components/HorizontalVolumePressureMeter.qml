@@ -33,21 +33,21 @@ Canvas {
     QtObject {
         id: meterStyle
 
-        readonly property var clippedColor: "#EF476F"
+        readonly property var clippedColor: ui.theme.extra["meter_clipped_color"]
         readonly property var noClippedColor: ui.theme.buttonColor
 
         readonly property var rmsColor: ui.theme.accentColor
-        readonly property var rmsOverlayColor: "#66000000"
+        readonly property var rmsOverlayColor: ui.theme.extra["meter_rms_overlay_color"]
 
         readonly property var defaultColor: ui.theme.accentColor
 
-        readonly property var gradientColorGreen: "#50DF46"
-        readonly property var gradientColorYellow: "#FFE100"
-        readonly property var gradientColorRed: "#EF476F"
+        readonly property var gradientColorGreen: ui.theme.extra["meter_gradient_green_color"]
+        readonly property var gradientColorYellow: ui.theme.extra["meter_gradient_yellow_color"]
+        readonly property var gradientColorRed: ui.theme.extra["meter_clipped_color"]
 
         readonly property color meterBackgroundColor: Utils.colorWithAlpha(ui.theme.strokeColor, 0.7)
 
-        readonly property var maxPeakMarkerColor: "#14151A"
+        readonly property var maxPeakMarkerColor: ui.theme.extra["meter_max_peak_marker_color"]
 
         readonly property var smallSteps: root.meterModel.smallSteps
 

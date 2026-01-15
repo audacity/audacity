@@ -331,7 +331,7 @@ Rectangle {
                 anchors.top: parent.verticalCenter
                 anchors.bottom: parent.bottom
 
-                color: "#ABE7FF"
+                color: ui.theme.extra["selection_highlight_color"]
                 opacity: 0.3
             }
 
@@ -1065,7 +1065,7 @@ Rectangle {
 
             anchors.top: parent.top
             anchors.bottom: parent.bottom
-            color: "#ABE7FF"
+            color: ui.theme.extra["selection_highlight_color"]
             opacity: 0.05
             visible: false
 
@@ -1091,7 +1091,7 @@ Rectangle {
             width: 1
             x: playRegionController.guidelineVisible ? playRegionController.guidelinePosition : (root.guidelineVisible ? root.guidelinePos : -1)
 
-            color: tracksViewState.snapEnabled ? "#00E5FF" : "#FFF200"
+            color: tracksViewState.snapEnabled ? ui.theme.extra["guideline_snap_enabled_color"] : ui.theme.extra["guideline_snap_disabled_color"]
 
             visible: root.guidelineVisible || playRegionController.guidelineVisible
         }
@@ -1105,7 +1105,7 @@ Rectangle {
             width: 1
             height: splitToolController.singleTrack ? hoveredTrackHeight : content.height
 
-            color: "#0121C0"
+            color: ui.theme.extra["guideline_split_color"]
 
             visible: splitToolController.guidelineVisible
         }
@@ -1133,7 +1133,7 @@ Rectangle {
 
         width: 1
 
-        color: "#FFFFFF"
+        color: ui.theme.extra["white_color"]
         opacity: 0.8
 
         visible: playRegionModel.active
@@ -1149,7 +1149,7 @@ Rectangle {
 
         width: 1
 
-        color: "#FFFFFF"
+        color: ui.theme.extra["white_color"]
         opacity: 0.8
 
         visible: playRegionModel.active

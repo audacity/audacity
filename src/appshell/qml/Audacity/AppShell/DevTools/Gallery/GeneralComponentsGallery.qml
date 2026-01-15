@@ -309,7 +309,7 @@ Rectangle {
         ColorPicker {
             width: 200
 
-            color: "black"
+            color: ui.theme.extra["black_color"]
 
             onNewColorSelected: function(newColor) {
                 color = newColor

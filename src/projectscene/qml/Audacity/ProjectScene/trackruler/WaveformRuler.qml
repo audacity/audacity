@@ -87,7 +87,7 @@ Item {
 
                 width: 8
                 height: 1
-                color: ui.theme.isDark ? "#F4F7F9" : "#F4F5F9"
+                color: ui.theme.fontSecondaryColor
 
                 antialiasing: true
             }
@@ -101,7 +101,7 @@ Item {
                 width: parent.width - tick.width
                 height: 1
 
-                color: "#475157"
+                color: ui.theme.extra["waveform_ruler_tick_extension_color"]
 
                 visible: modelData.fullWidthTick
 
@@ -127,7 +127,7 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
 
                     text: rulerModel.sampleToText(modelData.value)
-                    color: "#F9F9FA"
+                    color: ui.theme.extra["waveform_ruler_label_color"]
                     font.pixelSize: 11
 
                     font.bold: modelData.bold
@@ -147,7 +147,7 @@ Item {
 
                     width: 3
                     height: 1
-                    color: "#F4F5F9"
+                    color: ui.theme.fontSecondaryColor
 
                     visible: modelData.value < 0
 
@@ -172,7 +172,7 @@ Item {
             Rectangle {
                 width: 4
                 height: 1
-                color: ui.theme.isDark ? "#868B8E" : "#8B8C96"
+                color: ui.theme.extra["waveform_ruler_small_step_color"]
                 anchors.verticalCenter: parent.verticalCenter
                 antialiasing: true
             }

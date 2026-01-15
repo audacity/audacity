@@ -237,9 +237,9 @@ QColor PlaybackToolBarCustomiseModel::iconColor(const muse::ui::UiAction& action
 {
     QColor color = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::FONT_PRIMARY_COLOR).toString());
     if (action.code == PLAYBACK_PLAY_QUERY.toString()) {
-        color = QColor(configuration()->playColor().toQColor());
+        color = uiConfiguration()->currentTheme().values.value(muse::ui::PLAY_COLOR).value<QColor>();
     } else if (action.code == RECORD_START_QUERY.toString()) {
-        color = QColor(recordConfiguration()->recordColor().toQColor());
+        color = uiConfiguration()->currentTheme().values.value(muse::ui::RECORD_COLOR).value<QColor>();
     }
 
     return color;

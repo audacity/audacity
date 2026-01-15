@@ -17,10 +17,15 @@
 #include <unordered_map>
 #include <limits>
 
+#include "modularity/ioc.h"
+#include "ui/iuiconfiguration.h"
+
 namespace au::effects {
 class DynamicsTimeline : public QQuickItem
 {
     Q_OBJECT
+
+    muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
 
     Q_PROPERTY(double dbMin READ dbMin WRITE setDbMin NOTIFY dbMinChanged)
     Q_PROPERTY(double duration READ duration WRITE setDuration NOTIFY durationChanged)

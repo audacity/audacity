@@ -12,7 +12,7 @@ FlatButton {
     width: size
     height: size
     icon: IconCode.BYPASS
-    iconColor: accentButton ? "white" : ui.theme.fontPrimaryColor
+    iconColor: accentButton ? ui.theme.extra["white_color"] : ui.theme.fontPrimaryColor
     iconFont: ui.theme.toolbarIconsFont
-    accentColor: isMasterEffect ? "black" : ui.theme.accentColor
+    accentColor: isMasterEffect ? ui.theme.extra["black_color"] : ui.theme.accentColor
 }

@@ -23,11 +23,11 @@ Rectangle {
     property bool showChannelSplitter: false
     property alias channelHeightRatio: waveChannelSplitter.channelHeightRatio
     property var canvas: null
-    property color clipColor: "#677CE4"
+    property color clipColor: ui.theme.extra["clip_color_1"]
     property color normalHeaderColor: root.currentClipStyle == ClipStyle.COLORFUL ? root.clipColor : root.classicHeaderColor
-    property color selectedHeaderColor: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors("#ffffff", root.clipColor, 0.3) : classicHeaderColor
-    property color normalHeaderHoveredColor: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors("#ffffff", root.clipColor, 0.8) : classicHeaderHoveredColor
-    property color selectedHeaderHoveredColor: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors("#ffffff", root.clipColor, 0.2) : classicHeaderHoveredColor
+    property color selectedHeaderColor: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors(ui.theme.extra["white_color"], root.clipColor, 0.3) : classicHeaderColor
+    property color normalHeaderHoveredColor: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors(ui.theme.extra["white_color"], root.clipColor, 0.8) : classicHeaderHoveredColor
+    property color selectedHeaderHoveredColor: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors(ui.theme.extra["white_color"], root.clipColor, 0.2) : classicHeaderHoveredColor
     readonly property color classicHeaderColor: ui.theme.extra["classic_clip_header_color"]
     readonly property color classicHeaderHoveredColor: ui.theme.extra["classic_clip_header_hover_color"]
     property int currentClipStyle: ClipStyle.COLORFUL
@@ -102,8 +102,8 @@ Rectangle {
     property alias navigation: navCtrl
 
     radius: 4
-    color: clipSelected ? "white" : clipColor
-    border.color: "#000000"
+    color: clipSelected ? ui.theme.extra["white_color"] : clipColor
+    border.color: ui.theme.extra["black_color"]
     opacity: root.moveActive && (clipSelected || clipIntersectsSelection) ? 0.5 : isAudible ? 1.0 : 0.3
 
     onMoveActiveChanged: {
@@ -160,7 +160,7 @@ Rectangle {
         anchors.fill: parent
         color: "transparent"
         border.width: root.enableContrastBorder ? 2 : 1
-        border.color: "#000000"
+        border.color: ui.theme.extra["black_color"]
         radius: root.enableContrastBorder ? 0 : 4
         z: root.parent.z + 1
     }
@@ -182,7 +182,7 @@ Rectangle {
 
         navigationCtrl: navCtrl
 
-        border.color: "white"
+        border.color: ui.theme.extra["white_color"]
         border.width: 2
         radius: 4
 
@@ -823,7 +823,7 @@ Rectangle {
                     editable: root.enableCursorInteraction && root.asymmetricStereoHeightsPossible
                     asymmetricStereoHeightsPossible: root.asymmetricStereoHeightsPossible
 
-                    color: "#000000"
+                    color: ui.theme.extra["black_color"]
                     opacity: 0.10
 
                     onPositionChangeRequested: function (position) {
@@ -886,7 +886,7 @@ Rectangle {
                     editable: root.enableCursorInteraction && root.asymmetricStereoHeightsPossible
                     asymmetricStereoHeightsPossible: root.asymmetricStereoHeightsPossible
 
-                    color: "#000000"
+                    color: ui.theme.extra["black_color"]
                     opacity: 0.10
 
                     onPositionChangeRequested: function (position) {
@@ -911,7 +911,7 @@ Rectangle {
             height: 20
             text: !root.clipSelected ? qsTrc("clips", "Select") : qsTrc("clips", "Deselect")
             visible: root.clipNavigationPanel.highlight
-            normalColor: "#2b2a33"
+            normalColor: ui.theme.extra["accessibility_clip_select_button_color"]
 
             onClicked: {
                 if (!root.clipSelected) {
@@ -993,21 +993,21 @@ Rectangle {
             }
             PropertyChanges {
                 target: titleLabel
-                color: "#000000"
+                color: ui.theme.extra["black_color"]
             }
             PropertyChanges {
                 target: pitchBtn
-                textColor: "#000000"
-                iconColor: "#000000"
+                textColor: ui.theme.extra["black_color"]
+                iconColor: ui.theme.extra["black_color"]
             }
             PropertyChanges {
                 target: speedBtn
-                textColor: "#000000"
-                iconColor: "#000000"
+                textColor: ui.theme.extra["black_color"]
+                iconColor: ui.theme.extra["black_color"]
             }
             PropertyChanges {
                 target: menuBtn
-                iconColor: "#000000"
+                iconColor: ui.theme.extra["black_color"]
             }
         },
         State {
@@ -1019,21 +1019,21 @@ Rectangle {
             }
             PropertyChanges {
                 target: titleLabel
-                color: "#000000"
+                color: ui.theme.extra["black_color"]
             }
             PropertyChanges {
                 target: pitchBtn
-                textColor: "#000000"
-                iconColor: "#000000"
+                textColor: ui.theme.extra["black_color"]
+                iconColor: ui.theme.extra["black_color"]
             }
             PropertyChanges {
                 target: speedBtn
-                textColor: "#000000"
-                iconColor: "#000000"
+                textColor: ui.theme.extra["black_color"]
+                iconColor: ui.theme.extra["black_color"]
             }
             PropertyChanges {
                 target: menuBtn
-                iconColor: "#000000"
+                iconColor: ui.theme.extra["black_color"]
             }
         },
         State {
@@ -1045,21 +1045,21 @@ Rectangle {
             }
             PropertyChanges {
                 target: titleLabel
-                color: "#000000"
+                color: ui.theme.extra["black_color"]
             }
             PropertyChanges {
                 target: pitchBtn
-                textColor: "#000000"
-                iconColor: "#000000"
+                textColor: ui.theme.extra["black_color"]
+                iconColor: ui.theme.extra["black_color"]
             }
             PropertyChanges {
                 target: speedBtn
-                textColor: "#000000"
-                iconColor: "#000000"
+                textColor: ui.theme.extra["black_color"]
+                iconColor: ui.theme.extra["black_color"]
             }
             PropertyChanges {
                 target: menuBtn
-                iconColor: "#000000"
+                iconColor: ui.theme.extra["black_color"]
             }
         },
         State {
@@ -1071,21 +1071,21 @@ Rectangle {
             }
             PropertyChanges {
                 target: titleLabel
-                color: "#000000"
+                color: ui.theme.extra["black_color"]
             }
             PropertyChanges {
                 target: pitchBtn
-                textColor: "#000000"
-                iconColor: "#000000"
+                textColor: ui.theme.extra["black_color"]
+                iconColor: ui.theme.extra["black_color"]
             }
             PropertyChanges {
                 target: speedBtn
-                textColor: "#000000"
-                iconColor: "#000000"
+                textColor: ui.theme.extra["black_color"]
+                iconColor: ui.theme.extra["black_color"]
             }
             PropertyChanges {
                 target: menuBtn
-                iconColor: "#000000"
+                iconColor: ui.theme.extra["black_color"]
             }
         }
     ]

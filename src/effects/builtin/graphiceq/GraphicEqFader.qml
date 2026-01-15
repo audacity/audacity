@@ -39,7 +39,7 @@ Item {
         height: root.height
         anchors.horizontalCenter: parent.horizontalCenter
 
-        color: ui.theme.isDark ? "#191F24" : "#B8BBCC"
+        color: ui.theme.extra["graphic_eq_fader_track_color"]
 
         GraphicEqFaderHandle {
             id: eqFaderHandle

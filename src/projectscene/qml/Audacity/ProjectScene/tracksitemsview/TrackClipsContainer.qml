@@ -589,7 +589,7 @@ TrackItemsContainer {
                 anchors.bottomMargin: 3
 
                 channelHeightRatio: prv.isMultiView ? 0.5 : root.trackViewState.channelHeightRatio
-                color: "#FFFFFF"
+                color: ui.theme.extra["white_color"]
                 opacity: 0.05
                 visible: clipsModel.isStereo
 

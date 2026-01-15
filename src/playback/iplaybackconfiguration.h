@@ -19,8 +19,6 @@ class IPlaybackConfiguration : MODULE_GLOBAL_EXPORT_INTERFACE
 public:
     virtual ~IPlaybackConfiguration() = default;
 
-    virtual muse::draw::Color playColor() const = 0;
-
     virtual au::uicomponents::TimecodeFormatType playbackTimeItemFormat() const = 0;
     virtual void setPlaybackTimeItemFormat(au::uicomponents::TimecodeFormatType format) = 0;
     virtual muse::async::Notification playbackTimeItemFormatChanged() const = 0;

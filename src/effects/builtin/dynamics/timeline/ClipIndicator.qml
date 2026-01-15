@@ -21,7 +21,7 @@ Shape {
         id: prv
 
         readonly property int radius: 2
-        property color color: root.isClipping ? DynamicsColors.clippingColor : ui.theme.backgroundSecondaryColor
+        property color color: root.isClipping ? ui.theme.recordColor : ui.theme.backgroundSecondaryColor
     }
 
     MouseArea {

@@ -130,7 +130,7 @@ Rectangle {
 
                         width: parent.width
                         height: trackViewState.isTrackCollapsed ? 0 : 20
-                        color: "#000000"
+                        color: ui.theme.extra["black_color"]
                         opacity: 0.20
                     }
 
@@ -148,7 +148,7 @@ Rectangle {
 
                         color: "transparent"
 
-                        border.color: "#7EB1FF"
+                        border.color: ui.theme.extra["focus_state_color"]
                         border.width: 2
                     }
 
@@ -161,7 +161,7 @@ Rectangle {
 
                         height: 2
 
-                        color: "#7EB1FF"
+                        color: ui.theme.extra["focus_state_color"]
 
                         visible: model.isTrackFocused
                     }
@@ -169,7 +169,7 @@ Rectangle {
                     SeparatorLine {
                         id: sep
 
-                        color: "#000000"
+                        color: ui.theme.extra["black_color"]
                         opacity: 0.20
                         anchors.bottom: parent.bottom
                         thickness: 2
