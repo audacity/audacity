@@ -45,8 +45,7 @@ DockPage {
         id: tracksNavModel
 
         Component.onCompleted: {
-            var section = root.navigationPanelSec(tracksPanel.location)
-            tracksNavModel.init(section)
+            tracksNavModel.init(keynavCentralPanelSec)
         }
     }
 
@@ -86,10 +85,16 @@ DockPage {
         order: keynavTopPanelSec.order + 1
     }
 
+    property NavigationSection keynavCentralPanelSec: NavigationSection {
+        name: "TrackViewSection"
+        enabled: root.visible
+        order: keynavLeftPanelSec.order + 1
+    }
+
     property NavigationSection keynavRightPanelSec: NavigationSection {
         name: "NavigationRightPanel"
         enabled: root.visible
-        order: keynavLeftPanelSec.order + 1
+        order: keynavCentralPanelSec.order + 1
     }
 
     property NavigationSection keynavBottomPanelSec: NavigationSection {
