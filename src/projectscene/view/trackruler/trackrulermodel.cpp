@@ -20,7 +20,6 @@ const muse::actions::ActionQuery TOGGLE_TRACK_HALF_WAVE("action://projectscene/t
 TrackRulerModel::TrackRulerModel(QObject* parent)
     : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
 {
-    m_model = buildRulerModel();
 }
 
 IProjectViewStatePtr TrackRulerModel::viewState() const
@@ -31,6 +30,9 @@ IProjectViewStatePtr TrackRulerModel::viewState() const
 
 void TrackRulerModel::init()
 {
+    if (!m_model) {
+        m_model = buildRulerModel();
+    }
     m_model->setDbRange(au::playback::PlaybackMeterDbRange::toDouble(configuration()->playbackMeterDbRange()));
     configuration()->playbackMeterDbRangeChanged().onNotify(this, [this]() {
         m_model->setDbRange(au::playback::PlaybackMeterDbRange::toDouble(configuration()->playbackMeterDbRange()));
@@ -173,6 +175,9 @@ double TrackRulerModel::channelHeightRatio() const
 
 void TrackRulerModel::setChannelHeightRatio(double channelHeightRatio)
 {
+    if (!m_model) {
+        return;
+    }
     if (m_channelHeightRatio != channelHeightRatio) {
         m_channelHeightRatio = channelHeightRatio;
         m_model->setChannelHeightRatio(channelHeightRatio);

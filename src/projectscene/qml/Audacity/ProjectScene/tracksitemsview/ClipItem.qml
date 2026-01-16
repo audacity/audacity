@@ -306,6 +306,7 @@ Rectangle {
     }
 
     Component.onCompleted: {
+        playbackState.init()
         singleClipContextMenuModel.load()
         multiClipContextMenuModel.load()
     }

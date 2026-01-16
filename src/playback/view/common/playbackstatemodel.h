@@ -22,6 +22,8 @@ class PlaybackStateModel : public QObject, public muse::async::Asyncable, public
 public:
     explicit PlaybackStateModel(QObject* parent = nullptr);
 
+    Q_INVOKABLE void init();
+
     bool isPlaying() const;
     bool isPaused() const;
     bool isStopped() const;
