@@ -357,12 +357,6 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Copy label"),
              IconCode::Code::COPY
              ),
-    UiAction("label-open-in-editor",
-             au::context::UiCtxProjectOpened,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Open in label editor"),
-             TranslatableString("action", "Open in label editor")
-             ),
     UiAction("trim-audio-outside-selection",
              au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
