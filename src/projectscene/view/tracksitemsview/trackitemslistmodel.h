@@ -78,6 +78,8 @@ signals:
     void timelineContextChanged();
     void itemTitleEditRequested(const TrackItemKey& key);
 
+    void itemContextMenuOpenRequested(const TrackItemKey& key);
+
 protected slots:
     virtual void onTimelineZoomChanged();
     virtual void onTimelineFrameTimeChanged();

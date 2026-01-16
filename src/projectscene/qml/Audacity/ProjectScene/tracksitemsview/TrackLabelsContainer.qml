@@ -260,6 +260,11 @@ TrackItemsContainer {
                                             item.editTitle()
                                         }
                                     }
+                                    function onItemContextMenuOpenRequested(key) {
+                                        if (key === item.itemData.key) {
+                                            item.openContextMenu()
+                                        }
+                                    }
                                 }
 
                                 Component.onCompleted: {

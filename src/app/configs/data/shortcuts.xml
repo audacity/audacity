@@ -299,6 +299,11 @@
         <seq>Ctrl+Down</seq>
     </SC>
     <SC>
+        <key>track-view-item-context-menu</key>
+        <seq>Shift+F10</seq>
+        <seq>Ctrl+Shift+F10</seq>
+    </SC>
+    <SC>
         <key>cut-per-track-ripple</key>
         <seq>Ctrl+Shift+X</seq>
     </SC>

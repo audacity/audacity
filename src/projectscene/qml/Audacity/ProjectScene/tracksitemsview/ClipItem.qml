@@ -221,6 +221,10 @@ Rectangle {
         Qt.callLater(root.titleEditAccepted, newTitle)
     }
 
+    function openContextMenu() {
+        menuBtn.toggleMenu(menuBtn)
+    }
+
     function mousePositionChanged(x, y) {
         clipItemMousePositionChanged(x, y)
         waveView.onWaveViewPositionChanged(x, y - header.height)

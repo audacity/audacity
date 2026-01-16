@@ -30,5 +30,7 @@ public:
     virtual void toggleSelectionOnFocusedTrack() = 0;
     virtual void multiSelectionUp() = 0;
     virtual void multiSelectionDown() = 0;
+
+    virtual muse::async::Channel<TrackItemKey> openContextMenuRequested() const = 0;
 };
 }

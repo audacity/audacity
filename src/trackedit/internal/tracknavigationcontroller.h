@@ -47,6 +47,8 @@ public:
     void multiSelectionUp() override;
     void multiSelectionDown() override;
 
+    muse::async::Channel<TrackItemKey> openContextMenuRequested() const override;
+
     void moveFocusedItemLeft();
     void moveFocusedItemRight();
     void extendFocusedItemBoundaryLeft();
@@ -55,6 +57,8 @@ public:
     void reduceFocusedItemBoundaryRight();
     void moveFocusedItemUp();
     void moveFocusedItemDown();
+
+    void openContextMenuForFocusedItem();
 
 private:
     void updateSelectionStart(SelectionDirection direction);
@@ -77,5 +81,7 @@ private:
 
     TrackItemKey m_focusedItemKey;
     muse::async::Channel<TrackItemKey> m_focusedItemChanged;
+
+    muse::async::Channel<TrackItemKey> m_openContextMenuRequested;
 };
 }

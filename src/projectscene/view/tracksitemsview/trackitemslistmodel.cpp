@@ -538,6 +538,14 @@ void TrackItemsListModel::init()
         }
     });
 
+    trackNavigationController()->openContextMenuRequested().onReceive(this, [this](const TrackItemKey& key){
+        if (key.trackId() != m_trackId) {
+            return;
+        }
+
+        emit itemContextMenuOpenRequested(key);
+    });
+
     onInit();
 
     reload();

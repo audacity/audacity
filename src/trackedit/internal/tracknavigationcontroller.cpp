@@ -29,6 +29,8 @@ static const muse::actions::ActionCode TRACK_VIEW_ITEM_REDUCE_RIGHT_CODE("track-
 static const muse::actions::ActionCode TRACK_VIEW_ITEM_MOVE_UP_CODE("track-view-item-move-up");
 static const muse::actions::ActionCode TRACK_VIEW_ITEM_MOVE_DOWN_CODE("track-view-item-move-down");
 
+static const muse::actions::ActionCode TRACK_VIEW_ITEM_CONTEXT_MENU_CODE("track-view-item-context-menu");
+
 static const muse::actions::ActionQuery PLAYBACK_SEEK_QUERY("action://playback/seek");
 
 constexpr double MIN_CLIP_WIDTH = 3.0;
@@ -53,6 +55,8 @@ void TrackNavigationController::init()
     dispatcher()->reg(this, TRACK_VIEW_ITEM_REDUCE_RIGHT_CODE, this, &TrackNavigationController::reduceFocusedItemBoundaryRight);
     dispatcher()->reg(this, TRACK_VIEW_ITEM_MOVE_UP_CODE, this, &TrackNavigationController::moveFocusedItemUp);
     dispatcher()->reg(this, TRACK_VIEW_ITEM_MOVE_DOWN_CODE, this, &TrackNavigationController::moveFocusedItemDown);
+
+    dispatcher()->reg(this, TRACK_VIEW_ITEM_CONTEXT_MENU_CODE, this, &TrackNavigationController::openContextMenuForFocusedItem);
 
     dispatcher()->reg(this, PLAYBACK_SEEK_QUERY, [this] {
         m_selectionStart = std::nullopt;
@@ -263,6 +267,11 @@ void TrackNavigationController::multiSelectionDown()
 
     selectionController()->focusNextTrack();
     updateTrackSelection(selectedTracks, focusedTrack);
+}
+
+muse::async::Channel<TrackItemKey> TrackNavigationController::openContextMenuRequested() const
+{
+    return m_openContextMenuRequested;
 }
 
 void TrackNavigationController::updateSelectionStart(SelectionDirection direction)
@@ -573,4 +582,13 @@ void TrackNavigationController::moveFocusedItemDown()
             setFocusedItem(result.val.front());
         }
     }
+}
+
+void TrackNavigationController::openContextMenuForFocusedItem()
+{
+    if (!isFocusedItemValid()) {
+        return;
+    }
+
+    m_openContextMenuRequested.send(m_focusedItemKey);
 }
