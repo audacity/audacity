@@ -13,7 +13,7 @@ LabelsTableViewTimecodeCell::LabelsTableViewTimecodeCell(QObject* parent)
 }
 
 LabelsTableViewTimecodeCell::LabelsTableViewTimecodeCell(const TableViewCell* other)
-    : muse::Injectable(muse::iocCtxForQmlObject(this))
+    : muse::uicomponents::TableViewCell(other->parent()), muse::Injectable(muse::iocCtxForQmlObject(this))
 {
     setValue(other->value());
 }
