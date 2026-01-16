@@ -406,7 +406,7 @@ DockPage {
     ]
 
     central: TracksItemsView {
-        navPanels: tracksNavModel.clipItemPanels
+        navPanels: tracksNavModel.viewItemPanels
     }
 
     statusBar: DockStatusBar {
