@@ -22,6 +22,26 @@ GeneratedEffectViewerModel::GeneratedEffectViewerModel(QObject* parent, EffectIn
             this, &GeneratedEffectViewerModel::hasParametersChanged);
 }
 
+GeneratedEffectViewerModel::~GeneratedEffectViewerModel()
+{
+    // End parameter editing session
+    EffectInstance* instance = instancesRegister()->instanceById(instanceId()).get();
+    if (!instance) {
+        return;
+    }
+
+    const EffectId effectId = instancesRegister()->effectIdByInstanceId(instanceId());
+    const EffectMeta meta = effectsProvider()->meta(effectId);
+    const EffectFamily family = meta.family;
+
+    IParameterExtractorService* extractor = parameterExtractorRegistry()
+                                            ? parameterExtractorRegistry()->extractorForFamily(family)
+                                            : nullptr;
+    if (extractor) {
+        extractor->endParameterEditing(instance);
+    }
+}
+
 QString GeneratedEffectViewerModel::computeEffectName(EffectInstanceId instanceId, IEffectsProvider* provider,
                                                       IEffectInstancesRegister* instancesRegister)
 {
@@ -59,6 +79,22 @@ bool GeneratedEffectViewerModel::hasParameters() const
 void GeneratedEffectViewerModel::doInit()
 {
     LOGI() << "instanceId=" << instanceId();
+
+    // Begin parameter editing session
+    EffectInstance* instance = instancesRegister()->instanceById(instanceId()).get();
+    if (instance) {
+        const EffectId effectId = instancesRegister()->effectIdByInstanceId(instanceId());
+        const EffectMeta meta = effectsProvider()->meta(effectId);
+        const EffectFamily family = meta.family;
+
+        IParameterExtractorService* extractor = parameterExtractorRegistry()
+                                                ? parameterExtractorRegistry()->extractorForFamily(family)
+                                                : nullptr;
+        if (extractor) {
+            EffectSettingsAccessPtr settingsAccess = instancesRegister()->settingsAccessById(instanceId());
+            extractor->beginParameterEditing(instance, settingsAccess);
+        }
+    }
 
     // Initialize the parameters model
     m_parametersModel->load();

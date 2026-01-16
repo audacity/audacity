@@ -406,3 +406,38 @@ double VST3ParameterExtraction::fullRangeToNormalized(EffectInstanceEx* instance
         return std::clamp(fullRangeValue, 0.0, 1.0);
     }
 }
+
+void VST3ParameterExtraction::beginParameterEditing(EffectInstanceEx* instance, EffectSettingsAccess* settingsAccess)
+{
+    if (!instance) {
+        return;
+    }
+
+    const auto vst3Instance = dynamic_cast<VST3Instance*>(instance);
+    if (!vst3Instance) {
+        return;
+    }
+
+    auto& wrapper = vst3Instance->GetWrapper();
+    if (!settingsAccess) {
+        wxLogDebug("VST3ParameterExtraction::beginParameterEditing: settingsAccess is null");
+        return;
+    }
+
+    wrapper.BeginParameterEdit(*settingsAccess);
+}
+
+void VST3ParameterExtraction::endParameterEditing(EffectInstanceEx* instance)
+{
+    if (!instance) {
+        return;
+    }
+
+    const auto vst3Instance = dynamic_cast<VST3Instance*>(instance);
+    if (!vst3Instance) {
+        return;
+    }
+
+    auto& wrapper = vst3Instance->GetWrapper();
+    wrapper.EndParameterEdit();
+}

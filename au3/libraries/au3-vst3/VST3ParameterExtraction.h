@@ -125,4 +125,15 @@ double normalizedToFullRange(EffectInstanceEx* instance, uint32_t parameterId, d
 //! Convert "Full Range" value (actual display value) to normalized value (0.0-1.0)
 //! Returns the normalized value, or the "Full Range" value clamped to 0.0-1.0 if conversion is not supported
 double fullRangeToNormalized(EffectInstanceEx* instance, uint32_t parameterId, double fullRangeValue);
+
+//! Begin parameter editing session
+//! Sets up the ComponentHandler to track parameter changes with the given settings access
+//! @param instance The VST3 effect instance
+//! @param settingsAccess Settings access to use for parameter changes during the session
+void beginParameterEditing(EffectInstanceEx* instance, EffectSettingsAccess* settingsAccess);
+
+//! End parameter editing session
+//! Clears the ComponentHandler's settings access pointer
+//! @param instance The VST3 effect instance
+void endParameterEditing(EffectInstanceEx* instance);
 } // namespace VST3ParameterExtraction

@@ -39,6 +39,17 @@ public:
 
     //! Get formatted string representation of a parameter value
     virtual muse::String getParameterValueString(EffectInstance* instance, const muse::String& parameterId, double value) const = 0;
+
+    //! Begin parameter editing session
+    //! Called before showing UI to set up parameter change tracking
+    //! @param instance The effect instance
+    //! @param settingsAccess Settings access to use for parameter changes during the session
+    virtual void beginParameterEditing(EffectInstance* instance, EffectSettingsAccessPtr settingsAccess) {}
+
+    //! End parameter editing session
+    //! Called when closing UI to clean up parameter change tracking
+    //! @param instance The effect instance
+    virtual void endParameterEditing(EffectInstance* instance) {}
 };
 
 using IParameterExtractorServicePtr = std::shared_ptr<IParameterExtractorService>;

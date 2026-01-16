@@ -154,3 +154,13 @@ String VstParameterExtractorService::getParameterValueString(EffectInstance* ins
     std::string result = VST3ParameterExtraction::getParameterValueString(instance, paramId, value);
     return String::fromStdString(result);
 }
+
+void VstParameterExtractorService::beginParameterEditing(EffectInstance* instance, EffectSettingsAccessPtr settingsAccess)
+{
+    VST3ParameterExtraction::beginParameterEditing(instance, settingsAccess.get());
+}
+
+void VstParameterExtractorService::endParameterEditing(EffectInstance* instance)
+{
+    VST3ParameterExtraction::endParameterEditing(instance);
+}

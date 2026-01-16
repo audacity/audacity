@@ -5,6 +5,7 @@
 
 #include "abstracteffectviewmodel.h"
 #include "ieffectsprovider.h"
+#include "../iparameterextractorregistry.h"
 
 namespace au::effects {
 class EffectParametersListModel;
@@ -21,10 +22,11 @@ class GeneratedEffectViewerModel : public AbstractEffectViewModel
     Q_PROPERTY(bool hasParameters READ hasParameters NOTIFY hasParametersChanged FINAL)
 
     muse::Inject<IEffectsProvider> effectsProvider;
+    muse::Inject<IParameterExtractorRegistry> parameterExtractorRegistry;
 
 public:
     explicit GeneratedEffectViewerModel(QObject* parent, EffectInstanceId instanceId);
-    ~GeneratedEffectViewerModel() override = default;
+    ~GeneratedEffectViewerModel() override;
 
     EffectParametersListModel* parametersModel() const { return m_parametersModel; }
     QString effectName() const { return m_effectName; }

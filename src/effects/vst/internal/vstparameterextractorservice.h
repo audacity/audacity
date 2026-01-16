@@ -23,5 +23,9 @@ public:
                            EffectSettingsAccessPtr settingsAccess = nullptr) override;
 
     muse::String getParameterValueString(EffectInstance* instance, const muse::String& parameterId, double value) const override;
+
+    void beginParameterEditing(EffectInstance* instance, EffectSettingsAccessPtr settingsAccess) override;
+
+    void endParameterEditing(EffectInstance* instance) override;
 };
 }
