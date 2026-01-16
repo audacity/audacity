@@ -189,7 +189,7 @@ void LabelsTableViewModel::handleTrackMenuItem(int row, int column, const QStrin
     QString labelTrackItemId = itemId;
 
     if (labelTrackItemId == NEW_LABEL_TRACK_CODE) {
-        labelTrackItemId = createNewLabelTrack(row);
+        labelTrackItemId = createNewLabelTrack(row).val;
     }
 
     if (labelTrackItemId.isEmpty()) {
@@ -219,8 +219,10 @@ void LabelsTableViewModel::addNewLabel()
 
     std::vector<trackedit::Track> labelTracks = allLabelTracks();
     if (labelTracks.empty()) {
-        createNewLabelTrack(-1);
-        addNewLabel();
+        muse::RetVal<QString> retVal = createNewLabelTrack(-1);
+        if (retVal.ret) {
+            addNewLabel();
+        }
         return;
     }
 
@@ -570,11 +572,14 @@ bool LabelsTableViewModel::changeLabelHighFrequency(int row, const Val& value)
     return trackeditInteraction()->changeLabelHighFrequency(labelKey, value.toDouble());
 }
 
-QString LabelsTableViewModel::createNewLabelTrack(int currentRow)
+muse::RetVal<QString> LabelsTableViewModel::createNewLabelTrack(int currentRow)
 {
+    muse::RetVal<QString> result;
+
     RetVal<muse::Val> rv = interactive()->openSync("audacity://projectscene/addnewlabeltrack");
     if (!rv.ret) {
-        return QString();
+        result.ret = rv.ret;
+        return result;
     }
 
     trackedit::TrackId newTrackId = rv.val.toInt();
@@ -600,7 +605,10 @@ QString LabelsTableViewModel::createNewLabelTrack(int currentRow)
         }
     }
 
-    return newLabelTrackItemId;
+    result.ret = make_ok();
+    result.val = newLabelTrackItemId;
+
+    return result;
 }
 
 io::path_t LabelsTableViewModel::selectFileForExport()

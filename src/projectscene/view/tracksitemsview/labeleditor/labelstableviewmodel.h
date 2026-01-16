@@ -86,7 +86,7 @@ private:
     bool changeLabelLowFrequency(int row, const muse::Val& value);
     bool changeLabelHighFrequency(int row, const muse::Val& value);
 
-    QString createNewLabelTrack(int currentRow);
+    muse::RetVal<QString> createNewLabelTrack(int currentRow);
 
     muse::io::path_t selectFileForExport();
     muse::io::path_t selectFileForImport();
