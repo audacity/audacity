@@ -2,6 +2,7 @@
  * Audacity: A Digital Audio Editor
  */
 #include "spectrogramutils.h"
+#include "ispectrogramconfiguration.h"
 
 #include <cmath>
 
@@ -15,7 +16,7 @@ double au::spectrogram::positionToTime(const ViewInfo& viewInfo, int position)
     return viewInfo.viewportStartTime + position / viewInfo.pixelsPerSecond;
 }
 
-int au::spectrogram::timeToPosition(const ViewInfo& viewInfo, double projectTime)
+long long au::spectrogram::timeToPosition(const ViewInfo& viewInfo, double projectTime)
 {
     double t = 0.5 + viewInfo.pixelsPerSecond * (projectTime - viewInfo.viewportStartTime);
     if (t < INT64_MIN) {
@@ -79,4 +80,45 @@ void au::spectrogram::fillWhere(
     for (decltype(len) x = 1; x < len + 1; x++) {
         where[x] = floor(w0 + double(x) * samplesPerPixel);
     }
+}
+
+int au::spectrogram::fftLength(const ISpectrogramConfiguration& config)
+{
+    return (1 << config.winSizeLog2()) * ((config.algorithm() != SpectrogramAlgorithm::Pitch) ? config.zeroPaddingFactor() : 1);
+}
+
+std::pair<float, float> au::spectrogram::spectrogramBounds(const ISpectrogramConfiguration& config, double sampleRate)
+{
+    const auto type = config.scale();
+
+    auto min = 0.f;
+    auto max = 0.f;
+
+    auto bottom = 0.f;
+    if (type == SpectrogramScale::Period) {
+        // special case
+        const auto half = fftLength(config) / 2;
+        // EAC returns no data for below this frequency:
+        const float bin2 = sampleRate / half;
+        bottom = bin2;
+    } else if (type != SpectrogramScale::Linear) {
+        // logarithmic, etc.
+        bottom = 1.0f;
+    }
+
+    const float top = sampleRate / 2;
+    if (config.maxFreq() < 0) {
+        max = top;
+    } else {
+        max = std::clamp<double>(config.maxFreq(), bottom, top);
+    }
+
+    auto spectrumMin = config.minFreq();
+    if (spectrumMin < 0) {
+        min = std::max(bottom, top / 1000.0f);
+    } else {
+        min = std::clamp<double>(spectrumMin, bottom, top);
+    }
+
+    return std::make_pair(min, max);
 }

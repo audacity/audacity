@@ -62,8 +62,8 @@ public:
     double rightTrim{ .0 };
     double start;      // relative to clip start
     std::optional<SpectrogramWindowType> windowType;
-    size_t windowSize { 0 };
-    unsigned zeroPaddingFactor { 0 };
+    int windowSize { 0 };
+    int zeroPaddingFactor { 0 };
     int frequencyGain;
     std::vector<float> freq;
     std::vector<long long> where;

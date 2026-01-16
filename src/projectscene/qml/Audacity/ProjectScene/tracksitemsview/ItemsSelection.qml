@@ -14,11 +14,6 @@ Item {
     signal requestSelectionContextMenu(real x, real y)
     signal handleGuideline(var x, var completed)
 
-    onSelectionInProgressChanged: {
-        leftMa.cursorShape = root.selectionInProgress ? Qt.IBeamCursor : Qt.SizeHorCursor
-        rightMa.cursorShape = root.selectionInProgress ? Qt.IBeamCursor : Qt.SizeHorCursor
-    }
-
     Rectangle {
         id: selRect
 
@@ -49,7 +44,7 @@ Item {
         // it overrides ClipItem's (even if hover is disabled)
         cursorShape: undefined
 
-        onClicked: function(mouse) {
+        onClicked: function (mouse) {
             let position = mapToItem(root.parent, Qt.point(mouse.x, mouse.y))
             root.requestSelectionContextMenu(position.x, position.y)
         }
@@ -65,14 +60,14 @@ Item {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
 
-        visible: isDataSelected
+        visible: isDataSelected && !root.selectionInProgress
         width: selRect.width >= 16 ? 8 : (selRect.width / 2)
         cursorShape: Qt.SizeHorCursor
 
         property real startX: 0
         property real startW: 0
 
-        onPressed: function(mouse) {
+        onPressed: function (mouse) {
             if (mouse.button !== Qt.LeftButton) {
                 return
             }
@@ -83,7 +78,7 @@ Item {
             handleGuideline(selRect.x, false)
         }
 
-        onPositionChanged: function(mouse) {
+        onPositionChanged: function (mouse) {
             if (!(leftMa.pressedButtons & Qt.LeftButton)) {
                 return
             }
@@ -96,18 +91,20 @@ Item {
             handleGuideline(selRect.x, false)
         }
 
-        onReleased: function(mouse) {
+        onReleased: function (mouse) {
             if (mouse.button !== Qt.LeftButton) {
                 return
             }
             root.selectionDraged(selRect.x, selRect.x + selRect.width, true)
-            leftMa.x = Qt.binding(function() { return selRect.x })
+            leftMa.x = Qt.binding(function () {
+                return selRect.x
+            })
             leftMa.cursorShape = Qt.SizeHorCursor
             centerMa.cursorShape = Qt.IBeamCursor
             handleGuideline(selRect.x, true)
         }
 
-        onClicked: function(mouse) {
+        onClicked: function (mouse) {
             if (mouse.button === Qt.RightButton) {
                 let position = mapToItem(root.parent, Qt.point(mouse.x, mouse.y))
                 root.requestSelectionContextMenu(position.x, position.y)
@@ -125,14 +122,14 @@ Item {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
 
-        visible: isDataSelected
+        visible: isDataSelected && !root.selectionInProgress
         width: selRect.width >= 16 ? 8 : (selRect.width / 2)
         cursorShape: Qt.SizeHorCursor
 
         property real startX: 0
         property real startW: 0
 
-        onPressed: function(mouse) {
+        onPressed: function (mouse) {
             if (mouse.button !== Qt.LeftButton) {
                 return
             }
@@ -142,7 +139,7 @@ Item {
             handleGuideline(root.context.selectionEndPosition, false)
         }
 
-        onPositionChanged: function(mouse) {
+        onPositionChanged: function (mouse) {
             if (!(rightMa.pressedButtons & Qt.LeftButton)) {
                 return
             }
@@ -154,18 +151,20 @@ Item {
             handleGuideline(root.context.selectionEndPosition, false)
         }
 
-        onReleased: function(mouse) {
+        onReleased: function (mouse) {
             if (mouse.button !== Qt.LeftButton) {
                 return
             }
             root.selectionDraged(selRect.x, selRect.x + selRect.width, true)
-            rightMa.x = Qt.binding(function() {return selRect.x + selRect.width - rightMa.width })
+            rightMa.x = Qt.binding(function () {
+                return selRect.x + selRect.width - rightMa.width
+            })
             rightMa.cursorShape = Qt.SizeHorCursor
             centerMa.cursorShape = Qt.IBeamCursor
             handleGuideline(root.context.selectionEndPosition, true)
         }
 
-        onClicked: function(mouse) {
+        onClicked: function (mouse) {
             if (mouse.button === Qt.RightButton) {
                 let position = mapToItem(root.parent, Qt.point(mouse.x, mouse.y))
                 root.requestSelectionContextMenu(position.x, position.y)
@@ -173,4 +172,3 @@ Item {
         }
     }
 }
-

@@ -393,6 +393,10 @@ void SpecCache::Populate(
         const int lowerBoundX = jj == 0 ? 0 : copyEnd;
         const int upperBoundX = jj == 0 ? copyBegin : numPixels;
 
+        if (lowerBoundX >= upperBoundX) {
+            continue;
+        }
+
         std::vector<int> xRange(upperBoundX - lowerBoundX);
         std::iota(xRange.begin(), xRange.end(), lowerBoundX);
 
@@ -784,8 +788,8 @@ void WaveClipSpectrumCache::MakeStereo(WaveClipListener&& other, bool)
 {
     auto pOther = dynamic_cast<WaveClipSpectrumCache*>(&other);
     assert(pOther); // precondition
-    mSpecCaches.push_back(move(pOther->mSpecCaches[0]));
-    mSpecPxCaches.push_back(move(pOther->mSpecPxCaches[0]));
+    mSpecCaches.push_back(std::move(pOther->mSpecCaches[0]));
+    mSpecPxCaches.push_back(std::move(pOther->mSpecPxCaches[0]));
 }
 
 void WaveClipSpectrumCache::SwapChannels()

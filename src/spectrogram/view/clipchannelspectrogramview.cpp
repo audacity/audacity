@@ -1,17 +1,17 @@
 /*
  * Audacity: A Digital Audio Editor
  */
-#include "./spectrogramview.h"
+#include "./clipchannelspectrogramview.h"
 #include "framework/global/types/number.h"
 
 namespace au::spectrogram {
-SpectrogramView::SpectrogramView(QQuickItem* parent)
+ClipChannelSpectrogramView::ClipChannelSpectrogramView(QQuickItem* parent)
     : QQuickPaintedItem(parent)
 {
     setFlag(QQuickItem::ItemObservesViewport, true);
 }
 
-void SpectrogramView::componentComplete()
+void ClipChannelSpectrogramView::componentComplete()
 {
     const auto project = globalContext()->currentTrackeditProject();
     IF_ASSERT_FAILED(project) {
@@ -24,7 +24,7 @@ void SpectrogramView::componentComplete()
     });
 }
 
-void SpectrogramView::setClipId(int id)
+void ClipChannelSpectrogramView::setClipId(int id)
 {
     if (m_clipId == id) {
         return;
@@ -34,7 +34,7 @@ void SpectrogramView::setClipId(int id)
     update();
 }
 
-void SpectrogramView::setTrackId(int id)
+void ClipChannelSpectrogramView::setTrackId(int id)
 {
     if (m_trackId == id) {
         return;
@@ -44,7 +44,17 @@ void SpectrogramView::setTrackId(int id)
     update();
 }
 
-void SpectrogramView::setTimelineIndentWidth(int width)
+void ClipChannelSpectrogramView::setChannel(int channel)
+{
+    if (m_channel == channel) {
+        return;
+    }
+    m_channel = channel;
+    emit channelChanged();
+    update();
+}
+
+void ClipChannelSpectrogramView::setTimelineIndentWidth(int width)
 {
     if (m_timelineIndentWidth == width) {
         return;
@@ -54,17 +64,7 @@ void SpectrogramView::setTimelineIndentWidth(int width)
     update();
 }
 
-void SpectrogramView::setChannelHeightRatio(double ratio)
-{
-    if (muse::is_equal(m_channelHeightRatio, ratio)) {
-        return;
-    }
-    m_channelHeightRatio = ratio;
-    emit channelHeightRatioChanged();
-    update();
-}
-
-void SpectrogramView::setZoom(double zoom)
+void ClipChannelSpectrogramView::setZoom(double zoom)
 {
     if (muse::is_equal(m_zoom, zoom)) {
         return;
@@ -74,7 +74,7 @@ void SpectrogramView::setZoom(double zoom)
     update();
 }
 
-void SpectrogramView::setFrameStartTime(double time)
+void ClipChannelSpectrogramView::setFrameStartTime(double time)
 {
     if (muse::is_equal(m_frameStartTime, time)) {
         return;
@@ -84,7 +84,7 @@ void SpectrogramView::setFrameStartTime(double time)
     update();
 }
 
-void SpectrogramView::setFrameEndTime(double time)
+void ClipChannelSpectrogramView::setFrameEndTime(double time)
 {
     if (muse::is_equal(m_frameEndTime, time)) {
         return;
@@ -94,7 +94,7 @@ void SpectrogramView::setFrameEndTime(double time)
     update();
 }
 
-void SpectrogramView::setSelectionStartTime(double time)
+void ClipChannelSpectrogramView::setSelectionStartTime(double time)
 {
     if (muse::is_equal(m_selectionStartTime, time)) {
         return;
@@ -104,7 +104,7 @@ void SpectrogramView::setSelectionStartTime(double time)
     update();
 }
 
-void SpectrogramView::setSelectionEndTime(double time)
+void ClipChannelSpectrogramView::setSelectionEndTime(double time)
 {
     if (muse::is_equal(m_selectionEndTime, time)) {
         return;
@@ -114,14 +114,44 @@ void SpectrogramView::setSelectionEndTime(double time)
     update();
 }
 
-void SpectrogramView::paint(QPainter* painter)
+double ClipChannelSpectrogramView::selectionStartFrequency() const
+{
+    return m_selectionStartFrequency;
+}
+
+void ClipChannelSpectrogramView::setSelectionStartFrequency(double frequency)
+{
+    if (muse::is_equal(m_selectionStartFrequency, frequency)) {
+        return;
+    }
+    m_selectionStartFrequency = frequency;
+    emit selectionFrequencyChanged();
+    update();
+}
+
+double ClipChannelSpectrogramView::selectionEndFrequency() const
+{
+    return m_selectionEndFrequency;
+}
+
+void ClipChannelSpectrogramView::setSelectionEndFrequency(double frequency)
+{
+    if (muse::is_equal(m_selectionEndFrequency, frequency)) {
+        return;
+    }
+    m_selectionEndFrequency = frequency;
+    emit selectionFrequencyChanged();
+    update();
+}
+
+void ClipChannelSpectrogramView::paint(QPainter* painter)
 {
     const auto project = globalContext()->currentProject();
 
     const auto indentTime = m_timelineIndentWidth / m_zoom;
     const auto viewportStartTime = m_frameStartTime - indentTime;
     const auto viewportEndTime = m_frameEndTime;
-    const spectrogram::SelectionInfo selectionInfo { m_selectionStartTime, m_selectionEndTime };
+    const SelectionInfo selectionInfo { m_selectionStartTime, m_selectionEndTime, m_selectionStartFrequency, m_selectionEndFrequency };
 
     const QRect visibleSubrect = clipRect().toRect();
     if (!visibleSubrect.isValid()) {
@@ -129,15 +159,14 @@ void SpectrogramView::paint(QPainter* painter)
     }
     const int xBegin = std::max(visibleSubrect.left() - m_timelineIndentWidth, 0);
     const int xEnd = visibleSubrect.right() + 1;
-    const spectrogram::ClipInfo clipInfo { m_clipId, m_trackId, xBegin, xEnd };
-    const spectrogram::ViewInfo viewInfo {
-        static_cast<int>(height()),
-        m_channelHeightRatio,
+    const ClipChannelInfo channelInfo { m_clipId, m_trackId, m_channel, xBegin, xEnd };
+    const ViewInfo viewInfo {
+        height(),
         viewportStartTime,
         viewportEndTime,
         m_zoom
     };
 
-    spectrogramPainter()->paintClip(*painter, clipInfo, viewInfo, selectionInfo);
+    spectrogramPainter()->paintClipChannel(*painter, channelInfo, viewInfo, selectionInfo);
 }
 }

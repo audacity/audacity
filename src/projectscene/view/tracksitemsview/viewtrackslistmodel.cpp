@@ -126,6 +126,14 @@ void ViewTracksListModel::load()
         emit dataChanged(index(0), index(lastIndex), { IsDataSelectedRole });
     }, muse::async::Asyncable::Mode::SetReplace);
 
+    selectionController()->frequencySelectionChanged().onReceive(this, [this](trackedit::TrackId trackId) {
+        QModelIndex idx = indexOf(trackId);
+        if (!idx.isValid()) {
+            return;
+        }
+        emit dataChanged(idx, idx, { FrequencySelectionRole });
+    }, muse::async::Asyncable::Mode::SetReplace);
+
     prj->tracksChanged().onReceive(this, [this](const std::vector<au::trackedit::Track> tracks) {
         Q_UNUSED(tracks);
         muse::async::Async::call(this, [this]() {
@@ -280,9 +288,19 @@ QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
         const auto vt = getTrackViewType(globalContext()->currentProject(), track.id);
         return vt == trackedit::TrackViewType::Waveform || vt == trackedit::TrackViewType::WaveformAndSpectrogram;
     }
+
     case IsSpectrogramViewVisibleRole: {
         const auto vt = getTrackViewType(globalContext()->currentProject(), track.id);
         return vt == trackedit::TrackViewType::Spectrogram || vt == trackedit::TrackViewType::WaveformAndSpectrogram;
+    }
+
+    case FrequencySelectionRole: {
+        const auto [startFrequency, endFrequency] = selectionController()->frequencySelection(track.id);
+        const QVariantMap frequencySelectionMap {
+            { "startFrequency", startFrequency },
+            { "endFrequency", endFrequency }
+        };
+        return frequencySelectionMap;
     }
 
     case DbRangeRole:
@@ -314,6 +332,7 @@ QHash<int, QByteArray> ViewTracksListModel::roleNames() const
         { DbRangeRole, "dbRange" },
         { IsWaveformViewVisibleRole, "isWaveformViewVisible" },
         { IsSpectrogramViewVisibleRole, "isSpectrogramViewVisible" },
+        { FrequencySelectionRole, "frequencySelection" },
         { ColorRole, "color" }
     };
     return roles;

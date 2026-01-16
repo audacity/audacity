@@ -16,6 +16,6 @@ class ISpectrogramPainter : MODULE_EXPORT_INTERFACE
 public:
     virtual ~ISpectrogramPainter() = default;
 
-    virtual void paintClip(QPainter&, const ClipInfo&, const ViewInfo&, const SelectionInfo&) = 0;
+    virtual void paintClipChannel(QPainter&, const ClipChannelInfo&, const ViewInfo&, const SelectionInfo&) = 0;
 };
 }

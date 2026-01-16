@@ -7,6 +7,7 @@ import Muse.UiComponents
 import Audacity.ProjectScene
 import Audacity.Project
 import Audacity.Playback
+import Audacity.Spectrogram
 
 Rectangle {
     id: root
@@ -468,7 +469,8 @@ Rectangle {
                         }
 
                         if (!splitToolController.active) {
-                            selectionController.onPressed(e.x, e.y)
+                            const spectrogramHit = tracksItemsView.getSpectrogramHit(e.y)
+                            selectionController.onPressed(e.x, e.y, spectrogramHit)
                             selectionController.resetSelectedItems()
                             itemsSelection.visible = true
                         }
@@ -507,7 +509,7 @@ Rectangle {
                 }
             }
 
-            onReleased: function(e) {
+            onReleased: function (e) {
                 if (e.button !== Qt.LeftButton) {
                     return
                 }
@@ -614,6 +616,21 @@ Rectangle {
                         }
                     }
                     return false
+                }
+
+                function getSpectrogramHit(y) {
+                    var spectrogramHit = null
+                    checkIfAnyTrack(function (trackItem) {
+                        if (trackItem.getSpectrogramHit) {
+                            const yy = trackItem.mapFromItem(tracksItemsView, 0, y).y
+                            spectrogramHit = trackItem.getSpectrogramHit(yy)
+                            if (spectrogramHit) {
+                                return true
+                            }
+                        }
+                        return false
+                    })
+                    return spectrogramHit
                 }
 
                 signal itemMoveRequested(var itemKey, bool completed)
@@ -733,6 +750,11 @@ Rectangle {
                                     return trackItem && trackItem.hover
                                 })
                             }
+
+                            selectionStartFrequency: itemData.frequencySelection.startFrequency
+                            selectionEndFrequency: itemData.frequencySelection.endFrequency
+                            pressedSpectrogram: selectionController.pressedSpectrogram
+                            spectralSelectionEnabled: selectionController.spectralSelectionEnabled
 
                             navigationPanel: navPanels && navPanels[index] ? navPanels[index] : null
 
@@ -886,8 +908,8 @@ Rectangle {
                                 function onPreviewImportClipRequested(tracksIds, startPos, durations, titles) {
                                     for (let i = 0; i < tracksIds.length; i++) {
                                         if (tracksIds[i] == trackClipsContainer.trackId) {
-                                            const startTime = timeline.context.positionToTime(startPos);
-                                            const endPos = timeline.context.timeToPosition(startTime + durations[i]);
+                                            const startTime = timeline.context.positionToTime(startPos)
+                                            const endPos = timeline.context.timeToPosition(startTime + durations[i])
                                             trackClipsContainer.movePreviewClip(startPos, endPos - startPos, titles[i])
                                         }
                                     }
@@ -1124,7 +1146,7 @@ Rectangle {
         tracksViewState: tracksViewState
         timeline: timeline
 
-        onSetGuidelineRequested: function(pos, visibility) {
+        onSetGuidelineRequested: function (pos, visibility) {
             root.guidelinePos = pos
             root.guidelineVisible = visibility
         }

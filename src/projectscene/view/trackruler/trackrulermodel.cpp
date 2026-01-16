@@ -55,7 +55,7 @@ void TrackRulerModel::init()
         emit smallStepsChanged();
     }, muse::async::Asyncable::Mode::SetReplace);
 
-    prjViewState->isHalfWave(m_trackId).ch.onReceive(this, [this](bool isHalfWave) {
+    prjViewState->isHalfWave(m_trackId).ch.onReceive(this, [this](bool) {
         emit isHalfWaveChanged();
         emit fullStepsChanged();
         emit smallStepsChanged();
@@ -232,7 +232,7 @@ QVariant TrackRulerModel::displayBounds() const
     }
 
     muse::ValCh<std::pair<float, float> > bounds = prjViewState->verticalDisplayBounds(m_trackId);
-    QVariant::fromValue(QMap<QString, QVariant> {
+    return QVariant::fromValue(QMap<QString, QVariant> {
         { "min", bounds.val.first },
         { "max", bounds.val.second }
     });

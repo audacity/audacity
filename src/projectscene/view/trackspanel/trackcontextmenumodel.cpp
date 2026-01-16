@@ -283,7 +283,8 @@ void TrackContextMenuModel::updateColorCheckedState()
 void TrackContextMenuModel::updateTrackViewCheckedState()
 {
     const auto prj = globalContext()->currentProject();
-    IF_ASSERT_FAILED(prj) {
+    if (!prj) {
+        // Probably closing down.
         return;
     }
     const auto viewType = prj->viewState()->trackViewType(m_trackId).val;

@@ -69,6 +69,7 @@ private:
         IsStereoRole,
         IsWaveformViewVisibleRole,
         IsSpectrogramViewVisibleRole,
+        FrequencySelectionRole,
         DbRangeRole,
         ColorRole,
     };

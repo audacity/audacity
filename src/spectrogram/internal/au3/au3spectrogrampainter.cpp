@@ -7,6 +7,8 @@
 #include "./au3spectrogramtypes.h"
 #include "./au3spectrogramclipchannelpainter.h"
 #include "./au3spectrogramsettings.h"
+#include "./au3trackspectrogramconfiguration.h"
+#include "../spectrogramutils.h"
 
 #include "au3wrap/internal/domaccessor.h"
 
@@ -26,23 +28,22 @@ void Au3SpectrogramPainter::init()
     });
 }
 
-void Au3SpectrogramPainter::paintClip(QPainter& qPainter, const ClipInfo& clipInfo, const ViewInfo& viewInfo,
-                                      const SelectionInfo& selectionInfo)
+void Au3SpectrogramPainter::paintClipChannel(QPainter& qPainter, const ClipChannelInfo& channelInfo, const ViewInfo& viewInfo,
+                                             const SelectionInfo& selectionInfo)
 {
     const auto au3Project = m_au3Project.lock();
     IF_ASSERT_FAILED(au3Project) {
         return;
     }
 
-    au3::Au3WaveTrack* const waveTrack = au3::DomAccessor::findWaveTrack(*au3Project, au3::Au3TrackId { clipInfo.trackId });
+    au3::Au3WaveTrack* const waveTrack = au3::DomAccessor::findWaveTrack(*au3Project, au3::Au3TrackId { channelInfo.trackId });
     if (!waveTrack) {
         return;
     }
 
     auto& settings = Au3SpectrogramSettings::Get(*waveTrack);
 
-    float minFreq, maxFreq;
-    SpectrogramBounds::Get(*waveTrack).GetBounds(*waveTrack, minFreq, maxFreq);
+    const auto [minFreq, maxFreq] = spectrogramBounds(Au3TrackSpectrogramConfiguration { settings }, waveTrack->GetRate());
 
     const SpectrogramTrackContext trackContext{
         settings,
@@ -51,23 +52,18 @@ void Au3SpectrogramPainter::paintClip(QPainter& qPainter, const ClipInfo& clipIn
         maxFreq
     };
 
-    const int trackHeight{ viewInfo.trackHeight };
-
-    ::WaveClip* const clip = au3::DomAccessor::findWaveClip(waveTrack, static_cast<int64_t>(clipInfo.clipId)).get();
+    ::WaveClip* const clip = au3::DomAccessor::findWaveClip(waveTrack, static_cast<int64_t>(channelInfo.clipId)).get();
     if (!clip) {
         return;
     }
 
-    const auto isStereo = clip->NChannels() == 2;
-    const auto rightChannelHeight = static_cast<int>(std::round(trackHeight * (1 - viewInfo.channelHeightRatio)));
-    for (auto i = 0u; i < clip->NChannels(); ++i) {
-        const auto isRightChannel = i == 1u;
-        const auto channelHeight = isStereo ? (isRightChannel ? rightChannelHeight : trackHeight - rightChannelHeight) : trackHeight;
-        QImage image{ clipInfo.xPaintEnd - clipInfo.xPaintBegin, channelHeight, QImage::Format_RGB888 };
-        const std::shared_ptr<WaveClipChannel> clipChannel = clip->GetChannel<WaveClipChannel>(i);
-        Au3SpectrogramClipChannelPainter::fillImage(image, viewInfo, selectionInfo, trackContext, *clipChannel);
-        const auto channelY = isStereo ? (isRightChannel ? trackHeight - rightChannelHeight : 0) : 0;
-        qPainter.drawImage(QPoint { clipInfo.xPaintBegin, channelY }, image);
+    const auto channelHeight = static_cast<int>(viewInfo.channelHeight);
+    QImage image{ channelInfo.xPaintEnd - channelInfo.xPaintBegin, channelHeight, QImage::Format_RGB888 };
+    const std::shared_ptr<WaveClipChannel> clipChannel = clip->GetChannel<WaveClipChannel>(channelInfo.channel);
+    IF_ASSERT_FAILED(clipChannel) {
+        return;
     }
+    Au3SpectrogramClipChannelPainter::fillImage(image, viewInfo, selectionInfo, trackContext, *clipChannel);
+    qPainter.drawImage(QPoint { channelInfo.xPaintBegin, 0 }, image);
 }
 }

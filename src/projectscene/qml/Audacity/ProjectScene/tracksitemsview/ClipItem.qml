@@ -41,12 +41,20 @@ Rectangle {
     property bool isAudible: true
     property bool isLinear: false
     property real dbRange: -60.0
-    property var displayBounds: ({ "min": -1.0, "max": 1.0 })
+    property var displayBounds: ({
+            "min": -1.0,
+            "max": 1.0
+        })
     property real selectionStart: 0
     property real selectionWidth: 0
     property bool selectionInProgress: false
     property bool enableCursorInteraction: !selectionInProgress && !isBrush
     property bool isContrastFocusBorderEnabled: false
+
+    required property real selectionStartFrequency
+    required property real selectionEndFrequency
+    required property bool spectralSelectionEnabled
+    required property var pressedSpectrogram
 
     property real distanceToLeftNeighbor: -1
     property real distanceToRightNeighbor: -1
@@ -233,6 +241,17 @@ Rectangle {
     function mouseReleased() {
         waveView.isNearSample = false
         waveView.onWaveViewPositionChanged(lastSample.x, lastSample.y)
+    }
+
+    function getSpectrogramHit(y /* relative to this item */) {
+        if (!isSpectrogramViewVisible || y > height) {
+            return null
+        }
+        y = spectrogramView.mapFromItem(root, 0, y).y
+        if (y < 0) {
+            return null
+        }
+        return spectrogramView.getSpectrogramHit(y)
     }
 
     function setLastSample(x, y) {
@@ -821,7 +840,9 @@ Rectangle {
                 }
             }
 
-            SpectrogramView {
+            ClipSpectrogramView {
+                id: spectrogramView
+
                 visible: root.isSpectrogramViewVisible
 
                 Layout.fillWidth: true
@@ -829,14 +850,19 @@ Rectangle {
 
                 clipId: root.clipKey.itemId()
                 trackId: root.clipKey.trackId()
+                spectralSelectionEnabled: root.spectralSelectionEnabled
+                pressedSpectrogram: root.pressedSpectrogram
+                isStereo: root.showChannelSplitter
+                channelHeightRatio: showChannelSplitter ? root.channelHeightRatio : 1
 
                 timelineIndentWidth: root.canvas.anchors.leftMargin
-                channelHeightRatio: showChannelSplitter ? root.channelHeightRatio : 1
                 zoom: root.context.zoom
                 frameStartTime: root.context.frameStartTime
                 frameEndTime: root.context.frameEndTime
                 selectionStartTime: root.context.selectionStartTime
                 selectionEndTime: root.context.selectionEndTime
+                selectionStartFrequency: root.selectionStartFrequency
+                selectionEndFrequency: root.selectionEndFrequency
 
                 ChannelSplitter {
                     id: spectrogramChannelSplitter
