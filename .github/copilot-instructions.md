@@ -102,7 +102,7 @@ The repository has a `.editorconfig` file at the root. IDEs should automatically
 - **Code Style**: `.github/workflows/au4_check_codestyle.yml`
   - Runs: `cmake -P ./buildscripts/ci/checkcodestyle/_deps/checkcodestyle.cmake ./src/`
 - **Unit Tests**: `.github/workflows/au4_check_unit_tests.yml`
-  - Builds with Qt 6.10.1+ on Ubuntu
+  - Builds with Qt 6.10.1 on Ubuntu
   - Runs unit tests with ASAN
   - Optional code coverage
 - **Platform Builds**: Linux, macOS, Windows workflows
