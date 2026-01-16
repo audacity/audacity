@@ -31,7 +31,7 @@ class Lv2ViewModel : public AbstractEffectViewModel
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged FINAL)
     Q_PROPERTY(QString unsupportedUiReason READ unsupportedUiReason NOTIFY unsupportedUiReasonChanged FINAL)
 
-    muse::Inject<trackedit::IProjectHistory> projectHistory;
+    muse::Inject<trackedit::IProjectHistory> projectHistory { this };
 
 public:
     Lv2ViewModel(QObject* parent, int instanceId, const QString& effectState);
