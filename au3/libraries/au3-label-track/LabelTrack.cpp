@@ -140,7 +140,6 @@ LabelTrack::Holder LabelTrack::CreatePtr(TrackList& trackList)
 {
     auto track = std::make_shared<LabelTrack>();
     track->SetName(trackList.MakeUniqueTrackName(GetDefaultName()));
-    trackList.Add(track);
     return track;
 }
 
