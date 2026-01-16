@@ -23,7 +23,8 @@ class QItemSelectionModel;
 
 namespace au::projectscene {
 class PlaybackToolBarCustomiseItem;
-class PlaybackToolBarCustomiseModel : public muse::uicomponents::SelectableItemListModel, public muse::Injectable, public muse::async::Asyncable
+class PlaybackToolBarCustomiseModel : public muse::uicomponents::SelectableItemListModel, public muse::Injectable,
+    public muse::async::Asyncable
 {
     Q_OBJECT
 

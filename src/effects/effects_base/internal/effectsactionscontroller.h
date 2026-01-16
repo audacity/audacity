@@ -36,7 +36,8 @@ class EffectsActionsController : public muse::actions::Actionable, public muse::
     muse::Inject<au::playback::IPlaybackController> playbackController{ this };
 
 public:
-    EffectsActionsController(const muse::modularity::ContextPtr& ctx) : muse::Injectable(ctx) {}
+    EffectsActionsController(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
 
     void init();
     bool canReceiveAction(const muse::actions::ActionCode&) const override;

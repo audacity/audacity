@@ -20,7 +20,8 @@
 #include "trackedit/dom/track.h"
 
 namespace au::projectscene {
-class ViewTracksListModel : public QAbstractListModel, public muse::async::Asyncable, public muse::actions::Actionable, public muse::Injectable
+class ViewTracksListModel : public QAbstractListModel, public muse::async::Asyncable, public muse::actions::Actionable,
+    public muse::Injectable
 {
     Q_OBJECT
 

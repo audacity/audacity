@@ -19,7 +19,8 @@ public:
 public:
     using GetTitleFunc = std::function<muse::String (const muse::io::path_t&)>;
 
-    EffectsRepositoryHelper(const muse::modularity::ContextPtr& ctx, PluginProvider&, muse::audio::AudioResourceType, GetTitleFunc getTitle = nullptr);
+    EffectsRepositoryHelper(const muse::modularity::ContextPtr& ctx, PluginProvider&, muse::audio::AudioResourceType,
+                            GetTitleFunc getTitle = nullptr);
 
     virtual ~EffectsRepositoryHelper() = default;
 

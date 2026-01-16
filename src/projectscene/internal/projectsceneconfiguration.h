@@ -19,7 +19,8 @@ public:
     muse::Inject<muse::workspace::IWorkspaceManager> workspaceManager { this };
 
 public:
-    ProjectSceneConfiguration(const muse::modularity::ContextPtr& ctx) : muse::Injectable(ctx) {}
+    ProjectSceneConfiguration(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
 
     void init();
 

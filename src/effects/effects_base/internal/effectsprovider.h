@@ -43,7 +43,8 @@ class EffectsProvider : public IEffectsProvider, public muse::async::Asyncable, 
     muse::Inject<muse::audioplugins::IKnownAudioPluginsRegister> knownPluginsRegister{ this };
 
 public:
-    EffectsProvider(const muse::modularity::ContextPtr& ctx) : muse::Injectable(ctx) {}
+    EffectsProvider(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
 
     void init();
 

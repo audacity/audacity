@@ -33,7 +33,8 @@ class Au3Record : public IRecord, public muse::async::Asyncable, public muse::In
     muse::Inject<au::trackedit::ISelectionController> selectionController{ this };
 
 public:
-    Au3Record(const muse::modularity::ContextPtr& ctx) : muse::Injectable(ctx) {}
+    Au3Record(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
 
     void init();
 

@@ -13,7 +13,7 @@
 namespace au::spectrogram {
 class SpectrogramService final : public ISpectrogramService, public muse::Injectable
 {
-	muse::GlobalInject<IGlobalSpectrogramConfiguration> globalSpectrogramConfiguration;
+    muse::GlobalInject<IGlobalSpectrogramConfiguration> globalSpectrogramConfiguration;
 
     muse::Inject<context::IGlobalContext> globalContext { this };
 

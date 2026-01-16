@@ -38,7 +38,8 @@ static constexpr Qt::WindowFlags splashScreenWindowFlags = (Qt::SplashScreen | Q
 static constexpr Qt::WindowFlags splashScreenWindowFlags = Qt::SplashScreen | Qt::FramelessWindowHint;
 #endif
 
-SplashScreen::SplashScreen(const muse::modularity::ContextPtr& ctx, SplashScreen::SplashScreenType type, bool forNewScore, const QString& openingFileName)
+SplashScreen::SplashScreen(const muse::modularity::ContextPtr& ctx, SplashScreen::SplashScreenType type, bool forNewScore,
+                           const QString& openingFileName)
     : QWidget(nullptr, splashScreenWindowFlags), muse::Injectable(ctx)
 {
     setAttribute(Qt::WA_TranslucentBackground);

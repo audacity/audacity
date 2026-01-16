@@ -31,7 +31,8 @@
 #include "../timeline/timelinecontext.h"
 
 namespace au::projectscene {
-class PlayPositionActionController : public QObject, public muse::actions::Actionable, public muse::async::Asyncable, public muse::Injectable
+class PlayPositionActionController : public QObject, public muse::actions::Actionable, public muse::async::Asyncable,
+    public muse::Injectable
 {
     Q_OBJECT
 

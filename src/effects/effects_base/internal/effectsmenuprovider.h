@@ -17,7 +17,8 @@ class EffectsMenuProvider : public IEffectsMenuProvider, public muse::async::Asy
     muse::Inject<effects::IEffectsProvider> effectsProvider{ this };
 
 public:
-    EffectsMenuProvider(const muse::modularity::ContextPtr& ctx) : muse::Injectable(ctx) {}
+    EffectsMenuProvider(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
 
     void init();
 
