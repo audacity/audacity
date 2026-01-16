@@ -16,7 +16,7 @@ namespace au::trackedit {
 class Au3TrackSpectrogramConfiguration;
 class TrackSpectrogramSettingsUpdater : public muse::async::Asyncable, public muse::Injectable
 {
-	muse::GlobalInject<spectrogram::IGlobalSpectrogramConfiguration> globalSpectrogramConfiguration;
+    muse::GlobalInject<spectrogram::IGlobalSpectrogramConfiguration> globalSpectrogramConfiguration;
 
     muse::Inject<au::context::IGlobalContext> globalContext { this };
     muse::Inject<spectrogram::ISpectrogramService> spectrogramService { this };

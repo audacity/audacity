@@ -21,7 +21,7 @@ class TrackSpectrogramSettingsModel : public spectrogram::AbstractSpectrogramSet
     Q_PROPERTY(bool useGlobalSettings READ useGlobalSettings WRITE setUseGlobalSettings NOTIFY useGlobalSettingsChanged)
 
     muse::GlobalInject<spectrogram::IGlobalSpectrogramConfiguration> globalSpectrogramConfiguration;
-    
+
     muse::Inject<au::context::IGlobalContext> globalContext { this };
     muse::Inject<spectrogram::ISpectrogramService> spectrogramService { this };
 

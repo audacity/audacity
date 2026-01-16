@@ -92,7 +92,8 @@ private:
 class Au3TrackeditProjectCreator : public ITrackeditProjectCreator, public muse::Injectable
 {
 public:
-    Au3TrackeditProjectCreator(const muse::modularity::ContextPtr& ctx) : muse::Injectable(ctx) {}
+    Au3TrackeditProjectCreator(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
 
     ITrackeditProjectPtr create(const std::shared_ptr<au::au3::IAu3Project>& au3project) const override;
 };

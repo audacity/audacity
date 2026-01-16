@@ -38,7 +38,8 @@ class RealtimeEffectService : public IRealtimeEffectService, muse::async::Asynca
     muse::Inject<IEffectsProvider> effectsProvider{ this };
 
 public:
-    RealtimeEffectService(const muse::modularity::ContextPtr& ctx) : muse::Injectable(ctx) {}
+    RealtimeEffectService(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
 
     void init();
 

@@ -5,7 +5,8 @@
 #include "trackediterrors.h"
 
 namespace au::trackedit {
-TrackeditOperationController::TrackeditOperationController(const muse::modularity::ContextPtr& ctx, std::unique_ptr<IUndoManager> undoManager)
+TrackeditOperationController::TrackeditOperationController(const muse::modularity::ContextPtr& ctx,
+                                                           std::unique_ptr<IUndoManager> undoManager)
     : muse::Injectable(ctx), m_undoManager{std::move(undoManager)} {}
 
 secs_t TrackeditOperationController::clipStartTime(const ClipKey& clipKey) const

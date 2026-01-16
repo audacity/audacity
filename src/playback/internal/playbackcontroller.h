@@ -22,7 +22,8 @@
 
 namespace au::playback {
 class PlaybackUiActions;
-class PlaybackController : public IPlaybackController, public muse::actions::Actionable, public muse::async::Asyncable, public muse::Injectable
+class PlaybackController : public IPlaybackController, public muse::actions::Actionable, public muse::async::Asyncable,
+    public muse::Injectable
 {
 public:
     muse::GlobalInject<au::playback::IPlaybackConfiguration> playbackConfiguration;
@@ -37,7 +38,8 @@ public:
     muse::Inject<trackedit::ISelectionController> selectionController{ this };
 
 public:
-    PlaybackController(const muse::modularity::ContextPtr& ctx) : muse::Injectable(ctx) {}
+    PlaybackController(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
 
     void init();
     void deinit();

@@ -16,7 +16,8 @@ class RealtimeEffectPanelTrackSelection : public IRealtimeEffectPanelTrackSelect
     muse::Inject<context::IGlobalContext> globalContext{ this };
 
 public:
-    RealtimeEffectPanelTrackSelection(const muse::modularity::ContextPtr& ctx) : muse::Injectable(ctx) {}
+    RealtimeEffectPanelTrackSelection(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
 
     void init();
 

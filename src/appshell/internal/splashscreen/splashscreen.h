@@ -37,7 +37,8 @@ public:
         ForNewInstance
     };
 
-    explicit SplashScreen(const muse::modularity::ContextPtr& ctx, SplashScreenType type, bool forNewScore = false, const QString& openingFileName = QString());
+    explicit SplashScreen(const muse::modularity::ContextPtr& ctx, SplashScreenType type, bool forNewScore = false,
+                          const QString& openingFileName = QString());
 
 private:
     bool event(QEvent* event) override;

@@ -31,7 +31,8 @@ constexpr EffectFamily toEffectFamily(muse::audio::AudioResourceType type)
     }
 }
 
-EffectsRepositoryHelper::EffectsRepositoryHelper(const muse::modularity::ContextPtr& ctx, PluginProvider& provider, muse::audio::AudioResourceType resourceType,
+EffectsRepositoryHelper::EffectsRepositoryHelper(const muse::modularity::ContextPtr& ctx, PluginProvider& provider,
+                                                 muse::audio::AudioResourceType resourceType,
                                                  GetTitleFunc getTitle)
     : muse::Injectable(ctx), m_pluginProvider{provider}, m_resourceType{resourceType}, m_getTitle{std::move(getTitle)}
 {

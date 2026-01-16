@@ -31,7 +31,8 @@ static const QString OPEN_PROJECT_URL_HOSTNAME("open-project");
 static const muse::actions::ActionCode OPEN_CUSTOM_FFMPEG_OPTIONS("open-custom-ffmpeg-options");
 static const muse::actions::ActionCode OPEN_METADATA_DIALOG("open-metadata-dialog");
 
-ProjectActionsController::ProjectActionsController(muse::modularity::ContextPtr ctx) : muse::Injectable(ctx)
+ProjectActionsController::ProjectActionsController(muse::modularity::ContextPtr ctx)
+    : muse::Injectable(ctx)
 {
 }
 

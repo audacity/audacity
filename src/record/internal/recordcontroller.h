@@ -29,7 +29,8 @@ class RecordController : public IRecordController, public muse::actions::Actiona
     muse::Inject<playback::IPlaybackController> playbackController{ this };
 
 public:
-    RecordController(const muse::modularity::ContextPtr& ctx) : muse::Injectable(ctx) {}
+    RecordController(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
 
     void init();
     void deinit();

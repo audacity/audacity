@@ -26,7 +26,8 @@
 #include "viewtrackitem.h"
 
 namespace au::projectscene {
-class TrackItemsListModel : public QAbstractListModel, public muse::async::Asyncable, public muse::actions::Actionable, public muse::Injectable
+class TrackItemsListModel : public QAbstractListModel, public muse::async::Asyncable, public muse::actions::Actionable,
+    public muse::Injectable
 {
     Q_OBJECT
 
