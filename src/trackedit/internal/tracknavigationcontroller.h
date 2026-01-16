@@ -49,6 +49,9 @@ public:
 
     muse::async::Channel<TrackItemKey> openContextMenuRequested() const override;
 
+    void navigateNextItem();
+    void navigatePrevItem();
+
     void moveFocusedItemLeft();
     void moveFocusedItemRight();
     void extendFocusedItemBoundaryLeft();

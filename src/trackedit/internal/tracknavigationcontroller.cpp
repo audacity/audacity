@@ -20,6 +20,9 @@ static const muse::actions::ActionCode TRACK_RANGE_SELECTION_CODE("track-range-s
 static const muse::actions::ActionCode MULTI_TRACK_SELECTION_PREV_CODE("shift-up");
 static const muse::actions::ActionCode MULTI_TRACK_SELECTION_NEXT_CODE("shift-down");
 
+static const muse::actions::ActionCode TRACK_VIEW_NEXT_ITEM_CODE("track-view-next-item");
+static const muse::actions::ActionCode TRACK_VIEW_PREV_ITEM_CODE("track-view-prev-item");
+
 static const muse::actions::ActionCode TRACK_VIEW_ITEM_MOVE_LEFT_CODE("track-view-item-move-left");
 static const muse::actions::ActionCode TRACK_VIEW_ITEM_MOVE_RIGHT_CODE("track-view-item-move-right");
 static const muse::actions::ActionCode TRACK_VIEW_ITEM_EXTEND_LEFT_CODE("track-view-item-extend-left");
@@ -46,6 +49,9 @@ void TrackNavigationController::init()
     dispatcher()->reg(this, TRACK_RANGE_SELECTION_CODE, this, &TrackNavigationController::trackRangeSelection);
     dispatcher()->reg(this, MULTI_TRACK_SELECTION_PREV_CODE, this, &TrackNavigationController::multiSelectionUp);
     dispatcher()->reg(this, MULTI_TRACK_SELECTION_NEXT_CODE, this, &TrackNavigationController::multiSelectionDown);
+
+    dispatcher()->reg(this, TRACK_VIEW_NEXT_ITEM_CODE, this, &TrackNavigationController::navigateNextItem);
+    dispatcher()->reg(this, TRACK_VIEW_PREV_ITEM_CODE, this, &TrackNavigationController::navigatePrevItem);
 
     dispatcher()->reg(this, TRACK_VIEW_ITEM_MOVE_LEFT_CODE, this, &TrackNavigationController::moveFocusedItemLeft);
     dispatcher()->reg(this, TRACK_VIEW_ITEM_MOVE_RIGHT_CODE, this, &TrackNavigationController::moveFocusedItemRight);
@@ -267,6 +273,16 @@ void TrackNavigationController::multiSelectionDown()
 
     selectionController()->focusNextTrack();
     updateTrackSelection(selectedTracks, focusedTrack);
+}
+
+void TrackNavigationController::navigateNextItem()
+{
+    dispatcher()->dispatch("nav-right");
+}
+
+void TrackNavigationController::navigatePrevItem()
+{
+    dispatcher()->dispatch("nav-left");
 }
 
 muse::async::Channel<TrackItemKey> TrackNavigationController::openContextMenuRequested() const

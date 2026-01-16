@@ -391,6 +391,18 @@ UiActionList STATIC_ACTIONS = {
              ),
 
     // track view navigation
+    UiAction("track-view-next-item",
+             au::context::UiCtxProjectFocused,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Next item"),
+             TranslatableString("action", "Next item")
+             ),
+    UiAction("track-view-prev-item",
+             au::context::UiCtxProjectFocused,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Previous item"),
+             TranslatableString("action", "Previous item")
+             ),
     UiAction("track-view-item-move-left",
              au::context::UiCtxProjectFocused,
              au::context::CTX_PROJECT_FOCUSED,

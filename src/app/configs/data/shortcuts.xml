@@ -267,6 +267,14 @@
         <key>curs-next-clip-boundary</key>
     </SC>
     <SC>
+        <key>track-view-next-item</key>
+        <seq>Right</seq>
+    </SC>
+    <SC>
+        <key>track-view-prev-item</key>
+        <seq>Left</seq>
+    </SC>
+    <SC>
         <key>track-view-item-move-left</key>
         <seq>Ctrl+Left</seq>
     </SC>
