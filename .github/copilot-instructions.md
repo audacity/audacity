@@ -14,11 +14,12 @@ The `master` branch contains Audacity 4 development. For Audacity 3.x work, use 
 ### Prerequisites
 - **CMake** (minimum 3.24)
 - **C++ Compiler** with C++17 support
-- **Qt 6.9.1+** with Desktop components and additional libraries:
+- **Qt 6.9.1 or higher** with Desktop components and additional libraries:
   - Qt 5 Compatibility Module
   - Qt Network Authorization
   - Qt Shader Tools
   - Qt State Machines
+  - Note: CI uses Qt 6.10.1
 - **Ninja** (recommended build generator)
 - **Git** with submodules
 
@@ -184,7 +185,7 @@ The repository has a `.editorconfig` file at the root. IDEs should automatically
 - **Submodules**: Be aware of the MuseScore framework submodule
 - **Branch Awareness**: Confirm whether changes target `master` (AU4) or `audacity3` (AU3.x)
 - **Build Time**: Initial builds can be slow; use ccache if available
-- **Qt Version**: Ensure Qt 6.9.1+ for compatibility
+- **Qt Version**: Minimum Qt 6.9.1 required (CI uses Qt 6.10.1)
 
 ## File Patterns to Recognize
 
