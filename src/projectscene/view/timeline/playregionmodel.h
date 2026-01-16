@@ -25,6 +25,8 @@ class PlayRegionModel : public QObject, public muse::Injectable, public muse::as
 public:
     explicit PlayRegionModel(QObject* parent = nullptr);
 
+    Q_INVOKABLE void init();
+
     double start() const;
     void setStart(double newStart);
 

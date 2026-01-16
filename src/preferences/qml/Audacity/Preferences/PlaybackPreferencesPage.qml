@@ -26,6 +26,7 @@ PreferencesPage {
     }
 
     Component.onCompleted: {
+        playbackState.init()
         playbackPreferencesModel.init()
     }
 

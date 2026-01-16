@@ -39,6 +39,10 @@ BaseSection {
         id: playbackState
     }
 
+    Component.onCompleted: {
+        playbackState.init()
+    }
+
     Row {
         spacing: 8
 
