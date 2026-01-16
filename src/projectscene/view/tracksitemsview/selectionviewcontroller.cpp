@@ -254,6 +254,37 @@ void SelectionViewController::onSelectionDraged(double x1, double x2, bool compl
     emit selectionEditInProgressChanged();
 }
 
+void SelectionViewController::onSpectralSelectionDragged(int trackId, double spectrogramY1, double spectrogramY2, double spectrogramHeight, bool completed)
+{
+    if (!isProjectOpened()) {
+        return;
+    }
+
+    if (!spectralSelectionEnabled()) {
+        return;
+    }
+
+    // Convert Y positions to frequencies using the spectrogram service
+    double freq1 = spectrogramService()->yToFrequency(trackId, spectrogramY1, spectrogramHeight);
+    double freq2 = spectrogramService()->yToFrequency(trackId, spectrogramY2, spectrogramHeight);
+
+    // Ensure freq1 is the lower frequency
+    if (freq1 > freq2) {
+        std::swap(freq1, freq2);
+    }
+
+    selectionController()->setFrequencySelection(trackId, std::make_pair(freq1, freq2));
+}
+
+double SelectionViewController::frequencyToSpectrogramY(int trackId, double frequency, double spectrogramHeight) const
+{
+    if (!isProjectOpened() || frequency < 0) {
+        return -1;
+    }
+
+    return spectrogramService()->frequencyToY(trackId, frequency, spectrogramHeight);
+}
+
 void SelectionViewController::selectTrackAudioData(double y)
 {
     if (!isProjectOpened()) {
