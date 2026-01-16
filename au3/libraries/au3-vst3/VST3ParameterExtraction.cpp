@@ -237,12 +237,20 @@ ParamInfo VST3ParameterExtraction::getParameter(EffectInstanceEx* instance, uint
         return {};
     }
 
-    Steinberg::Vst::ParameterInfo vstInfo;
-    if (editController->getParameterInfo(parameterId, vstInfo) != Steinberg::kResultOk) {
-        return {};
+    // NOTE: getParameterInfo expects an INDEX (0, 1, 2, ...), not a parameter ID!
+    // We need to iterate through all parameters to find the one with the matching ID
+    const Steinberg::int32 paramCount = editController->getParameterCount();
+    for (Steinberg::int32 i = 0; i < paramCount; ++i) {
+        Steinberg::Vst::ParameterInfo vstInfo;
+        if (editController->getParameterInfo(i, vstInfo) == Steinberg::kResultOk) {
+            if (vstInfo.id == parameterId) {
+                return buildParamInfo(editController.get(), vstInfo);
+            }
+        }
     }
 
-    return buildParamInfo(editController.get(), vstInfo);
+    // Parameter not found
+    return {};
 }
 
 double VST3ParameterExtraction::getParameterValue(EffectInstanceEx* instance, uint32_t parameterId)
