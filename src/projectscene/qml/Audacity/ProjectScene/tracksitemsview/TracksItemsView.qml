@@ -722,6 +722,7 @@ Rectangle {
                             width: trackItemLoader.width
 
                             context: timeline.context
+                            selectionViewController: selectionController
 
                             container: tracksItemsView
                             canvas: content

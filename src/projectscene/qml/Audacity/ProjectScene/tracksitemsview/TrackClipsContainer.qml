@@ -24,6 +24,7 @@ TrackItemsContainer {
     required property double selectionEndFrequency
     required property bool spectralSelectionEnabled
     required property var pressedSpectrogram
+    required property var selectionViewController
 
     signal movePreviewClip(int x, int width, string title)
     signal clearPreviewClip
@@ -271,6 +272,7 @@ TrackItemsContainer {
 
                                 context: root.context
                                 canvas: root.canvas
+                                selectionViewController: root.selectionViewController
 
                                 title: itemData.title
                                 clipColor: itemData.color

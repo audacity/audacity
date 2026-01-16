@@ -8,11 +8,8 @@ Item {
     required property bool spectralSelectionEnabled
     required property var pressedSpectrogram
     required property int trackId
-    required property double selectionStartFrequency
-    required property double selectionEndFrequency
-    required property double minFreq
-    required property double maxFreq
-    required property double spectrogramHeight
+    required property double spectralTopY
+    required property double spectralBottomY
     required property double selectionStartX
     required property double selectionEndX
 
@@ -21,27 +18,11 @@ Item {
     //! NOTE: sync with SelectionViewController's MIN_SELECTION_PX
     property real minSelection: 1
 
-    // Convert frequency to Y position (inverted: 0 at bottom, height at top)
-    function frequencyToY(freq) {
-        if (freq <= root.minFreq || root.maxFreq <= root.minFreq) {
-            return root.spectrogramHeight
-        }
-        if (freq >= root.maxFreq) {
-            return 0
-        }
-        // Linear scale for now - this should match the scale type in the spectrogram settings
-        const normalized = (freq - root.minFreq) / (root.maxFreq - root.minFreq)
-        return root.spectrogramHeight * (1.0 - normalized)
-    }
-
     readonly property bool hasSpectralSelection: root.spectralSelectionEnabled && 
                                                    root.isDataSelected &&
-                                                   root.selectionStartFrequency >= 0 &&
-                                                   root.selectionEndFrequency >= 0 &&
+                                                   root.spectralTopY >= 0 &&
+                                                   root.spectralBottomY >= 0 &&
                                                    root.pressedSpectrogram.trackId === root.trackId
-
-    readonly property double spectralTop: hasSpectralSelection ? frequencyToY(root.selectionEndFrequency) : 0
-    readonly property double spectralBottom: hasSpectralSelection ? frequencyToY(root.selectionStartFrequency) : 0
 
     // Top edge handle
     MouseArea {
@@ -49,7 +30,7 @@ Item {
 
         x: root.selectionStartX
         width: root.selectionEndX - x
-        y: root.spectralTop
+        y: root.spectralTopY
         height: 8
 
         visible: root.hasSpectralSelection && !root.selectionInProgress
@@ -64,7 +45,7 @@ Item {
                 return
             }
             startY = topEdge.y
-            startBottom = root.spectralBottom
+            startBottom = root.spectralBottomY
         }
 
         onPositionChanged: function (mouse) {
@@ -83,7 +64,7 @@ Item {
             if (mouse.button !== Qt.LeftButton) {
                 return
             }
-            root.spectralSelectionDragged(topEdge.y, root.spectralBottom, true)
+            root.spectralSelectionDragged(topEdge.y, root.spectralBottomY, true)
         }
     }
 
@@ -93,7 +74,7 @@ Item {
 
         x: root.selectionStartX
         width: root.selectionEndX - x
-        y: root.spectralBottom - 8
+        y: root.spectralBottomY - 8
         height: 8
 
         visible: root.hasSpectralSelection && !root.selectionInProgress
@@ -108,7 +89,7 @@ Item {
                 return
             }
             startY = bottomEdge.y
-            startTop = root.spectralTop
+            startTop = root.spectralTopY
         }
 
         onPositionChanged: function (mouse) {
@@ -127,14 +108,14 @@ Item {
             if (mouse.button !== Qt.LeftButton) {
                 return
             }
-            root.spectralSelectionDragged(root.spectralTop, bottomEdge.y + 8, true)
+            root.spectralSelectionDragged(root.spectralTopY, bottomEdge.y + 8, true)
         }
     }
 
     // Top-left corner
     Rectangle {
         x: root.selectionStartX - 2
-        y: root.spectralTop - 2
+        y: root.spectralTopY - 2
         width: 5
         height: 5
 
@@ -156,8 +137,8 @@ Item {
                 if (mouse.button !== Qt.LeftButton) {
                     return
                 }
-                startY = root.spectralTop
-                startBottom = root.spectralBottom
+                startY = root.spectralTopY
+                startBottom = root.spectralBottomY
             }
 
             onPositionChanged: function (mouse) {
@@ -176,7 +157,7 @@ Item {
                 if (mouse.button !== Qt.LeftButton) {
                     return
                 }
-                root.spectralSelectionDragged(root.spectralTop, root.spectralBottom, true)
+                root.spectralSelectionDragged(root.spectralTopY, root.spectralBottomY, true)
             }
         }
     }
@@ -184,7 +165,7 @@ Item {
     // Top-right corner
     Rectangle {
         x: root.selectionEndX - 3
-        y: root.spectralTop - 2
+        y: root.spectralTopY - 2
         width: 5
         height: 5
 
@@ -206,8 +187,8 @@ Item {
                 if (mouse.button !== Qt.LeftButton) {
                     return
                 }
-                startY = root.spectralTop
-                startBottom = root.spectralBottom
+                startY = root.spectralTopY
+                startBottom = root.spectralBottomY
             }
 
             onPositionChanged: function (mouse) {
@@ -226,7 +207,7 @@ Item {
                 if (mouse.button !== Qt.LeftButton) {
                     return
                 }
-                root.spectralSelectionDragged(root.spectralTop, root.spectralBottom, true)
+                root.spectralSelectionDragged(root.spectralTopY, root.spectralBottomY, true)
             }
         }
     }
@@ -234,7 +215,7 @@ Item {
     // Bottom-left corner
     Rectangle {
         x: root.selectionStartX - 2
-        y: root.spectralBottom - 3
+        y: root.spectralBottomY - 3
         width: 5
         height: 5
 
@@ -256,8 +237,8 @@ Item {
                 if (mouse.button !== Qt.LeftButton) {
                     return
                 }
-                startY = root.spectralBottom
-                startTop = root.spectralTop
+                startY = root.spectralBottomY
+                startTop = root.spectralTopY
             }
 
             onPositionChanged: function (mouse) {
@@ -276,7 +257,7 @@ Item {
                 if (mouse.button !== Qt.LeftButton) {
                     return
                 }
-                root.spectralSelectionDragged(root.spectralTop, root.spectralBottom, true)
+                root.spectralSelectionDragged(root.spectralTopY, root.spectralBottomY, true)
             }
         }
     }
@@ -284,7 +265,7 @@ Item {
     // Bottom-right corner
     Rectangle {
         x: root.selectionEndX - 3
-        y: root.spectralBottom - 3
+        y: root.spectralBottomY - 3
         width: 5
         height: 5
 
@@ -306,8 +287,8 @@ Item {
                 if (mouse.button !== Qt.LeftButton) {
                     return
                 }
-                startY = root.spectralBottom
-                startTop = root.spectralTop
+                startY = root.spectralBottomY
+                startTop = root.spectralTopY
             }
 
             onPositionChanged: function (mouse) {
@@ -326,7 +307,7 @@ Item {
                 if (mouse.button !== Qt.LeftButton) {
                     return
                 }
-                root.spectralSelectionDragged(root.spectralTop, root.spectralBottom, true)
+                root.spectralSelectionDragged(root.spectralTopY, root.spectralBottomY, true)
             }
         }
     }
