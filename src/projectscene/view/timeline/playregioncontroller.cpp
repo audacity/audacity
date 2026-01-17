@@ -11,7 +11,7 @@
 
 namespace au::projectscene {
 PlayRegionController::PlayRegionController(QObject* parent)
-    : QObject(parent)
+    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
 {
 }
 

@@ -22,13 +22,16 @@ class RecordController : public IRecordController, public muse::actions::Actiona
 {
     muse::GlobalInject<record::IRecordConfiguration> configuration;
 
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
-    muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<IRecord> record;
-    muse::Inject<playback::IPlaybackController> playbackController;
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::Inject<au::context::IGlobalContext> globalContext{ this };
+    muse::Inject<muse::IInteractive> interactive{ this };
+    muse::Inject<IRecord> record{ this };
+    muse::Inject<playback::IPlaybackController> playbackController{ this };
 
 public:
+    RecordController(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
+
     void init();
     void deinit();
 

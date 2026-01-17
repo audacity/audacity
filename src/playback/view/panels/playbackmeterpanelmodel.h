@@ -15,14 +15,14 @@
 #include "playback/iplaybackcontroller.h"
 
 namespace au::playback {
-class PlaybackMeterPanelModel : public QObject, public muse::async::Asyncable
+class PlaybackMeterPanelModel : public QObject, public muse::async::Asyncable, public muse::Injectable
 {
     Q_OBJECT
 
     muse::GlobalInject<IPlaybackConfiguration> configuration;
 
-    muse::Inject<IPlayback> playback;
-    muse::Inject<IPlaybackController> playbackController;
+    muse::Inject<IPlayback> playback{ this };
+    muse::Inject<IPlaybackController> playbackController{ this };
 
     Q_PROPERTY(float leftChannelPressure READ leftChannelPressure NOTIFY leftChannelPressureChanged)
     Q_PROPERTY(float leftChannelRMS READ leftChannelRMS NOTIFY leftChannelRMSChanged)

@@ -58,14 +58,14 @@ std::string AppShellModule::moduleName() const
 
 void AppShellModule::registerExports()
 {
-    m_applicationActionController = std::make_shared<ApplicationActionController>();
-    m_applicationUiActions = std::make_shared<ApplicationUiActions>(m_applicationActionController);
+    m_applicationActionController = std::make_shared<ApplicationActionController>(iocContext());
+    m_applicationUiActions = std::make_shared<ApplicationUiActions>(iocContext(), m_applicationActionController);
     m_appShellConfiguration = std::make_shared<AppShellConfiguration>();
-    m_sessionsManager = std::make_shared<SessionsManager>();
+    m_sessionsManager = std::make_shared<SessionsManager>(iocContext());
 
     ioc()->registerExport<IAppShellConfiguration>(moduleName(), m_appShellConfiguration);
     ioc()->registerExport<IApplicationActionController>(moduleName(), m_applicationActionController);
-    ioc()->registerExport<IStartupScenario>(moduleName(), new StartupScenario());
+    ioc()->registerExport<IStartupScenario>(moduleName(), new StartupScenario(iocContext()));
     ioc()->registerExport<ISessionsManager>(moduleName(), m_sessionsManager);
 
 #ifdef Q_OS_MAC

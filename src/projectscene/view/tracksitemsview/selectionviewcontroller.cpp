@@ -16,7 +16,7 @@ using namespace au::trackedit;
 constexpr double MIN_SELECTION_PX = 1.0;
 
 SelectionViewController::SelectionViewController(QObject* parent)
-    : QObject(parent)
+    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
 {
 }
 

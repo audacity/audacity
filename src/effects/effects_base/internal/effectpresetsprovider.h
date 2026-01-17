@@ -13,13 +13,14 @@
 
 class EffectSettingsManager;
 namespace au::effects {
-class EffectPresetsProvider : public IEffectPresetsProvider
+class EffectPresetsProvider : public IEffectPresetsProvider, public muse::Injectable
 {
-    muse::Inject<IEffectsProvider> effectsProvider;
-    muse::Inject<IEffectInstancesRegister> instancesRegister;
+    muse::Inject<IEffectsProvider> effectsProvider{ this };
+    muse::Inject<IEffectInstancesRegister> instancesRegister{ this };
 
 public:
-    EffectPresetsProvider() = default;
+    EffectPresetsProvider(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
 
     PresetIdList factoryPresets(const EffectId& effectId) const override;
     PresetIdList userPresets(const EffectId& effectId) const override;

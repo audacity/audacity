@@ -13,13 +13,13 @@
 #include "iffmpegoptionsaccessor.h"
 
 namespace au::importexport {
-class CustomFFmpegPreferencesModel : public QObject, public muse::async::Asyncable
+class CustomFFmpegPreferencesModel : public QObject, public muse::async::Asyncable, public muse::Injectable
 {
     Q_OBJECT
 
     muse::GlobalInject<IExportConfiguration> exportConfiguration;
-    muse::Inject<IExporter> exporter;
-    muse::Inject<IFFmpegOptionsAccessor> ffmpegOptionsAccessor;
+    muse::Inject<IExporter> exporter{ this };
+    muse::Inject<IFFmpegOptionsAccessor> ffmpegOptionsAccessor{ this };
 
     // formats
     Q_PROPERTY(int ffmpegFormatIndex READ ffmpegFormatIndex NOTIFY ffmpegFormatIndexChanged)

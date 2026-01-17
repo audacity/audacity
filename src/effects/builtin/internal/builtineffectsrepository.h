@@ -13,12 +13,13 @@
 #include "au3-components/ComponentInterfaceSymbol.h"
 
 namespace au::effects {
-class BuiltinEffectsRepository : public IBuiltinEffectsRepository
+class BuiltinEffectsRepository : public IBuiltinEffectsRepository, public muse::Injectable
 {
-    muse::Inject<IEffectsViewRegister> effectsViewRegister;
+    muse::Inject<IEffectsViewRegister> effectsViewRegister{ this };
 
 public:
-    BuiltinEffectsRepository() = default;
+    BuiltinEffectsRepository(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
 
     void preInit();
     void init();

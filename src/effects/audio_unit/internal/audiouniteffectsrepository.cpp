@@ -3,8 +3,8 @@
 */
 #include "audiouniteffectsrepository.h"
 
-au::effects::AudioUnitEffectsRepository::AudioUnitEffectsRepository()
-    : m_helper(m_module, muse::audio::AudioResourceType::AudioUnit)
+au::effects::AudioUnitEffectsRepository::AudioUnitEffectsRepository(const muse::modularity::ContextPtr& ctx)
+    : muse::Injectable(ctx), m_helper(ctx, m_module, muse::audio::AudioResourceType::AudioUnit)
 {
 }
 

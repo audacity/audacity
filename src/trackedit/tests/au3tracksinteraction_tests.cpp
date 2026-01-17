@@ -26,7 +26,7 @@ class Au3TracksInteractionTests : public Au3InteractionTestBase
 public:
     void SetUp() override
     {
-        m_tracksInteraction = std::make_shared<Au3TracksInteraction>();
+        m_tracksInteraction = std::make_shared<Au3TracksInteraction>(muse::modularity::globalCtx());
 
         m_globalContext = std::make_shared<NiceMock<context::GlobalContextMock> >();
         m_selectionController = std::make_shared<NiceMock<SelectionControllerMock> >();

@@ -17,13 +17,13 @@
 #include "au3wrap/internal/au3audiometer.h"
 
 namespace au::playback {
-class Au3AudioOutput : public IAudioOutput, public muse::async::Asyncable
+class Au3AudioOutput : public IAudioOutput, public muse::async::Asyncable, public muse::Injectable
 {
-    muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<au::audio::IAudioEngine> audioEngine;
+    muse::Inject<au::context::IGlobalContext> globalContext{ this };
+    muse::Inject<au::audio::IAudioEngine> audioEngine{ this };
 
 public:
-    Au3AudioOutput();
+    Au3AudioOutput(const muse::modularity::ContextPtr& ctx);
 
     muse::async::Promise<float> playbackVolume() const override;
     void setPlaybackVolume(float volume) override;

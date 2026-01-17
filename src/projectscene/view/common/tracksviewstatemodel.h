@@ -11,7 +11,7 @@
 #include "context/iglobalcontext.h"
 
 namespace au::projectscene {
-class TracksViewStateModel : public QObject, public muse::async::Asyncable
+class TracksViewStateModel : public QObject, public muse::Injectable, public muse::async::Asyncable
 {
     Q_OBJECT
 
@@ -25,7 +25,7 @@ class TracksViewStateModel : public QObject, public muse::async::Asyncable
 
     Q_PROPERTY(bool snapEnabled READ snapEnabled NOTIFY snapEnabledChanged FINAL)
 
-    muse::Inject<context::IGlobalContext> globalContext;
+    muse::Inject<context::IGlobalContext> globalContext{ this };
 
 public:
     TracksViewStateModel(QObject* parent = nullptr);

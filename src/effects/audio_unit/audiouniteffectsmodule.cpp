@@ -35,7 +35,7 @@ std::string au::effects::AudioUnitEffectsModule::moduleName() const
 
 void au::effects::AudioUnitEffectsModule::registerExports()
 {
-    m_effectsRepository = std::make_shared<AudioUnitEffectsRepository>();
+    m_effectsRepository = std::make_shared<AudioUnitEffectsRepository>(iocContext());
 
     ioc()->registerExport<IAudioUnitEffectsRepository>(moduleName(), m_effectsRepository);
 }
@@ -54,7 +54,7 @@ void au::effects::AudioUnitEffectsModule::resolveImports()
 
     auto launchRegister = ioc()->resolve<IEffectViewLaunchRegister>(moduleName());
     if (launchRegister) {
-        launchRegister->regLauncher("AudioUnit", std::make_shared<AudioUnitViewLauncher>());
+        launchRegister->regLauncher("AudioUnit", std::make_shared<AudioUnitViewLauncher>(iocContext()));
     }
 }
 

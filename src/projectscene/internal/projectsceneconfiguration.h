@@ -11,15 +11,16 @@
 #include "../iprojectsceneconfiguration.h"
 
 namespace au::projectscene {
-class ProjectSceneConfiguration : public IProjectSceneConfiguration
+class ProjectSceneConfiguration : public IProjectSceneConfiguration, public muse::Injectable
 {
 public:
     muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
 
-    muse::Inject<muse::workspace::IWorkspaceManager> workspaceManager;
+    muse::Inject<muse::workspace::IWorkspaceManager> workspaceManager { this };
 
 public:
-    ProjectSceneConfiguration() = default;
+    ProjectSceneConfiguration(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
 
     void init();
 

@@ -11,6 +11,11 @@
 
 using namespace au::effects;
 
+GeneralViewModel::GeneralViewModel(QObject* parent)
+    : BuiltinEffectModel(parent, -1)
+{
+}
+
 void GeneralViewModel::init()
 {
     // LOGDA() << au3::wxToString(instance()->GetSymbol().Internal());

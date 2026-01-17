@@ -19,19 +19,19 @@
 #include <unordered_set>
 
 namespace au::projectscene {
-class ProjectViewState : public QObject, public IProjectViewState, public muse::async::Asyncable
+class ProjectViewState : public QObject, public IProjectViewState, public muse::Injectable, public muse::async::Asyncable
 {
     Q_OBJECT
 
     muse::GlobalInject<IProjectSceneConfiguration> configuration;
     muse::GlobalInject<au::playback::IPlaybackConfiguration> playbackConfiguration;
 
-    muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<trackedit::ISelectionController> selectionController;
-    muse::Inject<trackedit::IProjectHistory> projectHistory;
+    muse::Inject<au::context::IGlobalContext> globalContext{ this };
+    muse::Inject<trackedit::ISelectionController> selectionController{ this };
+    muse::Inject<trackedit::IProjectHistory> projectHistory{ this };
 
 public:
-    ProjectViewState(std::shared_ptr<au::au3::IAu3Project> project);
+    ProjectViewState(const muse::modularity::ContextPtr& ctx, std::shared_ptr<au::au3::IAu3Project> project);
 
     // State of elements
     muse::ValCh<int> totalTrackHeight() const override;

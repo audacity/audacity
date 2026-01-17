@@ -9,7 +9,7 @@
 
 namespace au::effects {
 AbstractDynamicsEffectInstanceModel::AbstractDynamicsEffectInstanceModel(QObject* parent)
-    : QObject{parent}
+    : QObject{parent}, muse::Injectable(muse::iocCtxForQmlObject(this))
 {
 }
 

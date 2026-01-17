@@ -14,16 +14,17 @@
 #include "../ieffectinstancesregister.h"
 
 namespace au::effects {
-class EffectPresetsScenario : public IEffectPresetsScenario
+class EffectPresetsScenario : public IEffectPresetsScenario, public muse::Injectable
 {
     muse::GlobalInject<muse::IGlobalConfiguration> globalConfiguration;
 
-    muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<IEffectPresetsProvider> presetsProvider;
-    muse::Inject<IEffectInstancesRegister> instancesRegister;
+    muse::Inject<muse::IInteractive> interactive{ this };
+    muse::Inject<IEffectPresetsProvider> presetsProvider{ this };
+    muse::Inject<IEffectInstancesRegister> instancesRegister{ this };
 
 public:
-    EffectPresetsScenario() = default;
+    EffectPresetsScenario(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
 
     void applyPreset(const EffectInstanceId& effectInstanceId, const PresetId& presetId) override;
     void saveCurrentAsPreset(const EffectInstanceId& effectInstanceId) override;

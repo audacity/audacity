@@ -26,7 +26,7 @@ using namespace au::appshell;
 using namespace au::project;
 
 MainWindowTitleProvider::MainWindowTitleProvider(QObject* parent)
-    : QObject(parent)
+    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
 {
 }
 

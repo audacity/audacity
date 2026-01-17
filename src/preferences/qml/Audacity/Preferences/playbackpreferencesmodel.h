@@ -14,7 +14,7 @@
 #include "playback/iplaybackconfiguration.h"
 
 namespace au::appshell {
-class PlaybackPreferencesModel : public QObject, public muse::async::Asyncable
+class PlaybackPreferencesModel : public QObject, public muse::async::Asyncable, public muse::Injectable
 {
     Q_OBJECT
     QML_ELEMENT
@@ -34,7 +34,7 @@ class PlaybackPreferencesModel : public QObject, public muse::async::Asyncable
     muse::GlobalInject<muse::audio::IAudioConfiguration> audioConfiguration;
     muse::GlobalInject<playback::IPlaybackConfiguration> playbackConfiguration;
 
-    muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider;
+    muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider { this };
 
 public:
     explicit PlaybackPreferencesModel(QObject* parent = nullptr);

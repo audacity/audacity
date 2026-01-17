@@ -11,11 +11,14 @@
 
 namespace au::projectscene {
 using Direction = DirectionType::Direction;
-class SnapTimeFormatter
+class SnapTimeFormatter : public muse::Injectable
 {
-    muse::Inject<playback::IPlayback> playback;
+    muse::Inject<playback::IPlayback> playback{ this };
 
 public:
+    SnapTimeFormatter(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
+
     muse::secs_t snapTime(muse::secs_t time, const Snap& snap, trackedit::TimeSignature timeSig) const;
     muse::secs_t singleStep(muse::secs_t time, const Snap& snap, Direction direction, trackedit::TimeSignature timeSig) const;
 

@@ -100,19 +100,19 @@ void ProjectSceneModule::registerResources()
 
 void ProjectSceneModule::registerExports()
 {
-    m_projectSceneActionsController = std::make_shared<ProjectSceneActionsController>();
-    m_uiActions = std::make_shared<ProjectSceneUiActions>(m_projectSceneActionsController);
-    m_configuration = std::make_shared<ProjectSceneConfiguration>();
-    m_realtimeEffectPanelTrackSelection = std::make_shared<RealtimeEffectPanelTrackSelection>();
+    m_projectSceneActionsController = std::make_shared<ProjectSceneActionsController>(iocContext());
+    m_uiActions = std::make_shared<ProjectSceneUiActions>(iocContext(), m_projectSceneActionsController);
+    m_configuration = std::make_shared<ProjectSceneConfiguration>(iocContext());
+    m_realtimeEffectPanelTrackSelection = std::make_shared<RealtimeEffectPanelTrackSelection>(iocContext());
 
     ioc()->registerExport<IProjectSceneConfiguration>(moduleName(), m_configuration);
-    ioc()->registerExport<IProjectViewStateCreator>(moduleName(), new ProjectViewStateCreator());
+    ioc()->registerExport<IProjectViewStateCreator>(moduleName(), std::make_shared<ProjectViewStateCreator>(iocContext()));
     ioc()->registerExport<IProjectSceneActionsController>(moduleName(), m_projectSceneActionsController);
     ioc()->registerExport<IRealtimeEffectPanelTrackSelection>(moduleName(), m_realtimeEffectPanelTrackSelection);
-    ioc()->registerExport<IWavePainter>(moduleName(), new WavePainterProxy());
-    ioc()->registerExport<IConnectingDotsPainter>(moduleName(), new ConnectingDotsPainter());
-    ioc()->registerExport<IMinMaxRMSPainter>(moduleName(), new MinMaxRMSPainter());
-    ioc()->registerExport<ISamplesPainter>(moduleName(), new SamplesPainter());
+    ioc()->registerExport<IWavePainter>(moduleName(), std::make_shared<WavePainterProxy>(iocContext()));
+    ioc()->registerExport<IConnectingDotsPainter>(moduleName(), std::make_shared<ConnectingDotsPainter>(iocContext()));
+    ioc()->registerExport<IMinMaxRMSPainter>(moduleName(), std::make_shared<MinMaxRMSPainter>(iocContext()));
+    ioc()->registerExport<ISamplesPainter>(moduleName(), std::make_shared<SamplesPainter>(iocContext()));
 }
 
 void ProjectSceneModule::resolveImports()

@@ -20,7 +20,7 @@
 Q_DECLARE_METATYPE(au::trackedit::TrackType)
 
 namespace au::projectscene {
-class TrackItem : public QObject, public muse::async::Asyncable
+class TrackItem : public QObject, public muse::Injectable, public muse::async::Asyncable
 {
     Q_OBJECT
 
@@ -32,8 +32,8 @@ class TrackItem : public QObject, public muse::async::Asyncable
     Q_PROPERTY(bool isSelected READ isSelected NOTIFY isSelectedChanged)
     Q_PROPERTY(bool isFocused READ isFocused NOTIFY isFocusedChanged)
 
-    muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
-    muse::Inject<trackedit::ISelectionController> selectionController;
+    muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
+    muse::Inject<trackedit::ISelectionController> selectionController{ this };
 
 public:
     explicit TrackItem(QObject* parent = nullptr);

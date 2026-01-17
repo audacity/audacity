@@ -38,8 +38,7 @@ class RecentProjectsModel : public AbstractProjectsModel, public muse::async::As
 
     muse::GlobalInject<IProjectConfiguration> configuration;
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
-
-    muse::Inject<IRecentFilesController> recentFilesController;
+    muse::GlobalInject<IRecentFilesController> recentFilesController;
 
 public:
     RecentProjectsModel(QObject* parent = nullptr);

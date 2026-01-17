@@ -31,7 +31,7 @@ using namespace au::appshell;
 using namespace muse::ui;
 
 PreferencesModel::PreferencesModel(QObject* parent)
-    : QAbstractItemModel(parent)
+    : QAbstractItemModel(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
 {
 }
 

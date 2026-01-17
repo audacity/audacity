@@ -19,7 +19,7 @@ std::string ImporterModule::moduleName() const
 
 void ImporterModule::registerExports()
 {
-    m_importer = std::make_shared<Au3Importer>();
+    m_importer = std::make_shared<Au3Importer>(iocContext());
 
     ioc()->registerExport<IImporter>(moduleName(), m_importer);
 }

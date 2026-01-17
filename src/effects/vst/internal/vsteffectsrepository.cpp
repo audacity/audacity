@@ -5,8 +5,8 @@
 
 using namespace au::effects;
 
-VstEffectsRepository::VstEffectsRepository()
-    : m_helper{m_module, muse::audio::AudioResourceType::VstPlugin}
+VstEffectsRepository::VstEffectsRepository(const muse::modularity::ContextPtr& ctx)
+    : muse::Injectable(ctx), m_helper{ctx, m_module, muse::audio::AudioResourceType::VstPlugin}
 {
 }
 

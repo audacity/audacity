@@ -7,16 +7,16 @@
 #include "progressdialog.h"
 #include "wxtypes_convert.h"
 
-ProgressDialog::ProgressDialog(const std::string& title)
-    : m_progressTitle{title}
+ProgressDialog::ProgressDialog(const muse::modularity::ContextPtr& ctx, const std::string& title)
+    : muse::Injectable(ctx), m_progressTitle{title}
 {
     // Of course, the least number of increments to yield a smooth animation depends on the width of the progress bar,
     // yet 300 increments should be enough to provide a smooth animation in most cases.
     m_progress.setMaxNumIncrements(200);
 }
 
-ProgressDialog::ProgressDialog(const TranslatableString& title)
-    : ProgressDialog{au::au3::wxToStdString(title.Translation())}
+ProgressDialog::ProgressDialog(const muse::modularity::ContextPtr& ctx, const TranslatableString& title)
+    : ProgressDialog{ctx, au::au3::wxToStdString(title.Translation())}
 {
 }
 

@@ -40,14 +40,14 @@ std::string PlaybackModule::moduleName() const
 void PlaybackModule::registerExports()
 {
     m_configuration = std::make_shared<PlaybackConfiguration>();
-    m_controller = std::make_shared<PlaybackController>();
-    m_uiActions = std::make_shared<PlaybackUiActions>(m_controller);
-    m_playback = std::make_shared<Au3Playback>();
+    m_controller = std::make_shared<PlaybackController>(iocContext());
+    m_uiActions = std::make_shared<PlaybackUiActions>(iocContext(), m_controller);
+    m_playback = std::make_shared<Au3Playback>(iocContext());
 
     ioc()->registerExport<PlaybackConfiguration>(moduleName(), m_configuration);
     ioc()->registerExport<IPlaybackController>(moduleName(), m_controller);
     ioc()->registerExport<playback::IPlayback>(moduleName(), m_playback);
-    ioc()->registerExport<ITrackPlaybackControl>(moduleName(), new Au3TrackPlaybackControl());
+    ioc()->registerExport<ITrackPlaybackControl>(moduleName(), std::make_shared<Au3TrackPlaybackControl>(iocContext()));
     ioc()->registerExport<IPlaybackMeterController>(moduleName(), std::make_shared<PlaybackMeterController>());
 }
 

@@ -15,14 +15,18 @@
 #include "../iprojectsceneconfiguration.h"
 
 namespace au::projectscene {
-class ProjectSceneActionsController : public IProjectSceneActionsController, public muse::actions::Actionable, public muse::async::Asyncable
+class ProjectSceneActionsController : public IProjectSceneActionsController, public muse::actions::Actionable,
+    public muse::async::Asyncable, public muse::Injectable
 {
-    INJECT_STATIC(muse::actions::IActionsDispatcher, dispatcher)
-    INJECT_STATIC(au::context::IGlobalContext, globalContext)
-    INJECT_STATIC(muse::IInteractive, interactive)
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::Inject<au::context::IGlobalContext> globalContext { this };
+    muse::Inject<muse::IInteractive> interactive { this };
     muse::GlobalInject<IProjectSceneConfiguration> configuration;
 
 public:
+    ProjectSceneActionsController(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
+
     void init();
 
     bool actionChecked(const muse::actions::ActionCode& actionCode) const override;

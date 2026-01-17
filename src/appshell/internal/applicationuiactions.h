@@ -45,7 +45,7 @@ class ApplicationUiActions : public muse::ui::IUiActionsModule, public muse::asy
     muse::Inject <record::IRecordController> recordController { this };
 
 public:
-    ApplicationUiActions(std::shared_ptr<ApplicationActionController> controller);
+    ApplicationUiActions(const muse::modularity::ContextPtr& ctx, std::shared_ptr<ApplicationActionController> controller);
 
     void init();
 

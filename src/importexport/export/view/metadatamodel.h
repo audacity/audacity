@@ -17,7 +17,7 @@
 #include "project/types/projectmeta.h"
 
 namespace au::importexport {
-class MetadataModel : public QAbstractListModel, public muse::async::Asyncable
+class MetadataModel : public QAbstractListModel, public muse::async::Asyncable, public muse::Injectable
 {
     Q_OBJECT
 
@@ -25,8 +25,8 @@ class MetadataModel : public QAbstractListModel, public muse::async::Asyncable
     muse::GlobalInject<importexport::IExportConfiguration> exportConfiguration;
     muse::GlobalInject<appshell::IAppShellConfiguration> configuration;
 
-    muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<project::IMetadata> metadata;
+    muse::Inject<muse::IInteractive> interactive{ this };
+    muse::Inject<project::IMetadata> metadata{ this };
 
 public:
     explicit MetadataModel(QObject* parent = nullptr);

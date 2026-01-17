@@ -12,11 +12,14 @@ namespace au::trackedit {
 class Au3TrackData;
 using Au3TrackDataPtr = std::shared_ptr<Au3TrackData>;
 
-class Au3TrackeditClipboard : public ITrackeditClipboard
+class Au3TrackeditClipboard : public ITrackeditClipboard, public muse::Injectable
 {
-    muse::Inject<au::context::IGlobalContext> globalContext;
+    muse::Inject<au::context::IGlobalContext> globalContext { this };
 
 public:
+    Au3TrackeditClipboard(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
+
     std::vector<ITrackDataPtr> trackDataCopy() const override;
     void clearTrackData() override;
     bool trackDataEmpty() const override;

@@ -24,11 +24,11 @@ class ItemMultiSelectionModel;
 class QItemSelectionModel;
 
 namespace au::projectscene {
-class PanelTracksListModel : public QAbstractListModel, public muse::async::Asyncable
+class PanelTracksListModel : public QAbstractListModel, public muse::async::Asyncable, public muse::Injectable
 {
     Q_OBJECT
 
-    muse::Inject<au::context::IGlobalContext> globalContext;
+    muse::Inject<au::context::IGlobalContext> globalContext{ this };
 
     Q_PROPERTY(bool isMovingUpAvailable READ isMovingUpAvailable NOTIFY isMovingUpAvailableChanged)
     Q_PROPERTY(bool isMovingDownAvailable READ isMovingDownAvailable NOTIFY isMovingDownAvailableChanged)
@@ -36,10 +36,10 @@ class PanelTracksListModel : public QAbstractListModel, public muse::async::Asyn
     Q_PROPERTY(bool isAddingAvailable READ isAddingAvailable NOTIFY isAddingAvailableChanged)
     Q_PROPERTY(bool isEmpty READ isEmpty NOTIFY isEmptyChanged)
 
-    muse::Inject<trackedit::ISelectionController> selectionController;
-    muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
-    muse::Inject<trackedit::IProjectHistory> projectHistory;
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
+    muse::Inject<trackedit::ISelectionController> selectionController{ this };
+    muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
+    muse::Inject<trackedit::IProjectHistory> projectHistory{ this };
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher{ this };
 
 public:
     explicit PanelTracksListModel(QObject* parent = nullptr);

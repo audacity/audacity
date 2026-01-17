@@ -36,7 +36,7 @@
 class QUrl;
 
 namespace au::appshell {
-class AboutModel : public QObject
+class AboutModel : public QObject, public muse::Injectable
 {
     Q_OBJECT
     QML_ELEMENT
@@ -44,7 +44,7 @@ class AboutModel : public QObject
     muse::GlobalInject<IAppShellConfiguration> configuration;
     muse::GlobalInject<muse::IGlobalConfiguration> globalConfiguration;
 
-    muse::Inject<muse::IApplication> application;
+    muse::Inject<muse::IApplication> application { this };
 
 //! TODO AU4
 //     muse::GlobalInject<update::IUpdateConfiguration> updateConfiguration;
