@@ -69,9 +69,9 @@ Item {
 
             iconCode: IconCode.SMALL_ARROW_LEFT
             font.pixelSize: 30
-            color: "black"
+            color: ui.theme.extra["black_color"]
             style: Text.Outline
-            styleColor: "white"
+            styleColor: ui.theme.extra["white_color"]
 
             Rectangle {
                 height: 12
@@ -214,9 +214,9 @@ Item {
 
             iconCode: IconCode.SMALL_ARROW_RIGHT
             font.pixelSize: 30
-            color: "black"
+            color: ui.theme.extra["black_color"]
             style: Text.Outline
-            styleColor: "white"
+            styleColor: ui.theme.extra["white_color"]
 
             Rectangle {
                 height: 12
@@ -361,7 +361,7 @@ Item {
             anchors.left: leftTimecode.left
             anchors.leftMargin: 4
 
-            color: "black"
+            color: ui.theme.extra["black_color"]
 
             StyledIconLabel {
                 id: leftClockIcon
@@ -370,7 +370,7 @@ Item {
 
                 iconCode: IconCode.CLOCK
                 font.pixelSize: 14
-                color: "white"
+                color: ui.theme.extra["white_color"]
 
                 Rectangle {
                     height: 12
@@ -522,7 +522,7 @@ Item {
             anchors.right: rightTimecode.right
             anchors.rightMargin: 4
 
-            color: "black"
+            color: ui.theme.extra["black_color"]
 
             StyledIconLabel {
                 id: rightClockIcon
@@ -530,7 +530,7 @@ Item {
                 anchors.centerIn: parent
                 iconCode: IconCode.CLOCK
                 font.pixelSize: 14
-                color: "white"
+                color: ui.theme.extra["white_color"]
 
                 Rectangle {
                     height: 12

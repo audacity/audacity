@@ -7,7 +7,7 @@ import "../../../dynamics/timeline"
 BuiltinEffectBase {
     property alias playState: playStateModel.playState
 
-    readonly property color gridColor: "#33D4D5D9"
+    readonly property color gridColor: ui.theme.extra["dynamics_effect_grid_color"]
 
     DynamicsPlayStateModel {
         id: playStateModel

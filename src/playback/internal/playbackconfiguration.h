@@ -16,8 +16,6 @@ class PlaybackConfiguration : public IPlaybackConfiguration
 public:
     void init();
 
-    muse::draw::Color playColor() const override;
-
     au::uicomponents::TimecodeFormatType playbackTimeItemFormat() const override;
     void setPlaybackTimeItemFormat(au::uicomponents::TimecodeFormatType format) override;
     muse::async::Notification playbackTimeItemFormatChanged() const override;

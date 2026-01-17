@@ -448,7 +448,7 @@ Item {
             when: root.isSelected && !root.headerHovered
             PropertyChanges {
                 target: prv
-                backgroundColor: ui.blendColors("#ffffff", root.labelColor, 0.4)
+                backgroundColor: ui.blendColors(ui.theme.extra["white_color"], root.labelColor, 0.4)
                 leftEarBackgroundColor: prv.backgroundColor
                 rightEarBackgroundColor: prv.backgroundColor
             }
@@ -458,7 +458,7 @@ Item {
             when: !root.isSelected && root.headerHovered
             PropertyChanges {
                 target: prv
-                backgroundColor: ui.blendColors("#ffffff", root.labelColor, 0.7)
+                backgroundColor: ui.blendColors(ui.theme.extra["white_color"], root.labelColor, 0.7)
                 leftEarBackgroundColor: prv.backgroundColor
                 rightEarBackgroundColor: prv.backgroundColor
             }
@@ -471,8 +471,8 @@ Item {
                   (root.isLeftLinked && root.isLinkedActive)
             PropertyChanges {
                 target: prv
-                backgroundColor: ui.blendColors("#ffffff", root.labelColor, 0.7)
-                leftEarBackgroundColor: ui.blendColors("#ffffff", root.labelColor, 0.3)
+                backgroundColor: ui.blendColors(ui.theme.extra["white_color"], root.labelColor, 0.7)
+                leftEarBackgroundColor: ui.blendColors(ui.theme.extra["white_color"], root.labelColor, 0.3)
                 rightEarBackgroundColor: prv.backgroundColor
             }
         },
@@ -483,9 +483,9 @@ Item {
                   !root.headerHovered
             PropertyChanges {
                 target: prv
-                backgroundColor: ui.blendColors("#ffffff", root.labelColor, 0.7)
+                backgroundColor: ui.blendColors(ui.theme.extra["white_color"], root.labelColor, 0.7)
                 leftEarBackgroundColor: prv.backgroundColor
-                rightEarBackgroundColor: ui.blendColors("#ffffff", root.labelColor, 0.3)
+                rightEarBackgroundColor: ui.blendColors(ui.theme.extra["white_color"], root.labelColor, 0.3)
             }
         },
         State {
@@ -493,7 +493,7 @@ Item {
             when: root.isSelected && root.headerHovered
             PropertyChanges {
                 target: prv
-                backgroundColor: ui.blendColors("#ffffff", root.labelColor, 0.2)
+                backgroundColor: ui.blendColors(ui.theme.extra["white_color"], root.labelColor, 0.2)
                 leftEarBackgroundColor: prv.backgroundColor
                 rightEarBackgroundColor: prv.backgroundColor
             }

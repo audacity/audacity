@@ -47,6 +47,17 @@ void ImportUtils::ShowMessageBox(const TranslatableString& message, const Transl
                             BasicUI::MessageBoxOptions().Caption(caption));
 }
 
+int ImportUtils::RequiredTrackCountFromChannels(int channels) noexcept
+{
+    if (channels <= 2) {
+        // mono and stereo channel config will fit a single track
+        return 1;
+    }
+
+    // split multi-channel into separated mono tracks
+    return channels;
+}
+
 void ImportUtils::FinalizeImport(TrackHolders& outTracks, const std::vector<WaveTrack::Holder>& importedStreams)
 {
     for (auto& stream : importedStreams) {

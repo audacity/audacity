@@ -12,8 +12,6 @@ namespace au::playback {
 class PlaybackConfigurationMock : public IPlaybackConfiguration
 {
 public:
-    MOCK_METHOD(muse::draw::Color, playColor, (), (const, override));
-
     MOCK_METHOD(au::uicomponents::TimecodeFormatType, playbackTimeItemFormat, (), (const, override));
     MOCK_METHOD(void, setPlaybackTimeItemFormat, (au::uicomponents::TimecodeFormatType format), (override));
     MOCK_METHOD(muse::async::Notification, playbackTimeItemFormatChanged, (), (const, override));

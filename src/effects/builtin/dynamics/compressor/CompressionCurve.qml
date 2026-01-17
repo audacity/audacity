@@ -48,7 +48,7 @@ Item {
         y: prv.labelHeight + prv.labelMargin
         width: 312
         height: availableHeight - prv.labelHeight - prv.labelMargin - prv.extraLabelSpace
-        color: DynamicsColors.backgroundColor
+        color: ui.theme.extra["dynamics_background_color"]
 
         Repeater {
             id: verticalLines
@@ -73,7 +73,7 @@ Item {
 
                     width: 1
                     height: background.height + prv.tickLength
-                    color: DynamicsColors.gridColor
+                    color: ui.theme.extra["dynamics_grid_color"]
                 }
             }
         }
@@ -99,7 +99,7 @@ Item {
 
                     width: background.width + prv.tickLength
                     height: 1
-                    color: DynamicsColors.gridColor
+                    color: ui.theme.extra["dynamics_grid_color"]
                 }
             }
         }

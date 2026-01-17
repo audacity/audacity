@@ -88,7 +88,7 @@ Item {
         anchors.bottomMargin: sep.thickness
 
         visible: root.isDataSelected
-        color: "#ABE7FF"
+        color: ui.theme.extra["selection_highlight_color"]
         opacity: 0.3
     }
 
@@ -99,7 +99,7 @@ Item {
         anchors.bottomMargin: sep.thickness
         anchors.leftMargin: (canvas && canvas.anchors && canvas.anchors.leftMargin) ? -canvas.anchors.leftMargin : 0
 
-        color: "#FFFFFF"
+        color: ui.theme.extra["white_color"]
         opacity: 0.10
 
         visible: root.isDataSelected || root.isTrackSelected
@@ -112,7 +112,7 @@ Item {
         anchors.bottomMargin: sep.thickness
         anchors.leftMargin: (canvas && canvas.anchors && canvas.anchors.leftMargin) ? -canvas.anchors.leftMargin : 0
 
-        color: "#FFFFFF"
+        color: ui.theme.extra["white_color"]
         opacity: 0.05
     }
 
@@ -163,7 +163,7 @@ Item {
 
         color: "transparent"
 
-        border.color: "#7EB1FF"
+        border.color: ui.theme.extra["focus_state_color"]
         border.width: 2
     }
 

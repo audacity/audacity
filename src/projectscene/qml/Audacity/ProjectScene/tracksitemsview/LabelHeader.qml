@@ -11,7 +11,7 @@ Rectangle {
     property bool isPoint: false
 
     property color backgroundColor: "transparent"
-    property color labelColor: "#000000"
+    property color labelColor: ui.theme.extra["black_color"]
 
     property int earWidth: 0
 

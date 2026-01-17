@@ -99,6 +99,30 @@ double OggImportFileHandle::GetDuration() const
     return (seconds > 0.0) ? seconds : 0.0;
 }
 
+int OggImportFileHandle::GetRequiredTrackCount() const
+{
+    // This function looks different because OGG is fundamentally different
+    // from the other formats. OGG is a container, not a codec.
+    // It can contain:
+    // * Multiple logical bitstreams
+    // * Each bitstream can have different channel counts
+    // * Streams can be enabled/disabled individually
+
+    if (!mVorbisFile) {
+        return 0;
+    }
+
+    size_t tracks = 0;
+    for (int i = 0; i < mVorbisFile->links; ++i) {
+        if (mStreamUsage[i] == 0) {
+            continue;
+        }
+        tracks += ImportUtils::RequiredTrackCountFromChannels(mVorbisFile->vi[i].channels);
+    }
+
+    return tracks;
+}
+
 auto OggImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 {
     // TODO:

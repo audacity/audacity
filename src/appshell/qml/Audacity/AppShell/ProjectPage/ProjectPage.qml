@@ -41,6 +41,10 @@ DockPage {
 
     property ProjectPageModel pageModel: ProjectPageModel {}
 
+    signal externalDropAreaEntered(var drop)
+    signal externalDropAreaExited()
+    signal externalDropAreaDropped(var drop)
+
     TrackNavigationModel {
         id: tracksNavModel
 
@@ -342,6 +346,22 @@ DockPage {
                         tracksNavModel.moveFocusTo(index)
                     }
 
+                    DropArea {
+                        anchors.fill: parent
+
+                        onEntered: function(drop) {
+                            root.externalDropAreaEntered(drop)
+                        }
+
+                        onExited: {
+                            root.externalDropAreaExited()
+                        }
+
+                        onDropped: function(drop) {
+                            root.externalDropAreaDropped(drop)
+                        }
+                    }
+
                     Connections {
                         target: tracksPanel
 
@@ -401,7 +421,25 @@ DockPage {
     ]
 
     central: TracksItemsView {
+        id: tracksItemsView
+
         navPanels: tracksNavModel.clipItemPanels
+
+        Connections {
+            target: root
+
+            function onExternalDropAreaEntered(drop) {
+                tracksItemsView.externalDropAreaEntered(drop)
+            }
+
+            function onExternalDropAreaExited() {
+                tracksItemsView.externalDropAreaExited()
+            }
+
+            function onExternalDropAreaDropped(drop) {
+                tracksItemsView.externalDropAreaDropped(drop)
+            }
+        }
     }
 
     statusBar: DockStatusBar {
