@@ -24,5 +24,6 @@ public:
     ITrackSpectrogramConfigurationPtr trackSpectrogramConfiguration(int trackId) const override;
     void copyConfiguration(const ISpectrogramConfiguration& source, ISpectrogramConfiguration& destination) const override;
     double yToFrequency(int trackId, double spectrogramY, double spectrogramHeight) const override;
+    double frequencyToY(int trackId, double frequency, double spectrogramHeight) const override;
 };
 }

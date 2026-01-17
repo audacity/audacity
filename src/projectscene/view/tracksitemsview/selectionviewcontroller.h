@@ -52,6 +52,8 @@ public:
     Q_INVOKABLE void onReleased(double x, double y);
 
     Q_INVOKABLE void onSelectionDraged(double x, double x2, bool completed);
+    Q_INVOKABLE void onSpectralSelectionDragged(int trackId, double spectrogramY1, double spectrogramY2, double spectrogramHeight, bool completed);
+    Q_INVOKABLE double frequencyToSpectrogramY(int trackId, double frequency, double spectrogramHeight) const;
 
     Q_INVOKABLE void selectTrackAudioData(double y);
     Q_INVOKABLE void selectItemData(const TrackItemKey& key);

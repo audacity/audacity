@@ -16,6 +16,7 @@ Rectangle {
     property alias clipKey: waveView.clipKey
     property alias clipTime: waveView.clipTime
     property alias title: titleLabel.text
+    property var selectionViewController: null
     required property bool isWaveformViewVisible
     required property bool isSpectrogramViewVisible
     property int pitch: 0
@@ -863,6 +864,9 @@ Rectangle {
                 selectionEndTime: root.context.selectionEndTime
                 selectionStartFrequency: root.selectionStartFrequency
                 selectionEndFrequency: root.selectionEndFrequency
+                selectionInProgress: root.selectionInProgress
+                context: root.context
+                selectionViewController: root.selectionViewController
 
                 ChannelSplitter {
                     id: spectrogramChannelSplitter

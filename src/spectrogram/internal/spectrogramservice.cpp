@@ -62,4 +62,30 @@ double SpectrogramService::yToFrequency(int trackId, double spectrogramY, double
                       minFreq,
                       maxFreq);
 }
+
+double SpectrogramService::frequencyToY(int trackId, double frequency, double spectrogramHeight) const
+{
+    const auto config = trackSpectrogramConfiguration(trackId);
+    if (!config) {
+        return -1.0;
+    }
+
+    const auto prj = globalContext()->currentProject();
+    IF_ASSERT_FAILED(prj) {
+        return -1.0;
+    }
+
+    au3::Au3WaveTrack* const waveTrack = au3::DomAccessor::findWaveTrack(*reinterpret_cast<::AudacityProject*>(prj->au3ProjectPtr()),
+                                                                         ::TrackId { trackId });
+    if (!waveTrack) {
+        return -1.0;
+    }
+
+    const auto [minFreq, maxFreq] = spectrogramBounds(*config, waveTrack->GetRate());
+    const NumberScale numberScale{ config->scale(), minFreq, maxFreq };
+    const auto normalizedPosition = numberScale.valueToPosition(frequency);
+    
+    // Convert to Y coordinate (inverted: 0 at top, height at bottom)
+    return spectrogramHeight * (1.0 - normalizedPosition);
+}
 }
