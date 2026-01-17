@@ -357,12 +357,6 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Copy label"),
              IconCode::Code::COPY
              ),
-    UiAction("label-open-in-editor",
-             au::context::UiCtxProjectOpened,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Open in label editor"),
-             TranslatableString("action", "Open in label editor")
-             ),
     UiAction("trim-audio-outside-selection",
              au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
@@ -388,6 +382,75 @@ UiActionList STATIC_ACTIONS = {
              au::context::CTX_ANY,
              TranslatableString("action", "Ungroup clips"),
              TranslatableString("action", "Ungroup clips")
+             ),
+
+    // track view navigation
+    UiAction("track-view-next-item",
+             au::context::UiCtxProjectFocused,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Next item"),
+             TranslatableString("action", "Next item")
+             ),
+    UiAction("track-view-prev-item",
+             au::context::UiCtxProjectFocused,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Previous item"),
+             TranslatableString("action", "Previous item")
+             ),
+    UiAction("track-view-item-move-left",
+             au::context::UiCtxProjectFocused,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Move item left"),
+             TranslatableString("action", "Move item left")
+             ),
+    UiAction("track-view-item-move-right",
+             au::context::UiCtxProjectFocused,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Move item right"),
+             TranslatableString("action", "Move item right")
+             ),
+    UiAction("track-view-item-extend-left",
+             au::context::UiCtxProjectFocused,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Extend item left"),
+             TranslatableString("action", "Extend item left")
+             ),
+    UiAction("track-view-item-extend-right",
+             au::context::UiCtxProjectFocused,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Extend item right"),
+             TranslatableString("action", "Extend item right")
+             ),
+    UiAction("track-view-item-reduce-left",
+             au::context::UiCtxProjectFocused,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Reduce item left"),
+             TranslatableString("action", "Reduce item left")
+             ),
+    UiAction("track-view-item-reduce-right",
+             au::context::UiCtxProjectFocused,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Reduce item right"),
+             TranslatableString("action", "Reduce item right")
+             ),
+    UiAction("track-view-item-move-up",
+             au::context::UiCtxProjectFocused,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Move item up"),
+             TranslatableString("action", "Move item up")
+             ),
+    UiAction("track-view-item-move-down",
+             au::context::UiCtxProjectFocused,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Move item down"),
+             TranslatableString("action", "Move item down")
+             ),
+
+    UiAction("track-view-item-context-menu",
+             au::context::UiCtxProjectFocused,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Open item's context menu"),
+             TranslatableString("action", "Open item's context menu")
              )
 };
 }

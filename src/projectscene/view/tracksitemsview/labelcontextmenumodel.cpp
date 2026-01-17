@@ -20,7 +20,6 @@ void LabelContextMenuModel::load()
     };
 
     MenuItemList items {
-        makeItemWithArg("label-open-in-editor"),
         makeItemWithArg("label-rename"),
         makeSeparator(),
         makeItemWithArg("action://trackedit/cut"),

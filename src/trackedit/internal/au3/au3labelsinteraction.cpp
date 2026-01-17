@@ -304,7 +304,7 @@ ITrackDataPtr Au3LabelsInteraction::copyLabel(const LabelKey& labelKey)
     return std::make_shared<Au3TrackData>(std::move(track));
 }
 
-bool Au3LabelsInteraction::moveLabels(secs_t timePositionOffset)
+bool Au3LabelsInteraction::moveLabels(const LabelKeyList& labelKeys, secs_t timePositionOffset)
 {
     if (muse::RealIsEqual(timePositionOffset, 0.0)) {
         return true;
@@ -322,13 +322,8 @@ bool Au3LabelsInteraction::moveLabels(secs_t timePositionOffset)
 
     const trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
 
-    auto selectedLabels = selectionController()->selectedLabels();
-    if (selectedLabels.empty()) {
-        return false;
-    }
-
     //! NOTE: check if offset is applicable to every label and recalculate if needed
-    std::optional<secs_t> leftmostLabelStartTime = getLeftmostLabelStartTime(selectionController()->selectedLabels());
+    std::optional<secs_t> leftmostLabelStartTime = getLeftmostLabelStartTime(labelKeys);
 
     if (leftmostLabelStartTime.has_value()) {
         if (muse::RealIsEqualOrLess(leftmostLabelStartTime.value() + timePositionOffset, 0.0)) {
@@ -336,13 +331,13 @@ bool Au3LabelsInteraction::moveLabels(secs_t timePositionOffset)
         }
     }
 
-    for (const auto& selectedLabel : selectedLabels) {
-        Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(selectedLabel.trackId));
+    for (const auto& labelKey : labelKeys) {
+        Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(labelKey.trackId));
         IF_ASSERT_FAILED(labelTrack) {
             continue;
         }
 
-        int labelIndex = labelTrack->GetLabelIndex(selectedLabel.itemId);
+        int labelIndex = labelTrack->GetLabelIndex(labelKey.itemId);
         IF_ASSERT_FAILED(labelIndex >= 0) {
             continue;
         }
@@ -366,7 +361,7 @@ bool Au3LabelsInteraction::moveLabels(secs_t timePositionOffset)
     return true;
 }
 
-muse::RetVal<LabelKeyList> Au3LabelsInteraction::moveLabels(const LabelKeyList& labelKeys, const TrackId& toTrackId)
+muse::RetVal<LabelKeyList> Au3LabelsInteraction::moveLabelsToTrack(const LabelKeyList& labelKeys, const TrackId& toTrackId)
 {
     muse::RetVal<LabelKeyList> result;
     result.ret = make_ret(Err::NoError);

@@ -18,6 +18,7 @@
 #include "trackedit/itrackeditinteraction.h"
 #include "trackedit/trackedittypes.h"
 #include "trackedit/iprojecthistory.h"
+#include "trackedit/internal/itracknavigationcontroller.h"
 
 #include "../timeline/timelinecontext.h"
 
@@ -40,6 +41,7 @@ protected:
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
     muse::Inject<trackedit::ISelectionController> selectionController;
     muse::Inject<trackedit::IProjectHistory> projectHistory;
+    muse::Inject<trackedit::ITrackNavigationController> trackNavigationController;
 
 public:
     explicit TrackItemsListModel(QObject* parent = nullptr);
@@ -64,6 +66,9 @@ public:
 
     Q_INVOKABLE QVariant findGuideline(const TrackItemKey& key, DirectionType::Direction direction) const;
 
+    Q_INVOKABLE void setFocusedItem(const TrackItemKey& key);
+    Q_INVOKABLE void resetFocusedItem();
+
     int rowCount(const QModelIndex& parent) const override;
     QHash<int, QByteArray> roleNames() const override;
     QVariant data(const QModelIndex& index, int role) const override;
@@ -72,6 +77,8 @@ signals:
     void trackIdChanged();
     void timelineContextChanged();
     void itemTitleEditRequested(const TrackItemKey& key);
+
+    void itemContextMenuOpenRequested(const TrackItemKey& key);
 
 protected slots:
     virtual void onTimelineZoomChanged();

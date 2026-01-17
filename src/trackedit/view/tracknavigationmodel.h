@@ -19,7 +19,7 @@ class TrackNavigationModel : public QObject, public muse::async::Asyncable
     muse::Inject<muse::ui::INavigationController> navigationController;
 
     Q_PROPERTY(QList<muse::ui::NavigationPanel*> trackItemPanels READ trackItemPanels NOTIFY trackItemPanelsChanged)
-    Q_PROPERTY(QList<muse::ui::NavigationPanel*> clipItemPanels READ clipItemPanels NOTIFY clipItemPanelsChanged)
+    Q_PROPERTY(QList<muse::ui::NavigationPanel*> viewItemPanels READ viewItemPanels NOTIFY viewItemPanelsChanged)
 
 public:
     explicit TrackNavigationModel(QObject* parent = nullptr);
@@ -29,11 +29,11 @@ public:
     Q_INVOKABLE void moveFocusTo(int index);
 
     QList<muse::ui::NavigationPanel*> trackItemPanels() const;
-    QList<muse::ui::NavigationPanel*> clipItemPanels() const;
+    QList<muse::ui::NavigationPanel*> viewItemPanels() const;
 
 signals:
     void trackItemPanelsChanged();
-    void clipItemPanelsChanged();
+    void viewItemPanelsChanged();
 
 private:
     void load();
@@ -51,6 +51,6 @@ private:
     muse::ui::INavigationSection* m_section = nullptr;
 
     QList<muse::ui::NavigationPanel*> m_trackItemPanels;
-    QList<muse::ui::NavigationPanel*> m_clipItemPanels;
+    QList<muse::ui::NavigationPanel*> m_viewItemPanels;
 };
 }

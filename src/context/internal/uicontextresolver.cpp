@@ -35,7 +35,7 @@ static const Uri PROJECT_PAGE_URI("audacity://project");
 //! but we don't have that yet, so binding it to
 //! area that's being focused when opening a project
 static const QString PROJECT_NAVIGATION_PANEL("MainToolBar");
-static const QString DEFAULT_NAVIGATION_PANEL("Main Panel");
+static const QString DEFAULT_NAVIGATION_SECTION("TrackViewSection");
 
 void UiContextResolver::init()
 {
@@ -111,9 +111,9 @@ muse::ui::UiContext UiContextResolver::resolveUiContext() const
             return context::UiCtxUnknown;
         }
 
-        INavigationPanel* activePanel = navigationController()->activePanel();
-        if (activePanel) {
-            if (activePanel->name() == DEFAULT_NAVIGATION_PANEL) {
+        INavigationSection* activeSection = navigationController()->activeSection();
+        if (activeSection) {
+            if (activeSection->name() == DEFAULT_NAVIGATION_SECTION) {
                 return context::UiCtxProjectFocused;
             } else {
                 return context::UiCtxProjectPlayback;

@@ -240,12 +240,15 @@ bool TrackeditOperationController::removeTracksData(const TrackIdList& tracksIds
     return false;
 }
 
-bool TrackeditOperationController::moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed,
-                                             bool& clipsMovedToOtherTrack)
+muse::RetVal<ClipKeyList> TrackeditOperationController::moveClips(const ClipKeyList& clipKeyList, secs_t timePositionOffset,
+                                                                  int trackPositionOffset,
+                                                                  bool completed,
+                                                                  bool& clipsMovedToOtherTrack)
 {
-    auto success = true;
-    if (!clipsInteraction()->moveClips(timePositionOffset, trackPositionOffset, completed, clipsMovedToOtherTrack)) {
-        success = false;
+    muse::RetVal<ClipKeyList> result = clipsInteraction()->moveClips(clipKeyList, timePositionOffset, trackPositionOffset, completed,
+                                                                     clipsMovedToOtherTrack);
+
+    if (!result.ret) {
         if (completed) {
             clipsMovedToOtherTrack = false;
             projectHistory()->rollbackState();
@@ -254,7 +257,7 @@ bool TrackeditOperationController::moveClips(secs_t timePositionOffset, int trac
     } else if (completed) {
         projectHistory()->pushHistoryState("Clip moved", "Move clip");
     }
-    return success;
+    return result;
 }
 
 void TrackeditOperationController::cancelItemDragEdit()
@@ -737,18 +740,19 @@ bool TrackeditOperationController::removeLabels(const LabelKeyList& labelKeys, b
     return false;
 }
 
-bool TrackeditOperationController::moveLabels(secs_t timePositionOffset, bool completed)
+bool TrackeditOperationController::moveLabels(const LabelKeyList& labelKeys, secs_t timePositionOffset, bool completed)
 {
-    bool success = labelsInteraction()->moveLabels(timePositionOffset);
+    bool success = labelsInteraction()->moveLabels(labelKeys, timePositionOffset);
     if (success && completed) {
         projectHistory()->pushHistoryState("Labels moved", "Move labels");
     }
     return success;
 }
 
-muse::RetVal<LabelKeyList> TrackeditOperationController::moveLabels(const LabelKeyList& labelKeys, const TrackId& toTrackId, bool completed)
+muse::RetVal<LabelKeyList> TrackeditOperationController::moveLabelsToTrack(const LabelKeyList& labelKeys, const TrackId& toTrackId,
+                                                                           bool completed)
 {
-    muse::RetVal<LabelKeyList> retVal = labelsInteraction()->moveLabels(labelKeys, toTrackId);
+    muse::RetVal<LabelKeyList> retVal = labelsInteraction()->moveLabelsToTrack(labelKeys, toTrackId);
     if (retVal.ret && completed) {
         projectHistory()->pushHistoryState("Labels moved", "Move labels");
     }

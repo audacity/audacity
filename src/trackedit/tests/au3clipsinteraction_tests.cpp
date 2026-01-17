@@ -446,16 +446,15 @@ TEST_F(Au3ClipsInteractionTests, MoveClipsRight)
     const double lastClipStart = lastClip->GetSequenceStartTime();
     const double lastClipEnd = lastClip->GetSequenceEndTime();
 
-    EXPECT_CALL(*m_selectionController,
-                selectedClipsInTrackOrder()).Times(1).WillOnce(Return(ClipKeyList {
-            ClipKey { trackId, firstClip->GetId() },
-            ClipKey { trackId, middleClip->GetId() },
-            ClipKey { trackId, lastClip->GetId() }
-        }));
+    ClipKeyList selectedClipsKeys = {
+        ClipKey { trackId, firstClip->GetId() },
+        ClipKey { trackId, middleClip->GetId() },
+        ClipKey { trackId, lastClip->GetId() }
+    };
 
     //! [WHEN] Move the clips right
     auto clipsMovedToOtherTracks = false;
-    m_clipsInteraction->moveClips(secondsToMove, 0, true, clipsMovedToOtherTracks);
+    m_clipsInteraction->moveClips(selectedClipsKeys, secondsToMove, 0, true, clipsMovedToOtherTracks);
 
     //! [THEN] All clips are moved
     const WaveTrack::IntervalConstHolder modifiedFirstClip = track->GetSortedClipByIndex(0);
@@ -487,22 +486,15 @@ TEST_F(Au3ClipsInteractionTests, MoveClipLeftWhenClipIsAtZero)
     const double lastClipStart = lastClip->GetSequenceStartTime();
     const double lastClipEnd = lastClip->GetSequenceEndTime();
 
-    ON_CALL(*m_selectionController,
-            selectedClipsInTrackOrder()).WillByDefault(Return(ClipKeyList {
-            ClipKey { trackId, firstClip->GetId() },
-            ClipKey { trackId, middleClip->GetId() },
-            ClipKey { trackId, lastClip->GetId() }
-        }));
-
-    ON_CALL(*m_selectionController, selectedClips()).WillByDefault(Return(ClipKeyList {
-            ClipKey { trackId, firstClip->GetId() },
-            ClipKey { trackId, middleClip->GetId() },
-            ClipKey { trackId, lastClip->GetId() }
-        }));
+    ClipKeyList selectedClipsKeys = {
+        ClipKey { trackId, firstClip->GetId() },
+        ClipKey { trackId, middleClip->GetId() },
+        ClipKey { trackId, lastClip->GetId() }
+    };
 
     //! [WHEN] Move the clips left
     auto clipsMovedToOtherTracks = false;
-    m_clipsInteraction->moveClips(-1.0, 0, true, clipsMovedToOtherTracks);
+    m_clipsInteraction->moveClips(selectedClipsKeys, -1.0, 0, true, clipsMovedToOtherTracks);
 
     //! [THEN] No clip is moved
     const WaveTrack::IntervalConstHolder modifiedFirstClip = track->GetSortedClipByIndex(0);

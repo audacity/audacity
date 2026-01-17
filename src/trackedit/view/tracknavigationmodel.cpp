@@ -52,11 +52,11 @@ void TrackNavigationModel::load()
             }
         }
 
-        for (int i = 0; i < m_clipItemPanels.size(); ++i) {
-            if (m_clipItemPanels.at(i)->name() == QString("Clip %1 Panel").arg(track.id)) {
-                muse::ui::NavigationPanel* clipPanel = m_clipItemPanels.takeAt(i);
-                clipPanel->setSection(nullptr);
-                clipPanel->deleteLater();
+        for (int i = 0; i < m_viewItemPanels.size(); ++i) {
+            if (m_viewItemPanels.at(i)->name() == QString("Track %1 Items Panel").arg(track.id)) {
+                muse::ui::NavigationPanel* itemsPanel = m_viewItemPanels.takeAt(i);
+                itemsPanel->setSection(nullptr);
+                itemsPanel->deleteLater();
                 break;
             }
         }
@@ -78,10 +78,10 @@ void TrackNavigationModel::load()
             }
         }
 
-        for (int i = 0; i < m_clipItemPanels.size(); ++i) {
-            if (m_clipItemPanels.at(i)->name() == QString("Clip %1 Panel").arg(track.id)) {
-                auto clipPanel = m_clipItemPanels.takeAt(i);
-                m_clipItemPanels.insert(pos, clipPanel);
+        for (int i = 0; i < m_viewItemPanels.size(); ++i) {
+            if (m_viewItemPanels.at(i)->name() == QString("Track %1 Items Panel").arg(track.id)) {
+                auto itemsPanel = m_viewItemPanels.takeAt(i);
+                m_viewItemPanels.insert(pos, itemsPanel);
                 break;
             }
         }
@@ -138,18 +138,18 @@ void TrackNavigationModel::addPanels(trackedit::TrackId trackId, int pos)
         }
     });
 
-    muse::ui::NavigationPanel* clipPanel = new muse::ui::NavigationPanel(this);
-    clipPanel->setName(QString("Clip %1 Panel").arg(trackId));
-    clipPanel->setIndex({ 2 * pos + 1, 0 });
-    clipPanel->setOrder(2 * pos + 1);
-    clipPanel->setSection(m_section);
-    clipPanel->componentComplete();
+    muse::ui::NavigationPanel* itemsPanel = new muse::ui::NavigationPanel(this);
+    itemsPanel->setName(QString("Track %1 Items Panel").arg(trackId));
+    itemsPanel->setIndex({ 2 * pos + 1, 0 });
+    itemsPanel->setOrder(2 * pos + 1);
+    itemsPanel->setSection(m_section);
+    itemsPanel->componentComplete();
 
     m_trackItemPanels.append(trackPanel);
-    m_clipItemPanels.append(clipPanel);
+    m_viewItemPanels.append(itemsPanel);
 
     emit trackItemPanelsChanged();
-    emit clipItemPanelsChanged();
+    emit viewItemPanelsChanged();
 }
 
 void TrackNavigationModel::resetPanelOrder()
@@ -158,12 +158,12 @@ void TrackNavigationModel::resetPanelOrder()
         m_trackItemPanels.at(i)->setOrder(2 * i);
     }
 
-    for (int i = 0; i < m_clipItemPanels.size(); ++i) {
-        m_clipItemPanels.at(i)->setOrder(2 * i + 1);
+    for (int i = 0; i < m_viewItemPanels.size(); ++i) {
+        m_viewItemPanels.at(i)->setOrder(2 * i + 1);
     }
 
     emit trackItemPanelsChanged();
-    emit clipItemPanelsChanged();
+    emit viewItemPanelsChanged();
 }
 
 void TrackNavigationModel::requestActivateByIndex(int index)
@@ -257,11 +257,11 @@ void TrackNavigationModel::clearPanels()
     }
     m_trackItemPanels.clear();
 
-    for (auto& panel : m_clipItemPanels) {
+    for (auto& panel : m_viewItemPanels) {
         panel->setSection(nullptr);
         panel->deleteLater();
     }
-    m_clipItemPanels.clear();
+    m_viewItemPanels.clear();
 }
 
 QList<muse::ui::NavigationPanel*> TrackNavigationModel::trackItemPanels() const
@@ -269,7 +269,7 @@ QList<muse::ui::NavigationPanel*> TrackNavigationModel::trackItemPanels() const
     return m_trackItemPanels;
 }
 
-QList<muse::ui::NavigationPanel*> TrackNavigationModel::clipItemPanels() const
+QList<muse::ui::NavigationPanel*> TrackNavigationModel::viewItemPanels() const
 {
-    return m_clipItemPanels;
+    return m_viewItemPanels;
 }

@@ -32,8 +32,8 @@ public:
     virtual ITrackDataPtr cutLabel(const LabelKey& labelKey) = 0;
     virtual ITrackDataPtr copyLabel(const LabelKey& labelKey) = 0;
 
-    virtual bool moveLabels(secs_t timePositionOffset) = 0;
-    virtual muse::RetVal<LabelKeyList> moveLabels(const LabelKeyList& labelKeys, const trackedit::TrackId& toTrackId) = 0;
+    virtual bool moveLabels(const LabelKeyList& labelKeys, secs_t timePositionOffset) = 0;
+    virtual muse::RetVal<LabelKeyList> moveLabelsToTrack(const LabelKeyList& labelKeys, const trackedit::TrackId& toTrackId) = 0;
 
     virtual bool stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed) = 0;
     virtual bool stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed) = 0;

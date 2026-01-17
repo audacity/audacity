@@ -286,6 +286,7 @@ TrackItemsContainer {
                                 clipIntersectsSelection: itemData.intersectsSelection
                                 isMultiSelectionActive: root.isMultiSelectionActive
                                 isDataSelected: root.isDataSelected
+                                clipFocused: itemData.focused
                                 moveActive: root.moveActive
                                 isAudible: root.isTrackAudible
                                 dbRange: root.dbRange
@@ -321,6 +322,10 @@ TrackItemsContainer {
                                     if (navigation.active) {
                                         root.context.insureVisible(root.context.positionToTime(itemData.x))
                                         root.insureVerticallyVisible(root.y, root.y + root.height)
+
+                                        Qt.callLater(clipsModel.setFocusedItem, itemData.key)
+                                    } else {
+                                        clipsModel.resetFocusedItem()
                                     }
                                 }
 
@@ -495,6 +500,11 @@ TrackItemsContainer {
                                     function onItemTitleEditRequested(key) {
                                         if (key === item.itemData.key) {
                                             item.editTitle()
+                                        }
+                                    }
+                                    function onItemContextMenuOpenRequested(key) {
+                                        if (key === item.itemData.key) {
+                                            item.openContextMenu()
                                         }
                                     }
                                 }
