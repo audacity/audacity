@@ -53,6 +53,82 @@ enum class EffectUIMode {
     FallbackUI = 1,   // Use Audacity's fallback UI
 };
 
+// Parameter types for auto-generated UI
+enum class ParameterType {
+    Unknown = -1,
+    Toggle,        // Boolean on/off
+    Dropdown,      // Enumerated list of choices
+    Slider,        // Continuous value with range
+    Numeric,       // Numeric input field
+    ReadOnly,      // Display-only (meter, status)
+};
+
+// Parameter metadata for auto-generated UI
+// Values are stored in "Full Range" (display) representation, e.g., -60 to +6 for dB.
+// Use getNormalizedValue() to convert to normalized [0,1] for plugin API calls.
+struct ParameterInfo {
+    muse::String id;              // Unique parameter identifier
+    muse::String name;            // Display name
+    muse::String description;     // Optional description
+    muse::String units;           // Unit string (dB, Hz, %, etc.)
+    muse::String group;           // Parameter group/category
+
+    ParameterType type = ParameterType::Unknown;
+
+    // Value range in "Full Range" (display) values, e.g., -60 to +6 for dB, 20 to 20000 for Hz
+    // For plugins that don't implement proper conversions, these will be 0.0 to 1.0.
+    double minValue = 0.0;
+    double maxValue = 0.0;
+    double defaultValue = 0.0;
+    double currentValue = 0.0;
+
+    // Formatted value string from plugin (e.g., "440 Hz", "3.5 dB", "-12.0 dB")
+    muse::String currentValueString;
+
+    // For discrete parameters
+    int stepCount = 0;            // 0=continuous, 1=toggle, >1=discrete steps
+    double stepSize = 0.0;        // Step increment for discrete values
+
+    // For dropdown/enumeration parameters
+    std::vector<muse::String> enumValues;  // List of choice labels
+    std::vector<double> enumIndices;       // Corresponding normalized values
+
+    // Flags
+    bool isReadOnly = false;
+    bool isHidden = false;
+    bool isLogarithmic = false;
+    bool isInteger = false;
+    bool canAutomate = true;
+
+    bool isValid() const { return !id.empty(); }
+
+    //! Convert current "Full Range" value to normalized [0,1] for plugin API calls
+    double getNormalizedValue() const
+    {
+        if (maxValue == minValue) {
+            return 0.0; // Avoid division by zero
+        }
+        return (currentValue - minValue) / (maxValue - minValue);
+    }
+
+    //! Convert a "Full Range" value to normalized [0,1]
+    double toNormalized(double fullRangeValue) const
+    {
+        if (maxValue == minValue) {
+            return 0.0;
+        }
+        return (fullRangeValue - minValue) / (maxValue - minValue);
+    }
+
+    //! Convert a normalized [0,1] value to "Full Range"
+    double toFullRange(double normalizedValue) const
+    {
+        return minValue + normalizedValue * (maxValue - minValue);
+    }
+};
+
+using ParameterInfoList = std::vector<ParameterInfo>;
+
 class EffectFamilies
 {
     Q_GADGET

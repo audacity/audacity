@@ -95,11 +95,6 @@ if (AU_MODULE_EFFECTS_LV2)
     set(AU3_LINK ${AU3_LINK} lv2sdk)
 endif()
 
-if(AU_MODULE_EFFECTS_VST)
-    set(AU3_INCLUDE ${AU3_INCLUDE} ${AU_MODULE_VST_VST3_SDK_PATH})
-    set(AU3_LINK ${AU3_LINK} vst_sdk_3)
-endif()
-
 # We currently have some AU3 modules that are still compiled as sources (not yet converted to libraries)
 set(MODULE_SRC ${MODULE_SRC}
     # AU3 modules that are still compiled as sources (not yet converted to libraries)

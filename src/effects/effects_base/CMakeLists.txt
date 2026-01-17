@@ -24,6 +24,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/ieffectpresetsscenario.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectviewlauncher.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectviewlaunchregister.h
+    ${CMAKE_CURRENT_LIST_DIR}/ieffectparametersprovider.h
+    ${CMAKE_CURRENT_LIST_DIR}/iparameterextractorregistry.h
+    # interfaces for optional services
+    ${CMAKE_CURRENT_LIST_DIR}/iparameterextractorservice.h
 
     # internal
     ${CMAKE_CURRENT_LIST_DIR}/internal/abstractaudiopluginmetareader.cpp
@@ -62,6 +66,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectpresetsscenario.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectviewlaunchregister.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectviewlaunchregister.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectparametersprovider.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectparametersprovider.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/parameterextractorregistry.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/parameterextractorregistry.h
 
     # view
     ${CMAKE_CURRENT_LIST_DIR}/view/abstracteffectviewmodel.cpp
@@ -75,6 +83,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/destructiveeffectviewerdialogmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/realtimeeffectviewerdialogmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/realtimeeffectviewerdialogmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/effectparameterslistmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/effectparameterslistmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/generatedeffectviewermodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/generatedeffectviewermodel.h
     )
 
 # AU3
