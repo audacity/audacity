@@ -12,7 +12,7 @@ import Audacity.AppShell
 BaseSection {
     id: root
 
-    title: qsTrc("appshell/preferences", "Move cursor along the timeline during playback")
+    title: qsTrc("preferences", "Move cursor along the timeline during playback")
     spacing: 16
 
     property var playbackPreferencesModel: null
@@ -20,7 +20,7 @@ BaseSection {
     navigation.direction: NavigationPanel.Both
 
     IncrementalPropertyControlWithTitle {
-        title: qsTrc("appshell/preferences", "Short skip")
+        title: qsTrc("preferences", "Short skip")
 
         currentValue: playbackPreferencesModel.shortSkip
 
@@ -40,7 +40,7 @@ BaseSection {
     }
 
     IncrementalPropertyControlWithTitle {
-        title: qsTrc("appshell/preferences", "Long skip")
+        title: qsTrc("preferences", "Long skip")
 
         currentValue: playbackPreferencesModel.longSkip
 

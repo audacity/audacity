@@ -31,7 +31,7 @@ import Audacity.AppShell
 BaseSection {
     id: root
 
-    title: qsTrc("appshell/preferences", "UI colors")
+    title: qsTrc("preferences", "UI colors")
     navigation.direction: NavigationPanel.Both
 
     signal colorChangeRequested(var newColor, var propertyType)
@@ -46,10 +46,10 @@ BaseSection {
 
         Repeater {
             model: [
-                { textRole: qsTrc("appshell/preferences", "Accent color:"), colorRole: ui.theme.accentColor, typeRole: AppearancePreferencesModel.AccentColor},
-                { textRole: qsTrc("appshell/preferences", "Text and icons:"), colorRole: ui.theme.fontPrimaryColor, typeRole: AppearancePreferencesModel.TextAndIconsColor},
-                { textRole: qsTrc("appshell/preferences", "Disabled text:"), colorRole: "#000000", typeRole: AppearancePreferencesModel.DisabledColor},
-                { textRole: qsTrc("appshell/preferences", "Border color:"), colorRole: ui.theme.strokeColor, typeRole: AppearancePreferencesModel.BorderColor}
+                { textRole: qsTrc("preferences", "Accent color:"), colorRole: ui.theme.accentColor, typeRole: AppearancePreferencesModel.AccentColor},
+                { textRole: qsTrc("preferences", "Text and icons:"), colorRole: ui.theme.fontPrimaryColor, typeRole: AppearancePreferencesModel.TextAndIconsColor},
+                { textRole: qsTrc("preferences", "Disabled text:"), colorRole: "#000000", typeRole: AppearancePreferencesModel.DisabledColor},
+                { textRole: qsTrc("preferences", "Border color:"), colorRole: ui.theme.strokeColor, typeRole: AppearancePreferencesModel.BorderColor}
             ]
 
             delegate: Row {

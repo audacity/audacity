@@ -12,7 +12,7 @@ import Audacity.Spectrogram 1.0
 SpectrogramBaseSection {
     id: root
 
-    title: qsTrc("appshell/preferences/spectrogram", "Scale")
+    title: qsTrc("preferences/spectrogram", "Scale")
 
     required property AbstractSpectrogramSettingsModel settingsModel
 
@@ -23,7 +23,7 @@ SpectrogramBaseSection {
         navigation.name: "ScaleComboBox"
         navigation.order: 0
 
-        title: qsTrc("spectrogram/preferences/settings", "Scale")
+        title: qsTrc("preferences/spectrogram/settings", "Scale")
         spacing: root.narrowSpacing
         columnWidth: root.mediumControlWidth
         model: settingsModel.scaleNames

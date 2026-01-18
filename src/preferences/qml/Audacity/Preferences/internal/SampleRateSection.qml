@@ -30,7 +30,7 @@ import Audacity.AppShell
 BaseSection {
     id: root
 
-    title: qsTrc("appshell/preferences", "Sample rate")
+    title: qsTrc("preferences", "Sample rate")
     spacing: 16
 
     property var apiModel: null
@@ -43,7 +43,7 @@ BaseSection {
         spacing: 8
 
         ComboBoxWithTitle {
-            title: qsTrc("appshell/preferences", "Default sample rate")
+            title: qsTrc("preferences", "Default sample rate")
             columnWidth: root.columnWidth
 
             enabled: !playbackState.isPlaying
@@ -84,7 +84,7 @@ BaseSection {
     }
 
     ComboBoxWithTitle {
-        title: qsTrc("appshell/preferences", "Default sample format")
+        title: qsTrc("preferences", "Default sample format")
         columnWidth: root.columnWidth
 
         enabled: !playbackState.isPlaying

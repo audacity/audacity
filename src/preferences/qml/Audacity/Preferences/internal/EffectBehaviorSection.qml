@@ -11,7 +11,7 @@ import Audacity.UiComponents 1.0
 BaseSection {
     id: root
 
-    title: qsTrc("appshell/preferences", "Effect behavior")
+    title: qsTrc("preferences", "Effect behavior")
 
     property var editPreferencesModel: null
 
@@ -26,7 +26,7 @@ BaseSection {
 
             width: parent.width
 
-            text: qsTrc("appshell/preferences", "Apply effects to all audio when no selection is made")
+            text: qsTrc("preferences", "Apply effects to all audio when no selection is made")
 
             checked: editPreferencesModel.applyEffectToAllAudio
 

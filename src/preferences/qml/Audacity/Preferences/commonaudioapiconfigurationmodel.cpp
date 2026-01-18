@@ -37,9 +37,9 @@ QString toSampleRateName(uint64_t sampleRate)
 QString channelName(int channelNumber)
 {
     return channelNumber == 1
-           ? muse::qtrc("appshell/preferences", "%1 (Mono) Recording channel").arg(channelNumber)
+           ? muse::qtrc("preferences", "%1 (Mono) Recording channel").arg(channelNumber)
            : channelNumber == 2
-           ? muse::qtrc("appshell/preferences", "%1 (Stereo) Recording channels").arg(channelNumber)
+           ? muse::qtrc("preferences", "%1 (Stereo) Recording channels").arg(channelNumber)
            : QString::number(channelNumber);
 }
 }

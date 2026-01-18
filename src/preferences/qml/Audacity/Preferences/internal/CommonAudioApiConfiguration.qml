@@ -44,7 +44,7 @@ Item {
         spacing: 16
 
         ComboBoxWithTitle {
-            title: qsTrc("appshell/preferences", "Playback device")
+            title: qsTrc("preferences", "Playback device")
             columnWidth: root.columnWidth
 
             currentIndex: indexOfValue(apiModel.currentOutputDeviceId)
@@ -60,7 +60,7 @@ Item {
         }
 
         ComboBoxWithTitle {
-            title: qsTrc("appshell/preferences", "Recording device")
+            title: qsTrc("preferences", "Recording device")
             columnWidth: root.columnWidth
 
             currentIndex: indexOfValue(apiModel.currentInputDeviceId)
@@ -76,7 +76,7 @@ Item {
         }
 
         ComboBoxWithTitle {
-            title: qsTrc("appshell/preferences", "Recording channels")
+            title: qsTrc("preferences", "Recording channels")
             columnWidth: root.columnWidth
 
             currentIndex: indexOfValue(apiModel.currentInputChannelsSelected)

@@ -14,12 +14,12 @@ SpectrogramBaseSection {
 
     property bool showTitle: true
 
-    title: root.showTitle ? qsTrc("appshell/preferences", "Selection") : ""
+    title: root.showTitle ? qsTrc("preferences", "Selection") : ""
 
     required property AbstractSpectrogramSettingsModel settingsModel
 
     CheckBox {
-        text: qsTrc("appshell/preferences/spectrogram", "Enable spectral selection")
+        text: qsTrc("preferences/spectrogram", "Enable spectral selection")
         checked: settingsModel.spectralSelectionEnabled
 
         onClicked: {

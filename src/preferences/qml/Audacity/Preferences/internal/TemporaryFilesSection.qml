@@ -43,7 +43,7 @@ BaseSection {
         spacing: 12
 
         StyledTextLabel {
-            text: qsTrc("appshell/preferences", "Temporary files location")
+            text: qsTrc("preferences", "Temporary files location")
         }
 
         Row {
@@ -54,7 +54,7 @@ BaseSection {
                 pathFieldWidth: root.columnWidth
                 spacing: root.columnSpacing
 
-                dialogTitle: qsTrc("appshell/preferences", "Choose temporary files location")
+                dialogTitle: qsTrc("preferences", "Choose temporary files location")
 
                 path: temporaryPath
                 dir: temporaryPath
@@ -70,7 +70,7 @@ BaseSection {
         }
 
         StyledTextLabel {
-            text: qsTrc("appshell/preferences", "Folder in which unsaved projects and other data are kept")
+            text: qsTrc("preferences", "Folder in which unsaved projects and other data are kept")
             color: ui.theme.fontSecondaryColor
         }
     }

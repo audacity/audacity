@@ -353,6 +353,20 @@ std::vector<wxString> FFmpegFunctions::GetSearchPaths(bool fromUserPathOnly)
     return paths;
 }
 
+wxString FFmpegFunctions::GetLoadedAVFormatPath() const
+{
+    if (!mPrivate || !mPrivate->AVFormatLibrary || !mPrivate->AVFormatLibrary->IsLoaded()) {
+        return {};
+    }
+
+    void* sym = mPrivate->AVFormatLibrary->GetSymbol("avformat_version");
+    if (!sym) {
+        return {};
+    }
+
+    return FileNames::PathFromAddr(sym);
+}
+
 std::unique_ptr<AVIOContextWrapper> FFmpegFunctions::CreateAVIOContext() const
 {
     return mPrivate->FormatFactories.CreateAVIOContextWrapper(*this);

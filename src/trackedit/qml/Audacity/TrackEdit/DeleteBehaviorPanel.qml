@@ -12,7 +12,7 @@ Column {
     id: root
 
     required property NavigationPanel navigation
-    readonly property string title: qsTrc("appshell/preferences", "Choose behavior when deleting a portion of a clip")
+    readonly property string title: qsTrc("trackedit/preferences", "Choose behavior when deleting a portion of a clip")
     required property color parentBackgroundColor
 
     property alias deleteBehavior: deleteBehaviorModel.deleteBehavior
