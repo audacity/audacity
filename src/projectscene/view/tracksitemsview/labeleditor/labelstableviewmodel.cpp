@@ -470,8 +470,8 @@ bool LabelsTableViewModel::moveLabel(int row, const Val& value)
 
     trackedit::LabelKey labelKey = verticalHeader->labelKey().key;
 
-    muse::RetVal<trackedit::LabelKeyList> retVal = trackeditInteraction()->moveLabels({ labelKey }, cell->currentTrackId(),
-                                                                                      true /* completed */);
+    muse::RetVal<trackedit::LabelKeyList> retVal = trackeditInteraction()->moveLabelsToTrack({ labelKey }, cell->currentTrackId(),
+                                                                                             true /* completed */);
     if (!retVal.ret) {
         return false;
     }

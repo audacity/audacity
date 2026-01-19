@@ -12,6 +12,7 @@ Item {
     property string title: ""
     property bool isSelected: false
     property bool selectionInProgress: false
+    property bool isFocused: false
     property bool enableCursorInteraction: !selectionInProgress
     property var labelKey: null
 
@@ -78,6 +79,16 @@ Item {
         header.edit()
     }
 
+    function openContextMenu() {
+        labelContextMenuLoader.show(Qt.point(width - 4, 4), labelContextMenuModel.items)
+    }
+
+    onIsFocusedChanged: function () {
+        if (root.isFocused && !navCtrl.active) {
+            navCtrl.requestActive()
+        }
+    }
+
     // Navigation support
     NavigationControl {
         id: navCtrl
@@ -99,7 +110,14 @@ Item {
     }
 
     NavigationFocusBorder {
+        anchors.leftMargin: -leftEar.width - border.width
+        anchors.rightMargin: -rightEar.width - border.width
+
         navigationCtrl: navCtrl
+
+        border.color: ui.theme.fontPrimaryColor
+        border.width: 2
+        radius: 4
     }
 
     // panel for navigating within the label's items

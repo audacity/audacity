@@ -139,6 +139,7 @@ TrackItemsContainer {
                                 labelColor: Boolean(itemData) ? itemData.color : null
                                 labelKey: Boolean(itemData) ? itemData.key : null
                                 isSelected: Boolean(itemData) && itemData.selected
+                                isFocused: Boolean(itemData) && itemData.focused
                                 enableCursorInteraction: true
 
                                 isLeftLinked: Boolean(itemData) && itemData.isLeftLinked
@@ -155,6 +156,10 @@ TrackItemsContainer {
                                     if (navigation.active) {
                                         root.context.insureVisible(root.context.positionToTime(itemData.x))
                                         root.insureVerticallyVisible(root.y, root.y + root.height)
+
+                                        Qt.callLater(labelsModel.setFocusedItem, itemData.key)
+                                    } else {
+                                        labelsModel.resetFocusedItem()
                                     }
                                 }
 
@@ -253,6 +258,11 @@ TrackItemsContainer {
                                     function onItemTitleEditRequested(key) {
                                         if (key === item.itemData.key) {
                                             item.editTitle()
+                                        }
+                                    }
+                                    function onItemContextMenuOpenRequested(key) {
+                                        if (key === item.itemData.key) {
+                                            item.openContextMenu()
                                         }
                                     }
                                 }
