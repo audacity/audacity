@@ -134,6 +134,8 @@ Rectangle {
             horizontalAlignment: Qt.AlignLeft
 
             color: ui.theme.extra["black_color"]
+
+            visible: header.width > 10
         }
 
         Rectangle {
