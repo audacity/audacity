@@ -14,6 +14,7 @@
 #include "projectscene/iprojectsceneconfiguration.h"
 #include "trackedit/iselectioncontroller.h"
 #include "trackedit/itrackeditinteraction.h"
+#include "trackedit/internal/itracknavigationcontroller.h"
 #include "playback/itrackplaybackcontrol.h"
 #include "playback/iplaybackconfiguration.h"
 
@@ -36,6 +37,7 @@ class ViewTracksListModel : public QAbstractListModel, public muse::async::Async
     muse::Inject<trackedit::ISelectionController> selectionController{ this };
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
     muse::Inject<playback::ITrackPlaybackControl> trackPlaybackControl{ this };
+    muse::Inject<trackedit::ITrackNavigationController> trackNavigationController{ this };
 public:
     explicit ViewTracksListModel(QObject* parent = nullptr);
 

@@ -17,6 +17,10 @@ class ITrackNavigationController : MODULE_EXPORT_INTERFACE
 public:
     virtual ~ITrackNavigationController() = default;
 
+    virtual TrackId focusedTrack() const = 0;
+    virtual void setFocusedTrack(TrackId trackId) = 0;
+    virtual muse::async::Channel<TrackId> focusedTrackChanged() const = 0;
+
     virtual void focusTrackByIndex(const muse::actions::ActionData& args) = 0;
     virtual void focusPrevTrack() = 0;
     virtual void focusNextTrack() = 0;

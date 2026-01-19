@@ -14,6 +14,7 @@
 #include "ieffectsconfiguration.h"
 #include "trackedit/iprojecthistory.h"
 #include "trackedit/iselectioncontroller.h"
+#include "trackedit/internal/itracknavigationcontroller.h"
 #include "au3wrap/au3types.h"
 
 #include <optional>
@@ -35,6 +36,7 @@ class EffectExecutionScenario : public IEffectExecutionScenario, public muse::In
     muse::Inject<trackedit::ISelectionController> selectionController{ this };
     muse::Inject<muse::IInteractive> interactive{ this };
     muse::Inject<trackedit::IProjectHistory> projectHistory{ this };
+    muse::Inject<trackedit::ITrackNavigationController> trackNavigationController { this };
 
 public:
     EffectExecutionScenario(const muse::modularity::ContextPtr& ctx)

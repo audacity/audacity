@@ -1744,7 +1744,7 @@ void TrackeditActionsController::setCustomTrackRate(const muse::actions::ActionD
         return;
     }
 
-    const TrackId focusedTrackId = selectionController()->focusedTrack();
+    const TrackId focusedTrackId = trackNavigationController()->focusedTrack();
     const std::optional<Track> focused = project->trackeditProject()->track(focusedTrackId);
     if (!focused) {
         return;
@@ -1891,7 +1891,7 @@ void TrackeditActionsController::resampleTracks(const muse::actions::ActionData&
         return;
     }
 
-    const TrackId focusedTrackId = selectionController()->focusedTrack();
+    const TrackId focusedTrackId = trackNavigationController()->focusedTrack();
     const std::optional<Track> focused = project->trackeditProject()->track(focusedTrackId);
     if (!focused) {
         return;

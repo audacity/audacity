@@ -37,6 +37,10 @@ public:
 
     void init();
 
+    TrackId focusedTrack() const override;
+    void setFocusedTrack(TrackId trackId) override;
+    muse::async::Channel<TrackId> focusedTrackChanged() const override;
+
     void focusTrackByIndex(const muse::actions::ActionData& args) override;
     void focusPrevTrack() override;
     void focusNextTrack() override;
@@ -80,8 +84,31 @@ private:
 
     Label focusedLabel() const;
 
-    TrackId resolvePreviousTrackId(const TrackId& trackId) const;
-    TrackId resolveNextTrackId(const TrackId& trackId) const;
+    TrackId resolvePreviousTrackIdForMove(const TrackId& trackId) const;
+    TrackId resolveNextTrackIdForMove(const TrackId& trackId) const;
+
+    template<typename T>
+    struct Val {
+        Val()
+            : val(T()) {}
+        Val(const T& val)
+            : val(val) {}
+        T val;
+        muse::async::Channel<T> changed;
+        muse::async::Channel<T> selected;
+
+        void set(const T& v, bool complete)
+        {
+            if (val == v) {
+                return;
+            }
+            val = v;
+            changed.send(v);
+            if (complete) {
+                selected.send(v);
+            }
+        }
+    };
 
     std::optional<TrackId> m_selectionStart;
     std::optional<TrackId> m_lastSelectedTrack;
@@ -90,5 +117,7 @@ private:
     muse::async::Channel<TrackItemKey> m_focusedItemChanged;
 
     muse::async::Channel<TrackItemKey> m_openContextMenuRequested;
+
+    Val<TrackId> m_focusedTrack = Val<TrackId> { TrackId(INVALID_TRACK) };
 };
 }
