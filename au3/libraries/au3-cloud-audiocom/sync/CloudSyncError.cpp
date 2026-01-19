@@ -26,7 +26,7 @@ DeduceUploadError(audacity::network_manager::IResponse& response)
     const auto error = response.getError();
 
     if (error == NetworkError::NoError) {
-        return {}
+        return {};
     }
 
     CloudSyncError result;

@@ -177,7 +177,7 @@ std::shared_ptr<RemoteProjectSnapshot> RemoteProjectSnapshot::Sync(
     }
 
     if (snapshot->mNothingToDo) {
-        return {}
+        return {};
     }
 
     snapshot->StartSync();
@@ -228,7 +228,7 @@ std::string RemoteProjectSnapshot::AttachOriginalDB()
         =CloudProjectsDatabase::Get().GetProjectData(mProjectInfo.Id);
 
     if (!projectData) {
-        return {}
+        return {};
     }
 
     auto db = CloudProjectsDatabase::Get().GetConnection();
@@ -239,7 +239,7 @@ std::string RemoteProjectSnapshot::AttachOriginalDB()
     auto result     = attachStmt->Prepare(projectData->LocalPath, dbName).Run();
 
     if (!result.IsOk()) {
-        return {}
+        return {};
     }
 
     mAttachedDBNames.push_back(dbName);
@@ -331,7 +331,7 @@ std::unordered_set<std::string> RemoteProjectSnapshot::CalculateKnownBlocks(
         + attachedDbName + ".sampleblocks)");
 
     if (!statement) {
-        return {}
+        return {};
     }
 
     auto result = statement->Prepare(mProjectInfo.Id).Run();

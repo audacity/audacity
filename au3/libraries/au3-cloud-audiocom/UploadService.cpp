@@ -637,7 +637,7 @@ wxString GetUploadTempPath()
 
     if (!FileNames::WritableLocationCheck(
             tempPath, XO("Cannot proceed to upload."))) {
-        return {}
+        return {};
     }
 
     return tempPath + "/cloud/";

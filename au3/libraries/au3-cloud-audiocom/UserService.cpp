@@ -258,7 +258,7 @@ wxString UserService::GetAvatarPath() const
     auto path = MakeAvatarPath();
 
     if (!wxFileExists(path)) {
-        return {}
+        return {};
     }
 
     return path;

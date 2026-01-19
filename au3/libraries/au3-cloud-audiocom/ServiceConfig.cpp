@@ -207,9 +207,9 @@ std::vector<std::string>
 ServiceConfig::GetPreferredAudioFormats(bool preferLossless) const
 {
     if (preferLossless) {
-        return { "audio/x-wavpack", "audio/x-flac", "audio/x-wav" }
+        return { "audio/x-wavpack", "audio/x-flac", "audio/x-wav" };
     } else {
-        return { "audio/mpeg" }
+        return { "audio/mpeg" };
     }
 }
 

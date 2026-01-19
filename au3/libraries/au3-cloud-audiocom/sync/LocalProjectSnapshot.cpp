@@ -222,7 +222,7 @@ LocalProjectSnapshot::Future LocalProjectSnapshot::Create(
     auto project = extension.GetProject().lock();
 
     if (!project) {
-        return {}
+        return {};
     }
 
     auto snapshot = std::make_shared<LocalProjectSnapshot>(

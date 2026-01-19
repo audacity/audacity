@@ -45,7 +45,7 @@ std::string GenerateTempPath(FileExtension extension)
 
     if (fileName.Exists()) {
         if (!wxRemoveFile(fileName.GetFullPath())) {
-            return {}
+            return {};
         }
     }
 
@@ -235,7 +235,8 @@ std::shared_ptr<MixdownUploader> MixdownUploader::Upload(
     const AudacityProject& project, MixdownProgressCallback progressCallback)
 {
     if (!progressCallback) {
-        progressCallback = [](auto...) { return true; } }
+        progressCallback = [](auto...) { return true; };
+    }
 
     if (!cancellationContext) {
         cancellationContext

@@ -98,13 +98,13 @@ public:
     {
         assert(block.Id >= 0);
         if (block.Id < 0) {
-            return { {}, false }
+            return { {}, false };
         }
 
         std::string hash;
 
         if (mCache.GetHash(block.Id, hash)) {
-            return { hash, false }
+            return { hash, false };
         }
 
         const auto sampleFormat = block.Format;
@@ -117,7 +117,7 @@ public:
             sampleData.data(), sampleFormat, 0, sampleCount, false);
 
         if (samplesRead != sampleCount) {
-            return { {}, false }
+            return { {}, false };
         }
 
         hash = crypto::sha256(sampleData);
@@ -204,7 +204,7 @@ bool BlockHasher::IsReady() const
 std::vector<std::pair<int64_t, std::string> > BlockHasher::TakeResult()
 {
     if (mWorkers == nullptr) {
-        return {}
+        return {};
     }
 
     return mWorkers->TakeResult();

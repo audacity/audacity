@@ -105,25 +105,25 @@ bool DeserializeArray(
 bool Deserialize(const rapidjson::Value& value, UploadUrls& urls)
 {
     if (!value.IsObject()) {
-        return {}
+        return {};
     }
 
     UploadUrls tempUrls;
 
     if (!Deserialize(value, "id", tempUrls.Id)) {
-        return {}
+        return {};
     }
 
     if (!Deserialize(value, "url", tempUrls.UploadUrl)) {
-        return {}
+        return {};
     }
 
     if (!Deserialize(value, "success", tempUrls.SuccessUrl)) {
-        return {}
+        return {};
     }
 
     if (!Deserialize(value, "fail", tempUrls.FailUrl)) {
-        return {}
+        return {};
     }
 
     urls = std::move(tempUrls);
@@ -134,29 +134,29 @@ bool Deserialize(const rapidjson::Value& value, UploadUrls& urls)
 bool Deserialize(const rapidjson::Value& value, VersionInfo& urls)
 {
     if (!value.IsObject()) {
-        return {}
+        return {};
     }
 
     VersionInfo tempVersion;
 
     if (!Deserialize(value, "id", tempVersion.Id)) {
-        return {}
+        return {};
     }
 
     if (!Deserialize(value, "name", tempVersion.Name)) {
-        return {}
+        return {};
     }
 
     if (!Deserialize(value, "snapshot_id", tempVersion.SnapshotId)) {
-        return {}
+        return {};
     }
 
     if (!Deserialize(value, "date_created", tempVersion.Created)) {
-        return {}
+        return {};
     }
 
     if (!Deserialize(value, "date_updated", tempVersion.Updated)) {
-        return {}
+        return {};
     }
 
     urls = std::move(tempVersion);
@@ -167,17 +167,17 @@ bool Deserialize(const rapidjson::Value& value, VersionInfo& urls)
 bool Deserialize(const rapidjson::Value& value, SnapshotBlockInfo& urls)
 {
     if (!value.IsObject()) {
-        return {}
+        return {};
     }
 
     SnapshotBlockInfo tempBlock;
 
     if (!Deserialize(value, "hash", tempBlock.Hash)) {
-        return {}
+        return {};
     }
 
     if (!Deserialize(value, "url", tempBlock.Url)) {
-        return {}
+        return {};
     }
 
     urls = std::move(tempBlock);
@@ -188,37 +188,37 @@ bool Deserialize(const rapidjson::Value& value, SnapshotBlockInfo& urls)
 bool Deserialize(const rapidjson::Value& value, SnapshotInfo& snapshotInfo)
 {
     if (!value.IsObject()) {
-        return {}
+        return {};
     }
 
     SnapshotInfo tempSnapshot;
 
     if (!Deserialize(value, "id", tempSnapshot.Id)) {
-        return {}
+        return {};
     }
 
     if (!Deserialize(value, "parent_id", tempSnapshot.ParentId)) {
-        return {}
+        return {};
     }
 
     if (!Deserialize(value, "date_created", tempSnapshot.Created)) {
-        return {}
+        return {};
     }
 
     if (!Deserialize(value, "date_updated", tempSnapshot.Updated)) {
-        return {}
+        return {};
     }
 
     if (!Deserialize(value, "date_synced", tempSnapshot.Synced)) {
-        return {}
+        return {};
     }
 
     if (!Deserialize(value, "file_size", tempSnapshot.FileSize)) {
-        return {}
+        return {};
     }
 
     if (!Deserialize(value, "blocks_size", tempSnapshot.BlocksSize)) {
-        return {}
+        return {};
     }
 
     Deserialize(value, "file_url", tempSnapshot.FileUrl);
@@ -232,41 +232,41 @@ bool Deserialize(const rapidjson::Value& value, SnapshotInfo& snapshotInfo)
 bool Deserialize(const rapidjson::Value& value, ProjectInfo& projectInfo)
 {
     if (!value.IsObject()) {
-        return {}
+        return {};
     }
 
     ProjectInfo tempProject;
 
     if (!Deserialize(value, "id", tempProject.Id)) {
-        return {}
+        return {};
     }
 
     if (!Deserialize(value, "username", tempProject.Username)) {
-        return {}
+        return {};
     }
 
     if (!Deserialize(value, "author_name", tempProject.AuthorName)) {
-        return {}
+        return {};
     }
 
     if (!Deserialize(value, "slug", tempProject.Slug)) {
-        return {}
+        return {};
     }
 
     if (!Deserialize(value, "name", tempProject.Name)) {
-        return {}
+        return {};
     }
 
     if (!Deserialize(value, "details", tempProject.Details)) {
-        return {}
+        return {};
     }
 
     if (!Deserialize(value, "date_created", tempProject.Created)) {
-        return {}
+        return {};
     }
 
     if (!Deserialize(value, "date_updated", tempProject.Updated)) {
-        return {}
+        return {};
     }
 
     Deserialize(value, "head", tempProject.HeadSnapshot);
@@ -281,21 +281,21 @@ bool Deserialize(const rapidjson::Value& value, ProjectInfo& projectInfo)
 bool Deserialize(const rapidjson::Value& value, ProjectSyncState& urls)
 {
     if (!value.IsObject()) {
-        return {}
+        return {};
     }
 
     ProjectSyncState tempState;
 
     if (!Deserialize(value, "mixdown", tempState.MixdownUrls)) {
-        return {}
+        return {};
     }
 
     if (!Deserialize(value, "file", tempState.FileUrls)) {
-        return {}
+        return {};
     }
 
     if (!DeserializeArray(value, "blocks", tempState.MissingBlocks)) {
-        return {}
+        return {};
     }
 
     urls = std::move(tempState);
@@ -306,21 +306,21 @@ bool Deserialize(const rapidjson::Value& value, ProjectSyncState& urls)
 bool Deserialize(const rapidjson::Value& value, CreateSnapshotResponse& reponse)
 {
     if (!value.IsObject()) {
-        return {}
+        return {};
     }
 
     CreateSnapshotResponse tempResponse;
 
     if (!Deserialize(value, "project", tempResponse.Project)) {
-        return {}
+        return {};
     }
 
     if (!Deserialize(value, "snapshot", tempResponse.Snapshot)) {
-        return {}
+        return {};
     }
 
     if (!Deserialize(value, "sync", tempResponse.SyncState)) {
-        return {}
+        return {};
     }
 
     reponse = std::move(tempResponse);
@@ -331,25 +331,25 @@ bool Deserialize(const rapidjson::Value& value, CreateSnapshotResponse& reponse)
 bool Deserialize(const rapidjson::Value& value, PaginationInfo& info)
 {
     if (!value.IsObject()) {
-        return {}
+        return {};
     }
 
     PaginationInfo tempInfo;
 
     if (!Deserialize(value, "total", tempInfo.TotalCount)) {
-        return {}
+        return {};
     }
 
     if (!Deserialize(value, "pages", tempInfo.PagesCount)) {
-        return {}
+        return {};
     }
 
     if (!Deserialize(value, "page", tempInfo.CurrentPage)) {
-        return {}
+        return {};
     }
 
     if (!Deserialize(value, "size", tempInfo.PageSize)) {
-        return {}
+        return {};
     }
 
     info = std::move(tempInfo);
@@ -361,17 +361,17 @@ bool Deserialize(
     const rapidjson::Value& value, PaginatedProjectsResponse& response)
 {
     if (!value.IsObject()) {
-        return {}
+        return {};
     }
 
     PaginatedProjectsResponse tempResponse;
 
     if (!DeserializeArray(value, "items", tempResponse.Items)) {
-        return {}
+        return {};
     }
 
     if (!Deserialize(value, "pagination", tempResponse.Pagination)) {
-        return {}
+        return {};
     }
 
     response = std::move(tempResponse);

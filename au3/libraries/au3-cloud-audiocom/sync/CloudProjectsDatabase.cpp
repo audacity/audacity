@@ -136,14 +136,14 @@ CloudProjectsDatabase::GetProjectData(std::string_view projectId) const
     auto connection = GetConnection();
 
     if (!connection) {
-        return {}
+        return {};
     }
 
     auto statement = connection->CreateStatement(
         "SELECT project_id, snapshot_id, saves_count, last_audio_preview_save, local_path, last_modified, last_read, sync_status, synced_dialog_shown FROM projects WHERE project_id = ? LIMIT 1");
 
     if (!statement) {
-        return {}
+        return {};
     }
 
     return DoGetProjectData(statement->Prepare(projectId).Run());
@@ -155,14 +155,14 @@ std::optional<DBProjectData> CloudProjectsDatabase::GetProjectDataForPath(
     auto connection = GetConnection();
 
     if (!connection) {
-        return {}
+        return {};
     }
 
     auto statement = connection->CreateStatement(
         "SELECT project_id, snapshot_id, saves_count, last_audio_preview_save, local_path, last_modified, last_read, sync_status, synced_dialog_shown FROM projects WHERE local_path = ? LIMIT 1");
 
     if (!statement) {
-        return {}
+        return {};
     }
 
     return DoGetProjectData(statement->Prepare(projectFilePath).Run());
@@ -272,14 +272,14 @@ std::optional<std::string> CloudProjectsDatabase::GetBlockHash(
     auto connection = GetConnection();
 
     if (!connection) {
-        return {}
+        return {};
     }
 
     auto statement = connection->CreateStatement(
         "SELECT hash FROM block_hashes WHERE project_id = ? AND block_id = ? LIMIT 1");
 
     if (!statement) {
-        return {}
+        return {};
     }
 
     auto result = statement->Prepare(projectId, blockId).Run();
@@ -288,7 +288,7 @@ std::optional<std::string> CloudProjectsDatabase::GetBlockHash(
         std::string hash;
 
         if (!row.Get(0, hash)) {
-            return {}
+            return {};
         }
 
         return hash;
@@ -433,14 +433,14 @@ CloudProjectsDatabase::GetProjectUserSlug(std::string_view projectId)
     auto connection = GetConnection();
 
     if (!connection) {
-        return {}
+        return {};
     }
 
     auto statement = connection->CreateStatement(
         "SELECT user_name FROM project_users WHERE project_id = ? LIMIT 1");
 
     if (!statement) {
-        return {}
+        return {};
     }
 
     auto result = statement->Prepare(projectId).Run();
@@ -449,7 +449,7 @@ CloudProjectsDatabase::GetProjectUserSlug(std::string_view projectId)
         std::string slug;
 
         if (!row.Get(0, slug)) {
-            return {}
+            return {};
         }
 
         return slug;
@@ -563,14 +563,14 @@ CloudProjectsDatabase::GetPendingSnapshots(std::string_view projectId) const
     auto connection = GetConnection();
 
     if (!connection) {
-        return {}
+        return {};
     }
 
     auto statement = connection->CreateStatement(
         "SELECT project_id, snapshot_id, confirm_url FROM pending_snapshots WHERE project_id = ?");
 
     if (!statement) {
-        return {}
+        return {};
     }
 
     auto result = statement->Prepare(projectId).Run();
@@ -581,15 +581,15 @@ CloudProjectsDatabase::GetPendingSnapshots(std::string_view projectId) const
         PendingSnapshotData data;
 
         if (!row.Get(0, data.ProjectId)) {
-            return {}
+            return {};
         }
 
         if (!row.Get(1, data.SnapshotId)) {
-            return {}
+            return {};
         }
 
         if (!row.Get(2, data.ConfirmUrl)) {
-            return {}
+            return {};
         }
 
         snapshots.push_back(data);
@@ -650,14 +650,14 @@ CloudProjectsDatabase::GetPendingProjectBlob(
     auto connection = GetConnection();
 
     if (!connection) {
-        return {}
+        return {};
     }
 
     auto statement = connection->CreateStatement(
         "SELECT project_id, snapshot_id, upload_url, confirm_url, fail_url, blob FROM pending_project_blobs WHERE project_id = ? AND snapshot_id = ?");
 
     if (!statement) {
-        return {}
+        return {};
     }
 
     auto result = statement->Prepare(projectId, snapshotId).Run();
@@ -666,30 +666,30 @@ CloudProjectsDatabase::GetPendingProjectBlob(
         PendingProjectBlobData data;
 
         if (!row.Get(0, data.ProjectId)) {
-            return {}
+            return {};
         }
 
         if (!row.Get(1, data.SnapshotId)) {
-            return {}
+            return {};
         }
 
         if (!row.Get(2, data.UploadUrl)) {
-            return {}
+            return {};
         }
 
         if (!row.Get(3, data.ConfirmUrl)) {
-            return {}
+            return {};
         }
 
         if (!row.Get(4, data.FailUrl)) {
-            return {}
+            return {};
         }
 
         const auto size = row.GetColumnBytes(6);
         data.BlobData.resize(size);
 
         if (size != row.ReadData(6, data.BlobData.data(), size)) {
-            return {}
+            return {};
         }
 
         return data;
@@ -777,14 +777,14 @@ CloudProjectsDatabase::GetPendingProjectBlocks(
     auto connection = GetConnection();
 
     if (!connection) {
-        return {}
+        return {};
     }
 
     auto statement = connection->CreateStatement(
         "SELECT project_id, snapshot_id, upload_url, confirm_url, fail_url, block_id, block_sample_format, block_hash FROM pending_project_blocks WHERE project_id = ? AND snapshot_id = ?");
 
     if (!statement) {
-        return {}
+        return {};
     }
 
     auto result = statement->Prepare(projectId, snapshotId).Run();
@@ -795,35 +795,35 @@ CloudProjectsDatabase::GetPendingProjectBlocks(
         PendingProjectBlockData data;
 
         if (!row.Get(0, data.ProjectId)) {
-            return {}
+            return {};
         }
 
         if (!row.Get(1, data.SnapshotId)) {
-            return {}
+            return {};
         }
 
         if (!row.Get(2, data.UploadUrl)) {
-            return {}
+            return {};
         }
 
         if (!row.Get(3, data.ConfirmUrl)) {
-            return {}
+            return {};
         }
 
         if (!row.Get(4, data.FailUrl)) {
-            return {}
+            return {};
         }
 
         if (!row.Get(5, data.BlockId)) {
-            return {}
+            return {};
         }
 
         if (!row.Get(6, data.BlockSampleFormat)) {
-            return {}
+            return {};
         }
 
         if (!row.Get(7, data.BlockHash)) {
-            return {}
+            return {};
         }
 
         blocks.push_back(data);
@@ -838,42 +838,42 @@ CloudProjectsDatabase::DoGetProjectData(const sqlite::Row& row) const
     DBProjectData data;
 
     if (!row.Get(0, data.ProjectId)) {
-        return {}
+        return {};
     }
 
     if (!row.Get(1, data.SnapshotId)) {
-        return {}
+        return {};
     }
 
     if (!row.Get(2, data.SavesCount)) {
-        return {}
+        return {};
     }
 
     if (!row.Get(3, data.LastAudioPreview)) {
-        return {}
+        return {};
     }
 
     if (!row.Get(4, data.LocalPath)) {
-        return {}
+        return {};
     }
 
     if (!row.Get(5, data.LastModified)) {
-        return {}
+        return {};
     }
 
     if (!row.Get(6, data.LastRead)) {
-        return {}
+        return {};
     }
 
     int status;
     if (!row.Get(7, status)) {
-        return {}
+        return {};
     }
 
     data.SyncStatus = static_cast<DBProjectData::SyncStatusType>(status);
 
     if (!row.Get(8, data.FirstSyncDialogShown)) {
-        return {}
+        return {};
     }
 
     return data;

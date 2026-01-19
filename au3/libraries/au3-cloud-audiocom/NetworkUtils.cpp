@@ -104,11 +104,11 @@ ResponseResult GetResponseResult(IResponse& response, bool readBody)
 
     if (resultCode == SyncResultCode::Success) {
         return { resultCode,
-                 readBody ? response.readAll<std::string>() : std::string {} }
+                 readBody ? response.readAll<std::string>() : std::string {} };
     }
 
     if (response.getError() != NetworkError::HTTPError) {
-        return { resultCode, response.getErrorString() }
+        return { resultCode, response.getErrorString() };
     }
 
     return { resultCode,

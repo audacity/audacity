@@ -37,7 +37,7 @@ Cookie Cookie::Parse(const std::string& cookieString)
     const size_t equalsPosition = cookieString.find('=');
 
     if (equalsPosition == std::string::npos) {
-        return { cookieString, std::string() }
+        return { cookieString, std::string() };
     }
 
     std::string name = cookieString.substr(0, equalsPosition);

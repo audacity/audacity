@@ -207,7 +207,7 @@ CurlHandleManager::Handle::Result CurlHandleManager::Handle::perform()
     CURLcode result = setOption(CURLOPT_HTTPHEADER, mHeaders.getCurlList());
 
     if (result != CURLE_OK) {
-        return { result, std::string() }
+        return { result, std::string() };
     }
 
     char currentError[CURL_ERROR_SIZE] = {};
