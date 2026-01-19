@@ -187,7 +187,7 @@ public:
 
     using CachingSettingBase< T >::CachingSettingBase;
 
-    using DefaultValueFunction = std::function< T () >;
+    using DefaultValueFunction = std::function< T() >;
 
     //! Usual overload supplies a default value
     Setting(const SettingBase& path, const T& defaultValue)
@@ -421,7 +421,7 @@ public:
                   long defaultSymbol = -1)
         : mKey{key.GetPath()}
         , mSymbols{std::move(symbols)}
-        , mpOtherSettings{&key}
+        , mpOtherSettings{& key}
         , mDefaultSymbol{defaultSymbol}
     {
         assert(defaultSymbol < static_cast<long>(mSymbols.size()));
@@ -704,5 +704,6 @@ struct PREFERENCES_API PreferenceInitializer {
 
 // Special extra-sticky settings
 extern PREFERENCES_API StickySetting<BoolSetting> DefaultUpdatesCheckingFlag;
-
+extern PREFERENCES_API StickySetting<BoolSetting> SendAnonymousUsageInfo;
+extern PREFERENCES_API StickySetting<StringSetting> InstanceId;
 #endif
