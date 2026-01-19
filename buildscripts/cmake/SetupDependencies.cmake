@@ -29,7 +29,8 @@ else()
     set(LIB_BUILD_TYPE "debug")
 endif()
 
-set(REMOTE_ROOT_URL https://raw.githubusercontent.com/musescore/muse_deps/main)
+#set(REMOTE_ROOT_URL https://raw.githubusercontent.com/musescore/muse_deps/main)
+set(REMOTE_ROOT_URL https://raw.githubusercontent.com/embarc-gabriel/muse_deps/add_openssl)
 set(LOCAL_ROOT_PATH ${FETCHCONTENT_BASE_DIR})
 
 function(populate name remote_suffix)
@@ -78,6 +79,8 @@ populate(flac "flac/1.4.2")
 populate(ogg "ogg/1.3.5")
 populate(opus "opus/1.5.2")
 populate(opusfile "opusfile/0.12")
+populate(openssl "openssl/1.1.1t")
+populate(libcurl "libcurl/8.17.0")
 
 if (NOT OS_IS_LIN)
     populate(zlib "zlib/1.2.13")

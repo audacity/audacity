@@ -80,9 +80,9 @@ set( LIBRARIES
 #   au3-note-track # not yet used in AU4
    au3-viewport
 #   au3-music-information-retrieval # not yet used in AU4
-#   au3-crypto # not yet used in AU4
+   au3-crypto
    au3-fft
-#   au3-concurrency # not yet used in AU4
+   au3-concurrency
    au3-sqlite-helpers
 #   au3-preference-pages # not yet used in AU4
    au3-dynamic-range-processor

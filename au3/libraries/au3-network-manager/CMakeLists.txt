@@ -43,7 +43,6 @@ set ( LIBRARIES
     au3-concurrency-interface
 PRIVATE
     CURL::libcurl
-    threadpool::threadpool
     au3-exceptions-interface
     wxBase
 )
