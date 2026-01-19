@@ -62,6 +62,7 @@ void TrackRulerModel::init()
         emit fullStepsChanged();
         emit smallStepsChanged();
     }, muse::async::Asyncable::Mode::SetReplace);
+    setInitialized(true);
 }
 
 std::vector<QVariantMap> TrackRulerModel::fullSteps() const
@@ -395,4 +396,18 @@ void TrackRulerModel::setTrackId(const trackedit::TrackId& newTrackId)
 au::trackedit::TrackId TrackRulerModel::trackId() const
 {
     return m_trackId;
+}
+
+bool TrackRulerModel::initialized() const
+{
+    return m_initialized;
+}
+
+void TrackRulerModel::setInitialized(bool newInitialized)
+{
+    if (m_initialized == newInitialized) {
+        return;
+    }
+    m_initialized = newInitialized;
+    emit initializedChanged();
 }

@@ -29,6 +29,8 @@ class TrackRulerModel : public QObject, public muse::async::Asyncable, public mu
     Q_PROPERTY(std::vector<QVariantMap> fullSteps READ fullSteps NOTIFY fullStepsChanged)
     Q_PROPERTY(std::vector<QVariantMap> smallSteps READ smallSteps NOTIFY smallStepsChanged)
 
+    Q_PROPERTY(bool initialized READ initialized WRITE setInitialized NOTIFY initializedChanged FINAL)
+
     Q_PROPERTY(bool isStereo READ isStereo WRITE setIsStereo NOTIFY isStereoChanged FINAL)
     Q_PROPERTY(bool isCollapsed READ isCollapsed WRITE setIsCollapsed NOTIFY isCollapsedChanged FINAL)
     Q_PROPERTY(int height READ height WRITE setHeight NOTIFY heightChanged FINAL)
@@ -90,6 +92,9 @@ public:
 
     bool isHalfWave() const;
 
+    bool initialized() const;
+    void setInitialized(bool newInitialized);
+
 signals:
     void fullStepsChanged();
     void smallStepsChanged();
@@ -109,6 +114,8 @@ signals:
     void trackIdChanged();
 
     void isHalfWaveChanged();
+    void initializedChanged();
+
 private:
     IProjectViewStatePtr viewState() const;
 
@@ -122,5 +129,6 @@ private:
     bool m_isCollapsed = false;
     int m_height = 0;
     double m_channelHeightRatio = 0.5;
+    bool m_initialized = false;
 };
 }

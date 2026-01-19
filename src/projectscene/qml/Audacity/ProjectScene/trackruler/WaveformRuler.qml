@@ -16,15 +16,14 @@ Item {
     TrackRulerModel {
         id: rulerModel
 
-        height: root.height
+        height: initialized ? root.height : 0
 
-        trackId: model.trackId
-        isStereo: model.isStereo
+        trackId: initialized ? model.trackId : -1
+        isStereo: initialized ? model.isStereo : false
 
-        isCollapsed: root.isCollapsed
-        channelHeightRatio: root.channelHeightRatio
+        isCollapsed: initialized ? root.isCollapsed : false
+        channelHeightRatio: initialized ? root.channelHeightRatio : 1.0
     }
-
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.RightButton | Qt.LeftButton
