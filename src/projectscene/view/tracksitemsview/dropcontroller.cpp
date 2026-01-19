@@ -36,6 +36,9 @@ void DropController::probeAudioFilesLength(const QStringList& fileUrls)
 
     for (const auto& path : localPaths) {
         au::importexport::FileInfo fileInfo = importer()->fileInfo(path);
+        if (fileInfo.isEmpty()) {
+            continue;
+        }
         m_lastDraggedFilesInfo.push_back(std::move(fileInfo));
     }
 }
