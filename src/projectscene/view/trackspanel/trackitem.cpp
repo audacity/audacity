@@ -50,7 +50,7 @@ void TrackItem::init(const trackedit::Track& track)
 
     m_icon = iconFromTrackType(track.type);
 
-    m_isFocused = selectionController()->focusedTrack() == m_trackId;
+    m_isFocused = trackNavigationController()->focusedTrack() == m_trackId;
     emit isFocusedChanged();
 }
 

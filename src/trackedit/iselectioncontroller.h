@@ -110,15 +110,6 @@ public:
 
     virtual void resetTimeSelection() = 0;
 
-    // track focus state
-    virtual TrackId focusedTrack() const = 0;
-    virtual void setFocusedTrack(TrackId trackId) = 0;
-    virtual muse::async::Channel<trackedit::TrackId> focusedTrackChanged() const = 0;
-
-    virtual void focusPreviousTrack() = 0;
-    virtual void focusNextTrack() = 0;
-    virtual void focusTrackByIndex(int index) = 0;
-
     virtual int trackDistance(const TrackId previous, const TrackId next) const = 0;
     virtual TrackIdList orderedTrackList() const = 0;
 };

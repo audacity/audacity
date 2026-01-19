@@ -17,6 +17,7 @@
 #include "iselectioncontroller.h"
 #include "itrackeditconfiguration.h"
 #include "itrackeditinteraction.h"
+#include "internal/itracknavigationcontroller.h"
 
 #include "deletebehavioronboardingscenario.h"
 
@@ -36,6 +37,7 @@ class TrackeditActionsController : public ITrackeditActionsController, public mu
     muse::Inject<trackedit::IProjectHistory> projectHistory { this };
     muse::Inject<trackedit::ISelectionController> selectionController { this };
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction { this };
+    muse::Inject<trackedit::ITrackNavigationController> trackNavigationController { this };
 
 public:
     TrackeditActionsController(const muse::modularity::ContextPtr& ctx)

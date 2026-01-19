@@ -6,6 +6,7 @@
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "../../iselectioncontroller.h"
+#include "../itracknavigationcontroller.h"
 
 #include "au3wrap/au3types.h"
 
@@ -16,6 +17,7 @@ class Au3LabelsInteraction : public ILabelsInteraction, public muse::Injectable
 {
     muse::Inject<context::IGlobalContext> globalContext{ this };
     muse::Inject<ISelectionController> selectionController{ this };
+    muse::Inject<ITrackNavigationController> trackNavigationController{ this };
 
 public:
     Au3LabelsInteraction(const muse::modularity::ContextPtr& ctx);

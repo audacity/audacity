@@ -60,7 +60,7 @@ Au3AudioInput::Au3AudioInput(const muse::modularity::ContextPtr& ctx)
             updateAudioEngineMonitoring();
         }, muse::async::Asyncable::Mode::SetReplace);
 
-        selectionController()->focusedTrackChanged().onReceive(this, [this](const trackedit::TrackId&) {
+        trackNavigationController()->focusedTrackChanged().onReceive(this, [this](const trackedit::TrackId&) {
             const int focusedTrackChannels = getFocusedTrackChannels();
             if (focusedTrackChannels != m_focusedTrackChannels) {
                 m_focusedTrackChannels = focusedTrackChannels;
@@ -192,7 +192,7 @@ int Au3AudioInput::getFocusedTrackChannels() const
         return 0;
     }
 
-    const auto trackId = selectionController()->focusedTrack();
+    const auto trackId = trackNavigationController()->focusedTrack();
 
     std::optional<au::trackedit::Track> track = prj->track(trackId);
     if (!track) {

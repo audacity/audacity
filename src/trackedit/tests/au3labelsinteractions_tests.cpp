@@ -7,6 +7,7 @@
 
 #include "au3interactiontestbase.h"
 #include "mocks/selectioncontrollermock.h"
+#include "mocks/tracknavigationcontrollermock.h"
 
 #include "au3-label-track/LabelTrack.h"
 #include "au3wrap/internal/domaccessor.h"
@@ -35,10 +36,12 @@ public:
 
         m_globalContext = std::make_shared<NiceMock<context::GlobalContextMock> >();
         m_selectionController = std::make_shared<NiceMock<SelectionControllerMock> >();
+        m_trackNavigationController = std::make_shared<NiceMock<TrackNavigationControllerMock> >();
         m_playbackState = std::make_shared<NiceMock<context::PlaybackStateMock> >();
 
         m_labelsInteraction->globalContext.set(m_globalContext);
         m_labelsInteraction->selectionController.set(m_selectionController);
+        m_labelsInteraction->trackNavigationController.set(m_trackNavigationController);
 
         m_trackEditProject = std::make_shared<NiceMock<TrackeditProjectMock> >();
         ON_CALL(*m_globalContext, currentTrackeditProject())
@@ -53,11 +56,15 @@ public:
         ON_CALL(*m_currentProject, trackeditProject())
         .WillByDefault(Return(m_trackEditProject));
 
+        ON_CALL(*m_trackNavigationController, focusedTrack())
+        .WillByDefault(Return(INVALID_TRACK));
+
         initTestProject();
     }
 
     std::shared_ptr<Au3LabelsInteraction> m_labelsInteraction;
     std::shared_ptr<SelectionControllerMock> m_selectionController;
+    std::shared_ptr<TrackNavigationControllerMock> m_trackNavigationController;
 };
 
 TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionCreatesLabelTrackWhenNoneExists)
@@ -73,7 +80,7 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionCreatesLabelTrackWhenNoneE
     .WillByDefault(Return(selectionStart));
     ON_CALL(*m_selectionController, dataSelectedEndTime())
     .WillByDefault(Return(selectionEnd));
-    ON_CALL(*m_selectionController, focusedTrack())
+    ON_CALL(*m_trackNavigationController, focusedTrack())
     .WillByDefault(Return(INVALID_TRACK));
 
     //! [EXPECT] The project is notified about a new track and a new label being added
@@ -117,7 +124,7 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionUsesExistingLabelTrack)
     .WillByDefault(Return(selectionStart));
     ON_CALL(*m_selectionController, dataSelectedEndTime())
     .WillByDefault(Return(selectionEnd));
-    ON_CALL(*m_selectionController, focusedTrack())
+    ON_CALL(*m_trackNavigationController, focusedTrack())
     .WillByDefault(Return(INVALID_TRACK));
 
     //! [EXPECT] The project is notified about a new label being added but NOT about a new track
@@ -156,7 +163,7 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionUsesFocusedLabelTrack)
 
     //! [GIVEN] The second label track is focused
     const TrackId focusedTrackId = secondLabelTrack->GetId();
-    ON_CALL(*m_selectionController, focusedTrack())
+    ON_CALL(*m_trackNavigationController, focusedTrack())
     .WillByDefault(Return(focusedTrackId));
 
     //! [GIVEN] There is a selection from 0.5 to 1.5 seconds
@@ -201,7 +208,7 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionWithZeroLengthSelection)
     .WillByDefault(Return(cursorPosition));
     ON_CALL(*m_selectionController, dataSelectedEndTime())
     .WillByDefault(Return(cursorPosition));
-    ON_CALL(*m_selectionController, focusedTrack())
+    ON_CALL(*m_trackNavigationController, focusedTrack())
     .WillByDefault(Return(INVALID_TRACK));
 
     //! [EXPECT] The project is notified about a new track and a new label being added
@@ -236,7 +243,7 @@ TEST_F(Au3LabelsInteractionsTests, AddMultipleLabelsToSameLabelTrack)
     const Au3TrackList& projectTracks = Au3TrackList::Get(projectRef());
     ASSERT_EQ(projectTracks.Size(), 0) << "Precondition failed: The project should be empty";
 
-    ON_CALL(*m_selectionController, focusedTrack())
+    ON_CALL(*m_trackNavigationController, focusedTrack())
     .WillByDefault(Return(INVALID_TRACK));
 
     //! [EXPECT] Notifications for track and labels
@@ -303,7 +310,7 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionWithAudioTrackPresent)
     .WillByDefault(Return(selectionStart));
     ON_CALL(*m_selectionController, dataSelectedEndTime())
     .WillByDefault(Return(selectionEnd));
-    ON_CALL(*m_selectionController, focusedTrack())
+    ON_CALL(*m_trackNavigationController, focusedTrack())
     .WillByDefault(Return(INVALID_TRACK));
 
     //! [EXPECT] The project is notified about a new label track and a new label being added
@@ -352,7 +359,7 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionWhenPlaybackIsActive)
     .WillByDefault(Return(selectionStart));
     ON_CALL(*m_selectionController, dataSelectedEndTime())
     .WillByDefault(Return(selectionEnd));
-    ON_CALL(*m_selectionController, focusedTrack())
+    ON_CALL(*m_trackNavigationController, focusedTrack())
     .WillByDefault(Return(INVALID_TRACK));
 
     //! [GIVEN] Playback is active at position 2.5 seconds
@@ -403,7 +410,7 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionWhenRecordingIsActive)
     .WillByDefault(Return(selectionStart));
     ON_CALL(*m_selectionController, dataSelectedEndTime())
     .WillByDefault(Return(selectionEnd));
-    ON_CALL(*m_selectionController, focusedTrack())
+    ON_CALL(*m_trackNavigationController, focusedTrack())
     .WillByDefault(Return(INVALID_TRACK));
 
     //! [GIVEN] Playback is not active

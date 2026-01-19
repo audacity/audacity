@@ -934,79 +934,6 @@ void Au3SelectionController::resetTimeSelection()
     resetSelectedLabels();
 }
 
-au::trackedit::TrackId Au3SelectionController::focusedTrack() const
-{
-    return m_focusedTrack.val;
-}
-
-void Au3SelectionController::setFocusedTrack(TrackId trackId)
-{
-    au3::DomAccessor::clearAllTrackFocus(projectRef());
-    au3::DomAccessor::setTrackFocused(projectRef(), trackId, true);
-
-    m_focusedTrack.set(trackId, true);
-}
-
-muse::async::Channel<au::trackedit::TrackId> Au3SelectionController::focusedTrackChanged() const
-{
-    return m_focusedTrack.changed;
-}
-
-void Au3SelectionController::focusPreviousTrack()
-{
-    const au::trackedit::TrackId currentFocusedTrack = focusedTrack();
-
-    Au3Track* au3FocusedTrack = au3::DomAccessor::findTrack(projectRef(), ::TrackId(currentFocusedTrack));
-    if (!au3FocusedTrack) {
-        return;
-    }
-
-    auto& tracks = Au3TrackList::Get(projectRef());
-    auto currentIter = tracks.Find(au3FocusedTrack);
-    if (currentIter != tracks.begin()) {
-        --currentIter;
-        if (*currentIter) {
-            const TrackId trackId = TrackId((*currentIter)->GetId());
-            setFocusedTrack(trackId);
-        }
-    }
-}
-
-void Au3SelectionController::focusNextTrack()
-{
-    const au::trackedit::TrackId currentFocusedTrack = focusedTrack();
-
-    Au3Track* au3FocusedTrack = au3::DomAccessor::findTrack(projectRef(), ::TrackId(currentFocusedTrack));
-    if (!au3FocusedTrack) {
-        return;
-    }
-
-    auto& tracks = Au3TrackList::Get(projectRef());
-    auto currentIter = tracks.Find(au3FocusedTrack);
-    if (currentIter != tracks.end()) {
-        ++currentIter;
-        if (currentIter != tracks.end() && *currentIter) {
-            const TrackId trackId = TrackId((*currentIter)->GetId());
-            setFocusedTrack(trackId);
-        }
-    }
-}
-
-void Au3SelectionController::focusTrackByIndex(int index)
-{
-    if (index < 0) {
-        return;
-    }
-
-    auto& tracks = Au3TrackList::Get(projectRef());
-    auto iter = tracks.begin();
-    std::advance(iter, index);
-    if (iter != tracks.end() && *iter) {
-        const TrackId trackId = TrackId((*iter)->GetId());
-        setFocusedTrack(trackId);
-    }
-}
-
 muse::async::Channel<au::trackedit::secs_t> Au3SelectionController::dataSelectedEndTimeChanged() const
 {
     return m_selectedEndTime.changed;
@@ -1086,10 +1013,6 @@ void Au3SelectionController::updateSelectionController()
     }
 
     m_selectedTracks.set(selectedTracks, true);
-
-    if (!selectedTracks.empty()) {
-        setFocusedTrack(selectedTracks.front());
-    }
 }
 
 int Au3SelectionController::trackDistance(const TrackId previous, const TrackId next) const

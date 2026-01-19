@@ -83,7 +83,7 @@ void ViewTracksListModel::load()
         emit dataChanged(beginIndex, lastIndex, { IsDataSelectedRole });
     }, muse::async::Asyncable::Mode::SetReplace);
 
-    selectionController()->focusedTrackChanged().onReceive(this, [this](const trackedit::TrackId& trackId) {
+    trackNavigationController()->focusedTrackChanged().onReceive(this, [this](const trackedit::TrackId& trackId) {
         Q_UNUSED(trackId);
         if (m_trackList.empty()) {
             return;
@@ -284,7 +284,7 @@ QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
         return muse::contains(selectionController()->selectedTracks(), track.id);
     }
     case IsTrackFocusedRole: {
-        return selectionController()->focusedTrack() == track.id;
+        return trackNavigationController()->focusedTrack() == track.id;
     }
     case IsMultiSelectionActiveRole: {
         return selectionController()->selectedClips().size() > 1;
