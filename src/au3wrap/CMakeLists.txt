@@ -86,6 +86,10 @@ if(AU_MODULE_EFFECTS_VST)
     add_subdirectory(vst3)
 endif()
 
+# Set _OPT prefix for AU3 build system compatibility
+# AU3 CMake files use ${_OPT}has_* variables, AU4 uses audacity_has_* variables
+set(_OPT "audacity_")
+
 # Include AU3 libraries - this will add all library subdirectories
 # and set AU3_LIBRARIES_LIST in this scope
 add_subdirectory(${AU3_LIBRARIES} au3-libraries)
@@ -261,6 +265,8 @@ set(MODULE_USE_PCH OFF)
 set(MODULE_USE_UNITY OFF)
 
 setup_module()
+
+add_subdirectory(tests)
 
 target_no_warning(${MODULE} -w)
 
