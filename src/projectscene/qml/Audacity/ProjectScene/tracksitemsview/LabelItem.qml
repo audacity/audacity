@@ -36,26 +36,26 @@ Item {
 
     height: header.height
 
-    signal requestSelected()
-    signal requestSingleSelected()
-    signal requestSelectionReset()
+    signal requestSelected
+    signal requestSingleSelected
+    signal requestSelectionReset
 
-    signal titleEditStarted()
+    signal titleEditStarted
     signal titleEditAccepted(var newTitle)
-    signal titleEditCanceled()
-    signal titleEditFinished()
+    signal titleEditCanceled
+    signal titleEditFinished
 
     signal labelItemMousePositionChanged(real x, real y)
 
-    signal labelStartEditRequested()
-    signal labelEndEditRequested()
+    signal labelStartEditRequested
+    signal labelEndEditRequested
 
     signal labelLeftStretchRequested(bool unlink, bool completed)
     signal labelRightStretchRequested(bool unlink, bool completed)
 
-    signal activateLeftLinkedLabel()
-    signal activateRightLinkedLabel()
-    signal deactivateLinkedLabel()
+    signal activateLeftLinkedLabel
+    signal activateRightLinkedLabel
+    signal deactivateLinkedLabel
 
     QtObject {
         id: prv
@@ -199,11 +199,11 @@ Item {
             root.labelStartEditRequested()
         }
 
-        onStretchMousePositionChanged: function(x, y) {
+        onStretchMousePositionChanged: function (x, y) {
             root.labelItemMousePositionChanged(x - root.parent.x, y)
         }
 
-        onStretchRequested: function(completed) {
+        onStretchRequested: function (completed) {
             root.labelLeftStretchRequested(true /*unlink*/, completed)
         }
 
@@ -243,11 +243,11 @@ Item {
             root.labelStartEditRequested()
         }
 
-        onStretchMousePositionChanged: function(x, y) {
+        onStretchMousePositionChanged: function (x, y) {
             root.labelItemMousePositionChanged(x - root.parent.x, y)
         }
 
-        onStretchRequested: function(completed) {
+        onStretchRequested: function (completed) {
             root.labelRightStretchRequested(true /*unlink*/, completed)
         }
 
@@ -277,7 +277,7 @@ Item {
 
         visible: root.visible
 
-        onTitleEditAccepted: function(newTitle) {
+        onTitleEditAccepted: function (newTitle) {
             root.titleEditAccepted(newTitle)
         }
 
@@ -293,15 +293,15 @@ Item {
             root.requestSingleSelected()
         }
 
-        onContextMenuOpenRequested: function(x, y) {
+        onContextMenuOpenRequested: function (x, y) {
             labelContextMenuLoader.show(Qt.point(x, y), labelContextMenuModel.items)
         }
 
-        onMousePositionChanged: function(x, y) {
+        onMousePositionChanged: function (x, y) {
             root.labelItemMousePositionChanged(x, y)
         }
 
-        onHeaderHoveredChanged: function(value) {
+        onHeaderHoveredChanged: function (value) {
             root.headerHovered = value
         }
     }
@@ -313,7 +313,7 @@ Item {
         //! To draw on top of other labels, we need to change the parent and increase z
         parent: root.container
         width: 2
-        x: root.parent.x + root.parent.width/2 - width/2
+        x: root.parent.x + root.parent.width / 2 - width / 2
         y: root.parent.y
         z: root.parent.z
 
@@ -325,7 +325,7 @@ Item {
 
         visible: prv.isPoint
 
-        onHeaderHoveredChanged: function(value) {
+        onHeaderHoveredChanged: function (value) {
             root.headerHovered = value
         }
 
@@ -333,11 +333,11 @@ Item {
             root.requestSingleSelected()
         }
 
-        onStretchMousePositionChanged: function(x, y) {
+        onStretchMousePositionChanged: function (x, y) {
             root.labelItemMousePositionChanged(x - root.parent.x, y)
         }
 
-        onStretchRequested: function(completed) {
+        onStretchRequested: function (completed) {
             root.labelLeftStretchRequested(false /*without unlink*/, completed)
         }
 
@@ -367,7 +367,7 @@ Item {
 
         visible: !prv.isPoint || isStretchInProgress
 
-        onHeaderHoveredChanged: function(value) {
+        onHeaderHoveredChanged: function (value) {
             root.headerHovered = value
         }
 
@@ -384,11 +384,11 @@ Item {
             root.labelStartEditRequested()
         }
 
-        onStretchMousePositionChanged: function(x, y) {
+        onStretchMousePositionChanged: function (x, y) {
             root.labelItemMousePositionChanged(x - root.parent.x, y)
         }
 
-        onStretchRequested: function(completed) {
+        onStretchRequested: function (completed) {
             root.labelLeftStretchRequested(false /*without unlink*/, completed)
         }
 
@@ -418,7 +418,7 @@ Item {
 
         visible: !prv.isPoint || isStretchInProgress
 
-        onHeaderHoveredChanged: function(value) {
+        onHeaderHoveredChanged: function (value) {
             root.headerHovered = value
         }
 
@@ -435,11 +435,11 @@ Item {
             root.labelStartEditRequested()
         }
 
-        onStretchMousePositionChanged: function(x, y) {
+        onStretchMousePositionChanged: function (x, y) {
             root.labelItemMousePositionChanged(x - root.parent.x, y)
         }
 
-        onStretchRequested: function(completed) {
+        onStretchRequested: function (completed) {
             root.labelRightStretchRequested(false /*without unlink*/, completed)
         }
 
@@ -451,10 +451,7 @@ Item {
     states: [
         State {
             name: "NORMAL"
-            when: !root.isSelected && !root.headerHovered &&
-                  !leftEar.hovered && !leftStalk.hovered &&
-                  !rightEar.hovered && !rightStalk.hovered &&
-                  ((root.isLeftLinked || root.isRightLinked) && !root.isLinkedActive)
+            when: !root.isSelected && !root.headerHovered && !leftEar.hovered && !leftStalk.hovered && !rightEar.hovered && !rightStalk.hovered && ((root.isLeftLinked || root.isRightLinked) && !root.isLinkedActive)
             PropertyChanges {
                 target: prv
                 backgroundColor: root.labelColor
@@ -484,10 +481,7 @@ Item {
         },
         State {
             name: "LEFT_EAR_HOVERED"
-            when: (!root.isSelected &&
-                  (leftEar.hovered || leftStalk.hovered) &&
-                  !root.headerHovered) ||
-                  (root.isLeftLinked && root.isLinkedActive)
+            when: (!root.isSelected && (leftEar.hovered || leftStalk.hovered) && !root.headerHovered) || (root.isLeftLinked && root.isLinkedActive)
             PropertyChanges {
                 target: prv
                 backgroundColor: ui.blendColors(ui.theme.extra["white_color"], root.labelColor, 0.7)
@@ -497,9 +491,7 @@ Item {
         },
         State {
             name: "RIGHT_EAR_HOVERED"
-            when: !root.isSelected &&
-                  (rightEar.hovered || rightStalk.hovered || (root.isRightLinked && root.isLinkedActive)) &&
-                  !root.headerHovered
+            when: !root.isSelected && (rightEar.hovered || rightStalk.hovered || (root.isRightLinked && root.isLinkedActive)) && !root.headerHovered
             PropertyChanges {
                 target: prv
                 backgroundColor: ui.blendColors(ui.theme.extra["white_color"], root.labelColor, 0.7)
