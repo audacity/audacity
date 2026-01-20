@@ -107,18 +107,8 @@ if (AU_MODULE_EFFECTS_AUDIO_UNIT)
    list( APPEND LIBRARIES au3-audio-unit)
 endif()
 
-# AU3-specific conditional libraries (not used in AU4 yet)
-# These use ${_OPT} variables from AU3's build system
-if ( DEFINED ${_OPT}has_networking AND ${_OPT}has_networking )
-   list( APPEND LIBRARIES au3-network-manager)
-endif()
-
-if ( DEFINED ${_OPT}has_url_schemes_support AND ${_OPT}has_url_schemes_support )
-   list( APPEND LIBRARIES au3-url-schemes)
-endif()
-
-if ( DEFINED ${_OPT}has_audiocom_upload AND ${_OPT}has_audiocom_upload)
-   list( APPEND LIBRARIES au3-cloud-audiocom)
+if (AU_BUILD_CLOUD_AUDIOCOM)
+   list( APPEND LIBRARIES au3-network-manager au3-url-schemes au3-cloud-audiocom)
 endif()
 
 if( DEFINED ${_OPT}has_crashreports AND ${_OPT}has_crashreports )
