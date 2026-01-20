@@ -71,10 +71,6 @@ void ToneViewModel::prop_setAmplitudeEnd(double newAmplitude)
         return;
     }
 
-    if (effect<ToneEffect>().amplitudeEnd() == newAmplitude) {
-        return;
-    }
-
     effect<ToneEffect>().setAmplitudeEnd(newAmplitude);
     emit amplitudeEndChanged();
 
