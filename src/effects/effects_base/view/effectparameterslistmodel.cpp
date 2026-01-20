@@ -182,6 +182,26 @@ QString EffectParametersListModel::getParameterValueString(int index, double nor
     return parametersProvider()->parameterValueString(m_instanceId, param.id, normalizedValue).toQString();
 }
 
+void EffectParametersListModel::beginGesture(int index)
+{
+    if (index < 0 || index >= static_cast<int>(m_parameters.size())) {
+        return;
+    }
+
+    const ParameterInfo& param = m_parameters[index];
+    parametersProvider()->beginParameterGesture(m_instanceId, param.id);
+}
+
+void EffectParametersListModel::endGesture(int index)
+{
+    if (index < 0 || index >= static_cast<int>(m_parameters.size())) {
+        return;
+    }
+
+    const ParameterInfo& param = m_parameters[index];
+    parametersProvider()->endParameterGesture(m_instanceId, param.id);
+}
+
 bool EffectParametersListModel::hasParameters() const
 {
     return !m_parameters.empty();

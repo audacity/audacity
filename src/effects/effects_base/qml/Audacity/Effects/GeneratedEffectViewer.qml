@@ -102,6 +102,15 @@ Rectangle {
                         delegate: ParameterControl {
                             Layout.fillWidth: true
                             parameterData: model
+                            parameterIndex: index
+
+                            onGestureStarted: function (parameterIndex) {
+                                viewModel.parametersModel.beginGesture(parameterIndex)
+                            }
+
+                            onGestureEnded: function (parameterIndex) {
+                                viewModel.parametersModel.endGesture(parameterIndex)
+                            }
 
                             onValueChanged: function (value) {
                                 viewModel.parametersModel.setParameterValue(index, value)

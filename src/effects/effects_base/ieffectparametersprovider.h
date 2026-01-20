@@ -63,6 +63,16 @@ public:
     //! @return true if parameters can be extracted
     virtual bool supportsParameterExtraction(const EffectId& effectId) const = 0;
 
+    //! Begin parameter gesture (e.g., user starts dragging a slider)
+    //! @param instanceId The effect instance ID
+    //! @param parameterId The parameter identifier
+    virtual void beginParameterGesture(EffectInstanceId instanceId, const muse::String& parameterId) = 0;
+
+    //! End parameter gesture (e.g., user releases a slider)
+    //! @param instanceId The effect instance ID
+    //! @param parameterId The parameter identifier
+    virtual void endParameterGesture(EffectInstanceId instanceId, const muse::String& parameterId) = 0;
+
     //! Channel that sends data when a specific parameter value changes
     //! Subscribers receive the instance ID, parameter ID, and new values
     virtual muse::async::Channel<ParameterChangedData> parameterChanged() const = 0;

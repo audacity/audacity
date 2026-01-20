@@ -13,8 +13,11 @@ Item {
     id: root
 
     property var parameterData: null
+    property int parameterIndex: -1
 
     signal valueChanged(double value)
+    signal gestureStarted(int index)
+    signal gestureEnded(int index)
 
     implicitHeight: controlLoader.height
 
@@ -89,10 +92,15 @@ Item {
             enabled: parameterData ? !parameterData.isReadOnly : false
 
             onClicked: {
+                // Toggle is a single atomic operation - begin and end gesture immediately
+                root.gestureStarted(root.parameterIndex);
+
                 // Send the opposite of current value (toggle)
                 var midpoint = (parameterData.minValue + parameterData.maxValue) / 2
                 var isCurrentlyOn = parameterData.currentValue > midpoint
                 root.valueChanged(isCurrentlyOn ? parameterData.minValue : parameterData.maxValue)
+
+                root.gestureEnded(root.parameterIndex)
             }
         }
     }
@@ -141,9 +149,14 @@ Item {
                 enabled: parameterData ? !parameterData.isReadOnly : false
 
                 onActivated: function (index, value) {
+                    // Dropdown selection is a single atomic operation - begin and end gesture immediately
+                    root.gestureStarted(root.parameterIndex)
+
                     if (parameterData && parameterData.enumIndices && index >= 0 && index < parameterData.enumIndices.length) {
                         root.valueChanged(parameterData.enumIndices[index])
                     }
+
+                    root.gestureEnded(root.parameterIndex)
                 }
             }
         }
@@ -157,6 +170,7 @@ Item {
             spacing: prv.spaceL
 
             StyledSlider {
+                id: slider
                 anchors.verticalCenter: parent.verticalCenter
                 width: prv.controlWidth
 
@@ -165,6 +179,16 @@ Item {
                 value: parameterData ? parameterData.currentValue : 0
                 stepSize: parameterData && parameterData.stepSize > 0 ? parameterData.stepSize : 0.01
                 enabled: parameterData ? !parameterData.isReadOnly : false
+
+                onPressedChanged: {
+                    if (pressed) {
+                        // Drag started - begin gesture
+                        root.gestureStarted(root.parameterIndex)
+                    } else {
+                        // Drag ended - end gesture
+                        root.gestureEnded(root.parameterIndex)
+                    }
+                }
 
                 onMoved: {
                     root.valueChanged(value)
@@ -214,6 +238,7 @@ Item {
             spacing: prv.spaceM
 
             IncrementalPropertyControl {
+                id: numericInput
                 Layout.preferredWidth: prv.numericControlWidth
 
                 // Always use normalized values (0.0 to 1.0) like AU3 does
@@ -225,8 +250,36 @@ Item {
                 measureUnitsSymbol: ""  // Don't show units here, show in formatted label
                 enabled: parameterData ? !parameterData.isReadOnly : false
 
+                // Track editing state for gesture
+                property bool isEditing: false
+
+                // Handle focus changes for gesture tracking
+                onActiveFocusChanged: {
+                    if (activeFocus && !isEditing) {
+                        // User focused the control - begin gesture
+                        isEditing = true
+                        root.gestureStarted(root.parameterIndex)
+                    } else if (!activeFocus && isEditing) {
+                        // User left the control - end gesture
+                        isEditing = false
+                        root.gestureEnded(root.parameterIndex)
+                    }
+                }
+
                 onValueEdited: function (newValue) {
-                    root.valueChanged(newValue)
+                    // If not already editing (e.g., increment/decrement button without focus), start gesture
+                    if (!isEditing) {
+                        isEditing = true
+                        root.gestureStarted(root.parameterIndex)
+                    }
+
+                    root.valueChanged(newValue);
+
+                    // For button clicks without focus, end gesture immediately
+                    if (!activeFocus && isEditing) {
+                        isEditing = false
+                        root.gestureEnded(root.parameterIndex)
+                    }
                 }
             }
 

@@ -126,14 +126,34 @@ double normalizedToFullRange(EffectInstanceEx* instance, uint32_t parameterId, d
 //! Returns the normalized value, or the "Full Range" value clamped to 0.0-1.0 if conversion is not supported
 double fullRangeToNormalized(EffectInstanceEx* instance, uint32_t parameterId, double fullRangeValue);
 
+//! Begin edit gesture for a single parameter (e.g., user starts dragging slider)
+//! Calls VST3 IComponentHandler::beginEdit()
+//! @param instance The VST3 effect instance
+//! @param parameterId The parameter ID
+void beginEdit(EffectInstanceEx* instance, uint32_t parameterId);
+
+//! End edit gesture for a single parameter (e.g., user releases slider)
+//! Calls VST3 IComponentHandler::endEdit()
+//! @param instance The VST3 effect instance
+//! @param parameterId The parameter ID
+void endEdit(EffectInstanceEx* instance, uint32_t parameterId);
+
+//! Flush parameters and store settings
+//! Should be called after endEdit to persist the final state
+//! @param instance The VST3 effect instance
+//! @param settingsAccess Settings access to use for storing
+void flushAndStoreSettings(EffectInstanceEx* instance, EffectSettingsAccess* settingsAccess);
+
 //! Begin parameter editing session
 //! Sets up the ComponentHandler to track parameter changes with the given settings access
+//! Should be called once when opening the effect UI
 //! @param instance The VST3 effect instance
 //! @param settingsAccess Settings access to use for parameter changes during the session
 void beginParameterEditing(EffectInstanceEx* instance, EffectSettingsAccess* settingsAccess);
 
 //! End parameter editing session
 //! Clears the ComponentHandler's settings access pointer
+//! Should be called once when closing the effect UI
 //! @param instance The VST3 effect instance
 void endParameterEditing(EffectInstanceEx* instance);
 } // namespace VST3ParameterExtraction

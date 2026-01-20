@@ -139,6 +139,43 @@ bool EffectParametersProvider::supportsParameterExtraction(const EffectId& effec
     return parameterExtractorRegistry() && parameterExtractorRegistry()->hasExtractorForFamily(family);
 }
 
+void EffectParametersProvider::beginParameterGesture(EffectInstanceId instanceId, const String& parameterId)
+{
+    EffectInstance* instance = instancesRegister()->instanceById(instanceId).get();
+    if (!instance) {
+        return;
+    }
+
+    const EffectId effectId = instancesRegister()->effectIdByInstanceId(instanceId);
+    const EffectFamily family = getEffectFamily(effectId);
+
+    const IParameterExtractorService* extractor = parameterExtractorRegistry()
+                                                  ? parameterExtractorRegistry()->extractorForFamily(family)
+                                                  : nullptr;
+    if (extractor) {
+        EffectSettingsAccessPtr settingsAccess = instancesRegister()->settingsAccessById(instanceId);
+        const_cast<IParameterExtractorService*>(extractor)->beginParameterGesture(instance, parameterId, settingsAccess);
+    }
+}
+
+void EffectParametersProvider::endParameterGesture(EffectInstanceId instanceId, const String& parameterId)
+{
+    EffectInstance* instance = instancesRegister()->instanceById(instanceId).get();
+    if (!instance) {
+        return;
+    }
+
+    const EffectId effectId = instancesRegister()->effectIdByInstanceId(instanceId);
+    const EffectFamily family = getEffectFamily(effectId);
+
+    const IParameterExtractorService* extractor = parameterExtractorRegistry()
+                                                  ? parameterExtractorRegistry()->extractorForFamily(family)
+                                                  : nullptr;
+    if (extractor) {
+        const_cast<IParameterExtractorService*>(extractor)->endParameterGesture(instance, parameterId);
+    }
+}
+
 muse::async::Channel<ParameterChangedData> EffectParametersProvider::parameterChanged() const
 {
     return m_parameterChanged;

@@ -60,6 +60,8 @@ public:
     Q_INVOKABLE void load();
     Q_INVOKABLE void setParameterValue(int index, double fullRangeValue);
     Q_INVOKABLE QString getParameterValueString(int index, double normalizedValue) const;
+    Q_INVOKABLE void beginGesture(int index);
+    Q_INVOKABLE void endGesture(int index);
 
     bool hasParameters() const;
 

@@ -91,10 +91,16 @@ ParameterInfoList VstParameterExtractorService::extractParameters(EffectInstance
     std::vector<VST3ParameterExtraction::ParamInfo> au3Params
         = VST3ParameterExtraction::extractParameters(instance, settingsAccess.get());
 
+    // Populate cache for this instance
+    auto& instanceCache = m_paramCache[instance];
+    instanceCache.clear(); // Clear any existing cache for this instance
+
     ParameterInfoList result;
     result.reserve(au3Params.size());
 
     for (const auto& au3Param : au3Params) {
+        // Cache the parameter info with its index
+        instanceCache[au3Param.id] = au3Param;
         result.push_back(convertParamInfo(au3Param));
     }
 
@@ -108,10 +114,34 @@ ParameterInfo VstParameterExtractorService::getParameter(EffectInstance* instanc
         return {};
     }
 
+    // Check cache first
+    auto instanceIt = m_paramCache.find(instance);
+    if (instanceIt != m_paramCache.end()) {
+        auto paramIt = instanceIt->second.find(paramId);
+        if (paramIt != instanceIt->second.end()) {
+            // Found in cache - update current value and return
+            VST3ParameterExtraction::ParamInfo& cachedParam = paramIt->second;
+
+            // Update the current value from VST3 (value may have changed)
+            const double normalizedValue = VST3ParameterExtraction::getParameterValue(instance, paramId);
+            cachedParam.currentValue = cachedParam.toFullRange(normalizedValue);
+
+            // Update the formatted string
+            cachedParam.currentValueString = VST3ParameterExtraction::getParameterValueString(
+                instance, paramId, normalizedValue);
+
+            return convertParamInfo(cachedParam);
+        }
+    }
+
+    // Not in cache - do full lookup
     VST3ParameterExtraction::ParamInfo au3Param = VST3ParameterExtraction::getParameter(instance, paramId);
     if (au3Param.id == 0 && au3Param.name.empty()) {
         return {}; // Not found
     }
+
+    // Cache it for next time
+    m_paramCache[instance][paramId] = au3Param;
 
     return convertParamInfo(au3Param);
 }
@@ -123,6 +153,18 @@ double VstParameterExtractorService::getParameterValue(EffectInstance* instance,
         return 0.0;
     }
 
+    // Check cache for parameter info (to get min/max for conversion)
+    auto instanceIt = m_paramCache.find(instance);
+    if (instanceIt != m_paramCache.end()) {
+        auto paramIt = instanceIt->second.find(paramId);
+        if (paramIt != instanceIt->second.end()) {
+            // Use cached parameter info to convert normalized to full range
+            const double normalizedValue = VST3ParameterExtraction::getParameterValue(instance, paramId);
+            return paramIt->second.toFullRange(normalizedValue);
+        }
+    }
+
+    // Not in cache - just return normalized value (fallback)
     return VST3ParameterExtraction::getParameterValue(instance, paramId);
 }
 
@@ -137,9 +179,10 @@ bool VstParameterExtractorService::setParameterValue(EffectInstance* instance,
     }
 
     // Convert "Full Range" value to normalized [0,1] for VST3 API
-    double normalizedValue = VST3ParameterExtraction::fullRangeToNormalized(instance, paramId, fullRangeValue);
+    const double normalizedValue = VST3ParameterExtraction::fullRangeToNormalized(instance, paramId, fullRangeValue);
 
-    return VST3ParameterExtraction::setParameterValue(instance, paramId, normalizedValue, settingsAccess.get());
+    const bool result = VST3ParameterExtraction::setParameterValue(instance, paramId, normalizedValue, settingsAccess.get());
+    return result;
 }
 
 String VstParameterExtractorService::getParameterValueString(EffectInstance* instance,
@@ -155,6 +198,46 @@ String VstParameterExtractorService::getParameterValueString(EffectInstance* ins
     return String::fromStdString(result);
 }
 
+void VstParameterExtractorService::beginParameterGesture(EffectInstance* instance, const String& parameterId,
+                                                         EffectSettingsAccessPtr settingsAccess)
+{
+    uint32_t paramId = 0;
+    if (!parseParameterId(parameterId, paramId)) {
+        return;
+    }
+
+    // Store settings access for this gesture
+    m_gestureSettings[instance] = settingsAccess;
+
+    // Call VST3 beginEdit
+    VST3ParameterExtraction::beginEdit(instance, paramId);
+}
+
+void VstParameterExtractorService::endParameterGesture(EffectInstance* instance, const String& parameterId)
+{
+    uint32_t paramId = 0;
+    if (!parseParameterId(parameterId, paramId)) {
+        return;
+    }
+
+    // Call VST3 endEdit
+    VST3ParameterExtraction::endEdit(instance, paramId);
+
+    // Get the stored settings access
+    auto it = m_gestureSettings.find(instance);
+    if (it != m_gestureSettings.end() && it->second) {
+        // Now save the final state
+        VST3ParameterExtraction::flushAndStoreSettings(instance, it->second.get());
+        m_gestureSettings.erase(it);
+    }
+}
+
+void VstParameterExtractorService::onInstanceDestroyed(EffectInstance* instance)
+{
+    clearCache(instance);
+    m_gestureSettings.erase(instance);
+}
+
 void VstParameterExtractorService::beginParameterEditing(EffectInstance* instance, EffectSettingsAccessPtr settingsAccess)
 {
     VST3ParameterExtraction::beginParameterEditing(instance, settingsAccess.get());
@@ -163,4 +246,17 @@ void VstParameterExtractorService::beginParameterEditing(EffectInstance* instanc
 void VstParameterExtractorService::endParameterEditing(EffectInstance* instance)
 {
     VST3ParameterExtraction::endParameterEditing(instance);
+}
+
+void VstParameterExtractorService::clearCache(EffectInstance* instance)
+{
+    auto it = m_paramCache.find(instance);
+    if (it != m_paramCache.end()) {
+        m_paramCache.erase(it);
+    }
+}
+
+void VstParameterExtractorService::clearAllCaches()
+{
+    m_paramCache.clear();
 }

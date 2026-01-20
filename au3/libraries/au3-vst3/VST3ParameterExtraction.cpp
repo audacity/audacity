@@ -298,24 +298,15 @@ bool VST3ParameterExtraction::setParameterValue(EffectInstanceEx* instance, uint
         return false;
     }
 
-    // Also notify via component handler to update settings and sync with audio processor
-    // This is the same flow used by the vendor UI when parameters are changed
+    // Notify via component handler to update the parameter
+    // Only call performEdit - beginEdit/endEdit are called separately by gesture tracking
     if (wrapper.mComponentHandler) {
-        wrapper.mComponentHandler->beginEdit(parameterId);
         wrapper.mComponentHandler->performEdit(parameterId, normalizedValue);
-        wrapper.mComponentHandler->endEdit(parameterId);
     }
 
-    // If settings access is provided, flush parameters and store settings to persist the change
-    // This ensures the parameter change is saved and will be restored when switching UI modes
-    if (settingsAccess) {
-        settingsAccess->ModifySettings([&wrapper](EffectSettings& settings) {
-            wrapper.FlushParameters(settings);
-            wrapper.StoreSettings(settings);
-            return nullptr;
-        });
-        settingsAccess->Flush();
-    }
+    // NOTE: We do NOT save settings here anymore!
+    // Settings are saved only when endParameterGesture() is called (when user releases slider)
+    // This prevents saving the entire state on every slider movement callbacks
 
     return true;
 }
@@ -424,6 +415,7 @@ void VST3ParameterExtraction::beginParameterEditing(EffectInstanceEx* instance, 
         return;
     }
 
+    // Set the ComponentHandler's mAccess pointer so performEdit() can store parameter changes
     wrapper.BeginParameterEdit(*settingsAccess);
 }
 
@@ -439,5 +431,63 @@ void VST3ParameterExtraction::endParameterEditing(EffectInstanceEx* instance)
     }
 
     auto& wrapper = vst3Instance->GetWrapper();
+
+    // Clear the ComponentHandler's mAccess pointer
     wrapper.EndParameterEdit();
+}
+
+void VST3ParameterExtraction::beginEdit(EffectInstanceEx* instance, uint32_t parameterId)
+{
+    if (!instance) {
+        return;
+    }
+
+    const auto vst3Instance = dynamic_cast<VST3Instance*>(instance);
+    if (!vst3Instance) {
+        return;
+    }
+
+    auto& wrapper = vst3Instance->GetWrapper();
+    if (wrapper.mComponentHandler) {
+        wrapper.mComponentHandler->beginEdit(parameterId);
+    }
+}
+
+void VST3ParameterExtraction::endEdit(EffectInstanceEx* instance, uint32_t parameterId)
+{
+    if (!instance) {
+        return;
+    }
+
+    const auto vst3Instance = dynamic_cast<VST3Instance*>(instance);
+    if (!vst3Instance) {
+        return;
+    }
+
+    auto& wrapper = vst3Instance->GetWrapper();
+    if (wrapper.mComponentHandler) {
+        wrapper.mComponentHandler->endEdit(parameterId);
+    }
+}
+
+void VST3ParameterExtraction::flushAndStoreSettings(EffectInstanceEx* instance, EffectSettingsAccess* settingsAccess)
+{
+    if (!instance || !settingsAccess) {
+        return;
+    }
+
+    const auto vst3Instance = dynamic_cast<VST3Instance*>(instance);
+    if (!vst3Instance) {
+        return;
+    }
+
+    auto& wrapper = vst3Instance->GetWrapper();
+
+    // Flush parameters and store settings to persist the change
+    settingsAccess->ModifySettings([&wrapper](EffectSettings& settings) {
+        wrapper.FlushParameters(settings);
+        wrapper.StoreSettings(settings);
+        return nullptr;
+    });
+    settingsAccess->Flush();
 }

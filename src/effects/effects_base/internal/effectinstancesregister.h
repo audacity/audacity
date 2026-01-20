@@ -5,11 +5,18 @@
 
 #include <map>
 
+#include "framework/global/modularity/ioc.h"
+
 #include "../ieffectinstancesregister.h"
+#include "../iparameterextractorregistry.h"
+#include "../ieffectsprovider.h"
 
 namespace au::effects {
 class EffectInstancesRegister : public IEffectInstancesRegister
 {
+    muse::Inject<IParameterExtractorRegistry> parameterExtractorRegistry;
+    muse::Inject<IEffectsProvider> effectsProvider;
+
 public:
     EffectInstancesRegister() = default;
 

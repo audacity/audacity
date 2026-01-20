@@ -32,6 +32,9 @@ public:
 
     bool supportsParameterExtraction(const EffectId& effectId) const override;
 
+    void beginParameterGesture(EffectInstanceId instanceId, const muse::String& parameterId) override;
+    void endParameterGesture(EffectInstanceId instanceId, const muse::String& parameterId) override;
+
     muse::async::Channel<ParameterChangedData> parameterChanged() const override;
 
 private:
