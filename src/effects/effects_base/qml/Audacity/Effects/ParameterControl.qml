@@ -195,23 +195,6 @@ Item {
                 }
             }
 
-            // IncrementalPropertyControl {
-            //     width: 60
-            //
-            //     // Always use normalized values (0.0 to 1.0) like AU3 does
-            //     currentValue: parameterData ? parameterData.currentValue : 0
-            //     minValue: parameterData ? parameterData.minValue : 0
-            //     maxValue: parameterData ? parameterData.maxValue : 1
-            //     step: parameterData && parameterData.stepSize > 0 ? parameterData.stepSize : 0.01
-            //     decimals: parameterData && parameterData.isInteger ? 0 : 2
-            //     measureUnitsSymbol: ""  // Don't show units here, show in formatted label
-            //     enabled: parameterData ? !parameterData.isReadOnly : false
-            //
-            //     onValueEdited: function(newValue) {
-            //         root.valueChanged(newValue)
-            //     }
-            // }
-
             // Display formatted value from plugin (like AU3 does)
             StyledTextLabel {
                 anchors.verticalCenter: parent.verticalCenter
