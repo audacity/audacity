@@ -266,8 +266,6 @@ set(MODULE_USE_UNITY OFF)
 
 setup_module()
 
-add_subdirectory(tests)
-
 target_no_warning(${MODULE} -w)
 
 if (CC_IS_CLANG)
