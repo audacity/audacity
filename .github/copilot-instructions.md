@@ -81,6 +81,7 @@ The `master` branch contains Audacity 4 development. For Audacity 3.x work, use 
 - Structural changes are frequent
 - Some MuseScore dependencies are still being cleaned up
 - **License**: GPLv3 (most code files are GPLv2-or-later)
+  - Exceptions: `/au3/lib-src/` (third-party libraries), VST3-related code
 
 ## Common Development Tasks
 
