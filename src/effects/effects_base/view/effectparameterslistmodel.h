@@ -58,10 +58,10 @@ public:
     QHash<int, QByteArray> roleNames() const override;
 
     Q_INVOKABLE void load();
-    Q_INVOKABLE void setParameterValue(int index, double fullRangeValue);
-    Q_INVOKABLE QString getParameterValueString(int index, double normalizedValue) const;
-    Q_INVOKABLE void beginGesture(int index);
-    Q_INVOKABLE void endGesture(int index);
+    Q_INVOKABLE void setParameterValue(const QString& parameterId, double fullRangeValue);
+    Q_INVOKABLE QString getParameterValueString(int index, double normalizedValue) const; // Internal helper for getParameterValueString (not commonly used)
+    Q_INVOKABLE void beginGesture(const QString& parameterId);
+    Q_INVOKABLE void endGesture(const QString& parameterId);
 
     bool hasParameters() const;
 

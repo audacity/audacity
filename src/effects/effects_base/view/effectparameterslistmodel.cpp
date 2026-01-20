@@ -99,7 +99,9 @@ bool EffectParametersListModel::setData(const QModelIndex& index, const QVariant
         return false;
     }
 
-    setParameterValue(index.row(), value.toDouble());
+    // Get parameter ID from the index and use ID-based method
+    const ParameterInfo& param = m_parameters[index.row()];
+    setParameterValue(param.id.toQString(), value.toDouble());
     return true;
 }
 
@@ -157,17 +159,10 @@ void EffectParametersListModel::load()
     });
 }
 
-void EffectParametersListModel::setParameterValue(int index, double fullRangeValue)
+void EffectParametersListModel::setParameterValue(const QString& parameterId, double fullRangeValue)
 {
-    if (index < 0 || index >= static_cast<int>(m_parameters.size())) {
-        LOGE() << "Invalid parameter index: " << index;
-        return;
-    }
-
-    const ParameterInfo& param = m_parameters[index];
-
     // Update the parameter value through the provider
-    parametersProvider()->setParameterValue(m_instanceId, param.id, fullRangeValue);
+    parametersProvider()->setParameterValue(m_instanceId, String::fromQString(parameterId), fullRangeValue);
 
     // The actual model update will happen via the parameterChanged signal
 }
@@ -182,24 +177,14 @@ QString EffectParametersListModel::getParameterValueString(int index, double nor
     return parametersProvider()->parameterValueString(m_instanceId, param.id, normalizedValue).toQString();
 }
 
-void EffectParametersListModel::beginGesture(int index)
+void EffectParametersListModel::beginGesture(const QString& parameterId)
 {
-    if (index < 0 || index >= static_cast<int>(m_parameters.size())) {
-        return;
-    }
-
-    const ParameterInfo& param = m_parameters[index];
-    parametersProvider()->beginParameterGesture(m_instanceId, param.id);
+    parametersProvider()->beginParameterGesture(m_instanceId, String::fromQString(parameterId));
 }
 
-void EffectParametersListModel::endGesture(int index)
+void EffectParametersListModel::endGesture(const QString& parameterId)
 {
-    if (index < 0 || index >= static_cast<int>(m_parameters.size())) {
-        return;
-    }
-
-    const ParameterInfo& param = m_parameters[index];
-    parametersProvider()->endParameterGesture(m_instanceId, param.id);
+    parametersProvider()->endParameterGesture(m_instanceId, String::fromQString(parameterId));
 }
 
 bool EffectParametersListModel::hasParameters() const

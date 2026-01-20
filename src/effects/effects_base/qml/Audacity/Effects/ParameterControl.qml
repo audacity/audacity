@@ -13,11 +13,11 @@ Item {
     id: root
 
     property var parameterData: null
-    property int parameterIndex: -1
+    property string parameterId: parameterData ? parameterData.id : ""
 
-    signal valueChanged(double value)
-    signal gestureStarted(int index)
-    signal gestureEnded(int index)
+    signal valueChanged(string parameterId, double value)
+    signal gestureStarted(string parameterId)
+    signal gestureEnded(string parameterId)
 
     implicitHeight: controlLoader.height
 
@@ -93,14 +93,14 @@ Item {
 
             onClicked: {
                 // Toggle is a single atomic operation - begin and end gesture immediately
-                root.gestureStarted(root.parameterIndex);
+                root.gestureStarted(root.parameterId);
 
                 // Send the opposite of current value (toggle)
                 var midpoint = (parameterData.minValue + parameterData.maxValue) / 2
                 var isCurrentlyOn = parameterData.currentValue > midpoint
-                root.valueChanged(isCurrentlyOn ? parameterData.minValue : parameterData.maxValue)
+                root.valueChanged(root.parameterId, isCurrentlyOn ? parameterData.minValue : parameterData.maxValue)
 
-                root.gestureEnded(root.parameterIndex)
+                root.gestureEnded(root.parameterId)
             }
         }
     }
@@ -150,13 +150,13 @@ Item {
 
                 onActivated: function (index, value) {
                     // Dropdown selection is a single atomic operation - begin and end gesture immediately
-                    root.gestureStarted(root.parameterIndex)
+                    root.gestureStarted(root.parameterId)
 
                     if (parameterData && parameterData.enumIndices && index >= 0 && index < parameterData.enumIndices.length) {
-                        root.valueChanged(parameterData.enumIndices[index])
+                        root.valueChanged(root.parameterId, parameterData.enumIndices[index])
                     }
 
-                    root.gestureEnded(root.parameterIndex)
+                    root.gestureEnded(root.parameterId)
                 }
             }
         }
@@ -183,15 +183,15 @@ Item {
                 onPressedChanged: {
                     if (pressed) {
                         // Drag started - begin gesture
-                        root.gestureStarted(root.parameterIndex)
+                        root.gestureStarted(root.parameterId)
                     } else {
                         // Drag ended - end gesture
-                        root.gestureEnded(root.parameterIndex)
+                        root.gestureEnded(root.parameterId)
                     }
                 }
 
                 onMoved: {
-                    root.valueChanged(value)
+                    root.valueChanged(root.parameterId, value)
                 }
             }
 
@@ -258,11 +258,11 @@ Item {
                     if (activeFocus && !isEditing) {
                         // User focused the control - begin gesture
                         isEditing = true
-                        root.gestureStarted(root.parameterIndex)
+                        root.gestureStarted(root.parameterId)
                     } else if (!activeFocus && isEditing) {
                         // User left the control - end gesture
                         isEditing = false
-                        root.gestureEnded(root.parameterIndex)
+                        root.gestureEnded(root.parameterId)
                     }
                 }
 
@@ -270,15 +270,15 @@ Item {
                     // If not already editing (e.g., increment/decrement button without focus), start gesture
                     if (!isEditing) {
                         isEditing = true
-                        root.gestureStarted(root.parameterIndex)
+                        root.gestureStarted(root.parameterId)
                     }
 
-                    root.valueChanged(newValue);
+                    root.valueChanged(root.parameterId, newValue);
 
                     // For button clicks without focus, end gesture immediately
                     if (!activeFocus && isEditing) {
                         isEditing = false
-                        root.gestureEnded(root.parameterIndex)
+                        root.gestureEnded(root.parameterId)
                     }
                 }
             }

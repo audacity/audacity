@@ -102,18 +102,17 @@ Rectangle {
                         delegate: ParameterControl {
                             Layout.fillWidth: true
                             parameterData: model
-                            parameterIndex: index
 
-                            onGestureStarted: function (parameterIndex) {
-                                viewModel.parametersModel.beginGesture(parameterIndex)
+                            onGestureStarted: function (parameterId) {
+                                viewModel.parametersModel.beginGesture(parameterId)
                             }
 
-                            onGestureEnded: function (parameterIndex) {
-                                viewModel.parametersModel.endGesture(parameterIndex)
+                            onGestureEnded: function (parameterId) {
+                                viewModel.parametersModel.endGesture(parameterId)
                             }
 
-                            onValueChanged: function (value) {
-                                viewModel.parametersModel.setParameterValue(index, value)
+                            onValueChanged: function (parameterId, value) {
+                                viewModel.parametersModel.setParameterValue(parameterId, value)
                             }
                         }
                     }
