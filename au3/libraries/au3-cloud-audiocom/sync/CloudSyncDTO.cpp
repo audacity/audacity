@@ -14,10 +14,10 @@
 #include <set>
 #include <unordered_set>
 
-#include <rapidjson/document.h>
-#include <rapidjson/reader.h>
-#include <rapidjson/stringbuffer.h>
-#include <rapidjson/writer.h>
+#include "au3-import-export/rapidjson/document.h"
+#include "au3-import-export/rapidjson/reader.h"
+#include "au3-import-export/rapidjson/stringbuffer.h"
+#include "au3-import-export/rapidjson/writer.h"
 
 #include <algorithm>
 

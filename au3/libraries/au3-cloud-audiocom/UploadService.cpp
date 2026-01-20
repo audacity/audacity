@@ -17,9 +17,6 @@
 #include <wx/filefn.h>
 #include <wx/filename.h>
 
-#include <rapidjson/document.h>
-#include <rapidjson/writer.h>
-
 #include "au3-exceptions/AudacityException.h"
 
 #include "OAuthService.h"
@@ -36,6 +33,8 @@
 
 #include "au3-files/TempDirectory.h"
 #include "au3-files/FileNames.h"
+#include "au3-import-export/rapidjson/document.h"
+#include "au3-import-export/rapidjson/writer.h"
 
 namespace audacity::cloud::audiocom {
 namespace {

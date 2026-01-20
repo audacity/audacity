@@ -16,22 +16,19 @@
 
 #include <wx/file.h>
 
-#include <rapidjson/document.h>
-
 #include "ServiceConfig.h"
 #include "OAuthService.h"
+#include "NetworkUtils.h"
 
 #include "au3-basic-ui/BasicUI.h"
 #include "au3-files/FileNames.h"
 #include "au3-utility/Observer.h"
 #include "au3-preferences/Prefs.h"
-
 #include "au3-network-manager/IResponse.h"
 #include "au3-network-manager/NetworkManager.h"
-#include "NetworkUtils.h"
 #include "au3-network-manager/Request.h"
-
 #include "au3-string-utils/CodeConversions.h"
+#include "au3-import-export/rapidjson/document.h"
 
 namespace audacity::cloud::audiocom {
 namespace {

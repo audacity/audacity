@@ -11,11 +11,11 @@
 
 #include <memory>
 
-#include <rapidjson/fwd.h>
-
 #include <wx/string.h>
 
+#include "rapidjson/fwd.h"
 #include "ExportOptionsEditor.h"
+
 #include "au3-strings/wxArrayStringEx.h"
 #include "au3-strings/Identifier.h"
 #include "au3-strings/TranslatableString.h"

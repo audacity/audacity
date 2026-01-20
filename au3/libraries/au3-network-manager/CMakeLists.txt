@@ -26,6 +26,8 @@ set( SOURCES
     NetworkManager.h
     NetworkManager.cpp
 
+    ThreadPool/ThreadPool.h
+
     curl/CurlResponse.h
     curl/CurlResponse.cpp
     curl/CurlResponseFactory.h

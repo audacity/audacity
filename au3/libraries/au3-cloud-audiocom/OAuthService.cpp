@@ -14,12 +14,11 @@
 #include <cassert>
 #include <cctype>
 
-#include <rapidjson/document.h>
-#include <rapidjson/writer.h>
-
 #include "au3-string-utils/CodeConversions.h"
 #include "au3-preferences/Prefs.h"
 
+#include "au3-import-export/rapidjson/document.h"
+#include "au3-import-export/rapidjson/writer.h"
 #include "au3-network-manager/IResponse.h"
 #include "au3-network-manager/NetworkManager.h"
 #include "au3-network-manager/Request.h"
