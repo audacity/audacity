@@ -20,38 +20,38 @@ BaseSection {
         spacing: 12
 
         CheckBox {
-            id: micMeteringCheckBox
-
-            width: parent.width
-
-            text: qsTrc("preferences", "Show mic metering")
-
-            checked: recordingPreferencesModel.isMicMeteringOn
-
-            navigation.name: "MicMeteringCheckBox"
-            navigation.panel: root.navigation
-            navigation.order: 1
-
-            onClicked: {
-                recordingPreferencesModel.isMicMeteringOn = !checked
-            }
-        }
-
-        CheckBox {
             id: inputMonitoringCheckBox
 
             width: parent.width
 
-            text: qsTrc("preferences", "Enable input monitoring")
+            text: qsTrc("preferences", "Turn on input monitoring (hear yourself while recording)")
 
             checked: recordingPreferencesModel.isInputMonitoringOn
 
             navigation.name: "InputMonitoringCheckBox"
             navigation.panel: root.navigation
-            navigation.order: 2
+            navigation.order: 1
 
             onClicked: {
                 recordingPreferencesModel.isInputMonitoringOn = !checked
+            }
+        }
+
+        CheckBox {
+            id: micMeteringCheckBox
+
+            width: parent.width
+
+            text: qsTrc("preferences", "Show mic metering when not recording")
+
+            checked: recordingPreferencesModel.isMicMeteringOn
+
+            navigation.name: "MicMeteringCheckBox"
+            navigation.panel: root.navigation
+            navigation.order: 2
+
+            onClicked: {
+                recordingPreferencesModel.isMicMeteringOn = !checked
             }
         }
     }

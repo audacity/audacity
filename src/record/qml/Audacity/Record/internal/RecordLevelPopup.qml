@@ -33,11 +33,10 @@ StyledPopupView {
         id: prv
 
         readonly property int contentWidth: 480 - 2 * margins
-        readonly property int contentHeight: 174 - 2 * margins
+        readonly property int contentHeight: 210 - 2 * margins
 
         readonly property int margins: 12
         readonly property int spacing: 8
-        readonly property int checkboxSpacing: 20
 
         readonly property int meterHeight: 50
         readonly property int textHeight: 16
@@ -200,45 +199,42 @@ StyledPopupView {
             }
         }
 
-        Row {
+        Column {
             anchors.left: parent.left
             anchors.right: parent.right
-
-            height: prv.checkboxHeight
-
-            spacing: prv.checkboxSpacing
+            spacing: prv.spacing
 
             CheckBox {
-                id: showMeterMeteringCheckbox
+                id: enableMonitoringCheckbox
 
-                anchors.verticalCenter: parent.verticalCenter
+                height: prv.checkboxHeight
 
-                text: qsTrc("record", "Show mic metering")
+                text: qsTrc("record", "Turn on input monitoring (hear yourself while recording)")
 
-                checked: root.isMicMeteringOn
+                checked: root.isInputMonitoringOn
 
                 navigation.panel: navPanel
                 navigation.order: 2
 
                 onClicked: {
-                    isMicMeteringOnChangeRequested(!checked)
+                    isInputMonitoringOnChangeRequested(!checked)
                 }
             }
 
             CheckBox {
-                id: enableMonitoringCheckbox
+                id: showMeterMeteringCheckbox
 
-                anchors.verticalCenter: parent.verticalCenter
+                height: prv.checkboxHeight
 
-                text: qsTrc("record", "Enable input monitoring")
+                text: qsTrc("record", "Show mic metering when not recording")
 
-                checked: root.isInputMonitoringOn
+                checked: root.isMicMeteringOn
 
                 navigation.panel: navPanel
                 navigation.order: 3
 
                 onClicked: {
-                    isInputMonitoringOnChangeRequested(!checked)
+                    isMicMeteringOnChangeRequested(!checked)
                 }
             }
         }
