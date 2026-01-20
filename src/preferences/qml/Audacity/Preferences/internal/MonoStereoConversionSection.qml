@@ -9,7 +9,7 @@ import Audacity.UiComponents 1.0
 BaseSection {
     id: root
 
-    title: qsTrc("appshell/preferences", "Mono & stereo conversion")
+    title: qsTrc("preferences", "Mono & stereo conversion")
 
     property bool askBeforeConverting: true
 
@@ -22,7 +22,7 @@ BaseSection {
 
             width: parent.width
 
-            text: qsTrc("appshell/preferences", "Always convert to mono without prompt")
+            text: qsTrc("preferences", "Always convert to mono without prompt")
 
             checked: !root.askBeforeConverting
 

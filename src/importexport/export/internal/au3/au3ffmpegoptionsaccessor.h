@@ -24,6 +24,10 @@ public:
     std::vector<std::string> profileList() const override;
     std::vector<std::string> predictionOrderMethodList() const override;
 
+    std::string ffmpegVersion() const override;
+    std::string ffmpegLibraryPath() const override;
+    bool setFFmpegLibraryPath(const muse::io::path_t& path) override;
+
 private:
     std::unique_ptr<ExportFFmpegOptions> m_options;
 };

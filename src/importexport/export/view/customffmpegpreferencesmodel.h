@@ -11,6 +11,8 @@
 #include "iexportconfiguration.h"
 #include "iexporter.h"
 #include "iffmpegoptionsaccessor.h"
+#include "iinteractive.h"
+#include "iglobalconfiguration.h"
 
 namespace au::importexport {
 class CustomFFmpegPreferencesModel : public QObject, public muse::async::Asyncable
@@ -20,6 +22,11 @@ class CustomFFmpegPreferencesModel : public QObject, public muse::async::Asyncab
     muse::GlobalInject<IExportConfiguration> exportConfiguration;
     muse::Inject<IExporter> exporter;
     muse::Inject<IFFmpegOptionsAccessor> ffmpegOptionsAccessor;
+    muse::Inject<muse::IInteractive> interactive;
+    muse::GlobalInject<muse::IGlobalConfiguration> globalConfiguration;
+
+    Q_PROPERTY(QString ffmpegVersion READ ffmpegVersion NOTIFY ffmpegVersionChanged)
+    Q_PROPERTY(QString ffmpegLibraryPath READ ffmpegLibraryPath NOTIFY ffmpegLibraryPathChanged)
 
     // formats
     Q_PROPERTY(int ffmpegFormatIndex READ ffmpegFormatIndex NOTIFY ffmpegFormatIndexChanged)
@@ -63,6 +70,12 @@ public:
     explicit CustomFFmpegPreferencesModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void init();
+
+    QString ffmpegVersion() const;
+    QString ffmpegLibraryPath() const;
+    Q_INVOKABLE void setFFmpegLibraryPath(const QString& path);
+    Q_INVOKABLE void locateFFmpegLibrary();
+    QString avformatString() const;
 
     int ffmpegFormatIndex() const;
     QString ffmpegFormat() const;
@@ -139,6 +152,8 @@ public:
     Q_INVOKABLE void setPacketSize(int packetSize);
 
 signals:
+    void ffmpegVersionChanged();
+    void ffmpegLibraryPathChanged();
     void ffmpegFormatIndexChanged();
     void ffmpegFormatChanged();
     void ffmpegFormatListChanged();

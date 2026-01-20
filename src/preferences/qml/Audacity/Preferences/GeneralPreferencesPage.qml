@@ -97,5 +97,14 @@ PreferencesPage {
 
             availableSpace: preferencesModel.availableSpace
         }
+
+        SeparatorLine { }
+
+        FFmpegLibrarySection {
+            id: ffmpegLibrarySection
+
+            navigation.section: root.navigationSection
+            navigation.order: root.navigationOrderStart + 4
+        }
     }
 }

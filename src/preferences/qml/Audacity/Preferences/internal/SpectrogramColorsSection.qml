@@ -12,7 +12,7 @@ import Audacity.Spectrogram 1.0
 SpectrogramBaseSection {
     id: root
 
-    title: qsTrc("appshell/preferences/spectrogram", "Colors")
+    title: qsTrc("preferences/spectrogram", "Colors")
 
     required property AbstractSpectrogramSettingsModel settingsModel
 
