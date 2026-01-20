@@ -28,13 +28,13 @@
 #include "modularity/ioc.h"
 
 namespace au::project {
-class ProjectPropertiesModel : public QAbstractListModel, public muse::async::Asyncable
+class ProjectPropertiesModel : public QAbstractListModel, public muse::async::Asyncable, public muse::Injectable
 {
     Q_OBJECT
 
-    muse::Inject<context::IGlobalContext> globalContext;
-    muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<IThumbnailCreator> thumbnailCreator;
+    muse::Inject<context::IGlobalContext> globalContext { this };
+    muse::Inject<muse::IInteractive> interactive { this };
+    muse::Inject<IThumbnailCreator> thumbnailCreator { this };
 
     Q_PROPERTY(QString filePath READ filePath CONSTANT)
     Q_PROPERTY(QString version READ version CONSTANT)

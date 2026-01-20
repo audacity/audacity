@@ -19,7 +19,7 @@ std::string Au3AudioModule::moduleName() const
 void Au3AudioModule::registerExports()
 {
     m_audioEngine = std::make_shared<Au3AudioEngine>();
-    m_audioDevicesProvider = std::make_shared<Au3AudioDevicesProvider>();
+    m_audioDevicesProvider = std::make_shared<Au3AudioDevicesProvider>(iocContext());
 
     ioc()->registerExport<audio::IAudioEngine>(moduleName(), m_audioEngine);
     ioc()->registerExport<audio::IAudioDevicesProvider>(moduleName(), m_audioDevicesProvider);

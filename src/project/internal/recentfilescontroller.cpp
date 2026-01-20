@@ -248,6 +248,7 @@ void RecentFilesController::saveRecentFilesList() const
 
 Promise<QPixmap> RecentFilesController::thumbnail(const muse::io::path_t& filePath) const
 {
+    // TODO: doublecheck if this code is used anywhere
     return Promise<QPixmap>([this, filePath](const auto& resolve, const auto& reject) {
         if (filePath.empty()) {
             return reject(static_cast<int>(Ret::Code::UnknownError), "Invalid file specified");
@@ -264,15 +265,6 @@ Promise<QPixmap> RecentFilesController::thumbnail(const muse::io::path_t& filePa
                     (void)resolve(it->second.thumbnail);
                     return;
                 }
-            }
-
-            RetVal<ProjectMeta> rv = mscMetaReader()->readMeta(filePath);
-            if (!rv.ret) {
-                m_thumbnailCache[filePath] = CachedThumbnail();
-                (void)reject(rv.ret.code(), rv.ret.toString());
-            } else {
-                m_thumbnailCache[filePath] = CachedThumbnail { rv.val.thumbnail, lastModified };
-                (void)resolve(rv.val.thumbnail);
             }
         });
 

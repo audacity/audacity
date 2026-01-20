@@ -26,7 +26,7 @@ std::string ToastModule::moduleName() const
 
 void ToastModule::registerExports()
 {
-    m_toastService = std::make_shared<ToastService>();
+    m_toastService = std::make_shared<ToastService>(iocContext());
     m_toastProvider = std::make_shared<ToastProvider>();
 
     ioc()->registerExport<IToastService>(moduleName(), m_toastService);

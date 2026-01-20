@@ -13,11 +13,11 @@
 namespace au::trackedit {
 class TrackeditInteraction : public ITrackeditInteraction, public muse::Injectable
 {
-    muse::Inject<au::record::IRecordController> recordController;
-    muse::Inject<au::playback::IPlaybackController> playbackController;
+    muse::Inject<au::record::IRecordController> recordController { this };
+    muse::Inject<au::playback::IPlaybackController> playbackController { this };
 
 public:
-    TrackeditInteraction(std::unique_ptr<ITrackeditInteraction> interaction);
+    TrackeditInteraction(const muse::modularity::ContextPtr& ctx, std::unique_ptr<ITrackeditInteraction> interaction);
 
 private:
     muse::secs_t clipStartTime(const trackedit::ClipKey& clipKey) const override;
@@ -167,7 +167,7 @@ private:
     template<typename Func, typename ... Args>
     muse::Ret withProgress(Func&& method, Args&&... args) const
     {
-        auto progressDialog = std::make_unique<ProgressDialog>();
+        auto progressDialog = std::make_unique<ProgressDialog>(iocContext());
         progress().progressChanged().onReceive(progressDialog.get(),
                                                [&](int64_t current, int64_t total, const std::string&) {
             const auto result = progressDialog->Poll(current, total);

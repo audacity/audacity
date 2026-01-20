@@ -20,10 +20,10 @@ class EffectManageMenu : public muse::uicomponents::AbstractMenuModel
 
     muse::GlobalInject<IEffectsConfiguration> configuration;
 
-    muse::Inject<IEffectPresetsProvider> presetsController;
-    muse::Inject<IEffectInstancesRegister> instancesRegister;
-    muse::Inject<IEffectsProvider> effectsProvider;
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
+    muse::Inject<IEffectPresetsProvider> presetsController { this };
+    muse::Inject<IEffectInstancesRegister> instancesRegister { this };
+    muse::Inject<IEffectsProvider> effectsProvider { this };
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
 
 public:
 

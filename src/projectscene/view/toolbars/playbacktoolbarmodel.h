@@ -29,10 +29,10 @@ class PlaybackToolBarModel : public muse::uicomponents::AbstractToolBarModel
     muse::GlobalInject<playback::IPlaybackConfiguration> configuration;
     muse::GlobalInject<record::IRecordConfiguration> recordConfiguration;
 
-    muse::Inject<muse::ui::IUiActionsRegister> uiActionsRegister;
-    muse::Inject<context::IGlobalContext> context;
-    muse::Inject<playback::IPlaybackController> playbackController;
-    muse::Inject<record::IRecordController> recordController;
+    muse::Inject<muse::ui::IUiActionsRegister> uiActionsRegister{ this };
+    muse::Inject<context::IGlobalContext> context{ this };
+    muse::Inject<playback::IPlaybackController> playbackController{ this };
+    muse::Inject<record::IRecordController> recordController{ this };
 
 public:
     explicit PlaybackToolBarModel(QObject* parent = nullptr);

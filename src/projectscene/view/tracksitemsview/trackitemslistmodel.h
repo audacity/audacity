@@ -26,7 +26,8 @@
 #include "viewtrackitem.h"
 
 namespace au::projectscene {
-class TrackItemsListModel : public QAbstractListModel, public muse::async::Asyncable, public muse::actions::Actionable
+class TrackItemsListModel : public QAbstractListModel, public muse::async::Asyncable, public muse::actions::Actionable,
+    public muse::Injectable
 {
     Q_OBJECT
 
@@ -35,13 +36,13 @@ class TrackItemsListModel : public QAbstractListModel, public muse::async::Async
     Q_PROPERTY(int cacheBufferPx READ cacheBufferPx CONSTANT)
 
 protected:
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
-    muse::Inject<context::IGlobalContext> globalContext;
-    muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction;
-    muse::Inject<trackedit::ISelectionController> selectionController;
-    muse::Inject<trackedit::IProjectHistory> projectHistory;
-    muse::Inject<trackedit::ITrackNavigationController> trackNavigationController;
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::Inject<context::IGlobalContext> globalContext{ this };
+    muse::Inject<muse::IInteractive> interactive{ this };
+    muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
+    muse::Inject<trackedit::ISelectionController> selectionController{ this };
+    muse::Inject<trackedit::IProjectHistory> projectHistory{ this };
+    muse::Inject<trackedit::ITrackNavigationController> trackNavigationController{ this };
 
 public:
     explicit TrackItemsListModel(QObject* parent = nullptr);

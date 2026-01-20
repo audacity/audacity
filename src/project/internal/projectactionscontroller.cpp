@@ -31,6 +31,11 @@ static const QString OPEN_PROJECT_URL_HOSTNAME("open-project");
 static const muse::actions::ActionCode OPEN_CUSTOM_FFMPEG_OPTIONS("open-custom-ffmpeg-options");
 static const muse::actions::ActionCode OPEN_METADATA_DIALOG("open-metadata-dialog");
 
+ProjectActionsController::ProjectActionsController(muse::modularity::ContextPtr ctx)
+    : muse::Injectable(ctx)
+{
+}
+
 void ProjectActionsController::init()
 {
     dispatcher()->reg(this, "file-new", this, &ProjectActionsController::newProject);
@@ -171,7 +176,7 @@ void ProjectActionsController::newProject()
         return;
     }
 
-    IAudacityProjectPtr project = std::make_shared<Audacity4Project>();
+    IAudacityProjectPtr project = std::make_shared<Audacity4Project>(iocContext());
     project->createNew();
 
     globalContext()->setCurrentProject(project);
@@ -580,7 +585,7 @@ RetVal<IAudacityProjectPtr> ProjectActionsController::loadProject(const io::path
     // IF_ASSERT_FAILED(project) {
     //     return make_ret(Ret::Code::InternalError);
     // }
-    IAudacityProjectPtr project = std::make_shared<Audacity4Project>();
+    IAudacityProjectPtr project = std::make_shared<Audacity4Project>(iocContext());
 
     //! TODO AU4
     // bool hasUnsavedChanges = project->hasUnsavedChanges();

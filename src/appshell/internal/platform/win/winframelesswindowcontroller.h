@@ -40,7 +40,7 @@ class WinFramelessWindowController : public QObject, public FramelessWindowContr
     muse::Inject<muse::ui::IMainWindow> mainWindow { this };
 
 public:
-    explicit WinFramelessWindowController();
+    explicit WinFramelessWindowController(QObject* parent = nullptr);
 
     void init() override;
 

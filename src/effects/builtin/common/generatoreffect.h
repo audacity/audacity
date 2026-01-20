@@ -12,8 +12,8 @@ struct EffectSettings;
 namespace au::effects {
 class GeneratorEffect : public muse::Injectable
 {
-    muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<au::playback::IPlayback> playback;
+    muse::Inject<au::context::IGlobalContext> globalContext{ this };
+    muse::Inject<au::playback::IPlayback> playback{ this };
 
 public:
     GeneratorEffect(const double& t0, double& t1);

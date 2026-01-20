@@ -6,7 +6,7 @@ using namespace au::appshell;
 using namespace muse;
 
 WorkspaceLayoutPageModel::WorkspaceLayoutPageModel(QObject* parent)
-    : QObject(parent)
+    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
 {
 #ifdef MUSE_MODULE_WORKSPACE
     // Listen to workspace changes to update selection

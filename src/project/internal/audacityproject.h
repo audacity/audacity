@@ -41,22 +41,23 @@ namespace au::project {
 //! it cannot be used in parts, therefore, to avoid duplication of symbols,
 //! we can add (as source) it only to one library
 //! * Thanks to this wrapper we will see exactly what we are using from AU3
-class Audacity4Project : public IAudacityProject, public muse::async::Asyncable
+class Audacity4Project : public IAudacityProject, public muse::async::Asyncable, public muse::Injectable
 {
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
     muse::GlobalInject<IProjectConfiguration> configuration;
 
-    muse::Inject<au3::IAu3ProjectCreator> au3ProjectCreator;
-    muse::Inject<trackedit::ITrackeditProjectCreator> trackeditProjectCreator;
-    muse::Inject<projectscene::IProjectViewStateCreator> viewStateCreator;
-    muse::Inject<context::IGlobalContext> globalContext;
-    muse::Inject<au::trackedit::IProjectHistory> projectHistory;
-    muse::Inject<au::trackedit::ITrackeditClipboard> clipboard;
-    muse::Inject<IThumbnailCreator> thumbnailCreator;
-    muse::Inject<importexport::IImporter> importer;
+    muse::Inject<au3::IAu3ProjectCreator> au3ProjectCreator { this };
+    muse::Inject<trackedit::ITrackeditProjectCreator> trackeditProjectCreator { this };
+    muse::Inject<projectscene::IProjectViewStateCreator> viewStateCreator { this };
+    muse::Inject<context::IGlobalContext> globalContext { this };
+    muse::Inject<au::trackedit::IProjectHistory> projectHistory { this };
+    muse::Inject<au::trackedit::ITrackeditClipboard> clipboard { this };
+    muse::Inject<IThumbnailCreator> thumbnailCreator { this };
+    muse::Inject<importexport::IImporter> importer { this };
 
 public:
-    Audacity4Project();
+    Audacity4Project(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
 
     muse::Ret createNew() override;
 

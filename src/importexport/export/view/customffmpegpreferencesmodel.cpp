@@ -10,7 +10,7 @@
 using namespace au::importexport;
 
 CustomFFmpegPreferencesModel::CustomFFmpegPreferencesModel(QObject* parent)
-    : QObject(parent)
+    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
 {
 }
 

@@ -13,16 +13,16 @@
 #include <QObject>
 
 namespace au::effects {
-class AbstractEffectViewModel : public QObject, public muse::async::Asyncable
+class AbstractEffectViewModel : public QObject, public muse::async::Asyncable, public muse::Injectable
 {
     Q_OBJECT
     Q_PROPERTY(EffectInstanceId instanceId READ instanceId CONSTANT FINAL)
     Q_PROPERTY(bool isPreviewing READ isPreviewing NOTIFY isPreviewingChanged FINAL)
 
 protected:
-    muse::Inject<IEffectInstancesRegister> instancesRegister;
-    muse::Inject<IEffectExecutionScenario> executionScenario;
-    muse::Inject<au::playback::IPlayback> playback;
+    muse::Inject<IEffectInstancesRegister> instancesRegister{ this };
+    muse::Inject<IEffectExecutionScenario> executionScenario{ this };
+    muse::Inject<au::playback::IPlayback> playback{ this };
 
 public:
     AbstractEffectViewModel(QObject* parent, int instanceId);

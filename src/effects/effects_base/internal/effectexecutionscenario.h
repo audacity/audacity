@@ -25,19 +25,20 @@ class EffectBase;
 class EffectInstance;
 class SimpleEffectSettingsAccess;
 namespace au::effects {
-class EffectExecutionScenario : public IEffectExecutionScenario
+class EffectExecutionScenario : public IEffectExecutionScenario, public muse::Injectable
 {
     muse::GlobalInject<IEffectsConfiguration> effectsConfiguration;
 
-    muse::Inject<context::IGlobalContext> globalContext;
-    muse::Inject<IEffectsProvider> effectsProvider;
-    muse::Inject<IEffectInstancesRegister> effectInstancesRegister;
-    muse::Inject<trackedit::ISelectionController> selectionController;
-    muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<trackedit::IProjectHistory> projectHistory;
+    muse::Inject<context::IGlobalContext> globalContext{ this };
+    muse::Inject<IEffectsProvider> effectsProvider{ this };
+    muse::Inject<IEffectInstancesRegister> effectInstancesRegister{ this };
+    muse::Inject<trackedit::ISelectionController> selectionController{ this };
+    muse::Inject<muse::IInteractive> interactive{ this };
+    muse::Inject<trackedit::IProjectHistory> projectHistory{ this };
 
 public:
-    EffectExecutionScenario() = default;
+    EffectExecutionScenario(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
 
     muse::Ret performEffect(const EffectId& effectId) override;
     bool lastProcessorIsAvailable() const override;

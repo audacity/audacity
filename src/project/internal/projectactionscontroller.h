@@ -20,22 +20,24 @@
 #include "project/iaudacityproject.h"
 
 namespace au::project {
-class ProjectActionsController : public IProjectFilesController, public muse::actions::Actionable, public muse::async::Asyncable
+class ProjectActionsController : public IProjectFilesController, public muse::actions::Actionable, public muse::async::Asyncable,
+    public muse::Injectable
 {
     muse::GlobalInject<IProjectConfiguration> configuration;
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
     muse::GlobalInject<importexport::ExportConfiguration> exportConfiguration;
 
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
-    muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<IRecentFilesController> recentFilesController;
-    muse::Inject<IOpenSaveProjectScenario> openSaveProjectScenario;
-    muse::Inject<trackedit::IProjectHistory> projectHistory;
-    muse::Inject<record::IRecordController> recordController;
+    muse::GlobalInject<IRecentFilesController> recentFilesController;
+
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::Inject<au::context::IGlobalContext> globalContext { this };
+    muse::Inject<muse::IInteractive> interactive { this };
+    muse::Inject<IOpenSaveProjectScenario> openSaveProjectScenario { this };
+    muse::Inject<trackedit::IProjectHistory> projectHistory { this };
+    muse::Inject<record::IRecordController> recordController { this };
 
 public:
-    ProjectActionsController() = default;
+    ProjectActionsController(muse::modularity::ContextPtr ctx = nullptr);
 
     void init();
 

@@ -7,7 +7,7 @@ using namespace au::projectscene;
 using namespace au::project;
 
 TracksViewStateModel::TracksViewStateModel(QObject* parent)
-    : QObject(parent)
+    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
 {
 }
 

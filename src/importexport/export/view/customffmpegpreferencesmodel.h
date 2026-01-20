@@ -15,15 +15,16 @@
 #include "iglobalconfiguration.h"
 
 namespace au::importexport {
-class CustomFFmpegPreferencesModel : public QObject, public muse::async::Asyncable
+class CustomFFmpegPreferencesModel : public QObject, public muse::async::Asyncable, public muse::Injectable
 {
     Q_OBJECT
 
     muse::GlobalInject<IExportConfiguration> exportConfiguration;
-    muse::Inject<IExporter> exporter;
-    muse::Inject<IFFmpegOptionsAccessor> ffmpegOptionsAccessor;
-    muse::Inject<muse::IInteractive> interactive;
     muse::GlobalInject<muse::IGlobalConfiguration> globalConfiguration;
+
+    muse::Inject<IFFmpegOptionsAccessor> ffmpegOptionsAccessor { this };
+    muse::Inject<IExporter> exporter{ this };
+    muse::Inject<muse::IInteractive> interactive{ this };
 
     Q_PROPERTY(QString ffmpegVersion READ ffmpegVersion NOTIFY ffmpegVersionChanged)
     Q_PROPERTY(QString ffmpegLibraryPath READ ffmpegLibraryPath NOTIFY ffmpegLibraryPathChanged)

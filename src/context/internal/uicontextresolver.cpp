@@ -37,6 +37,11 @@ static const Uri PROJECT_PAGE_URI("audacity://project");
 static const QString PROJECT_NAVIGATION_PANEL("MainToolBar");
 static const QString DEFAULT_NAVIGATION_SECTION("TrackViewSection");
 
+UiContextResolver::UiContextResolver(const muse::modularity::ContextPtr& ctx)
+    : muse::Injectable(ctx)
+{
+}
+
 void UiContextResolver::init()
 {
     interactive()->currentUri().ch.onReceive(this, [this](const Uri&) {

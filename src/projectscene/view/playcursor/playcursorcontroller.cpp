@@ -31,7 +31,7 @@ static const ActionQuery PLAYBACK_SEEK_QUERY("action://playback/seek");
 static const ActionQuery PLAYBACK_CHANGE_PLAY_REGION_QUERY("action://playback/play-region-change");
 
 PlayCursorController::PlayCursorController(QObject* parent)
-    : QObject(parent)
+    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
 {
 }
 

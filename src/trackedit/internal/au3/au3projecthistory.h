@@ -12,11 +12,14 @@
 #include "au3wrap/au3types.h"
 
 namespace au::trackedit {
-class Au3ProjectHistory : public IProjectHistory
+class Au3ProjectHistory : public IProjectHistory, public muse::Injectable
 {
-    muse::Inject<context::IGlobalContext> globalContext;
+    muse::Inject<context::IGlobalContext> globalContext { this };
 
 public:
+    Au3ProjectHistory(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
+
     void init() override;
 
     bool undoAvailable() const override;

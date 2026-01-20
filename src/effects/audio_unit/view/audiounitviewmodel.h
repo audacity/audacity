@@ -23,10 +23,10 @@ class AudioUnitViewModel : public AbstractEffectViewModel
     Q_OBJECT
     Q_PROPERTY(QString title READ title NOTIFY titleChanged FINAL)
 
-    muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<IRealtimeEffectService> realtimeEffectService;
-    muse::Inject<au::playback::IPlayback> playback;
-    muse::Inject<trackedit::IProjectHistory> projectHistory;
+    muse::Inject<au::context::IGlobalContext> globalContext{ this };
+    muse::Inject<IRealtimeEffectService> realtimeEffectService{ this };
+    muse::Inject<au::playback::IPlayback> playback{ this };
+    muse::Inject<trackedit::IProjectHistory> projectHistory{ this };
 
 public:
     AudioUnitViewModel(QObject* parent, int instanceId);

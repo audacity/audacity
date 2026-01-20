@@ -42,6 +42,10 @@ BaseSection {
         id: playbackState
     }
 
+    Component.onCompleted: {
+        playbackState.init()
+    }
+
     // /*
     //  * TODO: https://github.com/musescore/MuseScore/issues/9807
     ComboBoxWithTitle {

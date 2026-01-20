@@ -28,8 +28,8 @@ muse::String effectTitle(const muse::io::path_t& path)
 }
 }
 
-Lv2EffectsRepository::Lv2EffectsRepository()
-    : m_helper{m_module, muse::audio::AudioResourceType::Lv2Plugin, effectTitle}
+Lv2EffectsRepository::Lv2EffectsRepository(const muse::modularity::ContextPtr& ctx)
+    : muse::Injectable(ctx), m_helper{ctx, m_module, muse::audio::AudioResourceType::Lv2Plugin, effectTitle}
 {
 }
 

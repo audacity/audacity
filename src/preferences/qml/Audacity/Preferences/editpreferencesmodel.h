@@ -15,7 +15,7 @@
 #include "trackedit/itrackeditconfiguration.h"
 
 namespace au::appshell {
-class EditPreferencesModel : public QObject, public muse::async::Asyncable
+class EditPreferencesModel : public QObject, public muse::async::Asyncable, public muse::Injectable
 {
     Q_OBJECT
     QML_ELEMENT
@@ -24,7 +24,7 @@ class EditPreferencesModel : public QObject, public muse::async::Asyncable
     muse::GlobalInject<au::projectscene::IProjectSceneConfiguration> projectsceneConfiguration;
     muse::GlobalInject<au::effects::IEffectsConfiguration> effectsConfiguration;
 
-    muse::Inject<muse::workspace::IWorkspaceManager> workspacesManager;
+    muse::Inject<muse::workspace::IWorkspaceManager> workspacesManager { this };
 
     Q_PROPERTY(bool applyEffectToAllAudio READ applyEffectToAllAudio NOTIFY applyEffectToAllAudioChanged)
     Q_PROPERTY(

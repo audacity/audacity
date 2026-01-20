@@ -31,7 +31,7 @@ class Au3LabelsInteractionsTests : public Au3InteractionTestBase
 public:
     void SetUp() override
     {
-        m_labelsInteraction = std::make_shared<Au3LabelsInteraction>();
+        m_labelsInteraction = std::make_shared<Au3LabelsInteraction>(muse::modularity::globalCtx());
 
         m_globalContext = std::make_shared<NiceMock<context::GlobalContextMock> >();
         m_selectionController = std::make_shared<NiceMock<SelectionControllerMock> >();

@@ -32,7 +32,6 @@
 
 #include "modularity/ioc.h"
 #include "iprojectconfiguration.h"
-#include "imscmetareader.h"
 #include "io/ifilesystem.h"
 #include "multiinstances/imultiinstancesprovider.h"
 
@@ -42,8 +41,6 @@ class RecentFilesController : public IRecentFilesController, public muse::async:
     muse::GlobalInject<IProjectConfiguration> configuration;
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
     muse::GlobalInject<muse::mi::IMultiInstancesProvider> multiInstancesProvider;
-
-    muse::Inject<IMscMetaReader> mscMetaReader;
 
 public:
     void init();

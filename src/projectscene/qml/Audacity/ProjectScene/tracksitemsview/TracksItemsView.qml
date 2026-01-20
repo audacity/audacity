@@ -177,6 +177,8 @@ Rectangle {
         //! NOTE Models depend on geometry, so let's create a page first and then initialize the models
         Qt.callLater(root.init)
 
+        playbackState.init()
+        playRegionModel.init()
         selectionController.load()
         selectionContextMenuModel.load()
         canvasContextMenuModel.load()

@@ -15,7 +15,7 @@ class PlaybackToolBarBPMItem : public muse::uicomponents::ToolBarItem
 
     Q_PROPERTY(double currentValue READ currentValue WRITE setCurrentValue NOTIFY currentValueChanged FINAL)
 
-    muse::Inject<context::IGlobalContext> globalContext;
+    muse::Inject<context::IGlobalContext> globalContext{ this };
 
 public:
     explicit PlaybackToolBarBPMItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,

@@ -29,6 +29,10 @@ Rectangle {
     onStartChanged: updatePosition()
     onEndChanged: updatePosition()
 
+    Component.onCompleted: {
+        playRegionModel.init()
+    }
+
     Connections {
         target: context
 

@@ -16,7 +16,7 @@
 
 class WaveClipItem;
 namespace au::projectscene {
-class WaveView : public QQuickPaintedItem, public muse::async::Asyncable
+class WaveView : public QQuickPaintedItem, public muse::async::Asyncable, public muse::Injectable
 {
     Q_OBJECT
     Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
@@ -39,9 +39,9 @@ class WaveView : public QQuickPaintedItem, public muse::async::Asyncable
 
     muse::GlobalInject<IProjectSceneConfiguration> configuration;
 
-    muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<au::projectscene::IWavePainter> wavePainter;
-    muse::Inject<au::trackedit::IProjectHistory> projectHistory;
+    muse::Inject<au::context::IGlobalContext> globalContext{ this };
+    muse::Inject<au::projectscene::IWavePainter> wavePainter{ this };
+    muse::Inject<au::trackedit::IProjectHistory> projectHistory{ this };
 
 public:
     WaveView(QQuickItem* parent = nullptr);

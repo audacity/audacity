@@ -9,6 +9,11 @@
 using namespace muse::ui;
 using namespace au::toast;
 
+ToastService::ToastService(kors::modularity::ContextPtr ctx)
+    : muse::Injectable(ctx)
+{
+}
+
 muse::async::Promise<ToastActionCode> ToastService::show(const std::string& title, const std::string& message,
                                                          muse::ui::IconCode::Code iconCode, bool dismissible,
                                                          const std::vector<ToastAction>& actions)

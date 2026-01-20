@@ -36,18 +36,20 @@
 #include "cloud/qml/Muse/Cloud/enums.h"
 
 namespace au::project {
-class OpenSaveProjectScenario : public IOpenSaveProjectScenario
+class OpenSaveProjectScenario : public IOpenSaveProjectScenario, public muse::Injectable
 {
     muse::GlobalInject<IProjectConfiguration> configuration;
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
 
-    muse::Inject<IProjectFilesController> projectFilesController;
-    muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<muse::cloud::IMuseScoreComService> museScoreComService;
-    muse::Inject<muse::cloud::IAudioComService> audioComService;
+    muse::GlobalInject<IProjectFilesController> projectFilesController;
+
+    muse::Inject<muse::IInteractive> interactive { this };
+    muse::Inject<muse::cloud::IMuseScoreComService> museScoreComService { this };
+    muse::Inject<muse::cloud::IAudioComService> audioComService { this };
 
 public:
-    OpenSaveProjectScenario() = default;
+    OpenSaveProjectScenario(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
 
     muse::RetVal<SaveLocation> askSaveLocation(IAudacityProjectPtr project, SaveMode mode,
                                                SaveLocationType preselectedType = SaveLocationType::Undefined) const override;

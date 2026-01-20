@@ -45,7 +45,7 @@ QString channelName(int channelNumber)
 }
 
 CommonAudioApiConfigurationModel::CommonAudioApiConfigurationModel(QObject* parent)
-    : QObject(parent)
+    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
 {
 }
 

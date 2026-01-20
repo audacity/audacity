@@ -44,8 +44,8 @@ static constexpr QRectF websiteRect(76, 240, 0, 0);
 
 static constexpr qreal versionNumberSpacing = 5.0;
 
-LoadingScreenView::LoadingScreenView(QWidget* parent)
-    : QWidget(parent),
+LoadingScreenView::LoadingScreenView(const muse::modularity::ContextPtr& ctx, QWidget* parent)
+    : QWidget(parent), muse::Injectable(ctx),
     m_backgroundRenderer(new QSvgRenderer(imagePath, this))
 {
     setAttribute(Qt::WA_TranslucentBackground);

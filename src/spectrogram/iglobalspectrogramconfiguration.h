@@ -10,7 +10,7 @@
 #include "framework/global/async/notification.h"
 
 namespace au::spectrogram {
-class IGlobalSpectrogramConfiguration : MODULE_EXPORT_INTERFACE, public ISpectrogramConfiguration
+class IGlobalSpectrogramConfiguration : MODULE_GLOBAL_EXPORT_INTERFACE, public ISpectrogramConfiguration
 {
     INTERFACE_ID(IGlobalSpectrogramConfiguration)
 

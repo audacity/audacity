@@ -11,13 +11,13 @@
 class CompressorInstance;
 
 namespace au::effects {
-class AbstractDynamicsEffectInstanceModel : public QObject
+class AbstractDynamicsEffectInstanceModel : public QObject, public muse::Injectable
 {
     Q_OBJECT
 
     Q_PROPERTY(int instanceId READ instanceId WRITE setInstanceId NOTIFY instanceIdChanged FINAL)
 
-    muse::Inject<IEffectInstancesRegister> instancesRegister;
+    muse::Inject<IEffectInstancesRegister> instancesRegister{ this };
 
 public:
     AbstractDynamicsEffectInstanceModel(QObject* parent = nullptr);

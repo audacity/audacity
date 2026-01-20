@@ -42,7 +42,7 @@ static_assert(numDecimals(0.005) == 3);
 }
 
 ViewTracksListModel::ViewTracksListModel(QObject* parent)
-    : QAbstractListModel(parent)
+    : QAbstractListModel(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
 {
 }
 

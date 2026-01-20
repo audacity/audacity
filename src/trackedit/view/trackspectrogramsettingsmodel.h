@@ -20,9 +20,10 @@ class TrackSpectrogramSettingsModel : public spectrogram::AbstractSpectrogramSet
     Q_PROPERTY(QString trackTitle READ trackTitle NOTIFY trackIdChanged)
     Q_PROPERTY(bool useGlobalSettings READ useGlobalSettings WRITE setUseGlobalSettings NOTIFY useGlobalSettingsChanged)
 
-    muse::Inject<spectrogram::IGlobalSpectrogramConfiguration> globalSpectrogramConfiguration;
-    muse::Inject<au::context::IGlobalContext> globalContext;
-    muse::Inject<spectrogram::ISpectrogramService> spectrogramService;
+    muse::GlobalInject<spectrogram::IGlobalSpectrogramConfiguration> globalSpectrogramConfiguration;
+
+    muse::Inject<au::context::IGlobalContext> globalContext { this };
+    muse::Inject<spectrogram::ISpectrogramService> spectrogramService { this };
 
 public:
     TrackSpectrogramSettingsModel(QObject* parent = nullptr);

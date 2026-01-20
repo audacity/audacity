@@ -20,10 +20,12 @@ class PlayRegionModel : public QObject, public muse::Injectable, public muse::as
     Q_PROPERTY(double end READ end WRITE setEnd NOTIFY endChanged FINAL)
     Q_PROPERTY(bool active READ active WRITE setActive NOTIFY activeChanged FINAL)
 
-    muse::Inject<playback::IPlaybackController> playbackController;
+    muse::Inject<playback::IPlaybackController> playbackController{ this };
 
 public:
     explicit PlayRegionModel(QObject* parent = nullptr);
+
+    Q_INVOKABLE void init();
 
     double start() const;
     void setStart(double newStart);

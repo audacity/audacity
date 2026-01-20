@@ -13,7 +13,7 @@
 
 namespace au::projectscene {
 SplitToolController::SplitToolController(QObject* parent)
-    : QObject(parent)
+    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
 {
 }
 
@@ -26,7 +26,7 @@ void SplitToolController::init(QObject* root)
         setActive(!active());
     });
 
-    m_shortcut = std::make_unique<TapHoldShortcut>("split-tool", root);
+    m_shortcut = std::make_unique<TapHoldShortcut>(iocContext(), "split-tool", root);
 
     m_shortcut->pressed().onNotify(this, [this]() {
         m_prePressState = active();

@@ -34,17 +34,17 @@
 #endif
 
 namespace au::context {
-class UiContextResolver : public muse::ui::IUiContextResolver, public muse::async::Asyncable
+class UiContextResolver : public muse::ui::IUiContextResolver, public muse::async::Asyncable, public muse::Injectable
 {
-    muse::Inject<muse::IInteractive> interactive;
-    muse::Inject<IGlobalContext> globalContext;
-    muse::Inject<muse::ui::INavigationController> navigationController;
+    muse::Inject<muse::IInteractive> interactive { this };
+    muse::Inject<IGlobalContext> globalContext { this };
+    muse::Inject<muse::ui::INavigationController> navigationController { this };
 
 #ifdef AU_BUILD_PLAYBACK_MODULE
-    muse::Inject<playback::IPlaybackController> playbackController;
+    muse::Inject<playback::IPlaybackController> playbackController { this };
 #endif
 public:
-    UiContextResolver() = default;
+    UiContextResolver(const muse::modularity::ContextPtr& ctx);
 
     void init();
 

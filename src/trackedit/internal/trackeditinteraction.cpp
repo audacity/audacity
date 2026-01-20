@@ -1,8 +1,8 @@
 #include "trackeditinteraction.h"
 
 namespace au::trackedit {
-TrackeditInteraction::TrackeditInteraction(std::unique_ptr<ITrackeditInteraction> interaction)
-    : m_interaction(std::move(interaction))
+TrackeditInteraction::TrackeditInteraction(const muse::modularity::ContextPtr& ctx, std::unique_ptr<ITrackeditInteraction> interaction)
+    : muse::Injectable(ctx), m_interaction(std::move(interaction))
 {
 }
 

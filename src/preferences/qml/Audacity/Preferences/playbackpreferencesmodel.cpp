@@ -10,7 +10,7 @@ using namespace au::appshell;
 using namespace muse::audio;
 
 PlaybackPreferencesModel::PlaybackPreferencesModel(QObject* parent)
-    : QObject(parent)
+    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
 {
 }
 

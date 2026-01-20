@@ -5,7 +5,7 @@
 using namespace au::playback;
 
 PlaybackMeterPanelModel::PlaybackMeterPanelModel(QObject* parent)
-    : QObject(parent)
+    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
 {
     m_meterModel = new PlaybackMeterModel(this);
 }

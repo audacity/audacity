@@ -39,6 +39,10 @@ BaseSection {
         id: playbackState
     }
 
+    Component.onCompleted: {
+        playbackState.init()
+    }
+
     IncrementalPropertyControlWithTitle {
         title: qsTrc("preferences", "Buffer length")
 

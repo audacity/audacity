@@ -13,7 +13,7 @@
 namespace au::projectscene {
 class TapHoldShortcut;
 
-class SplitToolController : public QObject, public muse::actions::Actionable, public muse::async::Asyncable
+class SplitToolController : public QObject, public muse::actions::Actionable, public muse::async::Asyncable, public muse::Injectable
 {
     Q_OBJECT
 
@@ -25,9 +25,9 @@ class SplitToolController : public QObject, public muse::actions::Actionable, pu
     Q_PROPERTY(double guidelinePosition READ guidelinePosition NOTIFY guidelinePositionChanged FINAL)
     Q_PROPERTY(bool guidelineVisible READ guidelineVisible NOTIFY guidelineVisibleChanged FINAL)
 
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
-    muse::Inject<context::IGlobalContext> globalContext;
-    muse::Inject<context::IUiContextResolver> uicontextResolver;
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::Inject<context::IGlobalContext> globalContext{ this };
+    muse::Inject<context::IUiContextResolver> uicontextResolver{ this };
 
 public:
     SplitToolController(QObject* parent = nullptr);

@@ -33,7 +33,7 @@ std::string ExporterModule::moduleName() const
 
 void ExporterModule::registerExports()
 {
-    m_exporter = std::make_shared<Au3Exporter>();
+    m_exporter = std::make_shared<Au3Exporter>(iocContext());
     m_configuration = std::make_shared<ExportConfiguration>();
     m_ffmpegOptionsAccessor = std::make_shared<Au3FFmpegOptionsAccessor>();
 

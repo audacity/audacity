@@ -14,7 +14,7 @@ using namespace muse::actions;
 static const ActionQuery PLAYBACK_LEVEL_QUERY("action://playback/level");
 
 ProjectPageModel::ProjectPageModel(QObject* parent)
-    : QObject(parent)
+    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
 {
 }
 

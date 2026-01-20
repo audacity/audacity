@@ -12,7 +12,7 @@
 #include <map>
 
 namespace au::projectscene {
-class RealtimeEffectSectionModel : public QObject, public muse::actions::Actionable, public muse::async::Asyncable
+class RealtimeEffectSectionModel : public QObject, public muse::actions::Actionable, public muse::async::Asyncable, public muse::Injectable
 {
     Q_OBJECT
 
@@ -20,7 +20,7 @@ class RealtimeEffectSectionModel : public QObject, public muse::actions::Actiona
 
     muse::GlobalInject<IProjectSceneConfiguration> configuration;
 
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher;
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher{ this };
 
 public:
     explicit RealtimeEffectSectionModel(QObject* parent = nullptr);
