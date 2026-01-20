@@ -102,6 +102,7 @@ Item {
     Component {
         id: dropdownControl
 
+        // Wrapper Item needed to properly communicate size to parent Loader via implicitWidth/Height
         Item {
             implicitWidth: dropdown.width
             implicitHeight: dropdown.height
