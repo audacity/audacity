@@ -135,7 +135,7 @@ void StartupScenario::runAfterSplashScreen()
                                                      muse::IInteractive::ButtonData(
                                                          muse::IInteractive::Button::Apply, muse::trc("appshell", "Scan plugins"), true) });
             if (ret.standardButton() == muse::IInteractive::Button::Apply) {
-                muse::Ret ret = registerAudioPluginsScenario()->registerNewPlugins(newPluginPaths);
+                muse::Ret ret = registerAudioPluginsScenario()->updatePluginsRegistry(newPluginPaths);
                 if (!ret) {
                     LOGE() << ret.toString();
                 }

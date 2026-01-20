@@ -36,7 +36,7 @@ FramelessWindowModel::FramelessWindowModel(QObject* parent)
     : QObject(parent)
 {
 #ifdef Q_OS_WIN
-    m_controller = new WinFramelessWindowController();
+    m_controller = new WinFramelessWindowController(this);
 #else
     m_controller = new FramelessWindowController();
 #endif
