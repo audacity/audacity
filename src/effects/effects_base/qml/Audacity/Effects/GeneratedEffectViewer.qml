@@ -14,9 +14,10 @@ Rectangle {
 
     required property int instanceId
 
-    implicitWidth: 640
+    implicitWidth: prv.dialogWidth
     implicitHeight: {
         // why 5 times spaceXL?
+        // -> 5 * spaceXL accounts for the combined vertical margins and spacing:
         // Calculate total height needed:
         // - Top margin: prv.spaceXL (1)
         // - Title height: titleLabel.height
@@ -28,8 +29,8 @@ Rectangle {
         // - Border: 2 * prv.borderWidth
         var totalHeight = prv.spaceXL * 5 + titleLabel.height + parametersColumn.height + 2 * prv.borderWidth
         // we automatically size the height to fit the content for plugins with few parameters
-        // we limit the height to 640 to avoid making the dialog too tall
-        return Math.min(totalHeight, 640)
+        // we limit the height to avoid making the dialog too tall
+        return Math.min(totalHeight, prv.maxDialogHeight)
     }
 
     color: ui.theme.backgroundPrimaryColor
@@ -45,6 +46,10 @@ Rectangle {
 
         readonly property int borderWidth: 1
         readonly property int borderRadius: 4
+
+        readonly property int dialogWidth: 640
+        readonly property int maxDialogHeight: 640
+        readonly property int maxContentWidth: 512
     }
 
     property var viewModel: GeneratedEffectViewerModelFactory.createModel(root, root.instanceId)
@@ -82,7 +87,7 @@ Rectangle {
 
                 ColumnLayout {
                     id: parametersColumn
-                    width: Math.min(parent.width, 512)
+                    width: Math.min(parent.width, prv.maxContentWidth)
                     anchors.horizontalCenter: parent.horizontalCenter
                     spacing: prv.spaceXXL
 
