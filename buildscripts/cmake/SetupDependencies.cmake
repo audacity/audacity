@@ -29,8 +29,7 @@ else()
     set(LIB_BUILD_TYPE "debug")
 endif()
 
-#set(REMOTE_ROOT_URL https://raw.githubusercontent.com/musescore/muse_deps/main)
-set(REMOTE_ROOT_URL https://raw.githubusercontent.com/embarc-gabriel/muse_deps/add_openssl)
+set(REMOTE_ROOT_URL https://raw.githubusercontent.com/musescore/muse_deps/main)
 set(LOCAL_ROOT_PATH ${FETCHCONTENT_BASE_DIR})
 
 function(populate name remote_suffix)
