@@ -30,6 +30,11 @@ git clone --recurse-submodules https://github.com/audacity/audacity.git
 # Configure (first time only)
 cmake -S . -B build/ -G Ninja
 
+# Or use CMake presets (defined in CMakePresets.json):
+# cmake --preset audacity-debug      # Debug build
+# cmake --preset audacity-asan       # Debug with AddressSanitizer
+# cmake --preset audacity-release    # Release with debug info
+
 # Build
 cmake --build build/
 
@@ -39,8 +44,8 @@ cmake --install build/
 
 ### Quick Development Builds
 - **Qt Creator**: Open `CMakeLists.txt`, configure with Qt kit, and build
-- **Visual Studio (Windows)**: Run `generate_sln.bat` to generate solution
-- **VSCode**: Open workspace file `.vscode/audacity.code-workspace`
+- **Visual Studio (Windows)**: Run `generate_sln.bat` in the repository root to generate solution in `./build/audacity.sln`
+- **VSCode**: Open workspace file `.vscode/audacity.code-workspace` (note: BUILDING.md indicates this is currently Windows-only, but workspace file exists and should work on all platforms)
 
 ## Architecture & Project Structure
 
@@ -49,19 +54,29 @@ cmake --install build/
   - `app/` - Application layer
   - `appshell/` - Application shell and startup
   - `au3wrap/` - Audacity 3 wrapper/integration
-  - `effects/` - Audio effects
+  - `au3audio/` - AU3 audio integration
+  - `audio/` - Audio engine
+  - `context/` - Global context management
+  - `effects/` - Audio effects (builtin, VST, LV2, Audio Unit, Nyquist, Vamp)
+  - `importexport/` - Import/export functionality
   - `playback/` - Playback engine
+  - `preferences/` - Preferences/settings
   - `project/` - Project management
   - `projectscene/` - Project UI/scene
   - `record/` - Recording functionality
+  - `spectrogram/` - Spectrogram visualization
+  - `toast/` - Toast notifications
   - `trackedit/` - Track editing
+  - `uicomponents/` - Reusable UI components
+  - `stubs/` - Stub implementations for testing
 - **`/au3/`** - Audacity 3.x legacy code
   - `src/` - AU3 C++ source
-  - `lib-src/` - Third-party libraries
-  - `libraries/` - AU3 modular libraries
+  - `lib-src/` - Third-party libraries (libnyquist, libsoxr, portmixer, soundtouch, sqlite, etc.)
+  - `libraries/` - AU3 modular libraries (70+ libraries with au3- prefix)
 - **`/muse_framework/`** - MuseScore framework (submodule)
 - **`/buildscripts/`** - Build and CI scripts
-- **`/docs/`** - Documentation
+- **`/docs/`** - Documentation (currently minimal, contains effect-view-architecture.md)
+- **`/share/`** - Shared resources (icons, locale, workspaces, autobotscripts)
 
 ### Technologies
 - **Languages**: C++17, QML, Python (scripts)
@@ -88,7 +103,13 @@ cmake --install build/
 - Comment only when necessary for clarity
 
 ### EditorConfig
-The repository has a `.editorconfig` file at the root. IDEs should automatically apply these settings.
+The repository has a `.editorconfig` file at the root. IDEs should automatically apply these settings:
+- 4 spaces for most files (Python, shell scripts)
+- 2 spaces for YAML/JSON files
+- Tab indentation for Makefiles
+- UTF-8 encoding, LF line endings (except `.bat`/`.ps1` which use CRLF)
+- Trim trailing whitespace (except Markdown)
+- Insert final newline
 
 ## Testing
 
@@ -101,12 +122,19 @@ The repository has a `.editorconfig` file at the root. IDEs should automatically
 
 ### CI Workflows
 - **Code Style**: `.github/workflows/au4_check_codestyle.yml`
-  - Runs: `cmake -P ./buildscripts/ci/checkcodestyle/_deps/checkcodestyle.cmake ./src/`
+  - Runs on Ubuntu 24.04
+  - Executes: `cmake -P ./buildscripts/ci/checkcodestyle/_deps/checkcodestyle.cmake ./src/`
+  - Checks only `/src/` directory for AU4 code style compliance
 - **Unit Tests**: `.github/workflows/au4_check_unit_tests.yml`
-  - Builds with Qt 6.10.1 on Ubuntu 22.04
-  - Runs unit tests with ASAN
+  - Runs on Ubuntu 22.04
+  - Builds with Qt 6.10.1
+  - Runs unit tests with ASAN (AddressSanitizer)
   - Optional code coverage (enabled on scheduled runs every Thursday at 03:00)
-- **Platform Builds**: Linux, macOS, Windows workflows (all use Qt 6.10.1)
+- **Platform Builds**:
+  - Linux: Ubuntu 22.04, Qt 6.10.1 (`.github/workflows/au4_build_linux.yml`)
+  - macOS: Xcode 15.2, Qt 6.10.1 (`.github/workflows/au4_build_macos.yml`)
+  - Windows: MSVC 2022, Qt 6.10.1 (`.github/workflows/au4_build_windows.yml`)
+  - All scheduled daily at 03:00 UTC
 
 ### Testing Guidelines
 - Write tests for new features and bug fixes when applicable
@@ -122,8 +150,8 @@ The repository has a `.editorconfig` file at the root. IDEs should automatically
 - Some MuseScore dependencies are still being cleaned up
 
 ### Contributing
-- **CLA Required**: Contributors must [sign the CLA](https://www.audacityteam.org/cla/)
-- **PR Template**: Use the pull request template in `.github/`
+- **CLA Required**: Contributors of non-trivial code (more than just a line or two) must [sign the CLA](https://www.audacityteam.org/cla/)
+- **PR Template**: Use the pull request template at `.github/pull_request_template.md`
 - **Review Process**: Changes are reviewed by the Audacity team
 - **Communication**: Use [Audacity Dev Discord](https://discord.gg/N3XKxzTrq3) for help
 
@@ -148,8 +176,10 @@ The repository has a `.editorconfig` file at the root. IDEs should automatically
 - Follow Qt best practices for model-view separation
 
 ### Debugging
-- Qt Creator provides the best QML debugging support
-- For C++ debugging, Visual Studio (Windows) or GDB (Linux) work well
+- **Qt Creator**: Provides the best QML debugging support
+- **Visual Studio (Windows)**: Good C++ debugging with `.vscode/qt6.natvis` visualizers
+- **GDB/LLDB (Linux/macOS)**: Use with VSCode launch configurations in `.vscode/launch.json`
+- **VSCode**: Launch configurations available for Windows (cdb), macOS (lldb), and Linux (gdb)
 - Check `buildscripts/ci/` for CI debugging scripts
 
 ### Dependencies
@@ -192,8 +222,13 @@ The repository has a `.editorconfig` file at the root. IDEs should automatically
 
 - `*.cpp`, `*.h` - C++ source/header files
 - `*.qml` - QML UI files
+- `*.qrc` - Qt resource files
 - `CMakeLists.txt` - CMake build configuration
 - `.clang-format` - C++ code formatting rules
-- `*module.cpp` - Module initialization code
+- `*module.cpp`, `*module.h` - Module initialization code
 - `*types.h` - Type definitions
 - `*configuration.h` - Configuration interfaces
+- `i*.h` - Interface definitions (e.g., `ieffectsprovider.h`, `iplayback.h`)
+- `*.bat` - Windows batch scripts (CRLF line endings)
+- `*.sh` - Shell scripts (LF line endings)
+- `*.cmake` - CMake scripts and modules
