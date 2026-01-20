@@ -265,6 +265,12 @@ const UiActionList ApplicationUiActions::m_actions = {
              TranslatableString("action", "Cancel"),
              IconCode::Code::DELETE_TANK
              ),
+    UiAction("action://trigger",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "&Trigger"),
+             TranslatableString("action", "Trigger")
+             ),
 };
 
 ApplicationUiActions::ApplicationUiActions(std::shared_ptr<ApplicationActionController> controller)

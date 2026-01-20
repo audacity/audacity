@@ -106,6 +106,8 @@ private:
     void revertToFactorySettings();
 
     bool isProjectOpened() const;
+    bool isProjectOpenedAndFocused() const;
+
     void doGlobalCopy();
     void doGlobalCut();
     void doGlobalPaste();
@@ -113,6 +115,7 @@ private:
     void doGlobalRedo();
     void doGlobalDelete();
     void doGlobalCancel();
+    void doGlobalTrigger();
 
     bool m_quiting = false;
 
