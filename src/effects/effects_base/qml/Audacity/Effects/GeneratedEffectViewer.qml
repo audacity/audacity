@@ -122,10 +122,6 @@ Rectangle {
     }
 
     // Preview methods - delegate to viewModel
-    function preview() {
-        viewModel.startPreview()
-    }
-
     function startPreview() {
         viewModel.startPreview()
     }
