@@ -26,11 +26,6 @@ void RecordConfiguration::init()
     });
 }
 
-draw::Color RecordConfiguration::recordColor() const
-{
-    return "#EF476F";
-}
-
 bool RecordConfiguration::isMicMeteringOn() const
 {
     return muse::settings()->value(MIC_METERING_KEY).toBool();

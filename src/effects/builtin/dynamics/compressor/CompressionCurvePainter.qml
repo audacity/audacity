@@ -23,11 +23,11 @@ Canvas {
         ctx.lineTo(points[points.length - 1].x, height)
         // Down to bottom right
         ctx.closePath()
-        ctx.fillStyle = "#1A50CAFF"
+        ctx.fillStyle = ui.theme.extra["compression_curve_fill_color"]
         ctx.fill();
 
         // Draw curve
-        ctx.strokeStyle = "#50caff"
+        ctx.strokeStyle = ui.theme.extra["compression_curve_stroke_color"]
         ctx.lineWidth = 1
         ctx.beginPath()
         ctx.moveTo(points[0].x, points[0].y)

@@ -102,6 +102,7 @@ au::importexport::FileInfo au::importexport::Au3Importer::fileInfo(const muse::i
         if ((inFile != NULL) && (inFile->GetStreamCount() > 0)) {
             fileInfo.path = filePath;
             fileInfo.duration = inFile->GetDuration();
+            fileInfo.trackCount = inFile->GetRequiredTrackCount();
 
             return fileInfo;
         }
@@ -169,9 +170,10 @@ bool au::importexport::Au3Importer::importIntoTrack(const muse::io::path_t& file
     std::optional<LibFileFormats::AcidizerTags> acidTags;
     TranslatableString errorMessage;
 
+    const wxString wxPath = filePath.toString().toUtf8().constData();
     const bool ok = Importer::Get().Import(
         *project,
-        wxFromString(filePath.toString()),
+        wxPath,
         &importProgressListener,
         &WaveTrackFactory::Get(*project),
         tmpTracks,
@@ -184,25 +186,59 @@ bool au::importexport::Au3Importer::importIntoTrack(const muse::io::path_t& file
         return false;
     }
 
+    std::string baseName = filename(filePath, false).toStdString();
     std::vector<ITrackDataPtr> importedData;
     for (auto& holder : tmpTracks) {
-        importedData.push_back(std::make_shared<Au3TrackData>(holder));
-        // TODO: implement multi-channel, multi-file drag&drop import
-        // for now, simply import first of the streams
-        break;
-    }
+        for (const auto& interval : dynamic_cast<WaveTrack*>(holder.get())->Intervals()) {
+            interval->SetName(baseName);
+        }
 
-    WaveTrack* dstWaveTrack = DomAccessor::findWaveTrack(*project, ::TrackId(dstTrackId));
-    IF_ASSERT_FAILED(dstWaveTrack) {
-        return false;
+        holder->ShiftBy(startTime);
+        importedData.push_back(std::make_shared<Au3TrackData>(holder));
     }
 
     bool modifiedState = false;
     selectionController()->setSelectedTracks({ dstTrackId }, true);
-    tracksInteraction()->paste(importedData, startTime, false /* moveClips */, false /* moveAllTracks */,
-                               false /* isMultiSelectionCopy */, modifiedState);
+    tracksInteraction()->paste(importedData, 0.0, false /* moveClips */, false /* moveAllTracks */,
+                               true /* isMultiSelectionCopy */, modifiedState);
 
     return true;
+}
+
+std::vector<std::string> au::importexport::Au3Importer::supportedExtensions() const
+{
+    static const std::vector<std::string> supportedExtensions = [] {
+        std::unordered_set<std::string> uniq;
+
+        const auto fileTypes = Importer::Get().GetFileTypes(FileNames::FileType {});
+
+        if (fileTypes.size() > 1) {
+            const auto& exts = fileTypes[1].extensions;
+            for (const auto& wxExt : exts) {
+                std::string ext = wxExt.ToStdString();
+
+                if (ext.empty() || ext == "*") {
+                    continue;
+                }
+
+                if (!ext.empty() && ext.front() == '.') {
+                    ext.erase(ext.begin());
+                }
+
+                uniq.emplace(ext);
+            }
+        }
+
+        std::vector<std::string> out;
+        out.reserve(uniq.size());
+        for (auto& e : uniq) {
+            out.push_back(e);
+        }
+
+        return out;
+    }();
+
+    return supportedExtensions;
 }
 
 void au::importexport::Au3Importer::addImportedTracks(const muse::io::path_t& fileName, TrackHolders&& newTracks)

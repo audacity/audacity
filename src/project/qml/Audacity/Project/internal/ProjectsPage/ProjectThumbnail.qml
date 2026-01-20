@@ -72,7 +72,7 @@ Item {
 
             Rectangle {
                 anchors.fill: parent
-                color: "white"
+                color: ui.theme.extra["white_color"]
 
                 Image {
                     anchors.centerIn: parent

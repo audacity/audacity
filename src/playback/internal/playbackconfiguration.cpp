@@ -36,11 +36,6 @@ static const std::vector<std::string> ditherNames{
     "None", "Rectangle", "Triangle", "Shaped"
 };
 
-draw::Color PlaybackConfiguration::playColor() const
-{
-    return "#18A999";
-}
-
 au::uicomponents::TimecodeFormatType PlaybackConfiguration::playbackTimeItemFormat() const
 {
     au::uicomponents::TimecodeFormatType result = au::uicomponents::TimecodeFormatType::HHMMSSHundredths;

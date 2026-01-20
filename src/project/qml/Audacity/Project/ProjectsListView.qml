@@ -107,7 +107,7 @@ Item {
 
             thumbnailComponent: Rectangle {
                 anchors.fill: parent
-                color: "white"
+                color: ui.theme.extra["white_color"]
 
                 StyledIconLabel {
                     anchors.centerIn: parent
@@ -115,7 +115,7 @@ Item {
                     iconCode: IconCode.PLUS
 
                     font.pixelSize: 16
-                    color: "black"
+                    color: ui.theme.extra["black_color"]
                 }
             }
 

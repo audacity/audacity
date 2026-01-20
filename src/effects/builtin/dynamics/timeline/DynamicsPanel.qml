@@ -161,8 +161,8 @@ Item {
                 //     radius: 3
                 // }
 
-                color: DynamicsColors.backgroundColor
-                border.color: DynamicsColors.gridColor
+                color: ui.theme.extra["dynamics_background_color"]
+                border.color: ui.theme.extra["dynamics_grid_color"]
                 border.width: 1
                 width: root.width - meterGrid.width - 24 // TODO font metrics
                 height: root.timelineHeight
@@ -177,7 +177,7 @@ Item {
                         width: timeline.width
                         height: 1
                         y: modelData / root.dbMin * root.timelineHeight
-                        color: DynamicsColors.gridColor
+                        color: ui.theme.extra["dynamics_grid_color"]
                     }
                 }
 
@@ -190,7 +190,7 @@ Item {
                         width: 1
                         height: timeline.height
                         x: (modelData + root.duration) / root.duration * timeline.width
-                        color: DynamicsColors.gridColor
+                        color: ui.theme.extra["dynamics_grid_color"]
                     }
                 }
 
@@ -277,7 +277,7 @@ Item {
 
                         upwards: false
                         dbMin: root.dbMin
-                        areaColor: DynamicsColors.timelineCompressionDbColor
+                        areaColor: ui.theme.extra["dynamics_timeline_compression_db_color"]
                         onClicked: {
                             compressionDbMeterModel.reset()
                         }
@@ -300,7 +300,7 @@ Item {
 
                         upwards: true
                         dbMin: root.dbMin
-                        areaColor: DynamicsColors.timelineDataFillColor
+                        areaColor: ui.theme.extra["dynamics_timeline_data_fill_color"]
                         onClicked: {
                             outputDbMeterModel.reset()
                             outputDbMeterModel.isClipping = false

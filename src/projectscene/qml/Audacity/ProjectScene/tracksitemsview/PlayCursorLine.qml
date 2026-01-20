@@ -7,8 +7,8 @@ Rectangle {
 
     QtObject {
         id: prv
-        property color borderColor: "#000000"
-        property color centerLineColor: "#ffffff"
+        property color borderColor: ui.theme.extra["black_color"]
+        property color centerLineColor: ui.theme.extra["white_color"]
         property int borderWidth: 1 // can be any number
         property int centerLineWidth: 1 // must be odd number
     }

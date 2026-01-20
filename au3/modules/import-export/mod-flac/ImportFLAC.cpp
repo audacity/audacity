@@ -301,6 +301,15 @@ double FLACImportFileHandle::GetDuration() const
     return static_cast<double>(mNumSamples) / static_cast<double>(mSampleRate);
 }
 
+int FLACImportFileHandle::GetRequiredTrackCount() const
+{
+    if (!mStreamInfoDone) {
+        return 0;
+    }
+
+    return ImportUtils::RequiredTrackCountFromChannels(static_cast<int>(mNumChannels));
+}
+
 auto FLACImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 {
     // TODO: Get Uncompressed byte count.
