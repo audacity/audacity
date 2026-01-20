@@ -57,7 +57,7 @@ void Lv2EffectsModule::resolveImports()
 
     auto lr = ioc()->resolve<IEffectViewLaunchRegister>(moduleName());
     if (lr) {
-        lr->regLauncher("LV2", std::make_shared<Lv2ViewLauncher>());
+        lr->regLauncher("LV2", std::make_shared<Lv2ViewLauncher>(iocContext()));
     }
 
     // auto ir = ioc()->resolve<IInteractiveUriRegister>(moduleName());

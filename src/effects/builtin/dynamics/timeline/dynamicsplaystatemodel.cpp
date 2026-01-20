@@ -6,6 +6,11 @@
 #include "playback/iplayer.h"
 
 namespace au::effects {
+DynamicsPlayStateModel::DynamicsPlayStateModel(QObject* parent)
+    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
+{
+}
+
 void DynamicsPlayStateModel::init()
 {
     playbackController()->isPlayingChanged().onNotify(this, [this]() {
