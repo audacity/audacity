@@ -14,12 +14,11 @@ The `master` branch contains Audacity 4 development. For Audacity 3.x work, use 
 ### Prerequisites
 - **CMake** (minimum 3.24)
 - **C++ Compiler** with C++17 support
-- **Qt 6.9.1 or higher** with Desktop components and additional libraries:
-  - Qt 5 Compatibility Module
-  - Qt Network Authorization
-  - Qt Shader Tools
-  - Qt State Machines
-  - Note: CI uses Qt 6.10.1
+- **Qt 6.2.4 minimum** (Qt 6.9.1 or higher recommended) with Desktop components and additional libraries:
+  - Qt 5 Compatibility Module (Core5Compat)
+  - Qt Network Authorization (NetworkAuth)
+  - Qt Shader Tools (ShaderTools)
+  - Note: CI uses Qt 6.10.1 with additional modules: qt5compat, qtnetworkauth, qtshadertools, qtwebsockets, qtgraphs, qtquick3d
 - **Ninja** (recommended build generator)
 - **Git** with submodules
 
@@ -97,16 +96,17 @@ The repository has a `.editorconfig` file at the root. IDEs should automatically
 - Tests are located in various directories:
   - `/au3/tests/` - Audacity 3 tests
   - Component-specific test directories (e.g., `/au3/libraries/*/tests/`)
+  - Module-specific test directories (e.g., `/src/context/tests/`, `/src/playback/tests/`, `/src/projectscene/tests/`, `/src/record/tests/`, `/src/trackedit/tests/`)
 - **Run tests**: Use CI workflow scripts or manual CMake test targets
 
 ### CI Workflows
 - **Code Style**: `.github/workflows/au4_check_codestyle.yml`
   - Runs: `cmake -P ./buildscripts/ci/checkcodestyle/_deps/checkcodestyle.cmake ./src/`
 - **Unit Tests**: `.github/workflows/au4_check_unit_tests.yml`
-  - Builds with Qt 6.10.1 on Ubuntu
+  - Builds with Qt 6.10.1 on Ubuntu 22.04
   - Runs unit tests with ASAN
-  - Optional code coverage
-- **Platform Builds**: Linux, macOS, Windows workflows
+  - Optional code coverage (enabled on scheduled runs every Thursday at 03:00)
+- **Platform Builds**: Linux, macOS, Windows workflows (all use Qt 6.10.1)
 
 ### Testing Guidelines
 - Write tests for new features and bug fixes when applicable
@@ -129,8 +129,8 @@ The repository has a `.editorconfig` file at the root. IDEs should automatically
 
 ### License
 - **Primary License**: GPLv3
-- Most code files are GPLv2-or-later
-- Exceptions: `/au3/lib-src/` (third-party), VST3-related code
+- Most code files are GPLv2-or-later (default license where no other license is specified)
+- Exceptions: `/au3/lib-src/` (third-party libraries), VST3-related code
 - Documentation: CC-BY 3.0
 
 ## Common Tasks
@@ -153,9 +153,10 @@ The repository has a `.editorconfig` file at the root. IDEs should automatically
 - Check `buildscripts/ci/` for CI debugging scripts
 
 ### Dependencies
-- External dependencies are in `/au3/lib-src/`
-- MuseScore framework provides many core utilities
-- Qt modules are specified in CMake and CI workflows
+- External dependencies are in `/au3/lib-src/` (third-party libraries like libnyquist, libsoxr, portmixer, soundtouch, sqlite, etc.)
+- MuseScore framework provides many core utilities (located in `/muse_framework/`)
+- Qt modules are specified in `buildscripts/cmake/SetupQt6.cmake` and CI workflows
+- Core Qt modules used: Core, Gui, Widgets, Network, Qml, Quick, QuickControls2, QuickWidgets, ShaderTools, Xml, Svg, Core5Compat, NetworkAuth, PrintSupport
 
 ## Additional Resources
 
@@ -182,10 +183,10 @@ The repository has a `.editorconfig` file at the root. IDEs should automatically
 - **Minimal Changes**: Make surgical, targeted changes
 - **Test Early**: Run code style checks and builds frequently
 - **Context Matters**: Audacity 4 is a hybrid of new Qt/QML UI and legacy AU3 code
-- **Submodules**: Be aware of the MuseScore framework submodule
+- **Submodules**: Be aware of the MuseScore framework submodule at `/muse_framework/`
 - **Branch Awareness**: Confirm whether changes target `master` (AU4) or `audacity3` (AU3.x)
 - **Build Time**: Initial builds can be slow; use ccache if available
-- **Qt Version**: Minimum Qt 6.9.1 required (CI uses Qt 6.10.1)
+- **Qt Version**: Minimum Qt 6.2.4 required (Qt 6.9.1+ recommended, CI uses Qt 6.10.1)
 
 ## File Patterns to Recognize
 
