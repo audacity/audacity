@@ -39,6 +39,8 @@ public:
         StepCountRole,
         CurrentValueStringRole,
         FormattedValueRole,
+        IsToggleCheckedRole,
+        CurrentEnumIndexRole,
         EnumValuesRole,
         EnumIndicesRole,
         IsReadOnlyRole,

@@ -82,13 +82,7 @@ Item {
         id: toggleControl
 
         CheckBox {
-            checked: {
-                if (!parameterData) {
-                    return false
-                }
-                var midpoint = (parameterData.minValue + parameterData.maxValue) / 2
-                return parameterData.currentValue > midpoint
-            }
+            checked: parameterData ? parameterData.isToggleChecked : false
             enabled: parameterData ? !parameterData.isReadOnly : false
 
             onClicked: {
@@ -96,8 +90,7 @@ Item {
                 root.gestureStarted(root.parameterId);
 
                 // Send the opposite of current value (toggle)
-                var midpoint = (parameterData.minValue + parameterData.maxValue) / 2
-                var isCurrentlyOn = parameterData.currentValue > midpoint
+                var isCurrentlyOn = parameterData.isToggleChecked
                 root.valueChanged(root.parameterId, isCurrentlyOn ? parameterData.minValue : parameterData.maxValue)
 
                 root.gestureEnded(root.parameterId)
@@ -117,19 +110,7 @@ Item {
                 id: dropdown
                 width: prv.controlWidth
 
-                currentIndex: {
-                    if (!parameterData || !parameterData.enumIndices) {
-                        return 0
-                    }
-
-                    // Find the index that matches the current value
-                    for (var i = 0; i < parameterData.enumIndices.length; i++) {
-                        if (Math.abs(parameterData.enumIndices[i] - parameterData.currentValue) < 0.001) {
-                            return i
-                        }
-                    }
-                    return 0
-                }
+                currentIndex: parameterData ? parameterData.currentEnumIndex : 0
 
                 model: {
                     if (!parameterData || !parameterData.enumValues) {
@@ -272,21 +253,7 @@ Item {
         id: readonlyControl
 
         StyledTextLabel {
-            text: {
-                if (!parameterData) {
-                    return ""
-                }
-                // Use formatted string from plugin if available, otherwise show normalized value
-                if (parameterData.currentValueString && parameterData.currentValueString.length > 0) {
-                    return parameterData.currentValueString
-                }
-                // Fallback: show normalized value with units
-                var valueStr = parameterData.currentValue.toFixed(2)
-                if (parameterData.units) {
-                    return valueStr + " " + parameterData.units
-                }
-                return valueStr
-            }
+            text: parameterData ? parameterData.formattedValue : ""
             opacity: 0.7
         }
     }

@@ -3,6 +3,8 @@
  */
 #include "effectparameterslistmodel.h"
 
+#include <cmath>
+
 #include "framework/global/log.h"
 
 using namespace au::effects;
@@ -74,6 +76,22 @@ QVariant EffectParametersListModel::data(const QModelIndex& index, int role) con
         }
         return displayText;
     }
+    case IsToggleCheckedRole:
+    {
+        // For toggle controls: check if currentValue is above the midpoint
+        const double midpoint = (param.minValue + param.maxValue) / 2.0;
+        return param.currentValue > midpoint;
+    }
+    case CurrentEnumIndexRole:
+    {
+        // For dropdown controls: find the index that matches the current value
+        for (size_t i = 0; i < param.enumIndices.size(); ++i) {
+            if (std::abs(param.enumIndices[i] - param.currentValue) < 0.001) {
+                return static_cast<int>(i);
+            }
+        }
+        return 0; // Default to first item if no match found
+    }
     case EnumValuesRole:
     {
         QVariantList list;
@@ -130,6 +148,8 @@ QHash<int, QByteArray> EffectParametersListModel::roleNames() const
         { StepCountRole, "stepCount" },
         { CurrentValueStringRole, "currentValueString" },
         { FormattedValueRole, "formattedValue" },
+        { IsToggleCheckedRole, "isToggleChecked" },
+        { CurrentEnumIndexRole, "currentEnumIndex" },
         { EnumValuesRole, "enumValues" },
         { EnumIndicesRole, "enumIndices" },
         { IsReadOnlyRole, "isReadOnly" },
@@ -165,8 +185,15 @@ void EffectParametersListModel::load()
         m_parameters[idx].currentValueString = data.newValueString;
 
         // Emit dataChanged for just this row
+        // Include all derived roles that depend on currentValue or currentValueString
         QModelIndex modelIndex = createIndex(idx, 0);
-        emit dataChanged(modelIndex, modelIndex, { CurrentValueRole, CurrentValueStringRole, FormattedValueRole });
+        emit dataChanged(modelIndex, modelIndex, {
+            CurrentValueRole,
+            CurrentValueStringRole,
+            FormattedValueRole,
+            IsToggleCheckedRole,
+            CurrentEnumIndexRole
+        });
     });
 }
 
