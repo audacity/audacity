@@ -54,7 +54,8 @@ public:
     ITrackDataPtr copyClip(const trackedit::ClipKey& clipKey) override;
     std::optional<TimeSpan> removeClip(const trackedit::ClipKey& clipKey) override;
     bool removeClips(const trackedit::ClipKeyList& clipKeyList, bool moveClips) override;
-    bool moveClips(secs_t timePositionOffset, int trackPositionOffset, bool completed, bool& clipsMovedToOtherTracks) override;
+    muse::RetVal<ClipKeyList> moveClips(const ClipKeyList& clipKeyList, secs_t timePositionOffset, int trackPositionOffset, bool completed,
+                                        bool& clipsMovedToOtherTracks) override;
     void cancelClipDragEdit() override;
 
     bool splitClipsAtSilences(const ClipKeyList& clipKeyList) override;
@@ -101,7 +102,7 @@ private:
 
     au3::Au3Project& projectRef() const;
 
-    NeedsDownmixing moveSelectedClipsUpOrDown(int offset);
+    NeedsDownmixing moveSelectedClipsUpOrDown(ClipKeyList& clipKeyList, int offset);
 
     void trimOrDeleteOverlapping(::WaveTrack* waveTrack, muse::secs_t begin, muse::secs_t end, std::shared_ptr<::WaveClip> otherClip);
 

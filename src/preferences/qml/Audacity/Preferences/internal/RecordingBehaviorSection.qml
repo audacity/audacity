@@ -11,7 +11,7 @@ import Audacity.UiComponents 1.0
 BaseSection {
     id: root
 
-    title: qsTrc("appshell/preferences", "Recording behavior")
+    title: qsTrc("preferences", "Recording behavior")
 
     property var recordingPreferencesModel: null
 
@@ -24,7 +24,7 @@ BaseSection {
 
             width: parent.width
 
-            text: qsTrc("appshell/preferences", "Show mic metering")
+            text: qsTrc("preferences", "Show mic metering")
 
             checked: recordingPreferencesModel.isMicMeteringOn
 
@@ -42,7 +42,7 @@ BaseSection {
 
             width: parent.width
 
-            text: qsTrc("appshell/preferences", "Enable input monitoring")
+            text: qsTrc("preferences", "Enable input monitoring")
 
             checked: recordingPreferencesModel.isInputMonitoringOn
 

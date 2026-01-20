@@ -23,6 +23,7 @@ enum class Err {
     FailedToMakeRoomForClip,
     NotEnoughDataInClipboard,
     DisallowedDuringRecording,
+    DownmixingIsNotAllowed
 };
 
 inline muse::Ret make_ret(Err e)
@@ -41,6 +42,7 @@ inline muse::Ret make_ret(Err e)
     case Err::FailedToMakeRoomForClip: return muse::Ret(retCode);
     case Err::DisallowedDuringRecording: return muse::Ret(retCode);
     case Err::NotEnoughDataInClipboard: return muse::Ret(retCode);
+    case Err::DownmixingIsNotAllowed: return muse::Ret(retCode);
     }
 
     return muse::Ret(static_cast<int>(e));

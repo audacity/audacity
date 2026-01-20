@@ -79,6 +79,8 @@ au::au3::Au3TrackId TrackTemplateFactory::addLabelTrackFromTemplate(const std::s
 {
     auto& trackList = Au3TrackList::Get(m_project);
     auto track = ::LabelTrack::CreatePtr(trackList);
+    trackList.Add(track);
+
     track->SetName(wxFromStdString(name));
 
     for (const auto& tmpl : labelTemplates) {

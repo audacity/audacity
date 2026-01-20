@@ -1087,7 +1087,7 @@ TEST_F(Au3LabelsInteractionsTests, MoveLabelsRight)
     const double timeOffset = 2.0;
 
     //! [WHEN] Move the labels right
-    bool result = m_labelsInteraction->moveLabels(timeOffset);
+    bool result = m_labelsInteraction->moveLabels(selectedLabels, timeOffset);
 
     //! [THEN] The operation is successful
     ASSERT_TRUE(result) << "Moving labels should succeed";
@@ -1152,7 +1152,7 @@ TEST_F(Au3LabelsInteractionsTests, MoveLabelsLeftWhenLabelIsAtZero)
     const double timeOffset = -1.0;
 
     //! [WHEN] Move the labels left by 1.0 second
-    bool result = m_labelsInteraction->moveLabels(timeOffset);
+    bool result = m_labelsInteraction->moveLabels(selectedLabels, timeOffset);
 
     //! [THEN] The operation is successful
     ASSERT_TRUE(result) << "Moving labels should succeed";
@@ -1199,7 +1199,7 @@ TEST_F(Au3LabelsInteractionsTests, MoveLabelsWithZeroOffset)
     EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(0);
 
     //! [WHEN] Move the label by zero offset
-    bool result = m_labelsInteraction->moveLabels(0.0);
+    bool result = m_labelsInteraction->moveLabels(selectedLabels, 0.0);
 
     //! [THEN] The operation succeeds but does nothing
     ASSERT_TRUE(result) << "Moving by zero should succeed";
@@ -1228,16 +1228,15 @@ TEST_F(Au3LabelsInteractionsTests, MoveLabelsWithNoSelection)
 
     //! [GIVEN] No labels are selected
     LabelKeyList emptySelection;
-    ON_CALL(*m_selectionController, selectedLabels()).WillByDefault(Return(emptySelection));
 
     //! [EXPECT] No notifications should be sent
     EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(0);
 
     //! [WHEN] Try to move labels with no selection
-    bool result = m_labelsInteraction->moveLabels(2.0);
+    bool result = m_labelsInteraction->moveLabels(emptySelection, 2.0);
 
-    //! [THEN] The operation fails
-    ASSERT_FALSE(result) << "Moving with no selection should fail";
+    //! [THEN] The operation don't fail
+    ASSERT_TRUE(result) << "Moving with no selection shouldn't fail";
 
     //! [THEN] The label position is unchanged
     const Au3Label* label = labelTrack->GetLabel(0);
@@ -1269,7 +1268,7 @@ TEST_F(Au3LabelsInteractionsTests, MoveLabelsToAnotherTrack)
 
     //! [WHEN] Move the label from first track to second track
     LabelKeyList labelsToMove = { { labelTrack1->GetId(), labelId } };
-    muse::RetVal<LabelKeyList> result = m_labelsInteraction->moveLabels(labelsToMove, labelTrack2->GetId());
+    muse::RetVal<LabelKeyList> result = m_labelsInteraction->moveLabelsToTrack(labelsToMove, labelTrack2->GetId());
 
     //! [THEN] The operation is successful
     ASSERT_TRUE(result.ret) << "Moving label to another track should succeed";
