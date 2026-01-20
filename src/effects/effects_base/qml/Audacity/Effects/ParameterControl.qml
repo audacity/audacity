@@ -198,16 +198,7 @@ Item {
             // Display formatted value from plugin (like AU3 does)
             StyledTextLabel {
                 anchors.verticalCenter: parent.verticalCenter
-                text: {
-                    if (!parameterData)
-                        return ""
-                    var displayText = parameterData.currentValueString || ""
-                    // Add units if available and not already in the formatted string
-                    if (parameterData.units && displayText.indexOf(parameterData.units) === -1) {
-                        displayText = displayText + " " + parameterData.units
-                    }
-                    return displayText
-                }
+                text: parameterData ? parameterData.formattedValue : ""
                 horizontalAlignment: Text.AlignLeft
             }
         }
@@ -270,16 +261,7 @@ Item {
             StyledTextLabel {
                 Layout.preferredWidth: prv.valueDisplayWidth
                 Layout.alignment: Qt.AlignVCenter
-                text: {
-                    if (!parameterData)
-                        return ""
-                    var displayText = parameterData.currentValueString || ""
-                    // Add units if available and not already in the formatted string
-                    if (parameterData.units && displayText.indexOf(parameterData.units) === -1) {
-                        displayText = displayText + " " + parameterData.units
-                    }
-                    return displayText
-                }
+                text: parameterData ? parameterData.formattedValue : ""
                 horizontalAlignment: Text.AlignLeft
             }
         }

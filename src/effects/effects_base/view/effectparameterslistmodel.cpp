@@ -64,6 +64,16 @@ QVariant EffectParametersListModel::data(const QModelIndex& index, int role) con
         return param.stepCount;
     case CurrentValueStringRole:
         return param.currentValueString.toQString();
+    case FormattedValueRole:
+    {
+        QString displayText = param.currentValueString.toQString();
+        QString units = param.units.toQString();
+        // Add units if available and not already in the formatted string
+        if (!units.isEmpty() && !displayText.contains(units)) {
+            displayText = displayText + " " + units;
+        }
+        return displayText;
+    }
     case EnumValuesRole:
     {
         QVariantList list;
@@ -119,6 +129,7 @@ QHash<int, QByteArray> EffectParametersListModel::roleNames() const
         { StepSizeRole, "stepSize" },
         { StepCountRole, "stepCount" },
         { CurrentValueStringRole, "currentValueString" },
+        { FormattedValueRole, "formattedValue" },
         { EnumValuesRole, "enumValues" },
         { EnumIndicesRole, "enumIndices" },
         { IsReadOnlyRole, "isReadOnly" },
@@ -155,7 +166,7 @@ void EffectParametersListModel::load()
 
         // Emit dataChanged for just this row
         QModelIndex modelIndex = createIndex(idx, 0);
-        emit dataChanged(modelIndex, modelIndex, { CurrentValueRole, CurrentValueStringRole });
+        emit dataChanged(modelIndex, modelIndex, { CurrentValueRole, CurrentValueStringRole, FormattedValueRole });
     });
 }
 

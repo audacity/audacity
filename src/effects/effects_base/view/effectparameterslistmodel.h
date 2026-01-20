@@ -38,6 +38,7 @@ public:
         StepSizeRole,
         StepCountRole,
         CurrentValueStringRole,
+        FormattedValueRole,
         EnumValuesRole,
         EnumIndicesRole,
         IsReadOnlyRole,
