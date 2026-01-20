@@ -45,6 +45,8 @@ private:
     static QString computeEffectName(EffectInstanceId instanceId, IEffectsProvider* provider, IEffectInstancesRegister* instancesRegister);
     static QString computeTitle(const QString& effectName);
 
+    IParameterExtractorService* getParameterExtractor() const;
+
     EffectParametersListModel* const m_parametersModel;
     const QString m_effectName;
     const QString m_title;

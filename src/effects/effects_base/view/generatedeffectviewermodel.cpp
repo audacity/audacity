@@ -30,13 +30,7 @@ GeneratedEffectViewerModel::~GeneratedEffectViewerModel()
         return;
     }
 
-    const EffectId effectId = instancesRegister()->effectIdByInstanceId(instanceId());
-    const EffectMeta meta = effectsProvider()->meta(effectId);
-    const EffectFamily family = meta.family;
-
-    IParameterExtractorService* extractor = parameterExtractorRegistry()
-                                            ? parameterExtractorRegistry()->extractorForFamily(family)
-                                            : nullptr;
+    IParameterExtractorService* extractor = getParameterExtractor();
     if (extractor) {
         extractor->endParameterEditing(instance);
     }
@@ -66,6 +60,17 @@ QString GeneratedEffectViewerModel::computeTitle(const QString& effectName)
     return QObject::tr("%1 Fallback UI").arg(effectName);
 }
 
+IParameterExtractorService* GeneratedEffectViewerModel::getParameterExtractor() const
+{
+    const EffectId effectId = instancesRegister()->effectIdByInstanceId(instanceId());
+    const EffectMeta meta = effectsProvider()->meta(effectId);
+    const EffectFamily family = meta.family;
+
+    return parameterExtractorRegistry()
+           ? parameterExtractorRegistry()->extractorForFamily(family)
+           : nullptr;
+}
+
 QString GeneratedEffectViewerModel::noParametersMessage() const
 {
     return QObject::tr("No parameters available for this effect");
@@ -83,13 +88,7 @@ void GeneratedEffectViewerModel::doInit()
     // Begin parameter editing session
     EffectInstance* instance = instancesRegister()->instanceById(instanceId()).get();
     if (instance) {
-        const EffectId effectId = instancesRegister()->effectIdByInstanceId(instanceId());
-        const EffectMeta meta = effectsProvider()->meta(effectId);
-        const EffectFamily family = meta.family;
-
-        IParameterExtractorService* extractor = parameterExtractorRegistry()
-                                                ? parameterExtractorRegistry()->extractorForFamily(family)
-                                                : nullptr;
+        IParameterExtractorService* extractor = getParameterExtractor();
         if (extractor) {
             EffectSettingsAccessPtr settingsAccess = instancesRegister()->settingsAccessById(instanceId());
             extractor->beginParameterEditing(instance, settingsAccess);
