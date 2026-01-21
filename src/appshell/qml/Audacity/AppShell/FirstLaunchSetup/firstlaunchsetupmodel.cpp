@@ -33,7 +33,8 @@ FirstLaunchSetupModel::FirstLaunchSetupModel(QObject* parent)
     m_pages = {
         Page { "ThemesPage.qml", "audacity://project" },
         Page { "ClipVisualizationPage.qml", "audacity://project" },
-        Page { "WorkspaceLayoutPage.qml", "audacity://project" }
+        Page { "WorkspaceLayoutPage.qml", "audacity://project" },
+        Page { "SigninAudiocomPage.qml", "audacity://project" },
     };
 }
 
