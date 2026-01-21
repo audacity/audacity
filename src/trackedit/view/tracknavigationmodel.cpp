@@ -110,34 +110,6 @@ void TrackNavigationModel::addPanels(trackedit::TrackId trackId, int pos)
     trackPanel->setSection(m_section);
     trackPanel->componentComplete();
 
-    connect(trackPanel, &muse::ui::NavigationPanel::navigationEvent, this,
-            [this, name = trackPanel->name()](muse::ui::NavigationEvent* event) {
-        int pos = -1;
-        for (int i = 0; i < m_trackItemPanels.size(); ++i) {
-            if (m_trackItemPanels.at(i)->name() == name) {
-                pos = i;
-                break;
-            }
-        }
-
-        if (pos == -1) {
-            return;
-        }
-
-        if (event->type() == muse::ui::NavigationEvent::Type::Up) {
-            const auto args = muse::actions::ActionData::make_arg1<int>(pos);
-            dispatcher()->dispatch("prev-track", args);
-            event->setAccepted(true);
-        } else if (event->type() == muse::ui::NavigationEvent::Type::Down) {
-            const auto args = muse::actions::ActionData::make_arg1<int>(pos);
-            dispatcher()->dispatch("next-track", args);
-            event->setAccepted(true);
-        } else if (event->type() == muse::ui::NavigationEvent::Type::Trigger) {
-            dispatcher()->dispatch("track-toggle-focused-selection");
-            event->setAccepted(true);
-        }
-    });
-
     muse::ui::NavigationPanel* itemsPanel = new muse::ui::NavigationPanel(this);
     itemsPanel->setName(QString("Track %1 Items Panel").arg(trackId));
     itemsPanel->setIndex({ 2 * pos + 1, 0 });
@@ -220,18 +192,6 @@ void TrackNavigationModel::addDefaultNavigation()
         m_default_control->setPanel(m_default_panel);
         m_default_control->componentComplete();
 
-        connect(m_default_control, &muse::ui::NavigationControl::navigationEvent, this, [this](muse::ui::NavigationEvent* event) {
-            if (event->type() == muse::ui::NavigationEvent::Type::Up) {
-                dispatcher()->dispatch("focus-prev-track");
-                event->setAccepted(true);
-            } else if (event->type() == muse::ui::NavigationEvent::Type::Down) {
-                dispatcher()->dispatch("focus-next-track");
-                event->setAccepted(true);
-            } else if (event->type() == muse::ui::NavigationEvent::Type::Trigger) {
-                dispatcher()->dispatch("track-toggle-focused-selection");
-                event->setAccepted(true);
-            }
-        });
         navigationController()->reg(m_default_section);
     }
 

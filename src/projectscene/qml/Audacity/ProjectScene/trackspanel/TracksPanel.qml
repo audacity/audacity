@@ -219,6 +219,12 @@ Item {
                                 }
                             }
 
+                            onIsFocusedChanged: function() {
+                                if (isFocused && !navigation.active) {
+                                    navigation.requestActive()
+                                }
+                            }
+
                             onInteractionStarted: {
                                 tracksViewState.requestVerticalScrollLock()
                             }
@@ -269,6 +275,12 @@ Item {
                                     root.panelActive(index)
                                     prv.currentItemNavigationName = navigation.name
                                     view.positionViewAtIndex(index, ListView.Contain)
+                                }
+                            }
+
+                            onIsFocusedChanged: function() {
+                                if (isFocused && !navigation.active) {
+                                    navigation.requestActive()
                                 }
                             }
 

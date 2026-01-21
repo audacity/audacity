@@ -428,7 +428,7 @@ DockPage {
     central: TracksItemsView {
         id: tracksItemsView
 
-        navPanels: tracksNavModel.clipItemPanels
+        navPanels: tracksNavModel.viewItemPanels
 
         Connections {
             target: root

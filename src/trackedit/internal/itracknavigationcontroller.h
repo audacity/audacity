@@ -28,8 +28,6 @@ public:
     virtual void setFocusedItem(const TrackItemKey& key) = 0;
     virtual muse::async::Channel<TrackItemKey> focusedItemChanged() const = 0;
 
-    virtual void navigateUp(const muse::actions::ActionData& args) = 0;
-    virtual void navigateDown(const muse::actions::ActionData& args) = 0;
     virtual void trackRangeSelection() = 0;
     virtual void toggleSelectionOnFocusedTrack() = 0;
     virtual void multiSelectionUp() = 0;
