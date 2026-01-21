@@ -458,6 +458,18 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Previous track"),
              TranslatableString("action", "Previous track")
              ),
+    UiAction("track-view-first-track",
+             au::context::UiCtxProjectFocused,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "First track"),
+             TranslatableString("action", "First track")
+             ),
+    UiAction("track-view-last-track",
+             au::context::UiCtxProjectFocused,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Last track"),
+             TranslatableString("action", "Last track")
+             ),
 
     UiAction("track-view-item-context-menu",
              au::context::UiCtxProjectFocused,
