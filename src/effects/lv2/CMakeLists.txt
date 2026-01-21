@@ -34,7 +34,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/x11idleui.h
 )
 
-set(MODULE_LINK au3wrap lv2sdk X11)
+set(MODULE_LINK effects_base au3wrap lv2sdk X11)
 
 # AU3
 include(${CMAKE_CURRENT_LIST_DIR}/../../au3wrap/au3wrapDefs.cmake)
