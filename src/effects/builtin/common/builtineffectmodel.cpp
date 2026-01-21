@@ -59,6 +59,11 @@ void BuiltinEffectModel::doStartPreview()
     }
 }
 
+void BuiltinEffectModel::doStopPreview()
+{
+    effectsProvider()->stopPreview();
+}
+
 void BuiltinEffectModel::modifySettings(const std::function<void(EffectSettings& settings)>& modifier)
 {
     const EffectSettingsAccessPtr access = this->settingsAccess();

@@ -44,6 +44,7 @@ protected:
 private:
     virtual void doInit() = 0;
     virtual void doStartPreview() = 0;
+    virtual void doStopPreview() = 0;
 };
 
 class AbstractEffectViewModelFactory : public QObject

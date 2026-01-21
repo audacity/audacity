@@ -74,6 +74,7 @@ protected:
 private:
     void doInit() override;
     void doStartPreview() override;
+    void doStopPreview() override;
 
     EffectSettingsAccessPtr settingsAccess() const;
 };
