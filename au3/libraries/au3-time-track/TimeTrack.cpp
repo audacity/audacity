@@ -141,6 +141,7 @@ bool TimeTrack::SupportsBasicEditing() const
 Track::Holder TimeTrack::PasteInto(AudacityProject& project, TrackList& list)
 const
 {
+    // TODO: properly implement moveClips for TimeTrack::PasteInto
     // Maintain uniqueness of the time track!
     std::shared_ptr<TimeTrack> pNewTrack;
     if (auto pTrack = *TrackList::Get(project).Any<TimeTrack>().begin()) {
@@ -156,16 +157,18 @@ const
     // And for import we agree to replace the track contents completely
     pNewTrack->CleanState();
     pNewTrack->Init(*this);
-    pNewTrack->Paste(0.0, *this);
+    const bool moveClips = false; // TODO: properly implement moveClips for TimeTrack::Paste
+    pNewTrack->Paste(0.0, *this, moveClips); // TODO: properly implement moveClips for TimeTrack::Paste
     pNewTrack->SetRangeLower(this->GetRangeLower());
     pNewTrack->SetRangeUpper(this->GetRangeUpper());
     return pNewTrack;
 }
 
-Track::Holder TimeTrack::Cut(double t0, double t1)
+Track::Holder TimeTrack::Cut(double t0, double t1, bool moveClips)
 {
+    // TODO: properly implement moveClips for TimeTrack::Cut
     auto result = Copy(t0, t1, false);
-    Clear(t0, t1);
+    Clear(t0, t1, moveClips);// TODO: properly implement moveClips for TimeTrack::Clear
     return result;
 }
 
@@ -189,14 +192,16 @@ double GetRate(const Track& track)
 }
 }
 
-void TimeTrack::Clear(double t0, double t1)
+void TimeTrack::Clear(double t0, double t1, bool moveClips)
 {
+    // TODO: properly implement moveClips for TimeTrack::Clear
     auto sampleTime = 1.0 / GetRate(*this);
     mEnvelope->CollapseRegion(t0, t1, sampleTime);
 }
 
-void TimeTrack::Paste(double t, const Track& src)
+void TimeTrack::Paste(double t, const Track& src, bool moveClips)
 {
+    // TODO: properly implement moveClips for TimeTrack::Paste
     bool bOk = src.TypeSwitch<bool>([&](const TimeTrack& tt) {
         auto sampleTime = 1.0 / GetRate(*this);
         mEnvelope->PasteEnvelope(t, tt.mEnvelope.get(), sampleTime);
@@ -224,6 +229,12 @@ Track::Holder TimeTrack::Clone(bool) const
     auto result = std::make_shared<TimeTrack>(*this, ProtectedCreationArg {});
     result->Init(*this);
     return result;
+}
+
+Track::Holder TimeTrack::TrackEmptyCopy() const
+{
+    // TODO: implement TimeTrack::TrackEmptyCopy
+    return {};
 }
 
 bool TimeTrack::GetInterpolateLog() const
