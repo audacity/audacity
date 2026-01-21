@@ -5,20 +5,18 @@
 
 #include "internal/nyquisteffectsrepository.h"
 
-using namespace au::effects;
-
-std::string NyquistEffectsModule::moduleName() const
+std::string au::effects::NyquistEffectsModule::moduleName() const
 {
     return "effects_nyquist";
 }
 
-void NyquistEffectsModule::registerExports()
+void au::effects::NyquistEffectsModule::registerExports()
 {
     m_nyquistEffectsRepository = std::make_shared<NyquistEffectsRepository>();
 
     ioc()->registerExport<INyquistEffectsRepository>(moduleName(), m_nyquistEffectsRepository);
 }
 
-void NyquistEffectsModule::resolveImports()
+void au::effects::NyquistEffectsModule::resolveImports()
 {
 }
