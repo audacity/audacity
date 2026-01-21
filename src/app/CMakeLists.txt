@@ -143,6 +143,10 @@ if (AU_MODULE_EFFECTS_AUDIO_UNIT)
     add_definitions(-DAU_MODULE_EFFECTS_AUDIO_UNIT)
 endif()
 
+if (AU_MODULE_EFFECTS_NYQUIST)
+    add_definitions(-DAU_MODULE_EFFECTS_NYQUIST)
+endif()
+
 set (AUDACITY_APPEND_SRC)
 
 if (OS_IS_WIN)

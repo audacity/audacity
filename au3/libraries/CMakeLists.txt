@@ -68,7 +68,7 @@ set( LIBRARIES
 #   au3-wx-wrappers # not yet used in AU4
 #   au3-shuttlegui # not yet used in AU4
 #   au3-wx-init # not yet used in AU4
-#   au3-time-track # not yet used in AU4
+   au3-time-track
    au3-snapping
 #   au3-vst # not yet used in AU4
    au3-playable-track
@@ -107,6 +107,10 @@ if (AU_MODULE_EFFECTS_AUDIO_UNIT)
    list( APPEND LIBRARIES au3-audio-unit)
 endif()
 
+if (AU_MODULE_EFFECTS_NYQUIST)
+   list( APPEND LIBRARIES au3-nyquist-effects )
+endif()
+
 if (AU_BUILD_CLOUD_AUDIOCOM)
    list( APPEND LIBRARIES au3-network-manager au3-url-schemes au3-cloud-audiocom)
 endif()
@@ -117,10 +121,6 @@ if( DEFINED ${_OPT}has_crashreports AND ${_OPT}has_crashreports )
    elseif( ${_OPT}crashreport_backend STREQUAL "crashpad" )
       list( APPEND LIBRARIES au3-crashpad-configurer )
    endif()
-endif()
-
-if ( DEFINED ${_OPT}use_nyquist AND ${_OPT}use_nyquist )
-   list( APPEND LIBRARIES au3-nyquist-effects )
 endif()
 
 if ( DEFINED ${_OPT}use_ladspa AND ${_OPT}use_ladspa )
