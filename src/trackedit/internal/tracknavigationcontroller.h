@@ -41,10 +41,6 @@ public:
     void setFocusedTrack(TrackId trackId) override;
     muse::async::Channel<TrackId> focusedTrackChanged() const override;
 
-    void focusTrackByIndex(const muse::actions::ActionData& args) override;
-    void focusPrevTrack() override;
-    void focusNextTrack() override;
-
     void setFocusedItem(const TrackItemKey& key) override;
     muse::async::Channel<TrackItemKey> focusedItemChanged() const override;
 
@@ -75,6 +71,12 @@ private:
 
     double zoomLevel() const;
     double calculateStepSize() const;
+
+    void focusTrackByIndex(const muse::actions::ActionData& args);
+    void focusPrevTrack();
+    void focusNextTrack();
+    void focusFirstTrack();
+    void focusLastTrack();
 
     TrackItemKey focusedItemKey() const;
     bool isFocusedItemValid() const;

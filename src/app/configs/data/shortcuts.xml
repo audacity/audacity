@@ -180,16 +180,16 @@
         <key>track-view-prev-track</key>
         <seq>Up</seq>
     </SC>
-
-    <!-- todo -->
     <SC>
-        <key>first-track</key>
+        <key>track-view-first-track</key>
         <seq>Ctrl+Home</seq>
     </SC>
     <SC>
-        <key>last-track</key>
+        <key>track-view-last-track</key>
         <seq>Ctrl+End</seq>
     </SC>
+
+    <!-- todo -->
     <SC>
         <key>shift-up</key>
         <seq>Shift+Up</seq>
