@@ -22,8 +22,6 @@ public:
     MOCK_METHOD(void, setFocusedItem, (const TrackItemKey& key), (override));
     MOCK_METHOD(muse::async::Channel<TrackItemKey>, focusedItemChanged, (), (const, override));
 
-    MOCK_METHOD(void, navigateUp, (const muse::actions::ActionData& args), (override));
-    MOCK_METHOD(void, navigateDown, (const muse::actions::ActionData& args), (override));
     MOCK_METHOD(void, trackRangeSelection, (), (override));
     MOCK_METHOD(void, toggleSelectionOnFocusedTrack, (), (override));
     MOCK_METHOD(void, multiSelectionUp, (), (override));

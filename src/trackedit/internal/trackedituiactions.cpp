@@ -446,6 +446,19 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Move item down")
              ),
 
+    UiAction("track-view-next-track",
+             au::context::UiCtxProjectFocused,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Next track"),
+             TranslatableString("action", "Next track")
+             ),
+    UiAction("track-view-prev-track",
+             au::context::UiCtxProjectFocused,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Previous track"),
+             TranslatableString("action", "Previous track")
+             ),
+
     UiAction("track-view-item-context-menu",
              au::context::UiCtxProjectFocused,
              au::context::CTX_PROJECT_FOCUSED,

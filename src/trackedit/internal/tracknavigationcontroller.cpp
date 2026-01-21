@@ -11,10 +11,10 @@
 using namespace au::trackedit;
 
 static const muse::actions::ActionCode FOCUS_TRACK_INDEX_CODE("focus-track-index");
-static const muse::actions::ActionCode FOCUS_PREV_TRACK_CODE("focus-prev-track");
-static const muse::actions::ActionCode FOCUS_NEXT_TRACK_CODE("focus-next-track");
-static const muse::actions::ActionCode PREV_TRACK_CODE("prev-track");
-static const muse::actions::ActionCode NEXT_TRACK_CODE("next-track");
+
+static const muse::actions::ActionCode TRACK_VIEW_NEXT_TRACK_CODE("track-view-next-track");
+static const muse::actions::ActionCode TRACK_VIEW_PREV_TRACK_CODE("track-view-prev-track");
+
 static const muse::actions::ActionCode TRACK_TOGGLE_SELECTION_CODE("track-toggle-focused-selection");
 static const muse::actions::ActionCode TRACK_RANGE_SELECTION_CODE("track-range-selection");
 static const muse::actions::ActionCode MULTI_TRACK_SELECTION_PREV_CODE("shift-up");
@@ -41,10 +41,10 @@ constexpr double MIN_CLIP_WIDTH = 3.0;
 void TrackNavigationController::init()
 {
     dispatcher()->reg(this, FOCUS_TRACK_INDEX_CODE, this, &TrackNavigationController::focusTrackByIndex);
-    dispatcher()->reg(this, FOCUS_PREV_TRACK_CODE, this, &TrackNavigationController::focusPrevTrack);
-    dispatcher()->reg(this, FOCUS_NEXT_TRACK_CODE, this, &TrackNavigationController::focusNextTrack);
-    dispatcher()->reg(this, PREV_TRACK_CODE, this, &TrackNavigationController::navigateUp);
-    dispatcher()->reg(this, NEXT_TRACK_CODE, this, &TrackNavigationController::navigateDown);
+
+    dispatcher()->reg(this, TRACK_VIEW_NEXT_TRACK_CODE, this, &TrackNavigationController::focusNextTrack);
+    dispatcher()->reg(this, TRACK_VIEW_PREV_TRACK_CODE, this, &TrackNavigationController::focusPrevTrack);
+
     dispatcher()->reg(this, TRACK_TOGGLE_SELECTION_CODE, this, &TrackNavigationController::toggleSelectionOnFocusedTrack);
     dispatcher()->reg(this, TRACK_RANGE_SELECTION_CODE, this, &TrackNavigationController::trackRangeSelection);
     dispatcher()->reg(this, MULTI_TRACK_SELECTION_PREV_CODE, this, &TrackNavigationController::multiSelectionUp);
@@ -144,82 +144,6 @@ void TrackNavigationController::setFocusedItem(const TrackItemKey& key)
 muse::async::Channel<TrackItemKey> TrackNavigationController::focusedItemChanged() const
 {
     return m_focusedItemChanged;
-}
-
-void TrackNavigationController::navigateUp(const muse::actions::ActionData& args)
-{
-    if (args.count() != 1) {
-        return;
-    }
-
-    const auto section = navigationController()->activeSection();
-    if (!section) {
-        return;
-    }
-
-    const int position = args.arg<int>(0) - 1;
-    if (position < 0) {
-        return;
-    }
-
-    const auto panels = section->panels();
-    if (static_cast<size_t>(2 * position) >= panels.size()) {
-        return;
-    }
-
-    const auto& panel = std::find_if(panels.begin(), panels.end(), [position](const muse::ui::INavigationPanel* p) {
-        return p->index().order() == 2 * position;
-    });
-
-    if (panel == panels.end()) {
-        return;
-    }
-
-    const auto firstControl = (*panel)->controls().begin();
-    if (!(*firstControl)) {
-        return;
-    }
-
-    navigationController()->setIsResetOnMousePress(false);
-    navigationController()->setIsHighlight(true);
-    navigationController()->requestActivateByName(section->name().toStdString(),
-                                                  (*panel)->name().toStdString(), (*firstControl)->name().toStdString());
-}
-
-void TrackNavigationController::navigateDown(const muse::actions::ActionData& args)
-{
-    if (args.count() != 1) {
-        return;
-    }
-
-    const auto section = navigationController()->activeSection();
-    if (!section) {
-        return;
-    }
-
-    const int position = args.arg<int>(0) + 1;
-    const auto panels = section->panels();
-    if (static_cast<size_t>(2 * position) >= panels.size()) {
-        return;
-    }
-
-    const auto& panel = std::find_if(panels.begin(), panels.end(), [position](const muse::ui::INavigationPanel* p) {
-        return p->index().order() == 2 * position;
-    });
-
-    if (panel == panels.end()) {
-        return;
-    }
-
-    const auto firstControl = (*panel)->controls().begin();
-    if (!(*firstControl)) {
-        return;
-    }
-
-    navigationController()->setIsResetOnMousePress(false);
-    navigationController()->setIsHighlight(true);
-    navigationController()->requestActivateByName(section->name().toStdString(),
-                                                  (*panel)->name().toStdString(), (*firstControl)->name().toStdString());
 }
 
 void TrackNavigationController::toggleSelectionOnFocusedTrack()
@@ -633,6 +557,12 @@ void TrackNavigationController::focusPrevTrack()
 {
     m_selectionStart = std::nullopt;
 
+    if (isFocusedItemValid()) {
+        //! we are on tracks items panel, need to move to previous item instead
+        navigatePrevItem();
+        return;
+    }
+
     const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (!prj) {
         return;
@@ -646,6 +576,8 @@ void TrackNavigationController::focusPrevTrack()
         if (track.id == currentFocusedTrack) {
             if (--i >= 0) {
                 setFocusedTrack(trackList[i].id);
+            } else {
+                setFocusedTrack(trackList.back().id);
             }
             return;
         }
@@ -655,6 +587,12 @@ void TrackNavigationController::focusPrevTrack()
 void TrackNavigationController::focusNextTrack()
 {
     m_selectionStart = std::nullopt;
+
+    if (isFocusedItemValid()) {
+        //! we are on tracks items panel, need to move to next item instead
+        navigateNextItem();
+        return;
+    }
 
     const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (!prj) {
@@ -669,6 +607,8 @@ void TrackNavigationController::focusNextTrack()
         if (track.id == currentFocusedTrack) {
             if (++i < trackList.size()) {
                 setFocusedTrack(trackList[i].id);
+            } else {
+                setFocusedTrack(trackList.front().id);
             }
             return;
         }

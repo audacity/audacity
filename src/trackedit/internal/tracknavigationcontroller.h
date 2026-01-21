@@ -48,8 +48,6 @@ public:
     void setFocusedItem(const TrackItemKey& key) override;
     muse::async::Channel<TrackItemKey> focusedItemChanged() const override;
 
-    void navigateUp(const muse::actions::ActionData& args) override;
-    void navigateDown(const muse::actions::ActionData& args) override;
     void toggleSelectionOnFocusedTrack() override;
     void trackRangeSelection() override;
     void multiSelectionUp() override;
