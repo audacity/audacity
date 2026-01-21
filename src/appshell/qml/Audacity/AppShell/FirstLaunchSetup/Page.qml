@@ -37,6 +37,7 @@ Item {
     default property alias content: contentItem.data
     property real titleContentSpacing: 24
     property string extraButtonTitle: ""
+    property int titleTopMargin: 39
 
     property NavigationPanel navigationPanel: NavigationPanel {
         name: "ContentPanel"
@@ -81,7 +82,7 @@ Item {
         id: header
 
         anchors.top: parent.top
-        anchors.topMargin: 39
+        anchors.topMargin: root.titleTopMargin
         anchors.left: parent.left
         anchors.right: parent.right
 
