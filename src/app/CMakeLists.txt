@@ -132,6 +132,7 @@ endif()
 
 if (MUSE_MODULE_AUTOBOT)
     list(APPEND LINK_LIB muse::autobot)
+    list(APPEND LINK_LIB muse::autobot_qml)
 endif()
 
 if (MUSE_MODULE_EXTENSIONS)
