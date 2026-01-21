@@ -5,21 +5,27 @@
 #ifndef AU_AU3WRAP_AU3AUDIODEVICESPROVIDER_H
 #define AU_AU3WRAP_AU3AUDIODEVICESPROVIDER_H
 
+#include <chrono>
+
 #include "framework/global/modularity/ioc.h"
+#include "global/async/asyncable.h"
+#include "global/timer.h"
 
 #include "context/iglobalcontext.h"
 #include "audio/iaudiodevicesprovider.h"
 #include "audio/iaudioengine.h"
 
 namespace au::au3audio {
-class Au3AudioDevicesProvider : public audio::IAudioDevicesProvider, public muse::Injectable
+class Au3AudioDevicesProvider : public audio::IAudioDevicesProvider, public muse::async::Asyncable, public muse::Injectable
 {
     muse::Inject<context::IGlobalContext> globalContext { this };
     muse::Inject<au::audio::IAudioEngine> audioEngine { this };
 
 public:
     Au3AudioDevicesProvider(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Injectable(ctx),
+        m_defaultDevicePollTimer(std::chrono::milliseconds(1000))
+    {}
 
     void init();
 
@@ -75,6 +81,9 @@ private:
 
     std::string defaultOutputDevice();
     std::string defaultInputDevice();
+    std::string systemDefaultOutputDevice() const;
+    std::string systemDefaultInputDevice() const;
+    void checkSystemDefaultDeviceChanges();
 
     std::vector<std::string> m_audioApis;
     std::vector<std::string> m_outputDevices;
@@ -90,6 +99,11 @@ private:
     muse::async::Notification m_latencyCompensationChanged;
     muse::async::Notification m_defaultSampleRateChanged;
     muse::async::Notification m_defaultSampleFormatChanged;
+
+    muse::Timer m_defaultDevicePollTimer;
+    std::string m_lastDefaultOutputDevice;
+    std::string m_lastDefaultInputDevice;
+    bool m_pendingDeviceChange = false;
 };
 }
 

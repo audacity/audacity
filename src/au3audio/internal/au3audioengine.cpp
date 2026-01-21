@@ -62,11 +62,15 @@ bool Au3AudioEngine::isBusy() const
 
 int Au3AudioEngine::startStream(const TransportSequences& sequences, const double startTime, const double endTime,
                                 const double mixerEndTime,
-                                AudacityProject& project, const bool isDefaultPlayTrackPolicy, const double audioStreamSampleRate)
+                                AudacityProject& project, const bool isDefaultPlayTrackPolicy, const double audioStreamSampleRate,
+                                const std::optional<double> startTimeOverride)
 {
     AudioIOStartStreamOptions options = ProjectAudioIO::GetDefaultOptions(project, isDefaultPlayTrackPolicy);
     options.inputMonitoring = recordConfiguration()->isInputMonitoringOn();
     options.rate = audioStreamSampleRate;
+    if (startTimeOverride) {
+        options.pStartTime = *startTimeOverride;
+    }
     return AudioIO::Get()->StartStream(sequences, startTime, endTime, mixerEndTime, options);
 }
 

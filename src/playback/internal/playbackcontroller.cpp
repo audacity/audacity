@@ -620,9 +620,27 @@ void PlaybackController::setAudioApi(const muse::actions::ActionQuery& q)
         return;
     }
 
-    int index = q.param("api_index").toInt();
+    if (isPlaying()) {
+        LOGI() << "Audio host change ignored while playing";
+        return;
+    }
 
-    audioDevicesProvider()->setApi(audioDevicesProvider()->apis().at(index));
+    int index = q.param("api_index").toInt();
+    const auto& apis = audioDevicesProvider()->apis();
+    if (index < 0 || static_cast<size_t>(index) >= apis.size()) {
+        LOGW() << "Audio host index out of range: " << index << " (size=" << apis.size() << ")";
+        return;
+    }
+
+    const bool wasPaused = isPaused();
+    const auto resumePosition = player()->playbackPosition();
+
+    audioDevicesProvider()->setApi(apis.at(index));
+
+    if (wasPaused) {
+        LOGI() << "Restarting paused playback after audio host change";
+        player()->restartPausedPlayback(resumePosition);
+    }
 }
 
 void PlaybackController::setAudioOutputDevice(const muse::actions::ActionQuery& q)
@@ -631,9 +649,28 @@ void PlaybackController::setAudioOutputDevice(const muse::actions::ActionQuery& 
         return;
     }
 
-    int index = q.param("device_index").toInt();
+    if (isPlaying()) {
+        LOGI() << "Playback device change ignored while playing";
+        return;
+    }
 
-    audioDevicesProvider()->setOutputDevice(audioDevicesProvider()->outputDevices().at(index));
+    int index = q.param("device_index").toInt();
+    const auto& devices = audioDevicesProvider()->outputDevices();
+    if (index < 0 || static_cast<size_t>(index) >= devices.size()) {
+        LOGW() << "Playback device index out of range: " << index << " (size=" << devices.size() << ")";
+        return;
+    }
+
+    const bool wasPaused = isPaused();
+    const auto resumePosition = player()->playbackPosition();
+
+    const auto nextDevice = devices.at(index);
+    audioDevicesProvider()->setOutputDevice(nextDevice);
+
+    if (wasPaused) {
+        LOGI() << "Restarting paused playback after device change";
+        player()->restartPausedPlayback(resumePosition);
+    }
 }
 
 void PlaybackController::setAudioInputDevice(const muse::actions::ActionQuery& q)
@@ -642,9 +679,27 @@ void PlaybackController::setAudioInputDevice(const muse::actions::ActionQuery& q
         return;
     }
 
-    int index = q.param("device_index").toInt();
+    if (isPlaying()) {
+        LOGI() << "Recording device change ignored while playing";
+        return;
+    }
 
-    audioDevicesProvider()->setInputDevice(audioDevicesProvider()->inputDevices().at(index));
+    int index = q.param("device_index").toInt();
+    const auto& devices = audioDevicesProvider()->inputDevices();
+    if (index < 0 || static_cast<size_t>(index) >= devices.size()) {
+        LOGW() << "Recording device index out of range: " << index << " (size=" << devices.size() << ")";
+        return;
+    }
+
+    const bool wasPaused = isPaused();
+    const auto resumePosition = player()->playbackPosition();
+
+    audioDevicesProvider()->setInputDevice(devices.at(index));
+
+    if (wasPaused) {
+        LOGI() << "Restarting paused playback after recording device change";
+        player()->restartPausedPlayback(resumePosition);
+    }
 }
 
 void PlaybackController::setInputChannels(const muse::actions::ActionQuery& q)
@@ -653,9 +708,27 @@ void PlaybackController::setInputChannels(const muse::actions::ActionQuery& q)
         return;
     }
 
+    if (isPlaying()) {
+        LOGI() << "Input channels change ignored while playing";
+        return;
+    }
+
     int index = q.param("input-channels_index").toInt();
+    const int available = audioDevicesProvider()->inputChannelsAvailable();
+    if (index <= 0 || index > available) {
+        LOGW() << "Input channels out of range: " << index << " (available=" << available << ")";
+        return;
+    }
+
+    const bool wasPaused = isPaused();
+    const auto resumePosition = player()->playbackPosition();
 
     audioDevicesProvider()->setInputChannels(index);
+
+    if (wasPaused) {
+        LOGI() << "Restarting paused playback after input channels change";
+        player()->restartPausedPlayback(resumePosition);
+    }
 }
 
 void PlaybackController::rescanAudioDevices()
@@ -774,6 +847,13 @@ bool PlaybackController::canReceiveAction(const ActionCode& code) const
     }
 
     if (code == PLAYBACK_REWIND_START_QUERY.toString() || code == PLAYBACK_REWIND_END_QUERY.toString()) {
+        return !isPlaying() && !recordController()->isRecording();
+    }
+
+    if (code == PLAYBACK_CHANGE_AUDIO_API_QUERY.toString()
+        || code == PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY.toString()
+        || code == PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY.toString()
+        || code == PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY.toString()) {
         return !isPlaying() && !recordController()->isRecording();
     }
 

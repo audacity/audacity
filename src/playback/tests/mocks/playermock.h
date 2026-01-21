@@ -18,6 +18,7 @@ public:
     MOCK_METHOD(void, stop, (), (override));
     MOCK_METHOD(void, pause, (), (override));
     MOCK_METHOD(void, resume, (), (override));
+    MOCK_METHOD(void, restartPausedPlayback, (const muse::secs_t), (override));
 
     MOCK_METHOD(bool, isRunning, (), (const, override));
     MOCK_METHOD(PlaybackStatus, playbackStatus, (), (const, override));

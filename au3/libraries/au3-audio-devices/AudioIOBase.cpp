@@ -736,6 +736,16 @@ int AudioIOBase::getPlayDevIndex(const wxString& devNameArg)
         }
     }
 
+    {
+        wxString hostName = AudioIOHost.Read();
+        if (!hostName.empty()) {
+            int deviceIndex = DeviceManager::Instance()->GetSystemDefaultOutputDeviceIndex(hostName.ToStdString(wxConvUTF8));
+            if (deviceIndex >= 0) {
+                return deviceIndex;
+            }
+        }
+    }
+
     // Use the default output device.
     // FIXME: TRAP_ERR PaErrorCode not handled well (this code is similar to input code
     // and the input side has more comments.)
@@ -770,6 +780,16 @@ int AudioIOBase::getRecordDevIndex(const wxString& devNameArg)
             hostName.ToStdString(wxConvUTF8), devName.ToStdString(wxConvUTF8));
         if (deviceIndex >= 0) {
             return deviceIndex;
+        }
+    }
+
+    {
+        wxString hostName = AudioIOHost.Read();
+        if (!hostName.empty()) {
+            int deviceIndex = DeviceManager::Instance()->GetSystemDefaultInputDeviceIndex(hostName.ToStdString(wxConvUTF8));
+            if (deviceIndex >= 0) {
+                return deviceIndex;
+            }
         }
     }
 
