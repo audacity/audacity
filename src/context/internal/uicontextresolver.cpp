@@ -120,8 +120,6 @@ muse::ui::UiContext UiContextResolver::resolveUiContext() const
         if (activeSection) {
             if (activeSection->name() == DEFAULT_NAVIGATION_SECTION) {
                 return context::UiCtxProjectFocused;
-            } else {
-                return context::UiCtxProjectPlayback;
             }
         }
 
@@ -144,15 +142,8 @@ bool UiContextResolver::match(const ui::UiContext& currentCtx, const ui::UiConte
         return true;
     }
 
-    //! NOTE If the current context is `UiCtxProjectFocused` or `UiCtxProjectPlayback`, then we allow `UiCtxProjectOpened` too
-    if ((currentCtx == context::UiCtxProjectFocused || currentCtx == context::UiCtxProjectPlayback)
-        && actCtx == context::UiCtxProjectOpened) {
-        return true;
-    }
-
-    //! SEE There's a problem here, see https://github.com/audacity/audacity/pull/9662#issuecomment-3405088750
-    //! NOTE If the current context is `UiCtxProjectPlayback`, then we allow `UiCtxProjectFocused` too
-    if (currentCtx == context::UiCtxProjectFocused && actCtx == context::UiCtxProjectPlayback) {
+    //! NOTE If the current context is `UiCtxProjectFocused`, then we allow `UiCtxProjectOpened` too
+    if (currentCtx == context::UiCtxProjectFocused && actCtx == context::UiCtxProjectOpened) {
         return true;
     }
 
@@ -187,8 +178,6 @@ bool UiContextResolver::isShortcutContextAllowed(const std::string& scContext) c
 
     if (CTX_PROJECT_OPENED == scContext) {
         return matchWithCurrent(context::UiCtxProjectOpened);
-    } else if (CTX_PROJECT_PLAYBACK == scContext) {
-        return matchWithCurrent(context::UiCtxProjectPlayback);
     } else if (CTX_PROJECT_FOCUSED == scContext) {
         return matchWithCurrent(context::UiCtxProjectFocused);
     } else if (CTX_NOT_PROJECT_FOCUSED == scContext) {

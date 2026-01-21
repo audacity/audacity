@@ -74,6 +74,7 @@ void ApplicationActionController::init()
     dispatcher()->reg(this, "action://redo", this, &ApplicationActionController::doGlobalRedo);
     dispatcher()->reg(this, "action://delete", this, &ApplicationActionController::doGlobalDelete);
     dispatcher()->reg(this, "action://cancel", this, &ApplicationActionController::doGlobalCancel);
+    dispatcher()->reg(this, "action://trigger", this, &ApplicationActionController::doGlobalTrigger);
 }
 
 const std::vector<muse::actions::ActionCode>& ApplicationActionController::prohibitedActionsWhileRecording() const
@@ -333,9 +334,16 @@ bool ApplicationActionController::isProjectOpened() const
     return hasProject && isOpened;
 }
 
+bool ApplicationActionController::isProjectOpenedAndFocused() const
+{
+    bool isOpened = isProjectOpened();
+    bool isFocused = uiContextResolver()->matchWithCurrent(context::UiCtxProjectFocused);
+    return isOpened && isFocused;
+}
+
 void ApplicationActionController::doGlobalCopy()
 {
-    if (isProjectOpened()) {
+    if (isProjectOpenedAndFocused()) {
         dispatcher()->dispatch("action://trackedit/copy");
     } else {
         // resolve other actions
@@ -344,7 +352,7 @@ void ApplicationActionController::doGlobalCopy()
 
 void ApplicationActionController::doGlobalCut()
 {
-    if (isProjectOpened()) {
+    if (isProjectOpenedAndFocused()) {
         dispatcher()->dispatch("action://trackedit/cut");
     } else {
         // resolve other actions
@@ -353,7 +361,7 @@ void ApplicationActionController::doGlobalCut()
 
 void ApplicationActionController::doGlobalPaste()
 {
-    if (isProjectOpened()) {
+    if (isProjectOpenedAndFocused()) {
         dispatcher()->dispatch("action://trackedit/paste-default");
     } else {
         // resolve other actions
@@ -380,7 +388,7 @@ void ApplicationActionController::doGlobalRedo()
 
 void ApplicationActionController::doGlobalDelete()
 {
-    if (isProjectOpened()) {
+    if (isProjectOpenedAndFocused()) {
         dispatcher()->dispatch("action://trackedit/delete");
     } else {
         // resolve other actions
@@ -389,9 +397,18 @@ void ApplicationActionController::doGlobalDelete()
 
 void ApplicationActionController::doGlobalCancel()
 {
-    if (isProjectOpened()) {
+    if (isProjectOpenedAndFocused()) {
         dispatcher()->dispatch("action://trackedit/cancel");
     } else {
         dispatcher()->dispatch("nav-escape");
+    }
+}
+
+void ApplicationActionController::doGlobalTrigger()
+{
+    if (isProjectOpened()) {
+        dispatcher()->dispatch("action://playback/play");
+    } else {
+        dispatcher()->dispatch("nav-trigger-control");
     }
 }
