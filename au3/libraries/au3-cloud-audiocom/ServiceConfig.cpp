@@ -16,8 +16,7 @@
 #include <stdexcept>
 #include <string_view>
 
-#include <rapidjson/document.h>
-
+#include "au3-import-export/rapidjson/document.h"
 #include "au3-string-utils/CodeConversions.h"
 #include "au3-preferences/Prefs.h"
 
@@ -207,9 +206,9 @@ std::vector<std::string>
 ServiceConfig::GetPreferredAudioFormats(bool preferLossless) const
 {
     if (preferLossless) {
-        return { "audio/x-wavpack", "audio/x-flac", "audio/x-wav" }
+        return { "audio/x-wavpack", "audio/x-flac", "audio/x-wav" };
     } else {
-        return { "audio/mpeg" }
+        return { "audio/mpeg" };
     }
 }
 

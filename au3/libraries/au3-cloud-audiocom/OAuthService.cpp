@@ -14,12 +14,11 @@
 #include <cassert>
 #include <cctype>
 
-#include <rapidjson/document.h>
-#include <rapidjson/writer.h>
-
 #include "au3-string-utils/CodeConversions.h"
 #include "au3-preferences/Prefs.h"
 
+#include "au3-import-export/rapidjson/document.h"
+#include "au3-import-export/rapidjson/writer.h"
 #include "au3-network-manager/IResponse.h"
 #include "au3-network-manager/NetworkManager.h"
 #include "au3-network-manager/Request.h"
@@ -89,7 +88,7 @@ void WriteCommonFields(
     WriteAccessFields(document, grantType, scope);
 }
 
-template<typename Elem, typename First, typename ...Others>
+template<typename Elem, typename First, typename ... Others>
 void append(std::basic_string<Elem>& dest, First&& first, Others&& ... others)
 {
     dest.append(first);
@@ -98,7 +97,7 @@ void append(std::basic_string<Elem>& dest, First&& first, Others&& ... others)
     }
 }
 
-template<typename First, typename ...Others>
+template<typename First, typename ... Others>
 auto concat(First&& first, Others&& ... others)
 {
     std::basic_string<typename First::value_type> dest(first);

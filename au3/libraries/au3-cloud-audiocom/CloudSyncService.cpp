@@ -353,7 +353,8 @@ CloudSyncService::SyncFuture CloudSyncService::OpenFromCloud(
     }
 
     if (!callback) {
-        mProgressCallback = [](auto...) { return true; } } else {
+        mProgressCallback = [](auto...) { return true; };
+    } else {
         mProgressCallback = std::move(callback);
     }
 
@@ -388,7 +389,8 @@ CloudSyncService::SyncFuture CloudSyncService::SyncProject(
     }
 
     if (!callback) {
-        mProgressCallback = [](auto...) { return true; } } else {
+        mProgressCallback = [](auto...) { return true; };
+    } else {
         mProgressCallback = std::move(callback);
     }
 

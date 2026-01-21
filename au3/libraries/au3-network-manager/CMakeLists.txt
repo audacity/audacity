@@ -26,6 +26,8 @@ set( SOURCES
     NetworkManager.h
     NetworkManager.cpp
 
+    ThreadPool/ThreadPool.h
+
     curl/CurlResponse.h
     curl/CurlResponse.cpp
     curl/CurlResponseFactory.h
@@ -43,7 +45,6 @@ set ( LIBRARIES
     au3-concurrency-interface
 PRIVATE
     CURL::libcurl
-    threadpool::threadpool
     au3-exceptions-interface
     wxBase
 )

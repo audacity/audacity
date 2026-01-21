@@ -240,7 +240,7 @@ struct Importer final
     std::string ReadTag(const char* tagName)
     {
         if (Context == nullptr) {
-            return {}
+            return {};
         }
 
         const auto tagLength = WavpackGetTagItem(Context, tagName, nullptr, 0);
@@ -494,13 +494,13 @@ std::optional<DecompressedBlock>
 DecompressBlock(const void* data, const std::size_t size)
 {
     if (data == nullptr || size == 0) {
-        return {}
+        return {};
     }
 
     Importer importer { data, static_cast<int64_t>(size) };
 
     if (!importer.Unpack()) {
-        return {}
+        return {};
     }
 
     DecompressedBlock result {};

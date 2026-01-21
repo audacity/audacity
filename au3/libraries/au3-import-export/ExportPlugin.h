@@ -11,11 +11,11 @@
 
 #include <memory>
 
-// #include <rapidjson/fwd.h>
-
 #include <wx/string.h>
 
+#include "rapidjson/fwd.h"
 #include "ExportOptionsEditor.h"
+
 #include "au3-strings/wxArrayStringEx.h"
 #include "au3-strings/Identifier.h"
 #include "au3-strings/TranslatableString.h"
@@ -159,7 +159,7 @@ public:
      * @param parameters Where to put parameters
      * @return Whether the parsing was successful
      **/
-    // virtual bool ParseConfig(int formatIndex, const rapidjson::Value& config, ExportProcessor::Parameters& parameters) const;
+    virtual bool ParseConfig(int formatIndex, const rapidjson::Value& config, ExportProcessor::Parameters& parameters) const;
 
     virtual bool CheckFileName(wxFileName& filename, int format = 0) const;
 

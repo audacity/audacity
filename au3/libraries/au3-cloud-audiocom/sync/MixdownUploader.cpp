@@ -10,24 +10,17 @@
 **********************************************************************/
 
 #include "MixdownUploader.h"
-
-#include <rapidjson/document.h>
-
-#include "au3-wave-track/WaveTrack.h"
-
-#include "au3-string-utils/CodeConversions.h"
-
-#include "ServiceConfig.h"
-
-#include "au3-import-export/Export.h"
-#include "au3-import-export/ExportPluginRegistry.h"
-
-#include "au3-project-rate/ProjectRate.h"
-
 #include "DataUploader.h"
 #include "UploadService.h"
+#include "ServiceConfig.h"
 
+#include "au3-wave-track/WaveTrack.h"
+#include "au3-string-utils/CodeConversions.h"
+#include "au3-import-export/Export.h"
+#include "au3-import-export/ExportPluginRegistry.h"
+#include "au3-project-rate/ProjectRate.h"
 #include "au3-basic-ui/BasicUI.h"
+#include "au3-import-export/rapidjson/document.h"
 
 namespace audacity::cloud::audiocom::sync {
 namespace {
@@ -45,7 +38,7 @@ std::string GenerateTempPath(FileExtension extension)
 
     if (fileName.Exists()) {
         if (!wxRemoveFile(fileName.GetFullPath())) {
-            return {}
+            return {};
         }
     }
 
@@ -235,7 +228,8 @@ std::shared_ptr<MixdownUploader> MixdownUploader::Upload(
     const AudacityProject& project, MixdownProgressCallback progressCallback)
 {
     if (!progressCallback) {
-        progressCallback = [](auto...) { return true; } }
+        progressCallback = [](auto...) { return true; };
+    }
 
     if (!cancellationContext) {
         cancellationContext

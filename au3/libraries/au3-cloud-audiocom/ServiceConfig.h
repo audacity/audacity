@@ -13,7 +13,8 @@
 #include <chrono>
 #include <string>
 #include <vector>
-#include <rapidjson/fwd.h>
+
+#include "au3-import-export/rapidjson/fwd.h"
 
 enum class AudiocomTrace;
 
