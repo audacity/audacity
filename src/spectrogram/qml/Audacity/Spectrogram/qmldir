@@ -1,2 +1,4 @@
 module Audacity.Spectrogram
 ClipSpectrogramView 1.0 ClipSpectrogramView.qml
+ChannelSpectralSelectionContainer 1.0 ChannelSpectralSelectionContainer.qml
+TrackSpectralSelectionContainer 1.0 TrackSpectralSelectionContainer.qml

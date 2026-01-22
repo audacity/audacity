@@ -9,6 +9,8 @@
         <file>qml/Audacity/UiComponents/components/internal/TimeSignaturePopup.qml</file>
         <file>qml/Audacity/UiComponents/components/BPM.qml</file>
         <file>qml/Audacity/UiComponents/components/Frequency.qml</file>
+        <file>qml/Audacity/UiComponents/components/MarqueeSelection.qml</file>
+        <file>qml/Audacity/UiComponents/components/CornerHandle.qml</file>
         <file>qml/Audacity/UiComponents/components/ArrowButton.qml</file>
         <file>qml/Audacity/UiComponents/components/ArrowMenuButton.qml</file>
         <file>qml/Audacity/UiComponents/components/DropdownWithTitle.qml</file>

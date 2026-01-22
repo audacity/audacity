@@ -6,6 +6,7 @@ import Audacity.Spectrogram 1.0
 Item {
     id: root
 
+    required property var canvas
     required property bool spectralSelectionEnabled
     required property bool isStereo
     required property double channelHeightRatio
@@ -21,11 +22,15 @@ Item {
     required property double selectionStartFrequency
     required property double selectionEndFrequency
 
-    function getSpectrogramHit(y /* relative to this item */) {
+    function getSpectrogramHit(y /* relative to tracks canvas */) {
+        y = root.mapFromItem(root.canvas, 0, y).y
+        if (y < 0 || y > height) {
+            return null
+        }
         const channel = y < height * channelHeightRatio ? 0 : 1
-        const spectrogramY = channel === 0 ? y : y - height * channelHeightRatio
-        const spectrogramHeight = channel === 0 ? height * channelHeightRatio : height * (1.0 - channelHeightRatio)
-        return SpectrogramHitFactory.createSpectrogramHit(root.trackId, channel, spectrogramY, spectrogramHeight)
+        const item = repeater.itemAt(channel)
+        const spectrogramY = item.mapToItem(root.canvas, 0, 0).y
+        return SpectrogramHitFactory.createSpectrogramHit(root.trackId, channel, spectrogramY, item.height)
     }
 
     ColumnLayout {
@@ -34,6 +39,8 @@ Item {
         spacing: 0
 
         Repeater {
+            id: repeater
+
             model: root.isStereo ? 2 : 1
 
             ClipChannelSpectrogramView {
