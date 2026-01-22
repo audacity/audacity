@@ -43,15 +43,20 @@ public:
 
     static Au3Label* findLabel(Au3LabelTrack* track, int64_t labelId);
 
-    // Focus state persistence
     static trackedit::TrackIdList findSelectedTracks(Au3Project& prj);
     static trackedit::TrackId findFocusedTrack(Au3Project& prj);
     static void setTrackFocused(Au3Project& prj, trackedit::TrackId trackId, bool focused);
     static void clearAllTrackFocus(Au3Project& prj);
 
-    // Clip selection persistence
     static trackedit::ClipKeyList findSelectedClips(Au3Project& prj);
     static void setClipSelected(Au3Project& prj, trackedit::ClipKey clipKey, bool selected);
     static void clearAllClipSelection(Au3Project& prj);
+
+    static trackedit::LabelKeyList findSelectedLabels(Au3Project& prj);
+    static void setLabelSelected(Au3Project& prj, trackedit::LabelKey labelKey, bool selected);
+    static void clearAllLabelSelection(Au3Project& prj);
+
+    static int getTrackHeight(const Au3Track* track);
+    static void setTrackHeight(Au3Track* track, int height);
 };
 }

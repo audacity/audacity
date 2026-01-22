@@ -273,3 +273,79 @@ void DomAccessor::clearAllClipSelection(Au3Project& prj)
         }
     }
 }
+
+LabelKeyList DomAccessor::findSelectedLabels(Au3Project& prj)
+{
+    LabelKeyList selectedLabels;
+    Au3TrackList& tracks = Au3TrackList::Get(prj);
+
+    for (Au3Track* track : tracks) {
+        Au3LabelTrack* labelTrack = dynamic_cast<Au3LabelTrack*>(track);
+        if (!labelTrack) {
+            continue;
+        }
+
+        for (int i = 0; i < labelTrack->GetNumLabels(); ++i) {
+            const LabelStruct* label = labelTrack->GetLabel(i);
+            if (label && label->GetSelected()) {
+                trackedit::LabelKey key;
+                key.trackId = labelTrack->GetId();
+                key.itemId = label->GetId();
+                selectedLabels.push_back(key);
+            }
+        }
+    }
+
+    return selectedLabels;
+}
+
+void DomAccessor::setLabelSelected(Au3Project& prj, LabelKey labelKey, bool selected)
+{
+    auto track = findLabelTrack(prj, ::TrackId { labelKey.trackId });
+    if (!track) {
+        return;
+    }
+
+    Au3Label* label = findLabel(track, labelKey.itemId);
+
+    if (label) {
+        label->SetSelected(selected);
+    }
+}
+
+void DomAccessor::clearAllLabelSelection(Au3Project& prj)
+{
+    Au3TrackList& tracks = Au3TrackList::Get(prj);
+
+    for (Au3Track* track : tracks) {
+        Au3LabelTrack* labelTrack = dynamic_cast<Au3LabelTrack*>(track);
+        if (!labelTrack) {
+            continue;
+        }
+
+        for (int i = 0; i < labelTrack->GetNumLabels(); ++i) {
+            const LabelStruct* constLabel = labelTrack->GetLabel(i);
+            if (constLabel) {
+                LabelStruct* label = labelTrack->GetLabelById(constLabel->GetId());
+                if (label) {
+                    label->SetSelected(false);
+                }
+            }
+        }
+    }
+}
+
+int DomAccessor::getTrackHeight(const Au3Track* track)
+{
+    if (track) {
+        return track->GetHeight();
+    }
+    return 0;
+}
+
+void DomAccessor::setTrackHeight(Au3Track* track, int height)
+{
+    if (track) {
+        track->SetHeight(height);
+    }
+}

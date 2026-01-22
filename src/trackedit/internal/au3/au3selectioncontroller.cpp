@@ -41,6 +41,7 @@ void Au3SelectionController::init()
             //! NOTE: load project's last saved selection state
             auto& selectedRegion = ViewInfo::Get(projectRef()).selectedRegion;
             auto savedSelectedClips = au3::DomAccessor::findSelectedClips(projectRef());
+            auto savedSelectedLabels = au3::DomAccessor::findSelectedLabels(projectRef());
             auto savedSelectedTracks = au3::DomAccessor::findSelectedTracks(projectRef());
 
             // Clip selection takes priority
@@ -69,6 +70,8 @@ void Au3SelectionController::init()
             if (focusedTrack != INVALID_TRACK) {
                 m_focusedTrack.set(focusedTrack, true);
             }
+
+            setSelectedLabels(savedSelectedLabels, true);
 
             if (!savedSelectedClips.empty()) {
                 setSelectedClips(savedSelectedClips, true);
@@ -380,6 +383,7 @@ double Au3SelectionController::rightMostSelectedClipEndTime() const
 void Au3SelectionController::resetSelectedLabels()
 {
     MYLOG() << "resetSelectedLabels";
+    au3::DomAccessor::clearAllLabelSelection(projectRef());
     m_selectedLabels.set(au::trackedit::LabelKeyList(), true);
 }
 
@@ -410,6 +414,11 @@ LabelKeyList Au3SelectionController::selectedLabelsInTrackOrder() const
 
 void Au3SelectionController::setSelectedLabels(const LabelKeyList& labelKeys, bool complete)
 {
+    au3::DomAccessor::clearAllLabelSelection(projectRef());
+    for (const LabelKey& key : labelKeys) {
+        au3::DomAccessor::setLabelSelected(projectRef(), key, true);
+    }
+
     m_selectedLabels.set(labelKeys, complete);
 
     //! NOTE: when selecting a label, we also need to select
@@ -430,6 +439,7 @@ void Au3SelectionController::addSelectedLabel(const LabelKey& labelKey)
 
     if (!muse::contains(selectedLabels, labelKey)) {
         selectedLabels.push_back(labelKey);
+        au3::DomAccessor::setLabelSelected(projectRef(), labelKey, true);
 
         m_selectedLabels.set(selectedLabels, true);
 
@@ -446,6 +456,8 @@ void Au3SelectionController::removeLabelSelection(const LabelKey& labelKey)
     if (!muse::contains(selectedLabels, labelKey)) {
         return;
     }
+
+    au3::DomAccessor::setLabelSelected(projectRef(), labelKey, false);
 
     selectedLabels.erase(
         std::remove(selectedLabels.begin(), selectedLabels.end(), labelKey),
