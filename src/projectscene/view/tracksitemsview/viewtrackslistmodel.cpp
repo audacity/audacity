@@ -250,6 +250,9 @@ QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
     switch (role) {
     case TrackIdRole:
         return QVariant::fromValue(track.id);
+    case TrackSampleRateRole: {
+        return static_cast<int>(track.rate);
+    }
     case IsDataSelectedRole: {
         return muse::contains(selectionController()->selectedTracks(), track.id) && selectionController()->timeSelectionIsNotEmpty();
     }
@@ -323,6 +326,7 @@ QHash<int, QByteArray> ViewTracksListModel::roleNames() const
     {
         { TypeRole, "trackType" },
         { TrackIdRole, "trackId" },
+        { TrackSampleRateRole, "trackSampleRate" },
         { IsDataSelectedRole, "isDataSelected" },
         { IsTrackSelectedRole, "isTrackSelected" },
         { IsTrackFocusedRole, "isTrackFocused" },

@@ -23,6 +23,7 @@ Rectangle {
     property bool showChannelSplitter: false
     property alias channelHeightRatio: waveChannelSplitter.channelHeightRatio
     property var canvas: null
+    required property int headerHeight
     property color clipColor: ui.theme.extra["clip_color_1"]
     property color normalHeaderColor: root.currentClipStyle == ClipStyle.COLORFUL ? root.clipColor : root.classicHeaderColor
     property color selectedHeaderColor: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors(ui.theme.extra["white_color"], root.clipColor, 0.3) : classicHeaderColor
@@ -248,14 +249,7 @@ Rectangle {
         waveView.onWaveViewPositionChanged(lastSample.x, lastSample.y)
     }
 
-    function getSpectrogramHit(y /* relative to this item */) {
-        if (!isSpectrogramViewVisible || y > height) {
-            return null
-        }
-        y = spectrogramView.mapFromItem(root, 0, y).y
-        if (y < 0) {
-            return null
-        }
+    function getSpectrogramHit(y /* relative to tracks canvas */) {
         return spectrogramView.getSpectrogramHit(y)
     }
 
@@ -516,7 +510,7 @@ Rectangle {
             anchors.left: parent.left
             anchors.right: parent.right
 
-            height: 20
+            height: root.headerHeight
             z: 2
 
             visible: !root.collapsed || root.hover
@@ -860,6 +854,7 @@ Rectangle {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
+                canvas: root.canvas
                 clipId: root.clipKey.itemId()
                 trackId: root.clipKey.trackId()
                 spectralSelectionEnabled: root.spectralSelectionEnabled

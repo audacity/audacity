@@ -42,7 +42,7 @@ Item {
     signal itemSelectedRequested
     signal selectionResetRequested
     signal requestSelectionContextMenu(real x, real y)
-    signal selectionDraged(var x1, var x2, var completed)
+    signal selectionResize(var x1, var x2, var completed)
 
     signal updateMoveActive(bool completed)
 
