@@ -16,6 +16,8 @@ set( SOURCES
    MacroMagic.h
    Theme.cpp
    Theme.h
+   # ThemeAsCeeCode.h # not used in au4 atm
+   # ThemeImageDefsAsCee.h # not used in au4 atm
 )
 set( LIBRARIES
    au3-files-interface
