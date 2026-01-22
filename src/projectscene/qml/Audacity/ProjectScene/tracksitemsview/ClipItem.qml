@@ -937,10 +937,13 @@ Rectangle {
         id: clipHandles
 
         // +1 not to overlap with header
-        y: header.height + 1
+        y: !root.collapsed ? header.height + 1 : 0
         width: root.width
         handlesVisible: root.clipSelected && !root.moveActive
         canvas: root.canvas
+        collapsed: root.collapsed
+        clipHeight: root.height
+        headerHeight: header.height
 
         clipNavigationPanel: root.clipNavigationPanel
 
