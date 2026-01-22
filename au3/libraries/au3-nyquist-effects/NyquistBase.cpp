@@ -670,8 +670,7 @@ bool NyquistBase::Process(EffectInstance&, EffectSettings& settings)
     std::optional<EffectOutputTracks> oOutputs;
     if (!bOnePassTool) {
         oOutputs.emplace(
-            *mTracks, GetType(), EffectOutputTracks::TimeInterval { mT0, mT1 },
-            true, false);
+            *mTracks, GetType(), std::optional<EffectOutputTracks::TimeInterval> { { mT0, mT1 } });
     }
 
     mNumSelectedChannels
