@@ -130,7 +130,7 @@ PluginPath NyquistBase::GetPath() const
 ComponentInterfaceSymbol NyquistBase::GetSymbol() const
 {
     if (mIsPrompt) {
-        return { NYQUIST_PROMPT_ID, NYQUIST_PROMPT_NAME }
+        return { NYQUIST_PROMPT_ID, NYQUIST_PROMPT_NAME };
     }
 
     return mName;
@@ -1675,7 +1675,7 @@ FileNames::FileType NyquistBase::ParseFileType(const wxString& text)
         tzer.Tokenize(text, true, 1, 1);
         auto& tokens = tzer.tokens;
         if (tokens.size() == 2) {
-            result = { UnQuoteMsgid(tokens[0]), ParseFileExtensions(tokens[1]) }
+            result = { UnQuoteMsgid(tokens[0]), ParseFileExtensions(tokens[1]) };
         }
     }
     return result;
@@ -1757,7 +1757,7 @@ TranslatableString NyquistBase::UnQuoteMsgid(
     const wxString& s, bool allowParens, wxString* pExtraString)
 {
     if (pExtraString) {
-        *pExtraString = wxString {}
+        *pExtraString = wxString {};
     }
 
     int len = s.length();
@@ -1785,7 +1785,7 @@ TranslatableString NyquistBase::UnQuoteMsgid(
                 return UnQuoteMsgid(tokens[1], false);
             }
         } else {
-            return {}
+            return {};
         }
     } else {
         // If string was not quoted, assume no translation exists
