@@ -23,6 +23,9 @@
 #ifdef __WXMAC__
 #include <CoreAudio/CoreAudio.h>
 #include <CoreFoundation/CoreFoundation.h>
+#ifndef kAudioObjectPropertyElementMain
+#define kAudioObjectPropertyElementMain kAudioObjectPropertyElementMaster
+#endif
 #endif
 
 #ifdef USE_PORTMIXER
@@ -120,7 +123,7 @@ static std::string GetSystemDefaultDeviceName(bool isInput)
     deviceAddress.mSelector = isInput ? kAudioHardwarePropertyDefaultInputDevice
                                       : kAudioHardwarePropertyDefaultOutputDevice;
     deviceAddress.mScope = kAudioObjectPropertyScopeGlobal;
-    deviceAddress.mElement = kAudioObjectPropertyElementMaster;
+    deviceAddress.mElement = kAudioObjectPropertyElementMain;
 
     AudioDeviceID deviceId = kAudioObjectUnknown;
     UInt32 dataSize = sizeof(deviceId);
@@ -136,7 +139,7 @@ static std::string GetSystemDefaultDeviceName(bool isInput)
     AudioObjectPropertyAddress nameAddress;
     nameAddress.mSelector = kAudioObjectPropertyName;
     nameAddress.mScope = kAudioObjectPropertyScopeGlobal;
-    nameAddress.mElement = kAudioObjectPropertyElementMaster;
+    nameAddress.mElement = kAudioObjectPropertyElementMain;
 
     CFStringRef cfName = nullptr;
     dataSize = sizeof(cfName);

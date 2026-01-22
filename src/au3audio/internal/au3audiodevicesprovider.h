@@ -11,9 +11,19 @@
 #include "global/async/asyncable.h"
 #include "global/timer.h"
 
+#include "muse_framework_config.h"
+
 #include "context/iglobalcontext.h"
 #include "audio/iaudiodevicesprovider.h"
 #include "audio/iaudioengine.h"
+
+#ifdef MUSE_ENABLE_UNIT_TESTS
+#include <gtest/gtest_prod.h>
+#endif
+
+namespace au::au3audio {
+class IAu3DeviceManager;
+}
 
 namespace au::au3audio {
 class Au3AudioDevicesProvider : public audio::IAudioDevicesProvider, public muse::async::Asyncable, public muse::Injectable
@@ -72,7 +82,18 @@ public:
 
     void rescan() override;
 
+#ifdef MUSE_ENABLE_UNIT_TESTS
+    void setDeviceManagerForTests(IAu3DeviceManager* deviceManager);
+#endif
+
 private:
+#ifdef MUSE_ENABLE_UNIT_TESTS
+    FRIEND_TEST(Au3AudioDevicesProviderTests, OutputDevicesIncludeSystemDefaultAndCurrentSelectionIsLabelWhenUnset);
+    FRIEND_TEST(Au3AudioDevicesProviderTests, InputDevicesIncludeSystemDefaultAndCurrentSelectionIsLabelWhenUnset);
+    FRIEND_TEST(Au3AudioDevicesProviderTests, SetOutputDeviceSystemDefaultClearsSettingsAndWrap);
+    FRIEND_TEST(Au3AudioDevicesProviderTests, SetInputDeviceSystemDefaultClearsSettingsAndWrap);
+#endif
+
     void initHosts();
     void initInputChannels();
 
@@ -84,6 +105,7 @@ private:
     std::string systemDefaultOutputDevice() const;
     std::string systemDefaultInputDevice() const;
     void checkSystemDefaultDeviceChanges();
+    IAu3DeviceManager& deviceManager() const;
 
     std::vector<std::string> m_audioApis;
     std::vector<std::string> m_outputDevices;
@@ -104,6 +126,7 @@ private:
     std::string m_lastDefaultOutputDevice;
     std::string m_lastDefaultInputDevice;
     bool m_pendingDeviceChange = false;
+    IAu3DeviceManager* m_deviceManager = nullptr;
 };
 }
 

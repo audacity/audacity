@@ -15,7 +15,7 @@
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 
-#include "au3-audio-devices/DeviceManager.h"
+#include "au3audio/internal/au3devicemanageriface.h"
 #include "au3-audio-devices/AudioIOBase.h"
 #include "au3-project-rate/QualitySettings.h"
 #include "au3-project-rate/ProjectRate.h"
@@ -23,6 +23,58 @@
 using namespace muse;
 using namespace au::au3;
 using namespace au::au3audio;
+
+namespace {
+class DefaultDeviceManager final : public IAu3DeviceManager
+{
+public:
+    const std::vector<DeviceSourceMap>& inputDeviceMaps() const override
+    {
+        return DeviceManager::Instance()->GetInputDeviceMaps();
+    }
+
+    const std::vector<DeviceSourceMap>& outputDeviceMaps() const override
+    {
+        return DeviceManager::Instance()->GetOutputDeviceMaps();
+    }
+
+    int systemDefaultOutputDeviceIndex(const std::string& hostName) const override
+    {
+        return DeviceManager::Instance()->GetSystemDefaultOutputDeviceIndex(hostName);
+    }
+
+    int systemDefaultInputDeviceIndex(const std::string& hostName) const override
+    {
+        return DeviceManager::Instance()->GetSystemDefaultInputDeviceIndex(hostName);
+    }
+
+    int hostIndex(const std::string& hostName) const override
+    {
+        return DeviceManager::Instance()->GetHostIndex(hostName);
+    }
+
+    DeviceSourceMap* defaultOutputDevice(int hostIndex) const override
+    {
+        return DeviceManager::Instance()->GetDefaultOutputDevice(hostIndex);
+    }
+
+    DeviceSourceMap* defaultInputDevice(int hostIndex) const override
+    {
+        return DeviceManager::Instance()->GetDefaultInputDevice(hostIndex);
+    }
+
+    void rescan() override
+    {
+        DeviceManager::Instance()->Rescan();
+    }
+};
+
+DefaultDeviceManager& defaultDeviceManager()
+{
+    static DefaultDeviceManager instance;
+    return instance;
+}
+}
 
 static const muse::Settings::Key AUDIO_HOST("au3audio", "AudioIO/Host");
 static const muse::Settings::Key PLAYBACK_DEVICE("au3audio", "AudioIO/PlaybackDevice");
@@ -179,6 +231,23 @@ void Au3AudioDevicesProvider::init()
         checkSystemDefaultDeviceChanges();
     });
     m_defaultDevicePollTimer.start();
+}
+
+#ifdef MUSE_ENABLE_UNIT_TESTS
+void Au3AudioDevicesProvider::setDeviceManagerForTests(IAu3DeviceManager* deviceManager)
+{
+    m_deviceManager = deviceManager;
+}
+
+#endif
+
+IAu3DeviceManager& Au3AudioDevicesProvider::deviceManager() const
+{
+    if (m_deviceManager) {
+        return *m_deviceManager;
+    }
+
+    return defaultDeviceManager();
 }
 
 std::vector<std::string> Au3AudioDevicesProvider::outputDevices() const
@@ -440,8 +509,8 @@ async::Notification Au3AudioDevicesProvider::apiChanged() const
 
 void Au3AudioDevicesProvider::initHosts()
 {
-    const std::vector<DeviceSourceMap>& inMaps = DeviceManager::Instance()->GetInputDeviceMaps();
-    const std::vector<DeviceSourceMap>& outMaps = DeviceManager::Instance()->GetOutputDeviceMaps();
+    const std::vector<DeviceSourceMap>& inMaps = deviceManager().inputDeviceMaps();
+    const std::vector<DeviceSourceMap>& outMaps = deviceManager().outputDeviceMaps();
 
     m_audioApis.clear();
 
@@ -462,12 +531,12 @@ void Au3AudioDevicesProvider::initHosts()
 
 void Au3AudioDevicesProvider::initInputChannels()
 {
-    const std::vector<DeviceSourceMap>& inMaps = DeviceManager::Instance()->GetInputDeviceMaps();
+    const std::vector<DeviceSourceMap>& inMaps = deviceManager().inputDeviceMaps();
     const std::string host = currentApi();
     std::string inputDevice = muse::settings()->value(RECORDING_DEVICE).toString();
     if (isSystemDefaultDeviceSelection(inputDevice)) {
         inputDevice.clear();
-        int deviceIndex = DeviceManager::Instance()->GetSystemDefaultInputDeviceIndex(host);
+        int deviceIndex = deviceManager().systemDefaultInputDeviceIndex(host);
         if (deviceIndex >= 0) {
             for (const auto& device : inMaps) {
                 if (device.deviceIndex == deviceIndex) {
@@ -477,8 +546,8 @@ void Au3AudioDevicesProvider::initInputChannels()
             }
         }
         if (inputDevice.empty()) {
-            int hostIndex = DeviceManager::Instance()->GetHostIndex(host);
-            DeviceSourceMap* defaultMap = DeviceManager::Instance()->GetDefaultInputDevice(hostIndex);
+            int hostIndex = deviceManager().hostIndex(host);
+            DeviceSourceMap* defaultMap = deviceManager().defaultInputDevice(hostIndex);
             inputDevice = MakeDeviceSourceString(defaultMap, inMaps);
         }
     }
@@ -497,8 +566,8 @@ void Au3AudioDevicesProvider::initInputChannels()
 
 void Au3AudioDevicesProvider::updateInputOutputDevices()
 {
-    const std::vector<DeviceSourceMap>& inputDevices = DeviceManager::Instance()->GetInputDeviceMaps();
-    const std::vector<DeviceSourceMap>& outputDevices = DeviceManager::Instance()->GetOutputDeviceMaps();
+    const std::vector<DeviceSourceMap>& inputDevices = deviceManager().inputDeviceMaps();
+    const std::vector<DeviceSourceMap>& outputDevices = deviceManager().outputDeviceMaps();
 
     m_inputDevices.clear();
     m_outputDevices.clear();
@@ -533,14 +602,14 @@ void Au3AudioDevicesProvider::updateInputOutputDevices()
 
 void Au3AudioDevicesProvider::setupInputDevice(const std::string& newDevice)
 {
-    const std::vector<DeviceSourceMap>& inMaps = DeviceManager::Instance()->GetInputDeviceMaps();
+    const std::vector<DeviceSourceMap>& inMaps = deviceManager().inputDeviceMaps();
     auto host = muse::settings()->value(AUDIO_HOST).toString();
 
     int prevInputChannels = muse::settings()->value(INPUT_CHANNELS).toInt();
     bool useSystemDefault = isSystemDefaultDeviceSelection(newDevice);
     std::string effectiveDevice = useSystemDefault ? std::string() : newDevice;
     if (useSystemDefault) {
-        int deviceIndex = DeviceManager::Instance()->GetSystemDefaultInputDeviceIndex(host);
+        int deviceIndex = deviceManager().systemDefaultInputDeviceIndex(host);
         if (deviceIndex >= 0) {
             for (const auto& device : inMaps) {
                 if (device.deviceIndex == deviceIndex) {
@@ -550,8 +619,8 @@ void Au3AudioDevicesProvider::setupInputDevice(const std::string& newDevice)
             }
         }
         if (effectiveDevice.empty()) {
-            int hostIndex = DeviceManager::Instance()->GetHostIndex(host);
-            DeviceSourceMap* defaultMap = DeviceManager::Instance()->GetDefaultInputDevice(hostIndex);
+            int hostIndex = deviceManager().hostIndex(host);
+            DeviceSourceMap* defaultMap = deviceManager().defaultInputDevice(hostIndex);
             effectiveDevice = MakeDeviceSourceString(defaultMap, inMaps);
         }
     }
@@ -596,9 +665,9 @@ std::string Au3AudioDevicesProvider::defaultInputDevice()
 
 std::string Au3AudioDevicesProvider::systemDefaultOutputDevice() const
 {
-    const std::vector<DeviceSourceMap>& outputDevices = DeviceManager::Instance()->GetOutputDeviceMaps();
+    const std::vector<DeviceSourceMap>& outputDevices = deviceManager().outputDeviceMaps();
     const std::string hostName = currentApi();
-    int deviceIndex = DeviceManager::Instance()->GetSystemDefaultOutputDeviceIndex(hostName);
+    int deviceIndex = deviceManager().systemDefaultOutputDeviceIndex(hostName);
     if (deviceIndex >= 0) {
         for (const auto& device : outputDevices) {
             if (device.deviceIndex == deviceIndex) {
@@ -607,20 +676,20 @@ std::string Au3AudioDevicesProvider::systemDefaultOutputDevice() const
         }
     }
 
-    int hostIndex = DeviceManager::Instance()->GetHostIndex(hostName);
+    int hostIndex = deviceManager().hostIndex(hostName);
     if (hostIndex < 0) {
         return {};
     }
 
-    DeviceSourceMap* defaultMap = DeviceManager::Instance()->GetDefaultOutputDevice(hostIndex);
+    DeviceSourceMap* defaultMap = deviceManager().defaultOutputDevice(hostIndex);
     return MakeDeviceSourceString(defaultMap, outputDevices);
 }
 
 std::string Au3AudioDevicesProvider::systemDefaultInputDevice() const
 {
-    const std::vector<DeviceSourceMap>& inputDevices = DeviceManager::Instance()->GetInputDeviceMaps();
+    const std::vector<DeviceSourceMap>& inputDevices = deviceManager().inputDeviceMaps();
     const std::string hostName = currentApi();
-    int deviceIndex = DeviceManager::Instance()->GetSystemDefaultInputDeviceIndex(hostName);
+    int deviceIndex = deviceManager().systemDefaultInputDeviceIndex(hostName);
     if (deviceIndex >= 0) {
         for (const auto& device : inputDevices) {
             if (device.deviceIndex == deviceIndex) {
@@ -629,12 +698,12 @@ std::string Au3AudioDevicesProvider::systemDefaultInputDevice() const
         }
     }
 
-    int hostIndex = DeviceManager::Instance()->GetHostIndex(hostName);
+    int hostIndex = deviceManager().hostIndex(hostName);
     if (hostIndex < 0) {
         return {};
     }
 
-    DeviceSourceMap* defaultMap = DeviceManager::Instance()->GetDefaultInputDevice(hostIndex);
+    DeviceSourceMap* defaultMap = deviceManager().defaultInputDevice(hostIndex);
     return MakeDeviceSourceString(defaultMap, inputDevices);
 }
 
@@ -695,7 +764,7 @@ void Au3AudioDevicesProvider::checkSystemDefaultDeviceChanges()
 
 void Au3AudioDevicesProvider::rescan()
 {
-    DeviceManager::Instance()->Rescan();
+    deviceManager().rescan();
 
     initHosts();
     updateInputOutputDevices();

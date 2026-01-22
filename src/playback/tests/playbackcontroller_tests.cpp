@@ -7,6 +7,7 @@
 #include "actions/tests/mocks/actionsdispatchermock.h"
 #include "context/tests/mocks/globalcontextmock.h"
 #include "global/tests/mocks/applicationmock.h"
+#include "mocks/audiodevicesprovidermock.h"
 #include "mocks/playbackmock.h"
 #include "mocks/playermock.h"
 #include "project/tests/mocks/audacityprojectmock.h"
@@ -17,6 +18,7 @@
 #include "../internal/playbackcontroller.h"
 
 using ::testing::_;
+using ::testing::NiceMock;
 using ::testing::Return;
 using ::testing::ReturnRef;
 
@@ -27,6 +29,10 @@ using namespace au::context;
 
 static const actions::ActionQuery PLAYBACK_SEEK_QUERY("action://playback/seek");
 static const actions::ActionQuery PLAYBACK_CHANGE_PLAY_REGION_QUERY("action://playback/play-region-change");
+static const actions::ActionQuery PLAYBACK_CHANGE_AUDIO_API_QUERY("action://playback/change-api");
+static const actions::ActionQuery PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY("action://playback/change-playback-device");
+static const actions::ActionQuery PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY("action://playback/change-recording-device");
+static const actions::ActionQuery PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY("action://playback/change-input-channels");
 
 namespace au::playback {
 class PlaybackControllerTests : public ::testing::Test
@@ -54,6 +60,9 @@ public:
         m_trackeditProject = std::make_shared<trackedit::TrackeditProjectMock>();
 
         m_currentProject = std::make_shared<project::AudacityProjectMock>();
+
+        m_audioDevicesProvider = std::make_shared<NiceMock<audio::AudioDevicesProviderMock> >();
+        m_controller->audioDevicesProvider.set(m_audioDevicesProvider);
 
         m_playback = std::make_shared<PlaybackMock>();
         m_controller->playback.set(m_playback);
@@ -117,6 +126,34 @@ public:
         m_controller->rewindToEndAction();
     }
 
+    void setAudioApi(int index)
+    {
+        muse::actions::ActionQuery q(PLAYBACK_CHANGE_AUDIO_API_QUERY);
+        q.addParam("api_index", muse::Val(index));
+        m_controller->setAudioApi(q);
+    }
+
+    void setAudioOutputDevice(int index)
+    {
+        muse::actions::ActionQuery q(PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY);
+        q.addParam("device_index", muse::Val(index));
+        m_controller->setAudioOutputDevice(q);
+    }
+
+    void setAudioInputDevice(int index)
+    {
+        muse::actions::ActionQuery q(PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY);
+        q.addParam("device_index", muse::Val(index));
+        m_controller->setAudioInputDevice(q);
+    }
+
+    void setInputChannels(int index)
+    {
+        muse::actions::ActionQuery q(PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY);
+        q.addParam("input-channels_index", muse::Val(index));
+        m_controller->setInputChannels(q);
+    }
+
     PlaybackController* m_controller = nullptr;
 
     std::shared_ptr<ApplicationMock> m_application;
@@ -127,6 +164,7 @@ public:
     std::shared_ptr<trackedit::TrackeditProjectMock> m_trackeditProject;
     std::shared_ptr<project::AudacityProjectMock> m_currentProject;
 
+    std::shared_ptr<NiceMock<audio::AudioDevicesProviderMock> > m_audioDevicesProvider;
     std::shared_ptr<PlaybackMock> m_playback;
     std::shared_ptr<PlayerMock> m_player;
 };
@@ -236,6 +274,118 @@ TEST_F(PlaybackControllerTests, TogglePlay_WithSelection)
 
     //! [WHEN] Toggle play
     togglePlay();
+}
+
+TEST_F(PlaybackControllerTests, SetAudioOutputDevice_WhenPaused_RestartsPlayback)
+{
+    //! [GIVEN] Playback is paused
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Paused));
+
+    const secs_t resumePosition = 12.0;
+    EXPECT_CALL(*m_player, playbackPosition())
+    .WillOnce(Return(resumePosition));
+
+    const std::vector<std::string> devices { "System default", "Speakers" };
+    EXPECT_CALL(*m_audioDevicesProvider, outputDevices())
+    .WillOnce(Return(devices));
+
+    EXPECT_CALL(*m_audioDevicesProvider, setOutputDevice(devices.at(1)))
+    .Times(1);
+
+    EXPECT_CALL(*m_player, restartPausedPlayback(resumePosition))
+    .Times(1);
+
+    //! [WHEN] Change playback device
+    setAudioOutputDevice(1);
+}
+
+TEST_F(PlaybackControllerTests, SetAudioOutputDevice_WhenPlaying_IgnoresChange)
+{
+    //! [GIVEN] Playback is running
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+
+    EXPECT_CALL(*m_audioDevicesProvider, outputDevices())
+    .Times(0);
+    EXPECT_CALL(*m_audioDevicesProvider, setOutputDevice(_))
+    .Times(0);
+    EXPECT_CALL(*m_player, restartPausedPlayback(_))
+    .Times(0);
+
+    //! [WHEN] Attempt to change playback device
+    setAudioOutputDevice(0);
+}
+
+TEST_F(PlaybackControllerTests, SetAudioApi_WhenPaused_RestartsPlayback)
+{
+    //! [GIVEN] Playback is paused
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Paused));
+
+    const secs_t resumePosition = 7.5;
+    EXPECT_CALL(*m_player, playbackPosition())
+    .WillOnce(Return(resumePosition));
+
+    const std::vector<std::string> apis { "ALSA", "CoreAudio" };
+    EXPECT_CALL(*m_audioDevicesProvider, apis())
+    .WillOnce(Return(apis));
+
+    EXPECT_CALL(*m_audioDevicesProvider, setApi(apis.at(1)))
+    .Times(1);
+
+    EXPECT_CALL(*m_player, restartPausedPlayback(resumePosition))
+    .Times(1);
+
+    //! [WHEN] Change audio host
+    setAudioApi(1);
+}
+
+TEST_F(PlaybackControllerTests, SetAudioInputDevice_WhenPaused_RestartsPlayback)
+{
+    //! [GIVEN] Playback is paused
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Paused));
+
+    const secs_t resumePosition = 3.25;
+    EXPECT_CALL(*m_player, playbackPosition())
+    .WillOnce(Return(resumePosition));
+
+    const std::vector<std::string> devices { "System default", "Mic" };
+    EXPECT_CALL(*m_audioDevicesProvider, inputDevices())
+    .WillOnce(Return(devices));
+
+    EXPECT_CALL(*m_audioDevicesProvider, setInputDevice(devices.at(1)))
+    .Times(1);
+
+    EXPECT_CALL(*m_player, restartPausedPlayback(resumePosition))
+    .Times(1);
+
+    //! [WHEN] Change recording device
+    setAudioInputDevice(1);
+}
+
+TEST_F(PlaybackControllerTests, SetInputChannels_WhenPaused_RestartsPlayback)
+{
+    //! [GIVEN] Playback is paused
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Paused));
+
+    const secs_t resumePosition = 5.0;
+    EXPECT_CALL(*m_player, playbackPosition())
+    .WillOnce(Return(resumePosition));
+
+    EXPECT_CALL(*m_audioDevicesProvider, inputChannelsAvailable())
+    .WillOnce(Return(2));
+
+    EXPECT_CALL(*m_audioDevicesProvider, setInputChannels(2))
+    .Times(1);
+
+    EXPECT_CALL(*m_player, restartPausedPlayback(resumePosition))
+    .Times(1);
+
+    //! [WHEN] Change recording channels
+    setInputChannels(2);
 }
 
 /**
