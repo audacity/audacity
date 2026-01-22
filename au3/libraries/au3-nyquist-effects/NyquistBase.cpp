@@ -14,7 +14,9 @@
 #include "au3-files/FileNames.h"
 #include "au3-label-track/LabelTrack.h"
 #include "au3-strings/Languages.h"
+#if defined(USE_MIDI)
 #include "au3-note-track/NoteTrack.h"
+#endif
 #include "au3-files/PlatformCompatibility.h"
 #include "au3-module-manager/PluginManager.h"
 #include "au3-preferences/Prefs.h"
