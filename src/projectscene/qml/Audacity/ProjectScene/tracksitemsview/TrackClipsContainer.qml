@@ -18,12 +18,15 @@ TrackItemsContainer {
     property bool rightTrimPressedButtons: false
     property real dbRange: -60.0
     property color trackColor
+    required property int headerHeight
     required property bool isWaveformViewVisible
     required property bool isSpectrogramViewVisible
     required property double selectionStartFrequency
     required property double selectionEndFrequency
     required property bool spectralSelectionEnabled
     required property var pressedSpectrogram
+    required property double sampleRate
+    required property var selectionController
 
     signal movePreviewClip(int x, int width, string title)
     signal clearPreviewClip
@@ -31,6 +34,7 @@ TrackItemsContainer {
     QtObject {
         id: prv
         readonly property bool isMultiView: root.isSpectrogramViewVisible && root.isWaveformViewVisible
+        readonly property real viewHeight: (root.height - root.headerHeight) / (prv.isMultiView ? 2 : 1)
     }
 
     TrackClipsListModel {
@@ -48,18 +52,18 @@ TrackItemsContainer {
         clipsModel.resetSelectedClips()
     }
 
-    function getSpectrogramHit(y) {
+    function getSpectrogramHit(mouseY) {
         if (!contentItem) {
             return null
         }
+        // Get spectrogram hit does the mapping to canvas internally
         const e = {
-            // We don't need x for this
             x: 0,
-            y: y
+            y: 0
         }
         var hit = null
         contentItem.clipsContainer.mapToAllClips(e, function (clipItem, mouseEvent, controller) {
-            hit = clipItem.getSpectrogramHit(mouseEvent.y)
+            hit = clipItem.getSpectrogramHit(mouseY)
             if (hit) {
                 controller.shouldStop = true
             }
@@ -280,6 +284,7 @@ TrackItemsContainer {
                                 pitch: itemData.pitch
 
                                 currentClipStyle: clipsModel.clipStyle
+                                headerHeight: root.headerHeight
 
                                 speedPercentage: itemData.speedPercentage
                                 clipSelected: itemData.selected
@@ -556,6 +561,8 @@ TrackItemsContainer {
             ItemsSelection {
                 id: clipsSelection
 
+                visible: root.selectionStartFrequency === root.selectionEndFrequency
+
                 isDataSelected: root.isDataSelected
                 selectionInProgress: root.selectionInProgress
                 context: root.context
@@ -563,8 +570,8 @@ TrackItemsContainer {
                 anchors.fill: parent
                 z: 1
 
-                onSelectionDraged: function (x1, x2, completed) {
-                    root.selectionDraged(x1, x2, completed)
+                onSelectionResize: function (x1, x2, completed) {
+                    root.selectionResize(x1, x2, completed)
                     if (completed) {
                         root.seekToX(Math.min(x1, x2))
                     }
@@ -577,6 +584,36 @@ TrackItemsContainer {
 
                 onHandleGuideline: function (x, completed) {
                     root.handleTimeGuideline(x, completed)
+                }
+            }
+
+            TrackSpectralSelectionContainer {
+                id: spectralSelectionContainer
+
+                visible: root.isSpectrogramViewVisible
+
+                y: root.headerHeight + (root.isWaveformViewVisible ? prv.viewHeight : 0)
+                height: prv.viewHeight
+                anchors.left: parent.left
+                anchors.right: parent.right
+                z: 1
+
+                canvas: root.canvas
+                trackId: root.trackId
+                sampleRate: root.sampleRate
+                selectionStartPosition: root.context.selectionStartPosition
+                selectionEndPosition: root.context.selectionEndPosition
+                selectionStartFrequency: root.selectionStartFrequency
+                selectionEndFrequency: root.selectionEndFrequency
+                channelHeightRatio: channelSplitter.channelHeightRatio
+                isStereo: clipsModel.isStereo
+                selectionController: root.selectionController
+
+                onSelectionHorizontalResize: function (x1, x2, completed) {
+                    root.selectionResize(x1, x2, completed)
+                    if (completed) {
+                        root.seekToX(x1)
+                    }
                 }
             }
 

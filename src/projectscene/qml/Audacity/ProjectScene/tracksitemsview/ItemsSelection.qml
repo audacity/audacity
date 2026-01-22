@@ -10,7 +10,7 @@ Item {
     //! NOTE: sync with SelectionViewController's MIN_SELECTION_PX
     property real minSelection: 1
 
-    signal selectionDraged(var x1, var x2, var completed)
+    signal selectionResize(var x1, var x2, var completed)
     signal requestSelectionContextMenu(real x, real y)
     signal handleGuideline(var x, var completed)
 
@@ -84,9 +84,9 @@ Item {
             }
             var newWidth = leftMa.startW + (mouse.x * -1)
             if (newWidth < root.minSelection) {
-                root.selectionDraged(selRect.x + selRect.width - root.minSelection, selRect.x + selRect.width, false)
+                root.selectionResize(selRect.x + selRect.width - root.minSelection, selRect.x + selRect.width, false)
             } else {
-                root.selectionDraged(leftMa.startX + mouse.x, leftMa.startX + mouse.x + newWidth, false)
+                root.selectionResize(leftMa.startX + mouse.x, leftMa.startX + mouse.x + newWidth, false)
             }
             handleGuideline(selRect.x, false)
         }
@@ -95,7 +95,7 @@ Item {
             if (mouse.button !== Qt.LeftButton) {
                 return
             }
-            root.selectionDraged(selRect.x, selRect.x + selRect.width, true)
+            root.selectionResize(selRect.x, selRect.x + selRect.width, true)
             leftMa.x = Qt.binding(function () {
                 return selRect.x
             })
@@ -147,7 +147,7 @@ Item {
             if (newWidth < root.minSelection) {
                 newWidth = root.minSelection
             }
-            root.selectionDraged(selRect.x, selRect.x + newWidth, false)
+            root.selectionResize(selRect.x, selRect.x + newWidth, false)
             handleGuideline(root.context.selectionEndPosition, false)
         }
 
@@ -155,7 +155,7 @@ Item {
             if (mouse.button !== Qt.LeftButton) {
                 return
             }
-            root.selectionDraged(selRect.x, selRect.x + selRect.width, true)
+            root.selectionResize(selRect.x, selRect.x + selRect.width, true)
             rightMa.x = Qt.binding(function () {
                 return selRect.x + selRect.width - rightMa.width
             })

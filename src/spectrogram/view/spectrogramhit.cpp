@@ -4,8 +4,8 @@
 #include "spectrogramhit.h"
 
 namespace au::spectrogram {
-SpectrogramHit::SpectrogramHit(int trackId, int channel, double spectrogramY, double spectrogramHeight, QObject* parent)
-    : QObject(parent),
+SpectrogramHit::SpectrogramHit(int trackId, int channel, double spectrogramY, double spectrogramHeight)
+    : QObject(nullptr),
     trackId(trackId),
     channel(channel),
     spectrogramY(spectrogramY),
@@ -17,4 +17,4 @@ SpectrogramHit* SpectrogramHitFactory::createSpectrogramHit(int trackId, int cha
 {
     return new SpectrogramHit{ trackId, channel, spectrogramY, spectrogramHeight };
 }
-}
+} // namespace au::spectrogram

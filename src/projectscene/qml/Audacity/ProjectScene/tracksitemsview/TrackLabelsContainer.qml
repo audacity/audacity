@@ -297,8 +297,8 @@ TrackItemsContainer {
                 anchors.fill: parent
                 z: 1
 
-                onSelectionDraged: function (x1, x2, completed) {
-                    root.selectionDraged(x1, x2, completed)
+                onSelectionResize: function (x1, x2, completed) {
+                    root.selectionResize(x1, x2, completed)
                     if (completed) {
                         root.seekToX(Math.min(x1, x2))
                     }
