@@ -1097,6 +1097,7 @@ static constexpr auto ClipTempo_attr = "clipTempo";
 static constexpr auto Name_attr = "name";
 static constexpr auto GroupId_attr = "groupId";
 static constexpr auto Color_attr = "color";
+static constexpr auto Selected_attr = "isSelected";
 
 bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList& attrs)
 {
@@ -1170,6 +1171,8 @@ bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList& a
                 if (value.IsStringView()) {
                     SetColor(value.ToWString());
                 }
+            } else if (attr == Selected_attr && value.TryGet(boolValue)) {
+                SetSelected(boolValue);
             } else if (Attachments::FindIf(
                            [&](WaveClipListener& listener){
                 return listener.HandleXMLAttribute(attr, value);
@@ -1249,6 +1252,7 @@ void WaveClip::WriteXML(size_t ii, XMLWriter& xmlFile) const
     xmlFile.WriteAttr(Name_attr, mName);
     xmlFile.WriteAttr(GroupId_attr, static_cast<long>(mGroupId));
     xmlFile.WriteAttr(Color_attr, mColor);
+    xmlFile.WriteAttr(Selected_attr, mSelected);
 
     if (mClipTempo) {
         xmlFile.WriteAttr(ClipTempo_attr, *mClipTempo, 8);
@@ -1925,6 +1929,16 @@ void WaveClip::SetColor(const wxString& color)
 const wxString& WaveClip::GetColor() const
 {
     return mColor;
+}
+
+void WaveClip::SetSelected(bool selected)
+{
+    mSelected = selected;
+}
+
+bool WaveClip::GetSelected() const
+{
+    return mSelected;
 }
 
 sampleCount WaveClip::TimeToSamples(double time) const

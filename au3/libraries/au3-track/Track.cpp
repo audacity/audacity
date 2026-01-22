@@ -92,6 +92,16 @@ void Track::SetSelected(bool s)
     }
 }
 
+bool Track::GetFocused() const
+{
+    return mFocused;
+}
+
+void Track::SetFocused(bool f)
+{
+    mFocused = f;
+}
+
 void Track::CopyAttachments(Track& dst, const Track& src, bool deep)
 {
     if (!deep) {
@@ -883,6 +893,7 @@ void Track::WriteCommonXMLAttributes(
         // which does not have unique ChannelGroupData for the track
         xmlFile.WriteAttr(wxT("name"), GetName());
         xmlFile.WriteAttr(wxT("isSelected"), this->GetSelected());
+        xmlFile.WriteAttr(wxT("isFocused"), this->GetFocused());
     }
     AttachedTrackObjects::ForEach([&](auto& attachment){
         attachment.WriteXMLAttributes(xmlFile);
@@ -909,6 +920,9 @@ bool Track::HandleCommonXMLAttribute(
         return true;
     } else if (attr == "isSelected" && valueView.TryGet(nValue)) {
         this->SetSelected(nValue != 0);
+        return true;
+    } else if (attr == "isFocused" && valueView.TryGet(nValue)) {
+        this->SetFocused(nValue != 0);
         return true;
     }
     return false;

@@ -38,12 +38,17 @@ void Au3SelectionController::init()
         ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
 
         if (prj) {
-            resetSelectedClips();
-            resetSelectedLabels();
-            resetSelectedTracks();
-
             //! NOTE: load project's last saved selection state
             auto& selectedRegion = ViewInfo::Get(projectRef()).selectedRegion;
+            auto savedSelectedClips = au3::DomAccessor::findSelectedClips(projectRef());
+            auto savedSelectedTracks = au3::DomAccessor::findSelectedTracks(projectRef());
+
+            // Clip selection takes priority
+            if (!savedSelectedClips.empty()) {
+                selectedRegion.setT0(0);
+                selectedRegion.setT1(0);
+            }
+
             m_selectedStartTime.set(selectedRegion.t0(), true);
             m_selectedEndTime.set(selectedRegion.t1(), true);
 
@@ -60,10 +65,15 @@ void Au3SelectionController::init()
                 restoreSelection(selection);
             };
 
-            auto& tracks = ::TrackList::Get(projectRef());
-            if (!tracks.empty()) {
-                const auto it = tracks.begin();
-                setFocusedTrack(TrackId((*it)->GetId()));
+            TrackId focusedTrack = au3::DomAccessor::findFocusedTrack(projectRef());
+            if (focusedTrack != INVALID_TRACK) {
+                m_focusedTrack.set(focusedTrack, true);
+            }
+
+            if (!savedSelectedClips.empty()) {
+                setSelectedClips(savedSelectedClips, true);
+            } else {
+                setSelectedTracks(savedSelectedTracks, true);
             }
         } else {
             m_tracksSubc.Reset();
@@ -158,6 +168,8 @@ muse::async::Channel<TrackIdList> Au3SelectionController::tracksSelected() const
 void Au3SelectionController::resetSelectedClips()
 {
     MYLOG() << "resetSelectedClip";
+    //! NOTE: sync clip deselection with au3 persistence
+    au3::DomAccessor::clearAllClipSelection(projectRef());
     m_selectedClips.set(au::trackedit::ClipKeyList(), true);
 }
 
@@ -188,6 +200,12 @@ ClipKeyList Au3SelectionController::selectedClipsInTrackOrder() const
 
 void Au3SelectionController::setSelectedClips(const ClipKeyList& clipKeys, bool complete)
 {
+    //! NOTE: sync clip selection with au3 persistence
+    au3::DomAccessor::clearAllClipSelection(projectRef());
+    for (const ClipKey& key : clipKeys) {
+        au3::DomAccessor::setClipSelected(projectRef(), key, true);
+    }
+
     m_selectedClips.set(clipKeys, complete);
 
     //! NOTE: when selecting a clip, we also need to select
@@ -208,6 +226,7 @@ void Au3SelectionController::addSelectedClip(const ClipKey& clipKey)
 
     if (!muse::contains(selectedClips, clipKey)) {
         selectedClips.push_back(clipKey);
+        au3::DomAccessor::setClipSelected(projectRef(), clipKey, true);
 
         m_selectedClips.set(selectedClips, true);
 
@@ -224,6 +243,8 @@ void Au3SelectionController::removeClipSelection(const ClipKey& clipKey)
     if (!muse::contains(selectedClips, clipKey)) {
         return;
     }
+
+    au3::DomAccessor::setClipSelected(projectRef(), clipKey, false);
 
     selectedClips.erase(
         std::remove(selectedClips.begin(), selectedClips.end(), clipKey),
@@ -772,6 +793,9 @@ au::trackedit::TrackId Au3SelectionController::focusedTrack() const
 
 void Au3SelectionController::setFocusedTrack(TrackId trackId)
 {
+    au3::DomAccessor::clearAllTrackFocus(projectRef());
+    au3::DomAccessor::setTrackFocused(projectRef(), trackId, true);
+
     m_focusedTrack.set(trackId, true);
 }
 
