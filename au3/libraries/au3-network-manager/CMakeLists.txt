@@ -6,7 +6,10 @@ set(TARGET au3-network-manager)
 
 set( SOURCES
     IResponse.h
+    IResponse.cpp
     IResponseFactory.h
+
+    NetworkManagerApi.h
 
     HeadersList.h
     HeadersList.cpp
