@@ -18,12 +18,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# App (main)
-add_subdirectory(app)
-
-# Framework
-#add_subdirectory(framework)
-
 # Modules
 if (AU_BUILD_APPSHELL_MODULE)
     add_subdirectory(appshell)
@@ -66,4 +60,5 @@ add_subdirectory(toast)
 # Stubs
 add_subdirectory(stubs)
 
-# ...
+# App (main)
+add_subdirectory(app)
