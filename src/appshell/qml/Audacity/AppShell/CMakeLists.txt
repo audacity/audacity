@@ -57,6 +57,7 @@ qt_add_qml_module(appshell_qml
         FirstLaunchSetup/UnderConstructionPage.qml
         FirstLaunchSetup/WorkspaceLayoutPage.qml
         FirstLaunchSetup/SigninAudiocomPage.qml
+        FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml
         HomePage/HomeMenu.qml
         HomePage/HomePage.qml
         HomePage/PluginsPage.qml
