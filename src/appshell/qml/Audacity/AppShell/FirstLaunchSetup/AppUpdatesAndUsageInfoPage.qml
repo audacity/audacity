@@ -185,6 +185,11 @@ Item {
             CheckBox {
                 id: enableUUIDCheckBox
 
+                navigation.name: "EnableUUIDCheckbox"
+                navigation.panel: root.navigationPanel
+                navigation.row: root.navigationStartRow + 1
+                navigation.column: 0
+
                 text: prv.enableUUIDText
                 checked: true
             }

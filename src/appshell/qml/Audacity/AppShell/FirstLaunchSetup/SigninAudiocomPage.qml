@@ -50,9 +50,24 @@ Page {
 
             spacing: prv.socialButtonSpacing
 
+            NavigationPanel {
+                id: socialButtonsPanel
+                name: "SocialButtonsPanel"
+                enabled: root.enabled && root.visible
+                section: root.navigationSection
+                order: root.navigationStartRow + 1
+                direction: NavigationPanel.Horizontal
+                accessible.name: qsTrc("appshell/gettingstarted", "Social sign-in options")
+            }
+
             FlatButton {
                 Layout.fillWidth: true
                 Layout.preferredHeight: prv.socialButtonHeight
+
+                navigation.name: "GoogleSignInButton"
+                navigation.panel: socialButtonsPanel
+                navigation.row: 0
+                navigation.column: 0
 
                 contentItem: RowLayout {
                     spacing: prv.socialIconTextSpacing
@@ -73,6 +88,11 @@ Page {
             FlatButton {
                 Layout.fillWidth: true
                 Layout.preferredHeight: prv.socialButtonHeight
+
+                navigation.name: "FacebookSignInButton"
+                navigation.panel: socialButtonsPanel
+                navigation.row: 0
+                navigation.column: 1
 
                 contentItem: RowLayout {
                     spacing: prv.socialIconTextSpacing
@@ -116,48 +136,73 @@ Page {
             }
         }
 
-        Column {
-            spacing: prv.textInputTitleSpacing
+        ColumnLayout {
             Layout.fillWidth: true
+            spacing: prv.columnSpacing
 
-            StyledTextLabel {
-                text: prv.emailText
+            NavigationPanel {
+                id: formFieldsPanel
+                name: "FormFieldsPanel"
+                enabled: root.enabled && root.visible
+                section: root.navigationSection
+                direction: NavigationPanel.Vertical
+                order: root.navigationStartRow + 2
+                accessible.name: qsTrc("appshell/gettingstarted", "Email and password field")
             }
 
-            TextInputField {
-                anchors.left: parent.left
-                anchors.right: parent.right
-                height: prv.textInputHeight
-            }
-        }
-
-        Column {
-            spacing: prv.textInputTitleSpacing
-            Layout.fillWidth: true
-
-            RowLayout {
-                width: parent.width
+            Column {
+                spacing: prv.textInputTitleSpacing
+                Layout.fillWidth: true
 
                 StyledTextLabel {
-                    text: prv.passwordText
+                    text: prv.emailText
                 }
 
-                Item {
-                    Layout.fillWidth: true
-                }
+                TextInputField {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: prv.textInputHeight
 
-                StyledTextLabel {
-                    text: qsTrc("appshell/gettingstarted", "<a href=\"%1\">Forgot your password?</a>")
-                          .arg(prv.forgotPasswordUrl)
+                    navigation.name: "EmailInput"
+                    navigation.panel: formFieldsPanel
+                    navigation.row: 0
+                    navigation.column: 0
                 }
             }
 
-            TextInputField {
-                anchors.left: parent.left
-                anchors.right: parent.right
-                height: prv.textInputHeight
+            Column {
+                spacing: prv.textInputTitleSpacing
+                Layout.fillWidth: true
 
-                inputField.echoMode: TextInput.Password
+                RowLayout {
+                    width: parent.width
+
+                    StyledTextLabel {
+                        text: prv.passwordText
+                    }
+
+                    Item {
+                        Layout.fillWidth: true
+                    }
+
+                    StyledTextLabel {
+                        text: qsTrc("appshell/gettingstarted", "<a href=\"%1\">Forgot your password?</a>")
+                            .arg(prv.forgotPasswordUrl)
+                    }
+                }
+
+                TextInputField {
+                    anchors.left: parent.left
+                    anchors.right: parent.right
+                    height: prv.textInputHeight
+
+                    inputField.echoMode: TextInput.Password
+
+                    navigation.name: "PasswordInput"
+                    navigation.panel: formFieldsPanel
+                    navigation.row: 1
+                    navigation.column: 0
+                }
             }
         }
 
@@ -166,9 +211,21 @@ Page {
             Layout.fillWidth: true
             Layout.preferredHeight: prv.signinButtonHeight
 
+            NavigationPanel {
+                id: actionsPanel
+                name: "ActionsPanel"
+                enabled: root.enabled && root.visible
+                section: root.navigationSection
+                order: root.navigationStartRow + 3
+                accessible.name: qsTrc("appshell/gettingstarted", "Sign-in action")
+            }
+
             accentButton: true
 
             text: prv.signInText
+
+            navigation.name: "SignInButton"
+            navigation.panel: actionsPanel
         }
 
         StyledTextLabel {
