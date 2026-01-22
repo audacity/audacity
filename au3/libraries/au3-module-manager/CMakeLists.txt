@@ -9,12 +9,13 @@ and plug-ins, and preferred settings.
 set( TARGET au3-module-manager )
 
 set( SOURCES
-   AsyncPluginValidator.cpp
-   AsyncPluginValidator.h
+# those files aren't used in au4 atm
+#   AsyncPluginValidator.cpp
+#   AsyncPluginValidator.h
+#   PluginIPCUtils.cpp
+#   PluginIPCUtils.h
    ConfigInterface.cpp
    ConfigInterface.h
-   PluginIPCUtils.cpp
-   PluginIPCUtils.h
    ModuleManager.cpp
    ModuleManager.h
    ModuleSettings.cpp
