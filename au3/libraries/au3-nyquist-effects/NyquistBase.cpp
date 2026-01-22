@@ -23,7 +23,7 @@
 #include "au3-project/Project.h"
 #include "au3-project-rate/ProjectRate.h"
 #include "au3-command-parameters/ShuttleAutomation.h"
-#include "au3-wave-track-settings/SpectrogramSettings.h"
+// #include "au3-wave-track-settings/SpectrogramSettings.h" // TODO: properly handle SpectrogramSettings
 #include "au3-track-selection/SyncLock.h"
 #include "au3-files/TempDirectory.h"
 #include "au3-time-track/TimeTrack.h"
@@ -497,12 +497,13 @@ bool NyquistBase::Init()
                     WaveChannelSubViewType {
                     WaveChannelViewConstants::Spectrum, {} });
 
-                if (
-                    hasSpectral
-                    && (SpectrogramSettings::Get(*t).SpectralSelectionEnabled())) {
-                    bAllowSpectralEditing = true;
-                    break;
-                }
+                // TODO: properly handle SpectrogramSettings
+                // if (
+                //     hasSpectral
+                //     && (SpectrogramSettings::Get(*t).SpectralSelectionEnabled())) {
+                //     bAllowSpectralEditing = true;
+                //     break;
+                // }
             }
 
             if (!bAllowSpectralEditing || ((mF0 < 0.0) && (mF1 < 0.0))) {
@@ -1109,10 +1110,12 @@ bool NyquistBase::ProcessOne(
         mCurChannelGroup->TypeSwitch(
             [&](const WaveTrack& wt) {
             type = wxT("wave");
-            spectralEditp = SpectrogramSettings::Get(*mCurChannelGroup)
-                            .SpectralSelectionEnabled()
-                            ? wxT("T")
-                            : wxT("NIL");
+            // TODO: properly handle SpectrogramSettings
+            spectralEditp = wxT("NIL");
+            // spectralEditp = SpectrogramSettings::Get(*mCurChannelGroup)
+            //                 .SpectralSelectionEnabled()
+            //                 ? wxT("T")
+            //                 : wxT("NIL");
             view = wxT("NIL");
             // Find() not Get() to avoid creation-on-demand of views in case we
             // are only previewing
