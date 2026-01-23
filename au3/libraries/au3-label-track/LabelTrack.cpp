@@ -167,6 +167,7 @@ LabelTrack::LabelTrack(const LabelTrack& orig, ProtectedCreationArg&& a)
     for (auto& original: orig.mLabels) {
         LabelStruct l { original.selectedRegion, original.title };
         l.SetId(LabelStruct::NewID());
+        l.SetSelected(original.GetSelected());
         mLabels.push_back(l);
     }
 }

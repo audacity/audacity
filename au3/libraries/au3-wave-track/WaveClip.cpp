@@ -293,6 +293,8 @@ WaveClip::WaveClip(
 
     mColor = orig.mColor;
 
+    mSelected = orig.mSelected;
+
     assert(NChannels() == (token.emptyCopy ? 0 : orig.NChannels()));
     assert(token.emptyCopy || CheckInvariants());
     assert(!copyCutlines || NumCutLines() == orig.NumCutLines());
@@ -357,6 +359,8 @@ WaveClip::WaveClip(
     }
 
     mColor = orig.mColor;
+
+    mSelected = orig.mSelected;
 
     assert(NChannels() == orig.NChannels());
     assert(CheckInvariants());
