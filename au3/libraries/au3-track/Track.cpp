@@ -161,6 +161,7 @@ void Track::CopyGroupProperties(const Track& other)
 {
     mName = other.mName;
     mSelected = other.mSelected;
+    mFocused = other.mFocused;
 }
 
 void Track::DoSetLinkType(LinkType linkType, bool completeList)

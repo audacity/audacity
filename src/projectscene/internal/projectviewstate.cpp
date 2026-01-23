@@ -15,6 +15,7 @@
 
 #include "au3/waveformscale.h"
 #include "au3/viewinfo.h"
+#include "au3/trackheightattachment.h"
 #include "au3/trackrulertypeattachment.h"
 #include "au3/trackviewtypeattachment.h"
 
@@ -341,7 +342,18 @@ ProjectViewState::TrackData& ProjectViewState::makeTrackData(const trackedit::Tr
         std::optional<trackedit::Track> track = trackeditPrj->track(trackId);
         if (track) {
             d.channelHeightRatio.val = track->type == trackedit::TrackType::Stereo ? 0.5 : 1.0;
-            d.height.val = track->type == trackedit::TrackType::Label ? TRACK_LABEL_DEFAULT_HEIGHT : TRACK_DEFAULT_HEIGHT;
+            int defaultHeight = track->type == trackedit::TrackType::Label ? TRACK_LABEL_DEFAULT_HEIGHT : TRACK_DEFAULT_HEIGHT;
+
+            int height = defaultHeight;
+
+            if (prj) {
+                auto track = au::au3::DomAccessor::findTrack(*reinterpret_cast<au::au3::Au3Project*>(prj->au3ProjectPtr()), au::au3::Au3TrackId(trackId));
+                int savedHeight = au3::TrackHeightAttachment::Get(track).GetHeight();
+                savedHeight = savedHeight <= 0 ? defaultHeight : savedHeight;
+                height = std::max(savedHeight, TRACK_MIN_HEIGHT);
+            }
+            d.collapsed.val = height <= TRACK_COLLAPSE_HEIGHT;
+            d.height.val = height;
         }
     }
 
@@ -401,6 +413,15 @@ void ProjectViewState::changeTrackHeight(const trackedit::TrackId& trackId, int 
     d->collapsed.set(newHeight < TRACK_COLLAPSE_HEIGHT);
 
     m_totalTracksHeight.set(m_totalTracksHeight.val + (newHeight - oldHeight));
+
+    const project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    if (prj) {
+        au3::Au3Project* au3Project = reinterpret_cast<au3::Au3Project*>(prj->au3ProjectPtr());
+        if (au3Project) {
+            auto track = au::au3::DomAccessor::findTrack(*au3Project, au::au3::Au3TrackId(trackId));
+            au3::TrackHeightAttachment::Get(track).SetHeight(newHeight);
+        }
+    }
 }
 
 void ProjectViewState::setTrackHeight(const trackedit::TrackId& trackId, int height)
@@ -419,6 +440,15 @@ void ProjectViewState::setTrackHeight(const trackedit::TrackId& trackId, int hei
     d->collapsed.set(height < TRACK_COLLAPSE_HEIGHT);
 
     m_totalTracksHeight.set(m_totalTracksHeight.val + (newHeight - oldHeight));
+
+    const project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    if (prj) {
+        au3::Au3Project* au3Project = reinterpret_cast<au3::Au3Project*>(prj->au3ProjectPtr());
+        if (au3Project) {
+            auto track = au::au3::DomAccessor::findTrack(*au3Project, au::au3::Au3TrackId(trackId));
+            au3::TrackHeightAttachment::Get(track).SetHeight(newHeight);
+        }
+    }
 }
 
 au::trackedit::TrackId ProjectViewState::trackAtPosition(double y) const

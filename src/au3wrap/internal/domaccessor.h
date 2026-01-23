@@ -55,8 +55,5 @@ public:
     static trackedit::LabelKeyList findSelectedLabels(Au3Project& prj);
     static void setLabelSelected(Au3Project& prj, trackedit::LabelKey labelKey, bool selected);
     static void clearAllLabelSelection(Au3Project& prj);
-
-    static int getTrackHeight(const Au3Track* track);
-    static void setTrackHeight(Au3Track* track, int height);
 };
 }

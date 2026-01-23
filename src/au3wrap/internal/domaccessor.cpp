@@ -334,18 +334,3 @@ void DomAccessor::clearAllLabelSelection(Au3Project& prj)
         }
     }
 }
-
-int DomAccessor::getTrackHeight(const Au3Track* track)
-{
-    if (track) {
-        return track->GetHeight();
-    }
-    return 0;
-}
-
-void DomAccessor::setTrackHeight(Au3Track* track, int height)
-{
-    if (track) {
-        track->SetHeight(height);
-    }
-}
