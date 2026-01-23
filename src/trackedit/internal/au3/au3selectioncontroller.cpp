@@ -689,7 +689,7 @@ void Au3SelectionController::setDataSelectedStartTime(au::trackedit::secs_t time
     MYLOG() << "start time: " << time << ", complete: " << complete;
 
     auto& selectedRegion = ViewInfo::Get(projectRef()).selectedRegion;
-    selectedRegion.setT0(time);
+    selectedRegion.setT0(time, false);
 
     m_selectedStartTime.set(time, complete);
 
@@ -718,7 +718,7 @@ void Au3SelectionController::setDataSelectedEndTime(au::trackedit::secs_t time, 
     MYLOG() << "end time: " << time << ", complete: " << complete;
 
     auto& selectedRegion = ViewInfo::Get(projectRef()).selectedRegion;
-    selectedRegion.setT1(time);
+    selectedRegion.setT1(time, false);
 
     m_selectedEndTime.set(time, complete);
 
