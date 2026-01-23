@@ -46,8 +46,7 @@ void Au3SelectionController::init()
 
             // Clip selection takes priority
             if (!savedSelectedClips.empty()) {
-                selectedRegion.setT0(0);
-                selectedRegion.setT1(0);
+                selectedRegion.setTimes(0, 0);
             }
 
             m_selectedStartTime.set(selectedRegion.t0(), true);
@@ -86,7 +85,10 @@ void Au3SelectionController::init()
 
 void Au3SelectionController::restoreSelection(const ClipAndTimeSelection& selection)
 {
-    MYLOG() << "restoreSelection";
+    MYLOG() << "[SELECTION] restoreSelection: " << selection.dataSelectedStartTime << ":" << selection.dataSelectedEndTime;
+
+    auto& selectedRegion = ViewInfo::Get(projectRef()).selectedRegion;
+    selectedRegion.setTimes(selection.dataSelectedStartTime, selection.dataSelectedEndTime);
 
     m_selectedClips.set(selection.selectedClips, true);
     m_selectedStartTime.set(selection.dataSelectedStartTime, true);
@@ -117,7 +119,7 @@ ClipKeyList Au3SelectionController::findClipsIntersectingRangeSelection() const
 
 void Au3SelectionController::resetSelectedTracks()
 {
-    MYLOG() << "resetSelectedTrack";
+    MYLOG() << "[SELECTION] resetSelectedTrack";
 
     setSelectedTracks({}, true);
 }
@@ -129,7 +131,7 @@ TrackIdList Au3SelectionController::selectedTracks() const
 
 void Au3SelectionController::setSelectedTracks(const TrackIdList& tracksIds, bool complete)
 {
-    MYLOG() << "tracks: " << tracksIds;
+    MYLOG() << "[SELECTION] setSelectedTracks: " << tracksIds;
 
     auto& tracks = Au3TrackList::Get(projectRef());
     for (Au3Track* au3Track : tracks) {
@@ -170,7 +172,7 @@ muse::async::Channel<TrackIdList> Au3SelectionController::tracksSelected() const
 
 void Au3SelectionController::resetSelectedClips()
 {
-    MYLOG() << "resetSelectedClip";
+    MYLOG() << "[SELECTION] resetSelectedClip";
     //! NOTE: sync clip deselection with au3 persistence
     au3::DomAccessor::clearAllClipSelection(projectRef());
     m_selectedClips.set(au::trackedit::ClipKeyList(), true);
@@ -382,7 +384,7 @@ double Au3SelectionController::rightMostSelectedClipEndTime() const
 
 void Au3SelectionController::resetSelectedLabels()
 {
-    MYLOG() << "resetSelectedLabels";
+    MYLOG() << "[SELECTION] resetSelectedLabels";
     au3::DomAccessor::clearAllLabelSelection(projectRef());
     m_selectedLabels.set(au::trackedit::LabelKeyList(), true);
 }
@@ -607,11 +609,14 @@ void Au3SelectionController::setSelectedTrackAudioData(TrackId trackId)
 
 void Au3SelectionController::resetDataSelection()
 {
-    MYLOG() << "resetDataSelection";
+    MYLOG() << "[SELECTION] resetDataSelection";
 
     const auto initialPlaybackPosition = globalContext()->playbackState()->playbackPosition();
     m_selectedStartTime.set(initialPlaybackPosition, true);
     m_selectedEndTime.set(initialPlaybackPosition, true);
+
+    auto& selectedRegion = ViewInfo::Get(projectRef()).selectedRegion;
+    selectedRegion.setTimes(0, 0);
 
     setClipsIntersectingRangeSelection({});
 }
@@ -686,7 +691,7 @@ au::trackedit::secs_t Au3SelectionController::dataSelectedStartTime() const
 
 void Au3SelectionController::setDataSelectedStartTime(au::trackedit::secs_t time, bool complete)
 {
-    MYLOG() << "start time: " << time << ", complete: " << complete;
+    MYLOG() << "[SELECTION] setDataSelectedStartTime: " << time << ", complete: " << complete;
 
     auto& selectedRegion = ViewInfo::Get(projectRef()).selectedRegion;
     selectedRegion.setT0(time, false);
@@ -715,7 +720,7 @@ au::trackedit::secs_t Au3SelectionController::dataSelectedEndTime() const
 
 void Au3SelectionController::setDataSelectedEndTime(au::trackedit::secs_t time, bool complete)
 {
-    MYLOG() << "end time: " << time << ", complete: " << complete;
+    MYLOG() << "[SELECTION] setDataSelectedEndTime: " << time << ", complete: " << complete;
 
     auto& selectedRegion = ViewInfo::Get(projectRef()).selectedRegion;
     selectedRegion.setT1(time, false);

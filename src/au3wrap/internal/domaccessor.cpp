@@ -184,19 +184,19 @@ Au3Label* DomAccessor::findLabel(Au3LabelTrack* track, int64_t labelId)
     return track->GetLabelById(labelId);
 }
 
-TrackIdList DomAccessor::findSelectedTracks(Au3Project& prj)
+TrackIdList DomAccessor::findSelectedTracks(const Au3Project& prj)
 {
     TrackIdList tracks;
-    for (const Track* track : Au3TrackList::Get(prj).Selected<Track>()) {
+    for (const Track* track : Au3TrackList::Get(prj).Selected<const Track>()) {
         tracks.push_back(track->GetId());
     }
     return tracks;
 }
 
-au::trackedit::TrackId DomAccessor::findFocusedTrack(Au3Project& prj)
+au::trackedit::TrackId DomAccessor::findFocusedTrack(const Au3Project& prj)
 {
-    Au3TrackList& tracks = Au3TrackList::Get(prj);
-    for (Au3Track* track : tracks) {
+    const Au3TrackList& tracks = Au3TrackList::Get(prj);
+    for (const Au3Track* track : tracks) {
         if (track->GetFocused()) {
             return track->GetId();
         }
@@ -204,7 +204,7 @@ au::trackedit::TrackId DomAccessor::findFocusedTrack(Au3Project& prj)
     return INVALID_TRACK;
 }
 
-void DomAccessor::setTrackFocused(Au3Project& prj, trackedit::TrackId trackId, bool focused)
+void DomAccessor::setTrackFocused(Au3Project& prj, const au::trackedit::TrackId trackId, bool focused)
 {
     auto track = findTrack(prj, ::TrackId { trackId });
     if (track) {
@@ -220,13 +220,13 @@ void DomAccessor::clearAllTrackFocus(Au3Project& prj)
     }
 }
 
-ClipKeyList DomAccessor::findSelectedClips(Au3Project& prj)
+ClipKeyList DomAccessor::findSelectedClips(const Au3Project& prj)
 {
     ClipKeyList selectedClips;
-    Au3TrackList& tracks = Au3TrackList::Get(prj);
+    const Au3TrackList& tracks = Au3TrackList::Get(prj);
 
-    for (Au3Track* track : tracks) {
-        Au3WaveTrack* waveTrack = dynamic_cast<Au3WaveTrack*>(track);
+    for (const Au3Track* track : tracks) {
+        const Au3WaveTrack* waveTrack = dynamic_cast<const Au3WaveTrack*>(track);
         if (!waveTrack) {
             continue;
         }
@@ -244,7 +244,7 @@ ClipKeyList DomAccessor::findSelectedClips(Au3Project& prj)
     return selectedClips;
 }
 
-void DomAccessor::setClipSelected(Au3Project& prj, ClipKey clipKey, bool selected)
+void DomAccessor::setClipSelected(Au3Project& prj, const ClipKey& clipKey, bool selected)
 {
     auto track = findWaveTrack(prj, ::TrackId { clipKey.trackId });
     if (!track) {
@@ -274,13 +274,13 @@ void DomAccessor::clearAllClipSelection(Au3Project& prj)
     }
 }
 
-LabelKeyList DomAccessor::findSelectedLabels(Au3Project& prj)
+LabelKeyList DomAccessor::findSelectedLabels(const Au3Project& prj)
 {
     LabelKeyList selectedLabels;
-    Au3TrackList& tracks = Au3TrackList::Get(prj);
+    const Au3TrackList& tracks = Au3TrackList::Get(prj);
 
-    for (Au3Track* track : tracks) {
-        Au3LabelTrack* labelTrack = dynamic_cast<Au3LabelTrack*>(track);
+    for (const Au3Track* track : tracks) {
+        const Au3LabelTrack* labelTrack = dynamic_cast<const Au3LabelTrack*>(track);
         if (!labelTrack) {
             continue;
         }
@@ -299,7 +299,7 @@ LabelKeyList DomAccessor::findSelectedLabels(Au3Project& prj)
     return selectedLabels;
 }
 
-void DomAccessor::setLabelSelected(Au3Project& prj, LabelKey labelKey, bool selected)
+void DomAccessor::setLabelSelected(Au3Project& prj, const LabelKey& labelKey, bool selected)
 {
     auto track = findLabelTrack(prj, ::TrackId { labelKey.trackId });
     if (!track) {
