@@ -347,7 +347,8 @@ ProjectViewState::TrackData& ProjectViewState::makeTrackData(const trackedit::Tr
             int height = defaultHeight;
 
             if (prj) {
-                auto track = au::au3::DomAccessor::findTrack(*reinterpret_cast<au::au3::Au3Project*>(prj->au3ProjectPtr()), au::au3::Au3TrackId(trackId));
+                auto track = au::au3::DomAccessor::findTrack(
+                    *reinterpret_cast<au::au3::Au3Project*>(prj->au3ProjectPtr()), au::au3::Au3TrackId(trackId));
                 int savedHeight = au3::TrackHeightAttachment::Get(track).GetHeight();
                 savedHeight = savedHeight <= 0 ? defaultHeight : savedHeight;
                 height = std::max(savedHeight, TRACK_MIN_HEIGHT);

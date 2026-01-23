@@ -13,13 +13,13 @@
 
 #include "trackedittypes.h"
 #include "../../iselectioncontroller.h"
+#include "../../iprojecthistory.h"
 
 namespace au::trackedit {
-struct ClipAndTimeSelection;
-
 class Au3SelectionController : public ISelectionController, public muse::async::Asyncable, public muse::Injectable
 {
     muse::Inject<au::context::IGlobalContext> globalContext { this };
+    muse::Inject<IProjectHistory> projectHistory { this };
 
 public:
     Au3SelectionController(const muse::modularity::ContextPtr& ctx)
@@ -111,7 +111,7 @@ public:
 private:
     void addSelectedTrack(const trackedit::TrackId& trackId);
     void updateSelectionController();
-    void restoreSelection(const ClipAndTimeSelection& selection);
+    void onUndoRedo();
     ClipKeyList findClipsIntersectingRangeSelection() const;
 
     au3::Au3Project& projectRef() const;

@@ -2,7 +2,6 @@
 * Audacity: A Digital Audio Editor
 */
 #include "au3selectioncontroller.h"
-#include "selectionrestorer.h"
 
 #include "global/containers.h"
 #include "global/realfn.h"
@@ -52,19 +51,6 @@ void Au3SelectionController::init()
             m_selectedStartTime.set(selectedRegion.t0(), true);
             m_selectedEndTime.set(selectedRegion.t1(), true);
 
-            auto& restorer = SelectionRestorer::Get(projectRef());
-            restorer.selectionGetter = [this] {
-                return ClipAndTimeSelection {
-                    m_selectedClips.val,
-                    m_selectedStartTime.val,
-                    m_selectedEndTime.val
-                };
-            };
-
-            restorer.selectionSetter = [this](const ClipAndTimeSelection& selection) {
-                restoreSelection(selection);
-            };
-
             TrackId focusedTrack = au3::DomAccessor::findFocusedTrack(projectRef());
             if (focusedTrack != INVALID_TRACK) {
                 m_focusedTrack.set(focusedTrack, true);
@@ -77,22 +63,42 @@ void Au3SelectionController::init()
             } else {
                 setSelectedTracks(savedSelectedTracks, true);
             }
+
+            projectHistory()->historyChanged().onNotify(this, [this]() {
+                onUndoRedo();
+            }, Asyncable::Mode::SetReplace);
         } else {
             m_tracksSubc.Reset();
         }
     });
 }
 
-void Au3SelectionController::restoreSelection(const ClipAndTimeSelection& selection)
+void Au3SelectionController::onUndoRedo()
 {
-    MYLOG() << "[SELECTION] restoreSelection: " << selection.dataSelectedStartTime << ":" << selection.dataSelectedEndTime;
-
+    // Resync controller state with the project state after undo/redo
     auto& selectedRegion = ViewInfo::Get(projectRef()).selectedRegion;
-    selectedRegion.setTimes(selection.dataSelectedStartTime, selection.dataSelectedEndTime);
+    auto restoredSelectedClips = au3::DomAccessor::findSelectedClips(projectRef());
+    auto restoredSelectedLabels = au3::DomAccessor::findSelectedLabels(projectRef());
+    auto restoredSelectedTracks = au3::DomAccessor::findSelectedTracks(projectRef());
+    auto restoredFocusedTrack = au3::DomAccessor::findFocusedTrack(projectRef());
 
-    m_selectedClips.set(selection.selectedClips, true);
-    m_selectedStartTime.set(selection.dataSelectedStartTime, true);
-    m_selectedEndTime.set(selection.dataSelectedEndTime, true);
+    MYLOG() << "[SELECTION] onUndoRedo: time=" << selectedRegion.t0() << ":" << selectedRegion.t1()
+            << " clips=" << restoredSelectedClips.size()
+            << " labels=" << restoredSelectedLabels.size()
+            << " tracks=" << restoredSelectedTracks.size()
+            << " focusedTrack=" << restoredFocusedTrack;
+
+    m_selectedStartTime.set(selectedRegion.t0(), true);
+    m_selectedEndTime.set(selectedRegion.t1(), true);
+
+    m_selectedClips.set(restoredSelectedClips, true);
+    setSelectedLabels(restoredSelectedLabels, true);
+    setSelectedTracks(restoredSelectedTracks, true);
+
+    if (restoredFocusedTrack != INVALID_TRACK) {
+        m_focusedTrack.set(restoredFocusedTrack, true);
+    }
+
     updateSelectionController();
 }
 
@@ -700,6 +706,7 @@ void Au3SelectionController::setDataSelectedStartTime(au::trackedit::secs_t time
 
     if (complete) {
         setClipsIntersectingRangeSelection(findClipsIntersectingRangeSelection());
+        projectHistory()->modifyState(false);
     }
 }
 
@@ -729,6 +736,7 @@ void Au3SelectionController::setDataSelectedEndTime(au::trackedit::secs_t time, 
 
     if (complete) {
         setClipsIntersectingRangeSelection(findClipsIntersectingRangeSelection());
+        projectHistory()->modifyState(false);
     }
 }
 
