@@ -83,8 +83,7 @@ void ViewTracksListModel::load()
         emit dataChanged(beginIndex, lastIndex, { IsDataSelectedRole });
     }, muse::async::Asyncable::Mode::SetReplace);
 
-    trackNavigationController()->focusedTrackChanged().onReceive(this, [this](const trackedit::TrackId& trackId) {
-        Q_UNUSED(trackId);
+    trackNavigationController()->focusedTrackChanged().onNotify(this, [this]() {
         if (m_trackList.empty()) {
             return;
         }

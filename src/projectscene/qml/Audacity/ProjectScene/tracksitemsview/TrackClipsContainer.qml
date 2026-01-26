@@ -314,7 +314,7 @@ TrackItemsContainer {
                                 channelHeightRatio: root.trackViewState.channelHeightRatio
                                 showChannelSplitter: clipsModel.isStereo
 
-                                navigation.name: Boolean(itemData) ? itemData.title + itemData.index : ""
+                                navigation.name: Boolean(itemData) ? itemData.key.itemId() : ""
                                 navigation.panel: root.navigationPanel
                                 navigation.column: itemData ? Math.floor(itemData.x) : 0
                                 navigation.accessible.name: Boolean(itemData) ? itemData.title : ""
@@ -322,10 +322,6 @@ TrackItemsContainer {
                                     if (navigation.active) {
                                         root.context.insureVisible(root.context.positionToTime(itemData.x))
                                         root.insureVerticallyVisible(root.y, root.y + root.height)
-
-                                        Qt.callLater(clipsModel.setFocusedItem, itemData.key)
-                                    } else {
-                                        clipsModel.resetFocusedItem()
                                     }
                                 }
 

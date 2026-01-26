@@ -17,7 +17,7 @@ Item {
     property alias tracksModel: tracksModel
 
     signal openEffectsRequested()
-    signal panelActive(int index)
+    signal panelActive(var trackId)
 
     property NavigationSection trackEffectsNavigationSection: null
     property NavigationSection masterEffectsNavigationSection: null
@@ -213,15 +213,9 @@ Item {
                             navigation.accessible.name: Boolean(item) ? item.title : ""
                             navigation.onActiveChanged: {
                                 if (navigation.active) {
-                                    root.panelActive(index)
+                                    root.panelActive(item.trackId)
                                     prv.currentItemNavigationName = navigation.name
                                     view.positionViewAtIndex(index, ListView.Contain)
-                                }
-                            }
-
-                            onIsFocusedChanged: function() {
-                                if (isFocused && !navigation.active) {
-                                    navigation.requestActive()
                                 }
                             }
 
@@ -275,12 +269,6 @@ Item {
                                     root.panelActive(index)
                                     prv.currentItemNavigationName = navigation.name
                                     view.positionViewAtIndex(index, ListView.Contain)
-                                }
-                            }
-
-                            onIsFocusedChanged: function() {
-                                if (isFocused && !navigation.active) {
-                                    navigation.requestActive()
                                 }
                             }
 
