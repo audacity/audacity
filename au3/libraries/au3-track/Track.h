@@ -309,6 +309,10 @@ public:
     bool GetSelected() const;
     virtual void SetSelected(bool s);
 
+    //! Focus state - only one track can be focused at a time
+    bool GetFocused() const;
+    void SetFocused(bool f);
+
 public:
 
     //! Create tracks and modify this track
@@ -442,6 +446,7 @@ private:
     // This is important only during loading of files
     LinkType mLinkType{ LinkType::None };
     bool mSelected{ false };
+    bool mFocused{ false };
 };
 
 ENUMERATE_TRACK_TYPE(Track);

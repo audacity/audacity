@@ -465,7 +465,8 @@ muse::RetVal<ClipKeyList> Au3ClipsInteraction::moveClips(const ClipKeyList& clip
         std::vector<std::pair<WaveTrack*, std::shared_ptr<WaveTrack> > > toReplace;
         for (const trackedit::TrackId track : selectionController()->selectedTracks()) {
             Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(track));
-            IF_ASSERT_FAILED(waveTrack) {
+            // If this is not an audio track (i.e. a label track), skip it
+            if (!waveTrack) {
                 continue;
             }
             const auto copy = std::static_pointer_cast<WaveTrack>(waveTrack->Duplicate(::Track::DuplicateOptions {}.Backup()));

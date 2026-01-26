@@ -5,6 +5,7 @@
 #include "log.h"
 
 using namespace au::au3;
+using namespace au::trackedit;
 using namespace muse;
 
 Au3Track* DomAccessor::findTrack(Au3Project& prj, const Au3TrackId& au3trackId)
@@ -181,4 +182,155 @@ Au3Label* DomAccessor::findLabel(Au3LabelTrack* track, int64_t labelId)
     }
 
     return track->GetLabelById(labelId);
+}
+
+TrackIdList DomAccessor::findSelectedTracks(const Au3Project& prj)
+{
+    TrackIdList tracks;
+    for (const Track* track : Au3TrackList::Get(prj).Selected<const Track>()) {
+        tracks.push_back(track->GetId());
+    }
+    return tracks;
+}
+
+au::trackedit::TrackId DomAccessor::findFocusedTrack(const Au3Project& prj)
+{
+    const Au3TrackList& tracks = Au3TrackList::Get(prj);
+    for (const Au3Track* track : tracks) {
+        if (track->GetFocused()) {
+            return track->GetId();
+        }
+    }
+    return INVALID_TRACK;
+}
+
+void DomAccessor::setTrackFocused(Au3Project& prj, const au::trackedit::TrackId trackId, bool focused)
+{
+    auto track = findTrack(prj, ::TrackId { trackId });
+    if (track) {
+        track->SetFocused(focused);
+    }
+}
+
+void DomAccessor::clearAllTrackFocus(Au3Project& prj)
+{
+    Au3TrackList& tracks = Au3TrackList::Get(prj);
+    for (Au3Track* track : tracks) {
+        track->SetFocused(false);
+    }
+}
+
+ClipKeyList DomAccessor::findSelectedClips(const Au3Project& prj)
+{
+    ClipKeyList selectedClips;
+    const Au3TrackList& tracks = Au3TrackList::Get(prj);
+
+    for (const Au3Track* track : tracks) {
+        const Au3WaveTrack* waveTrack = dynamic_cast<const Au3WaveTrack*>(track);
+        if (!waveTrack) {
+            continue;
+        }
+
+        for (const auto& clip : waveTrack->Intervals()) {
+            if (clip->GetSelected()) {
+                trackedit::ClipKey key;
+                key.trackId = waveTrack->GetId();
+                key.itemId = clip->GetId();
+                selectedClips.push_back(key);
+            }
+        }
+    }
+
+    return selectedClips;
+}
+
+void DomAccessor::setClipSelected(Au3Project& prj, const ClipKey& clipKey, bool selected)
+{
+    auto track = findWaveTrack(prj, ::TrackId { clipKey.trackId });
+    if (!track) {
+        return;
+    }
+
+    auto clip = findWaveClip(track, clipKey.itemId);
+
+    if (clip) {
+        clip->SetSelected(selected);
+    }
+}
+
+void DomAccessor::clearAllClipSelection(Au3Project& prj)
+{
+    Au3TrackList& tracks = Au3TrackList::Get(prj);
+
+    for (Au3Track* track : tracks) {
+        Au3WaveTrack* waveTrack = dynamic_cast<Au3WaveTrack*>(track);
+        if (!waveTrack) {
+            continue;
+        }
+
+        for (const auto& clip : waveTrack->Intervals()) {
+            clip->SetSelected(false);
+        }
+    }
+}
+
+LabelKeyList DomAccessor::findSelectedLabels(const Au3Project& prj)
+{
+    LabelKeyList selectedLabels;
+    const Au3TrackList& tracks = Au3TrackList::Get(prj);
+
+    for (const Au3Track* track : tracks) {
+        const Au3LabelTrack* labelTrack = dynamic_cast<const Au3LabelTrack*>(track);
+        if (!labelTrack) {
+            continue;
+        }
+
+        for (int i = 0; i < labelTrack->GetNumLabels(); ++i) {
+            const LabelStruct* label = labelTrack->GetLabel(i);
+            if (label && label->GetSelected()) {
+                trackedit::LabelKey key;
+                key.trackId = labelTrack->GetId();
+                key.itemId = label->GetId();
+                selectedLabels.push_back(key);
+            }
+        }
+    }
+
+    return selectedLabels;
+}
+
+void DomAccessor::setLabelSelected(Au3Project& prj, const LabelKey& labelKey, bool selected)
+{
+    auto track = findLabelTrack(prj, ::TrackId { labelKey.trackId });
+    if (!track) {
+        return;
+    }
+
+    Au3Label* label = findLabel(track, labelKey.itemId);
+
+    if (label) {
+        label->SetSelected(selected);
+    }
+}
+
+void DomAccessor::clearAllLabelSelection(Au3Project& prj)
+{
+    Au3TrackList& tracks = Au3TrackList::Get(prj);
+
+    for (Au3Track* track : tracks) {
+        Au3LabelTrack* labelTrack = dynamic_cast<Au3LabelTrack*>(track);
+        if (!labelTrack) {
+            continue;
+        }
+
+        for (int i = 0; i < labelTrack->GetNumLabels(); ++i) {
+            const LabelStruct* constLabel = labelTrack->GetLabel(i);
+            if (constLabel) {
+                LabelStruct* label = labelTrack->GetLabelById(constLabel->GetId());
+                if (label) {
+                    label->SetSelected(false);
+                }
+            }
+        }
+    }
 }

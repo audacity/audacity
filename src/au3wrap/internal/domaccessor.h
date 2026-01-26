@@ -42,5 +42,18 @@ public:
     static const Au3LabelTrack* findLabelTrackByIndex(const Au3Project& prj, size_t index);
 
     static Au3Label* findLabel(Au3LabelTrack* track, int64_t labelId);
+
+    static trackedit::TrackIdList findSelectedTracks(const Au3Project& prj);
+    static trackedit::TrackId findFocusedTrack(const Au3Project& prj);
+    static void setTrackFocused(Au3Project& prj, const trackedit::TrackId trackId, bool focused);
+    static void clearAllTrackFocus(Au3Project& prj);
+
+    static trackedit::ClipKeyList findSelectedClips(const Au3Project& prj);
+    static void setClipSelected(Au3Project& prj, const trackedit::ClipKey& clipKey, bool selected);
+    static void clearAllClipSelection(Au3Project& prj);
+
+    static trackedit::LabelKeyList findSelectedLabels(const Au3Project& prj);
+    static void setLabelSelected(Au3Project& prj, const trackedit::LabelKey& labelKey, bool selected);
+    static void clearAllLabelSelection(Au3Project& prj);
 };
 }

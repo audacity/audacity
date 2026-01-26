@@ -33,6 +33,8 @@ TrackItem {
             spacing: 2
 
             RowLayout {
+                id: topRow
+
                 Layout.fillWidth: true
 
                 spacing: 16
@@ -68,7 +70,7 @@ TrackItem {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 24
 
-                opacity: root.height > root.mapFromItem(this, 0, height + bottomSeparatorHeight).y ? 1 : 0
+                opacity: topRow.visible && root.height > root.mapFromItem(this, 0, height + bottomSeparatorHeight).y ? 1 : 0
                 visible: opacity !== 0
                 Behavior on opacity { OpacityAnimator { duration: 100 } }
 
