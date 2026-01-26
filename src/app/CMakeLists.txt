@@ -145,6 +145,8 @@ endif()
 
 if (AU_MODULE_EFFECTS_NYQUIST)
     add_definitions(-DAU_MODULE_EFFECTS_NYQUIST)
+    # Make audacity depend on Nyquist runtime and plug-in deployment targets
+    add_dependencies(audacity nyquist plug-ins)
 endif()
 
 set (AUDACITY_APPEND_SRC)
