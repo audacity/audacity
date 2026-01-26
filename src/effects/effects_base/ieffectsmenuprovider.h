@@ -14,6 +14,8 @@ enum class EffectFilter {
     GeneratorsOnly,
     ProcessorsOnly,
     RealtimeProcessorsOnly,
+    ToolsOnly,
+    AnalyzersOnly,
 };
 
 class IEffectsMenuProvider : MODULE_EXPORT_INTERFACE
