@@ -109,6 +109,10 @@ endif()
 
 if (AU_MODULE_EFFECTS_NYQUIST)
    list( APPEND LIBRARIES au3-nyquist-effects )
+   # Add Nyquist runtime files (.lsp and .raw files) subdirectory
+   add_subdirectory( ${CMAKE_CURRENT_LIST_DIR}/../nyquist nyquist )
+   # Add Nyquist plug-ins (.ny files) subdirectory
+   add_subdirectory( ${CMAKE_CURRENT_LIST_DIR}/../plug-ins plug-ins )
 endif()
 
 if (AU_BUILD_CLOUD_AUDIOCOM)
