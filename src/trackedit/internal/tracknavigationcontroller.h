@@ -45,46 +45,11 @@ public:
     void setFocusedItem(const TrackItemKey& key, bool highlight = false) override;
     muse::async::Channel<TrackItemKey, bool /*highlight*/> focusedItemChanged() const override;
 
-    void toggleSelection();
-    void trackRangeSelection() override;
-
-    void multiSelectionUp() override;
-    void multiSelectionDown() override;
-
     muse::async::Channel<TrackItemKey> openContextMenuRequested() const override;
 
-    void navigateNextItem();
-    void navigatePrevItem();
-
-    void navigateFirstItem();
-    void navigateLastItem();
-
-    void moveFocusedItemLeft();
-    void moveFocusedItemRight();
-    void extendFocusedItemBoundaryLeft();
-    void extendFocusedItemBoundaryRight();
-    void reduceFocusedItemBoundaryLeft();
-    void reduceFocusedItemBoundaryRight();
-    void moveFocusedItemUp();
-    void moveFocusedItemDown();
-
-    void openContextMenuForFocusedItem();
-
 private:
-    void updateSelectionStart(SelectionDirection direction);
-    void updateTrackSelection(TrackIdList& selectedTracks, const TrackId& previousFocusedTrack);
-
     double zoomLevel() const;
     double calculateStepSize() const;
-
-    void navigateNextPanel();
-    void navigatePrevPanel();
-
-    void focusTrackByIndex(const muse::actions::ActionData& args);
-    void focusPrevTrack();
-    void focusNextTrack();
-    void focusFirstTrack();
-    void focusLastTrack();
 
     TrackItemKey focusedItemKey() const;
     bool isFocusedItemValid() const;
@@ -95,8 +60,41 @@ private:
 
     bool isTrackItemsEmpty(const TrackId& trackId) const;
 
+    void navigateToNextPanel();
+    void navigateToPrevPanel();
+
+    void navigateToPrevTrack();
+    void navigateToNextTrack();
+    void navigateToFirstTrack();
+    void navigateToLastTrack();
+
+    void navigateToNextItem();
+    void navigateToPrevItem();
+    void navigateToFirstItem();
+    void navigateToLastItem();
+
+    void moveFocusedItemLeft();
+    void moveFocusedItemRight();
+    void moveFocusedItemUp();
+    void moveFocusedItemDown();
+    void extendFocusedItemBoundaryLeft();
+    void extendFocusedItemBoundaryRight();
+    void reduceFocusedItemBoundaryLeft();
+    void reduceFocusedItemBoundaryRight();
+
     TrackId resolvePreviousTrackIdForMove(const TrackId& trackId) const;
     TrackId resolveNextTrackIdForMove(const TrackId& trackId) const;
+
+    void toggleSelection();
+    void trackRangeSelection();
+
+    void multiSelectionUp();
+    void multiSelectionDown();
+
+    void updateSelectionStart(SelectionDirection direction);
+    void updateTrackSelection(TrackIdList& selectedTracks, const TrackId& previousFocusedTrack);
+
+    void openContextMenuForFocusedItem();
 
     std::optional<TrackId> m_selectionStart;
     std::optional<TrackId> m_lastSelectedTrack;

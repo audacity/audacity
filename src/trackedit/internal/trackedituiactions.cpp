@@ -496,13 +496,13 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Track range selection"),
              TranslatableString("action", "Track range selection")
              ),
-    UiAction("track-view-shift-up",
+    UiAction("track-view-extend-track-selection-up",
              au::context::UiCtxProjectFocused,
              au::context::CTX_PROJECT_FOCUSED,
              TranslatableString("action", "Multi track selection previous"),
              TranslatableString("action", "Multi track selection previous")
              ),
-    UiAction("track-view-shift-down",
+    UiAction("track-view-extend-track-selection-down",
              au::context::UiCtxProjectFocused,
              au::context::CTX_PROJECT_FOCUSED,
              TranslatableString("action", "Multi track selection next"),

@@ -205,24 +205,17 @@
         <seq>Enter</seq>
     </SC>
     <SC>
-        <key>track-view-toggle-selection-multi</key>
-        <seq>Shift+Return</seq>
-        <seq>Shift+Enter</seq>
-    </SC>
-
-    <SC>
-        <key>track-view-shift-up</key>
-        <seq>Shift+Up</seq>
-    </SC>
-    <SC>
-        <key>track-view-shift-down</key>
-        <seq>Shift+Down</seq>
-    </SC>
-
-    <SC>
         <key>track-view-range-selection</key>
         <seq>Shift+Enter</seq>
         <seq>Shift+Return</seq>
+    </SC>
+    <SC>
+        <key>track-view-extend-track-selection-prev</key>
+        <seq>Shift+Up</seq>
+    </SC>
+    <SC>
+        <key>track-view-extend-track-selection-next</key>
+        <seq>Shift+Down</seq>
     </SC>
 
 <!-- end Tracks view navigation actions -->
