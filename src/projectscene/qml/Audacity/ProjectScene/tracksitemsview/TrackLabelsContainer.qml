@@ -148,7 +148,10 @@ TrackItemsContainer {
                                 labelKey: Boolean(itemData) ? itemData.key : null
                                 isSelected: Boolean(itemData) && itemData.selected
                                 isFocused: Boolean(itemData) && itemData.focused
-                                enableCursorInteraction: true
+
+                                selectionInProgress: root.selectionInProgress
+                                selectionEditInProgress: root.selectionEditInProgress
+                                verticalSelectionEditInProgress: root.verticalSelectionEditInProgress
 
                                 isLeftLinked: Boolean(itemData) && itemData.isLeftLinked
                                 isRightLinked: Boolean(itemData) && itemData.isRightLinked

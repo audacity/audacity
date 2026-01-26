@@ -763,8 +763,10 @@ Rectangle {
                             altPressed: root.altPressed
                             ctrlPressed: root.ctrlPressed
 
-                            selectionEditInProgress: selectionViewController.selectionEditInProgress
                             selectionInProgress: selectionViewController.selectionInProgress
+                            selectionEditInProgress: selectionViewController.selectionEditInProgress
+                            verticalSelectionEditInProgress: selectionViewController.verticalSelectionEditInProgress
+
                             onHoverChanged: function () {
                                 root.itemHovered = tracksItemsView.checkIfAnyTrack(function (trackItem) {
                                     return trackItem && trackItem.hover
@@ -970,8 +972,9 @@ Rectangle {
                             altPressed: root.altPressed
                             ctrlPressed: root.ctrlPressed
 
-                            selectionEditInProgress: selectionViewController.selectionEditInProgress
                             selectionInProgress: selectionViewController.selectionInProgress
+                            selectionEditInProgress: selectionViewController.selectionEditInProgress
+                            verticalSelectionEditInProgress: selectionViewController.verticalSelectionEditInProgress
 
                             navigationPanel: navPanels && navPanels[index] ? navPanels[index] : null
 
