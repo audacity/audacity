@@ -145,8 +145,6 @@ endif()
 
 if (AU_MODULE_EFFECTS_NYQUIST)
     add_definitions(-DAU_MODULE_EFFECTS_NYQUIST)
-    # Make audacity depend on Nyquist runtime and plug-in deployment targets
-    add_dependencies(audacity nyquist plug-ins)
 endif()
 
 set (AUDACITY_APPEND_SRC)
@@ -233,6 +231,15 @@ endif(CC_IS_MSVC)
 # Link
 ##########################################
 target_link_libraries(audacity PRIVATE ${LINK_LIB}  ${COVERAGE_LINK_FLAGS})
+
+###########################################
+# Dependencies
+###########################################
+
+if (AU_MODULE_EFFECTS_NYQUIST)
+    # Make audacity depend on Nyquist runtime and plug-in deployment targets
+    add_dependencies(audacity nyquist plug-ins)
+endif()
 
 ###########################################
 # INSTALL
