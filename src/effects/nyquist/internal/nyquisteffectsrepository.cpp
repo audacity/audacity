@@ -33,11 +33,7 @@ au::effects::EffectMetaList au::effects::NyquistEffectsRepository::effectMetaLis
         // - $type process  → Effects menu (Processor)
         // - $type generate → Generate menu (Generator)
         // - $type analyze  → Analyze menu (Analyzer)
-        // - $type tool     → Tools menu (currently mapped to Processor as fallback)
-        //
-        // Note: AU3's EffectTypeTool doesn't have a direct equivalent in AU4's EffectType enum.
-        // Tool effects are currently mapped to Processor type, but they should ideally appear
-        // in the Tools menu. This needs architectural discussion.
+        // - $type tool     → Tools menu (Tool)
         switch (desc.GetEffectType()) {
         case ::EffectTypeGenerate:
             meta.type = au::effects::EffectType::Generator;
@@ -49,9 +45,7 @@ au::effects::EffectMetaList au::effects::NyquistEffectsRepository::effectMetaLis
             meta.type = au::effects::EffectType::Analyzer;
             break;
         case ::EffectTypeTool:
-            // Tool effects don't have a direct AU4 equivalent type
-            // Map to Processor for now (they appear in Tools menu via hardcoded entries)
-            meta.type = au::effects::EffectType::Processor;
+            meta.type = au::effects::EffectType::Tool;
             break;
         default:
             meta.type = au::effects::EffectType::Unknown;
