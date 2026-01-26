@@ -1,10 +1,25 @@
+#[[
+Nyquist runtime files (.lsp and .raw files) for Audacity.
+
+This CMakeLists.txt handles:
+1. Installing runtime files for release builds
+2. Copying runtime files to the build directory for development builds
+]]
+
 
 set( TARGET nyquist )
-set( TARGET_ROOT ${topdir}/nyquist )
 
 message( STATUS "========== Configuring ${TARGET} ==========" )
 
-def_vars()
+# Determine install and build destinations based on platform
+if(OS_IS_MAC)
+   # On macOS, Nyquist runtime files go in Contents/Resources/nyquist
+   set(NYQUIST_INSTALL_DEST "${AU4_SHARE_NAME}${AU4_INSTALL_NAME}")
+   set(NYQUIST_BUILD_DEST "${CMAKE_BINARY_DIR}/src/app/${AU4_SHARE_NAME}${AU4_INSTALL_NAME}")
+else()
+   set(NYQUIST_INSTALL_DEST "${AU4_SHARE_NAME}${AU4_INSTALL_NAME}")
+   set(NYQUIST_BUILD_DEST "${CMAKE_BINARY_DIR}/bin/${AU4_SHARE_NAME}${AU4_INSTALL_NAME}")
+endif()
 
 set( RUNTIME
    aud-do-support.lsp
@@ -55,13 +70,13 @@ set( RUNTIME
 )
 
 foreach( source ${RUNTIME} )
-   set( src "${_SRCDIR}/${source}" )
-   set( dst "${_DEST}/${TARGET}/${source}" )
+   set( src "${CMAKE_CURRENT_SOURCE_DIR}/${source}" )
+   set( dst "${NYQUIST_BUILD_DEST}${TARGET}/${source}" )
 
    # Fix this when reorganizing the Nyquist sources
    if( source STREQUAL "system.lsp" )
       if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
-         set( src "${libsrc}/libnyquist/nyquist/sys/win/msvc/system.lsp" )
+         set( src "${CMAKE_SOURCE_DIR}/au3/lib-src/libnyquist/nyquist/sys/win/msvc/system.lsp" )
       endif()
    endif()
 
@@ -69,7 +84,7 @@ foreach( source ${RUNTIME} )
       DEPENDS
          "${src}"
       COMMAND
-         ${CMAKE_COMMAND} -E make_directory "${_DEST}/${TARGET}"
+         ${CMAKE_COMMAND} -E make_directory "${NYQUIST_BUILD_DEST}${TARGET}"
       COMMAND
          ${CMAKE_COMMAND} -E copy "${src}" "${dst}"
       OUTPUT
@@ -82,10 +97,11 @@ endforeach()
 
 add_custom_target( ${TARGET} ALL DEPENDS ${OUTPUTS} SOURCES ${SOURCES} )
 
+# Install Nyquist runtime files for release builds
 if( NOT CMAKE_SYSTEM_NAME MATCHES "Darwin" )
    if( NOT "${CMAKE_GENERATOR}" MATCHES "Visual Studio*")
-      install( DIRECTORY "${_DEST}/${TARGET}"
-               DESTINATION "${_PKGDATA}" )
+      install( DIRECTORY "${NYQUIST_BUILD_DEST}${TARGET}"
+               DESTINATION "${NYQUIST_INSTALL_DEST}" )
    endif()
 endif()
 
