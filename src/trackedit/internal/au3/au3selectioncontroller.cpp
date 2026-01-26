@@ -670,6 +670,10 @@ void Au3SelectionController::setSelectedAllAudioData(const std::optional<secs_t>
     secs_t startTime = fromTime.has_value() ? fromTime.value() : secs_t(0.0);
     secs_t endTime = toTime.has_value() ? toTime.value() : prj->totalTime();
 
+    // Clear item selection in favor of data selection
+    resetSelectedClips();
+    resetSelectedLabels();
+
     setSelectedTracks(tracks, true);
     setDataSelectedStartTime(startTime, true);
     setDataSelectedEndTime(endTime, true);
