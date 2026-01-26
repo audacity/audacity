@@ -8,4 +8,7 @@ install (DIRECTORY
     PATTERN ".*" EXCLUDE
     )
 
+# Note: Nyquist runtime files (.lsp, .txt, .raw) are handled by au3/nyquist/CMakeLists.txt
+# Note: Nyquist plug-in files (.ny) are handled by au3/plug-ins/CMakeLists.txt
+
 subdirs(locale autobotscripts icons)
