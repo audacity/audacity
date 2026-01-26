@@ -5,6 +5,7 @@
 
 #include "au3-module-manager/PluginManager.h"
 #include "au3-files/FileNames.h"
+#include "au3-files/PathList.h"
 
 #include "framework/ui/iuiactionsregister.h"
 #include "framework/interactive/iinteractiveuriregister.h"
@@ -93,6 +94,7 @@ void EffectsModule::registerUiTypes()
 
 void EffectsModule::onInit(const muse::IApplication::RunMode&)
 {
+    FileNames::InitializePathList();
     PluginManager::Get().Initialize([](const FilePath& localFileName) {
         return std::make_unique<au3::EffectConfigSettings>(localFileName.ToStdString());
     });
