@@ -4,7 +4,6 @@
 #pragma once
 
 #include "async/channel.h"
-#include "async/notification.h"
 
 #include "global/modularity/imoduleinterface.h"
 
@@ -18,12 +17,12 @@ public:
     virtual ~ITrackNavigationController() = default;
 
     virtual TrackId focusedTrack() const = 0;
-    virtual void setFocusedTrack(const TrackId& trackId) = 0;
-    virtual muse::async::Notification focusedTrackChanged() const = 0;
+    virtual void setFocusedTrack(const TrackId& trackId, bool highlight = false) = 0;
+    virtual muse::async::Channel<TrackId, bool /*highlight*/> focusedTrackChanged() const = 0;
 
     virtual TrackItemKey focusedItem() const = 0;
-    virtual void setFocusedItem(const TrackItemKey& key) = 0;
-    virtual muse::async::Notification focusedItemChanged() const = 0;
+    virtual void setFocusedItem(const TrackItemKey& key, bool highlight = false) = 0;
+    virtual muse::async::Channel<TrackItemKey, bool /*highlight*/> focusedItemChanged() const = 0;
 
     virtual void trackRangeSelection() = 0;
     virtual void toggleSelectionOnFocusedTrack() = 0;

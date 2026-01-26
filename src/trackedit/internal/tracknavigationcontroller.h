@@ -38,12 +38,12 @@ public:
     void init();
 
     TrackId focusedTrack() const override;
-    void setFocusedTrack(const TrackId &trackId) override;
-    muse::async::Notification focusedTrackChanged() const override;
+    void setFocusedTrack(const TrackId& trackId, bool highlight = false) override;
+    muse::async::Channel<TrackId, bool /*highlight*/> focusedTrackChanged() const override;
 
     TrackItemKey focusedItem() const override;
-    void setFocusedItem(const TrackItemKey& key) override;
-    muse::async::Notification focusedItemChanged() const override;
+    void setFocusedItem(const TrackItemKey& key, bool highlight = false) override;
+    muse::async::Channel<TrackItemKey, bool /*highlight*/> focusedItemChanged() const override;
 
     void toggleSelectionOnFocusedTrack() override;
     void trackRangeSelection() override;
@@ -55,6 +55,7 @@ public:
     void navigateNextItem();
     void navigatePrevItem();
 
+    void navigateFirstItem();
     void navigateLastItem();
 
     void moveFocusedItemLeft();
@@ -100,8 +101,8 @@ private:
     std::optional<TrackId> m_lastSelectedTrack;
 
     TrackItemKey m_focusedItemKey;
-    muse::async::Notification m_focusedItemChanged;
-    muse::async::Notification m_focusedTrackChanged;
+    muse::async::Channel<TrackItemKey, bool /*highlight*/> m_focusedItemChanged;
+    muse::async::Channel<TrackId, bool /*highlight*/> m_focusedTrackChanged;
 
     muse::async::Channel<TrackItemKey> m_openContextMenuRequested;
 };

@@ -42,11 +42,12 @@ private:
     void cleanup();
     void clearPanels();
 
-    void addPanels(trackedit::TrackId trackId, int pos);
+    void addPanels(const TrackId& trackId, int pos);
     void resetPanelOrder();
     void addDefaultNavigation();
-    void activateNavigationForFocusedTrack();
-    void activateNavigationForFocusedItem();
+
+    void activateNavigation(const TrackId& trackId, bool highlight = false);
+    void activateNavigation(const TrackItemKey& itemKey, bool highlight = false);
 
     muse::ui::NavigationControl* m_default_control = nullptr;
     muse::ui::NavigationPanel* m_default_panel = nullptr;

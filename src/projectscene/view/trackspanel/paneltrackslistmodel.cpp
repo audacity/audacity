@@ -107,8 +107,7 @@ void PanelTracksListModel::load()
 
     onFocusedTrack(trackNavigationController()->focusedTrack());
 
-    trackNavigationController()->focusedTrackChanged().onNotify(this, [this]() {
-        TrackId trackId = trackNavigationController()->focusedTrack();
+    trackNavigationController()->focusedTrackChanged().onReceive(this, [this](const TrackId& trackId, bool /*highlight*/) {
         if (trackId != INVALID_TRACK) {
             onFocusedTrack(trackId);
         }
@@ -379,7 +378,6 @@ void PanelTracksListModel::setItemsSelected(const QModelIndexList& indexes, bool
     if (selected) {
         // if selecting new tracks, add them to the existing selection
         alreadySelectedTracksIds.insert(alreadySelectedTracksIds.end(), idsToModify.begin(), idsToModify.end());
-        trackNavigationController()->setFocusedTrack(idsToModify.back());
     } else {
         // if deselecting tracks, remove them from the existing selection
         alreadySelectedTracksIds.erase(

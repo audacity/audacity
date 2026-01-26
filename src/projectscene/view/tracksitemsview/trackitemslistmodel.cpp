@@ -527,13 +527,12 @@ void TrackItemsListModel::init()
         updateItemsMetrics();
     });
 
-    trackNavigationController()->focusedItemChanged().onNotify(this, [this]() {
-        TrackItemKey key = trackNavigationController()->focusedItem();
-        if (key.trackId() != m_trackId) {
+    trackNavigationController()->focusedItemChanged().onReceive(this, [this](const TrackItemKey& itemKey, bool /*highlight*/) {
+        if (itemKey.trackId() != m_trackId) {
             return;
         }
 
-        ViewTrackItem* item = itemByKey(key.key);
+        ViewTrackItem* item = itemByKey(itemKey.key);
         if (item) {
             item->setFocused(true);
         }

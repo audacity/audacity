@@ -348,7 +348,7 @@ DockPage {
                     }
 
                     onPanelActive: function (trackId) {
-                        // tracksNavModel.moveFocusTo(trackId)
+                        tracksNavModel.moveFocusTo(trackId)
                     }
 
                     DropArea {
