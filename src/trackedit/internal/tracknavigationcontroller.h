@@ -45,8 +45,9 @@ public:
     void setFocusedItem(const TrackItemKey& key, bool highlight = false) override;
     muse::async::Channel<TrackItemKey, bool /*highlight*/> focusedItemChanged() const override;
 
-    void toggleSelectionOnFocusedTrack() override;
+    void toggleSelection();
     void trackRangeSelection() override;
+
     void multiSelectionUp() override;
     void multiSelectionDown() override;
 

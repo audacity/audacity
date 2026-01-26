@@ -25,7 +25,6 @@ public:
     virtual muse::async::Channel<TrackItemKey, bool /*highlight*/> focusedItemChanged() const = 0;
 
     virtual void trackRangeSelection() = 0;
-    virtual void toggleSelectionOnFocusedTrack() = 0;
     virtual void multiSelectionUp() = 0;
     virtual void multiSelectionDown() = 0;
 

@@ -199,23 +199,28 @@
         <seq>Ctrl+End</seq>
     </SC>
 
-    <!-- todo -->
     <SC>
-        <key>shift-up</key>
-        <seq>Shift+Up</seq>
-    </SC>
-    <SC>
-        <key>shift-down</key>
-        <seq>Shift+Down</seq>
-    </SC>
-
-    <SC>
-        <key>track-toggle-focused-selection</key>
+        <key>track-view-toggle-selection</key>
         <seq>Return</seq>
         <seq>Enter</seq>
     </SC>
     <SC>
-        <key>track-range-selection</key>
+        <key>track-view-toggle-selection-multi</key>
+        <seq>Shift+Return</seq>
+        <seq>Shift+Enter</seq>
+    </SC>
+
+    <SC>
+        <key>track-view-shift-up</key>
+        <seq>Shift+Up</seq>
+    </SC>
+    <SC>
+        <key>track-view-shift-down</key>
+        <seq>Shift+Down</seq>
+    </SC>
+
+    <SC>
+        <key>track-view-range-selection</key>
         <seq>Shift+Enter</seq>
         <seq>Shift+Return</seq>
     </SC>
