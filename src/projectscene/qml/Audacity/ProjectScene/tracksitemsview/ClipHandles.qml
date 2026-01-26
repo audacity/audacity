@@ -12,6 +12,14 @@ Item {
     property bool handlesHovered: false
     property bool handlesVisible: false
 
+    property bool collapsed: false
+    property int clipHeight: 114
+    property int headerHeight: 20
+    readonly property int handleMinH: 22
+    readonly property int handleMaxH: 32
+    readonly property int handleHeight: Math.min(handleMaxH,
+                    Math.max(handleMinH, collapsed ? Math.round(clipHeight / 2) : Math.round((clipHeight - headerHeight) / 2)))
+
     property int animationDuration: 100
 
     property bool debugRectsVisible: false
@@ -45,7 +53,7 @@ Item {
         id: leftTrimHandle
 
         x: -24
-        height: 32
+        height: root.handleHeight
         width: 36
 
         visible: handlesVisible
@@ -190,7 +198,7 @@ Item {
         id: rightTrimHandle
 
         x: parent.width - 12
-        height: 32
+        height: root.handleHeight
         width: 36
 
         visible: handlesVisible
@@ -336,7 +344,7 @@ Item {
 
         x: -24
         y: leftTrimHandle.height
-        height: 32
+        height: root.handleHeight
         width: 36
 
         visible: handlesVisible
@@ -498,7 +506,7 @@ Item {
 
         x: parent.width - 12
         y: rightTrimHandle.height
-        height: 32
+        height: root.handleHeight
         width: 36
 
         visible: handlesVisible
