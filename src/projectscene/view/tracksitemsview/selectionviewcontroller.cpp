@@ -254,8 +254,8 @@ void SelectionViewController::onSelectionHorizontalResize(double x1, double x2, 
 void SelectionViewController::startSelectionVerticalResize(const spectrogram::SpectrogramHit* hit)
 {
     m_spectrogramHit = hit;
-    m_selectionEditInProgress = true;
-    emit selectionEditInProgressChanged();
+    m_verticalSelectionEditInProgress = true;
+    emit verticalSelectionEditInProgressChanged();
 }
 
 void SelectionViewController::updateSelectionVerticalResize(double y1, double y2, bool completed)
@@ -275,9 +275,9 @@ void SelectionViewController::updateSelectionVerticalResize(double y1, double y2
     setFrequencySelection(y1, y2);
 
     if (completed) {
+        m_verticalSelectionEditInProgress = false;
+        emit verticalSelectionEditInProgressChanged();
         m_spectrogramHit = nullptr;
-        m_selectionEditInProgress = false;
-        emit selectionEditInProgressChanged();
     }
 }
 
@@ -426,6 +426,11 @@ bool SelectionViewController::selectionActive() const
 bool SelectionViewController::selectionEditInProgress() const
 {
     return m_selectionEditInProgress;
+}
+
+bool SelectionViewController::verticalSelectionEditInProgress() const
+{
+    return m_verticalSelectionEditInProgress;
 }
 
 bool SelectionViewController::selectionInProgress() const

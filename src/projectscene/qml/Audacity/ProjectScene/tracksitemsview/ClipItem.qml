@@ -49,8 +49,10 @@ Rectangle {
         })
     property real selectionStart: 0
     property real selectionWidth: 0
-    property bool selectionInProgress: false
-    property bool enableCursorInteraction: !selectionInProgress && !isBrush
+    required property bool selectionInProgress
+    required property bool selectionEditInProgress
+    required property bool verticalSelectionEditInProgress
+    property bool enableCursorInteraction: !selectionInProgress && !selectionEditInProgress && !verticalSelectionEditInProgress && !isBrush
     property bool isContrastFocusBorderEnabled: false
 
     required property real selectionStartFrequency
@@ -857,6 +859,9 @@ Rectangle {
                 canvas: root.canvas
                 clipId: root.clipKey.itemId()
                 trackId: root.clipKey.trackId()
+                selectionInProgress: root.selectionInProgress
+                selectionEditInProgress: root.selectionEditInProgress
+                verticalSelectionEditInProgress: root.verticalSelectionEditInProgress
                 spectralSelectionEnabled: root.spectralSelectionEnabled
                 pressedSpectrogram: root.pressedSpectrogram
                 isStereo: root.showChannelSplitter

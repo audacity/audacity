@@ -27,6 +27,7 @@ class SelectionViewController : public QObject, public muse::async::Asyncable, p
 
     Q_PROPERTY(bool selectionActive READ selectionActive NOTIFY selectionActiveChanged FINAL)
     Q_PROPERTY(bool selectionEditInProgress READ selectionEditInProgress NOTIFY selectionEditInProgressChanged FINAL)
+    Q_PROPERTY(bool verticalSelectionEditInProgress READ verticalSelectionEditInProgress NOTIFY verticalSelectionEditInProgressChanged FINAL)
     Q_PROPERTY(bool selectionInProgress READ selectionInProgress NOTIFY selectionInProgressChanged FINAL)
     Q_PROPERTY(bool spectralSelectionEnabled READ spectralSelectionEnabled NOTIFY spectralSelectionEnabledChanged FINAL)
     Q_PROPERTY(QVariantMap pressedSpectrogram READ pressedSpectrogram NOTIFY pressedSpectrogramChanged FINAL)
@@ -71,6 +72,7 @@ public:
 
     bool selectionActive() const;
     bool selectionEditInProgress() const;
+    bool verticalSelectionEditInProgress() const;
     bool selectionInProgress() const;
     bool spectralSelectionEnabled() const;
     void setSelectionActive(bool newSelectionActive);
@@ -81,6 +83,7 @@ signals:
     void resistancePxChanged();
     void selectionActiveChanged();
     void selectionEditInProgressChanged();
+    void verticalSelectionEditInProgressChanged();
     void selectionInProgressChanged();
     void spectralSelectionEnabledChanged();
     void pressedSpectrogramChanged();
@@ -109,6 +112,7 @@ private:
     bool m_selectionStarted = false;
     bool m_selectionActive = false;
     bool m_selectionEditInProgress = false;
+    bool m_verticalSelectionEditInProgress = false;
     QPointF m_startPoint;
     QPointF m_lastPoint;
 

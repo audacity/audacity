@@ -11,10 +11,13 @@ Item {
 
     property string title: ""
     property bool isSelected: false
-    property bool selectionInProgress: false
     property bool isFocused: false
-    property bool enableCursorInteraction: !selectionInProgress
+    property bool enableCursorInteraction: !selectionInProgress && !selectionEditInProgress && !verticalSelectionEditInProgress
     property var labelKey: null
+
+    required property bool selectionInProgress
+    required property bool selectionEditInProgress
+    required property bool verticalSelectionEditInProgress
 
     property bool isLeftLinked: false
     property bool isRightLinked: false

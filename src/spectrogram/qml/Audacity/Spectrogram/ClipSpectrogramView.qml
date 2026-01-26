@@ -8,6 +8,11 @@ Item {
 
     required property var canvas
     required property bool spectralSelectionEnabled
+
+    required property bool selectionInProgress
+    required property bool selectionEditInProgress
+    required property bool verticalSelectionEditInProgress
+
     required property bool isStereo
     required property double channelHeightRatio
     required property int clipId
@@ -69,7 +74,15 @@ Item {
                 MouseArea {
                     anchors.fill: parent
 
-                    visible: spectralSelectionEnabled && (root.pressedSpectrogram.trackId === -1 || (root.pressedSpectrogram.trackId === root.trackId && root.pressedSpectrogram.channel === index))
+                    visible: {
+                        if (!root.spectralSelectionEnabled || root.selectionEditInProgress || root.verticalSelectionEditInProgress) {
+                            return false
+                        }
+                        if (!root.selectionInProgress) {
+                            return true
+                        }
+                        return root.pressedSpectrogram.trackId === root.trackId && root.pressedSpectrogram.channel === index
+                    }
 
                     cursorShape: Qt.CrossCursor
                     acceptedButtons: Qt.NoButton // Don't consume mouse events
