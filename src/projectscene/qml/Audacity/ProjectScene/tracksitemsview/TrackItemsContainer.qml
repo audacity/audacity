@@ -24,9 +24,11 @@ Item {
     property bool moveActive: false
     property bool altPressed: false
     property bool ctrlPressed: false
-    property bool selectionEditInProgress: false
-    property bool selectionInProgress: false
     property bool hover: false
+
+    required property bool selectionInProgress
+    required property bool selectionEditInProgress
+    required property bool verticalSelectionEditInProgress
 
     property alias bottomSeparatorHeight: sep.height
 
@@ -126,7 +128,7 @@ Item {
 
         cursorShape: Qt.SizeVerCursor
 
-        visible: !root.selectionInProgress
+        visible: !root.selectionInProgress && !root.selectionEditInProgress && !root.verticalSelectionEditInProgress
 
         onPressed: {
             root.interactionStarted()

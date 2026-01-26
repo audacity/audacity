@@ -301,7 +301,9 @@ TrackItemsContainer {
                                 isSpectrogramViewVisible: root.isSpectrogramViewVisible
                                 multiSampleEdit: clipsContainer.multiSampleEdit
                                 altPressed: root.altPressed
-                                selectionInProgress: root.selectionInProgress || root.selectionEditInProgress
+                                selectionInProgress: root.selectionInProgress
+                                selectionEditInProgress: root.selectionEditInProgress
+                                verticalSelectionEditInProgress: root.verticalSelectionEditInProgress
                                 asymmetricStereoHeightsPossible: clipsModel.asymmetricStereoHeightsPossible
 
                                 //! NOTE: use the same integer rounding as in WaveBitmapCache
