@@ -73,7 +73,7 @@ void SelectionViewController::onPressed(double x, double y, spectrogram::Spectro
     }
 
     if (!tracks.empty()) {
-        trackNavigationController()->setFocusedTrack(tracks.at(0));
+        trackNavigationController()->setFocusedTrack(tracks.at(0), false /*highlight*/);
     }
     selectionController()->setSelectedTracks(tracks, true);
 

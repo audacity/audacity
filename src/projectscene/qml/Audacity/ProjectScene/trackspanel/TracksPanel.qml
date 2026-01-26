@@ -213,7 +213,6 @@ Item {
                             navigation.accessible.name: Boolean(item) ? item.title : ""
                             navigation.onActiveChanged: {
                                 if (navigation.active) {
-                                    root.panelActive(item.trackId)
                                     prv.currentItemNavigationName = navigation.name
                                     view.positionViewAtIndex(index, ListView.Contain)
                                 }
@@ -238,6 +237,10 @@ Item {
 
                             onRemoveSelectionRequested: {
                                 tracksModel.removeSelection()
+                            }
+
+                            onMouseReleased: function(releasedItem, x, y) {
+                                root.panelActive(item.trackId)
                             }
 
                             Component.onCompleted: {
@@ -266,7 +269,6 @@ Item {
                             navigation.accessible.name: Boolean(item) ? item.title : ""
                             navigation.onActiveChanged: {
                                 if (navigation.active) {
-                                    root.panelActive(index)
                                     prv.currentItemNavigationName = navigation.name
                                     view.positionViewAtIndex(index, ListView.Contain)
                                 }
@@ -290,6 +292,10 @@ Item {
 
                             onAddLabelToSelectionRequested: {
                                 tracksModel.addLabelToSelection()
+                            }
+
+                            onMouseReleased: function(releasedItem, x, y) {
+                                root.panelActive(item.trackId)
                             }
 
                             Component.onCompleted: {

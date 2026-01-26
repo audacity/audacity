@@ -113,20 +113,20 @@ void TrackNavigationModel::load()
     navigationController()->requestActivateByName(m_default_section->name().toStdString(),
                                                   m_default_panel->name().toStdString(), m_default_control->name().toStdString());
 
-    tracksNavigationController()->focusedTrackChanged().onNotify(this, [this]() {
-        QTimer::singleShot(10, [this](){
-            activateNavigationForFocusedTrack();
+    tracksNavigationController()->focusedTrackChanged().onReceive(this, [this](const TrackId& trackId, bool highlight) {
+        QTimer::singleShot(10, [this, trackId, highlight](){
+            activateNavigation(trackId, highlight);
         });
     }, muse::async::Asyncable::Mode::SetReplace);
 
-    tracksNavigationController()->focusedItemChanged().onNotify(this, [this]() {
-        QTimer::singleShot(10, [this](){
-            activateNavigationForFocusedItem();
+    tracksNavigationController()->focusedItemChanged().onReceive(this, [this](const TrackItemKey& itemKey, bool highlight) {
+        QTimer::singleShot(10, [this, itemKey, highlight](){
+            activateNavigation(itemKey, highlight);
         });
     }, muse::async::Asyncable::Mode::SetReplace);
 }
 
-void TrackNavigationModel::addPanels(trackedit::TrackId trackId, int pos)
+void TrackNavigationModel::addPanels(const TrackId& trackId, int pos)
 {
     muse::ui::NavigationPanel* trackPanel = new muse::ui::NavigationPanel(this);
     trackPanel->setName(makeTrackPanelName(trackId));
@@ -187,7 +187,7 @@ void TrackNavigationModel::requestActivateByIndex(int index)
 
 void TrackNavigationModel::moveFocusTo(const QVariant& trackId)
 {
-    tracksNavigationController()->setFocusedTrack(trackId.toInt());
+    tracksNavigationController()->setFocusedTrack(trackId.toInt(), false /*highlight*/);
 }
 
 void TrackNavigationModel::addDefaultNavigation()
@@ -255,13 +255,12 @@ QList<muse::ui::NavigationPanel*> TrackNavigationModel::viewItemPanels() const
     return m_viewItemPanels;
 }
 
-void TrackNavigationModel::activateNavigationForFocusedTrack()
+void TrackNavigationModel::activateNavigation(const TrackId& trackId, bool highlight)
 {
     if (!m_section) {
         return;
     }
 
-    TrackId trackId = tracksNavigationController()->focusedTrack();
     if (trackId == INVALID_TRACK) {
         return;
     }
@@ -296,7 +295,7 @@ void TrackNavigationModel::activateNavigationForFocusedTrack()
     }
 
     navigationController()->setIsResetOnMousePress(false);
-    navigationController()->setIsHighlight(true);
+    navigationController()->setIsHighlight(highlight);
     navigationController()->requestActivateByName(
         m_section->name().toStdString(),
         panelName.toStdString(),
@@ -304,19 +303,17 @@ void TrackNavigationModel::activateNavigationForFocusedTrack()
         );
 }
 
-void TrackNavigationModel::activateNavigationForFocusedItem()
+void TrackNavigationModel::activateNavigation(const TrackItemKey& itemKey, bool highlight)
 {
     if (!m_section) {
         return;
     }
 
-    TrackItemKey focusedItem = tracksNavigationController()->focusedItem();
-
-    if (!focusedItem.isValid()) {
+    if (!itemKey.isValid()) {
         return;
     }
 
-    QString panelName = makeTrackItemsPanelName(focusedItem.trackId);
+    QString panelName = makeTrackItemsPanelName(itemKey.trackId);
 
     muse::ui::NavigationPanel* targetPanel = nullptr;
     for (auto* panel : m_viewItemPanels) {
@@ -332,9 +329,9 @@ void TrackNavigationModel::activateNavigationForFocusedItem()
 
     const auto controls = targetPanel->controls();
     for (auto* control : controls) {
-        if (control && control->name() == QString::number(focusedItem.itemId)) {
+        if (control && control->name() == QString::number(itemKey.itemId)) {
             navigationController()->setIsResetOnMousePress(false);
-            navigationController()->setIsHighlight(true);
+            navigationController()->setIsHighlight(highlight);
             navigationController()->requestActivateByName(
                 m_section->name().toStdString(),
                 panelName.toStdString(),

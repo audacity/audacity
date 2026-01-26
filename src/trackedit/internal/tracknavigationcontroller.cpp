@@ -99,7 +99,7 @@ void TrackNavigationController::init()
         if (prj) {
             std::vector<Track> trackList = prj->trackList();
             if (!trackList.empty()) {
-                setFocusedTrack(trackList.front().id);
+                setFocusedTrack(trackList.front().id, true /*highlight*/);
             }
         }
     });
@@ -110,7 +110,7 @@ au::trackedit::TrackId TrackNavigationController::focusedTrack() const
     return m_focusedItemKey.trackId;
 }
 
-void TrackNavigationController::setFocusedTrack(const TrackId& trackId)
+void TrackNavigationController::setFocusedTrack(const TrackId& trackId, bool highlight)
 {
     TrackItemKey newKey;
 
@@ -123,7 +123,7 @@ void TrackNavigationController::setFocusedTrack(const TrackId& trackId)
 
     m_focusedItemKey = newKey;
 
-    m_focusedTrackChanged.notify();
+    m_focusedTrackChanged.send(m_focusedItemKey.trackId, highlight);
 }
 
 TrackItemKey TrackNavigationController::focusedItem() const
@@ -131,12 +131,12 @@ TrackItemKey TrackNavigationController::focusedItem() const
     return m_focusedItemKey;
 }
 
-muse::async::Notification TrackNavigationController::focusedTrackChanged() const
+muse::async::Channel<TrackId, bool> TrackNavigationController::focusedTrackChanged() const
 {
     return m_focusedTrackChanged;
 }
 
-void TrackNavigationController::setFocusedItem(const TrackItemKey& key)
+void TrackNavigationController::setFocusedItem(const TrackItemKey& key, bool highlight)
 {
     if (m_focusedItemKey == key) {
         return;
@@ -147,13 +147,13 @@ void TrackNavigationController::setFocusedItem(const TrackItemKey& key)
     m_focusedItemKey = key;
 
     if (isTrackChanged) {
-        m_focusedTrackChanged.notify();
+        m_focusedTrackChanged.send(key.trackId, highlight);
     }
 
-    m_focusedItemChanged.notify();
+    m_focusedItemChanged.send(key, highlight);
 }
 
-muse::async::Notification TrackNavigationController::focusedItemChanged() const
+muse::async::Channel<TrackItemKey, bool> TrackNavigationController::focusedItemChanged() const
 {
     return m_focusedItemChanged;
 }
@@ -236,16 +236,16 @@ void TrackNavigationController::navigateNextItem()
     TrackItemKeyList itemsKeys = sortedItemsKeys(m_focusedItemKey.trackId);
 
     if (m_focusedItemKey.itemId == INVALID_TRACK_ITEM) {
-        setFocusedItem(itemsKeys.front());
+        dispatcher()->dispatch("nav-right");
         return;
     }
 
     for (size_t i = 0; i < itemsKeys.size(); ++i) {
         if (itemsKeys[i].itemId == m_focusedItemKey.itemId) {
             if (++i >= itemsKeys.size()) {
-                setFocusedItem(itemsKeys.front());
+                setFocusedItem(itemsKeys.front(), true /*highlight*/);
             } else {
-                setFocusedItem(itemsKeys[i]);
+                setFocusedItem(itemsKeys[i], true /*highlight*/);
             }
             break;
         }
@@ -257,20 +257,32 @@ void TrackNavigationController::navigatePrevItem()
     TrackItemKeyList itemsKeys = sortedItemsKeys(m_focusedItemKey.trackId);
 
     if (m_focusedItemKey.itemId == INVALID_TRACK_ITEM) {
-        setFocusedItem(itemsKeys.back());
+        dispatcher()->dispatch("nav-left");
         return;
     }
 
     for (size_t i = 0; i < itemsKeys.size(); ++i) {
         if (itemsKeys[i].itemId == m_focusedItemKey.itemId) {
             if (i == 0) {
-                setFocusedItem(itemsKeys.back());
+                setFocusedItem(itemsKeys.back(), true /*highlight*/);
             } else {
-                setFocusedItem(itemsKeys[i - 1]);
+                setFocusedItem(itemsKeys[i - 1], true /*highlight*/);
             }
             break;
         }
     }
+}
+
+void TrackNavigationController::navigateFirstItem()
+{
+    TrackItemKeyList itemsKeys = sortedItemsKeys(m_focusedItemKey.trackId);
+
+    if (itemsKeys.empty()) {
+        focusNextTrack();
+        return;
+    }
+
+    setFocusedItem(itemsKeys.front(), true /*highlight*/);
 }
 
 void TrackNavigationController::navigateLastItem()
@@ -282,7 +294,7 @@ void TrackNavigationController::navigateLastItem()
         return;
     }
 
-    setFocusedItem(itemsKeys.back());
+    setFocusedItem(itemsKeys.back(), true /*highlight*/);
 }
 
 muse::async::Channel<TrackItemKey> TrackNavigationController::openContextMenuRequested() const
@@ -383,11 +395,7 @@ void TrackNavigationController::navigateNextPanel()
         return;
     }
 
-    if (isTrackItemsEmpty(m_focusedItemKey.trackId)) {
-        focusNextTrack();
-    } else {
-        navigateNextItem();
-    }
+    navigateFirstItem();
 }
 
 void TrackNavigationController::navigatePrevPanel()
@@ -395,7 +403,7 @@ void TrackNavigationController::navigatePrevPanel()
     bool isTrackPanel = m_focusedItemKey.itemId == INVALID_TRACK_ITEM;
 
     if (!isTrackPanel) {
-        setFocusedTrack(m_focusedItemKey.trackId);
+        setFocusedTrack(m_focusedItemKey.trackId, true /*highlight*/);
         return;
     }
 
@@ -426,7 +434,7 @@ void TrackNavigationController::focusTrackByIndex(const muse::actions::ActionDat
         return;
     }
 
-    setFocusedTrack(trackList[index].id);
+    setFocusedTrack(trackList[index].id, true /*highlight*/);
 }
 
 void TrackNavigationController::focusPrevTrack()
@@ -445,9 +453,9 @@ void TrackNavigationController::focusPrevTrack()
         const Track& track = trackList[i];
         if (track.id == currentFocusedTrack) {
             if (--i >= 0) {
-                setFocusedTrack(trackList[i].id);
+                setFocusedTrack(trackList[i].id, true /*highlight*/);
             } else {
-                setFocusedTrack(trackList.back().id);
+                setFocusedTrack(trackList.back().id, true /*highlight*/);
             }
             return;
         }
@@ -470,9 +478,9 @@ void TrackNavigationController::focusNextTrack()
         const Track& track = trackList[i];
         if (track.id == currentFocusedTrack) {
             if (++i < trackList.size()) {
-                setFocusedTrack(trackList[i].id);
+                setFocusedTrack(trackList[i].id, true /*highlight*/);
             } else {
-                setFocusedTrack(trackList.front().id);
+                setFocusedTrack(trackList.front().id, true /*highlight*/);
             }
             return;
         }
@@ -488,7 +496,7 @@ void TrackNavigationController::focusFirstTrack()
 
     std::vector<Track> trackList = prj->trackList();
     if (!trackList.empty()) {
-        setFocusedTrack(trackList.front().id);
+        setFocusedTrack(trackList.front().id, true /*highlight*/);
     }
 }
 
@@ -501,7 +509,7 @@ void TrackNavigationController::focusLastTrack()
 
     std::vector<Track> trackList = prj->trackList();
     if (!trackList.empty()) {
-        setFocusedTrack(trackList.back().id);
+        setFocusedTrack(trackList.back().id, true /*highlight*/);
     }
 }
 
@@ -739,7 +747,7 @@ void TrackNavigationController::moveFocusedItemUp()
         if (previousTrackId != INVALID_TRACK) {
             muse::RetVal<LabelKeyList> result = trackeditInteraction()->moveLabelsToTrack({ itemKey }, previousTrackId, completed);
             if (result.ret) {
-                setFocusedItem(result.val.front());
+                setFocusedItem(result.val.front(), true /*highlight*/);
             }
         }
     } else {
@@ -747,7 +755,7 @@ void TrackNavigationController::moveFocusedItemUp()
         muse::RetVal<ClipKeyList> result
             = trackeditInteraction()->moveClips({ focusedItemKey() }, 0, -1, completed, itemsMovedToOtherTrack);
         if (result.ret) {
-            setFocusedItem(result.val.front());
+            setFocusedItem(result.val.front(), true /*highlight*/);
         }
     }
 }
@@ -762,14 +770,14 @@ void TrackNavigationController::moveFocusedItemDown()
         if (nextTrackId != INVALID_TRACK) {
             muse::RetVal<LabelKeyList> result = trackeditInteraction()->moveLabelsToTrack({ itemKey }, nextTrackId, completed);
             if (result.ret) {
-                setFocusedItem(result.val.front());
+                setFocusedItem(result.val.front(), true /*highlight*/);
             }
         }
     } else {
         static bool itemsMovedToOtherTrack = false;
         muse::RetVal<ClipKeyList> result = trackeditInteraction()->moveClips({ focusedItemKey() }, 0, 1, completed, itemsMovedToOtherTrack);
         if (result.ret) {
-            setFocusedItem(result.val.front());
+            setFocusedItem(result.val.front(), true /*highlight*/);
         }
     }
 }
