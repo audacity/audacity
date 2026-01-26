@@ -8,7 +8,6 @@
 
 #include "au3-track/Track.h"
 #include "au3-time-frequency-selection/ViewInfo.h"
-#include "au3-track-selection/TrackFocus.h"
 
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/au3types.h"
