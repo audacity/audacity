@@ -374,36 +374,12 @@ MenuItem* AppMenuModel::makeEffectMenu()
 
 MenuItem* AppMenuModel::makeAnalyzeMenu()
 {
-    MenuItemList analyzeItems {
-        makeMenuItem("analyze-plugin-manager"),
-        makeSeparator(),
-        makeMenuItem("contrast-analyzer"),
-        makeMenuItem("plot-spectrum"),
-        makeMenuItem("analyzer-omitted"),
-    };
-
-    return makeMenu(TranslatableString("appshell/menu/analyze", "&Analyze"), analyzeItems, "menu-analyze");
+    return makeMenu(TranslatableString("appshell/menu/analyze", "&Analyze"), makeAnalyzeItems(), "menu-analyze");
 }
 
 MenuItem* AppMenuModel::makeToolsMenu()
 {
-    MenuItemList toolsItems {
-        makeMenuItem("tools-plugin-manager"),
-        makeSeparator(),
-        makeMenuItem("manage-macros"),
-        makeMenu(TranslatableString("appshell/menu/macros", "&Macros"), makeMacrosItems(), "menu-macros", false),
-        makeSeparator(),
-        makeMenuItem("nyquist-plugin-installer"),
-        makeMenuItem("nyquist-prompt"),
-        makeSeparator(),
-        makeMenuItem("sample-data-export"),
-        makeMenuItem("sample-data-import"),
-        makeMenuItem("raw-data-import"),
-        makeSeparator(),
-        makeMenuItem("reset-configuration")
-    };
-
-    return makeMenu(TranslatableString("appshell/menu/tools", "&Tools"), toolsItems, "menu-tools");
+    return makeMenu(TranslatableString("appshell/menu/tools", "&Tools"), makeToolItems(), "menu-tools");
 }
 
 MenuItem* AppMenuModel::makeExtraMenu()
@@ -882,10 +858,63 @@ MenuItemList AppMenuModel::makeGeneratorItems()
     return items;
 }
 
+MenuItemList AppMenuModel::makeToolItems()
+{
+    MenuItemList items {
+        makeMenuItem("tools-plugin-manager"),
+        makeSeparator(),
+        makeMenuItem("manage-macros"),
+        makeMenu(TranslatableString("appshell/menu/macros", "&Macros"), makeMacrosItems(), "menu-macros", false),
+        makeSeparator(),
+    };
+
+    const muse::uicomponents::MenuItemList toolMenus = effectsMenuProvider()->destructiveEffectMenu(*this,
+                                                                                                    effects::EffectFilter::ToolsOnly);
+
+    items << toolMenus;
+
+    if (!toolMenus.empty()) {
+        items << makeSeparator();
+    }
+
+    items << makeMenuItem("raw-data-import")
+          << makeSeparator()
+          << makeMenuItem("reset-configuration");
+
+    return items;
+}
+
+MenuItemList AppMenuModel::makeAnalyzeItems()
+{
+    MenuItemList items {
+        makeMenuItem("analyze-plugin-manager"),
+        makeSeparator(),
+        makeMenuItem("contrast-analyzer"),
+        makeMenuItem("plot-spectrum"),
+        makeMenuItem("analyzer-omitted"),
+        makeSeparator(),
+    };
+
+    const muse::uicomponents::MenuItemList analyzeMenus = effectsMenuProvider()->destructiveEffectMenu(*this,
+                                                                                                       effects::EffectFilter::AnalyzersOnly);
+
+    items << analyzeMenus;
+
+    if (!analyzeMenus.empty()) {
+        items << makeSeparator();
+    }
+
+    return items;
+}
+
 void AppMenuModel::onEffectsChanged()
 {
     MenuItem& effectsItem = findMenu("menu-effect");
     effectsItem.setSubitems(makeEffectsItems());
     MenuItem& generateItem = findMenu("menu-generate");
     generateItem.setSubitems(makeGeneratorItems());
+    MenuItem& analyzeItem = findMenu("menu-analyze");
+    analyzeItem.setSubitems(makeAnalyzeItems());
+    MenuItem& toolsItem = findMenu("menu-tools");
+    toolsItem.setSubitems(makeToolItems());
 }

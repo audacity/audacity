@@ -28,6 +28,12 @@ muse::uicomponents::MenuItemList EffectsMenuProvider::destructiveEffectMenu(IEff
     case EffectFilter::ProcessorsOnly:
         filter = [](const EffectMeta& meta) { return meta.type != EffectType::Processor; };
         break;
+    case EffectFilter::ToolsOnly:
+        filter = [](const EffectMeta& meta) { return meta.type != EffectType::Tool; };
+        break;
+    case EffectFilter::AnalyzersOnly:
+        filter = [](const EffectMeta& meta) { return meta.type != EffectType::Analyzer; };
+        break;
     default:
         LOGE() << "EffectsMenuProvider::destructiveEffectMenu: Unknown filter type:" << static_cast<int>(filterType);
         break;
