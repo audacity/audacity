@@ -24,20 +24,20 @@ constexpr TrackId INVALID_TRACK = -1;
 using TrackItemId = int64_t;
 using ClipId = TrackItemId;
 using LabelId = TrackItemId;
-constexpr TrackItemId INVALID_ITEM = -1;
+constexpr TrackItemId INVALID_TRACK_ITEM = -1;
 
 using TrackIdList = std::vector<TrackId>;
 
 struct TrackItemKey
 {
     TrackId trackId = INVALID_TRACK;
-    TrackItemId itemId = INVALID_ITEM;
+    TrackItemId itemId = INVALID_TRACK_ITEM;
 
     TrackItemKey() = default;
     TrackItemKey(const TrackId t, const TrackItemId o)
         : trackId(t), itemId(o) {}
 
-    inline bool isValid() const { return trackId != INVALID_TRACK && itemId != INVALID_ITEM; }
+    inline bool isValid() const { return trackId != INVALID_TRACK && itemId != INVALID_TRACK_ITEM; }
 
     inline bool operator==(const TrackItemKey& k) const { return trackId == k.trackId && itemId == k.itemId; }
     inline bool operator!=(const TrackItemKey& k) const { return !this->operator==(k); }

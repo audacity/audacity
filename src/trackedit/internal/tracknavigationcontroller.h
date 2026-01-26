@@ -38,11 +38,12 @@ public:
     void init();
 
     TrackId focusedTrack() const override;
-    void setFocusedTrack(TrackId trackId) override;
-    muse::async::Channel<TrackId> focusedTrackChanged() const override;
+    void setFocusedTrack(const TrackId &trackId) override;
+    muse::async::Notification focusedTrackChanged() const override;
 
+    TrackItemKey focusedItem() const override;
     void setFocusedItem(const TrackItemKey& key) override;
-    muse::async::Channel<TrackItemKey> focusedItemChanged() const override;
+    muse::async::Notification focusedItemChanged() const override;
 
     void toggleSelectionOnFocusedTrack() override;
     void trackRangeSelection() override;
@@ -53,6 +54,8 @@ public:
 
     void navigateNextItem();
     void navigatePrevItem();
+
+    void navigateLastItem();
 
     void moveFocusedItemLeft();
     void moveFocusedItemRight();
@@ -72,6 +75,9 @@ private:
     double zoomLevel() const;
     double calculateStepSize() const;
 
+    void navigateNextPanel();
+    void navigatePrevPanel();
+
     void focusTrackByIndex(const muse::actions::ActionData& args);
     void focusPrevTrack();
     void focusNextTrack();
@@ -82,42 +88,21 @@ private:
     bool isFocusedItemValid() const;
     bool isFocusedItemLabel() const;
 
+    TrackItemKeyList sortedItemsKeys(const TrackId& trackId) const;
     Label focusedLabel() const;
+
+    bool isTrackItemsEmpty(const TrackId& trackId) const;
 
     TrackId resolvePreviousTrackIdForMove(const TrackId& trackId) const;
     TrackId resolveNextTrackIdForMove(const TrackId& trackId) const;
-
-    template<typename T>
-    struct Val {
-        Val()
-            : val(T()) {}
-        Val(const T& val)
-            : val(val) {}
-        T val;
-        muse::async::Channel<T> changed;
-        muse::async::Channel<T> selected;
-
-        void set(const T& v, bool complete)
-        {
-            if (val == v) {
-                return;
-            }
-            val = v;
-            changed.send(v);
-            if (complete) {
-                selected.send(v);
-            }
-        }
-    };
 
     std::optional<TrackId> m_selectionStart;
     std::optional<TrackId> m_lastSelectedTrack;
 
     TrackItemKey m_focusedItemKey;
-    muse::async::Channel<TrackItemKey> m_focusedItemChanged;
+    muse::async::Notification m_focusedItemChanged;
+    muse::async::Notification m_focusedTrackChanged;
 
     muse::async::Channel<TrackItemKey> m_openContextMenuRequested;
-
-    Val<TrackId> m_focusedTrack = Val<TrackId> { TrackId(INVALID_TRACK) };
 };
 }

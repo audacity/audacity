@@ -126,6 +126,16 @@
 <!-- end Global actions -->
 
 <!-- Tracks view navigation actions -->
+
+    <SC>
+        <key>track-view-next-panel</key>
+        <seq>Tab</seq>
+    </SC>
+    <SC>
+        <key>track-view-prev-panel</key>
+        <seq>Shift+Tab</seq>
+    </SC>
+
     <SC>
         <key>track-view-next-item</key>
         <seq>Right</seq>

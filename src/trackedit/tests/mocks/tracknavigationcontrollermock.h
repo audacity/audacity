@@ -12,11 +12,12 @@ class TrackNavigationControllerMock : public ITrackNavigationController
 {
 public:
     MOCK_METHOD(TrackId, focusedTrack, (), (const, override));
-    MOCK_METHOD(void, setFocusedTrack, (TrackId trackId), (override));
-    MOCK_METHOD(muse::async::Channel<TrackId>, focusedTrackChanged, (), (const, override));
+    MOCK_METHOD(void, setFocusedTrack, (const TrackId& trackId), (override));
+    MOCK_METHOD(muse::async::Notification, focusedTrackChanged, (), (const, override));
 
+    MOCK_METHOD(TrackItemKey, focusedItem, (), (const, override));
     MOCK_METHOD(void, setFocusedItem, (const TrackItemKey& key), (override));
-    MOCK_METHOD(muse::async::Channel<TrackItemKey>, focusedItemChanged, (), (const, override));
+    MOCK_METHOD(muse::async::Notification, focusedItemChanged, (), (const, override));
 
     MOCK_METHOD(void, trackRangeSelection, (), (override));
     MOCK_METHOD(void, toggleSelectionOnFocusedTrack, (), (override));

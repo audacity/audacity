@@ -87,12 +87,6 @@ Item {
         labelContextMenuLoader.show(Qt.point(width - 4, 4), labelContextMenuModel.items)
     }
 
-    onIsFocusedChanged: function () {
-        if (root.isFocused && !navCtrl.active) {
-            navCtrl.requestActive()
-        }
-    }
-
     // Navigation support
     NavigationControl {
         id: navCtrl

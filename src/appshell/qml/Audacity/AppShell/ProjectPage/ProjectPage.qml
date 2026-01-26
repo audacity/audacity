@@ -347,8 +347,8 @@ DockPage {
                         tracksPanel.showEffectsSection = showEffectsSection
                     }
 
-                    onPanelActive: function (index) {
-                        tracksNavModel.moveFocusTo(index)
+                    onPanelActive: function (trackId) {
+                        // tracksNavModel.moveFocusTo(trackId)
                     }
 
                     DropArea {

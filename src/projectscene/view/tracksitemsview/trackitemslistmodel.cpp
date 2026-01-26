@@ -527,7 +527,8 @@ void TrackItemsListModel::init()
         updateItemsMetrics();
     });
 
-    trackNavigationController()->focusedItemChanged().onReceive(this, [this](const TrackItemKey& key) {
+    trackNavigationController()->focusedItemChanged().onNotify(this, [this]() {
+        TrackItemKey key = trackNavigationController()->focusedItem();
         if (key.trackId() != m_trackId) {
             return;
         }
@@ -602,7 +603,7 @@ void TrackItemsListModel::startEditItem(const TrackItemKey& key)
         vs->updateItemsBoundaries(true, key.key);
     }
 
-    item->setFocused(true);
+    setFocusedItem(key);
 }
 
 void TrackItemsListModel::endEditItem(const TrackItemKey& key)
@@ -624,8 +625,6 @@ void TrackItemsListModel::endEditItem(const TrackItemKey& key)
     disconnectAutoScroll();
 
     projectHistory()->endUserInteraction();
-
-    item->setFocused(false);
 }
 
 bool TrackItemsListModel::cancelItemDragEdit(const TrackItemKey& key)

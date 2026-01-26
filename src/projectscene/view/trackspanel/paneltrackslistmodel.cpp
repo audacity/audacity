@@ -107,8 +107,11 @@ void PanelTracksListModel::load()
 
     onFocusedTrack(trackNavigationController()->focusedTrack());
 
-    trackNavigationController()->focusedTrackChanged().onReceive(this, [this](trackedit::TrackId trackId) {
-        onFocusedTrack(trackId);
+    trackNavigationController()->focusedTrackChanged().onNotify(this, [this]() {
+        TrackId trackId = trackNavigationController()->focusedTrack();
+        if (trackId != INVALID_TRACK) {
+            onFocusedTrack(trackId);
+        }
     }, muse::async::Asyncable::Mode::SetReplace);
 
     emit isEmptyChanged();
