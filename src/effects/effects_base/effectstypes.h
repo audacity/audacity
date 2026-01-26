@@ -164,6 +164,7 @@ enum class EffectType {
     Analyzer,
     Generator,
     Processor,
+    Tool,
 };
 
 struct EffectMeta {
