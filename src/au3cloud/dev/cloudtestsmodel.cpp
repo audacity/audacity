@@ -27,12 +27,12 @@ bool CloudTestsModel::isAuthorized() const
     return authorization()->authState().val == AuthState::Authorized;
 }
 
-std::string CloudTestsModel::avatarPath() const
+QString CloudTestsModel::avatarPath() const
 {
-    return userData()->getAvatarPath();
+    return QString::fromStdString(userData()->getAvatarPath());
 }
 
-std::string CloudTestsModel::displayName() const
+QString CloudTestsModel::displayName() const
 {
-    return userData()->getDisplayName();
+    return QString::fromStdString(userData()->getDisplayName());
 }

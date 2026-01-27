@@ -5,7 +5,6 @@
 #include <QTimer>
 
 #include <string>
-#include <sstream>
 
 #include "au3-cloud-audiocom/OAuthService.h"
 #include "au3-cloud-audiocom/UserService.h"
@@ -29,16 +28,18 @@ void Au3CloudService::init()
 
 void Au3CloudService::signInWithPassword(const std::string& email, const std::string& password)
 {
-    std::ostringstream oss;
-    oss << std::this_thread::get_id();
     m_authState.set(AuthState::Authorizing);
 
     auto& oauthService = audacity::cloud::audiocom::GetOAuthService();
     oauthService.Authorize(email, password,
                            [this](auto token)
     {
-        m_authState.set(
-            token.empty() ? AuthState::NotAuthorized : AuthState::Authorized);
+        if (token.empty()) {
+            m_authState.set(AuthState::NotAuthorized);
+            return;
+        }
+
+        m_authState.set(AuthState::Authorized);
     },
                            [this](auto, auto)
     {
@@ -66,6 +67,7 @@ std::string Au3CloudService::getAvatarPath() const
 
 std::string Au3CloudService::getDisplayName() const
 {
-    const auto& userService = audacity::cloud::audiocom::GetUserService();
-    return userService.GetDisplayName().ToStdString();
+    auto& userService = audacity::cloud::audiocom::GetUserService();
+    return userService.GetDisplayName().IsEmpty() ? userService.GetUserSlug().ToStdString()
+           : userService.GetDisplayName().ToStdString();
 }
