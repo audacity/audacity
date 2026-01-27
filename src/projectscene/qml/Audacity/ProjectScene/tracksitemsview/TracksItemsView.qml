@@ -651,6 +651,11 @@ Rectangle {
                     return spectrogramHit
                 }
 
+                function insureVerticallyVisible(item) {
+                    var itemViewY = item.mapToItem(tracksItemsView.contentItem, Qt.point(0, 0)).y
+                    tracksViewState.insureVerticallyVisible(tracksItemsView.contentY, tracksItemsView.height, itemViewY, item.height)
+                }
+
                 signal itemMoveRequested(var itemKey, bool completed)
                 signal itemStartEditRequested(var itemKey)
                 signal itemEndEditRequested(var itemKey)
@@ -826,13 +831,8 @@ Rectangle {
                                 playCursorController.seekToX(x)
                             }
 
-                            onInsureVerticallyVisible: function (clipTop, clipBottom) {
-                                var delta = calculateVerticalScrollDelta(tracksViewState.tracksVerticalOffset, tracksViewState.tracksVerticalOffset + content.height, clipTop, clipBottom)
-                                if (tracksViewState.tracksVerticalOffset + delta < 0) {
-                                    tracksViewState.changeTracksVerticalOffset(0)
-                                } else {
-                                    tracksViewState.changeTracksVerticalOffset(tracksViewState.tracksVerticalOffset + delta)
-                                }
+                            onInsureVerticallyVisible: function () {
+                                tracksItemsView.insureVerticallyVisible(this)
                             }
 
                             onInteractionStarted: {
@@ -899,25 +899,6 @@ Rectangle {
 
                             onHandleTimeGuideline: function (x) {
                                 root.handleGuideline(x)
-                            }
-
-                            function calculateVerticalScrollDelta(viewTop, viewBottom, clipTop, clipBottom, padding = 10) {
-                                // clip fully visible
-                                if (clipTop >= viewTop && clipBottom <= viewBottom) {
-                                    return 0
-                                }
-
-                                // clip is above the view —> scroll up
-                                if (clipTop < viewTop) {
-                                    return clipTop - (viewTop + padding)
-                                }
-
-                                // clip is below the view —> scroll down
-                                if (clipBottom > viewBottom) {
-                                    return clipBottom - (viewBottom - padding)
-                                }
-
-                                return 0
                             }
 
                             Connections {
@@ -1043,6 +1024,10 @@ Rectangle {
 
                             onHandleTimeGuideline: function (x) {
                                 root.handleGuideline(x)
+                            }
+
+                            onInsureVerticallyVisible: function () {
+                                tracksItemsView.insureVerticallyVisible(this)
                             }
                         }
                     }
