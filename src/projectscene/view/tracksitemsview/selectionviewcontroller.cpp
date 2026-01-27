@@ -34,7 +34,7 @@ void SelectionViewController::load()
     });
 }
 
-void SelectionViewController::onPressed(double x, double y, const spectrogram::SpectrogramHit* spectrogramHit)
+void SelectionViewController::onPressed(double x, double y, spectrogram::SpectrogramHit spectrogramHit)
 {
     if (!isProjectOpened()) {
         return;
@@ -91,8 +91,8 @@ void SelectionViewController::onPressed(double x, double y, const spectrogram::S
     }
 
     m_spectrogramHit.reset();
-    if (spectralSelectionEnabled() && spectrogramHit) {
-        m_spectrogramHit.emplace(*spectrogramHit);
+    if (spectralSelectionEnabled() && spectrogramHit.trackId >= 0) {
+        m_spectrogramHit.emplace(spectrogramHit);
     }
     emit pressedSpectrogramChanged();
     setFrequencySelection(y, y);
@@ -251,12 +251,12 @@ void SelectionViewController::onSelectionHorizontalResize(double x1, double x2, 
     emit selectionEditInProgressChanged();
 }
 
-void SelectionViewController::startSelectionVerticalResize(const spectrogram::SpectrogramHit* hit)
+void SelectionViewController::startSelectionVerticalResize(spectrogram::SpectrogramHit hit)
 {
-    IF_ASSERT_FAILED(hit) {
+    IF_ASSERT_FAILED(hit.trackId >= 0) {
         return;
     }
-    m_spectrogramHit.emplace(*hit);
+    m_spectrogramHit.emplace(hit);
     m_verticalSelectionEditInProgress = true;
     emit verticalSelectionEditInProgressChanged();
 }
