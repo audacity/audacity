@@ -52,7 +52,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3trackspectrogramconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/SpectrumCache.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/SpectrumCache.h
-    
+
+    # view/ settings
     ${CMAKE_CURRENT_LIST_DIR}/view/abstractsectionparameterslistmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/abstractsectionparameterslistmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/abstractspectrogramsettingsmodel.cpp
@@ -65,6 +66,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/scalesectionparameterlistmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/globalspectrogramsettingsmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/globalspectrogramsettingsmodel.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/view/channelspectralselectionmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/channelspectralselectionmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/clipchannelspectrogramview.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/clipchannelspectrogramview.h
     ${CMAKE_CURRENT_LIST_DIR}/view/spectrogramhit.cpp
