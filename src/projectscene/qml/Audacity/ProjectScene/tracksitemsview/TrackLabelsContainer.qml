@@ -167,7 +167,7 @@ TrackItemsContainer {
                                 navigation.onActiveChanged: {
                                     if (navigation.active) {
                                         root.context.insureVisible(root.context.positionToTime(itemData.x))
-                                        root.insureVerticallyVisible(root.y, root.y + root.height)
+                                        root.insureVerticallyVisible()
                                     }
                                 }
 

@@ -181,6 +181,11 @@ Item {
                     height: tracksViewState.tracksVerticalScrollPadding
                 }
 
+                function insureVerticallyVisible(item) {
+                    var itemViewY = item.mapToItem(view.contentItem, Qt.point(0, 0)).y
+                    tracksViewState.insureVerticallyVisible(view.contentY, view.height, itemViewY, item.height)
+                }
+
                 delegate: Loader {
                     id: trackItemLoader
 
@@ -214,7 +219,8 @@ Item {
                             navigation.onActiveChanged: {
                                 if (navigation.active) {
                                     prv.currentItemNavigationName = navigation.name
-                                    view.positionViewAtIndex(index, ListView.Contain)
+
+                                    view.insureVerticallyVisible(this)
                                 }
                             }
 
@@ -270,7 +276,8 @@ Item {
                             navigation.onActiveChanged: {
                                 if (navigation.active) {
                                     prv.currentItemNavigationName = navigation.name
-                                    view.positionViewAtIndex(index, ListView.Contain)
+
+                                    view.insureVerticallyVisible(this)
                                 }
                             }
 
