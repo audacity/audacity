@@ -14,6 +14,17 @@ Rectangle {
 
     color: ui.theme.backgroundPrimaryColor
 
+    QtObject {
+        id: prv
+
+        readonly property int mainMargin: 12
+        readonly property int groupBoxMargin: 24
+        readonly property int iconSize: 48
+        readonly property int iconTextSpacing: 12
+        readonly property int buttonWidth: 100
+        readonly property int infoButtonSpacing: 24
+    }
+
     CloudTestsModel {
         id: model
     }
@@ -25,44 +36,84 @@ Rectangle {
     Flickable {
         id: flickable
 
-        anchors.fill: parent
-        anchors.margins: 12
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.margins: prv.mainMargin
 
-        contentHeight: contentColumn.implicitHeight
+        contentHeight: groupBox.implicitHeight
 
-        Column {
-            id: contentColumn
+        StyledGroupBox {
+            id: groupBox
 
-            width: parent.width 
+            anchors.margins: prv.groupBoxMargin
+
+            title: "Account Information"
             height: implicitHeight
-            spacing: 36
+            width: implicitWidth
 
-            StyledTextLabel {
-                text: "Cloud Tests"
-                font: ui.theme.largeBodyFont
-            }
+            Column {
+                id: contentColumn
 
-            ColumnLayout {
-                spacing: 8
+                spacing: prv.infoButtonSpacing
 
                 Row {
-                    spacing: 8
+                    visible: model.isAuthorized
+                    spacing: prv.iconTextSpacing
 
-                    Rectangle {
-                        visible: true
-                        width: 32
-                        height: 32
-                        color: model.isAuthorized ? "green" : "red"
+                    Item {
+                        id: userAvatarContainer
+
+                        width: prv.iconSize
+                        height: prv.iconSize
+
+                        StyledIconLabel {
+                            anchors.fill: parent
+
+                            visible: model.avatarPath === ""
+                            iconCode: IconCode.ACCOUNT
+                        }
+
+                        Image {
+                            anchors.fill: parent
+                            visible: model.avatarPath !== ""
+                            source: model.avatarPath
+                        }
                     }
 
                     StyledTextLabel {
-                        text: model.isAuthorized ? model.displayName : "User not logged in"
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        font: ui.theme.bodyFont
+                        text: model.displayName
+                    }
+                }
+
+                Row {
+                    visible: !model.isAuthorized
+                    spacing: prv.iconTextSpacing
+
+                    Rectangle {
+                        width: prv.iconSize
+                        height: prv.iconSize
+
+                        visible: !model.isAuthorized
+                        color: "red"
+                    }
+
+                    StyledTextLabel {
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        text: "User not authorized"
                         font: ui.theme.bodyFont
                     }
                 }
 
                 FlatButton {
                     text: "Logout"
+
+                    anchors.horizontalCenter: parent.horizontalCenter
+
+                    width: prv.buttonWidth
 
                     onClicked: {
                         model.signOut();
@@ -71,5 +122,4 @@ Rectangle {
             }
         }
     }
-
 }
