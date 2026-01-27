@@ -4,10 +4,13 @@
 #pragma once
 
 #include "ispectrogramservice.h"
+#include "spectrogramtypes.h" // SelectionInfo
 
 #include "framework/global/modularity/ioc.h"
 
 #include <QObject>
+
+#include <utility>
 
 namespace au::spectrogram {
 class ChannelSpectralSelectionModel : public QObject, public muse::Injectable
@@ -31,7 +34,7 @@ class ChannelSpectralSelectionModel : public QObject, public muse::Injectable
     muse::Inject<spectrogram::ISpectrogramService> spectrogramService { this };
 
 public:
-    ChannelSpectralSelectionModel(QQuickItem* parent = nullptr);
+    ChannelSpectralSelectionModel(QObject* parent = nullptr);
     ~ChannelSpectralSelectionModel() override = default;
 
     Q_INVOKABLE double positionToFrequency(double y) const;

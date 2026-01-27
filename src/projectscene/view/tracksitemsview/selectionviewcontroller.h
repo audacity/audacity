@@ -119,6 +119,6 @@ private:
     double spectrogramHitFrequency(const spectrogram::SpectrogramHit& hit, double y) const;
     bool isInExtendedSpectrogram(const spectrogram::SpectrogramHit& hit, double y) const;
 
-    const spectrogram::SpectrogramHit* m_spectrogramHit = nullptr;
+    std::optional<const spectrogram::SpectrogramHit> m_spectrogramHit;
 };
 }

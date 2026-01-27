@@ -8,7 +8,7 @@
 #include "framework/global/types/number.h"
 
 namespace au::spectrogram {
-ChannelSpectralSelectionModel::ChannelSpectralSelectionModel(QQuickItem* parent)
+ChannelSpectralSelectionModel::ChannelSpectralSelectionModel(QObject* parent)
     : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
 {
 }
@@ -89,6 +89,11 @@ double ChannelSpectralSelectionModel::selectionHeight() const
 
 std::pair<double, double> ChannelSpectralSelectionModel::selectionYRange() const
 {
+    if (m_selectionStartFrequency == SelectionInfo::UndefinedFrequency
+        || m_selectionEndFrequency == SelectionInfo::UndefinedFrequency) {
+        return { 0, 0 };
+    }
+
     const auto config = spectrogramService()->trackSpectrogramConfiguration(m_trackId);
     if (!config) {
         return { 0, 0 };

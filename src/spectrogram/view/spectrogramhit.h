@@ -12,6 +12,7 @@ class SpectrogramHit : public QObject
 
 public:
     SpectrogramHit(int trackId, int channel, double spectrogramY, double spectrogramHeight);
+    SpectrogramHit(const SpectrogramHit&);
     ~SpectrogramHit() override = default;
 
     const int trackId = -1;
