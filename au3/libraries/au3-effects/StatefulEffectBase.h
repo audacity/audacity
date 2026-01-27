@@ -55,9 +55,11 @@ public:
 
         bool ProcessFinalize() noexcept override;
 
+        //! Public accessor for the underlying effect (for parameter extraction, etc.)
+        StatefulEffectBase& GetEffect() const { return mEffect; }
+
     protected:
         StatefulEffectBase& mEffect;
-        StatefulEffectBase& GetEffect() const { return mEffect; }
     };
 
     /*!
