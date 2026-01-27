@@ -71,6 +71,7 @@ public:
                             EffectSettings& settings) override;
 
     muse::Ret previewEffect(const EffectId& effectId, EffectSettings& settings) override;
+    void stopPreview() override;
 
 private:
     struct EffectContext {
@@ -82,10 +83,13 @@ private:
     };
 
     struct EffectPreviewState {
-        EffectPreviewState(const EffectContext& originContext, const std::shared_ptr<TrackList>& previewTracks)
-            : originContext(originContext), previewTracks(previewTracks) {}
+        EffectPreviewState(const EffectId& effectId, const EffectContext& originContext,
+                           const std::shared_ptr<TrackList>& previewTracks, bool loopWasActive)
+            : effectId(effectId), originContext(originContext), previewTracks(previewTracks), loopWasActive(loopWasActive) {}
+        const EffectId effectId;
         const EffectContext originContext;
         const std::shared_ptr<TrackList> previewTracks;
+        const bool loopWasActive;
     };
 
     bool isVstSupported() const;

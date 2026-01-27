@@ -134,3 +134,8 @@ void VstViewModel::doStartPreview()
         return nullptr;
     });
 }
+
+void VstViewModel::doStopPreview()
+{
+    effectsProvider()->stopPreview();
+}

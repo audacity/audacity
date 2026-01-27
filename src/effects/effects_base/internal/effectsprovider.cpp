@@ -570,49 +570,60 @@ muse::Ret EffectsProvider::previewEffect(const EffectId& effectId, EffectSetting
         player->setLoopRegionActive(false);
         player->setPlaybackRegion({ startOffset + newCtx.t0, startOffset + newCtx.t1 });
 
-        m_effectPreviewState.emplace(originCtx, newCtx.tracks);
-        player->playbackStatusChanged().onReceive(this, [this, effectId, loopWasActive](playback::PlaybackStatus status) {
-            if (status == playback::PlaybackStatus::Running) {
-                return;
-            }
+        m_effectPreviewState.emplace(effectId, originCtx, newCtx.tracks, loopWasActive);
 
-            IF_ASSERT_FAILED(status == playback::PlaybackStatus::Stopped) {
-                // Pausing should not be possible during preview.
-                // If we reset the playback context's tracks while playback is still ongoing, though,
-                // we're in for a crash, hence wait and hope that the "stop" signal will come in due time.
-                return;
-            }
-
-            // Wait for other observers of this signal to be finished, in particular the audio engine,
-            // which should stop playback synchronously. Only then we may delete the preview tracks.
-            async::Async::call(this, [this, effectId, loopWasActive] {
-                const auto player = playback()->player();
-                const auto reset = finally([this, player] {
-                    m_effectPreviewState.reset();
-                    player->playbackStatusChanged().disconnect(this);
+        // Listen for playback stop to clean up preview state when audio finishes
+        // before user manually stops it.
+        player->playbackStatusChanged().onReceive(this, [this](playback::PlaybackStatus status) {
+            if (status == playback::PlaybackStatus::Stopped) {
+                // Wait for other observers of this signal to be finished, in particular the audio engine,
+                // which should stop playback synchronously. Only then we may delete the preview tracks.
+                async::Async::call(this, [this] {
+                    stopPreview();
                 });
-
-                EffectBase* effect = this->effect(effectId);
-                IF_ASSERT_FAILED(effect && m_effectPreviewState) {
-                    return;
-                }
-
-                const EffectContext& originCtx = m_effectPreviewState->originContext;
-                effect->mT0 = originCtx.t0;
-                effect->mT1 = originCtx.t1;
-                effect->mTracks = originCtx.tracks;
-                effect->mProgress = originCtx.preparingPreviewProgress;
-                effect->mIsPreview = originCtx.isPreview;
-
-                player->setLoopRegionActive(loopWasActive);
-            });
+            }
         });
 
         muse::Ret ret = player->playTracks(*newCtx.tracks, newCtx.t0, newCtx.t1, opt);
         if (!ret) {
+            player->playbackStatusChanged().disconnect(this);
+            m_effectPreviewState.reset();
             return ret;
         }
     }
 
     return muse::make_ok();
+}
+
+void EffectsProvider::stopPreview()
+{
+    if (!m_effectPreviewState) {
+        return;
+    }
+
+    const auto player = playback()->player();
+
+    IF_ASSERT_FAILED(player) {
+        return;
+    }
+
+    player->playbackStatusChanged().disconnect(this);
+
+    if (player->playbackStatus() == playback::PlaybackStatus::Running) {
+        player->stop();
+    }
+
+    EffectBase* effect = this->effect(m_effectPreviewState->effectId);
+    if (effect) {
+        const EffectContext& originCtx = m_effectPreviewState->originContext;
+        effect->mT0 = originCtx.t0;
+        effect->mT1 = originCtx.t1;
+        effect->mTracks = originCtx.tracks;
+        effect->mProgress = originCtx.preparingPreviewProgress;
+        effect->mIsPreview = originCtx.isPreview;
+    }
+
+    player->setLoopRegionActive(m_effectPreviewState->loopWasActive);
+
+    m_effectPreviewState.reset();
 }

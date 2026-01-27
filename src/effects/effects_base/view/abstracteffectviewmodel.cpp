@@ -43,7 +43,7 @@ void AbstractEffectViewModel::startPreview()
 
 void AbstractEffectViewModel::stopPreview()
 {
-    playback()->player()->stop();
+    doStopPreview();
 }
 
 EffectInstanceId AbstractEffectViewModel::instanceId() const

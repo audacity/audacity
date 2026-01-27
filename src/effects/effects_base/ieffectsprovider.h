@@ -42,5 +42,6 @@ public:
                                     EffectSettings& settings) = 0;
 
     virtual muse::Ret previewEffect(const EffectId& effectId, EffectSettings& settings) = 0;
+    virtual void stopPreview() = 0;
 };
 }
