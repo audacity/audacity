@@ -82,6 +82,11 @@ ViewerComponentType DestructiveEffectViewerDialogModel::viewerComponentType() co
         return ViewerComponentType::Builtin;
     }
 
+    // Nyquist effects always use generated UI (no vendor UI available)
+    if (family == EffectFamily::Nyquist) {
+        return ViewerComponentType::Generated;
+    }
+
     // For external plugins (VST3, LV2), check if we should use generated UI
     const bool shouldUseVendorUI = useVendorUI();
     if (!shouldUseVendorUI) {
