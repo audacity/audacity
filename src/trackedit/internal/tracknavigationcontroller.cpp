@@ -267,16 +267,55 @@ bool TrackNavigationController::isTrackItemsEmpty(const TrackId& trackId) const
     return itemsKeys.empty();
 }
 
+bool TrackNavigationController::isFirstTrack(const TrackId& trackId) const
+{
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return true;
+    }
+
+    std::vector<Track> trackList = prj->trackList();
+    if (trackList.empty()) {
+        return true;
+    }
+
+    return trackList.front().id == trackId;
+}
+
+bool TrackNavigationController::isLastTrack(const TrackId& trackId) const
+{
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return true;
+    }
+
+    std::vector<Track> trackList = prj->trackList();
+    if (trackList.empty()) {
+        return true;
+    }
+
+    return trackList.back().id == trackId;
+}
+
 void TrackNavigationController::navigateToNextPanel()
 {
     bool isTrackPanel = m_focusedItemKey.itemId == INVALID_TRACK_ITEM;
 
-    if (!isTrackPanel) {
-        navigateToNextTrack();
+    if (isTrackPanel) {
+        if (isTrackItemsEmpty(m_focusedItemKey.trackId)) {
+            dispatcher()->dispatch("nav-next-panel");
+        } else {
+            navigateToFirstItem();
+        }
         return;
     }
 
-    navigateToFirstItem();
+    if (isLastTrack(m_focusedItemKey.trackId)) {
+        dispatcher()->dispatch("nav-next-panel");
+        return;
+    }
+
+    navigateToNextTrack();
 }
 
 void TrackNavigationController::navigateToPrevPanel()
@@ -289,6 +328,11 @@ void TrackNavigationController::navigateToPrevPanel()
     }
 
     m_focusedItemKey.itemId = INVALID_TRACK_ITEM;
+
+    if (isFirstTrack(m_focusedItemKey.trackId)) {
+        dispatcher()->dispatch("nav-prev-panel");
+        return;
+    }
 
     navigateToPrevTrack();
 

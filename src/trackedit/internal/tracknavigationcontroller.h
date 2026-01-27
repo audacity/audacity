@@ -59,6 +59,8 @@ private:
     Label focusedLabel() const;
 
     bool isTrackItemsEmpty(const TrackId& trackId) const;
+    bool isFirstTrack(const TrackId& trackId) const;
+    bool isLastTrack(const TrackId& trackId) const;
 
     void navigateToNextPanel();
     void navigateToPrevPanel();
