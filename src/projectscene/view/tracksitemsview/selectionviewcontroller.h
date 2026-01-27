@@ -53,12 +53,12 @@ public:
     //! NOTE The x coordinates must match the timeline.
     //! The y coordinates must match the track view
     //! If this is not the case, then appropriate adjustments must be made.
-    Q_INVOKABLE void onPressed(double x, double y, const spectrogram::SpectrogramHit* spectrogramHit = nullptr);
+    Q_INVOKABLE void onPressed(double x, double y, spectrogram::SpectrogramHit spectrogramHit = {});
     Q_INVOKABLE void onPositionChanged(double x, double y);
     Q_INVOKABLE void onReleased(double x, double y);
 
     Q_INVOKABLE void onSelectionHorizontalResize(double x, double x2, bool completed);
-    Q_INVOKABLE void startSelectionVerticalResize(const spectrogram::SpectrogramHit* hit);
+    Q_INVOKABLE void startSelectionVerticalResize(spectrogram::SpectrogramHit hit);
     Q_INVOKABLE void updateSelectionVerticalResize(double y1, double y2, bool completed);
 
     Q_INVOKABLE void selectTrackAudioData(double y);

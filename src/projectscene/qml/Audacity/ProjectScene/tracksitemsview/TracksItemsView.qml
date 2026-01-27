@@ -658,7 +658,11 @@ Rectangle {
                         }
                         return false
                     })
-                    return spectrogramHit
+                    if (spectrogramHit) {
+                        return spectrogramHit
+                    } else {
+                        return SpectrogramHitFactory.createNullSpectrogramHit()
+                    }
                 }
 
                 signal itemMoveRequested(var itemKey, bool completed)
