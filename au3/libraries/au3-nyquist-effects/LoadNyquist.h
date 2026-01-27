@@ -8,9 +8,12 @@
 
 **********************************************************************/
 
+#include "au3-utility/Callable.h"
+#include "au3-utility/GlobalVariable.h"
 #include "au3-components/PluginProvider.h"
 #include "au3-components/EffectInterface.h"
 #include "au3-module-manager/PluginInterface.h"
+#include "NyquistBase.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -21,6 +24,11 @@
 class NyquistEffectsModule final : public PluginProvider
 {
 public:
+    //! Factory for creating NyquistBase instances
+    struct NYQUIST_EFFECTS_API Factory : DefaultedGlobalHook<Factory,
+                                                             Callable::UniquePtrFactory<NyquistBase, const wxString&>::Function
+                                                             > {};
+
     NyquistEffectsModule();
     virtual ~NyquistEffectsModule();
 

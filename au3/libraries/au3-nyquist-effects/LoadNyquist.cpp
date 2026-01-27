@@ -248,7 +248,7 @@ std::unique_ptr<ComponentInterface>
 NyquistEffectsModule::LoadPlugin(const PluginPath& path)
 {
     // Acquires a resource for the application.
-    auto effect = NyquistBase::GetEffectHook::Call(path);
+    auto effect = Factory::Call(path);
     if (effect && effect->IsOk()) {
         return effect;
     }
