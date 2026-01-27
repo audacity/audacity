@@ -40,6 +40,7 @@ signals:
 protected:
     void doInit() override;
     void doStartPreview() override;
+    void doStopPreview() override;
 
 private:
     static QString computeEffectName(EffectInstanceId instanceId, IEffectsProvider* provider, IEffectInstancesRegister* instancesRegister);

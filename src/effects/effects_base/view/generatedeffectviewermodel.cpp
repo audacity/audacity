@@ -114,3 +114,8 @@ void GeneratedEffectViewerModel::doStartPreview()
         return nullptr;
     });
 }
+
+void GeneratedEffectViewerModel::doStopPreview()
+{
+    effectsProvider()->stopPreview();
+}
