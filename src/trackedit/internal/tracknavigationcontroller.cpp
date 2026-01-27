@@ -77,13 +77,6 @@ void TrackNavigationController::init()
         m_selectionStart = std::nullopt;
     });
 
-    // focusedTrackChanged().onReceive(this, [this](const trackedit::TrackId& trackId) {
-    //     const auto activePanel = navigationController()->activePanel();
-    //     if (activePanel && activePanel->name() != "AddNewTrackPopup" && activePanel->name() != QString("Track %1 Panel").arg(trackId)) {
-    //         navigationController()->requestActivateByName("Main Section", "Main Panel", "Main Control");
-    //     }
-    // });
-
     selectionController()->tracksSelected().onReceive(this, [this](const trackedit::TrackIdList& trackIds) {
         if (trackIds.size() == 1) {
             // The idea here is that range selection also supports the base track to be selected using the mouse.
@@ -98,7 +91,7 @@ void TrackNavigationController::init()
         if (prj) {
             std::vector<Track> trackList = prj->trackList();
             if (!trackList.empty()) {
-                setFocusedTrack(trackList.front().id, true /*highlight*/);
+                setFocusedTrack(trackList.front().id);
             }
         }
     });

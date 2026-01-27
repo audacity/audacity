@@ -27,7 +27,7 @@ public:
     explicit TrackNavigationModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void init(muse::ui::NavigationSection* section);
-    Q_INVOKABLE void requestActivateByIndex(int index);
+
     Q_INVOKABLE void moveFocusTo(const QVariant& trackId);
 
     QList<muse::ui::NavigationPanel*> trackItemPanels() const;

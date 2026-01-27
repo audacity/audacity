@@ -163,28 +163,6 @@ void TrackNavigationModel::resetPanelOrder()
     emit viewItemPanelsChanged();
 }
 
-void TrackNavigationModel::requestActivateByIndex(int index)
-{
-    if (index < 0 || index >= m_trackItemPanels.size()) {
-        return;
-    }
-
-    const auto& panel = m_trackItemPanels.at(index);
-    if (!panel) {
-        return;
-    }
-
-    const auto firstControl = panel->controls().begin();
-    if (!(*firstControl)) {
-        return;
-    }
-
-    navigationController()->setIsResetOnMousePress(false);
-    navigationController()->setIsHighlight(true);
-    navigationController()->requestActivateByName(m_section->name().toStdString(), panel->name().toStdString(),
-                                                  (*firstControl)->name().toStdString());
-}
-
 void TrackNavigationModel::moveFocusTo(const QVariant& trackId)
 {
     tracksNavigationController()->setFocusedTrack(trackId.toInt(), false /*highlight*/);
@@ -267,11 +245,6 @@ void TrackNavigationModel::activateNavigation(const TrackId& trackId, bool highl
 
     QString panelName = makeTrackPanelName(trackId);
 
-    muse::ui::INavigationPanel* activePanel = navigationController()->activePanel();
-    if (activePanel && activePanel->name() == panelName) {
-        return;
-    }
-
     muse::ui::NavigationPanel* targetPanel = nullptr;
     for (auto* panel : m_trackItemPanels) {
         if (panel->name() == panelName) {
@@ -294,7 +267,6 @@ void TrackNavigationModel::activateNavigation(const TrackId& trackId, bool highl
         return;
     }
 
-    navigationController()->setIsResetOnMousePress(false);
     navigationController()->setIsHighlight(highlight);
     navigationController()->requestActivateByName(
         m_section->name().toStdString(),
@@ -330,7 +302,6 @@ void TrackNavigationModel::activateNavigation(const TrackItemKey& itemKey, bool 
     const auto controls = targetPanel->controls();
     for (auto* control : controls) {
         if (control && control->name() == QString::number(itemKey.itemId)) {
-            navigationController()->setIsResetOnMousePress(false);
             navigationController()->setIsHighlight(highlight);
             navigationController()->requestActivateByName(
                 m_section->name().toStdString(),
