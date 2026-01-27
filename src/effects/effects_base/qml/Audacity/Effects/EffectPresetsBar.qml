@@ -37,11 +37,6 @@ RowLayout {
     EffectManageMenu {
         id: manageMenuModel
         instanceId: root.instanceId
-
-        onUseVendorUIChanged: {
-            // Reload the menu to update the checkmark
-            manageMenuModel.load()
-        }
     }
 
     ContextMenuLoader {

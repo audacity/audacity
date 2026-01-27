@@ -22,11 +22,15 @@
 #include "internal/effectpresetsprovider.h"
 #include "internal/effectpresetsscenario.h"
 #include "internal/effectviewlaunchregister.h"
+#include "internal/effectparametersprovider.h"
+#include "internal/parameterextractorregistry.h"
 
 #include "view/effectmanagemenu.h"
 #include "view/effectsuiengine.h"
+#include "view/effectsviewutils.h"
 #include "view/destructiveeffectviewerdialogmodel.h"
 #include "view/realtimeeffectviewerdialogmodel.h"
+#include "view/generatedeffectviewermodel.h"
 
 using namespace au::effects;
 
@@ -58,6 +62,8 @@ void EffectsModule::registerExports()
     ioc()->registerExport<IEffectPresetsProvider>(moduleName(), std::make_shared<EffectPresetsProvider>(iocContext()));
     ioc()->registerExport<IEffectPresetsScenario>(moduleName(), std::make_shared<EffectPresetsScenario>(iocContext()));
     ioc()->registerExport<IEffectViewLaunchRegister>(moduleName(), new EffectViewLaunchRegister());
+    ioc()->registerExport<IEffectParametersProvider>(moduleName(), new EffectParametersProvider());
+    ioc()->registerExport<IParameterExtractorRegistry>(moduleName(), new ParameterExtractorRegistry());
 }
 
 void EffectsModule::resolveImports()
@@ -80,6 +86,7 @@ void EffectsModule::registerUiTypes()
     qmlRegisterType<EffectManageMenu>("Audacity.Effects", 1, 0, "EffectManageMenu");
     qmlRegisterType<DestructiveEffectViewerDialogModel>("Audacity.Effects", 1, 0, "DestructiveEffectViewerDialogModel");
     qmlRegisterType<RealtimeEffectViewerDialogModel>("Audacity.Effects", 1, 0, "RealtimeEffectViewerDialogModel");
+    REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(GeneratedEffectViewerModelFactory);
     qmlRegisterUncreatableType<EffectFamilies>("Audacity.Effects", 1, 0, "EffectFamily", "Not creatable from QML");
     qmlRegisterUncreatableType<ViewerComponentTypes>("Audacity.Effects", 1, 0, "ViewerComponentType", "Not creatable from QML");
 }

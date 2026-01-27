@@ -18,6 +18,7 @@
 
 #include <pluginterfaces/vst/ivsteditcontroller.h>
 #include <pluginterfaces/vst/ivstparameterchanges.h>
+#include <pluginterfaces/vst/ivstunits.h>
 #include <wx/regex.h>
 
 #include "au3-utility/MemoryX.h"
@@ -91,6 +92,51 @@ wxString VST3Utils::ToWxString(const Steinberg::Vst::TChar* str)
 {
     static const wxCSConv csConv { wxFONTENCODING_UTF16 };
     return { reinterpret_cast<const char*>(str), csConv };
+}
+
+std::string VST3Utils::UTF16ToStdString(const Steinberg::Vst::TChar* str)
+{
+    if (!str || str[0] == 0) {
+        return std::string();
+    }
+
+    // Use wxString's built-in UTF-16 to UTF-8 conversion
+    // This leverages the same conversion logic as ToWxString
+    return ToWxString(str).ToStdString();
+}
+
+std::string VST3Utils::GetParameterUnitStdString(Steinberg::Vst::IEditController* controller,
+                                                 const Steinberg::Vst::ParameterInfo& info)
+{
+    // Check the units field in parameter info first (simpler and more reliable)
+    try {
+        // Some plugins have malformed unit strings that cause exceptions
+        // even when checking the first character, so wrap everything
+        if (info.units[0] != 0) {
+            return UTF16ToStdString(info.units);
+        }
+    } catch (...) {
+        // Silently ignore - malformed unit strings are common in VST3 plugins
+        // and don't affect functionality (we just won't display units)
+    }
+
+    // Try to get unit info if the controller supports it
+    try {
+        auto unitInfo = Steinberg::FUnknownPtr<Steinberg::Vst::IUnitInfo>(controller);
+        if (unitInfo) {
+            Steinberg::Vst::UnitInfo uInfo;
+            if (unitInfo->getUnitInfo(info.unitId, uInfo) == Steinberg::kResultOk) {
+                // Check if there's a unit name
+                if (uInfo.name[0] != 0) {
+                    return UTF16ToStdString(uInfo.name);
+                }
+            }
+        }
+    } catch (...) {
+        // Silently ignore - same as above
+    }
+
+    return std::string();
 }
 
 wxString VST3Utils::MakeAutomationParameterKey(const Steinberg::Vst::ParameterInfo& parameterInfo)

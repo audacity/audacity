@@ -152,6 +152,15 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
             ActionQuery q("action://effects/toggle_vendor_ui");
             q.addParam("effectId", Val(effectId.toStdString()));
             MenuItem* item = makeMenuItem(q.toString());
+
+            // Manually set the checked state based on current UI mode
+            if (item) {
+                const bool isVendorUI = configuration()->effectUIMode(effectId) == EffectUIMode::VendorUI;
+                ui::UiActionState state = item->state();
+                state.checked = isVendorUI;
+                item->setState(state);
+            }
+
             items << item;
         }
     }

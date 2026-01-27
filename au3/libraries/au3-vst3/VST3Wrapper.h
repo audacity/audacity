@@ -69,6 +69,9 @@ public:
     Steinberg::IPtr<Steinberg::Vst::IConnectionPoint> mControllerConnectionProxy;
     Steinberg::IPtr<Steinberg::Vst::IComponentHandler> mComponentHandler;
 
+    //! Counter to track when FetchSettings was last called, used to skip redundant calls
+    uint64_t lastFetchedSettingsCounter{ 0 };
+
     VST3Wrapper(VST3::Hosting::Module& module, const VST3::Hosting::ClassInfo& effectClassInfo);
     ~VST3Wrapper();
 

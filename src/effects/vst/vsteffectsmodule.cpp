@@ -9,12 +9,14 @@
 #include "audioplugins/iaudiopluginmetareaderregister.h"
 
 #include "effects/effects_base/ieffectviewlaunchregister.h"
+#include "effects/effects_base/iparameterextractorregistry.h"
 #include "effects/effects_base/view/effectsviewutils.h"
 
 #include "internal/vsteffectsrepository.h"
 #include "internal/vst3pluginsscanner.h"
 #include "internal/vst3pluginsmetareader.h"
 #include "internal/vst3viewlauncher.h"
+#include "internal/vstparameterextractorservice.h"
 
 #include "internal/musevstpluginsregister.h"
 #include "internal/musevstmodulesrepository.h"
@@ -68,6 +70,11 @@ void VstEffectsModule::resolveImports()
     auto lr = ioc()->resolve<IEffectViewLaunchRegister>(moduleName());
     if (lr) {
         lr->regLauncher("VST3", std::make_shared<Vst3ViewLauncher>(iocContext()));
+    }
+
+    auto paramExtractorRegistry = ioc()->resolve<IParameterExtractorRegistry>(moduleName());
+    if (paramExtractorRegistry) {
+        paramExtractorRegistry->registerExtractor(std::make_shared<VstParameterExtractorService>());
     }
 }
 

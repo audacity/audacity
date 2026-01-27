@@ -1,6 +1,8 @@
 /*
 * Audacity: A Digital Audio Editor
 */
+#include "framework/global/log.h"
+
 #include "effectinstancesregister.h"
 #include "au3-components/EffectInterface.h"
 #include "au3-effects/EffectPlugin.h"
@@ -23,6 +25,26 @@ void EffectInstancesRegister::unregInstance(const std::shared_ptr<EffectInstance
 
 void EffectInstancesRegister::unregInstance(const EffectInstanceId& instanceId)
 {
+    // Notify parameter extractors before removing the instance
+    auto it = m_data.find(instanceId);
+    if (it != m_data.end() && parameterExtractorRegistry() && effectsProvider()) {
+        const EffectId& effectId = it->second.effectId;
+        EffectInstance* instance = it->second.instance.get();
+
+        // Determine effect family and notify the appropriate extractor
+        // This allows extractors to clean up cached data for this instance
+        EffectMeta effectMeta = effectsProvider()->meta(effectId);
+        if (effectMeta.isValid()) {
+            EffectFamily family = effectMeta.family;
+
+            if (auto extractor = parameterExtractorRegistry()->extractorForFamily(family)) {
+                LOGD() << "EffectInstancesRegister: notifying extractor about instance destruction, instanceId="
+                       << instanceId << ", family=" << static_cast<int>(family);
+                extractor->onInstanceDestroyed(instance);
+            }
+        }
+    }
+
     m_data.erase(instanceId);
 }
 
