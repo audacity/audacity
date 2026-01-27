@@ -209,6 +209,11 @@ std::vector<ParamInfo> VST3ParameterExtraction::extractParameters(EffectInstance
                     continue;
                 }
 
+                // Skip program change parameters (presets are handled separately)
+                if (vstInfo.flags & Steinberg::Vst::ParameterInfo::kIsProgramChange) {
+                    continue;
+                }
+
                 result.push_back(buildParamInfo(editController.get(), vstInfo));
             } catch (const std::exception& e) {
                 wxLogDebug("VST3ParameterExtraction: exception processing param %d: %s", i, e.what());
