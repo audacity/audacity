@@ -100,6 +100,14 @@ StyledDialogView {
             }
         }
 
+        Connections {
+            target: pageLoader.item
+
+            function onNextPage() {
+                nextStepButton.doClicked(null)
+            }
+        }
+
         SeparatorLine {
             Layout.fillWidth: true
             Layout.margins: 0
