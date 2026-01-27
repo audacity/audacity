@@ -77,6 +77,14 @@ void Au3SpectrogramClipChannelPainter::fillImage(QImage& image,
                                                  const SelectionInfo& selectionInfo,
                                                  const SpectrogramTrackContext& tc, WaveClipChannel& clipChannel)
 {
+    auto& spectrumCache = WaveClipSpectrumCache::Get(clipChannel);
+
+    if (clipChannel.GetChannelIndex() != 0 && !spectrumCache.IsStereo()) {
+        // This happens while dragging a mono clip over a stereo track: the clip won't be converted to stereo until released. In the meantime, just keep it blank.
+        image.fill(Qt::white);
+        return;
+    }
+
     Au3SpectrogramSettings& settings = tc.settings;
     const QRect paintableRect{ 0, 0, viewportWidth(viewInfo), image.height() };
     const ClipTimes clipTimes{
@@ -105,8 +113,8 @@ void Au3SpectrogramClipChannelPainter::fillImage(QImage& image,
     const long long* where = nullptr;
     const auto half = settings.GetFFTLength() / 2;
     const double binUnit = sampleRate / (2 * half);
-    const bool updated = WaveClipSpectrumCache::Get(clipChannel).GetSpectrogram(clipChannel, spectrogram, settings, where, imageWidth,
-                                                                                visibleStartTime, viewInfo.pixelsPerSecond);
+    const bool updated = spectrumCache.GetSpectrogram(clipChannel, spectrogram, settings, where, imageWidth,
+                                                      visibleStartTime, viewInfo.pixelsPerSecond);
 
     auto nBins = settings.NBins();
 
