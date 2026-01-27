@@ -60,8 +60,6 @@ public:
     virtual bool stretchClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed) = 0;
     virtual bool stretchClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed) = 0;
 
-    virtual std::optional<secs_t> getLeftmostClipStartTime(const ClipKeyList& clipKeys) const = 0;
-    virtual std::optional<secs_t> getRightmostClipEndTime(const ClipKeyList& clipKeys) const = 0;
     virtual muse::Ret makeRoomForClip(const trackedit::ClipKey& clipKey) = 0;
 
     virtual ClipKeyList clipsOnTrack(const trackedit::TrackId trackId) = 0;

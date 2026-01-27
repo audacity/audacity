@@ -388,15 +388,14 @@ bool TrackClipsListModel::moveSelectedClips(const ClipKey& key, bool completed)
     }, completed);
 
     if (vs->moveInitiated()) {
-        ClipKeyList selectedClips = selectionController()->timeSelectionIsNotEmpty()
-                                    ? selectionController()->clipsIntersectingRangeSelection()
-                                    : selectionController()->selectedClipsInTrackOrder();
-        muse::RetVal<ClipKeyList> result = trackeditInteraction()->moveClips(selectedClips, moveOffset.timeOffset, moveOffset.trackOffset,
-                                                                             completed, clipsMovedToOtherTrack);
-        if (result.ret) {
-            if (selectionController()->timeSelectionIsNotEmpty()) {
-                selectionController()->setClipsIntersectingRangeSelection(result.val);
-            } else {
+        if (selectionController()->timeSelectionIsNotEmpty()) {
+            trackeditInteraction()->moveRangeSelection(moveOffset.timeOffset, completed);
+        } else {
+            ClipKeyList selectedClips = selectionController()->selectedClipsInTrackOrder();
+            muse::RetVal<ClipKeyList> result = trackeditInteraction()->moveClips(selectedClips, moveOffset.timeOffset,
+                                                                                 moveOffset.trackOffset,
+                                                                                 completed, clipsMovedToOtherTrack);
+            if (result.ret) {
                 selectionController()->setSelectedClips(result.val);
             }
         }

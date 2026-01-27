@@ -568,7 +568,7 @@ Rectangle {
                         root.editTitle()
                     } else {
                         //! NOTE Handle singleClick logic
-                        if (!root.multiClipsSelected && !isWithinRange(e.x, headerSelectionRectangle.x, headerSelectionRectangle.width)) {
+                        if (!root.multiClipsSelected && !(root.isDataSelected && isWithinRange(e.x, headerSelectionRectangle.x, headerSelectionRectangle.width))) {
                             root.requestSelected()
                         }
 
