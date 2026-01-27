@@ -200,6 +200,15 @@ bool NyquistParameterExtractorService::setParameterValue(EffectInstance* instanc
     // Update string representation
     ctrl->valStr = wxString::Format(wxT("%g"), ctrl->val);
 
+    // Sync mControls back to EffectSettings for preset saving
+    // This ensures that when SaveUserPreset() is called, it has the updated control values
+    if (settingsAccess) {
+        settingsAccess->ModifySettings([&](EffectSettings& settings) {
+            NyquistBase::GetSettings(settings).controls = nyquist->mControls;
+            return nullptr;
+        });
+    }
+
     return true;
 }
 
