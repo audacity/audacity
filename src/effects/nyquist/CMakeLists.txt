@@ -10,6 +10,10 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/nyquisteffectsrepository.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/nyquisteffectsrepository.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/nyquistparameterextractorservice.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/nyquistparameterextractorservice.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/nyquistviewlauncher.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/nyquistviewlauncher.h
     )
 
 # AU3
