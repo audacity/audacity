@@ -14,6 +14,8 @@
 #include "iclipsinteraction.h"
 #include "ilabelsinteraction.h"
 #include "itrackeditclipboard.h"
+#include "importexport/import/iimporter.h"
+#include "iselectioncontroller.h"
 
 namespace au::trackedit {
 class TrackeditOperationController : public ITrackeditInteraction, public muse::Injectable, public muse::async::Asyncable
@@ -24,6 +26,8 @@ class TrackeditOperationController : public ITrackeditInteraction, public muse::
     muse::Inject<ITrackeditClipboard> clipboard { this };
     muse::Inject<IProjectHistory> projectHistory { this };
     muse::Inject<au::context::IGlobalContext> globalContext { this };
+    muse::Inject<importexport::IImporter> importer { this };
+    muse::Inject<au::trackedit::ISelectionController> selectionController{ this };
 
 public:
     TrackeditOperationController(const muse::modularity::ContextPtr& ctx, std::unique_ptr<IUndoManager> undoManager);

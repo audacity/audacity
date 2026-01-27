@@ -18,6 +18,7 @@
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/internal/domaccessor.h"
+#include "projectscene/view/tracksitemsview/dropcontroller.h"
 #include "trackedit/internal/au3/au3trackdata.h"
 
 using au::trackedit::ITrackDataPtr;
@@ -201,6 +202,37 @@ bool au::importexport::Au3Importer::importIntoTrack(const muse::io::path_t& file
     selectionController()->setSelectedTracks({ dstTrackId }, true);
     tracksInteraction()->paste(importedData, 0.0, false /* moveClips */, false /* moveAllTracks */,
                                true /* isMultiSelectionCopy */, modifiedState);
+
+    return true;
+}
+
+bool au::importexport::Au3Importer::importFromOsClipboard(
+    const std::vector<muse::io::path_t>& filePaths, muse::secs_t startTime)
+{
+    // this is basically the same as drag&drop import so utilizing DropController to do the job
+    projectscene::DropController dc;
+
+    trackedit::TrackId startingTrack = -1;
+    auto selectedTracks = selectionController()->selectedTracks();
+    if (!selectedTracks.empty()) {
+        startingTrack = selectedTracks.front();
+    }
+
+    QStringList files;
+    for (const auto& path : filePaths) {
+        files.append(path.toQString());
+    }
+
+    dc.probeAudioFiles(files);
+    int requiredTracksCount = dc.requiredTracksCount();
+    dc.prepareConditionalTracks(startingTrack, requiredTracksCount);
+    auto trackIds = dc.draggedTracksIds(startingTrack, requiredTracksCount);
+    std::vector<trackedit::TrackId> dstTrackIds;
+    for (const QVariant& v : trackIds) {
+        dstTrackIds.push_back(v.toInt());
+    }
+
+    dc.handleDroppedFiles(dstTrackIds, startTime);
 
     return true;
 }
