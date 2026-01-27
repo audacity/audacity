@@ -96,6 +96,8 @@ private:
 
     void openContextMenuForFocusedItem();
 
+    void au3SetTrackFocused(const TrackId& trackId);
+
     std::optional<TrackId> m_selectionStart;
     std::optional<TrackId> m_lastSelectedTrack;
 

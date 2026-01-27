@@ -6,6 +6,8 @@
 
 #include "framework/global/containers.h"
 
+#include "au3wrap/internal/domaccessor.h"
+
 #include "trackedit/trackedittypes.h"
 
 using namespace au::trackedit;
@@ -120,6 +122,8 @@ void TrackNavigationController::setFocusedTrack(const TrackId& trackId, bool hig
 
     m_focusedItemKey = newKey;
 
+    au3SetTrackFocused(m_focusedItemKey.trackId);
+
     m_focusedTrackChanged.send(m_focusedItemKey.trackId, highlight);
 }
 
@@ -128,7 +132,7 @@ TrackItemKey TrackNavigationController::focusedItem() const
     return m_focusedItemKey;
 }
 
-muse::async::Channel<TrackId, bool> TrackNavigationController::focusedTrackChanged() const
+muse::async::Channel<au::trackedit::TrackId, bool> TrackNavigationController::focusedTrackChanged() const
 {
     return m_focusedTrackChanged;
 }
@@ -144,6 +148,8 @@ void TrackNavigationController::setFocusedItem(const TrackItemKey& key, bool hig
     m_focusedItemKey = key;
 
     if (isTrackChanged) {
+        au3SetTrackFocused(m_focusedItemKey.trackId);
+
         m_focusedTrackChanged.send(key.trackId, highlight);
     }
 
@@ -772,4 +778,13 @@ void TrackNavigationController::openContextMenuForFocusedItem()
     }
 
     m_openContextMenuRequested.send(m_focusedItemKey);
+}
+
+void TrackNavigationController::au3SetTrackFocused(const TrackId& trackId)
+{
+    if (auto project = globalContext()->currentProject()) {
+        auto au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
+        au3::DomAccessor::clearAllTrackFocus(*au3Project);
+        au3::DomAccessor::setTrackFocused(*au3Project, trackId, true);
+    }
 }
