@@ -13,8 +13,19 @@ SpectrogramHit::SpectrogramHit(int trackId, int channel, double spectrogramY, do
 {
 }
 
+SpectrogramHit::SpectrogramHit(const SpectrogramHit& other)
+    : QObject(nullptr),
+    trackId(other.trackId),
+    channel(other.channel),
+    spectrogramY(other.spectrogramY),
+    spectrogramHeight(other.spectrogramHeight)
+{
+}
+
 SpectrogramHit* SpectrogramHitFactory::createSpectrogramHit(int trackId, int channel, double spectrogramY, double spectrogramHeight)
 {
-    return new SpectrogramHit{ trackId, channel, spectrogramY, spectrogramHeight };
+    auto hit = new SpectrogramHit{ trackId, channel, spectrogramY, spectrogramHeight };
+    QQmlEngine::setObjectOwnership(hit, QQmlEngine::CppOwnership);
+    return hit;
 }
 } // namespace au::spectrogram

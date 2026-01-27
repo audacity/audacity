@@ -1,5 +1,7 @@
 import QtQuick 2.15
 
+import "internal"
+
 Canvas {
     id: root
 

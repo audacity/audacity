@@ -90,9 +90,9 @@ void SelectionViewController::onPressed(double x, double y, const spectrogram::S
         selectionController()->setDataSelectedEndTime(m_context->positionToTime(x2, true /*withSnap*/), false);
     }
 
-    m_spectrogramHit = nullptr;
+    m_spectrogramHit.reset();
     if (spectralSelectionEnabled() && spectrogramHit) {
-        m_spectrogramHit = spectrogramHit;
+        m_spectrogramHit.emplace(*spectrogramHit);
     }
     emit pressedSpectrogramChanged();
     setFrequencySelection(y, y);
@@ -168,7 +168,7 @@ void SelectionViewController::onReleased(double x, double y)
         return;
     }
 
-    m_spectrogramHit = nullptr;
+    m_spectrogramHit.reset();
 
     IProjectViewStatePtr vs = viewState();
     if (!vs) {
@@ -253,7 +253,10 @@ void SelectionViewController::onSelectionHorizontalResize(double x1, double x2, 
 
 void SelectionViewController::startSelectionVerticalResize(const spectrogram::SpectrogramHit* hit)
 {
-    m_spectrogramHit = hit;
+    IF_ASSERT_FAILED(hit) {
+        return;
+    }
+    m_spectrogramHit.emplace(*hit);
     m_verticalSelectionEditInProgress = true;
     emit verticalSelectionEditInProgressChanged();
 }
@@ -277,7 +280,7 @@ void SelectionViewController::updateSelectionVerticalResize(double y1, double y2
     if (completed) {
         m_verticalSelectionEditInProgress = false;
         emit verticalSelectionEditInProgressChanged();
-        m_spectrogramHit = nullptr;
+        m_spectrogramHit.reset();
     }
 }
 
