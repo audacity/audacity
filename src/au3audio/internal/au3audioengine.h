@@ -21,7 +21,8 @@ public:
     bool isBusy() const override;
 
     int startStream(const TransportSequences& sequences, double startTime, double endTime, double mixerEndTime, AudacityProject& project,
-                    bool isDefaultPlayTrackPolicy, double audioStreamSampleRate) override;
+                    bool isDefaultPlayTrackPolicy, double audioStreamSampleRate,
+                    std::optional<double> startTimeOverride = std::nullopt) override;
 
     void stopStream() override;
     void pauseStream(bool pause) override;

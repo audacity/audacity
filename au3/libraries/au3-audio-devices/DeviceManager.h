@@ -68,6 +68,8 @@ public:
 
     int GetInputDevicePaIndex(const std::string& hostName, const std::string& deviceId);
     int GetOutputDevicePaIndex(const std::string& hostName, const std::string& deviceId);
+    int GetSystemDefaultOutputDeviceIndex(const std::string& hostName);
+    int GetSystemDefaultInputDeviceIndex(const std::string& hostName);
 
 #if defined(EXPERIMENTAL_DEVICE_CHANGE_HANDLER)
 #if defined(HAVE_DEVICE_CHANGE)

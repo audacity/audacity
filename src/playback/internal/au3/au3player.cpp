@@ -195,7 +195,8 @@ muse::Ret Au3Player::playTracks(TrackList& trackList, double startTime, double e
     return ret;
 }
 
-muse::Ret Au3Player::doPlayTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options)
+muse::Ret Au3Player::doPlayTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options,
+                                  std::optional<double> startTimeOverride)
 {
     TransportSequences seqs = makeTransportTracks(trackList, options.selectedOnly);
 
@@ -208,7 +209,8 @@ muse::Ret Au3Player::doPlayTracks(TrackList& trackList, double startTime, double
 
     AudacityProject& project = projectRef();
     const double projectRate = ProjectRate::Get(project).GetRate();
-    int token = audioEngine()->startStream(seqs, startTime, endTime, mixerEndTime, project, options.isDefaultPolicy, projectRate);
+    int token = audioEngine()->startStream(seqs, startTime, endTime, mixerEndTime, project, options.isDefaultPolicy,
+                                           projectRate, startTimeOverride);
     bool success = token != 0;
     if (success) {
         ProjectAudioIO::Get(project).SetAudioIOToken(token);
@@ -292,6 +294,95 @@ void Au3Player::resume()
     audioEngine()->pauseStream(false);
 
     m_playbackStatus.set(PlaybackStatus::Running);
+}
+
+void Au3Player::restartPausedPlayback(const muse::secs_t resumePosition)
+{
+    if (m_playbackStatus.val != PlaybackStatus::Paused) {
+        return;
+    }
+
+    if (audioEngine()->isBusy()) {
+        audioEngine()->pauseStream(true);
+        return;
+    }
+
+    Au3Project& project = projectRef();
+
+    const bool newDefault = true;
+    auto options = ProjectAudioIO::GetDefaultOptions(project, newDefault);
+    bool backwards = false;
+
+    auto& tracks = Au3TrackList::Get(project);
+    auto& playRegion = ViewInfo::Get(project).playRegion;
+
+    SelectedRegion selectedRegion(playRegion.GetStart(), playRegion.GetEnd());
+
+    if (!canStopAudioStream()) {
+        return;
+    }
+
+    if (audioEngine()->isBusy()) {
+        return;
+    }
+
+    bool hasaudio;
+    if (options.playNonWaveTracks) {
+        hasaudio = !tracks.Any<PlayableTrack>().empty();
+    } else {
+        hasaudio = !tracks.Any<Au3WaveTrack>().empty();
+    }
+
+    if (!hasaudio) {
+        return;
+    }
+
+    double latestEnd = tracks.GetEndTime();
+    if (playRegion.Active()) {
+        latestEnd = std::max(tracks.GetEndTime(), playRegion.GetEnd());
+    }
+
+    double t0 = resumePosition.raw();
+    double t1 = selectedRegion.t1();
+    const double selStart = selectedRegion.t0();
+    const double selEnd = selectedRegion.t1();
+
+    if (muse::is_equal(selEnd, selStart)) {
+        t0 = std::clamp(t0, tracks.GetStartTime(), tracks.GetEndTime());
+        t1 = tracks.GetEndTime();
+    } else {
+        if (backwards) {
+            std::swap(t0, t1);
+        }
+
+        t0 = std::max(0.0, std::min(t0, latestEnd));
+        t1 = std::max(t0, std::min(t1, latestEnd));
+
+        if (backwards) {
+            std::swap(t0, t1);
+        }
+    }
+
+    PlayTracksOptions opts;
+    m_startOffset = 0.0;
+    if (!muse::is_equal(t1, t0)) {
+        double mixerEndTime = t1;
+        if (newDefault) {
+            mixerEndTime = latestEnd;
+            if (options.pStartTime && *options.pStartTime >= t1) {
+                t1 = latestEnd;
+            }
+        }
+        opts.mixerEndTime = mixerEndTime;
+        muse::Ret ret = doPlayTracks(TrackList::Get(project), t0, t1, opts, t0);
+        if (!ret) {
+            return;
+        }
+    }
+
+    audioEngine()->pauseStream(true);
+    m_playbackPosition.set(t0);
+    m_playbackStatus.set(PlaybackStatus::Paused);
 }
 
 bool Au3Player::isRunning() const

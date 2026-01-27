@@ -22,11 +22,19 @@
 
 #include "commonaudioapiconfigurationmodel.h"
 
+#include <algorithm>
+
+#include "actions/actiontypes.h"
 #include "containers.h"
 #include "log.h"
 #include "types/translatablestring.h"
 
 using namespace au::appshell;
+using namespace muse::actions;
+
+static const ActionQuery PLAYBACK_CHANGE_AUDIO_API_QUERY("action://playback/change-api");
+static const ActionQuery PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY("action://playback/change-playback-device");
+static const ActionQuery PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY("action://playback/change-recording-device");
 
 namespace {
 QString toSampleRateName(uint64_t sampleRate)
@@ -51,6 +59,7 @@ CommonAudioApiConfigurationModel::CommonAudioApiConfigurationModel(QObject* pare
 
 void CommonAudioApiConfigurationModel::load()
 {
+    LOGI() << "CommonAudioApiConfigurationModel load";
     audioDevicesProvider()->apiChanged().onNotify(this, [this]() {
         emit currentAudioApiIndexChanged();
         emit outputDeviceListChanged();
@@ -96,7 +105,9 @@ void CommonAudioApiConfigurationModel::setCurrentAudioApiIndex(int index)
         return;
     }
 
-    audioDevicesProvider()->setApi(apiList[index]);
+    ActionQuery q = PLAYBACK_CHANGE_AUDIO_API_QUERY;
+    q.addParam("api_index", muse::Val(index));
+    dispatcher()->dispatch(q);
 }
 
 QStringList CommonAudioApiConfigurationModel::audioApiList() const
@@ -117,8 +128,13 @@ QString CommonAudioApiConfigurationModel::currentOutputDeviceId() const
 QVariantList CommonAudioApiConfigurationModel::outputDeviceList() const
 {
     QVariantList result;
+    LOGI() << "Preferences output device list requested (current="
+           << currentOutputDeviceId().toStdString() << ")";
     for (const auto& device : audioDevicesProvider()->outputDevices()) {
         result << QString::fromStdString(device);
+    }
+    for (int i = 0; i < result.size(); ++i) {
+        LOGI() << "  output[" << i << "]: " << result.at(i).toString().toStdString();
     }
 
     return result;
@@ -126,10 +142,23 @@ QVariantList CommonAudioApiConfigurationModel::outputDeviceList() const
 
 void CommonAudioApiConfigurationModel::outputDeviceSelected(const QString& device)
 {
+    LOGI() << "Preferences output device selected: " << device.toStdString();
     if (device == currentOutputDeviceId()) {
         return;
     }
-    audioDevicesProvider()->setOutputDevice(device.toStdString());
+
+    const std::string deviceId = device.toStdString();
+    const auto& devices = audioDevicesProvider()->outputDevices();
+    auto it = std::find(devices.begin(), devices.end(), deviceId);
+    if (it == devices.end()) {
+        LOGW() << "Preferences output device not found: " << deviceId;
+        return;
+    }
+
+    const int index = static_cast<int>(std::distance(devices.begin(), it));
+    ActionQuery q = PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY;
+    q.addParam("device_index", muse::Val(index));
+    dispatcher()->dispatch(q);
 }
 
 QString CommonAudioApiConfigurationModel::currentInputDeviceId() const
@@ -140,8 +169,13 @@ QString CommonAudioApiConfigurationModel::currentInputDeviceId() const
 QVariantList CommonAudioApiConfigurationModel::inputDeviceList() const
 {
     QVariantList result;
+    LOGI() << "Preferences input device list requested (current="
+           << currentInputDeviceId().toStdString() << ")";
     for (const auto& device : audioDevicesProvider()->inputDevices()) {
         result << QString::fromStdString(device);
+    }
+    for (int i = 0; i < result.size(); ++i) {
+        LOGI() << "  input[" << i << "]: " << result.at(i).toString().toStdString();
     }
 
     return result;
@@ -149,10 +183,23 @@ QVariantList CommonAudioApiConfigurationModel::inputDeviceList() const
 
 void CommonAudioApiConfigurationModel::inputDeviceSelected(const QString& device)
 {
+    LOGI() << "Preferences input device selected: " << device.toStdString();
     if (device == currentInputDeviceId()) {
         return;
     }
-    audioDevicesProvider()->setInputDevice(device.toStdString());
+
+    const std::string deviceId = device.toStdString();
+    const auto& devices = audioDevicesProvider()->inputDevices();
+    auto it = std::find(devices.begin(), devices.end(), deviceId);
+    if (it == devices.end()) {
+        LOGW() << "Preferences input device not found: " << deviceId;
+        return;
+    }
+
+    const int index = static_cast<int>(std::distance(devices.begin(), it));
+    ActionQuery q = PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY;
+    q.addParam("device_index", muse::Val(index));
+    dispatcher()->dispatch(q);
 }
 
 double CommonAudioApiConfigurationModel::bufferLength() const
