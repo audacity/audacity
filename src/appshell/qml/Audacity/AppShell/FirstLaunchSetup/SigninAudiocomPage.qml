@@ -12,7 +12,9 @@ Page {
     id: root
 
     title: qsTrc("appshell/gettingstarted", "Connect to your audio.com account")
-    titleTopMargin: 24
+    titleTopMargin: 16
+
+    signal nextPage()
 
     QtObject {
         id: prv
@@ -33,10 +35,27 @@ Page {
         readonly property string emailText: qsTrc("appshell/gettingstarted", "Email")
         readonly property string passwordText: qsTrc("appshell/gettingstarted", "Password")
         readonly property string noAccountText: qsTrc("appshell/gettingstarted", "Don't have an account? Create a new account.")
-        readonly property string signInText: qsTrc("appshell/gettingstarted", "Sign In")
+
+        readonly property string formButtonText: model.authInProgress ? qsTrc("appshell/gettingstarted", "Loading...") : qsTrc("appshell/gettingstarted", "Sign In")
+        readonly property string authFailedText: qsTrc("appshell/gettingstarted", "Incorrect email or password. Please try again.")
         readonly property int signinButtonHeight: 28
+        readonly property int signInButtonExtraSpace: model.authFailed ? 0 : 8
 
         readonly property string forgotPasswordUrl: "https://audio.com/auth/forgot-password"
+    }
+
+    Component.onCompleted: {
+        model.init()
+    }
+
+    SigninAudiocomPageModel{
+        id: model
+
+        onAuthSucceededChanged: {
+            if (authSucceeded) {
+                root.nextPage()
+            }
+        }
     }
 
     ColumnLayout {
@@ -136,96 +155,126 @@ Page {
             }
         }
 
-        ColumnLayout {
+        Column {
+            spacing: prv.textInputTitleSpacing
             Layout.fillWidth: true
-            spacing: prv.columnSpacing
 
             NavigationPanel {
-                id: formFieldsPanel
-                name: "FormFieldsPanel"
+                id: emailFieldPanel
+                name: "EmailFieldsPanel"
                 enabled: root.enabled && root.visible
                 section: root.navigationSection
                 direction: NavigationPanel.Vertical
                 order: root.navigationStartRow + 2
-                accessible.name: qsTrc("appshell/gettingstarted", "Email and password field")
+                accessible.name: qsTrc("appshell/gettingstarted", "Email field")
             }
 
-            Column {
-                spacing: prv.textInputTitleSpacing
-                Layout.fillWidth: true
-
-                StyledTextLabel {
-                    text: prv.emailText
-                }
-
-                TextInputField {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    height: prv.textInputHeight
-
-                    navigation.name: "EmailInput"
-                    navigation.panel: formFieldsPanel
-                    navigation.row: 0
-                    navigation.column: 0
-                }
+            StyledTextLabel {
+                text: prv.emailText
             }
 
-            Column {
-                spacing: prv.textInputTitleSpacing
-                Layout.fillWidth: true
+            TextInputField {
+                id: emailInputField
 
-                RowLayout {
-                    width: parent.width
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: prv.textInputHeight
 
-                    StyledTextLabel {
-                        text: prv.passwordText
-                    }
-
-                    Item {
-                        Layout.fillWidth: true
-                    }
-
-                    StyledTextLabel {
-                        text: qsTrc("appshell/gettingstarted", "<a href=\"%1\">Forgot your password?</a>")
-                            .arg(prv.forgotPasswordUrl)
-                    }
-                }
-
-                TextInputField {
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    height: prv.textInputHeight
-
-                    inputField.echoMode: TextInput.Password
-
-                    navigation.name: "PasswordInput"
-                    navigation.panel: formFieldsPanel
-                    navigation.row: 1
-                    navigation.column: 0
-                }
+                navigation.name: "EmailInput"
+                navigation.panel: emailFieldPanel
+                navigation.row: 0
+                navigation.column: 0
             }
         }
 
-        FlatButton {
-            Layout.topMargin: 8
+        Column {
+            spacing: prv.textInputTitleSpacing
             Layout.fillWidth: true
-            Layout.preferredHeight: prv.signinButtonHeight
 
-            NavigationPanel {
-                id: actionsPanel
-                name: "ActionsPanel"
+             NavigationPanel {
+                id: passwordFieldPanel
+                name: "PasswordFieldsPanel"
                 enabled: root.enabled && root.visible
                 section: root.navigationSection
+                direction: NavigationPanel.Vertical
                 order: root.navigationStartRow + 3
-                accessible.name: qsTrc("appshell/gettingstarted", "Sign-in action")
+                accessible.name: qsTrc("appshell/gettingstarted", "Password field")
             }
 
-            accentButton: true
+            RowLayout {
+                width: parent.width
 
-            text: prv.signInText
+                StyledTextLabel {
+                    text: prv.passwordText
+                }
 
-            navigation.name: "SignInButton"
-            navigation.panel: actionsPanel
+                Item {
+                    Layout.fillWidth: true
+                }
+
+                StyledTextLabel {
+                    text: qsTrc("appshell/gettingstarted", "<a href=\"%1\">Forgot your password?</a>")
+                        .arg(prv.forgotPasswordUrl)
+                }
+            }
+
+            TextInputField {
+                id: passwordInputField
+
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: prv.textInputHeight
+
+                inputField.echoMode: TextInput.Password
+
+                navigation.name: "PasswordInput"
+                navigation.panel: passwordFieldPanel
+                navigation.row: 0
+                navigation.column: 0
+            }
+        }
+
+        Column {
+            spacing: 8
+            Layout.fillWidth: true
+            Layout.topMargin: prv.signInButtonExtraSpace
+
+            StyledTextLabel {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                anchors.horizontalCenter: parent.horizontalCenter
+
+                visible: model.authFailed
+                color: ui.theme.extra["record_color"]
+
+                text: prv.authFailedText
+            }
+
+            FlatButton {
+                anchors.left: parent.left
+                anchors.right: parent.right
+                height: prv.signinButtonHeight
+
+                NavigationPanel {
+                    id: actionsPanel
+                    name: "ActionsPanel"
+                    enabled: root.enabled && root.visible
+                    section: root.navigationSection
+                    order: root.navigationStartRow + 4
+                    accessible.name: qsTrc("appshell/gettingstarted", "Sign-in action")
+                }
+
+                accentButton: true
+
+                text: prv.formButtonText
+
+                navigation.name: "SignInButton"
+                navigation.panel: actionsPanel
+
+                onClicked: {
+                    model.signIn(emailInputField.inputField.text, passwordInputField.inputField.text)
+                }
+            }
         }
 
         StyledTextLabel {
