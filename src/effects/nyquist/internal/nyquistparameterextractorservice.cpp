@@ -1,0 +1,256 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
+#include "nyquistparameterextractorservice.h"
+
+#include "au3wrap/internal/wxtypes_convert.h"
+
+// AU3 Nyquist effect base class
+#include "au3-nyquist-effects/NyquistBase.h"
+#include "au3-effects/StatefulEffectBase.h"
+
+using namespace au::effects;
+using namespace muse;
+
+namespace {
+//! Convert NyqControlType to AU4 ParameterType
+//!
+//! Known Limitations:
+//! - NYQ_CTRL_FILE: Currently mapped to Numeric as placeholder. Needs dedicated file picker
+//!   UI component with browse button and file type filter support.
+//! - NYQ_CTRL_TEXT: Currently mapped to Numeric as placeholder. Needs dedicated multiline
+//!   text input component for proper text editing.
+//! - NYQ_CTRL_TIME: Currently uses Slider. Could benefit from time-specific formatting
+//!   (samples/seconds/hh:mm:ss) in the UI layer.
+ParameterType convertControlType(int nyqType)
+{
+    switch (nyqType) {
+    case NYQ_CTRL_INT:
+    case NYQ_CTRL_INT_TEXT:
+        return ParameterType::Numeric;
+    case NYQ_CTRL_FLOAT:
+    case NYQ_CTRL_FLOAT_TEXT:
+        return ParameterType::Slider;
+    case NYQ_CTRL_CHOICE:
+        return ParameterType::Dropdown;
+    case NYQ_CTRL_STRING:
+        return ParameterType::Numeric; // String input field
+    case NYQ_CTRL_TIME:
+        // TODO: Could benefit from time-specific formatting in UI
+        return ParameterType::Slider;
+    case NYQ_CTRL_TEXT:
+        // TODO: Needs dedicated multiline text input component
+        return ParameterType::Numeric;
+    case NYQ_CTRL_FILE:
+        // TODO: Needs dedicated file picker UI component with browse button
+        return ParameterType::Numeric;
+    default:
+        return ParameterType::Unknown;
+    }
+}
+
+//! Convert NyqControl to AU4 ParameterInfo
+ParameterInfo convertControl(const NyqControl& ctrl)
+{
+    ParameterInfo info;
+
+    // Use variable name as ID
+    info.id = String::fromStdString(au::au3::wxToStdString(ctrl.var));
+    info.name = String::fromStdString(au::au3::wxToStdString(ctrl.name));
+    info.units = String::fromStdString(au::au3::wxToStdString(ctrl.label));
+
+    info.type = convertControlType(ctrl.type);
+
+    // Value range
+    info.minValue = ctrl.low;
+    info.maxValue = ctrl.high;
+    info.defaultValue = ctrl.val;
+    info.currentValue = ctrl.val;
+
+    // For integer controls
+    if (ctrl.type == NYQ_CTRL_INT || ctrl.type == NYQ_CTRL_INT_TEXT) {
+        info.isInteger = true;
+        info.stepSize = 1.0;
+    } else if (ctrl.ticks > 0) {
+        // Calculate step size from ticks
+        const double range = ctrl.high - ctrl.low;
+        info.stepSize = range / ctrl.ticks;
+        info.stepCount = ctrl.ticks;
+    }
+
+    // For choice controls, extract enum values
+    if (ctrl.type == NYQ_CTRL_CHOICE) {
+        info.enumValues.reserve(ctrl.choices.size());
+        info.enumIndices.reserve(ctrl.choices.size());
+
+        for (size_t i = 0; i < ctrl.choices.size(); ++i) {
+            const auto& choice = ctrl.choices[i];
+            info.enumValues.push_back(String::fromStdString(choice.Msgid().Translation().ToStdString()));
+            info.enumIndices.push_back(static_cast<double>(i));
+        }
+    }
+
+    return info;
+}
+
+//! Get NyquistBase effect from EffectInstance
+NyquistBase* getNyquistBase(::EffectInstance* instance)
+{
+    if (!instance) {
+        return nullptr;
+    }
+
+    // The instance is a StatefulEffectBase::Instance, not the NyquistBase itself
+    // We need to get the effect from the instance
+    auto* statefulInstance = dynamic_cast<StatefulEffectBase::Instance*>(instance);
+    if (!statefulInstance) {
+        return nullptr;
+    }
+
+    // Get the effect and cast to NyquistBase
+    return dynamic_cast<NyquistBase*>(&statefulInstance->GetEffect());
+}
+
+//! Find control by variable name (const version)
+const NyqControl* findControl(const std::vector<NyqControl>& controls, const String& varName)
+{
+    const std::string varNameStd = varName.toStdString();
+    for (const auto& ctrl : controls) {
+        if (au::au3::wxToStdString(ctrl.var) == varNameStd) {
+            return &ctrl;
+        }
+    }
+    return nullptr;
+}
+
+//! Find control by variable name (non-const version)
+//! Implemented by calling the const version and casting away constness
+NyqControl* findControl(std::vector<NyqControl>& controls, const String& varName)
+{
+    // Call the const version and cast away constness
+    // This is safe because we know the original vector is non-const
+    return const_cast<NyqControl*>(findControl(const_cast<const std::vector<NyqControl>&>(controls), varName));
+}
+} // anonymous namespace
+
+ParameterInfoList NyquistParameterExtractorService::extractParameters(EffectInstance* instance,
+                                                                      EffectSettingsAccessPtr settingsAccess) const
+{
+    NyquistBase* nyquist = getNyquistBase(instance);
+    if (!nyquist) {
+        return {};
+    }
+
+    ParameterInfoList result;
+    result.reserve(nyquist->mControls.size());
+
+    for (const auto& ctrl : nyquist->mControls) {
+        result.push_back(convertControl(ctrl));
+    }
+
+    return result;
+}
+
+ParameterInfo NyquistParameterExtractorService::getParameter(EffectInstance* instance, const String& parameterId) const
+{
+    NyquistBase* nyquist = getNyquistBase(instance);
+    if (!nyquist) {
+        return {};
+    }
+
+    const NyqControl* ctrl = findControl(nyquist->mControls, parameterId);
+    if (!ctrl) {
+        return {};
+    }
+
+    return convertControl(*ctrl);
+}
+
+double NyquistParameterExtractorService::getParameterValue(EffectInstance* instance, const String& parameterId) const
+{
+    NyquistBase* nyquist = getNyquistBase(instance);
+    if (!nyquist) {
+        return 0.0;
+    }
+
+    const NyqControl* ctrl = findControl(nyquist->mControls, parameterId);
+    if (!ctrl) {
+        return 0.0;
+    }
+
+    return ctrl->val;
+}
+
+bool NyquistParameterExtractorService::setParameterValue(EffectInstance* instance, const String& parameterId,
+                                                         double fullRangeValue, EffectSettingsAccessPtr settingsAccess)
+{
+    NyquistBase* nyquist = getNyquistBase(instance);
+    if (!nyquist) {
+        return false;
+    }
+
+    NyqControl* ctrl = findControl(nyquist->mControls, parameterId);
+    if (!ctrl) {
+        return false;
+    }
+
+    // Clamp value to valid range
+    ctrl->val = std::max(ctrl->low, std::min(ctrl->high, fullRangeValue));
+
+    // Update string representation
+    ctrl->valStr = wxString::Format(wxT("%g"), ctrl->val);
+
+    return true;
+}
+
+muse::String NyquistParameterExtractorService::getParameterValueString(EffectInstance* instance,
+                                                                       const String& parameterId, double value) const
+{
+    NyquistBase* nyquist = getNyquistBase(instance);
+    if (!nyquist) {
+        return String();
+    }
+
+    const NyqControl* ctrl = findControl(nyquist->mControls, parameterId);
+    if (!ctrl) {
+        return String();
+    }
+
+    // Format based on control type
+    switch (ctrl->type) {
+    case NYQ_CTRL_INT:
+    case NYQ_CTRL_INT_TEXT:
+        return String::number(static_cast<int>(value));
+
+    case NYQ_CTRL_CHOICE:
+    {
+        // Return the choice label for the given index
+        int index = static_cast<int>(value);
+        if (index >= 0 && index < static_cast<int>(ctrl->choices.size())) {
+            return String::fromStdString(ctrl->choices[index].Msgid().Translation().ToStdString());
+        }
+        return String::number(index);
+    }
+
+    case NYQ_CTRL_TIME:
+        // TODO: Format as time (HH:MM:SS or similar)
+        // For now, just return the numeric value
+        return String::number(value, 3);
+
+    case NYQ_CTRL_FILE:
+        // Return the file path from valStr
+        return String::fromStdString(au3::wxToStdString(ctrl->valStr));
+
+    case NYQ_CTRL_STRING:
+    case NYQ_CTRL_TEXT:
+        // Return the string value from valStr
+        return String::fromStdString(au3::wxToStdString(ctrl->valStr));
+
+    default:
+        // For numeric types, format with appropriate precision
+        if (ctrl->type == NYQ_CTRL_FLOAT || ctrl->type == NYQ_CTRL_FLOAT_TEXT) {
+            return String::number(value, 6);
+        }
+        return String::number(value);
+    }
+}
