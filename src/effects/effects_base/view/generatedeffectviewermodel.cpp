@@ -95,6 +95,12 @@ void GeneratedEffectViewerModel::doInit()
         }
     }
 
+    // Subscribe to settings changes (e.g., when a preset is loaded)
+    // This ensures the UI updates when settings change externally
+    instancesRegister()->settingsChanged(instanceId()).onNotify(this, [this]() {
+        m_parametersModel->reloadParameters();
+    });
+
     // Initialize the parameters model
     m_parametersModel->load();
 }

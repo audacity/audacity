@@ -68,11 +68,14 @@ public:
 
     bool hasParameters() const;
 
+    //! Reload all parameters from the effect instance
+    //! This is called when settings change externally (e.g., preset loaded)
+    void reloadParameters();
+
 signals:
     void hasParametersChanged();
 
 private:
-    void reloadParameters();
     int findParameterIndex(const muse::String& parameterId) const;
 
     const EffectInstanceId m_instanceId;
