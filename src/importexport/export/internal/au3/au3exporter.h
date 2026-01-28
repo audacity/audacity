@@ -48,6 +48,8 @@ public:
 
     OptionsEditorUPtr optionsEditor() const;
 
+    std::vector<bool> prepareChannelMask() const;
+
 private:
     double m_t0 {};
     double m_t1 {};
