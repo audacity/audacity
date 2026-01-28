@@ -23,6 +23,7 @@ Item {
     property int lowerTimeSignature: 0
 
     signal valueChanged(string parameterId, double value)
+    signal stringValueChanged(string parameterId, string stringValue)
     signal gestureStarted(string parameterId)
     signal gestureEnded(string parameterId)
 
@@ -81,6 +82,8 @@ Item {
                     return readonlyControl
                 case "time":
                     return timeControl
+                case "file":
+                    return fileControl
                 default:
                     return unknownControl
                 }
@@ -298,6 +301,26 @@ Item {
                 Layout.alignment: Qt.AlignVCenter
                 Layout.fillWidth: true // Fill remaining width so it adjusts when timecode width changes
                 horizontalAlignment: Text.AlignLeft
+            }
+        }
+    }
+
+    // File control (file picker)
+    Component {
+        id: fileControl
+
+        FilePicker {
+            path: parameterData ? parameterData.currentValueString : ""
+            pickerType: FilePicker.PickerType.File
+            enabled: parameterData ? !parameterData.isReadOnly : false
+
+            // TODO: Add support for file filters from parameterData.units
+
+            onPathEdited: function (newPath) {
+                // File selection is a single atomic operation - begin and end gesture immediately
+                root.gestureStarted(root.parameterId)
+                root.stringValueChanged(root.parameterId, newPath)
+                root.gestureEnded(root.parameterId)
             }
         }
     }
