@@ -515,7 +515,7 @@ Rectangle {
                 timeline.updateCursorPosition(e.x, e.y)
                 splitToolController.mouseMove(e.x)
 
-                if (root.itemHeaderHovered && mainMouseArea.pressed && !itemWasMoved) {
+                if (root.interactionState === TracksItemsView.State.DraggingItem && !itemWasMoved) {
                     var dx = Math.abs(e.x - pressStartPosition.x)
                     var dy = Math.abs(e.y - pressStartPosition.y)
                     if (dx > moveThreshold || dy > moveThreshold) {
@@ -523,7 +523,7 @@ Rectangle {
                     }
                 }
 
-                if (root.interactionState === TracksItemsView.State.DraggingItem) {
+                if (root.interactionState === TracksItemsView.State.DraggingItem && itemWasMoved) {
                     tracksItemsView.itemMoveRequested(hoveredItemKey, false)
                     tracksItemsView.startAutoScroll()
                 } else {
@@ -546,8 +546,10 @@ Rectangle {
 
                 if (root.interactionState === TracksItemsView.State.DraggingItem) {
                     root.interactionState = TracksItemsView.State.Idle
-                    tracksItemsView.itemMoveRequested(hoveredItemKey, true)
-                    tracksItemsView.stopAutoScroll()
+                    if (itemWasMoved) {
+                        tracksItemsView.itemMoveRequested(hoveredItemKey, true)
+                        tracksItemsView.stopAutoScroll()
+                    }
                     tracksItemsView.itemEndEditRequested(hoveredItemKey)
                 } else {
                     splitToolController.mouseUp(e.x)
