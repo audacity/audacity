@@ -12,7 +12,7 @@ DropController::DropController(QObject* parent)
     : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
 {}
 
-void DropController::probeAudioFilesLength(const QStringList& fileUrls)
+void DropController::probeAudioFiles(const QStringList& fileUrls)
 {
     m_lastDraggedUrls.clear();
     m_lastDraggedFilesInfo.clear();
@@ -23,7 +23,8 @@ void DropController::probeAudioFilesLength(const QStringList& fileUrls)
     const auto exts = importer()->supportedExtensions();
     for (const auto& fileUrl : fileUrls) {
         const QUrl url(fileUrl);
-        muse::io::path_t path = muse::io::path_t(url.toLocalFile());
+        QString local = url.isLocalFile() ? url.toLocalFile() : fileUrl;
+        muse::io::path_t path = muse::io::path_t(local);
         if (muse::contains(exts, muse::io::suffix(path))) {
             localPaths.push_back(path);
             m_lastDraggedUrls.push_back(fileUrl);

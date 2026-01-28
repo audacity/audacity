@@ -21,7 +21,7 @@ class DropController : public QObject, public muse::Injectable
 public:
     explicit DropController(QObject* parent = nullptr);
 
-    Q_INVOKABLE void probeAudioFilesLength(const QStringList& fileUrls);
+    Q_INVOKABLE void probeAudioFiles(const QStringList& fileUrls);
     Q_INVOKABLE QVariantList lastProbedDurations() const;
     Q_INVOKABLE QVariantList lastProbedFileNames() const;
     Q_INVOKABLE void startImportDrag();

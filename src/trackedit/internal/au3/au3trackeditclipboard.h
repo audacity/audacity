@@ -29,6 +29,9 @@ public:
     void setMultiSelectionCopy(bool newValue) override;
     bool isMultiSelectionCopy() const override;
 
+    std::vector<muse::io::path_t> systemClipboardFilePaths() const override;
+    void clearSystemClipboard() override;
+
 private:
     friend class Au3TrackEditClipboardTests;
 
