@@ -39,6 +39,11 @@ void SigninAudiocomPageModel::signIn(const QString& email, const QString& passwo
     authorization()->signInWithPassword(email.toStdString(), password.toStdString());
 }
 
+void SigninAudiocomPageModel::signInWithSocial(const QString& provider)
+{
+    authorization()->signInWithSocial(provider.toStdString());
+}
+
 void SigninAudiocomPageModel::signOut()
 {
     authorization()->signOut();

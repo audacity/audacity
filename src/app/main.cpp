@@ -46,9 +46,7 @@
 #include "framework/learn/learnmodule.h"
 #include "framework/languages/languagesmodule.h"
 #include "framework/workspace/workspacemodule.h"
-
-// need stubs
-#include "framework/stubs/multiinstances/multiinstancesstubmodule.h"
+#include "framework/multiinstances/multiinstancesmodule.h"
 
 // -----
 #include "appshell/appshellmodule.h"

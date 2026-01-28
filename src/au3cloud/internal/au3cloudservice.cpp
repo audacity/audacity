@@ -6,6 +6,8 @@
 
 #include <string>
 
+#include "framework/global/settings.h"
+
 #include "au3-cloud-audiocom/OAuthService.h"
 #include "au3-cloud-audiocom/UserService.h"
 #include "au3-import-export/ExportUtils.h"
@@ -13,6 +15,10 @@
 #include "au3cloudservice.h"
 
 using namespace au::au3cloud;
+
+namespace {
+const muse::Settings::Key CLOUD_AUTH_LINK_KEY("cloud", "cloud/authLinkUrl");
+}
 
 void Au3CloudService::init()
 {
@@ -23,6 +29,18 @@ void Au3CloudService::init()
     {
         m_authState.set(
             message.authorised ? AuthState::Authorized : AuthState::NotAuthorized);
+    });
+
+    multiInstancesProvider()->resourceChanged().onReceive(this, [this](const std::string& message){
+        if (message != CLOUD_AUTH_LINK_KEY.key) {
+            return;
+        }
+
+        const std::string linkUrl = muse::settings()->value(CLOUD_AUTH_LINK_KEY).toString();
+        if (!linkUrl.empty()) {
+            audacity::cloud::audiocom::GetOAuthService().HandleLinkURI(
+                linkUrl, AudiocomTrace::ignore, {});
+        }
     });
 }
 
@@ -45,6 +63,11 @@ void Au3CloudService::signInWithPassword(const std::string& email, const std::st
     {
         m_authState.set(AuthState::NotAuthorized);
     }, AudiocomTrace::ignore);
+}
+
+void Au3CloudService::signInWithSocial(const std::string& provider)
+{
+    interactive()->openUrl(audacity::cloud::audiocom::OAuthService::MakeOAuthRequestURL(provider));
 }
 
 void Au3CloudService::signOut()

@@ -153,6 +153,8 @@ void CommandLineParser::init()
     // Internal
     m_parser.addOption(internalCommandLineOption("score-display-name-override",
                                                  "Display name to be shown in splash screen for the score that is being opened", "name"));
+
+    m_parser.addOption(QCommandLineOption("url", "Handle URL scheme", "url"));
 }
 
 void CommandLineParser::parse(int argc, char** argv)
@@ -469,6 +471,11 @@ void CommandLineParser::parse(int argc, char** argv)
         m_autobot.testCaseFuncArgs = m_parser.value("test-case-func-args");
     }
 
+    if (m_parser.isSet("url")) {
+        m_runMode = IApplication::RunMode::ConsoleApp;
+        m_sendAuthLinkTask = SendAuthLinkTask { true, m_parser.value("url") };
+    }
+
     // Startup
     if (m_runMode == IApplication::RunMode::GuiApp) {
         if (!scorefiles.isEmpty()) {
@@ -528,4 +535,9 @@ void CommandLineParser::printLongVersion() const
     //     printf("MuseScore: Music Score Editor; Version %s; Build %s\n",
     //            MUVersion::version().toStdString().c_str(), MUVersion::revision().toStdString().c_str());
     // }
+}
+
+CommandLineParser::SendAuthLinkTask CommandLineParser::sendAuthLinkTask() const
+{
+    return m_sendAuthLinkTask;
 }

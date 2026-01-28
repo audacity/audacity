@@ -20,11 +20,14 @@ Page {
         id: prv
 
         readonly property int columnSpacing: 16
-        
+
         readonly property int socialButtonSpacing: 8
         readonly property int socialButtonHeight: 32
         readonly property int socialIconSize: 8
         readonly property int socialIconTextSpacing: 8
+
+        readonly property string googleAuthProvider: "google"
+        readonly property string facebookAuthProvider: "facebook"
         readonly property string googleTextLabel: qsTrc("appshell/gettingstarted", "Continue with Google")
         readonly property string facebookTextLabel: qsTrc("appshell/gettingstarted", "Continue with Facebook")
         readonly property string orUseEmailText: qsTrc("appshell/gettingstarted", "Or use email and password")
@@ -102,6 +105,10 @@ Page {
                         text: prv.googleTextLabel
                     }
                 }
+
+                onClicked: {
+                    model.signInWithSocial(prv.googleAuthProvider)
+                }
             }
 
             FlatButton {
@@ -126,6 +133,10 @@ Page {
                     StyledTextLabel {
                         text: prv.facebookTextLabel
                     }
+                }
+
+                onClicked: {
+                    model.signInWithSocial(prv.facebookAuthProvider)
                 }
             }
         }
