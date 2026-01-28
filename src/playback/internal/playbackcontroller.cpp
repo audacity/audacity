@@ -111,7 +111,12 @@ void PlaybackController::init()
             if (selectionRegion.isValid()) {
                 doChangePlaybackRegion(selectionRegion);
             }
-            doSeek(m_lastPlaybackSeekTime, false);
+            auto labelStartTime = selectionController()->selectedLabelStartTime();
+            auto labelEndTime = selectionController()->selectedLabelEndTime();
+            if (labelStartTime.has_value()) {
+                doSeek(labelStartTime.value(), false);
+                m_lastPlaybackRegion = { labelStartTime.value_or(0.0), labelEndTime.value_or(0.0) };
+            }
         }
     });
 }
