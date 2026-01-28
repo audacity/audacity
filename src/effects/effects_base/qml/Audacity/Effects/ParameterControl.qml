@@ -19,7 +19,7 @@ Item {
     signal gestureStarted(string parameterId)
     signal gestureEnded(string parameterId)
 
-    implicitHeight: controlLoader.height
+    implicitHeight: rowLayout.implicitHeight
 
     QtObject {
         id: prv
@@ -35,12 +35,14 @@ Item {
     }
 
     RowLayout {
+        id: rowLayout
         anchors.fill: parent
         anchors.rightMargin: prv.spaceL
         spacing: prv.spaceL
 
         // Parameter label
         StyledTextLabel {
+            id: paramLabel
             Layout.preferredWidth: prv.labelWidth
             Layout.alignment: Qt.AlignVCenter
             text: parameterData ? parameterData.name : ""
