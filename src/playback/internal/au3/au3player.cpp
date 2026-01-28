@@ -376,6 +376,7 @@ void Au3Player::setLoopRegion(const PlaybackRegion& region)
     auto& playRegion = ViewInfo::Get(project).playRegion;
 
     playRegion.SetAllTimes(region.start, region.end);
+    playRegion.SetActive(true);
 
     m_loopRegionChanged.notify();
 }

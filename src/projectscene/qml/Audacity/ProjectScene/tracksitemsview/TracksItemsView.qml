@@ -1134,35 +1134,25 @@ Rectangle {
         }
     }
 
-    Rectangle {
+    LoopRegionGuideline {
         id: loopRegionGuidelineLeft
-
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        x: timeline.context.timeToPosition(playRegionModel.start) + content.x
         z: timelineHeader.z + 1
-
-        width: 1
-
-        color: ui.theme.extra["white_color"]
-        opacity: 0.8
-
+        context: timeline.context
+        time: playRegionModel.start
+        contentX: content.x
         visible: playRegionModel.active
     }
 
-    Rectangle {
+    LoopRegionGuideline {
         id: loopRegionGuidelineRight
-
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        x: timeline.context.timeToPosition(playRegionModel.end) + content.x
         z: timelineHeader.z + 1
-
-        width: 1
-
-        color: ui.theme.extra["white_color"]
-        opacity: 0.8
-
+        context: timeline.context
+        time: playRegionModel.end
+        contentX: content.x
         visible: playRegionModel.active
     }
 
