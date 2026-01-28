@@ -301,6 +301,9 @@ Item {
         StyledTextLabel {
             text: parameterData ? parameterData.formattedValue : ""
             opacity: 0.7
+            wrapMode: Text.WordWrap
+            Layout.fillWidth: true
+            horizontalAlignment: Text.AlignLeft
         }
     }
 
