@@ -264,9 +264,8 @@ Item {
     Component {
         id: timeControl
 
-        Item {
-            implicitWidth: timecode.width
-            implicitHeight: timecode.height
+        RowLayout {
+            spacing: prv.spaceM
 
             Timecode {
                 id: timecode
@@ -291,6 +290,15 @@ Item {
                     }
                 }
             }
+
+            StyledTextLabel {
+                text: parameterData ? parameterData.formattedValue : ""
+                opacity: 0.7
+                wrapMode: Text.WordWrap
+                Layout.alignment: Qt.AlignVCenter
+                Layout.fillWidth: true // Fill remaining width so it adjusts when timecode width changes
+                horizontalAlignment: Text.AlignLeft
+            }
         }
     }
 
@@ -302,6 +310,7 @@ Item {
             text: parameterData ? parameterData.formattedValue : ""
             opacity: 0.7
             wrapMode: Text.WordWrap
+            Layout.alignment: Qt.AlignVCenter
             Layout.fillWidth: true
             horizontalAlignment: Text.AlignLeft
         }
