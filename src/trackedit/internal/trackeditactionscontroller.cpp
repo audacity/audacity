@@ -474,26 +474,15 @@ void TrackeditActionsController::doGlobalCutAllTracksRipple()
         return;
     }
 
-    if (!selectionController()->selectedClips().empty()) {
-        secs_t selectedStartTime = selectionController()->leftMostSelectedClipStartTime();
-        secs_t selectedEndTime = selectionController()->rightMostSelectedClipEndTime();
+    auto selectedStartTime = selectionController()->leftMostSelectedItemStartTime();
+    auto selectedEndTime = selectionController()->rightMostSelectedItemEndTime();
 
+    if (selectedStartTime.has_value() && selectedEndTime.has_value()) {
         trackeditInteraction()->clearClipboard();
-        trackeditInteraction()->cutItemDataIntoClipboard(tracks, selectedStartTime, selectedEndTime, true);
+        trackeditInteraction()->cutItemDataIntoClipboard(tracks, selectedStartTime.value(), selectedEndTime.value(), true);
 
         selectionController()->resetSelectedClips();
-        return;
-    }
-
-    if (!selectionController()->selectedLabels().empty()) {
-        secs_t selectedStartTime = selectionController()->leftMostSelectedLabelStartTime();
-        secs_t selectedEndTime = selectionController()->rightMostSelectedLabelEndTime();
-
-        trackeditInteraction()->clearClipboard();
-        trackeditInteraction()->cutItemDataIntoClipboard(tracks, selectedStartTime, selectedEndTime, true);
-
         selectionController()->resetSelectedLabels();
-        return;
     }
 }
 
@@ -637,21 +626,11 @@ void TrackeditActionsController::doGlobalDeleteAllTracksRipple()
         return;
     }
 
-    if (!selectionController()->selectedClips().empty()) {
-        secs_t selectedStartTime = selectionController()->leftMostSelectedClipStartTime();
-        secs_t selectedEndTime = selectionController()->rightMostSelectedClipEndTime();
+    auto selectedStartTime = selectionController()->leftMostSelectedItemStartTime();
+    auto selectedEndTime = selectionController()->rightMostSelectedItemEndTime();
 
-        trackeditInteraction()->removeTracksData(tracks, selectedStartTime, selectedEndTime, true);
-
-        selectionController()->resetDataSelection();
-        return;
-    }
-
-    if (!selectionController()->selectedLabels().empty()) {
-        secs_t selectedStartTime = selectionController()->leftMostSelectedLabelStartTime();
-        secs_t selectedEndTime = selectionController()->rightMostSelectedLabelEndTime();
-
-        trackeditInteraction()->removeTracksData(tracks, selectedStartTime, selectedEndTime, true);
+    if (selectedStartTime.has_value() && selectedEndTime.has_value()) {
+        trackeditInteraction()->removeTracksData(tracks, selectedStartTime.value(), selectedEndTime.value(), true);
 
         selectionController()->resetDataSelection();
         return;
@@ -896,9 +875,9 @@ void TrackeditActionsController::labelCopyMulti()
     trackeditInteraction()->clearClipboard();
 
     secs_t offset = 0.0;
-    std::optional<secs_t> leftmostLabelStartTime = trackeditInteraction()->getLeftmostLabelStartTime(selectedLabels);
-    if (leftmostLabelStartTime.has_value()) {
-        offset = -leftmostLabelStartTime.value();
+    std::optional<secs_t> leftmostItemStartTime = selectionController()->leftMostSelectedItemStartTime();
+    if (leftmostItemStartTime.has_value()) {
+        offset = -leftmostItemStartTime.value();
     }
 
     for (const auto& track : tracks) {
@@ -966,9 +945,9 @@ void TrackeditActionsController::multiClipCopy()
     trackeditInteraction()->clearClipboard();
 
     secs_t offset = 0.0;
-    std::optional<secs_t> leftmostClipStartTime = trackeditInteraction()->getLeftmostClipStartTime(selectionController()->selectedClips());
-    if (leftmostClipStartTime.has_value()) {
-        offset = -leftmostClipStartTime.value();
+    std::optional<secs_t> leftmostItemStartTime = selectionController()->leftMostSelectedItemStartTime();
+    if (leftmostItemStartTime.has_value()) {
+        offset = -leftmostItemStartTime.value();
     }
 
     for (const auto& track : tracks) {
@@ -1614,16 +1593,9 @@ void TrackeditActionsController::selectRightOfPlaybackPos()
 
 void TrackeditActionsController::selectTrackStartToCursor()
 {
-    ClipKeyList clipsOnSelectedTracks;
-    for (const auto& track : selectionController()->selectedTracks()) {
-        for (const auto& clip : trackeditInteraction()->clipsOnTrack(track)) {
-            clipsOnSelectedTracks.push_back(clip);
-        }
-    }
-
-    std::optional<secs_t> leftmostClipStartTime = trackeditInteraction()->getLeftmostClipStartTime(clipsOnSelectedTracks);
-    if (leftmostClipStartTime.has_value()) {
-        selectionController()->setDataSelectedStartTime(leftmostClipStartTime.value(), true);
+    std::optional<secs_t> leftmostItemStartTime = selectionController()->selectedTracksStartTime();
+    if (leftmostItemStartTime.has_value()) {
+        selectionController()->setDataSelectedStartTime(leftmostItemStartTime.value(), true);
     } else {
         selectionController()->setDataSelectedStartTime(0.0, true);
     }
@@ -1633,17 +1605,10 @@ void TrackeditActionsController::selectTrackStartToCursor()
 
 void TrackeditActionsController::selectCursorToTrackEnd()
 {
-    ClipKeyList clipsOnSelectedTracks;
-    for (const auto& track : selectionController()->selectedTracks()) {
-        for (const auto& clip : trackeditInteraction()->clipsOnTrack(track)) {
-            clipsOnSelectedTracks.push_back(clip);
-        }
-    }
-
-    std::optional<secs_t> rightmostClipEndTime = trackeditInteraction()->getRightmostClipEndTime(clipsOnSelectedTracks);
-    if (rightmostClipEndTime.has_value()) {
+    std::optional<secs_t> rightmostItemEndTime = selectionController()->selectedTracksEndTime();
+    if (rightmostItemEndTime.has_value()) {
         selectionController()->setDataSelectedStartTime(playbackState()->playbackPosition(), true);
-        selectionController()->setDataSelectedEndTime(rightmostClipEndTime.value(), true);
+        selectionController()->setDataSelectedEndTime(rightmostItemEndTime.value(), true);
     } else {
         //! NOTE: AU3 behavior
         selectTrackStartToCursor();
@@ -1652,19 +1617,12 @@ void TrackeditActionsController::selectCursorToTrackEnd()
 
 void TrackeditActionsController::selectTrackStartToEnd()
 {
-    ClipKeyList clipsOnSelectedTracks;
-    for (const auto& track : selectionController()->selectedTracks()) {
-        for (const auto& clip : trackeditInteraction()->clipsOnTrack(track)) {
-            clipsOnSelectedTracks.push_back(clip);
-        }
-    }
+    std::optional<secs_t> leftmostItemStartTime = selectionController()->selectedTracksStartTime();
+    std::optional<secs_t> rightmostItemEndTime = selectionController()->selectedTracksEndTime();
 
-    std::optional<secs_t> leftmostClipStartTime = trackeditInteraction()->getLeftmostClipStartTime(clipsOnSelectedTracks);
-    std::optional<secs_t> rightmostClipEndTime = trackeditInteraction()->getRightmostClipEndTime(clipsOnSelectedTracks);
-
-    if (leftmostClipStartTime.has_value() && rightmostClipEndTime.has_value()) {
-        selectionController()->setDataSelectedStartTime(leftmostClipStartTime.value(), true);
-        selectionController()->setDataSelectedEndTime(rightmostClipEndTime.value(), true);
+    if (leftmostItemStartTime.has_value() && rightmostItemEndTime.has_value()) {
+        selectionController()->setDataSelectedStartTime(leftmostItemStartTime.value(), true);
+        selectionController()->setDataSelectedEndTime(rightmostItemEndTime.value(), true);
     }
 }
 

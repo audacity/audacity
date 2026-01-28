@@ -42,10 +42,10 @@ public:
     void addSelectedClip(const ClipKey& clipKey) override;
     void removeClipSelection(const ClipKey& clipKey) override;
     muse::async::Channel<ClipKeyList> clipsSelected() const override;
-    double selectedClipStartTime() const override;
-    double selectedClipEndTime() const override;
-    double leftMostSelectedClipStartTime() const override;
-    double rightMostSelectedClipEndTime() const override;
+    std::optional<secs_t> selectedClipStartTime() const override;
+    std::optional<secs_t> selectedClipEndTime() const override;
+    std::optional<secs_t> leftMostSelectedClipStartTime() const override;
+    std::optional<secs_t> rightMostSelectedClipEndTime() const override;
 
     // label selection
     void resetSelectedLabels() override;
@@ -56,10 +56,16 @@ public:
     void addSelectedLabel(const LabelKey& labelKey) override;
     void removeLabelSelection(const LabelKey& labelKey) override;
     muse::async::Channel<LabelKeyList> labelsSelected() const override;
-    double selectedLabelStartTime() const override;
-    double selectedLabelEndTime() const override;
-    double leftMostSelectedLabelStartTime() const override;
-    double rightMostSelectedLabelEndTime() const override;
+    std::optional<secs_t> selectedLabelStartTime() const override;
+    std::optional<secs_t> selectedLabelEndTime() const override;
+    std::optional<secs_t> leftMostSelectedLabelStartTime() const override;
+    std::optional<secs_t> rightMostSelectedLabelEndTime() const override;
+
+    std::optional<secs_t> leftMostSelectedItemStartTime() const override;
+    std::optional<secs_t> rightMostSelectedItemEndTime() const override;
+
+    std::optional<secs_t> selectedTracksStartTime() const override;
+    std::optional<secs_t> selectedTracksEndTime() const override;
 
     // data selection
     void setSelectedTrackAudioData(trackedit::TrackId trackId) override;
@@ -72,6 +78,8 @@ public:
     ClipKeyList clipsIntersectingRangeSelection() const override;
     void setClipsIntersectingRangeSelection(const ClipKeyList& clipKeys) override;
     muse::async::Channel<ClipKeyList> clipsIntersectingRangeSelectionChanged() const override;
+    LabelKeyList labelsIntersectingRangeSelection() const override;
+    void setLabelsIntersectingRangeSelection(const LabelKeyList& labelKeys) override;
 
     trackedit::secs_t dataSelectedStartTime() const override;
     void setDataSelectedStartTime(trackedit::secs_t time, bool complete) override;
@@ -113,6 +121,7 @@ private:
     void updateSelectionController();
     void onUndoRedo();
     ClipKeyList findClipsIntersectingRangeSelection() const;
+    LabelKeyList findLabelsIntersectingRangeSelection() const;
 
     au3::Au3Project& projectRef() const;
     Observer::Subscription m_tracksSubc;
@@ -153,6 +162,7 @@ private:
     Val<trackedit::secs_t> m_selectedStartTime;
     Val<trackedit::secs_t> m_selectedEndTime;
     Val<ClipKeyList> m_clipsIntersectingRangeSelection;
+    Val<LabelKeyList> m_labelsIntersectingRangeSelection;
 
     Val<trackedit::secs_t> m_selectionStartTime; // indicates where user started selection
 

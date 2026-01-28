@@ -71,8 +71,6 @@ public:
     bool stretchClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed) override;
     bool stretchClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed) override;
 
-    std::optional<secs_t> getLeftmostClipStartTime(const ClipKeyList& clipKeys) const override;
-    std::optional<secs_t> getRightmostClipEndTime(const ClipKeyList& clipKeys) const override;
     muse::Ret makeRoomForClip(const trackedit::ClipKey& clipKey) override;
 
     ClipKeyList clipsOnTrack(const trackedit::TrackId trackId) override;
@@ -107,6 +105,7 @@ private:
     void trimOrDeleteOverlapping(::WaveTrack* waveTrack, muse::secs_t begin, muse::secs_t end, std::shared_ptr<::WaveClip> otherClip);
 
     std::optional<secs_t> shortestClipDuration(const ClipKeyList& clipKeys) const;
+    std::optional<secs_t> leftmostClipStartTime(const ClipKeyList& clipKeys) const;
     bool anyLeftFullyUntrimmed(const ClipKeyList& clipKeys) const;
     bool anyRightFullyUntrimmed(const ClipKeyList& clipKeys) const;
     ClipKeyList determineClipsForInteraction(const ClipKey& clipKey) const;

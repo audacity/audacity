@@ -148,6 +148,11 @@ muse::RetVal<ClipKeyList> TrackeditInteraction::moveClips(const ClipKeyList& cli
                                   clipsMovedToOtherTrack);
 }
 
+bool TrackeditInteraction::moveRangeSelection(secs_t timePositionOffset, bool completed)
+{
+    return m_interaction->moveRangeSelection(timePositionOffset, completed);
+}
+
 void TrackeditInteraction::cancelItemDragEdit()
 {
     m_interaction->cancelItemDragEdit();
@@ -254,16 +259,6 @@ bool TrackeditInteraction::stretchClipRight(const ClipKey& clipKey,
 muse::secs_t TrackeditInteraction::clipDuration(const trackedit::ClipKey& clipKey) const
 {
     return m_interaction->clipDuration(clipKey);
-}
-
-std::optional<secs_t> TrackeditInteraction::getLeftmostClipStartTime(const ClipKeyList& clipKeys) const
-{
-    return m_interaction->getLeftmostClipStartTime(clipKeys);
-}
-
-std::optional<secs_t> TrackeditInteraction::getRightmostClipEndTime(const ClipKeyList& clipKeys) const
-{
-    return m_interaction->getRightmostClipEndTime(clipKeys);
 }
 
 double TrackeditInteraction::nearestZeroCrossing(double time) const
@@ -488,11 +483,6 @@ bool TrackeditInteraction::stretchLabelLeft(const LabelKey& labelKey, secs_t new
 bool TrackeditInteraction::stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed)
 {
     return m_interaction->stretchLabelRight(labelKey, newEndTime, completed);
-}
-
-std::optional<secs_t> TrackeditInteraction::getLeftmostLabelStartTime(const LabelKeyList& labelKeys) const
-{
-    return m_interaction->getLeftmostLabelStartTime(labelKeys);
 }
 
 muse::Progress TrackeditInteraction::progress() const

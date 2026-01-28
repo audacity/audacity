@@ -410,17 +410,12 @@ muse::RetVal<ClipKeyList> Au3ClipsInteraction::moveClips(const ClipKeyList& clip
     }
 
     //! NOTE: check if offset is applicable to every clip and recalculate if needed
-    std::optional<secs_t> leftmostClipStartTime = getLeftmostClipStartTime(clipKeyList);
+    std::optional<secs_t> leftmostStartTime = leftmostClipStartTime(clipKeyList);
 
-    if (leftmostClipStartTime.has_value()) {
-        if (muse::RealIsEqualOrLess(leftmostClipStartTime.value() + timePositionOffset, 0.0)) {
-            timePositionOffset = -leftmostClipStartTime.value();
+    if (leftmostStartTime.has_value()) {
+        if (muse::RealIsEqualOrLess(leftmostStartTime.value() + timePositionOffset, 0.0)) {
+            timePositionOffset = -leftmostStartTime.value();
         }
-    }
-
-    if (selectionController()->timeSelectionIsNotEmpty() && !selectionController()->clipsIntersectingRangeSelection().empty()) {
-        selectionController()->setDataSelectedStartTime(selectionController()->dataSelectedStartTime() + timePositionOffset, false);
-        selectionController()->setDataSelectedEndTime(selectionController()->dataSelectedEndTime() + timePositionOffset, false);
     }
 
     for (const auto& selectedClip : clipKeyList) {
@@ -719,9 +714,9 @@ bool Au3ClipsInteraction::stretchClipRight(const ClipKey& clipKey, secs_t deltaS
     return stretchClipsRight(clips, adjustedDelta, completed);
 }
 
-std::optional<secs_t> Au3ClipsInteraction::getLeftmostClipStartTime(const ClipKeyList& clipKeys) const
+std::optional<secs_t> Au3ClipsInteraction::leftmostClipStartTime(const ClipKeyList& clipKeys) const
 {
-    std::optional<secs_t> leftmostClipStartTime;
+    std::optional<secs_t> leftmostStartTime;
     for (const auto& selectedClip : clipKeys) {
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(selectedClip.trackId));
         IF_ASSERT_FAILED(waveTrack) {
@@ -733,34 +728,12 @@ std::optional<secs_t> Au3ClipsInteraction::getLeftmostClipStartTime(const ClipKe
             continue;
         }
 
-        if (!leftmostClipStartTime.has_value() || !muse::RealIsEqualOrMore(clip->GetPlayStartTime(), leftmostClipStartTime.value())) {
-            leftmostClipStartTime = clip->GetPlayStartTime();
+        if (!leftmostStartTime.has_value() || !muse::RealIsEqualOrMore(clip->GetPlayStartTime(), leftmostStartTime.value())) {
+            leftmostStartTime = clip->GetPlayStartTime();
         }
     }
 
-    return leftmostClipStartTime;
-}
-
-std::optional<secs_t> Au3ClipsInteraction::getRightmostClipEndTime(const ClipKeyList& clipKeys) const
-{
-    std::optional<secs_t> rightmostClipEndTime;
-    for (const auto& selectedClip : clipKeys) {
-        Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(selectedClip.trackId));
-        IF_ASSERT_FAILED(waveTrack) {
-            continue;
-        }
-
-        std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.itemId);
-        IF_ASSERT_FAILED(clip) {
-            continue;
-        }
-
-        if (!rightmostClipEndTime.has_value() || !muse::RealIsEqualOrLess(clip->GetPlayEndTime(), rightmostClipEndTime.value())) {
-            rightmostClipEndTime = clip->GetPlayEndTime();
-        }
-    }
-
-    return rightmostClipEndTime;
+    return leftmostStartTime;
 }
 
 muse::Ret Au3ClipsInteraction::makeRoomForClip(const ClipKey& clipKey)
@@ -1164,10 +1137,10 @@ secs_t Au3ClipsInteraction::clampLeftTrimDelta(const ClipKeyList& clipKeys,
         }
 
         //! NOTE: check that no clip in selection extends beyond its track start
-        std::optional<secs_t> leftmostClipStartTime = getLeftmostClipStartTime(selectionController()->selectedClips());
+        std::optional<secs_t> leftmostStartTime = selectionController()->leftMostSelectedItemStartTime();
 
-        if (leftmostClipStartTime.has_value()) {
-            if (muse::RealIsEqualOrLess(leftmostClipStartTime.value() + deltaSec, 0.0)) {
+        if (leftmostStartTime.has_value()) {
+            if (muse::RealIsEqualOrLess(leftmostStartTime.value() + deltaSec, 0.0)) {
                 return 0.0;
             }
         }

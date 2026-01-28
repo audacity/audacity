@@ -68,6 +68,7 @@
         <file>qml/Audacity/ProjectScene/historypanel/HistoryPanel.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/WorkspacesToolBar.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/PlayRegion.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/LoopRegionGuideline.qml</file>
         <file>qml/Audacity/ProjectScene/trackruler/TrackRulerCustomizePopup.qml</file>
         <file>qml/Audacity/ProjectScene/trackruler/WaveformRuler.qml</file>
         <file>qml/Audacity/ProjectScene/trackruler/SpectrogramRuler.qml</file>

@@ -24,10 +24,10 @@ public:
     MOCK_METHOD(void, setSelectedClips, (const ClipKeyList&, bool), (override));
     MOCK_METHOD(void, addSelectedClip, (const ClipKey& clipKey), (override));
     MOCK_METHOD(muse::async::Channel<ClipKeyList>, clipsSelected, (), (const, override));
-    MOCK_METHOD(double, selectedClipStartTime, (), (const, override));
-    MOCK_METHOD(double, selectedClipEndTime, (), (const, override));
-    MOCK_METHOD(double, leftMostSelectedClipStartTime, (), (const, override));
-    MOCK_METHOD(double, rightMostSelectedClipEndTime, (), (const, override));
+    MOCK_METHOD(std::optional<secs_t>, selectedClipStartTime, (), (const, override));
+    MOCK_METHOD(std::optional<secs_t>, selectedClipEndTime, (), (const, override));
+    MOCK_METHOD(std::optional<secs_t>, leftMostSelectedClipStartTime, (), (const, override));
+    MOCK_METHOD(std::optional<secs_t>, rightMostSelectedClipEndTime, (), (const, override));
 
     MOCK_METHOD(void, resetSelectedLabels, (), (override));
     MOCK_METHOD(bool, hasSelectedLabels, (), (const, override));
@@ -38,11 +38,17 @@ public:
     MOCK_METHOD(void, removeLabelSelection, (const LabelKey& labelKey), (override));
     MOCK_METHOD(muse::async::Channel<LabelKeyList>, labelsSelected, (), (const, override));
 
-    MOCK_METHOD(double, selectedLabelStartTime, (), (const, override));
-    MOCK_METHOD(double, selectedLabelEndTime, (), (const, override));
+    MOCK_METHOD(std::optional<secs_t>, selectedLabelStartTime, (), (const, override));
+    MOCK_METHOD(std::optional<secs_t>, selectedLabelEndTime, (), (const, override));
 
-    MOCK_METHOD(double, leftMostSelectedLabelStartTime, (), (const, override));
-    MOCK_METHOD(double, rightMostSelectedLabelEndTime, (), (const, override));
+    MOCK_METHOD(std::optional<secs_t>, leftMostSelectedLabelStartTime, (), (const, override));
+    MOCK_METHOD(std::optional<secs_t>, rightMostSelectedLabelEndTime, (), (const, override));
+
+    MOCK_METHOD(std::optional<secs_t>, leftMostSelectedItemStartTime, (), (const, override));
+    MOCK_METHOD(std::optional<secs_t>, rightMostSelectedItemEndTime, (), (const, override));
+
+    MOCK_METHOD(std::optional<secs_t>, selectedTracksStartTime, (), (const, override));
+    MOCK_METHOD(std::optional<secs_t>, selectedTracksEndTime, (), (const, override));
 
     MOCK_METHOD(void, setSelectedTrackAudioData, (TrackId), (override));
     MOCK_METHOD(void, resetDataSelection, (), (override));
@@ -53,6 +59,8 @@ public:
     MOCK_METHOD(ClipKeyList, clipsIntersectingRangeSelection, (), (const, override));
     MOCK_METHOD(void, setClipsIntersectingRangeSelection, (const ClipKeyList& clipKeys), (override));
     MOCK_METHOD(muse::async::Channel<ClipKeyList>, clipsIntersectingRangeSelectionChanged, (), (const, override));
+    MOCK_METHOD(LabelKeyList, labelsIntersectingRangeSelection, (), (const, override));
+    MOCK_METHOD(void, setLabelsIntersectingRangeSelection, (const LabelKeyList& labelKeys), (override));
 
     MOCK_METHOD(secs_t, dataSelectedStartTime, (), (const, override));
     MOCK_METHOD(void, setDataSelectedStartTime, (secs_t, bool), (override));

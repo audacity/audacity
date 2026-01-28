@@ -145,6 +145,7 @@ TrackItemsContainer {
                                 isLeftLinked: Boolean(itemData) && itemData.isLeftLinked
                                 isRightLinked: Boolean(itemData) && itemData.isRightLinked
                                 isLinkedActive: Boolean(itemData) && itemData.isLinkedActive
+                                isPoint: Boolean(itemData) && itemData.isPoint
 
                                 container: repeater
 

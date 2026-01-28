@@ -134,13 +134,11 @@ muse::Ret Au3Exporter::exportData(std::string filename)
     // TODO: implement other ExportProcessType's selections
     if (exportConfiguration()->processType() == ExportProcessType::SELECTED_AUDIO) {
         m_t0
-            = selectionController()->timeSelectionIsNotEmpty() ? selectionController()->dataSelectedStartTime() : static_cast<trackedit::
-                                                                                                                              secs_t>(
-                  selectionController()->leftMostSelectedClipStartTime());
+            = selectionController()->timeSelectionIsNotEmpty() ? selectionController()->dataSelectedStartTime()
+              : selectionController()->leftMostSelectedClipStartTime().value_or(0.0);
         m_t1
-            = selectionController()->timeSelectionIsNotEmpty() ? selectionController()->dataSelectedEndTime() : static_cast<trackedit::
-                                                                                                                            secs_t>(
-                  selectionController()->rightMostSelectedClipEndTime());
+            = selectionController()->timeSelectionIsNotEmpty() ? selectionController()->dataSelectedEndTime()
+              : selectionController()->rightMostSelectedClipEndTime().value_or(0.0);
     } else if (exportConfiguration()->processType() == ExportProcessType::AUDIO_IN_LOOP_REGION) {
         auto region = playbackController()->loopRegion();
         m_t0 = region.start;

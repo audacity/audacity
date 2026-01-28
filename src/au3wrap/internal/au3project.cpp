@@ -191,7 +191,7 @@ void Au3ProjectAccessor::updateSavedState()
 
     clearSavedState();
     m_lastSavedTracks = TrackList::Create(nullptr);
-    for (auto t : TrackList::Get(project).Any<WaveTrack>()) {
+    for (auto t : TrackList::Get(project).Any<Track>()) {
         m_lastSavedTracks->Add(t->Duplicate(Track::DuplicateOptions {}.Backup()), TrackList::DoAssignId::No);
     }
 }

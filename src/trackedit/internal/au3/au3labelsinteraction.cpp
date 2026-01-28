@@ -324,11 +324,11 @@ bool Au3LabelsInteraction::moveLabels(const LabelKeyList& labelKeys, secs_t time
     const trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
 
     //! NOTE: check if offset is applicable to every label and recalculate if needed
-    std::optional<secs_t> leftmostLabelStartTime = getLeftmostLabelStartTime(labelKeys);
+    std::optional<secs_t> leftmostStartTime = leftmostLabelStartTime(labelKeys);
 
-    if (leftmostLabelStartTime.has_value()) {
-        if (muse::RealIsEqualOrLess(leftmostLabelStartTime.value() + timePositionOffset, 0.0)) {
-            timePositionOffset = -leftmostLabelStartTime.value();
+    if (leftmostStartTime.has_value()) {
+        if (muse::RealIsEqualOrLess(leftmostStartTime.value() + timePositionOffset, 0.0)) {
+            timePositionOffset = -leftmostStartTime.value();
         }
     }
 
@@ -527,9 +527,9 @@ muse::Progress Au3LabelsInteraction::progress() const
     return m_progress;
 }
 
-std::optional<secs_t> Au3LabelsInteraction::getLeftmostLabelStartTime(const LabelKeyList& labelKeys) const
+std::optional<secs_t> Au3LabelsInteraction::leftmostLabelStartTime(const LabelKeyList& labelKeys) const
 {
-    std::optional<secs_t> leftmostLabelStartTime;
+    std::optional<secs_t> leftmostStartTime;
     for (const auto& selectedLabel : labelKeys) {
         Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(selectedLabel.trackId));
         IF_ASSERT_FAILED(labelTrack) {
@@ -541,10 +541,10 @@ std::optional<secs_t> Au3LabelsInteraction::getLeftmostLabelStartTime(const Labe
             continue;
         }
 
-        if (!leftmostLabelStartTime.has_value() || !muse::RealIsEqualOrMore(label->getT0(), leftmostLabelStartTime.value())) {
-            leftmostLabelStartTime = label->getT0();
+        if (!leftmostStartTime.has_value() || !muse::RealIsEqualOrMore(label->getT0(), leftmostStartTime.value())) {
+            leftmostStartTime = label->getT0();
         }
     }
 
-    return leftmostLabelStartTime;
+    return leftmostStartTime;
 }

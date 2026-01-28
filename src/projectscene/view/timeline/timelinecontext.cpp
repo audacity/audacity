@@ -877,12 +877,11 @@ void TimelineContext::updateSingleItemSelected()
 
 void TimelineContext::updateSelectedItemTime()
 {
-    if (selectionController()->selectedClips().size() == 1) {
-        setItemStartTime(selectionController()->selectedClipStartTime());
-        setItemEndTime(selectionController()->selectedClipEndTime());
-    } else if (selectionController()->selectedLabels().size() == 1) {
-        setItemStartTime(selectionController()->selectedLabelStartTime());
-        setItemEndTime(selectionController()->selectedLabelEndTime());
+    auto itemStart = selectionController()->leftMostSelectedItemStartTime();
+    auto itemEnd = selectionController()->rightMostSelectedItemEndTime();
+    if (itemStart.has_value() && itemEnd.has_value()) {
+        setItemStartTime(itemStart.value());
+        setItemEndTime(itemEnd.value());
     }
 }
 

@@ -40,12 +40,12 @@ public:
     bool stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed) override;
     bool stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed) override;
 
-    std::optional<secs_t> getLeftmostLabelStartTime(const LabelKeyList& labelKeys) const override;
-
     muse::Progress progress() const override;
 
 private:
     friend class Au3LabelsInteractionsTests;
+
+    std::optional<secs_t> leftmostLabelStartTime(const LabelKeyList& labelKeys) const;
 
     au3::Au3Project& projectRef() const;
 
