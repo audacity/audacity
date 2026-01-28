@@ -60,9 +60,8 @@ enum class ParameterType {
     Dropdown,      // Enumerated list of choices
     Slider,        // Continuous value with range
     Numeric,       // Numeric input field
-    ReadOnly,      // Display-only (meter, status)
+    ReadOnly,      // Display-only (meter, status, informational text)
     Time,          // Time value with timecode formatting
-    Text,          // Multi-line text input
     File,          // File path with file picker
 };
 

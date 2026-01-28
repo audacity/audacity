@@ -17,8 +17,6 @@ namespace {
 //!
 //! Known Limitations:
 //! - NYQ_CTRL_FILE: Mapped to File type. UI implementation pending.
-//! - NYQ_CTRL_TEXT: Mapped to Text type. UI implementation pending.
-//! - NYQ_CTRL_TIME: Mapped to Time type with timecode formatting support.
 ParameterType convertControlType(int nyqType)
 {
     switch (nyqType) {
@@ -34,8 +32,8 @@ ParameterType convertControlType(int nyqType)
         return ParameterType::Numeric; // String input field
     case NYQ_CTRL_TIME:
         return ParameterType::Time;
-    case NYQ_CTRL_TEXT:
-        return ParameterType::Text;
+    case NYQ_CTRL_TEXT: // Informational text, not editable
+        return ParameterType::ReadOnly;
     case NYQ_CTRL_FILE:
         return ParameterType::File;
     default:
@@ -245,9 +243,12 @@ muse::String NyquistParameterExtractorService::getParameterValueString(EffectIns
         return String::fromStdString(au3::wxToStdString(ctrl->valStr));
 
     case NYQ_CTRL_STRING:
-    case NYQ_CTRL_TEXT:
         // Return the string value from valStr
         return String::fromStdString(au3::wxToStdString(ctrl->valStr));
+
+    case NYQ_CTRL_TEXT:
+        // Return the informational text from name field (read-only display)
+        return String::fromStdString(au3::wxToStdString(ctrl->name));
 
     default:
         // For numeric types, format with appropriate precision
