@@ -140,14 +140,15 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
         items << item;
     }
 
-    // UI Mode toggle - only for external plugins (VST3, LV2, Audio Units...)
-    // Built-in effects don't have a "Vendor UI" concept
+    // UI Mode toggle - only for external plugins with vendor UI (VST3, LV2, Audio Units)
+    // Built-in and Nyquist effects don't have a "Vendor UI" concept
     {
         const EffectMeta effectMeta = effectsProvider()->meta(effectId);
-        const bool isExternalPlugin = effectMeta.family != EffectFamily::Builtin
-                                      && effectMeta.family != EffectFamily::Unknown;
+        const bool hasVendorUI = effectMeta.family != EffectFamily::Builtin
+                                 && effectMeta.family != EffectFamily::Nyquist
+                                 && effectMeta.family != EffectFamily::Unknown;
 
-        if (isExternalPlugin) {
+        if (hasVendorUI) {
             items << makeSeparator();
             ActionQuery q("action://effects/toggle_vendor_ui");
             q.addParam("effectId", Val(effectId.toStdString()));
