@@ -108,6 +108,12 @@ Rectangle {
                             Layout.fillWidth: true
                             parameterData: model
 
+                            // Pass time-related properties for time controls
+                            sampleRate: viewModel.sampleRate
+                            tempo: viewModel.tempo
+                            upperTimeSignature: viewModel.upperTimeSignature
+                            lowerTimeSignature: viewModel.lowerTimeSignature
+
                             onGestureStarted: function (parameterId) {
                                 viewModel.parametersModel.beginGesture(parameterId)
                             }
