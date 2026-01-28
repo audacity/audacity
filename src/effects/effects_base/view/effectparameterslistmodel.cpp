@@ -207,6 +207,14 @@ void EffectParametersListModel::setParameterValue(const QString& parameterId, do
     // The actual model update will happen via the parameterChanged signal
 }
 
+void EffectParametersListModel::setParameterStringValue(const QString& parameterId, const QString& stringValue)
+{
+    // Update the parameter string value through the provider
+    parametersProvider()->setParameterStringValue(m_instanceId, String::fromQString(parameterId), String::fromQString(stringValue));
+
+    // The actual model update will happen via the parameterChanged signal
+}
+
 QString EffectParametersListModel::getParameterValueString(int index, double normalizedValue) const
 {
     if (index < 0 || index >= static_cast<int>(m_parameters.size())) {
