@@ -368,6 +368,10 @@ void Au3Player::loopEditingEnd()
 
 void Au3Player::setLoopRegion(const PlaybackRegion& region)
 {
+    if (!region.isValid()) {
+        return;
+    }
+
     Au3Project& project = projectRef();
     auto& playRegion = ViewInfo::Get(project).playRegion;
 
