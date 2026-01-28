@@ -14,14 +14,16 @@
 #include "au3-files/FileNames.h"
 #include "au3-label-track/LabelTrack.h"
 #include "au3-strings/Languages.h"
+#if defined(USE_MIDI)
 #include "au3-note-track/NoteTrack.h"
+#endif
 #include "au3-files/PlatformCompatibility.h"
 #include "au3-module-manager/PluginManager.h"
 #include "au3-preferences/Prefs.h"
 #include "au3-project/Project.h"
 #include "au3-project-rate/ProjectRate.h"
 #include "au3-command-parameters/ShuttleAutomation.h"
-#include "au3-wave-track-settings/SpectrogramSettings.h"
+// #include "au3-wave-track-settings/SpectrogramSettings.h" // TODO: properly handle SpectrogramSettings
 #include "au3-track-selection/SyncLock.h"
 #include "au3-files/TempDirectory.h"
 #include "au3-time-track/TimeTrack.h"
@@ -130,7 +132,7 @@ PluginPath NyquistBase::GetPath() const
 ComponentInterfaceSymbol NyquistBase::GetSymbol() const
 {
     if (mIsPrompt) {
-        return { NYQUIST_PROMPT_ID, NYQUIST_PROMPT_NAME }
+        return { NYQUIST_PROMPT_ID, NYQUIST_PROMPT_NAME };
     }
 
     return mName;
@@ -495,12 +497,13 @@ bool NyquistBase::Init()
                     WaveChannelSubViewType {
                     WaveChannelViewConstants::Spectrum, {} });
 
-                if (
-                    hasSpectral
-                    && (SpectrogramSettings::Get(*t).SpectralSelectionEnabled())) {
-                    bAllowSpectralEditing = true;
-                    break;
-                }
+                // TODO: properly handle SpectrogramSettings
+                // if (
+                //     hasSpectral
+                //     && (SpectrogramSettings::Get(*t).SpectralSelectionEnabled())) {
+                //     bAllowSpectralEditing = true;
+                //     break;
+                // }
             }
 
             if (!bAllowSpectralEditing || ((mF0 < 0.0) && (mF1 < 0.0))) {
@@ -667,8 +670,7 @@ bool NyquistBase::Process(EffectInstance&, EffectSettings& settings)
     std::optional<EffectOutputTracks> oOutputs;
     if (!bOnePassTool) {
         oOutputs.emplace(
-            *mTracks, GetType(), EffectOutputTracks::TimeInterval { mT0, mT1 },
-            true, false);
+            *mTracks, GetType(), std::optional<EffectOutputTracks::TimeInterval> { { mT0, mT1 } });
     }
 
     mNumSelectedChannels
@@ -899,7 +901,7 @@ bool NyquistBase::Process(EffectInstance&, EffectSettings& settings)
                 }
 
                 // Check whether we're in the same group as the last selected track
-                Track* gt = *SyncLock::Group(*mCurChannelGroup).first;
+                Track* gt = mCurChannelGroup;
                 mFirstInGroup = !gtLast || (gtLast != gt);
                 gtLast = gt;
 
@@ -1107,10 +1109,12 @@ bool NyquistBase::ProcessOne(
         mCurChannelGroup->TypeSwitch(
             [&](const WaveTrack& wt) {
             type = wxT("wave");
-            spectralEditp = SpectrogramSettings::Get(*mCurChannelGroup)
-                            .SpectralSelectionEnabled()
-                            ? wxT("T")
-                            : wxT("NIL");
+            // TODO: properly handle SpectrogramSettings
+            spectralEditp = wxT("NIL");
+            // spectralEditp = SpectrogramSettings::Get(*mCurChannelGroup)
+            //                 .SpectralSelectionEnabled()
+            //                 ? wxT("T")
+            //                 : wxT("NIL");
             view = wxT("NIL");
             // Find() not Get() to avoid creation-on-demand of views in case we
             // are only previewing
@@ -1580,12 +1584,6 @@ bool NyquistBase::ProcessOne(
 
     // If we were first in the group adjust non-selected group tracks
     if (mFirstInGroup) {
-        for (auto t : SyncLock::Group(*mCurChannelGroup)) {
-            if (!t->GetSelected() && SyncLock::IsSyncLockSelected(*t)) {
-                t->SyncLockAdjust(mT1, mT0 + out->GetEndTime());
-            }
-        }
-
         // Only the first channel can be first in its group
         mFirstInGroup = false;
     }
@@ -1675,7 +1673,7 @@ FileNames::FileType NyquistBase::ParseFileType(const wxString& text)
         tzer.Tokenize(text, true, 1, 1);
         auto& tokens = tzer.tokens;
         if (tokens.size() == 2) {
-            result = { UnQuoteMsgid(tokens[0]), ParseFileExtensions(tokens[1]) }
+            result = { UnQuoteMsgid(tokens[0]), ParseFileExtensions(tokens[1]) };
         }
     }
     return result;
@@ -1757,7 +1755,7 @@ TranslatableString NyquistBase::UnQuoteMsgid(
     const wxString& s, bool allowParens, wxString* pExtraString)
 {
     if (pExtraString) {
-        *pExtraString = wxString {}
+        *pExtraString = wxString {};
     }
 
     int len = s.length();
@@ -1785,7 +1783,7 @@ TranslatableString NyquistBase::UnQuoteMsgid(
                 return UnQuoteMsgid(tokens[1], false);
             }
         } else {
-            return {}
+            return {};
         }
     } else {
         // If string was not quoted, assume no translation exists

@@ -60,7 +60,9 @@ enum class ParameterType {
     Dropdown,      // Enumerated list of choices
     Slider,        // Continuous value with range
     Numeric,       // Numeric input field
-    ReadOnly,      // Display-only (meter, status)
+    ReadOnly,      // Display-only (meter, status, informational text)
+    Time,          // Time value with timecode formatting
+    File,          // File path with file picker
 };
 
 // Parameter metadata for auto-generated UI
@@ -139,6 +141,7 @@ public:
         VST3,
         LV2,
         AudioUnit,
+        Nyquist,
     };
     Q_ENUM(EffectFamily)
 };
@@ -163,6 +166,7 @@ enum class EffectType {
     Analyzer,
     Generator,
     Processor,
+    Tool,
 };
 
 struct EffectMeta {

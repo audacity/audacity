@@ -37,6 +37,19 @@ public:
     virtual bool setParameterValue(EffectInstance* instance, const muse::String& parameterId, double fullRangeValue,
                                    EffectSettingsAccessPtr settingsAccess = nullptr) = 0;
 
+    //! Set the string value of a parameter (for file paths, text, etc.)
+    //! @param instance The effect instance
+    //! @param parameterId The parameter identifier
+    //! @param stringValue The new string value (e.g., file path)
+    //! @param settingsAccess Optional settings access to persist the change
+    //! @return true if successful, false if parameter doesn't support string values
+    virtual bool setParameterStringValue(EffectInstance* instance, const muse::String& parameterId, const muse::String& stringValue,
+                                         EffectSettingsAccessPtr settingsAccess = nullptr)
+    {
+        // Default implementation: not supported
+        return false;
+    }
+
     //! Get formatted string representation of a parameter value
     virtual muse::String getParameterValueString(EffectInstance* instance, const muse::String& parameterId, double value) const = 0;
 

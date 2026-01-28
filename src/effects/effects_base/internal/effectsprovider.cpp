@@ -140,6 +140,10 @@ bool EffectsProvider::loadEffect(const EffectId& effectId) const
         // If an effect is not a VST and is in m_effects, then it's a built-in effect and it's loaded already.
         return true;
     }
+    if (it->family == EffectFamily::Nyquist) {
+        // Nyquist effects are loaded on-demand like built-in effects
+        return true;
+    }
     switch (it->family) {
     case EffectFamily::AudioUnit: {
         IF_ASSERT_FAILED(audioUnitEffectsRepository()) {
