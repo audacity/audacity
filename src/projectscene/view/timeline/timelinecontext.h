@@ -108,6 +108,7 @@ public:
     Q_INVOKABLE void scrollHorizontal(qreal newPos);
     Q_INVOKABLE void scrollVertical(qreal newPos);
 
+    void centerViewOnPlayhead(const muse::actions::ActionData& args);
     Q_INVOKABLE void insureVisible(double posSec);
     Q_INVOKABLE void startAutoScroll(double posSec);
     Q_INVOKABLE void stopAutoScroll();

@@ -148,6 +148,8 @@ muse::Ret TrackeditOperationController::pasteFromClipboard(secs_t begin, bool mo
 
     if (!paths.empty()) {
         ret = importer()->importFromOsClipboard(paths, begin);
+        dispatcher()->dispatch("center-view-on-playhead", muse::actions::ActionData::make_arg1<bool>(
+                                   true /* center only if playhead is not visible */));
     } else {
         ret = tracksInteraction()->paste(clipboard()->trackDataCopy(), begin, moveClips, moveAllTracks,
                                          clipboard()->isMultiSelectionCopy(), modifiedState);
