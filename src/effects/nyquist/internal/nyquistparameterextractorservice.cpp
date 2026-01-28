@@ -16,12 +16,9 @@ namespace {
 //! Convert NyqControlType to AU4 ParameterType
 //!
 //! Known Limitations:
-//! - NYQ_CTRL_FILE: Currently mapped to Numeric as placeholder. Needs dedicated file picker
-//!   UI component with browse button and file type filter support.
-//! - NYQ_CTRL_TEXT: Currently mapped to Numeric as placeholder. Needs dedicated multiline
-//!   text input component for proper text editing.
-//! - NYQ_CTRL_TIME: Currently uses Slider. Could benefit from time-specific formatting
-//!   (samples/seconds/hh:mm:ss) in the UI layer.
+//! - NYQ_CTRL_FILE: Mapped to File type. UI implementation pending.
+//! - NYQ_CTRL_TEXT: Mapped to Text type. UI implementation pending.
+//! - NYQ_CTRL_TIME: Mapped to Time type with timecode formatting support.
 ParameterType convertControlType(int nyqType)
 {
     switch (nyqType) {
@@ -36,14 +33,11 @@ ParameterType convertControlType(int nyqType)
     case NYQ_CTRL_STRING:
         return ParameterType::Numeric; // String input field
     case NYQ_CTRL_TIME:
-        // TODO: Could benefit from time-specific formatting in UI
-        return ParameterType::Slider;
+        return ParameterType::Time;
     case NYQ_CTRL_TEXT:
-        // TODO: Needs dedicated multiline text input component
-        return ParameterType::Numeric;
+        return ParameterType::Text;
     case NYQ_CTRL_FILE:
-        // TODO: Needs dedicated file picker UI component with browse button
-        return ParameterType::Numeric;
+        return ParameterType::File;
     default:
         return ParameterType::Unknown;
     }
