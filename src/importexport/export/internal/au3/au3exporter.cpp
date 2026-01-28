@@ -173,9 +173,15 @@ muse::Ret Au3Exporter::exportData(std::string filename)
     } else if (ExportChannelsPref::ExportChannels(exportConfiguration()->exportChannels()) == ExportChannelsPref::ExportChannels::STEREO) {
         m_numChannels = 2;
     } else {
-        const std::vector<std::vector<bool> > matrix = utils::valToMatrix(exportConfiguration()->exportCustomChannelMapping());
-
+        //Figure out the final channel mapping: mixer dialog shows
+        //all tracks regardless of their mute/solo state, but
+        //muted channels should not be present in exported file -
+        //apply channel mask to exclude them
+        auto channelMask = prepareChannelMask();
+        downMix = std::make_unique<MixerOptions::Downmix>(*downMix, channelMask);
         m_mixerSpec = downMix.get();
+
+        const std::vector<std::vector<bool> > matrix = utils::valToMatrix(exportConfiguration()->exportCustomChannelMapping());
         m_numChannels = exportConfiguration()->exportChannels();
 
         for (int in = 0; in < inputChannelsCount; ++in) {
@@ -429,4 +435,36 @@ OptionsEditorUPtr Au3Exporter::optionsEditor() const
     }
 
     return nullptr;
+}
+
+std::vector<bool> Au3Exporter::prepareChannelMask() const
+{
+    Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
+    IF_ASSERT_FAILED(project) {
+        return {};
+    }
+
+    auto tracks = TrackList::Get(*project).Any<WaveTrack>();
+    std::vector<bool> channelMask(
+        tracks.sum([](const auto track) { return track->NChannels(); }),
+        false);
+    unsigned trackIndex = 0;
+    for (const auto track : tracks) {
+        if (track->GetSolo()) {
+            channelMask.assign(channelMask.size(), false);
+            for (unsigned i = 0; i < track->NChannels(); ++i) {
+                channelMask[trackIndex++] = true;
+            }
+            break;
+        }
+        if (!track->GetMute() && (!m_selectedOnly || track->GetSelected())) {
+            for (unsigned i = 0; i < track->NChannels(); ++i) {
+                channelMask[trackIndex++] = true;
+            }
+        } else {
+            trackIndex += track->NChannels();
+        }
+    }
+
+    return channelMask;
 }
