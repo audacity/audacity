@@ -466,6 +466,8 @@ Rectangle {
 
             property var lastItemClickKey: null
             property bool itemWasMoved: false
+            property point pressStartPosition: Qt.point(0, 0)
+            readonly property int moveThreshold: 5
 
             onWheel: function (wheelEvent) {
                 timeline.onWheel(wheelEvent.x, wheelEvent.pixelDelta, wheelEvent.angleDelta)
@@ -499,6 +501,7 @@ Rectangle {
                     }
 
                     itemWasMoved = false
+                    pressStartPosition = Qt.point(e.x, e.y)
                 } else if (e.button === Qt.RightButton) {
                     if (tracksHovered)
                     //! TODO AU4: handle context menu over empty track area
@@ -512,8 +515,12 @@ Rectangle {
                 timeline.updateCursorPosition(e.x, e.y)
                 splitToolController.mouseMove(e.x)
 
-                if (root.itemHeaderHovered && mainMouseArea.pressed) {
-                    itemWasMoved = true
+                if (root.itemHeaderHovered && mainMouseArea.pressed && !itemWasMoved) {
+                    var dx = Math.abs(e.x - pressStartPosition.x)
+                    var dy = Math.abs(e.y - pressStartPosition.y)
+                    if (dx > moveThreshold || dy > moveThreshold) {
+                        itemWasMoved = true
+                    }
                 }
 
                 if (root.interactionState === TracksItemsView.State.DraggingItem) {
