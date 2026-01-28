@@ -53,6 +53,11 @@ public:
         bool selfTest = false;
     };
 
+    struct SendAuthLinkTask {
+        bool valid = false;
+        QString url;
+    };
+
     void init();
     void parse(int argc, char** argv);
     void processBuiltinArgs(const QCoreApplication& app);
@@ -65,6 +70,7 @@ public:
     // Tasks
     Autobot autobot() const;
     AudioPluginRegistration audioPluginRegistration() const;
+    SendAuthLinkTask sendAuthLinkTask() const;
 
 private:
     void printLongVersion() const;
@@ -75,5 +81,6 @@ private:
 
     Autobot m_autobot;
     AudioPluginRegistration m_audioPluginRegistration;
+    SendAuthLinkTask m_sendAuthLinkTask;
 };
 }

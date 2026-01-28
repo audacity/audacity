@@ -4,20 +4,31 @@
 
 #pragma once
 
+#include "au3-utility/Observer.h"
+
 #include "framework/global/async/asyncable.h"
 
-#include "au3-utility/Observer.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/global/iinteractive.h"
+#include "framework/multiinstances/imultiinstancesprovider.h"
 
 #include "au3cloud/iauthorization.h"
 #include "au3cloud/iuserdata.h"
 
 namespace au::au3cloud {
-class Au3CloudService : public muse::async::Asyncable, public IAuthorization, public IUserData
+class Au3CloudService : public muse::async::Asyncable, public IAuthorization, public IUserData, public muse::Injectable
 {
+    muse::Inject<muse::IInteractive> interactive = { this };
+    muse::GlobalInject <muse::mi::IMultiInstancesProvider> multiInstancesProvider;
+
 public:
+    Au3CloudService(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
+
     void init();
 
     void signInWithPassword(const std::string& email, const std::string& password) override;
+    void signInWithSocial(const std::string& provider) override;
     void signOut() override;
     muse::ValCh<AuthState> authState() const override;
 
@@ -26,6 +37,7 @@ public:
 
 private:
     Observer::Subscription m_authSubscription;
+    Observer::Subscription m_urlRegisterSubscription;
     muse::ValCh<AuthState> m_authState;
 };
 }

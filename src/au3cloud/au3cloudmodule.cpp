@@ -15,7 +15,7 @@ std::string Au3CloudModule::moduleName() const
 
 void Au3CloudModule::registerExports()
 {
-    m_cloudService = std::make_shared<Au3CloudService>();
+    m_cloudService = std::make_shared<Au3CloudService>(iocContext());
     ioc()->registerExport<IAuthorization>(moduleName(), m_cloudService);
     ioc()->registerExport<IUserData>(moduleName(), m_cloudService);
 }

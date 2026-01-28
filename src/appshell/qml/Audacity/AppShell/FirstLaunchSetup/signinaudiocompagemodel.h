@@ -28,6 +28,7 @@ public:
 
     Q_INVOKABLE void init();
     Q_INVOKABLE void signIn(const QString& email, const QString& password);
+    Q_INVOKABLE void signInWithSocial(const QString& provider);
     Q_INVOKABLE void signOut();
 
     bool authInProgress() const;

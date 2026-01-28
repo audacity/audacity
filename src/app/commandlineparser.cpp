@@ -182,6 +182,11 @@ void CommandLineParser::parse(int argc, char** argv)
         m_autobot.testCaseFuncArgs = m_parser.value("test-case-func-args");
     }
 
+    if (m_parser.isSet("url")) {
+        m_runMode = IApplication::RunMode::ConsoleApp;
+        m_sendAuthLinkTask = SendAuthLinkTask { true, m_parser.value("url") };
+    }
+
     // Startup
     if (m_runMode == IApplication::RunMode::GuiApp) {
         if (!projectfiles.isEmpty()) {
@@ -219,4 +224,9 @@ CommandLineParser::AudioPluginRegistration CommandLineParser::audioPluginRegistr
 void CommandLineParser::printLongVersion() const
 {
     NOT_IMPLEMENTED;
+}
+
+CommandLineParser::SendAuthLinkTask CommandLineParser::sendAuthLinkTask() const
+{
+    return m_sendAuthLinkTask;
 }
