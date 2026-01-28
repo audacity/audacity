@@ -19,6 +19,7 @@ Item {
     property bool isLeftLinked: false
     property bool isRightLinked: false
     property bool isLinkedActive: false
+    property bool isPoint: false
 
     property int visualWidth: prv.isPoint ? pointStalk.width + header.x + header.width : header.width
     readonly property int headerDefaultHeight: 14
@@ -59,7 +60,7 @@ Item {
     QtObject {
         id: prv
 
-        property bool isPoint: root.width < 2
+        property bool isPoint: root.isPoint
         readonly property int earWidth: 7
 
         property color backgroundColor: root.labelColor

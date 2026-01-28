@@ -407,7 +407,7 @@ TrackLabelItem* TrackLabelsListModel::labelItemByKey(const trackedit::LabelKey& 
 void TrackLabelsListModel::selectTracksDataFromLabelRange(const LabelKey& key)
 {
     TrackLabelItem* labelItem = labelItemByKey(key.key);
-    if (!labelItem || labelItem->isEditing()) {
+    if (!labelItem || labelItem->isEditing() || labelItem->isPoint()) {
         return;
     }
 
