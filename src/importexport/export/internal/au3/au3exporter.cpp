@@ -161,8 +161,13 @@ muse::Ret Au3Exporter::exportData(std::string filename)
         return muse::make_ret(muse::Ret::Code::InternalError, muse::trc("export", "All selected audio is muted"));
     }
 
-    // TODO: take into account soloed/muted tracks
-    auto downMix = std::make_unique<MixerOptions::Downmix>(exportedTracks.size(), exportConfiguration()->exportChannels());
+    int inputChannelsCount = 0;
+    for (const auto& exportedTrack : exportedTracks) {
+        inputChannelsCount += exportedTrack->NChannels();
+    }
+
+    auto downMix = std::make_unique<MixerOptions::Downmix>(inputChannelsCount,
+                                                           exportConfiguration()->exportChannels());
     if (ExportChannelsPref::ExportChannels(exportConfiguration()->exportChannels()) == ExportChannelsPref::ExportChannels::MONO) {
         m_numChannels = 1;
     } else if (ExportChannelsPref::ExportChannels(exportConfiguration()->exportChannels()) == ExportChannelsPref::ExportChannels::STEREO) {
@@ -171,22 +176,20 @@ muse::Ret Au3Exporter::exportData(std::string filename)
         const std::vector<std::vector<bool> > matrix = utils::valToMatrix(exportConfiguration()->exportCustomChannelMapping());
 
         m_mixerSpec = downMix.get();
-
-        const int trackCount = static_cast<int>(exportedTracks.size());
         m_numChannels = exportConfiguration()->exportChannels();
 
-        for (int t = 0; t < trackCount; ++t) {
-            for (int ch = 0; ch < m_numChannels; ++ch) {
-                m_mixerSpec->mMap[t][ch] = false;
+        for (int in = 0; in < inputChannelsCount; ++in) {
+            for (int out = 0; out < m_numChannels; ++out) {
+                m_mixerSpec->mMap[in][out] = false;
             }
         }
 
-        const int rows = std::min(trackCount, static_cast<int>(matrix.size()));
-        for (int t = 0; t < rows; ++t) {
-            const int cols = std::min(static_cast<int>(m_numChannels), static_cast<int>(matrix[t].size()));
-            for (int ch = 0; ch < cols; ++ch) {
-                if (matrix[t][ch]) {
-                    m_mixerSpec->mMap[t][ch] = true;
+        const int rows = std::min(inputChannelsCount, static_cast<int>(matrix.size()));
+        for (int in = 0; in < rows; ++in) {
+            const int cols = std::min(static_cast<int>(m_numChannels), static_cast<int>(matrix[in].size()));
+            for (int out = 0; out < cols; ++out) {
+                if (matrix[in][out]) {
+                    m_mixerSpec->mMap[in][out] = true;
                 }
             }
         }

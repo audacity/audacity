@@ -81,24 +81,13 @@ QVector<TableViewHeader*> ChannelMappingTableViewModel::makeHorizontalHeaders()
 
 QVector<TableViewHeader*> ChannelMappingTableViewModel::makeVerticalHeaders()
 {
-    const auto project = globalContext()->currentTrackeditProject();
-    if (!project) {
-        m_tracks.clear();
-        return {};
-    }
+    rebuildChannelRows();
 
-    m_tracks.clear();
     QVector<TableViewHeader*> v;
 
-    for (const auto& track : project->trackList()) {
-        if (track.type == trackedit::TrackType::Label) {
-            continue;
-        }
-
-        m_tracks.push_back(track);
-
+    for (const auto& row : m_rows) {
         auto* vh = new muse::uicomponents::TableViewHeader(this);
-        vh->setTitle(track.title.toQString());
+        vh->setTitle(row.title);
         v << vh;
     }
 
@@ -110,7 +99,7 @@ QVector<QVector<TableViewCell*> > ChannelMappingTableViewModel::makeTable()
     using muse::Val;
     using muse::uicomponents::TableViewCell;
 
-    const int rows = m_tracks.size();
+    const int rows = m_rows.size();
     const int cols = std::max(1, m_channelCount);
 
     std::vector<std::vector<bool> > newMatrix(rows, std::vector<bool>(cols, false));
@@ -156,7 +145,7 @@ bool ChannelMappingTableViewModel::doCellValueChangeRequested(int row, int colum
 
 void ChannelMappingTableViewModel::loadMatrixFromConfiguration()
 {
-    const int rows = m_tracks.size();
+    const int rows = m_rows.size();
     const int cols = std::max(1, m_channelCount);
 
     const muse::Val val = exportConfiguration()->exportCustomChannelMapping();
@@ -170,6 +159,42 @@ void ChannelMappingTableViewModel::loadMatrixFromConfiguration()
         const int colLimit = std::min(cols, static_cast<int>(saved[static_cast<size_t>(rIdx)].size()));
         for (int cIdx = 0; cIdx < colLimit; ++cIdx) {
             m_matrix[rIdx][cIdx] = saved[rIdx][cIdx];
+        }
+    }
+}
+
+void ChannelMappingTableViewModel::rebuildChannelRows()
+{
+    const auto project = globalContext()->currentTrackeditProject();
+    m_rows.clear();
+
+    if (!project) {
+        return;
+    }
+
+    for (const auto& track : project->trackList()) {
+        if (track.type == trackedit::TrackType::Label) {
+            continue;
+        }
+
+        const QString baseName = track.title.toQString();
+        const bool isStereo = (track.type == trackedit::TrackType::Stereo);
+
+        if (!isStereo) {
+            ChannelRow m;
+            m.track = track;
+            m.title = baseName;
+            m_rows.push_back(std::move(m));
+        } else {
+            ChannelRow l;
+            l.track = track;
+            l.title = baseName + " L";
+            m_rows.push_back(std::move(l));
+
+            ChannelRow r;
+            r.track = track;
+            r.title = baseName + " R";
+            m_rows.push_back(std::move(r));
         }
     }
 }

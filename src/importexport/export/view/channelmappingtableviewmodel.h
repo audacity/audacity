@@ -22,6 +22,11 @@ enum class Type {
 Q_ENUM_NS(Type);
 }
 
+struct ChannelRow {
+    trackedit::Track track;
+    QString title;
+};
+
 class ChannelMappingTableViewModel : public muse::uicomponents::AbstractTableViewModel, public muse::Injectable
 {
     Q_OBJECT
@@ -45,8 +50,9 @@ private:
 
     bool doCellValueChangeRequested(int row, int column, const muse::Val& value) override;
     void loadMatrixFromConfiguration();
+    void rebuildChannelRows();
 
-    std::vector<trackedit::Track> m_tracks;
+    std::vector<ChannelRow> m_rows;
     std::vector<std::vector<bool> > m_matrix;
     int m_channelCount = 1;
 };
