@@ -182,9 +182,9 @@ void CommandLineParser::parse(int argc, char** argv)
         m_autobot.testCaseFuncArgs = m_parser.value("test-case-func-args");
     }
 
-    if (m_parser.isSet("url")) {
+    if (m_parser.isSet("u")) {
         m_runMode = IApplication::RunMode::ConsoleApp;
-        m_sendAuthLinkTask = SendAuthLinkTask { true, m_parser.value("url") };
+        m_sendAuthLinkTask = SendAuthLinkTask { true, m_parser.value("u") };
     }
 
     // Startup
