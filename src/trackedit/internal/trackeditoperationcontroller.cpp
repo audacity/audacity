@@ -526,7 +526,7 @@ muse::Ret TrackeditOperationController::makeRoomForClip(const ClipKey& clipKey)
 bool TrackeditOperationController::newMonoTrack()
 {
     if (tracksInteraction()->newMonoTrack()) {
-        projectHistory()->pushHistoryState("Created new audio track", "New track");
+        projectHistory()->pushHistoryState("Created new mono track", "New mono track");
         return true;
     }
     return false;
@@ -535,7 +535,7 @@ bool TrackeditOperationController::newMonoTrack()
 bool TrackeditOperationController::newStereoTrack()
 {
     if (tracksInteraction()->newStereoTrack()) {
-        projectHistory()->pushHistoryState("Created new audio track", "New track");
+        projectHistory()->pushHistoryState("Created new stereo track", "New stereo track");
         return true;
     }
     return false;
@@ -543,7 +543,11 @@ bool TrackeditOperationController::newStereoTrack()
 
 muse::RetVal<TrackId> TrackeditOperationController::newLabelTrack(const muse::String& title)
 {
-    return tracksInteraction()->newLabelTrack(title);
+    auto track = tracksInteraction()->newLabelTrack(title);
+    if (track.ret.success()) {
+        projectHistory()->pushHistoryState("Created label track", "New label track");
+    }
+    return track;
 }
 
 bool TrackeditOperationController::deleteTracks(const TrackIdList& trackIds)
