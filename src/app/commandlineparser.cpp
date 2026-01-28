@@ -154,7 +154,7 @@ void CommandLineParser::init()
     m_parser.addOption(internalCommandLineOption("score-display-name-override",
                                                  "Display name to be shown in splash screen for the score that is being opened", "name"));
 
-    m_parser.addOption(QCommandLineOption("url", "Handle URL scheme", "url"));
+    m_parser.addOption(QCommandLineOption({ "u", "url" }, "Handle URL scheme", "url"));
 }
 
 void CommandLineParser::parse(int argc, char** argv)
@@ -471,9 +471,9 @@ void CommandLineParser::parse(int argc, char** argv)
         m_autobot.testCaseFuncArgs = m_parser.value("test-case-func-args");
     }
 
-    if (m_parser.isSet("url")) {
+    if (m_parser.isSet("u")) {
         m_runMode = IApplication::RunMode::ConsoleApp;
-        m_sendAuthLinkTask = SendAuthLinkTask { true, m_parser.value("url") };
+        m_sendAuthLinkTask = SendAuthLinkTask { true, m_parser.value("u") };
     }
 
     // Startup
