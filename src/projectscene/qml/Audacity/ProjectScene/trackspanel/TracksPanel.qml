@@ -17,7 +17,7 @@ Item {
     property alias tracksModel: tracksModel
 
     signal openEffectsRequested()
-    signal panelActive(int index)
+    signal panelActive(var trackId)
 
     property NavigationSection trackEffectsNavigationSection: null
     property NavigationSection masterEffectsNavigationSection: null
@@ -181,6 +181,11 @@ Item {
                     height: tracksViewState.tracksVerticalScrollPadding
                 }
 
+                function insureVerticallyVisible(item) {
+                    var itemViewY = item.mapToItem(view.contentItem, Qt.point(0, 0)).y
+                    tracksViewState.insureVerticallyVisible(view.contentY, view.height, itemViewY, item.height)
+                }
+
                 delegate: Loader {
                     id: trackItemLoader
 
@@ -213,9 +218,9 @@ Item {
                             navigation.accessible.name: Boolean(item) ? item.title : ""
                             navigation.onActiveChanged: {
                                 if (navigation.active) {
-                                    root.panelActive(index)
                                     prv.currentItemNavigationName = navigation.name
-                                    view.positionViewAtIndex(index, ListView.Contain)
+
+                                    view.insureVerticallyVisible(this)
                                 }
                             }
 
@@ -238,6 +243,10 @@ Item {
 
                             onRemoveSelectionRequested: {
                                 tracksModel.removeSelection()
+                            }
+
+                            onMouseReleased: function(releasedItem, x, y) {
+                                root.panelActive(item.trackId)
                             }
 
                             Component.onCompleted: {
@@ -266,9 +275,9 @@ Item {
                             navigation.accessible.name: Boolean(item) ? item.title : ""
                             navigation.onActiveChanged: {
                                 if (navigation.active) {
-                                    root.panelActive(index)
                                     prv.currentItemNavigationName = navigation.name
-                                    view.positionViewAtIndex(index, ListView.Contain)
+
+                                    view.insureVerticallyVisible(this)
                                 }
                             }
 
@@ -290,6 +299,10 @@ Item {
 
                             onAddLabelToSelectionRequested: {
                                 tracksModel.addLabelToSelection()
+                            }
+
+                            onMouseReleased: function(releasedItem, x, y) {
+                                root.panelActive(item.trackId)
                             }
 
                             Component.onCompleted: {

@@ -105,10 +105,12 @@ void PanelTracksListModel::load()
 
     loadTracks(prj->trackList());
 
-    onFocusedTrack(selectionController()->focusedTrack());
+    onFocusedTrack(trackNavigationController()->focusedTrack());
 
-    selectionController()->focusedTrackChanged().onReceive(this, [this](trackedit::TrackId trackId) {
-        onFocusedTrack(trackId);
+    trackNavigationController()->focusedTrackChanged().onReceive(this, [this](const TrackId& trackId, bool /*highlight*/) {
+        if (trackId != INVALID_TRACK) {
+            onFocusedTrack(trackId);
+        }
     }, muse::async::Asyncable::Mode::SetReplace);
 
     emit isEmptyChanged();
@@ -376,7 +378,6 @@ void PanelTracksListModel::setItemsSelected(const QModelIndexList& indexes, bool
     if (selected) {
         // if selecting new tracks, add them to the existing selection
         alreadySelectedTracksIds.insert(alreadySelectedTracksIds.end(), idsToModify.begin(), idsToModify.end());
-        selectionController()->setFocusedTrack(idsToModify.back());
     } else {
         // if deselecting tracks, remove them from the existing selection
         alreadySelectedTracksIds.erase(

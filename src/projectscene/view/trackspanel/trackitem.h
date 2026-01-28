@@ -11,6 +11,7 @@
 #include "modularity/ioc.h"
 #include "trackedit/itrackeditinteraction.h"
 #include "trackedit/iselectioncontroller.h"
+#include "trackedit/internal/itracknavigationcontroller.h"
 
 #include "ui/view/iconcodes.h"
 
@@ -34,6 +35,7 @@ class TrackItem : public QObject, public muse::Injectable, public muse::async::A
 
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
     muse::Inject<trackedit::ISelectionController> selectionController{ this };
+    muse::Inject<trackedit::ITrackNavigationController> trackNavigationController{ this };
 
 public:
     explicit TrackItem(QObject* parent = nullptr);

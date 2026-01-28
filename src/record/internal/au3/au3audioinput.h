@@ -18,6 +18,7 @@
 #include "record/irecordcontroller.h"
 #include "record/irecordmetercontroller.h"
 #include "trackedit/iselectioncontroller.h"
+#include "trackedit/internal/itracknavigationcontroller.h"
 
 namespace au::record {
 class Au3AudioInput : public IAudioInput, public muse::async::Asyncable, public muse::Injectable
@@ -31,6 +32,7 @@ class Au3AudioInput : public IAudioInput, public muse::async::Asyncable, public 
     muse::Inject<record::IRecordController> controller{ this };
     muse::Inject<record::IRecordMeterController> meterController{ this };
     muse::Inject<trackedit::ISelectionController> selectionController{ this };
+    muse::Inject<trackedit::ITrackNavigationController> trackNavigationController{ this };
 
 public:
     Au3AudioInput(const muse::modularity::ContextPtr& ctx);

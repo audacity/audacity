@@ -14,6 +14,7 @@
 #include "types/projectscenetypes.h"
 #include "trackedit/iselectioncontroller.h"
 #include "trackedit/iprojecthistory.h"
+#include "trackedit/internal/itracknavigationcontroller.h"
 
 #include "trackitem.h"
 
@@ -40,6 +41,7 @@ class PanelTracksListModel : public QAbstractListModel, public muse::async::Asyn
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
     muse::Inject<trackedit::IProjectHistory> projectHistory{ this };
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::Inject<trackedit::ITrackNavigationController> trackNavigationController{ this };
 
 public:
     explicit PanelTracksListModel(QObject* parent = nullptr);
