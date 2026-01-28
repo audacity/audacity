@@ -125,6 +125,10 @@ Rectangle {
                             onValueChanged: function (parameterId, value) {
                                 viewModel.parametersModel.setParameterValue(parameterId, value)
                             }
+
+                            onStringValueChanged: function (parameterId, stringValue) {
+                                viewModel.parametersModel.setParameterStringValue(parameterId, stringValue)
+                            }
                         }
                     }
                 }

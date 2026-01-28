@@ -204,6 +204,38 @@ bool NyquistParameterExtractorService::setParameterValue(EffectInstance* instanc
     return true;
 }
 
+bool NyquistParameterExtractorService::setParameterStringValue(EffectInstance* instance, const String& parameterId,
+                                                               const String& stringValue, EffectSettingsAccessPtr settingsAccess)
+{
+    NyquistBase* nyquist = getNyquistBase(instance);
+    if (!nyquist) {
+        return false;
+    }
+
+    NyqControl* ctrl = findControl(nyquist->mControls, parameterId);
+    if (!ctrl) {
+        return false;
+    }
+
+    // Only file and string parameters support string values
+    if (ctrl->type != NYQ_CTRL_FILE && ctrl->type != NYQ_CTRL_STRING) {
+        return false;
+    }
+
+    // Set the string value directly
+    ctrl->valStr = au3::wxFromString(stringValue);
+
+    // Sync mControls back to EffectSettings for preset saving
+    if (settingsAccess) {
+        settingsAccess->ModifySettings([&](EffectSettings& settings) {
+            NyquistBase::GetSettings(settings).controls = nyquist->mControls;
+            return nullptr;
+        });
+    }
+
+    return true;
+}
+
 muse::String NyquistParameterExtractorService::getParameterValueString(EffectInstance* instance,
                                                                        const String& parameterId, double value) const
 {
