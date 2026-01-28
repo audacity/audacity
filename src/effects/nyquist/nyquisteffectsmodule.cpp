@@ -31,6 +31,6 @@ void au::effects::NyquistEffectsModule::resolveImports()
 
     auto launchRegister = ioc()->resolve<IEffectViewLaunchRegister>(moduleName());
     if (launchRegister) {
-        launchRegister->regLauncher("Nyquist", std::make_shared<NyquistViewLauncher>());
+        launchRegister->regLauncher("Nyquist", std::make_shared<NyquistViewLauncher>(iocContext()));
     }
 }

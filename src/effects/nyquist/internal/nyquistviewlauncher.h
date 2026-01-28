@@ -9,7 +9,8 @@ namespace au::effects {
 class NyquistViewLauncher final : public AbstractViewLauncher
 {
 public:
-    NyquistViewLauncher() = default;
+    NyquistViewLauncher(const muse::modularity::ContextPtr& ctx)
+        : AbstractViewLauncher(ctx) {}
 
     muse::Ret showEffect(const EffectInstanceId& instanceId) const override;
     void showRealtimeEffect(const RealtimeEffectStatePtr& state) const override;
