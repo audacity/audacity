@@ -61,6 +61,9 @@ enum class ParameterType {
     Slider,        // Continuous value with range
     Numeric,       // Numeric input field
     ReadOnly,      // Display-only (meter, status)
+    Time,          // Time value with timecode formatting
+    Text,          // Multi-line text input
+    File,          // File path with file picker
 };
 
 // Parameter metadata for auto-generated UI

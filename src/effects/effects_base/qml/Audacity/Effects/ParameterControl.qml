@@ -8,12 +8,19 @@ import Muse.Ui
 import Muse.UiComponents
 
 import Audacity.Effects
+import Audacity.UiComponents
 
 Item {
     id: root
 
     property var parameterData: null
     property string parameterId: parameterData ? parameterData.id : ""
+
+    // Properties for time controls
+    property double sampleRate: 0
+    property double tempo: 0
+    property int upperTimeSignature: 0
+    property int lowerTimeSignature: 0
 
     signal valueChanged(string parameterId, double value)
     signal gestureStarted(string parameterId)
@@ -72,6 +79,8 @@ Item {
                     return numericControl
                 case "readonly":
                     return readonlyControl
+                case "time":
+                    return timeControl
                 default:
                     return unknownControl
                 }
@@ -247,6 +256,40 @@ Item {
                 Layout.alignment: Qt.AlignVCenter
                 text: parameterData ? parameterData.formattedValue : ""
                 horizontalAlignment: Text.AlignLeft
+            }
+        }
+    }
+
+    // Time control (timecode input)
+    Component {
+        id: timeControl
+
+        Item {
+            implicitWidth: timecode.width
+            implicitHeight: timecode.height
+
+            Timecode {
+                id: timecode
+
+                value: parameterData ? parameterData.currentValue : 0
+                mode: TimecodeModeSelector.Duration
+                currentFormatStr: "" // TODO
+                sampleRate: root.sampleRate
+                tempo: root.tempo
+                upperTimeSignature: root.upperTimeSignature
+                lowerTimeSignature: root.lowerTimeSignature
+
+                onValueChanged: {
+                    root.valueChanged(root.parameterId, timecode.value)
+                }
+
+                onFocusChanged: {
+                    if (focus) {
+                        root.gestureStarted(root.parameterId)
+                    } else {
+                        root.gestureEnded(root.parameterId)
+                    }
+                }
             }
         }
     }

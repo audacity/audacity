@@ -5,6 +5,8 @@
 #include "effectparameterslistmodel.h"
 
 #include "au3-effects/EffectPlugin.h"
+#include "playback/iaudiooutput.h"
+#include "trackedit/itrackeditproject.h"
 
 #include "framework/global/log.h"
 
@@ -79,6 +81,38 @@ QString GeneratedEffectViewerModel::noParametersMessage() const
 bool GeneratedEffectViewerModel::hasParameters() const
 {
     return m_parametersModel->hasParameters();
+}
+
+double GeneratedEffectViewerModel::sampleRate() const
+{
+    return playback()->audioOutput()->sampleRate();
+}
+
+double GeneratedEffectViewerModel::tempo() const
+{
+    auto project = globalContext()->currentTrackeditProject();
+    if (!project) {
+        return 0.0;
+    }
+    return project->timeSignature().tempo;
+}
+
+int GeneratedEffectViewerModel::upperTimeSignature() const
+{
+    auto project = globalContext()->currentTrackeditProject();
+    if (!project) {
+        return 0;
+    }
+    return project->timeSignature().upper;
+}
+
+int GeneratedEffectViewerModel::lowerTimeSignature() const
+{
+    auto project = globalContext()->currentTrackeditProject();
+    if (!project) {
+        return 0;
+    }
+    return project->timeSignature().lower;
 }
 
 void GeneratedEffectViewerModel::doInit()
