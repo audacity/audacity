@@ -187,8 +187,12 @@ void setTrackRulerType(std::shared_ptr<au::project::IAudacityProject> project, c
 }
 }
 
-ProjectViewState::ProjectViewState(const muse::modularity::ContextPtr& ctx, std::shared_ptr<au::au3::IAu3Project> project)
+ProjectViewState::ProjectViewState(const muse::modularity::ContextPtr& ctx)
     : muse::Injectable(ctx)
+{
+}
+
+void ProjectViewState::init(const std::shared_ptr<au3::IAu3Project>& project)
 {
     configuration()->setIsEffectsPanelVisible(false);
     qApp->installEventFilter(this);
