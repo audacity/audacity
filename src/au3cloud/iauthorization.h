@@ -22,6 +22,7 @@ class IAuthorization : MODULE_EXPORT_INTERFACE
 public:
     virtual ~IAuthorization() = default;
 
+    virtual void registerWithPassword(const std::string& email, const std::string& password) = 0;
     virtual void signInWithPassword(const std::string& email, const std::string& password) = 0;
     virtual void signInWithSocial(const std::string& provider) = 0;
     virtual void signOut() = 0;

@@ -14,29 +14,27 @@ SigninAudiocomPageModel::SigninAudiocomPageModel(QObject* parent)
 void SigninAudiocomPageModel::init()
 {
     authorization()->authState().ch.onReceive(this, [this](au::au3cloud::AuthState newState) {
-        if (m_state == au::au3cloud::AuthState::Authorizing
-            && newState == au::au3cloud::AuthState::NotAuthorized) {
-            m_authSucceeded = false;
-            m_authFailed = true;
-            emit authFailedChanged();
-        } else if (newState == au::au3cloud::AuthState::Authorized
-                   && m_state == au::au3cloud::AuthState::Authorizing) {
-            m_authFailed = false;
-            m_authSucceeded = true;
+        if (newState == au::au3cloud::AuthState::NotAuthorized) {
+            const auto& message = m_isRegistering
+                                  ? qtrc("appshell/gettingstarted", "Registration failed. Please try again.")
+                                  : qtrc("appshell/gettingstarted", "Incorrect email or password. Please try again.");
+            setErrorMessage(message);
         } else {
-            m_authFailed = false;
-            m_authSucceeded = false;
+            setErrorMessage(QString());
         }
+
         m_state = newState;
+
         emit authInProgressChanged();
-        emit authFailedChanged();
-        emit authSucceededChanged();
+        emit authorizedChanged();
     });
 }
 
-void SigninAudiocomPageModel::signIn(const QString& email, const QString& password)
+void SigninAudiocomPageModel::triggerAction(const QString& email, const QString& password)
 {
-    authorization()->signInWithPassword(email.toStdString(), password.toStdString());
+    m_isRegistering
+    ? authorization()->registerWithPassword(email.toStdString(), password.toStdString())
+    : authorization()->signInWithPassword(email.toStdString(), password.toStdString());
 }
 
 void SigninAudiocomPageModel::signInWithSocial(const QString& provider)
@@ -44,22 +42,44 @@ void SigninAudiocomPageModel::signInWithSocial(const QString& provider)
     authorization()->signInWithSocial(provider.toStdString());
 }
 
-void SigninAudiocomPageModel::signOut()
-{
-    authorization()->signOut();
-}
-
 bool SigninAudiocomPageModel::authInProgress() const
 {
     return m_state == au::au3cloud::AuthState::Authorizing;
 }
 
-bool SigninAudiocomPageModel::authFailed() const
-{
-    return m_authFailed;
-}
-
-bool SigninAudiocomPageModel::authSucceeded() const
+bool SigninAudiocomPageModel::authorized() const
 {
     return m_state == au::au3cloud::AuthState::Authorized;
+}
+
+bool SigninAudiocomPageModel::isRegistering() const
+{
+    return m_isRegistering;
+}
+
+void SigninAudiocomPageModel::setIsRegistering(bool isRegistering)
+{
+    if (m_isRegistering != isRegistering) {
+        m_isRegistering = isRegistering;
+        emit isRegisteringChanged();
+    }
+}
+
+bool SigninAudiocomPageModel::showErrorMessage() const
+{
+    return !m_errorMessage.isEmpty();
+}
+
+QString SigninAudiocomPageModel::errorMessage() const
+{
+    return m_errorMessage;
+}
+
+void SigninAudiocomPageModel::setErrorMessage(const QString& errorMessage)
+{
+    if (m_errorMessage != errorMessage) {
+        m_errorMessage = errorMessage;
+        emit errorMessageChanged();
+        emit showErrorMessageChanged();
+    }
 }
