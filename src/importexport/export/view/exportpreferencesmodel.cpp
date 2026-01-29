@@ -172,7 +172,12 @@ void ExportPreferencesModel::setCurrentProcess(const QString& newProcess)
         return;
     }
 
-    if (type == ExportProcessType::SELECTED_AUDIO && !selectionController()->timeSelectionIsNotEmpty()) {
+    const bool timeEmpty = !selectionController()->timeSelectionIsNotEmpty();
+    const bool noClips = !selectionController()->hasSelectedClips();
+    const bool moreThanOneClip = selectionController()->selectedClips().size() > 1;
+    if (type == ExportProcessType::SELECTED_AUDIO
+        && timeEmpty
+        && (noClips || moreThanOneClip)) {
         interactive()->error(muse::trc("export", "No selected audio"),
                              muse::trc("export",
                                        "Export selected audio requires a selection of audio data in the project. Please return to the project, make a selection and then try again."));
