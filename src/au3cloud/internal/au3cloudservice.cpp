@@ -11,6 +11,7 @@
 #include "au3-cloud-audiocom/OAuthService.h"
 #include "au3-cloud-audiocom/UserService.h"
 #include "au3-import-export/ExportUtils.h"
+#include "au3-preferences/Prefs.h"
 
 #include "au3cloudservice.h"
 
@@ -114,4 +115,14 @@ std::string Au3CloudService::getDisplayName() const
     auto& userService = audacity::cloud::audiocom::GetUserService();
     return userService.GetDisplayName().IsEmpty() ? userService.GetUserSlug().ToStdString()
            : userService.GetDisplayName().ToStdString();
+}
+
+void Au3CloudService::setSendAnonymousUsageInfo(bool send)
+{
+    SendAnonymousUsageInfo->Write(send);
+}
+
+bool Au3CloudService::getSendAnonymousUsageInfo() const
+{
+    return SendAnonymousUsageInfo->Read();
 }

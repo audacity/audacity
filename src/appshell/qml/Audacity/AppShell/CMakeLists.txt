@@ -21,6 +21,8 @@ qt_add_qml_module(appshell_qml
         FirstLaunchSetup/workspacelayoutpagemodel.h
         FirstLaunchSetup/signinaudiocompagemodel.cpp
         FirstLaunchSetup/signinaudiocompagemodel.h
+        FirstLaunchSetup/appupdateusageinfopagemodel.cpp
+        FirstLaunchSetup/appupdateusageinfopagemodel.h
         framelesswindowmodel.cpp
         framelesswindowmodel.h
         maintoolbarmodel.cpp

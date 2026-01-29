@@ -11,12 +11,12 @@
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/iinteractive.h"
 #include "framework/multiinstances/imultiinstancesprovider.h"
-
 #include "au3cloud/iauthorization.h"
 #include "au3cloud/iuserdata.h"
+#include "au3cloud/iusageinfo.h"
 
 namespace au::au3cloud {
-class Au3CloudService : public muse::async::Asyncable, public IAuthorization, public IUserData, public muse::Injectable
+class Au3CloudService : public muse::async::Asyncable, public IAuthorization, public IUserData, public IUsageInfo, public muse::Injectable
 {
     muse::Inject<muse::IInteractive> interactive = { this };
     muse::GlobalInject <muse::mi::IMultiInstancesProvider> multiInstancesProvider;
@@ -35,6 +35,9 @@ public:
 
     std::string getAvatarPath() const override;
     std::string getDisplayName() const override;
+
+    bool getSendAnonymousUsageInfo() const override;
+    void setSendAnonymousUsageInfo(bool send) override;
 
 private:
     Observer::Subscription m_authSubscription;
