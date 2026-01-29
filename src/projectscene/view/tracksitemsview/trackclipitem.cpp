@@ -24,7 +24,7 @@ void TrackClipItem::setClip(const trackedit::Clip& clip)
     emit speedPercentageChanged();
     emit colorChanged();
     emit groupIdChanged();
-    emit waveChanged();
+    emit contentChanged();
     emit timeChanged();
 }
 

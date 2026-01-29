@@ -497,8 +497,8 @@ TrackItemsContainer {
 
                                 Connections {
                                     target: itemData
-                                    function onWaveChanged() {
-                                        updateWave()
+                                    function onContentChanged() {
+                                        updateViews()
                                     }
                                 }
 

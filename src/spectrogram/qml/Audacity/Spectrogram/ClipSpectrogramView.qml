@@ -27,6 +27,15 @@ Item {
     required property double selectionStartFrequency
     required property double selectionEndFrequency
 
+    function update() {
+        for (let i = 0; i < repeater.count; i++) {
+            const item = repeater.itemAt(i)
+            if (item) {
+                item.update()
+            }
+        }
+    }
+
     function getSpectrogramHit(y /* relative to tracks canvas */) {
         y = root.mapFromItem(root.canvas, 0, y).y
         if (y < 0 || y > height) {

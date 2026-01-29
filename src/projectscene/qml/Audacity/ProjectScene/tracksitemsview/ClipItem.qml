@@ -273,8 +273,9 @@ Rectangle {
         }
     }
 
-    function updateWave() {
+    function updateViews() {
         waveView.update()
+        spectrogramView.update()
     }
 
     ClipContextMenuModel {
