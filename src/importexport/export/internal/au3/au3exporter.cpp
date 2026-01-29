@@ -168,9 +168,10 @@ muse::Ret Au3Exporter::exportData(std::string filename)
 
     auto downMix = std::make_unique<MixerOptions::Downmix>(inputChannelsCount,
                                                            exportConfiguration()->exportChannels());
-    if (ExportChannelsPref::ExportChannels(exportConfiguration()->exportChannels()) == ExportChannelsPref::ExportChannels::MONO) {
+    if (ExportChannelsPref::ExportChannels(exportConfiguration()->exportChannelsType()) == ExportChannelsPref::ExportChannels::MONO) {
         m_numChannels = 1;
-    } else if (ExportChannelsPref::ExportChannels(exportConfiguration()->exportChannels()) == ExportChannelsPref::ExportChannels::STEREO) {
+    } else if (ExportChannelsPref::ExportChannels(exportConfiguration()->exportChannelsType())
+               == ExportChannelsPref::ExportChannels::STEREO) {
         m_numChannels = 2;
     } else {
         //Figure out the final channel mapping: mixer dialog shows
