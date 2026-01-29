@@ -18,6 +18,7 @@ StyledTableView {
 
     model: tableViewModel
     headerCapitalization: Font.MixedCase
+    horizontalHeaderNavigationEnabled: false
     showVerticalHeader: true
 
     sourceComponentCallback: function(type) {
