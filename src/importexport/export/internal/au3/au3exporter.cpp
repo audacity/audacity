@@ -132,6 +132,7 @@ muse::Ret Au3Exporter::exportData(std::string filename)
     editor->Load(*gPrefs);
     m_parameters = ExportUtils::ParametersFromEditor(*editor);
 
+    m_selectedOnly = false;
     // TODO: implement other ExportProcessType's selections
     if (exportConfiguration()->processType() == ExportProcessType::SELECTED_AUDIO) {
         m_t0
@@ -140,6 +141,7 @@ muse::Ret Au3Exporter::exportData(std::string filename)
         m_t1
             = selectionController()->timeSelectionIsNotEmpty() ? selectionController()->dataSelectedEndTime()
               : selectionController()->rightMostSelectedClipEndTime().value_or(0.0);
+        m_selectedOnly = true;
     } else if (exportConfiguration()->processType() == ExportProcessType::AUDIO_IN_LOOP_REGION) {
         auto region = playbackController()->loopRegion();
         m_t0 = region.start;
@@ -150,8 +152,6 @@ muse::Ret Au3Exporter::exportData(std::string filename)
         m_t0 = 0.0;
         m_t1 = trackeditProject->totalTime().to_double();
     }
-
-    m_selectedOnly = false;
 
     m_tags = &Tags::Get(*project);
 
