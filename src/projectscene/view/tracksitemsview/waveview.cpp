@@ -51,6 +51,10 @@ WaveView::WaveView(QQuickItem* parent)
         }
     });
 
+    connect(this, &WaveView::visibleChanged, [this]() {
+        emit isNearSampleChanged();
+    });
+
     connect(this, &WaveView::multiSampleEditChanged, [this]() {
         if (!m_multiSampleEdit) {
             pushProjectHistorySampleEdit();
@@ -282,7 +286,7 @@ void WaveView::setChannelHeightRatio(double channelHeightRatio)
 
 bool WaveView::isNearSample() const
 {
-    return m_isNearSample;
+    return isVisible() && m_isNearSample;
 }
 
 void WaveView::setIsNearSample(bool isNearSample)
