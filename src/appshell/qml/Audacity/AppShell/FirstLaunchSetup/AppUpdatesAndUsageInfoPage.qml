@@ -51,6 +51,14 @@ Item {
                                                         .arg(prv.privacyPolicyLink)
     }
 
+    AppUpdateUsageInfoPageModel {
+        id: model
+    }
+
+    Component.onDestruction: {
+        model.setSendAnonymousUsageInfo(enableUUIDCheckBox.checked)
+    }
+
     function readInfo() {
         accessibleInfo.readInfo()
     }
@@ -192,6 +200,10 @@ Item {
 
                 text: prv.enableUUIDText
                 checked: true
+
+                onClicked: {
+                    checked = !checked
+                }
             }
 
             StyledTextLabel {
