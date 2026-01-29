@@ -65,6 +65,12 @@ static UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Zoom to fit project"),
              IconCode::Code::FIT_PROJECT
              ),
+    UiAction("center-view-on-playhead",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Center view on playhead"),
+             TranslatableString("action", "Center view on playhead")
+             ),
     UiAction("action://trackedit/global-view-spectrogram",
              au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,

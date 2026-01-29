@@ -1,7 +1,9 @@
 /*
  * Audacity: A Digital Audio Editor
  */
+
 #include "trackeditoperationcontroller.h"
+
 #include "trackediterrors.h"
 
 namespace au::trackedit {
@@ -141,8 +143,18 @@ void TrackeditOperationController::clearClipboard()
 muse::Ret TrackeditOperationController::pasteFromClipboard(secs_t begin, bool moveClips, bool moveAllTracks)
 {
     auto modifiedState = false;
-    const auto ret = tracksInteraction()->paste(clipboard()->trackDataCopy(), begin, moveClips, moveAllTracks,
-                                                clipboard()->isMultiSelectionCopy(), modifiedState);
+    muse::Ret ret;
+    const auto paths = clipboard()->systemClipboardFilePaths();
+
+    if (!paths.empty()) {
+        ret = importer()->importFromSystemClipboard(paths, begin);
+        dispatcher()->dispatch("center-view-on-playhead", muse::actions::ActionData::make_arg1<bool>(
+                                   true /* center only if playhead is not visible */));
+    } else {
+        ret = tracksInteraction()->paste(clipboard()->trackDataCopy(), begin, moveClips, moveAllTracks,
+                                         clipboard()->isMultiSelectionCopy(), modifiedState);
+    }
+
     if (ret) {
         projectHistory()->pushHistoryState("Pasted from the clipboard", "Paste");
     } else if (modifiedState) {
@@ -154,6 +166,7 @@ muse::Ret TrackeditOperationController::pasteFromClipboard(secs_t begin, bool mo
 
 bool TrackeditOperationController::cutClipIntoClipboard(const ClipKey& clipKey)
 {
+    clipboard()->clearSystemClipboard();
     ITrackDataPtr data = clipsInteraction()->cutClip(clipKey);
     if (!data) {
         return false;
@@ -165,6 +178,7 @@ bool TrackeditOperationController::cutClipIntoClipboard(const ClipKey& clipKey)
 
 bool TrackeditOperationController::cutItemDataIntoClipboard(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips)
 {
+    clipboard()->clearSystemClipboard();
     std::vector<ITrackDataPtr> tracksData;
     for (const auto& trackId : tracksIds) {
         const auto data = tracksInteraction()->cutTrackData(trackId, begin, end, moveClips);
@@ -182,6 +196,7 @@ bool TrackeditOperationController::cutItemDataIntoClipboard(const TrackIdList& t
 
 bool TrackeditOperationController::copyClipIntoClipboard(const ClipKey& clipKey)
 {
+    clipboard()->clearSystemClipboard();
     ITrackDataPtr data = clipsInteraction()->copyClip(clipKey);
     if (!data) {
         return false;
@@ -193,6 +208,7 @@ bool TrackeditOperationController::copyClipIntoClipboard(const ClipKey& clipKey)
 bool TrackeditOperationController::copyNonContinuousTrackDataIntoClipboard(const TrackId trackId, const TrackItemKeyList& itemKeys,
                                                                            secs_t offset)
 {
+    clipboard()->clearSystemClipboard();
     ITrackDataPtr data = tracksInteraction()->copyNonContinuousTrackData(trackId, itemKeys, offset);
     if (!data) {
         return false;
@@ -206,6 +222,7 @@ bool TrackeditOperationController::copyNonContinuousTrackDataIntoClipboard(const
 
 bool TrackeditOperationController::copyContinuousTrackDataIntoClipboard(const TrackId trackId, secs_t begin, secs_t end)
 {
+    clipboard()->clearSystemClipboard();
     ITrackDataPtr data = tracksInteraction()->copyContinuousTrackData(trackId, begin, end);
     if (!data) {
         return false;

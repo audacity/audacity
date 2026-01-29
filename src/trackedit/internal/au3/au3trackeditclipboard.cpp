@@ -2,6 +2,11 @@
 * Audacity: A Digital Audio Editor
 */
 
+#include <QMimeData>
+#include <QClipboard>
+
+#include "global/io/fileinfo.h"
+
 #include "au3trackeditclipboard.h"
 #include "au3trackdata.h"
 
@@ -11,6 +16,28 @@
 #include "au3-wave-track/WaveClip.h"
 #include "au3-wave-track/WaveTrack.h"
 #include "au3-label-track/LabelTrack.h"
+
+namespace {
+static std::vector<muse::io::path_t> extractLocalFilePaths(const QMimeData* md)
+{
+    std::vector<muse::io::path_t> out;
+    if (!md) {
+        return out;
+    }
+
+    if (md->hasUrls()) {
+        const auto urls = md->urls();
+        out.reserve(static_cast<size_t>(urls.size()));
+        for (const QUrl& url : urls) {
+            if (url.isLocalFile() && muse::io::FileInfo::exists(url.toLocalFile())) {
+                out.emplace_back(muse::io::path_t(url.toLocalFile()));
+            }
+        }
+    }
+
+    return out;
+}
+}
 
 using namespace au::trackedit;
 
@@ -63,6 +90,24 @@ void Au3TrackeditClipboard::setMultiSelectionCopy(bool newValue)
 bool Au3TrackeditClipboard::isMultiSelectionCopy() const
 {
     return m_isMultiSelectionCopy;
+}
+
+std::vector<muse::io::path_t> Au3TrackeditClipboard::systemClipboardFilePaths() const
+{
+    const QClipboard* cb = QGuiApplication::clipboard();
+    if (!cb) {
+        return {};
+    }
+
+    const QMimeData* md = cb->mimeData();
+    return extractLocalFilePaths(md);
+}
+
+void Au3TrackeditClipboard::clearSystemClipboard()
+{
+    auto* md = new QMimeData();
+    md->setText(QString());
+    QGuiApplication::clipboard()->setMimeData(md);
 }
 
 std::set<int64_t> Au3TrackeditClipboard::getGroupIDs(const std::vector<Au3TrackDataPtr>& tracksData)
