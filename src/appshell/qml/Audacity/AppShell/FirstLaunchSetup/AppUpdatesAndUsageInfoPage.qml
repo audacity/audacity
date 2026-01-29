@@ -1,4 +1,3 @@
-
 /*
  * Audacity: A Digital Audio Editor
  */
