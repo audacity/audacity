@@ -12,6 +12,25 @@ static const QString makeTrackItemsPanelName(const TrackId& trackId)
     return QString("Track %1 Items Panel").arg(trackId);
 }
 
+static const muse::ui::INavigationControl* findFirstEnabledControl(const muse::ui::INavigationPanel* panel)
+{
+    int minIndex = std::numeric_limits<int>::max();
+    muse::ui::INavigationControl* firstControl = nullptr;
+    for (muse::ui::INavigationControl* control : panel->controls()) {
+        if (!control || !control->enabled()) {
+            continue;
+        }
+
+        int index = control->index().order();
+        if (minIndex > index) {
+            firstControl = control;
+            minIndex = index;
+        }
+    }
+
+    return firstControl;
+}
+
 TrackNavigationModel::TrackNavigationModel(QObject* parent)
     : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
 {
@@ -28,6 +47,16 @@ void TrackNavigationModel::init(muse::ui::NavigationSection* section)
     globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]() {
         cleanup();
         load();
+    });
+
+    navigationController()->navigationChanged().onNotify(this, [this](){
+        const muse::ui::INavigationPanel* activePanel = navigationController()->activePanel();
+        const muse::ui::INavigationControl* activeControl = navigationController()->activeControl();
+
+        if (m_trackItemPanels.contains(activePanel)) {
+            const muse::ui::INavigationControl* firstControl = findFirstEnabledControl(activePanel);
+            tracksNavigationController()->setIsNavigationActive(firstControl == activeControl);
+        }
     });
 }
 
@@ -134,6 +163,17 @@ void TrackNavigationModel::addPanels(const TrackId& trackId, int pos)
     trackPanel->setOrder(2 * pos);
     trackPanel->setSection(m_section);
     trackPanel->componentComplete();
+
+    connect(trackPanel, &muse::ui::NavigationPanel::navigationEvent, this,
+            [this, trackId](muse::ui::NavigationEvent* event) {
+        if (event->type() != muse::ui::NavigationEvent::AboutActive) {
+            return;
+        }
+
+        if (tracksNavigationController()->focusedTrack() != trackId) {
+            tracksNavigationController()->setFocusedTrack(trackId);
+        }
+    });
 
     muse::ui::NavigationPanel* itemsPanel = new muse::ui::NavigationPanel(this);
     itemsPanel->setName(makeTrackItemsPanelName(trackId));
@@ -257,13 +297,12 @@ void TrackNavigationModel::activateNavigation(const TrackId& trackId, bool highl
         return;
     }
 
-    const auto controls = targetPanel->controls();
-    if (controls.empty()) {
+    const muse::ui::INavigationControl* firstControl = findFirstEnabledControl(targetPanel);
+    if (!firstControl) {
         return;
     }
 
-    const auto firstControl = controls.begin();
-    if (!(*firstControl)) {
+    if (firstControl->active()) {
         return;
     }
 
@@ -271,7 +310,7 @@ void TrackNavigationModel::activateNavigation(const TrackId& trackId, bool highl
     navigationController()->requestActivateByName(
         m_section->name().toStdString(),
         panelName.toStdString(),
-        (*firstControl)->name().toStdString()
+        firstControl->name().toStdString()
         );
 }
 
@@ -302,6 +341,10 @@ void TrackNavigationModel::activateNavigation(const TrackItemKey& itemKey, bool 
     const auto controls = targetPanel->controls();
     for (auto* control : controls) {
         if (control && control->name() == QString::number(itemKey.itemId)) {
+            if (control->active()) {
+                return;
+            }
+
             navigationController()->setIsHighlight(highlight);
             navigationController()->requestActivateByName(
                 m_section->name().toStdString(),

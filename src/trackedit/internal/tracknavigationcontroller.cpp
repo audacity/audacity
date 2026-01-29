@@ -97,6 +97,26 @@ void TrackNavigationController::init()
     });
 }
 
+bool TrackNavigationController::isNavigationEnabled() const
+{
+    return m_isNavigationActive;
+}
+
+void TrackNavigationController::setIsNavigationActive(bool active)
+{
+    if (m_isNavigationActive == active) {
+        return;
+    }
+
+    m_isNavigationActive = active;
+    m_isNavigationActiveChannel.notify();
+}
+
+muse::async::Notification TrackNavigationController::isNavigationActiveChanged() const
+{
+    return m_isNavigationActiveChannel;
+}
+
 au::trackedit::TrackId TrackNavigationController::focusedTrack() const
 {
     return m_focusedItemKey.trackId;

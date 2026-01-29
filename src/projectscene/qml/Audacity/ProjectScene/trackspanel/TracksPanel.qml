@@ -214,7 +214,7 @@ Item {
 
                             navigation.name: Boolean(item) ? item.title + item.index : ""
                             navigation.panel: root.navPanels && root.navPanels[index] ? root.navPanels[index] : null
-                            navigation.row: index
+                            navigation.order: 0
                             navigation.accessible.name: Boolean(item) ? item.title : ""
                             navigation.onActiveChanged: {
                                 if (navigation.active) {
@@ -271,7 +271,7 @@ Item {
 
                             navigation.name: Boolean(item) ? item.title + item.index : ""
                             navigation.panel: root.navPanels && root.navPanels[index] ? root.navPanels[index] : null
-                            navigation.row: index
+                            navigation.order: 0
                             navigation.accessible.name: Boolean(item) ? item.title : ""
                             navigation.onActiveChanged: {
                                 if (navigation.active) {
