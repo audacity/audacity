@@ -67,7 +67,7 @@ bool Au3LabelsInteraction::addLabelToSelection()
 
     Au3LabelTrack* labelTrack = nullptr;
 
-    const auto focusedTrackId = selectionController()->focusedTrack();
+    const auto focusedTrackId = trackNavigationController()->focusedTrack();
     if (focusedTrackId > 0) {
         Au3Track* focusedAu3Track = DomAccessor::findTrack(project, Au3TrackId(focusedTrackId));
         if (focusedAu3Track) {

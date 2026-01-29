@@ -201,42 +201,6 @@ static UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Show clipping in waveform"),
              Checkable::Yes
              ),
-    UiAction("track-toggle-focused-selection",
-             au::context::UiCtxProjectOpened,
-             muse::shortcuts::CTX_PROJECT_OPENED,
-             TranslatableString("action", "Select track"),
-             TranslatableString("action", "Select track")
-             ),
-    UiAction("track-range-selection",
-             au::context::UiCtxProjectOpened,
-             muse::shortcuts::CTX_PROJECT_OPENED,
-             TranslatableString("action", "Track range selection"),
-             TranslatableString("action", "Track range selection")
-             ),
-    UiAction("focus-prev-track",
-             au::context::UiCtxProjectOpened,
-             muse::shortcuts::CTX_PROJECT_OPENED,
-             TranslatableString("action", "Focus previous track"),
-             TranslatableString("action", "Focus previous track")
-             ),
-    UiAction("focus-next-track",
-             au::context::UiCtxProjectOpened,
-             muse::shortcuts::CTX_PROJECT_OPENED,
-             TranslatableString("action", "Focus next track"),
-             TranslatableString("action", "Focus next track")
-             ),
-    UiAction("shift-up",
-             au::context::UiCtxProjectOpened,
-             muse::shortcuts::CTX_PROJECT_OPENED,
-             TranslatableString("action", "Multi track selection previous"),
-             TranslatableString("action", "Multi track selection previous")
-             ),
-    UiAction("shift-down",
-             au::context::UiCtxProjectOpened,
-             muse::shortcuts::CTX_PROJECT_OPENED,
-             TranslatableString("action", "Multi track selection next"),
-             TranslatableString("action", "Multi track selection next")
-             ),
     UiAction("action://projectscene/track-view-half-wave",
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_OPENED,

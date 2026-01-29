@@ -12,6 +12,7 @@
 #include "trackedit/iclipsinteraction.h"
 #include "trackedit/iselectioncontroller.h"
 #include "trackedit/iprojecthistory.h"
+#include "trackedit/internal/itracknavigationcontroller.h"
 #include "playback/iplaybackconfiguration.h"
 
 #include "../../itracksinteraction.h"
@@ -30,6 +31,7 @@ class Au3TracksInteraction : public ITracksInteraction, public muse::Injectable
     muse::Inject<au::trackedit::ISelectionController> selectionController{ this };
     muse::Inject<au::trackedit::IProjectHistory> projectHistory{ this };
     muse::Inject<au::trackedit::IClipsInteraction> clipsInteraction{ this };
+    muse::Inject<au::trackedit::ITrackNavigationController> trackNavigationController{ this };
 
 public:
     Au3TracksInteraction(const muse::modularity::ContextPtr& ctx);

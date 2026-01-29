@@ -11,6 +11,7 @@ Dial {
     id: root
 
     property alias navigation: navCtrl
+    property bool isValueEditNavigationLeftAndRight: true
 
     property real radius: 16
     property real backgroundHeight: radius + radius * Math.sin(prv.startAngle)
@@ -85,7 +86,7 @@ Dial {
 
     NavigationControl {
         id: navCtrl
-        name: root.objectName != "" ? root.objectName : "KnobControl"
+        name: root.objectName !== "" ? root.objectName : "KnobControl"
         enabled: root.enabled && root.visible
 
         accessible.role: MUAccessible.Range
@@ -97,14 +98,31 @@ Dial {
         accessible.stepSize: root.stepSize
 
         onNavigationEvent: function(event) {
+            const handle = (stepSize) => {
+                prv.requestNewValue(root.value + stepSize)
+                event.accepted = true
+            }
+
             switch(event.type) {
             case NavigationEvent.Left:
-                prv.requestNewValue(root.value - root.stepSize)
-                event.accepted = true
+                if (isValueEditNavigationLeftAndRight) {
+                    handle(-root.stepSize)
+                }
                 break
             case NavigationEvent.Right:
-                prv.requestNewValue(root.value + root.stepSize)
-                event.accepted = true
+                if (isValueEditNavigationLeftAndRight) {
+                    handle(root.stepSize)
+                }
+                break
+            case NavigationEvent.Up:
+                if (!isValueEditNavigationLeftAndRight) {
+                    handle(root.stepSize)
+                }
+                break
+            case NavigationEvent.Down:
+                if (!isValueEditNavigationLeftAndRight) {
+                    handle(-root.stepSize)
+                }
                 break
             }
         }

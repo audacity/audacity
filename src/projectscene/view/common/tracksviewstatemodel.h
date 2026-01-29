@@ -43,6 +43,8 @@ public:
     Q_INVOKABLE void changeTracksVerticalOffset(int deltaY);
     Q_INVOKABLE void setMouseY(double y);
 
+    Q_INVOKABLE void insureVerticallyVisible(int viewContentY, int viewHeight, int itemY, int itemHeight);
+
     Q_INVOKABLE void requestVerticalScrollLock();
     Q_INVOKABLE void requestVerticalScrollUnlock();
 

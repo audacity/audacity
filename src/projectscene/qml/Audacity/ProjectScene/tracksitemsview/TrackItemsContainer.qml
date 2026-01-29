@@ -47,7 +47,7 @@ Item {
     signal updateMoveActive(bool completed)
 
     signal seekToX(var x)
-    signal insureVerticallyVisible(var top, var bottom)
+    signal insureVerticallyVisible()
 
     signal handleTimeGuideline(real x, bool completed)
     signal triggerItemGuideline(real x, bool completed)
