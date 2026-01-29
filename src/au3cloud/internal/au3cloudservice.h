@@ -27,6 +27,7 @@ public:
 
     void init();
 
+    void registerWithPassword(const std::string& email, const std::string& password) override;
     void signInWithPassword(const std::string& email, const std::string& password) override;
     void signInWithSocial(const std::string& provider) override;
     void signOut() override;

@@ -44,6 +44,27 @@ void Au3CloudService::init()
     });
 }
 
+void Au3CloudService::registerWithPassword(const std::string& email, const std::string& password)
+{
+    m_authState.set(AuthState::Authorizing);
+
+    auto& oauthService = audacity::cloud::audiocom::GetOAuthService();
+    oauthService.Register(email, password,
+                          [this](auto token)
+    {
+        if (token.empty()) {
+            m_authState.set(AuthState::NotAuthorized);
+            return;
+        }
+
+        m_authState.set(AuthState::Authorized);
+    },
+                          [this](auto, auto)
+    {
+        m_authState.set(AuthState::NotAuthorized);
+    }, AudiocomTrace::ignore);
+}
+
 void Au3CloudService::signInWithPassword(const std::string& email, const std::string& password)
 {
     m_authState.set(AuthState::Authorizing);

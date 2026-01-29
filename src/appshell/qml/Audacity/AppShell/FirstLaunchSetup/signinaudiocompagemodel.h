@@ -20,29 +20,42 @@ class SigninAudiocomPageModel : public QObject, public muse::async::Asyncable, p
     muse::Inject<au::au3cloud::IAuthorization> authorization { this };
 
     Q_PROPERTY(bool authInProgress READ authInProgress NOTIFY authInProgressChanged)
-    Q_PROPERTY(bool authFailed READ authFailed NOTIFY authFailedChanged)
-    Q_PROPERTY(bool authSucceeded READ authSucceeded NOTIFY authInProgressChanged)
+    Q_PROPERTY(bool authorized READ authorized NOTIFY authorizedChanged)
+    Q_PROPERTY(bool isRegistering READ isRegistering WRITE setIsRegistering NOTIFY isRegisteringChanged)
+
+    Q_PROPERTY(bool showErrorMessage READ showErrorMessage NOTIFY showErrorMessageChanged)
+    Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged)
 
 public:
     explicit SigninAudiocomPageModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void init();
-    Q_INVOKABLE void signIn(const QString& email, const QString& password);
     Q_INVOKABLE void signInWithSocial(const QString& provider);
-    Q_INVOKABLE void signOut();
+    Q_INVOKABLE void triggerAction(const QString& email, const QString& password);
 
     bool authInProgress() const;
-    bool authFailed() const;
-    bool authSucceeded() const;
+    bool authorized() const;
+    bool isRegistering() const;
+
+    bool showErrorMessage() const;
+    QString errorMessage() const;
 
 signals:
     void authInProgressChanged();
-    void authFailedChanged();
-    void authSucceededChanged();
+    void authorizedChanged();
+    void isRegisteringChanged();
+
+    void showErrorMessageChanged();
+    void errorMessageChanged();
+public slots:
+    void setIsRegistering(bool isRegistering);
 
 private:
+    void setErrorMessage(const QString& message);
+
     au::au3cloud::AuthState m_state;
-    bool m_authFailed = false;
-    bool m_authSucceeded = false;
+    bool m_isRegistering = false;
+
+    QString m_errorMessage;
 };
 }

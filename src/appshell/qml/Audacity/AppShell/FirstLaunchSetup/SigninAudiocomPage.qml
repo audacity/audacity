@@ -37,12 +37,15 @@ Page {
         readonly property int textInputHeight: 28
         readonly property string emailText: qsTrc("appshell/gettingstarted", "Email")
         readonly property string passwordText: qsTrc("appshell/gettingstarted", "Password")
-        readonly property string noAccountText: qsTrc("appshell/gettingstarted", "Don't have an account? Create a new account.")
+        readonly property string forgotPasswordLink:  qsTrc("appshell/gettingstarted", "<a href=\"%1\">Forgot your password?</a>")
+        readonly property string createNewAccountLink: qsTrc("appshell/gettingstarted", "Don´t have an account? <a href=\"create-account\">Create new account</a>")
+        readonly property string alreadyHaveAccountLink: qsTrc("appshell/gettingstarted", "Already have an account? <a href=\"sign-in\">Sign in</a>")
 
-        readonly property string formButtonText: model.authInProgress ? qsTrc("appshell/gettingstarted", "Loading...") : qsTrc("appshell/gettingstarted", "Sign In")
-        readonly property string authFailedText: qsTrc("appshell/gettingstarted", "Incorrect email or password. Please try again.")
-        readonly property int signinButtonHeight: 28
-        readonly property int signInButtonExtraSpace: model.authFailed ? 0 : 8
+        readonly property string formButtonTextLoading: qsTrc("appshell/gettingstarted", "Loading...")
+        readonly property string formButtonTextSignIn: qsTrc("appshell/gettingstarted", "Sign In")
+        readonly property string formButtonTextCreateAccount: qsTrc("appshell/gettingstarted", "Create Account")
+        readonly property int formButtonHeight: 28
+        readonly property int formButtonExtraSpace: model.showErrorMessage ? 0 : 8
 
         readonly property string forgotPasswordUrl: "https://audio.com/auth/forgot-password"
     }
@@ -54,8 +57,8 @@ Page {
     SigninAudiocomPageModel{
         id: model
 
-        onAuthSucceededChanged: {
-            if (authSucceeded) {
+        onAuthorizedChanged: {
+            if (authorized) {
                 root.nextPage()
             }
         }
@@ -224,8 +227,8 @@ Page {
                 }
 
                 StyledTextLabel {
-                    text: qsTrc("appshell/gettingstarted", "<a href=\"%1\">Forgot your password?</a>")
-                        .arg(prv.forgotPasswordUrl)
+                    visible: !model.isRegistering
+                    text: prv.forgotPasswordLink.arg(prv.forgotPasswordUrl)
                 }
             }
 
@@ -248,23 +251,23 @@ Page {
         Column {
             spacing: 8
             Layout.fillWidth: true
-            Layout.topMargin: prv.signInButtonExtraSpace
+            Layout.topMargin: prv.formButtonExtraSpace
 
             StyledTextLabel {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.horizontalCenter: parent.horizontalCenter
 
-                visible: model.authFailed
+                visible: model.showErrorMessage
                 color: ui.theme.extra["record_color"]
 
-                text: prv.authFailedText
+                text: model.errorMessage
             }
 
             FlatButton {
                 anchors.left: parent.left
                 anchors.right: parent.right
-                height: prv.signinButtonHeight
+                height: prv.formButtonHeight
 
                 NavigationPanel {
                     id: actionsPanel
@@ -272,26 +275,43 @@ Page {
                     enabled: root.enabled && root.visible
                     section: root.navigationSection
                     order: root.navigationStartRow + 4
-                    accessible.name: qsTrc("appshell/gettingstarted", "Sign-in action")
+                    accessible.name: qsTrc("appshell/gettingstarted", "Form action")
                 }
 
                 accentButton: true
 
-                text: prv.formButtonText
+                text: {
+                    if (model.isRegistering) {
+                        return prv.formButtonTextCreateAccount
+                    }
 
-                navigation.name: "SignInButton"
+                    return model.authInProgress ? prv.formButtonTextLoading : prv.formButtonTextSignIn
+                }
+
+                navigation.name: "FormButton"
                 navigation.panel: actionsPanel
 
                 onClicked: {
-                    model.signIn(emailInputField.inputField.text, passwordInputField.inputField.text)
+                    model.triggerAction(emailInputField.inputField.text, passwordInputField.inputField.text)
                 }
             }
         }
 
         StyledTextLabel {
             Layout.alignment: Qt.AlignHCenter
+            text: model.isRegistering ? prv.alreadyHaveAccountLink : prv.createNewAccountLink
+            textFormat: Text.RichText
+            onLinkActivated: {
+                if (link === "create-account") {
+                    model.isRegistering = true
+                    return
+                }
 
-            text: prv.noAccountText
+                if (link === "sign-in") {
+                    model.isRegistering = false
+                    return
+                }
+            }
         }
     }
 }
