@@ -123,5 +123,13 @@ protected:
 
 TEST_F(ProjectViewStateTests, tracksInRange)
 {
+    const trackedit::TrackIdList tracks = getAllTracks();
+    ASSERT_EQ(tracks.size(), 2) << "Expecting 2 tracks in test.aup4";
+    // Minimum track height is 44, so use values >= 44
+    m_projectViewState->setTrackHeight(tracks[0], 50);
+    m_projectViewState->setTrackHeight(tracks[1], 50);
+    // Track 0: y=0 to y=50, Track 1: y=50 to y=100
+    // Range (25, 75) should include both tracks
+    EXPECT_EQ(1, m_projectViewState->tracksInRange(0, 10).size());
 }
 } // namespace au::projectscene
