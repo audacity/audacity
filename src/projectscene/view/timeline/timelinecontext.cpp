@@ -251,7 +251,7 @@ void TimelineContext::centerViewOnPlayhead(const muse::actions::ActionData& args
 
     const int onlyIfPlayheadNotVisible = args.arg<bool>(0);
 
-    const double playheadSec = playbackState()->playbackPosition();
+    const trackedit::secs_t playheadSec = playbackState()->playbackPosition();
 
     if (muse::RealIsEqualOrMore(playheadSec, m_frameStartTime)
         && muse::RealIsEqualOrLess(playheadSec, m_frameEndTime)
@@ -259,8 +259,8 @@ void TimelineContext::centerViewOnPlayhead(const muse::actions::ActionData& args
         return;
     }
 
-    const double frameTime = m_frameEndTime - m_frameStartTime;
-    const double newFrameStartTime = playheadSec - frameTime * 0.5;
+    const trackedit::secs_t frameTime = m_frameEndTime - m_frameStartTime;
+    const trackedit::secs_t newFrameStartTime = playheadSec - frameTime * 0.5;
 
     moveToFrameTime(newFrameStartTime);
 }

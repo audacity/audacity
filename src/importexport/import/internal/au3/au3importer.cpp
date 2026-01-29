@@ -206,7 +206,7 @@ bool au::importexport::Au3Importer::importIntoTrack(const muse::io::path_t& file
     return true;
 }
 
-bool au::importexport::Au3Importer::importFromOsClipboard(
+bool au::importexport::Au3Importer::importFromSystemClipboard(
     const std::vector<muse::io::path_t>& filePaths, muse::secs_t startTime)
 {
     // this is basically the same as drag&drop import so utilizing DropController to do the job

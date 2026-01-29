@@ -147,7 +147,7 @@ muse::Ret TrackeditOperationController::pasteFromClipboard(secs_t begin, bool mo
     const auto paths = clipboard()->systemClipboardFilePaths();
 
     if (!paths.empty()) {
-        ret = importer()->importFromOsClipboard(paths, begin);
+        ret = importer()->importFromSystemClipboard(paths, begin);
         dispatcher()->dispatch("center-view-on-playhead", muse::actions::ActionData::make_arg1<bool>(
                                    true /* center only if playhead is not visible */));
     } else {

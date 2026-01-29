@@ -29,7 +29,7 @@ public:
 
     bool import(const muse::io::path_t& filePath) override;
     bool importIntoTrack(const muse::io::path_t& filePath, trackedit::TrackId dstTrackId, muse::secs_t startTime) override;
-    bool importFromOsClipboard(const std::vector<muse::io::path_t>& filePaths, muse::secs_t startTime) override;
+    bool importFromSystemClipboard(const std::vector<muse::io::path_t>& filePaths, muse::secs_t startTime) override;
     std::vector<std::string> supportedExtensions() const override;
 
 private:

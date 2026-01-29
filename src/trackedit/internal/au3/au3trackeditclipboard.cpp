@@ -2,9 +2,10 @@
 * Audacity: A Digital Audio Editor
 */
 
-#include <QFileInfo>
 #include <QMimeData>
 #include <QClipboard>
+
+#include "global/io/fileinfo.h"
 
 #include "au3trackeditclipboard.h"
 #include "au3trackdata.h"
@@ -28,7 +29,7 @@ static std::vector<muse::io::path_t> extractLocalFilePaths(const QMimeData* md)
         const auto urls = md->urls();
         out.reserve(static_cast<size_t>(urls.size()));
         for (const QUrl& url : urls) {
-            if (url.isLocalFile() && QFileInfo::exists(url.toLocalFile())) {
+            if (url.isLocalFile() && muse::io::FileInfo::exists(url.toLocalFile())) {
                 out.emplace_back(muse::io::path_t(url.toLocalFile()));
             }
         }
