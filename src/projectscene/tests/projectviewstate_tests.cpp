@@ -121,15 +121,33 @@ protected:
     const std::shared_ptr<au3::Au3ProjectAccessor> m_au3ProjectAccessor = std::make_shared<au3::Au3ProjectAccessor>();
 };
 
-TEST_F(ProjectViewStateTests, tracksInRange)
+TEST_F(ProjectViewStateTests, tracksInRange_InputIntervalIsClosedOpen)
 {
+    // i.e., [y1, y2)
+
     const trackedit::TrackIdList tracks = getAllTracks();
     ASSERT_EQ(tracks.size(), 2) << "Expecting 2 tracks in test.aup4";
     // Minimum track height is 44, so use values >= 44
     m_projectViewState->setTrackHeight(tracks[0], 50);
     m_projectViewState->setTrackHeight(tracks[1], 50);
-    // Track 0: y=0 to y=50, Track 1: y=50 to y=100
-    // Range (25, 75) should include both tracks
-    EXPECT_EQ(1, m_projectViewState->tracksInRange(0, 10).size());
+
+    const auto tracksTop = m_projectViewState->trackVerticalPosition(tracks[0]);
+    const auto firstTrackBottom = tracksTop + m_projectViewState->trackHeight(tracks[0]).val;
+    const auto secondTrackTop = m_projectViewState->trackVerticalPosition(tracks[1]);
+    const auto tracksBottom = secondTrackTop + m_projectViewState->trackHeight(tracks[1]).val;
+
+    using namespace trackedit;
+
+    EXPECT_EQ(TrackIdList({ }), m_projectViewState->tracksInRange(-10000, tracksTop));
+    EXPECT_EQ(TrackIdList({ tracks[0] }), m_projectViewState->tracksInRange(-10000, tracksTop + 1));
+
+    // Point selection
+    EXPECT_EQ(TrackIdList({ tracks[0] }), m_projectViewState->tracksInRange(tracksTop + 1, tracksTop + 1));
+
+    EXPECT_EQ(TrackIdList({ tracks[0], tracks[1] }), m_projectViewState->tracksInRange(tracksTop, secondTrackTop + 1));
+    EXPECT_EQ(TrackIdList({ tracks[1] }), m_projectViewState->tracksInRange(firstTrackBottom, secondTrackTop + 1));
+
+    // Outside
+    EXPECT_EQ(TrackIdList({ }), m_projectViewState->tracksInRange(tracksBottom, tracksBottom + 1));
 }
 } // namespace au::projectscene
