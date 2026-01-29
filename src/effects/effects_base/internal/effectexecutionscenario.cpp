@@ -101,8 +101,8 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
         if (numSelectedClips != 0) {
             // If multiple clips are selected, we have checked that the effect supports it, in which case these global time boundaries shouldn't be relevant.
             // If this is just a single-clip selection, though, that will just be start and end times of the selected clip.
-            t0 = selectionController()->selectedClipStartTime();
-            t1 = selectionController()->selectedClipEndTime();
+            t0 = selectionController()->selectedClipStartTime().value_or(0.0);
+            t1 = selectionController()->selectedClipEndTime().value_or(0.0);
         } else {
             t0 = selectionController()->dataSelectedStartTime();
             t1 = selectionController()->dataSelectedEndTime();

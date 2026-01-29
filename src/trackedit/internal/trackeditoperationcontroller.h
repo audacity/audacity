@@ -14,6 +14,7 @@
 #include "iclipsinteraction.h"
 #include "ilabelsinteraction.h"
 #include "itrackeditclipboard.h"
+#include "iselectioncontroller.h"
 
 namespace au::trackedit {
 class TrackeditOperationController : public ITrackeditInteraction, public muse::Injectable, public muse::async::Asyncable
@@ -23,6 +24,7 @@ class TrackeditOperationController : public ITrackeditInteraction, public muse::
     muse::Inject<ILabelsInteraction> labelsInteraction { this };
     muse::Inject<ITrackeditClipboard> clipboard { this };
     muse::Inject<IProjectHistory> projectHistory { this };
+    muse::Inject<ISelectionController> selectionController { this };
     muse::Inject<au::context::IGlobalContext> globalContext { this };
 
 public:
@@ -60,6 +62,7 @@ public:
     bool removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips) override;
     muse::RetVal<LabelKeyList> moveClips(const ClipKeyList& clipKeyList, secs_t timePositionOffset, int trackPositionOffset, bool completed,
                                          bool& clipsMovedToOtherTrack) override;
+    bool moveRangeSelection(secs_t timePositionOffset, bool completed) override;
     void cancelItemDragEdit() override;
     bool splitTracksAt(const TrackIdList& tracksIds, std::vector<secs_t> pivots) override;
     bool splitClipsAtSilences(const ClipKeyList& clipKeyList) override;
@@ -79,8 +82,6 @@ public:
     bool stretchClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed, UndoPushType type) override;
     bool stretchClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed, UndoPushType type) override;
     secs_t clipDuration(const ClipKey& clipKey) const override;
-    std::optional<secs_t> getLeftmostClipStartTime(const ClipKeyList& clipKeys) const override;
-    std::optional<secs_t> getRightmostClipEndTime(const ClipKeyList& clipKeys) const override;
     double nearestZeroCrossing(double t0) const override;
     muse::Ret makeRoomForClip(const trackedit::ClipKey& clipKey) override;
 
@@ -140,8 +141,6 @@ public:
 
     bool stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed) override;
     bool stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed) override;
-
-    std::optional<secs_t> getLeftmostLabelStartTime(const LabelKeyList& labelKeys) const override;
 
     muse::Progress progress() const override;
 

@@ -368,10 +368,15 @@ void Au3Player::loopEditingEnd()
 
 void Au3Player::setLoopRegion(const PlaybackRegion& region)
 {
+    if (!region.isValid()) {
+        return;
+    }
+
     Au3Project& project = projectRef();
     auto& playRegion = ViewInfo::Get(project).playRegion;
 
     playRegion.SetAllTimes(region.start, region.end);
+    playRegion.SetActive(true);
 
     m_loopRegionChanged.notify();
 }
@@ -434,9 +439,9 @@ void Au3Player::setLoopRegionActive(const bool active)
         if (selectionController()->timeSelectionIsNotEmpty()) {
             start = selectionController()->dataSelectedStartTime();
             end = selectionController()->dataSelectedEndTime();
-        } else if (selectionController()->hasSelectedClips()) {
-            start = selectionController()->leftMostSelectedClipStartTime();
-            end = selectionController()->rightMostSelectedClipEndTime();
+        } else if (selectionController()->leftMostSelectedItemStartTime().has_value()) {
+            start = selectionController()->leftMostSelectedItemStartTime().value();
+            end = selectionController()->rightMostSelectedItemEndTime().value_or(0.0);
         } else {
             // Default length is 4 bars
             au::trackedit::TimeSignature ts = globalContext()->currentTrackeditProject()->timeSignature();

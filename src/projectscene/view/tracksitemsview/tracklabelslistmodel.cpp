@@ -234,8 +234,14 @@ void TrackLabelsListModel::selectLabel(const LabelKey& key)
             return;
         }
 
-        selectionController()->resetSelectedClips();
-        selectionController()->setSelectedLabels(LabelKeyList({ key.key }), true);
+        if (selectionController()->timeSelectionIsNotEmpty()
+            && muse::contains(selectionController()->labelsIntersectingRangeSelection(), key.key)) {
+            selectionController()->addSelectedLabel(key.key);
+        } else {
+            selectionController()->resetDataSelection();
+            selectionController()->resetSelectedClips();
+            selectionController()->setSelectedLabels(LabelKeyList({ key.key }), true);
+        }
     }
 
     m_needToSelectTracksData = false;
@@ -300,11 +306,15 @@ bool TrackLabelsListModel::moveSelectedLabels(const LabelKey& key, bool complete
     // Labels can only be moved to label tracks
     TrackItemsListModel::MoveOffset moveOffset = calculateMoveOffset(item, key, { trackedit::TrackType::Label }, completed);
     if (vs->moveInitiated()) {
-        auto selectedLabels = selectionController()->selectedLabels();
-        ok = trackeditInteraction()->moveLabels(selectedLabels, moveOffset.timeOffset, completed);
+        if (selectionController()->timeSelectionIsNotEmpty()) {
+            ok = trackeditInteraction()->moveRangeSelection(moveOffset.timeOffset, completed);
+        } else {
+            auto selectedLabels = selectionController()->selectedLabels();
+            ok = trackeditInteraction()->moveLabels(selectedLabels, moveOffset.timeOffset, completed);
+        }
     }
 
-    if (ok && isTrackDataSelected()) {
+    if (ok && !selectionController()->timeSelectionIsNotEmpty() && isTrackDataSelected()) {
         doSelectTracksData(key);
     }
 
@@ -397,7 +407,7 @@ TrackLabelItem* TrackLabelsListModel::labelItemByKey(const trackedit::LabelKey& 
 void TrackLabelsListModel::selectTracksDataFromLabelRange(const LabelKey& key)
 {
     TrackLabelItem* labelItem = labelItemByKey(key.key);
-    if (!labelItem || labelItem->isEditing()) {
+    if (!labelItem || labelItem->isEditing() || labelItem->isPoint()) {
         return;
     }
 

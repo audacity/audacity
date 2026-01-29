@@ -48,6 +48,7 @@ private:
     bool removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips) override;
     muse::RetVal<ClipKeyList> moveClips(const ClipKeyList& clipKeyList, secs_t timePositionOffset, int trackPositionOffset, bool completed,
                                         bool&) override;
+    bool moveRangeSelection(secs_t timePositionOffset, bool completed) override;
     void cancelItemDragEdit() override;
     bool splitTracksAt(const TrackIdList& tracksIds, std::vector<secs_t> pivots) override;
     bool splitClipsAtSilences(const ClipKeyList& clipKeyList) override;
@@ -67,8 +68,6 @@ private:
     bool stretchClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed, UndoPushType type) override;
     bool stretchClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed, UndoPushType type) override;
     muse::secs_t clipDuration(const trackedit::ClipKey& clipKey) const override;
-    std::optional<secs_t> getLeftmostClipStartTime(const ClipKeyList& clipKeys) const override;
-    std::optional<secs_t> getRightmostClipEndTime(const ClipKeyList& clipKeys) const override;
     double nearestZeroCrossing(double time) const override;
     muse::Ret makeRoomForClip(const trackedit::ClipKey& clipKey) override;
 
@@ -128,8 +127,6 @@ private:
 
     bool stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed) override;
     bool stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed) override;
-
-    std::optional<secs_t> getLeftmostLabelStartTime(const LabelKeyList& labelKeys) const override;
 
     muse::Progress progress() const override;
 

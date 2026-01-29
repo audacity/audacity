@@ -111,7 +111,12 @@ void PlaybackController::init()
             if (selectionRegion.isValid()) {
                 doChangePlaybackRegion(selectionRegion);
             }
-            doSeek(m_lastPlaybackSeekTime, false);
+            auto labelStartTime = selectionController()->selectedLabelStartTime();
+            auto labelEndTime = selectionController()->selectedLabelEndTime();
+            if (labelStartTime.has_value()) {
+                doSeek(labelStartTime.value(), false);
+                m_lastPlaybackRegion = { labelStartTime.value_or(0.0), labelEndTime.value_or(0.0) };
+            }
         }
     });
 }
@@ -164,17 +169,11 @@ bool PlaybackController::isLoopRegionActive() const
 
 PlaybackRegion PlaybackController::selectionPlaybackRegion() const
 {
-    // clip selection have priority over time selection
-    if (selectionController()->selectedClips().size() == 1) {
-        secs_t clipStartTime = selectionController()->selectedClipStartTime();
-        secs_t clipEndTime = selectionController()->selectedClipEndTime();
-        return { clipStartTime, clipEndTime };
-    }
-
-    if (selectionController()->selectedLabels().size() == 1) {
-        secs_t labelStartTime = selectionController()->selectedLabelStartTime();
-        secs_t labelEndTime = selectionController()->selectedLabelEndTime();
-        return { labelStartTime, labelEndTime };
+    // item selection has priority over time selection
+    auto itemStart = selectionController()->leftMostSelectedItemStartTime();
+    auto itemEnd = selectionController()->rightMostSelectedItemEndTime();
+    if (itemStart.has_value() && itemEnd.has_value()) {
+        return { itemStart.value(), itemEnd.value() };
     }
 
     if (selectionController()->timeSelectionIsNotEmpty()) {
@@ -567,12 +566,16 @@ void PlaybackController::setLoopRegionToSelection()
     if (selectionController()->timeSelectionIsNotEmpty()) {
         start = selectionController()->dataSelectedStartTime();
         end = selectionController()->dataSelectedEndTime();
-    } else if (selectionController()->hasSelectedClips()) {
-        start = selectionController()->leftMostSelectedClipStartTime();
-        end = selectionController()->rightMostSelectedClipEndTime();
     } else {
-        player()->clearLoopRegion();
-        return;
+        auto itemStart = selectionController()->leftMostSelectedItemStartTime();
+        auto itemEnd = selectionController()->rightMostSelectedItemEndTime();
+        if (itemStart.has_value() && itemEnd.has_value()) {
+            start = itemStart.value();
+            end = itemEnd.value();
+        } else {
+            player()->clearLoopRegion();
+            return;
+        }
     }
 
     player()->setLoopRegion({ start, end });

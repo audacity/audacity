@@ -38,8 +38,6 @@ public:
     virtual bool stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed) = 0;
     virtual bool stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed) = 0;
 
-    virtual std::optional<secs_t> getLeftmostLabelStartTime(const LabelKeyList& labelKeys) const = 0;
-
     virtual muse::Progress progress() const = 0;
 };
 }

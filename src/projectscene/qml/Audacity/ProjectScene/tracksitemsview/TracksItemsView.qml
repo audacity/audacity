@@ -466,6 +466,8 @@ Rectangle {
 
             property var lastItemClickKey: null
             property bool itemWasMoved: false
+            property point pressStartPosition: Qt.point(0, 0)
+            readonly property int moveThreshold: 5
 
             onWheel: function (wheelEvent) {
                 timeline.onWheel(wheelEvent.x, wheelEvent.pixelDelta, wheelEvent.angleDelta)
@@ -499,6 +501,7 @@ Rectangle {
                     }
 
                     itemWasMoved = false
+                    pressStartPosition = Qt.point(e.x, e.y)
                 } else if (e.button === Qt.RightButton) {
                     if (tracksHovered)
                     //! TODO AU4: handle context menu over empty track area
@@ -512,11 +515,15 @@ Rectangle {
                 timeline.updateCursorPosition(e.x, e.y)
                 splitToolController.mouseMove(e.x)
 
-                if (root.itemHeaderHovered && mainMouseArea.pressed) {
-                    itemWasMoved = true
+                if (root.interactionState === TracksItemsView.State.DraggingItem && !itemWasMoved) {
+                    var dx = Math.abs(e.x - pressStartPosition.x)
+                    var dy = Math.abs(e.y - pressStartPosition.y)
+                    if (dx > moveThreshold || dy > moveThreshold) {
+                        itemWasMoved = true
+                    }
                 }
 
-                if (root.interactionState === TracksItemsView.State.DraggingItem) {
+                if (root.interactionState === TracksItemsView.State.DraggingItem && itemWasMoved) {
                     tracksItemsView.itemMoveRequested(hoveredItemKey, false)
                     tracksItemsView.startAutoScroll()
                 } else {
@@ -539,8 +546,10 @@ Rectangle {
 
                 if (root.interactionState === TracksItemsView.State.DraggingItem) {
                     root.interactionState = TracksItemsView.State.Idle
-                    tracksItemsView.itemMoveRequested(hoveredItemKey, true)
-                    tracksItemsView.stopAutoScroll()
+                    if (itemWasMoved) {
+                        tracksItemsView.itemMoveRequested(hoveredItemKey, true)
+                        tracksItemsView.stopAutoScroll()
+                    }
                     tracksItemsView.itemEndEditRequested(hoveredItemKey)
                 } else {
                     splitToolController.mouseUp(e.x)
@@ -1125,35 +1134,25 @@ Rectangle {
         }
     }
 
-    Rectangle {
+    LoopRegionGuideline {
         id: loopRegionGuidelineLeft
-
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        x: timeline.context.timeToPosition(playRegionModel.start) + content.x
         z: timelineHeader.z + 1
-
-        width: 1
-
-        color: ui.theme.extra["white_color"]
-        opacity: 0.8
-
+        context: timeline.context
+        time: playRegionModel.start
+        contentX: content.x
         visible: playRegionModel.active
     }
 
-    Rectangle {
+    LoopRegionGuideline {
         id: loopRegionGuidelineRight
-
         anchors.top: parent.top
         anchors.bottom: parent.bottom
-        x: timeline.context.timeToPosition(playRegionModel.end) + content.x
         z: timelineHeader.z + 1
-
-        width: 1
-
-        color: ui.theme.extra["white_color"]
-        opacity: 0.8
-
+        context: timeline.context
+        time: playRegionModel.end
+        contentX: content.x
         visible: playRegionModel.active
     }
 
