@@ -118,7 +118,7 @@ muse::ui::UiContext UiContextResolver::resolveUiContext() const
 
         INavigationSection* activeSection = navigationController()->activeSection();
         if (activeSection) {
-            if (activeSection->name() == DEFAULT_NAVIGATION_SECTION) {
+            if (activeSection->name() == DEFAULT_NAVIGATION_SECTION && trackNavigationController()->isNavigationEnabled()) {
                 return context::UiCtxProjectFocused;
             }
         }

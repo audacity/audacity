@@ -12,6 +12,25 @@ static const QString makeTrackItemsPanelName(const TrackId& trackId)
     return QString("Track %1 Items Panel").arg(trackId);
 }
 
+static const muse::ui::INavigationControl* findFirstEnabledControl(const muse::ui::INavigationPanel* panel)
+{
+    int minIndex = std::numeric_limits<int>::max();
+    muse::ui::INavigationControl* firstControl = nullptr;
+    for (muse::ui::INavigationControl* control : panel->controls()) {
+        if (!control || !control->enabled()) {
+            continue;
+        }
+
+        int index = control->index().order();
+        if (minIndex > index) {
+            firstControl = control;
+            minIndex = index;
+        }
+    }
+
+    return firstControl;
+}
+
 TrackNavigationModel::TrackNavigationModel(QObject* parent)
     : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
 {
@@ -28,6 +47,16 @@ void TrackNavigationModel::init(muse::ui::NavigationSection* section)
     globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]() {
         cleanup();
         load();
+    });
+
+    navigationController()->navigationChanged().onNotify(this, [this](){
+        const muse::ui::INavigationPanel* activePanel = navigationController()->activePanel();
+        const muse::ui::INavigationControl* activeControl = navigationController()->activeControl();
+
+        if (m_trackItemPanels.contains(activePanel)) {
+            const muse::ui::INavigationControl* firstControl = findFirstEnabledControl(activePanel);
+            tracksNavigationController()->setIsNavigationActive(firstControl == activeControl);
+        }
     });
 }
 

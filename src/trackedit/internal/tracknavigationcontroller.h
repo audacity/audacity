@@ -37,6 +37,10 @@ public:
 
     void init();
 
+    bool isNavigationEnabled() const override;
+    void setIsNavigationActive(bool active) override;
+    muse::async::Notification isNavigationActiveChanged() const override;
+
     TrackId focusedTrack() const override;
     void setFocusedTrack(const TrackId& trackId, bool highlight = false) override;
     muse::async::Channel<TrackId, bool /*highlight*/> focusedTrackChanged() const override;
@@ -99,6 +103,9 @@ private:
     void openContextMenuForFocusedItem();
 
     void au3SetTrackFocused(const TrackId& trackId);
+
+    bool m_isNavigationActive = false;
+    muse::async::Notification m_isNavigationActiveChannel;
 
     std::optional<TrackId> m_selectionStart;
     std::optional<TrackId> m_lastSelectedTrack;
