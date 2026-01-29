@@ -26,9 +26,17 @@ public:
     void setDirectoryPath(const muse::io::path_t& path) override;
     muse::async::Notification directoryPathChanged() const override;
 
+    int exportChannelsType() const override;
+    void setExportChannelsType(int channels) override;
+    muse::async::Notification exportChannelsTypeChanged() const override;
+
     int exportChannels() const override;
     void setExportChannels(int channels) override;
     muse::async::Notification exportChannelsChanged() const override;
+
+    muse::Val exportCustomChannelMapping() const override;
+    void setExportCustomChannelMapping(const muse::Val& mapping) override;
+    muse::async::Notification exportCustomChannelMappingChanged() const override;
 
     std::string currentFormat() const override;
     void setCurrentFormat(const std::string& format) override;
@@ -141,7 +149,9 @@ private:
     muse::async::Notification m_filenameChanged;
     muse::async::Notification m_directoryPathChanged;
     muse::async::Notification m_currentFormatChanged;
+    muse::async::Notification m_exportChannelsTypeChanged;
     muse::async::Notification m_exportChannelsChanged;
+    muse::async::Notification m_exportCustomChannelsMappingChanged;
     muse::async::Notification m_exportSampleRateChanged;
     muse::async::Notification m_defaultSampleFormatChanged;
 
