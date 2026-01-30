@@ -27,5 +27,38 @@ public:
                                  EffectSettingsAccessPtr settingsAccess = nullptr) override;
 
     muse::String getParameterValueString(EffectInstance* instance, const muse::String& parameterId, double value) const override;
+
+    //! Check if the effect instance is the Nyquist Prompt
+    //! @param instance The effect instance to check
+    //! @return true if this is the Nyquist Prompt, false otherwise
+    bool isNyquistPrompt(EffectInstance* instance) const;
+
+    //! Get the Nyquist command text from the Nyquist Prompt
+    //! @param instance The effect instance (must be Nyquist Prompt)
+    //! @return The command text, or empty string if not a prompt
+    muse::String getPromptCommandText(EffectInstance* instance) const;
+
+    //! Set the Nyquist command text for the Nyquist Prompt
+    //! @param instance The effect instance (must be Nyquist Prompt)
+    //! @param commandText The Nyquist code to set
+    //! @param settingsAccess Optional settings access to persist the change
+    //! @return true if successful
+    bool setPromptCommandText(EffectInstance* instance, const muse::String& commandText, EffectSettingsAccessPtr settingsAccess = nullptr);
+
+    //! Enable debug mode for the Nyquist effect
+    //! @param instance The effect instance
+    //! @param enable true to enable debug mode, false to disable
+    void setDebugMode(EffectInstance* instance, bool enable);
+
+    //! Get the debug output from the last execution
+    //! @param instance The effect instance
+    //! @return The debug output text
+    muse::String getDebugOutput(EffectInstance* instance) const;
+
+    //! Execute the Nyquist code for debugging (without audio playback)
+    //! @param instance The effect instance
+    //! @param settings The effect settings
+    //! @return The debug output text
+    muse::String executeForDebug(EffectInstance* instance, EffectSettings& settings);
 };
 }

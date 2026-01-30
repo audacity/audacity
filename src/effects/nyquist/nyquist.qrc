@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qml/Audacity/Nyquist/qmldir</file>
+        <file>qml/Audacity/Nyquist/NyquistPromptViewer.qml</file>
+    </qresource>
+</RCC>
+

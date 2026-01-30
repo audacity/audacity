@@ -2,7 +2,8 @@
  * Audacity: A Digital Audio Editor
  */
 #include "destructiveeffectviewerdialogmodel.h"
-#include "log.h"
+
+#include "effects/nyquist/internal/nyquistparameterextractorservice.h"
 
 namespace au::effects {
 DestructiveEffectViewerDialogModel::DestructiveEffectViewerDialogModel(QObject* parent)
@@ -82,8 +83,26 @@ ViewerComponentType DestructiveEffectViewerDialogModel::viewerComponentType() co
         return ViewerComponentType::Builtin;
     }
 
-    // Nyquist effects always use generated UI (no vendor UI available)
+    // Nyquist effects: check if it's the Nyquist Prompt
     if (family == EffectFamily::Nyquist) {
+        // Use the parameter extractor to check if this is the Nyquist Prompt
+        // The Nyquist Prompt is a special effect that needs a custom UI (text editor)
+        // instead of the auto-generated parameter UI
+        IParameterExtractorService* extractor = parameterExtractorRegistry()
+                                                ? parameterExtractorRegistry()->extractorForFamily(EffectFamily::Nyquist)
+                                                : nullptr;
+        if (extractor) {
+            EffectInstance* instance = instancesRegister()->instanceById(m_instanceId).get();
+            if (instance) {
+                // Cast to NyquistParameterExtractorService to access isNyquistPrompt()
+                // We know this is safe because we got it from the registry for Nyquist family
+                auto* nyquistExtractor = dynamic_cast<au::effects::NyquistParameterExtractorService*>(extractor);
+                if (nyquistExtractor && nyquistExtractor->isNyquistPrompt(instance)) {
+                    return ViewerComponentType::NyquistPrompt;
+                }
+            }
+        }
+        // Regular Nyquist effects use generated UI (no vendor UI available)
         return ViewerComponentType::Generated;
     }
 

@@ -126,7 +126,7 @@ NyqControl* findControl(std::vector<NyqControl>& controls, const String& varName
 } // anonymous namespace
 
 ParameterInfoList NyquistParameterExtractorService::extractParameters(EffectInstance* instance,
-                                                                      EffectSettingsAccessPtr settingsAccess) const
+                                                                      [[maybe_unused]] EffectSettingsAccessPtr settingsAccess) const
 {
     NyquistBase* nyquist = getNyquistBase(instance);
     if (!nyquist) {
@@ -289,4 +289,91 @@ muse::String NyquistParameterExtractorService::getParameterValueString(EffectIns
         }
         return String::number(value);
     }
+}
+
+bool NyquistParameterExtractorService::isNyquistPrompt(EffectInstance* instance) const
+{
+    NyquistBase* nyquist = getNyquistBase(instance);
+    if (!nyquist) {
+        return false;
+    }
+
+    return nyquist->mIsPrompt;
+}
+
+muse::String NyquistParameterExtractorService::getPromptCommandText(EffectInstance* instance) const
+{
+    NyquistBase* nyquist = getNyquistBase(instance);
+    if (!nyquist || !nyquist->mIsPrompt) {
+        return String();
+    }
+
+    return String::fromStdString(au3::wxToStdString(nyquist->mInputCmd));
+}
+
+bool NyquistParameterExtractorService::setPromptCommandText(EffectInstance* instance, const String& commandText,
+                                                            [[maybe_unused]] EffectSettingsAccessPtr settingsAccess)
+{
+    NyquistBase* nyquist = getNyquistBase(instance);
+    if (!nyquist || !nyquist->mIsPrompt) {
+        return false;
+    }
+
+    // Set the command text directly on the NyquistBase instance
+    nyquist->mInputCmd = au3::wxFromString(commandText);
+
+    return true;
+}
+
+void NyquistParameterExtractorService::setDebugMode(EffectInstance* instance, bool enable)
+{
+    NyquistBase* nyquist = getNyquistBase(instance);
+    if (!nyquist) {
+        return;
+    }
+
+    nyquist->mDebug = enable;
+    // Note: Do NOT call RedirectOutput() here!
+    // When mRedirectOutput is false, OutputCallback captures to mDebugOutputStr
+    // When mRedirectOutput is true, OutputCallback prints to std::cout
+    // We want to capture to mDebugOutputStr, so we leave mRedirectOutput as false
+}
+
+muse::String NyquistParameterExtractorService::getDebugOutput(EffectInstance* instance) const
+{
+    NyquistBase* nyquist = getNyquistBase(instance);
+    if (!nyquist) {
+        return String();
+    }
+
+    return String::fromStdString(au3::wxToStdString(nyquist->mDebugOutputStr));
+}
+
+muse::String NyquistParameterExtractorService::executeForDebug(EffectInstance* instance, EffectSettings& settings)
+{
+    NyquistBase* nyquist = getNyquistBase(instance);
+    if (!nyquist) {
+        return String();
+    }
+
+    // Use SetCommand to parse the current command text
+    // This sets up mCmd, mIsSal, and other necessary state
+    nyquist->SetCommand(nyquist->mInputCmd);
+
+    // Enable debug mode
+    nyquist->mDebug = true;
+    // Clear previous debug output
+    nyquist->mDebugOutputStr.clear();
+
+    // Execute the Nyquist code by calling Process
+    // This will run the code and capture output to mDebugOutputStr
+    nyquist->Process(*instance, settings);
+
+    // Get the captured output
+    String debugOutput = String::fromStdString(au3::wxToStdString(nyquist->mDebugOutputStr));
+
+    // Disable debug mode
+    nyquist->mDebug = false;
+
+    return debugOutput;
 }
