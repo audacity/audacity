@@ -43,6 +43,7 @@ public:
         CurrentEnumIndexRole,
         EnumValuesRole,
         EnumIndicesRole,
+        FileFiltersRole,
         IsReadOnlyRole,
         IsHiddenRole,
         IsLogarithmicRole,

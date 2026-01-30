@@ -104,6 +104,14 @@ QVariant EffectParametersListModel::data(const QModelIndex& index, int role) con
     }
     case EnumIndicesRole:
         return QVariant::fromValue(param.enumIndices);
+    case FileFiltersRole:
+    {
+        QVariantList list;
+        for (const auto& filter : param.fileFilters) {
+            list.append(filter.toQString());
+        }
+        return list;
+    }
     case IsReadOnlyRole:
         return param.isReadOnly;
     case IsHiddenRole:
@@ -154,6 +162,7 @@ QHash<int, QByteArray> EffectParametersListModel::roleNames() const
         { CurrentEnumIndexRole, "currentEnumIndex" },
         { EnumValuesRole, "enumValues" },
         { EnumIndicesRole, "enumIndices" },
+        { FileFiltersRole, "fileFilters" },
         { IsReadOnlyRole, "isReadOnly" },
         { IsHiddenRole, "isHidden" },
         { IsLogarithmicRole, "isLogarithmic" },

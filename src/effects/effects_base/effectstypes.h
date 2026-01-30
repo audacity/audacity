@@ -95,6 +95,9 @@ struct ParameterInfo {
     std::vector<muse::String> enumValues;  // List of choice labels
     std::vector<double> enumIndices;       // Corresponding normalized values
 
+    // For file parameters
+    std::vector<muse::String> fileFilters;  // File type filters (e.g., "Nyquist Plug-in (*.ny *.NY)")
+
     // Flags
     bool isReadOnly = false;
     bool isHidden = false;

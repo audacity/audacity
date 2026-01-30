@@ -310,11 +310,19 @@ Item {
         id: fileControl
 
         FilePicker {
+            Layout.fillWidth: true
             path: parameterData ? parameterData.currentValueString : ""
             pickerType: FilePicker.PickerType.File
             enabled: parameterData ? !parameterData.isReadOnly : false
 
-            // TODO: Add support for file filters from parameterData.units
+            // Set file filters from parameterData
+            filter: {
+                if (!parameterData || !parameterData.fileFilters || parameterData.fileFilters.length === 0) {
+                    return ""
+                }
+                // Join all filters with ";;" separator for Qt file dialog
+                return parameterData.fileFilters.join(";;")
+            }
 
             onPathEdited: function (newPath) {
                 // File selection is a single atomic operation - begin and end gesture immediately

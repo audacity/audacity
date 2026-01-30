@@ -82,6 +82,34 @@ ParameterInfo convertControl(const NyqControl& ctrl)
         }
     }
 
+    // For file controls, extract file type filters
+    if (ctrl.type == NYQ_CTRL_FILE) {
+        info.fileFilters.reserve(ctrl.fileTypes.size());
+
+        for (const auto& fileType : ctrl.fileTypes) {
+            // Convert FileType to filter string format: "Description (*.ext1 *.ext2)"
+            wxString filterStr = fileType.description.Translation();
+
+            if (!fileType.extensions.empty()) {
+                wxString extList;
+                for (const auto& ext : fileType.extensions) {
+                    if (!extList.empty()) {
+                        extList += wxT(" ");
+                    }
+                    if (ext.empty()) {
+                        // Empty extension means "all files"
+                        extList += wxT("*");
+                    } else {
+                        extList += wxT("*.") + ext;
+                    }
+                }
+                filterStr += wxT(" (") + extList + wxT(")");
+            }
+
+            info.fileFilters.push_back(String::fromStdString(au::au3::wxToStdString(filterStr)));
+        }
+    }
+
     return info;
 }
 
