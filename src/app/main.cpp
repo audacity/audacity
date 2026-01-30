@@ -46,9 +46,7 @@
 #include "framework/learn/learnmodule.h"
 #include "framework/languages/languagesmodule.h"
 #include "framework/workspace/workspacemodule.h"
-
-// need stubs
-#include "framework/stubs/multiinstances/multiinstancesstubmodule.h"
+#include "framework/multiinstances/multiinstancesmodule.h"
 
 // -----
 #include "appshell/appshellmodule.h"
@@ -97,6 +95,7 @@
 #endif
 
 #include "au3wrap/au3wrapmodule.h"
+#include "au3cloud/au3cloudmodule.h"
 
 #if (defined (_MSCVER) || defined (_MSC_VER))
 #include <vector>
@@ -278,6 +277,7 @@ int main(int argc, char** argv)
         app.addModule(new au::importexport::ImporterModule());
         app.addModule(new au::importexport::LabelsModule());
         app.addModule(new au::au3::Au3WrapModule());
+        app.addModule(new au::au3cloud::Au3CloudModule());
         app.addModule(new au::effects::EffectsModule());
         app.addModule(new au::effects::BuiltinEffectsModule());
         app.addModule(new au::effects::NyquistEffectsModule());

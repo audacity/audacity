@@ -2,14 +2,15 @@
 * Audacity: A Digital Audio Editor
 */
 
-#include "au3basicui.h"
-#include "progressdialog.h"
+#include "framework/global/runtime.h"
+#include "framework/global/async/async.h"
 
-#include "global/async/async.h"
+#include "progressdialog.h"
+#include "au3basicui.h"
 
 void Au3BasicUI::DoCallAfter(const BasicUI::Action& action)
 {
-    muse::async::Async::call(this, action);
+    muse::async::Async::call(this, action, muse::runtime::mainThreadId());
 }
 
 void Au3BasicUI::DoYield()

@@ -19,6 +19,10 @@ qt_add_qml_module(appshell_qml
         FirstLaunchSetup/themespagemodel.h
         FirstLaunchSetup/workspacelayoutpagemodel.cpp
         FirstLaunchSetup/workspacelayoutpagemodel.h
+        FirstLaunchSetup/signinaudiocompagemodel.cpp
+        FirstLaunchSetup/signinaudiocompagemodel.h
+        FirstLaunchSetup/appupdateusageinfopagemodel.cpp
+        FirstLaunchSetup/appupdateusageinfopagemodel.h
         framelesswindowmodel.cpp
         framelesswindowmodel.h
         maintoolbarmodel.cpp
@@ -47,6 +51,7 @@ qt_add_qml_module(appshell_qml
         DevTools/KeyNav/KeyNavSubSection.qml
         DevTools/Preferences/SettingsPage.qml
         DevTools/ToastNotification/ToastNotificationTests.qml
+        DevTools/Cloud/CloudTests.qml
         FirstLaunchSetup/ClipVisualizationPage.qml
         FirstLaunchSetup/DoublePage.qml
         FirstLaunchSetup/FirstLaunchSetupDialog.qml
@@ -56,6 +61,8 @@ qt_add_qml_module(appshell_qml
         FirstLaunchSetup/TutorialsPage.qml
         FirstLaunchSetup/UnderConstructionPage.qml
         FirstLaunchSetup/WorkspaceLayoutPage.qml
+        FirstLaunchSetup/SigninAudiocomPage.qml
+        FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml
         HomePage/HomeMenu.qml
         HomePage/HomePage.qml
         HomePage/PluginsPage.qml

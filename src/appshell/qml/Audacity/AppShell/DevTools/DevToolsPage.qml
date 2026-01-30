@@ -31,6 +31,7 @@ import "./ToastNotification"
 import "./CrashHandler"
 import "./KeyNav"
 import "./Preferences"
+import "./Cloud"
 
 DockPage {
     id: root
@@ -47,6 +48,7 @@ DockPage {
         case "crashhandler": root.central = crashhandlerComp; break
         case "extensions": root.central = extensionsComp; break
         case "navigation": root.central = keynavComp; break
+        case "cloud": root.central = cloudComp; break
         }
     }
 
@@ -77,7 +79,8 @@ DockPage {
                         { "name": "toastnotification", "title": "Toast Notification" },
                         { "name": "crashhandler", "title": "Crash handler" },
                         { "name": "extensions", "title": "Extensions" },
-                        { "name": "navigation", "title": "KeyNav" }
+                        { "name": "navigation", "title": "KeyNav" },
+                        { "name": "cloud", "title": "Cloud Tests" }
                     ]
 
                     onSelected: function(name) {
@@ -130,5 +133,11 @@ DockPage {
         id: keynavComp
 
         KeyNavExample {}
+    }
+
+    Component {
+        id: cloudComp
+
+        CloudTests {}
     }
 }
