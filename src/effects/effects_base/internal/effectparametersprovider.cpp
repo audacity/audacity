@@ -103,6 +103,44 @@ bool EffectParametersProvider::setParameterValue(EffectInstanceId instanceId, co
     return success;
 }
 
+bool EffectParametersProvider::setParameterStringValue(EffectInstanceId instanceId, const String& parameterId, const String& stringValue)
+{
+    EffectInstance* instance = instancesRegister()->instanceById(instanceId).get();
+    if (!instance) {
+        LOGE() << "Effect instance not found: " << instanceId;
+        return false;
+    }
+
+    const EffectId effectId = instancesRegister()->effectIdByInstanceId(instanceId);
+    EffectFamily family = getEffectFamily(effectId);
+
+    IParameterExtractorService* extractor = parameterExtractorRegistry()
+                                            ? parameterExtractorRegistry()->extractorForFamily(family)
+                                            : nullptr;
+    if (!extractor) {
+        LOGW() << "No parameter extractor registered for effect family: " << static_cast<int>(family);
+        return false;
+    }
+
+    const EffectSettingsAccessPtr settingsAccess = instancesRegister()->settingsAccessById(instanceId);
+    const bool success = extractor->setParameterStringValue(instance, parameterId, stringValue, settingsAccess);
+
+    if (success) {
+        // Get the updated parameter info to send the new string value
+        const ParameterInfo param = parameter(instanceId, parameterId);
+
+        ParameterChangedData data;
+        data.instanceId = instanceId;
+        data.parameterId = parameterId;
+        data.newFullRangeValue = param.currentValue;
+        data.newValueString = param.currentValueString;
+
+        m_parameterChanged.send(data);
+    }
+
+    return success;
+}
+
 String EffectParametersProvider::parameterValueString(EffectInstanceId instanceId, const String& parameterId, double value) const
 {
     EffectInstance* instance = instancesRegister()->instanceById(instanceId).get();

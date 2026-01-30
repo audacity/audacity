@@ -34,6 +34,7 @@ set( SOURCES
    IteratorX.cpp
    IteratorX.h
    LockFreeQueue.h
+   MapToPositiveHalfIndex.h
    MathApprox.h
    MemoryX.cpp
    MemoryX.h

@@ -6,6 +6,7 @@
 #include "ieffectinstancesregister.h"
 #include "ieffectsprovider.h"
 #include "ieffectsconfiguration.h"
+#include "iparameterextractorregistry.h"
 #include "effectstypes.h"
 #include "realtimeeffectviewerdialogmodel.h"
 
@@ -29,6 +30,7 @@ class DestructiveEffectViewerDialogModel : public QObject, public muse::Injectab
 
     muse::Inject<IEffectInstancesRegister> instancesRegister{ this };
     muse::Inject<IEffectsProvider> effectsProvider{ this };
+    muse::Inject<IParameterExtractorRegistry> parameterExtractorRegistry{ this };
 
 public:
     explicit DestructiveEffectViewerDialogModel(QObject* parent = nullptr);

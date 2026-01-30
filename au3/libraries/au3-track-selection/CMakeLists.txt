@@ -13,10 +13,12 @@ callback interface for screen reader notifications.
 set( TARGET au3-track-selection )
 
 set( SOURCES
-   SelectionState.cpp
-   SelectionState.h
-   SyncLock.cpp
-   SyncLock.h
+# those files aren't used in au4 atm
+# AU4 has its own selection model and we don't want SyncLock from au3
+#   SelectionState.cpp
+#   SelectionState.h
+#   SyncLock.cpp
+#   SyncLock.h
    TrackFocus.cpp
    TrackFocus.h
 )
