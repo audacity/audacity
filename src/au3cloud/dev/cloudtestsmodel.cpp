@@ -1,6 +1,8 @@
 /*
 * Audacity: A Digital Audio Editor
 */
+#include "framework/global/io/path.h"
+
 #include "cloudtestsmodel.h"
 
 using namespace au::au3cloud;
@@ -27,9 +29,10 @@ bool CloudTestsModel::isAuthorized() const
     return authorization()->authState().val == AuthState::Authorized;
 }
 
-QString CloudTestsModel::avatarPath() const
+QUrl CloudTestsModel::avatarPath() const
 {
-    return QString::fromStdString(userData()->getAvatarPath());
+    muse::io::path_t filePath = userData()->getAvatarPath();
+    return filePath.toQUrl();
 }
 
 QString CloudTestsModel::displayName() const
