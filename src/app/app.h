@@ -23,7 +23,7 @@
 #ifndef MU_APP_APP_H
 #define MU_APP_APP_H
 
-#include <QList>
+#include <vector>
 
 #include "modularity/imodulesetup.h"
 #include "modularity/ioc.h"
@@ -53,7 +53,16 @@ private:
     void applyCommandLineOptions(const CommandLineParser::Options& options);
     int processAudioPluginRegistration(const CommandLineParser::AudioPluginRegistration& task);
 
-    QList<muse::modularity::IModuleSetup*> m_modules;
+    std::vector<muse::modularity::IContextSetup*>& contextSetups(const muse::modularity::ContextPtr& ctx);
+
+    std::vector<muse::modularity::IModuleSetup*> m_modules;
+
+    struct Context {
+        muse::modularity::ContextPtr ctx;
+        std::vector<muse::modularity::IContextSetup*> setups;
+    };
+
+    std::vector<Context> m_contexts;
 };
 }
 

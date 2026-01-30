@@ -78,12 +78,23 @@ int App::run(QCoreApplication& app, CommandLineParser& commandLineParser)
         m->registerExports();
     }
 
+    modularity::ContextPtr ctx = std::make_shared<modularity::Context>();
+    ctx->id = 0;
+    std::vector<muse::modularity::IContextSetup*>& csetups = contextSetups(ctx);
+    for (modularity::IContextSetup* s : csetups) {
+        s->registerExports();
+    }
+
     globalModule.resolveImports();
     globalModule.registerApi();
     for (modularity::IModuleSetup* m : m_modules) {
         m->registerUiTypes();
         m->resolveImports();
         m->registerApi();
+    }
+
+    for (modularity::IContextSetup* s : csetups) {
+        s->resolveImports();
     }
 
     const IApplication::RunMode runMode = commandLineParser.runMode();
@@ -101,6 +112,10 @@ int App::run(QCoreApplication& app, CommandLineParser& commandLineParser)
     globalModule.onPreInit(runMode);
     for (modularity::IModuleSetup* m : m_modules) {
         m->onPreInit(runMode);
+    }
+
+    for (modularity::IContextSetup* s : csetups) {
+        s->onPreInit(runMode);
     }
 
 #ifdef AU_BUILD_APPSHELL_MODULE
@@ -139,12 +154,20 @@ int App::run(QCoreApplication& app, CommandLineParser& commandLineParser)
         m->onInit(runMode);
     }
 
+    for (modularity::IContextSetup* s : csetups) {
+        s->onInit(runMode);
+    }
+
     // ====================================================
     // Setup modules: onAllInited
     // ====================================================
     globalModule.onAllInited(runMode);
     for (modularity::IModuleSetup* m : m_modules) {
         m->onAllInited(runMode);
+    }
+
+    for (modularity::IContextSetup* s : csetups) {
+        s->onAllInited(runMode);
     }
 
     // ====================================================
@@ -305,6 +328,34 @@ int App::run(QCoreApplication& app, CommandLineParser& commandLineParser)
     modularity::ioc()->reset();
 
     return retCode;
+}
+
+std::vector<muse::modularity::IContextSetup*>& App::contextSetups(const muse::modularity::ContextPtr& ctx)
+{
+    for (Context& c : m_contexts) {
+        if (c.ctx->id == ctx->id) {
+            return c.setups;
+        }
+    }
+
+    m_contexts.emplace_back();
+
+    Context& ref = m_contexts.back();
+    ref.ctx = ctx;
+
+    modularity::IContextSetup* global = globalModule.newContext(ctx);
+    if (global) {
+        ref.setups.push_back(global);
+    }
+
+    for (modularity::IModuleSetup* m : m_modules) {
+        modularity::IContextSetup* s = m->newContext(ctx);
+        if (s) {
+            ref.setups.push_back(s);
+        }
+    }
+
+    return ref.setups;
 }
 
 void App::applyCommandLineOptions(const CommandLineParser::Options& options)
