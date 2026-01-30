@@ -20,7 +20,7 @@ class CloudTestsModel : public QObject, public muse::async::Asyncable, public mu
     muse::Inject<IUserData> userData = { this };
 
     Q_PROPERTY(bool isAuthorized READ isAuthorized NOTIFY isAuthorizedChanged)
-    Q_PROPERTY(QString avatarPath READ avatarPath NOTIFY avatarPathChanged)
+    Q_PROPERTY(QUrl avatarPath READ avatarPath NOTIFY avatarPathChanged)
     Q_PROPERTY(QString displayName READ displayName NOTIFY displayNameChanged)
 
 public:
@@ -30,7 +30,7 @@ public:
     Q_INVOKABLE void signOut();
 
     bool isAuthorized() const;
-    QString avatarPath() const;
+    QUrl avatarPath() const;
     QString displayName() const;
 
 signals:
