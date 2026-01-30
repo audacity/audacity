@@ -200,7 +200,7 @@ void StartupScenario::onStartupPageOpened(StartupModeType modeType)
     } break;
     case StartupModeType::FirstLaunch: {
         dispatcher()->dispatch("file-new");
-        interactive()->openSync(FIRST_LAUNCH_SETUP_URI);
+        interactive()->open(FIRST_LAUNCH_SETUP_URI);
 #ifndef MUSE_APP_UNSTABLE
         interactive()->openSync(ALPHA_WELCOME_POPUP);
 #endif
