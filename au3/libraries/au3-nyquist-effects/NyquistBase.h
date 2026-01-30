@@ -21,6 +21,10 @@ class wxTextCtrl;
 
 class EffectOutputTracks;
 
+namespace au::effects {
+class NyquistParameterExtractorService;
+}
+
 #define NYQUISTEFFECTS_VERSION wxT("1.0.0.0")
 #define NYQUIST_WORKER_ID wxT("Nyquist Worker")
 #define UNINITIALIZED_CONTROL ((double)99999999.99)
@@ -295,4 +299,5 @@ protected:
     int mMergeClips;
 
     friend class NyquistEffectsModule;
+    friend class au::effects::NyquistParameterExtractorService;
 };

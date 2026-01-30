@@ -5,10 +5,18 @@
 
 #include "effects/effects_base/iparameterextractorregistry.h"
 #include "effects/effects_base/ieffectviewlaunchregister.h"
+#include "effects/effects_base/view/effectsviewutils.h"
 
 #include "internal/nyquisteffectsrepository.h"
 #include "internal/nyquistparameterextractorservice.h"
 #include "internal/nyquistviewlauncher.h"
+
+#include "view/nyquistpromptviewmodel.h"
+
+static void nyquist_init_qrc()
+{
+    Q_INIT_RESOURCE(nyquist);
+}
 
 std::string au::effects::NyquistEffectsModule::moduleName() const
 {
@@ -33,4 +41,14 @@ void au::effects::NyquistEffectsModule::resolveImports()
     if (launchRegister) {
         launchRegister->regLauncher("Nyquist", std::make_shared<NyquistViewLauncher>(iocContext()));
     }
+}
+
+void au::effects::NyquistEffectsModule::registerResources()
+{
+    nyquist_init_qrc();
+}
+
+void au::effects::NyquistEffectsModule::registerUiTypes()
+{
+    REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(NyquistPromptViewModelFactory);
 }
