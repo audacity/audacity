@@ -12,6 +12,10 @@ Item {
     property double defaultValue: 0
     property alias radius: knob.radius
 
+    property NavigationPanel navigationPanel: null
+    property int navigationOrder: 0
+    property int navigationOrderEnd: textEdit.navigation.order
+
     implicitWidth: content.implicitWidth
     implicitHeight: content.implicitHeight
 
