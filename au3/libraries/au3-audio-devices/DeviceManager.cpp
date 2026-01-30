@@ -9,12 +9,23 @@
 #include "DeviceManager.h"
 
 #include <map>
+#include <algorithm>
 #include <wx/log.h>
 #include <thread>
+#include <cstring>
 
 #include "portaudio.h"
 #ifdef __WXMSW__
 #include "pa_win_wasapi.h"
+#include <mmdeviceapi.h>
+#include <functiondiscoverykeys_devpkey.h>
+#endif
+#ifdef __WXMAC__
+#include <CoreAudio/CoreAudio.h>
+#include <CoreFoundation/CoreFoundation.h>
+#ifndef kAudioObjectPropertyElementMain
+#define kAudioObjectPropertyElementMain kAudioObjectPropertyElementMaster
+#endif
 #endif
 
 #ifdef USE_PORTMIXER
@@ -105,6 +116,115 @@ static std::pair<std::string, int> ParseDeviceId(const std::string& stableId)
     }
 }
 
+static std::string GetSystemDefaultDeviceName(bool isInput)
+{
+#if defined(__WXMAC__)
+    AudioObjectPropertyAddress deviceAddress;
+    deviceAddress.mSelector = isInput ? kAudioHardwarePropertyDefaultInputDevice
+                                      : kAudioHardwarePropertyDefaultOutputDevice;
+    deviceAddress.mScope = kAudioObjectPropertyScopeGlobal;
+    deviceAddress.mElement = kAudioObjectPropertyElementMain;
+
+    AudioDeviceID deviceId = kAudioObjectUnknown;
+    UInt32 dataSize = sizeof(deviceId);
+    if (AudioObjectGetPropertyData(kAudioObjectSystemObject,
+                                   &deviceAddress,
+                                   0,
+                                   nullptr,
+                                   &dataSize,
+                                   &deviceId) != noErr || deviceId == kAudioObjectUnknown) {
+        return {};
+    }
+
+    AudioObjectPropertyAddress nameAddress;
+    nameAddress.mSelector = kAudioObjectPropertyName;
+    nameAddress.mScope = kAudioObjectPropertyScopeGlobal;
+    nameAddress.mElement = kAudioObjectPropertyElementMain;
+
+    CFStringRef cfName = nullptr;
+    dataSize = sizeof(cfName);
+    if (AudioObjectGetPropertyData(deviceId,
+                                   &nameAddress,
+                                   0,
+                                   nullptr,
+                                   &dataSize,
+                                   &cfName) != noErr || !cfName) {
+        return {};
+    }
+
+    const CFIndex length = CFStringGetLength(cfName);
+    const CFIndex maxSize = CFStringGetMaximumSizeForEncoding(length, kCFStringEncodingUTF8) + 1;
+    std::string name;
+    name.resize(static_cast<size_t>(maxSize));
+    if (CFStringGetCString(cfName, name.data(), maxSize, kCFStringEncodingUTF8)) {
+        name.resize(strlen(name.c_str()));
+    } else {
+        name.clear();
+    }
+    CFRelease(cfName);
+    return name;
+#elif defined(__WXMSW__)
+    HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+    const bool needsUninit = (hr == S_OK || hr == S_FALSE);
+    if (FAILED(hr) && hr != RPC_E_CHANGED_MODE) {
+        return {};
+    }
+
+    IMMDeviceEnumerator* enumerator = nullptr;
+    hr = CoCreateInstance(__uuidof(MMDeviceEnumerator),
+                          nullptr,
+                          CLSCTX_INPROC_SERVER,
+                          __uuidof(IMMDeviceEnumerator),
+                          reinterpret_cast<void**>(&enumerator));
+    if (FAILED(hr) || !enumerator) {
+        if (needsUninit) {
+            CoUninitialize();
+        }
+        return {};
+    }
+
+    IMMDevice* device = nullptr;
+    hr = enumerator->GetDefaultAudioEndpoint(isInput ? eCapture : eRender, eConsole, &device);
+    if (FAILED(hr) || !device) {
+        enumerator->Release();
+        if (needsUninit) {
+            CoUninitialize();
+        }
+        return {};
+    }
+
+    IPropertyStore* props = nullptr;
+    hr = device->OpenPropertyStore(STGM_READ, &props);
+    if (FAILED(hr) || !props) {
+        device->Release();
+        enumerator->Release();
+        if (needsUninit) {
+            CoUninitialize();
+        }
+        return {};
+    }
+
+    PROPVARIANT varName;
+    PropVariantInit(&varName);
+    std::string name;
+    hr = props->GetValue(PKEY_Device_FriendlyName, &varName);
+    if (SUCCEEDED(hr) && varName.vt == VT_LPWSTR && varName.pwszVal) {
+        name = wxString(varName.pwszVal).ToStdString(wxConvUTF8);
+    }
+    PropVariantClear(&varName);
+
+    props->Release();
+    device->Release();
+    enumerator->Release();
+    if (needsUninit) {
+        CoUninitialize();
+    }
+    return name;
+#else
+    return {};
+#endif
+}
+
 static int FindDeviceIndexByDeviceId(const std::vector<DeviceSourceMap>& deviceMaps,
                                      const std::string& hostName,
                                      const std::string& deviceId)
@@ -113,7 +233,7 @@ static int FindDeviceIndexByDeviceId(const std::vector<DeviceSourceMap>& deviceM
 
     std::map<std::string, int> nameCount;
     for (const auto& device : deviceMaps) {
-        if (device.hostString != hostName) {
+        if (!hostName.empty() && device.hostString != hostName) {
             continue;
         }
         std::string deviceName = GetBaseDeviceName(&device);
@@ -124,6 +244,39 @@ static int FindDeviceIndexByDeviceId(const std::vector<DeviceSourceMap>& deviceM
         }
     }
     return -1;
+}
+
+static std::vector<int> FindDeviceIndicesByName(const std::vector<DeviceSourceMap>& deviceMaps,
+                                                const std::string& hostName,
+                                                const std::string& deviceId)
+{
+    auto [targetName, targetOccurrence] = ParseDeviceId(deviceId);
+    const bool hasOccurrence = deviceId.rfind('#') != std::string::npos;
+
+    std::map<std::string, int> nameCount;
+    std::vector<int> matches;
+
+    for (const auto& device : deviceMaps) {
+        if (!hostName.empty() && device.hostString != hostName) {
+            continue;
+        }
+
+        std::string deviceName = GetBaseDeviceName(&device);
+        int occurrence = nameCount[deviceName]++;
+        if (deviceName != targetName) {
+            continue;
+        }
+
+        if (hasOccurrence) {
+            if (occurrence == targetOccurrence) {
+                matches.push_back(device.deviceIndex);
+            }
+        } else {
+            matches.push_back(device.deviceIndex);
+        }
+    }
+
+    return matches;
 }
 
 int DeviceManager::GetInputDevicePaIndex(const std::string& hostName, const std::string& deviceId)
@@ -140,6 +293,68 @@ int DeviceManager::GetOutputDevicePaIndex(const std::string& hostName, const std
         Init();
     }
     return FindDeviceIndexByDeviceId(mOutputDeviceSourceMaps, hostName, deviceId);
+}
+
+int DeviceManager::GetSystemDefaultOutputDeviceIndex(const std::string& hostName)
+{
+    if (!m_inited) {
+        Init();
+    }
+
+    std::string deviceName = GetSystemDefaultDeviceName(false);
+    if (!deviceName.empty()) {
+        auto matches = FindDeviceIndicesByName(mOutputDeviceSourceMaps, hostName, deviceName);
+        if (matches.size() == 1) {
+            return matches.front();
+        }
+        if (!matches.empty()) {
+            int defaultIndex = -1;
+            if (!hostName.empty()) {
+                const int hostIndex = GetHostIndex(hostName);
+                if (auto* defaultMap = GetDefaultOutputDevice(hostIndex)) {
+                    defaultIndex = defaultMap->deviceIndex;
+                }
+            }
+            if (defaultIndex >= 0
+                && std::find(matches.begin(), matches.end(), defaultIndex) != matches.end()) {
+                return defaultIndex;
+            }
+            wxLogDebug(wxT("System default output device name matched multiple devices; falling back to host default"));
+        }
+    }
+
+    return -1;
+}
+
+int DeviceManager::GetSystemDefaultInputDeviceIndex(const std::string& hostName)
+{
+    if (!m_inited) {
+        Init();
+    }
+
+    std::string deviceName = GetSystemDefaultDeviceName(true);
+    if (!deviceName.empty()) {
+        auto matches = FindDeviceIndicesByName(mInputDeviceSourceMaps, hostName, deviceName);
+        if (matches.size() == 1) {
+            return matches.front();
+        }
+        if (!matches.empty()) {
+            int defaultIndex = -1;
+            if (!hostName.empty()) {
+                const int hostIndex = GetHostIndex(hostName);
+                if (auto* defaultMap = GetDefaultInputDevice(hostIndex)) {
+                    defaultIndex = defaultMap->deviceIndex;
+                }
+            }
+            if (defaultIndex >= 0
+                && std::find(matches.begin(), matches.end(), defaultIndex) != matches.end()) {
+                return defaultIndex;
+            }
+            wxLogDebug(wxT("System default input device name matched multiple devices; falling back to host default"));
+        }
+    }
+
+    return -1;
 }
 
 DeviceSourceMap* DeviceManager::GetDefaultDevice(int hostIndex, int isInput)
