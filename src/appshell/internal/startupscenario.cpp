@@ -104,7 +104,7 @@ void StartupScenario::runAfterSplashScreen()
 
     StartupModeType modeType = resolveStartupModeType();
     //! TODO AU4
-    // bool isMainInstance = multiInstancesProvider()->isMainInstance();
+    // bool isMainInstance = multiwindowsProvider()->isMainInstance();
     if (/*isMainInstance && */ sessionsManager()->hasProjectsForRestore()) {
         modeType = StartupModeType::Recovery;
     }

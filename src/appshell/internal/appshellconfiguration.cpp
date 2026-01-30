@@ -28,7 +28,7 @@
 #include "global/log.h"
 #include "appshell/appshelltypes.h"
 
-// #include "multiinstances/resourcelockguard.h"
+// #include "multiwindows/resourcelockguard.h"
 
 using namespace muse;
 using namespace au::appshell;
@@ -297,13 +297,13 @@ muse::io::path_t AppShellConfiguration::sessionFilePath() const
 
 muse::RetVal<muse::ByteArray> AppShellConfiguration::readSessionState() const
 {
-    // mi::ReadResourceLockGuard lock_guard(multiInstancesProvider(), SESSION_RESOURCE_NAME);
+    // mi::ReadResourceLockGuard lock_guard(multiwindowsProvider(), SESSION_RESOURCE_NAME);
     return fileSystem()->readFile(sessionFilePath());
 }
 
 muse::Ret AppShellConfiguration::writeSessionState(const QByteArray& data)
 {
-    // mi::WriteResourceLockGuard lock_guard(multiInstancesProvider(), SESSION_RESOURCE_NAME);
+    // mi::WriteResourceLockGuard lock_guard(multiwindowsProvider(), SESSION_RESOURCE_NAME);
     return fileSystem()->writeFile(sessionFilePath(), ByteArray::fromQByteArrayNoCopy(data));
 }
 

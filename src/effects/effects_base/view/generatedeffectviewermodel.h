@@ -21,8 +21,8 @@ class GeneratedEffectViewerModel : public AbstractEffectViewModel
     Q_PROPERTY(QString noParametersMessage READ noParametersMessage CONSTANT FINAL)
     Q_PROPERTY(bool hasParameters READ hasParameters NOTIFY hasParametersChanged FINAL)
 
-    muse::Inject<IEffectsProvider> effectsProvider;
-    muse::Inject<IParameterExtractorRegistry> parameterExtractorRegistry;
+    muse::Inject<IEffectsProvider> effectsProvider{ this };
+    muse::Inject<IParameterExtractorRegistry> parameterExtractorRegistry{ this };
 
 public:
     explicit GeneratedEffectViewerModel(QObject* parent, EffectInstanceId instanceId);

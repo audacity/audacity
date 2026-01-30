@@ -43,7 +43,7 @@
 
 //! TODO AU4
 // #include "languages/ilanguagesservice.h"
-// #include "multiinstances/imultiinstancesprovider.h"
+#include "multiwindows/imultiwindowsprovider.h"
 // #include "audio/isoundfontrepository.h"
 // #include "istartupscenario.h"
 
@@ -67,7 +67,7 @@ class ApplicationActionController : public QObject, public IApplicationActionCon
 
 //! TODO AU4
     // INJECT(languages::ILanguagesService, languagesService)
-    // INJECT(mi::IMultiInstancesProvider, multiInstancesProvider)
+    // INJECT(mi::IMultiWindowsProvider, multiwindowsProvider)
     // INJECT(audio::ISoundFontRepository, soundFontRepository)
     // INJECT(IStartupScenario, startupScenario)
 public:

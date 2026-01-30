@@ -26,7 +26,7 @@
 #include "global/defer.h"
 #include "global/serialization/json.h"
 
-#include "multiinstances/resourcelockguard.h"
+#include "multiwindows/resourcelockguard.h"
 
 using namespace au::project;
 using namespace muse;
@@ -40,7 +40,7 @@ void RecentFilesController::init()
 
     m_dirty = true;
 
-    multiInstancesProvider()->resourceChanged().onReceive(this, [this](const std::string& resourceName) {
+    multiwindowsProvider()->resourceChanged().onReceive(this, [this](const std::string& resourceName) {
         if (resourceName == RECENT_FILES_RESOURCE_NAME) {
             if (!m_isSaving) {
                 m_dirty = true;
@@ -131,7 +131,7 @@ void RecentFilesController::loadRecentFilesList()
 
     RetVal<ByteArray> data;
     {
-        mi::ReadResourceLockGuard lock_guard(multiInstancesProvider(), RECENT_FILES_RESOURCE_NAME);
+        mi::ReadResourceLockGuard lock_guard(multiwindowsProvider(), RECENT_FILES_RESOURCE_NAME);
         data = fileSystem()->readFile(configuration()->recentFilesJsonPath());
     }
 
@@ -239,7 +239,7 @@ void RecentFilesController::saveRecentFilesList() const
 
     JsonDocument json(jsonArray);
 
-    mi::WriteResourceLockGuard resource_guard(multiInstancesProvider(), RECENT_FILES_RESOURCE_NAME);
+    mi::WriteResourceLockGuard resource_guard(multiwindowsProvider(), RECENT_FILES_RESOURCE_NAME);
     Ret ret = fileSystem()->writeFile(configuration()->recentFilesJsonPath(), json.toJson());
     if (!ret) {
         LOGE() << "Failed to save recent files list: " << ret.toString();

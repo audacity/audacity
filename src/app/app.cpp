@@ -198,7 +198,7 @@ int App::run(QCoreApplication& app, CommandLineParser& commandLineParser)
         // ====================================================
         // Setup Qml Engine
         // ====================================================
-        QQmlApplicationEngine* engine = modularity::_ioc()->resolve<muse::ui::IUiEngine>("app")->qmlAppEngine();
+        QQmlApplicationEngine* engine = modularity::ioc()->resolve<muse::ui::IUiEngine>("app")->qmlAppEngine();
 
         QObject::connect(engine, &QQmlApplicationEngine::objectCreated,
                          &app, [this, splashScreen](QObject* obj, const QUrl& objUrl) {
@@ -282,7 +282,7 @@ int App::run(QCoreApplication& app, CommandLineParser& commandLineParser)
 #ifdef AU_BUILD_APPSHELL_MODULE
     if (runMode == IApplication::RunMode::GuiApp) {
         // Engine quit
-        modularity::_ioc()->resolve<muse::ui::IUiEngine>("app")->quit();
+        modularity::ioc()->resolve<muse::ui::IUiEngine>("app")->quit();
     }
 #endif
     // Deinit
@@ -302,7 +302,7 @@ int App::run(QCoreApplication& app, CommandLineParser& commandLineParser)
     // Delete modules
     qDeleteAll(m_modules);
     m_modules.clear();
-    modularity::_ioc()->reset();
+    modularity::ioc()->reset();
 
     return retCode;
 }
