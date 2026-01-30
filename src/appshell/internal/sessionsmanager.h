@@ -22,8 +22,6 @@
 #ifndef AU_APPSHELL_SESSIONSMANAGER_H
 #define AU_APPSHELL_SESSIONSMANAGER_H
 
-#include "istartupscenario.h"
-
 #include "async/asyncable.h"
 
 #include "modularity/ioc.h"
@@ -31,7 +29,7 @@
 #include "actions/iactionsdispatcher.h"
 #include "context/iglobalcontext.h"
 #include "iappshellconfiguration.h"
-#include "multiinstances/imultiinstancesprovider.h"
+#include "multiwindows/imultiwindowsprovider.h"
 #include "isessionsmanager.h"
 #include "au3wrap/iau3project.h"
 
@@ -43,7 +41,7 @@ class SessionsManager : public ISessionsManager, public muse::async::Asyncable, 
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
     muse::GlobalInject<project::IProjectConfiguration> projectConfiguration;
     muse::GlobalInject<IAppShellConfiguration> configuration;
-    muse::GlobalInject<muse::mi::IMultiInstancesProvider> multiInstancesProvider;
+    muse::GlobalInject<muse::mi::IMultiWindowsProvider> multiwindowsProvider;
 
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::Inject<au::context::IGlobalContext> globalContext { this };

@@ -44,8 +44,8 @@ void SessionsManager::init()
 
 void SessionsManager::deinit()
 {
-#ifdef MU_BUILD_MULTIINSTANCES_MODULE
-    bool isServer = multiInstancesProvider()->isMainInstance();
+#ifdef MUSE_MODULE_MULTIWINDOWS
+    bool isServer = multiwindowsProvider()->isMainInstance();
     if (!isServer) {
         return;
     }

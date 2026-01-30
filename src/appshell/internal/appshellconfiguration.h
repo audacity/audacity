@@ -27,7 +27,6 @@
 #include "modularity/ioc.h"
 #include "iglobalconfiguration.h"
 #include "io/ifilesystem.h"
-// #include "multiinstances/imultiinstancesprovider.h"
 #include "ui/iuiconfiguration.h"
 #include "projectscene/iprojectsceneconfiguration.h"
 // #include "project/iprojectconfiguration.h"

@@ -12,13 +12,14 @@
 #include "../ieffectsprovider.h"
 
 namespace au::effects {
-class EffectInstancesRegister : public IEffectInstancesRegister
+class EffectInstancesRegister : public IEffectInstancesRegister, public muse::Injectable
 {
-    muse::Inject<IParameterExtractorRegistry> parameterExtractorRegistry;
-    muse::Inject<IEffectsProvider> effectsProvider;
+    muse::Inject<IParameterExtractorRegistry> parameterExtractorRegistry{ this };
+    muse::Inject<IEffectsProvider> effectsProvider{ this };
 
 public:
-    EffectInstancesRegister() = default;
+    EffectInstancesRegister(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
 
     EffectInstanceId regInstance(const EffectId& effectId, const std::shared_ptr<EffectInstance>& i, EffectSettingsAccessPtr) override;
     void unregInstance(const std::shared_ptr<EffectInstance>& i) override;

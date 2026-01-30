@@ -12,14 +12,15 @@
 #include "../iparameterextractorregistry.h"
 
 namespace au::effects {
-class EffectParametersProvider : public IEffectParametersProvider, public muse::async::Asyncable
+class EffectParametersProvider : public IEffectParametersProvider, public muse::async::Asyncable, public muse::Injectable
 {
-    muse::Inject<IEffectInstancesRegister> instancesRegister;
-    muse::Inject<IEffectsProvider> effectsProvider;
-    muse::Inject<IParameterExtractorRegistry> parameterExtractorRegistry;
+    muse::Inject<IEffectInstancesRegister> instancesRegister{ this };
+    muse::Inject<IEffectsProvider> effectsProvider{ this };
+    muse::Inject<IParameterExtractorRegistry> parameterExtractorRegistry{ this };
 
 public:
-    EffectParametersProvider() = default;
+    EffectParametersProvider(const muse::modularity::ContextPtr& ctx)
+        : muse::Injectable(ctx) {}
 
     // IEffectParametersProvider interface
     ParameterInfoList parameters(EffectInstanceId instanceId) const override;

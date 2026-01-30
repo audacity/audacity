@@ -207,10 +207,10 @@ bool ApplicationActionController::quit()
 void ApplicationActionController::restart()
 {
     if (projectFilesController()->closeOpenedProject()) {
-        // if (multiInstancesProvider()->instances().size() == 1) {
+        // if (multiwindowsProvider()->instances().size() == 1) {
         application()->restart();
         // } else {
-        // multiInstancesProvider()->quitAllAndRestartLast();
+        // multiwindowsProvider()->quitAllAndRestartLast();
 
         // QCoreApplication::exit();
         // }
@@ -247,8 +247,8 @@ void ApplicationActionController::openAskForHelpPage()
 void ApplicationActionController::openPreferencesDialog()
 {
     //! TODO AU4
-    // if (multiInstancesProvider()->isPreferencesAlreadyOpened()) {
-    //     multiInstancesProvider()->activateWindowWithOpenedPreferences();
+    // if (multiwindowsProvider()->isPreferencesAlreadyOpened()) {
+    //     multiwindowsProvider()->activateWindowWithOpenedPreferences();
     //     return;
     // }
 

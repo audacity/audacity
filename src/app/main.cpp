@@ -48,7 +48,7 @@
 #include "framework/workspace/workspacemodule.h"
 
 // need stubs
-#include "framework/stubs/multiinstances/multiinstancesstubmodule.h"
+#include "framework/stubs/multiwindows/multiwindowsstubmodule.h"
 
 // -----
 #include "appshell/appshellmodule.h"

@@ -12,7 +12,7 @@
         <autorepeat>0</autorepeat>
     </SC>
     <SC>
-        <key>multiinstances-dev-show-info</key>
+        <key>multiwindows-dev-show-info</key>
         <seq>Ctrl+F3</seq>
         <autorepeat>0</autorepeat>
     </SC>

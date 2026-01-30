@@ -21,8 +21,8 @@ class EffectParametersListModel : public QAbstractListModel, public muse::Inject
 {
     Q_OBJECT
 
-    muse::Inject<IEffectInstancesRegister> instancesRegister;
-    muse::Inject<IEffectParametersProvider> parametersProvider;
+    muse::Inject<IEffectInstancesRegister> instancesRegister{ this };
+    muse::Inject<IEffectParametersProvider> parametersProvider{ this };
 
 public:
     // Roles for QML access

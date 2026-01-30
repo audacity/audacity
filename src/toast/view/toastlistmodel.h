@@ -14,11 +14,11 @@
 #include "toast/itoastprovider.h"
 
 namespace au::toast {
-class ToastListModel : public QAbstractListModel, public muse::async::Asyncable
+class ToastListModel : public QAbstractListModel, public muse::async::Asyncable, public muse::Injectable
 {
     Q_OBJECT
 
-    muse::Inject<au::toast::IToastProvider> toastProvider;
+    muse::Inject<au::toast::IToastProvider> toastProvider{ this };
 
 public:
     explicit ToastListModel(QObject* parent = nullptr);

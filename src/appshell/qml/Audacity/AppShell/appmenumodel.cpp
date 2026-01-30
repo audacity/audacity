@@ -511,7 +511,7 @@ muse::uicomponents::MenuItem* AppMenuModel::makeDiagnosticMenu()
               << makeMenu(TranslatableString("appshell/menu/diagnostics", "E&xtensions"), extensionsItems, "menu-extensions")
               << makeMenu(TranslatableString("appshell/menu/diagnostics", "Auto&bot"), autobotItems, "menu-autobot");
         //! TODO AU4
-        // << makeMenuItem("multiinstances-dev-show-info");
+        // << makeMenuItem("multiwindows-dev-show-info");
     }
 
     return makeMenu(TranslatableString("appshell/menu/diagnostics", "&Diagnostics"), items, "menu-diagnostic");
@@ -762,8 +762,8 @@ MenuItemList AppMenuModel::makeDiagnosticsItems()
         items << makeMenu(TranslatableString("appshell/menu/diagnostic", "Auto&bot"), autobotItems, "menu-autobot");
 #endif
 
-#ifdef MUSE_MODULE_MULTIINSTANCES
-        items << makeMenuItem("multiinstances-dev-show-info");
+#ifdef MUSE_MODULE_MULTIWINDOWS
+        items << makeMenuItem("multiwindows-dev-show-info");
 #endif
     }
 

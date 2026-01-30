@@ -35,7 +35,7 @@
 // #include "project/iprojectautosaver.h"
 
 //! TODO AU4
-// #include "multiinstances/imultiinstancesprovider.h"
+// #include "multiwindows/imultiwindowsprovider.h"
 
 namespace au::appshell {
 class StartupScenario : public au::appshell::IStartupScenario, public muse::async::Asyncable, public muse::Injectable
@@ -48,7 +48,7 @@ class StartupScenario : public au::appshell::IStartupScenario, public muse::asyn
     muse::Inject<muse::audioplugins::IRegisterAudioPluginsScenario> registerAudioPluginsScenario { this };
 
 //! TODO AU4
-    // INJECT(mi::IMultiInstancesProvider, multiInstancesProvider)
+    // INJECT(muse::mi::IMultiWindowsProvider, multiwindowsProvider)
 public:
     StartupScenario(const muse::modularity::ContextPtr& ctx)
         : muse::Injectable(ctx) {}

@@ -56,13 +56,13 @@ void EffectsModule::registerExports()
     ioc()->registerExport<IEffectsMenuProvider>(moduleName(), m_effectsMenuProvider);
     ioc()->registerExport<IEffectsConfiguration>(moduleName(), m_configuration);
     ioc()->registerExport<IEffectsUiEngine>(moduleName(), std::make_shared<EffectsUiEngine>(iocContext()));
-    ioc()->registerExport<IEffectInstancesRegister>(moduleName(), new EffectInstancesRegister());
+    ioc()->registerExport<IEffectInstancesRegister>(moduleName(), new EffectInstancesRegister(iocContext()));
     ioc()->registerExport<IEffectExecutionScenario>(moduleName(), std::make_shared<EffectExecutionScenario>(iocContext()));
     ioc()->registerExport<IRealtimeEffectService>(moduleName(), m_realtimeEffectService);
     ioc()->registerExport<IEffectPresetsProvider>(moduleName(), std::make_shared<EffectPresetsProvider>(iocContext()));
     ioc()->registerExport<IEffectPresetsScenario>(moduleName(), std::make_shared<EffectPresetsScenario>(iocContext()));
     ioc()->registerExport<IEffectViewLaunchRegister>(moduleName(), new EffectViewLaunchRegister());
-    ioc()->registerExport<IEffectParametersProvider>(moduleName(), new EffectParametersProvider());
+    ioc()->registerExport<IEffectParametersProvider>(moduleName(), new EffectParametersProvider(iocContext()));
     ioc()->registerExport<IParameterExtractorRegistry>(moduleName(), new ParameterExtractorRegistry());
 }
 
