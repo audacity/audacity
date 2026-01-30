@@ -58,6 +58,7 @@
 #include "view/tracksitemsview/dropcontroller.h"
 #include "view/tracksitemsview/labeleditor/labelstableviewmodel.h"
 #include "view/tracksitemsview/labeleditor/addnewlabeltrackmodel.h"
+#include "view/tracksitemsview/editablepolyline.h"
 
 #include "view/timeline/timelinecontext.h"
 #include "view/timeline/timelineruler.h"
@@ -184,6 +185,7 @@ void ProjectSceneModule::registerUiTypes()
     qmlRegisterUncreatableMetaObject(LabelsTableViewCellType::staticMetaObject,
                                      "Audacity.ProjectScene", 1, 0, "LabelsTableViewCellType", "");
     qmlRegisterType<AddNewLabelTrackModel>("Audacity.ProjectScene", 1, 0, "AddNewLabelTrackModel");
+    qmlRegisterType<EditablePolyline>("Audacity.ProjectScene", 1, 0, "EditablePolyline");
 
     // timeline
     qmlRegisterType<TimelineContext>("Audacity.ProjectScene", 1, 0, "TimelineContext");
