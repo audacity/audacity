@@ -14,6 +14,7 @@ public:
     MOCK_METHOD(void, resetSelectedTracks, (), (override));
     MOCK_METHOD(TrackIdList, selectedTracks, (), (const, override));
     MOCK_METHOD(void, setSelectedTracks, (const TrackIdList&, bool), (override));
+    MOCK_METHOD(muse::async::Channel<TrackIdList>, selectedTracksChanged, (), (const, override));
     MOCK_METHOD(void, removeClipSelection, (const trackedit::ClipKey&), (override));
     MOCK_METHOD(muse::async::Channel<TrackIdList>, tracksSelected, (), (const, override));
 

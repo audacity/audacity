@@ -6,7 +6,13 @@ import Audacity.Spectrogram 1.0
 Item {
     id: root
 
+    required property var canvas
     required property bool spectralSelectionEnabled
+
+    required property bool selectionInProgress
+    required property bool selectionEditInProgress
+    required property bool verticalSelectionEditInProgress
+
     required property bool isStereo
     required property double channelHeightRatio
     required property int clipId
@@ -21,11 +27,24 @@ Item {
     required property double selectionStartFrequency
     required property double selectionEndFrequency
 
-    function getSpectrogramHit(y /* relative to this item */) {
+    function update() {
+        for (let i = 0; i < repeater.count; i++) {
+            const item = repeater.itemAt(i)
+            if (item) {
+                item.update()
+            }
+        }
+    }
+
+    function getSpectrogramHit(y /* relative to tracks canvas */) {
+        y = root.mapFromItem(root.canvas, 0, y).y
+        if (y < 0 || y > height) {
+            return null
+        }
         const channel = y < height * channelHeightRatio ? 0 : 1
-        const spectrogramY = channel === 0 ? y : y - height * channelHeightRatio
-        const spectrogramHeight = channel === 0 ? height * channelHeightRatio : height * (1.0 - channelHeightRatio)
-        return SpectrogramHitFactory.createSpectrogramHit(root.trackId, channel, spectrogramY, spectrogramHeight)
+        const item = repeater.itemAt(channel)
+        const spectrogramY = item.mapToItem(root.canvas, 0, 0).y
+        return SpectrogramHitFactory.createSpectrogramHit(root.trackId, channel, spectrogramY, item.height)
     }
 
     ColumnLayout {
@@ -34,6 +53,8 @@ Item {
         spacing: 0
 
         Repeater {
+            id: repeater
+
             model: root.isStereo ? 2 : 1
 
             ClipChannelSpectrogramView {
@@ -62,7 +83,15 @@ Item {
                 MouseArea {
                     anchors.fill: parent
 
-                    visible: spectralSelectionEnabled && (root.pressedSpectrogram.trackId === -1 || (root.pressedSpectrogram.trackId === root.trackId && root.pressedSpectrogram.channel === index))
+                    visible: {
+                        if (!root.spectralSelectionEnabled || root.selectionEditInProgress || root.verticalSelectionEditInProgress) {
+                            return false
+                        }
+                        if (!root.selectionInProgress) {
+                            return true
+                        }
+                        return root.pressedSpectrogram.trackId === root.trackId && root.pressedSpectrogram.channel === index
+                    }
 
                     cursorShape: Qt.CrossCursor
                     acceptedButtons: Qt.NoButton // Don't consume mouse events

@@ -31,7 +31,9 @@ class ProjectViewState : public QObject, public IProjectViewState, public muse::
     muse::Inject<trackedit::IProjectHistory> projectHistory{ this };
 
 public:
-    ProjectViewState(const muse::modularity::ContextPtr& ctx, std::shared_ptr<au::au3::IAu3Project> project);
+    ProjectViewState(const muse::modularity::ContextPtr& ctx);
+
+    void init(const std::shared_ptr<au3::IAu3Project>& project);
 
     // State of elements
     muse::ValCh<int> totalTrackHeight() const override;
@@ -122,6 +124,8 @@ public:
     int trackDefaultHeight() const override;
 
 private:
+    friend class ProjectViewStateTests;
+
     int calculateVerticalRulerWidth() const;
     float maxVerticalZoomLevel(const trackedit::TrackId& trackId) const;
 

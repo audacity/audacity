@@ -6,6 +6,7 @@ set(MODULE_TEST projectscene_tests)
 
 set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/environment.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/projectviewstate_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/sample_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/snaptimeformatter_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/tracklabelslayoutmanager_tests.cpp
@@ -21,6 +22,7 @@ set(MODULE_TEST_LINK
     playback
     record
     context
+    au3wrap
 
     muse::ui
     muse::uicomponents

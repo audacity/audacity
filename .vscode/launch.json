@@ -21,7 +21,7 @@
                 "C:/work/build/qt5_workdir/w/s": "${env:QTDIR}/../Src",
                 "C:/Users/qt/worwk/install": "${env:QTDIR}/../Src",
                 "C:/Users/qt/work/qt": "${env:QTDIR}/../Src",
-                "Q:/qt_workdir/w/s": "${env:QTDIR}/../Src",
+                "Q:/qt_workdir/w/s": "${env:QTDIR}/../Src"
             },
             "symbolSearchPath": "${env:QTDIR}/bin;${env:QTDIR}/plugins/platforms",
             "visualizerFile": "${workspaceFolder}/.vscode/qt6.natvis"
@@ -54,10 +54,9 @@
             "args": [
                 // "--register-audio-plugin",
                 // "https://wasted.audio/software/wstd_flangr"
+                // "--gtest_filter=*.tracksInRange*"
             ],
-            "initCommands": [
-                "settings set target.load-cwd-lldbinit true"
-            ],
+            "initCommands": ["settings set target.load-cwd-lldbinit true"],
             // If you need to debug a plugin, you can do something like this.
             "postRunCommands": [
                 // "target symbols add /usr/lib/lv2/meters.lv2/meters.so",

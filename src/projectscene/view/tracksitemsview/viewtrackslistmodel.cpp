@@ -104,6 +104,30 @@ void ViewTracksListModel::load()
         emit dataChanged(index(0), index(lastIndex), { IsMultiSelectionActiveRole });
     }, muse::async::Asyncable::Mode::SetReplace);
 
+    selectionController()->selectedTracksChanged().onReceive(this, [this](const trackedit::TrackIdList& trackIds) {
+        Q_UNUSED(trackIds);
+
+        if (m_trackList.empty()) {
+            return;
+        }
+
+        // TODO: only dataChanged affected tracks, not the whole thing
+        const int lastIndex = static_cast<int>(m_trackList.size()) - 1;
+        emit dataChanged(index(0), index(lastIndex), { IsTrackSelectedRole });
+    }, muse::async::Asyncable::Mode::SetReplace);
+
+    selectionController()->tracksSelected().onReceive(this, [this](const trackedit::TrackIdList& trackIds) {
+        Q_UNUSED(trackIds);
+
+        if (m_trackList.empty()) {
+            return;
+        }
+
+        // TODO: only dataChanged affected tracks, not the whole thing
+        const int lastIndex = static_cast<int>(m_trackList.size()) - 1;
+        emit dataChanged(index(0), index(lastIndex), { IsTrackSelectedRole });
+    }, muse::async::Asyncable::Mode::SetReplace);
+
     selectionController()->dataSelectedStartTimeChanged().onReceive(this, [this](trackedit::secs_t begin) {
         Q_UNUSED(begin);
         if (m_trackList.empty()) {
@@ -250,6 +274,9 @@ QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
     switch (role) {
     case TrackIdRole:
         return QVariant::fromValue(track.id);
+    case TrackSampleRateRole: {
+        return static_cast<int>(track.rate);
+    }
     case IsDataSelectedRole: {
         return muse::contains(selectionController()->selectedTracks(), track.id) && selectionController()->timeSelectionIsNotEmpty();
     }
@@ -323,6 +350,7 @@ QHash<int, QByteArray> ViewTracksListModel::roleNames() const
     {
         { TypeRole, "trackType" },
         { TrackIdRole, "trackId" },
+        { TrackSampleRateRole, "trackSampleRate" },
         { IsDataSelectedRole, "isDataSelected" },
         { IsTrackSelectedRole, "isTrackSelected" },
         { IsTrackFocusedRole, "isTrackFocused" },

@@ -3,10 +3,12 @@
 */
 #pragma once
 
-#include "modularity/ioc.h"
+#include "framework/global/modularity/ioc.h"
+
 #include "ui/iuiconfiguration.h"
 #include "workspace/iworkspacemanager.h"
 #include "iprojectsceneconfiguration.h"
+#include "context/iglobalcontext.h"
 
 #include "trackitemslistmodel.h"
 #include "trackclipitem.h"
@@ -25,8 +27,8 @@ class TrackClipsListModel : public TrackItemsListModel
     muse::GlobalInject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
     muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
 
+    muse::Inject<context::IGlobalContext> globalContext { this };
     muse::Inject<muse::workspace::IWorkspaceManager> workspacesManager{ this };
-    muse::Inject<trackedit::IProjectHistory> projectHistory{ this };
 
 public:
     explicit TrackClipsListModel(QObject* parent = nullptr);

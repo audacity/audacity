@@ -177,6 +177,11 @@ void Au3SelectionController::addSelectedTrack(const TrackId& trackId)
     }
 }
 
+muse::async::Channel<TrackIdList> Au3SelectionController::selectedTracksChanged() const
+{
+    return m_selectedTracks.changed;
+}
+
 muse::async::Channel<TrackIdList> Au3SelectionController::tracksSelected() const
 {
     return m_selectedTracks.selected;

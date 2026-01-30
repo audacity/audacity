@@ -31,6 +31,7 @@ public:
     void resetSelectedTracks() override;
     trackedit::TrackIdList selectedTracks() const override;
     void setSelectedTracks(const trackedit::TrackIdList& trackIds, bool complete) override;
+    muse::async::Channel<TrackIdList> selectedTracksChanged() const override;
     muse::async::Channel<trackedit::TrackIdList> tracksSelected() const override;
 
     // clip selection
