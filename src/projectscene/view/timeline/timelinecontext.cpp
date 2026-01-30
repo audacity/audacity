@@ -112,6 +112,7 @@ void TimelineContext::init(double frameWidth)
     dispatcher()->reg(this, "zoom-out", this, &TimelineContext::zoomOut);
     dispatcher()->reg(this, "zoom-to-selection", this, &TimelineContext::fitSelectionToWidth);
     dispatcher()->reg(this, "zoom-to-fit-project", this, &TimelineContext::fitProjectToWidth);
+    dispatcher()->reg(this, "center-view-on-playhead", this, &TimelineContext::centerViewOnPlayhead);
 
     configuration()->playbackOnRulerClickEnabledChanged().onNotify(this, [this]() {
         emit playbackOnRulerClickEnabledChanged();
@@ -240,6 +241,28 @@ void TimelineContext::scrollVertical(qreal newPos)
 
     static constexpr qreal correction = 100.0;
     emit viewContentYChangeRequested(scrollStep * correction);
+}
+
+void TimelineContext::centerViewOnPlayhead(const muse::actions::ActionData& args)
+{
+    if (args.count() != 1) {
+        return;
+    }
+
+    const int onlyIfPlayheadNotVisible = args.arg<bool>(0);
+
+    const trackedit::secs_t playheadSec = playbackState()->playbackPosition();
+
+    if (muse::RealIsEqualOrMore(playheadSec, m_frameStartTime)
+        && muse::RealIsEqualOrLess(playheadSec, m_frameEndTime)
+        && onlyIfPlayheadNotVisible) {
+        return;
+    }
+
+    const trackedit::secs_t frameTime = m_frameEndTime - m_frameStartTime;
+    const trackedit::secs_t newFrameStartTime = playheadSec - frameTime * 0.5;
+
+    moveToFrameTime(newFrameStartTime);
 }
 
 void TimelineContext::insureVisible(double posSec)

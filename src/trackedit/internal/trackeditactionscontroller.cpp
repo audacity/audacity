@@ -1032,7 +1032,7 @@ void TrackeditActionsController::pasteOverlap()
     auto tracks = project->trackeditProject()->trackList();
     const double selectedStartTime = playbackState()->playbackPosition();
 
-    if (!tracks.empty() && selectedStartTime >= 0) {
+    if (selectedStartTime >= 0) {
         auto ret = trackeditInteraction()->pasteFromClipboard(selectedStartTime, false);
         if (!ret && !ret.text().empty()) {
             interactive()->error(muse::trc("trackedit", "Paste error"), ret.text());
@@ -1046,7 +1046,7 @@ void TrackeditActionsController::pasteInsert()
     auto tracks = project->trackeditProject()->trackList();
     const double selectedStartTime = playbackState()->playbackPosition();
 
-    if (!tracks.empty() && selectedStartTime >= 0) {
+    if (selectedStartTime >= 0) {
         auto ret = trackeditInteraction()->pasteFromClipboard(selectedStartTime, true);
         if (!ret && !ret.text().empty()) {
             interactive()->error(muse::trc("trackedit", "Paste error"), ret.text());
@@ -1060,7 +1060,7 @@ void TrackeditActionsController::pasteInsertRipple()
     auto tracks = project->trackeditProject()->trackList();
     const double selectedStartTime = playbackState()->playbackPosition();
 
-    if (!tracks.empty() && selectedStartTime >= 0) {
+    if (selectedStartTime >= 0) {
         auto ret = trackeditInteraction()->pasteFromClipboard(selectedStartTime, false, true);
         if (!ret && !ret.text().empty()) {
             interactive()->error(muse::trc("trackedit", "Paste error"), ret.text());

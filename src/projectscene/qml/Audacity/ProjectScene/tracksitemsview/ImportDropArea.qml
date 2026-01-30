@@ -81,7 +81,7 @@ DropArea {
             // NOTE: working with urls list from DropArea
             // is expensive so avoid it otherwise the preview clip
             // move will be laggy
-            dropController.probeAudioFilesLength(urls)
+            dropController.probeAudioFiles(urls)
             prv.lastProbedUrls = urls
         }
 
