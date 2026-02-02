@@ -74,6 +74,7 @@ private:
         IsMultiSelectionActiveRole,
         IsTrackAudibleRole,
         IsStereoRole,
+        IsAutomationEnabledRole,
         IsWaveformViewVisibleRole,
         IsSpectrogramViewVisibleRole,
         FrequencySelectionRole,

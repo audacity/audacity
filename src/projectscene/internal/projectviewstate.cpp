@@ -584,6 +584,20 @@ muse::ValCh<Snap> ProjectViewState::snap() const
     return m_snap;
 }
 
+void ProjectViewState::setAutomationEnabled(bool enabled)
+{
+    if (m_automationEnabled.val == enabled) {
+        return;
+    }
+
+    m_automationEnabled.set(enabled);
+}
+
+muse::ValCh<bool> ProjectViewState::automationEnabled() const
+{
+    return m_automationEnabled;
+}
+
 void ProjectViewState::setSplitToolEnabled(const bool enabled)
 {
     if (m_splitToolEnabled.val == enabled) {

@@ -59,6 +59,9 @@ public:
     Snap getSnap() const override;
     muse::ValCh<Snap> snap() const override;
 
+    void setAutomationEnabled(bool enabled) override;
+    muse::ValCh<bool> automationEnabled() const override;
+
     void setSplitToolEnabled(bool enabled) override;
     muse::ValCh<bool> splitToolEnabled() const override;
 
@@ -148,6 +151,8 @@ private:
 
     mutable std::map<trackedit::TrackId, TrackData> m_tracks;
     muse::ValCh<Snap> m_snap;
+
+    muse::ValCh<bool> m_automationEnabled;
 
     muse::ValCh<bool> m_splitToolEnabled;
 

@@ -23,6 +23,7 @@ static const ActionCode TOGGLE_PLAYBACK_ON_RULER_CLICK_ENABLED_CODE("toggle-play
 static const ActionQuery TOGGLE_TRACK_HALF_WAVE("action://projectscene/track-view-half-wave");
 static const ActionCode LABEL_OPEN_EDITOR_CODE("toggle-label-editor");
 static const ActionCode TOGGLE_GLOBAL_SPECTROGRAM_VIEW_ACTION_CODE("action://trackedit/global-view-spectrogram");
+static const ActionCode AUTOMATION_CODE("automation");
 
 static const muse::Uri EDIT_PITCH_AND_SPEED_URI("audacity://projectscene/editpitchandspeed");
 
@@ -41,6 +42,7 @@ void ProjectSceneActionsController::init()
                       &ProjectSceneActionsController::togglePlaybackOnRulerClickEnabled);
     dispatcher()->reg(this, TOGGLE_TRACK_HALF_WAVE, this, &ProjectSceneActionsController::toggleTrackHalfWave);
     dispatcher()->reg(this, LABEL_OPEN_EDITOR_CODE, this, &ProjectSceneActionsController::openLabelEditor);
+    dispatcher()->reg(this, AUTOMATION_CODE, this, &ProjectSceneActionsController::toggleAutomation);
 
     globalContext()->currentProjectChanged().onNotify(this, [this]() {
         const auto prj = globalContext()->currentProject();
@@ -147,6 +149,19 @@ void ProjectSceneActionsController::togglePlaybackOnRulerClickEnabled()
     bool isEnabled = configuration()->playbackOnRulerClickEnabled();
     configuration()->setPlaybackOnRulerClickEnabled(!isEnabled);
     notifyActionCheckedChanged(TOGGLE_PLAYBACK_ON_RULER_CLICK_ENABLED_CODE);
+}
+
+void ProjectSceneActionsController::toggleAutomation()
+{
+    project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    const auto viewState = prj->viewState();
+
+    if (viewState == nullptr) {
+        return;
+    }
+
+    bool automationState = viewState->automationEnabled().val;
+    viewState->setAutomationEnabled(!automationState);
 }
 
 void ProjectSceneActionsController::toggleTrackHalfWave(const muse::actions::ActionQuery& q)

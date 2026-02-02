@@ -17,7 +17,7 @@ using namespace muse::actions;
 
 static UiActionList STATIC_ACTIONS = {
     UiAction("automation",
-             au::context::UiCtxUnknown,
+             au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_OPENED,
              TranslatableString("action", "Automation"),
              TranslatableString("action", "Automation"),

@@ -69,6 +69,7 @@ private:
     void updateStopState();
     void updateRecordState();
     void updateLoopState();
+    void updateAutomationState();
     void updateSplitState();
     void updateGlobalSpectrogramViewState();
 
