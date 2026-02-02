@@ -112,6 +112,10 @@ QVariant EffectParametersListModel::data(const QModelIndex& index, int role) con
         }
         return list;
     }
+    case IsFileSaveRole:
+        return param.isFileSave;
+    case IsFileMultipleRole:
+        return param.isFileMultiple;
     case IsReadOnlyRole:
         return param.isReadOnly;
     case IsHiddenRole:
@@ -163,6 +167,8 @@ QHash<int, QByteArray> EffectParametersListModel::roleNames() const
         { EnumValuesRole, "enumValues" },
         { EnumIndicesRole, "enumIndices" },
         { FileFiltersRole, "fileFilters" },
+        { IsFileSaveRole, "isFileSave" },
+        { IsFileMultipleRole, "isFileMultiple" },
         { IsReadOnlyRole, "isReadOnly" },
         { IsHiddenRole, "isHidden" },
         { IsLogarithmicRole, "isLogarithmic" },

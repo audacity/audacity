@@ -97,6 +97,8 @@ struct ParameterInfo {
 
     // For file parameters
     std::vector<muse::String> fileFilters;  // File type filters (e.g., "Nyquist Plug-in (*.ny *.NY)")
+    bool isFileSave = false;                // true for save dialog, false for open dialog
+    bool isFileMultiple = false;            // true to allow multiple file selection
 
     // Flags
     bool isReadOnly = false;

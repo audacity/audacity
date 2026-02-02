@@ -44,6 +44,8 @@ public:
         EnumValuesRole,
         EnumIndicesRole,
         FileFiltersRole,
+        IsFileSaveRole,
+        IsFileMultipleRole,
         IsReadOnlyRole,
         IsHiddenRole,
         IsLogarithmicRole,

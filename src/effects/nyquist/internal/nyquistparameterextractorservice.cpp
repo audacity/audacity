@@ -14,9 +14,6 @@ using namespace muse;
 
 namespace {
 //! Convert NyqControlType to AU4 ParameterType
-//!
-//! Known Limitations:
-//! - NYQ_CTRL_FILE: Mapped to File type. UI implementation pending.
 ParameterType convertControlType(int nyqType)
 {
     switch (nyqType) {
@@ -82,7 +79,7 @@ ParameterInfo convertControl(const NyqControl& ctrl)
         }
     }
 
-    // For file controls, extract file type filters
+    // For file controls, extract file type filters and parse flags
     if (ctrl.type == NYQ_CTRL_FILE) {
         info.fileFilters.reserve(ctrl.fileTypes.size());
 
@@ -108,6 +105,19 @@ ParameterInfo convertControl(const NyqControl& ctrl)
 
             info.fileFilters.push_back(String::fromStdString(au::au3::wxToStdString(filterStr)));
         }
+
+        // Parse file control flags from highStr (e.g., "open,exists,multiple" or "save,overwrite")
+        wxString flags = ctrl.highStr.Lower();
+        info.isFileSave = flags.Contains(wxT("save"));
+        info.isFileMultiple = flags.Contains(wxT("multiple"));
+
+        // Set currentValueString from valStr for file controls
+        info.currentValueString = String::fromStdString(au::au3::wxToStdString(ctrl.valStr));
+    }
+
+    // For string controls, set currentValueString from valStr
+    if (ctrl.type == NYQ_CTRL_STRING) {
+        info.currentValueString = String::fromStdString(au::au3::wxToStdString(ctrl.valStr));
     }
 
     return info;

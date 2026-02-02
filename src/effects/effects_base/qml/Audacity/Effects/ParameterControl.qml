@@ -310,9 +310,27 @@ Item {
         id: fileControl
 
         FilePicker {
-            Layout.fillWidth: true
+            id: filePicker
+            width: parent.width
+
             path: parameterData ? parameterData.currentValueString : ""
-            pickerType: FilePicker.PickerType.File
+
+            pickerType: {
+                if (!parameterData) {
+                    return FilePicker.PickerType.File
+                }
+
+                // If "save" flag is set, use Any type (save dialog)
+                if (parameterData.isFileSave) {
+                    return FilePicker.PickerType.Any
+                }
+
+                // Otherwise use File type (open dialog)
+                // Note: Multiple file selection is not yet fully supported in the Framework
+                // but the flag is available for future implementation
+                return FilePicker.PickerType.File
+            }
+
             enabled: parameterData ? !parameterData.isReadOnly : false
 
             // Set file filters from parameterData
