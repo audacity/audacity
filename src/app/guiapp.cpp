@@ -140,35 +140,6 @@ void GuiApp::setup()
 
     QQmlApplicationEngine* engine = modularity::ioc()->resolve<muse::ui::IUiEngine>("app")->qmlAppEngine();
 
-    QObject::connect(engine, &QQmlApplicationEngine::objectCreated,
-                     qApp, [this](QObject* obj, const QUrl& objUrl) {
-        if (!obj) {
-            LOGE() << "failed Qml load\n";
-            QCoreApplication::exit(-1);
-            return;
-        }
-
-        startupScenario()->runOnSplashScreen();
-
-        m_globalModule.onDelayedInit();
-        for (modularity::IModuleSetup* m : m_modules) {
-            m->onDelayedInit();
-        }
-
-        if (m_splashScreen) {
-            m_splashScreen->close();
-            delete m_splashScreen;
-            m_splashScreen = nullptr;
-        }
-
-        // The main window must be shown at this point so KDDockWidgets can read its size correctly
-        // and scale all sizes properly. https://github.com/musescore/MuseScore/issues/21148
-        QQuickWindow* w = dynamic_cast<QQuickWindow*>(obj);
-        w->setVisible(true);
-
-        startupScenario()->runAfterSplashScreen();
-    }, Qt::QueuedConnection);
-
     QObject::connect(engine, &QQmlEngine::warnings, [](const QList<QQmlError>& warnings) {
         for (const QQmlError& e : warnings) {
             LOGE() << "error: " << e.toString().toStdString() << "\n";
@@ -310,15 +281,15 @@ modularity::ContextPtr GuiApp::setupNewContext()
     }
 
     for (modularity::IContextSetup* s : csetups) {
-        s->onPreInit(runMode);
+        s->onPreInit(runMode());
     }
 
     for (modularity::IContextSetup* s : csetups) {
-        s->onInit(runMode);
+        s->onInit(runMode());
     }
 
     for (modularity::IContextSetup* s : csetups) {
-        s->onAllInited(runMode);
+        s->onAllInited(runMode());
     }
 #endif
 
