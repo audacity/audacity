@@ -31,18 +31,6 @@ void Au3CloudService::init()
         m_authState.set(
             message.authorised ? AuthState::Authorized : AuthState::NotAuthorized);
     });
-
-    multiInstancesProvider()->resourceChanged().onReceive(this, [this](const std::string& message){
-        if (message != CLOUD_AUTH_LINK_KEY.key) {
-            return;
-        }
-
-        const std::string linkUrl = muse::settings()->value(CLOUD_AUTH_LINK_KEY).toString();
-        if (!linkUrl.empty()) {
-            audacity::cloud::audiocom::GetOAuthService().HandleLinkURI(
-                linkUrl, AudiocomTrace::ignore, {});
-        }
-    });
 }
 
 void Au3CloudService::registerWithPassword(const std::string& email, const std::string& password)

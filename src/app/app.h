@@ -30,7 +30,6 @@
 #include "appshell/istartupscenario.h"
 #include "audioplugins/iregisteraudiopluginsscenario.h"
 #include "appshell/iappshellconfiguration.h"
-#include "multiinstances/internal/multiinstancesprovider.h"
 
 #include "commandlineparser.h"
 
@@ -42,7 +41,6 @@ class App : public muse::Injectable
     muse::Inject<muse::IApplication> muapplication{ this };
     muse::Inject<appshell::IStartupScenario> startupScenario{ this };
     muse::Inject<muse::audioplugins::IRegisterAudioPluginsScenario> registerAudioPluginsScenario{ this };
-    muse::GlobalInject<muse::mi::MultiInstancesProvider> multiInstancesProvider;
 
 public:
     App();

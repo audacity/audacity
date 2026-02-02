@@ -215,18 +215,6 @@ int App::run(QCoreApplication& app, CommandLineParser& commandLineParser)
         //             }, Qt::QueuedConnection);
         //     }
         // }
-        CommandLineParser::SendAuthLinkTask sendLinkTask = commandLineParser.sendAuthLinkTask();
-        if (sendLinkTask.valid) {
-            constexpr const char* AUTH_LINK_KEY{ "cloud/authLinkUrl" };
-            QMetaObject::invokeMethod(qApp, [this, sendLinkTask]() {
-                    multiInstancesProvider()->init();
-                    if (!multiInstancesProvider()->isMainInstance()) {
-                        multiInstancesProvider()->settingsSetValue(AUTH_LINK_KEY, Val(sendLinkTask.url));
-                        multiInstancesProvider()->notifyAboutResourceChanged(AUTH_LINK_KEY);
-                    }
-                    qApp->exit(0);
-                }, Qt::QueuedConnection);
-        }
     } break;
     case IApplication::RunMode::GuiApp: {
 #ifdef AU_BUILD_APPSHELL_MODULE
