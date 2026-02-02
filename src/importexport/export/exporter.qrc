@@ -8,5 +8,7 @@
         <file>qml/Export/CustomFFmpegDialog.qml</file>
         <file>qml/Export/MetadataDialog.qml</file>
         <file>qml/Export/internal/MetadataControlPanel.qml</file>
+        <file>qml/Export/CustomMappingDialog.qml</file>
+        <file>qml/Export/internal/ChannelMappingTableView.qml</file>
     </qresource>
 </RCC>

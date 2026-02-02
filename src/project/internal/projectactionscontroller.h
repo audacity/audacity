@@ -94,6 +94,7 @@ private:
 
     void openCustomFFmpegOptions();
     void openMetadataDialog();
+    void openCustomMapping();
 
     bool m_isProjectSaving = false;
     bool m_isProjectClosing = false;

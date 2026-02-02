@@ -44,9 +44,8 @@ class ExportPreferencesModel : public QObject, public muse::async::Asyncable, pu
     Q_PROPERTY(QString currentFormat READ currentFormat NOTIFY currentFormatChanged)
     Q_PROPERTY(QStringList formatsList READ formatsList NOTIFY formatsListChanged)
 
-    Q_PROPERTY(importexport::ExportChannelsPref::ExportChannels exportChannels READ exportChannels NOTIFY exportChannelsChanged)
+    Q_PROPERTY(importexport::ExportChannelsPref::ExportChannels exportChannelsType READ exportChannelsType NOTIFY exportChannelsTypeChanged)
     Q_PROPERTY(int maxExportChannels READ maxExportChannels NOTIFY maxExportChannelsChanged)
-    // TODO: add custom mapping as a separate property
 
     Q_PROPERTY(QString exportSampleRate READ exportSampleRate NOTIFY exportSampleRateChanged)
     Q_PROPERTY(QVariantList exportSampleRateList READ exportSampleRateList NOTIFY exportSampleRateListChanged)
@@ -79,8 +78,8 @@ public:
     Q_INVOKABLE void setCurrentFormat(const QString& format);
     QStringList formatsList() const;
 
-    importexport::ExportChannelsPref::ExportChannels exportChannels() const;
-    Q_INVOKABLE void setExportChannels(importexport::ExportChannelsPref::ExportChannels exportChannels);
+    importexport::ExportChannelsPref::ExportChannels exportChannelsType() const;
+    Q_INVOKABLE void setExportChannelsType(importexport::ExportChannelsPref::ExportChannels type);
     Q_INVOKABLE int maxExportChannels() const;
 
     QString exportSampleRate() const;
@@ -89,6 +88,7 @@ public:
 
     Q_INVOKABLE void openCustomFFmpegDialog();
     Q_INVOKABLE void openMetadataDialog();
+    Q_INVOKABLE void openCustomMappingDialog();
     Q_INVOKABLE void setFilePickerPath(const QString& path);
     Q_INVOKABLE bool verifyExportPossible();
     Q_INVOKABLE QStringList fileFilter();
@@ -110,7 +110,7 @@ signals:
     void directoryPathChanged();
     void currentFormatChanged();
     void formatsListChanged();
-    void exportChannelsChanged();
+    void exportChannelsTypeChanged();
     void maxExportChannelsChanged();
     void exportSampleRateChanged();
     void exportSampleRateListChanged();

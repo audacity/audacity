@@ -13,6 +13,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/iexporter.h
     ${CMAKE_CURRENT_LIST_DIR}/iffmpegoptionsaccessor.h
     ${CMAKE_CURRENT_LIST_DIR}/iexportconfiguration.h
+    ${CMAKE_CURRENT_LIST_DIR}/exportutils.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/exportutils.h
 
     #internals
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3exporter.cpp
@@ -31,6 +33,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/customffmpegpreferencesmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/metadatamodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/metadatamodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/custommappingmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/custommappingmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/channelmappingtableviewmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/channelmappingtableviewmodel.h
 
     #types
     ${CMAKE_CURRENT_LIST_DIR}/types/exporttypes.h
