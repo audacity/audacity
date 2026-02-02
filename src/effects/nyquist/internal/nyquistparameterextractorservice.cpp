@@ -77,6 +77,12 @@ ParameterInfo convertControl(const NyqControl& ctrl)
             info.enumValues.push_back(String::fromStdString(choice.Msgid().Translation().ToStdString()));
             info.enumIndices.push_back(static_cast<double>(i));
         }
+
+        // Update min/max to match the enum indices range
+        if (!ctrl.choices.empty()) {
+            info.minValue = 0.0;
+            info.maxValue = static_cast<double>(ctrl.choices.size() - 1);
+        }
     }
 
     // For file controls, extract file type filters and parse flags
@@ -224,8 +230,15 @@ bool NyquistParameterExtractorService::setParameterValue(EffectInstance* instanc
         return false;
     }
 
-    // Clamp value to valid range
-    ctrl->val = std::max(ctrl->low, std::min(ctrl->high, fullRangeValue));
+    // For choice controls, use the number of choices to determine valid range
+    // (ctrl->low and ctrl->high are 0 for choice controls)
+    if (ctrl->type == NYQ_CTRL_CHOICE) {
+        const double maxChoice = static_cast<double>(ctrl->choices.size() - 1);
+        ctrl->val = std::max(0.0, std::min(maxChoice, fullRangeValue));
+    } else {
+        // For other controls, clamp to the specified range
+        ctrl->val = std::max(ctrl->low, std::min(ctrl->high, fullRangeValue));
+    }
 
     // Update string representation
     ctrl->valStr = wxString::Format(wxT("%g"), ctrl->val);
