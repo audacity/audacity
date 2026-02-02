@@ -99,7 +99,12 @@ void PluginRegistrationApp::setup()
     }, Qt::QueuedConnection);
 
     QMetaObject::invokeMethod(qApp, [this]() {
-        int code = processAudioPluginRegistration();
+        int code = 0;
+        if (m_task.selfTest) {
+            code = runSelfTest();
+        } else {
+            code = processAudioPluginRegistration();
+        }
         qApp->exit(code);
     }, Qt::QueuedConnection);
 }
@@ -188,6 +193,21 @@ std::vector<modularity::ContextPtr> PluginRegistrationApp::contexts() const
         ctxs.push_back(c.ctx);
     }
     return ctxs;
+}
+
+int PluginRegistrationApp::runSelfTest()
+{
+    // TODO: add more checks, add a dummy plugin?
+
+    LOGI() << "PluginRegistrationApp self-test: initialization successful";
+
+    if (!registerAudioPluginsScenario()) {
+        LOGE() << "Self-test failed: registerAudioPluginsScenario not available";
+        return 1;
+    }
+
+    LOGI() << "PluginRegistrationApp self-test: all checks passed";
+    return 0;
 }
 
 int PluginRegistrationApp::processAudioPluginRegistration()

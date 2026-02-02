@@ -61,6 +61,8 @@ void CommandLineParser::init()
     m_parser.addOption(QCommandLineOption("register-audio-plugin",
                                           "Check an audio plugin for compatibility with the application and register it", "path"));
     m_parser.addOption(QCommandLineOption("register-failed-audio-plugin", "Register an incompatible audio plugin", "path"));
+    m_parser.addOption(QCommandLineOption("plugin-registration-self-test",
+                                          "Run plugin registration app self-test (verify initialization)"));
 
     // Autobot
     m_parser.addOption(QCommandLineOption("test-case", "Run test case by name or file", "nameOrFile"));
@@ -142,6 +144,12 @@ void CommandLineParser::parse(int argc, char** argv)
         m_runMode = IApplication::RunMode::AudioPluginRegistration;
         m_audioPluginRegistration.pluginPath = fromUserInputPath(m_parser.value("register-audio-plugin"));
         m_audioPluginRegistration.failedPlugin = false;
+    }
+
+    // Self-test mode for plugin registration
+    if (m_parser.isSet("plugin-registration-self-test")) {
+        m_runMode = IApplication::RunMode::AudioPluginRegistration;
+        m_audioPluginRegistration.selfTest = true;
     }
 
     if (m_parser.isSet("register-failed-audio-plugin")) {

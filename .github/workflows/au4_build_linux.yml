@@ -119,6 +119,15 @@ jobs:
         source $HOME/build_tools/environment.sh
         cmake -DCRASH_REPORT_URL=$C_URL -P ${CI_DIR}/linux/ci_build.cmake
 
+    - name: Run plugin registration app self-test
+      if: env.DO_BUILD == 'true'
+      run: |
+        source $HOME/build_tools/environment.sh
+        INSTALL_DIR=$(cat ./build.release/PREFIX.txt)
+        export LD_LIBRARY_PATH="${INSTALL_DIR}/lib:${LD_LIBRARY_PATH}"
+        APP_BIN=$(find "${INSTALL_DIR}/bin/" -type f -name "audacity4portable*" -print -quit)
+        QT_QPA_PLATFORM=minimal:enable_fonts "$APP_BIN" --plugin-registration-self-test
+
     - name: Package
       if: env.DO_BUILD == 'true'
       run: |

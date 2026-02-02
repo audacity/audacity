@@ -34,6 +34,7 @@ public:
     std::vector<muse::modularity::ContextPtr> contexts() const override;
 
 private:
+    int runSelfTest();
     int processAudioPluginRegistration();
     std::vector<muse::modularity::IContextSetup*>& contextSetups(const muse::modularity::ContextPtr& ctx);
 

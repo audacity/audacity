@@ -128,6 +128,11 @@ jobs:
         source $HOME/build_tools/environment.sh
         cmake -DCRASH_REPORT_URL=$C_URL -P ${CI_DIR}/macos/ci_build.cmake
 
+    - name: Run plugin registration app self-test
+      if: env.DO_BUILD == 'true'
+      run: |
+        ./build.install/audacity.app/Contents/MacOS/audacity --plugin-registration-self-test
+
     - name: Package
       env:
         SIGN_CERTIFICATE_ENCRYPT_SECRET: ${{ secrets.MAC_SIGN_CERTIFICATE_ENCRYPT_SECRET }}

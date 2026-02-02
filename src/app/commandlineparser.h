@@ -50,6 +50,7 @@ public:
         muse::io::path_t pluginPath;
         bool failedPlugin = false;
         int failCode = 0;
+        bool selfTest = false;
     };
 
     void init();
