@@ -31,7 +31,7 @@ Rectangle {
     property alias isSplitMode: splitToolController.active
 
     signal externalDropAreaEntered(var drop)
-    signal externalDropAreaExited()
+    signal externalDropAreaExited
     signal externalDropAreaDropped(var drop)
 
     onExternalDropAreaEntered: drop => {
@@ -65,6 +65,7 @@ Rectangle {
         id: prv
 
         property bool playRegionActivated: false
+        readonly property int headerHeight: 20
 
         function cancelClipDragEdit() {
             if (mainMouseArea.pressed) {
@@ -169,8 +170,9 @@ Rectangle {
     }
 
     SelectionViewController {
-        id: selectionController
+        id: selectionViewController
         context: timeline.context
+        resistancePx: prv.headerHeight
     }
 
     Component.onCompleted: {
@@ -179,7 +181,7 @@ Rectangle {
 
         playbackState.init()
         playRegionModel.init()
-        selectionController.load()
+        selectionViewController.load()
         selectionContextMenuModel.load()
         canvasContextMenuModel.load()
 
@@ -490,8 +492,8 @@ Rectangle {
 
                         if (!splitToolController.active) {
                             const spectrogramHit = tracksItemsView.getSpectrogramHit(e.y)
-                            selectionController.onPressed(e.x, e.y, spectrogramHit)
-                            selectionController.resetSelectedItems()
+                            selectionViewController.onPressed(e.x, e.y, spectrogramHit)
+                            selectionViewController.resetSelectedItems()
                             itemsSelection.visible = true
                         }
                         handleGuideline(e.x, false)
@@ -527,7 +529,7 @@ Rectangle {
                     tracksItemsView.itemMoveRequested(hoveredItemKey, false)
                     tracksItemsView.startAutoScroll()
                 } else {
-                    selectionController.onPositionChanged(e.x, e.y)
+                    selectionViewController.onPositionChanged(e.x, e.y)
                     let trackId = tracksViewState.trackAtPosition(e.x, e.y)
 
                     handleGuideline(e.x, false)
@@ -554,11 +556,11 @@ Rectangle {
                 } else {
                     splitToolController.mouseUp(e.x)
 
-                    if (selectionController.isLeftSelection(e.x)) {
+                    if (selectionViewController.isLeftSelection(e.x)) {
                         playCursorController.seekToX(e.x)
                     }
                     if (!splitToolController.active) {
-                        selectionController.onReleased(e.x, e.y)
+                        selectionViewController.onReleased(e.x, e.y)
                         itemsSelection.visible = false
                     }
                     handleGuideline(e.x, true)
@@ -581,7 +583,7 @@ Rectangle {
                 }
 
                 if (!root.itemHovered) {
-                    selectionController.resetSelectedItems()
+                    selectionViewController.resetSelectedItems()
                 }
             }
 
@@ -595,10 +597,10 @@ Rectangle {
                 }
 
                 if (root.itemHovered) {
-                    selectionController.selectItemData(root.hoveredItemKey)
+                    selectionViewController.selectItemData(root.hoveredItemKey)
                     playCursorController.setPlaybackRegion(timeline.context.selectedItemStartPosition, timeline.context.selectedItemEndPosition)
                 } else {
-                    selectionController.selectTrackAudioData(e.y)
+                    selectionViewController.selectTrackAudioData(e.y)
                     playCursorController.setPlaybackRegion(timeline.context.selectedItemStartPosition, timeline.context.selectedItemEndPosition)
                 }
                 itemsSelection.visible = false
@@ -649,15 +651,18 @@ Rectangle {
                     var spectrogramHit = null
                     checkIfAnyTrack(function (trackItem) {
                         if (trackItem.getSpectrogramHit) {
-                            const yy = trackItem.mapFromItem(tracksItemsView, 0, y).y
-                            spectrogramHit = trackItem.getSpectrogramHit(yy)
+                            spectrogramHit = trackItem.getSpectrogramHit(y)
                             if (spectrogramHit) {
                                 return true
                             }
                         }
                         return false
                     })
-                    return spectrogramHit
+                    if (spectrogramHit) {
+                        return spectrogramHit
+                    } else {
+                        return SpectrogramHitFactory.createNullSpectrogramHit()
+                    }
                 }
 
                 signal itemMoveRequested(var itemKey, bool completed)
@@ -702,7 +707,6 @@ Rectangle {
                     target: timeline.context
 
                     function onViewContentYChangeRequested(delta) {
-                        let headerHeight = tracksItemsView.headerItem ? tracksItemsView.headerItem.height : 0
                         let totalContentHeight = tracksModel.totalTracksHeight + tracksViewState.tracksVerticalScrollPadding
                         let canMove = totalContentHeight > tracksItemsView.height
                         if (!canMove) {
@@ -713,7 +717,7 @@ Rectangle {
 
                         let maxContentY = totalContentHeight - tracksItemsView.height
                         maxContentY = Math.max(maxContentY, tracksItemsView.contentY)
-                        contentYOffset = Math.max(Math.min(contentYOffset, maxContentY), -headerHeight)
+                        contentYOffset = Math.max(Math.min(contentYOffset, maxContentY), -prv.headerHeight)
 
                         tracksItemsView.contentY = contentYOffset
                     }
@@ -755,6 +759,8 @@ Rectangle {
 
                             trackId: itemData.trackId
                             trackColor: itemData.color
+                            headerHeight: prv.headerHeight
+                            sampleRate: itemData.trackSampleRate
 
                             isDataSelected: itemData.isDataSelected
                             isTrackSelected: itemData.isTrackSelected
@@ -770,8 +776,10 @@ Rectangle {
                             altPressed: root.altPressed
                             ctrlPressed: root.ctrlPressed
 
-                            selectionEditInProgress: selectionController.selectionEditInProgress
-                            selectionInProgress: selectionController.selectionInProgress
+                            selectionInProgress: selectionViewController.selectionInProgress
+                            selectionEditInProgress: selectionViewController.selectionEditInProgress
+                            verticalSelectionEditInProgress: selectionViewController.verticalSelectionEditInProgress
+
                             onHoverChanged: function () {
                                 root.itemHovered = tracksItemsView.checkIfAnyTrack(function (trackItem) {
                                     return trackItem && trackItem.hover
@@ -780,8 +788,9 @@ Rectangle {
 
                             selectionStartFrequency: itemData.frequencySelection.startFrequency
                             selectionEndFrequency: itemData.frequencySelection.endFrequency
-                            pressedSpectrogram: selectionController.pressedSpectrogram
-                            spectralSelectionEnabled: selectionController.spectralSelectionEnabled
+                            pressedSpectrogram: selectionViewController.pressedSpectrogram
+                            spectralSelectionEnabled: selectionViewController.spectralSelectionEnabled
+                            selectionController: selectionViewController
 
                             navigationPanel: navPanels && navPanels[index] ? navPanels[index] : null
 
@@ -808,12 +817,12 @@ Rectangle {
                             }
 
                             onItemSelectedRequested: {
-                                selectionController.resetDataSelection()
+                                selectionViewController.resetDataSelection()
                                 itemsSelection.visible = false
                             }
 
                             onSelectionResetRequested: {
-                                selectionController.resetDataSelection()
+                                selectionViewController.resetDataSelection()
                             }
 
                             onUpdateMoveActive: function (completed) {
@@ -827,8 +836,8 @@ Rectangle {
                                 selectionContextMenuLoader.show(Qt.point(x + canvasIndent.width, y + timelineHeader.height), selectionContextMenuModel.items)
                             }
 
-                            onSelectionDraged: function (x1, x2, completed) {
-                                selectionController.onSelectionDraged(x1, x2, completed)
+                            onSelectionResize: function (x1, x2, completed) {
+                                selectionViewController.onSelectionHorizontalResize(x1, x2, completed)
                             }
 
                             onSeekToX: function (x) {
@@ -976,8 +985,9 @@ Rectangle {
                             altPressed: root.altPressed
                             ctrlPressed: root.ctrlPressed
 
-                            selectionEditInProgress: selectionController.selectionEditInProgress
-                            selectionInProgress: selectionController.selectionInProgress
+                            selectionInProgress: selectionViewController.selectionInProgress
+                            selectionEditInProgress: selectionViewController.selectionEditInProgress
+                            verticalSelectionEditInProgress: selectionViewController.verticalSelectionEditInProgress
 
                             navigationPanel: navPanels && navPanels[index] ? navPanels[index] : null
 
@@ -1021,8 +1031,8 @@ Rectangle {
                                 playCursorController.seekToX(x)
                             }
 
-                            onSelectionDraged: function (x1, x2, completed) {
-                                selectionController.onSelectionDraged(x1, x2, completed)
+                            onSelectionResize: function (x1, x2, completed) {
+                                selectionViewController.onSelectionHorizontalResize(x1, x2, completed)
                             }
 
                             onRequestSelectionContextMenu: function (x, y) {
@@ -1030,12 +1040,12 @@ Rectangle {
                             }
 
                             onItemSelectedRequested: {
-                                selectionController.resetDataSelection()
+                                selectionViewController.resetDataSelection()
                                 itemsSelection.visible = false
                             }
 
                             onSelectionResetRequested: {
-                                selectionController.resetDataSelection()
+                                selectionViewController.resetDataSelection()
                             }
 
                             onUpdateMoveActive: function (completed) {

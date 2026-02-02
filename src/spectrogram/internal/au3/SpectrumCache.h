@@ -136,6 +136,7 @@ struct WaveClipSpectrumCache final : WaveClipListener
     bool GetSpectrogram(const WaveChannelInterval& clip, const float*& spectrogram, Au3SpectrogramSettings& spectrogramSettings,
                         const long long*& where, size_t numPixels, double t0 /*absolute time*/, double pixelsPerSecond);
 
+    bool IsStereo() const { return mSpecCaches.size() == 2; }
     void MakeStereo(WaveClipListener&& other, bool aligned) override;
     void SwapChannels() override;
     void Erase(size_t index) override;

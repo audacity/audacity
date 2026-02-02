@@ -62,16 +62,8 @@ float findValue(const float* spectrum, float bin0, float bin1, unsigned nBins, b
     return value;
 }
 
-constexpr auto DASH_LENGTH = 10; // pixel
-
-inline SpectrogramColors::ColorGradientChoice
-ChooseColorSet(float bin0, float bin1, float selBinLo, float selBinHi, int dashCount)
+inline SpectrogramColors::ColorGradientChoice ChooseColorSet(float bin0, float bin1, float selBinLo, float selBinHi)
 {
-    if ((0 == dashCount % 2)
-        && (((selBinLo >= 0) && (bin0 <= selBinLo) && (selBinLo < bin1))
-            || ((selBinHi >= 0) && (bin0 <= selBinHi) && (selBinHi < bin1)))) {
-        return SpectrogramColors::ColorGradientEdge;
-    }
     if ((selBinLo < 0 || selBinLo < bin1) && (selBinHi < 0 || selBinHi > bin0)) {
         return SpectrogramColors::ColorGradientTimeAndFrequencySelected;
     }
@@ -85,6 +77,14 @@ void Au3SpectrogramClipChannelPainter::fillImage(QImage& image,
                                                  const SelectionInfo& selectionInfo,
                                                  const SpectrogramTrackContext& tc, WaveClipChannel& clipChannel)
 {
+    auto& spectrumCache = WaveClipSpectrumCache::Get(clipChannel);
+
+    if (clipChannel.GetChannelIndex() != 0 && !spectrumCache.IsStereo()) {
+        // This happens while dragging a mono clip over a stereo track: the clip won't be converted to stereo until released. In the meantime, just keep it blank.
+        image.fill(Qt::white);
+        return;
+    }
+
     Au3SpectrogramSettings& settings = tc.settings;
     const QRect paintableRect{ 0, 0, viewportWidth(viewInfo), image.height() };
     const ClipTimes clipTimes{
@@ -113,8 +113,8 @@ void Au3SpectrogramClipChannelPainter::fillImage(QImage& image,
     const long long* where = nullptr;
     const auto half = settings.GetFFTLength() / 2;
     const double binUnit = sampleRate / (2 * half);
-    const bool updated = WaveClipSpectrumCache::Get(clipChannel).GetSpectrogram(clipChannel, spectrogram, settings, where, imageWidth,
-                                                                                visibleStartTime, viewInfo.pixelsPerSecond);
+    const bool updated = spectrumCache.GetSpectrogram(clipChannel, spectrogram, settings, where, imageWidth,
+                                                      visibleStartTime, viewInfo.pixelsPerSecond);
 
     auto nBins = settings.NBins();
 
@@ -216,7 +216,7 @@ void Au3SpectrogramClipChannelPainter::fillImage(QImage& image,
                 if (imageHeight - yy - 1 == selYCenter) {
                     selected = SpectrogramColors::ColorGradientEdge;
                 } else {
-                    selected = ChooseColorSet(bin, nextBin, selBinLo, selBinHi, (xx + leftOffset - leftOffset) / DASH_LENGTH);
+                    selected = ChooseColorSet(bin, nextBin, selBinLo, selBinHi);
                 }
             }
 

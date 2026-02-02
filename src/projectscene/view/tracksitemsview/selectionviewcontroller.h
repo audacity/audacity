@@ -23,9 +23,11 @@ class SelectionViewController : public QObject, public muse::async::Asyncable, p
 {
     Q_OBJECT
     Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
+    Q_PROPERTY(int resistancePx READ resistancePx WRITE setResistancePx NOTIFY resistancePxChanged FINAL)
 
     Q_PROPERTY(bool selectionActive READ selectionActive NOTIFY selectionActiveChanged FINAL)
     Q_PROPERTY(bool selectionEditInProgress READ selectionEditInProgress NOTIFY selectionEditInProgressChanged FINAL)
+    Q_PROPERTY(bool verticalSelectionEditInProgress READ verticalSelectionEditInProgress NOTIFY verticalSelectionEditInProgressChanged FINAL)
     Q_PROPERTY(bool selectionInProgress READ selectionInProgress NOTIFY selectionInProgressChanged FINAL)
     Q_PROPERTY(bool spectralSelectionEnabled READ spectralSelectionEnabled NOTIFY spectralSelectionEnabledChanged FINAL)
     Q_PROPERTY(QVariantMap pressedSpectrogram READ pressedSpectrogram NOTIFY pressedSpectrogramChanged FINAL)
@@ -43,16 +45,21 @@ public:
     TimelineContext* timelineContext() const;
     void setTimelineContext(TimelineContext* newContext);
 
+    int resistancePx() const { return m_resistancePx; }
+    void setResistancePx(int value);
+
     Q_INVOKABLE void load();
 
     //! NOTE The x coordinates must match the timeline.
     //! The y coordinates must match the track view
     //! If this is not the case, then appropriate adjustments must be made.
-    Q_INVOKABLE void onPressed(double x, double y, const spectrogram::SpectrogramHit* spectrogramHit = nullptr);
+    Q_INVOKABLE void onPressed(double x, double y, spectrogram::SpectrogramHit spectrogramHit = {});
     Q_INVOKABLE void onPositionChanged(double x, double y);
     Q_INVOKABLE void onReleased(double x, double y);
 
-    Q_INVOKABLE void onSelectionDraged(double x, double x2, bool completed);
+    Q_INVOKABLE void onSelectionHorizontalResize(double x, double x2, bool completed);
+    Q_INVOKABLE void startSelectionVerticalResize(spectrogram::SpectrogramHit hit);
+    Q_INVOKABLE void updateSelectionVerticalResize(double y1, double y2, bool completed);
 
     Q_INVOKABLE void selectTrackAudioData(double y);
     Q_INVOKABLE void selectItemData(const TrackItemKey& key);
@@ -65,6 +72,7 @@ public:
 
     bool selectionActive() const;
     bool selectionEditInProgress() const;
+    bool verticalSelectionEditInProgress() const;
     bool selectionInProgress() const;
     bool spectralSelectionEnabled() const;
     void setSelectionActive(bool newSelectionActive);
@@ -72,8 +80,10 @@ public:
 
 signals:
     void timelineContextChanged();
+    void resistancePxChanged();
     void selectionActiveChanged();
     void selectionEditInProgressChanged();
+    void verticalSelectionEditInProgressChanged();
     void selectionInProgressChanged();
     void spectralSelectionEnabledChanged();
     void pressedSpectrogramChanged();
@@ -89,33 +99,26 @@ private:
 
     bool doOnPositionChanged(double x, double y);
     void setSelection(double x1, double x2, bool complete);
-    void setFrequencySelection(double y);
+    void setFrequencySelection(double y1, double y2);
 
     Qt::KeyboardModifiers keyboardModifiers() const;
 
     bool isProjectOpened() const;
 
     TimelineContext* m_context = nullptr;
+    int m_resistancePx = 0;
     QMetaObject::Connection m_autoScrollConnection;
 
     bool m_selectionStarted = false;
     bool m_selectionActive = false;
     bool m_selectionEditInProgress = false;
+    bool m_verticalSelectionEditInProgress = false;
     QPointF m_startPoint;
     QPointF m_lastPoint;
 
-    struct SpectrogramMousePress {
-        SpectrogramMousePress(const spectrogram::SpectrogramHit& hit, double freq)
-            : hit(hit), freq(freq) {}
-        const spectrogram::SpectrogramHit& hit;
-        const double freq;
-    };
-
     double spectrogramHitFrequency(const spectrogram::SpectrogramHit& hit, double y) const;
-    double spectrogramTop(const spectrogram::SpectrogramHit& hit) const;
-    double spectrogramBottom(const spectrogram::SpectrogramHit& hit) const;
     bool isInExtendedSpectrogram(const spectrogram::SpectrogramHit& hit, double y) const;
 
-    std::optional<SpectrogramMousePress> m_spectrogramMousePress;
+    std::optional<const spectrogram::SpectrogramHit> m_spectrogramHit;
 };
 }

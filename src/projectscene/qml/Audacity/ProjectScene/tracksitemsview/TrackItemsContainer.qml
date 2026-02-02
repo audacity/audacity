@@ -24,25 +24,27 @@ Item {
     property bool moveActive: false
     property bool altPressed: false
     property bool ctrlPressed: false
-    property bool selectionEditInProgress: false
-    property bool selectionInProgress: false
     property bool hover: false
+
+    required property bool selectionInProgress
+    required property bool selectionEditInProgress
+    required property bool verticalSelectionEditInProgress
 
     property alias bottomSeparatorHeight: sep.height
 
     property alias contentItem: contentLoader.item
 
-    signal interactionStarted()
-    signal interactionEnded()
+    signal interactionStarted
+    signal interactionEnded
     signal trackItemMousePositionChanged(real x, real y, var itemKey)
     signal setHoveredItemKey(var itemKey)
 
     signal itemHeaderHoveredChanged(bool val)
 
-    signal itemSelectedRequested()
-    signal selectionResetRequested()
+    signal itemSelectedRequested
+    signal selectionResetRequested
     signal requestSelectionContextMenu(real x, real y)
-    signal selectionDraged(var x1, var x2, var completed)
+    signal selectionResize(var x1, var x2, var completed)
 
     signal updateMoveActive(bool completed)
 
@@ -53,7 +55,7 @@ Item {
     signal triggerItemGuideline(real x, bool completed)
     signal itemDragEditCanceled
 
-    signal initRequired()
+    signal initRequired
 
     property Component contentComponent: null
 
@@ -126,13 +128,13 @@ Item {
 
         cursorShape: Qt.SizeVerCursor
 
-        visible: !root.selectionInProgress
+        visible: !root.selectionInProgress && !root.selectionEditInProgress && !root.verticalSelectionEditInProgress
 
         onPressed: {
             root.interactionStarted()
         }
 
-        onPositionChanged: function(mouse) {
+        onPositionChanged: function (mouse) {
             const resizeVerticalMargin = 10
             mouse.accepted = true
 
