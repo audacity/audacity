@@ -41,6 +41,9 @@ public:
     virtual Snap getSnap() const = 0;
     virtual muse::ValCh<Snap> snap() const = 0;
 
+    virtual void setAutomationEnabled(bool enabled) = 0;
+    virtual muse::ValCh<bool> automationEnabled() const = 0;
+
     virtual void setSplitToolEnabled(bool enabled) = 0;
     virtual muse::ValCh<bool> splitToolEnabled() const = 0;
 

@@ -39,6 +39,7 @@ static const ActionQuery PLAYBACK_REWIND_START_QUERY("action://playback/rewind-s
 static const ActionQuery PLAYBACK_REWIND_END_QUERY("action://playback/rewind-end");
 static const ActionCode LOOP_ACTION_CODE("toggle-loop-region");
 
+static const ActionCode AUTOMATION_CODE("automation");
 static const ActionCode SPLIT_TOOL_ACTION_CODE("split-tool");
 
 static const ActionCode TOGGLE_GLOBAL_SPECTROGRAM_VIEW_ACTION_CODE("action://trackedit/global-view-spectrogram");
@@ -64,6 +65,7 @@ static PlaybackToolBarModel::ItemType itemType(const ActionCode& actionCode)
         { PLAYBACK_REWIND_START_QUERY.toString(), PlaybackToolBarModel::PLAYBACK_CONTROL },
         { PLAYBACK_REWIND_END_QUERY.toString(), PlaybackToolBarModel::PLAYBACK_CONTROL },
         { LOOP_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
+        { AUTOMATION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
         { SPLIT_TOOL_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
         { TOGGLE_GLOBAL_SPECTROGRAM_VIEW_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
         { SNAP_ACTION_CODE, PlaybackToolBarModel::SNAP }
@@ -120,6 +122,7 @@ void PlaybackToolBarModel::reload()
 void PlaybackToolBarModel::setupProjectConnections(project::IAudacityProject& project)
 {
     const auto vs = project.viewState();
+    vs->automationEnabled().ch.onReceive(this, [this](bool){ updateAutomationState(); });
     vs->splitToolEnabled().ch.onReceive(this, [this](bool){ updateSplitState(); });
     vs->globalSpectrogramViewToggleChanged().onNotify(this, [this] { updateGlobalSpectrogramViewState(); });
 }
@@ -152,6 +155,7 @@ void PlaybackToolBarModel::updateStates()
     updateStopState();
     updateRecordState();
     updateLoopState();
+    updateAutomationState();
     updateSplitState();
     updateGlobalSpectrogramViewState();
 }
@@ -248,6 +252,33 @@ void PlaybackToolBarModel::updateLoopState()
     }
 
     item->setIconColor(iconColor);
+    item->setBackgroundColor(backgroundColor);
+}
+
+void PlaybackToolBarModel::updateAutomationState()
+{
+    auto prj = context()->currentProject();
+
+    if (!prj) {
+        return;
+    }
+
+    PlaybackToolBarControlItem* item = dynamic_cast<PlaybackToolBarControlItem*>(findItemPtr(AUTOMATION_CODE));
+
+    if (item == nullptr) {
+        return;
+    }
+
+    auto vs = prj->viewState();
+
+    bool automationEnabled = vs->automationEnabled().val;
+    item->setSelected(automationEnabled);
+
+    QColor backgroundColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::BUTTON_COLOR).toString());
+    if (automationEnabled) {
+        backgroundColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::ACCENT_COLOR).toString());
+    }
+
     item->setBackgroundColor(backgroundColor);
 }
 

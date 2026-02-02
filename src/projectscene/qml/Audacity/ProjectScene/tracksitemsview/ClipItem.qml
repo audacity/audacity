@@ -16,6 +16,7 @@ Rectangle {
     property alias clipKey: waveView.clipKey
     property alias clipTime: waveView.clipTime
     property alias title: titleLabel.text
+    required property bool isAutomationEnabled
     required property bool isWaveformViewVisible
     required property bool isSpectrogramViewVisible
     property int pitch: 0
@@ -897,9 +898,12 @@ Rectangle {
 
             anchors.fill: viewsColumn
 
+            visible: root.isAutomationEnabled
+
             lineColor: ui.theme.extra["stroke_automation_curve"]
             lineWidth: 1.5
             pointRadius: 3
+
             // pointsN: model.pointsN  // later
         }
 
