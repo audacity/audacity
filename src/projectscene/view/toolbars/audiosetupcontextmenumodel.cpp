@@ -3,6 +3,8 @@
 */
 #include "audiosetupcontextmenumodel.h"
 
+#include "playback/playbacktypes.h"
+
 using namespace au::projectscene;
 using namespace muse::uicomponents;
 using namespace muse::actions;
@@ -19,6 +21,18 @@ bool containsAny(const ActionCodeList& list, const ActionCodeList& actionCodes)
         return std::find(list.begin(), list.end(), code) != list.end();
     });
 }
+
+void setItemsEnabled(const MenuItemList& items, bool enabled)
+{
+    for (MenuItem* item : items) {
+        if (!item) {
+            continue;
+        }
+        auto state = item->state();
+        state.enabled = enabled;
+        item->setState(state);
+    }
+}
 }
 
 void AudioSetupContextMenuModel::load()
@@ -26,6 +40,16 @@ void AudioSetupContextMenuModel::load()
     AbstractMenuModel::load();
 
     makeMenuItems();
+
+    if (auto playbackState = globalContext()->playbackState()) {
+        playbackState->playbackStatusChanged().onReceive(this, [this](au::playback::PlaybackStatus) {
+            makeMenuItems();
+        }, muse::async::Asyncable::Mode::SetReplace);
+    }
+
+    globalContext()->isRecordingChanged().onNotify(this, [this]() {
+        makeMenuItems();
+    }, muse::async::Asyncable::Mode::SetReplace);
 }
 
 void AudioSetupContextMenuModel::onActionsStateChanges(const muse::actions::ActionCodeList& codes)
@@ -46,11 +70,24 @@ void AudioSetupContextMenuModel::onActionsStateChanges(const muse::actions::Acti
 
 void AudioSetupContextMenuModel::makeMenuItems()
 {
+    const bool allowChanges = (!globalContext()->playbackState()
+                               || !globalContext()->playbackState()->isPlaying())
+                              && !globalContext()->isRecording();
+    MenuItemList hostItems = makeHostItems();
+    MenuItemList playbackItems = makePlaybackDevicesItems();
+    MenuItemList recordingItems = makeRecordingDevicesItems();
+    MenuItemList inputChannelItems = makeInputChannelsItems();
+
+    setItemsEnabled(hostItems, allowChanges);
+    setItemsEnabled(playbackItems, allowChanges);
+    setItemsEnabled(recordingItems, allowChanges);
+    setItemsEnabled(inputChannelItems, allowChanges);
+
     MenuItemList items {
-        makeMenu(muse::TranslatableString("audio setup", "Host"), makeHostItems(), "hostMenu"),
-        makeMenu(muse::TranslatableString("audio setup", "Playback device"), makePlaybackDevicesItems(), "playbackDeviceMenu"),
-        makeMenu(muse::TranslatableString("audio setup", "Recording device"), makeRecordingDevicesItems(), "recordingDeviceMenu"),
-        makeMenu(muse::TranslatableString("audio setup", "Recording channels"), makeInputChannelsItems(), "inputChannelsMenu"),
+        makeMenu(muse::TranslatableString("audio setup", "Host"), hostItems, "hostMenu"),
+        makeMenu(muse::TranslatableString("audio setup", "Playback device"), playbackItems, "playbackDeviceMenu"),
+        makeMenu(muse::TranslatableString("audio setup", "Recording device"), recordingItems, "recordingDeviceMenu"),
+        makeMenu(muse::TranslatableString("audio setup", "Recording channels"), inputChannelItems, "inputChannelsMenu"),
         makeMenuItem("rescan-devices"),
         makeMenuItem("audio-settings")
     };

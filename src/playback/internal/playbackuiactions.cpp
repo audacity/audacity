@@ -242,7 +242,11 @@ void PlaybackUiActions::init()
             PLAYBACK_PLAY_QUERY.toString(),
             PLAYBACK_PAUSE_QUERY.toString(),
             PLAYBACK_REWIND_START_QUERY.toString(),
-            PLAYBACK_REWIND_END_QUERY.toString()
+            PLAYBACK_REWIND_END_QUERY.toString(),
+            PLAYBACK_CHANGE_AUDIO_API_QUERY.toString(),
+            PLAYBACK_CHANGE_PLAYBACK_DEVICE_QUERY.toString(),
+            PLAYBACK_CHANGE_RECORDING_DEVICE_QUERY.toString(),
+            PLAYBACK_CHANGE_INPUT_CHANNELS_QUERY.toString()
         };
 
         m_actionEnabledChanged.send(codes);

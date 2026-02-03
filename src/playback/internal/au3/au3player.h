@@ -40,6 +40,7 @@ public:
     void stop() override;
     void pause() override;
     void resume() override;
+    void restartPausedPlayback(const muse::secs_t resumePosition) override;
 
     bool isRunning() const override;
     PlaybackStatus playbackStatus() const override;
@@ -75,7 +76,8 @@ private:
 
     TransportSequences makeTransportTracks(au3::Au3TrackList& trackList, bool selectedOnly);
 
-    muse::Ret doPlayTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options = {});
+    muse::Ret doPlayTracks(TrackList& trackList, double startTime, double endTime, const PlayTracksOptions& options = {},
+                           std::optional<double> startTimeOverride = std::nullopt);
 
     void updatePlaybackState();
 
