@@ -367,10 +367,10 @@ void TrackNavigationController::navigateToPrevTrack()
     for (size_t i = 0; i < trackList.size(); ++i) {
         const Track& track = trackList[i];
         if (track.id == currentFocusedTrack) {
-            if (--i >= 0) {
-                setFocusedTrack(trackList[i].id, true /*highlight*/);
-            } else {
+            if (i == 0) {
                 setFocusedTrack(trackList.back().id, true /*highlight*/);
+            } else {
+                setFocusedTrack(trackList.at(i - 1).id, true /*highlight*/);
             }
             return;
         }
@@ -461,7 +461,7 @@ void TrackNavigationController::navigateToPrevItem()
             if (i == 0) {
                 setFocusedItem(itemsKeys.back(), true /*highlight*/);
             } else {
-                setFocusedItem(itemsKeys[i - 1], true /*highlight*/);
+                setFocusedItem(itemsKeys.at(i - 1), true /*highlight*/);
             }
             break;
         }
@@ -494,6 +494,10 @@ void TrackNavigationController::navigateToLastItem()
 
 void TrackNavigationController::moveFocusedItemLeft() // todo: not only focused item
 {
+    if (!isFocusedItemValid()) {
+        return;
+    }
+
     const double stepSize = calculateStepSize();
     static bool completed = true;
 
@@ -507,6 +511,10 @@ void TrackNavigationController::moveFocusedItemLeft() // todo: not only focused 
 
 void TrackNavigationController::moveFocusedItemRight()
 {
+    if (!isFocusedItemValid()) {
+        return;
+    }
+
     const double stepSize = calculateStepSize();
     static bool completed = true;
 
@@ -520,6 +528,10 @@ void TrackNavigationController::moveFocusedItemRight()
 
 void TrackNavigationController::moveFocusedItemUp()
 {
+    if (!isFocusedItemValid()) {
+        return;
+    }
+
     static bool completed = true;
 
     if (isFocusedItemLabel()) {
@@ -543,6 +555,10 @@ void TrackNavigationController::moveFocusedItemUp()
 
 void TrackNavigationController::moveFocusedItemDown()
 {
+    if (!isFocusedItemValid()) {
+        return;
+    }
+
     static bool completed = true;
 
     if (isFocusedItemLabel()) {
@@ -565,6 +581,10 @@ void TrackNavigationController::moveFocusedItemDown()
 
 void TrackNavigationController::extendFocusedItemBoundaryLeft()
 {
+    if (!isFocusedItemValid()) {
+        return;
+    }
+
     const double stepSize = calculateStepSize();
     static bool completed = true;
 
@@ -579,6 +599,10 @@ void TrackNavigationController::extendFocusedItemBoundaryLeft()
 
 void TrackNavigationController::extendFocusedItemBoundaryRight()
 {
+    if (!isFocusedItemValid()) {
+        return;
+    }
+
     const double stepSize = calculateStepSize();
     static bool completed = true;
 
@@ -593,6 +617,10 @@ void TrackNavigationController::extendFocusedItemBoundaryRight()
 
 void TrackNavigationController::reduceFocusedItemBoundaryLeft()
 {
+    if (!isFocusedItemValid()) {
+        return;
+    }
+
     const double stepSize = calculateStepSize();
     static bool completed = true;
 
@@ -610,6 +638,10 @@ void TrackNavigationController::reduceFocusedItemBoundaryLeft()
 
 void TrackNavigationController::reduceFocusedItemBoundaryRight()
 {
+    if (!isFocusedItemValid()) {
+        return;
+    }
+
     const double stepSize = calculateStepSize();
     static bool completed = true;
 
@@ -732,15 +764,37 @@ void TrackNavigationController::trackRangeSelection()
             selectionController()->addSelectedClip(m_focusedItemKey);
         }
     } else {
-        TrackIdList selectedTracks = selectionController()->selectedTracks();
-        if (muse::contains(selectedTracks, m_focusedItemKey.trackId)) {
-            selectedTracks.erase(std::remove(selectedTracks.begin(), selectedTracks.end(), m_focusedItemKey.trackId), selectedTracks.end());
-            isSelect = false;
-        } else {
-            selectedTracks.push_back(m_focusedItemKey.trackId);
-            isSelect = true;
+        const auto orderedTracks = selectionController()->orderedTrackList();
+        if (orderedTracks.empty()) {
+            return;
         }
-        selectionController()->setSelectedTracks(selectedTracks);
+
+        TrackIdList selectedTracks = selectionController()->selectedTracks();
+        TrackId focusedTrack = m_focusedItemKey.trackId;
+
+        if (!m_lastSelectedTrack) {
+            m_lastSelectedTrack = focusedTrack;
+            selectionController()->setSelectedTracks({ focusedTrack });
+            return;
+        }
+
+        if (!muse::contains(selectedTracks, *m_lastSelectedTrack)) {
+            m_lastSelectedTrack = selectedTracks.size() == 1 ? selectedTracks.front() : focusedTrack;
+        }
+
+        auto startIt = std::find(orderedTracks.begin(), orderedTracks.end(), *m_lastSelectedTrack);
+        auto endIt = std::find(orderedTracks.begin(), orderedTracks.end(), focusedTrack);
+
+        if (startIt > endIt) {
+            std::swap(startIt, endIt);
+        }
+
+        au::trackedit::TrackIdList newSelectedTracks;
+        for (auto it = startIt; it <= endIt; ++it) {
+            newSelectedTracks.push_back(*it);
+        }
+
+        selectionController()->setSelectedTracks(newSelectedTracks);
     }
 
     m_lastSelectedTrack = isSelect ? std::optional<TrackId>(m_focusedItemKey.trackId) : std::nullopt;
