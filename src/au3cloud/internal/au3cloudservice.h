@@ -14,9 +14,14 @@
 #include "au3cloud/iuserdata.h"
 #include "au3cloud/iusageinfo.h"
 
+#include "oauthhttpserverreplyhandler.h"
+
 namespace au::au3cloud {
-class Au3CloudService : public muse::async::Asyncable, public IAuthorization, public IUserData, public IUsageInfo, public muse::Injectable
+class Au3CloudService : public QObject, public muse::async::Asyncable, public IAuthorization, public IUserData, public IUsageInfo,
+    public muse::Injectable
 {
+    Q_OBJECT
+
     muse::Inject<muse::IInteractive> interactive = { this };
 
 public:
@@ -38,8 +43,11 @@ public:
     void setSendAnonymousUsageInfo(bool send) override;
 
 private:
+    std::string buildOAuthRequestURL(const std::string& provider);
+
     Observer::Subscription m_authSubscription;
     Observer::Subscription m_urlRegisterSubscription;
     muse::ValCh<AuthState> m_authState;
+    OAuthHttpServerReplyHandler* m_replyHandler;
 };
 }

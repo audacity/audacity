@@ -16,8 +16,10 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3cloudservice.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3cloudservice.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/oauthhttpserverreplyhandler.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/oauthhttpserverreplyhandler.h
     )
 
-set(MODULE_LINK au3wrap)
+set(MODULE_LINK au3wrap Qt6::Network Qt6::NetworkAuth)
 
 setup_module()
