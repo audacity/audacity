@@ -98,6 +98,9 @@ public:
     void Register(std::string_view email, std::string_view password, AuthSuccessCallback successCallback,
                   AuthFailureCallback failureCallback, AudiocomTrace trace);
 
+    void AuthorizeCode(const std::string_view authorizationCode, std::string_view redirectUri, AudiocomTrace trace,
+                       AuthSuccessCallback completedHandler);
+
 private:
     void AuthorisePassword(
         const ServiceConfig& config, std::string_view userName, std::string_view password, AudiocomTrace,
