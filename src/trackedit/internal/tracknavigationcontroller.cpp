@@ -759,11 +759,21 @@ void TrackNavigationController::trackRangeSelection()
         if (isFocusedItemLabel()) {
             LabelKeyList selectedLabels = selectionController()->selectedLabels();
             isSelect = !muse::contains(selectedLabels, m_focusedItemKey);
-            selectionController()->addSelectedLabel(m_focusedItemKey);
+
+            if (isSelect) {
+                selectionController()->addSelectedLabel(m_focusedItemKey);
+            } else {
+                selectionController()->removeLabelSelection(m_focusedItemKey);
+            }
         } else {
             ClipKeyList selectedClips = selectionController()->selectedClips();
             isSelect = !muse::contains(selectedClips, m_focusedItemKey);
-            selectionController()->addSelectedClip(m_focusedItemKey);
+
+            if (isSelect) {
+                selectionController()->addSelectedClip(m_focusedItemKey);
+            } else {
+                selectionController()->removeClipSelection(m_focusedItemKey);
+            }
         }
     } else {
         const auto orderedTracks = selectionController()->orderedTrackList();

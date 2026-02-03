@@ -159,11 +159,6 @@ void TrackItemsListModel::onSelectedItem(const trackedit::TrackItemKey& k)
 
 void TrackItemsListModel::onSelectedItems(const trackedit::TrackItemKeyList& keyList)
 {
-    if (keyList.size() == 1) {
-        onSelectedItem(keyList.front());
-        return;
-    }
-
     // Multiple-item selection can only be done programmatically, hence there is no need to check for the Shift key ;
     // we can begin by clearing everything.
     clearSelectedItems();
