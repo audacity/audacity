@@ -87,13 +87,15 @@ void TrackNavigationController::init()
     m_selectionStart = std::nullopt;
 
     globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]() {
-        ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-        if (prj) {
-            std::vector<Track> trackList = prj->trackList();
-            if (!trackList.empty()) {
-                setFocusedTrack(trackList.front().id);
+        QTimer::singleShot(100, [this](){
+            ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+            if (prj) {
+                std::vector<Track> trackList = prj->trackList();
+                if (!trackList.empty()) {
+                    setFocusedTrack(trackList.front().id);
+                }
             }
-        }
+        });
     });
 }
 
