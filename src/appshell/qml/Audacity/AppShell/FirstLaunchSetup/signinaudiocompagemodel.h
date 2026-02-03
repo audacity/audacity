@@ -31,7 +31,8 @@ public:
 
     Q_INVOKABLE void init();
     Q_INVOKABLE void signInWithSocial(const QString& provider);
-    Q_INVOKABLE void triggerAction(const QString& email, const QString& password);
+    Q_INVOKABLE void signInWithEmail(const QString& email, const QString& password);
+    Q_INVOKABLE void signUpWithEmail(const QString& email, const QString& password);
 
     bool authInProgress() const;
     bool authorized() const;
@@ -53,7 +54,7 @@ public slots:
 private:
     void setErrorMessage(const QString& message);
 
-    au::au3cloud::AuthState m_state;
+    au::au3cloud::AuthState m_state = au::au3cloud::AuthState(au::au3cloud::NotAuthorized());
     bool m_isRegistering = false;
 
     QString m_errorMessage;

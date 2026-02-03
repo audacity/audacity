@@ -12,7 +12,7 @@ class IUsageInfo : MODULE_EXPORT_INTERFACE
 public:
     virtual ~IUsageInfo() = default;
 
-    virtual void setSendAnonymousUsageInfo(bool send) = 0;
+    virtual void setSendAnonymousUsageInfo(bool allow) = 0;
     virtual bool getSendAnonymousUsageInfo() const = 0;
 };
 }

@@ -11,7 +11,7 @@ AppUpdateUsageInfoPageModel::AppUpdateUsageInfoPageModel(QObject* parent)
 {
 }
 
-void AppUpdateUsageInfoPageModel::setSendAnonymousUsageInfo(bool send)
+void AppUpdateUsageInfoPageModel::setSendAnonymousUsageInfo(bool allow)
 {
-    usageInfo()->setSendAnonymousUsageInfo(send);
+    usageInfo()->setSendAnonymousUsageInfo(allow);
 }

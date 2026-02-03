@@ -26,7 +26,7 @@ void CloudTestsModel::signOut()
 
 bool CloudTestsModel::isAuthorized() const
 {
-    return authorization()->authState().val == AuthState::Authorized;
+    return std::holds_alternative<au3cloud::Authorized>(authorization()->authState().val);
 }
 
 QUrl CloudTestsModel::avatarPath() const

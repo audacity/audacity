@@ -40,7 +40,7 @@ public:
     std::string getDisplayName() const override;
 
     bool getSendAnonymousUsageInfo() const override;
-    void setSendAnonymousUsageInfo(bool send) override;
+    void setSendAnonymousUsageInfo(bool allow) override;
 
 private:
     std::string buildOAuthRequestURL(const std::string& provider);

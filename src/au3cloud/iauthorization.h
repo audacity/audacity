@@ -4,16 +4,25 @@
 #pragma once
 
 #include <string>
+#include <variant>
 
 #include "framework/global/modularity/imoduleinterface.h"
 #include "framework/global/types/retval.h"
 
 namespace au::au3cloud {
-enum class AuthState : int {
-    NotAuthorized = 0,
-    Authorizing,
-    Authorized
+struct NotAuthorized {
+    std::string error;
+
+    NotAuthorized() = default;
+    explicit NotAuthorized(std::string err)
+        : error(std::move(err)) {}
 };
+
+struct Authorizing {};
+
+struct Authorized {};
+
+using AuthState = std::variant<NotAuthorized, Authorizing, Authorized>;
 
 class IAuthorization : MODULE_EXPORT_INTERFACE
 {

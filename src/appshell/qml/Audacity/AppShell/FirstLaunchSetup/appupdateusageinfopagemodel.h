@@ -20,6 +20,6 @@ class AppUpdateUsageInfoPageModel : public QObject, public muse::Injectable
 public:
     explicit AppUpdateUsageInfoPageModel(QObject* parent = nullptr);
 
-    Q_INVOKABLE void setSendAnonymousUsageInfo(bool send);
+    Q_INVOKABLE void setSendAnonymousUsageInfo(bool allow);
 };
 }

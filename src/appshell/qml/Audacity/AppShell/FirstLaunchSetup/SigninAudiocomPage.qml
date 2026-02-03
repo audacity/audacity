@@ -23,7 +23,6 @@ Page {
 
         readonly property int socialButtonSpacing: 8
         readonly property int socialButtonHeight: 32
-        readonly property int socialIconSize: 8
         readonly property int socialIconTextSpacing: 8
 
         readonly property string googleAuthProvider: "google"
@@ -38,7 +37,7 @@ Page {
         readonly property string emailText: qsTrc("appshell/gettingstarted", "Email")
         readonly property string passwordText: qsTrc("appshell/gettingstarted", "Password")
         readonly property string forgotPasswordLink:  qsTrc("appshell/gettingstarted", "<a href=\"%1\">Forgot your password?</a>")
-        readonly property string createNewAccountLink: qsTrc("appshell/gettingstarted", "Don´t have an account? <a href=\"create-account\">Create new account</a>")
+        readonly property string createNewAccountLink: qsTrc("appshell/gettingstarted", "Don't have an account? <a href=\"create-account\">Create new account</a>")
         readonly property string alreadyHaveAccountLink: qsTrc("appshell/gettingstarted", "Already have an account? <a href=\"sign-in\">Sign in</a>")
 
         readonly property string formButtonTextLoading: qsTrc("appshell/gettingstarted", "Loading...")
@@ -99,8 +98,6 @@ Page {
 
                     Image {
                         source: "qrc:/resources/GoogleLogo.png"
-                        width: prv.socialIconSize
-                        height: prv.socialIconSize
                         fillMode: Image.PreserveAspectFit
                     }
 
@@ -128,8 +125,6 @@ Page {
 
                     Image {
                         source: "qrc:/resources/FacebookLogo.png"
-                        width: prv.socialIconSize
-                        height: prv.socialIconSize
                         fillMode: Image.PreserveAspectFit
                     }
 
@@ -259,7 +254,7 @@ Page {
                 anchors.horizontalCenter: parent.horizontalCenter
 
                 visible: model.showErrorMessage
-                color: ui.theme.extra["record_color"]
+                color: ui.theme.extra["error_text_color"]
 
                 text: model.errorMessage
             }
@@ -268,6 +263,10 @@ Page {
                 anchors.left: parent.left
                 anchors.right: parent.right
                 height: prv.formButtonHeight
+
+                enabled: !model.authInProgress 
+                          && emailInputField.inputField.text.length > 0
+                          && passwordInputField.inputField.text.length > 0
 
                 NavigationPanel {
                     id: actionsPanel
@@ -292,7 +291,9 @@ Page {
                 navigation.panel: actionsPanel
 
                 onClicked: {
-                    model.triggerAction(emailInputField.inputField.text, passwordInputField.inputField.text)
+                    model.isRegistering ?
+                        model.signUpWithEmail(emailInputField.inputField.text, passwordInputField.inputField.text) :
+                        model.signInWithEmail(emailInputField.inputField.text, passwordInputField.inputField.text)
                 }
             }
         }

@@ -3,6 +3,7 @@
 */
 
 #include "signinaudiocompagemodel.h"
+#include <variant>
 
 using namespace au::appshell;
 
@@ -14,11 +15,9 @@ SigninAudiocomPageModel::SigninAudiocomPageModel(QObject* parent)
 void SigninAudiocomPageModel::init()
 {
     authorization()->authState().ch.onReceive(this, [this](au::au3cloud::AuthState newState) {
-        if (newState == au::au3cloud::AuthState::NotAuthorized) {
-            const auto& message = m_isRegistering
-                                  ? qtrc("appshell/gettingstarted", "Registration failed. Please try again.")
-                                  : qtrc("appshell/gettingstarted", "Incorrect email or password. Please try again.");
-            setErrorMessage(message);
+        if (std::holds_alternative<au3cloud::NotAuthorized>(newState)) {
+            const std::string& error = std::get<au3cloud::NotAuthorized>(newState).error;
+            setErrorMessage(QString::fromStdString(error));
         } else {
             setErrorMessage(QString());
         }
@@ -30,11 +29,14 @@ void SigninAudiocomPageModel::init()
     });
 }
 
-void SigninAudiocomPageModel::triggerAction(const QString& email, const QString& password)
+void SigninAudiocomPageModel::signInWithEmail(const QString& email, const QString& password)
 {
-    m_isRegistering
-    ? authorization()->registerWithPassword(email.toStdString(), password.toStdString())
-    : authorization()->signInWithPassword(email.toStdString(), password.toStdString());
+    authorization()->signInWithPassword(email.toStdString(), password.toStdString());
+}
+
+void SigninAudiocomPageModel::signUpWithEmail(const QString& email, const QString& password)
+{
+    authorization()->registerWithPassword(email.toStdString(), password.toStdString());
 }
 
 void SigninAudiocomPageModel::signInWithSocial(const QString& provider)
@@ -44,12 +46,12 @@ void SigninAudiocomPageModel::signInWithSocial(const QString& provider)
 
 bool SigninAudiocomPageModel::authInProgress() const
 {
-    return m_state == au::au3cloud::AuthState::Authorizing;
+    return std::holds_alternative<au3cloud::Authorizing>(m_state);
 }
 
 bool SigninAudiocomPageModel::authorized() const
 {
-    return m_state == au::au3cloud::AuthState::Authorized;
+    return std::holds_alternative<au3cloud::Authorized>(m_state);
 }
 
 bool SigninAudiocomPageModel::isRegistering() const
