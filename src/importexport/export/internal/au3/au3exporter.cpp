@@ -95,22 +95,9 @@ void Au3Exporter::init()
     RegisterExportPlugins();
 }
 
-muse::Ret Au3Exporter::exportData(std::string filename)
+muse::Ret Au3Exporter::exportData(const muse::io::path_t& path)
 {
-    muse::io::path_t directoryPath = exportConfiguration()->directoryPath();
-    muse::io::path_t filePath = directoryPath.appendingComponent(filename);
-
-    if (suffix(filePath).empty()) {
-        auto extensions = formatExtensions(exportConfiguration()->currentFormat());
-        std::string defaultExtension = "";
-        if (!extensions.empty()) {
-            defaultExtension = extensions.front();
-        }
-
-        filePath = filePath.appendingSuffix(defaultExtension);
-    }
-
-    wxFileName wxfilename = wxFromString(filePath.toString());
+    wxFileName wxfilename = wxFromString(path.toString());
 
     Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
     IF_ASSERT_FAILED(project) {
