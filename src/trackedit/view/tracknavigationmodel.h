@@ -49,10 +49,6 @@ private:
     void activateNavigation(const TrackId& trackId, bool highlight = false);
     void activateNavigation(const TrackItemKey& itemKey, bool highlight = false);
 
-    muse::ui::NavigationControl* m_default_control = nullptr;
-    muse::ui::NavigationPanel* m_default_panel = nullptr;
-    muse::ui::NavigationSection* m_default_section = nullptr;
-
     muse::ui::INavigationSection* m_section = nullptr;
 
     QList<muse::ui::NavigationPanel*> m_trackItemPanels;

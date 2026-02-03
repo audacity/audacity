@@ -137,11 +137,6 @@ void TrackNavigationModel::load()
         addPanels(track.id, pos);
     }
 
-    addDefaultNavigation();
-
-    navigationController()->requestActivateByName(m_default_section->name().toStdString(),
-                                                  m_default_panel->name().toStdString(), m_default_control->name().toStdString());
-
     tracksNavigationController()->focusedTrackChanged().onReceive(this, [this](const TrackId& trackId, bool highlight) {
         QTimer::singleShot(10, [this, trackId, highlight](){
             activateNavigation(trackId, highlight);
@@ -208,41 +203,8 @@ void TrackNavigationModel::moveFocusTo(const QVariant& trackId)
     tracksNavigationController()->setFocusedTrack(trackId.toInt(), false /*highlight*/);
 }
 
-void TrackNavigationModel::addDefaultNavigation()
-{
-    if (!m_default_section) {
-        m_default_section = new muse::ui::NavigationSection(this);
-        m_default_section->setName("Main Section");
-        m_default_section->setIndex({ 0, 0 });
-        m_default_section->setOrder(1000); //! so as not to conflict with other sections
-        m_default_section->componentComplete();
-
-        m_default_panel = new muse::ui::NavigationPanel(this);
-        m_default_panel->setName("Main Panel");
-        m_default_panel->setIndex({ 0, 0 });
-        m_default_panel->setOrder(0);
-        m_default_panel->setSection(m_default_section);
-        m_default_panel->componentComplete();
-
-        m_default_control = new muse::ui::NavigationControl(this);
-        m_default_control->setName("Main Control");
-        m_default_control->setIndex({ 0, 0 });
-        m_default_control->setOrder(0);
-        m_default_control->setPanel(m_default_panel);
-        m_default_control->componentComplete();
-
-        navigationController()->reg(m_default_section);
-    }
-
-    navigationController()->setDefaultNavigationControl(m_default_control);
-}
-
 void TrackNavigationModel::cleanup()
 {
-    if (m_default_section) {
-        navigationController()->setDefaultNavigationControl(nullptr);
-    }
-
     clearPanels();
 
     navigationController()->resetNavigation();
