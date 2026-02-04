@@ -243,7 +243,13 @@ bool TrackeditOperationController::removeClip(const ClipKey& clipKey)
 bool TrackeditOperationController::removeClips(const ClipKeyList& clipKeyList, bool moveClips)
 {
     if (clipsInteraction()->removeClips(clipKeyList, moveClips)) {
-        projectHistory()->pushHistoryState("Delete", "Delete multiple clips");
+        bool hasLabels = isLabelsSelected();
+        if (hasLabels) {
+            labelsInteraction()->removeLabels(selectedLabels(), moveClips);
+        }
+
+        const std::string msg = hasLabels ? "Remove multiple items" : "Remove multiple clips";
+        projectHistory()->pushHistoryState("Remove", msg);
         return true;
     }
     return false;
@@ -839,7 +845,7 @@ bool TrackeditOperationController::cutLabel(const LabelKey& labelKey)
     }
 
     clipboard()->addTrackData(std::move(data));
-    projectHistory()->pushHistoryState("Label cut", "Cut label");
+    projectHistory()->pushHistoryState("Cut", "Cut label");
     return true;
 }
 
@@ -856,7 +862,7 @@ bool TrackeditOperationController::copyLabel(const LabelKey& labelKey)
 bool TrackeditOperationController::removeLabel(const LabelKey& labelKey)
 {
     if (labelsInteraction()->removeLabel(labelKey)) {
-        projectHistory()->pushHistoryState("Label removed", "Remove label");
+        projectHistory()->pushHistoryState("Remove", "Remove label");
         return true;
     }
     return false;
@@ -865,7 +871,17 @@ bool TrackeditOperationController::removeLabel(const LabelKey& labelKey)
 bool TrackeditOperationController::removeLabels(const LabelKeyList& labelKeys, bool moveLabels)
 {
     if (labelsInteraction()->removeLabels(labelKeys, moveLabels)) {
-        projectHistory()->pushHistoryState("Labels removed", "Remove labels");
+        bool hasClips = isClipsSelected();
+        if (hasClips) {
+            clipsInteraction()->removeClips(selectedClips(), moveLabels);
+        }
+
+        if (hasClips) {
+            projectHistory()->pushHistoryState("Remove", "Remove multiple items");
+        } else {
+            projectHistory()->pushHistoryState("Remove", "Remove multiple labels");
+        }
+
         return true;
     }
     return false;
