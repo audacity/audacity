@@ -56,6 +56,12 @@ private:
     void notifyActionEnabledChanged(const muse::actions::ActionCode& actionCode);
     void notifyActionCheckedChanged(const muse::actions::ActionCode& actionCode);
 
+    bool isFocusedItemClip() const;
+    ClipKeyList clipsForInteraction() const;
+
+    bool isFocusedItemLabel() const;
+    LabelKeyList labelsForInteraction() const;
+
     void undo();
     void redo();
 
