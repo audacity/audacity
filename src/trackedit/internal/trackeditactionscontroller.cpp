@@ -375,7 +375,7 @@ ClipKeyList TrackeditActionsController::clipsForInteraction() const
     TrackItemKey focusedItemKey = trackNavigationController()->focusedItem();
     if (focusedItemKey.isValid() && !muse::contains(result, focusedItemKey)) {
         if (isFocusedItemClip()) {
-            result.emplace_back(focusedItemKey);
+            result.insert(result.cbegin(), focusedItemKey);
         }
     }
 
@@ -400,7 +400,7 @@ LabelKeyList TrackeditActionsController::labelsForInteraction() const
     TrackItemKey focusedItemKey = trackNavigationController()->focusedItem();
     if (focusedItemKey.isValid() && !muse::contains(result, focusedItemKey)) {
         if (isFocusedItemLabel()) {
-            result.emplace_back(focusedItemKey);
+            result.insert(result.cbegin(), focusedItemKey);
         }
     }
 
@@ -2077,7 +2077,7 @@ void TrackeditActionsController::extendFocusedItemBoundaryLeft()
         trackeditInteraction()->stretchLabelsLeft(labelsForInteraction(), -stepSize, completed);
     } else {
         double minClipDuration = MIN_CLIP_WIDTH / zoomLevel();
-        trackeditInteraction()->trimClipLeft(focusedItemKey, -stepSize, minClipDuration, completed, UndoPushType::CONSOLIDATE);
+        trackeditInteraction()->trimClipsLeft(clipsForInteraction(), -stepSize, minClipDuration, completed, UndoPushType::CONSOLIDATE);
     }
 }
 
@@ -2095,7 +2095,7 @@ void TrackeditActionsController::extendFocusedItemBoundaryRight()
         trackeditInteraction()->stretchLabelsRight(labelsForInteraction(), stepSize, completed);
     } else {
         double minClipDuration = MIN_CLIP_WIDTH / zoomLevel();
-        trackeditInteraction()->trimClipRight(focusedItemKey, -stepSize, minClipDuration, completed, UndoPushType::CONSOLIDATE);
+        trackeditInteraction()->trimClipsRight(clipsForInteraction(), -stepSize, minClipDuration, completed, UndoPushType::CONSOLIDATE);
     }
 }
 
@@ -2113,7 +2113,7 @@ void TrackeditActionsController::reduceFocusedItemBoundaryLeft()
         trackeditInteraction()->stretchLabelsLeft(labelsForInteraction(), stepSize, completed);
     } else {
         double minClipDuration = MIN_CLIP_WIDTH / zoomLevel();
-        trackeditInteraction()->trimClipLeft(focusedItemKey, stepSize, minClipDuration, completed, UndoPushType::CONSOLIDATE);
+        trackeditInteraction()->trimClipsLeft(clipsForInteraction(), stepSize, minClipDuration, completed, UndoPushType::CONSOLIDATE);
     }
 }
 
@@ -2131,7 +2131,7 @@ void TrackeditActionsController::reduceFocusedItemBoundaryRight()
         trackeditInteraction()->stretchLabelsRight(labelsForInteraction(), -stepSize, completed);
     } else {
         double minClipDuration = MIN_CLIP_WIDTH / zoomLevel();
-        trackeditInteraction()->trimClipRight(focusedItemKey, stepSize, minClipDuration, completed, UndoPushType::CONSOLIDATE);
+        trackeditInteraction()->trimClipsRight(clipsForInteraction(), stepSize, minClipDuration, completed, UndoPushType::CONSOLIDATE);
     }
 }
 

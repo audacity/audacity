@@ -223,14 +223,16 @@ bool TrackeditInteraction::splitDeleteSelectedOnTracks(const TrackIdList tracksI
     return withPlaybackStop(&ITrackeditInteraction::splitDeleteSelectedOnTracks, tracksIds, begin, end);
 }
 
-bool TrackeditInteraction::trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed, UndoPushType type)
+bool TrackeditInteraction::trimClipsLeft(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed,
+                                         UndoPushType type)
 {
-    return withPlaybackStop(&ITrackeditInteraction::trimClipLeft, clipKey, deltaSec, minClipDuration, completed, type);
+    return withPlaybackStop(&ITrackeditInteraction::trimClipsLeft, clipKeyList, deltaSec, minClipDuration, completed, type);
 }
 
-bool TrackeditInteraction::trimClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed, UndoPushType type)
+bool TrackeditInteraction::trimClipsRight(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed,
+                                          UndoPushType type)
 {
-    return withPlaybackStop(&ITrackeditInteraction::trimClipRight, clipKey, deltaSec, minClipDuration, completed, type);
+    return withPlaybackStop(&ITrackeditInteraction::trimClipsRight, clipKeyList, deltaSec, minClipDuration, completed, type);
 }
 
 bool TrackeditInteraction::stretchClipsLeft(const ClipKeyList& clipKeyList,

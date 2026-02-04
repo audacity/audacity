@@ -479,7 +479,7 @@ bool TrackClipsListModel::trimLeftClip(const ClipKey& key, bool completed, ClipB
 
     newStartTime = std::max(newStartTime, 0.0);
 
-    bool ok = trackeditInteraction()->trimClipLeft(key.key, newStartTime - item->time().startTime, minClipTime, completed, undoType);
+    bool ok = trackeditInteraction()->trimClipsLeft({ key.key }, newStartTime - item->time().startTime, minClipTime, completed, undoType);
 
     if (ok) {
         vs->setLastEditedClip(key.key);
@@ -542,7 +542,7 @@ bool TrackClipsListModel::trimRightClip(const ClipKey& key, bool completed, Clip
         newEndTime = item->time().startTime + minClipTime;
     }
 
-    bool ok = trackeditInteraction()->trimClipRight(key.key, item->time().endTime - newEndTime, minClipTime, completed, undoType);
+    bool ok = trackeditInteraction()->trimClipsRight({ key.key }, item->time().endTime - newEndTime, minClipTime, completed, undoType);
 
     if (ok) {
         vs->setLastEditedClip(key.key);
