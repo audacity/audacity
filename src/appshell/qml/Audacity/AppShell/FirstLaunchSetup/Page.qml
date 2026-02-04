@@ -49,6 +49,7 @@ Item {
 
     signal extraButtonClicked
     signal nextButtonClicked
+    signal navNextPageRequested
 
     function readInfo() {
         accessibleInfo.readInfo()

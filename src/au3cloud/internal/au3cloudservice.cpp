@@ -8,13 +8,15 @@
 
 #include <string>
 
+#include "framework/global/translation.h"
+
 #include "au3-cloud-audiocom/OAuthService.h"
 #include "au3-cloud-audiocom/UserService.h"
 #include "au3-cloud-audiocom/ServiceConfig.h"
 #include "au3-import-export/ExportUtils.h"
 #include "au3-preferences/Prefs.h"
-#include "au3cloud/iauthorization.h"
-#include "translation.h"
+
+#include "au3cloud/cloudtypes.h"
 
 using namespace au::au3cloud;
 
@@ -123,14 +125,13 @@ void Au3CloudService::signInWithPassword(const std::string& email, const std::st
     },
                            [this](auto, auto)
     {
-        const auto INCORRECT_EMAIL_OR_PASSWORD = muse::qtrc("appshell/gettingstarted", "Incorrect email or password. Please try again.");
+        const auto INCORRECT_EMAIL_OR_PASSWORD = muse::qtrc("appshell/gettingstarted", "Authentication failed. Please try again.");
         m_authState.set(AuthState(NotAuthorized(INCORRECT_EMAIL_OR_PASSWORD.toStdString())));
     }, AudiocomTrace::ignore);
 }
 
 void Au3CloudService::signInWithSocial(const std::string& provider)
 {
-    m_authState.set(AuthState(Authorizing()));
     interactive()->openUrl(buildOAuthRequestURL(provider));
 }
 

@@ -14,8 +14,6 @@ Page {
     title: qsTrc("appshell/gettingstarted", "Connect to your audio.com account")
     titleTopMargin: 16
 
-    signal nextPage()
-
     QtObject {
         id: prv
 
@@ -58,7 +56,7 @@ Page {
 
         onAuthorizedChanged: {
             if (authorized) {
-                root.nextPage()
+                root.navNextPageRequested()
             }
         }
     }
@@ -251,7 +249,6 @@ Page {
             StyledTextLabel {
                 anchors.left: parent.left
                 anchors.right: parent.right
-                anchors.horizontalCenter: parent.horizontalCenter
 
                 visible: model.showErrorMessage
                 color: ui.theme.extra["error_text_color"]

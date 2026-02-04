@@ -48,6 +48,24 @@ StyledDialogView {
         root.hide()
     }
 
+    function advanceToNextPage() {
+        if (root.currentPage) {
+            root.currentPage.nextButtonClicked()
+        }
+
+        if (model.canFinish) {
+            endSetup()
+            return
+        }
+
+        if (Boolean(buttons.lastPressedButton)) {
+            buttons.lastPressedButton.navigation.accessible.ignored = true
+        }
+
+        pageLoader.item.resetFocus()
+        model.currentPageIndex++
+    }
+
     FirstLaunchSetupModel {
         id: model
     }
@@ -87,6 +105,12 @@ StyledDialogView {
             onLoaded: {
                 item.navigationSection = root.navigationSection
                 item.activeButtonTitle = buttons.activeButton.text
+
+                if (item.navNextPageRequested) {
+                    item.navNextPageRequested.connect(function() {
+                        advanceToNextPage()
+                    })
+                }
 
                 navigationActiveTimer.start()
             }
@@ -220,7 +244,7 @@ StyledDialogView {
                 Layout.alignment: Qt.AlignRight
                 Layout.preferredHeight: 28
 
-                text: model.canFinish ? model.doneButtonText : model.nextButtonText
+                text: model.nextButtonText
                 accentButton: !extraButton.visible
 
                 navigation.name: "NextButton"
@@ -235,22 +259,7 @@ StyledDialogView {
                 }
 
                 onClicked: {
-                    if (root.currentPage) {
-                        root.currentPage.nextButtonClicked()
-                    }
-
-                    if (model.canFinish) {
-                        endSetup()
-                        return
-                    }
-
-                    if (Boolean(buttons.lastPressedButton)) {
-                        buttons.lastPressedButton.navigation.accessible.ignored = true
-                    }
-
-                    buttons.lastPressedButton = nextStepButton
-                    pageLoader.item.resetFocus()
-                    model.currentPageIndex++
+                    advanceToNextPage()
                 }
             }
         }
