@@ -2,6 +2,9 @@
  * Audacity: A Digital Audio Editor
  */
 #include "au3interactionutils.h"
+
+#include <QCoreApplication>
+
 #include "../../trackedittypes.h"
 #include "au3wrap/internal/domaccessor.h"
 #include "au3-wave-track/WaveTrack.h"

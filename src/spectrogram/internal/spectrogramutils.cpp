@@ -5,6 +5,7 @@
 #include "ispectrogramconfiguration.h"
 
 #include <cmath>
+#include <cassert>
 
 int au::spectrogram::viewportWidth(const ViewInfo& viewInfo)
 {

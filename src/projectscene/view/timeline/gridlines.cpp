@@ -2,6 +2,8 @@
 * Audacity: A Digital Audio Editor
 */
 
+#include <QPainter>
+
 #include "gridlines.h"
 
 using namespace au::projectscene;

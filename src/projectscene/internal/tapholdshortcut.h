@@ -5,6 +5,7 @@
 #pragma once
 
 #include <QObject>
+#include <QKeyEvent>
 #include <QTimer>
 
 #include "modularity/ioc.h"

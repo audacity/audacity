@@ -3,6 +3,8 @@
 */
 #include "labelstableviewmodel.h"
 
+#include <QTimer>
+
 #include "framework/global/translation.h"
 #include "framework/global/log.h"
 

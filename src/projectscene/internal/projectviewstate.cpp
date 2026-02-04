@@ -4,6 +4,10 @@
 
 #include <memory>
 
+#include <QApplication>
+#include <QEvent>
+#include <QKeyEvent>
+
 #include "framework/global/types/retval.h"
 
 #include "au3wrap/iau3project.h"

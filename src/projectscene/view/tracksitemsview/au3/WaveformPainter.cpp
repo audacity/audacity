@@ -1,3 +1,5 @@
+#include <QImage>
+
 #include "WaveformPainter.h"
 #include "au3-screen-geometry/ZoomInfo.h"
 

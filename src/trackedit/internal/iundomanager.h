@@ -3,6 +3,8 @@
  */
 #pragma once
 
+#include <cstdlib>
+
 namespace au::trackedit {
 class IUndoManager
 {

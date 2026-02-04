@@ -6,6 +6,8 @@
 
 #include <algorithm>
 
+#include <QCoreApplication>
+
 #include "au3-track/Track.h"
 #include "au3-stretching-sequence/TempoChange.h"
 #include "au3-wave-track/WaveClip.h"

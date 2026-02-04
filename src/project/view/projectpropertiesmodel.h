@@ -22,6 +22,8 @@
 
 #pragma once
 
+#include <QAbstractListModel>
+
 #include "iinteractive.h"
 #include "ithumbnailcreator.h"
 #include "context/iglobalcontext.h"

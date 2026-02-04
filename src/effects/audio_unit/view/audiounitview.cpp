@@ -5,6 +5,7 @@
 
 #include <QQuickWindow>
 
+#include "au3-audio-unit/AudioUnitInstance.h"
 #include "audiounitcontrol.h"
 
 namespace au::effects {
