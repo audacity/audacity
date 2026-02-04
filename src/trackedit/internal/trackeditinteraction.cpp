@@ -470,6 +470,12 @@ bool TrackeditInteraction::moveLabels(const LabelKeyList& labelKeys, secs_t time
     return m_interaction->moveLabels(labelKeys, timePositionOffset, completed);
 }
 
+muse::RetVal<LabelKeyList> TrackeditInteraction::moveLabels(const LabelKeyList& labelKeys, secs_t timePositionOffset,
+                                                            int trackPositionOffset, bool completed)
+{
+    return m_interaction->moveLabels(labelKeys, timePositionOffset, trackPositionOffset, completed);
+}
+
 muse::RetVal<LabelKeyList> TrackeditInteraction::moveLabelsToTrack(const LabelKeyList& labelKeys, const TrackId& toTrackId, bool completed)
 {
     return m_interaction->moveLabelsToTrack(labelKeys, toTrackId, completed);

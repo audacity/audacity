@@ -1094,10 +1094,10 @@ TEST_F(Au3LabelsInteractionsTests, MoveLabelsRight)
     const double timeOffset = 2.0;
 
     //! [WHEN] Move the labels right
-    bool result = m_labelsInteraction->moveLabels(selectedLabels, timeOffset);
+    muse::RetVal<LabelKeyList> result = m_labelsInteraction->moveLabels(selectedLabels, timeOffset, 0);
 
     //! [THEN] The operation is successful
-    ASSERT_TRUE(result) << "Moving labels should succeed";
+    ASSERT_TRUE(result.ret) << "Moving labels should succeed";
 
     //! [THEN] All labels are moved by the offset
     const Au3Label* label1 = labelTrack->GetLabel(0);
@@ -1159,10 +1159,10 @@ TEST_F(Au3LabelsInteractionsTests, MoveLabelsLeftWhenLabelIsAtZero)
     const double timeOffset = -1.0;
 
     //! [WHEN] Move the labels left by 1.0 second
-    bool result = m_labelsInteraction->moveLabels(selectedLabels, timeOffset);
+    muse::RetVal<LabelKeyList> result = m_labelsInteraction->moveLabels(selectedLabels, timeOffset, 0);
 
     //! [THEN] The operation is successful
-    ASSERT_TRUE(result) << "Moving labels should succeed";
+    ASSERT_TRUE(result.ret) << "Moving labels should succeed";
 
     //! [THEN] Labels are moved but the leftmost is clamped to zero
     const Au3Label* label1 = labelTrack->GetLabel(0);
@@ -1206,10 +1206,10 @@ TEST_F(Au3LabelsInteractionsTests, MoveLabelsWithZeroOffset)
     EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(0);
 
     //! [WHEN] Move the label by zero offset
-    bool result = m_labelsInteraction->moveLabels(selectedLabels, 0.0);
+    muse::RetVal<LabelKeyList> result = m_labelsInteraction->moveLabels(selectedLabels, 0.0, 0);
 
     //! [THEN] The operation succeeds but does nothing
-    ASSERT_TRUE(result) << "Moving by zero should succeed";
+    ASSERT_TRUE(result.ret) << "Moving by zero should succeed";
 
     //! [THEN] The label position is unchanged
     const Au3Label* label = labelTrack->GetLabel(0);
@@ -1240,10 +1240,10 @@ TEST_F(Au3LabelsInteractionsTests, MoveLabelsWithNoSelection)
     EXPECT_CALL(*m_trackEditProject, notifyAboutLabelChanged(_)).Times(0);
 
     //! [WHEN] Try to move labels with no selection
-    bool result = m_labelsInteraction->moveLabels(emptySelection, 2.0);
+    muse::RetVal<LabelKeyList> result = m_labelsInteraction->moveLabels(emptySelection, 2.0, 0);
 
     //! [THEN] The operation don't fail
-    ASSERT_TRUE(result) << "Moving with no selection shouldn't fail";
+    ASSERT_TRUE(result.ret) << "Moving with no selection shouldn't fail";
 
     //! [THEN] The label position is unchanged
     const Au3Label* label = labelTrack->GetLabel(0);

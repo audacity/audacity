@@ -1990,7 +1990,7 @@ void TrackeditActionsController::moveFocusedItemLeft()
     static bool completed = true;
 
     if (isFocusedItemLabel()) {
-        trackeditInteraction()->moveLabels(labelsForInteraction(), -stepSize, completed);
+        trackeditInteraction()->moveLabels(labelsForInteraction(), -stepSize, 0, completed);
     } else {
         static bool itemsMovedToOtherTrack = false;
         trackeditInteraction()->moveClips(clipsForInteraction(), -stepSize, 0, completed, itemsMovedToOtherTrack);
@@ -2008,7 +2008,7 @@ void TrackeditActionsController::moveFocusedItemRight()
     static bool completed = true;
 
     if (isFocusedItemLabel()) {
-        trackeditInteraction()->moveLabels(labelsForInteraction(), stepSize, completed);
+        trackeditInteraction()->moveLabels(labelsForInteraction(), stepSize, 0, completed);
     } else {
         static bool itemsMovedToOtherTrack = false;
         trackeditInteraction()->moveClips(clipsForInteraction(), stepSize, 0, completed, itemsMovedToOtherTrack);
@@ -2025,13 +2025,9 @@ void TrackeditActionsController::moveFocusedItemUp()
     static bool completed = true;
 
     if (isFocusedItemLabel()) {
-        //! todo: move to different tracks
-        TrackId previousTrackId = resolvePreviousTrackIdForMove(focusedItemKey.trackId);
-        if (previousTrackId != INVALID_TRACK) {
-            muse::RetVal<LabelKeyList> result = trackeditInteraction()->moveLabelsToTrack({ focusedItemKey }, previousTrackId, completed);
-            if (result.ret) {
-                trackNavigationController()->setFocusedItem(result.val.front(), true /*highlight*/);
-            }
+        muse::RetVal<LabelKeyList> result = trackeditInteraction()->moveLabels(labelsForInteraction(), 0, -1, completed);
+        if (result.ret) {
+            trackNavigationController()->setFocusedItem(result.val.front(), true /*highlight*/);
         }
     } else {
         static bool itemsMovedToOtherTrack = false;
@@ -2053,13 +2049,9 @@ void TrackeditActionsController::moveFocusedItemDown()
     static bool completed = true;
 
     if (isFocusedItemLabel()) {
-        //! todo: move to different tracks
-        TrackId nextTrackId = resolveNextTrackIdForMove(focusedItemKey.trackId);
-        if (nextTrackId != INVALID_TRACK) {
-            muse::RetVal<LabelKeyList> result = trackeditInteraction()->moveLabelsToTrack({ focusedItemKey }, nextTrackId, completed);
-            if (result.ret) {
-                trackNavigationController()->setFocusedItem(result.val.front(), true /*highlight*/);
-            }
+        muse::RetVal<LabelKeyList> result = trackeditInteraction()->moveLabels(labelsForInteraction(), 0, 1, completed);
+        if (result.ret) {
+            trackNavigationController()->setFocusedItem(result.val.front(), true /*highlight*/);
         }
     } else {
         static bool itemsMovedToOtherTrack = false;

@@ -283,7 +283,7 @@ muse::RetVal<ClipKeyList> TrackeditOperationController::moveClips(const ClipKeyL
             }
         }
 
-        labelsInteraction()->moveLabels(selectedLabels, clampedOffset);
+        labelsInteraction()->moveLabels(selectedLabels, clampedOffset, trackPositionOffset);
         timePositionOffset = clampedOffset;
     }
 
@@ -340,7 +340,7 @@ bool TrackeditOperationController::moveRangeSelection(secs_t timePositionOffset,
     }
 
     if (!labelsInRange.empty()) {
-        labelsInteraction()->moveLabels(labelsInRange, clampedOffset);
+        labelsInteraction()->moveLabels(labelsInRange, clampedOffset, 0);
     }
 
     selectionController()->setDataSelectedStartTime(
@@ -858,12 +858,35 @@ bool TrackeditOperationController::moveLabels(const LabelKeyList& labelKeys, sec
         timePositionOffset = clampedOffset;
     }
 
-    bool success = labelsInteraction()->moveLabels(labelKeys, timePositionOffset);
-    if (success && completed) {
+    muse::RetVal<LabelKeyList> retVal = labelsInteraction()->moveLabels(labelKeys, timePositionOffset, 0);
+    if (retVal.ret && completed) {
         const std::string msg = !selectedClips.empty() ? "Items moved" : "Labels moved";
         projectHistory()->pushHistoryState(msg, "Move labels");
     }
-    return success;
+    return retVal.ret;
+}
+
+muse::RetVal<LabelKeyList> TrackeditOperationController::moveLabels(const LabelKeyList& labelKeys, secs_t timePositionOffset,
+                                                                    int trackPositionOffset,
+                                                                    bool completed)
+{
+    muse::RetVal<LabelKeyList> retVal = labelsInteraction()->moveLabels(labelKeys, timePositionOffset, trackPositionOffset);
+    if (!retVal.ret) {
+        return retVal;
+    }
+
+    bool clipsSelected = isClipsSelected();
+    if (isClipsSelected()) {
+        bool clipsMovedToOtherTracks = false;
+        clipsInteraction()->moveClips(selectedClips(), timePositionOffset, trackPositionOffset, completed, clipsMovedToOtherTracks);
+    }
+
+    if (completed) {
+        const std::string msg = clipsSelected ? "Items moved" : "Labels moved";
+        projectHistory()->pushHistoryState("Move", msg);
+    }
+
+    return retVal;
 }
 
 muse::RetVal<LabelKeyList> TrackeditOperationController::moveLabelsToTrack(const LabelKeyList& labelKeys, const TrackId& toTrackId,
@@ -921,5 +944,25 @@ void TrackeditOperationController::pushProjectHistoryDeleteState(secs_t start, s
     std::stringstream ss;
     ss << "Delete " << duration << " seconds at " << start;
     projectHistory()->pushHistoryState(ss.str(), "Delete");
+}
+
+bool TrackeditOperationController::isClipsSelected() const
+{
+    return selectionController()->hasSelectedClips();
+}
+
+ClipKeyList TrackeditOperationController::selectedClips() const
+{
+    return selectionController()->selectedClips();
+}
+
+bool TrackeditOperationController::isLabelsSelected() const
+{
+    return selectionController()->hasSelectedLabels();
+}
+
+LabelKeyList TrackeditOperationController::selectedLabels() const
+{
+    return selectionController()->selectedLabels();
 }
 }

@@ -130,6 +130,8 @@ public:
     virtual bool copyLabel(const LabelKey& labelKey) = 0;
 
     virtual bool moveLabels(const LabelKeyList& labelKeys, secs_t timePositionOffset, bool completed) = 0;
+    virtual muse::RetVal<LabelKeyList> moveLabels(const LabelKeyList& labelKeys, secs_t timePositionOffset, int trackPositionOffset,
+                                                  bool completed) = 0;
     virtual muse::RetVal<LabelKeyList> moveLabelsToTrack(const LabelKeyList& labelKeys, const TrackId& toTrackId, bool completed) = 0;
 
     virtual bool stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed) = 0;
