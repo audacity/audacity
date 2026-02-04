@@ -39,6 +39,17 @@ public:
     virtual bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) = 0;
     virtual bool renderClipPitchAndSpeed(const ClipKey& clipKey) = 0;
 
+    virtual std::optional<ClipEnvelopeInfo> clipEnvelopeInfo(const ClipKey& key) const = 0;
+    virtual ClipEnvelopePoints clipEnvelopePoints(const ClipKey& key) const = 0;
+    virtual bool setClipEnvelopePoint(const ClipKey& key, double tAbs, double value, bool completed) = 0;
+    virtual bool removeClipEnvelopePoint(const ClipKey& key, int index, bool completed) = 0;
+    virtual bool flattenClipEnvelope(const ClipKey& key, double value, bool completed) = 0;
+    virtual bool setClipEnvelopePointAtIndex(const ClipKey& key, int index, double tAbs, double value, bool completed) = 0;
+    virtual bool beginClipEnvelopePointDrag(const ClipKey& clip, int pointIndex) = 0;
+    virtual bool updateClipEnvelopePointDrag(const ClipKey& clip, double tAbs, double value) = 0;
+    virtual bool endClipEnvelopePointDrag(const ClipKey& clip, bool commit) = 0;
+    virtual muse::async::Channel<ClipKey, bool> clipEnvelopeChanged() const = 0;
+
     virtual ITrackDataPtr cutClip(const ClipKey& clipKey) = 0;
     virtual ITrackDataPtr copyClip(const ClipKey& clipKey) = 0;
     virtual std::optional<TimeSpan> removeClip(const ClipKey& clipKey) = 0;

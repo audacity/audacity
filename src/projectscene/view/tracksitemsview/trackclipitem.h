@@ -15,6 +15,7 @@ class TrackClipItem : public ViewTrackItem
     Q_PROPERTY(int groupId READ groupId NOTIFY groupIdChanged FINAL)
     Q_PROPERTY(int pitch READ pitch NOTIFY pitchChanged FINAL)
     Q_PROPERTY(int speedPercentage READ speedPercentage NOTIFY speedPercentageChanged FINAL)
+    // Q_PROPERTY(QObject * envelopeModel READ envelopeModel NOTIFY envelopeModelChanged)
 
 public:
     explicit TrackClipItem(QObject* parent);

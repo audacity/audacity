@@ -1,0 +1,94 @@
+import QtQuick
+
+import Muse.Ui
+import Muse.UiComponents
+
+StyledPopupView {
+    id: root
+
+    padding: 8
+    margins: 8
+    contentWidth: contentRect.width
+    contentHeight: contentRect.height
+
+    placementPolicies: PopupView.PreferAbove
+    openPolicies: PopupView.NoActivateFocus
+
+    property var gain
+    property rect contentRect: fontMetrics.boundingRect(minValue.toFixed(root.decimalPlaces) + unitText)
+
+    property int decimalPlaces: 1
+    property string unitText: "dB"
+    property real minValue: -60.0
+
+    property int showDelay: ui.theme.tooltipDelay
+    property int hideDelay: ui.theme.tooltipDelay
+
+    Item {
+        id: content
+
+        anchors.fill: parent
+
+        StyledTextLabel {
+            id: label
+
+            anchors.horizontalCenter: parent.horizontalCenter
+            text: {
+                const g = Number(root.gain)
+
+                if (!isFinite(g)) {
+                    return `${root.gain}${root.unitText}`;
+                }
+
+                let value = g.toFixed(root.decimalPlaces);
+                return `${value}${root.unitText}`;
+            }
+        }
+    }
+
+    FontMetrics {
+        id: fontMetrics
+
+        font: label.font
+    }
+
+    Timer {
+        id: openTimer
+
+        interval: root.showDelay
+        repeat: false
+
+        onTriggered: {
+            root.open()
+        }
+    }
+
+    Timer {
+        id: closeTimer
+
+        interval: root.hideDelay
+        repeat: false
+
+        onTriggered: {
+            root.close()
+        }
+    }
+
+    function show(noDelay = false) {
+        if (noDelay) {
+            root.open()
+        } else {
+            openTimer.restart()
+        }
+        closeTimer.stop()
+    }
+
+    function hide(noDelay = false) {
+        if (noDelay) {
+            root.close()
+        } else {
+            closeTimer.restart()
+        }
+        openTimer.stop()
+    }
+}
