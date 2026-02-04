@@ -136,10 +136,8 @@ void OAuthHttpServerReplyHandler::Impl::readData(QTcpSocket* socket)
 
 void OAuthHttpServerReplyHandler::Impl::answerClient(QTcpSocket* socket, const QUrl& url)
 {
-    qDebug() << "OAuth callback received - URL: " << url.toString() << ", Path: " << url.path() << ", Expected path prefix: /" << m_path;
-
     if (!url.path().startsWith(QLatin1String("/") + m_path)) {
-        qDebug() << "Invalid request - path mismatch: " << url.toString() << " (expected to start with: /" << m_path << ")";
+        LOGW() << "Invalid request: " << url;
         socket->disconnectFromHost();
         return;
     }
@@ -149,7 +147,6 @@ void OAuthHttpServerReplyHandler::Impl::answerClient(QTcpSocket* socket, const Q
     const auto items = query.queryItems();
     for (auto it = items.begin(), end = items.end(); it != end; ++it) {
         receivedData.insert(it->first, it->second);
-        qDebug() << "OAuth callback parameter: " << it->first << " = " << it->second;
     }
 
     Q_EMIT m_public->callbackReceived(receivedData);
