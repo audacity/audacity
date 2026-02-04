@@ -25,14 +25,14 @@
 #include "view/toolbars/undoredotoolbarmodel.h"
 #include "view/toolbars/workspacestoolbarmodel.h"
 
-#include "view/trackspanel/paneltrackslistmodel.h"
 #include "view/trackspanel/addeffectmenumodel.h"
-#include "view/trackspanel/realtimeeffectlistmodel.h"
+#include "view/trackspanel/addnewtrackpopupmodel.h"
+#include "view/trackspanel/paneltrackslistmodel.h"
 #include "view/trackspanel/realtimeeffectlistitemmenumodel.h"
+#include "view/trackspanel/realtimeeffectlistmodel.h"
 #include "view/trackspanel/realtimeeffectsectionmodel.h"
 #include "view/trackspanel/trackcontextmenumodel.h"
 #include "view/trackspanel/trackitem.h"
-#include "view/trackspanel/addnewtrackpopupmodel.h"
 
 #include "view/tracksitemsview/viewtrackslistmodel.h"
 #include "view/tracksitemsview/trackclipslistmodel.h"
@@ -58,6 +58,7 @@
 #include "view/tracksitemsview/labeleditor/labelstableviewmodel.h"
 #include "view/tracksitemsview/labeleditor/addnewlabeltrackmodel.h"
 #include "view/tracksitemsview/editablepolyline.h"
+#include "view/tracksitemsview/clipenvelopemodel.h"
 
 #include "view/timeline/timelinecontext.h"
 #include "view/timeline/timelineruler.h"
@@ -190,6 +191,7 @@ void ProjectSceneModule::registerUiTypes()
                                      "Audacity.ProjectScene", 1, 0, "LabelsTableViewCellType", "");
     qmlRegisterType<AddNewLabelTrackModel>("Audacity.ProjectScene", 1, 0, "AddNewLabelTrackModel");
     qmlRegisterType<EditablePolyline>("Audacity.ProjectScene", 1, 0, "EditablePolyline");
+    qmlRegisterType<ClipEnvelopeModel>("Audacity.ProjectScene", 1, 0, "ClipEnvelopeModel");
 
     // timeline
     qmlRegisterType<TimelineContext>("Audacity.ProjectScene", 1, 0, "TimelineContext");

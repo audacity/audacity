@@ -130,6 +130,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/trackclipslistmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/trackclipitem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/trackclipitem.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/clipenvelopemodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/clipenvelopemodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/tracklabelslistmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/tracklabelslistmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/tracklabelslayoutmanager.cpp

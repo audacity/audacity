@@ -18,6 +18,7 @@ HistoryPanel 1.0 historypanel/HistoryPanel.qml
 VolumePressureMeter 1.0 trackspanel/audio/VolumePressureMeter.qml
 VolumePressureRuler 1.0 trackspanel/audio/VolumePressureRuler.qml
 VolumeTooltip 1.0 trackspanel/audio/VolumeTooltip.qml
+GainTooltip 1.0 trackspanel/audio/GainTooltip.qml
 TrackRulerCustomizePopup 1.0 trackruler/TrackRulerCustomizePopup.qml
 WaveformRuler 1.0 trackruler/WaveformRuler.qml
 SpectrogramRuler 1.0 trackruler/SpectrogramRuler.qml

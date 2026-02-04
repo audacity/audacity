@@ -51,6 +51,17 @@ public:
     bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) override;
     bool renderClipPitchAndSpeed(const ClipKey& clipKey) override;
 
+    std::optional<ClipEnvelopeInfo> clipEnvelopeInfo(const ClipKey& key) const override;
+    ClipEnvelopePoints clipEnvelopePoints(const ClipKey& key) const override;
+    bool setClipEnvelopePoint(const ClipKey& key, double tAbs, double value, bool completed) override;
+    bool removeClipEnvelopePoint(const ClipKey& key, int index, bool completed) override;
+    bool flattenClipEnvelope(const ClipKey& key, double value, bool completed) override;
+    bool setClipEnvelopePointAtIndex(const ClipKey& key, int index, double tAbs, double value, bool completed) override;
+    bool beginClipEnvelopePointDrag(const ClipKey& clip, int pointIndex) override;
+    bool updateClipEnvelopePointDrag(const ClipKey& clip, double tAbs, double value) override;
+    bool endClipEnvelopePointDrag(const ClipKey& clip, bool commit) override;
+    muse::async::Channel<ClipKey, bool> clipEnvelopeChanged() const override;
+
     ITrackDataPtr cutClip(const ClipKey& clipKey) override;
     ITrackDataPtr copyClip(const trackedit::ClipKey& clipKey) override;
     std::optional<TimeSpan> removeClip(const trackedit::ClipKey& clipKey) override;
@@ -123,6 +134,8 @@ private:
     context::IPlaybackStatePtr playbackState() const;
 
     muse::async::Channel<trackedit::ClipKey, secs_t /*newStartTime*/, bool /*completed*/> m_clipStartTimeChanged;
+    muse::async::Channel<au::trackedit::ClipKey, bool> m_clipEnvelopeChanged;
+    std::optional<EnvelopeDragSession> m_envDrag;
 
     muse::Progress m_progress;
     std::atomic<bool> m_busy = false;
