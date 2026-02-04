@@ -2,6 +2,11 @@
 * Audacity: A Digital Audio Editor
 */
 
+#include <QObject>
+#include <QString>
+#include <QQuickItem>
+#include <QCursor>
+
 constexpr static int DEFAULT_CURSOR_SIZE = 26;
 
 namespace au::projectscene {

@@ -6,6 +6,7 @@
 #include <AudioToolbox/AudioUnitUtilities.h>
 
 #include <QObject>
+#include <QTimer>
 
 #include "effects/effects_base/ieffectsprovider.h"
 #include "modularity/ioc.h"

@@ -3,6 +3,7 @@
 */
 #include "fieldsinteractioncontroller.h"
 
+#include <QCursor>
 #include <QKeyEvent>
 
 using namespace au::uicomponents;

@@ -2,6 +2,8 @@
  * Audacity: A Digital Audio Editor
  */
 
+#include <QFile>
+
 #include "global/translation.h"
 
 #include "project/internal/au3/au3metadata.h"

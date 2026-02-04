@@ -1,14 +1,16 @@
 /*
 * Audacity: A Digital Audio Editor
 */
+#include "toastmodule.h"
+
+#include <QQuickItem>
+
 #include "framework/global/modularity/ioc.h"
 
 #include "internal/toastservice.h"
 #include "internal/toastprovider.h"
 #include "view/toastlistmodel.h"
 #include "dev/toasttestsmodel.h"
-
-#include "toastmodule.h"
 
 using namespace au::toast;
 using namespace muse;

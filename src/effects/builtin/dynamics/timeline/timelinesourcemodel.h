@@ -12,6 +12,8 @@
 
 #include <optional>
 
+class QTimer;
+
 namespace au::effects {
 class TimelineSourceModel : public AbstractDynamicsEffectInstanceModel
 {

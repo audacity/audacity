@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QColor>
+#include <QPainter>
 #include <QRect>
 
 #include "modularity/imoduleinterface.h"

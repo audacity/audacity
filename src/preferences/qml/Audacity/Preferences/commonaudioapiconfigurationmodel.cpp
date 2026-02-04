@@ -22,6 +22,8 @@
 
 #include "commonaudioapiconfigurationmodel.h"
 
+#include <QFontMetrics>
+
 #include "containers.h"
 #include "log.h"
 #include "types/translatablestring.h"

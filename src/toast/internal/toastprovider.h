@@ -7,6 +7,8 @@
 #include <vector>
 #include <map>
 
+#include <QTimer>
+
 #include "framework/global/async/channel.h"
 #include "framework/global/async/asyncable.h"
 #include "framework/global/progress.h"

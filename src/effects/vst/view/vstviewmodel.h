@@ -4,6 +4,7 @@
 #pragma once
 
 #include <QObject>
+#include <QTimer>
 
 #include "modularity/ioc.h"
 #include "trackedit/iprojecthistory.h"

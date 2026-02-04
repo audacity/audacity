@@ -3,6 +3,7 @@
  */
 #pragma once
 
+#include <QAbstractListModel>
 #include <QObject>
 
 #include "async/asyncable.h"

@@ -2,6 +2,7 @@
 * Audacity: A Digital Audio Editor
 */
 
+#include <QGuiApplication>
 #include <QMimeData>
 #include <QClipboard>
 
