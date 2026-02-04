@@ -48,6 +48,7 @@ Item {
     }
 
     signal extraButtonClicked
+    signal nextButtonClicked
 
     function readInfo() {
         accessibleInfo.readInfo()
@@ -81,12 +82,14 @@ Item {
     Column {
         id: header
 
+        visible: root.title.length > 0
+
         anchors.top: parent.top
-        anchors.topMargin: root.titleTopMargin
+        anchors.topMargin: root.title.length > 0 ? root.titleTopMargin : 0
         anchors.left: parent.left
         anchors.right: parent.right
 
-        height: childrenRect.height
+        height: root.title.length > 0 ? childrenRect.height : 0
 
         StyledTextLabel {
             id: titleLabel
@@ -104,7 +107,7 @@ Item {
         id: contentItem
 
         anchors.top: header.bottom
-        anchors.topMargin: root.titleContentSpacing
+        anchors.topMargin: root.title.length > 0 ? root.titleContentSpacing : 0
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom

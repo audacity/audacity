@@ -8,8 +8,10 @@ import Muse.Ui 1.0
 import Muse.UiComponents
 import Audacity.AppShell
 
-Item {
+Page {
     id: root
+
+    extraButtonTitle: prv.disableUUIDBtnText
 
     property string activeButtonTitle: ""
     property int navigationStartRow: 2
@@ -28,9 +30,9 @@ Item {
         readonly property int columnSpacing: 24
         readonly property int titleTextSpacing: 16
         readonly property int contentMargins: 24
-        readonly property int contentTextSpacing: 8
+        readonly property int contentTextSpacing: 16
 
-        readonly property string preferencesLink: "<a href=\"preferences\">%1</a>".arg(qsTrc("appshell/gettingstarted", "Preferences"))
+        readonly property string preferencesLink: "<a href=\"preferences\">%1</a>".arg(qsTrc("appshell/gettingstarted", "Preferences → Application"))
         readonly property string preferencesUrl: "audacity://preferences"
         readonly property string updatesTitleText: qsTrc("appshell/gettingstarted", "App Updates")
         readonly property string updatesBodyText1: qsTrc("appshell/gettingstarted", 
@@ -38,24 +40,27 @@ Item {
         readonly property string updatesBodyText2: qsTrc("appshell/gettingstarted", "You can turn this off anytime in %1.")
                                                      .arg(prv.preferencesLink)
         readonly property string usageInfoTitleText: qsTrc("appshell/gettingstarted", "Usage Info")
+        readonly property string privacyPolicyUrl: "https://www.audacityteam.org/legal/privacy-notice/"
+        readonly property string privacyPolicyLink: "<a href=\"%1\">%2</a>".arg(prv.privacyPolicyUrl).arg(qsTrc("appshell/gettingstarted", "privacy policy"))
         readonly property string usageInfoBodyText1: qsTrc("appshell/gettingstarted", 
-                                                        "To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This ID does not contain any personally identifiable information.")
+                                                        "To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This ID does not contain any personally identifiable information. Want to know more? Check out our %1.").arg(prv.privacyPolicyLink)
         readonly property string usageInfoBodyText2: qsTrc("appshell/gettingstarted", "You can disable this anytime in %1.")
                                                      .arg(prv.preferencesLink)
-        readonly property string enableUUIDText: qsTrc("appshell/gettingstarted", "Enable UUID")
-        readonly property string privacyPolicyUrl: "https://www.audacityteam.org/legal/privacy-notice/"
-        readonly property string privacyPolicyLink: "<a href=\"%1\">%2</a>".arg(prv.privacyPolicyUrl).arg(qsTrc("appshell/gettingstarted", "Privacy Policy"))
-        readonly property string privacyPolicyInfoText: qsTrc("appshell/gettingstarted", 
-                                                        "Want to know more? Check out our %1")
-                                                        .arg(prv.privacyPolicyLink)
+        readonly property string disableUUIDBtnText: qsTrc("appshell/gettingstarted", "Disable UUID")
     }
 
     AppUpdateUsageInfoPageModel {
         id: model
     }
 
-    Component.onDestruction: {
-        model.setSendAnonymousUsageInfo(enableUUIDCheckBox.checked)
+    onExtraButtonClicked: {
+        const disableUUID = false;
+        model.setSendAnonymousUsageInfo(disableUUID)
+    }
+
+    onNextButtonClicked: {
+        const enableUUID = true;
+        model.setSendAnonymousUsageInfo(enableUUID)
     }
 
     function readInfo() {
@@ -187,30 +192,6 @@ Item {
                         cursorShape: parent.hoveredLink ? Qt.PointingHandCursor : Qt.ArrowCursor
                     }
                 }
-            }
-
-            CheckBox {
-                id: enableUUIDCheckBox
-
-                navigation.name: "EnableUUIDCheckbox"
-                navigation.panel: root.navigationPanel
-                navigation.row: root.navigationStartRow + 1
-                navigation.column: 0
-
-                text: prv.enableUUIDText
-                checked: true
-
-                onClicked: {
-                    checked = !checked
-                }
-            }
-
-            StyledTextLabel {
-                width: parent.width
-                horizontalAlignment: Text.AlignLeft
-                wrapMode: Text.Wrap
-
-                text: prv.privacyPolicyInfoText
             }
         }
     }

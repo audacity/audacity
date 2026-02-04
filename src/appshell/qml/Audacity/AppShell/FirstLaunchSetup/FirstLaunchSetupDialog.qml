@@ -43,6 +43,11 @@ StyledDialogView {
 
     readonly property Page currentPage: pageLoader.item as Page
 
+    function endSetup() {
+        model.finish()
+        root.hide()
+    }
+
     FirstLaunchSetupModel {
         id: model
     }
@@ -100,14 +105,6 @@ StyledDialogView {
             }
         }
 
-        Connections {
-            target: pageLoader.item
-
-            function onNextPage() {
-                nextStepButton.doClicked(null)
-            }
-        }
-
         SeparatorLine {
             Layout.fillWidth: true
             Layout.margins: 0
@@ -161,7 +158,6 @@ StyledDialogView {
 
                 Layout.alignment: Qt.AlignLeft
                 Layout.preferredHeight: 28
-                Layout.preferredWidth: 80
 
                 text: model.backButtonText
                 enabled: model.canGoBack
@@ -196,7 +192,6 @@ StyledDialogView {
 
                 Layout.alignment: Qt.AlignRight
                 Layout.preferredHeight: 28
-                Layout.preferredWidth: 80
 
                 visible: root.currentPage ? Boolean(root.currentPage.extraButtonTitle) : false
                 accentButton: true
@@ -211,6 +206,11 @@ StyledDialogView {
                     if (root.currentPage) {
                         root.currentPage.extraButtonClicked()
                     }
+
+                    if (model.canFinish) {
+                        endSetup()
+                        return
+                    }
                 }
             }
 
@@ -219,7 +219,6 @@ StyledDialogView {
 
                 Layout.alignment: Qt.AlignRight
                 Layout.preferredHeight: 28
-                Layout.preferredWidth: 80
 
                 text: model.canFinish ? model.doneButtonText : model.nextButtonText
                 accentButton: !extraButton.visible
@@ -236,9 +235,12 @@ StyledDialogView {
                 }
 
                 onClicked: {
+                    if (root.currentPage) {
+                        root.currentPage.nextButtonClicked()
+                    }
+
                     if (model.canFinish) {
-                        model.finish()
-                        root.hide()
+                        endSetup()
                         return
                     }
 

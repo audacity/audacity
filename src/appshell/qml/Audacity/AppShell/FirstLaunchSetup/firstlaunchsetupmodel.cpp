@@ -116,7 +116,7 @@ QString FirstLaunchSetupModel::nextButtonText()
 
 QString FirstLaunchSetupModel::doneButtonText()
 {
-    return muse::qtrc("appshell/gettingstarted", "Done");
+    return muse::qtrc("appshell/gettingstarted", "Accept & continue");
 }
 
 QString FirstLaunchSetupModel::formatPageProgress(int current, int total) const
