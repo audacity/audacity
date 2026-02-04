@@ -40,7 +40,10 @@ public:
     muse::RetVal<LabelKeyList> moveLabelsToTrack(const LabelKeyList& labelKeys, const trackedit::TrackId& toTrackId) override;
 
     bool stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed) override;
+    bool stretchLabelsLeft(const LabelKeyList& labelKeys, secs_t deltaSec, bool completed) override;
+
     bool stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed) override;
+    bool stretchLabelsRight(const LabelKeyList& labelKeys, secs_t deltaSec, bool completed) override;
 
     muse::Progress progress() const override;
 

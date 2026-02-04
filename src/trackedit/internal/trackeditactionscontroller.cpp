@@ -2073,10 +2073,8 @@ void TrackeditActionsController::extendFocusedItemBoundaryLeft()
     const double stepSize = calculateStepSize();
     static bool completed = true;
 
-    //! todo: move list of items
     if (isFocusedItemLabel()) {
-        Label label = focusedLabel();
-        trackeditInteraction()->stretchLabelLeft(focusedItemKey, label.startTime - stepSize, completed);
+        trackeditInteraction()->stretchLabelsLeft(labelsForInteraction(), -stepSize, completed);
     } else {
         double minClipDuration = MIN_CLIP_WIDTH / zoomLevel();
         trackeditInteraction()->trimClipLeft(focusedItemKey, -stepSize, minClipDuration, completed, UndoPushType::CONSOLIDATE);
@@ -2093,10 +2091,8 @@ void TrackeditActionsController::extendFocusedItemBoundaryRight()
     const double stepSize = calculateStepSize();
     static bool completed = true;
 
-    //! todo: move list of items
     if (isFocusedItemLabel()) {
-        Label label = focusedLabel();
-        trackeditInteraction()->stretchLabelRight(focusedItemKey, label.endTime + stepSize, completed);
+        trackeditInteraction()->stretchLabelsRight(labelsForInteraction(), stepSize, completed);
     } else {
         double minClipDuration = MIN_CLIP_WIDTH / zoomLevel();
         trackeditInteraction()->trimClipRight(focusedItemKey, -stepSize, minClipDuration, completed, UndoPushType::CONSOLIDATE);
@@ -2113,13 +2109,8 @@ void TrackeditActionsController::reduceFocusedItemBoundaryLeft()
     const double stepSize = calculateStepSize();
     static bool completed = true;
 
-    //! todo: move list of items
     if (isFocusedItemLabel()) {
-        Label label = focusedLabel();
-        double newStartTime = label.startTime + stepSize;
-        if (muse::RealIsEqualOrLess(newStartTime, label.endTime)) {
-            trackeditInteraction()->stretchLabelLeft(focusedItemKey, newStartTime, completed);
-        }
+        trackeditInteraction()->stretchLabelsLeft(labelsForInteraction(), stepSize, completed);
     } else {
         double minClipDuration = MIN_CLIP_WIDTH / zoomLevel();
         trackeditInteraction()->trimClipLeft(focusedItemKey, stepSize, minClipDuration, completed, UndoPushType::CONSOLIDATE);
@@ -2136,13 +2127,8 @@ void TrackeditActionsController::reduceFocusedItemBoundaryRight()
     const double stepSize = calculateStepSize();
     static bool completed = true;
 
-    //! todo: move list of items
     if (isFocusedItemLabel()) {
-        Label label = focusedLabel();
-        double newEndTime = label.endTime - stepSize;
-        if (muse::RealIsEqualOrMore(newEndTime, label.startTime)) {
-            trackeditInteraction()->stretchLabelRight(focusedItemKey, newEndTime, completed);
-        }
+        trackeditInteraction()->stretchLabelsRight(labelsForInteraction(), -stepSize, completed);
     } else {
         double minClipDuration = MIN_CLIP_WIDTH / zoomLevel();
         trackeditInteraction()->trimClipRight(focusedItemKey, stepSize, minClipDuration, completed, UndoPushType::CONSOLIDATE);

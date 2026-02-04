@@ -531,6 +531,29 @@ bool Au3LabelsInteraction::stretchLabelLeft(const LabelKey& labelKey, secs_t new
     return true;
 }
 
+bool Au3LabelsInteraction::stretchLabelsLeft(const LabelKeyList& labelKeys, secs_t deltaSec, bool completed)
+{
+    for (const auto& labelKey : labelKeys) {
+        Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(labelKey.trackId));
+        IF_ASSERT_FAILED(labelTrack) {
+            continue;
+        }
+
+        Au3Label* label = DomAccessor::findLabel(labelTrack, labelKey.itemId);
+        IF_ASSERT_FAILED(label) {
+            continue;
+        }
+
+        secs_t newStartTime = label->selectedRegion.t0() + deltaSec;
+        if (muse::RealIsEqualOrMore(deltaSec, 0) && muse::RealIsEqualOrMore(newStartTime, label->selectedRegion.t1())) {
+            newStartTime = label->selectedRegion.t1();
+        }
+
+        stretchLabelLeft(labelKey, newStartTime, completed);
+    }
+    return true;
+}
+
 bool Au3LabelsInteraction::stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed)
 {
     UNUSED(completed);
@@ -580,6 +603,29 @@ bool Au3LabelsInteraction::stretchLabelRight(const LabelKey& labelKey, secs_t ne
         m_stretchingLabelKey.reset();
     }
 
+    return true;
+}
+
+bool Au3LabelsInteraction::stretchLabelsRight(const LabelKeyList& labelKeys, secs_t deltaSec, bool completed)
+{
+    for (const auto& labelKey : labelKeys) {
+        Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(projectRef(), Au3TrackId(labelKey.trackId));
+        IF_ASSERT_FAILED(labelTrack) {
+            continue;
+        }
+
+        Au3Label* label = DomAccessor::findLabel(labelTrack, labelKey.itemId);
+        IF_ASSERT_FAILED(label) {
+            continue;
+        }
+
+        secs_t newEndTime = label->selectedRegion.t1() + deltaSec;
+        if (muse::RealIsEqualOrLess(deltaSec, 0) && muse::RealIsEqualOrLess(newEndTime, label->selectedRegion.t0())) {
+            newEndTime = label->selectedRegion.t0();
+        }
+
+        stretchLabelRight(labelKey, newEndTime, completed);
+    }
     return true;
 }
 

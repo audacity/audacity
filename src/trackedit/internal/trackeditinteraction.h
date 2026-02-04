@@ -65,8 +65,10 @@ private:
     bool splitDeleteSelectedOnTracks(const TrackIdList tracksIds, secs_t begin, secs_t end) override;
     bool trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed, UndoPushType type) override;
     bool trimClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed, UndoPushType type) override;
-    bool stretchClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed, UndoPushType type) override;
-    bool stretchClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed, UndoPushType type) override;
+    bool stretchClipsLeft(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed,
+                          UndoPushType type) override;
+    bool stretchClipsRight(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed,
+                           UndoPushType type) override;
     muse::secs_t clipDuration(const trackedit::ClipKey& clipKey) const override;
     double nearestZeroCrossing(double time) const override;
     muse::Ret makeRoomForClip(const trackedit::ClipKey& clipKey) override;
@@ -128,7 +130,10 @@ private:
     muse::RetVal<LabelKeyList> moveLabelsToTrack(const LabelKeyList& labelKeys, const TrackId& toTrackId, bool completed) override;
 
     bool stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed) override;
+    bool stretchLabelsLeft(const LabelKeyList& labelKeyList, secs_t deltaSec, bool completed) override;
+
     bool stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed) override;
+    bool stretchLabelsRight(const LabelKeyList& labelKeyList, secs_t deltaSec, bool completed) override;
 
     muse::Progress progress() const override;
 
