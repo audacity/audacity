@@ -145,38 +145,6 @@
         <seq>Left</seq>
     </SC>
     <SC>
-        <key>track-view-item-move-left</key>
-        <seq>Ctrl+Left</seq>
-    </SC>
-    <SC>
-        <key>track-view-item-move-right</key>
-        <seq>Ctrl+Right</seq>
-    </SC>
-    <SC>
-        <key>track-view-item-extend-left</key>
-        <seq>Shift+Left</seq>
-    </SC>
-    <SC>
-        <key>track-view-item-extend-right</key>
-        <seq>Shift+Right</seq>
-    </SC>
-    <SC>
-        <key>track-view-item-reduce-left</key>
-        <seq>Ctrl+Shift+Left</seq>
-    </SC>
-    <SC>
-        <key>track-view-item-reduce-right</key>
-        <seq>Ctrl+Shift+Right</seq>
-    </SC>
-    <SC>
-        <key>track-view-item-move-up</key>
-        <seq>Ctrl+Up</seq>
-    </SC>
-    <SC>
-        <key>track-view-item-move-down</key>
-        <seq>Ctrl+Down</seq>
-    </SC>
-    <SC>
         <key>track-view-item-context-menu</key>
         <seq>Shift+F10</seq>
         <seq>Ctrl+Shift+F10</seq>
@@ -1206,5 +1174,37 @@
     <SC>
         <key>keyboard-scrub-forwards</key>
         <seq>I</seq>
+    </SC>
+    <SC>
+        <key>track-view-item-move-left</key>
+        <seq>Ctrl+Left</seq>
+    </SC>
+    <SC>
+        <key>track-view-item-move-right</key>
+        <seq>Ctrl+Right</seq>
+    </SC>
+    <SC>
+        <key>track-view-item-extend-left</key>
+        <seq>Shift+Left</seq>
+    </SC>
+    <SC>
+        <key>track-view-item-extend-right</key>
+        <seq>Shift+Right</seq>
+    </SC>
+    <SC>
+        <key>track-view-item-reduce-left</key>
+        <seq>Ctrl+Shift+Left</seq>
+    </SC>
+    <SC>
+        <key>track-view-item-reduce-right</key>
+        <seq>Ctrl+Shift+Right</seq>
+    </SC>
+    <SC>
+        <key>track-view-item-move-up</key>
+        <seq>Ctrl+Up</seq>
+    </SC>
+    <SC>
+        <key>track-view-item-move-down</key>
+        <seq>Ctrl+Down</seq>
     </SC>
 </Shortcuts>

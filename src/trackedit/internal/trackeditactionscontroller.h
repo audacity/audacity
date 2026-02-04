@@ -177,6 +177,21 @@ private:
     void labelCopy(const muse::actions::ActionData& args);
     void labelCopyMulti();
 
+    void moveFocusedItemLeft();
+    void moveFocusedItemRight();
+    void moveFocusedItemUp();
+    void moveFocusedItemDown();
+    void extendFocusedItemBoundaryLeft();
+    void extendFocusedItemBoundaryRight();
+    void reduceFocusedItemBoundaryLeft();
+    void reduceFocusedItemBoundaryRight();
+
+    double zoomLevel() const;
+    double calculateStepSize() const;
+    Label focusedLabel() const;
+    TrackId resolvePreviousTrackIdForMove(const TrackId& trackId) const;
+    TrackId resolveNextTrackIdForMove(const TrackId& trackId) const;
+
     context::IPlaybackStatePtr playbackState() const;
 
     muse::async::Channel<muse::actions::ActionCode> m_actionEnabledChanged;

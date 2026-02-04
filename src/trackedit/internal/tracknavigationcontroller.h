@@ -52,15 +52,11 @@ public:
     muse::async::Channel<TrackItemKey> openContextMenuRequested() const override;
 
 private:
-    double zoomLevel() const;
-    double calculateStepSize() const;
-
     TrackItemKey focusedItemKey() const;
     bool isFocusedItemValid() const;
     bool isFocusedItemLabel() const;
 
     TrackItemKeyList sortedItemsKeys(const TrackId& trackId) const;
-    Label focusedLabel() const;
 
     bool isTrackItemsEmpty(const TrackId& trackId) const;
     bool isFirstTrack(const TrackId& trackId) const;
@@ -78,18 +74,6 @@ private:
     void navigateToPrevItem();
     void navigateToFirstItem();
     void navigateToLastItem();
-
-    void moveFocusedItemLeft();
-    void moveFocusedItemRight();
-    void moveFocusedItemUp();
-    void moveFocusedItemDown();
-    void extendFocusedItemBoundaryLeft();
-    void extendFocusedItemBoundaryRight();
-    void reduceFocusedItemBoundaryLeft();
-    void reduceFocusedItemBoundaryRight();
-
-    TrackId resolvePreviousTrackIdForMove(const TrackId& trackId) const;
-    TrackId resolveNextTrackIdForMove(const TrackId& trackId) const;
 
     void toggleSelection();
     void trackRangeSelection();
