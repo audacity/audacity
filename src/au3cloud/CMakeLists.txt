@@ -7,8 +7,8 @@ declare_module(au3cloud)
 set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/au3cloudmodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/au3cloudmodule.h
+    ${CMAKE_CURRENT_LIST_DIR}/cloudtypes.h
     ${CMAKE_CURRENT_LIST_DIR}/iauthorization.h
-    ${CMAKE_CURRENT_LIST_DIR}/iuserdata.h
     ${CMAKE_CURRENT_LIST_DIR}/iusageinfo.h
 
     ${CMAKE_CURRENT_LIST_DIR}/dev/cloudtestsmodel.cpp

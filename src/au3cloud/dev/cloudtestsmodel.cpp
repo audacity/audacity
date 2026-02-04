@@ -31,11 +31,10 @@ bool CloudTestsModel::isAuthorized() const
 
 QUrl CloudTestsModel::avatarPath() const
 {
-    muse::io::path_t filePath = userData()->getAvatarPath();
-    return filePath.toQUrl();
+    return muse::io::path_t{ authorization()->accountInfo().avatarPath }.toQUrl();
 }
 
 QString CloudTestsModel::displayName() const
 {
-    return QString::fromStdString(userData()->getDisplayName());
+    return QString::fromStdString(authorization()->accountInfo().displayName);
 }

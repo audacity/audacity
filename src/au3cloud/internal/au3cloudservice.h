@@ -11,14 +11,13 @@
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/iinteractive.h"
 #include "au3cloud/iauthorization.h"
-#include "au3cloud/iuserdata.h"
 #include "au3cloud/iusageinfo.h"
 
+#include "au3cloud/cloudtypes.h"
 #include "oauthhttpserverreplyhandler.h"
 
 namespace au::au3cloud {
-class Au3CloudService : public QObject, public muse::async::Asyncable, public IAuthorization, public IUserData, public IUsageInfo,
-    public muse::Injectable
+class Au3CloudService : public QObject, public muse::async::Asyncable, public IAuthorization, public IUsageInfo, public muse::Injectable
 {
     Q_OBJECT
 
@@ -34,10 +33,8 @@ public:
     void signInWithPassword(const std::string& email, const std::string& password) override;
     void signInWithSocial(const std::string& provider) override;
     void signOut() override;
+    const AccountInfo& accountInfo() const override;
     muse::ValCh<AuthState> authState() const override;
-
-    std::string getAvatarPath() const override;
-    std::string getDisplayName() const override;
 
     bool getSendAnonymousUsageInfo() const override;
     void setSendAnonymousUsageInfo(bool allow) override;
@@ -47,7 +44,12 @@ private:
 
     Observer::Subscription m_authSubscription;
     Observer::Subscription m_urlRegisterSubscription;
+    Observer::Subscription m_userDataSubscription;
+
     muse::ValCh<AuthState> m_authState;
+
     OAuthHttpServerReplyHandler* m_replyHandler;
+
+    AccountInfo m_accountInfo;
 };
 }

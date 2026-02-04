@@ -8,7 +8,6 @@
 #include "framework/global/async/asyncable.h"
 
 #include "framework/global/modularity/ioc.h"
-#include "au3cloud/iuserdata.h"
 #include "au3cloud/iauthorization.h"
 
 namespace au::au3cloud {
@@ -17,7 +16,6 @@ class CloudTestsModel : public QObject, public muse::async::Asyncable, public mu
     Q_OBJECT
 
     muse::Inject<IAuthorization> authorization = { this };
-    muse::Inject<IUserData> userData = { this };
 
     Q_PROPERTY(bool isAuthorized READ isAuthorized NOTIFY isAuthorizedChanged)
     Q_PROPERTY(QUrl avatarPath READ avatarPath NOTIFY avatarPathChanged)

@@ -52,7 +52,7 @@ void Au3CloudService::init()
     const auto NO_ACCESS_TOKEN = muse::qtrc("appshell/gettingstarted", "No access token");
     m_authState.set(oauthService.HasAccessToken() ? AuthState(Authorized()) : AuthState(NotAuthorized(NO_ACCESS_TOKEN.toStdString())));
     m_authSubscription
-        = audacity::cloud::audiocom::GetOAuthService().Subscribe([this](const audacity::cloud::audiocom::AuthStateChangedMessage& message)
+        = oauthService.Subscribe([this](const audacity::cloud::audiocom::AuthStateChangedMessage& message)
     {
         if (std::holds_alternative<Authorized>(m_authState.val) && message.authorised) {
             return;
@@ -68,6 +68,17 @@ void Au3CloudService::init()
 
         auto& service = audacity::cloud::audiocom::GetUserService();
         message.authorised ? service.UpdateUserData() : service.ClearUserData();
+    });
+
+    auto& userService = audacity::cloud::audiocom::GetUserService();
+    m_userDataSubscription
+        = userService.Subscribe(
+              [this](const audacity::cloud::audiocom::UserDataChanged&) {
+        auto& userService = audacity::cloud::audiocom::GetUserService();
+        m_accountInfo.id = userService.GetUserId().ToStdString();
+        m_accountInfo.userSlug = userService.GetUserSlug().ToStdString();
+        m_accountInfo.displayName = userService.GetDisplayName().ToStdString();
+        m_accountInfo.avatarPath = userService.GetAvatarPath().ToStdString();
     });
 }
 
@@ -134,17 +145,9 @@ muse::ValCh<AuthState> Au3CloudService::authState() const
     return m_authState;
 }
 
-std::string Au3CloudService::getAvatarPath() const
+const AccountInfo& Au3CloudService::accountInfo() const
 {
-    const auto& userService = audacity::cloud::audiocom::GetUserService();
-    return userService.GetAvatarPath().ToStdString();
-}
-
-std::string Au3CloudService::getDisplayName() const
-{
-    auto& userService = audacity::cloud::audiocom::GetUserService();
-    return userService.GetDisplayName().IsEmpty() ? userService.GetUserSlug().ToStdString()
-           : userService.GetDisplayName().ToStdString();
+    return m_accountInfo;
 }
 
 void Au3CloudService::setSendAnonymousUsageInfo(bool allow)

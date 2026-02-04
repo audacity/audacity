@@ -4,26 +4,12 @@
 #pragma once
 
 #include <string>
-#include <variant>
 
 #include "framework/global/modularity/imoduleinterface.h"
 #include "framework/global/types/retval.h"
 
+#include "cloudtypes.h"
 namespace au::au3cloud {
-struct NotAuthorized {
-    std::string error;
-
-    NotAuthorized() = default;
-    explicit NotAuthorized(std::string err)
-        : error(std::move(err)) {}
-};
-
-struct Authorizing {};
-
-struct Authorized {};
-
-using AuthState = std::variant<NotAuthorized, Authorizing, Authorized>;
-
 class IAuthorization : MODULE_EXPORT_INTERFACE
 {
     INTERFACE_ID(IAuthorization)
@@ -35,6 +21,8 @@ public:
     virtual void signInWithPassword(const std::string& email, const std::string& password) = 0;
     virtual void signInWithSocial(const std::string& provider) = 0;
     virtual void signOut() = 0;
+
+    virtual const AccountInfo& accountInfo() const = 0;
 
     virtual muse::ValCh<AuthState> authState() const = 0;
 };
