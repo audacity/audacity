@@ -19,19 +19,16 @@ on:
         required: false
         default: ''
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
-env:
-  CI_DIR: buildscripts/ci
-
 jobs:
   au4_build_linux:
     runs-on: ubuntu-22.04
     steps:
+    - name: Cancel Previous Runs
+      uses: styfle/cancel-workflow-action@0.13.0
+      with:
+        access_token: ${{ github.token }}
     - name: Clone repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         submodules: recursive
     - name: "Configure workflow"
@@ -40,6 +37,7 @@ jobs:
         SENTRY_SERVER_AU4_KEY: ${{ secrets.SENTRY_SERVER_AU4_KEY }}
         SENTRY_SERVER_AU4_SANDBOX_KEY: ${{ secrets.SENTRY_SERVER_AU4_SANDBOX_KEY }}
         SENTRY_PROJECT: ${{ github.event.inputs.sentry_project }}
+        CI_DIR: buildscripts/ci
       run: |
 
         ADD_INFO="_${GITHUB_REF#refs/heads/}"
@@ -91,6 +89,19 @@ jobs:
         echo "SENTRY_URL=$SENTRY_URL" >> $GITHUB_ENV
         echo "SENTRY_URL: $SENTRY_URL"
 
+        echo "CCACHE_TIMESTAMP=$(date -u +"%F-%T")" | tee -a $GITHUB_ENV
+
+    - name: Restore ccache files
+      uses: actions/cache@v5
+      with:
+        path: ${{ github.workspace }}/.ccache
+        key: ${{runner.os}}-${{runner.arch}}-ccache-${{ env.CCACHE_TIMESTAMP }}
+        restore-keys: ${{runner.os}}-${{runner.arch}}-ccache-
+    - name: Setup ccache
+      run: |
+        sudo apt-get update && sudo apt-get install -y ccache
+        bash ./buildscripts/ci/tools/setup_ccache_config.sh
+
     - name: Install Conan
       id: conan
       uses: turtlebrowser/get-conan@main
@@ -110,23 +121,32 @@ jobs:
     - name: Setup environment
       if: env.DO_BUILD == 'true'
       run: |
-        bash ${CI_DIR}/linux/setup.sh
+        bash ./buildscripts/ci/linux/setup.sh
 
     - name: Build
       if: env.DO_BUILD == 'true'
+      env:
+        CI_DIR: buildscripts/ci
       run: |
         C_URL=${SENTRY_URL}; if [ -z "$C_URL" ]; then C_URL="''"; fi
         source $HOME/build_tools/environment.sh
         cmake -DCRASH_REPORT_URL=$C_URL -P ${CI_DIR}/linux/ci_build.cmake
+    - name: Show ccache stats
+      run: |
+        ccache -sv
 
     - name: Package
       if: env.DO_BUILD == 'true'
+      env:
+        CI_DIR: buildscripts/ci
       run: |
         cmake -P ${CI_DIR}/linux/package.cmake
 
     - name: Generate and upload dump symbols
       if: env.DO_UPLOAD_SYMBOLS == 'true'
       shell: bash
+      env:
+        CI_DIR: buildscripts/ci
       run: |
         APP_BIN=$(find "$(pwd)/build.release/src/app/" -type f -name "audacity4portable*" -print -quit)
         ARCH=x86-64
@@ -140,7 +160,7 @@ jobs:
 
     - name: Upload artifacts on GitHub
       if: env.DO_BUILD == 'true'
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: ${{ env.UPLOAD_ARTIFACT_NAME }}
         path: ./build.artifacts/

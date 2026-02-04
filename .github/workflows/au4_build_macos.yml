@@ -20,20 +20,19 @@ on:
         required: false
         default: ''
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
 env:
-  CI_DIR: buildscripts/ci
   DEVELOPER_DIR: /Applications/Xcode_15.2.app/Contents/Developer
 
 jobs:
   au4_build_macos:
     runs-on: macos-14
     steps:
+    - name: Cancel Previous Runs
+      uses: styfle/cancel-workflow-action@0.13.0
+      with:
+        access_token: ${{ github.token }}
     - name: Clone repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         submodules: recursive
 
@@ -43,6 +42,7 @@ jobs:
         SENTRY_SERVER_AU4_KEY: ${{ secrets.SENTRY_SERVER_AU4_KEY }}
         SENTRY_SERVER_AU4_SANDBOX_KEY: ${{ secrets.SENTRY_SERVER_AU4_SANDBOX_KEY }}
         SENTRY_PROJECT: ${{ github.event.inputs.sentry_project }}
+        CI_DIR: buildscripts/ci
       run: |
         ADD_INFO="_${GITHUB_REF#refs/heads/}"
         if [ "${{ github.event_name }}" == "schedule" ] && [ "${{ github.event.schedule }}" == "0 5 */1 */1 *" ]; then ADD_INFO="_${{ env.CURRENT_RELEASE_BRANCH }}"; fi
@@ -107,6 +107,19 @@ jobs:
         echo "SENTRY_URL=$SENTRY_URL" >> $GITHUB_ENV
         echo "SENTRY_URL: $SENTRY_URL"
 
+        echo "CCACHE_TIMESTAMP=$(date -u +"%F-%T")" | tee -a $GITHUB_ENV
+
+    - name: Restore ccache files
+      uses: actions/cache@v5
+      with:
+        path: ${{ github.workspace }}/.ccache
+        key: ${{runner.os}}-${{runner.arch}}-ccache-${{ env.CCACHE_TIMESTAMP }}
+        restore-keys: ${{runner.os}}-${{runner.arch}}-ccache-
+    - name: Setup ccache
+      run: |
+        brew install ccache
+        bash ./buildscripts/ci/tools/setup_ccache_config.sh
+
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
@@ -119,19 +132,25 @@ jobs:
     - name: Setup environment
       if: env.DO_BUILD == 'true'
       run: |
-        bash ${CI_DIR}/macos/setup.sh
+        bash ./buildscripts/ci/macos/setup.sh
 
     - name: Build
       if: env.DO_BUILD == 'true'
+      env:
+        CI_DIR: buildscripts/ci
       run: |
         C_URL=${SENTRY_URL}; if [ -z "$C_URL" ]; then C_URL="''"; fi
         source $HOME/build_tools/environment.sh
         cmake -DCRASH_REPORT_URL=$C_URL -P ${CI_DIR}/macos/ci_build.cmake
+    - name: Show ccache stats
+      run: |
+        ccache -sv
 
     - name: Package
       env:
         SIGN_CERTIFICATE_ENCRYPT_SECRET: ${{ secrets.MAC_SIGN_CERTIFICATE_ENCRYPT_SECRET }}
         SIGN_CERTIFICATE_PASSWORD: ${{ secrets.MAC_SIGN_CERTIFICATE_PASSWORD }}
+        CI_DIR: buildscripts/ci
       if: env.DO_BUILD == 'true'
       run: |
         source $HOME/build_tools/environment.sh
@@ -146,6 +165,8 @@ jobs:
     - name: Generate and upload dump symbols
       if: env.DO_UPLOAD_SYMBOLS == 'true'
       shell: bash
+      env:
+        CI_DIR: buildscripts/ci
       run: |
         APP_BIN=$(pwd)/build.install/audacity.app/Contents/MacOS/audacity
         GENERATE_ARCHS=("x86_64 arm64")
@@ -162,7 +183,7 @@ jobs:
 
     - name: Upload artifacts on GitHub
       if: env.DO_BUILD == 'true'
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: ${{ env.UPLOAD_ARTIFACT_NAME }}
         path: ./build.artifacts

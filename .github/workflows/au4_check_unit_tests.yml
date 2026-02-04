@@ -7,27 +7,27 @@ on:
       code_coverage:
         description: 'Enable code coverage'
         required: false
-        default: 'false'
+        type: boolean
+        default: false
   schedule:
     - cron: "0 3 * * 4" # Every Thursday night at 03:00 for master branch
-
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
-env:
-  CI_DIR: buildscripts/ci
 
 jobs:
   run_tests:
     runs-on: ubuntu-22.04
     steps:
+    - name: Cancel Previous Runs
+      uses: styfle/cancel-workflow-action@0.13.0
+      with:
+        access_token: ${{ github.token }}
     - name: Clone repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         submodules: recursive
 
     - name: "Configure workflow"
+      env:
+        CI_DIR: buildscripts/ci
       run: |
         echo "CCACHE_TIMESTAMP=$(date -u +"%F-%T")" | tee -a $GITHUB_ENV
 
@@ -37,16 +37,16 @@ jobs:
               -P ${CI_DIR}/common/ci_configure.cmake
 
     - name: Restore ccache files
-      uses: actions/cache@v4
+      uses: actions/cache@v5
       with:
         path: ${{ github.workspace }}/.ccache
-        key: ${{github.workflow}}-ccache-${{ env.CCACHE_TIMESTAMP }}
-        restore-keys: ${{github.workflow}}-ccache-
+        key: ${{runner.os}}-${{runner.arch}}-tests-ccache-${{ env.CCACHE_TIMESTAMP }}
+        restore-keys: ${{runner.os}}-${{runner.arch}}-tests-ccache-
 
     - name: Setup ccache
       run: |
         sudo apt-get update && sudo apt-get install -y ccache
-        cmake -P ${CI_DIR}/tools/setup_ccache_config.cmake
+        bash ./buildscripts/ci/tools/setup_ccache_config.sh
 
     - name: Free up disk space
       run: |
@@ -70,11 +70,12 @@ jobs:
       env:
         GITHUB_EVENT_NAME: ${{ github.event_name }}
         CODE_COVERAGE: ${{ inputs.code_coverage }}
+        CI_DIR: buildscripts/ci
       run: |
 
         ENABLE_CODE_COVERAGE='false'
 
-        if [[ "$GITHUB_EVENT_NAME" == "schedule" || "$CODE_COVERAGE" == "true" ]]; then
+        if [[ "$GITHUB_EVENT_NAME" == "schedule" || "$CODE_COVERAGE" == true ]]; then
           ENABLE_CODE_COVERAGE='true'
         else
           ENABLE_CODE_COVERAGE='false'
@@ -83,17 +84,19 @@ jobs:
         source $HOME/build_tools/environment.sh
         cmake -DBUILD_ENABLE_CODE_COVERAGE=${ENABLE_CODE_COVERAGE} -P ${CI_DIR}/linux/ci_build_utests.cmake
 
-        echo "============== ccache ==============="
-        ccache -s
+    - name: Show ccache stats
+      run: |
+        ccache -sv
 
     - name: Run tests
+      env:
+        CI_DIR: buildscripts/ci
+        ASAN_OPTIONS: "detect_leaks=0"
       run: |
         cmake -P ${CI_DIR}/linux/ci_run_utests.cmake
-      env:
-        ASAN_OPTIONS: "detect_leaks=0"
 
     - name: Code coverage
-      if: github.event_name == 'schedule' || inputs.code_coverage == 'true'
+      if: ( github.event_name == 'schedule' || inputs.code_coverage ) && github.repository == 'audacity/audacity'
       run: |
         lcov --capture --directory "$(pwd)/build.debug/" --output-file coverage.info
         lcov --remove coverage.info '/usr/*' '*/tests/*' '*/thirdparty/*' '*/moc_*' '*framework/Headers/*' '*/hb-*' '*/Qt/*' --output-file filtered_coverage.info

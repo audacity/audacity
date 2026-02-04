@@ -139,7 +139,7 @@ option(MU_RUN_LRELEASE "Generate .qm files" ON)
 # === Compile ===
 option(MU_COMPILE_INSTALL_QTQML_FILES "Whether to bundle qml files along with the installation (relevant on MacOS only)" ON)
 option(MUSE_COMPILE_USE_UNITY "Use unity build." ON)
-option(MUSE_COMPILE_USE_CCACHE "Try use ccache" ON)
+option(MUSE_COMPILE_USE_COMPILER_CACHE "Try to use compiler cache: tries ccache, sccache, buildcache in that order. Use COMPILER_CACHE_PROGRAM to specify a specific compiler cache program." ON)
 
 ###########################################
 # Setup Configure
@@ -164,9 +164,9 @@ include(SetupBuildEnvironment)
 include(GetPlatformInfo)
 include(SetupDevEnvironment)
 
-if (MUE_COMPILE_USE_CCACHE)
-    include(TryUseCcache)
-endif(MUE_COMPILE_USE_CCACHE)
+if (MUSE_COMPILE_USE_COMPILER_CACHE)
+    include(SetupCompilerCache)
+endif(MUSE_COMPILE_USE_COMPILER_CACHE)
 
 
 ###########################################
