@@ -3,9 +3,9 @@
 */
 #include "effectexecutionscenario.h"
 
-#include "global/defer.h"
-#include "global/realfn.h"
-#include "global/translation.h"
+#include "framework/global/defer.h"
+#include "framework/global/realfn.h"
+#include "framework/global/translation.h"
 
 #include "au3-project/Project.h"
 #include "au3-effects/Effect.h"
