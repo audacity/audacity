@@ -274,8 +274,8 @@ int main(int argc, char** argv)
         app.addModule(new au::spectrogram::SpectrogramModule());
         app.addModule(new au::toast::ToastModule());
         app.addModule(new au::project::ProjectModule());
-        app.addModule(new au::importexport::ImporterModule());
         app.addModule(new au::importexport::ExporterModule());
+        app.addModule(new au::importexport::ImporterModule());
         app.addModule(new au::importexport::LabelsModule());
         app.addModule(new au::au3::Au3WrapModule());
         app.addModule(new au::effects::EffectsModule());
