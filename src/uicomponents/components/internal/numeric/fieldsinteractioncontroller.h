@@ -44,6 +44,7 @@ private:
     bool isMouseWithinBoundaries(const QPoint& mousePos) const;
 
     void moveCurrentEditedField(int moveKey);
+    void applyCurrentEditedField(int numberKey);
     void adjustCurrentEditedField(int adjustKey);
     void scrollCurrentEditedField(int pixelsYScrolled, int stepsYScrolled);
 
