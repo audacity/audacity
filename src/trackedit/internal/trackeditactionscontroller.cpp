@@ -2111,10 +2111,10 @@ void TrackeditActionsController::reduceFocusedItemBoundaryLeft()
     static bool completed = true;
 
     if (isFocusedItemLabel()) {
-        trackeditInteraction()->stretchLabelsLeft(labelsForInteraction(), stepSize, completed);
+        trackeditInteraction()->stretchLabelsRight(labelsForInteraction(), -stepSize, completed);
     } else {
         double minClipDuration = MIN_CLIP_WIDTH / zoomLevel();
-        trackeditInteraction()->trimClipsLeft(clipsForInteraction(), stepSize, minClipDuration, completed, UndoPushType::CONSOLIDATE);
+        trackeditInteraction()->trimClipsRight(clipsForInteraction(), stepSize, minClipDuration, completed, UndoPushType::CONSOLIDATE);
     }
 }
 
@@ -2129,10 +2129,10 @@ void TrackeditActionsController::reduceFocusedItemBoundaryRight()
     static bool completed = true;
 
     if (isFocusedItemLabel()) {
-        trackeditInteraction()->stretchLabelsRight(labelsForInteraction(), -stepSize, completed);
+        trackeditInteraction()->stretchLabelsLeft(labelsForInteraction(), stepSize, completed);
     } else {
         double minClipDuration = MIN_CLIP_WIDTH / zoomLevel();
-        trackeditInteraction()->trimClipsRight(clipsForInteraction(), stepSize, minClipDuration, completed, UndoPushType::CONSOLIDATE);
+        trackeditInteraction()->trimClipsLeft(clipsForInteraction(), stepSize, minClipDuration, completed, UndoPushType::CONSOLIDATE);
     }
 }
 
