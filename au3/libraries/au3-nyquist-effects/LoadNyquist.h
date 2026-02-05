@@ -8,6 +8,9 @@
 
 **********************************************************************/
 
+#ifndef __AUDACITY_LOAD_NYQUIST__
+#define __AUDACITY_LOAD_NYQUIST__
+
 #include "au3-utility/Callable.h"
 #include "au3-utility/GlobalVariable.h"
 #include "au3-components/PluginProvider.h"
@@ -60,3 +63,5 @@ public:
     std::unique_ptr<ComponentInterface>
     LoadPlugin(const PluginPath& path) override;
 };
+
+#endif // __AUDACITY_LOAD_NYQUIST__
