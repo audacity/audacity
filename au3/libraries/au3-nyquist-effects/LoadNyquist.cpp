@@ -42,6 +42,7 @@ const static wxChar* kShippedEffects[] =
     wxT("pluck.ny"),
     wxT("rhythmtrack.ny"),
     wxT("rissetdrum.ny"),
+    wxT("rms.ny"),
     wxT("sample-data-export.ny"),
     wxT("sample-data-import.ny"),
     wxT("ShelfFilter.ny"),
