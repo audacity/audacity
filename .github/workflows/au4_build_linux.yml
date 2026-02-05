@@ -133,7 +133,7 @@ jobs:
         cmake -DCRASH_REPORT_URL=$C_URL -P ${CI_DIR}/linux/ci_build.cmake
     - name: Show ccache stats
       run: |
-        ccache -sv
+        ccache -svv
 
     - name: Package
       if: env.DO_BUILD == 'true'

@@ -32,5 +32,5 @@ echo "max_size = 2G" >>$CCACHE_DIR/ccache.conf
 echo "sloppiness=pch_defines,time_macros" >>$CCACHE_DIR/ccache.conf
 cat $CCACHE_DIR/ccache.conf
 
-ccache -sv
+ccache -svv
 ccache -z
