@@ -6,6 +6,8 @@
 #include "global/realfn.h"
 #include "global/async/async.h"
 
+#include "global/containers.h"
+
 #include "types/projectscenetypes.h"
 
 #include "log.h"
@@ -50,7 +52,7 @@ void TrackClipsListModel::onInit()
         emit asymmetricStereoHeightsPossibleChanged();
     });
 
-    dispatcher()->reg(this, "rename-clip", [this]() {
+    dispatcher()->reg(this, "rename-item", [this]() {
         requestItemTitleChange();
     });
 
@@ -722,7 +724,17 @@ void TrackClipsListModel::resetSelectedClips()
 
 TrackItemKeyList TrackClipsListModel::getSelectedItemKeys() const
 {
-    return selectionController()->selectedClips();
+    TrackItemKeyList result = selectionController()->selectedClips();
+
+    trackedit::TrackItemKey focusedItemKey = trackNavigationController()->focusedItem();
+    if (focusedItemKey.isValid() && !muse::contains(result, focusedItemKey)) {
+        const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+        if (prj && prj->track(focusedItemKey.trackId)->type != TrackType::Label) {
+            result.insert(result.cbegin(), focusedItemKey);
+        }
+    }
+
+    return result;
 }
 
 bool TrackClipsListModel::isStereo() const

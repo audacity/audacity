@@ -1130,7 +1130,7 @@
         <key>next-lower-peak-frequency</key>
     </SC>
     <SC>
-        <key>rename-clip</key>
+        <key>rename-item</key>
         <seq>Ctrl+F2</seq>
     </SC>
     <SC>

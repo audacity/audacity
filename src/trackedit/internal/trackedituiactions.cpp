@@ -330,12 +330,6 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Add label"),
              TranslatableString("action", "Add label")
              ),
-    UiAction("label-rename",
-             au::context::UiCtxProjectOpened,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Rename label"),
-             TranslatableString("action", "Rename label")
-             ),
     UiAction("label-delete",
              au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,

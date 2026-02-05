@@ -575,7 +575,7 @@ MenuItemList AppMenuModel::makeExportItems()
 MenuItemList AppMenuModel::makeClipItems()
 {
     MenuItemList items {
-        makeMenuItem("rename-clip"),
+        makeMenuItem("rename-item", TranslatableString("appshell/menu/clip", "Rename clip")),
         makeMenuItem("trim-clip"),
         makeSeparator(),
         makeMenuItem("split"),

@@ -27,7 +27,7 @@ void TrackLabelsListModel::onInit()
         onSelectedItems(keyList);
     });
 
-    dispatcher()->reg(this, "label-rename", [this]() {
+    dispatcher()->reg(this, "rename-item", [this]() {
         requestItemTitleChange();
     });
 }
@@ -85,7 +85,7 @@ void TrackLabelsListModel::onReload()
             update();
 
             QTimer::singleShot(100, [this](){
-                dispatcher()->dispatch("label-rename");
+                dispatcher()->dispatch("rename-item");
             });
 
             break;
@@ -216,7 +216,17 @@ void TrackLabelsListModel::updateItemMetrics(ViewTrackItem* viewItem)
 
 TrackItemKeyList TrackLabelsListModel::getSelectedItemKeys() const
 {
-    return selectionController()->selectedLabels();
+    TrackItemKeyList result = selectionController()->selectedLabels();
+
+    trackedit::TrackItemKey focusedItemKey = trackNavigationController()->focusedItem();
+    if (focusedItemKey.isValid() && !muse::contains(result, focusedItemKey)) {
+        const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+        if (prj && prj->track(focusedItemKey.trackId)->type == TrackType::Label) {
+            result.insert(result.cbegin(), focusedItemKey);
+        }
+    }
+
+    return result;
 }
 
 void TrackLabelsListModel::selectLabel(const LabelKey& key)
