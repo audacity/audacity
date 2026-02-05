@@ -36,6 +36,10 @@ StyledDialogView {
 
     ExportPreferencesModel {
         id: exportPreferencesModel
+
+        onExportCompleted: {
+            root.accept()
+        }
     }
 
     CustomFFmpegPreferencesModel {
@@ -640,7 +644,6 @@ StyledDialogView {
                     if (exportPreferencesModel.verifyExportPossible()) {
                         exportPreferencesModel.apply()
                         exportPreferencesModel.exportData()
-                        root.accept()
                     }
                 }
             }

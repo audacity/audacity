@@ -121,6 +121,8 @@ signals:
     void optionsCountChanged();
     void optionTitleListChanged();
 
+    void exportCompleted();
+
 private:
     void updateCurrentSampleRate();
     void updateExportChannels();

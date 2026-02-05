@@ -3,7 +3,8 @@
 */
 #pragma once
 
-#include "modularity/imoduleinterface.h"
+#include "framework/global/io/path.h"
+#include "framework/global/modularity/imoduleinterface.h"
 
 #include "types/exporttypes.h"
 #include "types/ret.h"
@@ -17,7 +18,7 @@ public:
     virtual ~IExporter() = default;
 
     virtual void init() = 0;
-    virtual muse::Ret exportData(std::string filename) = 0;
+    virtual muse::Ret exportData(const muse::io::path_t& path) = 0;
 
     virtual std::vector<std::string> formatsList() const = 0;
     virtual int formatIndex(const std::string& format) const = 0;

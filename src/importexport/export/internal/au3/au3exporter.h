@@ -29,7 +29,7 @@ public:
         : muse::Injectable(ctx) {}
 
     void init() override;
-    muse::Ret exportData(std::string filename) override;
+    muse::Ret exportData(const muse::io::path_t& path) override;
 
     std::vector<std::string> formatsList() const override;
     int formatIndex(const std::string& format) const override;

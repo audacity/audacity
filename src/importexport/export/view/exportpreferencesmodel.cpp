@@ -466,10 +466,39 @@ QStringList ExportPreferencesModel::fileFilter()
 
 void ExportPreferencesModel::exportData()
 {
-    muse::Ret result = exporter()->exportData(filename().toStdString());
+    muse::io::path_t directoryPath = exportConfiguration()->directoryPath();
+    muse::io::path_t filePath = directoryPath.appendingComponent(filename());
+
+    if (suffix(filePath).empty()) {
+        auto extensions = exporter()->formatExtensions(exportConfiguration()->currentFormat());
+        std::string defaultExtension;
+        if (!extensions.empty()) {
+            defaultExtension = extensions.front();
+        }
+
+        filePath = filePath.appendingSuffix(defaultExtension);
+    }
+
+    if (fileSystem()->exists(filePath)) {
+        const int overwriteBtn = int(muse::IInteractive::Button::CustomButton) + 1;
+        const auto question = muse::trc("export", "Do you want to overwrite?");
+        const auto btnText = muse::trc("export", "Overwrite");
+        muse::IInteractive::Result result = interactive()->questionSync("", question,
+                                                                        { muse::IInteractive::ButtonData(overwriteBtn, btnText),
+                                                                          interactive()->buttonData(muse::IInteractive::Button::Cancel)
+                                                                        });
+        if (result.button() != overwriteBtn) {
+            return;
+        }
+    }
+
+    muse::Ret result = exporter()->exportData(filePath);
     if (!result.success() && !result.text().empty()) {
         interactive()->error(muse::trc("export", "Export error"), result.text());
+        return;
     }
+
+    emit exportCompleted();
 }
 
 bool ExportPreferencesModel::customFFmpegOptionsVisible()
