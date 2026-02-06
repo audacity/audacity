@@ -149,6 +149,7 @@ option(MUSE_COMPILE_USE_CCACHE "Try use ccache" ON)
 set(QT_ADD_LINGUISTTOOLS ON)
 set(QT_ADD_CONCURRENT ON)
 set(QT_QPROCESS_SUPPORTED ON)
+set(QT_NO_PRIVATE_MODULE_WARNING ON) # hide Qt warning about private module (KDDockWidgets)
 
 if(EXISTS "${CMAKE_CURRENT_LIST_DIR}/SetupConfigure.local.cmake")
     include(${CMAKE_CURRENT_LIST_DIR}/SetupConfigure.local.cmake)
