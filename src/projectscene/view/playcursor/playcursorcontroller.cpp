@@ -99,20 +99,25 @@ void PlayCursorController::updatePositionX(muse::secs_t secs)
         return;
     }
 
-    // Check if we should update the view during playback
-    const bool updateDisplayWhilePlaying = m_context->updateDisplayWhilePlayingEnabled();
-    const bool pinnedPlayHead = m_context->pinnedPlayHeadEnabled();
+    // Only update the view during actual playback or recording, not when manually seeking
+    const bool isPlayingOrRecording = playbackState()->isPlaying() || globalContext()->isRecording();
 
-    if (updateDisplayWhilePlaying) {
-        if (pinnedPlayHead) {
-            // Pinned playhead mode: Keep cursor at center, scroll the view continuously
-            ensureCursorAtCenter(secs);
-        } else {
-            // Standard mode: Prevent cursor from going off screen (paged scrolling)
-            m_context->insureVisible(secs);
+    if (isPlayingOrRecording) {
+        // Check if we should update the view during playback
+        const bool updateDisplayWhilePlaying = m_context->updateDisplayWhilePlayingEnabled();
+        const bool pinnedPlayHead = m_context->pinnedPlayHeadEnabled();
+
+        if (updateDisplayWhilePlaying) {
+            if (pinnedPlayHead) {
+                // Pinned playhead mode: Keep cursor at center, scroll the view continuously
+                ensureCursorAtCenter(secs);
+            } else {
+                // Standard mode: Prevent cursor from going off screen (paged scrolling)
+                m_context->insureVisible(secs);
+            }
         }
+        // If updateDisplayWhilePlaying is false, cursor can go off screen - no scrolling
     }
-    // If updateDisplayWhilePlaying is false, cursor can go off screen - no scrolling
 
     m_positionX = m_context->timeToPosition(secs);
     emit positionXChanged();
