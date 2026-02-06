@@ -173,7 +173,7 @@ endif(MUSE_COMPILE_USE_COMPILER_CACHE)
 ###########################################
 # Setup external dependencies
 ###########################################
-set(QT_MIN_VERSION "6.2.4")
+ set(QT_MIN_VERSION "6.9.1")
 include(SetupQt6)
 
 ###########################################
