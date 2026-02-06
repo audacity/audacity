@@ -71,6 +71,14 @@ public:
     void setPlaybackOnRulerClickEnabled(bool enabled) override;
     muse::async::Notification playbackOnRulerClickEnabledChanged() const override;
 
+    bool updateDisplayWhilePlayingEnabled() const;
+    void setUpdateDisplayWhilePlayingEnabled(bool enabled);
+    muse::async::Notification updateDisplayWhilePlayingEnabledChanged() const;
+
+    bool pinnedPlayHeadEnabled() const;
+    void setPinnedPlayHeadEnabled(bool enabled);
+    muse::async::Notification pinnedPlayHeadEnabledChanged() const;
+
     int labelEditorColumnFormat(const std::string& columnName) const override;
     void setLabelEditorColumnFormat(const std::string& columnName, int format) const override;
 
@@ -86,5 +94,7 @@ private:
     muse::async::Notification m_asymmetricStereoHeightsWorkspacesChanged;
     muse::async::Notification m_selectionTimecodeFormatChanged;
     muse::async::Notification m_playbackOnRulerClickEnabledChanged;
+    muse::async::Notification m_updateDisplayWhilePlayingEnabledChanged;
+    muse::async::Notification m_pinnedPlayHeadEnabledChanged;
 };
 }

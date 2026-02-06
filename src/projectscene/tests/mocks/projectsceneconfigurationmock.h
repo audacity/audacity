@@ -59,6 +59,14 @@ public:
     MOCK_METHOD(void, setPlaybackOnRulerClickEnabled, (bool enabled), (override));
     MOCK_METHOD(muse::async::Notification, playbackOnRulerClickEnabledChanged, (), (const, override));
 
+    MOCK_METHOD(bool, updateDisplayWhilePlayingEnabled, (), (const, override));
+    MOCK_METHOD(void, setUpdateDisplayWhilePlayingEnabled, (bool enabled), (override));
+    MOCK_METHOD(muse::async::Notification, updateDisplayWhilePlayingEnabledChanged, (), (const, override));
+
+    MOCK_METHOD(bool, pinnedPlayHeadEnabled, (), (const, override));
+    MOCK_METHOD(void, setPinnedPlayHeadEnabled, (bool enabled), (override));
+    MOCK_METHOD(muse::async::Notification, pinnedPlayHeadEnabledChanged, (), (const, override));
+
     MOCK_METHOD(int, labelEditorColumnFormat, (const std::string& columnName), (const, override));
     MOCK_METHOD(void, setLabelEditorColumnFormat, (const std::string& columnName, int format), (const, override));
 };

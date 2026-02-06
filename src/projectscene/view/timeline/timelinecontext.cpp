@@ -118,6 +118,14 @@ void TimelineContext::init(double frameWidth)
         emit playbackOnRulerClickEnabledChanged();
     });
 
+    configuration()->updateDisplayWhilePlayingEnabledChanged().onNotify(this, [this]() {
+        emit updateDisplayWhilePlayingEnabledChanged();
+    });
+
+    configuration()->pinnedPlayHeadEnabledChanged().onNotify(this, [this]() {
+        emit pinnedPlayHeadEnabledChanged();
+    });
+
     onProjectChanged();
 }
 
@@ -1030,4 +1038,14 @@ au::context::IPlaybackStatePtr TimelineContext::playbackState() const
 bool TimelineContext::playbackOnRulerClickEnabled() const
 {
     return configuration()->playbackOnRulerClickEnabled();
+}
+
+bool TimelineContext::updateDisplayWhilePlayingEnabled() const
+{
+    return configuration()->updateDisplayWhilePlayingEnabled();
+}
+
+bool TimelineContext::pinnedPlayHeadEnabled() const
+{
+    return configuration()->pinnedPlayHeadEnabled();
 }

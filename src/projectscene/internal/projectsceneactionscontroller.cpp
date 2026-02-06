@@ -17,6 +17,8 @@ static const ActionCode CLIPPING_IN_WAVEFORM_CODE("toggle-clipping-in-waveform")
 static const ActionCode MINUTES_SECONDS_RULER("minutes-seconds-ruler");
 static const ActionCode BEATS_MEASURES_RULER("beats-measures-ruler");
 static const ActionCode CLIP_PITCH_AND_SPEED_CODE("clip-pitch-speed");
+static const ActionCode TOGGLE_UPDATE_DISPLAY_WHILE_PLAYING_CODE("toggle-update-display-while-playing");
+static const ActionCode TOGGLE_PINNED_PLAY_HEAD_CODE("toggle-pinned-play-head");
 static const ActionCode TOGGLE_PLAYBACK_ON_RULER_CLICK_ENABLED_CODE("toggle-playback-on-ruler-click-enabled");
 static const ActionQuery TOGGLE_TRACK_HALF_WAVE("action://projectscene/track-view-half-wave");
 static const ActionCode LABEL_OPEN_EDITOR_CODE("toggle-label-editor");
@@ -31,8 +33,8 @@ void ProjectSceneActionsController::init()
     dispatcher()->reg(this, VERTICAL_RULERS_CODE, this, &ProjectSceneActionsController::toggleVerticalRulers);
     dispatcher()->reg(this, RMS_IN_WAVEFORM_CODE, this, &ProjectSceneActionsController::toggleRMSInWaveform);
     dispatcher()->reg(this, CLIPPING_IN_WAVEFORM_CODE, this, &ProjectSceneActionsController::toggleClippingInWaveform);
-    dispatcher()->reg(this, "update-display-while-playing", this, &ProjectSceneActionsController::updateDisplayWhilePlaying);
-    dispatcher()->reg(this, "pinned-play-head", this, &ProjectSceneActionsController::pinnedPlayHead);
+    dispatcher()->reg(this, TOGGLE_UPDATE_DISPLAY_WHILE_PLAYING_CODE, this, &ProjectSceneActionsController::toggleUpdateDisplayWhilePlaying);
+    dispatcher()->reg(this, TOGGLE_PINNED_PLAY_HEAD_CODE, this, &ProjectSceneActionsController::togglePinnedPlayHead);
     dispatcher()->reg(this, CLIP_PITCH_AND_SPEED_CODE, this, &ProjectSceneActionsController::openClipPitchAndSpeedEdit);
     dispatcher()->reg(this, TOGGLE_PLAYBACK_ON_RULER_CLICK_ENABLED_CODE, this,
                       &ProjectSceneActionsController::togglePlaybackOnRulerClickEnabled);
@@ -97,14 +99,19 @@ void ProjectSceneActionsController::toggleClippingInWaveform()
     notifyActionCheckedChanged(CLIPPING_IN_WAVEFORM_CODE);
 }
 
-void ProjectSceneActionsController::updateDisplayWhilePlaying()
+void ProjectSceneActionsController::toggleUpdateDisplayWhilePlaying()
 {
-    NOT_IMPLEMENTED;
+    bool enabled = configuration()->updateDisplayWhilePlayingEnabled();
+    configuration()->setUpdateDisplayWhilePlayingEnabled(!enabled);
+    notifyActionCheckedChanged(TOGGLE_UPDATE_DISPLAY_WHILE_PLAYING_CODE);
+
 }
 
-void ProjectSceneActionsController::pinnedPlayHead()
+void ProjectSceneActionsController::togglePinnedPlayHead()
 {
-    NOT_IMPLEMENTED;
+    bool enabled = configuration()->pinnedPlayHeadEnabled();
+    configuration()->setPinnedPlayHeadEnabled(!enabled);
+    notifyActionCheckedChanged(TOGGLE_PINNED_PLAY_HEAD_CODE);
 }
 
 void ProjectSceneActionsController::openClipPitchAndSpeedEdit(const ActionData& args)
@@ -167,7 +174,9 @@ bool ProjectSceneActionsController::actionChecked(const ActionCode& actionCode) 
         { CLIPPING_IN_WAVEFORM_CODE, configuration()->isClippingInWaveformVisible() },
         { MINUTES_SECONDS_RULER, configuration()->timelineRulerMode() == TimelineRulerMode::MINUTES_AND_SECONDS },
         { BEATS_MEASURES_RULER, configuration()->timelineRulerMode() == TimelineRulerMode::BEATS_AND_MEASURES },
-        { TOGGLE_PLAYBACK_ON_RULER_CLICK_ENABLED_CODE, configuration()->playbackOnRulerClickEnabled() }
+        { TOGGLE_PLAYBACK_ON_RULER_CLICK_ENABLED_CODE, configuration()->playbackOnRulerClickEnabled() },
+        { TOGGLE_UPDATE_DISPLAY_WHILE_PLAYING_CODE, configuration()->updateDisplayWhilePlayingEnabled() },
+        { TOGGLE_PINNED_PLAY_HEAD_CODE, configuration()->pinnedPlayHeadEnabled() }
     };
 
     return isChecked[actionCode];
