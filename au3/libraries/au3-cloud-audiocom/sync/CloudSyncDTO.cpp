@@ -379,6 +379,322 @@ bool Deserialize(
     return true;
 }
 
+bool Deserialize(const rapidjson::Value& value, CloudAudioDownloadInfoItem& item)
+{
+    if (!value.IsObject()) {
+        return false;
+    }
+
+    CloudAudioDownloadInfoItem temp;
+
+    if (!Deserialize(value, "format", temp.Format)) {
+        return false;
+    }
+
+    if (!Deserialize(value, "url", temp.Url)) {
+        return false;
+    }
+
+    if (!Deserialize(value, "size", temp.Size)) {
+        return false;
+    }
+
+    if (!Deserialize(value, "source", temp.IsSource)) {
+        return false;
+    }
+
+    item = std::move(temp);
+    return true;
+}
+
+bool Deserialize(const rapidjson::Value& value, CloudAudioDownloadInfo& info)
+{
+    CloudAudioDownloadInfo temp;
+
+    if (value.IsArray()) {
+        if (!DeserializeArray(value, temp.Items)) {
+            return false;
+        }
+    } else if (value.IsObject() && value.HasMember("items")) {
+        if (!DeserializeArray(value, "items", temp.Items)) {
+            return false;
+        }
+    } else {
+        return false;
+    }
+
+    info = std::move(temp);
+    return true;
+}
+
+bool Deserialize(const rapidjson::Value& value, CloudAudioInfo& audio)
+{
+    if (!value.IsObject()) {
+        return {};
+    }
+
+    CloudAudioInfo temp;
+
+    if (!Deserialize(value, "id", temp.Id)) {
+        return {};
+    }
+
+    if (!Deserialize(value, "username", temp.Username)) {
+        return {};
+    }
+
+    if (!Deserialize(value, "author", temp.AuthorName)) {
+        return {};
+    }
+
+    if (!Deserialize(value, "slug", temp.Slug)) {
+        return {};
+    }
+
+    if (!Deserialize(value, "title", temp.Title)) {
+        return {};
+    }
+
+    if (value.HasMember("tags") && value["tags"].IsArray()) {
+        DeserializeArray(value["tags"], temp.Tags);
+    }
+
+    if (!Deserialize(value, "created", temp.Created)) {
+        return {};
+    }
+
+    audio = std::move(temp);
+    return true;
+}
+
+bool Deserialize(const rapidjson::Value& value, CloudAudioFullInfo& audio)
+{
+    if (!value.IsObject()) {
+        return {};
+    }
+
+    CloudAudioFullInfo temp;
+
+    if (!Deserialize(value, "id", temp.Id)) {
+        return {};
+    }
+
+    if (!Deserialize(value, "username", temp.Username)) {
+        return {};
+    }
+
+    if (!Deserialize(value, "author_name", temp.AuthorName)) {
+        return {};
+    }
+
+    if (!Deserialize(value, "slug", temp.Slug)) {
+        return {};
+    }
+
+    if (!Deserialize(value, "title", temp.Title)) {
+        return {};
+    }
+
+    if (value.HasMember("tags") && value["tags"].IsArray()) {
+        DeserializeArray(value["tags"], temp.Tags);
+    }
+
+    if (!Deserialize(value, "date_created", temp.Created)) {
+        return {};
+    }
+
+    if (!Deserialize(value, "is_downloadable", temp.IsDownloadable)) {
+        return {};
+    }
+
+    if (value.HasMember("author") && value["author"].IsObject()) {
+        if (!Deserialize(value["author"], "id", temp.AuthorId)) {
+            return {};
+        }
+    }
+
+    audio = std::move(temp);
+    return true;
+}
+
+bool Deserialize(
+    const rapidjson::Value& value, PaginatedAudioResponse& response)
+{
+    if (!value.IsObject()) {
+        return {};
+    }
+
+    PaginatedAudioResponse tempResponse;
+
+    if (!DeserializeArray(value, "items", tempResponse.Items)) {
+        return {};
+    }
+
+    if (!Deserialize(value, "pagination", tempResponse.Pagination)) {
+        return {};
+    }
+
+    response = std::move(tempResponse);
+
+    return true;
+}
+
+bool Deserialize(const rapidjson::Value& value, PollingInfo& task)
+{
+    if (!value.IsObject()) {
+        return {};
+    }
+
+    PollingInfo tempPolling;
+
+    if (!Deserialize(value, "interval", tempPolling.IntervalSeconds)) {
+        return {};
+    }
+
+    if (!Deserialize(value, "stop", tempPolling.Stop)) {
+        return {};
+    }
+
+    task = std::move(tempPolling);
+
+    return true;
+}
+
+bool Deserialize(const rapidjson::Value& value, AudioOpenTaskParameters& task)
+{
+    if (!value.IsObject()) {
+        return {};
+    }
+
+    AudioOpenTaskParameters tempTask;
+
+    if (!Deserialize(value, "audio_id", tempTask.AudioId)) {
+        return {};
+    }
+
+    task = std::move(tempTask);
+
+    return true;
+}
+
+bool Deserialize(const rapidjson::Value& value, ProjectOpenTaskParameters& task)
+{
+    if (!value.IsObject()) {
+        return {};
+    }
+
+    ProjectOpenTaskParameters tempTask;
+
+    if (!Deserialize(value, "project_id", tempTask.ProjectId)) {
+        return {};
+    }
+
+    // Snapshot ID is optional
+    Deserialize(value, "snapshot_id", tempTask.SnapshotId);
+
+    task = std::move(tempTask);
+
+    return true;
+}
+
+bool Deserialize(const rapidjson::Value& value, TaskStatus& taskStatus)
+{
+    if (!value.IsString()) {
+        return false;
+    }
+
+    const std::string typeStr = value.GetString();
+
+    if (typeStr == "pending") {
+        taskStatus = TaskStatus::Pending;
+    } else if (typeStr == "started") {
+        taskStatus = TaskStatus::Started;
+    } else if (typeStr == "success") {
+        taskStatus = TaskStatus::Success;
+    } else if (typeStr == "failed") {
+        taskStatus = TaskStatus::Failed;
+    } else {
+        taskStatus = TaskStatus::Unknown;
+    }
+
+    return true;
+}
+
+bool Deserialize(const rapidjson::Value& value, TaskAction& taskAction)
+{
+    if (!value.IsString()) {
+        return false;
+    }
+
+    const std::string typeStr = value.GetString();
+
+    if (typeStr == "open_audio") {
+        taskAction = TaskAction::OpenAudio;
+    } else if (typeStr == "open_project") {
+        taskAction = TaskAction::OpenProject;
+    } else {
+        taskAction = TaskAction::Unknown;
+    }
+
+    return true;
+}
+
+bool Deserialize(const rapidjson::Value& value, AppTask& task)
+{
+    if (!value.IsObject()) {
+        return false;
+    }
+
+    AppTask tempTask;
+
+    if (!Deserialize(value, "id", tempTask.Id)) {
+        return false;
+    }
+
+    if (!Deserialize(value, "status", tempTask.Status)) {
+        return false;
+    }
+
+    if (!Deserialize(value, "action", tempTask.Action)) {
+        return false;
+    }
+
+    if (!Deserialize(value, "created_at", tempTask.Created)) {
+        return false;
+    }
+
+    if (ProjectOpenTaskParameters parameters; Deserialize(value, "parameters", parameters)) {
+        tempTask.Parameters = std::move(parameters);
+    } else if (AudioOpenTaskParameters parameters; Deserialize(value, "parameters", parameters)) {
+        tempTask.Parameters = std::move(parameters);
+    }
+
+    task = std::move(tempTask);
+
+    return true;
+}
+
+bool Deserialize(const rapidjson::Value& value, AppTaskPollResponse& response)
+{
+    if (!value.IsObject()) {
+        return false;
+    }
+
+    AppTaskPollResponse tempResponse;
+
+    if (!Deserialize(value, "polling", tempResponse.Polling)) {
+        return false;
+    }
+
+    if (!DeserializeArray(value, "tasks", tempResponse.Tasks)) {
+        return false;
+    }
+
+    response = std::move(tempResponse);
+
+    return true;
+}
+
 template<typename T>
 bool Deserialize(
     const rapidjson::Value& value, std::string_view zKey, T& result)
@@ -500,6 +816,52 @@ DeserializePaginatedProjectsResponse(const std::string& data)
     return {};
 }
 
+std::optional<PaginatedAudioResponse>
+DeserializePaginatedAudioResponse(const std::string& data)
+{
+    PaginatedAudioResponse result;
+
+    if (Deserialize(data, result)) {
+        return std::move(result);
+    }
+
+    return {};
+}
+
+std::optional<CloudAudioInfo> DeserializeCloudAudioInfo(const std::string& data)
+{
+    CloudAudioInfo result;
+
+    if (Deserialize(data, result)) {
+        return std::move(result);
+    }
+
+    return {};
+}
+
+std::optional<CloudAudioFullInfo> DeserializeCloudAudioFullInfo(const std::string& data)
+{
+    CloudAudioFullInfo result;
+
+    if (Deserialize(data, result)) {
+        return std::move(result);
+    }
+
+    return {};
+}
+
+std::optional<CloudAudioDownloadInfo>
+DeserializeCloudAudioDownloadInfo(const std::string& data)
+{
+    CloudAudioDownloadInfo result;
+
+    if (Deserialize(data, result)) {
+        return std::move(result);
+    }
+
+    return {};
+}
+
 std::optional<ProjectInfo> DeserializeProjectInfo(const std::string& data)
 {
     ProjectInfo result;
@@ -514,6 +876,17 @@ std::optional<ProjectInfo> DeserializeProjectInfo(const std::string& data)
 std::optional<SnapshotInfo> DeserializeSnapshotInfo(const std::string& data)
 {
     SnapshotInfo result;
+
+    if (Deserialize(data, result)) {
+        return std::move(result);
+    }
+
+    return {};
+}
+
+std::optional<AppTaskPollResponse> DeserializeAppTaskPollResponse(const std::string& data)
+{
+    AppTaskPollResponse result;
 
     if (Deserialize(data, result)) {
         return std::move(result);
@@ -541,11 +914,11 @@ wxString SafeName(wxString name)
 } // namespace
 
 wxString
-MakeSafeProjectPath(const wxString& rootDir, const wxString& projectName)
+MakeSafeFilePath(const wxString& rootDir, const wxString& fileName, const wxString& fileExtension)
 {
-    const auto safeName = SafeName(projectName);
+    const auto safeName = SafeName(fileName);
 
-    auto path = wxFileNameWrapper { rootDir, safeName, "aup3" };
+    auto path = wxFileNameWrapper { rootDir, safeName, fileExtension };
 
     int iteration = 0;
     while (path.FileExists()) {
@@ -553,6 +926,12 @@ MakeSafeProjectPath(const wxString& rootDir, const wxString& projectName)
     }
 
     return path.GetFullPath();
+}
+
+wxString
+MakeSafeProjectPath(const wxString& rootDir, const wxString& projectName)
+{
+    return MakeSafeFilePath(rootDir, projectName, "aup3");
 }
 
 std::string Serialize(NetworkStats stats)

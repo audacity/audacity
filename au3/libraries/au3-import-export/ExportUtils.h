@@ -38,6 +38,7 @@ enum class AudiocomTrace
     UpdateCloudAudioPreviewMenu,
     LinkAudiocomAccountHelpMenu,
     OpenFromCloudMenu,
+    TaskService,
 };
 
 class IMPORT_EXPORT_API ExportUtils final
@@ -57,7 +58,7 @@ public:
         Cancel,
     };
 
-    using ExportHook = std::function<ExportHookResult (
+    using ExportHook = std::function<ExportHookResult(
                                          AudacityProject&, const FileExtension&,
                                          AudiocomTrace, bool)>;
 

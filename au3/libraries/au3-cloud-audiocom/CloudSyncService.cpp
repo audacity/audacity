@@ -13,11 +13,13 @@
 #include <algorithm>
 #include <cassert>
 #include <chrono>
+#include <fstream>
 #include <mutex>
 #include <string>
 
 #include "CloudLibrarySettings.h"
 
+#include "UserService.h"
 #include "sync/CloudProjectsDatabase.h"
 #include "sync/CloudSyncDTO.h"
 #include "sync/RemoteProjectSnapshot.h"
@@ -662,5 +664,327 @@ void CloudSyncService::ReportUploadStats(
         =NetworkManager::GetInstance().doPost(request, body.data(), body.size());
     // Keep response alive
     response->setRequestFinishedCallback([response](auto) {});
+}
+
+void GetAudioInfo(
+    OAuthService& oAuthService, const ServiceConfig& serviceConfig,
+    std::string audioId,
+    std::function<void(sync::CloudAudioFullInfo, ResponseResult)> callback)
+{
+    assert(callback);
+
+    PerformProjectGetRequest(
+        oAuthService, serviceConfig.GetAudioInfoUrl(audioId),
+        [callback = std::move(callback)](ResponseResult result)
+    {
+        if (result.Code != SyncResultCode::Success) {
+            callback(sync::CloudAudioFullInfo {}, std::move(result));
+            return;
+        }
+
+        auto audioInfo = sync::DeserializeCloudAudioFullInfo(result.Content);
+
+        if (!audioInfo) {
+            callback({}, { SyncResultCode::UnexpectedResponse,
+                           std::move(result.Content) });
+            return;
+        }
+
+        callback(std::move(*audioInfo), std::move(result));
+    });
+}
+
+void GetAudioDownloadInfo(
+    OAuthService& oAuthService, const ServiceConfig& serviceConfig,
+    std::string audioId,
+    std::function<void(sync::CloudAudioDownloadInfo, ResponseResult)> callback)
+{
+    assert(callback);
+
+    PerformProjectGetRequest(oAuthService, serviceConfig.GetAudioDownloadListUrl(audioId),
+                             [callback = std::move(callback)](ResponseResult result)
+    {
+        if (result.Code != SyncResultCode::Success) {
+            callback(sync::CloudAudioDownloadInfo {}, std::move(result));
+            return;
+        }
+
+        auto downloadInfo = sync::DeserializeCloudAudioDownloadInfo(result.Content);
+
+        if (!downloadInfo) {
+            callback({}, {
+                    SyncResultCode::UnexpectedResponse,
+                    std::move(result.Content) });
+            return;
+        }
+
+        callback(std::move(*downloadInfo), std::move(result));
+    });
+}
+
+CloudSyncService::GetAudioInfoFuture GetAudioInfo(
+    concurrency::CancellationContextPtr context, std::string_view audioId)
+{
+    using namespace audacity::network_manager;
+
+    auto promise = std::make_shared<CloudSyncService::GetAudioInfoPromise>();
+
+    auto& serviceConfig = GetServiceConfig();
+    auto& oAuthService = GetOAuthService();
+
+    auto request
+        =Request(serviceConfig.GetAudioInfoUrl(audioId));
+
+    request.setHeader(
+        common_headers::ContentType, common_content_types::ApplicationJson);
+    request.setHeader(
+        common_headers::Accept, common_content_types::ApplicationJson);
+
+    SetCommonHeaders(request);
+    SetOptionalHeaders(request);
+
+    auto response = NetworkManager::GetInstance().doGet(request);
+
+    context->OnCancelled(response);
+
+    response->setRequestFinishedCallback(
+        [promise, response](auto)
+    {
+        auto responseResult = GetResponseResult(*response, true);
+
+        if (responseResult.Code != SyncResultCode::Success) {
+            promise->set_value(responseResult);
+            return;
+        }
+
+        auto audioInfo
+            =sync::DeserializeCloudAudioInfo(responseResult.Content);
+
+        if (!audioInfo) {
+            promise->set_value(
+                ResponseResult { SyncResultCode::UnexpectedResponse,
+                                 std::move(responseResult.Content) });
+            return;
+        }
+
+        promise->set_value(std::move(*audioInfo));
+    });
+
+    return promise->get_future();
+}
+
+CloudSyncService::GetAudioListFuture CloudSyncService::GetAudioList(
+    concurrency::CancellationContextPtr context, int page, int pageSize,
+    std::string_view searchString)
+{
+    using namespace audacity::network_manager;
+
+    auto promise = std::make_shared<GetAudioListPromise>();
+
+    auto& serviceConfig = GetServiceConfig();
+    auto& oAuthService  = GetOAuthService();
+
+    auto request = Request(serviceConfig.GetAudioListUrl(page, pageSize, searchString));
+
+    request.setHeader(
+        common_headers::ContentType, common_content_types::ApplicationJson);
+    request.setHeader(
+        common_headers::Accept, common_content_types::ApplicationJson);
+
+    SetCommonHeaders(request);
+    SetOptionalHeaders(request);
+
+    auto response = NetworkManager::GetInstance().doGet(request);
+
+    context->OnCancelled(response);
+
+    response->setRequestFinishedCallback(
+        [promise, response](auto)
+    {
+        auto responseResult = GetResponseResult(*response, true);
+
+        if (responseResult.Code != SyncResultCode::Success) {
+            promise->set_value(responseResult);
+            return;
+        }
+
+        auto audios = sync::DeserializePaginatedAudioResponse(responseResult.Content);
+
+        if (!audios) {
+            promise->set_value(
+                ResponseResult { SyncResultCode::UnexpectedResponse,
+                                 std::move(responseResult.Content) });
+            return;
+        }
+
+        promise->set_value(std::move(*audios));
+    });
+
+    return promise->get_future();
+}
+
+void CloudSyncService::DownloadAudio(const std::string& name, const std::string& format, const std::string& url)
+{
+    using namespace audacity::network_manager;
+    using namespace sync;
+
+    const Request request(url);
+    auto response = NetworkManager::GetInstance().doGet(request);
+
+    const auto filename = sync::MakeSafeFilePath(wxFileName::GetTempDir(), audacity::ToWXString(name), format);
+    auto audioFile = std::make_shared<std::ofstream>(filename.ToStdString(), std::ios::binary);
+
+    response->setRequestFinishedCallback([response, this, filename, name, format, audioFile]
+                                         (IResponse*) {
+        if (audioFile && audioFile->is_open()) {
+            audioFile->close();
+        }
+
+        if (response->getError() != NetworkError::NoError) {
+            BasicUI::CallAfter([this] {
+                ShowErrorDialog({},
+                                XC("Error importing cloud audio", "cloud sync"),
+                                XC("Can't download cloud audio", "update dialog"),
+                                wxString(),
+                                BasicUI::ErrorDialogOptions { BasicUI::ErrorDialogType::ModalErrorReport });
+
+                mDownloadInProcess.store(false);
+                mDownloadAudioPromise.set_value({ DownloadAudioResult::StatusCode::Failed, {}, {} });
+            });
+
+            return;
+        }
+
+        BasicUI::CallAfter([this, filename, name, format] {
+            mDownloadAudioPromise.set_value({
+                    DownloadAudioResult::StatusCode::Succeeded,
+                    {},
+                    filename.ToStdString(),
+                    name,
+                    format
+                });
+            mDownloadInProcess.store(false);
+        });
+    }
+                                         );
+
+    // Called each time, since downloading for update progress status.
+    response->setDownloadProgressCallback([this]
+                                          (int64_t current, int64_t expected) {
+        mDownloadProgress.store(static_cast<double>(current) / expected);
+
+        if (mAudioProgressUpdateQueued.exchange(true)) {
+            return;
+        }
+
+        BasicUI::CallAfter([this] {
+            mProgressCallback(mDownloadProgress.load());
+            mAudioProgressUpdateQueued.store(false);
+        });
+    }
+                                          );
+
+    // Called each time, since downloading for get data.
+    response->setOnDataReceivedCallback([audioFile]
+                                        (IResponse* response) {
+        if (response->getError() == NetworkError::NoError) {
+            std::vector<char> buffer(response->getBytesAvailable());
+
+            uint64_t bytes = response->readData(buffer.data(), buffer.size());
+
+            if (audioFile && audioFile->is_open()) {
+                audioFile->write(buffer.data(), bytes);
+            }
+        }
+    }
+                                        );
+}
+
+CloudSyncService::DownloadAudioFuture CloudSyncService::DownloadCloudAudio(
+    std::string_view audioId,
+    sync::ProgressCallback callback)
+{
+    ASSERT_MAIN_THREAD();
+
+    mDownloadAudioPromise = {};
+
+    if (mDownloadInProcess.exchange(true)) {
+        mDownloadAudioPromise.set_value(
+            { sync::DownloadAudioResult::StatusCode::Blocked, {}, {} });
+        return mDownloadAudioPromise.get_future();
+    }
+
+    if (audioId.empty()) {
+        mDownloadAudioPromise.set_value(
+            { sync::DownloadAudioResult::StatusCode::Failed,
+              { SyncResultCode::InternalClientError, "Empty audioId" },
+              {} });
+        return mDownloadAudioPromise.get_future();
+    }
+
+    if (!callback) {
+        mProgressCallback = [](auto...) { return true; };
+    } else {
+        mProgressCallback = std::move(callback);
+    }
+
+    GetAudioInfo(GetOAuthService(), GetServiceConfig(), std::string(audioId),
+                 [this](sync::CloudAudioFullInfo audioInfo, ResponseResult result)
+    {
+        if (result.Code != SyncResultCode::Success) {
+            mDownloadInProcess.store(false);
+            mDownloadAudioPromise.set_value(
+                { sync::DownloadAudioResult::StatusCode::Failed,
+                  std::move(result),
+                  {} });
+            return;
+        }
+
+        if (!audioInfo.IsDownloadable && audioInfo.AuthorId != GetUserService().GetUserId()) {
+            mDownloadInProcess.store(false);
+            mDownloadAudioPromise.set_value(
+                { sync::DownloadAudioResult::StatusCode::Failed,
+                  { SyncResultCode::Forbidden, "You don't have permission to download this audio" },
+                  {} });
+            return;
+        }
+
+        GetAudioDownloadInfo(GetOAuthService(), GetServiceConfig(), audioInfo.Id,
+                             [this, audioInfo](sync::CloudAudioDownloadInfo downloadInfo, ResponseResult result)
+        {
+            if (result.Code != SyncResultCode::Success) {
+                mDownloadInProcess.store(false);
+                mDownloadAudioPromise.set_value(
+                    { sync::DownloadAudioResult::StatusCode::Failed,
+                      std::move(result),
+                      {} });
+            } else {
+                if (downloadInfo.Items.empty()) {
+                    mDownloadInProcess.store(false);
+                    mDownloadAudioPromise.set_value(
+                        { sync::DownloadAudioResult::StatusCode::Failed,
+                          { SyncResultCode::UnexpectedResponse,
+                            "Empty download items" },
+                          {} });
+                    return;
+                }
+                // find source file (the one that was uploaded, before any transcodes) url and download file
+                auto item = std::find_if(downloadInfo.Items.begin(), downloadInfo.Items.end(),
+                                         [](const auto& item)
+                {
+                    return item.IsSource;
+                });
+                // If source file not found, download first available format
+                if (item == downloadInfo.Items.end()) {
+                    item = downloadInfo.Items.begin();
+                }
+                DownloadAudio(audioInfo.Title, item->Format, item->Url);
+            }
+        }
+                             );
+    }
+                 );
+
+    return mDownloadAudioPromise.get_future();
 }
 } // namespace audacity::cloud::audiocom
