@@ -8,5 +8,7 @@
         <file>configs/shortcuts.cfg</file>
         <file>configs/data/shortcuts.xml</file>
         <file>configs/workspaces.cfg</file>
+        <file>configs/ui.cfg</file>
+        <file alias="resources/appIcon.png">../../share/icons/AppIcon/AU4_AppIcon_96x96.png</file>
     </qresource>
 </RCC>
