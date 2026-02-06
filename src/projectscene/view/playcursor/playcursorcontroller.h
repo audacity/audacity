@@ -66,6 +66,7 @@ private:
     projectscene::IProjectViewStatePtr projectViewState() const;
 
     void updatePositionX(muse::secs_t secs);
+    void ensureCursorAtCenter(muse::secs_t secs) const;
 
     TimelineContext* m_context = nullptr;
     double m_positionX = 0.0;

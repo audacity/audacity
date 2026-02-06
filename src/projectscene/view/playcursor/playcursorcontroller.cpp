@@ -99,7 +99,20 @@ void PlayCursorController::updatePositionX(muse::secs_t secs)
         return;
     }
 
-    m_context->insureVisible(secs);
+    // Check if we should update the view during playback
+    const bool updateDisplayWhilePlaying = m_context->updateDisplayWhilePlayingEnabled();
+    const bool pinnedPlayHead = m_context->pinnedPlayHeadEnabled();
+
+    if (updateDisplayWhilePlaying) {
+        if (pinnedPlayHead) {
+            // Pinned playhead mode: Keep cursor at center, scroll the view continuously
+            ensureCursorAtCenter(secs);
+        } else {
+            // Standard mode: Prevent cursor from going off screen (paged scrolling)
+            m_context->insureVisible(secs);
+        }
+    }
+    // If updateDisplayWhilePlaying is false, cursor can go off screen - no scrolling
 
     m_positionX = m_context->timeToPosition(secs);
     emit positionXChanged();
@@ -147,4 +160,21 @@ void PlayCursorController::setTimelineContext(TimelineContext* newContext)
     }
 
     emit timelineContextChanged();
+}
+
+void PlayCursorController::ensureCursorAtCenter(muse::secs_t secs) const
+{
+    // In pinned playhead mode, keep the cursor at the center of the view
+    // and scroll the view continuously as playback progresses
+
+    const double frameTime = m_context->frameEndTime() - m_context->frameStartTime();
+    const double centerTime = m_context->frameStartTime() + (frameTime / 2.0);
+
+    // Calculate how much we need to shift the view to keep cursor centered
+    const double timeShift = secs - centerTime;
+
+    // Only shift if there's a meaningful difference (avoid micro-adjustments)
+    if (!muse::RealIsEqual(timeShift, 0.0)) {
+        m_context->shiftFrameTime(timeShift);
+    }
 }
