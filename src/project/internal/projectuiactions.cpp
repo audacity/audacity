@@ -114,12 +114,6 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Split into new track"),
              TranslatableString("action", "Split into new track")
              ),
-    UiAction("silence-audio",
-             au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Silence audio"),
-             TranslatableString("action", "Silence audio")
-             ),
     UiAction("paste-new-label",
              au::context::UiCtxUnknown,
              au::context::CTX_ANY,

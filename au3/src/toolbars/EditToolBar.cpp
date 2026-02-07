@@ -91,7 +91,6 @@ static const ToolBarButtons::ButtonList EditToolbarButtonList = {
     { ETBZoomFitID,  wxT("FitInWindow"), XO("Fit project to width") },
 
     { ETBTrimID,     wxT("Trim"),        XO("Trim audio outside selection") },
-    { ETBSilenceID,  wxT("Silence"),     XO("Silence audio selection") },
 #ifdef OPTION_SYNC_LOCK_BUTTON
     {
         ETBSyncLockID, wxT("SyncLock"),    XO("Sync-Lock Tracks")
@@ -189,8 +188,6 @@ void EditToolBar::Populate()
     // Tooltips slightly more verbose than the menu entries are.
     AddButton(bmpTrim, bmpTrim, bmpTrimDisabled, ETBTrimID,
               XO("Trim audio outside selection"));
-    AddButton(bmpSilence, bmpSilence, bmpSilenceDisabled, ETBSilenceID,
-              XO("Silence audio selection"));
 
 #ifdef OPTION_SYNC_LOCK_BUTTON
     AddButton(bmpSyncLockTracksUp, bmpSyncLockTracksDown, bmpSyncLockTracksUp, ETBSyncLockID,
