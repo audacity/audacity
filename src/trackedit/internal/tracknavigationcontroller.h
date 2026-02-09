@@ -37,57 +37,66 @@ public:
 
     void init();
 
-    void focusTrackByIndex(const muse::actions::ActionData& args) override;
-    void focusPrevTrack() override;
-    void focusNextTrack() override;
+    bool isNavigationEnabled() const override;
+    void setIsNavigationActive(bool active) override;
+    muse::async::Notification isNavigationActiveChanged() const override;
 
-    void setFocusedItem(const TrackItemKey& key) override;
-    muse::async::Channel<TrackItemKey> focusedItemChanged() const override;
+    TrackId focusedTrack() const override;
+    void setFocusedTrack(const TrackId& trackId, bool highlight = false) override;
+    muse::async::Channel<TrackId, bool /*highlight*/> focusedTrackChanged() const override;
 
-    void navigateUp(const muse::actions::ActionData& args) override;
-    void navigateDown(const muse::actions::ActionData& args) override;
-    void toggleSelectionOnFocusedTrack() override;
-    void trackRangeSelection() override;
-    void multiSelectionUp() override;
-    void multiSelectionDown() override;
+    TrackItemKey focusedItem() const override;
+    void setFocusedItem(const TrackItemKey& key, bool highlight = false) override;
+    muse::async::Channel<TrackItemKey, bool /*highlight*/> focusedItemChanged() const override;
 
     muse::async::Channel<TrackItemKey> openContextMenuRequested() const override;
 
-    void navigateNextItem();
-    void navigatePrevItem();
-
-    void moveFocusedItemLeft();
-    void moveFocusedItemRight();
-    void extendFocusedItemBoundaryLeft();
-    void extendFocusedItemBoundaryRight();
-    void reduceFocusedItemBoundaryLeft();
-    void reduceFocusedItemBoundaryRight();
-    void moveFocusedItemUp();
-    void moveFocusedItemDown();
-
-    void openContextMenuForFocusedItem();
-
 private:
-    void updateSelectionStart(SelectionDirection direction);
-    void updateTrackSelection(TrackIdList& selectedTracks, const TrackId& previousFocusedTrack);
-
-    double zoomLevel() const;
-    double calculateStepSize() const;
-
     TrackItemKey focusedItemKey() const;
     bool isFocusedItemValid() const;
     bool isFocusedItemLabel() const;
 
-    Label focusedLabel() const;
+    TrackItemKeyList sortedItemsKeys(const TrackId& trackId) const;
 
-    TrackId resolvePreviousTrackId(const TrackId& trackId) const;
-    TrackId resolveNextTrackId(const TrackId& trackId) const;
+    bool isTrackItemsEmpty(const TrackId& trackId) const;
+    bool isFirstTrack(const TrackId& trackId) const;
+    bool isLastTrack(const TrackId& trackId) const;
+
+    void navigateToNextPanel();
+    void navigateToPrevPanel();
+
+    void navigateToPrevTrack();
+    void navigateToNextTrack();
+    void navigateToFirstTrack();
+    void navigateToLastTrack();
+
+    void navigateToNextItem();
+    void navigateToPrevItem();
+    void navigateToFirstItem();
+    void navigateToLastItem();
+
+    void toggleSelection();
+    void trackRangeSelection();
+
+    void multiSelectionUp();
+    void multiSelectionDown();
+
+    void updateSelectionStart(SelectionDirection direction);
+    void updateTrackSelection(TrackIdList& selectedTracks, const TrackId& previousFocusedTrack);
+
+    void openContextMenuForFocusedItem();
+
+    void au3SetTrackFocused(const TrackId& trackId);
+
+    bool m_isNavigationActive = false;
+    muse::async::Notification m_isNavigationActiveChannel;
 
     std::optional<TrackId> m_selectionStart;
     std::optional<TrackId> m_lastSelectedTrack;
 
     TrackItemKey m_focusedItemKey;
-    muse::async::Channel<TrackItemKey> m_focusedItemChanged;
+    muse::async::Channel<TrackItemKey, bool /*highlight*/> m_focusedItemChanged;
+    muse::async::Channel<TrackId, bool /*highlight*/> m_focusedTrackChanged;
 
     muse::async::Channel<TrackItemKey> m_openContextMenuRequested;
 };

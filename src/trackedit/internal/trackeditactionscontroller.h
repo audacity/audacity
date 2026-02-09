@@ -17,6 +17,7 @@
 #include "iselectioncontroller.h"
 #include "itrackeditconfiguration.h"
 #include "itrackeditinteraction.h"
+#include "internal/itracknavigationcontroller.h"
 
 #include "deletebehavioronboardingscenario.h"
 
@@ -36,6 +37,7 @@ class TrackeditActionsController : public ITrackeditActionsController, public mu
     muse::Inject<trackedit::IProjectHistory> projectHistory { this };
     muse::Inject<trackedit::ISelectionController> selectionController { this };
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction { this };
+    muse::Inject<trackedit::ITrackNavigationController> trackNavigationController { this };
 
 public:
     TrackeditActionsController(const muse::modularity::ContextPtr& ctx)
@@ -53,6 +55,12 @@ public:
 private:
     void notifyActionEnabledChanged(const muse::actions::ActionCode& actionCode);
     void notifyActionCheckedChanged(const muse::actions::ActionCode& actionCode);
+
+    bool isFocusedItemClip() const;
+    ClipKeyList clipsForInteraction() const;
+
+    bool isFocusedItemLabel() const;
+    LabelKeyList labelsForInteraction() const;
 
     void undo();
     void redo();
@@ -168,6 +176,21 @@ private:
 
     void labelCopy(const muse::actions::ActionData& args);
     void labelCopyMulti();
+
+    void moveFocusedItemLeft();
+    void moveFocusedItemRight();
+    void moveFocusedItemUp();
+    void moveFocusedItemDown();
+    void extendFocusedItemBoundaryLeft();
+    void extendFocusedItemBoundaryRight();
+    void reduceFocusedItemBoundaryLeft();
+    void reduceFocusedItemBoundaryRight();
+
+    double zoomLevel() const;
+    double calculateStepSize() const;
+    Label focusedLabel() const;
+    TrackId resolvePreviousTrackIdForMove(const TrackId& trackId) const;
+    TrackId resolveNextTrackIdForMove(const TrackId& trackId) const;
 
     context::IPlaybackStatePtr playbackState() const;
 

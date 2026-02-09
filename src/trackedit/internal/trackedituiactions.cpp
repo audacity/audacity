@@ -330,12 +330,6 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Add label"),
              TranslatableString("action", "Add label")
              ),
-    UiAction("label-rename",
-             au::context::UiCtxProjectOpened,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Rename label"),
-             TranslatableString("action", "Rename label")
-             ),
     UiAction("label-delete",
              au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
@@ -382,20 +376,6 @@ UiActionList STATIC_ACTIONS = {
              au::context::CTX_ANY,
              TranslatableString("action", "Ungroup clips"),
              TranslatableString("action", "Ungroup clips")
-             ),
-
-    // track view navigation
-    UiAction("track-view-next-item",
-             au::context::UiCtxProjectFocused,
-             au::context::CTX_PROJECT_FOCUSED,
-             TranslatableString("action", "Next item"),
-             TranslatableString("action", "Next item")
-             ),
-    UiAction("track-view-prev-item",
-             au::context::UiCtxProjectFocused,
-             au::context::CTX_PROJECT_FOCUSED,
-             TranslatableString("action", "Previous item"),
-             TranslatableString("action", "Previous item")
              ),
     UiAction("track-view-item-move-left",
              au::context::UiCtxProjectFocused,
@@ -444,6 +424,83 @@ UiActionList STATIC_ACTIONS = {
              au::context::CTX_PROJECT_FOCUSED,
              TranslatableString("action", "Move item down"),
              TranslatableString("action", "Move item down")
+             ),
+
+    // track view navigation
+    UiAction("track-view-next-panel",
+             au::context::UiCtxProjectFocused,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Next panel"),
+             TranslatableString("action", "Next panel")
+             ),
+    UiAction("track-view-prev-panel",
+             au::context::UiCtxProjectFocused,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Previous panel"),
+             TranslatableString("action", "Previous panel")
+             ),
+
+    UiAction("track-view-next-item",
+             au::context::UiCtxProjectFocused,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Next item"),
+             TranslatableString("action", "Next item")
+             ),
+    UiAction("track-view-prev-item",
+             au::context::UiCtxProjectFocused,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Previous item"),
+             TranslatableString("action", "Previous item")
+             ),
+
+    UiAction("track-view-next-track",
+             au::context::UiCtxProjectFocused,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Next track"),
+             TranslatableString("action", "Next track")
+             ),
+    UiAction("track-view-prev-track",
+             au::context::UiCtxProjectFocused,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Previous track"),
+             TranslatableString("action", "Previous track")
+             ),
+    UiAction("track-view-first-track",
+             au::context::UiCtxProjectFocused,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "First track"),
+             TranslatableString("action", "First track")
+             ),
+    UiAction("track-view-last-track",
+             au::context::UiCtxProjectFocused,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Last track"),
+             TranslatableString("action", "Last track")
+             ),
+
+    UiAction("track-view-toggle-selection",
+             au::context::UiCtxProjectFocused,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Select track/track item"),
+             TranslatableString("action", "Select track/track item")
+             ),
+    UiAction("track-view-range-selection",
+             au::context::UiCtxProjectFocused,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Track range selection"),
+             TranslatableString("action", "Track range selection")
+             ),
+    UiAction("track-view-extend-track-selection-prev",
+             au::context::UiCtxProjectFocused,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Multi track selection previous"),
+             TranslatableString("action", "Multi track selection previous")
+             ),
+    UiAction("track-view-extend-track-selection-next",
+             au::context::UiCtxProjectFocused,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Multi track selection next"),
+             TranslatableString("action", "Multi track selection next")
              ),
 
     UiAction("track-view-item-context-menu",

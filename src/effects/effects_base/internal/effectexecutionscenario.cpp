@@ -418,7 +418,7 @@ muse::Ret EffectExecutionScenario::performEffectOnEachSelectedClip(au3::Au3Proje
     for (const auto& clip : clipsToProcess) {
         selectionController()->setSelectedClips({ clip }, complete);
         selectionController()->setSelectedTracks({ clip.trackId }, complete);
-        selectionController()->setFocusedTrack(clip.trackId);
+        trackNavigationController()->setFocusedTrack(clip.trackId);
 
         WaveTrack* waveTrack = au3::DomAccessor::findWaveTrack(project, ::TrackId(clip.trackId));
         IF_ASSERT_FAILED(waveTrack) {

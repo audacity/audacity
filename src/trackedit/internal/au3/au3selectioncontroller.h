@@ -106,14 +106,6 @@ public:
 
     void resetTimeSelection() override;
 
-    trackedit::TrackId focusedTrack() const override;
-    void setFocusedTrack(TrackId trackId) override;
-    muse::async::Channel<trackedit::TrackId> focusedTrackChanged() const override;
-
-    void focusPreviousTrack() override;
-    void focusNextTrack() override;
-    void focusTrackByIndex(int index) override;
-
     int trackDistance(const TrackId previous, const TrackId next) const override;
     TrackIdList orderedTrackList() const override;
 

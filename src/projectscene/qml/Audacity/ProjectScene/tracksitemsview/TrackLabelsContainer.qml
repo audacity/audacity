@@ -160,18 +160,14 @@ TrackItemsContainer {
 
                                 container: repeater
 
-                                navigation.name: Boolean(itemData) ? itemData.title + itemData.index : ""
+                                navigation.name: Boolean(itemData) ? itemData.key.itemId() : ""
                                 navigation.panel: root.navigationPanel
                                 navigation.column: Boolean(itemData) ? Math.floor(itemData.x) : 0
                                 navigation.accessible.name: Boolean(itemData) ? itemData.title : ""
                                 navigation.onActiveChanged: {
                                     if (navigation.active) {
                                         root.context.insureVisible(root.context.positionToTime(itemData.x))
-                                        root.insureVerticallyVisible(root.y, root.y + root.height)
-
-                                        Qt.callLater(labelsModel.setFocusedItem, itemData.key)
-                                    } else {
-                                        labelsModel.resetFocusedItem()
+                                        root.insureVerticallyVisible()
                                     }
                                 }
 

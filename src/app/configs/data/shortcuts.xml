@@ -58,16 +58,6 @@
         <seq>Left</seq>
     </SC>
     <SC>
-        <key>track-toggle-focused-selection</key>
-        <seq>Return</seq>
-        <seq>Enter</seq>
-    </SC>
-    <SC>
-        <key>track-range-selection</key>
-        <seq>Shift+Enter</seq>
-        <seq>Shift+Return</seq>
-    </SC>
-    <SC>
         <key>nav-up</key>
         <seq>Up</seq>
     </SC>
@@ -134,6 +124,69 @@
       <seq>Space</seq>
     </SC>
 <!-- end Global actions -->
+
+<!-- Tracks view navigation actions -->
+
+    <SC>
+        <key>track-view-next-panel</key>
+        <seq>Tab</seq>
+    </SC>
+    <SC>
+        <key>track-view-prev-panel</key>
+        <seq>Shift+Tab</seq>
+    </SC>
+
+    <SC>
+        <key>track-view-next-item</key>
+        <seq>Right</seq>
+    </SC>
+    <SC>
+        <key>track-view-prev-item</key>
+        <seq>Left</seq>
+    </SC>
+    <SC>
+        <key>track-view-item-context-menu</key>
+        <seq>Shift+F10</seq>
+        <seq>Ctrl+Shift+F10</seq>
+    </SC>
+
+    <SC>
+        <key>track-view-next-track</key>
+        <seq>Down</seq>
+    </SC>
+    <SC>
+        <key>track-view-prev-track</key>
+        <seq>Up</seq>
+    </SC>
+    <SC>
+        <key>track-view-first-track</key>
+        <seq>Ctrl+Home</seq>
+    </SC>
+    <SC>
+        <key>track-view-last-track</key>
+        <seq>Ctrl+End</seq>
+    </SC>
+
+    <SC>
+        <key>track-view-toggle-selection</key>
+        <seq>Return</seq>
+        <seq>Enter</seq>
+    </SC>
+    <SC>
+        <key>track-view-range-selection</key>
+        <seq>Shift+Enter</seq>
+        <seq>Shift+Return</seq>
+    </SC>
+    <SC>
+        <key>track-view-extend-track-selection-prev</key>
+        <seq>Shift+Up</seq>
+    </SC>
+    <SC>
+        <key>track-view-extend-track-selection-next</key>
+        <seq>Shift+Down</seq>
+    </SC>
+
+<!-- end Tracks view navigation actions -->
 
 <!-- Trackedit actions -->
     <SC>
@@ -268,51 +321,6 @@
     </SC>
     <SC>
         <key>curs-next-clip-boundary</key>
-    </SC>
-    <SC>
-        <key>track-view-next-item</key>
-        <seq>Right</seq>
-    </SC>
-    <SC>
-        <key>track-view-prev-item</key>
-        <seq>Left</seq>
-    </SC>
-    <SC>
-        <key>track-view-item-move-left</key>
-        <seq>Ctrl+Left</seq>
-    </SC>
-    <SC>
-        <key>track-view-item-move-right</key>
-        <seq>Ctrl+Right</seq>
-    </SC>
-    <SC>
-        <key>track-view-item-extend-left</key>
-        <seq>Shift+Left</seq>
-    </SC>
-    <SC>
-        <key>track-view-item-extend-right</key>
-        <seq>Shift+Right</seq>
-    </SC>
-    <SC>
-        <key>track-view-item-reduce-left</key>
-        <seq>Ctrl+Shift+Left</seq>
-    </SC>
-    <SC>
-        <key>track-view-item-reduce-right</key>
-        <seq>Ctrl+Shift+Right</seq>
-    </SC>
-    <SC>
-        <key>track-view-item-move-up</key>
-        <seq>Ctrl+Up</seq>
-    </SC>
-    <SC>
-        <key>track-view-item-move-down</key>
-        <seq>Ctrl+Down</seq>
-    </SC>
-    <SC>
-        <key>track-view-item-context-menu</key>
-        <seq>Shift+F10</seq>
-        <seq>Ctrl+Shift+F10</seq>
     </SC>
     <SC>
         <key>cut-per-track-ripple</key>
@@ -519,42 +527,6 @@
     <SC>
         <key>prev-frame</key>
         <seq>Ctrl+Shift+F6</seq>
-    </SC>
-    <SC>
-        <key>focus-prev-track</key>
-        <seq>Up</seq>
-    </SC>
-    <SC>
-        <key>focus-next-track</key>
-        <seq>Down</seq>
-    </SC>
-    <SC>
-        <key>next-frame</key>
-        <seq>Ctrl+F6</seq>
-    </SC>
-    <SC>
-        <key>prev-track</key>
-        <seq>Up</seq>
-    </SC>
-    <SC>
-        <key>next-track</key>
-        <seq>Down</seq>
-    </SC>
-    <SC>
-        <key>first-track</key>
-        <seq>Ctrl+Home</seq>
-    </SC>
-    <SC>
-        <key>last-track</key>
-        <seq>Ctrl+End</seq>
-    </SC>
-    <SC>
-        <key>shift-up</key>
-        <seq>Shift+Up</seq>
-    </SC>
-    <SC>
-        <key>shift-down</key>
-        <seq>Shift+Down</seq>
     </SC>
     <SC>
         <key>toggle</key>
@@ -1158,7 +1130,7 @@
         <key>next-lower-peak-frequency</key>
     </SC>
     <SC>
-        <key>rename-clip</key>
+        <key>rename-item</key>
         <seq>Ctrl+F2</seq>
     </SC>
     <SC>
@@ -1202,5 +1174,37 @@
     <SC>
         <key>keyboard-scrub-forwards</key>
         <seq>I</seq>
+    </SC>
+    <SC>
+        <key>track-view-item-move-left</key>
+        <seq>Ctrl+Left</seq>
+    </SC>
+    <SC>
+        <key>track-view-item-move-right</key>
+        <seq>Ctrl+Right</seq>
+    </SC>
+    <SC>
+        <key>track-view-item-extend-left</key>
+        <seq>Shift+Left</seq>
+    </SC>
+    <SC>
+        <key>track-view-item-extend-right</key>
+        <seq>Shift+Right</seq>
+    </SC>
+    <SC>
+        <key>track-view-item-reduce-left</key>
+        <seq>Ctrl+Shift+Left</seq>
+    </SC>
+    <SC>
+        <key>track-view-item-reduce-right</key>
+        <seq>Ctrl+Shift+Right</seq>
+    </SC>
+    <SC>
+        <key>track-view-item-move-up</key>
+        <seq>Ctrl+Up</seq>
+    </SC>
+    <SC>
+        <key>track-view-item-move-down</key>
+        <seq>Ctrl+Down</seq>
     </SC>
 </Shortcuts>

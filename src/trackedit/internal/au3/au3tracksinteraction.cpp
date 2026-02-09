@@ -202,7 +202,7 @@ muse::Ret Au3TracksInteraction::paste(const std::vector<ITrackDataPtr>& data, se
     if (selectedTracks.empty()) {
         const TrackIdList tracksIdsToSelect = pasteIntoNewTracks(copiedData);
         selectionController()->setSelectedTracks(tracksIdsToSelect);
-        selectionController()->setFocusedTrack(tracksIdsToSelect.front());
+        trackNavigationController()->setFocusedTrack(tracksIdsToSelect.front());
         projectWasModified = true;
         return muse::make_ok();
     }
@@ -236,7 +236,7 @@ muse::Ret Au3TracksInteraction::paste(const std::vector<ITrackDataPtr>& data, se
             TrackIdList clipSelectedTracks = selectionController()->selectedTracks();
             finalSelectedTracks.insert(finalSelectedTracks.end(), clipSelectedTracks.begin(), clipSelectedTracks.end());
             selectionController()->setSelectedTracks(finalSelectedTracks);
-            selectionController()->setFocusedTrack(finalSelectedTracks.front());
+            trackNavigationController()->setFocusedTrack(finalSelectedTracks.front());
         }
     }
 
@@ -344,10 +344,10 @@ muse::Ret Au3TracksInteraction::pasteClips(const std::vector<Au3TrackDataPtr>& c
         allDstTracksIds.insert(allDstTracksIds.end(), tracksIdsToSelect.begin(), tracksIdsToSelect.end());
 
         selectionController()->setSelectedTracks(allDstTracksIds);
-        selectionController()->setFocusedTrack(allDstTracksIds.front());
+        trackNavigationController()->setFocusedTrack(allDstTracksIds.front());
     } else {
         selectionController()->setSelectedTracks(dstTracksIds);
-        selectionController()->setFocusedTrack(dstTracksIds.front());
+        trackNavigationController()->setFocusedTrack(dstTracksIds.front());
     }
 
     return ok;
@@ -403,10 +403,10 @@ muse::Ret Au3TracksInteraction::pasteLabels(const std::vector<Au3TrackDataPtr>& 
         allDstTracksIds.insert(allDstTracksIds.end(), tracksIdsToSelect.begin(), tracksIdsToSelect.end());
 
         selectionController()->setSelectedTracks(allDstTracksIds);
-        selectionController()->setFocusedTrack(allDstTracksIds.front());
+        trackNavigationController()->setFocusedTrack(allDstTracksIds.front());
     } else {
         selectionController()->setSelectedTracks(dstTracksIds);
-        selectionController()->setFocusedTrack(dstTracksIds.front());
+        trackNavigationController()->setFocusedTrack(dstTracksIds.front());
     }
 
     return muse::make_ok();
@@ -649,7 +649,7 @@ bool Au3TracksInteraction::newMonoTrack()
 {
     auto trackId = addWaveTrack(1);
     selectionController()->setSelectedTracks({ trackId });
-    selectionController()->setFocusedTrack(trackId);
+    trackNavigationController()->setFocusedTrack(trackId);
 
     projectHistory()->pushHistoryState("Created new mono track", "New Mono Track");
     return true;
@@ -659,7 +659,7 @@ bool Au3TracksInteraction::newStereoTrack()
 {
     auto trackId = addWaveTrack(2);
     selectionController()->setSelectedTracks({ trackId });
-    selectionController()->setFocusedTrack(trackId);
+    trackNavigationController()->setFocusedTrack(trackId);
 
     projectHistory()->pushHistoryState("Created new stereo track", "New Stereo Track");
     return true;
@@ -674,7 +674,7 @@ muse::RetVal<au::trackedit::TrackId> Au3TracksInteraction::newLabelTrack(const m
     prj->notifyAboutTrackAdded(DomConverter::labelTrack(track));
 
     selectionController()->setSelectedTracks({ track->GetId() });
-    selectionController()->setFocusedTrack(track->GetId());
+    trackNavigationController()->setFocusedTrack(track->GetId());
 
     return muse::RetVal<TrackId>::make_ok(track->GetId());
 }
@@ -684,7 +684,7 @@ bool Au3TracksInteraction::deleteTracks(const TrackIdList& trackIds)
     auto& project = projectRef();
     auto& tracks = Au3TrackList::Get(project);
 
-    TrackId focusedTrack = selectionController()->focusedTrack();
+    TrackId focusedTrack = trackNavigationController()->focusedTrack();
 
     for (const auto& trackId : trackIds) {
         Au3Track* au3Track = DomAccessor::findTrack(project, Au3TrackId(trackId));
@@ -702,7 +702,7 @@ bool Au3TracksInteraction::deleteTracks(const TrackIdList& trackIds)
     if (muse::contains(trackIds, focusedTrack)) {
         trackedit::ITrackeditProjectPtr trackEdit = globalContext()->currentTrackeditProject();
         const auto notRemovedTracks = trackEdit->trackIdList();
-        selectionController()->setFocusedTrack(notRemovedTracks.empty() ? -1 : notRemovedTracks.front());
+        trackNavigationController()->setFocusedTrack(notRemovedTracks.empty() ? -1 : notRemovedTracks.front());
     }
 
     return true;
@@ -943,8 +943,8 @@ bool Au3TracksInteraction::splitStereoTracksToLRMono(const TrackIdList& tracksId
         prj->notifyAboutTrackAdded(DomConverter::track(unlinkedTracks[0].get()));
         prj->notifyAboutTrackAdded(DomConverter::track(unlinkedTracks[1].get()));
 
-        if (selectionController()->focusedTrack() == trackId) {
-            selectionController()->setFocusedTrack(unlinkedTracks[0]->GetId());
+        if (trackNavigationController()->focusedTrack() == trackId) {
+            trackNavigationController()->setFocusedTrack(unlinkedTracks[0]->GetId());
         }
 
         const auto viewState = globalContext()->currentProject()->viewState();
@@ -986,8 +986,8 @@ bool Au3TracksInteraction::splitStereoTracksToCenterMono(const TrackIdList& trac
         prj->notifyAboutTrackAdded(DomConverter::track(unlinkedTracks[0].get()));
         prj->notifyAboutTrackAdded(DomConverter::track(unlinkedTracks[1].get()));
 
-        if (selectionController()->focusedTrack() == trackId) {
-            selectionController()->setFocusedTrack(unlinkedTracks[0]->GetId());
+        if (trackNavigationController()->focusedTrack() == trackId) {
+            trackNavigationController()->setFocusedTrack(unlinkedTracks[0]->GetId());
         }
 
         const auto viewState = globalContext()->currentProject()->viewState();

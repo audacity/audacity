@@ -44,7 +44,15 @@ TrackItem {
                 Behavior on opacity { OpacityAnimator { duration: 100 } }
 
                 PanKnob {
+                    id: panKnob
+
                     value: Boolean(root.item) ? root.item.pan : 0
+                    isValueEditNavigationLeftAndRight: false
+
+                    navigation.panel: root.navigation.panel
+                    navigation.order: root.extraControlsNavigationStart
+                    navigation.enabled: !root.collapsed
+
                     onNewPanRequested: function(newValue, completed) {
                         if (Boolean(root.item)) {
                             root.item.setPan(newValue, completed)
@@ -53,11 +61,23 @@ TrackItem {
                 }
 
                 VolumeSlider {
+                    id: volumeSlider
+
                     value: Boolean(root.item) ? root.item.volumeLevel : 0
+                    isValueEditNavigationLeftAndRight: false
+
+                    navigation.panel: root.navigation.panel
+                    navigation.order: panKnob.navigation.order + 1
+                    navigation.enabled: !root.collapsed
+
                     onNewVolumeRequested: function(newValue, completed) {
                         if (Boolean(root.item)) {
                             root.item.setVolumeLevel(newValue, completed)
                         }
+                    }
+
+                    Component.onCompleted: {
+                        root.extraControlsNavigationEnd = Qt.binding(function() { return volumeSlider.navigation.order })
                     }
                 }
 
@@ -70,11 +90,15 @@ TrackItem {
                 Layout.fillWidth: true
                 Layout.preferredHeight: 24
 
+                text: qsTrc("projectscene", "Effects")
+
                 opacity: topRow.visible && root.height > root.mapFromItem(this, 0, height + bottomSeparatorHeight).y ? 1 : 0
                 visible: opacity !== 0
                 Behavior on opacity { OpacityAnimator { duration: 100 } }
 
-                text: qsTrc("projectscene", "Effects")
+                navigation.panel: root.navigation.panel
+                navigation.order: root.headerTrailingControlsNavigationEnd + 1
+                navigation.enabled: topRow.visible
 
                 onClicked: {
                     root.openEffectsRequested()
@@ -183,11 +207,16 @@ TrackItem {
             spacing: 4
 
             FlatToggleButton {
+                id: muteButton
+
                 Layout.preferredWidth: 20
                 Layout.preferredHeight: Layout.preferredWidth
 
                 icon: IconCode.MUTE
                 checked: Boolean(root.item) ? root.item.muted : false
+
+                navigation.panel: root.navigation.panel
+                navigation.order: root.headerTrailingControlsNavigationStart
 
                 onToggled: {
                     if (Boolean(root.item)) {
@@ -197,16 +226,25 @@ TrackItem {
             }
 
             FlatToggleButton {
+                id: soloButton
+
                 Layout.preferredWidth: 20
                 Layout.preferredHeight: Layout.preferredWidth
 
                 icon: IconCode.SOLO
                 checked: Boolean(root.item) ? root.item.solo : false
 
+                navigation.panel: root.navigation.panel
+                navigation.order: muteButton.navigation.order + 1
+
                 onToggled: {
                     if (Boolean(root.item)) {
                         root.item.solo = !checked
                     }
+                }
+
+                Component.onCompleted: {
+                    root.headerTrailingControlsNavigationEnd = Qt.binding(function() { return soloButton.navigation.order })
                 }
             }
         }

@@ -13,14 +13,17 @@ void LabelContextMenuModel::load()
 {
     AbstractMenuModel::load();
 
-    auto makeItemWithArg = [this](const ActionCode& actionCode) {
+    auto makeItemWithArg = [this](const ActionCode& actionCode, const muse::TranslatableString& title = {}) {
         MenuItem* item = makeMenuItem(actionCode);
         item->setArgs(ActionData::make_arg1<trackedit::LabelKey>(m_labelKey.key));
+        if (!title.isEmpty()) {
+            item->setTitle(title);
+        }
         return item;
     };
 
     MenuItemList items {
-        makeItemWithArg("label-rename"),
+        makeItemWithArg("rename-item", muse::TranslatableString("label", "Rename label")),
         makeSeparator(),
         makeItemWithArg("action://trackedit/cut"),
         makeItemWithArg("action://trackedit/copy"),

@@ -6,6 +6,7 @@
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "../../iselectioncontroller.h"
+#include "../itracknavigationcontroller.h"
 
 #include "au3wrap/au3types.h"
 
@@ -16,6 +17,7 @@ class Au3LabelsInteraction : public ILabelsInteraction, public muse::Injectable
 {
     muse::Inject<context::IGlobalContext> globalContext{ this };
     muse::Inject<ISelectionController> selectionController{ this };
+    muse::Inject<ITrackNavigationController> trackNavigationController{ this };
 
 public:
     Au3LabelsInteraction(const muse::modularity::ContextPtr& ctx);
@@ -34,11 +36,14 @@ public:
 
     ITrackDataPtr copyLabel(const LabelKey& labelKey) override;
 
-    bool moveLabels(const LabelKeyList& labelKeys, secs_t timePositionOffset) override;
+    muse::RetVal<LabelKeyList> moveLabels(const LabelKeyList& labelKeys, secs_t timePositionOffset, int trackPositionOffset) override;
     muse::RetVal<LabelKeyList> moveLabelsToTrack(const LabelKeyList& labelKeys, const trackedit::TrackId& toTrackId) override;
 
     bool stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed) override;
+    bool stretchLabelsLeft(const LabelKeyList& labelKeys, secs_t deltaSec, bool completed) override;
+
     bool stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed) override;
+    bool stretchLabelsRight(const LabelKeyList& labelKeys, secs_t deltaSec, bool completed) override;
 
     muse::Progress progress() const override;
 

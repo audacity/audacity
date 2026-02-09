@@ -243,7 +243,13 @@ bool TrackeditOperationController::removeClip(const ClipKey& clipKey)
 bool TrackeditOperationController::removeClips(const ClipKeyList& clipKeyList, bool moveClips)
 {
     if (clipsInteraction()->removeClips(clipKeyList, moveClips)) {
-        projectHistory()->pushHistoryState("Delete", "Delete multiple clips");
+        bool hasLabels = isLabelsSelected();
+        if (hasLabels) {
+            labelsInteraction()->removeLabels(selectedLabels(), moveClips);
+        }
+
+        const std::string msg = hasLabels ? "Remove multiple items" : "Remove multiple clips";
+        projectHistory()->pushHistoryState("Remove", msg);
         return true;
     }
     return false;
@@ -283,7 +289,7 @@ muse::RetVal<ClipKeyList> TrackeditOperationController::moveClips(const ClipKeyL
             }
         }
 
-        labelsInteraction()->moveLabels(selectedLabels, clampedOffset);
+        labelsInteraction()->moveLabels(selectedLabels, clampedOffset, trackPositionOffset);
         timePositionOffset = clampedOffset;
     }
 
@@ -340,7 +346,7 @@ bool TrackeditOperationController::moveRangeSelection(secs_t timePositionOffset,
     }
 
     if (!labelsInRange.empty()) {
-        labelsInteraction()->moveLabels(labelsInRange, clampedOffset);
+        labelsInteraction()->moveLabels(labelsInRange, clampedOffset, 0);
     }
 
     selectionController()->setDataSelectedStartTime(
@@ -485,43 +491,85 @@ bool TrackeditOperationController::splitDeleteSelectedOnTracks(const TrackIdList
     return false;
 }
 
-bool TrackeditOperationController::trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed,
-                                                UndoPushType type)
-{
-    const auto success = clipsInteraction()->trimClipLeft(clipKey, deltaSec, minClipDuration, completed);
-    if (success && completed) {
-        projectHistory()->pushHistoryState("Clip left trimmed", "Trim clip left", type);
-    }
-    return success;
-}
-
-bool TrackeditOperationController::trimClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed,
+bool TrackeditOperationController::trimClipsLeft(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed,
                                                  UndoPushType type)
 {
-    const auto success = clipsInteraction()->trimClipRight(clipKey, deltaSec, minClipDuration, completed);
-    if (success && completed) {
-        projectHistory()->pushHistoryState("Clip right trimmed", "Trim clip right", type);
+    const auto success = clipsInteraction()->trimClipsLeft(clipKeyList, deltaSec, minClipDuration, completed);
+    if (!success) {
+        return success;
+    }
+
+    bool hasLabels = isLabelsSelected();
+    if (hasLabels) {
+        labelsInteraction()->stretchLabelsLeft(selectedLabels(), deltaSec, completed);
+    }
+
+    if (completed) {
+        std::string msg = hasLabels ? "Trim items left" : "Trim clip left";
+        projectHistory()->pushHistoryState("Trim", msg, type);
     }
     return success;
 }
 
-bool TrackeditOperationController::stretchClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed,
-                                                   UndoPushType type)
+bool TrackeditOperationController::trimClipsRight(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed,
+                                                  UndoPushType type)
 {
-    const auto success = clipsInteraction()->stretchClipLeft(clipKey, deltaSec, minClipDuration, completed);
-    if (success && completed) {
-        projectHistory()->pushHistoryState("Clip left stretched", "Stretch clip left", type);
+    const auto success = clipsInteraction()->trimClipsRight(clipKeyList, deltaSec, minClipDuration, completed);
+    if (!success) {
+        return success;
+    }
+
+    bool hasLabels = isLabelsSelected();
+    if (hasLabels) {
+        labelsInteraction()->stretchLabelsRight(selectedLabels(), deltaSec, completed);
+    }
+    if (completed) {
+        std::string msg = hasLabels ? "Trim items right" : "Trim clip right";
+        projectHistory()->pushHistoryState("Trim", msg, type);
     }
     return success;
 }
 
-bool TrackeditOperationController::stretchClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed,
+bool TrackeditOperationController::stretchClipsLeft(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed,
                                                     UndoPushType type)
 {
-    const auto success = clipsInteraction()->stretchClipRight(clipKey, deltaSec, minClipDuration, completed);
-    if (success && completed) {
-        projectHistory()->pushHistoryState("Clip right stretched", "Stretch clip right", type);
+    const auto success = clipsInteraction()->stretchClipsLeft(clipKeyList, deltaSec, minClipDuration, completed);
+    if (!success) {
+        return success;
     }
+
+    bool hasLabels = isLabelsSelected();
+    if (hasLabels) {
+        labelsInteraction()->stretchLabelsLeft(selectedLabels(), deltaSec, completed);
+    }
+
+    if (completed) {
+        std::string msg = hasLabels ? "Stretch items left" : "Stretch clip left";
+        projectHistory()->pushHistoryState("Stretch", msg, type);
+    }
+
+    return success;
+}
+
+bool TrackeditOperationController::stretchClipsRight(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration,
+                                                     bool completed,
+                                                     UndoPushType type)
+{
+    const auto success = clipsInteraction()->stretchClipsRight(clipKeyList, deltaSec, minClipDuration, completed);
+    if (!success) {
+        return success;
+    }
+
+    bool hasLabels = isLabelsSelected();
+    if (hasLabels) {
+        labelsInteraction()->stretchLabelsRight(selectedLabels(), deltaSec, completed);
+    }
+
+    if (completed) {
+        std::string msg = hasLabels ? "Stretch items right" : "Stretch clips right";
+        projectHistory()->pushHistoryState("Stretch", msg, type);
+    }
+
     return success;
 }
 
@@ -797,7 +845,7 @@ bool TrackeditOperationController::cutLabel(const LabelKey& labelKey)
     }
 
     clipboard()->addTrackData(std::move(data));
-    projectHistory()->pushHistoryState("Label cut", "Cut label");
+    projectHistory()->pushHistoryState("Cut", "Cut label");
     return true;
 }
 
@@ -814,7 +862,7 @@ bool TrackeditOperationController::copyLabel(const LabelKey& labelKey)
 bool TrackeditOperationController::removeLabel(const LabelKey& labelKey)
 {
     if (labelsInteraction()->removeLabel(labelKey)) {
-        projectHistory()->pushHistoryState("Label removed", "Remove label");
+        projectHistory()->pushHistoryState("Remove", "Remove label");
         return true;
     }
     return false;
@@ -823,7 +871,17 @@ bool TrackeditOperationController::removeLabel(const LabelKey& labelKey)
 bool TrackeditOperationController::removeLabels(const LabelKeyList& labelKeys, bool moveLabels)
 {
     if (labelsInteraction()->removeLabels(labelKeys, moveLabels)) {
-        projectHistory()->pushHistoryState("Labels removed", "Remove labels");
+        bool hasClips = isClipsSelected();
+        if (hasClips) {
+            clipsInteraction()->removeClips(selectedClips(), moveLabels);
+        }
+
+        if (hasClips) {
+            projectHistory()->pushHistoryState("Remove", "Remove multiple items");
+        } else {
+            projectHistory()->pushHistoryState("Remove", "Remove multiple labels");
+        }
+
         return true;
     }
     return false;
@@ -858,12 +916,35 @@ bool TrackeditOperationController::moveLabels(const LabelKeyList& labelKeys, sec
         timePositionOffset = clampedOffset;
     }
 
-    bool success = labelsInteraction()->moveLabels(labelKeys, timePositionOffset);
-    if (success && completed) {
-        const std::string msg = !selectedClips.empty() ? "Items moved" : "Labels moved";
-        projectHistory()->pushHistoryState(msg, "Move labels");
+    muse::RetVal<LabelKeyList> retVal = labelsInteraction()->moveLabels(labelKeys, timePositionOffset, 0);
+    if (retVal.ret && completed) {
+        const std::string msg = !selectedClips.empty() ? "Move items" : "Move labels";
+        projectHistory()->pushHistoryState("Move", msg);
     }
-    return success;
+    return retVal.ret;
+}
+
+muse::RetVal<LabelKeyList> TrackeditOperationController::moveLabels(const LabelKeyList& labelKeys, secs_t timePositionOffset,
+                                                                    int trackPositionOffset,
+                                                                    bool completed)
+{
+    muse::RetVal<LabelKeyList> retVal = labelsInteraction()->moveLabels(labelKeys, timePositionOffset, trackPositionOffset);
+    if (!retVal.ret) {
+        return retVal;
+    }
+
+    bool clipsSelected = isClipsSelected();
+    if (isClipsSelected()) {
+        bool clipsMovedToOtherTracks = false;
+        clipsInteraction()->moveClips(selectedClips(), timePositionOffset, trackPositionOffset, completed, clipsMovedToOtherTracks);
+    }
+
+    if (completed) {
+        const std::string msg = clipsSelected ? "Move items" : "Movel labels";
+        projectHistory()->pushHistoryState("Move", msg);
+    }
+
+    return retVal;
 }
 
 muse::RetVal<LabelKeyList> TrackeditOperationController::moveLabelsToTrack(const LabelKeyList& labelKeys, const TrackId& toTrackId,
@@ -885,11 +966,54 @@ bool TrackeditOperationController::stretchLabelLeft(const LabelKey& labelKey, se
     return success;
 }
 
+bool TrackeditOperationController::stretchLabelsLeft(const LabelKeyList& labelKeyList, secs_t deltaSec,
+                                                     bool completed)
+{
+    bool success = labelsInteraction()->stretchLabelsLeft(labelKeyList, deltaSec, completed);
+    if (!success) {
+        return success;
+    }
+
+    bool clipsSelected = isClipsSelected();
+    if (clipsSelected) {
+        constexpr double MIN_CLIP_WIDTH = 3.0;
+        clipsInteraction()->stretchClipsLeft(selectedClips(), deltaSec, MIN_CLIP_WIDTH, completed);
+    }
+
+    if (completed) {
+        const std::string msg = clipsSelected ? "Stretch items left" : "Stretch labels left";
+        projectHistory()->pushHistoryState("Stretch", msg);
+    }
+
+    return success;
+}
+
 bool TrackeditOperationController::stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed)
 {
     bool success = labelsInteraction()->stretchLabelRight(labelKey, newEndTime, completed);
     if (success && completed) {
         projectHistory()->pushHistoryState("Label stretched", "Stretch label right");
+    }
+    return success;
+}
+
+bool TrackeditOperationController::stretchLabelsRight(const LabelKeyList& labelKeyList, secs_t deltaSec,
+                                                      bool completed)
+{
+    bool success = labelsInteraction()->stretchLabelsRight(labelKeyList, deltaSec, completed);
+    if (!success) {
+        return success;
+    }
+
+    bool clipsSelected = isClipsSelected();
+    if (clipsSelected) {
+        constexpr double MIN_CLIP_WIDTH = 3.0;
+        clipsInteraction()->stretchClipsRight(selectedClips(), -deltaSec, MIN_CLIP_WIDTH, completed);
+    }
+
+    if (completed) {
+        const std::string msg = clipsSelected ? "Stretch items right" : "Stretch labels right";
+        projectHistory()->pushHistoryState("Stretch", msg);
     }
     return success;
 }
@@ -921,5 +1045,25 @@ void TrackeditOperationController::pushProjectHistoryDeleteState(secs_t start, s
     std::stringstream ss;
     ss << "Delete " << duration << " seconds at " << start;
     projectHistory()->pushHistoryState(ss.str(), "Delete");
+}
+
+bool TrackeditOperationController::isClipsSelected() const
+{
+    return selectionController()->hasSelectedClips();
+}
+
+ClipKeyList TrackeditOperationController::selectedClips() const
+{
+    return selectionController()->selectedClips();
+}
+
+bool TrackeditOperationController::isLabelsSelected() const
+{
+    return selectionController()->hasSelectedLabels();
+}
+
+LabelKeyList TrackeditOperationController::selectedLabels() const
+{
+    return selectionController()->selectedLabels();
 }
 }

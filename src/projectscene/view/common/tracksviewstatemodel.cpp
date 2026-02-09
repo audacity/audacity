@@ -113,6 +113,34 @@ void TracksViewStateModel::requestVerticalScrollUnlock()
     }
 }
 
+void TracksViewStateModel::insureVerticallyVisible(int viewContentY, int viewHeight, int itemY, int itemHeight)
+{
+    static constexpr int PADDING = 10;
+
+    int itemTop = itemY;
+    int itemBottom = itemY + itemHeight;
+
+    int viewTop = viewContentY;
+    int viewBottom = viewContentY + viewHeight;
+
+    int delta = 0;
+
+    if (itemTop >= (viewTop + PADDING) && itemBottom <= (viewBottom - PADDING)) {
+        delta = 0;
+    } else if (itemTop < (viewTop + PADDING)) {
+        delta = itemTop - (viewTop + PADDING);
+    } else if (itemBottom > (viewBottom - PADDING)) {
+        delta = itemBottom - (viewBottom - PADDING);
+    }
+
+    int newOffset = viewContentY + delta;
+    if (newOffset < 0) {
+        changeTracksVerticalOffset(0);
+    } else {
+        changeTracksVerticalOffset(newOffset);
+    }
+}
+
 int TracksViewStateModel::tracksVerticalOffset() const
 {
     return m_tracksVerticalOffset.val;

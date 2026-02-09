@@ -65,8 +65,8 @@ public:
     bool removeClip(const ClipKey& clipKey) override;
     bool removeClips(const ClipKeyList& clipKeyList, bool moveClips) override;
     bool removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips) override;
-    muse::RetVal<LabelKeyList> moveClips(const ClipKeyList& clipKeyList, secs_t timePositionOffset, int trackPositionOffset, bool completed,
-                                         bool& clipsMovedToOtherTrack) override;
+    muse::RetVal<ClipKeyList> moveClips(const ClipKeyList& clipKeyList, secs_t timePositionOffset, int trackPositionOffset, bool completed,
+                                        bool& clipsMovedToOtherTrack) override;
     bool moveRangeSelection(secs_t timePositionOffset, bool completed) override;
     void cancelItemDragEdit() override;
     bool splitTracksAt(const TrackIdList& tracksIds, std::vector<secs_t> pivots) override;
@@ -82,10 +82,15 @@ public:
     bool clipSplitDelete(const ClipKey& clipKey) override;
     bool splitCutSelectedOnTracks(const TrackIdList tracksIds, secs_t begin, secs_t end) override;
     bool splitDeleteSelectedOnTracks(const TrackIdList tracksIds, secs_t begin, secs_t end) override;
-    bool trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed, UndoPushType type) override;
-    bool trimClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed, UndoPushType type) override;
-    bool stretchClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed, UndoPushType type) override;
-    bool stretchClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed, UndoPushType type) override;
+    bool trimClipsLeft(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed, UndoPushType type) override;
+    bool trimClipsRight(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed,
+                        UndoPushType type) override;
+
+    bool stretchClipsLeft(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed,
+                          UndoPushType type) override;
+    bool stretchClipsRight(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed,
+                           UndoPushType type) override;
+
     secs_t clipDuration(const ClipKey& clipKey) const override;
     double nearestZeroCrossing(double t0) const override;
     muse::Ret makeRoomForClip(const trackedit::ClipKey& clipKey) override;
@@ -142,10 +147,15 @@ public:
     bool copyLabel(const LabelKey& labelKey) override;
 
     bool moveLabels(const LabelKeyList& labelKeys, secs_t timePositionOffset, bool completed) override;
+    muse::RetVal<LabelKeyList> moveLabels(const LabelKeyList& labelKeys, secs_t timePositionOffset, int trackPositionOffset,
+                                          bool completed) override;
     muse::RetVal<LabelKeyList> moveLabelsToTrack(const LabelKeyList& labelKeys, const TrackId& toTrackId, bool completed) override;
 
     bool stretchLabelLeft(const LabelKey& labelKey, secs_t newStartTime, bool completed) override;
+    bool stretchLabelsLeft(const LabelKeyList& labelKeyList, secs_t deltaSec, bool completed) override;
+
     bool stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed) override;
+    bool stretchLabelsRight(const LabelKeyList& labelKeyList, secs_t deltaSec, bool completed) override;
 
     muse::Progress progress() const override;
 
@@ -154,6 +164,12 @@ private:
     void pushProjectHistoryDuplicateState();
     void pushProjectHistorySplitDeleteState();
     void pushProjectHistoryDeleteState(secs_t start, secs_t duration);
+
+    bool isClipsSelected() const;
+    ClipKeyList selectedClips() const;
+
+    bool isLabelsSelected() const;
+    LabelKeyList selectedLabels() const;
 
     const std::unique_ptr<IUndoManager> m_undoManager;
     muse::async::Notification m_cancelDragEditRequested;

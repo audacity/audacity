@@ -666,54 +666,24 @@ bool Au3ClipsInteraction::clipSplitDelete(const ClipKey& clipKey)
     return true;
 }
 
-bool Au3ClipsInteraction::trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed)
+bool Au3ClipsInteraction::trimClipsLeft(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed)
 {
-    //! NOTE: other clips must follow if selected
-    ClipKeyList clips = determineClipsForInteraction(clipKey);
-
-    secs_t adjustedDelta = clampLeftTrimDelta(clips, deltaSec, minClipDuration);
+    secs_t adjustedDelta = clampLeftTrimDelta(clipKeyList, deltaSec, minClipDuration);
 
     //! NOTE: don't be tempted to early return if delta is 0.0 or by any other reason:
     //! we still need to trigger cannibalistic clip behaviour and save project state
     //! to the history so this function has to execute till the end
-    return trimClipsLeft(clips, adjustedDelta, completed);
+    return trimClipsLeft(clipKeyList, adjustedDelta, completed);
 }
 
-bool Au3ClipsInteraction::trimClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed)
+bool Au3ClipsInteraction::trimClipsRight(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed)
 {
-    //! NOTE: other clips must follow if selected
-    ClipKeyList clips = determineClipsForInteraction(clipKey);
-    secs_t adjustedDelta = clampRightTrimDelta(clips, deltaSec, minClipDuration);
+    secs_t adjustedDelta = clampRightTrimDelta(clipKeyList, deltaSec, minClipDuration);
 
     //! NOTE: don't be tempted to early return if delta is 0.0 or by any other reason:
     //! we still need to trigger cannibalistic clip behaviour and save project state
     //! to the history so this function has to execute till the end
-    return trimClipsRight(clips, adjustedDelta, completed);
-}
-
-bool Au3ClipsInteraction::stretchClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed)
-{
-    //! NOTE: other clips must follow if selected
-    ClipKeyList clips = determineClipsForInteraction(clipKey);
-
-    secs_t adjustedDelta = clampLeftStretchDelta(clips, deltaSec, minClipDuration);
-
-    //! NOTE: don't be tempted to early return if delta is 0.0 or by any other reason:
-    //! we still need to trigger cannibalistic clip behaviour and save project state
-    //! to the history so this function has to execute till the end
-    return stretchClipsLeft(clips, adjustedDelta, completed);
-}
-
-bool Au3ClipsInteraction::stretchClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed)
-{
-    //! NOTE: other clips must follow if selected
-    ClipKeyList clips = determineClipsForInteraction(clipKey);
-    secs_t adjustedDelta = clampRightStretchDelta(clips, deltaSec, minClipDuration);
-
-    //! NOTE: don't be tempted to early return if delta is 0.0 or by any other reason:
-    //! we still need to trigger cannibalistic clip behaviour and save project state
-    //! to the history so this function has to execute till the end
-    return stretchClipsRight(clips, adjustedDelta, completed);
+    return trimClipsRight(clipKeyList, adjustedDelta, completed);
 }
 
 std::optional<secs_t> Au3ClipsInteraction::leftmostClipStartTime(const ClipKeyList& clipKeys) const
@@ -1288,8 +1258,10 @@ bool Au3ClipsInteraction::trimClipsRight(const ClipKeyList& clipKeys, secs_t del
     return true;
 }
 
-bool Au3ClipsInteraction::stretchClipsLeft(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed)
+bool Au3ClipsInteraction::stretchClipsLeft(const ClipKeyList& clipKeys, secs_t deltaSec, secs_t minClipDuration, bool completed)
 {
+    secs_t adjustedDelta = clampLeftStretchDelta(clipKeys, deltaSec, minClipDuration);
+
     for (const auto& selectedClip : clipKeys) {
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(selectedClip.trackId));
         IF_ASSERT_FAILED(waveTrack) {
@@ -1308,7 +1280,7 @@ bool Au3ClipsInteraction::stretchClipsLeft(const ClipKeyList& clipKeys, secs_t d
             }
         }
 
-        secs_t newStart = clip->GetPlayStartTime() + deltaSec;
+        secs_t newStart = clip->GetPlayStartTime() + adjustedDelta;
         clip->StretchLeftTo(newStart);
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
@@ -1318,8 +1290,10 @@ bool Au3ClipsInteraction::stretchClipsLeft(const ClipKeyList& clipKeys, secs_t d
     return true;
 }
 
-bool Au3ClipsInteraction::stretchClipsRight(const ClipKeyList& clipKeys, secs_t deltaSec, bool completed)
+bool Au3ClipsInteraction::stretchClipsRight(const ClipKeyList& clipKeys, secs_t deltaSec, secs_t minClipDuration, bool completed)
 {
+    secs_t adjustedDelta = clampRightStretchDelta(clipKeys, deltaSec, minClipDuration);
+
     for (const auto& selectedClip : clipKeys) {
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(selectedClip.trackId));
         IF_ASSERT_FAILED(waveTrack) {
@@ -1338,7 +1312,7 @@ bool Au3ClipsInteraction::stretchClipsRight(const ClipKeyList& clipKeys, secs_t 
             }
         }
 
-        secs_t newEnd = clip->GetPlayEndTime() - deltaSec;
+        secs_t newEnd = clip->GetPlayEndTime() - adjustedDelta;
         clip->StretchRightTo(newEnd);
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();

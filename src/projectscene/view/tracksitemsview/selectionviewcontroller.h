@@ -14,6 +14,7 @@
 #include "spectrogram/view/spectrogramhit.h"
 #include "spectrogram/ispectrogramservice.h"
 #include "spectrogram/iglobalspectrogramconfiguration.h"
+#include "trackedit/internal/itracknavigationcontroller.h"
 
 #include "types/projectscenetypes.h"
 #include "../timeline/timelinecontext.h"
@@ -38,6 +39,7 @@ class SelectionViewController : public QObject, public muse::async::Asyncable, p
     muse::Inject<trackedit::ISelectionController> selectionController { this };
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction { this };
     muse::Inject<spectrogram::ISpectrogramService> spectrogramService { this };
+    muse::Inject<trackedit::ITrackNavigationController> trackNavigationController { this };
 
 public:
     SelectionViewController(QObject* parent = nullptr);

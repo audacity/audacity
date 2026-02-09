@@ -87,14 +87,6 @@ public:
 
     MOCK_METHOD(void, resetTimeSelection, (), (override));
 
-    MOCK_METHOD(TrackId, focusedTrack, (), (const, override));
-    MOCK_METHOD(void, setFocusedTrack, (TrackId trackId), (override));
-    MOCK_METHOD(muse::async::Channel<trackedit::TrackId>, focusedTrackChanged, (), (const, override));
-
-    MOCK_METHOD(void, focusPreviousTrack, (), (override));
-    MOCK_METHOD(void, focusNextTrack, (), (override));
-    MOCK_METHOD(void, focusTrackByIndex, (int index), (override));
-
     MOCK_METHOD(int, trackDistance, (TrackId previous, TrackId next), (const, override));
     MOCK_METHOD(TrackIdList, orderedTrackList, (), (const, override));
 };

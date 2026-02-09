@@ -223,33 +223,35 @@ bool TrackeditInteraction::splitDeleteSelectedOnTracks(const TrackIdList tracksI
     return withPlaybackStop(&ITrackeditInteraction::splitDeleteSelectedOnTracks, tracksIds, begin, end);
 }
 
-bool TrackeditInteraction::trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed, UndoPushType type)
+bool TrackeditInteraction::trimClipsLeft(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed,
+                                         UndoPushType type)
 {
-    return withPlaybackStop(&ITrackeditInteraction::trimClipLeft, clipKey, deltaSec, minClipDuration, completed, type);
+    return withPlaybackStop(&ITrackeditInteraction::trimClipsLeft, clipKeyList, deltaSec, minClipDuration, completed, type);
 }
 
-bool TrackeditInteraction::trimClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed, UndoPushType type)
+bool TrackeditInteraction::trimClipsRight(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed,
+                                          UndoPushType type)
 {
-    return withPlaybackStop(&ITrackeditInteraction::trimClipRight, clipKey, deltaSec, minClipDuration, completed, type);
+    return withPlaybackStop(&ITrackeditInteraction::trimClipsRight, clipKeyList, deltaSec, minClipDuration, completed, type);
 }
 
-bool TrackeditInteraction::stretchClipLeft(const ClipKey& clipKey,
-                                           secs_t deltaSec,
-                                           secs_t minClipDuration,
-                                           bool completed,
-                                           UndoPushType type)
-{
-    return withPlaybackStop(&ITrackeditInteraction::stretchClipLeft, clipKey, deltaSec, minClipDuration, completed, type);
-}
-
-bool TrackeditInteraction::stretchClipRight(const ClipKey& clipKey,
+bool TrackeditInteraction::stretchClipsLeft(const ClipKeyList& clipKeyList,
                                             secs_t deltaSec,
                                             secs_t minClipDuration,
                                             bool completed,
                                             UndoPushType type)
 {
-    return withPlaybackStop(&ITrackeditInteraction::stretchClipRight,
-                            clipKey,
+    return withPlaybackStop(&ITrackeditInteraction::stretchClipsLeft, clipKeyList, deltaSec, minClipDuration, completed, type);
+}
+
+bool TrackeditInteraction::stretchClipsRight(const ClipKeyList& clipKeyList,
+                                             secs_t deltaSec,
+                                             secs_t minClipDuration,
+                                             bool completed,
+                                             UndoPushType type)
+{
+    return withPlaybackStop(&ITrackeditInteraction::stretchClipsRight,
+                            clipKeyList,
                             deltaSec,
                             minClipDuration,
                             completed,
@@ -470,6 +472,12 @@ bool TrackeditInteraction::moveLabels(const LabelKeyList& labelKeys, secs_t time
     return m_interaction->moveLabels(labelKeys, timePositionOffset, completed);
 }
 
+muse::RetVal<LabelKeyList> TrackeditInteraction::moveLabels(const LabelKeyList& labelKeys, secs_t timePositionOffset,
+                                                            int trackPositionOffset, bool completed)
+{
+    return m_interaction->moveLabels(labelKeys, timePositionOffset, trackPositionOffset, completed);
+}
+
 muse::RetVal<LabelKeyList> TrackeditInteraction::moveLabelsToTrack(const LabelKeyList& labelKeys, const TrackId& toTrackId, bool completed)
 {
     return m_interaction->moveLabelsToTrack(labelKeys, toTrackId, completed);
@@ -480,9 +488,19 @@ bool TrackeditInteraction::stretchLabelLeft(const LabelKey& labelKey, secs_t new
     return m_interaction->stretchLabelLeft(labelKey, newStartTime, completed);
 }
 
+bool TrackeditInteraction::stretchLabelsLeft(const LabelKeyList& labelKeyList, secs_t deltaSec, bool completed)
+{
+    return m_interaction->stretchLabelsLeft(labelKeyList, deltaSec, completed);
+}
+
 bool TrackeditInteraction::stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed)
 {
     return m_interaction->stretchLabelRight(labelKey, newEndTime, completed);
+}
+
+bool TrackeditInteraction::stretchLabelsRight(const LabelKeyList& labelKeyList, secs_t deltaSec, bool completed)
+{
+    return m_interaction->stretchLabelsRight(labelKeyList, deltaSec, completed);
 }
 
 muse::Progress TrackeditInteraction::progress() const

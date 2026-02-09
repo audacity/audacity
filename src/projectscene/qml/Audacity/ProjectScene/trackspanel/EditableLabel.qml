@@ -5,10 +5,12 @@ import QtQuick.Layouts
 import Muse.Ui
 import Muse.UiComponents
 
-Item {
+FocusScope {
     id: root
 
     property string text
+
+    readonly property alias navigation: navCtrl
 
     implicitHeight: loader.implicitHeight
     implicitWidth: loader.implicitWidth
@@ -17,6 +19,25 @@ Item {
 
     function edit() {
         loader.edit(text)
+    }
+
+    NavigationControl {
+        id: navCtrl
+        name: root.objectName !== "" ? root.objectName : "EditableLabel"
+        enabled: root.enabled && root.visible && !loader.isEditState
+
+        accessible.role: MUAccessible.Information
+        accessible.name: root.text
+        accessible.visualItem: root
+
+        onTriggered: {
+            root.edit()
+        }
+    }
+
+    NavigationFocusBorder {
+        enabled: navCtrl.enabled
+        navigationCtrl: navCtrl
     }
 
     Loader {
@@ -31,6 +52,16 @@ Item {
         function edit(text) {
             isEditState = true
             item.ensureActiveFocus()
+        }
+
+        function finishEdit() {
+            var itemWasActive = loader.item.navigation.active
+
+            isEditState = false
+
+            if (itemWasActive) {
+                navCtrl.requestActive()
+            }
         }
     }
 
@@ -48,13 +79,23 @@ Item {
         id: textEditComp
 
         TextInputField {
+            property string newText: root.text
+
+            currentText: root.text
+
             background.color: "transparent"
             background.border.width: 0
             background.radius: 0
             textSidePadding: 0
 
-            currentText: root.text
-            property string newText: root.text
+            navigation.panel: navCtrl.panel
+            navigation.order: navCtrl.order
+            navigation.enabled: !navCtrl.enabled
+            navigation.onActiveChanged: {
+                if (!navigation.active && loader.isEditState) {
+                    loader.finishEdit()
+                }
+            }
 
             onTextEdited: function(text) {
                 newText = text
@@ -63,6 +104,8 @@ Item {
             onEscaped: {
                 clear()
                 newText = ""
+
+                loader.finishEdit()
             }
 
             onFocusChanged: {
@@ -73,7 +116,8 @@ Item {
                 if (hasText) {
                     root.textEdited(newText)
                 }
-                loader.isEditState = false
+
+                loader.finishEdit()
             }
         }
     }

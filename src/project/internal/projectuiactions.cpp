@@ -97,11 +97,11 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Insert"),
              TranslatableString("action", "Insert")
              ),
-    UiAction("rename-clip",
+    UiAction("rename-item",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Rename clip"),
-             TranslatableString("action", "Rename clip")
+             TranslatableString("action", "Rename item"),
+             TranslatableString("action", "Rename item")
              ),
     UiAction("trim-clip",
              au::context::UiCtxUnknown,

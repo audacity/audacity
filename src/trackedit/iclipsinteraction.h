@@ -43,8 +43,8 @@ public:
     virtual ITrackDataPtr copyClip(const ClipKey& clipKey) = 0;
     virtual std::optional<TimeSpan> removeClip(const ClipKey& clipKey) = 0;
     virtual bool removeClips(const ClipKeyList& clipKeyList, bool moveClips) = 0;
-    virtual muse::RetVal<LabelKeyList> moveClips(const ClipKeyList& clipKeyList, secs_t timePositionOffset, int trackPositionOffset,
-                                                 bool completed, bool& clipsMovedToOtherTracks) = 0;
+    virtual muse::RetVal<ClipKeyList> moveClips(const ClipKeyList& clipKeyList, secs_t timePositionOffset, int trackPositionOffset,
+                                                bool completed, bool& clipsMovedToOtherTracks) = 0;
     virtual void cancelClipDragEdit() = 0;
 
     virtual bool splitClipsAtSilences(const ClipKeyList& clipKeyList) = 0;
@@ -55,10 +55,11 @@ public:
     virtual ITrackDataPtr clipSplitCut(const ClipKey& clipKey) = 0;
     virtual bool clipSplitDelete(const ClipKey& clipKey) = 0;
 
-    virtual bool trimClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed) = 0;
-    virtual bool trimClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed) = 0;
-    virtual bool stretchClipLeft(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed) = 0;
-    virtual bool stretchClipRight(const ClipKey& clipKey, secs_t deltaSec, secs_t minClipDuration, bool completed) = 0;
+    virtual bool trimClipsLeft(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed) = 0;
+    virtual bool trimClipsRight(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed) = 0;
+
+    virtual bool stretchClipsLeft(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed) = 0;
+    virtual bool stretchClipsRight(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed) = 0;
 
     virtual muse::Ret makeRoomForClip(const trackedit::ClipKey& clipKey) = 0;
 

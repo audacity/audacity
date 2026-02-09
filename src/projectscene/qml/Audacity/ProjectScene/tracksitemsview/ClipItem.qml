@@ -324,12 +324,6 @@ Rectangle {
         root.headerHovered = false
     }
 
-    onClipFocusedChanged: function () {
-        if (root.clipFocused && !navCtrl.active) {
-            navCtrl.requestActive()
-        }
-    }
-
     MouseArea {
         id: hoverArea
         anchors.fill: parent
