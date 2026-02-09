@@ -6,10 +6,11 @@
 #include <QAbstractListModel>
 #include <QObject>
 
-#include "async/asyncable.h"
+#include "framework/global/async/asyncable.h"
 
-#include "modularity/ioc.h"
-#include "iinteractive.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/interactive/iinteractive.h"
+
 #include "project/imetadata.h"
 #include "project/iprojectconfiguration.h"
 #include "iexportconfiguration.h"

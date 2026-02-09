@@ -2,10 +2,11 @@
 * Audacity: A Digital Audio Editor
 */
 
-#include "modularity/ioc.h"
-#include "context/iglobalcontext.h"
-#include "iinteractive.h"
+#include "framework/global/modularity/ioc.h"
 
+#include "framework/interactive/iinteractive.h"
+
+#include "context/iglobalcontext.h"
 #include "au3-tags/Tags.h"
 
 #include "project/types/projectmeta.h"

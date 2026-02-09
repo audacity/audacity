@@ -6,7 +6,7 @@
 #include "../common/builtineffectmodel.h"
 #include "../common/params.h"
 
-#include "global/iinteractive.h"
+#include "framework/interactive/iinteractive.h"
 
 namespace au::effects {
 class NoiseReductionEffect;

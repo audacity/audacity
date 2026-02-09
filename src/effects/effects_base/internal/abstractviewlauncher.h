@@ -4,8 +4,8 @@
 
 #include "effects/effects_base/ieffectinstancesregister.h"
 
-#include "modularity/ioc.h"
-#include "global/iinteractive.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/interactive/iinteractive.h"
 
 namespace au::effects {
 class AbstractViewLauncher : public IEffectViewLauncher, public muse::Injectable

@@ -3,12 +3,13 @@
  */
 #pragma once
 
+#include "framework/global/types/ret.h"
+#include "framework/interactive/iinteractive.h"
+
 #include "au3interactiontypes.h"
 #include "trackedittypes.h"
 #include "dom/clip.h"
 #include "au3wrap/au3types.h"
-#include "global/types/ret.h"
-#include "global/iinteractive.h"
 #include <cstddef>
 
 namespace au::trackedit::utils {

@@ -26,13 +26,14 @@
 
 #include "../iapplicationactioncontroller.h"
 
-#include "modularity/ioc.h"
-#include "actions/actionable.h"
-#include "actions/iactionsdispatcher.h"
-#include "ui/iuiactionsregister.h"
-#include "async/asyncable.h"
-#include "ui/imainwindow.h"
-#include "iinteractive.h"
+#include "framework/global/async/asyncable.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/actions/actionable.h"
+#include "framework/actions/iactionsdispatcher.h"
+#include "framework/interactive/iinteractive.h"
+#include "framework/ui/iuiactionsregister.h"
+#include "framework/ui/imainwindow.h"
+
 #include "iappshellconfiguration.h"
 #include "iapplication.h"
 #include "startupscenario.h"

@@ -23,7 +23,10 @@
 
 #include <QtQml>
 
-#include "modularity/ioc.h"
+#include "framework/global/modularity/ioc.h"
+
+#include "framework/ui/iuiactionsregister.h"
+#include "framework/interactive/iinteractiveuriregister.h"
 
 #include "internal/trackedituiactions.h"
 #include "internal/trackeditactionscontroller.h"
@@ -47,9 +50,6 @@
 #include "internal/au3/au3tracksinteraction.h"
 #include "internal/au3/au3clipsinteraction.h"
 #include "internal/au3/au3labelsinteraction.h"
-
-#include "ui/iuiactionsregister.h"
-#include "ui/iinteractiveuriregister.h"
 
 using namespace au::trackedit;
 using namespace muse;
@@ -105,7 +105,7 @@ void TrackeditModule::registerUiTypes()
 
 void TrackeditModule::resolveImports()
 {
-    auto ir = ioc()->resolve<muse::ui::IInteractiveUriRegister>(moduleName());
+    auto ir = ioc()->resolve<muse::interactive::IInteractiveUriRegister>(moduleName());
     if (ir) {
         ir->registerQmlUri(muse::Uri("audacity://trackedit/custom_rate"), "Audacity/TrackEdit/CustomRateDialog.qml");
         ir->registerQmlUri(muse::Uri("audacity://trackedit/custom_time"), "Audacity/TrackEdit/CustomTimeDialog.qml");

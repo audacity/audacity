@@ -23,9 +23,11 @@
 #define AU_CONTEXT_UICONTEXTRESOLVER_H
 
 #include "../iuicontextresolver.h"
-#include "async/asyncable.h"
-#include "modularity/ioc.h"
-#include "iinteractive.h"
+
+#include "framework/global/async/asyncable.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/interactive/iinteractive.h"
+
 #include "../iglobalcontext.h"
 #include "ui/inavigationcontroller.h"
 #include "trackedit/internal/itracknavigationcontroller.h"

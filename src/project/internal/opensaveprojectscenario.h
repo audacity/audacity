@@ -25,15 +25,16 @@
 
 #include "iopensaveprojectscenario.h"
 
-#include "modularity/ioc.h"
-#include "iprojectconfiguration.h"
-#include "iprojectfilescontroller.h"
-#include "global/io/ifilesystem.h"
-#include "global/iinteractive.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/global/io/ifilesystem.h"
+#include "framework/interactive/iinteractive.h"
 
-#include "cloud/musescorecom/imusescorecomservice.h"
-#include "cloud/audiocom/iaudiocomservice.h"
-#include "cloud/qml/Muse/Cloud/enums.h"
+#include "framework/cloud/musescorecom/imusescorecomservice.h"
+#include "framework/cloud/audiocom/iaudiocomservice.h"
+#include "framework/cloud/qml/Muse/Cloud/enums.h"
+
+#include "project/iprojectconfiguration.h"
+#include "project/iprojectfilescontroller.h"
 
 namespace au::project {
 class OpenSaveProjectScenario : public IOpenSaveProjectScenario, public muse::Injectable

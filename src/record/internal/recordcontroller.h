@@ -5,12 +5,13 @@
 #define AU_RECORD_RECORDCONTROLLER_H
 
 #include "framework/global/async/asyncable.h"
-#include "framework/actions/actionable.h"
+#include "framework/global/modularity/ioc.h"
 
-#include "modularity/ioc.h"
-#include "context/iglobalcontext.h"
+#include "framework/actions/actionable.h"
 #include "framework/actions/iactionsdispatcher.h"
-#include "framework/global/iinteractive.h"
+#include "framework/interactive/iinteractive.h"
+
+#include "context/iglobalcontext.h"
 #include "playback/iplaybackcontroller.h"
 #include "record/irecordconfiguration.h"
 

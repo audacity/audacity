@@ -4,14 +4,11 @@
 
 #pragma once
 
-#include "effects/effects_base/internal/abstractviewlauncher.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/vst/ivstinstancesregister.h"
 
-#include "global/modularity/ioc.h"
 #include "effects/effects_base/ieffectinstancesregister.h"
-#include "global/iinteractive.h"
-
-// from muse
-#include "vst/ivstinstancesregister.h"
+#include "effects/effects_base/internal/abstractviewlauncher.h"
 
 namespace au::effects {
 class Vst3ViewLauncher final : public AbstractViewLauncher

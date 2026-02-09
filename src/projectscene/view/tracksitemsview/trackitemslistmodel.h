@@ -7,13 +7,14 @@
 
 #include <QAbstractListModel>
 
-#include "actions/actionable.h"
-#include "async/asyncable.h"
+#include "framework/global/async/asyncable.h"
+#include "framework/global/modularity/ioc.h"
 
-#include "modularity/ioc.h"
-#include "global/iinteractive.h"
+#include "framework/actions/actionable.h"
+#include "framework/actions/iactionsdispatcher.h"
+#include "framework/interactive/iinteractive.h"
+
 #include "context/iglobalcontext.h"
-#include "actions/iactionsdispatcher.h"
 #include "trackedit/iselectioncontroller.h"
 #include "trackedit/itrackeditinteraction.h"
 #include "trackedit/trackedittypes.h"

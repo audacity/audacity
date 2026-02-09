@@ -4,8 +4,8 @@
 
 #include "labelsmodule.h"
 
-#include "modularity/ioc.h"
-#include "ui/iinteractiveuriregister.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/interactive/iinteractiveuriregister.h"
 
 #include "internal/au3/au3labelsimporter.h"
 #include "internal/au3/au3labelsexporter.h"
@@ -50,7 +50,7 @@ void LabelsModule::registerUiTypes()
 
 void LabelsModule::resolveImports()
 {
-    auto ir = ioc()->resolve<muse::ui::IInteractiveUriRegister>(moduleName());
+    auto ir = ioc()->resolve<muse::interactive::IInteractiveUriRegister>(moduleName());
     if (ir) {
         ir->registerQmlUri(Uri("audacity://project/export/labels"), "Export/ExportLabelsDialog.qml");
     }

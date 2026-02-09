@@ -7,8 +7,8 @@
 
 #include "types/projectscenetypes.h"
 
-#include "ui/iuiactionsregister.h"
-#include "ui/iinteractiveuriregister.h"
+#include "framework/ui/iuiactionsregister.h"
+#include "framework/interactive/iinteractiveuriregister.h"
 
 #include "internal/projectsceneuiactions.h"
 #include "internal/projectsceneactionscontroller.h"
@@ -82,6 +82,7 @@
 using namespace au::projectscene;
 using namespace muse::modularity;
 using namespace muse::ui;
+using namespace muse::interactive;
 
 static void projectscene_init_qrc()
 {

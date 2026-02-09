@@ -13,6 +13,7 @@
 #include "framework/draw/drawmodule.h"
 #include "framework/actions/actionsmodule.h"
 #include "framework/audioplugins/audiopluginsmodule.h"
+#include "framework/interactive/interactivemodule.h"
 #include "framework/ui/uimodule.h"
 #include "framework/shortcuts/shortcutsmodule.h"
 #include "framework/accessibility/accessibilitymodule.h"
@@ -109,6 +110,7 @@ std::shared_ptr<muse::IApplication> AppFactory::newGuiApp(const CommandLineParse
     app->addModule(new muse::draw::DrawModule());
     app->addModule(new muse::workspace::WorkspaceModule());
     app->addModule(new muse::accessibility::AccessibilityModule());
+    app->addModule(new muse::interactive::InteractiveModule());
     app->addModule(new muse::mi::MultiInstancesModule());
     app->addModule(new muse::learn::LearnModule());
     app->addModule(new muse::languages::LanguagesModule());

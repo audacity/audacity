@@ -24,10 +24,10 @@
 
 #include <QQmlEngine>
 
-#include "modularity/ioc.h"
+#include "framework/global/modularity/ioc.h"
 
-#include "ui/iuiactionsregister.h"
-#include "ui/iinteractiveuriregister.h"
+#include "framework/interactive/iinteractiveuriregister.h"
+#include "framework/ui/iuiactionsregister.h"
 
 #include "internal/applicationuiactions.h"
 #include "internal/applicationactioncontroller.h"
@@ -43,9 +43,6 @@
 
 using namespace au::appshell;
 using namespace au::appshell;
-using namespace muse;
-using namespace muse::modularity;
-using namespace muse::ui;
 
 AppShellModule::AppShellModule()
 {
@@ -77,36 +74,36 @@ void AppShellModule::registerExports()
 
 void AppShellModule::resolveImports()
 {
-    auto ar = ioc()->resolve<ui::IUiActionsRegister>(moduleName());
+    auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(moduleName());
     if (ar) {
         ar->reg(m_applicationUiActions);
     }
 
-    auto ir = ioc()->resolve<IInteractiveUriRegister>(moduleName());
+    auto ir = ioc()->resolve<muse::interactive::IInteractiveUriRegister>(moduleName());
     if (ir) {
-        ir->registerPageUri(Uri("audacity://home"));
-        ir->registerPageUri(Uri("audacity://project"));
-        ir->registerPageUri(Uri("audacity://publish"));
-        ir->registerPageUri(Uri("audacity://devtools"));
+        ir->registerPageUri(muse::Uri("audacity://home"));
+        ir->registerPageUri(muse::Uri("audacity://project"));
+        ir->registerPageUri(muse::Uri("audacity://publish"));
+        ir->registerPageUri(muse::Uri("audacity://devtools"));
 
-        ir->registerQmlUri(Uri("audacity://about/audacity"), "Audacity.AppShell", "AboutDialog");
-        ir->registerQmlUri(Uri("audacity://firstLaunchSetup"), "Audacity.AppShell", "FirstLaunchSetupDialog");
-        ir->registerQmlUri(Uri("audacity://alphaWelcomePopup"), "Audacity.AppShell", "AlphaWelcomePopupDialog");
+        ir->registerQmlUri(muse::Uri("audacity://about/audacity"), "Audacity.AppShell", "AboutDialog");
+        ir->registerQmlUri(muse::Uri("audacity://firstLaunchSetup"), "Audacity.AppShell", "FirstLaunchSetupDialog");
+        ir->registerQmlUri(muse::Uri("audacity://alphaWelcomePopup"), "Audacity.AppShell", "AlphaWelcomePopupDialog");
     }
 }
 
-void AppShellModule::onPreInit(const IApplication::RunMode& mode)
+void AppShellModule::onPreInit(const muse::IApplication::RunMode& mode)
 {
-    if (mode == IApplication::RunMode::AudioPluginRegistration) {
+    if (mode == muse::IApplication::RunMode::AudioPluginRegistration) {
         return;
     }
 
     m_applicationActionController->preInit();
 }
 
-void AppShellModule::onInit(const IApplication::RunMode& mode)
+void AppShellModule::onInit(const muse::IApplication::RunMode& mode)
 {
-    if (mode == IApplication::RunMode::AudioPluginRegistration) {
+    if (mode == muse::IApplication::RunMode::AudioPluginRegistration) {
         return;
     }
 
@@ -116,9 +113,9 @@ void AppShellModule::onInit(const IApplication::RunMode& mode)
     m_sessionsManager->init();
 }
 
-void AppShellModule::onAllInited(const IApplication::RunMode& mode)
+void AppShellModule::onAllInited(const muse::IApplication::RunMode& mode)
 {
-    if (mode == IApplication::RunMode::AudioPluginRegistration) {
+    if (mode == muse::IApplication::RunMode::AudioPluginRegistration) {
         return;
     }
 

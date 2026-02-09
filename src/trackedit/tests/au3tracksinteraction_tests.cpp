@@ -14,7 +14,7 @@
 #include "mocks/tracknavigationcontrollermock.h"
 #include "../trackediterrors.h"
 
-#include "global/tests/mocks/interactivemock.h"
+#include "interactive/tests/mocks/interactivemock.h"
 
 #include "au3wrap/internal/trackcolor.h"
 

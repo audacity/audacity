@@ -121,9 +121,11 @@ void StartupScenario::runAfterSplashScreen()
         }
         once = true;
 
-        muse::io::paths_t newPluginPaths = registerAudioPluginsScenario()->scanForNewPluginPaths();
+        muse::audioplugins::PluginScanResult scanResult = registerAudioPluginsScenario()->scanPlugins();
 
-        if (!newPluginPaths.empty()) {
+        registerAudioPluginsScenario()->unregisterRemovedPlugins(scanResult.missingPluginIds);
+
+        if (!scanResult.newPluginPaths.empty()) {
             auto ret = interactive()->questionSync(muse::trc("appshell", "Scanning audio plugins"),
                                                    muse::trc(
                                                        "appshell",
@@ -134,10 +136,7 @@ void StartupScenario::runAfterSplashScreen()
                                                      muse::IInteractive::ButtonData(
                                                          muse::IInteractive::Button::Apply, muse::trc("appshell", "Scan plugins"), true) });
             if (ret.standardButton() == muse::IInteractive::Button::Apply) {
-                muse::Ret ret = registerAudioPluginsScenario()->updatePluginsRegistry(newPluginPaths);
-                if (!ret) {
-                    LOGE() << ret.toString();
-                }
+                registerAudioPluginsScenario()->registerNewPlugins(scanResult.newPluginPaths);
             }
         }
 

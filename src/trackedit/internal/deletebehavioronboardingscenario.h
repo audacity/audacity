@@ -3,9 +3,11 @@
  */
 #pragma once
 
-#include "modularity/ioc.h"
-#include "global/iinteractive.h"
-#include "actions/iactionsdispatcher.h"
+#include "framework/global/modularity/ioc.h"
+
+#include "framework/interactive/iinteractive.h"
+#include "framework/actions/iactionsdispatcher.h"
+
 #include "trackedit/itrackeditconfiguration.h"
 
 #include "trackedit/trackedittypes.h"

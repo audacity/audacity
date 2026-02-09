@@ -1,21 +1,22 @@
 #ifndef AU_PROJECT_PROJECTACTIONSCONTROLLER_H
 #define AU_PROJECT_PROJECTACTIONSCONTROLLER_H
 
-#include "actions/actionable.h"
-#include "async/asyncable.h"
+#include "framework/global/async/asyncable.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/global/io/ifilesystem.h"
 
-#include "modularity/ioc.h"
-#include "actions/iactionsdispatcher.h"
+#include "framework/actions/actionable.h"
+#include "framework/actions/iactionsdispatcher.h"
+#include "framework/interactive/iinteractive.h"
+
 #include "context/iglobalcontext.h"
-#include "global/iinteractive.h"
-#include "project/iprojectconfiguration.h"
-#include "global/io/ifilesystem.h"
 #include "project/irecentfilescontroller.h"
 #include "iopensaveprojectscenario.h"
 #include "trackedit/iprojecthistory.h"
 #include "record/irecordcontroller.h"
 #include "importexport/export/internal/exportconfiguration.h"
 
+#include "project/iprojectconfiguration.h"
 #include "project/iprojectfilescontroller.h"
 #include "project/iaudacityproject.h"
 

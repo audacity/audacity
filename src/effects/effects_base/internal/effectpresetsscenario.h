@@ -5,11 +5,12 @@
 
 #include "../ieffectpresetsscenario.h"
 
-#include "global/io/path.h"
+#include "framework/global/io/path.h"
 
-#include "modularity/ioc.h"
-#include "global/iinteractive.h"
-#include "global/iglobalconfiguration.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/global/iglobalconfiguration.h"
+#include "framework/interactive/iinteractive.h"
+
 #include "../ieffectpresetsprovider.h"
 #include "../ieffectinstancesregister.h"
 

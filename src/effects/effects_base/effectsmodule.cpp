@@ -6,9 +6,9 @@
 #include "au3-module-manager/PluginManager.h"
 #include "au3-files/FileNames.h"
 
-#include "ui/iuiactionsregister.h"
-#include "ui/iinteractiveuriregister.h"
-#include "diagnostics/idiagnosticspathsregister.h"
+#include "framework/ui/iuiactionsregister.h"
+#include "framework/interactive/iinteractiveuriregister.h"
+#include "framework/diagnostics/idiagnosticspathsregister.h"
 
 #include "internal/effectconfigsettings.h"
 #include "internal/effectsprovider.h"
@@ -68,7 +68,7 @@ void EffectsModule::registerExports()
 
 void EffectsModule::resolveImports()
 {
-    auto ir = ioc()->resolve<muse::ui::IInteractiveUriRegister>(moduleName());
+    auto ir = ioc()->resolve<muse::interactive::IInteractiveUriRegister>(moduleName());
     if (ir) {
         ir->registerQmlUri(muse::Uri("audacity://effects/destructive_viewer"), "Audacity/Effects/DestructiveEffectsViewerDialog.qml");
         ir->registerQmlUri(muse::Uri("audacity://effects/realtime_viewer"), "Audacity/Effects/RealtimeEffectViewerDialog.qml");

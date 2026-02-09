@@ -5,10 +5,11 @@
 
 #include <QObject>
 
-#include "async/asyncable.h"
+#include "framework/global/async/asyncable.h"
 
-#include "modularity/ioc.h"
-#include "iinteractive.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/interactive/iinteractive.h"
+
 #include "context/iglobalcontext.h"
 #include "ilabelsexporter.h"
 #include "ilabelsconfiguration.h"

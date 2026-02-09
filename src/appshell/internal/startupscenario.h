@@ -24,17 +24,15 @@
 
 #include "istartupscenario.h"
 
-#include "async/asyncable.h"
+#include "framework/global/async/asyncable.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/interactive/iinteractive.h"
+#include "framework/actions/iactionsdispatcher.h"
+#include "framework/audioplugins/iregisteraudiopluginsscenario.h"
+#include "framework/multiwindows/imultiwindowsprovider.h"
 
-#include "modularity/ioc.h"
-#include "iinteractive.h"
-#include "actions/iactionsdispatcher.h"
-#include "multiwindows/imultiwindowsprovider.h"
-
-#include "iappshellconfiguration.h"
-#include "isessionsmanager.h"
-#include "audioplugins/iregisteraudiopluginsscenario.h"
-// #include "project/iprojectautosaver.h"
+#include "appshell/iappshellconfiguration.h"
+#include "appshell/internal/isessionsmanager.h"
 
 namespace au::appshell {
 class StartupScenario : public au::appshell::IStartupScenario, public muse::async::Asyncable, public muse::Injectable

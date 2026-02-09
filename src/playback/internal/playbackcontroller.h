@@ -4,10 +4,10 @@
 #pragma once
 
 #include "framework/global/async/asyncable.h"
-#include "framework/actions/actionable.h"
 #include "framework/global/iapplication.h"
-#include "framework/global/iinteractive.h"
+#include "framework/actions/actionable.h"
 #include "framework/actions/iactionsdispatcher.h"
+#include "framework/interactive/iinteractive.h"
 #include "framework/ui/iuiactionsregister.h"
 
 #include "audio/audiotypes.h"

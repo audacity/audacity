@@ -3,12 +3,13 @@
 */
 #pragma once
 
-#include "modularity/ioc.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/interactive/iinteractive.h"
+
 #include "context/iglobalcontext.h"
 #include "trackedit/iselectioncontroller.h"
 #include "trackedit/itrackeditconfiguration.h"
 #include "trackedit/iprojecthistory.h"
-#include "iinteractive.h"
 #include "trackedit/itracksinteraction.h"
 
 #include "au3wrap/au3types.h"
