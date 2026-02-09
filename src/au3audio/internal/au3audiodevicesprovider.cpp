@@ -27,6 +27,7 @@ static const muse::Settings::Key PLAYBACK_DEVICE("au3audio", "AudioIO/PlaybackDe
 static const muse::Settings::Key RECORDING_DEVICE("au3audio", "AudioIO/RecordingDevice");
 static const muse::Settings::Key INPUT_CHANNELS("au3audio", "AudioIO/RecordChannels");
 
+static const muse::Settings::Key AUTOMATIC_LATENCY_CORRECTION("au3audio", "AudioIO/AutomaticLatencyCorrection");
 static const muse::Settings::Key LATENCY_DURATION("au3audio", "AudioIO/LatencyDuration");
 static const muse::Settings::Key LATENCY_CORRECTION("au3audio", "AudioIO/LatencyCorrection");
 
@@ -80,6 +81,7 @@ void Au3AudioDevicesProvider::init()
 
     muse::settings()->setDefaultValue(INPUT_CHANNELS, muse::Val(1));
     muse::settings()->setDefaultValue(LATENCY_DURATION, muse::Val(100.0));
+    muse::settings()->setDefaultValue(AUTOMATIC_LATENCY_CORRECTION, muse::Val(false));
     muse::settings()->setDefaultValue(LATENCY_CORRECTION, muse::Val(-130.0));
     muse::settings()->setDefaultValue(DEFAULT_PROJECT_SAMPLE_RATE, muse::Val(AudioIOBase::GetOptimalSupportedSampleRate()));
     muse::settings()->setDefaultValue(DEFAULT_PROJECT_SAMPLE_FORMAT,
@@ -105,6 +107,10 @@ void Au3AudioDevicesProvider::init()
 
     muse::settings()->valueChanged(INPUT_CHANNELS).onReceive(nullptr, [this](const muse::Val& val) {
         m_inputChannelsChanged.notify();
+    });
+
+    muse::settings()->valueChanged(AUTOMATIC_LATENCY_CORRECTION).onReceive(nullptr, [this](const muse::Val& val) {
+        m_automaticCompensationEnabledChanged.notify();
     });
 
     muse::settings()->valueChanged(LATENCY_DURATION).onReceive(nullptr, [this](const muse::Val& val) {
@@ -237,6 +243,16 @@ void Au3AudioDevicesProvider::setBufferLength(double newBufferLength)
     muse::settings()->setLocalValue(LATENCY_DURATION, muse::Val(newBufferLength));
 }
 
+bool Au3AudioDevicesProvider::automaticCompensationEnabled() const
+{
+    return muse::settings()->value(AUTOMATIC_LATENCY_CORRECTION).toBool();
+}
+
+void Au3AudioDevicesProvider::setAutomaticCompensationEnabled(bool enabled)
+{
+    muse::settings()->setLocalValue(AUTOMATIC_LATENCY_CORRECTION, muse::Val(enabled));
+}
+
 double Au3AudioDevicesProvider::latencyCompensation() const
 {
     return muse::settings()->value(LATENCY_CORRECTION).toDouble();
@@ -244,7 +260,7 @@ double Au3AudioDevicesProvider::latencyCompensation() const
 
 void Au3AudioDevicesProvider::setLatencyCompensation(double newLatencyCompensation)
 {
-    settings()->setLocalValue(LATENCY_CORRECTION, muse::Val(newLatencyCompensation));
+    muse::settings()->setLocalValue(LATENCY_CORRECTION, muse::Val(newLatencyCompensation));
 }
 
 std::vector<uint64_t> Au3AudioDevicesProvider::sampleRates() const
@@ -307,6 +323,11 @@ std::vector<std::string> Au3AudioDevicesProvider::sampleFormats() const
 async::Notification Au3AudioDevicesProvider::defaultSampleRateChanged() const
 {
     return m_defaultSampleRateChanged;
+}
+
+async::Notification Au3AudioDevicesProvider::automaticCompensationEnabledChanged() const
+{
+    return m_automaticCompensationEnabledChanged;
 }
 
 async::Notification Au3AudioDevicesProvider::latencyCompensationChanged() const

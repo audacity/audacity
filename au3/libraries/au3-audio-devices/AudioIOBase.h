@@ -405,6 +405,7 @@ protected:
 
 extern AUDIO_DEVICES_API StringSetting AudioIOHost;
 extern AUDIO_DEVICES_API DoubleSetting AudioIOLatencyCorrection;
+extern AUDIO_DEVICES_API BoolSetting AudioIOAutomaticLatencyCorrection;
 extern AUDIO_DEVICES_API DoubleSetting AudioIOLatencyDuration;
 extern AUDIO_DEVICES_API StringSetting AudioIOPlaybackDevice;
 extern AUDIO_DEVICES_API StringSetting AudioIOPlaybackSource;

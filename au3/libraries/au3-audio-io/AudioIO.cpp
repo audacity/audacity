@@ -699,7 +699,12 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
                   : // Otherwise, use the (likely incorrect) latency reported by PA
                   stream->outputLatency;
 
+            if (AudioIOAutomaticLatencyCorrection.Read()) {
+                mRecordingSchedule.mLatencyCorrection = -stream->inputLatency - outputLatency;
+            }
+
             mHardwarePlaybackLatencyMs = outputLatency * 1000.0;
+            mHardwareCaptureLatencyMs = stream->inputLatency * 1000.0;
             mHardwarePlaybackLatencyFrames = lrint(outputLatency * stream->sampleRate);
 #ifdef __WXGTK__
             // DV: When using ALSA PortAudio does not report the buffer size.
@@ -1922,7 +1927,7 @@ void AudioIO::AudioThread(std::atomic<bool>& finish)
             lastState = ProcessingState::eSkipProcessing;
 
             if (gAudioIO->IsMonitoring()) {
-               lastState = ProcessingState::eMonitoringProcessing;
+                lastState = ProcessingState::eMonitoringProcessing;
             }
         }
 

@@ -730,7 +730,8 @@ int AudioIOBase::getPlayDevIndex(const wxString& devNameArg)
 
     if (!devName.empty()) {
         wxString hostName = AudioIOHost.Read();
-        int deviceIndex = DeviceManager::Instance()->GetOutputDevicePaIndex(hostName.ToStdString(wxConvUTF8), devName.ToStdString(wxConvUTF8));
+        int deviceIndex = DeviceManager::Instance()->GetOutputDevicePaIndex(hostName.ToStdString(wxConvUTF8), devName.ToStdString(
+                                                                                wxConvUTF8));
         if (deviceIndex >= 0) {
             return deviceIndex;
         }
@@ -1054,6 +1055,8 @@ auto AudioIOBase::GetAllDeviceInfo() -> std::vector<AudioIODiagnostics>
 
 StringSetting AudioIOHost{
     L"/AudioIO/Host", L"" };
+BoolSetting AudioIOAutomaticLatencyCorrection{
+    L"/AudioIO/AutomaticLatencyCorrection", true };
 DoubleSetting AudioIOLatencyCorrection{
     L"/AudioIO/LatencyCorrection", -130.0 };
 DoubleSetting AudioIOLatencyDuration{
