@@ -26,14 +26,14 @@ concurrency:
 
 env:
   CI_DIR: buildscripts/ci
-  DEVELOPER_DIR: /Applications/Xcode_15.2.app/Contents/Developer
+  DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
 
 jobs:
   au4_build_macos:
-    runs-on: macos-14
+    runs-on: macos-26
     steps:
     - name: Clone repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
       with:
         submodules: recursive
 
@@ -107,6 +107,18 @@ jobs:
         echo "SENTRY_URL=$SENTRY_URL" >> $GITHUB_ENV
         echo "SENTRY_URL: $SENTRY_URL"
 
+    - name: Restore ccache files
+      id: restore-ccache
+      uses: actions/cache/restore@v5
+      with:
+        path: ${{ github.workspace }}/.ccache
+        key: ${{runner.os}}-${{runner.arch}}-ccache-
+        restore-keys: ${{runner.os}}-${{runner.arch}}-ccache-
+    - name: Setup ccache
+      run: |
+        brew install ccache
+        bash ./buildscripts/ci/tools/setup_ccache_config.sh
+
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
@@ -115,6 +127,7 @@ jobs:
         target: 'desktop'
         arch: 'clang_64'
         modules: 'qt5compat qtnetworkauth qtshadertools qtwebsockets qtgraphs qtquick3d'
+        cache: true
 
     - name: Setup environment
       if: env.DO_BUILD == 'true'
@@ -127,6 +140,10 @@ jobs:
         C_URL=${SENTRY_URL}; if [ -z "$C_URL" ]; then C_URL="''"; fi
         source $HOME/build_tools/environment.sh
         cmake -DCRASH_REPORT_URL=$C_URL -P ${CI_DIR}/macos/ci_build.cmake
+
+    - name: Show ccache stats
+      run: |
+        ccache -sv
 
     - name: Run plugin registration app self-test
       if: env.DO_BUILD == 'true'
@@ -167,7 +184,20 @@ jobs:
 
     - name: Upload artifacts on GitHub
       if: env.DO_BUILD == 'true'
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v6
       with:
         name: ${{ env.UPLOAD_ARTIFACT_NAME }}
         path: ./build.artifacts
+
+    - name: Prepare ccache files for saving
+      id: prepare-save-ccache
+      if: always()
+      run: |
+        ccache --recompress 10
+        echo "CCACHE_TIMESTAMP=$(date -u +"%F-%T")" | tee -a $GITHUB_OUTPUT
+    - name: Save ccache files
+      if: always()
+      uses: actions/cache/save@v5
+      with:
+        key: ${{ steps.restore-ccache.outputs.cache-primary-key }}${{ steps.prepare-save-ccache.outputs.CCACHE_TIMESTAMP }}
+        path: ${{ github.workspace }}/.ccache

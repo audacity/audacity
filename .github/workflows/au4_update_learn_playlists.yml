@@ -14,10 +14,10 @@ defaults:
 
 jobs:
   au4_update_playlists:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     steps:
       - name: Clone repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Update info about the get started playlist in s3
         run: |
