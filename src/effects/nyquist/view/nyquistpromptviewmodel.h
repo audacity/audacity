@@ -5,9 +5,10 @@
 
 #include <QObject>
 
-#include "framework/global/iinteractive.h"
 #include "framework/global/io/ifilesystem.h"
 #include "framework/global/modularity/ioc.h"
+
+#include "framework/interactive/iinteractive.h"
 
 #include "effects/effects_base/view/abstracteffectviewmodel.h"
 #include "effects/effects_base/ieffectsprovider.h"
