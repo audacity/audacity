@@ -11,7 +11,6 @@ Dial {
     id: root
 
     property alias navigation: navCtrl
-    property bool isValueEditNavigationLeftAndRight: true
 
     property real radius: 16
     property real backgroundHeight: radius + radius * Math.sin(prv.startAngle)
@@ -104,25 +103,11 @@ Dial {
             }
 
             switch(event.type) {
-            case NavigationEvent.Left:
-                if (isValueEditNavigationLeftAndRight) {
-                    handle(-root.stepSize)
-                }
-                break
-            case NavigationEvent.Right:
-                if (isValueEditNavigationLeftAndRight) {
-                    handle(root.stepSize)
-                }
-                break
             case NavigationEvent.Up:
-                if (!isValueEditNavigationLeftAndRight) {
-                    handle(root.stepSize)
-                }
+                handle(root.stepSize)
                 break
             case NavigationEvent.Down:
-                if (!isValueEditNavigationLeftAndRight) {
-                    handle(-root.stepSize)
-                }
+                handle(-root.stepSize)
                 break
             }
         }
