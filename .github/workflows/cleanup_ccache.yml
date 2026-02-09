@@ -1,0 +1,21 @@
+name: 'Cleanup: CCache'
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '30 * * * *'
+
+jobs:
+  cleanup_ccache:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: buildscripts/ci/tools/cleanup_ccache.py
+      - name: Cleanup ccache
+        run: buildscripts/ci/tools/cleanup_ccache.py
+        env:
+          GH_TOKEN: ${{ github.token }}
