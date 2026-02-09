@@ -57,10 +57,9 @@ void Au3SelectionController::init()
             }
 
             setSelectedLabels(savedSelectedLabels, true);
+            setSelectedClips(savedSelectedClips, true);
 
-            if (!savedSelectedClips.empty()) {
-                setSelectedClips(savedSelectedClips, true);
-            } else {
+            if (savedSelectedClips.empty()) {
                 setSelectedTracks(savedSelectedTracks, true);
             }
 
