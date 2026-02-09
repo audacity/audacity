@@ -176,6 +176,8 @@ signals:
     void updateDisplayWhilePlayingEnabledChanged();
     void pinnedPlayHeadEnabledChanged();
 
+    void userHorizontalScrolled();
+
 private:
     trackedit::ITrackeditProjectPtr trackEditProject() const;
     IProjectViewStatePtr viewState() const;

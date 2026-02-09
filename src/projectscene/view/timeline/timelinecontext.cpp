@@ -210,9 +210,17 @@ void TimelineContext::onWheel(double mouseX, const QPoint& pixelDelta, const QPo
         if (modifiers.testFlag(Qt::ShiftModifier)) {
             int abs = sqrt(dx * dx + dy * dy) * (dy > -dx ? -1 : 1);
             shiftFrameTime(abs * correction);
+            emit userHorizontalScrolled();
         } else {
-            shiftFrameTime(-dx * correction);
-            emit viewContentYChangeRequested(-dy);
+            if (dx != 0) {
+                // don't emit signal if there was no horizontal scroll (only vertical)
+                shiftFrameTime(-dx * correction);
+                emit userHorizontalScrolled();
+            }
+            if (dy != 0) {
+                // don't emit signal if there was no vertical scroll (only horizontal)
+                emit viewContentYChangeRequested(-dy);
+            }
         }
     }
 }
@@ -236,6 +244,7 @@ void TimelineContext::scrollHorizontal(qreal newPos)
     qreal dx = horizontalScrollableSize() * scrollStep;
 
     shiftFrameTime(dx * correction);
+    emit userHorizontalScrolled();
 }
 
 void TimelineContext::scrollVertical(qreal newPos)

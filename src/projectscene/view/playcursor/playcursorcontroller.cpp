@@ -30,9 +30,14 @@ using namespace muse::actions;
 static const ActionQuery PLAYBACK_SEEK_QUERY("action://playback/seek");
 static const ActionQuery PLAYBACK_CHANGE_PLAY_REGION_QUERY("action://playback/play-region-change");
 
+static constexpr int SCROLL_SUPPRESSION_TIMEOUT_MS = 3000;
+
 PlayCursorController::PlayCursorController(QObject* parent)
     : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
 {
+    m_scrollSuppressionTimer.setSingleShot(true);
+    m_scrollSuppressionTimer.setInterval(SCROLL_SUPPRESSION_TIMEOUT_MS);
+    connect(&m_scrollSuppressionTimer, &QTimer::timeout, this, &PlayCursorController::onScrollSuppressionTimeout);
 }
 
 void PlayCursorController::init()
@@ -43,6 +48,13 @@ void PlayCursorController::init()
 
     globalContext()->recordPositionChanged().onReceive(this, [this](muse::secs_t secs){
         updatePositionX(secs);
+    });
+
+    // When playback starts, clear any scroll suppression so the view updates instantly
+    playbackState()->playbackStatusChanged().onReceive(this, [this](playback::PlaybackStatus status) {
+        if (status == playback::PlaybackStatus::Running) {
+            clearScrollSuppression();
+        }
     });
 }
 
@@ -107,7 +119,7 @@ void PlayCursorController::updatePositionX(muse::secs_t secs)
         const bool updateDisplayWhilePlaying = m_context->updateDisplayWhilePlayingEnabled();
         const bool pinnedPlayHead = m_context->pinnedPlayHeadEnabled();
 
-        if (updateDisplayWhilePlaying) {
+        if (updateDisplayWhilePlaying && !m_viewUpdatesSuppressed) {
             if (pinnedPlayHead) {
                 // Pinned playhead mode: Keep cursor at center, scroll the view continuously
                 ensureCursorAtCenter(secs);
@@ -116,7 +128,8 @@ void PlayCursorController::updatePositionX(muse::secs_t secs)
                 m_context->insureVisible(secs);
             }
         }
-        // If updateDisplayWhilePlaying is false, cursor can go off screen - no scrolling
+        // If updateDisplayWhilePlaying is false or view updates are suppressed
+        // by user horizontal scroll, cursor can go off screen - no scrolling
     }
 
     m_positionX = m_context->timeToPosition(secs);
@@ -162,6 +175,12 @@ void PlayCursorController::setTimelineContext(TimelineContext* newContext)
 
     if (m_context) {
         connect(m_context, &TimelineContext::frameTimeChanged, this, &PlayCursorController::onFrameTimeChanged);
+        connect(m_context, &TimelineContext::userHorizontalScrolled, this, &PlayCursorController::onUserHorizontalScroll);
+        connect(m_context, &TimelineContext::updateDisplayWhilePlayingEnabledChanged, this, [this]() {
+            if (m_context->updateDisplayWhilePlayingEnabled()) {
+                clearScrollSuppression();
+            }
+        });
     }
 
     emit timelineContextChanged();
@@ -182,4 +201,29 @@ void PlayCursorController::ensureCursorAtCenter(muse::secs_t secs) const
     if (!muse::RealIsEqual(timeShift, 0.0)) {
         m_context->shiftFrameTime(timeShift);
     }
+}
+
+void PlayCursorController::onUserHorizontalScroll()
+{
+    // Only suppress view updates if playback is running and updateDisplayWhilePlaying is enabled
+    const bool isPlayingOrRecording = playbackState()->isPlaying() || globalContext()->isRecording();
+    if (!isPlayingOrRecording || !m_context->updateDisplayWhilePlayingEnabled()) {
+        return;
+    }
+
+    m_viewUpdatesSuppressed = true;
+    // Restart the debounce timer - after SCROLL_SUPPRESSION_TIMEOUT_MS of no horizontal scrolling, resume view updates
+    m_scrollSuppressionTimer.start();
+}
+
+void PlayCursorController::onScrollSuppressionTimeout()
+{
+    // 5 seconds elapsed since last horizontal scroll - resume automatic view updates
+    m_viewUpdatesSuppressed = false;
+}
+
+void PlayCursorController::clearScrollSuppression()
+{
+    m_scrollSuppressionTimer.stop();
+    m_viewUpdatesSuppressed = false;
 }

@@ -22,6 +22,7 @@
 #pragma once
 
 #include <QObject>
+#include <QTimer>
 
 #include "global/async/asyncable.h"
 
@@ -68,7 +69,14 @@ private:
     void updatePositionX(muse::secs_t secs);
     void ensureCursorAtCenter(muse::secs_t secs) const;
 
+    void onUserHorizontalScroll();
+    void onScrollSuppressionTimeout();
+    void clearScrollSuppression();
+
     TimelineContext* m_context = nullptr;
     double m_positionX = 0.0;
+
+    QTimer m_scrollSuppressionTimer;
+    bool m_viewUpdatesSuppressed = false;
 };
 }
