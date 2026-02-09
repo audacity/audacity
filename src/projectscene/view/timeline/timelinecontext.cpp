@@ -275,17 +275,17 @@ void TimelineContext::centerViewOnPlayhead(const muse::actions::ActionData& args
 
 void TimelineContext::insureVisible(double posSec)
 {
-    double newPosition = timeToContentPosition(posSec);
-    double frameStartPosition = timeToContentPosition(m_frameStartTime);
-    double frameEndPosition = timeToContentPosition(m_frameEndTime);
+    const double newPosition = timeToContentPosition(posSec);
+    const double frameStartPosition = timeToContentPosition(m_frameStartTime);
+    const double frameEndPosition = timeToContentPosition(m_frameEndTime);
 
     if (muse::RealIsEqualOrMore(newPosition, frameStartPosition)
         && muse::RealIsEqualOrLess(newPosition, frameEndPosition)) {
         return;
     }
 
-    double frameTime = m_frameEndTime - m_frameStartTime;
-    double newFrameTime = m_frameStartTime + (posSec - m_frameEndTime) + (frameTime / 3.0);
+    const double frameTime = m_frameEndTime - m_frameStartTime;
+    const double newFrameTime = m_frameStartTime + (posSec - m_frameEndTime) + (frameTime * 0.90); // keep 10% margin on the left
     moveToFrameTime(newFrameTime);
 }
 
