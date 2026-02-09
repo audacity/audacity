@@ -47,7 +47,6 @@ TrackItem {
                     id: panKnob
 
                     value: Boolean(root.item) ? root.item.pan : 0
-                    isValueEditNavigationLeftAndRight: false
 
                     navigation.panel: root.navigation.panel
                     navigation.order: root.extraControlsNavigationStart
@@ -64,7 +63,6 @@ TrackItem {
                     id: volumeSlider
 
                     value: Boolean(root.item) ? root.item.volumeLevel : 0
-                    isValueEditNavigationLeftAndRight: false
 
                     navigation.panel: root.navigation.panel
                     navigation.order: panKnob.navigation.order + 1
