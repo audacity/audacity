@@ -9,7 +9,7 @@
 #include "framework/global/async/asyncable.h"
 
 #include "framework/global/modularity/ioc.h"
-#include "framework/global/iinteractive.h"
+#include "framework/interactive/iinteractive.h"
 #include "au3cloud/iauthorization.h"
 #include "au3cloud/iusageinfo.h"
 
