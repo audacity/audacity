@@ -21,16 +21,16 @@
  */
 #include "projectmodule.h"
 
-#include "modularity/ioc.h"
+#include "framework/global/modularity/ioc.h"
+
+#include "framework/ui/iuiactionsregister.h"
+#include "framework/interactive/iinteractiveuriregister.h"
 
 #include "internal/projectconfiguration.h"
 #include "internal/projectuiactions.h"
 #include "internal/thumbnailcreator.h"
 #include "internal/projectautosaver.h"
 #include "internal/au3/au3metadata.h"
-
-#include "ui/iuiactionsregister.h"
-#include "ui/iinteractiveuriregister.h"
 
 #include "context/iglobalcontext.h"
 #include "internal/audacityproject.h"
@@ -98,7 +98,7 @@ void ProjectModule::resolveImports()
     if (ar) {
         ar->reg(m_uiActions);
     }
-    auto ir = ioc()->resolve<muse::ui::IInteractiveUriRegister>(moduleName());
+    auto ir = ioc()->resolve<muse::interactive::IInteractiveUriRegister>(moduleName());
     if (ir) {
         ir->registerQmlUri(muse::Uri("audacity://project/new"), "Audacity/Project/NewProjectDialog.qml");
         ir->registerQmlUri(muse::Uri("audacity://project/asksavelocationtype"), "Audacity/Project/AskSaveLocationTypeDialog.qml");

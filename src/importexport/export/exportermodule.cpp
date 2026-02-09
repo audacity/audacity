@@ -2,7 +2,7 @@
 * Audacity: A Digital Audio Editor
 */
 
-#include "ui/iinteractiveuriregister.h"
+#include "framework/interactive/iinteractiveuriregister.h"
 
 #include "internal/au3/au3exporter.h"
 #include "internal/au3/au3ffmpegoptionsaccessor.h"
@@ -46,7 +46,7 @@ void ExporterModule::registerExports()
 
 void ExporterModule::resolveImports()
 {
-    auto ir = ioc()->resolve<muse::ui::IInteractiveUriRegister>(moduleName());
+    auto ir = ioc()->resolve<muse::interactive::IInteractiveUriRegister>(moduleName());
     if (ir) {
         ir->registerQmlUri(Uri("audacity://project/export"), "Export/ExportDialog.qml");
         ir->registerQmlUri(Uri("audacity://project/export/ffmpeg"), "Export/CustomFFmpegDialog.qml");

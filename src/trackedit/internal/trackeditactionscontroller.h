@@ -7,7 +7,7 @@
 #include "framework/actions/actionable.h"
 
 #include "framework/global/modularity/ioc.h"
-#include "framework/global/iinteractive.h"
+#include "framework/interactive/iinteractive.h"
 #include "framework/actions/iactionsdispatcher.h"
 
 #include "audio/iaudiodevicesprovider.h"

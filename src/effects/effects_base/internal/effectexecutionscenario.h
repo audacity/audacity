@@ -3,12 +3,11 @@
 */
 #pragma once
 
-#include "modularity/ioc.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/global/async/channel.h"
+#include "framework/interactive/iinteractive.h"
 
-#include "async/channel.h"
 #include "context/iglobalcontext.h"
-#include "global/iinteractive.h"
-
 #include "../ieffectinstancesregister.h"
 #include "../ieffectsprovider.h"
 #include "ieffectsconfiguration.h"

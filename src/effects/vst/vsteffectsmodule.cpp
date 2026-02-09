@@ -3,8 +3,6 @@
 */
 #include "vsteffectsmodule.h"
 
-#include "ui/iinteractiveuriregister.h"
-
 #include "audioplugins/iaudiopluginsscannerregister.h"
 #include "audioplugins/iaudiopluginmetareaderregister.h"
 
@@ -24,7 +22,6 @@
 #include "view/vstviewmodel.h"
 
 using namespace muse;
-using namespace muse::ui;
 using namespace au::effects;
 
 static void vst_init_qrc()

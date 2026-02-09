@@ -25,15 +25,15 @@
 #include <QObject>
 #include <QtQml/qqmlregistration.h>
 
-#include "progress.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/global/async/asyncable.h"
+#include "framework/global/progress.h"
 
-#include "modularity/ioc.h"
-#include "async/asyncable.h"
+#include "framework/interactive/iinteractive.h"
+#include "framework/languages/ilanguagesconfiguration.h"
+#include "framework/languages/ilanguagesservice.h"
+#include "framework/shortcuts/ishortcutsconfiguration.h"
 
-#include "global/iinteractive.h"
-#include "languages/ilanguagesconfiguration.h"
-#include "languages/ilanguagesservice.h"
-#include "shortcuts/ishortcutsconfiguration.h"
 #include "project/iprojectconfiguration.h"
 
 namespace au::appshell {

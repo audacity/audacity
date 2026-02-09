@@ -5,12 +5,12 @@
 
 #include <QObject>
 
-#include "async/asyncable.h"
+#include "framework/global/async/asyncable.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/global/io/ifilesystem.h"
+#include "framework/actions/iactionsdispatcher.h"
+#include "framework/interactive/iinteractive.h"
 
-#include "modularity/ioc.h"
-#include "actions/iactionsdispatcher.h"
-#include "iinteractive.h"
-#include "io/ifilesystem.h"
 #include "appshell/iappshellconfiguration.h"
 #include "context/iglobalcontext.h"
 #include "iexportconfiguration.h"

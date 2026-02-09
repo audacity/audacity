@@ -25,11 +25,11 @@
 #include <QObject>
 #include <QtQml/qqmlregistration.h>
 
-#include "global/async/asyncable.h"
+#include "framework/global/async/asyncable.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/interactive/iinteractive.h"
 
-#include "modularity/ioc.h"
-#include "iappshellconfiguration.h"
-#include "iinteractive.h"
+#include "appshell/iappshellconfiguration.h"
 
 namespace au::appshell {
 class FirstLaunchSetupModel : public QObject, public muse::async::Asyncable, public muse::Injectable

@@ -5,13 +5,13 @@
 
 #include <QObject>
 
-#include "async/asyncable.h"
+#include "framework/global/async/asyncable.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/interactive/iinteractive.h"
 
-#include "modularity/ioc.h"
 #include "iexportconfiguration.h"
 #include "iexporter.h"
 #include "iffmpegoptionsaccessor.h"
-#include "iinteractive.h"
 #include "iglobalconfiguration.h"
 
 namespace au::importexport {

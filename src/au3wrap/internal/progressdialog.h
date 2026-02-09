@@ -6,9 +6,9 @@
 
 #include "au3-basic-ui/BasicUI.h" // For ProgressResult
 
-#include "framework/global/iinteractive.h"
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/async/asyncable.h"
+#include "framework/interactive/iinteractive.h"
 
 using ProgressResult = BasicUI::ProgressResult;
 

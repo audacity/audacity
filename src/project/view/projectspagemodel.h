@@ -24,12 +24,14 @@
 
 #include <QObject>
 
-#include "modularity/ioc.h"
+#include "framework/global/modularity/ioc.h"
+
+#include "framework/actions/iactionsdispatcher.h"
+#include "framework/interactive/iinteractive.h"
+#include "framework/cloud/musescorecom/imusescorecomservice.h"
+#include "framework/cloud/audiocom/iaudiocomservice.h"
+
 #include "iprojectconfiguration.h"
-#include "actions/iactionsdispatcher.h"
-#include "iinteractive.h"
-#include "cloud/musescorecom/imusescorecomservice.h"
-#include "cloud/audiocom/iaudiocomservice.h"
 
 class QString;
 

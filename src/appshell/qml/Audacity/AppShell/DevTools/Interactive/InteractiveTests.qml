@@ -2,7 +2,8 @@
 * Audacity: A Digital Audio Editor
 */
 import QtQuick 2.7
-import Muse.Ui 1.0
+import Muse.Interactive
+import Muse.Ui
 import Muse.UiComponents
 
 Rectangle {

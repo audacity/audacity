@@ -5,14 +5,14 @@
 #include <QQmlEngine>
 #include <QtQml>
 
+#include "framework/interactive/iinteractiveuriregister.h"
+
 #include "internal/playbackconfiguration.h"
 #include "internal/playbackcontroller.h"
 #include "internal/playbackmetercontroller.h"
 #include "internal/playbackuiactions.h"
 #include "internal/au3/au3playback.h"
 #include "internal/au3/au3trackplaybackcontrol.h"
-
-#include "ui/iinteractiveuriregister.h"
 
 #include "view/common/playbackstatemodel.h"
 #include "view/common/playbackmetermodel.h"
@@ -57,7 +57,7 @@ void PlaybackModule::resolveImports()
     if (ar) {
         ar->reg(m_uiActions);
     }
-    auto ir = ioc()->resolve<muse::ui::IInteractiveUriRegister>(moduleName());
+    auto ir = ioc()->resolve<muse::interactive::IInteractiveUriRegister>(moduleName());
     if (ir) {
         ir->registerQmlUri(muse::Uri("audacity://playback/loop_region_in_out"), "Audacity/Playback/dialogs/LoopRegionInOut.qml");
     }

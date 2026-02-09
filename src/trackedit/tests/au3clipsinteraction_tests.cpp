@@ -11,7 +11,7 @@
 #include "mocks/trackeditconfigurationmock.h"
 #include "mocks/projecthistorymock.h"
 
-#include "global/tests/mocks/interactivemock.h"
+#include "interactive/tests/mocks/interactivemock.h"
 
 using ::testing::Truly;
 using ::testing::_;

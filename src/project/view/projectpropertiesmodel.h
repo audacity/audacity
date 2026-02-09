@@ -24,10 +24,11 @@
 
 #include <QAbstractListModel>
 
-#include "iinteractive.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/interactive/iinteractive.h"
+
 #include "ithumbnailcreator.h"
 #include "context/iglobalcontext.h"
-#include "modularity/ioc.h"
 
 namespace au::project {
 class ProjectPropertiesModel : public QAbstractListModel, public muse::async::Asyncable, public muse::Injectable
