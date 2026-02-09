@@ -118,6 +118,12 @@ jobs:
         source /c/build_tools/environment.sh
         cmake -DCRASH_REPORT_URL=$C_URL -P ${CI_DIR}/windows/ci_build.cmake
 
+    - name: Run plugin registration app self-test
+      if: env.DO_BUILD == 'true'
+      shell: bash
+      run: |
+        ./build.install/bin/Audacity4.exe --plugin-registration-self-test
+
     - name: Package
       env:
         SIGN_KEY:    ${{ secrets.WINDOWS_CODE_SIGNING_ACCESS_KEY_ID }}

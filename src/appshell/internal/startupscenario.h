@@ -29,26 +29,24 @@
 #include "modularity/ioc.h"
 #include "iinteractive.h"
 #include "actions/iactionsdispatcher.h"
+#include "multiwindows/imultiwindowsprovider.h"
+
 #include "iappshellconfiguration.h"
 #include "isessionsmanager.h"
 #include "audioplugins/iregisteraudiopluginsscenario.h"
 // #include "project/iprojectautosaver.h"
 
-//! TODO AU4
-// #include "multiwindows/imultiwindowsprovider.h"
-
 namespace au::appshell {
 class StartupScenario : public au::appshell::IStartupScenario, public muse::async::Asyncable, public muse::Injectable
 {
     muse::GlobalInject<IAppShellConfiguration> configuration;
+    muse::GlobalInject<muse::mi::IMultiWindowsProvider> multiwindowsProvider;
 
     muse::Inject<muse::IInteractive> interactive { this };
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::Inject<ISessionsManager> sessionsManager { this };
     muse::Inject<muse::audioplugins::IRegisterAudioPluginsScenario> registerAudioPluginsScenario { this };
 
-//! TODO AU4
-    // INJECT(muse::mi::IMultiWindowsProvider, multiwindowsProvider)
 public:
     StartupScenario(const muse::modularity::ContextPtr& ctx)
         : muse::Injectable(ctx) {}
@@ -60,7 +58,7 @@ public:
     const au::project::ProjectFile& startupScoreFile() const override;
     void setStartupScoreFile(const std::optional<au::project::ProjectFile>& file) override;
 
-    void runOnSplashScreen() override;
+    muse::async::Promise<muse::Ret> runOnSplashScreen() override;
     void runAfterSplashScreen() override;
     bool startupCompleted() const override;
 

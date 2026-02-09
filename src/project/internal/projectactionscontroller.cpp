@@ -524,7 +524,7 @@ muse::Ret ProjectActionsController::openProject(const muse::io::path_t& givenPat
         args << actualPath.toQString();
 
         if (!displayNameOverride.isEmpty()) {
-            args << "--score-display-name-override" << displayNameOverride;
+            args << "--project-display-name-override" << displayNameOverride;
         }
 #ifdef MU_BUILD_MULTIINSTANCE_MODULE
         multiwindowsProvider()->openNewAppInstance(args);

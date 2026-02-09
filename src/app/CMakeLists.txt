@@ -162,8 +162,12 @@ qt_add_executable(${EXECUTABLE_NAME}
     ${APP_RCC_SOURCES}
     ${AUDACITY_APPEND_SRC}
     main.cpp
-    app.cpp
-    app.h
+    appfactory.cpp
+    appfactory.h
+    guiapp.cpp
+    guiapp.h
+    pluginregistrationapp.cpp
+    pluginregistrationapp.h
     commandlineparser.cpp
     commandlineparser.h
 )

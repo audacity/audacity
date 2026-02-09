@@ -110,6 +110,11 @@ void EffectsModule::onInit(const muse::IApplication::RunMode&)
     }
 }
 
+void EffectsModule::onAllInited(const muse::IApplication::RunMode& mode)
+{
+    m_effectsProvider->reloadEffects();
+}
+
 void EffectsModule::onDelayedInit()
 {
     //! NOTE On init, built-in, vst and other plugins are initialized.

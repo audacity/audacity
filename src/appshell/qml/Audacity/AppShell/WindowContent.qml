@@ -43,6 +43,7 @@ DockWindow {
 
     onPageLoaded: {
         root.interactiveProvider.onPageOpened()
+        window.opacity = 1.0
     }
 
     property NavigationSection topToolKeyNavSec: NavigationSection {
