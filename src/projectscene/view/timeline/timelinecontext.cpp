@@ -276,8 +276,18 @@ void TimelineContext::centerViewOnPlayhead(const muse::actions::ActionData& args
         return;
     }
 
-    const trackedit::secs_t frameTime = m_frameEndTime - m_frameStartTime;
-    const trackedit::secs_t newFrameStartTime = playheadSec - frameTime * 0.5;
+    centerOnTime(playheadSec);
+}
+
+void TimelineContext::centerOnTime(double secs)
+{
+    const double frameTime = m_frameEndTime - m_frameStartTime;
+    const double newFrameStartTime = secs - frameTime * 0.5;
+
+    // Avoid unnecessary updates when the view is already centered
+    if (muse::is_equal(newFrameStartTime, m_frameStartTime)) {
+        return;
+    }
 
     moveToFrameTime(newFrameStartTime);
 }

@@ -188,19 +188,7 @@ void PlayCursorController::setTimelineContext(TimelineContext* newContext)
 
 void PlayCursorController::ensureCursorAtCenter(muse::secs_t secs) const
 {
-    // In pinned playhead mode, keep the cursor at the center of the view
-    // and scroll the view continuously as playback progresses
-
-    const double frameTime = m_context->frameEndTime() - m_context->frameStartTime();
-    const double centerTime = m_context->frameStartTime() + (frameTime / 2.0);
-
-    // Calculate how much we need to shift the view to keep cursor centered
-    const double timeShift = secs - centerTime;
-
-    // Only shift if there's a meaningful difference (avoid micro-adjustments)
-    if (!muse::RealIsEqual(timeShift, 0.0)) {
-        m_context->shiftFrameTime(timeShift);
-    }
+    m_context->centerOnTime(secs);
 }
 
 void PlayCursorController::onUserHorizontalScroll()
