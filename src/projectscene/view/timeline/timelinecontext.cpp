@@ -294,6 +294,7 @@ void TimelineContext::centerOnTime(double secs)
 
 void TimelineContext::insureVisible(double posSec)
 {
+    // aka: paged scrolling
     const double newPosition = timeToContentPosition(posSec);
     const double frameStartPosition = timeToContentPosition(m_frameStartTime);
     const double frameEndPosition = timeToContentPosition(m_frameEndTime);

@@ -50,10 +50,9 @@ void PlayCursorController::init()
         updatePositionX(secs);
     });
 
-    // When playback starts, clear any scroll suppression so the view updates instantly
     playbackState()->playbackStatusChanged().onReceive(this, [this](playback::PlaybackStatus status) {
         if (status == playback::PlaybackStatus::Running) {
-            clearScrollSuppression();
+            clearScrollSuppression(); // so that the cursor is immediately updated when playback starts
         }
     });
 }
@@ -111,25 +110,19 @@ void PlayCursorController::updatePositionX(muse::secs_t secs)
         return;
     }
 
-    // Only update the view during actual playback or recording, not when manually seeking
     const bool isPlayingOrRecording = playbackState()->isPlaying() || globalContext()->isRecording();
 
     if (isPlayingOrRecording) {
-        // Check if we should update the view during playback
         const bool updateDisplayWhilePlaying = m_context->updateDisplayWhilePlayingEnabled();
         const bool pinnedPlayHead = m_context->pinnedPlayHeadEnabled();
 
         if (updateDisplayWhilePlaying && !m_viewUpdatesSuppressed) {
             if (pinnedPlayHead) {
-                // Pinned playhead mode: Keep cursor at center, scroll the view continuously
                 ensureCursorAtCenter(secs);
             } else {
-                // Standard mode: Prevent cursor from going off screen (paged scrolling)
                 m_context->insureVisible(secs);
             }
         }
-        // If updateDisplayWhilePlaying is false or view updates are suppressed
-        // by user horizontal scroll, cursor can go off screen - no scrolling
     }
 
     m_positionX = m_context->timeToPosition(secs);
@@ -193,20 +186,17 @@ void PlayCursorController::ensureCursorAtCenter(muse::secs_t secs) const
 
 void PlayCursorController::onUserHorizontalScroll()
 {
-    // Only suppress view updates if playback is running and updateDisplayWhilePlaying is enabled
     const bool isPlayingOrRecording = playbackState()->isPlaying() || globalContext()->isRecording();
     if (!isPlayingOrRecording || !m_context->updateDisplayWhilePlayingEnabled()) {
         return;
     }
 
     m_viewUpdatesSuppressed = true;
-    // Restart the debounce timer - after SCROLL_SUPPRESSION_TIMEOUT_MS of no horizontal scrolling, resume view updates
     m_scrollSuppressionTimer.start();
 }
 
 void PlayCursorController::onScrollSuppressionTimeout()
 {
-    // resume automatic view updates after scroll suppression timeout
     m_viewUpdatesSuppressed = false;
 }
 
