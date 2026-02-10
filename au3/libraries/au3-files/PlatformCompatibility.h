@@ -21,6 +21,7 @@
 #define __AUDACITY_COMPATIBILITY__
 
 #include "au3-strings/Identifier.h"
+#include <vector>
 
 namespace PlatformCompatibility {
 //
@@ -38,8 +39,19 @@ std::string FILES_API GetDataDir();
 std::string FILES_API GetPluginsDir();
 std::string FILES_API GetDocumentsDir();
 std::string FILES_API GetExecutablePath();
+std::string FILES_API GetExecutableDir();
 std::string FILES_API GetTempDir();
 std::string FILES_API GetHomeDir();
+std::string FILES_API GetCurrentDir();
+std::string FILES_API GetUserId();
+
+// Path utilities
+std::string FILES_API GetParentDir(const std::string& path);
+std::string FILES_API GetEnvironmentVar(const char* name);
+bool FILES_API DirectoryExists(const std::string& path);
+bool FILES_API MakePath(const std::string& path);
+std::string FILES_API NormalizePath(const std::string& path);
+std::vector<std::string> FILES_API SplitSearchPath(const std::string& pathString);
 }
 
 #endif
