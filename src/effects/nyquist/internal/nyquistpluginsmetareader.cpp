@@ -19,10 +19,11 @@ NyquistPluginsMetaReader::NyquistPluginsMetaReader()
 
 void NyquistPluginsMetaReader::doInit(const IApplication::RunMode& mode)
 {
-    // Initialize the Nyquist module (this calls NyquistEffectsModule::Initialize())
-    // Note: m_module is the PluginProvider, so calling Initialize() on it will
-    // call NyquistEffectsModule::Initialize() which sets up the Nyquist environment
-    m_module.Initialize();
+    // Don't call m_module.Initialize() here.
+    // At this point FileNames::AudacityPathList() is not yet populated
+    // (InitializePathList is called later in EffectsModule::onInit),
+    // so Initialize() would always fail to find nyquist.lsp.
+    // Instead, readMeta() handles lazy initialization when paths are ready.
 }
 
 bool NyquistPluginsMetaReader::canReadMeta(const io::path_t& pluginPath) const
