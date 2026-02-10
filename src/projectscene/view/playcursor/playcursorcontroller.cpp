@@ -218,7 +218,7 @@ void PlayCursorController::onUserHorizontalScroll()
 
 void PlayCursorController::onScrollSuppressionTimeout()
 {
-    // 5 seconds elapsed since last horizontal scroll - resume automatic view updates
+    // resume automatic view updates after scroll suppression timeout
     m_viewUpdatesSuppressed = false;
 }
 
