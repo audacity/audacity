@@ -69,6 +69,10 @@ endif()
 ###########################################
 # Setup paths
 ###########################################
+
+# Configure muse_framework app bundle name for macOS
+set(MUSE_APP_BUNDLE_NAME "audacity.app")
+
 if (OS_IS_MAC)
     SET(AU4_INSTALL_NAME  "Contents/Resources/")
     SET(AU4_SHARE_NAME    "audacity.app/")

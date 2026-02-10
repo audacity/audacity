@@ -164,9 +164,9 @@ include(SetupBuildEnvironment)
 include(GetPlatformInfo)
 include(SetupDevEnvironment)
 
-if (MUE_COMPILE_USE_CCACHE)
-    include(TryUseCcache)
-endif(MUE_COMPILE_USE_CCACHE)
+if (MUSE_COMPILE_USE_CCACHE)
+    include(SetupCompilerCache)
+endif(MUSE_COMPILE_USE_CCACHE)
 
 
 ###########################################
