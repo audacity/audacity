@@ -55,6 +55,9 @@ class TimelineContext : public QObject, public muse::async::Asyncable, public mu
     Q_PROPERTY(qreal verticalScrollbarSize READ verticalScrollbarSize NOTIFY verticalScrollChanged)
 
     Q_PROPERTY(bool playbackOnRulerClickEnabled READ playbackOnRulerClickEnabled NOTIFY playbackOnRulerClickEnabledChanged FINAL)
+    Q_PROPERTY(
+        bool updateDisplayWhilePlayingEnabled READ updateDisplayWhilePlayingEnabled NOTIFY updateDisplayWhilePlayingEnabledChanged FINAL)
+    Q_PROPERTY(bool pinnedPlayHeadEnabled READ pinnedPlayHeadEnabled NOTIFY pinnedPlayHeadEnabledChanged FINAL)
 
     muse::GlobalInject<IProjectSceneConfiguration> configuration;
 
@@ -109,6 +112,7 @@ public:
     Q_INVOKABLE void scrollVertical(qreal newPos);
 
     void centerViewOnPlayhead(const muse::actions::ActionData& args);
+    void centerOnTime(double secs);
     Q_INVOKABLE void insureVisible(double posSec);
     Q_INVOKABLE void startAutoScroll(double posSec);
     Q_INVOKABLE void stopAutoScroll();
@@ -138,6 +142,8 @@ public:
     Q_INVOKABLE void updateSelectedItemTime();
 
     bool playbackOnRulerClickEnabled() const;
+    bool updateDisplayWhilePlayingEnabled() const;
+    bool pinnedPlayHeadEnabled() const;
 
 signals:
 
@@ -168,6 +174,11 @@ signals:
     void verticalScrollChanged();
 
     void playbackOnRulerClickEnabledChanged();
+
+    void updateDisplayWhilePlayingEnabledChanged();
+    void pinnedPlayHeadEnabledChanged();
+
+    void userHorizontalScrolled();
 
 private:
     trackedit::ITrackeditProjectPtr trackEditProject() const;

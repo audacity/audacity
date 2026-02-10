@@ -43,8 +43,8 @@ private:
     void toggleVerticalRulers();
     void toggleRMSInWaveform();
     void toggleClippingInWaveform();
-    void updateDisplayWhilePlaying();
-    void pinnedPlayHead();
+    void toggleUpdateDisplayWhilePlaying();
+    void togglePinnedPlayHead();
     void togglePlaybackOnRulerClickEnabled();
     void toggleTrackHalfWave(const muse::actions::ActionQuery& q);
 

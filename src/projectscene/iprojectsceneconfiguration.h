@@ -60,6 +60,14 @@ public:
     virtual void setPlaybackOnRulerClickEnabled(bool enabled) = 0;
     virtual muse::async::Notification playbackOnRulerClickEnabledChanged() const = 0;
 
+    virtual bool updateDisplayWhilePlayingEnabled() const = 0;
+    virtual void setUpdateDisplayWhilePlayingEnabled(bool enabled) = 0;
+    virtual muse::async::Notification updateDisplayWhilePlayingEnabledChanged() const = 0;
+
+    virtual bool pinnedPlayHeadEnabled() const = 0;
+    virtual void setPinnedPlayHeadEnabled(bool enabled) = 0;
+    virtual muse::async::Notification pinnedPlayHeadEnabledChanged() const = 0;
+
     virtual int labelEditorColumnFormat(const std::string& columnName) const = 0;
     virtual void setLabelEditorColumnFormat(const std::string& columnName, int format) const = 0;
 };

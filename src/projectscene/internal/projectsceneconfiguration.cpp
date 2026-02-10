@@ -33,8 +33,12 @@ static const muse::Settings::Key ASYMMETRIC_STEREO_HEIGHTS_WORKSPACES(moduleName
 static const muse::Settings::Key SELECTION_TIMECODE_FORMAT(moduleName, "projectscene/selectionTimecodeFormat");
 static const muse::Settings::Key PLAYBACK_ON_RULER_CLICK_ENABLED(moduleName, "projectscene/playbackOnRulerClickEnabled");
 static const muse::Settings::Key LABEL_EDITOR_COLUMN_FORMAT(moduleName, "projectscene/labelEditorColumnFormat");
+static const muse::Settings::Key UPDATE_DISPLAY_WHILE_PLAYING_ENABLED(moduleName, "projectscene/updateDisplayWhilePlayingEnabled");
+static const muse::Settings::Key PINNED_PLAY_HEAD_ENABLED(moduleName, "projectscene/pinnedPlayHeadEnabled");
 
 static const bool DEFAULT_PLAYBACK_ON_RULER_CLICK_ENABLED = false;
+static const bool DEFAULT_UPDATE_DISPLAY_WHILE_PLAYING_ENABLED = true;
+static const bool DEFAULT_PINNED_PLAY_HEAD_ENABLED = false;
 
 void ProjectSceneConfiguration::init()
 {
@@ -78,6 +82,16 @@ void ProjectSceneConfiguration::init()
     muse::settings()->setDefaultValue(PLAYBACK_ON_RULER_CLICK_ENABLED, muse::Val(DEFAULT_PLAYBACK_ON_RULER_CLICK_ENABLED));
     muse::settings()->valueChanged(PLAYBACK_ON_RULER_CLICK_ENABLED).onReceive(nullptr, [this](const muse::Val&) {
         m_playbackOnRulerClickEnabledChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(UPDATE_DISPLAY_WHILE_PLAYING_ENABLED, muse::Val(DEFAULT_UPDATE_DISPLAY_WHILE_PLAYING_ENABLED));
+    muse::settings()->valueChanged(UPDATE_DISPLAY_WHILE_PLAYING_ENABLED).onReceive(nullptr, [this](const muse::Val&) {
+        m_updateDisplayWhilePlayingEnabledChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(PINNED_PLAY_HEAD_ENABLED, muse::Val(DEFAULT_PINNED_PLAY_HEAD_ENABLED));
+    muse::settings()->valueChanged(PINNED_PLAY_HEAD_ENABLED).onReceive(nullptr, [this](const muse::Val&) {
+        m_pinnedPlayHeadEnabledChanged.notify();
     });
 }
 
@@ -336,4 +350,34 @@ void ProjectSceneConfiguration::setLabelEditorColumnFormat(const std::string& co
 muse::async::Notification ProjectSceneConfiguration::playbackOnRulerClickEnabledChanged() const
 {
     return m_playbackOnRulerClickEnabledChanged;
+}
+
+bool ProjectSceneConfiguration::updateDisplayWhilePlayingEnabled() const
+{
+    return muse::settings()->value(UPDATE_DISPLAY_WHILE_PLAYING_ENABLED).toBool();
+}
+
+void ProjectSceneConfiguration::setUpdateDisplayWhilePlayingEnabled(bool enabled)
+{
+    muse::settings()->setSharedValue(UPDATE_DISPLAY_WHILE_PLAYING_ENABLED, muse::Val(enabled));
+}
+
+muse::async::Notification ProjectSceneConfiguration::updateDisplayWhilePlayingEnabledChanged() const
+{
+    return m_updateDisplayWhilePlayingEnabledChanged;
+}
+
+bool ProjectSceneConfiguration::pinnedPlayHeadEnabled() const
+{
+    return muse::settings()->value(PINNED_PLAY_HEAD_ENABLED).toBool();
+}
+
+void ProjectSceneConfiguration::setPinnedPlayHeadEnabled(bool enabled)
+{
+    muse::settings()->setSharedValue(PINNED_PLAY_HEAD_ENABLED, muse::Val(enabled));
+}
+
+muse::async::Notification ProjectSceneConfiguration::pinnedPlayHeadEnabledChanged() const
+{
+    return m_pinnedPlayHeadEnabledChanged;
 }
