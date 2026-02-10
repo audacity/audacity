@@ -849,6 +849,88 @@ Rectangle {
                         waveView.onWaveViewPositionChanged(hoverArea.mouseX, hoverArea.mouseY - header.height)
                     }
                 }
+
+                EditablePolyline {
+                    id: automation
+
+                    anchors.fill: waveView
+
+                    visible: root.isAutomationEnabled
+
+                    lineColor: ui.theme.extra["stroke_automation_curve"]
+                    lineWidth: 1.5
+                    pointRadius: 3
+
+                    points: envelopeModel.points
+                    defaultValue: envelopeModel.defaultValue
+
+                    xRangeFrom: waveView.itemStartTime
+                    xRangeTo: waveView.itemEndTime
+
+                    yRangeFrom: envelopeModel.minValue
+                    yRangeTo: envelopeModel.maxValue
+                    yAxisInverse: false
+
+                    Component.onCompleted: {
+                        automation.init()
+                    }
+
+                    onPointMoved: function(index, x, y, completed) {
+                        // NOTE: EditablePolyline's returned x is within [xRangeFrom..xRangeTo] boundaries but
+                        // clip's internal envelope expects time relative to clip startTime
+                        envelopeModel.setPoint(index, x - waveView.startTime, y, completed)
+                        tooltip.show(true)
+                        tooltip.gain = gainToDb(y)
+                    }
+
+                    onPointAdded: function(x, y, completed) {
+                        envelopeModel.addPoint(x, y, completed)
+                    }
+
+                    onPointRemoved: function(index, completed) {
+                        envelopeModel.removePoint(index, completed)
+                    }
+
+                    onPolylineFlattenRequested: function(y, completed) {
+                        envelopeModel.flatten(y, completed)
+                        tooltip.show(true)
+                        tooltip.gain = gainToDb(y)
+                    }
+
+                    onDragCancelled: {
+                        envelopeModel.cancelDrag()
+                        tooltip.hide(true)
+                    }
+
+                    onInteractionFinished: function() {
+                        tooltip.hide(true)
+                    }
+
+                    Item {
+                        // NOTE: fakeItem for tooltip to follow
+                        id: fake
+
+                        height: 1
+                        width: 1
+
+                        x: automation.dragX
+                        y: automation.dragY
+
+                        enabled: false // so it doesn't steal mouse events
+
+                        GainTooltip {
+                            id: tooltip
+                        }
+                    }
+
+                    function gainToDb(g) {
+                        if (g < 0.001)  // -60 dB
+                            return "-∞"
+
+                        let db = 20 * Math.log10(g)
+                        return db.toFixed(1)
+                    }
+                }
             }
 
             ClipSpectrogramView {
@@ -897,88 +979,6 @@ Rectangle {
                         root.splitterPositionChangeRequested(position)
                     }
                 }
-            }
-        }
-
-        EditablePolyline {
-            id: automation
-
-            anchors.fill: viewsColumn
-
-            visible: root.isAutomationEnabled
-
-            lineColor: ui.theme.extra["stroke_automation_curve"]
-            lineWidth: 1.5
-            pointRadius: 3
-
-            points: envelopeModel.points
-            defaultValue: envelopeModel.defaultValue
-
-            xRangeFrom: waveView.itemStartTime
-            xRangeTo: waveView.itemEndTime
-
-            yRangeFrom: envelopeModel.minValue
-            yRangeTo: envelopeModel.maxValue
-            yAxisInverse: false
-
-            Component.onCompleted: {
-                automation.init()
-            }
-
-            onPointMoved: function(index, x, y, completed) {
-                // NOTE: EditablePolyline's returned x is within [xRangeFrom..xRangeTo] boundaries but
-                // clip's internal envelope expects time relative to clip startTime
-                envelopeModel.setPoint(index, x - waveView.startTime, y, completed)
-                tooltip.show(true)
-                tooltip.gain = gainToDb(y)
-            }
-
-            onPointAdded: function(x, y, completed) {
-                envelopeModel.addPoint(x, y, completed)
-            }
-
-            onPointRemoved: function(index, completed) {
-                envelopeModel.removePoint(index, completed)
-            }
-
-            onPolylineFlattenRequested: function(y, completed) {
-                envelopeModel.flatten(y, completed)
-                tooltip.show(true)
-                tooltip.gain = gainToDb(y)
-            }
-
-            onDragCancelled: {
-                envelopeModel.cancelDrag()
-                tooltip.hide(true)
-            }
-
-            onInteractionFinished: function() {
-                tooltip.hide(true)
-            }
-
-            Item {
-                // NOTE: fakeItem for tooltip to follow
-                id: fake
-
-                height: 1
-                width: 1
-
-                x: automation.dragX
-                y: automation.dragY
-
-                enabled: false // so it doesn't steal mouse events
-
-                GainTooltip {
-                    id: tooltip
-                }
-            }
-
-            function gainToDb(g) {
-                if (g < 0.001)  // -60 dB
-                    return "-∞"
-
-                let db = 20 * Math.log10(g)
-                return db.toFixed(1)
             }
         }
 
