@@ -28,6 +28,7 @@ Page {
         readonly property string googleTextLabel: qsTrc("appshell/gettingstarted", "Continue with Google")
         readonly property string facebookTextLabel: qsTrc("appshell/gettingstarted", "Continue with Facebook")
         readonly property string orUseEmailText: qsTrc("appshell/gettingstarted", "Or use email and password")
+        readonly property int providerLogoSize: 16
 
         readonly property int textSeparatorSpacing: 16
         readonly property int textInputTitleSpacing: 8
@@ -35,12 +36,16 @@ Page {
         readonly property string emailText: qsTrc("appshell/gettingstarted", "Email")
         readonly property string passwordText: qsTrc("appshell/gettingstarted", "Password")
         readonly property string forgotPasswordLink:  qsTrc("appshell/gettingstarted", "<a href=\"%1\">Forgot your password?</a>")
-        readonly property string createNewAccountLink: qsTrc("appshell/gettingstarted", "Don't have an account? <a href=\"create-account\">Create new account</a>")
-        readonly property string alreadyHaveAccountLink: qsTrc("appshell/gettingstarted", "Already have an account? <a href=\"sign-in\">Sign in</a>")
+        
+        readonly property string noAccountText: qsTrc("appshell/gettingstarted", "Don't have an account?")
+        readonly property string createAccountLinkText: qsTrc("appshell/gettingstarted", "Create new account")
+        readonly property string haveAccountText: qsTrc("appshell/gettingstarted", "Already have an account?")
+        readonly property string signInLinkText: qsTrc("appshell/gettingstarted", "Sign in")
+        readonly property int textLinkSpacing: 4
 
         readonly property string formButtonTextLoading: qsTrc("appshell/gettingstarted", "Loading...")
-        readonly property string formButtonTextSignIn: qsTrc("appshell/gettingstarted", "Sign In")
-        readonly property string formButtonTextCreateAccount: qsTrc("appshell/gettingstarted", "Create Account")
+        readonly property string formButtonTextSignIn: qsTrc("appshell/gettingstarted", "Sign in")
+        readonly property string formButtonTextCreateAccount: qsTrc("appshell/gettingstarted", "Create account")
         readonly property int formButtonHeight: 28
         readonly property int formButtonExtraSpace: model.showErrorMessage ? 0 : 8
 
@@ -97,6 +102,9 @@ Page {
                     Image {
                         source: "qrc:/resources/GoogleLogo.png"
                         fillMode: Image.PreserveAspectFit
+
+                        Layout.preferredWidth: prv.providerLogoSize
+                        Layout.preferredHeight: prv.providerLogoSize
                     }
 
                     StyledTextLabel {
@@ -124,6 +132,9 @@ Page {
                     Image {
                         source: "qrc:/resources/FacebookLogo.png"
                         fillMode: Image.PreserveAspectFit
+
+                        Layout.preferredWidth: prv.providerLogoSize
+                        Layout.preferredHeight: prv.providerLogoSize
                     }
 
                     StyledTextLabel {
@@ -198,16 +209,6 @@ Page {
             spacing: prv.textInputTitleSpacing
             Layout.fillWidth: true
 
-             NavigationPanel {
-                id: passwordFieldPanel
-                name: "PasswordFieldsPanel"
-                enabled: root.enabled && root.visible
-                section: root.navigationSection
-                direction: NavigationPanel.Vertical
-                order: root.navigationStartRow + 3
-                accessible.name: qsTrc("appshell/gettingstarted", "Password field")
-            }
-
             RowLayout {
                 width: parent.width
 
@@ -219,9 +220,41 @@ Page {
                     Layout.fillWidth: true
                 }
 
-                StyledTextLabel {
+                FocusableControl {
                     visible: !model.isRegistering
-                    text: prv.forgotPasswordLink.arg(prv.forgotPasswordUrl)
+                    
+                    implicitWidth: forgotPasswordLabel.implicitWidth
+                    implicitHeight: forgotPasswordLabel.implicitHeight
+                    
+                    background.color: "transparent"
+                    background.border.width: 0
+                    
+                    NavigationPanel {
+                        id: forgetPasswordPanel
+                        name: "ForgotPasswordPanel"
+                        enabled: root.enabled && root.visible
+                        section: root.navigationSection
+                        direction: NavigationPanel.Vertical
+                        order: root.navigationStartRow + 3
+                        accessible.name: qsTrc("appshell/gettingstarted", "Forgot password")
+                    }
+
+                    navigation.name: "ForgotPasswordLink"
+                    navigation.panel: forgetPasswordPanel
+                    navigation.row: 0
+                    navigation.column: 0
+                    navigation.accessible.name: qsTrc("appshell/gettingstarted", "Forgot password")
+
+                    onNavigationTriggered: {
+                        Qt.openUrlExternally(prv.forgotPasswordUrl)
+                    }
+                    
+                    StyledTextLabel {
+                        id: forgotPasswordLabel
+                        anchors.fill: parent
+                        text: prv.forgotPasswordLink.arg(prv.forgotPasswordUrl)
+                        textFormat: Text.RichText
+                    }
                 }
             }
 
@@ -233,6 +266,16 @@ Page {
                 height: prv.textInputHeight
 
                 inputField.echoMode: TextInput.Password
+
+                NavigationPanel {
+                    id: passwordFieldPanel
+                    name: "PasswordFieldsPanel"
+                    enabled: root.enabled && root.visible
+                    section: root.navigationSection
+                    direction: NavigationPanel.Vertical
+                    order: root.navigationStartRow + 4
+                    accessible.name: qsTrc("appshell/gettingstarted", "Password field")
+                }
 
                 navigation.name: "PasswordInput"
                 navigation.panel: passwordFieldPanel
@@ -248,7 +291,6 @@ Page {
 
             StyledTextLabel {
                 anchors.left: parent.left
-                anchors.right: parent.right
 
                 visible: model.showErrorMessage
                 color: ui.theme.extra["error_text_color"]
@@ -270,7 +312,7 @@ Page {
                     name: "ActionsPanel"
                     enabled: root.enabled && root.visible
                     section: root.navigationSection
-                    order: root.navigationStartRow + 4
+                    order: root.navigationStartRow + 5
                     accessible.name: qsTrc("appshell/gettingstarted", "Form action")
                 }
 
@@ -295,19 +337,58 @@ Page {
             }
         }
 
-        StyledTextLabel {
+        RowLayout {
             Layout.alignment: Qt.AlignHCenter
-            text: model.isRegistering ? prv.alreadyHaveAccountLink : prv.createNewAccountLink
-            textFormat: Text.RichText
-            onLinkActivated: {
-                if (link === "create-account") {
-                    model.isRegistering = true
-                    return
+            spacing: prv.textLinkSpacing
+            
+            StyledTextLabel {
+                text: model.isRegistering ? prv.haveAccountText : prv.noAccountText
+            }
+            
+            FocusableControl {
+                implicitWidth: accountLinkLabel.implicitWidth
+                implicitHeight: accountLinkLabel.implicitHeight
+                
+                background.color: "transparent"
+                background.border.width: 0
+                
+                NavigationPanel {
+                    id: accountLinkPanel
+                    name: "AccountLinkPanel"
+                    enabled: root.enabled && root.visible
+                    section: root.navigationSection
+                    direction: NavigationPanel.Vertical
+                    order: root.navigationStartRow + 6
+                    accessible.name: model.isRegistering 
+                        ? qsTrc("appshell/gettingstarted", "Sign in link") 
+                        : qsTrc("appshell/gettingstarted", "Create account link")
                 }
+                
+                navigation.name: "AccountLink"
+                navigation.panel: accountLinkPanel
+                navigation.row: 0
+                navigation.column: 0
+                navigation.accessible.name: model.isRegistering ? prv.signInLinkText : prv.createAccountLinkText
+                
+                onNavigationTriggered: {
+                    model.isRegistering = !model.isRegistering
+                }
+                
+                StyledTextLabel {
+                    id: accountLinkLabel
+                    anchors.fill: parent
+                    text: model.isRegistering ? prv.signInLinkText : prv.createAccountLinkText
+                    color: ui.theme.linkColor
+                    font.underline: true
 
-                if (link === "sign-in") {
-                    model.isRegistering = false
-                    return
+                    MouseArea {
+                        anchors.fill: parent
+                        cursorShape: Qt.PointingHandCursor
+
+                        onClicked: {
+                            model.isRegistering = !model.isRegistering
+                        }
+                    }
                 }
             }
         }

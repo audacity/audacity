@@ -14,6 +14,7 @@ SigninAudiocomPageModel::SigninAudiocomPageModel(QObject* parent)
 
 void SigninAudiocomPageModel::init()
 {
+    authorization()->signOut();
     authorization()->authState().ch.onReceive(this, [this](au::au3cloud::AuthState newState) {
         if (std::holds_alternative<au3cloud::NotAuthorized>(newState)) {
             const std::string& error = std::get<au3cloud::NotAuthorized>(newState).error;
