@@ -193,7 +193,7 @@ void PlaybackSchedule::Init(
     if (pRecordingSchedule) {
         // adjust mT1 so that we don't give paComplete too soon to fill up the
         // desired length of recording
-        mT1 -= pRecordingSchedule->mLatencyCorrection;
+        mT1 -= pRecordingSchedule->mLatencyCompensation;
     }
 
     // Main thread's initialization of mTime

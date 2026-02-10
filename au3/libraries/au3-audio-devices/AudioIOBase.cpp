@@ -179,8 +179,7 @@ void AudioIOBase::HandleDeviceChange()
         playbackParameters.suggestedLatency
             =Pa_GetDeviceInfo(playDeviceNum)->defaultLowOutputLatency;
     } else {
-        playbackParameters.suggestedLatency
-            =AudioIOLatencyCorrection.GetDefault() / 1000.0;
+        playbackParameters.suggestedLatency = AudioIOLatencyCompensation.GetDefault() / 1000.0;
     }
 
     PaStreamParameters captureParameters;
@@ -193,8 +192,7 @@ void AudioIOBase::HandleDeviceChange()
         captureParameters.suggestedLatency
             =Pa_GetDeviceInfo(recDeviceNum)->defaultLowInputLatency;
     } else {
-        captureParameters.suggestedLatency
-            =AudioIOLatencyCorrection.GetDefault() / 1000.0;
+        captureParameters.suggestedLatency = AudioIOLatencyCompensation.GetDefault() / 1000.0;
     }
 
     // try opening for record and playback
@@ -940,8 +938,7 @@ wxString AudioIOBase::GetDeviceInfo() const
             playbackParameters.suggestedLatency
                 =Pa_GetDeviceInfo(playDeviceNum)->defaultLowOutputLatency;
         } else {
-            playbackParameters.suggestedLatency
-                =AudioIOLatencyCorrection.GetDefault() / 1000.0;
+            playbackParameters.suggestedLatency = AudioIOLatencyCompensation.GetDefault() / 1000.0;
         }
 
         PaStreamParameters captureParameters;
@@ -954,8 +951,7 @@ wxString AudioIOBase::GetDeviceInfo() const
             captureParameters.suggestedLatency
                 =Pa_GetDeviceInfo(recDeviceNum)->defaultLowInputLatency;
         } else {
-            captureParameters.suggestedLatency
-                =AudioIOLatencyCorrection.GetDefault() / 1000.0;
+            captureParameters.suggestedLatency = AudioIOLatencyCompensation.GetDefault() / 1000.0;
         }
 
         // Not really doing I/O so pass nullptr for the callback function
@@ -1055,10 +1051,10 @@ auto AudioIOBase::GetAllDeviceInfo() -> std::vector<AudioIODiagnostics>
 
 StringSetting AudioIOHost{
     L"/AudioIO/Host", L"" };
-BoolSetting AudioIOAutomaticLatencyCorrection{
-    L"/AudioIO/AutomaticLatencyCorrection", true };
-DoubleSetting AudioIOLatencyCorrection{
-    L"/AudioIO/LatencyCorrection", -130.0 };
+BoolSetting AudioIOAutomaticLatencyCompensation{
+    L"/AudioIO/AutomaticLatencyCompensation", true };
+DoubleSetting AudioIOLatencyCompensation{
+    L"/AudioIO/LatencyCompensation", -130.0 };
 DoubleSetting AudioIOLatencyDuration{
     L"/AudioIO/LatencyDuration", 100.0 };
 StringSetting AudioIOPlaybackDevice{

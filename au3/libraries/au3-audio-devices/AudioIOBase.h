@@ -404,8 +404,8 @@ protected:
 #include "au3-preferences/Prefs.h"
 
 extern AUDIO_DEVICES_API StringSetting AudioIOHost;
-extern AUDIO_DEVICES_API DoubleSetting AudioIOLatencyCorrection;
-extern AUDIO_DEVICES_API BoolSetting AudioIOAutomaticLatencyCorrection;
+extern AUDIO_DEVICES_API DoubleSetting AudioIOLatencyCompensation;
+extern AUDIO_DEVICES_API BoolSetting AudioIOAutomaticLatencyCompensation;
 extern AUDIO_DEVICES_API DoubleSetting AudioIOLatencyDuration;
 extern AUDIO_DEVICES_API StringSetting AudioIOPlaybackDevice;
 extern AUDIO_DEVICES_API StringSetting AudioIOPlaybackSource;
