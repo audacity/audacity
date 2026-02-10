@@ -33,7 +33,8 @@ void ProjectSceneActionsController::init()
     dispatcher()->reg(this, VERTICAL_RULERS_CODE, this, &ProjectSceneActionsController::toggleVerticalRulers);
     dispatcher()->reg(this, RMS_IN_WAVEFORM_CODE, this, &ProjectSceneActionsController::toggleRMSInWaveform);
     dispatcher()->reg(this, CLIPPING_IN_WAVEFORM_CODE, this, &ProjectSceneActionsController::toggleClippingInWaveform);
-    dispatcher()->reg(this, TOGGLE_UPDATE_DISPLAY_WHILE_PLAYING_CODE, this, &ProjectSceneActionsController::toggleUpdateDisplayWhilePlaying);
+    dispatcher()->reg(this, TOGGLE_UPDATE_DISPLAY_WHILE_PLAYING_CODE, this,
+                      &ProjectSceneActionsController::toggleUpdateDisplayWhilePlaying);
     dispatcher()->reg(this, TOGGLE_PINNED_PLAY_HEAD_CODE, this, &ProjectSceneActionsController::togglePinnedPlayHead);
     dispatcher()->reg(this, CLIP_PITCH_AND_SPEED_CODE, this, &ProjectSceneActionsController::openClipPitchAndSpeedEdit);
     dispatcher()->reg(this, TOGGLE_PLAYBACK_ON_RULER_CLICK_ENABLED_CODE, this,
@@ -104,7 +105,6 @@ void ProjectSceneActionsController::toggleUpdateDisplayWhilePlaying()
     bool enabled = configuration()->updateDisplayWhilePlayingEnabled();
     configuration()->setUpdateDisplayWhilePlayingEnabled(!enabled);
     notifyActionCheckedChanged(TOGGLE_UPDATE_DISPLAY_WHILE_PLAYING_CODE);
-
 }
 
 void ProjectSceneActionsController::togglePinnedPlayHead()
