@@ -213,12 +213,10 @@ void TimelineContext::onWheel(double mouseX, const QPoint& pixelDelta, const QPo
             emit userHorizontalScrolled();
         } else {
             if (dx != 0) {
-                // don't emit signal if there was no horizontal scroll (only vertical)
                 shiftFrameTime(-dx * correction);
                 emit userHorizontalScrolled();
             }
             if (dy != 0) {
-                // don't emit signal if there was no vertical scroll (only horizontal)
                 emit viewContentYChangeRequested(-dy);
             }
         }
@@ -284,7 +282,6 @@ void TimelineContext::centerOnTime(double secs)
     const double frameTime = m_frameEndTime - m_frameStartTime;
     const double newFrameStartTime = secs - frameTime * 0.5;
 
-    // Avoid unnecessary updates when the view is already centered
     if (muse::is_equal(newFrameStartTime, m_frameStartTime)) {
         return;
     }
@@ -294,7 +291,7 @@ void TimelineContext::centerOnTime(double secs)
 
 void TimelineContext::insureVisible(double posSec)
 {
-    // aka: paged scrolling
+    // paged scrolling
     const double newPosition = timeToContentPosition(posSec);
     const double frameStartPosition = timeToContentPosition(m_frameStartTime);
     const double frameEndPosition = timeToContentPosition(m_frameEndTime);
@@ -305,7 +302,7 @@ void TimelineContext::insureVisible(double posSec)
     }
 
     const double frameTime = m_frameEndTime - m_frameStartTime;
-    const double newFrameTime = m_frameStartTime + (posSec - m_frameEndTime) + (frameTime * 0.90); // keep 10% margin on the left
+    const double newFrameTime = m_frameStartTime + (posSec - m_frameEndTime) + (frameTime * 0.90);
     moveToFrameTime(newFrameTime);
 }
 
