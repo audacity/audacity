@@ -60,29 +60,47 @@ BaseSection {
         navigation.panel: root.navigation
         navigation.row: 1
 
-        onValueEdited: function(newValue) {
+        onValueEdited: function (newValue) {
             apiModel.bufferLengthSelected(newValue)
         }
     }
 
-    IncrementalPropertyControlWithTitle {
-        title: qsTrc("preferences", "Latency compensation")
+    StyledTextLabel {
+        text: qsTrc("preferences", "Latency compensation")
+
+        width: root.columnWidth
+        horizontalAlignment: Qt.AlignLeft
+        wrapMode: Text.WordWrap
+        maximumLineCount: 2
+    }
+
+    CheckBox {
+        id: automaticCompensationCheckbox
+
+        text: qsTrc("preferences", "Automatic")
+        checked: apiModel.automaticCompensationEnabled
+        onClicked: apiModel.setAutomaticCompensationEnabled(!checked)
+
+        navigation.name: "AutomaticLatencyCompensationCheckBox"
+        navigation.panel: root.navigation
+        navigation.row: 2
+    }
+
+    IncrementalPropertyControl {
 
         currentValue: apiModel.latencyCompensation
 
-        enabled: !playbackState.isPlaying
-
-        columnWidth: root.columnWidth
-        spacing: root.columnSpacing
+        enabled: !playbackState.isPlaying && !apiModel.automaticCompensationEnabled
+        implicitWidth: 100
 
         //: Abbreviation of "milliseconds"
         measureUnitsSymbol: qsTrc("global", "ms")
 
         navigation.name: "LatencyCompensationControl"
         navigation.panel: root.navigation
-        navigation.row: 2
+        navigation.row: 3
 
-        onValueEdited: function(newValue) {
+        onValueEdited: function (newValue) {
             apiModel.latencyCompensationSelected(newValue)
         }
     }

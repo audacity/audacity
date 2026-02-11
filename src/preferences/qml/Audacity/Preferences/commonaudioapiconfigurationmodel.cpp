@@ -69,6 +69,7 @@ void CommonAudioApiConfigurationModel::load()
     audioDevicesProvider()->inputDeviceChanged().onNotify(this, [this]() { emit currentInputDeviceIdChanged(); });
     audioDevicesProvider()->inputChannelsAvailableChanged().onNotify(this, [this](){ emit inputChannelsListChanged(); });
     audioDevicesProvider()->inputChannelsChanged().onNotify(this, [this](){ emit currentInputChannelsSelectedChanged(); });
+    audioDevicesProvider()->automaticCompensationEnabledChanged().onNotify(this, [this](){ emit automaticCompensationEnabledChanged(); });
     audioDevicesProvider()->bufferLengthChanged().onNotify(this, [this](){ emit bufferLengthChanged(); });
     audioDevicesProvider()->latencyCompensationChanged().onNotify(this, [this](){ emit latencyCompensationChanged(); });
     audioDevicesProvider()->defaultSampleRateChanged().onNotify(this, [this](){
@@ -169,6 +170,20 @@ void CommonAudioApiConfigurationModel::bufferLengthSelected(const QString& buffe
     }
 
     audioDevicesProvider()->setBufferLength(bufferLengthStr.toDouble());
+}
+
+bool CommonAudioApiConfigurationModel::automaticCompensationEnabled() const
+{
+    return audioDevicesProvider()->automaticCompensationEnabled();
+}
+
+void CommonAudioApiConfigurationModel::setAutomaticCompensationEnabled(bool enabled)
+{
+    if (enabled == automaticCompensationEnabled()) {
+        return;
+    }
+
+    audioDevicesProvider()->setAutomaticCompensationEnabled(enabled);
 }
 
 double CommonAudioApiConfigurationModel::latencyCompensation() const

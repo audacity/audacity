@@ -40,6 +40,10 @@ public:
     virtual void setBufferLength(double newBufferLength) = 0;
     virtual muse::async::Notification bufferLengthChanged() const = 0;
 
+    virtual bool automaticCompensationEnabled() const = 0;
+    virtual void setAutomaticCompensationEnabled(bool enabled) = 0;
+    virtual muse::async::Notification automaticCompensationEnabledChanged() const = 0;
+
     virtual double latencyCompensation() const = 0;
     virtual void setLatencyCompensation(double newLatencyCompensation) = 0;
     virtual muse::async::Notification latencyCompensationChanged() const = 0;

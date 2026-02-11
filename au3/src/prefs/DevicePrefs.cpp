@@ -304,7 +304,7 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui& S)
             w = S
                 .NameSuffix(XO("milliseconds"))
                 .TieNumericTextBox(XXO("&Latency compensation:"),
-                                   AudioIOLatencyCorrection, 25);
+                                   AudioIOLatencyCompensation, 25);
             S.AddUnits(XO("milliseconds"));
         }
         S.EndThreeColumn();
@@ -539,7 +539,7 @@ bool DevicePrefs::Commit()
     }
 
     AudioIOLatencyDuration.Invalidate();
-    AudioIOLatencyCorrection.Invalidate();
+    AudioIOLatencyCompensation.Invalidate();
 
     QualitySettings::DefaultSampleRate.Invalidate();
 

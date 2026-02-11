@@ -699,7 +699,12 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
                   : // Otherwise, use the (likely incorrect) latency reported by PA
                   stream->outputLatency;
 
+            if (AudioIOAutomaticLatencyCompensation.Read()) {
+                mRecordingSchedule.mLatencyCompensation = -stream->inputLatency - outputLatency;
+            }
+
             mHardwarePlaybackLatencyMs = outputLatency * 1000.0;
+            mHardwareCaptureLatencyMs = stream->inputLatency * 1000.0;
             mHardwarePlaybackLatencyFrames = lrint(outputLatency * stream->sampleRate);
 #ifdef __WXGTK__
             // DV: When using ALSA PortAudio does not report the buffer size.
@@ -976,8 +981,7 @@ int AudioIO::StartStream(const TransportSequences& sequences,
     const auto preRoll = std::max(0.0, std::min(t0, options.preRoll));
     mRecordingSchedule = {};
     mRecordingSchedule.mPreRoll = preRoll;
-    mRecordingSchedule.mLatencyCorrection
-        =AudioIOLatencyCorrection.Read() / 1000.0;
+    mRecordingSchedule.mLatencyCompensation = AudioIOLatencyCompensation.Read() / 1000.0;
     mRecordingSchedule.mDuration = t1 - t0;
     if (options.pCrossfadeData) {
         mRecordingSchedule.mCrossfadeData.swap(*options.pCrossfadeData);
@@ -1922,7 +1926,7 @@ void AudioIO::AudioThread(std::atomic<bool>& finish)
             lastState = ProcessingState::eSkipProcessing;
 
             if (gAudioIO->IsMonitoring()) {
-               lastState = ProcessingState::eMonitoringProcessing;
+                lastState = ProcessingState::eMonitoringProcessing;
             }
         }
 
@@ -2977,7 +2981,7 @@ void AudioIoCallback::DrainInputBuffers(
         // Assume that any good partial buffer should be written leftmost
         // and zeroes will be padded after; label the zeroes.
         auto start = mPlaybackSchedule.GetSequenceTime()
-                     + len / mRate + mRecordingSchedule.mLatencyCorrection;
+                     + len / mRate + mRecordingSchedule.mLatencyCompensation;
         auto duration = (framesPerBuffer - len) / mRate;
         auto pLast = mLostCaptureIntervals.empty()
                      ? nullptr : &mLostCaptureIntervals.back();

@@ -50,6 +50,10 @@ public:
     void setBufferLength(double newBufferLength) override;
     muse::async::Notification bufferLengthChanged() const override;
 
+    bool automaticCompensationEnabled() const override;
+    void setAutomaticCompensationEnabled(bool enabled) override;
+    muse::async::Notification automaticCompensationEnabledChanged() const override;
+
     double latencyCompensation() const override;
     void setLatencyCompensation(double newLatencyCompensation) override;
     muse::async::Notification latencyCompensationChanged() const override;
@@ -87,6 +91,7 @@ private:
     muse::async::Notification m_inputChannelsChanged;
     muse::async::Notification m_inputChannelsListChanged;
     muse::async::Notification m_bufferLengthChanged;
+    muse::async::Notification m_automaticCompensationEnabledChanged;
     muse::async::Notification m_latencyCompensationChanged;
     muse::async::Notification m_defaultSampleRateChanged;
     muse::async::Notification m_defaultSampleFormatChanged;
