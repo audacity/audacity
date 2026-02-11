@@ -15,6 +15,10 @@ Item {
     property alias middle: warper.middle
     property bool knobFirst: true
 
+    property NavigationPanel navigationPanel: null
+    property int navigationOrder: 0
+    property int navigationOrderEnd: textEdit.navigation.order
+
     implicitWidth: content.implicitWidth
     implicitHeight: content.implicitHeight
 
@@ -59,6 +63,9 @@ Item {
         KnobControl {
             id: knob
 
+            navigation.panel: root.navigationPanel
+            navigation.order: root.navigationOrder
+
             value: warper.warpedValue
 
             anchors.horizontalCenter: parent.horizontalCenter
@@ -91,6 +98,9 @@ Item {
             anchors.horizontalCenter: parent.horizontalCenter
 
             implicitWidth: 70
+
+            navigation.panel: root.navigationPanel
+            navigation.order: root.navigationOrder + 1
 
             minValue: knob.from
             maxValue: knob.to

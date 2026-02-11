@@ -20,6 +20,7 @@ RowLayout {
 
     // Expose the manage menu model so parent can listen to its signals
     property alias manageMenuModel: manageMenuModel
+    property int navigationOrderEnd: manageButton.navigation.order + 1
 
     spacing: 4
 
