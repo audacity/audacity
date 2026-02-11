@@ -238,6 +238,12 @@ PluginPaths NyquistEffectsModule::FindModulePaths(PluginManagerInterface& pm) co
     // LLL:  Works for all platform with NEW plugin support (dups are removed)
     pm.FindFilesInPathList(wxT("*.NY"), pathList, files); // Ed's fix for bug 179
 
+    // Remove duplicates - case-insensitive comparison.
+    std::sort(files.begin(), files.end(), 
+        [](const wxString& a, const wxString& b) { return a.CmpNoCase(b) < 0; });
+    files.erase(std::unique(files.begin(), files.end(),
+        [](const wxString& a, const wxString& b) { return a.CmpNoCase(b) == 0; }), files.end());
+
     wxLogDebug("NyquistEffectsModule::FindModulePaths - Found %zu total files", files.size());
     for (size_t i = 0; i < files.size(); ++i) {
         wxLogDebug("  [%zu] %s", i, files[i]);
