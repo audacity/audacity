@@ -5,6 +5,7 @@
         <file>qml/Audacity/Project/ProjectsPage.qml</file>
         <file>qml/Audacity/Project/internal/ProjectsPage/ProjectGridItem.qml</file>
         <file>qml/Audacity/Project/internal/ProjectsPage/ProjectListItem.qml</file>
+        <file>qml/Audacity/Project/internal/ProjectsPage/AudioListItem.qml</file>
         <file>qml/Audacity/Project/internal/ProjectsPage/RecentProjectsView.qml</file>
         <file>qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml</file>
         <file>qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml</file>
@@ -28,6 +29,7 @@
         <file>resources/ProjectPlaceholder.svg</file>
         <file>resources/AudioFilePlaceholder.svg</file>
         <file>resources/PublishProjects.png</file>
+        <file>resources/Waveform.svg</file>
         <file>qml/Audacity/Project/UploadProgressDialog.qml</file>
         <file>qml/Audacity/Project/AlsoShareAudioComDialog.qml</file>
         <file>resources/AudioCom_Waveform.png</file>
@@ -35,5 +37,6 @@
         <file>qml/Audacity/Project/Message.qml</file>
         <file>qml/Audacity/Project/ProjectsListView.qml</file>
         <file>qml/Audacity/Project/ProjectsGridView.qml</file>
+        <file>qml/Audacity/Project/AudioListView.qml</file>
     </qresource>
 </RCC>

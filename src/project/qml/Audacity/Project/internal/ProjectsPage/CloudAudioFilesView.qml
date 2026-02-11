@@ -22,7 +22,7 @@ ProjectsView {
 
     QtObject {
         id: prv
-        property string placeholderFile: "qrc:/resources/AudioFilePlaceholder.svg"
+        property string gridPlaceholderFile: "qrc:/resources/AudioFilePlaceholder.svg"
     }
 
     sourceComponent: root.viewType === ProjectsPageModel.List ? listComp : gridComp
@@ -38,7 +38,7 @@ ProjectsView {
 
             backgroundColor: root.backgroundColor
             sideMargin: root.sideMargin
-            placeholder: prv.placeholderFile
+            placeholder: prv.gridPlaceholderFile
 
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrder
@@ -53,7 +53,7 @@ ProjectsView {
     Component {
         id: listComp
 
-        ProjectsListView {
+        AudioListView {
             id: list
 
             anchors.fill: parent
@@ -63,9 +63,6 @@ ProjectsView {
 
             backgroundColor: root.backgroundColor
             sideMargin: root.sideMargin
-            placeholder: prv.placeholderFile
-
-            showNewProjectItem: true
 
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrder
@@ -76,16 +73,12 @@ ProjectsView {
             //onOpenProjectRequested: function(projectPath, displayName) {}
 
             columns: [
-                ProjectsListView.ColumnItem {
+                AudioListView.ColumnItem {
                     id: modifiedColumn
-
-                    //: Stands for "Last time that this audio file was modified".
-                    //: Used as the header of this column in the audio files list.
-                    header: qsTrc("project", "Modified")
 
                     width: function (parentWidth) {
                         let parentWidthExclusingSpacing = parentWidth - list.columns.length * list.view.columnSpacing;
-                        return 0.25 * parentWidthExclusingSpacing
+                        return 0.15 * parentWidthExclusingSpacing
                     }
 
                     delegate: StyledTextLabel {
@@ -118,42 +111,19 @@ ProjectsView {
                     }
                 },
 
-                ProjectsListView.ColumnItem {
-                    id: sizeColumn
-                    header: qsTrc("global", "Size", "file size")
+                AudioListView.ColumnItem {
+                    id: previewColumn
 
                     width: function (parentWidth) {
                         let parentWidthExclusingSpacing = parentWidth - list.columns.length * list.view.columnSpacing;
-                        return 0.15 * parentWidthExclusingSpacing
+                        return 0.7 * parentWidthExclusingSpacing
                     }
 
-                    delegate: StyledTextLabel {
-                        id: sizeLabel
-                        text: Boolean(project.fileSize) ? project.fileSize : "-"
-
-                        font: ui.theme.largeBodyFont
-                        horizontalAlignment: Text.AlignLeft
-
-                        NavigationFocusBorder {
-                            navigationCtrl: NavigationControl {
-                                name: "SizeLabel"
-                                panel: navigationPanel
-                                row: navigationRow
-                                column: navigationColumnStart
-                                enabled: sizeLabel.visible && sizeLabel.enabled && !sizeLabel.isEmpty
-                                accessible.name: sizeColumn.header + ": " + (Boolean(project.fileSize) ? project.fileSize : qsTrc("global", "Unknown"))
-                                accessible.role: MUAccessible.StaticText
-
-                                onActiveChanged: {
-                                    if (active) {
-                                        listItem.scrollIntoView()
-                                    }
-                                }
-                            }
-
-                            anchors.margins: -radius
-                            radius: 2 + border.width
-                        }
+                    delegate: Image {
+                        source: "qrc:/resources/Waveform.svg"
+                        fillMode: Image.PreserveAspectFit
+                        horizontalAlignment: Image.AlignLeft
+                        verticalAlignment: Image.AlignVCenter   
                     }
                 }
             ]

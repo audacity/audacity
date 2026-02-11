@@ -58,8 +58,6 @@ ProjectsView {
             backgroundColor: root.backgroundColor
             sideMargin: root.sideMargin
 
-            showNewProjectItem: true
-
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrder
             navigation.name: "CloudProjectsList"
