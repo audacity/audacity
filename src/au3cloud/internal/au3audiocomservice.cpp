@@ -1,3 +1,7 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+
 #include "au3audiocomservice.h"
 
 #include "au3-cloud-audiocom/CloudSyncService.h"
@@ -26,6 +30,7 @@ au::au3cloud::ProjectList convertFromAu3PaginatedProject(const sync::PaginatedPr
         item.lastSyncedSnapshotId = projectInfo.LastSyncedSnapshotId;
         item.created = projectInfo.Created;
         item.updated = projectInfo.Updated;
+        item.fileSize = projectInfo.HeadSnapshot.FileSize;
 
         projectList.items.push_back(std::move(item));
     }
@@ -85,6 +90,10 @@ muse::async::Promise<ProjectList> Au3AudioComService::downloadProjectList(size_t
                         return resolve(cachedProject.projectList);
                     });
                 }
+            } else {
+                return muse::async::Promise<ProjectList>([cachedProject](auto resolve, auto) {
+                    return resolve(cachedProject.projectList);
+                });
             }
         }
     }

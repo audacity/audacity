@@ -83,7 +83,7 @@ Item {
                     source: {
                         switch (root.suffix) {
                         default:
-                            return "qrc:/resources/Placeholder_Other.png"
+                            return "qrc:/resources/ProjectPlaceholder.svg"
                         }
                     }
 

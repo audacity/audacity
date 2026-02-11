@@ -34,6 +34,7 @@ struct ProjectList {
         std::string name;
         std::string details;
         std::string lastSyncedSnapshotId;
+        int64_t fileSize;
 
         int64_t created {};
         int64_t updated {};

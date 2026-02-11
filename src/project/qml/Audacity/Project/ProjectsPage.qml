@@ -159,13 +159,19 @@ FocusScope {
             }
 
             StyledTabButton {
-                text: qsTrc("project", "My online projects")
+                text: qsTrc("project", "Cloud projects")
 
-                visible: false
-
-                navigation.name: "MyOnlineProjects"
+                navigation.name: "CloudProjects"
                 navigation.panel: navTabPanel
                 navigation.column: 2
+            }
+
+            StyledTabButton {
+                text: qsTrc("project", "Cloud audio files")
+
+                navigation.name: "CloudAudioFiles"
+                navigation.panel: navTabPanel
+                navigation.column: 3
             }
         }
 
@@ -240,7 +246,7 @@ FocusScope {
                 return null
             }
 
-            return [newAndRecentComp, onlineProjectsComp][tabBar.currentIndex]
+            return [newAndRecentComp, cloudProjectsComp, cloudAudioFilesComp][tabBar.currentIndex]
         }
     }
 
@@ -270,41 +276,45 @@ FocusScope {
     }
 
     Component {
-        id: onlineProjectsComp
+        id: cloudProjectsComp
+
+        CloudProjectsView {
+            id: cloudProjectsView
+            anchors.fill: parent
+
+            viewType: projectsPageModel.viewType
+            searchText: searchField.searchText
+
+            backgroundColor: background.color
+            sideMargin: prv.sideMargin
+
+            navigationSection: navSec
+            navigationOrder: 4
+
+            // onCreateNewProjectRequested: {
+            //     projectsPageModel.createNewProject()
+            // }
+
+            // onOpenProjectRequested: function(projectPath, displayName) {
+            //     Qt.callLater(projectsPageModel.openProject, projectPath, displayName)
+            // }
+
+            // Connections {
+            //     target: refreshButton
+
+            //     function onClicked() {
+            //         cloudProjectsView.refresh()
+            //     }
+            // }
+        }
+    }
+
+    Component {
+        id: cloudAudioFilesComp
 
         Text {
-            text: "onlineProjectsComp"
+            text: "cloud audio files"
         }
-
-        // CloudProjectsView {
-        //     id: cloudProjectsView
-        //     anchors.fill: parent
-
-        //     viewType: projectsPageModel.viewType
-        //     searchText: searchField.searchText
-
-        //     backgroundColor: background.color
-        //     sideMargin: prv.sideMargin
-
-        //     navigationSection: navSec
-        //     navigationOrder: 4
-
-        //     onCreateNewProjectRequested: {
-        //         projectsPageModel.createNewProject()
-        //     }
-
-        //     onOpenProjectRequested: function(projectPath, displayName) {
-        //         Qt.callLater(projectsPageModel.openProject, projectPath, displayName)
-        //     }
-
-        //     Connections {
-        //         target: refreshButton
-
-        //         function onClicked() {
-        //             cloudProjectsView.refresh()
-        //         }
-        //     }
-        // }
     }
 
     Rectangle {
