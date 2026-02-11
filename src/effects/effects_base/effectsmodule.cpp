@@ -94,7 +94,6 @@ void EffectsModule::registerUiTypes()
 
 void EffectsModule::onInit(const muse::IApplication::RunMode&)
 {
-    FileNames::InitializePathList();
     PluginManager::Get().Initialize([](const FilePath& localFileName) {
         return std::make_unique<au3::EffectConfigSettings>(localFileName.ToStdString());
     });
