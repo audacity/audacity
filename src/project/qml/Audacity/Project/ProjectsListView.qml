@@ -39,6 +39,7 @@ Item {
 
     property color backgroundColor: ui.theme.backgroundSecondaryColor
     property real sideMargin: 46
+    property string placeholder: ""
 
     property alias view: view
 
@@ -212,6 +213,8 @@ Item {
                         itemInset: view.itemInset
                         implicitHeight: view.rowHeight
                         columnSpacing: view.columnSpacing
+
+                        placeholder: root.placeholder
 
                         navigation.panel: navPanel
                         navigation.row: index + 1

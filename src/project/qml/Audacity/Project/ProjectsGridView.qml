@@ -36,6 +36,7 @@ Item {
 
     property color backgroundColor: ui.theme.backgroundSecondaryColor
     property real sideMargin: 46
+    property string placeholder: ""
 
     property alias view: view
 
@@ -151,6 +152,8 @@ Item {
                         view.positionViewAtIndex(index, GridView.Contain)
                     }
                 }
+
+                placeholder: root.placeholder
 
                 name: project.name
                 path: project.path ?? ""

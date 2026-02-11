@@ -20,6 +20,11 @@ ProjectsView {
         cloudAudioFilesModel.load()
     }
 
+    QtObject {
+        id: prv
+        property string placeholderFile: "qrc:/resources/AudioFilePlaceholder.svg"
+    }
+
     sourceComponent: root.viewType === ProjectsPageModel.List ? listComp : gridComp
 
     Component {
@@ -33,6 +38,7 @@ ProjectsView {
 
             backgroundColor: root.backgroundColor
             sideMargin: root.sideMargin
+            placeholder: prv.placeholderFile
 
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrder
@@ -57,6 +63,7 @@ ProjectsView {
 
             backgroundColor: root.backgroundColor
             sideMargin: root.sideMargin
+            placeholder: prv.placeholderFile
 
             showNewProjectItem: true
 

@@ -39,6 +39,8 @@ ListItemBlank {
     property real columnSpacing: 44
     property alias showBottomBorder: bottomBorder.visible
 
+    property string placeholder: ""
+
     implicitHeight: 64
 
     navigation.accessible.name: root.project.name ?? ""
@@ -70,6 +72,7 @@ ListItemBlank {
                     path: root.project.path ?? ""
                     suffix: root.project.suffix ?? ""
                     thumbnailUrl: Qt.resolvedUrl("file:" + root.project.thumbnailUrl) ?? ""
+                    placeholder: root.placeholder
                 }
 
                 layer.enabled: true

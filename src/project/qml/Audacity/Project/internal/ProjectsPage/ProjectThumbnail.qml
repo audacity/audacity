@@ -31,6 +31,7 @@ Item {
     property string path: ""
     property string suffix: ""
     property string thumbnailUrl: ""
+    property string placeholder: ""
 
     ProjectThumbnailLoader {
         id: thumbnailLoader
@@ -83,7 +84,7 @@ Item {
                     source: {
                         switch (root.suffix) {
                         default:
-                            return "qrc:/resources/ProjectPlaceholder.svg"
+                            return root.placeholder || "qrc:/resources/ProjectPlaceholder.svg"
                         }
                     }
 

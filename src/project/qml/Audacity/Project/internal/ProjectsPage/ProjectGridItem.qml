@@ -35,6 +35,7 @@ FocusScope {
     property string suffix: ""
     property alias timeSinceModified: timeSinceModified.text
     property string thumbnailUrl: ""
+    property string placeholder: ""
     property bool isCreateNew: false
     property bool isNoResultsFound: false
     property bool isCloud: false
@@ -300,6 +301,7 @@ FocusScope {
             path: root.path
             suffix: root.suffix
             thumbnailUrl: root.thumbnailUrl
+            placeholder: root.placeholder
         }
     }
 }
