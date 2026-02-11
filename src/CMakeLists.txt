@@ -26,6 +26,7 @@ endif()
 add_subdirectory(au3wrap)
 
 add_subdirectory(audio)
+add_subdirectory(au3cloud)
 add_subdirectory(context)
 add_subdirectory(project)
 add_subdirectory(preferences)

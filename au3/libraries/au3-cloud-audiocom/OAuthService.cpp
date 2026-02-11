@@ -282,6 +282,34 @@ void OAuthService::AuthoriseRefreshToken(
         std::move(completedHandler), silent);
 }
 
+void OAuthService::AuthorizeCode(std::string_view authorizationCode,
+                                 std::string_view redirectUri, AudiocomTrace trace,
+                                 std::function<void(std::string_view)> completedHandler)
+{
+    using namespace rapidjson;
+
+    Document document;
+    document.SetObject();
+
+    document.AddMember(
+        "code", StringRef(authorizationCode.data(), authorizationCode.size()),
+        document.GetAllocator());
+
+    document.AddMember(
+        "redirect_uri", StringRef(redirectUri.data(), redirectUri.size()),
+        document.GetAllocator());
+
+    WriteCommonFields(document, "authorization_code", "all");
+
+    rapidjson::StringBuffer buffer;
+    rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
+    document.Accept(writer);
+
+    DoAuthorise(
+        GetServiceConfig(), { buffer.GetString(), buffer.GetSize() }, trace,
+        std::move(completedHandler), false);
+}
+
 void OAuthService::AuthoriseCode(
     const ServiceConfig& config, std::string_view authorizationCode, bool useAudioComRedirectURI,
     AudiocomTrace trace, std::function<void(std::string_view)> completedHandler)

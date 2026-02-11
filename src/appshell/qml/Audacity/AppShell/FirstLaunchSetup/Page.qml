@@ -37,6 +37,7 @@ Item {
     default property alias content: contentItem.data
     property real titleContentSpacing: 24
     property string extraButtonTitle: ""
+    property int titleTopMargin: 39
 
     property NavigationPanel navigationPanel: NavigationPanel {
         name: "ContentPanel"
@@ -47,6 +48,8 @@ Item {
     }
 
     signal extraButtonClicked
+    signal nextButtonClicked
+    signal navNextPageRequested
 
     function readInfo() {
         accessibleInfo.readInfo()
@@ -80,12 +83,14 @@ Item {
     Column {
         id: header
 
+        visible: root.title.length > 0
+
         anchors.top: parent.top
-        anchors.topMargin: 39
+        anchors.topMargin: root.title.length > 0 ? root.titleTopMargin : 0
         anchors.left: parent.left
         anchors.right: parent.right
 
-        height: childrenRect.height
+        height: root.title.length > 0 ? childrenRect.height : 0
 
         StyledTextLabel {
             id: titleLabel
@@ -103,7 +108,7 @@ Item {
         id: contentItem
 
         anchors.top: header.bottom
-        anchors.topMargin: root.titleContentSpacing
+        anchors.topMargin: root.title.length > 0 ? root.titleContentSpacing : 0
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom

@@ -29,11 +29,11 @@ StringSetting audioComApiEndpoint { L"/CloudServices/AudioCom/ApiEndpoint",
                                     L"https://api.audio.com" };
 
 StringSetting audioComOAuthClientID { L"/CloudServices/AudioCom/OAuthClientID",
-                                      L"1741964426607541" };
+                                      L"1856093568187764" };
 
 StringSetting audioComOAuthClientSecret {
     L"/CloudServices/AudioCom/OAuthClientSecret",
-    L"shKqnY2sLTfRK7hztwzNEVxnmhJfOy1i"
+    L"k5yMf8iSaYzYa-xWOh6j5yomwV0ELXZs"
 };
 
 StringSetting audioComOAuthRedirectURL {

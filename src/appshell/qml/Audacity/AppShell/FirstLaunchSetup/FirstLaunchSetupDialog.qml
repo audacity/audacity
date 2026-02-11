@@ -43,6 +43,29 @@ StyledDialogView {
 
     readonly property Page currentPage: pageLoader.item as Page
 
+    function endSetup() {
+        model.finish()
+        root.hide()
+    }
+
+    function advanceToNextPage() {
+        if (root.currentPage) {
+            root.currentPage.nextButtonClicked()
+        }
+
+        if (model.canFinish) {
+            endSetup()
+            return
+        }
+
+        if (Boolean(buttons.lastPressedButton)) {
+            buttons.lastPressedButton.navigation.accessible.ignored = true
+        }
+
+        pageLoader.item.resetFocus()
+        model.currentPageIndex++
+    }
+
     FirstLaunchSetupModel {
         id: model
     }
@@ -82,6 +105,12 @@ StyledDialogView {
             onLoaded: {
                 item.navigationSection = root.navigationSection
                 item.activeButtonTitle = buttons.activeButton.text
+
+                if (item.navNextPageRequested) {
+                    item.navNextPageRequested.connect(function() {
+                        advanceToNextPage()
+                    })
+                }
 
                 navigationActiveTimer.start()
             }
@@ -153,7 +182,6 @@ StyledDialogView {
 
                 Layout.alignment: Qt.AlignLeft
                 Layout.preferredHeight: 28
-                Layout.preferredWidth: 80
 
                 text: model.backButtonText
                 enabled: model.canGoBack
@@ -188,7 +216,6 @@ StyledDialogView {
 
                 Layout.alignment: Qt.AlignRight
                 Layout.preferredHeight: 28
-                Layout.preferredWidth: 80
 
                 visible: root.currentPage ? Boolean(root.currentPage.extraButtonTitle) : false
                 accentButton: true
@@ -203,6 +230,11 @@ StyledDialogView {
                     if (root.currentPage) {
                         root.currentPage.extraButtonClicked()
                     }
+
+                    if (model.canFinish) {
+                        endSetup()
+                        return
+                    }
                 }
             }
 
@@ -211,9 +243,8 @@ StyledDialogView {
 
                 Layout.alignment: Qt.AlignRight
                 Layout.preferredHeight: 28
-                Layout.preferredWidth: 80
 
-                text: model.canFinish ? model.doneButtonText : model.nextButtonText
+                text: model.nextButtonText
                 accentButton: !extraButton.visible
 
                 navigation.name: "NextButton"
@@ -228,19 +259,7 @@ StyledDialogView {
                 }
 
                 onClicked: {
-                    if (model.canFinish) {
-                        model.finish()
-                        root.hide()
-                        return
-                    }
-
-                    if (Boolean(buttons.lastPressedButton)) {
-                        buttons.lastPressedButton.navigation.accessible.ignored = true
-                    }
-
-                    buttons.lastPressedButton = nextStepButton
-                    pageLoader.item.resetFocus()
-                    model.currentPageIndex++
+                    advanceToNextPage()
                 }
             }
         }

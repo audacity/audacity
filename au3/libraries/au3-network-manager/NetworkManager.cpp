@@ -18,7 +18,12 @@
 #include "NetworkManager.h"
 
 #include "IResponseFactory.h"
+
+#ifdef USE_QT_NETWORKMANAGER
+#include "qt/ResponseFactory.h"
+#else
 #include "curl/CurlResponseFactory.h"
+#endif
 
 #include "MultipartData.h"
 
@@ -28,7 +33,11 @@ namespace audacity {
 namespace network_manager {
 NetworkManager::NetworkManager ()
 {
-    mResponseFactory = std::make_unique<CurlResponseFactory> ();
+#ifdef USE_QT_NETWORKMANAGER
+    mResponseFactory = std::make_unique<ResponseFactory>();
+#else
+    mResponseFactory = std::make_unique<CurlResponseFactory>();
+#endif
 }
 
 NetworkManager::~NetworkManager ()

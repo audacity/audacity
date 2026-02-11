@@ -33,7 +33,9 @@ FirstLaunchSetupModel::FirstLaunchSetupModel(QObject* parent)
     m_pages = {
         Page { "ThemesPage.qml", "audacity://project" },
         Page { "ClipVisualizationPage.qml", "audacity://project" },
-        Page { "WorkspaceLayoutPage.qml", "audacity://project" }
+        Page { "WorkspaceLayoutPage.qml", "audacity://project" },
+        Page { "SigninAudiocomPage.qml", "audacity://project" },
+        Page { "AppUpdatesAndUsageInfoPage.qml", "audacity://project" },
     };
 }
 
@@ -91,30 +93,26 @@ void FirstLaunchSetupModel::setCurrentPageIndex(int index)
 
     m_currentPageIndex = index;
     emit currentPageChanged();
+    emit nextButtonTextChanged();
 
     async::Async::call(this, [this]() {
         interactive()->open(m_pages.at(m_currentPageIndex).m_backgroundUri);
     });
 }
 
-QString FirstLaunchSetupModel::dialogTitle()
+QString FirstLaunchSetupModel::dialogTitle() const
 {
     return muse::qtrc("appshell/gettingstarted", "Getting started");
 }
 
-QString FirstLaunchSetupModel::backButtonText()
+QString FirstLaunchSetupModel::backButtonText() const
 {
     return muse::qtrc("global", "Back");
 }
 
-QString FirstLaunchSetupModel::nextButtonText()
+QString FirstLaunchSetupModel::nextButtonText() const
 {
-    return muse::qtrc("global", "Next");
-}
-
-QString FirstLaunchSetupModel::doneButtonText()
-{
-    return muse::qtrc("appshell/gettingstarted", "Done");
+    return !canFinish() ? muse::qtrc("global", "Next") : muse::qtrc("appshell/gettingstarted", "Accept & continue");
 }
 
 QString FirstLaunchSetupModel::formatPageProgress(int current, int total) const

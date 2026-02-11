@@ -1,0 +1,39 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+#pragma once
+
+#include <QObject>
+
+#include "framework/global/async/asyncable.h"
+
+#include "framework/global/modularity/ioc.h"
+#include "au3cloud/iauthorization.h"
+
+namespace au::au3cloud {
+class CloudTestsModel : public QObject, public muse::async::Asyncable, public muse::Injectable
+{
+    Q_OBJECT
+
+    muse::Inject<IAuthorization> authorization = { this };
+
+    Q_PROPERTY(bool isAuthorized READ isAuthorized NOTIFY isAuthorizedChanged)
+    Q_PROPERTY(QUrl avatarPath READ avatarPath NOTIFY avatarPathChanged)
+    Q_PROPERTY(QString displayName READ displayName NOTIFY displayNameChanged)
+
+public:
+    explicit CloudTestsModel(QObject* parent = nullptr);
+
+    Q_INVOKABLE void init();
+    Q_INVOKABLE void signOut();
+
+    bool isAuthorized() const;
+    QUrl avatarPath() const;
+    QString displayName() const;
+
+signals:
+    void displayNameChanged();
+    void avatarPathChanged();
+    void isAuthorizedChanged();
+};
+}
