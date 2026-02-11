@@ -143,6 +143,10 @@ muse::async::Promise<AudioList> Au3AudioComService::downloadAudioList(size_t aud
                         return resolve(cachedAudio.audioList);
                     });
                 }
+            } else {
+                return muse::async::Promise<AudioList>([cachedAudio](auto resolve, auto) {
+                    return resolve(cachedAudio.audioList);
+                });
             }
         }
     }
@@ -150,7 +154,7 @@ muse::async::Promise<AudioList> Au3AudioComService::downloadAudioList(size_t aud
     return muse::async::Promise<AudioList>([this, audiosPerBatch, batchNumber](auto resolve, auto) {
         auto& cloudSyncService = CloudSyncService::Get();
         auto cancellationContext = CancellationContext::Create();
-        auto future = cloudSyncService.GetAudioList(cancellationContext, audiosPerBatch, batchNumber, "");
+        auto future = cloudSyncService.GetAudioList(cancellationContext, batchNumber, audiosPerBatch, "");
         auto result = future.get();
 
         const auto* paginatedResponse = std::get_if<sync::PaginatedAudioResponse>(&result);

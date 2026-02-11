@@ -7,6 +7,7 @@
         <file>qml/Audacity/Project/internal/ProjectsPage/ProjectListItem.qml</file>
         <file>qml/Audacity/Project/internal/ProjectsPage/RecentProjectsView.qml</file>
         <file>qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml</file>
+        <file>qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml</file>
         <file>qml/Audacity/Project/internal/ProjectsPage/CloudProjectIndicatorButton.qml</file>
         <file>qml/Audacity/Project/internal/ProjectsPage/ProjectThumbnail.qml</file>
         <file>qml/Audacity/Project/AskSaveLocationTypeDialog.qml</file>

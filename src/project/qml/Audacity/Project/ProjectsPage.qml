@@ -289,7 +289,7 @@ FocusScope {
             sideMargin: prv.sideMargin
 
             navigationSection: navSec
-            navigationOrder: 4
+            navigationOrder: 5
 
             // onCreateNewProjectRequested: {
             //     projectsPageModel.createNewProject()
@@ -312,8 +312,18 @@ FocusScope {
     Component {
         id: cloudAudioFilesComp
 
-        Text {
-            text: "cloud audio files"
+        CloudAudioFilesView {
+            id: cloudAudioFilesView
+            anchors.fill: parent
+
+            viewType: projectsPageModel.viewType
+            searchText: searchField.searchText
+
+            backgroundColor: background.color
+            sideMargin: prv.sideMargin
+
+            navigationSection: navSec
+            navigationOrder: 5
         }
     }
 
