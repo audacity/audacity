@@ -49,8 +49,8 @@ if(OS_IS_MAC)
    set(PLUGINS_INSTALL_DEST "${AU4_SHARE_NAME}Contents/plug-ins")
    set(PLUGINS_BUILD_DEST "${CMAKE_BINARY_DIR}/src/app/${AU4_SHARE_NAME}Contents/plug-ins")
 else()
-   set(PLUGINS_INSTALL_DEST "${AU4_SHARE_NAME}${AU4_INSTALL_NAME}plug-ins")
-   set(PLUGINS_BUILD_DEST "${CMAKE_BINARY_DIR}/bin/${AU4_SHARE_NAME}${AU4_INSTALL_NAME}plug-ins")
+   set(PLUGINS_INSTALL_DEST "${AU4_SHARE_NAME}${AU4_INSTALL_NAME}bin/plug-ins")
+   set(PLUGINS_BUILD_DEST "${CMAKE_BINARY_DIR}/${AU4_SHARE_NAME}${AU4_INSTALL_NAME}plug-ins")
 endif()
 
 # Install plug-ins for release builds
