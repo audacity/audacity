@@ -73,13 +73,12 @@ Item {
 
             Rectangle {
                 anchors.fill: parent
-                color: ui.theme.extra["white_color"]
+                color: ui.theme.backgroundSecondaryColor
 
                 Image {
                     anchors.centerIn: parent
 
-                    width: 80/172 * parent.width
-                    height: 110/80 * width
+                    width: parent.width / 2
 
                     source: {
                         switch (root.suffix) {
