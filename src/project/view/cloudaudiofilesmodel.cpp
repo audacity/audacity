@@ -4,10 +4,9 @@
 #include "cloudaudiofilesmodel.h"
 
 #include "framework/global/dataformatter.h"
-#include "framework//global/types/datetime.h"
+#include "framework/global/types/datetime.h"
 
 #include "au3cloud/cloudtypes.h"
-#include <qstringliteral.h>
 
 using namespace muse;
 using namespace au::project;
@@ -145,6 +144,10 @@ void CloudAudioFilesModel::loadItemsIfNecessary()
             m_isWaitingForPromise = false;
 
             loadItemsIfNecessary();
+        })
+        .onReject(this, [this](int, const std::string&) {
+            m_isWaitingForPromise = false;
+            setState(State::Error);
         });
     } else {
         setState(State::Fine);

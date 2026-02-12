@@ -98,10 +98,10 @@ muse::async::Promise<ProjectList> Au3AudioComService::downloadProjectList(size_t
         }
     }
 
-    return muse::async::Promise<ProjectList>([this, projectsPerBatch, batchNumber](auto resolve, auto) {
+    return muse::async::Promise<ProjectList>([this, projectsPerBatch, batchNumber](auto resolve, auto reject) {
         auto& cloudSyncService = CloudSyncService::Get();
         auto cancellationContext = CancellationContext::Create();
-        auto future = cloudSyncService.GetProjects(cancellationContext, 1, 20, "");
+        auto future = cloudSyncService.GetProjects(cancellationContext, batchNumber, projectsPerBatch, "");
         auto result = future.get();
 
         const auto* paginatedResponse = std::get_if<sync::PaginatedProjectsResponse>(&result);
@@ -110,8 +110,7 @@ muse::async::Promise<ProjectList> Au3AudioComService::downloadProjectList(size_t
             m_projectListCache[batchNumber] = CachedProjectItem { projects, std::chrono::system_clock::now() };
             (void)resolve(projects);
         } else {
-            ProjectList projects;
-            (void)resolve(projects);
+            (void)reject(-1, "Failed to fetch project list from cloud service");
         }
 
         return muse::async::Promise<ProjectList>::dummy_result();
@@ -151,7 +150,7 @@ muse::async::Promise<AudioList> Au3AudioComService::downloadAudioList(size_t aud
         }
     }
 
-    return muse::async::Promise<AudioList>([this, audiosPerBatch, batchNumber](auto resolve, auto) {
+    return muse::async::Promise<AudioList>([this, audiosPerBatch, batchNumber](auto resolve, auto reject) {
         auto& cloudSyncService = CloudSyncService::Get();
         auto cancellationContext = CancellationContext::Create();
         auto future = cloudSyncService.GetAudioList(cancellationContext, batchNumber, audiosPerBatch, "");
@@ -163,8 +162,7 @@ muse::async::Promise<AudioList> Au3AudioComService::downloadAudioList(size_t aud
             m_audioListCache[batchNumber] = CachedAudioItem { audioList, std::chrono::system_clock::now() };
             (void)resolve(audioList);
         } else {
-            AudioList audioList;
-            (void)resolve(audioList);
+            (void)reject(-1, "Failed to fetch audio list from cloud service");
         }
 
         return muse::async::Promise<AudioList>::dummy_result();
