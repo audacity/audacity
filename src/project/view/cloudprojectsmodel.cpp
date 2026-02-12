@@ -47,6 +47,8 @@ void CloudProjectsModel::load()
 
 void CloudProjectsModel::reload()
 {
+    audioComService()->clearProjectListCache();
+
     beginResetModel();
 
     m_items.clear();

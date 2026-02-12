@@ -12,6 +12,10 @@ import Audacity.Project 1.0
 ProjectsView {
     id: root
 
+    function refresh() {
+        cloudAudioFilesModel.reload()
+    }
+
     CloudAudioFilesModel {
         id: cloudAudioFilesModel
     }

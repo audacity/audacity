@@ -47,6 +47,8 @@ void CloudAudioFilesModel::load()
 
 void CloudAudioFilesModel::reload()
 {
+    audioComService()->clearAudioListCache();
+
     beginResetModel();
 
     m_items.clear();

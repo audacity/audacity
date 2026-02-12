@@ -188,7 +188,7 @@ FocusScope {
         FlatButton {
             id: refreshButton
 
-            visible: tabBar.currentIndex === 1
+            visible: tabBar.currentIndex === 1 || tabBar.currentIndex === 2
 
             navigation.panel: viewButtonsNavPanel
             navigation.order: 1
@@ -299,13 +299,13 @@ FocusScope {
             //     Qt.callLater(projectsPageModel.openProject, projectPath, displayName)
             // }
 
-            // Connections {
-            //     target: refreshButton
+            Connections {
+                 target: refreshButton
 
-            //     function onClicked() {
-            //         cloudProjectsView.refresh()
-            //     }
-            // }
+                function onClicked() {
+                    cloudProjectsView.refresh()
+                }
+            }
         }
     }
 
@@ -323,7 +323,15 @@ FocusScope {
             sideMargin: prv.sideMargin
 
             navigationSection: navSec
-            navigationOrder: 5
+            navigationOrder: 6
+            
+            Connections {
+                 target: refreshButton
+
+                function onClicked() {
+                    cloudAudioFilesView.refresh()
+                }
+            }
         }
     }
 
