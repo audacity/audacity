@@ -37,7 +37,7 @@ AboutModel::AboutModel(QObject* parent)
 
 QString AboutModel::museScoreVersion() const
 {
-    QString version = QString::fromStdString(configuration()->museScoreVersion());
+    QString version = QString::fromStdString(configuration()->audacityVersion());
     return application()->unstable()
            ? qtrc("appshell/about", "Unstable prerelease for %1").arg(version)
            : version;

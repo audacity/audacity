@@ -62,6 +62,7 @@ public:
 
 private:
     void onStartupPageOpened(StartupModeType modeType);
+    void showStartupDialogsIfNeed(StartupModeType modeType);
 
     StartupModeType resolveStartupModeType() const;
     muse::Uri startupPageUri(StartupModeType modeType) const;

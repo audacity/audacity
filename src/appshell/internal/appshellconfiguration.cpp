@@ -37,6 +37,10 @@ static const std::string module_name("appshell");
 
 static const Settings::Key HAS_COMPLETED_FIRST_LAUNCH_SETUP(module_name, "application/hasCompletedFirstLaunchSetup");
 
+static const Settings::Key WELCOME_DIALOG_SHOW_ON_STARTUP_KEY(module_name, "application/welcomeDialogShowOnStartup");
+static const Settings::Key WELCOME_DIALOG_LAST_SHOWN_VERSION_KEY(module_name, "application/welcomeDialogLastShownVersion");
+static const Settings::Key WELCOME_DIALOG_LAST_SHOWN_INDEX(module_name, "application/welcomeDialogLastShownIndex");
+
 static const Settings::Key STARTUP_MODE_TYPE(module_name, "application/startup/modeStart");
 static const Settings::Key STARTUP_SCORE_PATH(module_name, "application/startup/startScore");
 
@@ -60,6 +64,14 @@ void AppShellConfiguration::init()
 {
     settings()->setDefaultValue(HAS_COMPLETED_FIRST_LAUNCH_SETUP, Val(false));
 
+    settings()->setDefaultValue(WELCOME_DIALOG_SHOW_ON_STARTUP_KEY, Val(true));
+    settings()->valueChanged(WELCOME_DIALOG_SHOW_ON_STARTUP_KEY).onReceive(this, [this](const Val&) {
+        m_welcomeDialogShowOnStartupChanged.notify();
+    });
+
+    settings()->setDefaultValue(WELCOME_DIALOG_LAST_SHOWN_VERSION_KEY, Val("0.0.0"));
+    settings()->setDefaultValue(WELCOME_DIALOG_LAST_SHOWN_INDEX, Val(-1));
+
     settings()->setDefaultValue(STARTUP_MODE_TYPE, Val(StartupModeType::StartEmpty));
     // settings()->setDefaultValue(STARTUP_SCORE_PATH, Val(projectConfiguration()->myFirstProjectPath().toStdString()));
 
@@ -69,6 +81,41 @@ void AppShellConfiguration::init()
 bool AppShellConfiguration::hasCompletedFirstLaunchSetup() const
 {
     return settings()->value(HAS_COMPLETED_FIRST_LAUNCH_SETUP).toBool();
+}
+
+bool AppShellConfiguration::welcomeDialogShowOnStartup() const
+{
+    return settings()->value(WELCOME_DIALOG_SHOW_ON_STARTUP_KEY).toBool();
+}
+
+void AppShellConfiguration::setWelcomeDialogShowOnStartup(bool show)
+{
+    settings()->setSharedValue(WELCOME_DIALOG_SHOW_ON_STARTUP_KEY, Val(show));
+}
+
+async::Notification AppShellConfiguration::welcomeDialogShowOnStartupChanged() const
+{
+    return m_welcomeDialogShowOnStartupChanged;
+}
+
+std::string AppShellConfiguration::welcomeDialogLastShownVersion() const
+{
+    return settings()->value(WELCOME_DIALOG_LAST_SHOWN_VERSION_KEY).toString();
+}
+
+void AppShellConfiguration::setWelcomeDialogLastShownVersion(const std::string& version)
+{
+    settings()->setSharedValue(WELCOME_DIALOG_LAST_SHOWN_VERSION_KEY, Val(version));
+}
+
+int AppShellConfiguration::welcomeDialogLastShownIndex() const
+{
+    return settings()->value(WELCOME_DIALOG_LAST_SHOWN_INDEX).toInt();
+}
+
+void AppShellConfiguration::setWelcomeDialogLastShownIndex(int index)
+{
+    settings()->setSharedValue(WELCOME_DIALOG_LAST_SHOWN_INDEX, Val(index));
 }
 
 void AppShellConfiguration::setHasCompletedFirstLaunchSetup(bool has)
@@ -151,10 +198,9 @@ std::string AppShellConfiguration::musicXMLLicenseDeedUrl() const
     return MUSICXML_LICENSE_DEED_URL;
 }
 
-std::string AppShellConfiguration::museScoreVersion() const
+std::string AppShellConfiguration::audacityVersion() const
 {
-    return std::string();
-    //return MUSESCORE_VERSION + std::string(".") + MUSESCORE_BUILD_NUMBER;
+    return String(application()->version().toString() + u"." + application()->build()).toStdString();
 }
 
 std::string AppShellConfiguration::museScoreRevision() const

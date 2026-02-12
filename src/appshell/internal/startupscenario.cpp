@@ -33,6 +33,7 @@ using namespace au::project;
 
 static const muse::UriQuery FIRST_LAUNCH_SETUP_URI("audacity://firstLaunchSetup?floating=true");
 static const muse::Uri ALPHA_WELCOME_POPUP("audacity://alphaWelcomePopup");
+static const muse::UriQuery WELCOME_DIALOG_URI("audacity://welcomedialog");
 static const muse::Uri HOME_URI("audacity://home");
 static const muse::Uri PROJECT_URI("audacity://project");
 
@@ -174,11 +175,9 @@ void StartupScenario::onStartupPageOpened(StartupModeType modeType)
 {
     TRACEFUNC;
 
-#ifndef MUSE_APP_UNSTABLE
-    if (modeType != StartupModeType::FirstLaunch) {
-        interactive()->openSync(ALPHA_WELCOME_POPUP);
-    }
-#endif
+// #ifndef MUSE_APP_UNSTABLE
+    showStartupDialogsIfNeed(modeType);
+// #endif
 
     switch (modeType) {
     case StartupModeType::StartEmpty:
@@ -200,12 +199,30 @@ void StartupScenario::onStartupPageOpened(StartupModeType modeType)
     } break;
     case StartupModeType::FirstLaunch: {
         dispatcher()->dispatch("file-new");
-        interactive()->open(FIRST_LAUNCH_SETUP_URI);
-#ifndef MUSE_APP_UNSTABLE
-        interactive()->openSync(ALPHA_WELCOME_POPUP);
-#endif
     } break;
     }
+}
+
+void StartupScenario::showStartupDialogsIfNeed(StartupModeType modeType)
+{
+    if (!configuration()->hasCompletedFirstLaunchSetup()) {
+        interactive()->openSync(FIRST_LAUNCH_SETUP_URI);
+    }
+
+    const std::string welcomeDialogLastShownVersion(configuration()->welcomeDialogLastShownVersion());
+    const std::string currentAudacityVersion(configuration()->audacityVersion());
+
+    if (welcomeDialogLastShownVersion < currentAudacityVersion) {
+        configuration()->setWelcomeDialogShowOnStartup(true); // override user preference
+        configuration()->setWelcomeDialogLastShownIndex(-1); // reset
+    }
+
+    if (!configuration()->welcomeDialogShowOnStartup()) {
+        return;
+    }
+
+    interactive()->openSync(WELCOME_DIALOG_URI);
+    configuration()->setWelcomeDialogLastShownVersion(configuration()->audacityVersion());
 }
 
 muse::Uri StartupScenario::startupPageUri(StartupModeType modeType) const

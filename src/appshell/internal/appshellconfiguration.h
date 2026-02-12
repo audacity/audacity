@@ -27,8 +27,10 @@
 #include "modularity/ioc.h"
 #include "iglobalconfiguration.h"
 #include "io/ifilesystem.h"
-#include "ui/iuiconfiguration.h"
 #include "projectscene/iprojectsceneconfiguration.h"
+#include "iapplication.h"
+
+// #include "ui/iuiconfiguration.h"
 // #include "project/iprojectconfiguration.h"
 // #include "playback/iplaybackconfiguration.h"
 // #include "languages/ilanguagesconfiguration.h"
@@ -36,17 +38,31 @@
 #include "iappshellconfiguration.h"
 
 namespace au::appshell {
-class AppShellConfiguration : public IAppShellConfiguration, public muse::async::Asyncable
+class AppShellConfiguration : public IAppShellConfiguration, public muse::Contextable, public muse::async::Asyncable
 {
     muse::GlobalInject<muse::IGlobalConfiguration> globalConfiguration;
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
     muse::GlobalInject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
+    muse::Inject<muse::IApplication> application { this };
 
 public:
+    AppShellConfiguration(const muse::modularity::ContextPtr& iocCtx)
+        : muse::Contextable(iocCtx) {}
+
     void init();
 
     bool hasCompletedFirstLaunchSetup() const override;
     void setHasCompletedFirstLaunchSetup(bool has) override;
+
+    bool welcomeDialogShowOnStartup() const override;
+    void setWelcomeDialogShowOnStartup(bool show) override;
+    muse::async::Notification welcomeDialogShowOnStartupChanged() const override;
+
+    std::string welcomeDialogLastShownVersion() const override;
+    void setWelcomeDialogLastShownVersion(const std::string& version) override;
+
+    int welcomeDialogLastShownIndex() const override;
+    void setWelcomeDialogLastShownIndex(int index) override;
 
     StartupModeType startupModeType() const override;
     void setStartupModeType(StartupModeType type) override;
@@ -64,7 +80,7 @@ public:
     std::string musicXMLLicenseUrl() const override;
     std::string musicXMLLicenseDeedUrl() const override;
 
-    std::string museScoreVersion() const override;
+    std::string audacityVersion() const override;
     std::string museScoreRevision() const override;
 
     bool isNotationNavigatorVisible() const override;
@@ -106,6 +122,8 @@ private:
 
     QString m_preferencesDialogCurrentPageId;
     muse::async::Notification m_settingsApplied;
+
+    muse::async::Notification m_welcomeDialogShowOnStartupChanged;
 };
 }
 

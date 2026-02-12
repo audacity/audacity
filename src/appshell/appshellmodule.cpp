@@ -57,7 +57,7 @@ void AppShellModule::registerExports()
 {
     m_applicationActionController = std::make_shared<ApplicationActionController>(iocContext());
     m_applicationUiActions = std::make_shared<ApplicationUiActions>(iocContext(), m_applicationActionController);
-    m_appShellConfiguration = std::make_shared<AppShellConfiguration>();
+    m_appShellConfiguration = std::make_shared<AppShellConfiguration>(iocContext());
     m_sessionsManager = std::make_shared<SessionsManager>(iocContext());
 
     ioc()->registerExport<IAppShellConfiguration>(moduleName(), m_appShellConfiguration);
@@ -88,7 +88,7 @@ void AppShellModule::resolveImports()
 
         ir->registerQmlUri(muse::Uri("audacity://about/audacity"), "Audacity.AppShell", "AboutDialog");
         ir->registerQmlUri(muse::Uri("audacity://firstLaunchSetup"), "Audacity.AppShell", "FirstLaunchSetupDialog");
-        ir->registerQmlUri(muse::Uri("audacity://alphaWelcomePopup"), "Audacity.AppShell", "AlphaWelcomePopupDialog");
+        ir->registerQmlUri(muse::Uri("audacity://welcomedialog"), "Audacity.AppShell", "WelcomeDialog");
     }
 }
 
