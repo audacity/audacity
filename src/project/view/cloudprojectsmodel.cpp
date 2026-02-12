@@ -28,6 +28,7 @@ void CloudProjectsModel::load()
             setState(State::Loading);
             loadItemsIfNecessary();
         } else {
+            interactive()->open("audacity://signin/audiocom");
             setState(State::NotSignedIn);
         }
     };

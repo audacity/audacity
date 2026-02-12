@@ -39,6 +39,7 @@ qt_add_qml_module(appshell_qml
         AboutDialog.qml
         AlphaWelcomePopup.qml
         AppWindow.qml
+        SigninAudiocomDialog.qml
         DevTools/CrashHandler/CrashHandlerDevTools.qml
         DevTools/DevToolsMenu.qml
         DevTools/DevToolsPage.qml

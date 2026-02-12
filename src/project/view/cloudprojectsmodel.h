@@ -5,12 +5,13 @@
 
 #include "abstractprojectsmodel.h"
 
-#include "async/asyncable.h"
+#include "framework/global/async/asyncable.h"
 
 #include "modularity/ioc.h"
 #include "iprojectconfiguration.h"
 #include "au3cloud/iau3audiocomservice.h"
 #include "au3cloud/iauthorization.h"
+#include "framework/interactive/iinteractive.h"
 
 namespace au::project {
 class CloudProjectsModel : public AbstractProjectsModel, public muse::async::Asyncable, public muse::Injectable
@@ -21,6 +22,7 @@ class CloudProjectsModel : public AbstractProjectsModel, public muse::async::Asy
 
     muse::Inject<au::au3cloud::IAu3AudioComService> audioComService { this };
     muse::Inject<au::au3cloud::IAuthorization> authorization { this };
+    muse::Inject<muse::IInteractive> interactive { this };
 
     Q_PROPERTY(State state READ state NOTIFY stateChanged)
     Q_PROPERTY(bool hasMore READ hasMore NOTIFY hasMoreChanged)
