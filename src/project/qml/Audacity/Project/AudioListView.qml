@@ -21,6 +21,10 @@ Item {
     property color backgroundColor: ui.theme.backgroundSecondaryColor
     property real sideMargin: 46
 
+    property color itemNormalColor: "transparent"
+    property color itemHoverHitColor: ui.theme.buttonColor
+    property real itemSpacing: 0
+
     property alias view: view
 
     property alias navigation: navPanel
@@ -74,10 +78,11 @@ Item {
                 id: view
                 anchors.fill: parent
 
+                spacing: root.itemSpacing
                 bottomMargin: bottomGradient.height
 
                 readonly property real itemInset: 12
-                readonly property real rowHeight: 64
+                readonly property real rowHeight: 48
                 readonly property real columnSpacing: 44
 
                 ScrollBar.vertical: StyledScrollBar {
@@ -101,6 +106,9 @@ Item {
                     itemInset: view.itemInset
                     implicitHeight: view.rowHeight
                     columnSpacing: view.columnSpacing
+
+                    normalColor: root.itemNormalColor
+                    hoverHitColor: root.itemHoverHitColor
 
                     navigation.panel: navPanel
                     navigation.row: index + 1

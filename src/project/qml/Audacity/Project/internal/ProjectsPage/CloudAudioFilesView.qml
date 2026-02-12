@@ -68,6 +68,10 @@ ProjectsView {
             backgroundColor: root.backgroundColor
             sideMargin: root.sideMargin
 
+            itemNormalColor: ui.theme.extra["white_color"]
+            itemHoverHitColor: ui.theme.buttonColor
+            itemSpacing: 16
+
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrder
             navigation.name: "CloudAudioFilesList"
@@ -125,7 +129,6 @@ ProjectsView {
 
                     delegate: Image {
                         source: "qrc:/resources/Waveform.svg"
-                        fillMode: Image.PreserveAspectFit
                         horizontalAlignment: Image.AlignLeft
                         verticalAlignment: Image.AlignVCenter   
                     }

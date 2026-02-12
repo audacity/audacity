@@ -18,7 +18,7 @@ ListItemBlank {
     property real itemInset: 12
     property real columnSpacing: 44
 
-    implicitHeight: 64
+    implicitHeight: 48
 
     navigation.accessible.name: root.project.title ?? ""
     navigation.onActiveChanged: {
@@ -33,12 +33,14 @@ ListItemBlank {
         anchors.fill: parent
         anchors.leftMargin: root.itemInset
         anchors.rightMargin: root.itemInset
+        anchors.topMargin: 10
+        anchors.bottomMargin: 10
 
         spacing: root.columnSpacing
 
         StyledTextLabel {
             Layout.preferredWidth: 71
-            Layout.preferredHeight: 40
+            Layout.preferredHeight: 28
 
             text: root.project.name ?? ""
             font: ui.theme.largeBodyFont
