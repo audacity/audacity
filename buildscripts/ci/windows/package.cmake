@@ -87,35 +87,20 @@ if(PACK_TYPE STREQUAL "msi")
   endif()
   message(STATUS "PACKAGE_UUID: ${PACKAGE_UUID}")
 
-  execute_process(
-    COMMAND "${CMAKE_COMMAND}"
-      -S "${CMAKE_SOURCE_DIR}" -B "${BUILD_DIR}"
-      -DCPACK_WIX_PRODUCT_GUID=${PACKAGE_UUID}
-      -DCPACK_WIX_UPGRADE_GUID=${UPGRADE_UUID}
-    RESULT_VARIABLE _rc_conf
+  set(_cpack_config "${BUILD_DIR}/CPackConfig.cmake")
+  if(NOT EXISTS "${_cpack_config}")
+    message(FATAL_ERROR "CPackConfig.cmake not found at ${_cpack_config}")
+  endif()
+  get_filename_component(_install_abs "${INSTALL_DIR}" ABSOLUTE)
+  file(APPEND "${_cpack_config}"
+    "set(CPACK_WIX_PRODUCT_GUID \"${PACKAGE_UUID}\")\n"
+    "set(CPACK_WIX_UPGRADE_GUID \"${UPGRADE_UUID}\")\n"
+    "set(CPACK_INSTALL_CMAKE_PROJECTS \"\")\n"
+    "set(CPACK_INSTALLED_DIRECTORIES \"${_install_abs};.\")\n"
   )
-  if(NOT _rc_conf EQUAL 0)
-    message(FATAL_ERROR "CMake reconfigure failed for WiX/CPack injection")
-  endif()
-
-  set(_cfg_arg "")
-  if(BUILD_MODE MATCHES "^[Rr]elease|[Dd]ebug|RelWithDebInfo|MinSizeRel$")
-    set(_cfg_arg "--config" "${BUILD_MODE}")
-  else()
-    set(_cfg_arg "--config" "Release")
-  endif()
-
-  set(_app_target "audacity")
-  execute_process(
-    COMMAND "${CMAKE_COMMAND}" --build "${BUILD_DIR}" --target ${_app_target} ${_cfg_arg}
-    RESULT_VARIABLE _rc_build_app
-  )
-  if(NOT _rc_build_app EQUAL 0)
-    message(FATAL_ERROR "Failed to build target ${_app_target} for signing")
-  endif()
 
   if(SIGN_ENABLE AND SIGN_KEY AND SIGN_SECRET)
-    set(_app_exe "${BUILD_DIR}/Audacity4.exe")
+    set(_app_exe "${INSTALL_DIR}/bin/Audacity4.exe")
 
     if(EXISTS "${_app_exe}")
       message(STATUS "[sign-prepack] exe: ${_app_exe}")
@@ -138,8 +123,11 @@ if(PACK_TYPE STREQUAL "msi")
     message(STATUS "[sign-prepack] disabled or credentials missing; skipping exe signing")
   endif()
 
+  get_filename_component(_cmake_bin_dir "${CMAKE_COMMAND}" DIRECTORY)
+  find_program(_cpack_cmd cpack HINTS "${_cmake_bin_dir}" REQUIRED)
   execute_process(
-    COMMAND "${CMAKE_COMMAND}" --build "${BUILD_DIR}" --target package ${_cfg_arg}
+    COMMAND "${_cpack_cmd}" -C Release
+    WORKING_DIRECTORY "${BUILD_DIR}"
     RESULT_VARIABLE _rc_pkg
   )
   if(NOT _rc_pkg EQUAL 0)
