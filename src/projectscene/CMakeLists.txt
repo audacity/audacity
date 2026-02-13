@@ -175,8 +175,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/labeleditor/labelstableviewtimecodecell.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/labeleditor/addnewlabeltrackmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/labeleditor/addnewlabeltrackmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/editablepolyline.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/tracksitemsview/editablepolyline.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/timeline/timelinecontext.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/timeline/timelinecontext.h

@@ -8,6 +8,7 @@ import Muse.GraphicalEffects
 import Audacity.ProjectScene
 import Audacity.Playback
 import Audacity.Spectrogram
+import Audacity.UiComponents
 
 Rectangle {
     id: root
