@@ -83,6 +83,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     secs_t t0;
     secs_t t1;
     bool isTimeSelection = false;
+    const auto [f0, f1] = selectionController()->frequencySelection();
 
     const trackedit::ClipKeyList selectedClips = selectionController()->selectedClips();
     const auto numSelectedClips = selectedClips.size();
@@ -161,6 +162,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
         double t1 = 0.0;
         double f0 = 0.0;
         double f1 = 0.0;
+        bool spectralSelectionEnabled = false;
     } tp;
 
     tp.projectRate = ProjectRate::Get(project).GetRate();
@@ -194,9 +196,9 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
             tp.t1 = tp.t0 + quantizedDuration;
         }
 
-        //! TODO when we support spectral display and selection
-        //   tp.f0 = f0;
-        //   tp.f1 = f1;
+        tp.f0 = f0;
+        tp.f1 = f1;
+        tp.spectralSelectionEnabled = spectrogramConfiguration()->spectralSelectionEnabled();
 
         //! NOTE Step 2.4 - update settings
         wxString newFormat = (isTimeSelection
@@ -227,6 +229,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
         effect->CountWaveTracks();
 
         //! NOTE Step 3.2 - check frequency params
+        effect->mSpectralSelectionEnabled = tp.spectralSelectionEnabled;
         effect->mF0 = tp.f0;
         effect->mF1 = tp.f1;
         if (effect->mF0 != UNDEFINED_FREQUENCY) {

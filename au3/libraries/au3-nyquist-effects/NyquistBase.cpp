@@ -490,20 +490,12 @@ bool NyquistBase::Init()
             for (auto t : TrackList::Get(*project).Selected<const WaveTrack>()) {
                 // Find() not Get() to avoid creation-on-demand of views in case we
                 // are only previewing
-                const auto displays = GetDisplaysHook::Call(t);
-                hasSpectral |= displays.end()
-                               != std::find(
-                    displays.begin(), displays.end(),
-                    WaveChannelSubViewType {
-                    WaveChannelViewConstants::Spectrum, {} });
+                hasSpectral |= GetHasSpectralDisplayHook::Call(t);
 
-                // TODO: properly handle SpectrogramSettings
-                // if (
-                //     hasSpectral
-                //     && (SpectrogramSettings::Get(*t).SpectralSelectionEnabled())) {
-                //     bAllowSpectralEditing = true;
-                //     break;
-                // }
+                if (hasSpectral && mSpectralSelectionEnabled) {
+                    bAllowSpectralEditing = true;
+                    break;
+                }
             }
 
             if (!bAllowSpectralEditing || ((mF0 < 0.0) && (mF1 < 0.0))) {
@@ -517,7 +509,7 @@ bool NyquistBase::Init()
                     ShowMessageBox(
                         XO("To use 'Spectral effects', enable 'Spectral Selection'\n"
                            "in the track Spectrogram settings and select the\n"
-                           "frequency range for the effect to act von."),
+                           "frequency range for the effect to act on."),
                         MessageBoxOptions {}.IconStyle(Icon::Error));
                 }
                 return false;

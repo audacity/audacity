@@ -102,6 +102,7 @@ protected:
 
     double mF0{};
     double mF1{};
+    bool mSpectralSelectionEnabled{ false };
 
     wxArrayString mPresetNames;
     unsigned mUIFlags{ 0 };
