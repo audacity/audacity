@@ -47,6 +47,8 @@ void CloudAudioFilesModel::load()
 
 void CloudAudioFilesModel::reload()
 {
+    audioComService()->cancelRequests();
+    m_isWaitingForPromise = false;
     audioComService()->clearAudioListCache();
 
     beginResetModel();
@@ -131,6 +133,9 @@ void CloudAudioFilesModel::loadItemsIfNecessary()
                         = DataFormatter::formatTimeSince(Date::fromQDate(QDateTime::fromSecsSinceEpoch(
                                                                              static_cast<qint64>(item.created)).date())).toQString();
                     obj[THUMBNAIL_URL_KEY] = "";
+                    obj[IS_CREATE_NEW_KEY] = false;
+                    obj[IS_NO_RESULTS_FOUND_KEY] = false;
+                    obj[IS_CLOUD_KEY] = true;
 
                     m_items.push_back(obj);
                 }

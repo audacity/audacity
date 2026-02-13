@@ -47,6 +47,8 @@ void CloudProjectsModel::load()
 
 void CloudProjectsModel::reload()
 {
+    audioComService()->cancelRequests();
+    m_isWaitingForPromise = false;
     audioComService()->clearProjectListCache();
 
     beginResetModel();
@@ -132,6 +134,9 @@ void CloudProjectsModel::loadItemsIfNecessary()
                                                                              static_cast<qint64>(item.updated)).date())).toQString();
                     obj[THUMBNAIL_URL_KEY] = "";
                     obj[FILE_SIZE_KEY] = (item.fileSize > 0) ? DataFormatter::formatFileSize(item.fileSize).toQString() : QString();
+                    obj[IS_CREATE_NEW_KEY] = false;
+                    obj[IS_NO_RESULTS_FOUND_KEY] = false;
+                    obj[IS_CLOUD_KEY] = true;
 
                     m_items.push_back(obj);
                 }

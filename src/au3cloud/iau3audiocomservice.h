@@ -36,5 +36,7 @@ public:
     virtual muse::async::Promise<AudioList> downloadAudioList(size_t audiosPerBatch, size_t batchNumber,
                                                               const FetchOptions& options = {}) = 0;
     virtual void clearAudioListCache() = 0;
+
+    virtual void cancelRequests() = 0;
 };
 }

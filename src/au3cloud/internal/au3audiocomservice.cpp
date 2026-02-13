@@ -6,12 +6,18 @@
 #include "au3audiocomservice.h"
 
 #include "au3-cloud-audiocom/CloudSyncService.h"
+#include "au3-cloud-audiocom/NetworkUtils.h"
 #include "au3-cloud-audiocom/sync/CloudSyncDTO.h"
 #include "au3cloud/cloudtypes.h"
 
 using namespace au::au3cloud;
 using namespace audacity::concurrency;
 using namespace audacity::cloud::audiocom;
+
+Au3AudioComService::Au3AudioComService()
+    : m_dataListCancellation(CancellationContext::Create())
+{
+}
 
 namespace {
 au::au3cloud::ProjectList convertFromAu3PaginatedProject(const sync::PaginatedProjectsResponse& paginatedResponse)
@@ -76,6 +82,7 @@ muse::async::Promise<ProjectList> Au3AudioComService::downloadProjectList(size_t
                                                                           const FetchOptions& options)
 {
     if (m_projectsPerBatch != projectsPerBatch) {
+        auto guard = std::lock_guard(m_cacheMutex);
         m_projectListCache.clear();
         m_projectsPerBatch = projectsPerBatch;
     }
@@ -100,19 +107,26 @@ muse::async::Promise<ProjectList> Au3AudioComService::downloadProjectList(size_t
     }
 
     return muse::async::Promise<ProjectList>([this, projectsPerBatch, batchNumber](auto resolve, auto reject) {
-        std::thread([this, projectsPerBatch, batchNumber, resolve, reject]() {
+        auto cancellationContext = m_dataListCancellation;
+
+        std::thread([this, projectsPerBatch, batchNumber, cancellationContext, resolve, reject]() {
             auto& cloudSyncService = CloudSyncService::Get();
-            auto cancellationContext = CancellationContext::Create();
             auto future = cloudSyncService.GetProjects(cancellationContext, batchNumber, projectsPerBatch, "");
             auto result = future.get();
 
             const auto* paginatedResponse = std::get_if<sync::PaginatedProjectsResponse>(&result);
             if (paginatedResponse) {
                 const auto projects = convertFromAu3PaginatedProject(*paginatedResponse);
-                m_projectListCache[batchNumber] = CachedProjectItem { projects, std::chrono::system_clock::now() };
+                {
+                    std::lock_guard guard(m_cacheMutex);
+                    m_projectListCache[batchNumber] = CachedProjectItem { projects, std::chrono::system_clock::now() };
+                }
                 (void)resolve(projects);
             } else {
-                (void)reject(-1, "Failed to fetch project list from cloud service");
+                const auto* errorResponse = std::get_if<ResponseResult>(&result);
+                if (errorResponse && errorResponse->Code != SyncResultCode::Cancelled) {
+                    (void)reject(-1, "Failed to fetch project list from cloud service");
+                }
             }
         }).detach();
 
@@ -122,6 +136,7 @@ muse::async::Promise<ProjectList> Au3AudioComService::downloadProjectList(size_t
 
 void Au3AudioComService::clearProjectListCache()
 {
+    auto guard = std::lock_guard(m_cacheMutex);
     m_projectListCache.clear();
     m_projectsPerBatch = 0;
 }
@@ -130,6 +145,7 @@ muse::async::Promise<AudioList> Au3AudioComService::downloadAudioList(size_t aud
                                                                       const FetchOptions& options)
 {
     if (m_audiosPerBatch != audiosPerBatch) {
+        auto guard = std::lock_guard(m_cacheMutex);
         m_audioListCache.clear();
         m_audiosPerBatch = audiosPerBatch;
     }
@@ -154,19 +170,26 @@ muse::async::Promise<AudioList> Au3AudioComService::downloadAudioList(size_t aud
     }
 
     return muse::async::Promise<AudioList>([this, audiosPerBatch, batchNumber](auto resolve, auto reject) {
-        std::thread([this, audiosPerBatch, batchNumber, resolve, reject]() {
+        auto cancellationContext = m_dataListCancellation;
+
+        std::thread([this, audiosPerBatch, batchNumber, cancellationContext, resolve, reject]() {
             auto& cloudSyncService = CloudSyncService::Get();
-            auto cancellationContext = CancellationContext::Create();
             auto future = cloudSyncService.GetAudioList(cancellationContext, batchNumber, audiosPerBatch, "");
             auto result = future.get();
 
             const auto* paginatedResponse = std::get_if<sync::PaginatedAudioResponse>(&result);
             if (paginatedResponse) {
                 const auto audioList = convertFromAu3CloudAudio(*paginatedResponse);
-                m_audioListCache[batchNumber] = CachedAudioItem { audioList, std::chrono::system_clock::now() };
+                {
+                    auto guard = std::lock_guard(m_cacheMutex);
+                    m_audioListCache[batchNumber] = CachedAudioItem { audioList, std::chrono::system_clock::now() };
+                }
                 (void)resolve(audioList);
             } else {
-                (void)reject(-1, "Failed to fetch audio list from cloud service");
+                const auto* errorResponse = std::get_if<ResponseResult>(&result);
+                if (errorResponse && errorResponse->Code != SyncResultCode::Cancelled) {
+                    (void)reject(-1, "Failed to fetch audio list from cloud service");
+                }
             }
         }).detach();
 
@@ -176,6 +199,14 @@ muse::async::Promise<AudioList> Au3AudioComService::downloadAudioList(size_t aud
 
 void Au3AudioComService::clearAudioListCache()
 {
+    auto guard = std::lock_guard(m_cacheMutex);
     m_audioListCache.clear();
     m_audiosPerBatch = 0;
+}
+
+void Au3AudioComService::cancelRequests()
+{
+    auto guard = std::lock_guard(m_cacheMutex);
+    m_dataListCancellation->Cancel();
+    m_dataListCancellation = CancellationContext::Create();
 }
