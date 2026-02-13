@@ -102,7 +102,23 @@ ProjectsView {
         }
     }
 
-    sourceComponent: root.viewType === ProjectsPageModel.List ? listComp : gridComp
+    sourceComponent: {
+        switch(cloudAudioFilesModel.state) {
+            case CloudAudioFilesModel.NotSignedIn:
+                return notSignedInComp
+            case CloudAudioFilesModel.Error:
+                return errorComp
+            case CloudAudioFilesModel.Fine:
+            case CloudAudioFilesModel.Loading:
+                break;
+        }
+
+        if (cloudAudioFilesModel.rowCount == 0 && !cloudAudioFilesModel.hasMore && cloudAudioFilesModel.state != CloudAudioFilesModel.Loading) {
+            return emptyComp
+        }
+
+        return root.viewType === ProjectsPageModel.List ? listComp : gridComp
+    }
 
     Component {
         id: gridComp
@@ -209,6 +225,66 @@ ProjectsView {
                     }
                 }
             ]
+        }
+    }
+
+    Component {
+        id: errorComp
+
+        Item {
+            anchors.fill: parent
+
+            Message {
+                anchors.top: parent.top
+                anchors.topMargin: Math.max(parent.height / 3 - height / 2, 0)
+                anchors.left: parent.left
+                anchors.leftMargin: root.sideMargin
+                anchors.right: parent.right
+                anchors.rightMargin: root.sideMargin
+
+                title: qsTrc("project", "Unable to load online files")
+                body: qsTrc("global", "Please check your internet connection or try again later.")
+            }
+        }
+    }
+
+    Component {
+        id: emptyComp
+
+        Item {
+            anchors.fill: parent
+
+            Message {
+                anchors.top: parent.top
+                anchors.topMargin: Math.max(parent.height / 3 - height / 2, 0)
+                anchors.left: parent.left
+                anchors.leftMargin: root.sideMargin
+                anchors.right: parent.right
+                anchors.rightMargin: root.sideMargin
+
+                title: qsTrc("project", "You don't have any online files yet")
+                body: qsTrc("project", "Files will appear here when you save a file to the cloud, or publish a project")
+            }
+        }
+    }
+
+    Component {
+        id: notSignedInComp
+
+        Item {
+            anchors.fill: parent
+
+            Message {
+                anchors.top: parent.top
+                anchors.topMargin: Math.max(parent.height / 3 - height / 2, 0)
+                anchors.left: parent.left
+                anchors.leftMargin: root.sideMargin
+                anchors.right: parent.right
+                anchors.rightMargin: root.sideMargin
+
+                title: qsTrc("project", "You are not signed in")
+                body: qsTrc("project", "Please sign in to view your online files")
+            }
         }
     }
 }

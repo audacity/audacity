@@ -98,7 +98,23 @@ ProjectsView {
         }
     }
 
-    sourceComponent: root.viewType === ProjectsPageModel.List ? listComp : gridComp
+    sourceComponent: {
+        switch(cloudProjectsModel.state) {
+            case CloudProjectsModel.NotSignedIn:
+                return notSignedInComp
+            case CloudProjectsModel.Error:
+                return errorComp
+            case CloudProjectsModel.Fine:
+            case CloudProjectsModel.Loading:
+                break;
+        }
+
+        if (cloudProjectsModel.rowCount == 0 && !cloudProjectsModel.hasMore && cloudProjectsModel.state != CloudProjectsModel.Loading) {
+            return emptyComp
+        }
+
+        return root.viewType === ProjectsPageModel.List ? listComp : gridComp
+    }
 
     Component {
         id: gridComp
@@ -228,6 +244,66 @@ ProjectsView {
                     }
                 }
             ]
+        }
+    }
+
+    Component {
+        id: errorComp
+
+        Item {
+            anchors.fill: parent
+
+            Message {
+                anchors.top: parent.top
+                anchors.topMargin: Math.max(parent.height / 3 - height / 2, 0)
+                anchors.left: parent.left
+                anchors.leftMargin: root.sideMargin
+                anchors.right: parent.right
+                anchors.rightMargin: root.sideMargin
+
+                title: qsTrc("project", "Unable to load online projects")
+                body: qsTrc("global", "Please check your internet connection or try again later.")
+            }
+        }
+    }
+
+    Component {
+        id: emptyComp
+
+        Item {
+            anchors.fill: parent
+
+            Message {
+                anchors.top: parent.top
+                anchors.topMargin: Math.max(parent.height / 3 - height / 2, 0)
+                anchors.left: parent.left
+                anchors.leftMargin: root.sideMargin
+                anchors.right: parent.right
+                anchors.rightMargin: root.sideMargin
+
+                title: qsTrc("project", "You don't have any online projects yet")
+                body: qsTrc("project", "Projects will appear here when you publish a project")
+            }
+        }
+    }
+
+    Component {
+        id: notSignedInComp
+
+        Item {
+            anchors.fill: parent
+
+            Message {
+                anchors.top: parent.top
+                anchors.topMargin: Math.max(parent.height / 3 - height / 2, 0)
+                anchors.left: parent.left
+                anchors.leftMargin: root.sideMargin
+                anchors.right: parent.right
+                anchors.rightMargin: root.sideMargin
+
+                title: qsTrc("project", "You are not signed in")
+                body: qsTrc("project", "Please sign in to view your online projects")
+            }
         }
     }
 }
