@@ -71,7 +71,7 @@ ListItemBlank {
                 sourceComponent: ProjectThumbnail {
                     path: root.project.path ?? ""
                     suffix: root.project.suffix ?? ""
-                    thumbnailUrl: Qt.resolvedUrl("file:" + root.project.thumbnailUrl) ?? ""
+                    thumbnailUrl: root.project.thumbnailUrl ? Qt.resolvedUrl("file:" + root.project.thumbnailUrl) : ""
                     placeholder: root.placeholder
                 }
 
