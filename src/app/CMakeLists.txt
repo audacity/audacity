@@ -132,6 +132,7 @@ add_to_link_if_exists(projectscene)
 add_to_link_if_exists(record)
 add_to_link_if_exists(spectrogram)
 add_to_link_if_exists(toast)
+add_to_link_if_exists(automation)
 
 set (AUDACITY_APPEND_SRC)
 

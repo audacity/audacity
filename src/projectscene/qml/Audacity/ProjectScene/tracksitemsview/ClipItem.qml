@@ -9,6 +9,7 @@ import Audacity.ProjectScene
 import Audacity.Playback
 import Audacity.Spectrogram
 import Audacity.UiComponents
+import Audacity.Automation
 
 Rectangle {
     id: root
