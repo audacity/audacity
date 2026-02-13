@@ -31,6 +31,8 @@ class Polyline : public QQuickPaintedItem, public muse::async::Asyncable, public
     Q_PROPERTY(qreal pointRadius READ pointRadius WRITE setPointRadius NOTIFY pointRadiusChanged)
     Q_PROPERTY(qreal pointOutlineWidth READ pointOutlineWidth WRITE setPointOutlineWidth NOTIFY pointOutlineWidthChanged)
     Q_PROPERTY(QColor pointOutlineColor READ pointOutlineColor WRITE setPointOutlineColor NOTIFY pointOutlineColorChanged)
+    Q_PROPERTY(
+        QColor ghostPointOutlineColor READ ghostPointOutlineColor WRITE setGhostPointOutlineColor NOTIFY ghostPointOutlineColorChanged)
     Q_PROPERTY(qreal hitRadius READ hitRadius WRITE setHitRadius NOTIFY hitRadiusChanged)
 
     Q_PROPERTY(QVector<QPointF> points READ points WRITE setPoints NOTIFY pointsChanged)
@@ -75,6 +77,9 @@ public:
     QColor pointOutlineColor() const;
     void setPointOutlineColor(const QColor&);
 
+    QColor ghostPointOutlineColor() const;
+    void setGhostPointOutlineColor(const QColor&);
+
     qreal hitRadius() const;
     void setHitRadius(qreal);
 
@@ -115,6 +120,7 @@ signals:
     void pointRadiusChanged();
     void pointOutlineWidthChanged();
     void pointOutlineColorChanged();
+    void ghostPointOutlineColorChanged();
     void hitRadiusChanged();
 
     void polylineFlattenRequested(qreal y, bool completed);
@@ -173,6 +179,7 @@ private:
     qreal m_pointRadius = 3.0;
     qreal m_pointOutlineWidth = 1.0;
     QColor m_pointOutlineColor;
+    QColor m_ghostPointOutlineColor;
     qreal m_hitRadius = 8.0;
 
     QVector<QPointF> m_points;          // domain points as provided from model
