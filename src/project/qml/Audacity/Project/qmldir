@@ -7,5 +7,4 @@ AudioGenerationSettings 1.0 AudioGenerationSettings.qml
 ProjectsView 1.0 ProjectsView.qml
 ProjectsListView 1.0 ProjectsListView.qml
 ProjectsGridView 1.0 ProjectsGridView.qml
-AudioListView 1.0 AudioListView.qml
 Message 1.0 Message.qml

@@ -157,5 +157,5 @@ void CloudProjectsModel::loadItemsIfNecessary()
 
 bool CloudProjectsModel::needsLoading()
 {
-    return hasMore();
+    return hasMore() && static_cast<int>(m_items.size()) < m_desiredRowCount;
 }
