@@ -1,6 +1,7 @@
 /*
 * Audacity: A Digital Audio Editor
 */
+#include <thread>
 
 #include "au3audiocomservice.h"
 
@@ -99,22 +100,24 @@ muse::async::Promise<ProjectList> Au3AudioComService::downloadProjectList(size_t
     }
 
     return muse::async::Promise<ProjectList>([this, projectsPerBatch, batchNumber](auto resolve, auto reject) {
-        auto& cloudSyncService = CloudSyncService::Get();
-        auto cancellationContext = CancellationContext::Create();
-        auto future = cloudSyncService.GetProjects(cancellationContext, batchNumber, projectsPerBatch, "");
-        auto result = future.get();
+        std::thread([this, projectsPerBatch, batchNumber, resolve, reject]() {
+            auto& cloudSyncService = CloudSyncService::Get();
+            auto cancellationContext = CancellationContext::Create();
+            auto future = cloudSyncService.GetProjects(cancellationContext, batchNumber, projectsPerBatch, "");
+            auto result = future.get();
 
-        const auto* paginatedResponse = std::get_if<sync::PaginatedProjectsResponse>(&result);
-        if (paginatedResponse) {
-            const auto projects = convertFromAu3PaginatedProject(*paginatedResponse);
-            m_projectListCache[batchNumber] = CachedProjectItem { projects, std::chrono::system_clock::now() };
-            (void)resolve(projects);
-        } else {
-            (void)reject(-1, "Failed to fetch project list from cloud service");
-        }
+            const auto* paginatedResponse = std::get_if<sync::PaginatedProjectsResponse>(&result);
+            if (paginatedResponse) {
+                const auto projects = convertFromAu3PaginatedProject(*paginatedResponse);
+                m_projectListCache[batchNumber] = CachedProjectItem { projects, std::chrono::system_clock::now() };
+                (void)resolve(projects);
+            } else {
+                (void)reject(-1, "Failed to fetch project list from cloud service");
+            }
+        }).detach();
 
         return muse::async::Promise<ProjectList>::dummy_result();
-    });
+    }, muse::async::PromiseType::AsyncByBody);
 }
 
 void Au3AudioComService::clearProjectListCache()
@@ -151,22 +154,24 @@ muse::async::Promise<AudioList> Au3AudioComService::downloadAudioList(size_t aud
     }
 
     return muse::async::Promise<AudioList>([this, audiosPerBatch, batchNumber](auto resolve, auto reject) {
-        auto& cloudSyncService = CloudSyncService::Get();
-        auto cancellationContext = CancellationContext::Create();
-        auto future = cloudSyncService.GetAudioList(cancellationContext, batchNumber, audiosPerBatch, "");
-        auto result = future.get();
+        std::thread([this, audiosPerBatch, batchNumber, resolve, reject]() {
+            auto& cloudSyncService = CloudSyncService::Get();
+            auto cancellationContext = CancellationContext::Create();
+            auto future = cloudSyncService.GetAudioList(cancellationContext, batchNumber, audiosPerBatch, "");
+            auto result = future.get();
 
-        const auto* paginatedResponse = std::get_if<sync::PaginatedAudioResponse>(&result);
-        if (paginatedResponse) {
-            const auto audioList = convertFromAu3CloudAudio(*paginatedResponse);
-            m_audioListCache[batchNumber] = CachedAudioItem { audioList, std::chrono::system_clock::now() };
-            (void)resolve(audioList);
-        } else {
-            (void)reject(-1, "Failed to fetch audio list from cloud service");
-        }
+            const auto* paginatedResponse = std::get_if<sync::PaginatedAudioResponse>(&result);
+            if (paginatedResponse) {
+                const auto audioList = convertFromAu3CloudAudio(*paginatedResponse);
+                m_audioListCache[batchNumber] = CachedAudioItem { audioList, std::chrono::system_clock::now() };
+                (void)resolve(audioList);
+            } else {
+                (void)reject(-1, "Failed to fetch audio list from cloud service");
+            }
+        }).detach();
 
         return muse::async::Promise<AudioList>::dummy_result();
-    });
+    }, muse::async::PromiseType::AsyncByBody);
 }
 
 void Au3AudioComService::clearAudioListCache()
