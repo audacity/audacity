@@ -217,6 +217,21 @@ void Polyline::setPointOutlineColor(const QColor& c)
     emit pointOutlineColorChanged();
 }
 
+QColor Polyline::ghostPointOutlineColor() const
+{
+    return m_ghostPointOutlineColor;
+}
+
+void Polyline::setGhostPointOutlineColor(const QColor& c)
+{
+    if (m_ghostPointOutlineColor == c) {
+        return;
+    }
+
+    m_ghostPointOutlineColor = c;
+    emit ghostPointOutlineColorChanged();
+}
+
 qreal Polyline::hitRadius() const
 {
     return m_hitRadius;
@@ -758,7 +773,7 @@ void Polyline::paint(QPainter* painter)
             painter->restore();
 
             // draw hollow outline
-            QPen outerPen(m_pointOutlineColor);
+            QPen outerPen(m_ghostPointOutlineColor);
             outerPen.setWidthF(m_pointOutlineWidth);
             painter->setPen(outerPen);
             painter->setBrush(Qt::NoBrush);

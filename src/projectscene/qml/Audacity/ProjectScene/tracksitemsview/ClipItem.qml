@@ -862,6 +862,7 @@ Rectangle {
                     lineColor: ui.theme.extra["stroke_automation_curve"]
                     lineWidth: 2.5
                     pointRadius: 4
+                    ghostPointOutlineColor: ui.theme.extra["white_color"]
                     pointOutlineColor: ui.theme.extra["black_color"]
                     pointOutlineWidth: 1.0
 
