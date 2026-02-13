@@ -21,8 +21,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/components/timecodemodel.h
 
     ${CMAKE_CURRENT_LIST_DIR}/components/timecodemodeselector.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/components/editablepolyline.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/components/editablepolyline.h
+    ${CMAKE_CURRENT_LIST_DIR}/components/polyline.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/components/polyline.h
 
     ${CMAKE_CURRENT_LIST_DIR}/components/internal/numeric/numericviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/components/internal/numeric/numericviewmodel.h

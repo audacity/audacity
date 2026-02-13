@@ -1,7 +1,7 @@
 /*
  * Audacity: A Digital Audio Editor
  */
-#include "editablepolyline.h"
+#include "polyline.h"
 
 #include <QPainter>
 #include <QPen>
@@ -98,7 +98,7 @@ static double valueAtX(const QVector<QPointF>& sortedPoints, double x)
 }
 }
 
-EditablePolyline::EditablePolyline(QQuickItem* parent)
+Polyline::Polyline(QQuickItem* parent)
     : QQuickPaintedItem(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
 {
     setAcceptHoverEvents(true);
@@ -109,7 +109,7 @@ EditablePolyline::EditablePolyline(QQuickItem* parent)
     setOpaquePainting(false);
 }
 
-void EditablePolyline::init()
+void Polyline::init()
 {
     dispatcher()->reg(this, "action://cancel", [this](){
         // emit signal and let decide model what to do
@@ -118,12 +118,12 @@ void EditablePolyline::init()
     });
 }
 
-QColor EditablePolyline::lineColor() const
+QColor Polyline::lineColor() const
 {
     return m_lineColor;
 }
 
-void EditablePolyline::setLineColor(const QColor& c)
+void Polyline::setLineColor(const QColor& c)
 {
     if (m_lineColor == c) {
         return;
@@ -134,12 +134,12 @@ void EditablePolyline::setLineColor(const QColor& c)
     update();
 }
 
-qreal EditablePolyline::lineWidth() const
+qreal Polyline::lineWidth() const
 {
     return m_lineWidth;
 }
 
-void EditablePolyline::setLineWidth(qreal w)
+void Polyline::setLineWidth(qreal w)
 {
     if (m_lineWidth == w) {
         return;
@@ -151,12 +151,12 @@ void EditablePolyline::setLineWidth(qreal w)
     update();
 }
 
-qreal EditablePolyline::baselineN() const
+qreal Polyline::baselineN() const
 {
     return m_baselineN;
 }
 
-void EditablePolyline::setBaselineN(qreal v)
+void Polyline::setBaselineN(qreal v)
 {
     v = clamp01(v);
 
@@ -170,12 +170,12 @@ void EditablePolyline::setBaselineN(qreal v)
     update();
 }
 
-qreal EditablePolyline::pointRadius() const
+qreal Polyline::pointRadius() const
 {
     return m_pointRadius;
 }
 
-void EditablePolyline::setPointRadius(qreal r)
+void Polyline::setPointRadius(qreal r)
 {
     if (m_pointRadius == r) {
         return;
@@ -187,12 +187,12 @@ void EditablePolyline::setPointRadius(qreal r)
     update();
 }
 
-qreal EditablePolyline::pointOutlineWidth() const
+qreal Polyline::pointOutlineWidth() const
 {
     return m_pointOutlineWidth;
 }
 
-void EditablePolyline::setPointOutlineWidth(qreal w)
+void Polyline::setPointOutlineWidth(qreal w)
 {
     if (m_pointOutlineWidth == w) {
         return;
@@ -202,12 +202,12 @@ void EditablePolyline::setPointOutlineWidth(qreal w)
     emit pointOutlineWidthChanged();
 }
 
-QColor EditablePolyline::pointOutlineColor() const
+QColor Polyline::pointOutlineColor() const
 {
     return m_pointOutlineColor;
 }
 
-void EditablePolyline::setPointOutlineColor(const QColor& c)
+void Polyline::setPointOutlineColor(const QColor& c)
 {
     if (m_pointOutlineColor == c) {
         return;
@@ -217,12 +217,12 @@ void EditablePolyline::setPointOutlineColor(const QColor& c)
     emit pointOutlineColorChanged();
 }
 
-qreal EditablePolyline::hitRadius() const
+qreal Polyline::hitRadius() const
 {
     return m_hitRadius;
 }
 
-void EditablePolyline::setHitRadius(qreal r)
+void Polyline::setHitRadius(qreal r)
 {
     if (m_hitRadius == r) {
         return;
@@ -232,12 +232,12 @@ void EditablePolyline::setHitRadius(qreal r)
     emit hitRadiusChanged();
 }
 
-QVector<QPointF> EditablePolyline::points() const
+QVector<QPointF> Polyline::points() const
 {
     return m_points;
 }
 
-void EditablePolyline::setPoints(const QVector<QPointF>& pts)
+void Polyline::setPoints(const QVector<QPointF>& pts)
 {
     if (m_points == pts) {
         return;
@@ -253,12 +253,12 @@ void EditablePolyline::setPoints(const QVector<QPointF>& pts)
     rebuildVisiblePoints();
 }
 
-qreal EditablePolyline::defaultValue() const
+qreal Polyline::defaultValue() const
 {
     return m_defaultValue;
 }
 
-void EditablePolyline::setXRangeFrom(qreal v)
+void Polyline::setXRangeFrom(qreal v)
 {
     if (m_xFrom == v) {
         return;
@@ -270,12 +270,12 @@ void EditablePolyline::setXRangeFrom(qreal v)
     rebuildVisiblePoints();
 }
 
-qreal EditablePolyline::xRangeTo() const
+qreal Polyline::xRangeTo() const
 {
     return m_xTo;
 }
 
-void EditablePolyline::setXRangeTo(qreal v)
+void Polyline::setXRangeTo(qreal v)
 {
     if (m_xTo == v) {
         return;
@@ -287,12 +287,12 @@ void EditablePolyline::setXRangeTo(qreal v)
     rebuildVisiblePoints();
 }
 
-qreal EditablePolyline::yRangeFrom() const
+qreal Polyline::yRangeFrom() const
 {
     return m_yFrom;
 }
 
-void EditablePolyline::setYRangeFrom(qreal v)
+void Polyline::setYRangeFrom(qreal v)
 {
     if (m_yFrom == v) {
         return;
@@ -304,12 +304,12 @@ void EditablePolyline::setYRangeFrom(qreal v)
     rebuildVisiblePoints();
 }
 
-qreal EditablePolyline::yRangeTo() const
+qreal Polyline::yRangeTo() const
 {
     return m_yTo;
 }
 
-void EditablePolyline::setYRangeTo(qreal v)
+void Polyline::setYRangeTo(qreal v)
 {
     if (m_yTo == v) {
         return;
@@ -321,12 +321,12 @@ void EditablePolyline::setYRangeTo(qreal v)
     rebuildVisiblePoints();
 }
 
-bool EditablePolyline::yAxisInverse() const
+bool Polyline::yAxisInverse() const
 {
     return m_yAxisInverse;
 }
 
-void EditablePolyline::setYAxisInverse(bool v)
+void Polyline::setYAxisInverse(bool v)
 {
     if (m_yAxisInverse == v) {
         return;
@@ -336,12 +336,12 @@ void EditablePolyline::setYAxisInverse(bool v)
     emit yAxisInverseChanged();
 }
 
-qreal EditablePolyline::dragX() const
+qreal Polyline::dragX() const
 {
     return m_dragX;
 }
 
-void EditablePolyline::setDragX(qreal v)
+void Polyline::setDragX(qreal v)
 {
     if (m_dragX == v) {
         return;
@@ -351,12 +351,12 @@ void EditablePolyline::setDragX(qreal v)
     emit dragXChanged();
 }
 
-qreal EditablePolyline::dragY() const
+qreal Polyline::dragY() const
 {
     return m_dragY;
 }
 
-void EditablePolyline::setDragY(qreal v)
+void Polyline::setDragY(qreal v)
 {
     if (m_dragY == v) {
         return;
@@ -366,7 +366,7 @@ void EditablePolyline::setDragY(qreal v)
     emit dragYChanged();
 }
 
-void EditablePolyline::setDefaultValue(qreal v)
+void Polyline::setDefaultValue(qreal v)
 {
     if (m_defaultValue == v) {
         return;
@@ -383,32 +383,32 @@ void EditablePolyline::setDefaultValue(qreal v)
     }
 }
 
-qreal EditablePolyline::xRangeFrom() const
+qreal Polyline::xRangeFrom() const
 {
     return m_xFrom;
 }
 
-qreal EditablePolyline::clamp01(qreal v) const
+qreal Polyline::clamp01(qreal v) const
 {
     return std::max<qreal>(0.0, std::min<qreal>(1.0, v));
 }
 
-QPointF EditablePolyline::clamp01(const QPointF& p) const
+QPointF Polyline::clamp01(const QPointF& p) const
 {
     return QPointF(clamp01(p.x()), clamp01(p.y()));
 }
 
-bool EditablePolyline::hasValidXRange() const
+bool Polyline::hasValidXRange() const
 {
     return std::isfinite(m_xFrom) && std::isfinite(m_xTo) && std::abs(m_xTo - m_xFrom) > EPSILON;
 }
 
-bool EditablePolyline::hasValidYRange() const
+bool Polyline::hasValidYRange() const
 {
     return std::isfinite(m_yFrom) && std::isfinite(m_yTo) && std::abs(m_yTo - m_yFrom) > EPSILON;
 }
 
-QPointF EditablePolyline::normalizedFromDomain(const QPointF& p) const
+QPointF Polyline::normalizedFromDomain(const QPointF& p) const
 {
     if (!hasValidXRange() || !hasValidYRange()) {
         return clamp01(QPointF(0.0, 0.0));
@@ -424,7 +424,7 @@ QPointF EditablePolyline::normalizedFromDomain(const QPointF& p) const
     return clamp01(QPointF(xN, yN));
 }
 
-QPointF EditablePolyline::domainFromNormalized(const QPointF& pN) const
+QPointF Polyline::domainFromNormalized(const QPointF& pN) const
 {
     if (!hasValidXRange() || !hasValidYRange()) {
         return QPointF(m_xFrom, m_yFrom);
@@ -441,7 +441,7 @@ QPointF EditablePolyline::domainFromNormalized(const QPointF& pN) const
     return QPointF(x, y);
 }
 
-QVector<QPointF> EditablePolyline::normalizedFromDomain(const QVector<QPointF>& pts) const
+QVector<QPointF> Polyline::normalizedFromDomain(const QVector<QPointF>& pts) const
 {
     QVector<QPointF> out;
     out.reserve(pts.size());
@@ -452,7 +452,7 @@ QVector<QPointF> EditablePolyline::normalizedFromDomain(const QVector<QPointF>& 
     return out;
 }
 
-QVector<QPointF> EditablePolyline::domainFromNormalized(const QVector<QPointF>& ptsN) const
+QVector<QPointF> Polyline::domainFromNormalized(const QVector<QPointF>& ptsN) const
 {
     QVector<QPointF> out;
     out.reserve(ptsN.size());
@@ -463,7 +463,7 @@ QVector<QPointF> EditablePolyline::domainFromNormalized(const QVector<QPointF>& 
     return out;
 }
 
-void EditablePolyline::rebuildVisiblePoints()
+void Polyline::rebuildVisiblePoints()
 {
     m_pointsNVisible.clear();
     m_visibleToDomainIndex.clear();
@@ -540,7 +540,7 @@ void EditablePolyline::rebuildVisiblePoints()
     update();
 }
 
-QVector<QPointF> EditablePolyline::polylinePx() const
+QVector<QPointF> Polyline::polylinePx() const
 {
     QVector<QPointF> pts;
 
@@ -591,7 +591,7 @@ QVector<QPointF> EditablePolyline::polylinePx() const
     return pts;
 }
 
-bool EditablePolyline::isNearLinePx(const QPointF& px) const
+bool Polyline::isNearLinePx(const QPointF& px) const
 {
     const auto pts = polylinePx();
     if (pts.size() < 2) {
@@ -605,7 +605,7 @@ bool EditablePolyline::isNearLinePx(const QPointF& px) const
     return best <= m_hitRadius;
 }
 
-int EditablePolyline::pointIndexAtPx(const QPointF& px) const
+int Polyline::pointIndexAtPx(const QPointF& px) const
 {
     // search in visible points, skip synthetic boundary points
     for (int i = 0; i < m_pointsNVisible.size(); ++i) {
@@ -627,7 +627,7 @@ int EditablePolyline::pointIndexAtPx(const QPointF& px) const
     return -1;
 }
 
-GhostPoint EditablePolyline::ghostPointToPolylinePx(const QPointF& px) const
+GhostPoint Polyline::ghostPointToPolylinePx(const QPointF& px) const
 {
     GhostPoint best;
 
@@ -648,7 +648,7 @@ GhostPoint EditablePolyline::ghostPointToPolylinePx(const QPointF& px) const
     return best;
 }
 
-void EditablePolyline::updateCursor()
+void Polyline::updateCursor()
 {
     const bool interactive = m_hoveredOnLine || m_pressed || m_draggingLine || (m_pressedPointIndex >= 0);
 
@@ -659,7 +659,7 @@ void EditablePolyline::updateCursor()
     }
 }
 
-void EditablePolyline::resetGestureState()
+void Polyline::resetGestureState()
 {
     m_pressed = false;
     m_pressedOnLine = false;
@@ -674,7 +674,7 @@ void EditablePolyline::resetGestureState()
     update();
 }
 
-void EditablePolyline::geometryChange(const QRectF& newG, const QRectF& oldG)
+void Polyline::geometryChange(const QRectF& newG, const QRectF& oldG)
 {
     QQuickPaintedItem::geometryChange(newG, oldG);
     if (newG.size() != oldG.size()) {
@@ -682,7 +682,7 @@ void EditablePolyline::geometryChange(const QRectF& newG, const QRectF& oldG)
     }
 }
 
-void EditablePolyline::paint(QPainter* painter)
+void Polyline::paint(QPainter* painter)
 {
     if (!painter) {
         return;
@@ -767,7 +767,7 @@ void EditablePolyline::paint(QPainter* painter)
     }
 }
 
-void EditablePolyline::hoverMoveEvent(QHoverEvent* e)
+void Polyline::hoverMoveEvent(QHoverEvent* e)
 {
     m_hoverPx = e->position();
 
@@ -789,7 +789,7 @@ void EditablePolyline::hoverMoveEvent(QHoverEvent* e)
     e->accept();
 }
 
-void EditablePolyline::hoverLeaveEvent(QHoverEvent* e)
+void Polyline::hoverLeaveEvent(QHoverEvent* e)
 {
     Q_UNUSED(e);
     m_hoveredOnLine = false;
@@ -797,7 +797,7 @@ void EditablePolyline::hoverLeaveEvent(QHoverEvent* e)
     update();
 }
 
-void EditablePolyline::mousePressEvent(QMouseEvent* e)
+void Polyline::mousePressEvent(QMouseEvent* e)
 {
     if (e->button() != Qt::LeftButton) {
         e->ignore();
@@ -837,7 +837,7 @@ void EditablePolyline::mousePressEvent(QMouseEvent* e)
     }
 }
 
-void EditablePolyline::mouseMoveEvent(QMouseEvent* e)
+void Polyline::mouseMoveEvent(QMouseEvent* e)
 {
     if (!m_pressed) {
         e->ignore();
@@ -886,7 +886,7 @@ void EditablePolyline::mouseMoveEvent(QMouseEvent* e)
     }
 }
 
-void EditablePolyline::mouseReleaseEvent(QMouseEvent* e)
+void Polyline::mouseReleaseEvent(QMouseEvent* e)
 {
     if (e->button() != Qt::LeftButton || !m_pressed) {
         e->ignore();

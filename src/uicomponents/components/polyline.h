@@ -21,7 +21,7 @@ struct GhostPoint {
     qreal distToSegment = 1e18;
 };
 
-class EditablePolyline : public QQuickPaintedItem, public muse::async::Asyncable, public muse::actions::Actionable, public muse::Injectable
+class Polyline : public QQuickPaintedItem, public muse::async::Asyncable, public muse::actions::Actionable, public muse::Injectable
 {
     Q_OBJECT
 
@@ -53,7 +53,7 @@ class EditablePolyline : public QQuickPaintedItem, public muse::async::Asyncable
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
 
 public:
-    explicit EditablePolyline(QQuickItem* parent = nullptr);
+    explicit Polyline(QQuickItem* parent = nullptr);
 
     Q_INVOKABLE void init();
 

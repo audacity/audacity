@@ -851,7 +851,7 @@ Rectangle {
                     }
                 }
 
-                EditablePolyline {
+                Polyline {
                     id: automation
 
                     anchors.fill: waveView
@@ -879,7 +879,7 @@ Rectangle {
                     }
 
                     onPointMoved: function(index, x, y, completed) {
-                        // NOTE: EditablePolyline's returned x is within [xRangeFrom..xRangeTo] boundaries but
+                        // NOTE: Polyline's returned x is within [xRangeFrom..xRangeTo] boundaries but
                         // clip's internal envelope expects time relative to clip startTime
                         envelopeModel.setPoint(index, x - waveView.startTime, y, completed)
                         tooltip.show(true)
