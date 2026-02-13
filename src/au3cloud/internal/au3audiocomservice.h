@@ -19,8 +19,6 @@ namespace au::au3cloud {
 class Au3AudioComService : public IAu3AudioComService, public muse::async::Asyncable
 {
 public:
-    Au3AudioComService();
-
     muse::async::Promise<ProjectList> downloadProjectList(size_t projectsPerBatch, size_t batchNumber,
                                                           const FetchOptions& options) override;
     void clearProjectListCache() override;
@@ -47,6 +45,8 @@ private:
     size_t m_audiosPerBatch = 0;
 
     std::mutex m_cacheMutex;
-    audacity::concurrency::CancellationContextPtr m_dataListCancellation;
+
+    std::mutex m_pendingRequestsMutex;
+    std::set<audacity::concurrency::CancellationContextPtr> m_pendingCancellationContexts;
 };
 }

@@ -48,8 +48,8 @@ void CloudProjectsModel::load()
 void CloudProjectsModel::reload()
 {
     audioComService()->cancelRequests();
-    m_isWaitingForPromise = false;
     audioComService()->clearProjectListCache();
+    m_isWaitingForPromise = false;
 
     beginResetModel();
 
@@ -151,8 +151,11 @@ void CloudProjectsModel::loadItemsIfNecessary()
 
             loadItemsIfNecessary();
         })
-        .onReject(this, [this](int, const std::string&) {
+        .onReject(this, [this](int errorCode, const std::string&) {
             m_isWaitingForPromise = false;
+            if (errorCode == -1) {
+                return;
+            }
             setState(State::Error);
         });
     } else {

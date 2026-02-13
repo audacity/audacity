@@ -48,8 +48,8 @@ void CloudAudioFilesModel::load()
 void CloudAudioFilesModel::reload()
 {
     audioComService()->cancelRequests();
-    m_isWaitingForPromise = false;
     audioComService()->clearAudioListCache();
+    m_isWaitingForPromise = false;
 
     beginResetModel();
 
@@ -150,8 +150,11 @@ void CloudAudioFilesModel::loadItemsIfNecessary()
 
             loadItemsIfNecessary();
         })
-        .onReject(this, [this](int, const std::string&) {
+        .onReject(this, [this](int errCode, const std::string&) {
             m_isWaitingForPromise = false;
+            if (errCode == -1) {
+                return;
+            }
             setState(State::Error);
         });
     } else {
