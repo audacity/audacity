@@ -8,8 +8,6 @@
 
 #include <QCoreApplication>
 
-#include "au3-track/Track.h"
-#include "au3-mixer/Envelope.h"
 #include "au3-stretching-sequence/TempoChange.h"
 #include "au3-track/Track.h"
 #include "au3-wave-track/TimeStretching.h"
@@ -302,263 +300,6 @@ bool Au3ClipsInteraction::renderClipPitchAndSpeed(const ClipKey& clipKey)
     prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));         //! todo: replace with onClipChanged
 
     return true;
-}
-
-std::optional<ClipEnvelopeInfo> Au3ClipsInteraction::clipEnvelopeInfo(const ClipKey& clipKey) const
-{
-    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
-        return {};
-    }
-
-    std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
-    IF_ASSERT_FAILED(clip) {
-        return {};
-    }
-
-    auto& env = clip->GetEnvelope();
-
-    ClipEnvelopeInfo info;
-    info.minValue = env.GetMinValue();
-    info.maxValue = env.GetMaxValue();
-    info.defaultValue = env.GetDefaultValue();
-    info.exponential = env.GetExponential();
-    info.version = env.GetVersion();
-
-    return info;
-}
-
-ClipEnvelopePoints Au3ClipsInteraction::clipEnvelopePoints(const ClipKey& clipKey) const
-{
-    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
-        return {};
-    }
-
-    std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
-    IF_ASSERT_FAILED(clip) {
-        return {};
-    }
-
-    auto& env = clip->GetEnvelope();
-
-    ClipEnvelopePoints pts;
-    const auto n = env.GetNumberOfPoints();
-    pts.reserve(n);
-
-    const double offset = env.GetOffset();
-    for (size_t i = 0; i < n; ++i) {
-        const auto& p = env[int(i)];
-        pts.push_back({ offset + p.GetT(), p.GetVal() });
-    }
-    return pts;
-}
-
-bool Au3ClipsInteraction::setClipEnvelopePoint(const ClipKey& clipKey, double time, double value, bool completed)
-{
-    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
-        return false;
-    }
-
-    std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
-    IF_ASSERT_FAILED(clip) {
-        return false;
-    }
-
-    auto& env = clip->GetEnvelope();
-
-    const double v = std::clamp(value, env.GetMinValue(), env.GetMaxValue());
-
-    env.InsertOrReplace(time, v);
-
-    if (auto prj = globalContext()->currentTrackeditProject()) {
-        prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
-    }
-    projectHistory()->pushHistoryState(muse::trc("trackedit", "Added enveloped point"), muse::trc("trackedit",
-                                                                                                  "Clip envelope edit"));
-
-    m_clipEnvelopeChanged.send(clipKey, completed);
-    return true;
-}
-
-bool Au3ClipsInteraction::removeClipEnvelopePoint(const ClipKey& clipKey, int index, bool completed)
-{
-    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
-        return false;
-    }
-
-    std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
-    IF_ASSERT_FAILED(clip) {
-        return false;
-    }
-
-    auto& env = clip->GetEnvelope();
-    if (index < 0 || index >= int(env.GetNumberOfPoints())) {
-        return false;
-    }
-
-    env.Delete(index);
-
-    if (auto prj = globalContext()->currentTrackeditProject()) {
-        prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
-    }
-    projectHistory()->pushHistoryState(muse::trc("trackedit", "Removed enveloped point"), muse::trc("trackedit",
-                                                                                                    "Clip envelope edit"));
-
-    m_clipEnvelopeChanged.send(clipKey, completed);
-    return true;
-}
-
-bool Au3ClipsInteraction::flattenClipEnvelope(const ClipKey& clipKey, double value, bool completed)
-{
-    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
-        return false;
-    }
-
-    std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
-    IF_ASSERT_FAILED(clip) {
-        return false;
-    }
-
-    auto& env = clip->GetEnvelope();
-    const double v = std::clamp(value, env.GetMinValue(), env.GetMaxValue());
-    env.Flatten(v);
-
-    if (auto prj = globalContext()->currentTrackeditProject()) {
-        prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
-    }
-
-    m_clipEnvelopeChanged.send(clipKey, completed);
-    return true;
-}
-
-bool Au3ClipsInteraction::setClipEnvelopePointAtIndex(
-    const ClipKey& key, int index, double time, double value, bool completed)
-{
-    const auto points = clipEnvelopePoints(key);
-    if (index < 0 || index >= static_cast<int>(points.size())) {
-        return false;
-    }
-
-    const double oldTime = points.at(index).time;
-    if (muse::is_equal(oldTime, time)) {
-        return setClipEnvelopePoint(key, time, value, completed);
-    }
-
-    return setClipEnvelopePoint(key, time, value, completed);
-}
-
-bool Au3ClipsInteraction::beginClipEnvelopePointDrag(const ClipKey& clipKey, int pointIndex)
-{
-    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
-        return false;
-    }
-
-    std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
-    IF_ASSERT_FAILED(clip) {
-        return false;
-    }
-
-    auto& env = clip->GetEnvelope();
-
-    const int n = static_cast<int>(env.GetNumberOfPoints());
-    if (pointIndex < 0 || pointIndex >= n) {
-        return false;
-    }
-
-    QVector<double> times(n);
-    QVector<double> values(n);
-    env.GetPoints(times.data(), values.data(), n);
-
-    if (m_envDrag && m_envDrag->active) {
-        endClipEnvelopePointDrag(m_envDrag->clip, true);
-    }
-
-    EnvelopeDragSession s;
-    s.clip = clipKey;
-    s.index = pointIndex;
-    s.active = true;
-    s.origTime = times[pointIndex];
-    s.origValue = values[pointIndex];
-
-    env.SetDragPoint(pointIndex);
-
-    m_envDrag = s;
-    return true;
-}
-
-bool Au3ClipsInteraction::updateClipEnvelopePointDrag(const ClipKey& clipKey, double tAbs, double value)
-{
-    if (!m_envDrag || !m_envDrag->active || !(m_envDrag->clip == clipKey)) {
-        return false;
-    }
-
-    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
-        return false;
-    }
-
-    std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
-    IF_ASSERT_FAILED(clip) {
-        return false;
-    }
-
-    auto& env = clip->GetEnvelope();
-    env.MoveDragPoint(tAbs, value);
-
-    if (auto prj = globalContext()->currentTrackeditProject()) {
-        prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
-    }
-
-    m_clipEnvelopeChanged.send(clipKey, false);
-    return true;
-}
-
-bool Au3ClipsInteraction::endClipEnvelopePointDrag(const ClipKey& clipKey, bool commit)
-{
-    if (!m_envDrag || !m_envDrag->active || !(m_envDrag->clip == clipKey)) {
-        return false;
-    }
-
-    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
-        return false;
-    }
-
-    std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
-    IF_ASSERT_FAILED(clip) {
-        return false;
-    }
-
-    auto& env = clip->GetEnvelope();
-
-    if (commit) {
-        env.ClearDragPoint();
-        projectHistory()->pushHistoryState(muse::trc("trackedit", "Dragged enveloped point"), muse::trc("trackedit",
-                                                                                                        "Clip envelope edit"));
-    } else {
-        // cancel path: restore orig values
-        env.MoveDragPoint(m_envDrag->origTime + clip->GetPlayStartTime(), m_envDrag->origValue);
-        env.ClearDragPoint();
-    }
-
-    if (auto prj = globalContext()->currentTrackeditProject()) {
-        prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
-    }
-
-    m_clipEnvelopeChanged.send(clipKey, true);
-    m_envDrag.reset();
-
-    return true;
-}
-
-muse::async::Channel<ClipKey, bool> Au3ClipsInteraction::clipEnvelopeChanged() const
-{
-    return m_clipEnvelopeChanged;
 }
 
 ITrackDataPtr Au3ClipsInteraction::cutClip(const ClipKey& clipKey)
@@ -1544,7 +1285,7 @@ bool Au3ClipsInteraction::stretchClipsLeft(const ClipKeyList& clipKeys, secs_t d
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
-        m_clipEnvelopeChanged.send(selectedClip, completed);
+        clipGainINteraction()->clipEnvelopeChanged().send(selectedClip, completed);
     }
 
     return true;
@@ -1577,7 +1318,7 @@ bool Au3ClipsInteraction::stretchClipsRight(const ClipKeyList& clipKeys, secs_t 
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
-        m_clipEnvelopeChanged.send(selectedClip, completed);
+        clipGainINteraction()->clipEnvelopeChanged().send(selectedClip, completed);
     }
 
     return true;

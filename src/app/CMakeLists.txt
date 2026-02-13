@@ -131,6 +131,7 @@ add_to_link_if_exists(projectscene)
 add_to_link_if_exists(record)
 add_to_link_if_exists(spectrogram)
 add_to_link_if_exists(toast)
+add_to_link_if_exists(automation)
 
 if (AU_MODULE_EFFECTS_VST)
     add_definitions(-DAU_MODULE_EFFECTS_VST)

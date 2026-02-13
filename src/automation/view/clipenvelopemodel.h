@@ -4,25 +4,28 @@
 #pragma once
 
 #include <QObject>
-#include <QVector>
 #include <QPointF>
+#include <QVector>
+#include <QAbstractItemModel>
 
 #include "async/asyncable.h"
 
 #include "modularity/ioc.h"
+#include "automation/iclipgaininteraction.h"
 #include "trackedit/iclipsinteraction.h"
 
 #include "trackedit/trackedittypes.h"
-#include "types/projectscenetypes.h"
+#include "projectscene/types/projectscenetypes.h"
 
-namespace au::projectscene {
+namespace au::automation {
 class ClipEnvelopeModel : public QAbstractListModel, public muse::async::Asyncable, public muse::Injectable
 {
     Q_OBJECT
 
-    muse::Inject<au::trackedit::IClipsInteraction> clipsInteraction{ this };
+    muse::Inject<IClipGainInteraction> clipGainInteraction{ this };
+    muse::Inject<trackedit::IClipsInteraction> clipsInteraction{ this };
 
-    Q_PROPERTY(ClipKey clipKey READ clipKey WRITE setClipKey NOTIFY clipKeyChanged FINAL)
+    Q_PROPERTY(projectscene::ClipKey clipKey READ clipKey WRITE setClipKey NOTIFY clipKeyChanged FINAL)
 
     Q_PROPERTY(QVector<QPointF> points READ points NOTIFY pointsChanged)
 
@@ -59,8 +62,8 @@ public:
     Q_INVOKABLE void flatten(double value, bool completed);
     Q_INVOKABLE void cancelDrag();
 
-    ClipKey clipKey() const;
-    void setClipKey(const ClipKey& key);
+    projectscene::ClipKey clipKey() const;
+    void setClipKey(const projectscene::ClipKey& key);
 
 signals:
     void clipKeyChanged();
@@ -77,7 +80,7 @@ private:
         ValueRole
     };
 
-    ClipKey m_clipKey;
+    projectscene::ClipKey m_clipKey;
     ClipEnvelopePoints m_points;
     ClipEnvelopeInfo m_info;
 

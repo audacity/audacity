@@ -5,6 +5,7 @@
 
 #include "log.h"
 
+using namespace au::automation;
 using namespace au::projectscene;
 
 ClipEnvelopeModel::ClipEnvelopeModel(QObject* parent)
@@ -23,7 +24,7 @@ void ClipEnvelopeModel::init()
         }
     });
 
-    clipsInteraction()->clipEnvelopeChanged().onReceive(
+    clipGainInteraction()->clipEnvelopeChanged().onReceive(
         this,
         [this](const ClipKey& key, bool /*completed*/) {
         if (m_clipKey.isValid() && key == m_clipKey) {
@@ -136,8 +137,8 @@ void ClipEnvelopeModel::reload()
     m_clipEndTime   = clipsInteraction()->clipEndTime(m_clipKey.key);
     emit clipTimeChanged();
 
-    auto points = clipsInteraction()->clipEnvelopePoints(m_clipKey.key);
-    auto infoOpt = clipsInteraction()->clipEnvelopeInfo(m_clipKey.key);
+    auto points = clipGainInteraction()->clipEnvelopePoints(m_clipKey.key);
+    auto infoOpt = clipGainInteraction()->clipEnvelopeInfo(m_clipKey.key);
     if (infoOpt) {
         m_info = *infoOpt;
     } else {
@@ -176,10 +177,10 @@ void ClipEnvelopeModel::setPoint(int index, double tAbs, double value, bool comp
     if (!m_dragActive || m_dragIndex != index) {
         // if we somehow had a different drag active, end it
         if (m_dragActive) {
-            clipsInteraction()->endClipEnvelopePointDrag(m_clipKey.key, /*commit*/ true);
+            clipGainInteraction()->endClipEnvelopePointDrag(m_clipKey.key, /*commit*/ true);
         }
 
-        if (!clipsInteraction()->beginClipEnvelopePointDrag(m_clipKey.key, index)) {
+        if (!clipGainInteraction()->beginClipEnvelopePointDrag(m_clipKey.key, index)) {
             m_dragActive = false;
             m_dragIndex = -1;
             return;
@@ -189,7 +190,7 @@ void ClipEnvelopeModel::setPoint(int index, double tAbs, double value, bool comp
         m_dragIndex = index;
     }
 
-    if (!clipsInteraction()->updateClipEnvelopePointDrag(m_clipKey.key, tAbs, value)) {
+    if (!clipGainInteraction()->updateClipEnvelopePointDrag(m_clipKey.key, tAbs, value)) {
         return;
     }
 
@@ -200,7 +201,7 @@ void ClipEnvelopeModel::setPoint(int index, double tAbs, double value, bool comp
     emit dataChanged(idx, idx, { TimeRole, ValueRole });
 
     if (completed) {
-        clipsInteraction()->endClipEnvelopePointDrag(m_clipKey.key, /*commit*/ true);
+        clipGainInteraction()->endClipEnvelopePointDrag(m_clipKey.key, /*commit*/ true);
 
         m_dragActive = false;
         m_dragIndex = -1;
@@ -215,7 +216,7 @@ void ClipEnvelopeModel::addPoint(double tAbs, double value, bool completed)
         return;
     }
 
-    if (!clipsInteraction()->setClipEnvelopePoint(m_clipKey.key, tAbs, value, completed)) {
+    if (!clipGainInteraction()->setClipEnvelopePoint(m_clipKey.key, tAbs, value, completed)) {
         return;
     }
 
@@ -231,7 +232,7 @@ void ClipEnvelopeModel::removePoint(int index, bool completed)
         return;
     }
 
-    if (!clipsInteraction()->removeClipEnvelopePoint(m_clipKey.key, index, completed)) {
+    if (!clipGainInteraction()->removeClipEnvelopePoint(m_clipKey.key, index, completed)) {
         return;
     }
 
@@ -244,7 +245,7 @@ void ClipEnvelopeModel::flatten(double value, bool completed)
         return;
     }
 
-    if (!clipsInteraction()->flattenClipEnvelope(m_clipKey.key, value, completed)) {
+    if (!clipGainInteraction()->flattenClipEnvelope(m_clipKey.key, value, completed)) {
         return;
     }
 
@@ -257,7 +258,7 @@ void ClipEnvelopeModel::cancelDrag()
         return;
     }
 
-    clipsInteraction()->endClipEnvelopePointDrag(m_clipKey.key, /*commit*/ false);
+    clipGainInteraction()->endClipEnvelopePointDrag(m_clipKey.key, /*commit*/ false);
 
     m_dragActive = false;
     m_dragIndex = -1;
