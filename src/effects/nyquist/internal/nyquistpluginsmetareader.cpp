@@ -17,7 +17,7 @@ NyquistPluginsMetaReader::NyquistPluginsMetaReader()
 {
 }
 
-void NyquistPluginsMetaReader::doInit(const IApplication::RunMode& mode)
+void NyquistPluginsMetaReader::doInit(const IApplication::RunMode&)
 {
     // Don't call m_module.Initialize() here.
     // At this point FileNames::AudacityPathList() is not yet populated

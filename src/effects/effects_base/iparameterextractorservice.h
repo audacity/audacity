@@ -46,6 +46,10 @@ public:
     virtual bool setParameterStringValue(EffectInstance* instance, const muse::String& parameterId, const muse::String& stringValue,
                                          EffectSettingsAccessPtr settingsAccess = nullptr)
     {
+        (void)instance;
+        (void)parameterId;
+        (void)stringValue;
+        (void)settingsAccess;
         // Default implementation: not supported
         return false;
     }
@@ -59,31 +63,50 @@ public:
     //! @param parameterId The parameter being edited
     //! @param settingsAccess Settings access for this editing session
     virtual void beginParameterGesture(EffectInstance* instance, const muse::String& parameterId,
-                                       EffectSettingsAccessPtr settingsAccess) {}
+                                       EffectSettingsAccessPtr settingsAccess)
+    {
+        (void)instance;
+        (void)parameterId;
+        (void)settingsAccess;
+    }
 
     //! End parameter gesture (e.g., user releases a slider)
     //! Called when interactive editing of a parameter ends - this is when state should be saved
     //! @param instance The effect instance
     //! @param parameterId The parameter that was being edited
-    virtual void endParameterGesture(EffectInstance* instance, const muse::String& parameterId) {}
+    virtual void endParameterGesture(EffectInstance* instance, const muse::String& parameterId)
+    {
+        (void)instance;
+        (void)parameterId;
+    }
 
     //! Notify that an instance is being destroyed
     //! Called when an instance is unregistered to allow cleanup of cached data
     //! @param instance The effect instance being destroyed
-    virtual void onInstanceDestroyed(EffectInstance* instance) {}
+    virtual void onInstanceDestroyed(EffectInstance* instance)
+    {
+        (void)instance;
+    }
 
     //! Begin parameter editing session
     //! Called before showing UI to set up parameter change tracking
     //! Sets up the ComponentHandler to track parameter changes with the given settings access
     //! @param instance The effect instance
     //! @param settingsAccess Settings access to use for parameter changes during the session
-    virtual void beginParameterEditing(EffectInstance* instance, EffectSettingsAccessPtr settingsAccess) {}
+    virtual void beginParameterEditing(EffectInstance* instance, EffectSettingsAccessPtr settingsAccess)
+    {
+        (void)instance;
+        (void)settingsAccess;
+    }
 
     //! End parameter editing session
     //! Called when closing UI to clean up parameter change tracking
     //! Clears the ComponentHandler's settings access pointer
     //! @param instance The effect instance
-    virtual void endParameterEditing(EffectInstance* instance) {}
+    virtual void endParameterEditing(EffectInstance* instance)
+    {
+        (void)instance;
+    }
 };
 
 using IParameterExtractorServicePtr = std::shared_ptr<IParameterExtractorService>;
