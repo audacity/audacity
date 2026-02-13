@@ -858,8 +858,10 @@ Rectangle {
                     visible: root.isAutomationEnabled
 
                     lineColor: ui.theme.extra["stroke_automation_curve"]
-                    lineWidth: 1.5
-                    pointRadius: 3
+                    lineWidth: 2.5
+                    pointRadius: 4
+                    pointOutlineColor: ui.theme.extra["black_color"]
+                    pointOutlineWidth: 1.0
 
                     points: envelopeModel.points
                     defaultValue: envelopeModel.defaultValue

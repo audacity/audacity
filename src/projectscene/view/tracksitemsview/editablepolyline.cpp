@@ -187,6 +187,36 @@ void EditablePolyline::setPointRadius(qreal r)
     update();
 }
 
+qreal EditablePolyline::pointOutlineWidth() const
+{
+    return m_pointOutlineWidth;
+}
+
+void EditablePolyline::setPointOutlineWidth(qreal w)
+{
+    if (m_pointOutlineWidth == w) {
+        return;
+    }
+
+    m_pointOutlineWidth = w;
+    emit pointOutlineWidthChanged();
+}
+
+QColor EditablePolyline::pointOutlineColor() const
+{
+    return m_pointOutlineColor;
+}
+
+void EditablePolyline::setPointOutlineColor(const QColor& c)
+{
+    if (m_pointOutlineColor == c) {
+        return;
+    }
+
+    m_pointOutlineColor = c;
+    emit pointOutlineColorChanged();
+}
+
 qreal EditablePolyline::hitRadius() const
 {
     return m_hitRadius;
@@ -684,7 +714,23 @@ void EditablePolyline::paint(QPainter* painter)
     for (int i = 0; i < n; ++i) {
         QPointF pN = m_pointsNVisible[i];
         const QPointF c(toPxX(this, pN.x()), toPxY(this, pN.y()));
+
+        // fill
+        painter->setPen(Qt::NoPen);
+        painter->setBrush(m_lineColor);
         painter->drawEllipse(c, m_pointRadius, m_pointRadius);
+
+        // outline
+        QPen innerPen(m_pointOutlineColor);
+        innerPen.setWidthF(m_pointOutlineWidth);
+        painter->setPen(innerPen);
+        painter->setBrush(Qt::NoBrush);
+
+        painter->drawEllipse(
+            c,
+            m_pointRadius,
+            m_pointRadius
+            );
     }
 
     // draw hover ghost point
@@ -712,12 +758,9 @@ void EditablePolyline::paint(QPainter* painter)
             painter->restore();
 
             // draw hollow outline
-            QPen hoverPen(m_lineColor);
-            hoverPen.setWidthF(1.0);
-            hoverPen.setCapStyle(Qt::RoundCap);
-            hoverPen.setJoinStyle(Qt::RoundJoin);
-
-            painter->setPen(hoverPen);
+            QPen outerPen(m_pointOutlineColor);
+            outerPen.setWidthF(m_pointOutlineWidth);
+            painter->setPen(outerPen);
             painter->setBrush(Qt::NoBrush);
             painter->drawEllipse(hp, m_pointRadius, m_pointRadius);
         }

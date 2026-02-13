@@ -29,6 +29,8 @@ class EditablePolyline : public QQuickPaintedItem, public muse::async::Asyncable
     Q_PROPERTY(qreal lineWidth READ lineWidth WRITE setLineWidth NOTIFY lineWidthChanged)
     Q_PROPERTY(qreal baselineN READ baselineN WRITE setBaselineN NOTIFY baselineNChanged)
     Q_PROPERTY(qreal pointRadius READ pointRadius WRITE setPointRadius NOTIFY pointRadiusChanged)
+    Q_PROPERTY(qreal pointOutlineWidth READ pointOutlineWidth WRITE setPointOutlineWidth NOTIFY pointOutlineWidthChanged)
+    Q_PROPERTY(QColor pointOutlineColor READ pointOutlineColor WRITE setPointOutlineColor NOTIFY pointOutlineColorChanged)
     Q_PROPERTY(qreal hitRadius READ hitRadius WRITE setHitRadius NOTIFY hitRadiusChanged)
 
     Q_PROPERTY(QVector<QPointF> points READ points WRITE setPoints NOTIFY pointsChanged)
@@ -66,6 +68,12 @@ public:
 
     qreal pointRadius() const;
     void setPointRadius(qreal);
+
+    qreal pointOutlineWidth() const;
+    void setPointOutlineWidth(qreal);
+
+    QColor pointOutlineColor() const;
+    void setPointOutlineColor(const QColor&);
 
     qreal hitRadius() const;
     void setHitRadius(qreal);
@@ -105,6 +113,8 @@ signals:
     void lineWidthChanged();
     void baselineNChanged();
     void pointRadiusChanged();
+    void pointOutlineWidthChanged();
+    void pointOutlineColorChanged();
     void hitRadiusChanged();
 
     void polylineFlattenRequested(qreal y, bool completed);
@@ -161,6 +171,8 @@ private:
     qreal m_lineWidth = 1.0;
     qreal m_baselineN =0.5;
     qreal m_pointRadius = 3.0;
+    qreal m_pointOutlineWidth = 1.0;
+    QColor m_pointOutlineColor;
     qreal m_hitRadius = 8.0;
 
     QVector<QPointF> m_points;          // domain points as provided from model
