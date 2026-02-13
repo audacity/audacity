@@ -144,6 +144,10 @@ if (AU_MODULE_EFFECTS_AUDIO_UNIT)
     add_definitions(-DAU_MODULE_EFFECTS_AUDIO_UNIT)
 endif()
 
+if (AU_MODULE_EFFECTS_NYQUIST)
+    add_definitions(-DAU_MODULE_EFFECTS_NYQUIST)
+endif()
+
 set (AUDACITY_APPEND_SRC)
 
 if (OS_IS_WIN)
@@ -228,6 +232,15 @@ endif(CC_IS_MSVC)
 # Link
 ##########################################
 target_link_libraries(audacity PRIVATE ${LINK_LIB}  ${COVERAGE_LINK_FLAGS})
+
+###########################################
+# Dependencies
+###########################################
+
+if (AU_MODULE_EFFECTS_NYQUIST)
+    # Make audacity depend on Nyquist runtime and plug-in deployment targets
+    add_dependencies(audacity nyquist plug-ins)
+endif()
 
 ###########################################
 # INSTALL

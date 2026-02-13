@@ -105,10 +105,13 @@ muse::RetVal<muse::audio::AudioResourceMetaList> AbstractAudioPluginMetaReader::
 
     muse::audio::AudioResourceMetaList metaList;
     for (const PluginDescriptor& desc : descriptors) {
-        //! NOTE At the moment AU only supports Fx and Fx|Generator,
-        //! see VST3EffectBase::GetType
+        //! NOTE At the moment AU supports Fx (Process, Generate, Analyze, Tool)
+        //! All effect types are treated as "Fx" for the plugin system
         muse::String type;
-        if (desc.GetEffectType() == EffectType::EffectTypeProcess || desc.GetEffectType() == EffectType::EffectTypeGenerate) {
+        if (desc.GetEffectType() == EffectType::EffectTypeProcess
+            || desc.GetEffectType() == EffectType::EffectTypeGenerate
+            || desc.GetEffectType() == EffectType::EffectTypeAnalyze
+            || desc.GetEffectType() == EffectType::EffectTypeTool) {
             type = u"Fx";
         } else {
             type = u"None";

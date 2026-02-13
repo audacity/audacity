@@ -15,5 +15,6 @@ public:
     virtual ~INyquistEffectsRepository() = default;
 
     virtual EffectMetaList effectMetaList() const = 0;
+    virtual bool ensurePluginIsLoaded(const EffectId& effectId) const = 0;
 };
 }

@@ -3,6 +3,9 @@
  */
 #include "trackviewtypeattachment.h"
 
+#include "au3-nyquist-effects/NyquistBase.h"
+#include "au3-wave-track/WaveTrack.h"
+
 namespace au::au3 {
 static const AttachedTrackObjects::RegisteredFactory keyTrackViewType{
     [](Au3Track& track) -> std::shared_ptr<TrackViewTypeAttachment> { return std::make_shared<TrackViewTypeAttachment>(track); }
@@ -60,4 +63,11 @@ void TrackViewTypeAttachment::SetTrackViewType(const trackedit::TrackViewType& t
 {
     mTrackViewType = type;
 }
+
+static NyquistBase::GetHasSpectralDisplayHook::Scope scope {
+    [](const WaveTrack* track) {
+        const auto viewType = TrackViewTypeAttachment::Get(track).GetTrackViewType();
+        return viewType == trackedit::TrackViewType::WaveformAndSpectrogram || viewType == trackedit::TrackViewType::Spectrogram;
+    }
+};
 }

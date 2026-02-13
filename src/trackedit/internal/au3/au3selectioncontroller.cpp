@@ -8,7 +8,6 @@
 
 #include "au3-track/Track.h"
 #include "au3-time-frequency-selection/ViewInfo.h"
-#include "au3-track-selection/TrackFocus.h"
 
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/au3types.h"
@@ -955,7 +954,7 @@ void Au3SelectionController::setSelectionStartTime(secs_t time)
 
 std::pair<double, double> Au3SelectionController::frequencySelection(trackedit::TrackId trackId) const
 {
-    if (m_frequencySelection.has_value() && m_frequencySelection->trackId == static_cast<int>(trackId)) {
+    if (m_frequencySelection.has_value() && (trackId == -1 || m_frequencySelection->trackId == static_cast<int>(trackId))) {
         return { m_frequencySelection->startFrequency, m_frequencySelection->endFrequency };
     }
     return { spectrogram::SelectionInfo::UndefinedFrequency, spectrogram::SelectionInfo::UndefinedFrequency };

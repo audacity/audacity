@@ -5,6 +5,7 @@
   @file PathList.cpp
 
   Paul Licameli split from AudacityApp.cpp
+  Rewritten to use PlatformCompatibility (Qt-free)
 
 **********************************************************************/
 
@@ -13,185 +14,142 @@
 #include "PlatformCompatibility.h"
 #include "FileNames.h"
 #include "TempDirectory.h"
-#include <wx/stdpaths.h>
-#include <wx/utils.h>
 
-#if HAVE_DLFCN_H && !defined(DISABLE_DLADDR)
-#  if __linux__ && !defined(_GNU_SOURCE)
-#    define _GNU_SOURCE
-#  endif
-#  include <dlfcn.h>
-#  define HAVE_GET_LIBRARY_PATH 1
+#if defined(__linux__)
+#include <dlfcn.h>
+#endif
+
+namespace PC = PlatformCompatibility;
+
 namespace {
-wxString GetLibraryPath()
+
+#if defined(__linux__)
+// Get path to the library containing this code (for plugin search paths)
+std::string getLibraryPath()
 {
     Dl_info info;
-    // This is a GNU extension, but it's also supported on FreeBSD, OpenBSD, macOS and Solaris.
-    if (dladdr(reinterpret_cast<const void*>(GetLibraryPath), &info)) {
+    if (dladdr(reinterpret_cast<const void*>(getLibraryPath), &info)) {
         return info.dli_fname;
     }
     return {};
 }
-}
 #endif
+
+// Normalize and add path to list if not already present
+void addUniquePath(FilePaths& list, const std::string& path)
+{
+    if (path.empty()) {
+        return;
+    }
+
+    std::string normalized = PC::NormalizePath(path);
+    wxString wxpath = wxString::FromUTF8(normalized.c_str());
+
+    // Check for duplicates
+    for (const auto& existing : list) {
+        if (existing == wxpath) {
+            return;
+        }
+    }
+
+    list.push_back(wxpath);
+}
+
+// Add multiple paths from a path-separator-delimited string
+void addMultiplePaths(FilePaths& list, const std::string& pathString)
+{
+    for (const auto& p : PC::SplitSearchPath(pathString)) {
+        addUniquePath(list, p);
+    }
+}
+
+} // anonymous namespace
 
 void FileNames::InitializePathList()
 {
-    const auto programPath = PlatformCompatibility::GetExecutablePath();
+    FilePaths searchPaths;
 
-    //
-    // Paths: set search path and temp dir path
-    //
-    FilePaths audacityPathList;
-    auto& standardPaths = wxStandardPaths::Get();
+    // Get key paths
+    const std::string binDir = PC::GetExecutableDir();
+    const std::string userAppData = PC::GetUserLocalDataDir();
+    const std::string home = PC::GetHomeDir();
 
-#ifdef __WXGTK__
-    const auto portablePrefix = wxPathOnly(wxPathOnly(programPath));
+#if defined(__linux__)
+    // Linux: check for portable installation
+    std::string installPrefix;
+    const std::string portablePrefix = PC::GetParentDir(binDir);
 
-    // Make sure install prefix is set so wxStandardPath resolves paths properly
-    if (wxDirExists(portablePrefix + L"/share/audacity")) {
-        // use prefix relative to executable location to make Audacity portable
-        standardPaths.SetInstallPrefix(portablePrefix);
+    if (PC::DirectoryExists(portablePrefix + "/share/audacity")) {
+        installPrefix = portablePrefix;
     } else {
-        // fallback to hard-coded prefix set during configuration
-        standardPaths.SetInstallPrefix(wxT(INSTALL_PREFIX));
-    }
-    wxString installPrefix = standardPaths.GetInstallPrefix();
-
-    /* Search path (for plug-ins, translations etc) is (in this order):
-       * The AUDACITY_PATH environment variable
-       * The current directory
-       * The user's "~/.audacity-data" or "Portable Settings" directory
-       * The user's "~/.audacity-files" directory
-       * The "share" and "share/doc" directories in their install path */
-    wxString home = wxGetHomeDir();
-
-    wxString envTempDir = wxGetenv(wxT("TMPDIR"));
-    if (!envTempDir.empty()) {
-        /* On Unix systems, the environment variable TMPDIR may point to
-           an unusual path when /tmp and /var/tmp are not desirable. */
-        TempDirectory::SetDefaultTempDir(wxString::Format(
-                                             wxT("%s/audacity-%s"), envTempDir, wxGetUserId()));
-    } else {
-        /* On Unix systems, the default temp dir is in /var/tmp. */
-        TempDirectory::SetDefaultTempDir(wxString::Format(
-                                             wxT("/var/tmp/audacity-%s"), wxGetUserId()));
-    }
-
-    wxString pathVar = wxGetenv(wxT("AUDACITY_PATH"));
-
-    if (!pathVar.empty()) {
-        FileNames::AddMultiPathsToPathList(pathVar, audacityPathList);
-    }
-    FileNames::AddUniquePathToPathList(::wxGetCwd(), audacityPathList);
-
-    const auto progPath = wxPathOnly(programPath);
-
-    FileNames::AddUniquePathToPathList(progPath, audacityPathList);
-    // Add the path to modules:
-    FileNames::AddUniquePathToPathList(progPath + L"/lib/audacity", audacityPathList);
-
-#if !defined(__WXMSW__)
-    // On Unix systems, the common directory structure is
-    // .../bin
-    // .../lib
-    const wxString progParentPath = wxPathOnly(progPath);
-
-    if (!progParentPath.IsEmpty()) {
-        FileNames::AddUniquePathToPathList(progParentPath + L"/lib/audacity", audacityPathList);
-        FileNames::AddUniquePathToPathList(progParentPath + L"/lib", audacityPathList);
-    }
-
-#if HAVE_GET_LIBRARY_PATH
-    const wxString thisLibPath = GetLibraryPath();
-    if (!thisLibPath.IsEmpty()) {
-        FileNames::AddUniquePathToPathList(wxPathOnly(thisLibPath), audacityPathList);
-    }
-#endif
-#endif
-
-    FileNames::AddUniquePathToPathList(FileNames::DataDir(), audacityPathList);
-
-#ifdef AUDACITY_NAME
-    FileNames::AddUniquePathToPathList(wxString::Format(wxT("%s/.%s-files"),
-                                                        home, wxT(AUDACITY_NAME)),
-                                       audacityPathList);
-    FileNames::AddUniquePathToPathList(FileNames::ModulesDir(),
-                                       audacityPathList);
-    FileNames::AddUniquePathToPathList(wxString::Format(installPrefix + L"/share/%s", wxT(AUDACITY_NAME)),
-                                       audacityPathList);
-    FileNames::AddUniquePathToPathList(wxString::Format(installPrefix + L"/share/doc/%s", wxT(AUDACITY_NAME)),
-                                       audacityPathList);
-#else //AUDACITY_NAME
-    FileNames::AddUniquePathToPathList(wxString::Format(wxT("%s/.audacity-files"),
-                                                        home),
-                                       audacityPathList);
-    FileNames::AddUniquePathToPathList(FileNames::ModulesDir(),
-                                       audacityPathList);
-    FileNames::AddUniquePathToPathList(installPrefix + L"/share/audacity",
-                                       audacityPathList);
-    FileNames::AddUniquePathToPathList(installPrefix + L"/share/doc/audacity",
-                                       audacityPathList);
-#endif //AUDACITY_NAME
-
-    FileNames::AddUniquePathToPathList(installPrefix + L"/share/locale",
-                                       audacityPathList);
-
-    FileNames::AddUniquePathToPathList(wxString::Format(wxT("./locale")),
-                                       audacityPathList);
-
-#endif //__WXGTK__
-
-// JKC Bug 1220: Use path based on home directory on WXMAC
-#ifdef __WXMAC__
-    wxFileName tmpFile;
-    tmpFile.AssignHomeDir();
-    wxString tmpDirLoc = tmpFile.GetPath(wxPATH_GET_VOLUME);
+#ifdef INSTALL_PREFIX
+        installPrefix = INSTALL_PREFIX;
 #else
-    wxFileName tmpFile;
-    tmpFile.AssignTempFileName(wxT("nn"));
-    wxString tmpDirLoc = tmpFile.GetPath(wxPATH_GET_VOLUME);
-    ::wxRemoveFile(tmpFile.GetFullPath());
+        installPrefix = "/usr";
+#endif
+    }
+
+    // Add AUDACITY_PATH environment variable paths
+    addMultiplePaths(searchPaths, PC::GetEnvironmentVar("AUDACITY_PATH"));
+
+    // Current working directory
+    addUniquePath(searchPaths, PC::GetCurrentDir());
+
+    // Executable directory and lib paths
+    addUniquePath(searchPaths, binDir);
+    addUniquePath(searchPaths, binDir + "/lib/audacity");
+
+    // Parent lib directories (standard Unix layout: bin/../lib)
+    std::string binParent = PC::GetParentDir(binDir);
+    if (!binParent.empty()) {
+        addUniquePath(searchPaths, binParent + "/lib/audacity");
+        addUniquePath(searchPaths, binParent + "/lib");
+    }
+
+    // Library path (for finding modules relative to this library)
+    std::string libPath = getLibraryPath();
+    if (!libPath.empty()) {
+        addUniquePath(searchPaths, PC::GetParentDir(libPath));
+    }
+
+    // User and system data directories
+    addUniquePath(searchPaths, userAppData);
+    addUniquePath(searchPaths, home + "/.audacity-files");
+    addUniquePath(searchPaths, FileNames::ModulesDir().ToStdString());
+    addUniquePath(searchPaths, installPrefix + "/share/audacity");
+    addUniquePath(searchPaths, installPrefix + "/share/doc/audacity");
+    addUniquePath(searchPaths, installPrefix + "/share/locale");
+    addUniquePath(searchPaths, "./locale");
+
+    // Set up temp directory
+    std::string tmpDir = PC::GetEnvironmentVar("TMPDIR");
+    if (tmpDir.empty()) {
+        tmpDir = "/var/tmp";
+    }
+    TempDirectory::SetDefaultTempDir(
+        wxString::FromUTF8((tmpDir + "/audacity-" + PC::GetUserId()).c_str()));
+
+#elif defined(_WIN32)
+    // Windows: executable directory and Languages subdirectory
+    addUniquePath(searchPaths, binDir);
+    addUniquePath(searchPaths, binDir + "\\Languages");
+
+    // Set up temp directory in user local data
+    PC::MakePath(userAppData);
+    TempDirectory::SetDefaultTempDir(
+        wxString::FromUTF8((userAppData + "\\SessionData").c_str()));
+
+#elif defined(__APPLE__)
+    // macOS: executable directory and bundle Resources
+    addUniquePath(searchPaths, binDir);
+    addUniquePath(searchPaths, binDir + "/../");
+    addUniquePath(searchPaths, binDir + "/../Resources");
+
+    // Set up temp directory in Application Support (persists across reboots)
+    TempDirectory::SetDefaultTempDir(
+        wxString::FromUTF8((home + "/Library/Application Support/audacity/SessionData").c_str()));
+
 #endif
 
-    // On Mac and Windows systems, use the directory which contains Audacity.
-#ifdef __WXMSW__
-    // On Windows, the path to the Audacity program is programPath
-    const auto progPath = wxPathOnly(programPath);
-    FileNames::AddUniquePathToPathList(progPath, audacityPathList);
-    FileNames::AddUniquePathToPathList(progPath + wxT("\\Languages"), audacityPathList);
-
-    // See bug #1271 for explanation of location
-    tmpDirLoc = FileNames::MkDir(wxStandardPaths::Get().GetUserLocalDataDir());
-    TempDirectory::SetDefaultTempDir(wxString::Format(
-                                         wxT("%s\\SessionData"), tmpDirLoc));
-#endif //__WXWSW__
-
-#ifdef __WXMAC__
-    // On Mac OS X, the path to the Audacity program is programPath
-    const auto progPath = wxPathOnly(programPath);
-
-    FileNames::AddUniquePathToPathList(progPath, audacityPathList);
-    // If Audacity is a "bundle" package, then the root directory is
-    // the great-great-grandparent of the directory containing the executable.
-    //FileNames::AddUniquePathToPathList(progPath + wxT("/../../../"), audacityPathList);
-
-    // These allow for searching the "bundle"
-    FileNames::AddUniquePathToPathList(
-        progPath + wxT("/../"), audacityPathList);
-    FileNames::AddUniquePathToPathList(
-        progPath + wxT("/../Resources"), audacityPathList);
-
-    // JKC Bug 1220: Using an actual temp directory for session data on Mac was
-    // wrong because it would get cleared out on a reboot.
-    TempDirectory::SetDefaultTempDir(wxString::Format(
-                                         wxT("%s/Library/Application Support/audacity/SessionData"), tmpDirLoc));
-
-    //TempDirectory::SetDefaultTempDir( wxString::Format(
-    //   wxT("%s/audacity-%s"),
-    //   tmpDirLoc,
-    //   wxGetUserId() ) );
-#endif //__WXMAC__
-
-    FileNames::SetAudacityPathList(std::move(audacityPathList));
+    FileNames::SetAudacityPathList(std::move(searchPaths));
 }

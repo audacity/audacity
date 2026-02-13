@@ -11,6 +11,7 @@ set( SOURCES
    DownwardMeterValueProvider.h
    DynamicRangeProcessorClock.cpp
    DynamicRangeProcessorClock.h
+   DynamicRangeProcessorDummyOutputs.h
    DynamicRangeProcessorHistory.cpp
    DynamicRangeProcessorHistory.h
    DynamicRangeProcessorTypes.h

@@ -57,6 +57,7 @@ BasicUI::MessageBoxResult Au3BasicUI::DoMessageBox(const TranslatableString& mes
     muse::IInteractive::Result iret;
 
     switch (options.iconStyle) {
+    case BasicUI::Icon::None:
     case BasicUI::Icon::Information:
         iret = interactive()->infoSync("", message.Translation().ToStdString(), buttons);
         break;

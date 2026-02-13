@@ -51,6 +51,13 @@ public:
     //! @return true if successful
     virtual bool setParameterValue(EffectInstanceId instanceId, const muse::String& parameterId, double value) = 0;
 
+    //! Set string value of a parameter (for file paths, text, etc.)
+    //! @param instanceId The effect instance ID
+    //! @param parameterId The parameter identifier
+    //! @param stringValue The new string value to set (e.g., file path)
+    //! @return true if successful
+    virtual bool setParameterStringValue(EffectInstanceId instanceId, const muse::String& parameterId, const muse::String& stringValue) = 0;
+
     //! Get formatted string representation of a parameter value
     //! @param instanceId The effect instance ID
     //! @param parameterId The parameter identifier

@@ -140,6 +140,10 @@ bool EffectsProvider::loadEffect(const EffectId& effectId) const
         // If an effect is not a VST and is in m_effects, then it's a built-in effect and it's loaded already.
         return true;
     }
+    if (it->family == EffectFamily::Nyquist) {
+        // Nyquist effects are loaded on-demand like built-in effects
+        return true;
+    }
     switch (it->family) {
     case EffectFamily::AudioUnit: {
         IF_ASSERT_FAILED(audioUnitEffectsRepository()) {
@@ -285,6 +289,37 @@ void EffectsProvider::hideEffect(const RealtimeEffectStatePtr& state) const
     });
 }
 
+namespace {
+std::vector<au::trackedit::Track> trackListDifference(const std::vector<au::trackedit::Track>& a,
+                                                      const std::vector<au::trackedit::Track>& b)
+{
+    std::vector<au::trackedit::Track> result;
+    for (const au::trackedit::Track& item : a) {
+        if (std::find_if(b.begin(), b.end(), [&item](const au::trackedit::Track& other) { return item.id == other.id; }) == b.end()) {
+            result.push_back(item);
+        }
+    }
+    return result;
+}
+
+void notifyIfTracksWereAdded(au::au3::Au3Project& au3Prj, const std::vector<au::trackedit::Track>& before,
+                             au::trackedit::ITrackeditProject& trackeditPrj)
+{
+    const auto& trackList = ::TrackList::Get(au3Prj);
+    std::vector<au::trackedit::Track> tracksAfter;
+    auto it = trackList.begin();
+    while (it != trackList.end()) {
+        tracksAfter.push_back(au::au3::DomConverter::track(*it));
+        ++it;
+    }
+
+    const std::vector<au::trackedit::Track> addedTracks = trackListDifference(tracksAfter, before);
+    for (const auto& track : addedTracks) {
+        trackeditPrj.notifyAboutTrackAdded(track);
+    }
+}
+}
+
 muse::Ret EffectsProvider::performEffect(au3::Au3Project& project, Effect* effect, std::shared_ptr<EffectInstance> pInstanceEx,
                                          EffectSettings& settings)
 {
@@ -339,6 +374,9 @@ muse::Ret EffectsProvider::performEffect(au3::Au3Project& project, Effect* effec
 
             assert(pInstanceEx); // null check above
             try {
+                // Get tracklist now and compare it with after to see if some tracks were added (such as a label track being added by the beat finder analyzer).
+                const auto prj = globalContext()->currentTrackeditProject();
+                const std::vector<trackedit::Track> tracksBefore = prj->trackList();
                 if (pInstanceEx->Process(settings) == false) {
                     if (progress.cancelled()) {
                         success = make_ret(Err::EffectProcessCancelled);
@@ -346,6 +384,7 @@ muse::Ret EffectsProvider::performEffect(au3::Au3Project& project, Effect* effec
                         success = make_ret(Err::EffectProcessFailed, pInstanceEx->GetLastError());
                     }
                 }
+                notifyIfTracksWereAdded(project, tracksBefore, *prj);
             } catch (::AudacityException& e) {
                 success = make_ret(Err::EffectProcessFailed);
                 if (const auto box = dynamic_cast<MessageBoxException*>(&e)) {

@@ -4,9 +4,9 @@
 #pragma once
 
 #include "effects/effects_base/effectstypes.h"
-#include "audioplugins/iknownaudiopluginsregister.h"
-#include "modularity/ioc.h"
-#include "global/io/path.h"
+#include "framework/audioplugins/iknownaudiopluginsregister.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/global/io/path.h"
 
 class PluginProvider;
 

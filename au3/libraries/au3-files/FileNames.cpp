@@ -21,6 +21,7 @@ used throughout Audacity into this one place.
 *//********************************************************************/
 
 #include "FileNames.h"
+#include "PathList.h"
 
 #include <memory>
 
@@ -627,6 +628,10 @@ static FilePaths sAudacityPathList;
 
 const FilePaths& FileNames::AudacityPathList()
 {
+    if (sAudacityPathList.empty()) {
+        InitializePathList();
+        assert(!sAudacityPathList.empty());
+    }
     return sAudacityPathList;
 }
 

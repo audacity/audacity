@@ -77,6 +77,10 @@ if (AU_USE_SBSMS)
     add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/sbsms au3-sbsms)
 endif()
 
+if (AU_MODULE_EFFECTS_NYQUIST)
+    add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/nyquist au3-nyquist)
+endif()
+
 # Conditional third-party SDKs (must be set up before AU3 libraries)
 if (AU_MODULE_EFFECTS_LV2)
     add_subdirectory(lv2sdk)

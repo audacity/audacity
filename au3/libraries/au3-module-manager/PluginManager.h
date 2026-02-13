@@ -120,7 +120,7 @@ public:
         Iterator(PluginManager& manager, int pluginType //!< bitwise or of values in PluginType
                  );
         //! Iterates only enabled and matching effects, with family enabled too
-        Iterator(PluginManager& manager, EffectType type);
+        Iterator(PluginManager& manager, ::EffectType type);
         bool operator !=(int) const
         {
             return mIterator != mPm.mRegisteredPlugins.end();
@@ -132,7 +132,7 @@ public:
         void Advance(bool incrementing);
         const PluginManager& mPm;
         PluginMap::iterator mIterator;
-        EffectType mEffectType{ EffectTypeNone };
+        ::EffectType mEffectType{ EffectTypeNone };
         int mPluginType{ PluginTypeNone };
     };
     struct Range {
@@ -143,7 +143,7 @@ public:
 
     Range AllPlugins() { return { Iterator{ *this } }; }
     Range PluginsOfType(int type) { return { Iterator{ *this, type } }; }
-    Range EffectsOfType(EffectType type) { return { Iterator{ *this, type } }; }
+    Range EffectsOfType(::EffectType type) { return { Iterator{ *this, type } }; }
     //! @}
 
     bool IsPluginEnabled(const PluginID& ID);

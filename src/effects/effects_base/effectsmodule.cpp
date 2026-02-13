@@ -5,6 +5,7 @@
 
 #include "au3-module-manager/PluginManager.h"
 #include "au3-files/FileNames.h"
+#include "au3-files/PathList.h"
 
 #include "framework/ui/iuiactionsregister.h"
 #include "framework/interactive/iinteractiveuriregister.h"

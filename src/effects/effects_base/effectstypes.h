@@ -60,7 +60,9 @@ enum class ParameterType {
     Dropdown,      // Enumerated list of choices
     Slider,        // Continuous value with range
     Numeric,       // Numeric input field
-    ReadOnly,      // Display-only (meter, status)
+    ReadOnly,      // Display-only (meter, status, informational text)
+    Time,          // Time value with timecode formatting
+    File,          // File path with file picker
 };
 
 // Parameter metadata for auto-generated UI
@@ -92,6 +94,11 @@ struct ParameterInfo {
     // For dropdown/enumeration parameters
     std::vector<muse::String> enumValues;  // List of choice labels
     std::vector<double> enumIndices;       // Corresponding normalized values
+
+    // For file parameters
+    std::vector<muse::String> fileFilters;  // File type filters (e.g., "Nyquist Plug-in (*.ny *.NY)")
+    bool isFileSave = false;                // true for save dialog, false for open dialog
+    bool isFileMultiple = false;            // true to allow multiple file selection
 
     // Flags
     bool isReadOnly = false;
@@ -139,6 +146,7 @@ public:
         VST3,
         LV2,
         AudioUnit,
+        Nyquist,
     };
     Q_ENUM(EffectFamily)
 };
@@ -163,6 +171,7 @@ enum class EffectType {
     Analyzer,
     Generator,
     Processor,
+    Tool,
 };
 
 struct EffectMeta {

@@ -1,12 +1,17 @@
+#[[
+Nyquist plug-ins (.ny files) for Audacity.
 
-set( TARGET plug-ins )
-set( TARGET_ROOT ${topdir}/plug-ins )
+This CMakeLists.txt handles:
+1. Installing plug-ins for release builds
+2. Copying plug-ins to the build directory for development builds
+]]
 
-message( STATUS "========== Configuring ${TARGET} ==========" )
+set(TARGET plug-ins)
 
-def_vars()
+message(STATUS "========== Configuring ${TARGET} ==========")
 
-set( SOURCES
+# List of Nyquist plug-in files
+set(PLUGIN_FILES
    ShelfFilter.ny
    SpectralEditMulti.ny
    SpectralEditParametricEQ.ny
@@ -37,30 +42,50 @@ set( SOURCES
    vocoder.ny
 )
 
-foreach( source ${SOURCES} )
-   set( src "${_SRCDIR}/${source}" )
-   set( dst "${_DEST}/${TARGET}/${source}" )
+# Determine install and build destinations based on platform
+if(OS_IS_MAC)
+   # On macOS, plug-ins go in Contents/plug-ins (not Contents/Resources/plug-ins)
+   # This matches what PluginManager.cpp expects (see lines 229-238)
+   set(PLUGINS_INSTALL_DEST "${AU4_SHARE_NAME}Contents/plug-ins")
+   set(PLUGINS_BUILD_DEST "${CMAKE_BINARY_DIR}/src/app/${AU4_SHARE_NAME}Contents/plug-ins")
+elseif(OS_IS_LIN)
+   # On Linux, files go in share/audacity/plug-ins which PathList.cpp expects
+   set(PLUGINS_INSTALL_DEST "${CMAKE_INSTALL_PREFIX}/share/audacity/plug-ins")
+   set(PLUGINS_BUILD_DEST "${CMAKE_BINARY_DIR}/share/audacity/plug-ins")
+else()
+   set(PLUGINS_INSTALL_DEST "${AU4_SHARE_NAME}${AU4_INSTALL_NAME}bin/plug-ins")
+   set(PLUGINS_BUILD_DEST "${CMAKE_BINARY_DIR}/${AU4_SHARE_NAME}${AU4_INSTALL_NAME}plug-ins")
+endif()
+
+# Install plug-ins for release builds
+install(DIRECTORY
+   ${CMAKE_CURRENT_SOURCE_DIR}/
+   DESTINATION ${PLUGINS_INSTALL_DEST}
+   FILES_MATCHING
+   PATTERN "*.ny"
+   PATTERN "CMakeLists.txt" EXCLUDE
+   PATTERN ".*" EXCLUDE
+)
+
+# Copy plug-ins to build directory for development builds
+# Build list of source and output files
+foreach( plugin ${PLUGIN_FILES} )
+   set( src "${CMAKE_CURRENT_SOURCE_DIR}/${plugin}" )
+   set( dst "${PLUGINS_BUILD_DEST}/${plugin}" )
 
    add_custom_command(
       DEPENDS
          "${src}"
       COMMAND
-         ${CMAKE_COMMAND} -E make_directory "${_DEST}/${TARGET}"
+         ${CMAKE_COMMAND} -E make_directory "${PLUGINS_BUILD_DEST}"
       COMMAND
          ${CMAKE_COMMAND} -E copy "${src}" "${dst}"
       OUTPUT
          "${dst}"
    )
 
+   list( APPEND SOURCES "${src}" )
    list( APPEND OUTPUTS "${dst}" )
 endforeach()
 
 add_custom_target( ${TARGET} ALL DEPENDS ${OUTPUTS} SOURCES ${SOURCES} )
-
-if( NOT CMAKE_SYSTEM_NAME MATCHES "Darwin" )
-   if( NOT "${CMAKE_GENERATOR}" MATCHES "Visual Studio*")
-      install( DIRECTORY "${_DEST}/${TARGET}"
-               DESTINATION "${_PKGDATA}" )
-   endif()
-endif()
-

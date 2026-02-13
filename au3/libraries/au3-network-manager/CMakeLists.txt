@@ -8,7 +8,10 @@ option(USE_QT_NETWORKMANAGER "Use Qt NetworkManager instead of libcurl for HTTP 
 
 set( SOURCES
     IResponse.h
+    IResponse.cpp
     IResponseFactory.h
+
+    NetworkManagerApi.h
 
     HeadersList.h
     HeadersList.cpp

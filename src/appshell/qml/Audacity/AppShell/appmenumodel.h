@@ -133,6 +133,8 @@ private:
     muse::uicomponents::MenuItemList makeShowItems();
     muse::uicomponents::MenuItemList makeEffectsItems();
     muse::uicomponents::MenuItemList makeGeneratorItems();
+    muse::uicomponents::MenuItemList makeToolItems();
+    muse::uicomponents::MenuItemList makeAnalyzeItems();
 
     void setItemIsChecked(const QString& itemId, bool checked);
 

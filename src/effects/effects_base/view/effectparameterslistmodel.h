@@ -43,6 +43,9 @@ public:
         CurrentEnumIndexRole,
         EnumValuesRole,
         EnumIndicesRole,
+        FileFiltersRole,
+        IsFileSaveRole,
+        IsFileMultipleRole,
         IsReadOnlyRole,
         IsHiddenRole,
         IsLogarithmicRole,
@@ -62,6 +65,7 @@ public:
 
     Q_INVOKABLE void load();
     Q_INVOKABLE void setParameterValue(const QString& parameterId, double fullRangeValue);
+    Q_INVOKABLE void setParameterStringValue(const QString& parameterId, const QString& stringValue);
     Q_INVOKABLE QString getParameterValueString(int index, double normalizedValue) const; // Internal helper for getParameterValueString (not commonly used)
     Q_INVOKABLE void beginGesture(const QString& parameterId);
     Q_INVOKABLE void endGesture(const QString& parameterId);

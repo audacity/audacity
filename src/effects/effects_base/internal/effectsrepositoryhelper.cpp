@@ -21,6 +21,8 @@ constexpr EffectFamily toEffectFamily(muse::audio::AudioResourceType type)
         return EffectFamily::LV2;
     case muse::audio::AudioResourceType::AudioUnit:
         return EffectFamily::AudioUnit;
+    case muse::audio::AudioResourceType::NyquistPlugin:
+        return EffectFamily::Nyquist;
     case muse::audio::AudioResourceType::FluidSoundfont:
     case muse::audio::AudioResourceType::MusePlugin:
     case muse::audio::AudioResourceType::MuseSamplerSoundPack:

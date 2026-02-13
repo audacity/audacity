@@ -21,24 +21,18 @@ set( SOURCES
    FileNames.h
    PathList.cpp
    PathList.h
+   PlatformCompatibility.cpp
    PlatformCompatibility.h
    TempDirectory.cpp
    TempDirectory.h
    wxFileNameWrapper.h
 )
-# Add platform-specific PlatformCompatibility implementations
-if(OS_IS_WIN)
-    list(APPEND SOURCES PlatformCompatibilityWindows.cpp)
-elseif(OS_IS_LIN)
-    list(APPEND SOURCES PlatformCompatibilityLinux.cpp)
-elseif(OS_IS_MAC)
-    list(APPEND SOURCES PlatformCompatibilityMacOS.cpp)
-endif()
 
 set( LIBRARIES
    au3-exceptions-interface
    au3-preferences-interface
    wxBase
+   Qt6::Core
 )
 set(DEFINES
    PRIVATE

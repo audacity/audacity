@@ -6,6 +6,7 @@
 #include "abstracteffectviewmodel.h"
 #include "ieffectsprovider.h"
 #include "../iparameterextractorregistry.h"
+#include "context/iglobalcontext.h"
 
 namespace au::effects {
 class EffectParametersListModel;
@@ -20,9 +21,14 @@ class GeneratedEffectViewerModel : public AbstractEffectViewModel
     Q_PROPERTY(QString title READ title CONSTANT FINAL)
     Q_PROPERTY(QString noParametersMessage READ noParametersMessage CONSTANT FINAL)
     Q_PROPERTY(bool hasParameters READ hasParameters NOTIFY hasParametersChanged FINAL)
+    Q_PROPERTY(double sampleRate READ sampleRate NOTIFY sampleRateChanged FINAL)
+    Q_PROPERTY(double tempo READ tempo NOTIFY timeSignatureChanged FINAL)
+    Q_PROPERTY(int upperTimeSignature READ upperTimeSignature NOTIFY timeSignatureChanged FINAL)
+    Q_PROPERTY(int lowerTimeSignature READ lowerTimeSignature NOTIFY timeSignatureChanged FINAL)
 
     muse::Inject<IEffectsProvider> effectsProvider{ this };
     muse::Inject<IParameterExtractorRegistry> parameterExtractorRegistry{ this };
+    muse::Inject<au::context::IGlobalContext> globalContext{ this };
 
 public:
     explicit GeneratedEffectViewerModel(QObject* parent, EffectInstanceId instanceId);
@@ -34,8 +40,15 @@ public:
     QString noParametersMessage() const;
     bool hasParameters() const;
 
+    double sampleRate() const;
+    double tempo() const;
+    int upperTimeSignature() const;
+    int lowerTimeSignature() const;
+
 signals:
     void hasParametersChanged();
+    void sampleRateChanged();
+    void timeSignatureChanged();
 
 protected:
     void doInit() override;

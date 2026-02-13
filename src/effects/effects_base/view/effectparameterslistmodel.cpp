@@ -50,6 +50,8 @@ QVariant EffectParametersListModel::data(const QModelIndex& index, int role) con
         case ParameterType::Slider: return QStringLiteral("slider");
         case ParameterType::Numeric: return QStringLiteral("numeric");
         case ParameterType::ReadOnly: return QStringLiteral("readonly");
+        case ParameterType::Time: return QStringLiteral("time");
+        case ParameterType::File: return QStringLiteral("file");
         default: return QStringLiteral("unknown");
         }
     case MinValueRole:
@@ -102,6 +104,18 @@ QVariant EffectParametersListModel::data(const QModelIndex& index, int role) con
     }
     case EnumIndicesRole:
         return QVariant::fromValue(param.enumIndices);
+    case FileFiltersRole:
+    {
+        QVariantList list;
+        for (const auto& filter : param.fileFilters) {
+            list.append(filter.toQString());
+        }
+        return list;
+    }
+    case IsFileSaveRole:
+        return param.isFileSave;
+    case IsFileMultipleRole:
+        return param.isFileMultiple;
     case IsReadOnlyRole:
         return param.isReadOnly;
     case IsHiddenRole:
@@ -152,6 +166,9 @@ QHash<int, QByteArray> EffectParametersListModel::roleNames() const
         { CurrentEnumIndexRole, "currentEnumIndex" },
         { EnumValuesRole, "enumValues" },
         { EnumIndicesRole, "enumIndices" },
+        { FileFiltersRole, "fileFilters" },
+        { IsFileSaveRole, "isFileSave" },
+        { IsFileMultipleRole, "isFileMultiple" },
         { IsReadOnlyRole, "isReadOnly" },
         { IsHiddenRole, "isHidden" },
         { IsLogarithmicRole, "isLogarithmic" },
@@ -201,6 +218,14 @@ void EffectParametersListModel::setParameterValue(const QString& parameterId, do
 {
     // Update the parameter value through the provider
     parametersProvider()->setParameterValue(m_instanceId, String::fromQString(parameterId), fullRangeValue);
+
+    // The actual model update will happen via the parameterChanged signal
+}
+
+void EffectParametersListModel::setParameterStringValue(const QString& parameterId, const QString& stringValue)
+{
+    // Update the parameter string value through the provider
+    parametersProvider()->setParameterStringValue(m_instanceId, String::fromQString(parameterId), String::fromQString(stringValue));
 
     // The actual model update will happen via the parameterChanged signal
 }

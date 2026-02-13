@@ -5,7 +5,7 @@
 
 #include "../ivsteffectsrepository.h"
 #include "effects/effects_base/internal/effectsrepositoryhelper.h"
-#include "modularity/ioc.h"
+#include "framework/global/modularity/ioc.h"
 #include "au3-vst3/VST3EffectsModule.h"
 
 namespace au::effects {

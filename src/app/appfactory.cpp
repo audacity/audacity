@@ -135,6 +135,7 @@ std::shared_ptr<muse::IApplication> AppFactory::newGuiApp(const CommandLineParse
     app->addModule(new au::effects::AudioUnitEffectsModule());
     app->addModule(new au::effects::Lv2EffectsModule());
     app->addModule(new au::effects::VstEffectsModule());
+    app->addModule(new au::effects::NyquistEffectsModule());
     app->addModule(new au::context::ContextModule());
     app->addModule(new au::audio::AudioModule());
     app->addModule(new au::au3audio::Au3AudioModule());
@@ -152,7 +153,6 @@ std::shared_ptr<muse::IApplication> AppFactory::newGuiApp(const CommandLineParse
     app->addModule(new au::au3cloud::Au3CloudModule());
     app->addModule(new au::effects::EffectsModule());
     app->addModule(new au::effects::BuiltinEffectsModule());
-    app->addModule(new au::effects::NyquistEffectsModule());
 
     return app;
 }
@@ -174,6 +174,7 @@ std::shared_ptr<muse::IApplication> AppFactory::newPluginRegistrationApp(const C
     app->addModule(new au::effects::AudioUnitEffectsModule());
     app->addModule(new au::effects::Lv2EffectsModule());
     app->addModule(new au::effects::VstEffectsModule());
+    app->addModule(new au::effects::NyquistEffectsModule());
 
     return app;
 }

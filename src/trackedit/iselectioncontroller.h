@@ -96,7 +96,7 @@ public:
     virtual muse::async::Channel<secs_t> dataSelectedEndTimeChanged() const = 0;
     virtual muse::async::Channel<secs_t> dataSelectedEndTimeSelected() const = 0;
 
-    virtual std::pair<double, double> frequencySelection(trackedit::TrackId trackId) const = 0;
+    virtual std::pair<double, double> frequencySelection(trackedit::TrackId trackId = -1) const = 0;
     virtual void setFrequencySelection(trackedit::TrackId, const std::pair<double, double>& selection) = 0;
     virtual void resetFrequencySelection() = 0;
     virtual muse::async::Channel<trackedit::TrackId> frequencySelectionChanged() const = 0;

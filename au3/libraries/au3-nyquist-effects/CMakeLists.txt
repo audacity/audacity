@@ -13,7 +13,7 @@ set( SOURCES
 set( LIBRARIES
    au3-effects-interface
    au3-label-track-interface
-   au3-note-track-interface
+   #au3-note-track-interface # don't link for now as we need USE_MIDI
    au3-time-track-interface
    au3-wave-track-settings
    libnyquist

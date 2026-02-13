@@ -21,6 +21,10 @@ class wxTextCtrl;
 
 class EffectOutputTracks;
 
+namespace au::effects {
+class NyquistParameterExtractorService;
+}
+
 #define NYQUISTEFFECTS_VERSION wxT("1.0.0.0")
 #define NYQUIST_WORKER_ID wxT("Nyquist Worker")
 #define UNINITIALIZED_CONTROL ((double)99999999.99)
@@ -83,6 +87,12 @@ public:
     struct NYQUIST_EFFECTS_API GetDisplaysHook : GlobalHook<
             GetDisplaysHook,
             std::vector<WaveChannelSubViewType>(const WaveTrack*)>
+    {
+    };
+
+    struct NYQUIST_EFFECTS_API GetHasSpectralDisplayHook : GlobalHook<
+            GetHasSpectralDisplayHook,
+            bool(const WaveTrack*)>
     {
     };
 
@@ -295,4 +305,5 @@ protected:
     int mMergeClips;
 
     friend class NyquistEffectsModule;
+    friend class au::effects::NyquistParameterExtractorService;
 };
