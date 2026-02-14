@@ -230,9 +230,6 @@ MenuItem* AppMenuModel::makeEditMenu()
         makeMenuItem("action://paste"),
         makeMenuItem("action://delete"),
         makeSeparator(),
-        makeMenuItem("group-clips"),
-        makeMenuItem("ungroup-clips"),
-        makeSeparator(),
         makeMenuItem("duplicate"),
         // TODO: we should only show those trackedit actions when in the trackedit context,
         // this need some framework update to support contextual shortcuts and dynamic actions based on context
