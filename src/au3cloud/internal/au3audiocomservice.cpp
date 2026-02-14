@@ -199,6 +199,12 @@ muse::async::Promise<AudioList> Au3AudioComService::downloadAudioList(size_t aud
                     std::lock_guard guard(m_cacheMutex);
                     m_audioListCache[batchNumber] = CachedAudioItem { audioList, std::chrono::system_clock::now() };
                 }
+
+                if (cancellationContext->Cancelled()) {
+                    (void)reject(-1, "Cancelled");
+                    return;
+                }
+
                 (void)resolve(audioList);
             } else {
                 const auto* errorResponse = std::get_if<ResponseResult>(&result);

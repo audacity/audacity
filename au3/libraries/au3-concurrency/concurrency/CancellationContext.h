@@ -34,6 +34,7 @@ public:
     [[nodiscard]] static CancellationContextPtr Create();
 
     void Cancel();
+    bool Cancelled() const;
 
     using CancellableWPtr = std::weak_ptr<ICancellable>;
     void OnCancelled(CancellableWPtr cancellable);
