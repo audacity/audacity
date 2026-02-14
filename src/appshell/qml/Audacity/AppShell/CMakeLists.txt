@@ -35,6 +35,8 @@ qt_add_qml_module(appshell_qml
         PublishPage/publishtoolbarmodel.h
         windowdroparea.cpp
         windowdroparea.h
+        welcomedialogmodel.cpp
+        welcomedialogmodel.h
     QML_FILES
         AboutDialog.qml
         AlphaWelcomePopup.qml
@@ -79,6 +81,7 @@ qt_add_qml_module(appshell_qml
         shared/AccentColorsList.qml
         shared/ThemeSamplesList.qml
         shared/internal/ThemeSample.qml
+        WelcomeDialog.qml
         WindowContent.qml
     RESOURCES
         FirstLaunchSetup/resources/ClipVisuals_ClassicClips.png

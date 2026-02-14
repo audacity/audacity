@@ -82,6 +82,10 @@ qt_add_resources(appshell appshell_resources
         resources/GoogleLogo.png
         resources/FacebookLogo.png
         resources/win_opengl_buglist.json
+        resources/welcomedialog/MuseHubPromo.jpg
+        resources/welcomedialog/Audacity40Video.png
+        resources/welcomedialog/AudioDotCom_Promo.png
+        resources/welcomedialog/Audacity_Merch_Store.png
 )
 
 target_link_libraries(appshell PRIVATE

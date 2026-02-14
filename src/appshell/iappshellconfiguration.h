@@ -41,6 +41,16 @@ public:
     virtual bool hasCompletedFirstLaunchSetup() const = 0;
     virtual void setHasCompletedFirstLaunchSetup(bool has) = 0;
 
+    virtual bool welcomeDialogShowOnStartup() const = 0;
+    virtual void setWelcomeDialogShowOnStartup(bool show) = 0;
+    virtual muse::async::Notification welcomeDialogShowOnStartupChanged() const = 0;
+
+    virtual std::string welcomeDialogLastShownVersion() const = 0;
+    virtual void setWelcomeDialogLastShownVersion(const std::string& version) = 0;
+
+    virtual int welcomeDialogLastShownIndex() const = 0;
+    virtual void setWelcomeDialogLastShownIndex(int index) = 0;
+
     virtual StartupModeType startupModeType() const = 0;
     virtual void setStartupModeType(StartupModeType type) = 0;
 
@@ -57,7 +67,7 @@ public:
     virtual std::string musicXMLLicenseUrl() const = 0;
     virtual std::string musicXMLLicenseDeedUrl() const = 0;
 
-    virtual std::string museScoreVersion() const = 0;
+    virtual std::string audacityVersion() const = 0;
     virtual std::string museScoreRevision() const = 0;
 
     virtual bool isNotationNavigatorVisible() const = 0;
