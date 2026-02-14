@@ -116,6 +116,7 @@ private:
 
     muse::uicomponents::MenuItemList makeExportItems();
     muse::uicomponents::MenuItemList makeClipItems();
+    muse::uicomponents::MenuItemList makeLabelItems();
     muse::uicomponents::MenuItemList makeAudioActionsItems();
     muse::uicomponents::MenuItemList makeRegionSelectionItems();
     muse::uicomponents::MenuItemList makeAudioClipsSelectionItems();

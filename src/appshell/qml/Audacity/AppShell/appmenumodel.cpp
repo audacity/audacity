@@ -230,9 +230,6 @@ MenuItem* AppMenuModel::makeEditMenu()
         makeMenuItem("action://paste"),
         makeMenuItem("action://delete"),
         makeSeparator(),
-        makeMenuItem("group-clips"),
-        makeMenuItem("ungroup-clips"),
-        makeSeparator(),
         makeMenuItem("duplicate"),
         // TODO: we should only show those trackedit actions when in the trackedit context,
         // this need some framework update to support contextual shortcuts and dynamic actions based on context
@@ -242,14 +239,9 @@ MenuItem* AppMenuModel::makeEditMenu()
         makeMenuItem("delete-per-track-ripple"),
         makeSeparator(),
         makeMenu(TranslatableString("appshell/menu/clip", "Clip"), makeClipItems(), "menu-clip"),
+        makeMenu(TranslatableString("appshell/menu/label", "Label"), makeLabelItems(), "menu-label"),
         makeMenuItem("silence-audio"),
         makeSeparator(),
-        makeMenuItem("label-add"),
-        makeMenuItem("paste-new-label"),
-        makeMenu(TranslatableString("appshell/menu/audio-actions", "Audio actions across labels"),
-                 makeAudioActionsItems(), "menu-audio-actions", false),
-        makeSeparator(),
-        makeMenuItem("manage-labels"),
         makeMenuItem("manage-metadata"),
         makeSeparator(),
         makeMenuItem("preference-dialog", MenuItemRole::PreferencesRole)
@@ -585,6 +577,20 @@ MenuItemList AppMenuModel::makeClipItems()
         makeSeparator(),
         makeMenuItem("group-clips"),
         makeMenuItem("ungroup-clips")
+    };
+
+    return items;
+}
+
+MenuItemList AppMenuModel::makeLabelItems()
+{
+    MenuItemList items {
+        makeMenuItem("label-add"),
+        makeMenuItem("paste-new-label"),
+        makeMenu(TranslatableString("appshell/menu/audio-actions", "Audio actions across labels"),
+                 makeAudioActionsItems(), "menu-audio-actions", false),
+        makeSeparator(),
+        makeMenuItem("manage-labels"),
     };
 
     return items;
