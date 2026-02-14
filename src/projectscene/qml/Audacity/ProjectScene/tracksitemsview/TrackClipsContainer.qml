@@ -19,6 +19,7 @@ TrackItemsContainer {
     property real dbRange: -60.0
     property color trackColor
     required property int headerHeight
+    required property bool isAutomationEnabled
     required property bool isWaveformViewVisible
     required property bool isSpectrogramViewVisible
     required property double selectionStartFrequency
@@ -297,6 +298,7 @@ TrackItemsContainer {
                                 dbRange: root.dbRange
                                 isLinear: root.trackViewState.isLinear
                                 displayBounds: root.trackViewState.displayBounds
+                                isAutomationEnabled: root.isAutomationEnabled
                                 isWaveformViewVisible: root.isWaveformViewVisible
                                 isSpectrogramViewVisible: root.isSpectrogramViewVisible
                                 multiSampleEdit: clipsContainer.multiSampleEdit

@@ -25,14 +25,14 @@
 #include "view/toolbars/undoredotoolbarmodel.h"
 #include "view/toolbars/workspacestoolbarmodel.h"
 
-#include "view/trackspanel/paneltrackslistmodel.h"
 #include "view/trackspanel/addeffectmenumodel.h"
-#include "view/trackspanel/realtimeeffectlistmodel.h"
+#include "view/trackspanel/addnewtrackpopupmodel.h"
+#include "view/trackspanel/paneltrackslistmodel.h"
 #include "view/trackspanel/realtimeeffectlistitemmenumodel.h"
+#include "view/trackspanel/realtimeeffectlistmodel.h"
 #include "view/trackspanel/realtimeeffectsectionmodel.h"
 #include "view/trackspanel/trackcontextmenumodel.h"
 #include "view/trackspanel/trackitem.h"
-#include "view/trackspanel/addnewtrackpopupmodel.h"
 
 #include "view/tracksitemsview/viewtrackslistmodel.h"
 #include "view/tracksitemsview/trackclipslistmodel.h"

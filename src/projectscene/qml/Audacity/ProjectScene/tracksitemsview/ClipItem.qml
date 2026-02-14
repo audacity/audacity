@@ -8,6 +8,8 @@ import Muse.GraphicalEffects
 import Audacity.ProjectScene
 import Audacity.Playback
 import Audacity.Spectrogram
+import Audacity.UiComponents
+import Audacity.Automation
 
 Rectangle {
     id: root
@@ -16,6 +18,7 @@ Rectangle {
     property alias clipKey: waveView.clipKey
     property alias clipTime: waveView.clipTime
     property alias title: titleLabel.text
+    required property bool isAutomationEnabled
     required property bool isWaveformViewVisible
     required property bool isSpectrogramViewVisible
     property int pitch: 0
@@ -133,6 +136,12 @@ Rectangle {
 
     PlaybackStateModel {
         id: playbackState
+    }
+
+    ClipEnvelopeModel {
+        id: envelopeModel
+
+        clipKey: root.clipKey
     }
 
     // for navigating between clips
@@ -311,6 +320,7 @@ Rectangle {
         playbackState.init()
         singleClipContextMenuModel.load()
         multiClipContextMenuModel.load()
+        envelopeModel.init()
     }
 
     Component.onDestruction: {
@@ -839,6 +849,91 @@ Rectangle {
                     if (waveView.isStemPlot && hoverArea.containsMouse) {
                         // force mouse position update will update isNearSample
                         waveView.onWaveViewPositionChanged(hoverArea.mouseX, hoverArea.mouseY - header.height)
+                    }
+                }
+
+                Polyline {
+                    id: automation
+
+                    anchors.fill: waveView
+
+                    visible: root.isAutomationEnabled
+
+                    lineColor: ui.theme.extra["stroke_automation_curve"]
+                    lineWidth: 2.5
+                    pointRadius: 4
+                    ghostPointOutlineColor: ui.theme.extra["white_color"]
+                    pointOutlineColor: ui.theme.extra["black_color"]
+                    pointOutlineWidth: 1.0
+
+                    points: envelopeModel.points
+                    defaultValue: envelopeModel.defaultValue
+
+                    xRangeFrom: waveView.itemStartTime
+                    xRangeTo: waveView.itemEndTime
+
+                    yRangeFrom: envelopeModel.minValue
+                    yRangeTo: envelopeModel.maxValue
+                    yAxisInverse: false
+
+                    Component.onCompleted: {
+                        automation.init()
+                    }
+
+                    onPointMoved: function(index, x, y, completed) {
+                        // NOTE: Polyline's returned x is within [xRangeFrom..xRangeTo] boundaries but
+                        // clip's internal envelope expects time relative to clip startTime
+                        envelopeModel.setPoint(index, x - waveView.startTime, y, completed)
+                        tooltip.show(true)
+                        tooltip.gain = gainToDb(y)
+                    }
+
+                    onPointAdded: function(x, y, completed) {
+                        envelopeModel.addPoint(x, y, completed)
+                    }
+
+                    onPointRemoved: function(index, completed) {
+                        envelopeModel.removePoint(index, completed)
+                    }
+
+                    onPolylineFlattenRequested: function(y, completed) {
+                        envelopeModel.flatten(y, completed)
+                        tooltip.show(true)
+                        tooltip.gain = gainToDb(y)
+                    }
+
+                    onDragCancelled: {
+                        envelopeModel.cancelDrag()
+                        tooltip.hide(true)
+                    }
+
+                    onInteractionFinished: function() {
+                        tooltip.hide(true)
+                    }
+
+                    Item {
+                        // NOTE: fakeItem for tooltip to follow
+                        id: fake
+
+                        height: 1
+                        width: 1
+
+                        x: automation.dragX
+                        y: automation.dragY
+
+                        enabled: false // so it doesn't steal mouse events
+
+                        GainTooltip {
+                            id: tooltip
+                        }
+                    }
+
+                    function gainToDb(g) {
+                        if (g < 0.001)  // -60 dB
+                            return "-∞"
+
+                        let db = 20 * Math.log10(g)
+                        return db.toFixed(1)
                     }
                 }
             }

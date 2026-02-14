@@ -220,10 +220,6 @@ void ProjectViewState::init(const std::shared_ptr<au3::IAu3Project>& project)
         saveProjectZoomState(au3Project, zoomState);
     });
 
-    m_spectrogramToggledTracks.ch.onReceive(this, [this](auto) {
-        m_globalSpectrogramViewToggleChanged.notify();
-    });
-
     globalContext()->currentTrackeditProjectChanged().onNotify(this, [this](){
         auto prj = globalContext()->currentTrackeditProject();
         if (!prj) {
@@ -586,6 +582,20 @@ Snap ProjectViewState::getSnap() const
 muse::ValCh<Snap> ProjectViewState::snap() const
 {
     return m_snap;
+}
+
+void ProjectViewState::setAutomationEnabled(bool enabled)
+{
+    if (m_automationEnabled.val == enabled) {
+        return;
+    }
+
+    m_automationEnabled.set(enabled);
+}
+
+muse::ValCh<bool> ProjectViewState::automationEnabled() const
+{
+    return m_automationEnabled;
 }
 
 void ProjectViewState::setSplitToolEnabled(const bool enabled)

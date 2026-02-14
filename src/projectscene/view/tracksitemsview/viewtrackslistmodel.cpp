@@ -245,6 +245,13 @@ void ViewTracksListModel::load()
     viewState->verticalRulerWidth().ch.onReceive(this, [this](int) {
         emit verticalRulerWidthChanged();
     }, muse::async::Asyncable::Mode::SetReplace);
+
+    viewState->automationEnabled().ch.onReceive(this, [this](int) {
+        QModelIndex beginIndex = index(0);
+        QModelIndex lastIndex = index(static_cast<int>(m_trackList.size()) - 1);
+
+        emit dataChanged(beginIndex, lastIndex, { IsAutomationEnabledRole });
+    }, muse::async::Asyncable::Mode::SetReplace);
 }
 
 int ViewTracksListModel::rowCount(const QModelIndex&) const
@@ -310,6 +317,17 @@ QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
     case IsStereoRole:
         return track.type == au::trackedit::TrackType::Stereo;
 
+    case IsAutomationEnabledRole: {
+        const project::IAudacityProjectPtr prj = globalContext()->currentProject();
+        const IProjectViewStatePtr vs = prj ? prj->viewState() : nullptr;
+
+        if (!vs) {
+            return false;
+        }
+
+        return vs->automationEnabled().val;
+    }
+
     case IsWaveformViewVisibleRole: {
         const auto vt = getTrackViewType(globalContext()->currentProject(), track.id);
         return vt == trackedit::TrackViewType::Waveform || vt == trackedit::TrackViewType::WaveformAndSpectrogram;
@@ -357,6 +375,7 @@ QHash<int, QByteArray> ViewTracksListModel::roleNames() const
         { IsTrackAudibleRole, "isTrackAudible" },
         { IsStereoRole, "isStereo" },
         { DbRangeRole, "dbRange" },
+        { IsAutomationEnabledRole, "isAutomationEnabled" },
         { IsWaveformViewVisibleRole, "isWaveformViewVisible" },
         { IsSpectrogramViewVisibleRole, "isSpectrogramViewVisible" },
         { FrequencySelectionRole, "frequencySelection" },

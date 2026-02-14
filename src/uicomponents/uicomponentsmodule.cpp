@@ -13,6 +13,7 @@
 #include "components/timecodemodel.h"
 #include "components/bpmmodel.h"
 #include "components/frequencymodel.h"
+#include "components/polyline.h"
 
 #include "log.h"
 
@@ -40,6 +41,7 @@ void UiComponentsModule::registerUiTypes()
     qmlRegisterType<TimecodeModel>("Audacity.UiComponents", 1, 0, "TimecodeModel");
     qmlRegisterType<BPMModel>("Audacity.UiComponents", 1, 0, "BPMModel");
     qmlRegisterType<FrequencyModel>("Audacity.UiComponents", 1, 0, "FrequencyModel");
+    qmlRegisterType<Polyline>("Audacity.UiComponents", 1, 0, "Polyline");
 }
 
 void UiComponentsModule::onInit(const muse::IApplication::RunMode& mode)

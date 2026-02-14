@@ -11,6 +11,7 @@
 #include "trackedit/itrackeditconfiguration.h"
 #include "trackedit/iprojecthistory.h"
 #include "trackedit/itracksinteraction.h"
+#include "automation/iclipgaininteraction.h"
 
 #include "au3wrap/au3types.h"
 
@@ -31,6 +32,7 @@ class Au3ClipsInteraction : public IClipsInteraction, public muse::Injectable
     muse::Inject<au::trackedit::IProjectHistory> projectHistory{ this };
     muse::Inject<muse::IInteractive> interactive{ this };
     muse::Inject<ITracksInteraction> tracksInteraction{ this };
+    muse::Inject<automation::IClipGainInteraction> clipGainINteraction{ this };
 
 public:
     Au3ClipsInteraction(const muse::modularity::ContextPtr& ctx);
