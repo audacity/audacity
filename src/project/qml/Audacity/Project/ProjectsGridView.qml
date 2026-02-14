@@ -36,6 +36,7 @@ Item {
 
     property color backgroundColor: ui.theme.backgroundSecondaryColor
     property real sideMargin: 46
+    property string placeholder: ""
 
     property alias view: view
 
@@ -152,10 +153,12 @@ Item {
                     }
                 }
 
+                placeholder: root.placeholder
+
                 name: project.name
                 path: project.path ?? ""
                 suffix: project.suffix ?? ""
-                thumbnailUrl: Qt.resolvedUrl("file:" + project.thumbnailUrl) ?? ""
+                thumbnailUrl: project.thumbnailUrl ? Qt.resolvedUrl("file:" + project.thumbnailUrl) : ""
                 isCreateNew: project.isCreateNew
                 isNoResultsFound: project.isNoResultsFound
                 //isCloud: project.isCloud

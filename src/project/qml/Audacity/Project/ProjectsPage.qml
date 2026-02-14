@@ -64,7 +64,7 @@ FocusScope {
 
         anchors.fill: parent
 
-        color: ui.theme.backgroundSecondaryColor
+        color: ui.theme.backgroundTertiaryColor
     }
 
     RowLayout {
@@ -159,13 +159,19 @@ FocusScope {
             }
 
             StyledTabButton {
-                text: qsTrc("project", "My online projects")
+                text: qsTrc("project", "Cloud projects")
 
-                visible: false
-
-                navigation.name: "MyOnlineProjects"
+                navigation.name: "CloudProjects"
                 navigation.panel: navTabPanel
                 navigation.column: 2
+            }
+
+            StyledTabButton {
+                text: qsTrc("project", "Cloud audio files")
+
+                navigation.name: "CloudAudioFiles"
+                navigation.panel: navTabPanel
+                navigation.column: 3
             }
         }
 
@@ -182,7 +188,7 @@ FocusScope {
         FlatButton {
             id: refreshButton
 
-            visible: tabBar.currentIndex === 1
+            visible: tabBar.currentIndex === 1 || tabBar.currentIndex === 2
 
             navigation.panel: viewButtonsNavPanel
             navigation.order: 1
@@ -240,7 +246,7 @@ FocusScope {
                 return null
             }
 
-            return [newAndRecentComp, onlineProjectsComp][tabBar.currentIndex]
+            return [newAndRecentComp, cloudProjectsComp, cloudAudioFilesComp][tabBar.currentIndex]
         }
     }
 
@@ -270,41 +276,63 @@ FocusScope {
     }
 
     Component {
-        id: onlineProjectsComp
+        id: cloudProjectsComp
 
-        Text {
-            text: "onlineProjectsComp"
+        CloudProjectsView {
+            id: cloudProjectsView
+            anchors.fill: parent
+
+            viewType: projectsPageModel.viewType
+            searchText: searchField.searchText
+
+            backgroundColor: background.color
+            sideMargin: prv.sideMargin
+
+            navigationSection: navSec
+            navigationOrder: 5
+
+            // onCreateNewProjectRequested: {
+            //     projectsPageModel.createNewProject()
+            // }
+
+            // onOpenProjectRequested: function(projectPath, displayName) {
+            //     Qt.callLater(projectsPageModel.openProject, projectPath, displayName)
+            // }
+
+            Connections {
+                 target: refreshButton
+
+                function onClicked() {
+                    cloudProjectsView.refresh()
+                }
+            }
         }
+    }
 
-        // CloudProjectsView {
-        //     id: cloudProjectsView
-        //     anchors.fill: parent
+    Component {
+        id: cloudAudioFilesComp
 
-        //     viewType: projectsPageModel.viewType
-        //     searchText: searchField.searchText
+        CloudAudioFilesView {
+            id: cloudAudioFilesView
+            anchors.fill: parent
 
-        //     backgroundColor: background.color
-        //     sideMargin: prv.sideMargin
+            viewType: projectsPageModel.viewType
+            searchText: searchField.searchText
 
-        //     navigationSection: navSec
-        //     navigationOrder: 4
+            backgroundColor: background.color
+            sideMargin: prv.sideMargin
 
-        //     onCreateNewProjectRequested: {
-        //         projectsPageModel.createNewProject()
-        //     }
+            navigationSection: navSec
+            navigationOrder: 6
+            
+            Connections {
+                 target: refreshButton
 
-        //     onOpenProjectRequested: function(projectPath, displayName) {
-        //         Qt.callLater(projectsPageModel.openProject, projectPath, displayName)
-        //     }
-
-        //     Connections {
-        //         target: refreshButton
-
-        //         function onClicked() {
-        //             cloudProjectsView.refresh()
-        //         }
-        //     }
-        // }
+                function onClicked() {
+                    cloudAudioFilesView.refresh()
+                }
+            }
+        }
     }
 
     Rectangle {

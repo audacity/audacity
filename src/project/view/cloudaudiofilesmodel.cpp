@@ -1,7 +1,7 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#include "cloudprojectsmodel.h"
+#include "cloudaudiofilesmodel.h"
 
 #include "framework/global/dataformatter.h"
 #include "framework/global/types/datetime.h"
@@ -15,12 +15,12 @@ namespace {
 constexpr int BATCH_SIZE = 8;
 }
 
-CloudProjectsModel::CloudProjectsModel(QObject* parent)
+CloudAudioFilesModel::CloudAudioFilesModel(QObject* parent)
     : AbstractProjectsModel(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
 {
 }
 
-void CloudProjectsModel::load()
+void CloudAudioFilesModel::load()
 {
     auto onUserAuthorizedChanged = [this](bool authorized) {
         if (authorized) {
@@ -42,13 +42,13 @@ void CloudProjectsModel::load()
         onUserAuthorizedChanged(isAuthorized(std::move(authState)));
     });
 
-    connect(this, &CloudProjectsModel::desiredRowCountChanged, this, &CloudProjectsModel::loadItemsIfNecessary);
+    connect(this, &CloudAudioFilesModel::desiredRowCountChanged, this, &CloudAudioFilesModel::loadItemsIfNecessary);
 }
 
-void CloudProjectsModel::reload()
+void CloudAudioFilesModel::reload()
 {
     audioComService()->cancelRequests();
-    audioComService()->clearProjectListCache();
+    audioComService()->clearAudioListCache();
     m_isWaitingForPromise = false;
 
     beginResetModel();
@@ -65,12 +65,12 @@ void CloudProjectsModel::reload()
     setState(State::Loading);
 }
 
-CloudProjectsModel::State CloudProjectsModel::state() const
+CloudAudioFilesModel::State CloudAudioFilesModel::state() const
 {
     return m_state;
 }
 
-void CloudProjectsModel::setState(State state)
+void CloudAudioFilesModel::setState(State state)
 {
     if (m_state == state) {
         return;
@@ -80,17 +80,17 @@ void CloudProjectsModel::setState(State state)
     emit stateChanged();
 }
 
-bool CloudProjectsModel::hasMore() const
+bool CloudAudioFilesModel::hasMore() const
 {
     return m_totalItems == muse::nidx || m_items.size() < m_totalItems;
 }
 
-int CloudProjectsModel::desiredRowCount() const
+int CloudAudioFilesModel::desiredRowCount() const
 {
     return m_desiredRowCount;
 }
 
-void CloudProjectsModel::setDesiredRowCount(int count)
+void CloudAudioFilesModel::setDesiredRowCount(int count)
 {
     if (m_desiredRowCount == count) {
         return;
@@ -100,7 +100,7 @@ void CloudProjectsModel::setDesiredRowCount(int count)
     emit desiredRowCountChanged();
 }
 
-void CloudProjectsModel::loadItemsIfNecessary()
+void CloudAudioFilesModel::loadItemsIfNecessary()
 {
     if (m_isWaitingForPromise) {
         return;
@@ -115,25 +115,24 @@ void CloudProjectsModel::loadItemsIfNecessary()
 
         m_isWaitingForPromise = true;
 
-        audioComService()->downloadProjectList(BATCH_SIZE, static_cast<int>(m_items.size()) / BATCH_SIZE + 1)
-        .onResolve(this, [this](const au::au3cloud::ProjectList& projectList) {
-            if (!projectList.items.empty()) {
+        audioComService()->downloadAudioList(BATCH_SIZE, static_cast<int>(m_items.size()) / BATCH_SIZE + 1)
+        .onResolve(this, [this](const au::au3cloud::AudioList& audioFileList) {
+            if (!audioFileList.items.empty()) {
                 beginInsertRows(QModelIndex(), static_cast<int>(m_items.size()),
-                                static_cast<int>(m_items.size() + projectList.items.size()) - 1);
+                                static_cast<int>(m_items.size() + audioFileList.items.size()) - 1);
 
-                for (const au::au3cloud::ProjectList::Item& item : projectList.items) {
+                for (const au::au3cloud::AudioList::Item& item : audioFileList.items) {
                     QVariantMap obj;
 
-                    obj[NAME_KEY] = QString::fromStdString(item.name);
+                    obj[NAME_KEY] = QString::fromStdString(item.title);
                     obj[PATH_KEY] = ""; //configuration()->cloudProjectPath(item.id).toQString();
                     obj[SUFFIX_KEY] = "";
                     obj[IS_CLOUD_KEY] = true;
                     obj[CLOUD_PROJECT_ID_KEY] = QString::fromStdString(item.id);
                     obj[TIME_SINCE_MODIFIED_KEY]
                         = DataFormatter::formatTimeSince(Date::fromQDate(QDateTime::fromSecsSinceEpoch(
-                                                                             static_cast<qint64>(item.updated)).date())).toQString();
+                                                                             static_cast<qint64>(item.created)).date())).toQString();
                     obj[THUMBNAIL_URL_KEY] = "";
-                    obj[FILE_SIZE_KEY] = (item.fileSize > 0) ? DataFormatter::formatFileSize(item.fileSize).toQString() : QString();
                     obj[IS_CREATE_NEW_KEY] = false;
                     obj[IS_NO_RESULTS_FOUND_KEY] = false;
                     obj[IS_CLOUD_KEY] = true;
@@ -144,16 +143,16 @@ void CloudProjectsModel::loadItemsIfNecessary()
                 endInsertRows();
             }
 
-            m_totalItems = projectList.meta.total;
+            m_totalItems = audioFileList.meta.total;
             emit hasMoreChanged();
 
             m_isWaitingForPromise = false;
 
             loadItemsIfNecessary();
         })
-        .onReject(this, [this](int errorCode, const std::string&) {
+        .onReject(this, [this](int errCode, const std::string&) {
             m_isWaitingForPromise = false;
-            if (errorCode == -1) {
+            if (errCode == -1) {
                 return;
             }
             setState(State::Error);
@@ -163,7 +162,7 @@ void CloudProjectsModel::loadItemsIfNecessary()
     }
 }
 
-bool CloudProjectsModel::needsLoading()
+bool CloudAudioFilesModel::needsLoading()
 {
     return hasMore() && static_cast<int>(m_items.size()) < m_desiredRowCount;
 }

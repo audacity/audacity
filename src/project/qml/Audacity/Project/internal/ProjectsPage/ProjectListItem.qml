@@ -39,6 +39,8 @@ ListItemBlank {
     property real columnSpacing: 44
     property alias showBottomBorder: bottomBorder.visible
 
+    property string placeholder: ""
+
     implicitHeight: 64
 
     navigation.accessible.name: root.project.name ?? ""
@@ -69,7 +71,8 @@ ListItemBlank {
                 sourceComponent: ProjectThumbnail {
                     path: root.project.path ?? ""
                     suffix: root.project.suffix ?? ""
-                    thumbnailUrl: Qt.resolvedUrl("file:" + root.project.thumbnailUrl) ?? ""
+                    thumbnailUrl: root.project.thumbnailUrl ? Qt.resolvedUrl("file:" + root.project.thumbnailUrl) : ""
+                    placeholder: root.placeholder
                 }
 
                 layer.enabled: true
@@ -86,67 +89,67 @@ ListItemBlank {
                 horizontalAlignment: Text.AlignLeft
             }
 
-            Loader {
-                active: root.project.isCloud ?? false
+            // Loader {
+            //     active: root.project.isCloud ?? false
 
-                sourceComponent: RowLayout {
-                    visible: root.project.isCloud
+            //     sourceComponent: RowLayout {
+            //         visible: root.project.isCloud
 
-                    spacing: 24
+            //         spacing: 24
 
-                    // CloudProjectStatusWatcher {
-                    //     id: cloudProjectStatusWatcher
-                    // }
+            //         // CloudProjectStatusWatcher {
+            //         //     id: cloudProjectStatusWatcher
+            //         // }
 
-                    Component.onCompleted: {
-                        cloudProjectStatusWatcher.load(root.project.projectId)
-                    }
+            //         Component.onCompleted: {
+            //             cloudProjectStatusWatcher.load(root.project.projectId)
+            //         }
 
-                    ProgressBar {
-                        Layout.preferredWidth: 118
-                        Layout.preferredHeight: 16
+            //         ProgressBar {
+            //             Layout.preferredWidth: 118
+            //             Layout.preferredHeight: 16
 
-                        visible: cloudProjectStatusWatcher.isProgress
+            //             visible: cloudProjectStatusWatcher.isProgress
 
-                        from: 0
-                        to: cloudProjectStatusWatcher.progressTotal
-                        value: cloudProjectStatusWatcher.progressCurrent
+            //             from: 0
+            //             to: cloudProjectStatusWatcher.progressTotal
+            //             value: cloudProjectStatusWatcher.progressCurrent
 
-                        navigation.panel: root.navigation.panel
-                        navigation.row: root.navigation.row
-                        navigation.column: 2
-                        navigation.onActiveChanged: {
-                            if (navigation.active) {
-                                root.scrollIntoView()
-                            }
-                        }
-                    }
+            //             navigation.panel: root.navigation.panel
+            //             navigation.row: root.navigation.row
+            //             navigation.column: 2
+            //             navigation.onActiveChanged: {
+            //                 if (navigation.active) {
+            //                     root.scrollIntoView()
+            //                 }
+            //             }
+            //         }
 
-                    CloudProjectIndicatorButton {
-                        Layout.alignment: Qt.AlignTrailing | Qt.AlignVCenter
+            //         CloudProjectIndicatorButton {
+            //             Layout.alignment: Qt.AlignTrailing | Qt.AlignVCenter
 
-                        isProgress: cloudProjectStatusWatcher.isProgress
-                        isDownloadedAndUpToDate: cloudProjectStatusWatcher.isDownloadedAndUpToDate
+            //             isProgress: cloudProjectStatusWatcher.isProgress
+            //             isDownloadedAndUpToDate: cloudProjectStatusWatcher.isDownloadedAndUpToDate
 
-                        navigation.panel: root.navigation.panel
-                        navigation.row: root.navigation.row
-                        navigation.column: 3
-                        navigation.onActiveChanged: {
-                            if (navigation.active) {
-                                root.scrollIntoView()
-                            }
-                        }
+            //             navigation.panel: root.navigation.panel
+            //             navigation.row: root.navigation.row
+            //             navigation.column: 3
+            //             navigation.onActiveChanged: {
+            //                 if (navigation.active) {
+            //                     root.scrollIntoView()
+            //                 }
+            //             }
 
-                        onClicked: {
-                            if (isProgress) {
-                                cloudProjectStatusWatcher.cancel()
-                            } else {
-                                root.clicked(null)
-                            }
-                        }
-                    }
-                }
-            }
+            //             onClicked: {
+            //                 if (isProgress) {
+            //                     cloudProjectStatusWatcher.cancel()
+            //                 } else {
+            //                     root.clicked(null)
+            //                 }
+            //             }
+            //         }
+            //     }
+            // }
         }
 
         Repeater {

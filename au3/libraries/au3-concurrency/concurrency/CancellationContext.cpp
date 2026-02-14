@@ -43,6 +43,11 @@ void CancellationContext::Cancel()
     });
 }
 
+bool CancellationContext::Cancelled() const
+{
+    return mCancelled.load(std::memory_order_acquire);
+}
+
 void CancellationContext::OnCancelled(CancellableWPtr cancellable)
 {
     auto locked = cancellable.lock();

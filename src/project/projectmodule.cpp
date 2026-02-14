@@ -29,21 +29,17 @@
 #include "internal/projectconfiguration.h"
 #include "internal/projectuiactions.h"
 #include "internal/thumbnailcreator.h"
-#include "internal/projectautosaver.h"
 #include "internal/au3/au3metadata.h"
-
-#include "context/iglobalcontext.h"
-#include "internal/audacityproject.h"
 
 #include "view/projectpropertiesmodel.h"
 #include "view/projectspagemodel.h"
 #include "view/recentprojectsmodel.h"
-#include "internal/opensaveprojectscenario.h"
 #include "view/cloudprojectsmodel.h"
-#include "view/cloudprojectstatuswatcher.h"
+#include "view/cloudaudiofilesmodel.h"
 #include "view/projectthumbnailloader.h"
 #include "view/pixmapprojectthumbnailview.h"
 #include "view/newprojectmodel.h"
+#include "internal/opensaveprojectscenario.h"
 
 #ifdef Q_OS_MAC
 #include "internal/platform/macos/macosrecentfilescontroller.h"
@@ -117,6 +113,7 @@ void ProjectModule::registerUiTypes()
                                                       "Not creatable as it is an abstract type");
     qmlRegisterType<RecentProjectsModel>("Audacity.Project", 1, 0, "RecentProjectsModel");
     qmlRegisterType<CloudProjectsModel>("Audacity.Project", 1, 0, "CloudProjectsModel");
+    qmlRegisterType<CloudAudioFilesModel>("Audacity.Project", 1, 0, "CloudAudioFilesModel");
     qmlRegisterType<NewProjectModel>("Audacity.Project", 1, 0, "NewProjectModel");
     qmlRegisterType<ProjectThumbnailLoader>("Audacity.Project", 1, 0, "ProjectThumbnailLoader");
     qmlRegisterType<PixmapProjectThumbnailView>("Audacity.Project", 1, 0, "PixmapProjectThumbnailView");

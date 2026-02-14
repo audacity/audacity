@@ -31,6 +31,7 @@ Item {
     property string path: ""
     property string suffix: ""
     property string thumbnailUrl: ""
+    property string placeholder: ""
 
     ProjectThumbnailLoader {
         id: thumbnailLoader
@@ -72,18 +73,17 @@ Item {
 
             Rectangle {
                 anchors.fill: parent
-                color: ui.theme.extra["white_color"]
+                color: ui.theme.backgroundSecondaryColor
 
                 Image {
                     anchors.centerIn: parent
 
-                    width: 80/172 * parent.width
-                    height: 110/80 * width
+                    width: parent.width / 2
 
                     source: {
                         switch (root.suffix) {
                         default:
-                            return "qrc:/resources/Placeholder_Other.png"
+                            return root.placeholder || "qrc:/resources/ProjectPlaceholder.svg"
                         }
                     }
 

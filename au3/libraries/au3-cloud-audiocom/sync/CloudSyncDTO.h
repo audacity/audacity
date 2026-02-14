@@ -15,6 +15,7 @@
 #include <string_view>
 #include <optional>
 #include <unordered_set>
+#include <variant>
 #include <vector>
 #include <memory>
 
@@ -133,6 +134,53 @@ struct PaginatedProjectsResponse final
     PaginationInfo Pagination;
 }; // struct PaginatedProjectsResponse
 
+struct CloudAudioInfo final
+{
+    std::string Id;
+
+    std::string Username;
+    std::string AuthorName;
+    std::string Slug;
+    std::string Title;
+    std::vector<std::string> Tags;
+
+    int64_t Created {};
+}; // struct CloudAudioInfo
+
+struct CloudAudioFullInfo final
+{
+    std::string Id;
+
+    std::string Username;
+    std::string AuthorName;
+    std::string AuthorId;
+    std::string Slug;
+    std::string Title;
+    std::vector<std::string> Tags;
+
+    bool IsDownloadable {};
+    int64_t Created {};
+}; // struct CloudAudioFullInfo
+
+struct CloudAudioDownloadInfoItem final
+{
+    std::string Format;
+    std::string Url;
+    int64_t Size {};
+    bool IsSource {};
+}; // struct CloudAudioDownloadInfoItem
+
+struct CloudAudioDownloadInfo final
+{
+    std::vector<CloudAudioDownloadInfoItem> Items;
+}; // struct CloudAudioDownloadInfo
+
+struct PaginatedAudioResponse final
+{
+    std::vector<CloudAudioInfo> Items;
+    PaginationInfo Pagination;
+}; // struct PaginatedAudioResponse
+
 struct NetworkStats final
 {
     int64_t Files {};
@@ -141,6 +189,53 @@ struct NetworkStats final
     int64_t Mixes {};
     bool IsDownload {};
 }; // struct NetworkStats
+
+enum class TaskAction
+{
+    OpenAudio,
+    OpenProject,
+    Unknown
+};
+
+enum class TaskStatus
+{
+    Pending,
+    Started,
+    Success,
+    Failed,
+    Unknown
+};
+
+struct ProjectOpenTaskParameters final
+{
+    std::string ProjectId;
+    std::string SnapshotId;
+}; // struct ProjectOpenTaskParameters
+
+struct AudioOpenTaskParameters final
+{
+    std::string AudioId;
+}; // struct AudioOpenTaskParameters
+
+struct AppTask final {
+    std::string Id;
+    TaskStatus Status;
+    TaskAction Action;
+    int64_t Created {};
+    std::variant<ProjectOpenTaskParameters, AudioOpenTaskParameters> Parameters;
+}; // struct AppTask
+
+struct PollingInfo final
+{
+    int IntervalSeconds { 10 };
+    bool Stop { false };
+}; // struct PollingInfo
+
+struct AppTaskPollResponse final
+{
+    PollingInfo Polling;
+    std::vector<AppTask> Tasks;
+}; // struct AppTaskPollResponse
 
 std::string Serialize(const ProjectForm& form);
 
@@ -152,11 +247,26 @@ DeserializeCreateSnapshotResponse(const std::string& data);
 std::optional<PaginatedProjectsResponse>
 DeserializePaginatedProjectsResponse(const std::string& data);
 
+// Audio
+std::optional<PaginatedAudioResponse>
+DeserializePaginatedAudioResponse(const std::string& data);
+
+std::optional<CloudAudioDownloadInfo>
+DeserializeCloudAudioDownloadInfo(const std::string& data);
+
+std::optional<CloudAudioInfo> DeserializeCloudAudioInfo(const std::string& data);
+std::optional<CloudAudioFullInfo> DeserializeCloudAudioFullInfo(const std::string& data);
+
 std::optional<ProjectInfo> DeserializeProjectInfo(const std::string& data);
 std::optional<SnapshotInfo> DeserializeSnapshotInfo(const std::string& data);
+
+std::optional<AppTaskPollResponse> DeserializeAppTaskPollResponse(const std::string& data);
 
 std::string Serialize(NetworkStats stats);
 
 CLOUD_AUDIOCOM_API wxString
 MakeSafeProjectPath(const wxString& rootDir, const wxString& projectName);
+
+CLOUD_AUDIOCOM_API wxString
+MakeSafeFilePath(const wxString& rootDir, const wxString& fileName, const wxString& fileExtension);
 } // namespace audacity::cloud::audiocom::sync

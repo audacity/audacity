@@ -24,7 +24,7 @@ void Au3CloudService::init()
 {
     auto& serviceConfig = audacity::cloud::audiocom::GetServiceConfig();
     m_replyHandler = new OAuthHttpServerReplyHandler(iocContext(), this);
-    m_replyHandler->setRedirectUrl(QUrl(serviceConfig.GetOAuthRedirectURL().c_str()));
+    m_replyHandler->setRedirectUrl(QUrl(serviceConfig.GetTourPage().c_str()));
     connect(m_replyHandler, &OAuthHttpServerReplyHandler::callbackReceived,
             this, [this](const QVariantMap& data) {
         // Extract authorization code from callback
