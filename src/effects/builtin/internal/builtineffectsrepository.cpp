@@ -39,6 +39,7 @@
 #include "dynamics/limiter/limitersettingmodel.h"
 #include "normalize/normalizeeffect.h"
 #include "normalize/normalizeviewmodel.h"
+#include "removedcoffset/removedcoffseteffect.h"
 #include "tonegen/chirpeffect.h"
 #include "tonegen/toneeffect.h"
 #include "reverb/reverbeffect.h"
@@ -86,6 +87,7 @@ void BuiltinEffectsRepository::preInit()
     static BuiltinEffectsModule::Registration< GraphicEq > regGraphicEq;
     static BuiltinEffectsModule::Registration< ClickRemovalEffect > regClickRemoval;
     static BuiltinEffectsModule::Registration< NormalizeEffect > regNormalize;
+    static BuiltinEffectsModule::Registration< RemoveDCOffsetEffect > regRemoveDCOffset;
     static BuiltinEffectsModule::Registration< ChirpEffect > regChirp;
     static BuiltinEffectsModule::Registration< ToneEffect > regTone;
     static BuiltinEffectsModule::Registration< ReverbEffect > regReverb;

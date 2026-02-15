@@ -77,6 +77,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/normalize/normalizeviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/normalize/normalizeviewmodel.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/removedcoffset/removedcoffseteffect.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/removedcoffset/removedcoffseteffect.h
+
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/timeline/meters/abstractdbmetermodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/timeline/meters/abstractdbmetermodel.h
     ${CMAKE_CURRENT_LIST_DIR}/dynamics/timeline/meters/compressiondbmetermodel.cpp
