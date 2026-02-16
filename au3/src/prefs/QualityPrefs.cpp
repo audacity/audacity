@@ -103,6 +103,17 @@ void QualityPrefs::PopulateOrExchange(ShuttleGui& S)
         S.EndMultiColumn();
     }
     S.EndStatic();
+    
+    S.StartStatic(XO("Project Storage"));
+    {
+        S.StartMultiColumn(2);
+        {
+            S.TieChoice(XXO("Project &Compression:"),
+                        QualitySettings::ProjectCompressionSetting);
+        }
+        S.EndMultiColumn();
+    }
+    S.EndStatic();
     S.EndScroller();
 }
 

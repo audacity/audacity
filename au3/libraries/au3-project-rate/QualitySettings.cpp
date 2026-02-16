@@ -39,3 +39,12 @@ sampleFormat QualitySettings::SampleFormatChoice()
 {
     return SampleFormatSetting.ReadEnum();
 }
+
+EnumSetting< QualitySettings::CompressionMethod > QualitySettings::ProjectCompressionSetting{
+    L"/Quality/ProjectCompression",
+    {
+        { L"None", XO("None (lossless)") },
+        { L"WavPack", XO("WavPack (lossless)") }
+    },
+    0, // None
+};

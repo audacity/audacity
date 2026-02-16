@@ -23,6 +23,8 @@ Paul Licameli -- split from SampleBlock.cpp and SampleBlock.h
 #include "au3-track/UndoTracks.h"
 #include "au3-wave-track/WaveTrack.h"
 #include "au3-wave-track/WaveTrackUtilities.h"
+#include "au3-project-rate/QualitySettings.h"
+#include "WavPackCompressor.h"
 
 #include "au3-sentry-reporting/SentryHelper.h"
 #include <wx/log.h>
@@ -112,6 +114,7 @@ private:
     size_t mSampleBytes;
     size_t mSampleCount;
     sampleFormat mSampleFormat;
+    int mComprType{ 0 };
 
     ArrayOf<char> mSummary256;
     ArrayOf<char> mSummary64k;
@@ -329,6 +332,7 @@ SqliteSampleBlock::SqliteSampleBlock(
     mSumMin = 0.0;
     mSumMax = 0.0;
     mSumRms = 0.0;
+    mComprType = 0;
 }
 
 SqliteSampleBlock::~SqliteSampleBlock()
@@ -412,7 +416,7 @@ size_t SqliteSampleBlock::DoGetSamples(samplePtr dest,
 
     // Prepare and cache statement...automatically finalized at DB close
     sqlite3_stmt* stmt = Conn()->Prepare(DBConnection::GetSamples,
-                                         "SELECT samples FROM sampleblocks WHERE blockid = ?1;");
+                                         "SELECT samples, compr_type FROM sampleblocks WHERE blockid = ?1;");
 
     return GetBlob(dest,
                    destformat,
@@ -615,6 +619,21 @@ size_t SqliteSampleBlock::GetBlob(void* dest,
     // Retrieve returned data
     samplePtr src = (samplePtr)sqlite3_column_blob(stmt, 0);
     size_t blobbytes = (size_t)sqlite3_column_bytes(stmt, 0);
+    int comprType = sqlite3_column_int(stmt, 1);
+
+    std::vector<uint8_t> decompressedData;
+    if (comprType == 1) { // WavPack
+        auto decompressed = audacity::project::WavPackDecompress(src, blobbytes);
+        if (decompressed) {
+            decompressedData = std::move(decompressed->data);
+            src = (samplePtr)decompressedData.data();
+            blobbytes = decompressedData.size();
+        } else {
+            // Handle error? For now, we'll just continue and it will likely result in silent/garbage data or a crash later
+            // Throwing might be better
+            Conn()->ThrowException(false);
+        }
+    }
 
     srcoffset = std::min(srcoffset, blobbytes);
     minbytes = std::min(srcbytes, blobbytes - srcoffset);
@@ -695,7 +714,7 @@ void SqliteSampleBlock::Load(SampleBlockID sbid)
     // Prepare and cache statement...automatically finalized at DB close
     sqlite3_stmt* stmt = Conn()->Prepare(DBConnection::LoadSampleBlock,
                                          "SELECT sampleformat, summin, summax, sumrms,"
-                                         "       length(samples)"
+                                         "       length(samples), compr_type, sample_count"
                                          "  FROM sampleblocks WHERE blockid = ?1;");
 
     // Bind statement parameters
@@ -732,7 +751,12 @@ void SqliteSampleBlock::Load(SampleBlockID sbid)
     mSumMax = sqlite3_column_double(stmt, 2);
     mSumRms = sqlite3_column_double(stmt, 3);
     mSampleBytes = sqlite3_column_int(stmt, 4);
-    mSampleCount = mSampleBytes / SAMPLE_SIZE(mSampleFormat);
+    mComprType = sqlite3_column_int(stmt, 5);
+    if (sqlite3_column_type(stmt, 6) != SQLITE_NULL) {
+        mSampleCount = (size_t)sqlite3_column_int64(stmt, 6);
+    } else {
+        mSampleCount = mSampleBytes / SAMPLE_SIZE(mSampleFormat);
+    }
 
     // Clear statement bindings and rewind statement
     sqlite3_clear_bindings(stmt);
@@ -749,11 +773,23 @@ void SqliteSampleBlock::Commit(Sizes sizes)
     auto db = DB();
     int rc;
 
+    mComprType = 0;
+    std::vector<uint8_t> compressed;
+    if (QualitySettings::ProjectCompressionSetting.ReadEnum() == QualitySettings::CompressionMethod::WavPack) {
+        compressed = audacity::project::WavPackCompress(mSamples.get(), mSampleCount, mSampleFormat);
+        if (!compressed.empty()) {
+            mComprType = 1;
+        }
+    }
+
+    const void* sampleData = mComprType == 1 ? compressed.data() : mSamples.get();
+    size_t sampleDataSize = mComprType == 1 ? compressed.size() : mSampleBytes;
+
     // Prepare and cache statement...automatically finalized at DB close
     sqlite3_stmt* stmt = Conn()->Prepare(DBConnection::InsertSampleBlock,
                                          "INSERT INTO sampleblocks (sampleformat, summin, summax, sumrms,"
-                                         "                          summary256, summary64k, samples)"
-                                         "                         VALUES(?1,?2,?3,?4,?5,?6,?7);");
+                                         "                          summary256, summary64k, samples, compr_type, sample_count)"
+                                         "                         VALUES(?1,?2,?3,?4,?5,?6,?7,?8,?9);");
 
     // Bind statement parameters
     // Might return SQLITE_MISUSE which means it's our mistake that we violated
@@ -764,7 +800,9 @@ void SqliteSampleBlock::Commit(Sizes sizes)
         || sqlite3_bind_double(stmt, 4, mSumRms)
         || sqlite3_bind_blob(stmt, 5, mSummary256.get(), mSummary256Bytes, SQLITE_STATIC)
         || sqlite3_bind_blob(stmt, 6, mSummary64k.get(), mSummary64kBytes, SQLITE_STATIC)
-        || sqlite3_bind_blob(stmt, 7, mSamples.get(), mSampleBytes, SQLITE_STATIC)) {
+        || sqlite3_bind_blob(stmt, 7, sampleData, sampleDataSize, SQLITE_STATIC)
+        || sqlite3_bind_int(stmt, 8, mComprType)
+        || sqlite3_bind_int64(stmt, 9, (sqlite3_int64)mSampleCount)) {
         ADD_EXCEPTION_CONTEXT(
             "sqlite3.rc", std::to_string(sqlite3_errcode(Conn()->DB())));
         ADD_EXCEPTION_CONTEXT("sqlite3.context", "SqliteSampleBlock::Commit::bind");

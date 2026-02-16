@@ -20,6 +20,12 @@ namespace QualitySettings {
 extern PROJECT_RATE_API IntSetting DefaultSampleRate;
 extern PROJECT_RATE_API EnumSetting< sampleFormat > SampleFormatSetting;
 extern PROJECT_RATE_API sampleFormat SampleFormatChoice();
+
+enum class CompressionMethod : int {
+    None = 0,
+    WavPack = 1
+};
+extern PROJECT_RATE_API EnumSetting< CompressionMethod > ProjectCompressionSetting;
 }
 
 #endif

@@ -165,7 +165,9 @@ static const char* ProjectFileSchema
       "  sumrms               REAL,"
       "  summary256           BLOB,"
       "  summary64k           BLOB,"
-      "  samples              BLOB"
+      "  samples              BLOB,"
+      "  compr_type           INTEGER DEFAULT 0,"
+      "  sample_count         INTEGER"
       ");";
 
 class SQLiteBlobStream final
@@ -742,6 +744,28 @@ bool ProjectFileIO::CheckVersion()
     if (wxStrtoul<char**>(result, nullptr, 10) != ProjectFileID) {
         SetError(XO("This is not an Audacity project file"));
         return false;
+    }
+
+    // Check if compr_type column exists in sampleblocks (Migration for older 4.0 alpha/dev projects)
+    if (GetValue("SELECT count(*) FROM pragma_table_info('sampleblocks') WHERE name='compr_type';", result)) {
+        if (wxStrtol<char**>(result, nullptr, 10) == 0) {
+            if (!Exec("ALTER TABLE sampleblocks ADD COLUMN compr_type INTEGER DEFAULT 0;", nullptr)) {
+                return false;
+            }
+        }
+    }
+
+    // Check if sample_count column exists (Migration for older 4.0 alpha/dev projects)
+    if (GetValue("SELECT count(*) FROM pragma_table_info('sampleblocks') WHERE name='sample_count';", result)) {
+        if (wxStrtol<char**>(result, nullptr, 10) == 0) {
+            if (!Exec("ALTER TABLE sampleblocks ADD COLUMN sample_count INTEGER;", nullptr)) {
+                return false;
+            }
+            // Populate sample_count for existing blocks: (sampleformat >> 16) & 255 is the sample size
+            if (!Exec("UPDATE sampleblocks SET sample_count = length(samples) / ((sampleformat >> 16) & 255) WHERE sample_count IS NULL;", nullptr)) {
+                return false;
+            }
+        }
     }
 
     // Get the project file version

@@ -19,6 +19,8 @@ set( SOURCES
    ProjectSerializer.cpp
    ProjectSerializer.h
    SqliteSampleBlock.cpp
+   WavPackCompressor.cpp
+   WavPackCompressor.h
 )
 
 set( LIBRARIES
@@ -34,10 +36,11 @@ list( APPEND LIBRARIES
    au3-sentry-reporting-interface
 )
 
-# Only this library needs sqlite, so make the dependency private
+# Only this library needs sqlite and wavpack, so make the dependency private
 list( APPEND LIBRARIES
    PRIVATE
       au3-sqlite-helpers-interface
+      wavpack::wavpack
 )
 
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
