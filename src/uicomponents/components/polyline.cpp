@@ -16,6 +16,9 @@ namespace {
 constexpr double MOVE_THRESHOLD = 3.0;
 constexpr double EPSILON = 1e-12;
 
+static constexpr int INVALID_POINT_IDX = -1;
+static constexpr int PENDING_POINT_IDX = -2;
+
 static inline qreal toPxX(const QQuickItem* item, qreal xN)
 {
     return xN * item->width();
@@ -278,6 +281,36 @@ void Polyline::setPoints(const QVector<QPointF>& pts)
     if (m_points.isEmpty()) {
         m_baselineN = normalizedFromDomain(QPointF(m_xFrom, m_defaultValue)).y();
         emit baselineNChanged();
+    }
+
+    // if there's pending point, find its index and mark as ready for drag
+    if (m_pressed && m_pressedPointIndex == PENDING_POINT_IDX && m_pressedOnLine) {
+        if (width() > 0 && height() > 0 && !m_points.isEmpty()) {
+            const auto ghostPoint = ghostPointToPolylinePx(m_pressPx);
+
+            QPointF pN(clamp01(ghostPoint.point.x() / width()),
+                       1.0 - clamp01(ghostPoint.point.y() / height()));
+
+            const QPointF targetDomain = domainFromNormalized(pN);
+
+            int bestIdx = INVALID_POINT_IDX;
+            double bestScore = std::numeric_limits<double>::max();
+
+            for (int i = 0; i < m_points.size(); ++i) {
+                const double dx = std::abs(m_points[i].x() - targetDomain.x());
+                const double dy = std::abs(m_points[i].y() - targetDomain.y());
+                const double score = dx * 1000.0 + dy;
+                if (score < bestScore) {
+                    bestScore = score;
+                    bestIdx = i;
+                }
+            }
+
+            if (bestIdx >= 0) {
+                m_pressedOnPoint = true;
+                m_pressedPointIndex = bestIdx;
+            }
+        }
     }
 
     rebuildVisiblePoints();
@@ -579,7 +612,7 @@ void Polyline::rebuildVisiblePoints()
 
     // left boundary (synthetic)
     m_pointsNVisible.push_back(QPointF(-0.1, normY(yAt0)));
-    m_visibleToDomainIndex.push_back(-1);
+    m_visibleToDomainIndex.push_back(INVALID_POINT_IDX);
 
     // interior real points
     for (const auto& it : sortedPointsWithIndexes) {
@@ -594,7 +627,7 @@ void Polyline::rebuildVisiblePoints()
 
     // right boundary (synthetic)
     m_pointsNVisible.push_back(QPointF(1.1, normY(yAt1)));
-    m_visibleToDomainIndex.push_back(-1);
+    m_visibleToDomainIndex.push_back(INVALID_POINT_IDX);
 
     updateActivePoint();
     update();
@@ -669,7 +702,7 @@ int Polyline::pointIndexAtPx(const QPointF& px) const
 {
     // search in visible points, skip synthetic boundary points
     for (int i = 0; i < m_pointsNVisible.size(); ++i) {
-        const int domainIdx = (i < m_visibleToDomainIndex.size()) ? m_visibleToDomainIndex[i] : -1;
+        const int domainIdx = (i < m_visibleToDomainIndex.size()) ? m_visibleToDomainIndex[i] : INVALID_POINT_IDX;
         if (domainIdx < 0) {
             continue;
         }
@@ -684,7 +717,7 @@ int Polyline::pointIndexAtPx(const QPointF& px) const
         }
     }
 
-    return -1;
+    return INVALID_POINT_IDX;
 }
 
 GhostPoint Polyline::ghostPointToPolylinePx(const QPointF& px) const
@@ -724,7 +757,7 @@ void Polyline::resetGestureState()
     m_pressed = false;
     m_pressedOnLine = false;
     m_pressedOnPoint = false;
-    m_pressedPointIndex = -1;
+    m_pressedPointIndex = INVALID_POINT_IDX;
     m_draggingLine = false;
 
     m_movedSincePress = false;
@@ -788,7 +821,7 @@ void Polyline::paint(QPainter* painter)
         const QPointF c(toPxX(this, pN.x()), toPxY(this, pN.y()));
 
         const int domainIdx
-            =(i < m_visibleToDomainIndex.size()) ? m_visibleToDomainIndex[i] : -1;
+            =(i < m_visibleToDomainIndex.size()) ? m_visibleToDomainIndex[i] : INVALID_POINT_IDX;
         const bool isHovered = (domainIdx >= 0 && domainIdx == hoveredIndex);
         const qreal radius = isHovered ? (m_pointRadius + 1.0) : m_pointRadius;
 
@@ -906,7 +939,19 @@ void Polyline::mousePressEvent(QMouseEvent* e)
 
     if (onLine) {
         m_pressedOnLine = true;
-        m_pressBaselineN = m_baselineN;
+        m_pressedPointIndex = PENDING_POINT_IDX;
+        m_pressedOnPoint = false;
+
+        if (width() > 0 && height() > 0) {
+            const auto ghostPoint = ghostPointToPolylinePx(e->position());
+
+            QPointF pN(clamp01(ghostPoint.point.x() / width()),
+                       1.0 - clamp01(ghostPoint.point.y() / height()));
+
+            const QPointF pDomain = domainFromNormalized(pN);
+            emit pointAdded(pDomain.x(), pDomain.y(), /*completed*/ true);
+        }
+
         updateActivePoint();
         return;
     }
@@ -974,25 +1019,10 @@ void Polyline::mouseReleaseEvent(QMouseEvent* e)
 
     // remove point
     if (isClick && m_pressedOnPoint && m_pressedPointIndex >= 0) {
-        emit pointRemoved(m_pressedPointIndex, /*completed*/ true);
-        emit interactionFinished();
-        resetGestureState();
-        return;
-    }
-
-    // add point
-    if (isClick && m_pressedOnLine) {
-        if (width() > 0 && height() > 0) {
-            const auto proj = ghostPointToPolylinePx(rel);
-
-            QPointF pN(clamp01(proj.point.x() / width()),
-                       1.0 - clamp01(proj.point.y() / height()));
-
-            const QPointF pDomain = domainFromNormalized(pN);
-            emit pointAdded(pDomain.x(), pDomain.y(), /*completed*/ true);
-            emit interactionFinished();
+        if (!m_pressedOnLine) {
+            emit pointRemoved(m_pressedPointIndex, /*completed*/ true);
         }
-
+        emit interactionFinished();
         resetGestureState();
         return;
     }
