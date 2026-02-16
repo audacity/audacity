@@ -46,7 +46,9 @@
 #include "importexport/import/importermodule.h"
 #include "importexport/export/exportermodule.h"
 #include "importexport/labels/labelsmodule.h"
+#ifdef AU_BUILD_CLOUD_AUDIOCOM
 #include "au3cloud/au3cloudmodule.h"
+#endif
 
 #ifdef AU_MODULE_EFFECTS_LV2
 #include "effects/lv2/lv2effectsmodule.h"
@@ -149,7 +151,9 @@ std::shared_ptr<muse::IApplication> AppFactory::newGuiApp(const CommandLineParse
     app->addModule(new au::importexport::ImporterModule());
     app->addModule(new au::importexport::LabelsModule());
     app->addModule(new au::au3::Au3WrapModule());
+#ifdef AU_BUILD_CLOUD_AUDIOCOM
     app->addModule(new au::au3cloud::Au3CloudModule());
+#endif
     app->addModule(new au::effects::EffectsModule());
     app->addModule(new au::effects::BuiltinEffectsModule());
     app->addModule(new au::effects::NyquistEffectsModule());
