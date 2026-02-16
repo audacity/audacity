@@ -51,8 +51,9 @@ class Polyline : public QQuickPaintedItem, public muse::async::Asyncable, public
 
     Q_PROPERTY(bool yAxisInverse READ yAxisInverse WRITE setYAxisInverse NOTIFY yAxisInverseChanged)
 
-    Q_PROPERTY(qreal dragX READ dragX WRITE setDragX NOTIFY dragXChanged)
-    Q_PROPERTY(qreal dragY READ dragY WRITE setDragY NOTIFY dragYChanged)
+    Q_PROPERTY(bool hasActivePoint READ hasActivePoint NOTIFY activePointChanged)
+    Q_PROPERTY(qreal activePointX READ activePointX NOTIFY activePointChanged)
+    Q_PROPERTY(qreal activePointY READ activePointY NOTIFY activePointChanged)
 
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
@@ -110,11 +111,9 @@ public:
     bool yAxisInverse() const;
     void setYAxisInverse(bool);
 
-    qreal dragX() const;
-    void setDragX(qreal);
-
-    qreal dragY() const;
-    void setDragY(qreal);
+    bool hasActivePoint() const;
+    qreal activePointX() const;
+    qreal activePointY() const;
 
     void geometryChange(const QRectF& newG, const QRectF& oldG) override;
     void paint(QPainter* painter) override;
@@ -147,8 +146,7 @@ signals:
     void pointsNChanged();
     void pointsChanged();
 
-    void dragXChanged();
-    void dragYChanged();
+    void activePointChanged();
 
 protected:
     void hoverMoveEvent(QHoverEvent* e) override;
@@ -178,6 +176,8 @@ private:
 
     bool hasValidXRange() const;
     bool hasValidYRange() const;
+
+    void updateActivePoint();
 
 private:
     QColor m_lineColor;
@@ -218,7 +218,6 @@ private:
     bool m_draggingLine = false;
     bool m_movedSincePress = false;
 
-    // used for tracking x/y position during drag
-    qreal m_dragX = 0.0;
-    qreal m_dragY = 0.0;
+    bool m_hasActivePoint = false;
+    QPointF m_activePointPx;
 };

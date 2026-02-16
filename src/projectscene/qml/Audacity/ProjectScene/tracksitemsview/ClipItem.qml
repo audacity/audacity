@@ -919,8 +919,8 @@ Rectangle {
                         height: 1
                         width: 1
 
-                        x: automation.dragX
-                        y: automation.dragY
+                        x: automation.activePointX
+                        y: automation.activePointY - (automation.pointRadius + 2)
 
                         enabled: false // so it doesn't steal mouse events
 

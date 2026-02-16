@@ -366,34 +366,19 @@ void Polyline::setYAxisInverse(bool v)
     emit yAxisInverseChanged();
 }
 
-qreal Polyline::dragX() const
+bool Polyline::hasActivePoint() const
 {
-    return m_dragX;
+    return m_hasActivePoint;
 }
 
-void Polyline::setDragX(qreal v)
+qreal Polyline::activePointX() const
 {
-    if (m_dragX == v) {
-        return;
-    }
-
-    m_dragX = v;
-    emit dragXChanged();
+    return m_activePointPx.x();
 }
 
-qreal Polyline::dragY() const
+qreal Polyline::activePointY() const
 {
-    return m_dragY;
-}
-
-void Polyline::setDragY(qreal v)
-{
-    if (m_dragY == v) {
-        return;
-    }
-
-    m_dragY = v;
-    emit dragYChanged();
+    return m_activePointPx.y();
 }
 
 void Polyline::setDefaultValue(qreal v)
@@ -436,6 +421,50 @@ bool Polyline::hasValidXRange() const
 bool Polyline::hasValidYRange() const
 {
     return std::isfinite(m_yFrom) && std::isfinite(m_yTo) && std::abs(m_yTo - m_yFrom) > EPSILON;
+}
+
+void Polyline::updateActivePoint()
+{
+    const int hoveredDomainIdx = pointIndexAtPx(m_hoverPx);
+    const int activeDomainIdx = (m_pressedPointIndex >= 0) ? m_pressedPointIndex : hoveredDomainIdx;
+
+    if (activeDomainIdx < 0) {
+        if (m_hasActivePoint) {
+            m_hasActivePoint = false;
+            m_activePointPx = {};
+            emit activePointChanged();
+        }
+        return;
+    }
+
+    QPointF activeN;
+    bool found = false;
+    for (int i = 0; i < m_pointsNVisible.size() && i < m_visibleToDomainIndex.size(); ++i) {
+        if (m_visibleToDomainIndex[i] == activeDomainIdx) {
+            activeN = m_pointsNVisible[i];
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        if (m_hasActivePoint) {
+            m_hasActivePoint = false;
+            m_activePointPx = {};
+            emit activePointChanged();
+        }
+        return;
+    }
+
+    const QPointF newPx(toPxX(this, activeN.x()), toPxY(this, activeN.y()));
+    const bool changed = (!m_hasActivePoint || newPx != m_activePointPx);
+
+    m_hasActivePoint = true;
+    m_activePointPx = newPx;
+
+    if (changed) {
+        emit activePointChanged();
+    }
 }
 
 QPointF Polyline::normalizedFromDomain(const QPointF& p) const
@@ -567,6 +596,7 @@ void Polyline::rebuildVisiblePoints()
     m_pointsNVisible.push_back(QPointF(1.1, normY(yAt1)));
     m_visibleToDomainIndex.push_back(-1);
 
+    updateActivePoint();
     update();
 }
 
@@ -701,6 +731,7 @@ void Polyline::resetGestureState()
     m_pressPx = QPointF(0.0, 0.0);
 
     updateCursor();
+    updateActivePoint();
     update();
 }
 
@@ -827,6 +858,7 @@ void Polyline::hoverMoveEvent(QHoverEvent* e)
         m_hoverGhostPx = m_hoverPx;
     }
 
+    updateActivePoint();
     update();
     e->accept();
 }
@@ -836,6 +868,7 @@ void Polyline::hoverLeaveEvent(QHoverEvent* e)
     Q_UNUSED(e);
     m_hoveredOnLine = false;
     updateCursor();
+    updateActivePoint();
     update();
 }
 
@@ -859,8 +892,6 @@ void Polyline::mousePressEvent(QMouseEvent* e)
     resetGestureState();
 
     e->accept();
-    setDragX(e->position().rx());
-    setDragY(e->position().ry());
     updateCursor();
 
     m_pressed = true;
@@ -869,12 +900,14 @@ void Polyline::mousePressEvent(QMouseEvent* e)
     if (onPoint) {
         m_pressedOnPoint = true;
         m_pressedPointIndex = pointIndex;
+        updateActivePoint();
         return;
     }
 
     if (onLine) {
         m_pressedOnLine = true;
         m_pressBaselineN = m_baselineN;
+        updateActivePoint();
         return;
     }
 }
@@ -887,8 +920,6 @@ void Polyline::mouseMoveEvent(QMouseEvent* e)
     }
 
     e->accept();
-    setDragX(e->position().rx());
-    setDragY(e->position().ry());
 
     const QPointF pos = e->position();
     if (!m_movedSincePress && (pos - m_pressPx).manhattanLength() > MOVE_THRESHOLD) {
@@ -910,6 +941,7 @@ void Polyline::mouseMoveEvent(QMouseEvent* e)
 
         const QPointF pDomain = domainFromNormalized(pN);
         emit pointMoved(m_pressedPointIndex, pDomain.x(), pDomain.y(), /*completed*/ false);
+        updateActivePoint();
 
         return;
     }
@@ -922,6 +954,7 @@ void Polyline::mouseMoveEvent(QMouseEvent* e)
 
         const QPointF domainAtBaseline = domainFromNormalized(QPointF(0.0, newBaselineN));
         emit polylineFlattenRequested(domainAtBaseline.y(), /*completed*/ false);
+        updateActivePoint();
 
         update();
         return;
