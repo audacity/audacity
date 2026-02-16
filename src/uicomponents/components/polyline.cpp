@@ -1017,16 +1017,6 @@ void Polyline::mouseReleaseEvent(QMouseEvent* e)
     const bool isClick = !m_movedSincePress;
     const QPointF rel = e->position();
 
-    // remove point
-    if (isClick && m_pressedOnPoint && m_pressedPointIndex >= 0) {
-        if (!m_pressedOnLine) {
-            emit pointRemoved(m_pressedPointIndex, /*completed*/ true);
-        }
-        emit interactionFinished();
-        resetGestureState();
-        return;
-    }
-
     // commit point drag
     if (!isClick && m_pressedPointIndex >= 0) {
         QPointF pN(rel.x() / width(), 1.0 - (rel.y() / height()));
@@ -1051,6 +1041,28 @@ void Polyline::mouseReleaseEvent(QMouseEvent* e)
         resetGestureState();
         return;
     }
+
+    emit interactionFinished();
+    resetGestureState();
+}
+
+void Polyline::mouseDoubleClickEvent(QMouseEvent* e)
+{
+    if (e->button() != Qt::LeftButton) {
+        e->ignore();
+        return;
+    }
+
+    const int idx = pointIndexAtPx(e->position());
+    if (idx < 0) {
+        e->ignore();
+        return;
+    }
+
+    e->accept();
+
+    emit pointRemoved(idx, /*completed*/ true);
+    emit interactionFinished();
 
     resetGestureState();
 }
