@@ -13,6 +13,7 @@
 
 #include "modularity/ioc.h"
 #include "actions/iactionsdispatcher.h"
+#include "ui/iuiconfiguration.h"
 
 // NOTE: all of fooN() function are normalized, returning 0..1 values
 
@@ -31,6 +32,7 @@ class Polyline : public QQuickPaintedItem, public muse::async::Asyncable, public
     Q_PROPERTY(qreal pointRadius READ pointRadius WRITE setPointRadius NOTIFY pointRadiusChanged)
     Q_PROPERTY(qreal pointOutlineWidth READ pointOutlineWidth WRITE setPointOutlineWidth NOTIFY pointOutlineWidthChanged)
     Q_PROPERTY(QColor pointOutlineColor READ pointOutlineColor WRITE setPointOutlineColor NOTIFY pointOutlineColorChanged)
+    Q_PROPERTY(QColor pointCentreColor READ pointCentreColor WRITE setPointCentreColor NOTIFY pointCentreColorChanged)
     Q_PROPERTY(
         QColor ghostPointOutlineColor READ ghostPointOutlineColor WRITE setGhostPointOutlineColor NOTIFY ghostPointOutlineColorChanged)
     Q_PROPERTY(qreal hitRadius READ hitRadius WRITE setHitRadius NOTIFY hitRadiusChanged)
@@ -53,6 +55,7 @@ class Polyline : public QQuickPaintedItem, public muse::async::Asyncable, public
     Q_PROPERTY(qreal dragY READ dragY WRITE setDragY NOTIFY dragYChanged)
 
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
 
 public:
     explicit Polyline(QQuickItem* parent = nullptr);
@@ -76,6 +79,9 @@ public:
 
     QColor pointOutlineColor() const;
     void setPointOutlineColor(const QColor&);
+
+    QColor pointCentreColor() const;
+    void setPointCentreColor(const QColor&);
 
     QColor ghostPointOutlineColor() const;
     void setGhostPointOutlineColor(const QColor&);
@@ -120,6 +126,7 @@ signals:
     void pointRadiusChanged();
     void pointOutlineWidthChanged();
     void pointOutlineColorChanged();
+    void pointCentreColorChanged();
     void ghostPointOutlineColorChanged();
     void hitRadiusChanged();
 
@@ -179,8 +186,9 @@ private:
     qreal m_pointRadius = 3.0;
     qreal m_pointOutlineWidth = 1.0;
     QColor m_pointOutlineColor;
+    QColor m_pointCentreColor;
     QColor m_ghostPointOutlineColor;
-    qreal m_hitRadius = 8.0;
+    qreal m_hitRadius = 9.0;
 
     QVector<QPointF> m_points;          // domain points as provided from model
     QVector<QPointF> m_pointsNVisible;  // normalized points [0..1], cropped to frame boundaries (used for drawing only)

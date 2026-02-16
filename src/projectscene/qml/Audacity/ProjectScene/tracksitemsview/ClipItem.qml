@@ -859,12 +859,13 @@ Rectangle {
 
                     visible: root.isAutomationEnabled
 
-                    lineColor: ui.theme.extra["stroke_automation_curve"]
-                    lineWidth: 2.5
-                    pointRadius: 4
+                    lineColor: ui.theme.extra["audio_envelope_line"]
+                    lineWidth: 2
+                    pointRadius: 5
                     ghostPointOutlineColor: ui.theme.extra["white_color"]
-                    pointOutlineColor: ui.theme.extra["black_color"]
-                    pointOutlineWidth: 1.0
+                    pointOutlineColor: ui.theme.extra["audio_envelope_point"]
+                    pointCentreColor: ui.theme.extra["audio_envelope_point_centre"]
+                    pointOutlineWidth: 2.0
 
                     points: envelopeModel.points
                     defaultValue: envelopeModel.defaultValue
