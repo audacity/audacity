@@ -246,7 +246,7 @@ void ViewTracksListModel::load()
         emit verticalRulerWidthChanged();
     }, muse::async::Asyncable::Mode::SetReplace);
 
-    viewState->automationEnabled().ch.onReceive(this, [this](int) {
+    viewState->clipGainAutomationEnabled().ch.onReceive(this, [this](int) {
         QModelIndex beginIndex = index(0);
         QModelIndex lastIndex = index(static_cast<int>(m_trackList.size()) - 1);
 
@@ -325,7 +325,7 @@ QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
             return false;
         }
 
-        return vs->automationEnabled().val;
+        return vs->clipGainAutomationEnabled().val;
     }
 
     case IsWaveformViewVisibleRole: {

@@ -23,7 +23,7 @@ static const ActionCode TOGGLE_PLAYBACK_ON_RULER_CLICK_ENABLED_CODE("toggle-play
 static const ActionQuery TOGGLE_TRACK_HALF_WAVE("action://projectscene/track-view-half-wave");
 static const ActionCode LABEL_OPEN_EDITOR_CODE("toggle-label-editor");
 static const ActionCode TOGGLE_GLOBAL_SPECTROGRAM_VIEW_ACTION_CODE("action://trackedit/global-view-spectrogram");
-static const ActionCode AUTOMATION_CODE("automation");
+static const ActionCode CLIP_GAIN_CODE("clip-gain");
 
 static const muse::Uri EDIT_PITCH_AND_SPEED_URI("audacity://projectscene/editpitchandspeed");
 
@@ -42,7 +42,7 @@ void ProjectSceneActionsController::init()
                       &ProjectSceneActionsController::togglePlaybackOnRulerClickEnabled);
     dispatcher()->reg(this, TOGGLE_TRACK_HALF_WAVE, this, &ProjectSceneActionsController::toggleTrackHalfWave);
     dispatcher()->reg(this, LABEL_OPEN_EDITOR_CODE, this, &ProjectSceneActionsController::openLabelEditor);
-    dispatcher()->reg(this, AUTOMATION_CODE, this, &ProjectSceneActionsController::toggleAutomation);
+    dispatcher()->reg(this, CLIP_GAIN_CODE, this, &ProjectSceneActionsController::toggleAutomation);
 
     globalContext()->currentProjectChanged().onNotify(this, [this]() {
         const auto prj = globalContext()->currentProject();
@@ -160,8 +160,8 @@ void ProjectSceneActionsController::toggleAutomation()
         return;
     }
 
-    bool automationState = viewState->automationEnabled().val;
-    viewState->setAutomationEnabled(!automationState);
+    bool automationState = viewState->clipGainAutomationEnabled().val;
+    viewState->setClipGainAutomationEnabled(!automationState);
 }
 
 void ProjectSceneActionsController::toggleTrackHalfWave(const muse::actions::ActionQuery& q)

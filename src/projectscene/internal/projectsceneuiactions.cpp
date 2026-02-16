@@ -16,11 +16,11 @@ using namespace muse::ui;
 using namespace muse::actions;
 
 static UiActionList STATIC_ACTIONS = {
-    UiAction("automation",
+    UiAction("clip-gain",
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_OPENED,
-             TranslatableString("action", "Automation"),
-             TranslatableString("action", "Automation"),
+             TranslatableString("action", "Clip gain"),
+             TranslatableString("action", "Clip gain"),
              IconCode::Code::AUTOMATION
              ),
     UiAction("split-tool",
@@ -306,7 +306,7 @@ const ToolConfig& ProjectSceneUiActions::defaultPlaybackToolBarConfig()
             { "action://playback/rewind-end", true },
             { "toggle-loop-region", true },
             { "", true },
-            { "automation", true },
+            { "clip-gain", true },
             { "split-tool", true },
             { "action://trackedit/global-view-spectrogram", true },
             { "zoom-in", true },
