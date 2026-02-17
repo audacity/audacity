@@ -856,6 +856,7 @@ Rectangle {
                     id: automation
 
                     anchors.fill: waveView
+                    anchors.bottomMargin: 1
 
                     visible: root.isAutomationEnabled
 
