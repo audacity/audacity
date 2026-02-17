@@ -241,7 +241,7 @@ WaveClip::WaveClip(size_t width,
                                                SampleFormats { narrowestSampleFormat, format });
     }
 
-    mEnvelope = std::make_unique<Envelope>(true, 1e-7, 2.0, 1.0);
+    mEnvelope = std::make_unique<Envelope>(true, 1e-7, 4.0, 1.0);
     assert(CheckInvariants());
 }
 
