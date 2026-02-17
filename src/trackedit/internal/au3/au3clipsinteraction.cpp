@@ -1225,6 +1225,7 @@ bool Au3ClipsInteraction::trimClipsLeft(const ClipKeyList& clipKeys, secs_t delt
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
+        clipGainInteraction()->clipEnvelopeChanged().send(selectedClip, completed);
     }
 
     return ok;
@@ -1255,6 +1256,7 @@ bool Au3ClipsInteraction::trimClipsRight(const ClipKeyList& clipKeys, secs_t del
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
+        clipGainInteraction()->clipEnvelopeChanged().send(selectedClip, completed);
     }
 
     return ok;
@@ -1287,7 +1289,7 @@ bool Au3ClipsInteraction::stretchClipsLeft(const ClipKeyList& clipKeys, secs_t d
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
-        clipGainINteraction()->clipEnvelopeChanged().send(selectedClip, completed);
+        clipGainInteraction()->clipEnvelopeChanged().send(selectedClip, completed);
     }
 
     return true;
@@ -1320,7 +1322,7 @@ bool Au3ClipsInteraction::stretchClipsRight(const ClipKeyList& clipKeys, secs_t 
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
-        clipGainINteraction()->clipEnvelopeChanged().send(selectedClip, completed);
+        clipGainInteraction()->clipEnvelopeChanged().send(selectedClip, completed);
     }
 
     return true;

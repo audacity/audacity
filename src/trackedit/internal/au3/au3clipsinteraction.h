@@ -32,7 +32,7 @@ class Au3ClipsInteraction : public IClipsInteraction, public muse::Injectable
     muse::Inject<au::trackedit::IProjectHistory> projectHistory{ this };
     muse::Inject<muse::IInteractive> interactive{ this };
     muse::Inject<ITracksInteraction> tracksInteraction{ this };
-    muse::Inject<automation::IClipGainInteraction> clipGainINteraction{ this };
+    muse::Inject<automation::IClipGainInteraction> clipGainInteraction{ this };
 
 public:
     Au3ClipsInteraction(const muse::modularity::ContextPtr& ctx);
