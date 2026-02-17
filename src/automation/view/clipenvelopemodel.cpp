@@ -249,19 +249,6 @@ void ClipEnvelopeModel::removePoint(int index, bool completed)
     reload();
 }
 
-void ClipEnvelopeModel::flatten(double value, bool completed)
-{
-    if (!m_clipKey.isValid()) {
-        return;
-    }
-
-    if (!clipGainInteraction()->flattenClipEnvelope(m_clipKey.key, value, completed)) {
-        return;
-    }
-
-    reload();
-}
-
 void ClipEnvelopeModel::cancelDrag()
 {
     if (!m_clipKey.isValid()) {

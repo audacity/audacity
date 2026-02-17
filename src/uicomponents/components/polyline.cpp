@@ -864,7 +864,7 @@ GhostPoint Polyline::ghostPointToPolylinePx(const QPointF& px) const
 
 void Polyline::updateCursor()
 {
-    const bool interactive = m_hoveredOnLine || m_pressed || m_draggingLine || (m_pressedPointIndex >= 0);
+    const bool interactive = m_hoveredOnLine || m_pressed || (m_pressedPointIndex >= 0);
 
     if (interactive) {
         setCursor(Qt::CrossCursor);
@@ -879,8 +879,6 @@ void Polyline::resetGestureState()
     m_pressedOnLine = false;
     m_pressedOnPoint = false;
     m_pressedPointIndex = INVALID_POINT_IDX;
-    m_draggingLine = false;
-
     m_movedSincePress = false;
     m_pressPx = QPointF(0.0, 0.0);
 
@@ -961,7 +959,7 @@ void Polyline::paint(QPainter* painter)
     }
 
     // draw hover ghost point
-    if (m_hoveredOnLine && !m_draggingLine && m_pressedPointIndex < 0) {
+    if (m_hoveredOnLine && m_pressedPointIndex < 0) {
         QPointF hp = m_hoverGhostPx;
 
         if (m_pointsNVisible.size() < 2) {
@@ -1096,9 +1094,6 @@ void Polyline::mouseMoveEvent(QMouseEvent* e)
     if (!m_movedSincePress && (pos - m_pressPx).manhattanLength() > MOVE_THRESHOLD) {
         m_movedSincePress = true;
 
-        if (m_pressedOnLine && m_points.size() <= 1) {
-            m_draggingLine = true;
-        }
     }
 
     // drag point (2+ points only)
@@ -1117,19 +1112,6 @@ void Polyline::mouseMoveEvent(QMouseEvent* e)
         return;
     }
 
-    // drag baseline / single-point line
-    if (m_draggingLine && m_points.size() <= 1) {
-        const qreal dyPx = pos.y() - m_pressPx.y();
-        const qreal dyN = dyPx / height();
-        const qreal newBaselineN = clamp01(m_pressBaselineN - dyN);
-
-        const QPointF domainAtBaseline = domainFromNormalized(QPointF(0.0, newBaselineN));
-        emit polylineFlattenRequested(domainAtBaseline.y(), /*completed*/ false);
-        updateActivePoint();
-
-        update();
-        return;
-    }
 }
 
 void Polyline::mouseReleaseEvent(QMouseEvent* e)
@@ -1150,19 +1132,6 @@ void Polyline::mouseReleaseEvent(QMouseEvent* e)
 
         const QPointF pDomain = domainFromNormalized(pN);
         emit pointMoved(m_pressedPointIndex, pDomain.x(), pDomain.y(), /*completed*/ true);
-        emit interactionFinished();
-        resetGestureState();
-        return;
-    }
-
-    // comming baseline drag
-    if (!isClick && m_draggingLine) {
-        const qreal dyPx = rel.y() - m_pressPx.y();
-        const qreal dyN = dyPx / height();
-        const qreal newBaselineN = clamp01(m_pressBaselineN - dyN);
-
-        const QPointF domainAtBaseline = domainFromNormalized(QPointF(0.0, newBaselineN));
-        emit polylineFlattenRequested(domainAtBaseline.y(), /*completed*/ true);
         emit interactionFinished();
         resetGestureState();
         return;

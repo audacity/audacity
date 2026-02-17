@@ -24,7 +24,6 @@ public:
     ClipEnvelopePoints clipEnvelopePoints(const trackedit::ClipKey& key) const override;
     bool setClipEnvelopePoint(const trackedit::ClipKey& key, double tAbs, double value, bool completed) override;
     bool removeClipEnvelopePoint(const trackedit::ClipKey& key, int index, bool completed) override;
-    bool flattenClipEnvelope(const trackedit::ClipKey& key, double value, bool completed) override;
     bool setClipEnvelopePointAtIndex(const trackedit::ClipKey& key, int index, double tAbs, double value, bool completed) override;
     bool beginClipEnvelopePointDrag(const trackedit::ClipKey& clip, int pointIndex) override;
     bool updateClipEnvelopePointDrag(const trackedit::ClipKey& clip, double tAbs, double value) override;

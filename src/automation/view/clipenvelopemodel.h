@@ -63,7 +63,6 @@ public:
     Q_INVOKABLE void setPoint(int index, double tAbs, double value, bool completed);
     Q_INVOKABLE void addPoint(double tAbs, double value, bool completed);
     Q_INVOKABLE void removePoint(int index, bool completed);
-    Q_INVOKABLE void flatten(double value, bool completed);
     Q_INVOKABLE void cancelDrag();
 
     projectscene::ClipKey clipKey() const;

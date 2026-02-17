@@ -885,9 +885,7 @@ Rectangle {
                     }
 
                     onPointMoved: function(index, x, y, completed) {
-                        // NOTE: Polyline's returned x is within [xRangeFrom..xRangeTo] boundaries but
-                        // clip's internal envelope expects time relative to clip startTime
-                        envelopeModel.setPoint(index, x - waveView.startTime, y, completed)
+                        envelopeModel.setPoint(index, x, y, completed)
                         tooltip.show(true)
                         tooltip.gain = gainToDb(y)
                     }
@@ -898,12 +896,6 @@ Rectangle {
 
                     onPointRemoved: function(index, completed) {
                         envelopeModel.removePoint(index, completed)
-                    }
-
-                    onPolylineFlattenRequested: function(y, completed) {
-                        envelopeModel.flatten(y, completed)
-                        tooltip.show(true)
-                        tooltip.gain = gainToDb(y)
                     }
 
                     onDragCancelled: {

@@ -17,6 +17,26 @@
 using namespace au::automation;
 using namespace au::au3;
 
+namespace {
+// NOTE: newly recorded clips doesn't have offset/sequenceLength synced with envelope.
+// We need to sync it before interacting with clip gain
+void syncEnvelopeOffset(const std::shared_ptr<Au3WaveClip>& clip, Envelope& env)
+{
+    const double sequenceStartTime = clip->GetSequenceStartTime();
+    if (env.GetOffset() != sequenceStartTime) {
+        env.SetOffset(sequenceStartTime);
+    }
+
+    // Recording path may keep clip envelope length stale (e.g. still zero)
+    // while sequence data grows via linked pending clip updates.
+    // Ensure envelope domain matches current sequence duration.
+    const double sequenceLen = clip->GetSequenceEndTime() - sequenceStartTime;
+    if (env.GetTrackLen() != sequenceLen) {
+        env.SetTrackLen(sequenceLen, 1.0 / clip->GetRate());
+    }
+}
+}
+
 Au3ClipGainInteraction::Au3ClipGainInteraction(const muse::modularity::ContextPtr& ctx)
     : muse::Injectable(ctx) {}
 
@@ -34,6 +54,7 @@ std::optional<ClipEnvelopeInfo> Au3ClipGainInteraction::clipEnvelopeInfo(
     }
 
     auto& env = clip->GetEnvelope();
+    syncEnvelopeOffset(clip, env);
 
     ClipEnvelopeInfo info;
     info.minValue = env.GetMinValue();
@@ -58,6 +79,7 @@ ClipEnvelopePoints Au3ClipGainInteraction::clipEnvelopePoints(const trackedit::C
     }
 
     auto& env = clip->GetEnvelope();
+    syncEnvelopeOffset(clip, env);
 
     ClipEnvelopePoints pts;
     const auto n = env.GetNumberOfPoints();
@@ -84,9 +106,9 @@ bool Au3ClipGainInteraction::setClipEnvelopePoint(const trackedit::ClipKey& clip
     }
 
     auto& env = clip->GetEnvelope();
+    syncEnvelopeOffset(clip, env);
 
     const double v = std::clamp(value, env.GetMinValue(), env.GetMaxValue());
-
     env.InsertOrReplace(time, v);
 
     if (auto prj = globalContext()->currentTrackeditProject()) {
@@ -112,6 +134,7 @@ bool Au3ClipGainInteraction::removeClipEnvelopePoint(const trackedit::ClipKey& c
     }
 
     auto& env = clip->GetEnvelope();
+    syncEnvelopeOffset(clip, env);
     if (index < 0 || index >= int(env.GetNumberOfPoints())) {
         return false;
     }
@@ -123,30 +146,6 @@ bool Au3ClipGainInteraction::removeClipEnvelopePoint(const trackedit::ClipKey& c
     }
     projectHistory()->pushHistoryState(muse::trc("trackedit", "Removed enveloped point"), muse::trc("trackedit",
                                                                                                     "Clip envelope edit"));
-
-    m_clipEnvelopeChanged.send(clipKey, completed);
-    return true;
-}
-
-bool Au3ClipGainInteraction::flattenClipEnvelope(const trackedit::ClipKey& clipKey, double value, bool completed)
-{
-    Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
-        return false;
-    }
-
-    std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
-    IF_ASSERT_FAILED(clip) {
-        return false;
-    }
-
-    auto& env = clip->GetEnvelope();
-    const double v = std::clamp(value, env.GetMinValue(), env.GetMaxValue());
-    env.Flatten(v);
-
-    if (auto prj = globalContext()->currentTrackeditProject()) {
-        prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
-    }
 
     m_clipEnvelopeChanged.send(clipKey, completed);
     return true;
@@ -181,15 +180,12 @@ bool Au3ClipGainInteraction::beginClipEnvelopePointDrag(const trackedit::ClipKey
     }
 
     auto& env = clip->GetEnvelope();
+    syncEnvelopeOffset(clip, env);
 
     const int n = static_cast<int>(env.GetNumberOfPoints());
     if (pointIndex < 0 || pointIndex >= n) {
         return false;
     }
-
-    QVector<double> times(n);
-    QVector<double> values(n);
-    env.GetPoints(times.data(), values.data(), n);
 
     if (m_envDrag && m_envDrag->active) {
         endClipEnvelopePointDrag(m_envDrag->clip, true);
@@ -199,8 +195,8 @@ bool Au3ClipGainInteraction::beginClipEnvelopePointDrag(const trackedit::ClipKey
     s.clip = clipKey;
     s.index = pointIndex;
     s.active = true;
-    s.origTime = times[pointIndex];
-    s.origValue = values[pointIndex];
+    s.origTime = env[pointIndex].GetT();
+    s.origValue = env[pointIndex].GetVal();
 
     env.SetDragPoint(pointIndex);
 
@@ -225,7 +221,8 @@ bool Au3ClipGainInteraction::updateClipEnvelopePointDrag(const trackedit::ClipKe
     }
 
     auto& env = clip->GetEnvelope();
-    env.MoveDragPoint(tAbs, value);
+    syncEnvelopeOffset(clip, env);
+    env.MoveDragPoint(tAbs - env.GetOffset(), value);
 
     if (auto prj = globalContext()->currentTrackeditProject()) {
         prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
@@ -252,6 +249,7 @@ bool Au3ClipGainInteraction::endClipEnvelopePointDrag(const trackedit::ClipKey& 
     }
 
     auto& env = clip->GetEnvelope();
+    syncEnvelopeOffset(clip, env);
 
     if (commit) {
         env.ClearDragPoint();
@@ -259,7 +257,7 @@ bool Au3ClipGainInteraction::endClipEnvelopePointDrag(const trackedit::ClipKey& 
                                                                                                         "Clip envelope edit"));
     } else {
         // cancel path: restore orig values
-        env.MoveDragPoint(m_envDrag->origTime + clip->GetPlayStartTime(), m_envDrag->origValue);
+        env.MoveDragPoint(m_envDrag->origTime, m_envDrag->origValue);
         env.ClearDragPoint();
     }
 

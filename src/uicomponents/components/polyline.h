@@ -137,7 +137,6 @@ signals:
     void ghostPointOutlineColorChanged();
     void hitRadiusChanged();
 
-    void polylineFlattenRequested(qreal y, bool completed);
     void pointAdded(qreal x, qreal y, bool completed);
     void pointMoved(int index, qreal x, qreal y, bool completed);
     void pointRemoved(int index, bool completed);
@@ -228,11 +227,9 @@ private:
     bool m_pressedOnLine = false;
     bool m_pressed = false;
     QPointF m_pressPx;
-    qreal m_pressBaselineN = 0.5;
     bool m_pressedOnPoint = false;
     int m_pressedPointIndex = -1;
 
-    bool m_draggingLine = false;
     bool m_movedSincePress = false;
 
     bool m_hasActivePoint = false;
