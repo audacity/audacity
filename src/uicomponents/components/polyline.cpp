@@ -875,6 +875,11 @@ void Polyline::paint(QPainter* painter)
 
 void Polyline::hoverMoveEvent(QHoverEvent* e)
 {
+    // NOTE: even if mouse is still, Qt produces hoverMoveEvents constantly
+    if (m_hoverPx == e->position()) {
+        return;
+    }
+
     m_hoverPx = e->position();
 
     const bool nearPoint = (pointIndexAtPx(m_hoverPx) >= 0);
