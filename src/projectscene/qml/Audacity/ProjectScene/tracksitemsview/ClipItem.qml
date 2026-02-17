@@ -876,6 +876,8 @@ Rectangle {
 
                     yRangeFrom: envelopeModel.minValue
                     yRangeTo: envelopeModel.maxValue
+                    ySplitNormalized: envelopeModel.ySplitNormalized
+                    ySplitValue: envelopeModel.ySplitValue
                     yAxisInverse: false
 
                     Component.onCompleted: {

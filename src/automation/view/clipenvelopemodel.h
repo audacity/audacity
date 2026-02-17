@@ -33,6 +33,8 @@ class ClipEnvelopeModel : public QAbstractListModel, public muse::async::Asyncab
     Q_PROPERTY(double maxValue READ maxValue NOTIFY envelopeInfoChanged)
     Q_PROPERTY(double defaultValue READ defaultValue NOTIFY envelopeInfoChanged)
     Q_PROPERTY(bool exponential READ exponential NOTIFY envelopeInfoChanged)
+    Q_PROPERTY(double ySplitNormalized READ ySplitNormalized NOTIFY envelopeInfoChanged)
+    Q_PROPERTY(double ySplitValue READ ySplitValue NOTIFY envelopeInfoChanged)
 
     Q_PROPERTY(double clipStartTime READ clipStartTime NOTIFY clipTimeChanged)
     Q_PROPERTY(double clipEndTime READ clipEndTime NOTIFY clipTimeChanged)
@@ -52,6 +54,8 @@ public:
     double maxValue() const;
     double defaultValue() const;
     bool exponential() const;
+    double ySplitNormalized() const;
+    double ySplitValue() const;
 
     double clipStartTime() const;
     double clipEndTime() const;

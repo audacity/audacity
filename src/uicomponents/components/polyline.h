@@ -46,6 +46,8 @@ class Polyline : public QQuickPaintedItem, public muse::async::Asyncable, public
 
     Q_PROPERTY(qreal yRangeFrom READ yRangeFrom WRITE setYRangeFrom NOTIFY yRangeFromChanged)
     Q_PROPERTY(qreal yRangeTo READ yRangeTo WRITE setYRangeTo NOTIFY yRangeToChanged)
+    Q_PROPERTY(qreal ySplitNormalized READ ySplitNormalized WRITE setYSplitNormalized NOTIFY ySplitNormalizedChanged)
+    Q_PROPERTY(qreal ySplitValue READ ySplitValue WRITE setYSplitValue NOTIFY ySplitValueChanged)
 
     // TODO: dB or linear (separate setting for x and y axis)
 
@@ -108,6 +110,12 @@ public:
     qreal yRangeTo() const;
     void setYRangeTo(qreal);
 
+    qreal ySplitNormalized() const;
+    void setYSplitNormalized(qreal);
+
+    qreal ySplitValue() const;
+    void setYSplitValue(qreal);
+
     bool yAxisInverse() const;
     void setYAxisInverse(bool);
 
@@ -140,6 +148,8 @@ signals:
     void xRangeToChanged();
     void yRangeFromChanged();
     void yRangeToChanged();
+    void ySplitNormalizedChanged();
+    void ySplitValueChanged();
     void yAxisInverseChanged();
 
     void defaultValueChanged();
@@ -177,6 +187,10 @@ private:
 
     bool hasValidXRange() const;
     bool hasValidYRange() const;
+    bool hasValidYSplit() const;
+
+    qreal yDomainFromNormalized(qreal yNormalized) const;
+    qreal yNormalizedFromDomain(qreal yDomain) const;
 
     void updateActivePoint();
 
@@ -203,6 +217,8 @@ private:
     qreal m_xTo   = 1.0;
     qreal m_yFrom = 0.0;
     qreal m_yTo   = 1.0;
+    qreal m_ySplitNormalized = 1.0;
+    qreal m_ySplitValue = 1.0;
     bool m_yAxisInverse = true;
 
     bool m_hoveredOnLine = false;

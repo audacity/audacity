@@ -2,6 +2,7 @@
  * Audacity: A Digital Audio Editor
  */
 #include "polyline.h"
+#include "realfn.h"
 
 #include <QPainter>
 #include <QPen>
@@ -384,6 +385,45 @@ void Polyline::setYRangeTo(qreal v)
     rebuildVisiblePoints();
 }
 
+qreal Polyline::ySplitNormalized() const
+{
+    return m_ySplitNormalized;
+}
+
+void Polyline::setYSplitNormalized(qreal v)
+{
+    v = clamp01(v);
+    if (m_ySplitNormalized == v) {
+        return;
+    }
+
+    m_ySplitNormalized = v;
+    emit ySplitNormalizedChanged();
+
+    rebuildVisiblePoints();
+}
+
+qreal Polyline::ySplitValue() const
+{
+    return m_ySplitValue;
+}
+
+void Polyline::setYSplitValue(qreal v)
+{
+    const qreal low = std::min(m_yFrom, m_yTo);
+    const qreal high = std::max(m_yFrom, m_yTo);
+    qreal clampedValue = std::clamp(v, low, high);
+
+    if (m_ySplitValue == clampedValue) {
+        return;
+    }
+
+    m_ySplitValue = clampedValue;
+    emit ySplitValueChanged();
+
+    rebuildVisiblePoints();
+}
+
 bool Polyline::yAxisInverse() const
 {
     return m_yAxisInverse;
@@ -456,6 +496,84 @@ bool Polyline::hasValidYRange() const
     return std::isfinite(m_yFrom) && std::isfinite(m_yTo) && std::abs(m_yTo - m_yFrom) > EPSILON;
 }
 
+bool Polyline::hasValidYSplit() const
+{
+    return hasValidYRange() && !muse::RealIsEqualOrLess(m_ySplitNormalized, 0.0) && !muse::RealIsEqualOrMore(m_ySplitNormalized, 1.0);
+}
+
+qreal Polyline::yDomainFromNormalized(qreal yNormalized) const
+{
+    const qreal n = clamp01(yNormalized);
+
+    // simple linear mapping (no split)
+    if (!hasValidYSplit()) {
+        return m_yFrom + n * (m_yTo - m_yFrom);
+    }
+
+    const qreal splitNormalized = m_ySplitNormalized;
+    const qreal splitValue      = m_ySplitValue;
+
+    // first segment (bottom → split)
+    if (n <= splitNormalized) {
+        if (splitNormalized <= EPSILON) {
+            return splitValue;
+        }
+
+        const qreal segmentN = n / splitNormalized;
+        return m_yFrom + segmentN * (splitValue - m_yFrom);
+    }
+
+    // second segment (split → top)
+    const qreal secondSegmentSize = 1.0 - splitNormalized;
+    if (secondSegmentSize <= EPSILON) {
+        return splitValue;
+    }
+
+    const qreal segmentN = (n - splitNormalized) / secondSegmentSize;
+    return splitValue + segmentN * (m_yTo - splitValue);
+}
+
+qreal Polyline::yNormalizedFromDomain(qreal yDomain) const
+{
+    // simple linear mapping (no split)
+    if (!hasValidYSplit()) {
+        return clamp01((yDomain - m_yFrom) / (m_yTo - m_yFrom));
+    }
+
+    const qreal splitNormalized = m_ySplitNormalized;
+    const qreal splitValue      = m_ySplitValue;
+
+    const qreal minY = std::min(m_yFrom, m_yTo);
+    const qreal maxY = std::max(m_yFrom, m_yTo);
+    const qreal yClamped = std::clamp(yDomain, minY, maxY);
+
+    const bool increasing = (m_yTo >= m_yFrom);
+
+    const bool isInFirstSegment
+        =increasing ? (yClamped <= splitValue)
+          : (yClamped >= splitValue);
+
+    // ---- first segment ----
+    if (isInFirstSegment) {
+        const qreal segmentSize = splitValue - m_yFrom;
+        if (std::abs(segmentSize) <= EPSILON) {
+            return splitNormalized;
+        }
+
+        const qreal segmentN = (yClamped - m_yFrom) / segmentSize;
+        return clamp01(segmentN * splitNormalized);
+    }
+
+    // ---- second segment ----
+    const qreal segmentSize = m_yTo - splitValue;
+    if (std::abs(segmentSize) <= EPSILON) {
+        return splitNormalized;
+    }
+
+    const qreal segmentN = (yClamped - splitValue) / segmentSize;
+    return clamp01(splitNormalized + segmentN * (1.0 - splitNormalized));
+}
+
 void Polyline::updateActivePoint()
 {
     const int hoveredDomainIdx = pointIndexAtPx(m_hoverPx);
@@ -507,7 +625,7 @@ QPointF Polyline::normalizedFromDomain(const QPointF& p) const
     }
 
     const qreal xN = (p.x() - m_xFrom) / (m_xTo - m_xFrom);
-    qreal yN = (p.y() - m_yFrom) / (m_yTo - m_yFrom);
+    qreal yN = yNormalizedFromDomain(p.y());
 
     if (m_yAxisInverse) {
         yN = 1.0 - yN;
@@ -528,7 +646,7 @@ QPointF Polyline::domainFromNormalized(const QPointF& pN) const
     if (m_yAxisInverse) {
         yT = 1.0 - yT;
     }
-    const qreal y = m_yFrom + yT * (m_yTo - m_yFrom);
+    const qreal y = yDomainFromNormalized(yT);
 
     return QPointF(x, y);
 }
@@ -587,7 +705,7 @@ void Polyline::rebuildVisiblePoints()
               [](const P& a, const P& b) { return a.p.x() < b.p.x(); });
 
     auto normY = [&](double yAbs) {
-        double yn = (yAbs - m_yFrom) / yRange;
+        double yn = yNormalizedFromDomain(yAbs);
         if (m_yAxisInverse) {
             yn = 1.0 - yn;
         }
@@ -595,14 +713,17 @@ void Polyline::rebuildVisiblePoints()
     };
 
     // interpolate at window edges
-    QVector<QPointF> sortedPoints;
-    sortedPoints.reserve(sortedPointsWithIndexes.size());
+    QVector<QPointF> sortedPointsN;
+    sortedPointsN.reserve(sortedPointsWithIndexes.size());
     for (const auto& it : sortedPointsWithIndexes) {
-        sortedPoints.push_back(it.p);
+        sortedPointsN.push_back(QPointF(it.p.x(), normY(it.p.y())));
     }
 
-    const double yAt0 = valueAtX(sortedPoints, m_xFrom);
-    const double yAt1 = valueAtX(sortedPoints, m_xTo);
+    // Synthetic boundary points must be interpolated in rendered Y-space.
+    // Interpolating in domain Y breaks continuity for split mappings
+    // (e.g. segments crossing 0 dB split value).
+    const double yAt0N = valueAtX(sortedPointsN, m_xFrom);
+    const double yAt1N = valueAtX(sortedPointsN, m_xTo);
 
     // NOTE: synthetic boundary points are added just outside the visible range
     // so the polyline draws correctly: they allow horizontal segments
@@ -611,7 +732,7 @@ void Polyline::rebuildVisiblePoints()
     // These are rendering-only points (no corresponding domain index).
 
     // left boundary (synthetic)
-    m_pointsNVisible.push_back(QPointF(-0.1, normY(yAt0)));
+    m_pointsNVisible.push_back(QPointF(-0.1, std::clamp(yAt0N, 0.0, 1.0)));
     m_visibleToDomainIndex.push_back(INVALID_POINT_IDX);
 
     // interior real points
@@ -626,7 +747,7 @@ void Polyline::rebuildVisiblePoints()
     }
 
     // right boundary (synthetic)
-    m_pointsNVisible.push_back(QPointF(1.1, normY(yAt1)));
+    m_pointsNVisible.push_back(QPointF(1.1, std::clamp(yAt1N, 0.0, 1.0)));
     m_visibleToDomainIndex.push_back(INVALID_POINT_IDX);
 
     updateActivePoint();

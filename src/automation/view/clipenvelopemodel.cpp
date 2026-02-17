@@ -96,6 +96,16 @@ bool ClipEnvelopeModel::exponential() const
     return m_info.exponential;
 }
 
+double ClipEnvelopeModel::ySplitNormalized() const
+{
+    return 0.7;
+}
+
+double ClipEnvelopeModel::ySplitValue() const
+{
+    return 1.0;
+}
+
 double ClipEnvelopeModel::clipStartTime() const
 {
     return m_clipStartTime;
