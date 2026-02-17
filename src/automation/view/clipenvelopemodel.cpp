@@ -180,7 +180,10 @@ void ClipEnvelopeModel::setPoint(int index, double tAbs, double value, bool comp
     if (!m_clipKey.isValid()) {
         return;
     }
-    if (index < 0 || index >= int(m_points.size())) {
+    if (index < 0) {
+        return;
+    }
+    if (!m_dragActive && index >= int(m_points.size())) {
         return;
     }
 
@@ -204,11 +207,13 @@ void ClipEnvelopeModel::setPoint(int index, double tAbs, double value, bool comp
         return;
     }
 
-    auto& p = m_points[size_t(index)];
-    p.time = tAbs;
-    p.value = value;
-    const QModelIndex idx = this->index(index, 0);
-    emit dataChanged(idx, idx, { TimeRole, ValueRole });
+    if (index < int(m_points.size())) {
+        auto& p = m_points[size_t(index)];
+        p.time = tAbs;
+        p.value = value;
+        const QModelIndex idx = this->index(index, 0);
+        emit dataChanged(idx, idx, { TimeRole, ValueRole });
+    }
 
     if (completed) {
         clipGainInteraction()->endClipEnvelopePointDrag(m_clipKey.key, /*commit*/ true);

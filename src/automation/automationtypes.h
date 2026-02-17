@@ -26,9 +26,15 @@ using ClipEnvelopePoints = std::vector<ClipEnvelopePoint>;
 struct EnvelopeDragSession
 {
     au::trackedit::ClipKey clip;
-    int index = -1;
+    int origIndex = -1;
     double origTime = 0.0;
     double origValue = 0.0;
     bool active = false;
+
+    // used for eat/restore behavior
+    int currentDragIndex = -1;
+    int lastConsumedLeft = -1;  // smallest removed index on the left side
+    int lastConsumedRight = -1; // largest removed index on the right side
+    ClipEnvelopePoints originalPoints;
 };
 }

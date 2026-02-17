@@ -14,6 +14,8 @@
 
 #include "automationtypes.h"
 
+#include <algorithm>
+
 using namespace au::automation;
 using namespace au::au3;
 
@@ -34,6 +36,75 @@ void syncEnvelopeOffset(const std::shared_ptr<Au3WaveClip>& clip, Envelope& env)
     if (env.GetTrackLen() != sequenceLen) {
         env.SetTrackLen(sequenceLen, 1.0 / clip->GetRate());
     }
+}
+
+void restoreEnvelopeFromSnapshot(Envelope& env, const EnvelopeDragSession& session)
+{
+    env.Clear();
+    for (const auto& p : session.originalPoints) {
+        env.Insert(p.time, p.value);
+    }
+}
+
+// How many original points have we crossed while dragging to new time?
+int computeRightCrossedIndex(const EnvelopeDragSession& session, double time)
+{
+    int idx = session.origIndex;
+    for (int i = session.origIndex + 1; i < static_cast<int>(session.originalPoints.size()); ++i) {
+        const double pointTime = session.originalPoints[i].time;
+        if (pointTime > session.origTime && pointTime <= time) {
+            idx = i;
+        } else {
+            break;
+        }
+    }
+    return idx;
+}
+
+// How many original points have we crossed while dragging to new time?
+int computeLeftCrossedIndex(const EnvelopeDragSession& session, double time)
+{
+    int idx = session.origIndex;
+    for (int i = session.origIndex - 1; i >= 0; --i) {
+        const double pointTime = session.originalPoints[i].time;
+        if (pointTime < session.origTime && pointTime >= time) {
+            idx = i;
+        } else {
+            break;
+        }
+    }
+    return idx;
+}
+
+void applyDragWithCrossingRemoval(Envelope& env, EnvelopeDragSession& session, double newTime, double newValue)
+{
+    const int desiredRight = computeRightCrossedIndex(session, newTime);
+    const int desiredLeft = computeLeftCrossedIndex(session, newTime);
+
+    while (session.lastConsumedRight < desiredRight) {
+        env.Delete(session.currentDragIndex + 1);
+        ++session.lastConsumedRight;
+    }
+    while (session.lastConsumedRight > desiredRight) {
+        const auto& restore = session.originalPoints[session.lastConsumedRight];
+        env.Insert(session.currentDragIndex + 1, EnvPoint { restore.time, restore.value });
+        --session.lastConsumedRight;
+    }
+
+    while (session.lastConsumedLeft > desiredLeft) {
+        env.Delete(session.currentDragIndex - 1);
+        --session.currentDragIndex;
+        --session.lastConsumedLeft;
+    }
+    while (session.lastConsumedLeft < desiredLeft) {
+        const auto& restore = session.originalPoints[session.lastConsumedLeft];
+        env.Insert(session.currentDragIndex, EnvPoint { restore.time, restore.value });
+        ++session.currentDragIndex;
+        ++session.lastConsumedLeft;
+    }
+
+    env.SetDragPoint(session.currentDragIndex);
+    env.MoveDragPoint(newTime, newValue);
 }
 }
 
@@ -193,10 +264,19 @@ bool Au3ClipGainInteraction::beginClipEnvelopePointDrag(const trackedit::ClipKey
 
     EnvelopeDragSession s;
     s.clip = clipKey;
-    s.index = pointIndex;
-    s.active = true;
+    s.origIndex = pointIndex;
     s.origTime = env[pointIndex].GetT();
     s.origValue = env[pointIndex].GetVal();
+    s.active = true;
+
+    s.currentDragIndex = pointIndex;
+    s.lastConsumedLeft = pointIndex;
+    s.lastConsumedRight = pointIndex;
+    s.originalPoints.reserve(n);
+    for (int i = 0; i < n; ++i) {
+        const auto& p = env[i];
+        s.originalPoints.push_back({ p.GetT(), p.GetVal() });
+    }
 
     env.SetDragPoint(pointIndex);
 
@@ -222,7 +302,7 @@ bool Au3ClipGainInteraction::updateClipEnvelopePointDrag(const trackedit::ClipKe
 
     auto& env = clip->GetEnvelope();
     syncEnvelopeOffset(clip, env);
-    env.MoveDragPoint(tAbs - env.GetOffset(), value);
+    applyDragWithCrossingRemoval(env, *m_envDrag, tAbs - env.GetOffset(), value);
 
     if (auto prj = globalContext()->currentTrackeditProject()) {
         prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
@@ -256,8 +336,7 @@ bool Au3ClipGainInteraction::endClipEnvelopePointDrag(const trackedit::ClipKey& 
         projectHistory()->pushHistoryState(muse::trc("trackedit", "Dragged enveloped point"), muse::trc("trackedit",
                                                                                                         "Clip envelope edit"));
     } else {
-        // cancel path: restore orig values
-        env.MoveDragPoint(m_envDrag->origTime, m_envDrag->origValue);
+        restoreEnvelopeFromSnapshot(env, *m_envDrag);
         env.ClearDragPoint();
     }
 

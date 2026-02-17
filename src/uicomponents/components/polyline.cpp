@@ -310,6 +310,8 @@ void Polyline::setPoints(const QVector<QPointF>& pts)
             if (bestIdx >= 0) {
                 m_pressedOnPoint = true;
                 m_pressedPointIndex = bestIdx;
+                m_draggedPointDomain = m_points[bestIdx];
+                m_hasDraggedPointDomain = true;
             }
         }
     }
@@ -577,7 +579,23 @@ qreal Polyline::yNormalizedFromDomain(qreal yDomain) const
 void Polyline::updateActivePoint()
 {
     const int hoveredDomainIdx = pointIndexAtPx(m_hoverPx);
-    const int activeDomainIdx = (m_pressedPointIndex >= 0) ? m_pressedPointIndex : hoveredDomainIdx;
+    int draggedDisplayDomainIdx = INVALID_POINT_IDX;
+    if (m_pressed && m_hasDraggedPointDomain && !m_points.isEmpty()) {
+        double bestScore = std::numeric_limits<double>::max();
+        for (int i = 0; i < m_points.size(); ++i) {
+            const double dx = std::abs(m_points[i].x() - m_draggedPointDomain.x());
+            const double dy = std::abs(m_points[i].y() - m_draggedPointDomain.y());
+            const double score = dx * 1000.0 + dy;
+            if (score < bestScore) {
+                bestScore = score;
+                draggedDisplayDomainIdx = i;
+            }
+        }
+    }
+
+    const int activeDomainIdx = (draggedDisplayDomainIdx >= 0)
+                                ? draggedDisplayDomainIdx
+                                : ((m_pressedPointIndex >= 0) ? m_pressedPointIndex : hoveredDomainIdx);
 
     if (activeDomainIdx < 0) {
         if (m_hasActivePoint) {
@@ -879,6 +897,8 @@ void Polyline::resetGestureState()
     m_pressedOnLine = false;
     m_pressedOnPoint = false;
     m_pressedPointIndex = INVALID_POINT_IDX;
+    m_hasDraggedPointDomain = false;
+    m_draggedPointDomain = {};
     m_movedSincePress = false;
     m_pressPx = QPointF(0.0, 0.0);
 
@@ -1057,6 +1077,10 @@ void Polyline::mousePressEvent(QMouseEvent* e)
     if (onPoint) {
         m_pressedOnPoint = true;
         m_pressedPointIndex = pointIndex;
+        if (m_pressedPointIndex >= 0 && m_pressedPointIndex < m_points.size()) {
+            m_draggedPointDomain = m_points[m_pressedPointIndex];
+            m_hasDraggedPointDomain = true;
+        }
         updateActivePoint();
         return;
     }
@@ -1106,6 +1130,8 @@ void Polyline::mouseMoveEvent(QMouseEvent* e)
         pN = clamp01(pN);
 
         const QPointF pDomain = domainFromNormalized(pN);
+        m_draggedPointDomain = pDomain;
+        m_hasDraggedPointDomain = true;
         emit pointMoved(m_pressedPointIndex, pDomain.x(), pDomain.y(), /*completed*/ false);
         updateActivePoint();
 
@@ -1131,6 +1157,8 @@ void Polyline::mouseReleaseEvent(QMouseEvent* e)
         pN = clamp01(pN);
 
         const QPointF pDomain = domainFromNormalized(pN);
+        m_draggedPointDomain = pDomain;
+        m_hasDraggedPointDomain = true;
         emit pointMoved(m_pressedPointIndex, pDomain.x(), pDomain.y(), /*completed*/ true);
         emit interactionFinished();
         resetGestureState();

@@ -229,6 +229,8 @@ private:
     QPointF m_pressPx;
     bool m_pressedOnPoint = false;
     int m_pressedPointIndex = -1;
+    bool m_hasDraggedPointDomain = false;
+    QPointF m_draggedPointDomain;
 
     bool m_movedSincePress = false;
 
