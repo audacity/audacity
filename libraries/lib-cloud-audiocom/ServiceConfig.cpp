@@ -248,6 +248,7 @@ ServiceConfig::GetExportConfig(const std::string& mimeType) const
       config.AddMember(
          "bit_depth", rapidjson::Value(24), config.GetAllocator());
       config.AddMember("level", rapidjson::Value(5), config.GetAllocator());
+      return config;
    }
    else if (mimeType == "audio/x-wav")
    {
