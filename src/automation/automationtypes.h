@@ -12,7 +12,7 @@ struct ClipEnvelopePoint
     double value = 1.0;
 };
 
-struct ClipEnvelopeInfo
+struct ClipGainAutomationInfo
 {
     double minValue = 0.0;
     double maxValue = 1.0;
@@ -21,7 +21,7 @@ struct ClipEnvelopeInfo
     std::uint64_t version = 0;
 };
 
-using ClipEnvelopePoints = std::vector<ClipEnvelopePoint>;
+using ClipGainAutomationPoints = std::vector<ClipEnvelopePoint>;
 
 struct EnvelopeDragSession
 {
@@ -35,6 +35,6 @@ struct EnvelopeDragSession
     int currentDragIndex = -1;
     int lastConsumedLeft = -1;  // smallest removed index on the left side
     int lastConsumedRight = -1; // largest removed index on the right side
-    ClipEnvelopePoints originalPoints;
+    ClipGainAutomationPoints originalPoints;
 };
 }

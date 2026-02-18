@@ -20,8 +20,8 @@ class Au3ClipGainInteraction : public IClipGainInteraction, public muse::Injecta
 public:
     Au3ClipGainInteraction(const muse::modularity::ContextPtr& ctx);
 
-    std::optional<ClipEnvelopeInfo> clipEnvelopeInfo(const trackedit::ClipKey& key) const override;
-    ClipEnvelopePoints clipEnvelopePoints(const trackedit::ClipKey& key) const override;
+    std::optional<ClipGainAutomationInfo> clipEnvelopeInfo(const trackedit::ClipKey& key) const override;
+    ClipGainAutomationPoints clipEnvelopePoints(const trackedit::ClipKey& key) const override;
     bool setClipEnvelopePoint(const trackedit::ClipKey& key, double tAbs, double value, bool completed) override;
     bool removeClipEnvelopePoint(const trackedit::ClipKey& key, int index, bool completed) override;
     bool setClipEnvelopePointAtIndex(const trackedit::ClipKey& key, int index, double tAbs, double value, bool completed) override;

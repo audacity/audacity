@@ -139,8 +139,8 @@ Rectangle {
         id: playbackState
     }
 
-    ClipEnvelopeModel {
-        id: envelopeModel
+    ClipGainModel {
+        id: clipGainModel
 
         clipKey: root.clipKey
     }
@@ -321,7 +321,7 @@ Rectangle {
         playbackState.init()
         singleClipContextMenuModel.load()
         multiClipContextMenuModel.load()
-        envelopeModel.init()
+        clipGainModel.init()
     }
 
     Component.onDestruction: {
@@ -881,16 +881,16 @@ Rectangle {
                     pointCentreColor: ui.theme.extra["audio_envelope_point_centre"]
                     pointOutlineWidth: 2.0
 
-                    points: envelopeModel.points
-                    defaultValue: envelopeModel.defaultValue
+                    points: clipGainModel.points
+                    defaultValue: clipGainModel.defaultValue
 
                     xRangeFrom: waveView.itemStartTime
                     xRangeTo: waveView.itemEndTime
 
-                    yRangeFrom: envelopeModel.minValue
-                    yRangeTo: envelopeModel.maxValue
-                    ySplitNormalized: envelopeModel.ySplitNormalized
-                    ySplitValue: envelopeModel.ySplitValue
+                    yRangeFrom: clipGainModel.minValue
+                    yRangeTo: clipGainModel.maxValue
+                    ySplitNormalized: clipGainModel.ySplitNormalized
+                    ySplitValue: clipGainModel.ySplitValue
                     yAxisInverse: false
 
                     Component.onCompleted: {
@@ -898,21 +898,21 @@ Rectangle {
                     }
 
                     onPointMoved: function(index, x, y, completed) {
-                        envelopeModel.setPoint(index, x, y, completed)
+                        clipGainModel.setPoint(index, x, y, completed)
                         tooltip.show(true)
                         tooltip.gain = gainToDb(y)
                     }
 
                     onPointAdded: function(x, y, completed) {
-                        envelopeModel.addPoint(x, y, completed)
+                        clipGainModel.addPoint(x, y, completed)
                     }
 
                     onPointRemoved: function(index, completed) {
-                        envelopeModel.removePoint(index, completed)
+                        clipGainModel.removePoint(index, completed)
                     }
 
                     onDragCancelled: {
-                        envelopeModel.cancelDrag()
+                        clipGainModel.cancelDrag()
                         tooltip.hide(true)
                     }
 

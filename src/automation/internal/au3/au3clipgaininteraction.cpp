@@ -111,7 +111,7 @@ void applyDragWithCrossingRemoval(Envelope& env, EnvelopeDragSession& session, d
 Au3ClipGainInteraction::Au3ClipGainInteraction(const muse::modularity::ContextPtr& ctx)
     : muse::Injectable(ctx) {}
 
-std::optional<ClipEnvelopeInfo> Au3ClipGainInteraction::clipEnvelopeInfo(
+std::optional<ClipGainAutomationInfo> Au3ClipGainInteraction::clipEnvelopeInfo(
     const trackedit::ClipKey& clipKey) const
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
@@ -127,7 +127,7 @@ std::optional<ClipEnvelopeInfo> Au3ClipGainInteraction::clipEnvelopeInfo(
     auto& env = clip->GetEnvelope();
     syncEnvelopeOffset(clip, env);
 
-    ClipEnvelopeInfo info;
+    ClipGainAutomationInfo info;
     info.minValue = env.GetMinValue();
     info.maxValue = env.GetMaxValue();
     info.defaultValue = env.GetDefaultValue();
@@ -137,7 +137,7 @@ std::optional<ClipEnvelopeInfo> Au3ClipGainInteraction::clipEnvelopeInfo(
     return info;
 }
 
-ClipEnvelopePoints Au3ClipGainInteraction::clipEnvelopePoints(const trackedit::ClipKey& clipKey) const
+ClipGainAutomationPoints Au3ClipGainInteraction::clipEnvelopePoints(const trackedit::ClipKey& clipKey) const
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
@@ -152,7 +152,7 @@ ClipEnvelopePoints Au3ClipGainInteraction::clipEnvelopePoints(const trackedit::C
     auto& env = clip->GetEnvelope();
     syncEnvelopeOffset(clip, env);
 
-    ClipEnvelopePoints pts;
+    ClipGainAutomationPoints pts;
     const auto n = env.GetNumberOfPoints();
     pts.reserve(n);
 

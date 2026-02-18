@@ -2,7 +2,7 @@
 
 #include "internal/au3/au3clipgaininteraction.h"
 
-#include "view/clipenvelopemodel.h"
+#include "view/clipgainmodel.h"
 
 using namespace au::automation;
 
@@ -21,5 +21,5 @@ void AutomationModule::registerExports()
 
 void AutomationModule::registerUiTypes()
 {
-    qmlRegisterType<ClipEnvelopeModel>("Audacity.Automation", 1, 0, "ClipEnvelopeModel");
+    qmlRegisterType<ClipGainModel>("Audacity.Automation", 1, 0, "ClipGainModel");
 }

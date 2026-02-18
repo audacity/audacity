@@ -18,8 +18,8 @@ class IClipGainInteraction : MODULE_EXPORT_INTERFACE
 public:
     virtual ~IClipGainInteraction() = default;
 
-    virtual std::optional<ClipEnvelopeInfo> clipEnvelopeInfo(const trackedit::ClipKey& key) const = 0;
-    virtual ClipEnvelopePoints clipEnvelopePoints(const trackedit::ClipKey& key) const = 0;
+    virtual std::optional<ClipGainAutomationInfo> clipEnvelopeInfo(const trackedit::ClipKey& key) const = 0;
+    virtual ClipGainAutomationPoints clipEnvelopePoints(const trackedit::ClipKey& key) const = 0;
     virtual bool setClipEnvelopePoint(const trackedit::ClipKey& key, double tAbs, double value, bool completed) = 0;
     virtual bool removeClipEnvelopePoint(const trackedit::ClipKey& key, int index, bool completed) = 0;
     virtual bool setClipEnvelopePointAtIndex(const trackedit::ClipKey& key, int index, double tAbs, double value, bool completed) = 0;

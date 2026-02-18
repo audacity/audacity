@@ -11,8 +11,8 @@ namespace au::automation {
 class ClipGainInteractionMock : public IClipGainInteraction
 {
 public:
-    MOCK_METHOD(std::optional<ClipEnvelopeInfo>, clipEnvelopeInfo, (const trackedit::ClipKey&), (const, override));
-    MOCK_METHOD(ClipEnvelopePoints, clipEnvelopePoints, (const trackedit::ClipKey&), (const, override));
+    MOCK_METHOD(std::optional<ClipGainAutomationInfo>, clipEnvelopeInfo, (const trackedit::ClipKey&), (const, override));
+    MOCK_METHOD(ClipGainAutomationPoints, clipEnvelopePoints, (const trackedit::ClipKey&), (const, override));
     MOCK_METHOD(bool, setClipEnvelopePoint, (const trackedit::ClipKey&, double, double, bool), (override));
     MOCK_METHOD(bool, removeClipEnvelopePoint, (const trackedit::ClipKey&, int, bool), (override));
     MOCK_METHOD(bool, setClipEnvelopePointAtIndex, (const trackedit::ClipKey&, int, double, double, bool), (override));

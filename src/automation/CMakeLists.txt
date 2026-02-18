@@ -14,8 +14,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3clipgaininteraction.h
 
     # view/ settings
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipenvelopemodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/clipenvelopemodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipgainmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/clipgainmodel.h
 )
 
 set(MODULE_USE_UNITY OFF)

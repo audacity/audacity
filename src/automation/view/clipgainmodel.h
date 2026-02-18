@@ -19,7 +19,7 @@
 #include "projectscene/types/projectscenetypes.h"
 
 namespace au::automation {
-class ClipEnvelopeModel : public QAbstractListModel, public muse::async::Asyncable, public muse::Injectable
+class ClipGainModel : public QAbstractListModel, public muse::async::Asyncable, public muse::Injectable
 {
     Q_OBJECT
 
@@ -31,18 +31,18 @@ class ClipEnvelopeModel : public QAbstractListModel, public muse::async::Asyncab
 
     Q_PROPERTY(QVector<QPointF> points READ points NOTIFY pointsChanged)
 
-    Q_PROPERTY(double minValue READ minValue NOTIFY envelopeInfoChanged)
-    Q_PROPERTY(double maxValue READ maxValue NOTIFY envelopeInfoChanged)
-    Q_PROPERTY(double defaultValue READ defaultValue NOTIFY envelopeInfoChanged)
-    Q_PROPERTY(bool exponential READ exponential NOTIFY envelopeInfoChanged)
-    Q_PROPERTY(double ySplitNormalized READ ySplitNormalized NOTIFY envelopeInfoChanged)
-    Q_PROPERTY(double ySplitValue READ ySplitValue NOTIFY envelopeInfoChanged)
+    Q_PROPERTY(double minValue READ minValue NOTIFY clipGainAutomationInfoChanged)
+    Q_PROPERTY(double maxValue READ maxValue NOTIFY clipGainAutomationInfoChanged)
+    Q_PROPERTY(double defaultValue READ defaultValue NOTIFY clipGainAutomationInfoChanged)
+    Q_PROPERTY(bool exponential READ exponential NOTIFY clipGainAutomationInfoChanged)
+    Q_PROPERTY(double ySplitNormalized READ ySplitNormalized NOTIFY clipGainAutomationInfoChanged)
+    Q_PROPERTY(double ySplitValue READ ySplitValue NOTIFY clipGainAutomationInfoChanged)
 
     Q_PROPERTY(double clipStartTime READ clipStartTime NOTIFY clipTimeChanged)
     Q_PROPERTY(double clipEndTime READ clipEndTime NOTIFY clipTimeChanged)
 
 public:
-    explicit ClipEnvelopeModel(QObject* parent = nullptr);
+    explicit ClipGainModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void init();
 
@@ -73,7 +73,7 @@ public:
 signals:
     void clipKeyChanged();
     void pointsChanged();
-    void envelopeInfoChanged();
+    void clipGainAutomationInfoChanged();
     void clipTimeChanged();
 
 private:
@@ -86,8 +86,8 @@ private:
     };
 
     projectscene::ClipKey m_clipKey;
-    ClipEnvelopePoints m_points;
-    ClipEnvelopeInfo m_info;
+    ClipGainAutomationPoints m_points;
+    ClipGainAutomationInfo m_info;
 
     double m_clipStartTime = 0.0;
     double m_clipEndTime = 0.0;

@@ -1,20 +1,20 @@
 /*
  * Audacity: A Digital Audio Editor
  */
-#include "clipenvelopemodel.h"
+#include "clipgainmodel.h"
 
 #include "log.h"
 
 using namespace au::automation;
 using namespace au::projectscene;
 
-ClipEnvelopeModel::ClipEnvelopeModel(QObject* parent)
+ClipGainModel::ClipGainModel(QObject* parent)
     : QAbstractListModel(parent)
     , muse::Injectable(muse::modularity::ContextPtr())
 {
 }
 
-void ClipEnvelopeModel::init()
+void ClipGainModel::init()
 {
     projectHistory()->historyChanged().onNotify(this, [this]() {
         if (m_clipKey.isValid()) {
@@ -41,7 +41,7 @@ void ClipEnvelopeModel::init()
     reload();
 }
 
-QVariant ClipEnvelopeModel::data(const QModelIndex& index, int role) const
+QVariant ClipGainModel::data(const QModelIndex& index, int role) const
 {
     if (!index.isValid()) {
         return {};
@@ -64,7 +64,7 @@ QVariant ClipEnvelopeModel::data(const QModelIndex& index, int role) const
     }
 }
 
-QHash<int, QByteArray> ClipEnvelopeModel::roleNames() const
+QHash<int, QByteArray> ClipGainModel::roleNames() const
 {
     return {
         { TimeRole, "time" },
@@ -72,7 +72,7 @@ QHash<int, QByteArray> ClipEnvelopeModel::roleNames() const
     };
 }
 
-QVector<QPointF> ClipEnvelopeModel::points() const
+QVector<QPointF> ClipGainModel::points() const
 {
     QVector<QPointF> out;
     out.reserve(int(m_points.size()));
@@ -82,57 +82,57 @@ QVector<QPointF> ClipEnvelopeModel::points() const
     return out;
 }
 
-double ClipEnvelopeModel::minValue() const
+double ClipGainModel::minValue() const
 {
     return m_info.minValue;
 }
 
-double ClipEnvelopeModel::maxValue() const
+double ClipGainModel::maxValue() const
 {
     return m_info.maxValue;
 }
 
-double ClipEnvelopeModel::defaultValue() const
+double ClipGainModel::defaultValue() const
 {
     return m_info.defaultValue;
 }
 
-bool ClipEnvelopeModel::exponential() const
+bool ClipGainModel::exponential() const
 {
     return m_info.exponential;
 }
 
-double ClipEnvelopeModel::ySplitNormalized() const
+double ClipGainModel::ySplitNormalized() const
 {
     return 0.7;
 }
 
-double ClipEnvelopeModel::ySplitValue() const
+double ClipGainModel::ySplitValue() const
 {
     return 1.0;
 }
 
-double ClipEnvelopeModel::clipStartTime() const
+double ClipGainModel::clipStartTime() const
 {
     return m_clipStartTime;
 }
 
-double ClipEnvelopeModel::clipEndTime() const
+double ClipGainModel::clipEndTime() const
 {
     return m_clipEndTime;
 }
 
-int ClipEnvelopeModel::rowCount(const QModelIndex& parent) const
+int ClipGainModel::rowCount(const QModelIndex& parent) const
 {
     return parent.isValid() ? 0 : int(m_points.size());
 }
 
-au::projectscene::ClipKey ClipEnvelopeModel::clipKey() const
+au::projectscene::ClipKey ClipGainModel::clipKey() const
 {
     return m_clipKey;
 }
 
-void ClipEnvelopeModel::setClipKey(const ClipKey& key)
+void ClipGainModel::setClipKey(const ClipKey& key)
 {
     if (m_clipKey == key) {
         return;
@@ -142,7 +142,7 @@ void ClipEnvelopeModel::setClipKey(const ClipKey& key)
     reload();
 }
 
-void ClipEnvelopeModel::reload()
+void ClipGainModel::reload()
 {
     if (!m_clipKey.isValid()) {
         clear();
@@ -166,10 +166,10 @@ void ClipEnvelopeModel::reload()
     endResetModel();
 
     emit pointsChanged();
-    emit envelopeInfoChanged();
+    emit clipGainAutomationInfoChanged();
 }
 
-void ClipEnvelopeModel::clear()
+void ClipGainModel::clear()
 {
     if (m_points.empty()) {
         return;
@@ -181,7 +181,7 @@ void ClipEnvelopeModel::clear()
     emit pointsChanged();
 }
 
-void ClipEnvelopeModel::setPoint(int index, double tAbs, double value, bool completed)
+void ClipGainModel::setPoint(int index, double tAbs, double value, bool completed)
 {
     if (!m_clipKey.isValid()) {
         return;
@@ -231,7 +231,7 @@ void ClipEnvelopeModel::setPoint(int index, double tAbs, double value, bool comp
     }
 }
 
-void ClipEnvelopeModel::addPoint(double tAbs, double value, bool completed)
+void ClipGainModel::addPoint(double tAbs, double value, bool completed)
 {
     if (!m_clipKey.isValid()) {
         return;
@@ -244,7 +244,7 @@ void ClipEnvelopeModel::addPoint(double tAbs, double value, bool completed)
     reload();
 }
 
-void ClipEnvelopeModel::removePoint(int index, bool completed)
+void ClipGainModel::removePoint(int index, bool completed)
 {
     if (!m_clipKey.isValid()) {
         return;
@@ -260,7 +260,7 @@ void ClipEnvelopeModel::removePoint(int index, bool completed)
     reload();
 }
 
-void ClipEnvelopeModel::cancelDrag()
+void ClipGainModel::cancelDrag()
 {
     if (!m_clipKey.isValid()) {
         return;
