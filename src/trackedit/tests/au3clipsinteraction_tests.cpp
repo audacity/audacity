@@ -10,6 +10,7 @@
 #include "mocks/selectioncontrollermock.h"
 #include "mocks/trackeditconfigurationmock.h"
 #include "mocks/projecthistorymock.h"
+#include "automation/tests/mocks/clipgaininteractionmock.h"
 
 #include "interactive/tests/mocks/interactivemock.h"
 
@@ -30,12 +31,14 @@ public:
         m_playbackState = std::make_shared<NiceMock<context::PlaybackStateMock> >();
         m_configuration = std::make_shared<NiceMock<TrackeditConfigurationMock> >();
         m_projectHistory = std::make_shared<NiceMock<ProjectHistoryMock> >();
+        m_clipGainInteraction = std::make_shared<NiceMock<automation::ClipGainInteractionMock> >();
 
         m_clipsInteraction->globalContext.set(m_globalContext);
         m_clipsInteraction->selectionController.set(m_selectionController);
         m_clipsInteraction->interactive.set(m_interactive);
         m_clipsInteraction->configuration.set(m_configuration);
         m_clipsInteraction->projectHistory.set(m_projectHistory);
+        m_clipsInteraction->clipGainInteraction.set(m_clipGainInteraction);
 
         m_trackEditProject = std::make_shared<NiceMock<TrackeditProjectMock> >();
         ON_CALL(*m_globalContext, currentTrackeditProject())
@@ -58,6 +61,7 @@ public:
     std::shared_ptr<TrackeditConfigurationMock> m_configuration;
     std::shared_ptr<ProjectHistoryMock> m_projectHistory;
     std::shared_ptr<muse::IInteractive> m_interactive;
+    std::shared_ptr<automation::ClipGainInteractionMock> m_clipGainInteraction;
 };
 
 TEST_F(Au3ClipsInteractionTests, ChangeClipColor)
