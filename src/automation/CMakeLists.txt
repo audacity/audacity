@@ -22,3 +22,7 @@ set(MODULE_USE_UNITY OFF)
 set(MODULE_LINK au3wrap)
 
 setup_module()
+
+if (AU_BUILD_AUTOMATION_TESTS)
+    add_subdirectory(tests)
+endif()
