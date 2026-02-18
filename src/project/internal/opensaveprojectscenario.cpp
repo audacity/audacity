@@ -25,6 +25,7 @@
 #include "cloud/clouderrors.h"
 #include "projecterrors.h"
 #include "translation.h"
+#include "types/uri.h"
 
 using namespace muse;
 using namespace au::project;
@@ -236,8 +237,12 @@ RetVal<CloudAudioInfo> OpenSaveProjectScenario::askShareAudioLocation(IAudacityP
 //! TODO AU4
 RetVal<CloudProjectInfo> OpenSaveProjectScenario::doAskCloudLocation(IAudacityProjectPtr project, SaveMode mode, bool isPublishShare) const
 {
-    return RetVal<CloudProjectInfo>();
+    RetVal<Val> rv = interactive()->openSync(UriQuery("audacity://project/savetocloud"));
+    if (!rv.ret) {
+        return rv.ret;
+    }
 
+    return RetVal<CloudProjectInfo>();
     // bool isCloudAvailable = museScoreComService()->authorization()->checkCloudIsAvailable();
     // if (!isCloudAvailable) {
     //     return warnCloudNotAvailableForUploading(isPublishShare);

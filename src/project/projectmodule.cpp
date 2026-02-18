@@ -31,6 +31,7 @@
 #include "internal/thumbnailcreator.h"
 #include "internal/au3/au3metadata.h"
 
+#include "view/accountinfomodel.h"
 #include "view/projectpropertiesmodel.h"
 #include "view/projectspagemodel.h"
 #include "view/recentprojectsmodel.h"
@@ -86,6 +87,7 @@ void ProjectModule::resolveImports()
     if (ir) {
         ir->registerQmlUri(muse::Uri("audacity://project/new"), "Audacity/Project/NewProjectDialog.qml");
         ir->registerQmlUri(muse::Uri("audacity://project/asksavelocationtype"), "Audacity/Project/AskSaveLocationTypeDialog.qml");
+        ir->registerQmlUri(muse::Uri("audacity://project/savetocloud"), "Audacity/Project/SaveToCloudDialog.qml");
     }
 }
 
@@ -109,6 +111,8 @@ void ProjectModule::registerUiTypes()
 
     qmlRegisterUncreatableType<QMLSaveLocationType>("Audacity.Project", 1, 0, "SaveLocationType",
                                                     "Not creatable as it is an enum type");
+
+    qmlRegisterType<AccountInfoModel>("Audacity.Project", 1, 0, "AccountInfoModel");
 }
 
 void ProjectModule::onInit(const muse::IApplication::RunMode&)
