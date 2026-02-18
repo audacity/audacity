@@ -6,7 +6,7 @@
 #include "framework/global/io/path.h"
 #include "framework/global/types/retval.h"
 
-using namespace au::project;
+using namespace au::au3cloud;
 
 AccountInfoModel::AccountInfoModel(QObject* parent)
     : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))

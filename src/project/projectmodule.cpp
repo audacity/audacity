@@ -31,7 +31,6 @@
 #include "internal/thumbnailcreator.h"
 #include "internal/au3/au3metadata.h"
 
-#include "view/accountinfomodel.h"
 #include "view/projectpropertiesmodel.h"
 #include "view/projectspagemodel.h"
 #include "view/recentprojectsmodel.h"
@@ -111,8 +110,6 @@ void ProjectModule::registerUiTypes()
 
     qmlRegisterUncreatableType<QMLSaveLocationType>("Audacity.Project", 1, 0, "SaveLocationType",
                                                     "Not creatable as it is an enum type");
-
-    qmlRegisterType<AccountInfoModel>("Audacity.Project", 1, 0, "AccountInfoModel");
 }
 
 void ProjectModule::onInit(const muse::IApplication::RunMode&)

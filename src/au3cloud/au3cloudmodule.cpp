@@ -2,6 +2,8 @@
 * Audacity: A Digital Audio Editor
 */
 #include "au3cloudmodule.h"
+
+#include "view/accountinfomodel.h"
 #include "dev/cloudtestsmodel.h"
 
 using namespace au::au3cloud;
@@ -29,4 +31,5 @@ void Au3CloudModule::onInit(const muse::IApplication::RunMode&)
 void Au3CloudModule::registerUiTypes()
 {
     qmlRegisterType<CloudTestsModel>("Audacity.Cloud", 1, 0, "CloudTestsModel");
+    qmlRegisterType<AccountInfoModel>("Audacity.Cloud", 1, 0, "AccountInfoModel");
 }

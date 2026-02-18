@@ -63,8 +63,6 @@ Item {
             Layout.preferredHeight: 60
             Layout.topMargin: 20
 
-            enabled: false
-
             navigation.name: "AccountInfo"
             navigation.panel: navPanel
             navigation.row: 1

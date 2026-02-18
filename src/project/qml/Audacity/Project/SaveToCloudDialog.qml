@@ -8,6 +8,8 @@ import Muse.Ui 1.0
 import Muse.UiComponents
 import Muse.Cloud 1.0
 
+import Audacity.Cloud 1.0
+
 StyledDialogView {
     id: root
 
