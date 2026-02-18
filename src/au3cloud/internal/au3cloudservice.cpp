@@ -52,7 +52,8 @@ void Au3CloudService::init()
 
     auto& oauthService = audacity::cloud::audiocom::GetOAuthService();
     const auto NO_ACCESS_TOKEN = muse::qtrc("appshell/gettingstarted", "No access token");
-    m_authState.set(oauthService.HasAccessToken() ? AuthState(Authorized()) : AuthState(NotAuthorized(NO_ACCESS_TOKEN.toStdString())));
+    m_authState.set(AuthState(NotAuthorized(NO_ACCESS_TOKEN.toStdString())));
+    oauthService.ValidateAuth(nullptr, AudiocomTrace::ignore, true);
     m_authSubscription
         = oauthService.Subscribe([this](const audacity::cloud::audiocom::AuthStateChangedMessage& message)
     {
