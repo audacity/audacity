@@ -13,6 +13,7 @@
 #include "modularity/ioc.h"
 #include "automation/iclipgaininteraction.h"
 #include "trackedit/iclipsinteraction.h"
+#include "trackedit/iprojecthistory.h"
 
 #include "trackedit/trackedittypes.h"
 #include "projectscene/types/projectscenetypes.h"
@@ -24,6 +25,7 @@ class ClipEnvelopeModel : public QAbstractListModel, public muse::async::Asyncab
 
     muse::Inject<IClipGainInteraction> clipGainInteraction{ this };
     muse::Inject<trackedit::IClipsInteraction> clipsInteraction{ this };
+    muse::Inject<trackedit::IProjectHistory> projectHistory{ this };
 
     Q_PROPERTY(projectscene::ClipKey clipKey READ clipKey WRITE setClipKey NOTIFY clipKeyChanged FINAL)
 

@@ -16,6 +16,12 @@ ClipEnvelopeModel::ClipEnvelopeModel(QObject* parent)
 
 void ClipEnvelopeModel::init()
 {
+    projectHistory()->historyChanged().onNotify(this, [this]() {
+        if (m_clipKey.isValid()) {
+            reload();
+        }
+    });
+
     clipsInteraction()->clipStartTimeChanged().onReceive(
         this,
         [this](const ClipKey& key, muse::secs_t /*newStart*/, bool /*completed*/) {
