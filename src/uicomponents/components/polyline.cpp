@@ -1016,6 +1016,9 @@ void Polyline::hoverMoveEvent(QHoverEvent* e)
 {
     // NOTE: even if mouse is still, Qt produces hoverMoveEvents constantly
     if (m_hoverPx == e->position()) {
+        // IMPORTANT: let through hover events (otherwise double-click
+        // clip selection may be broken)
+        e->ignore();
         return;
     }
 
@@ -1037,7 +1040,15 @@ void Polyline::hoverMoveEvent(QHoverEvent* e)
 
     updateActivePoint();
     update();
-    e->accept();
+
+    // IMPORTANT: only consume hover when automation is actually interactive.
+    // Otherwise let underlying ClipItem hover area keep containsMouse=true,
+    // so itemHovered stays correct for selection/double-click logic.
+    if (nearPoint || nearLine || m_pressed || m_pressedPointIndex >= 0) {
+        e->accept();
+    } else {
+        e->ignore();
+    }
 }
 
 void Polyline::hoverLeaveEvent(QHoverEvent* e)
@@ -1117,7 +1128,6 @@ void Polyline::mouseMoveEvent(QMouseEvent* e)
     const QPointF pos = e->position();
     if (!m_movedSincePress && (pos - m_pressPx).manhattanLength() > MOVE_THRESHOLD) {
         m_movedSincePress = true;
-
     }
 
     // drag point (2+ points only)
@@ -1137,7 +1147,6 @@ void Polyline::mouseMoveEvent(QMouseEvent* e)
 
         return;
     }
-
 }
 
 void Polyline::mouseReleaseEvent(QMouseEvent* e)

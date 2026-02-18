@@ -124,6 +124,7 @@ Rectangle {
     property bool isBrush: waveView.isStemPlot && root.altPressed
     property bool isIsolationMode: false
     property bool containsMouse: false
+    property bool automationMouseHoverLetThrough: false
     property alias isNearSample: waveView.isNearSample
     property alias currentChannel: waveView.currentChannel
     property bool leftTrimContainsMouse: false
@@ -276,7 +277,7 @@ Rectangle {
             return
         }
 
-        root.containsMouse = containsMouse
+        root.containsMouse = containsMouse || root.automationMouseHoverLetThrough
         if (!root.containsMouse && !root.multiSampleEdit) {
             waveView.isNearSample = false
         }
@@ -376,6 +377,18 @@ Rectangle {
             }
 
             root.setContainsMouse(containsMouse)
+        }
+    }
+
+    // NOTE: hover events from polyline are not visible in MouseArea
+    // so we need to handle them manually
+    HoverHandler {
+        id: passiveHoverHandler
+
+        enabled: root.isAutomationEnabled
+
+        onHoveredChanged: {
+            automationMouseHoverLetThrough = hovered
         }
     }
 
