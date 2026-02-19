@@ -16,6 +16,7 @@
 namespace {
 constexpr double MOVE_THRESHOLD = 3.0;
 constexpr double EPSILON = 1e-12;
+constexpr double BOUNDARY_MARGIN = 0.1;
 
 static constexpr int INVALID_POINT_IDX = -1;
 static constexpr int PENDING_POINT_IDX = -2;
@@ -756,7 +757,9 @@ void Polyline::rebuildVisiblePoints()
     // interior real points
     for (const auto& it : sortedPointsWithIndexes) {
         const auto& p = it.p;
-        if (p.x() <= m_xFrom || p.x() >= m_xTo) {
+        // NOTE: build visible points with a margin so points directly at the edges
+        // of container do not flash on re-paint
+        if (p.x() < (m_xFrom - BOUNDARY_MARGIN) || p.x() > (m_xTo + BOUNDARY_MARGIN)) {
             continue;
         }
         const double xN = (p.x() - m_xFrom) / xRange;

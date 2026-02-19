@@ -179,8 +179,9 @@ bool Au3ClipGainInteraction::setClipGainPoint(const trackedit::ClipKey& clipKey,
     auto& env = clip->GetEnvelope();
     syncEnvelopeOffset(clip, env);
 
+    const double clampedTime = std::clamp(time, clip->GetPlayStartTime(), clip->GetPlayEndTime());
     const double v = std::clamp(value, env.GetMinValue(), env.GetMaxValue());
-    env.InsertOrReplace(time, v);
+    env.InsertOrReplace(clampedTime, v);
 
     if (auto prj = globalContext()->currentTrackeditProject()) {
         prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
@@ -302,7 +303,9 @@ bool Au3ClipGainInteraction::updateClipGainPointDrag(const trackedit::ClipKey& c
 
     auto& env = clip->GetEnvelope();
     syncEnvelopeOffset(clip, env);
-    applyDragWithCrossingRemoval(env, *m_envDrag, tAbs - env.GetOffset(), value);
+    const double clampedTAbs = std::clamp(tAbs, clip->GetPlayStartTime(), clip->GetPlayEndTime());
+    const double clampedValue = std::clamp(value, env.GetMinValue(), env.GetMaxValue());
+    applyDragWithCrossingRemoval(env, *m_envDrag, clampedTAbs - env.GetOffset(), clampedValue);
 
     if (auto prj = globalContext()->currentTrackeditProject()) {
         prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));

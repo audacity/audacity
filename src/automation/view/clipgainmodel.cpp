@@ -193,6 +193,8 @@ void ClipGainModel::setPoint(int index, double tAbs, double value, bool complete
         return;
     }
 
+    const double clampedTime = std::clamp(tAbs, m_clipStartTime, m_clipEndTime);
+
     if (!m_dragActive || m_dragIndex != index) {
         // if we somehow had a different drag active, end it
         if (m_dragActive) {
@@ -209,13 +211,13 @@ void ClipGainModel::setPoint(int index, double tAbs, double value, bool complete
         m_dragIndex = index;
     }
 
-    if (!clipGainInteraction()->updateClipGainPointDrag(m_clipKey.key, tAbs, value)) {
+    if (!clipGainInteraction()->updateClipGainPointDrag(m_clipKey.key, clampedTime, value)) {
         return;
     }
 
     if (index < int(m_points.size())) {
         auto& p = m_points[size_t(index)];
-        p.xValue = tAbs;
+        p.xValue = clampedTime;
         p.yValue = value;
         const QModelIndex idx = this->index(index, 0);
         emit dataChanged(idx, idx, { TimeRole, ValueRole });
@@ -237,7 +239,9 @@ void ClipGainModel::addPoint(double tAbs, double value, bool completed)
         return;
     }
 
-    if (!clipGainInteraction()->setClipGainPoint(m_clipKey.key, tAbs, value, completed)) {
+    const double clampedTime = std::clamp(tAbs, m_clipStartTime, m_clipEndTime);
+
+    if (!clipGainInteraction()->setClipGainPoint(m_clipKey.key, clampedTime, value, completed)) {
         return;
     }
 
