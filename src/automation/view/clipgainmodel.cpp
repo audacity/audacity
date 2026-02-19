@@ -30,7 +30,7 @@ void ClipGainModel::init()
         }
     });
 
-    clipGainInteraction()->clipEnvelopeChanged().onReceive(
+    clipGainInteraction()->clipGainChanged().onReceive(
         this,
         [this](const ClipKey& key, bool /*completed*/) {
         if (m_clipKey.isValid() && key == m_clipKey) {
@@ -56,9 +56,9 @@ QVariant ClipGainModel::data(const QModelIndex& index, int role) const
 
     switch (role) {
     case TimeRole:
-        return p.time;
+        return p.xValue;
     case ValueRole:
-        return p.value;
+        return p.yValue;
     default:
         return {};
     }
@@ -77,7 +77,7 @@ QVector<QPointF> ClipGainModel::points() const
     QVector<QPointF> out;
     out.reserve(int(m_points.size()));
     for (const auto& point : m_points) {
-        out.push_back(QPointF(point.time, point.value));
+        out.push_back(QPointF(point.xValue, point.yValue));
     }
     return out;
 }
@@ -153,8 +153,8 @@ void ClipGainModel::reload()
     m_clipEndTime   = clipsInteraction()->clipEndTime(m_clipKey.key);
     emit clipTimeChanged();
 
-    auto points = clipGainInteraction()->clipEnvelopePoints(m_clipKey.key);
-    auto infoOpt = clipGainInteraction()->clipEnvelopeInfo(m_clipKey.key);
+    auto points = clipGainInteraction()->clipGainPoints(m_clipKey.key);
+    auto infoOpt = clipGainInteraction()->clipGainInfo(m_clipKey.key);
     if (infoOpt) {
         m_info = *infoOpt;
     } else {
@@ -196,10 +196,10 @@ void ClipGainModel::setPoint(int index, double tAbs, double value, bool complete
     if (!m_dragActive || m_dragIndex != index) {
         // if we somehow had a different drag active, end it
         if (m_dragActive) {
-            clipGainInteraction()->endClipEnvelopePointDrag(m_clipKey.key, /*commit*/ true);
+            clipGainInteraction()->endClipGainPointDrag(m_clipKey.key, /*commit*/ true);
         }
 
-        if (!clipGainInteraction()->beginClipEnvelopePointDrag(m_clipKey.key, index)) {
+        if (!clipGainInteraction()->beginClipGainPointDrag(m_clipKey.key, index)) {
             m_dragActive = false;
             m_dragIndex = -1;
             return;
@@ -209,20 +209,20 @@ void ClipGainModel::setPoint(int index, double tAbs, double value, bool complete
         m_dragIndex = index;
     }
 
-    if (!clipGainInteraction()->updateClipEnvelopePointDrag(m_clipKey.key, tAbs, value)) {
+    if (!clipGainInteraction()->updateClipGainPointDrag(m_clipKey.key, tAbs, value)) {
         return;
     }
 
     if (index < int(m_points.size())) {
         auto& p = m_points[size_t(index)];
-        p.time = tAbs;
-        p.value = value;
+        p.xValue = tAbs;
+        p.yValue = value;
         const QModelIndex idx = this->index(index, 0);
         emit dataChanged(idx, idx, { TimeRole, ValueRole });
     }
 
     if (completed) {
-        clipGainInteraction()->endClipEnvelopePointDrag(m_clipKey.key, /*commit*/ true);
+        clipGainInteraction()->endClipGainPointDrag(m_clipKey.key, /*commit*/ true);
 
         m_dragActive = false;
         m_dragIndex = -1;
@@ -237,7 +237,7 @@ void ClipGainModel::addPoint(double tAbs, double value, bool completed)
         return;
     }
 
-    if (!clipGainInteraction()->setClipEnvelopePoint(m_clipKey.key, tAbs, value, completed)) {
+    if (!clipGainInteraction()->setClipGainPoint(m_clipKey.key, tAbs, value, completed)) {
         return;
     }
 
@@ -253,7 +253,7 @@ void ClipGainModel::removePoint(int index, bool completed)
         return;
     }
 
-    if (!clipGainInteraction()->removeClipEnvelopePoint(m_clipKey.key, index, completed)) {
+    if (!clipGainInteraction()->removeClipGainPoint(m_clipKey.key, index, completed)) {
         return;
     }
 
@@ -266,7 +266,7 @@ void ClipGainModel::cancelDrag()
         return;
     }
 
-    clipGainInteraction()->endClipEnvelopePointDrag(m_clipKey.key, /*commit*/ false);
+    clipGainInteraction()->endClipGainPointDrag(m_clipKey.key, /*commit*/ false);
 
     m_dragActive = false;
     m_dragIndex = -1;

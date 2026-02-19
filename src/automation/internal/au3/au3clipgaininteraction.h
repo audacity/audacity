@@ -20,20 +20,20 @@ class Au3ClipGainInteraction : public IClipGainInteraction, public muse::Injecta
 public:
     Au3ClipGainInteraction(const muse::modularity::ContextPtr& ctx);
 
-    std::optional<ClipGainAutomationInfo> clipEnvelopeInfo(const trackedit::ClipKey& key) const override;
-    ClipGainAutomationPoints clipEnvelopePoints(const trackedit::ClipKey& key) const override;
-    bool setClipEnvelopePoint(const trackedit::ClipKey& key, double tAbs, double value, bool completed) override;
-    bool removeClipEnvelopePoint(const trackedit::ClipKey& key, int index, bool completed) override;
-    bool setClipEnvelopePointAtIndex(const trackedit::ClipKey& key, int index, double tAbs, double value, bool completed) override;
-    bool beginClipEnvelopePointDrag(const trackedit::ClipKey& clip, int pointIndex) override;
-    bool updateClipEnvelopePointDrag(const trackedit::ClipKey& clip, double tAbs, double value) override;
-    bool endClipEnvelopePointDrag(const trackedit::ClipKey& clip, bool commit) override;
-    muse::async::Channel<trackedit::ClipKey, bool> clipEnvelopeChanged() const override;
+    std::optional<AutomationInfo> clipGainInfo(const trackedit::ClipKey& key) const override;
+    AutomationPoints clipGainPoints(const trackedit::ClipKey& key) const override;
+    bool setClipGainPoint(const trackedit::ClipKey& key, double tAbs, double value, bool completed) override;
+    bool removeClipGainPoint(const trackedit::ClipKey& key, int index, bool completed) override;
+    bool setClipGainPointAtIndex(const trackedit::ClipKey& key, int index, double tAbs, double value, bool completed) override;
+    bool beginClipGainPointDrag(const trackedit::ClipKey& clip, int pointIndex) override;
+    bool updateClipGainPointDrag(const trackedit::ClipKey& clip, double tAbs, double value) override;
+    bool endClipGainPointDrag(const trackedit::ClipKey& clip, bool commit) override;
+    muse::async::Channel<trackedit::ClipKey, bool> clipGainChanged() const override;
 
 private:
     au3::Au3Project& projectRef() const;
 
     muse::async::Channel<au::trackedit::ClipKey, bool> m_clipEnvelopeChanged;
-    std::optional<EnvelopeDragSession> m_envDrag;
+    std::optional<AutomationDragSession> m_envDrag;
 };
 }

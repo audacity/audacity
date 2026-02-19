@@ -6,13 +6,13 @@
 #include "trackedit/trackedittypes.h"
 
 namespace au::automation {
-struct ClipEnvelopePoint
+struct AutomationPoint
 {
-    double time = 0.0;
-    double value = 1.0;
+    double xValue = 0.0;
+    double yValue = 1.0;
 };
 
-struct ClipGainAutomationInfo
+struct AutomationInfo
 {
     double minValue = 0.0;
     double maxValue = 1.0;
@@ -21,20 +21,20 @@ struct ClipGainAutomationInfo
     std::uint64_t version = 0;
 };
 
-using ClipGainAutomationPoints = std::vector<ClipEnvelopePoint>;
+using AutomationPoints = std::vector<AutomationPoint>;
 
-struct EnvelopeDragSession
+struct AutomationDragSession
 {
     au::trackedit::ClipKey clip;
-    int origIndex = -1;
-    double origTime = 0.0;
-    double origValue = 0.0;
+    int originalIndex = -1;
+    double originalXValue = 0.0;
+    double originalYValue = 0.0;
     bool active = false;
 
     // used for eat/restore behavior
     int currentDragIndex = -1;
     int lastConsumedLeft = -1;  // smallest removed index on the left side
     int lastConsumedRight = -1; // largest removed index on the right side
-    ClipGainAutomationPoints originalPoints;
+    AutomationPoints originalPoints;
 };
 }

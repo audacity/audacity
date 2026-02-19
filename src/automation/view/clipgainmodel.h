@@ -86,8 +86,8 @@ private:
     };
 
     projectscene::ClipKey m_clipKey;
-    ClipGainAutomationPoints m_points;
-    ClipGainAutomationInfo m_info;
+    AutomationPoints m_points;
+    AutomationInfo m_info;
 
     double m_clipStartTime = 0.0;
     double m_clipEndTime = 0.0;

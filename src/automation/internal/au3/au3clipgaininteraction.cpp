@@ -38,21 +38,21 @@ void syncEnvelopeOffset(const std::shared_ptr<Au3WaveClip>& clip, Envelope& env)
     }
 }
 
-void restoreEnvelopeFromSnapshot(Envelope& env, const EnvelopeDragSession& session)
+void restoreEnvelopeFromSnapshot(Envelope& env, const AutomationDragSession& session)
 {
     env.Clear();
     for (const auto& p : session.originalPoints) {
-        env.Insert(p.time, p.value);
+        env.Insert(p.xValue, p.yValue);
     }
 }
 
 // How many original points have we crossed while dragging to new time?
-int computeRightCrossedIndex(const EnvelopeDragSession& session, double time)
+int computeRightCrossedIndex(const AutomationDragSession& session, double time)
 {
-    int idx = session.origIndex;
-    for (int i = session.origIndex + 1; i < static_cast<int>(session.originalPoints.size()); ++i) {
-        const double pointTime = session.originalPoints[i].time;
-        if (pointTime > session.origTime && pointTime <= time) {
+    int idx = session.originalIndex;
+    for (int i = session.originalIndex + 1; i < static_cast<int>(session.originalPoints.size()); ++i) {
+        const double pointTime = session.originalPoints[i].xValue;
+        if (pointTime > session.originalXValue && pointTime <= time) {
             idx = i;
         } else {
             break;
@@ -62,12 +62,12 @@ int computeRightCrossedIndex(const EnvelopeDragSession& session, double time)
 }
 
 // How many original points have we crossed while dragging to new time?
-int computeLeftCrossedIndex(const EnvelopeDragSession& session, double time)
+int computeLeftCrossedIndex(const AutomationDragSession& session, double time)
 {
-    int idx = session.origIndex;
-    for (int i = session.origIndex - 1; i >= 0; --i) {
-        const double pointTime = session.originalPoints[i].time;
-        if (pointTime < session.origTime && pointTime >= time) {
+    int idx = session.originalIndex;
+    for (int i = session.originalIndex - 1; i >= 0; --i) {
+        const double pointTime = session.originalPoints[i].xValue;
+        if (pointTime < session.originalXValue && pointTime >= time) {
             idx = i;
         } else {
             break;
@@ -76,7 +76,7 @@ int computeLeftCrossedIndex(const EnvelopeDragSession& session, double time)
     return idx;
 }
 
-void applyDragWithCrossingRemoval(Envelope& env, EnvelopeDragSession& session, double newTime, double newValue)
+void applyDragWithCrossingRemoval(Envelope& env, AutomationDragSession& session, double newTime, double newValue)
 {
     const int desiredRight = computeRightCrossedIndex(session, newTime);
     const int desiredLeft = computeLeftCrossedIndex(session, newTime);
@@ -87,7 +87,7 @@ void applyDragWithCrossingRemoval(Envelope& env, EnvelopeDragSession& session, d
     }
     while (session.lastConsumedRight > desiredRight) {
         const auto& restore = session.originalPoints[session.lastConsumedRight];
-        env.Insert(session.currentDragIndex + 1, EnvPoint { restore.time, restore.value });
+        env.Insert(session.currentDragIndex + 1, EnvPoint { restore.xValue, restore.yValue });
         --session.lastConsumedRight;
     }
 
@@ -98,7 +98,7 @@ void applyDragWithCrossingRemoval(Envelope& env, EnvelopeDragSession& session, d
     }
     while (session.lastConsumedLeft < desiredLeft) {
         const auto& restore = session.originalPoints[session.lastConsumedLeft];
-        env.Insert(session.currentDragIndex, EnvPoint { restore.time, restore.value });
+        env.Insert(session.currentDragIndex, EnvPoint { restore.xValue, restore.yValue });
         ++session.currentDragIndex;
         ++session.lastConsumedLeft;
     }
@@ -111,7 +111,7 @@ void applyDragWithCrossingRemoval(Envelope& env, EnvelopeDragSession& session, d
 Au3ClipGainInteraction::Au3ClipGainInteraction(const muse::modularity::ContextPtr& ctx)
     : muse::Injectable(ctx) {}
 
-std::optional<ClipGainAutomationInfo> Au3ClipGainInteraction::clipEnvelopeInfo(
+std::optional<AutomationInfo> Au3ClipGainInteraction::clipGainInfo(
     const trackedit::ClipKey& clipKey) const
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
@@ -127,7 +127,7 @@ std::optional<ClipGainAutomationInfo> Au3ClipGainInteraction::clipEnvelopeInfo(
     auto& env = clip->GetEnvelope();
     syncEnvelopeOffset(clip, env);
 
-    ClipGainAutomationInfo info;
+    AutomationInfo info;
     info.minValue = env.GetMinValue();
     info.maxValue = env.GetMaxValue();
     info.defaultValue = env.GetDefaultValue();
@@ -137,7 +137,7 @@ std::optional<ClipGainAutomationInfo> Au3ClipGainInteraction::clipEnvelopeInfo(
     return info;
 }
 
-ClipGainAutomationPoints Au3ClipGainInteraction::clipEnvelopePoints(const trackedit::ClipKey& clipKey) const
+AutomationPoints Au3ClipGainInteraction::clipGainPoints(const trackedit::ClipKey& clipKey) const
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
@@ -152,7 +152,7 @@ ClipGainAutomationPoints Au3ClipGainInteraction::clipEnvelopePoints(const tracke
     auto& env = clip->GetEnvelope();
     syncEnvelopeOffset(clip, env);
 
-    ClipGainAutomationPoints pts;
+    AutomationPoints pts;
     const auto n = env.GetNumberOfPoints();
     pts.reserve(n);
 
@@ -164,7 +164,7 @@ ClipGainAutomationPoints Au3ClipGainInteraction::clipEnvelopePoints(const tracke
     return pts;
 }
 
-bool Au3ClipGainInteraction::setClipEnvelopePoint(const trackedit::ClipKey& clipKey, double time, double value, bool completed)
+bool Au3ClipGainInteraction::setClipGainPoint(const trackedit::ClipKey& clipKey, double time, double value, bool completed)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
@@ -192,7 +192,7 @@ bool Au3ClipGainInteraction::setClipEnvelopePoint(const trackedit::ClipKey& clip
     return true;
 }
 
-bool Au3ClipGainInteraction::removeClipEnvelopePoint(const trackedit::ClipKey& clipKey, int index, bool completed)
+bool Au3ClipGainInteraction::removeClipGainPoint(const trackedit::ClipKey& clipKey, int index, bool completed)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
@@ -222,23 +222,23 @@ bool Au3ClipGainInteraction::removeClipEnvelopePoint(const trackedit::ClipKey& c
     return true;
 }
 
-bool Au3ClipGainInteraction::setClipEnvelopePointAtIndex(
+bool Au3ClipGainInteraction::setClipGainPointAtIndex(
     const trackedit::ClipKey& key, int index, double time, double value, bool completed)
 {
-    const auto points = clipEnvelopePoints(key);
+    const auto points = clipGainPoints(key);
     if (index < 0 || index >= static_cast<int>(points.size())) {
         return false;
     }
 
-    const double oldTime = points.at(index).time;
+    const double oldTime = points.at(index).xValue;
     if (muse::is_equal(oldTime, time)) {
-        return setClipEnvelopePoint(key, time, value, completed);
+        return setClipGainPoint(key, time, value, completed);
     }
 
-    return setClipEnvelopePoint(key, time, value, completed);
+    return setClipGainPoint(key, time, value, completed);
 }
 
-bool Au3ClipGainInteraction::beginClipEnvelopePointDrag(const trackedit::ClipKey& clipKey, int pointIndex)
+bool Au3ClipGainInteraction::beginClipGainPointDrag(const trackedit::ClipKey& clipKey, int pointIndex)
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
@@ -259,14 +259,14 @@ bool Au3ClipGainInteraction::beginClipEnvelopePointDrag(const trackedit::ClipKey
     }
 
     if (m_envDrag && m_envDrag->active) {
-        endClipEnvelopePointDrag(m_envDrag->clip, true);
+        endClipGainPointDrag(m_envDrag->clip, true);
     }
 
-    EnvelopeDragSession s;
+    AutomationDragSession s;
     s.clip = clipKey;
-    s.origIndex = pointIndex;
-    s.origTime = env[pointIndex].GetT();
-    s.origValue = env[pointIndex].GetVal();
+    s.originalIndex = pointIndex;
+    s.originalXValue = env[pointIndex].GetT();
+    s.originalYValue = env[pointIndex].GetVal();
     s.active = true;
 
     s.currentDragIndex = pointIndex;
@@ -284,7 +284,7 @@ bool Au3ClipGainInteraction::beginClipEnvelopePointDrag(const trackedit::ClipKey
     return true;
 }
 
-bool Au3ClipGainInteraction::updateClipEnvelopePointDrag(const trackedit::ClipKey& clipKey, double tAbs, double value)
+bool Au3ClipGainInteraction::updateClipGainPointDrag(const trackedit::ClipKey& clipKey, double tAbs, double value)
 {
     if (!m_envDrag || !m_envDrag->active || !(m_envDrag->clip == clipKey)) {
         return false;
@@ -312,7 +312,7 @@ bool Au3ClipGainInteraction::updateClipEnvelopePointDrag(const trackedit::ClipKe
     return true;
 }
 
-bool Au3ClipGainInteraction::endClipEnvelopePointDrag(const trackedit::ClipKey& clipKey, bool commit)
+bool Au3ClipGainInteraction::endClipGainPointDrag(const trackedit::ClipKey& clipKey, bool commit)
 {
     if (!m_envDrag || !m_envDrag->active || !(m_envDrag->clip == clipKey)) {
         return false;
@@ -350,7 +350,7 @@ bool Au3ClipGainInteraction::endClipEnvelopePointDrag(const trackedit::ClipKey& 
     return true;
 }
 
-muse::async::Channel<au::trackedit::ClipKey, bool> Au3ClipGainInteraction::clipEnvelopeChanged() const
+muse::async::Channel<au::trackedit::ClipKey, bool> Au3ClipGainInteraction::clipGainChanged() const
 {
     return m_clipEnvelopeChanged;
 }

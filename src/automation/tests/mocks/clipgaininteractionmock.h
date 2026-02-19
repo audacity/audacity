@@ -11,14 +11,14 @@ namespace au::automation {
 class ClipGainInteractionMock : public IClipGainInteraction
 {
 public:
-    MOCK_METHOD(std::optional<ClipGainAutomationInfo>, clipEnvelopeInfo, (const trackedit::ClipKey&), (const, override));
-    MOCK_METHOD(ClipGainAutomationPoints, clipEnvelopePoints, (const trackedit::ClipKey&), (const, override));
-    MOCK_METHOD(bool, setClipEnvelopePoint, (const trackedit::ClipKey&, double, double, bool), (override));
-    MOCK_METHOD(bool, removeClipEnvelopePoint, (const trackedit::ClipKey&, int, bool), (override));
-    MOCK_METHOD(bool, setClipEnvelopePointAtIndex, (const trackedit::ClipKey&, int, double, double, bool), (override));
-    MOCK_METHOD(bool, beginClipEnvelopePointDrag, (const trackedit::ClipKey&, int), (override));
-    MOCK_METHOD(bool, updateClipEnvelopePointDrag, (const trackedit::ClipKey&, double, double), (override));
-    MOCK_METHOD(bool, endClipEnvelopePointDrag, (const trackedit::ClipKey&, bool), (override));
-    MOCK_METHOD((muse::async::Channel<trackedit::ClipKey, bool>), clipEnvelopeChanged, (), (const, override));
+    MOCK_METHOD(std::optional<AutomationInfo>, clipGainInfo, (const trackedit::ClipKey&), (const, override));
+    MOCK_METHOD(AutomationPoints, clipGainPoints, (const trackedit::ClipKey&), (const, override));
+    MOCK_METHOD(bool, setClipGainPoint, (const trackedit::ClipKey&, double, double, bool), (override));
+    MOCK_METHOD(bool, removeClipGainPoint, (const trackedit::ClipKey&, int, bool), (override));
+    MOCK_METHOD(bool, setClipGainPointAtIndex, (const trackedit::ClipKey&, int, double, double, bool), (override));
+    MOCK_METHOD(bool, beginClipGainPointDrag, (const trackedit::ClipKey&, int), (override));
+    MOCK_METHOD(bool, updateClipGainPointDrag, (const trackedit::ClipKey&, double, double), (override));
+    MOCK_METHOD(bool, endClipGainPointDrag, (const trackedit::ClipKey&, bool), (override));
+    MOCK_METHOD((muse::async::Channel<trackedit::ClipKey, bool>), clipGainChanged, (), (const, override));
 };
 }

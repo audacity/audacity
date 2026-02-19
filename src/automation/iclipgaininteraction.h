@@ -18,14 +18,14 @@ class IClipGainInteraction : MODULE_EXPORT_INTERFACE
 public:
     virtual ~IClipGainInteraction() = default;
 
-    virtual std::optional<ClipGainAutomationInfo> clipEnvelopeInfo(const trackedit::ClipKey& key) const = 0;
-    virtual ClipGainAutomationPoints clipEnvelopePoints(const trackedit::ClipKey& key) const = 0;
-    virtual bool setClipEnvelopePoint(const trackedit::ClipKey& key, double tAbs, double value, bool completed) = 0;
-    virtual bool removeClipEnvelopePoint(const trackedit::ClipKey& key, int index, bool completed) = 0;
-    virtual bool setClipEnvelopePointAtIndex(const trackedit::ClipKey& key, int index, double tAbs, double value, bool completed) = 0;
-    virtual bool beginClipEnvelopePointDrag(const trackedit::ClipKey& clip, int pointIndex) = 0;
-    virtual bool updateClipEnvelopePointDrag(const trackedit::ClipKey& clip, double tAbs, double value) = 0;
-    virtual bool endClipEnvelopePointDrag(const trackedit::ClipKey& clip, bool commit) = 0;
-    virtual muse::async::Channel<trackedit::ClipKey, bool> clipEnvelopeChanged() const = 0;
+    virtual std::optional<AutomationInfo> clipGainInfo(const trackedit::ClipKey& key) const = 0;
+    virtual AutomationPoints clipGainPoints(const trackedit::ClipKey& key) const = 0;
+    virtual bool setClipGainPoint(const trackedit::ClipKey& key, double tAbs, double value, bool completed) = 0;
+    virtual bool removeClipGainPoint(const trackedit::ClipKey& key, int index, bool completed) = 0;
+    virtual bool setClipGainPointAtIndex(const trackedit::ClipKey& key, int index, double tAbs, double value, bool completed) = 0;
+    virtual bool beginClipGainPointDrag(const trackedit::ClipKey& clip, int pointIndex) = 0;
+    virtual bool updateClipGainPointDrag(const trackedit::ClipKey& clip, double tAbs, double value) = 0;
+    virtual bool endClipGainPointDrag(const trackedit::ClipKey& clip, bool commit) = 0;
+    virtual muse::async::Channel<trackedit::ClipKey, bool> clipGainChanged() const = 0;
 };
 }
