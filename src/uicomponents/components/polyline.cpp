@@ -28,7 +28,17 @@ static inline qreal toPxX(const QQuickItem* item, qreal xN)
 
 static inline qreal toPxY(const QQuickItem* item, qreal yN)
 {
-    return (1.0 - yN) * item->height();
+    const qreal h = item->height();
+    if (h <= 0.0) {
+        return 0.0;
+    }
+
+    // NOTE: preserve full height of the line at top/bottom edges
+    const auto* polyline = static_cast<const Polyline*>(item);
+    const qreal inset = std::clamp(polyline->lineWidth() * 0.5, 0.0, h * 0.5);
+    const qreal drawableHeight = h - (2.0 * inset);
+
+    return inset + (1.0 - yN) * drawableHeight;
 }
 
 static qreal pointToSegmentDistance(const QPointF& point, const QPointF& segmentStart, const QPointF& segmentEnd)
