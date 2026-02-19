@@ -30,6 +30,7 @@ class Polyline : public QQuickPaintedItem, public muse::async::Asyncable, public
     Q_PROPERTY(qreal lineWidth READ lineWidth WRITE setLineWidth NOTIFY lineWidthChanged)
     Q_PROPERTY(qreal baselineN READ baselineN WRITE setBaselineN NOTIFY baselineNChanged)
     Q_PROPERTY(qreal pointRadius READ pointRadius WRITE setPointRadius NOTIFY pointRadiusChanged)
+    Q_PROPERTY(qreal ghostPointRadius READ ghostPointRadius WRITE setGhostPointRadius NOTIFY ghostPointRadiusChanged)
     Q_PROPERTY(qreal pointOutlineWidth READ pointOutlineWidth WRITE setPointOutlineWidth NOTIFY pointOutlineWidthChanged)
     Q_PROPERTY(QColor pointOutlineColor READ pointOutlineColor WRITE setPointOutlineColor NOTIFY pointOutlineColorChanged)
     Q_PROPERTY(QColor pointCentreColor READ pointCentreColor WRITE setPointCentreColor NOTIFY pointCentreColorChanged)
@@ -76,6 +77,9 @@ public:
 
     qreal pointRadius() const;
     void setPointRadius(qreal);
+
+    qreal ghostPointRadius() const;
+    void setGhostPointRadius(qreal);
 
     qreal pointOutlineWidth() const;
     void setPointOutlineWidth(qreal);
@@ -131,6 +135,7 @@ signals:
     void lineWidthChanged();
     void baselineNChanged();
     void pointRadiusChanged();
+    void ghostPointRadiusChanged();
     void pointOutlineWidthChanged();
     void pointOutlineColorChanged();
     void pointCentreColorChanged();
@@ -198,6 +203,7 @@ private:
     qreal m_lineWidth = 1.0;
     qreal m_baselineN =0.5;
     qreal m_pointRadius = 3.0;
+    qreal m_ghostPointRadius = 3.0;
     qreal m_pointOutlineWidth = 1.0;
     QColor m_pointOutlineColor;
     QColor m_pointCentreColor;

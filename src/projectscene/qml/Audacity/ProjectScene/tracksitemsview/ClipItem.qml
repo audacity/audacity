@@ -875,11 +875,15 @@ Rectangle {
 
                     lineColor: ui.theme.extra["audio_envelope_line"]
                     lineWidth: 2
-                    pointRadius: 5
-                    ghostPointOutlineColor: ui.theme.extra["white_color"]
+
+                    pointRadius: 4.5
                     pointOutlineColor: ui.theme.extra["audio_envelope_point"]
-                    pointCentreColor: ui.theme.extra["audio_envelope_point_centre"]
+                    pointCentreColor: ui.theme.extra["audio_envelope_point"]
                     pointOutlineWidth: 2.0
+
+                    ghostPointRadius: 3.5
+                    ghostPointOutlineColor: ui.theme.extra["audio_envelope_point"]
+
 
                     points: clipGainModel.points
                     defaultValue: clipGainModel.defaultValue
