@@ -17,6 +17,6 @@ Terminal=false
 MimeType=application/x-audacity;
 Categories=AudioVideo;Audio;Graphics;2DGraphics;VectorGraphics;RasterGraphics;Publishing;Midi;Mixer;Sequencer;Music;Qt;
 Keywords=audio;music;sound;mixing;mastering;production;producing;editing audio;mp3;wav;flac;MIDI;playing;playback;effects;synth;
-Keywords[de]=Musik;Audio;Mischend;Musizieren;Mastering;Musikprogramm;mp3;wav;flac;MIDI;musicxml;Audioeffekte;Synth;
+Keywords[de]=Musik;Audio;Mischend;Musizieren;Mastering;Musikprogramm;mp3;wav;flac;MIDI;Audioeffekte;Synth;
 StartupNotify=true
 StartupWMClass=@WINDOW_MANAGER_CLASS@
