@@ -242,7 +242,14 @@ RetVal<CloudProjectInfo> OpenSaveProjectScenario::doAskCloudLocation(IAudacityPr
         return rv.ret;
     }
 
-    return RetVal<CloudProjectInfo>();
+    cloud::Visibility defaultVisibility = isPublishShare ? cloud::Visibility::Public : cloud::Visibility::Private;
+
+    CloudProjectInfo result;
+    result.name = rv.val.toQString();
+    result.visibility = defaultVisibility;
+
+    return RetVal<CloudProjectInfo>::make_ok(result);
+
     // bool isCloudAvailable = museScoreComService()->authorization()->checkCloudIsAvailable();
     // if (!isCloudAvailable) {
     //     return warnCloudNotAvailableForUploading(isPublishShare);

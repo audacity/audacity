@@ -7,11 +7,14 @@
 #include "global/translation.h"
 
 #include "audacityproject.h"
+#include "io/path.h"
+#include "progress.h"
 #include "projecterrors.h"
 
 #include "project/types/projecttypes.h"
 
 #include "log.h"
+#include "ui/view/iconcodes.h"
 
 using namespace muse;
 using namespace au::project;
@@ -294,6 +297,59 @@ bool ProjectActionsController::saveProject(const muse::io::path_t& path)
     return saveProject(SaveMode::Save);
 }
 
+bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudInfo, SaveMode saveMode)
+{
+    io::path_t cloudProjectsPath = configuration()->cloudProjectsPath();
+    if (cloudProjectsPath.empty()) {
+        LOGE() << "Cloud projects path is not set";
+        return false;
+    }
+
+    io::path_t projectFilePath = cloudProjectsPath.appendingComponent(cloudInfo.name).appendingSuffix(au::project::AUP4);
+
+    IAudacityProjectPtr project = currentProject();
+    if (!project) {
+        LOGE() << "No project opened";
+        return false;
+    }
+
+    auto progress = audioComService()->uploadProject(project, cloudInfo.name.toStdString(), projectFilePath);
+    progress->finished().onReceive(this, [this, project](const ProgressResult& result) {
+        if (result.ret.success()) {
+            const bool dismissable = false;
+            toastService()->show(trc("project", "Success"),
+                                 trc("project",
+                                     "All saved changes will now update to the cloud. \
+                You can manage this file from your updated projects page on audio.com"),
+                                 muse::ui::IconCode::Code::TICK,
+                                 dismissable,
+            {
+                { trc("project", "Dismiss"), au::toast::ToastActionCode::None },
+                { trc("project", "View on audio.com"), au::toast::ToastActionCode::Custom }
+            }
+                                 ).onResolve(this, [this, project](au::toast::ToastActionCode actionCode) {
+                if (actionCode == au::toast::ToastActionCode::Custom) {
+                    interactive()->openUrl(audioComService()->getCloudProjectPage(project));
+                }
+            });
+        }
+    });
+
+    const bool dismissible = false;
+    const bool showProgressInfo = true;
+    toastService()->showWithProgress(
+        trc("project", "Upload project to audio.com..."),
+        {},
+        progress,
+        muse::ui::IconCode::Code::CLOUD,
+        dismissible,
+        {},
+        showProgressInfo
+        );
+
+    return true;
+}
+
 bool ProjectActionsController::saveProjectLocally(const muse::io::path_t& filePath, SaveMode saveMode)
 {
     IAudacityProjectPtr project = currentProject();
@@ -473,9 +529,9 @@ bool ProjectActionsController::saveProjectAt(const SaveLocation& location, SaveM
         return saveProjectLocally(location.localPath(), saveMode);
     }
 
-    // if (location.isCloud()) {
-    //     return saveProjectToCloud(location.cloudInfo(), saveMode);
-    // }
+    if (location.isCloud()) {
+        return saveProjectToCloud(location.cloudInfo(), saveMode);
+    }
 
     return false;
 }

@@ -13,6 +13,8 @@
 #include "au3cloud/cloudtypes.h"
 #include "au3cloud/iau3audiocomservice.h"
 
+#include "au3-utility/Observer.h"
+
 namespace au::au3cloud {
 class Au3AudioComService : public IAu3AudioComService, public muse::async::Asyncable
 {
@@ -23,6 +25,10 @@ public:
 
     muse::async::Promise<AudioList> downloadAudioList(size_t audiosPerBatch, size_t batchNumber, const FetchOptions& options) override;
     void clearAudioListCache() override;
+
+    muse::ProgressPtr uploadProject(au::project::IAudacityProjectPtr project, const std::string& filename,
+                                    const muse::io::path_t& path) override;
+    std::string getCloudProjectPage(au::project::IAudacityProjectPtr project) override;
 
 private:
     struct CachedProjectItem {
@@ -41,5 +47,7 @@ private:
     size_t m_audiosPerBatch = 0;
 
     std::mutex m_cacheMutex;
+
+    Observer::Subscription m_projectUploadSubscription;
 };
 }

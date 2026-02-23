@@ -6,11 +6,18 @@
 #include "au3audiocomservice.h"
 
 #include "au3-cloud-audiocom/CloudSyncService.h"
-#include "au3-cloud-audiocom/NetworkUtils.h"
+#include "au3-cloud-audiocom/OAuthService.h"
+#include "au3-cloud-audiocom/ServiceConfig.h"
 #include "au3-cloud-audiocom/sync/CloudSyncDTO.h"
+#include "au3-cloud-audiocom/sync/ProjectCloudExtension.h"
+#include "au3-cloud-audiocom/sync/LocalProjectSnapshot.h"
 #include "au3-concurrency/concurrency/CancellationContext.h"
+#include "au3-import-export/ExportUtils.h"
+#include "au3-project-file-io/ProjectFileIO.h"
 
 #include "au3cloud/cloudtypes.h"
+#include "au3wrap/au3types.h"
+#include "project/iaudacityproject.h"
 
 using namespace au::au3cloud;
 using namespace audacity::concurrency;
@@ -209,4 +216,59 @@ void Au3AudioComService::clearAudioListCache()
     std::lock_guard guard(m_cacheMutex);
     m_audioListCache.clear();
     m_audiosPerBatch = 0;
+}
+
+muse::ProgressPtr Au3AudioComService::uploadProject(au::project::IAudacityProjectPtr project, const std::string& name,
+                                                    const muse::io::path_t& path)
+{
+    au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
+
+    muse::ProgressPtr progress = std::make_shared<muse::Progress>();
+
+    auto& projectCloudExtension = audacity::cloud::audiocom::sync::ProjectCloudExtension::Get(*au3Project);
+    m_projectUploadSubscription = projectCloudExtension.SubscribeStatusChanged(
+        [this, progress](const audacity::cloud::audiocom::sync::CloudStatusChangedMessage& message) {
+        if (message.Status == audacity::cloud::audiocom::sync::ProjectSyncStatus::Syncing) {
+            progress->progress(message.Progress * 100, 100);
+        }
+
+        if (message.Status == audacity::cloud::audiocom::sync::ProjectSyncStatus::Synced) {
+            progress->finish(muse::make_ret(muse::Ret::Code::Ok));
+        }
+
+        if (message.Status == audacity::cloud::audiocom::sync::ProjectSyncStatus::Failed) {
+            progress->finish(muse::make_ret(muse::Ret::Code::UnknownError, std::string { "Project sync failed" }));
+        }
+    }, false);
+
+    projectCloudExtension.OnSyncStarted();
+
+    auto future = audacity::cloud::audiocom::sync::LocalProjectSnapshot::Create(
+        audacity::cloud::audiocom::GetServiceConfig(),
+        audacity::cloud::audiocom::GetOAuthService(),
+        projectCloudExtension,
+        name,
+        audacity::cloud::audiocom::sync::UploadMode::Normal,
+        AudiocomTrace::SaveProjectSaveToCloudMenu);
+
+    std::thread([this, au3Project, future = std::move(future), path]() mutable {
+        auto result = future.get();
+
+        if (!result.Response) {
+            return;
+        }
+
+        auto& projectFileIO = ProjectFileIO::Get(*au3Project);
+        projectFileIO.UpdateSaved(nullptr);
+    }).detach();
+
+    return progress;
+}
+
+std::string Au3AudioComService::getCloudProjectPage(au::project::IAudacityProjectPtr project)
+{
+    au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
+
+    auto& projectCloudExtension = audacity::cloud::audiocom::sync::ProjectCloudExtension::Get(*au3Project);
+    return projectCloudExtension.GetCloudProjectPage(AudiocomTrace::SaveProjectSaveToCloudMenu);
 }
