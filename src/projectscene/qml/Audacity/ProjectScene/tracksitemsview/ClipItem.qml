@@ -876,12 +876,12 @@ Rectangle {
                     lineColor: ui.theme.extra["audio_envelope_line"]
                     lineWidth: 2
 
-                    pointRadius: 4.5
+                    pointRadius: 4.0
                     pointOutlineColor: ui.theme.extra["audio_envelope_point"]
                     pointCentreColor: ui.theme.extra["audio_envelope_point"]
                     pointOutlineWidth: 2.0
 
-                    ghostPointRadius: 3.5
+                    ghostPointRadius: 3.0
                     ghostPointOutlineColor: ui.theme.extra["audio_envelope_point"]
 
 

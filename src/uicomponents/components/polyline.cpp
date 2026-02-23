@@ -1000,10 +1000,10 @@ void Polyline::paint(QPainter* painter)
             painter->setBrush(m_pointOutlineColor);
             painter->drawEllipse(c, hoveredOuterRadius, hoveredOuterRadius);
 
-            painter->setBrush(Qt::white);
+            painter->setBrush(Qt::black);
             painter->drawEllipse(c, m_pointRadius - 1.0, m_pointRadius - 1.0);
 
-            painter->setBrush(Qt::black);
+            painter->setBrush(Qt::white);
             painter->drawEllipse(c, m_pointRadius - 3.0, m_pointRadius - 3.0);
         } else {
             // fill
@@ -1035,21 +1035,17 @@ void Polyline::paint(QPainter* painter)
         }
 
         if (pointIndexAtPx(hp) < 0 && isNearLinePx(hp)) {
-            const qreal eraseRadius = m_ghostPointRadius + m_lineWidth * 0.75;
-
-            // make ghost point empty inside (erase underlying line)
-            painter->save();
-            painter->setCompositionMode(QPainter::CompositionMode_Clear);
+            // fill
             painter->setPen(Qt::NoPen);
-            painter->setBrush(Qt::transparent);
-            painter->drawEllipse(hp, eraseRadius, eraseRadius);
-            painter->restore();
+            painter->setBrush(m_ghostPointOutlineColor);
+            painter->drawEllipse(hp, m_ghostPointRadius, m_ghostPointRadius);
 
-            // draw hollow outline
-            QPen outerPen(m_ghostPointOutlineColor);
-            outerPen.setWidthF(m_pointOutlineWidth);
-            painter->setPen(outerPen);
+            // outline
+            QPen innerPen(m_ghostPointOutlineColor);
+            innerPen.setWidthF(m_pointOutlineWidth);
+            painter->setPen(innerPen);
             painter->setBrush(Qt::NoBrush);
+
             painter->drawEllipse(hp, m_ghostPointRadius, m_ghostPointRadius);
         }
     }
