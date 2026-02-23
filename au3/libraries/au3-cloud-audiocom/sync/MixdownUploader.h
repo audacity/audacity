@@ -22,7 +22,7 @@
 
 #include "CloudSyncDTO.h"
 
-#include "NetworkUtils.h"
+#include "../NetworkUtils.h"
 
 #include "au3-concurrency/concurrency/CancellationContext.h"
 #include "au3-concurrency/concurrency/ICancellable.h"

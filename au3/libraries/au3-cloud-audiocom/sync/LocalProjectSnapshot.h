@@ -20,7 +20,7 @@
 #include "ProjectUploadOperation.h"
 #include "CloudSyncError.h"
 #include "CloudSyncDTO.h"
-#include "NetworkUtils.h"
+#include "../NetworkUtils.h"
 
 #include "au3-concurrency/concurrency/CancellationContext.h"
 
