@@ -26,8 +26,7 @@ public:
     muse::async::Promise<AudioList> downloadAudioList(size_t audiosPerBatch, size_t batchNumber, const FetchOptions& options) override;
     void clearAudioListCache() override;
 
-    muse::ProgressPtr uploadProject(au::project::IAudacityProjectPtr project, const std::string& filename,
-                                    const muse::io::path_t& path) override;
+    muse::ProgressPtr uploadProject(au::project::IAudacityProjectPtr project, const std::string& name) override;
     std::string getCloudProjectPage(au::project::IAudacityProjectPtr project) override;
 
 private:

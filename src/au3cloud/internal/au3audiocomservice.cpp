@@ -218,8 +218,7 @@ void Au3AudioComService::clearAudioListCache()
     m_audiosPerBatch = 0;
 }
 
-muse::ProgressPtr Au3AudioComService::uploadProject(au::project::IAudacityProjectPtr project, const std::string& name,
-                                                    const muse::io::path_t& path)
+muse::ProgressPtr Au3AudioComService::uploadProject(au::project::IAudacityProjectPtr project, const std::string& name)
 {
     au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
 
@@ -251,7 +250,7 @@ muse::ProgressPtr Au3AudioComService::uploadProject(au::project::IAudacityProjec
         audacity::cloud::audiocom::sync::UploadMode::Normal,
         AudiocomTrace::SaveProjectSaveToCloudMenu);
 
-    std::thread([this, au3Project, future = std::move(future), path]() mutable {
+    std::thread([this, au3Project, future = std::move(future)]() mutable {
         auto result = future.get();
 
         if (!result.Response) {

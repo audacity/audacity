@@ -313,9 +313,11 @@ bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudI
         return false;
     }
 
-    auto progress = audioComService()->uploadProject(project, cloudInfo.name.toStdString(), projectFilePath);
-    progress->finished().onReceive(this, [this, project](const ProgressResult& result) {
+    auto progress = audioComService()->uploadProject(project, cloudInfo.name.toStdString());
+    progress->finished().onReceive(this, [this, project, saveMode, projectFilePath](const ProgressResult& result) {
         if (result.ret.success()) {
+            saveProjectLocally(projectFilePath, saveMode);
+
             const bool dismissable = false;
             toastService()->show(trc("project", "Success"),
                                  trc("project",

@@ -9,7 +9,6 @@
 #include "framework/global/modularity/imoduleinterface.h"
 #include "framework/global/async/promise.h"
 #include "framework/global/progress.h"
-#include "framework/global/io/path.h"
 
 #include "project/iaudacityproject.h"
 #include "cloudtypes.h"
@@ -40,8 +39,7 @@ public:
                                                               const FetchOptions& options = {}) = 0;
     virtual void clearAudioListCache() = 0;
 
-    virtual muse::ProgressPtr uploadProject(au::project::IAudacityProjectPtr project, const std::string& filename,
-                                            const muse::io::path_t& path) = 0;
+    virtual muse::ProgressPtr uploadProject(au::project::IAudacityProjectPtr project, const std::string& name) = 0;
     virtual std::string getCloudProjectPage(au::project::IAudacityProjectPtr project) = 0;
 };
 }
