@@ -302,14 +302,17 @@ QVector<QPointF> Polyline::points() const
 void Polyline::setPoints(const QVector<QPointF>& pts)
 {
     if (m_points == pts) {
+        if (m_points.isEmpty()) {
+            updateBaselineFromDefaultValue();
+            update();
+        }
         return;
     }
     m_points = pts;
     emit pointsChanged();
 
     if (m_points.isEmpty()) {
-        m_baselineN = normalizedFromDomain(QPointF(m_xFrom, m_defaultValue)).y();
-        emit baselineNChanged();
+        updateBaselineFromDefaultValue();
     }
 
     // if there's pending point, find its index and mark as ready for drag
@@ -467,6 +470,7 @@ void Polyline::setYAxisInverse(bool v)
 
     m_yAxisInverse = v;
     emit yAxisInverseChanged();
+    rebuildVisiblePoints();
 }
 
 bool Polyline::hasActivePoint() const
@@ -495,8 +499,7 @@ void Polyline::setDefaultValue(qreal v)
 
     // if there are no points, baseline should reflect defaultY immediately
     if (m_points.isEmpty()) {
-        m_baselineN = normalizedFromDomain(QPointF(m_xFrom, m_defaultValue)).y();
-        emit baselineNChanged();
+        updateBaselineFromDefaultValue();
         rebuildVisiblePoints();
     }
 }
@@ -602,6 +605,17 @@ qreal Polyline::yNormalizedFromDomain(qreal yDomain) const
 
     const qreal segmentN = (yClamped - splitValue) / segmentSize;
     return clamp01(splitNormalized + segmentN * (1.0 - splitNormalized));
+}
+
+void Polyline::updateBaselineFromDefaultValue()
+{
+    const qreal baseline = normalizedFromDomain(QPointF(m_xFrom, m_defaultValue)).y();
+    if (m_baselineN == baseline) {
+        return;
+    }
+
+    m_baselineN = baseline;
+    emit baselineNChanged();
 }
 
 void Polyline::updateActivePoint()
@@ -728,11 +742,15 @@ void Polyline::rebuildVisiblePoints()
     const double yRange = (m_yTo - m_yFrom);
 
     if (width() <= 0 || height() <= 0 || std::abs(xRange) <= 0 || std::abs(yRange) <= 0) {
+        if (m_points.isEmpty()) {
+            updateBaselineFromDefaultValue();
+        }
         update();
         return;
     }
 
     if (m_points.isEmpty()) {
+        updateBaselineFromDefaultValue();
         update();
         return;
     }

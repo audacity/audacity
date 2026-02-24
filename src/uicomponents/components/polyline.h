@@ -195,6 +195,7 @@ private:
 
     qreal yDomainFromNormalized(qreal yNormalized) const;
     qreal yNormalizedFromDomain(qreal yDomain) const;
+    void updateBaselineFromDefaultValue();
 
     void updateActivePoint();
 
