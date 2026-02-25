@@ -12,7 +12,9 @@
 using namespace muse;
 using namespace au::au3cloud;
 
-static const muse::UriQuery SAVE_TO_CLOUD_URI("audacity://project/savetocloud");
+namespace {
+constexpr auto SAVE_TO_CLOUD_URI("audacity://project/savetocloud");
+}
 
 void Au3AudioComController::init()
 {
@@ -21,43 +23,42 @@ void Au3AudioComController::init()
 
 void Au3AudioComController::shareAudio()
 {
-    auto project = globalContext()->currentProject();
-    if (!project) {
-        LOGW() << "No project opened";
-        return;
-    }
+    muse::UriQuery query(SAVE_TO_CLOUD_URI);
+    query.addParam("formTitle", Val(trc("cloud", "Track title")));
 
-    RetVal<Val> rv = interactive()->openSync(SAVE_TO_CLOUD_URI);
+    RetVal<Val> rv = interactive()->openSync(query);
     if (!rv.ret) {
         return;
     }
 
     std::string title = rv.val.toQString().toStdString();
 
-    auto progress = audioComService()->shareAudio(project, title);
-    progress->finished().onReceive(this, [this, project](const ProgressResult& result) {
+    auto progress = audioComService()->shareAudio(title);
+    progress->finished().onReceive(this, [this](const ProgressResult& result) {
         if (result.ret.success()) {
             const bool dismissable = false;
-            toastService()->show(trc("au3cloud", "Success"),
-                                 trc("au3cloud", "Audio shared to audio.com"),
+            toastService()->show(trc("global", "Success"),
+                                 trc("cloud", "Audio shared to audio.com"),
                                  muse::ui::IconCode::Code::TICK,
                                  dismissable,
             {
-                { trc("au3cloud", "Dismiss"), au::toast::ToastActionCode::None },
-                { trc("au3cloud", "View on audio.com"), au::toast::ToastActionCode::Custom }
+                { trc("global", "Dismiss"), au::toast::ToastActionCode::None },
+                { trc("cloud", "View on audio.com"), au::toast::ToastActionCode::Custom }
             }
-                                 ).onResolve(this, [this, project](au::toast::ToastActionCode actionCode) {
+                                 ).onResolve(this, [this](au::toast::ToastActionCode actionCode) {
                 if (actionCode == au::toast::ToastActionCode::Custom) {
                     interactive()->openUrl(audioComService()->getSharedAudioPage());
                 }
             });
+        } else {
+            toastService()->showError(trc("global", "Fail"), trc("cloud", "Unable to save audio file"));
         }
     });
 
     const bool dismissible = false;
     const bool showProgressInfo = true;
     toastService()->showWithProgress(
-        trc("au3cloud", "Sharing audio to audio.com..."),
+        trc("cloud", "Sharing audio to audio.com..."),
         {},
         progress,
         muse::ui::IconCode::Code::SHARE_AUDIO,

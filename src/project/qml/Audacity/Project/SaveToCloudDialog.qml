@@ -18,26 +18,27 @@ StyledDialogView {
     contentWidth: prv.contentWidth
     contentHeight: content.implicitHeight
 
+    property string formTitle: qsTrc("cloud", "Project name")
+
     QtObject {
         id: prv
 
         readonly property int contentWidth: 367
 
-        readonly property string dialogTitle: qsTrc("project/save", "Save to audio.com")
+        readonly property string dialogTitle: qsTrc("cloud/save", "Save to audio.com")
 
-        readonly property string signoutButtonText: qsTrc("project", "Sign out")
+        readonly property string signoutButtonText: qsTrc("cloud", "Sign out")
         readonly property int signoutButtonHeight: 28
         readonly property int signoutButtonWidth: 71
 
         readonly property int accountRowMargins: 8
         readonly property int accountRowSpacing: 8
         readonly property int accountAvatarSide: 36
-        readonly property string notSignedInText: qsTrc("project", "You are not signed in")
+        readonly property string notSignedInText: qsTrc("cloud", "You are not signed in")
 
         readonly property int formColumnMargins: 16
         readonly property int formColumnSpacing: 8
         readonly property int formTextInputHeight: 28
-        readonly property string formTitle: qsTrc("project", "Project name")
 
         readonly property string saveButtonText: qsTrc("global", "Save")
 
@@ -128,7 +129,7 @@ StyledDialogView {
                 Layout.fillWidth: true
 
                 font: ui.theme.bodyFont
-                text: prv.formTitle
+                text: root.formTitle
 
                 horizontalAlignment: Text.AlignLeft
             }
