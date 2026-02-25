@@ -91,6 +91,10 @@ void ToastProvider::checkProgress(int id)
                 }
             }
         });
+
+        progress->finished().onReceive(this, [this, item](const muse::ProgressResult&) {
+            dismissToast(item->id());
+        });
     }
 }
 
