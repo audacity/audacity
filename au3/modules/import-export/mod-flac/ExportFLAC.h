@@ -18,6 +18,8 @@
 
 #include "FLAC++/encoder.h"
 
+#include <rapidjson/document.h>
+
 enum : int {
     FlacOptionIDBitDepth = 0,
     FlacOptionIDLevel
@@ -71,7 +73,7 @@ public:
     int GetFormatCount() const override;
     FormatInfo GetFormatInfo(int) const override;
 
-    // bool ParseConfig(int, const rapidjson::Value& config, ExportProcessor::Parameters& parameters) const override;
+    bool ParseConfig(int, const rapidjson::Value& config, ExportProcessor::Parameters& parameters) const override;
 
     std::vector<std::string> GetMimeTypes(int) const override;
 

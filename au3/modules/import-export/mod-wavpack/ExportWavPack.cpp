@@ -167,49 +167,49 @@ std::vector<std::string> ExportWavPack::GetMimeTypes(int) const
     return { "audio/x-wavpack" };
 }
 
-// bool ExportWavPack::ParseConfig(int formatIndex, const rapidjson::Value& config, ExportProcessor::Parameters& parameters) const
-// {
-//     if (!config.IsObject()
-//         || !config.HasMember("quality") || !config["quality"].IsNumber()
-//         || !config.HasMember("bit_rate") || !config["bit_rate"].IsNumber()
-//         || !config.HasMember("bit_depth") || !config["bit_depth"].IsNumber()
-//         || !config.HasMember("hybrid_mode") || !config["hybrid_mode"].IsBool()) {
-//         return false;
-//     }
+bool ExportWavPack::ParseConfig(int formatIndex, const rapidjson::Value& config, ExportProcessor::Parameters& parameters) const
+{
+    if (!config.IsObject()
+        || !config.HasMember("quality") || !config["quality"].IsNumber()
+        || !config.HasMember("bit_rate") || !config["bit_rate"].IsNumber()
+        || !config.HasMember("bit_depth") || !config["bit_depth"].IsNumber()
+        || !config.HasMember("hybrid_mode") || !config["hybrid_mode"].IsBool()) {
+        return false;
+    }
 
-//     const auto quality = ExportValue(config["quality"].GetInt());
-//     const auto bitRate = ExportValue(config["bit_rate"].GetInt());
-//     const auto bitDepth = ExportValue(config["bit_depth"].GetInt());
-//     const auto hybridMode = ExportValue(config["hybrid_mode"].GetBool());
+    const auto quality = ExportValue(config["quality"].GetInt());
+    const auto bitRate = ExportValue(config["bit_rate"].GetInt());
+    const auto bitDepth = ExportValue(config["bit_depth"].GetInt());
+    const auto hybridMode = ExportValue(config["hybrid_mode"].GetBool());
 
-//     for (const auto& option : ExportWavPackOptions) {
-//         if ((option.id == OptionIDQuality
-//              && std::find(option.values.begin(),
-//                           option.values.end(),
-//                           quality) == option.values.end())
-//             ||
-//             (option.id == OptionIDBitRate
-//              && std::find(option.values.begin(),
-//                           option.values.end(),
-//                           bitRate) == option.values.end())
-//             ||
-//             (option.id == OptionIDBitDepth
-//              && std::find(option.values.begin(),
-//                           option.values.end(),
-//                           bitDepth) == option.values.end())) {
-//             return false;
-//         }
-//     }
-//     ExportProcessor::Parameters result {
-//         { OptionIDQuality, quality },
-//         { OptionIDBitRate, bitRate },
-//         { OptionIDBitDepth, bitDepth },
-//         { OptionIDHybridMode, hybridMode },
-//         { OptionIDCreateCorrection, false }
-//     };
-//     std::swap(parameters, result);
-//     return true;
-// }
+    for (const auto& option : ExportWavPackOptions) {
+        if ((option.id == OptionIDQuality
+             && std::find(option.values.begin(),
+                          option.values.end(),
+                          quality) == option.values.end())
+            ||
+            (option.id == OptionIDBitRate
+             && std::find(option.values.begin(),
+                          option.values.end(),
+                          bitRate) == option.values.end())
+            ||
+            (option.id == OptionIDBitDepth
+             && std::find(option.values.begin(),
+                          option.values.end(),
+                          bitDepth) == option.values.end())) {
+            return false;
+        }
+    }
+    ExportProcessor::Parameters result {
+        { OptionIDQuality, quality },
+        { OptionIDBitRate, bitRate },
+        { OptionIDBitDepth, bitDepth },
+        { OptionIDHybridMode, hybridMode },
+        { OptionIDCreateCorrection, false }
+    };
+    std::swap(parameters, result);
+    return true;
+}
 
 std::unique_ptr<ExportOptionsEditor>
 ExportWavPack::CreateOptionsEditor(int, ExportOptionsEditor::Listener* listener) const

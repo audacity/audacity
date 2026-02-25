@@ -11,6 +11,8 @@
 #include "ExportPlugin.h"
 #include "au3-files/wxFileNameWrapper.h"
 
+#include <rapidjson/document.h>
+
 ExportException::ExportException(const wxString& msg)
     : mMessage(msg)
 {
@@ -71,7 +73,7 @@ std::vector<std::string> ExportPlugin::GetMimeTypes(int formatIndex) const
     return {};
 }
 
-bool ExportPlugin::ParseConfig(int, const std::string&, ExportProcessor::Parameters&) const
+bool ExportPlugin::ParseConfig(int, const rapidjson::Value&, ExportProcessor::Parameters&) const
 {
      return false;
 }

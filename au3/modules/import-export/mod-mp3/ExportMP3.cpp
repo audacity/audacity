@@ -1249,78 +1249,78 @@ std::vector<std::string> ExportMP3::GetMimeTypes(int) const
     return { "audio/mpeg" };
 }
 
-// bool ExportMP3::ParseConfig(
-//     int formatIndex, const rapidjson::Value& document,
-//     ExportProcessor::Parameters& parameters) const
-// {
-//     if (!document.IsObject()) {
-//         return false;
-//     }
+bool ExportMP3::ParseConfig(
+    int formatIndex, const rapidjson::Value& document,
+    ExportProcessor::Parameters& parameters) const
+{
+    if (!document.IsObject()) {
+        return false;
+    }
 
-//     MP3OptionID qualityMode;
+    MP3OptionID qualityMode;
 
-//     if (document.HasMember("mode")) {
-//         auto& mode = document["mode"];
-//         if (!mode.IsString()) {
-//             return false;
-//         }
+    if (document.HasMember("mode")) {
+        auto& mode = document["mode"];
+        if (!mode.IsString()) {
+            return false;
+        }
 
-//         auto value = mode.GetString();
+        auto value = mode.GetString();
 
-//         if (value == std::string_view { "SET" }) {
-//             qualityMode = MP3OptionIDQualitySET;
-//         } else if (value == std::string_view { "VBR" }) {
-//             qualityMode = MP3OptionIDQualityVBR;
-//         } else if (value == std::string_view { "ABR" }) {
-//             qualityMode = MP3OptionIDQualityABR;
-//         } else if (value == std::string_view { "CBR" }) {
-//             qualityMode = MP3OptionIDQualityCBR;
-//         } else {
-//             return false;
-//         }
+        if (value == std::string_view { "SET" }) {
+            qualityMode = MP3OptionIDQualitySET;
+        } else if (value == std::string_view { "VBR" }) {
+            qualityMode = MP3OptionIDQualityVBR;
+        } else if (value == std::string_view { "ABR" }) {
+            qualityMode = MP3OptionIDQualityABR;
+        } else if (value == std::string_view { "CBR" }) {
+            qualityMode = MP3OptionIDQualityCBR;
+        } else {
+            return false;
+        }
 
-//         parameters.push_back(std::make_tuple(MP3OptionIDMode, value));
-//     } else {
-//         return false;
-//     }
+        parameters.push_back(std::make_tuple(MP3OptionIDMode, value));
+    } else {
+        return false;
+    }
 
-//     if (document.HasMember("quality")) {
-//         auto& qualityMember = document["quality"];
+    if (document.HasMember("quality")) {
+        auto& qualityMember = document["quality"];
 
-//         if (!qualityMember.IsInt()) {
-//             return false;
-//         }
+        if (!qualityMember.IsInt()) {
+            return false;
+        }
 
-//         const auto quality = qualityMember.GetInt();
+        const auto quality = qualityMember.GetInt();
 
-//         if (qualityMode == MP3OptionIDQualitySET && (quality < 0 || quality > 3)) {
-//             return false;
-//         } else if (
-//             qualityMode == MP3OptionIDQualityVBR && (quality < 0 || quality > 9)) {
-//             return false;
-//         } else if (
-//             qualityMode == MP3OptionIDQualityABR
-//             && std::find(
-//                 fixRateValues.begin(), fixRateValues.end(),
-//                 ExportValue { quality })
-//             == fixRateValues.end()) {
-//             return false;
-//         } else if (
-//             qualityMode == MP3OptionIDQualityCBR
-//             && std::find(
-//                 fixRateValues.begin(), fixRateValues.end(),
-//                 ExportValue { quality })
-//             == fixRateValues.end()) {
-//             return false;
-//         }
+        if (qualityMode == MP3OptionIDQualitySET && (quality < 0 || quality > 3)) {
+            return false;
+        } else if (
+            qualityMode == MP3OptionIDQualityVBR && (quality < 0 || quality > 9)) {
+            return false;
+        } else if (
+            qualityMode == MP3OptionIDQualityABR
+            && std::find(
+                fixRateValues.begin(), fixRateValues.end(),
+                ExportValue { quality })
+            == fixRateValues.end()) {
+            return false;
+        } else if (
+            qualityMode == MP3OptionIDQualityCBR
+            && std::find(
+                fixRateValues.begin(), fixRateValues.end(),
+                ExportValue { quality })
+            == fixRateValues.end()) {
+            return false;
+        }
 
-//         parameters.push_back(std::make_tuple(qualityMode, quality));
-//     } else {
-//         return false;
-//     }
+        parameters.push_back(std::make_tuple(qualityMode, quality));
+    } else {
+        return false;
+    }
 
-//     return true;
-// }
+    return true;
+}
 
 bool ExportMP3::CheckFileName(wxFileName& WXUNUSED(filename), int WXUNUSED(format)) const
 {

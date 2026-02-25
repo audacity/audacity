@@ -22,6 +22,8 @@
 #include <wx/dynlib.h>
 #include <wx/ffile.h>
 
+#include <rapidjson/document.h>
+
 enum MP3RateMode : unsigned {
     MODE_SET = 0,
     MODE_VBR,
@@ -58,8 +60,8 @@ public:
 
     std::vector<std::string> GetMimeTypes(int) const override;
 
-    // bool ParseConfig(
-    //     int formatIndex, const rapidjson::Value& document, ExportProcessor::Parameters& parameters) const override;
+    bool ParseConfig(
+        int formatIndex, const rapidjson::Value& document, ExportProcessor::Parameters& parameters) const override;
 };
 
 class MP3ExportOptionsEditor final : public ExportOptionsEditor
