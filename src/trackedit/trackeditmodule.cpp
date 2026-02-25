@@ -33,6 +33,7 @@
 #include "internal/trackeditinteraction.h"
 #include "internal/trackeditconfiguration.h"
 #include "internal/trackeditoperationcontroller.h"
+#include "internal/clipboarddata.h"
 #include "internal/tracknavigationcontroller.h"
 #include "internal/trackspectrogramsettingsupdater.h"
 #include "internal/undomanager.h"
@@ -78,6 +79,7 @@ void TrackeditModule::registerExports()
     m_configuration = std::make_shared<TrackeditConfiguration>();
 
     globalIoc()->registerExport<ITrackeditConfiguration>(mname, m_configuration);
+    globalIoc()->registerExport<IClipboardData>(mname, std::make_shared<ClipboardData>());
 }
 
 void TrackeditModule::registerUiTypes()
