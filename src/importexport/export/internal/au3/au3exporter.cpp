@@ -4,6 +4,8 @@
 
 #include "au3exporter.h"
 
+#include "framework/global/async/asyncable.h"
+
 #include "au3-basic-ui/BasicUI.h"
 #include "au3-cloud-audiocom/ServiceConfig.h"
 #include "au3-import-export/ExportPluginRegistry.h"
@@ -36,7 +38,7 @@ ExportPlugin* formatPlugin(const std::string& format)
 }
 }
 
-class ProgressDelegate : public ExportProcessorDelegate
+class ProgressDelegate : public ExportProcessorDelegate, public muse::async::Asyncable
 {
     muse::ProgressPtr m_progress;
     std::atomic<bool> m_cancelled { false };
@@ -44,7 +46,7 @@ public:
     ProgressDelegate(muse::ProgressPtr progress)
         : m_progress(progress)
     {
-        m_progress->canceled().onNotify(nullptr, [this] { m_cancelled = true; });
+        m_progress->canceled().onNotify(this, [this] { m_cancelled = true; });
     }
 
     bool IsCancelled() const override { return m_cancelled; }

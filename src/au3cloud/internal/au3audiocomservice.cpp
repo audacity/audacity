@@ -22,8 +22,8 @@
 #include "au3wrap/au3types.h"
 #include "importexport/export/iexporter.h"
 #include "importexport/export/types/exporttypes.h"
-#include "io/path.h"
 #include "project/iaudacityproject.h"
+#include "types/ret.h"
 
 using namespace au::au3cloud;
 using namespace audacity::concurrency;
@@ -281,11 +281,6 @@ muse::ProgressPtr Au3AudioComService::uploadProject(au::project::IAudacityProjec
     return progress;
 }
 
-std::string Au3AudioComService::getSharedAudioPage() const
-{
-    return m_sharedAudioUrl;
-}
-
 std::string Au3AudioComService::getCloudProjectPage(au::project::IAudacityProjectPtr project)
 {
     au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
@@ -326,28 +321,33 @@ muse::ProgressPtr Au3AudioComService::shareAudio(const std::string& title)
 
         const auto exportRet = exporter()->exportData(muse::io::path_t(tempPath), config, parameters, progress);
         if (!exportRet) {
+            filesystem()->remove(tempPath);
             progress->finish(exportRet);
             return;
         }
 
-        m_uploadService
-            = std::make_unique<audacity::cloud::audiocom::UploadService>(audacity::cloud::audiocom::GetServiceConfig(),
-                                                                         audacity::cloud::audiocom::GetOAuthService());
+        struct UploadOp {
+            std::shared_ptr<audacity::cloud::audiocom::UploadService> service;
+            audacity::cloud::audiocom::UploadOperationHandle handle;
+        };
+
+        auto op = std::make_shared<UploadOp>();
+        op->service = std::make_shared<audacity::cloud::audiocom::UploadService>(
+            audacity::cloud::audiocom::GetServiceConfig(),
+            audacity::cloud::audiocom::GetOAuthService());
+
         const bool isPublic = false;
-        m_uploadOperationHandle = m_uploadService->Upload(
+        op->handle = op->service->Upload(
             tempPath.toStdString(),
             title,
             isPublic,
-            [this, progress, tempPath](const audacity::cloud::audiocom::UploadOperationCompleted& result) {
-            if (filesystem()->exists(tempPath)) {
-                filesystem()->remove(tempPath);
-            }
+            [op, progress, tempPath, filesystem = filesystem()](const audacity::cloud::audiocom::UploadOperationCompleted& result) {
+            filesystem->remove(tempPath);
 
             if (result.result == audacity::cloud::audiocom::UploadOperationCompleted::Result::Success) {
                 auto* payload = std::get_if<audacity::cloud::audiocom::UploadSuccessfulPayload>(&result.payload);
                 if (payload) {
-                    m_sharedAudioUrl = payload->audioUrl;
-                    progress->finish(muse::make_ret(muse::Ret::Code::Ok));
+                    progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(payload->audioUrl)));
                 }
             } else {
                 progress->finish(muse::make_ret(muse::Ret::Code::UnknownError, std::string { "Upload failed" }));

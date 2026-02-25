@@ -43,6 +43,5 @@ public:
     virtual std::string getCloudProjectPage(au::project::IAudacityProjectPtr project) = 0;
 
     virtual muse::ProgressPtr shareAudio(const std::string& title) = 0;
-    virtual std::string getSharedAudioPage() const = 0;
 };
 }

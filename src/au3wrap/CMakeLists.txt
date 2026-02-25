@@ -256,6 +256,7 @@ set(MODULE_LINK ${AU3_LINK}
         project # required for projectconfiguration and projecterrors
         audio # required for audiometer
         sqlite # static Factory init HACK for au3-project-file-io/SqliteSampleBlock.cpp included in au3project.cpp
+        rapidjson::rapidjson
         # TODO: fix Hack and remove sqlite dependency from au3wrap
 )
 set(MODULE_LINK_PUBLIC ${AU3_LIBRARIES_LIST})

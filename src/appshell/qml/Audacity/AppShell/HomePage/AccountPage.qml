@@ -88,7 +88,6 @@ FocusScope {
         }
 
         onCreateAccountRequested: {
-            console.log("Create account requested")
         }
     }
 }

@@ -77,8 +77,8 @@ void Au3CloudService::init()
     m_userDataSubscription
         = userService.Subscribe(
               [this](const audacity::cloud::audiocom::UserDataChanged&) {
-        auto& authoService = audacity::cloud::audiocom::GetOAuthService();
-        if (authoService.HasAccessToken()) {
+        auto& authService = audacity::cloud::audiocom::GetOAuthService();
+        if (authService.HasAccessToken()) {
             auto& userService = audacity::cloud::audiocom::GetUserService();
             m_accountInfo.id = userService.GetUserId().ToStdString();
             m_accountInfo.userSlug = userService.GetUserSlug().ToStdString();

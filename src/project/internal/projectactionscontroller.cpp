@@ -319,7 +319,7 @@ bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudI
             saveProjectLocally(projectFilePath, saveMode);
 
             const bool dismissable = false;
-            toastService()->show(trc("project", "Success"),
+            toastService()->show(trc("global", "Success"),
                                  trc("project",
                                      "All saved changes will now update to the cloud. \
                 You can manage this file from your updated projects page on audio.com"),
@@ -334,6 +334,8 @@ bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudI
                     interactive()->openUrl(audioComService()->getCloudProjectPage(project));
                 }
             });
+        } else {
+            toastService()->showError(trc("global", "Error"), result.ret.text());
         }
     });
 

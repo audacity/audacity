@@ -59,7 +59,7 @@ PUBLIC
       au3-wave-track-interface
       au3-project-file-io-interface # ProjectFileIOExtension
       au3-concurrency-interface
-      rapidjson::rapidjson # Required for the JSON parsing (PUBLIC because ServiceConfig.h includes it)
+      rapidjson::rapidjson 
    PRIVATE
       au3-sqlite-helpers-interface
       au3-crypto-interface

@@ -44,7 +44,6 @@ public:
     std::string getCloudProjectPage(au::project::IAudacityProjectPtr project) override;
 
     muse::ProgressPtr shareAudio(const std::string& title) override;
-    std::string getSharedAudioPage() const override;
 
 private:
     struct CachedProjectItem {
@@ -65,10 +64,5 @@ private:
     std::mutex m_cacheMutex;
 
     Observer::Subscription m_projectUploadSubscription;
-
-    std::shared_ptr <audacity::cloud::audiocom::UploadService> m_uploadService;
-    audacity::cloud::audiocom::UploadOperationHandle m_uploadOperationHandle;
-
-    std::string m_sharedAudioUrl;
 };
 }
