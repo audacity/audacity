@@ -17,6 +17,7 @@ void Au3CloudModule::registerExports()
 {
     m_cloudService = std::make_shared<Au3CloudService>(muse::modularity::globalCtx());
     m_audioComService = std::make_shared<Au3AudioComService>();
+    m_audioComController = std::make_shared<Au3AudioComController>(iocContext());
 
     globalIoc()->registerExport<au3cloud::IAuthorization>(moduleName(), m_cloudService);
     globalIoc()->registerExport<au3cloud::IUsageInfo>(moduleName(), m_cloudService);
@@ -26,6 +27,7 @@ void Au3CloudModule::registerExports()
 void Au3CloudModule::onInit(const muse::IApplication::RunMode&)
 {
     m_cloudService->init();
+    m_audioComController->init();
 }
 
 void Au3CloudModule::registerUiTypes()

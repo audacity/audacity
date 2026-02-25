@@ -35,6 +35,26 @@ ExportPlugin* formatPlugin(const std::string& format)
 }
 }
 
+class ProgressDelegate : public ExportProcessorDelegate
+{
+    muse::ProgressPtr m_progress;
+    std::atomic<bool> m_cancelled { false };
+public:
+    ProgressDelegate(muse::ProgressPtr progress)
+        : m_progress(progress)
+    {
+        m_progress->canceled().onNotify(nullptr, [this] { m_cancelled = true; });
+    }
+
+    bool IsCancelled() const override { return m_cancelled; }
+    bool IsStopped()   const override { return false; }
+    void SetStatusString(const TranslatableString&) override {}
+    void OnProgress(double p) override
+    {
+        m_progress->progress(static_cast<int64_t>(p * 50), 100);
+    }
+};
+
 class DialogExportProgressDelegate : public ExportProcessorDelegate
 {
     std::atomic<bool> mCancelled { false };
@@ -95,7 +115,7 @@ void Au3Exporter::init()
     RegisterExportPlugins();
 }
 
-muse::Ret Au3Exporter::exportData(const muse::io::path_t& path)
+muse::Ret Au3Exporter::exportData(const muse::io::path_t& path, muse::ProgressPtr progress)
 {
     wxFileName wxfilename = wxFromString(path.toString());
 
@@ -227,14 +247,23 @@ muse::Ret Au3Exporter::exportData(const muse::io::path_t& path)
         });
 
         auto f = exportTask.get_future();
-        DialogExportProgressDelegate delegate;
-        std::thread(std::move(exportTask), std::ref(delegate)).detach();
-        auto result = ExportResult::Error;
-        while (f.wait_for(std::chrono::milliseconds(50)) != std::future_status::ready) {
-            delegate.UpdateUI();
+        ExportResult result = ExportResult::Error;
+
+        if (progress) {
+            ProgressDelegate delegate(progress);
+            std::thread(std::move(exportTask), std::ref(delegate)).detach();
+            while (f.wait_for(std::chrono::milliseconds(50)) != std::future_status::ready) {}
+            result = f.get();
+        } else {
+            DialogExportProgressDelegate delegate;
+            std::thread(std::move(exportTask), std::ref(delegate)).detach();
+            while (f.wait_for(std::chrono::milliseconds(50)) != std::future_status::ready) {
+                delegate.UpdateUI();
+            }
+            result = f.get();
         }
 
-        if (result == ExportResult::Error) {
+        if (result != ExportResult::Success) {
             return muse::make_ret(muse::Ret::Code::InternalError);
         }
     } catch (const ExportException& e) {

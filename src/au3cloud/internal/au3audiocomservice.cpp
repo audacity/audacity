@@ -264,10 +264,75 @@ muse::ProgressPtr Au3AudioComService::uploadProject(au::project::IAudacityProjec
     return progress;
 }
 
+std::string Au3AudioComService::getSharedAudioPage() const
+{
+    return m_sharedAudioUrl;
+}
+
 std::string Au3AudioComService::getCloudProjectPage(au::project::IAudacityProjectPtr project)
 {
     au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
 
     auto& projectCloudExtension = audacity::cloud::audiocom::sync::ProjectCloudExtension::Get(*au3Project);
     return projectCloudExtension.GetCloudProjectPage(AudiocomTrace::SaveProjectSaveToCloudMenu);
+}
+
+muse::ProgressPtr Au3AudioComService::shareAudio(au::project::IAudacityProjectPtr, const std::string& title)
+{
+    muse::ProgressPtr progress = std::make_shared<muse::Progress>();
+
+    std::thread([this, title, progress]() {
+        auto formats = exporter()->formatsList();
+        if (formats.empty()) {
+            progress->finish(muse::make_ret(muse::Ret::Code::UnknownError, std::string { "No export formats available" }));
+            return;
+        }
+
+        const auto it = std::find(formats.begin(), formats.end(), "WavPack Files");
+        const std::string format = (it != formats.end()) ? *it : formats[0];
+        exportConfiguration()->setCurrentFormat(format);
+        exportConfiguration()->setProcessType(importexport::ExportProcessType::FULL_PROJECT_AUDIO);
+        exportConfiguration()->setExportSampleRate(44100);
+        exporter()->setValue(1, 24);
+
+        auto extensions = exporter()->formatExtensions(format);
+        std::string tempPath = "/tmp/teste." + extensions[0];
+
+        const auto exportRet = exporter()->exportData(muse::io::path_t(tempPath), progress);
+        if (!exportRet) {
+            progress->finish(exportRet);
+            return;
+        }
+
+        m_uploadService
+            = std::make_unique<audacity::cloud::audiocom::UploadService>(audacity::cloud::audiocom::GetServiceConfig(),
+                                                                         audacity::cloud::audiocom::GetOAuthService());
+        const bool isPublic = false;
+        m_uploadOperationHandle = m_uploadService->Upload(
+            tempPath,
+            wxString(title),
+            isPublic,
+            [this, progress, tempPath](const audacity::cloud::audiocom::UploadOperationCompleted& result) {
+            if (wxFileExists(tempPath)) {
+                wxRemoveFile(tempPath);
+            }
+
+            if (result.result == audacity::cloud::audiocom::UploadOperationCompleted::Result::Success) {
+                auto* payload = std::get_if<audacity::cloud::audiocom::UploadSuccessfulPayload>(&result.payload);
+                if (payload) {
+                    m_sharedAudioUrl = payload->audioUrl;
+                    progress->finish(muse::make_ret(muse::Ret::Code::Ok));
+                }
+            } else {
+                progress->finish(muse::make_ret(muse::Ret::Code::UnknownError, std::string { "Upload failed" }));
+            }
+        },
+            [progress](uint64_t current, uint64_t total) {
+            // Progress 50-100% for upload
+            double uploadProgress = double(current) / double(total);
+            progress->progress(50 + uploadProgress * 50, 100);
+        },
+            AudiocomTrace::ShareAudioButton);
+    }).detach();
+    return progress;
 }

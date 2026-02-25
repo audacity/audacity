@@ -19,6 +19,7 @@ void ProjectToolBarModel::load()
 
     muse::actions::ActionCodeList itemsCodes = {
         "audio-setup",
+        "file-share-audio",
         "get-effects"
     };
 

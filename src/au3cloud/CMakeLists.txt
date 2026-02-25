@@ -15,6 +15,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/dev/cloudtestsmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/dev/cloudtestsmodel.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiocomcontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiocomcontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiocomservice.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiocomservice.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3cloudprojectfileioextension.cpp
