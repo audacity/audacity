@@ -63,7 +63,12 @@ BuiltinEffectBase {
                 columnSpacing: prv.columnSpacing
 
                 BigParameterKnob {
+                    id: roomSizeKnob
+
                     Layout.fillWidth: true
+
+                    navigationPanel: root.navigationPanel
+                    navigationOrder: root.navigationOrder
 
                     parameter: reverb.paramsList["RoomSize"]
                     radius: 24
@@ -77,7 +82,12 @@ BuiltinEffectBase {
                 }
 
                 BigParameterKnob {
+                    id: stereoWidthKnob
+
                     Layout.fillWidth: true
+
+                    navigationPanel: root.navigationPanel
+                    navigationOrder: roomSizeKnob.navigationOrderEnd
 
                     parameter: reverb.paramsList["StereoWidth"]
                     radius: 24
@@ -92,6 +102,9 @@ BuiltinEffectBase {
 
                 BigParameterKnob {
                     Layout.fillWidth: true
+
+                    navigationPanel: root.navigationPanel
+                    navigationOrder: stereoWidthKnob.navigationOrderEnd
 
                     parameter: reverb.paramsList["PreDelay"]
                     radius: 24
@@ -124,8 +137,12 @@ BuiltinEffectBase {
             }
 
             ParameterKnob {
+                id: hfDampingKnob
 
                 Layout.fillWidth: true
+
+                navigationPanel: root.navigationPanel
+                navigationOrder: leftColumn.navigationOrderEnd
 
                 parameter: reverb.paramsList["HfDamping"]
 
@@ -138,8 +155,12 @@ BuiltinEffectBase {
             }
 
             ParameterKnob {
+                id: reverberanceKnob
 
                 Layout.fillWidth: true
+
+                navigationPanel: root.navigationPanel
+                navigationOrder: hfDampingKnob.navigationOrderEnd
 
                 parameter: reverb.paramsList["Reverberance"]
 
@@ -152,8 +173,12 @@ BuiltinEffectBase {
             }
 
             ParameterKnob {
+                id: toneLowKnob
 
                 Layout.fillWidth: true
+
+                navigationPanel: root.navigationPanel
+                navigationOrder: reverberanceKnob.navigationOrderEnd
 
                 parameter: reverb.paramsList["ToneLow"]
 
@@ -166,8 +191,12 @@ BuiltinEffectBase {
             }
 
             ParameterKnob {
+                id: toneHighKnob
 
                 Layout.fillWidth: true
+
+                navigationPanel: root.navigationPanel
+                navigationOrder: toneLowKnob.navigationOrderEnd
 
                 parameter: reverb.paramsList["ToneHigh"]
 
@@ -184,8 +213,12 @@ BuiltinEffectBase {
             }
 
             ParameterKnob {
+                id: wetGainKnob
 
                 Layout.fillWidth: true
+
+                navigationPanel: root.navigationPanel
+                navigationOrder: toneHighKnob.navigationOrderEnd
 
                 parameter: reverb.paramsList["WetGain"]
 
@@ -198,8 +231,12 @@ BuiltinEffectBase {
             }
 
             ParameterKnob {
+                id: dryGainKnob
 
                 Layout.fillWidth: true
+
+                navigationPanel: root.navigationPanel
+                navigationOrder: wetGainKnob.navigationOrderEnd
 
                 parameter: reverb.paramsList["DryGain"]
 
@@ -213,6 +250,9 @@ BuiltinEffectBase {
 
             CheckBox {
                 id: wetOnly
+
+                navigation.panel: root.navigationPanel
+                navigation.order: dryGainKnob.navigationOrderEnd
 
                 text: qsTrc("effects/reverb", "Wet only")
                 checked: reverb.wetOnly
