@@ -3,14 +3,12 @@
  */
 #include "generatoreffect.h"
 #include "au3-components/EffectInterface.h"
-#include "playback/iaudiooutput.h"
-#include "trackedit/itrackeditproject.h"
 #include "log.h"
 
 using namespace au::effects;
 
 GeneratorEffect::GeneratorEffect(const double& t0, double& t1)
-    : muse::Injectable(muse::modularity::globalCtx()), m_t0{t0}
+    : m_t0{t0}
     , m_t1{t1}
 {
 }
@@ -23,26 +21,6 @@ void GeneratorEffect::init(EffectSettings* settings)
     m_settings = settings;
     setDuration(settings->extra.GetDuration());
     doInit();
-}
-
-double GeneratorEffect::sampleRate() const
-{
-    return playback()->audioOutput()->sampleRate();
-}
-
-double GeneratorEffect::tempo() const
-{
-    return globalContext()->currentTrackeditProject()->timeSignature().tempo;
-}
-
-int GeneratorEffect::upperTimeSignature() const
-{
-    return globalContext()->currentTrackeditProject()->timeSignature().upper;
-}
-
-int GeneratorEffect::lowerTimeSignature() const
-{
-    return globalContext()->currentTrackeditProject()->timeSignature().lower;
 }
 
 double GeneratorEffect::duration() const
