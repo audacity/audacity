@@ -84,10 +84,6 @@ void RecordContext::registerExports()
 
 void RecordContext::resolveImports()
 {
-    auto ar = ioc()->resolve<IUiActionsRegister>(mname);
-    if (ar) {
-        ar->reg(m_uiActions);
-    }
 }
 
 void RecordContext::onInit(const IApplication::RunMode& mode)
@@ -99,6 +95,11 @@ void RecordContext::onInit(const IApplication::RunMode& mode)
     m_controller->init();
     m_uiActions->init();
     m_record->init();
+
+    auto ar = ioc()->resolve<IUiActionsRegister>(mname);
+    if (ar) {
+        ar->reg(m_uiActions);
+    }
 }
 
 void RecordContext::onDeinit()

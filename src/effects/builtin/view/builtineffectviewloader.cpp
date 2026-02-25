@@ -24,6 +24,7 @@
 #include "effects/effects_base/internal/abstractviewlauncher.h"
 
 #include <QQmlEngine>
+#include <QQmlContext>
 
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "global/types/number.h"
@@ -78,13 +79,15 @@ void BuiltinEffectViewLoader::load(int instanceId, QObject* itemParent, QObject*
         return;
     }
 
+    QQmlContext* ctx = qmlContext(itemParent);
+
     QObject* obj = component.createWithInitialProperties(
     {
         { "parent", QVariant::fromValue(itemParent) },
         { "instanceId", instanceId },
         { "dialogView", QVariant::fromValue(dialogView) },
         { "usedDestructively", usedDestructively }
-    });
+    }, ctx);
 
     m_contentItem = qobject_cast<QQuickItem*>(obj);
     if (!m_contentItem) {

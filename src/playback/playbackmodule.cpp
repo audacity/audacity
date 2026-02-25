@@ -67,6 +67,14 @@ void PlaybackModule::registerUiTypes()
     qmlRegisterUncreatableType<PlaybackMeterDbRange>("Audacity.Playback", 1, 0, "PlaybackMeterDbRange", "Not creatable from QML");
 }
 
+void PlaybackModule::resolveImports()
+{
+    auto ir = globalIoc()->resolve<muse::interactive::IInteractiveUriRegister>(mname);
+    if (ir) {
+        ir->registerQmlUri(muse::Uri("audacity://playback/loop_region_in_out"), "Audacity/Playback/dialogs/LoopRegionInOut.qml");
+    }
+}
+
 void PlaybackModule::onInit(const IApplication::RunMode& mode)
 {
     if (mode == IApplication::RunMode::AudioPluginRegistration) {
@@ -102,14 +110,6 @@ void PlaybackContext::registerExports()
 
 void PlaybackContext::resolveImports()
 {
-    auto ar = ioc()->resolve<IUiActionsRegister>(mname);
-    if (ar) {
-        ar->reg(m_uiActions);
-    }
-    auto ir = ioc()->resolve<muse::interactive::IInteractiveUriRegister>(mname);
-    if (ir) {
-        ir->registerQmlUri(muse::Uri("audacity://playback/loop_region_in_out"), "Audacity/Playback/dialogs/LoopRegionInOut.qml");
-    }
 }
 
 void PlaybackContext::onInit(const IApplication::RunMode& mode)
@@ -124,6 +124,11 @@ void PlaybackContext::onInit(const IApplication::RunMode& mode)
 
     m_uiActions->init();
     m_controller->init();
+
+    auto ar = ioc()->resolve<IUiActionsRegister>(mname);
+    if (ar) {
+        ar->reg(m_uiActions);
+    }
 }
 
 void PlaybackContext::onDeinit()

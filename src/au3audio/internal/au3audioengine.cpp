@@ -60,6 +60,11 @@ bool Au3AudioEngine::isBusy() const
     return AudioIO::Get()->IsBusy();
 }
 
+bool Au3AudioEngine::isCapturing() const
+{
+    return AudioIO::Get()->IsCapturing();
+}
+
 int Au3AudioEngine::startStream(const TransportSequences& sequences, const double startTime, const double endTime,
                                 const double mixerEndTime,
                                 AudacityProject& project, const bool isDefaultPlayTrackPolicy, const double audioStreamSampleRate)

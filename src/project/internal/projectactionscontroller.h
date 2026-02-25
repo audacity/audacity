@@ -8,6 +8,7 @@
 #include "framework/actions/actionable.h"
 #include "framework/actions/iactionsdispatcher.h"
 #include "framework/interactive/iinteractive.h"
+#include "framework/ui/imainwindow.h"
 
 #include "context/iglobalcontext.h"
 #include "project/irecentfilescontroller.h"
@@ -19,6 +20,7 @@
 #include "project/iprojectconfiguration.h"
 #include "project/iprojectfilescontroller.h"
 #include "project/iaudacityproject.h"
+#include "multiwindows/imultiwindowsprovider.h"
 
 namespace au::project {
 class ProjectActionsController : public IProjectFilesController, public muse::actions::Actionable, public muse::async::Asyncable,
@@ -29,8 +31,10 @@ class ProjectActionsController : public IProjectFilesController, public muse::ac
     muse::GlobalInject<importexport::ExportConfiguration> exportConfiguration;
 
     muse::GlobalInject<IRecentFilesController> recentFilesController;
+    muse::GlobalInject<muse::mi::IMultiWindowsProvider> multiwindowsProvider;
 
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::Inject<muse::ui::IMainWindow> mainWindow { this };
     muse::Inject<au::context::IGlobalContext> globalContext { this };
     muse::Inject<muse::IInteractive> interactive { this };
     muse::Inject<IOpenSaveProjectScenario> openSaveProjectScenario { this };

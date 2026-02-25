@@ -114,10 +114,6 @@ void AppShellContext::registerExports()
 
 void AppShellContext::resolveImports()
 {
-    auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(mname);
-    if (ar) {
-        ar->reg(m_applicationUiActions);
-    }
 }
 
 void AppShellContext::onPreInit(const muse::IApplication::RunMode& mode)
@@ -138,6 +134,11 @@ void AppShellContext::onInit(const muse::IApplication::RunMode& mode)
     m_applicationActionController->init();
     m_applicationUiActions->init();
     m_sessionsManager->init();
+
+    auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(mname);
+    if (ar) {
+        ar->reg(m_applicationUiActions);
+    }
 }
 
 void AppShellContext::onAllInited(const muse::IApplication::RunMode& mode)

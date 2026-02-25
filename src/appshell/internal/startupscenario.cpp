@@ -103,12 +103,10 @@ void StartupScenario::runAfterSplashScreen()
     }
 
     StartupModeType modeType = resolveStartupModeType();
-    //! TODO AU4
-    // bool isMainInstance = multiwindowsProvider()->isMainInstance();
-    if (/*isMainInstance && */ sessionsManager()->hasProjectsForRestore()) {
+    if (multiwindowsProvider()->isFirstWindow() && sessionsManager()->hasProjectsForRestore()) {
         modeType = StartupModeType::Recovery;
     }
-    if (!configuration()->hasCompletedFirstLaunchSetup()) {
+    if (multiwindowsProvider()->isFirstWindow() && !configuration()->hasCompletedFirstLaunchSetup()) {
         modeType = StartupModeType::FirstLaunch;
     }
 
@@ -116,38 +114,40 @@ void StartupScenario::runAfterSplashScreen()
 
     muse::async::Channel<muse::Uri> opened = interactive()->opened();
     opened.onReceive(this, [this, opened, modeType](const muse::Uri&) {
-        static bool once = false;
-        if (once) {
+        if (m_startupCompleted) {
             return;
         }
-        once = true;
 
-        muse::audioplugins::PluginScanResult scanResult = registerAudioPluginsScenario()->scanPlugins();
+        m_startupCompleted = true;
 
-        registerAudioPluginsScenario()->unregisterRemovedPlugins(scanResult.missingPluginIds);
+        muse::async::Channel<muse::Uri> mut = opened;
+        mut.disconnect(this);
 
-        if (!scanResult.newPluginPaths.empty()) {
-            auto ret = interactive()->questionSync(muse::trc("appshell", "Scanning audio plugins"),
-                                                   muse::trc(
-                                                       "appshell",
-                                                       "Audacity has found plugins that need to be scanned before use. Would you like to scan them now or skip?"),
-                                                   { muse::IInteractive::ButtonData(
-                                                         muse::IInteractive::Button::Cancel, muse::trc("appshell", "Skip this time"),
-                                                         false),
-                                                     muse::IInteractive::ButtonData(
-                                                         muse::IInteractive::Button::Apply, muse::trc("appshell", "Scan plugins"), true) });
-            if (ret.standardButton() == muse::IInteractive::Button::Apply) {
-                registerAudioPluginsScenario()->registerNewPlugins(scanResult.newPluginPaths);
+        static bool pluginsScanned = false;
+        if (!pluginsScanned) {
+            pluginsScanned = true;
+
+            muse::audioplugins::PluginScanResult scanResult = registerAudioPluginsScenario()->scanPlugins();
+
+            registerAudioPluginsScenario()->unregisterRemovedPlugins(scanResult.missingPluginIds);
+
+            if (!scanResult.newPluginPaths.empty()) {
+                auto ret = interactive()->questionSync(muse::trc("appshell", "Scanning audio plugins"),
+                                                       muse::trc(
+                                                           "appshell",
+                                                           "Audacity has found plugins that need to be scanned before use. Would you like to scan them now or skip?"),
+                                                       { muse::IInteractive::ButtonData(
+                                                             muse::IInteractive::Button::Cancel, muse::trc("appshell", "Skip this time"),
+                                                             false),
+                                                         muse::IInteractive::ButtonData(
+                                                             muse::IInteractive::Button::Apply, muse::trc("appshell", "Scan plugins"), true) });
+                if (ret.standardButton() == muse::IInteractive::Button::Apply) {
+                    registerAudioPluginsScenario()->registerNewPlugins(scanResult.newPluginPaths);
+                }
             }
         }
 
         onStartupPageOpened(modeType);
-
-        muse::async::Async::call(this, [this, opened]() {
-            muse::async::Channel<muse::Uri> mut = opened;
-            mut.disconnect(this);
-            m_startupCompleted = true;
-        });
     });
 
     interactive()->open(startupUri);

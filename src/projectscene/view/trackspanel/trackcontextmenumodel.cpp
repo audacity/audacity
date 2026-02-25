@@ -225,10 +225,14 @@ void TrackContextMenuModel::onActionsStateChanges(const muse::actions::ActionCod
 
     if (containsAny(codes, { ActionCode(TRACK_VIEW_HALF_WAVE_ACTION) })) {
         const auto project = globalContext()->currentProject();
-        assert(project);
+        if (!project) {
+            return;
+        }
 
         const auto viewState = project->viewState();
-        assert(viewState);
+        if (!viewState) {
+            return;
+        }
 
         const bool isHalfWave = viewState->isHalfWave(m_trackId).val;
 

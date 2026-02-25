@@ -73,6 +73,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectautosaver.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectactionscontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectactionscontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/projectprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/recentfilescontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/recentfilescontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/iopensaveprojectscenario.h
