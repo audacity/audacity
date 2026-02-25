@@ -1,6 +1,8 @@
 /*
 * Audacity: A Digital Audio Editor
 */
+#include <chrono>
+#include <cstdint>
 #include <thread>
 
 #include "au3audiocomservice.h"
@@ -14,9 +16,13 @@
 #include "au3-concurrency/concurrency/CancellationContext.h"
 #include "au3-import-export/ExportUtils.h"
 #include "au3-project-file-io/ProjectFileIO.h"
+#include "au3-project-rate/ProjectRate.h"
 
 #include "au3cloud/cloudtypes.h"
 #include "au3wrap/au3types.h"
+#include "importexport/export/iexporter.h"
+#include "importexport/export/types/exporttypes.h"
+#include "io/path.h"
 #include "project/iaudacityproject.h"
 
 using namespace au::au3cloud;
@@ -79,6 +85,17 @@ au::au3cloud::AudioList convertFromAu3CloudAudio(const sync::PaginatedAudioRespo
     audioList.meta.itemsPerBatch = paginatedResponse.Pagination.PageSize;
 
     return audioList;
+}
+
+muse::io::path_t getTempFileName(const muse::io::path_t tempDir, const std::string& ext)
+{
+    auto timestamp = std::chrono::system_clock::now().time_since_epoch().count();
+    std::ostringstream oss;
+    oss << timestamp;
+
+    return tempDir
+           .appendingComponent(oss.str())
+           .appendingSuffix(ext);
 }
 }
 
@@ -277,28 +294,37 @@ std::string Au3AudioComService::getCloudProjectPage(au::project::IAudacityProjec
     return projectCloudExtension.GetCloudProjectPage(AudiocomTrace::SaveProjectSaveToCloudMenu);
 }
 
-muse::ProgressPtr Au3AudioComService::shareAudio(au::project::IAudacityProjectPtr, const std::string& title)
+muse::ProgressPtr Au3AudioComService::shareAudio(const std::string& title)
 {
     muse::ProgressPtr progress = std::make_shared<muse::Progress>();
 
     std::thread([this, title, progress]() {
-        auto formats = exporter()->formatsList();
-        if (formats.empty()) {
+        const auto preferredFormats = exporter()->cloudPreferredAudioFormats();
+        if (preferredFormats.empty()) {
             progress->finish(muse::make_ret(muse::Ret::Code::UnknownError, std::string { "No export formats available" }));
             return;
         }
 
-        const auto it = std::find(formats.begin(), formats.end(), "WavPack Files");
-        const std::string format = (it != formats.end()) ? *it : formats[0];
-        exportConfiguration()->setCurrentFormat(format);
-        exportConfiguration()->setProcessType(importexport::ExportProcessType::FULL_PROJECT_AUDIO);
-        exportConfiguration()->setExportSampleRate(44100);
-        exporter()->setValue(1, 24);
+        auto project = globalContext()->currentProject();
+        if (!project) {
+            progress->finish(muse::make_ret(muse::Ret::Code::UnknownError, std::string { "No valid current project" }));
+            return;
+        }
+        au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
 
-        auto extensions = exporter()->formatExtensions(format);
-        std::string tempPath = "/tmp/teste." + extensions[0];
+        au::importexport::ExportDataConfig config;
+        config.format = preferredFormats[0];
+        config.processType = importexport::ExportProcessType::FULL_PROJECT_AUDIO;
+        config.exportChannelsType = static_cast<int>(importexport::ExportChannelsPref::ExportChannels::STEREO);
+        config.exportChannels = 2;
+        config.exportSampleRate = ProjectRate::Get(*au3Project).GetRate();
 
-        const auto exportRet = exporter()->exportData(muse::io::path_t(tempPath), progress);
+        const auto parameters = exporter()->cloudExportParameters(preferredFormats[0]);
+
+        muse::io::path_t tempPath
+            = getTempFileName(projectConfiguration()->temporaryDir(), exporter()->formatExtensions(config.format).front());
+
+        const auto exportRet = exporter()->exportData(muse::io::path_t(tempPath), config, parameters, progress);
         if (!exportRet) {
             progress->finish(exportRet);
             return;
@@ -309,12 +335,12 @@ muse::ProgressPtr Au3AudioComService::shareAudio(au::project::IAudacityProjectPt
                                                                          audacity::cloud::audiocom::GetOAuthService());
         const bool isPublic = false;
         m_uploadOperationHandle = m_uploadService->Upload(
-            tempPath,
-            wxString(title),
+            tempPath.toStdString(),
+            title,
             isPublic,
             [this, progress, tempPath](const audacity::cloud::audiocom::UploadOperationCompleted& result) {
-            if (wxFileExists(tempPath)) {
-                wxRemoveFile(tempPath);
+            if (filesystem()->exists(tempPath)) {
+                filesystem()->remove(tempPath);
             }
 
             if (result.result == audacity::cloud::audiocom::UploadOperationCompleted::Result::Success) {
@@ -328,9 +354,7 @@ muse::ProgressPtr Au3AudioComService::shareAudio(au::project::IAudacityProjectPt
             }
         },
             [progress](uint64_t current, uint64_t total) {
-            // Progress 50-100% for upload
-            double uploadProgress = double(current) / double(total);
-            progress->progress(50 + uploadProgress * 50, 100);
+            progress->progress(static_cast<int64_t>(current), static_cast<int64_t>(total));
         },
             AudiocomTrace::ShareAudioButton);
     }).detach();

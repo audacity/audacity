@@ -7,23 +7,27 @@
 #include <map>
 #include <mutex>
 
+#include "context/iglobalcontext.h"
 #include "framework/global/async/asyncable.h"
 #include "framework/global/async/promise.h"
 #include "framework/global/modularity/ioc.h"
+#include "framework/global/io/ifilesystem.h"
 
-#include "au3-cloud-audiocom/UploadService.h"
 #include "au3cloud/cloudtypes.h"
 #include "au3cloud/iau3audiocomservice.h"
 #include "importexport/export/iexporter.h"
-#include "importexport/export/iexportconfiguration.h"
+#include "project/iprojectconfiguration.h"
 
+#include "au3-cloud-audiocom/UploadService.h"
 #include "au3-utility/Observer.h"
 
 namespace au::au3cloud {
 class Au3AudioComService : public IAu3AudioComService, public muse::async::Asyncable, public muse::Injectable
 {
-    muse::GlobalInject<importexport::IExportConfiguration> exportConfiguration;
+    muse::GlobalInject<muse::io::IFileSystem> filesystem;
+    muse::GlobalInject<project::IProjectConfiguration> projectConfiguration;
     muse::Inject<importexport::IExporter> exporter{ this };
+    muse::Inject<context::IGlobalContext> globalContext { this };
 
 public:
     Au3AudioComService(const muse::modularity::ContextPtr& ctx)
@@ -39,7 +43,7 @@ public:
     muse::ProgressPtr uploadProject(au::project::IAudacityProjectPtr project, const std::string& name) override;
     std::string getCloudProjectPage(au::project::IAudacityProjectPtr project) override;
 
-    muse::ProgressPtr shareAudio(au::project::IAudacityProjectPtr project, const std::string& title) override;
+    muse::ProgressPtr shareAudio(const std::string& title) override;
     std::string getSharedAudioPage() const override;
 
 private:
