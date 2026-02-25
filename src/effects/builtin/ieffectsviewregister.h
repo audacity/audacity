@@ -9,7 +9,7 @@
 
 namespace au::effects {
 //! TODO Move to builtin module
-class IEffectsViewRegister : MODULE_EXPORT_INTERFACE
+class IEffectsViewRegister : MODULE_GLOBAL_INTERFACE
 {
     INTERFACE_ID(IEffectsViewRegister)
 
