@@ -221,6 +221,9 @@ void GuiApp::finish()
     // Delete modules
     qDeleteAll(m_modules);
     m_modules.clear();
+
+    // Engine quit
+    muse::modularity::globalIoc()->resolve<muse::ui::IUiEngine>("app")->quit();
 }
 
 std::vector<muse::modularity::IContextSetup*>& GuiApp::contextSetups(const muse::modularity::ContextPtr& ctx)
@@ -319,7 +322,7 @@ modularity::ContextPtr GuiApp::setupNewContext(const muse::StringList& args)
     }
 #endif
 
-    QQmlApplicationEngine* engine = muse::modularity::ioc(ctx)->resolve<muse::ui::IUiEngine>("app")->qmlAppEngine();
+    QQmlApplicationEngine* engine = muse::modularity::globalIoc()->resolve<muse::ui::IUiEngine>("app")->qmlAppEngine();
 
     QObject::connect(engine, &QQmlEngine::warnings, [](const QList<QQmlError>& warnings) {
         for (const QQmlError& e : warnings) {
@@ -416,9 +419,6 @@ void GuiApp::destroyContext(const modularity::ContextPtr& ctx)
         LOGW() << "Context not found: " << ctx->id;
         return;
     }
-
-    // Engine quit
-    muse::modularity::ioc(ctx)->resolve<muse::ui::IUiEngine>("app")->quit();
 
     for (modularity::IContextSetup* s : it->setups) {
         s->onDeinit();
