@@ -197,11 +197,17 @@ void Au3Record::init()
     m_audioInput = std::make_shared<Au3AudioInput>(iocContext());
 
     audioEngine()->updateRequested().onNotify(this, [this]() {
+        if (m_recordData.empty()) {
+            return;
+        }
         auto& pendingTracks = PendingTracks::Get(projectRef());
         pendingTracks.UpdatePendingTracks();
     });
 
     audioEngine()->recordingClipChanged().onReceive(this, [this](const au3::Au3TrackId& trackId, const au3::Au3ClipId& clipId) {
+        if (m_recordData.empty()) {
+            return;
+        }
         Au3WaveTrack* origWaveTrack = DomAccessor::findWaveTrack(projectRef(), trackId);
 
         Au3Track* pendingTrack = PendingTracks::Get(projectRef()).FindPendingTrack(*origWaveTrack);
@@ -244,7 +250,18 @@ void Au3Record::init()
         }
     });
 
+    audioEngine()->finished().onNotify(this, [this]() {
+        if (m_recordData.empty()) {
+            return;
+        }
+        m_recordPosition.set(m_recordPosition.val);
+        m_recordingFinished.notify();
+    });
+
     audioEngine()->commitRequested().onNotify(this, [this]() {
+        if (m_recordData.empty()) {
+            return;
+        }
         for (const RecordData& recordEntry : m_recordData) {
             trackedit::ClipKey clipKey = recordEntry.clipKey;
             Au3WaveTrack* origWaveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
@@ -352,6 +369,13 @@ muse::Ret Au3Record::start()
     std::copy(existingTracks.begin(), existingTracks.end(),
               back_inserter(transportTracks.captureSequences));
 
+    if (audioEngine()->isBusy()) {
+        if (audioEngine()->isCapturing()) {
+            return make_ret(Ret::Code::InternalError, std::string("Another project is recording"));
+        }
+        audioEngine()->stopStream();
+    }
+
     audioEngine()->stopMonitoring();
 
     return doRecord(project, transportTracks, t0, t1, altAppearance, projectRate);
@@ -409,6 +433,11 @@ muse::async::Channel<muse::secs_t> Au3Record::recordPositionChanged() const
 secs_t Au3Record::recordPosition() const
 {
     return m_recordPosition.val;
+}
+
+Notification Au3Record::recordingFinished() const
+{
+    return m_recordingFinished;
 }
 
 Au3Project& Au3Record::projectRef() const

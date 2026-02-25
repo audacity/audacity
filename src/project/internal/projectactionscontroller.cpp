@@ -106,9 +106,12 @@ void ProjectActionsController::init()
         // reset preferred export sample rate
         exportConfiguration()->setExportSampleRate(-1);
 
-        //! TODO AU4
-        bool quitApp = false; //multiwindowsProvider()->instances().size() > 1;
-        closeOpenedProject(quitApp);
+        if (multiwindowsProvider()->windowCount() > 1) {
+            mainWindow()->qWindow()->close();
+            return;
+        }
+
+        closeOpenedProject(false);
     });
 
     dispatcher()->reg(this, OPEN_CUSTOM_FFMPEG_OPTIONS, this, &ProjectActionsController::openCustomFFmpegOptions);
@@ -205,10 +208,9 @@ void ProjectActionsController::newProject()
     };
 
     if (globalContext()->currentProject()) {
-#ifdef MU_BUILD_MULTIINSTANCE_MODULE
         //! Check, if any project is already open in the current window
         //! and there is already a created instance without a project, then activate it
-        if (multiwindowsProvider()->isHasAppInstanceWithoutProject()) {
+        if (multiwindowsProvider()->isHasWindowWithoutProject()) {
             multiwindowsProvider()->activateWindowWithoutProject();
             return;
         }
@@ -216,10 +218,7 @@ void ProjectActionsController::newProject()
         //! Otherwise, we will create a new instance
         QStringList args;
         args << "--session-type" << "start-with-new";
-        multiwindowsProvider()->openNewAppInstance(args);
-#else
-        LOGE() << "Has current project, but no multiinstance module, create new unable, need close current";
-#endif
+        multiwindowsProvider()->openNewWindow(args);
         return;
     }
 
@@ -613,12 +612,10 @@ muse::Ret ProjectActionsController::openProject(const muse::io::path_t& givenPat
     }
 
     //! Step 3. Check, if the project already opened in another window, then activate the window with the project
-#ifdef MU_BUILD_MULTIINSTANCE_MODULE
     if (multiwindowsProvider()->isProjectAlreadyOpened(actualPath)) {
         multiwindowsProvider()->activateWindowWithProject(actualPath);
         return make_ret(Ret::Code::Ok);
     }
-#endif
 
     //! Step 4. Check, if a any project is already open in the current window,
     //! then create a new instance
@@ -629,12 +626,8 @@ muse::Ret ProjectActionsController::openProject(const muse::io::path_t& givenPat
         if (!displayNameOverride.isEmpty()) {
             args << "--project-display-name-override" << displayNameOverride;
         }
-#ifdef MU_BUILD_MULTIINSTANCE_MODULE
-        multiwindowsProvider()->openNewAppInstance(args);
+        multiwindowsProvider()->openNewWindow(args);
         return make_ret(Ret::Code::Ok);
-#else
-        return muse::make_ret(muse::Ret::Code::NotSupported);
-#endif
     }
 
     //! Step 5. If it's a cloud project, download the latest version

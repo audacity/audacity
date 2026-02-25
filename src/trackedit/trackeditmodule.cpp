@@ -148,10 +148,6 @@ void TrackeditContext::registerExports()
 
 void TrackeditContext::resolveImports()
 {
-    auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(mname);
-    if (ar) {
-        ar->reg(m_trackeditUiActions);
-    }
 }
 
 void TrackeditContext::onInit(const muse::IApplication::RunMode&)
@@ -161,6 +157,11 @@ void TrackeditContext::onInit(const muse::IApplication::RunMode&)
     m_selectionController->init();
     m_trackNavigationController->init();
     m_trackSpectrogramSettingsUpdater->init();
+
+    auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(mname);
+    if (ar) {
+        ar->reg(m_trackeditUiActions);
+    }
 }
 
 void TrackeditContext::onDeinit()

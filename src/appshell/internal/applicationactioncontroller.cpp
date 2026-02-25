@@ -158,9 +158,21 @@ bool ApplicationActionController::canReceiveAction(const ActionCode& code) const
 
 bool ApplicationActionController::eventFilter(QObject* watched, QEvent* event)
 {
-    //! TODO AU4
-    if ((event->type() == QEvent::Close && watched == mainWindow()->qWindow())
-        || event->type() == QEvent::Quit) {
+    if (event->type() == QEvent::Close && watched == mainWindow()->qWindow()) {
+        if (multiwindowsProvider()->windowCount() > 1) {
+            if (!projectFilesController()->closeOpenedProject()) {
+                event->ignore();
+                return true;
+            }
+            watched->deleteLater();
+            return false;
+        }
+        const bool accepted = quit();
+        event->setAccepted(accepted);
+        return true;
+    }
+
+    if (event->type() == QEvent::Quit) {
         const bool accepted = quit();
         event->setAccepted(accepted);
         return true;

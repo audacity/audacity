@@ -25,7 +25,7 @@
 #include "framework/languages/languagesmodule.h"
 #include "framework/workspace/workspacemodule.h"
 
-#include "framework/stubs/multiwindows/multiwindowsstubmodule.h"
+#include "framework/multiwindows/multiwindowsmodule.h"
 
 #include "appshell/appshellmodule.h"
 #include "context/contextmodule.h"
