@@ -28,6 +28,7 @@
 #include "au3-network-manager/NetworkManager.h"
 #include "NetworkUtils.h"
 #include "au3-network-manager/Request.h"
+#include "au3-network-manager/RequestPayload.h"
 
 #include "au3-string-utils/CodeConversions.h"
 
@@ -92,6 +93,9 @@ std::string GetUploadRequestPayload(
     document.AddMember(
         "public", rapidjson::Value(isPublic), document.GetAllocator());
 
+    document.AddMember(
+        "method", rapidjson::Value("PUT"), document.GetAllocator());
+
     rapidjson::StringBuffer buffer;
     rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
     document.Accept(writer);
@@ -124,7 +128,7 @@ UploadFailedPayload ParseUploadFailedMessage(const std::string& payloadText)
 
     if (!document.IsObject()) {
         // This is unexpected, just return an empty object
-        assert(document.IsObject());
+        // In case of 5xx server erros we may get HTML here.
         return {};
     }
 
@@ -352,36 +356,6 @@ struct AudiocomUploadOperation final : UploadOperation, std::enable_shared_from_
             return;
         }
 
-        auto form = std::make_unique<MultipartData>();
-
-        if (document.HasMember("fields")) {
-            const auto& fields = document["fields"];
-
-            for (auto it = fields.MemberBegin(); it != fields.MemberEnd(); ++it) {
-                form->Add(it->name.GetString(), it->value.GetString());
-            }
-        }
-
-        const auto fileField
-            =document.HasMember("field") ? document["field"].GetString() : "file";
-
-        const wxFileName name { mFileName };
-
-        try
-        {
-            // We have checked for the file existence on the main thread
-            // already. For safety sake check for any exception thrown by AddFile
-            // anyway
-            form->AddFile(fileField, DeduceMimeType(name.GetExt()), name);
-        }
-        catch (...)
-        {
-            // Just fail the promise in case if any exception was thrown
-            // UploadService user is responsible to display an appropriate dialog
-            FailPromise(UploadOperationCompleted::Result::FileNotFound, {});
-            return;
-        }
-
         const auto url = document["url"].GetString();
 
         mSuccessUrl = document["success"].GetString();
@@ -401,13 +375,8 @@ struct AudiocomUploadOperation final : UploadOperation, std::enable_shared_from_
             mUserName = extra["audio"]["username"].GetString();
         }
 
-        const auto encType = document.HasMember("enctype")
-                             ? document["enctype"].GetString()
-                             : "multipart/form-data";
-
         Request request(url);
 
-        request.setHeader(common_headers::ContentType, encType);
         request.setHeader(
             common_headers::Accept, common_content_types::ApplicationJson);
 
@@ -418,8 +387,17 @@ struct AudiocomUploadOperation final : UploadOperation, std::enable_shared_from_
             return;
         }
 
-        auto response
-            =NetworkManager::GetInstance().doPost(request, std::move(form));
+        auto payload = CreateRequestPayloadStream(mFileName.ToStdString());
+
+        if (!payload->HasData()) {
+            FailPromise(
+                UploadOperationCompleted::Result::FileNotFound,
+                "File not found: " + audacity::ToUTF8(mFileName));
+
+            return;
+        }
+
+        auto response = NetworkManager::GetInstance().doPut(request, payload);
 
         mActiveResponse = response;
 
