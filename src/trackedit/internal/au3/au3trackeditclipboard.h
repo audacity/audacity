@@ -4,6 +4,7 @@
 #pragma once
 
 #include "trackedit/itrackeditclipboard.h"
+#include "trackedit/iclipboarddata.h"
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
@@ -15,6 +16,7 @@ using Au3TrackDataPtr = std::shared_ptr<Au3TrackData>;
 class Au3TrackeditClipboard : public ITrackeditClipboard, public muse::Injectable
 {
     muse::Inject<au::context::IGlobalContext> globalContext { this };
+    muse::GlobalInject<IClipboardData> clipboardData;
 
 public:
     Au3TrackeditClipboard(const muse::modularity::ContextPtr& ctx)
@@ -39,9 +41,5 @@ private:
     std::vector<int64_t> createNewGroupIDs(const std::set<int64_t>& groupIDs) const;
     static void updateTracksDataWithIDs(const std::vector<Au3TrackDataPtr>& tracksData, const std::set<int64_t>& groupIDs,
                                         const std::vector<int64_t>& newGroupIDs);
-
-    std::vector<Au3TrackDataPtr> m_tracksData;
-
-    bool m_isMultiSelectionCopy = false;
 };
 }

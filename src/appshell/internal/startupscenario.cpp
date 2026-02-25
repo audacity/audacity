@@ -140,7 +140,8 @@ void StartupScenario::runAfterSplashScreen()
                                                              muse::IInteractive::Button::Cancel, muse::trc("appshell", "Skip this time"),
                                                              false),
                                                          muse::IInteractive::ButtonData(
-                                                             muse::IInteractive::Button::Apply, muse::trc("appshell", "Scan plugins"), true) });
+                                                             muse::IInteractive::Button::Apply, muse::trc("appshell", "Scan plugins"),
+                                                             true) });
                 if (ret.standardButton() == muse::IInteractive::Button::Apply) {
                     registerAudioPluginsScenario()->registerNewPlugins(scanResult.newPluginPaths);
                 }
