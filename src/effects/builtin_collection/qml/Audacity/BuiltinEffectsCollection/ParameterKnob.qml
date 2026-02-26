@@ -8,6 +8,8 @@ Item {
 
     required property var parameter
 
+    property alias navigation: knob.navigation
+
     property alias value: knob.value
     property double defaultValue: 0
     property alias radius: knob.radius

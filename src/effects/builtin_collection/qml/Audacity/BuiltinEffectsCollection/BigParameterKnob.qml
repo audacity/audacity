@@ -10,6 +10,8 @@ Item {
 
     required property var parameter
 
+    property alias navigation: knob.navigation
+
     property double defaultValue: 0
     property alias stepSize: knob.stepSize
     property alias radius: knob.radius
