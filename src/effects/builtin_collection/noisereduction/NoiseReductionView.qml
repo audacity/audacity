@@ -12,12 +12,34 @@ BuiltinEffectBase {
 
     property string title: qsTrc("effects/noisereduction", "Noise Reduction")
     property bool isApplyAllowed: noiseReduction.isApplyAllowed
+    property int bottomButtonsNavigationPanelOrder: 4
 
     implicitHeight: column.implicitHeight
     implicitWidth: row.implicitWidth
 
     builtinEffectModel: NoiseReductionViewModelFactory.createModel(root, root.instanceId)
     property alias noiseReduction: root.builtinEffectModel
+    property NavigationPanel getNoiseProfileNavigationPanel: NavigationPanel {
+        name: "NoiseReductionGetProfile"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 1
+    }
+    property NavigationPanel slidersNavigationPanel: NavigationPanel {
+        name: "NoiseReductionSliders"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 2
+    }
+    property NavigationPanel outputModeNavigationPanel: NavigationPanel {
+        name: "NoiseReductionOutputMode"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 3
+    }
 
     Column {
         id: column
@@ -63,6 +85,9 @@ BuiltinEffectBase {
 
                         Layout.fillWidth: true
                         Layout.margins: 16
+
+                        navigation.panel: root.getNoiseProfileNavigationPanel
+                        navigation.order: 0
 
                         text: qsTrc("effects/noisereduction", "Get noise profile")
                         onClicked: {
@@ -118,10 +143,15 @@ BuiltinEffectBase {
                     }
 
                     NoiseReductionSlider {
+                        id: reductionSlider
+
                         Layout.fillWidth: true
                         Layout.leftMargin: 16
                         Layout.rightMargin: 16
                         Layout.bottomMargin: 16
+
+                        navigationPanel: root.slidersNavigationPanel
+                        navigationOrderStart: 0
 
                         value: noiseReduction.reduction
                         onNewValueRequested: function (newValue) {
@@ -143,10 +173,15 @@ BuiltinEffectBase {
                     }
 
                     NoiseReductionSlider {
+                        id: sensitivitySlider
+
                         Layout.fillWidth: true
                         Layout.leftMargin: 16
                         Layout.rightMargin: 16
                         Layout.bottomMargin: 16
+
+                        navigationPanel: root.slidersNavigationPanel
+                        navigationOrderStart: reductionSlider.navigationOrderStart + 2
 
                         value: noiseReduction.sensitivity
                         onNewValueRequested: function (newValue) {
@@ -167,10 +202,15 @@ BuiltinEffectBase {
                     }
 
                     NoiseReductionSlider {
+                        id: frequencySmoothingSlider
+
                         Layout.fillWidth: true
                         Layout.leftMargin: 16
                         Layout.rightMargin: 16
                         Layout.bottomMargin: 16
+
+                        navigationPanel: root.slidersNavigationPanel
+                        navigationOrderStart: sensitivitySlider.navigationOrderStart + 2
 
                         value: noiseReduction.frequencySmoothingBands
                         onNewValueRequested: function (newValue) {
@@ -215,7 +255,11 @@ BuiltinEffectBase {
 
                             RoundedRadioButton {
                                 id: audioWithNoiseRemovedRadioButton
+
                                 width: parent.width
+
+                                navigation.panel: root.outputModeNavigationPanel
+                                navigation.order: 0
 
                                 checked: noiseReduction.reductionMode === 0
                                 text: qsTrc("effects/noisereduction", "Audio with noise removed")
@@ -226,7 +270,11 @@ BuiltinEffectBase {
                             }
 
                             RoundedRadioButton {
+                                id: noiseOnlyRadioButton
                                 width: parent.width
+
+                                navigation.panel: root.outputModeNavigationPanel
+                                navigation.order: audioWithNoiseRemovedRadioButton.navigation.order + 1
 
                                 checked: !audioWithNoiseRemovedRadioButton.checked
                                 text: qsTrc("effects/noisereduction", "Noise only")
