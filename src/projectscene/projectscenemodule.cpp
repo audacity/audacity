@@ -238,10 +238,6 @@ void ProjectSceneContext::registerExports()
     ioc()->registerExport<ISamplesPainter>(mname, std::make_shared<SamplesPainter>(iocContext()));
 }
 
-void ProjectSceneContext::resolveImports()
-{
-}
-
 void ProjectSceneContext::onInit(const muse::IApplication::RunMode& mode)
 {
     if (mode != muse::IApplication::RunMode::GuiApp) {

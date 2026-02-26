@@ -112,10 +112,6 @@ void AppShellContext::registerExports()
     ioc()->registerExport<ISessionsManager>(mname, m_sessionsManager);
 }
 
-void AppShellContext::resolveImports()
-{
-}
-
 void AppShellContext::onPreInit(const muse::IApplication::RunMode& mode)
 {
     if (mode == muse::IApplication::RunMode::AudioPluginRegistration) {

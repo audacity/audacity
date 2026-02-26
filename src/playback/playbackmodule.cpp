@@ -108,10 +108,6 @@ void PlaybackContext::registerExports()
     ioc()->registerExport<ITrackPlaybackControl>(mname, std::make_shared<Au3TrackPlaybackControl>(iocContext()));
 }
 
-void PlaybackContext::resolveImports()
-{
-}
-
 void PlaybackContext::onInit(const IApplication::RunMode& mode)
 {
     if (mode == IApplication::RunMode::AudioPluginRegistration) {
