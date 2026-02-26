@@ -1,13 +1,17 @@
 import QtQuick 2.15
 import Audacity.ProjectScene
 
+import Muse.UiComponents
+
 Item {
     id: root
 
     property double min: 0
     property double max: 0
     property double value: 0
+    property double stepSize: 1
     property alias handle: eqFaderHandle
+    property alias navigation: navCtrl
 
     function showTooltip() {
         // The user just clicked the effect's window.
@@ -32,6 +36,32 @@ Item {
 
     width: eqFaderHandle.width
 
+    NavigationControl {
+        id: navCtrl
+        name: root.objectName !== "" ? root.objectName : "GraphicEqFader"
+        enabled: root.enabled && root.visible
+
+        accessible.role: MUAccessible.Range
+        accessible.visualItem: root
+        accessible.value: root.value
+        accessible.minimumValue: root.min
+        accessible.maximumValue: root.max
+        accessible.stepSize: root.stepSize
+
+        onNavigationEvent: function(event) {
+            switch (event.type) {
+            case NavigationEvent.Up:
+                root.requestNewValue(Math.min(root.max, root.value + root.stepSize))
+                event.accepted = true
+                break
+            case NavigationEvent.Down:
+                root.requestNewValue(Math.max(root.min, root.value - root.stepSize))
+                event.accepted = true
+                break
+            }
+        }
+    }
+
     Rectangle {
         id: faderTrack
 
@@ -46,6 +76,11 @@ Item {
 
             anchors.horizontalCenter: parent.horizontalCenter
             y: faderTrack.height * (1 - (value - min) / (max - min)) - eqFaderHandle.height / 2
+
+            NavigationFocusBorder {
+                anchors.fill: parent
+                navigationCtrl: navCtrl
+            }
 
             VolumeTooltip {
                 id: tooltip
