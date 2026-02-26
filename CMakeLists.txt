@@ -99,6 +99,8 @@ set(MUSE_MODULE_WORKSPACE ON)
 set(MUSE_MODULE_VST ON)
 set(MUSE_MODULE_VST_QML ON)
 
+set(MUSE_MULTICONTEXT_WIP ON)
+
 # Modules (alphabetical order please)
 option(AU_BUILD_APPSHELL_MODULE "Build appshell module" ON)
 option(AU_BUILD_CLOUD_AUDIOCOM "Build cloud audiocom module" ON)
