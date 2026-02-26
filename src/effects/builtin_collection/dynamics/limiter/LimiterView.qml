@@ -3,6 +3,7 @@
  */
 import QtQuick
 import QtQuick.Layouts
+import Muse.Ui 1.0
 import Muse.UiComponents
 import Audacity.Effects
 import Audacity.ProjectScene
@@ -22,6 +23,20 @@ DynamicsEffectBase {
 
     builtinEffectModel: LimiterViewModelFactory.createModel(root, root.instanceId)
     property alias limiter: root.builtinEffectModel
+    property NavigationPanel thresholdAndMakeupNavigationPanel: NavigationPanel {
+        name: "LimiterThresholdAndMakeup"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 1
+    }
+    property NavigationPanel rightKnobsNavigationPanel: NavigationPanel {
+        name: "LimiterRightKnobs"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 2
+    }
 
     Column {
         id: rootColumn
@@ -82,6 +97,8 @@ DynamicsEffectBase {
                     SettingKnob {
                         id: thresholdKnob
 
+                        navigationPanel: root.thresholdAndMakeupNavigationPanel
+                        navigationOrder: 0
                         isVertical: true
                         radius: 24
                         warp: true
@@ -96,6 +113,8 @@ DynamicsEffectBase {
                     SettingKnob {
                         id: makeupKnob
 
+                        navigationPanel: root.thresholdAndMakeupNavigationPanel
+                        navigationOrder: thresholdKnob.navigationOrder + 1
                         isVertical: true
                         radius: 24
                         warp: true
@@ -115,6 +134,9 @@ DynamicsEffectBase {
 
                     delegate: SettingKnob {
                         required property string modelData
+                        required property int index
+                        navigationPanel: root.rightKnobsNavigationPanel
+                        navigationOrder: index
                         anchors.verticalCenter: parent.verticalCenter
                         isVertical: true
                         knobFirst: false

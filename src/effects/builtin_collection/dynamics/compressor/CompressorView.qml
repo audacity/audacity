@@ -3,6 +3,7 @@
  */
 import QtQuick
 import QtQuick.Layouts
+import Muse.Ui 1.0
 import Muse.UiComponents
 import Audacity.Effects
 import Audacity.BuiltinEffects
@@ -25,6 +26,20 @@ DynamicsEffectBase {
         return model
     }
     property alias compressor: root.builtinEffectModel
+    property NavigationPanel leftGridNavigationPanel: NavigationPanel {
+        name: "CompressorLeftGrid"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 1
+    }
+    property NavigationPanel rightGridNavigationPanel: NavigationPanel {
+        name: "CompressorRightGrid"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 2
+    }
 
     Column {
         id: rootColumn
@@ -80,6 +95,11 @@ DynamicsEffectBase {
 
                         delegate: SettingKnob {
                             required property string modelData
+                            required property int index
+
+                            navigationPanel: root.leftGridNavigationPanel
+                            navigationOrder: index
+
                             isVertical: true
                             knobFirst: false
                             warp: true
@@ -96,6 +116,8 @@ DynamicsEffectBase {
                 }
 
                 Grid {
+                    id: rightGrid
+
                     columns: 2
                     spacing: 24
 
@@ -104,6 +126,11 @@ DynamicsEffectBase {
 
                         delegate: SettingKnob {
                             required property string modelData
+                            required property int index
+
+                            navigationPanel: root.rightGridNavigationPanel
+                            navigationOrder: index
+
                             isVertical: true
                             knobFirst: false
                             warp: true
@@ -114,6 +141,7 @@ DynamicsEffectBase {
                                 })
                                 return model
                             }
+
                         }
                     }
                 }
