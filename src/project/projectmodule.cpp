@@ -142,10 +142,6 @@ void ProjectContext::registerExports()
     ioc()->registerExport<IMetadata>(mname, m_tagsAccessor);
 }
 
-void ProjectContext::resolveImports()
-{
-}
-
 void ProjectContext::onInit(const muse::IApplication::RunMode&)
 {
     m_actionsController->init();

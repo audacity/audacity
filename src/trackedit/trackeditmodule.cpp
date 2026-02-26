@@ -148,10 +148,6 @@ void TrackeditContext::registerExports()
     ioc()->registerExport<ILabelsInteraction>(mname, new Au3LabelsInteraction(iocContext()));
 }
 
-void TrackeditContext::resolveImports()
-{
-}
-
 void TrackeditContext::onInit(const muse::IApplication::RunMode&)
 {
     m_trackeditUiActions->init();
