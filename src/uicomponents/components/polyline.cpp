@@ -488,6 +488,11 @@ qreal Polyline::activePointY() const
     return m_activePointPx.y();
 }
 
+qreal Polyline::activePointValue() const
+{
+    return m_activePointValue;
+}
+
 void Polyline::setDefaultValue(qreal v)
 {
     if (m_defaultValue == v) {
@@ -643,6 +648,7 @@ void Polyline::updateActivePoint()
         if (m_hasActivePoint) {
             m_hasActivePoint = false;
             m_activePointPx = {};
+            m_activePointValue = 0.0;
             emit activePointChanged();
         }
         return;
@@ -662,16 +668,23 @@ void Polyline::updateActivePoint()
         if (m_hasActivePoint) {
             m_hasActivePoint = false;
             m_activePointPx = {};
+            m_activePointValue = 0.0;
             emit activePointChanged();
         }
         return;
     }
 
     const QPointF newPx(toPxX(this, activeN.x()), toPxY(this, activeN.y()));
-    const bool changed = (!m_hasActivePoint || newPx != m_activePointPx);
+    const qreal newValue = (draggedDisplayDomainIdx >= 0 && m_hasDraggedPointDomain)
+                           ? m_draggedPointDomain.y()
+                           : m_points[activeDomainIdx].y();
+    const bool changed = (!m_hasActivePoint
+                          || newPx != m_activePointPx
+                          || std::abs(newValue - m_activePointValue) > EPSILON);
 
     m_hasActivePoint = true;
     m_activePointPx = newPx;
+    m_activePointValue = newValue;
 
     if (changed) {
         emit activePointChanged();

@@ -904,8 +904,8 @@ Rectangle {
 
                     onPointMoved: function(index, x, y, completed) {
                         clipGainModel.setPoint(index, x, y, completed)
-                        tooltip.show(true)
                         tooltip.gain = gainToDb(y)
+                        tooltip.show(true)
                     }
 
                     onPointAdded: function(x, y, completed) {
@@ -922,7 +922,20 @@ Rectangle {
                     }
 
                     onInteractionFinished: function() {
-                        tooltip.hide(true)
+                        if (!automation.hasActivePoint) {
+                            tooltip.hide(true)
+                        }
+                    }
+
+                    onActivePointChanged: {
+                        if (automation.hasActivePoint) {
+                            fake.x = automation.activePointX
+                            fake.y = automation.activePointY - (automation.pointRadius + 2)
+                            tooltip.gain = gainToDb(automation.activePointValue)
+                            tooltip.show(true)
+                        } else {
+                            tooltip.hide(true)
+                        }
                     }
 
                     Item {

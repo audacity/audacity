@@ -57,6 +57,7 @@ class Polyline : public QQuickPaintedItem, public muse::async::Asyncable, public
     Q_PROPERTY(bool hasActivePoint READ hasActivePoint NOTIFY activePointChanged)
     Q_PROPERTY(qreal activePointX READ activePointX NOTIFY activePointChanged)
     Q_PROPERTY(qreal activePointY READ activePointY NOTIFY activePointChanged)
+    Q_PROPERTY(qreal activePointValue READ activePointValue NOTIFY activePointChanged)
 
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
@@ -126,6 +127,7 @@ public:
     bool hasActivePoint() const;
     qreal activePointX() const;
     qreal activePointY() const;
+    qreal activePointValue() const;
 
     void geometryChange(const QRectF& newG, const QRectF& oldG) override;
     void paint(QPainter* painter) override;
@@ -243,4 +245,5 @@ private:
 
     bool m_hasActivePoint = false;
     QPointF m_activePointPx;
+    qreal m_activePointValue = 0.0;
 };
