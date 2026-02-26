@@ -9,6 +9,7 @@ BuiltinEffectBase {
 
     property string title: amplify.effectTitle
     property bool isApplyAllowed: amplify.isApplyAllowed
+    property int bottomButtonsNavigationPanelOrder: 2
 
     width: 320
     implicitHeight: column.height
@@ -21,6 +22,13 @@ BuiltinEffectBase {
         return model
     }
     property alias amplify: root.builtinEffectModel
+    property NavigationPanel amplifyNavigationPanel: NavigationPanel {
+        name: "AmplifyControls"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 1
+    }
 
     Component.onCompleted: {
         ampSlider.value = amplify.ampValue
@@ -37,6 +45,10 @@ BuiltinEffectBase {
             id: ampSlider
 
             width: parent.width
+
+            navigationPanel: root.amplifyNavigationPanel
+            navigationOrderStart: 0
+
             text: amplify.ampLabel
             measureUnitsSymbol: amplify.ampMeasureUnitsSymbol
             value: amplify.ampValue
@@ -54,6 +66,10 @@ BuiltinEffectBase {
             id: newPeakSlider
 
             width: parent.width
+
+            navigationPanel: root.amplifyNavigationPanel
+            navigationOrderStart: ampSlider.navigationOrderStart + 2
+
             text: amplify.newPeakLabel
             measureUnitsSymbol: amplify.newPeakMeasureUnitsSymbol
             value: amplify.newPeakValue
@@ -68,6 +84,10 @@ BuiltinEffectBase {
         }
 
         CheckBox {
+            id: canClipCheckbox
+
+            navigation.panel: root.amplifyNavigationPanel
+            navigation.order: newPeakSlider.navigationOrderStart + 2
 
             text: amplify.canClipLabel
             checked: amplify.canClip

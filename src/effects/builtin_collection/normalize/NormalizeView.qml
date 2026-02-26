@@ -10,12 +10,20 @@ BuiltinEffectBase {
 
     property string title: qsTrc("effects/normalize", "Normalize")
     property bool isApplyAllowed: removeDcCheckbox.checked || normalizePeakAmplitudeCheckbox.checked
+    property int bottomButtonsNavigationPanelOrder: 2
 
     width: 400
     implicitHeight: column.height
 
     builtinEffectModel: NormalizeViewModelFactory.createModel(root, root.instanceId)
     property alias normalize: root.builtinEffectModel
+    property NavigationPanel normalizeNavigationPanel: NavigationPanel {
+        name: "NormalizeControls"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 1
+    }
 
     Column {
         id: column
@@ -26,6 +34,9 @@ BuiltinEffectBase {
 
         CheckBox {
             id: removeDcCheckbox
+
+            navigation.panel: root.normalizeNavigationPanel
+            navigation.order: 0
 
             text: qsTrc("effects/normalize", "Remove DC offset (center on 0.0 vertically)")
 
@@ -45,6 +56,9 @@ BuiltinEffectBase {
                 Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
                 Layout.fillWidth: true
 
+                navigation.panel: root.normalizeNavigationPanel
+                navigation.order: removeDcCheckbox.navigation.order + 1
+
                 text: qsTrc("effects/normalize", "Normalize peak amplitude to")
                 onClicked: {
                     normalize.normalizePeakAmplitude = !checked
@@ -53,8 +67,13 @@ BuiltinEffectBase {
             }
 
             IncrementalPropertyControl {
+                id: peakAmplitudeControl
+
                 Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
                 Layout.preferredWidth: 100
+
+                navigation.panel: root.normalizeNavigationPanel
+                navigation.order: normalizePeakAmplitudeCheckbox.navigation.order + 1
 
                 measureUnitsSymbol: qsTrc("global", "dB")
                 decimals: 2
@@ -72,6 +91,10 @@ BuiltinEffectBase {
 
         CheckBox {
             id: normalizeStereoChannelsIndependentlyCheckbox
+
+            navigation.panel: root.normalizeNavigationPanel
+            navigation.order: peakAmplitudeControl.navigation.order + 1
+
             text: qsTrc("effects/normalize", "Normalize stereo channels independently")
 
             onClicked: {
