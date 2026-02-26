@@ -160,8 +160,13 @@ void ProjectSceneActionsController::toggleAutomation()
         return;
     }
 
-    bool automationState = viewState->clipGainAutomationEnabled().val;
-    viewState->setClipGainAutomationEnabled(!automationState);
+    const bool automationState = viewState->clipGainAutomationEnabled().val;
+    const bool enablingAutomation = !automationState;
+    if (enablingAutomation && viewState->globalSpectrogramToggleIsOn()) {
+        viewState->toggleGlobalSpectrogramView();
+    }
+
+    viewState->setClipGainAutomationEnabled(enablingAutomation);
 }
 
 void ProjectSceneActionsController::toggleTrackHalfWave(const muse::actions::ActionQuery& q)

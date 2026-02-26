@@ -1820,7 +1820,18 @@ void TrackeditActionsController::toggleGlobalSpectrogramView()
     IF_ASSERT_FAILED(project) {
         return;
     }
-    project->viewState()->toggleGlobalSpectrogramView();
+
+    const auto viewState = project->viewState();
+    IF_ASSERT_FAILED(viewState) {
+        return;
+    }
+
+    const bool enablingGlobalSpectrogram = !viewState->globalSpectrogramToggleIsOn();
+    if (enablingGlobalSpectrogram && viewState->clipGainAutomationEnabled().val) {
+        viewState->setClipGainAutomationEnabled(false);
+    }
+
+    viewState->toggleGlobalSpectrogramView();
 }
 
 void TrackeditActionsController::changeTrackViewToWaveform(const muse::actions::ActionQuery& q)
