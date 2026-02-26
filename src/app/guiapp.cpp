@@ -297,7 +297,7 @@ modularity::ContextPtr GuiApp::setupNewContext(const muse::StringList& args)
         auto startupScenario = muse::modularity::ioc(ctx)->resolve<IStartupScenario>("app");
         if (startupScenario) {
             std::optional<std::string> sessionType;
-            std::optional<project::ProjectFile> scoreFile;
+            std::optional<project::ProjectFile> projectFile;
             QString displayNameOverride;
 
             for (size_t i = 0; i < args.size(); ++i) {
@@ -308,16 +308,16 @@ modularity::ContextPtr GuiApp::setupNewContext(const muse::StringList& args)
                 } else if (!args[i].startsWith(u"--")) {
                     project::ProjectFile file;
                     file.url = QUrl::fromLocalFile(args[i].toQString());
-                    scoreFile = file;
+                    projectFile = file;
                 }
             }
 
-            if (scoreFile.has_value() && !displayNameOverride.isEmpty()) {
-                scoreFile.value().displayNameOverride = displayNameOverride;
+            if (projectFile.has_value() && !displayNameOverride.isEmpty()) {
+                projectFile.value().displayNameOverride = displayNameOverride;
             }
 
             startupScenario->setStartupType(sessionType);
-            startupScenario->setStartupScoreFile(scoreFile);
+            startupScenario->setStartupScoreFile(projectFile);
         }
     }
 #endif
