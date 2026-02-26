@@ -257,7 +257,7 @@ EffectStyledDialogView {
                         spacing: prv.panelMargins
                         navigationPanel.section: root.navigationSection
                         navigationPanel.order: viewerModel.effectFamily == EffectFamily.Builtin
-                                               ? 3
+                                               ? (prv.viewer ? prv.viewer.bottomButtonsNavigationPanelOrder : 3)
                                                : 1
 
                         //! TODO Move function to ButtonBox (Muse framework)
