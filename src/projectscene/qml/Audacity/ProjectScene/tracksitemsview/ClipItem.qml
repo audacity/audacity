@@ -389,6 +389,7 @@ Rectangle {
 
         onHoveredChanged: {
             automationMouseHoverLetThrough = hovered
+            root.setContainsMouse(hoverArea.containsMouse)
         }
     }
 
