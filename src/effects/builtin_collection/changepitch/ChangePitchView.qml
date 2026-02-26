@@ -19,9 +19,38 @@ BuiltinEffectBase {
 
     property string title: changePitch.effectTitle()
     property bool isApplyAllowed: true
+    property int bottomButtonsNavigationPanelOrder: 5
 
     builtinEffectModel: ChangePitchViewModelFactory.createModel(root, root.instanceId)
     property alias changePitch: root.builtinEffectModel
+    property NavigationPanel pitchRowNavigationPanel: NavigationPanel {
+        name: "ChangePitchPitchRow"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 1
+    }
+    property NavigationPanel semitonesAndCentsNavigationPanel: NavigationPanel {
+        name: "ChangePitchSemitonesAndCents"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 2
+    }
+    property NavigationPanel frequencyNavigationPanel: NavigationPanel {
+        name: "ChangePitchFrequency"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 3
+    }
+    property NavigationPanel highQualityStretchingNavigationPanel: NavigationPanel {
+        name: "ChangePitchHighQualityStretching"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 4
+    }
 
     QtObject {
         id: prv
@@ -89,7 +118,11 @@ BuiltinEffectBase {
 
                             StyledDropdown {
                                 id: fromPitchDropdown
+
                                 width: prv.pitchDropdownFieldWidth
+
+                                navigation.panel: root.pitchRowNavigationPanel
+                                navigation.order: 0
 
                                 currentIndex: changePitch.fromPitchValue
                                 model: changePitch.fromPitchModel()
@@ -101,7 +134,12 @@ BuiltinEffectBase {
 
                             IncrementalPropertyControl {
                                 id: fromOctaveControl
+
                                 width: parent.width - fromPitchDropdown.width - parent.spacing
+
+                                navigation.panel: root.pitchRowNavigationPanel
+                                navigation.order: fromPitchDropdown.navigation.order + 1
+
                                 currentValue: changePitch.fromOctaveValue
                                 measureUnitsSymbol: changePitch.fromOctaveUnitSymbol()
                                 decimals: changePitch.fromOctaveDecimals()
@@ -131,7 +169,11 @@ BuiltinEffectBase {
 
                             StyledDropdown {
                                 id: toPitchDropdown
+
                                 width: prv.pitchDropdownFieldWidth
+
+                                navigation.panel: root.pitchRowNavigationPanel
+                                navigation.order: fromOctaveControl.navigation.order + 1
 
                                 currentIndex: changePitch.toPitchValue
                                 model: changePitch.toPitchModel()
@@ -143,7 +185,12 @@ BuiltinEffectBase {
 
                             IncrementalPropertyControl {
                                 id: toOctaveControl
+
                                 width: parent.width - fromPitchDropdown.width - parent.spacing
+
+                                navigation.panel: root.pitchRowNavigationPanel
+                                navigation.order: toPitchDropdown.navigation.order + 1
+
                                 currentValue: changePitch.toOctaveValue
                                 measureUnitsSymbol: changePitch.toOctaveUnitSymbol()
                                 decimals: changePitch.toOctaveDecimals()
@@ -193,7 +240,13 @@ BuiltinEffectBase {
                         }
 
                         IncrementalPropertyControl {
+                            id: semitonesControl
+
                             width: parent.width
+
+                            navigation.panel: root.semitonesAndCentsNavigationPanel
+                            navigation.order: 0
+
                             currentValue: changePitch.semitonesIntegerValue
                             measureUnitsSymbol: changePitch.semitonesUnitSymbol()
                             decimals: changePitch.semitonesDecimals()
@@ -217,7 +270,13 @@ BuiltinEffectBase {
                         }
 
                         IncrementalPropertyControl {
+                            id: centsControl
+
                             width: parent.width
+
+                            navigation.panel: root.semitonesAndCentsNavigationPanel
+                            navigation.order: semitonesControl.navigation.order + 1
+
                             currentValue: changePitch.centsValue
                             measureUnitsSymbol: changePitch.centsUnitSymbol()
                             decimals: changePitch.centsDecimals()
@@ -271,7 +330,13 @@ BuiltinEffectBase {
                             }
 
                             IncrementalPropertyControl {
+                                id: fromFrequencyControl
+
                                 width: parent.width
+
+                                navigation.panel: root.frequencyNavigationPanel
+                                navigation.order: 0
+
                                 currentValue: changePitch.fromFrequencyValue
                                 measureUnitsSymbol: changePitch.fromFrequencyUnitSymbol()
                                 decimals: changePitch.fromFrequencyDecimals()
@@ -295,7 +360,13 @@ BuiltinEffectBase {
                             }
 
                             IncrementalPropertyControl {
+                                id: toFrequencyControl
+
                                 width: parent.width
+
+                                navigation.panel: root.frequencyNavigationPanel
+                                navigation.order: fromFrequencyControl.navigation.order + 1
+
                                 currentValue: changePitch.toFrequencyValue
                                 measureUnitsSymbol: changePitch.toFrequencyUnitSymbol()
                                 decimals: changePitch.toFrequencyDecimals()
@@ -325,9 +396,12 @@ BuiltinEffectBase {
 
                             StyledSlider {
                                 id: percentSlider
-                                anchors.verticalCenter: parent.verticalCenter
 
                                 width: parent.width - percentField.width - parent.spacing
+                                anchors.verticalCenter: parent.verticalCenter
+
+                                navigation.panel: root.frequencyNavigationPanel
+                                navigation.order: toFrequencyControl.navigation.order + 1
 
                                 from: changePitch.percentChangeMin()
                                 to: changePitch.percentChangeMax()
@@ -341,7 +415,12 @@ BuiltinEffectBase {
 
                             IncrementalPropertyControl {
                                 id: percentField
+
                                 width: prv.fieldWidth
+
+                                navigation.panel: root.frequencyNavigationPanel
+                                navigation.order: percentSlider.navigation.order + 1
+
                                 currentValue: changePitch.percentChangeValue
                                 measureUnitsSymbol: changePitch.percentChangeUnitSymbol()
                                 decimals: changePitch.percentChangeDecimals()
@@ -361,7 +440,13 @@ BuiltinEffectBase {
 
         // Use high quality stretching checkbox
         CheckBox {
+            id: highQualityStretchingCheckbox
+
             Layout.fillWidth: true
+
+            navigation.panel: root.highQualityStretchingNavigationPanel
+            navigation.order: 0
+
             text: changePitch.useSBSMSLabel()
             checked: changePitch.useSBSMSValue
             enabled: changePitch.useSBSMSEnabled()
