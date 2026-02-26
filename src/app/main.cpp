@@ -178,7 +178,11 @@ int main(int argc, char** argv)
     if (commandLineParser.runMode() == muse::IApplication::RunMode::AudioPluginRegistration) {
         qApplication = new QCoreApplication(argcFinal, argvFinal);
     } else {
-        qApplication = new QApplication(argcFinal, argvFinal);
+        QApplication* guiApp = new QApplication(argcFinal, argvFinal);
+#ifdef MUSE_MULTICONTEXT_WIP
+        guiApp->setQuitOnLastWindowClosed(false);
+#endif
+        qApplication = guiApp;
     }
 
     commandLineParser.processBuiltinArgs(*qApplication);

@@ -30,7 +30,10 @@ std::string BuiltinEffectsModule::moduleName() const
 
 void BuiltinEffectsModule::registerExports()
 {
+    m_builtinEffectsRepository = std::make_shared<BuiltinEffectsRepository>();
+
     globalIoc()->registerExport<IEffectsViewRegister>(mname, new EffectsViewRegister());
+    globalIoc()->registerExport<IBuiltinEffectsRepository>(mname, m_builtinEffectsRepository);
 }
 
 void BuiltinEffectsModule::registerResources()
@@ -52,6 +55,11 @@ void BuiltinEffectsModule::onPreInit(const muse::IApplication::RunMode&)
     BuiltinEffectsRepository::preInit();
 }
 
+void BuiltinEffectsModule::onInit(const muse::IApplication::RunMode& mode)
+{
+    m_builtinEffectsRepository->init();
+}
+
 muse::modularity::IContextSetup* BuiltinEffectsModule::newContext(const muse::modularity::ContextPtr& ctx) const
 {
     return new BuiltinEffectsContext(ctx);
@@ -63,9 +71,6 @@ muse::modularity::IContextSetup* BuiltinEffectsModule::newContext(const muse::mo
 
 void BuiltinEffectsContext::registerExports()
 {
-    m_builtinEffectsRepository = std::make_shared<BuiltinEffectsRepository>(iocContext());
-
-    ioc()->registerExport<IBuiltinEffectsRepository>(mname, m_builtinEffectsRepository);
 }
 
 void BuiltinEffectsContext::resolveImports()
@@ -78,7 +83,6 @@ void BuiltinEffectsContext::resolveImports()
 
 void BuiltinEffectsContext::onInit(const muse::IApplication::RunMode&)
 {
-    m_builtinEffectsRepository->init();
 }
 
 void BuiltinEffectsContext::onDeinit()

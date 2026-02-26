@@ -44,12 +44,9 @@ void SessionsManager::init()
 
 void SessionsManager::deinit()
 {
-#ifdef MUSE_MODULE_MULTIWINDOWS
-    bool isServer = multiwindowsProvider()->isMainInstance();
-    if (!isServer) {
+    if (!multiwindowsProvider()->isFirstWindow()) {
         return;
     }
-#endif
 
     if (configuration()->startupModeType() != StartupModeType::ContinueLastSession) {
         reset();

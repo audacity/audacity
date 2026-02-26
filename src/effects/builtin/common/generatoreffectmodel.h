@@ -5,6 +5,9 @@
 
 #include "../common/builtineffectmodel.h"
 
+#include "context/iglobalcontext.h"
+#include "playback/iplayback.h"
+
 namespace au::effects {
 class GeneratorEffect;
 class ToneEffect;
@@ -19,6 +22,9 @@ class GeneratorEffectModel : public BuiltinEffectModel
     Q_PROPERTY(int upperTimeSignature READ upperTimeSignature NOTIFY upperTimeSignatureChanged FINAL)
     Q_PROPERTY(int lowerTimeSignature READ lowerTimeSignature NOTIFY lowerTimeSignatureChanged FINAL)
     Q_PROPERTY(bool isApplyAllowed READ isApplyAllowed NOTIFY isApplyAllowedChanged FINAL)
+
+    muse::Inject<au::context::IGlobalContext> globalContext{ this };
+    muse::Inject<au::playback::IPlayback> playback{ this };
 
 public:
     GeneratorEffectModel(QObject* parent, int instanceId);

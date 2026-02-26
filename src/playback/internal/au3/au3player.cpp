@@ -94,7 +94,11 @@ void Au3Player::play()
     SelectedRegion selectedRegion(playRegion.GetStart(), playRegion.GetEnd());
 
     if (!canStopAudioStream()) {
-        return /*-1*/;
+        if (audioEngine()->isCapturing()) {
+            LOGW() << "Cannot start playback: another project is recording";
+            return;
+        }
+        audioEngine()->stopStream();
     }
 
     auto& pStartTime = options.pStartTime;
@@ -109,7 +113,8 @@ void Au3Player::play()
     }
 
     if (audioEngine()->isBusy()) {
-        return /*-1*/;
+        LOGW() << "Audio engine still busy after stopping other stream";
+        return;
     }
 
     const bool cutpreview = false;//mode == PlayMode::cutPreviewPlay;
@@ -471,12 +476,10 @@ void Au3Player::updatePlaybackState()
         m_playbackPosition.set(time);
     }
 
-    if (isActive) {
-        m_reachedEnd.val = false;
-    } else {
-        if (playbackStatus() == PlaybackStatus::Running && !m_reachedEnd.val) {
-            m_reachedEnd.val = true;
-            m_reachedEnd.notification.notify();
+    if (!isActive) {
+        if (playbackStatus() == PlaybackStatus::Running
+            || playbackStatus() == PlaybackStatus::Paused) {
+            m_playbackStatus.set(PlaybackStatus::Stopped);
         }
     }
 }

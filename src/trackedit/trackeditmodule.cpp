@@ -33,6 +33,7 @@
 #include "internal/trackeditinteraction.h"
 #include "internal/trackeditconfiguration.h"
 #include "internal/trackeditoperationcontroller.h"
+#include "internal/clipboarddata.h"
 #include "internal/tracknavigationcontroller.h"
 #include "internal/trackspectrogramsettingsupdater.h"
 #include "internal/undomanager.h"
@@ -78,6 +79,7 @@ void TrackeditModule::registerExports()
     m_configuration = std::make_shared<TrackeditConfiguration>();
 
     globalIoc()->registerExport<ITrackeditConfiguration>(mname, m_configuration);
+    globalIoc()->registerExport<IClipboardData>(mname, std::make_shared<ClipboardData>());
 }
 
 void TrackeditModule::registerUiTypes()
@@ -146,14 +148,6 @@ void TrackeditContext::registerExports()
     ioc()->registerExport<ILabelsInteraction>(mname, new Au3LabelsInteraction(iocContext()));
 }
 
-void TrackeditContext::resolveImports()
-{
-    auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(mname);
-    if (ar) {
-        ar->reg(m_trackeditUiActions);
-    }
-}
-
 void TrackeditContext::onInit(const muse::IApplication::RunMode&)
 {
     m_trackeditUiActions->init();
@@ -161,6 +155,11 @@ void TrackeditContext::onInit(const muse::IApplication::RunMode&)
     m_selectionController->init();
     m_trackNavigationController->init();
     m_trackSpectrogramSettingsUpdater->init();
+
+    auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(mname);
+    if (ar) {
+        ar->reg(m_trackeditUiActions);
+    }
 }
 
 void TrackeditContext::onDeinit()

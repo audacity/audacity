@@ -22,6 +22,7 @@ public:
     void registerExports() override;
     void registerResources() override;
     void registerUiTypes() override;
+    void resolveImports() override;
     void onInit(const muse::IApplication::RunMode& mode) override;
 
     muse::modularity::IContextSetup* newContext(const muse::modularity::ContextPtr& ctx) const override;
@@ -37,7 +38,6 @@ public:
         : muse::modularity::IContextSetup(ctx) {}
 
     void registerExports() override;
-    void resolveImports() override;
     void onInit(const muse::IApplication::RunMode& mode) override;
     void onDeinit() override;
 

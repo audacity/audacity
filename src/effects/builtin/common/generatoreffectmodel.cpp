@@ -8,6 +8,9 @@
 #include "au3-components/EffectInterface.h"
 #include "au3-effects/Effect.h"
 
+#include "playback/iaudiooutput.h"
+#include "trackedit/itrackeditproject.h"
+
 using namespace au::effects;
 
 GeneratorEffectModel::GeneratorEffectModel(QObject* parent, int instanceId)
@@ -32,26 +35,34 @@ void GeneratorEffectModel::doReload()
 
 double GeneratorEffectModel::sampleRate() const
 {
-    const auto& e = effect<GeneratorEffect>();
-    return e.sampleRate();
+    return playback()->audioOutput()->sampleRate();
 }
 
 double GeneratorEffectModel::tempo() const
 {
-    const auto& e = effect<GeneratorEffect>();
-    return e.tempo();
+    auto project = globalContext()->currentTrackeditProject();
+    if (!project) {
+        return 0.0;
+    }
+    return project->timeSignature().tempo;
 }
 
 int GeneratorEffectModel::upperTimeSignature() const
 {
-    const auto& e = effect<GeneratorEffect>();
-    return e.upperTimeSignature();
+    auto project = globalContext()->currentTrackeditProject();
+    if (!project) {
+        return 0;
+    }
+    return project->timeSignature().upper;
 }
 
 int GeneratorEffectModel::lowerTimeSignature() const
 {
-    const auto& e = effect<GeneratorEffect>();
-    return e.lowerTimeSignature();
+    auto project = globalContext()->currentTrackeditProject();
+    if (!project) {
+        return 0;
+    }
+    return project->timeSignature().lower;
 }
 
 double GeneratorEffectModel::duration() const

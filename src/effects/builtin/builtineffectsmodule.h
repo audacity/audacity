@@ -18,8 +18,12 @@ public:
     void registerResources() override;
     void registerUiTypes() override;
     void onPreInit(const muse::IApplication::RunMode& mode) override;
+    void onInit(const muse::IApplication::RunMode& mode) override;
 
     muse::modularity::IContextSetup* newContext(const muse::modularity::ContextPtr& ctx) const override;
+
+private:
+    std::shared_ptr<BuiltinEffectsRepository> m_builtinEffectsRepository;
 };
 
 class BuiltinEffectsContext : public muse::modularity::IContextSetup
@@ -34,6 +38,5 @@ public:
     void onDeinit() override;
 
 private:
-    std::shared_ptr<BuiltinEffectsRepository> m_builtinEffectsRepository;
 };
 }

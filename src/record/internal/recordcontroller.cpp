@@ -29,6 +29,12 @@ void RecordController::init()
         m_isRecordAllowedChanged.notify();
     });
 
+    record()->recordingFinished().onNotify(this, [this]() {
+        if (isRecording()) {
+            setCurrentRecordStatus(RecordStatus::Stopped);
+        }
+    });
+
     globalContext()->currentProjectChanged().onNotify(this, [this]() {
         onProjectChanged();
     });
