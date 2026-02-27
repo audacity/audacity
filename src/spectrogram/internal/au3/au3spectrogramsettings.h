@@ -41,8 +41,8 @@ public:
 
 public:
     bool syncWithGlobalSettings = true;
-    int minFreq = 0;
-    int maxFreq = 0;
+    double minFreq = 0;
+    double maxFreq = 0;
     int range = 0;
     int gain = 0;
     int frequencyGain = 0;

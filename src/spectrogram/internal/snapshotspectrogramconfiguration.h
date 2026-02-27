@@ -29,11 +29,11 @@ public:
 
     ~SnapshotSpectrogramConfiguration() override = default;
 
-    int minFreq() const override { return m_minFreq; }
-    void setMinFreq(int) override { assert(false); }
+    double minFreq() const override { return m_minFreq; }
+    void setMinFreq(double) override { assert(false); }
 
-    int maxFreq() const override { return m_maxFreq; }
-    void setMaxFreq(int) override { assert(false); }
+    double maxFreq() const override { return m_maxFreq; }
+    void setMaxFreq(double) override { assert(false); }
 
     int colorGainDb() const override { return m_colorGainDb; }
     void setColorGainDb(int) override { assert(false); }
@@ -66,8 +66,8 @@ public:
     void setUseGlobalSettings(bool) override { assert(false); }
 
 private:
-    const int m_minFreq;
-    const int m_maxFreq;
+    const double m_minFreq;
+    const double m_maxFreq;
     const int m_colorGainDb;
     const int m_colorRangeDb;
     const int m_colorHighBoostDbPerDec;
