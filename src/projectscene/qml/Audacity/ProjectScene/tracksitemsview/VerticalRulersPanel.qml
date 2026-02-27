@@ -193,6 +193,10 @@ Rectangle {
                             channelHeightRatio: trackViewState.channelHeightRatio
                         }
 
+                        SeparatorLine {
+                            color: ui.theme.extra["waveform_ruler_tick_extension_color"]
+                        }
+
                         SpectrogramTrackRulers {
                             Layout.fillWidth: true
                             Layout.fillHeight: true

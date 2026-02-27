@@ -7,11 +7,8 @@ import Muse.UiComponents
 import Audacity.ProjectScene
 import Audacity.Spectrogram
 
-Rectangle {
+Item {
     id: root
-
-    color: "grey"
-    border.width: 0
 
     required property int trackId
     required property bool isStereo

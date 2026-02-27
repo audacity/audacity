@@ -74,6 +74,7 @@ void TrackSpectrogramSettingsModel::componentComplete()
 void TrackSpectrogramSettingsModel::onSettingChanged()
 {
     setUseGlobalSettings(false);
+    spectrogramService()->notifyAboutTrackSpectrogramConfigurationChanged(m_trackId);
     emit updateRequested();
 }
 

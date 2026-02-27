@@ -97,4 +97,14 @@ struct FrequencySelection {
         return !(*this == other);
     }
 };
+
+struct SpectrogramRulerTick {
+    double val = 0.f;
+    double pos = 0.f;
+};
+
+struct SpectrogramRulerTicks {
+    std::vector<SpectrogramRulerTick> major;
+    std::vector<SpectrogramRulerTick> minor;
+};
 }
