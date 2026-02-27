@@ -206,10 +206,6 @@ Rectangle {
                             trackId: model.trackId
                             isStereo: model.isStereo
                             channelHeightRatio: trackViewState.channelHeightRatio
-
-                            onChannelZoomChanged: function (channel) {
-                                trackViewState.spectrogramVerticalZoomChanged(trackId, channel)
-                            }
                         }
                     }
                 }

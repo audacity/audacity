@@ -48,7 +48,6 @@ public:
 signals:
     void trackIdChanged();
     void channelHeightChanged();
-    void zoomChanged();
     void ticksChanged();
     void labelHeightChanged();
 

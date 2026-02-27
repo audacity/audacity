@@ -149,7 +149,6 @@ void SpectrogramChannelRulerModel::zoomBy(double factor, double mousePos)
 
     updateTicks();
 
-    emit zoomChanged();
     emit ticksChanged();
     spectrogramService()->notifyAboutTrackSpectrogramConfigurationChanged(m_trackId);
 }
@@ -199,8 +198,6 @@ void SpectrogramChannelRulerModel::scrollBy(double delta)
     config->setMaxFreq(newMaxFreq);
 
     updateTicks();
-
-    emit zoomChanged();
     emit ticksChanged();
     spectrogramService()->notifyAboutTrackSpectrogramConfigurationChanged(m_trackId);
 }

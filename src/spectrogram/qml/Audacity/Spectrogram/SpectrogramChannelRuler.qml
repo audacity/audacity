@@ -7,14 +7,12 @@ Item {
     id: root
 
     required property int trackId
-    signal zoomChanged
 
     SpectrogramChannelRulerModel {
         id: rulerModel
         trackId: root.trackId
         labelHeight: fontMetrics.height
         channelHeight: root.height
-        onZoomChanged: root.zoomChanged()
     }
 
     QtObject {

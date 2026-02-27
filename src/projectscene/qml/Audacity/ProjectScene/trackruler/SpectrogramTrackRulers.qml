@@ -14,8 +14,6 @@ Item {
     required property bool isStereo
     required property real channelHeightRatio
 
-    signal channelZoomChanged(int channel)
-
     Column {
         anchors.fill: parent
 
@@ -24,7 +22,6 @@ Item {
             height: root.isStereo ? root.height * root.channelHeightRatio : root.height
 
             trackId: root.trackId
-            onZoomChanged: root.channelZoomChanged(0)
         }
 
         SeparatorLine {
@@ -39,8 +36,6 @@ Item {
 
             visible: root.isStereo
             trackId: root.trackId
-
-            onZoomChanged: root.channelZoomChanged(1)
         }
     }
 }
