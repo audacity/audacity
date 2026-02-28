@@ -98,6 +98,8 @@ private:
 
     muse::Ret openPageIfNeed(muse::Uri pageUri);
 
+    void shareAudio();
+
     void openCustomFFmpegOptions();
     void openMetadataDialog();
     void openCustomMapping();

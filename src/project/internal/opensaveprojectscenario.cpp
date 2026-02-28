@@ -248,6 +248,10 @@ RetVal<CloudProjectInfo> OpenSaveProjectScenario::doAskCloudLocation(IAudacityPr
     result.name = rv.val.toQString();
     result.visibility = defaultVisibility;
 
+    if (!muse::io::isAllowedFileName(muse::io::path_t(result.name))) {
+        return make_ret(Ret::Code::BadData);
+    }
+
     return RetVal<CloudProjectInfo>::make_ok(result);
 
     // bool isCloudAvailable = museScoreComService()->authorization()->checkCloudIsAvailable();

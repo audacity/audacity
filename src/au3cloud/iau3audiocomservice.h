@@ -40,7 +40,6 @@ public:
     virtual void clearAudioListCache() = 0;
 
     virtual muse::ProgressPtr uploadProject(au::project::IAudacityProjectPtr project, const std::string& name) = 0;
-    virtual std::string getCloudProjectPage(au::project::IAudacityProjectPtr project) = 0;
 
     virtual muse::ProgressPtr shareAudio(const std::string& title) = 0;
 };

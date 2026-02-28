@@ -18,6 +18,7 @@
 #include "au3-project-file-io/ProjectFileIO.h"
 #include "au3-project-rate/ProjectRate.h"
 
+#include "au3cloud/au3clouderrors.h"
 #include "au3cloud/cloudtypes.h"
 #include "au3wrap/au3types.h"
 #include "importexport/export/iexporter.h"
@@ -96,6 +97,47 @@ muse::io::path_t getTempFileName(const muse::io::path_t tempDir, const std::stri
     return tempDir
            .appendingComponent(oss.str())
            .appendingSuffix(ext);
+}
+
+au::au3cloud::Err cloudSyncErrorToErr(const std::optional<sync::CloudSyncError>& error)
+{
+    if (!error.has_value()) {
+        return Err::UnknownError;
+    }
+
+    using ErrorType = sync::CloudSyncError::ErrorType;
+    switch (error->Type) {
+    case ErrorType::None:                       return Err::UnknownError;
+    case ErrorType::Authorization:              return Err::AuthorizationRequired;
+    case ErrorType::ProjectLimitReached:        return Err::ProjectLimitReached;
+    case ErrorType::ProjectStorageLimitReached: return Err::ProjectStorageLimitReached;
+    case ErrorType::ProjectVersionConflict:     return Err::ProjectVersionConflict;
+    case ErrorType::ProjectNotFound:            return Err::ProjectNotFound;
+    case ErrorType::DataUploadFailed:           return Err::DataUploadFailed;
+    case ErrorType::Network:                    return Err::NetworkError;
+    case ErrorType::Server:                     return Err::ServerError;
+    case ErrorType::Cancelled:                  return Err::SyncCancelled;
+    case ErrorType::Aborted:                    return Err::SyncAborted;
+    case ErrorType::ClientFailure:              return Err::ClientFailure;
+    }
+
+    return Err::UnknownError;
+}
+
+au::au3cloud::Err uploadResultToErr(UploadOperationCompleted::Result result)
+{
+    using Result = UploadOperationCompleted::Result;
+    switch (result) {
+    case Result::Success:            return Err::NoError;
+    case Result::Aborted:            return Err::UploadAborted;
+    case Result::FileNotFound:       return Err::UploadFileNotFound;
+    case Result::Unauthorized:       return Err::UploadUnauthorized;
+    case Result::InvalidData:        return Err::UploadInvalidData;
+    case Result::UnexpectedResponse: return Err::UploadUnexpectedResponse;
+    case Result::UploadFailed:       return Err::UploadFailed;
+    }
+
+    return Err::UnknownError;
 }
 }
 
@@ -237,23 +279,32 @@ void Au3AudioComService::clearAudioListCache()
 
 muse::ProgressPtr Au3AudioComService::uploadProject(au::project::IAudacityProjectPtr project, const std::string& name)
 {
-    au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
-
     muse::ProgressPtr progress = std::make_shared<muse::Progress>();
+
+    if (!project) {
+        progress->finish(muse::make_ret(muse::Ret::Code::InternalError, muse::trc("cloud", "Invalid project")));
+        return progress;
+    }
+
+    au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
+    if (!au3Project) {
+        progress->finish(muse::make_ret(muse::Ret::Code::InternalError, muse::trc("cloud", "Invalid project")));
+        return progress;
+    }
 
     auto& projectCloudExtension = audacity::cloud::audiocom::sync::ProjectCloudExtension::Get(*au3Project);
     m_projectUploadSubscription = projectCloudExtension.SubscribeStatusChanged(
-        [this, progress](const audacity::cloud::audiocom::sync::CloudStatusChangedMessage& message) {
+        [this, project, progress](const audacity::cloud::audiocom::sync::CloudStatusChangedMessage& message) {
         if (message.Status == audacity::cloud::audiocom::sync::ProjectSyncStatus::Syncing) {
             progress->progress(message.Progress * 100, 100);
         }
 
         if (message.Status == audacity::cloud::audiocom::sync::ProjectSyncStatus::Synced) {
-            progress->finish(muse::make_ret(muse::Ret::Code::Ok));
+            progress->finish(muse::make_ret(muse::Ret::Code::Ok, getCloudProjectPage(project)));
         }
 
         if (message.Status == audacity::cloud::audiocom::sync::ProjectSyncStatus::Failed) {
-            progress->finish(muse::make_ret(muse::Ret::Code::UnknownError, std::string { "Project sync failed" }));
+            progress->finish(make_ret(cloudSyncErrorToErr(message.Error)));
         }
     }, false);
 
@@ -267,10 +318,23 @@ muse::ProgressPtr Au3AudioComService::uploadProject(au::project::IAudacityProjec
         audacity::cloud::audiocom::sync::UploadMode::Normal,
         AudiocomTrace::SaveProjectSaveToCloudMenu);
 
-    std::thread([this, au3Project, future = std::move(future)]() mutable {
+    std::thread([project, progress, future = std::move(future)]() mutable {
+        if (!project) {
+            progress->finish(muse::make_ret(muse::Ret::Code::InternalError, muse::trc("cloud",
+                                                                                      "Project was closed before upload started")));
+            return;
+        }
+
+        au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
+        if (!au3Project) {
+            progress->finish(muse::make_ret(muse::Ret::Code::InternalError, muse::trc("cloud", "Invalid project")));
+            return;
+        }
+
         auto result = future.get();
 
         if (!result.Response) {
+            progress->finish(make_ret(Err::SnapshotFailed));
             return;
         }
 
@@ -296,30 +360,47 @@ muse::ProgressPtr Au3AudioComService::shareAudio(const std::string& title)
     std::thread([this, title, progress]() {
         const auto preferredFormats = exporter()->cloudPreferredAudioFormats();
         if (preferredFormats.empty()) {
-            progress->finish(muse::make_ret(muse::Ret::Code::UnknownError, std::string { "No export formats available" }));
+            progress->finish(make_ret(Err::NoExportPlugin));
             return;
         }
 
         auto project = globalContext()->currentProject();
         if (!project) {
-            progress->finish(muse::make_ret(muse::Ret::Code::UnknownError, std::string { "No valid current project" }));
+            progress->finish(muse::make_ret(muse::Ret::Code::InternalError, muse::trc("cloud", "No valid current project")));
             return;
         }
         au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
 
-        au::importexport::ExportDataConfig config;
-        config.format = preferredFormats[0];
-        config.processType = importexport::ExportProcessType::FULL_PROJECT_AUDIO;
-        config.exportChannelsType = static_cast<int>(importexport::ExportChannelsPref::ExportChannels::STEREO);
-        config.exportChannels = 2;
-        config.exportSampleRate = ProjectRate::Get(*au3Project).GetRate();
+        const std::string format = preferredFormats[0];
 
-        const auto parameters = exporter()->cloudExportParameters(preferredFormats[0]);
+        muse::ValList paramsList;
+        for (const auto& [id, val] : exporter()->cloudExportParameters(format)) {
+            muse::ValMap entry;
+            entry["id"] = muse::Val(id);
+            entry["value"] = std::visit([](auto v) -> muse::Val { return muse::Val(v); }, val);
+            paramsList.push_back(muse::Val(entry));
+        }
 
-        muse::io::path_t tempPath
-            = getTempFileName(projectConfiguration()->temporaryDir(), exporter()->formatExtensions(config.format).front());
+        importexport::IExporter::Options options;
+        options[importexport::IExporter::OptionKey::Format] = muse::Val(format);
+        options[importexport::IExporter::OptionKey::ProcessType] = muse::Val(importexport::ExportProcessType::FULL_PROJECT_AUDIO);
+        options[importexport::IExporter::OptionKey::ExportChannelsType]
+            = muse::Val(static_cast<int>(importexport::ExportChannelsPref::ExportChannels::STEREO));
+        options[importexport::IExporter::OptionKey::ExportChannels] = muse::Val(2);
+        options[importexport::IExporter::OptionKey::ExportSampleRate]
+            = muse::Val(static_cast<int>(ProjectRate::Get(*au3Project).GetRate()));
+        options[importexport::IExporter::OptionKey::Parameters] = muse::Val(paramsList);
 
-        const auto exportRet = exporter()->exportData(muse::io::path_t(tempPath), config, parameters, progress);
+        const auto extensions = exporter()->formatExtensions(format);
+        if (extensions.empty()) {
+            progress->finish(make_ret(Err::NoExtensions));
+            return;
+        }
+
+        const muse::io::path_t tempPath
+            = getTempFileName(projectConfiguration()->temporaryDir(), extensions.front());
+
+        const auto exportRet = exporter()->exportData(muse::io::path_t(tempPath), options, progress);
         if (!exportRet) {
             filesystem()->remove(tempPath);
             progress->finish(exportRet);
@@ -346,11 +427,14 @@ muse::ProgressPtr Au3AudioComService::shareAudio(const std::string& title)
 
             if (result.result == audacity::cloud::audiocom::UploadOperationCompleted::Result::Success) {
                 auto* payload = std::get_if<audacity::cloud::audiocom::UploadSuccessfulPayload>(&result.payload);
-                if (payload) {
-                    progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(payload->audioUrl)));
+                if (!payload) {
+                    progress->finish(muse::make_ret(muse::Ret::Code::InternalError,
+                                                    muse::trc("cloud", "Upload succeeded but payload is missing")));
+                    return;
                 }
+                progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(payload->audioUrl)));
             } else {
-                progress->finish(muse::make_ret(muse::Ret::Code::UnknownError, std::string { "Upload failed" }));
+                progress->finish(make_ret(uploadResultToErr(result.result)));
             }
         },
             [progress](uint64_t current, uint64_t total) {

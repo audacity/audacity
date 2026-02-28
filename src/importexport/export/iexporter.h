@@ -3,6 +3,7 @@
 */
 #pragma once
 
+#include <map>
 #include <tuple>
 #include <vector>
 
@@ -15,15 +16,6 @@
 #include "types/ret.h"
 
 namespace au::importexport {
-struct ExportDataConfig {
-    std::string format;
-    ExportProcessType processType = ExportProcessType::FULL_PROJECT_AUDIO;
-    int exportChannelsType = static_cast<int>(ExportChannelsPref::ExportChannels::STEREO);
-    int exportChannels = 2;
-    muse::Val exportCustomChannelMapping;
-    int exportSampleRate = 44100;
-};
-
 using ExportParameters = std::vector<std::tuple<int, OptionValue> >;
 
 class IExporter : MODULE_EXPORT_INTERFACE
@@ -31,12 +23,22 @@ class IExporter : MODULE_EXPORT_INTERFACE
     INTERFACE_ID(IExporter)
 
 public:
+    enum class OptionKey {
+        Format,
+        ProcessType,
+        ExportChannelsType,
+        ExportChannels,
+        ExportCustomChannelMapping,
+        ExportSampleRate,
+        Parameters
+    };
+
+    using Options = std::map<OptionKey, muse::Val>;
+
     virtual ~IExporter() = default;
 
     virtual void init() = 0;
-    virtual muse::Ret exportData(const muse::io::path_t& path, muse::ProgressPtr progress = nullptr) = 0;
-    virtual muse::Ret exportData(const muse::io::path_t& path, const ExportDataConfig& config, const ExportParameters& parameters,
-                                 muse::ProgressPtr progress = nullptr) = 0;
+    virtual muse::Ret exportData(const muse::io::path_t& path, const Options& options = {}, muse::ProgressPtr progress = nullptr) = 0;
 
     virtual std::vector<std::string> formatsList() const = 0;
     virtual int formatIndex(const std::string& format) const = 0;

@@ -8,7 +8,6 @@
 namespace au::au3cloud {
 class Au3CloudService;
 class Au3AudioComService;
-class Au3AudioComController;
 
 class Au3CloudModule : public muse::modularity::IModuleSetup
 {
@@ -35,6 +34,5 @@ public:
 private:
     std::shared_ptr<Au3CloudService> m_cloudService;
     std::shared_ptr<Au3AudioComService> m_audioComService;
-    std::shared_ptr<Au3AudioComController> m_audioComController;
 };
 }

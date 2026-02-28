@@ -13,16 +13,55 @@
 
 #include "project/types/projecttypes.h"
 
+#include "au3cloud/au3clouderrors.h"
+
 #include "log.h"
 #include "ui/view/iconcodes.h"
 
 using namespace muse;
 using namespace au::project;
 
+namespace {
+std::string cloudErrorTitle(const muse::Ret& ret)
+{
+    using Err = au::au3cloud::Err;
+    switch (static_cast<Err>(ret.code())) {
+    case Err::UploadUnauthorized:
+    case Err::AuthorizationRequired:
+        return muse::trc("cloud", "Authorization Required");
+    case Err::NetworkError:
+        return muse::trc("cloud", "Network Error");
+    case Err::ServerError:
+        return muse::trc("cloud", "Server Error");
+    case Err::UploadAborted:
+    case Err::SyncCancelled:
+    case Err::SyncAborted:
+        return muse::trc("cloud", "Cancelled");
+    case Err::ProjectLimitReached:
+    case Err::ProjectStorageLimitReached:
+        return muse::trc("cloud", "Limit Reached");
+    case Err::ProjectVersionConflict:
+        return muse::trc("cloud", "Version Conflict");
+    case Err::ProjectNotFound:
+        return muse::trc("cloud", "Not Found");
+    case Err::UploadFailed:
+    case Err::UploadFileNotFound:
+    case Err::UploadInvalidData:
+    case Err::UploadUnexpectedResponse:
+    case Err::DataUploadFailed:
+    case Err::SnapshotFailed:
+        return muse::trc("cloud", "Upload Failed");
+    default:
+        return muse::trc("global", "Error");
+    }
+}
+}
+
 static const muse::Uri PROJECT_PAGE_URI("audacity://project");
 static const muse::Uri HOME_PAGE_URI("audacity://home");
 static const muse::Uri NEW_PROJECT_URI("audacity://project/new");
 
+static const muse::Uri SAVE_TO_CLOUD_URI("audacity://project/savetocloud");
 static const muse::Uri EXPORT_URI("audacity://project/export");
 static const muse::Uri CUSTOM_FFMPEG_OPTIONS("audacity://project/export/ffmpeg");
 static const muse::Uri METADATA_DIALOG_URI("audacity://project/export/metadata");
@@ -54,6 +93,8 @@ void ProjectActionsController::init()
     //! right now there's only BasicUI stub which means there's no progress dialog shown on saving
     dispatcher()->reg(this, "file-save-as", [this]() { saveProject(SaveMode::SaveAs); });
     dispatcher()->reg(this, "file-save-backup", [this]() { saveProject(SaveMode::SaveCopy); });
+
+    dispatcher()->reg(this, "file-share-audio", this, &ProjectActionsController::shareAudio);
 
     dispatcher()->reg(this, "export-audio", this, &ProjectActionsController::exportAudio);
     dispatcher()->reg(this, "export-labels", this, &ProjectActionsController::exportLabels);
@@ -316,7 +357,11 @@ bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudI
     auto progress = audioComService()->uploadProject(project, cloudInfo.name.toStdString());
     progress->finished().onReceive(this, [this, project, saveMode, projectFilePath](const ProgressResult& result) {
         if (result.ret.success()) {
-            saveProjectLocally(projectFilePath, saveMode);
+            if (!saveProjectLocally(projectFilePath, saveMode)) {
+                toastService()->showError(trc("global", "Error"), trc("project",
+                                                                      "Failed to save project locally after uploading to cloud"));
+                return;
+            }
 
             const bool dismissable = false;
             toastService()->show(trc("global", "Success"),
@@ -329,13 +374,13 @@ bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudI
                 { trc("project", "Dismiss"), au::toast::ToastActionCode::None },
                 { trc("project", "View on audio.com"), au::toast::ToastActionCode::Custom }
             }
-                                 ).onResolve(this, [this, project](au::toast::ToastActionCode actionCode) {
+                                 ).onResolve(this, [this, url = result.val.toQString()](au::toast::ToastActionCode actionCode) {
                 if (actionCode == au::toast::ToastActionCode::Custom) {
-                    interactive()->openUrl(audioComService()->getCloudProjectPage(project));
+                    interactive()->openUrl(url);
                 }
             });
         } else {
-            toastService()->showError(trc("global", "Error"), result.ret.text());
+            toastService()->showError(cloudErrorTitle(result.ret), result.ret.text());
         }
     });
 
@@ -362,12 +407,10 @@ bool ProjectActionsController::saveProjectLocally(const muse::io::path_t& filePa
     }
 
     Ret ret = project->save(filePath, saveMode);
-    //! TODO AU4
-    // if (!ret) {
-    //     LOGE() << ret.toString();
-    //     warnScoreCouldnotBeSaved(ret);
-    //     return false;
-    // }
+    if (!ret) {
+        LOGE() << ret.toString();
+        return false;
+    }
 
     recentFilesController()->prependRecentFile(makeRecentFile(project));
     return true;
@@ -751,6 +794,56 @@ void ProjectActionsController::warnProjectCannotBeOpened(const Ret& ret, const m
         = ret.data<std::string>("body", !ret.text().empty() ? ret.text() : muse::trc("project",
                                                                                      "An error occurred while reading this file."));
     interactive()->error(title, body);
+}
+
+void ProjectActionsController::shareAudio()
+{
+    muse::UriQuery query(SAVE_TO_CLOUD_URI);
+    query.addParam("formTitle", Val(trc("cloud", "Track title")));
+
+    RetVal<Val> rv = interactive()->openSync(query);
+    if (!rv.ret) {
+        return;
+    }
+
+    std::string title = rv.val.toQString().toStdString();
+    if (title.empty()) {
+        return;
+    }
+
+    auto progress = audioComService()->shareAudio(title);
+    progress->finished().onReceive(this, [this](const ProgressResult& result) {
+        if (result.ret.success()) {
+            const bool dismissable = false;
+            toastService()->show(trc("global", "Success"),
+                                 trc("cloud", "Audio shared to audio.com"),
+                                 muse::ui::IconCode::Code::TICK,
+                                 dismissable,
+            {
+                { trc("global", "Dismiss"), au::toast::ToastActionCode::None },
+                { trc("cloud", "View on audio.com"), au::toast::ToastActionCode::Custom }
+            }
+                                 ).onResolve(this, [this, url = result.val.toQString()](au::toast::ToastActionCode actionCode) {
+                if (actionCode == au::toast::ToastActionCode::Custom) {
+                    interactive()->openUrl(url);
+                }
+            });
+        } else {
+            toastService()->showError(cloudErrorTitle(result.ret), result.ret.text());
+        }
+    });
+
+    const bool dismissable = false;
+    const bool showProgressInfo = true;
+    toastService()->showWithProgress(
+        trc("cloud", "Sharing audio to audio.com..."),
+        {},
+        progress,
+        muse::ui::IconCode::Code::SHARE_AUDIO,
+        dismissable,
+        {},
+        showProgressInfo
+        );
 }
 
 void ProjectActionsController::exportAudio()

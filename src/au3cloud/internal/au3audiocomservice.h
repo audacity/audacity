@@ -41,11 +41,12 @@ public:
     void clearAudioListCache() override;
 
     muse::ProgressPtr uploadProject(au::project::IAudacityProjectPtr project, const std::string& name) override;
-    std::string getCloudProjectPage(au::project::IAudacityProjectPtr project) override;
 
     muse::ProgressPtr shareAudio(const std::string& title) override;
 
 private:
+    std::string getCloudProjectPage(au::project::IAudacityProjectPtr project);
+
     struct CachedProjectItem {
         ProjectList projectList;
         std::chrono::system_clock::time_point timestamp;
