@@ -1,7 +1,9 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+
 import Muse.UiComponents
+
 import Audacity.Effects
 import Audacity.BuiltinEffects
 import Audacity.BuiltinEffectsCollection
@@ -21,6 +23,15 @@ BuiltinEffectBase {
 
     builtinEffectModel: NoiseViewModelFactory.createModel(root, root.instanceId)
     property alias noise: root.builtinEffectModel
+
+    property int bottomButtonsNavigationPanelOrder: 2
+    property NavigationPanel controlsNavigationPanel: NavigationPanel {
+        name: "NoiseControls"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 1
+    }
 
     Column {
         id: column
@@ -42,12 +53,16 @@ BuiltinEffectBase {
             control.background.border.width: 1
             control.itemColor: "transparent"
 
+            navigation.panel: root.controlsNavigationPanel
+            navigation.order: 0
+
             onValueEdited: function (newIndex, newValue) {
                 noise.type = newIndex
             }
         }
 
         IncrementalPropertyControlWithTitle {
+            id: amplitudeControl
 
             title: qsTrc("effects/noise", "Amplitude (0-1)")
 
@@ -56,6 +71,9 @@ BuiltinEffectBase {
             decimals: 4
             step: 0.01
             currentValue: noise.amplitude
+
+            navigation.panel: root.controlsNavigationPanel
+            navigation.order: typeSelector.navigation.order + 1
 
             onValueEdited: function (newValue) {
                 if (noise.amplitude !== newValue) {
@@ -93,6 +111,9 @@ BuiltinEffectBase {
                 tempo: noise.tempo
                 upperTimeSignature: noise.upperTimeSignature
                 lowerTimeSignature: noise.lowerTimeSignature
+
+                navigation.panel: root.controlsNavigationPanel
+                navigation.order: amplitudeControl.navigation.order + 1
 
                 onValueChanged: {
                     noise.duration = timecode.value
