@@ -24,6 +24,15 @@ Item {
     signal newValueRequested(string key, real newValue)
     signal commitRequested
 
+    function activateNumericInput(initialText) {
+        if (!textEdit.activeFocus) {
+            textEdit.forceActiveFocus()
+        }
+        if (initialText !== undefined && initialText !== "") {
+            textEdit.currentText = initialText
+        }
+    }
+
     onParameterChanged: {
         if (parameter) {
             knob.from = parameter["min"]
@@ -76,6 +85,19 @@ Item {
 
             mouseArea.onReleased: function () {
                 root.commitRequested()
+            }
+        }
+
+        Connections {
+            target: knob.navigation
+
+            function onNavigationEvent(event) {
+                if (event.type !== NavigationEvent.Trigger) {
+                    return
+                }
+
+                root.activateNumericInput()
+                event.accepted = true
             }
         }
 
