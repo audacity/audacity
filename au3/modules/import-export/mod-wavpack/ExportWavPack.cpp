@@ -29,6 +29,8 @@
 
 #include "ExportWavPack.h"
 
+#include <rapidjson/document.h>
+
 ExportOptionsWavPackEditor::ExportOptionsWavPackEditor(Listener* listener)
     : mListener(listener)
 {
@@ -167,9 +169,10 @@ std::vector<std::string> ExportWavPack::GetMimeTypes(int) const
     return { "audio/x-wavpack" };
 }
 
-bool ExportWavPack::ParseConfig(int formatIndex, const rapidjson::Value& config, ExportProcessor::Parameters& parameters) const
+bool ExportWavPack::ParseConfig(int formatIndex, const std::string& configStr, ExportProcessor::Parameters& parameters) const
 {
-    if (!config.IsObject()
+    rapidjson::Document config;
+    if (config.Parse(configStr.c_str()).HasParseError() || !config.IsObject()
         || !config.HasMember("quality") || !config["quality"].IsNumber()
         || !config.HasMember("bit_rate") || !config["bit_rate"].IsNumber()
         || !config.HasMember("bit_depth") || !config["bit_depth"].IsNumber()

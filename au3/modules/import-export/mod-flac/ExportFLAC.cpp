@@ -16,6 +16,8 @@ Joshua Haberman
 
 #include "ExportFLAC.h"
 
+#include <rapidjson/document.h>
+
 #include <wx/ffile.h>
 #include <wx/log.h>
 
@@ -158,9 +160,10 @@ FormatInfo ExportFLAC::GetFormatInfo(int) const
     };
 }
 
-bool ExportFLAC::ParseConfig(int, const rapidjson::Value& config, ExportProcessor::Parameters& parameters) const
+bool ExportFLAC::ParseConfig(int, const std::string& configStr, ExportProcessor::Parameters& parameters) const
 {
-    if (!config.IsObject()
+    rapidjson::Document config;
+    if (config.Parse(configStr.c_str()).HasParseError() || !config.IsObject()
         || !config.HasMember("level") || !config["level"].IsNumber()
         || !config.HasMember("bit_depth") || !config["bit_depth"].IsNumber()) {
         return false;

@@ -61,6 +61,8 @@
 
 #include "ExportMP3.h"
 
+#include <rapidjson/document.h>
+
 #include <wx/app.h>
 #include <wx/defs.h>
 
@@ -1250,10 +1252,11 @@ std::vector<std::string> ExportMP3::GetMimeTypes(int) const
 }
 
 bool ExportMP3::ParseConfig(
-    int formatIndex, const rapidjson::Value& document,
+    int formatIndex, const std::string& configStr,
     ExportProcessor::Parameters& parameters) const
 {
-    if (!document.IsObject()) {
+    rapidjson::Document document;
+    if (document.Parse(configStr.c_str()).HasParseError() || !document.IsObject()) {
         return false;
     }
 

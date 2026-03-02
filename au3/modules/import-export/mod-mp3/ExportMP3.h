@@ -12,17 +12,17 @@
 
 /* --------------------------------------------------------------------------*/
 
+#include <memory>
+
 #include "au3-files/FileNames.h"
 #include "au3-mixer/Mix.h"
 #include "au3-import-export/ExportPlugin.h"
-#include <memory>
+
 
 #include <lame/lame.h>
 
 #include <wx/dynlib.h>
 #include <wx/ffile.h>
-
-#include <rapidjson/document.h>
 
 enum MP3RateMode : unsigned {
     MODE_SET = 0,
@@ -61,7 +61,7 @@ public:
     std::vector<std::string> GetMimeTypes(int) const override;
 
     bool ParseConfig(
-        int formatIndex, const rapidjson::Value& document, ExportProcessor::Parameters& parameters) const override;
+        int formatIndex, const std::string& config, ExportProcessor::Parameters& parameters) const override;
 };
 
 class MP3ExportOptionsEditor final : public ExportOptionsEditor
