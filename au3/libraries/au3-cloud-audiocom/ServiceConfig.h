@@ -13,7 +13,6 @@
 #include <chrono>
 #include <string>
 #include <vector>
-#include <rapidjson/document.h>
 
 enum class AudiocomTrace;
 
@@ -50,8 +49,8 @@ public:
     std::chrono::milliseconds GetProgressCallbackTimeout() const;
     //! Preferred audio format
     std::vector<std::string> GetPreferredAudioFormats(bool preferLossless = true) const;
-    //! Export configuration suitable for the mime type provided
-    rapidjson::Document GetExportConfig(const std::string& exporterName) const;
+    //! Export configuration suitable for the mime type provided as a JSON string
+    std::string GetExportConfig(const std::string& exporterName) const;
     //! Return the mime type server should store the file. This is a requirement
     //! from audiocom
     std::string GetDownloadMime() const;

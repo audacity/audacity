@@ -13,7 +13,6 @@
 #include <string>
 
 #include <wx/string.h>
-#include <rapidjson/document.h>
 
 #include "ExportOptionsEditor.h"
 
@@ -160,7 +159,7 @@ public:
      * @param parameters Where to put parameters
      * @return Whether the parsing was successful
      **/
-    virtual bool ParseConfig(int formatIndex, const rapidjson::Value& document, ExportProcessor::Parameters& parameters) const;
+    virtual bool ParseConfig(int formatIndex, const std::string& config, ExportProcessor::Parameters& parameters) const;
 
     virtual bool CheckFileName(wxFileName& filename, int format = 0) const;
 

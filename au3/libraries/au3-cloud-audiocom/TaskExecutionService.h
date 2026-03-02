@@ -16,9 +16,8 @@
 #include <thread>
 #include <vector>
 
-#include <rapidjson/fwd.h>
-
 #include "au3-utility/Observer.h"
+
 #include "sync/CloudSyncDTO.h"
 
 namespace audacity::cloud::audiocom {
