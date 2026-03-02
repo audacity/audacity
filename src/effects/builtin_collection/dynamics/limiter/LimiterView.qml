@@ -23,19 +23,28 @@ DynamicsEffectBase {
 
     builtinEffectModel: LimiterViewModelFactory.createModel(root, root.instanceId)
     property alias limiter: root.builtinEffectModel
+
+    property int bottomButtonsNavigationPanelOrder: 4
+    property NavigationPanel dynamicsPanelNavigationPanel: NavigationPanel {
+        name: "LimiterDynamicsPanel"
+        enabled: root.enabled && root.visible && !root.usedDestructively
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 1
+    }
     property NavigationPanel thresholdAndMakeupNavigationPanel: NavigationPanel {
         name: "LimiterThresholdAndMakeup"
         enabled: root.enabled && root.visible
         direction: NavigationPanel.Horizontal
         section: root.dialogView ? root.dialogView.navigationSection : null
-        order: 1
+        order: 2
     }
     property NavigationPanel rightKnobsNavigationPanel: NavigationPanel {
         name: "LimiterRightKnobs"
         enabled: root.enabled && root.visible
         direction: NavigationPanel.Horizontal
         section: root.dialogView ? root.dialogView.navigationSection : null
-        order: 2
+        order: 3
     }
 
     Column {
@@ -61,6 +70,9 @@ DynamicsEffectBase {
                 duration: 2
                 timelineHeight: knobRow.height
                 needsClipIndicator: false // Clipping with the limiter is impossible.
+
+                navigationPanel: root.dynamicsPanelNavigationPanel
+                navigationOrderStart: 0
             }
         }
 
