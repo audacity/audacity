@@ -1,0 +1,34 @@
+name: '[AU4] Translations: Push source strings to Transifex'
+
+on:
+  workflow_dispatch:
+    inputs:
+      retyped_branch_name:
+        description: "Retype the current branch name to confirm you are on the correct branch"
+        required: true
+
+jobs:
+  tx_push:
+    runs-on: ubuntu-slim
+    steps:
+      - name: Check preconditions
+        env:
+          GITHUB_REF: ${{ github.ref }}
+        run: |
+          if [ "${GITHUB_REF}" != "refs/heads/${{ inputs.retyped_branch_name }}" ]; then
+            echo "::error::Branch name does not match. Expected 'refs/heads/${{ inputs.retyped_branch_name }}' but got '${GITHUB_REF}'."
+            exit 1
+          fi
+          if [ -z "${{ secrets.TRANSIFEX_API_TOKEN }}" ]; then
+            echo "::error::TRANSIFEX_API_TOKEN is empty"
+            exit 1
+          fi
+
+      - name: Clone repository
+        uses: actions/checkout@v6
+
+      - name: Push source strings to Transifex (tx push)
+        uses: transifex/cli-action@v2
+        with:
+          token: ${{ secrets.TRANSIFEX_API_TOKEN }}
+          args: "push -s"

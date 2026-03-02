@@ -1,0 +1,56 @@
+name: '[AU4] Translations: Update source strings (lupdate)'
+
+on:
+  workflow_dispatch:
+    inputs:
+      cleanup_obsolete:
+        description: "Clean up obsolete strings"
+        required: true
+        type: boolean
+        default: false
+  schedule:
+    - cron: "0 12 * * Sun"
+
+
+jobs:
+  lupdate:
+    runs-on: ubuntu-slim
+    if: github.event_name != 'schedule' || github.repository == 'audacity/audacity'
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v6
+        with:
+          submodules: recursive
+
+      - name: Configure workflow
+        run: |
+          LUPDATE_ARGS=''
+          if [[ "${{ github.event_name }}" == "schedule" || "${{ inputs.cleanup_obsolete }}" == "true" ]]; then
+            LUPDATE_ARGS='-no-obsolete'
+          fi
+          echo "LUPDATE_ARGS=$LUPDATE_ARGS" | tee -a $GITHUB_ENV
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: 6.10.2
+          host: "linux"
+          target: "desktop"
+          arch: "linux_gcc_64"
+          cache: true
+
+      - name: Run lupdate
+        run: bash ./tools/translations/run_lupdate.sh
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          commit-message: "Run `lupdate` with arguments `${{ env.LUPDATE_ARGS }}`"
+          branch: "ci_lupdate${{github.ref_name && format('_{0}', github.ref_name) || ''}}"
+          add-paths: share/locale/*
+          title: "Update in-repo translation source files"
+          body: "Run `lupdate` with arguments `${{ env.LUPDATE_ARGS }}`"
+          labels: "translation / i18n"
+          reviewers: kryksyh
