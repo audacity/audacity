@@ -8,6 +8,8 @@ import Muse.GraphicalEffects
 import Audacity.ProjectScene
 import Audacity.Playback
 import Audacity.Spectrogram
+import Audacity.UiComponents
+import Audacity.Automation
 
 Rectangle {
     id: root
@@ -16,6 +18,7 @@ Rectangle {
     property alias clipKey: waveView.clipKey
     property alias clipTime: waveView.clipTime
     property alias title: titleLabel.text
+    required property bool isAutomationEnabled
     required property bool isWaveformViewVisible
     required property bool isSpectrogramViewVisible
     property int pitch: 0
@@ -121,6 +124,7 @@ Rectangle {
     property bool isBrush: waveView.isStemPlot && root.altPressed
     property bool isIsolationMode: false
     property bool containsMouse: false
+    property bool automationMouseHoverLetThrough: false
     property alias isNearSample: waveView.isNearSample
     property alias currentChannel: waveView.currentChannel
     property bool leftTrimContainsMouse: false
@@ -133,6 +137,12 @@ Rectangle {
 
     PlaybackStateModel {
         id: playbackState
+    }
+
+    ClipGainModel {
+        id: clipGainModel
+
+        clipKey: root.clipKey
     }
 
     // for navigating between clips
@@ -267,7 +277,7 @@ Rectangle {
             return
         }
 
-        root.containsMouse = containsMouse
+        root.containsMouse = containsMouse || root.automationMouseHoverLetThrough
         if (!root.containsMouse && !root.multiSampleEdit) {
             waveView.isNearSample = false
         }
@@ -311,6 +321,7 @@ Rectangle {
         playbackState.init()
         singleClipContextMenuModel.load()
         multiClipContextMenuModel.load()
+        clipGainModel.init()
     }
 
     Component.onDestruction: {
@@ -366,6 +377,19 @@ Rectangle {
             }
 
             root.setContainsMouse(containsMouse)
+        }
+    }
+
+    // NOTE: hover events from polyline are not visible in MouseArea
+    // so we need to handle them manually
+    HoverHandler {
+        id: passiveHoverHandler
+
+        enabled: root.isAutomationEnabled
+
+        onHoveredChanged: {
+            automationMouseHoverLetThrough = hovered
+            root.setContainsMouse(hoverArea.containsMouse)
         }
     }
 
@@ -839,6 +863,104 @@ Rectangle {
                     if (waveView.isStemPlot && hoverArea.containsMouse) {
                         // force mouse position update will update isNearSample
                         waveView.onWaveViewPositionChanged(hoverArea.mouseX, hoverArea.mouseY - header.height)
+                    }
+                }
+
+                Polyline {
+                    id: automation
+
+                    anchors.fill: waveView
+                    anchors.bottomMargin: 1
+
+                    visible: root.isAutomationEnabled
+
+                    lineColor: ui.theme.extra["audio_envelope_line"]
+                    lineWidth: 2
+
+                    pointRadius: 4.0
+                    pointOutlineColor: ui.theme.extra["audio_envelope_point"]
+                    pointCentreColor: ui.theme.extra["audio_envelope_point"]
+                    pointOutlineWidth: 2.0
+
+                    ghostPointRadius: 3.0
+                    ghostPointOutlineColor: ui.theme.extra["audio_envelope_point"]
+
+
+                    points: clipGainModel.points
+                    defaultValue: clipGainModel.defaultValue
+
+                    xRangeFrom: waveView.itemStartTime
+                    xRangeTo: waveView.itemEndTime
+
+                    yRangeFrom: clipGainModel.minValue
+                    yRangeTo: clipGainModel.maxValue
+                    ySplitNormalized: clipGainModel.ySplitNormalized
+                    ySplitValue: clipGainModel.ySplitValue
+                    yAxisInverse: false
+
+                    Component.onCompleted: {
+                        automation.init()
+                    }
+
+                    onPointMoved: function(index, x, y, completed) {
+                        clipGainModel.setPoint(index, x, y, completed)
+                        tooltip.gain = gainToDb(y)
+                        tooltip.show(true)
+                    }
+
+                    onPointAdded: function(x, y, completed) {
+                        clipGainModel.addPoint(x, y, completed)
+                    }
+
+                    onPointRemoved: function(index, completed) {
+                        clipGainModel.removePoint(index, completed)
+                    }
+
+                    onDragCancelled: {
+                        clipGainModel.cancelDrag()
+                        tooltip.hide(true)
+                    }
+
+                    onInteractionFinished: function() {
+                        if (!automation.hasActivePoint) {
+                            tooltip.hide(true)
+                        }
+                    }
+
+                    onActivePointChanged: {
+                        if (automation.hasActivePoint) {
+                            fake.x = automation.activePointX
+                            fake.y = automation.activePointY - (automation.pointRadius + 2)
+                            tooltip.gain = gainToDb(automation.activePointValue)
+                            tooltip.show(true)
+                        } else {
+                            tooltip.hide(true)
+                        }
+                    }
+
+                    Item {
+                        // NOTE: fakeItem for tooltip to follow
+                        id: fake
+
+                        height: 1
+                        width: 1
+
+                        x: automation.activePointX
+                        y: automation.activePointY - (automation.pointRadius + 2)
+
+                        enabled: false // so it doesn't steal mouse events
+
+                        GainTooltip {
+                            id: tooltip
+                        }
+                    }
+
+                    function gainToDb(g) {
+                        if (g < 0.001)  // -60 dB
+                            return "-∞"
+
+                        let db = 20 * Math.log10(g)
+                        return db.toFixed(1)
                     }
                 }
             }

@@ -47,6 +47,7 @@
 #include "importexport/export/exportermodule.h"
 #include "importexport/labels/labelsmodule.h"
 #include "au3cloud/au3cloudmodule.h"
+#include "automation/automationmodule.h"
 
 #if AU_MODULE_EFFECTS_NYQUIST
 #include "effects/nyquist/nyquisteffectsmodule.h"
@@ -159,6 +160,7 @@ std::shared_ptr<muse::IApplication> AppFactory::newGuiApp(const CommandLineParse
     app->addModule(new au::effects::EffectsModule());
     app->addModule(new au::effects::BuiltinEffectsModule());
     app->addModule(new au::effects::BuiltinEffectsCollectionModule());
+    app->addModule(new au::automation::AutomationModule());
 
     return app;
 }

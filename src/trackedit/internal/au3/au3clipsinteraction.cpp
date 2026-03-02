@@ -8,12 +8,12 @@
 
 #include <QCoreApplication>
 
-#include "au3-track/Track.h"
 #include "au3-stretching-sequence/TempoChange.h"
-#include "au3-wave-track/WaveClip.h"
-#include "au3-wave-track/WaveTrackUtilities.h"
-#include "au3-wave-track/WaveTrack.h"
+#include "au3-track/Track.h"
 #include "au3-wave-track/TimeStretching.h"
+#include "au3-wave-track/WaveClip.h"
+#include "au3-wave-track/WaveTrack.h"
+#include "au3-wave-track/WaveTrackUtilities.h"
 
 #include "global/types/ret.h"
 #include "global/types/number.h"
@@ -1225,6 +1225,7 @@ bool Au3ClipsInteraction::trimClipsLeft(const ClipKeyList& clipKeys, secs_t delt
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
+        clipGainInteraction()->clipGainChanged().send(selectedClip, completed);
     }
 
     return ok;
@@ -1255,6 +1256,7 @@ bool Au3ClipsInteraction::trimClipsRight(const ClipKeyList& clipKeys, secs_t del
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
+        clipGainInteraction()->clipGainChanged().send(selectedClip, completed);
     }
 
     return ok;
@@ -1287,6 +1289,7 @@ bool Au3ClipsInteraction::stretchClipsLeft(const ClipKeyList& clipKeys, secs_t d
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
+        clipGainInteraction()->clipGainChanged().send(selectedClip, completed);
     }
 
     return true;
@@ -1319,6 +1322,7 @@ bool Au3ClipsInteraction::stretchClipsRight(const ClipKeyList& clipKeys, secs_t 
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
+        clipGainInteraction()->clipGainChanged().send(selectedClip, completed);
     }
 
     return true;

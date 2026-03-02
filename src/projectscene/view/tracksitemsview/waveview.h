@@ -25,6 +25,10 @@ class WaveView : public QQuickPaintedItem, public muse::async::Asyncable, public
     Q_PROPERTY(bool clipSelected READ clipSelected WRITE setClipSelected NOTIFY clipSelectedChanged FINAL)
     Q_PROPERTY(double channelHeightRatio READ channelHeightRatio WRITE setChannelHeightRatio NOTIFY channelHeightRatioChanged FINAL)
 
+    Q_PROPERTY(double startTime READ startTime NOTIFY clipTimeChanged)
+    Q_PROPERTY(double endTime READ endTime NOTIFY clipTimeChanged)
+    Q_PROPERTY(double itemStartTime READ itemStartTime NOTIFY clipTimeChanged)
+    Q_PROPERTY(double itemEndTime READ itemEndTime NOTIFY clipTimeChanged)
     Q_PROPERTY(ClipTime clipTime READ clipTime WRITE setClipTime NOTIFY clipTimeChanged FINAL)
 
     Q_PROPERTY(bool isNearSample READ isNearSample WRITE setIsNearSample NOTIFY isNearSampleChanged FINAL)
@@ -55,6 +59,10 @@ public:
     void setClipColor(const QColor& newClipColor);
     bool clipSelected() const;
     void setClipSelected(bool newClipSelected);
+    double startTime() const { return m_clipTime.startTime; }
+    double endTime()   const { return m_clipTime.endTime; }
+    double itemStartTime() const { return m_clipTime.itemStartTime; }
+    double itemEndTime()   const { return m_clipTime.itemEndTime; }
     ClipTime clipTime() const;
     void setClipTime(const ClipTime& newClipTime);
     double channelHeightRatio() const;

@@ -584,6 +584,20 @@ muse::ValCh<Snap> ProjectViewState::snap() const
     return m_snap;
 }
 
+void ProjectViewState::setClipGainAutomationEnabled(bool enabled)
+{
+    if (m_clipGainAutomationEnabled.val == enabled) {
+        return;
+    }
+
+    m_clipGainAutomationEnabled.set(enabled);
+}
+
+muse::ValCh<bool> ProjectViewState::clipGainAutomationEnabled() const
+{
+    return m_clipGainAutomationEnabled;
+}
+
 void ProjectViewState::setSplitToolEnabled(const bool enabled)
 {
     if (m_splitToolEnabled.val == enabled) {
