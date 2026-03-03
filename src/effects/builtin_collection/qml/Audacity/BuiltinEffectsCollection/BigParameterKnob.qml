@@ -24,6 +24,31 @@ Item {
     signal newValueRequested(string key, real newValue)
     signal commitRequested
 
+    function effectiveStepSize() {
+        const visibleStep = (knob.to - knob.from) / 50
+        const parameterStep = Number(parameter["step"])
+
+        if (isFinite(parameterStep) && parameterStep > 0) {
+            return Math.max(visibleStep, parameterStep)
+        }
+
+        return visibleStep
+    }
+
+    function precisionStepSize() {
+        const parameterStep = Number(parameter["step"])
+
+        if (isFinite(parameterStep) && parameterStep > 0) {
+            return parameterStep
+        }
+
+        return knob.stepSize
+    }
+
+    function normalizedValue(value) {
+        return Number(value.toFixed(textEdit.decimals))
+    }
+
     function activateNumericInput(initialText) {
         if (!textEdit.activeFocus) {
             textEdit.forceActiveFocus()
@@ -38,7 +63,7 @@ Item {
             knob.from = parameter["min"]
             knob.to = parameter["max"]
             warper.value = parameter["value"]
-            knob.stepSize = parameter["step"] || 1
+            knob.stepSize = effectiveStepSize()
             textEdit.measureUnitsSymbol = parameter["unit"] || ""
         }
     }
@@ -50,7 +75,7 @@ Item {
         max: knob.to
 
         onValueChanged: {
-            root.newValueRequested(root.parameter["key"], warper.value)
+            root.newValueRequested(root.parameter["key"], root.normalizedValue(warper.value))
         }
     }
 
@@ -120,17 +145,17 @@ Item {
             minValue: knob.from
             maxValue: knob.to
             decimals: {
-                let s = knob.stepSize.toString()
+                let s = root.precisionStepSize().toString()
                 if (s.indexOf('.') >= 0)
                     return s.split('.')[1].length
                 return 0
             }
-            step: knob.stepSize
+            step: root.precisionStepSize()
 
             currentValue: +warper.value.toFixed(decimals)
 
             onValueEdited: function (value) {
-                root.newValueRequested(root.parameter["key"], value)
+                root.newValueRequested(root.parameter["key"], root.normalizedValue(value))
             }
 
             onValueEditingFinished: function (value) {

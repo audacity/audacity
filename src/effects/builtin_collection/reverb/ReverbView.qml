@@ -90,7 +90,6 @@ BuiltinEffectBase {
 
                     onNewValueRequested: function (key, newValue) {
                         newParameterValueRequested(key, newValue)
-                        value = newValue
                     }
 
                     onCommitRequested: reverb.commitSettings()
@@ -109,7 +108,6 @@ BuiltinEffectBase {
 
                     onNewValueRequested: function (key, newValue) {
                         newParameterValueRequested(key, newValue)
-                        value = newValue
                     }
 
                     onCommitRequested: reverb.commitSettings()
@@ -128,7 +126,6 @@ BuiltinEffectBase {
 
                     onNewValueRequested: function (key, newValue) {
                         newParameterValueRequested(key, newValue)
-                        value = newValue
                     }
 
                     onCommitRequested: reverb.commitSettings()
@@ -165,7 +162,7 @@ BuiltinEffectBase {
 
                 onNewValueRequested: function (key, newValue) {
                     newParameterValueRequested(key, newValue)
-                    value = newValue
+                    hfDampingKnob.value = newValue
                 }
 
                 onCommitRequested: reverb.commitSettings()
@@ -183,7 +180,7 @@ BuiltinEffectBase {
 
                 onNewValueRequested: function (key, newValue) {
                     newParameterValueRequested(key, newValue)
-                    value = newValue
+                    reverberanceKnob.value = newValue
                 }
 
                 onCommitRequested: reverb.commitSettings()
@@ -201,7 +198,7 @@ BuiltinEffectBase {
 
                 onNewValueRequested: function (key, newValue) {
                     newParameterValueRequested(key, newValue)
-                    value = newValue
+                    toneLowKnob.value = newValue
                 }
 
                 onCommitRequested: reverb.commitSettings()
@@ -219,7 +216,7 @@ BuiltinEffectBase {
 
                 onNewValueRequested: function (key, newValue) {
                     newParameterValueRequested(key, newValue)
-                    value = newValue
+                    toneHighKnob.value = newValue
                 }
 
                 onCommitRequested: reverb.commitSettings()
@@ -241,7 +238,7 @@ BuiltinEffectBase {
 
                 onNewValueRequested: function (key, newValue) {
                     newParameterValueRequested(key, newValue)
-                    value = newValue
+                    wetGainKnob.value = newValue
                 }
 
                 onCommitRequested: reverb.commitSettings()
@@ -259,7 +256,7 @@ BuiltinEffectBase {
 
                 onNewValueRequested: function (key, newValue) {
                     newParameterValueRequested(key, newValue)
-                    value = newValue
+                    dryGainKnob.value = newValue
                 }
 
                 onCommitRequested: reverb.commitSettings()
