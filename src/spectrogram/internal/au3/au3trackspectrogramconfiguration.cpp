@@ -32,22 +32,22 @@ Au3TrackSpectrogramConfiguration::Au3TrackSpectrogramConfiguration(Au3Spectrogra
     : m_settings(settings)
 {}
 
-int Au3TrackSpectrogramConfiguration::minFreq() const
+double Au3TrackSpectrogramConfiguration::minFreq() const
 {
     return m_settings.minFreq;
 }
 
-void Au3TrackSpectrogramConfiguration::setMinFreq(int value)
+void Au3TrackSpectrogramConfiguration::setMinFreq(double value)
 {
     m_settings.minFreq = value;
 }
 
-int Au3TrackSpectrogramConfiguration::maxFreq() const
+double Au3TrackSpectrogramConfiguration::maxFreq() const
 {
     return m_settings.maxFreq;
 }
 
-void Au3TrackSpectrogramConfiguration::setMaxFreq(int value)
+void Au3TrackSpectrogramConfiguration::setMaxFreq(double value)
 {
     m_settings.maxFreq = value;
 }

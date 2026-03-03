@@ -12,7 +12,6 @@
 #include "playback/iplaybackcontroller.h"
 #include "playback/iplaybackconfiguration.h"
 #include "record/irecordcontroller.h"
-#include "trackedit/iprojecthistory.h"
 
 #include "playback/view/common/playbackmetermodel.h"
 #include "types/val.h"
@@ -39,7 +38,6 @@ class TrackViewStateModel : public QObject, public muse::Injectable, public muse
     muse::Inject<context::IGlobalContext> globalContext{ this };
     muse::Inject<playback::IPlaybackController> playbackController{ this };
     muse::Inject<record::IRecordController> recordController{ this };
-    muse::Inject<trackedit::IProjectHistory> projectHistory{ this };
 
 public:
     TrackViewStateModel(QObject* parent = nullptr);
@@ -55,8 +53,6 @@ public:
     bool isTrackCollapsed() const;
     double channelHeightRatio() const;
     Q_INVOKABLE void changeChannelHeightRatio(double ratio);
-
-    Q_INVOKABLE void spectrogramVerticalZoomChanged(trackedit::TrackId trackId, int channel);
 
     QVariant displayBounds() const;
 

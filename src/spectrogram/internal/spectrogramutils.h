@@ -26,4 +26,6 @@ void fillWhere(
 int fftLength(const ISpectrogramConfiguration& config);
 
 std::pair<float, float> spectrogramBounds(const ISpectrogramConfiguration&, double sampleRate);
+
+SpectrogramRulerTicks spectrogramRulerTicks(const ISpectrogramConfiguration&, double labelHeight, double rulerHeight);
 }

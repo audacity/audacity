@@ -27,13 +27,13 @@ void GlobalSpectrogramConfiguration::init()
 {
     muse::settings()->setDefaultValue(MIN_FREQ, muse::Val(0));
     muse::settings()->valueChanged(MIN_FREQ).onReceive(this, [this](const muse::Val& val) {
-        m_minFreqChanged.send(val.toInt());
+        m_minFreqChanged.send(val.toDouble());
         m_someSettingChanged.notify();
     });
 
     muse::settings()->setDefaultValue(MAX_FREQ, muse::Val(20000));
     muse::settings()->valueChanged(MAX_FREQ).onReceive(this, [this](const muse::Val& val) {
-        m_maxFreqChanged.send(val.toInt());
+        m_maxFreqChanged.send(val.toDouble());
         m_someSettingChanged.notify();
     });
 
@@ -98,12 +98,12 @@ void GlobalSpectrogramConfiguration::init()
     });
 }
 
-int GlobalSpectrogramConfiguration::minFreq() const
+double GlobalSpectrogramConfiguration::minFreq() const
 {
-    return muse::settings()->value(MIN_FREQ).toInt();
+    return muse::settings()->value(MIN_FREQ).toDouble();
 }
 
-void GlobalSpectrogramConfiguration::setMinFreq(int value)
+void GlobalSpectrogramConfiguration::setMinFreq(double value)
 {
     if (minFreq() == value) {
         return;
@@ -111,17 +111,17 @@ void GlobalSpectrogramConfiguration::setMinFreq(int value)
     muse::settings()->setSharedValue(MIN_FREQ, muse::Val(value));
 }
 
-muse::async::Channel<int> GlobalSpectrogramConfiguration::minFreqChanged() const
+muse::async::Channel<double> GlobalSpectrogramConfiguration::minFreqChanged() const
 {
     return m_minFreqChanged;
 }
 
-int GlobalSpectrogramConfiguration::maxFreq() const
+double GlobalSpectrogramConfiguration::maxFreq() const
 {
-    return muse::settings()->value(MAX_FREQ).toInt();
+    return muse::settings()->value(MAX_FREQ).toDouble();
 }
 
-void GlobalSpectrogramConfiguration::setMaxFreq(int value)
+void GlobalSpectrogramConfiguration::setMaxFreq(double value)
 {
     if (maxFreq() == value) {
         return;
@@ -129,7 +129,7 @@ void GlobalSpectrogramConfiguration::setMaxFreq(int value)
     muse::settings()->setSharedValue(MAX_FREQ, muse::Val(value));
 }
 
-muse::async::Channel<int> GlobalSpectrogramConfiguration::maxFreqChanged() const
+muse::async::Channel<double> GlobalSpectrogramConfiguration::maxFreqChanged() const
 {
     return m_maxFreqChanged;
 }

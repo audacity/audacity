@@ -175,10 +175,3 @@ au::playback::PlaybackMeterModel* TrackViewStateModel::meterModel() const
 {
     return m_meterModel;
 }
-
-void TrackViewStateModel::spectrogramVerticalZoomChanged(trackedit::TrackId trackId, int channel)
-{
-    Q_UNUSED(trackId);
-    Q_UNUSED(channel);
-    projectHistory()->markUnsaved();
-}

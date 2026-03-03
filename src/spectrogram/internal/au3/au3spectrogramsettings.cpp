@@ -137,15 +137,16 @@ void Au3SpectrogramSettings::WriteXMLAttributes(XMLWriter& writer) const
 
 bool Au3SpectrogramSettings::HandleXMLAttribute(const std::string_view& attr, const XMLAttributeValueView& valueView)
 {
-    int nValue;
+    int nValue = 0;
+    double nValueDbl = 0.;
     if (attr == "syncWithGlobalSettings" && valueView.TryGet(nValue)) {
         syncWithGlobalSettings = (nValue != 0);
         return true;
-    } else if (attr == "minFreq" && valueView.TryGet(nValue)) {
-        minFreq = nValue;
+    } else if (attr == "minFreq" && valueView.TryGet(nValueDbl)) {
+        minFreq = nValueDbl;
         return true;
-    } else if (attr == "maxFreq" && valueView.TryGet(nValue)) {
-        maxFreq = nValue;
+    } else if (attr == "maxFreq" && valueView.TryGet(nValueDbl)) {
+        maxFreq = nValueDbl;
         return true;
     } else if (attr == "range" && valueView.TryGet(nValue)) {
         range = nValue;

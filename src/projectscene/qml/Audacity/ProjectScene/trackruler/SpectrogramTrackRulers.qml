@@ -7,17 +7,12 @@ import Muse.UiComponents
 import Audacity.ProjectScene
 import Audacity.Spectrogram
 
-Rectangle {
+Item {
     id: root
-
-    color: "grey"
-    border.width: 0
 
     required property int trackId
     required property bool isStereo
     required property real channelHeightRatio
-
-    signal channelZoomChanged(int channel)
 
     Column {
         anchors.fill: parent
@@ -27,7 +22,6 @@ Rectangle {
             height: root.isStereo ? root.height * root.channelHeightRatio : root.height
 
             trackId: root.trackId
-            onZoomChanged: root.channelZoomChanged(0)
         }
 
         SeparatorLine {
@@ -42,8 +36,6 @@ Rectangle {
 
             visible: root.isStereo
             trackId: root.trackId
-
-            onZoomChanged: root.channelZoomChanged(1)
         }
     }
 }
