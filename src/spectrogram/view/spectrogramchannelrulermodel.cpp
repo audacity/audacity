@@ -255,6 +255,5 @@ QVariantList SpectrogramChannelRulerModel::majorTicks() const
 QVariantList SpectrogramChannelRulerModel::minorTicks() const
 {
     return toVariantList(m_ticks.minor);
-    spectrogramService()->notifyAboutTrackSpectrogramConfigurationChanged(m_trackId);
 }
 }
