@@ -38,7 +38,8 @@ Item {
             knob.from = parameter["min"]
             knob.to = parameter["max"]
             warper.value = parameter["value"]
-            knob.stepSize = parameter["step"] || 1
+            // TODO: select the appropriate step for each parameter separately
+            knob.stepSize = Math.max(((knob.to - knob.from) / 50).toFixed(textEdit.decimals), parameter["step"]) // parameter["step"] || 1     // temporary
             textEdit.measureUnitsSymbol = parameter["unit"] || ""
         }
     }
