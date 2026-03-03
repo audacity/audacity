@@ -12,7 +12,7 @@
 
 #include <string>
 
-#include "NetworkUtils.h"
+#include "../NetworkUtils.h"
 
 class TranslatableString;
 

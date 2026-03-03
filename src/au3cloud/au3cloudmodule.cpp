@@ -1,32 +1,58 @@
 /*
 * Audacity: A Digital Audio Editor
 */
+#include <QQmlEngine>
+#include <QtQml>
+
 #include "au3cloudmodule.h"
+
+#include "internal/au3cloudservice.h"
+#include "internal/au3audiocomservice.h"
+
+#include "view/accountinfomodel.h"
 #include "dev/cloudtestsmodel.h"
 
 using namespace au::au3cloud;
 
+static const std::string mname("au3cloud");
+
 std::string Au3CloudModule::moduleName() const
 {
-    return "au3cloud";
+    return mname;
 }
 
-void Au3CloudModule::registerExports()
-{
-    m_cloudService = std::make_shared<Au3CloudService>(muse::modularity::globalCtx());
-    m_audioComService = std::make_shared<Au3AudioComService>();
+void Au3CloudModule::registerExports() {}
 
-    globalIoc()->registerExport<au3cloud::IAuthorization>(moduleName(), m_cloudService);
-    globalIoc()->registerExport<au3cloud::IUsageInfo>(moduleName(), m_cloudService);
-    globalIoc()->registerExport<au3cloud::IAu3AudioComService>(moduleName(), m_audioComService);
-}
-
-void Au3CloudModule::onInit(const muse::IApplication::RunMode&)
-{
-    m_cloudService->init();
-}
+void Au3CloudModule::onInit(const muse::IApplication::RunMode&) {}
 
 void Au3CloudModule::registerUiTypes()
 {
     qmlRegisterType<CloudTestsModel>("Audacity.Cloud", 1, 0, "CloudTestsModel");
+    qmlRegisterType<AccountInfoModel>("Audacity.Cloud", 1, 0, "AccountInfoModel");
 }
+
+muse::modularity::IContextSetup* Au3CloudModule::newContext(const muse::modularity::ContextPtr& ctx) const
+{
+    return new Au3CloudContext(ctx);
+}
+
+// =====================================================
+// Au3CloudContext
+// =====================================================
+
+void Au3CloudContext::registerExports()
+{
+    m_cloudService = std::make_shared<Au3CloudService>(iocContext());
+    m_audioComService = std::make_shared<Au3AudioComService>(iocContext());
+
+    ioc()->registerExport<au3cloud::IAuthorization>(mname, m_cloudService);
+    ioc()->registerExport<au3cloud::IUsageInfo>(mname, m_cloudService);
+    ioc()->registerExport<au3cloud::IAu3AudioComService>(mname, m_audioComService);
+}
+
+void Au3CloudContext::onInit(const muse::IApplication::RunMode&)
+{
+    m_cloudService->init();
+}
+
+void Au3CloudContext::onDeinit() {}

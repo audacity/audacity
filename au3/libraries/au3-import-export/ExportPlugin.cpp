@@ -11,6 +11,8 @@
 #include "ExportPlugin.h"
 #include "au3-files/wxFileNameWrapper.h"
 
+#include <rapidjson/document.h>
+
 ExportException::ExportException(const wxString& msg)
     : mMessage(msg)
 {

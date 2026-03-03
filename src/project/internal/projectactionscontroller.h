@@ -12,9 +12,11 @@
 #include "context/iglobalcontext.h"
 #include "project/irecentfilescontroller.h"
 #include "iopensaveprojectscenario.h"
+#include "toast/itoastservice.h"
 #include "trackedit/iprojecthistory.h"
 #include "record/irecordcontroller.h"
 #include "importexport/export/internal/exportconfiguration.h"
+#include "au3cloud/iau3audiocomservice.h"
 
 #include "project/iprojectconfiguration.h"
 #include "project/iprojectfilescontroller.h"
@@ -36,6 +38,8 @@ class ProjectActionsController : public IProjectFilesController, public muse::ac
     muse::Inject<IOpenSaveProjectScenario> openSaveProjectScenario { this };
     muse::Inject<trackedit::IProjectHistory> projectHistory { this };
     muse::Inject<record::IRecordController> recordController { this };
+    muse::Inject<au3cloud::IAu3AudioComService> audioComService { this };
+    muse::Inject<toast::IToastService> toastService { this };
 
 public:
     ProjectActionsController(muse::modularity::ContextPtr ctx = nullptr);
@@ -50,6 +54,7 @@ public:
     bool closeOpenedProject(bool quitApp = false) override;
     bool saveProject(const muse::io::path_t& path = muse::io::path_t()) override;
     bool saveProjectLocally(const muse::io::path_t& filePath = muse::io::path_t(), SaveMode saveMode = SaveMode::Save) override;
+    bool saveProjectToCloud(const CloudProjectInfo& cloudInfo, SaveMode saveMode = SaveMode::Save) override;
 
     const ProjectBeingDownloaded& projectBeingDownloaded() const override;
     muse::async::Notification projectBeingDownloadedChanged() const override;
@@ -92,6 +97,8 @@ private:
     void redo();
 
     muse::Ret openPageIfNeed(muse::Uri pageUri);
+
+    void shareAudio();
 
     void openCustomFFmpegOptions();
     void openMetadataDialog();

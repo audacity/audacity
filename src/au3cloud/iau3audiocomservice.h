@@ -8,7 +8,9 @@
 
 #include "framework/global/modularity/imoduleinterface.h"
 #include "framework/global/async/promise.h"
+#include "framework/global/progress.h"
 
+#include "project/iaudacityproject.h"
 #include "cloudtypes.h"
 
 namespace au::au3cloud {
@@ -36,5 +38,9 @@ public:
     virtual muse::async::Promise<AudioList> downloadAudioList(size_t audiosPerBatch, size_t batchNumber,
                                                               const FetchOptions& options = {}) = 0;
     virtual void clearAudioListCache() = 0;
+
+    virtual muse::ProgressPtr uploadProject(au::project::IAudacityProjectPtr project, const std::string& name) = 0;
+
+    virtual muse::ProgressPtr shareAudio(const std::string& title) = 0;
 };
 }

@@ -15,6 +15,7 @@ static const std::string module_name("project");
 
 static const muse::Settings::Key COMPAT_RECENT_FILES_DATA(module_name, "project/recentList");
 static const muse::Settings::Key USER_PROJECTS_PATH(module_name, "project/paths/myprojects");
+static const muse::Settings::Key CLOUD_PROJECTS_PATH(module_name, "project/paths/cloudprojects");
 static const muse::Settings::Key LAST_OPENED_PROJECTS_PATH(module_name, "project/paths/lastprojects");
 static const muse::Settings::Key LAST_SAVED_PROJECTS_PATH(module_name, "application/paths/lastSavedProjectsPath");
 static const muse::Settings::Key TEMPORARY_FILES_PATH(module_name, "project/temporaryFilesPath");
@@ -29,6 +30,7 @@ static const std::string DEFAULT_FILE_SUFFIX(".aup4");
 void ProjectConfiguration::init()
 {
     muse::settings()->setDefaultValue(USER_PROJECTS_PATH, muse::Val(globalConfiguration()->userDataPath() + "/Projects"));
+    muse::settings()->setDefaultValue(CLOUD_PROJECTS_PATH, muse::Val(globalConfiguration()->userDataPath() + "/CloudProjects"));
     muse::settings()->setDefaultValue(HOME_PROJECTS_PAGE_VIEW_TYPE, muse::Val(HomeProjectsPageViewType::Grid));
     muse::settings()->setDefaultValue(AUTOSAVE_ENABLED_KEY, muse::Val(true));
     muse::settings()->valueChanged(AUTOSAVE_ENABLED_KEY).onReceive(nullptr, [this](const muse::Val& val) {
@@ -46,6 +48,9 @@ void ProjectConfiguration::init()
     initTempDir();
     if (!userProjectsPath().empty()) {
         fileSystem()->makePath(userProjectsPath());
+    }
+    if (!cloudProjectsPath().empty()) {
+        fileSystem()->makePath(cloudProjectsPath());
     }
 }
 
@@ -80,6 +85,16 @@ muse::async::Channel<muse::io::path_t> ProjectConfiguration::userProjectsPathCha
 muse::io::path_t ProjectConfiguration::defaultUserProjectsPath() const
 {
     return muse::settings()->defaultValue(USER_PROJECTS_PATH).toPath();
+}
+
+muse::io::path_t ProjectConfiguration::cloudProjectsPath() const
+{
+    return muse::settings()->value(CLOUD_PROJECTS_PATH).toPath();
+}
+
+void ProjectConfiguration::setCloudProjectsPath(const muse::io::path_t& path)
+{
+    muse::settings()->setSharedValue(CLOUD_PROJECTS_PATH, muse::Val(path));
 }
 
 muse::io::path_t ProjectConfiguration::lastOpenedProjectsPath() const

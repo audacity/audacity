@@ -7,13 +7,11 @@
 #include "au3-import-export/Export.h"
 
 #include "au3-mixer/Mix.h"
-#include "au3-preferences/Prefs.h"
 
 #include "au3-tags/Tags.h"
 #include "au3-track/Track.h"
 
 #include "au3-import-export/ExportPluginHelpers.h"
-#include "au3-import-export/ExportPluginRegistry.h"
 #include "au3-import-export/PlainExportOptionsEditor.h"
 
 #include "FLAC++/encoder.h"
@@ -71,7 +69,7 @@ public:
     int GetFormatCount() const override;
     FormatInfo GetFormatInfo(int) const override;
 
-    // bool ParseConfig(int, const rapidjson::Value& config, ExportProcessor::Parameters& parameters) const override;
+    bool ParseConfig(int, const std::string& config, ExportProcessor::Parameters& parameters) const override;
 
     std::vector<std::string> GetMimeTypes(int) const override;
 

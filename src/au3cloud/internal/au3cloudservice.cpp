@@ -52,7 +52,8 @@ void Au3CloudService::init()
 
     auto& oauthService = audacity::cloud::audiocom::GetOAuthService();
     const auto NO_ACCESS_TOKEN = muse::qtrc("appshell/gettingstarted", "No access token");
-    m_authState.set(oauthService.HasAccessToken() ? AuthState(Authorized()) : AuthState(NotAuthorized(NO_ACCESS_TOKEN.toStdString())));
+    m_authState.set(AuthState(NotAuthorized(NO_ACCESS_TOKEN.toStdString())));
+    oauthService.ValidateAuth(nullptr, AudiocomTrace::ignore, true);
     m_authSubscription
         = oauthService.Subscribe([this](const audacity::cloud::audiocom::AuthStateChangedMessage& message)
     {
@@ -64,23 +65,36 @@ void Au3CloudService::init()
             return;
         }
 
-        const auto NOT_AUTHORIZED = muse::qtrc("appshell/gettingstarted", "Not authorized");
-        m_authState.set(
-            message.authorised ? AuthState(Authorized()) : AuthState(NotAuthorized(NOT_AUTHORIZED.toStdString())));
-
         auto& service = audacity::cloud::audiocom::GetUserService();
-        message.authorised ? service.UpdateUserData() : service.ClearUserData();
+        if (message.authorised) {
+            service.UpdateUserData();
+        } else {
+            service.ClearUserData();
+        }
     });
 
     auto& userService = audacity::cloud::audiocom::GetUserService();
     m_userDataSubscription
         = userService.Subscribe(
               [this](const audacity::cloud::audiocom::UserDataChanged&) {
-        auto& userService = audacity::cloud::audiocom::GetUserService();
-        m_accountInfo.id = userService.GetUserId().ToStdString();
-        m_accountInfo.userSlug = userService.GetUserSlug().ToStdString();
-        m_accountInfo.displayName = userService.GetDisplayName().ToStdString();
-        m_accountInfo.avatarPath = userService.GetAvatarPath().ToStdString();
+        auto& authService = audacity::cloud::audiocom::GetOAuthService();
+        if (authService.HasAccessToken()) {
+            auto& userService = audacity::cloud::audiocom::GetUserService();
+            m_accountInfo.id = userService.GetUserId().ToStdString();
+            m_accountInfo.userSlug = userService.GetUserSlug().ToStdString();
+            m_accountInfo.displayName = userService.GetDisplayName().ToStdString();
+            m_accountInfo.avatarPath = userService.GetAvatarPath().ToStdString();
+
+            //Only set to authorized if we have user data
+            m_authState.set(AuthState(Authorized()));
+        } else {
+            m_accountInfo = AccountInfo();
+
+            if (!std::holds_alternative<NotAuthorized>(m_authState.val)) {
+                const auto NOT_AUTHORIZED = muse::qtrc("appshell/gettingstarted", "Not authorized");
+                m_authState.set(AuthState(NotAuthorized(NOT_AUTHORIZED.toStdString())));
+            }
+        }
     });
 }
 
@@ -96,8 +110,6 @@ void Au3CloudService::registerWithPassword(const std::string& email, const std::
             m_authState.set(AuthState(NotAuthorized(REGISTRATION_FAILED.toStdString())));
             return;
         }
-
-        m_authState.set(AuthState(Authorized()));
     },
                           [this](auto, auto)
     {
@@ -120,8 +132,6 @@ void Au3CloudService::signInWithPassword(const std::string& email, const std::st
             m_authState.set(AuthState(NotAuthorized(INCORRECT_EMAIL_OR_PASSWORD.toStdString())));
             return;
         }
-
-        m_authState.set(AuthState(Authorized()));
     },
                            [this](auto, auto)
     {

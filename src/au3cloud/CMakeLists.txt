@@ -7,6 +7,7 @@ declare_module(au3cloud)
 set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/au3cloudmodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/au3cloudmodule.h
+    ${CMAKE_CURRENT_LIST_DIR}/au3clouderrors.h
     ${CMAKE_CURRENT_LIST_DIR}/cloudtypes.h
     ${CMAKE_CURRENT_LIST_DIR}/iauthorization.h
     ${CMAKE_CURRENT_LIST_DIR}/iau3audiocomservice.h
@@ -17,11 +18,18 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiocomservice.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiocomservice.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3cloudprojectfileioextension.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3cloudprojectfileioextension.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3cloudservice.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3cloudservice.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/oauthhttpserverreplyhandler.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/oauthhttpserverreplyhandler.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/view/accountinfomodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/accountinfomodel.h
     )
+
+set(MODULE_INCLUDE ${AU3_LIBRARIES})
 
 set(MODULE_LINK au3wrap Qt6::Network Qt6::NetworkAuth)
 

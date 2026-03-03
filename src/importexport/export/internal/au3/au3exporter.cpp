@@ -4,7 +4,10 @@
 
 #include "au3exporter.h"
 
+#include "framework/global/async/asyncable.h"
+
 #include "au3-basic-ui/BasicUI.h"
+#include "au3-cloud-audiocom/ServiceConfig.h"
 #include "au3-import-export/ExportPluginRegistry.h"
 #include "au3-import-export/ExportUtils.h"
 #include "au3-mixer/MixerOptions.h"
@@ -34,6 +37,23 @@ ExportPlugin* formatPlugin(const std::string& format)
     return nullptr;
 }
 }
+
+class ProgressDelegate : public ExportProcessorDelegate, public muse::async::Asyncable
+{
+    muse::ProgressPtr m_progress;
+    std::atomic<bool> m_cancelled { false };
+public:
+    ProgressDelegate(muse::ProgressPtr progress)
+        : m_progress(progress)
+    {
+        m_progress->canceled().onNotify(this, [this] { m_cancelled = true; });
+    }
+
+    bool IsCancelled() const override { return m_cancelled; }
+    bool IsStopped()   const override { return false; }
+    void SetStatusString(const TranslatableString&) override {}
+    void OnProgress(double) override {}
+};
 
 class DialogExportProgressDelegate : public ExportProcessorDelegate
 {
@@ -95,8 +115,68 @@ void Au3Exporter::init()
     RegisterExportPlugins();
 }
 
-muse::Ret Au3Exporter::exportData(const muse::io::path_t& path)
+muse::Ret Au3Exporter::exportData(const muse::io::path_t& path, const Options& options, muse::ProgressPtr progress)
 {
+    const std::string formatName = options.count(OptionKey::Format)
+                                   ? options.at(OptionKey::Format).toString()
+                                   : exportConfiguration()->currentFormat();
+
+    const ExportProcessType processType = options.count(OptionKey::ProcessType)
+                                          ? options.at(OptionKey::ProcessType).toEnum<ExportProcessType>()
+                                          : exportConfiguration()->processType();
+
+    const int exportChannelsType = options.count(OptionKey::ExportChannelsType)
+                                   ? options.at(OptionKey::ExportChannelsType).toInt()
+                                   : exportConfiguration()->exportChannelsType();
+
+    const int exportChannels = options.count(OptionKey::ExportChannels)
+                               ? options.at(OptionKey::ExportChannels).toInt()
+                               : exportConfiguration()->exportChannels();
+
+    const muse::Val exportCustomChannelMapping = options.count(OptionKey::ExportCustomChannelMapping)
+                                                 ? options.at(OptionKey::ExportCustomChannelMapping)
+                                                 : exportConfiguration()->exportCustomChannelMapping();
+
+    const int exportSampleRate = options.count(OptionKey::ExportSampleRate)
+                                 ? options.at(OptionKey::ExportSampleRate).toInt()
+                                 : exportConfiguration()->exportSampleRate();
+
+    ExportParameters parameters;
+    if (options.count(OptionKey::Parameters)) {
+        for (const auto& entryVal : options.at(OptionKey::Parameters).toList()) {
+            const auto& m = entryVal.toMap();
+            const int id = m.at("id").toInt();
+            const auto& valueVal = m.at("value");
+            OptionValue value;
+            switch (valueVal.type()) {
+            case muse::Val::Type::Bool:
+                value = valueVal.toBool();
+                break;
+            case muse::Val::Type::Int:
+                value = valueVal.toInt();
+                break;
+            case muse::Val::Type::Double:
+                value = valueVal.toDouble();
+                break;
+            case muse::Val::Type::String:
+                value = valueVal.toString();
+                break;
+            default: break;
+            }
+            parameters.emplace_back(id, value);
+        }
+    } else {
+        const int fmt = formatIndex(formatName);
+        const ExportPlugin* plugin = formatPlugin(formatName);
+        if (plugin) {
+            auto editor = plugin->CreateOptionsEditor(fmt, nullptr);
+            editor->Load(*gPrefs);
+            for (const auto& [id, val] : ExportUtils::ParametersFromEditor(*editor)) {
+                parameters.emplace_back(id, std::visit([](auto v) -> OptionValue { return v; }, val));
+            }
+        }
+    }
+
     wxFileName wxfilename = wxFromString(path.toString());
 
     Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
@@ -104,24 +184,25 @@ muse::Ret Au3Exporter::exportData(const muse::io::path_t& path)
         return muse::make_ret(muse::Ret::Code::InternalError);
     }
 
-    int format = formatIndex(exportConfiguration()->currentFormat());
-    if (format == -1) {
+    int formatIdx = formatIndex(formatName);
+    if (formatIdx == -1) {
         return muse::make_ret(muse::Ret::Code::InternalError);
     }
-    m_format = format;
+    m_format = formatIdx;
 
-    m_plugin = formatPlugin(exportConfiguration()->currentFormat());
+    m_plugin = formatPlugin(formatName);
     if (!m_plugin) {
         return muse::make_ret(muse::Ret::Code::InternalError);
     }
 
-    auto editor = m_plugin->CreateOptionsEditor(m_format, nullptr);
-    editor->Load(*gPrefs);
-    m_parameters = ExportUtils::ParametersFromEditor(*editor);
+    m_parameters.clear();
+    for (const auto& [id, val] : parameters) {
+        m_parameters.emplace_back(id, std::visit([](auto v) -> ExportValue { return v; }, val));
+    }
 
     m_selectedOnly = false;
     // TODO: implement other ExportProcessType's selections
-    if (exportConfiguration()->processType() == ExportProcessType::SELECTED_AUDIO) {
+    if (processType == ExportProcessType::SELECTED_AUDIO) {
         m_t0
             = selectionController()->timeSelectionIsNotEmpty() ? selectionController()->dataSelectedStartTime()
               : selectionController()->leftMostSelectedClipStartTime().value_or(0.0);
@@ -129,7 +210,7 @@ muse::Ret Au3Exporter::exportData(const muse::io::path_t& path)
             = selectionController()->timeSelectionIsNotEmpty() ? selectionController()->dataSelectedEndTime()
               : selectionController()->rightMostSelectedClipEndTime().value_or(0.0);
         m_selectedOnly = true;
-    } else if (exportConfiguration()->processType() == ExportProcessType::AUDIO_IN_LOOP_REGION) {
+    } else if (processType == ExportProcessType::AUDIO_IN_LOOP_REGION) {
         auto region = playbackController()->loopRegion();
         m_t0 = region.start;
         m_t1 = region.end;
@@ -153,11 +234,10 @@ muse::Ret Au3Exporter::exportData(const muse::io::path_t& path)
         inputChannelsCount += exportedTrack->NChannels();
     }
 
-    auto downMix = std::make_unique<MixerOptions::Downmix>(inputChannelsCount,
-                                                           exportConfiguration()->exportChannels());
-    if (ExportChannelsPref::ExportChannels(exportConfiguration()->exportChannelsType()) == ExportChannelsPref::ExportChannels::MONO) {
+    auto downMix = std::make_unique<MixerOptions::Downmix>(inputChannelsCount, exportChannels);
+    if (ExportChannelsPref::ExportChannels(exportChannelsType) == ExportChannelsPref::ExportChannels::MONO) {
         m_numChannels = 1;
-    } else if (ExportChannelsPref::ExportChannels(exportConfiguration()->exportChannelsType())
+    } else if (ExportChannelsPref::ExportChannels(exportChannelsType)
                == ExportChannelsPref::ExportChannels::STEREO) {
         m_numChannels = 2;
     } else {
@@ -169,11 +249,11 @@ muse::Ret Au3Exporter::exportData(const muse::io::path_t& path)
         downMix = std::make_unique<MixerOptions::Downmix>(*downMix, channelMask);
         m_mixerSpec = downMix.get();
 
-        const std::vector<std::vector<bool> > matrix = utils::valToMatrix(exportConfiguration()->exportCustomChannelMapping());
-        m_numChannels = exportConfiguration()->exportChannels();
+        const std::vector<std::vector<bool> > matrix = utils::valToMatrix(exportCustomChannelMapping);
+        m_numChannels = exportChannels;
 
         for (int in = 0; in < inputChannelsCount; ++in) {
-            for (int out = 0; out < m_numChannels; ++out) {
+            for (unsigned int out = 0; out < m_numChannels; ++out) {
                 m_mixerSpec->mMap[in][out] = false;
             }
         }
@@ -189,7 +269,7 @@ muse::Ret Au3Exporter::exportData(const muse::io::path_t& path)
         }
     }
 
-    m_sampleRate = exportConfiguration()->exportSampleRate();
+    m_sampleRate = exportSampleRate;
 
     try {
         auto processor = m_plugin->CreateProcessor(m_format);
@@ -227,14 +307,23 @@ muse::Ret Au3Exporter::exportData(const muse::io::path_t& path)
         });
 
         auto f = exportTask.get_future();
-        DialogExportProgressDelegate delegate;
-        std::thread(std::move(exportTask), std::ref(delegate)).detach();
-        auto result = ExportResult::Error;
-        while (f.wait_for(std::chrono::milliseconds(50)) != std::future_status::ready) {
-            delegate.UpdateUI();
+        ExportResult result = ExportResult::Error;
+
+        if (progress) {
+            ProgressDelegate delegate(progress);
+            std::thread(std::move(exportTask), std::ref(delegate)).detach();
+            while (f.wait_for(std::chrono::milliseconds(50)) != std::future_status::ready) {}
+            result = f.get();
+        } else {
+            DialogExportProgressDelegate delegate;
+            std::thread(std::move(exportTask), std::ref(delegate)).detach();
+            while (f.wait_for(std::chrono::milliseconds(50)) != std::future_status::ready) {
+                delegate.UpdateUI();
+            }
+            result = f.get();
         }
 
-        if (result == ExportResult::Error) {
+        if (result != ExportResult::Success) {
             return muse::make_ret(muse::Ret::Code::InternalError);
         }
     } catch (const ExportException& e) {
@@ -277,6 +366,64 @@ std::vector<std::string> Au3Exporter::formatExtensions(const std::string& format
                 }
                 return result;
             }
+        }
+    }
+
+    return {};
+}
+
+std::vector<std::string> Au3Exporter::cloudPreferredAudioFormats() const
+{
+    const auto& registry = ExportPluginRegistry::Get();
+
+    std::vector<std::string> result;
+    for (const auto& mimeType : audacity::cloud::audiocom::GetServiceConfig().GetPreferredAudioFormats(true)) {
+        for (auto [plugin, formatIndex] : registry) {
+            for (const auto& mime : plugin->GetMimeTypes(formatIndex)) {
+                if (mime == mimeType) {
+                    result.push_back(plugin->GetFormatInfo(formatIndex).description.MSGID().GET().ToStdString());
+                    break;
+                }
+            }
+        }
+    }
+
+    if (result.empty()) {
+        // Fallback to all formats if no preferred formats are found
+        for (auto [plugin, formatIndex] : registry) {
+            result.push_back(plugin->GetFormatInfo(formatIndex).description.MSGID().GET().ToStdString());
+        }
+    }
+
+    return result;
+}
+
+ExportParameters Au3Exporter::cloudExportParameters(const std::string& format) const
+{
+    const ExportPlugin* plugin = nullptr;
+    int fmt = -1;
+
+    for (auto [p, formatIndex] : ExportPluginRegistry::Get()) {
+        if (p->GetFormatInfo(formatIndex).description.MSGID().GET().ToStdString() == format) {
+            plugin = p;
+            fmt = formatIndex;
+            break;
+        }
+    }
+
+    if (!plugin) {
+        return {};
+    }
+
+    for (const auto& mimeType : plugin->GetMimeTypes(fmt)) {
+        auto config = audacity::cloud::audiocom::GetServiceConfig().GetExportConfig(mimeType);
+        ExportProcessor::Parameters au3Params;
+        if (plugin->ParseConfig(fmt, config, au3Params)) {
+            ExportParameters result;
+            for (const auto& [id, val] : au3Params) {
+                result.emplace_back(id, std::visit([](auto v) -> OptionValue { return v; }, val));
+            }
+            return result;
         }
     }
 

@@ -1,281 +1,204 @@
 /*
- * SPDX-License-Identifier: GPL-3.0-only
- * Audacity-CLA-applies
- *
- * Audacity
- * Music Composition & Notation
- *
- * Copyright (C) 2024 Audacity BVBA and others
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 3 as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+* Audacity: A Digital Audio Editor
+*/
 import QtQuick 2.15
 import QtQuick.Layouts 1.15
 
 import Muse.Ui 1.0
 import Muse.UiComponents
-import Muse.GraphicalEffects 1.0
 import Muse.Cloud 1.0
+
+import Audacity.Cloud 1.0
 
 StyledDialogView {
     id: root
 
-    property bool isPublishShare: false
-    property string name
-    property int visibility: CloudVisibility.Private
-    property string existingProjectOrAudioUrl
-    property bool replaceExisting: true
-    property string cloudCode: ""
+    title: prv.dialogTitle
 
-    contentWidth: contentItem.implicitWidth
-    contentHeight: contentItem.implicitHeight
+    contentWidth: prv.contentWidth
+    contentHeight: content.implicitHeight
 
-    margins: 20
+    property string formTitle: qsTrc("cloud", "Project name")
 
-    function done(response, data = {}) {
-        let value = Object.assign(({ response: response }), data)
+    QtObject {
+        id: prv
 
-        root.ret = {
-            errcode: 0,
-            value: value
-        }
+        readonly property int contentWidth: 367
 
-        root.hide()
+        readonly property string dialogTitle: qsTrc("cloud/save", "Save to audio.com")
+
+        readonly property string signoutButtonText: qsTrc("cloud", "Sign out")
+        readonly property int signoutButtonHeight: 28
+        readonly property int signoutButtonWidth: 71
+
+        readonly property int accountRowMargins: 8
+        readonly property int accountRowSpacing: 8
+        readonly property int accountAvatarSide: 36
+        readonly property string notSignedInText: qsTrc("cloud", "You are not signed in")
+
+        readonly property int formColumnMargins: 16
+        readonly property int formColumnSpacing: 8
+        readonly property int formTextInputHeight: 28
+
+        readonly property string saveButtonText: qsTrc("global", "Save")
+
+        readonly property int buttonBoxMargins: 8
     }
 
-    Item {
-        id: contentItem
+    AccountInfoModel {
+        id: model
+    }
 
-        property var cloudInfo: null
-        property var dialogText: null
-        property var visibilityModel: null
+    Component.onCompleted: {
+        model.init()
+    }
 
-        implicitWidth: Math.max(420, contentColumn.implicitWidth)
-        implicitHeight: contentColumn.implicitHeight
+    ColumnLayout {
+        id: content
+
+        anchors.fill: parent
+        spacing: 0
+
+        NavigationPanel {
+            id: accountNavPanel
+            name: "AccountPanel"
+            enabled: accountInfoRow.enabled && accountInfoRow.visible
+            section: root.navigationSection
+            order: 1
+        }
+
+        RowLayout {
+            id: accountInfoRow
+
+            Layout.fillWidth: true
+            Layout.margins: prv.accountRowMargins
+
+            spacing: prv.accountRowSpacing
+
+            AccountAvatar {
+                id: avatar
+                side: 36
+                url: model.avatarPath
+            }
+
+            StyledTextLabel {
+                Layout.fillWidth: true
+
+                font: ui.theme.bodyFont
+                text: model.isAuthorized ? model.displayName : prv.notSignedInText
+
+                horizontalAlignment: Text.AlignLeft
+            }
+
+            Item {
+                Layout.fillWidth: true
+            }
+
+            FlatButton {
+                id: signoutButton
+
+                Layout.preferredHeight: prv.signoutButtonHeight
+                Layout.preferredWidth: prv.signoutButtonWidth
+
+                text: prv.signoutButtonText
+
+                visible: model.isAuthorized
+
+                navigation.panel: accountNavPanel
+                navigation.order: 1
+
+                onClicked: function() {
+                    model.signOut()
+                }
+            }
+        }
+
+        SeparatorLine {
+            Layout.fillWidth: true
+        }
 
         ColumnLayout {
-            id: contentColumn
+            id: projectNameColumn
 
-            anchors.fill: parent
+            Layout.fillWidth: true
+            Layout.margins: prv.formColumnMargins
 
-            spacing: 20
+            spacing: prv.formColumnSpacing
 
-            ColumnLayout {
-                id: headerColumn
+            StyledTextLabel {
+                Layout.fillWidth: true
 
-                spacing: root.isPublishShare ? 16 : 0
+                font: ui.theme.bodyFont
+                text: root.formTitle
 
-                Item {
-                    id: cloudImages
-
-                    width: contentItem.width
-                    height: root.isPublishShare ? childrenRect.height : 0
-
-                    Image {
-                        id: cloudLogo
-
-                        visible: false
-
-                        anchors.verticalCenter: avatar.verticalCenter
-                        anchors.left: parent.left
-
-                        source: contentItem.cloudInfo.cloudLogoUrl
-                        sourceSize.height: 20
-                    }
-
-                    EffectColorOverlay {
-                        visible: root.isPublishShare
-
-                        anchors.fill: cloudLogo
-
-                        color: contentItem.cloudInfo.cloudLogoColor
-
-                        source: cloudLogo
-                    }
-
-                    AccountAvatar {
-                        id: avatar
-
-                        anchors.right: parent.right
-
-                        side: 38
-                        url: Boolean(contentItem.cloudInfo) ? contentItem.cloudInfo.userAvatarUrl : null
-
-                        CloudsModel {
-                            id: cloudsModel
-
-                            Component.onCompleted: {
-                                load()
-
-                                contentItem.cloudInfo = cloudsModel.cloudInfo(root.cloudCode)
-                                contentItem.dialogText = cloudsModel.dialogText(root.cloudCode, existingProjectOrAudioUrl)
-                                contentItem.visibilityModel = cloudsModel.visibilityModel(root.cloudCode)
-                            }
-                        }
-                    }
-                }
-
-                StyledTextLabel {
-                    id: titleLabel
-
-                    text: root.isPublishShare && Boolean(contentItem.dialogText) ? contentItem.dialogText.titleText
-                                                                                 : qsTrc("project/save", "Save to cloud")
-
-                    font: ui.theme.largeBodyBoldFont
-                    horizontalAlignment: Text.AlignLeft
-                }
+                horizontalAlignment: Text.AlignLeft
             }
 
-            ColumnLayout {
-                id: optionsColumn
-                spacing: 16
+            NavigationPanel {
+                id: projectNameNavPanel
 
-                NavigationPanel {
-                    id: optionsNavPanel
-                    name: "SaveToCloudOptions"
-                    enabled: optionsColumn.enabled && optionsColumn.visible
-                    direction: NavigationPanel.Vertical
-                    section: root.navigationSection
-                    order: 1
-                    accessible.name: qsTrc("project/save", "Options")
-                }
-
-                ColumnLayout {
-                    spacing: 8
-
-                    StyledTextLabel {
-                        Layout.fillWidth: true
-                        text: qsTrc("project/save", "Name")
-                        horizontalAlignment: Text.AlignLeft
-                    }
-
-                    TextInputField {
-                        Layout.fillWidth: true
-                        currentText: root.name
-
-                        navigation.panel: optionsNavPanel
-                        navigation.row: 1
-                        accessible.name: titleLabel.text + ". " + qsTrc("project/save", "Name") + ": " + currentText
-
-                        onTextChanged: function(newTextValue) {
-                            root.name = newTextValue
-                        }
-                    }
-                }
-
-                ColumnLayout {
-                    spacing: 8
-
-                    StyledTextLabel {
-                        Layout.fillWidth: true
-                        //: visibility of a project on Audio.com: private, public or unlisted
-                        text: qsTrc("project/cloud", "Visibility")
-                        horizontalAlignment: Text.AlignLeft
-                    }
-
-                    StyledDropdown {
-                        Layout.fillWidth: true
-
-                        model: contentItem.visibilityModel
-
-                        currentIndex: indexOfValue(root.visibility)
-
-                        navigation.panel: optionsNavPanel
-                        navigation.row: 2
-                        navigation.accessible.name: qsTrc("project/cloud", "Visibility") + ": " + currentText
-
-                        onActivated: function(index, value) {
-                            root.visibility = value
-                        }
-                    }
-                }
-
-                RadioButtonGroup {
-                    Layout.fillWidth: true
-
-                    orientation: ListView.Vertical
-                    spacing: 8
-
-                    visible: root.isPublishShare && Boolean(root.existingProjectOrAudioUrl)
-
-                    model: [
-                        { text: Boolean(contentItem.dialogText) ? contentItem.dialogText.replaceButtonText
-                                                                : qsTrc("project/save", "Replace existing"), value: true },
-                        { text: Boolean(contentItem.dialogText) ? contentItem.dialogText.newButtonText
-                                                                : qsTrc("project/save", "Create new"), value: false }
-                    ]
-
-                    delegate: RoundedRadioButton {
-                        checked: modelData.value === root.replaceExisting
-                        text: modelData.text
-
-                        navigation.name: modelData.text
-                        navigation.panel: optionsNavPanel
-                        navigation.row: 3 + model.index
-
-                        onToggled: {
-                            root.replaceExisting = modelData.value
-                        }
-                    }
-                }
+                name: "ProjectNamePanel"
+                enabled: projectNameColumn.enabled && projectNameColumn.visible
+                section: root.navigationSection
+                order: 2
             }
 
-            ButtonBox {
-                id: buttonBox
+            TextInputField {
+                id: projectNameField
+
+                property string value: ""
 
                 Layout.fillWidth: true
 
-                buttons: [ ButtonBoxModel.Cancel ]
+                Layout.preferredHeight: prv.formTextInputHeight
 
-                navigationPanel.section: root.navigationSection
-                navigationPanel.order: 2
+                navigation.panel: projectNameNavPanel
+                navigation.order: 1
 
-                FlatButton {
-                    text: qsTrc("project/save", "Save to computer")
-                    buttonRole: ButtonBoxModel.ApplyRole
-                    buttonId: ButtonBoxModel.CustomButton + 1
-                    visible: !root.isPublishShare
+                onTextChanged: function(newTextValue) {
+                    value = newTextValue
+                }
+            }
+        }
 
-                    onClicked: {
-                        root.done(SaveToCloudResponse.SaveLocallyInstead)
+        SeparatorLine {
+            Layout.fillWidth: true
+        }
+
+        ButtonBox {
+            id: buttonBox
+
+            Layout.fillWidth: true
+            Layout.margins: prv.buttonBoxMargins
+
+            buttons: [ ButtonBoxModel.Cancel ]
+
+            navigationPanel.section: root.navigationSection
+            navigationPanel.order: 3
+
+            FlatButton {
+                id: saveButton
+
+                text: prv.saveButtonText
+                buttonRole: ButtonBoxModel.ApplyRole
+                buttonId: ButtonBoxModel.Apply
+                enabled: projectNameField.hasText
+
+                onClicked: function() {
+                    if (model.isAuthorized) {
+                        root.ret = { errcode: 0, value: projectNameField.value }
+                        root.hide()
+                    } else {
+                        model.openAuthorizationDialog()
                     }
                 }
+            }
 
-                FlatButton {
-                    text: root.isPublishShare && Boolean(contentItem.dialogText) ? contentItem.dialogText.saveButtonText
-                                                                                 : qsTrc("project/save", "Save")
-
-                    buttonRole: ButtonBoxModel.ApplyRole
-                    buttonId: ButtonBoxModel.Save
-                    enabled: Boolean(root.name)
-                    accentButton: true
-
-                    onClicked: {
-                        root.done(SaveToCloudResponse.Ok, {
-                                      name: root.name,
-                                      visibility: root.visibility,
-                                      replaceExisting: root.replaceExisting
-                                  })
-                    }
-                }
-
-                onStandardButtonClicked: function(buttonId) {
-                    if (buttonId === ButtonBoxModel.Cancel) {
-                        root.done(SaveToCloudResponse.Cancel)
-                    }
+            onStandardButtonClicked: function(buttonId) {
+                if (buttonId === ButtonBoxModel.Cancel) {
+                    root.reject()
                 }
             }
         }
     }
 }
-

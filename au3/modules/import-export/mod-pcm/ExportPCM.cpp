@@ -423,15 +423,15 @@ std::vector<std::string> ExportPCM::GetMimeTypes(int formatIndex) const
     return {};
 }
 
-// bool ExportPCM::ParseConfig(int formatIndex, const rapidjson::Value&, ExportProcessor::Parameters& parameters) const
-// {
-//     if (formatIndex == FMT_WAV) {
-//         //no parameters available...
-//         parameters = {};
-//         return true;
-//     }
-//     return false;
-// }
+bool ExportPCM::ParseConfig(int formatIndex, const std::string&, ExportProcessor::Parameters& parameters) const
+{
+    if (formatIndex == FMT_WAV) {
+        //no parameters available...
+        parameters = {};
+        return true;
+    }
+    return false;
+}
 
 std::unique_ptr<ExportOptionsEditor>
 ExportPCM::CreateOptionsEditor(int format, ExportOptionsEditor::Listener* listener) const

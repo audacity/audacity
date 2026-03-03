@@ -151,7 +151,7 @@ public:
 
     std::vector<std::string> GetMimeTypes(int) const override;
 
-    // bool ParseConfig(int formatIndex, const rapidjson::Value& document, ExportProcessor::Parameters& parameters) const override;
+    bool ParseConfig(int formatIndex, const std::string& config, ExportProcessor::Parameters& parameters) const override;
 
     std::unique_ptr<ExportOptionsEditor>
     CreateOptionsEditor(int, ExportOptionsEditor::Listener*) const override;

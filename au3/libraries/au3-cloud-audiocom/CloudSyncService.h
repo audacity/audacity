@@ -29,10 +29,10 @@ namespace audacity::cloud::audiocom {
 namespace sync {
 class LocalProjectSnapshot;
 class PaginatedProjectsResponse;
-class PaginatedAudioResponse;
-class CloudAudioInfo;
-class ProjectInfo;
-class SnapshotInfo;
+struct PaginatedAudioResponse;
+struct CloudAudioInfo;
+struct ProjectInfo;
+struct SnapshotInfo;
 class RemoteProjectSnapshot;
 
 struct ProjectSyncResult final
