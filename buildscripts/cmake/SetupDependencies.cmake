@@ -68,7 +68,6 @@ endfunction()
 
 populate(wxwidgets "wxwidgets/3.1.3.9")
 populate(expat "expat/2.0.5")
-populate(portaudio "portaudio/19.7.0")
 populate(libmp3lame "libmp3lame/3.100")
 populate(wavpack "wavpack/5.7.0")
 populate(mpg123 "mpg123/1.31.2")
@@ -88,3 +87,20 @@ populate(libcurl "libcurl/8.17.0")
 if (NOT OS_IS_LIN)
     populate(zlib "zlib/1.2.13")
 endif()
+
+include(FetchContent)
+
+# Build PortAudio from source to get ASIO support on Windows
+set(PA_USE_ASIO ON CACHE BOOL "Enable ASIO support")
+FetchContent_Declare(
+    portaudio
+    GIT_REPOSITORY https://github.com/PortAudio/portaudio.git
+    GIT_TAG 147dd722548358763a8b649b3e4b41dfffbcfbb6 # v19.7.0
+)
+FetchContent_MakeAvailable(portaudio)
+add_library(portaudio::portaudio ALIAS portaudio)
+
+# Export the include directory so that check_include_file() calls in portmixer
+# (which use try_compile internally) can find portaudio headers without needing
+# the non-IMPORTED target portaudio::portaudio.
+set(PORTAUDIO_INCLUDE_DIR "${portaudio_SOURCE_DIR}/include" CACHE PATH "PortAudio include directory")

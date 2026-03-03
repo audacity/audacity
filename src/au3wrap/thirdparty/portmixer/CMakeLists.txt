@@ -6,7 +6,7 @@ set(TARGET_ROOT ${AUDACITY_ROOT}/lib-src/portmixer)
 
 if (UNIX AND NOT APPLE)
    include(CheckIncludeFile)
-   set(CMAKE_REQUIRED_LIBRARIES portaudio::portaudio)
+   set(CMAKE_REQUIRED_INCLUDES "${PORTAUDIO_INCLUDE_DIR}")
 
    check_include_file( "pa_jack.h" PA_HAS_JACK )
 
