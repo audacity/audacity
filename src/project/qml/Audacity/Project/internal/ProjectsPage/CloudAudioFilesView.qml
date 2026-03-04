@@ -21,7 +21,7 @@ ProjectsView {
 
     CloudAudioFilesModel {
         id: cloudAudioFilesModel
-    
+
         onStateChanged: {
             if (cloudAudioFilesModel.state === CloudAudioFilesModel.Fine) {
                 prv.updateDesiredRowCount()
@@ -35,7 +35,7 @@ ProjectsView {
 
     Connections {
         target: root.item ? root.item.view : null
-        
+
         function onContentYChanged() {
             prv.updateDesiredRowCount()
         }
@@ -86,7 +86,7 @@ ProjectsView {
 
             updateDesiredRowCountScheduled = true
 
-            Qt.callLater(function() {
+            Qt.callLater(function () {
                 let view = activeView ? activeView.view : null
                 let columns = view ? (view.columns || 1) : 1
 
@@ -103,14 +103,14 @@ ProjectsView {
     }
 
     sourceComponent: {
-        switch(cloudAudioFilesModel.state) {
-            case CloudAudioFilesModel.NotSignedIn:
-                return notSignedInComp
-            case CloudAudioFilesModel.Error:
-                return errorComp
-            case CloudAudioFilesModel.Fine:
-            case CloudAudioFilesModel.Loading:
-                break;
+        switch (cloudAudioFilesModel.state) {
+        case CloudAudioFilesModel.NotSignedIn:
+            return notSignedInComp
+        case CloudAudioFilesModel.Error:
+            return errorComp
+        case CloudAudioFilesModel.Fine:
+        case CloudAudioFilesModel.Loading:
+            break
         }
 
         if (cloudAudioFilesModel.rowCount == 0 && !cloudAudioFilesModel.hasMore && cloudAudioFilesModel.state != CloudAudioFilesModel.Loading) {
@@ -125,7 +125,7 @@ ProjectsView {
 
         ProjectsGridView {
             id: gridView
-            
+
             anchors.fill: parent
 
             model: cloudAudioFilesModel
@@ -176,7 +176,7 @@ ProjectsView {
                     id: modifiedColumn
 
                     width: function (parentWidth) {
-                        let parentWidthExclusingSpacing = parentWidth - listView.columns.length * listView.view.columnSpacing;
+                        let parentWidthExclusingSpacing = parentWidth - listView.columns.length * listView.view.columnSpacing
                         return 0.15 * parentWidthExclusingSpacing
                     }
 
@@ -209,19 +209,18 @@ ProjectsView {
                         }
                     }
                 },
-
                 AudioListView.ColumnItem {
                     id: previewColumn
 
                     width: function (parentWidth) {
-                        let parentWidthExclusingSpacing = parentWidth - listView.columns.length * listView.view.columnSpacing;
+                        let parentWidthExclusingSpacing = parentWidth - listView.columns.length * listView.view.columnSpacing
                         return 0.7 * parentWidthExclusingSpacing
                     }
 
                     delegate: Image {
                         source: "qrc:/resources/Waveform.svg"
                         horizontalAlignment: Image.AlignLeft
-                        verticalAlignment: Image.AlignVCenter   
+                        verticalAlignment: Image.AlignVCenter
                     }
                 }
             ]
@@ -262,7 +261,7 @@ ProjectsView {
                 anchors.right: parent.right
                 anchors.rightMargin: root.sideMargin
 
-                title: qsTrc("project", "You don't have any online files yet")
+                title: qsTrc("project", "You don’t have any online files yet")
                 body: qsTrc("project", "Files will appear here when you save a file to the cloud, or publish a project")
             }
         }
