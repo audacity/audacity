@@ -78,7 +78,7 @@ void au::effects::NyquistEffectsContext::onPreInit(const muse::IApplication::Run
 
 void au::effects::NyquistEffectsContext::registerExports()
 {
-    m_nyquistEffectsRepository = std::make_shared<NyquistEffectsRepository>();
+    m_nyquistEffectsRepository = std::make_shared<NyquistEffectsRepository>(iocContext());
 
     ioc()->registerExport<INyquistEffectsRepository>(mname, m_nyquistEffectsRepository);
 }
@@ -101,9 +101,10 @@ void au::effects::NyquistEffectsContext::resolveImports()
     }
 }
 
-void au::effects::NyquistEffectsContext::onInit(const muse::IApplication::RunMode& runMode)
+void au::effects::NyquistEffectsContext::onInit(const muse::IApplication::RunMode&)
 {
     m_nyquistPromptLoader->init();
+    m_nyquistEffectsRepository->init();
 }
 
 void au::effects::NyquistEffectsContext::onDeinit()

@@ -13,6 +13,8 @@
 #include "audio/iaudiodevicesprovider.h"
 #include "context/iglobalcontext.h"
 #include "projectscene/iprojectsceneconfiguration.h"
+#include "spectrogram/ifrequencyselectioncontroller.h"
+#include "spectrogram/ispectraleffectsregister.h"
 #include "iprojecthistory.h"
 #include "iselectioncontroller.h"
 #include "itrackeditconfiguration.h"
@@ -38,6 +40,8 @@ class TrackeditActionsController : public ITrackeditActionsController, public mu
     muse::Inject<trackedit::ISelectionController> selectionController { this };
     muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction { this };
     muse::Inject<trackedit::ITrackNavigationController> trackNavigationController { this };
+    muse::Inject<spectrogram::IFrequencySelectionController> frequencySelectionController { this };
+    muse::Inject<spectrogram::ISpectralEffectsRegister> spectralEffectsRegister { this };
 
 public:
     TrackeditActionsController(const muse::modularity::ContextPtr& ctx)

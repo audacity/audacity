@@ -598,6 +598,14 @@ void TrackeditActionsController::doGlobalDelete()
         }
     }
 
+    if (frequencySelectionController()->frequencySelection().isValid()) {
+        const auto actionCode = spectralEffectsRegister()->spectralEffectActionCode(spectrogram::SpectralEffectId::DeleteSelection);
+        if (!actionCode.empty()) {
+            dispatcher()->dispatch(actionCode);
+            return;
+        }
+    }
+
     if (selectionController()->timeSelectionIsNotEmpty()) {
         auto selectedTracks = selectionController()->selectedTracks();
         secs_t selectedStartTime = selectionController()->dataSelectedStartTime();

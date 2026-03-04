@@ -5,14 +5,21 @@
 
 #include "../inyquisteffectsrepository.h"
 #include "effects/effects_base/internal/effectsrepositoryhelper.h"
+#include "spectrogram/ispectraleffectsregister.h"
+
 #include "framework/global/modularity/ioc.h"
+
 #include "au3-nyquist-effects/LoadNyquist.h"
 
 namespace au::effects {
-class NyquistEffectsRepository : public INyquistEffectsRepository
+class NyquistEffectsRepository : public INyquistEffectsRepository, public muse::Injectable
 {
+    muse::Inject<spectrogram::ISpectralEffectsRegister> spectralEffectsRegister { this };
+
 public:
-    NyquistEffectsRepository();
+    NyquistEffectsRepository(const muse::modularity::ContextPtr& ctx);
+
+    void init();
 
     EffectMetaList effectMetaList() const override;
     bool ensurePluginIsLoaded(const EffectId& effectId) const override;

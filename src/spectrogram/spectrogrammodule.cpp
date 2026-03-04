@@ -1,5 +1,6 @@
 #include "spectrogrammodule.h"
 
+#include "internal/spectraleffectsregister.h"
 #include "internal/globalspectrogramconfiguration.h"
 #include "internal/spectrogramservice.h"
 #include "internal/frequencyselectioncontroller.h"
@@ -81,6 +82,7 @@ void SpectrogramContext::registerExports()
     m_au3SpectrogramPainter = std::make_shared<Au3SpectrogramPainter>(iocContext());
     m_spectrogramService = std::make_shared<SpectrogramService>(iocContext());
 
+    ioc()->registerExport<ISpectralEffectsRegister>(mname, new SpectralEffectsRegister);
     ioc()->registerExport<ISpectrogramPainter>(mname, m_au3SpectrogramPainter);
     ioc()->registerExport<ISpectrogramService>(mname, m_spectrogramService);
     ioc()->registerExport<IPeakFinderFactory>(mname, new Au3PeakFinderFactory(iocContext()));
