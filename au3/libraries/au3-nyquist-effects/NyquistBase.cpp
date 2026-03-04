@@ -23,7 +23,6 @@
 #include "au3-project/Project.h"
 #include "au3-project-rate/ProjectRate.h"
 #include "au3-command-parameters/ShuttleAutomation.h"
-// #include "au3-wave-track-settings/SpectrogramSettings.h" // TODO: properly handle SpectrogramSettings
 #include "au3-files/TempDirectory.h"
 #include "au3-time-track/TimeTrack.h"
 #include "au3-track/TimeWarper.h"
@@ -1988,6 +1987,11 @@ bool NyquistBase::Parse(
                 mGroup = EffectGroup::Unspecified;
             }
         }
+        return true;
+    }
+
+    if (len == 2 && tokens[0] == wxT("spectraleffectid")) {
+        mSpectralEffectId = tokens[1].ToStdString();
         return true;
     }
 
