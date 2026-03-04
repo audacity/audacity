@@ -171,8 +171,8 @@ UiActionList STATIC_ACTIONS = {
     UiAction("track-change-rate-custom",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Other..."),
-             TranslatableString("action", "Other..."),
+             TranslatableString("action", "Other…"),
+             TranslatableString("action", "Other…"),
              Checkable::Yes
              ),
     UiAction("track-make-stereo",
@@ -202,8 +202,8 @@ UiActionList STATIC_ACTIONS = {
     UiAction("track-resample",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Resample track..."),
-             TranslatableString("action", "Resample track...")
+             TranslatableString("action", "Resample track…"),
+             TranslatableString("action", "Resample track…")
              ),
     UiAction("action://trackedit/track-view-waveform",
              au::context::UiCtxAny,

@@ -43,7 +43,7 @@ Page {
         readonly property string signInLinkText: qsTrc("appshell/gettingstarted", "Sign in")
         readonly property int textLinkSpacing: 4
 
-        readonly property string formButtonTextLoading: qsTrc("appshell/gettingstarted", "Loading...")
+        readonly property string formButtonTextLoading: qsTrc("appshell/gettingstarted", "Loading…")
         readonly property string formButtonTextSignIn: qsTrc("appshell/gettingstarted", "Sign in")
         readonly property string formButtonTextCreateAccount: qsTrc("appshell/gettingstarted", "Create account")
         readonly property int formButtonHeight: 28

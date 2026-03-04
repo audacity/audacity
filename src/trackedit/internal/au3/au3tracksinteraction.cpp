@@ -43,7 +43,7 @@ using namespace au::trackedit;
 using namespace au::au3;
 
 namespace {
-const std::string mixingDownToMonoLabel = muse::trc("trackedit", "Mixing down to mono...");
+const std::string mixingDownToMonoLabel = muse::trc("trackedit", "Mixing down to mono…");
 }
 
 Au3TracksInteraction::Au3TracksInteraction(const muse::modularity::ContextPtr& ctx)
