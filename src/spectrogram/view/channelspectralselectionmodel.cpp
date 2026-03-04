@@ -186,8 +186,10 @@ void ChannelSpectralSelectionModel::dragCenterFrequency(double y)
 
     const auto newStartFreq = positionToFrequency(newStartFreqPos);
     const auto newEndFreq = positionToFrequency(newEndFreqPos);
+    const auto newCenterFreq = positionToFrequency(peakPosition);
 
-    frequencySelectionController()->setFrequencySelection({ m_dragStartFrequencySelection.trackId, newStartFreq, newEndFreq });
+    frequencySelectionController()->setFrequencySelection({ m_dragStartFrequencySelection.trackId, newStartFreq, newEndFreq,
+                                                            newCenterFreq });
 }
 
 void ChannelSpectralSelectionModel::endCenterFrequencyDrag()
