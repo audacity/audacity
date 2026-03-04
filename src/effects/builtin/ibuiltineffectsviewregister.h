@@ -8,7 +8,6 @@
 #include "modularity/imoduleinterface.h"
 
 namespace au::effects {
-//! TODO Move to builtin module
 class IBuiltinEffectsViewRegister : MODULE_GLOBAL_INTERFACE
 {
     INTERFACE_ID(IBuiltinEffectsViewRegister)
