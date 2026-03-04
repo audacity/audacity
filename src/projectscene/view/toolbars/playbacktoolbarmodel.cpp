@@ -326,8 +326,9 @@ void PlaybackToolBarModel::updateGlobalSpectrogramViewState()
 
     const auto vs = prj->viewState();
     const bool isOn = vs->globalSpectrogramToggleIsOn();
-    const QColor backgroundColor{ uiConfiguration()->currentTheme().values.value(isOn ? muse::ui::ACCENT_COLOR : muse::ui::BUTTON_COLOR).
-                                  toString() };
+    item->setSelected(isOn);
+    const auto key = isOn ? muse::ui::ThemeStyleKey::ACCENT_COLOR : muse::ui::ThemeStyleKey::BUTTON_COLOR;
+    const QColor backgroundColor{ uiConfiguration()->currentTheme().values.value(key).toString() };
     item->setBackgroundColor(backgroundColor);
 }
 

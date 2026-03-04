@@ -818,7 +818,6 @@ void ProjectViewState::setTrackViewType(const trackedit::TrackId& trackId, track
     if (it != m_tracks.end()) {
         it->second.viewType.set(viewType);
         ::setTrackViewType(project, trackId, viewType);
-        m_globalSpectrogramToggleIsOnChanged.notify();
         projectHistory()->modifyState();
         projectHistory()->markUnsaved();
     }
