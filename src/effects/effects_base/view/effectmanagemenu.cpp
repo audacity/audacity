@@ -23,6 +23,21 @@ void EffectManageMenu::load()
         reload(effectId, m_instanceId);
     }, muse::async::Asyncable::Mode::SetReplace);
 
+    presetsController()->presetSaved().onReceive(this, [this](const PresetSavedInfo& info) {
+        if (info.instanceId != m_instanceId) {
+            return;
+        }
+
+        const QString presetId = au3::wxToString(info.presetId).toQString();
+        if (presetId.isEmpty() || m_currentPreset == presetId) {
+            return;
+        }
+
+        m_currentPreset = presetId;
+        emit presetChanged();
+        emit canDeletePresetChanged();
+    }, muse::async::Asyncable::Mode::SetReplace);
+
     reload(effectId, m_instanceId);
 }
 

@@ -21,6 +21,7 @@ public:
     virtual PresetIdList factoryPresets(const EffectId& effectId) const = 0;
     virtual PresetIdList userPresets(const EffectId& effectId) const = 0;
     virtual muse::async::Channel<EffectId> userPresetsChanged() const = 0;
+    virtual muse::async::Channel<PresetSavedInfo> presetSaved() const = 0;
 
     virtual muse::Ret applyPreset(const EffectInstanceId& effectInstanceId, const PresetId& presetId) = 0;
     virtual bool hasUserPresetWithName(const EffectId& effectId, const std::string& presetName) const = 0;

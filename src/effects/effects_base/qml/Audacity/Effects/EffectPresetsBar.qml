@@ -55,6 +55,14 @@ RowLayout {
         preset: manageMenuModel.preset
     }
 
+    Connections {
+        target: manageMenuModel
+
+        function onPresetChanged() {
+            presetSelector.currentIndex = manageMenuModel.presets.findIndex(preset => preset.id === manageMenuModel.preset)
+        }
+    }
+
     ContextMenuLoader {
         id: menuLoader
 
