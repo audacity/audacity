@@ -49,6 +49,11 @@ muse::async::Channel<EffectId> EffectPresetsProvider::userPresetsChanged() const
     return m_userPresetsChanged;
 }
 
+muse::async::Channel<PresetSavedInfo> EffectPresetsProvider::presetSaved() const
+{
+    return m_presetSaved;
+}
+
 Ret EffectPresetsProvider::applyPreset(const EffectInstanceId& effectInstanceId, const PresetId& presetId)
 {
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(effectInstanceId);
@@ -135,6 +140,11 @@ Ret EffectPresetsProvider::saveCurrentAsPreset(const EffectInstanceId& effectIns
 
     if (ok) {
         m_userPresetsChanged.send(effectId);
+        m_presetSaved.send(PresetSavedInfo {
+            effectInstanceId,
+            effectId,
+            presetName
+        });
     }
 
     return ok ? muse::make_ok() : make_ret(Err::InternalError);
