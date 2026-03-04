@@ -116,10 +116,27 @@ RowLayout {
     }
 
     FlatButton {
-        id: manageButton
+        id: deleteBtn
 
         navigation.panel: root.navigationPanel
         navigation.order: resetBtn.navigation.order + 1
+        navigation.name: "delete preset btn"
+
+        Layout.alignment: Qt.AlignVCenter
+
+        icon: IconCode.DELETE_TANK
+        enabled: manageMenuModel.canDeletePreset
+
+        onClicked: {
+            manageMenuModel.deletePreset()
+        }
+    }
+
+    FlatButton {
+        id: manageButton
+
+        navigation.panel: root.navigationPanel
+        navigation.order: deleteBtn.navigation.order + 1
         navigation.name: "manage preset btn"
 
         Layout.alignment: Qt.AlignVCenter

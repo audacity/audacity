@@ -47,6 +47,7 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
 
     // user
     PresetIdList userPresets = presetsController()->userPresets(effectId);
+    m_userPresets.clear();
     {
         MenuItem* menuItem = makeMenu(TranslatableString("effects", "User Presets"), {});
         if (userPresets.empty()) {
@@ -55,6 +56,7 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
             MenuItemList subitems;
             for (const PresetId& p : userPresets) {
                 String name = au3::wxToString(p);
+                m_userPresets << name.toQString();
                 MenuItem* item = makeMenuItem(makeApplyAction(instanceId, p).toString(), TranslatableString::untranslatable(name));
                 item->setId("user_apply_" + name);
                 subitems << item;
@@ -73,26 +75,6 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
         q.addParam("instanceId", Val(instanceId));
         MenuItem* item = makeMenuItem(q.toString());
         items << item;
-    }
-
-    {
-        MenuItem* menuItem = makeMenu(TranslatableString("effects", "Delete Presets"), {});
-        if (userPresets.empty()) {
-            menuItem->setState(ui::UiActionState::make_disabled());
-        } else {
-            MenuItemList subitems;
-            for (const PresetId& p : userPresets) {
-                String name = au3::wxToString(p);
-                ActionQuery q("action://effects/presets/delete");
-                q.addParam("effectId", Val(effectId.toStdString()));
-                q.addParam("presetId", Val(au3::wxToStdString(p)));
-                MenuItem* item = makeMenuItem(q.toString(), TranslatableString::untranslatable(name));
-                item->setId("user_delete_" + name);
-                subitems << item;
-            }
-            menuItem->setSubitems(subitems);
-        }
-        items << menuItem;
     }
 
     items << makeSeparator();
@@ -169,6 +151,7 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
     setItems(items);
     m_presets = presets;
     emit presetsChanged();
+    emit canDeletePresetChanged();
 }
 
 int EffectManageMenu::instanceId_prop() const
@@ -200,11 +183,17 @@ void EffectManageMenu::setPreset(QString presetId)
     m_currentPreset = presetId;
     resetPreset();
     emit presetChanged();
+    emit canDeletePresetChanged();
 }
 
 bool EffectManageMenu::enabled() const
 {
     return m_presets.size() > 1; // Do not take default preset into account
+}
+
+bool EffectManageMenu::canDeletePreset() const
+{
+    return m_userPresets.contains(m_currentPreset);
 }
 
 void EffectManageMenu::resetPreset()
@@ -222,6 +211,24 @@ void EffectManageMenu::savePresetAs()
     dispatcher()->dispatch(q);
     emit presetsChanged();
     emit presetChanged();
+    emit canDeletePresetChanged();
+}
+
+void EffectManageMenu::deletePreset()
+{
+    if (!canDeletePreset()) {
+        return;
+    }
+
+    const EffectId effectId = instancesRegister()->effectIdByInstanceId(m_instanceId);
+    if (effectId.empty()) {
+        return;
+    }
+
+    ActionQuery q("action://effects/presets/delete");
+    q.addParam("effectId", Val(effectId.toStdString()));
+    q.addParam("presetId", Val(m_currentPreset.toStdString()));
+    dispatcher()->dispatch(q);
 }
 
 bool EffectManageMenu::useVendorUI() const
