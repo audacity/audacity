@@ -179,7 +179,7 @@ void BuiltinEffectsLoader::init()
             regView(CompressorEffect::Symbol, u"qrc:/dynamics/compressor/CompressorView.qml");
             regMeta(desc,
                     muse::mtrc("effects", "Compressor"),
-                    muse::mtrc("effects", "Reduces \"dynamic range\", or differences between loud and quiet parts"),
+                    muse::mtrc("effects", "Reduces “dynamic range”, or differences between loud and quiet parts"),
                     true
                     );
         } else if (symbol == LimiterEffect::Symbol) {
