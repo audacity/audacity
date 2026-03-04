@@ -3,6 +3,8 @@
 #include "framework/uicomponents/qml/Muse/UiComponents/abstractmenumodel.h"
 #include "framework/global/modularity/ioc.h"
 
+#include <QStringList>
+
 #include "effects/effects_base/ieffectpresetsprovider.h"
 #include "effects/effects_base/ieffectinstancesregister.h"
 #include "effects/effects_base/ieffectsconfiguration.h"
@@ -16,6 +18,7 @@ class EffectManageMenu : public muse::uicomponents::AbstractMenuModel
     Q_PROPERTY(QVariantList presets READ presets NOTIFY presetsChanged FINAL)
     Q_PROPERTY(QString preset READ preset WRITE setPreset NOTIFY presetChanged FINAL)
     Q_PROPERTY(bool enabled READ enabled NOTIFY presetsChanged FINAL)
+    Q_PROPERTY(bool canDeletePreset READ canDeletePreset NOTIFY canDeletePresetChanged FINAL)
     Q_PROPERTY(bool useVendorUI READ useVendorUI WRITE setUseVendorUI NOTIFY useVendorUIChanged FINAL)
 
     muse::GlobalInject<IEffectsConfiguration> configuration;
@@ -33,11 +36,13 @@ public:
     QString preset() const;
     void setPreset(QString presetId);
     bool enabled() const;
+    bool canDeletePreset() const;
     bool useVendorUI() const;
     void setUseVendorUI(bool value);
 
     Q_INVOKABLE void resetPreset();
     Q_INVOKABLE void savePresetAs();
+    Q_INVOKABLE void deletePreset();
 
     Q_INVOKABLE void load() override;
 
@@ -45,6 +50,7 @@ signals:
     void instanceIdChanged();
     void presetsChanged();
     void presetChanged();
+    void canDeletePresetChanged();
     void useVendorUIChanged();
 
 private:
@@ -53,6 +59,7 @@ private:
 
     int m_instanceId = -1;
     QString m_currentPreset;
+    QStringList m_userPresets;
     QVariantList m_presets;
 };
 }
