@@ -506,8 +506,8 @@ UiActionList STATIC_ACTIONS = {
     UiAction("track-view-item-context-menu",
              au::context::UiCtxProjectFocused,
              au::context::CTX_PROJECT_FOCUSED,
-             TranslatableString("action", "Open item's context menu"),
-             TranslatableString("action", "Open item's context menu")
+             TranslatableString("action", "Open item’s context menu"),
+             TranslatableString("action", "Open item’s context menu")
              )
 };
 }

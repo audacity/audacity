@@ -58,7 +58,7 @@ StyledPopupView {
     }
 
     Component.onCompleted: {
-        meterModel.init();
+        meterModel.init()
     }
 
     Column {
@@ -145,16 +145,16 @@ StyledPopupView {
                     meterModel: meterModel
 
                     anchors.left: parent.left
-                    anchors.leftMargin: -handleWidth/2
+                    anchors.leftMargin: -handleWidth / 2
                     anchors.right: parent.right
-                    anchors.rightMargin: -handleWidth/2 + leftVolumePressure.overloadWidth
+                    anchors.rightMargin: -handleWidth / 2 + leftVolumePressure.overloadWidth
                     anchors.top: parent.top
                     anchors.topMargin: -1
 
                     navigation.panel: navPanel
                     navigation.order: 1
 
-                    onVolumeLevelMoved: function(level) {
+                    onVolumeLevelMoved: function (level) {
                         root.volumeLevelChangeRequested(Math.round(level * 100) / 100)
                     }
 
@@ -181,7 +181,7 @@ StyledPopupView {
 
             height: prv.textHeight
 
-            text: qsTrc("record", "Note: this control is tied to your computer's main mic volume")
+            text: qsTrc("record", "Note: this control is tied to your computer’s main mic volume")
             horizontalAlignment: Text.AlignLeft
             wrapMode: Text.WordWrap
         }
