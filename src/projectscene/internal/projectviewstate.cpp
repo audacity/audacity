@@ -105,7 +105,7 @@ ZoomState getProjectZoomState(au::au3::Au3Project* au3Project)
     };
 }
 
-std::pair<float, float> getVerticalDisplayBounds(std::shared_ptr<au::project::IAudacityProject> project,
+std::pair<float, float> getVerticalDisplayBounds(const std::shared_ptr<au::project::IAudacityProject>& project,
                                                  const au::trackedit::TrackId& trackId)
 {
     au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
@@ -122,7 +122,7 @@ std::pair<float, float> getVerticalDisplayBounds(std::shared_ptr<au::project::IA
     return { min, max };
 }
 
-void setVerticalDisplayBounds(std::shared_ptr<au::project::IAudacityProject> project, const au::trackedit::TrackId& trackId,
+void setVerticalDisplayBounds(const std::shared_ptr<au::project::IAudacityProject>& project, const au::trackedit::TrackId& trackId,
                               const std::pair<float, float>& bounds)
 {
     au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
@@ -136,7 +136,8 @@ void setVerticalDisplayBounds(std::shared_ptr<au::project::IAudacityProject> pro
     cache.SetDisplayBounds(bounds.first, bounds.second);
 }
 
-au::trackedit::TrackViewType getTrackViewType(std::shared_ptr<au::project::IAudacityProject> project, const au::trackedit::TrackId& trackId)
+au::trackedit::TrackViewType getTrackViewType(const std::shared_ptr<au::project::IAudacityProject>& project,
+                                              const au::trackedit::TrackId& trackId)
 {
     const au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
 
@@ -150,8 +151,8 @@ au::trackedit::TrackViewType getTrackViewType(std::shared_ptr<au::project::IAuda
     return viewType == au::trackedit::TrackViewType::Undefined ? au::trackedit::TrackViewType::Waveform : viewType;
 }
 
-void setTrackViewType(std::shared_ptr<au::project::IAudacityProject> project, const au::trackedit::TrackId& trackId,
-                      au::trackedit::TrackViewType viewType)
+void setTrackViewType(const std::shared_ptr<au::project::IAudacityProject>& project, const au::trackedit::TrackId& trackId,
+                      au::trackedit::TrackViewType viewType, au::spectrogram::IFrequencySelectionController& frequencySelectionController)
 {
     au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
 
@@ -162,9 +163,13 @@ void setTrackViewType(std::shared_ptr<au::project::IAudacityProject> project, co
 
     auto& cache = au::au3::TrackViewTypeAttachment::Get(waveTrack);
     cache.SetTrackViewType(viewType);
+
+    const auto hasSpectrogram = viewType == au::trackedit::TrackViewType::Spectrogram
+                                || viewType == au::trackedit::TrackViewType::WaveformAndSpectrogram;
+    frequencySelectionController.setShowsSpectrogram(trackId, hasSpectrogram);
 }
 
-int getTrackRulerType(std::shared_ptr<au::project::IAudacityProject> project, const au::trackedit::TrackId& trackId)
+int getTrackRulerType(const std::shared_ptr<au::project::IAudacityProject>& project, const au::trackedit::TrackId& trackId)
 {
     const au::au3::Au3Project* au3Project = reinterpret_cast<const au::au3::Au3Project*>(project->au3ProjectPtr());
 
@@ -177,7 +182,7 @@ int getTrackRulerType(std::shared_ptr<au::project::IAudacityProject> project, co
     return static_cast<int>(cache.GetRulerType());
 }
 
-void setTrackRulerType(std::shared_ptr<au::project::IAudacityProject> project, const au::trackedit::TrackId& trackId, int rulerType)
+void setTrackRulerType(const std::shared_ptr<au::project::IAudacityProject>& project, const au::trackedit::TrackId& trackId, int rulerType)
 {
     au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
 
@@ -248,6 +253,14 @@ void ProjectViewState::init(const std::shared_ptr<au3::IAu3Project>& project)
         prj->trackInserted().onReceive(this, [this](const trackedit::Track&, int) {
             updateItemsBoundaries(false);
         });
+
+        for (const auto& trackId : prj->trackIdList()) {
+            const auto prj = globalContext()->currentProject();
+            const auto viewType = getTrackViewType(prj, trackId);
+            const auto hasSpectrogram = viewType == au::trackedit::TrackViewType::Spectrogram
+                                        || viewType == au::trackedit::TrackViewType::WaveformAndSpectrogram;
+            frequencySelectionController()->setShowsSpectrogram(trackId, hasSpectrogram);
+        }
     });
 
     projectHistory()->historyChanged().onNotify(this, [this]() {
@@ -817,7 +830,7 @@ void ProjectViewState::setTrackViewType(const trackedit::TrackId& trackId, track
     const auto it = m_tracks.find(trackId);
     if (it != m_tracks.end()) {
         it->second.viewType.set(viewType);
-        ::setTrackViewType(project, trackId, viewType);
+        ::setTrackViewType(project, trackId, viewType, *frequencySelectionController());
         projectHistory()->modifyState();
         projectHistory()->markUnsaved();
     }
@@ -838,7 +851,7 @@ void ProjectViewState::toggleGlobalSpectrogramView()
             if (trackData.viewType.val == TrackViewType::Waveform || trackData.viewType.val == TrackViewType::WaveformAndSpectrogram) {
                 changed = true;
                 trackData.viewType.set(TrackViewType::Spectrogram);
-                ::setTrackViewType(prj, trackId, TrackViewType::Spectrogram);
+                ::setTrackViewType(prj, trackId, TrackViewType::Spectrogram, *frequencySelectionController());
             }
         }
     } else {
@@ -847,7 +860,7 @@ void ProjectViewState::toggleGlobalSpectrogramView()
             if (trackData.viewType.val == TrackViewType::Spectrogram || trackData.viewType.val == TrackViewType::WaveformAndSpectrogram) {
                 changed = true;
                 trackData.viewType.set(TrackViewType::Waveform);
-                ::setTrackViewType(prj, trackId, TrackViewType::Waveform);
+                ::setTrackViewType(prj, trackId, TrackViewType::Waveform, *frequencySelectionController());
             }
         }
     }
