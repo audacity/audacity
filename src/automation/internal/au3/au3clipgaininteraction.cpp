@@ -120,7 +120,7 @@ std::optional<AutomationInfo> Au3ClipGainInteraction::clipGainInfo(
     }
 
     std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
-    IF_ASSERT_FAILED(clip) {
+    if (!clip) {
         return {};
     }
 
@@ -145,7 +145,7 @@ AutomationPoints Au3ClipGainInteraction::clipGainPoints(const trackedit::ClipKey
     }
 
     std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
-    IF_ASSERT_FAILED(clip) {
+    if (!clip) {
         return {};
     }
 
