@@ -28,13 +28,13 @@ BaseSection {
         controlWidth: 120
         spacing: root.columnSpacing
 
-        measureUnitsSymbol: qsTrc("global", " seconds")
+        measureUnitsSymbol: " " + qsTrc("global", "seconds")
 
         navigation.name: "ShortSkipControl"
         navigation.panel: root.navigation
         navigation.row: 0
 
-        onValueEdited: function(newValue) {
+        onValueEdited: function (newValue) {
             playbackPreferencesModel.setShortSkip(newValue)
         }
     }
@@ -48,13 +48,13 @@ BaseSection {
         controlWidth: 120
         spacing: root.columnSpacing
 
-        measureUnitsSymbol: qsTrc("global", " seconds")
+        measureUnitsSymbol: " " + qsTrc("global", "seconds")
 
         navigation.name: "LongSkipControl"
         navigation.panel: root.navigation
         navigation.row: 1
 
-        onValueEdited: function(newValue) {
+        onValueEdited: function (newValue) {
             playbackPreferencesModel.setLongSkip(newValue)
         }
     }
