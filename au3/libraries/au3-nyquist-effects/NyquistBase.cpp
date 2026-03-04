@@ -937,9 +937,8 @@ bool NyquistBase::Process(EffectInstance&, EffectSettings& settings)
                     highHz.Printf(wxT("(float %s)"), Internat::ToString(mF1));
                 }
 
-                if ((mF0 >= 0.0) && (mF1 >= 0.0)) {
-                    centerHz.Printf(
-                        wxT("(float %s)"), Internat::ToString(sqrt(mF0 * mF1)));
+                if (mCenterFrequency >= 0.0) {
+                    centerHz.Printf(wxT("(float %s)"), Internat::ToString(mCenterFrequency));
                 }
 
                 if ((mF0 > 0.0) && (mF1 >= mF0)) {

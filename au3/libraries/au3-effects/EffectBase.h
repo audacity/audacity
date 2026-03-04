@@ -102,6 +102,9 @@ protected:
 
     double mF0{ 0. };
     double mF1{ 0. };
+    //! Not necessarily halfway between f0 and f1, e.g. on a logarithmic scale it'd be sqrt(f0*f1).
+    double mCenterFrequency{ 0. };
+
     bool mSpectralSelectionEnabled{ false };
 
     wxArrayString mPresetNames;

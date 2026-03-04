@@ -485,7 +485,8 @@ void SelectionViewController::setFrequencySelection(double y1, double y2)
 
     const auto freq1 = spectrogramHitFrequency(*m_spectrogramHit, y1);
     const auto freq2 = spectrogramHitFrequency(*m_spectrogramHit, y2);
-    frequencySelectionController()->setFrequencySelection({ m_spectrogramHit->trackId, freq1, freq2 });
+    const auto centerFreq = spectrogramHitFrequency(*m_spectrogramHit, (y1 + y2) / 2);
+    frequencySelectionController()->setFrequencySelection({ m_spectrogramHit->trackId, freq1, freq2, centerFreq });
 }
 
 bool SelectionViewController::isInExtendedSpectrogram(const spectrogram::SpectrogramHit& hit, double y) const
