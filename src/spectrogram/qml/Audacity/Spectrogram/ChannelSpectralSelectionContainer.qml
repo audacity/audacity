@@ -107,7 +107,7 @@ Item {
         property var draggedEdges: []
 
         onPressed: function (mouse) {
-            switch (marquee.hitHandle(mouse.x, mouse.y, root)) {
+            switch (marquee.hitHandle(mouse.x - marquee.x, mouse.y - marquee.y, marquee)) {
             case marquee.handleId.TopLeft:
                 draggedEdges = [topEdge, leftEdge]
                 break
@@ -150,7 +150,7 @@ Item {
                     prv.edgePositionChanged(draggedEdges[i], mouse)
                 }
             } else {
-                switch (marquee.hitHandle(mouse.x, mouse.y, root)) {
+                switch (marquee.hitHandle(mouse.x - marquee.x, mouse.y - marquee.y, marquee)) {
                 case marquee.handleId.TopLeft:
                 case marquee.handleId.BottomRight:
                     cursorShape = Qt.SizeFDiagCursor
@@ -186,9 +186,10 @@ Item {
     MouseArea {
         // To make sure that the cursor stays as SizeVerCursor during vertical drag even when the mouse is outside of the centerFrequencyMouseArea
         anchors.fill: parent
+        visible: selectionModel.verticalDragActive
         hoverEnabled: true
         acceptedButtons: Qt.NoButton
-        cursorShape: selectionModel.verticalDragActive ? Qt.SizeVerCursor : Qt.ArrowCursor
+        cursorShape: Qt.SizeVerCursor
     }
 
     MarqueeSelection {
