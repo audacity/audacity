@@ -28,7 +28,8 @@ public:
         : muse::Injectable(ctx) {}
 
     void applyPreset(const EffectInstanceId& effectInstanceId, const PresetId& presetId) override;
-    void saveCurrentAsPreset(const EffectInstanceId& effectInstanceId) override;
+    void savePresetAs(const EffectInstanceId& effectInstanceId) override;
+    void savePreset(const EffectInstanceId& effectInstanceId, const PresetId& presetId) override;
     void deletePreset(const EffectId& effectId, const PresetId& presetId) override;
     void importPreset(const EffectInstanceId& effectInstanceId) override;
     void exportPreset(const EffectInstanceId& effectInstanceId) override;

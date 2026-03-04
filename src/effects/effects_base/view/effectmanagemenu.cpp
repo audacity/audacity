@@ -71,7 +71,7 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
     }
 
     {
-        ActionQuery q("action://effects/presets/save");
+        ActionQuery q("action://effects/presets/save_as");
         q.addParam("instanceId", Val(instanceId));
         MenuItem* item = makeMenuItem(q.toString());
         items << item;
@@ -206,7 +206,7 @@ void EffectManageMenu::resetPreset()
 
 void EffectManageMenu::savePresetAs()
 {
-    ActionQuery q("action://effects/presets/save");
+    ActionQuery q("action://effects/presets/save_as");
     q.addParam("instanceId", Val(m_instanceId));
     dispatcher()->dispatch(q);
     emit presetsChanged();

@@ -21,13 +21,23 @@ RowLayout {
     // Expose the manage menu model so parent can listen to its signals
     property alias manageMenuModel: manageMenuModel
 
+    property var activeMenuModel: null
+
     spacing: 4
 
     function manage(button) {
         // Reload the menu to ensure the checkmark state is current
         manageMenuModel.load()
+        activeMenuModel = manageMenuModel
         var pos = Qt.point(button.x, button.y + button.height)
         menuLoader.show(pos, manageMenuModel)
+    }
+
+    function save(button) {
+        saveMenuModel.load()
+        activeMenuModel = saveMenuModel
+        var pos = Qt.point(button.x, button.y + button.height)
+        menuLoader.show(pos, saveMenuModel)
     }
 
     Component.onCompleted: {
@@ -39,6 +49,12 @@ RowLayout {
         instanceId: root.instanceId
     }
 
+    EffectSaveMenu {
+        id: saveMenuModel
+        instanceId: root.instanceId
+        preset: manageMenuModel.preset
+    }
+
     ContextMenuLoader {
         id: menuLoader
 
@@ -47,7 +63,9 @@ RowLayout {
         parentWindow: root.parentWindow
 
         onHandleMenuItem: function (itemId) {
-            manageMenuModel.handleMenuItem(itemId)
+            if (root.activeMenuModel) {
+                root.activeMenuModel.handleMenuItem(itemId)
+            }
         }
     }
 
@@ -90,7 +108,7 @@ RowLayout {
         icon: IconCode.SAVE
 
         onClicked: {
-            manageMenuModel.savePresetAs()
+            root.save(saveBtn)
         }
     }
 

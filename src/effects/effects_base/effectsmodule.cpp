@@ -24,6 +24,7 @@
 #include "internal/parameterextractorregistry.h"
 
 #include "view/effectmanagemenu.h"
+#include "view/effectsavemenu.h"
 #include "view/effectsuiengine.h"
 #include "view/effectsviewutils.h"
 #include "view/destructiveeffectviewerdialogmodel.h"
@@ -70,6 +71,7 @@ void EffectsModule::registerResources()
 void EffectsModule::registerUiTypes()
 {
     qmlRegisterType<EffectManageMenu>("Audacity.Effects", 1, 0, "EffectManageMenu");
+    qmlRegisterType<EffectSaveMenu>("Audacity.Effects", 1, 0, "EffectSaveMenu");
     qmlRegisterType<DestructiveEffectViewerDialogModel>("Audacity.Effects", 1, 0, "DestructiveEffectViewerDialogModel");
     qmlRegisterType<RealtimeEffectViewerDialogModel>("Audacity.Effects", 1, 0, "RealtimeEffectViewerDialogModel");
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(GeneratedEffectViewerModelFactory);
