@@ -9,13 +9,15 @@
 #include "internal/frequencyselectioncontroller.h"
 
 #include "framework/global/modularity/ioc.h"
+#include "framework/global/async/asyncable.h"
 
 #include <QObject>
+#include <QQmlParserStatus>
 
 #include <utility>
 
 namespace au::spectrogram {
-class ChannelSpectralSelectionModel : public QObject, public muse::Injectable
+class ChannelSpectralSelectionModel : public QObject, public QQmlParserStatus, public muse::Injectable, public muse::async::Asyncable
 {
     Q_OBJECT
 
@@ -92,6 +94,9 @@ signals:
     void centerFrequencyChangeRequested(double frequency);
 
 private:
+    void classBegin() override {}
+    void componentComplete() override;
+
     std::pair<double, double> selectionYRange() const;
     double positionToFrequency(double y) const;
     double frequencyToPosition(double frequency) const;
