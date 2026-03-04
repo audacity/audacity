@@ -46,7 +46,7 @@ void EffectPresetsScenario::saveCurrentAsPreset(const EffectInstanceId& effectIn
     if (alreadyExists) {
         IInteractive::Result res = interactive()->questionSync(
             muse::trc("effects", "Save Preset"),
-            muse::mtrc("effects", "Preset \"%1\" already exists, replace?")
+            muse::mtrc("effects", "Preset “%1” already exists, replace?")
             .arg(String::fromStdString(name)).toStdString(),
             { IInteractive::Button::Cancel, IInteractive::Button::Yes });
 
@@ -66,7 +66,7 @@ void EffectPresetsScenario::deletePreset(const EffectId& effectId, const PresetI
 {
     IInteractive::Result res = interactive()->questionSync(
         muse::trc("effects", "Delete Preset"),
-        muse::mtrc("effects", "Are you sure you want to delete \"%1\"?")
+        muse::mtrc("effects", "Are you sure you want to delete “%1”?")
         .arg(au3::wxToString(presetId)).toStdString(),
         { IInteractive::Button::No, IInteractive::Button::Yes });
 

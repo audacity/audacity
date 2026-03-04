@@ -423,7 +423,7 @@ muse::RetVal<muse::io::path_t> OpenSaveProjectScenario::resolveLegacyProjectForm
     fileSystem()->copy(path, newFilename);
 
     interactive()->infoSync(muse::trc("project/open", ""),
-                            muse::mtrc("project/open", "The project was saved as \"%1\"").arg(newFilename.toString()).toStdString(),
+                            muse::mtrc("project/open", "The project was saved as “%1”").arg(newFilename.toString()).toStdString(),
     {
         muse::IInteractive::ButtonData(
             muse::IInteractive::Button::Ok, muse::trc("project/open", "Continue"), false)
