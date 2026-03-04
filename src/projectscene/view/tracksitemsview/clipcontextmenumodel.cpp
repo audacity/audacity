@@ -57,6 +57,11 @@ void ClipContextMenuModel::load()
         makeItemWithArg("clip-render-pitch-speed"),
     };
 
+    if (frequencySelectionController()->showsSpectrogram(m_clipKey.trackId())) {
+        items.push_back(makeSeparator());
+        items.push_back(makeMenuItem("action://trackedit/track-spectrogram-settings"));
+    }
+
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (prj) {
         prj->clipList(m_clipKey.trackId()).onItemChanged(this, [this](const trackedit::Clip& clip) {
