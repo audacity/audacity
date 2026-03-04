@@ -34,9 +34,7 @@ void FrequencySelectionController::setFrequencySelection(FrequencySelection freq
     });
 
     m_frequencySelection = frequencySelection;
-    if (frequencySelection.isValid()) {
-        m_frequencySelectionChanged.send(frequencySelection.trackId);
-    }
+    m_frequencySelectionChanged.send(frequencySelection.trackId);
 }
 
 void FrequencySelectionController::resetFrequencySelection()
