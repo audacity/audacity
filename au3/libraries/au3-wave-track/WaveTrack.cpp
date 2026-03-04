@@ -1445,12 +1445,11 @@ void WaveTrack::ClearAndPasteAtSameTempo(
     const auto tolerance = 2.0 / track.GetRate();
 
     constexpr auto addCutLines = false;
-    // ClearAndPaste means "replace t0 to t1 by nothing and paste (eating around if necessary) the source track".
-    constexpr auto split = true;
+    constexpr auto split = true; // Do not move the remaining right part of the clip back to the left.
     constexpr auto moveClips = false;
 
-    // Now, make room as needed
-    track.HandleClear(t0, std::max(t1, t0 + srcEndTime), addCutLines, split, moveClips, clearByTrimming);
+    // Now, clear the selection
+    track.HandleClear(t0, t1, addCutLines, split, moveClips, clearByTrimming);
 
     // And paste in the new data
     track.PasteWaveTrackAtSameTempo(t0, src, merge, moveClips);

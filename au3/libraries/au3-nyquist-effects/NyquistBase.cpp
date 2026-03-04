@@ -1570,12 +1570,10 @@ bool NyquistBase::ProcessOne(
     {
         PasteTimeWarper warper { mT1, mT0 + tempTrack->GetEndTime() };
         auto pProject = FindProject();
-        const auto& selectedRegion = ViewInfo::Get(*pProject).selectedRegion;
         const bool mergeClips = (mMergeClips < 0)
                                 ? GetType() != EffectTypeGenerate
                                 : mMergeClips > 0;
-        mCurChannelGroup->ClearAndPaste(
-            selectedRegion.t0(), selectedRegion.t1(), *tempTrack, mRestoreSplits, mergeClips, &warper);
+        mCurChannelGroup->ClearAndPaste(mT0, mT0 + mOutputDuration, *tempTrack, mRestoreSplits, mergeClips, &warper);
     }
 
     // If we were first in the group adjust non-selected group tracks
