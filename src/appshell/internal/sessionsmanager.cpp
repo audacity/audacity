@@ -44,6 +44,10 @@ void SessionsManager::init()
 
 void SessionsManager::deinit()
 {
+    if (!multiwindowsProvider()) {
+        return;
+    }
+
     if (!multiwindowsProvider()->isFirstWindow()) {
         return;
     }
