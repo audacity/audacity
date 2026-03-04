@@ -343,7 +343,7 @@ std::optional<secs_t> Au3SelectionController::leftMostSelectedClipStartTime() co
         }
 
         std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, selectedClip.itemId);
-        IF_ASSERT_FAILED(clip) {
+        if (!clip) {
             continue;
         }
 
@@ -875,7 +875,7 @@ bool Au3SelectionController::selectionContainsGroup() const
         }
 
         std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
-        IF_ASSERT_FAILED(clip) {
+        if (!clip) {
             return false;
         }
 
@@ -903,7 +903,7 @@ bool Au3SelectionController::isSelectionGrouped() const
         }
 
         std::shared_ptr<WaveClip> clip = au3::DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
-        IF_ASSERT_FAILED(clip) {
+        if (!clip) {
             return false;
         }
 
