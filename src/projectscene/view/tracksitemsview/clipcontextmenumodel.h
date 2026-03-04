@@ -4,6 +4,7 @@
 #pragma once
 
 #include "context/iglobalcontext.h"
+#include "spectrogram/ifrequencyselectioncontroller.h"
 #include "uicomponents/qml/Muse/UiComponents/abstractmenumodel.h"
 
 #include "iprojectsceneconfiguration.h"
@@ -17,6 +18,7 @@ class ClipContextMenuModel : public muse::uicomponents::AbstractMenuModel
     muse::GlobalInject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
 
     muse::Inject<context::IGlobalContext> globalContext{ this };
+    muse::Inject<spectrogram::IFrequencySelectionController> frequencySelectionController{ this };
 
     Q_PROPERTY(ClipKey clipKey READ clipKey WRITE setClipKey NOTIFY clipKeyChanged FINAL)
 
