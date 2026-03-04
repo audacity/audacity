@@ -28,7 +28,7 @@ void EffectPresetsScenario::applyPreset(const EffectInstanceId& effectInstanceId
     }
 }
 
-void EffectPresetsScenario::saveCurrentAsPreset(const EffectInstanceId& effectInstanceId)
+void EffectPresetsScenario::savePresetAs(const EffectInstanceId& effectInstanceId)
 {
     RetVal<Val> rv = interactive()->openSync("audacity://effects/presets/input_name");
     std::string name = rv.val.toString();
@@ -57,6 +57,27 @@ void EffectPresetsScenario::saveCurrentAsPreset(const EffectInstanceId& effectIn
     }
 
     Ret ret = presetsProvider()->saveCurrentAsPreset(effectInstanceId, name);
+    if (!ret) {
+        showError(ret);
+    }
+}
+
+void EffectPresetsScenario::savePreset(const EffectInstanceId& effectInstanceId, const PresetId& presetId)
+{
+    if (presetId.empty()) {
+        return;
+    }
+
+    const EffectId effectId = instancesRegister()->effectIdByInstanceId(effectInstanceId);
+    if (effectId.empty()) {
+        return;
+    }
+
+    if (!presetsProvider()->hasUserPresetWithName(effectId, presetId.ToStdString())) {
+        return;
+    }
+
+    Ret ret = presetsProvider()->saveCurrentAsPreset(effectInstanceId, presetId.ToStdString());
     if (!ret) {
         showError(ret);
     }

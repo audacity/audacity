@@ -32,12 +32,17 @@ static UiActionList STATIC_ACTIONS = {
     UiAction("action://effects/presets/apply",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "&Apply Presets")
+             TranslatableString("action", "&Apply Preset")
+             ),
+    UiAction("action://effects/presets/save_as",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "&Save Preset…")
              ),
     UiAction("action://effects/presets/save",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "&Save Presets…")
+             TranslatableString("action", "&Save Preset")
              ),
     UiAction("action://effects/presets/delete",
              au::context::UiCtxAny,
