@@ -167,6 +167,11 @@ public:
 
     bool IsOk();
 
+    std::string GetSpectralEffectId() const
+    {
+        return mSpectralEffectId;
+    }
+
 private:
     static int mReentryCount;
     // NyquistBase implementation
@@ -274,6 +279,7 @@ protected:
     EffectType mType;
     EffectType mPromptType; // If a prompt, need to remember original type.
     EffectGroup mGroup = EffectGroup::Unspecified;
+    std::string mSpectralEffectId;
 
     bool mEnablePreview;
     bool mDebugButton; // Set to false to disable Debug button.

@@ -3,6 +3,7 @@
  */
 #pragma once
 
+#include "framework/actions/actiontypes.h"
 #include "framework/global/realfn.h"
 
 namespace au::spectrogram {
@@ -114,4 +115,18 @@ struct SpectrogramRulerTicks {
     std::vector<SpectrogramRulerTick> major;
     std::vector<SpectrogramRulerTick> minor;
 };
+
+enum class SpectralEffectId {
+    DeleteSelection,
+    DeleteCenterFrequency,
+    AmplifySelection,
+    AmplifyCenterFrequency,
+};
+
+struct SpectralEffect {
+    SpectralEffectId spectralEffectId;
+    muse::actions::ActionCode action;
+};
+
+using SpectralEffectList = std::vector<SpectralEffect>;
 }
