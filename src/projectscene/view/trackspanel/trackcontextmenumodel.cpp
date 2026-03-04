@@ -461,10 +461,6 @@ muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackViewItems()
     muse::uicomponents::MenuItemList items;
     items.reserve(5);
 
-    const auto prj = globalContext()->currentTrackeditProject();
-    const std::optional<trackedit::Track> track = prj ? prj->track(m_trackId) : std::nullopt;
-    const auto trackTitle = track.has_value() ? track->title.toStdString() : "";
-
     for (const std::string action : { TRACK_VIEW_WAVEFORM_ACTION,
                                       TRACK_VIEW_SPECTROGRAM_ACTION,
                                       TRACK_VIEW_MULTI_ACTION,
@@ -476,7 +472,6 @@ muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackViewItems()
         } else {
             muse::actions::ActionQuery query(action);
             query.addParam("trackId", muse::Val { m_trackId });
-            query.addParam("trackTitle", muse::Val { trackTitle });
             items.push_back(makeMenuItem(query.toString()));
             m_trackViewTypeChangeActionCodeList.push_back(action);
         }
