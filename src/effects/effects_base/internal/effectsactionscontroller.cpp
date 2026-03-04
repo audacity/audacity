@@ -157,7 +157,8 @@ bool EffectsActionsController::canReceiveAction(const muse::actions::ActionCode&
             return spectralEffect.action == code;
         });
         if (it != spectralEffects.end()) {
-            return frequencySelectionController()->frequencySelection().isValid();
+            const spectrogram::FrequencySelection selection = frequencySelectionController()->frequencySelection();
+            return frequencySelectionController()->showsSpectrogram(selection.trackId) && selection.isValid();
         }
 
         return true;

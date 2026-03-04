@@ -484,30 +484,11 @@ bool NyquistBase::Init()
         // Completely skip the spectral editing limitations if there is no
         // project because that is editing of macro parameters
         if (const auto project = FindProject()) {
-            bool bAllowSpectralEditing = false;
-            bool hasSpectral = false;
-            for (auto t : TrackList::Get(*project).Selected<const WaveTrack>()) {
-                // Find() not Get() to avoid creation-on-demand of views in case we
-                // are only previewing
-                hasSpectral |= GetHasSpectralDisplayHook::Call(t);
-
-                if (hasSpectral && mSpectralSelectionEnabled) {
-                    bAllowSpectralEditing = true;
-                    break;
-                }
-            }
-
-            if (!bAllowSpectralEditing || ((mF0 < 0.0) && (mF1 < 0.0))) {
-                if (!hasSpectral) {
-                    mLastError
-                        = XO("Enable track spectrogram view before\n"
-                             "applying 'Spectral' effects.").Translation().ToStdString();
-                } else {
-                    mLastError
-                        = XO("To use 'Spectral effects', enable 'Spectral Selection'\n"
-                             "in the track Spectrogram settings and select the\n"
-                             "frequency range for the effect to act on.").Translation().ToStdString();
-                }
+            if (!mSpectralSelectionEnabled || ((mF0 < 0.0) && (mF1 < 0.0))) {
+                mLastError
+                    = XO("To use 'Spectral effects', enable 'Spectral Selection'\n"
+                         "in the track Spectrogram settings and select the\n"
+                         "frequency range for the effect to act on.").Translation().ToStdString();
                 return false;
             }
         }

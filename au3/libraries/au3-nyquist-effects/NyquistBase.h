@@ -90,12 +90,6 @@ public:
     {
     };
 
-    struct NYQUIST_EFFECTS_API GetHasSpectralDisplayHook : GlobalHook<
-            GetHasSpectralDisplayHook,
-            bool(const WaveTrack*)>
-    {
-    };
-
     struct NYQUIST_EFFECTS_API ShowDebugOutputHook : GlobalHook<
             ShowDebugOutputHook, void(
                 const TranslatableString& title,
