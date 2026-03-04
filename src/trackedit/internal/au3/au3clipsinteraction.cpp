@@ -38,7 +38,7 @@ using namespace au::trackedit;
 using namespace au::au3;
 
 namespace {
-static const std::string mixingDownToMonoLabel = muse::trc("trackedit", "Mixing down to mono...");
+static const std::string mixingDownToMonoLabel = muse::trc("trackedit", "Mixing down to mono…");
 }
 
 Au3ClipsInteraction::Au3ClipsInteraction(const muse::modularity::ContextPtr& ctx)
@@ -261,7 +261,7 @@ bool Au3ClipsInteraction::changeClipOptimizeForVoice(const ClipKey& clipKey, boo
 
 bool Au3ClipsInteraction::renderClipPitchAndSpeed(const ClipKey& clipKey)
 {
-    interactive()->showProgress(muse::trc("trackedit", "Rendering pitch and speed..."), m_progress);
+    interactive()->showProgress(muse::trc("trackedit", "Rendering pitch and speed…"), m_progress);
     m_progress.start();
 
     muse::ProgressResult result;

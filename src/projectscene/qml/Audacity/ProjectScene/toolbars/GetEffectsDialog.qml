@@ -93,7 +93,7 @@ StyledDialogView {
 
                     StyledTextLabel {
                         Layout.alignment: Qt.AlignHCenter
-                        text: qsTrc("projectscene", "Please wait...")
+                        text: qsTrc("projectscene", "Please wait…")
                         font: ui.theme.largeBodyFont
                     }
                 }
