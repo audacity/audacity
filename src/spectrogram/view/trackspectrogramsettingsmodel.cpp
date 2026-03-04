@@ -42,6 +42,7 @@ void TrackSpectrogramSettingsModel::aboutToDestroy()
     if (m_initialTrackConfig) {
         spectrogramService()->copyConfiguration(*m_initialTrackConfig, *m_trackConfig);
         m_trackConfig->setUseGlobalSettings(m_initialTrackConfig->useGlobalSettings());
+        spectrogramService()->notifyAboutTrackSpectrogramConfigurationChanged(m_trackId);
         emit updateRequested();
     }
 }

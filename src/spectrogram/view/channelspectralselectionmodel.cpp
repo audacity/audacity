@@ -14,6 +14,15 @@ ChannelSpectralSelectionModel::ChannelSpectralSelectionModel(QObject* parent)
 {
 }
 
+void ChannelSpectralSelectionModel::componentComplete()
+{
+    spectrogramService()->trackSpectrogramConfigurationChanged().onReceive(this, [this](int trackId) {
+        if (trackId == m_trackId) {
+            emit selectionRangeChanged();
+        }
+    });
+}
+
 double ChannelSpectralSelectionModel::positionToFrequency(double y) const
 {
     return spectrogramService()->yToFrequency(m_trackId, y, m_channelHeight);
