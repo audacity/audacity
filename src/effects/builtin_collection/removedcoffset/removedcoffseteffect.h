@@ -33,6 +33,8 @@ public:
     TranslatableString GetDescription() const override;
     ManualPageID ManualPage() const override;
     ::EffectType GetType() const override;
+    EffectGroup GetGroup() const override { return EffectGroup::VolumeAndCompression; }
+    bool IsInteractive() const override { return false; }
 
     bool Process(::EffectInstance& instance, ::EffectSettings& settings) override;
 
