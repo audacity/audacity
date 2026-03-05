@@ -104,10 +104,17 @@ void SelectionViewController::onPressed(double x, double y, spectrogram::Spectro
     });
 }
 
+namespace {
+double clampToSpectrogram(const au::spectrogram::SpectrogramHit& hit, double y)
+{
+    return std::clamp(y, hit.spectrogramY, hit.spectrogramY + hit.spectrogramHeight);
+}
+}
+
 void SelectionViewController::onPositionChanged(double x, double y)
 {
     if (m_spectrogramHit && isInExtendedSpectrogram(*m_spectrogramHit, y)) {
-        y = std::clamp(y, m_spectrogramHit->spectrogramY, m_spectrogramHit->spectrogramY + m_spectrogramHit->spectrogramHeight);
+        y = clampToSpectrogram(*m_spectrogramHit, y);
     }
     if (doOnPositionChanged(x, y)) {
         setFrequencySelection(y, m_startPoint.y());
@@ -265,6 +272,13 @@ void SelectionViewController::updateSelectionVerticalResize(double y1, double y2
 {
     IF_ASSERT_FAILED(m_spectrogramHit) {
         return;
+    }
+
+    if (isInExtendedSpectrogram(*m_spectrogramHit, y1)) {
+        y1 = clampToSpectrogram(*m_spectrogramHit, y1);
+    }
+    if (isInExtendedSpectrogram(*m_spectrogramHit, y2)) {
+        y2 = clampToSpectrogram(*m_spectrogramHit, y2);
     }
 
     const auto vs = viewState();
