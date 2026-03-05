@@ -1,6 +1,8 @@
 #include "effectmanagemenu.h"
 
 #include "effects/effects_base/effectstypes.h"
+#include "au3-components/EffectInterface.h"
+#include "au3-effects/Effect.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 #include <algorithm>
 
@@ -35,8 +37,26 @@ void EffectManageMenu::load()
         }
 
         m_currentPreset = presetId;
+        m_isPresetUnsaved = false;
+        updatePresetDisplayNames();
         emit presetChanged();
         emit canDeletePresetChanged();
+    }, muse::async::Asyncable::Mode::SetReplace);
+
+    parametersProvider()->parameterChanged().onReceive(this, [this](const ParameterChangedData& data) {
+        if (data.instanceId != m_instanceId || m_currentPreset.isEmpty()) {
+            return;
+        }
+
+        setPresetUnsaved(isCurrentPresetUnsaved());
+    }, muse::async::Asyncable::Mode::SetReplace);
+
+    instancesRegister()->settingsChanged(m_instanceId).onNotify(this, [this] {
+        if (m_currentPreset.isEmpty()) {
+            return;
+        }
+
+        setPresetUnsaved(isCurrentPresetUnsaved());
     }, muse::async::Asyncable::Mode::SetReplace);
 
     reload(effectId, m_instanceId);
@@ -47,6 +67,8 @@ void EffectManageMenu::load()
         if (!storedPresetId.isEmpty() && hasPreset(storedPresetId)) {
             m_currentPreset = storedPresetId;
             resetPreset();
+            m_isPresetUnsaved = false;
+            updatePresetDisplayNames();
             emit presetChanged();
             emit canDeletePresetChanged();
         }
@@ -60,10 +82,13 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
 
     MenuItemList items;
     QVariantList presets;
+    m_basePresetNames.clear();
+    m_factoryPresets.clear();
 
     presets << QVariantMap {
         { "id", "default" },
         { "name", muse::qtrc("effects", "Default preset") } };
+    m_basePresetNames.insert("default", muse::qtrc("effects", "Default preset"));
 
     auto makeApplyAction = [](const EffectInstanceId& iid, const PresetId& p) {
         ActionQuery q("action://effects/presets/apply");
@@ -76,7 +101,7 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
     PresetIdList userPresets = presetsController()->userPresets(effectId);
     m_userPresets.clear();
     {
-        MenuItem* menuItem = makeMenu(TranslatableString("effects", "User Presets"), {});
+        MenuItem* menuItem = makeMenu(muse::TranslatableString("effects", "User Presets"), {});
         if (userPresets.empty()) {
             menuItem->setState(ui::UiActionState::make_disabled());
         } else {
@@ -84,13 +109,14 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
             for (const PresetId& p : userPresets) {
                 String name = au3::wxToString(p);
                 m_userPresets << name.toQString();
-                MenuItem* item = makeMenuItem(makeApplyAction(instanceId, p).toString(), TranslatableString::untranslatable(name));
+                MenuItem* item = makeMenuItem(makeApplyAction(instanceId, p).toString(), muse::TranslatableString::untranslatable(name));
                 item->setId("user_apply_" + name);
                 subitems << item;
 
                 presets << QVariantMap {
                     { "id", name.toQString() },
                     { "name", name.toQString() } };
+                m_basePresetNames.insert(name.toQString(), name.toQString());
             }
             menuItem->setSubitems(subitems);
         }
@@ -109,16 +135,17 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
     // factory
     {
         PresetIdList factoryPresets = presetsController()->factoryPresets(effectId);
-        MenuItem* menuItem = makeMenu(TranslatableString("effects", "Factory Presets"), {});
+        MenuItem* menuItem = makeMenu(muse::TranslatableString("effects", "Factory Presets"), {});
 
         MenuItemList subitems;
-        MenuItem* defItem = makeMenuItem(makeApplyAction(instanceId, "default").toString(), TranslatableString("effects", "Defaults"));
+        MenuItem* defItem = makeMenuItem(makeApplyAction(instanceId, "default").toString(), muse::TranslatableString("effects", "Defaults"));
         defItem->setId("factory_apply_default");
         subitems << defItem;
 
         for (const PresetId& p : factoryPresets) {
             String name = au3::wxToString(p);
-            MenuItem* item = makeMenuItem(makeApplyAction(instanceId, p).toString(), TranslatableString::untranslatable(name));
+            m_factoryPresets << name.toQString();
+            MenuItem* item = makeMenuItem(makeApplyAction(instanceId, p).toString(), muse::TranslatableString::untranslatable(name));
             QString id = "factory_apply_" + name;
             item->setId(id);
             subitems << item;
@@ -126,6 +153,7 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
             presets << QVariantMap {
                 { "id", name.toQString() },
                 { "name", name.toQString() } };
+            m_basePresetNames.insert(name.toQString(), name.toQString());
         }
         menuItem->setSubitems(subitems);
 
@@ -177,7 +205,18 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
 
     setItems(items);
     m_presets = presets;
-    emit presetsChanged();
+
+    if (!m_currentPreset.isEmpty() && !hasPreset(m_currentPreset)) {
+        m_currentPreset.clear();
+        m_isPresetUnsaved = false;
+        emit presetChanged();
+    } else if (!m_currentPreset.isEmpty()) {
+        m_isPresetUnsaved = isCurrentPresetUnsaved();
+    } else {
+        m_isPresetUnsaved = false;
+    }
+
+    updatePresetDisplayNames();
     emit canDeletePresetChanged();
 }
 
@@ -193,6 +232,7 @@ void EffectManageMenu::setInstanceId_prop(int newInstanceId)
     }
     m_instanceId = newInstanceId;
     m_currentPreset.clear();
+    m_isPresetUnsaved = false;
     m_hasLoadedInitialPreset = false;
     emit instanceIdChanged();
 }
@@ -211,6 +251,8 @@ void EffectManageMenu::setPreset(QString presetId)
 {
     m_currentPreset = presetId;
     resetPreset();
+    m_isPresetUnsaved = false;
+    updatePresetDisplayNames();
     emit presetChanged();
     emit canDeletePresetChanged();
 }
@@ -238,9 +280,6 @@ void EffectManageMenu::savePresetAs()
     ActionQuery q("action://effects/presets/save_as");
     q.addParam("instanceId", Val(m_instanceId));
     dispatcher()->dispatch(q);
-    emit presetsChanged();
-    emit presetChanged();
-    emit canDeletePresetChanged();
 }
 
 void EffectManageMenu::deletePreset()
@@ -324,4 +363,98 @@ bool EffectManageMenu::hasPreset(const QString& presetId) const
     });
 
     return it != m_presets.cend();
+}
+
+bool EffectManageMenu::isUserPreset(const QString& presetId) const
+{
+    return m_userPresets.contains(presetId);
+}
+
+bool EffectManageMenu::isFactoryPreset(const QString& presetId) const
+{
+    return m_factoryPresets.contains(presetId);
+}
+
+int EffectManageMenu::factoryPresetIndex(const QString& presetId) const
+{
+    return m_factoryPresets.indexOf(presetId);
+}
+
+bool EffectManageMenu::isCurrentPresetUnsaved() const
+{
+    if (m_currentPreset.isEmpty()) {
+        return false;
+    }
+
+    const EffectId effectId = instancesRegister()->effectIdByInstanceId(m_instanceId);
+    Effect* effect = effectsProvider()->effect(effectId);
+    const EffectSettings* settings = instancesRegister()->settingsById(m_instanceId);
+    if (!effect || !settings) {
+        return false;
+    }
+
+    wxString currentSettingsString;
+    if (!effect->SaveSettingsAsString(*settings, currentSettingsString)) {
+        return false;
+    }
+
+    auto& definition = effect->GetDefinition();
+    EffectSettings presetSettings = definition.MakeSettings();
+    if (!definition.CopySettingsContents(*settings, presetSettings)) {
+        return false;
+    }
+
+    OptionalMessage loadResult;
+    if (m_currentPreset == "default") {
+        loadResult = definition.LoadFactoryDefaults(presetSettings);
+    } else if (isUserPreset(m_currentPreset)) {
+        const auto name = au3::wxFromString(String::fromQString(m_currentPreset));
+        loadResult = definition.LoadUserPreset(UserPresetsGroup(name), presetSettings);
+    } else if (isFactoryPreset(m_currentPreset)) {
+        const int index = factoryPresetIndex(m_currentPreset);
+        if (index < 0) {
+            return false;
+        }
+        loadResult = definition.LoadFactoryPreset(index, presetSettings);
+    } else {
+        return false;
+    }
+
+    if (!loadResult) {
+        return false;
+    }
+
+    wxString selectedPresetSettingsString;
+    if (!effect->SaveSettingsAsString(presetSettings, selectedPresetSettingsString)) {
+        return false;
+    }
+
+    return currentSettingsString != selectedPresetSettingsString;
+}
+
+void EffectManageMenu::setPresetUnsaved(bool unsaved)
+{
+    if (m_isPresetUnsaved == unsaved) {
+        return;
+    }
+
+    m_isPresetUnsaved = unsaved;
+    updatePresetDisplayNames();
+}
+
+void EffectManageMenu::updatePresetDisplayNames()
+{
+    for (int i = 0; i < m_presets.size(); ++i) {
+        QVariantMap map = m_presets[i].toMap();
+        const QString id = map.value("id").toString();
+        const QString baseName = m_basePresetNames.value(id, map.value("name").toString());
+        QString displayName = baseName;
+        if (m_isPresetUnsaved && id == m_currentPreset) {
+            displayName += "*";
+        }
+        map.insert("name", displayName);
+        m_presets[i] = map;
+    }
+
+    emit presetsChanged();
 }

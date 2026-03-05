@@ -3,9 +3,11 @@
 #include "framework/uicomponents/qml/Muse/UiComponents/abstractmenumodel.h"
 #include "framework/global/modularity/ioc.h"
 
+#include <QHash>
 #include <QStringList>
 #include <QVariant>
 
+#include "effects/effects_base/ieffectparametersprovider.h"
 #include "effects/effects_base/ieffectpresetsprovider.h"
 #include "effects/effects_base/ieffectinstancesregister.h"
 #include "effects/effects_base/ieffectsconfiguration.h"
@@ -28,6 +30,7 @@ class EffectManageMenu : public muse::uicomponents::AbstractMenuModel
     muse::Inject<IEffectPresetsProvider> presetsController { this };
     muse::Inject<IEffectInstancesRegister> instancesRegister { this };
     muse::Inject<IEffectsProvider> effectsProvider { this };
+    muse::Inject<IEffectParametersProvider> parametersProvider { this };
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
 
 public:
@@ -63,11 +66,20 @@ private:
 
     void reload(const EffectId& effectId, const EffectInstanceId& instanceId);
     bool hasPreset(const QString& presetId) const;
+    bool isUserPreset(const QString& presetId) const;
+    bool isFactoryPreset(const QString& presetId) const;
+    int factoryPresetIndex(const QString& presetId) const;
+    bool isCurrentPresetUnsaved() const;
+    void setPresetUnsaved(bool unsaved);
+    void updatePresetDisplayNames();
 
     int m_instanceId = -1;
     QString m_currentPreset;
     QStringList m_userPresets;
+    QStringList m_factoryPresets;
+    QHash<QString, QString> m_basePresetNames;
     QVariantList m_presets;
+    bool m_isPresetUnsaved = false;
     bool m_persistLastUsedPreset = false;
     bool m_hasLoadedInitialPreset = false;
 };

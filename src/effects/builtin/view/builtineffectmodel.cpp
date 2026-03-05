@@ -72,6 +72,9 @@ void BuiltinEffectModel::modifySettings(const std::function<void(EffectSettings&
         modifier(settings);
         return nullptr;
     });
+
+    // Notify observers (preset bar, generated models, etc.) that settings changed.
+    instancesRegister()->notifyAboutSettingsChanged(m_instanceId);
 }
 
 void BuiltinEffectModel::commitSettings()

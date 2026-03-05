@@ -98,6 +98,7 @@ bool EffectParametersProvider::setParameterValue(EffectInstanceId instanceId, co
         data.newValueString = param.currentValueString;
 
         m_parameterChanged.send(data);
+        instancesRegister()->notifyAboutSettingsChanged(instanceId);
     }
 
     return success;
@@ -136,6 +137,7 @@ bool EffectParametersProvider::setParameterStringValue(EffectInstanceId instance
         data.newValueString = param.currentValueString;
 
         m_parameterChanged.send(data);
+        instancesRegister()->notifyAboutSettingsChanged(instanceId);
     }
 
     return success;
