@@ -118,7 +118,7 @@ std::shared_ptr<muse::IApplication> AppFactory::newGuiApp(const CommandLineParse
     app->addModule(new muse::workspace::WorkspaceModule());
     app->addModule(new muse::accessibility::AccessibilityModule());
     app->addModule(new muse::interactive::InteractiveModule());
-    app->addModule(new muse::mi::MultiInstancesModule());
+    app->addModule(new muse::mi::MultiWindowsModule());
     app->addModule(new muse::learn::LearnModule());
     app->addModule(new muse::languages::LanguagesModule());
     app->addModule(new muse::ui::UiModule());
