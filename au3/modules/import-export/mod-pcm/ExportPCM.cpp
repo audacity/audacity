@@ -27,6 +27,7 @@
 #include "au3-import-export/Export.h"
 #include "au3-import-export/ExportOptionsEditor.h"
 
+#include "au3-label-track/LabelTrack.h"
 #include "au3-import-export/ExportPluginHelpers.h"
 #include "au3-import-export/ExportPluginRegistry.h"
 
@@ -543,6 +544,35 @@ bool PCMExportProcessor::Initialize(AudacityProject& project,
             sf_command(sf, SFC_SET_CLIPPING, NULL, sf_subtype_is_integer(sf_format) ? SF_TRUE : SF_FALSE);
         }
 
+        // Collect point labels as WAV cue points
+        if (fileFormat == SF_FORMAT_WAV || fileFormat == SF_FORMAT_WAVEX) {
+            auto& tracks = TrackList::Get(project);
+            auto labelRange = tracks.Any<LabelTrack>();
+            auto it = labelRange.begin();
+            if (it != labelRange.end()) {
+                auto labelTrack = *it;
+                uint32_t cueIdx = 0;
+                for (int i = 0; i < labelTrack->GetNumLabels() && cueIdx < 100; ++i) {
+                    const auto* label = labelTrack->GetLabel(i);
+                    if (label->getT0() != label->getT1())
+                        continue;
+                    auto& cue = context.cues.cue_points[cueIdx];
+                    cue.indx = static_cast<int32_t>(cueIdx + 1);
+                    cue.position = static_cast<uint32_t>(
+                        label->getT0() * info.samplerate + 0.5);
+                    cue.sample_offset = cue.position;
+                    strncpy(cue.name, label->title.mb_str(wxConvUTF8),
+                            sizeof(cue.name) - 1);
+                    cue.name[sizeof(cue.name) - 1] = '\0';
+                    ++cueIdx;
+                }
+                if (cueIdx > 0) {
+                    context.cues.cue_count = cueIdx;
+                    context.hasCues = true;
+                }
+            }
+        }
+
         if (!sf) {
             throw ExportException(_("Cannot export audio to %s").Format(path));
         }
@@ -679,6 +709,10 @@ ExportResult PCMExportProcessor::Process(ExportProcessorDelegate& delegate)
             || context.fileFormat == SF_FORMAT_WAVEX) {
             AddStrings(context.sf, context.metadata.get(), context.sf_format);
         }
+    }
+
+    if (context.hasCues) {
+        sf_command(context.sf, SFC_SET_CUE, &context.cues, sizeof(context.cues));
     }
 
     if (0 != sf_close(context.sf)) {

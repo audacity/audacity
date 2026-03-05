@@ -20,6 +20,7 @@ list (APPEND LIBRARIES
    PRIVATE
       lib-import-export-interface
       lib-file-formats-interface
+      au3-label-track
 )
 
 
