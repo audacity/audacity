@@ -8,10 +8,33 @@ Item {
     required property var model
     property var navigationPanel: null
     property int navigationOrder: 0
+    property bool modelInitialized: false
     property bool warp: false
     property bool isVertical: false
     property bool knobFirst: true // Only relevant is `isVertical` is true
     property int radius: 16
+
+    function initModelIfNeeded() {
+        if (!root.model) {
+            return
+        }
+
+        if (root.modelInitialized) {
+            return
+        }
+
+        root.model.init()
+        root.modelInitialized = true
+    }
+
+    onModelChanged: {
+        root.modelInitialized = false
+        initModelIfNeeded()
+    }
+
+    Component.onCompleted: {
+        initModelIfNeeded()
+    }
 
     Loader {
         id: knobLoader
