@@ -47,6 +47,8 @@ public:
     muse::secs_t recordPosition() const override;
     muse::async::Channel<muse::secs_t> recordPositionChanged() const override;
 
+    muse::async::Notification recordingFinished() const override;
+
 private:
     struct RecordData {
         trackedit::ClipKey clipKey;
@@ -70,6 +72,7 @@ private:
     std::vector<RecordData> m_recordData;
 
     muse::ValCh<muse::secs_t> m_recordPosition;
+    muse::async::Notification m_recordingFinished;
 
     context::IPlaybackStatePtr playbackState() const;
 };

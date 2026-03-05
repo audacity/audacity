@@ -13,8 +13,8 @@ namespace au::effects {
 class NyquistPromptLoader : public muse::Injectable
 {
     muse::GlobalInject<IBuiltinEffectsRepository> builtinEffectsRepository;
+    muse::GlobalInject<IBuiltinEffectsViewRegister> builtinEffectsViewRegister;
 
-    muse::Inject<IBuiltinEffectsViewRegister> builtinEffectsViewRegister { this };
 public:
 
     NyquistPromptLoader(const muse::modularity::ContextPtr& ctx)

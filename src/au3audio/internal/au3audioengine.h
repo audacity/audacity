@@ -19,6 +19,7 @@ public:
     void deinit();
 
     bool isBusy() const override;
+    bool isCapturing() const override;
 
     int startStream(const TransportSequences& sequences, double startTime, double endTime, double mixerEndTime, AudacityProject& project,
                     bool isDefaultPlayTrackPolicy, double audioStreamSampleRate) override;

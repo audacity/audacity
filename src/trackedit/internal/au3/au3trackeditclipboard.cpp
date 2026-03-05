@@ -44,13 +44,22 @@ using namespace au::trackedit;
 
 std::vector<ITrackDataPtr> Au3TrackeditClipboard::trackDataCopy() const
 {
+    std::vector<ITrackDataPtr> sourceData = clipboardData()->trackData();
+
     std::vector<Au3TrackDataPtr> deepCopiedTracksData;
-    deepCopiedTracksData.reserve(m_tracksData.size());
-    for (const auto& data : m_tracksData) {
-        deepCopiedTracksData.push_back(std::make_shared<Au3TrackData>(data->track()->Duplicate()));
+    deepCopiedTracksData.reserve(sourceData.size());
+    for (const auto& data : sourceData) {
+        const auto& au3Data = std::static_pointer_cast<Au3TrackData>(data);
+        deepCopiedTracksData.push_back(std::make_shared<Au3TrackData>(au3Data->track()->Duplicate()));
     }
 
-    auto copiedGroupIds = getGroupIDs(m_tracksData);
+    std::vector<Au3TrackDataPtr> sourceAu3Data;
+    sourceAu3Data.reserve(sourceData.size());
+    for (const auto& data : sourceData) {
+        sourceAu3Data.push_back(std::static_pointer_cast<Au3TrackData>(data));
+    }
+
+    auto copiedGroupIds = getGroupIDs(sourceAu3Data);
     auto newGroupIds = createNewGroupIDs(copiedGroupIds);
     updateTracksDataWithIDs(deepCopiedTracksData, copiedGroupIds, newGroupIds);
 
@@ -59,38 +68,32 @@ std::vector<ITrackDataPtr> Au3TrackeditClipboard::trackDataCopy() const
 
 void Au3TrackeditClipboard::addTrackData(ITrackDataPtr trackData)
 {
-    const auto& au3TrackData = std::static_pointer_cast<Au3TrackData>(trackData);
-    m_tracksData.push_back(std::move(au3TrackData));
+    clipboardData()->addTrackData(std::move(trackData));
 }
 
 void Au3TrackeditClipboard::clearTrackData()
 {
-    m_tracksData.clear();
-    m_isMultiSelectionCopy = false;
+    clipboardData()->clearTrackData();
 }
 
 bool Au3TrackeditClipboard::trackDataEmpty() const
 {
-    return m_tracksData.empty();
+    return clipboardData()->trackDataEmpty();
 }
 
 size_t Au3TrackeditClipboard::trackDataSize() const
 {
-    return m_tracksData.size();
+    return clipboardData()->trackDataSize();
 }
 
 void Au3TrackeditClipboard::setMultiSelectionCopy(bool newValue)
 {
-    if (m_isMultiSelectionCopy == newValue) {
-        return;
-    }
-
-    m_isMultiSelectionCopy = newValue;
+    clipboardData()->setMultiSelectionCopy(newValue);
 }
 
 bool Au3TrackeditClipboard::isMultiSelectionCopy() const
 {
-    return m_isMultiSelectionCopy;
+    return clipboardData()->isMultiSelectionCopy();
 }
 
 std::vector<muse::io::path_t> Au3TrackeditClipboard::systemClipboardFilePaths() const

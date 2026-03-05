@@ -29,6 +29,8 @@
 #include "internal/projectconfiguration.h"
 #include "internal/projectuiactions.h"
 #include "internal/thumbnailcreator.h"
+#include "internal/projectautosaver.h"
+#include "internal/projectprovider.h"
 #include "internal/au3/au3metadata.h"
 
 #include "view/projectpropertiesmodel.h"
@@ -135,23 +137,21 @@ void ProjectContext::registerExports()
     m_tagsAccessor = std::make_shared<Au3Metadata>(iocContext());
 
     ioc()->registerExport<IProjectFilesController>(mname, m_actionsController);
+    ioc()->registerExport<muse::mi::IProjectProvider>(mname, std::make_shared<ProjectProvider>(iocContext()));
     ioc()->registerExport<IOpenSaveProjectScenario>(mname, new OpenSaveProjectScenario(iocContext()));
     ioc()->registerExport<IThumbnailCreator>(mname, m_thumbnailCreator);
     ioc()->registerExport<IMetadata>(mname, m_tagsAccessor);
-}
-
-void ProjectContext::resolveImports()
-{
-    auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(mname);
-    if (ar) {
-        ar->reg(m_uiActions);
-    }
 }
 
 void ProjectContext::onInit(const muse::IApplication::RunMode&)
 {
     m_actionsController->init();
     m_uiActions->init();
+
+    auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(mname);
+    if (ar) {
+        ar->reg(m_uiActions);
+    }
 }
 
 void ProjectContext::onDeinit()

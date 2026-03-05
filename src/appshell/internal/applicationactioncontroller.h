@@ -66,11 +66,7 @@ class ApplicationActionController : public QObject, public IApplicationActionCon
     muse::Inject<context::IUiContextResolver> uiContextResolver { this };
     muse::Inject<context::IGlobalContext> globalContext { this };
 
-//! TODO AU4
-    // INJECT(languages::ILanguagesService, languagesService)
-    // INJECT(mi::IMultiWindowsProvider, multiwindowsProvider)
-    // INJECT(audio::ISoundFontRepository, soundFontRepository)
-    // INJECT(IStartupScenario, startupScenario)
+    muse::GlobalInject<muse::mi::IMultiWindowsProvider> multiwindowsProvider;
 public:
     ApplicationActionController(const muse::modularity::ContextPtr& ctx)
         : muse::Injectable(ctx) {}

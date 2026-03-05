@@ -15,14 +15,14 @@
 #include "effects/effects_base/ieffectinstancesregister.h"
 
 namespace au::effects {
-//! TODO Move to builtin module
 class BuiltinEffectViewLoader : public QObject, public muse::async::Asyncable, muse::Injectable
 {
     Q_OBJECT
 
     Q_PROPERTY(QQuickItem * contentItem READ contentItem NOTIFY contentItemChanged FINAL)
 
-    muse::Inject<IBuiltinEffectsViewRegister> viewRegister { this };
+    muse::GlobalInject<IBuiltinEffectsViewRegister> viewRegister;
+
     muse::Inject<IEffectsUiEngine> engine { this };
     muse::Inject<IEffectInstancesRegister> instancesRegister { this };
 
