@@ -23,6 +23,7 @@ Item {
     property bool isRightLinked: false
     property bool isLinkedActive: false
     property bool isPoint: false
+    property bool isMarker: false
 
     property int visualWidth: prv.isPoint ? pointStalk.width + header.x + header.width : header.width
     readonly property int headerDefaultHeight: 14
@@ -178,6 +179,7 @@ Item {
         height: root.headerDefaultHeight
 
         isRight: false
+        isMarker: root.isMarker
         enableCursorInteraction: root.enableCursorInteraction
         backgroundColor: prv.leftEarBackgroundColor
         isSelected: root.isSelected
@@ -222,6 +224,7 @@ Item {
         height: root.headerDefaultHeight
 
         isRight: true
+        isMarker: root.isMarker
         enableCursorInteraction: root.enableCursorInteraction
         backgroundColor: prv.rightEarBackgroundColor
         isSelected: root.isSelected
@@ -272,7 +275,7 @@ Item {
 
         navigationPanel: root.labelNavigationPanel
 
-        visible: root.visible
+        visible: root.visible && !root.isMarker
 
         onTitleEditAccepted: function (newTitle) {
             root.titleEditAccepted(newTitle)
@@ -317,8 +320,9 @@ Item {
         height: root.height
 
         isForPoint: true
+        isForMarker: root.isMarker
         enableCursorInteraction: root.enableCursorInteraction
-        backgroundColor: leftEar.hovered ? prv.leftEarBackgroundColor : prv.rightEarBackgroundColor
+        backgroundColor: root.isMarker ? prv.backgroundColor : (leftEar.hovered ? prv.leftEarBackgroundColor : prv.rightEarBackgroundColor)
 
         visible: prv.isPoint
 
@@ -328,6 +332,11 @@ Item {
 
         onRequestSelected: {
             root.requestSingleSelected()
+        }
+
+        onStretchStartRequested: {
+            root.requestSingleSelected()
+            root.labelStartEditRequested()
         }
 
         onStretchMousePositionChanged: function (x, y) {
@@ -362,7 +371,7 @@ Item {
         backgroundColor: prv.leftEarBackgroundColor
         isSelected: root.isSelected
 
-        visible: !prv.isPoint || isStretchInProgress
+        visible: (!prv.isPoint || isStretchInProgress) && !root.isMarker
 
         onHeaderHoveredChanged: function (value) {
             root.headerHovered = value
@@ -413,7 +422,7 @@ Item {
         backgroundColor: prv.rightEarBackgroundColor
         isSelected: root.isSelected
 
-        visible: !prv.isPoint || isStretchInProgress
+        visible: (!prv.isPoint || isStretchInProgress) && !root.isMarker
 
         onHeaderHoveredChanged: function (value) {
             root.headerHovered = value

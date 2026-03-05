@@ -8,6 +8,7 @@
 #include <algorithm>
 
 #include "au3-label-track/LabelTrack.h"
+#include "mod-pcm/CueTrackAttachment.h"
 
 #include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/domconverter.h"
@@ -51,6 +52,15 @@ muse::RetVal<LabelKey> Au3LabelsInteraction::addLabel(const TrackId& toTrackId)
     selectedRegion.setTimes(0.0, 0.0);
 
     int64_t newLabelId = labelTrack->AddLabel(selectedRegion, wxEmptyString);
+
+    if (CueTrackAttachment::Get(*labelTrack).IsCueTrack()) {
+        int idx = labelTrack->GetLabelIndex(newLabelId);
+        if (idx >= 0) {
+            auto label = *labelTrack->GetLabel(idx);
+            label.SetIsMarker(true);
+            labelTrack->SetLabel(idx, label);
+        }
+    }
 
     const auto prj = globalContext()->currentTrackeditProject();
     if (prj) {
@@ -107,6 +117,16 @@ bool Au3LabelsInteraction::addLabelToSelection()
     }
 
     int64_t newLabelId = labelTrack->AddLabel(selectedRegion, title);
+
+    if (CueTrackAttachment::Get(*labelTrack).IsCueTrack()) {
+        int idx = labelTrack->GetLabelIndex(newLabelId);
+        if (idx >= 0) {
+            auto label = *labelTrack->GetLabel(idx);
+            label.SetIsMarker(true);
+            labelTrack->SetLabel(idx, label);
+        }
+    }
+
     const auto& newLabel = DomAccessor::findLabel(labelTrack, newLabelId);
 
     const auto prj = globalContext()->currentTrackeditProject();
@@ -513,9 +533,13 @@ bool Au3LabelsInteraction::stretchLabelLeft(const LabelKey& labelKey, secs_t new
     }
 
     newStartTime = std::max(0.0, newStartTime.to_double());
-    double anchorT1 = m_stretchTime.value();
 
-    au3Label.selectedRegion.setTimes(newStartTime, anchorT1);
+    if (au3Label.GetIsMarker()) {
+        au3Label.selectedRegion.setTimes(newStartTime, newStartTime);
+    } else {
+        double anchorT1 = m_stretchTime.value();
+        au3Label.selectedRegion.setTimes(newStartTime, anchorT1);
+    }
     labelTrack->SetLabel(labelIndex, au3Label);
 
     const auto prj = globalContext()->currentTrackeditProject();
@@ -588,9 +612,13 @@ bool Au3LabelsInteraction::stretchLabelRight(const LabelKey& labelKey, secs_t ne
     }
 
     newEndTime = std::max(0.0, newEndTime.to_double());
-    double anchorT0 = m_stretchTime.value();
 
-    au3Label.selectedRegion.setTimes(anchorT0, newEndTime);
+    if (au3Label.GetIsMarker()) {
+        au3Label.selectedRegion.setTimes(newEndTime, newEndTime);
+    } else {
+        double anchorT0 = m_stretchTime.value();
+        au3Label.selectedRegion.setTimes(anchorT0, newEndTime);
+    }
     labelTrack->SetLabel(labelIndex, au3Label);
 
     const auto prj = globalContext()->currentTrackeditProject();
