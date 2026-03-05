@@ -20,6 +20,7 @@ namespace au::spectrogram {
 class ChannelSpectralSelectionModel : public QObject, public QQmlParserStatus, public muse::Injectable, public muse::async::Asyncable
 {
     Q_OBJECT
+    Q_INTERFACES(QQmlParserStatus)
 
     Q_PROPERTY(int trackId READ trackId WRITE setTrackId NOTIFY trackIdChanged FINAL)
     Q_PROPERTY(int channel READ channel WRITE setChannel NOTIFY channelChanged FINAL)
