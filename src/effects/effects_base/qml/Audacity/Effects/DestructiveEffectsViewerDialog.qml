@@ -206,6 +206,7 @@ EffectStyledDialogView {
                         enabled: !(prv.viewer && prv.viewer.isPreviewing)
                         parentWindow: root.window
                         instanceId: root.instanceId
+                        destructiveMode: true
                     }
                 }
 
@@ -340,6 +341,7 @@ EffectStyledDialogView {
                             enabled: prv.isApplyAllowed
 
                             onClicked: {
+                                presetsBar.manageMenuModel.commitSelectedPreset()
                                 prv.closeWindow(true)
                             }
                         }

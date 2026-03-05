@@ -2,6 +2,7 @@
 
 #include "effects/effects_base/effectstypes.h"
 #include "au3wrap/internal/wxtypes_convert.h"
+#include <algorithm>
 
 using namespace muse;
 using namespace muse::uicomponents;
@@ -39,6 +40,17 @@ void EffectManageMenu::load()
     }, muse::async::Asyncable::Mode::SetReplace);
 
     reload(effectId, m_instanceId);
+
+    if (m_persistLastUsedPreset && !m_hasLoadedInitialPreset) {
+        m_hasLoadedInitialPreset = true;
+        const QString storedPresetId = QString::fromStdString(configuration()->lastUsedPreset(effectId));
+        if (!storedPresetId.isEmpty() && hasPreset(storedPresetId)) {
+            m_currentPreset = storedPresetId;
+            resetPreset();
+            emit presetChanged();
+            emit canDeletePresetChanged();
+        }
+    }
 }
 
 void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& instanceId)
@@ -180,6 +192,8 @@ void EffectManageMenu::setInstanceId_prop(int newInstanceId)
         return;
     }
     m_instanceId = newInstanceId;
+    m_currentPreset.clear();
+    m_hasLoadedInitialPreset = false;
     emit instanceIdChanged();
 }
 
@@ -246,6 +260,20 @@ void EffectManageMenu::deletePreset()
     dispatcher()->dispatch(q);
 }
 
+void EffectManageMenu::commitSelectedPreset()
+{
+    if (!m_persistLastUsedPreset) {
+        return;
+    }
+
+    const EffectId effectId = instancesRegister()->effectIdByInstanceId(m_instanceId);
+    if (effectId.empty() || m_currentPreset.isEmpty() || !hasPreset(m_currentPreset)) {
+        return;
+    }
+
+    configuration()->setLastUsedPreset(effectId, m_currentPreset.toStdString());
+}
+
 bool EffectManageMenu::useVendorUI() const
 {
     const EffectInstanceId instanceId = m_instanceId;
@@ -267,4 +295,33 @@ void EffectManageMenu::setUseVendorUI(const bool value)
     const EffectUIMode mode = value ? EffectUIMode::VendorUI : EffectUIMode::FallbackUI;
     configuration()->setEffectUIMode(effectId, mode);
     emit useVendorUIChanged();
+}
+
+bool EffectManageMenu::persistLastUsedPreset() const
+{
+    return m_persistLastUsedPreset;
+}
+
+void EffectManageMenu::setPersistLastUsedPreset(bool value)
+{
+    if (m_persistLastUsedPreset == value) {
+        return;
+    }
+
+    m_persistLastUsedPreset = value;
+    m_hasLoadedInitialPreset = false;
+    emit persistLastUsedPresetChanged();
+}
+
+bool EffectManageMenu::hasPreset(const QString& presetId) const
+{
+    if (presetId.isEmpty()) {
+        return false;
+    }
+
+    const auto it = std::find_if(m_presets.cbegin(), m_presets.cend(), [&](const QVariant& v) {
+        return v.toMap().value("id").toString() == presetId;
+    });
+
+    return it != m_presets.cend();
 }

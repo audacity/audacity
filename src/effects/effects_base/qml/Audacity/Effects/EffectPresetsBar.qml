@@ -13,6 +13,7 @@ RowLayout {
     id: root
 
     required property var instanceId
+    property bool destructiveMode: false
     property int navigationOrder: 0
     property var navigationPanel: null
 
@@ -47,6 +48,7 @@ RowLayout {
     EffectManageMenu {
         id: manageMenuModel
         instanceId: root.instanceId
+        persistLastUsedPreset: root.destructiveMode
     }
 
     EffectSaveMenu {
