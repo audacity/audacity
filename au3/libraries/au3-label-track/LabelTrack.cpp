@@ -789,6 +789,7 @@ bool LabelTrack::HandleXMLTag(const std::string_view& tag, const AttributesList&
         SelectedRegion selectedRegion;
         wxString title;
         bool selected = false;
+        bool isMarker = false;
 
         // loop through attrs, which is a null-terminated list of
         // attribute-value pairs
@@ -803,6 +804,8 @@ bool LabelTrack::HandleXMLTag(const std::string_view& tag, const AttributesList&
                 title = value.ToWString();
             } else if (attr == "isSelected") {
                 value.TryGet(selected);
+            } else if (attr == "isMarker") {
+                value.TryGet(isMarker);
             }
         } // while
 
@@ -815,6 +818,7 @@ bool LabelTrack::HandleXMLTag(const std::string_view& tag, const AttributesList&
 
         LabelStruct l { selectedRegion, title };
         l.SetSelected(selected);
+        l.SetIsMarker(isMarker);
         mLabels.push_back(l);
 
         return true;
@@ -866,6 +870,8 @@ void LabelTrack::WriteXML(XMLWriter& xmlFile) const
         // PRL: to do: write other selection fields
         xmlFile.WriteAttr(wxT("title"), labelStruct.title);
         xmlFile.WriteAttr(wxT("isSelected"), labelStruct.GetSelected());
+        if (labelStruct.GetIsMarker())
+            xmlFile.WriteAttr(wxT("isMarker"), true);
         xmlFile.EndTag(wxT("label"));
     }
 
