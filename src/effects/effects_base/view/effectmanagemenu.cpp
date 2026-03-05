@@ -11,6 +11,10 @@ using namespace muse::uicomponents;
 using namespace muse::actions;
 using namespace au::effects;
 
+namespace {
+constexpr int USER_PRESET_ICON_CODE = 0xEF99;
+}
+
 void EffectManageMenu::load()
 {
     AbstractMenuModel::load();
@@ -95,7 +99,8 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
 
     presets << QVariantMap {
         { "id", "default" },
-        { "name", muse::qtrc("effects", "Default preset") } };
+        { "name", muse::qtrc("effects", "Default preset") },
+        { "iconCode", 0 } };
     m_basePresetNames.insert("default", muse::qtrc("effects", "Default preset"));
 
     auto makeApplyAction = [](const EffectInstanceId& iid, const PresetId& p) {
@@ -123,7 +128,8 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
 
                 presets << QVariantMap {
                     { "id", name.toQString() },
-                    { "name", name.toQString() } };
+                    { "name", name.toQString() },
+                    { "iconCode", USER_PRESET_ICON_CODE } };
                 m_basePresetNames.insert(name.toQString(), name.toQString());
             }
             menuItem->setSubitems(subitems);
@@ -160,7 +166,8 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
 
             presets << QVariantMap {
                 { "id", name.toQString() },
-                { "name", name.toQString() } };
+                { "name", name.toQString() },
+                { "iconCode", 0 } };
             m_basePresetNames.insert(name.toQString(), name.toQString());
         }
         menuItem->setSubitems(subitems);
