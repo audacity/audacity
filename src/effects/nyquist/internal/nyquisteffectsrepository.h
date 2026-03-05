@@ -4,10 +4,11 @@
 #pragma once
 
 #include "../inyquisteffectsrepository.h"
-#include "effects/effects_base/internal/effectsrepositoryhelper.h"
 #include "spectrogram/ispectraleffectsregister.h"
 
 #include "framework/global/modularity/ioc.h"
+#include "framework/audioplugins/iaudiopluginsscanner.h"
+#include "framework/audioplugins/iaudiopluginmetareader.h"
 
 #include "au3-nyquist-effects/LoadNyquist.h"
 
@@ -17,7 +18,9 @@ class NyquistEffectsRepository : public INyquistEffectsRepository, public muse::
     muse::Inject<spectrogram::ISpectralEffectsRegister> spectralEffectsRegister { this };
 
 public:
-    NyquistEffectsRepository(const muse::modularity::ContextPtr& ctx);
+    NyquistEffectsRepository(const muse::modularity::ContextPtr& ctx,
+                             std::unique_ptr<muse::audioplugins::IAudioPluginsScanner> nyquistPluginScanner,
+                             std::shared_ptr<muse::audioplugins::IAudioPluginMetaReader> nyquistPluginMetaReader);
 
     void init();
 
@@ -28,6 +31,7 @@ private:
     // This member forces the linker to include LoadNyquist.cpp,
     // which contains DECLARE_BUILTIN_PROVIDER for the Nyquist module
     ::NyquistEffectsModule m_module;
-    EffectsRepositoryHelper m_helper;
+    const std::unique_ptr<muse::audioplugins::IAudioPluginsScanner> m_nyquistPluginScanner;
+    const std::shared_ptr<muse::audioplugins::IAudioPluginMetaReader> m_nyquistPluginMetaReader;
 };
 }
