@@ -97,6 +97,7 @@ RowLayout {
 
         textRole: "name"
         valueRole: "id"
+        iconRole: "iconCode"
 
         parentWindow: root.parentWindow
         enabled: manageMenuModel.enabled
