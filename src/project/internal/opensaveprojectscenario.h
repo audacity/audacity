@@ -41,12 +41,11 @@ class OpenSaveProjectScenario : public IOpenSaveProjectScenario, public muse::In
 {
     muse::GlobalInject<IProjectConfiguration> configuration;
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
+    muse::GlobalInject<muse::cloud::IMuseScoreComService> museScoreComService;
+    muse::GlobalInject<muse::cloud::IAudioComService> audioComService;
 
     muse::Inject<IProjectFilesController> projectFilesController { this };
-
     muse::Inject<muse::IInteractive> interactive { this };
-    muse::Inject<muse::cloud::IMuseScoreComService> museScoreComService { this };
-    muse::Inject<muse::cloud::IAudioComService> audioComService { this };
 
 public:
     OpenSaveProjectScenario(const muse::modularity::ContextPtr& ctx)
