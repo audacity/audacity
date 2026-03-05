@@ -31,7 +31,7 @@ public:
 
     muse::modularity::ContextPtr setupNewContext(const muse::StringList& args = {}) override;
     void destroyContext(const muse::modularity::ContextPtr& ctx) override;
-    int contextCount() const override;
+    size_t contextCount() const override;
     std::vector<muse::modularity::ContextPtr> contexts() const override;
 
 private:
