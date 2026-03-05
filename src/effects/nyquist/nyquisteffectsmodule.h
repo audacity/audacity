@@ -24,9 +24,6 @@ public:
     void onDeinit() override;
 
     muse::modularity::IContextSetup* newContext(const muse::modularity::ContextPtr& ctx) const override;
-
-private:
-    std::shared_ptr<NyquistPluginsMetaReader> m_nyquistMetaReader;
 };
 
 class NyquistEffectsContext : public muse::modularity::IContextSetup
@@ -44,5 +41,6 @@ private:
 
     const std::unique_ptr<NyquistPromptLoader> m_nyquistPromptLoader;
     std::shared_ptr<NyquistEffectsRepository> m_nyquistEffectsRepository;
+    std::shared_ptr<NyquistPluginsMetaReader> m_nyquistMetaReader;
 };
 }
