@@ -19,7 +19,7 @@
 namespace au::app {
 class PluginRegistrationApp : public muse::BaseApplication, public std::enable_shared_from_this<PluginRegistrationApp>
 {
-    muse::Inject<muse::audioplugins::IRegisterAudioPluginsScenario> registerAudioPluginsScenario{ this };
+    muse::GlobalInject<muse::audioplugins::IRegisterAudioPluginsScenario> registerAudioPluginsScenario;
 
 public:
     PluginRegistrationApp(const CommandLineParser::AudioPluginRegistration& task, const muse::modularity::ContextPtr& ctx);
