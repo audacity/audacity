@@ -41,6 +41,7 @@
 
 #include <algorithm>
 
+#include "CueTrackAttachment.h"
 #include "ImportPCM.h"
 
 #ifdef USE_LIBID3TAG
@@ -377,13 +378,18 @@ void PCMImportFileHandle::Import(
 
     ImportUtils::FinalizeImport(outTracks, std::move(*trackList));
 
+    wxLogDebug(wxT("ImportPCM: Import complete, %zu tracks, checking for cue points (format=0x%x)"),
+               outTracks.size(), mInfo.format);
     // Import WAV cue points as a label track
     {
         uint32_t cueCount = 0;
-        sf_command(mFile.get(), SFC_GET_CUE_COUNT, &cueCount, sizeof(cueCount));
+        auto rc = sf_command(mFile.get(), SFC_GET_CUE_COUNT, &cueCount, sizeof(cueCount));
+        wxLogDebug(wxT("ImportPCM: SFC_GET_CUE_COUNT returned %d, cueCount=%u"), rc, cueCount);
         if (cueCount > 0) {
             SF_CUES cues{};
-            if (sf_command(mFile.get(), SFC_GET_CUE, &cues, sizeof(cues)) == SF_TRUE) {
+            auto cueRc = sf_command(mFile.get(), SFC_GET_CUE, &cues, sizeof(cues));
+            wxLogDebug(wxT("ImportPCM: SFC_GET_CUE returned %d, cue_count=%u"), cueRc, cues.cue_count);
+            if (cueRc == SF_TRUE) {
                 auto labelTrack = std::make_shared<LabelTrack>();
                 labelTrack->SetName(wxT("Cue Points"));
                 for (uint32_t i = 0; i < cues.cue_count && i < 100; ++i) {
@@ -393,8 +399,25 @@ void PCMImportFileHandle::Import(
                     wxString name = UTF8CTOWX(cue.name);
                     if (name.empty())
                         name = wxString::Format(wxT("Cue %u"), i + 1);
+                    wxLogDebug(wxT("ImportPCM: Cue %u: sample_offset=%u t=%.6f name='%s'"),
+                               i, cue.sample_offset, t, name);
                     labelTrack->AddLabel(SelectedRegion(t, t), name);
                 }
+                // Mark all cue labels as markers (non-stretchable)
+                for (int i = 0; i < labelTrack->GetNumLabels(); ++i) {
+                    auto label = *labelTrack->GetLabel(i);
+                    label.SetIsMarker(true);
+                    labelTrack->SetLabel(i, label);
+                }
+                if (!outTracks.empty()) {
+                    if (auto wt = dynamic_cast<WaveTrack*>(outTracks.front().get())) {
+                        wxLogDebug(wxT("ImportPCM: Associating cue label track with wave track '%s'"),
+                                   wt->GetName());
+                        CueTrackAttachment::Get(*labelTrack).SetSourceTrackName(wt->GetName());
+                    }
+                }
+                wxLogDebug(wxT("ImportPCM: Created label track with %d labels"),
+                           labelTrack->GetNumLabels());
                 outTracks.push_back(std::move(labelTrack));
             }
         }
