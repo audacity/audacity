@@ -112,6 +112,9 @@ QString FirstLaunchSetupModel::backButtonText() const
 
 QString FirstLaunchSetupModel::nextButtonText() const
 {
+    if (m_pages.at(m_currentPageIndex).m_url.contains("SigninAudiocomPage")) {
+        return muse::qtrc("global", "Skip");
+    }
     return !canFinish() ? muse::qtrc("global", "Next") : muse::qtrc("appshell/gettingstarted", "Accept & continue");
 }
 
