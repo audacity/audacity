@@ -140,13 +140,9 @@ RowLayout {
         Layout.alignment: Qt.AlignVCenter
 
         icon: IconCode.UNDO
+        enabled: manageMenuModel.canResetPreset
 
         onClicked: {
-            if (manageMenuModel.preset === "") {
-                manageMenuModel.preset = "default"
-                presetSelector.currentIndex = 0
-            }
-
             manageMenuModel.resetPreset()
         }
     }
