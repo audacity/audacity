@@ -36,11 +36,15 @@ void EffectManageMenu::load()
             return;
         }
 
+        const bool oldCanReset = canResetPreset();
         m_currentPreset = presetId;
         m_isPresetUnsaved = false;
         updatePresetDisplayNames();
         emit presetChanged();
         emit canDeletePresetChanged();
+        if (oldCanReset != canResetPreset()) {
+            emit canResetPresetChanged();
+        }
     }, muse::async::Asyncable::Mode::SetReplace);
 
     parametersProvider()->parameterChanged().onReceive(this, [this](const ParameterChangedData& data) {
@@ -65,12 +69,16 @@ void EffectManageMenu::load()
         m_hasLoadedInitialPreset = true;
         const QString storedPresetId = QString::fromStdString(configuration()->lastUsedPreset(effectId));
         if (!storedPresetId.isEmpty() && hasPreset(storedPresetId)) {
+            const bool oldCanReset = canResetPreset();
             m_currentPreset = storedPresetId;
             resetPreset();
             m_isPresetUnsaved = false;
             updatePresetDisplayNames();
             emit presetChanged();
             emit canDeletePresetChanged();
+            if (oldCanReset != canResetPreset()) {
+                emit canResetPresetChanged();
+            }
         }
     }
 }
@@ -206,6 +214,7 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
     setItems(items);
     m_presets = presets;
 
+    const bool oldCanReset = canResetPreset();
     if (!m_currentPreset.isEmpty() && !hasPreset(m_currentPreset)) {
         m_currentPreset.clear();
         m_isPresetUnsaved = false;
@@ -218,6 +227,9 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
 
     updatePresetDisplayNames();
     emit canDeletePresetChanged();
+    if (oldCanReset != canResetPreset()) {
+        emit canResetPresetChanged();
+    }
 }
 
 int EffectManageMenu::instanceId_prop() const
@@ -230,11 +242,15 @@ void EffectManageMenu::setInstanceId_prop(int newInstanceId)
     if (m_instanceId == newInstanceId) {
         return;
     }
+    const bool oldCanReset = canResetPreset();
     m_instanceId = newInstanceId;
     m_currentPreset.clear();
     m_isPresetUnsaved = false;
     m_hasLoadedInitialPreset = false;
     emit instanceIdChanged();
+    if (oldCanReset != canResetPreset()) {
+        emit canResetPresetChanged();
+    }
 }
 
 QVariantList EffectManageMenu::presets()
@@ -249,12 +265,16 @@ QString EffectManageMenu::preset() const
 
 void EffectManageMenu::setPreset(QString presetId)
 {
+    const bool oldCanReset = canResetPreset();
     m_currentPreset = presetId;
     resetPreset();
     m_isPresetUnsaved = false;
     updatePresetDisplayNames();
     emit presetChanged();
     emit canDeletePresetChanged();
+    if (oldCanReset != canResetPreset()) {
+        emit canResetPresetChanged();
+    }
 }
 
 bool EffectManageMenu::enabled() const
@@ -267,8 +287,17 @@ bool EffectManageMenu::canDeletePreset() const
     return m_userPresets.contains(m_currentPreset);
 }
 
+bool EffectManageMenu::canResetPreset() const
+{
+    return !m_currentPreset.isEmpty() && m_isPresetUnsaved;
+}
+
 void EffectManageMenu::resetPreset()
 {
+    if (m_currentPreset.isEmpty()) {
+        return;
+    }
+
     ActionQuery q("action://effects/presets/apply");
     q.addParam("instanceId", Val(m_instanceId));
     q.addParam("presetId", Val(m_currentPreset.toStdString()));
@@ -438,8 +467,12 @@ void EffectManageMenu::setPresetUnsaved(bool unsaved)
         return;
     }
 
+    const bool oldCanReset = canResetPreset();
     m_isPresetUnsaved = unsaved;
     updatePresetDisplayNames();
+    if (oldCanReset != canResetPreset()) {
+        emit canResetPresetChanged();
+    }
 }
 
 void EffectManageMenu::updatePresetDisplayNames()

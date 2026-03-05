@@ -22,6 +22,7 @@ class EffectManageMenu : public muse::uicomponents::AbstractMenuModel
     Q_PROPERTY(QString preset READ preset WRITE setPreset NOTIFY presetChanged FINAL)
     Q_PROPERTY(bool enabled READ enabled NOTIFY presetsChanged FINAL)
     Q_PROPERTY(bool canDeletePreset READ canDeletePreset NOTIFY canDeletePresetChanged FINAL)
+    Q_PROPERTY(bool canResetPreset READ canResetPreset NOTIFY canResetPresetChanged FINAL)
     Q_PROPERTY(bool useVendorUI READ useVendorUI WRITE setUseVendorUI NOTIFY useVendorUIChanged FINAL)
     Q_PROPERTY(bool persistLastUsedPreset READ persistLastUsedPreset WRITE setPersistLastUsedPreset NOTIFY persistLastUsedPresetChanged FINAL)
 
@@ -42,6 +43,7 @@ public:
     void setPreset(QString presetId);
     bool enabled() const;
     bool canDeletePreset() const;
+    bool canResetPreset() const;
     bool useVendorUI() const;
     void setUseVendorUI(bool value);
     bool persistLastUsedPreset() const;
@@ -59,6 +61,7 @@ signals:
     void presetsChanged();
     void presetChanged();
     void canDeletePresetChanged();
+    void canResetPresetChanged();
     void useVendorUIChanged();
     void persistLastUsedPresetChanged();
 
