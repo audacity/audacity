@@ -63,6 +63,10 @@ RowLayout {
         function onPresetChanged() {
             presetSelector.currentIndex = manageMenuModel.presets.findIndex(preset => preset.id === manageMenuModel.preset)
         }
+
+        function onPresetsChanged() {
+            presetSelector.currentIndex = manageMenuModel.presets.findIndex(preset => preset.id === manageMenuModel.preset)
+        }
     }
 
     ContextMenuLoader {
@@ -100,6 +104,10 @@ RowLayout {
         indeterminateText: qsTrc("effects", "Select preset")
 
         model: manageMenuModel.presets
+        displayText: {
+            const preset = manageMenuModel.presets.find(item => item.id === manageMenuModel.preset)
+            return preset ? preset.name : indeterminateText
+        }
 
         onActivated: function (index, value) {
             manageMenuModel.preset = value
