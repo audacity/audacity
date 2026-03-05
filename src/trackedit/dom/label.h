@@ -19,6 +19,7 @@ struct Label {
     double endTime = 0.0;
     double lowFrequency = 0.0;
     double highFrequency = 0.0;
+    bool isMarker = false;
 
     inline bool isValid() const { return key.isValid(); }
 };

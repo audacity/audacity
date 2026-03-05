@@ -145,6 +145,7 @@ au::trackedit::Label DomConverter::label(const Au3LabelTrack* labelTrack, const 
     label.highFrequency = au3label->getHighFrequency();
 
     label.color = TrackColor::Get(labelTrack).GetColor();
+    label.isMarker = au3label->GetIsMarker();
 
     return label;
 }

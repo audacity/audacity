@@ -4,6 +4,7 @@ Canvas {
     id: root
 
     property bool isRight: false
+    property bool isMarker: false
     property bool enableCursorInteraction: true
     property color backgroundColor: "transparent"
     property bool isSelected: false
@@ -17,7 +18,7 @@ Canvas {
     signal stretchEndRequested()
     signal stretchMousePositionChanged(real x, real y)
 
-    width: 7
+    width: root.isMarker ? 6 : 7
 
     onPaint: {
         var ctx = getContext("2d")
@@ -30,14 +31,28 @@ Canvas {
 
         ctx.beginPath()
 
-        if (root.isRight) {
-            ctx.moveTo(0, 0)
-            ctx.lineTo(0, height)
-            ctx.lineTo(width, 0)
+        if (root.isMarker) {
+            // Draw half-diamond: left ear = left half, right ear = right half
+            var midY = height / 2
+            if (root.isRight) {
+                ctx.moveTo(0, 0)
+                ctx.lineTo(width, midY)
+                ctx.lineTo(0, height)
+            } else {
+                ctx.moveTo(width, 0)
+                ctx.lineTo(0, midY)
+                ctx.lineTo(width, height)
+            }
         } else {
-            ctx.moveTo(0, 0)
-            ctx.lineTo(width, 0)
-            ctx.lineTo(width, height)
+            if (root.isRight) {
+                ctx.moveTo(0, 0)
+                ctx.lineTo(0, height)
+                ctx.lineTo(width, 0)
+            } else {
+                ctx.moveTo(0, 0)
+                ctx.lineTo(width, 0)
+                ctx.lineTo(width, height)
+            }
         }
 
         ctx.closePath()
@@ -47,6 +62,10 @@ Canvas {
     }
 
     onBackgroundColorChanged: {
+        root.requestPaint()
+    }
+
+    onIsMarkerChanged: {
         root.requestPaint()
     }
 

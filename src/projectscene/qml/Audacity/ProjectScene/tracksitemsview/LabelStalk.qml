@@ -4,6 +4,7 @@ Rectangle {
     id: root
 
     property bool isForPoint: false
+    property bool isForMarker: false
     property bool isRight: false
     property bool enableCursorInteraction: true
     property color backgroundColor: "transparent"
@@ -33,19 +34,19 @@ Rectangle {
 
         acceptedButtons: Qt.LeftButton
         hoverEnabled: true
-        cursorShape: Qt.SizeHorCursor
+        cursorShape: root.isForMarker ? Qt.SizeAllCursor : Qt.SizeHorCursor
 
         visible: root.enableCursorInteraction
 
         onContainsMouseChanged: {
-            if (!root.visible || !root.isForPoint) {
+            if (!root.visible || (!root.isForPoint && !root.isForMarker)) {
                 return
             }
             root.headerHoveredChanged(containsMouse)
         }
 
         onPressed: function (e) {
-            if (!root.isForPoint) {
+            if (!root.isForPoint || root.isForMarker) {
                 root.isStretchInProgress = true
 
                 let mousePos = mapToItem(root.parent, e.x, e.y)
@@ -62,7 +63,7 @@ Rectangle {
         onPositionChanged: function (e) {
             let mousePos = mapToItem(root.parent, e.x, e.y)
 
-            if (pressed && !root.isForPoint) {
+            if (pressed && (!root.isForPoint || root.isForMarker)) {
                 root.stretchMousePositionChanged(mousePos.x, mousePos.y)
                 root.stretchRequested(false)
                 e.accepted = true
@@ -73,7 +74,7 @@ Rectangle {
         }
 
         onReleased: function (e) {
-            if (!root.isForPoint) {
+            if (!root.isForPoint || root.isForMarker) {
                 root.isStretchInProgress = false
                 root.stretchRequested(true)
                 root.stretchEndRequested()
