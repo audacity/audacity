@@ -271,6 +271,10 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     //! ============================================================================
     {
         if (effect->IsInteractive() && (flags& EffectManager::kConfigured) == 0) {
+            auto& definition = effect->GetDefinition();
+            EffectSettings originalSettings = definition.MakeSettings();
+            definition.CopySettingsContents(*settings, originalSettings);
+
             const auto access = std::make_shared<SimpleEffectSettingsAccess>(*settings);
             EffectInstanceId instanceId = effectInstancesRegister()->regInstance(effectId, pInstanceEx, access);
             muse::Ret ret = effectsProvider()->showEffect(effectId, instanceId);
@@ -279,6 +283,9 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
             if (ret) {
                 effect->SaveUserPreset(CurrentSettingsGroup(), *settings);
             } else {
+                if (muse::Ret::Code(ret.code()) == muse::Ret::Code::Cancel) {
+                    definition.CopySettingsContents(originalSettings, *settings);
+                }
                 return ret;
             }
         }
