@@ -118,6 +118,8 @@ set(MODULE_SRC ${MODULE_SRC}
     ${IMPORT_EXPORT_MODULE}/mod-wavpack/ImportWavPack.cpp
     ${IMPORT_EXPORT_MODULE}/mod-wavpack/ImportWavPack.h
 
+    ${IMPORT_EXPORT_MODULE}/mod-pcm/CueTrackAttachment.cpp
+    ${IMPORT_EXPORT_MODULE}/mod-pcm/CueTrackAttachment.h
     ${IMPORT_EXPORT_MODULE}/mod-pcm/ExportPCM.cpp
     ${IMPORT_EXPORT_MODULE}/mod-pcm/ExportPCM.h
     ${IMPORT_EXPORT_MODULE}/mod-pcm/ImportPCM.cpp
