@@ -4,6 +4,7 @@
 #include "framework/global/modularity/ioc.h"
 
 #include <QStringList>
+#include <QVariant>
 
 #include "effects/effects_base/ieffectpresetsprovider.h"
 #include "effects/effects_base/ieffectinstancesregister.h"
@@ -20,6 +21,7 @@ class EffectManageMenu : public muse::uicomponents::AbstractMenuModel
     Q_PROPERTY(bool enabled READ enabled NOTIFY presetsChanged FINAL)
     Q_PROPERTY(bool canDeletePreset READ canDeletePreset NOTIFY canDeletePresetChanged FINAL)
     Q_PROPERTY(bool useVendorUI READ useVendorUI WRITE setUseVendorUI NOTIFY useVendorUIChanged FINAL)
+    Q_PROPERTY(bool persistLastUsedPreset READ persistLastUsedPreset WRITE setPersistLastUsedPreset NOTIFY persistLastUsedPresetChanged FINAL)
 
     muse::GlobalInject<IEffectsConfiguration> configuration;
 
@@ -39,10 +41,13 @@ public:
     bool canDeletePreset() const;
     bool useVendorUI() const;
     void setUseVendorUI(bool value);
+    bool persistLastUsedPreset() const;
+    void setPersistLastUsedPreset(bool value);
 
     Q_INVOKABLE void resetPreset();
     Q_INVOKABLE void savePresetAs();
     Q_INVOKABLE void deletePreset();
+    Q_INVOKABLE void commitSelectedPreset();
 
     Q_INVOKABLE void load() override;
 
@@ -52,14 +57,18 @@ signals:
     void presetChanged();
     void canDeletePresetChanged();
     void useVendorUIChanged();
+    void persistLastUsedPresetChanged();
 
 private:
 
     void reload(const EffectId& effectId, const EffectInstanceId& instanceId);
+    bool hasPreset(const QString& presetId) const;
 
     int m_instanceId = -1;
     QString m_currentPreset;
     QStringList m_userPresets;
     QVariantList m_presets;
+    bool m_persistLastUsedPreset = false;
+    bool m_hasLoadedInitialPreset = false;
 };
 }

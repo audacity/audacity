@@ -29,5 +29,8 @@ public:
     virtual EffectUIMode effectUIMode(const EffectId& effectId) const = 0;
     virtual void setEffectUIMode(const EffectId& effectId, EffectUIMode mode) = 0;
     virtual muse::async::Notification effectUIModeChanged() const = 0;
+
+    virtual std::string lastUsedPreset(const EffectId& effectId) const = 0;
+    virtual void setLastUsedPreset(const EffectId& effectId, const std::string& presetId) = 0;
 };
 }
