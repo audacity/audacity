@@ -272,10 +272,16 @@ void SelectionViewController::updateSelectionVerticalResize(double y1, double y2
         return;
     }
 
-    const trackedit::TrackIdList tracks = vs->tracksInRange(y1, y2);
-    selectionController()->setSelectedTracks(tracks, completed);
-
     setFrequencySelection(y1, y2);
+
+    // Only extend track selection to other tracks if there is no spectral selection.
+    const auto frequencySelection = frequencySelectionController()->frequencySelection();
+    if (frequencySelection.isValid()) {
+        selectionController()->setSelectedTracks({ frequencySelection.trackId });
+    } else {
+        const trackedit::TrackIdList tracks = vs->tracksInRange(y1, y2);
+        selectionController()->setSelectedTracks(tracks, completed);
+    }
 
     if (completed) {
         m_verticalSelectionEditInProgress = false;
