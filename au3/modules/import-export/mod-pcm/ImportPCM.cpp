@@ -20,6 +20,7 @@
 *//*******************************************************************/
 
 #include "au3-import-export/Import.h"
+#include "au3-label-track/LabelTrack.h"
 #include "au3-tags/Tags.h"
 
 #include <wx/wx.h>
@@ -375,6 +376,29 @@ void PCMImportFileHandle::Import(
     }
 
     ImportUtils::FinalizeImport(outTracks, std::move(*trackList));
+
+    // Import WAV cue points as a label track
+    {
+        uint32_t cueCount = 0;
+        sf_command(mFile.get(), SFC_GET_CUE_COUNT, &cueCount, sizeof(cueCount));
+        if (cueCount > 0) {
+            SF_CUES cues{};
+            if (sf_command(mFile.get(), SFC_GET_CUE, &cues, sizeof(cues)) == SF_TRUE) {
+                auto labelTrack = std::make_shared<LabelTrack>();
+                labelTrack->SetName(wxT("Cue Points"));
+                for (uint32_t i = 0; i < cues.cue_count && i < 100; ++i) {
+                    const auto& cue = cues.cue_points[i];
+                    double t = static_cast<double>(cue.sample_offset)
+                             / static_cast<double>(mInfo.samplerate);
+                    wxString name = UTF8CTOWX(cue.name);
+                    if (name.empty())
+                        name = wxString::Format(wxT("Cue %u"), i + 1);
+                    labelTrack->AddLabel(SelectedRegion(t, t), name);
+                }
+                outTracks.push_back(std::move(labelTrack));
+            }
+        }
+    }
 
     const char* str;
 
