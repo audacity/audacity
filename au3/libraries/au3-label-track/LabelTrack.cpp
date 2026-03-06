@@ -168,6 +168,7 @@ LabelTrack::LabelTrack(const LabelTrack& orig, ProtectedCreationArg&& a)
         LabelStruct l { original.selectedRegion, original.title };
         l.SetId(LabelStruct::NewID());
         l.SetSelected(original.GetSelected());
+        l.SetIsMarker(original.GetIsMarker());
         mLabels.push_back(l);
     }
 }
