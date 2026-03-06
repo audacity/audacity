@@ -39,11 +39,11 @@ class StartupScenario : public au::appshell::IStartupScenario, public muse::asyn
 {
     muse::GlobalInject<IAppShellConfiguration> configuration;
     muse::GlobalInject<muse::mi::IMultiWindowsProvider> multiwindowsProvider;
+    muse::GlobalInject<muse::audioplugins::IRegisterAudioPluginsScenario> registerAudioPluginsScenario;
 
     muse::Inject<muse::IInteractive> interactive { this };
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::Inject<ISessionsManager> sessionsManager { this };
-    muse::Inject<muse::audioplugins::IRegisterAudioPluginsScenario> registerAudioPluginsScenario { this };
 
 public:
     StartupScenario(const muse::modularity::ContextPtr& ctx)
