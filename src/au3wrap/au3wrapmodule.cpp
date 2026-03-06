@@ -44,6 +44,9 @@ void Au3WrapModule::registerExports()
 void Au3WrapModule::onPreInit(const muse::IApplication::RunMode&)
 {
     // Make sure the logger is initialized before other modules.
+    // Note: ownership is transferred to wxLog via SetActiveTarget.
+    // AudacityLogger::Get() may later replace and delete this target,
+    // so we only keep a non-owning pointer to check identity in onDeinit.
     m_wxLog = new WxLogWrap();
     wxLog::SetActiveTarget(m_wxLog);
 
