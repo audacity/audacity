@@ -9,6 +9,7 @@
 **********************************************************************/
 
 #include <wx/defs.h>
+#include <wx/log.h>
 
 #include <wx/app.h>
 #include <wx/dynlib.h>
@@ -27,9 +28,11 @@
 #include "au3-import-export/Export.h"
 #include "au3-import-export/ExportOptionsEditor.h"
 
+#include "au3-label-track/LabelTrack.h"
 #include "au3-import-export/ExportPluginHelpers.h"
 #include "au3-import-export/ExportPluginRegistry.h"
 
+#include "CueTrackAttachment.h"
 #include "ExportPCM.h"
 
 #ifdef USE_LIBID3TAG
@@ -541,6 +544,66 @@ bool PCMExportProcessor::Initialize(AudacityProject& project,
             sf = sf_open_fd(f.fd(), SFM_WRITE, &info, FALSE);
             //add clipping for integer formats.  We allow floats to clip.
             sf_command(sf, SFC_SET_CLIPPING, NULL, sf_subtype_is_integer(sf_format) ? SF_TRUE : SF_FALSE);
+        }
+
+        // Collect point labels as WAV cue points
+        if (fileFormat == SF_FORMAT_WAV || fileFormat == SF_FORMAT_WAVEX) {
+            auto& tracks = TrackList::Get(project);
+            LabelTrack* labelTrack = nullptr;
+            wxLogDebug(wxT("ExportPCM: Looking for cue label track"));
+            for (auto lt : tracks.Any<LabelTrack>()) {
+                auto& att = CueTrackAttachment::Get(*lt);
+                wxLogDebug(wxT("ExportPCM: Checking label track '%s', isCueTrack=%d, sourceTrack='%s'"),
+                           lt->GetName(), att.IsCueTrack(), att.GetSourceTrackName());
+                if (att.IsCueTrack()) {
+                    labelTrack = lt;
+                    break;
+                }
+            }
+            if (!labelTrack) {
+                auto it = tracks.Any<LabelTrack>().begin();
+                if (it != tracks.Any<LabelTrack>().end()) {
+                    labelTrack = *it;
+                    wxLogDebug(wxT("ExportPCM: Falling back to first label track '%s'"),
+                               labelTrack->GetName());
+                }
+            }
+            if (labelTrack) {
+                wxLogDebug(wxT("ExportPCM: Using label track '%s' with %d labels"),
+                           labelTrack->GetName(), labelTrack->GetNumLabels());
+                uint32_t cueIdx = 0;
+                for (int i = 0; i < labelTrack->GetNumLabels() && cueIdx < 100; ++i) {
+                    const auto* label = labelTrack->GetLabel(i);
+                    if (label->getT0() != label->getT1()) {
+                        wxLogDebug(wxT("ExportPCM: Skipping region label %d (t0=%.6f t1=%.6f)"),
+                                   i, label->getT0(), label->getT1());
+                        continue;
+                    }
+                    auto& cue = context.cues.cue_points[cueIdx];
+                    cue.indx = static_cast<int32_t>(cueIdx + 1);
+                    cue.position = static_cast<uint32_t>(
+                        label->getT0() * info.samplerate + 0.5);
+                    cue.sample_offset = cue.position;
+                    strncpy(cue.name, label->title.mb_str(wxConvUTF8),
+                            sizeof(cue.name) - 1);
+                    cue.name[sizeof(cue.name) - 1] = '\0';
+                    wxLogDebug(wxT("ExportPCM: Cue %u: sample_offset=%u name='%s'"),
+                               cueIdx, cue.sample_offset, wxString(cue.name));
+                    ++cueIdx;
+                }
+                if (cueIdx > 0) {
+                    context.cues.cue_count = cueIdx;
+                    context.hasCues = true;
+                    wxLogDebug(wxT("ExportPCM: Will write %u cue points"), cueIdx);
+
+                    // Set cue points before writing audio data
+                    auto cueRc = sf_command(sf, SFC_SET_CUE, &context.cues, sizeof(context.cues));
+                    wxLogDebug(wxT("ExportPCM: SFC_SET_CUE returned %d for %u cues"),
+                               cueRc, context.cues.cue_count);
+                }
+            } else {
+                wxLogDebug(wxT("ExportPCM: No label track found for cue export"));
+            }
         }
 
         if (!sf) {
