@@ -103,79 +103,30 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
         { "iconCode", 0 } };
     m_basePresetNames.insert("default", muse::qtrc("effects", "Default preset"));
 
-    auto makeApplyAction = [](const EffectInstanceId& iid, const PresetId& p) {
-        ActionQuery q("action://effects/presets/apply");
-        q.addParam("instanceId", Val(iid));
-        q.addParam("presetId", Val(au3::wxToStdString(p)));
-        return q;
-    };
-
-    // user
+    // Build presets model for the dropdown, but do not expose duplicated
+    // preset apply/save actions in the three-dots manage menu.
     PresetIdList userPresets = presetsController()->userPresets(effectId);
     m_userPresets.clear();
-    {
-        MenuItem* menuItem = makeMenu(muse::TranslatableString("effects", "User Presets"), {});
-        if (userPresets.empty()) {
-            menuItem->setState(ui::UiActionState::make_disabled());
-        } else {
-            MenuItemList subitems;
-            for (const PresetId& p : userPresets) {
-                String name = au3::wxToString(p);
-                m_userPresets << name.toQString();
-                MenuItem* item = makeMenuItem(makeApplyAction(instanceId, p).toString(), muse::TranslatableString::untranslatable(name));
-                item->setId("user_apply_" + name);
-                subitems << item;
-
-                presets << QVariantMap {
-                    { "id", name.toQString() },
-                    { "name", name.toQString() },
-                    { "iconCode", USER_PRESET_ICON_CODE } };
-                m_basePresetNames.insert(name.toQString(), name.toQString());
-            }
-            menuItem->setSubitems(subitems);
-        }
-        items << menuItem;
+    for (const PresetId& p : userPresets) {
+        String name = au3::wxToString(p);
+        m_userPresets << name.toQString();
+        presets << QVariantMap {
+            { "id", name.toQString() },
+            { "name", name.toQString() },
+            { "iconCode", USER_PRESET_ICON_CODE } };
+        m_basePresetNames.insert(name.toQString(), name.toQString());
     }
 
-    {
-        ActionQuery q("action://effects/presets/save_as");
-        q.addParam("instanceId", Val(instanceId));
-        MenuItem* item = makeMenuItem(q.toString());
-        items << item;
+    PresetIdList factoryPresets = presetsController()->factoryPresets(effectId);
+    for (const PresetId& p : factoryPresets) {
+        String name = au3::wxToString(p);
+        m_factoryPresets << name.toQString();
+        presets << QVariantMap {
+            { "id", name.toQString() },
+            { "name", name.toQString() },
+            { "iconCode", 0 } };
+        m_basePresetNames.insert(name.toQString(), name.toQString());
     }
-
-    items << makeSeparator();
-
-    // factory
-    {
-        PresetIdList factoryPresets = presetsController()->factoryPresets(effectId);
-        MenuItem* menuItem = makeMenu(muse::TranslatableString("effects", "Factory Presets"), {});
-
-        MenuItemList subitems;
-        MenuItem* defItem = makeMenuItem(makeApplyAction(instanceId, "default").toString(), muse::TranslatableString("effects", "Defaults"));
-        defItem->setId("factory_apply_default");
-        subitems << defItem;
-
-        for (const PresetId& p : factoryPresets) {
-            String name = au3::wxToString(p);
-            m_factoryPresets << name.toQString();
-            MenuItem* item = makeMenuItem(makeApplyAction(instanceId, p).toString(), muse::TranslatableString::untranslatable(name));
-            QString id = "factory_apply_" + name;
-            item->setId(id);
-            subitems << item;
-
-            presets << QVariantMap {
-                { "id", name.toQString() },
-                { "name", name.toQString() },
-                { "iconCode", 0 } };
-            m_basePresetNames.insert(name.toQString(), name.toQString());
-        }
-        menuItem->setSubitems(subitems);
-
-        items << menuItem;
-    }
-
-    items << makeSeparator();
 
     // import / export
     {
@@ -201,7 +152,9 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
                                  && effectMeta.family != EffectFamily::Unknown;
 
         if (hasVendorUI) {
-            items << makeSeparator();
+            if (!items.empty()) {
+                items << makeSeparator();
+            }
             ActionQuery q("action://effects/toggle_vendor_ui");
             q.addParam("effectId", Val(effectId.toStdString()));
             MenuItem* item = makeMenuItem(q.toString());
