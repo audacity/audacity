@@ -365,7 +365,11 @@ bool TrackeditActionsController::isFocusedItemClip() const
     }
 
     const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    return prj ? prj->track(focusedItemKey.trackId)->type != TrackType::Label : false;
+    if (!prj) {
+        return false;
+    }
+    auto t = prj->track(focusedItemKey.trackId);
+    return t ? t->type != TrackType::Label : false;
 }
 
 ClipKeyList TrackeditActionsController::clipsForInteraction() const
@@ -390,7 +394,11 @@ bool TrackeditActionsController::isFocusedItemLabel() const
     }
 
     const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    return prj ? prj->track(focusedItemKey.trackId)->type == TrackType::Label : false;
+    if (!prj) {
+        return false;
+    }
+    auto t = prj->track(focusedItemKey.trackId);
+    return t ? t->type == TrackType::Label : false;
 }
 
 LabelKeyList TrackeditActionsController::labelsForInteraction() const
