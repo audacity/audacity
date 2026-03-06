@@ -595,6 +595,11 @@ bool PCMExportProcessor::Initialize(AudacityProject& project,
                     context.cues.cue_count = cueIdx;
                     context.hasCues = true;
                     wxLogDebug(wxT("ExportPCM: Will write %u cue points"), cueIdx);
+
+                    // Set cue points before writing audio data
+                    auto cueRc = sf_command(sf, SFC_SET_CUE, &context.cues, sizeof(context.cues));
+                    wxLogDebug(wxT("ExportPCM: SFC_SET_CUE returned %d for %u cues"),
+                               cueRc, context.cues.cue_count);
                 }
             } else {
                 wxLogDebug(wxT("ExportPCM: No label track found for cue export"));
@@ -737,10 +742,6 @@ ExportResult PCMExportProcessor::Process(ExportProcessorDelegate& delegate)
             || context.fileFormat == SF_FORMAT_WAVEX) {
             AddStrings(context.sf, context.metadata.get(), context.sf_format);
         }
-    }
-
-    if (context.hasCues) {
-        sf_command(context.sf, SFC_SET_CUE, &context.cues, sizeof(context.cues));
     }
 
     if (0 != sf_close(context.sf)) {
