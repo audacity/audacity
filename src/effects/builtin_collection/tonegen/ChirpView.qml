@@ -16,12 +16,41 @@ BuiltinEffectBase {
 
     property string title: qsTrc("effects", "Chirp")
     property bool isApplyAllowed: chirp.isApplyAllowed
+    property int bottomButtonsNavigationPanelOrder: 5
 
     width: 370
     implicitHeight: column.height
 
     builtinEffectModel: ToneViewModelFactory.createModel(root, root.instanceId)
     property alias chirp: root.builtinEffectModel
+    property NavigationPanel waveformNavigationPanel: NavigationPanel {
+        name: "ChirpWaveform"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 1
+    }
+    property NavigationPanel frequencyNavigationPanel: NavigationPanel {
+        name: "ChirpFrequencyGroup"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 2
+    }
+    property NavigationPanel amplitudeNavigationPanel: NavigationPanel {
+        name: "ChirpAmplitudeGroup"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 3
+    }
+    property NavigationPanel durationNavigationPanel: NavigationPanel {
+        name: "ChirpDuration"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 4
+    }
 
     QtObject {
         id: prv
@@ -40,6 +69,7 @@ BuiltinEffectBase {
         spacing: prv.spacing
 
         ComboBoxWithTitle {
+            id: waveformDropdown
 
             title: qsTrc("effects/chirp", "Waveform")
             columnWidth: parent.width
@@ -50,6 +80,9 @@ BuiltinEffectBase {
 
             currentIndex: chirp.waveform
             model: chirp.waveforms
+
+            navigation.panel: root.waveformNavigationPanel
+            navigation.order: 0
 
             onValueEdited: function (newIndex, newValue) {
                 chirp.waveform = newIndex
@@ -90,9 +123,13 @@ BuiltinEffectBase {
                         spacing: prv.spacing
 
                         RoundedRadioButton {
+                            id: interpolationLinearRadio
 
                             text: qsTrc("effects/chirp", "Linear")
                             checked: chirp.interpolation == prv.interpolationLinear
+
+                            navigation.panel: root.frequencyNavigationPanel
+                            navigation.order: 0
 
                             onToggled: {
                                 if (chirp.interpolation != prv.interpolationLinear) {
@@ -102,9 +139,13 @@ BuiltinEffectBase {
                         }
 
                         RoundedRadioButton {
+                            id: interpolationLogarithmicRadio
 
                             text: qsTrc("effects/chirp", "Logarithmic")
                             checked: chirp.interpolation == prv.interpolationLogarithmic
+
+                            navigation.panel: root.frequencyNavigationPanel
+                            navigation.order: interpolationLinearRadio.navigation.order + 1
 
                             onToggled: {
                                 if (chirp.interpolation != prv.interpolationLogarithmic) {
@@ -121,9 +162,13 @@ BuiltinEffectBase {
                     width: parent.width
 
                     IncrementalPropertyControlWithTitle {
+                        id: startFrequencyControl
 
                         columnWidth: (parent.width - parent.spacing) / 2
                         controlWidth: (parent.width - parent.spacing) / 2
+
+                        navigation.panel: root.frequencyNavigationPanel
+                        navigation.order: interpolationLogarithmicRadio.navigation.order + 1
 
                         title: qsTrc("effects/chirp", "Start frequency")
                         currentValue: chirp.frequencyStart
@@ -141,6 +186,7 @@ BuiltinEffectBase {
                     }
 
                     IncrementalPropertyControlWithTitle {
+                        id: endFrequencyControl
 
                         columnWidth: (parent.width - parent.spacing) / 2
                         controlWidth: (parent.width - parent.spacing) / 2
@@ -152,6 +198,9 @@ BuiltinEffectBase {
                         maxValue: 1000000
 
                         measureUnitsSymbol: qsTrc("global", "Hz")
+
+                        navigation.panel: root.frequencyNavigationPanel
+                        navigation.order: startFrequencyControl.navigation.order + 1
 
                         onValueEdited: function (newValue) {
                             if (chirp.frequencyEnd !== newValue) {
@@ -186,6 +235,7 @@ BuiltinEffectBase {
                 y: prv.spacing
 
                 IncrementalPropertyControlWithTitle {
+                    id: startAmplitudeControl
 
                     columnWidth: (parent.width - parent.spacing) / 2
                     controlWidth: parent.width * .25
@@ -198,6 +248,9 @@ BuiltinEffectBase {
                     decimals: 4
                     step: 0.01
 
+                    navigation.panel: root.amplitudeNavigationPanel
+                    navigation.order: 0
+
                     onValueEdited: function (newValue) {
                         if (chirp.amplitudeStart !== newValue) {
                             chirp.amplitudeStart = newValue
@@ -206,6 +259,7 @@ BuiltinEffectBase {
                 }
 
                 IncrementalPropertyControlWithTitle {
+                    id: endAmplitudeControl
 
                     columnWidth: (parent.width - parent.spacing) / 2
                     controlWidth: parent.width * .25
@@ -217,6 +271,9 @@ BuiltinEffectBase {
                     maxValue: 1
                     decimals: 4
                     step: 0.01
+
+                    navigation.panel: root.amplitudeNavigationPanel
+                    navigation.order: startAmplitudeControl.navigation.order + 1
 
                     onValueEdited: function (newValue) {
                         if (chirp.amplitudeEnd !== newValue) {
@@ -258,6 +315,9 @@ BuiltinEffectBase {
                 upperTimeSignature: chirp.upperTimeSignature
                 lowerTimeSignature: chirp.lowerTimeSignature
                 enabled: true
+
+                navigation.panel: root.durationNavigationPanel
+                navigation.order: 0
 
                 onValueChanged: {
                     chirp.duration = timecode.value

@@ -9,6 +9,9 @@ Item {
     property int minDbGain: -1
     property int maxDbGain: -1
 
+    property var navigationPanel: null
+    property int navigationOrderStart: 0
+
     width: gridLines.width
     height: prv.labelHeight + prv.labelBottomMargin + prv.faderHeight
 
@@ -158,6 +161,9 @@ Item {
                     min: root.minDbGain
                     max: root.maxDbGain
                     anchors.horizontalCenter: parent.horizontalCenter
+
+                    navigation.panel: root.navigationPanel
+                    navigation.order: root.navigationOrderStart + index
 
                     value: model.dbGain
 

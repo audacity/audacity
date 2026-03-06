@@ -15,6 +15,8 @@ Item {
     required property var showInputDbModel
     required property var showOutputDbModel
     required property var showCompressionDbModel
+    property var navigationPanel: null
+    property int navigationOrderStart: 0
 
     property int dbMin: -48
     property int dbStep: 12
@@ -135,7 +137,13 @@ Item {
                 ]
 
                 delegate: CheckBox {
+                    required property int index
+                    required property var modelData
+
                     anchors.verticalCenter: parent.verticalCenter
+
+                    navigation.panel: root.navigationPanel
+                    navigation.order: root.navigationOrderStart + index
 
                     text: modelData.text
                     checked: modelData.settingModel.value === 1

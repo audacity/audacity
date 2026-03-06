@@ -9,12 +9,20 @@ BuiltinEffectBase {
 
     property string title: clickRemoval.effectTitle
     property bool isApplyAllowed: true
+    property int bottomButtonsNavigationPanelOrder: 2
 
     width: 328
     implicitHeight: column.height
 
     builtinEffectModel: ClickRemovalViewModelFactory.createModel(root, root.instanceId)
     property alias clickRemoval: root.builtinEffectModel
+    property NavigationPanel clickRemovalNavigationPanel: NavigationPanel {
+        name: "ClickRemovalSliders"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 1
+    }
 
     Column {
         id: column
@@ -27,6 +35,10 @@ BuiltinEffectBase {
             id: thresholdSlider
 
             width: parent.width
+
+            navigationPanel: root.clickRemovalNavigationPanel
+            navigationOrderStart: 0
+
             text: clickRemoval.thresholdLabel
             value: clickRemoval.thresholdValue
             from: clickRemoval.thresholdMin
@@ -43,6 +55,10 @@ BuiltinEffectBase {
             id: widthSlider
 
             width: parent.width
+
+            navigationPanel: root.clickRemovalNavigationPanel
+            navigationOrderStart: thresholdSlider.navigationOrderStart + 2
+
             text: clickRemoval.widthLabel
             value: clickRemoval.widthValue
             from: clickRemoval.widthMin

@@ -10,6 +10,8 @@ Item {
 
     required property var parameter
 
+    property alias navigation: knob.navigation
+
     property double defaultValue: 0
     property alias stepSize: knob.stepSize
     property alias radius: knob.radius
@@ -22,12 +24,22 @@ Item {
     signal newValueRequested(string key, real newValue)
     signal commitRequested
 
+    function activateNumericInput(initialText) {
+        if (!textEdit.activeFocus) {
+            textEdit.forceActiveFocus()
+        }
+        if (initialText !== undefined && initialText !== "") {
+            textEdit.currentText = initialText
+        }
+    }
+
     onParameterChanged: {
         if (parameter) {
             knob.from = parameter["min"]
             knob.to = parameter["max"]
             warper.value = parameter["value"]
-            knob.stepSize = parameter["step"] || 1
+            // TODO: select the appropriate step for each parameter separately
+            knob.stepSize = Math.max(((knob.to - knob.from) / 50).toFixed(textEdit.decimals), parameter["step"]) // parameter["step"] || 1     // temporary
             textEdit.measureUnitsSymbol = parameter["unit"] || ""
         }
     }
@@ -74,6 +86,19 @@ Item {
 
             mouseArea.onReleased: function () {
                 root.commitRequested()
+            }
+        }
+
+        Connections {
+            target: knob.navigation
+
+            function onNavigationEvent(event) {
+                if (event.type !== NavigationEvent.Trigger) {
+                    return
+                }
+
+                root.activateNumericInput()
+                event.accepted = true
             }
         }
 

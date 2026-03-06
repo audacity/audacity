@@ -12,6 +12,9 @@ Row {
     property alias to: slider.to
     property alias measureUnitsSymbol: textControl.measureUnitsSymbol
 
+    property var navigationPanel: null
+    property int navigationOrderStart: 0
+
     signal newValueRequested(double newValue)
 
     onValueChanged: {
@@ -25,8 +28,13 @@ Row {
 
     StyledSlider {
         id: slider
+
         width: (root.width - root.spacing) * 0.6
         anchors.verticalCenter: root.verticalCenter
+
+        navigation.panel: root.navigationPanel
+        navigation.order: root.navigationOrderStart
+
         value: root.value
         onMoved: {
             const newValue = slider.value.toFixed(textControl.decimals)
@@ -38,7 +46,12 @@ Row {
 
     IncrementalPropertyControl {
         id: textControl
+
         width: (root.width - root.spacing) * 0.4
+
+        navigation.panel: root.navigationPanel
+        navigation.order: slider.navigation.order + 1
+
         decimals: root.isInt ? 0 : 2
         minValue: root.from
         maxValue: root.to
