@@ -77,6 +77,12 @@ void Au3WrapModule::onDeinit()
 {
     (void)BasicUI::Install(nullptr);
 
-    wxLog::SetActiveTarget(nullptr);
-    delete m_wxLog;
+    if (m_wxLog) {
+        // Only clean up if it's still the active target;
+        // if something else replaced it, that code took ownership
+        if (wxLog::GetActiveTarget() == m_wxLog) {
+            delete wxLog::SetActiveTarget(nullptr);
+        }
+        m_wxLog = nullptr;
+    }
 }
