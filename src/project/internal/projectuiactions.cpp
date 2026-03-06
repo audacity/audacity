@@ -744,8 +744,8 @@ const UiActionList ProjectUiActions::m_actions = {
              IconCode::Code::CLOUD_FILE
              ),
     UiAction("file-share-audio",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_FOCUSED,
              TranslatableString("action", "Share audio"),
              TranslatableString("action", "Share audio"),
              IconCode::Code::SHARE_AUDIO
