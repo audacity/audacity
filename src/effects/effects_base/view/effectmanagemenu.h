@@ -1,7 +1,8 @@
 #pragma once
 
-#include "framework/uicomponents/qml/Muse/UiComponents/abstractmenumodel.h"
+#include <QObject>
 #include "framework/global/modularity/ioc.h"
+#include "framework/global/async/asyncable.h"
 
 #include <QHash>
 #include <QStringList>
@@ -13,8 +14,11 @@
 #include "effects/effects_base/ieffectsconfiguration.h"
 #include "effects/effects_base/ieffectsprovider.h"
 
+#include "effectsavecontextmenu.h"
+#include "presetscontextmenumodel.h"
+
 namespace au::effects {
-class EffectManageMenu : public muse::uicomponents::AbstractMenuModel
+class EffectManageMenu : public QObject, public muse::Injectable, public muse::async::Asyncable
 {
     Q_OBJECT
     Q_PROPERTY(int instanceId READ instanceId_prop WRITE setInstanceId_prop NOTIFY instanceIdChanged FINAL)
@@ -23,7 +27,7 @@ class EffectManageMenu : public muse::uicomponents::AbstractMenuModel
     Q_PROPERTY(bool enabled READ enabled NOTIFY presetsChanged FINAL)
     Q_PROPERTY(bool canDeletePreset READ canDeletePreset NOTIFY canDeletePresetChanged FINAL)
     Q_PROPERTY(bool canResetPreset READ canResetPreset NOTIFY canResetPresetChanged FINAL)
-    Q_PROPERTY(bool useVendorUI READ useVendorUI WRITE setUseVendorUI NOTIFY useVendorUIChanged FINAL)
+    Q_PROPERTY(bool useVendorUI READ useVendorUI NOTIFY useVendorUIChanged FINAL)
     Q_PROPERTY(bool persistLastUsedPreset READ persistLastUsedPreset WRITE setPersistLastUsedPreset NOTIFY persistLastUsedPresetChanged FINAL)
 
     muse::GlobalInject<IEffectsConfiguration> configuration;
@@ -35,6 +39,7 @@ class EffectManageMenu : public muse::uicomponents::AbstractMenuModel
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
 
 public:
+    explicit EffectManageMenu(QObject* parent = nullptr);
 
     int instanceId_prop() const;
     void setInstanceId_prop(int newInstanceId);
@@ -45,7 +50,6 @@ public:
     bool canDeletePreset() const;
     bool canResetPreset() const;
     bool useVendorUI() const;
-    void setUseVendorUI(bool value);
     bool persistLastUsedPreset() const;
     void setPersistLastUsedPreset(bool value);
 
@@ -53,8 +57,10 @@ public:
     Q_INVOKABLE void savePresetAs();
     Q_INVOKABLE void deletePreset();
     Q_INVOKABLE void commitSelectedPreset();
+    Q_INVOKABLE QObject* saveContextMenu();
+    Q_INVOKABLE QObject* presetContextMenu();
 
-    Q_INVOKABLE void load() override;
+    Q_INVOKABLE void load();
 
 signals:
     void instanceIdChanged();
@@ -85,5 +91,7 @@ private:
     bool m_isPresetUnsaved = false;
     bool m_persistLastUsedPreset = false;
     bool m_hasLoadedInitialPreset = false;
+    EffectSaveContextMenu* m_saveContextMenu = nullptr;
+    PresetsContextMenuModel* m_presetsContextMenu = nullptr;
 };
 }

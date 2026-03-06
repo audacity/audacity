@@ -7,7 +7,6 @@
 #include <algorithm>
 
 using namespace muse;
-using namespace muse::uicomponents;
 using namespace muse::actions;
 using namespace au::effects;
 
@@ -15,10 +14,18 @@ namespace {
 constexpr int USER_PRESET_ICON_CODE = 0xEF99;
 }
 
+EffectManageMenu::EffectManageMenu(QObject* parent)
+    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
+{
+    m_saveContextMenu = new EffectSaveContextMenu(this);
+    m_presetsContextMenu = new PresetsContextMenuModel(this);
+
+    connect(m_presetsContextMenu, &PresetsContextMenuModel::useVendorUIChanged,
+            this, &EffectManageMenu::useVendorUIChanged);
+}
+
 void EffectManageMenu::load()
 {
-    AbstractMenuModel::load();
-
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(m_instanceId);
 
     // Subscribe on user presets change (replace subscription each time with new effectId)
@@ -92,7 +99,6 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
     assert(!effectId.empty());
     assert(instanceId != 0);
 
-    MenuItemList items;
     QVariantList presets;
     m_basePresetNames.clear();
     m_factoryPresets.clear();
@@ -128,50 +134,6 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
         m_basePresetNames.insert(name.toQString(), name.toQString());
     }
 
-    // import / export
-    {
-        ActionQuery q("action://effects/presets/import");
-        q.addParam("instanceId", Val(instanceId));
-        MenuItem* item = makeMenuItem(q.toString());
-        items << item;
-    }
-
-    {
-        ActionQuery q("action://effects/presets/export");
-        q.addParam("instanceId", Val(instanceId));
-        MenuItem* item = makeMenuItem(q.toString());
-        items << item;
-    }
-
-    // UI Mode toggle - only for external plugins with vendor UI (VST3, LV2, Audio Units)
-    // Built-in and Nyquist effects don't have a "Vendor UI" concept
-    {
-        const EffectMeta effectMeta = effectsProvider()->meta(effectId);
-        const bool hasVendorUI = effectMeta.family != EffectFamily::Builtin
-                                 && effectMeta.family != EffectFamily::Nyquist
-                                 && effectMeta.family != EffectFamily::Unknown;
-
-        if (hasVendorUI) {
-            if (!items.empty()) {
-                items << makeSeparator();
-            }
-            ActionQuery q("action://effects/toggle_vendor_ui");
-            q.addParam("effectId", Val(effectId.toStdString()));
-            MenuItem* item = makeMenuItem(q.toString());
-
-            // Manually set the checked state based on current UI mode
-            if (item) {
-                const bool isVendorUI = configuration()->effectUIMode(effectId) == EffectUIMode::VendorUI;
-                ui::UiActionState state = item->state();
-                state.checked = isVendorUI;
-                item->setState(state);
-            }
-
-            items << item;
-        }
-    }
-
-    setItems(items);
     m_presets = presets;
 
     const bool oldCanReset = canResetPreset();
@@ -271,6 +233,29 @@ void EffectManageMenu::savePresetAs()
     dispatcher()->dispatch(q);
 }
 
+QObject* EffectManageMenu::saveContextMenu()
+{
+    IF_ASSERT_FAILED(m_saveContextMenu) {
+        return nullptr;
+    }
+
+    m_saveContextMenu->setInstanceId_prop(m_instanceId);
+    m_saveContextMenu->setPreset(m_currentPreset);
+    m_saveContextMenu->load();
+    return m_saveContextMenu;
+}
+
+QObject* EffectManageMenu::presetContextMenu()
+{
+    IF_ASSERT_FAILED(m_presetsContextMenu) {
+        return nullptr;
+    }
+
+    m_presetsContextMenu->setInstanceId_prop(m_instanceId);
+    m_presetsContextMenu->load();
+    return m_presetsContextMenu;
+}
+
 void EffectManageMenu::deletePreset()
 {
     if (!canDeletePreset()) {
@@ -304,25 +289,11 @@ void EffectManageMenu::commitSelectedPreset()
 
 bool EffectManageMenu::useVendorUI() const
 {
-    const EffectInstanceId instanceId = m_instanceId;
-    const EffectId effectId = instancesRegister()->effectIdByInstanceId(instanceId);
-    if (effectId.empty()) {
-        return true; // Default to vendor UI
-    }
-    return configuration()->effectUIMode(effectId) == EffectUIMode::VendorUI;
-}
-
-void EffectManageMenu::setUseVendorUI(const bool value)
-{
-    const EffectInstanceId instanceId = m_instanceId;
-    const EffectId effectId = instancesRegister()->effectIdByInstanceId(instanceId);
-    if (effectId.empty()) {
-        return;
+    if (!m_presetsContextMenu) {
+        return true;
     }
 
-    const EffectUIMode mode = value ? EffectUIMode::VendorUI : EffectUIMode::FallbackUI;
-    configuration()->setEffectUIMode(effectId, mode);
-    emit useVendorUIChanged();
+    return m_presetsContextMenu->useVendorUI();
 }
 
 bool EffectManageMenu::persistLastUsedPreset() const

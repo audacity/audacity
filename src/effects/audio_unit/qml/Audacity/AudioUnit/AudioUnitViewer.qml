@@ -70,7 +70,7 @@ Rectangle {
         var py = parent.y + parent.height
         var pos = mapFromItem(parent, px, py)
 
-        menuLoader.show(pos, manageMenuModel)
+        menuLoader.show(pos, manageMenuModel.presetContextMenu())
     }
 
     EffectManageMenu {
@@ -82,7 +82,7 @@ Rectangle {
         id: menuLoader
 
         onHandleMenuItem: function (itemId) {
-            manageMenuModel.handleMenuItem(itemId)
+            manageMenuModel.presetContextMenu().handleMenuItem(itemId)
         }
     }
 

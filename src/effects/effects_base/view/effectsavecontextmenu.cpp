@@ -1,5 +1,6 @@
-#include "effectsavemenu.h"
+#include "effectsavecontextmenu.h"
 
+// needed for PresetIdList (TODO: remove wxWidgets types from interfaces)
 #include "au3wrap/internal/wxtypes_convert.h"
 
 using namespace muse;
@@ -7,12 +8,17 @@ using namespace muse::actions;
 using namespace muse::uicomponents;
 using namespace au::effects;
 
-int EffectSaveMenu::instanceId_prop() const
+EffectSaveContextMenu::EffectSaveContextMenu(QObject* parent)
+    : AbstractMenuModel(parent)
+{
+}
+
+int EffectSaveContextMenu::instanceId_prop() const
 {
     return m_instanceId;
 }
 
-void EffectSaveMenu::setInstanceId_prop(int newInstanceId)
+void EffectSaveContextMenu::setInstanceId_prop(int newInstanceId)
 {
     if (m_instanceId == newInstanceId) {
         return;
@@ -22,12 +28,12 @@ void EffectSaveMenu::setInstanceId_prop(int newInstanceId)
     emit instanceIdChanged();
 }
 
-QString EffectSaveMenu::preset() const
+QString EffectSaveContextMenu::preset() const
 {
     return m_preset;
 }
 
-void EffectSaveMenu::setPreset(QString newPreset)
+void EffectSaveContextMenu::setPreset(QString newPreset)
 {
     if (m_preset == newPreset) {
         return;
@@ -37,18 +43,18 @@ void EffectSaveMenu::setPreset(QString newPreset)
     emit presetChanged();
 }
 
-bool EffectSaveMenu::canSave() const
+bool EffectSaveContextMenu::canSave() const
 {
     return m_canSave;
 }
 
-void EffectSaveMenu::load()
+void EffectSaveContextMenu::load()
 {
     AbstractMenuModel::load();
     reload();
 }
 
-void EffectSaveMenu::reload()
+void EffectSaveContextMenu::reload()
 {
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(m_instanceId);
     if (effectId.empty()) {
@@ -58,7 +64,7 @@ void EffectSaveMenu::reload()
     }
 
     const PresetIdList userPresets = presetsController()->userPresets(effectId);
-    const PresetId currentPreset = m_preset.toStdString();
+    const std::string currentPreset = m_preset.toStdString();
 
     const auto it = std::find(userPresets.begin(), userPresets.end(), currentPreset);
     m_canSave = !currentPreset.empty() && it != userPresets.end();
@@ -68,7 +74,7 @@ void EffectSaveMenu::reload()
     {
         ActionQuery q("action://effects/presets/save");
         q.addParam("instanceId", Val(m_instanceId));
-        q.addParam("presetId", Val(currentPreset.ToStdString()));
+        q.addParam("presetId", Val(currentPreset));
         MenuItem* item = makeMenuItem(q.toString(), TranslatableString("effects", "Save"));
         if (!m_canSave) {
             item->setState(ui::UiActionState::make_disabled());
