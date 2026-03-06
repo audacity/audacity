@@ -196,7 +196,7 @@ QString ThemesPageModel::followSystemThemeText()
 
 QString ThemesPageModel::followSystemThemeDescription()
 {
-    return muse::qtrc("appshell/gettingstarted", "When enabled, the theme will automatically match your system's theme setting");
+    return muse::qtrc("appshell/gettingstarted", "When enabled, the theme will automatically match your system’s theme setting");
 }
 
 QString ThemesPageModel::enableHighContrastText()

@@ -35,15 +35,15 @@ Page {
         readonly property int textInputHeight: 28
         readonly property string emailText: qsTrc("appshell/gettingstarted", "Email")
         readonly property string passwordText: qsTrc("appshell/gettingstarted", "Password")
-        readonly property string forgotPasswordLink:  qsTrc("appshell/gettingstarted", "<a href=\"%1\">Forgot your password?</a>")
-        
-        readonly property string noAccountText: qsTrc("appshell/gettingstarted", "Don't have an account?")
+        readonly property string forgotPasswordLink: qsTrc("appshell/gettingstarted", "<a href=\"%1\">Forgot your password?</a>")
+
+        readonly property string noAccountText: qsTrc("appshell/gettingstarted", "Don’t have an account?")
         readonly property string createAccountLinkText: qsTrc("appshell/gettingstarted", "Create new account")
         readonly property string haveAccountText: qsTrc("appshell/gettingstarted", "Already have an account?")
         readonly property string signInLinkText: qsTrc("appshell/gettingstarted", "Sign in")
         readonly property int textLinkSpacing: 4
 
-        readonly property string formButtonTextLoading: qsTrc("appshell/gettingstarted", "Loading...")
+        readonly property string formButtonTextLoading: qsTrc("appshell/gettingstarted", "Loading…")
         readonly property string formButtonTextSignIn: qsTrc("appshell/gettingstarted", "Sign in")
         readonly property string formButtonTextCreateAccount: qsTrc("appshell/gettingstarted", "Create account")
         readonly property int formButtonHeight: 28
@@ -56,7 +56,7 @@ Page {
         model.init()
     }
 
-    SigninAudiocomPageModel{
+    SigninAudiocomPageModel {
         id: model
 
         onAuthorizedChanged: {
@@ -150,10 +150,10 @@ Page {
 
         RowLayout {
             spacing: prv.textSeparatorSpacing
-            
+
             Layout.fillWidth: true
             Layout.preferredHeight: emailSeparatorText.height
-            
+
             SeparatorLine {
                 Layout.fillWidth: true
                 orientation: Qt.Horizontal
@@ -222,13 +222,13 @@ Page {
 
                 FocusableControl {
                     visible: !model.isRegistering
-                    
+
                     implicitWidth: forgotPasswordLabel.implicitWidth
                     implicitHeight: forgotPasswordLabel.implicitHeight
-                    
+
                     background.color: "transparent"
                     background.border.width: 0
-                    
+
                     NavigationPanel {
                         id: forgetPasswordPanel
                         name: "ForgotPasswordPanel"
@@ -248,7 +248,7 @@ Page {
                     onNavigationTriggered: {
                         Qt.openUrlExternally(prv.forgotPasswordUrl)
                     }
-                    
+
                     StyledTextLabel {
                         id: forgotPasswordLabel
                         anchors.fill: parent
@@ -303,9 +303,7 @@ Page {
                 anchors.right: parent.right
                 height: prv.formButtonHeight
 
-                enabled: !model.authInProgress 
-                          && emailInputField.inputField.text.length > 0
-                          && passwordInputField.inputField.text.length > 0
+                enabled: !model.authInProgress && emailInputField.inputField.text.length > 0 && passwordInputField.inputField.text.length > 0
 
                 NavigationPanel {
                     id: actionsPanel
@@ -330,9 +328,7 @@ Page {
                 navigation.panel: actionsPanel
 
                 onClicked: {
-                    model.isRegistering ?
-                        model.signUpWithEmail(emailInputField.inputField.text, passwordInputField.inputField.text) :
-                        model.signInWithEmail(emailInputField.inputField.text, passwordInputField.inputField.text)
+                    model.isRegistering ? model.signUpWithEmail(emailInputField.inputField.text, passwordInputField.inputField.text) : model.signInWithEmail(emailInputField.inputField.text, passwordInputField.inputField.text)
                 }
             }
         }
@@ -340,18 +336,18 @@ Page {
         RowLayout {
             Layout.alignment: Qt.AlignHCenter
             spacing: prv.textLinkSpacing
-            
+
             StyledTextLabel {
                 text: model.isRegistering ? prv.haveAccountText : prv.noAccountText
             }
-            
+
             FocusableControl {
                 implicitWidth: accountLinkLabel.implicitWidth
                 implicitHeight: accountLinkLabel.implicitHeight
-                
+
                 background.color: "transparent"
                 background.border.width: 0
-                
+
                 NavigationPanel {
                     id: accountLinkPanel
                     name: "AccountLinkPanel"
@@ -359,21 +355,19 @@ Page {
                     section: root.navigationSection
                     direction: NavigationPanel.Vertical
                     order: root.navigationStartRow + 6
-                    accessible.name: model.isRegistering 
-                        ? qsTrc("appshell/gettingstarted", "Sign in link") 
-                        : qsTrc("appshell/gettingstarted", "Create account link")
+                    accessible.name: model.isRegistering ? qsTrc("appshell/gettingstarted", "Sign in link") : qsTrc("appshell/gettingstarted", "Create account link")
                 }
-                
+
                 navigation.name: "AccountLink"
                 navigation.panel: accountLinkPanel
                 navigation.row: 0
                 navigation.column: 0
                 navigation.accessible.name: model.isRegistering ? prv.signInLinkText : prv.createAccountLinkText
-                
+
                 onNavigationTriggered: {
                     model.isRegistering = !model.isRegistering
                 }
-                
+
                 StyledTextLabel {
                     id: accountLinkLabel
                     anchors.fill: parent

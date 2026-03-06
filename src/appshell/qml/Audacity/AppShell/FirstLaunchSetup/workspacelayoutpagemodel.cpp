@@ -151,7 +151,7 @@ QString WorkspaceLayoutPageModel::availableWorkspaceText()
 
 QString WorkspaceLayoutPageModel::additionalInfoText()
 {
-    return qtrc("appshell/gettingstarted", "You can change between these layouts at any time using our new 'workspaces' feature.");
+    return qtrc("appshell/gettingstarted", "You can change between these layouts at any time using our new ‘workspaces’ feature.");
 }
 
 QString WorkspaceLayoutPageModel::additionalInfoAccessibleName()

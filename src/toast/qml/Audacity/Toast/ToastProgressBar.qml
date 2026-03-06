@@ -40,28 +40,28 @@ Item {
                 return
             }
 
-            const SECONDS_IN_HOUR = 3600;
-            const SECONDS_IN_MINUTE = 60;
+            const SECONDS_IN_HOUR = 3600
+            const SECONDS_IN_MINUTE = 60
 
             const estimatedTotalTime = root.timeElapsed / (root.progress / 100.0)
             const remainingSeconds = Math.max(0, estimatedTotalTime - root.timeElapsed)
 
             if (remainingSeconds >= SECONDS_IN_HOUR) {
                 const hours = Math.round(remainingSeconds / SECONDS_IN_HOUR)
-                text = hours === 1 ? qsTrc("toast", "1 hour remaining") : hours + qsTrc("toast", " hours remaining")
+                text = hours === 1 ? qsTrc("toast", "1 hour remaining") : qsTrc("toast", "%1 hours remaining").arg(hours)
             } else if (remainingSeconds >= SECONDS_IN_MINUTE) {
                 const minutes = Math.round(remainingSeconds / SECONDS_IN_MINUTE)
-                text = minutes === 1 ? qsTrc("toast", "1 minute remaining") : minutes + qsTrc("toast", " minutes remaining")
+                text = minutes === 1 ? qsTrc("toast", "1 minute remaining") : qsTrc("toast", "%1 minutes remaining").arg(minutes)
             } else {
                 const seconds = Math.round(remainingSeconds)
-                text = seconds === 1 ? qsTrc("toast", "1 second remaining") : seconds + qsTrc("toast", " seconds remaining")
+                text = seconds === 1 ? qsTrc("toast", "1 second remaining") : qsTrc("toast", "%1 seconds remaining").arg(seconds)
             }
         }
     }
 
     Column {
         id: mainContainer
-    
+
         anchors.left: parent.left
         anchors.right: parent.right
 
@@ -79,7 +79,7 @@ Item {
             value: root.progress / 100.0
         }
 
-        Item{
+        Item {
             id: progressText
 
             width: parent.width

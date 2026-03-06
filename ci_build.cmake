@@ -105,7 +105,7 @@ macro(do_build build_type build_dir)
     # cmake .. -GNinja \
     #     -DCMAKE_BUILD_TYPE="${build_type}" \
 
-    #     -DMUE_RUN_LRELEASE="${AU4_RUN_LRELEASE}" \
+    #     -DMU_RUN_LRELEASE="${AU4_RUN_LRELEASE}" \
     #     -DMUE_BUILD_VIDEOEXPORT_MODULE="${AU4_BUILD_VIDEOEXPORT_MODULE}" \
     #     -DMUSE_MODULE_UPDATE="${AU4_MODULE_UPDATE}" \
     #     -DMUSE_ENABLE_UNIT_TESTS="${AU4_BUILD_UNIT_TESTS}" \
