@@ -27,18 +27,15 @@ RowLayout {
     spacing: 4
 
     function manage(button) {
-        // Reload the menu to ensure the checkmark state is current
-        manageMenuModel.load()
-        activeMenuModel = manageMenuModel
+        activeMenuModel = manageMenuModel.presetContextMenu()
         var pos = Qt.point(button.x, button.y + button.height)
-        menuLoader.show(pos, manageMenuModel)
+        menuLoader.show(pos, activeMenuModel)
     }
 
     function save(button) {
-        saveMenuModel.load()
-        activeMenuModel = saveMenuModel
+        activeMenuModel = manageMenuModel.saveContextMenu()
         var pos = Qt.point(button.x, button.y + button.height)
-        menuLoader.show(pos, saveMenuModel)
+        menuLoader.show(pos, activeMenuModel)
     }
 
     Component.onCompleted: {
@@ -49,12 +46,6 @@ RowLayout {
         id: manageMenuModel
         instanceId: root.instanceId
         persistLastUsedPreset: root.destructiveMode
-    }
-
-    EffectSaveMenu {
-        id: saveMenuModel
-        instanceId: root.instanceId
-        preset: manageMenuModel.preset
     }
 
     Connections {

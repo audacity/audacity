@@ -23,6 +23,7 @@ Rectangle {
     implicitWidth: textItem.width
     implicitHeight: textItem.height
     color: ui.theme.backgroundPrimaryColor
+    property var activeMenuModel: null
 
     QtObject {
         id: prv
@@ -57,7 +58,8 @@ Rectangle {
         var py = parent.y + parent.height
         var pos = mapFromItem(parent, px, py)
 
-        menuLoader.show(pos, manageMenuModel)
+        activeMenuModel = manageMenuModel.presetContextMenu()
+        menuLoader.show(pos, activeMenuModel)
     }
 
     EffectManageMenu {
@@ -69,7 +71,9 @@ Rectangle {
         id: menuLoader
 
         onHandleMenuItem: function (itemId) {
-            manageMenuModel.handleMenuItem(itemId)
+            if (root.activeMenuModel) {
+                root.activeMenuModel.handleMenuItem(itemId)
+            }
         }
     }
 

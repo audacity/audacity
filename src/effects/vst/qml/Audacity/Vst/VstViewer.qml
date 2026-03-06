@@ -48,6 +48,7 @@ Rectangle {
     implicitHeight: view.implicitHeight
 
     readonly property var viewModel: VstViewModelFactory.createModel(root, instanceId)
+    property var activeMenuModel: null
 
     Component.onCompleted: {
         viewModel.init()
@@ -68,7 +69,8 @@ Rectangle {
         var py = parent.y + parent.height
         var pos = mapFromItem(parent, px, py)
 
-        menuLoader.show(pos, manageMenuModel)
+        activeMenuModel = manageMenuModel.presetContextMenu()
+        menuLoader.show(pos, activeMenuModel)
     }
 
     EffectManageMenu {
@@ -80,7 +82,9 @@ Rectangle {
         id: menuLoader
 
         onHandleMenuItem: function (itemId) {
-            manageMenuModel.handleMenuItem(itemId)
+            if (root.activeMenuModel) {
+                root.activeMenuModel.handleMenuItem(itemId)
+            }
         }
     }
 
