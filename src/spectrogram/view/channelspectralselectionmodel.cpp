@@ -14,6 +14,15 @@ ChannelSpectralSelectionModel::ChannelSpectralSelectionModel(QObject* parent)
 {
 }
 
+void ChannelSpectralSelectionModel::componentComplete()
+{
+    spectrogramService()->trackSpectrogramConfigurationChanged().onReceive(this, [this](int trackId) {
+        if (trackId == m_trackId) {
+            emit selectionRangeChanged();
+        }
+    });
+}
+
 double ChannelSpectralSelectionModel::positionToFrequency(double y) const
 {
     return spectrogramService()->yToFrequency(m_trackId, y, m_channelHeight);
@@ -186,8 +195,10 @@ void ChannelSpectralSelectionModel::dragCenterFrequency(double y)
 
     const auto newStartFreq = positionToFrequency(newStartFreqPos);
     const auto newEndFreq = positionToFrequency(newEndFreqPos);
+    const auto newCenterFreq = positionToFrequency(peakPosition);
 
-    frequencySelectionController()->setFrequencySelection({ m_dragStartFrequencySelection.trackId, newStartFreq, newEndFreq });
+    frequencySelectionController()->setFrequencySelection({ m_dragStartFrequencySelection.trackId, newStartFreq, newEndFreq,
+                                                            newCenterFreq });
 }
 
 void ChannelSpectralSelectionModel::endCenterFrequencyDrag()

@@ -3,6 +3,9 @@
  */
 #pragma once
 
+#include "framework/actions/actiontypes.h"
+#include "framework/global/realfn.h"
+
 namespace au::spectrogram {
 // Spectrogram
 enum class SpectrogramScale {
@@ -71,25 +74,30 @@ struct ViewInfo {
 
 struct FrequencySelection {
     FrequencySelection() = default;
-    FrequencySelection(int trackId, double f1, double f2)
-        : trackId(trackId), startFrequency(std::min(f1, f2)), endFrequency(std::max(f1, f2)) {}
+    FrequencySelection(int trackId, double f1, double f2, double centerFrequency)
+        : trackId(trackId), startFrequency(std::min(f1, f2)), endFrequency(std::max(f1, f2)), centerFrequency(centerFrequency) {}
 
     int trackId = -1;
     double startFrequency = SelectionInfo::UndefinedFrequency;
     double endFrequency = SelectionInfo::UndefinedFrequency;
+    double centerFrequency = SelectionInfo::UndefinedFrequency;
 
     constexpr bool isValid() const
     {
         return trackId != -1
                && startFrequency != SelectionInfo::UndefinedFrequency
-               && endFrequency != SelectionInfo::UndefinedFrequency;
+               && endFrequency != SelectionInfo::UndefinedFrequency
+               && centerFrequency != SelectionInfo::UndefinedFrequency
+               && !muse::RealIsEqualOrLess(endFrequency, centerFrequency)
+               && !muse::RealIsEqualOrLess(centerFrequency, startFrequency);
     }
 
     constexpr bool operator==(const FrequencySelection& other) const
     {
         return trackId == other.trackId
                && startFrequency == other.startFrequency
-               && endFrequency == other.endFrequency;
+               && endFrequency == other.endFrequency
+               && centerFrequency == other.centerFrequency;
     }
 
     constexpr bool operator!=(const FrequencySelection& other) const
@@ -107,4 +115,18 @@ struct SpectrogramRulerTicks {
     std::vector<SpectrogramRulerTick> major;
     std::vector<SpectrogramRulerTick> minor;
 };
+
+enum class SpectralEffectId {
+    DeleteSelection,
+    DeleteCenterFrequency,
+    AmplifySelection,
+    AmplifyCenterFrequency,
+};
+
+struct SpectralEffect {
+    SpectralEffectId spectralEffectId;
+    muse::actions::ActionCode action;
+};
+
+using SpectralEffectList = std::vector<SpectralEffect>;
 }

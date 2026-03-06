@@ -13,6 +13,20 @@ FrequencySelectionController::FrequencySelectionController(const muse::modularit
 {
 }
 
+bool FrequencySelectionController::showsSpectrogram(int trackId) const
+{
+    return m_tracksWithSpectrogramShown.find(trackId) != m_tracksWithSpectrogramShown.end();
+}
+
+void FrequencySelectionController::setShowsSpectrogram(int trackId, bool value)
+{
+    if (value) {
+        m_tracksWithSpectrogramShown.insert(trackId);
+    } else {
+        m_tracksWithSpectrogramShown.erase(trackId);
+    }
+}
+
 FrequencySelection FrequencySelectionController::frequencySelection() const
 {
     return m_frequencySelection;
@@ -22,6 +36,10 @@ void FrequencySelectionController::setFrequencySelection(FrequencySelection freq
 {
     const std::optional<int> previousTrackId
         = m_frequencySelection.isValid() ? std::make_optional(m_frequencySelection.trackId) : std::nullopt;
+
+    frequencySelection.startFrequency = std::max(frequencySelection.startFrequency, 0.0);
+    frequencySelection.endFrequency
+        = std::min(frequencySelection.endFrequency, spectrogramService()->frequencyHardMaximum(frequencySelection.trackId));
 
     if (m_frequencySelection == frequencySelection) {
         return;
@@ -34,9 +52,7 @@ void FrequencySelectionController::setFrequencySelection(FrequencySelection freq
     });
 
     m_frequencySelection = frequencySelection;
-    if (frequencySelection.isValid()) {
-        m_frequencySelectionChanged.send(frequencySelection.trackId);
-    }
+    m_frequencySelectionChanged.send(frequencySelection.trackId);
 }
 
 void FrequencySelectionController::resetFrequencySelection()

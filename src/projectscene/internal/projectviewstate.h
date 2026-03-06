@@ -10,6 +10,7 @@
 #include "playback/iplaybackconfiguration.h"
 #include "trackedit/iselectioncontroller.h"
 #include "trackedit/iprojecthistory.h"
+#include "spectrogram/ifrequencyselectioncontroller.h"
 #include "../iprojectsceneconfiguration.h"
 
 #include "au3wrap/iau3project.h"
@@ -26,6 +27,7 @@ class ProjectViewState : public QObject, public IProjectViewState, public muse::
 
     muse::Inject<au::context::IGlobalContext> globalContext{ this };
     muse::Inject<trackedit::ISelectionController> selectionController{ this };
+    muse::Inject<spectrogram::IFrequencySelectionController> frequencySelectionController{ this };
     muse::Inject<trackedit::IProjectHistory> projectHistory{ this };
 
 public:

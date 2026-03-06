@@ -598,6 +598,15 @@ void TrackeditActionsController::doGlobalDelete()
         }
     }
 
+    const auto frequencySelection = frequencySelectionController()->frequencySelection();
+    if (frequencySelectionController()->showsSpectrogram(frequencySelection.trackId) && frequencySelection.isValid()) {
+        const auto actionCode = spectralEffectsRegister()->spectralEffectActionCode(spectrogram::SpectralEffectId::DeleteSelection);
+        if (!actionCode.empty()) {
+            dispatcher()->dispatch(actionCode);
+            return;
+        }
+    }
+
     if (selectionController()->timeSelectionIsNotEmpty()) {
         auto selectedTracks = selectionController()->selectedTracks();
         secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
@@ -1878,8 +1887,15 @@ void TrackeditActionsController::changeTrackView(const muse::actions::ActionQuer
 void TrackeditActionsController::openTrackSpectrogramSettings(const muse::actions::ActionQuery& q)
 {
     muse::UriQuery spectrogramSettingsUri("audacity://trackedit/track_spectrogram_settings");
-    spectrogramSettingsUri.addParam("trackId", muse::Val(q.param("trackId").toInt()));
-    spectrogramSettingsUri.addParam("trackTitle", muse::Val(q.param("trackTitle").toString()));
+
+    const auto trackId = q.param("trackId").toInt();
+    spectrogramSettingsUri.addParam("trackId", muse::Val(trackId));
+
+    const auto prj = globalContext()->currentTrackeditProject();
+    const std::optional<trackedit::Track> track = prj ? prj->track(trackId) : std::nullopt;
+    const auto trackTitle = track.has_value() ? track->title.toStdString() : "";
+
+    spectrogramSettingsUri.addParam("trackTitle", muse::Val(trackTitle));
     interactive()->open(spectrogramSettingsUri);
 }
 
