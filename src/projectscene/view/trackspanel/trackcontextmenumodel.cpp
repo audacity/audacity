@@ -62,7 +62,7 @@ MenuItemList TrackContextMenuModel::makeStereoTrackItems()
         makeItemWithArg("track-delete"),
         makeSeparator(),
         makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Move track"), makeTrackMoveItems()),
-        makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Track view"), makeTrackViewItems()),
+        makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Track visualization"), makeTrackVisualizationItems()),
         makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Track color"), makeTrackColorItems(), TRACK_COLOR_MENU_ID),
         makeItemWithArg("toggle-vertical-rulers"),
         makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Meters && monitoring"), makeMeterMonitoringItems()),
@@ -87,7 +87,7 @@ MenuItemList TrackContextMenuModel::makeMonoTrackItems()
         makeItemWithArg("track-delete"),
         makeSeparator(),
         makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Move track"), makeTrackMoveItems()),
-        makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Track view"), makeTrackViewItems()),
+        makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Track visualization"), makeTrackVisualizationItems()),
         makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Track color"), makeTrackColorItems(), TRACK_COLOR_MENU_ID),
         makeItemWithArg("toggle-vertical-rulers"),
         makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Meters && monitoring"), makeMeterMonitoringItems()),
@@ -456,7 +456,7 @@ muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackMoveItems()
     };
 }
 
-muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackViewItems()
+muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackVisualizationItems()
 {
     m_trackViewTypeChangeActionCodeList.clear();
     muse::uicomponents::MenuItemList items;
