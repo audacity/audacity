@@ -240,10 +240,6 @@ void ProjectSceneContext::registerExports()
 
 void ProjectSceneContext::resolveImports()
 {
-    auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(mname);
-    if (ar) {
-        ar->reg(m_uiActions);
-    }
 }
 
 void ProjectSceneContext::onInit(const muse::IApplication::RunMode& mode)
@@ -255,6 +251,11 @@ void ProjectSceneContext::onInit(const muse::IApplication::RunMode& mode)
     m_uiActions->init();
     m_projectSceneActionsController->init();
     m_realtimeEffectPanelTrackSelection->init();
+
+    auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(mname);
+    if (ar) {
+        ar->reg(m_uiActions);
+    }
 }
 
 void ProjectSceneContext::onDeinit()
