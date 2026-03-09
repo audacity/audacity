@@ -25,7 +25,7 @@ BuiltinEffectBase {
     builtinEffectModel: DtmfViewModelFactory.createModel(root, root.instanceId)
     property alias dtmf: root.builtinEffectModel
 
-    property int bottomButtonsNavigationPanelOrder: 3
+    numNavigationPanels: 3
     property NavigationPanel leftColumnNavigationPanel: NavigationPanel {
         name: "DtmfLeftColumn"
         enabled: root.enabled && root.visible

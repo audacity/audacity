@@ -27,7 +27,7 @@ DynamicsEffectBase {
     }
     property alias compressor: root.builtinEffectModel
 
-    property int bottomButtonsNavigationPanelOrder: 4
+    numNavigationPanels: 4
     property NavigationPanel dynamicsPanelNavigationPanel: NavigationPanel {
         name: "CompressorDynamicsPanel"
         enabled: root.enabled && root.visible && !root.usedDestructively

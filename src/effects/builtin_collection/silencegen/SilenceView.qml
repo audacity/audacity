@@ -21,7 +21,7 @@ BuiltinEffectBase {
     builtinEffectModel: SilenceViewModelFactory.createModel(root, root.instanceId)
     property alias silence: root.builtinEffectModel
 
-    property int bottomButtonsNavigationPanelOrder: 2
+    numNavigationPanels: 2
     property NavigationPanel timecodeNavigationPanel: NavigationPanel {
         name: "SilenceDuration"
         enabled: root.enabled && root.visible

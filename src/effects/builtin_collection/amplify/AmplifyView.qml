@@ -9,10 +9,10 @@ BuiltinEffectBase {
 
     property string title: amplify.effectTitle
     property bool isApplyAllowed: amplify.isApplyAllowed
-    property int bottomButtonsNavigationPanelOrder: 2
 
     width: 320
     implicitHeight: column.height
+    numNavigationPanels: 2
 
     builtinEffectModel: {
         var model = AmplifyViewModelFactory.createModel(root, root.instanceId)
@@ -68,7 +68,7 @@ BuiltinEffectBase {
             width: parent.width
 
             navigationPanel: root.amplifyNavigationPanel
-            navigationOrderStart: ampSlider.navigationOrderStart + 2
+            navigationOrderStart: ampSlider.navigationOrderEnd + 1
 
             text: amplify.newPeakLabel
             measureUnitsSymbol: amplify.newPeakMeasureUnitsSymbol

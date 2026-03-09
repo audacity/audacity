@@ -24,7 +24,7 @@ BuiltinEffectBase {
     builtinEffectModel: ToneViewModelFactory.createModel(root, root.instanceId)
     property alias tone: root.builtinEffectModel
 
-    property int bottomButtonsNavigationPanelOrder: 2
+    numNavigationPanels: 2
     property NavigationPanel controlsNavigationPanel: NavigationPanel {
         name: "ToneControls"
         enabled: root.enabled && root.visible

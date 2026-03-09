@@ -11,12 +11,12 @@ BuiltinEffectBase {
 
     property string title: qsTrc("effects/graphiceq", "Graphic EQ")
     property bool isApplyAllowed: true
-    property int bottomButtonsNavigationPanelOrder: 3
 
     width: boardRectangle.width
     implicitHeight: boardRectangle.height
 
     builtinEffectModel: GraphicEqViewModelFactory.createModel(root, root.instanceId)
+    numNavigationPanels: 3
     property alias graphicEq: root.builtinEffectModel
     property NavigationPanel slidersNavigationPanel: NavigationPanel {
         name: "GraphicEqSliders"

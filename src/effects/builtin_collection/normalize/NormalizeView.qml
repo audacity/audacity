@@ -10,12 +10,12 @@ BuiltinEffectBase {
 
     property string title: qsTrc("effects/normalize", "Normalize")
     property bool isApplyAllowed: removeDcCheckbox.checked || normalizePeakAmplitudeCheckbox.checked
-    property int bottomButtonsNavigationPanelOrder: 2
 
     width: 400
     implicitHeight: column.height
 
     builtinEffectModel: NormalizeViewModelFactory.createModel(root, root.instanceId)
+    numNavigationPanels: 2
     property alias normalize: root.builtinEffectModel
     property NavigationPanel normalizeNavigationPanel: NavigationPanel {
         name: "NormalizeControls"

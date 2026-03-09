@@ -12,12 +12,12 @@ BuiltinEffectBase {
 
     property string title: qsTrc("effects/noisereduction", "Noise Reduction")
     property bool isApplyAllowed: noiseReduction.isApplyAllowed
-    property int bottomButtonsNavigationPanelOrder: 4
 
     implicitHeight: column.implicitHeight
     implicitWidth: row.implicitWidth
 
     builtinEffectModel: NoiseReductionViewModelFactory.createModel(root, root.instanceId)
+    numNavigationPanels: 4
     property alias noiseReduction: root.builtinEffectModel
     property NavigationPanel getNoiseProfileNavigationPanel: NavigationPanel {
         name: "NoiseReductionGetProfile"

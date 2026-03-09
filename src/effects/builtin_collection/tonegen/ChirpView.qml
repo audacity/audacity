@@ -16,12 +16,12 @@ BuiltinEffectBase {
 
     property string title: qsTrc("effects", "Chirp")
     property bool isApplyAllowed: chirp.isApplyAllowed
-    property int bottomButtonsNavigationPanelOrder: 5
 
     width: 370
     implicitHeight: column.height
 
     builtinEffectModel: ToneViewModelFactory.createModel(root, root.instanceId)
+    numNavigationPanels: 5
     property alias chirp: root.builtinEffectModel
     property NavigationPanel waveformNavigationPanel: NavigationPanel {
         name: "ChirpWaveform"

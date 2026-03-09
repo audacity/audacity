@@ -9,12 +9,12 @@ BuiltinEffectBase {
 
     property string title: clickRemoval.effectTitle
     property bool isApplyAllowed: true
-    property int bottomButtonsNavigationPanelOrder: 2
 
     width: 328
     implicitHeight: column.height
 
     builtinEffectModel: ClickRemovalViewModelFactory.createModel(root, root.instanceId)
+    numNavigationPanels: 2
     property alias clickRemoval: root.builtinEffectModel
     property NavigationPanel clickRemovalNavigationPanel: NavigationPanel {
         name: "ClickRemovalSliders"

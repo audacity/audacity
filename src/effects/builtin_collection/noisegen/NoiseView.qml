@@ -24,7 +24,7 @@ BuiltinEffectBase {
     builtinEffectModel: NoiseViewModelFactory.createModel(root, root.instanceId)
     property alias noise: root.builtinEffectModel
 
-    property int bottomButtonsNavigationPanelOrder: 2
+    numNavigationPanels: 2
     property NavigationPanel controlsNavigationPanel: NavigationPanel {
         name: "NoiseControls"
         enabled: root.enabled && root.visible

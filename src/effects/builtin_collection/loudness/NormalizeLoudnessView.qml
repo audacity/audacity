@@ -9,12 +9,12 @@ BuiltinEffectBase {
 
     property string title: normalizeLoudness.effectTitle
     property bool isApplyAllowed: true
-    property int bottomButtonsNavigationPanelOrder: 2
 
     width: 400
     implicitHeight: column.height
 
     builtinEffectModel: NormalizeLoudnessViewModelFactory.createModel(root, root.instanceId)
+    numNavigationPanels: 2
     property alias normalizeLoudness: root.builtinEffectModel
     property NavigationPanel normalizeLoudnessNavigationPanel: NavigationPanel {
         name: "NormalizeLoudnessControls"

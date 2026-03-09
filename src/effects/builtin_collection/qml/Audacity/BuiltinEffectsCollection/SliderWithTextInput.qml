@@ -21,6 +21,7 @@ Column {
 
     property var navigationPanel: null
     property int navigationOrderStart: 0
+    readonly property int navigationOrderEnd: incrementalPropertyControl.navigation.order
 
     signal newValueRequested(double newValue)
 
