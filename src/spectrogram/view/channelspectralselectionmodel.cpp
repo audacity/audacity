@@ -166,8 +166,8 @@ void ChannelSpectralSelectionModel::dragCenterFrequency(double y)
     const double peakFrequency = m_peakFinder->findPeak(frequency);
     const double peakPosition = frequencyToPosition(peakFrequency);
 
-    const auto startFreqPos = frequencyToPosition(m_dragStartFrequencySelection.startFrequency);
-    const auto endFreqPos = frequencyToPosition(m_dragStartFrequencySelection.endFrequency);
+    const auto startFreqPos = frequencyToPosition(m_dragStartFrequencySelection.startFrequency());
+    const auto endFreqPos = frequencyToPosition(m_dragStartFrequencySelection.endFrequency());
     const auto range = endFreqPos - startFreqPos;
     auto newStartFreqPos = peakPosition - range / 2;
     auto newEndFreqPos = peakPosition + range / 2;
@@ -195,10 +195,11 @@ void ChannelSpectralSelectionModel::dragCenterFrequency(double y)
 
     const auto newStartFreq = positionToFrequency(newStartFreqPos);
     const auto newEndFreq = positionToFrequency(newEndFreqPos);
-    const auto newCenterFreq = positionToFrequency(peakPosition);
 
-    frequencySelectionController()->setFrequencySelection({ m_dragStartFrequencySelection.trackId, newStartFreq, newEndFreq,
-                                                            newCenterFreq });
+    FrequencySelection newSelection = m_dragStartFrequencySelection;
+    newSelection.setFrequencyRange(newStartFreq, newEndFreq, config->scale());
+
+    frequencySelectionController()->setFrequencySelection(std::move(newSelection));
 }
 
 void ChannelSpectralSelectionModel::endCenterFrequencyDrag()

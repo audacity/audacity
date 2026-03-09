@@ -4,8 +4,7 @@
 #include "frequencyselectioncontroller.h"
 
 #include "framework/global/defer.h"
-
-// clip selection
+#include "framework/global/log.h"
 
 namespace au::spectrogram {
 FrequencySelectionController::FrequencySelectionController(const muse::modularity::ContextPtr& ctx)
@@ -34,12 +33,18 @@ FrequencySelection FrequencySelectionController::frequencySelection() const
 
 void FrequencySelectionController::setFrequencySelection(FrequencySelection frequencySelection)
 {
+    const auto config = spectrogramService()->trackSpectrogramConfiguration(frequencySelection.trackId);
+    IF_ASSERT_FAILED(config) {
+        return;
+    }
+
     const std::optional<int> previousTrackId
         = m_frequencySelection.isValid() ? std::make_optional(m_frequencySelection.trackId) : std::nullopt;
 
-    frequencySelection.startFrequency = std::max(frequencySelection.startFrequency, 0.0);
-    frequencySelection.endFrequency
-        = std::min(frequencySelection.endFrequency, spectrogramService()->frequencyHardMaximum(frequencySelection.trackId));
+    const auto startFrequency = std::max(frequencySelection.startFrequency(), 0.0);
+    const auto endFrequency
+        = std::min(frequencySelection.endFrequency(), spectrogramService()->frequencyHardMaximum(frequencySelection.trackId));
+    frequencySelection.setFrequencyRange(startFrequency, endFrequency, config->scale());
 
     if (m_frequencySelection == frequencySelection) {
         return;

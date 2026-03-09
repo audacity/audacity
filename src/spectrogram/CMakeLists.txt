@@ -15,6 +15,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/ispectrogramservice.h
     ${CMAKE_CURRENT_LIST_DIR}/spectrogrammodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/spectrogrammodule.h
+    ${CMAKE_CURRENT_LIST_DIR}/spectrogramtypes.cpp
     ${CMAKE_CURRENT_LIST_DIR}/spectrogramtypes.h
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/ispectrogrampainter.h

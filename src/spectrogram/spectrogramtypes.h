@@ -4,7 +4,6 @@
 #pragma once
 
 #include "framework/actions/actiontypes.h"
-#include "framework/global/realfn.h"
 
 namespace au::spectrogram {
 // Spectrogram
@@ -72,38 +71,29 @@ struct ViewInfo {
     const double pixelsPerSecond = 0.; // aka zoom
 };
 
-struct FrequencySelection {
+class FrequencySelection
+{
+public:
     FrequencySelection() = default;
-    FrequencySelection(int trackId, double f1, double f2, double centerFrequency)
-        : trackId(trackId), startFrequency(std::min(f1, f2)), endFrequency(std::max(f1, f2)), centerFrequency(centerFrequency) {}
+    FrequencySelection(int trackId);
 
     int trackId = -1;
-    double startFrequency = SelectionInfo::UndefinedFrequency;
-    double endFrequency = SelectionInfo::UndefinedFrequency;
-    double centerFrequency = SelectionInfo::UndefinedFrequency;
 
-    constexpr bool isValid() const
-    {
-        return trackId != -1
-               && startFrequency != SelectionInfo::UndefinedFrequency
-               && endFrequency != SelectionInfo::UndefinedFrequency
-               && centerFrequency != SelectionInfo::UndefinedFrequency
-               && !muse::RealIsEqualOrLess(endFrequency, centerFrequency)
-               && !muse::RealIsEqualOrLess(centerFrequency, startFrequency);
-    }
+    void setFrequencyRange(double f1, double f2, SpectrogramScale scale);
 
-    constexpr bool operator==(const FrequencySelection& other) const
-    {
-        return trackId == other.trackId
-               && startFrequency == other.startFrequency
-               && endFrequency == other.endFrequency
-               && centerFrequency == other.centerFrequency;
-    }
+    double startFrequency() const { return m_startFrequency; }
+    double endFrequency() const { return m_endFrequency; }
+    double centerFrequency() const { return m_centerFrequency; }
 
-    constexpr bool operator!=(const FrequencySelection& other) const
-    {
-        return !(*this == other);
-    }
+    bool isValid() const;
+
+    bool operator==(const FrequencySelection& other) const;
+    bool operator!=(const FrequencySelection& other) const;
+
+private:
+    double m_startFrequency = SelectionInfo::UndefinedFrequency;
+    double m_endFrequency = SelectionInfo::UndefinedFrequency;
+    double m_centerFrequency = SelectionInfo::UndefinedFrequency;
 };
 
 struct SpectrogramRulerTick {
