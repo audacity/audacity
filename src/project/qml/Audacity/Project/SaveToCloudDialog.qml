@@ -49,6 +49,10 @@ StyledDialogView {
         id: model
     }
 
+    NewProjectModel {
+        id: newProjectModel
+    }
+
     Component.onCompleted: {
         model.init()
     }
@@ -182,7 +186,7 @@ StyledDialogView {
                 text: prv.saveButtonText
                 buttonRole: ButtonBoxModel.ApplyRole
                 buttonId: ButtonBoxModel.Apply
-                enabled: projectNameField.hasText
+                enabled: newProjectModel.isFilenameAllowed(projectNameField.value)
 
                 onClicked: function() {
                     if (model.isAuthorized) {

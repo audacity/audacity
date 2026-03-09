@@ -43,6 +43,7 @@ public:
 
     Q_INVOKABLE QString preferredProjectCreationMode() const;
     Q_INVOKABLE bool createProject(const QVariant& info);
+    Q_INVOKABLE bool isFilenameAllowed(const QString& filename) const;
 
 private:
     project::ProjectCreateOptions parseOptions(const QVariantMap& info) const;
