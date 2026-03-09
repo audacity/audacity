@@ -31,7 +31,7 @@ FrequencySelection FrequencySelectionController::frequencySelection() const
     return m_frequencySelection;
 }
 
-void FrequencySelectionController::setFrequencySelection(FrequencySelection frequencySelection)
+void FrequencySelectionController::setFrequencySelection(FrequencySelection frequencySelection, bool complete)
 {
     const auto config = spectrogramService()->trackSpectrogramConfiguration(frequencySelection.trackId);
     IF_ASSERT_FAILED(config) {
@@ -46,18 +46,17 @@ void FrequencySelectionController::setFrequencySelection(FrequencySelection freq
         = std::min(frequencySelection.endFrequency(), spectrogramService()->frequencyHardMaximum(frequencySelection.trackId));
     frequencySelection.setFrequencyRange(startFrequency, endFrequency, config->scale());
 
-    if (m_frequencySelection == frequencySelection) {
-        return;
+    if (m_frequencySelection != frequencySelection) {
+        muse::Defer notifyPreviousTrack([this, trackId = frequencySelection.trackId, previousTrackId, complete]() {
+            if (previousTrackId && previousTrackId != trackId) {
+                m_frequencySelectionChanged.send(*previousTrackId, complete);
+            }
+        });
+
+        m_frequencySelection = frequencySelection;
     }
 
-    muse::Defer notifyPreviousTrack([this, trackId = frequencySelection.trackId, previousTrackId]() {
-        if (previousTrackId && previousTrackId != trackId) {
-            m_frequencySelectionChanged.send(*previousTrackId);
-        }
-    });
-
-    m_frequencySelection = frequencySelection;
-    m_frequencySelectionChanged.send(frequencySelection.trackId);
+    m_frequencySelectionChanged.send(frequencySelection.trackId, complete);
 }
 
 void FrequencySelectionController::resetFrequencySelection()
@@ -69,10 +68,10 @@ void FrequencySelectionController::resetFrequencySelection()
     const int previousTrackId = m_frequencySelection.trackId;
 
     m_frequencySelection = FrequencySelection{};
-    m_frequencySelectionChanged.send(previousTrackId);
+    m_frequencySelectionChanged.send(previousTrackId, true);
 }
 
-muse::async::Channel<int> FrequencySelectionController::frequencySelectionChanged() const
+muse::async::Channel<int, bool> FrequencySelectionController::frequencySelectionChanged() const
 {
     return m_frequencySelectionChanged;
 }

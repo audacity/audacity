@@ -96,7 +96,7 @@ void SelectionViewController::onPressed(double x, double y, spectrogram::Spectro
         m_spectrogramHit.emplace(spectrogramHit);
     }
     emit pressedSpectrogramChanged();
-    setFrequencySelection(y, y);
+    setFrequencySelection(y, y, false);
 
     viewState()->updateItemsBoundaries(true);
 
@@ -118,7 +118,7 @@ void SelectionViewController::onPositionChanged(double x, double y)
         y = clampToSpectrogram(*m_spectrogramHit, y);
     }
     if (doOnPositionChanged(x, y)) {
-        setFrequencySelection(y, m_startPoint.y());
+        setFrequencySelection(y, m_startPoint.y(), false);
     }
 }
 
@@ -176,6 +176,7 @@ void SelectionViewController::onReleased(double x, double y)
         return;
     }
 
+    setFrequencySelection(y, m_startPoint.y(), true);
     m_spectrogramHit.reset();
 
     IProjectViewStatePtr vs = viewState();
@@ -287,7 +288,7 @@ void SelectionViewController::updateSelectionVerticalResize(double y1, double y2
         return;
     }
 
-    setFrequencySelection(y1, y2);
+    setFrequencySelection(y1, y2, completed);
 
     // Only extend track selection to other tracks if there is no spectral selection.
     const auto frequencySelection = frequencySelectionController()->frequencySelection();
@@ -498,7 +499,7 @@ double SelectionViewController::spectrogramHitFrequency(const spectrogram::Spect
     return spectrogramService()->yToFrequency(hit.trackId, y - hit.spectrogramY, hit.spectrogramHeight);
 }
 
-void SelectionViewController::setFrequencySelection(double y1, double y2)
+void SelectionViewController::setFrequencySelection(double y1, double y2, bool complete)
 {
     if (!m_spectrogramHit || !isInExtendedSpectrogram(*m_spectrogramHit, y1) || !isInExtendedSpectrogram(*m_spectrogramHit, y2)) {
         frequencySelectionController()->resetFrequencySelection();
@@ -515,7 +516,7 @@ void SelectionViewController::setFrequencySelection(double y1, double y2)
 
     spectrogram::FrequencySelection frequencySelection{ m_spectrogramHit->trackId };
     frequencySelection.setFrequencyRange(freq1, freq2, config->scale());
-    frequencySelectionController()->setFrequencySelection(std::move(frequencySelection));
+    frequencySelectionController()->setFrequencySelection(std::move(frequencySelection), complete);
 }
 
 bool SelectionViewController::isInExtendedSpectrogram(const spectrogram::SpectrogramHit& hit, double y) const

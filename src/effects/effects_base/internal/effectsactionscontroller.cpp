@@ -28,7 +28,10 @@ void EffectsActionsController::init()
         m_canReceiveActionsChanged.send({ "repeat-last-effect" });
     });
 
-    frequencySelectionController()->frequencySelectionChanged().onReceive(this, [this](auto) {
+    frequencySelectionController()->frequencySelectionChanged().onReceive(this, [this](auto, bool complete) {
+        if (!complete) {
+            return;
+        }
         ActionCodeList codes;
         const auto spectralEffects = spectralEffectsRegister()->spectralEffects();
         for (const auto& spectralEffect : spectralEffects) {
