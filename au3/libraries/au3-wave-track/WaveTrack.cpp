@@ -1332,8 +1332,23 @@ void WaveTrack::ClearAndPaste(
         THROW_INCONSISTENCY_EXCEPTION;
     }
     const auto copyHolder = src.DuplicateWithOtherTempo(*tempo);
+    const auto clipsBefore = SortedIntervalArray();
     ClearAndPasteAtSameTempo(
         t0, t1, *copyHolder, preserve, merge, effectWarper, clearByTrimming);
+
+    const auto clipsAfter = SortedIntervalArray();
+    // If clips before and after have the same play start and end times, apply the IDs of the original clips:
+    if (clipsBefore.size() == clipsAfter.size()) {
+        for (size_t i = 0; i < clipsBefore.size(); ++i) {
+            if (clipsBefore[i]->GetPlayStartTime() != clipsAfter[i]->GetPlayStartTime()
+                || clipsBefore[i]->GetPlayEndTime() != clipsAfter[i]->GetPlayEndTime()) {
+                return;
+            }
+        }
+        for (size_t i = 0; i < clipsBefore.size(); ++i) {
+            clipsAfter[i]->SetId(clipsBefore[i]->GetId());
+        }
+    }
 }
 
 void WaveTrack::ClearAndPasteAtSameTempo(
