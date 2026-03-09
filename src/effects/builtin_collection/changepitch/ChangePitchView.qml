@@ -443,6 +443,7 @@ BuiltinEffectBase {
             id: highQualityStretchingCheckbox
 
             Layout.fillWidth: true
+            Layout.bottomMargin: 2
 
             navigation.panel: root.highQualityStretchingNavigationPanel
             navigation.order: 0
