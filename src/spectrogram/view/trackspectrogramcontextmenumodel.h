@@ -22,7 +22,6 @@ class TrackSpectrogramContextMenuModel : public muse::uicomponents::AbstractMenu
 public:
     TrackSpectrogramContextMenuModel(QObject* parent = nullptr);
 
-    // Couldn't find out why implementing QQmlParserStatus broke compilation. Have to use `init` instead.
     Q_INVOKABLE void init();
 
     void load() override;
