@@ -8,8 +8,6 @@
 #include "framework/uicomponents/qml/Muse/UiComponents/menuitem.h"
 #include "types/translatablestring.h"
 
-static const muse::actions::ActionCode ENABLE_STRETCH_CODE("stretch-clip-to-match-tempo");
-
 namespace au::spectrogram {
 TrackSpectrogramContextMenuModel::TrackSpectrogramContextMenuModel(QObject* parent)
     : AbstractMenuModel(parent) {}
