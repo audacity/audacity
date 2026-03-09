@@ -1,10 +1,12 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
 #include "effectmanagemenu.h"
 
 #include "effects/effects_base/effectstypes.h"
 #include "au3-components/EffectInterface.h"
 #include "au3-effects/Effect.h"
 #include "au3wrap/internal/wxtypes_convert.h"
-#include <algorithm>
 
 using namespace muse;
 using namespace muse::actions;
@@ -47,15 +49,10 @@ void EffectManageMenu::load()
             return;
         }
 
-        const bool oldCanReset = canResetPreset();
         m_currentPreset = presetId;
         m_isPresetUnsaved = false;
         updatePresetDisplayNames();
-        emit presetChanged();
-        emit canDeletePresetChanged();
-        if (oldCanReset != canResetPreset()) {
-            emit canResetPresetChanged();
-        }
+        updatePresetBar();
     }, muse::async::Asyncable::Mode::SetReplace);
 
     parametersProvider()->parameterChanged().onReceive(this, [this](const ParameterChangedData& data) {
@@ -80,16 +77,11 @@ void EffectManageMenu::load()
         m_hasLoadedInitialPreset = true;
         const QString storedPresetId = QString::fromStdString(configuration()->lastUsedPreset(effectId));
         if (!storedPresetId.isEmpty() && hasPreset(storedPresetId)) {
-            const bool oldCanReset = canResetPreset();
             m_currentPreset = storedPresetId;
             resetPreset();
             m_isPresetUnsaved = false;
             updatePresetDisplayNames();
-            emit presetChanged();
-            emit canDeletePresetChanged();
-            if (oldCanReset != canResetPreset()) {
-                emit canResetPresetChanged();
-            }
+            updatePresetBar();
         }
     }
 }
@@ -109,8 +101,6 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
         { "iconCode", 0 } };
     m_basePresetNames.insert("default", muse::qtrc("effects", "Default preset"));
 
-    // Build presets model for the dropdown, but do not expose duplicated
-    // preset apply/save actions in the three-dots manage menu.
     PresetIdList userPresets = presetsController()->userPresets(effectId);
     m_userPresets.clear();
     for (const PresetId& p : userPresets) {
@@ -136,7 +126,6 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
 
     m_presets = presets;
 
-    const bool oldCanReset = canResetPreset();
     if (!m_currentPreset.isEmpty() && !hasPreset(m_currentPreset)) {
         m_currentPreset.clear();
         m_isPresetUnsaved = false;
@@ -149,9 +138,7 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
 
     updatePresetDisplayNames();
     emit canDeletePresetChanged();
-    if (oldCanReset != canResetPreset()) {
-        emit canResetPresetChanged();
-    }
+    emit canResetPresetChanged();
 }
 
 int EffectManageMenu::instanceId_prop() const
@@ -164,15 +151,13 @@ void EffectManageMenu::setInstanceId_prop(int newInstanceId)
     if (m_instanceId == newInstanceId) {
         return;
     }
-    const bool oldCanReset = canResetPreset();
+
     m_instanceId = newInstanceId;
     m_currentPreset.clear();
     m_isPresetUnsaved = false;
     m_hasLoadedInitialPreset = false;
     emit instanceIdChanged();
-    if (oldCanReset != canResetPreset()) {
-        emit canResetPresetChanged();
-    }
+    emit canResetPresetChanged();
 }
 
 QVariantList EffectManageMenu::presets()
@@ -187,16 +172,11 @@ QString EffectManageMenu::preset() const
 
 void EffectManageMenu::setPreset(QString presetId)
 {
-    const bool oldCanReset = canResetPreset();
     m_currentPreset = presetId;
     resetPreset();
     m_isPresetUnsaved = false;
     updatePresetDisplayNames();
-    emit presetChanged();
-    emit canDeletePresetChanged();
-    if (oldCanReset != canResetPreset()) {
-        emit canResetPresetChanged();
-    }
+    updatePresetBar();
 }
 
 bool EffectManageMenu::enabled() const
@@ -398,12 +378,9 @@ void EffectManageMenu::setPresetUnsaved(bool unsaved)
         return;
     }
 
-    const bool oldCanReset = canResetPreset();
     m_isPresetUnsaved = unsaved;
     updatePresetDisplayNames();
-    if (oldCanReset != canResetPreset()) {
-        emit canResetPresetChanged();
-    }
+    emit canResetPresetChanged();
 }
 
 void EffectManageMenu::updatePresetDisplayNames()
@@ -421,4 +398,11 @@ void EffectManageMenu::updatePresetDisplayNames()
     }
 
     emit presetsChanged();
+}
+
+void EffectManageMenu::updatePresetBar()
+{
+    emit presetChanged();
+    emit canDeletePresetChanged();
+    emit canResetPresetChanged();
 }

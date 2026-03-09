@@ -1,12 +1,12 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
 #pragma once
 
 #include <QObject>
+
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/async/asyncable.h"
-
-#include <QHash>
-#include <QStringList>
-#include <QVariant>
 
 #include "effects/effects_base/ieffectparametersprovider.h"
 #include "effects/effects_base/ieffectpresetsprovider.h"
@@ -28,7 +28,8 @@ class EffectManageMenu : public QObject, public muse::Injectable, public muse::a
     Q_PROPERTY(bool canDeletePreset READ canDeletePreset NOTIFY canDeletePresetChanged FINAL)
     Q_PROPERTY(bool canResetPreset READ canResetPreset NOTIFY canResetPresetChanged FINAL)
     Q_PROPERTY(bool useVendorUI READ useVendorUI NOTIFY useVendorUIChanged FINAL)
-    Q_PROPERTY(bool persistLastUsedPreset READ persistLastUsedPreset WRITE setPersistLastUsedPreset NOTIFY persistLastUsedPresetChanged FINAL)
+    Q_PROPERTY(
+        bool persistLastUsedPreset READ persistLastUsedPreset WRITE setPersistLastUsedPreset NOTIFY persistLastUsedPresetChanged FINAL)
 
     muse::GlobalInject<IEffectsConfiguration> configuration;
 
@@ -81,6 +82,7 @@ private:
     bool isCurrentPresetUnsaved() const;
     void setPresetUnsaved(bool unsaved);
     void updatePresetDisplayNames();
+    void updatePresetBar();
 
     int m_instanceId = -1;
     QString m_currentPreset;
