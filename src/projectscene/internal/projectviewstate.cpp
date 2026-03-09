@@ -151,24 +151,6 @@ au::trackedit::TrackViewType getTrackViewType(const std::shared_ptr<au::project:
     return viewType == au::trackedit::TrackViewType::Undefined ? au::trackedit::TrackViewType::Waveform : viewType;
 }
 
-void setTrackViewType(const std::shared_ptr<au::project::IAudacityProject>& project, const au::trackedit::TrackId& trackId,
-                      au::trackedit::TrackViewType viewType, au::spectrogram::IFrequencySelectionController& frequencySelectionController)
-{
-    au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
-
-    au::au3::Au3WaveTrack* waveTrack = au::au3::DomAccessor::findWaveTrack(*au3Project, au::au3::Au3TrackId(trackId));
-    if (waveTrack == nullptr) {
-        return;
-    }
-
-    auto& cache = au::au3::TrackViewTypeAttachment::Get(waveTrack);
-    cache.SetTrackViewType(viewType);
-
-    const auto hasSpectrogram = viewType == au::trackedit::TrackViewType::Spectrogram
-                                || viewType == au::trackedit::TrackViewType::WaveformAndSpectrogram;
-    frequencySelectionController.setShowsSpectrogram(trackId, hasSpectrogram);
-}
-
 int getTrackRulerType(const std::shared_ptr<au::project::IAudacityProject>& project, const au::trackedit::TrackId& trackId)
 {
     const au::au3::Au3Project* au3Project = reinterpret_cast<const au::au3::Au3Project*>(project->au3ProjectPtr());
@@ -379,6 +361,36 @@ ProjectViewState::TrackData& ProjectViewState::makeTrackData(const trackedit::Tr
     m_verticalRulerWidth.set(calculateVerticalRulerWidth());
 
     return m_tracks.insert({ trackId, d }).first->second;
+}
+
+bool ProjectViewState::doSetTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType)
+{
+    const auto it = m_tracks.find(trackId);
+    if (it == m_tracks.end()) {
+        return false;
+    }
+
+    const auto project = globalContext()->currentProject();
+    IF_ASSERT_FAILED(project) {
+        return false;
+    }
+
+    au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
+
+    au::au3::Au3WaveTrack* waveTrack = au::au3::DomAccessor::findWaveTrack(*au3Project, au::au3::Au3TrackId(trackId));
+    if (waveTrack == nullptr) {
+        return false;
+    }
+
+    auto& cache = au::au3::TrackViewTypeAttachment::Get(waveTrack);
+    cache.SetTrackViewType(viewType);
+
+    const auto hasSpectrogram = viewType == au::trackedit::TrackViewType::Spectrogram
+                                || viewType == au::trackedit::TrackViewType::WaveformAndSpectrogram;
+    frequencySelectionController()->setShowsSpectrogram(trackId, hasSpectrogram);
+
+    it->second.viewType.set(viewType);
+    return true;
 }
 
 muse::ValCh<int> ProjectViewState::trackHeight(const trackedit::TrackId& trackId) const
@@ -827,10 +839,7 @@ void ProjectViewState::setTrackViewType(const trackedit::TrackId& trackId, track
         return;
     }
 
-    const auto it = m_tracks.find(trackId);
-    if (it != m_tracks.end()) {
-        it->second.viewType.set(viewType);
-        ::setTrackViewType(project, trackId, viewType, *frequencySelectionController());
+    if (doSetTrackViewType(trackId, viewType)) {
         projectHistory()->modifyState();
         projectHistory()->markUnsaved();
     }
@@ -850,8 +859,7 @@ void ProjectViewState::toggleGlobalSpectrogramView()
         for (auto& [trackId, trackData] : m_tracks) {
             if (trackData.viewType.val == TrackViewType::Waveform || trackData.viewType.val == TrackViewType::WaveformAndSpectrogram) {
                 changed = true;
-                trackData.viewType.set(TrackViewType::Spectrogram);
-                ::setTrackViewType(prj, trackId, TrackViewType::Spectrogram, *frequencySelectionController());
+                doSetTrackViewType(trackId, TrackViewType::Spectrogram);
             }
         }
     } else {
@@ -860,7 +868,7 @@ void ProjectViewState::toggleGlobalSpectrogramView()
             if (trackData.viewType.val == TrackViewType::Spectrogram || trackData.viewType.val == TrackViewType::WaveformAndSpectrogram) {
                 changed = true;
                 trackData.viewType.set(TrackViewType::Waveform);
-                ::setTrackViewType(prj, trackId, TrackViewType::Waveform, *frequencySelectionController());
+                doSetTrackViewType(trackId, TrackViewType::Waveform);
             }
         }
     }
