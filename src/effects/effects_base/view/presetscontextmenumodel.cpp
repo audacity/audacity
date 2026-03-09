@@ -1,3 +1,6 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
 #include "presetscontextmenumodel.h"
 
 using namespace muse;

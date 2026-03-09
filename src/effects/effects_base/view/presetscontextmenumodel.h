@@ -1,10 +1,13 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
 #pragma once
 
 #include "framework/uicomponents/qml/Muse/UiComponents/abstractmenumodel.h"
-#include "framework/global/modularity/ioc.h"
 
-#include "effects/effects_base/ieffectinstancesregister.h"
+#include "framework/global/modularity/ioc.h"
 #include "effects/effects_base/ieffectsconfiguration.h"
+#include "effects/effects_base/ieffectinstancesregister.h"
 #include "effects/effects_base/ieffectsprovider.h"
 
 namespace au::effects {
