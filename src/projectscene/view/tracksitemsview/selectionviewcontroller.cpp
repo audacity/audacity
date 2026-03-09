@@ -378,6 +378,7 @@ void SelectionViewController::resetDataSelection()
     }
     setSelectionActive(false);
     selectionController()->resetDataSelection();
+    frequencySelectionController()->resetFrequencySelection();
 }
 
 bool SelectionViewController::isLeftSelection(double x) const
