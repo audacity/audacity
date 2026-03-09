@@ -145,6 +145,7 @@ private:
     mutable muse::ValCh<int> m_verticalRulerWidth;
 
     TrackData& makeTrackData(const trackedit::TrackId& trackId) const;
+    bool doSetTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType);
 
     bool eventFilter(QObject* watched, QEvent* event) override;
 
