@@ -7,6 +7,8 @@
 
 #include "framework/global/modularity/imoduleinterface.h"
 
+#include <optional>
+
 namespace au::spectrogram {
 class ISpectralEffectsRegister : MODULE_EXPORT_INTERFACE
 {
@@ -17,6 +19,6 @@ public:
 
     virtual void registerSpectralEffect(const SpectralEffect&) = 0;
     virtual SpectralEffectList spectralEffects() const = 0;
-    virtual muse::actions::ActionCode spectralEffectActionCode(SpectralEffectId id) const = 0;
+    virtual std::optional<SpectralEffect> spectralEffect(SpectralEffectId id) const = 0;
 };
 }

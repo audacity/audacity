@@ -36,7 +36,7 @@ signals:
 
 private:
     void onActionsStateChanges(const muse::actions::ActionCodeList& codes) override;
-    muse::uicomponents::MenuItem* makeSpectralEffectItem(SpectralEffectId id, const char* title);
+    muse::uicomponents::MenuItem* makeSpectralEffectItem(SpectralEffectId id);
     int m_trackId = -1;
 };
 }

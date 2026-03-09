@@ -600,9 +600,9 @@ void TrackeditActionsController::doGlobalDelete()
 
     const auto frequencySelection = frequencySelectionController()->frequencySelection();
     if (frequencySelectionController()->showsSpectrogram(frequencySelection.trackId) && frequencySelection.isValid()) {
-        const auto actionCode = spectralEffectsRegister()->spectralEffectActionCode(spectrogram::SpectralEffectId::DeleteSelection);
-        if (!actionCode.empty()) {
-            dispatcher()->dispatch(actionCode);
+        using namespace spectrogram;
+        if (const std::optional<SpectralEffect> effect = spectralEffectsRegister()->spectralEffect(SpectralEffectId::DeleteSelection)) {
+            dispatcher()->dispatch(effect->action);
             return;
         }
     }
