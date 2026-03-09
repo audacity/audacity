@@ -199,11 +199,12 @@ void ChannelSpectralSelectionModel::dragCenterFrequency(double y)
     FrequencySelection newSelection = m_dragStartFrequencySelection;
     newSelection.setFrequencyRange(newStartFreq, newEndFreq, config->scale());
 
-    frequencySelectionController()->setFrequencySelection(std::move(newSelection));
+    frequencySelectionController()->setFrequencySelection(std::move(newSelection), false);
 }
 
 void ChannelSpectralSelectionModel::endCenterFrequencyDrag()
 {
+    frequencySelectionController()->setFrequencySelection(frequencySelectionController()->frequencySelection(), true);
     m_peakFinder.reset();
     m_dragStartFrequencySelection = {};
     emit verticalDragActiveChanged();
