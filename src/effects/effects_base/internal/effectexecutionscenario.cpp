@@ -205,9 +205,9 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
             if (std::all_of(selectedTracks.begin(), selectedTracks.end(), [trackId](const trackedit::TrackId& id) {
                 return id == trackId;
             })) {
-                tp.f0 = frequencySelection.startFrequency;
-                tp.f1 = frequencySelection.endFrequency;
-                tp.centerFrequency = frequencySelection.centerFrequency;
+                tp.f0 = frequencySelection.startFrequency();
+                tp.f1 = frequencySelection.endFrequency();
+                tp.centerFrequency = frequencySelection.centerFrequency();
             }
             tp.spectralSelectionEnabled = spectrogramConfiguration()->spectralSelectionEnabled();
         }

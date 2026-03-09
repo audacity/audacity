@@ -341,8 +341,8 @@ QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
     case FrequencySelectionRole: {
         const spectrogram::FrequencySelection selection = frequencySelectionController()->frequencySelection();
         const auto startFrequency = selection.trackId
-                                    == track.id ? selection.startFrequency : spectrogram::SelectionInfo::UndefinedFrequency;
-        const auto endFrequency = selection.trackId == track.id ? selection.endFrequency : spectrogram::SelectionInfo::UndefinedFrequency;
+                                    == track.id ? selection.startFrequency() : spectrogram::SelectionInfo::UndefinedFrequency;
+        const auto endFrequency = selection.trackId == track.id ? selection.endFrequency() : spectrogram::SelectionInfo::UndefinedFrequency;
         const QVariantMap frequencySelectionMap {
             { "startFrequency", startFrequency },
             { "endFrequency", endFrequency }
