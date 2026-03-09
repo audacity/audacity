@@ -37,6 +37,9 @@ Item {
     }
 
     function getSpectrogramHit(y /* relative to tracks canvas */) {
+        if (!visible) {
+            return null
+        }
         y = root.mapFromItem(root.canvas, 0, y).y
         if (y < 0 || y > height) {
             return null
