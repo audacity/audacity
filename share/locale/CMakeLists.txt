@@ -20,7 +20,7 @@
 
 file(GLOB TS_FILES CONFIGURE_DEPENDS ${CMAKE_CURRENT_LIST_DIR}/audacity_*.ts)
 
-if (MU_RUN_LRELEASE)
+if (AU_RUN_LRELEASE)
     add_custom_target(translations ALL
         COMMENT "Generating .qm files" VERBATIM
     )

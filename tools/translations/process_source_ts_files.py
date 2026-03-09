@@ -16,7 +16,7 @@
 #   1. Add Qt's bin folder to $PATH
 #   2. Set POSTPROCESS_ARGS to "--generate-placeholder-translations"
 #   3. Call run_lupdate.sh
-#   4. Call run_lrelease.sh (or build with MU_RUN_LRELEASE=ON)
+#   4. Call run_lrelease.sh (or build with AU_RUN_LRELEASE=ON)
 #   5. Compile & run Audacity
 #   6. In Preferences > General, set language to «Placeholder translations»
 
