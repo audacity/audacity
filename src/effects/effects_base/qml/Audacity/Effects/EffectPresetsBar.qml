@@ -26,6 +26,16 @@ RowLayout {
 
     spacing: 4
 
+    function presetIconCodeById(presetId) {
+        const preset = manageMenuModel.presets.find(item => item.id === presetId)
+        return preset && preset.iconCode ? preset.iconCode : IconCode.NONE
+    }
+
+    function presetIconCodeByName(name) {
+        const preset = manageMenuModel.presets.find(item => item.name === name)
+        return preset && preset.iconCode ? preset.iconCode : IconCode.NONE
+    }
+
     function manage(button) {
         activeMenuModel = manageMenuModel.presetContextMenu()
         var pos = Qt.point(button.x, button.y + button.height)
@@ -88,7 +98,6 @@ RowLayout {
 
         textRole: "name"
         valueRole: "id"
-        iconRole: "iconCode"
 
         parentWindow: root.parentWindow
         enabled: manageMenuModel.enabled
@@ -99,6 +108,60 @@ RowLayout {
         displayText: {
             const preset = manageMenuModel.presets.find(item => item.id === manageMenuModel.preset)
             return preset ? preset.name : indeterminateText
+        }
+
+        contentItem: RowLayout {
+            property alias labelItem: textItem
+            property alias text: textItem.text
+
+            anchors.fill: parent
+            anchors.leftMargin: 12
+            anchors.rightMargin: 8
+            spacing: 6
+
+            StyledIconLabel {
+                Layout.preferredWidth: ui.theme.iconsFont.pixelSize
+                Layout.alignment: Qt.AlignVCenter
+                readonly property int presetIconCode: root.presetIconCodeById(manageMenuModel.preset)
+                iconCode: presetIconCode
+            }
+
+            StyledTextLabel {
+                id: textItem
+
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignVCenter
+                horizontalAlignment: Text.AlignLeft
+            }
+
+            StyledIconLabel {
+                Layout.alignment: Qt.AlignVCenter
+                iconCode: IconCode.SMALL_ARROW_DOWN
+            }
+        }
+
+        contentListItem: RowLayout {
+            property alias text: textItem.text
+            property alias truncated: textItem.truncated
+
+            anchors.fill: parent
+            anchors.leftMargin: 12
+            spacing: 8
+
+            StyledIconLabel {
+                Layout.preferredWidth: ui.theme.iconsFont.pixelSize
+                Layout.alignment: Qt.AlignVCenter
+                readonly property int presetIconCode: root.presetIconCodeByName(textItem.text)
+                iconCode: presetIconCode
+            }
+
+            StyledTextLabel {
+                id: textItem
+
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignVCenter
+                horizontalAlignment: Text.AlignLeft
+            }
         }
 
         onActivated: function (index, value) {
