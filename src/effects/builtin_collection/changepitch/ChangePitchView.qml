@@ -406,7 +406,7 @@ BuiltinEffectBase {
                                 from: changePitch.percentChangeMin()
                                 to: changePitch.percentChangeMax()
                                 value: changePitch.percentChangeValue
-                                stepSize: changePitch.percentChangeStep()
+                                stepSize: (changePitch.percentChangeMax() - changePitch.percentChangeMin()) / 100
 
                                 onMoved: {
                                     changePitch.percentChangeValue = value
