@@ -156,7 +156,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
 
     // common things used below
     EffectSettings* settings = nullptr;
-    struct EffectTimeParams {
+    struct EffectParams {
         double projectRate = 0.0;
         double t0 = 0.0;
         double t1 = 0.0;
