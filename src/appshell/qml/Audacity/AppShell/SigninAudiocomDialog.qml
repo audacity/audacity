@@ -31,6 +31,8 @@ StyledDialogView {
             Layout.preferredWidth: 560
             Layout.preferredHeight: 404
 
+            navigationSection: root.navigationSection
+
             onNavNextPageRequested: {
                 root.accept()
             }
@@ -43,7 +45,7 @@ StyledDialogView {
             buttons: [ ButtonBoxModel.Cancel ]
 
             navigationPanel.section: root.navigationSection
-            navigationPanel.order: 2
+            navigationPanel.order: 1
 
             onStandardButtonClicked: function(buttonId) {
                 if (buttonId === ButtonBoxModel.Cancel) {
