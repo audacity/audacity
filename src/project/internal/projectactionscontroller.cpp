@@ -793,6 +793,8 @@ void ProjectActionsController::shareAudio()
 {
     muse::UriQuery query(SAVE_TO_CLOUD_URI);
     query.addParam("formTitle", Val(trc("cloud", "Track title")));
+    query.addParam("title", Val(trc("cloud", "Share audio")));
+    query.addParam("actionText", Val(trc("cloud", "Share")));
 
     RetVal<Val> rv = interactive()->openSync(query);
     if (!rv.ret) {

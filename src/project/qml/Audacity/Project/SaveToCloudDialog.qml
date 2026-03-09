@@ -13,19 +13,18 @@ import Audacity.Cloud 1.0
 StyledDialogView {
     id: root
 
-    title: prv.dialogTitle
+    title: qsTrc("cloud/save", "Save to audio.com")
 
     contentWidth: prv.contentWidth
     contentHeight: content.implicitHeight
 
     property string formTitle: qsTrc("cloud", "Project name")
+    property string actionText: qsTrc("cloud", "Save")
 
     QtObject {
         id: prv
 
         readonly property int contentWidth: 367
-
-        readonly property string dialogTitle: qsTrc("cloud/save", "Save to audio.com")
 
         readonly property string signoutButtonText: qsTrc("cloud", "Sign out")
         readonly property int signoutButtonHeight: 28
@@ -40,13 +39,15 @@ StyledDialogView {
         readonly property int formColumnSpacing: 8
         readonly property int formTextInputHeight: 28
 
-        readonly property string saveButtonText: qsTrc("global", "Save")
-
         readonly property int buttonBoxMargins: 8
     }
 
     AccountInfoModel {
         id: model
+    }
+
+    NewProjectModel {
+        id: newProjectModel
     }
 
     Component.onCompleted: {
@@ -107,7 +108,7 @@ StyledDialogView {
                 navigation.panel: accountNavPanel
                 navigation.order: 1
 
-                onClicked: function() {
+                onClicked: function () {
                     model.signOut()
                 }
             }
@@ -155,7 +156,7 @@ StyledDialogView {
                 navigation.panel: projectNameNavPanel
                 navigation.order: 1
 
-                onTextChanged: function(newTextValue) {
+                onTextChanged: function (newTextValue) {
                     value = newTextValue
                 }
             }
@@ -171,7 +172,7 @@ StyledDialogView {
             Layout.fillWidth: true
             Layout.margins: prv.buttonBoxMargins
 
-            buttons: [ ButtonBoxModel.Cancel ]
+            buttons: [ButtonBoxModel.Cancel]
 
             navigationPanel.section: root.navigationSection
             navigationPanel.order: 3
@@ -179,14 +180,17 @@ StyledDialogView {
             FlatButton {
                 id: saveButton
 
-                text: prv.saveButtonText
+                text: root.actionText
                 buttonRole: ButtonBoxModel.ApplyRole
                 buttonId: ButtonBoxModel.Apply
-                enabled: projectNameField.hasText
+                enabled: newProjectModel.isFilenameAllowed(projectNameField.value)
 
-                onClicked: function() {
+                onClicked: function () {
                     if (model.isAuthorized) {
-                        root.ret = { errcode: 0, value: projectNameField.value }
+                        root.ret = {
+                            errcode: 0,
+                            value: projectNameField.value
+                        }
                         root.hide()
                     } else {
                         model.openAuthorizationDialog()
@@ -194,7 +198,7 @@ StyledDialogView {
                 }
             }
 
-            onStandardButtonClicked: function(buttonId) {
+            onStandardButtonClicked: function (buttonId) {
                 if (buttonId === ButtonBoxModel.Cancel) {
                     root.reject()
                 }
