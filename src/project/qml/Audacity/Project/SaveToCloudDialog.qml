@@ -108,7 +108,7 @@ StyledDialogView {
                 navigation.panel: accountNavPanel
                 navigation.order: 1
 
-                onClicked: function() {
+                onClicked: function () {
                     model.signOut()
                 }
             }
@@ -156,7 +156,7 @@ StyledDialogView {
                 navigation.panel: projectNameNavPanel
                 navigation.order: 1
 
-                onTextChanged: function(newTextValue) {
+                onTextChanged: function (newTextValue) {
                     value = newTextValue
                 }
             }
@@ -172,7 +172,7 @@ StyledDialogView {
             Layout.fillWidth: true
             Layout.margins: prv.buttonBoxMargins
 
-            buttons: [ ButtonBoxModel.Cancel ]
+            buttons: [ButtonBoxModel.Cancel]
 
             navigationPanel.section: root.navigationSection
             navigationPanel.order: 3
@@ -185,9 +185,12 @@ StyledDialogView {
                 buttonId: ButtonBoxModel.Apply
                 enabled: newProjectModel.isFilenameAllowed(projectNameField.value)
 
-                onClicked: function() {
+                onClicked: function () {
                     if (model.isAuthorized) {
-                        root.ret = { errcode: 0, value: projectNameField.value }
+                        root.ret = {
+                            errcode: 0,
+                            value: projectNameField.value
+                        }
                         root.hide()
                     } else {
                         model.openAuthorizationDialog()
@@ -195,7 +198,7 @@ StyledDialogView {
                 }
             }
 
-            onStandardButtonClicked: function(buttonId) {
+            onStandardButtonClicked: function (buttonId) {
                 if (buttonId === ButtonBoxModel.Cancel) {
                     root.reject()
                 }

@@ -42,12 +42,12 @@ StyledDialogView {
             Layout.fillWidth: true
             Layout.topMargin: 12
 
-            buttons: [ ButtonBoxModel.Cancel ]
+            buttons: [ButtonBoxModel.Cancel]
 
             navigationPanel.section: root.navigationSection
             navigationPanel.order: 1
 
-            onStandardButtonClicked: function(buttonId) {
+            onStandardButtonClicked: function (buttonId) {
                 if (buttonId === ButtonBoxModel.Cancel) {
                     root.reject()
                 }
