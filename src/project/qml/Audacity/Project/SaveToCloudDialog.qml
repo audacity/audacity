@@ -13,19 +13,18 @@ import Audacity.Cloud 1.0
 StyledDialogView {
     id: root
 
-    title: prv.dialogTitle
+    title: qsTrc("cloud/save", "Save to audio.com")
 
     contentWidth: prv.contentWidth
     contentHeight: content.implicitHeight
 
     property string formTitle: qsTrc("cloud", "Project name")
+    property string actionText: qsTrc("cloud", "Save")
 
     QtObject {
         id: prv
 
         readonly property int contentWidth: 367
-
-        readonly property string dialogTitle: qsTrc("cloud/save", "Save to audio.com")
 
         readonly property string signoutButtonText: qsTrc("cloud", "Sign out")
         readonly property int signoutButtonHeight: 28
@@ -39,8 +38,6 @@ StyledDialogView {
         readonly property int formColumnMargins: 16
         readonly property int formColumnSpacing: 8
         readonly property int formTextInputHeight: 28
-
-        readonly property string saveButtonText: qsTrc("global", "Save")
 
         readonly property int buttonBoxMargins: 8
     }
@@ -183,7 +180,7 @@ StyledDialogView {
             FlatButton {
                 id: saveButton
 
-                text: prv.saveButtonText
+                text: root.actionText
                 buttonRole: ButtonBoxModel.ApplyRole
                 buttonId: ButtonBoxModel.Apply
                 enabled: newProjectModel.isFilenameAllowed(projectNameField.value)
