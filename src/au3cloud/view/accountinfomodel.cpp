@@ -32,7 +32,11 @@ QUrl AccountInfoModel::avatarPath() const
 
 QString AccountInfoModel::displayName() const
 {
-    return QString::fromStdString(authorization()->accountInfo().displayName);
+    std::string displayName
+        = !authorization()->accountInfo().displayName.empty()
+          ? authorization()->accountInfo().displayName
+          : authorization()->accountInfo().userSlug;
+    return QString::fromStdString(displayName);
 }
 
 void AccountInfoModel::signOut() const
