@@ -14,13 +14,13 @@ SpectralEffectList SpectralEffectsRegister::spectralEffects() const
     return m_spectralEffects;
 }
 
-muse::actions::ActionCode SpectralEffectsRegister::spectralEffectActionCode(SpectralEffectId id) const
+std::optional<SpectralEffect> SpectralEffectsRegister::spectralEffect(SpectralEffectId id) const
 {
     for (const auto& effect : m_spectralEffects) {
         if (effect.spectralEffectId == id) {
-            return effect.action;
+            return effect;
         }
     }
-    return "";
+    return std::nullopt;
 }
 }

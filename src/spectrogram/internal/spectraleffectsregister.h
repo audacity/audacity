@@ -11,7 +11,7 @@ class SpectralEffectsRegister : public ISpectralEffectsRegister
 public:
     void registerSpectralEffect(const SpectralEffect&) override;
     SpectralEffectList spectralEffects()const override;
-    muse::actions::ActionCode spectralEffectActionCode(SpectralEffectId id) const override;
+    std::optional<SpectralEffect> spectralEffect(SpectralEffectId id) const override;
 
 private:
     SpectralEffectList m_spectralEffects;

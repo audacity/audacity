@@ -28,17 +28,17 @@ void TrackSpectrogramContextMenuModel::setTrackId(int trackId)
     }
 }
 
-muse::uicomponents::MenuItem* TrackSpectrogramContextMenuModel::makeSpectralEffectItem(SpectralEffectId id, const char* title)
+muse::uicomponents::MenuItem* TrackSpectrogramContextMenuModel::makeSpectralEffectItem(SpectralEffectId id)
 {
-    const muse::actions::ActionCode code = spectralEffectsRegister()->spectralEffectActionCode(id);
-    if (code.empty()) {
+    const std::optional<SpectralEffect> effect = spectralEffectsRegister()->spectralEffect(id);
+    if (!effect) {
         return nullptr;
     }
-    muse::uicomponents::MenuItem* const item = makeMenuItem(code);
+    muse::uicomponents::MenuItem* const item = makeMenuItem(effect->action);
     IF_ASSERT_FAILED(item) {
         return nullptr;
     }
-    item->setTitle(muse::TranslatableString::untranslatable(title));
+    item->setTitle(muse::TranslatableString::untranslatable(effect->title));
     return item;
 }
 
@@ -50,10 +50,10 @@ void TrackSpectrogramContextMenuModel::load()
     using namespace muse::actions;
 
     muse::uicomponents::MenuItemList items;
-    if (auto item = makeSpectralEffectItem(SpectralEffectId::DeleteSelection, "Delete selection")) {
+    if (auto item = makeSpectralEffectItem(SpectralEffectId::DeleteSelection)) {
         items.push_back(item);
     }
-    if (auto item = makeSpectralEffectItem(SpectralEffectId::DeleteCenterFrequency, "Delete selection center frequency")) {
+    if (auto item = makeSpectralEffectItem(SpectralEffectId::DeleteCenterFrequency)) {
         items.push_back(item);
     }
 
@@ -62,10 +62,10 @@ void TrackSpectrogramContextMenuModel::load()
         items.push_back(makeSeparator());
     }
 
-    if (auto item = makeSpectralEffectItem(SpectralEffectId::AmplifySelection, "Amplify selection")) {
+    if (auto item = makeSpectralEffectItem(SpectralEffectId::AmplifySelection)) {
         items.push_back(item);
     }
-    if (auto item = makeSpectralEffectItem(SpectralEffectId::AmplifyCenterFrequency, "Amplify selection center frequency")) {
+    if (auto item = makeSpectralEffectItem(SpectralEffectId::AmplifyCenterFrequency)) {
         items.push_back(item);
     }
 

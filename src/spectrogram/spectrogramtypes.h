@@ -126,6 +126,7 @@ enum class SpectralEffectId {
 struct SpectralEffect {
     SpectralEffectId spectralEffectId;
     muse::actions::ActionCode action;
+    muse::String title;
 };
 
 using SpectralEffectList = std::vector<SpectralEffect>;
