@@ -28,7 +28,7 @@ Item {
         readonly property int edgeWidth: 10
         property var init: ({})
         property bool dragging: Object.keys(init).length !== 0
-        property bool selectionIsEmpty: root.selectionStartFrequency === root.selectionEndFrequency
+        property bool selectionIsEmpty: root.selectionStartFrequency === root.selectionEndFrequency && root.selectionStartTime === root.selectionEndTime
 
         function isDragged(name) {
             return dragging && name in init
