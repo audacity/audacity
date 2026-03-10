@@ -429,9 +429,9 @@ void GuiApp::destroyContext(const modularity::ContextPtr& ctx)
     modularity::removeIoC(ctx);
 }
 
-int GuiApp::contextCount() const
+size_t GuiApp::contextCount() const
 {
-    return static_cast<int>(m_contexts.size());
+    return m_contexts.size();
 }
 
 std::vector<modularity::ContextPtr> GuiApp::contexts() const

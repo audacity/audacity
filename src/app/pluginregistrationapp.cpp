@@ -188,9 +188,9 @@ void PluginRegistrationApp::destroyContext(const modularity::ContextPtr&)
     // Single context mode: context is destroyed in finish()
 }
 
-int PluginRegistrationApp::contextCount() const
+size_t PluginRegistrationApp::contextCount() const
 {
-    return static_cast<int>(m_contexts.size());
+    return m_contexts.size();
 }
 
 std::vector<modularity::ContextPtr> PluginRegistrationApp::contexts() const
