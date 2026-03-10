@@ -9,8 +9,11 @@
 **********************************************************************/
 #pragma once
 
+#include <cstdio>
 #include <memory>
 #include <string>
+#include <utility>
+#include <vector>
 
 #include <wx/string.h>
 
@@ -31,6 +34,36 @@ namespace MixerOptions {
 class Downmix;
 }
 
+struct IMPORT_EXPORT_API ChapterMark
+{
+    double time;              // start, seconds from project start
+    double endTime = -1.0;    // end time in seconds; -1.0 means point marker
+    std::string title;
+};
+
+// Format chapter marks as Vorbis Comment tag entries.
+// Returns pairs of (key, value): e.g. ("CHAPTER01", "00:01:23.456"), ("CHAPTER01NAME", "Intro")
+inline std::vector<std::pair<std::string, std::string>>
+FormatVorbisChapters(const std::vector<ChapterMark>& marks, int maxChapters = 999)
+{
+    std::vector<std::pair<std::string, std::string>> result;
+    int idx = 1;
+    for (const auto& mark : marks) {
+        if (idx > maxChapters) break;
+        int totalMs = static_cast<int>(mark.time * 1000 + 0.5);
+        int h = totalMs / 3600000, m = (totalMs / 60000) % 60;
+        int s = (totalMs / 1000) % 60, ms = totalMs % 1000;
+        char keyBuf[16], timeBuf[20], nameBuf[20];
+        snprintf(keyBuf, sizeof(keyBuf), "CHAPTER%02d", idx);
+        snprintf(timeBuf, sizeof(timeBuf), "%02d:%02d:%02d.%03d", h, m, s, ms);
+        snprintf(nameBuf, sizeof(nameBuf), "CHAPTER%02dNAME", idx);
+        result.emplace_back(keyBuf, timeBuf);
+        result.emplace_back(nameBuf, mark.title);
+        ++idx;
+    }
+    return result;
+}
+
 struct IMPORT_EXPORT_API FormatInfo final
 {
     wxString format;
@@ -38,6 +71,7 @@ struct IMPORT_EXPORT_API FormatInfo final
     FileExtensions extensions;
     unsigned maxChannels;
     bool canMetaData;
+    bool canChapters = false;
 };
 
 class IMPORT_EXPORT_API ExportException
@@ -115,6 +149,11 @@ public:
                             const Tags* tags = nullptr) = 0;
 
     virtual ExportResult Process(ExportProcessorDelegate& delegate) = 0;
+
+    virtual void SetChapterMarks(std::vector<ChapterMark> marks) { m_chapterMarks = std::move(marks); }
+
+protected:
+    std::vector<ChapterMark> m_chapterMarks;
 };
 
 //----------------------------------------------------------------------------

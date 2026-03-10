@@ -57,6 +57,11 @@ class ExportPreferencesModel : public QObject, public muse::async::Asyncable, pu
     Q_PROPERTY(bool hasMetadata READ hasMetadata NOTIFY hasMetadataChanged)
     Q_PROPERTY(int optionsCount READ optionsCount NOTIFY optionsCountChanged)
 
+    Q_PROPERTY(bool hasChapters READ hasChapters NOTIFY hasChaptersChanged)
+    Q_PROPERTY(bool chaptersEnabled READ chaptersEnabled NOTIFY chaptersEnabledChanged)
+    Q_PROPERTY(QVariantList labelTracks READ labelTracks NOTIFY labelTracksChanged)
+    Q_PROPERTY(QVariantList selectedChapterTracks READ selectedChapterTracks NOTIFY selectedChapterTracksChanged)
+
 public:
     explicit ExportPreferencesModel(QObject* parent = nullptr);
     ~ExportPreferencesModel();
@@ -103,6 +108,16 @@ public:
     bool hasMetadata();
     int optionsCount();
 
+    // chapters
+    bool hasChapters();
+    bool chaptersEnabled() const;
+    Q_INVOKABLE void setChaptersEnabled(bool enabled);
+    QVariantList labelTracks() const;
+    QVariantList selectedChapterTracks() const;
+    Q_INVOKABLE void changeChapterTrackSelection(const QVariant& trackId, bool selected);
+    Q_INVOKABLE void selectAllChapterTracks();
+    Q_INVOKABLE void deselectAllChapterTracks();
+
     bool needToDisableMasterFxBeforeExport() const;
     void enableMasterFx() const;
     bool masterFxEnabled() const;
@@ -128,14 +143,25 @@ signals:
     void optionsCountChanged();
     void optionTitleListChanged();
 
+    void hasChaptersChanged();
+    void chaptersEnabledChanged();
+    void labelTracksChanged();
+    void selectedChapterTracksChanged();
+
     void exportCompleted();
 
 private:
     void updateCurrentSampleRate();
     void updateExportChannels();
 
+    void populateLabelTracks();
+
     QString m_filename;
     std::vector<std::pair<int, QString> > m_sampleRateMapping;
     bool m_resetSampleRate = true;
+
+    bool m_chaptersEnabled = false;
+    QVariantList m_labelTracks;
+    QVariantList m_selectedChapterTracks;
 };
 }

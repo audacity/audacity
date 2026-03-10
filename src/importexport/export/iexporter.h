@@ -30,7 +30,8 @@ public:
         ExportChannels,
         ExportCustomChannelMapping,
         ExportSampleRate,
-        Parameters
+        Parameters,
+        ChapterTrackIds
     };
 
     using Options = std::map<OptionKey, muse::Val>;
@@ -48,6 +49,7 @@ public:
     virtual bool isCustomFFmpegExportFormat() const = 0;
     virtual bool isOggExportFormat() const = 0;
     virtual bool hasMetadata() const = 0;
+    virtual bool hasChapters() const = 0;
 
     virtual int maxChannels() const = 0;
     virtual std::vector<int> sampleRateList() const = 0;
