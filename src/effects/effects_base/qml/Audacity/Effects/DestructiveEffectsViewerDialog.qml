@@ -52,6 +52,7 @@ EffectStyledDialogView {
             // and we must make sure it doesn't do this after we've closed the dialog, or we'll be getting that Qt exception
             // "Object %p destroyed while one of its QML signal handlers is in progress."
             Qt.callLater(() => {
+                root.activateParentOnClose = false
                 accept ? root.accept() : root.reject()
             })
         }
