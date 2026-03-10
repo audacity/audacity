@@ -84,7 +84,7 @@ RowLayout {
     }
 
     RoundedRectangle {
-        Layout.preferredWidth: childrenRect.width
+        Layout.preferredWidth: contentItem.width
         Layout.fillHeight: true
 
         topLeftRadius: root.backgroundLeftRadius
@@ -94,6 +94,8 @@ RowLayout {
         color: root.backgroundColor
 
         Item {
+            id: contentItem
+
             property int margin: 6
 
             width: row.width + margin * 2
@@ -152,9 +154,11 @@ RowLayout {
                 }
             }
 
-            NavigationFocusBorder {
-                navigationCtrl: root.navigation
-            }
+        }
+
+        NavigationFocusBorder {
+            navigationCtrl: root.navigation
+            drawOutsideParent: false
         }
     }
 

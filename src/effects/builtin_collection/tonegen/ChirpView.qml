@@ -287,6 +287,7 @@ BuiltinEffectBase {
         Column {
 
             spacing: 8
+            Layout.bottomMargin: 2
 
             StyledTextLabel {
                 text: qsTrc("effects/chirp", "Duration")
