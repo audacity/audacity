@@ -26,8 +26,8 @@ bool FrequencySelection::isValid() const
            && m_startFrequency != SelectionInfo::UndefinedFrequency
            && m_endFrequency != SelectionInfo::UndefinedFrequency
            && m_centerFrequency != SelectionInfo::UndefinedFrequency
-           && !muse::RealIsEqualOrLess(m_endFrequency, m_centerFrequency)
-           && !muse::RealIsEqualOrLess(m_centerFrequency, m_startFrequency);
+           && muse::RealIsEqualOrLess(m_centerFrequency, m_endFrequency)
+           && muse::RealIsEqualOrLess(m_startFrequency, m_centerFrequency);
 }
 
 bool FrequencySelection::operator==(const FrequencySelection& other) const
