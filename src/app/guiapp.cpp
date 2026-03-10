@@ -6,9 +6,11 @@
 #include "thirdparty/kors_logger/src/log_base.h"
 
 #include <QApplication>
+#include <QDir>
 #include <QQmlApplicationEngine>
 #include <QQuickWindow>
 #include <QQmlContext>
+#include <QStandardPaths>
 #include <QStyleHints>
 #include <memory>
 #ifndef Q_OS_WASM
@@ -99,6 +101,12 @@ void GuiApp::setup()
 #endif
 
     applyCommandLineOptions(m_options);
+
+    if (appshellConfiguration()->isFactoryResetPending()) {
+        QString dataPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+        QDir(dataPath).removeRecursively();
+        QDir().mkpath(dataPath);
+    }
 
     m_globalModule.onPreInit(runMode());
     for (modularity::IModuleSetup* m : m_modules) {
