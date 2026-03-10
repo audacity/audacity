@@ -404,6 +404,11 @@ void PluginManager::Initialize(ConfigFactory factory)
 
 void PluginManager::Terminate()
 {
+    // Save and release settings while IOC services are still available.
+    // EffectConfigSettings::~EffectConfigSettings() calls Save() which uses
+    // GlobalInject<IFileSystem> — this must happen before IOC teardown.
+    mSettings.reset();
+
     // Get rid of all non-module(effects?) plugins first
     for (auto& p : mRegisteredPlugins) {
         auto& desc = p.second;
