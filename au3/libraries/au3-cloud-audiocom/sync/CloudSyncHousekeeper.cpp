@@ -41,6 +41,10 @@ private:
 
     void PerformHousekeeping()
     {
+        if (!CloudProjectsDatabase::DatabaseExists()) {
+            return;
+        }
+
         const auto timeToKeep = std::chrono::hours(24 * DaysToKeepFiles.Read());
         const auto now        = std::chrono::system_clock::now();
 
@@ -83,6 +87,10 @@ private:
         mHousekeepingCancelled.store(true);
         if (mHousekeepingOperation.valid()) {
             mHousekeepingOperation.wait();
+        }
+
+        if (!CloudProjectsDatabase::DatabaseExists()) {
+            return;
         }
 
         auto& cloudProjectsDatabase = CloudProjectsDatabase::Get();
