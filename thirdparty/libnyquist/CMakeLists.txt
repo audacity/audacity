@@ -278,6 +278,7 @@ set( DEFINES
    PRIVATE
       CMTSTUFF
       EXT
+      PROTOTYPES
       $<$<PLATFORM_ID:Windows>:WIN32>
 )
 
