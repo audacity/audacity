@@ -21,8 +21,10 @@
  */
 #include "appshellconfiguration.h"
 
+#include <QFile>
 #include <QJsonArray>
 #include <QJsonDocument>
+#include <QStandardPaths>
 
 #include "global/settings.h"
 #include "global/log.h"
@@ -274,6 +276,27 @@ muse::async::Notification AppShellConfiguration::settingsApplied() const
 void AppShellConfiguration::revertToFactorySettings(bool keepDefaultSettings, bool notifyAboutChanges) const
 {
     settings()->reset(keepDefaultSettings, notifyAboutChanges);
+}
+
+static QString factoryResetMarkerPath()
+{
+    return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation)
+           + "/.factory_reset_pending";
+}
+
+void AppShellConfiguration::setFactoryResetPending(bool pending) const
+{
+    if (pending) {
+        QFile file(factoryResetMarkerPath());
+        (void)file.open(QIODevice::WriteOnly);
+    } else {
+        QFile::remove(factoryResetMarkerPath());
+    }
+}
+
+bool AppShellConfiguration::isFactoryResetPending() const
+{
+    return QFile::exists(factoryResetMarkerPath());
 }
 
 muse::io::paths_t AppShellConfiguration::sessionProjectsPaths() const
