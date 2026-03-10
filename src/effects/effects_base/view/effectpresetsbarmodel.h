@@ -18,13 +18,13 @@
 #include "presetscontextmenumodel.h"
 
 namespace au::effects {
-class EffectManageMenu : public QObject, public muse::Injectable, public muse::async::Asyncable
+class EffectPresetsBarModel : public QObject, public muse::Injectable, public muse::async::Asyncable
 {
     Q_OBJECT
     Q_PROPERTY(int instanceId READ instanceId_prop WRITE setInstanceId_prop NOTIFY instanceIdChanged FINAL)
     Q_PROPERTY(QVariantList presets READ presets NOTIFY presetsChanged FINAL)
     Q_PROPERTY(QString preset READ preset WRITE setPreset NOTIFY presetChanged FINAL)
-    Q_PROPERTY(bool enabled READ enabled NOTIFY presetsChanged FINAL)
+    Q_PROPERTY(bool presetsDropdownEnabled READ presetsDropdownEnabled NOTIFY presetsChanged FINAL)
     Q_PROPERTY(bool canDeletePreset READ canDeletePreset NOTIFY canDeletePresetChanged FINAL)
     Q_PROPERTY(bool canResetPreset READ canResetPreset NOTIFY canResetPresetChanged FINAL)
     Q_PROPERTY(bool useVendorUI READ useVendorUI NOTIFY useVendorUIChanged FINAL)
@@ -40,14 +40,14 @@ class EffectManageMenu : public QObject, public muse::Injectable, public muse::a
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
 
 public:
-    explicit EffectManageMenu(QObject* parent = nullptr);
+    explicit EffectPresetsBarModel(QObject* parent = nullptr);
 
     int instanceId_prop() const;
     void setInstanceId_prop(int newInstanceId);
     QVariantList presets();
     QString preset() const;
     void setPreset(QString presetId);
-    bool enabled() const;
+    bool presetsDropdownEnabled() const;
     bool canDeletePreset() const;
     bool canResetPreset() const;
     bool useVendorUI() const;
@@ -58,8 +58,8 @@ public:
     Q_INVOKABLE void savePresetAs();
     Q_INVOKABLE void deletePreset();
     Q_INVOKABLE void commitSelectedPreset();
-    Q_INVOKABLE QObject* saveContextMenu();
-    Q_INVOKABLE QObject* presetContextMenu();
+    Q_INVOKABLE muse::uicomponents::AbstractMenuModel* saveContextMenu();
+    Q_INVOKABLE muse::uicomponents::AbstractMenuModel* presetContextMenu();
 
     Q_INVOKABLE void load();
 

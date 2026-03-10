@@ -271,7 +271,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
     //! ============================================================================
     {
         if (effect->IsInteractive() && (flags& EffectManager::kConfigured) == 0) {
-            auto& definition = effect->GetDefinition();
+            const auto& definition = effect->GetDefinition();
             EffectSettings originalSettings = definition.MakeSettings();
             definition.CopySettingsContents(*settings, originalSettings);
 

@@ -1,7 +1,7 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#include "effectmanagemenu.h"
+#include "effectpresetsbarmodel.h"
 
 #include "effects/effects_base/effectstypes.h"
 #include "au3-components/EffectInterface.h"
@@ -16,17 +16,17 @@ namespace {
 constexpr int USER_PRESET_ICON_CODE = 0xEF99;
 }
 
-EffectManageMenu::EffectManageMenu(QObject* parent)
+EffectPresetsBarModel::EffectPresetsBarModel(QObject* parent)
     : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
 {
     m_saveContextMenu = new EffectSaveContextMenu(this);
     m_presetsContextMenu = new PresetsContextMenuModel(this);
 
     connect(m_presetsContextMenu, &PresetsContextMenuModel::useVendorUIChanged,
-            this, &EffectManageMenu::useVendorUIChanged);
+            this, &EffectPresetsBarModel::useVendorUIChanged);
 }
 
-void EffectManageMenu::load()
+void EffectPresetsBarModel::load()
 {
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(m_instanceId);
 
@@ -86,7 +86,7 @@ void EffectManageMenu::load()
     }
 }
 
-void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& instanceId)
+void EffectPresetsBarModel::reload(const EffectId& effectId, const EffectInstanceId& instanceId)
 {
     assert(!effectId.empty());
     assert(instanceId != 0);
@@ -141,12 +141,12 @@ void EffectManageMenu::reload(const EffectId& effectId, const EffectInstanceId& 
     emit canResetPresetChanged();
 }
 
-int EffectManageMenu::instanceId_prop() const
+int EffectPresetsBarModel::instanceId_prop() const
 {
     return m_instanceId;
 }
 
-void EffectManageMenu::setInstanceId_prop(int newInstanceId)
+void EffectPresetsBarModel::setInstanceId_prop(int newInstanceId)
 {
     if (m_instanceId == newInstanceId) {
         return;
@@ -160,17 +160,17 @@ void EffectManageMenu::setInstanceId_prop(int newInstanceId)
     emit canResetPresetChanged();
 }
 
-QVariantList EffectManageMenu::presets()
+QVariantList EffectPresetsBarModel::presets()
 {
     return m_presets;
 }
 
-QString EffectManageMenu::preset() const
+QString EffectPresetsBarModel::preset() const
 {
     return m_currentPreset;
 }
 
-void EffectManageMenu::setPreset(QString presetId)
+void EffectPresetsBarModel::setPreset(QString presetId)
 {
     m_currentPreset = presetId;
     resetPreset();
@@ -179,22 +179,22 @@ void EffectManageMenu::setPreset(QString presetId)
     updatePresetBar();
 }
 
-bool EffectManageMenu::enabled() const
+bool EffectPresetsBarModel::presetsDropdownEnabled() const
 {
     return m_presets.size() > 1; // Do not take default preset into account
 }
 
-bool EffectManageMenu::canDeletePreset() const
+bool EffectPresetsBarModel::canDeletePreset() const
 {
     return m_userPresets.contains(m_currentPreset);
 }
 
-bool EffectManageMenu::canResetPreset() const
+bool EffectPresetsBarModel::canResetPreset() const
 {
     return !m_currentPreset.isEmpty() && m_isPresetUnsaved;
 }
 
-void EffectManageMenu::resetPreset()
+void EffectPresetsBarModel::resetPreset()
 {
     if (m_currentPreset.isEmpty()) {
         return;
@@ -206,14 +206,14 @@ void EffectManageMenu::resetPreset()
     dispatcher()->dispatch(q);
 }
 
-void EffectManageMenu::savePresetAs()
+void EffectPresetsBarModel::savePresetAs()
 {
     ActionQuery q("action://effects/presets/save_as");
     q.addParam("instanceId", Val(m_instanceId));
     dispatcher()->dispatch(q);
 }
 
-QObject* EffectManageMenu::saveContextMenu()
+muse::uicomponents::AbstractMenuModel* EffectPresetsBarModel::saveContextMenu()
 {
     IF_ASSERT_FAILED(m_saveContextMenu) {
         return nullptr;
@@ -225,7 +225,7 @@ QObject* EffectManageMenu::saveContextMenu()
     return m_saveContextMenu;
 }
 
-QObject* EffectManageMenu::presetContextMenu()
+muse::uicomponents::AbstractMenuModel* EffectPresetsBarModel::presetContextMenu()
 {
     IF_ASSERT_FAILED(m_presetsContextMenu) {
         return nullptr;
@@ -236,7 +236,7 @@ QObject* EffectManageMenu::presetContextMenu()
     return m_presetsContextMenu;
 }
 
-void EffectManageMenu::deletePreset()
+void EffectPresetsBarModel::deletePreset()
 {
     if (!canDeletePreset()) {
         return;
@@ -253,7 +253,7 @@ void EffectManageMenu::deletePreset()
     dispatcher()->dispatch(q);
 }
 
-void EffectManageMenu::commitSelectedPreset()
+void EffectPresetsBarModel::commitSelectedPreset()
 {
     if (!m_persistLastUsedPreset) {
         return;
@@ -267,7 +267,7 @@ void EffectManageMenu::commitSelectedPreset()
     configuration()->setLastUsedPreset(effectId, m_currentPreset.toStdString());
 }
 
-bool EffectManageMenu::useVendorUI() const
+bool EffectPresetsBarModel::useVendorUI() const
 {
     if (!m_presetsContextMenu) {
         return true;
@@ -276,12 +276,12 @@ bool EffectManageMenu::useVendorUI() const
     return m_presetsContextMenu->useVendorUI();
 }
 
-bool EffectManageMenu::persistLastUsedPreset() const
+bool EffectPresetsBarModel::persistLastUsedPreset() const
 {
     return m_persistLastUsedPreset;
 }
 
-void EffectManageMenu::setPersistLastUsedPreset(bool value)
+void EffectPresetsBarModel::setPersistLastUsedPreset(bool value)
 {
     if (m_persistLastUsedPreset == value) {
         return;
@@ -292,7 +292,7 @@ void EffectManageMenu::setPersistLastUsedPreset(bool value)
     emit persistLastUsedPresetChanged();
 }
 
-bool EffectManageMenu::hasPreset(const QString& presetId) const
+bool EffectPresetsBarModel::hasPreset(const QString& presetId) const
 {
     if (presetId.isEmpty()) {
         return false;
@@ -305,22 +305,22 @@ bool EffectManageMenu::hasPreset(const QString& presetId) const
     return it != m_presets.cend();
 }
 
-bool EffectManageMenu::isUserPreset(const QString& presetId) const
+bool EffectPresetsBarModel::isUserPreset(const QString& presetId) const
 {
     return m_userPresets.contains(presetId);
 }
 
-bool EffectManageMenu::isFactoryPreset(const QString& presetId) const
+bool EffectPresetsBarModel::isFactoryPreset(const QString& presetId) const
 {
     return m_factoryPresets.contains(presetId);
 }
 
-int EffectManageMenu::factoryPresetIndex(const QString& presetId) const
+int EffectPresetsBarModel::factoryPresetIndex(const QString& presetId) const
 {
     return m_factoryPresets.indexOf(presetId);
 }
 
-bool EffectManageMenu::isCurrentPresetUnsaved() const
+bool EffectPresetsBarModel::isCurrentPresetUnsaved() const
 {
     if (m_currentPreset.isEmpty()) {
         return false;
@@ -372,7 +372,7 @@ bool EffectManageMenu::isCurrentPresetUnsaved() const
     return currentSettingsString != selectedPresetSettingsString;
 }
 
-void EffectManageMenu::setPresetUnsaved(bool unsaved)
+void EffectPresetsBarModel::setPresetUnsaved(bool unsaved)
 {
     if (m_isPresetUnsaved == unsaved) {
         return;
@@ -383,7 +383,7 @@ void EffectManageMenu::setPresetUnsaved(bool unsaved)
     emit canResetPresetChanged();
 }
 
-void EffectManageMenu::updatePresetDisplayNames()
+void EffectPresetsBarModel::updatePresetDisplayNames()
 {
     for (int i = 0; i < m_presets.size(); ++i) {
         QVariantMap map = m_presets[i].toMap();
@@ -400,7 +400,7 @@ void EffectManageMenu::updatePresetDisplayNames()
     emit presetsChanged();
 }
 
-void EffectManageMenu::updatePresetBar()
+void EffectPresetsBarModel::updatePresetBar()
 {
     emit presetChanged();
     emit canDeletePresetChanged();
