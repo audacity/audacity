@@ -85,6 +85,8 @@ public:
     sqlite::SafeConnection::Lock GetConnection();
     const sqlite::SafeConnection::Lock GetConnection() const;
 
+    void CloseConnection();
+
     std::optional<DBProjectData>
     GetProjectData(std::string_view projectId) const;
     std::optional<DBProjectData>
