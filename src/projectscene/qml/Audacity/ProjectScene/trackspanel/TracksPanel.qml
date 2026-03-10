@@ -25,7 +25,6 @@ Item {
     // property alias contextMenuModel: contextMenuModel
     property int effectsSectionWidth: 240 // TODO: can this be set as a constant that can be imported?
     property alias showEffectsSection: effectSectionModel.showEffectsSection
-    property int selectedTrackIndex: -1
 
     PanelTracksListModel {
         id: tracksModel
@@ -35,8 +34,9 @@ Item {
     TracksViewStateModel {
         id: tracksViewState
         onTracksVerticalOffsetChanged: {
-            let headerHeight = view.header.height ? view.header.height : 0
+            prv.suppressTracksVerticalOffsetSync = true
             view.contentY = tracksViewState.tracksVerticalOffset
+            prv.suppressTracksVerticalOffsetSync = false
         }
     }
 
@@ -49,6 +49,7 @@ Item {
     QtObject {
         id: prv
 
+        property bool suppressTracksVerticalOffsetSync: false
         property string currentItemNavigationName: ""
     }
 
@@ -161,8 +162,7 @@ Item {
                 onContentYChanged: {
                     if (verticalScrollLocked) {
                         view.contentY = lockedVerticalScrollPosition
-                    }
-                    else {
+                    } else if (!prv.suppressTracksVerticalOffsetSync) {
                         tracksViewState.changeTracksVerticalOffset(view.contentY)
                     }
                 }

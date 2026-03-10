@@ -21,7 +21,7 @@ ListItemBlank {
     property bool isFocused: false
 
     property alias headerTrailingControlsComponent: headerTrailingControls.sourceComponent
-    property int headerTrailingControlsNavigationStart: collapsed ? title.navigation.order + 1 : extraControlsNavigationEnd + 1
+    readonly property int headerTrailingControlsNavigationStart: collapsed ? title.navigation.order + 1 : extraControlsNavigationEnd + 1
     property int headerTrailingControlsNavigationEnd: 0
 
     property alias extraControlsComponent: extraControlsLoader.sourceComponent

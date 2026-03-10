@@ -65,6 +65,12 @@ static UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Zoom to fit project"),
              IconCode::Code::FIT_PROJECT
              ),
+    UiAction("zoom-to-fit-project-vertically",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Zoom to fit project vertically"),
+             TranslatableString("action", "Zoom to fit project vertically")
+             ),
     UiAction("center-view-on-playhead",
              au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,

@@ -141,6 +141,7 @@ Rectangle {
     //! NOTE Sync with TracksPanel
     TracksViewStateModel {
         id: tracksViewState
+        tracksViewportHeight: tracksItemsView.height
         onTracksVerticalOffsetChanged: {
             tracksItemsView.contentY = tracksViewState.tracksVerticalOffset
         }

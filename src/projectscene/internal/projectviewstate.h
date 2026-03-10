@@ -72,6 +72,7 @@ public:
     bool isDefaultVerticalZoom(const trackedit::TrackId& trackId) const override;
     bool isMaxVerticalZoom(const trackedit::TrackId& trackId) const override;
     bool isMinVerticalZoom(const trackedit::TrackId& trackId) const override;
+    void fitTracksVertically() override;
 
     muse::ValCh<bool> isHalfWave(const trackedit::TrackId& trackId) const override;
     void toggleHalfWave(const trackedit::TrackId& trackId) override;
@@ -93,6 +94,8 @@ public:
 
     muse::ValCh<int> tracksVerticalOffset() const override;
     void changeTracksVerticalOffset(int deltaY) override;
+    void setTracksViewportHeight(int height) override;
+    int tracksViewportHeight() const override;
     virtual muse::ValCh<bool> tracksVerticalScrollLocked() const override;
     virtual void setTracksVerticalScrollLocked(bool lock) override;
 
@@ -146,10 +149,12 @@ private:
     TrackData& trackData(const trackedit::TrackId& trackId) const;
     //! Makes track data
     TrackData& makeTrackData(const trackedit::TrackId& trackId) const;
+    void doSetTrackHeight(const trackedit::TrackId& trackId, int height);
 
     bool eventFilter(QObject* watched, QEvent* event) override;
 
     muse::ValCh<int> m_tracksVerticalOffset;
+    int m_tracksViewportHeight = 0;
     muse::ValCh<bool> m_tracksVerticalScrollLocked;
 
     mutable std::map<trackedit::TrackId, TrackData> m_tracks;

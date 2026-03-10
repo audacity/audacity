@@ -19,6 +19,7 @@ class TracksViewStateModel : public QObject, public muse::Injectable, public mus
     Q_PROPERTY(int tracksVerticalOffset READ tracksVerticalOffset NOTIFY tracksVerticalOffsetChanged FINAL)
     Q_PROPERTY(bool tracksVerticalScrollLocked READ tracksVerticalScrollLocked NOTIFY tracksVerticalScrollLockedChanged FINAL)
     Q_PROPERTY(int tracksVerticalScrollPadding READ tracksVerticalScrollPadding FINAL CONSTANT)
+    Q_PROPERTY(int tracksViewportHeight READ tracksViewportHeight WRITE setTracksViewportHeight NOTIFY tracksViewportHeightChanged FINAL)
 
     Q_PROPERTY(bool altPressed READ altPressed NOTIFY altPressedChanged FINAL)
     Q_PROPERTY(bool ctrlPressed READ ctrlPressed NOTIFY ctrlPressedChanged FINAL)
@@ -40,6 +41,9 @@ public:
     bool altPressed() const;
     bool ctrlPressed() const;
 
+    int tracksViewportHeight() const;
+    void setTracksViewportHeight(int height);
+
     Q_INVOKABLE void changeTracksVerticalOffset(int deltaY);
     Q_INVOKABLE void setMouseY(double y);
 
@@ -57,6 +61,7 @@ public:
 signals:
     void tracksVerticalOffsetChanged();
     void tracksVerticalScrollLockedChanged();
+    void tracksViewportHeightChanged();
     void altPressedChanged();
     void ctrlPressedChanged();
 

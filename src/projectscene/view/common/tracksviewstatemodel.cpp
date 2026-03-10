@@ -81,12 +81,38 @@ au::trackedit::TrackId TracksViewStateModel::trackAtPosition(double x, double y)
     return {};
 }
 
-void TracksViewStateModel::changeTracksVerticalOffset(int deltaY)
+void TracksViewStateModel::changeTracksVerticalOffset(int offset)
 {
-    IProjectViewStatePtr vs = viewState();
-    if (vs) {
-        vs->changeTracksVerticalOffset(deltaY);
+    if (tracksVerticalOffset() == offset) {
+        return;
     }
+    IProjectViewStatePtr vs = viewState();
+    if (!vs) {
+        return;
+    }
+    vs->changeTracksVerticalOffset(offset);
+}
+
+int TracksViewStateModel::tracksViewportHeight() const
+{
+    const IProjectViewStatePtr vs = viewState();
+    if (!vs) {
+        return 0;
+    }
+    return vs->tracksViewportHeight();
+}
+
+void TracksViewStateModel::setTracksViewportHeight(int height)
+{
+    if (tracksViewportHeight() == height) {
+        return;
+    }
+    const IProjectViewStatePtr vs = viewState();
+    if (!vs) {
+        return;
+    }
+    vs->setTracksViewportHeight(height);
+    emit tracksViewportHeightChanged();
 }
 
 void TracksViewStateModel::setMouseY(double y)

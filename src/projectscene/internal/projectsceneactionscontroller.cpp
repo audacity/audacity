@@ -24,6 +24,7 @@ static const ActionQuery TOGGLE_TRACK_HALF_WAVE("action://projectscene/track-vie
 static const ActionCode LABEL_OPEN_EDITOR_CODE("toggle-label-editor");
 static const ActionCode TOGGLE_GLOBAL_SPECTROGRAM_VIEW_ACTION_CODE("action://trackedit/global-view-spectrogram");
 static const ActionCode CLIP_GAIN_CODE("clip-gain");
+static const ActionCode FIT_TO_HEIGHT_CODE("zoom-to-fit-project-vertically");
 
 static const muse::Uri EDIT_PITCH_AND_SPEED_URI("audacity://projectscene/editpitchandspeed");
 
@@ -43,6 +44,7 @@ void ProjectSceneActionsController::init()
     dispatcher()->reg(this, TOGGLE_TRACK_HALF_WAVE, this, &ProjectSceneActionsController::toggleTrackHalfWave);
     dispatcher()->reg(this, LABEL_OPEN_EDITOR_CODE, this, &ProjectSceneActionsController::openLabelEditor);
     dispatcher()->reg(this, CLIP_GAIN_CODE, this, &ProjectSceneActionsController::toggleAutomation);
+    dispatcher()->reg(this, FIT_TO_HEIGHT_CODE, this, &ProjectSceneActionsController::fitProjectToHeight);
 
     globalContext()->currentProjectChanged().onNotify(this, [this]() {
         const auto prj = globalContext()->currentProject();
@@ -184,6 +186,20 @@ void ProjectSceneActionsController::toggleTrackHalfWave(const muse::actions::Act
     }
     viewState->toggleHalfWave(trackId);
     notifyActionCheckedChanged(TOGGLE_TRACK_HALF_WAVE.toString());
+}
+
+void ProjectSceneActionsController::fitProjectToHeight()
+{
+    const project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    IF_ASSERT_FAILED(prj) {
+        return;
+    }
+
+    const auto viewState = prj->viewState();
+    if (viewState == nullptr) {
+        return;
+    }
+    viewState->fitTracksVertically();
 }
 
 bool ProjectSceneActionsController::actionChecked(const ActionCode& actionCode) const
