@@ -22,10 +22,10 @@
 
 #include "startupscenario.h"
 
+#include "framework/global/log.h"
+#include "framework/global/types/uri.h"
+
 #include "appshell/appshelltypes.h"
-#include "global/async/async.h"
-#include "global/translation.h"
-#include "global/log.h"
 
 using namespace au::appshell;
 using namespace muse::actions;
@@ -222,7 +222,10 @@ void StartupScenario::showStartupDialogsIfNeed(StartupModeType modeType)
         return;
     }
 
-    interactive()->openSync(WELCOME_DIALOG_URI);
+    muse::UriQuery query(WELCOME_DIALOG_URI);
+    query.set("modal", false);
+    interactive()->open(query);
+
     configuration()->setWelcomeDialogLastShownVersion(configuration()->audacityVersion());
 }
 

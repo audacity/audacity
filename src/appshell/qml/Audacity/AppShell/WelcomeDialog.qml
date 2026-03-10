@@ -51,13 +51,6 @@ StyledDialogView {
         readonly property string descText: model.currentItem ? model.currentItem.description : ""
     }
 
-    function openCurrent() {
-        if (!model.currentItem) {
-            return
-        }
-        api.launcher.openUrl(model.currentItem.destinationUrl)
-    }
-
     Column {
         id: contentColumn
 
@@ -144,7 +137,7 @@ StyledDialogView {
                 MouseArea {
                     anchors.fill: image
                     onClicked: {
-                        root.openCurrent()
+                        model.activateCurrentItem()
                     }
                 }
             }
@@ -210,7 +203,7 @@ StyledDialogView {
             navigation.accessible.description: prv.titleText + "; " + prv.descText
 
             onClicked: {
-                root.openCurrent()
+                model.activateCurrentItem()
             }
         }
 
