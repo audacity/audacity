@@ -7,6 +7,7 @@
 #include "framework/global/io/fileinfo.h"
 #include "framework/global/translation.h"
 #include "framework/global/defer.h"
+#include "trackedit/trackedittypes.h"
 
 #include "trackedit/trackeditutils.h"
 
@@ -111,6 +112,10 @@ void ExportPreferencesModel::init()
 
         emit exportSampleRateListChanged();
         emit maxExportChannelsChanged();
+        emit hasChaptersChanged();
+        if (!exporter()->hasChapters()) {
+            setChaptersEnabled(false);
+        }
         updateCurrentSampleRate();
         updateExportChannels();
     });
@@ -130,6 +135,8 @@ void ExportPreferencesModel::init()
     });
 
     updateExportChannels();
+    populateLabelTracks();
+
     updateCurrentSampleRate();
 }
 
@@ -276,6 +283,10 @@ void ExportPreferencesModel::setCurrentFormat(const QString& format)
     emit customFFmpegOptionsVisibleChanged();
     emit oggFormatOptionsVisibleChanged();
     emit hasMetadataChanged();
+    emit hasChaptersChanged();
+    if (!exporter()->hasChapters()) {
+        setChaptersEnabled(false);
+    }
 }
 
 QStringList ExportPreferencesModel::formatsList() const
@@ -531,7 +542,16 @@ void ExportPreferencesModel::exportData()
         }
     }
 
-    muse::Ret result = exporter()->exportData(filePath);
+    IExporter::Options exportOptions;
+    if (m_chaptersEnabled && !m_selectedChapterTracks.isEmpty()) {
+        muse::ValList trackIds;
+        for (const QVariant& trackId : m_selectedChapterTracks) {
+            trackIds.push_back(muse::Val(trackId.toInt()));
+        }
+        exportOptions[IExporter::OptionKey::ChapterTrackIds] = muse::Val(trackIds);
+    }
+
+    muse::Ret result = exporter()->exportData(filePath, exportOptions);
     if (!result.success() && !result.text().empty()) {
         interactive()->error(muse::trc("export", "Export error"), result.text());
         return;
@@ -587,6 +607,98 @@ bool ExportPreferencesModel::masterFxEnabled() const
 bool ExportPreferencesModel::customMappingEnabled() const
 {
     return exportChannelsType() == ExportChannelsPref::ExportChannels::CUSTOM;
+}
+
+bool ExportPreferencesModel::hasChapters()
+{
+    return exporter()->hasChapters();
+}
+
+bool ExportPreferencesModel::chaptersEnabled() const
+{
+    return m_chaptersEnabled;
+}
+
+void ExportPreferencesModel::setChaptersEnabled(bool enabled)
+{
+    if (m_chaptersEnabled == enabled) {
+        return;
+    }
+
+    m_chaptersEnabled = enabled;
+    emit chaptersEnabledChanged();
+}
+
+QVariantList ExportPreferencesModel::labelTracks() const
+{
+    return m_labelTracks;
+}
+
+QVariantList ExportPreferencesModel::selectedChapterTracks() const
+{
+    return m_selectedChapterTracks;
+}
+
+void ExportPreferencesModel::changeChapterTrackSelection(const QVariant& trackId, bool selected)
+{
+    QVariantList tracks = m_selectedChapterTracks;
+    if (!selected) {
+        tracks.removeAll(trackId);
+    } else {
+        tracks << trackId;
+    }
+
+    if (m_selectedChapterTracks != tracks) {
+        m_selectedChapterTracks = tracks;
+        emit selectedChapterTracksChanged();
+    }
+}
+
+void ExportPreferencesModel::selectAllChapterTracks()
+{
+    QVariantList tracks;
+    for (const QVariant& track : m_labelTracks) {
+        tracks << track.toMap()["itemId"];
+    }
+
+    if (m_selectedChapterTracks != tracks) {
+        m_selectedChapterTracks = tracks;
+        emit selectedChapterTracksChanged();
+    }
+}
+
+void ExportPreferencesModel::deselectAllChapterTracks()
+{
+    if (!m_selectedChapterTracks.isEmpty()) {
+        m_selectedChapterTracks.clear();
+        emit selectedChapterTracksChanged();
+    }
+}
+
+void ExportPreferencesModel::populateLabelTracks()
+{
+    const auto project = globalContext()->currentTrackeditProject();
+    if (!project) {
+        return;
+    }
+
+    QVariantList labelTracks;
+    for (const trackedit::Track& track : project->trackList()) {
+        if (track.type != trackedit::TrackType::Label) {
+            continue;
+        }
+
+        QVariantMap labelTrackMap;
+        labelTrackMap["itemId"] = QVariant::fromValue(track.id);
+        labelTrackMap["title"] = track.title.toQString();
+
+        labelTracks << labelTrackMap;
+    }
+
+    if (m_labelTracks != labelTracks) {
+        m_labelTracks = labelTracks;
+        emit labelTracksChanged();
+    }
 }
 
 muse::Ret ExportPreferencesModel::warnAndDisableMasterFxBeforeExport() const
