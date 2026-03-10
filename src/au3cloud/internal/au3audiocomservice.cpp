@@ -741,3 +741,8 @@ std::optional<std::string> Au3AudioComService::getHeadSnapshotID(const std::stri
 
     return std::nullopt;
 }
+
+void Au3AudioComService::closeConnection()
+{
+    audacity::cloud::audiocom::sync::CloudProjectsDatabase::Get().CloseConnection();
+}

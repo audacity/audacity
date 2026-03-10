@@ -360,8 +360,9 @@ std::vector<muse::modularity::IContextSetup*>& App::contextSetups(const muse::mo
 
 void App::applyCommandLineOptions(const CommandLineParser::Options& options)
 {
-    if (options.app.revertToFactorySettings) {
-        appshellConfiguration()->revertToFactorySettings(options.app.revertToFactorySettings.value());
+    if (options.app.factoryResetMode) {
+        bool keepDefaultSettings = (options.app.factoryResetMode.value() == CommandLineParser::FactoryResetMode::SettingsOnly);
+        appshellConfiguration()->revertToFactorySettings(keepDefaultSettings);
     }
 
     startupScenario()->setStartupType(options.startup.type);

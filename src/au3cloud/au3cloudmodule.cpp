@@ -73,4 +73,7 @@ void Au3CloudContext::onInit(const muse::IApplication::RunMode&)
     }
 }
 
-void Au3CloudContext::onDeinit() {}
+void Au3CloudContext::onDeinit()
+{
+    m_audioComService->closeConnection();
+}

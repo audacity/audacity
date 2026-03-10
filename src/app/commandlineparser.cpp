@@ -124,9 +124,10 @@ void CommandLineParser::parse(int argc, char** argv)
             m_options.startup.mediaFiles.emplace_back(fromUserInputPath(file));
         }
     }
-
-    if (m_parser.isSet("F") || m_parser.isSet("R")) {
-        m_options.app.revertToFactorySettings = true;
+    if (m_parser.isSet("F")) {
+        m_options.app.factoryResetMode = FactoryResetMode::Full;
+    } else if (m_parser.isSet("R")) {
+        m_options.app.factoryResetMode = FactoryResetMode::SettingsOnly;
     }
 
     // Audio plugin registration

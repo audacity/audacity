@@ -341,10 +341,6 @@ void ApplicationActionController::revertToFactorySettings()
         return;
     }
 
-    static constexpr bool KEEP_DEFAULT_SETTINGS = false;
-    static constexpr bool NOTIFY_ABOUT_CHANGES = false;
-    configuration()->revertToFactorySettings(KEEP_DEFAULT_SETTINGS, NOTIFY_ABOUT_CHANGES);
-
     title = muse::trc("appshell", "Would you like to restart Audacity now?");
     question = muse::trc("appshell", "Audacity needs to be restarted for these changes to take effect.");
 
@@ -358,7 +354,20 @@ void ApplicationActionController::revertToFactorySettings()
         return;
     }
 
-    restart();
+    // Close open project before cleaning up (like quit does)
+    projectFilesController()->closeOpenedProject();
+
+    // Close cloud database connection if cloud module is active
+    if (auto au3AudioComService = audioComService()) {
+        au3AudioComService->closeConnection();
+    }
+
+    // Full factory reset: clean user data directory + reset settings
+    static constexpr bool KEEP_DEFAULT_SETTINGS = false;
+    static constexpr bool NOTIFY_ABOUT_CHANGES = false;
+    configuration()->revertToFactorySettings(KEEP_DEFAULT_SETTINGS, NOTIFY_ABOUT_CHANGES);
+
+    application()->restart();
 }
 
 bool ApplicationActionController::isProjectOpened() const

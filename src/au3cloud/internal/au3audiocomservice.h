@@ -56,6 +56,8 @@ public:
 
     muse::ProgressPtr resumeProjectSync(au::project::IAudacityProjectPtr project) override;
 
+    void closeConnection() override;
+
 private:
     std::string getCloudProjectPage(au::project::IAudacityProjectPtr project);
 

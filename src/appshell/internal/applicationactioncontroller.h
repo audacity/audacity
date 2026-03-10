@@ -41,6 +41,7 @@
 #include "record/irecordcontroller.h"
 #include "context/iuicontextresolver.h"
 #include "context/iglobalcontext.h"
+#include "au3cloud/iau3audiocomservice.h"
 
 //! TODO AU4
 // #include "languages/ilanguagesservice.h"
@@ -66,6 +67,19 @@ class ApplicationActionController : public QObject, public IApplicationActionCon
     muse::ContextInject<record::IRecordController> recordController { this };
     muse::ContextInject<context::IUiContextResolver> uiContextResolver { this };
     muse::ContextInject<context::IGlobalContext> globalContext { this };
+
+
+    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::ContextInject<muse::ui::IUiActionsRegister> actionsRegister { this };
+    muse::ContextInject<muse::ui::IMainWindow> mainWindow { this };
+    muse::ContextInject<muse::IInteractive> interactive { this };
+    muse::ContextInject<appshell::IStartupScenario> startupScenario { this };
+    muse::ContextInject<project::IProjectFilesController> projectFilesController { this };
+    muse::ContextInject<record::IRecordController> recordController { this };
+    muse::ContextInject<context::IUiContextResolver> uiContextResolver { this };
+    muse::ContextInject<context::IGlobalContext> globalContext { this };
+    muse::ContextInject<au3cloud::IAu3AudioComService> audioComService { this };
+
 public:
     ApplicationActionController(const muse::modularity::ContextPtr& ctx)
         : muse::Contextable(ctx) {}
