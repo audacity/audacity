@@ -64,16 +64,16 @@ void EffectPresetsScenario::savePresetAs(const EffectInstanceId& effectInstanceI
 
 void EffectPresetsScenario::savePreset(const EffectInstanceId& effectInstanceId, const PresetId& presetId)
 {
-    if (presetId.empty()) {
+    IF_ASSERT_FAILED(!presetId.empty()) {
         return;
     }
 
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(effectInstanceId);
-    if (effectId.empty()) {
+    IF_ASSERT_FAILED(!effectId.empty()) {
         return;
     }
 
-    if (!presetsProvider()->hasUserPresetWithName(effectId, presetId.ToStdString())) {
+    IF_ASSERT_FAILED(presetsProvider()->hasUserPresetWithName(effectId, presetId.ToStdString())) {
         return;
     }
 

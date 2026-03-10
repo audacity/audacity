@@ -13,60 +13,64 @@ RowLayout {
     id: root
 
     required property var instanceId
-    property bool destructiveMode: false
+    required property bool destructiveMode
     property int navigationOrder: 0
     property var navigationPanel: null
 
     property var parentWindow: null
 
-    // Expose the manage menu model so parent can listen to its signals
-    property alias manageMenuModel: manageMenuModel
-
-    property var activeMenuModel: null
+    // Expose the presets bar model so parent can listen to its signals
+    property alias presetsBarModel: presetsBarModel
 
     spacing: 4
 
+    QtObject {
+        id: prv
+
+        property AbstractMenuModel activeMenuModel: null
+    }
+
     function presetIconCodeById(presetId) {
-        const preset = manageMenuModel.presets.find(item => item.id === presetId)
+        const preset = presetsBarModel.presets.find(item => item.id === presetId)
         return preset && preset.iconCode ? preset.iconCode : IconCode.NONE
     }
 
     function presetIconCodeByName(name) {
-        const preset = manageMenuModel.presets.find(item => item.name === name)
+        const preset = presetsBarModel.presets.find(item => item.name === name)
         return preset && preset.iconCode ? preset.iconCode : IconCode.NONE
     }
 
     function manage(button) {
-        activeMenuModel = manageMenuModel.presetContextMenu()
+        prv.activeMenuModel = presetsBarModel.presetContextMenu()
         var pos = Qt.point(button.x, button.y + button.height)
-        menuLoader.show(pos, activeMenuModel)
+        menuLoader.show(pos, prv.activeMenuModel)
     }
 
     function save(button) {
-        activeMenuModel = manageMenuModel.saveContextMenu()
+        prv.activeMenuModel = presetsBarModel.saveContextMenu()
         var pos = Qt.point(button.x, button.y + button.height)
-        menuLoader.show(pos, activeMenuModel)
+        menuLoader.show(pos, prv.activeMenuModel)
     }
 
     Component.onCompleted: {
-        Qt.callLater(manageMenuModel.load)
+        Qt.callLater(presetsBarModel.load)
     }
 
-    EffectManageMenu {
-        id: manageMenuModel
+    EffectPresetsBarModel {
+        id: presetsBarModel
         instanceId: root.instanceId
         persistLastUsedPreset: root.destructiveMode
     }
 
     Connections {
-        target: manageMenuModel
+        target: presetsBarModel
 
         function onPresetChanged() {
-            presetSelector.currentIndex = manageMenuModel.presets.findIndex(preset => preset.id === manageMenuModel.preset)
+            presetSelector.currentIndex = presetsBarModel.presets.findIndex(preset => preset.id === presetsBarModel.preset)
         }
 
         function onPresetsChanged() {
-            presetSelector.currentIndex = manageMenuModel.presets.findIndex(preset => preset.id === manageMenuModel.preset)
+            presetSelector.currentIndex = presetsBarModel.presets.findIndex(preset => preset.id === presetsBarModel.preset)
         }
     }
 
@@ -78,8 +82,8 @@ RowLayout {
         parentWindow: root.parentWindow
 
         onHandleMenuItem: function (itemId) {
-            if (root.activeMenuModel) {
-                root.activeMenuModel.handleMenuItem(itemId)
+            if (prv.activeMenuModel) {
+                prv.activeMenuModel.handleMenuItem(itemId)
             }
         }
     }
@@ -100,13 +104,13 @@ RowLayout {
         valueRole: "id"
 
         parentWindow: root.parentWindow
-        enabled: manageMenuModel.enabled
+        enabled: presetsBarModel.presetsDropdownEnabled
 
         indeterminateText: qsTrc("effects", "Select preset")
 
-        model: manageMenuModel.presets
+        model: presetsBarModel.presets
         displayText: {
-            const preset = manageMenuModel.presets.find(item => item.id === manageMenuModel.preset)
+            const preset = presetsBarModel.presets.find(item => item.id === presetsBarModel.preset)
             return preset ? preset.name : indeterminateText
         }
 
@@ -122,7 +126,7 @@ RowLayout {
             StyledIconLabel {
                 Layout.preferredWidth: ui.theme.iconsFont.pixelSize
                 Layout.alignment: Qt.AlignVCenter
-                readonly property int presetIconCode: root.presetIconCodeById(manageMenuModel.preset)
+                readonly property int presetIconCode: root.presetIconCodeById(presetsBarModel.preset)
                 iconCode: presetIconCode
             }
 
@@ -165,8 +169,8 @@ RowLayout {
         }
 
         onActivated: function (index, value) {
-            manageMenuModel.preset = value
-            currentIndex = manageMenuModel.presets.findIndex(preset => preset.id === value)
+            presetsBarModel.preset = value
+            currentIndex = presetsBarModel.presets.findIndex(preset => preset.id === value)
         }
     }
 
@@ -195,10 +199,10 @@ RowLayout {
         Layout.alignment: Qt.AlignVCenter
 
         icon: IconCode.UNDO
-        enabled: manageMenuModel.canResetPreset
+        enabled: presetsBarModel.canResetPreset
 
         onClicked: {
-            manageMenuModel.resetPreset()
+            presetsBarModel.resetPreset()
         }
     }
 
@@ -212,10 +216,10 @@ RowLayout {
         Layout.alignment: Qt.AlignVCenter
 
         icon: IconCode.DELETE_TANK
-        enabled: manageMenuModel.canDeletePreset
+        enabled: presetsBarModel.canDeletePreset
 
         onClicked: {
-            manageMenuModel.deletePreset()
+            presetsBarModel.deletePreset()
         }
     }
 

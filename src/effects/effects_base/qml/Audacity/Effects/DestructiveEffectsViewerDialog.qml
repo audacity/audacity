@@ -79,7 +79,7 @@ EffectStyledDialogView {
 
     // Listen to UI mode changes from the presets bar menu
     Connections {
-        target: presetsBar.manageMenuModel
+        target: presetsBar.presetsBarModel
         function onUseVendorUIChanged() {
             viewerModel.refreshUIMode()
         }
@@ -200,13 +200,13 @@ EffectStyledDialogView {
                         anchors.left: parent.left
                         anchors.right: parent.right
 
+                        destructiveMode: true
                         navigationPanel: root.navigationPanel
                         navigationOrder: 0
 
                         enabled: !(prv.viewer && prv.viewer.isPreviewing)
                         parentWindow: root.window
                         instanceId: root.instanceId
-                        destructiveMode: true
                     }
                 }
 
@@ -341,7 +341,7 @@ EffectStyledDialogView {
                             enabled: prv.isApplyAllowed
 
                             onClicked: {
-                                presetsBar.manageMenuModel.commitSelectedPreset()
+                                presetsBar.presetsBarModel.commitSelectedPreset()
                                 prv.closeWindow(true)
                             }
                         }

@@ -26,7 +26,7 @@ StyledDialogView {
         name: "PresetNameInput"
         enabled: input.enabled && input.visible
         section: root.navigationSection
-        order: 1
+        order: 0
     }
 
     TextInputField {

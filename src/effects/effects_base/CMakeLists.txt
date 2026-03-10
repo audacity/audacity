@@ -77,8 +77,8 @@ set(MODULE_SRC
     # view
     ${CMAKE_CURRENT_LIST_DIR}/view/abstracteffectviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/abstracteffectviewmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/effectmanagemenu.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/effectmanagemenu.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/effectpresetsbarmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/effectpresetsbarmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/presetscontextmenumodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/presetscontextmenumodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/effectsavecontextmenu.cpp
