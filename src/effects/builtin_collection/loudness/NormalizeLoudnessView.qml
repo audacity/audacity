@@ -14,7 +14,7 @@ BuiltinEffectBase {
     implicitHeight: column.height
 
     builtinEffectModel: NormalizeLoudnessViewModelFactory.createModel(root, root.instanceId)
-    numNavigationPanels: 2
+    numNavigationPanels: 1
     property alias normalizeLoudness: root.builtinEffectModel
     property NavigationPanel normalizeLoudnessNavigationPanel: NavigationPanel {
         name: "NormalizeLoudnessControls"

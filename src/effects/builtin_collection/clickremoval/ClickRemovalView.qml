@@ -14,7 +14,7 @@ BuiltinEffectBase {
     implicitHeight: column.height
 
     builtinEffectModel: ClickRemovalViewModelFactory.createModel(root, root.instanceId)
-    numNavigationPanels: 2
+    numNavigationPanels: 1
     property alias clickRemoval: root.builtinEffectModel
     property NavigationPanel clickRemovalNavigationPanel: NavigationPanel {
         name: "ClickRemovalSliders"

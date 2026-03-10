@@ -15,7 +15,7 @@ BuiltinEffectBase {
     implicitHeight: column.height
 
     builtinEffectModel: NormalizeViewModelFactory.createModel(root, root.instanceId)
-    numNavigationPanels: 2
+    numNavigationPanels: 1
     property alias normalize: root.builtinEffectModel
     property NavigationPanel normalizeNavigationPanel: NavigationPanel {
         name: "NormalizeControls"

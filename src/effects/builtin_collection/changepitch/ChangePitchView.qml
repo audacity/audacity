@@ -21,7 +21,7 @@ BuiltinEffectBase {
     property bool isApplyAllowed: true
 
     builtinEffectModel: ChangePitchViewModelFactory.createModel(root, root.instanceId)
-    numNavigationPanels: 5
+    numNavigationPanels: 4
     property alias changePitch: root.builtinEffectModel
     property NavigationPanel pitchRowNavigationPanel: NavigationPanel {
         name: "ChangePitchPitchRow"

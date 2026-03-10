@@ -24,7 +24,7 @@ DynamicsEffectBase {
     builtinEffectModel: LimiterViewModelFactory.createModel(root, root.instanceId)
     property alias limiter: root.builtinEffectModel
 
-    numNavigationPanels: 4
+    numNavigationPanels: 3
     property NavigationPanel dynamicsPanelNavigationPanel: NavigationPanel {
         name: "LimiterDynamicsPanel"
         enabled: root.enabled && root.visible && !root.usedDestructively

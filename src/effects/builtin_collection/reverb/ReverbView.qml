@@ -17,7 +17,7 @@ BuiltinEffectBase {
     width: 560
 
     builtinEffectModel: ReverbViewModelFactory.createModel(root, root.instanceId)
-    numNavigationPanels: 3
+    numNavigationPanels: 2
     property alias reverb: root.builtinEffectModel
     property NavigationPanel leftColumnNavigationPanel: NavigationPanel {
         name: "ReverbLeftColumn"

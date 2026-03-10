@@ -12,7 +12,7 @@ BuiltinEffectBase {
 
     width: 320
     implicitHeight: column.height
-    numNavigationPanels: 2
+    numNavigationPanels: 1
 
     builtinEffectModel: {
         var model = AmplifyViewModelFactory.createModel(root, root.instanceId)

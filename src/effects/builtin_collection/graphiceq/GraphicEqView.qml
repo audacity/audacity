@@ -16,7 +16,7 @@ BuiltinEffectBase {
     implicitHeight: boardRectangle.height
 
     builtinEffectModel: GraphicEqViewModelFactory.createModel(root, root.instanceId)
-    numNavigationPanels: 3
+    numNavigationPanels: 2
     property alias graphicEq: root.builtinEffectModel
     property NavigationPanel slidersNavigationPanel: NavigationPanel {
         name: "GraphicEqSliders"
