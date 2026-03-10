@@ -103,9 +103,36 @@ void GuiApp::setup()
     applyCommandLineOptions(m_options);
 
     if (appshellConfiguration()->isFactoryResetPending()) {
+        // Delete config directory contents on deferred factory reset,
+        // preserving user-installed content.
+        //
+        // Deleted:
+        //   .factory_reset_pending  - marker file triggering this cleanup
+        //   audiocom_sync.db        - cloud sync state
+        //   pluginregistry.cfg      - plugin scan cache (regenerated on startup)
+        //   pluginsettings.cfg      - per-plugin settings
+        //   session/                - session state
+        //   SessionData/            - session data
+        //   logs/                   - application logs
+        //   locale/                 - locale data
+        //
+        // Preserved:
+        //   Plug-Ins/               - user-installed Nyquist plugins
+        //   workspaces/             - custom workspace layouts
         QString dataPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-        QDir(dataPath).removeRecursively();
-        QDir().mkpath(dataPath);
+        QDir dataDir(dataPath);
+        const QStringList preservedDirs = { "Plug-Ins", "workspaces" };
+
+        for (const QFileInfo& entry : dataDir.entryInfoList(QDir::AllEntries | QDir::NoDotAndDotDot)) {
+            if (preservedDirs.contains(entry.fileName())) {
+                continue;
+            }
+            if (entry.isDir()) {
+                QDir(entry.absoluteFilePath()).removeRecursively();
+            } else {
+                QFile::remove(entry.absoluteFilePath());
+            }
+        }
     }
 
     m_globalModule.onPreInit(runMode());
