@@ -29,8 +29,8 @@
 #include <qqmlintegration.h>
 
 #include "framework/global/modularity/ioc.h"
+#include "framework/actions/iactionsdispatcher.h"
 #include "framework/interactive/iinteractive.h"
-#include "au3cloud/iauthorization.h"
 #include "iappshellconfiguration.h"
 
 namespace au::appshell {
@@ -47,8 +47,8 @@ class WelcomeDialogModel : public QObject, public muse::Contextable
 
     QML_ELEMENT
 
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::Inject<muse::IInteractive> interactive { this };
-    muse::Inject<au::au3cloud::IAuthorization> authorization { this };
     muse::GlobalInject<IAppShellConfiguration> configuration;
 
 public:

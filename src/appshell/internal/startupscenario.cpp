@@ -224,6 +224,7 @@ void StartupScenario::showStartupDialogsIfNeed(StartupModeType modeType)
 
     muse::UriQuery query(WELCOME_DIALOG_URI);
     query.set("modal", false);
+    query.set("floating", true);
     interactive()->open(query);
 
     configuration()->setWelcomeDialogLastShownVersion(configuration()->audacityVersion());

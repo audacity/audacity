@@ -22,6 +22,7 @@
 
 #include "welcomedialogmodel.h"
 
+#include "framework/actions/actiontypes.h"
 #include "translation.h"
 #include "log.h"
 
@@ -32,7 +33,6 @@ const char* AU4_VIDEO_URL {
     "https://youtu.be/QYM3TWf_G38?utm_source=au-app-au4-video&utm_medium=au-app-au4-video&utm_campaign=au-app-au4-video" };
 const char* SHOP_URL {
     "https://audacity-shop.fourthwall.com/en-gbp/?utm_source=au-app-merch-store&utm_medium=merch-25y&utm_campaign=au-app-welcome-au-app-merch-store-merch-25y&utm_id=au-app-welcome" };
-const char* TOUR_PAGE_URL { "https://audio.com/tour?mtm_campaign=audacitydesktop&mtm_content=app_launch_reg" };
 }
 
 std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
@@ -55,18 +55,10 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
                        "This integration allows you to save and access your Audacity projects on any device"),
             muse::qtrc("appshell/welcome", "Continue"),
             [this]() {
-                if (!authorization()->isAuthorized()) {
-                    interactive()->openSync("audacity://signin/audiocom");
+                muse::actions::ActionQuery query("audacity://cloud/open-signin-dialog");
+                query.addParam("showTourPage", muse::Val(true));
 
-                    if (!authorization()->isAuthorized()) {
-                        return;
-                    }
-
-                    interactive()->info(muse::trc("cloud", "Link account"), muse::trc("cloud", "Account linked successfully!"),
-                                        { interactive()->buttonData(muse::IInteractive::Button::Ok) });
-                }
-
-                interactive()->openUrl(TOUR_PAGE_URL);
+                dispatcher()->dispatch(query);
             }
         },
         {
@@ -75,7 +67,9 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
             muse::qtrc("appshell/welcome",
                        "There are tons of powerful plugins available that you can install for free on MuseHub"),
             muse::qtrc("appshell/welcome", "View free plugins"),
-            nullptr
+            [this]() {
+                dispatcher()->dispatch("get-effects");
+            }
         },
         {
             muse::qtrc("appshell/welcome", "Get 25th anniversary merchandise!"),
