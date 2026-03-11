@@ -31,6 +31,7 @@ public:
 
     virtual bool isNewlyCreated() const = 0;
     virtual bool isImported() const = 0;
+    virtual bool isCloudProject() const = 0;
 
     virtual muse::String title() const { return muse::String(); }
 

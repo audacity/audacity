@@ -268,6 +268,11 @@ bool Audacity4Project::isImported() const
     return m_isImported;
 }
 
+bool Audacity4Project::isCloudProject() const
+{
+    return configuration()->isCloudProject(m_path);
+}
+
 String Audacity4Project::title() const
 {
     return String::fromStdString(m_au3Project->title());
