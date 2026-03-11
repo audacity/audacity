@@ -3,6 +3,7 @@
 */
 #pragma once
 
+#include <functional>
 #include <optional>
 #include <chrono>
 
@@ -39,8 +40,8 @@ public:
                                                               const FetchOptions& options = {}) = 0;
     virtual void clearAudioListCache() = 0;
 
-    virtual muse::ProgressPtr uploadProject(au::project::IAudacityProjectPtr project, const std::string& name) = 0;
-
+    virtual muse::ProgressPtr uploadProject(au::project::IAudacityProjectPtr project, const std::string& name,
+                                            std::function<bool()> projectSaveCallback = nullptr) = 0;
     virtual muse::ProgressPtr shareAudio(const std::string& title) = 0;
 };
 }

@@ -277,7 +277,8 @@ void Au3AudioComService::clearAudioListCache()
     m_audiosPerBatch = 0;
 }
 
-muse::ProgressPtr Au3AudioComService::uploadProject(au::project::IAudacityProjectPtr project, const std::string& name)
+muse::ProgressPtr Au3AudioComService::uploadProject(au::project::IAudacityProjectPtr project, const std::string& name,
+                                                    std::function<bool()> projectSaveCallback)
 {
     muse::ProgressPtr progress = std::make_shared<muse::Progress>();
 
@@ -318,7 +319,7 @@ muse::ProgressPtr Au3AudioComService::uploadProject(au::project::IAudacityProjec
         audacity::cloud::audiocom::sync::UploadMode::Normal,
         AudiocomTrace::SaveProjectSaveToCloudMenu);
 
-    std::thread([project, progress, future = std::move(future)]() mutable {
+    std::thread([project, progress, future = std::move(future), projectSaveCallback = std::move(projectSaveCallback)]() mutable {
         if (!project) {
             progress->finish(muse::make_ret(muse::Ret::Code::InternalError, muse::trc("cloud",
                                                                                       "Project was closed before upload started")));
@@ -336,6 +337,10 @@ muse::ProgressPtr Au3AudioComService::uploadProject(au::project::IAudacityProjec
         if (!result.Response) {
             progress->finish(make_ret(Err::SnapshotFailed));
             return;
+        }
+
+        if (projectSaveCallback && !projectSaveCallback()) {
+            // Cancel the sync
         }
 
         auto& projectFileIO = ProjectFileIO::Get(*au3Project);

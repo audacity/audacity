@@ -470,15 +470,12 @@ bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudI
         return false;
     }
 
-    auto progress = audioComService()->uploadProject(project, cloudInfo.name.toStdString());
-    progress->finished().onReceive(this, [this, project, saveMode, projectFilePath](const ProgressResult& result) {
-        if (result.ret.success()) {
-            if (!saveProjectLocally(projectFilePath, saveMode)) {
-                toastService()->showError(trc("global", "Error"), trc("project",
-                                                                      "Failed to save project locally after uploading to cloud"));
-                return;
-            }
+    auto progress = audioComService()->uploadProject(project, cloudInfo.name.toStdString(), [this, projectFilePath]() {
+        return saveProjectLocally(projectFilePath, SaveMode::Save);
+    });
 
+    progress->finished().onReceive(this, [this, project, saveMode](const ProgressResult& result) {
+        if (result.ret.success()) {
             const bool dismissable = false;
             toastService()->show(trc("global", "Success"),
                                  trc("project",

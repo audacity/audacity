@@ -40,8 +40,8 @@ public:
     muse::async::Promise<AudioList> downloadAudioList(size_t audiosPerBatch, size_t batchNumber, const FetchOptions& options) override;
     void clearAudioListCache() override;
 
-    muse::ProgressPtr uploadProject(au::project::IAudacityProjectPtr project, const std::string& name) override;
-
+    muse::ProgressPtr uploadProject(au::project::IAudacityProjectPtr project, const std::string& name,
+                                    std::function<bool()> projectSaveCallback) override;
     muse::ProgressPtr shareAudio(const std::string& title) override;
 
 private:
