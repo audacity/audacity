@@ -9,6 +9,7 @@ Item {
     required property int trackId
     required property int channel
     required property real trackSampleRate
+    required property bool selectionInProgress
     required property real selectionStartPosition
     required property real selectionEndPosition
     required property real selectionStartFrequency
@@ -20,6 +21,7 @@ Item {
     property alias verticalDragActive: selectionModel.verticalDragActive
 
     signal selectionHorizontalResize(real startPosition, real endPosition, bool completed)
+    signal mousePositionChanged(real x, real y)
 
     QtObject {
         id: prv
@@ -99,10 +101,8 @@ Item {
 
         visible: !selectionModel.verticalDragActive && (pressed || !prv.selectionIsEmpty)
 
-        hoverEnabled: true
+        hoverEnabled: false
         acceptedButtons: Qt.LeftButton
-
-        cursorShape: Qt.CrossCursor
 
         property var draggedEdges: []
 
@@ -149,29 +149,8 @@ Item {
                 for (let i = 0; i < draggedEdges.length; i++) {
                     prv.edgePositionChanged(draggedEdges[i], mouse)
                 }
-            } else {
-                switch (marquee.hitHandle(mouse.x - marquee.x, mouse.y - marquee.y, marquee)) {
-                case marquee.handleId.TopLeft:
-                case marquee.handleId.BottomRight:
-                    cursorShape = Qt.SizeFDiagCursor
-                    break
-                case marquee.handleId.TopRight:
-                case marquee.handleId.BottomLeft:
-                    cursorShape = Qt.SizeBDiagCursor
-                    break
-                case marquee.handleId.Left:
-                case marquee.handleId.Right:
-                    cursorShape = Qt.SizeHorCursor
-                    break
-                case marquee.handleId.Top:
-                case marquee.handleId.Bottom:
-                    cursorShape = Qt.SizeVerCursor
-                    break
-                default:
-                    cursorShape = Qt.CrossCursor
-                    break
-                }
             }
+            root.mousePositionChanged(mouse.x, mouse.y)
         }
 
         onReleased: function (mouse) {
@@ -179,17 +158,7 @@ Item {
                 prv.edgeReleased(draggedEdges[i], mouse)
             }
             draggedEdges = []
-            cursorShape = Qt.CrossCursor
         }
-    }
-
-    MouseArea {
-        // To make sure that the cursor stays as SizeVerCursor during vertical drag even when the mouse is outside of the centerFrequencyMouseArea
-        anchors.fill: parent
-        visible: selectionModel.verticalDragActive
-        hoverEnabled: true
-        acceptedButtons: Qt.NoButton
-        cursorShape: Qt.SizeVerCursor
     }
 
     MarqueeSelection {
@@ -204,6 +173,7 @@ Item {
 
         lineWidth: 1
         color: "white"
+        changeCursorShape: !root.selectionInProgress
 
         Item {
             id: centerFrequencyDragHandle
@@ -228,8 +198,9 @@ Item {
                 }
 
                 onPositionChanged: function (mouse) {
-                    const absoluteY = centerFrequencyDragHandle.mapToItem(root, 0, mouse.y).y
-                    selectionModel.dragCenterFrequency(absoluteY)
+                    const position = centerFrequencyDragHandle.mapToItem(root, mouse.x, mouse.y)
+                    selectionModel.dragCenterFrequency(position.y)
+                    root.mousePositionChanged(position.x, position.y)
                 }
 
                 onReleased: {

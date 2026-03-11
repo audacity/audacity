@@ -12,6 +12,7 @@ Canvas {
 
     required property color color
     required property int lineWidth
+    required property bool changeCursorShape
 
     readonly property var handleId: ({
             None: -1,
@@ -80,36 +81,44 @@ Canvas {
     onWidthChanged: requestPaint()
     onHeightChanged: requestPaint()
 
-    Item {
+    EdgeHandle {
         id: leftEdge
         x: 0
         y: topLeft.y + topLeft.height
         width: prv.edgeWidth
         height: parent.height
+        edge: edgeId.Left
+        changeCursorShape: root.changeCursorShape
     }
 
-    Item {
+    EdgeHandle {
         id: rightEdge
         x: parent.width - rightEdge.width / 2
         y: topRight.y + topRight.height
         width: prv.edgeWidth
         height: parent.height
+        edge: edgeId.Right
+        changeCursorShape: root.changeCursorShape
     }
 
-    Item {
+    EdgeHandle {
         id: topEdge
         x: topLeft.x + topLeft.width
         y: -topEdge.height / 2
         width: parent.width
         height: prv.edgeWidth
+        edge: edgeId.Top
+        changeCursorShape: root.changeCursorShape
     }
 
-    Item {
+    EdgeHandle {
         id: bottomEdge
         x: bottomLeft.x + bottomLeft.width
         y: parent.height - bottomEdge.height / 2
         width: parent.width
         height: prv.edgeWidth
+        edge: edgeId.Bottom
+        changeCursorShape: root.changeCursorShape
     }
 
     CornerHandle {
@@ -117,6 +126,8 @@ Canvas {
         x: 0
         y: 0
         size: prv.edgeWidth
+        corner: cornerId.TopLeft
+        changeCursorShape: root.changeCursorShape
     }
 
     CornerHandle {
@@ -124,6 +135,8 @@ Canvas {
         x: parent.width - topRight.width
         y: 0
         size: prv.edgeWidth
+        corner: cornerId.TopRight
+        changeCursorShape: root.changeCursorShape
     }
 
     CornerHandle {
@@ -131,6 +144,8 @@ Canvas {
         x: parent.width - bottomRight.width
         y: parent.height - bottomRight.height
         size: prv.edgeWidth
+        corner: cornerId.BottomRight
+        changeCursorShape: root.changeCursorShape
     }
 
     CornerHandle {
@@ -138,5 +153,7 @@ Canvas {
         x: 0
         y: parent.height - bottomLeft.height
         size: prv.edgeWidth
+        corner: cornerId.BottomLeft
+        changeCursorShape: root.changeCursorShape
     }
 }

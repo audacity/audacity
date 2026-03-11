@@ -313,7 +313,9 @@ Rectangle {
             function updateCursorPosition(x, y) {
                 lineCursor.x = x
                 timeline.context.updateMousePositionTime(x)
-                tracksViewState.setMouseY(Math.max(0, Math.min(y, mainMouseArea.height)))
+                const mouseY = Math.max(0, Math.min(y, mainMouseArea.height))
+                tracksViewState.setMouseY(mouseY)
+                verticalRulers.cursorYPos = mouseY
             }
 
             Rectangle {
@@ -800,6 +802,13 @@ Rectangle {
                             selectionController: selectionViewController
 
                             navigationPanel: navPanels && navPanels[index] ? navPanels[index] : null
+
+                            onTrackMousePositionChanged: function (xWithinTrack, yWithinTrack) {
+                                let xGlobalPosition = xWithinTrack
+                                let yGlobalPosition = y + yWithinTrack - tracksItemsView.contentY
+
+                                timeline.updateCursorPosition(xGlobalPosition, yGlobalPosition)
+                            }
 
                             onTrackItemMousePositionChanged: function (xWithinTrack, yWithinTrack, itemKey) {
                                 let xGlobalPosition = xWithinTrack

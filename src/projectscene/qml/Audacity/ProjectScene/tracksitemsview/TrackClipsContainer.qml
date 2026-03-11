@@ -31,6 +31,7 @@ TrackItemsContainer {
 
     signal movePreviewClip(int x, int width, string title)
     signal clearPreviewClip
+    signal trackMousePositionChanged(real x, real y)
 
     QtObject {
         id: prv
@@ -604,6 +605,7 @@ TrackItemsContainer {
                 trackId: root.trackId
                 trackTitle: root.trackTitle
                 sampleRate: root.sampleRate
+                selectionInProgress: root.selectionInProgress
                 selectionStartPosition: root.context.selectionStartPosition
                 selectionEndPosition: root.context.selectionEndPosition
                 selectionStartFrequency: root.selectionStartFrequency
@@ -623,6 +625,11 @@ TrackItemsContainer {
 
                 onVerticalDragActiveChanged: {
                     root.verticalSelectionEditInProgress = verticalDragActive
+                }
+
+                onMousePositionChanged: function (x, y) {
+                    let position = mapToItem(root, Qt.point(x, y))
+                    root.trackMousePositionChanged(position.x, position.y)
                 }
             }
 

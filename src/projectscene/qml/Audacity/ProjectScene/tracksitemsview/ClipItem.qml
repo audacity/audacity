@@ -56,6 +56,7 @@ Rectangle {
     required property bool selectionEditInProgress
     required property bool verticalSelectionEditInProgress
     property bool enableCursorInteraction: !selectionInProgress && !selectionEditInProgress && !verticalSelectionEditInProgress && !isBrush
+
     property bool isContrastFocusBorderEnabled: false
 
     required property real selectionStartFrequency
@@ -885,7 +886,6 @@ Rectangle {
                     ghostPointRadius: 3.0
                     ghostPointOutlineColor: ui.theme.extra["audio_envelope_point"]
 
-
                     points: clipGainModel.points
                     defaultValue: clipGainModel.defaultValue
 
@@ -902,17 +902,17 @@ Rectangle {
                         automation.init()
                     }
 
-                    onPointMoved: function(index, x, y, completed) {
+                    onPointMoved: function (index, x, y, completed) {
                         clipGainModel.setPoint(index, x, y, completed)
                         tooltip.gain = gainToDb(y)
                         tooltip.show(true)
                     }
 
-                    onPointAdded: function(x, y, completed) {
+                    onPointAdded: function (x, y, completed) {
                         clipGainModel.addPoint(x, y, completed)
                     }
 
-                    onPointRemoved: function(index, completed) {
+                    onPointRemoved: function (index, completed) {
                         clipGainModel.removePoint(index, completed)
                     }
 
@@ -921,7 +921,7 @@ Rectangle {
                         tooltip.hide(true)
                     }
 
-                    onInteractionFinished: function() {
+                    onInteractionFinished: function () {
                         if (!automation.hasActivePoint) {
                             tooltip.hide(true)
                         }

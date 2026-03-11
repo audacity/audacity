@@ -6,7 +6,10 @@ import Audacity.Spectrogram
 Item {
     id: root
 
+    clip: true
+
     required property int trackId
+    required property real cursorYPos
 
     SpectrogramChannelRulerModel {
         id: rulerModel
@@ -82,6 +85,14 @@ Item {
                 }
             }
         }
+    }
+
+    Rectangle {
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 1
+        color: ui.theme.fontPrimaryColor
+        y: root.cursorYPos - height / 2
     }
 
     MouseArea {
