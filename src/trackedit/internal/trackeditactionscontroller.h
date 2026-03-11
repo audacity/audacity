@@ -177,6 +177,10 @@ private:
     void labelCopy(const muse::actions::ActionData& args);
     void labelCopyMulti();
 
+    void labelToggleMarker(const muse::actions::ActionData& args);
+    void labelTrackExpandToRegions(const muse::actions::ActionData& args);
+    void labelTrackCollapseToMarkers(const muse::actions::ActionData& args);
+
     void moveFocusedItemLeft();
     void moveFocusedItemRight();
     void moveFocusedItemUp();

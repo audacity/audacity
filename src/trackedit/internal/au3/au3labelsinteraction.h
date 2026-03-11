@@ -45,6 +45,10 @@ public:
     bool stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed) override;
     bool stretchLabelsRight(const LabelKeyList& labelKeys, secs_t deltaSec, bool completed) override;
 
+    bool toggleLabelMarker(const LabelKey& labelKey) override;
+    bool expandMarkersToRegions(const TrackId& trackId) override;
+    bool collapseLabelsToMarkers(const TrackId& trackId) override;
+
     muse::Progress progress() const override;
 
 private:

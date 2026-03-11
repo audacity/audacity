@@ -209,6 +209,10 @@ Item {
         onStretchEndRequested: {
             root.labelEndEditRequested()
         }
+
+        onContextMenuOpenRequested: function (x, y) {
+            labelContextMenuLoader.show(Qt.point(x, y), labelContextMenuModel.items)
+        }
     }
 
     // Right Ear
@@ -254,6 +258,10 @@ Item {
         onStretchEndRequested: {
             root.labelEndEditRequested()
         }
+
+        onContextMenuOpenRequested: function (x, y) {
+            labelContextMenuLoader.show(Qt.point(x, y), labelContextMenuModel.items)
+        }
     }
 
     // Main Label Header
@@ -275,7 +283,7 @@ Item {
 
         navigationPanel: root.labelNavigationPanel
 
-        visible: root.visible && !root.isMarker
+        visible: root.visible
 
         onTitleEditAccepted: function (newTitle) {
             root.titleEditAccepted(newTitle)
@@ -350,6 +358,10 @@ Item {
         onStretchEndRequested: {
             root.labelEndEditRequested()
         }
+
+        onContextMenuOpenRequested: function (x, y) {
+            labelContextMenuLoader.show(Qt.point(x, y), labelContextMenuModel.items)
+        }
     }
 
     // Left Stalk
@@ -401,6 +413,10 @@ Item {
         onStretchEndRequested: {
             root.labelEndEditRequested()
         }
+
+        onContextMenuOpenRequested: function (x, y) {
+            labelContextMenuLoader.show(Qt.point(x, y), labelContextMenuModel.items)
+        }
     }
 
     // Right Stalk
@@ -451,6 +467,10 @@ Item {
 
         onStretchEndRequested: {
             root.labelEndEditRequested()
+        }
+
+        onContextMenuOpenRequested: function (x, y) {
+            labelContextMenuLoader.show(Qt.point(x, y), labelContextMenuModel.items)
         }
     }
 

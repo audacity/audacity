@@ -17,8 +17,9 @@ Canvas {
     signal stretchStartRequested()
     signal stretchEndRequested()
     signal stretchMousePositionChanged(real x, real y)
+    signal contextMenuOpenRequested(real x, real y)
 
-    width: root.isMarker ? 6 : 7
+    width: 7
 
     onPaint: {
         var ctx = getContext("2d")
@@ -73,18 +74,27 @@ Canvas {
         id: dragArea
         anchors.fill: parent
 
-        acceptedButtons: Qt.LeftButton
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
         hoverEnabled: true
         cursorShape: !root.isLinked ? Qt.SizeHorCursor : Qt.SplitHCursor
 
         visible: root.enableCursorInteraction
 
         onPressed: function(e) {
+            if (e.button === Qt.RightButton) {
+                return
+            }
             let mousePos = mapToItem(root.parent, e.x, e.y)
             root.stretchMousePositionChanged(mousePos.x, mousePos.y)
             root.stretchStartRequested()
             root.stretchRequested(false)
             e.accepted = true
+        }
+
+        onClicked: function(e) {
+            if (e.button === Qt.RightButton) {
+                root.contextMenuOpenRequested(e.x, e.y)
+            }
         }
 
         onPositionChanged: function(e) {

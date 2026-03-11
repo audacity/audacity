@@ -24,6 +24,7 @@ void LabelContextMenuModel::load()
 
     MenuItemList items {
         makeItemWithArg("rename-item", muse::TranslatableString("label", "Rename label")),
+        makeItemWithArg("label-toggle-marker", muse::TranslatableString("label", "Toggle marker")),
         makeSeparator(),
         makeItemWithArg("action://trackedit/cut"),
         makeItemWithArg("action://trackedit/copy"),

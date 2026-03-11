@@ -21,6 +21,7 @@ Rectangle {
     signal stretchStartRequested()
     signal stretchEndRequested()
     signal stretchMousePositionChanged(real x, real y)
+    signal contextMenuOpenRequested(real x, real y)
 
     width: 1
 
@@ -32,7 +33,7 @@ Rectangle {
         anchors.leftMargin: -1
         anchors.rightMargin: -1
 
-        acceptedButtons: Qt.LeftButton
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
         hoverEnabled: true
         cursorShape: root.isForMarker ? Qt.SizeAllCursor : Qt.SizeHorCursor
 
@@ -45,7 +46,16 @@ Rectangle {
             root.headerHoveredChanged(containsMouse)
         }
 
+        onClicked: function (e) {
+            if (e.button === Qt.RightButton) {
+                root.contextMenuOpenRequested(e.x, e.y)
+            }
+        }
+
         onPressed: function (e) {
+            if (e.button === Qt.RightButton) {
+                return
+            }
             if (!root.isForPoint || root.isForMarker) {
                 root.isStretchInProgress = true
 
