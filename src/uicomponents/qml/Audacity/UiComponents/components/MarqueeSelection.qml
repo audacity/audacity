@@ -82,7 +82,7 @@ Canvas {
 
     Item {
         id: leftEdge
-        x: -leftEdge.width / 2
+        x: 0
         y: topLeft.y + topLeft.height
         width: prv.edgeWidth
         height: parent.height
@@ -114,29 +114,29 @@ Canvas {
 
     CornerHandle {
         id: topLeft
-        x: -topLeft.width / 2
-        y: -topLeft.height / 2
+        x: 0
+        y: 0
         size: prv.edgeWidth
     }
 
     CornerHandle {
         id: topRight
-        x: parent.width - topRight.width / 2
-        y: -topRight.height / 2
+        x: parent.width - topRight.width
+        y: 0
         size: prv.edgeWidth
     }
 
     CornerHandle {
         id: bottomRight
-        x: parent.width - bottomRight.width / 2
-        y: parent.height - bottomRight.height / 2
+        x: parent.width - bottomRight.width
+        y: parent.height - bottomRight.height
         size: prv.edgeWidth
     }
 
     CornerHandle {
         id: bottomLeft
-        x: -bottomLeft.width / 2
-        y: parent.height - bottomLeft.height / 2
+        x: 0
+        y: parent.height - bottomLeft.height
         size: prv.edgeWidth
     }
 }

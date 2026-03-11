@@ -598,6 +598,8 @@ TrackItemsContainer {
                 anchors.right: parent.right
                 z: 1
 
+                clip: true
+
                 canvas: root.canvas
                 trackId: root.trackId
                 sampleRate: root.sampleRate
