@@ -39,7 +39,7 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
 {
     return {
         {
-            muse::qtrc("appshell/welcome", "Tutorial: what's different in Audacity 4?"),
+            muse::qtrc("appshell/welcome", "Tutorial: what’s different in Audacity 4?"),
             "qrc:/resources/welcomedialog/Audacity40Video.png",
             muse::qtrc("appshell/welcome",
                        "In this video, we walk you through the most important differences between version 3 and version 4."),
@@ -75,7 +75,7 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
             muse::qtrc("appshell/welcome", "Get 25th anniversary merchandise!"),
             "qrc:/resources/welcomedialog/Audacity_Merch_Store.png",
             muse::qtrc("appshell/welcome",
-                       "A collection of merchandise that commemorates Audacity's original appearance and branding"),
+                       "A collection of merchandise that commemorates Audacity’s original appearance and branding"),
             muse::qtrc("appshell/welcome", "Visit now"),
             [this]() {
                 interactive()->openUrl(SHOP_URL);
