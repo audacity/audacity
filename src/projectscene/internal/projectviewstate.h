@@ -142,6 +142,9 @@ private:
     mutable muse::ValCh<int> m_totalTracksHeight;
     mutable muse::ValCh<int> m_verticalRulerWidth;
 
+    //! Makes track data if necessary
+    TrackData& trackData(const trackedit::TrackId& trackId) const;
+    //! Makes track data
     TrackData& makeTrackData(const trackedit::TrackId& trackId) const;
 
     bool eventFilter(QObject* watched, QEvent* event) override;
