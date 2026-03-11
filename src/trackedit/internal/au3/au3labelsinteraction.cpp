@@ -657,6 +657,104 @@ bool Au3LabelsInteraction::stretchLabelsRight(const LabelKeyList& labelKeys, sec
     return true;
 }
 
+bool Au3LabelsInteraction::toggleLabelMarker(const LabelKey& labelKey)
+{
+    auto& project = projectRef();
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(project, Au3TrackId(labelKey.trackId));
+    IF_ASSERT_FAILED(labelTrack) {
+        return false;
+    }
+
+    int labelIndex = labelTrack->GetLabelIndex(labelKey.itemId);
+    if (labelIndex < 0) {
+        return false;
+    }
+
+    const auto& au3labels = labelTrack->GetLabels();
+    Au3Label au3Label = au3labels[labelIndex];
+
+    if (au3Label.GetIsMarker()) {
+        au3Label.SetIsMarker(false);
+    } else {
+        au3Label.SetIsMarker(true);
+        au3Label.selectedRegion.setTimes(au3Label.getT0(), au3Label.getT0());
+    }
+
+    labelTrack->SetLabel(labelIndex, au3Label);
+
+    LOGD() << "toggled marker state of label: " << labelKey.itemId << ", track: " << labelKey.trackId;
+
+    const auto prj = globalContext()->currentTrackeditProject();
+    if (prj) {
+        prj->notifyAboutLabelChanged(DomConverter::label(labelTrack, DomAccessor::findLabel(labelTrack, au3Label.GetId())));
+    }
+
+    return true;
+}
+
+bool Au3LabelsInteraction::expandMarkersToRegions(const TrackId& trackId)
+{
+    auto& project = projectRef();
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(project, Au3TrackId(trackId));
+    IF_ASSERT_FAILED(labelTrack) {
+        return false;
+    }
+
+    const auto& labels = labelTrack->GetLabels();
+    int count = static_cast<int>(labels.size());
+    double projectEnd = Au3TrackList::Get(project).GetEndTime();
+
+    for (int i = 0; i < count; ++i) {
+        Au3Label label = labels[i];
+        if (!muse::RealIsEqual(label.getT0(), label.getT1())) {
+            continue;
+        }
+
+        double newT1 = (i + 1 < count) ? labels[i + 1].getT0() : projectEnd;
+
+        if (muse::RealIsEqualOrLess(newT1, label.getT0())) {
+            continue;
+        }
+
+        label.SetIsMarker(false);
+        label.selectedRegion.setTimes(label.getT0(), newT1);
+        labelTrack->SetLabel(i, label);
+    }
+
+    const auto prj = globalContext()->currentTrackeditProject();
+    if (prj) {
+        prj->notifyAboutTrackChanged(DomConverter::track(labelTrack));
+    }
+
+    return true;
+}
+
+bool Au3LabelsInteraction::collapseLabelsToMarkers(const TrackId& trackId)
+{
+    auto& project = projectRef();
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(project, Au3TrackId(trackId));
+    IF_ASSERT_FAILED(labelTrack) {
+        return false;
+    }
+
+    const auto& labels = labelTrack->GetLabels();
+    int count = static_cast<int>(labels.size());
+
+    for (int i = 0; i < count; ++i) {
+        Au3Label label = labels[i];
+        label.SetIsMarker(true);
+        label.selectedRegion.setTimes(label.getT0(), label.getT0());
+        labelTrack->SetLabel(i, label);
+    }
+
+    const auto prj = globalContext()->currentTrackeditProject();
+    if (prj) {
+        prj->notifyAboutTrackChanged(DomConverter::track(labelTrack));
+    }
+
+    return true;
+}
+
 muse::Progress Au3LabelsInteraction::progress() const
 {
     return m_progress;

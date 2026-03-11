@@ -113,7 +113,10 @@ MenuItemList TrackContextMenuModel::makeLabelTrackItems()
         makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Move track"), makeTrackMoveItems()),
         makeMenu(muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, "Track color"), makeTrackColorItems(), TRACK_COLOR_MENU_ID),
         makeSeparator(),
-        makeItemWithArg("export-labels")
+        makeItemWithArg("export-labels"),
+        makeSeparator(),
+        makeItemWithArg("label-track-expand-to-regions"),
+        makeItemWithArg("label-track-collapse-to-markers"),
     };
 }
 

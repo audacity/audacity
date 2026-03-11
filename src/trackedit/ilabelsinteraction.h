@@ -41,6 +41,10 @@ public:
     virtual bool stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed) = 0;
     virtual bool stretchLabelsRight(const LabelKeyList& labelKeys, secs_t deltaSec, bool completed) = 0;
 
+    virtual bool toggleLabelMarker(const LabelKey& labelKey) = 0;
+    virtual bool expandMarkersToRegions(const TrackId& trackId) = 0;
+    virtual bool collapseLabelsToMarkers(const TrackId& trackId) = 0;
+
     virtual muse::Progress progress() const = 0;
 };
 }
