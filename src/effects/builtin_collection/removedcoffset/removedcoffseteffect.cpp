@@ -23,7 +23,7 @@ const EffectParameterMethods& RemoveDCOffsetEffect::Parameters() const
     return parameters;
 }
 
-const ComponentInterfaceSymbol RemoveDCOffsetEffect::Symbol { XO("RemoveDCOffset") };
+const ComponentInterfaceSymbol RemoveDCOffsetEffect::Symbol { XO("Remove DC offset") };
 
 RemoveDCOffsetEffect::RemoveDCOffsetEffect()
 {
@@ -47,7 +47,7 @@ TranslatableString RemoveDCOffsetEffect::GetDescription() const
 
 ManualPageID RemoveDCOffsetEffect::ManualPage() const
 {
-    return L"Remove_DC_Offset";
+    return L"Remove_DC_offset";
 }
 
 ::EffectType RemoveDCOffsetEffect::GetType() const
