@@ -61,7 +61,7 @@ void FrequencySelectionController::setFrequencySelection(FrequencySelection freq
 
 void FrequencySelectionController::resetFrequencySelection()
 {
-    if (!m_frequencySelection.isValid()) {
+    if (m_frequencySelection.trackId == -1) {
         return;
     }
 
