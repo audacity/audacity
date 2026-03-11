@@ -25,5 +25,6 @@ public:
     virtual const AccountInfo& accountInfo() const = 0;
 
     virtual muse::ValCh<AuthState> authState() const = 0;
+    virtual bool isAuthorized() const = 0;
 };
 }

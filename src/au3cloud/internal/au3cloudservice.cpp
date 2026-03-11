@@ -156,6 +156,11 @@ muse::ValCh<AuthState> Au3CloudService::authState() const
     return m_authState;
 }
 
+bool Au3CloudService::isAuthorized() const
+{
+    return std::holds_alternative<Authorized>(m_authState.val);
+}
+
 const AccountInfo& Au3CloudService::accountInfo() const
 {
     return m_accountInfo;

@@ -55,10 +55,10 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
                        "This integration allows you to save and access your Audacity projects on any device"),
             muse::qtrc("appshell/welcome", "Continue"),
             [this]() {
-                if (!std::holds_alternative<au::au3cloud::Authorized>(authorization()->authState().val)) {
+                if (!authorization()->isAuthorized()) {
                     interactive()->openSync("audacity://signin/audiocom");
 
-                    if (!std::holds_alternative<au::au3cloud::Authorized>(authorization()->authState().val)) {
+                    if (!authorization()->isAuthorized()) {
                         return;
                     }
 
