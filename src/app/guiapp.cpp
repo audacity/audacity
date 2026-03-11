@@ -123,7 +123,7 @@ void GuiApp::setup()
         QDir dataDir(dataPath);
         const QStringList preservedDirs = { "Plug-Ins", "workspaces" };
 
-        for (const QFileInfo& entry : dataDir.entryInfoList(QDir::AllEntries | QDir::NoDotAndDotDot)) {
+        for (const QFileInfo& entry : dataDir.entryInfoList(QDir::AllEntries | QDir::Hidden | QDir::NoDotAndDotDot)) {
             if (preservedDirs.contains(entry.fileName())) {
                 continue;
             }
