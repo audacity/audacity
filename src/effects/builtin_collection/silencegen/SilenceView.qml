@@ -1,7 +1,9 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+
 import Muse.UiComponents
+
 import Audacity.UiComponents
 import Audacity.Effects
 import Audacity.BuiltinEffects
@@ -18,6 +20,15 @@ BuiltinEffectBase {
 
     builtinEffectModel: SilenceViewModelFactory.createModel(root, root.instanceId)
     property alias silence: root.builtinEffectModel
+
+    numNavigationPanels: 2
+    property NavigationPanel timecodeNavigationPanel: NavigationPanel {
+        name: "SilenceDuration"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 1
+    }
 
     Column {
         id: column
@@ -40,6 +51,9 @@ BuiltinEffectBase {
             tempo: silence.tempo
             upperTimeSignature: silence.upperTimeSignature
             lowerTimeSignature: silence.lowerTimeSignature
+
+            navigation.panel: root.timecodeNavigationPanel
+            navigation.order: 0
 
             onValueChanged: {
                 silence.duration = timecode.value

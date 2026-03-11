@@ -16,7 +16,22 @@ BuiltinEffectBase {
     implicitHeight: boardRectangle.height
 
     builtinEffectModel: GraphicEqViewModelFactory.createModel(root, root.instanceId)
+    numNavigationPanels: 2
     property alias graphicEq: root.builtinEffectModel
+    property NavigationPanel slidersNavigationPanel: NavigationPanel {
+        name: "GraphicEqSliders"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 1
+    }
+    property NavigationPanel flattenInvertNavigationPanel: NavigationPanel {
+        name: "GraphicEqFlattenInvert"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 2
+    }
 
     Rectangle {
         id: boardRectangle
@@ -38,7 +53,12 @@ BuiltinEffectBase {
 
             GraphicEqBoard {
                 id: board
+
                 anchors.horizontalCenter: parent.horizontalCenter
+
+                navigationPanel: root.slidersNavigationPanel
+                navigationOrderStart: 0
+
                 bandsModel: graphicEq.bandsModel
                 minDbGain: graphicEq.minDbGain
                 maxDbGain: graphicEq.maxDbGain
@@ -51,16 +71,30 @@ BuiltinEffectBase {
                 anchors.horizontalCenter: parent.horizontalCenter
 
                 FlatButton {
-                    text: qsTrc("effects/graphiceq", "Flatten")
+                    id: flattenButton
+
                     width: 64
                     height: 28
+
+                    navigation.panel: root.flattenInvertNavigationPanel
+                    navigation.order: 0
+
+                    text: qsTrc("effects/graphiceq", "Flatten")
+
                     onClicked: graphicEq.bandsModel.flatten()
                 }
 
                 FlatButton {
-                    text: qsTrc("effects/graphiceq", "Invert")
+                    id: invertButton
+
                     width: 64
                     height: 28
+
+                    navigation.panel: root.flattenInvertNavigationPanel
+                    navigation.order: flattenButton.navigation.order + 1
+
+                    text: qsTrc("effects/graphiceq", "Invert")
+
                     onClicked: graphicEq.bandsModel.invert()
                 }
             }

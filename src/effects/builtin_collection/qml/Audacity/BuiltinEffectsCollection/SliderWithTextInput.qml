@@ -19,6 +19,10 @@ Column {
         return parseFloat(val);
     }
 
+    property var navigationPanel: null
+    property int navigationOrderStart: 0
+    readonly property int navigationOrderEnd: incrementalPropertyControl.navigation.order
+
     signal newValueRequested(double newValue)
 
     height: implicitHeight
@@ -36,6 +40,9 @@ Column {
         StyledSlider {
             id: slider
 
+            navigation.panel: root.navigationPanel
+            navigation.order: root.navigationOrderStart
+
             anchors.verticalCenter: parent.verticalCenter
 
             width: parent.width * .65
@@ -52,6 +59,9 @@ Column {
 
         IncrementalPropertyControl {
             id: incrementalPropertyControl
+
+            navigation.panel: root.navigationPanel
+            navigation.order: slider.navigation.order + 1
 
             width: parent.width * .35
 

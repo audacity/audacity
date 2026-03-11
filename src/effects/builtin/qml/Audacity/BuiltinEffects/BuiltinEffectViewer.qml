@@ -16,6 +16,7 @@ Rectangle {
     property bool isApplyAllowed: builder.contentItem ? builder.contentItem.isApplyAllowed : false
     property bool isPreviewing: builder.contentItem ? builder.contentItem.isPreviewing : false
     property bool usesPresets: builder.contentItem ? builder.contentItem.usesPresets : false
+    property int numNavigationPanels: builder.contentItem ? builder.contentItem.numNavigationPanels : 3
 
     signal closeRequested
 

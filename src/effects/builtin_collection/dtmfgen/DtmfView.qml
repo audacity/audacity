@@ -1,7 +1,9 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+
 import Muse.UiComponents
+
 import Audacity.Effects
 import Audacity.BuiltinEffects
 import Audacity.BuiltinEffectsCollection
@@ -22,6 +24,22 @@ BuiltinEffectBase {
 
     builtinEffectModel: DtmfViewModelFactory.createModel(root, root.instanceId)
     property alias dtmf: root.builtinEffectModel
+
+    numNavigationPanels: 3
+    property NavigationPanel leftColumnNavigationPanel: NavigationPanel {
+        name: "DtmfLeftColumn"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 1
+    }
+    property NavigationPanel rightColumnNavigationPanel: NavigationPanel {
+        name: "DtmfRightColumn"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 2
+    }
 
     QtObject {
         id: prv
@@ -48,8 +66,12 @@ BuiltinEffectBase {
             }
 
             TextInputField {
+                id: sequenceInput
 
                 currentText: dtmf.sequence
+
+                navigation.panel: root.leftColumnNavigationPanel
+                navigation.order: 0
 
                 validator: RegularExpressionValidator {
                     regularExpression: /[0-9A-Da-z\*\#]*/
@@ -79,6 +101,7 @@ BuiltinEffectBase {
             }
 
             IncrementalPropertyControlWithTitle {
+                id: amplitudeControl
 
                 title: qsTrc("effects/dtmf", "Amplitude (0-1)")
                 currentValue: dtmf.amplitude
@@ -87,6 +110,9 @@ BuiltinEffectBase {
                 maxValue: 1
                 decimals: 4
                 step: 0.01
+
+                navigation.panel: root.leftColumnNavigationPanel
+                navigation.order: sequenceInput.navigation.order + 1
 
                 onValueEdited: function (newValue) {
                     if (dtmf.amplitude !== newValue) {
@@ -125,6 +151,9 @@ BuiltinEffectBase {
                     tempo: dtmf.tempo
                     upperTimeSignature: dtmf.upperTimeSignature
                     lowerTimeSignature: dtmf.lowerTimeSignature
+
+                    navigation.panel: root.leftColumnNavigationPanel
+                    navigation.order: amplitudeControl.navigation.order + 1
 
                     onValueChanged: {
                         dtmf.duration = timecode.value
@@ -171,6 +200,9 @@ BuiltinEffectBase {
                         to: 100
                         stepSize: 0.1
                         value: dtmf.dutyCycle
+
+                        navigation.panel: root.rightColumnNavigationPanel
+                        navigation.order: 0
 
                         onNewValueRequested: function (value) {
                             let newValue = +(value.toFixed(1))

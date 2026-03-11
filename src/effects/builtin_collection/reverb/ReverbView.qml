@@ -17,7 +17,22 @@ BuiltinEffectBase {
     width: 560
 
     builtinEffectModel: ReverbViewModelFactory.createModel(root, root.instanceId)
+    numNavigationPanels: 2
     property alias reverb: root.builtinEffectModel
+    property NavigationPanel leftColumnNavigationPanel: NavigationPanel {
+        name: "ReverbLeftColumn"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 1
+    }
+    property NavigationPanel rightColumnNavigationPanel: NavigationPanel {
+        name: "ReverbRightColumn"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 2
+    }
 
     QtObject {
         id: prv
@@ -64,42 +79,54 @@ BuiltinEffectBase {
                 columnSpacing: prv.columnSpacing
 
                 BigParameterKnob {
+                    id: roomSizeKnob
+
                     Layout.fillWidth: true
+
+                    navigation.panel: root.leftColumnNavigationPanel
+                    navigation.order: 0
 
                     parameter: reverb.paramsList["RoomSize"]
                     radius: 24
 
                     onNewValueRequested: function (key, newValue) {
                         newParameterValueRequested(key, newValue)
-                        value = newValue
                     }
 
                     onCommitRequested: reverb.commitSettings()
                 }
 
                 BigParameterKnob {
+                    id: stereoWidthKnob
+
                     Layout.fillWidth: true
+
+                    navigation.panel: root.leftColumnNavigationPanel
+                    navigation.order: roomSizeKnob.navigation.order + 1
 
                     parameter: reverb.paramsList["StereoWidth"]
                     radius: 24
 
                     onNewValueRequested: function (key, newValue) {
                         newParameterValueRequested(key, newValue)
-                        value = newValue
                     }
 
                     onCommitRequested: reverb.commitSettings()
                 }
 
                 BigParameterKnob {
+                    id: preDelayKnob
+
                     Layout.fillWidth: true
+
+                    navigation.panel: root.leftColumnNavigationPanel
+                    navigation.order: stereoWidthKnob.navigation.order + 1
 
                     parameter: reverb.paramsList["PreDelay"]
                     radius: 24
 
                     onNewValueRequested: function (key, newValue) {
                         newParameterValueRequested(key, newValue)
-                        value = newValue
                     }
 
                     onCommitRequested: reverb.commitSettings()
@@ -125,56 +152,72 @@ BuiltinEffectBase {
             }
 
             ParameterKnob {
+                id: hfDampingKnob
 
                 Layout.fillWidth: true
+
+                navigation.panel: root.rightColumnNavigationPanel
+                navigation.order: 0
 
                 parameter: reverb.paramsList["HfDamping"]
 
                 onNewValueRequested: function (key, newValue) {
                     newParameterValueRequested(key, newValue)
-                    value = newValue
+                    hfDampingKnob.value = newValue
                 }
 
                 onCommitRequested: reverb.commitSettings()
             }
 
             ParameterKnob {
+                id: reverberanceKnob
 
                 Layout.fillWidth: true
+
+                navigation.panel: root.rightColumnNavigationPanel
+                navigation.order: hfDampingKnob.navigation.order + 1
 
                 parameter: reverb.paramsList["Reverberance"]
 
                 onNewValueRequested: function (key, newValue) {
                     newParameterValueRequested(key, newValue)
-                    value = newValue
+                    reverberanceKnob.value = newValue
                 }
 
                 onCommitRequested: reverb.commitSettings()
             }
 
             ParameterKnob {
+                id: toneLowKnob
 
                 Layout.fillWidth: true
+
+                navigation.panel: root.rightColumnNavigationPanel
+                navigation.order: reverberanceKnob.navigation.order + 1
 
                 parameter: reverb.paramsList["ToneLow"]
 
                 onNewValueRequested: function (key, newValue) {
                     newParameterValueRequested(key, newValue)
-                    value = newValue
+                    toneLowKnob.value = newValue
                 }
 
                 onCommitRequested: reverb.commitSettings()
             }
 
             ParameterKnob {
+                id: toneHighKnob
 
                 Layout.fillWidth: true
+
+                navigation.panel: root.rightColumnNavigationPanel
+                navigation.order: toneLowKnob.navigation.order + 1
 
                 parameter: reverb.paramsList["ToneHigh"]
 
                 onNewValueRequested: function (key, newValue) {
                     newParameterValueRequested(key, newValue)
-                    value = newValue
+                    toneHighKnob.value = newValue
                 }
 
                 onCommitRequested: reverb.commitSettings()
@@ -185,28 +228,36 @@ BuiltinEffectBase {
             }
 
             ParameterKnob {
+                id: wetGainKnob
 
                 Layout.fillWidth: true
+
+                navigation.panel: root.rightColumnNavigationPanel
+                navigation.order: toneHighKnob.navigation.order + 1
 
                 parameter: reverb.paramsList["WetGain"]
 
                 onNewValueRequested: function (key, newValue) {
                     newParameterValueRequested(key, newValue)
-                    value = newValue
+                    wetGainKnob.value = newValue
                 }
 
                 onCommitRequested: reverb.commitSettings()
             }
 
             ParameterKnob {
+                id: dryGainKnob
 
                 Layout.fillWidth: true
+
+                navigation.panel: root.rightColumnNavigationPanel
+                navigation.order: wetGainKnob.navigation.order + 1
 
                 parameter: reverb.paramsList["DryGain"]
 
                 onNewValueRequested: function (key, newValue) {
                     newParameterValueRequested(key, newValue)
-                    value = newValue
+                    dryGainKnob.value = newValue
                 }
 
                 onCommitRequested: reverb.commitSettings()
@@ -214,6 +265,9 @@ BuiltinEffectBase {
 
             CheckBox {
                 id: wetOnly
+
+                navigation.panel: root.rightColumnNavigationPanel
+                navigation.order: dryGainKnob.navigation.order + 1
 
                 text: qsTrc("effects/reverb", "Wet only")
                 checked: reverb.wetOnly

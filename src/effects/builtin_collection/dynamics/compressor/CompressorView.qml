@@ -3,6 +3,7 @@
  */
 import QtQuick
 import QtQuick.Layouts
+import Muse.Ui 1.0
 import Muse.UiComponents
 import Audacity.Effects
 import Audacity.BuiltinEffects
@@ -26,6 +27,29 @@ DynamicsEffectBase {
     }
     property alias compressor: root.builtinEffectModel
 
+    numNavigationPanels: 3
+    property NavigationPanel dynamicsPanelNavigationPanel: NavigationPanel {
+        name: "CompressorDynamicsPanel"
+        enabled: root.enabled && root.visible && !root.usedDestructively
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 1
+    }
+    property NavigationPanel leftGridNavigationPanel: NavigationPanel {
+        name: "CompressorLeftGrid"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 2
+    }
+    property NavigationPanel rightGridNavigationPanel: NavigationPanel {
+        name: "CompressorRightGrid"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 3
+    }
+
     Column {
         id: rootColumn
 
@@ -41,6 +65,9 @@ DynamicsEffectBase {
                 showInputDbModel: CompressorSettingModelFactory.createModel(root, root.instanceId, "showInput")
                 showOutputDbModel: CompressorSettingModelFactory.createModel(root, root.instanceId, "showOutput")
                 showCompressionDbModel: CompressorSettingModelFactory.createModel(root, root.instanceId, "showActual")
+
+                navigationPanel: root.dynamicsPanelNavigationPanel
+                navigationOrderStart: 0
             }
         }
 
@@ -80,6 +107,11 @@ DynamicsEffectBase {
 
                         delegate: SettingKnob {
                             required property string modelData
+                            required property int index
+
+                            navigationPanel: root.leftGridNavigationPanel
+                            navigationOrder: index
+
                             isVertical: true
                             knobFirst: false
                             warp: true
@@ -96,6 +128,8 @@ DynamicsEffectBase {
                 }
 
                 Grid {
+                    id: rightGrid
+
                     columns: 2
                     spacing: 24
 
@@ -104,6 +138,11 @@ DynamicsEffectBase {
 
                         delegate: SettingKnob {
                             required property string modelData
+                            required property int index
+
+                            navigationPanel: root.rightGridNavigationPanel
+                            navigationOrder: index
+
                             isVertical: true
                             knobFirst: false
                             warp: true
@@ -114,6 +153,7 @@ DynamicsEffectBase {
                                 })
                                 return model
                             }
+
                         }
                     }
                 }

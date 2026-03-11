@@ -129,7 +129,7 @@ EffectStyledDialogView {
         id: builtinViewerComponent
         BuiltinEffectViewer {
             instanceId: root.instanceId
-            //dialogView: root // TODO: check if this has to be added !?
+            dialogView: root
             usedDestructively: false
         }
     }

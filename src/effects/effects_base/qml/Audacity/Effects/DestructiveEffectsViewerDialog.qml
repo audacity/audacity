@@ -52,6 +52,7 @@ EffectStyledDialogView {
             // and we must make sure it doesn't do this after we've closed the dialog, or we'll be getting that Qt exception
             // "Object %p destroyed while one of its QML signal handlers is in progress."
             Qt.callLater(() => {
+                root.activateParentOnClose = false
                 accept ? root.accept() : root.reject()
             })
         }
@@ -255,6 +256,11 @@ EffectStyledDialogView {
 
                         width: root.contentWidth - prv.panelMargins * 2
                         spacing: prv.panelMargins
+                        navigationPanel.section: root.navigationSection
+                        navigationPanel.order: (prv.showTopPanel ? 1 : 0) +
+                                                          (viewerModel.effectFamily == EffectFamily.Builtin ?
+                                                                  (prv.viewer ? prv.viewer.numNavigationPanels : 2)
+                                                                  : 0)
 
                         //! TODO Move function to ButtonBox (Muse framework)
                         function buttonById(id) {
@@ -274,7 +280,11 @@ EffectStyledDialogView {
                             height: presetsBar.height
                             minWidth: 80
                             isLeftSide: true
+
                             visible: prv.isPreviewAllowed
+
+                            navigation.panel: bbox.navigationPanel
+                            navigation.order: 0
 
                             text: (prv.viewer && prv.viewer.isPreviewing) ?
                             //: Shown on a button that stops effect preview
@@ -303,6 +313,8 @@ EffectStyledDialogView {
 
                             height: presetsBar.height
                             minWidth: 80
+                            navigation.panel: bbox.navigationPanel
+                            navigation.order: previewBtn.navigation.order + 1
 
                             text: qsTrc("global", "Cancel")
                             buttonRole: ButtonBoxModel.RejectRole
@@ -318,6 +330,8 @@ EffectStyledDialogView {
 
                             height: presetsBar.height
                             minWidth: 80
+                            navigation.panel: bbox.navigationPanel
+                            navigation.order: cancelBtn.navigation.order + 1
 
                             text: qsTrc("global", "Apply")
                             buttonRole: ButtonBoxModel.AcceptRole

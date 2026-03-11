@@ -20,6 +20,20 @@ BuiltinEffectBase {
 
     builtinEffectModel: TruncateSilenceViewModelFactory.createModel(root, root.instanceId)
     property alias truncateSilence: root.builtinEffectModel
+    property NavigationPanel detectSilenceNavigationPanel: NavigationPanel {
+        name: "TruncateSilenceDetectSilence"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 1
+    }
+    property NavigationPanel actionNavigationPanel: NavigationPanel {
+        name: "TruncateSilenceAction"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 2
+    }
 
     QtObject {
         id: prv
@@ -86,8 +100,12 @@ BuiltinEffectBase {
                         }
 
                         IncrementalPropertyControl {
+                            id: thresholdControl
 
                             width: parent.width
+
+                            navigation.panel: root.detectSilenceNavigationPanel
+                            navigation.order: 0
 
                             currentValue: truncateSilence.thresholdValue
                             measureUnitsSymbol: truncateSilence.thresholdUnitSymbol()
@@ -114,8 +132,12 @@ BuiltinEffectBase {
                         }
 
                         IncrementalPropertyControl {
+                            id: minimumControl
 
                             width: parent.width
+
+                            navigation.panel: root.detectSilenceNavigationPanel
+                            navigation.order: thresholdControl.navigation.order + 1
 
                             currentValue: truncateSilence.minimumValue
                             measureUnitsSymbol: truncateSilence.minimumUnitSymbol()
@@ -176,9 +198,11 @@ BuiltinEffectBase {
                         model: truncateSilence.actionModel()
 
                         delegate: RoundedRadioButton {
-
                             text: modelData.text
                             checked: truncateSilence.actionIndex === modelData.value
+
+                            navigation.panel: root.actionNavigationPanel
+                            navigation.order: index
 
                             onToggled: {
                                 truncateSilence.actionIndex = modelData.value
@@ -199,8 +223,12 @@ BuiltinEffectBase {
                         }
 
                         IncrementalPropertyControl {
+                            id: actionValueControl
 
                             width: prv.fieldWidth
+
+                            navigation.panel: root.actionNavigationPanel
+                            navigation.order: truncateSilence.actionModel().length
 
                             currentValue: truncateSilence.actionIndex === 0 ? truncateSilence.truncateValue : truncateSilence.compressValue
                             measureUnitsSymbol: truncateSilence.currentActionConfig.paramUnitSymbol || ""
@@ -220,8 +248,12 @@ BuiltinEffectBase {
                     }
 
                     CheckBox {
+                        id: independentCheckbox
 
                         width: parent.width
+
+                        navigation.panel: root.actionNavigationPanel
+                        navigation.order: actionValueControl.navigation.order + 1
 
                         text: truncateSilence.currentActionConfig.independentLabel || ""
                         checked: truncateSilence.independentValue

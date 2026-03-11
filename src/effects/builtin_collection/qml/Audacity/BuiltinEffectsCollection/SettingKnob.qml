@@ -6,6 +6,8 @@ Item {
     id: root
 
     required property var model
+    property var navigationPanel: null
+    property int navigationOrder: 0
     property bool warp: false
     property bool isVertical: false
     property bool knobFirst: true // Only relevant is `isVertical` is true
@@ -25,6 +27,8 @@ Item {
         id: verticalKnob
 
         BigParameterKnob {
+            navigation.panel: root.navigationPanel
+            navigation.order: root.navigationOrder
             radius: root.radius
             defaultValue: root.model.defaultValue
             middle: root.warp ? root.model.defaultValue : null
@@ -52,6 +56,8 @@ Item {
         id: horizontalKnob
 
         ParameterKnob {
+            navigation.panel: root.navigationPanel
+            navigation.order: root.navigationOrder
             radius: root.radius
             defaultValue: root.model.defaultValue
             parameter: {

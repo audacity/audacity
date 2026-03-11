@@ -8,6 +8,8 @@ Item {
 
     required property var parameter
 
+    property alias navigation: knob.navigation
+
     property alias value: knob.value
     property double defaultValue: 0
     property alias radius: knob.radius
@@ -17,6 +19,15 @@ Item {
 
     signal newValueRequested(string key, real newValue)
     signal commitRequested
+
+    function activateNumericInput(initialText) {
+        if (!textEdit.activeFocus) {
+            textEdit.forceActiveFocus()
+        }
+        if (initialText !== undefined && initialText !== "") {
+            textEdit.currentText = initialText
+        }
+    }
 
     onParameterChanged: {
         if (parameter) {
@@ -55,6 +66,19 @@ Item {
 
                 mouseArea.onDoubleClicked: function () {
                     root.newValueRequested(root.parameter["key"], root.defaultValue)
+                }
+            }
+
+            Connections {
+                target: knob.navigation
+
+                function onNavigationEvent(event) {
+                    if (event.type !== NavigationEvent.Trigger) {
+                        return
+                    }
+
+                    root.activateNumericInput()
+                    event.accepted = true
                 }
             }
 

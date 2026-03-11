@@ -12,6 +12,7 @@ Rectangle {
     property bool usesPresets: builtinEffectModel.usesPresets
     property bool isPreviewing: builtinEffectModel.isPreviewing
     property bool usedDestructively: true
+    required property int numNavigationPanels
 
     color: ui.theme.backgroundPrimaryColor
 

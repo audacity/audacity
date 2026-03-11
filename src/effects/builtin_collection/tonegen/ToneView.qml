@@ -1,7 +1,9 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+
 import Muse.UiComponents
+
 import Audacity.Effects
 import Audacity.BuiltinEffects
 import Audacity.BuiltinEffectsCollection
@@ -22,6 +24,15 @@ BuiltinEffectBase {
     builtinEffectModel: ToneViewModelFactory.createModel(root, root.instanceId)
     property alias tone: root.builtinEffectModel
 
+    numNavigationPanels: 2
+    property NavigationPanel controlsNavigationPanel: NavigationPanel {
+        name: "ToneControls"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 1
+    }
+
     QtObject {
         id: prv
 
@@ -38,6 +49,7 @@ BuiltinEffectBase {
         spacing: prv.spacing
 
         ComboBoxWithTitle {
+            id: waveformDropdown
 
             title: qsTrc("effects/tone", "Waveform")
             columnWidth: parent.width
@@ -49,12 +61,16 @@ BuiltinEffectBase {
             currentIndex: tone.waveform
             model: tone.waveforms
 
+            navigation.panel: root.controlsNavigationPanel
+            navigation.order: 0
+
             onValueEdited: function (newIndex, newValue) {
                 tone.waveform = newIndex
             }
         }
 
         IncrementalPropertyControlWithTitle {
+            id: frequencyControl
 
             columnWidth: (parent.width - parent.spacing) / 2
             controlWidth: (parent.width - parent.spacing) / 2
@@ -67,6 +83,9 @@ BuiltinEffectBase {
 
             measureUnitsSymbol: qsTrc("global", "Hz")
 
+            navigation.panel: root.controlsNavigationPanel
+            navigation.order: waveformDropdown.navigation.order + 1
+
             onValueEdited: function (newValue) {
                 if (tone.frequencyStart !== newValue) {
                     tone.frequencyStart = newValue
@@ -75,6 +94,7 @@ BuiltinEffectBase {
         }
 
         IncrementalPropertyControlWithTitle {
+            id: amplitudeControl
 
             columnWidth: (parent.width - parent.spacing) / 2
             controlWidth: parent.width * .25
@@ -86,6 +106,9 @@ BuiltinEffectBase {
             maxValue: 1
             decimals: 4
             step: 0.01
+
+            navigation.panel: root.controlsNavigationPanel
+            navigation.order: frequencyControl.navigation.order + 1
 
             onValueEdited: function (newValue) {
                 if (tone.amplitudeStart !== newValue) {
@@ -125,6 +148,9 @@ BuiltinEffectBase {
                 upperTimeSignature: tone.upperTimeSignature
                 lowerTimeSignature: tone.lowerTimeSignature
                 enabled: true
+
+                navigation.panel: root.controlsNavigationPanel
+                navigation.order: amplitudeControl.navigation.order + 1
 
                 onValueChanged: {
                     tone.duration = timecode.value

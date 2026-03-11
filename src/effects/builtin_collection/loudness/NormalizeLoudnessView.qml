@@ -14,7 +14,15 @@ BuiltinEffectBase {
     implicitHeight: column.height
 
     builtinEffectModel: NormalizeLoudnessViewModelFactory.createModel(root, root.instanceId)
+    numNavigationPanels: 1
     property alias normalizeLoudness: root.builtinEffectModel
+    property NavigationPanel normalizeLoudnessNavigationPanel: NavigationPanel {
+        name: "NormalizeLoudnessControls"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 1
+    }
 
     Column {
         id: column
@@ -35,6 +43,9 @@ BuiltinEffectBase {
                 width: 194
                 anchors.verticalCenter: parent.verticalCenter
 
+                navigation.panel: root.normalizeLoudnessNavigationPanel
+                navigation.order: 0
+
                 model: normalizeLoudness.algorithmOptions
                 currentIndex: normalizeLoudness.useRmsAlgorithm ? 0 : 1
                 onActivated: function (index) {
@@ -48,8 +59,13 @@ BuiltinEffectBase {
             }
 
             IncrementalPropertyControl {
+                id: targetControl
+
                 width: 125
                 anchors.verticalCenter: parent.verticalCenter
+
+                navigation.panel: root.normalizeLoudnessNavigationPanel
+                navigation.order: algorithmDropdown.navigation.order + 1
 
                 measureUnitsSymbol: normalizeLoudness.currentMeasureUnitsSymbol
                 step: normalizeLoudness.targetStep
@@ -71,6 +87,11 @@ BuiltinEffectBase {
             spacing: 8
 
             CheckBox {
+                id: independentStereoCheckbox
+
+                navigation.panel: root.normalizeLoudnessNavigationPanel
+                navigation.order: targetControl.navigation.order + 1
+
                 checked: normalizeLoudness.normalizeStereoChannelsIndependently
                 onClicked: {
                     normalizeLoudness.normalizeStereoChannelsIndependently = !checked
@@ -87,6 +108,11 @@ BuiltinEffectBase {
             spacing: 8
 
             CheckBox {
+                id: dualMonoCheckbox
+
+                navigation.panel: root.normalizeLoudnessNavigationPanel
+                navigation.order: independentStereoCheckbox.navigation.order + 1
+
                 enabled: !normalizeLoudness.useRmsAlgorithm
                 checked: normalizeLoudness.useDualMono
                 onClicked: {
