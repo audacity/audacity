@@ -265,9 +265,9 @@ muse::ValCh<int> ProjectViewState::tracksVerticalOffset() const
     return m_tracksVerticalOffset;
 }
 
-void ProjectViewState::changeTracksVerticalOffset(int deltaY)
+void ProjectViewState::changeTracksVerticalOffset(int offset)
 {
-    m_tracksVerticalOffset.set(deltaY);
+    m_tracksVerticalOffset.set(offset);
 }
 
 void ProjectViewState::setTracksViewportHeight(int height)

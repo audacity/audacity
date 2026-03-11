@@ -93,7 +93,7 @@ public:
     void setMousePositionY(double y) override;
 
     muse::ValCh<int> tracksVerticalOffset() const override;
-    void changeTracksVerticalOffset(int deltaY) override;
+    void changeTracksVerticalOffset(int offset) override;
     void setTracksViewportHeight(int height) override;
     int tracksViewportHeight() const override;
     virtual muse::ValCh<bool> tracksVerticalScrollLocked() const override;
