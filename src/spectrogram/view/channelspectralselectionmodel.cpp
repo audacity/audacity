@@ -79,6 +79,7 @@ void ChannelSpectralSelectionModel::setSelectionStartFrequency(double freq)
         return;
     }
     m_selectionStartFrequency = freq;
+    emit centerFrequencyChanged();
     emit selectionStartFrequencyChanged();
     emit selectionRangeChanged();
 }
@@ -89,6 +90,7 @@ void ChannelSpectralSelectionModel::setSelectionEndFrequency(double freq)
         return;
     }
     m_selectionEndFrequency = freq;
+    emit centerFrequencyChanged();
     emit selectionEndFrequencyChanged();
     emit selectionRangeChanged();
 }
@@ -208,5 +210,10 @@ void ChannelSpectralSelectionModel::endCenterFrequencyDrag()
     m_peakFinder.reset();
     m_dragStartFrequencySelection = {};
     emit verticalDragActiveChanged();
+}
+
+double ChannelSpectralSelectionModel::centerFrequency() const
+{
+    return frequencySelectionController()->frequencySelection().centerFrequency();
 }
 }

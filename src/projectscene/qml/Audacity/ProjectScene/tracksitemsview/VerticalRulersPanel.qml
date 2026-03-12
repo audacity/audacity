@@ -13,6 +13,7 @@ Rectangle {
     property ViewTracksListModel model: null
     property var context: null
     property real cursorYPos: 0
+    required property real pointerFrequency
 
     width: 32
     color: ui.theme.backgroundQuarternaryColor
@@ -208,6 +209,8 @@ Rectangle {
                             isStereo: model.isStereo
                             channelHeightRatio: trackViewState.channelHeightRatio
                             cursorYPos: root.mapToItem(this, 0, root.cursorYPos).y
+
+                            pointerFrequency: root.pointerFrequency
                         }
                     }
                 }

@@ -22,6 +22,8 @@ class SpectrogramChannelRulerModel : public QObject, public QQmlParserStatus, pu
     Q_PROPERTY(double channelHeight READ channelHeight WRITE setChannelHeight NOTIFY channelHeightChanged FINAL)
     Q_PROPERTY(QVariantList majorTicks READ majorTicks NOTIFY ticksChanged FINAL)
     Q_PROPERTY(QVariantList minorTicks READ minorTicks NOTIFY ticksChanged FINAL)
+    Q_PROPERTY(double pointerFrequency READ pointerFrequency WRITE setPointerFrequency NOTIFY pointerFrequencyChanged FINAL)
+    Q_PROPERTY(double pointerYPos READ pointerYPos NOTIFY pointerFrequencyChanged FINAL)
 
     muse::Inject<ISpectrogramService> spectrogramService{ this };
 
@@ -45,11 +47,17 @@ public:
     QVariantList majorTicks() const;
     QVariantList minorTicks() const;
 
+    double pointerFrequency() const { return m_pointerFrequency; }
+    void setPointerFrequency(double frequency);
+
+    double pointerYPos() const { return frequencyToPosition(m_pointerFrequency); }
+
 signals:
     void trackIdChanged();
     void channelHeightChanged();
     void ticksChanged();
     void labelHeightChanged();
+    void pointerFrequencyChanged();
 
 private:
     void classBegin() override {}
@@ -63,6 +71,7 @@ private:
     int m_trackId = -1;
     int m_labelHeight = 0;
     double m_channelHeight = 0.0;
+    double m_pointerFrequency = 0.0;
     SpectrogramRulerTicks m_ticks;
 };
 } // namespace au::spectrogram

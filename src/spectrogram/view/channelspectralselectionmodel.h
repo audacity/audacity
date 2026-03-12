@@ -35,6 +35,8 @@ class ChannelSpectralSelectionModel : public QObject, public QQmlParserStatus, p
     Q_PROPERTY(double selectionStartTime READ selectionStartTime WRITE setSelectionStartTime NOTIFY selectionStartTimeChanged FINAL)
     Q_PROPERTY(double selectionEndTime READ selectionEndTime WRITE setSelectionEndTime NOTIFY selectionEndTimeChanged FINAL)
 
+    Q_PROPERTY(double centerFrequency READ centerFrequency NOTIFY centerFrequencyChanged FINAL)
+
     // Output
     Q_PROPERTY(double selectionY READ selectionY NOTIFY selectionRangeChanged FINAL)
     Q_PROPERTY(double selectionHeight READ selectionHeight NOTIFY selectionRangeChanged FINAL)
@@ -75,6 +77,8 @@ public:
     double selectionEndTime() const { return m_selectionEndTime; }
     void setSelectionEndTime(double time);
 
+    double centerFrequency() const;
+
     bool verticalDragActive() const { return m_peakFinder != nullptr; }
 
     Q_INVOKABLE void startCenterFrequencyDrag();
@@ -93,6 +97,7 @@ signals:
     void selectionStartTimeChanged();
     void selectionEndTimeChanged();
     void centerFrequencyChangeRequested(double frequency);
+    void centerFrequencyChanged();
 
 private:
     void classBegin() override {}

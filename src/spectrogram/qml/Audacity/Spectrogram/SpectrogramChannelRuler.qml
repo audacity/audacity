@@ -10,12 +10,14 @@ Item {
 
     required property int trackId
     required property real cursorYPos
+    property alias pointerFrequency: rulerModel.pointerFrequency
 
     SpectrogramChannelRulerModel {
         id: rulerModel
         trackId: root.trackId
         labelHeight: fontMetrics.height
         channelHeight: root.height
+        pointerFrequency: root.pointerFrequency
     }
 
     QtObject {
@@ -92,7 +94,7 @@ Item {
         anchors.right: parent.right
         height: 1
         color: ui.theme.fontPrimaryColor
-        y: root.cursorYPos - height / 2
+        y: rulerModel.pointerYPos - height / 2
     }
 
     MouseArea {

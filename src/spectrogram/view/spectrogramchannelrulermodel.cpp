@@ -82,6 +82,15 @@ void SpectrogramChannelRulerModel::setChannelHeight(double height)
     emit ticksChanged();
 }
 
+void SpectrogramChannelRulerModel::setPointerFrequency(double frequency)
+{
+    if (muse::is_equal(m_pointerFrequency, frequency)) {
+        return;
+    }
+    m_pointerFrequency = frequency;
+    emit pointerFrequencyChanged();
+}
+
 namespace {
 constexpr double ZOOM_FACTOR = 1.4142;     // sqrt(2)
 }

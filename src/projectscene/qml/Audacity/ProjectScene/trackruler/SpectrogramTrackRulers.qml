@@ -14,16 +14,20 @@ Item {
     required property bool isStereo
     required property real channelHeightRatio
     required property real cursorYPos
+    property real pointerFrequency: leftOrMonoRuler.pointerFrequency >= 0 ? leftOrMonoRuler.pointerFrequency : rightRuler.pointerFrequency
 
     Column {
         anchors.fill: parent
 
         SpectrogramChannelRuler {
+            id: leftOrMonoRuler
+
             width: root.width
             height: root.isStereo ? root.height * root.channelHeightRatio : root.height
 
             trackId: root.trackId
             cursorYPos: root.mapToItem(this, 0, root.cursorYPos).y
+            pointerFrequency: root.pointerFrequency
         }
 
         SeparatorLine {
@@ -33,12 +37,15 @@ Item {
         }
 
         SpectrogramChannelRuler {
+            id: rightRuler
+
             width: root.width
             height: root.height * (1 - root.channelHeightRatio) - separatorLine.height
 
             visible: root.isStereo
             trackId: root.trackId
             cursorYPos: root.mapToItem(this, 0, root.cursorYPos).y
+            pointerFrequency: root.pointerFrequency
         }
     }
 }
