@@ -43,7 +43,6 @@ void TrackSpectrogramSettingsModel::aboutToDestroy()
         spectrogramService()->copyConfiguration(*m_initialTrackConfig, *m_trackConfig);
         m_trackConfig->setUseGlobalSettings(m_initialTrackConfig->useGlobalSettings());
         spectrogramService()->notifyAboutTrackSpectrogramConfigurationChanged(m_trackId);
-        emit updateRequested();
     }
 }
 
@@ -68,15 +67,12 @@ void TrackSpectrogramSettingsModel::componentComplete()
     emit windowSizeChanged();
     emit zeroPaddingFactorChanged();
     emit useGlobalSettingsChanged();
-
-    emit updateRequested();
 }
 
 void TrackSpectrogramSettingsModel::onSettingChanged()
 {
     setUseGlobalSettings(false);
     spectrogramService()->notifyAboutTrackSpectrogramConfigurationChanged(m_trackId);
-    emit updateRequested();
 }
 
 void TrackSpectrogramSettingsModel::accept()
@@ -120,8 +116,6 @@ void TrackSpectrogramSettingsModel::setUseGlobalSettings(bool value)
         emit windowTypeChanged();
         emit windowSizeChanged();
         emit zeroPaddingFactorChanged();
-
-        emit updateRequested();
     }
     emit useGlobalSettingsChanged();
 }
