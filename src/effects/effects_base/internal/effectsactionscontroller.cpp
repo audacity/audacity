@@ -82,7 +82,7 @@ void EffectsActionsController::applyPreset(const muse::actions::ActionQuery& q)
 
     EffectInstanceId effectInstanceId = q.param("instanceId").toInt();
     PresetId presetId = q.param("presetId").toString();
-    presetsScenario()->applyPreset(effectInstanceId, presetId);
+    presetsScenario()->loadPreset(effectInstanceId, presetId);
 }
 
 void EffectsActionsController::savePresetAs(const ActionQuery& q)

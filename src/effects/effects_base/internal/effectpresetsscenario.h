@@ -27,7 +27,7 @@ public:
     EffectPresetsScenario(const muse::modularity::ContextPtr& ctx)
         : muse::Injectable(ctx) {}
 
-    void applyPreset(const EffectInstanceId& effectInstanceId, const PresetId& presetId) override;
+    void loadPreset(const EffectInstanceId& effectInstanceId, const PresetId& presetId) override;
     void savePresetAs(const EffectInstanceId& effectInstanceId) override;
     void savePreset(const EffectInstanceId& effectInstanceId, const PresetId& presetId) override;
     void deletePreset(const EffectId& effectId, const PresetId& presetId) override;

@@ -14,6 +14,8 @@ RowLayout {
 
     required property var instanceId
     required property bool destructiveMode
+    property alias sessionStateKey: presetsBarModel.sessionStateKey
+
     property int navigationOrder: 0
     property var navigationPanel: null
 
