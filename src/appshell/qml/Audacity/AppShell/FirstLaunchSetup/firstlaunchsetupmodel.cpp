@@ -25,11 +25,11 @@
 #include "global/async/async.h"
 
 namespace {
-const char * THEMES_PAGE = "ThemesPage.qml";
-const char * CLIP_VISUALIZATION_PAGE = "ClipVisualizationPage.qml";
-const char * WORKSPACE_LAYOUT_PAGE = "WorkspaceLayoutPage.qml";
-const char * SIGNIN_AUDIO_COM_PAGE = "SigninAudiocomPage.qml";
-const char * APP_UPDATES_AND_USAGE_INFO_PAGE = "AppUpdatesAndUsageInfoPage.qml";
+const char* THEMES_PAGE = "ThemesPage.qml";
+const char* CLIP_VISUALIZATION_PAGE = "ClipVisualizationPage.qml";
+const char* WORKSPACE_LAYOUT_PAGE = "WorkspaceLayoutPage.qml";
+const char* SIGNIN_AUDIO_COM_PAGE = "SigninAudiocomPage.qml";
+const char* APP_UPDATES_AND_USAGE_INFO_PAGE = "AppUpdatesAndUsageInfoPage.qml";
 }
 
 using namespace muse;
