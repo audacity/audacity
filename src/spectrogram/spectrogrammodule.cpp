@@ -1,6 +1,8 @@
 #include "spectrogrammodule.h"
 
 #include "internal/spectraleffectsregister.h"
+#include "internal/spectrogramuiactions.h"
+#include "internal/spectrogramactionscontroller.h"
 #include "internal/globalspectrogramconfiguration.h"
 #include "internal/spectrogramservice.h"
 #include "internal/frequencyselectioncontroller.h"
@@ -15,10 +17,13 @@
 #include "view/globalspectrogramsettingsmodel.h"
 #include "view/trackspectrogramcontextmenumodel.h"
 #include "view/trackspectrogramsettingsmodel.h"
+#include "view/trackspectrogramsettingsdialogmodel.h"
 
 #include "view/spectrogramhit.h"
 #include "view/clipchannelspectrogramview.h"
 #include "view/channelspectralselectionmodel.h"
+
+#include "framework/interactive/iinteractiveuriregister.h"
 
 static void spectrogram_init_qrc()
 {
@@ -45,6 +50,14 @@ void SpectrogramModule::registerExports()
     globalIoc()->registerExport<IGlobalSpectrogramConfiguration>(mname, m_configuration);
 }
 
+void SpectrogramModule::resolveImports()
+{
+    auto ir = globalIoc()->resolve<muse::interactive::IInteractiveUriRegister>(mname);
+    if (ir) {
+        ir->registerQmlUri(muse::Uri(TRACK_SPECTROGRAM_SETTINGS_ACTION), "Audacity/Spectrogram/TrackSpectrogramSettingsDialog.qml");
+    }
+}
+
 void SpectrogramModule::registerUiTypes()
 {
     qmlRegisterUncreatableType<AbstractSpectrogramSettingsModel>("Audacity.Spectrogram", 1, 0, "AbstractSpectrogramSettingsModel",
@@ -57,6 +70,7 @@ void SpectrogramModule::registerUiTypes()
     qmlRegisterType<ChannelSpectralSelectionModel>("Audacity.Spectrogram", 1, 0, "ChannelSpectralSelectionModel");
     qmlRegisterType<SpectrogramHit>("Audacity.Spectrogram", 1, 0, "SpectrogramHit");
     qmlRegisterType<SpectrogramChannelRulerModel>("Audacity.Spectrogram", 1, 0, "SpectrogramChannelRulerModel");
+    qmlRegisterType<TrackSpectrogramSettingsDialogModel>("Audacity.Spectrogram", 1, 0, "TrackSpectrogramSettingsDialogModel");
     qmlRegisterType<TrackSpectrogramContextMenuModel>("Audacity.Spectrogram", 1, 0, "TrackSpectrogramContextMenuModel");
     qmlRegisterType<TrackSpectrogramSettingsModel>("Audacity.Spectrogram", 1, 0, "TrackSpectrogramSettingsModel");
     qmlRegisterSingletonType<SpectrogramHitFactory>("Audacity.Spectrogram", 1, 0, "SpectrogramHitFactory",
@@ -83,6 +97,7 @@ void SpectrogramContext::registerExports()
 {
     m_au3SpectrogramPainter = std::make_shared<Au3SpectrogramPainter>(iocContext());
     m_spectrogramService = std::make_shared<SpectrogramService>(iocContext());
+    m_spectrogramActionsController = std::make_shared<SpectrogramActionsController>(iocContext());
 
     ioc()->registerExport<ISpectralEffectsRegister>(mname, new SpectralEffectsRegister);
     ioc()->registerExport<ISpectrogramPainter>(mname, m_au3SpectrogramPainter);
@@ -91,8 +106,17 @@ void SpectrogramContext::registerExports()
     ioc()->registerExport<IFrequencySelectionController>(mname, new FrequencySelectionController(iocContext()));
 }
 
+void SpectrogramContext::resolveImports()
+{
+    auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(mname);
+    if (ar) {
+        ar->reg(std::make_shared<SpectrogramUiActions>(iocContext()));
+    }
+}
+
 void SpectrogramContext::onInit(const muse::IApplication::RunMode&)
 {
+    m_spectrogramActionsController->init();
     m_au3SpectrogramPainter->init();
     m_spectrogramService->init();
 }

@@ -229,12 +229,6 @@ UiActionList STATIC_ACTIONS = {
              IconCode::Code::SPECTROGRAM_BOX_SELECTION, // TODO need proper icon
              Checkable::Yes
              ),
-    UiAction("action://trackedit/track-spectrogram-settings",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Spectrogram settings…"),
-             TranslatableString("action", "Spectrogram settings…")
-             ),
     UiAction("action://trackedit/paste-default",
              au::context::UiCtxProjectOpened,
              au::context::CTX_DISABLED,

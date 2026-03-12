@@ -9,7 +9,7 @@
 
 #include <QObject>
 
-namespace au::trackedit {
+namespace au::spectrogram {
 class TrackSpectrogramSettingsDialogModel : public QObject, public muse::Injectable
 {
     Q_OBJECT

@@ -3,7 +3,6 @@
  */
 import QtQuick
 import Muse.UiComponents
-import Audacity.TrackEdit
 import Audacity.Preferences
 import Audacity.Spectrogram
 

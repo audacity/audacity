@@ -763,6 +763,7 @@ Rectangle {
                             canvas: content
 
                             trackId: itemData.trackId
+                            trackTitle: itemData.trackTitle
                             trackColor: itemData.color
                             headerHeight: prv.headerHeight
                             sampleRate: itemData.trackSampleRate
@@ -956,6 +957,7 @@ Rectangle {
                             canvas: content
 
                             trackId: itemData.trackId
+                            trackTitle: itemData.trackTitle
                             isDataSelected: itemData.isDataSelected
                             isTrackSelected: itemData.isTrackSelected
                             isTrackFocused: itemData.isTrackFocused

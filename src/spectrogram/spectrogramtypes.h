@@ -6,6 +6,8 @@
 #include "framework/actions/actiontypes.h"
 
 namespace au::spectrogram {
+static const muse::actions::ActionCode TRACK_SPECTROGRAM_SETTINGS_ACTION("track-spectrogram-settings");
+
 // Spectrogram
 enum class SpectrogramScale {
     Undefined = -1,
