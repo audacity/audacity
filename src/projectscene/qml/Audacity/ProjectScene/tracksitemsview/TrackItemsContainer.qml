@@ -12,6 +12,7 @@ Item {
     property NavigationPanel navigationPanel: null
 
     property var trackId: null
+    property string trackTitle: ""
     property var context: null
     property var canvas: null
     property var container: null
@@ -49,7 +50,7 @@ Item {
     signal updateMoveActive(bool completed)
 
     signal seekToX(var x)
-    signal insureVerticallyVisible()
+    signal insureVerticallyVisible
 
     signal handleTimeGuideline(real x, bool completed)
     signal triggerItemGuideline(real x, bool completed)

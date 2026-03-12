@@ -168,8 +168,6 @@ private:
     void changeTrackViewToWaveformAndSpectrogram(const muse::actions::ActionQuery&);
     void changeTrackView(const muse::actions::ActionQuery&, TrackViewType);
 
-    void openTrackSpectrogramSettings(const muse::actions::ActionQuery&);
-
     void addLabel();
 
     void labelDelete(const muse::actions::ActionData& args);

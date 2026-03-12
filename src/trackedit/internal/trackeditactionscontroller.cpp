@@ -111,7 +111,6 @@ static const ActionQuery TOGGLE_GLOBAL_VIEW_SPECTROGRAM("action://trackedit/glob
 static const ActionQuery SET_TRACK_VIEW_WAVEFORM("action://trackedit/track-view-waveform");
 static const ActionQuery SET_TRACK_VIEW_SPECTROGRAM("action://trackedit/track-view-spectrogram");
 static const ActionQuery SET_TRACK_VIEW_MULTI("action://trackedit/track-view-multi");
-static const ActionQuery TRACK_OPEN_SPECTROGRAM_SETTINGS("action://trackedit/track-spectrogram-settings");
 
 static const ActionCode LABEL_ADD_CODE("label-add");
 
@@ -294,7 +293,6 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, SET_TRACK_VIEW_WAVEFORM, this, &TrackeditActionsController::changeTrackViewToWaveform);
     dispatcher()->reg(this, SET_TRACK_VIEW_SPECTROGRAM, this, &TrackeditActionsController::changeTrackViewToSpectrogram);
     dispatcher()->reg(this, SET_TRACK_VIEW_MULTI, this, &TrackeditActionsController::changeTrackViewToWaveformAndSpectrogram);
-    dispatcher()->reg(this, TRACK_OPEN_SPECTROGRAM_SETTINGS, this, &TrackeditActionsController::openTrackSpectrogramSettings);
 
     dispatcher()->reg(this, LABEL_ADD_CODE, this, &TrackeditActionsController::addLabel);
 
@@ -1882,21 +1880,6 @@ void TrackeditActionsController::changeTrackView(const muse::actions::ActionQuer
     default:
         assert(false);
     }
-}
-
-void TrackeditActionsController::openTrackSpectrogramSettings(const muse::actions::ActionQuery& q)
-{
-    muse::UriQuery spectrogramSettingsUri("audacity://trackedit/track_spectrogram_settings");
-
-    const auto trackId = q.param("trackId").toInt();
-    spectrogramSettingsUri.addParam("trackId", muse::Val(trackId));
-
-    const auto prj = globalContext()->currentTrackeditProject();
-    const std::optional<trackedit::Track> track = prj ? prj->track(trackId) : std::nullopt;
-    const auto trackTitle = track.has_value() ? track->title.toStdString() : "";
-
-    spectrogramSettingsUri.addParam("trackTitle", muse::Val(trackTitle));
-    interactive()->open(spectrogramSettingsUri);
 }
 
 void TrackeditActionsController::addLabel()

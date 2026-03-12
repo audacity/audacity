@@ -8,6 +8,7 @@ Item {
     // In
     required property var canvas
     required property int trackId
+    required property string trackTitle
     required property real sampleRate
     required property real selectionStartPosition
     required property real selectionEndPosition
@@ -31,6 +32,7 @@ Item {
     TrackSpectrogramContextMenuModel {
         id: contextMenuModel
         trackId: root.trackId
+        trackTitle: root.trackTitle
     }
 
     ContextMenuLoader {

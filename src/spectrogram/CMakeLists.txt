@@ -29,6 +29,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/macromagic.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/numberscale.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/roseuscolormaps.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramactionscontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramactionscontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramcolordefinitions.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramcolordefinitions.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramcolorregister.cpp
@@ -40,6 +42,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/snapshotspectrogramconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectraleffectsregister.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectraleffectsregister.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramuiactions.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramuiactions.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramutils.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramutils.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramservice.cpp
@@ -93,6 +97,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspectrogramsettingsmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspectrogramcontextmenumodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspectrogramcontextmenumodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspectrogramsettingsdialogmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspectrogramsettingsdialogmodel.h
 )
 
 set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml)
