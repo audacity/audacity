@@ -13,6 +13,7 @@
 #include "view/algorithmsectionparameterlistmodel.h"
 #include "view/colorsectionparameterlistmodel.h"
 #include "view/spectrogramchannelrulermodel.h"
+#include "view/spectrogramviewservice.h"
 #include "view/scalesectionparameterlistmodel.h"
 #include "view/globalspectrogramsettingsmodel.h"
 #include "view/trackspectrogramcontextmenumodel.h"
@@ -102,6 +103,7 @@ void SpectrogramContext::registerExports()
     ioc()->registerExport<ISpectrogramService>(mname, m_spectrogramService);
     ioc()->registerExport<IPeakFinderFactory>(mname, new Au3PeakFinderFactory(iocContext()));
     ioc()->registerExport<IFrequencySelectionController>(mname, new FrequencySelectionController(iocContext()));
+    ioc()->registerExport<ISpectrogramViewService>(mname, new SpectrogramViewService);
 }
 
 void SpectrogramContext::resolveImports()

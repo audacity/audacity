@@ -4,6 +4,7 @@
 #pragma once
 
 #include "spectrogram/ispectrogramservice.h"
+#include "spectrogram/view/ispectrogramviewservice.h"
 
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/async/asyncable.h"
@@ -23,9 +24,10 @@ class SpectrogramChannelRulerModel : public QObject, public QQmlParserStatus, pu
     Q_PROPERTY(QVariantList majorTicks READ majorTicks NOTIFY ticksChanged FINAL)
     Q_PROPERTY(QVariantList minorTicks READ minorTicks NOTIFY ticksChanged FINAL)
     Q_PROPERTY(double pointerFrequency READ pointerFrequency WRITE setPointerFrequency NOTIFY pointerFrequencyChanged FINAL)
-    Q_PROPERTY(double pointerYPos READ pointerYPos NOTIFY pointerFrequencyChanged FINAL)
+    Q_PROPERTY(double rulerGuideYPos READ rulerGuideYPos NOTIFY pointerFrequencyChanged FINAL)
 
     muse::Inject<ISpectrogramService> spectrogramService{ this };
+    muse::Inject<ISpectrogramViewService> spectrogramViewService{ this };
 
 public:
     SpectrogramChannelRulerModel(QObject* parent = nullptr);
@@ -47,10 +49,10 @@ public:
     QVariantList majorTicks() const;
     QVariantList minorTicks() const;
 
-    double pointerFrequency() const { return m_pointerFrequency; }
+    double pointerFrequency() const;
     void setPointerFrequency(double frequency);
 
-    double pointerYPos() const { return frequencyToPosition(m_pointerFrequency); }
+    double rulerGuideYPos() const;
 
 signals:
     void trackIdChanged();
@@ -71,7 +73,6 @@ private:
     int m_trackId = -1;
     int m_labelHeight = 0;
     double m_channelHeight = 0.0;
-    double m_pointerFrequency = 0.0;
     SpectrogramRulerTicks m_ticks;
 };
 } // namespace au::spectrogram

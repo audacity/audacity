@@ -21,6 +21,12 @@ void ChannelSpectralSelectionModel::componentComplete()
             emit selectionRangeChanged();
         }
     });
+
+    spectrogramViewService()->rulerGuideFrequencyChanged().onReceive(this, [this](int trackId) {
+        if (trackId == m_trackId) {
+            emit rulerGuideFrequencyChanged();
+        }
+    });
 }
 
 double ChannelSpectralSelectionModel::positionToFrequency(double y) const
@@ -215,5 +221,15 @@ void ChannelSpectralSelectionModel::endCenterFrequencyDrag()
 double ChannelSpectralSelectionModel::centerFrequency() const
 {
     return frequencySelectionController()->frequencySelection().centerFrequency();
+}
+
+double ChannelSpectralSelectionModel::rulerGuideFrequency() const
+{
+    return spectrogramViewService()->rulerGuideFrequency(m_trackId);
+}
+
+void ChannelSpectralSelectionModel::setRulerGuideFrequency(double frequency)
+{
+    spectrogramViewService()->setRulerGuideFrequency(m_trackId, frequency);
 }
 }

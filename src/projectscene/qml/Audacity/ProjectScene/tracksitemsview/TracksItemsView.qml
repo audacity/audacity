@@ -841,10 +841,6 @@ Rectangle {
                                 selectionViewController.resetDataSelection()
                             }
 
-                            onPointerFrequencyChanged: {
-                                verticalRulers.pointerFrequency = this.pointerFrequency
-                            }
-
                             onUpdateMoveActive: function (completed) {
                                 if (tracksItemsView.moveActive !== completed) {
                                     return

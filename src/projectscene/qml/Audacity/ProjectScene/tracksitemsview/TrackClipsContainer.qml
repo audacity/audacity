@@ -29,8 +29,6 @@ TrackItemsContainer {
     required property double sampleRate
     required property var selectionController
 
-    property real pointerFrequency: -1
-
     signal movePreviewClip(int x, int width, string title)
     signal clearPreviewClip
     signal trackMousePositionChanged(real x, real y)
@@ -632,10 +630,6 @@ TrackItemsContainer {
                 onMousePositionChanged: function (x, y) {
                     let position = mapToItem(root, Qt.point(x, y))
                     root.trackMousePositionChanged(position.x, position.y)
-                }
-
-                onPointerFrequencyChanged: {
-                    root.pointerFrequency = this.pointerFrequency
                 }
             }
 

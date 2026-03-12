@@ -24,7 +24,6 @@ Item {
 
     // Out
     property bool verticalDragActive: leftOrMonoContainer.verticalDragActive || rightContainer.verticalDragActive
-    property real pointerFrequency: leftOrMonoContainer.pointerFrequency >= 0 ? leftOrMonoContainer.pointerFrequency : rightContainer.pointerFrequency
 
     signal selectionHorizontalResize(real x1, real x2, bool completed)
     signal mousePositionChanged(real x, real y)

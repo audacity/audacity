@@ -20,8 +20,6 @@ Item {
 
     property alias verticalDragActive: selectionModel.verticalDragActive
 
-    property real pointerFrequency: -1
-
     signal selectionHorizontalResize(real startPosition, real endPosition, bool completed)
     signal mousePositionChanged(real x, real y)
 
@@ -112,47 +110,51 @@ Item {
             switch (marquee.hitHandle(mouse.x - marquee.x, mouse.y - marquee.y, marquee)) {
             case marquee.handleId.TopLeft:
                 draggedEdges = [topEdge, leftEdge]
-                root.pointerFrequency = Qt.binding(function () {
-                    return root.selectionStartFrequency
+                selectionModel.rulerGuideFrequency = Qt.binding(function () {
+                    return root.selectionEndFrequency
                 })
                 break
             case marquee.handleId.TopRight:
                 draggedEdges = [topEdge, rightEdge]
-                root.pointerFrequency = Qt.binding(function () {
-                    return root.selectionStartFrequency
+                selectionModel.rulerGuideFrequency = Qt.binding(function () {
+                    return root.selectionEndFrequency
                 })
                 break
             case marquee.handleId.BottomRight:
                 draggedEdges = [bottomEdge, rightEdge]
-                root.pointerFrequency = Qt.binding(function () {
-                    return root.selectionEndFrequency
+                selectionModel.rulerGuideFrequency = Qt.binding(function () {
+                    return root.selectionStartFrequency
                 })
                 break
             case marquee.handleId.BottomLeft:
                 draggedEdges = [bottomEdge, leftEdge]
-                root.pointerFrequency = Qt.binding(function () {
-                    return root.selectionEndFrequency
+                selectionModel.rulerGuideFrequency = Qt.binding(function () {
+                    return root.selectionStartFrequency
                 })
                 break
             case marquee.handleId.Left:
                 draggedEdges = [leftEdge]
-                root.pointerFrequency = -1
+                selectionModel.rulerGuideFrequency = -1
                 break
             case marquee.handleId.Right:
                 draggedEdges = [rightEdge]
-                root.pointerFrequency = -1
+                selectionModel.rulerGuideFrequency = -1
                 break
             case marquee.handleId.Top:
                 draggedEdges = [topEdge]
-                root.pointerFrequency = -1
+                selectionModel.rulerGuideFrequency = Qt.binding(function () {
+                    return root.selectionEndFrequency
+                })
                 break
             case marquee.handleId.Bottom:
                 draggedEdges = [bottomEdge]
-                root.pointerFrequency = -1
+                selectionModel.rulerGuideFrequency = Qt.binding(function () {
+                    return root.selectionStartFrequency
+                })
                 break
             default:
                 draggedEdges = []
-                root.pointerFrequency = -1
+                selectionModel.rulerGuideFrequency = -1
                 // It missed - let the event propagate
                 mouse.accepted = false
                 return
@@ -214,7 +216,7 @@ Item {
 
                 onPressed: {
                     selectionModel.startCenterFrequencyDrag()
-                    root.pointerFrequency = Qt.binding(function () {
+                    selectionModel.rulerGuideFrequency = Qt.binding(function () {
                         return selectionModel.centerFrequency
                     })
                 }
