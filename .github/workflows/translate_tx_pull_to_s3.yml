@@ -48,13 +48,17 @@ jobs:
 
           if [[ "${{ github.event_name }}" == "schedule" ]]; then
             DO_CREATE_PR="${{ github.event.schedule == '0 12 * * Sun'}}"
-            DO_PUSH_TO_S3='true'
+            # TODO: Re-enable once S3_KEY and S3_SECRET are properly configured
+            # DO_PUSH_TO_S3='true'
+            DO_PUSH_TO_S3='false'
           else
             if [[ "${{ inputs.create_pull_request }}" == "true" ]]; then
               DO_CREATE_PR='true'
             fi
             if [[ "${{ inputs.push_to_s3 }}" == "true" ]]; then
-              DO_PUSH_TO_S3='true'
+              # TODO: Re-enable once S3_KEY and S3_SECRET are properly configured
+              # DO_PUSH_TO_S3='true'
+              DO_PUSH_TO_S3='false'
             fi
           fi
 
