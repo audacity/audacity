@@ -19,8 +19,6 @@ void AmplifyViewModel::doReload()
 {
     auto& ae = effect<AmplifyEffect>();
 
-    const db_t initAmp = ae.defaultAmp();
-    ae.setAmp(initAmp);
     m_amp.val = std::numeric_limits<float>::lowest();
 
     m_canClip = ae.canClip();
