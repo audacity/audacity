@@ -37,6 +37,8 @@ public:
     Q_INVOKABLE void load();
     Q_INVOKABLE void refreshUIMode();
 
+    Q_INVOKABLE void rollbackSettings();
+
     QString title() const;
     int instanceId() const;
     void setInstanceId(int newInstanceId);
@@ -52,8 +54,12 @@ signals:
     void viewerComponentTypeChanged();
 
 private:
+    void captureInitialSettings();
+
     QString m_title;
     int m_instanceId = -1;
     EffectId m_effectId;
+
+    std::shared_ptr<EffectSettings> m_initialSettings;
 };
 }

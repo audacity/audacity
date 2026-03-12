@@ -20,7 +20,7 @@ void EffectPresetsScenario::showError(const muse::Ret& ret, const std::string& t
     interactive()->error(ret.text(), text);
 }
 
-void EffectPresetsScenario::applyPreset(const EffectInstanceId& effectInstanceId, const PresetId& presetId)
+void EffectPresetsScenario::loadPreset(const EffectInstanceId& effectInstanceId, const PresetId& presetId)
 {
     Ret ret = presetsProvider()->applyPreset(effectInstanceId, presetId);
     if (!ret) {

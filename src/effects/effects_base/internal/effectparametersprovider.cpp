@@ -10,6 +10,14 @@
 using namespace au::effects;
 using namespace muse;
 
+EffectParametersProvider::EffectParametersProvider(const kors::modularity::ContextPtr& ctx)
+    : muse::Injectable(ctx)
+{
+    m_parameterChanged.onReceive(nullptr, [this](const ParameterChangedData& data){
+        instancesRegister()->notifyAboutSettingsChanged(data.instanceId);
+    });
+}
+
 ParameterInfoList EffectParametersProvider::parameters(EffectInstanceId instanceId) const
 {
     EffectInstance* instance = instancesRegister()->instanceById(instanceId).get();
@@ -98,7 +106,6 @@ bool EffectParametersProvider::setParameterValue(EffectInstanceId instanceId, co
         data.newValueString = param.currentValueString;
 
         m_parameterChanged.send(data);
-        instancesRegister()->notifyAboutSettingsChanged(instanceId);
     }
 
     return success;
@@ -137,7 +144,6 @@ bool EffectParametersProvider::setParameterStringValue(EffectInstanceId instance
         data.newValueString = param.currentValueString;
 
         m_parameterChanged.send(data);
-        instancesRegister()->notifyAboutSettingsChanged(instanceId);
     }
 
     return success;

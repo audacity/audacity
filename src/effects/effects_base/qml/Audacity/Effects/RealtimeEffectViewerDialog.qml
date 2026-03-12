@@ -182,6 +182,7 @@ EffectStyledDialogView {
                         anchors.right: parent.right
 
                         destructiveMode: false
+                        sessionStateKey: viewerModel.presetSessionKey
                         navigationPanel: root.navigationPanel
                         navigationOrder: 1
 

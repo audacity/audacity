@@ -17,7 +17,7 @@ public:
     virtual ~IEffectPresetsScenario() = default;
 
     // methods with interaction (select file, show error and etc)
-    virtual void applyPreset(const EffectInstanceId& effectInstanceId, const PresetId& presetId) = 0;
+    virtual void loadPreset(const EffectInstanceId& effectInstanceId, const PresetId& presetId) = 0;
     virtual void savePresetAs(const EffectInstanceId& effectInstanceId) = 0;
     virtual void savePreset(const EffectInstanceId& effectInstanceId, const PresetId& presetId) = 0;
     virtual void deletePreset(const EffectId& effectId, const PresetId& presetId) = 0;

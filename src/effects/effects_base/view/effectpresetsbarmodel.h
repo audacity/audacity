@@ -22,6 +22,7 @@ class EffectPresetsBarModel : public QObject, public muse::Injectable, public mu
 {
     Q_OBJECT
     Q_PROPERTY(int instanceId READ instanceId_prop WRITE setInstanceId_prop NOTIFY instanceIdChanged FINAL)
+    Q_PROPERTY(QString sessionStateKey READ sessionStateKey WRITE setSessionStateKey NOTIFY sessionStateKeyChanged FINAL)
     Q_PROPERTY(QVariantList presets READ presets NOTIFY presetsChanged FINAL)
     Q_PROPERTY(QString preset READ preset WRITE setPreset NOTIFY presetChanged FINAL)
     Q_PROPERTY(bool presetsDropdownEnabled READ presetsDropdownEnabled NOTIFY presetsChanged FINAL)
@@ -44,6 +45,8 @@ public:
 
     int instanceId_prop() const;
     void setInstanceId_prop(int newInstanceId);
+    QString sessionStateKey() const;
+    void setSessionStateKey(const QString& newSessionStateKey);
     QVariantList presets();
     QString preset() const;
     void setPreset(QString presetId);
@@ -58,6 +61,7 @@ public:
     Q_INVOKABLE void savePresetAs();
     Q_INVOKABLE void deletePreset();
     Q_INVOKABLE void commitSelectedPreset();
+    Q_INVOKABLE void restoreInitialSessionPresetState();
     Q_INVOKABLE muse::uicomponents::AbstractMenuModel* saveContextMenu();
     Q_INVOKABLE muse::uicomponents::AbstractMenuModel* presetContextMenu();
 
@@ -65,6 +69,7 @@ public:
 
 signals:
     void instanceIdChanged();
+    void sessionStateKeyChanged();
     void presetsChanged();
     void presetChanged();
     void canDeletePresetChanged();
@@ -79,20 +84,32 @@ private:
     bool isUserPreset(const QString& presetId) const;
     bool isFactoryPreset(const QString& presetId) const;
     int factoryPresetIndex(const QString& presetId) const;
+    QString matchPresetForCurrentSettings() const;
+    void captureInitialSessionPresetState();
+    bool restoreSessionPresetState();
+    void restoreLastUsedPreset(const EffectId& effectId);
+    void restoreMatchedPresetForCurrentSettings();
+    QString sessionPresetStateKey() const;
+    void persistSessionPresetState();
     bool isCurrentPresetUnsaved() const;
     void setPresetUnsaved(bool unsaved);
     void updatePresetDisplayNames();
     void updatePresetBar();
 
     int m_instanceId = -1;
+    QString m_sessionStateKey;
+
     QString m_currentPreset;
     QStringList m_userPresets;
     QStringList m_factoryPresets;
     QHash<QString, QString> m_basePresetNames;
-    QVariantList m_presets;
+    QVariantList m_allPresets;
+
     bool m_isPresetUnsaved = false;
-    bool m_persistLastUsedPreset = false;
-    bool m_hasLoadedInitialPreset = false;
+    bool m_usedDestructively = false;
+    std::optional<QString> m_initialPreset;
+    bool m_initialPresetUnsaved = false;
+
     EffectSaveContextMenu* m_saveContextMenu = nullptr;
     PresetsContextMenuModel* m_presetsContextMenu = nullptr;
 };

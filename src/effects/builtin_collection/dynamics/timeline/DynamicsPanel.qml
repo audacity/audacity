@@ -74,15 +74,9 @@ Item {
         timelineSourceModel.init()
         compressionDbMeterModel.init()
         outputDbMeterModel.init()
-        if (showInputDbModel) {
-            showInputDbModel.init()
-        }
-        if (showOutputDbModel) {
-            showOutputDbModel.init()
-        }
-        if (showCompressionDbModel) {
-            showCompressionDbModel.init()
-        }
+        showInputDbModel.init()
+        showOutputDbModel.init()
+        showCompressionDbModel.init()
     }
 
     Stopwatch {
