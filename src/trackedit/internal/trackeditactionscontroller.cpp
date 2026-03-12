@@ -1711,7 +1711,7 @@ void TrackeditActionsController::moveCursorToClosestZeroCrossing()
 void TrackeditActionsController::setClipColor(const muse::actions::ActionQuery& q)
 {
     auto selectedClips = clipsForInteraction();
-    if (!selectedClips.empty()) {
+    if (selectedClips.empty()) {
         return;
     }
 

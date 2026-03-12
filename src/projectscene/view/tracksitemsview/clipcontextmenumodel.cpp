@@ -124,7 +124,7 @@ void ClipContextMenuModel::updateColorCheckedState()
         ActionQuery query(action);
 
         if ((!clip.hasCustomColor && action == m_colorChangeActionCodeList.at(0))
-            || (clip.hasCustomColor && query.param("color").toString() == clip.color.toString())) {
+            || (clip.hasCustomColor && muse::draw::Color::fromString(query.param("color").toString()) == clip.color)) {
             auto state = item.state();
             state.checked = true;
             item.setState(state);
