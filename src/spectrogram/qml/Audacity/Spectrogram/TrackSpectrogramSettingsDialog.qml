@@ -26,11 +26,6 @@ StyledDialogView {
 
     property var settingsModel: TrackSpectrogramSettingsModel {
         trackId: root.trackId
-        onUpdateRequested: dialogModel.requestSpectrogramUpdate()
-    }
-
-    property var dialogModel: TrackSpectrogramSettingsDialogModel {
-        trackId: root.trackId
     }
 
     Component.onDestruction: settingsModel.aboutToDestroy()
