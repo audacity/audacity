@@ -111,6 +111,7 @@ Ret EffectPresetsProvider::applyPreset(const EffectInstanceId& effectInstanceId,
     }
 
     if (ret) {
+        access->Flush();
         instancesRegister()->notifyAboutSettingsChanged(effectInstanceId);
     }
 
@@ -211,6 +212,7 @@ muse::Ret EffectPresetsProvider::importPreset(const EffectInstanceId& effectInst
         });
         ret = res ? muse::make_ok() : make_ret(Err::InternalError);
         if (ret) {
+            access->Flush();
             instancesRegister()->notifyAboutSettingsChanged(effectInstanceId);
         } else {
             LOGE() << "failed load settings from: " << data.constData();
