@@ -40,6 +40,20 @@ StyledDialogView {
         readonly property int formTextInputHeight: 28
 
         readonly property int buttonBoxMargins: 8
+
+        readonly property bool canTrigger: newProjectModel.isFilenameAllowed(projectNameField.value)
+
+        function onTriggered() {
+            if (model.isAuthorized) {
+                root.ret = {
+                    errcode: 0,
+                    value: projectNameField.value
+                }
+                root.hide()
+            } else {
+                model.openAuthorizationDialog()
+            }
+        }
     }
 
     AccountInfoModel {
@@ -159,6 +173,14 @@ StyledDialogView {
                 onTextChanged: function (newTextValue) {
                     value = newTextValue
                 }
+
+                onAccepted: function () {
+                    if (prv.canTrigger) {
+                        prv.onTriggered()
+                    } else {
+                        Qt.callLater(projectNameField.ensureActiveFocus)
+                    }
+                }
             }
         }
 
@@ -183,18 +205,10 @@ StyledDialogView {
                 text: root.actionText
                 buttonRole: ButtonBoxModel.ApplyRole
                 buttonId: ButtonBoxModel.Apply
-                enabled: newProjectModel.isFilenameAllowed(projectNameField.value)
+                enabled: prv.canTrigger
 
                 onClicked: function () {
-                    if (model.isAuthorized) {
-                        root.ret = {
-                            errcode: 0,
-                            value: projectNameField.value
-                        }
-                        root.hide()
-                    } else {
-                        model.openAuthorizationDialog()
-                    }
+                    prv.onTriggered()
                 }
             }
 

@@ -50,6 +50,16 @@ Page {
         readonly property int formButtonExtraSpace: model.showErrorMessage ? 0 : 8
 
         readonly property string forgotPasswordUrl: "https://audio.com/auth/forgot-password"
+
+        readonly property bool canTrigger: !model.authInProgress && emailInputField.inputField.text.length > 0 && passwordInputField.inputField.text.length > 0
+
+        function onTriggered() {
+            if (!canTrigger) {
+                return
+            }
+
+            model.isRegistering ? model.signUpWithEmail(emailInputField.inputField.text, passwordInputField.inputField.text) : model.signInWithEmail(emailInputField.inputField.text, passwordInputField.inputField.text)
+        }
     }
 
     Component.onCompleted: {
@@ -202,6 +212,14 @@ Page {
                 navigation.panel: emailFieldPanel
                 navigation.row: 0
                 navigation.column: 0
+
+                onAccepted: {
+                    if (prv.canTrigger) {
+                        prv.onTriggered()
+                    } else {
+                        Qt.callLater(emailInputField.ensureActiveFocus)
+                    }
+                }
             }
         }
 
@@ -281,6 +299,14 @@ Page {
                 navigation.panel: passwordFieldPanel
                 navigation.row: 0
                 navigation.column: 0
+
+                onAccepted: {
+                    if (prv.canTrigger) {
+                        prv.onTriggered()
+                    } else {
+                        Qt.callLater(passwordInputField.ensureActiveFocus)
+                    }
+                }
             }
         }
 
@@ -303,7 +329,7 @@ Page {
                 anchors.right: parent.right
                 height: prv.formButtonHeight
 
-                enabled: !model.authInProgress && emailInputField.inputField.text.length > 0 && passwordInputField.inputField.text.length > 0
+                enabled: prv.canTrigger
 
                 NavigationPanel {
                     id: actionsPanel
@@ -328,7 +354,7 @@ Page {
                 navigation.panel: actionsPanel
 
                 onClicked: {
-                    model.isRegistering ? model.signUpWithEmail(emailInputField.inputField.text, passwordInputField.inputField.text) : model.signInWithEmail(emailInputField.inputField.text, passwordInputField.inputField.text)
+                    prv.onTriggered()
                 }
             }
         }
