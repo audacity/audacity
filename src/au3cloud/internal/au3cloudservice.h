@@ -33,8 +33,11 @@ public:
     void signInWithPassword(const std::string& email, const std::string& password) override;
     void signInWithSocial(const std::string& provider) override;
     void signOut() override;
+
     const AccountInfo& accountInfo() const override;
+
     muse::ValCh<AuthState> authState() const override;
+    bool isAuthorized() const override;
 
     bool getSendAnonymousUsageInfo() const override;
     void setSendAnonymousUsageInfo(bool allow) override;

@@ -300,7 +300,7 @@ muse::ProgressPtr Au3AudioComService::uploadProject(au::project::IAudacityProjec
         }
 
         if (message.Status == audacity::cloud::audiocom::sync::ProjectSyncStatus::Synced) {
-            progress->finish(muse::make_ret(muse::Ret::Code::Ok, getCloudProjectPage(project)));
+            progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(getCloudProjectPage(project))));
         }
 
         if (message.Status == audacity::cloud::audiocom::sync::ProjectSyncStatus::Failed) {

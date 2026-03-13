@@ -22,10 +22,15 @@
 
 #pragma once
 
+#include <functional>
+
 #include <QObject>
+#include <qcontainerfwd.h>
 #include <qqmlintegration.h>
 
-#include "modularity/ioc.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/actions/iactionsdispatcher.h"
+#include "framework/interactive/iinteractive.h"
 #include "iappshellconfiguration.h"
 
 namespace au::appshell {
@@ -42,6 +47,8 @@ class WelcomeDialogModel : public QObject, public muse::Contextable
 
     QML_ELEMENT
 
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::Inject<muse::IInteractive> interactive { this };
     muse::GlobalInject<IAppShellConfiguration> configuration;
 
 public:
@@ -57,6 +64,8 @@ public:
     Q_INVOKABLE void nextItem();
     Q_INVOKABLE void prevItem();
 
+    Q_INVOKABLE void activateCurrentItem();
+
     bool showOnStartup() const;
     void setShowOnStartup(bool show);
 
@@ -66,10 +75,30 @@ signals:
     void showOnStartupChanged();
 
 private:
+    struct Item {
+        QString title;
+        QString imageUrl;
+        QString description;
+        QString buttonText;
+        std::function<void()> action;
+
+        QVariantMap toQVariantMap() const
+        {
+            QVariantMap map;
+            map.insert("title", title);
+            map.insert("imageUrl", imageUrl);
+            map.insert("description", description);
+            map.insert("buttonText", buttonText);
+            return map;
+        }
+    };
+
     bool hasPrev() const { return m_currentIndex > 0; }
     bool hasNext() const { return m_currentIndex < m_items.size() - 1; }
 
-    std::vector<QVariantMap> m_items;
+    std::vector<Item> buildItems();
+
+    std::vector<Item> m_items;
     size_t m_currentIndex = 0;
 };
 }

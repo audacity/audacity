@@ -45,7 +45,7 @@ StyledDialogView {
 
     function endSetup() {
         model.finish()
-        root.hide()
+        root.accept()
     }
 
     function advanceToNextPage() {
@@ -107,7 +107,7 @@ StyledDialogView {
                 item.activeButtonTitle = buttons.activeButton.text
 
                 if (item.navNextPageRequested) {
-                    item.navNextPageRequested.connect(function() {
+                    item.navNextPageRequested.connect(function () {
                         advanceToNextPage()
                     })
                 }

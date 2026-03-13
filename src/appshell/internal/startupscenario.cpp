@@ -22,10 +22,10 @@
 
 #include "startupscenario.h"
 
+#include "framework/global/log.h"
+#include "framework/global/types/uri.h"
+
 #include "appshell/appshelltypes.h"
-#include "global/async/async.h"
-#include "global/translation.h"
-#include "global/log.h"
 
 using namespace au::appshell;
 using namespace muse::actions;
@@ -204,26 +204,37 @@ void StartupScenario::onStartupPageOpened(StartupModeType modeType)
     }
 }
 
-void StartupScenario::showStartupDialogsIfNeed(StartupModeType modeType)
+void StartupScenario::showStartupDialogsIfNeed(StartupModeType)
 {
+    const auto showWelcomePage = [this]() {
+        const std::string welcomeDialogLastShownVersion(configuration()->welcomeDialogLastShownVersion());
+        const std::string currentAudacityVersion(configuration()->audacityVersion());
+
+        if (welcomeDialogLastShownVersion < currentAudacityVersion) {
+            configuration()->setWelcomeDialogShowOnStartup(true); // override user preference
+            configuration()->setWelcomeDialogLastShownIndex(-1); // reset
+        }
+
+        if (!configuration()->welcomeDialogShowOnStartup()) {
+            return;
+        }
+
+        muse::UriQuery query(WELCOME_DIALOG_URI);
+        query.set("modal", false);
+        query.set("floating", true);
+        interactive()->open(query);
+
+        configuration()->setWelcomeDialogLastShownVersion(configuration()->audacityVersion());
+    };
+
     if (!configuration()->hasCompletedFirstLaunchSetup()) {
-        interactive()->openSync(FIRST_LAUNCH_SETUP_URI);
+        interactive()->open(FIRST_LAUNCH_SETUP_URI).then(this, [this, showWelcomePage](const muse::Val&, auto resolve) {
+            showWelcomePage();
+            return resolve();
+        });
+    } else {
+        showWelcomePage();
     }
-
-    const std::string welcomeDialogLastShownVersion(configuration()->welcomeDialogLastShownVersion());
-    const std::string currentAudacityVersion(configuration()->audacityVersion());
-
-    if (welcomeDialogLastShownVersion < currentAudacityVersion) {
-        configuration()->setWelcomeDialogShowOnStartup(true); // override user preference
-        configuration()->setWelcomeDialogLastShownIndex(-1); // reset
-    }
-
-    if (!configuration()->welcomeDialogShowOnStartup()) {
-        return;
-    }
-
-    interactive()->openSync(WELCOME_DIALOG_URI);
-    configuration()->setWelcomeDialogLastShownVersion(configuration()->audacityVersion());
 }
 
 muse::Uri StartupScenario::startupPageUri(StartupModeType modeType) const

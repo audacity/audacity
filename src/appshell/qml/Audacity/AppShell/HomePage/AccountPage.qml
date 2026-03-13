@@ -37,7 +37,7 @@ FocusScope {
         name: "Account"
         enabled: root.enabled && root.visible
         order: 3
-        onActiveChanged: function(active) {
+        onActiveChanged: function (active) {
             if (active) {
                 root.forceActiveFocus()
             }
@@ -60,7 +60,7 @@ FocusScope {
         anchors.right: parent.right
         anchors.rightMargin: prv.sideMargin
 
-        text: qsTrc("appshell", "Accounts")
+        text: qsTrc("appshell", "Cloud account")
         font: ui.theme.titleBoldFont
         horizontalAlignment: Text.AlignLeft
     }
@@ -87,7 +87,6 @@ FocusScope {
             model.signOut()
         }
 
-        onCreateAccountRequested: {
-        }
+        onCreateAccountRequested: {}
     }
 }

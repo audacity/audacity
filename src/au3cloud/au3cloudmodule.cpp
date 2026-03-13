@@ -8,6 +8,7 @@
 
 #include "internal/au3cloudservice.h"
 #include "internal/au3audiocomservice.h"
+#include "internal/au3cloudactionscontroller.h"
 
 #include "view/accountinfomodel.h"
 #include "dev/cloudtestsmodel.h"
@@ -44,6 +45,7 @@ void Au3CloudContext::registerExports()
 {
     m_cloudService = std::make_shared<Au3CloudService>(iocContext());
     m_audioComService = std::make_shared<Au3AudioComService>(iocContext());
+    m_actionsController = std::make_shared<Au3CloudActionsController>(iocContext());
 
     ioc()->registerExport<au3cloud::IAuthorization>(mname, m_cloudService);
     ioc()->registerExport<au3cloud::IUsageInfo>(mname, m_cloudService);
@@ -53,6 +55,7 @@ void Au3CloudContext::registerExports()
 void Au3CloudContext::onInit(const muse::IApplication::RunMode&)
 {
     m_cloudService->init();
+    m_actionsController->init();
 }
 
 void Au3CloudContext::onDeinit() {}
