@@ -919,6 +919,12 @@ bool CloudProjectsDatabase::OpenConnection()
     return RunMigrations();
 }
 
+void CloudProjectsDatabase::CloseConnection()
+{
+    auto lock = std::lock_guard { mConnectionMutex };
+    mConnection.reset();
+}
+
 bool CloudProjectsDatabase::RunMigrations()
 {
     auto connection = mConnection->Acquire();

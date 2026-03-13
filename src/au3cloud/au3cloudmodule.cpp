@@ -9,6 +9,7 @@
 #include "internal/au3cloudservice.h"
 #include "internal/au3audiocomservice.h"
 #include "internal/au3cloudactionscontroller.h"
+#include "au3-cloud-audiocom/sync/CloudProjectsDatabase.h"
 
 #include "view/accountinfomodel.h"
 #include "dev/cloudtestsmodel.h"
@@ -58,4 +59,7 @@ void Au3CloudContext::onInit(const muse::IApplication::RunMode&)
     m_actionsController->init();
 }
 
-void Au3CloudContext::onDeinit() {}
+void Au3CloudContext::onDeinit()
+{
+    audacity::cloud::audiocom::sync::CloudProjectsDatabase::Get().CloseConnection();
+}

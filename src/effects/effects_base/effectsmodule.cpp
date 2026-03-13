@@ -141,4 +141,5 @@ void EffectsContext::onAllInited(const muse::IApplication::RunMode&)
 
 void EffectsContext::onDeinit()
 {
+    PluginManager::Get().Terminate();
 }

@@ -319,9 +319,10 @@ void ApplicationActionController::revertToFactorySettings()
         return;
     }
 
-    static constexpr bool KEEP_DEFAULT_SETTINGS = false;
+    static constexpr bool KEEP_DEFAULT_SETTINGS = true; // Don't delete config dir yet — databases still open
     static constexpr bool NOTIFY_ABOUT_CHANGES = false;
     configuration()->revertToFactorySettings(KEEP_DEFAULT_SETTINGS, NOTIFY_ABOUT_CHANGES);
+    configuration()->setFactoryResetPending(true);
 
     title = muse::trc("appshell", "Would you like to restart Audacity now?");
     question = muse::trc("appshell", "Audacity needs to be restarted for these changes to take effect.");

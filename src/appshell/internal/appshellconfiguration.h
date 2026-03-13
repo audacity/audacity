@@ -100,6 +100,9 @@ public:
 
     void revertToFactorySettings(bool keepDefaultSettings = false, bool notifyAboutChanges = true) const override;
 
+    void setFactoryResetPending(bool pending) const override;
+    bool isFactoryResetPending() const override;
+
     muse::io::paths_t sessionProjectsPaths() const override;
     muse::Ret setSessionProjectsPaths(const muse::io::paths_t& paths) override;
 
