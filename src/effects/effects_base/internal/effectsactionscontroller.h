@@ -12,6 +12,9 @@
 #include "framework/actions/iactionsdispatcher.h"
 #include "framework/ui/iuiactionsregister.h"
 
+#include "spectrogram/ispectraleffectsregister.h"
+#include "spectrogram/ifrequencyselectioncontroller.h"
+
 #include "playback/iplaybackcontroller.h"
 #include "../ieffectexecutionscenario.h"
 #include "../ieffectsprovider.h"
@@ -34,6 +37,8 @@ class EffectsActionsController : public muse::actions::Actionable, public muse::
     muse::Inject<IEffectInstancesRegister> instancesRegister{ this };
     muse::Inject<muse::IInteractive> interactive{ this };
     muse::Inject<au::playback::IPlaybackController> playbackController{ this };
+    muse::Inject<spectrogram::ISpectralEffectsRegister> spectralEffectsRegister{ this };
+    muse::Inject<spectrogram::IFrequencySelectionController> frequencySelectionController{ this };
 
 public:
     EffectsActionsController(const muse::modularity::ContextPtr& ctx)

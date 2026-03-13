@@ -60,7 +60,7 @@ double SpectrogramService::trackSampleRate(int trackId) const
 
     au3::Au3WaveTrack* const waveTrack = au3::DomAccessor::findWaveTrack(*reinterpret_cast<::AudacityProject*>(prj->au3ProjectPtr()),
                                                                          ::TrackId { trackId });
-    IF_ASSERT_FAILED(waveTrack) {
+    if (!waveTrack) {
         return 0.;
     }
 

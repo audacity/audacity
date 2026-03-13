@@ -1,7 +1,8 @@
 $nyquist plug-in
 $version 5
 $type process spectraltools
-$name (_ "Spectral delete")
+$spectraleffectid DeleteSelection
+$name (_ "Delete selection")
 $author (_ "Steve Daulton")
 $release 4.0.0
 $copyright (_ "GNU General Public License v2.0 or later")

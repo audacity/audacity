@@ -1,4 +1,5 @@
 import QtQuick
+import Muse.UiComponents
 import Audacity.Spectrogram
 
 Item {
@@ -7,6 +8,7 @@ Item {
     // In
     required property var canvas
     required property int trackId
+    required property string trackTitle
     required property real sampleRate
     required property real selectionStartPosition
     required property real selectionEndPosition
@@ -22,6 +24,35 @@ Item {
     property bool verticalDragActive: leftOrMonoContainer.verticalDragActive || rightContainer.verticalDragActive
 
     signal selectionHorizontalResize(real x1, real x2, bool completed)
+
+    Component.onCompleted: {
+        contextMenuModel.init()
+    }
+
+    TrackSpectrogramContextMenuModel {
+        id: contextMenuModel
+        trackId: root.trackId
+        trackTitle: root.trackTitle
+    }
+
+    ContextMenuLoader {
+        id: contextMenuLoader
+
+        onHandleMenuItem: function (itemId) {
+            contextMenuModel.handleMenuItem(itemId)
+        }
+    }
+
+    MouseArea {
+        id: contextMenuMouseArea
+        anchors.fill: parent
+        visible: selectionStartFrequency < selectionEndFrequency
+        hoverEnabled: true
+        acceptedButtons: Qt.RightButton
+        onClicked: function (mouse) {
+            contextMenuLoader.show(Qt.point(mouse.x, mouse.y), contextMenuModel.items)
+        }
+    }
 
     ChannelSpectralSelectionContainer {
         id: leftOrMonoContainer

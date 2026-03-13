@@ -14,6 +14,15 @@ ChannelSpectralSelectionModel::ChannelSpectralSelectionModel(QObject* parent)
 {
 }
 
+void ChannelSpectralSelectionModel::componentComplete()
+{
+    spectrogramService()->trackSpectrogramConfigurationChanged().onReceive(this, [this](int trackId) {
+        if (trackId == m_trackId) {
+            emit selectionRangeChanged();
+        }
+    });
+}
+
 double ChannelSpectralSelectionModel::positionToFrequency(double y) const
 {
     return spectrogramService()->yToFrequency(m_trackId, y, m_channelHeight);
@@ -157,8 +166,8 @@ void ChannelSpectralSelectionModel::dragCenterFrequency(double y)
     const double peakFrequency = m_peakFinder->findPeak(frequency);
     const double peakPosition = frequencyToPosition(peakFrequency);
 
-    const auto startFreqPos = frequencyToPosition(m_dragStartFrequencySelection.startFrequency);
-    const auto endFreqPos = frequencyToPosition(m_dragStartFrequencySelection.endFrequency);
+    const auto startFreqPos = frequencyToPosition(m_dragStartFrequencySelection.startFrequency());
+    const auto endFreqPos = frequencyToPosition(m_dragStartFrequencySelection.endFrequency());
     const auto range = endFreqPos - startFreqPos;
     auto newStartFreqPos = peakPosition - range / 2;
     auto newEndFreqPos = peakPosition + range / 2;
@@ -187,11 +196,15 @@ void ChannelSpectralSelectionModel::dragCenterFrequency(double y)
     const auto newStartFreq = positionToFrequency(newStartFreqPos);
     const auto newEndFreq = positionToFrequency(newEndFreqPos);
 
-    frequencySelectionController()->setFrequencySelection({ m_dragStartFrequencySelection.trackId, newStartFreq, newEndFreq });
+    FrequencySelection newSelection = m_dragStartFrequencySelection;
+    newSelection.setFrequencyRange(newStartFreq, newEndFreq, config->scale());
+
+    frequencySelectionController()->setFrequencySelection(std::move(newSelection), false);
 }
 
 void ChannelSpectralSelectionModel::endCenterFrequencyDrag()
 {
+    frequencySelectionController()->setFrequencySelection(frequencySelectionController()->frequencySelection(), true);
     m_peakFinder.reset();
     m_dragStartFrequencySelection = {};
     emit verticalDragActiveChanged();

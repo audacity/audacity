@@ -1,7 +1,8 @@
 $nyquist plug-in
 $version 5
 $type process spectraltools
-$name (_ "Spectral edit multi tool")
+$spectraleffectid DeleteCenterFrequency
+$name (_ "Delete selection center frequency")
 $author (_ "Paul Licameli")
 $release 4.0.0
 $copyright (_ "GNU General Public License v2.0")

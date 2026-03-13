@@ -3,9 +3,6 @@
  */
 #include "trackviewtypeattachment.h"
 
-#if AU_MODULE_EFFECTS_NYQUIST
-#include "au3-nyquist-effects/NyquistBase.h"
-#endif
 #include "au3-wave-track/WaveTrack.h"
 
 namespace au::au3 {
@@ -65,13 +62,4 @@ void TrackViewTypeAttachment::SetTrackViewType(const trackedit::TrackViewType& t
 {
     mTrackViewType = type;
 }
-
-#if AU_MODULE_EFFECTS_NYQUIST
-static NyquistBase::GetHasSpectralDisplayHook::Scope scope {
-    [](const WaveTrack* track) {
-        const auto viewType = TrackViewTypeAttachment::Get(track).GetTrackViewType();
-        return viewType == trackedit::TrackViewType::WaveformAndSpectrogram || viewType == trackedit::TrackViewType::Spectrogram;
-    }
-};
-#endif
 }

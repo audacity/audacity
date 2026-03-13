@@ -111,7 +111,6 @@ static const ActionQuery TOGGLE_GLOBAL_VIEW_SPECTROGRAM("action://trackedit/glob
 static const ActionQuery SET_TRACK_VIEW_WAVEFORM("action://trackedit/track-view-waveform");
 static const ActionQuery SET_TRACK_VIEW_SPECTROGRAM("action://trackedit/track-view-spectrogram");
 static const ActionQuery SET_TRACK_VIEW_MULTI("action://trackedit/track-view-multi");
-static const ActionQuery TRACK_OPEN_SPECTROGRAM_SETTINGS("action://trackedit/track-spectrogram-settings");
 
 static const ActionCode LABEL_ADD_CODE("label-add");
 
@@ -294,7 +293,6 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, SET_TRACK_VIEW_WAVEFORM, this, &TrackeditActionsController::changeTrackViewToWaveform);
     dispatcher()->reg(this, SET_TRACK_VIEW_SPECTROGRAM, this, &TrackeditActionsController::changeTrackViewToSpectrogram);
     dispatcher()->reg(this, SET_TRACK_VIEW_MULTI, this, &TrackeditActionsController::changeTrackViewToWaveformAndSpectrogram);
-    dispatcher()->reg(this, TRACK_OPEN_SPECTROGRAM_SETTINGS, this, &TrackeditActionsController::openTrackSpectrogramSettings);
 
     dispatcher()->reg(this, LABEL_ADD_CODE, this, &TrackeditActionsController::addLabel);
 
@@ -594,6 +592,15 @@ void TrackeditActionsController::doGlobalDelete()
                 LOGE() << "Unexpected close gap behavior: " << static_cast<int>(configuration()->closeGapBehavior());
                 assert(false);
             }
+            return;
+        }
+    }
+
+    const auto frequencySelection = frequencySelectionController()->frequencySelection();
+    if (frequencySelectionController()->showsSpectrogram(frequencySelection.trackId) && frequencySelection.isValid()) {
+        using namespace spectrogram;
+        if (const std::optional<SpectralEffect> effect = spectralEffectsRegister()->spectralEffect(SpectralEffectId::DeleteSelection)) {
+            dispatcher()->dispatch(effect->action);
             return;
         }
     }
@@ -1873,14 +1880,6 @@ void TrackeditActionsController::changeTrackView(const muse::actions::ActionQuer
     default:
         assert(false);
     }
-}
-
-void TrackeditActionsController::openTrackSpectrogramSettings(const muse::actions::ActionQuery& q)
-{
-    muse::UriQuery spectrogramSettingsUri("audacity://trackedit/track_spectrogram_settings");
-    spectrogramSettingsUri.addParam("trackId", muse::Val(q.param("trackId").toInt()));
-    spectrogramSettingsUri.addParam("trackTitle", muse::Val(q.param("trackTitle").toString()));
-    interactive()->open(spectrogramSettingsUri);
 }
 
 void TrackeditActionsController::addLabel()

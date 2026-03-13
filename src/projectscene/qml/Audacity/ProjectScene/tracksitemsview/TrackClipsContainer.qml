@@ -598,8 +598,11 @@ TrackItemsContainer {
                 anchors.right: parent.right
                 z: 1
 
+                clip: true
+
                 canvas: root.canvas
                 trackId: root.trackId
+                trackTitle: root.trackTitle
                 sampleRate: root.sampleRate
                 selectionStartPosition: root.context.selectionStartPosition
                 selectionEndPosition: root.context.selectionEndPosition

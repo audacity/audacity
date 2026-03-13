@@ -1,8 +1,9 @@
 $nyquist plug-in
 $version 5
 $type process spectraltools
+$spectraleffectid AmplifyCenterFrequency
 $preview linear
-$name (_ "Spectral edit parametric EQ")
+$name (_ "Amplify selection center frequency")
 $debugbutton false
 $author (_ "Paul Licameli")
 $release 4.0.0

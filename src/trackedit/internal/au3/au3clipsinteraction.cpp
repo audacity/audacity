@@ -66,12 +66,12 @@ muse::async::Channel<au::trackedit::ClipKey, secs_t, bool> Au3ClipsInteraction::
 muse::secs_t Au3ClipsInteraction::clipStartTime(const trackedit::ClipKey& clipKey) const
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    if (!waveTrack) {
         return -1.0;
     }
 
     std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
-    IF_ASSERT_FAILED(clip) {
+    if (!clip) {
         return -1.0;
     }
 
@@ -81,12 +81,12 @@ muse::secs_t Au3ClipsInteraction::clipStartTime(const trackedit::ClipKey& clipKe
 muse::secs_t Au3ClipsInteraction::clipEndTime(const ClipKey& clipKey) const
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    if (!waveTrack) {
         return -1.0;
     }
 
     std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(waveTrack, clipKey.itemId);
-    IF_ASSERT_FAILED(clip) {
+    if (!clip) {
         return -1.0;
     }
 
