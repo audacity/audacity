@@ -51,7 +51,7 @@ EffectStyledDialogView {
 
     // Listen to UI mode changes from the presets bar menu
     Connections {
-        target: presetsBar.manageMenuModel
+        target: presetsBar.presetsBarModel
         function onUseVendorUIChanged() {
             viewerModel.refreshUIMode()
         }
@@ -181,6 +181,8 @@ EffectStyledDialogView {
                         anchors.leftMargin: headerBar.spacing
                         anchors.right: parent.right
 
+                        destructiveMode: false
+                        sessionStateKey: viewerModel.presetSessionKey
                         navigationPanel: root.navigationPanel
                         navigationOrder: 1
 

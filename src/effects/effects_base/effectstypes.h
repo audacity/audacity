@@ -220,6 +220,12 @@ inline EffectId effectIdFromAction(const QString& action)
 using PresetId = wxString;
 using PresetIdList = std::vector<PresetId>;
 
+struct PresetSavedInfo {
+    EffectInstanceId instanceId = -1;
+    EffectId effectId;
+    std::string presetId;
+};
+
 class IEffectMenuItemFactory
 {
 public:

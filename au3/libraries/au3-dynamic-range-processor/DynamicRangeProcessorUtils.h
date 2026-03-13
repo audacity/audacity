@@ -58,7 +58,7 @@ const std::vector<SerializedPreset> serializedCompressorPresets {
       "Compressor:attackMs=\"52.2\" compressionRatio=\"1.2\" kneeWidthDb=\"1\" lookaheadMs=\"33.2\" makeupGainDb=\"1.6\" releaseMs=\"12.2\" showActual=\"1\" showInput=\"0\" showOutput=\"1\" showTarget=\"1\" thresholdDb=\"-23.5\"" },
     /*i18n-hint: This is the name of an effect preset.*/
     { XO("Beefy Master"),
-      "Compressor:attackMs=\"49.6\" compressionRatio=\"1.2\" kneeWidthDb=\"4.9\" lookaheadMs=\"100.4\" makeupGainDb=\"2.5\" releaseMs=\"17.9\" showActual=\"1\" showInput=\"0\" showOutput=\"1\" showTarget=\"0\" thresholdDb=\"-16.8\"" },
+      "Compressor:attackMs=\"49.6\" compressionRatio=\"1.2\" kneeWidthDb=\"4.9\" lookaheadMs=\"100.0\" makeupGainDb=\"2.5\" releaseMs=\"17.9\" showActual=\"1\" showInput=\"0\" showOutput=\"1\" showTarget=\"0\" thresholdDb=\"-16.8\"" },
     /*i18n-hint: This is the name of an effect preset.*/
     { XO("Make It Right Master"),
       "Compressor:attackMs=\"1\" compressionRatio=\"1.4\" kneeWidthDb=\"1\" lookaheadMs=\"10\" makeupGainDb=\"1.6\" releaseMs=\"1\" showActual=\"1\" showInput=\"0\" showOutput=\"1\" showTarget=\"0\" thresholdDb=\"-6.5\"" },

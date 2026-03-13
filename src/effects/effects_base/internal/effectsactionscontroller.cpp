@@ -43,7 +43,8 @@ void EffectsActionsController::registerActions()
 
     // presets
     dispatcher()->reg(this, ActionQuery("action://effects/presets/apply"), this, &EffectsActionsController::applyPreset);
-    dispatcher()->reg(this, ActionQuery("action://effects/presets/save"), this, &EffectsActionsController::saveAsPreset);
+    dispatcher()->reg(this, ActionQuery("action://effects/presets/save"), this, &EffectsActionsController::savePreset);
+    dispatcher()->reg(this, ActionQuery("action://effects/presets/save_as"), this, &EffectsActionsController::savePresetAs);
     dispatcher()->reg(this, ActionQuery("action://effects/presets/delete"), this, &EffectsActionsController::deletePreset);
     dispatcher()->reg(this, ActionQuery("action://effects/presets/import"), this, &EffectsActionsController::importPreset);
     dispatcher()->reg(this, ActionQuery("action://effects/presets/export"), this, &EffectsActionsController::exportPreset);
@@ -81,17 +82,28 @@ void EffectsActionsController::applyPreset(const muse::actions::ActionQuery& q)
 
     EffectInstanceId effectInstanceId = q.param("instanceId").toInt();
     PresetId presetId = q.param("presetId").toString();
-    presetsScenario()->applyPreset(effectInstanceId, presetId);
+    presetsScenario()->loadPreset(effectInstanceId, presetId);
 }
 
-void EffectsActionsController::saveAsPreset(const ActionQuery& q)
+void EffectsActionsController::savePresetAs(const ActionQuery& q)
 {
     IF_ASSERT_FAILED(q.contains("instanceId")) {
         return;
     }
 
     EffectInstanceId effectInstanceId = q.param("instanceId").toInt();
-    presetsScenario()->saveCurrentAsPreset(effectInstanceId);
+    presetsScenario()->savePresetAs(effectInstanceId);
+}
+
+void EffectsActionsController::savePreset(const ActionQuery& q)
+{
+    IF_ASSERT_FAILED(q.contains("instanceId") && q.contains("presetId")) {
+        return;
+    }
+
+    const EffectInstanceId effectInstanceId = q.param("instanceId").toInt();
+    const PresetId presetId = q.param("presetId").toString();
+    presetsScenario()->savePreset(effectInstanceId, presetId);
 }
 
 void EffectsActionsController::deletePreset(const ActionQuery& q)

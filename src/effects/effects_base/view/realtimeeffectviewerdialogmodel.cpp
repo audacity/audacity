@@ -134,15 +134,26 @@ void RealtimeEffectViewerDialogModel::prop_setEffectState(const QString& effectS
 
     m_effectState = reinterpret_cast<RealtimeEffectState*>(effectState.toULongLong())->shared_from_this();
     const auto effectId = m_effectState->GetID().ToStdString();
-    const auto type = effectsProvider()->effectSymbol(effectId);
     const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(m_effectState->GetInstance());
     instancesRegister()->regInstance(muse::String::fromStdString(effectId), instance, m_effectState->GetAccess());
 
     emit isActiveChanged();
     emit trackNameChanged();
     emit titleChanged();
+    emit presetSessionKeyChanged();
     emit isMasterEffectChanged();
     emit effectFamilyChanged();
+}
+
+QString RealtimeEffectViewerDialogModel::presetSessionKey() const
+{
+    if (!m_effectState) {
+        return {};
+    }
+
+    const QString effectId = QString::fromStdString(m_effectState->GetID().ToStdString());
+    const quintptr effectStatePtr = reinterpret_cast<quintptr>(m_effectState.get());
+    return QStringLiteral("%1:%2").arg(effectId).arg(effectStatePtr);
 }
 
 void RealtimeEffectViewerDialogModel::unregisterState()
@@ -154,6 +165,7 @@ void RealtimeEffectViewerDialogModel::unregisterState()
     const auto instance = std::dynamic_pointer_cast<effects::EffectInstance>(m_effectState->GetInstance());
     instancesRegister()->unregInstance(instance);
     m_effectState.reset();
+    emit presetSessionKeyChanged();
 }
 
 QString RealtimeEffectViewerDialogModel::prop_trackName() const

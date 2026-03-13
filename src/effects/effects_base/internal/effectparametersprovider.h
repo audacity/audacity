@@ -19,8 +19,7 @@ class EffectParametersProvider : public IEffectParametersProvider, public muse::
     muse::Inject<IParameterExtractorRegistry> parameterExtractorRegistry{ this };
 
 public:
-    EffectParametersProvider(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+    EffectParametersProvider(const muse::modularity::ContextPtr& ctx);
 
     // IEffectParametersProvider interface
     ParameterInfoList parameters(EffectInstanceId instanceId) const override;

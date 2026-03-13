@@ -12,10 +12,16 @@ static const muse::Settings::Key APPLY_EFFECT_TO_ALL_AUDIO(moduleName, "effects/
 static const muse::Settings::Key EFFECT_MENU_ORGANIZATION(moduleName, "effects/effectMenuOrganization");
 static const muse::Settings::Key PREVIEW_MAX_DURATION(moduleName, "effects/previewMaxDuration");
 static const std::string EFFECT_UI_MODE_PREFIX = "effects/effectUIMode/";
+static const std::string LAST_USED_PRESET_PREFIX = "effects/lastUsedPreset/";
 
 static muse::Settings::Key makeEffectUIModeKey(const EffectId& effectId)
 {
     return { moduleName, EFFECT_UI_MODE_PREFIX + effectId.toStdString() };
+}
+
+static muse::Settings::Key makeLastUsedPresetKey(const EffectId& effectId)
+{
+    return { moduleName, LAST_USED_PRESET_PREFIX + effectId.toStdString() };
 }
 
 void EffectsConfiguration::init()
@@ -107,4 +113,32 @@ void EffectsConfiguration::setEffectUIMode(const EffectId& effectId, EffectUIMod
 muse::async::Notification EffectsConfiguration::effectUIModeChanged() const
 {
     return m_effectUIModeChanged;
+}
+
+std::string EffectsConfiguration::lastUsedPreset(const EffectId& effectId) const
+{
+    if (effectId.empty()) {
+        return {};
+    }
+
+    const muse::Val value = muse::settings()->value(makeLastUsedPresetKey(effectId));
+    if (value.isNull()) {
+        return {};
+    }
+
+    return value.toString();
+}
+
+void EffectsConfiguration::setLastUsedPreset(const EffectId& effectId, const std::string& presetId)
+{
+    if (effectId.empty()) {
+        return;
+    }
+
+    const muse::Settings::Key key = makeLastUsedPresetKey(effectId);
+    if (muse::settings()->value(key).toString() == presetId) {
+        return;
+    }
+
+    muse::settings()->setSharedValue(key, muse::Val(presetId));
 }

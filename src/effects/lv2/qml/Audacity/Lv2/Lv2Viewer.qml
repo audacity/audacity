@@ -26,6 +26,8 @@ Rectangle {
 
     QtObject {
         id: prv
+
+        property AbstractMenuModel activeMenuModel: null
         property var viewModel: {
             var viewModel = Lv2ViewModelFactory.createModel(root, root.instanceId, root.effectState)
             viewModel.onExternalUiClosed.connect(function () {
@@ -37,7 +39,7 @@ Rectangle {
 
     Component.onCompleted: {
         prv.viewModel.init()
-        Qt.callLater(manageMenuModel.load)
+        Qt.callLater(presetsBarModel.load)
     }
 
     Component.onDestruction: {
@@ -57,11 +59,12 @@ Rectangle {
         var py = parent.y + parent.height
         var pos = mapFromItem(parent, px, py)
 
-        menuLoader.show(pos, manageMenuModel)
+        prv.activeMenuModel = presetsBarModel.presetContextMenu()
+        menuLoader.show(pos, prv.activeMenuModel)
     }
 
-    EffectManageMenu {
-        id: manageMenuModel
+    EffectPresetsBarModel {
+        id: presetsBarModel
         instanceId: root.instanceId
     }
 
@@ -69,7 +72,9 @@ Rectangle {
         id: menuLoader
 
         onHandleMenuItem: function (itemId) {
-            manageMenuModel.handleMenuItem(itemId)
+            if (prv.activeMenuModel) {
+                prv.activeMenuModel.handleMenuItem(itemId)
+            }
         }
     }
 
