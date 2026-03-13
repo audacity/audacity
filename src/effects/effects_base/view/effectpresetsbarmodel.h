@@ -13,6 +13,7 @@
 #include "effects/effects_base/ieffectinstancesregister.h"
 #include "effects/effects_base/ieffectsconfiguration.h"
 #include "effects/effects_base/ieffectsprovider.h"
+#include "effects/effects_base/ipresetstatesregister.h"
 
 #include "effectsavecontextmenu.h"
 #include "presetscontextmenumodel.h"
@@ -38,6 +39,7 @@ class EffectPresetsBarModel : public QObject, public muse::Injectable, public mu
     muse::Inject<IEffectInstancesRegister> instancesRegister { this };
     muse::Inject<IEffectsProvider> effectsProvider { this };
     muse::Inject<IEffectParametersProvider> parametersProvider { this };
+    muse::Inject<IPresetStatesRegister> presetStatesRegister { this };
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
 
 public:
@@ -61,7 +63,7 @@ public:
     Q_INVOKABLE void savePresetAs();
     Q_INVOKABLE void deletePreset();
     Q_INVOKABLE void commitSelectedPreset();
-    Q_INVOKABLE void restoreInitialSessionPresetState();
+    Q_INVOKABLE void restoreInitialPresetState();
     Q_INVOKABLE muse::uicomponents::AbstractMenuModel* saveContextMenu();
     Q_INVOKABLE muse::uicomponents::AbstractMenuModel* presetContextMenu();
 
@@ -85,19 +87,18 @@ private:
     bool isFactoryPreset(const QString& presetId) const;
     int factoryPresetIndex(const QString& presetId) const;
     QString matchPresetForCurrentSettings() const;
-    void captureInitialSessionPresetState();
-    bool restoreSessionPresetState();
+    void captureInitialPresetState();
+    bool restorePresetState();
     void restoreLastUsedPreset(const EffectId& effectId);
     void restoreMatchedPresetForCurrentSettings();
-    QString sessionPresetStateKey() const;
-    void persistSessionPresetState();
+    void persistPresetState();
     bool isCurrentPresetUnsaved() const;
     void setPresetUnsaved(bool unsaved);
     void updatePresetDisplayNames();
     void updatePresetBar();
 
     int m_instanceId = -1;
-    QString m_sessionStateKey;
+    QString m_presetStateKey;
 
     QString m_currentPreset;
     QStringList m_userPresets;

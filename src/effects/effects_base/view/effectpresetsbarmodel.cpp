@@ -8,21 +8,12 @@
 #include "au3-effects/Effect.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 
-#include <QHash>
-
 using namespace muse;
 using namespace muse::actions;
 using namespace au::effects;
 
 namespace {
 constexpr int USER_PRESET_ICON_CODE = 0xEF99;
-
-struct SessionPresetState {
-    QString presetId;
-    bool unsaved = false;
-};
-
-QHash<QString, SessionPresetState> s_sessionPresetStates;
 }
 
 EffectPresetsBarModel::EffectPresetsBarModel(QObject* parent)
@@ -60,7 +51,7 @@ void EffectPresetsBarModel::load()
 
         m_currentPreset = presetId;
         m_isPresetUnsaved = false;
-        persistSessionPresetState();
+        persistPresetState();
         updatePresetDisplayNames();
         updatePresetBar();
     }, muse::async::Asyncable::Mode::SetReplace);
@@ -83,8 +74,8 @@ void EffectPresetsBarModel::load()
 
     reload(effectId, m_instanceId);
 
-    if (restoreSessionPresetState()) {
-        captureInitialSessionPresetState();
+    if (restorePresetState()) {
+        captureInitialPresetState();
         return;
     }
 
@@ -96,7 +87,7 @@ void EffectPresetsBarModel::load()
         restoreMatchedPresetForCurrentSettings();
     }
 
-    captureInitialSessionPresetState();
+    captureInitialPresetState();
 }
 
 void EffectPresetsBarModel::reload(const EffectId& effectId, const EffectInstanceId& instanceId)
@@ -142,11 +133,11 @@ void EffectPresetsBarModel::reload(const EffectId& effectId, const EffectInstanc
     if (!m_currentPreset.isEmpty() && !hasPreset(m_currentPreset)) {
         m_currentPreset.clear();
         m_isPresetUnsaved = false;
-        persistSessionPresetState();
+        persistPresetState();
         emit presetChanged();
     } else if (!m_currentPreset.isEmpty()) {
         m_isPresetUnsaved = isCurrentPresetUnsaved();
-        persistSessionPresetState();
+        persistPresetState();
     } else {
         m_isPresetUnsaved = false;
     }
@@ -156,27 +147,28 @@ void EffectPresetsBarModel::reload(const EffectId& effectId, const EffectInstanc
     emit canResetPresetChanged();
 }
 
-bool EffectPresetsBarModel::restoreSessionPresetState()
+bool EffectPresetsBarModel::restorePresetState()
 {
-    const QString sessionStateKey = sessionPresetStateKey();
-    const auto sessionPresetStateIt = s_sessionPresetStates.constFind(sessionStateKey);
-    if (sessionPresetStateIt == s_sessionPresetStates.cend()) {
+    const EffectId effectId = instancesRegister()->effectIdByInstanceId(m_instanceId);
+    const std::string key = presetStatesRegister()->makePresetStateKey(effectId, m_usedDestructively, m_presetStateKey.toStdString());
+    const std::optional<IPresetStatesRegister::PresetState> presetState = presetStatesRegister()->presetState(key);
+    if (!presetState.has_value()) {
         return false;
     }
 
-    const SessionPresetState& sessionPresetState = sessionPresetStateIt.value();
-    if (!hasPreset(sessionPresetState.presetId)) {
+    const QString presetId = QString::fromStdString(presetState->presetId);
+    if (!hasPreset(presetId)) {
         return false;
     }
 
-    m_currentPreset = sessionPresetState.presetId;
-    m_isPresetUnsaved = sessionPresetState.unsaved;
+    m_currentPreset = presetId;
+    m_isPresetUnsaved = presetState->unsaved;
     updatePresetDisplayNames();
     updatePresetBar();
     return true;
 }
 
-void EffectPresetsBarModel::captureInitialSessionPresetState()
+void EffectPresetsBarModel::captureInitialPresetState()
 {
     if (!m_currentPreset.isEmpty() && hasPreset(m_currentPreset)) {
         m_initialPreset = m_currentPreset;
@@ -198,31 +190,32 @@ void EffectPresetsBarModel::restoreLastUsedPreset(const EffectId& effectId)
     m_currentPreset = storedPresetId;
     resetPreset();
     m_isPresetUnsaved = false;
-    persistSessionPresetState();
+    persistPresetState();
     updatePresetDisplayNames();
     updatePresetBar();
 }
 
-void EffectPresetsBarModel::restoreInitialSessionPresetState()
+void EffectPresetsBarModel::restoreInitialPresetState()
 {
-    const QString key = sessionPresetStateKey();
-    if (key.isEmpty()) {
+    const EffectId effectId = instancesRegister()->effectIdByInstanceId(m_instanceId);
+    const std::string key = presetStatesRegister()->makePresetStateKey(effectId, m_usedDestructively, m_presetStateKey.toStdString());
+    if (key.empty()) {
         return;
     }
 
     if (!m_initialPreset.has_value() || !hasPreset(*m_initialPreset)) {
-        s_sessionPresetStates.remove(key);
+        presetStatesRegister()->removePresetState(key);
         return;
     }
 
-    s_sessionPresetStates.insert(key, SessionPresetState { *m_initialPreset, m_initialPresetUnsaved });
+    presetStatesRegister()->setPresetState(key, { m_initialPreset->toStdString(), m_initialPresetUnsaved });
 }
 
 void EffectPresetsBarModel::restoreMatchedPresetForCurrentSettings()
 {
     m_currentPreset = matchPresetForCurrentSettings();
     m_isPresetUnsaved = false;
-    persistSessionPresetState();
+    persistPresetState();
     updatePresetDisplayNames();
     updatePresetBar();
 }
@@ -247,16 +240,16 @@ void EffectPresetsBarModel::setInstanceId_prop(int newInstanceId)
 
 QString EffectPresetsBarModel::sessionStateKey() const
 {
-    return m_sessionStateKey;
+    return m_presetStateKey;
 }
 
 void EffectPresetsBarModel::setSessionStateKey(const QString& newSessionStateKey)
 {
-    if (m_sessionStateKey == newSessionStateKey) {
+    if (m_presetStateKey == newSessionStateKey) {
         return;
     }
 
-    m_sessionStateKey = newSessionStateKey;
+    m_presetStateKey = newSessionStateKey;
     emit sessionStateKeyChanged();
 }
 
@@ -275,7 +268,7 @@ void EffectPresetsBarModel::setPreset(QString presetId)
     m_currentPreset = presetId;
     resetPreset();
     m_isPresetUnsaved = false;
-    persistSessionPresetState();
+    persistPresetState();
     updatePresetDisplayNames();
     updatePresetBar();
 }
@@ -366,7 +359,7 @@ void EffectPresetsBarModel::commitSelectedPreset()
     }
 
     configuration()->setLastUsedPreset(effectId, m_currentPreset.toStdString());
-    persistSessionPresetState();
+    persistPresetState();
 }
 
 bool EffectPresetsBarModel::useVendorUI() const
@@ -489,35 +482,20 @@ QString EffectPresetsBarModel::matchPresetForCurrentSettings() const
     return {};
 }
 
-QString EffectPresetsBarModel::sessionPresetStateKey() const
+void EffectPresetsBarModel::persistPresetState()
 {
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(m_instanceId);
-    if (effectId.empty()) {
-        return {};
-    }
-
-    if (m_usedDestructively) {
-        return QStringLiteral("destructive:%1").arg(effectId.toStdString());
-    }
-
-    return !m_sessionStateKey.isEmpty()
-           ? QStringLiteral("realtime:%1").arg(m_sessionStateKey)
-           : QString();
-}
-
-void EffectPresetsBarModel::persistSessionPresetState()
-{
-    const QString key = sessionPresetStateKey();
-    if (key.isEmpty()) {
+    const std::string key = presetStatesRegister()->makePresetStateKey(effectId, m_usedDestructively, m_presetStateKey.toStdString());
+    if (key.empty()) {
         return;
     }
 
     if (m_currentPreset.isEmpty() || !hasPreset(m_currentPreset)) {
-        s_sessionPresetStates.remove(key);
+        presetStatesRegister()->removePresetState(key);
         return;
     }
 
-    s_sessionPresetStates.insert(key, SessionPresetState { m_currentPreset, m_isPresetUnsaved });
+    presetStatesRegister()->setPresetState(key, { m_currentPreset.toStdString(), m_isPresetUnsaved });
 }
 
 bool EffectPresetsBarModel::isCurrentPresetUnsaved() const
@@ -579,7 +557,7 @@ void EffectPresetsBarModel::setPresetUnsaved(bool unsaved)
     }
 
     m_isPresetUnsaved = unsaved;
-    persistSessionPresetState();
+    persistPresetState();
     updatePresetDisplayNames();
     emit canResetPresetChanged();
 }

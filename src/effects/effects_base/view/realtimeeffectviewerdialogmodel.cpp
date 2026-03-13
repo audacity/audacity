@@ -151,14 +151,9 @@ QString RealtimeEffectViewerDialogModel::presetSessionKey() const
         return {};
     }
 
-    const auto trackId = realtimeEffectService()->trackId(m_effectState);
-    if (!trackId.has_value()) {
-        return {};
-    }
-
     const QString effectId = QString::fromStdString(m_effectState->GetID().ToStdString());
     const quintptr effectStatePtr = reinterpret_cast<quintptr>(m_effectState.get());
-    return QStringLiteral("%1:%2:%3").arg(*trackId).arg(effectId).arg(effectStatePtr);
+    return QStringLiteral("%1:%2").arg(effectId).arg(effectStatePtr);
 }
 
 void RealtimeEffectViewerDialogModel::unregisterState()

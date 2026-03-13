@@ -70,7 +70,7 @@ EffectStyledDialogView {
 
             if (prv.shouldRollbackOnClose) {
                 viewerModel.rollbackSettings()
-                presetsBar.presetsBarModel.restoreInitialSessionPresetState()
+                presetsBar.presetsBarModel.restoreInitialPresetState()
             }
         }
     }

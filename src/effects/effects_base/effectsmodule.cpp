@@ -24,6 +24,7 @@
 #include "internal/parameterextractorregistry.h"
 
 #include "view/effectpresetsbarmodel.h"
+#include "view/presetstatesregister.h"
 #include "view/effectsuiengine.h"
 #include "view/effectsviewutils.h"
 #include "view/destructiveeffectviewerdialogmodel.h"
@@ -121,6 +122,7 @@ void EffectsContext::registerExports()
     ioc()->registerExport<IEffectParametersProvider>(mname, new EffectParametersProvider(iocContext()));
     ioc()->registerExport<IEffectInstancesRegister>(mname, new EffectInstancesRegister(iocContext()));
     ioc()->registerExport<IEffectExecutionScenario>(mname, std::make_shared<EffectExecutionScenario>(iocContext()));
+    ioc()->registerExport<IPresetStatesRegister>(mname, new PresetStatesRegister());
     ioc()->registerExport<IRealtimeEffectService>(mname, m_realtimeEffectService);
 }
 
