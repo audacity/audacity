@@ -366,7 +366,7 @@ muse::Ret EffectsProvider::performEffect(au3::Au3Project& project, Effect* effec
 
             const std::string title
                 = (effect->GetType()
-                   == EffectTypeGenerate ? muse::qtrc("effects", "Generating %1...") : muse::qtrc("effects", "Applying %1...")).arg(
+                   == EffectTypeGenerate ? muse::qtrc("effects", "Generating %1…") : muse::qtrc("effects", "Applying %1…")).arg(
                       QString::fromUtf8(name.Translation().ToUTF8().data())).toStdString();
 
             ::ProgressDialog progress{ iocContext(), title };

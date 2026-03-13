@@ -289,7 +289,7 @@ MenuItem* AppMenuModel::makeViewMenu()
 
     MenuItemList viewItems {
         makeMenu(TranslatableString("appshell/menu/zoom", "Zoom"), makeZoomItems(), "menu-zoom"),
-        makeMenu(TranslatableString("appshell/menu/skip", "Skip to "), makeSkipToItems(), "menu-skip", false),
+        makeMenu(TranslatableString("appshell/menu/skip", "Skip to"), makeSkipToItems(), "menu-skip", false),
     };
 
     if (effectsItem) {

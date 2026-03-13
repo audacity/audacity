@@ -80,16 +80,16 @@ ProjectsView {
             if (isSatisfied || !cloudProjectsModel.hasMore) {
                 return
             }
-            
+
             updateDesiredRowCountScheduled = true
 
-            Qt.callLater(function() {
+            Qt.callLater(function () {
                 let view = activeView ? activeView.view : null
                 let columns = view ? (view.columns || 1) : 1
-                
+
                 let rowsToAdd = Math.max(3 - remainingFullRowsBelowViewport, 1)
                 let newDesiredRowCount = cloudProjectsModel.rowCount + rowsToAdd * columns
- 
+
                 if (cloudProjectsModel.desiredRowCount < newDesiredRowCount) {
                     cloudProjectsModel.desiredRowCount = newDesiredRowCount
                 }
@@ -100,14 +100,14 @@ ProjectsView {
     }
 
     sourceComponent: {
-        switch(cloudProjectsModel.state) {
-            case CloudProjectsModel.NotSignedIn:
-                return notSignedInComp
-            case CloudProjectsModel.Error:
-                return errorComp
-            case CloudProjectsModel.Fine:
-            case CloudProjectsModel.Loading:
-                break;
+        switch (cloudProjectsModel.state) {
+        case CloudProjectsModel.NotSignedIn:
+            return notSignedInComp
+        case CloudProjectsModel.Error:
+            return errorComp
+        case CloudProjectsModel.Fine:
+        case CloudProjectsModel.Loading:
+            break
         }
 
         if (cloudProjectsModel.rowCount == 0 && !cloudProjectsModel.hasMore && cloudProjectsModel.state != CloudProjectsModel.Loading) {
@@ -172,7 +172,7 @@ ProjectsView {
                     header: qsTrc("project", "Modified")
 
                     width: function (parentWidth) {
-                        let parentWidthExclusingSpacing = parentWidth - list.columns.length * list.view.columnSpacing;
+                        let parentWidthExclusingSpacing = parentWidth - list.columns.length * list.view.columnSpacing
                         return 0.25 * parentWidthExclusingSpacing
                     }
 
@@ -205,13 +205,12 @@ ProjectsView {
                         }
                     }
                 },
-
                 ProjectsListView.ColumnItem {
                     id: sizeColumn
                     header: qsTrc("global", "Size", "file size")
 
                     width: function (parentWidth) {
-                        let parentWidthExclusingSpacing = parentWidth - list.columns.length * list.view.columnSpacing;
+                        let parentWidthExclusingSpacing = parentWidth - list.columns.length * list.view.columnSpacing
                         return 0.15 * parentWidthExclusingSpacing
                     }
 
@@ -282,7 +281,7 @@ ProjectsView {
                 anchors.right: parent.right
                 anchors.rightMargin: root.sideMargin
 
-                title: qsTrc("project", "You don't have any online projects yet")
+                title: qsTrc("project", "You don’t have any online projects yet")
                 body: qsTrc("project", "Projects will appear here when you publish a project")
             }
         }

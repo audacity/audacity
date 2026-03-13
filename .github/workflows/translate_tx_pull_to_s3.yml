@@ -1,0 +1,131 @@
+name: '[AU4] Translations: Pull from Transifex and push to S3'
+
+on:
+  schedule:
+    # Every 15 minutes, but only on Sunday at 12:00 a PR is created
+    - cron: "*/15 * * * 1-6"           # Every 15 minutes, Mon–Sat (except on Sunday)
+    - cron: "*/15 0-11,13-23 * * 0"    # Every 15 minutes on Sunday, except 12:xx (between 12:00 and 12:59)
+    - cron: "15,30,45 12 * * 0"        # At 12:15, 12:30, 12:45 on Sunday
+    - cron: "0 12 * * Sun"             # At 12:00 on Sunday (triggers PR creation)
+  workflow_dispatch:
+    inputs:
+      create_pull_request:
+        description: "Create pull request"
+        required: true
+        type: boolean
+        default: true
+      push_to_s3:
+        description: "Push to S3"
+        required: true
+        type: boolean
+        default: false
+
+jobs:
+  tx_pull:
+    runs-on: ubuntu-slim
+    if: github.event_name != 'schedule' || github.repository == 'audacity/audacity'
+    steps:
+      - name: Check preconditions
+        run: |
+          if [ -z "${{ secrets.TRANSIFEX_API_TOKEN }}" ]; then
+            echo "::error::TRANSIFEX_API_TOKEN is empty"
+            exit 1
+          fi
+          if [ -z "${{ secrets.S3_KEY }}" ]; then
+            echo "::error::S3_KEY is empty"
+            exit 1
+          fi
+          if [ -z "${{ secrets.S3_SECRET }}" ]; then
+            echo "::error::S3_SECRET is empty"
+            exit 1
+          fi
+
+      - name: "Configure workflow"
+        id: configure
+        run: |
+          DO_CREATE_PR='false'
+          DO_PUSH_TO_S3='false'
+
+          if [[ "${{ github.event_name }}" == "schedule" ]]; then
+            DO_CREATE_PR="${{ github.event.schedule == '0 12 * * Sun'}}"
+            # TODO: Re-enable once S3_KEY and S3_SECRET are properly configured
+            # DO_PUSH_TO_S3='true'
+            DO_PUSH_TO_S3='false'
+          else
+            if [[ "${{ inputs.create_pull_request }}" == "true" ]]; then
+              DO_CREATE_PR='true'
+            fi
+            if [[ "${{ inputs.push_to_s3 }}" == "true" ]]; then
+              # TODO: Re-enable once S3_KEY and S3_SECRET are properly configured
+              # DO_PUSH_TO_S3='true'
+              DO_PUSH_TO_S3='false'
+            fi
+          fi
+
+          if [[ "$DO_CREATE_PR" != "true" && "$DO_PUSH_TO_S3" != "true" ]]; then
+            echo "::warning::Nothing to do"
+            exit 1
+          fi
+
+          echo "DO_CREATE_PR=$DO_CREATE_PR" | tee -a $GITHUB_OUTPUT
+          echo "DO_PUSH_TO_S3=$DO_PUSH_TO_S3" | tee -a $GITHUB_OUTPUT
+
+      - name: Clone repository
+        uses: actions/checkout@v6
+
+      - name: Install Qt for lrelease
+        if: steps.configure.outputs.DO_PUSH_TO_S3 == 'true'
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: 6.10.2
+          host: "linux"
+          target: "desktop"
+          arch: "linux_gcc_64"
+          cache: true
+
+      - name: Setup environment for pushing to S3
+        if: steps.configure.outputs.DO_PUSH_TO_S3 == 'true'
+        run: |
+          bash ./buildscripts/ci/tools/s3_install.sh --s3_key ${{ secrets.S3_KEY }} --s3_secret ${{ secrets.S3_SECRET }}
+
+          bash ./buildscripts/ci/tools/make_build_number.sh
+          BUILD_NUMBER=$(cat ./build.artifacts/env/build_number.env)
+
+          echo "BUILD_NUMBER=$BUILD_NUMBER" | tee -a $GITHUB_ENV
+
+      - name: Update .ts files (tx pull)
+        uses: transifex/cli-action@v2
+        with:
+          token: ${{ secrets.TRANSIFEX_API_TOKEN }}
+          args: "pull -f"
+
+      - name: Create Pull Request
+        id: create-pr
+        if: steps.configure.outputs.DO_CREATE_PR == 'true'
+        uses: peter-evans/create-pull-request@v8
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          author: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
+          commit-message: "Update in-repo translations from Transifex"
+          branch: "ci_tx_pull${{github.ref_name && format('_{0}', github.ref_name) || ''}}"
+          add-paths: share/locale/*
+          title: "Update in-repo translations from Transifex"
+          body: "Run `tx pull`"
+          labels: "translation / i18n"
+          reviewers: kryksyh
+
+      - name: Add PR link to job summary
+        if: steps.configure.outputs.DO_CREATE_PR == 'true' && steps.create-pr.outputs.pull-request-number
+        run: |
+          echo "Pull Request: [#${{ steps.create-pr.outputs.pull-request-number }}](${{ steps.create-pr.outputs.pull-request-url }})" >> $GITHUB_STEP_SUMMARY
+
+      - name: Pack and send to s3
+        if: steps.configure.outputs.DO_PUSH_TO_S3 == 'true'
+        run: bash ./buildscripts/ci/translation/s3_packandsend.sh
+
+      - name: Upload artifacts on GitHub
+        if: steps.configure.outputs.DO_PUSH_TO_S3 == 'true'
+        uses: actions/upload-artifact@v6
+        with:
+          name: Audacity_locale_${{ env.BUILD_NUMBER }}
+          path: ./share/locale

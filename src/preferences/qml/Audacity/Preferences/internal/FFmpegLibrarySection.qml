@@ -23,7 +23,7 @@ BaseSection {
 
         Row {
             StyledTextLabel {
-                text: qsTrc("preferences", "FFmpeg library version: ")
+                text: qsTrc("preferences", "FFmpeg library version:")
             }
 
             StyledTextLabel {
@@ -43,7 +43,7 @@ BaseSection {
 
                 property var newLibPath
 
-                onTextEditingFinished: function(newTextValue) {
+                onTextEditingFinished: function (newTextValue) {
                     let result = ffmpegPrefModel.setFFmpegLibraryPath(newTextValue)
                     currentText = ffmpegPrefModel.ffmpegLibraryPath
                     inputField.text = ffmpegPrefModel.ffmpegLibraryPath

@@ -150,7 +150,7 @@ option(AU_USE_SOUNDTOUCH "Build with SoundTouch support for pitch/tempo effects"
 # === Setup ===
 
 # === Pack ===
-option(MU_RUN_LRELEASE "Generate .qm files" ON)
+option(AU_RUN_LRELEASE "Generate .qm files" ON)
 
 # === Compile ===
 option(MU_COMPILE_INSTALL_QTQML_FILES "Whether to bundle qml files along with the installation (relevant on MacOS only)" ON)
