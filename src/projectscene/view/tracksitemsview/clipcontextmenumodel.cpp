@@ -57,6 +57,15 @@ void ClipContextMenuModel::load()
         makeItemWithArg("clip-render-pitch-speed"),
     };
 
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (prj) {
+        prj->clipList(m_clipKey.trackId()).onItemChanged(this, [this](const trackedit::Clip& clip) {
+            if (clip.key == m_clipKey.key) {
+                load();
+            }
+        }, muse::async::Asyncable::Mode::SetReplace);
+    }
+
     setItems(items);
 
     updateColorCheckedState();
