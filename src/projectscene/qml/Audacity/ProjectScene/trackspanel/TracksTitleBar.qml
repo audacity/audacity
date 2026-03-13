@@ -69,9 +69,15 @@ Item {
                 color: effectsTitleBar.color
 
                 FlatButton {
+                    id: closeEffectsSectionButton
+
                     anchors.centerIn: parent
                     width: parent.width - 2 * effectsTitleBar.padding
                     height: parent.height - 2 * effectsTitleBar.padding
+
+                    navigation.name: "CloseEffectsSection"
+                    navigation.panel: buttonContainer.navigation
+                    navigation.order: 0
 
                     normalColor: ui.theme.backgroundPrimaryColor
                     hoverHitColor: ui.theme.buttonColor
@@ -124,6 +130,7 @@ Item {
 
                 navigation.name: "AddTrack"
                 navigation.panel: buttonContainer.navigation
+                navigation.order: closeEffectsSectionButton.navigation.order + 1
 
                 backgroundRadius: 3
                 normalColor: ui.theme.buttonColor
