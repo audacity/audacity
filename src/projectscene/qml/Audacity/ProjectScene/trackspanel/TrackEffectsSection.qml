@@ -20,7 +20,7 @@ Rectangle {
     property NavigationSection navigationSection: null
     property NavigationPanel navigationPanel: null
     property int navigationOrderStart: 0
-    readonly property int navigationOrderEnd: navigationOrderStart + effectList.count * 3 + 1
+    readonly property int navigationOrderEnd: navigationOrderStart + effectList.count + 1
 
     color: ui.theme.backgroundPrimaryColor
 

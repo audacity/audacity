@@ -50,7 +50,7 @@ Rectangle {
         footer: listMargin
         header: listMargin
 
-        clip: true
+        clip: false
         anchors.margins: 0
 
         delegate: RealtimeEffectListItem {
@@ -61,7 +61,7 @@ Rectangle {
             listView: trackEffectList
             width: trackEffectList.width - scrollbarContainer.width
             navigationPanel: root.navigationPanel
-            navigationOrder: root.navigationOrderStart + model.index * 3
+            navigationOrder: root.navigationOrderStart + model.index
         }
 
         ScrollBar.vertical: scrollbar

@@ -19,6 +19,15 @@ ListItemBlank {
 
     property NavigationPanel navigationPanel: null
     property int navigationOrder: 0
+    property bool innerNavigationActive: false
+
+    property NavigationPanel innerNavigationPanel: NavigationPanel {
+        name: prv.title + " controls"
+        enabled: root.enabled && root.visible && root.innerNavigationActive
+        section: root.navigationPanel ? root.navigationPanel.section : null
+        direction: NavigationPanel.Horizontal
+        order: root.navigationPanel ? root.navigationPanel.order : 0
+    }
 
     QtObject {
         id: prv
@@ -36,8 +45,34 @@ ListItemBlank {
     background.color: "transparent"
     hoverHitColor: "transparent"
 
+    navigation.panel: root.navigationPanel
+    navigation.order: root.navigationOrder
+    focusBorder.drawOutsideParent: true
+
+    function activateInnerNavigation() {
+        if (root.innerNavigationActive) {
+            return
+        }
+
+        root.innerNavigationActive = true
+        gripButton.navigation.requestActive()
+    }
+
+    function deactivateInnerNavigation() {
+        if (!root.innerNavigationActive) {
+            return
+        }
+
+        root.innerNavigationActive = false
+        root.navigation.requestActive()
+    }
+
     Component.onCompleted: {
         menuModel.init()
+    }
+
+    onNavigationTriggered: {
+        activateInnerNavigation()
     }
 
     Behavior on y {
@@ -88,6 +123,8 @@ ListItemBlank {
             hoverHitColor: normalColor
             accentColor: normalColor
             mouseArea.cursorShape: Qt.SizeAllCursor
+            navigation.panel: root.innerNavigationPanel
+            navigation.order: 0
 
             mouseArea.drag.target: content
             mouseArea.drag.axis: Drag.YAxis
@@ -155,8 +192,8 @@ ListItemBlank {
             Layout.minimumHeight: root.height
             Layout.maximumHeight: root.height
 
-            navigation.panel: root.navigationPanel
-            navigation.order: root.navigationOrder
+            navigation.panel: root.innerNavigationPanel
+            navigation.order: gripButton.navigation.order + 1
             navigation.name: "panel bypass btn - " + prv.title
 
             isMasterEffect: item && item.isMasterEffect
@@ -170,7 +207,7 @@ ListItemBlank {
         FlatButton {
             id: effectNameButton
 
-            navigation.panel: root.navigationPanel
+            navigation.panel: root.innerNavigationPanel
             navigation.order: bypassButton.navigation.order + 1
             navigation.name: "show ui btn - " + prv.title
 
@@ -209,7 +246,7 @@ ListItemBlank {
         FlatButton {
             id: chooseEffectDropdown
 
-            navigation.panel: root.navigationPanel
+            navigation.panel: root.innerNavigationPanel
             navigation.order: effectNameButton.navigation.order + 1
             navigation.name: "replace btn - " + prv.title
 
@@ -239,6 +276,60 @@ ListItemBlank {
                 onHandleMenuItem: function (menuItem) {
                     menuModel.handleMenuItem(menuItem)
                 }
+            }
+        }
+    }
+
+    Connections {
+        target: root.navigation
+
+        function onActiveChanged() {
+            if (root.navigation.active) {
+                root.innerNavigationActive = false
+            }
+        }
+    }
+
+    Connections {
+        target: gripButton.navigation
+
+        function onNavigationEvent(event) {
+            if (event.type === NavigationEvent.Escape) {
+                root.deactivateInnerNavigation()
+                event.accepted = true
+            }
+        }
+    }
+
+    Connections {
+        target: bypassButton.navigation
+
+        function onNavigationEvent(event) {
+            if (event.type === NavigationEvent.Escape) {
+                root.deactivateInnerNavigation()
+                event.accepted = true
+            }
+        }
+    }
+
+    Connections {
+        target: effectNameButton.navigation
+
+        function onNavigationEvent(event) {
+            if (event.type === NavigationEvent.Escape) {
+                root.deactivateInnerNavigation()
+                event.accepted = true
+            }
+        }
+    }
+
+    Connections {
+        target: chooseEffectDropdown.navigation
+
+        function onNavigationEvent(event) {
+            if (event.type === NavigationEvent.Escape) {
+                root.deactivateInnerNavigation()
+                event.accepted = true
             }
         }
     }
