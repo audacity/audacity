@@ -365,8 +365,7 @@ bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudI
             const bool dismissable = false;
             toastService()->show(trc("global", "Success"),
                                  trc("project",
-                                     "All saved changes will now update to the cloud. \
-                You can manage this file from your updated projects page on audio.com"),
+                                     "All saved changes will now update to the cloud. \nYou can manage this file from your updated projects page on audio.com"),
                                  muse::ui::IconCode::Code::TICK,
                                  dismissable,
             {
