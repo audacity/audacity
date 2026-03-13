@@ -46,11 +46,6 @@ void EffectSaveContextMenu::setPreset(QString newPreset)
     emit presetChanged();
 }
 
-bool EffectSaveContextMenu::canSave() const
-{
-    return m_canSave;
-}
-
 void EffectSaveContextMenu::load()
 {
     AbstractMenuModel::load();
@@ -88,7 +83,7 @@ void EffectSaveContextMenu::reload()
     {
         ActionQuery q("action://effects/presets/save_as");
         q.addParam("instanceId", Val(m_instanceId));
-        MenuItem* item = makeMenuItem(q.toString(), TranslatableString("effects", "Save as new"));
+        MenuItem* item = makeMenuItem(q.toString(), TranslatableString("effects", "Save as…"));
         items << item;
     }
 
