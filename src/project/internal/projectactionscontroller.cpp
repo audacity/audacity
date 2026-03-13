@@ -677,9 +677,9 @@ bool ProjectActionsController::saveProject(SaveMode saveMode, SaveLocationType s
     IAudacityProjectPtr project = currentProject();
 
     if (saveMode == SaveMode::Save && !project->isNewlyCreated()) {
-        // if (project->isCloudProject()) {
-        //     return saveProjectAt(SaveLocation(SaveLocationType::Cloud, project->cloudInfo()));
-        // }
+        if (project->isCloudProject()) {
+            return saveProjectAt(SaveLocation(SaveLocationType::Cloud, CloudProjectInfo { QUrl {}, {}, project->displayName() }));
+        }
 
         return saveProjectAt(SaveLocation(SaveLocationType::Local));
     }
