@@ -15,8 +15,8 @@ TrackSpectrogramContextMenuModel::TrackSpectrogramContextMenuModel(QObject* pare
 
 void TrackSpectrogramContextMenuModel::init()
 {
-    frequencySelectionController()->frequencySelectionChanged().onReceive(this, [this](auto, bool complete) {
-        if (complete) {
+    frequencySelectionController()->frequencySelectionChanged().onReceive(this, [this](auto, const std::optional<bool>& complete) {
+        if (complete.value_or(false)) {
             load();
         }
     });

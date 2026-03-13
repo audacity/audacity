@@ -122,9 +122,11 @@ Item {
                 break
             case marquee.handleId.Left:
                 draggedEdges = [leftEdge]
+                // selectionModel.setRulerGuideYPos(-1)
                 break
             case marquee.handleId.Right:
                 draggedEdges = [rightEdge]
+                // selectionModel.setRulerGuideYPos(-1)
                 break
             case marquee.handleId.Top:
                 draggedEdges = [topEdge]
@@ -134,6 +136,7 @@ Item {
                 break
             default:
                 draggedEdges = []
+                // selectionModel.setRulerGuideYPos(-1)
                 // It missed - let the event propagate
                 mouse.accepted = false
                 return
@@ -198,9 +201,10 @@ Item {
                 }
 
                 onPositionChanged: function (mouse) {
-                    const position = centerFrequencyDragHandle.mapToItem(root, mouse.x, mouse.y)
+                    const position = mapToItem(root, mouse.x, mouse.y)
                     selectionModel.dragCenterFrequency(position.y)
-                    root.mousePositionChanged(position.x, position.y)
+                    root.mousePositionChanged(position.x, mapToItem(root, 0, height / 2).y)
+                // selectionModel.setRulerGuideYPos(position.y)
                 }
 
                 onReleased: {
@@ -301,7 +305,11 @@ Item {
             const init = prv.init[name]
             const delta = mouse.y - init.mouseY
             const newTopPos = init.topPos + delta
-            root.selectionController.updateSelectionVerticalResize(newTopPos, init.bottomPos, complete)
+            if (newTopPos < init.bottomPos) {
+                root.selectionController.changeSelectionTopPosition(newTopPos, complete)
+            } else {
+                root.selectionController.changeSelectionBottomPosition(init.bottomPos, complete)
+            }
         }
     }
 
@@ -321,7 +329,11 @@ Item {
             const init = prv.init[name]
             const delta = mouse.y - init.mouseY
             const newBottomPos = init.bottomPos + delta
-            root.selectionController.updateSelectionVerticalResize(init.topPos, newBottomPos, complete)
+            if (newBottomPos > init.topPos) {
+                root.selectionController.changeSelectionBottomPosition(newBottomPos, complete)
+            } else {
+                root.selectionController.changeSelectionTopPosition(init.topPos, complete)
+            }
         }
     }
 }

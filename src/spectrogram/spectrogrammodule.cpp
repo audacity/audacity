@@ -13,6 +13,7 @@
 #include "view/algorithmsectionparameterlistmodel.h"
 #include "view/colorsectionparameterlistmodel.h"
 #include "view/spectrogramchannelrulermodel.h"
+#include "view/spectrogramviewservice.h"
 #include "view/scalesectionparameterlistmodel.h"
 #include "view/globalspectrogramsettingsmodel.h"
 #include "view/trackspectrogramcontextmenumodel.h"
@@ -96,12 +97,14 @@ void SpectrogramContext::registerExports()
     m_au3SpectrogramPainter = std::make_shared<Au3SpectrogramPainter>(iocContext());
     m_spectrogramService = std::make_shared<SpectrogramService>(iocContext());
     m_spectrogramActionsController = std::make_shared<SpectrogramActionsController>(iocContext());
+    m_spectrogramViewService = std::make_shared<SpectrogramViewService>(iocContext());
 
     ioc()->registerExport<ISpectralEffectsRegister>(mname, new SpectralEffectsRegister);
     ioc()->registerExport<ISpectrogramPainter>(mname, m_au3SpectrogramPainter);
     ioc()->registerExport<ISpectrogramService>(mname, m_spectrogramService);
     ioc()->registerExport<IPeakFinderFactory>(mname, new Au3PeakFinderFactory(iocContext()));
     ioc()->registerExport<IFrequencySelectionController>(mname, new FrequencySelectionController(iocContext()));
+    ioc()->registerExport<ISpectrogramViewService>(mname, m_spectrogramViewService);
 }
 
 void SpectrogramContext::resolveImports()
@@ -117,5 +120,6 @@ void SpectrogramContext::onInit(const muse::IApplication::RunMode&)
     m_spectrogramActionsController->init();
     m_au3SpectrogramPainter->init();
     m_spectrogramService->init();
+    m_spectrogramViewService->init();
 }
 }

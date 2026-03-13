@@ -149,7 +149,7 @@ void ViewTracksListModel::load()
         emit dataChanged(index(0), index(lastIndex), { IsDataSelectedRole });
     }, muse::async::Asyncable::Mode::SetReplace);
 
-    frequencySelectionController()->frequencySelectionChanged().onReceive(this, [this](int trackId, bool) {
+    frequencySelectionController()->frequencySelectionChanged().onReceive(this, [this](int trackId, auto) {
         QModelIndex idx = indexOf(trackId);
         if (!idx.isValid()) {
             return;

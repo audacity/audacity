@@ -64,7 +64,8 @@ public:
 
     Q_INVOKABLE void onSelectionHorizontalResize(double x, double x2, bool completed);
     Q_INVOKABLE void startSelectionVerticalResize(spectrogram::SpectrogramHit hit);
-    Q_INVOKABLE void updateSelectionVerticalResize(double y1, double y2, bool completed);
+    Q_INVOKABLE void changeSelectionTopPosition(double y, bool completed);
+    Q_INVOKABLE void changeSelectionBottomPosition(double y, bool completed);
 
     Q_INVOKABLE void selectTrackAudioData(double y);
     Q_INVOKABLE void selectItemData(const TrackItemKey& key);
@@ -104,7 +105,9 @@ private:
 
     bool doOnPositionChanged(double x, double y);
     void setSelection(double x1, double x2, bool complete);
-    void setFrequencySelection(double y1, double y2, bool complete);
+    void setFrequencySelectionTop(double y, bool complete);
+    void setFrequencySelectionBottom(double y, bool complete);
+    void setFrequencySelectionEdge(double y, bool complete, bool isTop);
 
     Qt::KeyboardModifiers keyboardModifiers() const;
 

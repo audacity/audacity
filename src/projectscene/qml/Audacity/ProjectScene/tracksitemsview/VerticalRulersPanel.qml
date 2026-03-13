@@ -153,6 +153,40 @@ Rectangle {
                         border.width: 2
                     }
 
+                    ColumnLayout {
+
+                        anchors.top: header.bottom
+                        anchors.bottom: sep.top
+                        anchors.left: leftBorder.right
+                        anchors.right: parent.right
+
+                        WaveformRuler {
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+
+                            onHeightChanged: console.log("WaveformRuler height: " + height)
+
+                            visible: model.isWaveformViewVisible
+
+                            isCollapsed: trackViewState.isTrackCollapsed
+                            channelHeightRatio: trackViewState.channelHeightRatio
+                        }
+
+                        SpectrogramTrackRulers {
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+
+                            onHeightChanged: console.log("SpectrogramTrackRulers height: " + height)
+
+                            visible: model.isSpectrogramViewVisible
+
+                            trackId: model.trackId
+                            isStereo: model.isStereo
+                            channelHeightRatio: trackViewState.channelHeightRatio
+                            cursorYPos: root.mapToItem(this, 0, root.cursorYPos).y
+                        }
+                    }
+
                     Rectangle {
                         id: bottomBorder
 
@@ -174,41 +208,6 @@ Rectangle {
                         opacity: 0.20
                         anchors.bottom: parent.bottom
                         thickness: 2
-                    }
-
-                    ColumnLayout {
-
-                        anchors.top: header.bottom
-                        anchors.bottom: sep.top
-                        anchors.left: leftBorder.right
-                        anchors.right: parent.right
-                        anchors.bottomMargin: 1
-
-                        WaveformRuler {
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
-
-                            visible: model.isWaveformViewVisible
-
-                            isCollapsed: trackViewState.isTrackCollapsed
-                            channelHeightRatio: trackViewState.channelHeightRatio
-                        }
-
-                        SeparatorLine {
-                            color: ui.theme.extra["waveform_ruler_tick_extension_color"]
-                        }
-
-                        SpectrogramTrackRulers {
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
-
-                            visible: model.isSpectrogramViewVisible
-
-                            trackId: model.trackId
-                            isStereo: model.isStereo
-                            channelHeightRatio: trackViewState.channelHeightRatio
-                            cursorYPos: root.mapToItem(this, 0, root.cursorYPos).y
-                        }
                     }
                 }
             }

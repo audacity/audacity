@@ -92,7 +92,7 @@ Item {
         anchors.right: parent.right
         height: 1
         color: ui.theme.fontPrimaryColor
-        y: root.cursorYPos - height / 2
+        y: rulerModel.rulerGuideYPos - height / 2
     }
 
     MouseArea {

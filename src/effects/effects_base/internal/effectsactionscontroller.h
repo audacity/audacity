@@ -50,6 +50,7 @@ public:
 
 private:
     void registerActions();
+    void notifyAboutSpectralEffectsAvailability();
 
     void onEffectTriggered(const muse::actions::ActionQuery& q);
     void repeatLastEffect();

@@ -9,6 +9,7 @@ namespace au::spectrogram {
 class Au3SpectrogramPainter;
 class GlobalSpectrogramConfiguration;
 class SpectrogramService;
+class SpectrogramViewService;
 class SpectrogramActionsController;
 
 class SpectrogramModule : public muse::modularity::IModuleSetup
@@ -40,6 +41,7 @@ public:
 private:
     std::shared_ptr<Au3SpectrogramPainter> m_au3SpectrogramPainter;
     std::shared_ptr<SpectrogramService> m_spectrogramService;
+    std::shared_ptr<SpectrogramViewService> m_spectrogramViewService;
     std::shared_ptr<SpectrogramActionsController> m_spectrogramActionsController;
 };
 }

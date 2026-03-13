@@ -7,6 +7,7 @@
 #include "spectrogramtypes.h" // SelectionInfo
 #include "internal/ipeakfinderfactory.h"
 #include "internal/frequencyselectioncontroller.h"
+#include "view/ispectrogramviewservice.h"
 
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/async/asyncable.h"
@@ -29,11 +30,14 @@ class ChannelSpectralSelectionModel : public QObject, public QQmlParserStatus, p
     Q_PROPERTY(double trackSampleRate READ trackSampleRate WRITE setTrackSampleRate NOTIFY trackSampleRateChanged FINAL)
     Q_PROPERTY(double channelHeight READ channelHeight WRITE setChannelHeight NOTIFY channelHeightChanged FINAL)
     Q_PROPERTY(
-        double selectionStartFrequency READ selectionStartFrequency WRITE setSelectionStartFrequency NOTIFY selectionStartFrequencyChanged FINAL)
+        double selectionStartFrequency READ selectionStartFrequency WRITE setSelectionStartFrequency NOTIFY startFrequencyChanged FINAL)
     Q_PROPERTY(
-        double selectionEndFrequency READ selectionEndFrequency WRITE setSelectionEndFrequency NOTIFY selectionEndFrequencyChanged FINAL)
+        double selectionEndFrequency READ selectionEndFrequency WRITE setSelectionEndFrequency NOTIFY endFrequencyChanged FINAL)
     Q_PROPERTY(double selectionStartTime READ selectionStartTime WRITE setSelectionStartTime NOTIFY selectionStartTimeChanged FINAL)
     Q_PROPERTY(double selectionEndTime READ selectionEndTime WRITE setSelectionEndTime NOTIFY selectionEndTimeChanged FINAL)
+
+    Q_PROPERTY(double centerFrequency READ centerFrequency NOTIFY centerFrequencyChanged FINAL)
+    Q_PROPERTY(double rulerGuideFrequency READ rulerGuideFrequency WRITE setRulerGuideFrequency NOTIFY rulerGuideFrequencyChanged FINAL)
 
     // Output
     Q_PROPERTY(double selectionY READ selectionY NOTIFY selectionRangeChanged FINAL)
@@ -43,6 +47,7 @@ class ChannelSpectralSelectionModel : public QObject, public QQmlParserStatus, p
     muse::Inject<ISpectrogramService> spectrogramService { this };
     muse::Inject<IPeakFinderFactory> peakFinderFactory { this };
     muse::Inject<IFrequencySelectionController> frequencySelectionController { this };
+    muse::Inject<ISpectrogramViewService> spectrogramViewService { this };
 
 public:
     ChannelSpectralSelectionModel(QObject* parent = nullptr);
@@ -75,6 +80,13 @@ public:
     double selectionEndTime() const { return m_selectionEndTime; }
     void setSelectionEndTime(double time);
 
+    double centerFrequency() const;
+
+    double rulerGuideFrequency() const;
+    void setRulerGuideFrequency(double frequency);
+
+    Q_INVOKABLE void setRulerGuideYPos(double y);
+
     bool verticalDragActive() const { return m_peakFinder != nullptr; }
 
     Q_INVOKABLE void startCenterFrequencyDrag();
@@ -86,13 +98,15 @@ signals:
     void channelHeightChanged();
     void trackIdChanged();
     void channelChanged();
-    void selectionStartFrequencyChanged();
-    void selectionEndFrequencyChanged();
+    void startFrequencyChanged();
+    void endFrequencyChanged();
     void selectionRangeChanged();
     void verticalDragActiveChanged();
     void selectionStartTimeChanged();
     void selectionEndTimeChanged();
     void centerFrequencyChangeRequested(double frequency);
+    void centerFrequencyChanged();
+    void rulerGuideFrequencyChanged();
 
 private:
     void classBegin() override {}
