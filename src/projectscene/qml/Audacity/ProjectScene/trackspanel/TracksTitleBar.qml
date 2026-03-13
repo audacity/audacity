@@ -10,6 +10,7 @@ Item {
 
     property alias navigation: buttonContainer.navigation
     property alias realtimeEffectsNavigation: effectsTitleBar.navigation
+    property alias closeEffectsNavigation: effectsTitleBar.navigation
 
     property int effectsSectionWidth: 0
     property bool showEffectsSection: false
@@ -44,6 +45,7 @@ Item {
                 name: "RealtimeEffectsSectionPanel"
                 enabled: root.enabled && root.visible && root.showEffectsSection
                 section: buttonContainer.navigation.section
+                direction: NavigationPanel.Vertical
                 order: 0
 
                 accessible.name: qsTrc("projectscene", "Realtime effects")

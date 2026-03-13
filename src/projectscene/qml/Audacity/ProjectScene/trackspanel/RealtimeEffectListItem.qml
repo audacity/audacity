@@ -17,11 +17,8 @@ ListItemBlank {
     property int scrollOffset: 0
     property int topMargin: 0
 
-    property NavigationPanel navigationPanel: NavigationPanel {
-        name: "effect item panel - " + prv.title
-        enabled: root.enabled && root.visible
-        direction: NavigationPanel.Horizontal
-    }
+    property NavigationPanel navigationPanel: null
+    property int navigationOrder: 0
 
     QtObject {
         id: prv
@@ -159,7 +156,7 @@ ListItemBlank {
             Layout.maximumHeight: root.height
 
             navigation.panel: root.navigationPanel
-            navigation.order: 0
+            navigation.order: root.navigationOrder
             navigation.name: "panel bypass btn - " + prv.title
 
             isMasterEffect: item && item.isMasterEffect
@@ -174,7 +171,7 @@ ListItemBlank {
             id: effectNameButton
 
             navigation.panel: root.navigationPanel
-            navigation.order: 1
+            navigation.order: bypassButton.navigation.order + 1
             navigation.name: "show ui btn - " + prv.title
 
             Layout.fillWidth: true
@@ -202,7 +199,9 @@ ListItemBlank {
                 // the new dialog doesn't believe its parent is the previous dialog.
                 // Note that calling `navigation.requestActive()` has no effect because
                 // the RealtimeEffectSection isn't of `NavigationSection.Exclusive` type.
-                root.navigationPanel.requestActive()
+                if (root.navigationPanel) {
+                    root.navigationPanel.requestActive()
+                }
                 root.item.showEffectDialog()
             }
         }
@@ -211,7 +210,7 @@ ListItemBlank {
             id: chooseEffectDropdown
 
             navigation.panel: root.navigationPanel
-            navigation.order: 2
+            navigation.order: effectNameButton.navigation.order + 1
             navigation.name: "replace btn - " + prv.title
 
             Layout.fillHeight: true

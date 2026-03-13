@@ -15,6 +15,7 @@ Item {
 
     property var navPanels: null
     property alias tracksModel: tracksModel
+    property NavigationPanel effectColumnNavigationPanel: null
 
     signal openEffectsRequested()
     signal panelActive(var trackId)
@@ -78,6 +79,8 @@ Item {
                 id: trackEffectsSection
 
                 navigationSection: trackEffectsNavigationSection
+                navigationPanel: root.effectColumnNavigationPanel
+                navigationOrderStart: 1
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true
@@ -119,6 +122,8 @@ Item {
                 id: masterEffectsSection
 
                 navigationSection: masterEffectsNavigationSection
+                navigationPanel: root.effectColumnNavigationPanel
+                navigationOrderStart: trackEffectsSection.navigationOrderEnd + 1
 
                 Layout.fillWidth: true
                 Layout.preferredHeight: 300

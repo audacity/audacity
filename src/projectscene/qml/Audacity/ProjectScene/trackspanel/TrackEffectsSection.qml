@@ -18,6 +18,9 @@ Rectangle {
     property alias minimumHeight: prv.addEffectButtonHeight
 
     property NavigationSection navigationSection: null
+    property NavigationPanel navigationPanel: null
+    property int navigationOrderStart: 0
+    readonly property int navigationOrderEnd: navigationOrderStart + effectList.count * 3 + 1
 
     color: ui.theme.backgroundPrimaryColor
 
@@ -52,15 +55,8 @@ Rectangle {
 
             BypassEffectButton {
                 id: trackEffectsPowerButton
-
-                property NavigationPanel navigationPanel: NavigationPanel {
-                    name: (isMasterTrack ? "Master" : effectList.trackName) + " effects bypass"
-                    enabled: root.enabled && root.visible
-                    section: root.navigationSection
-                    order: 0
-                }
-
-                navigation.panel: trackEffectsPowerButton.navigationPanel
+                navigation.panel: root.navigationPanel
+                navigation.order: root.navigationOrderStart
 
                 Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
                 Layout.margins: 8
@@ -101,8 +97,8 @@ Rectangle {
             Layout.fillWidth: true
             TrackEffectList {
                 id: effectList
-                navigationSection: root.navigationSection
-                navigationPanelOrderOffset: 1
+                navigationPanel: root.navigationPanel
+                navigationOrderStart: trackEffectsPowerButton.navigation.order + 1
                 color: "transparent"
                 anchors.fill: parent
                 anchors.leftMargin: 4
@@ -125,14 +121,8 @@ Rectangle {
             Layout.margins: prv.addEffectButtonMargin
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVTop
 
-            property NavigationPanel navigationPanel: NavigationPanel {
-                name: (isMasterTrack ? "Master" : effectList.trackName) + " add effect"
-                enabled: root.enabled && root.visible
-                section: root.navigationSection
-                order: effectList.navigationPanelOrderOffset + effectList.count + 1
-            }
-
-            navigation.panel: addEffectButton.navigationPanel
+            navigation.panel: root.navigationPanel
+            navigation.order: root.navigationOrderEnd
 
             text: qsTrc("projectscene", "Add effect")
 
