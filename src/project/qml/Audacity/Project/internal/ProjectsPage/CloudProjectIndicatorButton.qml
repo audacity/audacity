@@ -31,6 +31,7 @@ Item {
     property bool isDownloadedAndUpToDate: false
 
     property alias navigation: navCtrl
+    property alias mouseArea: mouseArea
 
     signal clicked
 
