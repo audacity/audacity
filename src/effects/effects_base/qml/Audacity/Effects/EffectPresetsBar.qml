@@ -30,28 +30,28 @@ RowLayout {
         id: prv
 
         property AbstractMenuModel activeMenuModel: null
-    }
 
-    function presetIconCodeById(presetId) {
-        const preset = presetsBarModel.presets.find(item => item.id === presetId)
-        return preset && preset.iconCode ? preset.iconCode : IconCode.NONE
-    }
+        function openThreeDotMenu(button) {
+            activeMenuModel = presetsBarModel.presetContextMenu()
+            var pos = Qt.point(button.x, button.y + button.height)
+            menuLoader.show(pos, activeMenuModel)
+        }
 
-    function presetIconCodeByName(name) {
-        const preset = presetsBarModel.presets.find(item => item.name === name)
-        return preset && preset.iconCode ? preset.iconCode : IconCode.NONE
-    }
+        function save(button) {
+            activeMenuModel = presetsBarModel.saveContextMenu()
+            var pos = Qt.point(button.x, button.y + button.height)
+            menuLoader.show(pos, activeMenuModel)
+        }
 
-    function manage(button) {
-        prv.activeMenuModel = presetsBarModel.presetContextMenu()
-        var pos = Qt.point(button.x, button.y + button.height)
-        menuLoader.show(pos, prv.activeMenuModel)
-    }
+        function presetIconCodeById(presetId) {
+            const preset = presetsBarModel.presets.find(item => item.id === presetId)
+            return preset && preset.iconCode ? preset.iconCode : IconCode.NONE
+        }
 
-    function save(button) {
-        prv.activeMenuModel = presetsBarModel.saveContextMenu()
-        var pos = Qt.point(button.x, button.y + button.height)
-        menuLoader.show(pos, prv.activeMenuModel)
+        function presetIconCodeByName(name) {
+            const preset = presetsBarModel.presets.find(item => item.name === name)
+            return preset && preset.iconCode ? preset.iconCode : IconCode.NONE
+        }
     }
 
     Component.onCompleted: {
@@ -128,7 +128,7 @@ RowLayout {
             StyledIconLabel {
                 Layout.preferredWidth: ui.theme.iconsFont.pixelSize
                 Layout.alignment: Qt.AlignVCenter
-                readonly property int presetIconCode: root.presetIconCodeById(presetsBarModel.preset)
+                readonly property int presetIconCode: prv.presetIconCodeById(presetsBarModel.preset)
                 iconCode: presetIconCode
             }
 
@@ -157,7 +157,7 @@ RowLayout {
             StyledIconLabel {
                 Layout.preferredWidth: ui.theme.iconsFont.pixelSize
                 Layout.alignment: Qt.AlignVCenter
-                readonly property int presetIconCode: root.presetIconCodeByName(textItem.text)
+                readonly property int presetIconCode: prv.presetIconCodeByName(textItem.text)
                 iconCode: presetIconCode
             }
 
@@ -187,7 +187,7 @@ RowLayout {
         icon: IconCode.SAVE
 
         onClicked: {
-            root.save(saveBtn)
+            prv.save(saveBtn)
         }
     }
 
@@ -237,7 +237,7 @@ RowLayout {
         icon: IconCode.MENU_THREE_DOTS
 
         onClicked: {
-            root.manage(manageButton)
+            prv.openThreeDotMenu(manageButton)
         }
     }
 }

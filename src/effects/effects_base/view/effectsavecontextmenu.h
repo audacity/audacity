@@ -31,7 +31,6 @@ public:
     QString preset() const;
     void setPreset(QString newPreset);
 
-    bool canSave() const;
     Q_INVOKABLE void load() override;
 
 signals:
