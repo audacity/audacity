@@ -14,6 +14,21 @@ ChannelSpectralSelectionModel::ChannelSpectralSelectionModel(QObject* parent)
 {
 }
 
+void ChannelSpectralSelectionModel::componentComplete()
+{
+    spectrogramService()->trackSpectrogramConfigurationChanged().onReceive(this, [this](int trackId) {
+        if (trackId == m_trackId) {
+            emit selectionRangeChanged();
+        }
+    });
+
+    spectrogramViewService()->rulerGuideFrequencyChanged().onReceive(this, [this](int trackId) {
+        if (trackId == m_trackId) {
+            emit rulerGuideFrequencyChanged();
+        }
+    });
+}
+
 double ChannelSpectralSelectionModel::positionToFrequency(double y) const
 {
     return spectrogramService()->yToFrequency(m_trackId, y, m_channelHeight);
@@ -70,6 +85,7 @@ void ChannelSpectralSelectionModel::setSelectionStartFrequency(double freq)
         return;
     }
     m_selectionStartFrequency = freq;
+    emit centerFrequencyChanged();
     emit selectionStartFrequencyChanged();
     emit selectionRangeChanged();
 }
@@ -80,6 +96,7 @@ void ChannelSpectralSelectionModel::setSelectionEndFrequency(double freq)
         return;
     }
     m_selectionEndFrequency = freq;
+    emit centerFrequencyChanged();
     emit selectionEndFrequencyChanged();
     emit selectionRangeChanged();
 }
@@ -157,8 +174,8 @@ void ChannelSpectralSelectionModel::dragCenterFrequency(double y)
     const double peakFrequency = m_peakFinder->findPeak(frequency);
     const double peakPosition = frequencyToPosition(peakFrequency);
 
-    const auto startFreqPos = frequencyToPosition(m_dragStartFrequencySelection.startFrequency);
-    const auto endFreqPos = frequencyToPosition(m_dragStartFrequencySelection.endFrequency);
+    const auto startFreqPos = frequencyToPosition(m_dragStartFrequencySelection.startFrequency());
+    const auto endFreqPos = frequencyToPosition(m_dragStartFrequencySelection.endFrequency());
     const auto range = endFreqPos - startFreqPos;
     auto newStartFreqPos = peakPosition - range / 2;
     auto newEndFreqPos = peakPosition + range / 2;
@@ -187,13 +204,32 @@ void ChannelSpectralSelectionModel::dragCenterFrequency(double y)
     const auto newStartFreq = positionToFrequency(newStartFreqPos);
     const auto newEndFreq = positionToFrequency(newEndFreqPos);
 
-    frequencySelectionController()->setFrequencySelection({ m_dragStartFrequencySelection.trackId, newStartFreq, newEndFreq });
+    FrequencySelection newSelection = m_dragStartFrequencySelection;
+    newSelection.setFrequencyRange(newStartFreq, newEndFreq, config->scale());
+
+    frequencySelectionController()->setFrequencySelection(std::move(newSelection), false);
 }
 
 void ChannelSpectralSelectionModel::endCenterFrequencyDrag()
 {
+    frequencySelectionController()->setFrequencySelection(frequencySelectionController()->frequencySelection(), true);
     m_peakFinder.reset();
     m_dragStartFrequencySelection = {};
     emit verticalDragActiveChanged();
+}
+
+double ChannelSpectralSelectionModel::centerFrequency() const
+{
+    return frequencySelectionController()->frequencySelection().centerFrequency();
+}
+
+double ChannelSpectralSelectionModel::rulerGuideFrequency() const
+{
+    return spectrogramViewService()->rulerGuideFrequency(m_trackId);
+}
+
+void ChannelSpectralSelectionModel::setRulerGuideFrequency(double frequency)
+{
+    spectrogramViewService()->setRulerGuideFrequency(m_trackId, frequency);
 }
 }

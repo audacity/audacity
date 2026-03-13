@@ -11,9 +11,11 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/iglobalspectrogramconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/itrackspectrogramconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/ifrequencyselectioncontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/ispectraleffectsregister.h
     ${CMAKE_CURRENT_LIST_DIR}/ispectrogramservice.h
     ${CMAKE_CURRENT_LIST_DIR}/spectrogrammodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/spectrogrammodule.h
+    ${CMAKE_CURRENT_LIST_DIR}/spectrogramtypes.cpp
     ${CMAKE_CURRENT_LIST_DIR}/spectrogramtypes.h
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/ispectrogrampainter.h
@@ -27,6 +29,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/macromagic.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/numberscale.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/roseuscolormaps.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramactionscontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramactionscontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramcolordefinitions.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramcolordefinitions.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramcolorregister.cpp
@@ -36,6 +40,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/globalspectrogramconfiguration.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/globalspectrogramconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/snapshotspectrogramconfiguration.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/spectraleffectsregister.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/spectraleffectsregister.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramuiactions.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramuiactions.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramutils.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramutils.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/spectrogramservice.cpp
@@ -87,6 +95,12 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/spectrogramviewutils.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspectrogramsettingsmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspectrogramsettingsmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspectrogramcontextmenumodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspectrogramcontextmenumodel.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/view/ispectrogramviewservice.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/spectrogramviewservice.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/spectrogramviewservice.h
 )
 
 set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml)

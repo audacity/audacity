@@ -73,7 +73,7 @@ static UiActionList STATIC_ACTIONS = {
              ),
     UiAction("action://trackedit/global-view-spectrogram",
              au::context::UiCtxProjectOpened,
-             au::context::CTX_ANY,
+             au::context::CTX_PROJECT_FOCUSED,
              TranslatableString("action", "Toggle spectral view"),
              TranslatableString("action", "Toggle spectral view"),
              IconCode::Code::SPECTROGRAM

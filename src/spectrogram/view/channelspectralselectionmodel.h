@@ -7,17 +7,21 @@
 #include "spectrogramtypes.h" // SelectionInfo
 #include "internal/ipeakfinderfactory.h"
 #include "internal/frequencyselectioncontroller.h"
+#include "view/ispectrogramviewservice.h"
 
 #include "framework/global/modularity/ioc.h"
+#include "framework/global/async/asyncable.h"
 
 #include <QObject>
+#include <QQmlParserStatus>
 
 #include <utility>
 
 namespace au::spectrogram {
-class ChannelSpectralSelectionModel : public QObject, public muse::Injectable
+class ChannelSpectralSelectionModel : public QObject, public QQmlParserStatus, public muse::Injectable, public muse::async::Asyncable
 {
     Q_OBJECT
+    Q_INTERFACES(QQmlParserStatus)
 
     Q_PROPERTY(int trackId READ trackId WRITE setTrackId NOTIFY trackIdChanged FINAL)
     Q_PROPERTY(int channel READ channel WRITE setChannel NOTIFY channelChanged FINAL)
@@ -32,6 +36,9 @@ class ChannelSpectralSelectionModel : public QObject, public muse::Injectable
     Q_PROPERTY(double selectionStartTime READ selectionStartTime WRITE setSelectionStartTime NOTIFY selectionStartTimeChanged FINAL)
     Q_PROPERTY(double selectionEndTime READ selectionEndTime WRITE setSelectionEndTime NOTIFY selectionEndTimeChanged FINAL)
 
+    Q_PROPERTY(double centerFrequency READ centerFrequency NOTIFY centerFrequencyChanged FINAL)
+    Q_PROPERTY(double rulerGuideFrequency READ rulerGuideFrequency WRITE setRulerGuideFrequency NOTIFY rulerGuideFrequencyChanged FINAL)
+
     // Output
     Q_PROPERTY(double selectionY READ selectionY NOTIFY selectionRangeChanged FINAL)
     Q_PROPERTY(double selectionHeight READ selectionHeight NOTIFY selectionRangeChanged FINAL)
@@ -40,6 +47,7 @@ class ChannelSpectralSelectionModel : public QObject, public muse::Injectable
     muse::Inject<ISpectrogramService> spectrogramService { this };
     muse::Inject<IPeakFinderFactory> peakFinderFactory { this };
     muse::Inject<IFrequencySelectionController> frequencySelectionController { this };
+    muse::Inject<ISpectrogramViewService> spectrogramViewService { this };
 
 public:
     ChannelSpectralSelectionModel(QObject* parent = nullptr);
@@ -72,6 +80,11 @@ public:
     double selectionEndTime() const { return m_selectionEndTime; }
     void setSelectionEndTime(double time);
 
+    double centerFrequency() const;
+
+    double rulerGuideFrequency() const;
+    void setRulerGuideFrequency(double frequency);
+
     bool verticalDragActive() const { return m_peakFinder != nullptr; }
 
     Q_INVOKABLE void startCenterFrequencyDrag();
@@ -90,8 +103,13 @@ signals:
     void selectionStartTimeChanged();
     void selectionEndTimeChanged();
     void centerFrequencyChangeRequested(double frequency);
+    void centerFrequencyChanged();
+    void rulerGuideFrequencyChanged();
 
 private:
+    void classBegin() override {}
+    void componentComplete() override;
+
     std::pair<double, double> selectionYRange() const;
     double positionToFrequency(double y) const;
     double frequencyToPosition(double frequency) const;

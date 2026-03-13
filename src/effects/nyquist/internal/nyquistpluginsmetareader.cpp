@@ -19,11 +19,10 @@ NyquistPluginsMetaReader::NyquistPluginsMetaReader()
 
 void NyquistPluginsMetaReader::doInit(const IApplication::RunMode&)
 {
-    // Don't call m_module.Initialize() here.
-    // At this point FileNames::AudacityPathList() is not yet populated
-    // (InitializePathList is called later in EffectsModule::onInit),
-    // so Initialize() would always fail to find nyquist.lsp.
-    // Instead, readMeta() handles lazy initialization when paths are ready.
+    // Lazy initialization: if not initialized yet, initialize now
+    // This is needed because the subprocess that registers plugins creates new instances
+    // of meta readers that haven't been initialized via onInit()
+    m_module.Initialize();
 }
 
 bool NyquistPluginsMetaReader::canReadMeta(const io::path_t& pluginPath) const
@@ -47,14 +46,7 @@ RetVal<audio::AudioResourceMetaList> NyquistPluginsMetaReader::readMeta(const io
     try {
         // For Nyquist plugins, we bypass the validation step because they are simple script files
         // We just need to discover them and create metadata without running validation
-
-        // Lazy initialization: if not initialized yet, initialize now
-        // This is needed because the subprocess that registers plugins creates new instances
-        // of meta readers that haven't been initialized via onInit()
         auto& module = const_cast<::NyquistEffectsModule&>(m_module);
-
-        // Initialize() is idempotent - it's safe to call multiple times
-        module.Initialize();
 
         muse::audio::AudioResourceMetaList metaList;
         wxString wxPluginPath = au3::wxFromString(pluginPath.toString());

@@ -3,9 +3,10 @@
 */
 #include "effectsactionscontroller.h"
 #include "effects/effects_base/effectstypes.h"
+#include "effects/effects_base/internal/effectsutils.h"
 #include "effectsuiactions.h"
-#include "playback/iplayer.h"
 
+#include "spectrogram/spectrogramtypes.h"
 #include "wx/string.h"
 
 #include "log.h"
@@ -25,6 +26,18 @@ void EffectsActionsController::init()
 
     effectExecutionScenario()->lastProcessorIsNowAvailable().onNotify(this, [this] {
         m_canReceiveActionsChanged.send({ "repeat-last-effect" });
+    });
+
+    frequencySelectionController()->frequencySelectionChanged().onReceive(this, [this](auto, bool complete) {
+        if (!complete) {
+            return;
+        }
+        ActionCodeList codes;
+        const auto spectralEffects = spectralEffectsRegister()->spectralEffects();
+        for (const auto& spectralEffect : spectralEffects) {
+            codes.push_back(spectralEffect.action);
+        }
+        m_canReceiveActionsChanged.send(codes);
     });
 }
 
@@ -142,6 +155,15 @@ bool EffectsActionsController::canReceiveAction(const muse::actions::ActionCode&
     if (code == "repeat-last-effect") {
         return effectExecutionScenario()->lastProcessorIsAvailable();
     } else {
+        const auto spectralEffects = spectralEffectsRegister()->spectralEffects();
+        const auto it = std::find_if(spectralEffects.begin(), spectralEffects.end(), [&code](const auto& spectralEffect) {
+            return spectralEffect.action == code;
+        });
+        if (it != spectralEffects.end()) {
+            const spectrogram::FrequencySelection selection = frequencySelectionController()->frequencySelection();
+            return frequencySelectionController()->showsSpectrogram(selection.trackId) && selection.isValid();
+        }
+
         return true;
     }
 }

@@ -23,7 +23,6 @@
 #include "au3-project/Project.h"
 #include "au3-project-rate/ProjectRate.h"
 #include "au3-command-parameters/ShuttleAutomation.h"
-// #include "au3-wave-track-settings/SpectrogramSettings.h" // TODO: properly handle SpectrogramSettings
 #include "au3-files/TempDirectory.h"
 #include "au3-time-track/TimeTrack.h"
 #include "au3-track/TimeWarper.h"
@@ -485,30 +484,11 @@ bool NyquistBase::Init()
         // Completely skip the spectral editing limitations if there is no
         // project because that is editing of macro parameters
         if (const auto project = FindProject()) {
-            bool bAllowSpectralEditing = false;
-            bool hasSpectral = false;
-            for (auto t : TrackList::Get(*project).Selected<const WaveTrack>()) {
-                // Find() not Get() to avoid creation-on-demand of views in case we
-                // are only previewing
-                hasSpectral |= GetHasSpectralDisplayHook::Call(t);
-
-                if (hasSpectral && mSpectralSelectionEnabled) {
-                    bAllowSpectralEditing = true;
-                    break;
-                }
-            }
-
-            if (!bAllowSpectralEditing || ((mF0 < 0.0) && (mF1 < 0.0))) {
-                if (!hasSpectral) {
-                    mLastError
-                        = XO("Enable track spectrogram view before\n"
-                             "applying 'Spectral' effects.").Translation().ToStdString();
-                } else {
-                    mLastError
-                        = XO("To use 'Spectral effects', enable 'Spectral Selection'\n"
-                             "in the track Spectrogram settings and select the\n"
-                             "frequency range for the effect to act on.").Translation().ToStdString();
-                }
+            if (!mSpectralSelectionEnabled || ((mF0 < 0.0) && (mF1 < 0.0))) {
+                mLastError
+                    = XO("To use 'Spectral effects', enable 'Spectral Selection'\n"
+                         "in the track Spectrogram settings and select the\n"
+                         "frequency range for the effect to act on.").Translation().ToStdString();
                 return false;
             }
         }
@@ -937,9 +917,8 @@ bool NyquistBase::Process(EffectInstance&, EffectSettings& settings)
                     highHz.Printf(wxT("(float %s)"), Internat::ToString(mF1));
                 }
 
-                if ((mF0 >= 0.0) && (mF1 >= 0.0)) {
-                    centerHz.Printf(
-                        wxT("(float %s)"), Internat::ToString(sqrt(mF0 * mF1)));
+                if (mCenterFrequency >= 0.0) {
+                    centerHz.Printf(wxT("(float %s)"), Internat::ToString(mCenterFrequency));
                 }
 
                 if ((mF0 > 0.0) && (mF1 >= mF0)) {
@@ -1572,12 +1551,10 @@ bool NyquistBase::ProcessOne(
     {
         PasteTimeWarper warper { mT1, mT0 + tempTrack->GetEndTime() };
         auto pProject = FindProject();
-        const auto& selectedRegion = ViewInfo::Get(*pProject).selectedRegion;
         const bool mergeClips = (mMergeClips < 0)
                                 ? GetType() != EffectTypeGenerate
                                 : mMergeClips > 0;
-        mCurChannelGroup->ClearAndPaste(
-            selectedRegion.t0(), selectedRegion.t1(), *tempTrack, mRestoreSplits, mergeClips, &warper);
+        mCurChannelGroup->ClearAndPaste(mT0, mT0 + mOutputDuration, *tempTrack, mRestoreSplits, mergeClips, &warper);
     }
 
     // If we were first in the group adjust non-selected group tracks
@@ -1989,6 +1966,11 @@ bool NyquistBase::Parse(
                 mGroup = EffectGroup::Unspecified;
             }
         }
+        return true;
+    }
+
+    if (len == 2 && tokens[0] == wxT("spectraleffectid")) {
+        mSpectralEffectId = tokens[1].ToStdString();
         return true;
     }
 

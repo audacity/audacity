@@ -9,6 +9,7 @@ Item {
     required property int trackId
     required property int channel
     required property real trackSampleRate
+    required property bool selectionInProgress
     required property real selectionStartPosition
     required property real selectionEndPosition
     required property real selectionStartFrequency
@@ -20,6 +21,7 @@ Item {
     property alias verticalDragActive: selectionModel.verticalDragActive
 
     signal selectionHorizontalResize(real startPosition, real endPosition, bool completed)
+    signal mousePositionChanged(real x, real y)
 
     QtObject {
         id: prv
@@ -28,7 +30,7 @@ Item {
         readonly property int edgeWidth: 10
         property var init: ({})
         property bool dragging: Object.keys(init).length !== 0
-        property bool selectionIsEmpty: root.selectionStartFrequency === root.selectionEndFrequency
+        property bool selectionIsEmpty: root.selectionStartFrequency === -1 || root.selectionEndFrequency === -1 || (root.selectionStartFrequency === root.selectionEndFrequency && root.selectionStartTime === root.selectionEndTime)
 
         function isDragged(name) {
             return dragging && name in init
@@ -99,41 +101,60 @@ Item {
 
         visible: !selectionModel.verticalDragActive && (pressed || !prv.selectionIsEmpty)
 
-        hoverEnabled: true
+        hoverEnabled: false
         acceptedButtons: Qt.LeftButton
-
-        cursorShape: Qt.CrossCursor
 
         property var draggedEdges: []
 
         onPressed: function (mouse) {
-            switch (marquee.hitHandle(mouse.x, mouse.y, root)) {
+            switch (marquee.hitHandle(mouse.x - marquee.x, mouse.y - marquee.y, marquee)) {
             case marquee.handleId.TopLeft:
                 draggedEdges = [topEdge, leftEdge]
+                selectionModel.rulerGuideFrequency = Qt.binding(function () {
+                    return root.selectionEndFrequency
+                })
                 break
             case marquee.handleId.TopRight:
                 draggedEdges = [topEdge, rightEdge]
+                selectionModel.rulerGuideFrequency = Qt.binding(function () {
+                    return root.selectionEndFrequency
+                })
                 break
             case marquee.handleId.BottomRight:
                 draggedEdges = [bottomEdge, rightEdge]
+                selectionModel.rulerGuideFrequency = Qt.binding(function () {
+                    return root.selectionStartFrequency
+                })
                 break
             case marquee.handleId.BottomLeft:
                 draggedEdges = [bottomEdge, leftEdge]
+                selectionModel.rulerGuideFrequency = Qt.binding(function () {
+                    return root.selectionStartFrequency
+                })
                 break
             case marquee.handleId.Left:
                 draggedEdges = [leftEdge]
+                selectionModel.rulerGuideFrequency = -1
                 break
             case marquee.handleId.Right:
                 draggedEdges = [rightEdge]
+                selectionModel.rulerGuideFrequency = -1
                 break
             case marquee.handleId.Top:
                 draggedEdges = [topEdge]
+                selectionModel.rulerGuideFrequency = Qt.binding(function () {
+                    return root.selectionEndFrequency
+                })
                 break
             case marquee.handleId.Bottom:
                 draggedEdges = [bottomEdge]
+                selectionModel.rulerGuideFrequency = Qt.binding(function () {
+                    return root.selectionStartFrequency
+                })
                 break
             default:
                 draggedEdges = []
+                selectionModel.rulerGuideFrequency = -1
                 // It missed - let the event propagate
                 mouse.accepted = false
                 return
@@ -149,29 +170,8 @@ Item {
                 for (let i = 0; i < draggedEdges.length; i++) {
                     prv.edgePositionChanged(draggedEdges[i], mouse)
                 }
-            } else {
-                switch (marquee.hitHandle(mouse.x, mouse.y, root)) {
-                case marquee.handleId.TopLeft:
-                case marquee.handleId.BottomRight:
-                    cursorShape = Qt.SizeFDiagCursor
-                    break
-                case marquee.handleId.TopRight:
-                case marquee.handleId.BottomLeft:
-                    cursorShape = Qt.SizeBDiagCursor
-                    break
-                case marquee.handleId.Left:
-                case marquee.handleId.Right:
-                    cursorShape = Qt.SizeHorCursor
-                    break
-                case marquee.handleId.Top:
-                case marquee.handleId.Bottom:
-                    cursorShape = Qt.SizeVerCursor
-                    break
-                default:
-                    cursorShape = Qt.CrossCursor
-                    break
-                }
             }
+            root.mousePositionChanged(mouse.x, mouse.y)
         }
 
         onReleased: function (mouse) {
@@ -179,16 +179,7 @@ Item {
                 prv.edgeReleased(draggedEdges[i], mouse)
             }
             draggedEdges = []
-            cursorShape = Qt.CrossCursor
         }
-    }
-
-    MouseArea {
-        // To make sure that the cursor stays as SizeVerCursor during vertical drag even when the mouse is outside of the centerFrequencyMouseArea
-        anchors.fill: parent
-        hoverEnabled: true
-        acceptedButtons: Qt.NoButton
-        cursorShape: selectionModel.verticalDragActive ? Qt.SizeVerCursor : Qt.ArrowCursor
     }
 
     MarqueeSelection {
@@ -203,6 +194,7 @@ Item {
 
         lineWidth: 1
         color: "white"
+        changeCursorShape: !root.selectionInProgress
 
         Item {
             id: centerFrequencyDragHandle
@@ -224,11 +216,15 @@ Item {
 
                 onPressed: {
                     selectionModel.startCenterFrequencyDrag()
+                    selectionModel.rulerGuideFrequency = Qt.binding(function () {
+                        return selectionModel.centerFrequency
+                    })
                 }
 
                 onPositionChanged: function (mouse) {
-                    const absoluteY = centerFrequencyDragHandle.mapToItem(root, 0, mouse.y).y
-                    selectionModel.dragCenterFrequency(absoluteY)
+                    const position = mapToItem(root, mouse.x, mouse.y)
+                    selectionModel.dragCenterFrequency(position.y)
+                    root.mousePositionChanged(position.x, mapToItem(root, 0, height / 2).y)
                 }
 
                 onReleased: {

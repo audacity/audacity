@@ -104,7 +104,7 @@ private:
 
     bool doOnPositionChanged(double x, double y);
     void setSelection(double x1, double x2, bool complete);
-    void setFrequencySelection(double y1, double y2);
+    void setFrequencySelection(double y1, double y2, bool complete);
 
     Qt::KeyboardModifiers keyboardModifiers() const;
 

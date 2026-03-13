@@ -3,7 +3,11 @@
  */
 #pragma once
 
+#include "framework/actions/actiontypes.h"
+
 namespace au::spectrogram {
+static const muse::actions::ActionCode TRACK_SPECTROGRAM_SETTINGS_ACTION("track-spectrogram-settings");
+
 // Spectrogram
 enum class SpectrogramScale {
     Undefined = -1,
@@ -69,33 +73,29 @@ struct ViewInfo {
     const double pixelsPerSecond = 0.; // aka zoom
 };
 
-struct FrequencySelection {
+class FrequencySelection
+{
+public:
     FrequencySelection() = default;
-    FrequencySelection(int trackId, double f1, double f2)
-        : trackId(trackId), startFrequency(std::min(f1, f2)), endFrequency(std::max(f1, f2)) {}
+    FrequencySelection(int trackId);
 
     int trackId = -1;
-    double startFrequency = SelectionInfo::UndefinedFrequency;
-    double endFrequency = SelectionInfo::UndefinedFrequency;
 
-    constexpr bool isValid() const
-    {
-        return trackId != -1
-               && startFrequency != SelectionInfo::UndefinedFrequency
-               && endFrequency != SelectionInfo::UndefinedFrequency;
-    }
+    void setFrequencyRange(double f1, double f2, SpectrogramScale scale);
 
-    constexpr bool operator==(const FrequencySelection& other) const
-    {
-        return trackId == other.trackId
-               && startFrequency == other.startFrequency
-               && endFrequency == other.endFrequency;
-    }
+    double startFrequency() const { return m_startFrequency; }
+    double endFrequency() const { return m_endFrequency; }
+    double centerFrequency() const { return m_centerFrequency; }
 
-    constexpr bool operator!=(const FrequencySelection& other) const
-    {
-        return !(*this == other);
-    }
+    bool isValid() const;
+
+    bool operator==(const FrequencySelection& other) const;
+    bool operator!=(const FrequencySelection& other) const;
+
+private:
+    double m_startFrequency = SelectionInfo::UndefinedFrequency;
+    double m_endFrequency = SelectionInfo::UndefinedFrequency;
+    double m_centerFrequency = SelectionInfo::UndefinedFrequency;
 };
 
 struct SpectrogramRulerTick {
@@ -107,4 +107,19 @@ struct SpectrogramRulerTicks {
     std::vector<SpectrogramRulerTick> major;
     std::vector<SpectrogramRulerTick> minor;
 };
+
+enum class SpectralEffectId {
+    DeleteSelection,
+    DeleteCenterFrequency,
+    AmplifySelection,
+    AmplifyCenterFrequency,
+};
+
+struct SpectralEffect {
+    SpectralEffectId spectralEffectId;
+    muse::actions::ActionCode action;
+    muse::String title;
+};
+
+using SpectralEffectList = std::vector<SpectralEffect>;
 }

@@ -13,6 +13,7 @@ Item {
     required property int trackId
     required property bool isStereo
     required property real channelHeightRatio
+    required property real cursorYPos
 
     Column {
         anchors.fill: parent
@@ -22,6 +23,7 @@ Item {
             height: root.isStereo ? root.height * root.channelHeightRatio : root.height
 
             trackId: root.trackId
+            cursorYPos: root.mapToItem(this, 0, root.cursorYPos).y
         }
 
         SeparatorLine {
@@ -36,6 +38,7 @@ Item {
 
             visible: root.isStereo
             trackId: root.trackId
+            cursorYPos: root.mapToItem(this, 0, root.cursorYPos).y
         }
     }
 }

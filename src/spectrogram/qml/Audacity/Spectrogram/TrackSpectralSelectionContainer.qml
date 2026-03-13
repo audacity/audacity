@@ -1,4 +1,5 @@
 import QtQuick
+import Muse.UiComponents
 import Audacity.Spectrogram
 
 Item {
@@ -7,21 +8,43 @@ Item {
     // In
     required property var canvas
     required property int trackId
+    required property string trackTitle
     required property real sampleRate
+    required property real channelHeightRatio
+    required property bool isStereo
+
+    required property bool selectionInProgress
     required property real selectionStartPosition
     required property real selectionEndPosition
     required property real selectionStartFrequency
     required property real selectionEndFrequency
     required property real selectionStartTime
     required property real selectionEndTime
-    required property real channelHeightRatio
-    required property bool isStereo
     required property var selectionController
 
     // Out
     property bool verticalDragActive: leftOrMonoContainer.verticalDragActive || rightContainer.verticalDragActive
 
     signal selectionHorizontalResize(real x1, real x2, bool completed)
+    signal mousePositionChanged(real x, real y)
+
+    Component.onCompleted: {
+        contextMenuModel.init()
+    }
+
+    TrackSpectrogramContextMenuModel {
+        id: contextMenuModel
+        trackId: root.trackId
+        trackTitle: root.trackTitle
+    }
+
+    ContextMenuLoader {
+        id: contextMenuLoader
+
+        onHandleMenuItem: function (itemId) {
+            contextMenuModel.handleMenuItem(itemId)
+        }
+    }
 
     ChannelSpectralSelectionContainer {
         id: leftOrMonoContainer
@@ -35,6 +58,7 @@ Item {
         trackId: root.trackId
         channel: 0
         trackSampleRate: root.sampleRate
+        selectionInProgress: root.selectionInProgress
         selectionStartPosition: root.selectionStartPosition
         selectionEndPosition: root.selectionEndPosition
         selectionStartFrequency: root.selectionStartFrequency
@@ -45,6 +69,11 @@ Item {
 
         onSelectionHorizontalResize: function (x1, x2, completed) {
             root.selectionHorizontalResize(x1, x2, completed)
+        }
+
+        onMousePositionChanged: function (x, y) {
+            const position = mapToItem(root, Qt.point(x, y))
+            root.mousePositionChanged(position.x, position.y)
         }
     }
 
@@ -62,6 +91,7 @@ Item {
         trackId: root.trackId
         channel: 1
         trackSampleRate: root.sampleRate
+        selectionInProgress: root.selectionInProgress
         selectionStartPosition: root.selectionStartPosition
         selectionEndPosition: root.selectionEndPosition
         selectionStartFrequency: root.selectionStartFrequency
@@ -72,6 +102,11 @@ Item {
 
         onSelectionHorizontalResize: function (x1, x2, completed) {
             root.selectionHorizontalResize(x1, x2, completed)
+        }
+
+        onMousePositionChanged: function (x, y) {
+            const position = mapToItem(root, Qt.point(x, y))
+            root.mousePositionChanged(position.x, position.y)
         }
     }
 }

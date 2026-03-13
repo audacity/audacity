@@ -5,5 +5,11 @@
         <file>qml/Audacity/Spectrogram/ChannelSpectralSelectionContainer.qml</file>
         <file>qml/Audacity/Spectrogram/SpectrogramChannelRuler.qml</file>
         <file>qml/Audacity/Spectrogram/TrackSpectralSelectionContainer.qml</file>
+        <file>qml/Audacity/Spectrogram/TrackSpectrogramBaseSection.qml</file>
+        <file>qml/Audacity/Spectrogram/TrackSpectrogramAlgorithmSection.qml</file>
+        <file>qml/Audacity/Spectrogram/TrackSpectrogramColorsSection.qml</file>
+        <file>qml/Audacity/Spectrogram/TrackSpectrogramScaleSection.qml</file>
+        <file>qml/Audacity/Spectrogram/TrackSpectrogramSelectionSection.qml</file>
+        <file>qml/Audacity/Spectrogram/TrackSpectrogramSettingsDialog.qml</file>
     </qresource>
 </RCC>

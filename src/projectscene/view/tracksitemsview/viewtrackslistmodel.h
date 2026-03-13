@@ -67,6 +67,7 @@ private:
     enum RoleNames {
         TypeRole = Qt::UserRole + 1,
         TrackIdRole,
+        TrackTitleRole,
         TrackSampleRateRole,
         IsDataSelectedRole,
         IsTrackSelectedRole,
