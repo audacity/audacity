@@ -20,6 +20,8 @@ ListItemBlank {
     property NavigationPanel navigationPanel: null
     property int navigationOrder: 0
     property bool innerNavigationActive: false
+    property bool gripReorderActive: false
+    property int gripReorderTargetIndex: -1
 
     property NavigationPanel innerNavigationPanel: NavigationPanel {
         name: prv.title + " controls"
@@ -59,12 +61,91 @@ ListItemBlank {
     }
 
     function deactivateInnerNavigation() {
+        commitGripReorder()
+
         if (!root.innerNavigationActive) {
             return
         }
 
         root.innerNavigationActive = false
+        root.gripReorderActive = false
         root.navigation.requestActive()
+    }
+
+    function clearReorderPreview() {
+        if (!listView) {
+            root.yOffset = 0
+            root.z = 0
+            root.gripReorderTargetIndex = -1
+            return
+        }
+
+        const siblings = listView.contentItem.children
+        for (var i = 0; i < siblings.length; ++i) {
+            const sibling = siblings[i]
+            if (sibling.hasOwnProperty("yOffset")) {
+                sibling.yOffset = 0
+            }
+        }
+
+        root.yOffset = 0
+        root.z = 0
+        root.gripReorderTargetIndex = -1
+    }
+
+    function previewGripReorder(targetIndex) {
+        if (!listView || !listView.model) {
+            return
+        }
+
+        const boundedTargetIndex = Math.max(0, Math.min(targetIndex, listView.model.count() - 1))
+        const siblings = listView.contentItem.children
+
+        root.gripReorderTargetIndex = boundedTargetIndex
+        root.yOffset = (boundedTargetIndex - root.index) * itemHeight
+        root.z = listView.model.count()
+
+        for (var i = 0; i < siblings.length; ++i) {
+            const sibling = siblings[i]
+            if (!sibling.hasOwnProperty("yOffset")) {
+                continue
+            } else if (sibling === root) {
+                continue
+            } else if (sibling.index > root.index && sibling.index <= boundedTargetIndex) {
+                sibling.yOffset = -itemHeight
+            } else if (sibling.index < root.index && sibling.index >= boundedTargetIndex) {
+                sibling.yOffset = itemHeight
+            } else {
+                sibling.yOffset = 0
+            }
+        }
+    }
+
+    function targetIndexFromContentPosition() {
+        if (!listView) {
+            return root.index
+        }
+
+        const posInListView = content.mapToItem(listView, 0, itemHeight / 2 - topMargin).y + scrollOffset
+        return Math.floor(posInListView / itemHeight)
+    }
+
+    function commitGripReorder() {
+        if (!listView || !listView.model) {
+            return
+        }
+
+        const targetIndex = root.gripReorderTargetIndex
+        clearReorderPreview()
+
+        if (targetIndex < 0 || targetIndex === root.index) {
+            return
+        }
+
+        const prevContentY = listView.contentY
+
+        listView.model.moveRow(root.index, targetIndex)
+        listView.contentY = prevContentY
     }
 
     Component.onCompleted: {
@@ -116,12 +197,14 @@ ListItemBlank {
             Layout.preferredWidth: 14
             Layout.preferredHeight: 16
             Layout.alignment: Qt.AlignVCenter
-            backgroundRadius: 0
+            backgroundRadius: 2
 
             visible: true
-            transparent: true
+            transparent: !root.gripReorderActive
             hoverHitColor: normalColor
-            accentColor: normalColor
+            accentButton: root.gripReorderActive
+            accentColor: ui.theme.accentColor
+            iconColor: root.gripReorderActive ? ui.theme.extra["white_color"] : ui.theme.fontPrimaryColor
             mouseArea.cursorShape: Qt.SizeAllCursor
             navigation.panel: root.innerNavigationPanel
             navigation.order: 0
@@ -129,43 +212,14 @@ ListItemBlank {
             mouseArea.drag.target: content
             mouseArea.drag.axis: Drag.YAxis
             mouseArea.onReleased: {
-                const posInListView = content.mapToItem(listView, 0, itemHeight / 2 - topMargin).y + scrollOffset
-                const targetIndex = Math.floor(posInListView / itemHeight)
-                const siblings = listView.contentItem.children
-
-                const prevContentY = listView.contentY
-                // Temporarily disable the animation, otherwise the dragged item first returns to its original position
-                // before sliding to its new position, which looks strange.
-                yAnimation.duration = 0
-                for (var i = 0; i < siblings.length; ++i) {
-                    const sibling = siblings[i]
-                    if (sibling.hasOwnProperty("yOffset")) {
-                        sibling.yOffset = 0
-                    }
-                }
-                listView.model.moveRow(root.index, targetIndex)
-                listView.contentY = prevContentY
-                yAnimation.duration = animationDuration
+                root.gripReorderTargetIndex = root.targetIndexFromContentPosition()
+                root.commitGripReorder()
             }
             mouseArea.onPositionChanged: {
                 if (!mouseArea.drag.active) {
                     return
                 }
-                const posInListView = content.mapToItem(listView, 0, itemHeight / 2 - topMargin).y + scrollOffset
-                const targetIndex = Math.floor(posInListView / itemHeight)
-                const siblings = listView.contentItem.children
-                for (var i = 0; i < siblings.length; ++i) {
-                    const sibling = siblings[i]
-                    if (!sibling.hasOwnProperty("yOffset")) {
-                        continue
-                    } else if (sibling.index > root.index && sibling.index <= targetIndex) {
-                        sibling.yOffset = -itemHeight
-                    } else if (sibling.index < root.index && sibling.index >= targetIndex) {
-                        sibling.yOffset = itemHeight
-                    } else {
-                        sibling.yOffset = 0
-                    }
-                }
+                root.previewGripReorder(root.targetIndexFromContentPosition())
             }
             mouseArea.drag.minimumY: {
                 const itemMiddle = (root.index + 0.5) * itemHeight
@@ -285,7 +339,9 @@ ListItemBlank {
 
         function onActiveChanged() {
             if (root.navigation.active) {
+                root.clearReorderPreview()
                 root.innerNavigationActive = false
+                root.gripReorderActive = false
             }
         }
     }
@@ -293,10 +349,54 @@ ListItemBlank {
     Connections {
         target: gripButton.navigation
 
+        function onActiveChanged() {
+            if (!gripButton.navigation.active) {
+                Qt.callLater(function() {
+                    if (root.gripReorderActive || root.gripReorderTargetIndex >= 0) {
+                        root.commitGripReorder()
+                    }
+
+                    root.gripReorderActive = false
+                })
+            }
+        }
+
         function onNavigationEvent(event) {
-            if (event.type === NavigationEvent.Escape) {
+            switch (event.type) {
+            case NavigationEvent.Trigger:
+                if (root.gripReorderActive) {
+                    root.gripReorderActive = false
+                    root.commitGripReorder()
+                } else {
+                    root.gripReorderActive = true
+                    root.gripReorderTargetIndex = root.index
+                }
+                event.accepted = true
+                break
+            case NavigationEvent.Up:
+                if (!root.gripReorderActive) {
+                    return
+                }
+                root.previewGripReorder((root.gripReorderTargetIndex >= 0 ? root.gripReorderTargetIndex : root.index) - 1)
+                event.accepted = true
+                break
+            case NavigationEvent.Down:
+                if (!root.gripReorderActive) {
+                    return
+                }
+                root.previewGripReorder((root.gripReorderTargetIndex >= 0 ? root.gripReorderTargetIndex : root.index) + 1)
+                event.accepted = true
+                break
+            case NavigationEvent.Escape:
+                if (root.gripReorderActive) {
+                    root.clearReorderPreview()
+                    root.gripReorderActive = false
+                    event.accepted = true
+                    return
+                }
                 root.deactivateInnerNavigation()
                 event.accepted = true
+                break
             }
         }
     }
