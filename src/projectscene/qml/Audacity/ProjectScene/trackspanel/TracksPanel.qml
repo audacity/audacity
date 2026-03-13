@@ -16,7 +16,7 @@ Item {
     property var navPanels: null
     property alias tracksModel: tracksModel
 
-    signal openEffectsRequested()
+    signal openEffectsRequested
     signal panelActive(var trackId)
 
     property NavigationSection trackEffectsNavigationSection: null
@@ -25,7 +25,6 @@ Item {
     // property alias contextMenuModel: contextMenuModel
     property int effectsSectionWidth: 240 // TODO: can this be set as a constant that can be imported?
     property alias showEffectsSection: effectSectionModel.showEffectsSection
-    property int selectedTrackIndex: -1
 
     PanelTracksListModel {
         id: tracksModel
@@ -35,8 +34,9 @@ Item {
     TracksViewStateModel {
         id: tracksViewState
         onTracksVerticalOffsetChanged: {
-            let headerHeight = view.header.height ? view.header.height : 0
+            prv.suppressTracksVerticalOffsetSync = true
             view.contentY = tracksViewState.tracksVerticalOffset
+            prv.suppressTracksVerticalOffsetSync = false
         }
     }
 
@@ -49,6 +49,7 @@ Item {
     QtObject {
         id: prv
 
+        property bool suppressTracksVerticalOffsetSync: false
         property string currentItemNavigationName: ""
     }
 
@@ -72,7 +73,7 @@ Item {
                 id: effectSectionModel
             }
 
-            SeparatorLine { }
+            SeparatorLine {}
 
             TrackEffectsSection {
                 id: trackEffectsSection
@@ -102,12 +103,12 @@ Item {
                     property real startY: 0
                     property real startHeight: 0
 
-                    onPressed: (mouse) => {
+                    onPressed: mouse => {
                         startY = mouse.y
                         startHeight = trackEffectsSection.height
                     }
 
-                    onPositionChanged: (mouse) => {
+                    onPositionChanged: mouse => {
                         const deltaY = mouse.y - startY
                         const newMasterHeight = masterEffectsSection.height - deltaY
                         masterEffectsSection.Layout.preferredHeight = Math.min(newMasterHeight, effectColumn.height - trackEffectsSection.minimumHeight)
@@ -128,7 +129,7 @@ Item {
             }
         }
 
-        SeparatorLine { }
+        SeparatorLine {}
 
         ColumnLayout {
             id: contentColumn
@@ -161,8 +162,7 @@ Item {
                 onContentYChanged: {
                     if (verticalScrollLocked) {
                         view.contentY = lockedVerticalScrollPosition
-                    }
-                    else {
+                    } else if (!prv.suppressTracksVerticalOffsetSync) {
                         tracksViewState.changeTracksVerticalOffset(view.contentY)
                     }
                 }
@@ -245,7 +245,7 @@ Item {
                                 tracksModel.removeSelection()
                             }
 
-                            onMouseReleased: function(releasedItem, x, y) {
+                            onMouseReleased: function (releasedItem, x, y) {
                                 root.panelActive(item.trackId)
                             }
 
@@ -301,7 +301,7 @@ Item {
                                 tracksModel.addLabelToSelection()
                             }
 
-                            onMouseReleased: function(releasedItem, x, y) {
+                            onMouseReleased: function (releasedItem, x, y) {
                                 root.panelActive(item.trackId)
                             }
 
@@ -322,10 +322,10 @@ Item {
                     WheelHandler {
                         acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
 
-                        onWheel: function(wheelEvent) {
+                        onWheel: function (wheelEvent) {
                             let headerHeight = view.headerItem ? view.headerItem.height : 0
                             let delta = wheelEvent.pixelDelta.y !== 0 ? wheelEvent.pixelDelta.y : wheelEvent.angleDelta.y
-                            let offset  = view.contentY - delta
+                            let offset = view.contentY - delta
 
                             let maxContentY = view.contentHeight - view.height
                             maxContentY = Math.max(maxContentY, view.contentY)
@@ -407,16 +407,14 @@ Item {
                             if (itemAtCursor.height / 2 < view.mapToItem(itemAtCursor, 0, mouseY - view.contentY).y) {
                                 indexAtCursor++
                             }
-                        }
-                        else {
+                        } else {
                             indexAtCursor = mouseY < 0 ? 0 : view.count
                         }
 
-                        if (dragFirstIndex > indexAtCursor || (dragLastIndex + 1) < indexAtCursor ) {
+                        if (dragFirstIndex > indexAtCursor || (dragLastIndex + 1) < indexAtCursor) {
                             dropIndex = indexAtCursor
                             setDraggedStateForTracks(true)
-                        }
-                        else {
+                        } else {
                             dropIndex = -1
                             setDraggedStateForTracks(false)
                         }
@@ -424,11 +422,11 @@ Item {
 
                     function setDraggedStateForTracks(state) {
                         tracksModel.selectionModel().selectedIndexes.forEach(selectedIndex => {
-                                                                                 let loader = view.itemAtIndex(selectedIndex.row)
-                                                                                 if (Boolean(loader) && Boolean(loader.item)) {
-                                                                                     loader.item.dragged = state
-                                                                                 }
-                                                                             })
+                            let loader = view.itemAtIndex(selectedIndex.row)
+                            if (Boolean(loader) && Boolean(loader.item)) {
+                                loader.item.dragged = state
+                            }
+                        })
                     }
                 }
             }

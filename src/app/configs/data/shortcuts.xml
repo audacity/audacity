@@ -974,7 +974,7 @@
         <seq>Ctrl+F</seq>
     </SC>
     <SC>
-        <key>fit-v</key>
+        <key>zoom-to-fit-project-vertically</key>
         <seq>Ctrl+Shift+F</seq>
     </SC>
     <SC>
