@@ -386,7 +386,7 @@ bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudI
     const bool dismissible = false;
     const bool showProgressInfo = true;
     toastService()->showWithProgress(
-        trc("project", "Upload project to audio.com..."),
+        trc("project", "Upload project to audio.com…"),
         {},
         progress,
         muse::ui::IconCode::Code::CLOUD,
@@ -831,7 +831,7 @@ void ProjectActionsController::shareAudio()
     const bool dismissable = false;
     const bool showProgressInfo = true;
     toastService()->showWithProgress(
-        trc("cloud", "Sharing audio to audio.com..."),
+        trc("cloud", "Sharing audio to audio.com…"),
         {},
         progress,
         muse::ui::IconCode::Code::SHARE_AUDIO,
