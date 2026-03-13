@@ -57,6 +57,15 @@ void ClipContextMenuModel::load()
         makeItemWithArg("clip-render-pitch-speed"),
     };
 
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (prj) {
+        prj->clipList(m_clipKey.trackId()).onItemChanged(this, [this](const trackedit::Clip& clip) {
+            if (clip.key == m_clipKey.key) {
+                load();
+            }
+        }, muse::async::Asyncable::Mode::SetReplace);
+    }
+
     setItems(items);
 
     updateColorCheckedState();
@@ -124,7 +133,7 @@ void ClipContextMenuModel::updateColorCheckedState()
         ActionQuery query(action);
 
         if ((!clip.hasCustomColor && action == m_colorChangeActionCodeList.at(0))
-            || (clip.hasCustomColor && query.param("color").toString() == clip.color.toString())) {
+            || (clip.hasCustomColor && muse::draw::Color::fromString(query.param("color").toString()) == clip.color)) {
             auto state = item.state();
             state.checked = true;
             item.setState(state);

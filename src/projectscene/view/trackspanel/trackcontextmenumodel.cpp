@@ -270,9 +270,8 @@ void TrackContextMenuModel::updateColorCheckedState()
     for (const auto& action : m_colorChangeActionCodeList) {
         MenuItem& item = findItem(ActionCode(action));
         ActionQuery query(action);
-        track.value().color.toString();
 
-        if (query.param("color").toString() == track.value().color.toString()) {
+        if (muse::draw::Color::fromString(query.param("color").toString()) == track.value().color) {
             auto state = item.state();
             state.checked = true;
             item.setState(state);
