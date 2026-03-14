@@ -503,6 +503,21 @@ bool TrackeditInteraction::stretchLabelsRight(const LabelKeyList& labelKeyList, 
     return m_interaction->stretchLabelsRight(labelKeyList, deltaSec, completed);
 }
 
+bool TrackeditInteraction::toggleLabelMarker(const LabelKey& labelKey)
+{
+    return m_interaction->toggleLabelMarker(labelKey);
+}
+
+bool TrackeditInteraction::expandMarkersToRegions(const TrackId& trackId)
+{
+    return m_interaction->expandMarkersToRegions(trackId);
+}
+
+bool TrackeditInteraction::collapseLabelsToMarkers(const TrackId& trackId)
+{
+    return m_interaction->collapseLabelsToMarkers(trackId);
+}
+
 muse::Progress TrackeditInteraction::progress() const
 {
     return m_interaction->progress();

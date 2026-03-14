@@ -125,7 +125,7 @@ int ExportOGG::GetFormatCount() const
 FormatInfo ExportOGG::GetFormatInfo(int) const
 {
     return {
-        wxT("OGG"), XO("Ogg Vorbis Files"), { wxT("ogg") }, 255, true
+        wxT("OGG"), XO("Ogg Vorbis Files"), { wxT("ogg") }, 255, true, true
     };
 }
 
@@ -188,6 +188,11 @@ bool OGGExportProcessor::Initialize(AudacityProject& project,
 
     // Retrieve tags
     FillComment(&project, &context.comment, metadata);
+
+    // Add chapter marks as Vorbis Comment tags
+    for (const auto& [key, value] : FormatVorbisChapters(m_chapterMarks)) {
+        vorbis_comment_add_tag(&context.comment, key.c_str(), value.c_str());
+    }
 
     // Set up packet->stream encoder.  According to encoder example,
     // a random serial number makes it more likely that you can make

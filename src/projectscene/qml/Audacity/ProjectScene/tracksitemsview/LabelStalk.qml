@@ -4,6 +4,7 @@ Rectangle {
     id: root
 
     property bool isForPoint: false
+    property bool isForMarker: false
     property bool isRight: false
     property bool enableCursorInteraction: true
     property color backgroundColor: "transparent"
@@ -20,6 +21,7 @@ Rectangle {
     signal stretchStartRequested()
     signal stretchEndRequested()
     signal stretchMousePositionChanged(real x, real y)
+    signal contextMenuOpenRequested(real x, real y)
 
     width: 1
 
@@ -31,21 +33,30 @@ Rectangle {
         anchors.leftMargin: -1
         anchors.rightMargin: -1
 
-        acceptedButtons: Qt.LeftButton
+        acceptedButtons: Qt.LeftButton | Qt.RightButton
         hoverEnabled: true
-        cursorShape: Qt.SizeHorCursor
+        cursorShape: root.isForMarker ? Qt.SizeAllCursor : Qt.SizeHorCursor
 
         visible: root.enableCursorInteraction
 
         onContainsMouseChanged: {
-            if (!root.visible || !root.isForPoint) {
+            if (!root.visible || (!root.isForPoint && !root.isForMarker)) {
                 return
             }
             root.headerHoveredChanged(containsMouse)
         }
 
+        onClicked: function (e) {
+            if (e.button === Qt.RightButton) {
+                root.contextMenuOpenRequested(e.x, e.y)
+            }
+        }
+
         onPressed: function (e) {
-            if (!root.isForPoint) {
+            if (e.button === Qt.RightButton) {
+                return
+            }
+            if (!root.isForPoint || root.isForMarker) {
                 root.isStretchInProgress = true
 
                 let mousePos = mapToItem(root.parent, e.x, e.y)
@@ -62,7 +73,7 @@ Rectangle {
         onPositionChanged: function (e) {
             let mousePos = mapToItem(root.parent, e.x, e.y)
 
-            if (pressed && !root.isForPoint) {
+            if (pressed && (!root.isForPoint || root.isForMarker)) {
                 root.stretchMousePositionChanged(mousePos.x, mousePos.y)
                 root.stretchRequested(false)
                 e.accepted = true
@@ -73,7 +84,7 @@ Rectangle {
         }
 
         onReleased: function (e) {
-            if (!root.isForPoint) {
+            if (!root.isForPoint || root.isForMarker) {
                 root.isStretchInProgress = false
                 root.stretchRequested(true)
                 root.stretchEndRequested()

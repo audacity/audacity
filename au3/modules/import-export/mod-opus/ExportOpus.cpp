@@ -192,7 +192,7 @@ int ExportOpus::GetFormatCount() const
 FormatInfo ExportOpus::GetFormatInfo(int) const
 {
     return {
-        wxT("Opus"), XO("Opus Files"), { wxT("opus") }, 255, true
+        wxT("Opus"), XO("Opus Files"), { wxT("opus") }, 255, true, true
     };
 }
 
@@ -282,7 +282,10 @@ void OpusExportProcessor::WriteTags()
     commentsPacket.Write<uint32_t>(vendor.size());
     commentsPacket.Write(vendor.data(), vendor.size());
 
-    commentsPacket.Write<uint32_t>(context.metadata->Count());
+    // Build chapter tag entries
+    auto chapterTags = FormatVorbisChapters(m_chapterMarks);
+
+    commentsPacket.Write<uint32_t>(context.metadata->Count() + chapterTags.size());
 
     for (const auto& pair : context.metadata->GetRange()) {
         const auto key = pair.first == TAG_YEAR ? std::string("DATE")
@@ -290,6 +293,14 @@ void OpusExportProcessor::WriteTags()
 
         const auto value = audacity::ToUTF8(pair.second);
 
+        commentsPacket.Write<uint32_t>(key.size() + value.size() + 1);
+        commentsPacket.Write(key.data(), key.size());
+        commentsPacket.Write("=", 1);
+        commentsPacket.Write(value.data(), value.size());
+    }
+
+    // Write chapter tags
+    for (const auto& [key, value] : chapterTags) {
         commentsPacket.Write<uint32_t>(key.size() + value.size() + 1);
         commentsPacket.Write(key.data(), key.size());
         commentsPacket.Write("=", 1);

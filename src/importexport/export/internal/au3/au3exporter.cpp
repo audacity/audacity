@@ -273,6 +273,26 @@ muse::Ret Au3Exporter::exportData(const muse::io::path_t& path, const Options& o
 
     try {
         auto processor = m_plugin->CreateProcessor(m_format);
+
+        // Collect chapter marks from selected label tracks
+        if (options.count(OptionKey::ChapterTrackIds)) {
+            auto trackeditProject = globalContext()->currentTrackeditProject();
+            if (trackeditProject) {
+                std::vector<ChapterMark> chapterMarks;
+                for (const auto& trackIdVal : options.at(OptionKey::ChapterTrackIds).toList()) {
+                    int trackId = trackIdVal.toInt();
+                    auto labels = trackeditProject->labelList(trackId);
+                    for (const auto& label : labels) {
+                        double end = (label.startTime == label.endTime) ? -1.0 : label.endTime;
+                        chapterMarks.push_back({ label.startTime, end, label.title.toStdString() });
+                    }
+                }
+                std::sort(chapterMarks.begin(), chapterMarks.end(),
+                          [](const auto& a, const auto& b) { return a.time < b.time; });
+                processor->SetChapterMarks(std::move(chapterMarks));
+            }
+        }
+
         if (!processor->Initialize(*project,
                                    m_parameters,
                                    wxfilename.GetFullPath(),
@@ -457,6 +477,19 @@ bool Au3Exporter::hasMetadata() const
     for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
         if (plugin->GetFormatInfo(formatIndex).description.Translation().ToStdString() == format) {
             return plugin->GetFormatInfo(formatIndex).canMetaData;
+        }
+    }
+
+    return false;
+}
+
+bool Au3Exporter::hasChapters() const
+{
+    std::string format = exportConfiguration()->currentFormat();
+
+    for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
+        if (plugin->GetFormatInfo(formatIndex).description.Translation().ToStdString() == format) {
+            return plugin->GetFormatInfo(formatIndex).canChapters;
         }
     }
 

@@ -18,6 +18,10 @@ void TrackLabelItem::setLabel(const trackedit::Label& label)
     m_title = label.title;
     m_color = label.color.toQColor();
 
+    if (m_isMarker != label.isMarker) {
+        m_isMarker = label.isMarker;
+        emit isMarkerChanged();
+    }
     emit titleChanged();
     emit colorChanged();
     emit timeChanged();
@@ -131,4 +135,9 @@ void TrackLabelItem::setIsLinkedActive(bool active)
 bool TrackLabelItem::isPoint() const
 {
     return muse::RealIsEqual(m_time.startTime, m_time.endTime);
+}
+
+bool TrackLabelItem::isMarker() const
+{
+    return m_isMarker;
 }

@@ -582,6 +582,59 @@ StyledDialogView {
 
                         onClicked: {}
                     }
+
+                    CheckBox {
+                        id: chaptersCheckBox
+                        width: parent.width
+
+                        text: qsTrc("export", "Include labels as chapter markers")
+                        enabled: exportPreferencesModel.hasChapters && exportPreferencesModel.labelTracks.length > 0
+                        checked: exportPreferencesModel.chaptersEnabled
+
+                        navigation.name: "ChaptersCheckBox"
+                        navigation.panel: renderingSection.navigation
+                        navigation.order: 2
+                        navigation.accessible.name: text
+
+                        onClicked: {
+                            exportPreferencesModel.setChaptersEnabled(!exportPreferencesModel.chaptersEnabled)
+                        }
+                    }
+
+                    RowLayout {
+                        visible: chaptersCheckBox.checked && chaptersCheckBox.enabled
+                        Layout.topMargin: 8
+
+                        Item {
+                            Layout.preferredWidth: root.labelColumnWidth
+                            Layout.alignment: Qt.AlignTop
+
+                            StyledTextLabel {
+                                text: qsTrc("export", "Label tracks")
+                            }
+                        }
+
+                        LabelTracksSelectionView {
+                            Layout.preferredWidth: root.dropdownWidth
+                            Layout.preferredHeight: 140
+
+                            itemsModel: exportPreferencesModel.labelTracks
+                            selectedItems: exportPreferencesModel.selectedChapterTracks
+
+                            itemsViewWidth: root.dropdownWidth - 120
+                            navigationSection: root.navigationSection
+
+                            onSetSelectedRequested: function(itemCode, selected) {
+                                exportPreferencesModel.changeChapterTrackSelection(itemCode, selected)
+                            }
+                            onSelectAllRequested: {
+                                exportPreferencesModel.selectAllChapterTracks()
+                            }
+                            onDeselectAllRequested: {
+                                exportPreferencesModel.deselectAllChapterTracks()
+                            }
+                        }
+                    }
                 }
             }
         }

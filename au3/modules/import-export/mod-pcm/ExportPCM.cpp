@@ -9,6 +9,7 @@
 **********************************************************************/
 
 #include <wx/defs.h>
+#include <wx/log.h>
 
 #include <wx/app.h>
 #include <wx/dynlib.h>
@@ -21,7 +22,6 @@
 #include "au3-mixer/Mix.h"
 #include "au3-preferences/Prefs.h"
 #include "au3-tags/Tags.h"
-#include "au3-track/Track.h"
 #include "au3-files/wxFileNameWrapper.h"
 
 #include "au3-import-export/Export.h"
@@ -406,12 +406,15 @@ FormatInfo ExportPCM::GetFormatInfo(int index) const
         index = 0;
     }
 
+    const bool isWav = (kFormats[index].format & SF_FORMAT_TYPEMASK) == SF_FORMAT_WAV;
+
     return {
         kFormats[index].name,
         kFormats[index].desc,
         { sf_header_extension(kFormats[index].format) },
         255,
-        true
+        true,
+        isWav
     };
 }
 
@@ -541,6 +544,25 @@ bool PCMExportProcessor::Initialize(AudacityProject& project,
             sf = sf_open_fd(f.fd(), SFM_WRITE, &info, FALSE);
             //add clipping for integer formats.  We allow floats to clip.
             sf_command(sf, SFC_SET_CLIPPING, NULL, sf_subtype_is_integer(sf_format) ? SF_TRUE : SF_FALSE);
+        }
+
+        // Prepare chapter marks as WAV cue points (written before sf_close in Process())
+        if ((fileFormat == SF_FORMAT_WAV || fileFormat == SF_FORMAT_WAVEX) && !m_chapterMarks.empty()) {
+            uint32_t cueIdx = 0;
+            for (const auto& mark : m_chapterMarks) {
+                if (cueIdx >= 100) break;
+                auto& cue = context.cues.cue_points[cueIdx];
+                cue.indx = static_cast<int32_t>(cueIdx + 1);
+                cue.position = static_cast<uint32_t>(mark.time * info.samplerate + 0.5);
+                cue.sample_offset = cue.position;
+                strncpy(cue.name, mark.title.c_str(), sizeof(cue.name) - 1);
+                cue.name[sizeof(cue.name) - 1] = '\0';
+                ++cueIdx;
+            }
+            if (cueIdx > 0) {
+                context.cues.cue_count = cueIdx;
+                context.hasCues = true;
+            }
         }
 
         if (!sf) {
@@ -679,6 +701,11 @@ ExportResult PCMExportProcessor::Process(ExportProcessorDelegate& delegate)
             || context.fileFormat == SF_FORMAT_WAVEX) {
             AddStrings(context.sf, context.metadata.get(), context.sf_format);
         }
+    }
+
+    // Write cue points after all audio data, before closing
+    if (context.hasCues) {
+        sf_command(context.sf, SFC_SET_CUE, &context.cues, sizeof(context.cues));
     }
 
     if (0 != sf_close(context.sf)) {

@@ -316,6 +316,7 @@ private:
 
     static int AskResample(int bitrate, int rate, int lowrate, int highrate);
     static unsigned long AddTags(ArrayOf<char>& buffer, bool* endOfFile, const Tags* tags);
+    void InjectChapterFrames(ArrayOf<char>& buffer, unsigned long& len) const;
 #ifdef USE_LIBID3TAG
     static void AddFrame(struct id3_tag* tp, const wxString& n, const wxString& v, const char* name);
 #endif

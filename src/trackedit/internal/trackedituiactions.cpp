@@ -351,6 +351,24 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Copy label"),
              IconCode::Code::COPY
              ),
+    UiAction("label-toggle-marker",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Toggle marker"),
+             TranslatableString("action", "Toggle marker")
+             ),
+    UiAction("label-track-expand-to-regions",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Expand markers to regions"),
+             TranslatableString("action", "Expand markers to regions")
+             ),
+    UiAction("label-track-collapse-to-markers",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Collapse labels to markers"),
+             TranslatableString("action", "Collapse labels to markers")
+             ),
     UiAction("trim-audio-outside-selection",
              au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,

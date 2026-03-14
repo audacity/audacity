@@ -151,6 +151,13 @@ void ClipGainModel::reload()
 
     m_clipStartTime = clipsInteraction()->clipStartTime(m_clipKey.key);
     m_clipEndTime   = clipsInteraction()->clipEndTime(m_clipKey.key);
+
+    // Track/clip may have been deleted (e.g. after track removal + history notify)
+    if (m_clipStartTime < 0 || m_clipEndTime < 0) {
+        clear();
+        return;
+    }
+
     emit clipTimeChanged();
 
     auto points = clipGainInteraction()->clipGainPoints(m_clipKey.key);

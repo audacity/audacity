@@ -98,9 +98,13 @@ public:
 
     bool updated{};                 /// flag to tell if the label times were updated
 
+    bool GetIsMarker() const { return mIsMarker; }
+    void SetIsMarker(bool marker) { mIsMarker = marker; }
+
 private:
     int64_t mId{ 0 };
     bool mSelected{ false };
+    bool mIsMarker{ false };
 };
 
 using LabelArray = std::vector<LabelStruct>;

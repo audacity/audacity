@@ -8,6 +8,7 @@
 #include <algorithm>
 
 #include "au3-label-track/LabelTrack.h"
+#include "mod-pcm/CueTrackAttachment.h"
 
 #include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/domconverter.h"
@@ -51,6 +52,15 @@ muse::RetVal<LabelKey> Au3LabelsInteraction::addLabel(const TrackId& toTrackId)
     selectedRegion.setTimes(0.0, 0.0);
 
     int64_t newLabelId = labelTrack->AddLabel(selectedRegion, wxEmptyString);
+
+    if (CueTrackAttachment::Get(*labelTrack).IsCueTrack()) {
+        int idx = labelTrack->GetLabelIndex(newLabelId);
+        if (idx >= 0) {
+            auto label = *labelTrack->GetLabel(idx);
+            label.SetIsMarker(true);
+            labelTrack->SetLabel(idx, label);
+        }
+    }
 
     const auto prj = globalContext()->currentTrackeditProject();
     if (prj) {
@@ -107,6 +117,16 @@ bool Au3LabelsInteraction::addLabelToSelection()
     }
 
     int64_t newLabelId = labelTrack->AddLabel(selectedRegion, title);
+
+    if (CueTrackAttachment::Get(*labelTrack).IsCueTrack()) {
+        int idx = labelTrack->GetLabelIndex(newLabelId);
+        if (idx >= 0) {
+            auto label = *labelTrack->GetLabel(idx);
+            label.SetIsMarker(true);
+            labelTrack->SetLabel(idx, label);
+        }
+    }
+
     const auto& newLabel = DomAccessor::findLabel(labelTrack, newLabelId);
 
     const auto prj = globalContext()->currentTrackeditProject();
@@ -513,9 +533,13 @@ bool Au3LabelsInteraction::stretchLabelLeft(const LabelKey& labelKey, secs_t new
     }
 
     newStartTime = std::max(0.0, newStartTime.to_double());
-    double anchorT1 = m_stretchTime.value();
 
-    au3Label.selectedRegion.setTimes(newStartTime, anchorT1);
+    if (au3Label.GetIsMarker()) {
+        au3Label.selectedRegion.setTimes(newStartTime, newStartTime);
+    } else {
+        double anchorT1 = m_stretchTime.value();
+        au3Label.selectedRegion.setTimes(newStartTime, anchorT1);
+    }
     labelTrack->SetLabel(labelIndex, au3Label);
 
     const auto prj = globalContext()->currentTrackeditProject();
@@ -588,9 +612,13 @@ bool Au3LabelsInteraction::stretchLabelRight(const LabelKey& labelKey, secs_t ne
     }
 
     newEndTime = std::max(0.0, newEndTime.to_double());
-    double anchorT0 = m_stretchTime.value();
 
-    au3Label.selectedRegion.setTimes(anchorT0, newEndTime);
+    if (au3Label.GetIsMarker()) {
+        au3Label.selectedRegion.setTimes(newEndTime, newEndTime);
+    } else {
+        double anchorT0 = m_stretchTime.value();
+        au3Label.selectedRegion.setTimes(anchorT0, newEndTime);
+    }
     labelTrack->SetLabel(labelIndex, au3Label);
 
     const auto prj = globalContext()->currentTrackeditProject();
@@ -626,6 +654,104 @@ bool Au3LabelsInteraction::stretchLabelsRight(const LabelKeyList& labelKeys, sec
 
         stretchLabelRight(labelKey, newEndTime, completed);
     }
+    return true;
+}
+
+bool Au3LabelsInteraction::toggleLabelMarker(const LabelKey& labelKey)
+{
+    auto& project = projectRef();
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(project, Au3TrackId(labelKey.trackId));
+    IF_ASSERT_FAILED(labelTrack) {
+        return false;
+    }
+
+    int labelIndex = labelTrack->GetLabelIndex(labelKey.itemId);
+    if (labelIndex < 0) {
+        return false;
+    }
+
+    const auto& au3labels = labelTrack->GetLabels();
+    Au3Label au3Label = au3labels[labelIndex];
+
+    if (au3Label.GetIsMarker()) {
+        au3Label.SetIsMarker(false);
+    } else {
+        au3Label.SetIsMarker(true);
+        au3Label.selectedRegion.setTimes(au3Label.getT0(), au3Label.getT0());
+    }
+
+    labelTrack->SetLabel(labelIndex, au3Label);
+
+    LOGD() << "toggled marker state of label: " << labelKey.itemId << ", track: " << labelKey.trackId;
+
+    const auto prj = globalContext()->currentTrackeditProject();
+    if (prj) {
+        prj->notifyAboutLabelChanged(DomConverter::label(labelTrack, DomAccessor::findLabel(labelTrack, au3Label.GetId())));
+    }
+
+    return true;
+}
+
+bool Au3LabelsInteraction::expandMarkersToRegions(const TrackId& trackId)
+{
+    auto& project = projectRef();
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(project, Au3TrackId(trackId));
+    IF_ASSERT_FAILED(labelTrack) {
+        return false;
+    }
+
+    const auto& labels = labelTrack->GetLabels();
+    int count = static_cast<int>(labels.size());
+    double projectEnd = Au3TrackList::Get(project).GetEndTime();
+
+    for (int i = 0; i < count; ++i) {
+        Au3Label label = labels[i];
+        if (!muse::RealIsEqual(label.getT0(), label.getT1())) {
+            continue;
+        }
+
+        double newT1 = (i + 1 < count) ? labels[i + 1].getT0() : projectEnd;
+
+        if (muse::RealIsEqualOrLess(newT1, label.getT0())) {
+            continue;
+        }
+
+        label.SetIsMarker(false);
+        label.selectedRegion.setTimes(label.getT0(), newT1);
+        labelTrack->SetLabel(i, label);
+    }
+
+    const auto prj = globalContext()->currentTrackeditProject();
+    if (prj) {
+        prj->notifyAboutTrackChanged(DomConverter::track(labelTrack));
+    }
+
+    return true;
+}
+
+bool Au3LabelsInteraction::collapseLabelsToMarkers(const TrackId& trackId)
+{
+    auto& project = projectRef();
+    Au3LabelTrack* labelTrack = DomAccessor::findLabelTrack(project, Au3TrackId(trackId));
+    IF_ASSERT_FAILED(labelTrack) {
+        return false;
+    }
+
+    const auto& labels = labelTrack->GetLabels();
+    int count = static_cast<int>(labels.size());
+
+    for (int i = 0; i < count; ++i) {
+        Au3Label label = labels[i];
+        label.SetIsMarker(true);
+        label.selectedRegion.setTimes(label.getT0(), label.getT0());
+        labelTrack->SetLabel(i, label);
+    }
+
+    const auto prj = globalContext()->currentTrackeditProject();
+    if (prj) {
+        prj->notifyAboutTrackChanged(DomConverter::track(labelTrack));
+    }
+
     return true;
 }
 

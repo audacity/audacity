@@ -49,6 +49,8 @@ class PCMExportProcessor final : public ExportProcessor
         wxFileNameWrapper fName;
         int fileFormat;
         std::unique_ptr<Tags> metadata;
+        SF_CUES cues{};
+        bool hasCues = false;
     } context;
 
 public:
