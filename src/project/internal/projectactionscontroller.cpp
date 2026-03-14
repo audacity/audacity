@@ -83,7 +83,7 @@ ProjectActionsController::ProjectActionsController(muse::modularity::ContextPtr 
 void ProjectActionsController::init()
 {
     dispatcher()->reg(this, "file-new", this, &ProjectActionsController::newProject);
-    dispatcher()->reg(this, "file-open", this, &ProjectActionsController::openProject);
+    dispatcher()->reg(this, "file-open", this, &ProjectActionsController::open);
     dispatcher()->reg(this, "clear-recent", this, &ProjectActionsController::clearRecentProjects);
     dispatcher()->reg(this, "project-import", this, &ProjectActionsController::importFile);
 
@@ -222,23 +222,31 @@ void ProjectActionsController::newProject()
         return;
     }
 
-    IAudacityProjectPtr project = std::make_shared<Audacity4Project>(iocContext());
-    project->createNew();
-
-    globalContext()->setCurrentProject(project);
-
-    projectHistory()->init();
-
+    createProjectInCurrentWindow();
     openPageIfNeed(PROJECT_PAGE_URI);
 }
 
-void ProjectActionsController::openProject(const muse::actions::ActionData& args)
+void ProjectActionsController::open(const muse::actions::ActionData& args)
 {
     UNUSED(args);
     const QUrl url = !args.empty() ? args.arg<QUrl>(0) : QUrl();
     const QString displayNameOverride = args.count() >= 2 ? args.arg<QString>(1) : QString();
+    const muse::io::path_t filePath = url.isLocalFile() ? muse::io::path_t(url) : selectOpeningFile();
 
-    Ret ret = openProject(ProjectFile(url, displayNameOverride));
+    Ret ret = make_ret(Ret::Code::Cancel);
+
+    if (filePath.empty()) {
+        ret = make_ret(Ret::Code::Cancel);
+    } else if (!isFileSupported(filePath)) {
+        interactive()->error(muse::trc("project", "Error opening file"),
+                             muse::mtrc("project", "Could not open file: %1").arg(filePath.toString()).toStdString());
+        ret = make_ret(Err::UnsupportedUrl);
+    } else if (au::project::isAudacityFile(filePath)) {
+        ret = openProject(ProjectFile(QUrl::fromLocalFile(filePath.toQString()), displayNameOverride));
+    } else {
+        ret = openMediaFile(filePath);
+    }
+
     if (!ret) {
         openPageIfNeed(HOME_PAGE_URI);
     }
@@ -249,6 +257,33 @@ void ProjectActionsController::importFile()
     const muse::io::path_t askedPath = selectImportFile();
     const IAudacityProjectPtr project = globalContext()->currentProject();
     project->import(askedPath);
+}
+
+muse::Ret ProjectActionsController::openMediaFile(const muse::io::path_t& givenPath)
+{
+    io::path_t actualPath = fileSystem()->absoluteFilePath(givenPath);
+    if (actualPath.empty()) {
+        return make_ret(Ret::Code::UnknownError);
+    }
+
+    if (globalContext()->currentProject()) {
+        QStringList args;
+        args << actualPath.toQString();
+        multiwindowsProvider()->openNewWindow(args);
+        return make_ret(Ret::Code::Ok);
+    }
+
+    IAudacityProjectPtr project = createProjectInCurrentWindow();
+    if (!project) {
+        return make_ret(Ret::Code::InternalError);
+    }
+
+    Ret ret = openPageIfNeed(PROJECT_PAGE_URI);
+    if (!ret) {
+        return ret;
+    }
+
+    return project->import(actualPath);
 }
 
 bool ProjectActionsController::isUrlSupported(const QUrl& url) const
@@ -272,7 +307,13 @@ bool ProjectActionsController::isFileSupported(const muse::io::path_t& path) con
         return true;
     }
 
-    return false;
+    const std::string ext = io::suffix(path);
+    if (ext.empty()) {
+        return false;
+    }
+
+    const auto supportedExtensions = importer()->supportedExtensions();
+    return std::find(supportedExtensions.cbegin(), supportedExtensions.cend(), ext) != supportedExtensions.cend();
 }
 
 bool ProjectActionsController::closeOpenedProject(const bool quitApp)
@@ -426,11 +467,31 @@ async::Notification ProjectActionsController::projectBeingDownloadedChanged() co
 
 muse::io::path_t ProjectActionsController::selectOpeningFile()
 {
-    std::string allExt = "*.aup3 *.aup4";
+    std::vector<std::string> supportedExtensions = importer()->supportedExtensions();
 
-    std::vector<std::string> filter { trc("project", "All supported files") + " (" + allExt + ")",
-                                      trc("project", "Audacity 3 files") + " (*.aup3)",
-                                      trc("project", "Audacity 4 files") + " (*.aup4)" };
+    std::string mediaExt;
+    for (const std::string& ext : supportedExtensions) {
+        if (ext.empty()) {
+            continue;
+        }
+
+        if (!mediaExt.empty()) {
+            mediaExt += " ";
+        }
+
+        mediaExt += "*." + ext;
+    }
+
+    const std::string projectExt = "*.aup3 *.aup4";
+    const std::string allExt = mediaExt.empty() ? projectExt : projectExt + " " + mediaExt;
+
+    std::vector<std::string> filter {
+        trc("project", "All supported files") + " (*.aup4,*.mp3, ...) (" + allExt + ")",
+        trc("project", "Audacity project files") + " (*.aup3,*.aup4, ...) (" + projectExt + ")",
+        trc("project", "Audacity 3 files") + " (*.aup3, ...) (*.aup3)",
+        trc("project", "Audacity 4 files") + " (*.aup4, ...) (*.aup4)",
+        trc("project", "Importable audio and media files") + " (*.mp3,*.aac, ...) (" + mediaExt + ")",
+    };
 
     io::path_t defaultDir = configuration()->lastOpenedProjectsPath();
 
@@ -442,7 +503,8 @@ muse::io::path_t ProjectActionsController::selectOpeningFile()
         defaultDir = configuration()->defaultUserProjectsPath();
     }
 
-    io::path_t filePath = interactive()->selectOpeningFileSync(muse::trc("project", "Open"), defaultDir, filter);
+    io::path_t filePath = interactive()->selectOpeningFileSync(muse::trc("project",
+                                                                         "Open"), defaultDir, filter, QFileDialog::HideNameFilterDetails);
 
     if (!filePath.empty()) {
         configuration()->setLastOpenedProjectsPath(io::dirpath(filePath));
@@ -638,6 +700,21 @@ muse::Ret ProjectActionsController::openProject(const muse::io::path_t& givenPat
 
     //! Step 6. Open project in the current window
     return doOpenProject(actualPath);
+}
+
+IAudacityProjectPtr ProjectActionsController::createProjectInCurrentWindow()
+{
+    IAudacityProjectPtr project = std::make_shared<Audacity4Project>(iocContext());
+    Ret ret = project->createNew();
+    if (!ret) {
+        LOGE() << ret.toString();
+        return nullptr;
+    }
+
+    globalContext()->setCurrentProject(project);
+    projectHistory()->init();
+
+    return project;
 }
 
 Ret ProjectActionsController::doOpenProject(const io::path_t& filePath)
