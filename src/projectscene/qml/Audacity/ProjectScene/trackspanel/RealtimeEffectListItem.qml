@@ -16,12 +16,15 @@ ListItemBlank {
     property int index: -1
     property int scrollOffset: 0
     property int topMargin: 0
+    property alias gripControl: gripButton
 
     property NavigationPanel navigationPanel: null
     property int navigationOrder: 0
     property bool innerNavigationActive: false
     property bool gripReorderActive: false
     property int gripReorderTargetIndex: -1
+
+    signal gripReorderCommitted(int targetIndex)
 
     property NavigationPanel innerNavigationPanel: NavigationPanel {
         name: prv.title + " controls"
@@ -143,6 +146,7 @@ ListItemBlank {
         }
 
         const prevContentY = listView.contentY
+        root.gripReorderCommitted(targetIndex)
 
         listView.model.moveRow(root.index, targetIndex)
         listView.contentY = prevContentY

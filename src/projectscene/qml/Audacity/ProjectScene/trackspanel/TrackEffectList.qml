@@ -21,9 +21,21 @@ Rectangle {
     property alias count: trackEffectList.count
     property NavigationPanel navigationPanel: null
     property int navigationOrderStart: 0
+    property int pendingGripFocusIndex: -1
 
     Component.onCompleted: {
         trackEffectListModel.load()
+    }
+
+    function focusGripAtIndex(targetIndex) {
+        const delegate = trackEffectList.itemAtIndex(targetIndex)
+        if (!delegate) {
+            return
+        }
+
+        delegate.innerNavigationActive = true
+        delegate.gripReorderActive = false
+        delegate.gripControl.navigation.requestActive()
     }
 
     RealtimeEffectListModel {
@@ -62,6 +74,10 @@ Rectangle {
             width: trackEffectList.width - scrollbarContainer.width
             navigationPanel: root.navigationPanel
             navigationOrder: root.navigationOrderStart + model.index
+
+            onGripReorderCommitted: function(targetIndex) {
+                root.pendingGripFocusIndex = targetIndex
+            }
         }
 
         ScrollBar.vertical: scrollbar
@@ -78,6 +94,23 @@ Rectangle {
                 thickness: 5
                 policy: ScrollBar.AlwaysOn
             }
+        }
+    }
+
+    Connections {
+        target: trackEffectListModel
+
+        function onLayoutChanged() {
+            if (root.pendingGripFocusIndex < 0) {
+                return
+            }
+
+            const targetIndex = root.pendingGripFocusIndex
+            root.pendingGripFocusIndex = -1
+
+            Qt.callLater(function() {
+                root.focusGripAtIndex(targetIndex)
+            })
         }
     }
 }
