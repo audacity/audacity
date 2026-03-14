@@ -24,7 +24,7 @@ ListItemBlank {
     property bool gripReorderActive: false
     property int gripReorderTargetIndex: -1
 
-    signal gripReorderCommitted(int targetIndex)
+    signal gripReorderCommitted(int targetIndex, bool focusGripHandle)
 
     property NavigationPanel innerNavigationPanel: NavigationPanel {
         name: prv.title + " controls"
@@ -37,6 +37,16 @@ ListItemBlank {
     QtObject {
         id: prv
         property string title: root.item ? root.item.effectName() : ""
+    }
+
+    Timer {
+        id: delayedOuterReorderCommitTimer
+
+        interval: root.animationDuration
+        repeat: false
+        onTriggered: {
+            root.commitGripReorder(false)
+        }
     }
 
     // Internal properties
@@ -54,6 +64,32 @@ ListItemBlank {
     navigation.order: root.navigationOrder
     focusBorder.drawOutsideParent: true
 
+    Keys.onPressed: function(event) {
+        const isAltReorder = (event.modifiers & Qt.AltModifier) !== 0
+        if (!root.navigation.active || root.innerNavigationActive || !isAltReorder) {
+            return
+        }
+
+        const previewBaseIndex = root.gripReorderTargetIndex >= 0 ? root.gripReorderTargetIndex : root.index
+
+        switch (event.key) {
+        case Qt.Key_Up:
+            yAnimation.stop()
+            root.previewGripReorder(previewBaseIndex - 1)
+            delayedOuterReorderCommitTimer.restart()
+            event.accepted = true
+            break
+        case Qt.Key_Down:
+            yAnimation.stop()
+            root.previewGripReorder(previewBaseIndex + 1)
+            delayedOuterReorderCommitTimer.restart()
+            event.accepted = true
+            break
+        default:
+            break
+        }
+    }
+
     function activateInnerNavigation() {
         if (root.innerNavigationActive) {
             return
@@ -64,7 +100,7 @@ ListItemBlank {
     }
 
     function deactivateInnerNavigation() {
-        commitGripReorder()
+        commitGripReorder(false)
 
         if (!root.innerNavigationActive) {
             return
@@ -133,10 +169,12 @@ ListItemBlank {
         return Math.floor(posInListView / itemHeight)
     }
 
-    function commitGripReorder() {
+    function commitGripReorder(focusGripHandle) {
         if (!listView || !listView.model) {
             return
         }
+
+        delayedOuterReorderCommitTimer.stop()
 
         const targetIndex = root.gripReorderTargetIndex
         clearReorderPreview()
@@ -146,7 +184,7 @@ ListItemBlank {
         }
 
         const prevContentY = listView.contentY
-        root.gripReorderCommitted(targetIndex)
+        root.gripReorderCommitted(targetIndex, focusGripHandle)
 
         listView.model.moveRow(root.index, targetIndex)
         listView.contentY = prevContentY
@@ -217,7 +255,7 @@ ListItemBlank {
             mouseArea.drag.axis: Drag.YAxis
             mouseArea.onReleased: {
                 root.gripReorderTargetIndex = root.targetIndexFromContentPosition()
-                root.commitGripReorder()
+                root.commitGripReorder(false)
             }
             mouseArea.onPositionChanged: {
                 if (!mouseArea.drag.active) {
@@ -357,7 +395,7 @@ ListItemBlank {
             if (!gripButton.navigation.active) {
                 Qt.callLater(function() {
                     if (root.gripReorderActive || root.gripReorderTargetIndex >= 0) {
-                        root.commitGripReorder()
+                        root.commitGripReorder(true)
                     }
 
                     root.gripReorderActive = false
@@ -370,7 +408,7 @@ ListItemBlank {
             case NavigationEvent.Trigger:
                 if (root.gripReorderActive) {
                     root.gripReorderActive = false
-                    root.commitGripReorder()
+                    root.commitGripReorder(true)
                 } else {
                     root.gripReorderActive = true
                     root.gripReorderTargetIndex = root.index

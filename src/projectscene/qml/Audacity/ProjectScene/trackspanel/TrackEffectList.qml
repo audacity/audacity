@@ -22,20 +22,26 @@ Rectangle {
     property NavigationPanel navigationPanel: null
     property int navigationOrderStart: 0
     property int pendingGripFocusIndex: -1
+    property bool pendingGripFocusHandle: false
 
     Component.onCompleted: {
         trackEffectListModel.load()
     }
 
-    function focusGripAtIndex(targetIndex) {
+    function focusGripAtIndex(targetIndex, focusGripHandle) {
         const delegate = trackEffectList.itemAtIndex(targetIndex)
         if (!delegate) {
             return
         }
 
-        delegate.innerNavigationActive = true
-        delegate.gripReorderActive = false
-        delegate.gripControl.navigation.requestActive()
+        if (focusGripHandle) {
+            delegate.innerNavigationActive = true
+            delegate.gripReorderActive = false
+            delegate.gripControl.navigation.requestActive()
+            return
+        }
+
+        delegate.navigation.requestActive()
     }
 
     RealtimeEffectListModel {
@@ -75,8 +81,9 @@ Rectangle {
             navigationPanel: root.navigationPanel
             navigationOrder: root.navigationOrderStart + model.index
 
-            onGripReorderCommitted: function(targetIndex) {
+            onGripReorderCommitted: function(targetIndex, focusGripHandle) {
                 root.pendingGripFocusIndex = targetIndex
+                root.pendingGripFocusHandle = focusGripHandle
             }
         }
 
@@ -106,10 +113,12 @@ Rectangle {
             }
 
             const targetIndex = root.pendingGripFocusIndex
+            const focusGripHandle = root.pendingGripFocusHandle
             root.pendingGripFocusIndex = -1
+            root.pendingGripFocusHandle = false
 
             Qt.callLater(function() {
-                root.focusGripAtIndex(targetIndex)
+                root.focusGripAtIndex(targetIndex, focusGripHandle)
             })
         }
     }
