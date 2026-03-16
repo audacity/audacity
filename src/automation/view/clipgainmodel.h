@@ -11,6 +11,7 @@
 #include "async/asyncable.h"
 
 #include "modularity/ioc.h"
+#include "context/iglobalcontext.h"
 #include "automation/iclipgaininteraction.h"
 #include "trackedit/iclipsinteraction.h"
 #include "trackedit/iprojecthistory.h"
@@ -26,6 +27,7 @@ class ClipGainModel : public QAbstractListModel, public muse::async::Asyncable, 
     muse::Inject<IClipGainInteraction> clipGainInteraction{ this };
     muse::Inject<trackedit::IClipsInteraction> clipsInteraction{ this };
     muse::Inject<trackedit::IProjectHistory> projectHistory{ this };
+    muse::Inject<context::IGlobalContext> globalContext{ this };
 
     Q_PROPERTY(projectscene::ClipKey clipKey READ clipKey WRITE setClipKey NOTIFY clipKeyChanged FINAL)
 

@@ -384,6 +384,7 @@ bool Au3ClipsInteraction::removeClips(const ClipKeyList& clipKeyList, bool moveC
         waveTrack->Clear(clip->Start(), clip->End(), moveClips);
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+        prj->notifyAboutClipRemoved(DomConverter::clip(waveTrack, clip.get()));
         prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
     }
 
