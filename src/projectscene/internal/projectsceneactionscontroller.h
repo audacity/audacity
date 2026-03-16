@@ -48,6 +48,7 @@ private:
     void togglePlaybackOnRulerClickEnabled();
     void toggleAutomation();
     void toggleTrackHalfWave(const muse::actions::ActionQuery& q);
+    void fitProjectToHeight();
 
     void changeFontForLabels();
 

@@ -265,9 +265,19 @@ muse::ValCh<int> ProjectViewState::tracksVerticalOffset() const
     return m_tracksVerticalOffset;
 }
 
-void ProjectViewState::changeTracksVerticalOffset(int deltaY)
+void ProjectViewState::changeTracksVerticalOffset(int offset)
 {
-    m_tracksVerticalOffset.set(deltaY);
+    m_tracksVerticalOffset.set(offset);
+}
+
+void ProjectViewState::setTracksViewportHeight(int height)
+{
+    m_tracksViewportHeight = std::max(height, 0);
+}
+
+int ProjectViewState::tracksViewportHeight() const
+{
+    return m_tracksViewportHeight;
 }
 
 double ProjectViewState::mousePositionY() const
@@ -313,6 +323,15 @@ int ProjectViewState::trackVerticalPosition(const trackedit::TrackId& trackId) c
     }
 
     return -1;
+}
+
+ProjectViewState::TrackData& ProjectViewState::trackData(const trackedit::TrackId& trackId) const
+{
+    auto it = m_tracks.find(trackId);
+    if (it != m_tracks.end()) {
+        return it->second;
+    }
+    return makeTrackData(trackId);
 }
 
 ProjectViewState::TrackData& ProjectViewState::makeTrackData(const trackedit::TrackId& trackId) const
@@ -370,52 +389,28 @@ ProjectViewState::TrackData& ProjectViewState::makeTrackData(const trackedit::Tr
 
 muse::ValCh<int> ProjectViewState::trackHeight(const trackedit::TrackId& trackId) const
 {
-    auto it = m_tracks.find(trackId);
-    if (it != m_tracks.end()) {
-        return it->second.height;
-    }
-
-    const ProjectViewState::TrackData& d = makeTrackData(trackId);
-    return d.height;
+    return trackData(trackId).height;
 }
 
 muse::ValCh<bool> ProjectViewState::isTrackCollapsed(const trackedit::TrackId& trackId) const
 {
-    auto it = m_tracks.find(trackId);
-    if (it != m_tracks.end()) {
-        return it->second.collapsed;
-    }
-
-    const ProjectViewState::TrackData& d = makeTrackData(trackId);
-    return d.collapsed;
+    return trackData(trackId).collapsed;
 }
 
 muse::ValCh<double> ProjectViewState::channelHeightRatio(const trackedit::TrackId& trackId) const
 {
-    auto it = m_tracks.find(trackId);
-    if (it != m_tracks.end()) {
-        return it->second.channelHeightRatio;
-    }
-
-    const ProjectViewState::TrackData& d = makeTrackData(trackId);
-    return d.channelHeightRatio;
+    return trackData(trackId).channelHeightRatio;
 }
 
 void ProjectViewState::changeTrackHeight(const trackedit::TrackId& trackId, int delta)
 {
-    TrackData* d = nullptr;
-    auto it = m_tracks.find(trackId);
-    if (it != m_tracks.end()) {
-        d = &it->second;
-    } else {
-        d = &makeTrackData(trackId);
-    }
+    auto& d = trackData(trackId);
 
-    int oldHeight = d->height.val;
+    int oldHeight = d.height.val;
     int newHeight = std::max(oldHeight + delta, TRACK_MIN_HEIGHT);
 
-    d->height.set(newHeight);
-    d->collapsed.set(newHeight < TRACK_COLLAPSE_HEIGHT);
+    d.height.set(newHeight);
+    d.collapsed.set(newHeight <= TRACK_COLLAPSE_HEIGHT);
 
     m_totalTracksHeight.set(m_totalTracksHeight.val + (newHeight - oldHeight));
 
@@ -431,20 +426,17 @@ void ProjectViewState::changeTrackHeight(const trackedit::TrackId& trackId, int 
 
 void ProjectViewState::setTrackHeight(const trackedit::TrackId& trackId, int height)
 {
-    TrackData* d = nullptr;
-    auto it = m_tracks.find(trackId);
-    if (it != m_tracks.end()) {
-        d = &it->second;
-    } else {
-        d = &makeTrackData(trackId);
-    }
-
-    int oldHeight = d->height.val;
-    int newHeight = std::max(height, TRACK_MIN_HEIGHT);
-    d->height.set(newHeight);
-    d->collapsed.set(height < TRACK_COLLAPSE_HEIGHT);
-
+    const int oldHeight = trackData(trackId).height.val;
+    const int newHeight = std::max(height, TRACK_MIN_HEIGHT);
+    doSetTrackHeight(trackId, newHeight);
     m_totalTracksHeight.set(m_totalTracksHeight.val + (newHeight - oldHeight));
+}
+
+void ProjectViewState::doSetTrackHeight(const trackedit::TrackId& trackId, int newHeight)
+{
+    auto& d = trackData(trackId);
+    d.height.set(newHeight);
+    d.collapsed.set(newHeight <= TRACK_COLLAPSE_HEIGHT);
 
     const project::IAudacityProjectPtr prj = globalContext()->currentProject();
     if (prj) {
@@ -522,15 +514,7 @@ au::trackedit::TrackIdList ProjectViewState::tracksInRange(double y1, double y2)
 
 void ProjectViewState::setChannelHeightRatio(const trackedit::TrackId& trackId, double ratio)
 {
-    TrackData* d = nullptr;
-    auto it = m_tracks.find(trackId);
-    if (it != m_tracks.end()) {
-        d = &it->second;
-    } else {
-        d = &makeTrackData(trackId);
-    }
-
-    d->channelHeightRatio.set(ratio);
+    trackData(trackId).channelHeightRatio.set(ratio);
 }
 
 bool ProjectViewState::isSnapEnabled() const
@@ -614,13 +598,7 @@ muse::ValCh<bool> ProjectViewState::splitToolEnabled() const
 
 muse::ValCh<std::pair<float, float> > ProjectViewState::verticalDisplayBounds(const trackedit::TrackId& trackId) const
 {
-    auto it = m_tracks.find(trackId);
-    if (it != m_tracks.end()) {
-        return it->second.verticalDisplayBounds;
-    }
-
-    const ProjectViewState::TrackData& d = makeTrackData(trackId);
-    return d.verticalDisplayBounds;
+    return trackData(trackId).verticalDisplayBounds;
 }
 
 float ProjectViewState::maxVerticalZoomLevel(const trackedit::TrackId& trackId) const
@@ -760,15 +738,64 @@ bool ProjectViewState::isMinVerticalZoom(const trackedit::TrackId& trackId) cons
     return muse::RealIsEqualOrMore(std::abs(verticalMax), MAX_VERTICAL_RANGE);
 }
 
-muse::ValCh<bool> ProjectViewState::isHalfWave(const trackedit::TrackId& trackId) const
+void ProjectViewState::fitTracksVertically()
 {
-    auto it = m_tracks.find(trackId);
-    if (it != m_tracks.end()) {
-        return it->second.isHalfWave;
+    const auto project = globalContext()->currentProject();
+    if (!project) {
+        return;
     }
 
-    const ProjectViewState::TrackData& d = makeTrackData(trackId);
-    return d.isHalfWave;
+    trackedit::ITrackeditProjectPtr trackeditPrj = globalContext()->currentTrackeditProject();
+    if (!trackeditPrj) {
+        return;
+    }
+
+    const trackedit::TrackIdList allTracks = trackeditPrj->trackIdList();
+    if (allTracks.empty()) {
+        return;
+    }
+
+    // Leave minimized tracks untouched, no matter what.
+    int minimizedTracksHeight = 0;
+    trackedit::TrackIdList normalTracks;
+    for (const auto& trackId : allTracks) {
+        if (muse::is_equal(trackHeight(trackId).val, TRACK_MIN_HEIGHT)) {
+            minimizedTracksHeight += TRACK_MIN_HEIGHT;
+        } else {
+            normalTracks.push_back(trackId);
+        }
+    }
+
+    constexpr auto margin = 2; // Essential to accommodate the blue focus ribbon.
+
+    // Set vertical offset before changing track heights, or subsequent scrolling up may mess up
+    // TracksItemsView and TracksPanel vertical offset.
+    // TODO find out why
+    m_tracksVerticalOffset.set(-margin);
+
+    // So that the mouse turns to a vertical resize cursor when at the bottom of the bottom track.
+    // TODO it would be better to have this value centralized
+    constexpr auto extraBottomSpace = 7;
+
+    int remainingHeight = tracksViewportHeight() - minimizedTracksHeight - margin - extraBottomSpace;
+    const int numNormalTracks = normalTracks.size();
+    for (auto i = 0; i < numNormalTracks; ++i) {
+        const auto numRemainingTracks = numNormalTracks - i;
+        const auto newTrackHeight = std::max(remainingHeight / numRemainingTracks, TRACK_MIN_HEIGHT);
+        doSetTrackHeight(normalTracks[i], newTrackHeight);
+        remainingHeight -= newTrackHeight;
+    }
+
+    const auto newTotalTrackHeight
+        = std::accumulate(allTracks.begin(), allTracks.end(), 0, [this](int sum, const trackedit::TrackId& trackId) {
+        return sum + trackHeight(trackId).val;
+    });
+    m_totalTracksHeight.set(newTotalTrackHeight);
+}
+
+muse::ValCh<bool> ProjectViewState::isHalfWave(const trackedit::TrackId& trackId) const
+{
+    return trackData(trackId).isHalfWave;
 }
 
 void ProjectViewState::toggleHalfWave(const trackedit::TrackId& trackId)
@@ -794,13 +821,7 @@ void ProjectViewState::toggleHalfWave(const trackedit::TrackId& trackId)
 
 muse::ValCh<au::trackedit::TrackViewType> ProjectViewState::trackViewType(const au::trackedit::TrackId& trackId) const
 {
-    auto it = m_tracks.find(trackId);
-    if (it != m_tracks.end()) {
-        return it->second.viewType;
-    }
-
-    const ProjectViewState::TrackData& d = makeTrackData(trackId);
-    return d.viewType;
+    return trackData(trackId).viewType;
 }
 
 void ProjectViewState::setTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType)
@@ -874,13 +895,7 @@ muse::async::Notification ProjectViewState::globalSpectrogramToggleIsOnChanged()
 
 muse::ValCh<int> ProjectViewState::trackRulerType(const trackedit::TrackId& trackId) const
 {
-    auto it = m_tracks.find(trackId);
-    if (it != m_tracks.end()) {
-        return it->second.rulerType;
-    }
-
-    const ProjectViewState::TrackData& d = makeTrackData(trackId);
-    return d.rulerType;
+    return trackData(trackId).rulerType;
 }
 
 void ProjectViewState::setTrackRulerType(const trackedit::TrackId& trackId, int rulerType)

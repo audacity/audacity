@@ -21,7 +21,7 @@ ListItemBlank {
     property bool isFocused: false
 
     property alias headerTrailingControlsComponent: headerTrailingControls.sourceComponent
-    property int headerTrailingControlsNavigationStart: collapsed ? title.navigation.order + 1 : extraControlsNavigationEnd + 1
+    readonly property int headerTrailingControlsNavigationStart: collapsed ? title.navigation.order + 1 : extraControlsNavigationEnd + 1
     property int headerTrailingControlsNavigationEnd: 0
 
     property alias extraControlsComponent: extraControlsLoader.sourceComponent
@@ -32,8 +32,8 @@ ListItemBlank {
 
     property alias bottomSeparatorHeight: bottomSeparator.height
 
-    signal interactionStarted()
-    signal interactionEnded()
+    signal interactionStarted
+    signal interactionEnded
     signal selectionRequested(bool exclusive)
 
     signal mousePressed(var item, double x, double y)
@@ -54,8 +54,7 @@ ListItemBlank {
 
     mouseArea.onDoubleClicked: {
         let titlePos = root.mapFromItem(title, 0, 0)
-        if (mouseArea.mouseX >= titlePos.x && mouseArea.mouseX <= titlePos.x + title.width &&
-            mouseArea.mouseY >= titlePos.y && mouseArea.mouseY <= titlePos.y + title.height) {
+        if (mouseArea.mouseX >= titlePos.x && mouseArea.mouseX <= titlePos.x + title.width && mouseArea.mouseY >= titlePos.y && mouseArea.mouseY <= titlePos.y + title.height) {
             title.edit()
         }
     }
@@ -67,16 +66,15 @@ ListItemBlank {
     focusBorder.anchors.rightMargin: 24 + separatorLine.width
     focusBorder.anchors.bottomMargin: 2
 
-    background.color: (root.isSelected || hoverHandler.hovered) ?
-                   ui.theme.backgroundPrimaryColor : ui.theme.backgroundSecondaryColor
+    background.color: (root.isSelected || hoverHandler.hovered) ? ui.theme.backgroundPrimaryColor : ui.theme.backgroundSecondaryColor
 
     background.opacity: (!root.isSelected || hoverHandler.hovered) ? 0.7 : 1
 
-    signal renameTrackRequested()
-    signal duplicateRequested()
-    signal deleteRequested()
+    signal renameTrackRequested
+    signal duplicateRequested
+    signal deleteRequested
 
-    signal openEffectsRequested()
+    signal openEffectsRequested
 
     property TrackViewStateModel trackViewState: TrackViewStateModel {
         trackId: root.item ? root.item.trackId : -1
@@ -100,7 +98,7 @@ ListItemBlank {
     ContextMenuLoader {
         id: contextMenuLoader
 
-        onHandleMenuItem: function(itemId) {
+        onHandleMenuItem: function (itemId) {
             contextMenuModel.handleMenuItem(itemId)
         }
     }
@@ -109,7 +107,7 @@ ListItemBlank {
         anchors.fill: parent
         acceptedButtons: Qt.RightButton
 
-        onClicked: function(e) {
+        onClicked: function (e) {
             if (!isSelected) {
                 root.selectionRequested(true)
             }
@@ -160,14 +158,16 @@ ListItemBlank {
                     navigation.panel: root.navigation.panel
                     navigation.order: root.navigation.order + 1
 
-                    onTextEdited: function(text) {
+                    onTextEdited: function (text) {
                         if (Boolean(root.item)) {
                             root.item.title = text
                         }
                     }
                 }
 
-                Loader { id: headerTrailingControls }
+                Loader {
+                    id: headerTrailingControls
+                }
 
                 MenuButton {
                     id: menuButton
@@ -181,13 +181,13 @@ ListItemBlank {
                         root.selectionRequested(true)
                     }
 
-                    onHandleMenuItem: function(itemId) {
+                    onHandleMenuItem: function (itemId) {
                         contextMenuModel.handleMenuItem(itemId)
                     }
                 }
             }
 
-            Loader { 
+            Loader {
                 id: extraControlsLoader
                 Layout.fillWidth: true
                 Layout.preferredHeight: implicitHeight
@@ -218,18 +218,18 @@ ListItemBlank {
         anchors.fill: parent
         MouseArea {
             anchors.fill: parent
-            onPressed: function(e) {
+            onPressed: function (e) {
                 // Pass the event forward to allow
                 // child elements to handle the input
                 e.accepted = false
-                if(!root.isSelected) {
+                if (!root.isSelected) {
                     root.selectionRequested(false)
                 }
             }
         }
 
         HoverHandler {
-            id:hoverHandler
+            id: hoverHandler
         }
     }
 
@@ -247,7 +247,7 @@ ListItemBlank {
             root.interactionStarted()
         }
 
-        onPositionChanged: function(mouse) {
+        onPositionChanged: function (mouse) {
             const resizeVerticalMargin = 10
             mouse.accepted = true
 

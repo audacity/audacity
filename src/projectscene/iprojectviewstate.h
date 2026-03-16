@@ -54,6 +54,7 @@ public:
     virtual bool isDefaultVerticalZoom(const trackedit::TrackId& trackId) const = 0;
     virtual bool isMaxVerticalZoom(const trackedit::TrackId& trackId) const = 0;
     virtual bool isMinVerticalZoom(const trackedit::TrackId& trackId) const = 0;
+    virtual void fitTracksVertically() = 0;
 
     virtual muse::ValCh<int> verticalRulerWidth() const = 0;
 
@@ -74,7 +75,9 @@ public:
     virtual void setMousePositionY(double y) = 0;
 
     virtual muse::ValCh<int> tracksVerticalOffset() const = 0;
-    virtual void changeTracksVerticalOffset(int deltaY) = 0;
+    virtual void changeTracksVerticalOffset(int offset) = 0;
+    virtual void setTracksViewportHeight(int height) = 0;
+    virtual int tracksViewportHeight() const = 0;
     virtual muse::ValCh<bool> tracksVerticalScrollLocked() const = 0;
     virtual void setTracksVerticalScrollLocked(bool lock) = 0;
 
