@@ -516,9 +516,9 @@ void CloudSyncService::CompleteSync(sync::ProjectSyncResult result)
         ReportUploadStats(mRemoteSnapshot->GetProjectId(), result.Stats);
     }
 
-    mSyncPromise.set_value(std::move(result));
     mRemoteSnapshot.reset();
     mSyncInProcess.store(false);
+    mSyncPromise.set_value(std::move(result));
 }
 
 void CloudSyncService::SyncCloudSnapshot(

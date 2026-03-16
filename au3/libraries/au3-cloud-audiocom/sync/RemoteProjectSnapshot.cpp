@@ -430,6 +430,7 @@ void RemoteProjectSnapshot::DownloadBlob(
             return;
         }
 
+        strong.reset();
         onSuccess(response);
     });
 }
