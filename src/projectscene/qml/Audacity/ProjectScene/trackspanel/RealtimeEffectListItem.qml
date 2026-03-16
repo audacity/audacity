@@ -431,8 +431,8 @@ ListItemBlank {
                 break
             case NavigationEvent.Escape:
                 if (root.gripReorderActive) {
-                    root.clearReorderPreview()
                     root.gripReorderActive = false
+                    root.commitGripReorder(true)
                     event.accepted = true
                     return
                 }
