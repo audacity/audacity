@@ -402,9 +402,14 @@ muse::ProgressPtr Au3AudioComService::openCloudProject(const muse::io::path_t& l
         auto headFuture = headFutureResult.get();
         auto headResult = headFuture.get();
 
-        // If the local snapshot already matches the remote head, no sync is needed
+        // If the local snapshot already matches the remote head AND the previous
+        // download completed successfully, no sync is needed. A SyncStatusDownloading
+        // status means a prior download was interrupted (e.g. user cancelled), so we
+        // must re-sync even though the snapshot IDs match.
         if (const auto* headSnapshotId = std::get_if<std::string>(&headResult)) {
-            if (*headSnapshotId == dbData->SnapshotId) {
+            const bool snapshotsMatch = (*headSnapshotId == dbData->SnapshotId);
+            const bool fullyDownloaded = (dbData->SyncStatus == sync::DBProjectData::SyncStatusSynced);
+            if (snapshotsMatch && fullyDownloaded) {
                 std::string localPath = dbData->LocalPath;
                 muse::async::Async::call(this, [progress, localPath]() {
                     progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(localPath)));
@@ -414,6 +419,10 @@ muse::ProgressPtr Au3AudioComService::openCloudProject(const muse::io::path_t& l
         }
 
         auto progressCallback = [progress](double p) -> bool {
+            if (progress->isCanceled()) {
+                return false;
+            }
+
             progress->progress(static_cast<int64_t>(p * 100), 100);
             return true;
         };
@@ -442,6 +451,10 @@ muse::ProgressPtr Au3AudioComService::openCloudProject(const muse::io::path_t& l
         // and handed back the future. The actual download runs on internal threads.
         auto syncFuture = syncFutureResult.get();
         auto result = syncFuture.get();
+
+        if (progress->isCanceled()) {
+            return;
+        }
 
         if (result.Status == sync::ProjectSyncResult::StatusCode::Succeeded) {
             std::string projectPath = result.ProjectPath;
