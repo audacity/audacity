@@ -10,7 +10,7 @@ using namespace au::projectscene;
 
 ClipGainModel::ClipGainModel(QObject* parent)
     : QAbstractListModel(parent)
-    , muse::Injectable(muse::modularity::ContextPtr())
+    , muse::Injectable(muse::iocCtxForQmlObject(this))
 {
 }
 
@@ -139,6 +139,18 @@ void ClipGainModel::setClipKey(const ClipKey& key)
     }
 
     m_clipKey = key;
+
+    if (m_clipKey.isValid()) {
+        if (auto prj = globalContext()->currentTrackeditProject()) {
+            prj->clipList(m_clipKey.key.trackId).onItemRemoved(this, [this](const trackedit::Clip& clip) {
+                if (clip.key == m_clipKey.key) {
+                    clear();
+                    m_clipKey = ClipKey {};
+                }
+            }, muse::async::Asyncable::Mode::SetReplace);
+        }
+    }
+
     reload();
 }
 
