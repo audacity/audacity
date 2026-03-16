@@ -44,6 +44,8 @@ public:
                                     std::function<bool()> projectSaveCallback) override;
     muse::ProgressPtr shareAudio(const std::string& title) override;
 
+    muse::ProgressPtr openCloudProject(const muse::io::path_t& localPath) override;
+
 private:
     std::string getCloudProjectPage(au::project::IAudacityProjectPtr project);
 

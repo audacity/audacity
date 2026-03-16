@@ -84,6 +84,7 @@ private:
     muse::Ret loadWithFallback(const IAudacityProjectPtr& project, const muse::io::path_t& loadPath, const std::string& format);
     muse::Ret doOpenProject(const muse::io::path_t& filePath);
     IAudacityProjectPtr createProjectInCurrentWindow();
+    muse::Ret openCloudProject(const muse::io::path_t& localPath);
     //! TODO AU4
     // muse::Ret openAudacityUrl(const QUrl& url);
     muse::RetVal<IAudacityProjectPtr> loadProject(const muse::io::path_t& filePath);

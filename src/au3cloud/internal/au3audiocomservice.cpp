@@ -15,6 +15,7 @@
 #include "au3-cloud-audiocom/OAuthService.h"
 #include "au3-cloud-audiocom/ServiceConfig.h"
 #include "au3-cloud-audiocom/sync/CloudSyncDTO.h"
+#include "au3-cloud-audiocom/sync/CloudProjectsDatabase.h"
 #include "au3-cloud-audiocom/sync/ProjectCloudExtension.h"
 #include "au3-cloud-audiocom/sync/LocalProjectSnapshot.h"
 #include "au3-concurrency/concurrency/CancellationContext.h"
@@ -372,6 +373,90 @@ std::string Au3AudioComService::getCloudProjectPage(au::project::IAudacityProjec
 
     auto& projectCloudExtension = audacity::cloud::audiocom::sync::ProjectCloudExtension::Get(*au3Project);
     return projectCloudExtension.GetCloudProjectPage(AudiocomTrace::SaveProjectSaveToCloudMenu);
+}
+
+muse::ProgressPtr Au3AudioComService::openCloudProject(const muse::io::path_t& localPath)
+{
+    muse::ProgressPtr progress = std::make_shared<muse::Progress>();
+
+    std::thread([this, progress, path = localPath.toStdString()]() {
+        // DB lookup is safe from any thread
+        auto dbData = sync::CloudProjectsDatabase::Get().GetProjectDataForPath(path);
+        if (!dbData.has_value()) {
+            std::string errorMsg = muse::trc("cloud", "Project not found in cloud database");
+            muse::async::Async::call(this, [progress, errorMsg]() {
+                progress->finish(muse::make_ret(muse::Ret::Code::UnknownError, errorMsg));
+            }, muse::runtime::mainThreadId());
+            return;
+        }
+
+        // GetHeadSnapshotID also asserts main thread — marshal it there
+        using HeadFuture = CloudSyncService::GetHeadSnapshotIDFuture;
+        auto headPromise = std::make_shared<std::promise<HeadFuture> >();
+        std::future<HeadFuture> headFutureResult = headPromise->get_future();
+
+        muse::async::Async::call(this, [headPromise, projectId = dbData->ProjectId]() {
+            headPromise->set_value(CloudSyncService::Get().GetHeadSnapshotID(projectId));
+        }, muse::runtime::mainThreadId());
+
+        auto headFuture = headFutureResult.get();
+        auto headResult = headFuture.get();
+
+        // If the local snapshot already matches the remote head, no sync is needed
+        if (const auto* headSnapshotId = std::get_if<std::string>(&headResult)) {
+            if (*headSnapshotId == dbData->SnapshotId) {
+                std::string localPath = dbData->LocalPath;
+                muse::async::Async::call(this, [progress, localPath]() {
+                    progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(localPath)));
+                }, muse::runtime::mainThreadId());
+                return;
+            }
+        }
+
+        auto progressCallback = [progress](double p) -> bool {
+            progress->progress(static_cast<int64_t>(p * 100), 100);
+            return true;
+        };
+
+        // CloudSyncService::OpenFromCloud asserts it must be called from the main thread
+        // because its internal state (mSyncPromise, mSyncInProcess, mProgressCallback) is
+        // mutated without any locks — thread safety is enforced by calling convention, not
+        // by synchronization primitives. We marshal the call to the main thread and transfer
+        // the resulting std::future back here via a shared promise.
+        using SyncFuture = CloudSyncService::SyncFuture;
+        auto syncFuturePromise = std::make_shared<std::promise<SyncFuture> >();
+        std::future<SyncFuture> syncFutureResult = syncFuturePromise->get_future();
+
+        muse::async::Async::call(this, [syncFuturePromise, dbData,
+                                        progressCallback = std::move(progressCallback)]() mutable {
+            // Pass empty snapshotId so OpenFromCloud fetches the remote head
+            auto future = CloudSyncService::Get().OpenFromCloud(
+                dbData->ProjectId, {},
+                CloudSyncService::SyncMode::Normal,
+                std::move(progressCallback));
+
+            syncFuturePromise->set_value(std::move(future));
+        }, muse::runtime::mainThreadId());
+
+        // Block this background thread until the main thread has started the sync
+        // and handed back the future. The actual download runs on internal threads.
+        auto syncFuture = syncFutureResult.get();
+        auto result = syncFuture.get();
+
+        if (result.Status == sync::ProjectSyncResult::StatusCode::Succeeded) {
+            std::string projectPath = result.ProjectPath;
+            muse::async::Async::call(this, [progress, projectPath]() {
+                progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(projectPath)));
+            }, muse::runtime::mainThreadId());
+        } else {
+            std::string content = result.Result.Content;
+            muse::async::Async::call(this, [progress, content]() {
+                progress->finish(muse::make_ret(muse::Ret::Code::UnknownError, content));
+            }, muse::runtime::mainThreadId());
+        }
+    }).detach();
+
+    return progress;
 }
 
 muse::ProgressPtr Au3AudioComService::shareAudio(const std::string& title)

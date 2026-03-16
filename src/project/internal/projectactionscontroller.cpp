@@ -767,11 +767,9 @@ muse::Ret ProjectActionsController::openProject(const muse::io::path_t& path, co
     }
 
     //! Step 5. If it's a cloud project, download the latest version
-    //! TODO AU4
-    // if (configuration()->isCloudProject(actualPath) && !configuration()->isLegacyCloudProject(actualPath)) {
-    //     downloadAndOpenCloudProject(configuration()->cloudScoreIdFromPath(actualPath));
-    //     return make_ret(Ret::Code::Ok);
-    // }
+    if (configuration()->isCloudProject(actualPath)) {
+        return openCloudProject(actualPath);
+    }
 
     //! Step 6. Open project in the current window
     return doOpenProject(actualPath);
@@ -790,6 +788,23 @@ IAudacityProjectPtr ProjectActionsController::createProjectInCurrentWindow()
     projectHistory()->init();
 
     return project;
+}
+
+Ret ProjectActionsController::openCloudProject(const io::path_t& localPath)
+{
+    muse::ProgressPtr progress = audioComService()->openCloudProject(localPath);
+
+    progress->finished().onReceive(this, [this](const ProgressResult& result) {
+        if (!result.ret) {
+            LOGE() << result.ret.toString();
+            return;
+        }
+        doOpenProject(io::path_t(result.val.toString()));
+    });
+
+    interactive()->showProgress(trc("project", "Syncing project from cloud..."), *progress);
+
+    return make_ret(Ret::Code::Ok);
 }
 
 Ret ProjectActionsController::doOpenProject(const io::path_t& filePath)
