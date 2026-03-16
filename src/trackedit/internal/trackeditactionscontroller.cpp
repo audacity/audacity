@@ -472,6 +472,8 @@ void TrackeditActionsController::doGlobalCut()
 
         dispatcher()->dispatch(RANGE_SELECTION_SPLIT_CUT,
                                ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
+
+        frequencySelectionController()->resetFrequencySelection();
         return;
     }
 
@@ -612,6 +614,8 @@ void TrackeditActionsController::doGlobalDelete()
 
         dispatcher()->dispatch(RANGE_SELECTION_SPLIT_DELETE,
                                ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
+
+        frequencySelectionController()->resetFrequencySelection();
         return;
     }
 
