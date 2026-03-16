@@ -120,9 +120,14 @@ QString FirstLaunchSetupModel::backButtonText() const
 
 QString FirstLaunchSetupModel::nextButtonText() const
 {
+    if (m_currentPageIndex < 0 || m_currentPageIndex >= m_pages.size()) {
+        return "";
+    }
+
     if (m_pages.at(m_currentPageIndex).m_url.contains(SIGNIN_AUDIO_COM_PAGE)) {
         return muse::qtrc("global", "Skip");
     }
+
     return !canFinish() ? muse::qtrc("global", "Next") : muse::qtrc("appshell/gettingstarted", "Accept & continue");
 }
 
