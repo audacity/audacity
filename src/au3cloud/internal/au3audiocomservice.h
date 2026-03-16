@@ -6,7 +6,9 @@
 
 #include <map>
 #include <mutex>
+#include <optional>
 
+#include "au3-cloud-audiocom/sync/CloudProjectsDatabase.h"
 #include "context/iglobalcontext.h"
 #include "framework/global/async/asyncable.h"
 #include "framework/global/async/promise.h"
@@ -48,6 +50,9 @@ public:
 
 private:
     std::string getCloudProjectPage(au::project::IAudacityProjectPtr project);
+
+    bool isSnapshotUpToDate(const audacity::cloud::audiocom::sync::DBProjectData& dbProjectData);
+    std::optional<std::string> getHeadSnapshotID(const std::string& projectId);
 
     struct CachedProjectItem {
         ProjectList projectList;

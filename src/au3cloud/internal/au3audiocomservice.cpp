@@ -380,7 +380,6 @@ muse::ProgressPtr Au3AudioComService::openCloudProject(const muse::io::path_t& l
     muse::ProgressPtr progress = std::make_shared<muse::Progress>();
 
     std::thread([this, progress, path = localPath.toStdString()]() {
-        // DB lookup is safe from any thread
         auto dbData = sync::CloudProjectsDatabase::Get().GetProjectDataForPath(path);
         if (!dbData.has_value()) {
             std::string errorMsg = muse::trc("cloud", "Project not found in cloud database");
@@ -390,32 +389,9 @@ muse::ProgressPtr Au3AudioComService::openCloudProject(const muse::io::path_t& l
             return;
         }
 
-        // GetHeadSnapshotID also asserts main thread — marshal it there
-        using HeadFuture = CloudSyncService::GetHeadSnapshotIDFuture;
-        auto headPromise = std::make_shared<std::promise<HeadFuture> >();
-        std::future<HeadFuture> headFutureResult = headPromise->get_future();
-
-        muse::async::Async::call(this, [headPromise, projectId = dbData->ProjectId]() {
-            headPromise->set_value(CloudSyncService::Get().GetHeadSnapshotID(projectId));
-        }, muse::runtime::mainThreadId());
-
-        auto headFuture = headFutureResult.get();
-        auto headResult = headFuture.get();
-
-        // If the local snapshot already matches the remote head AND the previous
-        // download completed successfully, no sync is needed. A SyncStatusDownloading
-        // status means a prior download was interrupted (e.g. user cancelled), so we
-        // must re-sync even though the snapshot IDs match.
-        if (const auto* headSnapshotId = std::get_if<std::string>(&headResult)) {
-            const bool snapshotsMatch = (*headSnapshotId == dbData->SnapshotId);
-            const bool fullyDownloaded = (dbData->SyncStatus == sync::DBProjectData::SyncStatusSynced);
-            if (snapshotsMatch && fullyDownloaded) {
-                std::string localPath = dbData->LocalPath;
-                muse::async::Async::call(this, [progress, localPath]() {
-                    progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(localPath)));
-                }, muse::runtime::mainThreadId());
-                return;
-            }
+        if (isSnapshotUpToDate(dbData.value())) {
+            progress->finish(muse::make_ok());
+            return;
         }
 
         auto progressCallback = [progress](double p) -> bool {
@@ -427,11 +403,6 @@ muse::ProgressPtr Au3AudioComService::openCloudProject(const muse::io::path_t& l
             return true;
         };
 
-        // CloudSyncService::OpenFromCloud asserts it must be called from the main thread
-        // because its internal state (mSyncPromise, mSyncInProcess, mProgressCallback) is
-        // mutated without any locks — thread safety is enforced by calling convention, not
-        // by synchronization primitives. We marshal the call to the main thread and transfer
-        // the resulting std::future back here via a shared promise.
         using SyncFuture = CloudSyncService::SyncFuture;
         auto syncFuturePromise = std::make_shared<std::promise<SyncFuture> >();
         std::future<SyncFuture> syncFutureResult = syncFuturePromise->get_future();
@@ -447,8 +418,6 @@ muse::ProgressPtr Au3AudioComService::openCloudProject(const muse::io::path_t& l
             syncFuturePromise->set_value(std::move(future));
         }, muse::runtime::mainThreadId());
 
-        // Block this background thread until the main thread has started the sync
-        // and handed back the future. The actual download runs on internal threads.
         auto syncFuture = syncFutureResult.get();
         auto result = syncFuture.get();
 
@@ -456,17 +425,14 @@ muse::ProgressPtr Au3AudioComService::openCloudProject(const muse::io::path_t& l
             return;
         }
 
-        if (result.Status == sync::ProjectSyncResult::StatusCode::Succeeded) {
-            std::string projectPath = result.ProjectPath;
-            muse::async::Async::call(this, [progress, projectPath]() {
-                progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(projectPath)));
-            }, muse::runtime::mainThreadId());
-        } else {
-            std::string content = result.Result.Content;
-            muse::async::Async::call(this, [progress, content]() {
+        muse::async::Async::call(this, [progress, result = std::move(result)]() {
+            if (result.Status == sync::ProjectSyncResult::StatusCode::Succeeded) {
+                progress->finish(muse::make_ok());
+            } else {
+                std::string content = result.Result.Content;
                 progress->finish(muse::make_ret(muse::Ret::Code::UnknownError, content));
-            }, muse::runtime::mainThreadId());
-        }
+            }
+        }, muse::runtime::mainThreadId());
     }).detach();
 
     return progress;
@@ -562,4 +528,37 @@ muse::ProgressPtr Au3AudioComService::shareAudio(const std::string& title)
             AudiocomTrace::ShareAudioButton);
     }).detach();
     return progress;
+}
+
+bool Au3AudioComService::isSnapshotUpToDate(const audacity::cloud::audiocom::sync::DBProjectData& dbProjectData)
+{
+    std::string projectId = dbProjectData.ProjectId;
+    std::optional<std::string> headSnapshotId = getHeadSnapshotID(projectId);
+    if (!headSnapshotId.has_value()) {
+        return false;
+    }
+
+    const bool snapshotsMatch = (*headSnapshotId == dbProjectData.SnapshotId);
+    const bool fullyDownloaded = (dbProjectData.SyncStatus == sync::DBProjectData::SyncStatusSynced);
+    return snapshotsMatch && fullyDownloaded;
+}
+
+std::optional<std::string> Au3AudioComService::getHeadSnapshotID(const std::string& projectId)
+{
+    using HeadFuture = CloudSyncService::GetHeadSnapshotIDFuture;
+    auto headPromise = std::make_shared<std::promise<HeadFuture> >();
+    std::future<HeadFuture> headFutureResult = headPromise->get_future();
+
+    muse::async::Async::call(this, [headPromise, projectId]() {
+        headPromise->set_value(CloudSyncService::Get().GetHeadSnapshotID(projectId));
+    }, muse::runtime::mainThreadId());
+
+    auto headFuture = headFutureResult.get();
+    auto headResult = headFuture.get();
+
+    if (const auto* snapshotId = std::get_if<std::string>(&headResult)) {
+        return *snapshotId;
+    }
+
+    return std::nullopt;
 }
