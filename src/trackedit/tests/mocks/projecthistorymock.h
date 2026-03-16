@@ -29,7 +29,7 @@ public:
     MOCK_METHOD(size_t, currentStateIndex, (), (const, override));
     MOCK_METHOD(const muse::TranslatableString, lastActionNameAtIdx, (size_t idx), (const, override));
 
-    MOCK_METHOD(muse::async::Notification, historyChanged, (), (const, override));
+    MOCK_METHOD(muse::async::Channel<trackedit::HistoryEvent>, historyChanged, (), (const, override));
 
     MOCK_METHOD(void, rollbackState, (), (override));
     MOCK_METHOD(void, modifyState, (bool autoSave), (override));

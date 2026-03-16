@@ -314,7 +314,7 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, TRACK_VIEW_ITEM_REDUCE_LEFT_CODE, this, &TrackeditActionsController::reduceFocusedItemBoundaryLeft);
     dispatcher()->reg(this, TRACK_VIEW_ITEM_REDUCE_RIGHT_CODE, this, &TrackeditActionsController::reduceFocusedItemBoundaryRight);
 
-    projectHistory()->historyChanged().onNotify(this, [this]() {
+    projectHistory()->historyChanged().onReceive(this, [this](auto) {
         notifyActionEnabledChanged(TRACKEDIT_UNDO);
         notifyActionEnabledChanged(TRACKEDIT_REDO);
     });

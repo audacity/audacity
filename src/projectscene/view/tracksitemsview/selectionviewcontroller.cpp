@@ -96,7 +96,6 @@ void SelectionViewController::onPressed(double x, double y, spectrogram::Spectro
         m_spectrogramHit.emplace(spectrogramHit);
     }
     emit pressedSpectrogramChanged();
-    setFrequencySelection(y, y, false);
 
     viewState()->updateItemsBoundaries(true);
 

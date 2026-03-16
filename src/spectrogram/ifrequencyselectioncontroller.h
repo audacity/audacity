@@ -22,5 +22,7 @@ public:
     virtual void setFrequencySelection(FrequencySelection, bool complete) = 0;
     virtual void resetFrequencySelection() = 0;
     virtual muse::async::Channel<int /*track ID*/, bool /*complete*/> frequencySelectionChanged() const = 0;
+
+    virtual void restoreFrequencySelection() = 0;
 };
 }

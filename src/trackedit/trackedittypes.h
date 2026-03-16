@@ -94,6 +94,11 @@ enum class PasteInsertBehavior {
     PasteInsert,
     PasteInsertRipple,
 };
+
+enum class HistoryEvent {
+    RestoredState,
+    NewState,
+};
 }
 
 inline muse::logger::Stream& operator<<(muse::logger::Stream& s, const au::trackedit::TrackItemKey& k)

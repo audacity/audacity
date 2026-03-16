@@ -245,7 +245,7 @@ void ProjectViewState::init(const std::shared_ptr<au3::IAu3Project>& project)
         }
     });
 
-    projectHistory()->historyChanged().onNotify(this, [this]() {
+    projectHistory()->historyChanged().onReceive(this, [this](auto) {
         updateItemsBoundaries(false);
     });
 }

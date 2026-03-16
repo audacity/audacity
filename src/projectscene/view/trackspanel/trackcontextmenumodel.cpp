@@ -118,7 +118,7 @@ void TrackContextMenuModel::load()
 {
     AbstractMenuModel::load();
 
-    projectHistory()->historyChanged().onNotify(this, [this]() {
+    projectHistory()->historyChanged().onReceive(this, [this](auto) {
         updateColorCheckedState();
         updateTrackFormatState();
         updateTrackRateState();

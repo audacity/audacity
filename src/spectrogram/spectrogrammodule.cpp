@@ -6,6 +6,7 @@
 #include "internal/globalspectrogramconfiguration.h"
 #include "internal/spectrogramservice.h"
 #include "internal/frequencyselectioncontroller.h"
+#include "internal/au3/au3frequencyselectionrestorer.h"
 #include "internal/au3/au3spectrogrampainter.h"
 #include "internal/au3/au3peakfinderfactory.h"
 
@@ -101,7 +102,9 @@ void SpectrogramContext::registerExports()
     ioc()->registerExport<ISpectrogramPainter>(mname, m_au3SpectrogramPainter);
     ioc()->registerExport<ISpectrogramService>(mname, m_spectrogramService);
     ioc()->registerExport<IPeakFinderFactory>(mname, new Au3PeakFinderFactory(iocContext()));
-    ioc()->registerExport<IFrequencySelectionController>(mname, new FrequencySelectionController(iocContext()));
+
+    auto restorer = std::make_unique<FrequencySelectionRestorer>(iocContext());
+    ioc()->registerExport<IFrequencySelectionController>(mname, new FrequencySelectionController(iocContext(), std::move(restorer)));
 }
 
 void SpectrogramContext::resolveImports()

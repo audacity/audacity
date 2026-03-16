@@ -65,16 +65,22 @@ void Au3SelectionController::init()
             setClipsIntersectingRangeSelection(findClipsIntersectingRangeSelection());
             setLabelsIntersectingRangeSelection(findLabelsIntersectingRangeSelection());
 
-            projectHistory()->historyChanged().onNotify(this, [this]() {
-                onUndoRedo();
+            projectHistory()->historyChanged().onReceive(this, [this](auto event) {
+                onHistoryEvent(event);
             }, Asyncable::Mode::SetReplace);
         } else {
             m_tracksSubc.Reset();
         }
     });
+
+    frequencySelectionController()->frequencySelectionChanged().onReceive(this, [this](auto, bool complete) {
+        if (complete) {
+            projectHistory()->modifyState();
+        }
+    });
 }
 
-void Au3SelectionController::onUndoRedo()
+void Au3SelectionController::onHistoryEvent(const trackedit::HistoryEvent& event)
 {
     // Resync controller state with the project state after undo/redo
     auto& selectedRegion = ViewInfo::Get(projectRef()).selectedRegion;
@@ -101,6 +107,10 @@ void Au3SelectionController::onUndoRedo()
     }
 
     updateSelectionController();
+
+    if (event == HistoryEvent::RestoredState) {
+        frequencySelectionController()->restoreFrequencySelection();
+    }
 
     setClipsIntersectingRangeSelection(findClipsIntersectingRangeSelection());
     setLabelsIntersectingRangeSelection(findLabelsIntersectingRangeSelection());

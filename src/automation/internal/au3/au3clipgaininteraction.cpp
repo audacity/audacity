@@ -115,7 +115,7 @@ std::optional<AutomationInfo> Au3ClipGainInteraction::clipGainInfo(
     const trackedit::ClipKey& clipKey) const
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    if (!waveTrack) {
         return {};
     }
 
@@ -140,7 +140,7 @@ std::optional<AutomationInfo> Au3ClipGainInteraction::clipGainInfo(
 AutomationPoints Au3ClipGainInteraction::clipGainPoints(const trackedit::ClipKey& clipKey) const
 {
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(clipKey.trackId));
-    IF_ASSERT_FAILED(waveTrack) {
+    if (!waveTrack) {
         return {};
     }
 

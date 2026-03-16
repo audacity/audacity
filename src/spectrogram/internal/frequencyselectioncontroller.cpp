@@ -3,13 +3,29 @@
  */
 #include "frequencyselectioncontroller.h"
 
+#include "ifrequencyselectionrestorer.h"
+
 #include "framework/global/defer.h"
 #include "framework/global/log.h"
 
 namespace au::spectrogram {
-FrequencySelectionController::FrequencySelectionController(const muse::modularity::ContextPtr& ctx)
-    : muse::Injectable(ctx)
+FrequencySelectionController::FrequencySelectionController(const muse::modularity::ContextPtr& ctx,
+                                                           std::unique_ptr<IFrequencySelectionRestorer> frequencySelectionRestorer)
+    : muse::Injectable(ctx), m_frequencySelectionRestorer(std::move(frequencySelectionRestorer))
 {
+    m_frequencySelectionChanged.onReceive(this, [this](int, bool complete) {
+        if (complete) {
+            m_frequencySelectionRestorer->storeFrequencySelectionState(m_frequencySelection);
+        }
+    });
+}
+
+void FrequencySelectionController::restoreFrequencySelection()
+{
+    const auto restoredSelection = m_frequencySelectionRestorer->loadFrequencySelectionState();
+    if (restoredSelection.isValid()) {
+        setFrequencySelection(restoredSelection, true);
+    }
 }
 
 bool FrequencySelectionController::showsSpectrogram(int trackId) const
@@ -34,7 +50,7 @@ FrequencySelection FrequencySelectionController::frequencySelection() const
 void FrequencySelectionController::setFrequencySelection(FrequencySelection frequencySelection, bool complete)
 {
     const auto config = spectrogramService()->trackSpectrogramConfiguration(frequencySelection.trackId);
-    IF_ASSERT_FAILED(config) {
+    if (!config) {
         return;
     }
 
