@@ -792,14 +792,20 @@ IAudacityProjectPtr ProjectActionsController::createProjectInCurrentWindow()
 
 Ret ProjectActionsController::openCloudProject(const io::path_t& localPath)
 {
-    muse::ProgressPtr progress = audioComService()->openCloudProject(localPath);
+    if (!authorization()->isAuthorized()) {
+        RetVal<Val> rv = interactive()->openSync("audacity://signin/audiocom");
+        if (!rv.ret) {
+            return make_ret(Ret::Code::Cancel);
+        }
+    }
 
-    progress->finished().onReceive(this, [this](const ProgressResult& result) {
+    muse::ProgressPtr progress = audioComService()->openCloudProject(localPath);
+    progress->finished().onReceive(this, [this, localPath](const ProgressResult& result) {
         if (!result.ret) {
             LOGE() << result.ret.toString();
             return;
         }
-        doOpenProject(io::path_t(result.val.toString()));
+        doOpenProject(localPath);
     });
 
     interactive()->showProgress(trc("project", "Syncing project from cloud..."), *progress);

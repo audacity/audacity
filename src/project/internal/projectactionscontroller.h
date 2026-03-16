@@ -20,6 +20,7 @@
 #include "importexport/export/internal/exportconfiguration.h"
 #include "importexport/import/iimporter.h"
 #include "au3cloud/iau3audiocomservice.h"
+#include "au3cloud/iauthorization.h"
 
 #include "project/iprojectconfiguration.h"
 #include "project/iprojectfilescontroller.h"
@@ -47,6 +48,7 @@ class ProjectActionsController : public IProjectFilesController, public muse::ac
     muse::Inject<record::IRecordController> recordController { this };
     muse::Inject<importexport::IImporter> importer { this };
     muse::Inject<au3cloud::IAu3AudioComService> audioComService { this };
+    muse::Inject<au3cloud::IAuthorization> authorization { this };
     muse::Inject<toast::IToastService> toastService { this };
 
 public:
