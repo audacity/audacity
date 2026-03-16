@@ -283,6 +283,7 @@ modularity::ContextPtr GuiApp::setupNewContext(const muse::StringList& args)
         if (startupScenario) {
             std::optional<std::string> sessionType;
             std::optional<project::ProjectFile> projectFile;
+            muse::io::paths_t mediaFiles;
             QString displayNameOverride;
 
             for (size_t i = 0; i < args.size(); ++i) {
@@ -291,9 +292,14 @@ modularity::ContextPtr GuiApp::setupNewContext(const muse::StringList& args)
                 } else if (args[i] == "--project-display-name-override" && i + 1 < args.size()) {
                     displayNameOverride = args[++i].toQString();
                 } else if (!args[i].startsWith(u"--")) {
-                    project::ProjectFile file;
-                    file.url = QUrl::fromLocalFile(args[i].toQString());
-                    projectFile = file;
+                    const muse::io::path_t filePath(args[i].toQString());
+                    if (project::isAudacityFile(filePath) && !projectFile.has_value() && mediaFiles.empty()) {
+                        project::ProjectFile file;
+                        file.url = QUrl::fromLocalFile(args[i].toQString());
+                        projectFile = file;
+                    } else {
+                        mediaFiles.emplace_back(filePath);
+                    }
                 }
             }
 
@@ -303,6 +309,7 @@ modularity::ContextPtr GuiApp::setupNewContext(const muse::StringList& args)
 
             startupScenario->setStartupType(sessionType);
             startupScenario->setStartupScoreFile(projectFile);
+            startupScenario->setStartupMediaFiles(mediaFiles);
         }
     }
 

@@ -86,6 +86,7 @@ void ProjectActionsController::init()
     dispatcher()->reg(this, "file-open", this, &ProjectActionsController::open);
     dispatcher()->reg(this, "clear-recent", this, &ProjectActionsController::clearRecentProjects);
     dispatcher()->reg(this, "project-import", this, &ProjectActionsController::importFile);
+    dispatcher()->reg(this, "project-import-media-files", this, &ProjectActionsController::importMediaFiles);
 
     dispatcher()->reg(this, "file-save", [this]() { saveProject(SaveMode::Save); });
     //! TODO AU4: decide whether to implement these functions from scratch in AU4 or
@@ -143,6 +144,7 @@ bool ProjectActionsController::canReceiveAction(const muse::actions::ActionCode&
         static const std::unordered_set<actions::ActionCode> DONT_REQUIRE_OPEN_PROJECT {
             "file-new",
             "file-open",
+            "project-import-media-files",
             "continue-last-session",
             "clear-recent",
         };
@@ -165,7 +167,8 @@ Ret ProjectActionsController::openProject(const ProjectFile& file)
     LOGI() << "Try open project: url = " << file.url.toString() << ", displayNameOverride = " << file.displayNameOverride;
 
     if (file.isNull() || file.url.isLocalFile()) {
-        muse::io::path_t filename = file.isNull() ? selectOpeningFile() : file.path();
+        muse::io::paths_t filenames = file.isNull() ? selectOpeningFiles() : muse::io::paths_t { file.path() };
+        muse::io::path_t filename = filenames.empty() ? muse::io::path_t() : filenames.front();
 
         if (filename.empty()) {
             return make_ret(Ret::Code::Cancel);
@@ -231,20 +234,33 @@ void ProjectActionsController::open(const muse::actions::ActionData& args)
     UNUSED(args);
     const QUrl url = !args.empty() ? args.arg<QUrl>(0) : QUrl();
     const QString displayNameOverride = args.count() >= 2 ? args.arg<QString>(1) : QString();
-    const muse::io::path_t filePath = url.isLocalFile() ? muse::io::path_t(url) : selectOpeningFile();
+    const muse::io::paths_t filePaths = url.isLocalFile() ? muse::io::paths_t { muse::io::path_t(url) } : selectOpeningFiles();
 
     Ret ret = make_ret(Ret::Code::Cancel);
 
-    if (filePath.empty()) {
+    if (filePaths.empty()) {
         ret = make_ret(Ret::Code::Cancel);
-    } else if (!isFileSupported(filePath)) {
+    } else if (filePaths.size() > 1) {
+        for (const auto& filePath : filePaths) {
+            if (!isFileSupported(filePath) || au::project::isAudacityFile(filePath)) {
+                interactive()->error(muse::trc("project", "Error opening files"),
+                                     muse::trc("project", "Multiple selection supports only importable audio and media files."));
+                ret = make_ret(Err::UnsupportedUrl);
+                break;
+            }
+        }
+
+        if (ret.code() == static_cast<int>(Ret::Code::Cancel)) {
+            ret = openMediaFiles(filePaths);
+        }
+    } else if (!isFileSupported(filePaths.front())) {
         interactive()->error(muse::trc("project", "Error opening file"),
-                             muse::mtrc("project", "Could not open file: %1").arg(filePath.toString()).toStdString());
+                             muse::mtrc("project", "Could not open file: %1").arg(filePaths.front().toString()).toStdString());
         ret = make_ret(Err::UnsupportedUrl);
-    } else if (au::project::isAudacityFile(filePath)) {
-        ret = openProject(ProjectFile(QUrl::fromLocalFile(filePath.toQString()), displayNameOverride));
+    } else if (au::project::isAudacityFile(filePaths.front())) {
+        ret = openProject(ProjectFile(QUrl::fromLocalFile(filePaths.front().toQString()), displayNameOverride));
     } else {
-        ret = openMediaFile(filePath);
+        ret = openMediaFile(filePaths.front());
     }
 
     if (!ret) {
@@ -259,16 +275,50 @@ void ProjectActionsController::importFile()
     project->import(askedPath);
 }
 
-muse::Ret ProjectActionsController::openMediaFile(const muse::io::path_t& givenPath)
+void ProjectActionsController::importMediaFiles(const muse::actions::ActionData& args)
 {
-    io::path_t actualPath = fileSystem()->absoluteFilePath(givenPath);
-    if (actualPath.empty()) {
-        return make_ret(Ret::Code::UnknownError);
+    const QStringList files = !args.empty() ? args.arg<QStringList>(0) : QStringList();
+    muse::io::paths_t filePaths;
+    filePaths.reserve(files.size());
+    for (const QString& file : files) {
+        filePaths.emplace_back(file);
+    }
+
+    Ret ret = openMediaFiles(filePaths);
+    if (!ret) {
+        openPageIfNeed(HOME_PAGE_URI);
+    }
+}
+
+muse::Ret ProjectActionsController::openMediaFile(const muse::io::path_t& path)
+{
+    return openMediaFiles({ path });
+}
+
+muse::Ret ProjectActionsController::openMediaFiles(const muse::io::paths_t& paths)
+{
+    if (paths.empty()) {
+        return make_ret(Ret::Code::Cancel);
+    }
+
+    muse::io::paths_t actualPaths;
+    actualPaths.reserve(paths.size());
+    for (const auto& givenPath : paths) {
+        io::path_t actualPath = fileSystem()->absoluteFilePath(givenPath);
+        if (actualPath.empty()) {
+            return make_ret(Ret::Code::UnknownError);
+        }
+
+        actualPaths.emplace_back(actualPath);
     }
 
     if (globalContext()->currentProject()) {
         QStringList args;
-        args << actualPath.toQString();
+        args << "--session-type" << "start-with-new";
+        for (const auto& actualPath : actualPaths) {
+            args << "--import-media-file" << actualPath.toQString();
+        }
+
         multiwindowsProvider()->openNewWindow(args);
         return make_ret(Ret::Code::Ok);
     }
@@ -283,7 +333,7 @@ muse::Ret ProjectActionsController::openMediaFile(const muse::io::path_t& givenP
         return ret;
     }
 
-    return project->import(actualPath);
+    return project->import(actualPaths);
 }
 
 bool ProjectActionsController::isUrlSupported(const QUrl& url) const
@@ -465,7 +515,7 @@ async::Notification ProjectActionsController::projectBeingDownloadedChanged() co
     return m_projectBeingDownloadedChanged;
 }
 
-muse::io::path_t ProjectActionsController::selectOpeningFile()
+muse::io::paths_t ProjectActionsController::selectOpeningFiles()
 {
     std::vector<std::string> supportedExtensions = importer()->supportedExtensions();
 
@@ -503,14 +553,15 @@ muse::io::path_t ProjectActionsController::selectOpeningFile()
         defaultDir = configuration()->defaultUserProjectsPath();
     }
 
-    io::path_t filePath = interactive()->selectOpeningFileSync(muse::trc("project",
-                                                                         "Open"), defaultDir, filter, QFileDialog::HideNameFilterDetails);
+    io::paths_t filePaths = interactive()->selectOpeningFilesSync(muse::trc("project",
+                                                                            "Open"), defaultDir, filter,
+                                                                  QFileDialog::HideNameFilterDetails);
 
-    if (!filePath.empty()) {
-        configuration()->setLastOpenedProjectsPath(io::dirpath(filePath));
+    if (!filePaths.empty()) {
+        configuration()->setLastOpenedProjectsPath(io::dirpath(filePaths.front()));
     }
 
-    return filePath;
+    return filePaths;
 }
 
 io::path_t ProjectActionsController::selectImportFile()

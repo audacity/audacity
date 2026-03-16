@@ -86,6 +86,16 @@ void StartupScenario::setStartupScoreFile(const std::optional<ProjectFile>& file
     m_startupScoreFile = file ? file.value() : ProjectFile();
 }
 
+const muse::io::paths_t& StartupScenario::startupMediaFiles() const
+{
+    return m_startupMediaFiles;
+}
+
+void StartupScenario::setStartupMediaFiles(const muse::io::paths_t& files)
+{
+    m_startupMediaFiles = files;
+}
+
 muse::async::Promise<muse::Ret> StartupScenario::runOnSplashScreen()
 {
     return muse::async::make_promise<muse::Ret>([this](auto resolve, auto) {
@@ -161,6 +171,10 @@ bool StartupScenario::startupCompleted() const
 
 StartupModeType StartupScenario::resolveStartupModeType() const
 {
+    if (!m_startupMediaFiles.empty()) {
+        return StartupModeType::StartEmpty;
+    }
+
     if (m_startupScoreFile.isValid()) {
         return StartupModeType::StartWithScore;
     }
@@ -176,9 +190,17 @@ void StartupScenario::onStartupPageOpened(StartupModeType modeType)
 {
     TRACEFUNC;
 
-// #ifndef MUSE_APP_UNSTABLE
     showStartupDialogsIfNeed(modeType);
-// #endif
+
+    if (!m_startupMediaFiles.empty()) {
+        QStringList files;
+        for (const auto& file : m_startupMediaFiles) {
+            files << file.toQString();
+        }
+
+        dispatcher()->dispatch("project-import-media-files", ActionData::make_arg1<QStringList>(files));
+        return;
+    }
 
     switch (modeType) {
     case StartupModeType::StartEmpty:

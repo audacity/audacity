@@ -55,6 +55,8 @@ public:
 
     const au::project::ProjectFile& startupScoreFile() const override;
     void setStartupScoreFile(const std::optional<au::project::ProjectFile>& file) override;
+    const muse::io::paths_t& startupMediaFiles() const override;
+    void setStartupMediaFiles(const muse::io::paths_t& files) override;
 
     muse::async::Promise<muse::Ret> runOnSplashScreen() override;
     void runAfterSplashScreen() override;
@@ -73,6 +75,7 @@ private:
 
     std::string m_startupTypeStr;
     au::project::ProjectFile m_startupScoreFile;
+    muse::io::paths_t m_startupMediaFiles;
     bool m_startupCompleted = false;
 };
 }
