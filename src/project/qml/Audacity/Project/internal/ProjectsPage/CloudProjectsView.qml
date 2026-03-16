@@ -136,8 +136,9 @@ ProjectsView {
             navigation.name: "CloudProjectsGrid"
             navigation.accessible.name: qsTrc("project", "Cloud projects grid")
 
-            //onCreateNewProjectRequested: {}
-            //onOpenProjectRequested: function(projectPath, displayName) {}
+            onOpenProjectRequested: function (projectPath, displayName) {
+                root.onOpenProjectRequested(projectPath, displayName)
+            }
         }
     }
 

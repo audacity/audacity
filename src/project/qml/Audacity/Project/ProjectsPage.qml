@@ -143,7 +143,7 @@ FocusScope {
                 accessible.name: qsTrc("project", "Projects tab bar")
                 enabled: tabBar.enabled && tabBar.visible
 
-                onNavigationEvent: function(event) {
+                onNavigationEvent: function (event) {
                     if (event.type === NavigationEvent.AboutActive) {
                         event.setData("controlName", tabBar.currentItem.navigation.name)
                     }
@@ -206,8 +206,16 @@ FocusScope {
             implicitHeight: ui.theme.defaultButtonSize
 
             model: [
-                { "icon": IconCode.GRID, "title": qsTrc("project", "Grid view"), "value": ProjectsPageModel.Grid },
-                { "icon": IconCode.LIST, "title": qsTrc("project", "List view"), "value": ProjectsPageModel.List }
+                {
+                    "icon": IconCode.GRID,
+                    "title": qsTrc("project", "Grid view"),
+                    "value": ProjectsPageModel.Grid
+                },
+                {
+                    "icon": IconCode.LIST,
+                    "title": qsTrc("project", "List view"),
+                    "value": ProjectsPageModel.List
+                }
             ]
 
             delegate: FlatRadioButton {
@@ -269,7 +277,7 @@ FocusScope {
                 projectsPageModel.createNewProject()
             }
 
-            onOpenProjectRequested: function(projectPath, displayName) {
+            onOpenProjectRequested: function (projectPath, displayName) {
                 Qt.callLater(projectsPageModel.openProject, projectPath, displayName)
             }
         }
@@ -291,16 +299,12 @@ FocusScope {
             navigationSection: navSec
             navigationOrder: 5
 
-            // onCreateNewProjectRequested: {
-            //     projectsPageModel.createNewProject()
-            // }
-
-            // onOpenProjectRequested: function(projectPath, displayName) {
-            //     Qt.callLater(projectsPageModel.openProject, projectPath, displayName)
-            // }
+            onOpenProjectRequested: function (projectPath, displayName) {
+                Qt.callLater(projectsPageModel.openProject, projectPath, displayName)
+            }
 
             Connections {
-                 target: refreshButton
+                target: refreshButton
 
                 function onClicked() {
                     cloudProjectsView.refresh()
@@ -324,9 +328,9 @@ FocusScope {
 
             navigationSection: navSec
             navigationOrder: 6
-            
+
             Connections {
-                 target: refreshButton
+                target: refreshButton
 
                 function onClicked() {
                     cloudAudioFilesView.refresh()
@@ -376,7 +380,7 @@ FocusScope {
         }
 
         Row {
-            anchors.right : parent.right
+            anchors.right: parent.right
             anchors.rightMargin: prv.sideMargin
             anchors.verticalCenter: parent.verticalCenter
 

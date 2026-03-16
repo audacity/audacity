@@ -60,7 +60,7 @@ ProjectsView {
                 root.createNewProjectRequested()
             }
 
-            onOpenProjectRequested: function(projectPath, displayName) {
+            onOpenProjectRequested: function (projectPath, displayName) {
                 root.openProjectRequested(projectPath, displayName)
             }
         }
@@ -91,7 +91,7 @@ ProjectsView {
                 root.createNewProjectRequested()
             }
 
-            onOpenProjectRequested: function(projectPath, displayName) {
+            onOpenProjectRequested: function (projectPath, displayName) {
                 root.openProjectRequested(projectPath, displayName)
             }
 
@@ -104,7 +104,7 @@ ProjectsView {
                     header: qsTrc("project", "Modified")
 
                     width: function (parentWidth) {
-                        let parentWidthExclusingSpacing = parentWidth - list.columns.length * list.view.columnSpacing;
+                        let parentWidthExclusingSpacing = parentWidth - list.columns.length * list.view.columnSpacing
                         return 0.25 * parentWidthExclusingSpacing
                     }
 
@@ -137,13 +137,12 @@ ProjectsView {
                         }
                     }
                 },
-
                 ProjectsListView.ColumnItem {
                     id: sizeColumn
                     header: qsTrc("global", "Size", "file size")
 
                     width: function (parentWidth) {
-                        let parentWidthExclusingSpacing = parentWidth - list.columns.length * list.view.columnSpacing;
+                        let parentWidthExclusingSpacing = parentWidth - list.columns.length * list.view.columnSpacing
                         return 0.15 * parentWidthExclusingSpacing
                     }
 
