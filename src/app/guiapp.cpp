@@ -286,11 +286,14 @@ modularity::ContextPtr GuiApp::setupNewContext(const muse::StringList& args)
             muse::io::paths_t mediaFiles;
             QString displayNameOverride;
 
+            QString cloudProjectId;
             for (size_t i = 0; i < args.size(); ++i) {
                 if (args[i] == "--session-type" && i + 1 < args.size()) {
                     sessionType = args[++i].toStdString();
                 } else if (args[i] == "--project-display-name-override" && i + 1 < args.size()) {
                     displayNameOverride = args[++i].toQString();
+                } else if (args[i] == "--cloud-project-id" && i + 1 < args.size()) {
+                    cloudProjectId = args[++i].toQString();
                 } else if (!args[i].startsWith(u"--")) {
                     const muse::io::path_t filePath(args[i].toQString());
                     if (project::isAudacityFile(filePath)) {
@@ -306,8 +309,13 @@ modularity::ContextPtr GuiApp::setupNewContext(const muse::StringList& args)
                 }
             }
 
-            if (projectFile.has_value() && !displayNameOverride.isEmpty()) {
-                projectFile.value().displayNameOverride = displayNameOverride;
+            if (projectFile.has_value()) {
+                if (!displayNameOverride.isEmpty()) {
+                    projectFile.value().displayNameOverride = displayNameOverride;
+                }
+                if (!cloudProjectId.isEmpty()) {
+                    projectFile.value().cloudProjectId = cloudProjectId;
+                }
             }
 
             startupScenario->setStartupType(sessionType);

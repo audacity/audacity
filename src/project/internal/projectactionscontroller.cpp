@@ -185,7 +185,7 @@ Ret ProjectActionsController::openProject(const ProjectFile& file)
             filename = resolved.val;
         }
 
-        return openProject(filename, file.displayNameOverride);
+        return openProject(filename, file.displayNameOverride, file.cloudProjectId);
     }
 
     //! TODO: Fix me
@@ -780,6 +780,9 @@ muse::Ret ProjectActionsController::openProject(const muse::io::path_t& path, co
 
         if (!displayNameOverride.isEmpty()) {
             args << "--project-display-name-override" << displayNameOverride;
+        }
+        if (!projectId.empty()) {
+            args << "--cloud-project-id" << projectId;
         }
         multiwindowsProvider()->openNewWindow(args);
         return make_ret(Ret::Code::Ok);
