@@ -160,6 +160,10 @@ Item {
             }
             draggedEdges = []
         }
+
+        onExited: function (mouse) {
+            selectionModel.onHoveringPositionChanged(-1)
+        }
     }
 
     MarqueeSelection {

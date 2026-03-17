@@ -184,10 +184,10 @@ void ChannelSpectralSelectionModel::endCenterFrequencyDrag()
 
 void ChannelSpectralSelectionModel::onHoveringPositionChanged(double y)
 {
-    if (y < 0 || y > m_channelHeight) {
-        return;
+    auto frequency = SelectionInfo::UndefinedFrequency;
+    if (y >= 0 && y <= m_channelHeight) {
+        frequency = positionToFrequency(y);
     }
-    const double frequency = positionToFrequency(y);
     spectrogramViewService()->setRulerGuideFrequency(m_trackId, frequency);
 }
 
