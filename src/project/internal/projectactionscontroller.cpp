@@ -494,7 +494,7 @@ bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudI
         return saveProjectLocally(projectFilePath, SaveMode::Save);
     });
 
-    progress->finished().onReceive(this, [this, exists, project](const ProgressResult& result) {
+    progress->finished().onReceive(this, [this, exists](const ProgressResult& result) {
         if (result.ret.success()) {
             if (exists) {
                 return;

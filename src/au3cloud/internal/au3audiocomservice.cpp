@@ -363,7 +363,7 @@ muse::ProgressPtr Au3AudioComService::uploadProject(au::project::IAudacityProjec
                 auto& projectCloudExtension = audacity::cloud::audiocom::sync::ProjectCloudExtension::Get(*au3Project);
                 projectCloudExtension.OnSyncCompleted(nullptr,
                                                       audacity::cloud::audiocom::sync::CloudSyncError {
-                    audacity::cloud::audiocom::sync::CloudSyncError::Aborted, muse::trc("project", "Cloud not save project locally") },
+                    audacity::cloud::audiocom::sync::CloudSyncError::Aborted, muse::trc("project", "Could not save project locally") },
                                                       AudiocomTrace::SaveProjectSaveToCloudMenu);
             }, muse::runtime::mainThreadId());
         }
@@ -396,8 +396,8 @@ muse::ProgressPtr Au3AudioComService::openCloudProject(const muse::io::path_t& l
         }
     }
 
-    std::thread([this, progress, db= std::move(dbProjectData), path = localPath.toStdString(), cloudProjectId]() {
-        if (isSnapshotUpToDate(db)) {
+    std::thread([this, progress, dbProjectData, path = localPath.toStdString(), cloudProjectId]() {
+        if (isSnapshotUpToDate(dbProjectData)) {
             progress->finish(muse::make_ok());
             return;
         }
@@ -417,8 +417,8 @@ muse::ProgressPtr Au3AudioComService::openCloudProject(const muse::io::path_t& l
 
         muse::async::Async::call(this, [syncFuturePromise, cloudProjectId,
                                         progressCallback = std::move(progressCallback)]() mutable {
-            // Important CloudSyncService does not control access by locking but by calling convention,
-            // forcing all operations to be called on the main thread
+            // Important: CloudSyncService does not control access by locking but by calling convention,
+            // We must ensure all operations on this service to be called on the main thread
             auto future = CloudSyncService::Get().OpenFromCloud(
                 cloudProjectId, {},
                 CloudSyncService::SyncMode::Normal,
@@ -562,8 +562,8 @@ std::optional<std::string> Au3AudioComService::getHeadSnapshotID(const std::stri
     std::future<HeadFuture> headFutureResult = headPromise->get_future();
 
     muse::async::Async::call(this, [headPromise, projectId]() {
-        // Important CloudSyncService does not control access by locking but by calling convention,
-        // forcing all operations to be called on the main thread
+        // Important: CloudSyncService does not control access by locking but by calling convention,
+        // We must ensure all operations on this service to be called on the main thread
         headPromise->set_value(CloudSyncService::Get().GetHeadSnapshotID(projectId));
     }, muse::runtime::mainThreadId());
 
