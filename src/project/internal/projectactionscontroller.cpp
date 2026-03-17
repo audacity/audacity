@@ -243,17 +243,26 @@ void ProjectActionsController::open(const muse::actions::ActionData& args)
     } else if (filePaths.empty()) {
         ret = make_ret(Ret::Code::Cancel);
     } else if (filePaths.size() > 1) {
-        for (const auto& filePath : filePaths) {
-            if (!isFileSupported(filePath) || au::project::isAudacityFile(filePath)) {
-                interactive()->error(muse::trc("project", "Error opening files"),
-                                     muse::trc("project", "Multiple selection supports only importable audio and media files."));
-                ret = make_ret(Err::UnsupportedUrl);
-                break;
-            }
-        }
+        auto projectIt = std::find_if(filePaths.cbegin(), filePaths.cend(), [](const auto& filePath) {
+            return au::project::isAudacityFile(filePath);
+        });
 
-        if (ret.code() == static_cast<int>(Ret::Code::Cancel)) {
-            ret = openMediaFiles(filePaths);
+        if (projectIt != filePaths.cend()) {
+            ret = openProject(ProjectFile(QUrl::fromLocalFile(projectIt->toQString()), displayNameOverride));
+        } else {
+            muse::io::paths_t supportedFilePaths;
+            supportedFilePaths.reserve(filePaths.size());
+            for (const auto& filePath : filePaths) {
+                if (isFileSupported(filePath)) {
+                    supportedFilePaths.emplace_back(filePath);
+                }
+            }
+
+            if (supportedFilePaths.empty()) {
+                ret = make_ret(Err::UnsupportedUrl);
+            } else {
+                ret = openMediaFiles(supportedFilePaths);
+            }
         }
     } else if (!isFileSupported(filePaths.front())) {
         interactive()->error(muse::trc("project", "Error opening file"),

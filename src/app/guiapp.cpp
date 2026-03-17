@@ -293,11 +293,14 @@ modularity::ContextPtr GuiApp::setupNewContext(const muse::StringList& args)
                     displayNameOverride = args[++i].toQString();
                 } else if (!args[i].startsWith(u"--")) {
                     const muse::io::path_t filePath(args[i].toQString());
-                    if (project::isAudacityFile(filePath) && !projectFile.has_value() && mediaFiles.empty()) {
-                        project::ProjectFile file;
-                        file.url = QUrl::fromLocalFile(args[i].toQString());
-                        projectFile = file;
-                    } else {
+                    if (project::isAudacityFile(filePath)) {
+                        if (!projectFile.has_value()) {
+                            project::ProjectFile file;
+                            file.url = QUrl::fromLocalFile(args[i].toQString());
+                            projectFile = file;
+                        }
+                        mediaFiles.clear();
+                    } else if (!projectFile.has_value()) {
                         mediaFiles.emplace_back(filePath);
                     }
                 }

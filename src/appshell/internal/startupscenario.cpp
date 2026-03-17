@@ -171,12 +171,12 @@ bool StartupScenario::startupCompleted() const
 
 StartupModeType StartupScenario::resolveStartupModeType() const
 {
-    if (!m_startupMediaFiles.empty()) {
-        return StartupModeType::StartEmpty;
-    }
-
     if (m_startupProjectFile.isValid()) {
         return StartupModeType::StartWithProject;
+    }
+
+    if (!m_startupMediaFiles.empty()) {
+        return StartupModeType::StartEmpty;
     }
 
     if (!m_startupTypeStr.empty()) {
