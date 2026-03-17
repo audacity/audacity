@@ -991,9 +991,15 @@ NeedsDownmixing Au3ClipsInteraction::moveSelectedClipsUpOrDown(ClipKeyList& clip
     if (offset < 0) {
         // The user dragged up. It's possible that the bottom-most tracks were created during this interaction,
         // in which case we make it nice to the user and remove them automatically.
-        // `m_tracksWhenDragStarted` tells use what the tracks looks like at the start of the interaction. We check all extra tracks.
+        // Only remove empty temp tracks that are below the dragged clips
+        const auto& origTracks = ::TrackList::Get(projectRef());
+        size_t highestClipIndex = 0;
+        for (const auto& clipKey : clipKeyList) {
+            highestClipIndex = std::max(highestClipIndex, utils::getTrackIndex(origTracks, clipKey.trackId));
+        }
+        const size_t removeFrom = std::max(m_tracksWhenDragStarted->size, highestClipIndex + 1);
         constexpr auto emptyOnly = true;
-        tracksInteraction()->removeDragAddedTracks(m_tracksWhenDragStarted->size, emptyOnly);
+        tracksInteraction()->removeDragAddedTracks(removeFrom, emptyOnly);
     }
 
     return needsDownmixing;
