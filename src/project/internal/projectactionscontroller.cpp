@@ -238,7 +238,9 @@ void ProjectActionsController::open(const muse::actions::ActionData& args)
 
     Ret ret = make_ret(Ret::Code::Cancel);
 
-    if (filePaths.empty()) {
+    if (url.isValid() && !url.isEmpty() && !url.isLocalFile()) {
+        ret = openProject(ProjectFile(url, displayNameOverride));
+    } else if (filePaths.empty()) {
         ret = make_ret(Ret::Code::Cancel);
     } else if (filePaths.size() > 1) {
         for (const auto& filePath : filePaths) {
