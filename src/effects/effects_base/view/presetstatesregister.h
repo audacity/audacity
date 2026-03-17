@@ -11,12 +11,13 @@ namespace au::effects {
 class PresetStatesRegister : public IPresetStatesRegister
 {
 public:
-    std::string makePresetStateKey(const EffectId& effectId, bool usedDestructively, const std::string& presetStateKey) const override;
-    std::optional<PresetState> presetState(const std::string& key) const override;
-    void setPresetState(const std::string& key, const PresetState& state) override;
-    void removePresetState(const std::string& key) override;
+    std::optional<PresetState> presetState(const PresetKey& key) const override;
+    void setPresetState(const PresetKey& key, const PresetState& state) override;
+    void removePresetState(const PresetKey& key) override;
 
 private:
+    static std::string keyString(const PresetKey& key);
+
     std::unordered_map<std::string, PresetState> m_presetStates;
 };
 }

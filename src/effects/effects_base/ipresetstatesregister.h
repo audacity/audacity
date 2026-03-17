@@ -23,9 +23,8 @@ public:
 
     virtual ~IPresetStatesRegister() = default;
 
-    virtual std::string makePresetStateKey(const EffectId& effectId, bool usedDestructively, const std::string& presetStateKey) const = 0;
-    virtual std::optional<PresetState> presetState(const std::string& key) const = 0;
-    virtual void setPresetState(const std::string& key, const PresetState& state) = 0;
-    virtual void removePresetState(const std::string& key) = 0;
+    virtual std::optional<PresetState> presetState(const PresetKey& key) const = 0;
+    virtual void setPresetState(const PresetKey& key, const PresetState& state) = 0;
+    virtual void removePresetState(const PresetKey& key) = 0;
 };
 }

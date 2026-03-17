@@ -5,23 +5,22 @@
 
 using namespace au::effects;
 
-std::string PresetStatesRegister::makePresetStateKey(const EffectId& effectId, bool usedDestructively,
-                                                     const std::string& presetStateKey) const
+std::string PresetStatesRegister::keyString(const PresetKey& key)
 {
-    if (effectId.empty()) {
+    if (key.effectId.empty()) {
         return {};
     }
 
-    if (usedDestructively) {
-        return "destructive:" + effectId.toStdString();
+    if (key.realtimeEffectState.empty()) {
+        return "destructive:" + key.effectId.toStdString();
     }
 
-    return !presetStateKey.empty() ? "realtime:" + presetStateKey : std::string();
+    return "realtime:" + key.effectId.toStdString() + ":" + key.realtimeEffectState;
 }
 
-std::optional<IPresetStatesRegister::PresetState> PresetStatesRegister::presetState(const std::string& key) const
+std::optional<IPresetStatesRegister::PresetState> PresetStatesRegister::presetState(const PresetKey& key) const
 {
-    const auto it = m_presetStates.find(key);
+    const auto it = m_presetStates.find(keyString(key));
     if (it == m_presetStates.cend()) {
         return std::nullopt;
     }
@@ -29,12 +28,12 @@ std::optional<IPresetStatesRegister::PresetState> PresetStatesRegister::presetSt
     return it->second;
 }
 
-void PresetStatesRegister::setPresetState(const std::string& key, const PresetState& state)
+void PresetStatesRegister::setPresetState(const PresetKey& key, const PresetState& state)
 {
-    m_presetStates.insert_or_assign(key, state);
+    m_presetStates.insert_or_assign(keyString(key), state);
 }
 
-void PresetStatesRegister::removePresetState(const std::string& key)
+void PresetStatesRegister::removePresetState(const PresetKey& key)
 {
-    m_presetStates.erase(key);
+    m_presetStates.erase(keyString(key));
 }

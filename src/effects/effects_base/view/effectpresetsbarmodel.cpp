@@ -79,7 +79,7 @@ void EffectPresetsBarModel::load()
         return;
     }
 
-    // NOTE: No restorable session preset state was found for this dialog instance,
+    // NOTE: No restorable preset state was found for this dialog instance,
     // so fall back to destructive last-used preset restore or realtime preset matching.
     if (m_usedDestructively) {
         restoreLastUsedPreset(effectId);
@@ -150,7 +150,7 @@ void EffectPresetsBarModel::reload(const EffectId& effectId, const EffectInstanc
 bool EffectPresetsBarModel::restorePresetState()
 {
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(m_instanceId);
-    const std::string key = presetStatesRegister()->makePresetStateKey(effectId, m_usedDestructively, m_presetStateKey.toStdString());
+    const PresetKey key { effectId, m_realtimeEffectState.toStdString() };
     const std::optional<IPresetStatesRegister::PresetState> presetState = presetStatesRegister()->presetState(key);
     if (!presetState.has_value()) {
         return false;
@@ -198,8 +198,8 @@ void EffectPresetsBarModel::restoreLastUsedPreset(const EffectId& effectId)
 void EffectPresetsBarModel::restoreInitialPresetState()
 {
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(m_instanceId);
-    const std::string key = presetStatesRegister()->makePresetStateKey(effectId, m_usedDestructively, m_presetStateKey.toStdString());
-    if (key.empty()) {
+    const PresetKey key { effectId, m_realtimeEffectState.toStdString() };
+    if (effectId.empty()) {
         return;
     }
 
@@ -238,19 +238,19 @@ void EffectPresetsBarModel::setInstanceId_prop(int newInstanceId)
     emit canResetPresetChanged();
 }
 
-QString EffectPresetsBarModel::sessionStateKey() const
+QString EffectPresetsBarModel::realtimeEffectState() const
 {
-    return m_presetStateKey;
+    return m_realtimeEffectState;
 }
 
-void EffectPresetsBarModel::setSessionStateKey(const QString& newSessionStateKey)
+void EffectPresetsBarModel::setRealtimeEffectState(const QString& newRealtimeEffectState)
 {
-    if (m_presetStateKey == newSessionStateKey) {
+    if (m_realtimeEffectState == newRealtimeEffectState) {
         return;
     }
 
-    m_presetStateKey = newSessionStateKey;
-    emit sessionStateKeyChanged();
+    m_realtimeEffectState = newRealtimeEffectState;
+    emit realtimeEffectStateChanged();
 }
 
 QVariantList EffectPresetsBarModel::presets()
@@ -485,10 +485,11 @@ QString EffectPresetsBarModel::matchPresetForCurrentSettings() const
 void EffectPresetsBarModel::persistPresetState()
 {
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(m_instanceId);
-    const std::string key = presetStatesRegister()->makePresetStateKey(effectId, m_usedDestructively, m_presetStateKey.toStdString());
-    if (key.empty()) {
+    if (effectId.empty()) {
         return;
     }
+
+    const PresetKey key { effectId, m_realtimeEffectState.toStdString() };
 
     if (m_currentPreset.isEmpty() || !hasPreset(m_currentPreset)) {
         presetStatesRegister()->removePresetState(key);

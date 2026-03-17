@@ -23,7 +23,7 @@ class EffectPresetsBarModel : public QObject, public muse::Injectable, public mu
 {
     Q_OBJECT
     Q_PROPERTY(int instanceId READ instanceId_prop WRITE setInstanceId_prop NOTIFY instanceIdChanged FINAL)
-    Q_PROPERTY(QString sessionStateKey READ sessionStateKey WRITE setSessionStateKey NOTIFY sessionStateKeyChanged FINAL)
+    Q_PROPERTY(QString realtimeEffectState READ realtimeEffectState WRITE setRealtimeEffectState NOTIFY realtimeEffectStateChanged FINAL)
     Q_PROPERTY(QVariantList presets READ presets NOTIFY presetsChanged FINAL)
     Q_PROPERTY(QString preset READ preset WRITE setPreset NOTIFY presetChanged FINAL)
     Q_PROPERTY(bool presetsDropdownEnabled READ presetsDropdownEnabled NOTIFY presetsChanged FINAL)
@@ -47,8 +47,8 @@ public:
 
     int instanceId_prop() const;
     void setInstanceId_prop(int newInstanceId);
-    QString sessionStateKey() const;
-    void setSessionStateKey(const QString& newSessionStateKey);
+    QString realtimeEffectState() const;
+    void setRealtimeEffectState(const QString& newRealtimeEffectState);
     QVariantList presets();
     QString preset() const;
     void setPreset(QString presetId);
@@ -71,7 +71,7 @@ public:
 
 signals:
     void instanceIdChanged();
-    void sessionStateKeyChanged();
+    void realtimeEffectStateChanged();
     void presetsChanged();
     void presetChanged();
     void canDeletePresetChanged();
@@ -98,7 +98,7 @@ private:
     void updatePresetBar();
 
     int m_instanceId = -1;
-    QString m_presetStateKey;
+    QString m_realtimeEffectState;
 
     QString m_currentPreset;
     QStringList m_userPresets;

@@ -23,7 +23,6 @@ class RealtimeEffectViewerDialogModel : public QObject, public muse::Injectable,
 {
     Q_OBJECT
     Q_PROPERTY(QString effectState READ prop_effectState WRITE prop_setEffectState FINAL)
-    Q_PROPERTY(QString presetSessionKey READ presetSessionKey NOTIFY presetSessionKeyChanged FINAL)
     Q_PROPERTY(QString title READ prop_title NOTIFY titleChanged);
     Q_PROPERTY(QString trackName READ prop_trackName NOTIFY trackNameChanged);
     Q_PROPERTY(bool isActive READ prop_isActive WRITE prop_setIsActive NOTIFY isActiveChanged);
@@ -52,7 +51,6 @@ public:
 
     QString prop_effectState() const;
     void prop_setEffectState(const QString& effectState);
-    QString presetSessionKey() const;
     QString prop_trackName() const;
     QString prop_title() const;
 
@@ -75,7 +73,6 @@ public:
 signals:
     void trackNameChanged();
     void titleChanged();
-    void presetSessionKeyChanged();
     void isActiveChanged();
     void isMasterEffectChanged();
     void dialogViewChanged();
