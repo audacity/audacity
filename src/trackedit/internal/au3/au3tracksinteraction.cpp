@@ -506,6 +506,10 @@ bool Au3TracksInteraction::splitTracksAt(const TrackIdList& tracksIds, std::vect
 {
     selectionController()->resetSelectedClips();
 
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    std::vector<trackedit::Track> changedTracks;
+    ClipKeyList splitClipKeys;
+
     for (const auto& trackId : tracksIds) {
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
         IF_ASSERT_FAILED(waveTrack) {
@@ -522,21 +526,25 @@ bool Au3TracksInteraction::splitTracksAt(const TrackIdList& tracksIds, std::vect
         }
 
         if (didAnySplitOccur) {
-            // Select the leftmost clip
             secs_t time = pivots.front();
             const auto sampleLength = 1. / waveTrack->GetRate();
             time -= sampleLength;
 
             auto clip = waveTrack->GetClipAtTime(time);
-
             if (clip) {
-                ClipKey clipKey = DomConverter::clip(waveTrack, clip.get()).key;
-                selectionController()->setSelectedClips({ clipKey }, true);
+                splitClipKeys.push_back(DomConverter::clip(waveTrack, clip.get()).key);
             }
 
-            trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-            prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+            changedTracks.push_back(DomConverter::track(waveTrack));
         }
+    }
+
+    for (const auto& track : changedTracks) {
+        prj->notifyAboutTrackClipListChanged(track);
+    }
+
+    if (!splitClipKeys.empty()) {
+        selectionController()->setSelectedClips(splitClipKeys, true);
     }
 
     return true;

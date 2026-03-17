@@ -565,6 +565,12 @@ void TrackItemsListModel::reload()
         }
     }, muse::async::Asyncable::Mode::SetReplace);
 
+    prj->trackClipListChanged().onReceive(this, [this](const au::trackedit::Track& track) {
+        if (track.id == m_trackId) {
+            reload();
+        }
+    }, muse::async::Asyncable::Mode::SetReplace);
+
     prj->trackRemoved().onReceive(this, [this](const au::trackedit::Track& track) {
         if (track.id == m_trackId) {
             m_trackId = -1;
