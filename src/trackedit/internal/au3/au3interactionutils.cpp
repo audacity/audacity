@@ -149,10 +149,14 @@ au::au3::Au3WaveTrack* au::trackedit::utils::appendWaveTrack(au3::Au3TrackList& 
     return track.get();
 }
 
-au::trackedit::NeedsDownmixing au::trackedit::utils::moveClipsVertically(VerticalDrag dragDirection, const au3::Au3TrackList& orig,
+au::trackedit::NeedsDownmixing au::trackedit::utils::moveClipsVertically(int offset, const au3::Au3TrackList& orig,
                                                                          au3::Au3TrackList& copy,
                                                                          const trackedit::ClipKeyList& selectedClips)
 {
+    IF_ASSERT_FAILED(offset != 0) {
+        return NeedsDownmixing::No;
+    }
+
     const auto& project = *orig.GetOwner();
     const auto& factory = ::WaveTrackFactory::Get(project);
     const auto rate = ::ProjectRate::Get(project).GetRate();
@@ -182,41 +186,47 @@ au::trackedit::NeedsDownmixing au::trackedit::utils::moveClipsVertically(Vertica
         srcWaveTrack->RemoveInterval(movedClips.back().ptr);
     }
 
+    const int stepsNeeded = std::abs(offset);
+
     for (const auto& clip : movedClips) {
         const au3::Au3WaveTrack* waveTrack = getWaveTrack(copy, TrackIndex { clip.origTrackIndex });
         IF_ASSERT_FAILED(waveTrack) {
             continue;
         }
 
-        // Find next WaveTrack in the direction, skipping non-WaveTrack tracks (e.g. LabelTrack)
+        // Find the N-th WaveTrack in the given direction, skipping non-WaveTrack tracks (e.g. LabelTrack)
         ::TrackList::iterator it = copy.begin();
         std::advance(it, clip.origTrackIndex);
 
         au3::Au3WaveTrack* dstTrack = nullptr;
-        const int direction = (dragDirection == VerticalDrag::Up ? -1 : 1);
 
-        if (direction > 0) {
-            // Moving down - find next WaveTrack
+        if (offset > 0) {
+            // Moving down - find the N-th WaveTrack below
+            int found = 0;
             ++it;
             while (it != copy.end()) {
                 dstTrack = dynamic_cast<au3::Au3WaveTrack*>(*it);
-                if (dstTrack) {
+                if (dstTrack && ++found >= stepsNeeded) {
                     break;
                 }
                 ++it;
             }
-            // If no WaveTrack found, append new one
-            if (!dstTrack) {
+            // Append new tracks for any remaining steps
+            for (; found < stepsNeeded; ++found) {
                 dstTrack = appendWaveTrack(copy, waveTrack->NChannels(), &factory, rate);
             }
         } else {
-            // Moving up - find previous WaveTrack
+            // Moving up - find the N-th WaveTrack above
+            int found = 0;
             if (it != copy.begin()) {
                 do {
                     --it;
-                    dstTrack = dynamic_cast<au3::Au3WaveTrack*>(*it);
-                    if (dstTrack) {
-                        break;
+                    au3::Au3WaveTrack* candidate = dynamic_cast<au3::Au3WaveTrack*>(*it);
+                    if (candidate) {
+                        dstTrack = candidate;
+                        if (++found >= stepsNeeded) {
+                            break;
+                        }
                     }
                 } while (it != copy.begin());
             }

@@ -338,6 +338,16 @@ int TrackItemsListModel::calculateTrackPositionOffset(const TrackItemKey& key,
     if (pointingAtEmptySpace) {
         if (sourceAllowedIndex >= 0) {
             trackPositionOffset = allowedCount - sourceAllowedIndex;
+
+            // Calculate how many tracks fit in the empty space below the last track
+            double lastTrackBottom = vs->totalTrackHeight().val - vs->tracksVerticalOffset().val;
+            double emptyDistance = yPos - lastTrackBottom;
+            if (emptyDistance > 0) {
+                int refTrackHeight = vs->trackDefaultHeight();
+                if (refTrackHeight > 0) {
+                    trackPositionOffset += static_cast<int>(emptyDistance / refTrackHeight);
+                }
+            }
         }
     } else if (sourceAllowedIndex >= 0 && targetAllowedIndex >= 0) {
         trackPositionOffset = targetAllowedIndex - sourceAllowedIndex;

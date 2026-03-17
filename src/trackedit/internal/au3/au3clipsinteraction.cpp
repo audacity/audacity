@@ -404,8 +404,6 @@ muse::RetVal<ClipKeyList> Au3ClipsInteraction::moveClips(const ClipKeyList& clip
     m_busy = true;
     const muse::Defer defer([&] { m_busy = false; });
 
-    trackPositionOffset = std::clamp(trackPositionOffset, -1, 1);
-
     const trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
 
     if (!m_tracksWhenDragStarted) {
@@ -878,9 +876,7 @@ NeedsDownmixing Au3ClipsInteraction::moveSelectedClipsUpOrDown(ClipKeyList& clip
     // Also, it feels better to do all the magic on some floating track list and, if all goes well, replace the original
     // with the modified copy, then sending the appropriate signals.
 
-    // The algorithm is easier if we only allow moving up or down one track at a time.
-    // From a UX perspective, this doesn't change a thing, since dragging a clip results in a myriad of `moveClips` calls.
-    IF_ASSERT_FAILED(offset == -1 || offset == 1) {
+    IF_ASSERT_FAILED(offset != 0) {
         return NeedsDownmixing::No;
     }
 
@@ -889,15 +885,14 @@ NeedsDownmixing Au3ClipsInteraction::moveSelectedClipsUpOrDown(ClipKeyList& clip
     const auto copy = orig.Duplicate();
     const auto prj = globalContext()->currentTrackeditProject();
 
-    const auto dragDirection = offset == -1 ? utils::VerticalDrag::Up : utils::VerticalDrag::Down;
     // Make sure clips aren't dragged past the topmost track:
-    if (dragDirection == utils::VerticalDrag::Up && std::any_of(clipKeyList.begin(), clipKeyList.end(), [&](const ClipKey& clip) {
+    if (offset < 0 && std::any_of(clipKeyList.begin(), clipKeyList.end(), [&](const ClipKey& clip) {
         return utils::getTrackIndex(orig, clip.trackId) == 0;
     })) {
         return NeedsDownmixing::No;
     }
 
-    const NeedsDownmixing needsDownmixing = utils::moveClipsVertically(dragDirection, orig,
+    const NeedsDownmixing needsDownmixing = utils::moveClipsVertically(offset, orig,
                                                                        *copy, clipKeyList);
 
     // Clean-up after ourselves, preserving original track formats:
@@ -933,7 +928,7 @@ NeedsDownmixing Au3ClipsInteraction::moveSelectedClipsUpOrDown(ClipKeyList& clip
 
         if (!origWaveTrack) {
             // This must be a new track created 'cos the user dragged clips down.
-            assert(offset == 1);
+            assert(offset > 0);
             origWaveTrack = utils::appendWaveTrack(mutOrig, newWaveTrack->NChannels());
             prj->notifyAboutTrackAdded(DomConverter::track(origWaveTrack));
         }
