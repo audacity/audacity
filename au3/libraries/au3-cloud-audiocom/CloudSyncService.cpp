@@ -339,8 +339,6 @@ CloudSyncService::SyncFuture CloudSyncService::OpenFromCloud(
     std::string projectId, std::string snapshotId, SyncMode mode,
     sync::ProgressCallback callback)
 {
-    //ASSERT_MAIN_THREAD();
-
     // Reset promise
     mSyncPromise = {};
 
@@ -476,8 +474,6 @@ CloudSyncService::GetProjectState(const std::string& projectId)
 CloudSyncService::GetHeadSnapshotIDFuture
 CloudSyncService::GetHeadSnapshotID(std::string_view projectId)
 {
-    //ASSERT_MAIN_THREAD();
-
     auto promise = std::make_shared<GetHeadSnapshotIDPromise>();
 
     GetProjectInfo(

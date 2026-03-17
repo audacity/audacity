@@ -417,7 +417,8 @@ muse::ProgressPtr Au3AudioComService::openCloudProject(const muse::io::path_t& l
 
         muse::async::Async::call(this, [syncFuturePromise, cloudProjectId,
                                         progressCallback = std::move(progressCallback)]() mutable {
-            // Pass empty snapshotId so OpenFromCloud fetches the remote head
+            // Important CloudSyncService does not control access by locking but by calling convention,
+            // forcing all operations to be called on the main thread
             auto future = CloudSyncService::Get().OpenFromCloud(
                 cloudProjectId, {},
                 CloudSyncService::SyncMode::Normal,
@@ -561,6 +562,8 @@ std::optional<std::string> Au3AudioComService::getHeadSnapshotID(const std::stri
     std::future<HeadFuture> headFutureResult = headPromise->get_future();
 
     muse::async::Async::call(this, [headPromise, projectId]() {
+        // Important CloudSyncService does not control access by locking but by calling convention,
+        // forcing all operations to be called on the main thread
         headPromise->set_value(CloudSyncService::Get().GetHeadSnapshotID(projectId));
     }, muse::runtime::mainThreadId());
 
