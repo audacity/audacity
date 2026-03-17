@@ -232,7 +232,7 @@ TrackItemsContainer {
                         width: Math.max(3, itemData.width)
                         x: itemData.x
 
-                        asynchronous: true
+                        asynchronous: false
 
                         sourceComponent: {
                             if ((itemData.x + itemData.width) < (0 - clipsModel.cacheBufferPx)) {
