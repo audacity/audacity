@@ -12,6 +12,8 @@ import Audacity.Project 1.0
 ProjectsView {
     id: root
 
+    signal openCloudProjectRequested(var cloudItemId, var projectPath, var displayName)
+
     function refresh() {
         cloudProjectsModel.reload()
         prv.updateDesiredRowCount()
@@ -136,8 +138,8 @@ ProjectsView {
             navigation.name: "CloudProjectsGrid"
             navigation.accessible.name: qsTrc("project", "Cloud projects grid")
 
-            onOpenProjectRequested: function (projectPath, displayName) {
-                root.onOpenProjectRequested(projectPath, displayName)
+            onOpenCloudProjectRequested: function (cloudItemId, projectPath, displayName) {
+                root.openCloudProjectRequested(cloudItemId, projectPath, displayName)
             }
         }
     }

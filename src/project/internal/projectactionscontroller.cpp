@@ -84,6 +84,7 @@ void ProjectActionsController::init()
 {
     dispatcher()->reg(this, "file-new", this, &ProjectActionsController::newProject);
     dispatcher()->reg(this, "file-open", this, &ProjectActionsController::open);
+    dispatcher()->reg(this, "cloud-file-open", this, &ProjectActionsController::openCloudProject);
     dispatcher()->reg(this, "clear-recent", this, &ProjectActionsController::clearRecentProjects);
     dispatcher()->reg(this, "project-import", this, &ProjectActionsController::importFiles);
     dispatcher()->reg(this, "project-import-startup-media", this, &ProjectActionsController::importStartupMedia);
@@ -125,6 +126,7 @@ const muse::actions::ActionCodeList& ProjectActionsController::prohibitedActions
     static const std::vector<muse::actions::ActionCode> PROHIBITED_WHILE_RECORDING {
         "file-new",
         "file-open",
+        "cloud-file-open",
         "file-close",
         "project-import",
         "file-save",
@@ -145,6 +147,7 @@ bool ProjectActionsController::canReceiveAction(const muse::actions::ActionCode&
             "file-new",
             "file-open",
             "project-import-startup-media",
+            "cloud-file-open",
             "continue-last-session",
             "clear-recent",
         };
@@ -231,7 +234,6 @@ void ProjectActionsController::newProject()
 
 void ProjectActionsController::open(const muse::actions::ActionData& args)
 {
-    UNUSED(args);
     const QUrl url = !args.empty() ? args.arg<QUrl>(0) : QUrl();
     const QString displayNameOverride = args.count() >= 2 ? args.arg<QString>(1) : QString();
     const muse::io::paths_t filePaths = url.isLocalFile() ? muse::io::paths_t { muse::io::path_t(url) } : selectOpeningFiles();
@@ -274,6 +276,22 @@ void ProjectActionsController::open(const muse::actions::ActionData& args)
         ret = processMediaFiles({ filePaths.front() });
     }
 
+    if (!ret) {
+        openPageIfNeed(HOME_PAGE_URI);
+    }
+}
+
+void ProjectActionsController::openCloudProject(const muse::actions::ActionData& args)
+{
+    if (args.count() != 3) {
+        return;
+    }
+
+    const QString cloudProjectId = args.arg<QString>(0);
+    const QUrl url = args.arg<QUrl>(1);
+    const QString displayName = args.arg<QString>(2);
+
+    Ret ret = openProject(muse::io::path_t(url), displayName, cloudProjectId);
     if (!ret) {
         openPageIfNeed(HOME_PAGE_URI);
     }
@@ -718,7 +736,8 @@ bool ProjectActionsController::saveProjectAt(const SaveLocation& location, SaveM
     return false;
 }
 
-muse::Ret ProjectActionsController::openProject(const muse::io::path_t& path, const String& displayNameOverride)
+muse::Ret ProjectActionsController::openProject(const muse::io::path_t& path, const String& displayNameOverride,
+                                                const String& projectId)
 {
     //! NOTE This method is synchronous,
     //! but inside `multiwindowsProvider` there can be an event loop
@@ -768,7 +787,7 @@ muse::Ret ProjectActionsController::openProject(const muse::io::path_t& path, co
 
     //! Step 5. If it's a cloud project, download the latest version
     if (configuration()->isCloudProject(actualPath)) {
-        return openCloudProject(actualPath);
+        return openCloudProject(actualPath, projectId);
     }
 
     //! Step 6. Open project in the current window
@@ -790,7 +809,7 @@ IAudacityProjectPtr ProjectActionsController::createProjectInCurrentWindow()
     return project;
 }
 
-Ret ProjectActionsController::openCloudProject(const io::path_t& localPath)
+Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, const String& projectId)
 {
     if (!authorization()->isAuthorized()) {
         RetVal<Val> rv = interactive()->openSync("audacity://signin/audiocom");
@@ -799,7 +818,7 @@ Ret ProjectActionsController::openCloudProject(const io::path_t& localPath)
         }
     }
 
-    muse::ProgressPtr progress = audioComService()->openCloudProject(localPath);
+    muse::ProgressPtr progress = audioComService()->openCloudProject(localPath, projectId.toStdString());
     progress->finished().onReceive(this, [this, localPath](const ProgressResult& result) {
         if (!result.ret) {
             LOGE() << result.ret.toString();

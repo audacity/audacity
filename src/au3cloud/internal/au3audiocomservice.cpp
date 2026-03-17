@@ -375,22 +375,27 @@ std::string Au3AudioComService::getCloudProjectPage(au::project::IAudacityProjec
     return projectCloudExtension.GetCloudProjectPage(AudiocomTrace::SaveProjectSaveToCloudMenu);
 }
 
-muse::ProgressPtr Au3AudioComService::openCloudProject(const muse::io::path_t& localPath)
+muse::ProgressPtr Au3AudioComService::openCloudProject(const muse::io::path_t& localPath, const std::string& projectId)
 {
     muse::ProgressPtr progress = std::make_shared<muse::Progress>();
 
-    std::thread([this, progress, path = localPath.toStdString()]() {
+    std::thread([this, progress, path = localPath.toStdString(), projectId]() {
         auto dbData = sync::CloudProjectsDatabase::Get().GetProjectDataForPath(path);
-        if (!dbData.has_value()) {
+
+        std::string cloudProjectId;
+        if (dbData.has_value()) {
+            cloudProjectId = dbData->ProjectId;
+            if (isSnapshotUpToDate(dbData.value())) {
+                progress->finish(muse::make_ok());
+                return;
+            }
+        } else if (!projectId.empty()) {
+            cloudProjectId = projectId;
+        } else {
             std::string errorMsg = muse::trc("cloud", "Project not found in cloud database");
             muse::async::Async::call(this, [progress, errorMsg]() {
                 progress->finish(muse::make_ret(muse::Ret::Code::UnknownError, errorMsg));
             }, muse::runtime::mainThreadId());
-            return;
-        }
-
-        if (isSnapshotUpToDate(dbData.value())) {
-            progress->finish(muse::make_ok());
             return;
         }
 
@@ -407,11 +412,11 @@ muse::ProgressPtr Au3AudioComService::openCloudProject(const muse::io::path_t& l
         auto syncFuturePromise = std::make_shared<std::promise<SyncFuture> >();
         std::future<SyncFuture> syncFutureResult = syncFuturePromise->get_future();
 
-        muse::async::Async::call(this, [syncFuturePromise, dbData,
+        muse::async::Async::call(this, [syncFuturePromise, cloudProjectId,
                                         progressCallback = std::move(progressCallback)]() mutable {
             // Pass empty snapshotId so OpenFromCloud fetches the remote head
             auto future = CloudSyncService::Get().OpenFromCloud(
-                dbData->ProjectId, {},
+                cloudProjectId, {},
                 CloudSyncService::SyncMode::Normal,
                 std::move(progressCallback));
 

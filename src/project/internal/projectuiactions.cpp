@@ -29,6 +29,12 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "&Open…"),
              TranslatableString("action", "Open…")
              ),
+    UiAction("cloud-file-open",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "&Open cloud project…"),
+             TranslatableString("action", "Open cloud project…")
+             ),
     UiAction("clear-recent",
              au::context::UiCtxAny,
              au::context::CTX_ANY,

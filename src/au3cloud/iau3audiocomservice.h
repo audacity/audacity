@@ -44,6 +44,6 @@ public:
                                             std::function<bool()> projectSaveCallback = nullptr) = 0;
     virtual muse::ProgressPtr shareAudio(const std::string& title) = 0;
 
-    virtual muse::ProgressPtr openCloudProject(const muse::io::path_t& localPath) = 0;
+    virtual muse::ProgressPtr openCloudProject(const muse::io::path_t& localPath, const std::string& projectId = {}) = 0;
 };
 }
