@@ -149,12 +149,12 @@ void ViewTracksListModel::load()
         emit dataChanged(index(0), index(lastIndex), { IsDataSelectedRole });
     }, muse::async::Asyncable::Mode::SetReplace);
 
-    frequencySelectionController()->frequencySelectionChanged().onReceive(this, [this](int trackId, bool) {
-        QModelIndex idx = indexOf(trackId);
-        if (!idx.isValid()) {
+    frequencySelectionController()->frequencySelectionChanged().onReceive(this, [this](auto) {
+        if (m_trackList.empty()) {
             return;
         }
-        emit dataChanged(idx, idx, { FrequencySelectionRole });
+        const int lastIndex = static_cast<int>(m_trackList.size()) - 1;
+        emit dataChanged(index(0), index(lastIndex), { FrequencySelectionRole });
     }, muse::async::Asyncable::Mode::SetReplace);
 
     prj->tracksChanged().onReceive(this, [this](const std::vector<au::trackedit::Track> tracks) {

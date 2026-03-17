@@ -93,6 +93,8 @@ public:
     bool operator!=(const FrequencySelection& other) const;
 
 private:
+    friend class FrequencySelectionController;
+
     double m_startFrequency = SelectionInfo::UndefinedFrequency;
     double m_endFrequency = SelectionInfo::UndefinedFrequency;
     double m_centerFrequency = SelectionInfo::UndefinedFrequency;

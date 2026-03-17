@@ -156,7 +156,14 @@ void ClipChannelSpectrogramView::paint(QPainter* painter)
     const auto indentTime = m_timelineIndentWidth / m_zoom;
     const auto viewportStartTime = m_frameStartTime - indentTime;
     const auto viewportEndTime = m_frameEndTime;
-    const SelectionInfo selectionInfo { m_selectionStartTime, m_selectionEndTime, m_selectionStartFrequency, m_selectionEndFrequency };
+
+    // It can be that only one of start or end frequency is set. Only paint the selection if both are.
+    const auto noSelection = m_selectionStartFrequency == SelectionInfo::UndefinedFrequency
+                             || m_selectionEndFrequency == SelectionInfo::UndefinedFrequency;
+    const auto startFrequency = noSelection ? SelectionInfo::UndefinedFrequency : m_selectionStartFrequency;
+    const auto endFrequency = noSelection ? SelectionInfo::UndefinedFrequency : m_selectionEndFrequency;
+
+    const SelectionInfo selectionInfo { m_selectionStartTime, m_selectionEndTime, startFrequency, endFrequency };
 
     const QQuickItem* const item = viewportItem();
     IF_ASSERT_FAILED(item) {

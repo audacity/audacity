@@ -4,6 +4,7 @@
 #pragma once
 
 #include "spectrogram/ispectrogramservice.h"
+#include "spectrogram/view/ispectrogramviewservice.h"
 
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/async/asyncable.h"
@@ -22,8 +23,10 @@ class SpectrogramChannelRulerModel : public QObject, public QQmlParserStatus, pu
     Q_PROPERTY(double channelHeight READ channelHeight WRITE setChannelHeight NOTIFY channelHeightChanged FINAL)
     Q_PROPERTY(QVariantList majorTicks READ majorTicks NOTIFY ticksChanged FINAL)
     Q_PROPERTY(QVariantList minorTicks READ minorTicks NOTIFY ticksChanged FINAL)
+    Q_PROPERTY(double rulerGuideYPos READ rulerGuideYPos WRITE setRulerGuideYPos NOTIFY rulerGuideYPosChanged FINAL)
 
     muse::Inject<ISpectrogramService> spectrogramService{ this };
+    muse::Inject<ISpectrogramViewService> spectrogramViewService{ this };
 
 public:
     SpectrogramChannelRulerModel(QObject* parent = nullptr);
@@ -45,11 +48,15 @@ public:
     QVariantList majorTicks() const;
     QVariantList minorTicks() const;
 
+    double rulerGuideYPos() const;
+    void setRulerGuideYPos(double yPos);
+
 signals:
     void trackIdChanged();
     void channelHeightChanged();
     void ticksChanged();
     void labelHeightChanged();
+    void rulerGuideYPosChanged();
 
 private:
     void classBegin() override {}

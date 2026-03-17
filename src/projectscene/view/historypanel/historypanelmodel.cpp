@@ -20,7 +20,7 @@ void HistoryPanelModel::classBegin()
         onCurrentProjectChanged();
     });
 
-    projectHistory()->historyChanged().onReceive(this, [this](auto event) {
+    projectHistory()->historyChanged().onReceive(this, [this](auto) {
         onHistoryEvent();
     });
 }

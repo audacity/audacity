@@ -28,17 +28,21 @@ void EffectsActionsController::init()
         m_canReceiveActionsChanged.send({ "repeat-last-effect" });
     });
 
-    frequencySelectionController()->frequencySelectionChanged().onReceive(this, [this](auto, bool complete) {
-        if (!complete) {
-            return;
+    frequencySelectionController()->frequencySelectionChanged().onReceive(this, [this](bool complete) {
+        if (complete) {
+            notifyAboutSpectralEffectsAvailability();
         }
-        ActionCodeList codes;
-        const auto spectralEffects = spectralEffectsRegister()->spectralEffects();
-        for (const auto& spectralEffect : spectralEffects) {
-            codes.push_back(spectralEffect.action);
-        }
-        m_canReceiveActionsChanged.send(codes);
     });
+}
+
+void EffectsActionsController::notifyAboutSpectralEffectsAvailability()
+{
+    ActionCodeList codes;
+    const auto spectralEffects = spectralEffectsRegister()->spectralEffects();
+    for (const auto& spectralEffect : spectralEffects) {
+        codes.push_back(spectralEffect.action);
+    }
+    m_canReceiveActionsChanged.send(codes);
 }
 
 void EffectsActionsController::registerActions()

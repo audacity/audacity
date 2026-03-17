@@ -93,6 +93,7 @@ void SelectionViewController::onPressed(double x, double y, spectrogram::Spectro
 
     m_spectrogramHit.reset();
     if (spectralSelectionEnabled() && spectrogramHit.trackId >= 0) {
+        // Don't begin a spectral selection until we've actually moved.
         m_spectrogramHit.emplace(spectrogramHit);
     }
     emit pressedSpectrogramChanged();
@@ -116,8 +117,12 @@ void SelectionViewController::onPositionChanged(double x, double y)
     if (m_spectrogramHit && isInExtendedSpectrogram(*m_spectrogramHit, y)) {
         y = clampToSpectrogram(*m_spectrogramHit, y);
     }
-    if (doOnPositionChanged(x, y)) {
-        setFrequencySelection(y, m_startPoint.y(), false);
+    if (doOnPositionChanged(x, y) && m_spectrogramHit) {
+        if (m_frequencyEdgeHandle == 0) {
+            const auto frequency = spectrogramHitFrequency(*m_spectrogramHit, m_startPoint.y());
+            m_frequencyEdgeHandle = frequencySelectionController()->beginSelection(m_spectrogramHit->trackId, frequency);
+        }
+        setFrequencySelectionEdge(y, false, m_frequencyEdgeHandle);
     }
 }
 
@@ -175,8 +180,9 @@ void SelectionViewController::onReleased(double x, double y)
         return;
     }
 
-    setFrequencySelection(y, m_startPoint.y(), true);
+    setFrequencySelectionEdge(y, true, m_frequencyEdgeHandle);
     m_spectrogramHit.reset();
+    m_frequencyEdgeHandle = 0;
 
     IProjectViewStatePtr vs = viewState();
     if (!vs) {
@@ -259,50 +265,30 @@ void SelectionViewController::onSelectionHorizontalResize(double x1, double x2, 
     emit selectionEditInProgressChanged();
 }
 
-void SelectionViewController::startSelectionVerticalResize(spectrogram::SpectrogramHit hit)
+void SelectionViewController::startSelectionVerticalResize(spectrogram::SpectrogramHit hit, bool isTop)
 {
     IF_ASSERT_FAILED(hit.trackId >= 0) {
         return;
     }
     m_spectrogramHit.emplace(hit);
+    m_frequencyEdgeHandle
+        = isTop ? frequencySelectionController()->endFrequencyHandle() : frequencySelectionController()->startFrequencyHandle();
     m_verticalSelectionEditInProgress = true;
     emit verticalSelectionEditInProgressChanged();
 }
 
-void SelectionViewController::updateSelectionVerticalResize(double y1, double y2, bool completed)
+void SelectionViewController::updateSelectionVerticalResize(double y, bool completed)
 {
-    IF_ASSERT_FAILED(m_spectrogramHit) {
+    if (!m_verticalSelectionEditInProgress || !m_spectrogramHit || m_frequencyEdgeHandle == 0) {
         return;
     }
 
-    if (isInExtendedSpectrogram(*m_spectrogramHit, y1)) {
-        y1 = clampToSpectrogram(*m_spectrogramHit, y1);
-    }
-    if (isInExtendedSpectrogram(*m_spectrogramHit, y2)) {
-        y2 = clampToSpectrogram(*m_spectrogramHit, y2);
+    auto frequency = spectrogram::SelectionInfo::UndefinedFrequency;
+    if (isInExtendedSpectrogram(*m_spectrogramHit, y)) {
+        frequency = spectrogramHitFrequency(*m_spectrogramHit, clampToSpectrogram(*m_spectrogramHit, y));
     }
 
-    const auto vs = viewState();
-    IF_ASSERT_FAILED(vs) {
-        return;
-    }
-
-    setFrequencySelection(y1, y2, completed);
-
-    // Only extend track selection to other tracks if there is no spectral selection.
-    const auto frequencySelection = frequencySelectionController()->frequencySelection();
-    if (frequencySelection.isValid()) {
-        selectionController()->setSelectedTracks({ frequencySelection.trackId });
-    } else {
-        const trackedit::TrackIdList tracks = vs->tracksInRange(y1, y2);
-        selectionController()->setSelectedTracks(tracks, completed);
-    }
-
-    if (completed) {
-        m_verticalSelectionEditInProgress = false;
-        emit verticalSelectionEditInProgressChanged();
-        m_spectrogramHit.reset();
-    }
+    frequencySelectionController()->setHandleFrequency(frequency, completed, m_frequencyEdgeHandle);
 }
 
 void SelectionViewController::selectTrackAudioData(double y)
@@ -498,24 +484,18 @@ double SelectionViewController::spectrogramHitFrequency(const spectrogram::Spect
     return spectrogramService()->yToFrequency(hit.trackId, y - hit.spectrogramY, hit.spectrogramHeight);
 }
 
-void SelectionViewController::setFrequencySelection(double y1, double y2, bool complete)
+void SelectionViewController::setFrequencySelectionEdge(double y, bool complete, uintptr_t handle)
 {
-    if (!m_spectrogramHit || !isInExtendedSpectrogram(*m_spectrogramHit, y1) || !isInExtendedSpectrogram(*m_spectrogramHit, y2)) {
-        frequencySelectionController()->resetFrequencySelection();
+    if (!m_spectrogramHit) {
         return;
     }
 
-    const auto config = spectrogramService()->trackSpectrogramConfiguration(m_spectrogramHit->trackId);
-    IF_ASSERT_FAILED(config) {
-        return;
+    auto frequency = spectrogram::SelectionInfo::UndefinedFrequency;
+    if (isInExtendedSpectrogram(*m_spectrogramHit, y)) {
+        frequency = spectrogramHitFrequency(*m_spectrogramHit, y);
     }
 
-    const auto freq1 = spectrogramHitFrequency(*m_spectrogramHit, y1);
-    const auto freq2 = spectrogramHitFrequency(*m_spectrogramHit, y2);
-
-    spectrogram::FrequencySelection frequencySelection{ m_spectrogramHit->trackId };
-    frequencySelection.setFrequencyRange(freq1, freq2, config->scale());
-    frequencySelectionController()->setFrequencySelection(std::move(frequencySelection), complete);
+    frequencySelectionController()->setHandleFrequency(frequency, complete, handle);
 }
 
 bool SelectionViewController::isInExtendedSpectrogram(const spectrogram::SpectrogramHit& hit, double y) const
