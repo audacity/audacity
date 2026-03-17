@@ -13,3 +13,10 @@ std::vector<const au::trackedit::Clip*> au::trackedit::utils::clipSetDifference(
     }
     return result;
 }
+
+bool au::trackedit::utils::hasStereoTrack(const au::trackedit::TrackList& tracks)
+{
+    return std::any_of(tracks.begin(), tracks.end(), [](const au::trackedit::Track& track) {
+        return track.type == au::trackedit::TrackType::Stereo;
+    });
+}
