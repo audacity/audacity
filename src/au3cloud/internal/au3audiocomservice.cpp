@@ -396,12 +396,12 @@ muse::ProgressPtr Au3AudioComService::openCloudProject(const muse::io::path_t& l
         }
     }
 
-    if (isSnapshotUpToDate(dbProjectData)) {
-        progress->finish(muse::make_ok());
-        return progress;
-    }
+    std::thread([this, progress, db= std::move(dbProjectData), path = localPath.toStdString(), cloudProjectId]() {
+        if (isSnapshotUpToDate(db)) {
+            progress->finish(muse::make_ok());
+            return;
+        }
 
-    std::thread([this, progress, path = localPath.toStdString(), cloudProjectId]() {
         auto progressCallback = [progress](double p) -> bool {
             if (progress->isCanceled()) {
                 return false;

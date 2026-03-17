@@ -171,7 +171,8 @@ Item {
                         root.createNewProjectRequested()
                     } else if (!isNoResultsFound) {
                         if (item.isCloud) {
-                            root.openCloudProjectRequested(item.itemId ?? "", item.path, item.name)
+                            var projectId = item.itemId ?? ""
+                            root.openCloudProjectRequested(projectId, item.path, item.name)
                         } else {
                             root.openProjectRequested(item.path, item.name)
                         }

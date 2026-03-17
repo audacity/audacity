@@ -63,6 +63,10 @@ ProjectsView {
             onOpenProjectRequested: function (projectPath, displayName) {
                 root.openProjectRequested(projectPath, displayName)
             }
+
+            onOpenCloudProjectRequested: function (projectId, projectPath, displayName) {
+                root.openCloudProjectRequested(projectId, projectPath, displayName)
+            }
         }
     }
 

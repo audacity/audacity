@@ -38,6 +38,7 @@ Loader {
     property NavigationSection navigationSection
     property int navigationOrder
 
-    signal createNewProjectRequested()
+    signal createNewProjectRequested
     signal openProjectRequested(var projectPath, var displayName)
+    signal openCloudProjectRequested(var projectId, var projectPath, var displayName)
 }

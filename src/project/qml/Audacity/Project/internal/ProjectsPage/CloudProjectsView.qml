@@ -12,8 +12,6 @@ import Audacity.Project 1.0
 ProjectsView {
     id: root
 
-    signal openCloudProjectRequested(var cloudItemId, var projectPath, var displayName)
-
     function refresh() {
         cloudProjectsModel.reload()
         prv.updateDesiredRowCount()

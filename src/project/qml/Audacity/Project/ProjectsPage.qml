@@ -280,6 +280,10 @@ FocusScope {
             onOpenProjectRequested: function (projectPath, displayName) {
                 Qt.callLater(projectsPageModel.openProject, projectPath, displayName)
             }
+
+            onOpenCloudProjectRequested: function (projectId, projectPath, displayName) {
+                Qt.callLater(projectsPageModel.openCloudProject, projectId, projectPath, displayName)
+            }
         }
     }
 
