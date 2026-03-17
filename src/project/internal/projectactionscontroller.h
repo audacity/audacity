@@ -75,7 +75,7 @@ private:
 
     void newProject();
     void open(const muse::actions::ActionData& args);
-    void importFile();
+    void importFiles(const muse::actions::ActionData& args);
     void importMediaFiles(const muse::actions::ActionData& args);
     muse::Ret openMediaFiles(const muse::io::paths_t& paths);
     muse::Ret openMediaFile(const muse::io::path_t& givenPath);
@@ -87,7 +87,7 @@ private:
     // muse::Ret openAudacityUrl(const QUrl& url);
     muse::RetVal<IAudacityProjectPtr> loadProject(const muse::io::path_t& filePath);
     muse::io::paths_t selectOpeningFiles();
-    muse::io::path_t selectImportFile();
+    muse::io::paths_t selectImportFiles();
 
     bool shouldRetryLoadAfterError(const muse::Ret& ret, const muse::io::path_t& filepath);
     void warnProjectCannotBeOpened(const muse::Ret& ret, const muse::io::path_t& filepath) const;

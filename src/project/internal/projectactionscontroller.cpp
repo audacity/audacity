@@ -85,7 +85,7 @@ void ProjectActionsController::init()
     dispatcher()->reg(this, "file-new", this, &ProjectActionsController::newProject);
     dispatcher()->reg(this, "file-open", this, &ProjectActionsController::open);
     dispatcher()->reg(this, "clear-recent", this, &ProjectActionsController::clearRecentProjects);
-    dispatcher()->reg(this, "project-import", this, &ProjectActionsController::importFile);
+    dispatcher()->reg(this, "project-import", this, &ProjectActionsController::importFiles);
     dispatcher()->reg(this, "project-import-media-files", this, &ProjectActionsController::importMediaFiles);
 
     dispatcher()->reg(this, "file-save", [this]() { saveProject(SaveMode::Save); });
@@ -270,11 +270,31 @@ void ProjectActionsController::open(const muse::actions::ActionData& args)
     }
 }
 
-void ProjectActionsController::importFile()
+void ProjectActionsController::importFiles(const muse::actions::ActionData& args)
 {
-    const muse::io::path_t askedPath = selectImportFile();
     const IAudacityProjectPtr project = globalContext()->currentProject();
-    project->import(askedPath);
+    if (!project) {
+        return;
+    }
+
+    muse::io::paths_t filePaths;
+    if (!args.empty()) {
+        const QStringList files = args.arg<QStringList>(0);
+        filePaths.reserve(files.size());
+        for (const QString& file : files) {
+            const io::path_t path(file);
+            const io::path_t actualPath = fileSystem()->absoluteFilePath(path);
+            filePaths.emplace_back(actualPath.empty() ? path : actualPath);
+        }
+    } else {
+        filePaths = selectImportFiles();
+    }
+
+    if (filePaths.empty()) {
+        return;
+    }
+
+    project->import(filePaths);
 }
 
 void ProjectActionsController::importMediaFiles(const muse::actions::ActionData& args)
@@ -566,7 +586,7 @@ muse::io::paths_t ProjectActionsController::selectOpeningFiles()
     return filePaths;
 }
 
-io::path_t ProjectActionsController::selectImportFile()
+muse::io::paths_t ProjectActionsController::selectImportFiles()
 {
     std::string audioFileExt
         = "*.aac *.ac3 *.mp2 *.mp3 *.wma *.wav *.flac *.ogg *.opus *.aif *.aiff *.amr *.ape *.au *.dts *.mpc *.tta *.wv *.shn *.voc *.mmf";
@@ -604,14 +624,15 @@ io::path_t ProjectActionsController::selectImportFile()
         defaultDir = configuration()->defaultUserProjectsPath();
     }
 
-    io::path_t filePath = interactive()->selectOpeningFileSync(muse::trc("project",
-                                                                         "Open"), defaultDir, filter, QFileDialog::HideNameFilterDetails);
+    io::paths_t filePaths = interactive()->selectOpeningFilesSync(muse::trc("project",
+                                                                            "Open"), defaultDir, filter,
+                                                                  QFileDialog::HideNameFilterDetails);
 
-    if (!filePath.empty()) {
-        configuration()->setLastOpenedProjectsPath(io::dirpath(filePath));
+    if (!filePaths.empty()) {
+        configuration()->setLastOpenedProjectsPath(io::dirpath(filePaths.front()));
     }
 
-    return filePath;
+    return filePaths;
 }
 
 IInteractive::Button ProjectActionsController::askAboutSavingProject(IAudacityProjectPtr project)
