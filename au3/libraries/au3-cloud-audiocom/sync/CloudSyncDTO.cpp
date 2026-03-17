@@ -931,7 +931,7 @@ MakeSafeFilePath(const wxString& rootDir, const wxString& fileName, const wxStri
 wxString
 MakeSafeProjectPath(const wxString& rootDir, const wxString& projectName)
 {
-    return MakeSafeFilePath(rootDir, projectName, "aup3");
+    return MakeSafeFilePath(rootDir, projectName, "aup4");
 }
 
 std::string Serialize(NetworkStats stats)
