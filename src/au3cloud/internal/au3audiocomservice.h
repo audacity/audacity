@@ -8,20 +8,20 @@
 #include <mutex>
 #include <optional>
 
-#include "au3-cloud-audiocom/sync/CloudProjectsDatabase.h"
-#include "context/iglobalcontext.h"
 #include "framework/global/async/asyncable.h"
 #include "framework/global/async/promise.h"
+
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/io/ifilesystem.h"
+#include "project/iprojectconfiguration.h"
+#include "importexport/export/iexporter.h"
+#include "context/iglobalcontext.h"
+
+#include "au3-cloud-audiocom/sync/CloudProjectsDatabase.h"
+#include "au3-utility/Observer.h"
 
 #include "au3cloud/cloudtypes.h"
 #include "au3cloud/iau3audiocomservice.h"
-#include "importexport/export/iexporter.h"
-#include "project/iprojectconfiguration.h"
-
-#include "au3-cloud-audiocom/UploadService.h"
-#include "au3-utility/Observer.h"
 
 namespace au::au3cloud {
 class Au3AudioComService : public IAu3AudioComService, public muse::async::Asyncable, public muse::Contextable
@@ -51,7 +51,7 @@ public:
 private:
     std::string getCloudProjectPage(au::project::IAudacityProjectPtr project);
 
-    bool isSnapshotUpToDate(const audacity::cloud::audiocom::sync::DBProjectData& dbProjectData);
+    bool isSnapshotUpToDate(const std::optional<audacity::cloud::audiocom::sync::DBProjectData>& dbProjectData);
     std::optional<std::string> getHeadSnapshotID(const std::string& projectId);
 
     struct CachedProjectItem {

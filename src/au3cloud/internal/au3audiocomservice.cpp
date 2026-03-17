@@ -18,9 +18,9 @@
 #include "au3-cloud-audiocom/sync/CloudProjectsDatabase.h"
 #include "au3-cloud-audiocom/sync/ProjectCloudExtension.h"
 #include "au3-cloud-audiocom/sync/LocalProjectSnapshot.h"
+#include "au3-cloud-audiocom/UploadService.h"
 #include "au3-concurrency/concurrency/CancellationContext.h"
 #include "au3-import-export/ExportUtils.h"
-#include "au3-project-file-io/ProjectFileIO.h"
 #include "au3-project-rate/ProjectRate.h"
 
 #include "au3cloud/au3clouderrors.h"
@@ -142,6 +142,11 @@ au::au3cloud::Err uploadResultToErr(UploadOperationCompleted::Result result)
     }
 
     return Err::UnknownError;
+}
+
+std::optional<sync::DBProjectData> getProjectDataFromDatabase(const muse::io::path_t& localPath)
+{
+    return sync::CloudProjectsDatabase::Get().GetProjectDataForPath(localPath.toStdString());
 }
 }
 
@@ -379,26 +384,24 @@ muse::ProgressPtr Au3AudioComService::openCloudProject(const muse::io::path_t& l
 {
     muse::ProgressPtr progress = std::make_shared<muse::Progress>();
 
-    std::thread([this, progress, path = localPath.toStdString(), projectId]() {
-        auto dbData = sync::CloudProjectsDatabase::Get().GetProjectDataForPath(path);
+    const auto dbProjectData = getProjectDataFromDatabase(localPath);
+    std::string cloudProjectId = projectId;
 
-        std::string cloudProjectId;
-        if (dbData.has_value()) {
-            cloudProjectId = dbData->ProjectId;
-            if (isSnapshotUpToDate(dbData.value())) {
-                progress->finish(muse::make_ok());
-                return;
-            }
-        } else if (!projectId.empty()) {
-            cloudProjectId = projectId;
-        } else {
-            std::string errorMsg = muse::trc("cloud", "Project not found in cloud database");
-            muse::async::Async::call(this, [progress, errorMsg]() {
-                progress->finish(muse::make_ret(muse::Ret::Code::UnknownError, errorMsg));
-            }, muse::runtime::mainThreadId());
-            return;
+    if (cloudProjectId.empty()) {
+        cloudProjectId = dbProjectData ? dbProjectData->ProjectId : "";
+
+        if (cloudProjectId.empty()) {
+            progress->finish(muse::make_ret(muse::Ret::Code::UnknownError, muse::trc("cloud", "Project not found in cloud database")));
+            return progress;
         }
+    }
 
+    if (isSnapshotUpToDate(dbProjectData)) {
+        progress->finish(muse::make_ok());
+        return progress;
+    }
+
+    std::thread([this, progress, path = localPath.toStdString(), cloudProjectId]() {
         auto progressCallback = [progress](double p) -> bool {
             if (progress->isCanceled()) {
                 return false;
@@ -535,16 +538,19 @@ muse::ProgressPtr Au3AudioComService::shareAudio(const std::string& title)
     return progress;
 }
 
-bool Au3AudioComService::isSnapshotUpToDate(const audacity::cloud::audiocom::sync::DBProjectData& dbProjectData)
+bool Au3AudioComService::isSnapshotUpToDate(const std::optional<sync::DBProjectData>& dbProjectData)
 {
-    std::string projectId = dbProjectData.ProjectId;
-    std::optional<std::string> headSnapshotId = getHeadSnapshotID(projectId);
+    if (!dbProjectData.has_value()) {
+        return false;
+    }
+
+    std::optional<std::string> headSnapshotId = getHeadSnapshotID(dbProjectData->ProjectId);
     if (!headSnapshotId.has_value()) {
         return false;
     }
 
-    const bool snapshotsMatch = (*headSnapshotId == dbProjectData.SnapshotId);
-    const bool fullyDownloaded = (dbProjectData.SyncStatus == sync::DBProjectData::SyncStatusSynced);
+    const bool snapshotsMatch = (*headSnapshotId == dbProjectData->SnapshotId);
+    const bool fullyDownloaded = (dbProjectData->SyncStatus == sync::DBProjectData::SyncStatusSynced);
     return snapshotsMatch && fullyDownloaded;
 }
 
