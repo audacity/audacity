@@ -19,7 +19,6 @@
 #include "au3-module-manager/ConfigInterface.h"
 #include "au3-numeric-formats/NumericConverterFormats.h"
 
-#include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/domaccessor.h"
 #include "trackedit/trackeditutils.h"
@@ -157,12 +156,13 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
 
     // common things used below
     EffectSettings* settings = nullptr;
-    struct EffectTimeParams {
+    struct EffectParams {
         double projectRate = 0.0;
         double t0 = 0.0;
         double t1 = 0.0;
         double f0 = 0.0;
         double f1 = 0.0;
+        double centerFrequency = 0.0;
         bool spectralSelectionEnabled = false;
     } tp;
 
@@ -197,9 +197,20 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
             tp.t1 = tp.t0 + quantizedDuration;
         }
 
-        tp.f0 = frequencySelection.startFrequency;
-        tp.f1 = frequencySelection.endFrequency;
-        tp.spectralSelectionEnabled = spectrogramConfiguration()->spectralSelectionEnabled();
+        const auto selectedTracks = selectionController()->selectedTracks();
+        if (!selectedTracks.empty()) {
+            const auto trackId = selectedTracks.front();
+            // Just as spectral selection is a per-track thing, so are spectral effects.
+            // Only pass spectral selection context if all selected clips belong to the same track.
+            if (std::all_of(selectedTracks.begin(), selectedTracks.end(), [trackId](const trackedit::TrackId& id) {
+                return id == trackId;
+            })) {
+                tp.f0 = frequencySelection.startFrequency();
+                tp.f1 = frequencySelection.endFrequency();
+                tp.centerFrequency = frequencySelection.centerFrequency();
+            }
+            tp.spectralSelectionEnabled = spectrogramConfiguration()->spectralSelectionEnabled();
+        }
 
         //! NOTE Step 2.4 - update settings
         wxString newFormat = (isTimeSelection
@@ -233,6 +244,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
         effect->mSpectralSelectionEnabled = tp.spectralSelectionEnabled;
         effect->mF0 = tp.f0;
         effect->mF1 = tp.f1;
+        effect->mCenterFrequency = tp.centerFrequency;
         if (effect->mF0 != UNDEFINED_FREQUENCY) {
             effect->mPresetNames.push_back(L"control-f0");
         }

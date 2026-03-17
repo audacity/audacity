@@ -16,7 +16,7 @@ ClipGainModel::ClipGainModel(QObject* parent)
 
 void ClipGainModel::init()
 {
-    projectHistory()->historyChanged().onNotify(this, [this]() {
+    projectHistory()->historyChanged().onReceive(this, [this](auto) {
         if (m_clipKey.isValid()) {
             reload();
         }

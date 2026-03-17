@@ -10,6 +10,7 @@
 
 #include "au3wrap/au3types.h"
 #include "context/iglobalcontext.h"
+#include "spectrogram/ifrequencyselectioncontroller.h"
 
 #include "trackedittypes.h"
 #include "../../iselectioncontroller.h"
@@ -20,6 +21,7 @@ class Au3SelectionController : public ISelectionController, public muse::async::
 {
     muse::Inject<au::context::IGlobalContext> globalContext { this };
     muse::Inject<IProjectHistory> projectHistory { this };
+    muse::Inject<spectrogram::IFrequencySelectionController> frequencySelectionController { this };
 
 public:
     Au3SelectionController(const muse::modularity::ContextPtr& ctx)
@@ -107,7 +109,7 @@ public:
 private:
     void addSelectedTrack(const trackedit::TrackId& trackId);
     void updateSelectionController();
-    void onUndoRedo();
+    void onHistoryEvent(const trackedit::HistoryEvent& event);
     ClipKeyList findClipsIntersectingRangeSelection() const;
     LabelKeyList findLabelsIntersectingRangeSelection() const;
 

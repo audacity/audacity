@@ -47,7 +47,7 @@ public:
     size_t currentStateIndex() const override;
     const muse::TranslatableString lastActionNameAtIdx(size_t idx) const override;
 
-    muse::async::Notification historyChanged() const override;
+    muse::async::Channel<HistoryEvent> historyChanged() const override;
 
 private:
     au3::Au3Project& projectRef() const;
@@ -55,9 +55,7 @@ private:
     void doUndo();
     void doRedo();
 
-    void notifyAboutHistoryChanged();
-
-    muse::async::Notification m_historyChanged;
+    muse::async::Channel<HistoryEvent> m_historyChanged;
 
     bool m_interactionOngoing = false;
 };

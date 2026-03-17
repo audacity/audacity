@@ -74,7 +74,6 @@ public:
 signals:
     void trackIdChanged();
     void useGlobalSettingsChanged();
-    void updateRequested();
 
 private:
     void classBegin() override {}

@@ -46,7 +46,7 @@ private:
     bool isProjectLoaded() const;
     void onCurrentProjectChanged();
 
-    void onUndoRedo();
+    void onHistoryEvent();
 
     void updateCurrentIndex();
 

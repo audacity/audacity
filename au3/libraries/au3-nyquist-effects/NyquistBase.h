@@ -90,12 +90,6 @@ public:
     {
     };
 
-    struct NYQUIST_EFFECTS_API GetHasSpectralDisplayHook : GlobalHook<
-            GetHasSpectralDisplayHook,
-            bool(const WaveTrack*)>
-    {
-    };
-
     struct NYQUIST_EFFECTS_API ShowDebugOutputHook : GlobalHook<
             ShowDebugOutputHook, void(
                 const TranslatableString& title,
@@ -166,6 +160,11 @@ public:
     void Stop();
 
     bool IsOk();
+
+    std::string GetSpectralEffectId() const
+    {
+        return mSpectralEffectId;
+    }
 
 private:
     static int mReentryCount;
@@ -274,6 +273,7 @@ protected:
     EffectType mType;
     EffectType mPromptType; // If a prompt, need to remember original type.
     EffectGroup mGroup = EffectGroup::Unspecified;
+    std::string mSpectralEffectId;
 
     bool mEnablePreview;
     bool mDebugButton; // Set to false to disable Debug button.

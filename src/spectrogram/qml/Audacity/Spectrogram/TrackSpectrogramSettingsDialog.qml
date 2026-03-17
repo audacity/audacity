@@ -3,7 +3,6 @@
  */
 import QtQuick
 import Muse.UiComponents
-import Audacity.TrackEdit
 import Audacity.Preferences
 import Audacity.Spectrogram
 
@@ -26,11 +25,6 @@ StyledDialogView {
     property string trackTitle: ""
 
     property var settingsModel: TrackSpectrogramSettingsModel {
-        trackId: root.trackId
-        onUpdateRequested: dialogModel.requestSpectrogramUpdate()
-    }
-
-    property var dialogModel: TrackSpectrogramSettingsDialogModel {
         trackId: root.trackId
     }
 

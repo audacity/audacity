@@ -20,8 +20,8 @@ void HistoryPanelModel::classBegin()
         onCurrentProjectChanged();
     });
 
-    projectHistory()->historyChanged().onNotify(this, [this] {
-        onUndoRedo();
+    projectHistory()->historyChanged().onReceive(this, [this](auto event) {
+        onHistoryEvent();
     });
 }
 
@@ -39,7 +39,7 @@ void HistoryPanelModel::onCurrentProjectChanged()
     emit currentIndexChanged();
 }
 
-void HistoryPanelModel::onUndoRedo()
+void HistoryPanelModel::onHistoryEvent()
 {
     int newRowCount = projectHistory()->undoRedoActionCount();
 

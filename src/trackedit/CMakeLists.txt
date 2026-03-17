@@ -89,8 +89,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/pastebehaviorpanelmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/tracknavigationmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/tracknavigationmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/trackspectrogramsettingsdialogmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/trackspectrogramsettingsdialogmodel.h
     )
 
 # AU3

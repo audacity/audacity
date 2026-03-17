@@ -3,11 +3,10 @@
 */
 #pragma once
 
-#include "async/notification.h"
+#include "framework/global/async/channel.h"
+#include "framework/global/modularity/imoduleinterface.h"
+#include "framework/global/types/translatablestring.h"
 
-#include "modularity/imoduleinterface.h"
-
-#include "global/types/translatablestring.h"
 #include "trackedittypes.h"
 
 #include <typeindex>
@@ -38,7 +37,7 @@ public:
     virtual size_t currentStateIndex() const = 0;
     virtual const muse::TranslatableString lastActionNameAtIdx(size_t idx) const = 0;
 
-    virtual muse::async::Notification historyChanged() const = 0;
+    virtual muse::async::Channel<HistoryEvent> historyChanged() const = 0;
 
     virtual void rollbackState() = 0;
 

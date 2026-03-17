@@ -142,7 +142,7 @@ void AppMenuModel::setupConnections()
         onEffectsChanged();
     });
 
-    projectHistory()->historyChanged().onNotify(this, [this]() {
+    projectHistory()->historyChanged().onReceive(this, [this](auto) {
         updateUndoRedoItems();
     });
 

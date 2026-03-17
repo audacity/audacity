@@ -331,11 +331,8 @@ bool PerTrackEffect::DoProcess(TrackList& outputs,
                 PasteTimeWarper warper { mT1,
                                          mT0 + (*results->begin())->GetEndTime() };
                 const auto preserve = !isGenerator;
-                auto pProject = FindProject();
-                const auto& selectedRegion = ViewInfo::Get(*pProject).selectedRegion;
-                wt.ClearAndPaste(selectedRegion.t0(), selectedRegion.t1(),
-                                 static_cast<WaveTrack&>(*results->DetachFirst()),
-                                 preserve, true, &warper);
+                const auto merge = !isGenerator;
+                wt.ClearAndPaste(mT0, mT1, static_cast<WaveTrack&>(*results->DetachFirst()), preserve, merge, &warper);
                 results.reset();
             }
         };

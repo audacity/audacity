@@ -158,12 +158,14 @@ void ClipChannelSpectrogramView::paint(QPainter* painter)
     const auto viewportEndTime = m_frameEndTime;
     const SelectionInfo selectionInfo { m_selectionStartTime, m_selectionEndTime, m_selectionStartFrequency, m_selectionEndFrequency };
 
-    const QRect visibleSubrect = clipRect().toRect();
-    if (!visibleSubrect.isValid()) {
+    const QQuickItem* const item = viewportItem();
+    IF_ASSERT_FAILED(item) {
         return;
     }
-    const int xBegin = std::max(visibleSubrect.left() - m_timelineIndentWidth, 0);
-    const int xEnd = visibleSubrect.right() + 1;
+    const auto boundingRect = this->boundingRect();
+    const QRect rect = mapRectToItem(item, boundingRect).toRect();
+    const int xBegin = std::max(-rect.left() - m_timelineIndentWidth, 0);
+    const int xEnd = xBegin + boundingRect.width();
     const ClipChannelInfo channelInfo { m_clipId, m_trackId, m_channel, xBegin, xEnd };
     const ViewInfo viewInfo {
         height(),

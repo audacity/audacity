@@ -1,8 +1,9 @@
 $nyquist plug-in
 $version 5
 $type process spectraltools
+$spectraleffectid AmplifySelection
 $preview linear
-$name (_ "Spectral edit shelves")
+$name (_ "Amplify selection")
 $debugbutton false
 $author (_ "Paul Licameli")
 $release 4.0.0

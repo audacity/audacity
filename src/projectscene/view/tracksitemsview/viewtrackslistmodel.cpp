@@ -149,7 +149,7 @@ void ViewTracksListModel::load()
         emit dataChanged(index(0), index(lastIndex), { IsDataSelectedRole });
     }, muse::async::Asyncable::Mode::SetReplace);
 
-    frequencySelectionController()->frequencySelectionChanged().onReceive(this, [this](int trackId) {
+    frequencySelectionController()->frequencySelectionChanged().onReceive(this, [this](int trackId, bool) {
         QModelIndex idx = indexOf(trackId);
         if (!idx.isValid()) {
             return;
@@ -280,6 +280,8 @@ QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
     switch (role) {
     case TrackIdRole:
         return QVariant::fromValue(track.id);
+    case TrackTitleRole:
+        return QVariant::fromValue(track.title.toQString());
     case TrackSampleRateRole: {
         return static_cast<int>(track.rate);
     }
@@ -341,8 +343,8 @@ QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
     case FrequencySelectionRole: {
         const spectrogram::FrequencySelection selection = frequencySelectionController()->frequencySelection();
         const auto startFrequency = selection.trackId
-                                    == track.id ? selection.startFrequency : spectrogram::SelectionInfo::UndefinedFrequency;
-        const auto endFrequency = selection.trackId == track.id ? selection.endFrequency : spectrogram::SelectionInfo::UndefinedFrequency;
+                                    == track.id ? selection.startFrequency() : spectrogram::SelectionInfo::UndefinedFrequency;
+        const auto endFrequency = selection.trackId == track.id ? selection.endFrequency() : spectrogram::SelectionInfo::UndefinedFrequency;
         const QVariantMap frequencySelectionMap {
             { "startFrequency", startFrequency },
             { "endFrequency", endFrequency }
@@ -370,6 +372,7 @@ QHash<int, QByteArray> ViewTracksListModel::roleNames() const
     {
         { TypeRole, "trackType" },
         { TrackIdRole, "trackId" },
+        { TrackTitleRole, "trackTitle" },
         { TrackSampleRateRole, "trackSampleRate" },
         { IsDataSelectedRole, "isDataSelected" },
         { IsTrackSelectedRole, "isTrackSelected" },

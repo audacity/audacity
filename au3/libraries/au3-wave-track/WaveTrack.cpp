@@ -1332,8 +1332,23 @@ void WaveTrack::ClearAndPaste(
         THROW_INCONSISTENCY_EXCEPTION;
     }
     const auto copyHolder = src.DuplicateWithOtherTempo(*tempo);
+    const auto clipsBefore = SortedIntervalArray();
     ClearAndPasteAtSameTempo(
         t0, t1, *copyHolder, preserve, merge, effectWarper, clearByTrimming);
+
+    const auto clipsAfter = SortedIntervalArray();
+    // If clips before and after have the same play start and end times, apply the IDs of the original clips:
+    if (clipsBefore.size() == clipsAfter.size()) {
+        for (size_t i = 0; i < clipsBefore.size(); ++i) {
+            if (clipsBefore[i]->GetPlayStartTime() != clipsAfter[i]->GetPlayStartTime()
+                || clipsBefore[i]->GetPlayEndTime() != clipsAfter[i]->GetPlayEndTime()) {
+                return;
+            }
+        }
+        for (size_t i = 0; i < clipsBefore.size(); ++i) {
+            clipsAfter[i]->SetId(clipsBefore[i]->GetId());
+        }
+    }
 }
 
 void WaveTrack::ClearAndPasteAtSameTempo(
@@ -1349,8 +1364,10 @@ void WaveTrack::ClearAndPasteAtSameTempo(
     t0 = SnapToSample(t0);
     t1 = SnapToSample(t1);
 
-    const auto endTime = src.GetEndTime();
-    const double dur = std::min(t1 - t0, endTime);
+    const auto srcStartTime = SnapToSample(src.GetStartTime());
+    const auto srcEndTime = SnapToSample(src.GetEndTime());
+    const double dur = std::min(t1 - t0, srcEndTime);
+    const auto joinEnds = merge && std::abs((srcEndTime - srcStartTime) - dur) < LongSamplesToTime(1);
 
     // If duration is 0, then it's just a plain paste
     if (dur == 0.0) {
@@ -1395,12 +1412,10 @@ void WaveTrack::ClearAndPasteAtSameTempo(
     // needs to know if a clip boundary is being crossed since Paste()
     // will add split lines around the pasted clip if so.
     for (const auto&& clip : track.Intervals()) {
-        double st;
-
         // Remember clip boundaries as locations to split
         // we need to copy clips, trims and names, because the original ones
         // could be changed later during Clear/Paste routines
-        st = roundTime(clip->GetPlayStartTime());
+        const auto st = roundTime(clip->GetPlayStartTime());
         if (st >= t0 && st <= t1) {
             auto it = get_split(st);
             if (clip->GetTrimLeft() != 0) {
@@ -1412,9 +1427,9 @@ void WaveTrack::ClearAndPasteAtSameTempo(
             it->rightClipName = clip->GetName();
         }
 
-        st = roundTime(clip->GetPlayEndTime());
-        if (st >= t0 && st <= t1) {
-            auto it = get_split(st);
+        const auto et = roundTime(clip->GetPlayEndTime());
+        if (et >= t0 && et <= t1) {
+            auto it = get_split(et);
             if (clip->GetTrimRight() != 0) {
                 //keep only hidden right part
                 it->left = track.CopyClip(*clip, false);
@@ -1445,12 +1460,11 @@ void WaveTrack::ClearAndPasteAtSameTempo(
     const auto tolerance = 2.0 / track.GetRate();
 
     constexpr auto addCutLines = false;
-    // ClearAndPaste means "replace t0 to t1 by nothing and paste (eating around if necessary) the source track".
-    constexpr auto split = true;
+    constexpr auto split = true; // Do not move the remaining right part of the clip back to the left.
     constexpr auto moveClips = false;
 
-    // Now, make room as needed
-    track.HandleClear(t0, std::max(t1, t0 + endTime), addCutLines, split, moveClips, clearByTrimming);
+    // Now, clear the selection
+    track.HandleClear(t0, t1, addCutLines, split, moveClips, clearByTrimming);
 
     // And paste in the new data
     track.PasteWaveTrackAtSameTempo(t0, src, merge, moveClips);
@@ -1459,7 +1473,7 @@ void WaveTrack::ClearAndPasteAtSameTempo(
     if (merge && splits.size() > 0) {
         {
             // Now t1 represents the absolute end of the pasted data.
-            t1 = t0 + endTime;
+            t1 = t0 + srcEndTime;
 
             // Get a sorted array of the clips
             auto clips = track.SortedIntervalArray();
@@ -1629,6 +1643,12 @@ void WaveTrack::ClearAndPasteAtSameTempo(
                 }
             }
         }
+    }
+
+    if (joinEnds) {
+        const auto delta = LongSamplesToTime(1);
+        track.Join(t0 - delta, t0 + delta, {});
+        track.Join(t1 - delta, t1 + delta, {});
     }
 }
 

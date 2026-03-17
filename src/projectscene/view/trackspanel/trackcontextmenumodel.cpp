@@ -19,8 +19,6 @@ constexpr const char* TRACK_VIEW_SPECTROGRAM_ACTION = "action://trackedit/track-
 constexpr const char* TRACK_VIEW_MULTI_ACTION = "action://trackedit/track-view-multi";
 constexpr const char* TRACK_VIEW_HALF_WAVE_ACTION = "action://projectscene/track-view-half-wave";
 
-constexpr const char* TRACK_SPECTROGRAM_SETTINGS_ACTION = "action://trackedit/track-spectrogram-settings";
-
 constexpr const char* TRACK_COLOR_MENU_ID = "trackColorMenu";
 constexpr const char* TRACK_FORMAT_MENU_ID = "trackFormatMenu";
 constexpr const char* TRACK_RATE_MENU_ID = "trackRateMenu";
@@ -120,7 +118,7 @@ void TrackContextMenuModel::load()
 {
     AbstractMenuModel::load();
 
-    projectHistory()->historyChanged().onNotify(this, [this]() {
+    projectHistory()->historyChanged().onReceive(this, [this](auto) {
         updateColorCheckedState();
         updateTrackFormatState();
         updateTrackRateState();
@@ -184,6 +182,18 @@ void TrackContextMenuModel::handleMenuItem(const QString& itemId)
 {
     if (itemId == "track-rename") {
         emit trackRenameRequested();
+    } else if (itemId == spectrogram::TRACK_SPECTROGRAM_SETTINGS_ACTION) {
+        const auto project = globalContext()->currentProject();
+        IF_ASSERT_FAILED(project) {
+            return;
+        }
+        const auto track = project->trackeditProject()->track(m_trackId);
+        IF_ASSERT_FAILED(track) {
+            return;
+        }
+        const auto trackTitle = track->title;
+        auto args = muse::actions::ActionData::make_arg2(m_trackId, trackTitle);
+        dispatcher()->dispatch(spectrogram::TRACK_SPECTROGRAM_SETTINGS_ACTION, std::move(args));
     } else {
         //! Why an async call?
         //!
@@ -461,26 +471,23 @@ muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackViewItems()
     muse::uicomponents::MenuItemList items;
     items.reserve(5);
 
-    const auto prj = globalContext()->currentTrackeditProject();
-    const std::optional<trackedit::Track> track = prj ? prj->track(m_trackId) : std::nullopt;
-    const auto trackTitle = track.has_value() ? track->title.toStdString() : "";
-
     for (const std::string action : { TRACK_VIEW_WAVEFORM_ACTION,
                                       TRACK_VIEW_SPECTROGRAM_ACTION,
                                       TRACK_VIEW_MULTI_ACTION,
                                       TRACK_VIEW_HALF_WAVE_ACTION,
-                                      "separator",
-                                      TRACK_SPECTROGRAM_SETTINGS_ACTION }) {
+                                      "separator" }) {
         if (action == "separator") {
             items.push_back(makeSeparator());
         } else {
             muse::actions::ActionQuery query(action);
             query.addParam("trackId", muse::Val { m_trackId });
-            query.addParam("trackTitle", muse::Val { trackTitle });
             items.push_back(makeMenuItem(query.toString()));
             m_trackViewTypeChangeActionCodeList.push_back(action);
         }
     }
+
+    items.push_back(makeMenuItem(spectrogram::TRACK_SPECTROGRAM_SETTINGS_ACTION));
+
     return items;
 }
 

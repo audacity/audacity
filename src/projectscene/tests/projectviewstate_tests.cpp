@@ -41,7 +41,7 @@ public:
         .WillByDefault(Return(muse::async::Notification()));
 
         ON_CALL(*m_projectHistoryMock, historyChanged())
-        .WillByDefault(Return(muse::async::Notification()));
+        .WillByDefault(Return(muse::async::Channel<trackedit::HistoryEvent>()));
 
         ON_CALL(*m_globalContextMock, currentProject())
         .WillByDefault(Return(m_currentProject));

@@ -15,8 +15,14 @@ class IFrequencySelectionController : MODULE_EXPORT_INTERFACE
 
 public:
     virtual FrequencySelection frequencySelection() const = 0;
-    virtual void setFrequencySelection(FrequencySelection) = 0;
+
+    virtual bool showsSpectrogram(int trackId) const = 0;
+    virtual void setShowsSpectrogram(int trackId, bool value) = 0;
+
+    virtual void setFrequencySelection(FrequencySelection, bool complete) = 0;
     virtual void resetFrequencySelection() = 0;
-    virtual muse::async::Channel<int /*track ID*/> frequencySelectionChanged() const = 0;
+    virtual muse::async::Channel<int /*track ID*/, bool /*complete*/> frequencySelectionChanged() const = 0;
+
+    virtual void restoreFrequencySelection() = 0;
 };
 }

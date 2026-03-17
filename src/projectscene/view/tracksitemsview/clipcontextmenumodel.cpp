@@ -3,7 +3,9 @@
 */
 #include "clipcontextmenumodel.h"
 
-#include "translation.h"
+#include "spectrogram/spectrogramtypes.h"
+#include "trackedit/dom/track.h"
+#include "framework/global/translation.h"
 
 using namespace au::projectscene;
 using namespace muse::uicomponents;
@@ -57,6 +59,18 @@ void ClipContextMenuModel::load()
         makeItemWithArg("clip-render-pitch-speed"),
     };
 
+    const auto project = globalContext()->currentProject();
+    if (project && project->viewState()) {
+        muse::ValCh<trackedit::TrackViewType> valCh = project->viewState()->trackViewType(m_clipKey.trackId());
+
+        if (valCh.val == trackedit::TrackViewType::Spectrogram || valCh.val == trackedit::TrackViewType::WaveformAndSpectrogram) {
+            items.push_back(makeSeparator());
+            items.push_back(makeMenuItem(spectrogram::TRACK_SPECTROGRAM_SETTINGS_ACTION));
+        }
+
+        valCh.ch.onReceive(this, [this](auto) { load(); }, Mode::SetReplace);
+    }
+
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (prj) {
         prj->clipList(m_clipKey.trackId()).onItemChanged(this, [this](const trackedit::Clip& clip) {
@@ -74,7 +88,22 @@ void ClipContextMenuModel::load()
 
 void ClipContextMenuModel::handleMenuItem(const QString& itemId)
 {
-    AbstractMenuModel::handleMenuItem(itemId);
+    if (itemId == spectrogram::TRACK_SPECTROGRAM_SETTINGS_ACTION) {
+        const auto project = globalContext()->currentProject();
+        IF_ASSERT_FAILED(project) {
+            return;
+        }
+        const auto trackId = m_clipKey.trackId();
+        const auto track = project->trackeditProject()->track(trackId);
+        IF_ASSERT_FAILED(track) {
+            return;
+        }
+        const muse::String trackTitle = track->title;
+        auto args = muse::actions::ActionData::make_arg2(trackId, trackTitle);
+        dispatcher()->dispatch(spectrogram::TRACK_SPECTROGRAM_SETTINGS_ACTION, std::move(args));
+    } else {
+        AbstractMenuModel::handleMenuItem(itemId);
+    }
 }
 
 ClipKey ClipContextMenuModel::clipKey() const

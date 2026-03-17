@@ -30,7 +30,7 @@ void au::trackedit::Au3ProjectHistory::undo()
     doUndo();
 
     m_interactionOngoing = false;
-    notifyAboutHistoryChanged();
+    m_historyChanged.send(HistoryEvent::RestoredState);
 }
 
 bool au::trackedit::Au3ProjectHistory::redoAvailable() const
@@ -44,7 +44,7 @@ void au::trackedit::Au3ProjectHistory::redo()
     doRedo();
 
     m_interactionOngoing = false;
-    notifyAboutHistoryChanged();
+    m_historyChanged.send(HistoryEvent::RestoredState);
 }
 
 void au::trackedit::Au3ProjectHistory::pushHistoryState(const std::string& longDescription, const std::string& shortDescription)
@@ -61,7 +61,7 @@ void Au3ProjectHistory::pushHistoryState(const std::string& longDescription, con
                                              undoFlags);
 
     m_interactionOngoing = false;
-    notifyAboutHistoryChanged();
+    m_historyChanged.send(HistoryEvent::NewState);
 }
 
 void au::trackedit::Au3ProjectHistory::rollbackState()
@@ -134,7 +134,7 @@ void Au3ProjectHistory::undoRedoToIndex(size_t index)
         doRedo();
     }
 
-    notifyAboutHistoryChanged();
+    m_historyChanged.send(HistoryEvent::RestoredState);
 }
 
 const muse::TranslatableString Au3ProjectHistory::topMostUndoActionName() const
@@ -196,7 +196,7 @@ const muse::TranslatableString Au3ProjectHistory::lastActionNameAtIdx(size_t idx
     return muse::TranslatableString::untranslatable(wxToString(actionName.Translation()));
 }
 
-muse::async::Notification Au3ProjectHistory::historyChanged() const
+muse::async::Channel<HistoryEvent> Au3ProjectHistory::historyChanged() const
 {
     return m_historyChanged;
 }
@@ -224,9 +224,4 @@ void Au3ProjectHistory::doRedo()
         [&]( const UndoStackElem& elem ){
         ::ProjectHistory::Get(project).PopState(elem.state);
     });
-}
-
-void Au3ProjectHistory::notifyAboutHistoryChanged()
-{
-    m_historyChanged.notify();
 }
