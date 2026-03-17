@@ -8,6 +8,7 @@
 
 #include "audacityproject.h"
 #include "io/path.h"
+#include "io/fileinfo.h"
 #include "progress.h"
 #include "projecterrors.h"
 
@@ -481,6 +482,7 @@ bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudI
     }
 
     io::path_t projectFilePath = cloudProjectsPath.appendingComponent(cloudInfo.name).appendingSuffix(au::project::AUP4);
+    bool exists = io::FileInfo::exists(projectFilePath);
 
     IAudacityProjectPtr project = currentProject();
     if (!project) {
@@ -492,8 +494,12 @@ bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudI
         return saveProjectLocally(projectFilePath, SaveMode::Save);
     });
 
-    progress->finished().onReceive(this, [this, project, saveMode](const ProgressResult& result) {
+    progress->finished().onReceive(this, [this, exists, project](const ProgressResult& result) {
         if (result.ret.success()) {
+            if (exists) {
+                return;
+            }
+
             const bool dismissable = false;
             toastService()->show(trc("global", "Success"),
                                  trc("project",
