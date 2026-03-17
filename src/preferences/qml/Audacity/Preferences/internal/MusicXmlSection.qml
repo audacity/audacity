@@ -72,7 +72,7 @@ BaseSection {
         id: needUseDefaultFontBox
         width: parent.width
 
-        text: qsTrc("appshell/preferences", "Apply default typeface (Edwin) to imported scores")
+        text: qsTrc("appshell/preferences", "Apply default typeface (Edwin) to imported projects")
 
         navigation.name: "UseDefaultFontBox"
         navigation.panel: root.navigation

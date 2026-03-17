@@ -40,7 +40,7 @@ BaseSection {
     StyledTextLabel {
         width: parent.width
 
-        text: qsTrc("appshell/preferences", "Generate MP3 audio for private cloud scores")
+        text: qsTrc("appshell/preferences", "Generate MP3 audio for private cloud projects")
 
         horizontalAlignment: Qt.AlignLeft
     }

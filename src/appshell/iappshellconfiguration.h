@@ -54,7 +54,7 @@ public:
     virtual StartupModeType startupModeType() const = 0;
     virtual void setStartupModeType(StartupModeType type) = 0;
 
-    virtual muse::io::path_t startupScorePath() const = 0;
+    virtual muse::io::path_t startupProjectPath() const = 0;
     virtual void setStartupScorePath(const muse::io::path_t& scorePath) = 0;
 
     virtual muse::io::path_t userDataPath() const = 0;

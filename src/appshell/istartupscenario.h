@@ -41,8 +41,8 @@ public:
 
     virtual bool isStartWithNewFileAsSecondaryInstance() const = 0;
 
-    virtual const project::ProjectFile& startupScoreFile() const = 0;
-    virtual void setStartupScoreFile(const std::optional<project::ProjectFile>& file) = 0;
+    virtual const project::ProjectFile& startupProjectFile() const = 0;
+    virtual void setStartupProjectFile(const std::optional<project::ProjectFile>& file) = 0;
     virtual const muse::io::paths_t& startupMediaFiles() const = 0;
     virtual void setStartupMediaFiles(const muse::io::paths_t& files) = 0;
 

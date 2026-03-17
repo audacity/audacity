@@ -67,7 +67,7 @@ public:
     StartupModeType startupModeType() const override;
     void setStartupModeType(StartupModeType type) override;
 
-    muse::io::path_t startupScorePath() const override;
+    muse::io::path_t startupProjectPath() const override;
     void setStartupScorePath(const muse::io::path_t& scorePath) override;
 
     muse::io::path_t userDataPath() const override;

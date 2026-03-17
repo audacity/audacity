@@ -308,7 +308,7 @@ modularity::ContextPtr GuiApp::setupNewContext(const muse::StringList& args)
             }
 
             startupScenario->setStartupType(sessionType);
-            startupScenario->setStartupScoreFile(projectFile);
+            startupScenario->setStartupProjectFile(projectFile);
             startupScenario->setStartupMediaFiles(mediaFiles);
         }
     }

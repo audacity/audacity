@@ -133,7 +133,7 @@ void AppShellConfiguration::setStartupModeType(StartupModeType type)
     settings()->setSharedValue(STARTUP_MODE_TYPE, Val(type));
 }
 
-muse::io::path_t AppShellConfiguration::startupScorePath() const
+muse::io::path_t AppShellConfiguration::startupProjectPath() const
 {
     return settings()->value(STARTUP_SCORE_PATH).toString();
 }

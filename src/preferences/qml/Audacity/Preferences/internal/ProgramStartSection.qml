@@ -78,7 +78,7 @@ BaseSection {
                 pathFieldWidth: root.columnWidth
                 spacing: root.columnSpacing
 
-                dialogTitle: qsTrc("appshell/preferences", "Choose starting score")
+                dialogTitle: qsTrc("appshell/preferences", "Choose starting project")
                 filter: root.scorePathFilter
 
                 visible: modelData.canSelectScorePath

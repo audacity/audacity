@@ -188,7 +188,7 @@ bool ApplicationActionController::eventFilter(QObject* watched, QEvent* event)
             if (startupScenario()->startupCompleted()) {
                 dispatcher()->dispatch("file-open", ActionData::make_arg1<QUrl>(url));
             } else {
-                startupScenario()->setStartupScoreFile(project::ProjectFile { url });
+                startupScenario()->setStartupProjectFile(project::ProjectFile { url });
             }
 
             return true;
@@ -326,8 +326,8 @@ void ApplicationActionController::revertToFactorySettings()
     std::string title = muse::trc("appshell", "Are you sure you want to revert to factory settings?");
     std::string question = muse::trc("appshell",
                                      "This action will reset all your app preferences and delete all custom palettes and custom shortcuts. "
-                                     "The list of recent scores will also be cleared.\n\n"
-                                     "This action will not delete any of your scores.");
+                                     "The list of recent projects will also be cleared.\n\n"
+                                     "This action will not delete any of your projects.");
 
     int revertBtn = int(muse::IInteractive::Button::Apply);
     muse::IInteractive::Result result = interactive()->warningSync(title, question,

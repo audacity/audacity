@@ -64,7 +64,7 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
 
         font: ui.theme.largeBodyBoldFont
-        text: qsTrc("project/newscore", "Additional score information")
+        text: qsTrc("project/newscore", "Additional project information")
     }
 
     ColumnLayout {
