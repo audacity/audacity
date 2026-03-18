@@ -86,7 +86,7 @@ void ProjectActionsController::init()
     dispatcher()->reg(this, "file-open", this, &ProjectActionsController::open);
     dispatcher()->reg(this, "clear-recent", this, &ProjectActionsController::clearRecentProjects);
     dispatcher()->reg(this, "project-import", this, &ProjectActionsController::importFiles);
-    dispatcher()->reg(this, "project-import-media-files", this, &ProjectActionsController::importMediaFiles);
+    dispatcher()->reg(this, "project-import-startup-media", this, &ProjectActionsController::importStartupMedia);
 
     dispatcher()->reg(this, "file-save", [this]() { saveProject(SaveMode::Save); });
     //! TODO AU4: decide whether to implement these functions from scratch in AU4 or
@@ -144,7 +144,7 @@ bool ProjectActionsController::canReceiveAction(const muse::actions::ActionCode&
         static const std::unordered_set<actions::ActionCode> DONT_REQUIRE_OPEN_PROJECT {
             "file-new",
             "file-open",
-            "project-import-media-files",
+            "project-import-startup-media",
             "continue-last-session",
             "clear-recent",
         };
@@ -261,7 +261,7 @@ void ProjectActionsController::open(const muse::actions::ActionData& args)
             if (supportedFilePaths.empty()) {
                 ret = make_ret(Err::UnsupportedUrl);
             } else {
-                ret = openMediaFiles(supportedFilePaths);
+                ret = processMediaFiles(supportedFilePaths);
             }
         }
     } else if (!isFileSupported(filePaths.front())) {
@@ -271,7 +271,7 @@ void ProjectActionsController::open(const muse::actions::ActionData& args)
     } else if (au::project::isAudacityFile(filePaths.front())) {
         ret = openProject(ProjectFile(QUrl::fromLocalFile(filePaths.front().toQString()), displayNameOverride));
     } else {
-        ret = openMediaFile(filePaths.front());
+        ret = processMediaFiles({ filePaths.front() });
     }
 
     if (!ret) {
@@ -306,7 +306,7 @@ void ProjectActionsController::importFiles(const muse::actions::ActionData& args
     project->import(filePaths);
 }
 
-void ProjectActionsController::importMediaFiles(const muse::actions::ActionData& args)
+void ProjectActionsController::importStartupMedia(const muse::actions::ActionData& args)
 {
     const QStringList files = !args.empty() ? args.arg<QStringList>(0) : QStringList();
     muse::io::paths_t filePaths;
@@ -315,18 +315,13 @@ void ProjectActionsController::importMediaFiles(const muse::actions::ActionData&
         filePaths.emplace_back(file);
     }
 
-    Ret ret = openMediaFiles(filePaths);
+    Ret ret = processMediaFiles(filePaths);
     if (!ret) {
         openPageIfNeed(HOME_PAGE_URI);
     }
 }
 
-muse::Ret ProjectActionsController::openMediaFile(const muse::io::path_t& path)
-{
-    return openMediaFiles({ path });
-}
-
-muse::Ret ProjectActionsController::openMediaFiles(const muse::io::paths_t& paths)
+muse::Ret ProjectActionsController::processMediaFiles(const muse::io::paths_t& paths)
 {
     if (paths.empty()) {
         return make_ret(Ret::Code::Cancel);
@@ -726,7 +721,7 @@ bool ProjectActionsController::saveProjectAt(const SaveLocation& location, SaveM
     return false;
 }
 
-muse::Ret ProjectActionsController::openProject(const muse::io::path_t& givenPath, const String& displayNameOverride)
+muse::Ret ProjectActionsController::openProject(const muse::io::path_t& path, const String& displayNameOverride)
 {
     //! NOTE This method is synchronous,
     //! but inside `multiwindowsProvider` there can be an event loop
@@ -744,7 +739,7 @@ muse::Ret ProjectActionsController::openProject(const muse::io::path_t& givenPat
     };
 
     //! Step 1. Take absolute path
-    io::path_t actualPath = fileSystem()->absoluteFilePath(givenPath);
+    io::path_t actualPath = fileSystem()->absoluteFilePath(path);
     if (actualPath.empty()) {
         // We assume that a valid path has been specified to this method
         return make_ret(Ret::Code::UnknownError);

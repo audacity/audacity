@@ -76,10 +76,11 @@ private:
     void newProject();
     void open(const muse::actions::ActionData& args);
     void importFiles(const muse::actions::ActionData& args);
-    void importMediaFiles(const muse::actions::ActionData& args);
-    muse::Ret openMediaFiles(const muse::io::paths_t& paths);
-    muse::Ret openMediaFile(const muse::io::path_t& givenPath);
-    muse::Ret openProject(const muse::io::path_t& givenPath, const muse::String& displayNameOverride = muse::String());
+
+    void importStartupMedia(const muse::actions::ActionData& args);
+    muse::Ret processMediaFiles(const muse::io::paths_t& paths);
+
+    muse::Ret openProject(const muse::io::path_t& path, const muse::String& displayNameOverride = muse::String());
     muse::Ret loadWithFallback(const IAudacityProjectPtr& project, const muse::io::path_t& loadPath, const std::string& format);
     muse::Ret doOpenProject(const muse::io::path_t& filePath);
     IAudacityProjectPtr createProjectInCurrentWindow();

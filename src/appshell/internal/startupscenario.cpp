@@ -198,7 +198,7 @@ void StartupScenario::onStartupPageOpened(StartupModeType modeType)
             files << file.toQString();
         }
 
-        dispatcher()->dispatch("project-import-media-files", ActionData::make_arg1<QStringList>(files));
+        dispatcher()->dispatch("project-import-startup-media", ActionData::make_arg1<QStringList>(files));
         return;
     }
 
