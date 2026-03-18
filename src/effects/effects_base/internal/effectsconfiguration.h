@@ -33,6 +33,9 @@ public:
     void setEffectUIMode(const EffectId& effectId, EffectUIMode mode) override;
     muse::async::Notification effectUIModeChanged() const override;
 
+    std::string lastUsedPreset(const EffectId& effectId) const override;
+    void setLastUsedPreset(const EffectId& effectId, const std::string& presetId) override;
+
 private:
     muse::async::Notification m_applyEffectToAllAudioChanged;
     muse::async::Notification m_effectMenuOrganizationChanged;

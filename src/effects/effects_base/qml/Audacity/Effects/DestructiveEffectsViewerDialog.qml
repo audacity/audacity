@@ -43,6 +43,7 @@ EffectStyledDialogView {
 
         property bool isApplyAllowed: viewerModel.effectFamily != EffectFamily.Builtin || (viewer && viewer.isApplyAllowed)
         property bool isPreviewAllowed: !viewer || viewer.isPreviewAllowed !== false
+        property bool shouldRollbackOnClose: true
 
         function closeWindow(accept) {
             if (prv.viewer) {
@@ -52,6 +53,7 @@ EffectStyledDialogView {
             // and we must make sure it doesn't do this after we've closed the dialog, or we'll be getting that Qt exception
             // "Object %p destroyed while one of its QML signal handlers is in progress."
             Qt.callLater(() => {
+                prv.shouldRollbackOnClose = !accept
                 root.activateParentOnClose = false
                 accept ? root.accept() : root.reject()
             })
@@ -64,6 +66,11 @@ EffectStyledDialogView {
             // Stop preview before closing, for the same reason as in closeWindow()
             if (prv.viewer) {
                 prv.viewer.stopPreview()
+            }
+
+            if (prv.shouldRollbackOnClose) {
+                viewerModel.rollbackSettings()
+                presetsBar.presetsBarModel.restoreInitialPresetState()
             }
         }
     }
@@ -79,7 +86,7 @@ EffectStyledDialogView {
 
     // Listen to UI mode changes from the presets bar menu
     Connections {
-        target: presetsBar.manageMenuModel
+        target: presetsBar.presetsBarModel
         function onUseVendorUIChanged() {
             viewerModel.refreshUIMode()
         }
@@ -200,6 +207,7 @@ EffectStyledDialogView {
                         anchors.left: parent.left
                         anchors.right: parent.right
 
+                        destructiveMode: true
                         navigationPanel: root.navigationPanel
                         navigationOrder: 0
 
@@ -340,6 +348,7 @@ EffectStyledDialogView {
                             enabled: prv.isApplyAllowed
 
                             onClicked: {
+                                presetsBar.presetsBarModel.commitSelectedPreset()
                                 prv.closeWindow(true)
                             }
                         }

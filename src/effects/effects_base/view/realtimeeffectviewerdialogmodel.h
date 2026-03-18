@@ -5,7 +5,6 @@
 
 #include "modularity/ioc.h"
 #include "ieffectinstancesregister.h"
-#include "ieffectsprovider.h"
 #include "ieffectsconfiguration.h"
 #include "effectstypes.h"
 #include "effectsviewtypes.h"
@@ -39,7 +38,6 @@ class RealtimeEffectViewerDialogModel : public QObject, public muse::Injectable,
     muse::GlobalInject<IEffectsConfiguration> configuration;
 
     muse::Inject<IEffectInstancesRegister> instancesRegister{ this };
-    muse::Inject<IEffectsProvider> effectsProvider{ this };
     muse::Inject<effects::IRealtimeEffectService> realtimeEffectService{ this };
     muse::Inject<context::IGlobalContext> globalContext{ this };
     muse::Inject<muse::ui::INavigationController> navigationController{ this };

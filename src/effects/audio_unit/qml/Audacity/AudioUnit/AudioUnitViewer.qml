@@ -38,7 +38,7 @@ Rectangle {
     Component.onCompleted: {
         model.init()
         view.init()
-        Qt.callLater(manageMenuModel.load)
+        Qt.callLater(presetsBarModel.load)
     }
 
     Component.onDestruction: {
@@ -47,7 +47,7 @@ Rectangle {
 
     // Reload the view when UI mode changes
     Connections {
-        target: manageMenuModel
+        target: presetsBarModel
         function onUseVendorUIChanged() {
             view.reload()
         }
@@ -70,11 +70,11 @@ Rectangle {
         var py = parent.y + parent.height
         var pos = mapFromItem(parent, px, py)
 
-        menuLoader.show(pos, manageMenuModel)
+        menuLoader.show(pos, presetsBarModel.presetContextMenu())
     }
 
-    EffectManageMenu {
-        id: manageMenuModel
+    EffectPresetsBarModel {
+        id: presetsBarModel
         instanceId: model.instanceId
     }
 
@@ -82,7 +82,7 @@ Rectangle {
         id: menuLoader
 
         onHandleMenuItem: function (itemId) {
-            manageMenuModel.handleMenuItem(itemId)
+            presetsBarModel.presetContextMenu().handleMenuItem(itemId)
         }
     }
 

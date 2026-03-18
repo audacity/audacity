@@ -20,7 +20,7 @@ void EffectPresetsScenario::showError(const muse::Ret& ret, const std::string& t
     interactive()->error(ret.text(), text);
 }
 
-void EffectPresetsScenario::applyPreset(const EffectInstanceId& effectInstanceId, const PresetId& presetId)
+void EffectPresetsScenario::loadPreset(const EffectInstanceId& effectInstanceId, const PresetId& presetId)
 {
     Ret ret = presetsProvider()->applyPreset(effectInstanceId, presetId);
     if (!ret) {
@@ -28,7 +28,7 @@ void EffectPresetsScenario::applyPreset(const EffectInstanceId& effectInstanceId
     }
 }
 
-void EffectPresetsScenario::saveCurrentAsPreset(const EffectInstanceId& effectInstanceId)
+void EffectPresetsScenario::savePresetAs(const EffectInstanceId& effectInstanceId)
 {
     RetVal<Val> rv = interactive()->openSync("audacity://effects/presets/input_name");
     std::string name = rv.val.toString();
@@ -57,6 +57,27 @@ void EffectPresetsScenario::saveCurrentAsPreset(const EffectInstanceId& effectIn
     }
 
     Ret ret = presetsProvider()->saveCurrentAsPreset(effectInstanceId, name);
+    if (!ret) {
+        showError(ret);
+    }
+}
+
+void EffectPresetsScenario::savePreset(const EffectInstanceId& effectInstanceId, const PresetId& presetId)
+{
+    IF_ASSERT_FAILED(!presetId.empty()) {
+        return;
+    }
+
+    const EffectId effectId = instancesRegister()->effectIdByInstanceId(effectInstanceId);
+    IF_ASSERT_FAILED(!effectId.empty()) {
+        return;
+    }
+
+    IF_ASSERT_FAILED(presetsProvider()->hasUserPresetWithName(effectId, presetId.ToStdString())) {
+        return;
+    }
+
+    Ret ret = presetsProvider()->saveCurrentAsPreset(effectInstanceId, presetId.ToStdString());
     if (!ret) {
         showError(ret);
     }

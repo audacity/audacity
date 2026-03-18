@@ -21,6 +21,14 @@ StyledDialogView {
         Qt.callLater(input.forceActiveFocus)
     }
 
+    NavigationPanel {
+        id: presetNameNavPanel
+        name: "PresetNameInput"
+        enabled: input.enabled && input.visible
+        section: root.navigationSection
+        order: 0
+    }
+
     TextInputField {
         id: input
         anchors.top: parent.top
@@ -28,6 +36,10 @@ StyledDialogView {
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottomMargin: 16
+
+        navigation.panel: presetNameNavPanel
+        navigation.order: 1
+        navigation.name: "Preset name"
 
         hint: qsTrc("effects", "Preset name")
 
@@ -40,6 +52,8 @@ StyledDialogView {
         anchors.bottom: parent.bottom
 
         buttons: [ ButtonBoxModel.Cancel, ButtonBoxModel.Ok]
+        navigationPanel.section: root.navigationSection
+        navigationPanel.order: 2
 
         onStandardButtonClicked: function(buttonId) {
             switch (buttonId) {

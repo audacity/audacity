@@ -26,6 +26,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/ieffectviewlaunchregister.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectparametersprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/iparameterextractorregistry.h
+    ${CMAKE_CURRENT_LIST_DIR}/ipresetstatesregister.h
     # interfaces for optional services
     ${CMAKE_CURRENT_LIST_DIR}/iparameterextractorservice.h
 
@@ -77,8 +78,14 @@ set(MODULE_SRC
     # view
     ${CMAKE_CURRENT_LIST_DIR}/view/abstracteffectviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/abstracteffectviewmodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/effectmanagemenu.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/effectmanagemenu.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/effectpresetsbarmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/effectpresetsbarmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/presetstatesregister.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/presetstatesregister.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/presetscontextmenumodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/presetscontextmenumodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/effectsavecontextmenu.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/effectsavecontextmenu.h
     ${CMAKE_CURRENT_LIST_DIR}/view/effectsuiengine.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/effectsuiengine.h
     ${CMAKE_CURRENT_LIST_DIR}/view/effectsviewtypes.h
@@ -108,4 +115,3 @@ setup_module()
 if (AU_BUILD_EFFECTS_TESTS)
     add_subdirectory(tests)
 endif()
-

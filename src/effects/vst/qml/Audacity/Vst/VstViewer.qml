@@ -49,10 +49,16 @@ Rectangle {
 
     readonly property var viewModel: VstViewModelFactory.createModel(root, instanceId)
 
+    QtObject {
+        id: prv
+
+        property AbstractMenuModel activeMenuModel: null
+    }
+
     Component.onCompleted: {
         viewModel.init()
         view.init()
-        Qt.callLater(manageMenuModel.load)
+        Qt.callLater(presetsBarModel.load)
     }
 
     function startPreview() {
@@ -68,11 +74,12 @@ Rectangle {
         var py = parent.y + parent.height
         var pos = mapFromItem(parent, px, py)
 
-        menuLoader.show(pos, manageMenuModel)
+        prv.activeMenuModel = presetsBarModel.presetContextMenu()
+        menuLoader.show(pos, prv.activeMenuModel)
     }
 
-    EffectManageMenu {
-        id: manageMenuModel
+    EffectPresetsBarModel {
+        id: presetsBarModel
         instanceId: viewModel.instanceId
     }
 
@@ -80,7 +87,9 @@ Rectangle {
         id: menuLoader
 
         onHandleMenuItem: function (itemId) {
-            manageMenuModel.handleMenuItem(itemId)
+            if (prv.activeMenuModel) {
+                prv.activeMenuModel.handleMenuItem(itemId)
+            }
         }
     }
 

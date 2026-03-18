@@ -35,13 +35,13 @@ public:
 #define COMPRESSOR_PARAM(paramName, paramMin, paramDefault, paramMax, paramStep) \
     DYNAMICS_EFFECT_PARAM(CompressorSettings, paramName, paramMin, paramDefault, paramMax, paramStep)
 
-    COMPRESSOR_PARAM(thresholdDb, -30, compressorThresholdDbDefault, 0, 0.1);
+    COMPRESSOR_PARAM(thresholdDb, -60, compressorThresholdDbDefault, 0, 0.1);
     COMPRESSOR_PARAM(makeupGainDb, 0, compressorMakeupGainDbDefault, 30, 0.1);
     COMPRESSOR_PARAM(kneeWidthDb, 0, compressorKneeWidthDbDefault, 30, 0.1);
-    COMPRESSOR_PARAM(compressionRatio, 1, compressorCompressionRatioDefault, 20, 0.01);
+    COMPRESSOR_PARAM(compressionRatio, 1, compressorCompressionRatioDefault, 100, 0.01);
     COMPRESSOR_PARAM(lookaheadMs, 0, compressorLookaheadMsDefault, compressorMaxLookaheadMs, 0.1);
-    COMPRESSOR_PARAM(attackMs, 0.1, compressorAttackMsDefault, 100, 0.01);
-    COMPRESSOR_PARAM(releaseMs, 10, compressorReleaseMsDefault, 1000, 0.1);
+    COMPRESSOR_PARAM(attackMs, 0.0, compressorAttackMsDefault, 200, 0.01);
+    COMPRESSOR_PARAM(releaseMs, 0.1, compressorReleaseMsDefault, 1000, 0.1);
     COMPRESSOR_PARAM(showInput, 0, showInputDefault, 1, 1);
     COMPRESSOR_PARAM(showOutput, 0, showOutputDefault, 1, 1);
     COMPRESSOR_PARAM(showActual, 0, showActualDefault, 1, 1);

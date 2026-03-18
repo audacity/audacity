@@ -55,7 +55,8 @@ private:
     void repeatLastEffect();
 
     void applyPreset(const muse::actions::ActionQuery& q);
-    void saveAsPreset(const muse::actions::ActionQuery& q);
+    void savePreset(const muse::actions::ActionQuery& q);
+    void savePresetAs(const muse::actions::ActionQuery& q);
     void deletePreset(const muse::actions::ActionQuery& q);
     void importPreset(const muse::actions::ActionQuery& q);
     void exportPreset(const muse::actions::ActionQuery& q);
