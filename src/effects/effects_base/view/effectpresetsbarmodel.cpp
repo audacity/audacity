@@ -570,6 +570,9 @@ void EffectPresetsBarModel::updatePresetDisplayNames()
         const QString id = map.value("id").toString();
         const QString baseName = m_basePresetNames.value(id, map.value("name").toString());
         QString displayName = baseName;
+        if (isUserPreset(id)) {
+            displayName += QString(" (%1)").arg(muse::qtrc("effects", "custom"));
+        }
         if (m_isPresetUnsaved && id == m_currentPreset) {
             displayName += "*";
         }

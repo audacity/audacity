@@ -42,16 +42,6 @@ RowLayout {
             var pos = Qt.point(button.x, button.y + button.height)
             menuLoader.show(pos, activeMenuModel)
         }
-
-        function presetIconCodeById(presetId) {
-            const preset = presetsBarModel.presets.find(item => item.id === presetId)
-            return preset && preset.iconCode ? preset.iconCode : IconCode.NONE
-        }
-
-        function presetIconCodeByName(name) {
-            const preset = presetsBarModel.presets.find(item => item.name === name)
-            return preset && preset.iconCode ? preset.iconCode : IconCode.NONE
-        }
     }
 
     Component.onCompleted: {
@@ -125,13 +115,6 @@ RowLayout {
             anchors.rightMargin: 8
             spacing: 6
 
-            StyledIconLabel {
-                Layout.preferredWidth: ui.theme.iconsFont.pixelSize
-                Layout.alignment: Qt.AlignVCenter
-                readonly property int presetIconCode: prv.presetIconCodeById(presetsBarModel.preset)
-                iconCode: presetIconCode
-            }
-
             StyledTextLabel {
                 id: textItem
 
@@ -152,14 +135,7 @@ RowLayout {
 
             anchors.fill: parent
             anchors.leftMargin: 12
-            spacing: 8
-
-            StyledIconLabel {
-                Layout.preferredWidth: ui.theme.iconsFont.pixelSize
-                Layout.alignment: Qt.AlignVCenter
-                readonly property int presetIconCode: prv.presetIconCodeByName(textItem.text)
-                iconCode: presetIconCode
-            }
+            spacing: 0
 
             StyledTextLabel {
                 id: textItem
