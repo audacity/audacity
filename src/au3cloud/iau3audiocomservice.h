@@ -50,6 +50,6 @@ public:
                                                bool forceOverwrite = false) = 0;
     virtual muse::ProgressPtr resumeProjectSync(au::project::IAudacityProjectPtr project) = 0;
 
-    virtual void closeConnection() = 0;
+    virtual void deinit() = 0;
 };
 }

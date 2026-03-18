@@ -20,6 +20,7 @@ public:
     void registerExports() override;
     void registerUiTypes() override;
     void onInit(const muse::IApplication::RunMode& mode) override;
+    void onDeinit() override;
 
     muse::modularity::IContextSetup* newContext(const muse::modularity::ContextPtr& ctx) const override;
 
@@ -35,7 +36,6 @@ public:
 
     void registerExports() override;
     void onInit(const muse::IApplication::RunMode& mode) override;
-    void onDeinit() override;
 
 private:
     std::shared_ptr<Au3CloudService> m_cloudService;

@@ -34,6 +34,14 @@ void Au3CloudModule::registerExports()
 
 void Au3CloudModule::onInit(const muse::IApplication::RunMode&) {}
 
+void Au3CloudModule::onDeinit()
+{
+    auto acs = globalIoc()->resolve<IAu3AudioComService>(mname);
+    if (acs) {
+        acs->deinit();
+    }
+}
+
 void Au3CloudModule::registerUiTypes()
 {
     qmlRegisterType<CloudTestsModel>("Audacity.Cloud", 1, 0, "CloudTestsModel");
@@ -71,9 +79,4 @@ void Au3CloudContext::onInit(const muse::IApplication::RunMode&)
     if (ar) {
         ar->reg(m_uiActions);
     }
-}
-
-void Au3CloudContext::onDeinit()
-{
-    m_audioComService->closeConnection();
 }

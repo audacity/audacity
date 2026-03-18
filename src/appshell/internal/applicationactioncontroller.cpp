@@ -359,7 +359,7 @@ void ApplicationActionController::revertToFactorySettings()
 
     // Close cloud database connection if cloud module is active
     if (auto au3AudioComService = audioComService()) {
-        au3AudioComService->closeConnection();
+        au3AudioComService->deinit();
     }
 
     // Full factory reset: clean user data directory + reset settings
