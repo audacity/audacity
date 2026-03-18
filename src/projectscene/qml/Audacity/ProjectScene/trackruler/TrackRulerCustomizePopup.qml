@@ -22,13 +22,13 @@ StyledPopupView {
     required property bool isHalfWave
 
     signal rulerTypeChangeRequested(int newType)
-    signal zoomInRequested()
-    signal zoomOutRequested()
-    signal zoomResetRequested()
-    signal toggleHalfWaveRequested()
+    signal zoomInRequested
+    signal zoomOutRequested
+    signal zoomResetRequested
+    signal toggleHalfWaveRequested
 
-    contentWidth: uiModel.popupWidth - 2*uiModel.popupMargins
-    contentHeight: uiModel.popupHeight - 2*uiModel.popupMargins
+    contentWidth: uiModel.popupWidth - 2 * uiModel.popupMargins
+    contentHeight: uiModel.popupHeight - 2 * uiModel.popupMargins
 
     margins: uiModel.popupMargins
 
@@ -128,7 +128,7 @@ StyledPopupView {
 
             model: root.availableRulerTypes
 
-            onValueChangeRequested: function(value) {
+            onValueChangeRequested: function (value) {
                 root.rulerTypeChangeRequested(value)
             }
         }
@@ -145,5 +145,4 @@ StyledPopupView {
             }
         }
     }
-
 }
