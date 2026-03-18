@@ -84,7 +84,8 @@ qt_add_resources(appshell appshell_resources
         resources/win_opengl_buglist.json
         resources/welcomedialog/MuseHubPromo.jpg
         resources/welcomedialog/Audacity40Video.png
-        resources/welcomedialog/AudioDotCom_Promo.png
+        resources/welcomedialog/AudioDotCom_Dark.png
+        resources/welcomedialog/AudioDotCom_Light.png
         resources/welcomedialog/Audacity_Merch_Store.png
 )
 
