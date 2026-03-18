@@ -1,8 +1,7 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#ifndef AU_APPSHELL_TESTS_WORKSPACECONFIGURATIONMOCK_H
-#define AU_APPSHELL_TESTS_WORKSPACECONFIGURATIONMOCK_H
+#pragma once
 
 #include <gmock/gmock.h>
 
@@ -21,5 +20,3 @@ public:
     MOCK_METHOD(muse::async::Channel<std::string>, currentWorkspaceNameChanged, (), (const, override));
 };
 }
-
-#endif // AU_APPSHELL_TESTS_WORKSPACECONFIGURATIONMOCK_H
