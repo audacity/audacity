@@ -59,6 +59,7 @@ void EffectsActionsController::registerActions()
     }
 
     dispatcher()->reg(this, "repeat-last-effect", this, &EffectsActionsController::repeatLastEffect);
+    dispatcher()->reg(this, "plugin-manager", this, &EffectsActionsController::openPluginManager);
 
     // presets
     dispatcher()->reg(this, ActionQuery("action://effects/presets/apply"), this, &EffectsActionsController::applyPreset);
@@ -216,4 +217,9 @@ bool EffectsActionsController::canReceiveAction(const muse::actions::ActionCode&
 muse::async::Channel<muse::actions::ActionCodeList> EffectsActionsController::canReceiveActionsChanged() const
 {
     return m_canReceiveActionsChanged;
+}
+
+void EffectsActionsController::openPluginManager()
+{
+    interactive()->openSync("audacity://effects/plugin_manager");
 }
