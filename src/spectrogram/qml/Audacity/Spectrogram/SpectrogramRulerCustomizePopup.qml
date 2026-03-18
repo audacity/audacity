@@ -6,7 +6,7 @@ import QtQuick 2.15
 import Muse.UiComponents
 import Muse.Ui 1.0
 
-import Audacity.Playback 1.0 // TODO move to common
+import Audacity.UiComponents 1.0
 import Audacity.Spectrogram 1.0
 
 StyledPopupView {

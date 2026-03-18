@@ -9,6 +9,7 @@ import Muse.UiComponents
 import Muse.Ui 1.0
 
 import Audacity.Playback 1.0
+import Audacity.UiComponents 1.0
 
 StyledPopupView {
     id: root
