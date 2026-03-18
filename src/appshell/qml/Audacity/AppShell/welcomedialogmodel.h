@@ -34,7 +34,7 @@
 #include "iappshellconfiguration.h"
 
 namespace au::appshell {
-class WelcomeDialogModel : public QObject, public muse::Contextable
+class WelcomeDialogModel : public QObject, public muse::Contextable, public muse::async::Asyncable
 {
     Q_OBJECT
 
@@ -50,6 +50,7 @@ class WelcomeDialogModel : public QObject, public muse::Contextable
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::Inject<muse::IInteractive> interactive { this };
     muse::GlobalInject<IAppShellConfiguration> configuration;
+    muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
 
 public:
     WelcomeDialogModel();

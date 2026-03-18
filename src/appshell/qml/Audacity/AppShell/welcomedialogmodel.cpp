@@ -37,6 +37,10 @@ const char* SHOP_URL {
 
 std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
 {
+    const char* audiocomUrl = muse::ui::isDarkTheme(uiConfiguration()->currentTheme().codeKey)
+                              ? "qrc:/resources/welcomedialog/AudioDotCom_Dark.png"
+                              : "qrc:/resources/welcomedialog/AudioDotCom_Light.png";
+
     return {
         {
             muse::qtrc("appshell/welcome", "Tutorial: what’s different in Audacity 4?"),
@@ -50,7 +54,7 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
         },
         {
             muse::qtrc("appshell/welcome", "Complete your Audacity cloud setup with Audio.com"),
-            "qrc:/resources/welcomedialog/AudioDotCom_Promo.png",
+            audiocomUrl,
             muse::qtrc("appshell/welcome",
                        "This integration allows you to save and access your Audacity projects on any device"),
             muse::qtrc("appshell/welcome", "Continue"),
@@ -104,6 +108,13 @@ void WelcomeDialogModel::init()
         m_currentIndex = 0;
     }
     configuration()->setWelcomeDialogLastShownIndex(static_cast<int>(m_currentIndex));
+
+    uiConfiguration()->currentThemeChanged().onNotify(this, [this]() {
+        m_items = buildItems();
+
+        emit itemsChanged();
+        emit currentItemChanged();
+    });
 
     emit itemsChanged();
     emit currentItemChanged();
