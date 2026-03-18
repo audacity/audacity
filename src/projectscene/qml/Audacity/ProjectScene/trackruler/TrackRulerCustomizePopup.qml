@@ -122,8 +122,6 @@ StyledPopupView {
 
             titleSpacing: 4
 
-            backgroundColor: ui.theme.backgroundSecondaryColor
-
             value: root.rulerType
 
             model: root.availableRulerTypes

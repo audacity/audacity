@@ -29,12 +29,12 @@ Item {
         acceptedButtons: Qt.RightButton | Qt.LeftButton
 
         onClicked: {
-            customisePopup.toggleOpened()
+            customizePopup.toggleOpened()
         }
     }
 
     TrackRulerCustomizePopup {
-        id: customisePopup
+        id: customizePopup
 
         availableRulerTypes: rulerModel.availableRulerTypes
         rulerType: rulerModel.rulerType

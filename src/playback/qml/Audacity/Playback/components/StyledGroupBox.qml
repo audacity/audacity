@@ -8,72 +8,73 @@ import QtQuick.Controls 2.15
 import Muse.UiComponents
 import Muse.Ui 1.0
 
-Item {
+Column {
     id: root
 
     property string title: ""
 
-    property int titleSpacing: 12
+    property int titleSpacing: 4
+    property int margin: 12
     property int itemSpacing: 8
-    property int itemMargin: 12
 
     property int borderWidth: 1
-    property int boarderRadius: 2
+
+    property alias navPanel: meterStyleGroup.navigation
 
     property int value
 
     property bool enabled: true
 
-    property color backgroundColor: ui.theme.backgroundPrimaryColor
+    property color backgroundColor: ui.theme.backgroundSecondaryColor
 
     property var model: null
 
+    spacing: root.titleSpacing
+
     signal valueChangeRequested(int value)
 
-    ColumnLayout {
-        anchors.fill: parent
+    StyledTextLabel {
+        width: parent.width
 
-        spacing: root.titleSpacing
+        text: root.title
+        horizontalAlignment: Text.AlignLeft
+    }
 
-        StyledTextLabel {
-            Layout.fillWidth: true
+    Rectangle {
+        width: parent.width
+        height: meterStyleGroup.implicitHeight + 2 * root.margin
 
-            text: root.title
-            horizontalAlignment: Text.AlignLeft
-        }
-        
-        Rectangle {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
+        color: root.backgroundColor
+        border.width: root.borderWidth
+        border.color: ui.theme.strokeColor
+        radius: 2
 
-            color: root.backgroundColor
-            border.width: root.borderWidth
-            border.color: ui.theme.strokeColor
-            radius: root.boarderRadius
+        Item {
+            anchors.fill: parent
+            anchors.margins: root.margin
 
-            Item {
-                anchors.fill: parent
-                anchors.margins: root.itemMargin
+            RadioButtonGroup {
+                id: meterStyleGroup
 
-                RadioButtonGroup {
-                    id: meterStyleGroup
+                orientation: Qt.Vertical
+                width: parent.width
 
-                    orientation: Qt.Vertical
-                    width: parent.width
+                spacing: root.itemSpacing
 
-                    spacing: root.itemSpacing
+                model: root.model
 
-                    model: root.model
+                delegate: RoundedRadioButton {
+                    id: meterStyleButton
+                    text: modelData["label"]
+                    checked: root.value == modelData["value"]
+                    enabled: root.enabled
 
-                    delegate: RoundedRadioButton {
-                        id: meterStyleButton
-                        text: modelData["label"]
-                        checked: root.value == modelData["value"]
-                        enabled: root.enabled
+                    navigation.panel: root.navPanel
+                    navigation.name: modelData["label"]
+                    navigation.order: index
 
-                        onToggled: {
-                            root.valueChangeRequested(modelData["value"])
-                        }
+                    onToggled: {
+                        root.valueChangeRequested(modelData["value"])
                     }
                 }
             }
