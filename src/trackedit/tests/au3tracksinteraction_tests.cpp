@@ -490,7 +490,7 @@ TEST_F(Au3TracksInteractionTests, SplitTracksOnClipData)
     ASSERT_NE(trackTwoClipsId, INVALID_TRACK) << "Failed to create track";
 
     //! [EXPECT] The project is notified about track changed
-    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackChanged(_)).Times(1);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackClipListChanged(_)).Times(1);
 
     Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackTwoClipsId));
 
@@ -526,7 +526,7 @@ TEST_F(Au3TracksInteractionTests, RangeSplitTracks)
     ASSERT_NE(trackTwoClipsId, INVALID_TRACK) << "Failed to create track";
 
     //! [EXPECT] The project is notified about track changed
-    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackChanged(_)).Times(1);
+    EXPECT_CALL(*m_trackEditProject, notifyAboutTrackClipListChanged(_)).Times(1);
 
     Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackTwoClipsId));
 

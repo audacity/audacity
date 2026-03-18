@@ -207,6 +207,23 @@ Rectangle {
 
         readonly property int doubleClickInterval: 400
         readonly property int doubleClickMaxDistance: 5
+
+        property bool singleMenuLoaded: false
+        property bool multiMenuLoaded: false
+
+        function ensureSingleMenuLoaded() {
+            if (!singleMenuLoaded) {
+                singleClipContextMenuModel.load()
+                singleMenuLoaded = true
+            }
+        }
+
+        function ensureMultiMenuLoaded() {
+            if (!multiMenuLoaded) {
+                multiClipContextMenuModel.load()
+                multiMenuLoaded = true
+            }
+        }
     }
 
     // panel for navigating within the clip's items
@@ -243,6 +260,11 @@ Rectangle {
     }
 
     function openContextMenu() {
+        if (root.multiClipsSelected || root.groupId != -1) {
+            prv.ensureMultiMenuLoaded()
+        } else {
+            prv.ensureSingleMenuLoaded()
+        }
         menuBtn.toggleMenu(menuBtn)
     }
 
@@ -319,8 +341,6 @@ Rectangle {
 
     Component.onCompleted: {
         playbackState.init()
-        singleClipContextMenuModel.load()
-        multiClipContextMenuModel.load()
         clipGainModel.init()
     }
 
@@ -357,8 +377,10 @@ Rectangle {
 
         onClicked: function (e) {
             if (root.multiClipsSelected) {
+                prv.ensureMultiMenuLoaded()
                 multiClipContextMenuLoader.show(Qt.point(e.x, e.y), multiClipContextMenuModel.items)
             } else {
+                prv.ensureSingleMenuLoaded()
                 singleClipContextMenuLoader.show(Qt.point(e.x, e.y), singleClipContextMenuModel.items)
                 root.requestSelected()
             }
@@ -776,6 +798,12 @@ Rectangle {
                     }
 
                     onClicked: {
+                        if (root.multiClipsSelected || root.groupId != -1) {
+                            prv.ensureMultiMenuLoaded()
+                        } else {
+                            prv.ensureSingleMenuLoaded()
+                        }
+
                         if (!root.multiClipsSelected) {
                             if (!root.clipSelected) {
                                 root.requestSelectionReset()

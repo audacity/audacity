@@ -320,6 +320,11 @@ au::trackedit::Label Au3TrackeditProject::label(const LabelKey& key) const
     return DomConverter::label(labelTrack, au3Label);
 }
 
+void Au3TrackeditProject::notifyAboutTrackClipListChanged(const Track& track)
+{
+    m_trackClipListChanged.send(track);
+}
+
 void Au3TrackeditProject::notifyAboutClipChanged(const Clip& clip)
 {
     async::ChangedNotifier<Clip>& notifier = m_clipsChanged[clip.key.trackId];
@@ -409,6 +414,11 @@ muse::async::Channel<au::trackedit::Track> Au3TrackeditProject::trackAdded() con
 muse::async::Channel<au::trackedit::Track> Au3TrackeditProject::trackChanged() const
 {
     return m_trackChanged;
+}
+
+muse::async::Channel<au::trackedit::Track> Au3TrackeditProject::trackClipListChanged() const
+{
+    return m_trackClipListChanged;
 }
 
 muse::async::Channel<au::trackedit::Track> Au3TrackeditProject::trackRemoved() const

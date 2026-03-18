@@ -398,7 +398,7 @@ bool TrackClipsListModel::moveSelectedClips(const ClipKey& key, bool completed)
                                                                                  moveOffset.trackOffset,
                                                                                  completed, clipsMovedToOtherTrack);
             if (result.ret) {
-                selectionController()->setSelectedClips(result.val);
+                selectionController()->setSelectedClips(result.val, completed);
             }
         }
     }
