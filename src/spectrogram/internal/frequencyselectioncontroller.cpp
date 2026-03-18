@@ -4,10 +4,11 @@
 #include "frequencyselectioncontroller.h"
 
 #include "ifrequencyselectionrestorer.h"
+#include "internal/numberscale.h"
 
 #include "framework/global/log.h"
+#include "framework/global/defer.h"
 #include "framework/global/types/number.h"
-#include "internal/numberscale.h"
 
 namespace au::spectrogram {
 FrequencySelectionController::FrequencySelectionController(const muse::modularity::ContextPtr& ctx,
@@ -195,6 +196,12 @@ void FrequencySelectionController::setCenterFrequency(double newCenterFrequency,
         return;
     }
 
+    muse::Defer maybeResetDragStartFrequencyRange([this, complete] {
+        if (complete) {
+            m_dragStartFrequencyRange.reset();
+        }
+    });
+
     if (muse::is_equal(newCenterFrequency, m_frequencySelection.centerFrequency())) {
         // Send even if not changed because the `complete` flag might be different.
         m_handleDragged.send(m_centerFrequencyHandle, complete);
@@ -206,23 +213,23 @@ void FrequencySelectionController::setCenterFrequency(double newCenterFrequency,
 
     const auto startFreqPos = numberScale.valueToPosition(m_frequencySelection.startFrequency());
     const auto endFreqPos = numberScale.valueToPosition(m_frequencySelection.endFrequency());
-    const auto range = endFreqPos - startFreqPos;
-    auto newStartFreqPos = centerFrequencyPos - range / 2;
-    auto newEndFreqPos = centerFrequencyPos + range / 2;
 
-    // NumberScale normalized position to [0, 1]...
-    if (newStartFreqPos > 1) {
-        const auto delta = newStartFreqPos - 1;
-        newEndFreqPos = std::min<double>(newEndFreqPos + delta, 1);
-        newStartFreqPos = 1;
-    } else if (newEndFreqPos < 0) {
-        const auto delta = -newEndFreqPos;
-        newStartFreqPos = std::max<double>(newStartFreqPos - delta, 0);
-        newEndFreqPos = 0;
+    if (!m_dragStartFrequencyRange.has_value()) {
+        m_dragStartFrequencyRange = endFreqPos - startFreqPos;
     }
 
-    if (newStartFreqPos == newEndFreqPos) {
-        return;
+    auto newStartFreqPos = centerFrequencyPos - *m_dragStartFrequencyRange / 2;
+    auto newEndFreqPos = centerFrequencyPos + *m_dragStartFrequencyRange / 2;
+
+    // NumberScale normalized position to [0, 1]...
+    if (newEndFreqPos > 1) {
+        const auto delta = newEndFreqPos - 1;
+        newStartFreqPos = std::min<double>(newStartFreqPos + delta, 1);
+        newEndFreqPos = 1;
+    } else if (newStartFreqPos < 0) {
+        const auto delta = -newStartFreqPos;
+        newEndFreqPos = std::max<double>(newEndFreqPos - delta, 0);
+        newStartFreqPos = 0;
     }
 
     const auto newStartFreq = numberScale.positionToValue(newStartFreqPos);

@@ -57,5 +57,7 @@ private:
     muse::async::Channel<uintptr_t, bool> m_handleDragged;
     std::unordered_set<int> m_tracksWithSpectrogramShown;
     const std::unique_ptr<IFrequencySelectionRestorer> m_frequencySelectionRestorer;
+
+    std::optional<double> m_dragStartFrequencyRange; // normalized
 };
 }

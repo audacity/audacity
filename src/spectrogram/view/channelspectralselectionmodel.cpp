@@ -154,7 +154,6 @@ std::pair<double, double> ChannelSpectralSelectionModel::selectionYRange() const
 void ChannelSpectralSelectionModel::startCenterFrequencyDrag()
 {
     m_peakFinder = peakFinderFactory()->newInstance(m_trackId, m_channel, m_startTime, m_endTime);
-    m_dragStartFrequencySelection = frequencySelectionController()->frequencySelection();
     emit verticalDragActiveChanged();
 }
 
@@ -178,7 +177,6 @@ void ChannelSpectralSelectionModel::endCenterFrequencyDrag()
     const auto cf = frequencySelectionController()->frequencySelection().centerFrequency();
     frequencySelectionController()->setCenterFrequency(cf, true);
     m_peakFinder.reset();
-    m_dragStartFrequencySelection = {};
     emit verticalDragActiveChanged();
 }
 

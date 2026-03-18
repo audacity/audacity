@@ -119,7 +119,5 @@ private:
     double m_startTime = 0.0;
     double m_endTime = 0.0;
     std::unique_ptr<IPeakFinder> m_peakFinder;
-
-    FrequencySelection m_dragStartFrequencySelection;
 };
 }
