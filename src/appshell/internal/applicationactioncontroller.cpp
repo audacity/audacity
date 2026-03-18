@@ -357,7 +357,7 @@ void ApplicationActionController::revertToFactorySettings()
     // Close open project before cleaning up (like quit does)
     projectFilesController()->closeOpenedProject();
 
-    // Close cloud database connection if cloud module is active
+    // Close cloud database before cleanup deletes the file
     if (auto au3AudioComService = audioComService()) {
         au3AudioComService->deinit();
     }
