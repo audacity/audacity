@@ -145,8 +145,3 @@ void EffectsContext::onAllInited(const muse::IApplication::RunMode&)
     //! After all, the provider can load effects of different types.
     m_effectsProvider->reloadEffects();
 }
-
-void EffectsContext::onDeinit()
-{
-    PluginManager::Get().Terminate();
-}
