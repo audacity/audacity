@@ -129,6 +129,7 @@ void ExportPreferencesModel::init()
         emit exportSampleRateChanged();
     });
 
+    updateExportChannels();
     updateCurrentSampleRate();
 }
 
