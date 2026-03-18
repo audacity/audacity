@@ -4,9 +4,11 @@
 
 #include "exportpreferencesmodel.h"
 
-#include "io/fileinfo.h"
-#include "translation.h"
+#include "framework/global/io/fileinfo.h"
+#include "framework/global/translation.h"
 #include "framework/global/defer.h"
+
+#include "trackedit/trackeditutils.h"
 
 using namespace au::importexport;
 
@@ -127,6 +129,7 @@ void ExportPreferencesModel::init()
         emit exportSampleRateChanged();
     });
 
+    updateExportChannels();
     updateCurrentSampleRate();
 }
 
@@ -287,7 +290,12 @@ QStringList ExportPreferencesModel::formatsList() const
 
 void ExportPreferencesModel::setExportChannelsType(ExportChannelsPref::ExportChannels type)
 {
+    if (type == exportChannelsType()) {
+        return;
+    }
+
     exportConfiguration()->setExportChannelsType(static_cast<int>(type));
+    emit exportChannelsTypeChanged();
 }
 
 ExportChannelsPref::ExportChannels ExportPreferencesModel::exportChannelsType() const
@@ -432,9 +440,24 @@ void ExportPreferencesModel::updateExportChannels()
 {
     int maxChannels = exporter()->maxChannels();
 
-    if (static_cast<int>(exportChannelsType()) > maxChannels) {
-        setExportChannelsType(ExportChannelsPref::ExportChannels(maxChannels));
+    const auto project = globalContext()->currentTrackeditProject();
+    if (project) {
+        const bool hasStereo = au::trackedit::utils::hasStereoTrack(project->trackList());
+        ExportChannelsPref::ExportChannels recommended = hasStereo
+                                                         ? ExportChannelsPref::ExportChannels::STEREO
+                                                         : ExportChannelsPref::ExportChannels::MONO;
+
+        if (static_cast<int>(recommended) <= maxChannels) {
+            setExportChannelsType(recommended);
+            return;
+        }
     }
+
+    const auto fallback = maxChannels >= static_cast<int>(ExportChannelsPref::ExportChannels::STEREO)
+                          ? ExportChannelsPref::ExportChannels::STEREO
+                          : ExportChannelsPref::ExportChannels::MONO;
+
+    setExportChannelsType(fallback);
 }
 
 bool ExportPreferencesModel::verifyExportPossible()
