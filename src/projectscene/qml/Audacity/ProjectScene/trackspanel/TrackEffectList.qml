@@ -23,6 +23,7 @@ Rectangle {
     property int navigationOrderStart: 0
     property int pendingGripFocusIndex: -1
     property bool pendingGripFocusHandle: false
+    property int pendingDialogRestoreIndex: -1
 
     Component.onCompleted: {
         trackEffectListModel.load()
@@ -85,6 +86,10 @@ Rectangle {
                 root.pendingGripFocusIndex = targetIndex
                 root.pendingGripFocusHandle = focusGripHandle
             }
+
+            onEffectDialogOpened: {
+                root.pendingDialogRestoreIndex = model.index
+            }
         }
 
         ScrollBar.vertical: scrollbar
@@ -119,6 +124,26 @@ Rectangle {
 
             Qt.callLater(function() {
                 root.focusGripAtIndex(targetIndex, focusGripHandle)
+            })
+        }
+    }
+
+    Connections {
+        target: root.navigationPanel
+
+        function onActiveChanged() {
+            if (!root.navigationPanel.active || root.pendingDialogRestoreIndex < 0) {
+                return
+            }
+
+            const targetIndex = root.pendingDialogRestoreIndex
+            root.pendingDialogRestoreIndex = -1
+
+            Qt.callLater(function() {
+                const delegate = trackEffectList.itemAtIndex(targetIndex)
+                if (delegate) {
+                    delegate.navigation.requestActive()
+                }
             })
         }
     }

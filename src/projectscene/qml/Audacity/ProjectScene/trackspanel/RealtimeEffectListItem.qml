@@ -25,6 +25,7 @@ ListItemBlank {
     property int gripReorderTargetIndex: -1
 
     signal gripReorderCommitted(int targetIndex, bool focusGripHandle)
+    signal effectDialogOpened()
 
     property NavigationPanel innerNavigationPanel: NavigationPanel {
         name: prv.title + " controls"
@@ -335,6 +336,7 @@ ListItemBlank {
                 if (root.navigationPanel) {
                     root.navigationPanel.requestActive()
                 }
+                root.effectDialogOpened()
                 root.item.showEffectDialog()
             }
         }
