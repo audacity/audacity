@@ -99,3 +99,7 @@ target_link_libraries(appshell PRIVATE
 )
 
 add_subdirectory(qml/Audacity/AppShell)
+
+if (AU_BUILD_APPSHELL_TESTS)
+    add_subdirectory(tests)
+endif()
