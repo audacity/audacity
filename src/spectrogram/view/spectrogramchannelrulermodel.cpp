@@ -29,6 +29,10 @@ void SpectrogramChannelRulerModel::componentComplete()
     });
     updateTicks();
     emit ticksChanged();
+
+    uiConfig()->currentThemeChanged().onNotify(this, [this] {
+        emit isHighContrastChanged();
+    });
 }
 
 void SpectrogramChannelRulerModel::updateTicks()

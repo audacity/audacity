@@ -8,6 +8,7 @@
 
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/async/asyncable.h"
+#include "framework/ui/iuiconfiguration.h"
 
 #include <QObject>
 #include <QQmlParserStatus>
@@ -24,9 +25,11 @@ class SpectrogramChannelRulerModel : public QObject, public QQmlParserStatus, pu
     Q_PROPERTY(QVariantList majorTicks READ majorTicks NOTIFY ticksChanged FINAL)
     Q_PROPERTY(QVariantList minorTicks READ minorTicks NOTIFY ticksChanged FINAL)
     Q_PROPERTY(double rulerGuideYPos READ rulerGuideYPos WRITE setRulerGuideYPos NOTIFY rulerGuideYPosChanged FINAL)
+    Q_PROPERTY(bool isHighContrast READ isHighContrast NOTIFY isHighContrastChanged FINAL)
 
     muse::Inject<ISpectrogramService> spectrogramService{ this };
     muse::Inject<ISpectrogramViewService> spectrogramViewService{ this };
+    muse::GlobalInject<muse::ui::IUiConfiguration> uiConfig;
 
 public:
     SpectrogramChannelRulerModel(QObject* parent = nullptr);
@@ -39,6 +42,8 @@ public:
 
     double channelHeight() const;
     void setChannelHeight(double height);
+
+    bool isHighContrast() const { return uiConfig()->isHighContrast(); }
 
     Q_INVOKABLE void zoomIn(double mouseY);
     Q_INVOKABLE void zoomOut(double mouseY);
@@ -57,6 +62,7 @@ signals:
     void ticksChanged();
     void labelHeightChanged();
     void rulerGuideYPosChanged();
+    void isHighContrastChanged();
 
 private:
     void classBegin() override {}
