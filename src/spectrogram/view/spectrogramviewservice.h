@@ -28,12 +28,8 @@ public:
 private:
     void doSetRulerGuideFrequency(int trackId, double frequency);
 
-    struct RulerGuide {
-        int trackId = -1;
-        double frequency = -1;
-    };
-
-    RulerGuide m_rulerGuide;
+    int m_trackId = -1;
+    double m_frequency = SelectionInfo::UndefinedFrequency;
     muse::async::Channel<int> m_rulerGuideFrequencyChanged;
     bool m_handleBeingDragged = false;
 };

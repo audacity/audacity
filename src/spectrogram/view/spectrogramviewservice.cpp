@@ -6,20 +6,19 @@
 #include "spectrogramtypes.h"
 #include "types/number.h"
 
-#include <optional>
-
 namespace au::spectrogram {
 void SpectrogramViewService::init()
 {
     frequencySelectionController()->handleDragged().onReceive(this, [this](uintptr_t handle, bool complete) {
         m_handleBeingDragged = !complete;
-        doSetRulerGuideFrequency(m_rulerGuide.trackId, frequencySelectionController()->handleFrequency(handle));
+        const auto frequency = frequencySelectionController()->handleFrequency(handle);
+        doSetRulerGuideFrequency(m_trackId, frequency);
     });
 }
 
 double SpectrogramViewService::rulerGuideFrequency(int trackId) const
 {
-    return m_rulerGuide.trackId == trackId ? m_rulerGuide.frequency : SelectionInfo::UndefinedFrequency;
+    return m_trackId == trackId ? m_frequency : SelectionInfo::UndefinedFrequency;
 }
 
 void SpectrogramViewService::setRulerGuideFrequency(int trackId, double frequency)
@@ -31,24 +30,14 @@ void SpectrogramViewService::setRulerGuideFrequency(int trackId, double frequenc
 
 void SpectrogramViewService::doSetRulerGuideFrequency(int trackId, double frequency)
 {
-    if (trackId == m_rulerGuide.trackId && muse::is_equal(frequency, m_rulerGuide.frequency)) {
+    if (trackId == m_trackId && muse::is_equal(frequency, m_frequency)) {
         return;
     }
 
-    if (trackId == m_rulerGuide.trackId && frequency == SelectionInfo::UndefinedFrequency) {
-        m_rulerGuide = {};
-        m_rulerGuideFrequencyChanged.send(trackId);
-        return;
-    }
+    const int previousTrackId = m_trackId;
 
-    if (frequency == SelectionInfo::UndefinedFrequency) {
-        // ignore
-        return;
-    }
-
-    const int previousTrackId = m_rulerGuide.trackId;
-
-    m_rulerGuide = { trackId, frequency };
+    m_trackId = trackId;
+    m_frequency = frequency;
     m_rulerGuideFrequencyChanged.send(trackId);
 
     if (previousTrackId != trackId) {
