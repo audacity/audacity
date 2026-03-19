@@ -346,7 +346,7 @@ void ApplicationActionController::revertToFactorySettings()
     static constexpr bool NOTIFY_ABOUT_CHANGES = false;
     configuration()->revertToFactorySettings(KEEP_DEFAULT_SETTINGS, NOTIFY_ABOUT_CHANGES);
 
-    application()->restart();
+    restart();
 }
 
 bool ApplicationActionController::isProjectOpened() const
