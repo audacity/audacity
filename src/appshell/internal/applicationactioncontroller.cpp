@@ -354,15 +354,6 @@ void ApplicationActionController::revertToFactorySettings()
         return;
     }
 
-    // Close open project before cleaning up (like quit does)
-    projectFilesController()->closeOpenedProject();
-
-    // Close cloud database before cleanup deletes the file
-    if (auto au3AudioComService = audioComService()) {
-        au3AudioComService->deinit();
-    }
-
-    // Full factory reset: clean user data directory + reset settings
     static constexpr bool KEEP_DEFAULT_SETTINGS = false;
     static constexpr bool NOTIFY_ABOUT_CHANGES = false;
     configuration()->revertToFactorySettings(KEEP_DEFAULT_SETTINGS, NOTIFY_ABOUT_CHANGES);

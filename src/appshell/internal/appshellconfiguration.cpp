@@ -228,57 +228,7 @@ muse::async::Notification AppShellConfiguration::settingsApplied() const
 
 void AppShellConfiguration::revertToFactorySettings(bool keepDefaultSettings, bool notifyAboutChanges) const
 {
-    if (!keepDefaultSettings) {
-        cleanUserDataDirectory();
-    }
-    // TODO: This is a temporary workaround. We use cleanUserDataDirectory()
-    // with Plug-Ins/ preservation instead of settings()->reset(false, ...)
-    // because user-installed Nyquist plugins currently reside in the app data
-    // directory. Once Plug-Ins/ is relocated to the user documents folder,
-    // we can pass keepDefaultSettings directly to settings()->reset() and
-    // remove cleanUserDataDirectory().
-    settings()->reset(/*keepDefaultSettings=*/ true, notifyAboutChanges);
-}
-
-void AppShellConfiguration::cleanUserDataDirectory() const
-{
-    // Delete config directory contents on factory reset,
-    // preserving only user-installed plugins.
-    //
-    // Everything is deleted except the Plug-Ins/ directory:
-    //
-    // Files:
-    //   audiocom_sync.db        - cloud project sync state (CloudProjectsDatabase)
-    //   known_audio_plugins.json - scanned audio plugin cache (AudioPluginsConfiguration, regenerated)
-    //   pluginregistry.cfg      - AU3 plugin scan cache (PluginManager, regenerated on startup)
-    //   pluginsettings.cfg      - per-effect plugin settings (EffectConfigSettings)
-    //   recent_files.json       - list of recently opened projects (ProjectConfiguration)
-    //   shortcuts.xml           - user-customised keyboard shortcuts (ShortcutsConfiguration)
-    //
-    // Directories:
-    //   extensions/             - user-installed extensions
-    //   locale/                 - locale/translation data
-    //   logs/                   - application debug logs (auto-created each run)
-    //   session/session.json    - paths of projects open in last session (AppShellConfiguration)
-    //   SessionData/            - autosave and undo/redo temp data (ProjectConfiguration)
-    //   workspaces/             - custom workspace layouts (.mws files)
-    //
-    // Preserved:
-    //   Plug-Ins/               - user-installed Nyquist plugins
-    QString dataPath = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
-    QDir dataDir(dataPath);
-    const QStringList preservedDirs = { "Plug-Ins" };
-
-    for (const QFileInfo& entry : dataDir.entryInfoList(QDir::AllEntries | QDir::Hidden | QDir::NoDotAndDotDot)) {
-        if (preservedDirs.contains(entry.fileName())) {
-            continue;
-        }
-        if (entry.isDir()) {
-            QDir(entry.absoluteFilePath()).removeRecursively();
-        } else {
-            QFile::remove(entry.absoluteFilePath());
-        }
-    }
+    settings()->reset(keepDefaultSettings, notifyAboutChanges);
 }
 
 muse::io::paths_t AppShellConfiguration::sessionProjectsPaths() const
