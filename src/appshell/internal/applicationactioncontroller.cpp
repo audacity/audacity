@@ -241,13 +241,13 @@ bool ApplicationActionController::quit()
 void ApplicationActionController::restart()
 {
     if (projectFilesController()->closeOpenedProject()) {
-        // if (multiwindowsProvider()->instances().size() == 1) {
-        application()->restart();
-        // } else {
-        // multiwindowsProvider()->quitAllAndRestartLast();
+        if (multiwindowsProvider()->windowCount() == 1) {
+            application()->restart();
+        } else {
+            multiwindowsProvider()->quitAllAndRestartLast();
 
-        // QCoreApplication::exit();
-        // }
+            QCoreApplication::exit();
+        }
     }
 }
 
