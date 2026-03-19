@@ -73,7 +73,7 @@ void Au3SelectionController::init()
         }
     });
 
-    frequencySelectionController()->frequencySelectionChanged().onReceive(this, [this](auto, bool complete) {
+    frequencySelectionController()->frequencySelectionChanged().onReceive(this, [this](bool complete) {
         if (complete) {
             projectHistory()->modifyState();
         }

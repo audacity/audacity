@@ -9,6 +9,7 @@ Item {
     required property int trackId
     required property int channel
     required property real trackSampleRate
+    required property bool selectionInProgress
     required property real selectionStartPosition
     required property real selectionEndPosition
     required property real selectionStartFrequency
@@ -20,6 +21,7 @@ Item {
     property alias verticalDragActive: selectionModel.verticalDragActive
 
     signal selectionHorizontalResize(real startPosition, real endPosition, bool completed)
+    signal mousePositionChanged(real x, real y)
 
     QtObject {
         id: prv
@@ -59,7 +61,8 @@ Item {
             startDrag(edge.name, edge.initData(mouse))
             if (edge.name !== "left" && edge.name !== "right") {
                 const hit = SpectrogramHitFactory.createSpectrogramHit(root.trackId, root.channel, prv.getGlobalY(), root.height)
-                root.selectionController.startSelectionVerticalResize(hit)
+                const isTop = edge.name === "top"
+                root.selectionController.startSelectionVerticalResize(hit, isTop)
             }
         }
 
@@ -84,10 +87,10 @@ Item {
         trackSampleRate: root.trackSampleRate
         channel: root.channel
         channelHeight: root.height
-        selectionStartFrequency: root.selectionStartFrequency
-        selectionEndFrequency: root.selectionEndFrequency
-        selectionStartTime: root.selectionStartTime
-        selectionEndTime: root.selectionEndTime
+        startFrequency: root.selectionStartFrequency
+        endFrequency: root.selectionEndFrequency
+        startTime: root.selectionStartTime
+        endTime: root.selectionEndTime
 
         onCenterFrequencyChangeRequested: function (frequency) {
             selectionController.dragFrequencySelectionCenterFrequency(frequency)
@@ -97,12 +100,8 @@ Item {
     MouseArea {
         anchors.fill: parent
 
-        visible: !selectionModel.verticalDragActive && (pressed || !prv.selectionIsEmpty)
-
         hoverEnabled: true
         acceptedButtons: Qt.LeftButton
-
-        cursorShape: Qt.CrossCursor
 
         property var draggedEdges: []
 
@@ -150,28 +149,9 @@ Item {
                     prv.edgePositionChanged(draggedEdges[i], mouse)
                 }
             } else {
-                switch (marquee.hitHandle(mouse.x - marquee.x, mouse.y - marquee.y, marquee)) {
-                case marquee.handleId.TopLeft:
-                case marquee.handleId.BottomRight:
-                    cursorShape = Qt.SizeFDiagCursor
-                    break
-                case marquee.handleId.TopRight:
-                case marquee.handleId.BottomLeft:
-                    cursorShape = Qt.SizeBDiagCursor
-                    break
-                case marquee.handleId.Left:
-                case marquee.handleId.Right:
-                    cursorShape = Qt.SizeHorCursor
-                    break
-                case marquee.handleId.Top:
-                case marquee.handleId.Bottom:
-                    cursorShape = Qt.SizeVerCursor
-                    break
-                default:
-                    cursorShape = Qt.CrossCursor
-                    break
-                }
+                selectionModel.onHoveringPositionChanged(mouse.y)
             }
+            root.mousePositionChanged(mouse.x, mouse.y)
         }
 
         onReleased: function (mouse) {
@@ -179,17 +159,11 @@ Item {
                 prv.edgeReleased(draggedEdges[i], mouse)
             }
             draggedEdges = []
-            cursorShape = Qt.CrossCursor
         }
-    }
 
-    MouseArea {
-        // To make sure that the cursor stays as SizeVerCursor during vertical drag even when the mouse is outside of the centerFrequencyMouseArea
-        anchors.fill: parent
-        visible: selectionModel.verticalDragActive
-        hoverEnabled: true
-        acceptedButtons: Qt.NoButton
-        cursorShape: Qt.SizeVerCursor
+        onExited: function (mouse) {
+            selectionModel.onHoveringPositionChanged(-1)
+        }
     }
 
     MarqueeSelection {
@@ -204,6 +178,7 @@ Item {
 
         lineWidth: 1
         color: "white"
+        allowCursorShapeChange: !root.selectionInProgress
 
         Item {
             id: centerFrequencyDragHandle
@@ -228,8 +203,9 @@ Item {
                 }
 
                 onPositionChanged: function (mouse) {
-                    const absoluteY = centerFrequencyDragHandle.mapToItem(root, 0, mouse.y).y
-                    selectionModel.dragCenterFrequency(absoluteY)
+                    const position = mapToItem(root, mouse.x, mouse.y)
+                    selectionModel.dragCenterFrequency(position.y)
+                    root.mousePositionChanged(position.x, mapToItem(root, 0, height / 2).y)
                 }
 
                 onReleased: {
@@ -330,7 +306,7 @@ Item {
             const init = prv.init[name]
             const delta = mouse.y - init.mouseY
             const newTopPos = init.topPos + delta
-            root.selectionController.updateSelectionVerticalResize(newTopPos, init.bottomPos, complete)
+            root.selectionController.updateSelectionVerticalResize(newTopPos, complete)
         }
     }
 
@@ -350,7 +326,7 @@ Item {
             const init = prv.init[name]
             const delta = mouse.y - init.mouseY
             const newBottomPos = init.bottomPos + delta
-            root.selectionController.updateSelectionVerticalResize(init.topPos, newBottomPos, complete)
+            root.selectionController.updateSelectionVerticalResize(newBottomPos, complete)
         }
     }
 }

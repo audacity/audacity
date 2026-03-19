@@ -22,8 +22,17 @@ void SpectrogramChannelRulerModel::componentComplete()
             emit ticksChanged();
         }
     });
+    spectrogramViewService()->rulerGuideFrequencyChanged().onReceive(this, [this](int trackId) {
+        if (trackId == m_trackId) {
+            emit rulerGuideYPosChanged();
+        }
+    });
     updateTicks();
     emit ticksChanged();
+
+    uiConfig()->currentThemeChanged().onNotify(this, [this] {
+        emit isHighContrastChanged();
+    });
 }
 
 void SpectrogramChannelRulerModel::updateTicks()
@@ -80,6 +89,20 @@ void SpectrogramChannelRulerModel::setChannelHeight(double height)
     updateTicks();
     emit channelHeightChanged();
     emit ticksChanged();
+}
+
+void SpectrogramChannelRulerModel::setRulerGuideYPos(double yPos)
+{
+    if (yPos < 0 || yPos > m_channelHeight) {
+        return;
+    }
+    spectrogramViewService()->setRulerGuideFrequency(m_trackId, positionToFrequency(yPos));
+}
+
+double SpectrogramChannelRulerModel::rulerGuideYPos() const
+{
+    const auto freq = spectrogramViewService()->rulerGuideFrequency(m_trackId);
+    return frequencyToPosition(freq);
 }
 
 namespace {

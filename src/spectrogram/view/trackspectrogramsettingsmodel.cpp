@@ -49,7 +49,7 @@ void TrackSpectrogramSettingsModel::aboutToDestroy()
 void TrackSpectrogramSettingsModel::componentComplete()
 {
     m_trackConfig = spectrogramService()->trackSpectrogramConfiguration(m_trackId);
-    IF_ASSERT_FAILED(m_trackConfig) {
+    if (!m_trackConfig) {
         return;
     }
 

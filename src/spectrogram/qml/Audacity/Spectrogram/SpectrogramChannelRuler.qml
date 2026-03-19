@@ -6,6 +6,8 @@ import Audacity.Spectrogram
 Item {
     id: root
 
+    clip: true
+
     required property int trackId
 
     SpectrogramChannelRulerModel {
@@ -82,6 +84,18 @@ Item {
                 }
             }
         }
+    }
+
+    // Spectrogram ruler guide
+    Rectangle {
+        anchors.left: parent.left
+        anchors.right: parent.right
+        height: 1
+        // color: ui.theme.fontPrimaryColor
+        // Hack for now: as opposed to the time rulers, the track rulers are dark in both dark and light themes.
+        // TODO https://github.com/audacity/audacity/issues/10561
+        color: rulerModel.isHighContrast || ui.theme.isDark ? ui.theme.fontPrimaryColor : "#F0F5FA"
+        y: rulerModel.rulerGuideYPos - height / 2
     }
 
     MouseArea {

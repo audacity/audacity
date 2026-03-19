@@ -17,6 +17,7 @@ class TrackSpectrogramSettingsModel : public AbstractSpectrogramSettingsModel,  
     public muse::async::Asyncable
 {
     Q_OBJECT
+    Q_INTERFACES(QQmlParserStatus)
 
     Q_PROPERTY(int trackId READ trackId WRITE setTrackId NOTIFY trackIdChanged)
     Q_PROPERTY(bool useGlobalSettings READ useGlobalSettings WRITE setUseGlobalSettings NOTIFY useGlobalSettingsChanged)

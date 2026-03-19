@@ -63,8 +63,8 @@ public:
     Q_INVOKABLE void onReleased(double x, double y);
 
     Q_INVOKABLE void onSelectionHorizontalResize(double x, double x2, bool completed);
-    Q_INVOKABLE void startSelectionVerticalResize(spectrogram::SpectrogramHit hit);
-    Q_INVOKABLE void updateSelectionVerticalResize(double y1, double y2, bool completed);
+    Q_INVOKABLE void startSelectionVerticalResize(spectrogram::SpectrogramHit hit, bool isTop);
+    Q_INVOKABLE void updateSelectionVerticalResize(double y, bool completed);
 
     Q_INVOKABLE void selectTrackAudioData(double y);
     Q_INVOKABLE void selectItemData(const TrackItemKey& key);
@@ -104,7 +104,7 @@ private:
 
     bool doOnPositionChanged(double x, double y);
     void setSelection(double x1, double x2, bool complete);
-    void setFrequencySelection(double y1, double y2, bool complete);
+    void setFrequencySelectionEdge(double y, bool complete = true, uintptr_t handle = 0); // If handle is 0, sets both
 
     Qt::KeyboardModifiers keyboardModifiers() const;
 
@@ -125,5 +125,6 @@ private:
     bool isInExtendedSpectrogram(const spectrogram::SpectrogramHit& hit, double y) const;
 
     std::optional<const spectrogram::SpectrogramHit> m_spectrogramHit;
+    uintptr_t m_frequencyEdgeHandle = 0;
 };
 }

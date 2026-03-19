@@ -801,6 +801,13 @@ Rectangle {
 
                             navigationPanel: navPanels && navPanels[index] ? navPanels[index] : null
 
+                            onTrackMousePositionChanged: function (xWithinTrack, yWithinTrack) {
+                                let xGlobalPosition = xWithinTrack
+                                let yGlobalPosition = y + yWithinTrack - tracksItemsView.contentY
+
+                                timeline.updateCursorPosition(xGlobalPosition, yGlobalPosition)
+                            }
+
                             onTrackItemMousePositionChanged: function (xWithinTrack, yWithinTrack, itemKey) {
                                 let xGlobalPosition = xWithinTrack
                                 let yGlobalPosition = y + yWithinTrack - tracksItemsView.contentY
