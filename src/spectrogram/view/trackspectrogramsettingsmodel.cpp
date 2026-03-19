@@ -39,11 +39,16 @@ TrackSpectrogramSettingsModel::TrackSpectrogramSettingsModel(QObject* parent)
 
 void TrackSpectrogramSettingsModel::aboutToDestroy()
 {
-    if (m_initialTrackConfig) {
-        spectrogramService()->copyConfiguration(*m_initialTrackConfig, *m_trackConfig);
-        m_trackConfig->setUseGlobalSettings(m_initialTrackConfig->useGlobalSettings());
-        spectrogramService()->notifyAboutTrackSpectrogramConfigurationChanged(m_trackId);
+    if (!m_initialTrackConfig) {
+        return;
     }
+    const auto config = spectrogramService()->trackSpectrogramConfiguration(m_trackId);
+    if (!config) {
+        return;
+    }
+    spectrogramService()->copyConfiguration(*m_initialTrackConfig, *config);
+    config->setUseGlobalSettings(m_initialTrackConfig->useGlobalSettings());
+    spectrogramService()->notifyAboutTrackSpectrogramConfigurationChanged(m_trackId);
 }
 
 void TrackSpectrogramSettingsModel::componentComplete()

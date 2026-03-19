@@ -15,11 +15,11 @@ public:
 
     void init();
 
-    double minFreq() const override;
+    double minFreq() override;
     void setMinFreq(double value) override;
     muse::async::Channel<double> minFreqChanged() const override;
 
-    double maxFreq() const override;
+    double maxFreq() override;
     void setMaxFreq(double value) override;
     muse::async::Channel<double> maxFreqChanged() const override;
 
@@ -27,39 +27,39 @@ public:
     void setSpectralSelectionEnabled(bool value) override;
     muse::async::Channel<bool> spectralSelectionEnabledChanged() const override;
 
-    SpectrogramColorScheme colorScheme() const override;
+    SpectrogramColorScheme colorScheme() override;
     void setColorScheme(SpectrogramColorScheme value) override;
     muse::async::Channel<SpectrogramColorScheme> colorSchemeChanged() const override;
 
-    int colorGainDb() const override;
+    int colorGainDb() override;
     void setColorGainDb(int value) override;
     muse::async::Channel<int> colorGainDbChanged() const override;
 
-    int colorRangeDb() const override;
+    int colorRangeDb() override;
     void setColorRangeDb(int value) override;
     muse::async::Channel<int> colorRangeDbChanged() const override;
 
-    int colorHighBoostDbPerDec() const override;
+    int colorHighBoostDbPerDec() override;
     void setColorHighBoostDbPerDec(int value) override;
     muse::async::Channel<int> colorHighBoostDbPerDecChanged() const override;
 
-    SpectrogramScale scale() const override;
+    SpectrogramScale scale() override;
     void setScale(SpectrogramScale value) override;
     muse::async::Channel<SpectrogramScale> scaleChanged() const override;
 
-    SpectrogramAlgorithm algorithm() const override;
+    SpectrogramAlgorithm algorithm() override;
     void setAlgorithm(SpectrogramAlgorithm value) override;
     muse::async::Channel<SpectrogramAlgorithm> algorithmChanged() const override;
 
-    SpectrogramWindowType windowType() const override;
+    SpectrogramWindowType windowType() override;
     void setWindowType(SpectrogramWindowType value) override;
     muse::async::Channel<SpectrogramWindowType> windowTypeChanged() const override;
 
-    int winSizeLog2() const override;
+    int winSizeLog2() override;
     void setWinSizeLog2(int value) override;
     muse::async::Channel<int> winSizeLog2Changed() const override;
 
-    int zeroPaddingFactor() const override;
+    int zeroPaddingFactor() override;
     void setZeroPaddingFactor(int value) override;
     muse::async::Channel<int> zeroPaddingFactorChanged() const override;
 

@@ -13,7 +13,7 @@ class ITrackSpectrogramConfiguration : public ISpectrogramConfiguration
 public:
     virtual ~ITrackSpectrogramConfiguration() = default;
 
-    virtual bool useGlobalSettings() const = 0;
+    virtual bool useGlobalSettings() = 0;
     virtual void setUseGlobalSettings(bool value) = 0;
 };
 

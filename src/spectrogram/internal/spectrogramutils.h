@@ -23,9 +23,9 @@ void fillWhere(
     std::vector<long long>& where, size_t len, bool addBias, double correction, double t0, double sampleRate, double stretchRatio,
     double samplesPerPixel);
 
-int fftLength(const ISpectrogramConfiguration& config);
+int fftLength(ISpectrogramConfiguration& config);
 
-std::pair<float, float> spectrogramBounds(const ISpectrogramConfiguration&, double sampleRate);
+std::pair<float, float> spectrogramBounds(ISpectrogramConfiguration&, double sampleRate);
 
-SpectrogramRulerTicks spectrogramRulerTicks(const ISpectrogramConfiguration&, double labelHeight, double rulerHeight);
+SpectrogramRulerTicks spectrogramRulerTicks(ISpectrogramConfiguration&, double labelHeight, double rulerHeight);
 }

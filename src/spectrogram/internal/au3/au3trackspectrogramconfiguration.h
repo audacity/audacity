@@ -5,6 +5,11 @@
 
 #include "itrackspectrogramconfiguration.h"
 
+#include <memory>
+
+class AudacityProject;
+class WaveTrack;
+
 namespace au::context {
 class IGlobalContext;
 }
@@ -17,46 +22,51 @@ class Au3TrackSpectrogramConfiguration final : public ITrackSpectrogramConfigura
 public:
     static std::shared_ptr<Au3TrackSpectrogramConfiguration> create(int trackId, const context::IGlobalContext& globalContext);
 
-    Au3TrackSpectrogramConfiguration(Au3SpectrogramSettings&);
+    Au3TrackSpectrogramConfiguration(int trackId, AudacityProject& project);
     ~Au3TrackSpectrogramConfiguration() override = default;
 
-    double minFreq() const override;
+    double minFreq() override;
     void setMinFreq(double value) override;
 
-    double maxFreq() const override;
+    double maxFreq() override;
     void setMaxFreq(double value) override;
 
-    int colorGainDb() const override;
+    int colorGainDb() override;
     void setColorGainDb(int value) override;
 
-    int colorRangeDb() const override;
+    int colorRangeDb() override;
     void setColorRangeDb(int value) override;
 
-    int colorHighBoostDbPerDec() const override;
+    int colorHighBoostDbPerDec() override;
     void setColorHighBoostDbPerDec(int value) override;
 
-    SpectrogramColorScheme colorScheme() const override;
+    SpectrogramColorScheme colorScheme() override;
     void setColorScheme(SpectrogramColorScheme value) override;
 
-    SpectrogramScale scale() const override;
+    SpectrogramScale scale() override;
     void setScale(SpectrogramScale value) override;
 
-    SpectrogramAlgorithm algorithm() const override;
+    SpectrogramAlgorithm algorithm() override;
     void setAlgorithm(SpectrogramAlgorithm value) override;
 
-    SpectrogramWindowType windowType() const override;
+    SpectrogramWindowType windowType() override;
     void setWindowType(SpectrogramWindowType value) override;
 
-    int winSizeLog2() const override;
+    int winSizeLog2() override;
     void setWinSizeLog2(int value) override;
 
-    int zeroPaddingFactor() const override;
+    int zeroPaddingFactor() override;
     void setZeroPaddingFactor(int value) override;
 
-    bool useGlobalSettings() const override;
+    bool useGlobalSettings() override;
     void setUseGlobalSettings(bool value) override;
 
 private:
-    Au3SpectrogramSettings& m_settings;
+    bool maybeReloadSettings();
+
+    const int m_trackId;
+    std::weak_ptr<AudacityProject> m_weakProject;
+    std::weak_ptr<WaveTrack> m_weakWaveTrack;
+    Au3SpectrogramSettings* m_settings = nullptr;
 };
 }
