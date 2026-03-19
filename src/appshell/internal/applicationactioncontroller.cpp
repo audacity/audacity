@@ -240,7 +240,7 @@ bool ApplicationActionController::quit()
 
 void ApplicationActionController::restart()
 {
-    if (projectFilesController()->closeOpenedProject()) {
+    if (projectFilesController()->closeOpenedProject(false)) {
         if (multiwindowsProvider()->windowCount() == 1) {
             application()->restart();
         } else {
@@ -325,7 +325,8 @@ void ApplicationActionController::revertToFactorySettings()
 {
     std::string title = muse::trc("appshell", "Are you sure you want to revert to factory settings?");
     std::string question = muse::trc("appshell",
-                                     "This action will reset all your app preferences and custom UI configurations. It also deletes your custom workspaces and shortcuts. "
+                                     "This action will reset all your app preferences and custom UI configurations. "
+                                     "It also deletes your custom workspaces and shortcuts. "
                                      "You will also need to scan all third party plugins again.\n\n"
                                      "This action will not delete any of your projects.");
 
@@ -344,7 +345,8 @@ void ApplicationActionController::revertToFactorySettings()
 
     static constexpr bool KEEP_DEFAULT_SETTINGS = false;
     static constexpr bool NOTIFY_ABOUT_CHANGES = false;
-    configuration()->revertToFactorySettings(KEEP_DEFAULT_SETTINGS, NOTIFY_ABOUT_CHANGES);
+    static constexpr bool NOTIFY_OTHER_INSTANCES = false;
+    configuration()->revertToFactorySettings(KEEP_DEFAULT_SETTINGS, NOTIFY_ABOUT_CHANGES, NOTIFY_OTHER_INSTANCES);
 
     restart();
 }

@@ -92,7 +92,8 @@ public:
     void rollbackSettings() override;
     muse::async::Notification settingsApplied() const override;
 
-    void revertToFactorySettings(bool keepDefaultSettings = false, bool notifyAboutChanges = true) const override;
+    void revertToFactorySettings(bool keepDefaultSettings = false, bool notifyAboutChanges = true,
+                                 bool notifyOtherInstances = true) const override;
 
     muse::io::paths_t sessionProjectsPaths() const override;
     muse::Ret setSessionProjectsPaths(const muse::io::paths_t& paths) override;
