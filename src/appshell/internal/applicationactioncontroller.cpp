@@ -333,22 +333,10 @@ void ApplicationActionController::revertToFactorySettings()
     muse::IInteractive::Result result = interactive()->warningSync(title, question,
                                                                    { interactive()->buttonData(muse::IInteractive::Button::Cancel),
                                                                      muse::IInteractive::ButtonData(revertBtn,
-                                                                                                    muse::trc("appshell", "Revert"),
+                                                                                                    muse::trc("appshell",
+                                                                                                              "Restart now to revert settings"),
                                                                                                     true) },
                                                                    revertBtn);
-
-    if (result.standardButton() == muse::IInteractive::Button::Cancel) {
-        return;
-    }
-
-    title = muse::trc("appshell", "Would you like to restart Audacity now?");
-    question = muse::trc("appshell", "Audacity needs to be restarted for these changes to take effect.");
-
-    int restartBtn = int(muse::IInteractive::Button::Apply);
-    result = interactive()->questionSync(title, question,
-                                         { interactive()->buttonData(muse::IInteractive::Button::Cancel),
-                                           muse::IInteractive::ButtonData(restartBtn, muse::trc("appshell", "Restart"), true) },
-                                         restartBtn);
 
     if (result.standardButton() == muse::IInteractive::Button::Cancel) {
         return;
