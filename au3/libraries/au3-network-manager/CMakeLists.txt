@@ -4,8 +4,6 @@ Asynchronously send and receive requests and responses over internet
 
 set(TARGET au3-network-manager)
 
-option(USE_QT_NETWORKMANAGER "Use Qt NetworkManager instead of libcurl for HTTP requests" ON)
-
 set( SOURCES
     IResponse.h
     IResponseFactory.h
@@ -44,18 +42,7 @@ PRIVATE
 
 set ( DEFINES INTERFACE "HAS_NETWORKING" PRIVATE "WIN32_LEAN_AND_MEAN" )
 
-if(USE_QT_NETWORKMANAGER)
-    set(CMAKE_AUTOMOC ON)
-
-    list(APPEND SOURCES
-        qt/Response.h
-        qt/Response.cpp
-        qt/ResponseFactory.h
-        qt/ResponseFactory.cpp
-    )
-    list(APPEND LIBRARIES PRIVATE Qt::Network)
-    list(APPEND DEFINES PRIVATE "USE_QT_NETWORKMANAGER")
-else()
+if(AU_USE_LIBCURL)
     list(APPEND SOURCES
         curl/CurlResponse.h
         curl/CurlResponse.cpp
@@ -67,6 +54,17 @@ else()
         curl/CurlHandleManager.cpp
     )
     list(APPEND LIBRARIES PRIVATE CURL::libcurl)
+else()
+    set(CMAKE_AUTOMOC ON)
+
+    list(APPEND SOURCES
+        qt/Response.h
+        qt/Response.cpp
+        qt/ResponseFactory.h
+        qt/ResponseFactory.cpp
+    )
+    list(APPEND LIBRARIES PRIVATE Qt::Network)
+    list(APPEND DEFINES PRIVATE "USE_QT_NETWORKMANAGER")
 endif()
 
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}" "${DEFINES}" "" )
