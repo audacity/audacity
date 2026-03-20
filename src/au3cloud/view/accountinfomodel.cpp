@@ -46,5 +46,5 @@ void AccountInfoModel::signOut() const
 
 void AccountInfoModel::openAuthorizationDialog() const
 {
-    interactive()->openSync("audacity://signin/audiocom");
+    authorization()->ensureAuthorization();
 }

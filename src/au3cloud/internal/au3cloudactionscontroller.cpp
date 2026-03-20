@@ -10,7 +10,6 @@ namespace {
 const char* TOUR_PAGE_URL { "https://audio.com/tour?mtm_campaign=audacitydesktop&mtm_content=app_launch_reg" };
 
 const muse::actions::ActionQuery OPEN_SIGNIN_DIALOG_ACTION("audacity://cloud/open-signin-dialog");
-const muse::Uri SIGNIN_URI("audacity://signin/audiocom");
 }
 
 Au3CloudActionsController::Au3CloudActionsController(muse::modularity::ContextPtr ctx)
@@ -30,13 +29,14 @@ bool Au3CloudActionsController::canReceiveAction(const muse::actions::ActionCode
 
 void Au3CloudActionsController::openSignInDialog(const muse::actions::ActionQuery& query)
 {
-    if (!authorization()->isAuthorized()) {
-        interactive()->openSync(SIGNIN_URI);
+    const auto ret = authorization()->ensureAuthorization();
+    if (!ret) {
+        return;
     }
 
     const bool showTourPage = query.param("showTourPage").toBool();
 
-    if (showTourPage && authorization()->isAuthorized()) {
+    if (showTourPage) {
         platformInteractive()->openUrl(TOUR_PAGE_URL);
     }
 }
