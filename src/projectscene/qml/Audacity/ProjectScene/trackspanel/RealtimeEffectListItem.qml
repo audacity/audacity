@@ -21,7 +21,7 @@ ListItemBlank {
     property NavigationPanel navigationPanel: null
     property int navigationOrder: 0
     property bool innerNavigationActive: false
-    property bool gripReorderActive: false
+    property bool innerGripReorderActive: false
     property int gripReorderTargetIndex: -1
 
     signal gripReorderCommitted(int targetIndex, bool focusGripHandle)
@@ -108,7 +108,7 @@ ListItemBlank {
         }
 
         root.innerNavigationActive = false
-        root.gripReorderActive = false
+        root.innerGripReorderActive = false
         root.navigation.requestActive()
     }
 
@@ -243,11 +243,11 @@ ListItemBlank {
             backgroundRadius: 2
 
             visible: true
-            transparent: !root.gripReorderActive
+            transparent: !root.innerGripReorderActive
             hoverHitColor: normalColor
-            accentButton: root.gripReorderActive
+            accentButton: root.innerGripReorderActive
             accentColor: ui.theme.accentColor
-            iconColor: root.gripReorderActive ? ui.theme.extra["white_color"] : ui.theme.fontPrimaryColor
+            iconColor: root.innerGripReorderActive ? ui.theme.extra["white_color"] : ui.theme.fontPrimaryColor
             mouseArea.cursorShape: Qt.SizeAllCursor
             navigation.panel: root.innerNavigationPanel
             navigation.order: 0
@@ -385,7 +385,7 @@ ListItemBlank {
             if (root.navigation.active) {
                 root.clearReorderPreview()
                 root.innerNavigationActive = false
-                root.gripReorderActive = false
+                root.innerGripReorderActive = false
             }
         }
     }
@@ -396,11 +396,11 @@ ListItemBlank {
         function onActiveChanged() {
             if (!gripButton.navigation.active) {
                 Qt.callLater(function() {
-                    if (root.gripReorderActive || root.gripReorderTargetIndex >= 0) {
+                    if (root.innerGripReorderActive || root.gripReorderTargetIndex >= 0) {
                         root.commitGripReorder(true)
                     }
 
-                    root.gripReorderActive = false
+                    root.innerGripReorderActive = false
                 })
             }
         }
@@ -408,32 +408,32 @@ ListItemBlank {
         function onNavigationEvent(event) {
             switch (event.type) {
             case NavigationEvent.Trigger:
-                if (root.gripReorderActive) {
-                    root.gripReorderActive = false
+                if (root.innerGripReorderActive) {
+                    root.innerGripReorderActive = false
                     root.commitGripReorder(true)
                 } else {
-                    root.gripReorderActive = true
+                    root.innerGripReorderActive = true
                     root.gripReorderTargetIndex = root.index
                 }
                 event.accepted = true
                 break
             case NavigationEvent.Up:
-                if (!root.gripReorderActive) {
+                if (!root.innerGripReorderActive) {
                     return
                 }
                 root.previewGripReorder((root.gripReorderTargetIndex >= 0 ? root.gripReorderTargetIndex : root.index) - 1)
                 event.accepted = true
                 break
             case NavigationEvent.Down:
-                if (!root.gripReorderActive) {
+                if (!root.innerGripReorderActive) {
                     return
                 }
                 root.previewGripReorder((root.gripReorderTargetIndex >= 0 ? root.gripReorderTargetIndex : root.index) + 1)
                 event.accepted = true
                 break
             case NavigationEvent.Escape:
-                if (root.gripReorderActive) {
-                    root.gripReorderActive = false
+                if (root.innerGripReorderActive) {
+                    root.innerGripReorderActive = false
                     root.commitGripReorder(true)
                     event.accepted = true
                     return

@@ -116,7 +116,7 @@ Item {
             property NavigationPanel navigation: NavigationPanel {
                 name: "AddTrackPanel"
                 enabled: root.enabled && root.visible
-                order: effectsTitleBar.navigation.order + 1
+                order: closeEffectsSectionButton.navigation.order + 1
 
                 accessible.name: qsTrc("projectscene", "Add track")
             }
