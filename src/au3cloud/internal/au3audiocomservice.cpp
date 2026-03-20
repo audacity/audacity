@@ -363,7 +363,6 @@ muse::ProgressPtr Au3AudioComService::uploadProject(au::project::IAudacityProjec
         auto result = future.get();
 
         if (!result.Response) {
-            progress->finish(make_ret(Err::SnapshotFailed));
             return;
         }
 

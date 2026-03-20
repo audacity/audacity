@@ -415,7 +415,7 @@ void Response::onFinished()
             }
         }
 
-        if (mHttpCode >= 400 && mNetworkError == NetworkError::NoError) {
+        if (mHttpCode >= 400 && (mNetworkError == NetworkError::NoError || mNetworkError == NetworkError::UnknownError)) {
             mNetworkError = NetworkError::HTTPError;
         }
 
