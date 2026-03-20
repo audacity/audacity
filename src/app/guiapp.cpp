@@ -10,6 +10,7 @@
 #include <QQuickWindow>
 #include <QQmlContext>
 #include <QStyleHints>
+#include <QProcess>
 #include <memory>
 #ifndef Q_OS_WASM
 #include <QThreadPool>

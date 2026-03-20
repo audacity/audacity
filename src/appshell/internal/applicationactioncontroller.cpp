@@ -331,24 +331,52 @@ void ApplicationActionController::revertToFactorySettings()
                                      "This action will not delete any of your projects.");
 
     int revertBtn = int(muse::IInteractive::Button::Apply);
-    muse::IInteractive::Result result = interactive()->warningSync(title, question,
-                                                                   { interactive()->buttonData(muse::IInteractive::Button::Cancel),
-                                                                     muse::IInteractive::ButtonData(revertBtn,
-                                                                                                    muse::trc("appshell",
-                                                                                                              "Restart now to revert settings"),
-                                                                                                    true) },
-                                                                   revertBtn);
+    auto promise = interactive()->warning(title, question,
+                                          { interactive()->buttonData(muse::IInteractive::Button::Cancel),
+                                            muse::IInteractive::ButtonData(revertBtn,
+                                                                           muse::trc("appshell",
+                                                                                     "Restart now to revert settings"),
+                                                                           true) },
+                                          revertBtn);
 
-    if (result.standardButton() == muse::IInteractive::Button::Cancel) {
+    promise.onResolve(this, [this](const muse::IInteractive::Result& res) {
+        if (res.isButton(muse::IInteractive::Button::Cancel)) {
+            return;
+        }
+
+        //! NOTE Close current project first (save dialog — user can cancel).
+        if (!projectFilesController()->closeOpenedProject()) {
+            return;
+        }
+
+        //! NOTE Don't call settings()->reset() here — the data directory is shared
+        //! by all open windows/processes. Deleting it now causes file handle errors.
+        //! Instead, set a mode and let GuiApp::finish() restart with the -F flag.
+        //! The new process does the actual reset on startup via applyCommandLineOptions().
+        configuration()->setFactoryResetMode(FactoryResetMode::Full);
+
+        if (multiwindowsProvider()->windowCount() <= 1) {
+            //! Single window — restart immediately
+            application()->restart();
+        } else {
+            //! Multi-window — tell other windows to quit (they'll show save dialogs),
+            //! then wait for all to close before restarting.
+            multiwindowsProvider()->quitForAll();
+            waitForOtherWindowsToCloseAndRestart();
+        }
+    });
+}
+
+void ApplicationActionController::waitForOtherWindowsToCloseAndRestart()
+{
+    if (multiwindowsProvider()->windowCount() <= 1) {
+        application()->restart();
         return;
     }
 
-    static constexpr bool KEEP_DEFAULT_SETTINGS = false;
-    static constexpr bool NOTIFY_ABOUT_CHANGES = false;
-    static constexpr bool NOTIFY_OTHER_INSTANCES = false;
-    configuration()->revertToFactorySettings(KEEP_DEFAULT_SETTINGS, NOTIFY_ABOUT_CHANGES, NOTIFY_OTHER_INSTANCES);
-
-    restart();
+    QTimer::singleShot(200, this, [this]() {
+        waitForOtherWindowsToCloseAndRestart();
+    });
 }
 
 bool ApplicationActionController::isProjectOpened() const
