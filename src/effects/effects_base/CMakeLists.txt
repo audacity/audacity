@@ -27,6 +27,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/ieffectparametersprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/iparameterextractorregistry.h
     ${CMAKE_CURRENT_LIST_DIR}/ipresetstatesregister.h
+    ${CMAKE_CURRENT_LIST_DIR}/ipluginmanager.h
     # interfaces for optional services
     ${CMAKE_CURRENT_LIST_DIR}/iparameterextractorservice.h
 
@@ -69,6 +70,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectviewlaunchregister.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectparametersprovider.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectparametersprovider.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/pluginmanageradapter.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/pluginmanageradapter.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/parameterextractorregistry.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/parameterextractorregistry.h
 

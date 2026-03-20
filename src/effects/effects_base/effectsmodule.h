@@ -7,6 +7,7 @@
 #include "modularity/imodulesetup.h"
 
 namespace au::effects {
+class PluginManagerAdapter;
 class EffectsProvider;
 class EffectsMenuProvider;
 class EffectsConfiguration;
@@ -24,10 +25,12 @@ public:
     void registerUiTypes() override;
     void onInit(const muse::IApplication::RunMode& mode) override;
     void onDelayedInit() override;
+    void onDeinit() override;
 
     muse::modularity::IContextSetup* newContext(const muse::modularity::ContextPtr& ctx) const override;
 
 private:
+    std::shared_ptr<PluginManagerAdapter> m_pluginManager;
     std::shared_ptr<EffectsConfiguration> m_configuration;
 };
 

@@ -3,12 +3,13 @@
 */
 #include "effectsmodule.h"
 
-#include "au3-module-manager/PluginManager.h"
 #include "au3-files/FileNames.h"
 
 #include "framework/interactive/iinteractiveuriregister.h"
 #include "framework/diagnostics/idiagnosticspathsregister.h"
 
+#include "ipluginmanager.h"
+#include "internal/pluginmanageradapter.h"
 #include "internal/effectconfigsettings.h"
 #include "internal/effectsprovider.h"
 #include "internal/effectsmenuprovider.h"
@@ -47,8 +48,10 @@ std::string EffectsModule::moduleName() const
 
 void EffectsModule::registerExports()
 {
+    m_pluginManager = std::make_shared<PluginManagerAdapter>();
     m_configuration = std::make_shared<EffectsConfiguration>();
 
+    globalIoc()->registerExport<IPluginManager>(mname, m_pluginManager);
     globalIoc()->registerExport<IEffectsConfiguration>(mname, m_configuration);
     globalIoc()->registerExport<IParameterExtractorRegistry>(mname, new ParameterExtractorRegistry());
 }
@@ -80,9 +83,7 @@ void EffectsModule::registerUiTypes()
 
 void EffectsModule::onInit(const muse::IApplication::RunMode&)
 {
-    PluginManager::Get().Initialize([](const FilePath& localFileName) {
-        return std::make_unique<au3::EffectConfigSettings>(localFileName.ToStdString());
-    });
+    m_pluginManager->initialize();
 
     m_configuration->init();
 
@@ -95,6 +96,11 @@ void EffectsModule::onInit(const muse::IApplication::RunMode&)
 
 void EffectsModule::onDelayedInit()
 {
+}
+
+void EffectsModule::onDeinit()
+{
+    m_pluginManager->terminate();
 }
 
 muse::modularity::IContextSetup* EffectsModule::newContext(const muse::modularity::ContextPtr& ctx) const

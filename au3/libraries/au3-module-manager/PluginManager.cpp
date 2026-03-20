@@ -21,6 +21,7 @@ for shared and private configs - which need to move out.
 #include "PluginManager.h"
 
 #include <algorithm>
+#include <cassert>
 
 #include <wx/log.h>
 #include <wx/tokenzr.h>
@@ -317,7 +318,7 @@ bool PluginManager::RemoveConfig(ConfigurationType type, const PluginID& ID,
 // ============================================================================
 
 // The one and only PluginManager
-std::unique_ptr<PluginManager> PluginManager::mInstance{};
+PluginManager* PluginManager::mInstance = nullptr;
 
 // ----------------------------------------------------------------------------
 // Creation/Destruction
@@ -374,11 +375,13 @@ static PluginManager::ConfigFactory sFactory;
 
 PluginManager& PluginManager::Get()
 {
-    if (!mInstance) {
-        mInstance.reset(safenew PluginManager);
-    }
-
+    assert(mInstance);
     return *mInstance;
+}
+
+void PluginManager::SetInstance(PluginManager* pm)
+{
+    mInstance = pm;
 }
 
 void PluginManager::Initialize(ConfigFactory factory)
@@ -415,6 +418,8 @@ void PluginManager::Terminate()
     // Now get rid of others
     mRegisteredPlugins.clear();
     mLoadedInterfaces.clear();
+
+    sFactory = {};
 }
 
 bool PluginManager::DropFile(const wxString& fileName)

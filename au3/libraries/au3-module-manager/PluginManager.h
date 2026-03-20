@@ -183,10 +183,13 @@ public:
     PluginPaths ReadCustomPaths(const PluginProvider& provider) override;
     void StoreCustomPaths(const PluginProvider& provider, const PluginPaths& paths) override;
 
-private:
-    // private! Use Get()
+public:
     PluginManager();
     ~PluginManager();
+
+    static void SetInstance(PluginManager* pm);
+
+private:
 
     void InitializePlugins();
 
@@ -214,8 +217,7 @@ private:
     wxString ConvertID(const PluginID& ID);
 
 private:
-    friend std::default_delete<PluginManager>;
-    static std::unique_ptr<PluginManager> mInstance;
+    static PluginManager* mInstance;
 
     bool IsDirty();
     void SetDirty(bool dirty = true);
