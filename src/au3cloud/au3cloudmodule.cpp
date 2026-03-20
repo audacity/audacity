@@ -9,7 +9,6 @@
 #include "internal/au3cloudservice.h"
 #include "internal/au3audiocomservice.h"
 #include "internal/au3cloudactionscontroller.h"
-#include "internal/au3cloudprojectfileioextension.h"
 
 #include "view/accountinfomodel.h"
 #include "dev/cloudtestsmodel.h"
@@ -47,8 +46,6 @@ void Au3CloudContext::registerExports()
     m_cloudService = std::make_shared<Au3CloudService>(iocContext());
     m_audioComService = std::make_shared<Au3AudioComService>(iocContext());
     m_actionsController = std::make_shared<Au3CloudActionsController>(iocContext());
-    m_fileIOExtension = std::make_shared<CloudProjectFileIOExtension>(iocContext());
-    m_fileIOExtensionRegistration = std::make_unique<ProjectFileIOExtensionRegistry::Extension>(*m_fileIOExtension);
 
     ioc()->registerExport<au3cloud::IAuthorization>(mname, m_cloudService);
     ioc()->registerExport<au3cloud::IUsageInfo>(mname, m_cloudService);

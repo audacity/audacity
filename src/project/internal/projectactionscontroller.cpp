@@ -120,37 +120,6 @@ void ProjectActionsController::init()
     dispatcher()->reg(this, OPEN_CUSTOM_FFMPEG_OPTIONS, this, &ProjectActionsController::openCustomFFmpegOptions);
     dispatcher()->reg(this, OPEN_METADATA_DIALOG, this, &ProjectActionsController::openMetadataDialog);
     dispatcher()->reg(this, OPEN_CUSTOM_MAPPING, this, &ProjectActionsController::openCustomMapping);
-
-    audioComService()->cloudProjectNeedsSync().onNotify(this, [this]() {
-        auto project = globalContext()->currentProject();
-        if (!project) {
-            return;
-        }
-
-        if (!authorization()->ensureAuthorization()) {
-            return;
-        }
-
-        auto progress = audioComService()->resumeProjectSync(project);
-
-        progress->finished().onReceive(this, [this](const ProgressResult& result) {
-            if (!result.ret.success()) {
-                toastService()->showError(cloudErrorTitle(result.ret), result.ret.text());
-            }
-        });
-
-        const bool dismissible = false;
-        const bool showProgressInfo = true;
-        toastService()->showWithProgress(
-            trc("project", "Resuming sync to audio.com…"),
-            {},
-            progress,
-            muse::ui::IconCode::Code::CLOUD,
-            dismissible,
-            {},
-            showProgressInfo
-            );
-    });
 }
 
 const muse::actions::ActionCodeList& ProjectActionsController::prohibitedActionsWhileRecording() const
@@ -861,7 +830,37 @@ Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, cons
             LOGE() << result.ret.toString();
             return;
         }
+
         doOpenProject(localPath);
+
+        auto project = globalContext()->currentProject();
+        if (!project) {
+            return;
+        }
+
+        if (!authorization()->ensureAuthorization()) {
+            return;
+        }
+
+        auto progress = audioComService()->resumeProjectSync(project);
+
+        progress->finished().onReceive(this, [this](const ProgressResult& result) {
+            if (!result.ret.success()) {
+                toastService()->showError(cloudErrorTitle(result.ret), result.ret.text());
+            }
+        });
+
+        const bool dismissible = false;
+        const bool showProgressInfo = true;
+        toastService()->showWithProgress(
+            trc("project", "Resuming sync to audio.com…"),
+            {},
+            progress,
+            muse::ui::IconCode::Code::CLOUD,
+            dismissible,
+            {},
+            showProgressInfo
+            );
     });
 
     interactive()->showProgress(trc("project", "Syncing project from cloud..."), *progress);

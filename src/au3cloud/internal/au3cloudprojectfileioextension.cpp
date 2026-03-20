@@ -8,11 +8,6 @@
 
 using namespace au::au3cloud;
 
-CloudProjectFileIOExtension::CloudProjectFileIOExtension(muse::modularity::ContextPtr ctx)
-    : muse::Injectable(ctx)
-{
-}
-
 OnOpenAction CloudProjectFileIOExtension::OnOpen(AudacityProject&, const std::string&)
 {
     return OnOpenAction::Continue;
@@ -24,10 +19,6 @@ void CloudProjectFileIOExtension::OnLoad(AudacityProject& project)
         = audacity::cloud::audiocom::sync::ProjectCloudExtension::Get(project);
 
     projectCloudExtension.OnLoad();
-
-    if (projectCloudExtension.IsCloudProject()) {
-        audioComService()->notifyCloudProjectLoaded();
-    }
 }
 
 OnSaveAction CloudProjectFileIOExtension::OnSave(AudacityProject&, const ProjectSaveCallback&)
@@ -54,3 +45,11 @@ bool CloudProjectFileIOExtension::IsBlockLocked(const AudacityProject& project, 
 {
     return audacity::cloud::audiocom::sync::ProjectCloudExtension::Get(project).IsBlockLocked(blockId);
 }
+
+CloudProjectFileIOExtension& GetExtension()
+{
+    static CloudProjectFileIOExtension extension;
+    return extension;
+}
+
+ProjectFileIOExtensionRegistry::Extension extension { GetExtension() };

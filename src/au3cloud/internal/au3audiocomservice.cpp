@@ -391,16 +391,6 @@ muse::ProgressPtr Au3AudioComService::uploadProject(au::project::IAudacityProjec
     return progress;
 }
 
-void Au3AudioComService::notifyCloudProjectLoaded()
-{
-    m_cloudProjectNeedsSyncNotification.notify();
-}
-
-muse::async::Notification Au3AudioComService::cloudProjectNeedsSync() const
-{
-    return m_cloudProjectNeedsSyncNotification;
-}
-
 muse::ProgressPtr Au3AudioComService::resumeProjectSync(au::project::IAudacityProjectPtr project)
 {
     au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());

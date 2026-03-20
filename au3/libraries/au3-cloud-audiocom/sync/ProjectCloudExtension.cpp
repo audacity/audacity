@@ -559,6 +559,10 @@ void ProjectCloudExtension::Publish(
         BasicUI::CallAfter(
             [this]
         {
+            if (!mUIStateNotifier) {
+                return;
+            }
+
             if (mUINotificationPending.exchange(false)) {
                 mUIStateNotifier->PublishSafe();
             }
