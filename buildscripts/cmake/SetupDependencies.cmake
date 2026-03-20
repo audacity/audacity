@@ -83,7 +83,9 @@ if (NOT OS_IS_WIN)
     populate(openssl "openssl/1.1.1t")
 endif()
 
-populate(libcurl "libcurl/8.17.0")
+if (AU_USE_LIBCURL)
+    populate(libcurl "libcurl/8.17.0")
+endif()
 
 if (NOT OS_IS_LIN)
     populate(zlib "zlib/1.2.13")

@@ -147,6 +147,9 @@ endif()
 option(AU_USE_SBSMS "Build with SBSMS support for time-stretching effects" ON)
 option(AU_USE_SOUNDTOUCH "Build with SoundTouch support for pitch/tempo effects" ON)
 
+# Networking
+option(AU_USE_LIBCURL "Use libcurl for HTTP requests" OFF)
+
 # === Setup ===
 
 # === Pack ===
