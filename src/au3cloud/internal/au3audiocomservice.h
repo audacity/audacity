@@ -10,6 +10,7 @@
 
 #include "framework/global/async/asyncable.h"
 #include "framework/global/async/promise.h"
+#include "framework/global/async/notification.h"
 
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/io/ifilesystem.h"
@@ -48,6 +49,10 @@ public:
 
     muse::ProgressPtr openCloudProject(const muse::io::path_t& localPath, const std::string& projectId = {}) override;
 
+    void notifyCloudProjectLoaded() override;
+    muse::async::Notification cloudProjectNeedsSync() const override;
+    muse::ProgressPtr resumeProjectSync(au::project::IAudacityProjectPtr project) override;
+
 private:
     std::string getCloudProjectPage(au::project::IAudacityProjectPtr project);
 
@@ -72,5 +77,8 @@ private:
     std::mutex m_cacheMutex;
 
     Observer::Subscription m_projectUploadSubscription;
+    Observer::Subscription m_resumeSyncSubscription;
+
+    muse::async::Notification m_cloudProjectNeedsSyncNotification;
 };
 }

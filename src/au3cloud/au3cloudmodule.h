@@ -5,10 +5,13 @@
 
 #include "modularity/imodulesetup.h"
 
+#include "au3-project-file-io/ProjectFileIOExtension.h"
+
 namespace au::au3cloud {
 class Au3CloudService;
 class Au3AudioComService;
 class Au3CloudActionsController;
+class CloudProjectFileIOExtension;
 
 class Au3CloudModule : public muse::modularity::IModuleSetup
 {
@@ -36,5 +39,7 @@ private:
     std::shared_ptr<Au3CloudService> m_cloudService;
     std::shared_ptr<Au3AudioComService> m_audioComService;
     std::shared_ptr<Au3CloudActionsController> m_actionsController;
+    std::shared_ptr<CloudProjectFileIOExtension> m_fileIOExtension;
+    std::unique_ptr<ProjectFileIOExtensionRegistry::Extension> m_fileIOExtensionRegistration;
 };
 }

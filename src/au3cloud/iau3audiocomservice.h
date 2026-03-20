@@ -9,6 +9,7 @@
 
 #include "framework/global/modularity/imoduleinterface.h"
 #include "framework/global/async/promise.h"
+#include "framework/global/async/notification.h"
 #include "framework/global/progress.h"
 
 #include "project/iaudacityproject.h"
@@ -45,5 +46,9 @@ public:
     virtual muse::ProgressPtr shareAudio(const std::string& title) = 0;
 
     virtual muse::ProgressPtr openCloudProject(const muse::io::path_t& localPath, const std::string& projectId = {}) = 0;
+    virtual muse::ProgressPtr resumeProjectSync(au::project::IAudacityProjectPtr project) = 0;
+
+    virtual void notifyCloudProjectLoaded() = 0;
+    virtual muse::async::Notification cloudProjectNeedsSync() const = 0;
 };
 }

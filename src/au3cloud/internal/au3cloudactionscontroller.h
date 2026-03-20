@@ -11,6 +11,7 @@
 #include "framework/interactive/iinteractive.h"
 #include "framework/interactive/iplatforminteractive.h"
 #include "au3cloud/iauthorization.h"
+#include "au3cloud/iau3audiocomservice.h"
 
 namespace au::au3cloud {
 class Au3CloudActionsController : public muse::actions::Actionable, public muse::Contextable
@@ -20,6 +21,7 @@ class Au3CloudActionsController : public muse::actions::Actionable, public muse:
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::Inject<muse::IInteractive> interactive { this };
     muse::Inject<IAuthorization> authorization { this };
+    muse::Inject<IAu3AudioComService> audioComService { this };
 
 public:
     Au3CloudActionsController(muse::modularity::ContextPtr ctx = nullptr);
