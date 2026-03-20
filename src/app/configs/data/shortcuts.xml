@@ -118,7 +118,7 @@
     <SC>
       <key>action://cancel</key>
       <seq>Esc</seq>
-    </SC>  
+    </SC>
     <SC>
       <key>action://trigger</key>
       <seq>Space</seq>
@@ -1146,6 +1146,14 @@
     </SC>
     <SC>
         <key>pitch-down</key>
+        <seq>Alt+Down</seq>
+    </SC>
+    <SC>
+        <key>realtime-effect-move-up</key>
+        <seq>Alt+Up</seq>
+    </SC>
+    <SC>
+        <key>realtime-effect-move-down</key>
         <seq>Alt+Down</seq>
     </SC>
     <SC>

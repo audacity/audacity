@@ -213,6 +213,18 @@ static UiActionList STATIC_ACTIONS = {
              au::context::CTX_PROJECT_OPENED,
              TranslatableString("action", "Show label editor"),
              TranslatableString("action", "Show label editor")
+             ),
+    UiAction("realtime-effect-move-up",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Move realtime effect up"),
+             TranslatableString("action", "Move realtime effect up")
+             ),
+    UiAction("realtime-effect-move-down",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Move realtime effect down"),
+             TranslatableString("action", "Move realtime effect down")
              )
 };
 

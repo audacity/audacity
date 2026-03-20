@@ -65,30 +65,31 @@ ListItemBlank {
     navigation.order: root.navigationOrder
     focusBorder.drawOutsideParent: true
 
-    Keys.onPressed: function(event) {
-        const isAltReorder = (event.modifiers & Qt.AltModifier) !== 0
-        if (!root.navigation.active || root.innerNavigationActive || !isAltReorder) {
+    RealtimeEffectRowActionsController {
+        id: rowActionsController
+
+        enabled: root.navigation.active && !root.innerNavigationActive
+
+        Component.onCompleted: init()
+
+        onMoveUpRequested: {
+            root.handleOuterReorder(-1)
+        }
+
+        onMoveDownRequested: {
+            root.handleOuterReorder(1)
+        }
+    }
+
+    function handleOuterReorder(step) {
+        if (!root.navigation.active || root.innerNavigationActive) {
             return
         }
 
         const previewBaseIndex = root.gripReorderTargetIndex >= 0 ? root.gripReorderTargetIndex : root.index
-
-        switch (event.key) {
-        case Qt.Key_Up:
-            yAnimation.stop()
-            root.previewGripReorder(previewBaseIndex - 1)
-            delayedOuterReorderCommitTimer.restart()
-            event.accepted = true
-            break
-        case Qt.Key_Down:
-            yAnimation.stop()
-            root.previewGripReorder(previewBaseIndex + 1)
-            delayedOuterReorderCommitTimer.restart()
-            event.accepted = true
-            break
-        default:
-            break
-        }
+        yAnimation.stop()
+        root.previewGripReorder(previewBaseIndex + step)
+        delayedOuterReorderCommitTimer.restart()
     }
 
     function activateInnerNavigation() {
