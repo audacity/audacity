@@ -162,6 +162,13 @@ static UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Rename clip"),
              Checkable::Yes
              ),
+    UiAction("action://delete",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Delete clip"),
+             TranslatableString("action", "Delete clip"),
+             Checkable::Yes
+             ),
     UiAction("action://trackedit/clip/change-color-auto",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
