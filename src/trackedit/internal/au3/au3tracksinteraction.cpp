@@ -293,15 +293,19 @@ muse::Ret Au3TracksInteraction::pasteClips(const std::vector<Au3TrackDataPtr>& c
         const auto trackToPaste = std::static_pointer_cast<Au3WaveTrack>(copiedData.at(i)->track());
 
         if (dstWaveTrack->IsEmpty()) {
+            bool trackChanged = false;
             // For empty tracks, adopt the sample rate from the imported audio
             if (dstWaveTrack->GetRate() != trackToPaste->GetRate()) {
                 dstWaveTrack->SetRate(trackToPaste->GetRate());
-                prj->trackChanged().send(DomConverter::track(dstWaveTrack));
+                trackChanged = true;
             }
             // Handle channel mismatch
             if (trackToPaste->NChannels() != dstWaveTrack->NChannels()) {
                 auto& trackList = au3::Au3TrackList::Get(projectRef());
                 dstWaveTrack = utils::toggleStereo(trackList, *dstWaveTrack);
+                trackChanged = true;
+            }
+            if (trackChanged) {
                 prj->trackChanged().send(DomConverter::track(dstWaveTrack));
             }
         } else if (trackToPaste->NChannels() == 1 && dstWaveTrack->NChannels() == 2) {
