@@ -7,13 +7,18 @@
 #include "ispectrogramservice.h"
 
 #include "framework/global/modularity/ioc.h"
+#include "framework/global/async/asyncable.h"
+
+#include <QQmlParserStatus>
 
 namespace au::spectrogram {
 class AbstractSpectrogramSettingsModel;
 
-class ScaleSectionParameterListModel : public AbstractSectionParametersListModel, muse::Injectable
+class ScaleSectionParameterListModel : public AbstractSectionParametersListModel, public QQmlParserStatus, public muse::Injectable,
+    public muse::async::Asyncable
 {
     Q_OBJECT
+    Q_INTERFACES(QQmlParserStatus)
 
 protected:
     muse::Inject<ISpectrogramService> spectrogramService{ this };
@@ -44,8 +49,12 @@ private:
 
     void onSettingsModelSet(AbstractSpectrogramSettingsModel& model) override;
 
+    void classBegin() override {}
+    void componentComplete() override;
+
     enum Roles {
         ControlLabelRole = Qt::UserRole + 1,
+        ShortControlLabelRole,
         ControlUnitsRole,
         ControlMinValueRole,
         ControlMaxValueRole,
@@ -53,6 +62,7 @@ private:
     };
 
     QString controlLabel(Control) const;
+    QString shortControlLabel(Control) const;
     int controlMinValue(Control) const;
     int controlMaxValue(Control) const;
     int controlCurrentValue(Control) const;

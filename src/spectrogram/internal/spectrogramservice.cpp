@@ -34,7 +34,7 @@ void SpectrogramService::notifyAboutTrackSpectrogramConfigurationChanged(int tra
     m_trackSpectrogramConfigurationChanged.send(trackId);
 }
 
-void SpectrogramService::copyConfiguration(const ISpectrogramConfiguration& source,
+void SpectrogramService::copyConfiguration(ISpectrogramConfiguration& source,
                                            ISpectrogramConfiguration& destination) const
 {
     destination.setMinFreq(source.minFreq());

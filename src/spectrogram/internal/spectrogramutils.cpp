@@ -85,12 +85,12 @@ void au::spectrogram::fillWhere(
     }
 }
 
-int au::spectrogram::fftLength(const ISpectrogramConfiguration& config)
+int au::spectrogram::fftLength(ISpectrogramConfiguration& config)
 {
     return (1 << config.winSizeLog2()) * ((config.algorithm() != SpectrogramAlgorithm::Pitch) ? config.zeroPaddingFactor() : 1);
 }
 
-std::pair<float, float> au::spectrogram::spectrogramBounds(const ISpectrogramConfiguration& config, double sampleRate)
+std::pair<float, float> au::spectrogram::spectrogramBounds(ISpectrogramConfiguration& config, double sampleRate)
 {
     const auto type = config.scale();
 
@@ -171,7 +171,7 @@ std::vector<SpectrogramRulerTick> toTicks(const std::vector<double>& values, con
     return ticks;
 }
 
-std::vector<SpectrogramRulerTick> getTicks(const ISpectrogramConfiguration& config, const NumberScale& numberScale, double reservedHeight,
+std::vector<SpectrogramRulerTick> getTicks(ISpectrogramConfiguration& config, const NumberScale& numberScale, double reservedHeight,
                                            double rulerHeight, double step)
 {
     const std::vector<double> values = getTicksValues(config.maxFreq(), config.minFreq(), step, config.scale());
@@ -179,7 +179,7 @@ std::vector<SpectrogramRulerTick> getTicks(const ISpectrogramConfiguration& conf
 }
 }
 
-au::spectrogram::SpectrogramRulerTicks au::spectrogram::spectrogramRulerTicks(const ISpectrogramConfiguration& config, double labelHeight,
+au::spectrogram::SpectrogramRulerTicks au::spectrogram::spectrogramRulerTicks(ISpectrogramConfiguration& config, double labelHeight,
                                                                               double rulerHeight)
 {
     const auto range = config.maxFreq() - config.minFreq();

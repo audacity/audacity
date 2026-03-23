@@ -8,7 +8,7 @@ import QtQuick.Controls 2.15
 import Muse.UiComponents
 import Muse.Ui 1.0
 
-import Audacity.Playback 1.0
+import Audacity.UiComponents 1.0
 
 StyledPopupView {
     id: root
@@ -22,13 +22,13 @@ StyledPopupView {
     required property bool isHalfWave
 
     signal rulerTypeChangeRequested(int newType)
-    signal zoomInRequested()
-    signal zoomOutRequested()
-    signal zoomResetRequested()
-    signal toggleHalfWaveRequested()
+    signal zoomInRequested
+    signal zoomOutRequested
+    signal zoomResetRequested
+    signal toggleHalfWaveRequested
 
-    contentWidth: uiModel.popupWidth - 2*uiModel.popupMargins
-    contentHeight: uiModel.popupHeight - 2*uiModel.popupMargins
+    contentWidth: uiModel.popupWidth - 2 * uiModel.popupMargins
+    contentHeight: uiModel.popupHeight - 2 * uiModel.popupMargins
 
     margins: uiModel.popupMargins
 
@@ -122,13 +122,11 @@ StyledPopupView {
 
             titleSpacing: 4
 
-            backgroundColor: ui.theme.backgroundSecondaryColor
-
             value: root.rulerType
 
             model: root.availableRulerTypes
 
-            onValueChangeRequested: function(value) {
+            onValueChangeRequested: function (value) {
                 root.rulerTypeChangeRequested(value)
             }
         }
@@ -145,5 +143,4 @@ StyledPopupView {
             }
         }
     }
-
 }

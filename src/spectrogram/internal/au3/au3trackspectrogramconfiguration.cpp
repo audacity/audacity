@@ -11,6 +11,8 @@
 
 #include "framework/global/log.h"
 
+#include "au3-project/Project.h"
+
 namespace au::spectrogram {
 std::shared_ptr<Au3TrackSpectrogramConfiguration> Au3TrackSpectrogramConfiguration::create(int trackId,
                                                                                            const context::IGlobalContext& context)
@@ -20,163 +22,249 @@ std::shared_ptr<Au3TrackSpectrogramConfiguration> Au3TrackSpectrogramConfigurati
         return nullptr;
     }
     auto au3Project = reinterpret_cast<au3::Au3Project*>(project->au3ProjectPtr());
-    au3::Au3WaveTrack* waveTrack = au3::DomAccessor::findWaveTrack(*au3Project, au3::Au3TrackId { trackId });
-    if (!waveTrack) {
-        // TODO find out why this happens sometimes
-        return nullptr;
-    }
-    return std::make_shared<Au3TrackSpectrogramConfiguration>(Au3SpectrogramSettings::Get(*waveTrack));
+    return std::make_shared<Au3TrackSpectrogramConfiguration>(trackId, *au3Project);
 }
 
-Au3TrackSpectrogramConfiguration::Au3TrackSpectrogramConfiguration(Au3SpectrogramSettings& settings)
-    : m_settings(settings)
-{}
-
-double Au3TrackSpectrogramConfiguration::minFreq() const
+Au3TrackSpectrogramConfiguration::Au3TrackSpectrogramConfiguration(int trackId, AudacityProject& project)
+    : m_trackId(trackId), m_weakProject(project.shared_from_this())
 {
-    return m_settings.minFreq;
+    maybeReloadSettings();
+}
+
+bool Au3TrackSpectrogramConfiguration::maybeReloadSettings()
+{
+    if (!m_weakWaveTrack.expired()) {
+        return true;
+    }
+    const auto project = m_weakProject.lock();
+    IF_ASSERT_FAILED(project) {
+        return false;
+    }
+    au3::Au3WaveTrack* waveTrack = au3::DomAccessor::findWaveTrack(*project, au3::Au3TrackId { m_trackId });
+    if (!waveTrack) {
+        return false;
+    }
+    m_settings = &Au3SpectrogramSettings::Get(*waveTrack);
+    return true;
+}
+
+double Au3TrackSpectrogramConfiguration::minFreq()
+{
+    if (!maybeReloadSettings()) {
+        return 0.0;
+    }
+    return m_settings->minFreq;
 }
 
 void Au3TrackSpectrogramConfiguration::setMinFreq(double value)
 {
-    m_settings.minFreq = value;
+    if (!maybeReloadSettings()) {
+        return;
+    }
+    m_settings->minFreq = value;
 }
 
-double Au3TrackSpectrogramConfiguration::maxFreq() const
+double Au3TrackSpectrogramConfiguration::maxFreq()
 {
-    return m_settings.maxFreq;
+    if (!maybeReloadSettings()) {
+        return 0.0;
+    }
+    return m_settings->maxFreq;
 }
 
 void Au3TrackSpectrogramConfiguration::setMaxFreq(double value)
 {
-    m_settings.maxFreq = value;
+    if (!maybeReloadSettings()) {
+        return;
+    }
+    m_settings->maxFreq = value;
 }
 
-int Au3TrackSpectrogramConfiguration::colorGainDb() const
+int Au3TrackSpectrogramConfiguration::colorGainDb()
 {
-    return m_settings.gain;
+    if (!maybeReloadSettings()) {
+        return 0;
+    }
+    return m_settings->gain;
 }
 
 void Au3TrackSpectrogramConfiguration::setColorGainDb(int value)
 {
-    if (m_settings.gain == value) {
+    if (!maybeReloadSettings()) {
         return;
     }
-    m_settings.gain = value;
+    if (m_settings->gain == value) {
+        return;
+    }
+    m_settings->gain = value;
 }
 
-int Au3TrackSpectrogramConfiguration::colorRangeDb() const
+int Au3TrackSpectrogramConfiguration::colorRangeDb()
 {
-    return m_settings.range;
+    if (!maybeReloadSettings()) {
+        return 0;
+    }
+    return m_settings->range;
 }
 
 void Au3TrackSpectrogramConfiguration::setColorRangeDb(int value)
 {
-    if (m_settings.range == value) {
+    if (!maybeReloadSettings()) {
         return;
     }
-    m_settings.range = value;
+    if (m_settings->range == value) {
+        return;
+    }
+    m_settings->range = value;
 }
 
-int Au3TrackSpectrogramConfiguration::colorHighBoostDbPerDec() const
+int Au3TrackSpectrogramConfiguration::colorHighBoostDbPerDec()
 {
-    return m_settings.frequencyGain;
+    if (!maybeReloadSettings()) {
+        return 0;
+    }
+    return m_settings->frequencyGain;
 }
 
 void Au3TrackSpectrogramConfiguration::setColorHighBoostDbPerDec(int value)
 {
-    if (m_settings.frequencyGain == value) {
+    if (!maybeReloadSettings()) {
         return;
     }
-    m_settings.frequencyGain = value;
+    if (m_settings->frequencyGain == value) {
+        return;
+    }
+    m_settings->frequencyGain = value;
 }
 
-SpectrogramColorScheme Au3TrackSpectrogramConfiguration::colorScheme() const
+SpectrogramColorScheme Au3TrackSpectrogramConfiguration::colorScheme()
 {
-    return m_settings.colorScheme;
+    if (!maybeReloadSettings()) {
+        return static_cast<SpectrogramColorScheme>(0);
+    }
+    return m_settings->colorScheme;
 }
 
 void Au3TrackSpectrogramConfiguration::setColorScheme(SpectrogramColorScheme value)
 {
-    if (m_settings.colorScheme == value) {
+    if (!maybeReloadSettings()) {
         return;
     }
-    m_settings.colorScheme = value;
+    if (m_settings->colorScheme == value) {
+        return;
+    }
+    m_settings->colorScheme = value;
 }
 
-SpectrogramScale Au3TrackSpectrogramConfiguration::scale() const
+SpectrogramScale Au3TrackSpectrogramConfiguration::scale()
 {
-    return m_settings.scaleType;
+    if (!maybeReloadSettings()) {
+        return static_cast<SpectrogramScale>(0);
+    }
+    return m_settings->scaleType;
 }
 
 void Au3TrackSpectrogramConfiguration::setScale(SpectrogramScale value)
 {
-    if (m_settings.scaleType == value) {
+    if (!maybeReloadSettings()) {
         return;
     }
-    m_settings.scaleType = value;
+    if (m_settings->scaleType == value) {
+        return;
+    }
+    m_settings->scaleType = value;
 }
 
-SpectrogramAlgorithm Au3TrackSpectrogramConfiguration::algorithm() const
+SpectrogramAlgorithm Au3TrackSpectrogramConfiguration::algorithm()
 {
-    return m_settings.algorithm;
+    if (!maybeReloadSettings()) {
+        return static_cast<SpectrogramAlgorithm>(0);
+    }
+    return m_settings->algorithm;
 }
 
 void Au3TrackSpectrogramConfiguration::setAlgorithm(SpectrogramAlgorithm value)
 {
-    if (m_settings.algorithm == value) {
+    if (!maybeReloadSettings()) {
         return;
     }
-    m_settings.algorithm = value;
+    if (m_settings->algorithm == value) {
+        return;
+    }
+    m_settings->algorithm = value;
 }
 
-SpectrogramWindowType Au3TrackSpectrogramConfiguration::windowType() const
+SpectrogramWindowType Au3TrackSpectrogramConfiguration::windowType()
 {
-    return static_cast<SpectrogramWindowType>(fromAu3WindowType(static_cast<::eWindowFunctions>(m_settings.WindowType())));
+    if (!maybeReloadSettings()) {
+        return static_cast<SpectrogramWindowType>(0);
+    }
+    return static_cast<SpectrogramWindowType>(fromAu3WindowType(static_cast<::eWindowFunctions>(m_settings->WindowType())));
 }
 
 void Au3TrackSpectrogramConfiguration::setWindowType(SpectrogramWindowType value)
 {
-    if (m_settings.WindowType() == value) {
+    if (!maybeReloadSettings()) {
         return;
     }
-    m_settings.SetWindowType(value);
+    if (m_settings->WindowType() == value) {
+        return;
+    }
+    m_settings->SetWindowType(value);
 }
 
-int Au3TrackSpectrogramConfiguration::winSizeLog2() const
+int Au3TrackSpectrogramConfiguration::winSizeLog2()
 {
-    return log2(m_settings.WindowSize());
+    if (!maybeReloadSettings()) {
+        return 0;
+    }
+    return log2(m_settings->WindowSize());
 }
 
 void Au3TrackSpectrogramConfiguration::setWinSizeLog2(int logValue)
 {
-    const int value = 1 << logValue;
-    if (m_settings.WindowSize() == value) {
+    if (!maybeReloadSettings()) {
         return;
     }
-    m_settings.SetWindowSize(value);
+    const int value = 1 << logValue;
+    if (m_settings->WindowSize() == value) {
+        return;
+    }
+    m_settings->SetWindowSize(value);
 }
 
-int Au3TrackSpectrogramConfiguration::zeroPaddingFactor() const
+int Au3TrackSpectrogramConfiguration::zeroPaddingFactor()
 {
-    return m_settings.ZeroPaddingFactor();
+    if (!maybeReloadSettings()) {
+        return 0;
+    }
+    return m_settings->ZeroPaddingFactor();
 }
 
 void Au3TrackSpectrogramConfiguration::setZeroPaddingFactor(int value)
 {
-    if (m_settings.ZeroPaddingFactor() == value) {
+    if (!maybeReloadSettings()) {
         return;
     }
-    m_settings.SetZeroPaddingFactor(value);
+    if (m_settings->ZeroPaddingFactor() == value) {
+        return;
+    }
+    m_settings->SetZeroPaddingFactor(value);
 }
 
-bool Au3TrackSpectrogramConfiguration::useGlobalSettings() const
+bool Au3TrackSpectrogramConfiguration::useGlobalSettings()
 {
-    return m_settings.syncWithGlobalSettings;
+    if (!maybeReloadSettings()) {
+        return false;
+    }
+    return m_settings->syncWithGlobalSettings;
 }
 
 void Au3TrackSpectrogramConfiguration::setUseGlobalSettings(bool value)
 {
-    m_settings.syncWithGlobalSettings = value;
+    if (!maybeReloadSettings()) {
+        return;
+    }
+    m_settings->syncWithGlobalSettings = value;
 }
 }

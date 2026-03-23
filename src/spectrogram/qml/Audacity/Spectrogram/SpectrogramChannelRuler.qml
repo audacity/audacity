@@ -96,11 +96,23 @@ Item {
         // TODO https://github.com/audacity/audacity/issues/10561
         color: rulerModel.isHighContrast || ui.theme.isDark ? ui.theme.fontPrimaryColor : "#F0F5FA"
         y: rulerModel.rulerGuideYPos - height / 2
+
+        SpectrogramRulerCustomizePopup {
+            id: customizePopup
+            rulerModel: rulerModel
+        }
     }
 
     MouseArea {
         anchors.fill: parent
-        acceptedButtons: Qt.NoButton
+        hoverEnabled: true
+
+        acceptedButtons: Qt.RightButton | Qt.LeftButton
+
+        onClicked: function (mouseEvent) {
+            rulerModel.setPopupPosition(mouseEvent.y)
+            customizePopup.toggleOpened()
+        }
 
         onWheel: function (wheelEvent) {
             if (wheelEvent.modifiers & Qt.ControlModifier) {
@@ -114,6 +126,14 @@ Item {
                 rulerModel.scrollBy(wheelEvent.angleDelta.y)
             }
             wheelEvent.accepted = true
+        }
+
+        onPositionChanged: function (mouse) {
+            rulerModel.rulerGuideYPos = mouse.y
+        }
+
+        onExited: function (mouse) {
+            rulerModel.rulerGuideYPos = -1
         }
     }
 }

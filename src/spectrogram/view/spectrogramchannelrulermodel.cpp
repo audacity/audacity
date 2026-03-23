@@ -20,13 +20,16 @@ void SpectrogramChannelRulerModel::componentComplete()
         if (trackId == m_trackId) {
             updateTicks();
             emit ticksChanged();
+            emit zoomStateChanged();
         }
     });
+
     spectrogramViewService()->rulerGuideFrequencyChanged().onReceive(this, [this](int trackId) {
         if (trackId == m_trackId) {
             emit rulerGuideYPosChanged();
         }
     });
+
     updateTicks();
     emit ticksChanged();
 
@@ -93,10 +96,11 @@ void SpectrogramChannelRulerModel::setChannelHeight(double height)
 
 void SpectrogramChannelRulerModel::setRulerGuideYPos(double yPos)
 {
-    if (yPos < 0 || yPos > m_channelHeight) {
-        return;
+    auto frequency = SelectionInfo::UndefinedFrequency;
+    if (yPos >= 0 && yPos <= m_channelHeight) {
+        frequency = positionToFrequency(yPos);
     }
-    spectrogramViewService()->setRulerGuideFrequency(m_trackId, positionToFrequency(yPos));
+    spectrogramViewService()->setRulerGuideFrequency(m_trackId, frequency);
 }
 
 double SpectrogramChannelRulerModel::rulerGuideYPos() const
@@ -117,6 +121,48 @@ void SpectrogramChannelRulerModel::zoomIn(double mouseY)
 void SpectrogramChannelRulerModel::zoomOut(double mouseY)
 {
     zoomBy(ZOOM_FACTOR, mouseY);
+}
+
+void SpectrogramChannelRulerModel::setPopupPosition(double yPos)
+{
+    m_popupPosition = yPos;
+}
+
+void SpectrogramChannelRulerModel::zoomInFromPopup()
+{
+    zoomBy(1. / ZOOM_FACTOR, m_popupPosition);
+}
+
+void SpectrogramChannelRulerModel::zoomOutFromPopup()
+{
+    zoomBy(ZOOM_FACTOR, m_popupPosition);
+}
+
+void SpectrogramChannelRulerModel::resetZoom()
+{
+    const auto config = spectrogramService()->trackSpectrogramConfiguration(m_trackId);
+    IF_ASSERT_FAILED(config) {
+        return;
+    }
+
+    config->setMinFreq(0.);
+    config->setMaxFreq(spectrogramService()->frequencyHardMaximum(m_trackId));
+    config->setUseGlobalSettings(false);
+
+    updateTicks();
+    emit ticksChanged();
+    emit zoomStateChanged();
+    spectrogramService()->notifyAboutTrackSpectrogramConfigurationChanged(m_trackId);
+}
+
+bool SpectrogramChannelRulerModel::isMinZoom() const
+{
+    const auto config = spectrogramService()->trackSpectrogramConfiguration(m_trackId);
+    if (!config) {
+        return true;
+    }
+    const auto hardMax = spectrogramService()->frequencyHardMaximum(m_trackId);
+    return muse::is_equal(config->minFreq(), 0.) && muse::is_equal(config->maxFreq(), hardMax);
 }
 
 double SpectrogramChannelRulerModel::frequencyToPosition(double freq) const
@@ -173,6 +219,7 @@ void SpectrogramChannelRulerModel::zoomBy(double factor, double mousePos)
     updateTicks();
 
     emit ticksChanged();
+    emit zoomStateChanged();
     spectrogramService()->notifyAboutTrackSpectrogramConfigurationChanged(m_trackId);
 }
 

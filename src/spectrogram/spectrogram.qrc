@@ -4,6 +4,7 @@
         <file>qml/Audacity/Spectrogram/ClipSpectrogramView.qml</file>
         <file>qml/Audacity/Spectrogram/ChannelSpectralSelectionContainer.qml</file>
         <file>qml/Audacity/Spectrogram/SpectrogramChannelRuler.qml</file>
+        <file>qml/Audacity/Spectrogram/SpectrogramRulerCustomizePopup.qml</file>
         <file>qml/Audacity/Spectrogram/TrackSpectralSelectionContainer.qml</file>
         <file>qml/Audacity/Spectrogram/TrackSpectrogramBaseSection.qml</file>
         <file>qml/Audacity/Spectrogram/TrackSpectrogramAlgorithmSection.qml</file>

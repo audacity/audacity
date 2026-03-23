@@ -36,14 +36,16 @@ void Au3SpectrogramPainter::paintClipChannel(QPainter& qPainter, const ClipChann
         return;
     }
 
-    au3::Au3WaveTrack* const waveTrack = au3::DomAccessor::findWaveTrack(*au3Project, au3::Au3TrackId { channelInfo.trackId });
+    const au3::Au3TrackId au3TrackId { channelInfo.trackId };
+    au3::Au3WaveTrack* const waveTrack = au3::DomAccessor::findWaveTrack(*au3Project, au3TrackId);
     if (!waveTrack) {
         return;
     }
 
     auto& settings = Au3SpectrogramSettings::Get(*waveTrack);
 
-    const auto [minFreq, maxFreq] = spectrogramBounds(Au3TrackSpectrogramConfiguration { settings }, waveTrack->GetRate());
+    Au3TrackSpectrogramConfiguration config(au3TrackId.raw(), *au3Project);
+    const auto [minFreq, maxFreq] = spectrogramBounds(config, waveTrack->GetRate());
 
     const SpectrogramTrackContext trackContext{
         settings,
