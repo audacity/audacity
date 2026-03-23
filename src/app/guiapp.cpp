@@ -221,6 +221,8 @@ void GuiApp::finish()
     // Delete modules
     qDeleteAll(m_modules);
     m_modules.clear();
+
+    modularity::resetAll();
 }
 
 std::vector<muse::modularity::IContextSetup*>& GuiApp::contextSetups(const muse::modularity::ContextPtr& ctx)
