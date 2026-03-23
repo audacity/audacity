@@ -21,7 +21,6 @@ for shared and private configs - which need to move out.
 #include "PluginManager.h"
 
 #include <algorithm>
-#include <cassert>
 
 #include <wx/log.h>
 #include <wx/tokenzr.h>
@@ -375,7 +374,13 @@ static PluginManager::ConfigFactory sFactory;
 
 PluginManager& PluginManager::Get()
 {
-    assert(mInstance);
+    if (!mInstance) {
+        // Self-create for code paths where the module system hasn't
+        // called SetInstance() (e.g. plugin registration subprocess).
+        // The instance is empty and its destruction is harmless.
+        static PluginManager s_fallback;
+        mInstance = &s_fallback;
+    }
     return *mInstance;
 }
 
