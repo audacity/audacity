@@ -148,8 +148,8 @@ ProjectsView {
     Component {
         id: listComp
 
-        AudioListView {
-            id: listView
+        ProjectsListView {
+            id: list
 
             anchors.fill: parent
 
@@ -159,25 +159,21 @@ ProjectsView {
             backgroundColor: root.backgroundColor
             sideMargin: root.sideMargin
 
-            itemNormalColor: ui.theme.extra["white_color"]
-            itemHoverHitColor: ui.theme.extra["white_color"]
-            itemSpacing: 16
+            isCloudList: true
 
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrder
             navigation.name: "CloudAudioFilesList"
-            navigation.accessible.name: qsTrc("project", "Cloud audio files list")
-
-            //onCreateNewProjectRequested: {}
-            //onOpenProjectRequested: function(projectPath, displayName) {}
 
             columns: [
-                AudioListView.ColumnItem {
+                ProjectsListView.ColumnItem {
                     id: modifiedColumn
 
+                    header: qsTrc("project", "Modified")
+
                     width: function (parentWidth) {
-                        let parentWidthExclusingSpacing = parentWidth - listView.columns.length * listView.view.columnSpacing
-                        return 0.15 * parentWidthExclusingSpacing
+                        let parentWidthExclusingSpacing = parentWidth - list.columns.length * list.view.columnSpacing
+                        return 0.10 * parentWidthExclusingSpacing
                     }
 
                     delegate: StyledTextLabel {
@@ -209,18 +205,42 @@ ProjectsView {
                         }
                     }
                 },
-                AudioListView.ColumnItem {
-                    id: previewColumn
+                ProjectsListView.ColumnItem {
+                    id: sizeColumn
+                    header: qsTrc("global", "Size", "file size")
 
                     width: function (parentWidth) {
-                        let parentWidthExclusingSpacing = parentWidth - listView.columns.length * listView.view.columnSpacing
-                        return 0.7 * parentWidthExclusingSpacing
+                        let parentWidthExclusingSpacing = parentWidth - list.columns.length * list.view.columnSpacing
+                        return 0.10 * parentWidthExclusingSpacing
                     }
 
-                    delegate: Image {
-                        source: "qrc:/resources/Waveform.svg"
-                        horizontalAlignment: Image.AlignLeft
-                        verticalAlignment: Image.AlignVCenter
+                    delegate: StyledTextLabel {
+                        id: sizeLabel
+                        text: Boolean(item.fileSize) ? item.fileSize : "-"
+
+                        font: ui.theme.largeBodyFont
+                        horizontalAlignment: Text.AlignLeft
+
+                        NavigationFocusBorder {
+                            navigationCtrl: NavigationControl {
+                                name: "SizeLabel"
+                                panel: navigationPanel
+                                row: navigationRow
+                                column: navigationColumnStart
+                                enabled: sizeLabel.visible && sizeLabel.enabled && !sizeLabel.isEmpty
+                                accessible.name: sizeColumn.header + ": " + (Boolean(item.fileSize) ? item.fileSize : qsTrc("global", "Unknown"))
+                                accessible.role: MUAccessible.StaticText
+
+                                onActiveChanged: {
+                                    if (active) {
+                                        listItem.scrollIntoView()
+                                    }
+                                }
+                            }
+
+                            anchors.margins: -radius
+                            radius: 2 + border.width
+                        }
                     }
                 }
             ]
