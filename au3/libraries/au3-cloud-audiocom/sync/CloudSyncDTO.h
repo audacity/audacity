@@ -144,6 +144,9 @@ struct CloudAudioInfo final
     std::string Title;
     std::vector<std::string> Tags;
 
+    int64_t FileSize {};
+    int64_t Duration {};
+
     int64_t Created {};
 }; // struct CloudAudioInfo
 

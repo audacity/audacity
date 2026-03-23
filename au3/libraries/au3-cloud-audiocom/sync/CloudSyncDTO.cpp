@@ -459,6 +459,11 @@ bool Deserialize(const rapidjson::Value& value, CloudAudioInfo& audio)
         DeserializeArray(value["tags"], temp.Tags);
     }
 
+    if (value.HasMember("source") && value["source"].IsObject()) {
+        Deserialize(value["source"], "size", temp.FileSize);
+        Deserialize(value["source"], "duration", temp.Duration);
+    }
+
     if (!Deserialize(value, "created", temp.Created)) {
         return {};
     }

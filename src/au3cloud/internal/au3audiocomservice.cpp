@@ -81,6 +81,8 @@ au::au3cloud::AudioList convertFromAu3CloudAudio(const sync::PaginatedAudioRespo
         item.title = audioInfo.Title;
         item.tags = audioInfo.Tags;
         item.created = audioInfo.Created;
+        item.fileSize = audioInfo.FileSize;
+        item.duration = audioInfo.Duration;
 
         audioList.items.push_back(std::move(item));
     }

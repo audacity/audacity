@@ -206,6 +206,44 @@ ProjectsView {
                     }
                 },
                 ProjectsListView.ColumnItem {
+                    id: durationColumn
+                    header: qsTrc("global", "Duration", "file duration")
+
+                    width: function (parentWidth) {
+                        let parentWidthExclusingSpacing = parentWidth - list.columns.length * list.view.columnSpacing
+                        return 0.10 * parentWidthExclusingSpacing
+                    }
+
+                    delegate: StyledTextLabel {
+                        id: durationLabel
+                        text: Boolean(item.duration) ? item.duration : "-"
+
+                        font: ui.theme.largeBodyFont
+                        horizontalAlignment: Text.AlignLeft
+
+                        NavigationFocusBorder {
+                            navigationCtrl: NavigationControl {
+                                name: "DurationLabel"
+                                panel: navigationPanel
+                                row: navigationRow
+                                column: navigationColumnStart
+                                enabled: durationLabel.visible && durationLabel.enabled && !durationLabel.isEmpty
+                                accessible.name: durationColumn.header + ": " + (Boolean(item.duration) ? item.duration : qsTrc("global", "Unknown"))
+                                accessible.role: MUAccessible.StaticText
+
+                                onActiveChanged: {
+                                    if (active) {
+                                        listItem.scrollIntoView()
+                                    }
+                                }
+                            }
+
+                            anchors.margins: -radius
+                            radius: 2 + border.width
+                        }
+                    }
+                },
+                ProjectsListView.ColumnItem {
                     id: sizeColumn
                     header: qsTrc("global", "Size", "file size")
 
