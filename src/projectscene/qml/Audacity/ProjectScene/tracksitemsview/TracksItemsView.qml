@@ -529,6 +529,9 @@ Rectangle {
                         lastItemClickKey = root.hoveredItemKey
                     } else {
                         if (!((e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) || root.isSplitMode)) {
+                            if (playbackState.isPlaying) {
+                                playbackState.setLastPlaybackSeekTime(timeline.context.positionToTime(e.x))
+                            }
                             playCursorController.seekToX(e.x)
                         }
 
@@ -1129,6 +1132,15 @@ Rectangle {
 
             x: Math.max(timeline.context.selectionStartPosition, 0.0)
             width: timeline.context.selectionEndPosition - x
+        }
+
+        Rectangle {
+            anchors.top: tracksItemsViewArea.top
+            anchors.bottom: parent.bottom
+
+            width: 1
+            x: timeline.context.timeToPosition(playbackState.lastPlaybackSeekTime)
+            color: ui.theme.extra["black_color"]
         }
 
         PlayCursorLine {

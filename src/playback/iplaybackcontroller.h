@@ -62,6 +62,10 @@ public:
     virtual muse::secs_t totalPlayTime() const = 0;
     virtual muse::async::Notification totalPlayTimeChanged() const = 0;
 
+    virtual muse::secs_t lastPlaybackSeekTime() const = 0;
+    virtual void setLastPlaybackSeekTime(muse::secs_t secs) = 0;
+    virtual muse::async::Notification lastPlaybackSeekTimeChanged() const = 0;
+
     virtual muse::Progress loadingProgress() const = 0;
 };
 }

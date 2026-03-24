@@ -199,6 +199,16 @@ Notification PlaybackController::isPlayingChanged() const
     return m_isPlayingChanged;
 }
 
+muse::secs_t PlaybackController::lastPlaybackSeekTime() const
+{
+    return m_lastPlaybackSeekTime;
+}
+
+muse::async::Notification PlaybackController::lastPlaybackSeekTimeChanged() const
+{
+    return m_lastPlaybackSeekTimeChanged;
+}
+
 PlaybackStatus PlaybackController::playbackStatus() const
 {
     return player()->playbackStatus();
@@ -373,7 +383,7 @@ void PlaybackController::rewindToStartAction()
 void PlaybackController::rewindToEndAction()
 {
     //! NOTE: In Audacity 3 we can't rewind while playing
-    m_lastPlaybackSeekTime = totalPlayTime();
+    setLastPlaybackSeekTime(totalPlayTime());
     m_lastPlaybackRegion = { totalPlayTime(), totalPlayTime() };
     stopSeekAndUpdatePlaybackRegion();
 
@@ -416,7 +426,7 @@ void PlaybackController::onSeekAction(const muse::actions::ActionQuery& q)
 void PlaybackController::doSeek(const muse::secs_t secs, bool applyIfPlaying)
 {
     seek(secs, applyIfPlaying);
-    m_lastPlaybackSeekTime = secs;
+    setLastPlaybackSeekTime(secs);
     m_lastPlaybackRegion = {};
 }
 
@@ -444,7 +454,7 @@ void PlaybackController::doChangePlaybackRegion(const PlaybackRegion& region)
     }
 
     if (region.isValid()) {
-        m_lastPlaybackSeekTime = m_lastPlaybackRegion.start;
+        setLastPlaybackSeekTime(m_lastPlaybackRegion.start);
     }
 }
 
@@ -536,6 +546,16 @@ void PlaybackController::setLoopRegionActive(const bool active)
 void PlaybackController::clearLoopRegion()
 {
     player()->clearLoopRegion();
+}
+
+void PlaybackController::setLastPlaybackSeekTime(muse::secs_t secs)
+{
+    if (muse::RealIsEqual(m_lastPlaybackSeekTime, secs)) {
+        return;
+    }
+
+    m_lastPlaybackSeekTime = secs;
+    m_lastPlaybackSeekTimeChanged.notify();
 }
 
 void PlaybackController::loopEditingBegin()
