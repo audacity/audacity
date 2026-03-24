@@ -40,7 +40,7 @@ void ProjectPageModel::init()
             dispatcher()->reg(this, actionCode, [=]() { toggleDock(dockName); });
         }
 
-        uiConfiguration()->toolConfigChanged(playbackToolBarName()).onNotify(this, [this]() {
+        uiState()->toolConfigChanged(playbackToolBarName()).onNotify(this, [this]() {
             updatePlaybackMeterVisibility();
         });
 
@@ -67,8 +67,8 @@ void ProjectPageModel::init()
 
 void ProjectPageModel::updatePlaybackMeterVisibility()
 {
-    const auto toolConfig = uiConfiguration()->toolConfig(playbackToolBarName(),
-                                                          au::projectscene::ProjectSceneUiActions::defaultPlaybackToolBarConfig());
+    const auto toolConfig = uiState()->toolConfig(playbackToolBarName(),
+                                                  au::projectscene::ProjectSceneUiActions::defaultPlaybackToolBarConfig());
     const auto it = std::find_if(toolConfig.items.begin(), toolConfig.items.end(),
                                  [](const muse::ui::ToolConfig::Item& item) {
         return item.action == PLAYBACK_LEVEL_QUERY.toString();
