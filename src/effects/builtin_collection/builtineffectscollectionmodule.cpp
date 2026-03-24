@@ -19,6 +19,9 @@ static void builtin_effects_collection_init_qrc()
     Q_INIT_RESOURCE(builtin_effects_collection);
 }
 
+BuiltinEffectsCollectionModule::BuiltinEffectsCollectionModule() = default;
+BuiltinEffectsCollectionModule::~BuiltinEffectsCollectionModule() = default;
+
 std::string BuiltinEffectsCollectionModule::moduleName() const
 {
     return mname;
@@ -43,6 +46,13 @@ void BuiltinEffectsCollectionModule::onPreInit(const muse::IApplication::RunMode
     //! NOTE preInit() only creates static Registration objects (doesn't use `this`).
     //! Must run at module level before Au3WrapModule::onInit() sets sInitialized = true.
     BuiltinEffectsLoader::preInit();
+
+    m_builtinEffectsLoader = std::make_unique<BuiltinEffectsLoader>(muse::modularity::globalCtx());
+}
+
+void BuiltinEffectsCollectionModule::onInit(const muse::IApplication::RunMode&)
+{
+    m_builtinEffectsLoader->init();
 }
 
 muse::modularity::IContextSetup* BuiltinEffectsCollectionModule::newContext(const muse::modularity::ContextPtr& ctx) const
@@ -55,7 +65,7 @@ muse::modularity::IContextSetup* BuiltinEffectsCollectionModule::newContext(cons
 // =====================================================
 
 BuiltinEffectsContext::BuiltinEffectsContext(const muse::modularity::ContextPtr& ctx)
-    : muse::modularity::IContextSetup(ctx), m_builtinEffectsLoader(std::make_unique<BuiltinEffectsLoader>(muse::modularity::globalCtx()))
+    : muse::modularity::IContextSetup(ctx)
 {
 }
 
@@ -69,11 +79,6 @@ void BuiltinEffectsContext::resolveImports()
     if (lr) {
         lr->regLauncher("Audacity" /*builtin*/, std::make_shared<BuiltinViewLauncher>(iocContext()));
     }
-}
-
-void BuiltinEffectsContext::onInit(const muse::IApplication::RunMode&)
-{
-    m_builtinEffectsLoader->init();
 }
 
 void BuiltinEffectsContext::onDeinit()

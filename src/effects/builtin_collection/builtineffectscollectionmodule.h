@@ -14,13 +14,20 @@ class BuiltinEffectsLoader;
 class BuiltinEffectsCollectionModule : public muse::modularity::IModuleSetup
 {
 public:
+    BuiltinEffectsCollectionModule();
+    ~BuiltinEffectsCollectionModule() override;
+
     std::string moduleName() const override;
     void registerExports() override;
     void registerResources() override;
     void registerUiTypes() override;
     void onPreInit(const muse::IApplication::RunMode& mode) override;
+    void onInit(const muse::IApplication::RunMode& mode) override;
 
     muse::modularity::IContextSetup* newContext(const muse::modularity::ContextPtr& ctx) const override;
+
+private:
+    std::unique_ptr<BuiltinEffectsLoader> m_builtinEffectsLoader;
 };
 
 class BuiltinEffectsContext : public muse::modularity::IContextSetup
@@ -30,10 +37,6 @@ public:
 
     void registerExports() override;
     void resolveImports() override;
-    void onInit(const muse::IApplication::RunMode& mode) override;
     void onDeinit() override;
-
-private:
-    const std::unique_ptr<BuiltinEffectsLoader> m_builtinEffectsLoader;
 };
 }
