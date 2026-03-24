@@ -167,6 +167,7 @@ static UiActionList STATIC_ACTIONS = {
              au::context::CTX_PROJECT_OPENED,
              TranslatableString("action", "Delete"),
              TranslatableString("action", "Delete"),
+             IconCode::Code::DELETE_TANK,
              Checkable::Yes
              ),
     UiAction("action://trackedit/clip/change-color-auto",
