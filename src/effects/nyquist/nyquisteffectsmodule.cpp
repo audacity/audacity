@@ -34,6 +34,12 @@ std::string au::effects::NyquistEffectsModule::moduleName() const
 
 void au::effects::NyquistEffectsModule::registerExports()
 {
+    m_nyquistMetaReader = std::make_shared<NyquistPluginsMetaReader>();
+    m_nyquistEffectsRepository = std::make_shared<NyquistEffectsRepository>(muse::modularity::globalCtx(),
+                                                                            std::make_unique<NyquistPluginsScanner>(),
+                                                                            m_nyquistMetaReader);
+
+    globalIoc()->registerExport<INyquistEffectsRepository>(mname, m_nyquistEffectsRepository);
 }
 
 void au::effects::NyquistEffectsModule::registerResources()
@@ -45,12 +51,15 @@ void au::effects::NyquistEffectsModule::resolveImports()
 {
 }
 
-void au::effects::NyquistEffectsModule::onInit(const muse::IApplication::RunMode&)
+void au::effects::NyquistEffectsModule::onInit(const muse::IApplication::RunMode& runMode)
 {
+    m_nyquistMetaReader->init(runMode);
+    m_nyquistEffectsRepository->init();
 }
 
 void au::effects::NyquistEffectsModule::onDeinit()
 {
+    m_nyquistMetaReader->deinit();
 }
 
 muse::modularity::IContextSetup* au::effects::NyquistEffectsModule::newContext(const muse::modularity::ContextPtr& ctx) const
@@ -69,16 +78,6 @@ void au::effects::NyquistEffectsContext::onPreInit(const muse::IApplication::Run
     m_nyquistPromptLoader->preInit();
 }
 
-void au::effects::NyquistEffectsContext::registerExports()
-{
-    m_nyquistMetaReader = std::make_shared<NyquistPluginsMetaReader>();
-    m_nyquistEffectsRepository = std::make_shared<NyquistEffectsRepository>(iocContext(),
-                                                                            std::make_unique<NyquistPluginsScanner>(),
-                                                                            m_nyquistMetaReader);
-
-    ioc()->registerExport<INyquistEffectsRepository>(mname, m_nyquistEffectsRepository);
-}
-
 void au::effects::NyquistEffectsContext::resolveImports()
 {
     auto paramExtractorRegistry = ioc()->resolve<IParameterExtractorRegistry>(mname);
@@ -92,14 +91,11 @@ void au::effects::NyquistEffectsContext::resolveImports()
     }
 }
 
-void au::effects::NyquistEffectsContext::onInit(const muse::IApplication::RunMode& runMode)
+void au::effects::NyquistEffectsContext::onInit(const muse::IApplication::RunMode&)
 {
-    m_nyquistMetaReader->init(runMode);
     m_nyquistPromptLoader->init();
-    m_nyquistEffectsRepository->init();
 }
 
 void au::effects::NyquistEffectsContext::onDeinit()
 {
-    m_nyquistMetaReader->deinit();
 }
