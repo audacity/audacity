@@ -404,6 +404,11 @@ void PluginManager::Initialize(ConfigFactory factory)
 
 void PluginManager::Terminate()
 {
+    if (mSettings) {
+        mSettings->Flush();
+        mSettings.reset();
+    }
+
     // Get rid of all non-module(effects?) plugins first
     for (auto& p : mRegisteredPlugins) {
         auto& desc = p.second;
