@@ -397,12 +397,6 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Set up timed recording"),
              TranslatableString("action", "Set up timed recording")
              ),
-    UiAction("punch-and-roll-record",
-             au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Punch and roll record"),
-             TranslatableString("action", "Punch and roll record")
-             ),
     UiAction("toggle-sound-activated-recording",
              au::context::UiCtxUnknown,
              au::context::CTX_ANY,

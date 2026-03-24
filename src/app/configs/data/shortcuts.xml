@@ -862,7 +862,7 @@
         <seq>R</seq>
     </SC>
     <SC>
-        <key>punch-and-roll</key>
+        <key>action://record/punch-and-roll</key>
         <seq>Shift+D</seq>
     </SC>
     <SC>

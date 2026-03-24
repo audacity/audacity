@@ -34,6 +34,7 @@ static const ActionQuery RECORD_START_QUERY("action://record/start");
 static const ActionQuery RECORD_PAUSE_QUERY("action://record/pause");
 static const ActionQuery RECORD_STOP_QUERY("action://record/stop");
 static const ActionQuery RECORD_LEVEL_QUERY("action://record/level");
+static const ActionQuery RECORD_PUNCH_AND_ROLL_QUERY("action://record/punch-and-roll");
 
 static const ActionQuery PLAYBACK_REWIND_START_QUERY("action://playback/rewind-start");
 static const ActionQuery PLAYBACK_REWIND_END_QUERY("action://playback/rewind-end");
@@ -62,6 +63,7 @@ static PlaybackToolBarModel::ItemType itemType(const ActionCode& actionCode)
         { PLAYBACK_PLAY_QUERY.toString(), PlaybackToolBarModel::PLAYBACK_CONTROL },
         { PLAYBACK_STOP_QUERY.toString(), PlaybackToolBarModel::PLAYBACK_CONTROL },
         { RECORD_START_QUERY.toString(), PlaybackToolBarModel::PLAYBACK_CONTROL },
+        { RECORD_PUNCH_AND_ROLL_QUERY.toString(), PlaybackToolBarModel::PLAYBACK_CONTROL },
         { PLAYBACK_REWIND_START_QUERY.toString(), PlaybackToolBarModel::PLAYBACK_CONTROL },
         { PLAYBACK_REWIND_END_QUERY.toString(), PlaybackToolBarModel::PLAYBACK_CONTROL },
         { LOOP_ACTION_CODE, PlaybackToolBarModel::PLAYBACK_CONTROL },
