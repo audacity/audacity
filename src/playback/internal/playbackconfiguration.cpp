@@ -6,17 +6,17 @@
 
 #include "playbackconfiguration.h"
 
-static const QString PLAYBACK_TIME_ITEM_FORMAT("playbackToolbar/playbackTimeItemFormat");
-static const QString PLAYBACK_METER_STYLE("playbackToolbar/playbackMeterStyle");
-static const QString PLAYBACK_METER_TYPE("playbackToolbar/playbackMeterType");
-static const QString PLAYBACK_METER_POSITION("playbackToolbar/playbackMeterPosition");
-static const QString PLAYBACK_METER_DB_RANGE("playbackToolbar/playbackMeterDbRange");
-static const QString PLAYBACK_HORIZONTAL_METER_SIZE("playbackToolbar/playbackHorizontalMeterSize");
-
 using namespace muse;
 using namespace au::playback;
 
 static const std::string moduleName("playback");
+
+static const muse::Settings::Key PLAYBACK_TIME_ITEM_FORMAT(moduleName, "playbackToolbar/playbackTimeItemFormat");
+static const muse::Settings::Key PLAYBACK_METER_STYLE(moduleName, "playbackToolbar/playbackMeterStyle");
+static const muse::Settings::Key PLAYBACK_METER_TYPE(moduleName, "playbackToolbar/playbackMeterType");
+static const muse::Settings::Key PLAYBACK_METER_POSITION(moduleName, "playbackToolbar/playbackMeterPosition");
+static const muse::Settings::Key PLAYBACK_METER_DB_RANGE(moduleName, "playbackToolbar/playbackMeterDbRange");
+static const muse::Settings::Key PLAYBACK_HORIZONTAL_METER_SIZE(moduleName, "playbackToolbar/playbackHorizontalMeterSize");
 
 static const muse::Settings::Key PLAYBACK_QUALITY("au3wrap", "/Quality/LibsoxrSampleRateConverterChoice");
 static const muse::Settings::Key DITHERING("au3wrap", "Quality/DitherAlgorithmChoice");
@@ -38,138 +38,136 @@ static const std::vector<std::string> ditherNames{
 
 au::uicomponents::TimecodeFormatType PlaybackConfiguration::playbackTimeItemFormat() const
 {
-    au::uicomponents::TimecodeFormatType result = au::uicomponents::TimecodeFormatType::HHMMSSHundredths;
-
-    QString formatStr = uiConfiguration()->uiItemState(PLAYBACK_TIME_ITEM_FORMAT);
-    if (!formatStr.isEmpty()) {
-        result = static_cast<au::uicomponents::TimecodeFormatType>(formatStr.toInt());
-    }
-
-    return result;
+    return muse::settings()->value(PLAYBACK_TIME_ITEM_FORMAT)
+           .toEnum<au::uicomponents::TimecodeFormatType>();
 }
 
 void PlaybackConfiguration::setPlaybackTimeItemFormat(au::uicomponents::TimecodeFormatType format)
 {
-    uiConfiguration()->setUiItemState(PLAYBACK_TIME_ITEM_FORMAT, QString::number(static_cast<int>(format)));
+    muse::settings()->setSharedValue(PLAYBACK_TIME_ITEM_FORMAT, muse::Val(static_cast<int>(format)));
 }
 
 async::Notification PlaybackConfiguration::playbackTimeItemFormatChanged() const
 {
-    return uiConfiguration()->uiItemStateChanged(PLAYBACK_TIME_ITEM_FORMAT);
+    return m_playbackTimeItemFormatChanged;
 }
 
 PlaybackMeterStyle::MeterStyle PlaybackConfiguration::playbackMeterStyle() const
 {
-    PlaybackMeterStyle::MeterStyle result = PlaybackMeterStyle::MeterStyle::Default;
-
-    QString formatStr = uiConfiguration()->uiItemState(PLAYBACK_METER_STYLE);
-    if (!formatStr.isEmpty()) {
-        result = static_cast<PlaybackMeterStyle::MeterStyle>(formatStr.toInt());
-    }
-
-    return result;
+    return muse::settings()->value(PLAYBACK_METER_STYLE)
+           .toEnum<PlaybackMeterStyle::MeterStyle>();
 }
 
 void PlaybackConfiguration::setPlaybackMeterStyle(PlaybackMeterStyle::MeterStyle style)
 {
-    uiConfiguration()->setUiItemState(PLAYBACK_METER_STYLE, QString::number(static_cast<int>(style)));
+    muse::settings()->setSharedValue(PLAYBACK_METER_STYLE, muse::Val(static_cast<int>(style)));
 }
 
 muse::async::Notification PlaybackConfiguration::playbackMeterStyleChanged() const
 {
-    return uiConfiguration()->uiItemStateChanged(PLAYBACK_METER_STYLE);
+    return m_playbackMeterStyleChanged;
 }
 
 PlaybackMeterType::MeterType PlaybackConfiguration::playbackMeterType() const
 {
-    PlaybackMeterType::MeterType result = PlaybackMeterType::MeterType::DbLog;
-
-    QString formatStr = uiConfiguration()->uiItemState(PLAYBACK_METER_TYPE);
-    if (!formatStr.isEmpty()) {
-        result = static_cast<PlaybackMeterType::MeterType>(formatStr.toInt());
-    }
-
-    return result;
+    return muse::settings()->value(PLAYBACK_METER_TYPE)
+           .toEnum<PlaybackMeterType::MeterType>();
 }
 
 void PlaybackConfiguration::setPlaybackMeterType(PlaybackMeterType::MeterType type)
 {
-    uiConfiguration()->setUiItemState(PLAYBACK_METER_TYPE, QString::number(static_cast<int>(type)));
+    muse::settings()->setSharedValue(PLAYBACK_METER_TYPE, muse::Val(static_cast<int>(type)));
 }
 
 muse::async::Notification PlaybackConfiguration::playbackMeterTypeChanged() const
 {
-    return uiConfiguration()->uiItemStateChanged(PLAYBACK_METER_TYPE);
+    return m_playbackMeterTypeChanged;
 }
 
 PlaybackMeterPosition::MeterPosition PlaybackConfiguration::playbackMeterPosition() const
 {
-    PlaybackMeterPosition::MeterPosition result = PlaybackMeterPosition::MeterPosition::TopBar;
-
-    QString formatStr = uiConfiguration()->uiItemState(PLAYBACK_METER_POSITION);
-    if (!formatStr.isEmpty()) {
-        result = static_cast<PlaybackMeterPosition::MeterPosition>(formatStr.toInt());
-    }
-
-    return result;
+    return muse::settings()->value(PLAYBACK_METER_POSITION)
+           .toEnum<PlaybackMeterPosition::MeterPosition>();
 }
 
 void PlaybackConfiguration::setPlaybackMeterPosition(PlaybackMeterPosition::MeterPosition position)
 {
-    uiConfiguration()->setUiItemState(PLAYBACK_METER_POSITION, QString::number(static_cast<int>(position)));
+    muse::settings()->setSharedValue(PLAYBACK_METER_POSITION, muse::Val(static_cast<int>(position)));
 }
 
 muse::async::Notification PlaybackConfiguration::playbackMeterPositionChanged() const
 {
-    return uiConfiguration()->uiItemStateChanged(PLAYBACK_METER_POSITION);
+    return m_playbackMeterPositionChanged;
 }
 
 PlaybackMeterDbRange::DbRange PlaybackConfiguration::playbackMeterDbRange() const
 {
-    PlaybackMeterDbRange::DbRange result = PlaybackMeterDbRange::DbRange::Range60;
-
-    QString rangeStr = uiConfiguration()->uiItemState(PLAYBACK_METER_DB_RANGE);
-    if (!rangeStr.isEmpty()) {
-        result = static_cast<PlaybackMeterDbRange::DbRange>(rangeStr.toInt());
-    }
-
-    return result;
+    return muse::settings()->value(PLAYBACK_METER_DB_RANGE)
+           .toEnum<PlaybackMeterDbRange::DbRange>();
 }
 
 void PlaybackConfiguration::setPlaybackMeterDbRange(PlaybackMeterDbRange::DbRange range)
 {
-    uiConfiguration()->setUiItemState(PLAYBACK_METER_DB_RANGE, QString::number(static_cast<int>(range)));
+    muse::settings()->setSharedValue(PLAYBACK_METER_DB_RANGE, muse::Val(static_cast<int>(range)));
 }
 
 muse::async::Notification PlaybackConfiguration::playbackMeterDbRangeChanged() const
 {
-    return uiConfiguration()->uiItemStateChanged(PLAYBACK_METER_DB_RANGE);
+    return m_playbackMeterDbRangeChanged;
 }
 
 int PlaybackConfiguration::playbackHorizontalMeterSize() const
 {
-    int result = 0;
-
-    QString sizeStr = uiConfiguration()->uiItemState(PLAYBACK_HORIZONTAL_METER_SIZE);
-    if (!sizeStr.isEmpty()) {
-        result = sizeStr.toInt();
-    }
-
-    return result;
+    return muse::settings()->value(PLAYBACK_HORIZONTAL_METER_SIZE).toInt();
 }
 
 void PlaybackConfiguration::setPlaybackHorizontalMeterSize(int size)
 {
-    uiConfiguration()->setUiItemState(PLAYBACK_HORIZONTAL_METER_SIZE, QString::number(size));
+    muse::settings()->setSharedValue(PLAYBACK_HORIZONTAL_METER_SIZE, muse::Val(size));
 }
 
 muse::async::Notification PlaybackConfiguration::playbackHorizontalMeterSizeChanged() const
 {
-    return uiConfiguration()->uiItemStateChanged(PLAYBACK_HORIZONTAL_METER_SIZE);
+    return m_playbackHorizontalMeterSizeChanged;
 }
 
 void PlaybackConfiguration::init()
 {
+    muse::settings()->setDefaultValue(PLAYBACK_TIME_ITEM_FORMAT,
+                                      muse::Val(static_cast<int>(au::uicomponents::TimecodeFormatType::HHMMSSHundredths)));
+    muse::settings()->valueChanged(PLAYBACK_TIME_ITEM_FORMAT).onReceive(nullptr, [this](const muse::Val&) {
+        m_playbackTimeItemFormatChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(PLAYBACK_METER_STYLE,
+                                      muse::Val(static_cast<int>(PlaybackMeterStyle::MeterStyle::Default)));
+    muse::settings()->valueChanged(PLAYBACK_METER_STYLE).onReceive(nullptr, [this](const muse::Val&) {
+        m_playbackMeterStyleChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(PLAYBACK_METER_TYPE,
+                                      muse::Val(static_cast<int>(PlaybackMeterType::MeterType::DbLog)));
+    muse::settings()->valueChanged(PLAYBACK_METER_TYPE).onReceive(nullptr, [this](const muse::Val&) {
+        m_playbackMeterTypeChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(PLAYBACK_METER_POSITION,
+                                      muse::Val(static_cast<int>(PlaybackMeterPosition::MeterPosition::TopBar)));
+    muse::settings()->valueChanged(PLAYBACK_METER_POSITION).onReceive(nullptr, [this](const muse::Val&) {
+        m_playbackMeterPositionChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(PLAYBACK_METER_DB_RANGE,
+                                      muse::Val(static_cast<int>(PlaybackMeterDbRange::DbRange::Range60)));
+    muse::settings()->valueChanged(PLAYBACK_METER_DB_RANGE).onReceive(nullptr, [this](const muse::Val&) {
+        m_playbackMeterDbRangeChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(PLAYBACK_HORIZONTAL_METER_SIZE, muse::Val(0));
+    muse::settings()->valueChanged(PLAYBACK_HORIZONTAL_METER_SIZE).onReceive(nullptr, [this](const muse::Val&) {
+        m_playbackHorizontalMeterSizeChanged.notify();
+    });
+
     muse::settings()->setDefaultValue(PLAYBACK_QUALITY, muse::Val(playbackNames.at(3)));
     muse::settings()->valueChanged(PLAYBACK_QUALITY).onReceive(nullptr, [this](const muse::Val&) {
         m_playbackQualityChanged.notify();
