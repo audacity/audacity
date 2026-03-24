@@ -399,6 +399,13 @@ muse::ProgressPtr Au3AudioComService::resumeProjectSync(au::project::IAudacityPr
 
     auto progress = std::make_shared<muse::Progress>();
 
+    const auto pendingSnapshots = sync::CloudProjectsDatabase::Get().GetPendingSnapshots(
+        projectCloudExtension.GetCloudProjectId());
+
+    if (pendingSnapshots.empty()) {
+        return nullptr;
+    }
+
     m_resumeSyncSubscription = projectCloudExtension.SubscribeStatusChanged(
         [progress](const audacity::cloud::audiocom::sync::CloudStatusChangedMessage& message) {
         if (message.Status == audacity::cloud::audiocom::sync::ProjectSyncStatus::Syncing) {

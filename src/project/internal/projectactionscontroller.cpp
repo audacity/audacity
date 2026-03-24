@@ -843,6 +843,9 @@ Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, cons
         }
 
         auto progress = audioComService()->resumeProjectSync(project);
+        if (!progress || progress->isCanceled()) {
+            return;
+        }
 
         progress->finished().onReceive(this, [this](const ProgressResult& result) {
             if (!result.ret.success()) {
