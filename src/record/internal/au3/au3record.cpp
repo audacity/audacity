@@ -420,6 +420,134 @@ muse::Ret Au3Record::stop()
     return make_ok();
 }
 
+muse::Ret Au3Record::punchAndRoll()
+{
+    Au3Project& project = projectRef();
+
+    // Get cursor position
+    double t1 = std::max(0.0, selectionController()->selectionStartTime());
+
+    // Punch and roll at t=0 makes no sense — there's no audio to play as lead-in
+    if (t1 == 0.0) {
+        return make_ret(Err::PunchAndRollNoValidClipAtCursor);
+    }
+
+    // Checking the selected tracks: making sure they all have the same rate
+    const auto selectedTracks{ GetPropertiesOfSelected(project) };
+    const int rateOfSelected{ selectedTracks.rateOfSelected };
+    const bool allSameRate{ selectedTracks.allSameRate };
+
+    if (!allSameRate) {
+        return make_ret(Err::MismatchedSamplingRatesError);
+    }
+
+    // Find tracks to record into (must be selected)
+    auto tracks = ChooseExistingRecordingTracks(project, true, rateOfSelected);
+    if (tracks.empty()) {
+        return make_ret(Err::PunchAndRollNoTracksSelected);
+    }
+
+    // Extract crossfade data from existing audio at the punch point
+    std::vector<std::vector<float>> crossfadeData;
+    const double crossFadeDuration = std::max(0.0,
+        recordConfiguration()->crossfadeDuration() / 1000.0
+    );
+
+    bool error = false;
+    double newt1 = t1;
+    for (const auto& wt : tracks) {
+        Au3WaveTrack* waveTrack = dynamic_cast<Au3WaveTrack*>(wt.get());
+        if (!waveTrack) {
+            continue;
+        }
+        auto rate = waveTrack->GetRate();
+        sampleCount testSample(floor(t1 * rate));
+        const auto& intervals = static_cast<const Au3WaveTrack*>(waveTrack)->Intervals();
+        auto pred = [rate](sampleCount testSample) {
+            return [rate, testSample](const auto& pInterval) {
+                auto start = floor(pInterval->Start() * rate + 0.5);
+                auto end = floor(pInterval->End() * rate + 0.5);
+                auto ts = testSample.as_double();
+                return ts >= start && ts < end;
+            };
+        };
+        auto begin = intervals.begin(), end = intervals.end(),
+             iter = std::find_if(begin, end, pred(testSample));
+        if (iter == end) {
+            // Try again, a little to the left (Bug 1890)
+            iter = std::find_if(begin, end, pred(testSample - 10));
+        }
+        if (iter == end) {
+            error = true;
+        } else {
+            // May adjust t1 left
+            newt1 = std::min(newt1, (*iter).get()->End() - crossFadeDuration);
+        }
+    }
+
+    if (error) {
+        return make_ret(Err::PunchAndRollNoValidClipAtCursor);
+    }
+
+    t1 = newt1;
+    for (const auto& wt : tracks) {
+        Au3WaveTrack* waveTrack = dynamic_cast<Au3WaveTrack*>(wt.get());
+        if (!waveTrack) {
+            continue;
+        }
+        const auto endTime = waveTrack->GetEndTime();
+        const auto duration =
+            std::max(0.0, std::min(crossFadeDuration, endTime - t1));
+        const size_t getLen = floor(duration * waveTrack->GetRate());
+        if (getLen > 0) {
+            const auto nChannels = std::min<size_t>(2, waveTrack->NChannels());
+            crossfadeData.resize(nChannels);
+            float* buffers[2]{};
+            for (size_t ii = 0; ii < nChannels; ++ii) {
+                auto& data = crossfadeData[ii];
+                data.resize(getLen);
+                buffers[ii] = data.data();
+            }
+            const sampleCount pos = waveTrack->TimeToLongSamples(t1);
+            if (!waveTrack->GetFloats(0, nChannels, buffers, pos, getLen)) {
+                return make_ret(Err::RecordingError);
+            }
+        }
+    }
+
+    // Set up transport sequences
+    // Unlike AU3, we do NOT clear tracks — AU4 uses non-destructive recording
+    bool useDuplex = true;
+    TransportSequences transportTracks;
+    if (useDuplex) {
+        transportTracks = MakeTransportTracks(Au3TrackList::Get(project), false, true);
+    } else {
+        for (auto& pTrack : tracks) {
+            transportTracks.playbackSequences.push_back(
+                StretchingSequence::Create(*pTrack, pTrack->GetClipInterfaces()));
+        }
+    }
+
+    // Recording tracks are also playback tracks (for pre-roll)
+    std::copy(tracks.begin(), tracks.end(),
+              back_inserter(transportTracks.captureSequences));
+
+    selectionController()->resetSelectedClips();
+
+    if (audioEngine()->isBusy()) {
+        if (audioEngine()->isCapturing()) {
+            return make_ret(Ret::Code::InternalError, std::string("Another project is recording"));
+        }
+        audioEngine()->stopStream();
+    }
+
+    audioEngine()->stopMonitoring();
+
+    double preRoll = std::max(0.0, std::min(t1, recordConfiguration()->preRollDuration()));
+
+    return doRecord(project, transportTracks, t1, DBL_MAX, false, rateOfSelected, preRoll, &crossfadeData);
+}
+
 IAudioInputPtr Au3Record::audioInput() const
 {
     return m_audioInput;
@@ -450,7 +578,9 @@ Ret Au3Record::doRecord(Au3Project& project,
                         const TransportSequences& sequences,
                         double t0, double t1,
                         bool altAppearance,
-                        const double audioStreamSampleRate)
+                        const double audioStreamSampleRate,
+                        double preRoll,
+                        std::vector<std::vector<float>>* crossfadeData)
 {
     //! NOTE: copied fromProjectAudioManager::DoRecord
 
@@ -677,7 +807,7 @@ Ret Au3Record::doRecord(Au3Project& project,
         pendingTracks.UpdatePendingTracks();
     }
 
-    int token = audioEngine()->startStream(transportSequences, t0, t1, t1, project, false, audioStreamSampleRate);
+    int token = audioEngine()->startStream(transportSequences, t0, t1, t1, project, false, audioStreamSampleRate, preRoll, crossfadeData);
 
     success = (token != 0);
 
