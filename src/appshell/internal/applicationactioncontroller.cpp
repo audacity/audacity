@@ -21,6 +21,8 @@
  */
 #include "applicationactioncontroller.h"
 
+#include <algorithm>
+
 #include <QApplication>
 #include <QCloseEvent>
 #include <QFileOpenEvent>
@@ -207,9 +209,29 @@ bool ApplicationActionController::quit()
         m_quiting = false;
     };
 
-    constexpr auto quit = true;
-    if (!projectFilesController()->closeOpenedProject(quit)) {
-        return false;
+    auto allContexts = application()->contexts();
+
+    // Close the current window first, then others
+    auto thisCtx = iocContext();
+    std::stable_partition(allContexts.begin(), allContexts.end(),
+                          [&thisCtx](const auto& ctx) { return ctx == thisCtx; });
+
+    for (const auto& ctx : allContexts) {
+        auto pfc = muse::modularity::ioc(ctx)->resolve<project::IProjectFilesController>("appshell");
+        if (pfc && !pfc->closeOpenedProject()) {
+            return false;
+        }
+
+        auto window = muse::modularity::ioc(ctx)->resolve<muse::ui::IMainWindow>("appshell");
+
+        IF_ASSERT_FAILED(window) {
+            continue;
+        }
+
+        if (auto w = window->qWindow()) {
+            w->hide();
+            w->deleteLater();
+        }
     }
 
     QCoreApplication::exit();
