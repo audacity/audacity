@@ -280,6 +280,37 @@ ProjectsView {
                             radius: 2 + border.width
                         }
                     }
+                },
+                ProjectsListView.ColumnItem {
+                    id: btnColumn
+                    header: ""
+
+                    width: function (parentWidth) {
+                        let parentWidthExclusingSpacing = parentWidth - list.columns.length * list.view.columnSpacing
+                        return 0.05 * parentWidthExclusingSpacing
+                    }
+
+                    delegate: Rectangle {
+                        MenuButton {
+                            id: menuButton
+
+                            width: 16
+                            height: 16
+
+                            CloudAudioFileContextMenuModel {
+                                id: contextMenuModel
+                                cloudItemId: item.itemId
+                            }
+
+                            Component.onCompleted: contextMenuModel.load()
+
+                            menuModel: contextMenuModel
+
+                            onHandleMenuItem: function (itemId) {
+                                contextMenuModel.handleMenuItem(itemId)
+                            }
+                        }
+                    }
                 }
             ]
         }

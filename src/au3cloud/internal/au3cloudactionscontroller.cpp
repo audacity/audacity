@@ -4,7 +4,6 @@
 #include "au3cloudactionscontroller.h"
 
 using namespace au::au3cloud;
-using namespace muse;
 
 namespace {
 const char* TOUR_PAGE_URL { "https://audio.com/tour?mtm_campaign=audacitydesktop&mtm_content=app_launch_reg" };
