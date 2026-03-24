@@ -19,6 +19,8 @@ class RecordingPreferencesModel : public QObject, public muse::async::Asyncable
 
     Q_PROPERTY(bool isInputMonitoringOn READ isInputMonitoringOn WRITE setIsInputMonitoringOn NOTIFY isInputMonitoringOnChanged)
     Q_PROPERTY(bool isMicMeteringOn READ isMicMeteringOn WRITE setIsMicMeteringOn NOTIFY isMicMeteringOnChanged)
+    Q_PROPERTY(double preRollDuration READ preRollDuration NOTIFY preRollDurationChanged)
+    Q_PROPERTY(double crossfadeDuration READ crossfadeDuration NOTIFY crossfadeDurationChanged)
 
     muse::GlobalInject<record::IRecordConfiguration> recordConfiguration;
 
@@ -31,8 +33,16 @@ public:
     bool isMicMeteringOn() const;
     void setIsMicMeteringOn(bool enabled);
 
+    double preRollDuration() const;
+    Q_INVOKABLE void setPreRollDuration(double seconds);
+
+    double crossfadeDuration() const;
+    Q_INVOKABLE void setCrossfadeDuration(double milliseconds);
+
 signals:
     void isInputMonitoringOnChanged();
     void isMicMeteringOnChanged();
+    void preRollDurationChanged();
+    void crossfadeDurationChanged();
 };
 }

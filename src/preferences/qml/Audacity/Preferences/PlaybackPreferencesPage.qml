@@ -73,5 +73,16 @@ PreferencesPage {
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart + 3
         }
+
+        SeparatorLine {}
+
+        PunchAndRollRecordingSection {
+            recordingPreferencesModel: recordingPreferencesModel
+
+            enabled: !(playbackState.isPaused || playbackState.isPlaying)
+
+            navigation.section: root.navigationSection
+            navigation.order: root.navigationOrderStart + 4
+        }
     }
 }

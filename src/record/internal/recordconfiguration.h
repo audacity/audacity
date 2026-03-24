@@ -24,8 +24,18 @@ public:
     void setIsInputMonitoringOn(bool enable) override;
     muse::async::Notification isInputMonitoringOnChanged() const override;
 
+    double preRollDuration() const override;
+    void setPreRollDuration(double seconds) override;
+    muse::async::Notification preRollDurationChanged() const override;
+
+    double crossfadeDuration() const override;
+    void setCrossfadeDuration(double milliseconds) override;
+    muse::async::Notification crossfadeDurationChanged() const override;
+
 private:
     muse::async::Notification m_isMicMeteringOnChanged;
     muse::async::Notification m_isInputMonitoringOnChanged;
+    muse::async::Notification m_preRollDurationChanged;
+    muse::async::Notification m_crossfadeDurationChanged;
 };
 }

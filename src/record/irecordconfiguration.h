@@ -22,5 +22,13 @@ public:
     virtual bool isInputMonitoringOn() const = 0;
     virtual void setIsInputMonitoringOn(bool enable) = 0;
     virtual muse::async::Notification isInputMonitoringOnChanged() const = 0;
+
+    virtual double preRollDuration() const = 0;
+    virtual void setPreRollDuration(double seconds) = 0;
+    virtual muse::async::Notification preRollDurationChanged() const = 0;
+
+    virtual double crossfadeDuration() const = 0;
+    virtual void setCrossfadeDuration(double milliseconds) = 0;
+    virtual muse::async::Notification crossfadeDurationChanged() const = 0;
 };
 }

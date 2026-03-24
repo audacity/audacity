@@ -64,6 +64,7 @@ qt_add_qml_module(preferences_qml
         internal/PasteBehaviorSection.qml
         internal/PlaybackPerformanceSection.qml
         internal/PreferencesButtonsPanel.qml
+        internal/PunchAndRollRecordingSection.qml
         internal/PreferencesMenu.qml
         internal/ProgramStartSection.qml
         internal/RecordingBehaviorSection.qml
