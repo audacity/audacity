@@ -380,6 +380,23 @@ ListItemBlank {
     }
 
     Connections {
+        target: root.innerNavigationPanel
+
+        function onActiveChanged() {
+            if (root.innerNavigationPanel.active) {
+                return
+            }
+
+            Qt.callLater(function() {
+                if (!root.innerNavigationPanel.active) {
+                    root.innerNavigationActive = false
+                    root.innerGripReorderActive = false
+                }
+            })
+        }
+    }
+
+    Connections {
         target: root.navigation
 
         function onActiveChanged() {
