@@ -4,6 +4,7 @@
 
 #include "tracknavigationcontroller.h"
 
+#include "framework/global/async/async.h"
 #include "framework/global/containers.h"
 
 #include "au3wrap/internal/domaccessor.h"
@@ -67,7 +68,7 @@ void TrackNavigationController::init()
     m_selectionStart = std::nullopt;
 
     globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]() {
-        QTimer::singleShot(100, [this](){
+        muse::async::Async::call(this, [this]() {
             ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
             if (prj) {
                 std::vector<Track> trackList = prj->trackList();
