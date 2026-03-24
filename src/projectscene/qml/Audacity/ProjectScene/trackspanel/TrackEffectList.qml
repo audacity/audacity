@@ -37,7 +37,7 @@ Rectangle {
 
         if (focusGripHandle) {
             delegate.innerNavigationActive = true
-            delegate.gripReorderActive = false
+            delegate.innerGripReorderActive = false
             delegate.gripControl.navigation.requestActive()
             return
         }
