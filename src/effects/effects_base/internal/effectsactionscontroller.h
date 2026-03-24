@@ -28,6 +28,7 @@ class EffectsActionsController : public muse::actions::Actionable, public muse::
     public std::enable_shared_from_this<EffectsActionsController>
 {
     muse::GlobalInject<IEffectsConfiguration> configuration;
+    muse::GlobalInject<spectrogram::ISpectralEffectsRegister> spectralEffectsRegister;
 
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher{ this };
     muse::Inject<muse::ui::IUiActionsRegister> uiActionsRegister{ this };
@@ -37,7 +38,6 @@ class EffectsActionsController : public muse::actions::Actionable, public muse::
     muse::Inject<IEffectInstancesRegister> instancesRegister{ this };
     muse::Inject<muse::IInteractive> interactive{ this };
     muse::Inject<au::playback::IPlaybackController> playbackController{ this };
-    muse::Inject<spectrogram::ISpectralEffectsRegister> spectralEffectsRegister{ this };
     muse::Inject<spectrogram::IFrequencySelectionController> frequencySelectionController{ this };
 
 public:

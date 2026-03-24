@@ -17,8 +17,9 @@ class TrackSpectrogramContextMenuModel : public muse::uicomponents::AbstractMenu
     Q_PROPERTY(int trackId READ trackId WRITE setTrackId NOTIFY trackIdChanged)
     Q_PROPERTY(QString trackTitle READ trackTitle WRITE setTrackTitle NOTIFY trackTitleChanged)
 
+    muse::GlobalInject<ISpectralEffectsRegister> spectralEffectsRegister;
+
     muse::Inject<IFrequencySelectionController> frequencySelectionController { this };
-    muse::Inject<ISpectralEffectsRegister> spectralEffectsRegister { this };
 
 public:
     TrackSpectrogramContextMenuModel(QObject* parent = nullptr);

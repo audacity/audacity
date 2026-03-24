@@ -15,7 +15,7 @@
 namespace au::effects {
 class NyquistEffectsRepository : public INyquistEffectsRepository, public muse::Injectable
 {
-    muse::Inject<spectrogram::ISpectralEffectsRegister> spectralEffectsRegister { this };
+    muse::GlobalInject<spectrogram::ISpectralEffectsRegister> spectralEffectsRegister;
 
 public:
     NyquistEffectsRepository(const muse::modularity::ContextPtr& ctx,
