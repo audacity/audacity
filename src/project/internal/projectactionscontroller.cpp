@@ -374,7 +374,7 @@ bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudI
             }
                                  ).onResolve(this, [this, url = result.val.toQString()](au::toast::ToastActionCode actionCode) {
                 if (actionCode == au::toast::ToastActionCode::Custom) {
-                    interactive()->openUrl(url);
+                    platformInteractive()->openUrl(url);
                 }
             });
         } else {
@@ -819,7 +819,7 @@ void ProjectActionsController::shareAudio()
             }
                                  ).onResolve(this, [this, url = result.val.toQString()](au::toast::ToastActionCode actionCode) {
                 if (actionCode == au::toast::ToastActionCode::Custom) {
-                    interactive()->openUrl(url);
+                    platformInteractive()->openUrl(url);
                 }
             });
         } else {

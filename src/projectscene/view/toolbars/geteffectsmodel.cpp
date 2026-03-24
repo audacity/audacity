@@ -70,7 +70,7 @@ void GetEffectsModel::load()
 
 void GetEffectsModel::openUrl(const std::string& url) const
 {
-    const muse::Ret ret = interactive()->openUrl(url);
+    const muse::Ret ret = platformInteractive()->openUrl(url);
     if (!ret) {
         LOGE() << ret.toString();
     }

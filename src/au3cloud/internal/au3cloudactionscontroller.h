@@ -9,11 +9,14 @@
 #include "framework/global/modularity/ioc.h"
 #include "framework/actions/iactionsdispatcher.h"
 #include "framework/interactive/iinteractive.h"
+#include "framework/interactive/iplatforminteractive.h"
 #include "au3cloud/iauthorization.h"
 
 namespace au::au3cloud {
 class Au3CloudActionsController : public muse::actions::Actionable, public muse::Injectable
 {
+    muse::GlobalInject<muse::IPlatformInteractive> platformInteractive;
+
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::Inject<muse::IInteractive> interactive { this };
     muse::Inject<IAuthorization> authorization { this };

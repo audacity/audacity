@@ -8,14 +8,14 @@
 #include "global/async/asyncable.h"
 
 #include "modularity/ioc.h"
-#include "interactive/iinteractive.h"
+#include "interactive/iplatforminteractive.h"
 
 namespace au::projectscene {
 class GetEffectsModel : public QObject, public muse::async::Asyncable, public muse::Injectable
 {
     Q_OBJECT
 
-    muse::Inject<muse::IInteractive> interactive{ this };
+    muse::GlobalInject<muse::IPlatformInteractive> platformInteractive;
 
     Q_PROPERTY(QVariantList effectsGroups READ effectsGroups NOTIFY effectsGroupsChanged FINAL)
     Q_PROPERTY(QVariantList categories READ categories NOTIFY categoriesChanged FINAL)

@@ -28,9 +28,12 @@
 #include <qcontainerfwd.h>
 #include <qqmlintegration.h>
 
+#include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
 #include "framework/actions/iactionsdispatcher.h"
-#include "framework/interactive/iinteractive.h"
+#include "framework/interactive/iplatforminteractive.h"
+#include "framework/ui/iuiconfiguration.h"
+
 #include "iappshellconfiguration.h"
 
 namespace au::appshell {
@@ -47,10 +50,11 @@ class WelcomeDialogModel : public QObject, public muse::Contextable, public muse
 
     QML_ELEMENT
 
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
-    muse::Inject<muse::IInteractive> interactive { this };
     muse::GlobalInject<IAppShellConfiguration> configuration;
     muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
+    muse::GlobalInject<muse::IPlatformInteractive> platformInteractive;
+
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
 
 public:
     WelcomeDialogModel();

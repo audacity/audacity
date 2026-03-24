@@ -247,13 +247,13 @@ void ApplicationActionController::openAboutQtDialog()
 void ApplicationActionController::openOnlineHandbookPage()
 {
     std::string handbookUrl = configuration()->handbookUrl();
-    interactive()->openUrl(handbookUrl);
+    platformInteractive()->openUrl(handbookUrl);
 }
 
 void ApplicationActionController::openAskForHelpPage()
 {
     std::string askForHelpUrl = configuration()->askForHelpUrl();
-    interactive()->openUrl(askForHelpUrl);
+    platformInteractive()->openUrl(askForHelpUrl);
 }
 
 void ApplicationActionController::openPreferencesDialog()

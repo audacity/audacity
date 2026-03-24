@@ -318,7 +318,7 @@ void LabelsTableViewModel::exportLabels()
     if (!ret) {
         LOGE() << ret.toString();
     } else {
-        interactive()->revealInFileBrowser(exportPath);
+        platformInteractive()->revealInFileBrowser(exportPath);
     }
 }
 

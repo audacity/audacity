@@ -53,7 +53,7 @@ void ProjectsPageModel::openProject(const QString& scorePath, const QString& dis
 
 void ProjectsPageModel::openProjectManager()
 {
-    interactive()->openUrl(audioComService()->projectManagerUrl());
+    platformInteractive()->openUrl(audioComService()->projectManagerUrl());
 }
 
 int ProjectsPageModel::tabIndex() const

@@ -30,7 +30,7 @@
 #include "framework/global/modularity/ioc.h"
 #include "framework/actions/actionable.h"
 #include "framework/actions/iactionsdispatcher.h"
-#include "framework/interactive/iinteractive.h"
+#include "framework/interactive/iplatforminteractive.h"
 #include "framework/ui/iuiactionsregister.h"
 #include "framework/ui/imainwindow.h"
 
@@ -52,17 +52,18 @@ namespace au::appshell {
 class ApplicationActionController : public QObject, public IApplicationActionController, public muse::actions::Actionable,
     public muse::async::Asyncable, public muse::Injectable
 {
+    muse::GlobalInject<muse::IApplication> application;
+    muse::GlobalInject<IAppShellConfiguration> configuration;
+    muse::GlobalInject<muse::IPlatformInteractive> platformInteractive;
+
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::Inject<muse::ui::IUiActionsRegister> actionsRegister { this };
     muse::Inject<muse::ui::IMainWindow> mainWindow { this };
+    muse::Inject<muse::IInteractive> interactive { this };
     muse::Inject<appshell::IStartupScenario> startupScenario { this };
 
-    muse::Inject<muse::IInteractive> interactive { this };
-    muse::GlobalInject<muse::IApplication> application;
-    muse::GlobalInject<IAppShellConfiguration> configuration;
     muse::Inject<project::IProjectFilesController> projectFilesController { this };
     muse::Inject<record::IRecordController> recordController { this };
-
     muse::Inject<context::IUiContextResolver> uiContextResolver { this };
     muse::Inject<context::IGlobalContext> globalContext { this };
 

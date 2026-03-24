@@ -8,7 +8,7 @@
 #include "framework/global/async/asyncable.h"
 
 #include "framework/global/modularity/ioc.h"
-#include "framework/interactive/iinteractive.h"
+#include "framework/interactive/iplatforminteractive.h"
 
 #include "context/iglobalcontext.h"
 #include "ilabelsexporter.h"
@@ -29,8 +29,8 @@ class ExportLabelsModel : public QObject, public muse::async::Asyncable, public 
     Q_PROPERTY(QVariantList selectedTracks READ selectedTracks NOTIFY selectedTracksChanged FINAL)
 
     muse::GlobalInject<ILabelsConfiguration> configuration;
+    muse::GlobalInject<muse::IPlatformInteractive> platformInteractive;
 
-    muse::Inject<muse::IInteractive> interactive = { this };
     muse::Inject<context::IGlobalContext> globalContext = { this };
     muse::Inject<ILabelsExporter> labelExporter = { this };
 

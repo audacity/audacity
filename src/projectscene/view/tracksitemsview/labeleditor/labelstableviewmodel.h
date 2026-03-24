@@ -7,6 +7,7 @@
 
 #include "framework/global/modularity/ioc.h"
 #include "framework/interactive/iinteractive.h"
+#include "framework/interactive/iplatforminteractive.h"
 
 #include "context/iglobalcontext.h"
 #include "trackedit/itrackeditinteraction.h"
@@ -41,6 +42,7 @@ class LabelsTableViewModel : public muse::uicomponents::AbstractTableViewModel, 
 
     muse::GlobalInject<importexport::ILabelsConfiguration> labelsImportExportConfiguration;
     muse::GlobalInject<IProjectSceneConfiguration> configuration;
+    muse::GlobalInject<muse::IPlatformInteractive> platformInteractive;
 
     muse::Inject<muse::IInteractive> interactive = { this };
     muse::Inject<context::IGlobalContext> globalContext = { this };
