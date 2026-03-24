@@ -27,10 +27,8 @@ void PlaybackMeterPanelModel::init()
         emit levelChanged();
     });
 
-    playback()->audioOutput()->playbackVolume().onResolve(this, [this](float volume) {
-        m_meterModel->setVolume(volume);
-        emit levelChanged();
-    });
+    m_meterModel->setVolume(playback()->audioOutput()->playbackVolume());
+    emit levelChanged();
 
     playbackController()->isPlayingChanged().onNotify(this, [this]() {
         emit isPlayingChanged();

@@ -24,7 +24,5 @@ void PlaybackMeterModel::init()
         setVolume(volume);
     });
 
-    playback()->audioOutput()->playbackVolume().onResolve(this, [this](float volume) {
-        setVolume(volume);
-    });
+    setVolume(playback()->audioOutput()->playbackVolume());
 }

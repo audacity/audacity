@@ -37,7 +37,7 @@ class Au3AudioInput : public IAudioInput, public muse::async::Asyncable, public 
 public:
     Au3AudioInput(const muse::modularity::ContextPtr& ctx);
 
-    muse::async::Promise<float> recordVolume() const override;
+    float recordVolume() const override;
     void setRecordVolume(float volume) override;
     muse::async::Channel<float> recordVolumeChanged() const override;
 

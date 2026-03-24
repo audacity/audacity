@@ -23,7 +23,5 @@ void RecordMeterModel::init()
         setVolume(volume);
     });
 
-    record()->audioInput()->recordVolume().onResolve(this, [this](float volume) {
-        setVolume(volume);
-    });
+    setVolume(record()->audioInput()->recordVolume());
 }

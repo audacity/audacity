@@ -6,7 +6,6 @@
 
 #include <memory>
 
-#include "global/async/promise.h"
 #include "global/async/channel.h"
 
 #include "audio/audiotypes.h"
@@ -17,7 +16,7 @@ class IAudioInput
 public:
     virtual ~IAudioInput() = default;
 
-    virtual muse::async::Promise<float> recordVolume() const = 0;
+    virtual float recordVolume() const = 0;
     virtual void setRecordVolume(float volume) = 0;
     virtual muse::async::Channel<float> recordVolumeChanged() const = 0;
 

@@ -44,10 +44,8 @@ PlaybackToolBarLevelItem::PlaybackToolBarLevelItem(const muse::ui::UiAction& act
         setAudioChannelRMS(audioChNum, meterSignal.rms.pressure);
     });
 
-    playback()->audioOutput()->playbackVolume().onResolve(this, [this](float volume) {
-        m_level = volume;
-        emit levelChanged();
-    });
+    m_level = playback()->audioOutput()->playbackVolume();
+    emit levelChanged();
 
     configuration()->playbackHorizontalMeterSizeChanged().onNotify(this, [this]() {
         emit meterSizeChanged();
