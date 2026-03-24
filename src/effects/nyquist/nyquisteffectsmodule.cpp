@@ -27,6 +27,9 @@ static void nyquist_init_qrc()
     Q_INIT_RESOURCE(nyquist);
 }
 
+au::effects::NyquistEffectsModule::NyquistEffectsModule() = default;
+au::effects::NyquistEffectsModule::~NyquistEffectsModule() = default;
+
 std::string au::effects::NyquistEffectsModule::moduleName() const
 {
     return mname;
@@ -38,6 +41,7 @@ void au::effects::NyquistEffectsModule::registerExports()
     m_nyquistEffectsRepository = std::make_shared<NyquistEffectsRepository>(muse::modularity::globalCtx(),
                                                                             std::make_unique<NyquistPluginsScanner>(),
                                                                             m_nyquistMetaReader);
+    m_nyquistPromptLoader = std::make_unique<NyquistPromptLoader>(muse::modularity::globalCtx());
 
     globalIoc()->registerExport<INyquistEffectsRepository>(mname, m_nyquistEffectsRepository);
 }
@@ -51,10 +55,16 @@ void au::effects::NyquistEffectsModule::resolveImports()
 {
 }
 
+void au::effects::NyquistEffectsModule::onPreInit(const muse::IApplication::RunMode&)
+{
+    m_nyquistPromptLoader->preInit();
+}
+
 void au::effects::NyquistEffectsModule::onInit(const muse::IApplication::RunMode& runMode)
 {
     m_nyquistMetaReader->init(runMode);
     m_nyquistEffectsRepository->init();
+    m_nyquistPromptLoader->init();
 }
 
 void au::effects::NyquistEffectsModule::onDeinit()
@@ -68,14 +78,8 @@ muse::modularity::IContextSetup* au::effects::NyquistEffectsModule::newContext(c
 }
 
 au::effects::NyquistEffectsContext::NyquistEffectsContext(const muse::modularity::ContextPtr& ctx)
-    : muse::modularity::IContextSetup(ctx),
-    m_nyquistPromptLoader(std::make_unique<NyquistPromptLoader>(iocContext()))
+    : muse::modularity::IContextSetup(ctx)
 {
-}
-
-void au::effects::NyquistEffectsContext::onPreInit(const muse::IApplication::RunMode&)
-{
-    m_nyquistPromptLoader->preInit();
 }
 
 void au::effects::NyquistEffectsContext::resolveImports()
@@ -89,11 +93,6 @@ void au::effects::NyquistEffectsContext::resolveImports()
     if (launchRegister) {
         launchRegister->regLauncher("Nyquist", std::make_shared<NyquistViewLauncher>(iocContext()));
     }
-}
-
-void au::effects::NyquistEffectsContext::onInit(const muse::IApplication::RunMode&)
-{
-    m_nyquistPromptLoader->init();
 }
 
 void au::effects::NyquistEffectsContext::onDeinit()
