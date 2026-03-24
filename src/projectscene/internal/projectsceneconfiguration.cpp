@@ -17,14 +17,11 @@ using namespace au::projectscene;
 
 static const std::string moduleName("projectscene");
 
-static const QString IS_VERTICAL_RULERS_VISIBLE("projectscene/verticalRulersVisible");
-static constexpr bool DEFAULT_VERTICAL_RULERS_VISIBILITY = false;
-static const QString IS_RMS_IN_WAVEFORM_VISIBLE("projectscene/rmsInWaveformVisible");
-static constexpr bool DEFAULT_RMS_IN_WAVEFORM_VISIBILITY = false;
-static const QString IS_CLIPPING_IN_WAVEFORM_VISIBLE("projectscene/clippingInWaveformVisible");
-static constexpr bool DEFAULT_CLIPPING_IN_WAVEFORM_VISIBILITY = false;
-static const QString TIMELINE_RULER_MODE("projectscene/timelineRulerMode");
-static const QString EFFECTS_PANEL_VISIBILITY("projectscene/effectsPanelVisible");
+static const muse::Settings::Key IS_VERTICAL_RULERS_VISIBLE(moduleName, "projectscene/verticalRulersVisible");
+static const muse::Settings::Key IS_RMS_IN_WAVEFORM_VISIBLE(moduleName, "projectscene/rmsInWaveformVisible");
+static const muse::Settings::Key IS_CLIPPING_IN_WAVEFORM_VISIBLE(moduleName, "projectscene/clippingInWaveformVisible");
+static const muse::Settings::Key TIMELINE_RULER_MODE(moduleName, "projectscene/timelineRulerMode");
+static const muse::Settings::Key EFFECTS_PANEL_VISIBILITY(moduleName, "projectscene/effectsPanelVisible");
 
 static const muse::Settings::Key MOUSE_ZOOM_PRECISION(moduleName, "projectscene/zoomPrecisionMouse");
 static const muse::Settings::Key CLIP_STYLE(moduleName, "projectscene/clipStyle");
@@ -37,22 +34,39 @@ static const muse::Settings::Key LABEL_EDITOR_COLUMN_FORMAT(moduleName, "project
 static const muse::Settings::Key UPDATE_DISPLAY_WHILE_PLAYING_ENABLED(moduleName, "projectscene/updateDisplayWhilePlayingEnabled");
 static const muse::Settings::Key PINNED_PLAY_HEAD_ENABLED(moduleName, "projectscene/pinnedPlayHeadEnabled");
 
+static constexpr bool DEFAULT_VERTICAL_RULERS_VISIBILITY = false;
+static constexpr bool DEFAULT_RMS_IN_WAVEFORM_VISIBILITY = false;
+static constexpr bool DEFAULT_CLIPPING_IN_WAVEFORM_VISIBILITY = false;
 static const bool DEFAULT_PLAYBACK_ON_RULER_CLICK_ENABLED = false;
 static const bool DEFAULT_UPDATE_DISPLAY_WHILE_PLAYING_ENABLED = true;
 static const bool DEFAULT_PINNED_PLAY_HEAD_ENABLED = false;
 
 void ProjectSceneConfiguration::init()
 {
-    uiConfiguration()->isVisibleChanged(IS_VERTICAL_RULERS_VISIBLE).onNotify(nullptr, [this](){
+    muse::settings()->setDefaultValue(IS_VERTICAL_RULERS_VISIBLE, muse::Val(DEFAULT_VERTICAL_RULERS_VISIBILITY));
+    muse::settings()->valueChanged(IS_VERTICAL_RULERS_VISIBLE).onReceive(nullptr, [this](const muse::Val&) {
         m_isVerticalRulersVisibleChanged.send(isVerticalRulersVisible());
     });
 
-    uiConfiguration()->isVisibleChanged(IS_RMS_IN_WAVEFORM_VISIBLE).onNotify(nullptr, [this](){
+    muse::settings()->setDefaultValue(IS_RMS_IN_WAVEFORM_VISIBLE, muse::Val(DEFAULT_RMS_IN_WAVEFORM_VISIBILITY));
+    muse::settings()->valueChanged(IS_RMS_IN_WAVEFORM_VISIBLE).onReceive(nullptr, [this](const muse::Val&) {
         m_isRMSInWaveformVisibleChanged.send(isRMSInWaveformVisible());
     });
 
-    uiConfiguration()->isVisibleChanged(IS_CLIPPING_IN_WAVEFORM_VISIBLE).onNotify(nullptr, [this](){
+    muse::settings()->setDefaultValue(IS_CLIPPING_IN_WAVEFORM_VISIBLE, muse::Val(DEFAULT_CLIPPING_IN_WAVEFORM_VISIBILITY));
+    muse::settings()->valueChanged(IS_CLIPPING_IN_WAVEFORM_VISIBLE).onReceive(nullptr, [this](const muse::Val&) {
         m_isClippingInWaveformVisibleChanged.send(isClippingInWaveformVisible());
+    });
+
+    muse::settings()->setDefaultValue(TIMELINE_RULER_MODE,
+                                      muse::Val(static_cast<int>(TimelineRulerMode::MINUTES_AND_SECONDS)));
+    muse::settings()->valueChanged(TIMELINE_RULER_MODE).onReceive(nullptr, [this](const muse::Val&) {
+        m_timelineRulerModeChanged.notify();
+    });
+
+    muse::settings()->setDefaultValue(EFFECTS_PANEL_VISIBILITY, muse::Val(true));
+    muse::settings()->valueChanged(EFFECTS_PANEL_VISIBILITY).onReceive(nullptr, [this](const muse::Val&) {
+        m_effectsPanelVisible.notify();
     });
 
     muse::settings()->setDefaultValue(MOUSE_ZOOM_PRECISION, muse::Val(6));
@@ -104,12 +118,12 @@ void ProjectSceneConfiguration::init()
 
 bool ProjectSceneConfiguration::isVerticalRulersVisible() const
 {
-    return uiConfiguration()->isVisible(IS_VERTICAL_RULERS_VISIBLE, DEFAULT_VERTICAL_RULERS_VISIBILITY);
+    return muse::settings()->value(IS_VERTICAL_RULERS_VISIBLE).toBool();
 }
 
 void ProjectSceneConfiguration::setVerticalRulersVisible(bool visible)
 {
-    uiConfiguration()->setIsVisible(IS_VERTICAL_RULERS_VISIBLE, visible);
+    muse::settings()->setSharedValue(IS_VERTICAL_RULERS_VISIBLE, muse::Val(visible));
 }
 
 muse::async::Channel<bool> ProjectSceneConfiguration::isVerticalRulersVisibleChanged() const
@@ -119,12 +133,12 @@ muse::async::Channel<bool> ProjectSceneConfiguration::isVerticalRulersVisibleCha
 
 bool ProjectSceneConfiguration::isRMSInWaveformVisible() const
 {
-    return uiConfiguration()->isVisible(IS_RMS_IN_WAVEFORM_VISIBLE, DEFAULT_RMS_IN_WAVEFORM_VISIBILITY);
+    return muse::settings()->value(IS_RMS_IN_WAVEFORM_VISIBLE).toBool();
 }
 
 void ProjectSceneConfiguration::setRMSInWaveformVisible(bool visible)
 {
-    uiConfiguration()->setIsVisible(IS_RMS_IN_WAVEFORM_VISIBLE, visible);
+    muse::settings()->setSharedValue(IS_RMS_IN_WAVEFORM_VISIBLE, muse::Val(visible));
 }
 
 muse::async::Channel<bool> ProjectSceneConfiguration::isRMSInWaveformVisibleChanged() const
@@ -134,12 +148,12 @@ muse::async::Channel<bool> ProjectSceneConfiguration::isRMSInWaveformVisibleChan
 
 bool ProjectSceneConfiguration::isClippingInWaveformVisible() const
 {
-    return uiConfiguration()->isVisible(IS_CLIPPING_IN_WAVEFORM_VISIBLE, DEFAULT_CLIPPING_IN_WAVEFORM_VISIBILITY);
+    return muse::settings()->value(IS_CLIPPING_IN_WAVEFORM_VISIBLE).toBool();
 }
 
 void ProjectSceneConfiguration::setClippingInWaveformVisible(bool visible)
 {
-    uiConfiguration()->setIsVisible(IS_CLIPPING_IN_WAVEFORM_VISIBLE, visible);
+    muse::settings()->setSharedValue(IS_CLIPPING_IN_WAVEFORM_VISIBLE, muse::Val(visible));
 }
 
 muse::async::Channel<bool> ProjectSceneConfiguration::isClippingInWaveformVisibleChanged() const
@@ -147,9 +161,9 @@ muse::async::Channel<bool> ProjectSceneConfiguration::isClippingInWaveformVisibl
     return m_isClippingInWaveformVisibleChanged;
 }
 
-double ProjectSceneConfiguration::zoom() const
+double ProjectSceneConfiguration::zoom(const muse::modularity::ContextPtr& ctx) const
 {
-    return uiConfiguration()->physicalDpi() / 4;
+    return uiConfiguration()->physicalDpi(ctx) / 4;
 }
 
 int ProjectSceneConfiguration::mouseZoomPrecision() const
@@ -164,39 +178,33 @@ void ProjectSceneConfiguration::setMouseZoomPrecision(int precision)
 
 TimelineRulerMode ProjectSceneConfiguration::timelineRulerMode() const
 {
-    TimelineRulerMode result = TimelineRulerMode::MINUTES_AND_SECONDS;
-
-    QString modeStr = uiConfiguration()->uiItemState(TIMELINE_RULER_MODE);
-    if (!modeStr.isEmpty()) {
-        result = static_cast<TimelineRulerMode>(modeStr.toInt());
-    }
-
-    return result;
+    return muse::settings()->value(TIMELINE_RULER_MODE)
+           .toEnum<TimelineRulerMode>();
 }
 
 void ProjectSceneConfiguration::setTimelineRulerMode(const TimelineRulerMode mode)
 {
-    uiConfiguration()->setUiItemState(TIMELINE_RULER_MODE, QString::number(static_cast<int>(mode)));
+    muse::settings()->setSharedValue(TIMELINE_RULER_MODE, muse::Val(static_cast<int>(mode)));
 }
 
 muse::async::Notification ProjectSceneConfiguration::timelineRulerModeChanged() const
 {
-    return uiConfiguration()->uiItemStateChanged(TIMELINE_RULER_MODE);
+    return m_timelineRulerModeChanged;
 }
 
 bool ProjectSceneConfiguration::isEffectsPanelVisible() const
 {
-    return uiConfiguration()->isVisible(EFFECTS_PANEL_VISIBILITY);
+    return muse::settings()->value(EFFECTS_PANEL_VISIBILITY).toBool();
 }
 
 void ProjectSceneConfiguration::setIsEffectsPanelVisible(bool visible)
 {
-    uiConfiguration()->setIsVisible(EFFECTS_PANEL_VISIBILITY, visible);
+    muse::settings()->setSharedValue(EFFECTS_PANEL_VISIBILITY, muse::Val(visible));
 }
 
 muse::async::Notification ProjectSceneConfiguration::isEffectsPanelVisibleChanged() const
 {
-    return uiConfiguration()->isVisibleChanged(EFFECTS_PANEL_VISIBILITY);
+    return m_effectsPanelVisible;
 }
 
 const std::vector<std::pair<std::string, std::string> >& ProjectSceneConfiguration::clipColors() const

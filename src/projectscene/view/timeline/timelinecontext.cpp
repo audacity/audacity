@@ -143,7 +143,7 @@ void TimelineContext::initToViewState(double frameWidth)
     } else {
         double initialTimeRange = trackEditProject() ? trackEditProject()->totalTime().to_double() * 2 : 0.0;
         if (muse::is_zero(initialTimeRange)) {
-            m_zoom = configuration()->zoom();
+            m_zoom = configuration()->zoom(iocContext());
         } else {
             m_zoom = m_frameWidth / initialTimeRange;
         }

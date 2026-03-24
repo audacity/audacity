@@ -4,6 +4,7 @@
 #include "async/notification.h"
 
 #include "modularity/imoduleinterface.h"
+#include "modularity/ioc.h"
 
 #include "types/projectscenetypes.h"
 
@@ -26,7 +27,7 @@ public:
     virtual void setClippingInWaveformVisible(bool visible) = 0;
     virtual muse::async::Channel<bool> isClippingInWaveformVisibleChanged() const = 0;
 
-    virtual double zoom() const = 0;
+    virtual double zoom(const muse::modularity::ContextPtr& ctx) const = 0;
 
     virtual int mouseZoomPrecision() const = 0;
     virtual void setMouseZoomPrecision(int precision) = 0;

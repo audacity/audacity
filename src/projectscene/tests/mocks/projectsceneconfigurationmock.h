@@ -24,7 +24,7 @@ public:
     MOCK_METHOD(void, setClippingInWaveformVisible, (bool visible), (override));
     MOCK_METHOD(muse::async::Channel<bool>, isClippingInWaveformVisibleChanged, (), (const, override));
 
-    MOCK_METHOD(double, zoom, (), (const, override));
+    MOCK_METHOD(double, zoom, (const muse::modularity::ContextPtr& ctx), (const, override));
 
     MOCK_METHOD(int, mouseZoomPrecision, (), (const, override));
     MOCK_METHOD(void, setMouseZoomPrecision, (int precision), (override));
