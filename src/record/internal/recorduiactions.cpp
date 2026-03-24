@@ -20,6 +20,7 @@ static const ActionQuery RECORD_STOP_QUERY("action://record/stop");
 static const ActionQuery RECORD_LEVEL_QUERY("action://record/level");
 static const ActionQuery RECORD_TOGGLE_MIC_METERING("action://record/toggle-mic-metering");
 static const ActionQuery RECORD_TOGGLE_INPUT_MONITORING("action://record/toggle-input-monitoring");
+static const ActionQuery RECORD_PUNCH_AND_ROLL_QUERY("action://record/punch-and-roll");
 
 const UiActionList RecordUiActions::m_mainActions = {
     UiAction(RECORD_START_QUERY.toString(),
@@ -63,6 +64,13 @@ const UiActionList RecordUiActions::m_mainActions = {
              TranslatableString("action", "Turn on input monitoring"),
              TranslatableString("action", "Turn on input monitoring"),
              Checkable::Yes
+             ),
+    UiAction(RECORD_PUNCH_AND_ROLL_QUERY.toString(),
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_FOCUSED,
+             TranslatableString("action", "Punch and Roll Record"),
+             TranslatableString("action", "Punch and roll record"),
+             IconCode::Code::RECORD_FILL
              ),
 };
 

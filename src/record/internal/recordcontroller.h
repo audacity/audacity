@@ -66,6 +66,7 @@ private:
     void start();
     void pause();
     void stop();
+    void punchAndRoll();
     void toggleMicMetering();
     void toggleInputMonitoring();
 
