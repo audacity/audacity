@@ -107,35 +107,8 @@ void BuiltinEffectsLoader::init()
     auto regMeta
         = [this](const ::PluginDescriptor& desc, const muse::String& title, const muse::String& description,
                  bool supportsMultipleClipSelection) {
-        EffectMeta meta;
-        meta.id = au3::wxToString(desc.GetID());
-        meta.family = EffectFamily::Builtin;
-        meta.category = utils::builtinEffectCategoryIdString(toAu4EffectCategory(desc.GetEffectGroup()));
-        meta.title = title;
-        meta.description = description;
-        meta.isRealtimeCapable = desc.IsEffectRealtime();
-        meta.supportsMultipleClipSelection = supportsMultipleClipSelection;
-        meta.vendor = "Audacity";
-        meta.path = desc.GetPath();
-
-        switch (desc.GetEffectType()) {
-        case EffectTypeGenerate:
-            meta.type = EffectType::Generator;
-            break;
-        case EffectTypeProcess:
-            meta.type = EffectType::Processor;
-            break;
-        case EffectTypeAnalyze:
-            meta.type = EffectType::Analyzer;
-            break;
-        case EffectTypeTool:
-            meta.type = EffectType::Tool;
-            break;
-        default:
-            assert(false);
-        }
-
-        builtinEffectsRepository()->registerMeta(meta);
+        auto meta = au::effects::toEffectMeta(desc, EffectFamily::Builtin, title, description, supportsMultipleClipSelection);
+        builtinEffectsRepository()->registerMeta(std::move(meta));
     };
 
     bool hasDynamicRangeProcessor = false;

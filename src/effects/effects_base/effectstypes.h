@@ -43,6 +43,12 @@ using RealtimeEffectStatePtr = std::shared_ptr<RealtimeEffectState>;
 using TrackId = long;
 using EffectChainLinkIndex = int;
 
+static const muse::String EFFECT_TITLE_ATTRIBUTE(u"title");
+static const muse::String EFFECT_TYPE_ATTRIBUTE(u"type");
+static const muse::String EFFECT_CATEGORY_ATTRIBUTE(u"category");
+static const muse::String EFFECT_IS_REALTIME_CAPABLE_ATTRIBUTE(u"isRealtimeCapable");
+static const muse::String EFFECT_SUPPORTS_MULTIPLE_CLIP_SELECTION_ATTRIBUTE(u"supportsMultipleClipSelection");
+
 enum class EffectMenuOrganization {
     Grouped = 0,
     Flat = 1,
@@ -154,7 +160,7 @@ public:
 
 using EffectFamily = EffectFamilies::EffectFamily;
 
-enum class BuiltinEffectCategoryId {
+enum class EffectCategory {
     Unspecified = -1,
     None,
     VolumeAndCompression,

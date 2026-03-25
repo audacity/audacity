@@ -27,7 +27,11 @@ static void nyquist_init_qrc()
     Q_INIT_RESOURCE(nyquist);
 }
 
-au::effects::NyquistEffectsModule::NyquistEffectsModule() = default;
+au::effects::NyquistEffectsModule::NyquistEffectsModule()
+    : m_nyquistEffectsRepository(std::make_unique<NyquistEffectsRepository>(muse::modularity::globalCtx()))
+{
+}
+
 au::effects::NyquistEffectsModule::~NyquistEffectsModule() = default;
 
 std::string au::effects::NyquistEffectsModule::moduleName() const
@@ -37,12 +41,6 @@ std::string au::effects::NyquistEffectsModule::moduleName() const
 
 void au::effects::NyquistEffectsModule::registerExports()
 {
-    m_nyquistMetaReader = std::make_shared<NyquistPluginsMetaReader>();
-    m_nyquistEffectsRepository = std::make_shared<NyquistEffectsRepository>(muse::modularity::globalCtx(),
-                                                                            std::make_unique<NyquistPluginsScanner>(),
-                                                                            m_nyquistMetaReader);
-
-    globalIoc()->registerExport<INyquistEffectsRepository>(mname, m_nyquistEffectsRepository);
 }
 
 void au::effects::NyquistEffectsModule::registerResources()
@@ -52,6 +50,16 @@ void au::effects::NyquistEffectsModule::registerResources()
 
 void au::effects::NyquistEffectsModule::resolveImports()
 {
+    auto scannerRegister = globalIoc()->resolve<muse::audioplugins::IAudioPluginsScannerRegister>(mname);
+    if (scannerRegister) {
+        scannerRegister->registerScanner(std::make_shared<NyquistPluginsScanner>());
+    }
+
+    m_nyquistMetaReader = std::make_shared<NyquistPluginsMetaReader>();
+    auto metaReaderRegister = globalIoc()->resolve<muse::audioplugins::IAudioPluginMetaReaderRegister>(moduleName());
+    if (metaReaderRegister) {
+        metaReaderRegister->registerReader(m_nyquistMetaReader);
+    }
 }
 
 void au::effects::NyquistEffectsModule::onPreInit(const muse::IApplication::RunMode& runMode)

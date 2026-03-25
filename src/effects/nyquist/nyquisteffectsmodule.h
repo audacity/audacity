@@ -9,7 +9,6 @@
 #include "modularity/imodulesetup.h"
 
 namespace au::effects {
-class NyquistEffectsRepository;
 class NyquistPluginsMetaReader;
 class NyquistPromptLoader;
 
@@ -31,7 +30,7 @@ public:
     muse::modularity::IContextSetup* newContext(const muse::modularity::ContextPtr& ctx) const override;
 
 private:
-    std::shared_ptr<NyquistEffectsRepository> m_nyquistEffectsRepository;
+    const std::unique_ptr<NyquistEffectsRepository> m_nyquistEffectsRepository;
     std::shared_ptr<NyquistPluginsMetaReader> m_nyquistMetaReader;
     std::unique_ptr<NyquistPromptLoader> m_nyquistPromptLoader;
 };

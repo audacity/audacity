@@ -22,66 +22,177 @@ constexpr const char* effectFamilyString(EffectFamily family)
     }
 }
 }
+
+static const muse::String unspecifiedEffectCategoryString{ "Third-party" };
+static const muse::String noneEffectCategoryString{ "None" };
+static const muse::String volumeAndCompressionEffectCategoryString{ "Volume and compression" };
+static const muse::String fadingEffectCategoryString{ "Fading" };
+static const muse::String pitchAndTempoEffectCategoryString{ "Pitch and tempo" };
+static const muse::String eqAndFiltersEffectCategoryString{ "EQ and filters" };
+static const muse::String noiseRemovalAndRepairEffectCategoryString{ "Noise removal and repair" };
+static const muse::String delayAndReverbEffectCategoryString{ "Delay and reverb" };
+static const muse::String distortionAndModulationEffectCategoryString{ "Distortion and modulation" };
+static const muse::String specialEffectCategoryString{ "Special" };
+static const muse::String spectralToolsEffectCategoryString{ "Spectral tools" };
+static const muse::String legacyEffectCategoryString{ "Legacy" };
 }
 
-muse::String au::effects::utils::builtinEffectCategoryIdString(BuiltinEffectCategoryId category)
+muse::String au::effects::utils::effectCategoryToString(EffectCategory category)
 {
     switch (category) {
-    case BuiltinEffectCategoryId::Unspecified:
-        return muse::String{ "Third-party" };
-    case BuiltinEffectCategoryId::None:
-        return muse::String{ "" };
-    case BuiltinEffectCategoryId::VolumeAndCompression:
-        return muse::String{ "Volume and compression" };
-    case BuiltinEffectCategoryId::Fading:
-        return muse::String{ "Fading" };
-    case BuiltinEffectCategoryId::PitchAndTempo:
-        return muse::String{ "Pitch and tempo" };
-    case BuiltinEffectCategoryId::EqAndFilters:
-        return muse::String{ "EQ and filters" };
-    case BuiltinEffectCategoryId::NoiseRemovalAndRepair:
-        return muse::String{ "Noise removal and repair" };
-    case BuiltinEffectCategoryId::DelayAndReverb:
-        return muse::String{ "Delay and reverb" };
-    case BuiltinEffectCategoryId::DistortionAndModulation:
-        return muse::String{ "Distortion and modulation" };
-    case BuiltinEffectCategoryId::Special:
-        return muse::String{ "Special" };
-    case BuiltinEffectCategoryId::SpectralTools:
-        return muse::String{ "Spectral tools" };
-    case BuiltinEffectCategoryId::Legacy:
-        return muse::String{ "Legacy" };
+    case EffectCategory::Unspecified:
+        return unspecifiedEffectCategoryString;
+    case EffectCategory::None:
+        return noneEffectCategoryString;
+    case EffectCategory::VolumeAndCompression:
+        return volumeAndCompressionEffectCategoryString;
+    case EffectCategory::Fading:
+        return fadingEffectCategoryString;
+    case EffectCategory::PitchAndTempo:
+        return pitchAndTempoEffectCategoryString;
+    case EffectCategory::EqAndFilters:
+        return eqAndFiltersEffectCategoryString;
+    case EffectCategory::NoiseRemovalAndRepair:
+        return noiseRemovalAndRepairEffectCategoryString;
+    case EffectCategory::DelayAndReverb:
+        return delayAndReverbEffectCategoryString;
+    case EffectCategory::DistortionAndModulation:
+        return distortionAndModulationEffectCategoryString;
+    case EffectCategory::Special:
+        return specialEffectCategoryString;
+    case EffectCategory::SpectralTools:
+        return spectralToolsEffectCategoryString;
+    case EffectCategory::Legacy:
+        return legacyEffectCategoryString;
     default:
         assert(false);
-        return muse::String{ "" };
+        return noneEffectCategoryString;
     }
 }
 
-int au::effects::utils::builtinEffectCategoryIdOrder(const muse::String& category)
+au::effects::EffectCategory au::effects::utils::effectCategoryFromString(const muse::String& category)
 {
-    using namespace au::effects::utils;
-    static const std::map<muse::String, int> categoryOrder = {
-        { builtinEffectCategoryIdString(BuiltinEffectCategoryId::None), 0 },
-        { builtinEffectCategoryIdString(BuiltinEffectCategoryId::VolumeAndCompression), 1 },
-        { builtinEffectCategoryIdString(BuiltinEffectCategoryId::Fading), 2 },
-        { builtinEffectCategoryIdString(BuiltinEffectCategoryId::PitchAndTempo), 3 },
-        { builtinEffectCategoryIdString(BuiltinEffectCategoryId::EqAndFilters), 4 },
-        { builtinEffectCategoryIdString(BuiltinEffectCategoryId::NoiseRemovalAndRepair), 5 },
-        { builtinEffectCategoryIdString(BuiltinEffectCategoryId::DelayAndReverb), 6 },
-        { builtinEffectCategoryIdString(BuiltinEffectCategoryId::DistortionAndModulation), 7 },
-        { builtinEffectCategoryIdString(BuiltinEffectCategoryId::Special), 8 },
-        { builtinEffectCategoryIdString(BuiltinEffectCategoryId::SpectralTools), 9 },
-        { builtinEffectCategoryIdString(BuiltinEffectCategoryId::Legacy), 10 },
-        { builtinEffectCategoryIdString(BuiltinEffectCategoryId::Unspecified), 11 },
-    };
-    auto it = categoryOrder.find(category);
-    return it == categoryOrder.end() ? INT_MAX : it->second;
+    if (category == volumeAndCompressionEffectCategoryString) {
+        return EffectCategory::VolumeAndCompression;
+    } else if (category == fadingEffectCategoryString) {
+        return EffectCategory::Fading;
+    } else if (category == pitchAndTempoEffectCategoryString) {
+        return EffectCategory::PitchAndTempo;
+    } else if (category == eqAndFiltersEffectCategoryString) {
+        return EffectCategory::EqAndFilters;
+    } else if (category == noiseRemovalAndRepairEffectCategoryString) {
+        return EffectCategory::NoiseRemovalAndRepair;
+    } else if (category == delayAndReverbEffectCategoryString) {
+        return EffectCategory::DelayAndReverb;
+    } else if (category == distortionAndModulationEffectCategoryString) {
+        return EffectCategory::DistortionAndModulation;
+    } else if (category == specialEffectCategoryString) {
+        return EffectCategory::Special;
+    } else if (category == spectralToolsEffectCategoryString) {
+        return EffectCategory::SpectralTools;
+    } else if (category == legacyEffectCategoryString) {
+        return EffectCategory::Legacy;
+    } else if (category == noneEffectCategoryString) {
+        return EffectCategory::None;
+    } else if (category == unspecifiedEffectCategoryString) {
+        return EffectCategory::Unspecified;
+    }
+    assert(false);
+    return EffectCategory::Unspecified;
+}
+
+muse::String au::effects::utils::effectTypeToString(EffectType type)
+{
+    switch (type) {
+    case EffectType::Unknown: return { "Unknown" };
+    case EffectType::Analyzer: return { "Analyzer" };
+    case EffectType::Generator: return { "Generator" };
+    case EffectType::Processor: return { "Processor" };
+    case EffectType::Tool: return { "Tool" };
+    default:
+        assert(false);
+        return { "Unknown" };
+    }
+}
+
+au::effects::EffectType au::effects::utils::effectTypeFromString(const muse::String& type)
+{
+    if (type == "Analyzer") {
+        return EffectType::Analyzer;
+    } else if (type == "Generator") {
+        return EffectType::Generator;
+    } else if (type == "Processor") {
+        return EffectType::Processor;
+    } else if (type == "Tool") {
+        return EffectType::Tool;
+    } else if (type == "Unknown") {
+        return EffectType::Unknown;
+    }
+    assert(false);
+    return EffectType::Unknown;
+}
+
+muse::audio::AudioResourceMeta au::effects::utils::auToMuseEffectMeta(const EffectMeta& meta)
+{
+    muse::audio::AudioResourceMeta museMeta;
+    // Use the AU3 plugin ID (same as Audio Unit does)
+    // This is necessary for looking up the plugin in PluginManager later
+    museMeta.id = meta.id.toStdString();
+    museMeta.type = toMuseAudioResourceType(meta.family);
+    museMeta.vendor = meta.vendor.toStdString();
+
+    // Add attributes using the map interface
+    museMeta.attributes.emplace(EFFECT_CATEGORY_ATTRIBUTE, meta.category);
+    // Store the plugin name (from $name directive) for display
+    museMeta.attributes.emplace(EFFECT_TITLE_ATTRIBUTE, meta.title);
+    museMeta.attributes.emplace(EFFECT_SUPPORTS_MULTIPLE_CLIP_SELECTION_ATTRIBUTE, meta.supportsMultipleClipSelection ? u"true" : u"false");
+    museMeta.attributes.emplace(EFFECT_IS_REALTIME_CAPABLE_ATTRIBUTE, meta.isRealtimeCapable ? u"true" : u"false");
+    museMeta.attributes.emplace(EFFECT_TYPE_ATTRIBUTE, utils::effectTypeToString(meta.type));
+
+    return museMeta;
+}
+
+au::effects::EffectMeta au::effects::utils::museToAuEffectMeta(const muse::io::path_t& path, const muse::audio::AudioResourceMeta& meta)
+{
+    EffectMeta effectMeta;
+    effectMeta.path = path;
+    effectMeta.id = muse::String::fromStdString(meta.id);
+    effectMeta.family = fromMuseAudioResourceType(meta.type);
+    effectMeta.vendor = muse::String::fromStdString(meta.vendor);
+    effectMeta.type = utils::effectTypeFromString(meta.attributeVal(EFFECT_TYPE_ATTRIBUTE));
+    effectMeta.title = meta.attributeVal(EFFECT_TITLE_ATTRIBUTE);
+    effectMeta.category = meta.attributeVal(EFFECT_CATEGORY_ATTRIBUTE);
+    effectMeta.isRealtimeCapable = meta.attributeVal(EFFECT_IS_REALTIME_CAPABLE_ATTRIBUTE) == u"true";
+    effectMeta.supportsMultipleClipSelection = meta.attributeVal(EFFECT_SUPPORTS_MULTIPLE_CLIP_SELECTION_ATTRIBUTE) == u"true";
+
+    return effectMeta;
 }
 
 namespace impl {
 using namespace muse;
 using namespace muse::uicomponents;
 using namespace au::effects;
+
+int builtinEffectCategoryIdOrder(const String& category)
+{
+    using namespace au::effects::utils;
+    static const std::map<String, int> categoryOrder = {
+        { effectCategoryToString(EffectCategory::None), 0 },
+        { effectCategoryToString(EffectCategory::VolumeAndCompression), 1 },
+        { effectCategoryToString(EffectCategory::Fading), 2 },
+        { effectCategoryToString(EffectCategory::PitchAndTempo), 3 },
+        { effectCategoryToString(EffectCategory::EqAndFilters), 4 },
+        { effectCategoryToString(EffectCategory::NoiseRemovalAndRepair), 5 },
+        { effectCategoryToString(EffectCategory::DelayAndReverb), 6 },
+        { effectCategoryToString(EffectCategory::DistortionAndModulation), 7 },
+        { effectCategoryToString(EffectCategory::Special), 8 },
+        { effectCategoryToString(EffectCategory::SpectralTools), 9 },
+        { effectCategoryToString(EffectCategory::Legacy), 10 },
+        { effectCategoryToString(EffectCategory::Unspecified), 11 },
+    };
+    auto it = categoryOrder.find(category);
+    return it == categoryOrder.end() ? INT_MAX : it->second;
+}
 
 // String with Case-Insensitive comparison
 class CiString : public String
@@ -115,7 +226,7 @@ bool shippedByAudacity(const EffectMeta& meta)
 {
     return meta.family == EffectFamily::Builtin
            || (meta.family == EffectFamily::Nyquist
-               && meta.category != utils::builtinEffectCategoryIdString(BuiltinEffectCategoryId::Unspecified));
+               && meta.category != utils::effectCategoryToString(EffectCategory::Unspecified));
 }
 
 MenuItemList makeItemsOrDisambiguationSubmenus(const AmbiguousTitleEntries& entries, IEffectMenuItemFactory& effectMenu)
@@ -167,12 +278,12 @@ MenuItemList audacityDestructiveEffectsGroup(const EffectMetaList& effects, IEff
         categoriesSorted.push_back({ category, effectIds });
     }
     std::sort(categoriesSorted.begin(), categoriesSorted.end(), [&](const auto& a, const auto& b) {
-        return au::effects::utils::builtinEffectCategoryIdOrder(a.first) < au::effects::utils::builtinEffectCategoryIdOrder(b.first);
+        return impl::builtinEffectCategoryIdOrder(a.first) < impl::builtinEffectCategoryIdOrder(b.first);
     });
 
     MenuItemList items;
     for (const auto& [category, effectIds] : categoriesSorted) {
-        if (category.isEmpty()) {
+        if (category == utils::noneEffectCategoryString) {
             for (const auto& effectId : effectIds) {
                 items << effectMenu.makeMenuEffectItem(effectId);
             }

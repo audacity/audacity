@@ -139,9 +139,37 @@ void StartupScenario::runAfterSplashScreen()
 
             muse::audioplugins::PluginScanResult scanResult = registerAudioPluginsScenario()->scanPlugins();
 
+            // Audacity plugins (built-in effects and nyquist plugins) are safe. Register them in-process,
+            // because out-of-process registration is slow and users may opt out.
+            muse::io::paths_t& thirdPartyPluginPaths = scanResult.newPluginPaths;
+            muse::io::paths_t audacityPluginPaths;
+            auto it = thirdPartyPluginPaths.begin();
+            while (it != thirdPartyPluginPaths.end()) {
+                auto isAudacityPlugin = std::make_optional(false);
+                for (const auto& reader : metaReaderRegister()->readers()) {
+                    if (reader->canReadMeta(*it)) {
+                        using namespace muse::audio;
+                        const auto metaType = reader->metaType();
+                        isAudacityPlugin = metaType == AudioResourceType::NyquistPlugin || metaType == AudioResourceType::BuiltinEffect;
+                        break;
+                    }
+                }
+                assert(isAudacityPlugin.has_value());
+                if (isAudacityPlugin.has_value() && *isAudacityPlugin) {
+                    audacityPluginPaths.push_back(*it);
+                    it = thirdPartyPluginPaths.erase(it);
+                } else {
+                    ++it;
+                }
+            }
+
             registerAudioPluginsScenario()->unregisterRemovedPlugins(scanResult.missingPluginIds);
 
-            if (!scanResult.newPluginPaths.empty()) {
+            for (const io::path_t& path : audacityPluginPaths) {
+                registerAudioPluginsScenario()->registerPlugin(path);
+            }
+
+            if (!thirdPartyPluginPaths.empty()) {
                 auto ret = interactive()->questionSync(muse::trc("appshell", "Scanning audio plugins"),
                                                        muse::trc(
                                                            "appshell",
@@ -153,7 +181,7 @@ void StartupScenario::runAfterSplashScreen()
                                                              muse::IInteractive::Button::Apply, muse::trc("appshell", "Scan plugins"),
                                                              true) });
                 if (ret.standardButton() == muse::IInteractive::Button::Apply) {
-                    registerAudioPluginsScenario()->registerNewPlugins(scanResult.newPluginPaths);
+                    registerAudioPluginsScenario()->registerNewPlugins(thirdPartyPluginPaths);
                 }
             }
         }

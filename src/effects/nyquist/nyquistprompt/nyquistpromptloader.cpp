@@ -3,8 +3,12 @@
  */
 #include "nyquistpromptloader.h"
 
+#include "effects/effects_base/internal/au3/au3effectsutils.h"
+
 #include "au3-module-manager/PluginManager.h"
 #include "au3-effects/LoadEffects.h"
+
+#include "framework/global/translation.h"
 
 namespace au::effects {
 void NyquistPromptLoader::preInit()
@@ -28,17 +32,11 @@ void NyquistPromptLoader::init()
         const auto effectName = au3::wxToString(NyquistPromptEffect::Symbol.Internal());
         builtinEffectsViewRegister()->regUrl(effectName, u"qrc:/nyquistprompt/NyquistPromptView.qml");
 
-        EffectMeta meta;
-        meta.id = au3::wxToString(desc.GetID());
-        meta.family = EffectFamily::Builtin;
-        meta.category = utils::builtinEffectCategoryIdString(toAu4EffectCategory(desc.GetEffectGroup()));
-        meta.title = muse::mtrc("effects", "Nyquist prompt");
-        meta.description = muse::mtrc("effects", "Nyquist prompt effect");
-        meta.isRealtimeCapable = desc.IsEffectRealtime();
-        meta.supportsMultipleClipSelection = false;
-        meta.vendor = "Audacity";
-        meta.path = desc.GetPath();
-        meta.type = EffectType::Tool;
+        // With the nyquist prompt, one can do the same thing to multiple clips at once (right?)
+        constexpr auto supportsMultipleClipSelection = true;
+        const auto title = muse::mtrc("effects", "Nyquist prompt");
+        const auto description = muse::mtrc("effects", "Nyquist prompt effect");
+        const EffectMeta meta = toEffectMeta(desc, EffectFamily::Builtin, title, description, supportsMultipleClipSelection);
 
         builtinEffectsRepository()->registerMeta(meta);
     }

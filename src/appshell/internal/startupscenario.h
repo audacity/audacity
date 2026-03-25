@@ -28,6 +28,7 @@
 #include "framework/global/modularity/ioc.h"
 #include "framework/interactive/iinteractive.h"
 #include "framework/actions/iactionsdispatcher.h"
+#include "framework/audioplugins/iaudiopluginmetareaderregister.h"
 #include "framework/audioplugins/iregisteraudiopluginsscenario.h"
 #include "framework/multiwindows/imultiwindowsprovider.h"
 
@@ -39,6 +40,7 @@ class StartupScenario : public au::appshell::IStartupScenario, public muse::asyn
 {
     muse::GlobalInject<IAppShellConfiguration> configuration;
     muse::GlobalInject<muse::mi::IMultiWindowsProvider> multiwindowsProvider;
+    muse::GlobalInject<muse::audioplugins::IAudioPluginMetaReaderRegister> metaReaderRegister;
 
     muse::ContextInject<muse::IInteractive> interactive { this };
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };

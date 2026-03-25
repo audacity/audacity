@@ -2,6 +2,7 @@
  * Audacity: A Digital Audio Editor
  */
 #include "effectsrepositoryhelper.h"
+#include "effectsutils.h"
 
 #include "au3-components/PluginProvider.h"
 #include "au3-strings/TranslatableString.h"
@@ -23,6 +24,8 @@ constexpr EffectFamily toEffectFamily(muse::audio::AudioResourceType type)
         return EffectFamily::AudioUnit;
     case muse::audio::AudioResourceType::NyquistPlugin:
         return EffectFamily::Nyquist;
+    case muse::audio::AudioResourceType::BuiltinEffect:
+        return EffectFamily::Builtin;
     case muse::audio::AudioResourceType::FluidSoundfont:
     case muse::audio::AudioResourceType::MusePlugin:
     case muse::audio::AudioResourceType::MuseSamplerSoundPack:
@@ -33,10 +36,8 @@ constexpr EffectFamily toEffectFamily(muse::audio::AudioResourceType type)
     }
 }
 
-EffectsRepositoryHelper::EffectsRepositoryHelper(PluginProvider& provider,
-                                                 muse::audio::AudioResourceType resourceType,
-                                                 GetTitleFunc getTitle)
-    : m_pluginProvider{provider}, m_resourceType{resourceType}, m_getTitle{std::move(getTitle)}
+EffectsRepositoryHelper::EffectsRepositoryHelper(PluginProvider& provider, muse::audio::AudioResourceType resourceType)
+    : m_pluginProvider{provider}, m_resourceType{resourceType}
 {
     IF_ASSERT_FAILED(toEffectFamily(resourceType) != EffectFamily::Unknown) {
         LOGE() << "Invalid AudioResourceType for EffectsRepositoryHelper: " << static_cast<int>(resourceType);
@@ -53,19 +54,11 @@ EffectMetaList EffectsRepositoryHelper::effectMetaList() const
     const std::vector<AudioPluginInfo> allEffects = knownPlugins()->pluginInfoList();
 
     for (const AudioPluginInfo& info : allEffects) {
-        if (!(info.type == AudioPluginType::Fx && info.meta.type == m_resourceType)) {
+        if (info.meta.type != m_resourceType) {
             continue;
         }
 
-        EffectMeta meta;
-        meta.id = muse::String(info.meta.id.c_str());
-        meta.family = toEffectFamily(m_resourceType);
-        meta.title = m_getTitle ? m_getTitle(info.path) : muse::io::completeBasename(info.path).toString();
-        meta.isRealtimeCapable = true;
-        meta.vendor = muse::String::fromStdString(info.meta.vendor);
-        meta.type = EffectType::Processor;
-        meta.path = info.path;
-
+        EffectMeta meta = utils::museToAuEffectMeta(info.path, info.meta);
         effects.push_back(std::move(meta));
     }
 

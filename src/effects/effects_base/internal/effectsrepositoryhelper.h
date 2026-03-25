@@ -17,9 +17,7 @@ public:
     muse::GlobalInject<muse::audioplugins::IKnownAudioPluginsRegister> knownPlugins;
 
 public:
-    using GetTitleFunc = std::function<muse::String (const muse::io::path_t&)>;
-
-    EffectsRepositoryHelper(PluginProvider&, muse::audio::AudioResourceType, GetTitleFunc getTitle = nullptr);
+    EffectsRepositoryHelper(PluginProvider&, muse::audio::AudioResourceType);
 
     ~EffectsRepositoryHelper() = default;
 
@@ -29,6 +27,5 @@ public:
 private:
     PluginProvider& m_pluginProvider;
     const muse::audio::AudioResourceType m_resourceType;
-    const GetTitleFunc m_getTitle;
 };
 } // namespace au::effects

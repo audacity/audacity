@@ -1,5 +1,6 @@
 #include "abstractaudiopluginmetareader.h"
 #include "effecterrors.h"
+#include "effectsutils.h"
 
 #include "au3-components/PluginProvider.h"
 #include "au3-strings/TranslatableString.h"
@@ -8,6 +9,7 @@
 
 #include "au3wrap/internal/wxtypes_convert.h"
 
+#include "internal/au3/au3effectsutils.h"
 #include "log.h"
 
 namespace au::effects {
@@ -105,26 +107,19 @@ muse::RetVal<muse::audio::AudioResourceMetaList> AbstractAudioPluginMetaReader::
 
     muse::audio::AudioResourceMetaList metaList;
     for (const PluginDescriptor& desc : descriptors) {
-        //! NOTE At the moment AU supports Fx (Process, Generate, Analyze, Tool)
-        //! All effect types are treated as "Fx" for the plugin system
-        muse::String type;
-        if (desc.GetEffectType() == EffectType::EffectTypeProcess
-            || desc.GetEffectType() == EffectType::EffectTypeGenerate
-            || desc.GetEffectType() == EffectType::EffectTypeAnalyze
-            || desc.GetEffectType() == EffectType::EffectTypeTool) {
-            type = u"Fx";
-        } else {
-            type = u"None";
-        }
+        // For now - we will overwrite `museMeta.type` in the next conversion step
+        constexpr auto effectFamily = EffectFamily::Unknown;
 
-        muse::audio::AudioResourceMeta meta;
-        meta.id = desc.GetID();
-        meta.type = metaType();
-        meta.attributes.emplace(muse::audio::CATEGORIES_ATTRIBUTE, type);
-        meta.vendor = desc.GetVendor();
-        meta.hasNativeEditorSupport = true;
+        const auto title = muse::String::fromStdString(desc.GetSymbol().Msgid().MSGID().GET().ToStdString());
 
-        metaList.emplace_back(std::move(meta));
+        // TODO in a follow-up commit will be a property of the AU3 effect type, then we could get the actual value.
+        constexpr auto supportsMultipleClipSelection = false;
+
+        const auto auMeta = toEffectMeta(desc, effectFamily, title, title, supportsMultipleClipSelection);
+        auto museMeta = utils::auToMuseEffectMeta(auMeta);
+        museMeta.type = this->metaType();
+
+        metaList.emplace_back(std::move(museMeta));
     }
 
     return muse::RetVal<muse::audio::AudioResourceMetaList>::make_ok(metaList);

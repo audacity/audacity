@@ -73,6 +73,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/parameterextractorregistry.h
 
     # AU3
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3effectsutils.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3effectsutils.h
 
     # view
