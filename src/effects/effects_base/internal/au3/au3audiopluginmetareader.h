@@ -6,11 +6,11 @@
 class PluginProvider;
 
 namespace au::effects {
-class AbstractAudioPluginMetaReader : public muse::audioplugins::IAudioPluginMetaReader
+class Au3AudioPluginMetaReader : public muse::audioplugins::IAudioPluginMetaReader
 {
 public:
-    AbstractAudioPluginMetaReader(PluginProvider&);
-    ~AbstractAudioPluginMetaReader() override;
+    Au3AudioPluginMetaReader(PluginProvider&);
+    ~Au3AudioPluginMetaReader() override;
 
     void init(const muse::IApplication::RunMode& mode);
     void deinit();

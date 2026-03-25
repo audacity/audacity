@@ -3,12 +3,12 @@
 */
 #pragma once
 
-#include "effects/effects_base/internal/abstractaudiopluginmetareader.h"
+#include "effects/effects_base/internal/au3/au3audiopluginmetareader.h"
 
 #include "au3-nyquist-effects/LoadNyquist.h"
 
 namespace au::effects {
-class NyquistPluginsMetaReader : public AbstractAudioPluginMetaReader
+class NyquistPluginsMetaReader : public Au3AudioPluginMetaReader
 {
 public:
     NyquistPluginsMetaReader();

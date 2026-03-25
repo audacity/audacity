@@ -1,6 +1,6 @@
-#include "abstractaudiopluginmetareader.h"
+#include "au3audiopluginmetareader.h"
 #include "effecterrors.h"
-#include "effectsutils.h"
+#include "../effectsutils.h"
 
 #include "au3-components/PluginProvider.h"
 #include "au3-strings/TranslatableString.h"
@@ -13,12 +13,12 @@
 #include "log.h"
 
 namespace au::effects {
-AbstractAudioPluginMetaReader::AbstractAudioPluginMetaReader(PluginProvider& provider)
+Au3AudioPluginMetaReader::Au3AudioPluginMetaReader(PluginProvider& provider)
     : m_pluginProvider{provider}
 {
 }
 
-AbstractAudioPluginMetaReader::~AbstractAudioPluginMetaReader()
+Au3AudioPluginMetaReader::~Au3AudioPluginMetaReader()
 {
     IF_ASSERT_FAILED(m_terminated) {
         LOGW() << "Better call deinit() on module deinit";
@@ -26,24 +26,24 @@ AbstractAudioPluginMetaReader::~AbstractAudioPluginMetaReader()
     }
 }
 
-void AbstractAudioPluginMetaReader::init(const muse::IApplication::RunMode& mode)
+void Au3AudioPluginMetaReader::init(const muse::IApplication::RunMode& mode)
 {
     doInit(mode);
     m_initialized = true;
 }
 
-void AbstractAudioPluginMetaReader::doInit(const muse::IApplication::RunMode&)
+void Au3AudioPluginMetaReader::doInit(const muse::IApplication::RunMode&)
 {
     m_pluginProvider.Initialize();
 }
 
-void AbstractAudioPluginMetaReader::deinit()
+void Au3AudioPluginMetaReader::deinit()
 {
     m_pluginProvider.Terminate();
     m_terminated = true;
 }
 
-muse::RetVal<muse::audio::AudioResourceMetaList> AbstractAudioPluginMetaReader::readMeta(const muse::io::path_t& pluginPath) const
+muse::RetVal<muse::audio::AudioResourceMetaList> Au3AudioPluginMetaReader::readMeta(const muse::io::path_t& pluginPath) const
 {
     IF_ASSERT_FAILED(m_initialized && !m_terminated) {
         return make_ret(muse::Ret::Code::InternalError);

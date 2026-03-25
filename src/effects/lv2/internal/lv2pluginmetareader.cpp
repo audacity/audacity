@@ -8,7 +8,7 @@
 
 namespace au::effects {
 Lv2PluginMetaReader::Lv2PluginMetaReader()
-    : AbstractAudioPluginMetaReader{m_module} {}
+    : Au3AudioPluginMetaReader{m_module} {}
 
 muse::audio::AudioResourceType Lv2PluginMetaReader::metaType() const
 {

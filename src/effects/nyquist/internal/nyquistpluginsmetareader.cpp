@@ -8,7 +8,7 @@ using namespace au::effects;
 using namespace muse;
 
 NyquistPluginsMetaReader::NyquistPluginsMetaReader()
-    : AbstractAudioPluginMetaReader{m_module}
+    : Au3AudioPluginMetaReader{m_module}
 {
 }
 
