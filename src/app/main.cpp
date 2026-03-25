@@ -179,9 +179,7 @@ int main(int argc, char** argv)
         qApplication = new QCoreApplication(argcFinal, argvFinal);
     } else {
         QApplication* guiApp = new QApplication(argcFinal, argvFinal);
-#ifdef MUSE_MULTICONTEXT_WIP
         guiApp->setQuitOnLastWindowClosed(false);
-#endif
         qApplication = guiApp;
     }
 
