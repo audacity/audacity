@@ -4,12 +4,18 @@
 
 #pragma once
 
-#include "audioplugins/iaudiopluginsscanner.h"
+#include "effects/effects_base/internal/au3/au3audiopluginscanner.h"
+
+#include "au3-lv2/LoadLV2.h"
 
 namespace au::effects {
-class Lv2PluginsScanner : public muse::audioplugins::IAudioPluginsScanner
+class Lv2PluginsScanner : public Au3AudioPluginScanner
 {
 public:
-    muse::io::paths_t scanPlugins() const override;
+    Lv2PluginsScanner()
+        : Au3AudioPluginScanner(m_lv2Module) {}
+
+private:
+    ::LV2EffectsModule m_lv2Module;
 };
 }

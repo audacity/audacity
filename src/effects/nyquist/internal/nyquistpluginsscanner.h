@@ -3,12 +3,17 @@
 */
 #pragma once
 
-#include "audioplugins/iaudiopluginsscanner.h"
+#include "effects/effects_base/internal/au3/au3audiopluginscanner.h"
+#include "au3-nyquist-effects/LoadNyquist.h"
 
 namespace au::effects {
-class NyquistPluginsScanner : public muse::audioplugins::IAudioPluginsScanner
+class NyquistPluginsScanner : public Au3AudioPluginScanner
 {
 public:
-    muse::io::paths_t scanPlugins() const override;
+    NyquistPluginsScanner()
+        : Au3AudioPluginScanner(m_nyquistModule) {}
+
+private:
+    ::NyquistEffectsModule m_nyquistModule;
 };
 }

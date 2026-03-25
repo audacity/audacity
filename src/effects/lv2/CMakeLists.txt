@@ -16,7 +16,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/lv2effectsrepository.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/lv2pluginmetareader.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/lv2pluginmetareader.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/lv2pluginsscanner.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/lv2pluginsscanner.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/lv2viewlauncher.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/lv2viewlauncher.h

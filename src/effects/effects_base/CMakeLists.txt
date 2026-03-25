@@ -73,6 +73,8 @@ set(MODULE_SRC
     # AU3
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3audiopluginmetareader.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3audiopluginmetareader.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3audiopluginscanner.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3audiopluginscanner.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3effectsutils.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3effectsutils.h
 

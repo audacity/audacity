@@ -15,7 +15,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/audiouniteffectsrepository.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/audiouniteffectsrepository.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/internal/audiounitpluginsscanner.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/audiounitpluginsscanner.h
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/audiounitpluginsmetareader.cpp

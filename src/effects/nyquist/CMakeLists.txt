@@ -16,7 +16,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/nyquistparameterextractorservice.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/nyquistviewlauncher.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/nyquistviewlauncher.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/nyquistpluginsscanner.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/nyquistpluginsscanner.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/nyquistpluginsmetareader.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/nyquistpluginsmetareader.h

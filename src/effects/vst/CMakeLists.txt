@@ -14,7 +14,6 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/vsteffectsrepository.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/vsteffectsrepository.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/vst3pluginsscanner.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/vst3pluginsscanner.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/vst3pluginsmetareader.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/vst3pluginsmetareader.h
