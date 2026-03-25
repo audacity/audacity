@@ -28,7 +28,7 @@
 #include "internal/framelesswindowcontroller.h"
 
 #include "modularity/ioc.h"
-#include "ui/iuiconfiguration.h"
+#include "ui/iuicontextconfiguration.h"
 #include "ui/imainwindow.h"
 
 #include "windows.h"
@@ -36,7 +36,7 @@
 namespace au::appshell {
 class WinFramelessWindowController : public QObject, public FramelessWindowController, public muse::Contextable
 {
-    muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
+    muse::ContextInject<muse::ui::IUiContextConfiguration> uiContextConfiguration = { this };
     muse::Inject<muse::ui::IMainWindow> mainWindow { this };
 
 public:

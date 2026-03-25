@@ -5,6 +5,7 @@
 
 #include "framework/global/stringutils.h"
 #include "framework/global/serialization/json.h"
+#include "framework/ui/iuicontextconfiguration.h"
 
 #include "framework/global/log.h"
 
@@ -163,7 +164,8 @@ muse::async::Channel<bool> ProjectSceneConfiguration::isClippingInWaveformVisibl
 
 double ProjectSceneConfiguration::zoom(const muse::modularity::ContextPtr& ctx) const
 {
-    return uiConfiguration()->physicalDpi(ctx) / 4;
+    auto uiCtxConfig = muse::modularity::ioc(ctx)->resolve<muse::ui::IUiContextConfiguration>("projectscene");
+    return uiCtxConfig ? uiCtxConfig->physicalDpi() / 4 : 96.0 / 4;
 }
 
 int ProjectSceneConfiguration::mouseZoomPrecision() const
