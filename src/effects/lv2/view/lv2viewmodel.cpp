@@ -300,8 +300,6 @@ bool Lv2ViewModel::buildFancy()
     if (auto idleUi = tryCreateLv2IdleUi(*m_suilInstance, isExternalUi)) {
         m_pluginUi = std::move(idleUi);
     } else {
-        const auto uri = lilv_node_as_uri(uiType);
-
         m_unsupportedUiReason = "Idle UI creation failed";
         emit unsupportedUiReasonChanged();
         return false;
