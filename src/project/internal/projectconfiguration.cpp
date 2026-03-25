@@ -1,7 +1,8 @@
-#include "global/settings.h"
-#include "translation.h"
-
 #include <QDir>
+
+#include "framework/global/settings.h"
+#include "framework/global/translation.h"
+#include "framework/global/io/dir.h"
 
 #include "au3-files/FileNames.h"
 #include "au3-cloud-audiocom/CloudLibrarySettings.h"
@@ -88,7 +89,7 @@ muse::io::path_t ProjectConfiguration::defaultUserProjectsPath() const
 
 muse::io::path_t ProjectConfiguration::cloudProjectsPath() const
 {
-    return muse::io::path_t(audacity::cloud::audiocom::CloudProjectsSavePath.Read());
+    return muse::io::Dir::fromNativeSeparators(muse::io::path_t(audacity::cloud::audiocom::CloudProjectsSavePath.Read()));
 }
 
 void ProjectConfiguration::setCloudProjectsPath(const muse::io::path_t& path)
