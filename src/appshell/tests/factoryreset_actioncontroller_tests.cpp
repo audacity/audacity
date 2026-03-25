@@ -78,7 +78,7 @@ public:
         EXPECT_CALL(*m_interactive, warning(
                         HasSubstr("revert to factory settings"),
                         _, _,
-                        static_cast<int>(IInteractive::Button::Apply),
+                        static_cast<int>(IInteractive::Button::Cancel),
                         _, _))
         .WillOnce([this](const std::string&, const IInteractive::Text&,
                          const IInteractive::ButtonDatas&, int,
