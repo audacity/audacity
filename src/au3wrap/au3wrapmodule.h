@@ -20,6 +20,7 @@ class Au3WrapModule : public muse::modularity::IModuleSetup
 {
     muse::GlobalInject<muse::IGlobalConfiguration> globalConfiguration;
     muse::GlobalInject<au::project::IProjectConfiguration> projectConfiguration;
+    muse::GlobalInject<muse::IApplication> application;
 public:
 
     std::string moduleName() const override;
@@ -32,7 +33,6 @@ public:
 private:
 
     WxLogWrap* m_wxLog = nullptr;
-
     std::shared_ptr<Au3BasicUI> m_au3BasicUi;
 };
 }

@@ -10,8 +10,12 @@
 #include "au3-import-export/Import.h"
 #include "au3-import-export/ExportPluginRegistry.h"
 #include "au3-preferences/Prefs.h"
+#include "au3-project/Project.h"
 #include "au3-project-file-io/ProjectFileIO.h"
 #include "au3-module-manager/ModuleManager.h"
+
+#include "context/iglobalcontext.h"
+#include "project/iaudacityproject.h"
 
 #include "modularity/ioc.h"
 
@@ -29,15 +33,15 @@
 using namespace au::au3;
 using namespace muse::modularity;
 
+static const std::string mname("au3wrap");
+
 std::string Au3WrapModule::moduleName() const
 {
-    return "au3wrap";
+    return mname;
 }
 
 void Au3WrapModule::registerExports()
 {
-    m_au3BasicUi = std::make_shared<Au3BasicUI>(muse::modularity::globalCtx());
-
     globalIoc()->registerExport<IAu3ProjectCreator>(moduleName(), new Au3ProjectCreator());
 }
 
@@ -66,7 +70,27 @@ void Au3WrapModule::onInit(const muse::IApplication::RunMode&)
     muse::String tempDir = projectConfiguration()->temporaryDir().toString();
     UpdateDefaultPath(FileNames::Operation::Temp, wxFromString(tempDir));
 
+    m_au3BasicUi = std::make_shared<Au3BasicUI>(application.get());
     (void)BasicUI::Install(m_au3BasicUi.get());
+
+    // Map AudacityProject to context for WindowPlacement
+    auto app = application.get();
+    static WindowPlacementFactory::Scope scope {
+        [app](AudacityProject& project) -> std::unique_ptr<const BasicUI::WindowPlacement> {
+            auto projectAddr = reinterpret_cast<uintptr_t>(&project);
+            for (const auto& ctx : app->contexts()) {
+                auto gc = muse::modularity::ioc(ctx)->resolve<au::context::IGlobalContext>("au3wrap");
+                if (!gc) {
+                    continue;
+                }
+                auto prj = gc->currentProject();
+                if (prj && prj->au3ProjectPtr() == projectAddr) {
+                    return std::make_unique<Au3WindowPlacement>(ctx);
+                }
+            }
+            return std::make_unique<BasicUI::WindowPlacement>();
+        }
+    };
 }
 
 void Au3WrapModule::onAllInited(const muse::IApplication::RunMode& mode)
@@ -79,6 +103,7 @@ void Au3WrapModule::onAllInited(const muse::IApplication::RunMode& mode)
 void Au3WrapModule::onDeinit()
 {
     (void)BasicUI::Install(nullptr);
+    m_au3BasicUi.reset();
 
     if (m_wxLog) {
         // Only clean up if it's still the active target;

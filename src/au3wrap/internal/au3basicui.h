@@ -7,16 +7,25 @@
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
 #include "framework/interactive/iinteractive.h"
+#include "framework/global/iapplication.h"
 
 #include "au3-basic-ui/BasicUI.h"
 
-class Au3BasicUI final : public BasicUI::Services, public muse::async::Asyncable, public muse::Injectable
+// WindowPlacement subclass that carries a muse context.
+// Created by WindowPlacementFactory when au3 code calls
+// ProjectFramePlacement(&project).
+class Au3WindowPlacement : public BasicUI::WindowPlacement, public kors::modularity::Contextable
 {
-    muse::Inject<muse::IInteractive> interactive { this };
-
 public:
-    Au3BasicUI(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+    Au3WindowPlacement(muse::modularity::ContextPtr ctx)
+        : Contextable(std::move(ctx)) {}
+};
+
+class Au3BasicUI final : public BasicUI::Services, public muse::async::Asyncable
+{
+public:
+    Au3BasicUI(std::shared_ptr<muse::IApplication> app)
+        : m_app(std::move(app)) {}
 
 protected:
     void DoCallAfter(const BasicUI::Action& action) override;
@@ -43,4 +52,12 @@ protected:
     bool IsUsingRtlLayout() const override;
 
     bool IsUiThread() const override;
+
+private:
+    muse::modularity::ContextPtr contextFromPlacement(const BasicUI::WindowPlacement& placement) const;
+    muse::modularity::ContextPtr contextFromPlacement(const BasicUI::WindowPlacement* placement) const;
+    muse::modularity::ContextPtr activeContext() const;
+    std::shared_ptr<muse::IInteractive> interactiveForContext(const muse::modularity::ContextPtr& ctx) const;
+
+    std::shared_ptr<muse::IApplication> m_app;
 };
