@@ -176,10 +176,6 @@ public:
 
     void NotifyPluginsChanged();
 
-    //! What is the plugin registry version number now in the file?
-    //! (Save() updates it)
-    const PluginRegistryVersion& GetRegistryVersion() const override;
-
     PluginPaths ReadCustomPaths(const PluginProvider& provider) override;
     void StoreCustomPaths(const PluginProvider& provider, const PluginPaths& paths) override;
 
@@ -227,8 +223,6 @@ private:
     PluginMap mRegisteredPlugins;
     std::map<PluginID, std::unique_ptr<ComponentInterface> > mLoadedInterfaces;
     std::vector<PluginDescriptor> mEffectPluginsCleared;
-
-    PluginRegistryVersion mRegver;
 };
 
 // Defining these special names in the low-level PluginManager.h

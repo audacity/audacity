@@ -43,7 +43,6 @@ for shared and private configs - which need to move out.
 ///////////////////////////////////////////////////////////////////////////////
 
 // Registry has the list of plug ins
-#define REGVERKEY wxString(wxT("/pluginregistryversion"))
 #define REGROOT wxString(wxT("/pluginregistry/"))
 #define REGCUSTOMPATHS wxString(wxT("/providercustompaths"))
 
@@ -559,61 +558,7 @@ void PluginManager::Load()
         return;
     }
 
-    // Check for a registry version that we can understand
-    // TODO: Should also check for a registry file that is newer than
-    // what we can understand.
-    mRegver = registry.Read(REGVERKEY);
-    if (Regver_lt(mRegver, "1.1")) {
-        // Conversion code here, for when registry version changes.
-
-        // We iterate through the effects, possibly updating their info.
-        wxString group = GetPluginTypeString(PluginTypeEffect);
-        wxString cfgPath = REGROOT + group + wxCONFIG_PATH_SEPARATOR;
-        wxArrayString groupsToDelete;
-
-        auto cfgGroup = registry.BeginGroup(cfgPath);
-        for (const auto& groupName : registry.GetChildGroups()) {
-            auto effectGroup = registry.BeginGroup(groupName);
-            wxString effectSymbol = registry.Read(KEY_SYMBOL, "");
-            wxString effectVersion = registry.Read(KEY_VERSION, "");
-
-            // For 2.3.0 the plugins we distribute have moved around.
-            // So we upped the registry version number to 1.1.
-            // These particular config edits were originally written to fix Bug 1914.
-            if (Regver_le(mRegver, "1.0")) {
-                // Nyquist prompt is a built-in that has moved to the tools menu.
-                if (effectSymbol == NYQUIST_PROMPT_ID) {
-                    registry.Write(KEY_EFFECTTYPE, "Tool");
-                    // Old version of SDE was in Analyze menu.  Now it is in Tools.
-                    // We don't want both the old and the new.
-                } else if ((effectSymbol == "Sample Data Export") && (effectVersion == "n/a")) {
-                    groupsToDelete.push_back(cfgPath + groupName);
-                    // Old version of SDI was in Generate menu.  Now it is in Tools.
-                } else if ((effectSymbol == "Sample Data Import") && (effectVersion == "n/a")) {
-                    groupsToDelete.push_back(cfgPath + groupName);
-                }
-            }
-        }
-        // Doing the deletion within the search loop risked skipping some items,
-        // hence the delayed delete.
-        for (unsigned int i = 0; i < groupsToDelete.size(); i++) {
-            registry.DeleteGroup(groupsToDelete[i]);
-        }
-        // Updates done.  Make sure we read the updated data later.
-        registry.Flush();
-    }
-
-    // Load all provider plugins first
-    LoadGroup(&registry, PluginTypeModule);
-
-    // Now the rest
     LoadGroup(&registry, PluginTypeEffect);
-    LoadGroup(&registry, PluginTypeAudacityCommand);
-    LoadGroup(&registry, PluginTypeExporter);
-    LoadGroup(&registry, PluginTypeImporter);
-
-    LoadGroup(&registry, PluginTypeStub);
-    return;
 }
 
 void PluginManager::LoadGroup(audacity::BasicSettings* pRegistry, PluginType type)
@@ -873,37 +818,15 @@ void PluginManager::Save()
     // Clear pluginregistry.cfg (not audacity.cfg)
     registry.Clear();
 
-    // Save the individual groups
     SaveGroup(&registry, PluginTypeEffect);
-    SaveGroup(&registry, PluginTypeExporter);
-    SaveGroup(&registry, PluginTypeAudacityCommand);
-    SaveGroup(&registry, PluginTypeImporter);
-    SaveGroup(&registry, PluginTypeStub);
-
-    // Not used by 2.1.1 or greater, but must save to allow users to switch between 2.1.0
-    // and 2.1.1+.  This should be removed after a few releases past 2.1.0.
-    //SaveGroup(&registry, PluginTypeNone);
-
-    // And now the providers
-    SaveGroup(&registry, PluginTypeModule);
-
-    // Write the version string
-    registry.Write(REGVERKEY, REGVERCUR);
 
     // Just to be safe
     registry.Flush();
-
-    mRegver = REGVERCUR;
 }
 
 void PluginManager::NotifyPluginsChanged()
 {
     Publisher<PluginsChangedMessage>::Publish({});
-}
-
-const PluginRegistryVersion& PluginManager::GetRegistryVersion() const
-{
-    return mRegver;
 }
 
 PluginPaths PluginManager::ReadCustomPaths(const PluginProvider& provider)
