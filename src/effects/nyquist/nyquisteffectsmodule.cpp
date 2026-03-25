@@ -41,7 +41,6 @@ void au::effects::NyquistEffectsModule::registerExports()
     m_nyquistEffectsRepository = std::make_shared<NyquistEffectsRepository>(muse::modularity::globalCtx(),
                                                                             std::make_unique<NyquistPluginsScanner>(),
                                                                             m_nyquistMetaReader);
-    m_nyquistPromptLoader = std::make_unique<NyquistPromptLoader>(muse::modularity::globalCtx());
 
     globalIoc()->registerExport<INyquistEffectsRepository>(mname, m_nyquistEffectsRepository);
 }
@@ -55,16 +54,21 @@ void au::effects::NyquistEffectsModule::resolveImports()
 {
 }
 
-void au::effects::NyquistEffectsModule::onPreInit(const muse::IApplication::RunMode&)
+void au::effects::NyquistEffectsModule::onPreInit(const muse::IApplication::RunMode& runMode)
 {
-    m_nyquistPromptLoader->preInit();
+    if (runMode != muse::IApplication::RunMode::AudioPluginRegistration) {
+        m_nyquistPromptLoader = std::make_unique<NyquistPromptLoader>(muse::modularity::globalCtx());
+        m_nyquistPromptLoader->preInit();
+    }
 }
 
 void au::effects::NyquistEffectsModule::onInit(const muse::IApplication::RunMode& runMode)
 {
     m_nyquistMetaReader->init(runMode);
     m_nyquistEffectsRepository->init();
-    m_nyquistPromptLoader->init();
+    if (m_nyquistPromptLoader) {
+        m_nyquistPromptLoader->init();
+    }
 }
 
 void au::effects::NyquistEffectsModule::onDeinit()

@@ -174,7 +174,6 @@ std::shared_ptr<muse::IApplication> AppFactory::newPluginRegistrationApp(const C
     app->addModule(new au::effects::Lv2EffectsModule());
     app->addModule(new au::effects::VstEffectsModule());
     app->addModule(new au::effects::NyquistEffectsModule());
-    app->addModule(new au::effects::BuiltinEffectsModule());
 
     return app;
 }
