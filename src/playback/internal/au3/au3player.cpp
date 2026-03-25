@@ -240,6 +240,16 @@ void Au3Player::seek(const muse::secs_t newPosition, bool applyIfPlaying)
     }
 
     m_playbackPosition.set(pos);
+
+    // Start position tracking if audio engine is active during recording
+    // (e.g., punch-and-roll pre-roll). The timer reads GetStreamTime() and
+    // updatePlaybackState() will stop it when the stream ends.
+    if (audioEngine()->isBusy() && m_playbackStatus.val == PlaybackStatus::Stopped
+        && !m_timer.isActive()) {
+        m_currentTarget.reset();
+        m_consumedSamplesSoFar = 0;
+        m_timer.start();
+    }
 }
 
 void Au3Player::rewind()
@@ -480,6 +490,9 @@ void Au3Player::updatePlaybackState()
         if (playbackStatus() == PlaybackStatus::Running
             || playbackStatus() == PlaybackStatus::Paused) {
             m_playbackStatus.set(PlaybackStatus::Stopped);
+        } else if (m_timer.isActive()) {
+            // Stream ended while not in playback mode (e.g., recording finished)
+            m_timer.stop();
         }
     }
 }
