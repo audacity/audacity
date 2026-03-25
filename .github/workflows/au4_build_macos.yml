@@ -205,7 +205,7 @@ jobs:
         key: ${{ steps.restore-ccache.outputs.cache-primary-key }}${{ steps.prepare-save-ccache.outputs.CCACHE_TIMESTAMP }}
         path: ${{ github.workspace }}/.ccache
 
-  selftest:
+  plugin-registration-self-test:
     needs: au4_build_macos
     runs-on: macos-26
     steps:
