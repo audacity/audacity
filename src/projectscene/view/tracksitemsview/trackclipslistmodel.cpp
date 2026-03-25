@@ -720,8 +720,18 @@ void TrackClipsListModel::selectClip(const ClipKey& key)
     if (clipGroupId != -1) {
         //! NOTE: clip belongs to a group, select the whole group
         if (modifiers.testFlag(Qt::ShiftModifier)) {
-            for (const auto& groupClipKey : trackeditInteraction()->clipsInGroup(clipGroupId)) {
-                selectionController()->addSelectedClip(groupClipKey);
+            const auto groupedClips = trackeditInteraction()->clipsInGroup(clipGroupId);
+            const auto selectedClips = selectionController()->selectedClips();
+            const bool allGroupClipsSelected = std::all_of(groupedClips.cbegin(), groupedClips.cend(), [&](const auto& groupClipKey) {
+                return muse::contains(selectedClips, groupClipKey);
+            });
+
+            for (const auto& groupClipKey : groupedClips) {
+                if (allGroupClipsSelected) {
+                    selectionController()->removeClipSelection(groupClipKey);
+                } else {
+                    selectionController()->addSelectedClip(groupClipKey);
+                }
             }
         } else {
             selectionController()->resetSelectedLabels();
@@ -730,7 +740,11 @@ void TrackClipsListModel::selectClip(const ClipKey& key)
         }
     } else {
         if (modifiers.testFlag(Qt::ShiftModifier)) {
-            selectionController()->addSelectedClip(key.key);
+            if (muse::contains(selectionController()->selectedClips(), key.key)) {
+                selectionController()->removeClipSelection(key.key);
+            } else {
+                selectionController()->addSelectedClip(key.key);
+            }
         } else {
             if (muse::contains(selectionController()->selectedClips(), key.key)) {
                 return;

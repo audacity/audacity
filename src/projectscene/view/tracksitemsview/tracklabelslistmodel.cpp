@@ -238,7 +238,11 @@ void TrackLabelsListModel::selectLabel(const LabelKey& key)
     Qt::KeyboardModifiers modifiers = keyboardModifiers();
 
     if (modifiers.testFlag(Qt::ShiftModifier)) {
-        selectionController()->addSelectedLabel(key.key);
+        if (muse::contains(selectionController()->selectedLabels(), key.key)) {
+            selectionController()->removeLabelSelection(key.key);
+        } else {
+            selectionController()->addSelectedLabel(key.key);
+        }
     } else {
         if (muse::contains(selectionController()->selectedLabels(), key.key)) {
             return;

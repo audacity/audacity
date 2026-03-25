@@ -605,7 +605,8 @@ Rectangle {
                         root.editTitle()
                     } else {
                         //! NOTE Handle singleClick logic
-                        if (!root.multiClipsSelected && !(root.isDataSelected && isWithinRange(e.x, headerSelectionRectangle.x, headerSelectionRectangle.width))) {
+                        if ((!root.multiClipsSelected || (e.modifiers & Qt.ShiftModifier))
+                                && !(root.isDataSelected && isWithinRange(e.x, headerSelectionRectangle.x, headerSelectionRectangle.width))) {
                             root.requestSelected()
                         }
 
@@ -797,14 +798,14 @@ Rectangle {
                         Qt.callLater(menuModel.handleMenuItem, itemId)
                     }
 
-                    onClicked: {
+                    onClicked: function(mouse) {
                         if (root.multiClipsSelected || root.groupId != -1) {
                             prv.ensureMultiMenuLoaded()
                         } else {
                             prv.ensureSingleMenuLoaded()
                         }
 
-                        if (!root.multiClipsSelected) {
+                        if (!root.multiClipsSelected || (mouse.modifiers & Qt.ShiftModifier)) {
                             if (!root.clipSelected) {
                                 root.requestSelectionReset()
                             }
