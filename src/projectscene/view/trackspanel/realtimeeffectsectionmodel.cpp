@@ -18,11 +18,19 @@ void RealtimeEffectSectionModel::load()
     });
 
     dispatcher()->reg(this, "toggle-effects", [this] {
-        configuration()->setIsEffectsPanelVisible(!configuration()->isEffectsPanelVisible());
+        const bool shouldShow = !configuration()->isEffectsPanelVisible();
+        configuration()->setIsEffectsPanelVisible(shouldShow);
+        if (shouldShow) {
+            emit focusEffectsPanelRequested();
+        }
     });
 
     dispatcher()->reg(this, "add-realtime-effects", [this] {
-        configuration()->setIsEffectsPanelVisible(!configuration()->isEffectsPanelVisible());
+        const bool shouldShow = !configuration()->isEffectsPanelVisible();
+        configuration()->setIsEffectsPanelVisible(shouldShow);
+        if (shouldShow) {
+            emit focusEffectsPanelRequested();
+        }
     });
 
     emit showEffectsSectionChanged();

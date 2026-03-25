@@ -32,5 +32,6 @@ public:
 
 signals:
     void showEffectsSectionChanged();
+    void focusEffectsPanelRequested();
 };
 }

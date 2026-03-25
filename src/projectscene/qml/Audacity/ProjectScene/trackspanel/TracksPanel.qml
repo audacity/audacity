@@ -71,6 +71,14 @@ Item {
 
             RealtimeEffectSectionModel {
                 id: effectSectionModel
+
+                onFocusEffectsPanelRequested: {
+                    Qt.callLater(function() {
+                        if (root.effectColumnNavigationPanel && effectColumn.visible) {
+                            root.effectColumnNavigationPanel.requestActive()
+                        }
+                    })
+                }
             }
 
             SeparatorLine { }
