@@ -30,10 +30,10 @@ private:
     std::unique_ptr<BuiltinEffectsLoader> m_builtinEffectsLoader;
 };
 
-class BuiltinEffectsContext : public muse::modularity::IContextSetup
+class BuiltinEffectsCollectionContext : public muse::modularity::IContextSetup
 {
 public:
-    BuiltinEffectsContext(const muse::modularity::ContextPtr& ctx);
+    BuiltinEffectsCollectionContext(const muse::modularity::ContextPtr& ctx);
 
     void registerExports() override;
     void resolveImports() override;

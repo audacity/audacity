@@ -57,23 +57,23 @@ void BuiltinEffectsCollectionModule::onInit(const muse::IApplication::RunMode&)
 
 muse::modularity::IContextSetup* BuiltinEffectsCollectionModule::newContext(const muse::modularity::ContextPtr& ctx) const
 {
-    return new BuiltinEffectsContext(ctx);
+    return new BuiltinEffectsCollectionContext(ctx);
 }
 
 // =====================================================
-// BuiltinEffectsContext
+// BuiltinEffectsCollectionContext
 // =====================================================
 
-BuiltinEffectsContext::BuiltinEffectsContext(const muse::modularity::ContextPtr& ctx)
+BuiltinEffectsCollectionContext::BuiltinEffectsCollectionContext(const muse::modularity::ContextPtr& ctx)
     : muse::modularity::IContextSetup(ctx)
 {
 }
 
-void BuiltinEffectsContext::registerExports()
+void BuiltinEffectsCollectionContext::registerExports()
 {
 }
 
-void BuiltinEffectsContext::resolveImports()
+void BuiltinEffectsCollectionContext::resolveImports()
 {
     auto lr = ioc()->resolve<IEffectViewLaunchRegister>(mname);
     if (lr) {
@@ -81,6 +81,6 @@ void BuiltinEffectsContext::resolveImports()
     }
 }
 
-void BuiltinEffectsContext::onDeinit()
+void BuiltinEffectsCollectionContext::onDeinit()
 {
 }
