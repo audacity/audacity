@@ -8,12 +8,6 @@ using namespace muse;
 WorkspaceLayoutPageModel::WorkspaceLayoutPageModel(QObject* parent)
     : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
-#ifdef MUSE_MODULE_WORKSPACE
-    // Listen to workspace changes to update selection
-    m_workspaceManager()->currentWorkspaceChanged().onNotify(this, [this]() {
-        updateWorkspaces();
-    });
-#endif
 }
 
 void WorkspaceLayoutPageModel::load()
@@ -22,6 +16,12 @@ void WorkspaceLayoutPageModel::load()
     m_workspaces.clear();
 
 #ifdef MUSE_MODULE_WORKSPACE
+    // Listen to workspace changes to update selection
+    if (m_workspaceManager()) {
+        m_workspaceManager()->currentWorkspaceChanged().onNotify(this, [this]() {
+            updateWorkspaces();
+        });
+    }
     // Get current workspace from workspace manager
     std::string currentWorkspaceName;
     if (m_workspaceManager() && m_workspaceManager()->currentWorkspace()) {
