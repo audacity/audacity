@@ -330,14 +330,16 @@ void ApplicationActionController::revertToFactorySettings()
                                      "You will also need to scan all third party plugins again.\n\n"
                                      "This action will not delete any of your projects.");
 
+    muse::IInteractive::ButtonData cancelBtn = interactive()->buttonData(muse::IInteractive::Button::Cancel);
+    cancelBtn.accent = true;
+
     int revertBtn = int(muse::IInteractive::Button::Apply);
     auto promise = interactive()->warning(title, question,
-                                          { interactive()->buttonData(muse::IInteractive::Button::Cancel),
+                                          { cancelBtn,
                                             muse::IInteractive::ButtonData(revertBtn,
-                                                                           muse::trc("appshell",
-                                                                                     "Restart now to revert settings"),
-                                                                           true) },
-                                          revertBtn);
+                                                                           muse::trc("appshell", "Restart now to revert settings")) },
+                                          cancelBtn.btn, { muse::IInteractive::Option::WithIcon },
+                                          muse::trc("appshell", "Revert to factory settings"));
 
     promise.onResolve(this, [this](const muse::IInteractive::Result& res) {
         if (res.isButton(muse::IInteractive::Button::Cancel)) {
