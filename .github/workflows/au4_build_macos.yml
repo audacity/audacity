@@ -145,10 +145,13 @@ jobs:
       run: |
         ccache -sv
 
-    - name: Run plugin registration app self-test
+    - name: Upload build for self-test
       if: env.DO_BUILD == 'true'
-      run: |
-        ./build.install/audacity.app/Contents/MacOS/audacity --plugin-registration-self-test
+      uses: actions/upload-artifact@v6
+      with:
+        name: selftest-build-macos
+        path: ./build.install/
+        retention-days: 1
 
     - name: Package
       env:
@@ -201,3 +204,18 @@ jobs:
       with:
         key: ${{ steps.restore-ccache.outputs.cache-primary-key }}${{ steps.prepare-save-ccache.outputs.CCACHE_TIMESTAMP }}
         path: ${{ github.workspace }}/.ccache
+
+  selftest:
+    needs: au4_build_macos
+    runs-on: macos-26
+    steps:
+    - name: Download build artifact
+      uses: actions/download-artifact@v6
+      with:
+        name: selftest-build-macos
+        path: ./build.install
+
+    - name: Run plugin registration app self-test
+      run: |
+        chmod +x ./build.install/audacity.app/Contents/MacOS/audacity
+        ./build.install/audacity.app/Contents/MacOS/audacity --plugin-registration-self-test

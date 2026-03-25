@@ -136,11 +136,13 @@ jobs:
       run: |
         ccache -sv
 
-    - name: Run plugin registration app self-test
+    - name: Upload build for self-test
       if: env.DO_BUILD == 'true'
-      shell: bash
-      run: |
-        ./build.install/bin/Audacity4.exe --plugin-registration-self-test
+      uses: actions/upload-artifact@v6
+      with:
+        name: selftest-build-windows
+        path: ./build.install/
+        retention-days: 1
 
     - name: Package
       env:
@@ -186,3 +188,18 @@ jobs:
       with:
         key: ${{ steps.restore-ccache.outputs.cache-primary-key }}${{ steps.prepare-save-ccache.outputs.CCACHE_TIMESTAMP }}
         path: ${{ github.workspace }}/.ccache
+
+  selftest:
+    needs: au4_build_windows
+    runs-on: windows-2022
+    steps:
+    - name: Download build artifact
+      uses: actions/download-artifact@v6
+      with:
+        name: selftest-build-windows
+        path: ./build.install
+
+    - name: Run plugin registration app self-test
+      shell: bash
+      run: |
+        ./build.install/bin/Audacity4.exe --plugin-registration-self-test
