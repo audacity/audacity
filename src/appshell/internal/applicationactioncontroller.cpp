@@ -349,10 +349,8 @@ void ApplicationActionController::revertToFactorySettings()
             return;
         }
 
-        //! NOTE Don't call settings()->reset() here — the data directory is shared
-        //! by all open windows/processes. Deleting it now causes file handle errors.
-        //! Instead, set a mode and let GuiApp::finish() restart with the -F flag.
-        //! The new process does the actual reset on startup via applyCommandLineOptions().
+        //! NOTE Set the mode now; GuiApp::finish() performs the actual reset
+        //! after all modules have been deinited and file handles released.
         configuration()->setFactoryResetMode(FactoryResetMode::Full);
 
         if (multiwindowsProvider()->windowCount() <= 1) {
