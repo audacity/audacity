@@ -193,6 +193,16 @@ jobs:
     needs: au4_build_windows
     runs-on: windows-2022
     steps:
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: '6.10.1'
+        host: 'windows'
+        target: 'desktop'
+        arch: 'win64_msvc2022_64'
+        modules: 'qt5compat qtnetworkauth qtshadertools qtwebsockets qtgraphs qtquick3d'
+        cache: true
+
     - name: Download build artifact
       uses: actions/download-artifact@v6
       with:

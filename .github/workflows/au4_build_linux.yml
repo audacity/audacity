@@ -187,6 +187,16 @@ jobs:
     needs: au4_build_linux
     runs-on: ubuntu-22.04
     steps:
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: '6.10.1'
+        host: 'linux'
+        target: 'desktop'
+        arch: 'linux_gcc_64'
+        modules: 'qt5compat qtnetworkauth qtshadertools qtwebsockets qtgraphs qtquick3d'
+        cache: true
+
     - name: Download build artifact
       uses: actions/download-artifact@v6
       with:
