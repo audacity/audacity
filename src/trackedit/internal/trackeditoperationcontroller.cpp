@@ -521,7 +521,7 @@ bool TrackeditOperationController::trimClipsRight(const ClipKeyList& clipKeyList
 
     bool hasLabels = isLabelsSelected();
     if (hasLabels) {
-        labelsInteraction()->stretchLabelsRight(selectedLabels(), deltaSec, completed);
+        labelsInteraction()->stretchLabelsRight(selectedLabels(), -deltaSec, completed);
     }
     if (completed) {
         std::string msg = hasLabels ? "Trim items right" : "Trim clip right";
@@ -562,7 +562,7 @@ bool TrackeditOperationController::stretchClipsRight(const ClipKeyList& clipKeyL
 
     bool hasLabels = isLabelsSelected();
     if (hasLabels) {
-        labelsInteraction()->stretchLabelsRight(selectedLabels(), deltaSec, completed);
+        labelsInteraction()->stretchLabelsRight(selectedLabels(), -deltaSec, completed);
     }
 
     if (completed) {
