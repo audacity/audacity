@@ -76,6 +76,7 @@ private:
     void update();
     void updateItemMetrics(ViewTrackItem* item) override;
     trackedit::TrackItemKeyList getSelectedItemKeys() const override;
+    trackedit::ClipKeyList clipsForInteraction(const ClipKey& key) const;
 
     TrackClipItem* clipItemByKey(const trackedit::ClipKey& k) const;
 
