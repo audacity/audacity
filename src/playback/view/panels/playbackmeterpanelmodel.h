@@ -15,7 +15,7 @@
 #include "playback/iplaybackcontroller.h"
 
 namespace au::playback {
-class PlaybackMeterPanelModel : public QObject, public muse::async::Asyncable, public muse::Injectable
+class PlaybackMeterPanelModel : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
 

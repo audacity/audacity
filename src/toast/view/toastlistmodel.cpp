@@ -16,7 +16,7 @@ constexpr int MAX_VISIBLE_TOASTS = 5;
 }
 
 ToastListModel::ToastListModel(QObject* parent)
-    : QAbstractListModel(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
+    : QAbstractListModel(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
 }
 

@@ -13,7 +13,7 @@
 using namespace au::projectscene;
 
 GetEffectsModel::GetEffectsModel(QObject* parent)
-    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
+    : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
 }
 

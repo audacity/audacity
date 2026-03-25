@@ -15,7 +15,7 @@
 #include "trackedit/itrackeditconfiguration.h"
 
 namespace au::appshell {
-class EditPreferencesModel : public QObject, public muse::async::Asyncable, public muse::Injectable
+class EditPreferencesModel : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
     QML_ELEMENT

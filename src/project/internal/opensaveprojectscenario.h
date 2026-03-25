@@ -37,7 +37,7 @@
 #include "project/iprojectfilescontroller.h"
 
 namespace au::project {
-class OpenSaveProjectScenario : public IOpenSaveProjectScenario, public muse::Injectable
+class OpenSaveProjectScenario : public IOpenSaveProjectScenario, public muse::Contextable
 {
     muse::GlobalInject<IProjectConfiguration> configuration;
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
@@ -49,7 +49,7 @@ class OpenSaveProjectScenario : public IOpenSaveProjectScenario, public muse::In
 
 public:
     OpenSaveProjectScenario(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
 
     muse::RetVal<SaveLocation> askSaveLocation(IAudacityProjectPtr project, SaveMode mode,
                                                SaveLocationType preselectedType = SaveLocationType::Undefined) const override;

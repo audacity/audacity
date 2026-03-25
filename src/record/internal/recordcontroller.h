@@ -19,7 +19,7 @@
 #include "record/irecordcontroller.h"
 
 namespace au::record {
-class RecordController : public IRecordController, public muse::actions::Actionable, public muse::async::Asyncable, public muse::Injectable
+class RecordController : public IRecordController, public muse::actions::Actionable, public muse::async::Asyncable, public muse::Contextable
 {
     muse::GlobalInject<record::IRecordConfiguration> configuration;
 
@@ -31,7 +31,7 @@ class RecordController : public IRecordController, public muse::actions::Actiona
 
 public:
     RecordController(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
 
     void init();
     void deinit();

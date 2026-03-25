@@ -21,7 +21,7 @@
 Q_DECLARE_METATYPE(au::trackedit::TrackType)
 
 namespace au::projectscene {
-class TrackItem : public QObject, public muse::Injectable, public muse::async::Asyncable
+class TrackItem : public QObject, public muse::Contextable, public muse::async::Asyncable
 {
     Q_OBJECT
 

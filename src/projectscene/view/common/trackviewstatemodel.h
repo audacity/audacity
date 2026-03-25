@@ -17,7 +17,7 @@
 #include "types/val.h"
 
 namespace au::projectscene {
-class TrackViewStateModel : public QObject, public muse::Injectable, public muse::async::Asyncable
+class TrackViewStateModel : public QObject, public muse::Contextable, public muse::async::Asyncable
 {
     Q_OBJECT
 

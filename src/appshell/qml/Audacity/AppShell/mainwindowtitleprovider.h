@@ -32,7 +32,7 @@
 #include "context/iglobalcontext.h"
 
 namespace au::appshell {
-class MainWindowTitleProvider : public QObject, public muse::async::Asyncable, public muse::Injectable
+class MainWindowTitleProvider : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
     QML_ELEMENT

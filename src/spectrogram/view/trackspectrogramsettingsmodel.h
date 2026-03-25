@@ -13,7 +13,7 @@
 #include "framework/global/modularity/ioc.h"
 
 namespace au::spectrogram {
-class TrackSpectrogramSettingsModel : public AbstractSpectrogramSettingsModel,  public QQmlParserStatus, public muse::Injectable,
+class TrackSpectrogramSettingsModel : public AbstractSpectrogramSettingsModel,  public QQmlParserStatus, public muse::Contextable,
     public muse::async::Asyncable
 {
     Q_OBJECT

@@ -10,7 +10,7 @@
 #include "trackedit/itracksinteraction.h"
 
 namespace au::projectscene {
-class DropController : public QObject, public muse::Injectable
+class DropController : public QObject, public muse::Contextable
 {
     Q_OBJECT
 

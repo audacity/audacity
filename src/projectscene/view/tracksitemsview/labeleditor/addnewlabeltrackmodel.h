@@ -9,7 +9,7 @@
 #include "trackedit/itrackeditinteraction.h"
 
 namespace au::projectscene {
-class AddNewLabelTrackModel : public QObject, public muse::Injectable
+class AddNewLabelTrackModel : public QObject, public muse::Contextable
 {
     Q_OBJECT
     QML_ELEMENT;

@@ -46,7 +46,7 @@ static void updateWindowPosition()
 }
 
 WinFramelessWindowController::WinFramelessWindowController(QObject* parent)
-    : QObject(parent), FramelessWindowController(), muse::Injectable(muse::iocCtxForQmlObject(this))
+    : QObject(parent), FramelessWindowController(), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
     memset(&m_monitorInfo, 0, sizeof(MONITORINFO));
     m_monitorInfo.cbSize = sizeof(MONITORINFO);

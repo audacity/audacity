@@ -37,7 +37,7 @@
 #include "project/iprojectconfiguration.h"
 
 namespace au::appshell {
-class GeneralPreferencesModel : public QObject, public muse::async::Asyncable, public muse::Injectable
+class GeneralPreferencesModel : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
     QML_ELEMENT

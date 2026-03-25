@@ -13,14 +13,14 @@
 class AudacityProject;
 
 namespace au::spectrogram {
-class FrequencySelectionRestorer : public IFrequencySelectionRestorer, public muse::Injectable
+class FrequencySelectionRestorer : public IFrequencySelectionRestorer, public muse::Contextable
 {
     muse::Inject<au::context::IGlobalContext> globalContext { this };
     muse::Inject<ISpectrogramService> spectrogramService { this };
 
 public:
     FrequencySelectionRestorer(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
     ~FrequencySelectionRestorer() override = default;
     void storeFrequencySelectionState(const FrequencySelection& selection) const override;
     FrequencySelection loadFrequencySelectionState() const override;

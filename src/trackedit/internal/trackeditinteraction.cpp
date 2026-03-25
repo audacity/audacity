@@ -2,7 +2,7 @@
 
 namespace au::trackedit {
 TrackeditInteraction::TrackeditInteraction(const muse::modularity::ContextPtr& ctx, std::unique_ptr<ITrackeditInteraction> interaction)
-    : muse::Injectable(ctx), m_interaction(std::move(interaction))
+    : muse::Contextable(ctx), m_interaction(std::move(interaction))
 {
 }
 

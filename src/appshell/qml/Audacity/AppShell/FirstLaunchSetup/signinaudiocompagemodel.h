@@ -12,7 +12,7 @@
 #include "au3cloud/iauthorization.h"
 
 namespace au::appshell {
-class SigninAudiocomPageModel : public QObject, public muse::async::Asyncable, public muse::Injectable
+class SigninAudiocomPageModel : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
     QML_ELEMENT

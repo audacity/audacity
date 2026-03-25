@@ -22,7 +22,7 @@
 
 struct TransportSequences;
 namespace au::playback {
-class Au3Player : public IPlayer, public muse::async::Asyncable, public muse::Injectable
+class Au3Player : public IPlayer, public muse::async::Asyncable, public muse::Contextable
 {
     muse::Inject<context::IGlobalContext> globalContext{ this };
     muse::Inject<au::trackedit::ISelectionController> selectionController{ this };

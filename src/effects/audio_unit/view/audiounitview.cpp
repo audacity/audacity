@@ -10,7 +10,7 @@
 
 namespace au::effects {
 AudioUnitView::AudioUnitView(QQuickItem* parent)
-    : QQuickItem(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
+    : QQuickItem(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
 }
 

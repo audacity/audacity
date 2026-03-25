@@ -10,7 +10,7 @@ using namespace au::projectscene;
 
 ClipGainModel::ClipGainModel(QObject* parent)
     : QAbstractListModel(parent)
-    , muse::Injectable(muse::iocCtxForQmlObject(this))
+    , muse::Contextable(muse::iocCtxForQmlObject(this))
 {
 }
 

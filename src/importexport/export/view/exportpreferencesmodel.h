@@ -20,7 +20,7 @@
 #include "trackedit/iselectioncontroller.h"
 
 namespace au::importexport {
-class ExportPreferencesModel : public QObject, public muse::async::Asyncable, public muse::Injectable
+class ExportPreferencesModel : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
 

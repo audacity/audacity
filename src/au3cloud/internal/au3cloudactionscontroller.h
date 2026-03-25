@@ -13,7 +13,7 @@
 #include "au3cloud/iauthorization.h"
 
 namespace au::au3cloud {
-class Au3CloudActionsController : public muse::actions::Actionable, public muse::Injectable
+class Au3CloudActionsController : public muse::actions::Actionable, public muse::Contextable
 {
     muse::GlobalInject<muse::IPlatformInteractive> platformInteractive;
 

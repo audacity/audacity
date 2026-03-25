@@ -32,7 +32,7 @@ static const muse::ui::INavigationControl* findFirstEnabledControl(const muse::u
 }
 
 TrackNavigationModel::TrackNavigationModel(QObject* parent)
-    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
+    : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
 }
 

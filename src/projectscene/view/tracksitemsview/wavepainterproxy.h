@@ -10,7 +10,7 @@
 #include "au3/isamplespainter.h"
 
 namespace au::projectscene {
-class WavePainterProxy : public IWavePainter, public muse::Injectable
+class WavePainterProxy : public IWavePainter, public muse::Contextable
 {
     muse::Inject<au::context::IGlobalContext> globalContext{ this };
     muse::Inject<IConnectingDotsPainter> connectingDotsPainter{ this };
@@ -19,7 +19,7 @@ class WavePainterProxy : public IWavePainter, public muse::Injectable
 
 public:
     WavePainterProxy(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
     void paint(QPainter& painter, const trackedit::ClipKey& clipKey, const Params& params, std::optional<PlotType> plotType) override;
 };
 }

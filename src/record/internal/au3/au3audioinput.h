@@ -21,7 +21,7 @@
 #include "trackedit/internal/itracknavigationcontroller.h"
 
 namespace au::record {
-class Au3AudioInput : public IAudioInput, public muse::async::Asyncable, public muse::Injectable
+class Au3AudioInput : public IAudioInput, public muse::async::Asyncable, public muse::Contextable
 {
     muse::GlobalInject<record::IRecordConfiguration> configuration;
 

@@ -23,7 +23,7 @@
 // #include "braille/ibrailleconfiguration.h"
 
 namespace au::appshell {
-class ProjectPageModel : public QObject, public muse::async::Asyncable, public muse::actions::Actionable, public muse::Injectable
+class ProjectPageModel : public QObject, public muse::async::Asyncable, public muse::actions::Actionable, public muse::Contextable
 {
     Q_OBJECT
     QML_ELEMENT

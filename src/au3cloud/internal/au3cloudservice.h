@@ -17,7 +17,7 @@
 #include "oauthhttpserverreplyhandler.h"
 
 namespace au::au3cloud {
-class Au3CloudService : public QObject, public muse::async::Asyncable, public IAuthorization, public IUsageInfo, public muse::Injectable
+class Au3CloudService : public QObject, public muse::async::Asyncable, public IAuthorization, public IUsageInfo, public muse::Contextable
 {
     Q_OBJECT
 
@@ -25,7 +25,7 @@ class Au3CloudService : public QObject, public muse::async::Asyncable, public IA
 
 public:
     Au3CloudService(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
 
     void init();
 

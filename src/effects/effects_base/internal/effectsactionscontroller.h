@@ -24,7 +24,7 @@
 
 namespace au::effects {
 class EffectsUiActions;
-class EffectsActionsController : public muse::actions::Actionable, public muse::async::Asyncable, public muse::Injectable,
+class EffectsActionsController : public muse::actions::Actionable, public muse::async::Asyncable, public muse::Contextable,
     public std::enable_shared_from_this<EffectsActionsController>
 {
     muse::GlobalInject<IEffectsConfiguration> configuration;
@@ -42,7 +42,7 @@ class EffectsActionsController : public muse::actions::Actionable, public muse::
 
 public:
     EffectsActionsController(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
 
     void init();
     bool canReceiveAction(const muse::actions::ActionCode&) const override;

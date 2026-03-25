@@ -14,7 +14,7 @@
 #include <QQuickPaintedItem>
 
 namespace au::spectrogram {
-class ClipChannelSpectrogramView : public QQuickPaintedItem, public muse::async::Asyncable, public muse::Injectable
+class ClipChannelSpectrogramView : public QQuickPaintedItem, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
     Q_PROPERTY(int clipId READ clipId WRITE setClipId NOTIFY clipIdChanged FINAL)

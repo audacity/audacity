@@ -27,7 +27,7 @@
 
 namespace au::project {
 class ProjectActionsController : public IProjectFilesController, public muse::actions::Actionable, public muse::async::Asyncable,
-    public muse::Injectable
+    public muse::Contextable
 {
     muse::GlobalInject<IProjectConfiguration> configuration;
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;

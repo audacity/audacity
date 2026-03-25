@@ -36,7 +36,7 @@
 class QUrl;
 
 namespace au::appshell {
-class AboutModel : public QObject, public muse::Injectable
+class AboutModel : public QObject, public muse::Contextable
 {
     Q_OBJECT
     QML_ELEMENT

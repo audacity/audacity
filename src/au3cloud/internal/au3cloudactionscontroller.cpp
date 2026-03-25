@@ -14,7 +14,7 @@ const muse::Uri SIGNIN_URI("audacity://signin/audiocom");
 }
 
 Au3CloudActionsController::Au3CloudActionsController(muse::modularity::ContextPtr ctx)
-    : muse::Injectable(ctx)
+    : muse::Contextable(ctx)
 {
 }
 

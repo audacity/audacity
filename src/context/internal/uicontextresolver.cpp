@@ -38,7 +38,7 @@ static const QString PROJECT_NAVIGATION_PANEL("MainToolBar");
 static const QString DEFAULT_NAVIGATION_SECTION("TrackViewSection");
 
 UiContextResolver::UiContextResolver(const muse::modularity::ContextPtr& ctx)
-    : muse::Injectable(ctx)
+    : muse::Contextable(ctx)
 {
 }
 

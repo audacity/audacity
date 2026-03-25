@@ -10,7 +10,7 @@
 #include "au3cloud/iauthorization.h"
 
 namespace au::au3cloud {
-class AccountInfoModel : public QObject, public muse::async::Asyncable, public muse::Injectable
+class AccountInfoModel : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
 

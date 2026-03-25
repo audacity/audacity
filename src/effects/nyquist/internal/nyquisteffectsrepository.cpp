@@ -16,8 +16,8 @@
 au::effects::NyquistEffectsRepository::NyquistEffectsRepository(const muse::modularity::ContextPtr& ctx,
                                                                 std::unique_ptr<muse::audioplugins::IAudioPluginsScanner> nyquistPluginScanner,
                                                                 std::shared_ptr<muse::audioplugins::IAudioPluginMetaReader> nyquistPluginMetaReader)
-    : muse::Injectable(ctx), m_nyquistPluginScanner{std::move(nyquistPluginScanner)}, m_nyquistPluginMetaReader{std::move(
-                                                                                                                    nyquistPluginMetaReader)}
+    : muse::Contextable(ctx), m_nyquistPluginScanner{std::move(nyquistPluginScanner)}, m_nyquistPluginMetaReader{std::move(
+                                                                                                                     nyquistPluginMetaReader)}
 {
 }
 

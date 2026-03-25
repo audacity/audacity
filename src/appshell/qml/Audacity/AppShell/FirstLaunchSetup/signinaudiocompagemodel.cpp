@@ -8,7 +8,7 @@
 using namespace au::appshell;
 
 SigninAudiocomPageModel::SigninAudiocomPageModel(QObject* parent)
-    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
+    : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
 }
 

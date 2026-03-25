@@ -33,7 +33,7 @@
 #include "preferencepageitem.h"
 
 namespace au::appshell {
-class PreferencesModel : public QAbstractItemModel, public muse::Injectable
+class PreferencesModel : public QAbstractItemModel, public muse::Contextable
 {
     Q_OBJECT
     QML_ELEMENT

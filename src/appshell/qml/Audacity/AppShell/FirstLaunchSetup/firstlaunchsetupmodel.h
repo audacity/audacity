@@ -32,7 +32,7 @@
 #include "appshell/iappshellconfiguration.h"
 
 namespace au::appshell {
-class FirstLaunchSetupModel : public QObject, public muse::async::Asyncable, public muse::Injectable
+class FirstLaunchSetupModel : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
     QML_ELEMENT

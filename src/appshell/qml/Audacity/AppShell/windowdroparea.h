@@ -30,7 +30,7 @@
 #include "iapplicationactioncontroller.h"
 
 namespace au::appshell {
-class WindowDropArea : public QQuickItem, public muse::Injectable
+class WindowDropArea : public QQuickItem, public muse::Contextable
 {
     Q_OBJECT
     QML_ELEMENT

@@ -13,7 +13,7 @@
 #include "toast/itoastservice.h"
 
 namespace au::toast {
-class ToastTestsModel : public QObject, public muse::Injectable, public muse::async::Asyncable
+class ToastTestsModel : public QObject, public muse::Contextable, public muse::async::Asyncable
 {
     Q_OBJECT
 

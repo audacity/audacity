@@ -12,14 +12,14 @@
 #include "audio/iaudioengine.h"
 
 namespace au::au3audio {
-class Au3AudioDevicesProvider : public audio::IAudioDevicesProvider, public muse::Injectable
+class Au3AudioDevicesProvider : public audio::IAudioDevicesProvider, public muse::Contextable
 {
     muse::Inject<context::IGlobalContext> globalContext { this };
     muse::Inject<au::audio::IAudioEngine> audioEngine { this };
 
 public:
     Au3AudioDevicesProvider(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
 
     void init();
 

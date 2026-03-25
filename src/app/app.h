@@ -34,7 +34,7 @@
 #include "commandlineparser.h"
 
 namespace au::app {
-class App : public muse::Injectable
+class App : public muse::Contextable
 {
     muse::GlobalInject<appshell::IAppShellConfiguration> appshellConfiguration;
     muse::GlobalInject<muse::IApplication> muapplication;

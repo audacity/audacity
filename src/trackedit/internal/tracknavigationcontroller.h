@@ -23,7 +23,7 @@ enum class SelectionDirection {
 };
 
 class TrackNavigationController : public ITrackNavigationController, public muse::actions::Actionable, public muse::async::Asyncable,
-    public muse::Injectable
+    public muse::Contextable
 {
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher{ this };
     muse::Inject<muse::ui::INavigationController> navigationController{ this };
@@ -33,7 +33,7 @@ class TrackNavigationController : public ITrackNavigationController, public muse
 
 public:
     TrackNavigationController(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
 
     void init();
 

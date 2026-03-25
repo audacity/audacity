@@ -50,7 +50,7 @@
 
 namespace au::appshell {
 class ApplicationActionController : public QObject, public IApplicationActionController, public muse::actions::Actionable,
-    public muse::async::Asyncable, public muse::Injectable
+    public muse::async::Asyncable, public muse::Contextable
 {
     muse::GlobalInject<muse::IApplication> application;
     muse::GlobalInject<IAppShellConfiguration> configuration;
@@ -70,7 +70,7 @@ class ApplicationActionController : public QObject, public IApplicationActionCon
     muse::GlobalInject<muse::mi::IMultiWindowsProvider> multiwindowsProvider;
 public:
     ApplicationActionController(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
 
     void preInit();
     void init();

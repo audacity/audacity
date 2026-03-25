@@ -76,7 +76,7 @@ static const muse::actions::ActionCode OPEN_METADATA_DIALOG("open-metadata-dialo
 static const muse::actions::ActionCode OPEN_CUSTOM_MAPPING("open-custom-mapping");
 
 ProjectActionsController::ProjectActionsController(muse::modularity::ContextPtr ctx)
-    : muse::Injectable(ctx)
+    : muse::Contextable(ctx)
 {
 }
 

@@ -17,7 +17,7 @@
 #include "au3wrap/internal/au3audiometer.h"
 
 namespace au::playback {
-class Au3AudioOutput : public IAudioOutput, public muse::async::Asyncable, public muse::Injectable
+class Au3AudioOutput : public IAudioOutput, public muse::async::Asyncable, public muse::Contextable
 {
     muse::Inject<au::context::IGlobalContext> globalContext{ this };
     muse::Inject<au::audio::IAudioEngine> audioEngine{ this };

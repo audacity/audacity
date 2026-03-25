@@ -8,12 +8,12 @@
 using namespace au::projectscene;
 
 LabelsTableViewTimecodeCell::LabelsTableViewTimecodeCell(QObject* parent)
-    : muse::uicomponents::TableViewCell(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
+    : muse::uicomponents::TableViewCell(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
 }
 
 LabelsTableViewTimecodeCell::LabelsTableViewTimecodeCell(const TableViewCell* other)
-    : muse::uicomponents::TableViewCell(other->parent()), muse::Injectable(muse::iocCtxForQmlObject(this))
+    : muse::uicomponents::TableViewCell(other->parent()), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
     setValue(other->value());
 }

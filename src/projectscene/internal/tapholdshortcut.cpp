@@ -8,7 +8,7 @@
 
 namespace au::projectscene {
 TapHoldShortcut::TapHoldShortcut(muse::modularity::ContextPtr ctx, const std::string& action, QObject* target)
-    : QObject(nullptr), muse::Injectable(ctx), m_action(action)
+    : QObject(nullptr), muse::Contextable(ctx), m_action(action)
 {
     connect(&m_holdTimer, &QTimer::timeout, this, &TapHoldShortcut::onHoldTimeout);
     m_holdTimer.setSingleShot(true);

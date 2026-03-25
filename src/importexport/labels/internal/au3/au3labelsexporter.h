@@ -9,13 +9,13 @@
 #include "../../ilabelsexporter.h"
 
 namespace au::importexport {
-class Au3LabelsExporter : public ILabelsExporter, public muse::Injectable
+class Au3LabelsExporter : public ILabelsExporter, public muse::Contextable
 {
     muse::Inject<context::IGlobalContext> globalContext = { this };
 
 public:
     Au3LabelsExporter(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
 
     muse::Ret exportData(const muse::io::path_t& filePath, const trackedit::TrackIdList& includedLabelTracksIds = {}) override;
 };

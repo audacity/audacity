@@ -11,7 +11,7 @@
 
 namespace au::spectrogram {
 ScaleSectionParameterListModel::ScaleSectionParameterListModel(QObject* parent)
-    : AbstractSectionParametersListModel(parent), muse::Injectable(muse::iocCtxForQmlObject(this)) {}
+    : AbstractSectionParametersListModel(parent), muse::Contextable(muse::iocCtxForQmlObject(this)) {}
 
 void ScaleSectionParameterListModel::componentComplete()
 {

@@ -12,7 +12,7 @@
 #include <QObject>
 
 namespace au::effects {
-class DynamicsPlayStateModel : public QObject, public muse::async::Asyncable, public muse::Injectable
+class DynamicsPlayStateModel : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
 

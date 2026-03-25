@@ -11,7 +11,7 @@
 #include "interactive/iplatforminteractive.h"
 
 namespace au::projectscene {
-class GetEffectsModel : public QObject, public muse::async::Asyncable, public muse::Injectable
+class GetEffectsModel : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
 

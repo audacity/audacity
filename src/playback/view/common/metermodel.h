@@ -12,7 +12,7 @@
 #include "record/irecord.h"
 
 namespace au::playback {
-class MeterModel : public QObject, public muse::async::Asyncable, public muse::Injectable
+class MeterModel : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
 

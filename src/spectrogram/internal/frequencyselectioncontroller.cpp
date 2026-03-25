@@ -13,7 +13,7 @@
 namespace au::spectrogram {
 FrequencySelectionController::FrequencySelectionController(const muse::modularity::ContextPtr& ctx,
                                                            std::unique_ptr<IFrequencySelectionRestorer> frequencySelectionRestorer)
-    : muse::Injectable(ctx), m_frequencySelectionRestorer(std::move(frequencySelectionRestorer))
+    : muse::Contextable(ctx), m_frequencySelectionRestorer(std::move(frequencySelectionRestorer))
 {
 }
 

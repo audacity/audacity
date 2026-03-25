@@ -35,7 +35,7 @@ enum class Type {
 Q_ENUM_NS(Type)
 }
 
-class LabelsTableViewModel : public muse::uicomponents::AbstractTableViewModel, public muse::Injectable
+class LabelsTableViewModel : public muse::uicomponents::AbstractTableViewModel, public muse::Contextable
 {
     Q_OBJECT
     QML_ELEMENT;

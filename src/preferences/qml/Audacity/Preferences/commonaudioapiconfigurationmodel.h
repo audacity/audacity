@@ -31,7 +31,7 @@
 #include "ui/iuiconfiguration.h"
 
 namespace au::appshell {
-class CommonAudioApiConfigurationModel : public QObject, public muse::async::Asyncable, public muse::Injectable
+class CommonAudioApiConfigurationModel : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
     QML_ELEMENT

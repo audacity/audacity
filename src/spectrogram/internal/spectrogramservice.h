@@ -11,7 +11,7 @@
 #include "framework/global/modularity/ioc.h"
 
 namespace au::spectrogram {
-class SpectrogramService final : public ISpectrogramService, public muse::Injectable
+class SpectrogramService final : public ISpectrogramService, public muse::Contextable
 {
     muse::GlobalInject<IGlobalSpectrogramConfiguration> globalSpectrogramConfiguration;
 
@@ -19,7 +19,7 @@ class SpectrogramService final : public ISpectrogramService, public muse::Inject
 
 public:
     SpectrogramService(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
     ~SpectrogramService() override = default;
 
     void init();

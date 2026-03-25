@@ -9,14 +9,14 @@
 #include "framework/global/modularity/ioc.h"
 
 namespace au::spectrogram {
-class SpectrogramActionsController : public muse::actions::Actionable, public muse::Injectable
+class SpectrogramActionsController : public muse::actions::Actionable, public muse::Contextable
 {
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::Inject<muse::IInteractive> interactive { this };
 
 public:
     SpectrogramActionsController(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
 
     void init();
 

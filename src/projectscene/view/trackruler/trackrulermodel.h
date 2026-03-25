@@ -17,7 +17,7 @@
 #include "projectscene/view/trackruler/itrackruler.h"
 
 namespace au::projectscene {
-class TrackRulerModel : public QObject, public muse::async::Asyncable, public muse::Injectable
+class TrackRulerModel : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
 

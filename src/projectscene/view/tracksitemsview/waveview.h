@@ -16,7 +16,7 @@
 
 class WaveClipItem;
 namespace au::projectscene {
-class WaveView : public QQuickPaintedItem, public muse::async::Asyncable, public muse::Injectable
+class WaveView : public QQuickPaintedItem, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
     Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)

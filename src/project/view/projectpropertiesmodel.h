@@ -31,7 +31,7 @@
 #include "context/iglobalcontext.h"
 
 namespace au::project {
-class ProjectPropertiesModel : public QAbstractListModel, public muse::async::Asyncable, public muse::Injectable
+class ProjectPropertiesModel : public QAbstractListModel, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
 

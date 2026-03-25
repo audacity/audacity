@@ -10,7 +10,7 @@
 #include "global/async/asyncable.h"
 
 namespace au::effects {
-class EffectsMenuProvider : public IEffectsMenuProvider, public muse::async::Asyncable, public muse::Injectable
+class EffectsMenuProvider : public IEffectsMenuProvider, public muse::async::Asyncable, public muse::Contextable
 {
     muse::GlobalInject<effects::IEffectsConfiguration> configuration;
 
@@ -18,7 +18,7 @@ class EffectsMenuProvider : public IEffectsMenuProvider, public muse::async::Asy
 
 public:
     EffectsMenuProvider(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
 
     void init();
 

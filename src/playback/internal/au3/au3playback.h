@@ -10,11 +10,11 @@
 namespace au::playback {
 class Au3Player;
 class Au3AudioOutput;
-class Au3Playback : public IPlayback, public muse::Injectable
+class Au3Playback : public IPlayback, public muse::Contextable
 {
 public:
     Au3Playback(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
 
     std::shared_ptr<playback::IPlayer> player(TrackSequenceId id = -1) const override;
 

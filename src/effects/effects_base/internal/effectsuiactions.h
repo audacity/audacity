@@ -13,7 +13,7 @@
 #include "ieffectsprovider.h"
 
 namespace au::effects {
-class EffectsUiActions : public muse::ui::IUiActionsModule, public muse::async::Asyncable, public muse::Injectable
+class EffectsUiActions : public muse::ui::IUiActionsModule, public muse::async::Asyncable, public muse::Contextable
 {
     muse::GlobalInject<IEffectsConfiguration> configuration;
 

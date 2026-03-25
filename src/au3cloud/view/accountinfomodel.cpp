@@ -9,7 +9,7 @@
 using namespace au::au3cloud;
 
 AccountInfoModel::AccountInfoModel(QObject* parent)
-    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
+    : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
 }
 

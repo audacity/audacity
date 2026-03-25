@@ -33,7 +33,7 @@ static const ActionQuery PLAYBACK_CHANGE_PLAY_REGION_QUERY("action://playback/pl
 static constexpr int SCROLL_SUPPRESSION_TIMEOUT_MS = 3000;
 
 PlayCursorController::PlayCursorController(QObject* parent)
-    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
+    : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
     m_scrollSuppressionTimer.setSingleShot(true);
     m_scrollSuppressionTimer.setInterval(SCROLL_SUPPRESSION_TIMEOUT_MS);

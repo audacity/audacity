@@ -17,7 +17,7 @@ namespace au::effects {
 //! Model that exposes effect parameters as a list for QML consumption.
 //! This is a separate model to allow GeneratedEffectViewerModel to inherit
 //! from AbstractEffectViewModel while still providing list-based parameter access.
-class EffectParametersListModel : public QAbstractListModel, public muse::Injectable, public muse::async::Asyncable
+class EffectParametersListModel : public QAbstractListModel, public muse::Contextable, public muse::async::Asyncable
 {
     Q_OBJECT
 

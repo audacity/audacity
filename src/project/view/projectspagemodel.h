@@ -36,7 +36,7 @@
 class QString;
 
 namespace au::project {
-class ProjectsPageModel : public QObject, public muse::Injectable
+class ProjectsPageModel : public QObject, public muse::Contextable
 {
     Q_OBJECT
 

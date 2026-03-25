@@ -12,7 +12,7 @@
 
 using ProgressResult = BasicUI::ProgressResult;
 
-class ProgressDialog : public BasicUI::ProgressDialog, public muse::async::Asyncable, public muse::Injectable
+class ProgressDialog : public BasicUI::ProgressDialog, public muse::async::Asyncable, public muse::Contextable
 {
     muse::Inject<muse::IInteractive> interactive { this };
 

@@ -11,7 +11,7 @@
 #include "playback/iplaybackcontroller.h"
 
 namespace au::trackedit {
-class TrackeditInteraction : public ITrackeditInteraction, public muse::Injectable
+class TrackeditInteraction : public ITrackeditInteraction, public muse::Contextable
 {
     muse::Inject<au::record::IRecordController> recordController { this };
     muse::Inject<au::playback::IPlaybackController> playbackController { this };

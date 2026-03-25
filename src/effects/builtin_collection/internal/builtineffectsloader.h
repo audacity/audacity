@@ -10,14 +10,14 @@
 #include "modularity/ioc.h"
 
 namespace au::effects {
-class BuiltinEffectsLoader : public muse::Injectable
+class BuiltinEffectsLoader : public muse::Contextable
 {
     muse::GlobalInject<IBuiltinEffectsRepository> builtinEffectsRepository;
     muse::GlobalInject<IBuiltinEffectsViewRegister> builtinEffectsViewRegister;
 
 public:
     BuiltinEffectsLoader(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
 
     static void preInit();
     void init();

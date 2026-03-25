@@ -27,7 +27,7 @@
 
 namespace au::trackedit {
 class TrackeditActionsController : public ITrackeditActionsController, public muse::actions::Actionable, public muse::async::Asyncable,
-    public muse::Injectable
+    public muse::Contextable
 {
     muse::GlobalInject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
     muse::GlobalInject<trackedit::ITrackeditConfiguration> configuration;
@@ -45,7 +45,7 @@ class TrackeditActionsController : public ITrackeditActionsController, public mu
 
 public:
     TrackeditActionsController(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx), m_deleteBehaviorOnboardingScenario(ctx) {}
+        : muse::Contextable(ctx), m_deleteBehaviorOnboardingScenario(ctx) {}
 
     void init();
 

@@ -21,7 +21,7 @@ using namespace au::playback;
 using namespace au::au3;
 
 Au3AudioOutput::Au3AudioOutput(const muse::modularity::ContextPtr& ctx)
-    : muse::Injectable(ctx), m_outputMeter{au::au3::createAudioMeter()}
+    : muse::Contextable(ctx), m_outputMeter{au::au3::createAudioMeter()}
 {
     globalContext()->currentProjectChanged().onNotify(this, [this](){
         auto currentProject = globalContext()->currentProject();

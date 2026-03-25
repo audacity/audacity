@@ -19,7 +19,7 @@ using namespace au::project;
 using namespace au::trackedit;
 
 PanelTracksListModel::PanelTracksListModel(QObject* parent)
-    : QAbstractListModel(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
+    : QAbstractListModel(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
     m_selectionModel = new muse::uicomponents::ItemMultiSelectionModel(this);
     m_selectionModel->setAllowedModifiers(Qt::ShiftModifier | Qt::ControlModifier);

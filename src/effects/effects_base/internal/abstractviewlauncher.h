@@ -8,7 +8,7 @@
 #include "framework/interactive/iinteractive.h"
 
 namespace au::effects {
-class AbstractViewLauncher : public IEffectViewLauncher, public muse::Injectable
+class AbstractViewLauncher : public IEffectViewLauncher, public muse::Contextable
 {
 protected:
     muse::Inject<muse::IInteractive> interactive{ this };
@@ -16,7 +16,7 @@ protected:
 
 public:
     AbstractViewLauncher(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
 
 protected:
     muse::Ret doShowEffect(int instanceId, EffectFamily) const;

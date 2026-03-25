@@ -35,7 +35,7 @@
 #include "appshell/internal/isessionsmanager.h"
 
 namespace au::appshell {
-class StartupScenario : public au::appshell::IStartupScenario, public muse::async::Asyncable, public muse::Injectable
+class StartupScenario : public au::appshell::IStartupScenario, public muse::async::Asyncable, public muse::Contextable
 {
     muse::GlobalInject<IAppShellConfiguration> configuration;
     muse::GlobalInject<muse::mi::IMultiWindowsProvider> multiwindowsProvider;
@@ -47,7 +47,7 @@ class StartupScenario : public au::appshell::IStartupScenario, public muse::asyn
 
 public:
     StartupScenario(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
 
     void setStartupType(const std::optional<std::string>& type) override;
 

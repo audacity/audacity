@@ -14,7 +14,7 @@
 #include "framework/interactive/iinteractive.h"
 
 namespace au::project {
-class CloudProjectsModel : public AbstractItemModel, public muse::async::Asyncable, public muse::Injectable
+class CloudProjectsModel : public AbstractItemModel, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
 

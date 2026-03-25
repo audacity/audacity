@@ -5,13 +5,13 @@
 #include "context/iglobalcontext.h"
 
 namespace au::project {
-class ProjectProvider : public muse::mi::IProjectProvider, public muse::Injectable
+class ProjectProvider : public muse::mi::IProjectProvider, public muse::Contextable
 {
     muse::Inject<au::context::IGlobalContext> globalContext { this };
 
 public:
     ProjectProvider(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
 
     bool isProjectOpened(const muse::io::path_t& path) const override
     {

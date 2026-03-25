@@ -22,7 +22,7 @@ static const muse::ui::UiActionList STATIC_ACTIONS = {
 }
 
 SpectrogramUiActions::SpectrogramUiActions(const muse::modularity::ContextPtr& ctx)
-    : muse::Injectable(ctx), m_actions(STATIC_ACTIONS)
+    : muse::Contextable(ctx), m_actions(STATIC_ACTIONS)
 {
 }
 

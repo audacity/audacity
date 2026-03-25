@@ -48,7 +48,7 @@ inline QVariantMap buildItem(const QString& title, const QString& uri, const boo
 }
 
 MainToolBarModel::MainToolBarModel(QObject* parent)
-    : QAbstractListModel(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
+    : QAbstractListModel(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
 }
 
