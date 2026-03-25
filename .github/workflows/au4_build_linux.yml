@@ -187,6 +187,13 @@ jobs:
     needs: au4_build_linux
     runs-on: ubuntu-22.04
     steps:
+    - name: Clone repository
+      uses: actions/checkout@v6
+
+    - name: Setup environment
+      run: |
+        bash ${CI_DIR}/linux/setup.sh
+
     - name: Install Qt
       uses: jurplel/install-qt-action@v4
       with:
@@ -205,6 +212,7 @@ jobs:
 
     - name: Run plugin registration app self-test
       run: |
+        source $HOME/build_tools/environment.sh
         export LD_LIBRARY_PATH="./build.install/lib:${LD_LIBRARY_PATH}"
         APP_BIN=$(find "./build.install/bin/" -type f -name "audacity4portable*" -print -quit)
         chmod +x "$APP_BIN"
