@@ -10,10 +10,8 @@
 #include "context/iglobalcontext.h"
 #include "playback/iplayback.h"
 
-#include "effects/builtin/ibuiltineffectsrepository.h"
 #include "effects/lv2/ilv2effectsrepository.h"
 #include "effects/vst/ivsteffectsrepository.h"
-#include "effects/nyquist/inyquisteffectsrepository.h"
 #include "effects/audio_unit/iaudiouniteffectsrepository.h"
 #include "audioplugins/iknownaudiopluginsregister.h"
 #include "../ieffectsconfiguration.h"
@@ -34,9 +32,7 @@ class EffectsProvider : public IEffectsProvider, public muse::async::Asyncable, 
     muse::GlobalInject<IEffectsConfiguration> configuration;
     muse::GlobalInject<muse::audioplugins::IKnownAudioPluginsRegister> knownPluginsRegister;
     muse::GlobalInject<IAudioUnitEffectsRepository> audioUnitEffectsRepository;
-    muse::GlobalInject<IBuiltinEffectsRepository> builtinEffectsRepository;
     muse::GlobalInject<ILv2EffectsRepository> lv2EffectsRepository;
-    muse::GlobalInject<INyquistEffectsRepository> nyquistEffectsRepository;
     muse::GlobalInject<IVstEffectsRepository> vstEffectsRepository;
 
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
@@ -93,11 +89,6 @@ private:
         const std::shared_ptr<TrackList> previewTracks;
         const bool loopWasActive;
     };
-
-    bool isVstSupported() const;
-    bool isNyquistSupported() const;
-    bool isAudioUnitSupported() const;
-    bool isLv2Supported() const;
 
     muse::Ret doEffectPreview(EffectBase& effect, EffectSettings& settings);
 

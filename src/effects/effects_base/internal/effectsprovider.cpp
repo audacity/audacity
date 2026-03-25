@@ -3,6 +3,7 @@
 */
 #include "effectsprovider.h"
 #include "effecterrors.h"
+#include "effectsutils.h"
 
 #include "au3wrap/internal/domconverter.h"
 #include "au3wrap/internal/wxtypes_convert.h"
@@ -39,69 +40,17 @@ void EffectsProvider::init()
     });
 }
 
-bool EffectsProvider::isVstSupported() const
-{
-    return vstEffectsRepository() ? true : false;
-}
-
-bool EffectsProvider::isNyquistSupported() const
-{
-    return nyquistEffectsRepository() ? true : false;
-}
-
-bool EffectsProvider::isAudioUnitSupported() const
-{
-    return audioUnitEffectsRepository() ? true : false;
-}
-
-bool EffectsProvider::isLv2Supported() const
-{
-    return lv2EffectsRepository() ? true : false;
-}
-
 void EffectsProvider::reloadEffects()
 {
     m_effects.clear();
 
-    // built-in
-    {
-        EffectMetaList metaList = builtinEffectsRepository()->effectMetaList();
-        for (EffectMeta meta : metaList) {
-            m_effects.push_back(std::move(meta));
+    const auto knownPlugins = knownPluginsRegister()->pluginInfoList();
+    std::for_each(knownPlugins.begin(), knownPlugins.end(),
+                  [this](const muse::audioplugins::AudioPluginInfo& info) {
+        if (info.enabled) {
+            m_effects.push_back(utils::museToAuEffectMeta(info.path, info.meta));
         }
-    }
-
-    // VST
-    if (isVstSupported()) {
-        EffectMetaList metaList = vstEffectsRepository()->effectMetaList();
-        for (EffectMeta meta : metaList) {
-            m_effects.push_back(std::move(meta));
-        }
-    }
-
-    // Nyquist
-    if (isNyquistSupported()) {
-        EffectMetaList metaList = nyquistEffectsRepository()->effectMetaList();
-        for (EffectMeta meta : metaList) {
-            m_effects.push_back(std::move(meta));
-        }
-    }
-
-    // AudioUnit
-    if (isAudioUnitSupported()) {
-        EffectMetaList metaList = audioUnitEffectsRepository()->effectMetaList();
-        for (EffectMeta meta : metaList) {
-            m_effects.push_back(std::move(meta));
-        }
-    }
-
-    // LV2
-    if (isLv2Supported()) {
-        EffectMetaList metaList = lv2EffectsRepository()->effectMetaList();
-        for (EffectMeta meta : metaList) {
-            m_effects.push_back(std::move(meta));
-        }
-    }
+    });
 
     m_effectsChanged.notify();
 }

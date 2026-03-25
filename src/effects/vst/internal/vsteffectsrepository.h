@@ -13,7 +13,6 @@ class VstEffectsRepository final : public IVstEffectsRepository
 public:
     VstEffectsRepository();
 
-    EffectMetaList effectMetaList() const override;
     bool ensurePluginIsLoaded(const EffectId&) const override;
 
 private:

@@ -14,7 +14,6 @@ class IVstEffectsRepository : MODULE_GLOBAL_INTERFACE
 public:
     virtual ~IVstEffectsRepository() = default;
 
-    virtual EffectMetaList effectMetaList() const = 0;
     virtual bool ensurePluginIsLoaded(const EffectId&) const = 0;
 };
 }

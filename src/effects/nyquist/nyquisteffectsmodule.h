@@ -9,6 +9,7 @@
 #include "modularity/imodulesetup.h"
 
 namespace au::effects {
+class NyquistEffectsRepository;
 class NyquistPluginsMetaReader;
 class NyquistPromptLoader;
 

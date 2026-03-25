@@ -13,7 +13,6 @@ class Lv2EffectsRepository final : public ILv2EffectsRepository
 public:
     Lv2EffectsRepository();
 
-    EffectMetaList effectMetaList() const override;
     bool ensurePluginIsLoaded(const EffectId& effectId) const override;
 
 private:

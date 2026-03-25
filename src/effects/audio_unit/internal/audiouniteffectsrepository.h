@@ -15,7 +15,6 @@ class AudioUnitEffectsRepository : public IAudioUnitEffectsRepository
 public:
     AudioUnitEffectsRepository();
 
-    EffectMetaList effectMetaList() const override;
     bool ensurePluginIsLoaded(const EffectId& effectId) const override;
 
 private:

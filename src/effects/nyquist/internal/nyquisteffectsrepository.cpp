@@ -4,11 +4,9 @@
 #include "nyquisteffectsrepository.h"
 
 #include "effects/effects_base/internal/effectsutils.h"
-#include "effects/effects_base/internal/au3/au3effectsutils.h"
 #include "effects/effects_base/effectstypes.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 
-#include "au3-module-manager/PluginManager.h"
 #include "au3-effects/EffectManager.h"
 #include "spectrogram/spectrogramtypes.h"
 
@@ -17,7 +15,7 @@ au::effects::NyquistEffectsRepository::NyquistEffectsRepository(const muse::modu
 {
 }
 
-void au::effects::NyquistEffectsRepository::registerSpectralEffects() const
+void au::effects::NyquistEffectsRepository::init()
 {
     for (const auto& meta : effectMetaList()) {
         if (meta.category == utils::effectCategoryToString(EffectCategory::SpectralTools)) {
@@ -50,7 +48,23 @@ void au::effects::NyquistEffectsRepository::registerSpectralEffects() const
 
 au::effects::EffectMetaList au::effects::NyquistEffectsRepository::effectMetaList() const
 {
-    return m_helper.effectMetaList();
+    using namespace muse::audioplugins;
+    using namespace muse::audio;
+
+    EffectMetaList effects;
+
+    const std::vector<AudioPluginInfo> allEffects = knownPlugins()->pluginInfoList();
+
+    for (const AudioPluginInfo& info : allEffects) {
+        if (info.meta.type != AudioResourceType::NyquistPlugin) {
+            continue;
+        }
+
+        EffectMeta meta = utils::museToAuEffectMeta(info.path, info.meta);
+        effects.push_back(std::move(meta));
+    }
+
+    return effects;
 }
 
 bool au::effects::NyquistEffectsRepository::ensurePluginIsLoaded(const EffectId& effectId) const

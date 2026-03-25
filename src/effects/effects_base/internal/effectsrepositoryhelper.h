@@ -21,7 +21,6 @@ public:
 
     ~EffectsRepositoryHelper() = default;
 
-    EffectMetaList effectMetaList() const;
     bool ensurePluginIsLoaded(const EffectId& effectId) const;
 
 private:

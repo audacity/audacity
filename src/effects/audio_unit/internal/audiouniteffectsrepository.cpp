@@ -8,11 +8,6 @@ au::effects::AudioUnitEffectsRepository::AudioUnitEffectsRepository()
 {
 }
 
-au::effects::EffectMetaList au::effects::AudioUnitEffectsRepository::effectMetaList() const
-{
-    return m_helper.effectMetaList();
-}
-
 bool au::effects::AudioUnitEffectsRepository::ensurePluginIsLoaded(const EffectId& effectId) const
 {
     return m_helper.ensurePluginIsLoaded(effectId);

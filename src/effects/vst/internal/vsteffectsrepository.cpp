@@ -10,11 +10,6 @@ VstEffectsRepository::VstEffectsRepository()
 {
 }
 
-EffectMetaList VstEffectsRepository::effectMetaList() const
-{
-    return m_helper.effectMetaList();
-}
-
 bool VstEffectsRepository::ensurePluginIsLoaded(const EffectId& effectId) const
 {
     return m_helper.ensurePluginIsLoaded(effectId);

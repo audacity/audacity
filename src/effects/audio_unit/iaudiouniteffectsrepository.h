@@ -15,7 +15,5 @@ public:
     virtual ~IAudioUnitEffectsRepository() = default;
 
     virtual bool ensurePluginIsLoaded(const EffectId& effectId) const = 0;
-
-    virtual EffectMetaList effectMetaList() const = 0;
 };
 }

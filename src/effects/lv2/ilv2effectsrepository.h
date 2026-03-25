@@ -14,7 +14,6 @@ class ILv2EffectsRepository : MODULE_GLOBAL_INTERFACE
 public:
     virtual ~ILv2EffectsRepository() = default;
 
-    virtual EffectMetaList effectMetaList() const = 0;
     virtual bool ensurePluginIsLoaded(const EffectId&) const = 0;
 };
 }

@@ -44,27 +44,6 @@ EffectsRepositoryHelper::EffectsRepositoryHelper(PluginProvider& provider, muse:
     }
 }
 
-EffectMetaList EffectsRepositoryHelper::effectMetaList() const
-{
-    using namespace muse::audioplugins;
-    using namespace muse::audio;
-
-    EffectMetaList effects;
-
-    const std::vector<AudioPluginInfo> allEffects = knownPlugins()->pluginInfoList();
-
-    for (const AudioPluginInfo& info : allEffects) {
-        if (info.meta.type != m_resourceType) {
-            continue;
-        }
-
-        EffectMeta meta = utils::museToAuEffectMeta(info.path, info.meta);
-        effects.push_back(std::move(meta));
-    }
-
-    return effects;
-}
-
 bool EffectsRepositoryHelper::ensurePluginIsLoaded(const EffectId& effectId) const
 {
     if (PluginManager::Get().IsPluginLoaded(au3::wxFromString(effectId))) {
