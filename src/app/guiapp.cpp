@@ -10,7 +10,6 @@
 #include <QQuickWindow>
 #include <QQmlContext>
 #include <QStyleHints>
-#include <QProcess>
 #include <memory>
 #ifndef Q_OS_WASM
 #include <QThreadPool>
@@ -199,6 +198,8 @@ void GuiApp::finish()
         qDeleteAll(m_modules);
         m_modules.clear();
 
+    BaseApplication::finish();
+}
         delete m_globalModule;
         m_globalModule = nullptr;
 
