@@ -214,6 +214,6 @@ jobs:
       run: |
         source $HOME/build_tools/environment.sh
         export LD_LIBRARY_PATH="./build.install/lib:${LD_LIBRARY_PATH}"
+        find ./build.install/bin/ -type f -exec chmod +x {} +
         APP_BIN=$(find "./build.install/bin/" -type f -name "audacity4portable*" -print -quit)
-        chmod +x "$APP_BIN"
         QT_QPA_PLATFORM=minimal:enable_fonts "$APP_BIN" --plugin-registration-self-test
