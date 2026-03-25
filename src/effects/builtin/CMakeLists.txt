@@ -15,8 +15,12 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/ibuiltineffectsviewregister.h
 
     # internal
+    ${CMAKE_CURRENT_LIST_DIR}/internal/builtineffectsmetareader.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/builtineffectsmetareader.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/builtineffectsrepository.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/builtineffectsrepository.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/builtineffectsscanner.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/builtineffectsscanner.h
 
     # view
     ${CMAKE_CURRENT_LIST_DIR}/view/builtineffectmodel.cpp

@@ -4,10 +4,15 @@
 #include "builtineffectsmodule.h"
 
 #include "internal/builtineffectsrepository.h"
+#include "internal/builtineffectsmetareader.h"
+#include "internal/builtineffectsscanner.h"
 
 #include "view/builtineffectmodel.h"
 #include "view/builtineffectviewloader.h"
 #include "view/builtineffectsviewregister.h"
+
+#include "framework/audioplugins/iaudiopluginsscannerregister.h"
+#include "framework/audioplugins/iaudiopluginmetareaderregister.h"
 
 using namespace au::effects;
 
@@ -29,6 +34,15 @@ void BuiltinEffectsModule::registerExports()
 
 void BuiltinEffectsModule::resolveImports()
 {
+    const auto scannerRegister = globalIoc()->resolve<muse::audioplugins::IAudioPluginsScannerRegister>(moduleName());
+    if (scannerRegister) {
+        scannerRegister->registerScanner(std::make_shared<BuiltinEffectsScanner>());
+    }
+
+    const auto metaReaderRegister = globalIoc()->resolve<muse::audioplugins::IAudioPluginMetaReaderRegister>(moduleName());
+    if (metaReaderRegister) {
+        metaReaderRegister->registerReader(std::make_shared<BuiltinEffectsMetaReader>());
+    }
 }
 
 void BuiltinEffectsModule::registerResources()

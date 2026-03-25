@@ -7,8 +7,6 @@
 #include "effects/effects_base/effectstypes.h"
 #include "au3-components/EffectInterface.h"
 
-class PluginDescriptor;
-
 namespace au::effects {
 constexpr auto toAu4EffectCategory(::EffectGroup group)
 {
