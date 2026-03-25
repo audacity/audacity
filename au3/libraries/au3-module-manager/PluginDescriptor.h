@@ -85,7 +85,7 @@ public:
     // Importer plugins only
 
     const wxString& GetImporterIdentifier() const;
-    const TranslatableString& GetImporterFilterDescription() const;
+    const ::TranslatableString& GetImporterFilterDescription() const;
     const FileExtensions& GetImporterExtensions() const;
 
     void WriteXML(XMLWriter& writer) const;
@@ -124,7 +124,7 @@ public:
     void SetEffectAutomatable(bool automatable);
 
     void SetImporterIdentifier(const wxString& identifier);
-    void SetImporterFilterDescription(const TranslatableString& filterDesc);
+    void SetImporterFilterDescription(const ::TranslatableString& filterDesc);
     void SetImporterExtensions(FileExtensions extensions);
 
 private:

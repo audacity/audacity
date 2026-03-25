@@ -53,7 +53,7 @@ public:
     // PluginManagerInterface implementation
 
     bool IsPluginRegistered(
-        const PluginPath& path, const TranslatableString* pSymbol) override;
+        const PluginPath& path, const ::TranslatableString* pSymbol) override;
 
     bool IsPluginLoaded(const wxString& ID) const;
 
@@ -150,7 +150,7 @@ public:
     void EnablePlugin(const PluginID& ID, bool enable);
 
     const ComponentInterfaceSymbol& GetSymbol(const PluginID& ID) const;
-    TranslatableString GetName(const PluginID& ID) const;
+    ::TranslatableString GetName(const PluginID& ID) const;
     CommandID GetCommandIdentifier(const PluginID& ID) const;
     const PluginID& GetByCommandIdentifier(const CommandID& strTarget);
     ComponentInterface* Load(const PluginID& ID);
