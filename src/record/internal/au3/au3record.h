@@ -57,8 +57,10 @@ public:
 
 private:
     struct RecordData {
-        trackedit::ClipKey clipKey;
+        trackedit::ClipKey clipKey;          // clip on original track (for commit). In deferred mode, set when recording starts.
+        au3::Au3ClipId pendingClipId;        // clip ID on pending track (for callback lookup)
         bool linkedToPendingClip;
+        bool deferredClipCreation = false;   // true for punch-and-roll: clip on pending only, not on original yet
     };
 
     au3::Au3Project& projectRef() const;
@@ -66,9 +68,7 @@ private:
     bool canStopAudioStream() const;
 
     muse::Ret doRecord(au3::Au3Project& project, const TransportSequences& sequences, double t0, double t1, bool altAppearance,
-                       const double audioStreamSampleRate,
-                       double preRoll = 0.0,
-                       std::vector<std::vector<float>>* crossfadeData = nullptr);
+                       const double audioStreamSampleRate, double preRoll = 0.0, std::vector<std::vector<float>>* crossfadeData = nullptr);
     void cancelRecording();
     void commitRecording();
 
