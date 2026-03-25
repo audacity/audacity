@@ -164,6 +164,8 @@ private:
     void pushProjectHistoryDuplicateState();
     void pushProjectHistorySplitDeleteState();
     void pushProjectHistoryDeleteState(secs_t start, secs_t duration);
+    std::optional<secs_t> shortestLabelDuration(const LabelKeyList& labelKeys) const;
+    secs_t clampBoundaryDeltaToSelectedItems(secs_t deltaSec, secs_t minClipDuration, const LabelKeyList& labelKeys) const;
 
     bool isClipsSelected() const;
     ClipKeyList selectedClips() const;
