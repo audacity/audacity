@@ -61,6 +61,7 @@ StyledPopupView {
                 text: modelData.text
                 onClicked: {
                     createTrack(modelData.type)
+                    root.close()
                 }
             }
         }
