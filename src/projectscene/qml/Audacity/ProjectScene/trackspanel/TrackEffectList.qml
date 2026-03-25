@@ -19,11 +19,30 @@ Rectangle {
     property alias trackEffectsActive: trackEffectListModel.trackEffectsActive
     property bool empty: trackEffectList.count == 0
     property alias count: trackEffectList.count
-    property NavigationSection navigationSection: null
-    property int navigationPanelOrderOffset: 0
+    property NavigationPanel navigationPanel: null
+    property int navigationOrderStart: 0
+    property int pendingGripFocusIndex: -1
+    property bool pendingGripFocusHandle: false
+    property int pendingDialogRestoreIndex: -1
 
     Component.onCompleted: {
         trackEffectListModel.load()
+    }
+
+    function focusGripAtIndex(targetIndex, focusGripHandle) {
+        const delegate = trackEffectList.itemAtIndex(targetIndex)
+        if (!delegate) {
+            return
+        }
+
+        if (focusGripHandle) {
+            delegate.innerNavigationActive = true
+            delegate.innerGripReorderActive = false
+            delegate.gripControl.navigation.requestActive()
+            return
+        }
+
+        delegate.navigation.requestActive()
     }
 
     RealtimeEffectListModel {
@@ -50,7 +69,7 @@ Rectangle {
         footer: listMargin
         header: listMargin
 
-        clip: true
+        clip: false
         anchors.margins: 0
 
         delegate: RealtimeEffectListItem {
@@ -60,8 +79,17 @@ Rectangle {
             index: model.index
             listView: trackEffectList
             width: trackEffectList.width - scrollbarContainer.width
-            navigationPanel.section: root.navigationSection
-            navigationPanel.order: navigationPanelOrderOffset + model.index
+            navigationPanel: root.navigationPanel
+            navigationOrder: root.navigationOrderStart + model.index
+
+            onGripReorderCommitted: function(targetIndex, focusGripHandle) {
+                root.pendingGripFocusIndex = targetIndex
+                root.pendingGripFocusHandle = focusGripHandle
+            }
+
+            onEffectDialogOpened: {
+                root.pendingDialogRestoreIndex = model.index
+            }
         }
 
         ScrollBar.vertical: scrollbar
@@ -78,6 +106,45 @@ Rectangle {
                 thickness: 5
                 policy: ScrollBar.AlwaysOn
             }
+        }
+    }
+
+    Connections {
+        target: trackEffectListModel
+
+        function onLayoutChanged() {
+            if (root.pendingGripFocusIndex < 0) {
+                return
+            }
+
+            const targetIndex = root.pendingGripFocusIndex
+            const focusGripHandle = root.pendingGripFocusHandle
+            root.pendingGripFocusIndex = -1
+            root.pendingGripFocusHandle = false
+
+            Qt.callLater(function() {
+                root.focusGripAtIndex(targetIndex, focusGripHandle)
+            })
+        }
+    }
+
+    Connections {
+        target: root.navigationPanel
+
+        function onActiveChanged() {
+            if (!root.navigationPanel.active || root.pendingDialogRestoreIndex < 0) {
+                return
+            }
+
+            const targetIndex = root.pendingDialogRestoreIndex
+            root.pendingDialogRestoreIndex = -1
+
+            Qt.callLater(function() {
+                const delegate = trackEffectList.itemAtIndex(targetIndex)
+                if (delegate) {
+                    delegate.navigation.requestActive()
+                }
+            })
         }
     }
 }

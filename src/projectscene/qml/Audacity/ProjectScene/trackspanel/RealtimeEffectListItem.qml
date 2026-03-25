@@ -16,16 +16,38 @@ ListItemBlank {
     property int index: -1
     property int scrollOffset: 0
     property int topMargin: 0
+    property alias gripControl: gripButton
 
-    property NavigationPanel navigationPanel: NavigationPanel {
-        name: "effect item panel - " + prv.title
-        enabled: root.enabled && root.visible
+    property NavigationPanel navigationPanel: null
+    property int navigationOrder: 0
+    property bool innerNavigationActive: false
+    property bool innerGripReorderActive: false
+    property int gripReorderTargetIndex: -1
+
+    signal gripReorderCommitted(int targetIndex, bool focusGripHandle)
+    signal effectDialogOpened()
+
+    property NavigationPanel innerNavigationPanel: NavigationPanel {
+        name: prv.title + " controls"
+        enabled: root.enabled && root.visible && root.innerNavigationActive
+        section: root.navigationPanel ? root.navigationPanel.section : null
         direction: NavigationPanel.Horizontal
+        order: root.navigationPanel ? root.navigationPanel.order : 0
     }
 
     QtObject {
         id: prv
         property string title: root.item ? root.item.effectName() : ""
+    }
+
+    Timer {
+        id: delayedOuterReorderCommitTimer
+
+        interval: root.animationDuration
+        repeat: false
+        onTriggered: {
+            root.commitGripReorder(false)
+        }
     }
 
     // Internal properties
@@ -39,8 +61,143 @@ ListItemBlank {
     background.color: "transparent"
     hoverHitColor: "transparent"
 
+    navigation.panel: root.navigationPanel
+    navigation.order: root.navigationOrder
+    focusBorder.drawOutsideParent: true
+
+    RealtimeEffectRowActionsController {
+        id: rowActionsController
+
+        enabled: root.navigation.active && !root.innerNavigationActive
+
+        Component.onCompleted: init()
+
+        onMoveUpRequested: {
+            root.handleOuterReorder(-1)
+        }
+
+        onMoveDownRequested: {
+            root.handleOuterReorder(1)
+        }
+    }
+
+    function handleOuterReorder(step) {
+        if (!root.navigation.active || root.innerNavigationActive) {
+            return
+        }
+
+        const previewBaseIndex = root.gripReorderTargetIndex >= 0 ? root.gripReorderTargetIndex : root.index
+        yAnimation.stop()
+        root.previewGripReorder(previewBaseIndex + step)
+        delayedOuterReorderCommitTimer.restart()
+    }
+
+    function activateInnerNavigation() {
+        if (root.innerNavigationActive) {
+            return
+        }
+
+        root.innerNavigationActive = true
+        gripButton.navigation.requestActive()
+    }
+
+    function deactivateInnerNavigation() {
+        commitGripReorder(false)
+
+        if (!root.innerNavigationActive) {
+            return
+        }
+
+        root.innerNavigationActive = false
+        root.innerGripReorderActive = false
+        root.navigation.requestActive()
+    }
+
+    function clearReorderPreview() {
+        if (!listView) {
+            root.yOffset = 0
+            root.z = 0
+            root.gripReorderTargetIndex = -1
+            return
+        }
+
+        const siblings = listView.contentItem.children
+        for (var i = 0; i < siblings.length; ++i) {
+            const sibling = siblings[i]
+            if (sibling.hasOwnProperty("yOffset")) {
+                sibling.yOffset = 0
+            }
+        }
+
+        root.yOffset = 0
+        root.z = 0
+        root.gripReorderTargetIndex = -1
+    }
+
+    function previewGripReorder(targetIndex) {
+        if (!listView || !listView.model) {
+            return
+        }
+
+        const boundedTargetIndex = Math.max(0, Math.min(targetIndex, listView.model.count() - 1))
+        const siblings = listView.contentItem.children
+
+        root.gripReorderTargetIndex = boundedTargetIndex
+        root.yOffset = (boundedTargetIndex - root.index) * itemHeight
+        root.z = listView.model.count()
+
+        for (var i = 0; i < siblings.length; ++i) {
+            const sibling = siblings[i]
+            if (!sibling.hasOwnProperty("yOffset")) {
+                continue
+            } else if (sibling === root) {
+                continue
+            } else if (sibling.index > root.index && sibling.index <= boundedTargetIndex) {
+                sibling.yOffset = -itemHeight
+            } else if (sibling.index < root.index && sibling.index >= boundedTargetIndex) {
+                sibling.yOffset = itemHeight
+            } else {
+                sibling.yOffset = 0
+            }
+        }
+    }
+
+    function targetIndexFromContentPosition() {
+        if (!listView) {
+            return root.index
+        }
+
+        const posInListView = content.mapToItem(listView, 0, itemHeight / 2 - topMargin).y + scrollOffset
+        return Math.floor(posInListView / itemHeight)
+    }
+
+    function commitGripReorder(focusGripHandle) {
+        if (!listView || !listView.model) {
+            return
+        }
+
+        delayedOuterReorderCommitTimer.stop()
+
+        const targetIndex = root.gripReorderTargetIndex
+        clearReorderPreview()
+
+        if (targetIndex < 0 || targetIndex === root.index) {
+            return
+        }
+
+        const prevContentY = listView.contentY
+        root.gripReorderCommitted(targetIndex, focusGripHandle)
+
+        listView.model.moveRow(root.index, targetIndex)
+        listView.contentY = prevContentY
+    }
+
     Component.onCompleted: {
         menuModel.init()
+    }
+
+    onNavigationTriggered: {
+        activateInnerNavigation()
     }
 
     Behavior on y {
@@ -84,54 +241,29 @@ ListItemBlank {
             Layout.preferredWidth: 14
             Layout.preferredHeight: 16
             Layout.alignment: Qt.AlignVCenter
-            backgroundRadius: 0
+            backgroundRadius: 2
 
             visible: true
-            transparent: true
+            transparent: !root.innerGripReorderActive
             hoverHitColor: normalColor
-            accentColor: normalColor
+            accentButton: root.innerGripReorderActive
+            accentColor: ui.theme.accentColor
+            iconColor: root.innerGripReorderActive ? ui.theme.extra["white_color"] : ui.theme.fontPrimaryColor
             mouseArea.cursorShape: Qt.SizeAllCursor
+            navigation.panel: root.innerNavigationPanel
+            navigation.order: 0
 
             mouseArea.drag.target: content
             mouseArea.drag.axis: Drag.YAxis
             mouseArea.onReleased: {
-                const posInListView = content.mapToItem(listView, 0, itemHeight / 2 - topMargin).y + scrollOffset
-                const targetIndex = Math.floor(posInListView / itemHeight)
-                const siblings = listView.contentItem.children
-
-                const prevContentY = listView.contentY
-                // Temporarily disable the animation, otherwise the dragged item first returns to its original position
-                // before sliding to its new position, which looks strange.
-                yAnimation.duration = 0
-                for (var i = 0; i < siblings.length; ++i) {
-                    const sibling = siblings[i]
-                    if (sibling.hasOwnProperty("yOffset")) {
-                        sibling.yOffset = 0
-                    }
-                }
-                listView.model.moveRow(root.index, targetIndex)
-                listView.contentY = prevContentY
-                yAnimation.duration = animationDuration
+                root.gripReorderTargetIndex = root.targetIndexFromContentPosition()
+                root.commitGripReorder(false)
             }
             mouseArea.onPositionChanged: {
                 if (!mouseArea.drag.active) {
                     return
                 }
-                const posInListView = content.mapToItem(listView, 0, itemHeight / 2 - topMargin).y + scrollOffset
-                const targetIndex = Math.floor(posInListView / itemHeight)
-                const siblings = listView.contentItem.children
-                for (var i = 0; i < siblings.length; ++i) {
-                    const sibling = siblings[i]
-                    if (!sibling.hasOwnProperty("yOffset")) {
-                        continue
-                    } else if (sibling.index > root.index && sibling.index <= targetIndex) {
-                        sibling.yOffset = -itemHeight
-                    } else if (sibling.index < root.index && sibling.index >= targetIndex) {
-                        sibling.yOffset = itemHeight
-                    } else {
-                        sibling.yOffset = 0
-                    }
-                }
+                root.previewGripReorder(root.targetIndexFromContentPosition())
             }
             mouseArea.drag.minimumY: {
                 const itemMiddle = (root.index + 0.5) * itemHeight
@@ -158,8 +290,8 @@ ListItemBlank {
             Layout.minimumHeight: root.height
             Layout.maximumHeight: root.height
 
-            navigation.panel: root.navigationPanel
-            navigation.order: 0
+            navigation.panel: root.innerNavigationPanel
+            navigation.order: gripButton.navigation.order + 1
             navigation.name: "panel bypass btn - " + prv.title
 
             isMasterEffect: item && item.isMasterEffect
@@ -173,8 +305,8 @@ ListItemBlank {
         FlatButton {
             id: effectNameButton
 
-            navigation.panel: root.navigationPanel
-            navigation.order: 1
+            navigation.panel: root.innerNavigationPanel
+            navigation.order: bypassButton.navigation.order + 1
             navigation.name: "show ui btn - " + prv.title
 
             Layout.fillWidth: true
@@ -202,7 +334,10 @@ ListItemBlank {
                 // the new dialog doesn't believe its parent is the previous dialog.
                 // Note that calling `navigation.requestActive()` has no effect because
                 // the RealtimeEffectSection isn't of `NavigationSection.Exclusive` type.
-                root.navigationPanel.requestActive()
+                if (root.navigationPanel) {
+                    root.navigationPanel.requestActive()
+                }
+                root.effectDialogOpened()
                 root.item.showEffectDialog()
             }
         }
@@ -210,8 +345,8 @@ ListItemBlank {
         FlatButton {
             id: chooseEffectDropdown
 
-            navigation.panel: root.navigationPanel
-            navigation.order: 2
+            navigation.panel: root.innerNavigationPanel
+            navigation.order: effectNameButton.navigation.order + 1
             navigation.name: "replace btn - " + prv.title
 
             Layout.fillHeight: true
@@ -240,6 +375,123 @@ ListItemBlank {
                 onHandleMenuItem: function (menuItem) {
                     menuModel.handleMenuItem(menuItem)
                 }
+            }
+        }
+    }
+
+    Connections {
+        target: root.innerNavigationPanel
+
+        function onActiveChanged() {
+            if (root.innerNavigationPanel.active) {
+                return
+            }
+
+            Qt.callLater(function() {
+                if (!root.innerNavigationPanel.active) {
+                    root.innerNavigationActive = false
+                    root.innerGripReorderActive = false
+                }
+            })
+        }
+    }
+
+    Connections {
+        target: root.navigation
+
+        function onActiveChanged() {
+            if (root.navigation.active) {
+                root.clearReorderPreview()
+                root.innerNavigationActive = false
+                root.innerGripReorderActive = false
+            }
+        }
+    }
+
+    Connections {
+        target: gripButton.navigation
+
+        function onActiveChanged() {
+            if (!gripButton.navigation.active) {
+                Qt.callLater(function() {
+                    if (root.innerGripReorderActive || root.gripReorderTargetIndex >= 0) {
+                        root.commitGripReorder(true)
+                    }
+
+                    root.innerGripReorderActive = false
+                })
+            }
+        }
+
+        function onNavigationEvent(event) {
+            switch (event.type) {
+            case NavigationEvent.Trigger:
+                if (root.innerGripReorderActive) {
+                    root.innerGripReorderActive = false
+                    root.commitGripReorder(true)
+                } else {
+                    root.innerGripReorderActive = true
+                    root.gripReorderTargetIndex = root.index
+                }
+                event.accepted = true
+                break
+            case NavigationEvent.Up:
+                if (!root.innerGripReorderActive) {
+                    return
+                }
+                root.previewGripReorder((root.gripReorderTargetIndex >= 0 ? root.gripReorderTargetIndex : root.index) - 1)
+                event.accepted = true
+                break
+            case NavigationEvent.Down:
+                if (!root.innerGripReorderActive) {
+                    return
+                }
+                root.previewGripReorder((root.gripReorderTargetIndex >= 0 ? root.gripReorderTargetIndex : root.index) + 1)
+                event.accepted = true
+                break
+            case NavigationEvent.Escape:
+                if (root.innerGripReorderActive) {
+                    root.innerGripReorderActive = false
+                    root.commitGripReorder(true)
+                    event.accepted = true
+                    return
+                }
+                root.deactivateInnerNavigation()
+                event.accepted = true
+                break
+            }
+        }
+    }
+
+    Connections {
+        target: bypassButton.navigation
+
+        function onNavigationEvent(event) {
+            if (event.type === NavigationEvent.Escape) {
+                root.deactivateInnerNavigation()
+                event.accepted = true
+            }
+        }
+    }
+
+    Connections {
+        target: effectNameButton.navigation
+
+        function onNavigationEvent(event) {
+            if (event.type === NavigationEvent.Escape) {
+                root.deactivateInnerNavigation()
+                event.accepted = true
+            }
+        }
+    }
+
+    Connections {
+        target: chooseEffectDropdown.navigation
+
+        function onNavigationEvent(event) {
+            if (event.type === NavigationEvent.Escape) {
+                root.deactivateInnerNavigation()
+                event.accepted = true
             }
         }
     }

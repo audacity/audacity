@@ -9,6 +9,8 @@ Item {
     id: root
 
     property alias navigation: buttonContainer.navigation
+    property alias realtimeEffectsNavigation: effectsTitleBar.navigation
+    property alias closeEffectsNavigation: effectsTitleBar.navigation
 
     property int effectsSectionWidth: 0
     property bool showEffectsSection: false
@@ -28,6 +30,12 @@ Item {
         }
     }
 
+    onShowEffectsSectionChanged: {
+        if (addNewTrack.isOpened) {
+            addNewTrack.close()
+        }
+    }
+
     RowLayout {
         id: rowLayout
 
@@ -39,6 +47,15 @@ Item {
             id: effectsTitleBar
 
             property int padding: parent.height / 4
+            property NavigationPanel navigation: NavigationPanel {
+                name: "RealtimeEffectsSectionPanel"
+                enabled: root.enabled && root.visible && root.showEffectsSection
+                section: buttonContainer.navigation.section
+                direction: NavigationPanel.Vertical
+                order: 0
+
+                accessible.name: qsTrc("projectscene", "Realtime effects")
+            }
 
             Layout.preferredWidth: root.effectsSectionWidth
             Layout.preferredHeight: root.height
@@ -69,9 +86,15 @@ Item {
                 color: effectsTitleBar.color
 
                 FlatButton {
+                    id: closeEffectsSectionButton
+
                     anchors.centerIn: parent
                     width: parent.width - 2 * effectsTitleBar.padding
                     height: parent.height - 2 * effectsTitleBar.padding
+
+                    navigation.name: "CloseEffectsSection"
+                    navigation.panel: effectsTitleBar.navigation
+                    navigation.order: 0
 
                     normalColor: ui.theme.backgroundPrimaryColor
                     hoverHitColor: ui.theme.buttonColor
@@ -99,7 +122,7 @@ Item {
             property NavigationPanel navigation: NavigationPanel {
                 name: "AddTrackPanel"
                 enabled: root.enabled && root.visible
-                order: 1
+                order: closeEffectsSectionButton.navigation.order + 1
 
                 accessible.name: qsTrc("projectscene", "Add track")
             }
@@ -124,6 +147,7 @@ Item {
 
                 navigation.name: "AddTrack"
                 navigation.panel: buttonContainer.navigation
+                navigation.order: 0
 
                 backgroundRadius: 3
                 normalColor: ui.theme.buttonColor
