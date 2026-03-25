@@ -234,7 +234,7 @@ bool WinFramelessWindowController::processMouseMove(MSG* message, qintptr* resul
     long x = GET_X_LPARAM(message->lParam);
     long y = GET_Y_LPARAM(message->lParam);
 
-    double scaleFactor = uiConfiguration()->guiScaling();
+    double scaleFactor = uiConfiguration()->guiScaling(iocContext());
     QRect moveAreaRect = windowTitleBarMoveArea();
     int moveAreaHeight = static_cast<int>(moveAreaRect.height() * scaleFactor);
     int moveAreaWidth = static_cast<int>(moveAreaRect.width() * scaleFactor);
