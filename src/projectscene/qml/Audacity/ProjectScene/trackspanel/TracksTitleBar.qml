@@ -30,6 +30,12 @@ Item {
         }
     }
 
+    onShowEffectsSectionChanged: {
+        if (addNewTrack.isOpened) {
+            addNewTrack.close()
+        }
+    }
+
     RowLayout {
         id: rowLayout
 

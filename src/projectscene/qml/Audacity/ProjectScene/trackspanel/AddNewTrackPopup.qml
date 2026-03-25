@@ -30,6 +30,9 @@ StyledPopupView {
     }
 
     onOpened: {
+        Qt.callLater(function() {
+            root.repositionWindowIfNeed()
+        })
         navPanel.requestActive()
     }
 
