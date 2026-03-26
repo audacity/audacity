@@ -13,8 +13,6 @@
 
 #include "LoadEffects.h"
 
-#include "au3-preferences/Prefs.h"
-
 #include "Effect.h"
 #include "au3-module-manager/ModuleManager.h"
 #include "au3-module-manager/PluginManager.h"
