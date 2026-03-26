@@ -97,7 +97,7 @@ void PlaybackController::init()
             if (selectionRegion.isValid()) {
                 doChangePlaybackRegion(selectionRegion);
             }
-            doSeek(m_lastPlaybackSeekTime, false);
+            doSeek(lastPlaybackSeekTime(), false);
         }
     });
 
@@ -227,7 +227,7 @@ void PlaybackController::stopSeekAndUpdatePlaybackRegion()
 {
     stop();
 
-    seek(m_lastPlaybackSeekTime, false);
+    seek(lastPlaybackSeekTime(), false);
     updatePlaybackRegion();
 }
 
@@ -332,7 +332,7 @@ void PlaybackController::doPlay(bool ignoreSelection)
         }
     } else {
         doChangePlaybackRegion({});
-        doSeek(m_lastPlaybackSeekTime, false);
+        doSeek(lastPlaybackSeekTime(), false);
     }
 
     if (!isPlaybackStartPositionValid()) {
@@ -557,7 +557,7 @@ void PlaybackController::clearLoopRegion()
 
 void PlaybackController::setLastPlaybackSeekTime(muse::secs_t secs)
 {
-    if (muse::RealIsEqual(m_lastPlaybackSeekTime, secs)) {
+    if (muse::RealIsEqual(lastPlaybackSeekTime(), secs)) {
         return;
     }
 
@@ -735,7 +735,7 @@ bool PlaybackController::isPlaybackStartPositionValid() const
 {
     muse::secs_t totalPlayTime = this->totalPlayTime();
 
-    if (m_lastPlaybackSeekTime >= totalPlayTime) {
+    if (lastPlaybackSeekTime() >= totalPlayTime) {
         return false;
     }
 
