@@ -437,7 +437,7 @@ bool ProjectActionsController::saveProject(const muse::io::path_t& path)
     return saveProject(SaveMode::Save);
 }
 
-bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudInfo, SaveMode saveMode)
+bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudInfo, SaveMode saveMode, bool forceOverwrite)
 {
     if (!authorization()->ensureAuthorization()) {
         return false;
@@ -460,7 +460,7 @@ bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudI
 
     auto progress = audioComService()->uploadProject(project, cloudInfo.name.toStdString(), [this, projectFilePath]() {
         return saveProjectLocally(projectFilePath, SaveMode::Save);
-    });
+    }, forceOverwrite);
 
     progress->finished().onReceive(this, [this, exists, projectFilePath](const ProgressResult& result) {
         if (result.ret.success()) {
@@ -786,13 +786,13 @@ IAudacityProjectPtr ProjectActionsController::createProjectInCurrentWindow()
     return project;
 }
 
-Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, const String& projectId)
+Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, const String& projectId, bool forceOverwrite)
 {
     if (!authorization()->ensureAuthorization()) {
         return make_ret(Ret::Code::Cancel);
     }
 
-    muse::ProgressPtr progress = audioComService()->openCloudProject(localPath, projectId.toStdString());
+    muse::ProgressPtr progress = audioComService()->openCloudProject(localPath, projectId.toStdString(), forceOverwrite);
     progress->finished().onReceive(this, [this, localPath](const ProgressResult& result) {
         if (!result.ret) {
             handleCloudOpenError(result.ret, localPath);
@@ -1102,6 +1102,19 @@ const char* OPEN_SYNC_ERROR_NO_LOCAL_FILE_MESSAGE = "No local copy is available.
 const char* OPEN_DEFAULT_ERROR_TITLE = "Cannot open cloud project";
 const char* OPEN_DEFAULT_ERROR_MESSAGE = "An error occurred while opening the cloud project.";
 
+const char* OPEN_CONFLICT_TITLE = "Project version conflict";
+const char* OPEN_CONFLICT_MESSAGE
+    = "There is a newer version of this project on audio.com. You can open your local version or discard it and download the latest.";
+const char* OPEN_CONFLICT_LOCAL_BTN = "Open local version";
+const char* OPEN_CONFLICT_REMOTE_BTN = "Discard and open latest";
+
+const char* SAVE_CONFLICT_TITLE = "Project version conflict";
+const char* SAVE_CONFLICT_MESSAGE
+    =
+        "A newer version of this project exists on audio.com. You can overwrite it with your local version or discard your changes and open the latest version.";
+const char* SAVE_CONFLICT_LOCAL_BTN = "Overwrite cloud version";
+const char* SAVE_CONFLICT_REMOTE_BTN = "Discard and open latest";
+
 const char* OPEN_NOT_FOUND_ERROR_TITLE = "Cloud project unavailable";
 const char* OPEN_NOT_FOUND_ERROR_MESSAGE
     = "Your project is no longer linked to its previous cloud save. This may happen if the cloud version was deleted.\n\n"
@@ -1203,6 +1216,28 @@ void ProjectActionsController::handleCloudOpenError(const muse::Ret& error, cons
         }
         break;
     }
+    case Err::SyncResultConflict: {
+        const int useLocalBtn = static_cast<int>(muse::IInteractive::Button::CustomButton);
+        const int useRemoteBtn = static_cast<int>(muse::IInteractive::Button::CustomButton) + 1;
+        muse::IInteractive::ButtonDatas buttons {
+            interactive()->buttonData(IInteractive::Button::Cancel),
+            muse::IInteractive::ButtonData(useLocalBtn, muse::trc("project", OPEN_CONFLICT_LOCAL_BTN), false, false,
+                                           muse::IInteractive::ButtonRole::ApplyRole),
+            muse::IInteractive::ButtonData(useRemoteBtn, muse::trc("project", OPEN_CONFLICT_REMOTE_BTN), /*accent=*/ true, false,
+                                           muse::IInteractive::ButtonRole::ApplyRole),
+        };
+        auto conflictResult = interactive()->infoSync(
+            trc("project", OPEN_CONFLICT_TITLE),
+            trc("project", OPEN_CONFLICT_MESSAGE),
+            buttons, useRemoteBtn);
+        if (conflictResult.isButton(useLocalBtn)) {
+            doOpenProject(localPath);
+        } else if (conflictResult.isButton(useRemoteBtn)) {
+            const bool forceOverwrite = true;
+            openCloudProject(localPath, {}, forceOverwrite);
+        }
+        break;
+    }
     default: {
         interactive()->infoSync(trc("project", OPEN_DEFAULT_ERROR_TITLE), trc("project", OPEN_DEFAULT_ERROR_MESSAGE));
         break;
@@ -1212,8 +1247,12 @@ void ProjectActionsController::handleCloudOpenError(const muse::Ret& error, cons
 
 void ProjectActionsController::handleCloudSaveError(const muse::Ret& error)
 {
-    using Err = au::au3cloud::Err;
+    IAudacityProjectPtr project = currentProject();
+    if (!project) {
+        return;
+    }
 
+    using Err = au::au3cloud::Err;
     const auto err = static_cast<Err>(error.code());
 
     switch (err) {
@@ -1231,11 +1270,6 @@ void ProjectActionsController::handleCloudSaveError(const muse::Ret& error)
         muse::IInteractive::Result result = interactive()->infoSync(title, text, buttons, saveLocallyBtn, {},
                                                                     muse::trc("cloud", "Save to audio.com"));
         if (result.isButton(muse::IInteractive::Button::Save)) {
-            IAudacityProjectPtr project = currentProject();
-            if (!project) {
-                break;
-            }
-
             const auto ret = openSaveProjectScenario()->askLocalPath(project, SaveMode::Save);
             if (!ret.ret) {
                 break;
@@ -1251,11 +1285,6 @@ void ProjectActionsController::handleCloudSaveError(const muse::Ret& error)
     }
     break;
     case Err::ProjectNotFound: {
-        IAudacityProjectPtr project = currentProject();
-        if (project) {
-            return;
-        }
-
         const auto localPath = project->path();
 
         const int saveLocallyBtn = static_cast<int>(muse::IInteractive::Button::CustomButton);
@@ -1289,6 +1318,29 @@ void ProjectActionsController::handleCloudSaveError(const muse::Ret& error)
         }
     }
     break;
+    case Err::ProjectVersionConflict: {
+        const int useLocalBtn = static_cast<int>(muse::IInteractive::Button::CustomButton);
+        const int useRemoteBtn = static_cast<int>(muse::IInteractive::Button::CustomButton) + 1;
+        muse::IInteractive::ButtonDatas buttons {
+            muse::IInteractive::ButtonData(useLocalBtn, muse::trc("project", SAVE_CONFLICT_LOCAL_BTN), /*accent=*/ true, false,
+                                           muse::IInteractive::ButtonRole::ApplyRole),
+            muse::IInteractive::ButtonData(useRemoteBtn, muse::trc("project", SAVE_CONFLICT_REMOTE_BTN), false, false,
+                                           muse::IInteractive::ButtonRole::ApplyRole),
+        };
+        auto conflictResult = interactive()->infoSync(
+            trc("project", SAVE_CONFLICT_TITLE),
+            trc("project", SAVE_CONFLICT_MESSAGE),
+            buttons, useLocalBtn);
+        if (conflictResult.isButton(useLocalBtn)) {
+            const bool forceOverwrite = true;
+            saveProjectToCloud(CloudProjectInfo { QUrl {}, {}, project->displayName() }, SaveMode::Save, forceOverwrite);
+        } else if (conflictResult.isButton(useRemoteBtn)) {
+            const io::path_t localPath = project->path();
+            closeOpenedProject(false);
+            openCloudProject(localPath, {}, /*forceOverwrite=*/ true);
+        }
+        break;
+    }
     case Err::NetworkError:
     case Err::DataUploadFailed:
     case Err::ServerError:

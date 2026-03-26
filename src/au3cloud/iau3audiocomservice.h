@@ -41,10 +41,12 @@ public:
     virtual void clearAudioListCache() = 0;
 
     virtual muse::ProgressPtr uploadProject(au::project::IAudacityProjectPtr project, const std::string& name,
-                                            std::function<bool()> projectSaveCallback = nullptr) = 0;
+                                            std::function<bool()> projectSaveCallback = nullptr,
+                                            bool forceOverwrite = false) = 0;
     virtual muse::ProgressPtr shareAudio(const std::string& title) = 0;
 
-    virtual muse::ProgressPtr openCloudProject(const muse::io::path_t& localPath, const std::string& projectId = {}) = 0;
+    virtual muse::ProgressPtr openCloudProject(const muse::io::path_t& localPath, const std::string& projectId = {},
+                                               bool forceOverwrite = false) = 0;
     virtual muse::ProgressPtr resumeProjectSync(au::project::IAudacityProjectPtr project) = 0;
 };
 }

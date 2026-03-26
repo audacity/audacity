@@ -347,7 +347,7 @@ void Au3AudioComService::clearAudioListCache()
 }
 
 muse::ProgressPtr Au3AudioComService::uploadProject(au::project::IAudacityProjectPtr project, const std::string& name,
-                                                    std::function<bool()> projectSaveCallback)
+                                                    std::function<bool()> projectSaveCallback, bool forceOverwrite)
 {
     muse::ProgressPtr progress = std::make_shared<muse::Progress>();
 
@@ -382,7 +382,7 @@ muse::ProgressPtr Au3AudioComService::uploadProject(au::project::IAudacityProjec
     const std::string currentSnapshotId = projectCloudExtension.GetSnapshotId();
     const std::string cloudProjectId = projectCloudExtension.GetCloudProjectId();
 
-    std::thread([this, project, progress, name, isSyncing, currentSnapshotId, cloudProjectId,
+    std::thread([this, project, progress, name, isSyncing, currentSnapshotId, cloudProjectId, forceOverwrite,
                  projectSaveCallback = std::move(projectSaveCallback)]() mutable {
         if (!project) {
             progress->finish(muse::make_ret(muse::Ret::Code::InternalError, muse::trc("cloud",
@@ -411,12 +411,15 @@ muse::ProgressPtr Au3AudioComService::uploadProject(au::project::IAudacityProjec
         }
 
         projectCloudExtension.OnSyncStarted();
+        const auto uploadMode = forceOverwrite
+            ? audacity::cloud::audiocom::sync::UploadMode::ForceOverwrite
+            : audacity::cloud::audiocom::sync::UploadMode::Normal;
         auto future = audacity::cloud::audiocom::sync::LocalProjectSnapshot::Create(
             audacity::cloud::audiocom::GetServiceConfig(),
             audacity::cloud::audiocom::GetOAuthService(),
             projectCloudExtension,
             name,
-            audacity::cloud::audiocom::sync::UploadMode::Normal,
+            uploadMode,
             AudiocomTrace::SaveProjectSaveToCloudMenu);
 
         auto result = future.get();
@@ -490,7 +493,8 @@ std::string Au3AudioComService::getCloudProjectPage(au::project::IAudacityProjec
     return projectCloudExtension.GetCloudProjectPage(AudiocomTrace::SaveProjectSaveToCloudMenu);
 }
 
-muse::ProgressPtr Au3AudioComService::openCloudProject(const muse::io::path_t& localPath, const std::string& projectId)
+muse::ProgressPtr Au3AudioComService::openCloudProject(const muse::io::path_t& localPath, const std::string& projectId,
+                                                       bool forceOverwrite)
 {
     muse::ProgressPtr progress = std::make_shared<muse::Progress>();
 
@@ -510,8 +514,8 @@ muse::ProgressPtr Au3AudioComService::openCloudProject(const muse::io::path_t& l
         }
     }
 
-    std::thread([this, progress, dbProjectData, path = localPath.toStdString(), cloudProjectId]() {
-        if (isSnapshotUpToDate(dbProjectData)) {
+    std::thread([this, progress, dbProjectData, path = localPath.toStdString(), cloudProjectId, forceOverwrite]() {
+        if (!forceOverwrite && isSnapshotUpToDate(dbProjectData)) {
             progress->finish(muse::make_ok());
             return;
         }
@@ -529,13 +533,16 @@ muse::ProgressPtr Au3AudioComService::openCloudProject(const muse::io::path_t& l
         auto syncFuturePromise = std::make_shared<std::promise<SyncFuture> >();
         std::future<SyncFuture> syncFutureResult = syncFuturePromise->get_future();
 
-        muse::async::Async::call(this, [syncFuturePromise, cloudProjectId,
+        muse::async::Async::call(this, [syncFuturePromise, cloudProjectId, forceOverwrite,
                                         progressCallback = std::move(progressCallback)]() mutable {
             // Important: CloudSyncService does not control access by locking but by calling convention,
             // We must ensure all operations on this service to be called on the main thread
+            const auto syncMode = forceOverwrite
+                ? CloudSyncService::SyncMode::ForceOverwrite
+                : CloudSyncService::SyncMode::Normal;
             auto future = CloudSyncService::Get().OpenFromCloud(
                 cloudProjectId, {},
-                CloudSyncService::SyncMode::Normal,
+                syncMode,
                 std::move(progressCallback));
 
             syncFuturePromise->set_value(std::move(future));
