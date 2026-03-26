@@ -175,6 +175,7 @@ private:
     muse::async::Notification m_currentSequenceIdChanged;
     muse::secs_t m_lastPlaybackSeekTime = 0.0;
     PlaybackRegion m_lastPlaybackRegion;
+    bool m_pauseShouldStopPlayback = false;
 
     muse::async::Channel<playback::TrackId> m_trackAdded;
     muse::async::Channel<playback::TrackId> m_trackRemoved;

@@ -117,6 +117,11 @@ public:
         m_controller->rewindToEndAction();
     }
 
+    void pause()
+    {
+        m_controller->pauseAction();
+    }
+
     PlaybackController* m_controller = nullptr;
 
     std::shared_ptr<ApplicationMock> m_application;
@@ -328,6 +333,43 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenPlaying)
 
     //! [WHEN] Toggle play
     togglePlay();
+}
+
+TEST_F(PlaybackControllerTests, Pause_WhenSeekTargetChangedDuringPlayback_StopsPlayback)
+{
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+
+    EXPECT_CALL(*m_player, setPlaybackRegion(PlaybackRegion()))
+    .Times(1);
+    EXPECT_CALL(*m_player, stop())
+    .Times(1);
+    EXPECT_CALL(*m_player, seek(secs_t(12.0), false))
+    .Times(1);
+    EXPECT_CALL(*m_player, pause())
+    .Times(0);
+
+    m_controller->setLastPlaybackSeekTime(12.0);
+    pause();
+}
+
+TEST_F(PlaybackControllerTests, Pause_WhenPlaybackRegionChangesAfterSeekTargetChange_StillStopsPlayback)
+{
+    ON_CALL(*m_player, playbackStatus())
+    .WillByDefault(Return(PlaybackStatus::Running));
+
+    EXPECT_CALL(*m_player, setPlaybackRegion(PlaybackRegion { 3.0, 7.0 }))
+    .Times(1);
+    EXPECT_CALL(*m_player, stop())
+    .Times(1);
+    EXPECT_CALL(*m_player, seek(secs_t(3.0), false))
+    .Times(1);
+    EXPECT_CALL(*m_player, pause())
+    .Times(0);
+
+    m_controller->setLastPlaybackSeekTime(12.0);
+    changePlaybackRegion(3.0, 7.0);
+    pause();
 }
 
 /**

@@ -428,6 +428,7 @@ void PlaybackController::doSeek(const muse::secs_t secs, bool applyIfPlaying)
     seek(secs, applyIfPlaying);
     setLastPlaybackSeekTime(secs);
     m_lastPlaybackRegion = {};
+    m_pauseShouldStopPlayback = false;
 }
 
 void PlaybackController::onChangePlaybackRegionAction(const muse::actions::ActionQuery& q)
@@ -466,6 +467,12 @@ void PlaybackController::pauseAction()
 void PlaybackController::doPause()
 {
     IF_ASSERT_FAILED(player()) {
+        return;
+    }
+
+    if (m_pauseShouldStopPlayback && isPlaying()) {
+        m_pauseShouldStopPlayback = false;
+        stopSeekAndUpdatePlaybackRegion();
         return;
     }
 
@@ -555,6 +562,7 @@ void PlaybackController::setLastPlaybackSeekTime(muse::secs_t secs)
     }
 
     m_lastPlaybackSeekTime = secs;
+    m_pauseShouldStopPlayback = isPlaying();
     m_lastPlaybackSeekTimeChanged.notify();
 }
 
