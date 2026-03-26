@@ -39,6 +39,7 @@ void NyquistPromptLoader::init()
         const EffectMeta meta = toEffectMeta(desc, EffectFamily::Builtin, title, description, supportsMultipleClipSelection);
 
         builtinEffectsRepository()->registerMeta(meta);
+        break;
     }
 }
 }
