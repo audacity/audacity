@@ -7,6 +7,10 @@
 #include <string>
 
 namespace au::project {
-std::string cloudErrorTitle(int code);
-std::string cloudErrorMessage(int code);
+struct CloudErrorDialogInfo {
+    std::string title;
+    std::string message;
+};
+
+CloudErrorDialogInfo getCloudErrorDialogInfo(int code);
 }

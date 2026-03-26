@@ -818,7 +818,7 @@ Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, cons
 
         progress->finished().onReceive(this, [this](const ProgressResult& result) {
             if (!result.ret.success()) {
-                toastService()->showError(cloudErrorTitle(result.ret.code()), cloudErrorMessage(result.ret.code()));
+                handleCloudUploadError(result.ret);
             }
         });
 
@@ -1023,7 +1023,7 @@ void ProjectActionsController::shareAudio()
                 }
             });
         } else {
-            toastService()->showError(cloudErrorTitle(result.ret.code()), cloudErrorMessage(result.ret.code()));
+            handleCloudUploadError(result.ret);
         }
     });
 
@@ -1100,6 +1100,7 @@ void ProjectActionsController::handleCloudUploadError(const muse::Ret& error)
     using Err = au::au3cloud::Err;
 
     const auto err = static_cast<Err>(error.code());
+    const auto dialogInfo = getCloudErrorDialogInfo(error.code());
 
     switch (err) {
     case Err::ProjectLimitReached:
@@ -1109,7 +1110,7 @@ void ProjectActionsController::handleCloudUploadError(const muse::Ret& error)
             interactive()->buttonData(IInteractive::Button::Cancel),
             muse::IInteractive::ButtonData(saveLocallyBtn, muse::trc("project", "Save to Computer"), /*accent=*/ true),
         };
-        muse::IInteractive::Result result = interactive()->infoSync(cloudErrorTitle(error.code()), cloudErrorMessage(error.code()),
+        muse::IInteractive::Result result = interactive()->infoSync(dialogInfo.title, dialogInfo.message,
                                                                     buttons, saveLocallyBtn, {},
                                                                     muse::trc("cloud", "Save to audio.com"));
         if (result.isButton(muse::IInteractive::Button::Save)) {
@@ -1143,7 +1144,7 @@ void ProjectActionsController::handleCloudUploadError(const muse::Ret& error)
             muse::IInteractive::ButtonData(saveToCloudBtn, muse::trc("cloud", "Save to audio.com"), /*accent=*/ true, false,
                                            muse::IInteractive::ButtonRole::ApplyRole),
         };
-        muse::IInteractive::Result result = interactive()->infoSync(cloudErrorTitle(error.code()), cloudErrorMessage(error.code()),
+        muse::IInteractive::Result result = interactive()->infoSync(dialogInfo.title, dialogInfo.message,
                                                                     buttons, saveToCloudBtn, {},
                                                                     muse::trc("cloud", "Save"));
         if (result.isButton(saveLocallyBtn)) {
@@ -1174,8 +1175,7 @@ void ProjectActionsController::handleCloudUploadError(const muse::Ret& error)
     }
     break;
     default:
-        interactive()->infoSync(cloudErrorTitle(error.code()), cloudErrorMessage(error.code()), {}, {}, {},
-                                muse::trc("cloud", "Save to audio.com"));
+        interactive()->infoSync(dialogInfo.title, dialogInfo.message);
         break;
     }
 }
