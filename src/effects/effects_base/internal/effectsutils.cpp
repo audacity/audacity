@@ -436,6 +436,13 @@ MenuItemList makeFlatList(const EffectMetaList& effects, IEffectMenuItemFactory&
     }
     return items;
 }
+
+void removeAlsoDisabledEffects(EffectMetaList& effects, const utils::EffectFilter& filter)
+{
+    effects.erase(std::remove_if(effects.begin(), effects.end(), [&](const EffectMeta& meta) {
+        return !meta.isActivated || filter(meta);
+    }), effects.end());
+}
 } // namespace
 
 muse::uicomponents::MenuItemList utils::destructiveEffectMenu(EffectMenuOrganization organization,
@@ -443,7 +450,7 @@ muse::uicomponents::MenuItemList utils::destructiveEffectMenu(EffectMenuOrganiza
                                                               const EffectFilter& filter,
                                                               IEffectMenuItemFactory& effectMenu)
 {
-    effects.erase(std::remove_if(effects.begin(), effects.end(), filter), effects.end());
+    impl::removeAlsoDisabledEffects(effects, filter);
     if (organization == EffectMenuOrganization::Flat) {
         return impl::makeFlatList(effects, effectMenu);
     } else {
@@ -457,7 +464,7 @@ muse::uicomponents::MenuItemList utils::realtimeEffectMenu(EffectMenuOrganizatio
                                                            const EffectFilter& filter,
                                                            IEffectMenuItemFactory& effectMenu)
 {
-    effects.erase(std::remove_if(effects.begin(), effects.end(), filter), effects.end());
+    impl::removeAlsoDisabledEffects(effects, filter);
     if (organization == EffectMenuOrganization::Flat) {
         return impl::makeFlatList(effects, effectMenu);
     } else {

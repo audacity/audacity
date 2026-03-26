@@ -3,6 +3,9 @@
  */
 #pragma once
 
+#include "ieffectsprovider.h"
+
+#include "framework/global/modularity/ioc.h"
 #include "framework/uicomponents/qml/Muse/UiComponents/abstracttableviewmodel.h"
 
 #include <QQmlParserStatus>
@@ -20,12 +23,18 @@ enum class Type {
 Q_ENUM_NS(Type)
 }
 
-class PluginManagerTableViewModel : public muse::uicomponents::AbstractTableViewModel, public QQmlParserStatus
+class PluginManagerTableViewModel : public muse::uicomponents::AbstractTableViewModel, public QQmlParserStatus, public muse::Injectable
 {
     Q_OBJECT
+    Q_INTERFACES(QQmlParserStatus)
+
+    muse::Inject<IEffectsProvider> effectsProvider{ this };
 
 public:
     explicit PluginManagerTableViewModel(QObject* parent = nullptr);
+    ~PluginManagerTableViewModel() override;
+
+    Q_INVOKABLE void handleEdit(int row, int column);
 
 private:
     void classBegin() override {}

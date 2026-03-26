@@ -77,8 +77,6 @@ void EffectsProvider::initOnce(muse::IInteractive& interactive,
 
     reloadEffects();
 
-    m_initialized.notify();
-
     // Register for future changes
     knownPluginsRegister()->pluginInfoListChanged().onNotify(this, [this]() {
         reloadEffects();
@@ -191,4 +189,42 @@ Effect* EffectsProvider::effect(const EffectId& effectId) const
     }
 
     return loader->effect(effectId);
+}
+
+void EffectsProvider::setEffectActivated(const EffectId& effectId, bool activated)
+{
+    const auto it = std::find_if(m_effects.begin(), m_effects.end(), [&](const EffectMeta& meta) {
+        return meta.id == effectId;
+    });
+    if (it == m_effects.end()) {
+        LOGE() << "effect not found: " << effectId;
+        return;
+    }
+    it->isActivated = activated;
+    m_effectsChanged.notify();
+}
+
+void EffectsProvider::save()
+{
+    muse::audioplugins::AudioPluginInfoList newPlugins;
+    newPlugins.reserve(m_effects.size());
+
+    for (const auto& meta : m_effects) {
+        muse::audioplugins::AudioPluginInfo info;
+        info.type = muse::audioplugins::AudioPluginType::Fx;
+        info.meta = utils::auToMuseEffectMeta(meta);
+        info.path = meta.path;
+        info.enabled = true;
+
+        newPlugins.push_back(std::move(info));
+    }
+
+    const auto filePath = audioPluginsConfiguration()->knownAudioPluginsFilePath();
+    if (fileSystem()->exists(filePath)) {
+        // Remove the file and reload the register.
+        fileSystem()->remove(filePath);
+        knownPluginsRegister()->load();
+    }
+
+    knownPluginsRegister()->registerPlugins(newPlugins);
 }

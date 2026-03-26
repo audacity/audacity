@@ -221,5 +221,5 @@ muse::async::Channel<muse::actions::ActionCodeList> EffectsActionsController::ca
 
 void EffectsActionsController::openPluginManager()
 {
-    interactive()->openSync("audacity://effects/plugin_manager");
+    interactive()->open("audacity://effects/plugin_manager");
 }

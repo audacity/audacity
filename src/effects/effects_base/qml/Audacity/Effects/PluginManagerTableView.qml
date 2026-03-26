@@ -46,7 +46,7 @@ StyledTableView {
 
             checked: val
             onClicked: {
-                item.changed(!checked)
+                tableViewModel.handleEdit(row, column)
             }
         }
     }
