@@ -495,6 +495,10 @@ muse::ProgressPtr Au3AudioComService::openCloudProject(const muse::io::path_t& l
     muse::ProgressPtr progress = std::make_shared<muse::Progress>();
 
     const auto dbProjectData = getProjectDataFromDatabase(localPath);
+    if (dbProjectData.has_value() && !filesystem()->exists(localPath)) {
+        removeProjectFromDatabase(localPath);
+    }
+
     std::string cloudProjectId = projectId;
 
     if (cloudProjectId.empty()) {
@@ -544,11 +548,16 @@ muse::ProgressPtr Au3AudioComService::openCloudProject(const muse::io::path_t& l
             return;
         }
 
-        muse::async::Async::call(this, [progress, result = std::move(result)]() {
+        muse::async::Async::call(this, [this, progress, result = std::move(result)]() {
             if (result.Status == sync::ProjectSyncResult::StatusCode::Succeeded) {
                 progress->finish(muse::make_ok());
             } else {
-                progress->finish(make_ret(syncResultCodeToErr(result.Result.Code)));
+                const auto err = syncResultCodeToErr(result.Result.Code);
+                if (err == Err::SyncResultNotFound) {
+                    removeProjectFromDatabase(result.ProjectPath);
+                }
+
+                progress->finish(make_ret(err));
             }
         }, muse::runtime::mainThreadId());
     }).detach();

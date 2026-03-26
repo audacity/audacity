@@ -1155,7 +1155,6 @@ void ProjectActionsController::handleCloudOpenError(const muse::Ret& error, cons
         break;
     }
     case Err::SyncResultNotFound: {
-        audioComService()->removeProjectFromDatabase(localPath);
         if (fileSystem()->exists(localPath)) {
             doOpenProject(localPath);
             const int saveLocallyBtn = static_cast<int>(muse::IInteractive::Button::CustomButton);
@@ -1182,12 +1181,13 @@ void ProjectActionsController::handleCloudOpenError(const muse::Ret& error, cons
                     break;
                 }
 
-                const auto localPath = ret.val;
-                if (localPath.empty()) {
+                const auto newPath = ret.val;
+                if (newPath.empty()) {
                     break;
                 }
 
-                saveProjectLocally(localPath, SaveMode::Save);
+                saveProjectLocally(newPath, SaveMode::Save);
+                fileSystem()->remove(localPath);
             } else if (result.isButton(saveToCloudBtn)) {
                 IAudacityProjectPtr project = currentProject();
                 if (!project) {
@@ -1250,8 +1250,11 @@ void ProjectActionsController::handleCloudSaveError(const muse::Ret& error)
     case Err::ProjectNotFound: {
         IAudacityProjectPtr project = currentProject();
         if (project) {
-            audioComService()->removeProjectFromDatabase(project->path());
+            return;
         }
+
+        const auto localPath = project->path();
+
         const int saveLocallyBtn = static_cast<int>(muse::IInteractive::Button::CustomButton);
         const int saveToCloudBtn = static_cast<int>(muse::IInteractive::Button::CustomButton) + 1;
         muse::IInteractive::ButtonDatas buttons {
@@ -1265,21 +1268,19 @@ void ProjectActionsController::handleCloudSaveError(const muse::Ret& error)
         muse::IInteractive::Result result = interactive()->infoSync(CLOUD_SAVE_UNAVAILABLE_TITLE, CLOUD_SAVE_UNAVAILABLE_TEXT,
                                                                     buttons, saveToCloudBtn, {},
                                                                     muse::trc("cloud", "Save"));
-        if (!project) {
-            break;
-        }
         if (result.isButton(saveLocallyBtn)) {
             const auto ret = openSaveProjectScenario()->askLocalPath(project, SaveMode::Save);
             if (!ret.ret) {
                 break;
             }
 
-            const auto localPath = ret.val;
-            if (localPath.empty()) {
+            const auto newPath = ret.val;
+            if (newPath.empty()) {
                 break;
             }
 
-            saveProjectLocally(localPath, SaveMode::Save);
+            saveProjectLocally(newPath, SaveMode::Save);
+            fileSystem()->remove(localPath);
         } else if (result.isButton(saveToCloudBtn)) {
             saveProjectToCloud(CloudProjectInfo { QUrl {}, {}, project->displayName() }, SaveMode::Save);
         }
@@ -1290,6 +1291,3 @@ void ProjectActionsController::handleCloudSaveError(const muse::Ret& error)
         break;
     }
 }
-
-/*
-*/

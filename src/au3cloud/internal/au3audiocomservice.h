@@ -10,7 +10,6 @@
 
 #include "framework/global/async/asyncable.h"
 #include "framework/global/async/promise.h"
-#include "framework/global/async/notification.h"
 
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/io/ifilesystem.h"
@@ -51,11 +50,10 @@ public:
 
     muse::ProgressPtr resumeProjectSync(au::project::IAudacityProjectPtr project) override;
 
-    void removeProjectFromDatabase(const muse::io::path_t& localPath) override;
-
 private:
     std::string getCloudProjectPage(au::project::IAudacityProjectPtr project);
 
+    static void removeProjectFromDatabase(const muse::io::path_t& localPath);
     bool isSnapshotUpToDate(const std::optional<audacity::cloud::audiocom::sync::DBProjectData>& dbProjectData);
     std::optional<std::string> getHeadSnapshotID(const std::string& projectId);
 
