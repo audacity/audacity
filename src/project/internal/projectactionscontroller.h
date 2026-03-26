@@ -116,6 +116,8 @@ private:
 
     muse::Ret openPageIfNeed(muse::Uri pageUri);
 
+    void handleCloudUploadError(const muse::Ret& error);
+
     void shareAudio();
 
     void openCustomFFmpegOptions();

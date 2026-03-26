@@ -2,61 +2,26 @@
 
 #include <QFileDialog>
 
-#include "async/async.h"
-#include "global/defer.h"
-#include "global/translation.h"
-
-#include "audacityproject.h"
-#include "io/path.h"
-#include "io/fileinfo.h"
-#include "progress.h"
-#include "projecterrors.h"
-
-#include "project/types/projecttypes.h"
+#include "framework/global/async/async.h"
+#include "framework/global/defer.h"
+#include "framework/global/translation.h"
+#include "framework/global/io/path.h"
+#include "framework/global/io/fileinfo.h"
+#include "framework/global/progress.h"
+#include "framework/global/log.h"
+#include "framework/global/types/ret.h"
+#include "framework/ui/view/iconcodes.h"
+#include "framework/interactive/iinteractive.h"
 
 #include "au3cloud/au3clouderrors.h"
 
-#include "log.h"
-#include "ui/view/iconcodes.h"
+#include "audacityproject.h"
+#include "projecterrors.h"
+#include "cloudprojectutils.h"
+#include "project/types/projecttypes.h"
 
 using namespace muse;
 using namespace au::project;
-
-namespace {
-std::string cloudErrorTitle(const muse::Ret& ret)
-{
-    using Err = au::au3cloud::Err;
-    switch (static_cast<Err>(ret.code())) {
-    case Err::UploadUnauthorized:
-    case Err::AuthorizationRequired:
-        return muse::trc("cloud", "Authorization Required");
-    case Err::NetworkError:
-        return muse::trc("cloud", "Network Error");
-    case Err::ServerError:
-        return muse::trc("cloud", "Server Error");
-    case Err::UploadAborted:
-    case Err::SyncCancelled:
-    case Err::SyncAborted:
-        return muse::trc("cloud", "Cancelled");
-    case Err::ProjectLimitReached:
-    case Err::ProjectStorageLimitReached:
-        return muse::trc("cloud", "Limit Reached");
-    case Err::ProjectVersionConflict:
-        return muse::trc("cloud", "Version Conflict");
-    case Err::ProjectNotFound:
-        return muse::trc("cloud", "Not Found");
-    case Err::UploadFailed:
-    case Err::UploadFileNotFound:
-    case Err::UploadInvalidData:
-    case Err::UploadUnexpectedResponse:
-    case Err::DataUploadFailed:
-    case Err::SnapshotFailed:
-        return muse::trc("cloud", "Upload Failed");
-    default:
-        return muse::trc("global", "Error");
-    }
-}
-}
 
 static const muse::Uri PROJECT_PAGE_URI("audacity://project");
 static const muse::Uri HOME_PAGE_URI("audacity://home");
@@ -475,6 +440,10 @@ bool ProjectActionsController::saveProject(const muse::io::path_t& path)
 
 bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudInfo, SaveMode saveMode)
 {
+    if (!authorization()->ensureAuthorization()) {
+        return false;
+    }
+
     io::path_t cloudProjectsPath = configuration()->cloudProjectsPath();
     if (cloudProjectsPath.empty()) {
         LOGE() << "Cloud projects path is not set";
@@ -494,7 +463,7 @@ bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudI
         return saveProjectLocally(projectFilePath, SaveMode::Save);
     });
 
-    progress->finished().onReceive(this, [this, exists](const ProgressResult& result) {
+    progress->finished().onReceive(this, [this, exists, projectFilePath](const ProgressResult& result) {
         if (result.ret.success()) {
             if (exists) {
                 return;
@@ -516,7 +485,7 @@ bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudI
                 }
             });
         } else {
-            toastService()->showError(cloudErrorTitle(result.ret), result.ret.text());
+            handleCloudUploadError(result.ret);
         }
     });
 
@@ -827,7 +796,7 @@ Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, cons
     muse::ProgressPtr progress = audioComService()->openCloudProject(localPath, projectId.toStdString());
     progress->finished().onReceive(this, [this, localPath](const ProgressResult& result) {
         if (!result.ret) {
-            LOGE() << result.ret.toString();
+            handleCloudUploadError(result.ret);
             return;
         }
 
@@ -849,7 +818,7 @@ Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, cons
 
         progress->finished().onReceive(this, [this](const ProgressResult& result) {
             if (!result.ret.success()) {
-                toastService()->showError(cloudErrorTitle(result.ret), result.ret.text());
+                toastService()->showError(cloudErrorTitle(result.ret.code()), cloudErrorMessage(result.ret.code()));
             }
         });
 
@@ -1054,7 +1023,7 @@ void ProjectActionsController::shareAudio()
                 }
             });
         } else {
-            toastService()->showError(cloudErrorTitle(result.ret), result.ret.text());
+            toastService()->showError(cloudErrorTitle(result.ret.code()), cloudErrorMessage(result.ret.code()));
         }
     });
 
@@ -1124,4 +1093,89 @@ void ProjectActionsController::openMetadataDialog()
 void ProjectActionsController::openCustomMapping()
 {
     interactive()->open(CUSTOM_MAPPING);
+}
+
+void ProjectActionsController::handleCloudUploadError(const muse::Ret& error)
+{
+    using Err = au::au3cloud::Err;
+
+    const auto err = static_cast<Err>(error.code());
+
+    switch (err) {
+    case Err::ProjectLimitReached:
+    case Err::ProjectStorageLimitReached: {
+        const int saveLocallyBtn = int(muse::IInteractive::Button::Save);
+        muse::IInteractive::ButtonDatas buttons {
+            interactive()->buttonData(IInteractive::Button::Cancel),
+            muse::IInteractive::ButtonData(saveLocallyBtn, muse::trc("project", "Save to Computer"), /*accent=*/ true),
+        };
+        muse::IInteractive::Result result = interactive()->infoSync(cloudErrorTitle(error.code()), cloudErrorMessage(error.code()),
+                                                                    buttons, saveLocallyBtn, {},
+                                                                    muse::trc("cloud", "Save to audio.com"));
+        if (result.isButton(muse::IInteractive::Button::Save)) {
+            IAudacityProjectPtr project = currentProject();
+            if (!project) {
+                break;
+            }
+
+            const auto ret = openSaveProjectScenario()->askLocalPath(project, SaveMode::Save);
+            if (!ret.ret) {
+                break;
+            }
+
+            const auto localPath = ret.val;
+            if (localPath.empty()) {
+                break;
+            }
+
+            saveProjectLocally(localPath, SaveMode::Save);
+        }
+    }
+    break;
+    case Err::ProjectNotFound: {
+        const int saveLocallyBtn = static_cast<int>(muse::IInteractive::Button::CustomButton);
+        const int saveToCloudBtn = static_cast<int>(muse::IInteractive::Button::CustomButton) + 1;
+        muse::IInteractive::ButtonDatas buttons {
+            interactive()->buttonData(IInteractive::Button::Cancel),
+            muse::IInteractive::ButtonData(saveLocallyBtn, muse::trc("project",
+                                                                     "Save to computer"), false, false,
+                                           muse::IInteractive::ButtonRole::ApplyRole),
+            muse::IInteractive::ButtonData(saveToCloudBtn, muse::trc("cloud", "Save to audio.com"), /*accent=*/ true, false,
+                                           muse::IInteractive::ButtonRole::ApplyRole),
+        };
+        muse::IInteractive::Result result = interactive()->infoSync(cloudErrorTitle(error.code()), cloudErrorMessage(error.code()),
+                                                                    buttons, saveToCloudBtn, {},
+                                                                    muse::trc("cloud", "Save"));
+        if (result.isButton(saveLocallyBtn)) {
+            IAudacityProjectPtr project = currentProject();
+            if (!project) {
+                break;
+            }
+
+            const auto ret = openSaveProjectScenario()->askLocalPath(project, SaveMode::Save);
+            if (!ret.ret) {
+                break;
+            }
+
+            const auto localPath = ret.val;
+            if (localPath.empty()) {
+                break;
+            }
+
+            saveProjectLocally(localPath, SaveMode::Save);
+        } else if (result.isButton(saveToCloudBtn)) {
+            IAudacityProjectPtr project = currentProject();
+            if (!project) {
+                break;
+            }
+
+            saveProjectToCloud(CloudProjectInfo { QUrl {}, {}, project->displayName() }, SaveMode::Save);
+        }
+    }
+    break;
+    default:
+        interactive()->infoSync(cloudErrorTitle(error.code()), cloudErrorMessage(error.code()), {}, {}, {},
+                                muse::trc("cloud", "Save to audio.com"));
+        break;
+    }
 }

@@ -49,14 +49,17 @@ inline muse::Ret make_ret(Err e)
     case Err::Undefined:                  return muse::Ret(retCode);
     case Err::NoError:                    return muse::Ret(retCode);
     case Err::UnknownError:               return muse::Ret(retCode);
+
     case Err::NoExportPlugin:             return muse::Ret(retCode, muse::trc("cloud", "No audio export plugin available"));
     case Err::NoExtensions:               return muse::Ret(retCode, muse::trc("cloud", "No file extensions available for audio format"));
+
     case Err::UploadAborted:              return muse::Ret(retCode, muse::trc("cloud", "Upload was aborted"));
     case Err::UploadFileNotFound:         return muse::Ret(retCode, muse::trc("cloud", "Exported audio file not found before upload"));
     case Err::UploadUnauthorized:         return muse::Ret(retCode, muse::trc("cloud", "Authorization required to upload audio"));
     case Err::UploadInvalidData:          return muse::Ret(retCode, muse::trc("cloud", "Invalid data was sent to audio.com"));
     case Err::UploadUnexpectedResponse:   return muse::Ret(retCode, muse::trc("cloud", "Unexpected response from audio.com"));
     case Err::UploadFailed:              return muse::Ret(retCode, muse::trc("cloud", "Audio upload failed"));
+
     case Err::AuthorizationRequired:      return muse::Ret(retCode, muse::trc("cloud", "Authorization required"));
     case Err::ProjectLimitReached:        return muse::Ret(retCode, muse::trc("cloud", "Project limit reached"));
     case Err::ProjectStorageLimitReached: return muse::Ret(retCode, muse::trc("cloud", "Project storage limit reached"));

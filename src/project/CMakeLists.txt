@@ -65,6 +65,8 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/audacityproject.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/audacityproject.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/cloudprojectutils.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/cloudprojectutils.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectconfiguration.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/projectuiactions.cpp

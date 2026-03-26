@@ -114,18 +114,30 @@ au::au3cloud::Err cloudSyncErrorToErr(const std::optional<sync::CloudSyncError>&
 
     using ErrorType = sync::CloudSyncError::ErrorType;
     switch (error->Type) {
-    case ErrorType::None:                       return Err::UnknownError;
-    case ErrorType::Authorization:              return Err::AuthorizationRequired;
-    case ErrorType::ProjectLimitReached:        return Err::ProjectLimitReached;
-    case ErrorType::ProjectStorageLimitReached: return Err::ProjectStorageLimitReached;
-    case ErrorType::ProjectVersionConflict:     return Err::ProjectVersionConflict;
-    case ErrorType::ProjectNotFound:            return Err::ProjectNotFound;
-    case ErrorType::DataUploadFailed:           return Err::DataUploadFailed;
-    case ErrorType::Network:                    return Err::NetworkError;
-    case ErrorType::Server:                     return Err::ServerError;
-    case ErrorType::Cancelled:                  return Err::SyncCancelled;
-    case ErrorType::Aborted:                    return Err::SyncAborted;
-    case ErrorType::ClientFailure:              return Err::ClientFailure;
+    case ErrorType::None:
+        return Err::UnknownError;
+    case ErrorType::Authorization:
+        return Err::AuthorizationRequired;
+    case ErrorType::ProjectLimitReached:
+        return Err::ProjectLimitReached;
+    case ErrorType::ProjectStorageLimitReached:
+        return Err::ProjectStorageLimitReached;
+    case ErrorType::ProjectVersionConflict:
+        return Err::ProjectVersionConflict;
+    case ErrorType::ProjectNotFound:
+        return Err::ProjectNotFound;
+    case ErrorType::DataUploadFailed:
+        return Err::DataUploadFailed;
+    case ErrorType::Network:
+        return Err::NetworkError;
+    case ErrorType::Server:
+        return Err::ServerError;
+    case ErrorType::Cancelled:
+        return Err::SyncCancelled;
+    case ErrorType::Aborted:
+        return Err::SyncAborted;
+    case ErrorType::ClientFailure:
+        return Err::ClientFailure;
     }
 
     return Err::UnknownError;
@@ -135,13 +147,56 @@ au::au3cloud::Err uploadResultToErr(UploadOperationCompleted::Result result)
 {
     using Result = UploadOperationCompleted::Result;
     switch (result) {
-    case Result::Success:            return Err::NoError;
-    case Result::Aborted:            return Err::UploadAborted;
-    case Result::FileNotFound:       return Err::UploadFileNotFound;
-    case Result::Unauthorized:       return Err::UploadUnauthorized;
-    case Result::InvalidData:        return Err::UploadInvalidData;
-    case Result::UnexpectedResponse: return Err::UploadUnexpectedResponse;
-    case Result::UploadFailed:       return Err::UploadFailed;
+    case Result::Success:
+        return Err::NoError;
+    case Result::Aborted:
+        return Err::UploadAborted;
+    case Result::FileNotFound:
+        return Err::UploadFileNotFound;
+    case Result::Unauthorized:
+        return Err::UploadUnauthorized;
+    case Result::InvalidData:
+        return Err::UploadInvalidData;
+    case Result::UnexpectedResponse:
+        return Err::UploadUnexpectedResponse;
+    case Result::UploadFailed:
+        return Err::UploadFailed;
+    }
+
+    return Err::UnknownError;
+}
+
+au::au3cloud::Err syncResultCodeToErr(audacity::cloud::audiocom::SyncResultCode code)
+{
+    switch (code) {
+    case SyncResultCode::Success:
+        return Err::NoError;
+    case SyncResultCode::Cancelled:
+        return Err::SyncCancelled;
+    case SyncResultCode::Expired:
+        return Err::UnknownError;
+    case SyncResultCode::Conflict:
+        return Err::ProjectVersionConflict;
+    case SyncResultCode::ConnectionFailed:
+        return Err::NetworkError;
+    case SyncResultCode::PaymentRequired:
+        return Err::ProjectLimitReached;
+    case SyncResultCode::TooLarge:
+        return Err::ProjectStorageLimitReached;
+    case SyncResultCode::Unauthorized:
+    case SyncResultCode::Forbidden:
+        return Err::AuthorizationRequired;
+    case SyncResultCode::NotFound:
+        return Err::ProjectNotFound;
+    case SyncResultCode::UnexpectedResponse:
+        return Err::UnknownError;
+    case SyncResultCode::InternalClientError:
+        return Err::ClientFailure;
+    case SyncResultCode::InternalServerError:
+        return Err::ServerError;
+    case SyncResultCode::SyncImpossible:
+    case SyncResultCode::UnknownError:
+        return Err::UnknownError;
     }
 
     return Err::UnknownError;
@@ -397,8 +452,6 @@ muse::ProgressPtr Au3AudioComService::resumeProjectSync(au::project::IAudacityPr
     au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
     auto& projectCloudExtension = audacity::cloud::audiocom::sync::ProjectCloudExtension::Get(*au3Project);
 
-    auto progress = std::make_shared<muse::Progress>();
-
     const auto pendingSnapshots = sync::CloudProjectsDatabase::Get().GetPendingSnapshots(
         projectCloudExtension.GetCloudProjectId());
 
@@ -406,6 +459,7 @@ muse::ProgressPtr Au3AudioComService::resumeProjectSync(au::project::IAudacityPr
         return nullptr;
     }
 
+    auto progress = std::make_shared<muse::Progress>();
     m_resumeSyncSubscription = projectCloudExtension.SubscribeStatusChanged(
         [progress](const audacity::cloud::audiocom::sync::CloudStatusChangedMessage& message) {
         if (message.Status == audacity::cloud::audiocom::sync::ProjectSyncStatus::Syncing) {
@@ -492,8 +546,7 @@ muse::ProgressPtr Au3AudioComService::openCloudProject(const muse::io::path_t& l
             if (result.Status == sync::ProjectSyncResult::StatusCode::Succeeded) {
                 progress->finish(muse::make_ok());
             } else {
-                std::string content = result.Result.Content;
-                progress->finish(muse::make_ret(muse::Ret::Code::UnknownError, content));
+                progress->finish(make_ret(syncResultCodeToErr(result.Result.Code)));
             }
         }, muse::runtime::mainThreadId());
     }).detach();
