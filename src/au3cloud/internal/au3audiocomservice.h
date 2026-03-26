@@ -51,6 +51,8 @@ public:
 
     muse::ProgressPtr resumeProjectSync(au::project::IAudacityProjectPtr project) override;
 
+    void removeProjectFromDatabase(const muse::io::path_t& localPath) override;
+
 private:
     std::string getCloudProjectPage(au::project::IAudacityProjectPtr project);
 

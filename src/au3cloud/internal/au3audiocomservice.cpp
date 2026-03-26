@@ -172,29 +172,31 @@ au::au3cloud::Err syncResultCodeToErr(audacity::cloud::audiocom::SyncResultCode 
     case SyncResultCode::Success:
         return Err::NoError;
     case SyncResultCode::Cancelled:
-        return Err::SyncCancelled;
+        return Err::SyncResultCancelled;
     case SyncResultCode::Expired:
-        return Err::UnknownError;
+        return Err::SyncResultExpired;
     case SyncResultCode::Conflict:
-        return Err::ProjectVersionConflict;
+        return Err::SyncResultConflict;
     case SyncResultCode::ConnectionFailed:
-        return Err::NetworkError;
+        return Err::SyncResultConnectionFailed;
     case SyncResultCode::PaymentRequired:
-        return Err::ProjectLimitReached;
+        return Err::SyncResultPaymentRequired;
     case SyncResultCode::TooLarge:
-        return Err::ProjectStorageLimitReached;
+        return Err::SyncResultTooLarge;
     case SyncResultCode::Unauthorized:
+        return Err::SyncResultUnauthorized;
     case SyncResultCode::Forbidden:
-        return Err::AuthorizationRequired;
+        return Err::SyncResultForbidden;
     case SyncResultCode::NotFound:
-        return Err::ProjectNotFound;
+        return Err::SyncResultNotFound;
     case SyncResultCode::UnexpectedResponse:
-        return Err::UnknownError;
+        return Err::SyncResultUnexpectedResponse;
     case SyncResultCode::InternalClientError:
-        return Err::ClientFailure;
+        return Err::SyncResultInternalClientError;
     case SyncResultCode::InternalServerError:
-        return Err::ServerError;
+        return Err::SyncResultInternalServerError;
     case SyncResultCode::SyncImpossible:
+        return Err::SyncResultSyncImpossible;
     case SyncResultCode::UnknownError:
         return Err::UnknownError;
     }
@@ -644,6 +646,14 @@ muse::ProgressPtr Au3AudioComService::shareAudio(const std::string& title)
             AudiocomTrace::ShareAudioButton);
     }).detach();
     return progress;
+}
+
+void Au3AudioComService::removeProjectFromDatabase(const muse::io::path_t& localPath)
+{
+    auto dbData = sync::CloudProjectsDatabase::Get().GetProjectDataForPath(localPath.toStdString());
+    if (dbData) {
+        sync::CloudProjectsDatabase::Get().DeleteProject(dbData->ProjectId);
+    }
 }
 
 bool Au3AudioComService::isSnapshotUpToDate(const std::optional<sync::DBProjectData>& dbProjectData)

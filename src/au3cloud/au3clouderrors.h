@@ -38,6 +38,23 @@ enum class Err {
     SyncAborted,
     ClientFailure,
     SnapshotFailed,
+
+    // ProjectSyncResult::StatusCode
+    SyncResultSuccess,
+    SyncResultCancelled,
+    SyncResultExpired,
+    SyncResultConflict,
+    SyncResultConnectionFailed,
+    SyncResultPaymentRequired,
+    SyncResultTooLarge,
+    SyncResultUnauthorized,
+    SyncResultForbidden,
+    SyncResultNotFound,
+    SyncResultUnexpectedResponse,
+    SyncResultInternalClientError,
+    SyncResultInternalServerError,
+    SyncResultSyncImpossible,
+    SyncResultUnknownError,
 };
 
 inline muse::Ret make_ret(Err e)
