@@ -15,16 +15,21 @@ effects::EffectMeta effects::toEffectMeta(const ::PluginDescriptor& desc, Effect
                                           bool supportsMultipleClipSelection)
 {
     EffectMeta meta;
+
     meta.id = au3::wxToString(desc.GetID());
     meta.family = effectFamily;
-    meta.category = utils::effectCategoryToString(toAu4EffectCategory(desc.GetEffectGroup()));
+    meta.type = toAu4EffectType(desc.GetEffectType());
     meta.title = title;
     meta.description = description;
+    meta.vendor = au3::wxToString(desc.GetVendor());
+    meta.version = au3::wxToString(desc.GetUntranslatedVersion());
+    meta.module = au3::wxToString(desc.GetProviderID());
+    meta.path = au3::wxToString(desc.GetPath());
+    meta.category = utils::effectCategoryToString(toAu4EffectCategory(desc.GetEffectGroup()));
     meta.isRealtimeCapable = desc.IsEffectRealtime();
     meta.supportsMultipleClipSelection = supportsMultipleClipSelection;
-    meta.vendor = au3::wxToString(desc.GetVendor());
-    meta.path = au3::wxToString(desc.GetPath());
-    meta.type = toAu4EffectType(desc.GetEffectType());
+    meta.isActivated = desc.IsEnabled();
+
     return meta;
 }
 }

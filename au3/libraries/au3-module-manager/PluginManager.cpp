@@ -363,6 +363,7 @@ void PluginManager::InitializePlugins()
 // ----------------------------------------------------------------------------
 
 static PluginManager::ConfigFactory sFactory;
+static PluginManager::PluginRegistryFactory sRegistryFactory;
 
 // ============================================================================
 //
@@ -380,9 +381,10 @@ PluginManager& PluginManager::Get()
     return *mInstance;
 }
 
-void PluginManager::Initialize(ConfigFactory factory)
+void PluginManager::Initialize(ConfigFactory factory, PluginRegistryFactory registryFactory)
 {
     sFactory = move(factory);
+    sRegistryFactory = move(registryFactory);
 
     // Always load the registry first
     Load();
@@ -542,286 +544,16 @@ bool PluginManager::DropFile(const wxString& fileName)
 
 void PluginManager::Load()
 {
-    // Create/Open the registry
-    auto pRegistry = sFactory(FileNames::PluginRegistry());
-    auto& registry = *pRegistry;
-
-    // If this group doesn't exist then we have something that's not a registry.
-    // We should probably warn the user, but it's pretty unlikely that this will happen.
-    if (!registry.HasGroup(REGROOT)) {
-        // Must start over
-        // This DeleteAll affects pluginregistry.cfg only, not audacity.cfg
-        // That is, the memory of on/off states of effect (and generator,
-        // analyzer, and tool) plug-ins
-        registry.Clear();
-        registry.Flush();
-        return;
+    if (const auto registry = sRegistryFactory()) {
+        registry->Load(mRegisteredPlugins);
     }
-
-    LoadGroup(&registry, PluginTypeEffect);
-}
-
-void PluginManager::LoadGroup(audacity::BasicSettings* pRegistry, PluginType type)
-{
-#ifdef __WXMAC__
-    // Bug 1590: On Mac, we should purge the registry of Nyquist plug-ins
-    // bundled with other versions of Audacity, assuming both versions
-    // were properly installed in /Applications (or whatever it is called in
-    // your locale)
-
-    const auto fullExePath
-        =wxString { PlatformCompatibility::GetExecutablePath() };
-
-    // Strip rightmost path components up to *.app
-    wxFileName exeFn{ fullExePath };
-    exeFn.SetEmptyExt();
-    exeFn.SetName(wxString {});
-    while (exeFn.GetDirCount() && !exeFn.GetDirs().back().EndsWith(".app")) {
-        exeFn.RemoveLastDir();
-    }
-
-    const auto goodPath = exeFn.GetPath();
-
-    if (exeFn.GetDirCount()) {
-        exeFn.RemoveLastDir();
-    }
-    const auto possiblyBadPath = exeFn.GetPath();
-
-    auto AcceptPath = [&](const wxString& path) {
-        if (!path.StartsWith(possiblyBadPath)) {
-            // Assume it's not under /Applications
-            return true;
-        }
-        if (path.StartsWith(goodPath)) {
-            // It's bundled with this executable
-            return true;
-        }
-        return false;
-    };
-#else
-    auto AcceptPath = [](const wxString&){ return true; };
-#endif
-
-    wxString strVal;
-    bool boolVal;
-    wxString cfgPath = REGROOT + GetPluginTypeString(type) + wxCONFIG_PATH_SEPARATOR;
-
-    const auto cfgGroup = pRegistry->BeginGroup(cfgPath);
-    for (const auto& group : pRegistry->GetChildGroups()) {
-        PluginDescriptor plug;
-        const auto effectGroup = pRegistry->BeginGroup(group);
-
-        auto groupName = ConvertID(group);
-
-        // Bypass group if the ID is already in use
-        if (mRegisteredPlugins.count(groupName)) {
-            continue;
-        }
-
-        // Set the ID and type
-        plug.SetID(groupName);
-        plug.SetPluginType(type);
-
-        // Get the provider ID and bypass group if not found
-        if (!pRegistry->Read(KEY_PROVIDERID, &strVal, {})) {
-            // Bypass group if the provider isn't valid
-            if (!strVal.empty() && !mRegisteredPlugins.count(strVal)) {
-                continue;
-            }
-        }
-        plug.SetProviderID(PluginID(strVal));
-
-        // Get the path (optional)
-        pRegistry->Read(KEY_PATH, &strVal, {});
-        if (!AcceptPath(strVal)) {
-            // Ignore the obsolete path in the config file, during session,
-            // but don't remove it from the file.  Maybe you really want to
-            // switch back to the other version of Audacity and lose nothing.
-            continue;
-        }
-        plug.SetPath(strVal);
-
-        /*
-         // PRL: Ignore names  written in configs before 2.3.0!
-         // use Internal string only!  Let the present version of Audacity map
-         // that to a user-visible string.
-        // Get the name and bypass group if not found
-        if (!pRegistry->Read(KEY_NAME, &strVal))
-        {
-           continue;
-        }
-        plug.SetName(strVal);
-         */
-
-        // Get the symbol...Audacity 2.3.0 or later requires it
-        // bypass group if not found
-        // Note, KEY_SYMBOL started getting written to config files in 2.1.0.
-        // KEY_NAME (now ignored) was written before that, but only for VST
-        // effects.
-        if (!pRegistry->Read(KEY_SYMBOL, &strVal)) {
-            continue;
-        }
-
-        // Related to Bug2778: config file only remembered an internal name,
-        // so this symbol may not contain the correct TranslatableString.
-        // See calls to IsPluginRegistered which can correct that.
-        plug.SetSymbol(strVal);
-
-        // Get the version and bypass group if not found
-        if (!pRegistry->Read(KEY_VERSION, &strVal)) {
-            continue;
-        }
-        plug.SetVersion(strVal);
-
-        // Get the vendor and bypass group if not found
-        if (!pRegistry->Read(KEY_VENDOR, &strVal)) {
-            continue;
-        }
-        plug.SetVendor(strVal);
-
-#if 0
-        // This was done before version 2.2.2, but the value was not really used
-        // But absence of a value will cause early versions to skip the group
-        // Therefore we still write a blank to keep pluginregistry.cfg
-        // backwards-compatible
-
-        // Get the description and bypass group if not found
-        if (!pRegistry->Read(KEY_DESCRIPTION, &strVal)) {
-            continue;
-        }
-#endif
-
-        // Is it enabled...default to no if not found
-        pRegistry->Read(KEY_ENABLED, &boolVal, false);
-        plug.SetEnabled(boolVal);
-
-        // Is it valid...default to no if not found
-        pRegistry->Read(KEY_VALID, &boolVal, false);
-        plug.SetValid(boolVal);
-
-        switch (type) {
-        case PluginTypeModule:
-        {
-            // Nothing to do here yet
-        }
-        break;
-
-        case PluginTypeEffect:
-        {
-            // Get the effect type and bypass group if not found
-            if (!pRegistry->Read(KEY_EFFECTTYPE, &strVal)) {
-                continue;
-            }
-
-            if (strVal == KEY_EFFECTTYPE_NONE) {
-                plug.SetEffectType(EffectTypeNone);
-            } else if (strVal == KEY_EFFECTTYPE_ANALYZE) {
-                plug.SetEffectType(EffectTypeAnalyze);
-            } else if (strVal == KEY_EFFECTTYPE_GENERATE) {
-                plug.SetEffectType(EffectTypeGenerate);
-            } else if (strVal == KEY_EFFECTTYPE_PROCESS) {
-                plug.SetEffectType(EffectTypeProcess);
-            } else if (strVal == KEY_EFFECTTYPE_TOOL) {
-                plug.SetEffectType(EffectTypeTool);
-            } else if (strVal == KEY_EFFECTTYPE_HIDDEN) {
-                plug.SetEffectType(EffectTypeHidden);
-            } else {
-                continue;
-            }
-
-            // Get the effect family and bypass group if not found
-            if (!pRegistry->Read(KEY_EFFECTFAMILY, &strVal)) {
-                continue;
-            }
-            plug.SetEffectFamily(strVal);
-
-            // Is it a default (above the line) effect and bypass group if not found
-            if (!pRegistry->Read(KEY_EFFECTDEFAULT, &boolVal)) {
-                continue;
-            }
-            plug.SetEffectDefault(boolVal);
-
-            // Is it an interactive effect and bypass group if not found
-            if (!pRegistry->Read(KEY_EFFECTINTERACTIVE, &boolVal)) {
-                continue;
-            }
-            plug.SetEffectInteractive(boolVal);
-
-            // Is it a realtime capable effect and bypass group if not found
-            if (!pRegistry->Read(KEY_EFFECTREALTIME, &strVal)) {
-                continue;
-            }
-            plug.DeserializeRealtimeSupport(strVal);
-
-            // Does the effect support automation...bypass group if not found
-            if (!pRegistry->Read(KEY_EFFECTAUTOMATABLE, &boolVal)) {
-                continue;
-            }
-            plug.SetEffectAutomatable(boolVal);
-        }
-        break;
-
-        case PluginTypeImporter:
-        {
-            // Get the importer identifier and bypass group if not found
-            if (!pRegistry->Read(KEY_IMPORTERIDENT, &strVal)) {
-                continue;
-            }
-            plug.SetImporterIdentifier(strVal);
-
-            // Get the importer extensions and bypass group if not found
-            if (!pRegistry->Read(KEY_IMPORTEREXTENSIONS, &strVal)) {
-                continue;
-            }
-            FileExtensions extensions;
-            wxStringTokenizer tkr(strVal, wxT(":"));
-            while (tkr.HasMoreTokens())
-            {
-                extensions.push_back(tkr.GetNextToken());
-            }
-            plug.SetImporterExtensions(extensions);
-        }
-        break;
-
-        case PluginTypeStub:
-        {
-            // Nothing additional for stubs
-        }
-        break;
-
-        // Not used by 2.1.1 or greater and should be removed after a few releases past 2.1.0.
-        case PluginTypeNone:
-        {
-            // Used for stub groups
-        }
-        break;
-
-        default:
-        {
-            continue;
-        }
-        }
-
-        // Everything checked out...accept the plugin
-        mRegisteredPlugins[groupName] = std::move(plug);
-    }
-
-    return;
 }
 
 void PluginManager::Save()
 {
-    // Create/Open the registry
-    auto pRegistry = sFactory(FileNames::PluginRegistry());
-    auto& registry = *pRegistry;
-
-    // Clear pluginregistry.cfg (not audacity.cfg)
-    registry.Clear();
-
-    SaveGroup(&registry, PluginTypeEffect);
-
-    // Just to be safe
-    registry.Flush();
+    if (const auto registry = sRegistryFactory()) {
+        registry->Save(mRegisteredPlugins);
+    }
 }
 
 void PluginManager::NotifyPluginsChanged()
@@ -845,87 +577,6 @@ void PluginManager::StoreCustomPaths(const PluginProvider& provider, const Plugi
     wxArrayString wxarr;
     std::copy(paths.begin(), paths.end(), std::back_inserter(wxarr));
     mSettings->Write(key, wxJoin(wxarr, ';'));
-}
-
-void PluginManager::SaveGroup(audacity::BasicSettings* pRegistry, PluginType type)
-{
-    wxString group = GetPluginTypeString(type);
-    for (auto& pair : mRegisteredPlugins) {
-        auto& plug = pair.second;
-
-        if (plug.GetPluginType() != type) {
-            continue;
-        }
-
-        const auto pluginGroup = pRegistry->BeginGroup(REGROOT + group + wxCONFIG_PATH_SEPARATOR + ConvertID(plug.GetID()));
-
-        pRegistry->Write(KEY_PATH, plug.GetPath());
-
-        // See comments with the corresponding load-time call to SetSymbol().
-        pRegistry->Write(KEY_SYMBOL, plug.GetSymbol().Internal());
-
-        // PRL:  Writing KEY_NAME which is no longer read, but older Audacity
-        // versions expect to find it.
-        pRegistry->Write(KEY_NAME, plug.GetSymbol().Msgid().MSGID());
-
-        pRegistry->Write(KEY_VERSION, plug.GetUntranslatedVersion());
-        pRegistry->Write(KEY_VENDOR, plug.GetVendor());
-        // Write a blank -- see comments in LoadGroup:
-        pRegistry->Write(KEY_DESCRIPTION, wxString {});
-        pRegistry->Write(KEY_PROVIDERID, plug.GetProviderID());
-        pRegistry->Write(KEY_ENABLED, plug.IsEnabled());
-        pRegistry->Write(KEY_VALID, plug.IsValid());
-
-        switch (type) {
-        case PluginTypeModule:
-            break;
-
-        case PluginTypeEffect:
-        {
-            EffectType etype = plug.GetEffectType();
-            wxString stype;
-            if (etype == EffectTypeNone) {
-                stype = KEY_EFFECTTYPE_NONE;
-            } else if (etype == EffectTypeAnalyze) {
-                stype = KEY_EFFECTTYPE_ANALYZE;
-            } else if (etype == EffectTypeGenerate) {
-                stype = KEY_EFFECTTYPE_GENERATE;
-            } else if (etype == EffectTypeProcess) {
-                stype = KEY_EFFECTTYPE_PROCESS;
-            } else if (etype == EffectTypeTool) {
-                stype = KEY_EFFECTTYPE_TOOL;
-            } else if (etype == EffectTypeHidden) {
-                stype = KEY_EFFECTTYPE_HIDDEN;
-            }
-
-            pRegistry->Write(KEY_EFFECTTYPE, stype);
-            pRegistry->Write(KEY_EFFECTFAMILY, plug.GetEffectFamily());
-            pRegistry->Write(KEY_EFFECTDEFAULT, plug.IsEffectDefault());
-            pRegistry->Write(KEY_EFFECTINTERACTIVE, plug.IsEffectInteractive());
-            pRegistry->Write(KEY_EFFECTREALTIME, plug.SerializeRealtimeSupport());
-            pRegistry->Write(KEY_EFFECTAUTOMATABLE, plug.IsEffectAutomatable());
-        }
-        break;
-
-        case PluginTypeImporter:
-        {
-            pRegistry->Write(KEY_IMPORTERIDENT, plug.GetImporterIdentifier());
-            const auto& extensions = plug.GetImporterExtensions();
-            wxString strExt;
-            for (size_t i = 0, cnt = extensions.size(); i < cnt; i++) {
-                strExt += extensions[i] + wxT(":");
-            }
-            strExt.RemoveLast(1);
-            pRegistry->Write(KEY_IMPORTEREXTENSIONS, strExt);
-        }
-        break;
-
-        default:
-            break;
-        }
-    }
-
-    return;
 }
 
 // Here solely for the purpose of Nyquist Workbench until
@@ -1083,8 +734,8 @@ const PluginID&
 PluginManager::GetByCommandIdentifier(const CommandID& strTarget)
 {
     static PluginID empty;
-    if (strTarget.empty()) { // set GetCommandIdentifier to wxT("") to not show an
-                             // effect in Batch mode
+    if (strTarget.empty()) {     // set GetCommandIdentifier to wxT("") to not show an
+                                 // effect in Batch mode
         return empty;
     }
 
@@ -1418,7 +1069,7 @@ RegistryPath PluginManager::SettingsPath(
 
         wxString id = GetPluginTypeString(plug.GetPluginType())
                       + wxT("_")
-                      + plug.GetEffectFamily() // is empty for non-Effects
+                      + plug.GetEffectFamily()     // is empty for non-Effects
                       + wxT("_")
                       + plug.GetVendor()
                       + wxT("_")

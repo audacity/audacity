@@ -25,6 +25,9 @@ EffectType effectTypeFromString(const muse::String& type);
 muse::String effectCategoryToString(EffectCategory category);
 EffectCategory effectCategoryFromString(const muse::String& category);
 
+muse::String effectFamilyToString(EffectFamily family);
+EffectFamily effectFamilyFromString(const muse::String& family);
+
 muse::audio::AudioResourceMeta auToMuseEffectMeta(const EffectMeta& meta);
 EffectMeta museToAuEffectMeta(const muse::io::path_t& path, const muse::audio::AudioResourceMeta& meta);
 

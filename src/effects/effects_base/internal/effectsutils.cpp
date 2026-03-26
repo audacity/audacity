@@ -6,23 +6,39 @@
 #include "effectstypes.h"
 #include "framework/global/log.h"
 
-namespace au::effects::utils {
-namespace {
-constexpr const char* effectFamilyString(EffectFamily family)
+namespace au::effects {
+muse::String utils::effectFamilyToString(EffectFamily family)
 {
     switch (family) {
-    case EffectFamily::Builtin: return "Audacity";
-    case EffectFamily::VST3: return "VST3";
-    case EffectFamily::LV2: return "LV2";
-    case EffectFamily::AudioUnit: return "AudioUnit";
-    case EffectFamily::Nyquist: return "Nyquist";
+    case EffectFamily::Builtin: return u"Audacity";
+    case EffectFamily::VST3: return u"VST3";
+    case EffectFamily::LV2: return u"LV2";
+    case EffectFamily::AudioUnit: return u"AudioUnit";
+    case EffectFamily::Nyquist: return u"Nyquist";
     default:
         assert(false);
-        return "Unknown";
+        return u"Unknown";
     }
 }
+
+EffectFamily utils::effectFamilyFromString(const muse::String& family)
+{
+    if (family == u"Audacity") {
+        return EffectFamily::Builtin;
+    } else if (family == u"VST3") {
+        return EffectFamily::VST3;
+    } else if (family == u"LV2") {
+        return EffectFamily::LV2;
+    } else if (family == u"AudioUnit") {
+        return EffectFamily::AudioUnit;
+    } else if (family == u"Nyquist") {
+        return EffectFamily::Nyquist;
+    }
+    assert(false);
+    return EffectFamily::Unknown;
 }
 
+namespace {
 static const muse::String unspecifiedEffectCategoryString{ "Third-party" };
 static const muse::String noneEffectCategoryString{ "None" };
 static const muse::String volumeAndCompressionEffectCategoryString{ "Volume and compression" };
@@ -37,7 +53,7 @@ static const muse::String spectralToolsEffectCategoryString{ "Spectral tools" };
 static const muse::String legacyEffectCategoryString{ "Legacy" };
 }
 
-muse::String au::effects::utils::effectCategoryToString(EffectCategory category)
+muse::String utils::effectCategoryToString(EffectCategory category)
 {
     switch (category) {
     case EffectCategory::Unspecified:
@@ -70,7 +86,7 @@ muse::String au::effects::utils::effectCategoryToString(EffectCategory category)
     }
 }
 
-au::effects::EffectCategory au::effects::utils::effectCategoryFromString(const muse::String& category)
+EffectCategory utils::effectCategoryFromString(const muse::String& category)
 {
     if (category == volumeAndCompressionEffectCategoryString) {
         return EffectCategory::VolumeAndCompression;
@@ -101,21 +117,21 @@ au::effects::EffectCategory au::effects::utils::effectCategoryFromString(const m
     return EffectCategory::Unspecified;
 }
 
-muse::String au::effects::utils::effectTypeToString(EffectType type)
+muse::String utils::effectTypeToString(EffectType type)
 {
     switch (type) {
-    case EffectType::Unknown: return { "Unknown" };
-    case EffectType::Analyzer: return { "Analyzer" };
-    case EffectType::Generator: return { "Generator" };
-    case EffectType::Processor: return { "Processor" };
-    case EffectType::Tool: return { "Tool" };
+    case EffectType::Unknown: return u"Unknown";
+    case EffectType::Analyzer: return u"Analyzer";
+    case EffectType::Generator: return u"Generator";
+    case EffectType::Processor: return u"Processor";
+    case EffectType::Tool: return u"Tool";
     default:
         assert(false);
-        return { "Unknown" };
+        return u"Unknown";
     }
 }
 
-au::effects::EffectType au::effects::utils::effectTypeFromString(const muse::String& type)
+EffectType utils::effectTypeFromString(const muse::String& type)
 {
     if (type == "Analyzer") {
         return EffectType::Analyzer;
@@ -132,7 +148,7 @@ au::effects::EffectType au::effects::utils::effectTypeFromString(const muse::Str
     return EffectType::Unknown;
 }
 
-muse::audio::AudioResourceMeta au::effects::utils::auToMuseEffectMeta(const EffectMeta& meta)
+muse::audio::AudioResourceMeta utils::auToMuseEffectMeta(const EffectMeta& meta)
 {
     muse::audio::AudioResourceMeta museMeta;
     // Use the AU3 plugin ID (same as Audio Unit does)
@@ -148,22 +164,52 @@ muse::audio::AudioResourceMeta au::effects::utils::auToMuseEffectMeta(const Effe
     museMeta.attributes.emplace(EFFECT_SUPPORTS_MULTIPLE_CLIP_SELECTION_ATTRIBUTE, meta.supportsMultipleClipSelection ? u"true" : u"false");
     museMeta.attributes.emplace(EFFECT_IS_REALTIME_CAPABLE_ATTRIBUTE, meta.isRealtimeCapable ? u"true" : u"false");
     museMeta.attributes.emplace(EFFECT_TYPE_ATTRIBUTE, utils::effectTypeToString(meta.type));
+    museMeta.attributes.emplace(EFFECT_VERSION_ATTRIBUTE, meta.version);
+    museMeta.attributes.emplace(EFFECT_MODULE_ATTRIBUTE, meta.module);
+    museMeta.attributes.emplace(EFFECT_ACTIVATED_ATTRIBUTE, meta.isActivated ? u"true" : u"false");
 
     return museMeta;
 }
 
-au::effects::EffectMeta au::effects::utils::museToAuEffectMeta(const muse::io::path_t& path, const muse::audio::AudioResourceMeta& meta)
+namespace {
+template<typename T>
+T value(const muse::String& str)
+{
+    return str;
+}
+
+template<>
+bool value<bool>(const muse::String& str)
+{
+    return str == u"true";
+}
+
+template<typename T = muse::String>
+T attributeValue(const muse::audio::AudioResourceMeta& meta, const muse::String& key)
+{
+    const auto valStr = meta.attributeVal(key);
+    IF_ASSERT_FAILED(!valStr.empty()) {
+        return {};
+    }
+    return value<T>(valStr);
+}
+}
+
+EffectMeta utils::museToAuEffectMeta(const muse::io::path_t& path, const muse::audio::AudioResourceMeta& meta)
 {
     EffectMeta effectMeta;
     effectMeta.path = path;
     effectMeta.id = muse::String::fromStdString(meta.id);
     effectMeta.family = fromMuseAudioResourceType(meta.type);
     effectMeta.vendor = muse::String::fromStdString(meta.vendor);
-    effectMeta.type = utils::effectTypeFromString(meta.attributeVal(EFFECT_TYPE_ATTRIBUTE));
-    effectMeta.title = meta.attributeVal(EFFECT_TITLE_ATTRIBUTE);
-    effectMeta.category = meta.attributeVal(EFFECT_CATEGORY_ATTRIBUTE);
-    effectMeta.isRealtimeCapable = meta.attributeVal(EFFECT_IS_REALTIME_CAPABLE_ATTRIBUTE) == u"true";
-    effectMeta.supportsMultipleClipSelection = meta.attributeVal(EFFECT_SUPPORTS_MULTIPLE_CLIP_SELECTION_ATTRIBUTE) == u"true";
+    effectMeta.type = utils::effectTypeFromString(attributeValue(meta, EFFECT_TYPE_ATTRIBUTE));
+    effectMeta.title = attributeValue(meta, EFFECT_TITLE_ATTRIBUTE);
+    effectMeta.category = attributeValue(meta, EFFECT_CATEGORY_ATTRIBUTE);
+    effectMeta.isRealtimeCapable = attributeValue<bool>(meta, EFFECT_IS_REALTIME_CAPABLE_ATTRIBUTE);
+    effectMeta.supportsMultipleClipSelection = attributeValue<bool>(meta, EFFECT_SUPPORTS_MULTIPLE_CLIP_SELECTION_ATTRIBUTE);
+    effectMeta.version = attributeValue(meta, EFFECT_VERSION_ATTRIBUTE);
+    effectMeta.module = attributeValue(meta, EFFECT_MODULE_ATTRIBUTE);
+    effectMeta.isActivated = attributeValue<bool>(meta, EFFECT_ACTIVATED_ATTRIBUTE);
 
     return effectMeta;
 }
@@ -175,7 +221,7 @@ using namespace au::effects;
 
 int builtinEffectCategoryIdOrder(const String& category)
 {
-    using namespace au::effects::utils;
+    using namespace utils;
     static const std::map<String, int> categoryOrder = {
         { effectCategoryToString(EffectCategory::None), 0 },
         { effectCategoryToString(EffectCategory::VolumeAndCompression), 1 },
@@ -283,7 +329,7 @@ MenuItemList audacityDestructiveEffectsGroup(const EffectMetaList& effects, IEff
 
     MenuItemList items;
     for (const auto& [category, effectIds] : categoriesSorted) {
-        if (category == utils::noneEffectCategoryString) {
+        if (category == noneEffectCategoryString) {
             for (const auto& effectId : effectIds) {
                 items << effectMenu.makeMenuEffectItem(effectId);
             }
@@ -299,8 +345,7 @@ MenuItemList thirdPartyGroup(const EffectMetaList& effects, IEffectMenuItemFacto
     std::map<CiString /*family*/, std::map<CiString /*publisher*/, std::map<CiString /*title*/, EffectMetaSet> > > families;
 
     for (const EffectMeta& meta : effects) {
-        families[CiString{ muse::String{ utils::effectFamilyString(meta.family) } }][CiString{ meta.vendor }][CiString{ meta.title }].insert(
-            &meta);
+        families[CiString{ utils::effectFamilyToString(meta.family) }][CiString{ meta.vendor }][CiString{ meta.title }].insert(&meta);
     }
 
     MenuItemList items;
@@ -391,10 +436,10 @@ MenuItemList makeFlatList(const EffectMetaList& effects, IEffectMenuItemFactory&
 }
 } // namespace
 
-muse::uicomponents::MenuItemList au::effects::utils::destructiveEffectMenu(EffectMenuOrganization organization,
-                                                                           EffectMetaList effects,
-                                                                           const EffectFilter& filter,
-                                                                           IEffectMenuItemFactory& effectMenu)
+muse::uicomponents::MenuItemList utils::destructiveEffectMenu(EffectMenuOrganization organization,
+                                                              EffectMetaList effects,
+                                                              const EffectFilter& filter,
+                                                              IEffectMenuItemFactory& effectMenu)
 {
     effects.erase(std::remove_if(effects.begin(), effects.end(), filter), effects.end());
     if (organization == EffectMenuOrganization::Flat) {
@@ -405,10 +450,10 @@ muse::uicomponents::MenuItemList au::effects::utils::destructiveEffectMenu(Effec
     }
 }
 
-muse::uicomponents::MenuItemList au::effects::utils::realtimeEffectMenu(EffectMenuOrganization organization,
-                                                                        EffectMetaList effects,
-                                                                        const EffectFilter& filter,
-                                                                        IEffectMenuItemFactory& effectMenu)
+muse::uicomponents::MenuItemList utils::realtimeEffectMenu(EffectMenuOrganization organization,
+                                                           EffectMetaList effects,
+                                                           const EffectFilter& filter,
+                                                           IEffectMenuItemFactory& effectMenu)
 {
     effects.erase(std::remove_if(effects.begin(), effects.end(), filter), effects.end());
     if (organization == EffectMenuOrganization::Flat) {
@@ -417,4 +462,5 @@ muse::uicomponents::MenuItemList au::effects::utils::realtimeEffectMenu(EffectMe
         assert(organization == EffectMenuOrganization::Grouped);
         return impl::realtimeEffectMenu(effects, effectMenu);
     }
+}
 }

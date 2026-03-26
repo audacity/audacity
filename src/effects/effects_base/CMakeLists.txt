@@ -81,6 +81,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3audiopluginscanner.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3effectsutils.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3effectsutils.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3pluginregistry.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3pluginregistry.h
 
     # view
     ${CMAKE_CURRENT_LIST_DIR}/view/abstracteffectviewmodel.cpp

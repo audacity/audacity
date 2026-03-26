@@ -23,6 +23,8 @@
 #include "PluginDescriptor.h"
 #include "au3-utility/Observer.h"
 
+#include "IPluginRegistry.h"
+
 class wxArrayString;
 
 namespace audacity {
@@ -34,8 +36,6 @@ class BasicSettings;
 // PluginManager
 //
 ///////////////////////////////////////////////////////////////////////////////
-
-typedef std::map<PluginID, PluginDescriptor> PluginMap;
 
 typedef wxArrayString PluginIDs;
 
@@ -82,10 +82,12 @@ public:
 
     // Initialization must inject a factory to make a concrete subtype of
     // BasicSettings
-    using ConfigFactory = std::function<
-        std::unique_ptr<audacity::BasicSettings>(const FilePath& localFilename) >;
+    using ConfigFactory = std::function<std::unique_ptr<audacity::BasicSettings>(const FilePath& localFilename)>;
+
+    using PluginRegistryFactory = std::function<std::unique_ptr<IPluginRegistry>()>;
+
     /*! @pre `factory != nullptr` */
-    void Initialize(ConfigFactory factory);
+    void Initialize(ConfigFactory, PluginRegistryFactory);
     void Terminate();
 
     bool DropFile(const wxString& fileName);
@@ -185,9 +187,6 @@ private:
     ~PluginManager();
 
     void InitializePlugins();
-
-    void LoadGroup(audacity::BasicSettings* pRegistry, PluginType type);
-    void SaveGroup(audacity::BasicSettings* pRegistry, PluginType type);
 
     PluginDescriptor& CreatePlugin(const PluginID& id, ComponentInterface* ident, PluginType type);
 
