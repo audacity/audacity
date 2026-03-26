@@ -217,3 +217,9 @@ jobs:
         find ./build.install/bin/ -type f -exec chmod +x {} +
         APP_BIN=$(find "./build.install/bin/" -type f -name "audacity4portable*" -print -quit)
         QT_QPA_PLATFORM=minimal:enable_fonts "$APP_BIN" --plugin-registration-self-test
+
+    - name: Delete self-test artifact
+      if: always()
+      uses: geekyeggo/delete-artifact@176a747ab7e287e3ff4787bf8a148716375ca118 # v6.0.0
+      with:
+        name: selftest-build-linux
