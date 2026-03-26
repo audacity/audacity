@@ -40,6 +40,7 @@
         <file>qml/Audacity/ProjectScene/toolbars/EffectCard.qml</file>
         <file>qml/Audacity/ProjectScene/toolbars/UndoRedoToolBar.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/PlayCursorLine.qml</file>
+        <file>qml/Audacity/ProjectScene/tracksitemsview/PlaybackSeekLine.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/PlayCursorHead.qml</file>
         <file>qml/Audacity/ProjectScene/tracksitemsview/VerticalRulersPanel.qml</file>
         <file>qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml</file>
