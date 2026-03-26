@@ -231,16 +231,6 @@ void AppShellConfiguration::revertToFactorySettings(bool keepDefaultSettings, bo
     settings()->reset(keepDefaultSettings, notifyAboutChanges, notifyOtherInstances);
 }
 
-void AppShellConfiguration::setFactoryResetMode(FactoryResetMode mode)
-{
-    m_factoryResetMode = mode;
-}
-
-std::optional<FactoryResetMode> AppShellConfiguration::factoryResetMode() const
-{
-    return m_factoryResetMode;
-}
-
 muse::io::paths_t AppShellConfiguration::sessionProjectsPaths() const
 {
     RetVal<ByteArray> retVal = readSessionState();

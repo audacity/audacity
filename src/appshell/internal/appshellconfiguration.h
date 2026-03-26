@@ -95,9 +95,6 @@ public:
     void revertToFactorySettings(bool keepDefaultSettings = false, bool notifyAboutChanges = true,
                                  bool notifyOtherInstances = true) const override;
 
-    void setFactoryResetMode(FactoryResetMode mode) override;
-    std::optional<FactoryResetMode> factoryResetMode() const override;
-
     muse::io::paths_t sessionProjectsPaths() const override;
     muse::Ret setSessionProjectsPaths(const muse::io::paths_t& paths) override;
 
@@ -118,8 +115,6 @@ private:
     muse::async::Notification m_settingsApplied;
 
     muse::async::Notification m_welcomeDialogShowOnStartupChanged;
-
-    std::optional<FactoryResetMode> m_factoryResetMode;
 };
 }
 

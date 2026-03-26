@@ -51,11 +51,6 @@ enum class StartupModeType
     Recovery,
     FirstLaunch
 };
-
-enum class FactoryResetMode {
-    Full,         // Clean user data files + reset settings
-    SettingsOnly  // Reset settings only, keep user data files
-};
 }
 
 #endif // AU_APPSHELL_APPSHELLTYPES_H

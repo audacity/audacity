@@ -23,7 +23,6 @@
 #define AU_APPSHELL_APPLICATIONCONTROLLER_H
 
 #include <QObject>
-#include <QTimer>
 
 #include "../iapplicationactioncontroller.h"
 
@@ -104,7 +103,6 @@ private:
     void openSpectrogramPreferencesDialog();
 
     void revertToFactorySettings();
-    void waitForOtherWindowsToCloseAndRestart();
 
     bool isProjectOpened() const;
     bool isProjectOpenedAndFocused() const;

@@ -336,8 +336,7 @@ void ApplicationActionController::revertToFactorySettings()
     int revertBtn = int(muse::IInteractive::Button::Apply);
     auto promise = interactive()->warning(title, question,
                                           { cancelBtn,
-                                            muse::IInteractive::ButtonData(revertBtn,
-                                                                           muse::trc("appshell", "Restart now to revert settings")) },
+                                            muse::IInteractive::ButtonData(revertBtn, muse::trc("appshell", "Revert")) },
                                           cancelBtn.btn, { muse::IInteractive::Option::WithIcon },
                                           muse::trc("appshell", "Revert to factory settings"));
 
@@ -346,36 +345,26 @@ void ApplicationActionController::revertToFactorySettings()
             return;
         }
 
-        //! NOTE Close current project first (save dialog — user can cancel).
-        if (!projectFilesController()->closeOpenedProject()) {
-            return;
-        }
+        static constexpr bool KEEP_DEFAULT_SETTINGS = false;
+        static constexpr bool NOTIFY_ABOUT_CHANGES = false;
+        static constexpr bool NOTIFY_OTHER_INSTANCES = false;
+        configuration()->revertToFactorySettings(KEEP_DEFAULT_SETTINGS, NOTIFY_ABOUT_CHANGES, NOTIFY_OTHER_INSTANCES);
 
-        //! NOTE Set the mode now; GuiApp::finish() performs the actual reset
-        //! after all modules have been deinited and file handles released.
-        configuration()->setFactoryResetMode(FactoryResetMode::Full);
+        std::string title = muse::trc("appshell", "Would you like to restart Audacity now?");
+        std::string question = muse::trc("appshell", "Audacity needs to be restarted for these changes to take effect.");
 
-        if (multiwindowsProvider()->windowCount() <= 1) {
-            //! Single window — restart immediately
-            application()->restart();
-        } else {
-            //! Multi-window — tell other windows to quit (they'll show save dialogs),
-            //! then wait for all to close before restarting.
-            multiwindowsProvider()->quitForAll();
-            waitForOtherWindowsToCloseAndRestart();
-        }
-    });
-}
+        int restartBtn = int(muse::IInteractive::Button::Apply);
+        auto promise = interactive()->question(title, question,
+                                               { interactive()->buttonData(muse::IInteractive::Button::Cancel),
+                                                 muse::IInteractive::ButtonData(restartBtn,
+                                                                                muse::trc("appshell", "Restart"), true) },
+                                               restartBtn);
 
-void ApplicationActionController::waitForOtherWindowsToCloseAndRestart()
-{
-    if (multiwindowsProvider()->windowCount() <= 1) {
-        application()->restart();
-        return;
-    }
-
-    QTimer::singleShot(200, this, [this]() {
-        waitForOtherWindowsToCloseAndRestart();
+        promise.onResolve(this, [this](const muse::IInteractive::Result& res) {
+            if (!res.isButton(muse::IInteractive::Button::Cancel)) {
+                restart();
+            }
+        });
     });
 }
 

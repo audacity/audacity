@@ -84,9 +84,6 @@ public:
     virtual void revertToFactorySettings(bool keepDefaultSettings = false, bool notifyAboutChanges = true,
                                          bool notifyOtherInstances = true) const = 0;
 
-    virtual void setFactoryResetMode(FactoryResetMode mode) = 0;
-    virtual std::optional<FactoryResetMode> factoryResetMode() const = 0;
-
     virtual muse::io::paths_t sessionProjectsPaths() const = 0;
     virtual muse::Ret setSessionProjectsPaths(const muse::io::paths_t& paths) = 0;
 

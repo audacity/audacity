@@ -4,9 +4,6 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include <QEventLoop>
-#include <QTimer>
-
 #include "actions/tests/mocks/actionsdispatchermock.h"
 #include "global/tests/mocks/applicationmock.h"
 #include "interactive/tests/mocks/interactivemock.h"
@@ -31,6 +28,7 @@ class FactoryResetActionTests : public ::testing::Test
 public:
     using ActionCB = muse::actions::IActionsDispatcher::ActionCallBackWithNameAndData;
     using WarningPromise = muse::async::Promise<IInteractive::Result>;
+    using QuestionPromise = muse::async::Promise<IInteractive::Result>;
 
     void SetUp() override
     {
@@ -91,6 +89,22 @@ public:
         });
     }
 
+    void setupRestartDialog()
+    {
+        EXPECT_CALL(*m_interactive, question(
+                        HasSubstr("restart Audacity"),
+                        _, _, _, _, _))
+        .WillOnce([this](const std::string&, const IInteractive::Text&,
+                         const IInteractive::ButtonDatas&, int,
+                         const IInteractive::Options&, const std::string&) -> QuestionPromise {
+            return QuestionPromise([this](QuestionPromise::Resolve resolve,
+                                          QuestionPromise::Reject) -> QuestionPromise::Result {
+                m_questionResolve = resolve;
+                return QuestionPromise::Result::unchecked();
+            }, muse::async::PromiseType::AsyncByBody);
+        });
+    }
+
     void triggerRevertToFactory()
     {
         auto it = m_registeredActions.find("revert-factory");
@@ -98,26 +112,32 @@ public:
         it->second("revert-factory", muse::actions::ActionData());
     }
 
-    void confirmRevertDialog()
+    void confirmWarningDialog()
     {
         int btn = static_cast<int>(IInteractive::Button::Apply);
         IInteractive::Result result(btn);
         (void)m_warningResolve(result);
     }
 
-    void cancelRevertDialog()
+    void cancelWarningDialog()
     {
         int btn = static_cast<int>(IInteractive::Button::Cancel);
         IInteractive::Result result(btn);
         (void)m_warningResolve(result);
     }
 
-    //! Run the Qt event loop for the given duration so QTimer::singleShot can fire.
-    void processEventsFor(int ms)
+    void confirmRestartDialog()
     {
-        QEventLoop loop;
-        QTimer::singleShot(ms, &loop, &QEventLoop::quit);
-        loop.exec();
+        int btn = static_cast<int>(IInteractive::Button::Apply);
+        IInteractive::Result result(btn);
+        (void)m_questionResolve(result);
+    }
+
+    void cancelRestartDialog()
+    {
+        int btn = static_cast<int>(IInteractive::Button::Cancel);
+        IInteractive::Result result(btn);
+        (void)m_questionResolve(result);
     }
 
 protected:
@@ -132,192 +152,121 @@ protected:
 
     std::map<std::string, ActionCB> m_registeredActions;
     WarningPromise::Resolve m_warningResolve;
+    QuestionPromise::Resolve m_questionResolve;
 };
 
 /**
- * @brief Cancel the factory reset confirmation dialog
- * @details User triggers factory reset but cancels the warning dialog.
- *          No side effects should occur.
+ * @brief Cancel the warning dialog — nothing should happen.
  */
-TEST_F(FactoryResetActionTests, CancelDialog_DoesNothing)
+TEST_F(FactoryResetActionTests, CancelWarningDialog_DoesNothing)
 {
-    //! [GIVEN] Single window
-    ON_CALL(*m_multiWindowsProvider, windowCount())
-    .WillByDefault(Return(size_t(1)));
-
-    //! [THEN] No project close, no reset mode, no restart
-    EXPECT_CALL(*m_projectFilesController, closeOpenedProject(_)).Times(0);
-    EXPECT_CALL(*m_configuration, setFactoryResetMode(_)).Times(0);
+    //! [THEN] No reset, no restart
+    EXPECT_CALL(*m_configuration, revertToFactorySettings(_, _, _)).Times(0);
     EXPECT_CALL(*m_application, restart()).Times(0);
 
-    //! [WHEN] User triggers factory reset and cancels the dialog
+    //! [WHEN] User triggers factory reset and cancels the warning
     triggerRevertToFactory();
-    cancelRevertDialog();
+    cancelWarningDialog();
 }
 
 /**
- * @brief Single window, project closes successfully (clean or user saved)
- * @details After confirming, the project is closed and the app restarts
- *          with factory reset mode set.
+ * @brief Confirm the warning — settings are reset immediately.
  */
-TEST_F(FactoryResetActionTests, SingleWindow_CloseSucceeds_Restarts)
+TEST_F(FactoryResetActionTests, ConfirmWarning_ResetsSettings)
 {
-    //! [GIVEN] Single window
+    //! [GIVEN] Restart dialog will appear
+    setupRestartDialog();
+
+    //! [THEN] Settings are reset with keepDefault=false
+    EXPECT_CALL(*m_configuration, revertToFactorySettings(false, false, false))
+    .Times(1);
+
+    //! [WHEN] User confirms the warning
+    triggerRevertToFactory();
+    confirmWarningDialog();
+
+    //! [WHEN] User cancels the restart dialog
+    cancelRestartDialog();
+}
+
+/**
+ * @brief Confirm warning, cancel restart dialog — reset done but no restart.
+ */
+TEST_F(FactoryResetActionTests, ConfirmWarning_CancelRestart_NoRestart)
+{
+    //! [GIVEN] Restart dialog will appear
+    setupRestartDialog();
+
+    //! [THEN] Settings are reset
+    EXPECT_CALL(*m_configuration, revertToFactorySettings(false, false, false))
+    .Times(1);
+
+    //! [THEN] No restart, no project close
+    EXPECT_CALL(*m_projectFilesController, closeOpenedProject(_)).Times(0);
+    EXPECT_CALL(*m_application, restart()).Times(0);
+
+    //! [WHEN] User confirms warning, cancels restart
+    triggerRevertToFactory();
+    confirmWarningDialog();
+    cancelRestartDialog();
+}
+
+/**
+ * @brief Confirm both dialogs, single window — restart via application()->restart().
+ */
+TEST_F(FactoryResetActionTests, ConfirmRestart_SingleWindow_Restarts)
+{
+    //! [GIVEN] Restart dialog will appear
+    setupRestartDialog();
+
+    //! [GIVEN] Single window, project closes successfully
     ON_CALL(*m_multiWindowsProvider, windowCount())
     .WillByDefault(Return(size_t(1)));
 
-    //! [GIVEN] Project closes successfully (quitApp=false, not a quit)
     EXPECT_CALL(*m_projectFilesController, closeOpenedProject(false))
     .WillOnce(Return(true));
 
-    //! [THEN] Factory reset mode is set to Full
-    EXPECT_CALL(*m_configuration, setFactoryResetMode(FactoryResetMode::Full))
+    //! [THEN] Settings are reset and app restarts
+    EXPECT_CALL(*m_configuration, revertToFactorySettings(false, false, false))
     .Times(1);
 
-    //! [THEN] Application restarts
     EXPECT_CALL(*m_application, restart())
     .Times(1);
 
-    //! [THEN] quitForAll is NOT called (single window)
-    EXPECT_CALL(*m_multiWindowsProvider, quitForAll()).Times(0);
-
-    //! [WHEN] User triggers and confirms factory reset
+    //! [WHEN] User confirms both dialogs
     triggerRevertToFactory();
-    confirmRevertDialog();
+    confirmWarningDialog();
+    confirmRestartDialog();
 }
 
 /**
- * @brief Single window, user cancels the save dialog
- * @details The project has unsaved changes. User confirms factory reset
- *          but cancels the save dialog. No restart should occur.
+ * @brief Confirm both dialogs, multi-window — uses quitAllAndRestartLast().
  */
-TEST_F(FactoryResetActionTests, SingleWindow_CloseCancelled_NoRestart)
+TEST_F(FactoryResetActionTests, ConfirmRestart_MultiWindow_QuitsAll)
 {
-    //! [GIVEN] Single window
-    ON_CALL(*m_multiWindowsProvider, windowCount())
-    .WillByDefault(Return(size_t(1)));
+    //! [GIVEN] Restart dialog will appear
+    setupRestartDialog();
 
-    //! [GIVEN] User cancels the save dialog (quitApp=false)
-    EXPECT_CALL(*m_projectFilesController, closeOpenedProject(false))
-    .WillOnce(Return(false));
-
-    //! [THEN] No factory reset mode set, no restart
-    EXPECT_CALL(*m_configuration, setFactoryResetMode(_)).Times(0);
-    EXPECT_CALL(*m_application, restart()).Times(0);
-    EXPECT_CALL(*m_multiWindowsProvider, quitForAll()).Times(0);
-
-    //! [WHEN] User triggers and confirms factory reset
-    triggerRevertToFactory();
-    confirmRevertDialog();
-}
-
-/**
- * @brief Multiple windows, user cancels save dialog for current project
- * @details The current project has unsaved changes. User cancels the save
- *          dialog. No factory reset or quit should occur.
- */
-TEST_F(FactoryResetActionTests, MultiWindow_CloseCancelled_NoAction)
-{
-    //! [GIVEN] Multiple windows open
+    //! [GIVEN] Multiple windows, project closes successfully
     ON_CALL(*m_multiWindowsProvider, windowCount())
     .WillByDefault(Return(size_t(3)));
 
-    //! [GIVEN] User cancels save dialog (quitApp=false)
     EXPECT_CALL(*m_projectFilesController, closeOpenedProject(false))
-    .WillOnce(Return(false));
+    .WillOnce(Return(true));
 
-    //! [THEN] No factory reset mode, no quit, no restart
-    EXPECT_CALL(*m_configuration, setFactoryResetMode(_)).Times(0);
-    EXPECT_CALL(*m_multiWindowsProvider, quitForAll()).Times(0);
+    //! [THEN] Settings are reset
+    EXPECT_CALL(*m_configuration, revertToFactorySettings(false, false, false))
+    .Times(1);
+
+    //! [THEN] quitAllAndRestartLast is called (not application()->restart())
+    EXPECT_CALL(*m_multiWindowsProvider, quitAllAndRestartLast())
+    .Times(1);
+
     EXPECT_CALL(*m_application, restart()).Times(0);
 
-    //! [WHEN] User triggers and confirms factory reset
+    //! [WHEN] User confirms both dialogs
     triggerRevertToFactory();
-    confirmRevertDialog();
-}
-
-/**
- * @brief Multiple windows: waits for other windows to close via QTimer polling,
- *        then restarts.
- * @details After quitForAll(), waitForOtherWindowsToCloseAndRestart() polls
- *          windowCount() every 200ms via QTimer::singleShot. When the count
- *          drops to 1, it calls restart(). This test exercises the actual
- *          timer-based wait by running the Qt event loop.
- */
-TEST_F(FactoryResetActionTests, MultiWindow_WaitsForWindowsToClose_ThenRestarts)
-{
-    //! [GIVEN] windowCount sequence:
-    //!   Call 1: in revertToFactorySettings → 2 (multi-window path)
-    //!   Call 2: in waitFor... → 2 (still waiting, schedule QTimer)
-    //!   Call 3: QTimer fires, in waitFor... → 1 (all closed, call restart)
-    EXPECT_CALL(*m_multiWindowsProvider, windowCount())
-    .WillOnce(Return(size_t(2)))
-    .WillOnce(Return(size_t(2)))
-    .WillOnce(Return(size_t(1)));
-
-    //! [GIVEN] Current project closes successfully (quitApp=false, not a quit)
-    EXPECT_CALL(*m_projectFilesController, closeOpenedProject(false))
-    .WillOnce(Return(true));
-
-    //! [THEN] Factory reset mode is set
-    EXPECT_CALL(*m_configuration, setFactoryResetMode(FactoryResetMode::Full))
-    .Times(1);
-
-    //! [THEN] quitForAll is called to tell other windows to close
-    EXPECT_CALL(*m_multiWindowsProvider, quitForAll())
-    .Times(1);
-
-    //! [THEN] restart is called after the timer fires and windowCount drops
-    EXPECT_CALL(*m_application, restart())
-    .Times(1);
-
-    //! [WHEN] User triggers and confirms factory reset
-    triggerRevertToFactory();
-    confirmRevertDialog();
-
-    //! [WHEN] Process Qt events so the QTimer::singleShot(200ms) fires
-    processEventsFor(500);
-}
-
-/**
- * @brief Multiple windows: polls through several timer iterations before restart
- * @details Exercises multiple iterations of the 200ms polling loop before
- *          windowCount finally drops to 1.
- */
-TEST_F(FactoryResetActionTests, MultiWindow_PollsMultipleTimesBeforeRestart)
-{
-    //! [GIVEN] windowCount stays > 1 for several polls, then drops
-    //!   Call 1: in revertToFactorySettings → 3 (multi-window path)
-    //!   Call 2: waitFor... → 3 (schedule timer)
-    //!   Call 3: timer fires, waitFor... → 2 (schedule timer again)
-    //!   Call 4: timer fires, waitFor... → 1 (done, restart)
-    EXPECT_CALL(*m_multiWindowsProvider, windowCount())
-    .WillOnce(Return(size_t(3)))
-    .WillOnce(Return(size_t(3)))
-    .WillOnce(Return(size_t(2)))
-    .WillOnce(Return(size_t(1)));
-
-    //! [GIVEN] Current project closes successfully (quitApp=false, not a quit)
-    EXPECT_CALL(*m_projectFilesController, closeOpenedProject(false))
-    .WillOnce(Return(true));
-
-    //! [THEN] Factory reset mode is set
-    EXPECT_CALL(*m_configuration, setFactoryResetMode(FactoryResetMode::Full))
-    .Times(1);
-
-    //! [THEN] quitForAll is called once
-    EXPECT_CALL(*m_multiWindowsProvider, quitForAll())
-    .Times(1);
-
-    //! [THEN] restart is called exactly once after all windows close
-    EXPECT_CALL(*m_application, restart())
-    .Times(1);
-
-    //! [WHEN] User triggers and confirms factory reset
-    triggerRevertToFactory();
-    confirmRevertDialog();
-
-    //! [WHEN] Process Qt events for enough time to cover multiple 200ms polls
-    processEventsFor(1000);
+    confirmWarningDialog();
+    confirmRestartDialog();
 }
 }

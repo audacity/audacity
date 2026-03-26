@@ -60,9 +60,6 @@ public:
 
     MOCK_METHOD(void, revertToFactorySettings, (bool, bool, bool), (const, override));
 
-    MOCK_METHOD(void, setFactoryResetMode, (FactoryResetMode), (override));
-    MOCK_METHOD(std::optional<FactoryResetMode>, factoryResetMode, (), (const, override));
-
     MOCK_METHOD(muse::io::paths_t, sessionProjectsPaths, (), (const, override));
     MOCK_METHOD(muse::Ret, setSessionProjectsPaths, (const muse::io::paths_t&), (override));
 
