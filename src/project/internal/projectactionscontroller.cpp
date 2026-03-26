@@ -1224,8 +1224,11 @@ void ProjectActionsController::handleCloudSaveError(const muse::Ret& error)
             interactive()->buttonData(IInteractive::Button::Cancel),
             muse::IInteractive::ButtonData(saveLocallyBtn, muse::trc("project", "Save to Computer"), /*accent=*/ true),
         };
-        muse::IInteractive::Result result = interactive()->infoSync(PRJ_LIMIT_REACHED_TITLE, PRJ_LIMIT_REACHED_TEXT,
-                                                                    buttons, saveLocallyBtn, {},
+
+        const char* title = err == Err::ProjectLimitReached ? PRJ_LIMIT_REACHED_TITLE : PRJ_SIZE_EXCEEDED_TITLE;
+        const char* text = err == Err::ProjectLimitReached ? PRJ_LIMIT_REACHED_TEXT : PRJ_SIZE_EXCEEDED_TEXT;
+
+        muse::IInteractive::Result result = interactive()->infoSync(title, text, buttons, saveLocallyBtn, {},
                                                                     muse::trc("cloud", "Save to audio.com"));
         if (result.isButton(muse::IInteractive::Button::Save)) {
             IAudacityProjectPtr project = currentProject();
@@ -1286,6 +1289,12 @@ void ProjectActionsController::handleCloudSaveError(const muse::Ret& error)
         }
     }
     break;
+    case Err::NetworkError:
+    case Err::DataUploadFailed:
+    case Err::ServerError:
+    case Err::ClientFailure:
+        interactive()->infoSync(DEFAULT_SYNC_ERROR_TITLE, DEFAULT_SYNC_ERROR_TEXT);
+        break;
     default:
         interactive()->infoSync(DEFAULT_CLOUD_ERROR_TITLE, DEFAULT_CLOUD_ERROR_TEXT);
         break;
