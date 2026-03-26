@@ -57,8 +57,8 @@ std::vector<int64_t> Au3TrackeditProject::groupsIdsList() const
 
     for (const auto& trackId : trackIdList()) {
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(*m_impl->prj, Au3TrackId(trackId));
-        IF_ASSERT_FAILED(waveTrack) {
-            return {};
+        if (!waveTrack) {
+            continue;
         }
 
         for (const auto& key : clipList(trackId)) {

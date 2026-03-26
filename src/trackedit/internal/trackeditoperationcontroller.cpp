@@ -494,6 +494,9 @@ bool TrackeditOperationController::splitDeleteSelectedOnTracks(const TrackIdList
 bool TrackeditOperationController::trimClipsLeft(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed,
                                                  UndoPushType type)
 {
+    const auto labelKeys = selectedLabels();
+    deltaSec = clampBoundaryDeltaToSelectedItems(deltaSec, minClipDuration, labelKeys);
+
     const auto success = clipsInteraction()->trimClipsLeft(clipKeyList, deltaSec, minClipDuration, completed);
     if (!success) {
         return success;
@@ -501,7 +504,7 @@ bool TrackeditOperationController::trimClipsLeft(const ClipKeyList& clipKeyList,
 
     bool hasLabels = isLabelsSelected();
     if (hasLabels) {
-        labelsInteraction()->stretchLabelsLeft(selectedLabels(), deltaSec, completed);
+        labelsInteraction()->stretchLabelsLeft(labelKeys, deltaSec, completed);
     }
 
     if (completed) {
@@ -514,6 +517,9 @@ bool TrackeditOperationController::trimClipsLeft(const ClipKeyList& clipKeyList,
 bool TrackeditOperationController::trimClipsRight(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed,
                                                   UndoPushType type)
 {
+    const auto labelKeys = selectedLabels();
+    deltaSec = clampBoundaryDeltaToSelectedItems(deltaSec, minClipDuration, labelKeys);
+
     const auto success = clipsInteraction()->trimClipsRight(clipKeyList, deltaSec, minClipDuration, completed);
     if (!success) {
         return success;
@@ -521,7 +527,7 @@ bool TrackeditOperationController::trimClipsRight(const ClipKeyList& clipKeyList
 
     bool hasLabels = isLabelsSelected();
     if (hasLabels) {
-        labelsInteraction()->stretchLabelsRight(selectedLabels(), deltaSec, completed);
+        labelsInteraction()->stretchLabelsRight(labelKeys, -deltaSec, completed);
     }
     if (completed) {
         std::string msg = hasLabels ? "Trim items right" : "Trim clip right";
@@ -533,6 +539,9 @@ bool TrackeditOperationController::trimClipsRight(const ClipKeyList& clipKeyList
 bool TrackeditOperationController::stretchClipsLeft(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed,
                                                     UndoPushType type)
 {
+    const auto labelKeys = selectedLabels();
+    deltaSec = clampBoundaryDeltaToSelectedItems(deltaSec, minClipDuration, labelKeys);
+
     const auto success = clipsInteraction()->stretchClipsLeft(clipKeyList, deltaSec, minClipDuration, completed);
     if (!success) {
         return success;
@@ -540,7 +549,7 @@ bool TrackeditOperationController::stretchClipsLeft(const ClipKeyList& clipKeyLi
 
     bool hasLabels = isLabelsSelected();
     if (hasLabels) {
-        labelsInteraction()->stretchLabelsLeft(selectedLabels(), deltaSec, completed);
+        labelsInteraction()->stretchLabelsLeft(labelKeys, deltaSec, completed);
     }
 
     if (completed) {
@@ -555,6 +564,9 @@ bool TrackeditOperationController::stretchClipsRight(const ClipKeyList& clipKeyL
                                                      bool completed,
                                                      UndoPushType type)
 {
+    const auto labelKeys = selectedLabels();
+    deltaSec = clampBoundaryDeltaToSelectedItems(deltaSec, minClipDuration, labelKeys);
+
     const auto success = clipsInteraction()->stretchClipsRight(clipKeyList, deltaSec, minClipDuration, completed);
     if (!success) {
         return success;
@@ -562,7 +574,7 @@ bool TrackeditOperationController::stretchClipsRight(const ClipKeyList& clipKeyL
 
     bool hasLabels = isLabelsSelected();
     if (hasLabels) {
-        labelsInteraction()->stretchLabelsRight(selectedLabels(), deltaSec, completed);
+        labelsInteraction()->stretchLabelsRight(labelKeys, -deltaSec, completed);
     }
 
     if (completed) {
@@ -1045,6 +1057,58 @@ void TrackeditOperationController::pushProjectHistoryDeleteState(secs_t start, s
     std::stringstream ss;
     ss << "Delete " << duration << " seconds at " << start;
     projectHistory()->pushHistoryState(ss.str(), "Delete");
+}
+
+std::optional<secs_t> TrackeditOperationController::shortestLabelDuration(const LabelKeyList& labelKeys) const
+{
+    const auto prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return std::nullopt;
+    }
+
+    std::optional<secs_t> shortestDuration;
+    for (const auto& labelKey : labelKeys) {
+        const auto label = prj->label(labelKey);
+        if (!label.isValid()) {
+            continue;
+        }
+
+        const secs_t duration = label.endTime - label.startTime;
+        if (!shortestDuration.has_value() || duration < shortestDuration.value()) {
+            shortestDuration = duration;
+        }
+    }
+
+    return shortestDuration;
+}
+
+secs_t TrackeditOperationController::clampBoundaryDeltaToSelectedItems(secs_t deltaSec,
+                                                                       secs_t minClipDuration,
+                                                                       const LabelKeyList& labelKeys) const
+{
+    if (!muse::RealIsEqualOrMore(deltaSec, 0.0) || labelKeys.empty()) {
+        return deltaSec;
+    }
+
+    std::optional<secs_t> maxShrinkDelta;
+    for (const auto& clipKey : selectedClips()) {
+        const secs_t duration = clipDuration(clipKey);
+        const secs_t clipShrinkDelta = std::max(0.0, (duration - minClipDuration).to_double());
+        if (!maxShrinkDelta.has_value() || clipShrinkDelta < maxShrinkDelta.value()) {
+            maxShrinkDelta = clipShrinkDelta;
+        }
+    }
+
+    if (const auto labelDuration = shortestLabelDuration(labelKeys); labelDuration.has_value()) {
+        const secs_t labelShrinkDelta = std::max(0.0, labelDuration.value().to_double());
+        maxShrinkDelta = std::min(labelShrinkDelta, maxShrinkDelta.value_or(labelShrinkDelta));
+    }
+
+    if (!maxShrinkDelta.has_value() || muse::RealIsEqualOrLess(deltaSec, maxShrinkDelta.value())) {
+        return deltaSec;
+    }
+
+    return maxShrinkDelta.value();
 }
 
 bool TrackeditOperationController::isClipsSelected() const
