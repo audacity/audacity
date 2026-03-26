@@ -74,8 +74,11 @@ private:
 
     int borderWidth() const;
 
+    void updateWindowPosition();
+
     QScreen* m_screen = nullptr;
 
+    HWND m_hwnd = 0;
     MONITORINFO m_monitorInfo;
 };
 }

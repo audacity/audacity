@@ -38,11 +38,9 @@
 
 using namespace au::appshell;
 
-static HWND s_hwnd = 0;
-
-static void updateWindowPosition()
+void WinFramelessWindowController::updateWindowPosition()
 {
-    SetWindowPos(s_hwnd, nullptr, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE);
+    SetWindowPos(m_hwnd, nullptr, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE);
 }
 
 WinFramelessWindowController::WinFramelessWindowController(QObject* parent)
@@ -62,14 +60,14 @@ void WinFramelessWindowController::init()
         return;
     }
 
-    s_hwnd = (HWND)window->winId();
+    m_hwnd = (HWND)window->winId();
 
-    SetWindowLongPtr(s_hwnd, GWL_STYLE,
+    SetWindowLongPtr(m_hwnd, GWL_STYLE,
                      static_cast<LONG>(WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_THICKFRAME
                                        | WS_CLIPCHILDREN));
 
     const MARGINS shadow_on = { 1, 1, 1, 1 };
-    DwmExtendFrameIntoClientArea(s_hwnd, &shadow_on);
+    DwmExtendFrameIntoClientArea(m_hwnd, &shadow_on);
 
     updateWindowPosition();
 }
@@ -81,7 +79,7 @@ bool WinFramelessWindowController::eventFilter(QObject* watched, QEvent* event)
     }
 
     QWindow* window = dynamic_cast<QWindow*>(watched);
-    if (!window) {
+    if (!window || (HWND)window->winId() != m_hwnd) {
         return false;
     }
 
@@ -114,7 +112,7 @@ bool WinFramelessWindowController::nativeEventFilter(const QByteArray& eventType
         return false;
     }
 
-    if (msg->hwnd != s_hwnd) {
+    if (msg->hwnd != m_hwnd) {
         return false;
     }
 
@@ -148,7 +146,7 @@ bool WinFramelessWindowController::removeWindowFrame(MSG* message, qintptr* resu
 
     WINDOWPLACEMENT placement = {};
     placement.length = sizeof(WINDOWPLACEMENT);
-    GetWindowPlacement(s_hwnd, &placement);
+    GetWindowPlacement(m_hwnd, &placement);
 
     if (placement.showCmd == SW_SHOWMAXIMIZED) {
         HMONITOR hMonitor = MonitorFromWindow(message->hwnd, MONITOR_DEFAULTTONULL);
@@ -328,7 +326,7 @@ void WinFramelessWindowController::updateContextMenuState(MSG* message) const
     menuItemInfo.fState = MF_GRAYED;
 
     WINDOWPLACEMENT windowPlacement;
-    GetWindowPlacement(s_hwnd, &windowPlacement);
+    GetWindowPlacement(m_hwnd, &windowPlacement);
 
     switch (windowPlacement.showCmd) {
     case SW_SHOWMAXIMIZED:
