@@ -21,18 +21,13 @@ class CommandLineParser
 public:
     CommandLineParser() = default;
 
-    enum class FactoryResetMode {
-        Full,         // -F: clean user data files + reset settings
-        SettingsOnly  // -R: reset settings only, keep user data files
-    };
-
     struct Options {
         struct {
             std::optional<double> physicalDotsPerInch;
         } ui;
 
         struct {
-            std::optional<FactoryResetMode> factoryResetMode;
+            bool factoryReset = false;
             std::optional<muse::logger::Level> loggerLevel;
         } app;
 

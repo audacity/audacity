@@ -477,9 +477,8 @@ std::vector<modularity::ContextPtr> GuiApp::contexts() const
 
 void GuiApp::applyCommandLineOptions(const CommandLineParser::Options& options)
 {
-    if (options.app.factoryResetMode) {
-        bool keepDefaultSettings = (options.app.factoryResetMode.value() == CommandLineParser::FactoryResetMode::SettingsOnly);
-        appshellConfiguration()->revertToFactorySettings(keepDefaultSettings);
+    if (options.app.factoryReset) {
+        appshellConfiguration()->revertToFactorySettings();
     }
 
     if (options.app.loggerLevel) {
