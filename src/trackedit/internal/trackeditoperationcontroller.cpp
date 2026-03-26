@@ -1101,9 +1101,7 @@ secs_t TrackeditOperationController::clampBoundaryDeltaToSelectedItems(secs_t de
 
     if (const auto labelDuration = shortestLabelDuration(labelKeys); labelDuration.has_value()) {
         const secs_t labelShrinkDelta = std::max(0.0, labelDuration.value().to_double());
-        if (!maxShrinkDelta.has_value() || labelShrinkDelta < maxShrinkDelta.value()) {
-            maxShrinkDelta = labelShrinkDelta;
-        }
+        maxShrinkDelta = std::min(labelShrinkDelta, maxShrinkDelta.value_or(labelShrinkDelta));
     }
 
     if (!maxShrinkDelta.has_value() || muse::RealIsEqualOrLess(deltaSec, maxShrinkDelta.value())) {
