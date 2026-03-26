@@ -10,6 +10,7 @@
 #include "au3-import-export/ImportPlugin.h"
 #include "au3-import-export/ImportProgressListener.h"
 #include "au3-numeric-formats/ProjectTimeSignature.h"
+#include "au3-project/Project.h"
 #include "au3-project-file-io/ProjectFileIO.h"
 #include "au3-tags/Tags.h"
 
@@ -277,10 +278,12 @@ void au::importexport::Au3Importer::addImportedTracks(const muse::io::path_t& fi
 {
     Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
     auto& tracks = TrackList::Get(*project);
+    auto& projectFileIO = ProjectFileIO::Get(*project);
 
     std::vector<Track*> results;
 
     wxFileName fn(wxFromString(fileName.toString()));
+    const bool initiallyEmpty = tracks.empty();
 
     double newRate = 0;
     wxString trackNameBase = fn.GetName();
@@ -335,6 +338,9 @@ void au::importexport::Au3Importer::addImportedTracks(const muse::io::path_t& fi
         });
     }
 
-    //! TODO AU4: if project was empty, set:
-    //! - project name/title
+    if (initiallyEmpty && projectFileIO.IsTemporary()) {
+        project->SetProjectName(trackNameBase);
+        project->SetInitialImportPath(fn.GetPath());
+        projectFileIO.SetProjectTitle();
+    }
 }
