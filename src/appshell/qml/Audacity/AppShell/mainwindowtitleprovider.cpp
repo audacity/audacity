@@ -37,13 +37,15 @@ void MainWindowTitleProvider::load()
         if (auto currentProject = context()->currentProject()) {
             currentProject->displayNameChanged().onNotify(this, [this]() {
                 update();
-            });
+            }, muse::async::Asyncable::Mode::SetReplace);
 
             currentProject->needSave().notification.onNotify(this, [this]() {
                 update();
-            });
+            }, muse::async::Asyncable::Mode::SetReplace);
         }
-    });
+
+        update();
+    }, muse::async::Asyncable::Mode::SetReplace);
 }
 
 QString MainWindowTitleProvider::title() const

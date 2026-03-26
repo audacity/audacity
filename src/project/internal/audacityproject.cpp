@@ -27,6 +27,7 @@ Ret Audacity4Project::createNew()
     m_trackeditProject = trackeditProjectCreator()->create(m_au3Project);
     m_isNewlyCreated = true;
     m_viewState = viewStateCreator()->createViewState(m_au3Project);
+    setupProjectNotifications();
 
     return muse::make_ret(Ret::Code::Ok);
 }
@@ -148,12 +149,7 @@ muse::Ret Audacity4Project::doLoad(const io::path_t& path, const bool forceMode,
     m_trackeditProject = trackeditProjectCreator()->create(m_au3Project);
 
     m_viewState = viewStateCreator()->createViewState(m_au3Project);
-
-    // Set up notification for save status changes
-    m_au3Project->projectChanged().onNotify(this, [this]() {
-        // Mark project as needing save and autosave
-        setNeedSave(true);
-    });
+    setupProjectNotifications();
 
     // For restored never-saved projects, ensure proper initialization
     // by calling reload() to trigger tracksChanged notifications.
@@ -168,6 +164,14 @@ muse::Ret Audacity4Project::doLoad(const io::path_t& path, const bool forceMode,
     }
 
     return ret;
+}
+
+void Audacity4Project::setupProjectNotifications()
+{
+    m_au3Project->projectChanged().onNotify(this, [this]() {
+        m_displayNameChanged.notify();
+        setNeedSave(true);
+    }, muse::async::Asyncable::Mode::SetReplace);
 }
 
 Ret Audacity4Project::doImport(const muse::io::path_t& path, const bool forceMode) const
