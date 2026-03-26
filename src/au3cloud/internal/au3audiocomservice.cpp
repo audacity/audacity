@@ -117,7 +117,7 @@ au::au3cloud::Err cloudSyncErrorToErr(const std::optional<sync::CloudSyncError>&
     case ErrorType::None:
         return Err::UnknownError;
     case ErrorType::Authorization:
-        return Err::AuthorizationRequired;
+        return Err::ProjectForbidden;
     case ErrorType::ProjectLimitReached:
         return Err::ProjectLimitReached;
     case ErrorType::ProjectStorageLimitReached:
@@ -412,8 +412,8 @@ muse::ProgressPtr Au3AudioComService::uploadProject(au::project::IAudacityProjec
 
         projectCloudExtension.OnSyncStarted();
         const auto uploadMode = forceOverwrite
-            ? audacity::cloud::audiocom::sync::UploadMode::ForceOverwrite
-            : audacity::cloud::audiocom::sync::UploadMode::Normal;
+                                ? audacity::cloud::audiocom::sync::UploadMode::ForceOverwrite
+                                : audacity::cloud::audiocom::sync::UploadMode::Normal;
         auto future = audacity::cloud::audiocom::sync::LocalProjectSnapshot::Create(
             audacity::cloud::audiocom::GetServiceConfig(),
             audacity::cloud::audiocom::GetOAuthService(),
@@ -538,8 +538,8 @@ muse::ProgressPtr Au3AudioComService::openCloudProject(const muse::io::path_t& l
             // Important: CloudSyncService does not control access by locking but by calling convention,
             // We must ensure all operations on this service to be called on the main thread
             const auto syncMode = forceOverwrite
-                ? CloudSyncService::SyncMode::ForceOverwrite
-                : CloudSyncService::SyncMode::Normal;
+                                  ? CloudSyncService::SyncMode::ForceOverwrite
+                                  : CloudSyncService::SyncMode::Normal;
             auto future = CloudSyncService::Get().OpenFromCloud(
                 cloudProjectId, {},
                 syncMode,

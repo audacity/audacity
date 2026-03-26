@@ -1022,7 +1022,7 @@ void ProjectActionsController::shareAudio()
                 }
             });
         } else {
-            //break;handleCloudError(result.ret);
+            //handleCloudError(result.ret);
         }
     });
 
@@ -1114,6 +1114,16 @@ const char* SAVE_CONFLICT_MESSAGE
         "A newer version of this project exists on audio.com. You can overwrite it with your local version or discard your changes and open the latest version.";
 const char* SAVE_CONFLICT_LOCAL_BTN = "Overwrite cloud version";
 const char* SAVE_CONFLICT_REMOTE_BTN = "Discard and open latest";
+
+const char* OPEN_FORBIDDEN_TITLE = "Access denied";
+const char* OPEN_FORBIDDEN_MESSAGE
+    = "You don't have permission to sync this project. It may belong to a different account. Opened from local copy.";
+const char* OPEN_FORBIDDEN_NO_LOCAL_FILE_MESSAGE
+    = "You don't have access to this cloud project. It may belong to a different account.";
+
+const char* SAVE_FORBIDDEN_TITLE = "Access denied";
+const char* SAVE_FORBIDDEN_MESSAGE
+    = "You don't have permission to save this project to the cloud. It may belong to a different account.";
 
 const char* OPEN_NOT_FOUND_ERROR_TITLE = "Cloud project unavailable";
 const char* OPEN_NOT_FOUND_ERROR_MESSAGE
@@ -1213,6 +1223,18 @@ void ProjectActionsController::handleCloudOpenError(const muse::Ret& error, cons
             interactive()->infoSync(
                 trc("project", OPEN_NOT_FOUND_ERROR_TITLE),
                 trc("project", OPEN_NOT_FOUND_ERROR_NO_LOCAL_FILE_MESSAGE));
+        }
+        break;
+    }
+    case Err::SyncResultForbidden: {
+        if (fileSystem()->exists(localPath)) {
+            doOpenProject(localPath);
+            toastService()->showError(
+                trc("project", OPEN_FORBIDDEN_TITLE),
+                trc("project", OPEN_FORBIDDEN_MESSAGE));
+        } else {
+            interactive()->infoSync(trc("project", OPEN_FORBIDDEN_TITLE),
+                                    trc("project", OPEN_FORBIDDEN_NO_LOCAL_FILE_MESSAGE));
         }
         break;
     }
@@ -1337,7 +1359,35 @@ void ProjectActionsController::handleCloudSaveError(const muse::Ret& error)
         } else if (conflictResult.isButton(useRemoteBtn)) {
             const io::path_t localPath = project->path();
             closeOpenedProject(false);
-            openCloudProject(localPath, {}, /*forceOverwrite=*/ true);
+            const bool forceOverwrite = true;
+            openCloudProject(localPath, {}, forceOverwrite);
+        }
+        break;
+    }
+    case Err::ProjectForbidden:
+    case Err::SyncResultForbidden: {
+        const int saveLocallyBtn = static_cast<int>(muse::IInteractive::Button::CustomButton);
+        muse::IInteractive::ButtonDatas buttons {
+            interactive()->buttonData(IInteractive::Button::Cancel),
+            muse::IInteractive::ButtonData(saveLocallyBtn, muse::trc("project", "Save to computer"), /*accent=*/ true, false,
+                                           muse::IInteractive::ButtonRole::ApplyRole),
+        };
+        muse::IInteractive::Result result = interactive()->infoSync(
+            trc("project", SAVE_FORBIDDEN_TITLE),
+            trc("project", SAVE_FORBIDDEN_MESSAGE),
+            buttons, saveLocallyBtn);
+        if (result.isButton(saveLocallyBtn)) {
+            const auto ret = openSaveProjectScenario()->askLocalPath(project, SaveMode::Save);
+            if (!ret.ret) {
+                break;
+            }
+
+            const auto newPath = ret.val;
+            if (newPath.empty()) {
+                break;
+            }
+
+            saveProjectLocally(newPath, SaveMode::Save);
         }
         break;
     }

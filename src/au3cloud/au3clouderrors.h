@@ -26,7 +26,7 @@ enum class Err {
     UploadFailed,
 
     // uploadProject — CloudSyncError::ErrorType
-    AuthorizationRequired,
+    ProjectForbidden,
     ProjectLimitReached,
     ProjectStorageLimitReached,
     ProjectVersionConflict,
