@@ -834,7 +834,7 @@ Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, cons
             );
     });
 
-    interactive()->showProgress(trc("project", "Syncing project from cloud..."), *progress);
+    interactive()->showProgress(trc("project", "Syncing project from cloud…"), *progress);
 
     return make_ret(Ret::Code::Ok);
 }
