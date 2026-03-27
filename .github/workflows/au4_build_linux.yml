@@ -136,14 +136,13 @@ jobs:
       run: |
         ccache -sv
 
-    - name: Run plugin registration app self-test
+    - name: Upload build for self-test
       if: env.DO_BUILD == 'true'
-      run: |
-        source $HOME/build_tools/environment.sh
-        INSTALL_DIR=$(cat ./build.release/PREFIX.txt)
-        export LD_LIBRARY_PATH="${INSTALL_DIR}/lib:${LD_LIBRARY_PATH}"
-        APP_BIN=$(find "${INSTALL_DIR}/bin/" -type f -name "audacity4portable*" -print -quit)
-        QT_QPA_PLATFORM=minimal:enable_fonts "$APP_BIN" --plugin-registration-self-test
+      uses: actions/upload-artifact@v6
+      with:
+        name: selftest-build-linux
+        path: ./build.install/
+        retention-days: 1
 
     - name: Package
       if: env.DO_BUILD == 'true'
@@ -183,3 +182,44 @@ jobs:
       with:
         key: ${{ steps.restore-ccache.outputs.cache-primary-key }}${{ steps.prepare-save-ccache.outputs.CCACHE_TIMESTAMP }}
         path: ${{ github.workspace }}/.ccache
+
+  plugin-registration-self-test:
+    needs: au4_build_linux
+    runs-on: ubuntu-22.04
+    steps:
+    - name: Clone repository
+      uses: actions/checkout@v6
+
+    - name: Setup environment
+      run: |
+        bash ${CI_DIR}/linux/setup.sh
+
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v4
+      with:
+        version: '6.10.1'
+        host: 'linux'
+        target: 'desktop'
+        arch: 'linux_gcc_64'
+        modules: 'qt5compat qtnetworkauth qtshadertools qtwebsockets qtgraphs qtquick3d'
+        cache: true
+
+    - name: Download build artifact
+      uses: actions/download-artifact@v6
+      with:
+        name: selftest-build-linux
+        path: ./build.install
+
+    - name: Run plugin registration app self-test
+      run: |
+        source $HOME/build_tools/environment.sh
+        export LD_LIBRARY_PATH="./build.install/lib:${LD_LIBRARY_PATH}"
+        find ./build.install/bin/ -type f -exec chmod +x {} +
+        APP_BIN=$(find "./build.install/bin/" -type f -name "audacity4portable*" -print -quit)
+        QT_QPA_PLATFORM=minimal:enable_fonts "$APP_BIN" --plugin-registration-self-test
+
+    - name: Delete self-test artifact
+      if: always()
+      uses: geekyeggo/delete-artifact@176a747ab7e287e3ff4787bf8a148716375ca118 # v6.0.0
+      with:
+        name: selftest-build-linux
