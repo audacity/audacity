@@ -171,11 +171,6 @@ public:
         std::unique_ptr<EffectDefinitionInterface> effect, PluginType type);
     void UnregisterPlugin(const PluginID& ID);
 
-    //! Load from preferences
-    void Load();
-    //! Save to preferences
-    void Save();
-
     void NotifyPluginsChanged();
 
     PluginPaths ReadCustomPaths(const PluginProvider& provider) override;
@@ -187,6 +182,11 @@ private:
     ~PluginManager();
 
     void InitializePlugins();
+
+    //! Load from preferences
+    void Load();
+    //! Save to preferences
+    void Save(bool overwrite);
 
     PluginDescriptor& CreatePlugin(const PluginID& id, ComponentInterface* ident, PluginType type);
 

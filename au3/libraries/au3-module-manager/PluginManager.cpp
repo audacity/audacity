@@ -355,7 +355,7 @@ void PluginManager::InitializePlugins()
         }
     }
 
-    Save();
+    Save(false);
 }
 
 // ----------------------------------------------------------------------------
@@ -530,7 +530,7 @@ bool PluginManager::DropFile(const wxString& fileName)
                         mRegisteredPlugins[id].SetEnabled(enable);
                     }
                     // Make changes to enabled status persist:
-                    this->Save();
+                    this->Save(true);
                     this->NotifyPluginsChanged();
                 }
 
@@ -549,10 +549,10 @@ void PluginManager::Load()
     }
 }
 
-void PluginManager::Save()
+void PluginManager::Save(bool overwrite)
 {
     if (const auto registry = sRegistryFactory()) {
-        registry->Save(mRegisteredPlugins);
+        registry->Save(mRegisteredPlugins, overwrite);
     }
 }
 

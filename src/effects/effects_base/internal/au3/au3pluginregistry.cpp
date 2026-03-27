@@ -56,9 +56,11 @@ void Au3PluginRegistry::Load(::PluginMap& pluginMap)
     LOGD() << "Loaded " << plugins.size() << " plugins from known plugins register";
 }
 
-void Au3PluginRegistry::Save(const ::PluginMap& pluginMap)
+void Au3PluginRegistry::Save(const ::PluginMap& pluginMap, bool overwrite)
 {
-    AudioPluginInfoList infoList;
+    knownPlugins()->load();
+    AudioPluginInfoList existingPlugins = knownPlugins()->pluginInfoList();
+    AudioPluginInfoList newPlugins;
 
     for (const auto& [id, plug] : pluginMap) {
         if (plug.GetPluginType() != PluginTypeEffect) {
@@ -73,9 +75,19 @@ void Au3PluginRegistry::Save(const ::PluginMap& pluginMap)
         info.type = AudioPluginType::Fx;
         info.meta = utils::auToMuseEffectMeta(meta);
         info.path = muse::io::path_t(au3::wxToString(plug.GetPath()));
-        info.enabled = plug.IsEnabled();
+        info.enabled = true;
 
-        infoList.emplace_back(std::move(info));
+        const auto it = std::find_if(existingPlugins.begin(), existingPlugins.end(),
+                                     [&info](const AudioPluginInfo& existingInfo) {
+            return existingInfo.path == info.path;
+        });
+
+        if (it == existingPlugins.end()) {
+            newPlugins.emplace_back(std::move(info));
+        } else if (overwrite) {
+            existingPlugins.erase(it);
+            newPlugins.emplace_back(std::move(info));
+        }
     }
 
     const auto filePath = audioPluginsConfiguration()->knownAudioPluginsFilePath();
@@ -84,6 +96,7 @@ void Au3PluginRegistry::Save(const ::PluginMap& pluginMap)
         knownPlugins()->load(); // Clears the in-memory information
     }
 
-    knownPlugins()->registerPlugins(infoList);
+    knownPlugins()->registerPlugins(existingPlugins);
+    knownPlugins()->registerPlugins(newPlugins);
 }
 }
