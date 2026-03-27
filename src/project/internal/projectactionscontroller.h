@@ -18,6 +18,7 @@
 #include "trackedit/iprojecthistory.h"
 #include "record/irecordcontroller.h"
 #include "importexport/export/internal/exportconfiguration.h"
+#include "importexport/import/iimporter.h"
 #include "au3cloud/iau3audiocomservice.h"
 
 #include "project/iprojectconfiguration.h"
@@ -44,6 +45,7 @@ class ProjectActionsController : public IProjectFilesController, public muse::ac
     muse::Inject<IOpenSaveProjectScenario> openSaveProjectScenario { this };
     muse::Inject<trackedit::IProjectHistory> projectHistory { this };
     muse::Inject<record::IRecordController> recordController { this };
+    muse::Inject<importexport::IImporter> importer { this };
     muse::Inject<au3cloud::IAu3AudioComService> audioComService { this };
     muse::Inject<toast::IToastService> toastService { this };
 
@@ -72,16 +74,21 @@ private:
     project::IAudacityProjectPtr currentProject() const;
 
     void newProject();
-    void openProject(const muse::actions::ActionData& args);
-    void importFile();
-    muse::Ret openProject(const muse::io::path_t& givenPath, const muse::String& displayNameOverride = muse::String());
+    void open(const muse::actions::ActionData& args);
+    void importFiles(const muse::actions::ActionData& args);
+
+    void importStartupMedia(const muse::actions::ActionData& args);
+    muse::Ret processMediaFiles(const muse::io::paths_t& paths);
+
+    muse::Ret openProject(const muse::io::path_t& path, const muse::String& displayNameOverride = muse::String());
     muse::Ret loadWithFallback(const IAudacityProjectPtr& project, const muse::io::path_t& loadPath, const std::string& format);
     muse::Ret doOpenProject(const muse::io::path_t& filePath);
+    IAudacityProjectPtr createProjectInCurrentWindow();
     //! TODO AU4
     // muse::Ret openAudacityUrl(const QUrl& url);
     muse::RetVal<IAudacityProjectPtr> loadProject(const muse::io::path_t& filePath);
-    muse::io::path_t selectOpeningFile();
-    muse::io::path_t selectImportFile();
+    muse::io::paths_t selectOpeningFiles();
+    muse::io::paths_t selectImportFiles();
 
     bool shouldRetryLoadAfterError(const muse::Ret& ret, const muse::io::path_t& filepath);
     void warnProjectCannotBeOpened(const muse::Ret& ret, const muse::io::path_t& filepath) const;

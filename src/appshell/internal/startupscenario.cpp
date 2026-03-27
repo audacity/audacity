@@ -48,11 +48,11 @@ static StartupModeType modeTypeFromString(const std::string& str)
     }
 
     if ("start-with-new" == str) {
-        return StartupModeType::StartWithNewScore;
+        return StartupModeType::StartWithNewProject;
     }
 
     if ("start-with-file" == str) {
-        return StartupModeType::StartWithScore;
+        return StartupModeType::StartWithProject;
     }
 
     return StartupModeType::StartEmpty;
@@ -65,25 +65,35 @@ void StartupScenario::setStartupType(const std::optional<std::string>& type)
 
 bool StartupScenario::isStartWithNewFileAsSecondaryInstance() const
 {
-    if (m_startupScoreFile.isValid()) {
+    if (m_startupProjectFile.isValid()) {
         return false;
     }
 
     if (!m_startupTypeStr.empty()) {
-        return modeTypeFromString(m_startupTypeStr) == StartupModeType::StartWithNewScore;
+        return modeTypeFromString(m_startupTypeStr) == StartupModeType::StartWithNewProject;
     }
 
     return false;
 }
 
-const ProjectFile& StartupScenario::startupScoreFile() const
+const ProjectFile& StartupScenario::startupProjectFile() const
 {
-    return m_startupScoreFile;
+    return m_startupProjectFile;
 }
 
-void StartupScenario::setStartupScoreFile(const std::optional<ProjectFile>& file)
+void StartupScenario::setStartupProjectFile(const std::optional<ProjectFile>& file)
 {
-    m_startupScoreFile = file ? file.value() : ProjectFile();
+    m_startupProjectFile = file ? file.value() : ProjectFile();
+}
+
+const muse::io::paths_t& StartupScenario::startupMediaFiles() const
+{
+    return m_startupMediaFiles;
+}
+
+void StartupScenario::setStartupMediaFiles(const muse::io::paths_t& files)
+{
+    m_startupMediaFiles = files;
 }
 
 muse::async::Promise<muse::Ret> StartupScenario::runOnSplashScreen()
@@ -161,8 +171,12 @@ bool StartupScenario::startupCompleted() const
 
 StartupModeType StartupScenario::resolveStartupModeType() const
 {
-    if (m_startupScoreFile.isValid()) {
-        return StartupModeType::StartWithScore;
+    if (m_startupProjectFile.isValid()) {
+        return StartupModeType::StartWithProject;
+    }
+
+    if (!m_startupMediaFiles.empty()) {
+        return StartupModeType::StartEmpty;
     }
 
     if (!m_startupTypeStr.empty()) {
@@ -176,14 +190,22 @@ void StartupScenario::onStartupPageOpened(StartupModeType modeType)
 {
     TRACEFUNC;
 
-// #ifndef MUSE_APP_UNSTABLE
     showStartupDialogsIfNeed(modeType);
-// #endif
+
+    if (!m_startupMediaFiles.empty()) {
+        QStringList files;
+        for (const auto& file : m_startupMediaFiles) {
+            files << file.toQString();
+        }
+
+        dispatcher()->dispatch("project-import-startup-media", ActionData::make_arg1<QStringList>(files));
+        return;
+    }
 
     switch (modeType) {
     case StartupModeType::StartEmpty:
         break;
-    case StartupModeType::StartWithNewScore:
+    case StartupModeType::StartWithNewProject:
         dispatcher()->dispatch("file-new");
         break;
     case StartupModeType::ContinueLastSession:
@@ -192,11 +214,11 @@ void StartupScenario::onStartupPageOpened(StartupModeType modeType)
     case StartupModeType::Recovery:
         restoreLastSession();
         break;
-    case StartupModeType::StartWithScore: {
-        ProjectFile file = m_startupScoreFile.isValid()
-                           ? m_startupScoreFile
-                           : ProjectFile(configuration()->startupScorePath());
-        openScore(file);
+    case StartupModeType::StartWithProject: {
+        ProjectFile file = m_startupProjectFile.isValid()
+                           ? m_startupProjectFile
+                           : ProjectFile(configuration()->startupProjectPath());
+        openProject(file);
     } break;
     case StartupModeType::FirstLaunch: {
         dispatcher()->dispatch("file-new");
@@ -241,10 +263,10 @@ muse::Uri StartupScenario::startupPageUri(StartupModeType modeType) const
 {
     switch (modeType) {
     case StartupModeType::StartEmpty:
-    case StartupModeType::StartWithNewScore:
+    case StartupModeType::StartWithNewProject:
     case StartupModeType::Recovery:
         return HOME_URI;
-    case StartupModeType::StartWithScore:
+    case StartupModeType::StartWithProject:
     case StartupModeType::ContinueLastSession:
     case StartupModeType::FirstLaunch:
         return PROJECT_URI;
@@ -253,7 +275,7 @@ muse::Uri StartupScenario::startupPageUri(StartupModeType modeType) const
     return HOME_URI;
 }
 
-void StartupScenario::openScore(const ProjectFile& file)
+void StartupScenario::openProject(const ProjectFile& file)
 {
     dispatcher()->dispatch("file-open", ActionData::make_arg2<QUrl, QString>(file.url, file.displayNameOverride));
 }

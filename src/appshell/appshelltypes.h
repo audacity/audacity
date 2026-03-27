@@ -58,8 +58,8 @@ enum class StartupModeType
 {
     StartEmpty,
     ContinueLastSession,
-    StartWithNewScore,
-    StartWithScore,
+    StartWithNewProject,
+    StartWithProject,
     Recovery,
     FirstLaunch
 };

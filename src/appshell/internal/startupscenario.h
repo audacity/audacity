@@ -53,8 +53,10 @@ public:
 
     bool isStartWithNewFileAsSecondaryInstance() const override;
 
-    const au::project::ProjectFile& startupScoreFile() const override;
-    void setStartupScoreFile(const std::optional<au::project::ProjectFile>& file) override;
+    const au::project::ProjectFile& startupProjectFile() const override;
+    void setStartupProjectFile(const std::optional<au::project::ProjectFile>& file) override;
+    const muse::io::paths_t& startupMediaFiles() const override;
+    void setStartupMediaFiles(const muse::io::paths_t& files) override;
 
     muse::async::Promise<muse::Ret> runOnSplashScreen() override;
     void runAfterSplashScreen() override;
@@ -67,12 +69,13 @@ private:
     StartupModeType resolveStartupModeType() const;
     muse::Uri startupPageUri(StartupModeType modeType) const;
 
-    void openScore(const au::project::ProjectFile& file);
+    void openProject(const au::project::ProjectFile& file);
 
     void restoreLastSession();
 
     std::string m_startupTypeStr;
-    au::project::ProjectFile m_startupScoreFile;
+    au::project::ProjectFile m_startupProjectFile;
+    muse::io::paths_t m_startupMediaFiles;
     bool m_startupCompleted = false;
 };
 }

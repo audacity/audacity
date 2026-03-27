@@ -6,6 +6,7 @@
 #include <QDir>
 
 #include "global/io/dir.h"
+#include "project/types/projecttypes.h"
 
 #include "log.h"
 
@@ -56,6 +57,7 @@ void CommandLineParser::init()
     m_parser.addOption(QCommandLineOption({ "R", "revert-settings" }, "Revert to factory settings, but keep default preferences"));
 
     m_parser.addOption(QCommandLineOption("session-type", "Startup with given session type", "type"));
+    m_parser.addOption(internalCommandLineOption("import-media-file", "Import media file on startup", "path"));
 
     // Audio plugins
     m_parser.addOption(QCommandLineOption("register-audio-plugin",
@@ -117,6 +119,12 @@ void CommandLineParser::parse(int argc, char** argv)
         m_options.startup.type = m_parser.value("session-type").toStdString();
     }
 
+    if (m_parser.isSet("import-media-file")) {
+        for (const QString& file : m_parser.values("import-media-file")) {
+            m_options.startup.mediaFiles.emplace_back(fromUserInputPath(file));
+        }
+    }
+
     if (m_parser.isSet("F") || m_parser.isSet("R")) {
         m_options.app.revertToFactorySettings = true;
     }
@@ -166,8 +174,19 @@ void CommandLineParser::parse(int argc, char** argv)
 
     // Startup
     if (m_runMode == IApplication::RunMode::GuiApp) {
-        if (!projectfiles.isEmpty()) {
-            m_options.startup.projectUrl = QUrl::fromUserInput(projectfiles[0], QDir::currentPath(), QUrl::AssumeLocalFile);
+        for (const QString& file : projectfiles) {
+            const muse::io::path_t filePath(file);
+            if (project::isAudacityFile(filePath)) {
+                if (!m_options.startup.projectUrl.has_value()) {
+                    m_options.startup.projectUrl = QUrl::fromUserInput(file, QDir::currentPath(), QUrl::AssumeLocalFile);
+                }
+                m_options.startup.mediaFiles.clear();
+                continue;
+            }
+
+            if (!m_options.startup.projectUrl.has_value()) {
+                m_options.startup.mediaFiles.emplace_back(filePath);
+            }
         }
     }
 }

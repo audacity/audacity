@@ -35,6 +35,7 @@ public:
             std::optional<std::string> type;
             std::optional<QUrl> projectUrl;
             std::optional<QString> projectDisplayNameOverride;
+            muse::io::paths_t mediaFiles;
         } startup;
     };
 

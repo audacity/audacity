@@ -212,8 +212,7 @@ Importer::GetFileTypes(const FileNames::FileType& extraType)
     FileNames::FileTypes fileTypes{
         FileNames::AllFiles,
         // Will fill in the list of extensions later:
-        { XO("All supported files"), {} },
-        FileNames::AudacityProjects
+        { XO("All supported files"), {} }
     };
 
     if (!extraType.extensions.empty()) {
@@ -226,14 +225,8 @@ Importer::GetFileTypes(const FileNames::FileType& extraType)
                        importPlugin->GetSupportedExtensions());
     }
 
-    FileExtensions extraExtensions = FileNames::AudacityProjects.extensions;
-    extraExtensions.insert(extraExtensions.end(),
-                           extraType.extensions.begin(),
-                           extraType.extensions.end());
-
     using ExtensionSet = std::unordered_set< FileExtension >;
-    FileExtensions allList = FileNames::AudacityProjects.extensions, newList;
-    allList.insert(allList.end(), extraType.extensions.begin(), extraType.extensions.end());
+    FileExtensions allList = extraType.extensions, newList;
     ExtensionSet allSet{ allList.begin(), allList.end() }, newSet;
     for ( const auto& format : l ) {
         newList.clear();
