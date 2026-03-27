@@ -28,6 +28,7 @@ class Au3AudioComService : public IAu3AudioComService, public muse::async::Async
 {
     muse::GlobalInject<muse::io::IFileSystem> filesystem;
     muse::GlobalInject<project::IProjectConfiguration> projectConfiguration;
+
     muse::Inject<importexport::IExporter> exporter{ this };
     muse::Inject<context::IGlobalContext> globalContext { this };
 

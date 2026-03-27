@@ -35,7 +35,6 @@ class ProjectActionsController : public IProjectFilesController, public muse::ac
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
     muse::GlobalInject<importexport::ExportConfiguration> exportConfiguration;
     muse::GlobalInject<muse::IPlatformInteractive> platformInteractive;
-
     muse::GlobalInject<IRecentFilesController> recentFilesController;
     muse::GlobalInject<muse::mi::IMultiWindowsProvider> multiwindowsProvider;
 
