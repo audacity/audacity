@@ -9,10 +9,8 @@ set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/factoryreset_tests.cpp
     ${CMAKE_CURRENT_LIST_DIR}/factoryreset_actioncontroller_tests.cpp
 
-    ${CMAKE_CURRENT_LIST_DIR}/mocks/workspaceconfigurationmock.h
     ${CMAKE_CURRENT_LIST_DIR}/mocks/appshellconfigurationmock.h
     ${CMAKE_CURRENT_LIST_DIR}/mocks/projectfilescontrollermock.h
-    ${CMAKE_CURRENT_LIST_DIR}/mocks/multiwindowsprovidermock.h
 )
 
 set(MODULE_TEST_LINK

@@ -4,14 +4,14 @@
 
 #include "testing/environment.h"
 
-#include "mocks/workspaceconfigurationmock.h"
+#include "workspace/tests/mocks/workspaceconfigurationmock.h"
 
 using namespace ::testing;
 
 static muse::testing::SuiteEnvironment appshell_se
     = muse::testing::SuiteEnvironment()
       .setPreInit([](){
-    auto workspaceConfig = std::make_shared<::testing::NiceMock<au::appshell::WorkspaceConfigurationMock> >();
+    auto workspaceConfig = std::make_shared<::testing::NiceMock<muse::workspace::WorkspaceConfigurationMock> >();
 
     ON_CALL(*workspaceConfig, defaultWorkspaceName())
     .WillByDefault(Return("Modern"));

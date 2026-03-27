@@ -10,7 +10,7 @@
 
 #include "mocks/appshellconfigurationmock.h"
 #include "mocks/projectfilescontrollermock.h"
-#include "mocks/multiwindowsprovidermock.h"
+#include "multiwindows/tests/mocks/multiwindowsprovidermock.h"
 
 #include "../internal/applicationactioncontroller.h"
 
