@@ -120,6 +120,7 @@ bool ProjectActionsController::canReceiveAction(const muse::actions::ActionCode&
             "continue-last-session",
             "clear-recent",
             "audacity://cloud/open-audio-file",
+            "plugin-manager",
         };
 
         return muse::contains(DONT_REQUIRE_OPEN_PROJECT, code);
