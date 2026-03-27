@@ -8,7 +8,7 @@
 #include "framework/global/async/asyncable.h"
 
 namespace au::spectrogram {
-class SpectrogramUiActions : public muse::ui::IUiActionsModule, public muse::async::Asyncable, public muse::Injectable
+class SpectrogramUiActions : public muse::ui::IUiActionsModule, public muse::async::Asyncable, public muse::Contextable
 {
 public:
     SpectrogramUiActions(const muse::modularity::ContextPtr& ctx);

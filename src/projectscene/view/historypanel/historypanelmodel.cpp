@@ -8,7 +8,7 @@ using namespace au::projectscene;
 using namespace muse;
 
 HistoryPanelModel::HistoryPanelModel(QObject* parent)
-    : QAbstractListModel(parent), Injectable(iocCtxForQmlObject(this))
+    : QAbstractListModel(parent), Contextable(iocCtxForQmlObject(this))
 {
 }
 

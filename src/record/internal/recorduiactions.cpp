@@ -67,7 +67,7 @@ const UiActionList RecordUiActions::m_mainActions = {
 };
 
 RecordUiActions::RecordUiActions(const muse::modularity::ContextPtr& ctx, std::shared_ptr<RecordController> controller)
-    : muse::Injectable(ctx), m_controller(controller)
+    : muse::Contextable(ctx), m_controller(controller)
 {
 }
 

@@ -13,7 +13,7 @@
 #include <QObject>
 
 namespace au::effects {
-class AbstractEffectViewModel : public QObject, public muse::async::Asyncable, public muse::Injectable
+class AbstractEffectViewModel : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
     Q_PROPERTY(EffectInstanceId instanceId READ instanceId CONSTANT FINAL)

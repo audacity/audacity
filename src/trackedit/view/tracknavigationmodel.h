@@ -11,7 +11,7 @@
 #include "trackedit/internal/itracknavigationcontroller.h"
 
 namespace au::trackedit {
-class TrackNavigationModel : public QObject, public muse::async::Asyncable, public muse::Injectable
+class TrackNavigationModel : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
 

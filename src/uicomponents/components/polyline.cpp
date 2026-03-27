@@ -114,7 +114,7 @@ static double valueAtX(const QVector<QPointF>& sortedPoints, double x)
 }
 
 Polyline::Polyline(QQuickItem* parent)
-    : QQuickPaintedItem(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
+    : QQuickPaintedItem(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
     setAcceptHoverEvents(true);
     setAcceptedMouseButtons(Qt::LeftButton);

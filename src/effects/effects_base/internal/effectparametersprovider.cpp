@@ -11,7 +11,7 @@ using namespace au::effects;
 using namespace muse;
 
 EffectParametersProvider::EffectParametersProvider(const kors::modularity::ContextPtr& ctx)
-    : muse::Injectable(ctx)
+    : muse::Contextable(ctx)
 {
     m_parameterChanged.onReceive(nullptr, [this](const ParameterChangedData& data){
         instancesRegister()->notifyAboutSettingsChanged(data.instanceId);

@@ -11,7 +11,7 @@
 #include "au3cloud/iauthorization.h"
 
 namespace au::au3cloud {
-class CloudTestsModel : public QObject, public muse::async::Asyncable, public muse::Injectable
+class CloudTestsModel : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
 

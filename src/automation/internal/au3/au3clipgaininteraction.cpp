@@ -109,7 +109,7 @@ void applyDragWithCrossingRemoval(Envelope& env, AutomationDragSession& session,
 }
 
 Au3ClipGainInteraction::Au3ClipGainInteraction(const muse::modularity::ContextPtr& ctx)
-    : muse::Injectable(ctx) {}
+    : muse::Contextable(ctx) {}
 
 std::optional<AutomationInfo> Au3ClipGainInteraction::clipGainInfo(
     const trackedit::ClipKey& clipKey) const

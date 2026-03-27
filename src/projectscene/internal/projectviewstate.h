@@ -18,7 +18,7 @@
 #include "../iprojectviewstate.h"
 
 namespace au::projectscene {
-class ProjectViewState : public QObject, public IProjectViewState, public muse::Injectable, public muse::async::Asyncable
+class ProjectViewState : public QObject, public IProjectViewState, public muse::Contextable, public muse::async::Asyncable
 {
     Q_OBJECT
 

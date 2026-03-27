@@ -9,13 +9,13 @@
 #include "WaveMetrics.h"
 
 namespace au::projectscene {
-class SamplesPainter : public ISamplesPainter, public muse::Injectable
+class SamplesPainter : public ISamplesPainter, public muse::Contextable
 {
     muse::Inject<au::context::IGlobalContext> globalContext{ this };
 
 public:
     SamplesPainter(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
     void paint(QPainter& painter, const trackedit::ClipKey& clipKey, const IWavePainter::Params& params) override;
 };
 }

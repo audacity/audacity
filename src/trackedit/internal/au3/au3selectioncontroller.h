@@ -17,7 +17,7 @@
 #include "../../iprojecthistory.h"
 
 namespace au::trackedit {
-class Au3SelectionController : public ISelectionController, public muse::async::Asyncable, public muse::Injectable
+class Au3SelectionController : public ISelectionController, public muse::async::Asyncable, public muse::Contextable
 {
     muse::Inject<au::context::IGlobalContext> globalContext { this };
     muse::Inject<IProjectHistory> projectHistory { this };
@@ -25,7 +25,7 @@ class Au3SelectionController : public ISelectionController, public muse::async::
 
 public:
     Au3SelectionController(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
 
     void init();
 

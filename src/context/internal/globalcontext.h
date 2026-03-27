@@ -9,13 +9,13 @@
 #include "record/irecordcontroller.h"
 
 namespace au::context {
-class GlobalContext : public au::context::IGlobalContext, public muse::Injectable
+class GlobalContext : public au::context::IGlobalContext, public muse::Contextable
 {
     muse::Inject<au::record::IRecordController> recordController { this };
 
 public:
     GlobalContext(muse::modularity::ContextPtr ctx)
-        : muse::Injectable(std::move(ctx))
+        : muse::Contextable(std::move(ctx))
         , m_playbackState(std::make_shared<PlaybackState>())
     {
     }

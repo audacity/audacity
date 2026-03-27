@@ -20,7 +20,7 @@
 #include "projectscene/types/projectscenetypes.h"
 
 namespace au::automation {
-class ClipGainModel : public QAbstractListModel, public muse::async::Asyncable, public muse::Injectable
+class ClipGainModel : public QAbstractListModel, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
 

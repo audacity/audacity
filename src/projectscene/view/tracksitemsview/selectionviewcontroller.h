@@ -21,7 +21,7 @@
 #include "../timeline/timelinecontext.h"
 
 namespace au::projectscene {
-class SelectionViewController : public QObject, public muse::async::Asyncable, public muse::Injectable
+class SelectionViewController : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
     Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)

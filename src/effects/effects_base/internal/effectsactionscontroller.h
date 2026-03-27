@@ -24,10 +24,11 @@
 
 namespace au::effects {
 class EffectsUiActions;
-class EffectsActionsController : public muse::actions::Actionable, public muse::async::Asyncable, public muse::Injectable,
+class EffectsActionsController : public muse::actions::Actionable, public muse::async::Asyncable, public muse::Contextable,
     public std::enable_shared_from_this<EffectsActionsController>
 {
     muse::GlobalInject<IEffectsConfiguration> configuration;
+    muse::GlobalInject<spectrogram::ISpectralEffectsRegister> spectralEffectsRegister;
 
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher{ this };
     muse::Inject<muse::ui::IUiActionsRegister> uiActionsRegister{ this };
@@ -37,12 +38,11 @@ class EffectsActionsController : public muse::actions::Actionable, public muse::
     muse::Inject<IEffectInstancesRegister> instancesRegister{ this };
     muse::Inject<muse::IInteractive> interactive{ this };
     muse::Inject<au::playback::IPlaybackController> playbackController{ this };
-    muse::Inject<spectrogram::ISpectralEffectsRegister> spectralEffectsRegister{ this };
     muse::Inject<spectrogram::IFrequencySelectionController> frequencySelectionController{ this };
 
 public:
     EffectsActionsController(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
 
     void init();
     bool canReceiveAction(const muse::actions::ActionCode&) const override;

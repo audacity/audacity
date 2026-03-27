@@ -31,7 +31,7 @@ struct WorkspaceInfo {
     }
 };
 
-class WorkspaceLayoutPageModel : public QObject, public muse::async::Asyncable, public muse::Injectable
+class WorkspaceLayoutPageModel : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
     QML_ELEMENT

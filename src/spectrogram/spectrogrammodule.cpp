@@ -49,6 +49,7 @@ void SpectrogramModule::registerExports()
     m_configuration = std::make_shared<GlobalSpectrogramConfiguration>();
 
     globalIoc()->registerExport<IGlobalSpectrogramConfiguration>(mname, m_configuration);
+    globalIoc()->registerExport<ISpectralEffectsRegister>(mname, std::make_shared<SpectralEffectsRegister>());
 }
 
 void SpectrogramModule::resolveImports()
@@ -103,7 +104,6 @@ void SpectrogramContext::registerExports()
     auto restorer = std::make_unique<FrequencySelectionRestorer>(iocContext());
     m_frequencySelectionController = std::make_shared<FrequencySelectionController>(iocContext(), std::move(restorer));
 
-    ioc()->registerExport<ISpectralEffectsRegister>(mname, new SpectralEffectsRegister);
     ioc()->registerExport<ISpectrogramPainter>(mname, m_au3SpectrogramPainter);
     ioc()->registerExport<ISpectrogramService>(mname, m_spectrogramService);
     ioc()->registerExport<IPeakFinderFactory>(mname, new Au3PeakFinderFactory(iocContext()));

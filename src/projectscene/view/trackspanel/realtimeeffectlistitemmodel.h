@@ -11,7 +11,7 @@
 #include <QObject>
 
 namespace au::projectscene {
-class RealtimeEffectListItemModel : public QObject, public muse::Injectable, public muse::async::Asyncable
+class RealtimeEffectListItemModel : public QObject, public muse::Contextable, public muse::async::Asyncable
 {
     Q_OBJECT
     Q_PROPERTY(bool isActive READ prop_isActive WRITE prop_setIsActive NOTIFY isActiveChanged)

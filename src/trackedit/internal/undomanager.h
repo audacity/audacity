@@ -11,7 +11,7 @@
 #include "modularity/ioc.h"
 
 namespace au::trackedit {
-class UndoManager : public IUndoManager, public muse::Injectable
+class UndoManager : public IUndoManager, public muse::Contextable
 {
 private:
     muse::Inject<au::context::IGlobalContext> globalContext { this };
@@ -19,7 +19,7 @@ private:
 
 public:
     UndoManager(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
 
     bool undo() override;
     bool canUndo() override;

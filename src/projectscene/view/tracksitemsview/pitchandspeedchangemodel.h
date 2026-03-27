@@ -13,7 +13,7 @@
 #include "trackedit/iselectioncontroller.h"
 
 namespace au::projectscene {
-class PitchAndSpeedChangeModel : public QObject, public muse::async::Asyncable, public muse::Injectable
+class PitchAndSpeedChangeModel : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
 

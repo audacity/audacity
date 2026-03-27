@@ -18,7 +18,7 @@ namespace au::playback {
 using au::audio::volume_dbfs_t;
 using au::audio::pan_t;
 
-class Au3TrackPlaybackControl : public ITrackPlaybackControl, public muse::Injectable
+class Au3TrackPlaybackControl : public ITrackPlaybackControl, public muse::Contextable
 {
     muse::GlobalInject<au::playback::IPlaybackConfiguration> playbackConfiguration;
 
@@ -27,7 +27,7 @@ class Au3TrackPlaybackControl : public ITrackPlaybackControl, public muse::Injec
 
 public:
     Au3TrackPlaybackControl(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
     volume_dbfs_t volume(long trackId) const override;
     void setVolume(long trackId, volume_dbfs_t vol, bool completed) override;
 

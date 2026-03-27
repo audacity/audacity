@@ -142,7 +142,7 @@ void Au3CloudService::signInWithPassword(const std::string& email, const std::st
 
 void Au3CloudService::signInWithSocial(const std::string& provider)
 {
-    interactive()->openUrl(buildOAuthRequestURL(provider));
+    platformInteractive()->openUrl(buildOAuthRequestURL(provider));
 }
 
 void Au3CloudService::signOut()

@@ -7,7 +7,7 @@ using namespace muse;
 using namespace au::projectscene;
 
 RealtimeEffectSectionModel::RealtimeEffectSectionModel(QObject* parent)
-    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
+    : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
 }
 

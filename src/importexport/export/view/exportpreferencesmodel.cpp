@@ -63,7 +63,7 @@ const std::vector<int> DEFAULT_SAMPLE_RATE_LIST {
 };
 
 ExportPreferencesModel::ExportPreferencesModel(QObject* parent)
-    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
+    : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
     //! NOTE: init m_sampleRateMapping
     exportSampleRateList();

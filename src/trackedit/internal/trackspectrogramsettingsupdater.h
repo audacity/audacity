@@ -14,7 +14,7 @@
 
 namespace au::trackedit {
 class Au3TrackSpectrogramConfiguration;
-class TrackSpectrogramSettingsUpdater : public muse::async::Asyncable, public muse::Injectable
+class TrackSpectrogramSettingsUpdater : public muse::async::Asyncable, public muse::Contextable
 {
     muse::GlobalInject<spectrogram::IGlobalSpectrogramConfiguration> globalSpectrogramConfiguration;
 
@@ -23,7 +23,7 @@ class TrackSpectrogramSettingsUpdater : public muse::async::Asyncable, public mu
 
 public:
     TrackSpectrogramSettingsUpdater(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
 
     void init();
     void forEachTrack(std::function<void(ITrackeditProject&, const trackedit::Track&, spectrogram::ITrackSpectrogramConfiguration&)>) const;

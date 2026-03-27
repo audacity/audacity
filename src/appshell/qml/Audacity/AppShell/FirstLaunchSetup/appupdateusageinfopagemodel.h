@@ -10,7 +10,7 @@
 #include "au3cloud/iusageinfo.h"
 
 namespace au::appshell {
-class AppUpdateUsageInfoPageModel : public QObject, public muse::Injectable
+class AppUpdateUsageInfoPageModel : public QObject, public muse::Contextable
 {
     Q_OBJECT
     QML_ELEMENT

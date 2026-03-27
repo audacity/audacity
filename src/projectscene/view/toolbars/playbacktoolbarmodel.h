@@ -3,16 +3,18 @@
 */
 #pragma once
 
-#include "modularity/ioc.h"
+#include "framework/uicomponents/qml/Muse/UiComponents/abstracttoolbarmodel.h"
+
+#include "framework/global/modularity/ioc.h"
+#include "framework/ui/iuiactionsregister.h"
+#include "framework/ui/iuiconfiguration.h"
+#include "framework/ui/iuistate.h"
+
 #include "context/iglobalcontext.h"
-#include "ui/iuiactionsregister.h"
-#include "ui/iuiconfiguration.h"
 #include "playback/iplaybackconfiguration.h"
 #include "playback/iplaybackcontroller.h"
 #include "record/irecordcontroller.h"
 #include "record/irecordconfiguration.h"
-
-#include "uicomponents/qml/Muse/UiComponents/abstracttoolbarmodel.h"
 
 namespace au::project {
 class IAudacityProject;
@@ -29,6 +31,7 @@ class PlaybackToolBarModel : public muse::uicomponents::AbstractToolBarModel
     muse::GlobalInject<playback::IPlaybackConfiguration> configuration;
     muse::GlobalInject<record::IRecordConfiguration> recordConfiguration;
 
+    muse::Inject<muse::ui::IUiState> uiState { this };
     muse::Inject<muse::ui::IUiActionsRegister> uiActionsRegister{ this };
     muse::Inject<context::IGlobalContext> context{ this };
     muse::Inject<playback::IPlaybackController> playbackController{ this };

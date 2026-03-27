@@ -32,7 +32,7 @@
 
 namespace au::projectscene {
 class PlayPositionActionController : public QObject, public muse::actions::Actionable, public muse::async::Asyncable,
-    public muse::Injectable
+    public muse::Contextable
 {
     Q_OBJECT
 

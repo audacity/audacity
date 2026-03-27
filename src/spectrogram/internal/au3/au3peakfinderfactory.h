@@ -11,7 +11,7 @@
 #include "framework/global/modularity/ioc.h"
 
 namespace au::spectrogram {
-class Au3PeakFinderFactory : public IPeakFinderFactory, public muse::Injectable
+class Au3PeakFinderFactory : public IPeakFinderFactory, public muse::Contextable
 {
     muse::Inject<context::IGlobalContext> globalContext { this };
 

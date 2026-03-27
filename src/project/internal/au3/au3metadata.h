@@ -14,14 +14,14 @@
 #include "project/imetadata.h"
 
 namespace au::project {
-class Au3Metadata : public IMetadata, public muse::Injectable
+class Au3Metadata : public IMetadata, public muse::Contextable
 {
     muse::Inject<au::context::IGlobalContext> globalContext { this };
     muse::Inject<muse::IInteractive> interactive { this };
 
 public:
     Au3Metadata(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
 
     void init();
 

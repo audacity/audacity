@@ -12,13 +12,13 @@
 #include "framework/global/async/asyncable.h"
 
 namespace au::spectrogram {
-class Au3SpectrogramPainter final : public ISpectrogramPainter, public muse::async::Asyncable, public muse::Injectable
+class Au3SpectrogramPainter final : public ISpectrogramPainter, public muse::async::Asyncable, public muse::Contextable
 {
     muse::Inject<context::IGlobalContext> globalContext { this };
 
 public:
     Au3SpectrogramPainter(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
     ~Au3SpectrogramPainter() override = default;
 
     void init();

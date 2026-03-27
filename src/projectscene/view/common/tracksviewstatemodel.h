@@ -11,7 +11,7 @@
 #include "context/iglobalcontext.h"
 
 namespace au::projectscene {
-class TracksViewStateModel : public QObject, public muse::Injectable, public muse::async::Asyncable
+class TracksViewStateModel : public QObject, public muse::Contextable, public muse::async::Asyncable
 {
     Q_OBJECT
 

@@ -8,6 +8,7 @@
 #include "framework/actions/actionable.h"
 #include "framework/actions/iactionsdispatcher.h"
 #include "framework/interactive/iinteractive.h"
+#include "framework/interactive/iplatforminteractive.h"
 #include "framework/ui/imainwindow.h"
 
 #include "context/iglobalcontext.h"
@@ -26,11 +27,12 @@
 
 namespace au::project {
 class ProjectActionsController : public IProjectFilesController, public muse::actions::Actionable, public muse::async::Asyncable,
-    public muse::Injectable
+    public muse::Contextable
 {
     muse::GlobalInject<IProjectConfiguration> configuration;
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
     muse::GlobalInject<importexport::ExportConfiguration> exportConfiguration;
+    muse::GlobalInject<muse::IPlatformInteractive> platformInteractive;
 
     muse::GlobalInject<IRecentFilesController> recentFilesController;
     muse::GlobalInject<muse::mi::IMultiWindowsProvider> multiwindowsProvider;

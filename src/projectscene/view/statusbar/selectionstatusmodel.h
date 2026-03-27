@@ -15,7 +15,7 @@
 #include "playback/iplayback.h"
 
 namespace au::projectscene {
-class SelectionStatusModel : public QObject, public muse::async::Asyncable, public muse::Injectable
+class SelectionStatusModel : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
 

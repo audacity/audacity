@@ -82,7 +82,7 @@ PlaybackToolBarModel::PlaybackToolBarModel(QObject* parent)
 void PlaybackToolBarModel::load()
 {
     if (!m_inited) {
-        uiConfiguration()->toolConfigChanged(TOOLBAR_NAME).onNotify(this, [this]() {
+        uiState()->toolConfigChanged(TOOLBAR_NAME).onNotify(this, [this]() {
             reload();
         });
 
@@ -336,8 +336,8 @@ void PlaybackToolBarModel::updateActions()
 {
     ToolBarItemList items;
 
-    muse::ui::ToolConfig playbackConfig = uiConfiguration()->toolConfig(TOOLBAR_NAME,
-                                                                        ProjectSceneUiActions::defaultPlaybackToolBarConfig());
+    muse::ui::ToolConfig playbackConfig = uiState()->toolConfig(TOOLBAR_NAME,
+                                                                ProjectSceneUiActions::defaultPlaybackToolBarConfig());
 
     for (const muse::ui::ToolConfig::Item& citem : playbackConfig.items) {
         if (!citem.show) {

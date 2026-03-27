@@ -41,7 +41,7 @@ namespace au::project {
 //! it cannot be used in parts, therefore, to avoid duplication of symbols,
 //! we can add (as source) it only to one library
 //! * Thanks to this wrapper we will see exactly what we are using from AU3
-class Audacity4Project : public IAudacityProject, public muse::async::Asyncable, public muse::Injectable
+class Audacity4Project : public IAudacityProject, public muse::async::Asyncable, public muse::Contextable
 {
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
     muse::GlobalInject<IProjectConfiguration> configuration;
@@ -57,7 +57,7 @@ class Audacity4Project : public IAudacityProject, public muse::async::Asyncable,
 
 public:
     Audacity4Project(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
 
     muse::Ret createNew() override;
 

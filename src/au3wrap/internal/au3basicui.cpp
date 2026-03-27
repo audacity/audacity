@@ -4,9 +4,54 @@
 
 #include "framework/global/runtime.h"
 #include "framework/global/async/async.h"
+#include "framework/ui/imainwindow.h"
+
+#include <QGuiApplication>
 
 #include "progressdialog.h"
 #include "au3basicui.h"
+
+muse::modularity::ContextPtr Au3BasicUI::contextFromPlacement(const BasicUI::WindowPlacement& placement) const
+{
+    if (auto* p = dynamic_cast<const Au3WindowPlacement*>(&placement)) {
+        return p->iocContext();
+    }
+    return nullptr;
+}
+
+muse::modularity::ContextPtr Au3BasicUI::contextFromPlacement(const BasicUI::WindowPlacement* placement) const
+{
+    if (!placement) {
+        return nullptr;
+    }
+    return contextFromPlacement(*placement);
+}
+
+muse::modularity::ContextPtr Au3BasicUI::activeContext() const
+{
+    QWindow* focused = QGuiApplication::focusWindow();
+    for (const auto& ctx : m_app->contexts()) {
+        auto w = muse::modularity::ioc(ctx)->resolve<muse::ui::IMainWindow>("au3wrap");
+        if (w && w->qWindow() == focused) {
+            return ctx;
+        }
+    }
+
+    auto ctxs = m_app->contexts();
+    if (!ctxs.empty()) {
+        return ctxs.front();
+    }
+    return nullptr;
+}
+
+std::shared_ptr<muse::IInteractive> Au3BasicUI::interactiveForContext(const muse::modularity::ContextPtr& ctx) const
+{
+    auto resolvedCtx = ctx ? ctx : activeContext();
+    if (!resolvedCtx) {
+        return nullptr;
+    }
+    return muse::modularity::ioc(resolvedCtx)->resolve<muse::IInteractive>("au3wrap");
+}
 
 void Au3BasicUI::DoCallAfter(const BasicUI::Action& action)
 {
@@ -21,7 +66,6 @@ void Au3BasicUI::DoShowErrorDialog(const BasicUI::WindowPlacement& placement, co
                                    const TranslatableString& message, const ManualPageID& helpPage,
                                    const BasicUI::ErrorDialogOptions& options)
 {
-    Q_UNUSED(placement);
     Q_UNUSED(helpPage);
 
     LOGE() << dlogTitle.Translation().ToStdString();
@@ -31,27 +75,35 @@ void Au3BasicUI::DoShowErrorDialog(const BasicUI::WindowPlacement& placement, co
         LOGE() << QString::fromStdWString(options.log);
     }
 
-    interactive()->error(dlogTitle.Translation().ToStdString(), message.Translation().ToStdString());
+    auto inter = interactiveForContext(contextFromPlacement(placement));
+    if (inter) {
+        inter->error(dlogTitle.Translation().ToStdString(), message.Translation().ToStdString());
+    }
 }
 
 BasicUI::MessageBoxResult Au3BasicUI::DoMessageBox(const TranslatableString& message, BasicUI::MessageBoxOptions options)
 {
     LOGI() << message.Translation().ToStdString();
 
+    auto inter = interactiveForContext(contextFromPlacement(options.parent));
+    if (!inter) {
+        return BasicUI::MessageBoxResult::None;
+    }
+
     muse::IInteractive::ButtonDatas buttons;
 
     if (options.cancelButton) {
-        buttons.push_back(interactive()->buttonData(muse::IInteractive::Button::Cancel));
+        buttons.push_back(inter->buttonData(muse::IInteractive::Button::Cancel));
     }
 
     switch (options.buttonStyle) {
     case BasicUI::Button::Default:
     case BasicUI::Button::Ok:
-        buttons.push_back(interactive()->buttonData(muse::IInteractive::Button::Ok));
+        buttons.push_back(inter->buttonData(muse::IInteractive::Button::Ok));
         break;
     case BasicUI::Button::YesNo:
-        buttons.push_back(interactive()->buttonData(muse::IInteractive::Button::Yes));
-        buttons.push_back(interactive()->buttonData(muse::IInteractive::Button::No));
+        buttons.push_back(inter->buttonData(muse::IInteractive::Button::Yes));
+        buttons.push_back(inter->buttonData(muse::IInteractive::Button::No));
     }
 
     muse::IInteractive::Result iret;
@@ -59,16 +111,16 @@ BasicUI::MessageBoxResult Au3BasicUI::DoMessageBox(const TranslatableString& mes
     switch (options.iconStyle) {
     case BasicUI::Icon::None:
     case BasicUI::Icon::Information:
-        iret = interactive()->infoSync("", message.Translation().ToStdString(), buttons);
+        iret = inter->infoSync("", message.Translation().ToStdString(), buttons);
         break;
     case BasicUI::Icon::Question:
-        iret = interactive()->questionSync("", message.Translation().ToStdString(), buttons);
+        iret = inter->questionSync("", message.Translation().ToStdString(), buttons);
         break;
     case BasicUI::Icon::Error:
-        iret = interactive()->errorSync("", message.Translation().ToStdString(), buttons);
+        iret = inter->errorSync("", message.Translation().ToStdString(), buttons);
         break;
     case BasicUI::Icon::Warning:
-        iret = interactive()->warningSync("", message.Translation().ToStdString(), buttons);
+        iret = inter->warningSync("", message.Translation().ToStdString(), buttons);
         break;
     default:
         iret = { static_cast<int>(muse::IInteractive::Button::NoButton) };
@@ -103,7 +155,7 @@ std::unique_ptr<BasicUI::ProgressDialog> Au3BasicUI::DoMakeProgress(const Transl
 {
     Q_UNUSED(flags);
     Q_UNUSED(remainingLabelText);
-    auto dialog = std::make_unique<ProgressDialog>(iocContext());
+    auto dialog = std::make_unique<ProgressDialog>(activeContext());
     dialog->SetDialogTitle(title);
     dialog->SetMessage(message);
     return dialog;
@@ -129,6 +181,7 @@ std::unique_ptr<BasicUI::GenericProgressDialog> Au3BasicUI::DoMakeGenericProgres
     Q_UNUSED(title);
     Q_UNUSED(message);
     Q_UNUSED(style);
+
     return std::make_unique<MyGenericProgress>();
 }
 

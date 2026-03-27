@@ -16,7 +16,7 @@ constexpr int BATCH_SIZE = 20;
 }
 
 CloudAudioFilesModel::CloudAudioFilesModel(QObject* parent)
-    : AbstractItemModel(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
+    : AbstractItemModel(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
 }
 

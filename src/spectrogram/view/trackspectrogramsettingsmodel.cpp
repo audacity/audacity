@@ -34,7 +34,7 @@ static_assert(logTwo(8) == 3);
 }
 
 TrackSpectrogramSettingsModel::TrackSpectrogramSettingsModel(QObject* parent)
-    : AbstractSpectrogramSettingsModel(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
+    : AbstractSpectrogramSettingsModel(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {}
 
 void TrackSpectrogramSettingsModel::aboutToDestroy()

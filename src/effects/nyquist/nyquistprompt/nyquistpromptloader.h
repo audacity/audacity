@@ -10,7 +10,7 @@
 class WaveChannel;
 
 namespace au::effects {
-class NyquistPromptLoader : public muse::Injectable
+class NyquistPromptLoader : public muse::Contextable
 {
     muse::GlobalInject<IBuiltinEffectsRepository> builtinEffectsRepository;
     muse::GlobalInject<IBuiltinEffectsViewRegister> builtinEffectsViewRegister;
@@ -18,7 +18,7 @@ class NyquistPromptLoader : public muse::Injectable
 public:
 
     NyquistPromptLoader(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
 
     static void preInit();
     void init();

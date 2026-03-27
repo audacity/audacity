@@ -13,7 +13,7 @@
 using namespace au::projectscene;
 
 GetEffectsModel::GetEffectsModel(QObject* parent)
-    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
+    : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
 }
 
@@ -70,7 +70,7 @@ void GetEffectsModel::load()
 
 void GetEffectsModel::openUrl(const std::string& url) const
 {
-    const muse::Ret ret = interactive()->openUrl(url);
+    const muse::Ret ret = platformInteractive()->openUrl(url);
     if (!ret) {
         LOGE() << ret.toString();
     }

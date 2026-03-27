@@ -10,7 +10,7 @@ using namespace au::toast;
 using namespace muse;
 
 ToastTestsModel::ToastTestsModel(QObject* parent)
-    : QObject(parent), Injectable(muse::iocCtxForQmlObject(this))
+    : QObject(parent), Contextable(muse::iocCtxForQmlObject(this))
 {
 }
 

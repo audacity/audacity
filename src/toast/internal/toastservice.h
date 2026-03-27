@@ -12,7 +12,7 @@
 #include "toast/itoastservice.h"
 
 namespace au::toast {
-class ToastService : public IToastService, public muse::Injectable
+class ToastService : public IToastService, public muse::Contextable
 {
     muse::Inject<IToastProvider> toastProvider { this };
 

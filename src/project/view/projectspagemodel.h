@@ -27,7 +27,7 @@
 #include "framework/global/modularity/ioc.h"
 
 #include "framework/actions/iactionsdispatcher.h"
-#include "framework/interactive/iinteractive.h"
+#include "framework/interactive/iplatforminteractive.h"
 #include "framework/cloud/musescorecom/imusescorecomservice.h"
 #include "framework/cloud/audiocom/iaudiocomservice.h"
 
@@ -36,15 +36,15 @@
 class QString;
 
 namespace au::project {
-class ProjectsPageModel : public QObject, public muse::Injectable
+class ProjectsPageModel : public QObject, public muse::Contextable
 {
     Q_OBJECT
 
     muse::GlobalInject<IProjectConfiguration> configuration;
     muse::GlobalInject<muse::cloud::IAudioComService> audioComService;
+    muse::GlobalInject<muse::IPlatformInteractive> platformInteractive;
 
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
-    muse::Inject<muse::IInteractive> interactive { this };
 
     Q_PROPERTY(int tabIndex READ tabIndex WRITE setTabIndex NOTIFY tabIndexChanged)
     Q_PROPERTY(ViewType viewType READ viewType WRITE setViewType NOTIFY viewTypeChanged)

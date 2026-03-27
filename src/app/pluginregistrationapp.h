@@ -11,18 +11,13 @@
 #include "modularity/imodulesetup.h"
 #include "global/internal/baseapplication.h"
 #include "global/globalmodule.h"
-#include "modularity/ioc.h"
-#include "audioplugins/iregisteraudiopluginsscenario.h"
-
 #include "commandlineparser.h"
 
 namespace au::app {
 class PluginRegistrationApp : public muse::BaseApplication, public std::enable_shared_from_this<PluginRegistrationApp>
 {
-    muse::GlobalInject<muse::audioplugins::IRegisterAudioPluginsScenario> registerAudioPluginsScenario;
-
 public:
-    PluginRegistrationApp(const CommandLineParser::AudioPluginRegistration& task, const muse::modularity::ContextPtr& ctx);
+    PluginRegistrationApp(const CommandLineParser::AudioPluginRegistration& task);
 
     void addModule(muse::modularity::IModuleSetup* module);
 
@@ -37,16 +32,17 @@ public:
 private:
     int runSelfTest();
     int processAudioPluginRegistration();
-    std::vector<muse::modularity::IContextSetup*>& contextSetups(const muse::modularity::ContextPtr& ctx);
-
-    CommandLineParser::AudioPluginRegistration m_task;
-    muse::GlobalModule m_globalModule;
-    QList<muse::modularity::IModuleSetup*> m_modules;
 
     struct Context {
         muse::modularity::ContextPtr ctx;
         std::vector<muse::modularity::IContextSetup*> setups;
     };
+
+    Context& context(const muse::modularity::ContextPtr& ctx);
+
+    CommandLineParser::AudioPluginRegistration m_task;
+    muse::GlobalModule* m_globalModule = nullptr;
+    QList<muse::modularity::IModuleSetup*> m_modules;
 
     std::vector<Context> m_contexts;
 };

@@ -15,7 +15,7 @@ using namespace muse;
 using namespace muse::io;
 
 MetadataModel::MetadataModel(QObject* parent)
-    : QAbstractListModel(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
+    : QAbstractListModel(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
 }
 

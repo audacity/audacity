@@ -14,7 +14,7 @@
 namespace au::spectrogram {
 class AbstractSpectrogramSettingsModel;
 
-class ScaleSectionParameterListModel : public AbstractSectionParametersListModel, public QQmlParserStatus, public muse::Injectable,
+class ScaleSectionParameterListModel : public AbstractSectionParametersListModel, public QQmlParserStatus, public muse::Contextable,
     public muse::async::Asyncable
 {
     Q_OBJECT

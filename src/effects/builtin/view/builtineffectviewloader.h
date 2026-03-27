@@ -15,7 +15,7 @@
 #include "effects/effects_base/ieffectinstancesregister.h"
 
 namespace au::effects {
-class BuiltinEffectViewLoader : public QObject, public muse::async::Asyncable, muse::Injectable
+class BuiltinEffectViewLoader : public QObject, public muse::async::Asyncable, muse::Contextable
 {
     Q_OBJECT
 

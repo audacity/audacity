@@ -14,7 +14,7 @@
 #include "trackedit/iprojecthistory.h"
 
 namespace au::projectscene {
-class HistoryPanelModel : public QAbstractListModel, public QQmlParserStatus, public muse::Injectable, public muse::async::Asyncable
+class HistoryPanelModel : public QAbstractListModel, public QQmlParserStatus, public muse::Contextable, public muse::async::Asyncable
 {
     Q_OBJECT
     Q_INTERFACES(QQmlParserStatus)

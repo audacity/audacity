@@ -27,7 +27,7 @@
 using namespace au::appshell;
 
 WindowDropArea::WindowDropArea(QQuickItem* parent)
-    : QQuickItem(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
+    : QQuickItem(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
     setFlag(ItemAcceptsDrops, true);
 }

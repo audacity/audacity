@@ -12,7 +12,7 @@ using namespace muse;
 
 EffectParametersListModel::EffectParametersListModel(QObject* parent, EffectInstanceId instanceId)
     : QAbstractListModel(parent)
-    , muse::Injectable(muse::iocCtxForQmlObject(this))
+    , muse::Contextable(muse::iocCtxForQmlObject(this))
     , m_instanceId(instanceId)
 {
     IF_ASSERT_FAILED(m_instanceId >= 0) {

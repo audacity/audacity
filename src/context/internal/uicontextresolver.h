@@ -37,7 +37,7 @@
 #endif
 
 namespace au::context {
-class UiContextResolver : public muse::ui::IUiContextResolver, public muse::async::Asyncable, public muse::Injectable
+class UiContextResolver : public muse::ui::IUiContextResolver, public muse::async::Asyncable, public muse::Contextable
 {
     muse::Inject<muse::IInteractive> interactive { this };
     muse::Inject<IGlobalContext> globalContext { this };

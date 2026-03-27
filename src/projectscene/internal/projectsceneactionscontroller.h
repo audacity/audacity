@@ -17,7 +17,7 @@
 
 namespace au::projectscene {
 class ProjectSceneActionsController : public IProjectSceneActionsController, public muse::actions::Actionable,
-    public muse::async::Asyncable, public muse::Injectable
+    public muse::async::Asyncable, public muse::Contextable
 {
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::Inject<au::context::IGlobalContext> globalContext { this };
@@ -26,7 +26,7 @@ class ProjectSceneActionsController : public IProjectSceneActionsController, pub
 
 public:
     ProjectSceneActionsController(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
 
     void init();
 

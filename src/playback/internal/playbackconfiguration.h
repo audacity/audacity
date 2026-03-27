@@ -3,16 +3,11 @@
 */
 #pragma once
 
-#include "framework/global/modularity/ioc.h"
-#include "framework/ui/iuiconfiguration.h"
-
 #include "../iplaybackconfiguration.h"
 
 namespace au::playback {
 class PlaybackConfiguration : public IPlaybackConfiguration
 {
-    muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
-
 public:
     void init();
 
@@ -67,6 +62,12 @@ public:
     muse::async::Notification selectionFollowsLoopRegionChanged() const override;
 
 private:
+    muse::async::Notification m_playbackTimeItemFormatChanged;
+    muse::async::Notification m_playbackMeterStyleChanged;
+    muse::async::Notification m_playbackMeterTypeChanged;
+    muse::async::Notification m_playbackMeterPositionChanged;
+    muse::async::Notification m_playbackMeterDbRangeChanged;
+    muse::async::Notification m_playbackHorizontalMeterSizeChanged;
     muse::async::Notification m_playbackQualityChanged;
     muse::async::Notification m_ditheringChanged;
     muse::async::Notification m_soloBehaviorChanged;

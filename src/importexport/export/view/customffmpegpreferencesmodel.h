@@ -15,7 +15,7 @@
 #include "iglobalconfiguration.h"
 
 namespace au::importexport {
-class CustomFFmpegPreferencesModel : public QObject, public muse::async::Asyncable, public muse::Injectable
+class CustomFFmpegPreferencesModel : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
 

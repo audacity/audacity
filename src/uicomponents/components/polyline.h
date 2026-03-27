@@ -22,7 +22,7 @@ struct GhostPoint {
     qreal distToSegment = 1e18;
 };
 
-class Polyline : public QQuickPaintedItem, public muse::async::Asyncable, public muse::actions::Actionable, public muse::Injectable
+class Polyline : public QQuickPaintedItem, public muse::async::Asyncable, public muse::actions::Actionable, public muse::Contextable
 {
     Q_OBJECT
 

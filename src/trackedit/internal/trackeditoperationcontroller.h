@@ -20,7 +20,7 @@
 #include "iundomanager.h"
 
 namespace au::trackedit {
-class TrackeditOperationController : public ITrackeditInteraction, public muse::Injectable, public muse::async::Asyncable
+class TrackeditOperationController : public ITrackeditInteraction, public muse::Contextable, public muse::async::Asyncable
 {
     muse::Inject<ITracksInteraction> tracksInteraction { this };
     muse::Inject<IClipsInteraction> clipsInteraction { this };

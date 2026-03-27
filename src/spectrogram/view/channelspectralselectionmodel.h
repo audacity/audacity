@@ -18,7 +18,7 @@
 #include <utility>
 
 namespace au::spectrogram {
-class ChannelSpectralSelectionModel : public QObject, public QQmlParserStatus, public muse::Injectable, public muse::async::Asyncable
+class ChannelSpectralSelectionModel : public QObject, public QQmlParserStatus, public muse::Contextable, public muse::async::Asyncable
 {
     Q_OBJECT
     Q_INTERFACES(QQmlParserStatus)

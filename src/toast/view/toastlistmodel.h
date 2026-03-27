@@ -14,7 +14,7 @@
 #include "toast/itoastprovider.h"
 
 namespace au::toast {
-class ToastListModel : public QAbstractListModel, public muse::async::Asyncable, public muse::Injectable
+class ToastListModel : public QAbstractListModel, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
 

@@ -29,7 +29,7 @@
 class QSvgRenderer;
 
 namespace au::appshell {
-class SplashScreen : public QWidget, public muse::Injectable
+class SplashScreen : public QWidget, public muse::Contextable
 {
 public:
     enum SplashScreenType {

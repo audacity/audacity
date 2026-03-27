@@ -28,7 +28,7 @@ struct Au3TrackeditProject::Au3Impl
 };
 
 Au3TrackeditProject::Au3TrackeditProject(const muse::modularity::ContextPtr& ctx, const std::shared_ptr<IAu3Project>& au3project)
-    : muse::Injectable(ctx)
+    : muse::Contextable(ctx)
 {
     m_impl = std::make_shared<Au3Impl>();
     m_impl->prj = reinterpret_cast<Au3Project*>(au3project->au3ProjectPtr());

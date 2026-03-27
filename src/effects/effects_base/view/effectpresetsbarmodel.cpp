@@ -17,7 +17,7 @@ constexpr int USER_PRESET_ICON_CODE = 0xEF99;
 }
 
 EffectPresetsBarModel::EffectPresetsBarModel(QObject* parent)
-    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
+    : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
     m_saveContextMenu = new EffectSaveContextMenu(this);
     m_presetsContextMenu = new PresetsContextMenuModel(this);

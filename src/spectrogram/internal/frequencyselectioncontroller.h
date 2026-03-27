@@ -13,7 +13,7 @@
 namespace au::spectrogram {
 class IFrequencySelectionRestorer;
 
-class FrequencySelectionController : public IFrequencySelectionController, public muse::Injectable, public muse::async::Asyncable
+class FrequencySelectionController : public IFrequencySelectionController, public muse::Contextable, public muse::async::Asyncable
 {
     muse::Inject<ISpectrogramService> spectrogramService{ this };
 

@@ -6,7 +6,7 @@
 
 namespace au::spectrogram {
 ClipChannelSpectrogramView::ClipChannelSpectrogramView(QQuickItem* parent)
-    : QQuickPaintedItem(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
+    : QQuickPaintedItem(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
     setFlag(QQuickItem::ItemObservesViewport, true);
 }

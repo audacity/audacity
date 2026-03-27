@@ -49,7 +49,7 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
                        "In this video, we walk you through the most important differences between version 3 and version 4."),
             muse::qtrc("appshell/welcome", "Watch video"),
             [this]() {
-                interactive()->openUrl(AU4_VIDEO_URL);
+                platformInteractive()->openUrl(AU4_VIDEO_URL);
             }
         },
         {
@@ -82,7 +82,7 @@ std::vector<WelcomeDialogModel::Item> WelcomeDialogModel::buildItems()
                        "A collection of merchandise that commemorates Audacity’s original appearance and branding"),
             muse::qtrc("appshell/welcome", "Visit now"),
             [this]() {
-                interactive()->openUrl(SHOP_URL);
+                platformInteractive()->openUrl(SHOP_URL);
             }
         },
     };

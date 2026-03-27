@@ -14,7 +14,7 @@
 #include "playback/iplaybackconfiguration.h"
 
 namespace au::appshell {
-class PlaybackPreferencesModel : public QObject, public muse::async::Asyncable, public muse::Injectable
+class PlaybackPreferencesModel : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
     QML_ELEMENT

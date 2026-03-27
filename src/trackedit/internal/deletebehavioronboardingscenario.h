@@ -13,7 +13,7 @@
 #include "trackedit/trackedittypes.h"
 
 namespace au::trackedit {
-class DeleteBehaviorOnboardingScenario : public muse::Injectable
+class DeleteBehaviorOnboardingScenario : public muse::Contextable
 {
     muse::GlobalInject<ITrackeditConfiguration> configuration;
 
@@ -22,7 +22,7 @@ class DeleteBehaviorOnboardingScenario : public muse::Injectable
 
 public:
     DeleteBehaviorOnboardingScenario(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
 
     bool showOnboardingDialog() const;
     void showFollowupDialog() const;

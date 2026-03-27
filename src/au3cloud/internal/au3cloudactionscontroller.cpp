@@ -14,7 +14,7 @@ const muse::Uri SIGNIN_URI("audacity://signin/audiocom");
 }
 
 Au3CloudActionsController::Au3CloudActionsController(muse::modularity::ContextPtr ctx)
-    : muse::Injectable(ctx)
+    : muse::Contextable(ctx)
 {
 }
 
@@ -37,6 +37,6 @@ void Au3CloudActionsController::openSignInDialog(const muse::actions::ActionQuer
     const bool showTourPage = query.param("showTourPage").toBool();
 
     if (showTourPage && authorization()->isAuthorized()) {
-        interactive()->openUrl(TOUR_PAGE_URL);
+        platformInteractive()->openUrl(TOUR_PAGE_URL);
     }
 }

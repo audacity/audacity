@@ -27,7 +27,7 @@ class EffectBase;
 class EffectInstance;
 class SimpleEffectSettingsAccess;
 namespace au::effects {
-class EffectExecutionScenario : public IEffectExecutionScenario, public muse::Injectable
+class EffectExecutionScenario : public IEffectExecutionScenario, public muse::Contextable
 {
     muse::GlobalInject<IEffectsConfiguration> effectsConfiguration;
 
@@ -43,7 +43,7 @@ class EffectExecutionScenario : public IEffectExecutionScenario, public muse::In
 
 public:
     EffectExecutionScenario(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
 
     muse::Ret performEffect(const EffectId& effectId) override;
     bool lastProcessorIsAvailable() const override;

@@ -14,7 +14,7 @@
 #include <map>
 
 namespace au::projectscene {
-class RealtimeEffectListModel : public QAbstractListModel, public muse::async::Asyncable, public muse::Injectable
+class RealtimeEffectListModel : public QAbstractListModel, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
 

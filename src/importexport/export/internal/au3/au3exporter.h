@@ -16,7 +16,7 @@
 namespace au::importexport {
 using OptionsEditorUPtr = std::unique_ptr<ExportOptionsEditor>;
 
-class Au3Exporter : public IExporter, public muse::Injectable
+class Au3Exporter : public IExporter, public muse::Contextable
 {
     muse::GlobalInject<au::importexport::ExportConfiguration> exportConfiguration;
 
@@ -26,7 +26,7 @@ class Au3Exporter : public IExporter, public muse::Injectable
 
 public:
     Au3Exporter(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
 
     void init() override;
     muse::Ret exportData(const muse::io::path_t& path, const Options& options = {}, muse::ProgressPtr progress = nullptr) override;

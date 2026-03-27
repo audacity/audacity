@@ -25,7 +25,7 @@ class ItemMultiSelectionModel;
 class QItemSelectionModel;
 
 namespace au::projectscene {
-class PanelTracksListModel : public QAbstractListModel, public muse::async::Asyncable, public muse::Injectable
+class PanelTracksListModel : public QAbstractListModel, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
 

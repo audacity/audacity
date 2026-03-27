@@ -25,7 +25,7 @@ namespace au::projectscene {
 using Direction = DirectionType::Direction;
 
 class SnapTimeFormatter;
-class TimelineContext : public QObject, public muse::async::Asyncable, public muse::actions::Actionable, public muse::Injectable
+class TimelineContext : public QObject, public muse::async::Asyncable, public muse::actions::Actionable, public muse::Contextable
 {
     Q_OBJECT
 

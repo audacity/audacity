@@ -10,7 +10,7 @@
 #include <optional>
 
 namespace au::spectrogram {
-class ISpectralEffectsRegister : MODULE_EXPORT_INTERFACE
+class ISpectralEffectsRegister : MODULE_GLOBAL_EXPORT_INTERFACE
 {
     INTERFACE_ID(ISpectralEffectsRegister)
 

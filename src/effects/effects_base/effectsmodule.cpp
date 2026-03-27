@@ -93,6 +93,11 @@ void EffectsModule::onInit(const muse::IApplication::RunMode&)
     }
 }
 
+void EffectsModule::onDeinit()
+{
+    PluginManager::Get().Terminate();
+}
+
 void EffectsModule::onDelayedInit()
 {
 }

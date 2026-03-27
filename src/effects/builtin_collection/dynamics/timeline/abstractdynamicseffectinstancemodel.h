@@ -11,7 +11,7 @@
 class CompressorInstance;
 
 namespace au::effects {
-class AbstractDynamicsEffectInstanceModel : public QObject, public muse::Injectable
+class AbstractDynamicsEffectInstanceModel : public QObject, public muse::Contextable
 {
     Q_OBJECT
 

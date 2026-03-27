@@ -25,7 +25,7 @@ static muse::ui::IconCode::Code iconFromTrackType(au::trackedit::TrackType type)
 }
 
 TrackItem::TrackItem(QObject* parent)
-    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
+    : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
     qRegisterMetaType<au::trackedit::TrackType>("au::trackedit::TrackType");
 }

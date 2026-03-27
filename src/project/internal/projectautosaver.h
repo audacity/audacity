@@ -35,7 +35,7 @@
 // maybe use the #include "appshell/internal/isessionsmanager.h"
 
 namespace au::project {
-class ProjectAutoSaver : public IProjectAutoSaver, public muse::async::Asyncable, public muse::Injectable
+class ProjectAutoSaver : public IProjectAutoSaver, public muse::async::Asyncable, public muse::Contextable
 {
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
     muse::GlobalInject<IProjectConfiguration> configuration;
@@ -46,7 +46,7 @@ class ProjectAutoSaver : public IProjectAutoSaver, public muse::async::Asyncable
 
 public:
     ProjectAutoSaver(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
 
     void init();
 

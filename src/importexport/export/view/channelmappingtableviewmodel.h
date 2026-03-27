@@ -27,7 +27,7 @@ struct ChannelRow {
     QString title;
 };
 
-class ChannelMappingTableViewModel : public muse::uicomponents::AbstractTableViewModel, public muse::Injectable
+class ChannelMappingTableViewModel : public muse::uicomponents::AbstractTableViewModel, public muse::Contextable
 {
     Q_OBJECT
     QML_ELEMENT;

@@ -6,14 +6,18 @@
 #include <memory>
 #include <vector>
 
+#include <QPointer>
+#include <QTimer>
+
 #include "modularity/imodulesetup.h"
 #include "global/internal/baseapplication.h"
 #include "global/globalmodule.h"
 #include "modularity/ioc.h"
-#include "appshell/istartupscenario.h"
 #include "appshell/iappshellconfiguration.h"
 
 #include "commandlineparser.h"
+
+class QQuickWindow;
 
 namespace au::appshell {
 class SplashScreen;
@@ -25,7 +29,7 @@ class GuiApp : public muse::BaseApplication, public std::enable_shared_from_this
     muse::GlobalInject<appshell::IAppShellConfiguration> appshellConfiguration;
 
 public:
-    GuiApp(const CommandLineParser::Options& options, const muse::modularity::ContextPtr& ctx);
+    GuiApp(const CommandLineParser::Options& options);
 
     void addModule(muse::modularity::IModuleSetup* module);
 
@@ -38,20 +42,25 @@ public:
     std::vector<muse::modularity::ContextPtr> contexts() const override;
 
 private:
-    static int lastId();
-
     void applyCommandLineOptions(const CommandLineParser::Options& options);
-    std::vector<muse::modularity::IContextSetup*>& contextSetups(const muse::modularity::ContextPtr& ctx);
-
-    CommandLineParser::Options m_options;
-    au::appshell::SplashScreen* m_splashScreen = nullptr;
-    muse::GlobalModule m_globalModule;
-    std::vector<muse::modularity::IModuleSetup*> m_modules;
 
     struct Context {
         muse::modularity::ContextPtr ctx;
         std::vector<muse::modularity::IContextSetup*> setups;
+        QPointer<QQuickWindow> window;
+
+        bool isValid() const { return ctx != nullptr && !setups.empty(); }
     };
+
+    Context& context(const muse::modularity::ContextPtr& ctx);
+
+    CommandLineParser::Options m_options;
+    au::appshell::SplashScreen* m_splashScreen = nullptr;
+
+    //! NOTE Separately to initialize logger and profiler as early as possible
+    muse::GlobalModule* m_globalModule = nullptr;
+    std::vector<muse::modularity::IModuleSetup*> m_modules;
+    QTimer m_delayedInitTimer;
 
     std::vector<Context> m_contexts;
 };

@@ -6,7 +6,7 @@
 
 namespace au::spectrogram {
 Au3PeakFinderFactory::Au3PeakFinderFactory(const muse::modularity::ContextPtr& ctx)
-    : muse::Injectable(ctx)
+    : muse::Contextable(ctx)
 {
 }
 

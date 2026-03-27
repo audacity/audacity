@@ -179,7 +179,7 @@ void setTrackRulerType(const std::shared_ptr<au::project::IAudacityProject>& pro
 }
 
 ProjectViewState::ProjectViewState(const muse::modularity::ContextPtr& ctx)
-    : muse::Injectable(ctx)
+    : muse::Contextable(ctx)
 {
 }
 

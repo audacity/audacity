@@ -12,7 +12,7 @@
 #include "../iparameterextractorregistry.h"
 
 namespace au::effects {
-class EffectParametersProvider : public IEffectParametersProvider, public muse::async::Asyncable, public muse::Injectable
+class EffectParametersProvider : public IEffectParametersProvider, public muse::async::Asyncable, public muse::Contextable
 {
     muse::Inject<IEffectInstancesRegister> instancesRegister{ this };
     muse::Inject<IEffectsProvider> effectsProvider{ this };

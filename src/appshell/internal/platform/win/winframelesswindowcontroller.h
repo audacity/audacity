@@ -28,15 +28,15 @@
 #include "internal/framelesswindowcontroller.h"
 
 #include "modularity/ioc.h"
-#include "ui/iuiconfiguration.h"
+#include "ui/iuicontextconfiguration.h"
 #include "ui/imainwindow.h"
 
 #include "windows.h"
 
 namespace au::appshell {
-class WinFramelessWindowController : public QObject, public FramelessWindowController, public muse::Injectable
+class WinFramelessWindowController : public QObject, public FramelessWindowController, public muse::Contextable
 {
-    muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
+    muse::ContextInject<muse::ui::IUiContextConfiguration> uiContextConfiguration = { this };
     muse::Inject<muse::ui::IMainWindow> mainWindow { this };
 
 public:
@@ -74,8 +74,11 @@ private:
 
     int borderWidth() const;
 
+    void updateWindowPosition();
+
     QScreen* m_screen = nullptr;
 
+    HWND m_hwnd = 0;
     MONITORINFO m_monitorInfo;
 };
 }

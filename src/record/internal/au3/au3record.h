@@ -23,7 +23,7 @@ struct TransportSequences;
 struct AudioIOStartStreamOptions;
 
 namespace au::record {
-class Au3Record : public IRecord, public muse::async::Asyncable, public muse::Injectable
+class Au3Record : public IRecord, public muse::async::Asyncable, public muse::Contextable
 {
     muse::Inject<au::context::IGlobalContext> globalContext{ this };
     muse::Inject<au::audio::IAudioEngine> audioEngine{ this };
@@ -34,7 +34,7 @@ class Au3Record : public IRecord, public muse::async::Asyncable, public muse::In
 
 public:
     Au3Record(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
 
     void init();
 

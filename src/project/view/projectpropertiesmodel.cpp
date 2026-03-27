@@ -30,7 +30,7 @@ using namespace muse::modularity;
 using namespace au::project;
 
 ProjectPropertiesModel::ProjectPropertiesModel(QObject* parent)
-    : QAbstractListModel(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
+    : QAbstractListModel(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
 }
 
@@ -197,7 +197,7 @@ void ProjectPropertiesModel::saveProperties()
 
 void ProjectPropertiesModel::openFileLocation()
 {
-    Ret ret = interactive()->revealInFileBrowser(m_projectMetaInfo.filePath.toQString());
+    Ret ret = platformInteractive()->revealInFileBrowser(m_projectMetaInfo.filePath.toQString());
 
     if (!ret) {
         LOGE() << "Could not open folder: " << m_projectMetaInfo.filePath.toQString();

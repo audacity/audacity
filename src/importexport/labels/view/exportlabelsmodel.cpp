@@ -13,7 +13,7 @@
 using namespace au::importexport;
 
 ExportLabelsModel::ExportLabelsModel(QObject* parent)
-    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
+    : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
 }
 
@@ -70,7 +70,7 @@ void ExportLabelsModel::exportData()
 
     configuration()->setLabelsDirectoryPath(m_directoryPath.toStdString());
 
-    interactive()->revealInFileBrowser(filePath);
+    platformInteractive()->revealInFileBrowser(filePath);
 }
 
 QVariantList ExportLabelsModel::labelTracks() const

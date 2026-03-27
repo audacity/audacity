@@ -33,7 +33,7 @@
 #include "context/iglobalcontext.h"
 
 namespace au::appshell {
-class MainToolBarModel : public QAbstractListModel, public muse::async::Asyncable, public muse::Injectable
+class MainToolBarModel : public QAbstractListModel, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
     QML_ELEMENT

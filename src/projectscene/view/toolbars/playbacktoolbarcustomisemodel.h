@@ -5,12 +5,13 @@
 
 #include <QHash>
 
-#include "uicomponents/qml/Muse/UiComponents/selectableitemlistmodel.h"
-#include "async/asyncable.h"
+#include "framework/uicomponents/qml/Muse/UiComponents/selectableitemlistmodel.h"
+#include "framework/global/async/asyncable.h"
+#include "framework/global/modularity/ioc.h"
+#include "framework/ui/iuiconfiguration.h"
+#include "framework/ui/iuistate.h"
+#include "framework/ui/iuiactionsregister.h"
 
-#include "modularity/ioc.h"
-#include "ui/iuiconfiguration.h"
-#include "ui/iuiactionsregister.h"
 #include "playback/iplaybackconfiguration.h"
 #include "record/irecordconfiguration.h"
 
@@ -23,7 +24,7 @@ class QItemSelectionModel;
 
 namespace au::projectscene {
 class PlaybackToolBarCustomiseItem;
-class PlaybackToolBarCustomiseModel : public muse::uicomponents::SelectableItemListModel, public muse::Injectable,
+class PlaybackToolBarCustomiseModel : public muse::uicomponents::SelectableItemListModel, public muse::Contextable,
     public muse::async::Asyncable
 {
     Q_OBJECT
@@ -33,6 +34,7 @@ class PlaybackToolBarCustomiseModel : public muse::uicomponents::SelectableItemL
     muse::GlobalInject<au::record::IRecordConfiguration> recordConfiguration;
 
     muse::Inject<muse::ui::IUiActionsRegister> actionsRegister{ this };
+    muse::Inject<muse::ui::IUiState> uiState { this };
 
     Q_PROPERTY(QItemSelectionModel * selectionModel READ selectionModel NOTIFY selectionChanged)
     Q_PROPERTY(bool isAddSeparatorAvailable READ isAddSeparatorAvailable NOTIFY isAddSeparatorAvailableChanged)

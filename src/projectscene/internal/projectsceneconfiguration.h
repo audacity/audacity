@@ -3,23 +3,17 @@
 */
 #pragma once
 
-#include "modularity/ioc.h"
-
-#include "ui/iuiconfiguration.h"
-#include "workspace/iworkspacemanager.h"
-
+#include "framework/global/modularity/ioc.h"
+#include "framework/ui/iuiconfiguration.h"
 #include "../iprojectsceneconfiguration.h"
 
 namespace au::projectscene {
-class ProjectSceneConfiguration : public IProjectSceneConfiguration, public muse::Injectable
+class ProjectSceneConfiguration : public IProjectSceneConfiguration
 {
 public:
     muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
 
 public:
-    ProjectSceneConfiguration(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
-
     void init();
 
     bool isVerticalRulersVisible() const override;
@@ -34,7 +28,7 @@ public:
     void setClippingInWaveformVisible(bool visible) override;
     muse::async::Channel<bool> isClippingInWaveformVisibleChanged() const override;
 
-    double zoom() const override;
+    double zoom(const muse::modularity::ContextPtr& ctx) const override;
 
     int mouseZoomPrecision() const override;
     void setMouseZoomPrecision(int precision) override;
@@ -90,8 +84,9 @@ private:
     muse::async::Channel<bool> m_isVerticalRulersVisibleChanged;
     muse::async::Channel<bool> m_isRMSInWaveformVisibleChanged;
     muse::async::Channel<bool> m_isClippingInWaveformVisibleChanged;
-    muse::async::Channel<ClipStyles::Style> m_clipStyleChanged;
+    muse::async::Notification m_timelineRulerModeChanged;
     muse::async::Notification m_effectsPanelVisible;
+    muse::async::Channel<ClipStyles::Style> m_clipStyleChanged;
     muse::async::Notification m_asymmetricStereoHeightsChanged;
     muse::async::Notification m_asymmetricStereoHeightsWorkspacesChanged;
     muse::async::Notification m_selectionTimecodeFormatChanged;

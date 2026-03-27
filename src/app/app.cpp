@@ -50,7 +50,7 @@ using namespace au::appshell;
 static GlobalModule globalModule;
 
 App::App()
-    : muse::Injectable(muse::modularity::globalCtx())
+    : muse::Contextable(muse::modularity::globalCtx())
 {
 }
 

@@ -13,9 +13,9 @@
 #include "au3-nyquist-effects/LoadNyquist.h"
 
 namespace au::effects {
-class NyquistEffectsRepository : public INyquistEffectsRepository, public muse::Injectable
+class NyquistEffectsRepository : public INyquistEffectsRepository, public muse::Contextable
 {
-    muse::Inject<spectrogram::ISpectralEffectsRegister> spectralEffectsRegister { this };
+    muse::GlobalInject<spectrogram::ISpectralEffectsRegister> spectralEffectsRegister;
 
 public:
     NyquistEffectsRepository(const muse::modularity::ContextPtr& ctx,

@@ -10,7 +10,7 @@ using namespace muse::ui;
 using namespace au::toast;
 
 ToastService::ToastService(kors::modularity::ContextPtr ctx)
-    : muse::Injectable(ctx)
+    : muse::Contextable(ctx)
 {
 }
 

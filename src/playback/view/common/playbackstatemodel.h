@@ -11,7 +11,7 @@
 #include "iplaybackcontroller.h"
 
 namespace au::playback {
-class PlaybackStateModel : public QObject, public muse::async::Asyncable, public muse::Injectable
+class PlaybackStateModel : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
     Q_PROPERTY(bool isPlaying READ isPlaying NOTIFY isPlayingChanged FINAL)

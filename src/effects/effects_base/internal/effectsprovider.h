@@ -29,7 +29,7 @@ class ProgressDialog;
 }
 
 namespace au::effects {
-class EffectsProvider : public IEffectsProvider, public muse::async::Asyncable, public muse::Injectable
+class EffectsProvider : public IEffectsProvider, public muse::async::Asyncable, public muse::Contextable
 {
     muse::GlobalInject<IEffectsConfiguration> configuration;
     muse::GlobalInject<muse::audioplugins::IKnownAudioPluginsRegister> knownPluginsRegister;
@@ -46,7 +46,7 @@ class EffectsProvider : public IEffectsProvider, public muse::async::Asyncable, 
 
 public:
     EffectsProvider(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
 
     void init();
 

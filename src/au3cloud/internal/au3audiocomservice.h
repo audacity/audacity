@@ -22,7 +22,7 @@
 #include "au3-utility/Observer.h"
 
 namespace au::au3cloud {
-class Au3AudioComService : public IAu3AudioComService, public muse::async::Asyncable, public muse::Injectable
+class Au3AudioComService : public IAu3AudioComService, public muse::async::Asyncable, public muse::Contextable
 {
     muse::GlobalInject<muse::io::IFileSystem> filesystem;
     muse::GlobalInject<project::IProjectConfiguration> projectConfiguration;
@@ -31,7 +31,7 @@ class Au3AudioComService : public IAu3AudioComService, public muse::async::Async
 
 public:
     Au3AudioComService(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
 
     muse::async::Promise<ProjectList> downloadProjectList(size_t projectsPerBatch, size_t batchNumber,
                                                           const FetchOptions& options) override;

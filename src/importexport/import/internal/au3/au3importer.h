@@ -13,7 +13,7 @@
 #include "../../iimporter.h"
 
 namespace au::importexport {
-class Au3Importer : public IImporter, public muse::Injectable
+class Au3Importer : public IImporter, public muse::Contextable
 {
     muse::Inject<au::context::IGlobalContext> globalContext{ this };
     muse::Inject<trackedit::ITracksInteraction> tracksInteraction{ this };
@@ -21,7 +21,7 @@ class Au3Importer : public IImporter, public muse::Injectable
 
 public:
     Au3Importer(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
 
     void init() override;
 

@@ -105,7 +105,7 @@ void ProjectSceneModule::registerResources()
 
 void ProjectSceneModule::registerExports()
 {
-    m_configuration = std::make_shared<ProjectSceneConfiguration>(muse::modularity::globalCtx());
+    m_configuration = std::make_shared<ProjectSceneConfiguration>();
 
     globalIoc()->registerExport<IProjectSceneConfiguration>(mname, m_configuration);
 }

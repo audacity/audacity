@@ -19,7 +19,7 @@
 #include "project/types/projectmeta.h"
 
 namespace au::importexport {
-class MetadataModel : public QAbstractListModel, public muse::async::Asyncable, public muse::Injectable
+class MetadataModel : public QAbstractListModel, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
 

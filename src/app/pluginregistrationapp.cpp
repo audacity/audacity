@@ -6,6 +6,7 @@
 #include <QCoreApplication>
 
 #include "modularity/ioc.h"
+#include "audioplugins/iregisteraudiopluginsscenario.h"
 #include "types/ret.h"
 
 #include "log.h"
@@ -13,9 +14,8 @@
 using namespace muse;
 using namespace au::app;
 
-PluginRegistrationApp::PluginRegistrationApp(const CommandLineParser::AudioPluginRegistration& task,
-                                             const muse::modularity::ContextPtr& ctx)
-    : BaseApplication(ctx), m_task(task)
+PluginRegistrationApp::PluginRegistrationApp(const CommandLineParser::AudioPluginRegistration& task)
+    : BaseApplication(), m_task(task)
 {
 }
 
@@ -28,10 +28,11 @@ void PluginRegistrationApp::setup()
 {
     const IApplication::RunMode runMode = IApplication::RunMode::AudioPluginRegistration;
 
-    m_globalModule.setApplication(shared_from_this());
-    m_globalModule.registerResources();
-    m_globalModule.registerExports();
-    m_globalModule.registerUiTypes();
+    m_globalModule = new GlobalModule();
+    m_globalModule->setApplication(shared_from_this());
+    m_globalModule->registerResources();
+    m_globalModule->registerExports();
+    m_globalModule->registerUiTypes();
 
     for (modularity::IModuleSetup* m : m_modules) {
         m->setApplication(shared_from_this());
@@ -45,13 +46,13 @@ void PluginRegistrationApp::setup()
     // Create single context (id=0)
     modularity::ContextPtr ctx = std::make_shared<modularity::Context>();
     ctx->id = 0;
-    std::vector<muse::modularity::IContextSetup*>& csetups = contextSetups(ctx);
+    std::vector<muse::modularity::IContextSetup*>& csetups = context(ctx).setups;
     for (modularity::IContextSetup* s : csetups) {
         s->registerExports();
     }
 
-    m_globalModule.resolveImports();
-    m_globalModule.registerApi();
+    m_globalModule->resolveImports();
+    m_globalModule->registerApi();
     for (modularity::IModuleSetup* m : m_modules) {
         m->registerUiTypes();
         m->resolveImports();
@@ -64,7 +65,7 @@ void PluginRegistrationApp::setup()
 
     setRunMode(runMode);
 
-    m_globalModule.onPreInit(runMode);
+    m_globalModule->onPreInit(runMode);
     for (modularity::IModuleSetup* m : m_modules) {
         m->onPreInit(runMode);
     }
@@ -73,7 +74,7 @@ void PluginRegistrationApp::setup()
         s->onPreInit(runMode);
     }
 
-    m_globalModule.onInit(runMode);
+    m_globalModule->onInit(runMode);
     for (modularity::IModuleSetup* m : m_modules) {
         m->onInit(runMode);
     }
@@ -82,7 +83,7 @@ void PluginRegistrationApp::setup()
         s->onInit(runMode);
     }
 
-    m_globalModule.onAllInited(runMode);
+    m_globalModule->onAllInited(runMode);
     for (modularity::IModuleSetup* m : m_modules) {
         m->onAllInited(runMode);
     }
@@ -92,7 +93,7 @@ void PluginRegistrationApp::setup()
     }
 
     QMetaObject::invokeMethod(qApp, [this]() {
-        m_globalModule.onStartApp();
+        m_globalModule->onStartApp();
         for (modularity::IModuleSetup* m : m_modules) {
             m->onStartApp();
         }
@@ -111,19 +112,7 @@ void PluginRegistrationApp::setup()
 
 void PluginRegistrationApp::finish()
 {
-    for (modularity::IModuleSetup* m : m_modules) {
-        m->onDeinit();
-    }
-
-    m_globalModule.onDeinit();
-
-    for (modularity::IModuleSetup* m : m_modules) {
-        m->onDestroy();
-    }
-
-    m_globalModule.onDestroy();
-
-    // Delete contexts
+    // Deinit and delete contexts
     for (auto& c : m_contexts) {
         for (modularity::IContextSetup* s : c.setups) {
             s->onDeinit();
@@ -133,16 +122,35 @@ void PluginRegistrationApp::finish()
     }
     m_contexts.clear();
 
+    for (modularity::IModuleSetup* m : m_modules) {
+        m->onDeinit();
+    }
+
+    m_globalModule->onDeinit();
+
+    for (modularity::IModuleSetup* m : m_modules) {
+        m->onDestroy();
+    }
+
+    m_globalModule->onDestroy();
+
     // Delete modules
     qDeleteAll(m_modules);
     m_modules.clear();
+
+    delete m_globalModule;
+    m_globalModule = nullptr;
+
+    muse::modularity::resetAll();
+
+    BaseApplication::finish();
 }
 
-std::vector<muse::modularity::IContextSetup*>& PluginRegistrationApp::contextSetups(const muse::modularity::ContextPtr& ctx)
+PluginRegistrationApp::Context& PluginRegistrationApp::context(const muse::modularity::ContextPtr& ctx)
 {
     for (Context& c : m_contexts) {
         if (c.ctx->id == ctx->id) {
-            return c.setups;
+            return c;
         }
     }
 
@@ -151,7 +159,7 @@ std::vector<muse::modularity::IContextSetup*>& PluginRegistrationApp::contextSet
     Context& ref = m_contexts.back();
     ref.ctx = ctx;
 
-    modularity::IContextSetup* global = m_globalModule.newContext(ctx);
+    modularity::IContextSetup* global = m_globalModule->newContext(ctx);
     if (global) {
         ref.setups.push_back(global);
     }
@@ -163,7 +171,7 @@ std::vector<muse::modularity::IContextSetup*>& PluginRegistrationApp::contextSet
         }
     }
 
-    return ref.setups;
+    return ref;
 }
 
 modularity::ContextPtr PluginRegistrationApp::setupNewContext(const StringList& /*args*/)
@@ -209,7 +217,9 @@ int PluginRegistrationApp::runSelfTest()
 
     LOGI() << "PluginRegistrationApp self-test: initialization successful";
 
-    if (!registerAudioPluginsScenario()) {
+    auto ctx = m_contexts.front().ctx;
+    auto scenario = modularity::ioc(ctx)->resolve<muse::audioplugins::IRegisterAudioPluginsScenario>("app");
+    if (!scenario) {
         LOGE() << "Self-test failed: registerAudioPluginsScenario not available";
         return 1;
     }
@@ -220,12 +230,15 @@ int PluginRegistrationApp::runSelfTest()
 
 int PluginRegistrationApp::processAudioPluginRegistration()
 {
+    auto ctx = m_contexts.front().ctx;
+    auto scenario = modularity::ioc(ctx)->resolve<muse::audioplugins::IRegisterAudioPluginsScenario>("app");
+
     Ret ret = make_ret(Ret::Code::Ok);
 
     if (m_task.failedPlugin) {
-        ret = registerAudioPluginsScenario()->registerFailedPlugin(m_task.pluginPath, m_task.failCode);
+        ret = scenario->registerFailedPlugin(m_task.pluginPath, m_task.failCode);
     } else {
-        ret = registerAudioPluginsScenario()->registerPlugin(m_task.pluginPath);
+        ret = scenario->registerPlugin(m_task.pluginPath);
     }
 
     if (!ret) {

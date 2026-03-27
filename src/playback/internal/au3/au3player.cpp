@@ -25,7 +25,7 @@ using namespace au::playback;
 using namespace au::au3;
 
 Au3Player::Au3Player(const muse::modularity::ContextPtr& ctx)
-    : muse::Injectable(ctx)
+    : muse::Contextable(ctx)
 {
     m_playbackStatus.ch.onReceive(this, [this](PlaybackStatus st) {
         if (st == PlaybackStatus::Running) {

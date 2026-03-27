@@ -32,7 +32,7 @@ using namespace au::project;
 using namespace muse::actions;
 
 ProjectsPageModel::ProjectsPageModel(QObject* parent)
-    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
+    : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
 }
 
@@ -53,7 +53,7 @@ void ProjectsPageModel::openProject(const QString& scorePath, const QString& dis
 
 void ProjectsPageModel::openProjectManager()
 {
-    interactive()->openUrl(audioComService()->projectManagerUrl());
+    platformInteractive()->openUrl(audioComService()->projectManagerUrl());
 }
 
 int ProjectsPageModel::tabIndex() const

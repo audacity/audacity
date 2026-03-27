@@ -8,7 +8,6 @@
 
 #include "muse_framework_config.h"
 
-#include "framework/global/modularity/ioc.h"
 #include "framework/diagnostics/diagnosticsmodule.h"
 #include "framework/draw/drawmodule.h"
 #include "framework/actions/actionsmodule.h"
@@ -105,8 +104,7 @@ std::shared_ptr<muse::IApplication> AppFactory::newApp(const CommandLineParser& 
 
 std::shared_ptr<muse::IApplication> AppFactory::newGuiApp(const CommandLineParser::Options& options) const
 {
-    modularity::ContextPtr ctx = modularity::globalCtx();
-    std::shared_ptr<GuiApp> app = std::make_shared<GuiApp>(options, ctx);
+    std::shared_ptr<GuiApp> app = std::make_shared<GuiApp>(options);
 
     //! NOTE `diagnostics` must be first, because it installs the crash handler.
     //! For other modules, the order is (and should be) unimportant.
@@ -167,18 +165,11 @@ std::shared_ptr<muse::IApplication> AppFactory::newGuiApp(const CommandLineParse
 
 std::shared_ptr<muse::IApplication> AppFactory::newPluginRegistrationApp(const CommandLineParser::AudioPluginRegistration& task) const
 {
-    modularity::ContextPtr ctx = modularity::globalCtx();
-    std::shared_ptr<PluginRegistrationApp> app = std::make_shared<PluginRegistrationApp>(task, ctx);
-
-    //! NOTE `diagnostics` must be first, because it installs the crash handler.
-    app->addModule(new muse::diagnostics::DiagnosticsModule());
+    std::shared_ptr<PluginRegistrationApp> app = std::make_shared<PluginRegistrationApp>(task);
 
     app->addModule(new muse::audioplugins::AudioPluginsModule());
     app->addModule(new muse::actions::ActionsModule());
 
-    app->addModule(new au::appshell::AppShellModule());
-    app->addModule(new au::preferences::PreferencesModule());
-    app->addModule(new au::uicomponents::UiComponentsModule());
     app->addModule(new au::effects::AudioUnitEffectsModule());
     app->addModule(new au::effects::Lv2EffectsModule());
     app->addModule(new au::effects::VstEffectsModule());

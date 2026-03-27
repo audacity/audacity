@@ -9,7 +9,7 @@
 #include "framework/global/async/asyncable.h"
 
 #include "framework/global/modularity/ioc.h"
-#include "framework/interactive/iinteractive.h"
+#include "framework/interactive/iplatforminteractive.h"
 #include "au3cloud/iauthorization.h"
 #include "au3cloud/iusageinfo.h"
 
@@ -17,15 +17,15 @@
 #include "oauthhttpserverreplyhandler.h"
 
 namespace au::au3cloud {
-class Au3CloudService : public QObject, public muse::async::Asyncable, public IAuthorization, public IUsageInfo, public muse::Injectable
+class Au3CloudService : public QObject, public muse::async::Asyncable, public IAuthorization, public IUsageInfo, public muse::Contextable
 {
     Q_OBJECT
 
-    muse::Inject<muse::IInteractive> interactive = { this };
+    muse::GlobalInject<muse::IPlatformInteractive> platformInteractive;
 
 public:
     Au3CloudService(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
+        : muse::Contextable(ctx) {}
 
     void init();
 

@@ -48,7 +48,7 @@ static std::vector<std::string> importExportFilter(const std::vector<au::importe
 }
 
 LabelsTableViewModel::LabelsTableViewModel(QObject* parent)
-    : AbstractTableViewModel(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
+    : AbstractTableViewModel(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
 }
 
@@ -318,7 +318,7 @@ void LabelsTableViewModel::exportLabels()
     if (!ret) {
         LOGE() << ret.toString();
     } else {
-        interactive()->revealInFileBrowser(exportPath);
+        platformInteractive()->revealInFileBrowser(exportPath);
     }
 }
 

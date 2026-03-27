@@ -22,7 +22,7 @@ namespace au::trackedit {
 class Au3TrackData;
 using Au3TrackDataPtr = std::shared_ptr<Au3TrackData>;
 
-class Au3TracksInteraction : public ITracksInteraction, public muse::Injectable
+class Au3TracksInteraction : public ITracksInteraction, public muse::Contextable
 {
     muse::GlobalInject<au::trackedit::ITrackeditConfiguration> configuration;
     muse::GlobalInject<au::playback::IPlaybackConfiguration> playbackConfiguration;

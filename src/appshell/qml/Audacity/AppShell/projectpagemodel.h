@@ -10,6 +10,7 @@
 #include "framework/actions/iactionsdispatcher.h"
 #include "framework/dockwindow/idockwindowprovider.h"
 #include "framework/ui/iuiconfiguration.h"
+#include "framework/ui/iuistate.h"
 
 #include "context/iglobalcontext.h"
 #include "playback/iplaybackconfiguration.h"
@@ -22,7 +23,7 @@
 // #include "braille/ibrailleconfiguration.h"
 
 namespace au::appshell {
-class ProjectPageModel : public QObject, public muse::async::Asyncable, public muse::actions::Actionable, public muse::Injectable
+class ProjectPageModel : public QObject, public muse::async::Asyncable, public muse::actions::Actionable, public muse::Contextable
 {
     Q_OBJECT
     QML_ELEMENT
@@ -34,6 +35,7 @@ class ProjectPageModel : public QObject, public muse::async::Asyncable, public m
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::Inject<au::context::IGlobalContext> globalContext { this };
     muse::Inject<muse::dock::IDockWindowProvider> dockWindowProvider { this };
+    muse::Inject<muse::ui::IUiState> uiState { this };
 
 //! TODO AU4
 //    INJECT(braille::IBrailleConfiguration, brailleConfiguration)

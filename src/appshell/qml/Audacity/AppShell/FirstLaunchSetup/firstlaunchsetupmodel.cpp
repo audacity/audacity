@@ -36,7 +36,7 @@ using namespace muse;
 using namespace au::appshell;
 
 FirstLaunchSetupModel::FirstLaunchSetupModel(QObject* parent)
-    : QObject(parent), muse::Injectable(muse::iocCtxForQmlObject(this))
+    : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
     m_pages = {
         Page { THEMES_PAGE, "audacity://project" },

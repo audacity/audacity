@@ -19,7 +19,7 @@
 #include "presetscontextmenumodel.h"
 
 namespace au::effects {
-class EffectPresetsBarModel : public QObject, public muse::Injectable, public muse::async::Asyncable
+class EffectPresetsBarModel : public QObject, public muse::Contextable, public muse::async::Asyncable
 {
     Q_OBJECT
     Q_PROPERTY(int instanceId READ instanceId_prop WRITE setInstanceId_prop NOTIFY instanceIdChanged FINAL)

@@ -25,18 +25,19 @@
 #include <QAbstractListModel>
 
 #include "framework/global/modularity/ioc.h"
-#include "framework/interactive/iinteractive.h"
+#include "framework/interactive/iplatforminteractive.h"
 
 #include "ithumbnailcreator.h"
 #include "context/iglobalcontext.h"
 
 namespace au::project {
-class ProjectPropertiesModel : public QAbstractListModel, public muse::async::Asyncable, public muse::Injectable
+class ProjectPropertiesModel : public QAbstractListModel, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
 
+    muse::GlobalInject<muse::IPlatformInteractive> platformInteractive;
+
     muse::Inject<context::IGlobalContext> globalContext { this };
-    muse::Inject<muse::IInteractive> interactive { this };
     muse::Inject<IThumbnailCreator> thumbnailCreator { this };
 
     Q_PROPERTY(QString filePath READ filePath CONSTANT)
