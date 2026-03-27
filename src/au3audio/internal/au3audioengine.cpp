@@ -69,7 +69,7 @@ int Au3AudioEngine::startStream(const TransportSequences& sequences, const doubl
                                 const double mixerEndTime,
                                 AudacityProject& project, const bool isDefaultPlayTrackPolicy, const double audioStreamSampleRate,
                                 const double preRoll,
-                                std::vector<std::vector<float>>* crossfadeData)
+                                std::vector<std::vector<float> >* crossfadeData)
 {
     AudioIOStartStreamOptions options = ProjectAudioIO::GetDefaultOptions(project, isDefaultPlayTrackPolicy);
     options.inputMonitoring = recordConfiguration()->isInputMonitoringOn();
