@@ -137,8 +137,6 @@ muse::io::path_t ProjectConfiguration::defaultSavingFilePath(IAudacityProjectPtr
             } else {
                 folderPath = userProjectsPath();
             }
-
-            filename = muse::io::filename(projectPath, false);
         } else {
             folderPath = muse::io::dirpath(projectPath);
             filename = muse::io::filename(projectPath, false);
