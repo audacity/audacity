@@ -9,10 +9,11 @@
 #include "framework/global/async/asyncable.h"
 
 #include "framework/global/modularity/ioc.h"
+#include "framework/interactive/iinteractive.h"
 #include "framework/interactive/iplatforminteractive.h"
+
 #include "au3cloud/iauthorization.h"
 #include "au3cloud/iusageinfo.h"
-
 #include "au3cloud/cloudtypes.h"
 #include "oauthhttpserverreplyhandler.h"
 
@@ -21,6 +22,7 @@ class Au3CloudService : public QObject, public muse::async::Asyncable, public IA
 {
     Q_OBJECT
 
+    muse::Inject<muse::IInteractive> interactive { this };
     muse::GlobalInject<muse::IPlatformInteractive> platformInteractive;
 
 public:
