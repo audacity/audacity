@@ -24,9 +24,6 @@ bool Lv2PluginMetaReader::canReadMeta(const muse::io::path_t& path) const
 {
     const wxString wxPath{ path.c_str() };
     m_module.LoadBundle(wxPath);
-    const std::vector<wxString> paths = m_module.FindModulePaths(PluginManager::Get());
-    return std::any_of(paths.begin(), paths.end(), [&](const wxString& modulePath) {
-        return wxPath == modulePath;
-    });
+    return m_module.CheckPluginExist(wxPath);
 }
 }
