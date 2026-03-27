@@ -35,6 +35,8 @@ public:
     Au3AudioComService(const muse::modularity::ContextPtr& ctx)
         : muse::Contextable(ctx) {}
 
+    void init();
+
     muse::async::Promise<ProjectList> downloadProjectList(size_t projectsPerBatch, size_t batchNumber,
                                                           const FetchOptions& options) override;
     void clearProjectListCache() override;

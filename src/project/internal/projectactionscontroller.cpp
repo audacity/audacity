@@ -1397,6 +1397,8 @@ void ProjectActionsController::handleCloudSaveError(const muse::Ret& error)
     case Err::ClientFailure:
         interactive()->infoSync(DEFAULT_SYNC_ERROR_TITLE, DEFAULT_SYNC_ERROR_TEXT);
         break;
+    case Err::SyncCancelled:
+        break;
     default:
         interactive()->infoSync(DEFAULT_CLOUD_ERROR_TITLE, DEFAULT_CLOUD_ERROR_TEXT);
         break;

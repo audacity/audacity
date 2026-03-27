@@ -59,6 +59,7 @@ void Au3CloudContext::registerExports()
 void Au3CloudContext::onInit(const muse::IApplication::RunMode&)
 {
     m_cloudService->init();
+    m_audioComService->init();
     m_actionsController->init();
 
     auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(mname);

@@ -210,6 +210,28 @@ std::optional<sync::DBProjectData> getProjectDataFromDatabase(const muse::io::pa
 }
 }
 
+void Au3AudioComService::init()
+{
+    globalContext()->currentProjectChanged().onNotify(this, [this]() {
+        auto project = globalContext()->currentProject();
+        if (!project) {
+            return;
+        }
+
+        project->aboutCloseBegin().onNotify(this, [project]() {
+            au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
+            if (!au3Project) {
+                return;
+            }
+
+            auto& projectCloudExtension = audacity::cloud::audiocom::sync::ProjectCloudExtension::Get(*au3Project);
+            if (projectCloudExtension.IsCloudProject()) {
+                projectCloudExtension.CancelSync();
+            }
+        });
+    });
+}
+
 muse::async::Promise<ProjectList> Au3AudioComService::downloadProjectList(size_t projectsPerBatch, size_t batchNumber,
                                                                           const FetchOptions& options)
 {
