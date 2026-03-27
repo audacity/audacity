@@ -27,7 +27,7 @@ public:
     MOCK_METHOD(StartupModeType, startupModeType, (), (const, override));
     MOCK_METHOD(void, setStartupModeType, (StartupModeType), (override));
 
-    MOCK_METHOD(muse::io::path_t, startupScorePath, (), (const, override));
+    MOCK_METHOD(muse::io::path_t, startupProjectPath, (), (const, override));
     MOCK_METHOD(void, setStartupScorePath, (const muse::io::path_t&), (override));
 
     MOCK_METHOD(muse::io::path_t, userDataPath, (), (const, override));
