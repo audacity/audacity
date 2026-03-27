@@ -79,6 +79,7 @@ public:
 
     bool isNewlyCreated() const override;
     bool isImported() const override;
+    bool isCloudProject() const override;
 
     muse::String title() const override;
 

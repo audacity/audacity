@@ -33,13 +33,15 @@ ListItemBlank {
     required property var item
     property alias columns: columnsRepeater.model
 
-    property alias thumbnailComponent: thumbnailLoader.sourceComponent
+    property Component thumbnailComponent: defaultThumbnailComponent
 
     property real itemInset: 12
     property real columnSpacing: 44
     property alias showBottomBorder: bottomBorder.visible
 
     property string placeholder: ""
+
+    property bool isCloudItem: false
 
     implicitHeight: 64
 
@@ -52,6 +54,17 @@ ListItemBlank {
 
     focusBorder.anchors.bottomMargin: bottomBorder.visible ? bottomBorder.height : 0
 
+    Component {
+        id: defaultThumbnailComponent
+
+        ProjectThumbnail {
+            path: root.item.path ?? ""
+            suffix: root.item.suffix ?? ""
+            thumbnailUrl: root.item.thumbnailUrl ? Qt.resolvedUrl("file:" + root.item.thumbnailUrl) : ""
+            placeholder: root.placeholder
+        }
+    }
+
     RowLayout {
         anchors.fill: parent
         anchors.leftMargin: root.itemInset
@@ -60,95 +73,90 @@ ListItemBlank {
         spacing: root.columnSpacing
 
         RowLayout {
+            id: nameLayout
+
+            Layout.fillWidth: true
+
             spacing: 24
 
             Loader {
-                id: thumbnailLoader
+                active: !(root.isCloudItem ?? false)
+                visible: active
+                Layout.fillWidth: active
 
-                Layout.preferredWidth: 71
-                Layout.preferredHeight: 40
+                sourceComponent: RowLayout {
+                    spacing: 24
 
-                sourceComponent: ProjectThumbnail {
-                    path: root.item.path ?? ""
-                    suffix: root.item.suffix ?? ""
-                    thumbnailUrl: root.item.thumbnailUrl ? Qt.resolvedUrl("file:" + root.item.thumbnailUrl) : ""
-                    placeholder: root.placeholder
-                }
+                    Loader {
+                        Layout.preferredWidth: 71
+                        Layout.preferredHeight: 40
 
-                layer.enabled: true
-                layer.effect: RoundedCornersEffect {
-                    radius: 2
+                        sourceComponent: root.thumbnailComponent
+
+                        layer.enabled: true
+                        layer.effect: RoundedCornersEffect {
+                            radius: 2
+                        }
+                    }
+
+                    StyledTextLabel {
+                        Layout.fillWidth: true
+
+                        text: root.item.name ?? ""
+                        font: ui.theme.largeBodyFont
+                        horizontalAlignment: Text.AlignLeft
+                    }
                 }
             }
 
-            StyledTextLabel {
-                Layout.fillWidth: true
+            Loader {
+                active: root.isCloudItem ?? false
+                visible: active
+                Layout.fillWidth: active
 
-                text: root.item.name ?? ""
-                font: ui.theme.largeBodyFont
-                horizontalAlignment: Text.AlignLeft
+                sourceComponent: RowLayout {
+                    visible: root.item.isCloud
+                    spacing: 24
+
+                    StyledTextLabel {
+                        id: cloudProjectName
+
+                        Layout.preferredWidth: 200
+
+                        text: root.item.name ?? ""
+                        font: ui.theme.largeBodyFont
+                        horizontalAlignment: Text.AlignLeft
+                    }
+
+                    Image {
+                        id: previewImage
+
+                        Layout.fillWidth: true
+
+                        source: "qrc:/resources/Waveform.svg"
+                        horizontalAlignment: Image.AlignLeft
+                        verticalAlignment: Image.AlignVCenter
+                    }
+
+                    CloudProjectIndicatorButton {
+                        id: cloudIndicator
+
+                        Layout.alignment: Qt.AlignTrailing | Qt.AlignVCenter
+
+                        isProgress: false //cloudProjectStatusWatcher.isProgress
+                        isDownloadedAndUpToDate: true //cloudProjectStatusWatcher.isDownloadedAndUpToDate
+
+                        navigation.panel: root.navigation.panel
+                        navigation.row: root.navigation.row
+                        navigation.column: 3
+                        navigation.onActiveChanged: {
+                            if (navigation.active) {
+                                root.scrollIntoView()
+                            }
+                        }
+                    }
+                }
             }
-
-            // Loader {
-            //     active: root.item.isCloud ?? false
-
-            //     sourceComponent: RowLayout {
-            //         visible: root.item.isCloud
-            //         spacing: 24
-
-            //         // CloudProjectStatusWatcher {
-            //         //     id: cloudProjectStatusWatcher
-            //         // }
-
-            //         Component.onCompleted: {
-            //             cloudProjectStatusWatcher.load(root.item.projectId)
-            //         }
-
-            //         ProgressBar {
-            //             Layout.preferredWidth: 118
-            //             Layout.preferredHeight: 16
-
-            //             visible: cloudProjectStatusWatcher.isProgress
-
-            //             from: 0
-            //             to: cloudProjectStatusWatcher.progressTotal
-            //             value: cloudProjectStatusWatcher.progressCurrent
-
-            //             navigation.panel: root.navigation.panel
-            //             navigation.row: root.navigation.row
-            //             navigation.column: 2
-            //             navigation.onActiveChanged: {
-            //                 if (navigation.active) {
-            //                     root.scrollIntoView()
-            //                 }
-            //             }
-            //         }
-
-            //         CloudProjectIndicatorButton {
-            //             Layout.alignment: Qt.AlignTrailing | Qt.AlignVCenter
-
-            //             isProgress: cloudProjectStatusWatcher.isProgress
-            //             isDownloadedAndUpToDate: cloudProjectStatusWatcher.isDownloadedAndUpToDate
-
-            //             navigation.panel: root.navigation.panel
-            //             navigation.row: root.navigation.row
-            //             navigation.column: 3
-            //             navigation.onActiveChanged: {
-            //                 if (navigation.active) {
-            //                     root.scrollIntoView()
-            //                 }
-            //             }
-
-            //             onClicked: {
-            //                 if (isProgress) {
-            //                     cloudProjectStatusWatcher.cancel()
-            //                 } else {
-            //                     root.clicked(null)
-            //                 }
-            //             }
-            //         }
-            //     }
-            // }
         }
 
         Repeater {

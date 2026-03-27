@@ -26,5 +26,7 @@ public:
 
     virtual muse::ValCh<AuthState> authState() const = 0;
     virtual bool isAuthorized() const = 0;
+    virtual muse::Ret ensureAuthorization() = 0;
+    virtual void openSignInDialog() = 0;
 };
 }

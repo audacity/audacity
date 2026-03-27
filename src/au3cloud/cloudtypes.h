@@ -58,6 +58,8 @@ struct AudioList {
         std::string title;
         std::vector<std::string> tags;
 
+        int64_t fileSize {};
+        int64_t duration {};
         int64_t created {};
     };
 

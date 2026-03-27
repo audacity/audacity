@@ -20,6 +20,10 @@
 
 using namespace au::au3cloud;
 
+namespace {
+const muse::Uri SIGNIN_URI("audacity://signin/audiocom");
+}
+
 void Au3CloudService::init()
 {
     auto& serviceConfig = audacity::cloud::audiocom::GetServiceConfig();
@@ -159,6 +163,21 @@ muse::ValCh<AuthState> Au3CloudService::authState() const
 bool Au3CloudService::isAuthorized() const
 {
     return std::holds_alternative<Authorized>(m_authState.val);
+}
+
+muse::Ret Au3CloudService::ensureAuthorization()
+{
+    if (isAuthorized()) {
+        return muse::make_ok();
+    }
+
+    muse::RetVal<muse::Val> rv = interactive()->openSync(SIGNIN_URI);
+    return rv.ret ? muse::make_ok() : muse::make_ret(muse::Ret::Code::Cancel);
+}
+
+void Au3CloudService::openSignInDialog()
+{
+    interactive()->open(SIGNIN_URI);
 }
 
 const AccountInfo& Au3CloudService::accountInfo() const

@@ -2031,6 +2031,10 @@ auto ProjectFileIO::LoadProject(const FilePath& fileName, bool ignoreAutosave)
         "Project loaded in %lld ms",
         std::chrono::duration_cast<std::chrono::milliseconds>(duration).count());
 
+    if (!ignoreAutosave) {
+        ProjectFileIOExtensionRegistry::OnLoad(mProject);
+    }
+
     return result;
 }
 

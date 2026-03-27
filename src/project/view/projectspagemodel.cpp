@@ -51,6 +51,13 @@ void ProjectsPageModel::openProject(const QString& scorePath, const QString& dis
     dispatcher()->dispatch("file-open", ActionData::make_arg2<QUrl, QString>(QUrl::fromLocalFile(scorePath), displayNameOverride));
 }
 
+void ProjectsPageModel::openCloudProject(const QString& cloudProjectId, const QString& localPath, const QString& displayNameOverride)
+{
+    dispatcher()->dispatch("cloud-file-open",
+                           ActionData::make_arg3<QString, QUrl, QString>(cloudProjectId, QUrl::fromLocalFile(
+                                                                             localPath), displayNameOverride));
+}
+
 void ProjectsPageModel::openProjectManager()
 {
     platformInteractive()->openUrl(audioComService()->projectManagerUrl());

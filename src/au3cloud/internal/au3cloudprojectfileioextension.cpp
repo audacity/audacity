@@ -13,7 +13,13 @@ OnOpenAction CloudProjectFileIOExtension::OnOpen(AudacityProject&, const std::st
     return OnOpenAction::Continue;
 }
 
-void CloudProjectFileIOExtension::OnLoad(AudacityProject&) {}
+void CloudProjectFileIOExtension::OnLoad(AudacityProject& project)
+{
+    auto& projectCloudExtension
+        = audacity::cloud::audiocom::sync::ProjectCloudExtension::Get(project);
+
+    projectCloudExtension.OnLoad();
+}
 
 OnSaveAction CloudProjectFileIOExtension::OnSave(AudacityProject&, const ProjectSaveCallback&)
 {

@@ -20,6 +20,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiocomservice.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3cloudactionscontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3cloudactionscontroller.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/clouduiactions.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/clouduiactions.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3cloudprojectfileioextension.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3cloudprojectfileioextension.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3cloudservice.cpp

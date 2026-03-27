@@ -7,6 +7,7 @@
 #include "framework/global/types/datetime.h"
 
 #include "au3cloud/cloudtypes.h"
+#include "project/types/projecttypes.h"
 
 using namespace muse;
 using namespace au::project;
@@ -27,7 +28,7 @@ void CloudProjectsModel::load()
             setState(State::Loading);
             loadItemsIfNecessary();
         } else {
-            interactive()->open("audacity://signin/audiocom");
+            authorization()->openSignInDialog();
             setState(State::NotSignedIn);
         }
     };
@@ -131,8 +132,11 @@ void CloudProjectsModel::loadItemsIfNecessary()
                     QVariantMap obj;
 
                     obj[NAME_KEY] = QString::fromStdString(item.name);
-                    obj[PATH_KEY] = ""; //configuration()->cloudProjectPath(item.id).toQString();
-                    obj[SUFFIX_KEY] = "";
+                    obj[PATH_KEY] = configuration()->cloudProjectsPath()
+                                    .appendingComponent(item.name)
+                                    .appendingSuffix(au::project::AUP4)
+                                    .toQString();
+                    obj[SUFFIX_KEY] = QString::fromStdString(au::project::AUP4);
                     obj[IS_CLOUD_KEY] = true;
                     obj[CLOUD_ITEM_ID_KEY] = QString::fromStdString(item.id);
                     obj[TIME_SINCE_MODIFIED_KEY]

@@ -459,6 +459,11 @@ bool Deserialize(const rapidjson::Value& value, CloudAudioInfo& audio)
         DeserializeArray(value["tags"], temp.Tags);
     }
 
+    if (value.HasMember("source") && value["source"].IsObject()) {
+        Deserialize(value["source"], "size", temp.FileSize);
+        Deserialize(value["source"], "duration", temp.Duration);
+    }
+
     if (!Deserialize(value, "created", temp.Created)) {
         return {};
     }
@@ -931,7 +936,7 @@ MakeSafeFilePath(const wxString& rootDir, const wxString& fileName, const wxStri
 wxString
 MakeSafeProjectPath(const wxString& rootDir, const wxString& projectName)
 {
-    return MakeSafeFilePath(rootDir, projectName, "aup3");
+    return MakeSafeFilePath(rootDir, projectName, "aup4");
 }
 
 std::string Serialize(NetworkStats stats)

@@ -42,8 +42,9 @@ Item {
 
     property alias navigation: navPanel
 
-    signal createNewProjectRequested()
+    signal createNewProjectRequested
     signal openProjectRequested(var projectPath, var displayName)
+    signal openCloudProjectRequested(var projectId, var projectPath, var displayName)
 
     clip: true
 
@@ -161,7 +162,7 @@ Item {
                 thumbnailUrl: item.thumbnailUrl ? Qt.resolvedUrl("file:" + item.thumbnailUrl) : ""
                 isCreateNew: item.isCreateNew
                 isNoResultsFound: item.isNoResultsFound
-                //isCloud: item.isCloud
+                isCloud: item.isCloud
                 cloudProjectId: item.itemId ?? 0
                 timeSinceModified: item.timeSinceModified ?? ""
 
@@ -169,7 +170,12 @@ Item {
                     if (isCreateNew) {
                         root.createNewProjectRequested()
                     } else if (!isNoResultsFound) {
-                        root.openProjectRequested(item.path, item.name)
+                        if (item.isCloud) {
+                            var projectId = item.itemId ?? ""
+                            root.openCloudProjectRequested(projectId, item.path, item.name)
+                        } else {
+                            root.openProjectRequested(item.path, item.name)
+                        }
                     }
                 }
             }

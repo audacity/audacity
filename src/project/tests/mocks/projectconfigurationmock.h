@@ -22,6 +22,7 @@ public:
 
     MOCK_METHOD(muse::io::path_t, cloudProjectsPath, (), (const, override));
     MOCK_METHOD(void, setCloudProjectsPath, (const muse::io::path_t& path), (override));
+    MOCK_METHOD(bool, isCloudProject, (const muse::io::path_t& projectPath), (const, override));
 
     MOCK_METHOD(muse::io::path_t, lastOpenedProjectsPath, (), (const, override));
     MOCK_METHOD(void, setLastOpenedProjectsPath, (const muse::io::path_t& path), (override));

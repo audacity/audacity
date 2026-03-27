@@ -195,38 +195,40 @@ FocusScope {
                     //     cloudProjectStatusWatcher.load(root.cloudProjectId)
                     // }
 
-                    ProgressBar {
-                        Layout.fillWidth: true
-                        Layout.preferredHeight: 16
+                    // ProgressBar {
+                    //     Layout.fillWidth: true
+                    //     Layout.preferredHeight: 16
 
-                        visible: cloudProjectStatusWatcher.isProgress
+                    //     visible: cloudProjectStatusWatcher.isProgress
 
-                        from: 0
-                        to: cloudProjectStatusWatcher.progressTotal
-                        value: cloudProjectStatusWatcher.progressCurrent
+                    //     from: 0
+                    //     to: cloudProjectStatusWatcher.progressTotal
+                    //     value: cloudProjectStatusWatcher.progressCurrent
 
-                        navigation.panel: root.navigation.panel
-                        navigation.row: root.navigation.row
-                        navigation.column: root.navigation.column + 1
-                    }
+                    //     navigation.panel: root.navigation.panel
+                    //     navigation.row: root.navigation.row
+                    //     navigation.column: root.navigation.column + 1
+                    // }
 
                     CloudProjectIndicatorButton {
                         Layout.alignment: Qt.AlignTrailing | Qt.AlignVCenter
 
-                        isProgress: cloudProjectStatusWatcher.isProgress
-                        isDownloadedAndUpToDate: cloudProjectStatusWatcher.isDownloadedAndUpToDate
+                        mouseArea.enabled: false
+
+                        isProgress: false //cloudProjectStatusWatcher.isProgress
+                        isDownloadedAndUpToDate: true //cloudProjectStatusWatcher.isDownloadedAndUpToDate
 
                         navigation.panel: root.navigation.panel
                         navigation.row: root.navigation.row
                         navigation.column: root.navigation.column + 2
 
-                        onClicked: {
-                            if (isProgress) {
-                                cloudProjectStatusWatcher.cancel()
-                            } else {
-                                root.clicked()
-                            }
-                        }
+                        // onClicked: {
+                        //     if (isProgress) {
+                        //         cloudProjectStatusWatcher.cancel()
+                        //     } else {
+                        //         root.clicked()
+                        //     }
+                        // }
                     }
                 }
             }

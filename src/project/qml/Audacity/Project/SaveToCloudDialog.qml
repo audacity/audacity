@@ -66,6 +66,7 @@ StyledDialogView {
 
     Component.onCompleted: {
         model.init()
+        Qt.callLater(projectNameField.ensureActiveFocus)
     }
 
     ColumnLayout {

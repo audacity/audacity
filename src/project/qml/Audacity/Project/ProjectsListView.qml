@@ -41,14 +41,16 @@ Item {
     property real sideMargin: 46
     property string placeholder: ""
 
+    property bool isCloudList: false
+
     property alias view: view
 
     property alias navigation: navPanel
 
-    signal createNewProjectRequested()
+    signal createNewProjectRequested
     signal openProjectRequested(var projectPath, var displayName)
 
-    component ColumnItem : QtObject {
+    component ColumnItem: QtObject {
         property string header
 
         property var width: function (parentWidth) {
@@ -139,6 +141,9 @@ Item {
 
                 // Column headers
                 RowLayout {
+                    id: headerLayout
+
+                    Layout.fillWidth: true
                     Layout.preferredHeight: 44
                     Layout.leftMargin: view.itemInset
                     Layout.rightMargin: view.itemInset
@@ -160,7 +165,9 @@ Item {
                         //
                         // - Qt.font(Object.assign(ui.theme.bodyBoldFont, { capitalization: Font.AllUppercase }))
                         //   (complains that ui.theme.bodyBoldFont is const and cannot be modified)
-                        font: Qt.font(Object.assign({}, ui.theme.bodyBoldFont, { capitalization: Font.AllUppercase }))
+                        font: Qt.font(Object.assign({}, ui.theme.bodyBoldFont, {
+                            capitalization: Font.AllUppercase
+                        }))
                         horizontalAlignment: Text.AlignLeft
                     }
 
@@ -172,7 +179,9 @@ Item {
 
                             text: modelData.header
 
-                            font: Qt.font(Object.assign({}, ui.theme.bodyBoldFont, { capitalization: Font.AllUppercase }))
+                            font: Qt.font(Object.assign({}, ui.theme.bodyBoldFont, {
+                                capitalization: Font.AllUppercase
+                            }))
                             horizontalAlignment: Text.AlignLeft
                         }
                     }
@@ -215,6 +224,8 @@ Item {
                         itemInset: view.itemInset
                         implicitHeight: view.rowHeight
                         columnSpacing: view.columnSpacing
+
+                        isCloudItem: root.isCloudList
 
                         placeholder: root.placeholder
 
