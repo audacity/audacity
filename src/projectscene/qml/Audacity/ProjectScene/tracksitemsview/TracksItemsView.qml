@@ -1138,7 +1138,7 @@ Rectangle {
             anchors.top: tracksItemsViewArea.top
             anchors.bottom: parent.bottom
 
-            x: timeline.context.timeToPosition(playbackState.lastPlaybackSeekTime)
+            x: timeline.context.lastPlaybackSeekPosition
         }
 
         PlayCursorLine {

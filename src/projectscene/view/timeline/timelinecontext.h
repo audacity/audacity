@@ -11,6 +11,7 @@
 
 #include "projectscene/iprojectsceneconfiguration.h"
 #include "playback/iplayback.h"
+#include "playback/iplaybackcontroller.h"
 #include "trackedit/iselectioncontroller.h"
 
 //! NOTE This class does two things:
@@ -58,6 +59,7 @@ class TimelineContext : public QObject, public muse::async::Asyncable, public mu
     Q_PROPERTY(
         bool updateDisplayWhilePlayingEnabled READ updateDisplayWhilePlayingEnabled NOTIFY updateDisplayWhilePlayingEnabledChanged FINAL)
     Q_PROPERTY(bool pinnedPlayHeadEnabled READ pinnedPlayHeadEnabled NOTIFY pinnedPlayHeadEnabledChanged FINAL)
+    Q_PROPERTY(double lastPlaybackSeekPosition READ lastPlaybackSeekPosition NOTIFY lastPlaybackSeekPositionChanged FINAL)
 
     muse::GlobalInject<IProjectSceneConfiguration> configuration;
 
@@ -65,6 +67,7 @@ class TimelineContext : public QObject, public muse::async::Asyncable, public mu
     muse::Inject<context::IGlobalContext> globalContext{ this };
     muse::Inject<trackedit::ISelectionController> selectionController{ this };
     muse::Inject<playback::IPlayback> playback{ this };
+    muse::Inject<playback::IPlaybackController> playbackController{ this };
 
 public:
 
@@ -144,6 +147,7 @@ public:
     bool playbackOnRulerClickEnabled() const;
     bool updateDisplayWhilePlayingEnabled() const;
     bool pinnedPlayHeadEnabled() const;
+    double lastPlaybackSeekPosition() const;
 
 signals:
 
@@ -177,6 +181,7 @@ signals:
 
     void updateDisplayWhilePlayingEnabledChanged();
     void pinnedPlayHeadEnabledChanged();
+    void lastPlaybackSeekPositionChanged();
 
     void userHorizontalScrolled();
 

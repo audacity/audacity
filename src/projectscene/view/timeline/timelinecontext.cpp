@@ -102,6 +102,7 @@ void TimelineContext::init(double frameWidth)
         emit selectionEndTimeChanged();
         emit selectionStartPositionChanged();
         emit selectionEndPositionChanged();
+        emit lastPlaybackSeekPositionChanged();
         if (singleItemSelected()) {
             emit selectedItemStartPositionChanged();
             emit selectedItemEndPositionChanged();
@@ -124,6 +125,10 @@ void TimelineContext::init(double frameWidth)
 
     configuration()->pinnedPlayHeadEnabledChanged().onNotify(this, [this]() {
         emit pinnedPlayHeadEnabledChanged();
+    });
+
+    playbackController()->lastPlaybackSeekTimeChanged().onNotify(this, [this]() {
+        emit lastPlaybackSeekPositionChanged();
     });
 
     onProjectChanged();
@@ -1065,4 +1070,9 @@ bool TimelineContext::updateDisplayWhilePlayingEnabled() const
 bool TimelineContext::pinnedPlayHeadEnabled() const
 {
     return configuration()->pinnedPlayHeadEnabled();
+}
+
+double TimelineContext::lastPlaybackSeekPosition() const
+{
+    return timeToPosition(playbackController()->lastPlaybackSeekTime());
 }

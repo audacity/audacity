@@ -264,6 +264,7 @@ void PlaybackController::onProjectChanged()
         });
 
         seek(0.0, false); // TODO: get the previous position from the project data
+        setLastPlaybackSeekTime(playbackPosition());
     }
 }
 
