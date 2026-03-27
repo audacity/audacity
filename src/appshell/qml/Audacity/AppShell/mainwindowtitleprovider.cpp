@@ -37,13 +37,15 @@ void MainWindowTitleProvider::load()
         if (auto currentProject = context()->currentProject()) {
             currentProject->displayNameChanged().onNotify(this, [this]() {
                 update();
-            });
+            }, muse::async::Asyncable::Mode::SetReplace);
 
             currentProject->needSave().notification.onNotify(this, [this]() {
                 update();
-            });
+            }, muse::async::Asyncable::Mode::SetReplace);
         }
-    });
+
+        update();
+    }, muse::async::Asyncable::Mode::SetReplace);
 }
 
 QString MainWindowTitleProvider::title() const
@@ -102,7 +104,10 @@ void MainWindowTitleProvider::update()
         return;
     }
 
-    setTitle((muse::qtrc("appshell", "%1 - Audacity 4").arg(project->title())));
+    const QString projectTitle = project->title().toQString();
+    setTitle(projectTitle.isEmpty()
+             ? muse::qtrc("appshell", "Audacity 4")
+             : muse::qtrc("appshell", "%1 - Audacity 4").arg(projectTitle));
 
     setFilePath(project->path().toQString());
     setFileModified(project->hasUnsavedChanges());

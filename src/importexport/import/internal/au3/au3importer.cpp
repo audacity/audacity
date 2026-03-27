@@ -10,6 +10,7 @@
 #include "au3-import-export/ImportPlugin.h"
 #include "au3-import-export/ImportProgressListener.h"
 #include "au3-numeric-formats/ProjectTimeSignature.h"
+#include "au3-project/Project.h"
 #include "au3-project-file-io/ProjectFileIO.h"
 #include "au3-tags/Tags.h"
 
@@ -202,6 +203,7 @@ bool au::importexport::Au3Importer::importIntoTrack(const muse::io::path_t& file
     selectionController()->setSelectedTracks({ dstTrackId }, true);
     tracksInteraction()->paste(importedData, 0.0, false /* moveClips */, false /* moveAllTracks */,
                                true /* isMultiSelectionCopy */, modifiedState);
+    applyImportedProjectTitleIfNeeded(filePath);
 
     return true;
 }
@@ -273,10 +275,25 @@ std::vector<std::string> au::importexport::Au3Importer::supportedExtensions() co
     return supportedExtensions;
 }
 
+void au::importexport::Au3Importer::applyImportedProjectTitleIfNeeded(const muse::io::path_t& filePath)
+{
+    Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
+    auto& projectFileIO = ProjectFileIO::Get(*project);
+
+    if (!projectFileIO.IsTemporary() || !project->GetProjectName().empty()) {
+        return;
+    }
+
+    project->SetProjectName(wxFromString(filename(filePath, false).toString()));
+    project->SetInitialImportPath(wxFromString(dirpath(filePath).toString()));
+    projectFileIO.SetProjectTitle();
+}
+
 void au::importexport::Au3Importer::addImportedTracks(const muse::io::path_t& fileName, TrackHolders&& newTracks)
 {
     Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
     auto& tracks = TrackList::Get(*project);
+    auto& projectFileIO = ProjectFileIO::Get(*project);
 
     std::vector<Track*> results;
 
@@ -335,6 +352,5 @@ void au::importexport::Au3Importer::addImportedTracks(const muse::io::path_t& fi
         });
     }
 
-    //! TODO AU4: if project was empty, set:
-    //! - project name/title
+    applyImportedProjectTitleIfNeeded(fileName);
 }
