@@ -198,8 +198,6 @@ void GuiApp::finish()
         qDeleteAll(m_modules);
         m_modules.clear();
 
-    BaseApplication::finish();
-}
         delete m_globalModule;
         m_globalModule = nullptr;
 
