@@ -218,14 +218,19 @@ void Au3AudioComService::init()
             return;
         }
 
-        project->aboutCloseBegin().onNotify(this, [project]() {
+        project->aboutCloseBegin().onNotify(this, [w_project = std::weak_ptr(project)]() {
+            auto project = w_project.lock();
+            if (!project) {
+                return;
+            }
+
             au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
             if (!au3Project) {
                 return;
             }
 
             auto& projectCloudExtension = audacity::cloud::audiocom::sync::ProjectCloudExtension::Get(*au3Project);
-            if (projectCloudExtension.IsCloudProject()) {
+            if (projectCloudExtension.IsSyncing()) {
                 projectCloudExtension.CancelSync();
             }
         });
