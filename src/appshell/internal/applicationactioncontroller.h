@@ -67,6 +67,9 @@ class ApplicationActionController : public QObject, public IApplicationActionCon
     muse::ContextInject<context::IGlobalContext> globalContext { this };
 
 public:
+
+    friend class FactoryResetActionTests;
+
     ApplicationActionController(const muse::modularity::ContextPtr& ctx)
         : muse::Contextable(ctx) {}
 
