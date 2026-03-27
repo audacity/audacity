@@ -33,6 +33,7 @@ public:
     std::vector<std::string> supportedExtensions() const override;
 
 private:
+    void applyImportedProjectTitleIfNeeded(const muse::io::path_t& filePath);
     void addImportedTracks(const muse::io::path_t& fileName, TrackHolders&& newTracks);
 };
 }
