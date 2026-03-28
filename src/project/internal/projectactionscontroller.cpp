@@ -793,6 +793,11 @@ IAudacityProjectPtr ProjectActionsController::createProjectInCurrentWindow()
 
 Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, const String& projectId, bool forceOverwrite)
 {
+    if (!audioComService()->enabled()) {
+        LOGE() << "Cloud support is not available";
+        return make_ret(Ret::Code::NotSupported);
+    }
+
     if (!authorization()->ensureAuthorization()) {
         return make_ret(Ret::Code::Cancel);
     }
