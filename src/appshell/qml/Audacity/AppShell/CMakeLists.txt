@@ -10,7 +10,6 @@ qt_add_qml_module(appshell_qml
         appmenumodel.h
         DevTools/Settings/settingslistmodel.cpp
         DevTools/Settings/settingslistmodel.h
-        FirstLaunchSetup/
         FirstLaunchSetup/clipvisualizationpagemodel.cpp
         FirstLaunchSetup/clipvisualizationpagemodel.h
         FirstLaunchSetup/firstlaunchsetupmodel.cpp
