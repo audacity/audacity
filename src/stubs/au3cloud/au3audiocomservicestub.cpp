@@ -32,12 +32,23 @@ void Au3AudioComServiceStub::clearAudioListCache()
 {
 }
 
-muse::ProgressPtr Au3AudioComServiceStub::uploadProject(au::project::IAudacityProjectPtr, const std::string&)
+muse::ProgressPtr Au3AudioComServiceStub::uploadProject(au::project::IAudacityProjectPtr, const std::string&,
+                                                        std::function<bool()>, bool)
 {
     return nullptr;
 }
 
 muse::ProgressPtr Au3AudioComServiceStub::shareAudio(const std::string&)
+{
+    return nullptr;
+}
+
+muse::ProgressPtr Au3AudioComServiceStub::openCloudProject(const muse::io::path_t&, const std::string&, bool)
+{
+    return nullptr;
+}
+
+muse::ProgressPtr Au3AudioComServiceStub::resumeProjectSync(au::project::IAudacityProjectPtr)
 {
     return nullptr;
 }

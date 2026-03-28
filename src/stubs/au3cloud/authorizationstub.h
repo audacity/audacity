@@ -22,5 +22,7 @@ public:
 
     muse::ValCh<AuthState> authState() const override;
     bool isAuthorized() const override;
+    muse::Ret ensureAuthorization() override;
+    void openSignInDialog() override;
 };
 }
