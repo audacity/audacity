@@ -35,6 +35,11 @@ using namespace au::au3cloud;
 using namespace audacity::concurrency;
 using namespace audacity::cloud::audiocom;
 
+bool Au3AudioComService::enabled() const
+{
+    return true;
+}
+
 namespace {
 au::au3cloud::ProjectList convertFromAu3PaginatedProject(const sync::PaginatedProjectsResponse& paginatedResponse)
 {

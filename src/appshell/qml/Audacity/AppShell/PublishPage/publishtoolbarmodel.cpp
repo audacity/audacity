@@ -37,9 +37,13 @@ void PublishToolBarModel::load()
     MenuItemList items {
         makeMenuItem("print"),
         makeMenuItem("file-publish"),
-        makeMenuItem("file-share-audio"),
-        makeMenuItem("file-export")
     };
+
+    if (au3CloudService()->enabled()) {
+        items << makeMenuItem("file-share-audio");
+    }
+
+    items << makeMenuItem("file-export");
 
     setItems(items);
 }

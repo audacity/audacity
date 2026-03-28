@@ -8,6 +8,7 @@
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
+#include "au3cloud/iau3audiocomservice.h"
 
 namespace au::projectscene {
 class ProjectToolBarModel : public muse::uicomponents::AbstractToolBarModel, public muse::actions::Actionable
@@ -18,6 +19,7 @@ class ProjectToolBarModel : public muse::uicomponents::AbstractToolBarModel, pub
 
     muse::ContextInject<au::context::IGlobalContext> context { this };
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::ContextInject<au::au3cloud::IAu3AudioComService> au3CloudService { this };
 
 public:
     Q_INVOKABLE void load() override;

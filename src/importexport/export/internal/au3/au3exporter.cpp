@@ -7,7 +7,9 @@
 #include "framework/global/async/asyncable.h"
 
 #include "au3-basic-ui/BasicUI.h"
+#ifdef AU_BUILD_CLOUD_AUDIOCOM
 #include "au3-cloud-audiocom/ServiceConfig.h"
+#endif
 #include "au3-import-export/ExportPluginRegistry.h"
 #include "au3-import-export/ExportUtils.h"
 #include "au3-mixer/MixerOptions.h"
@@ -375,6 +377,7 @@ std::vector<std::string> Au3Exporter::formatExtensions(const std::string& format
 
 std::vector<std::string> Au3Exporter::cloudPreferredAudioFormats() const
 {
+#ifdef AU_BUILD_CLOUD_AUDIOCOM
     const auto& registry = ExportPluginRegistry::Get();
 
     std::vector<std::string> result;
@@ -397,10 +400,14 @@ std::vector<std::string> Au3Exporter::cloudPreferredAudioFormats() const
     }
 
     return result;
+#else
+    return {};
+#endif
 }
 
 ExportParameters Au3Exporter::cloudExportParameters(const std::string& format) const
 {
+#ifdef AU_BUILD_CLOUD_AUDIOCOM
     const ExportPlugin* plugin = nullptr;
     int fmt = -1;
 
@@ -429,6 +436,10 @@ ExportParameters Au3Exporter::cloudExportParameters(const std::string& format) c
     }
 
     return {};
+#else
+    (void)format;
+    return {};
+#endif
 }
 
 bool Au3Exporter::isCustomFFmpegExportFormat() const

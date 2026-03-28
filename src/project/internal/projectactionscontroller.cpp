@@ -439,6 +439,11 @@ bool ProjectActionsController::saveProject(const muse::io::path_t& path)
 
 bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudInfo, SaveMode saveMode, bool forceOverwrite)
 {
+    if (!audioComService()->enabled()) {
+        LOGE() << "Cloud support is not available";
+        return false;
+    }
+
     if (!authorization()->ensureAuthorization()) {
         return false;
     }
@@ -989,6 +994,11 @@ void ProjectActionsController::warnProjectCannotBeOpened(const Ret& ret, const m
 
 void ProjectActionsController::shareAudio()
 {
+    if (!audioComService()->enabled()) {
+        LOGE() << "Cloud support is not available";
+        return;
+    }
+
     muse::UriQuery query(SAVE_TO_CLOUD_URI);
     query.addParam("formTitle", Val(trc("cloud", "Track title")));
     query.addParam("title", Val(trc("cloud", "Share audio")));
