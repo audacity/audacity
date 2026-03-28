@@ -3,6 +3,8 @@
 */
 #pragma once
 
+#ifdef AU_BUILD_CLOUD_AUDIOCOM
+
 #include <QObject>
 #include <QtQml/qqmlregistration.h>
 
@@ -23,3 +25,5 @@ public:
     Q_INVOKABLE void setSendAnonymousUsageInfo(bool allow);
 };
 }
+
+#endif // AU_BUILD_CLOUD_AUDIOCOM
