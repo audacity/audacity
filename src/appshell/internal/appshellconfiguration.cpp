@@ -21,15 +21,14 @@
  */
 #include "appshellconfiguration.h"
 
-#include <QDir>
-#include <QFile>
 #include <QFileInfo>
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QStandardPaths>
 
-#include "global/settings.h"
-#include "global/log.h"
+#include "framework/global/settings.h"
+#include "framework/global/log.h"
+
 #include "appshell/appshelltypes.h"
 
 // #include "multiwindows/resourcelockguard.h"
