@@ -22,11 +22,9 @@
 #ifndef AU_APPSHELL_IAPPSHELLCONFIGURATION_H
 #define AU_APPSHELL_IAPPSHELLCONFIGURATION_H
 
-#include <optional>
-
-#include "types/ret.h"
-#include "io/path.h"
-#include "async/notification.h"
+#include "framework/global/types/ret.h"
+#include "framework/global/io/path.h"
+#include "framework/global/async/notification.h"
 
 #include "modularity/imoduleinterface.h"
 
