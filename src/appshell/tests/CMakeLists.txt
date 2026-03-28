@@ -8,7 +8,6 @@ set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/factoryreset_actioncontroller_tests.cpp
 
     ${CMAKE_CURRENT_LIST_DIR}/mocks/appshellconfigurationmock.h
-    ${CMAKE_CURRENT_LIST_DIR}/mocks/projectfilescontrollermock.h
 )
 
 set(MODULE_TEST_LINK

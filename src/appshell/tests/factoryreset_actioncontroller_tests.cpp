@@ -9,7 +9,7 @@
 #include "interactive/tests/mocks/interactivemock.h"
 
 #include "mocks/appshellconfigurationmock.h"
-#include "mocks/projectfilescontrollermock.h"
+#include "project/tests/mocks/projectfilescontrollermock.h"
 #include "multiwindows/tests/mocks/multiwindowsprovidermock.h"
 
 #include "../internal/applicationactioncontroller.h"
