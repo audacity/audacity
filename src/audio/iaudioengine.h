@@ -33,7 +33,7 @@ public:
 
     virtual int startStream(const TransportSequences& sequences, double startTime, double endTime, double mixerEndTime, // Time at which mixer stops producing, maybe > endTime
                             AudacityProject& project, bool isDefaultPlayTrackPolicy, double audioStreamSampleRate, double preRoll = 0.0,
-                            std::vector<std::vector<float>>* crossfadeData = nullptr) = 0;
+                            std::vector<std::vector<float> >* crossfadeData = nullptr) = 0;
     virtual void stopStream() = 0;
     virtual void pauseStream(bool pause) = 0;
     virtual void seekStream(double time) = 0;

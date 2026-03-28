@@ -68,7 +68,7 @@ private:
     bool canStopAudioStream() const;
 
     muse::Ret doRecord(au3::Au3Project& project, const TransportSequences& sequences, double t0, double t1, bool altAppearance,
-                       const double audioStreamSampleRate, double preRoll = 0.0, std::vector<std::vector<float>>* crossfadeData = nullptr);
+                       const double audioStreamSampleRate, double preRoll = 0.0, std::vector<std::vector<float> >* crossfadeData = nullptr);
     void cancelRecording();
     void commitRecording();
 
