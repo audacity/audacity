@@ -490,6 +490,7 @@ void PlaybackController::stop()
     IF_ASSERT_FAILED(player()) {
         return;
     }
+    m_pauseShouldStopPlayback = false;
     player()->stop();
 }
 
