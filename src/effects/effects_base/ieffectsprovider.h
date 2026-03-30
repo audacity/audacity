@@ -35,8 +35,5 @@ public:
 
     virtual void showEffect(const RealtimeEffectStatePtr& state) const = 0;
     virtual void hideEffect(const RealtimeEffectStatePtr& state) const = 0;
-
-    virtual muse::Ret previewEffect(const EffectId& effectId, EffectSettings& settings) = 0;
-    virtual void stopPreview() = 0;
 };
 }

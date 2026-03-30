@@ -4,6 +4,7 @@
 #pragma once
 
 #include "framework/global/modularity/ioc.h"
+#include "framework/global/async/asyncable.h"
 #include "framework/global/async/channel.h"
 #include "framework/interactive/iinteractive.h"
 
@@ -17,6 +18,7 @@
 #include "au3wrap/au3types.h"
 #include "spectrogram/iglobalspectrogramconfiguration.h"
 #include "spectrogram/ifrequencyselectioncontroller.h"
+#include "playback/iplayback.h"
 
 #include <optional>
 
@@ -26,8 +28,13 @@ class Effect;
 class EffectBase;
 class EffectInstance;
 class SimpleEffectSettingsAccess;
+
+namespace BasicUI {
+class ProgressDialog;
+}
+
 namespace au::effects {
-class EffectExecutionScenario : public IEffectExecutionScenario, public muse::Contextable
+class EffectExecutionScenario : public IEffectExecutionScenario, public muse::Contextable, public muse::async::Asyncable
 {
     muse::GlobalInject<IEffectsConfiguration> effectsConfiguration;
     muse::GlobalInject<spectrogram::IGlobalSpectrogramConfiguration> spectrogramConfiguration;
@@ -40,6 +47,7 @@ class EffectExecutionScenario : public IEffectExecutionScenario, public muse::Co
     muse::ContextInject<trackedit::IProjectHistory> projectHistory{ this };
     muse::ContextInject<trackedit::ITrackNavigationController> trackNavigationController { this };
     muse::ContextInject<spectrogram::IFrequencySelectionController> frequencySelectionController { this };
+    muse::ContextInject<playback::IPlayback> playback{ this };
 
 public:
     EffectExecutionScenario(const muse::modularity::ContextPtr& ctx)
@@ -52,8 +60,10 @@ public:
     muse::Ret repeatLastProcessor() override;
 
     muse::Ret previewEffect(const EffectInstanceId& effectInstanceId, EffectSettings& settings) override;
+    void stopPreview() override;
 
 private:
+    muse::Ret doPreviewEffect(const EffectId& effectId, EffectSettings& settings);
 
     std::pair<std::string, std::string> makeErrorMsg(const muse::Ret& ret, const EffectId& effectId);
     muse::Ret performEffectWithShowError(au3::Au3Project& project, const EffectId& effectId, unsigned int flags);
@@ -72,8 +82,27 @@ private:
 
     bool DoEffect(const EffectId& effectId, au3::Au3Project& project, unsigned flags);
 
+    struct EffectContext {
+        double t0 = 0.0;
+        double t1 = 0.0;
+        std::shared_ptr<::TrackList> tracks;
+        BasicUI::ProgressDialog* preparingPreviewProgress = nullptr;
+        bool isPreview = false;
+    };
+
+    struct EffectPreviewState {
+        EffectPreviewState(const EffectId& effectId, const EffectContext& originContext,
+                           const std::shared_ptr<::TrackList>& previewTracks, bool loopWasActive)
+            : effectId(effectId), originContext(originContext), previewTracks(previewTracks), loopWasActive(loopWasActive) {}
+        const EffectId effectId;
+        const EffectContext originContext;
+        const std::shared_ptr<::TrackList> previewTracks;
+        const bool loopWasActive;
+    };
+
     muse::async::Notification m_lastProcessorIsAvailableChanged;
     muse::async::Channel<EffectId> m_lastProcessorIdChanged;
     std::optional<EffectId> m_lastProcessorId;
+    std::optional<EffectPreviewState> m_effectPreviewState;
 };
 }

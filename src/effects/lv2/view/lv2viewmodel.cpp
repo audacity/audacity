@@ -178,7 +178,7 @@ void Lv2ViewModel::doStartPreview()
 
 void Lv2ViewModel::doStopPreview()
 {
-    effectsProvider()->stopPreview();
+    executionScenario()->stopPreview();
 }
 
 std::optional<XID> Lv2ViewModel::x11Window() const

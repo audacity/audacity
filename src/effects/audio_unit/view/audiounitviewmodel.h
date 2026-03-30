@@ -8,7 +8,6 @@
 #include <QObject>
 #include <QTimer>
 
-#include "effects/effects_base/ieffectsprovider.h"
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "playback/iplayback.h"

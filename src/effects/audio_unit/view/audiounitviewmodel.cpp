@@ -92,7 +92,7 @@ void au::effects::AudioUnitViewModel::doStartPreview()
 
 void au::effects::AudioUnitViewModel::doStopPreview()
 {
-    effectsProvider()->stopPreview();
+    executionScenario()->stopPreview();
 }
 
 void AudioUnitViewModel::deinit()

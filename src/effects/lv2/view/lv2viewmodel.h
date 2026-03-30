@@ -6,7 +6,6 @@
 #include "lv2uihandler.h"
 
 #include "effects/effects_base/view/abstracteffectviewmodel.h"
-#include "effects/effects_base/ieffectsprovider.h"
 #include "trackedit/iprojecthistory.h"
 
 #include "au3-lv2/LV2UIFeaturesList.h"
@@ -17,8 +16,6 @@
 
 #include <QObject>
 #include <QQuickItem>
-
-#include <variant>
 
 class LV2PortUIStates;
 struct LV2EffectOutputs;
@@ -33,7 +30,6 @@ class Lv2ViewModel : public AbstractEffectViewModel
     Q_PROPERTY(QString unsupportedUiReason READ unsupportedUiReason NOTIFY unsupportedUiReasonChanged FINAL)
 
     muse::ContextInject<trackedit::IProjectHistory> projectHistory { this };
-    muse::ContextInject<IEffectsProvider> effectsProvider{ this };
 
 public:
     Lv2ViewModel(QObject* parent, int instanceId, const QString& effectState);
