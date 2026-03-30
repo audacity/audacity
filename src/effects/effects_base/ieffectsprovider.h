@@ -8,8 +8,6 @@
 #include "framework/global/async/notification.h"
 #include "framework/global/modularity/imoduleinterface.h"
 
-#include "au3wrap/au3types.h"
-
 #include "effectstypes.h"
 
 struct EffectSettings;
@@ -37,9 +35,6 @@ public:
 
     virtual void showEffect(const RealtimeEffectStatePtr& state) const = 0;
     virtual void hideEffect(const RealtimeEffectStatePtr& state) const = 0;
-
-    virtual muse::Ret performEffect(au3::Au3Project& project, Effect* effect, std::shared_ptr<EffectInstance> effectInstance,
-                                    EffectSettings& settings) = 0;
 
     virtual muse::Ret previewEffect(const EffectId& effectId, EffectSettings& settings) = 0;
     virtual void stopPreview() = 0;

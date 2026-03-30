@@ -2,12 +2,10 @@
 * Audacity: A Digital Audio Editor
 */
 #include "effectsprovider.h"
-#include "effecterrors.h"
 #include "effectsutils.h"
 
-#include "au3wrap/internal/domconverter.h"
+#include "playback/iplayer.h"
 #include "au3wrap/internal/wxtypes_convert.h"
-#include "au3wrap/internal/progressdialog.h"
 
 #include "au3-effects/Effect.h"
 #include "au3-components/EffectInterface.h"
@@ -17,17 +15,13 @@
 #include "au3-stretching-sequence/TempoChange.h"
 #include "au3-realtime-effects/RealtimeEffectState.h"
 #include "au3-wave-track/WaveTrack.h"
-#include "au3-transactions/TransactionScope.h"
-#include "au3-exceptions/AudacityException.h"
 
 #include "au3-module-manager/PluginManager.h" // for NYQUIST_PROMPT_ID
 #include "au3-basic-ui/BasicUI.h"
 
 #include "au3wrap/au3types.h"
-#include "playback/iplayer.h"
 
 #include "framework/global/log.h"
-#include "framework/global/translation.h"
 #include "framework/global/async/async.h"
 
 using namespace muse;
@@ -211,135 +205,6 @@ void EffectsProvider::hideEffect(const RealtimeEffectStatePtr& state) const
     callOnLauncher(state, *viewLaunchRegister(), [](const IEffectViewLauncher& launcher, const RealtimeEffectStatePtr& state) {
         launcher.hideRealtimeEffect(state);
     });
-}
-
-namespace {
-std::vector<au::trackedit::Track> trackListDifference(const std::vector<au::trackedit::Track>& a,
-                                                      const std::vector<au::trackedit::Track>& b)
-{
-    std::vector<au::trackedit::Track> result;
-    for (const au::trackedit::Track& item : a) {
-        if (std::find_if(b.begin(), b.end(), [&item](const au::trackedit::Track& other) { return item.id == other.id; }) == b.end()) {
-            result.push_back(item);
-        }
-    }
-    return result;
-}
-
-void notifyIfTracksWereAdded(au::au3::Au3Project& au3Prj, const std::vector<au::trackedit::Track>& before,
-                             au::trackedit::ITrackeditProject& trackeditPrj)
-{
-    const auto& trackList = ::TrackList::Get(au3Prj);
-    std::vector<au::trackedit::Track> tracksAfter;
-    auto it = trackList.begin();
-    while (it != trackList.end()) {
-        tracksAfter.push_back(au::au3::DomConverter::track(*it));
-        ++it;
-    }
-
-    const std::vector<au::trackedit::Track> addedTracks = trackListDifference(tracksAfter, before);
-    for (const auto& track : addedTracks) {
-        trackeditPrj.notifyAboutTrackAdded(track);
-    }
-}
-}
-
-muse::Ret EffectsProvider::performEffect(au3::Au3Project& project, Effect* effect, std::shared_ptr<EffectInstance> pInstanceEx,
-                                         EffectSettings& settings)
-{
-    //! ============================================================================
-    //! NOTE Step 1 - add new a track if need
-    //! ============================================================================
-
-    // common things used below
-    au3::Au3WaveTrack* newTrack = nullptr;
-    {
-        // We don't yet know the effect type for code in the Nyquist Prompt, so
-        // assume it requires a track and handle errors when the effect runs.
-        if ((effect->GetType() == EffectTypeGenerate || effect->GetPath() == NYQUIST_PROMPT_ID) && (effect->mNumTracks == 0)) {
-            auto track = effect->mFactory->Create();
-            track->SetName(effect->mTracks->MakeUniqueTrackName(au3::Au3WaveTrack::GetDefaultAudioTrackNamePreference()));
-            // The track-added event should be issued synchronously.
-            newTrack = effect->mTracks->Add(
-                track, TrackList::DoAssignId::Yes,
-                TrackList::EventPublicationSynchrony::Synchronous);
-            newTrack->SetSelected(true);
-            globalContext()->currentTrackeditProject()->notifyAboutTrackAdded(au3::DomConverter::track(newTrack));
-        }
-    }
-
-    //! ============================================================================
-    //! NOTE Step 2 - process
-    //! ============================================================================
-
-    // common things used below
-    muse::Ret success = make_ret(Ret::Code::Ok);
-    {
-        //! NOTE Step 2.3 - open transaction
-        TransactionScope trans(project, "Effect");
-
-        //! NOTE Step 2.4 - do process
-
-        //! TODO It is not clear what the skip flag is and why it can be set,
-        //! in what cases when calling this function
-        //! it is not necessary to call the main thing - the process
-        bool skipFlag = static_cast<EffectBase*>(effect)->CheckWhetherSkipEffect(settings);
-        if (skipFlag == false) {
-            using namespace BasicUI;
-            auto name = effect->GetName();
-
-            const std::string title
-                = (effect->GetType()
-                   == EffectTypeGenerate ? muse::qtrc("effects", "Generating %1…") : muse::qtrc("effects", "Applying %1…")).arg(
-                      QString::fromUtf8(name.Translation().ToUTF8().data())).toStdString();
-
-            ::ProgressDialog progress{ iocContext(), title };
-            auto vr = valueRestorer<BasicUI::ProgressDialog*>(effect->mProgress, &progress);
-
-            assert(pInstanceEx); // null check above
-            try {
-                // Get tracklist now and compare it with after to see if some tracks were added (such as a label track being added by the beat finder analyzer).
-                const auto prj = globalContext()->currentTrackeditProject();
-                const std::vector<trackedit::Track> tracksBefore = prj->trackList();
-                if (pInstanceEx->Process(settings) == false) {
-                    if (progress.cancelled()) {
-                        success = make_ret(Err::EffectProcessCancelled);
-                    } else {
-                        success = make_ret(Err::EffectProcessFailed, pInstanceEx->GetLastError());
-                    }
-                }
-                notifyIfTracksWereAdded(project, tracksBefore, *prj);
-            } catch (::AudacityException& e) {
-                success = make_ret(Err::EffectProcessFailed);
-                if (const auto box = dynamic_cast<MessageBoxException*>(&e)) {
-                    std::string message = box->ErrorMessage().Translation().ToStdString();
-                    if (!message.empty()) {
-                        success.setText(message);
-                    }
-                }
-            }
-        }
-
-        //! NOTE Step 2.5 - commit transaction on success
-        if (success) {
-            trans.Commit();
-        }
-    }
-
-    //! ============================================================================
-    //! NOTE Step 3 - cleanup
-    //! ============================================================================
-
-    {
-        if (!success && newTrack) {
-            const auto au4Track = au3::DomConverter::track(newTrack);
-            // This decreases the reference count of the track, so it may be deleted.
-            effect->mTracks->Remove(*newTrack);
-            globalContext()->currentTrackeditProject()->notifyAboutTrackRemoved(au4Track);
-        }
-    }
-
-    return success;
 }
 
 namespace {
