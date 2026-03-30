@@ -26,7 +26,7 @@ static void AudioUnitInitQrc()
 }
 
 au::effects::AudioUnitEffectsModule::AudioUnitEffectsModule()
-    : m_metaReader(std::make_shared<AudioUnitPluginsMetaReader>())
+    : m_metaReader(std::make_shared<AudioUnitPluginsMetaReader>()), m_effectLoader(std::make_shared<AudioUnitEffectLoader>())
 {
     AudioUnitInitQrc();
 }
@@ -54,7 +54,7 @@ void au::effects::AudioUnitEffectsModule::resolveImports()
 
     auto loadersRegister = globalIoc()->resolve<IEffectLoadersRegister>(mname);
     if (loadersRegister) {
-        loadersRegister->registerLoader(std::make_shared<AudioUnitEffectLoader>());
+        loadersRegister->registerLoader(m_effectLoader);
     }
 }
 
@@ -67,6 +67,7 @@ void au::effects::AudioUnitEffectsModule::registerUiTypes()
 void au::effects::AudioUnitEffectsModule::onInit(const muse::IApplication::RunMode&)
 {
     m_metaReader->init();
+    m_effectLoader->init();
 }
 
 void au::effects::AudioUnitEffectsModule::onDeinit()

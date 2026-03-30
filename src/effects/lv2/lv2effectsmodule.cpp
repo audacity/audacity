@@ -32,7 +32,7 @@ static void lv2_init_qrc()
 }
 
 Lv2EffectsModule::Lv2EffectsModule()
-    : m_metaReader{std::make_shared<Lv2PluginMetaReader>()}
+    : m_metaReader{std::make_shared<Lv2PluginMetaReader>()}, m_effectLoader{std::make_shared<Lv2EffectLoader>()}
 {
 }
 
@@ -59,7 +59,7 @@ void Lv2EffectsModule::resolveImports()
 
     auto loadersRegister = globalIoc()->resolve<IEffectLoadersRegister>(mname);
     if (loadersRegister) {
-        loadersRegister->registerLoader(std::make_shared<Lv2EffectLoader>());
+        loadersRegister->registerLoader(m_effectLoader);
     }
 
     // auto ir = ioc()->resolve<IInteractiveUriRegister>(mname);
@@ -81,6 +81,7 @@ void Lv2EffectsModule::registerUiTypes()
 void Lv2EffectsModule::onInit(const muse::IApplication::RunMode&)
 {
     m_metaReader->init();
+    m_effectLoader->init();
 }
 
 void Lv2EffectsModule::onDeinit()

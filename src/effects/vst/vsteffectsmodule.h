@@ -11,6 +11,8 @@
 namespace au::effects {
 class MuseVstModulesRepository;
 class Vst3PluginsMetaReader;
+class Vst3EffectLoader;
+
 class VstEffectsModule : public muse::modularity::IModuleSetup
 {
 public:
@@ -29,6 +31,8 @@ public:
 private:
 
     const std::shared_ptr<Vst3PluginsMetaReader> m_vstMetaReader;
+    const std::shared_ptr<Vst3EffectLoader> m_effectLoader;
+
     std::shared_ptr<MuseVstModulesRepository> m_museVstModulesRepository;
 };
 

@@ -33,7 +33,7 @@ static void vst_init_qrc()
 }
 
 VstEffectsModule::VstEffectsModule()
-    : m_vstMetaReader(std::make_shared<Vst3PluginsMetaReader>())
+    : m_vstMetaReader(std::make_shared<Vst3PluginsMetaReader>()), m_effectLoader(std::make_shared<Vst3EffectLoader>())
 {
     vst_init_qrc();
 }
@@ -71,7 +71,7 @@ void VstEffectsModule::resolveImports()
 
     auto loadersRegister = globalIoc()->resolve<IEffectLoadersRegister>(mname);
     if (loadersRegister) {
-        loadersRegister->registerLoader(std::make_shared<Vst3EffectLoader>());
+        loadersRegister->registerLoader(m_effectLoader);
     }
 }
 
@@ -88,6 +88,7 @@ void VstEffectsModule::onInit(const muse::IApplication::RunMode&)
 {
     m_museVstModulesRepository->init();
     m_vstMetaReader->init();
+    m_effectLoader->init();
 }
 
 void VstEffectsModule::onDeinit()
