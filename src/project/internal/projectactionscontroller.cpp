@@ -39,6 +39,7 @@ static const QString OPEN_PROJECT_URL_HOSTNAME("open-project");
 static const muse::actions::ActionCode OPEN_CUSTOM_FFMPEG_OPTIONS("open-custom-ffmpeg-options");
 static const muse::actions::ActionCode OPEN_METADATA_DIALOG("open-metadata-dialog");
 static const muse::actions::ActionCode OPEN_CUSTOM_MAPPING("open-custom-mapping");
+static const muse::actions::ActionQuery OPEN_CLOUD_AUDIO_FILE_URI("audacity://cloud/open-audio-file");
 
 ProjectActionsController::ProjectActionsController(muse::modularity::ContextPtr ctx)
     : muse::Contextable(ctx)
@@ -62,6 +63,7 @@ void ProjectActionsController::init()
     dispatcher()->reg(this, "file-save-backup", [this]() { saveProject(SaveMode::SaveCopy); });
 
     dispatcher()->reg(this, "file-share-audio", this, &ProjectActionsController::shareAudio);
+    dispatcher()->reg(this, OPEN_CLOUD_AUDIO_FILE_URI, this, &ProjectActionsController::openCloudAudioFile);
 
     dispatcher()->reg(this, "export-audio", this, &ProjectActionsController::exportAudio);
     dispatcher()->reg(this, "export-labels", this, &ProjectActionsController::exportLabels);
@@ -115,6 +117,7 @@ bool ProjectActionsController::canReceiveAction(const muse::actions::ActionCode&
             "cloud-file-open",
             "continue-last-session",
             "clear-recent",
+            "audacity://cloud/open-audio-file",
         };
 
         return muse::contains(DONT_REQUIRE_OPEN_PROJECT, code);
@@ -1075,6 +1078,33 @@ void ProjectActionsController::shareAudio()
         {},
         showProgressInfo
         );
+}
+
+void ProjectActionsController::openCloudAudioFile(const muse::actions::ActionQuery& query)
+{
+    const auto audioId = query.param("audioId").toString();
+    auto progress = audioComService()->openAudioFile(audioId);
+
+    progress->finished().onReceive(this, [this, audioId](const ProgressResult& result) {
+        if (!result.ret) {
+            interactive()->error(muse::trc("cloud", "Open audio from cloud"), result.ret.toString());
+            return;
+        }
+
+        const auto project = globalContext()->currentProject();
+        if (project) {
+            QStringList args;
+            args << "--session-type" << "start-with-new" << result.val.toQString();
+            multiwindowsProvider()->openNewWindow(args);
+            return;
+        }
+
+        auto newproject = createProjectInCurrentWindow();
+        newproject->import(muse::io::path_t(result.val.toQString()));
+        openPageIfNeed(PROJECT_PAGE_URI);
+    });
+
+    interactive()->showProgress(muse::trc("cloud", "Downloading audio from cloud…"), *progress);
 }
 
 void ProjectActionsController::exportAudio()

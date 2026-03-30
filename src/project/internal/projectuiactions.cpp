@@ -29,17 +29,11 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "&Open…"),
              TranslatableString("action", "Open…")
              ),
-    UiAction("cloud-file-open",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "&Open cloud project…"),
-             TranslatableString("action", "Open cloud project…")
-             ),
-    UiAction("cloud-audio-open",
+    UiAction("audacity://cloud/open-audio-file",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Open"),
-             TranslatableString("action", "Open cloud audio")
+             TranslatableString("action", "Open")
              ),
     UiAction("clear-recent",
              au::context::UiCtxAny,

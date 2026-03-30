@@ -299,6 +299,8 @@ ProjectsView {
 
                             CloudAudioFileContextMenuModel {
                                 id: contextMenuModel
+
+                                audioId: item.itemId ?? ""
                                 slug: item.slug ?? ""
                             }
 

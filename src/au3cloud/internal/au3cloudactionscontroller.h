@@ -5,22 +5,23 @@
 
 #include "framework/actions/actionable.h"
 #include "framework/actions/actiontypes.h"
+#include "framework/global/async/asyncable.h"
 
 #include "framework/global/modularity/ioc.h"
-#include "framework/actions/iactionsdispatcher.h"
-#include "framework/interactive/iinteractive.h"
 #include "framework/interactive/iplatforminteractive.h"
+#include "framework/actions/iactionsdispatcher.h"
 #include "au3cloud/iauthorization.h"
 #include "au3cloud/iau3audiocomservice.h"
 
 namespace au::au3cloud {
-class Au3CloudActionsController : public muse::actions::Actionable, public muse::Contextable
+class Au3CloudActionsController : public muse::actions::Actionable, public muse::async::Asyncable, public muse::Contextable
 {
     muse::GlobalInject<muse::IPlatformInteractive> platformInteractive;
     muse::GlobalInject<IAuthorization> authorization;
 
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::ContextInject<muse::IInteractive> interactive { this };
+    muse::ContextInject<IAuthorization> authorization { this };
     muse::ContextInject<IAu3AudioComService> audioComService { this };
 
 public:

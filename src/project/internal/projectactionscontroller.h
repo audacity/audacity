@@ -119,6 +119,7 @@ private:
     void handleCloudSaveError(const muse::Ret& error);
 
     void shareAudio();
+    void openCloudAudioFile(const muse::actions::ActionQuery& query);
 
     void openCustomFFmpegOptions();
     void openMetadataDialog();
