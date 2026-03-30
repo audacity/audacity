@@ -322,7 +322,6 @@ const ToolConfig& ProjectSceneUiActions::defaultPlaybackToolBarConfig()
             { "action://playback/play", true },
             { "action://playback/stop", true },
             { "action://record/start", true },
-            { "action://record/lead-in-recording", false },
             { "action://playback/rewind-start", true },
             { "action://playback/rewind-end", true },
             { "toggle-loop-region", true },
