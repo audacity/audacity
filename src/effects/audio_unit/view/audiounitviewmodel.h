@@ -28,7 +28,6 @@ class AudioUnitViewModel : public AbstractEffectViewModel
     muse::ContextInject<IRealtimeEffectService> realtimeEffectService{ this };
     muse::ContextInject<au::playback::IPlayback> playback{ this };
     muse::ContextInject<trackedit::IProjectHistory> projectHistory{ this };
-    muse::ContextInject<IEffectsProvider> effectsProvider{ this };
 
 public:
     AudioUnitViewModel(QObject* parent, int instanceId);

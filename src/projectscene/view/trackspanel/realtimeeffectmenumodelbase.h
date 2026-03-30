@@ -33,7 +33,7 @@ protected:
     bool isMasterTrack() const { return m_isMasterTrack; }
     muse::uicomponents::MenuItemList effectMenus();
 
-    muse::ContextInject<effects::IEffectsProvider> effectsProvider{ this };
+    muse::GlobalInject<effects::IEffectsProvider> effectsProvider;
     muse::ContextInject<effects::IRealtimeEffectService> realtimeEffectService{ this };
 
 signals:

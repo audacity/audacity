@@ -17,7 +17,7 @@ class RealtimeEffectListItemModel : public QObject, public muse::Contextable, pu
     Q_PROPERTY(bool isActive READ prop_isActive WRITE prop_setIsActive NOTIFY isActiveChanged)
     Q_PROPERTY(bool isMasterEffect READ prop_isMasterEffect CONSTANT)
 
-    muse::ContextInject<effects::IEffectsProvider> effectsProvider{ this };
+    muse::GlobalInject<effects::IEffectsProvider> effectsProvider;
     muse::ContextInject<effects::IRealtimeEffectService> realtimeEffectService{ this };
 
 public:
