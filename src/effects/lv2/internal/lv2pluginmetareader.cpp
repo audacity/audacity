@@ -15,11 +15,6 @@ muse::audio::AudioResourceType Lv2PluginMetaReader::metaType() const
     return muse::audio::AudioResourceType::Lv2Plugin;
 }
 
-void Lv2PluginMetaReader::doInit(const muse::IApplication::RunMode&)
-{
-    m_module.Initialize();
-}
-
 bool Lv2PluginMetaReader::canReadMeta(const muse::io::path_t& path) const
 {
     const wxString wxPath{ path.c_str() };

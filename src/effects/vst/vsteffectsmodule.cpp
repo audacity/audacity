@@ -84,10 +84,10 @@ void VstEffectsModule::registerUiTypes()
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(VstViewModelFactory);
 }
 
-void VstEffectsModule::onInit(const muse::IApplication::RunMode& runMode)
+void VstEffectsModule::onInit(const muse::IApplication::RunMode&)
 {
     m_museVstModulesRepository->init();
-    m_vstMetaReader->init(runMode);
+    m_vstMetaReader->init();
 }
 
 void VstEffectsModule::onDeinit()

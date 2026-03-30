@@ -12,14 +12,6 @@ NyquistPluginsMetaReader::NyquistPluginsMetaReader()
 {
 }
 
-void NyquistPluginsMetaReader::doInit(const IApplication::RunMode&)
-{
-    // Lazy initialization: if not initialized yet, initialize now
-    // This is needed because the subprocess that registers plugins creates new instances
-    // of meta readers that haven't been initialized via onInit()
-    m_module.Initialize();
-}
-
 bool NyquistPluginsMetaReader::canReadMeta(const io::path_t& pluginPath) const
 {
     // Handle the special "Nyquist Prompt" plugin (which is not a file)

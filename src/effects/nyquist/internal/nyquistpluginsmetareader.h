@@ -16,8 +16,6 @@ public:
     bool canReadMeta(const muse::io::path_t& pluginPath) const override;
 
 private:
-    void doInit(const muse::IApplication::RunMode& mode) override;
-
     ::NyquistEffectsModule m_module;
 };
 }

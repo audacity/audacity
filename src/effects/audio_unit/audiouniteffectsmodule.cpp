@@ -64,9 +64,9 @@ void au::effects::AudioUnitEffectsModule::registerUiTypes()
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(AudioUnitViewModelFactory);
 }
 
-void au::effects::AudioUnitEffectsModule::onInit(const muse::IApplication::RunMode& mode)
+void au::effects::AudioUnitEffectsModule::onInit(const muse::IApplication::RunMode&)
 {
-    m_metaReader->init(mode);
+    m_metaReader->init();
 }
 
 void au::effects::AudioUnitEffectsModule::onDeinit()

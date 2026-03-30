@@ -70,9 +70,9 @@ void au::effects::NyquistEffectsModule::onPreInit(const muse::IApplication::RunM
     }
 }
 
-void au::effects::NyquistEffectsModule::onInit(const muse::IApplication::RunMode& runMode)
+void au::effects::NyquistEffectsModule::onInit(const muse::IApplication::RunMode&)
 {
-    m_nyquistMetaReader->init(runMode);
+    m_nyquistMetaReader->init();
     m_nyquistEffectsRepository->init();
 }
 

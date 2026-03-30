@@ -12,11 +12,10 @@ public:
     Au3AudioPluginMetaReader(PluginProvider&);
     ~Au3AudioPluginMetaReader() override;
 
-    void init(const muse::IApplication::RunMode& mode);
+    void init();
     void deinit();
 
 private:
-    virtual void doInit(const muse::IApplication::RunMode& mode);
     muse::RetVal<muse::audio::AudioResourceMetaList> readMeta(const muse::io::path_t& pluginPath) const override;
 
     PluginProvider& m_pluginProvider;

@@ -26,15 +26,10 @@ Au3AudioPluginMetaReader::~Au3AudioPluginMetaReader()
     }
 }
 
-void Au3AudioPluginMetaReader::init(const muse::IApplication::RunMode& mode)
-{
-    doInit(mode);
-    m_initialized = true;
-}
-
-void Au3AudioPluginMetaReader::doInit(const muse::IApplication::RunMode&)
+void Au3AudioPluginMetaReader::init()
 {
     m_pluginProvider.Initialize();
+    m_initialized = true;
 }
 
 void Au3AudioPluginMetaReader::deinit()
