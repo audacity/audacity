@@ -471,12 +471,12 @@ bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudI
             const bool dismissable = false;
             toastService()->show(trc("global", "Success"),
                                  trc("project",
-                                     "All saved changes will now update to the cloud. \nYou can manage this file from your updated projects page on audio.com"),
+                                     "All saved changes will now update to the cloud.\nYou can manage this file from your updated projects page on Audio.com"),
                                  muse::ui::IconCode::Code::TICK,
                                  dismissable,
             {
                 { trc("project", "Dismiss"), au::toast::ToastActionCode::None },
-                { trc("cloud", "View on audio.com"), au::toast::ToastActionCode::Custom }
+                { trc("cloud", "View on Audio.com"), au::toast::ToastActionCode::Custom }
             }
                                  ).onResolve(this, [this, url = result.val.toQString()](au::toast::ToastActionCode actionCode) {
                 if (actionCode == au::toast::ToastActionCode::Custom) {
@@ -491,7 +491,7 @@ bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudI
     const bool dismissible = false;
     const bool showProgressInfo = true;
     toastService()->showWithProgress(
-        trc("project", "Upload project to audio.com…"),
+        trc("project", "Upload project to Audio.com…"),
         {},
         progress,
         muse::ui::IconCode::Code::CLOUD,
@@ -824,7 +824,7 @@ Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, cons
         const bool dismissible = false;
         const bool showProgressInfo = true;
         toastService()->showWithProgress(
-            trc("project", "Resuming sync to audio.com…"),
+            trc("project", "Resuming sync to Audio.com…"),
             {},
             progress,
             muse::ui::IconCode::Code::CLOUD,
@@ -1009,12 +1009,12 @@ void ProjectActionsController::shareAudio()
         if (result.ret.success()) {
             const bool dismissable = false;
             toastService()->show(trc("global", "Success"),
-                                 trc("cloud", "Audio shared to audio.com"),
+                                 trc("cloud", "Audio shared to Audio.com"),
                                  muse::ui::IconCode::Code::TICK,
                                  dismissable,
             {
                 { trc("global", "Dismiss"), au::toast::ToastActionCode::None },
-                { trc("cloud", "View on audio.com"), au::toast::ToastActionCode::Custom }
+                { trc("cloud", "View on Audio.com"), au::toast::ToastActionCode::Custom }
             }
                                  ).onResolve(this, [this, url = result.val.toQString()](au::toast::ToastActionCode actionCode) {
                 if (actionCode == au::toast::ToastActionCode::Custom) {
@@ -1029,7 +1029,7 @@ void ProjectActionsController::shareAudio()
     const bool dismissable = false;
     const bool showProgressInfo = true;
     toastService()->showWithProgress(
-        trc("cloud", "Sharing audio to audio.com…"),
+        trc("cloud", "Sharing audio to Audio.com…"),
         {},
         progress,
         muse::ui::IconCode::Code::SHARE_AUDIO,
@@ -1104,14 +1104,14 @@ const char* OPEN_DEFAULT_ERROR_MESSAGE = "An error occurred while opening the cl
 
 const char* OPEN_CONFLICT_TITLE = "Project version conflict";
 const char* OPEN_CONFLICT_MESSAGE
-    = "There is a newer version of this project on audio.com. You can open your local version or discard it and download the latest.";
+    = "There is a newer version of this project on Audio.com. You can open your local version or discard it and download the latest.";
 const char* OPEN_CONFLICT_LOCAL_BTN = "Open local version";
 const char* OPEN_CONFLICT_REMOTE_BTN = "Discard and open latest";
 
 const char* SAVE_CONFLICT_TITLE = "Project version conflict";
 const char* SAVE_CONFLICT_MESSAGE
     =
-        "A newer version of this project exists on audio.com. You can overwrite it with your local version or discard your changes and open the latest version.";
+        "A newer version of this project exists on Audio.com. You can overwrite it with your local version or discard your changes and open the latest version.";
 const char* SAVE_CONFLICT_LOCAL_BTN = "Overwrite cloud version";
 const char* SAVE_CONFLICT_REMOTE_BTN = "Discard and open latest";
 
@@ -1128,7 +1128,7 @@ const char* SAVE_FORBIDDEN_MESSAGE
 const char* OPEN_NOT_FOUND_ERROR_TITLE = "Cloud project unavailable";
 const char* OPEN_NOT_FOUND_ERROR_MESSAGE
     = "Your project is no longer linked to its previous cloud save. This may happen if the cloud version was deleted.\n\n"
-      "Save to audio.com to re-upload this project to the cloud.";
+      "Save to Audio.com to re-upload this project to the cloud.";
 const char* OPEN_NOT_FOUND_ERROR_NO_LOCAL_FILE_MESSAGE
     =
         "Your project is no longer linked to its previous cloud save and no local copy is available. This may happen if the cloud version was deleted.";
@@ -1139,12 +1139,12 @@ const char* PRJ_SIZE_EXCEEDED_TEXT
 const char* PRJ_LIMIT_REACHED_TITLE = "Your project limit has been reached";
 const char* PRJ_LIMIT_REACHED_TEXT
     =
-        "You have used up all of your available projects. Visit the project page on audio.com to make room for new creations.\n\nYou can also save this project on your computer to avoid losing changes.";
+        "You have used up all of your available projects. Visit the project page on Audio.com to make room for new creations.\n\nYou can also save this project on your computer to avoid losing changes.";
 
 const char* CLOUD_SAVE_UNAVAILABLE_TITLE = "Cloud save unavailable";
 const char* CLOUD_SAVE_UNAVAILABLE_TEXT
     =
-        "Your project is no longer linked to its previous cloud save. This may happen if the cloud version was deleted.\n\nSave to audio.com to re-upload this project to the cloud.";
+        "Your project is no longer linked to its previous cloud save. This may happen if the cloud version was deleted.\n\nSave to Audio.com to re-upload this project to the cloud.";
 
 const char* DEFAULT_SYNC_ERROR_TITLE = "We encountered an issue syncing your file";
 const char* DEFAULT_SYNC_ERROR_TEXT
@@ -1187,7 +1187,7 @@ void ProjectActionsController::handleCloudOpenError(const muse::Ret& error, cons
                 muse::IInteractive::ButtonData(saveLocallyBtn, muse::trc("project",
                                                                          "Save to computer"), false, false,
                                                muse::IInteractive::ButtonRole::ApplyRole),
-                muse::IInteractive::ButtonData(saveToCloudBtn, muse::trc("cloud", "Save to audio.com"), /*accent=*/ true, false,
+                muse::IInteractive::ButtonData(saveToCloudBtn, muse::trc("cloud", "Save to Audio.com"), /*accent=*/ true, false,
                                                muse::IInteractive::ButtonRole::ApplyRole),
             };
             muse::IInteractive::Result result = interactive()->infoSync(OPEN_NOT_FOUND_ERROR_TITLE, OPEN_NOT_FOUND_ERROR_MESSAGE,
@@ -1283,14 +1283,14 @@ void ProjectActionsController::handleCloudSaveError(const muse::Ret& error)
         const int saveLocallyBtn = int(muse::IInteractive::Button::Save);
         muse::IInteractive::ButtonDatas buttons {
             interactive()->buttonData(IInteractive::Button::Cancel),
-            muse::IInteractive::ButtonData(saveLocallyBtn, muse::trc("project", "Save to Computer"), /*accent=*/ true),
+            muse::IInteractive::ButtonData(saveLocallyBtn, muse::trc("project", "Save to computer"), /*accent=*/ true),
         };
 
         const char* title = err == Err::ProjectLimitReached ? PRJ_LIMIT_REACHED_TITLE : PRJ_SIZE_EXCEEDED_TITLE;
         const char* text = err == Err::ProjectLimitReached ? PRJ_LIMIT_REACHED_TEXT : PRJ_SIZE_EXCEEDED_TEXT;
 
         muse::IInteractive::Result result = interactive()->infoSync(title, text, buttons, saveLocallyBtn, {},
-                                                                    muse::trc("cloud", "Save to audio.com"));
+                                                                    muse::trc("cloud", "Save to Audio.com"));
         if (result.isButton(muse::IInteractive::Button::Save)) {
             const auto ret = openSaveProjectScenario()->askLocalPath(project, SaveMode::Save);
             if (!ret.ret) {
@@ -1316,7 +1316,7 @@ void ProjectActionsController::handleCloudSaveError(const muse::Ret& error)
             muse::IInteractive::ButtonData(saveLocallyBtn, muse::trc("project",
                                                                      "Save to computer"), false, false,
                                            muse::IInteractive::ButtonRole::ApplyRole),
-            muse::IInteractive::ButtonData(saveToCloudBtn, muse::trc("cloud", "Save to audio.com"), /*accent=*/ true, false,
+            muse::IInteractive::ButtonData(saveToCloudBtn, muse::trc("cloud", "Save to Audio.com"), /*accent=*/ true, false,
                                            muse::IInteractive::ButtonRole::ApplyRole),
         };
         muse::IInteractive::Result result = interactive()->infoSync(CLOUD_SAVE_UNAVAILABLE_TITLE, CLOUD_SAVE_UNAVAILABLE_TEXT,

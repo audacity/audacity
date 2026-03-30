@@ -227,10 +227,10 @@ MenuItem* SnapToolBarItem::makeSecondsAndSamplesMenu()
 MenuItem* SnapToolBarItem::makeVideoFramesMenu()
 {
     MenuItemList items = {
-        makeMenuItem(snapTypeToId(SnapType::FilmFrames), muse::TranslatableString("projectscene", "Video Frames (24 fps)")),
-        makeMenuItem(snapTypeToId(SnapType::NTSCFrames), muse::TranslatableString("projectscene", "NTSC Frames (29.97 fps)")),
-        makeMenuItem(snapTypeToId(SnapType::NTSCFramesDrop), muse::TranslatableString("projectscene", "NTSC Frames (30 fps)")),
-        makeMenuItem(snapTypeToId(SnapType::PALFrames), muse::TranslatableString("projectscene", "PAL Frames (25 fps)"))
+        makeMenuItem(snapTypeToId(SnapType::FilmFrames), muse::TranslatableString("projectscene", "Video frames (24 fps)")),
+        makeMenuItem(snapTypeToId(SnapType::NTSCFrames), muse::TranslatableString("projectscene", "NTSC frames (29.97 fps)")),
+        makeMenuItem(snapTypeToId(SnapType::NTSCFramesDrop), muse::TranslatableString("projectscene", "NTSC frames (30 fps)")),
+        makeMenuItem(snapTypeToId(SnapType::PALFrames), muse::TranslatableString("projectscene", "PAL frames (25 fps)"))
     };
 
     return makeMenu(muse::TranslatableString("projectscene", "Video frames"), items, "video-frames");
@@ -239,7 +239,7 @@ MenuItem* SnapToolBarItem::makeVideoFramesMenu()
 MenuItem* SnapToolBarItem::makeCDFramesMenu()
 {
     MenuItemList items = {
-        makeMenuItem(snapTypeToId(SnapType::CDDAFrames), muse::TranslatableString("projectscene", "CDDA Frames (75 fps)"))
+        makeMenuItem(snapTypeToId(SnapType::CDDAFrames), muse::TranslatableString("projectscene", "CDDA frames (75 fps)"))
     };
 
     return makeMenu(muse::TranslatableString("projectscene", "CD frames"), items, "cd-frames");

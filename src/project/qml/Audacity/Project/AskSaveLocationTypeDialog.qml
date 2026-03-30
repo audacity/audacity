@@ -76,7 +76,7 @@ StyledDialogView {
 
             SaveLocationOption {
                 title: qsTrc("project/save", "Save to the Cloud (free)")
-                description: qsTrc("project/save", "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others. Cloud saving is free for a limited number of projects.")
+                description: qsTrc("project/save", "Your project is backed up privately on Audio.com. You can access your work from any device and collaborate on your project with others. Cloud saving is free for a limited number of projects.")
                 buttonText: qsTrc("project/save", "Save to cloud")
 
                 imageSource: "qrc:/SaveToCloud/images/Cloud.png"

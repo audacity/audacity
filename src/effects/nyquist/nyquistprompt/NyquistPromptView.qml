@@ -51,7 +51,7 @@ BuiltinEffectBase {
             Layout.alignment: Qt.AlignHCenter
             StyledTextLabel {
                 Layout.fillWidth: true
-                text: qsTrc("effects", "Enter Nyquist Command:")
+                text: qsTrc("effects", "Enter Nyquist command:")
                 font: ui.theme.bodyBoldFont
                 horizontalAlignment: Text.AlignLeft
             }

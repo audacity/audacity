@@ -216,8 +216,8 @@ UiActionList STATIC_ACTIONS = {
     UiAction("action://trackedit/track-view-spectrogram",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Spectogram"),
-             TranslatableString("action", "Spectogram"),
+             TranslatableString("action", "Spectrogram"),
+             TranslatableString("action", "Spectrogram"),
              IconCode::Code::SPECTROGRAM,
              Checkable::Yes
              ),

@@ -19,7 +19,7 @@ ChangePitchViewModel::ChangePitchViewModel(QObject* parent, int instanceId)
 
 QString ChangePitchViewModel::effectTitle() const
 {
-    return muse::qtrc("effects/changepitch", "Change Pitch");
+    return muse::qtrc("effects/changepitch", "Change pitch");
 }
 
 QString ChangePitchViewModel::estimatedStartPitch() const

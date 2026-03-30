@@ -41,7 +41,7 @@ BaseSection {
     ComboBoxWithTitle {
         id: selectFontControl
 
-        title: qsTrc("preferences", "Font face:")
+        title: qsTrc("preferences", "Font face")
         columnWidth: root.columnWidth
 
         navigation.name: "FontFaceBox"
@@ -56,7 +56,7 @@ BaseSection {
     IncrementalPropertyControlWithTitle {
         id: bodyTextSizeControl
 
-        title: qsTrc("preferences", "Body text size:")
+        title: qsTrc("preferences", "Body text size")
         columnWidth: root.columnWidth
         control.width: 112
 
