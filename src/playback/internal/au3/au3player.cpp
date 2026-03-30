@@ -242,7 +242,7 @@ void Au3Player::seek(const muse::secs_t newPosition, bool applyIfPlaying)
     m_playbackPosition.set(pos);
 
     // Start position tracking if audio engine is active during recording
-    // (e.g., punch-and-roll pre-roll). The timer reads GetStreamTime() and
+    // (e.g., lead-in-recording lead-in time). The timer reads GetStreamTime() and
     // updatePlaybackState() will stop it when the stream ends.
     if (audioEngine()->isBusy() && m_playbackStatus.val == PlaybackStatus::Stopped
         && !m_timer.isActive()) {

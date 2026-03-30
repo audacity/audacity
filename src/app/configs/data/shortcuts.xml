@@ -862,7 +862,7 @@
         <seq>R</seq>
     </SC>
     <SC>
-        <key>action://record/punch-and-roll</key>
+        <key>action://record/lead-in-recording</key>
         <seq>Shift+D</seq>
     </SC>
     <SC>

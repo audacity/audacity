@@ -227,11 +227,11 @@ void Au3Record::init()
             return;
         }
 
-        // For punch-and-roll with pre-roll: the clip only exists on the pending track.
-        // Only create it on the original when the engine is actually capturing (after pre-roll).
+        // For lead-in-recording with lead-in time: the clip only exists on the pending track.
+        // Only create it on the original when the engine is actually capturing (after lead-in time).
         if (recordedClip->deferredClipCreation) {
             if (!audioEngine()->isCapturing()) {
-                return; // Still in pre-roll — don't create the clip yet
+                return; // Still in lead-in time — don't create the clip yet
             }
 
             std::shared_ptr<Au3WaveClip> pendingClip = DomAccessor::findWaveClip(pendingWaveTrack, clipId);
@@ -299,7 +299,7 @@ void Au3Record::init()
             return;
         }
         for (const RecordData& recordEntry : m_recordData) {
-            // Skip deferred clips that were never created (cancelled during pre-roll)
+            // Skip deferred clips that were never created (cancelled during lead-in time)
             if (recordEntry.deferredClipCreation) {
                 continue;
             }
@@ -318,7 +318,7 @@ void Au3Record::init()
         }
 
         for (const RecordData& recordEntry : m_recordData) {
-            // Skip deferred clips that were never created (cancelled during pre-roll)
+            // Skip deferred clips that were never created (cancelled during lead-in time)
             if (recordEntry.deferredClipCreation) {
                 continue;
             }
@@ -464,16 +464,16 @@ muse::Ret Au3Record::stop()
     return make_ok();
 }
 
-muse::Ret Au3Record::punchAndRoll()
+muse::Ret Au3Record::leadInRecording()
 {
     Au3Project& project = projectRef();
 
     // Get cursor position
     double t1 = std::max(0.0, selectionController()->selectionStartTime().to_double());
 
-    // Punch and roll at t=0 makes no sense — there's no audio to play as lead-in
+    // Lead-in recording at t=0 makes no sense — there's no audio to play as lead-in
     if (t1 == 0.0) {
-        return make_ret(Err::PunchAndRollNoValidClipAtCursor);
+        return make_ret(Err::LeadInRecordingNoValidClipAtCursor);
     }
 
     // Checking the selected tracks: making sure they all have the same rate
@@ -488,10 +488,10 @@ muse::Ret Au3Record::punchAndRoll()
     // Find tracks to record into (must be selected)
     auto tracks = ChooseExistingRecordingTracks(project, true, rateOfSelected);
     if (tracks.empty()) {
-        return make_ret(Err::PunchAndRollNoTracksSelected);
+        return make_ret(Err::LeadInRecordingNoTracksSelected);
     }
 
-    // Try to extract crossfade data from existing audio at the punch point.
+    // Try to extract crossfade data from existing audio at the lead-in point.
     // If the cursor is not inside a clip, skip crossfade — just record from that position.
     std::vector<std::vector<float> > crossfadeData;
     const double crossFadeDuration = std::max(0.0,
@@ -551,7 +551,7 @@ muse::Ret Au3Record::punchAndRoll()
                 }
                 const sampleCount pos = waveTrack->TimeToLongSamples(t1);
                 if (!waveTrack->GetFloats(0, nChannels, buffers, pos, getLen)) {
-                    LOGW() << "Punch and roll: GetFloats failed at position " << t1
+                    LOGW() << "Lead-in recording: GetFloats failed at position " << t1
                            << ", proceeding without crossfade";
                     crossfadeData.clear();
                     break;
@@ -562,7 +562,7 @@ muse::Ret Au3Record::punchAndRoll()
 
     // Set up transport sequences
     // Unlike AU3, we do NOT clear tracks — AU4 uses non-destructive recording
-    // Play all tracks (duplex) so user hears context during pre-roll
+    // Play all tracks (duplex) so user hears context during lead-in time
     TransportSequences transportTracks;
     transportTracks = MakeTransportTracks(Au3TrackList::Get(project), false, true);
 
@@ -581,17 +581,17 @@ muse::Ret Au3Record::punchAndRoll()
 
     audioEngine()->stopMonitoring();
 
-    double preRoll = std::max(0.0, std::min(t1, recordConfiguration()->preRollDuration()));
+    double leadInTime = std::max(0.0, std::min(t1, recordConfiguration()->leadInTimeDuration()));
 
     auto* pCrossfadeData = crossfadeData.empty() ? nullptr : &crossfadeData;
-    Ret ret = doRecord(project, transportTracks, t1, DBL_MAX, false, rateOfSelected, preRoll, pCrossfadeData);
+    Ret ret = doRecord(project, transportTracks, t1, DBL_MAX, false, rateOfSelected, leadInTime, pCrossfadeData);
 
     if (ret) {
-        // Set playhead to pre-roll start and trigger position tracking.
+        // Set playhead to lead-in time start and trigger position tracking.
         // With isDefaultPlayTrackPolicy=false, the stream time starts from
-        // t1-preRoll so this will align with the actual audio position.
+        // t1-leadInTime so this will align with the actual audio position.
         muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
-        q.addParam("seekTime", muse::Val(t1 - preRoll));
+        q.addParam("seekTime", muse::Val(t1 - leadInTime));
         q.addParam("triggerPlay", muse::Val(false));
         dispatcher()->dispatch(q);
     }
@@ -630,7 +630,7 @@ Ret Au3Record::doRecord(Au3Project& project,
                         double t0, double t1,
                         bool altAppearance,
                         const double audioStreamSampleRate,
-                        double preRoll,
+                        double leadInTime,
                         std::vector<std::vector<float> >* crossfadeData)
 {
     //! NOTE: copied fromProjectAudioManager::DoRecord
@@ -679,7 +679,7 @@ Ret Au3Record::doRecord(Au3Project& project,
     };
 
     auto& pendingTracks = PendingTracks::Get(project);
-    const bool deferClipCreation = (preRoll > 0.0);
+    const bool deferClipCreation = (leadInTime > 0.0);
 
     if (appendRecord) {
         // Append recording:
@@ -692,21 +692,21 @@ Ret Au3Record::doRecord(Au3Project& project,
             }
 
             // If the track was chosen for recording and playback both,
-            // remember the original in preroll tracks, before making the
+            // remember the original in leadInTime tracks, before making the
             // pending replacement.
             const auto shared = wt->SharedPointer<Au3WaveTrack>();
-            // prerollSequences should be a subset of playbackSequences.
+            // leadInTimeSequences should be a subset of playbackSequences.
             const auto& range = transportSequences.playbackSequences;
-            bool prerollTrack = any_of(range.begin(), range.end(),
+            bool leadInTimeTrack = any_of(range.begin(), range.end(),
                                        [&](const auto& pSequence) {
                 return shared.get() == pSequence->FindChannelGroup();
             });
-            if (prerollTrack) {
-                transportSequences.prerollSequences.push_back(shared);
+            if (leadInTimeTrack) {
+                transportSequences.leadInTimeSequences.push_back(shared);
             }
 
             if (deferClipCreation) {
-                // Punch-and-roll with pre-roll: don't modify the original track yet.
+                // Lead-in-recording with lead-in time: don't modify the original track yet.
                 // Register pending track first (copy of unmodified original), then
                 // create the clip only on the pending track. The original track stays
                 // clean — the clip will be created on it when recording data arrives.
@@ -884,7 +884,7 @@ Ret Au3Record::doRecord(Au3Project& project,
         pendingTracks.UpdatePendingTracks();
     }
 
-    int token = audioEngine()->startStream(transportSequences, t0, t1, t1, project, false, audioStreamSampleRate, preRoll, crossfadeData);
+    int token = audioEngine()->startStream(transportSequences, t0, t1, t1, project, false, audioStreamSampleRate, leadInTime, crossfadeData);
 
     success = (token != 0);
 

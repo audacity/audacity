@@ -23,9 +23,9 @@ public:
     virtual void setIsInputMonitoringOn(bool enable) = 0;
     virtual muse::async::Notification isInputMonitoringOnChanged() const = 0;
 
-    virtual double preRollDuration() const = 0;
-    virtual void setPreRollDuration(double seconds) = 0;
-    virtual muse::async::Notification preRollDurationChanged() const = 0;
+    virtual double leadInTimeDuration() const = 0;
+    virtual void setLeadInTimeDuration(double seconds) = 0;
+    virtual muse::async::Notification leadInTimeDurationChanged() const = 0;
 
     virtual double crossfadeDuration() const = 0;
     virtual void setCrossfadeDuration(double milliseconds) = 0;

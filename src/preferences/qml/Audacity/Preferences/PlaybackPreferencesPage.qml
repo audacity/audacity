@@ -76,7 +76,7 @@ PreferencesPage {
 
         SeparatorLine {}
 
-        PunchAndRollRecordingSection {
+        LeadInRecordingSection {
             recordingPreferencesModel: recordingPreferencesModel
 
             enabled: !(playbackState.isPaused || playbackState.isPlaying)

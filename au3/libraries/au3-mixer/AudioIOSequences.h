@@ -91,7 +91,7 @@ struct MIXER_API TransportSequences final {
     otherPlayableSequences;
 
     // This is a subset of playbackSequences
-    ConstPlayableSequences prerollSequences;
+    ConstPlayableSequences leadInTimeSequences;
 };
 
 #endif

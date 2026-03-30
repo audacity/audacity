@@ -977,10 +977,10 @@ int AudioIO::StartStream(const TransportSequences& sequences,
     }
     mSilenceLevel = DB_TO_LINEAR(silenceLevelDB); // meter goes -dBRange dB -> 0dB
 
-    // Clamp pre-roll so we don't play before time 0
-    const auto preRoll = std::max(0.0, std::min(t0, options.preRoll));
+    // Clamp lead-in time so we don't play before time 0
+    const auto leadInTime = std::max(0.0, std::min(t0, options.leadInTime));
     mRecordingSchedule = {};
-    mRecordingSchedule.mPreRoll = preRoll;
+    mRecordingSchedule.mLeadInTime = leadInTime;
     mRecordingSchedule.mLatencyCompensation = AudioIOLatencyCompensation.Read() / 1000.0;
     mRecordingSchedule.mDuration = t1 - t0;
     if (options.pCrossfadeData) {
@@ -1395,15 +1395,15 @@ bool AudioIO::AllocateBuffers(
                     assert(pSequence->FindChannelGroup());
                     // use sequence time for the end time, not real time!
                     double startTime, endTime;
-                    if (!sequences.prerollSequences.empty()) {
+                    if (!sequences.leadInTimeSequences.empty()) {
                         startTime = mPlaybackSchedule.mT0;
                     } else {
                         startTime = t0;
                     }
 
-                    if (make_iterator_range(sequences.prerollSequences)
+                    if (make_iterator_range(sequences.leadInTimeSequences)
                         .contains(pSequence)) {
-                        // Stop playing this sequence after pre-roll
+                        // Stop playing this sequence after lead-in time
                         endTime = t0;
                     } else {
                         // Pass t1 -- not mT1 as may have been adjusted for latency
@@ -3537,7 +3537,7 @@ bool AudioIO::IsCapturing() const
     return IsStreamActive()
            && GetNumCaptureChannels() > 0
            && mPlaybackSchedule.GetSequenceTime()
-           >= mPlaybackSchedule.mT0 + mRecordingSchedule.mPreRoll;
+           >= mPlaybackSchedule.mT0 + mRecordingSchedule.mLeadInTime;
 }
 
 BoolSetting SoundActivatedRecord{ "/AudioIO/SoundActivatedRecord", false };

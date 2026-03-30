@@ -16,7 +16,7 @@ static const ActionQuery RECORD_STOP_QUERY("action://record/stop");
 static const ActionQuery RECORD_LEVEL_QUERY("action://record/level"); // doesn't have callback here
 static const ActionQuery RECORD_TOGGLE_MIC_METERING("action://record/toggle-mic-metering");
 static const ActionQuery RECORD_TOGGLE_INPUT_MONITORING("action://record/toggle-input-monitoring");
-static const ActionQuery RECORD_PUNCH_AND_ROLL_QUERY("action://record/punch-and-roll");
+static const ActionQuery RECORD_LEAD_IN_RECORDING_QUERY("action://record/lead-in-recording");
 
 void RecordController::init()
 {
@@ -25,7 +25,7 @@ void RecordController::init()
     dispatcher()->reg(this, RECORD_STOP_QUERY, this, &RecordController::stop);
     dispatcher()->reg(this, RECORD_TOGGLE_MIC_METERING, this, &RecordController::toggleMicMetering);
     dispatcher()->reg(this, RECORD_TOGGLE_INPUT_MONITORING, this, &RecordController::toggleInputMonitoring);
-    dispatcher()->reg(this, RECORD_PUNCH_AND_ROLL_QUERY, this, &RecordController::punchAndRoll);
+    dispatcher()->reg(this, RECORD_LEAD_IN_RECORDING_QUERY, this, &RecordController::leadInRecording);
 
     playbackController()->isPlayingChanged().onNotify(this, [this]() {
         m_isRecordAllowedChanged.notify();
@@ -130,15 +130,15 @@ void RecordController::stop()
     setCurrentRecordStatus(RecordStatus::Stopped);
 }
 
-void RecordController::punchAndRoll()
+void RecordController::leadInRecording()
 {
     IF_ASSERT_FAILED(record()) {
         return;
     }
 
-    Ret ret = record()->punchAndRoll();
+    Ret ret = record()->leadInRecording();
     if (!ret) {
-        interactive()->error(muse::trc("record", "Punch and Roll error"), ret.text());
+        interactive()->error(muse::trc("record", "Lead-in Recording error"), ret.text());
         return;
     }
 
@@ -195,7 +195,7 @@ bool RecordController::canReceiveAction(const ActionCode& code) const
         return !playbackController()->isPlaying();
     }
 
-    if (code == RECORD_PUNCH_AND_ROLL_QUERY.toString()) {
+    if (code == RECORD_LEAD_IN_RECORDING_QUERY.toString()) {
         return !playbackController()->isPlaying() && !isRecording();
     }
 

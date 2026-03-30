@@ -21,7 +21,7 @@ BaseSection {
     IncrementalPropertyControlWithTitle {
         title: qsTrc("preferences", "Pre-roll duration")
 
-        currentValue: recordingPreferencesModel.preRollDuration
+        currentValue: recordingPreferencesModel.leadInTimeDuration
 
         columnWidth: root.columnWidth
         controlWidth: 120
@@ -34,12 +34,12 @@ BaseSection {
 
         measureUnitsSymbol: " " + qsTrc("global", "seconds")
 
-        navigation.name: "PreRollDurationControl"
+        navigation.name: "LeadInTimeDurationControl"
         navigation.panel: root.navigation
         navigation.row: 0
 
         onValueEdited: function (newValue) {
-            recordingPreferencesModel.setPreRollDuration(newValue)
+            recordingPreferencesModel.setLeadInTimeDuration(newValue)
         }
     }
 

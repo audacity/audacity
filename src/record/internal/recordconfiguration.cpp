@@ -11,7 +11,7 @@ using namespace au::record;
 namespace {
 const muse::Settings::Key MIC_METERING_KEY("record", "record/micMetering");
 const muse::Settings::Key INPUT_MONITORING_KEY("record", "record/inputMonitoring");
-const muse::Settings::Key PRE_ROLL_DURATION_KEY("record", "record/preRollDuration");
+const muse::Settings::Key LEAD_IN_TIME_DURATION_KEY("record", "record/leadInTimeDuration");
 const muse::Settings::Key CROSSFADE_DURATION_KEY("record", "record/crossfadeDuration");
 }
 
@@ -27,9 +27,9 @@ void RecordConfiguration::init()
         m_isInputMonitoringOnChanged.notify();
     });
 
-    muse::settings()->setDefaultValue(PRE_ROLL_DURATION_KEY, muse::Val(5.0));
-    muse::settings()->valueChanged(PRE_ROLL_DURATION_KEY).onReceive(nullptr, [this](const muse::Val&) {
-        m_preRollDurationChanged.notify();
+    muse::settings()->setDefaultValue(LEAD_IN_TIME_DURATION_KEY, muse::Val(5.0));
+    muse::settings()->valueChanged(LEAD_IN_TIME_DURATION_KEY).onReceive(nullptr, [this](const muse::Val&) {
+        m_leadInTimeDurationChanged.notify();
     });
 
     muse::settings()->setDefaultValue(CROSSFADE_DURATION_KEY, muse::Val(10.0));
@@ -68,19 +68,19 @@ muse::async::Notification RecordConfiguration::isInputMonitoringOnChanged() cons
     return m_isInputMonitoringOnChanged;
 }
 
-double RecordConfiguration::preRollDuration() const
+double RecordConfiguration::leadInTimeDuration() const
 {
-    return muse::settings()->value(PRE_ROLL_DURATION_KEY).toDouble();
+    return muse::settings()->value(LEAD_IN_TIME_DURATION_KEY).toDouble();
 }
 
-void RecordConfiguration::setPreRollDuration(double seconds)
+void RecordConfiguration::setLeadInTimeDuration(double seconds)
 {
-    muse::settings()->setSharedValue(PRE_ROLL_DURATION_KEY, muse::Val(seconds));
+    muse::settings()->setSharedValue(LEAD_IN_TIME_DURATION_KEY, muse::Val(seconds));
 }
 
-muse::async::Notification RecordConfiguration::preRollDurationChanged() const
+muse::async::Notification RecordConfiguration::leadInTimeDurationChanged() const
 {
-    return m_preRollDurationChanged;
+    return m_leadInTimeDurationChanged;
 }
 
 double RecordConfiguration::crossfadeDuration() const

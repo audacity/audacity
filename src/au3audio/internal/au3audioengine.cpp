@@ -68,13 +68,13 @@ bool Au3AudioEngine::isCapturing() const
 int Au3AudioEngine::startStream(const TransportSequences& sequences, const double startTime, const double endTime,
                                 const double mixerEndTime,
                                 AudacityProject& project, const bool isDefaultPlayTrackPolicy, const double audioStreamSampleRate,
-                                const double preRoll,
+                                const double leadInTime,
                                 std::vector<std::vector<float> >* crossfadeData)
 {
     AudioIOStartStreamOptions options = ProjectAudioIO::GetDefaultOptions(project, isDefaultPlayTrackPolicy);
     options.inputMonitoring = recordConfiguration()->isInputMonitoringOn();
     options.rate = audioStreamSampleRate;
-    options.preRoll = preRoll;
+    options.leadInTime = leadInTime;
     if (crossfadeData) {
         options.pCrossfadeData = crossfadeData;
     }

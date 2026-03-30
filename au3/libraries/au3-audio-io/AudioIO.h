@@ -525,7 +525,7 @@ public:
     int GetHardwarePlaybackLatencyMs() const { return mHardwarePlaybackLatencyMs; }
     int GetHardwareCaptureLatencyMs() const { return mHardwareCaptureLatencyMs; }
 
-    // Meaning really capturing, not just pre-rolling
+    // Meaning really capturing, not just lead-in time playing
     bool IsCapturing() const;
 
     /** \brief Ensure selected device names are valid

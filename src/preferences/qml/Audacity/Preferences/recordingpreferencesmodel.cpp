@@ -15,8 +15,8 @@ RecordingPreferencesModel::RecordingPreferencesModel(QObject* parent)
     recordConfiguration()->isInputMonitoringOnChanged().onNotify(this, [this]() {
         emit isInputMonitoringOnChanged();
     });
-    recordConfiguration()->preRollDurationChanged().onNotify(this, [this]() {
-        emit preRollDurationChanged();
+    recordConfiguration()->leadInTimeDurationChanged().onNotify(this, [this]() {
+        emit leadInTimeDurationChanged();
     });
     recordConfiguration()->crossfadeDurationChanged().onNotify(this, [this]() {
         emit crossfadeDurationChanged();
@@ -43,17 +43,17 @@ void RecordingPreferencesModel::setIsMicMeteringOn(bool enabled)
     recordConfiguration()->setIsMicMeteringOn(enabled);
 }
 
-double RecordingPreferencesModel::preRollDuration() const
+double RecordingPreferencesModel::leadInTimeDuration() const
 {
-    return recordConfiguration()->preRollDuration();
+    return recordConfiguration()->leadInTimeDuration();
 }
 
-void RecordingPreferencesModel::setPreRollDuration(double seconds)
+void RecordingPreferencesModel::setLeadInTimeDuration(double seconds)
 {
-    if (preRollDuration() == seconds) {
+    if (leadInTimeDuration() == seconds) {
         return;
     }
-    recordConfiguration()->setPreRollDuration(seconds);
+    recordConfiguration()->setLeadInTimeDuration(seconds);
 }
 
 double RecordingPreferencesModel::crossfadeDuration() const
