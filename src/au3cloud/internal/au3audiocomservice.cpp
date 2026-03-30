@@ -15,6 +15,7 @@
 
 #include "au3-cloud-audiocom/CloudSyncService.h"
 #include "au3-cloud-audiocom/OAuthService.h"
+#include "au3-cloud-audiocom/UserService.h"
 #include "au3-cloud-audiocom/ServiceConfig.h"
 #include "au3-cloud-audiocom/sync/CloudSyncDTO.h"
 #include "au3-cloud-audiocom/sync/CloudProjectsDatabase.h"
@@ -540,6 +541,28 @@ std::string Au3AudioComService::getCloudProjectPage(au::project::IAudacityProjec
 
     auto& projectCloudExtension = audacity::cloud::audiocom::sync::ProjectCloudExtension::Get(*au3Project);
     return projectCloudExtension.GetCloudProjectPage(AudiocomTrace::SaveProjectSaveToCloudMenu);
+}
+
+std::string Au3AudioComService::getCloudProjectPage(const std::string& slug)
+{
+    auto& oauthService = GetOAuthService();
+    const auto& serviceConfig = GetServiceConfig();
+
+    const auto userId = GetUserService().GetUserId().ToStdString();
+    const auto userslug = GetUserService().GetUserSlug().ToStdString();
+    const auto projectPage = serviceConfig.GetProjectPagePath(userslug, slug, AudiocomTrace::OpenFromCloudMenu);
+    return oauthService.MakeAudioComAuthorizeURL(userId, projectPage);
+}
+
+std::string Au3AudioComService::getCloudAudioPage(const std::string& slug)
+{
+    auto& oauthService = GetOAuthService();
+    const auto& serviceConfig = GetServiceConfig();
+
+    const auto userId = GetUserService().GetUserId().ToStdString();
+    const auto userslug = GetUserService().GetUserSlug().ToStdString();
+    const auto audioPage = serviceConfig.GetAudioPagePath(userslug, slug, AudiocomTrace::OpenFromCloudMenu);
+    return oauthService.MakeAudioComAuthorizeURL(userId, audioPage);
 }
 
 muse::ProgressPtr Au3AudioComService::openCloudProject(const muse::io::path_t& localPath, const std::string& projectId,

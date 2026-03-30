@@ -6,6 +6,7 @@
 #include <functional>
 #include <optional>
 #include <chrono>
+#include <string>
 
 #include "framework/global/modularity/imoduleinterface.h"
 #include "framework/global/async/promise.h"
@@ -49,6 +50,9 @@ public:
     virtual muse::ProgressPtr openCloudProject(const muse::io::path_t& localPath, const std::string& projectId = {},
                                                bool forceOverwrite = false) = 0;
     virtual muse::ProgressPtr resumeProjectSync(au::project::IAudacityProjectPtr project) = 0;
+
+    virtual std::string getCloudProjectPage(const std::string& slug) = 0;
+    virtual std::string getCloudAudioPage(const std::string& slug) = 0;
 
     virtual void deinit() = 0;
 };

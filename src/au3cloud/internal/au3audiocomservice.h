@@ -7,6 +7,7 @@
 #include <map>
 #include <mutex>
 #include <optional>
+#include <string>
 
 #include "framework/global/async/asyncable.h"
 #include "framework/global/async/promise.h"
@@ -58,6 +59,9 @@ public:
                                        bool forceOverwrite = false) override;
 
     muse::ProgressPtr resumeProjectSync(au::project::IAudacityProjectPtr project) override;
+
+    std::string getCloudProjectPage(const std::string& slug) override;
+    std::string getCloudAudioPage(const std::string& slug) override;
 
     void deinit() override;
 
