@@ -66,6 +66,11 @@ void au::effects::NyquistEffectsModule::onInit(const muse::IApplication::RunMode
 {
     m_nyquistMetaReader->init(runMode);
     m_nyquistEffectsRepository->init();
+}
+
+void au::effects::NyquistEffectsModule::onAllInited(const muse::IApplication::RunMode&)
+{
+    // onAllInited, because it depends on Au3Wrap and BuiltinEffects modules
     if (m_nyquistPromptLoader) {
         m_nyquistPromptLoader->init();
     }
