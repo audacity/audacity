@@ -1383,7 +1383,7 @@ bool FFmpegExportProcessor::Initialize(AudacityProject& project,
     context.t1 = t1;
 
     if (!FFmpegFunctions::Load()) {
-        throw ExportException(_("Properly configured FFmpeg is required to proceed.\nYou can configure it at Preferences > Libraries."));
+        throw ExportException(_("Properly configured FFmpeg is required to proceed.\nYou can configure it at Preferences > General."));
     }
     // subformat index may not correspond directly to fmts[] index, convert it
     const auto adjustedFormatIndex = AdjustFormatIndex(context.subformat);
