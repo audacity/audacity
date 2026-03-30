@@ -22,9 +22,9 @@ class BuiltinEffectViewLoader : public QObject, public muse::async::Asyncable, m
     Q_PROPERTY(QQuickItem * contentItem READ contentItem NOTIFY contentItemChanged FINAL)
 
     muse::GlobalInject<IBuiltinEffectsViewRegister> viewRegister;
+    muse::GlobalInject<IEffectInstancesRegister> instancesRegister;
 
     muse::ContextInject<IEffectsUiEngine> engine { this };
-    muse::ContextInject<IEffectInstancesRegister> instancesRegister { this };
 
 public:
     BuiltinEffectViewLoader(QObject* parent = nullptr);

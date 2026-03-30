@@ -39,9 +39,9 @@ class EffectExecutionScenario : public IEffectExecutionScenario, public muse::Co
     muse::GlobalInject<IEffectsConfiguration> effectsConfiguration;
     muse::GlobalInject<spectrogram::IGlobalSpectrogramConfiguration> spectrogramConfiguration;
     muse::GlobalInject<IEffectsProvider> effectsProvider;
+    muse::GlobalInject<IEffectInstancesRegister> effectInstancesRegister;
 
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
-    muse::ContextInject<IEffectInstancesRegister> effectInstancesRegister{ this };
     muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
     muse::ContextInject<muse::IInteractive> interactive{ this };
     muse::ContextInject<trackedit::IProjectHistory> projectHistory{ this };

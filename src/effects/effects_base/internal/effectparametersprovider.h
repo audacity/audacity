@@ -16,8 +16,7 @@ class EffectParametersProvider : public IEffectParametersProvider, public muse::
 {
     muse::GlobalInject<IParameterExtractorRegistry> parameterExtractorRegistry;
     muse::GlobalInject<IEffectsProvider> effectsProvider;
-
-    muse::ContextInject<IEffectInstancesRegister> instancesRegister{ this };
+    muse::GlobalInject<IEffectInstancesRegister> instancesRegister;
 
 public:
     EffectParametersProvider(const muse::modularity::ContextPtr& ctx);

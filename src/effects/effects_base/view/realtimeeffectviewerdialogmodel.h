@@ -36,8 +36,8 @@ class RealtimeEffectViewerDialogModel : public QObject, public muse::Contextable
     Q_PROPERTY(ViewerComponentType viewerComponentType READ viewerComponentType NOTIFY viewerComponentTypeChanged FINAL);
 
     muse::GlobalInject<IEffectsConfiguration> configuration;
+    muse::GlobalInject<IEffectInstancesRegister> instancesRegister;
 
-    muse::ContextInject<IEffectInstancesRegister> instancesRegister{ this };
     muse::ContextInject<effects::IRealtimeEffectService> realtimeEffectService{ this };
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
     muse::ContextInject<muse::ui::INavigationController> navigationController{ this };

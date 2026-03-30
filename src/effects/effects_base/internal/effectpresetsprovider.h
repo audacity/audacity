@@ -16,8 +16,7 @@ namespace au::effects {
 class EffectPresetsProvider : public IEffectPresetsProvider, public muse::Contextable
 {
     muse::GlobalInject<IEffectsProvider> effectsProvider;
-
-    muse::ContextInject<IEffectInstancesRegister> instancesRegister{ this };
+    muse::GlobalInject<IEffectInstancesRegister> instancesRegister;
 
 public:
     EffectPresetsProvider(const muse::modularity::ContextPtr& ctx)

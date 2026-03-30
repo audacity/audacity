@@ -19,8 +19,8 @@ class EffectSaveContextMenu : public muse::uicomponents::AbstractMenuModel
     Q_PROPERTY(int instanceId READ instanceId_prop WRITE setInstanceId_prop NOTIFY instanceIdChanged FINAL)
     Q_PROPERTY(QString preset READ preset WRITE setPreset NOTIFY presetChanged FINAL)
 
+    muse::GlobalInject<IEffectInstancesRegister> instancesRegister;
     muse::ContextInject<IEffectPresetsProvider> presetsController { this };
-    muse::ContextInject<IEffectInstancesRegister> instancesRegister { this };
 
 public:
     explicit EffectSaveContextMenu(QObject* parent = nullptr);

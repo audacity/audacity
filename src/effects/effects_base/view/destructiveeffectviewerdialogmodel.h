@@ -27,8 +27,7 @@ class DestructiveEffectViewerDialogModel : public QObject, public muse::Contexta
 
     muse::GlobalInject<IEffectsConfiguration> configuration;
     muse::GlobalInject<IEffectsProvider> effectsProvider;
-
-    muse::ContextInject<IEffectInstancesRegister> instancesRegister{ this };
+    muse::GlobalInject<IEffectInstancesRegister> instancesRegister;
 
 public:
     explicit DestructiveEffectViewerDialogModel(QObject* parent = nullptr);

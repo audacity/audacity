@@ -17,7 +17,7 @@ class AbstractDynamicsEffectInstanceModel : public QObject, public muse::Context
 
     Q_PROPERTY(int instanceId READ instanceId WRITE setInstanceId NOTIFY instanceIdChanged FINAL)
 
-    muse::ContextInject<IEffectInstancesRegister> instancesRegister{ this };
+    muse::GlobalInject<IEffectInstancesRegister> instancesRegister;
 
 public:
     AbstractDynamicsEffectInstanceModel(QObject* parent = nullptr);

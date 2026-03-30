@@ -19,8 +19,7 @@ class PresetsContextMenuModel : public muse::uicomponents::AbstractMenuModel
 
     muse::GlobalInject<IEffectsConfiguration> configuration;
     muse::GlobalInject<IEffectsProvider> effectsProvider;
-
-    muse::ContextInject<IEffectInstancesRegister> instancesRegister { this };
+    muse::GlobalInject<IEffectInstancesRegister> instancesRegister;
 
 public:
     explicit PresetsContextMenuModel(QObject* parent = nullptr);
