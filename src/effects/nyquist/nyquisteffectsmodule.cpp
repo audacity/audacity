@@ -8,12 +8,14 @@
 
 #include "effects/effects_base/iparameterextractorregistry.h"
 #include "effects/effects_base/ieffectviewlaunchregister.h"
+#include "effects/effects_base/ieffectloadersregister.h"
 
 #include "internal/nyquisteffectsrepository.h"
 #include "internal/nyquistparameterextractorservice.h"
 #include "internal/nyquistviewlauncher.h"
 #include "internal/nyquistpluginsscanner.h"
 #include "internal/nyquistpluginsmetareader.h"
+#include "internal/nyquisteffectsloader.h"
 
 #include "nyquistprompt/nyquistpromptloader.h"
 #include "nyquistprompt/nyquistpromptviewmodel.h"
@@ -60,6 +62,12 @@ void au::effects::NyquistEffectsModule::resolveImports()
     if (metaReaderRegister) {
         metaReaderRegister->registerReader(m_nyquistMetaReader);
     }
+
+    m_effectLoader = std::make_shared<NyquistEffectsLoader>();
+    auto loadersRegister = globalIoc()->resolve<IEffectLoadersRegister>(moduleName());
+    if (loadersRegister) {
+        loadersRegister->registerLoader(m_effectLoader);
+    }
 }
 
 void au::effects::NyquistEffectsModule::onPreInit(const muse::IApplication::RunMode& runMode)
@@ -73,6 +81,7 @@ void au::effects::NyquistEffectsModule::onPreInit(const muse::IApplication::RunM
 void au::effects::NyquistEffectsModule::onInit(const muse::IApplication::RunMode&)
 {
     m_nyquistMetaReader->init();
+    m_effectLoader->init();
     m_nyquistEffectsRepository->init();
 }
 

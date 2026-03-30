@@ -12,6 +12,7 @@ namespace au::effects {
 class NyquistEffectsRepository;
 class NyquistPluginsMetaReader;
 class NyquistPromptLoader;
+class NyquistEffectsLoader;
 
 class NyquistEffectsModule : public muse::modularity::IModuleSetup
 {
@@ -33,6 +34,7 @@ public:
 private:
     const std::unique_ptr<NyquistEffectsRepository> m_nyquistEffectsRepository;
     std::shared_ptr<NyquistPluginsMetaReader> m_nyquistMetaReader;
+    std::shared_ptr<NyquistEffectsLoader> m_effectLoader;
     std::unique_ptr<NyquistPromptLoader> m_nyquistPromptLoader;
 };
 
