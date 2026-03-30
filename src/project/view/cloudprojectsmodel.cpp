@@ -3,6 +3,7 @@
 */
 #include "cloudprojectsmodel.h"
 
+#include "framework/global/async/asyncable.h"
 #include "framework/global/dataformatter.h"
 #include "framework/global/types/datetime.h"
 
@@ -23,8 +24,12 @@ CloudProjectsModel::CloudProjectsModel(QObject* parent)
 
 void CloudProjectsModel::load()
 {
-    auto onUserAuthorizedChanged = [this](bool authorized) {
-        if (authorized) {
+    auto onUserAuthorizedChanged = [this](au::au3cloud::AuthState status) {
+        if (std::holds_alternative<au::au3cloud::Authorizing>(status)) {
+            return;
+        }
+
+        if (std::holds_alternative<au::au3cloud::Authorized>(status) || (authorization()->ensureAuthorization())) {
             setState(State::Loading);
             loadItemsIfNecessary();
         } else {
@@ -35,17 +40,15 @@ void CloudProjectsModel::load()
 
             setState(State::NotSignedIn);
         }
+
+        setState(State::NotSignedIn);
     };
 
-    auto isAuthorized = [](au::au3cloud::AuthState authState) {
-        return std::holds_alternative<au::au3cloud::Authorized>(authState);
-    };
+    onUserAuthorizedChanged(authorization()->authState().val);
 
-    onUserAuthorizedChanged(isAuthorized(authorization()->authState().val));
-
-    authorization()->authState().ch.onReceive(this, [isAuthorized, onUserAuthorizedChanged](au::au3cloud::AuthState authState) {
-        onUserAuthorizedChanged(isAuthorized(std::move(authState)));
-    });
+    authorization()->authState().ch.onReceive(this, [onUserAuthorizedChanged](au::au3cloud::AuthState authState) {
+        onUserAuthorizedChanged(std::move(authState));
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     connect(this, &CloudProjectsModel::desiredRowCountChanged, this, &CloudProjectsModel::loadItemsIfNecessary);
 }
