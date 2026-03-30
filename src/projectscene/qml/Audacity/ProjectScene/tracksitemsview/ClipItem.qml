@@ -903,7 +903,7 @@ Rectangle {
                     }
                 }
 
-                Polyline {
+                PolylinePlot {
                     id: automation
 
                     anchors.fill: waveView

@@ -52,7 +52,7 @@ int computeRightCrossedIndex(const AutomationDragSession& session, double time)
     int idx = session.originalIndex;
     for (int i = session.originalIndex + 1; i < static_cast<int>(session.originalPoints.size()); ++i) {
         const double pointTime = session.originalPoints[i].xValue;
-        if (pointTime > session.originalXValue && pointTime <= time) {
+        if (pointTime > session.originalXValue && pointTime < time) {
             idx = i;
         } else {
             break;
@@ -67,7 +67,7 @@ int computeLeftCrossedIndex(const AutomationDragSession& session, double time)
     int idx = session.originalIndex;
     for (int i = session.originalIndex - 1; i >= 0; --i) {
         const double pointTime = session.originalPoints[i].xValue;
-        if (pointTime < session.originalXValue && pointTime >= time) {
+        if (pointTime < session.originalXValue && pointTime > time) {
             idx = i;
         } else {
             break;
