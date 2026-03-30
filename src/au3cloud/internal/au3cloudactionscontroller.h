@@ -32,5 +32,7 @@ public:
 
 private:
     void openSignInDialog(const muse::actions::ActionQuery& query);
+    void openCloudProjectPage(const muse::actions::ActionQuery& query);
+    void openCloudAudioPage(const muse::actions::ActionQuery& query);
 };
 }
