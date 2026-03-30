@@ -310,10 +310,34 @@ Rectangle {
 
             height: 40
 
+            Timer {
+                id: playCursorReleaseTimer
+                interval: 100
+                repeat: false
+                onTriggered: {
+                    head.dragActive = false
+                    timeline.displayedPlayCursorX = playCursorController.positionX
+                }
+            }
+
+            property double displayedPlayCursorX: playCursorController.positionX
+
             function updateCursorPosition(x, y) {
                 lineCursor.x = x
                 timeline.context.updateMousePositionTime(x)
                 tracksViewState.setMouseY(Math.max(0, Math.min(y, mainMouseArea.height)))
+            }
+
+            Connections {
+                target: playCursorController
+
+                function onPositionXChanged() {
+                    if (head.dragActive) {
+                        return
+                    }
+
+                    timeline.displayedPlayCursorX = playCursorController.positionX
+                }
             }
 
             Rectangle {
@@ -345,16 +369,27 @@ Rectangle {
                 anchors.top: parent.top
                 anchors.topMargin: 24
 
-                x: playCursorController.positionX - (width / 2)
+                property bool dragActive: false
+                property double dragPositionX: timeline.displayedPlayCursorX
+
+                x: timeline.displayedPlayCursorX - (width / 2)
 
                 MouseArea {
                     anchors.fill: parent
                     hoverEnabled: true
                     cursorShape: pressed || timelineMouseArea.pressed ? Qt.ClosedHandCursor : Qt.OpenHandCursor
 
+                    onPressed: function(e) {
+                        head.dragActive = true
+                        head.dragPositionX = mapToItem(timeline, e.x, e.y).x
+                        timeline.displayedPlayCursorX = head.dragPositionX
+                    }
+
                     onPositionChanged: function (e) {
                         var ix = mapToItem(timeline, e.x, e.y).x
                         if (pressed) {
+                            head.dragPositionX = ix
+                            timeline.displayedPlayCursorX = ix
                             playCursorController.seekToX(ix)
                         }
                         timeline.updateCursorPosition(ix, 0)
@@ -367,6 +402,13 @@ Rectangle {
                             playCursorController.seekToX(ix, playbackState.isPlaying || timeline.context.playbackOnRulerClickEnabled)
                             playCursorController.setPlaybackRegion(ix, ix)
                         }
+                        playCursorReleaseTimer.restart()
+                    }
+
+                    onCanceled: {
+                        playCursorReleaseTimer.stop()
+                        head.dragActive = false
+                        timeline.displayedPlayCursorX = playCursorController.positionX
                     }
                 }
             }
@@ -487,6 +529,9 @@ Rectangle {
                         lastItemClickKey = root.hoveredItemKey
                     } else {
                         if (!((e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) || root.isSplitMode)) {
+                            if (playbackState.isPlaying) {
+                                playbackState.setLastPlaybackSeekTime(timeline.context.positionToTime(e.x))
+                            }
                             playCursorController.seekToX(e.x)
                         }
 
@@ -1089,13 +1134,20 @@ Rectangle {
             width: timeline.context.selectionEndPosition - x
         }
 
+        PlaybackSeekLine {
+            anchors.top: tracksItemsViewArea.top
+            anchors.bottom: parent.bottom
+
+            x: timeline.context.lastPlaybackSeekPosition
+        }
+
         PlayCursorLine {
             id: playCursor
 
             anchors.top: tracksItemsViewArea.top
             anchors.bottom: parent.bottom
 
-            x: playCursorController.positionX
+            x: timeline.displayedPlayCursorX
         }
 
         Rectangle {

@@ -84,6 +84,9 @@ public:
 
     muse::secs_t totalPlayTime() const override;
     muse::async::Notification totalPlayTimeChanged() const override;
+    muse::secs_t lastPlaybackSeekTime() const override;
+    void setLastPlaybackSeekTime(muse::secs_t secs) override;
+    muse::async::Notification lastPlaybackSeekTimeChanged() const override;
 
     muse::Progress loadingProgress() const override;
 
@@ -141,7 +144,6 @@ private:
     void rescanAudioDevices();
 
     void notifyActionCheckedChanged(const muse::actions::ActionCode& actionCode);
-
     void subscribeOnAudioParamsChanges();
     void setupSequenceTracks();
     void setupSequencePlayer();
@@ -165,6 +167,7 @@ private:
     muse::async::Notification m_isPlayAllowedChanged;
     muse::async::Notification m_isPlayingChanged;
     muse::async::Notification m_totalPlayTimeChanged;
+    muse::async::Notification m_lastPlaybackSeekTimeChanged;
     muse::async::Notification m_currentTempoChanged;
     muse::async::Channel<uint32_t> m_tickPlayed;
     muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;
@@ -172,6 +175,7 @@ private:
     muse::async::Notification m_currentSequenceIdChanged;
     muse::secs_t m_lastPlaybackSeekTime = 0.0;
     PlaybackRegion m_lastPlaybackRegion;
+    bool m_pauseShouldStopPlayback = false;
 
     muse::async::Channel<playback::TrackId> m_trackAdded;
     muse::async::Channel<playback::TrackId> m_trackRemoved;
