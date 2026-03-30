@@ -6,6 +6,7 @@
 #include "modularity/ioc.h"
 #include "global/iglobalconfiguration.h"
 #include "io/ifilesystem.h"
+#include "au3cloud/iau3cloudconfiguration.h"
 
 #include "../iprojectconfiguration.h"
 
@@ -14,6 +15,7 @@ class ProjectConfiguration final : public IProjectConfiguration
 {
     muse::GlobalInject<muse::IGlobalConfiguration> globalConfiguration;
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
+    muse::GlobalInject<au3cloud::IAu3CloudConfiguration> cloudConfiguration;
 
 public:
     ProjectConfiguration() = default;

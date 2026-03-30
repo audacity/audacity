@@ -6,6 +6,7 @@
 #include "modularity/imodulesetup.h"
 
 namespace au::au3cloud {
+class Au3CloudConfiguration;
 class Au3CloudService;
 class Au3AudioComService;
 class Au3CloudActionsController;
@@ -21,6 +22,9 @@ public:
     void onInit(const muse::IApplication::RunMode& mode) override;
 
     muse::modularity::IContextSetup* newContext(const muse::modularity::ContextPtr& ctx) const override;
+
+private:
+    std::shared_ptr<Au3CloudConfiguration> m_cloudConfiguration;
 };
 
 class Au3CloudContext : public muse::modularity::IContextSetup

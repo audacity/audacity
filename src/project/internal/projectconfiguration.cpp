@@ -5,9 +5,6 @@
 #include "framework/global/io/dir.h"
 
 #include "au3-files/FileNames.h"
-#ifdef AU_BUILD_CLOUD_AUDIOCOM
-#include "au3-cloud-audiocom/CloudLibrarySettings.h"
-#endif
 
 #include "au3wrap/internal/wxtypes_convert.h"
 
@@ -92,20 +89,12 @@ muse::io::path_t ProjectConfiguration::defaultUserProjectsPath() const
 
 muse::io::path_t ProjectConfiguration::cloudProjectsPath() const
 {
-#ifdef AU_BUILD_CLOUD_AUDIOCOM
-    return muse::io::Dir::fromNativeSeparators(muse::io::path_t(audacity::cloud::audiocom::CloudProjectsSavePath.Read()));
-#else
-    return {};
-#endif
+    return cloudConfiguration()->cloudProjectsPath();
 }
 
 void ProjectConfiguration::setCloudProjectsPath(const muse::io::path_t& path)
 {
-#ifdef AU_BUILD_CLOUD_AUDIOCOM
-    audacity::cloud::audiocom::CloudProjectsSavePath.Write(path.toStdString());
-#else
-    (void)path;
-#endif
+    cloudConfiguration()->setCloudProjectsPath(path);
 }
 
 bool ProjectConfiguration::isCloudProject(const muse::io::path_t& projectPath) const

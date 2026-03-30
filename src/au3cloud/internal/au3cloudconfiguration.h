@@ -1,0 +1,15 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
+#pragma once
+
+#include "au3cloud/iau3cloudconfiguration.h"
+
+namespace au::au3cloud {
+class Au3CloudConfiguration : public IAu3CloudConfiguration
+{
+public:
+    muse::io::path_t cloudProjectsPath() const override;
+    void setCloudProjectsPath(const muse::io::path_t& path) override;
+};
+}

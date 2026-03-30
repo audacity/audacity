@@ -6,6 +6,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/au3cloudstubmodule.h
     ${CMAKE_CURRENT_LIST_DIR}/au3audiocomservicestub.cpp
     ${CMAKE_CURRENT_LIST_DIR}/au3audiocomservicestub.h
+    ${CMAKE_CURRENT_LIST_DIR}/au3cloudconfigurationstub.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/au3cloudconfigurationstub.h
     ${CMAKE_CURRENT_LIST_DIR}/authorizationstub.cpp
     ${CMAKE_CURRENT_LIST_DIR}/authorizationstub.h
     ${CMAKE_CURRENT_LIST_DIR}/usageinfostub.cpp

@@ -14,6 +14,7 @@ class Au3CloudModule : public muse::modularity::IModuleSetup
 {
 public:
     std::string moduleName() const override;
+    void registerExports() override;
 
     muse::modularity::IContextSetup* newContext(const muse::modularity::ContextPtr& ctx) const override;
 };

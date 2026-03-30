@@ -11,6 +11,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/cloudtypes.h
     ${CMAKE_CURRENT_LIST_DIR}/iauthorization.h
     ${CMAKE_CURRENT_LIST_DIR}/iau3audiocomservice.h
+    ${CMAKE_CURRENT_LIST_DIR}/iau3cloudconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/iusageinfo.h
 
     ${CMAKE_CURRENT_LIST_DIR}/dev/cloudtestsmodel.cpp
@@ -18,6 +19,8 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiocomservice.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiocomservice.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3cloudconfiguration.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3cloudconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3cloudactionscontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3cloudactionscontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/clouduiactions.cpp
