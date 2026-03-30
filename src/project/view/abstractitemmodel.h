@@ -53,6 +53,7 @@ protected:
     };
 
     static const QString NAME_KEY;
+    static const QString SLUG_KEY;
     static const QString PATH_KEY;
     static const QString SUFFIX_KEY;
     static const QString FILE_SIZE_KEY;
