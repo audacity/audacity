@@ -565,6 +565,51 @@ std::string Au3AudioComService::getCloudAudioPage(const std::string& slug)
     return oauthService.MakeAudioComAuthorizeURL(userId, audioPage);
 }
 
+muse::ProgressPtr Au3AudioComService::openAudioFile(const std::string& audioId)
+{
+    muse::ProgressPtr progress = std::make_shared<muse::Progress>();
+
+    std::thread([this, audioId, progress]() {
+        auto progressCallback = [progress](double p) -> bool {
+            if (progress->isCanceled()) {
+                return false;
+            }
+
+            progress->progress(static_cast<int64_t>(p * 100), 100);
+            return true;
+        };
+
+        using DownloadFuture = CloudSyncService::DownloadAudioFuture;
+        auto downloadFuturePromise = std::make_shared<std::promise<DownloadFuture> >();
+        std::future<DownloadFuture> downloadFutureResult = downloadFuturePromise->get_future();
+
+        muse::async::Async::call(this, [downloadFuturePromise, audioId,
+                                        progressCallback = std::move(progressCallback)]() mutable {
+            // Important: CloudSyncService does not control access by locking but by calling convention,
+            // We must ensure all operations on this service to be called on the main thread
+            downloadFuturePromise->set_value(
+                CloudSyncService::Get().DownloadCloudAudio(audioId, std::move(progressCallback)));
+        }, muse::runtime::mainThreadId());
+
+        auto result = downloadFutureResult.get().get();
+
+        if (progress->isCanceled()) {
+            return;
+        }
+
+        if (result.Status != sync::DownloadAudioResult::StatusCode::Succeeded) {
+            progress->finish(muse::make_ret(muse::Ret::Code::UnknownError, result.Result.Content));
+            return;
+        }
+
+        muse::async::Async::call(this, [this, progress, audioPath = result.AudioPath]() {
+            progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(muse::io::path_t(audioPath))));
+        }, muse::runtime::mainThreadId());
+    }).detach();
+
+    return progress;
+}
+
 muse::ProgressPtr Au3AudioComService::openCloudProject(const muse::io::path_t& localPath, const std::string& projectId,
                                                        bool forceOverwrite)
 {

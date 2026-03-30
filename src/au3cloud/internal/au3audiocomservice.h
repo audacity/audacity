@@ -53,12 +53,14 @@ public:
 
     muse::ProgressPtr uploadProject(au::project::IAudacityProjectPtr project, const std::string& name,
                                     std::function<bool()> projectSaveCallback, bool forceOverwrite = false) override;
-    muse::ProgressPtr shareAudio(const std::string& title) override;
 
     muse::ProgressPtr openCloudProject(const muse::io::path_t& localPath, const std::string& projectId = {},
                                        bool forceOverwrite = false) override;
 
     muse::ProgressPtr resumeProjectSync(au::project::IAudacityProjectPtr project) override;
+
+    muse::ProgressPtr shareAudio(const std::string& title) override;
+    muse::ProgressPtr openAudioFile(const std::string& audioId) override;
 
     std::string getCloudProjectPage(const std::string& slug) override;
     std::string getCloudAudioPage(const std::string& slug) override;

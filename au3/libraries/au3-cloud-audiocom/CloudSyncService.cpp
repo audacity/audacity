@@ -902,8 +902,6 @@ CloudSyncService::DownloadAudioFuture CloudSyncService::DownloadCloudAudio(
     std::string_view audioId,
     sync::ProgressCallback callback)
 {
-    ASSERT_MAIN_THREAD();
-
     mDownloadAudioPromise = {};
 
     if (mDownloadInProcess.exchange(true)) {
