@@ -3,8 +3,6 @@
 */
 #pragma once
 
-#ifdef AU_BUILD_CLOUD_AUDIOCOM
-
 #include <QObject>
 #include <QtQml/qqmlregistration.h>
 
@@ -62,5 +60,3 @@ private:
     QString m_errorMessage;
 };
 }
-
-#endif // AU_BUILD_CLOUD_AUDIOCOM

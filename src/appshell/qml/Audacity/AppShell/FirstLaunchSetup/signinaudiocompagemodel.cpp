@@ -2,8 +2,6 @@
 * Audacity: A Digital Audio Editor
 */
 
-#ifdef AU_BUILD_CLOUD_AUDIOCOM
-
 #include "signinaudiocompagemodel.h"
 #include <variant>
 
@@ -88,5 +86,3 @@ void SigninAudiocomPageModel::setErrorMessage(const QString& errorMessage)
         emit showErrorMessageChanged();
     }
 }
-
-#endif // AU_BUILD_CLOUD_AUDIOCOM

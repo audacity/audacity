@@ -18,6 +18,10 @@ qt_add_qml_module(appshell_qml
         FirstLaunchSetup/themespagemodel.h
         FirstLaunchSetup/workspacelayoutpagemodel.cpp
         FirstLaunchSetup/workspacelayoutpagemodel.h
+        FirstLaunchSetup/signinaudiocompagemodel.cpp
+        FirstLaunchSetup/signinaudiocompagemodel.h
+        FirstLaunchSetup/appupdateusageinfopagemodel.cpp
+        FirstLaunchSetup/appupdateusageinfopagemodel.h
         framelesswindowmodel.cpp
         framelesswindowmodel.h
         maintoolbarmodel.cpp
@@ -57,6 +61,9 @@ qt_add_qml_module(appshell_qml
         FirstLaunchSetup/TutorialsPage.qml
         FirstLaunchSetup/UnderConstructionPage.qml
         FirstLaunchSetup/WorkspaceLayoutPage.qml
+        FirstLaunchSetup/SigninAudiocomPage.qml
+        FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml
+        SigninAudiocomDialog.qml
         HomePage/CloudItem.qml
         HomePage/HomeMenu.qml
         HomePage/HomePage.qml
@@ -95,20 +102,10 @@ qt_add_qml_module(appshell_qml
 )
 
 if (AU_BUILD_CLOUD_AUDIOCOM)
-    target_sources(appshell_qml PRIVATE
-        FirstLaunchSetup/signinaudiocompagemodel.cpp
-        FirstLaunchSetup/signinaudiocompagemodel.h
-        FirstLaunchSetup/appupdateusageinfopagemodel.cpp
-        FirstLaunchSetup/appupdateusageinfopagemodel.h
-    )
-
     qt_target_qml_sources(appshell_qml
         QML_FILES
-            SigninAudiocomDialog.qml
             DevTools/Cloud/CloudTests.qml
             HomePage/AccountPage.qml
-            FirstLaunchSetup/SigninAudiocomPage.qml
-            FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml
     )
 endif()
 
