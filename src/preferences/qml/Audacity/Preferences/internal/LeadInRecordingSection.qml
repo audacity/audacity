@@ -11,7 +11,7 @@ import Audacity.UiComponents 1.0
 BaseSection {
     id: root
 
-    title: qsTrc("preferences", "Punch and roll recording")
+    title: qsTrc("preferences", "Recording lead-in time")
     spacing: 16
 
     property var recordingPreferencesModel: null
@@ -19,7 +19,7 @@ BaseSection {
     navigation.direction: NavigationPanel.Both
 
     IncrementalPropertyControlWithTitle {
-        title: qsTrc("preferences", "Pre-roll duration")
+        title: qsTrc("preferences", "Lead-in time before recording starts")
 
         currentValue: recordingPreferencesModel.leadInTimeDuration
 
@@ -44,7 +44,7 @@ BaseSection {
     }
 
     IncrementalPropertyControlWithTitle {
-        title: qsTrc("preferences", "Crossfade duration")
+        title: qsTrc("preferences", "Crossfade")
 
         currentValue: recordingPreferencesModel.crossfadeDuration
 
