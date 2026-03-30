@@ -73,7 +73,7 @@ void au::effects::NyquistEffectsModule::resolveImports()
 void au::effects::NyquistEffectsModule::onPreInit(const muse::IApplication::RunMode& runMode)
 {
     if (runMode != muse::IApplication::RunMode::AudioPluginRegistration) {
-        m_nyquistPromptLoader = std::make_unique<NyquistPromptLoader>(muse::modularity::globalCtx());
+        m_nyquistPromptLoader = std::make_unique<NyquistPromptLoader>();
         m_nyquistPromptLoader->preInit();
     }
 }
