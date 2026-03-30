@@ -299,7 +299,7 @@ ProjectsView {
 
                             CloudAudioFileContextMenuModel {
                                 id: contextMenuModel
-                                cloudItemId: item.itemId
+                                slug: item.slug ?? ""
                             }
 
                             Component.onCompleted: contextMenuModel.load()
