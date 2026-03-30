@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: audacity 3.7.7\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2025-11-25 18:02+0300\n"
-"PO-Revision-Date: 2026-01-08 00:00+0000\n"
+"PO-Revision-Date: 2026-03-30 00:00+0000\n"
 "Last-Translator: Grzegorz Pruchniakowski <grzegorz.pruchniakowski@gmail.com>, 2026\n"
 "Language-Team: Polish (https://app.transifex.com/audacity/teams/164520/pl/)\n"
 "Language: pl\n"
@@ -6432,7 +6432,7 @@ msgstr "Tryb VBR"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Optimize for"
-msgstr "Optymalizuj dla"
+msgstr "Zoptymalizuj dla"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "Speech"
@@ -7269,7 +7269,7 @@ msgstr "Eksportuj zachowanie"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "S&how 'How would you like to export?' dialog"
-msgstr "Pokaż okno dialogowe „Jak c&hcesz eksportować?”"
+msgstr "Pokaż okno dialogowe „Gdzie c&hcesz eksportować?”"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Save behavior"
@@ -7465,7 +7465,7 @@ msgstr "Strona %d z %d"
 #. user to select Cloud or local save.
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "How would you like to save?"
-msgstr "Jak chcesz zapisać?"
+msgstr "Gdzie chcesz zapisać?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "Save to the Cloud (free)"
@@ -7481,7 +7481,7 @@ msgstr "Zapi&sz w chmurze"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "On your computer"
-msgstr "Na Twoim komputerze"
+msgstr "Na swoim komputerze"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid ""
@@ -7503,7 +7503,7 @@ msgstr "Zapamiętaj mój wybó&r i nie pytaj ponownie"
 #. Cloud or local export.
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "How would you like to export?"
-msgstr "Jak chcesz eksportować?"
+msgstr "Gdzie chcesz eksportować?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "Share to audio.com"
@@ -8901,7 +8901,7 @@ msgstr "Wklej dźwięk"
 
 #: src/AudioPasteDialog.cpp
 msgid "How would you like to paste your audio?"
-msgstr "Jak chcesz wkleić swój dźwięk?"
+msgstr "Gdzie chcesz wkleić swój dźwięk?"
 
 #. i18n-hint: %s substitutes for a file size, e.g. "345 MB". A "smart clip" is an audio clip containing hidden trimmed data.
 #: src/AudioPasteDialog.cpp
@@ -17035,7 +17035,7 @@ msgstr "Katalog %s nie jest przeznaczony do zapisu"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Changes to temporary directory will not take effect until Audacity is restarted"
-msgstr "Zmiana katalogu tymczasowego będzie nieaktywna aż do zrestartowania Audacity"
+msgstr "Zmiana katalogu tymczasowego zostanie wprowadzona dopiero po zrestartowaniu Audacity"
 
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Temp Directory Update"
@@ -17562,7 +17562,7 @@ msgstr ""
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Changes to these settings only take effect when restarting Audacity.\n"
-msgstr "Zmiany w tych ustawieniach zaczną obowiązywać dopiero po zrestartowaniu Audacity.\n"
+msgstr "Zmiany w tych ustawieniach zostaną wprowadzone dopiero po zrestartowaniu Audacity.\n"
 
 #: src/prefs/ModulePrefs.cpp
 msgid "Always ask"
@@ -18970,7 +18970,7 @@ msgstr "Ogólne"
 
 #: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
 msgid "&Optimize for Voice"
-msgstr "&Optymalizuj dla głosu"
+msgstr "Z&optymalizuj dla głosu"
 
 #: src/tracks/playabletrack/wavetrack/ui/PitchAndSpeedDialog.cpp
 msgid "Changed Speed"
@@ -19890,13 +19890,13 @@ msgstr "Informacje o użytkowaniu"
 #: src/update/UpdateNoticeDialog.cpp
 #, c-format
 msgid "You can turn this off anytime in %s."
-msgstr "Możesz to wyłączyć w dowolnym momencie w %s."
+msgstr "Możesz wyłączyć to w dowolnym momencie w %s."
 
 #. i18n-hint:  %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
 #, c-format
 msgid "You can disable this anytime in %s."
-msgstr "Możesz to wyłączyć w dowolnym momencie w %s."
+msgstr "Możesz wyłączyć to w dowolnym momencie w %s."
 
 #: src/update/UpdateNoticeDialog.cpp
 msgid "View privacy policy"
