@@ -21,7 +21,7 @@ struct AudioCallbackInfo {
     int numSamples = 0;
 };
 
-class IAudioEngine : MODULE_EXPORT_INTERFACE
+class IAudioEngine : MODULE_GLOBAL_EXPORT_INTERFACE
 {
     INTERFACE_ID(IAudioEngine);
 public:

@@ -162,7 +162,7 @@ class Au3InteractionTestBase : public ::testing::Test
 public:
     void initTestProject()
     {
-        m_au3ProjectAccessor = std::make_shared<au3::Au3ProjectAccessor>();
+        m_au3ProjectAccessor = std::make_shared<au3::Au3ProjectAccessor>(muse::modularity::globalCtx());
         const muse::io::path_t TEST_PROJECT_PATH = muse::String::fromUtf8(trackedit_tests_DATA_ROOT) + "/data/empty.aup3";
         constexpr auto discardAutosave = false;
         muse::Ret ret = m_au3ProjectAccessor->load(TEST_PROJECT_PATH, discardAutosave);

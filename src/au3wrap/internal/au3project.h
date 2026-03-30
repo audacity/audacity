@@ -23,7 +23,7 @@ class Au3ProjectAccessor : public IAu3Project
 {
 public:
 
-    Au3ProjectAccessor();
+    Au3ProjectAccessor(const muse::modularity::ContextPtr& ctx);
 
     [[nodiscard]] muse::Ret open() override;
     [[nodiscard]] muse::Ret load(const muse::io::path_t& filePath, bool ignoreAutosave) override;
@@ -65,7 +65,7 @@ class Au3ProjectCreator : public IAu3ProjectCreator
 
 public:
 
-    std::shared_ptr<IAu3Project> create() const override;
+    std::shared_ptr<IAu3Project> create(const muse::modularity::ContextPtr& ctx) const override;
     [[nodiscard]] muse::Ret removeUnsavedData(const muse::io::path_t& projectPath) const override;
 };
 }

@@ -59,8 +59,9 @@ class Polyline : public QQuickPaintedItem, public muse::async::Asyncable, public
     Q_PROPERTY(qreal activePointY READ activePointY NOTIFY activePointChanged)
     Q_PROPERTY(qreal activePointValue READ activePointValue NOTIFY activePointChanged)
 
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
+
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
 
 public:
     explicit Polyline(QQuickItem* parent = nullptr);

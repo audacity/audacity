@@ -10,12 +10,15 @@
 #include "global/types/ret.h"
 #include "global/async/notification.h"
 #include "modularity/imoduleinterface.h"
+#include "framework/global/modularity/ioc.h"
 
 namespace au::au3 {
 //! NOTE It's exactly IAu3Project, not just IProject
-class IAu3Project
+class IAu3Project : public muse::Contextable
 {
 public:
+    IAu3Project(const muse::modularity::ContextPtr& ctx)
+        : muse::Contextable(ctx) {}
 
     virtual ~IAu3Project() = default;
 
@@ -43,13 +46,13 @@ public:
     virtual uintptr_t au3ProjectPtr() const = 0;
 };
 
-class IAu3ProjectCreator : MODULE_EXPORT_INTERFACE
+class IAu3ProjectCreator : MODULE_GLOBAL_EXPORT_INTERFACE
 {
     INTERFACE_ID(IAu3ProjectCreator)
 public:
     virtual ~IAu3ProjectCreator() = default;
 
-    virtual std::shared_ptr<IAu3Project> create() const = 0;
+    virtual std::shared_ptr<IAu3Project> create(const muse::modularity::ContextPtr& ctx) const = 0;
 
     [[nodiscard]] virtual muse::Ret removeUnsavedData(const muse::io::path_t& projectPath) const = 0;
 };

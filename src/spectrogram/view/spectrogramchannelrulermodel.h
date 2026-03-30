@@ -29,9 +29,10 @@ class SpectrogramChannelRulerModel : public QObject, public QQmlParserStatus, pu
     Q_PROPERTY(bool isMinZoom READ isMinZoom NOTIFY zoomStateChanged FINAL)
     Q_PROPERTY(bool isHighContrast READ isHighContrast NOTIFY isHighContrastChanged FINAL)
 
+    muse::GlobalInject<muse::ui::IUiConfiguration> uiConfig;
+
     muse::Inject<ISpectrogramService> spectrogramService{ this };
     muse::Inject<ISpectrogramViewService> spectrogramViewService{ this };
-    muse::GlobalInject<muse::ui::IUiConfiguration> uiConfig;
 
 public:
     SpectrogramChannelRulerModel(QObject* parent = nullptr);

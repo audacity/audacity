@@ -37,6 +37,7 @@ class ProjectActionsController : public IProjectFilesController, public muse::ac
     muse::GlobalInject<muse::IPlatformInteractive> platformInteractive;
     muse::GlobalInject<IRecentFilesController> recentFilesController;
     muse::GlobalInject<muse::mi::IMultiWindowsProvider> multiwindowsProvider;
+    muse::GlobalInject<toast::IToastService> toastService;
 
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::Inject<muse::ui::IMainWindow> mainWindow { this };
@@ -48,7 +49,6 @@ class ProjectActionsController : public IProjectFilesController, public muse::ac
     muse::Inject<importexport::IImporter> importer { this };
     muse::Inject<au3cloud::IAu3AudioComService> audioComService { this };
     muse::Inject<au3cloud::IAuthorization> authorization { this };
-    muse::Inject<toast::IToastService> toastService { this };
 
 public:
     ProjectActionsController(muse::modularity::ContextPtr ctx = nullptr);

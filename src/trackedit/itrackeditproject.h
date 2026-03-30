@@ -81,7 +81,7 @@ public:
 
 using ITrackeditProjectPtr = std::shared_ptr<ITrackeditProject>;
 
-class ITrackeditProjectCreator : MODULE_EXPORT_INTERFACE
+class ITrackeditProjectCreator : MODULE_GLOBAL_EXPORT_INTERFACE
 {
     INTERFACE_ID(ITrackeditProjectCreator)
 public:

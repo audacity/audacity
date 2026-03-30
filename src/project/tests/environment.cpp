@@ -15,6 +15,7 @@
 #include "trackedit/tests/mocks/clipboardmock.h"
 
 namespace au::project {
+static auto s_testCtx = std::make_shared<muse::modularity::Context>(999);
 static muse::testing::SuiteEnvironment audacityproject_se
     = muse::testing::SuiteEnvironment()
       .setDependencyModules({ new au::au3::Au3WrapModule()
@@ -76,7 +77,7 @@ static muse::testing::SuiteEnvironment audacityproject_se
         [](au::trackedit::ClipboardMock*) {}
         );
 
-    muse::modularity::globalIoc()->registerExport<au::trackedit::ITrackeditClipboard>(
+    muse::modularity::ioc(s_testCtx)->registerExport<au::trackedit::ITrackeditClipboard>(
         "utests",
         clipboardMock
         );
@@ -130,13 +131,14 @@ static muse::testing::SuiteEnvironment audacityproject_se
     // Unregister and delete ClipboardMock
     {
         std::shared_ptr<au::trackedit::ITrackeditClipboard> clipboardPtr
-            =muse::modularity::globalIoc()->resolve<au::trackedit::ITrackeditClipboard>("utests");
+            =muse::modularity::ioc(s_testCtx)->resolve<au::trackedit::ITrackeditClipboard>("utests");
 
-        muse::modularity::globalIoc()->unregister<au::trackedit::ITrackeditClipboard>("utests");
+        muse::modularity::ioc(s_testCtx)->unregister<au::trackedit::ITrackeditClipboard>("utests");
 
         if (clipboardPtr) {
             delete static_cast<au::trackedit::ClipboardMock*>(clipboardPtr.get());
         }
     }
+    muse::modularity::removeIoC(s_testCtx);
 });
 } // namespace au::project

@@ -22,7 +22,7 @@ class CustomFFmpegPreferencesModel : public QObject, public muse::async::Asyncab
     muse::GlobalInject<IExportConfiguration> exportConfiguration;
     muse::GlobalInject<muse::IGlobalConfiguration> globalConfiguration;
 
-    muse::Inject<IFFmpegOptionsAccessor> ffmpegOptionsAccessor { this };
+    muse::GlobalInject<IFFmpegOptionsAccessor> ffmpegOptionsAccessor;
     muse::Inject<IExporter> exporter{ this };
     muse::Inject<muse::IInteractive> interactive{ this };
 

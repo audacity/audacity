@@ -108,6 +108,7 @@ void ProjectSceneModule::registerExports()
     m_configuration = std::make_shared<ProjectSceneConfiguration>();
 
     globalIoc()->registerExport<IProjectSceneConfiguration>(mname, m_configuration);
+    globalIoc()->registerExport<IProjectViewStateCreator>(mname, std::make_shared<ProjectViewStateCreator>());
 }
 
 void ProjectSceneModule::resolveImports()
@@ -231,7 +232,6 @@ void ProjectSceneContext::registerExports()
     m_uiActions = std::make_shared<ProjectSceneUiActions>(iocContext(), m_projectSceneActionsController);
     m_realtimeEffectPanelTrackSelection = std::make_shared<RealtimeEffectPanelTrackSelection>(iocContext());
 
-    ioc()->registerExport<IProjectViewStateCreator>(mname, std::make_shared<ProjectViewStateCreator>(iocContext()));
     ioc()->registerExport<IProjectSceneActionsController>(mname, m_projectSceneActionsController);
     ioc()->registerExport<IRealtimeEffectPanelTrackSelection>(mname, m_realtimeEffectPanelTrackSelection);
     ioc()->registerExport<IWavePainter>(mname, std::make_shared<WavePainterProxy>(iocContext()));

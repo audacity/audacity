@@ -30,6 +30,7 @@ namespace au::effects {
 class EffectExecutionScenario : public IEffectExecutionScenario, public muse::Contextable
 {
     muse::GlobalInject<IEffectsConfiguration> effectsConfiguration;
+    muse::GlobalInject<spectrogram::IGlobalSpectrogramConfiguration> spectrogramConfiguration;
 
     muse::Inject<context::IGlobalContext> globalContext{ this };
     muse::Inject<IEffectsProvider> effectsProvider{ this };
@@ -39,7 +40,6 @@ class EffectExecutionScenario : public IEffectExecutionScenario, public muse::Co
     muse::Inject<trackedit::IProjectHistory> projectHistory{ this };
     muse::Inject<trackedit::ITrackNavigationController> trackNavigationController { this };
     muse::Inject<spectrogram::IFrequencySelectionController> frequencySelectionController { this };
-    muse::GlobalInject<spectrogram::IGlobalSpectrogramConfiguration> spectrogramConfiguration;
 
 public:
     EffectExecutionScenario(const muse::modularity::ContextPtr& ctx)

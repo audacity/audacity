@@ -47,16 +47,16 @@ size_t randomIndex()
 }
 }
 
-std::shared_ptr<IAu3Project> Au3ProjectCreator::create() const
+std::shared_ptr<IAu3Project> Au3ProjectCreator::create(const muse::modularity::ContextPtr& ctx) const
 {
     TrackColor::Init(randomIndex());
-    return std::make_shared<Au3ProjectAccessor>();
+    return std::make_shared<Au3ProjectAccessor>(ctx);
 }
 
 muse::Ret Au3ProjectCreator::removeUnsavedData(const muse::io::path_t& projectPath) const
 {
     // Helper method to remove autosave data from a project file without keeping it open
-    const auto tempProject = create();
+    const auto tempProject = create(muse::modularity::globalCtx());
     if (!tempProject) {
         return muse::make_ret(static_cast<muse::Ret::Code>(au::project::Err::NoProjectError));
     }
@@ -81,8 +81,8 @@ struct au::au3::Au3ProjectData
     Au3Project& projectRef() { return *project.get(); }
 };
 
-Au3ProjectAccessor::Au3ProjectAccessor()
-    : m_data(std::make_shared<Au3ProjectData>())
+Au3ProjectAccessor::Au3ProjectAccessor(const muse::modularity::ContextPtr& ctx)
+    : IAu3Project(ctx), m_data(std::make_shared<Au3ProjectData>())
 {
     m_data->project = Au3Project::Create();
     mTrackListSubstription = Au3TrackList::Get(m_data->projectRef()).Subscribe([this](const TrackListEvent& event)

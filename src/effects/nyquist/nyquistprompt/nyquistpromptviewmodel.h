@@ -26,7 +26,7 @@ class NyquistPromptViewModel : public BuiltinEffectModel
     Q_PROPERTY(QString title READ title CONSTANT FINAL)
 
 protected:
-    muse::Inject<IParameterExtractorRegistry> parameterExtractorRegistry{ this };
+    muse::GlobalInject<IParameterExtractorRegistry> parameterExtractorRegistry;
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
     muse::Inject<muse::IInteractive> interactive{ this };
 

@@ -88,7 +88,7 @@ au::effects::NyquistEffectsContext::NyquistEffectsContext(const muse::modularity
 
 void au::effects::NyquistEffectsContext::resolveImports()
 {
-    auto paramExtractorRegistry = ioc()->resolve<IParameterExtractorRegistry>(mname);
+    auto paramExtractorRegistry = muse::modularity::globalIoc()->resolve<IParameterExtractorRegistry>(mname);
     if (paramExtractorRegistry) {
         paramExtractorRegistry->registerExtractor(std::make_shared<NyquistParameterExtractorService>());
     }

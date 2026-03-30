@@ -25,10 +25,11 @@ class ExportPreferencesModel : public QObject, public muse::async::Asyncable, pu
     Q_OBJECT
 
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher{ this };
-    muse::Inject<muse::IInteractive> interactive{ this };
     muse::GlobalInject<appshell::IAppShellConfiguration> configuration;
     muse::GlobalInject<IExportConfiguration> exportConfiguration;
+
+    muse::Inject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::Inject<muse::IInteractive> interactive{ this };
     muse::Inject<context::IGlobalContext> globalContext{ this };
     muse::Inject<IExporter> exporter{ this };
     muse::Inject<effects::IRealtimeEffectService> realtimeEffectService{ this };

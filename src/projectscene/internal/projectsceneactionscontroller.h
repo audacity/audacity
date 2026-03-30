@@ -19,10 +19,11 @@ namespace au::projectscene {
 class ProjectSceneActionsController : public IProjectSceneActionsController, public muse::actions::Actionable,
     public muse::async::Asyncable, public muse::Contextable
 {
+    muse::GlobalInject<IProjectSceneConfiguration> configuration;
+
     muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::Inject<au::context::IGlobalContext> globalContext { this };
     muse::Inject<muse::IInteractive> interactive { this };
-    muse::GlobalInject<IProjectSceneConfiguration> configuration;
 
 public:
     ProjectSceneActionsController(const muse::modularity::ContextPtr& ctx)

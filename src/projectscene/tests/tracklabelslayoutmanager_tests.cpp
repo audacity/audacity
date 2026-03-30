@@ -17,9 +17,13 @@ class TrackLabelsLayoutManagerTests : public ::testing::Test
 protected:
     void SetUp() override
     {
+        m_testCtx = std::make_shared<muse::modularity::Context>();
+        m_testCtx->id = 999;
+
         m_layoutManager = new TrackLabelsLayoutManager();
 
         m_labelsModel = new TrackLabelsListModel();
+        m_labelsModel->setContext(m_testCtx);
 
         m_globalContext = std::make_shared<context::GlobalContextMock>();
         m_labelsModel->globalContext.set(m_globalContext);
@@ -86,6 +90,7 @@ protected:
     void createTimelineContext()
     {
         m_timelineContext = std::make_shared<projectscene::TimelineContext>();
+        m_timelineContext->setContext(m_testCtx);
 
         m_timelineContext->setFrameStartTime(0);
         m_timelineContext->setFrameEndTime(100);
@@ -93,6 +98,7 @@ protected:
         m_labelsModel->setTimelineContext(m_timelineContext.get());
     }
 
+    muse::modularity::ContextPtr m_testCtx;
     TrackLabelsLayoutManager* m_layoutManager = nullptr;
     TrackLabelsListModel* m_labelsModel = nullptr;
 

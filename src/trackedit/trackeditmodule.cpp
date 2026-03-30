@@ -79,6 +79,7 @@ void TrackeditModule::registerExports()
 
     globalIoc()->registerExport<ITrackeditConfiguration>(mname, m_configuration);
     globalIoc()->registerExport<IClipboardData>(mname, std::make_shared<ClipboardData>());
+    globalIoc()->registerExport<ITrackeditProjectCreator>(mname, std::make_shared<Au3TrackeditProjectCreator>());
 }
 
 void TrackeditModule::registerUiTypes()
@@ -130,7 +131,6 @@ void TrackeditContext::registerExports()
     m_trackNavigationController = std::make_shared<TrackNavigationController>(iocContext());
     m_trackSpectrogramSettingsUpdater = std::make_shared<TrackSpectrogramSettingsUpdater>(iocContext());
 
-    ioc()->registerExport<ITrackeditProjectCreator>(mname, new Au3TrackeditProjectCreator(iocContext()));
     ioc()->registerExport<ITrackeditInteraction>(mname,
                                                  new TrackeditInteraction(iocContext(), std::make_unique<TrackeditOperationController>(
                                                                               iocContext(), std::make_unique<UndoManager>(iocContext()))));

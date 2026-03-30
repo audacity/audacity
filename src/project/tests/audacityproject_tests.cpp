@@ -76,6 +76,7 @@ private:
 class Project_Audacity4ProjectTests : public ::testing::Test
 {
 protected:
+    muse::modularity::ContextPtr m_testCtx;
     std::unique_ptr<Audacity4Project> m_currentProject = nullptr;
     std::shared_ptr<au::project::TrackeditProjectCreatorMock> m_trackeditProjectCreator;
     std::shared_ptr<au::projectscene::ProjectViewStateCreatorMock> m_projectViewStateCreator;
@@ -83,7 +84,12 @@ protected:
 
     void SetUp() override
     {
-        m_currentProject = std::make_unique<Audacity4Project>(muse::modularity::globalCtx());
+        m_testCtx = std::make_shared<muse::modularity::Context>();
+        m_testCtx->id = 998;
+
+        m_clipboard = std::make_shared<::testing::NiceMock<au::trackedit::ClipboardMock> >();
+
+        m_currentProject = std::make_unique<Audacity4Project>(m_testCtx);
         m_currentProject->trackeditProjectCreator.set(m_trackeditProjectCreator);
         m_currentProject->viewStateCreator.set(m_projectViewStateCreator);
         m_currentProject->clipboard.set(m_clipboard);

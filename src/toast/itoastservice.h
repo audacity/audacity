@@ -13,7 +13,7 @@
 #include "toasttypes.h"
 
 namespace au::toast {
-class IToastService : MODULE_EXPORT_INTERFACE
+class IToastService : MODULE_GLOBAL_EXPORT_INTERFACE
 {
     INTERFACE_ID(IToast)
 public:

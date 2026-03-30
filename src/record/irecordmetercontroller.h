@@ -7,7 +7,7 @@
 #include "async/notification.h"
 
 namespace au::record {
-class IRecordMeterController : MODULE_EXPORT_INTERFACE
+class IRecordMeterController : MODULE_GLOBAL_EXPORT_INTERFACE
 {
     INTERFACE_ID(IRecordMeterController)
 

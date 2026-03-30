@@ -93,12 +93,9 @@ private:
     mutable muse::async::Channel<trackedit::Track, int> m_trackMoved;
 };
 
-class Au3TrackeditProjectCreator : public ITrackeditProjectCreator, public muse::Contextable
+class Au3TrackeditProjectCreator : public ITrackeditProjectCreator
 {
 public:
-    Au3TrackeditProjectCreator(const muse::modularity::ContextPtr& ctx)
-        : muse::Contextable(ctx) {}
-
     ITrackeditProjectPtr create(const std::shared_ptr<au::au3::IAu3Project>& au3project) const override;
 };
 }
