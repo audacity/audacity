@@ -13,3 +13,13 @@ muse::io::path_t Au3CloudConfigurationStub::cloudProjectsPath() const
 void Au3CloudConfigurationStub::setCloudProjectsPath(const muse::io::path_t&)
 {
 }
+
+std::vector<std::string> Au3CloudConfigurationStub::preferredAudioFormats() const
+{
+    return {};
+}
+
+std::string Au3CloudConfigurationStub::exportConfig(const std::string&) const
+{
+    return {};
+}
