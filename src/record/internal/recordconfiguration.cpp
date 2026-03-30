@@ -27,7 +27,7 @@ void RecordConfiguration::init()
         m_isInputMonitoringOnChanged.notify();
     });
 
-    muse::settings()->setDefaultValue(LEAD_IN_TIME_DURATION_KEY, muse::Val(5.0));
+    muse::settings()->setDefaultValue(LEAD_IN_TIME_DURATION_KEY, muse::Val(2.0));
     muse::settings()->valueChanged(LEAD_IN_TIME_DURATION_KEY).onReceive(nullptr, [this](const muse::Val&) {
         m_leadInTimeDurationChanged.notify();
     });
