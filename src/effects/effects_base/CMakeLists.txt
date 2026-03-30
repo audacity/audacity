@@ -17,6 +17,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/ieffectsmenuprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectsconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectsuiengine.h
+    ${CMAKE_CURRENT_LIST_DIR}/ieffectviewcontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectinstancesregister.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectexecutionscenario.h
     ${CMAKE_CURRENT_LIST_DIR}/irealtimeeffectservice.h
@@ -51,8 +52,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3effectloader.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectloadersregister.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectloadersregister.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/effectsutils.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsutils.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectsutils.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectviewcontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectviewcontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectinstancesregister.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectinstancesregister.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectexecutionscenario.cpp

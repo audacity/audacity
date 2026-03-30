@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include "framework/global/types/ret.h"
 #include "framework/global/async/notification.h"
 #include "framework/global/modularity/imoduleinterface.h"
 
@@ -30,10 +29,5 @@ public:
     virtual Effect* effect(const EffectId& effectId) const = 0;
 
     virtual bool supportsMultipleClipSelection(const EffectId& effectId) const = 0;
-
-    virtual muse::Ret showEffect(const EffectId& effectId, const EffectInstanceId& instanceId) = 0;
-
-    virtual void showEffect(const RealtimeEffectStatePtr& state) const = 0;
-    virtual void hideEffect(const RealtimeEffectStatePtr& state) const = 0;
 };
 }

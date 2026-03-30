@@ -9,7 +9,6 @@
 #include "audioplugins/iknownaudiopluginsregister.h"
 #include "../ieffectsconfiguration.h"
 #include "../ieffectloadersregister.h"
-#include "../ieffectviewlaunchregister.h"
 
 #include "../ieffectsprovider.h"
 
@@ -23,8 +22,6 @@ class EffectsProvider : public IEffectsProvider, public muse::async::Asyncable
     muse::GlobalInject<IEffectsConfiguration> configuration;
     muse::GlobalInject<muse::audioplugins::IKnownAudioPluginsRegister> knownPluginsRegister;
     muse::GlobalInject<IEffectLoadersRegister> effectLoadersRegister;
-
-    muse::ContextInject<IEffectViewLaunchRegister> viewLaunchRegister{ this };
 
 public:
     void init();
@@ -42,11 +39,6 @@ public:
     Effect* effect(const EffectId& effectId) const override;
 
     bool supportsMultipleClipSelection(const EffectId& effectId) const override;
-
-    muse::Ret showEffect(const EffectId& effectId, const EffectInstanceId& instanceId) override;
-
-    void showEffect(const RealtimeEffectStatePtr& state) const override;
-    void hideEffect(const RealtimeEffectStatePtr& state) const override;
 
 private:
     muse::Ret doEffectPreview(EffectBase& effect, EffectSettings& settings);

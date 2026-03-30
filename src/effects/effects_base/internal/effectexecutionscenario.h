@@ -12,6 +12,7 @@
 #include "../ieffectinstancesregister.h"
 #include "../ieffectsprovider.h"
 #include "ieffectsconfiguration.h"
+#include "ieffectviewcontroller.h"
 #include "trackedit/iprojecthistory.h"
 #include "trackedit/iselectioncontroller.h"
 #include "trackedit/internal/itracknavigationcontroller.h"
@@ -41,6 +42,7 @@ class EffectExecutionScenario : public IEffectExecutionScenario, public muse::Co
     muse::GlobalInject<IEffectsProvider> effectsProvider;
     muse::GlobalInject<IEffectInstancesRegister> effectInstancesRegister;
 
+    muse::ContextInject<IEffectViewController> effectViewController{ this };
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
     muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
     muse::ContextInject<muse::IInteractive> interactive{ this };
