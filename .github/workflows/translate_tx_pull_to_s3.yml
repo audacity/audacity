@@ -31,12 +31,12 @@ jobs:
             echo "::error::TRANSIFEX_API_TOKEN is empty"
             exit 1
           fi
-          if [ -z "${{ secrets.S3_KEY }}" ]; then
-            echo "::error::S3_KEY is empty"
+          if [ -z "${{ secrets.AU_S3_KEY }}" ]; then
+            echo "::error::AU_S3_KEY is empty"
             exit 1
           fi
-          if [ -z "${{ secrets.S3_SECRET }}" ]; then
-            echo "::error::S3_SECRET is empty"
+          if [ -z "${{ secrets.AU_S3_SECRET }}" ]; then
+            echo "::error::AU_S3_SECRET is empty"
             exit 1
           fi
 
@@ -82,7 +82,7 @@ jobs:
       - name: Setup environment for pushing to S3
         if: steps.configure.outputs.DO_PUSH_TO_S3 == 'true'
         run: |
-          bash ./buildscripts/ci/tools/s3_install.sh --s3_key ${{ secrets.S3_KEY }} --s3_secret ${{ secrets.S3_SECRET }}
+          bash ./buildscripts/ci/tools/s3_install.sh --s3_key ${{ secrets.AU_S3_KEY }} --s3_secret ${{ secrets.AU_S3_SECRET }}
 
           bash ./buildscripts/ci/tools/make_build_number.sh
           BUILD_NUMBER=$(cat ./build.artifacts/env/build_number.env)
