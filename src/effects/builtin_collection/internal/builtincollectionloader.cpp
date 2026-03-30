@@ -1,7 +1,7 @@
 /*
-* Audacity: A Digital Audio Editor
-*/
-#include "builtineffectsloader.h"
+ * Audacity: A Digital Audio Editor
+ */
+#include "builtincollectionloader.h"
 
 #include <QtQml>
 
@@ -70,7 +70,7 @@
 
 using namespace au::effects;
 
-void BuiltinEffectsLoader::preInit()
+void BuiltinCollectionLoader::preInit()
 {
     static BuiltinEffectsModule::Registration< FadeInEffect > regFadeIn;
     static BuiltinEffectsModule::Registration< FadeOutEffect > regFadeOut;
@@ -98,7 +98,7 @@ void BuiltinEffectsLoader::preInit()
     static BuiltinEffectsModule::Registration< LimiterEffect > regLimiter;
 }
 
-void BuiltinEffectsLoader::init()
+void BuiltinCollectionLoader::init()
 {
     auto regView = [this](const ::ComponentInterfaceSymbol& symbol, const muse::String& url) {
         builtinEffectsViewRegister()->regUrl(au3::wxToString(symbol.Internal()), url);

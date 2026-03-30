@@ -50,8 +50,10 @@ std::string EffectsModule::moduleName() const
 void EffectsModule::registerExports()
 {
     m_configuration = std::make_shared<EffectsConfiguration>();
+    m_effectsProvider = std::make_shared<EffectsProvider>();
 
     globalIoc()->registerExport<IEffectsConfiguration>(mname, m_configuration);
+    globalIoc()->registerExport<IEffectsProvider>(mname, m_effectsProvider);
     globalIoc()->registerExport<IParameterExtractorRegistry>(mname, new ParameterExtractorRegistry());
     globalIoc()->registerExport<IEffectLoadersRegister>(mname, new EffectLoadersRegister());
 }
@@ -93,12 +95,20 @@ void EffectsModule::onInit(const muse::IApplication::RunMode&)
     PluginManager::Get().Initialize(std::move(configFactory), std::move(pluginRegistryFactory));
 
     m_configuration->init();
+    m_effectsProvider->init();
 
     //! --- Diagnostics ---
     auto pr = globalIoc()->resolve<muse::diagnostics::IDiagnosticsPathsRegister>(mname);
     if (pr) {
         pr->reg("pluginsettings", FileNames::PluginSettings().ToStdString());
     }
+}
+
+void EffectsModule::onAllInited(const muse::IApplication::RunMode&)
+{
+    //! NOTE On init, built-in, vst and other plugins are initialized.
+    //! After all, the provider can load effects of different types.
+    m_effectsProvider->reloadEffects();
 }
 
 void EffectsModule::onDeinit()
@@ -121,12 +131,10 @@ muse::modularity::IContextSetup* EffectsModule::newContext(const muse::modularit
 
 void EffectsContext::registerExports()
 {
-    m_effectsProvider = std::make_shared<EffectsProvider>(iocContext());
     m_effectsMenuProvider = std::make_shared<EffectsMenuProvider>(iocContext());
     m_actionsController = std::make_shared<EffectsActionsController>(iocContext());
     m_realtimeEffectService = std::make_shared<RealtimeEffectService>(iocContext());
 
-    ioc()->registerExport<IEffectsProvider>(mname, m_effectsProvider);
     ioc()->registerExport<IEffectsMenuProvider>(mname, m_effectsMenuProvider);
     ioc()->registerExport<IEffectsUiEngine>(mname, std::make_shared<EffectsUiEngine>(iocContext()));
     ioc()->registerExport<IEffectPresetsProvider>(mname, std::make_shared<EffectPresetsProvider>(iocContext()));
@@ -142,16 +150,8 @@ void EffectsContext::registerExports()
 void EffectsContext::onInit(const muse::IApplication::RunMode&)
 {
     m_effectsMenuProvider->init();
-    m_effectsProvider->init();
     m_actionsController->init();
     m_realtimeEffectService->init();
-}
-
-void EffectsContext::onAllInited(const muse::IApplication::RunMode&)
-{
-    //! NOTE On init, built-in, vst and other plugins are initialized.
-    //! After all, the provider can load effects of different types.
-    m_effectsProvider->reloadEffects();
 }
 
 void EffectsContext::onDeinit()

@@ -18,7 +18,7 @@ class EffectSettingsAccess;
 class TrackList;
 
 namespace au::effects {
-class EffectsProvider : public IEffectsProvider, public muse::async::Asyncable, public muse::Contextable
+class EffectsProvider : public IEffectsProvider, public muse::async::Asyncable
 {
     muse::GlobalInject<IEffectsConfiguration> configuration;
     muse::GlobalInject<muse::audioplugins::IKnownAudioPluginsRegister> knownPluginsRegister;
@@ -27,9 +27,6 @@ class EffectsProvider : public IEffectsProvider, public muse::async::Asyncable, 
     muse::ContextInject<IEffectViewLaunchRegister> viewLaunchRegister{ this };
 
 public:
-    EffectsProvider(const muse::modularity::ContextPtr& ctx)
-        : muse::Contextable(ctx) {}
-
     void init();
 
     void reloadEffects();

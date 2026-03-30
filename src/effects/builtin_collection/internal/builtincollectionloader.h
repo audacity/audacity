@@ -1,6 +1,6 @@
 /*
-* Audacity: A Digital Audio Editor
-*/
+ * Audacity: A Digital Audio Editor
+ */
 #pragma once
 
 #include "modularity/ioc.h"
@@ -10,13 +10,13 @@
 #include "modularity/ioc.h"
 
 namespace au::effects {
-class BuiltinEffectsLoader : public muse::Contextable
+class BuiltinCollectionLoader : public muse::Contextable
 {
     muse::GlobalInject<IBuiltinEffectsRepository> builtinEffectsRepository;
     muse::GlobalInject<IBuiltinEffectsViewRegister> builtinEffectsViewRegister;
 
 public:
-    BuiltinEffectsLoader(const muse::modularity::ContextPtr& ctx)
+    BuiltinCollectionLoader(const muse::modularity::ContextPtr& ctx)
         : muse::Contextable(ctx) {}
 
     static void preInit();
