@@ -52,7 +52,7 @@ void UpdatePreferencesModel::setNeedCheckForNewAppVersion(bool value)
     emit needCheckForNewAppVersionChanged(value);
 }
 
-QString UpdatePreferencesModel::museScorePrivacyPolicyUrl() const
+QString UpdatePreferencesModel::privacyPolicyUrl() const
 {
     return QString::fromStdString(updateConfiguration()->museScorePrivacyPolicyUrl());
 }

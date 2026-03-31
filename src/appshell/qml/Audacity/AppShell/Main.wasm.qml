@@ -33,7 +33,7 @@ ApplicationWindow {
     height: 480
 
     visible: true
-    title: qsTrc("appshell", "MuseScore")
+    title: qsTrc("appshell", "Audacity")
 
     header: ToolBar {
         contentHeight: 40

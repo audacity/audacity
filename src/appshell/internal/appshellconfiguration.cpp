@@ -264,7 +264,6 @@ async::Notification AppShellConfiguration::isEffectsPanelVisibleChanged() const
     return projectSceneConfiguration()->isEffectsPanelVisibleChanged();
 }
 
-
 muse::io::path_t AppShellConfiguration::sessionDataPath() const
 {
     return globalConfiguration()->userAppDataPath() + "/session";

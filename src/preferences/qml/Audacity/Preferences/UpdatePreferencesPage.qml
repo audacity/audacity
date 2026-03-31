@@ -40,7 +40,7 @@ PreferencesPage {
         AutomaticUpdateSection {
             isAppUpdatable: updateModel.isAppUpdatable()
             needCheckForNewAppVersion: updateModel.needCheckForNewAppVersion
-            museScorePrivacyPolicyUrl: updateModel.museScorePrivacyPolicyUrl()
+            privacyPolicyUrl: updateModel.privacyPolicyUrl()
 
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart + 1
