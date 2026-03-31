@@ -10,6 +10,7 @@
 #include "trackedit/tests/mocks/trackeditprojectmock.h"
 
 #include "trackedit/dom/label.h"
+#include "testing/testcontext.h"
 
 namespace au::projectscene {
 class TrackLabelsLayoutManagerTests : public ::testing::Test
@@ -17,8 +18,7 @@ class TrackLabelsLayoutManagerTests : public ::testing::Test
 protected:
     void SetUp() override
     {
-        m_testCtx = std::make_shared<muse::modularity::Context>();
-        m_testCtx->id = 999;
+        m_testCtx = au::testutils::makeTestContext();
 
         m_layoutManager = new TrackLabelsLayoutManager();
 

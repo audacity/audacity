@@ -35,6 +35,7 @@
 #include "trackedit/tests/mocks/clipboardmock.h"
 
 #include "testtools.h"
+#include "testing/testcontext.h"
 
 namespace au::project {
 enum class AccessMode
@@ -84,8 +85,7 @@ protected:
 
     void SetUp() override
     {
-        m_testCtx = std::make_shared<muse::modularity::Context>();
-        m_testCtx->id = 998;
+        m_testCtx = au::testutils::makeTestContext();
 
         m_clipboard = std::make_shared<::testing::NiceMock<au::trackedit::ClipboardMock> >();
 

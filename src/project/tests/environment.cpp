@@ -3,6 +3,7 @@
 */
 
 #include "testing/environment.h"
+#include "testing/testcontext.h"
 
 #include "trackedit/itrackeditproject.h"
 #include "au3wrap/au3wrapmodule.h"
@@ -15,7 +16,7 @@
 #include "trackedit/tests/mocks/clipboardmock.h"
 
 namespace au::project {
-static auto s_testCtx = std::make_shared<muse::modularity::Context>(999);
+static auto s_testCtx = au::testutils::makeTestContext();
 static muse::testing::SuiteEnvironment audacityproject_se
     = muse::testing::SuiteEnvironment()
       .setDependencyModules({ new au::au3::Au3WrapModule()
