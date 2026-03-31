@@ -52,6 +52,8 @@ public:
     int desiredRowCount() const;
     void setDesiredRowCount(int count);
 
+    Q_INVOKABLE void openAudioFile(const QString& audioId);
+
 signals:
     void stateChanged();
     void hasMoreChanged();

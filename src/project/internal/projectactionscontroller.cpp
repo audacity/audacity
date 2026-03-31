@@ -94,6 +94,7 @@ const muse::actions::ActionCodeList& ProjectActionsController::prohibitedActions
         "file-new",
         "file-open",
         "cloud-file-open",
+        "audacity://cloud/open-audio-file",
         "file-close",
         "project-import",
         "file-save",

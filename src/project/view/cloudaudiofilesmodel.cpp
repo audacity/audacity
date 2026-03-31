@@ -181,3 +181,14 @@ bool CloudAudioFilesModel::needsLoading()
 {
     return hasMore() && static_cast<int>(m_items.size()) < m_desiredRowCount;
 }
+
+void CloudAudioFilesModel::openAudioFile(const QString& audioId)
+{
+    if (audioId.isEmpty()) {
+        return;
+    }
+
+    muse::actions::ActionQuery query("audacity://cloud/open-audio-file");
+    query.addParam("audioId", muse::Val(audioId.toStdString()));
+    dispatcher()->dispatch(query);
+}

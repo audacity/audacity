@@ -140,8 +140,9 @@ ProjectsView {
             navigation.name: "CloudAudioFilesGrid"
             navigation.accessible.name: qsTrc("project", "Cloud audio files grid")
 
-            //onCreateNewProjectRequested: {}
-            //onOpenProjectRequested: function(projectPath, displayName) {}
+            onOpenCloudProjectRequested: function (id, _, _) {
+                cloudAudioFilesModel.openAudioFile(id)
+            }
         }
     }
 
