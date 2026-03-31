@@ -39,12 +39,6 @@ void NyquistPromptLoader::registerNyquistPromptEffect()
         if (symbol != NyquistPromptEffect::Symbol) {
             continue;
         }
-        qmlRegisterSingletonType<NyquistPromptViewModelFactory>("Audacity.Nyquist", 1, 0, "NyquistPromptViewModelFactory",
-                                                                [] (QQmlEngine*, QJSEngine*) -> QObject* {
-            return new NyquistPromptViewModelFactory();
-        });
-        const auto effectName = au3::wxToString(NyquistPromptEffect::Symbol.Internal());
-        builtinEffectsViewRegister()->regUrl(effectName, u"qrc:/nyquistprompt/NyquistPromptView.qml");
 
         // With the nyquist prompt, one can do the same thing to multiple clips at once (right?)
         constexpr auto supportsMultipleClipSelection = true;

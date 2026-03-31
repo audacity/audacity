@@ -30,7 +30,7 @@ static void nyquist_init_qrc()
 }
 
 au::effects::NyquistEffectsModule::NyquistEffectsModule()
-    : m_nyquistEffectsRepository(std::make_unique<NyquistEffectsRepository>(muse::modularity::globalCtx()))
+    : m_nyquistEffectsRepository(std::make_unique<NyquistEffectsRepository>())
 {
 }
 
@@ -119,6 +119,14 @@ void au::effects::NyquistEffectsContext::resolveImports()
     if (launchRegister) {
         launchRegister->regLauncher("Nyquist", std::make_shared<NyquistViewLauncher>(iocContext()));
     }
+}
+
+void au::effects::NyquistEffectsContext::onPreInit(const muse::IApplication::RunMode&)
+{
+}
+
+void au::effects::NyquistEffectsContext::onInit(const muse::IApplication::RunMode&)
+{
 }
 
 void au::effects::NyquistEffectsContext::onDeinit()

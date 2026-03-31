@@ -11,13 +11,13 @@
 #include "au3-nyquist-effects/LoadNyquist.h"
 
 namespace au::effects {
-class NyquistEffectsRepository : public muse::Contextable
+class NyquistEffectsRepository
 {
     muse::GlobalInject<muse::audioplugins::IKnownAudioPluginsRegister> knownPlugins;
     muse::GlobalInject<spectrogram::ISpectralEffectsRegister> spectralEffectsRegister;
 
 public:
-    NyquistEffectsRepository(const muse::modularity::ContextPtr& ctx);
+    NyquistEffectsRepository();
 
     void init();
 

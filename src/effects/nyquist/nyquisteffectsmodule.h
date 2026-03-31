@@ -44,6 +44,8 @@ public:
     NyquistEffectsContext(const muse::modularity::ContextPtr& ctx);
 
     void resolveImports() override;
+    void onPreInit(const muse::IApplication::RunMode& runMode) override;
+    void onInit(const muse::IApplication::RunMode& runMode) override;
     void onDeinit() override;
 };
 }

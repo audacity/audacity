@@ -10,8 +10,8 @@
 #include "au3-effects/EffectManager.h"
 #include "spectrogram/spectrogramtypes.h"
 
-au::effects::NyquistEffectsRepository::NyquistEffectsRepository(const muse::modularity::ContextPtr& ctx)
-    : muse::Contextable(ctx), m_loader{m_module, muse::audio::AudioResourceType::NyquistPlugin}
+au::effects::NyquistEffectsRepository::NyquistEffectsRepository()
+    : m_loader{m_module, muse::audio::AudioResourceType::NyquistPlugin}
 {
 }
 
