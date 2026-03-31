@@ -3,8 +3,6 @@
  */
 #include "lv2pluginmetareader.h"
 #include "au3-module-manager/PluginManager.h"
-#include "au3-module-manager/PluginManager.h"
-#include "au3-strings/TranslatableString.h"
 
 namespace au::effects {
 Lv2PluginMetaReader::Lv2PluginMetaReader()
@@ -13,6 +11,13 @@ Lv2PluginMetaReader::Lv2PluginMetaReader()
 muse::audio::AudioResourceType Lv2PluginMetaReader::metaType() const
 {
     return muse::audio::AudioResourceType::Lv2Plugin;
+}
+
+void Lv2PluginMetaReader::doInit()
+{
+    // This won't actually register the LV2 plugins on the manager
+    // but is needed to load the plugins in gWorld.
+    m_module.AutoRegisterPlugins(::PluginManager::Get());
 }
 
 bool Lv2PluginMetaReader::canReadMeta(const muse::io::path_t& path) const

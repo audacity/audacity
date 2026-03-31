@@ -16,6 +16,7 @@ public:
     void deinit();
 
 private:
+    virtual void doInit() {}
     muse::RetVal<muse::audio::AudioResourceMetaList> readMeta(const muse::io::path_t& pluginPath) const override;
 
     PluginProvider& m_pluginProvider;

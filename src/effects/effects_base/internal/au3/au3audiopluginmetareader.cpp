@@ -29,6 +29,7 @@ Au3AudioPluginMetaReader::~Au3AudioPluginMetaReader()
 void Au3AudioPluginMetaReader::init()
 {
     m_pluginProvider.Initialize();
+    doInit();
     m_initialized = true;
 }
 

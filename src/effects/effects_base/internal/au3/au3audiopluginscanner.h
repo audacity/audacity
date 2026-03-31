@@ -24,6 +24,7 @@ protected:
     virtual ::PluginPaths pluginPaths() const;
 
 private:
+    virtual void doInit() {}
     PluginProvider& m_pluginProvider;
 };
 }

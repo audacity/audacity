@@ -41,6 +41,7 @@ Au3EffectLoader::Au3EffectLoader(PluginProvider& provider, muse::audio::AudioRes
 void Au3EffectLoader::init()
 {
     m_pluginProvider.Initialize();
+    doInit();
 }
 
 EffectFamily Au3EffectLoader::family() const

@@ -24,6 +24,8 @@ public:
     bool ensurePluginIsLoaded(const EffectId& effectId) const override;
 
 private:
+    virtual void doInit() {}
+
     PluginProvider& m_pluginProvider;
     const muse::audio::AudioResourceType m_resourceType;
 };

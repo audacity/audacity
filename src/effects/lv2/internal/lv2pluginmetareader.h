@@ -15,6 +15,8 @@ public:
     bool canReadMeta(const muse::io::path_t& pluginPath) const override;
 
 private:
+    void doInit() override;
+
     LV2EffectsModule m_module;
 };
 }
