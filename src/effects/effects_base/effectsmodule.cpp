@@ -86,7 +86,7 @@ void EffectsModule::registerUiTypes()
     qmlRegisterUncreatableType<ViewerComponentTypes>("Audacity.Effects", 1, 0, "ViewerComponentType", "Not creatable from QML");
 }
 
-void EffectsModule::onInit(const muse::IApplication::RunMode&)
+void EffectsModule::onPreInit(const muse::IApplication::RunMode&)
 {
     // TODO: we probably can now just pass the Au3CommonSettings stub ?
     auto configFactory = [](const FilePath& localFileName) -> std::unique_ptr<audacity::BasicSettings> {
@@ -96,7 +96,10 @@ void EffectsModule::onInit(const muse::IApplication::RunMode&)
     auto pluginRegistryFactory = [] { return std::make_unique<Au3PluginRegistry>(); };
 
     PluginManager::Get().Initialize(std::move(configFactory), std::move(pluginRegistryFactory));
+}
 
+void EffectsModule::onInit(const muse::IApplication::RunMode&)
+{
     m_configuration->init();
 
     //! --- Diagnostics ---
