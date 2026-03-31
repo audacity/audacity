@@ -592,6 +592,10 @@ bool NyquistBase::Process(EffectInstance&, EffectSettings& settings)
         return result;
     }
 
+    if (mIsPrompt && !mInputCmd.empty()) {
+        SetCommand(mInputCmd);
+    }
+
     // Check for reentrant Nyquist commands.
     // I'm choosing to mark skipped Nyquist commands as successful even though
     // they are skipped.  The reason is that when Nyquist calls out to a chain,
