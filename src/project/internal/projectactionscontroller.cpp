@@ -1149,7 +1149,7 @@ const char* CLOUD_SAVE_UNAVAILABLE_TEXT
 const char* DEFAULT_SYNC_ERROR_TITLE = "We encountered an issue syncing your file";
 const char* DEFAULT_SYNC_ERROR_TEXT
     =
-        "Don't worry, your changes will be saved to a temporary location and will be synchronised to your cloud copy when your internet connection resumes.";
+        "Don't worry, your changes will be saved to a temporary location and will be synchronized to your cloud copy when your internet connection resumes.";
 
 const char* DEFAULT_CLOUD_ERROR_TITLE = "Cloud error";
 const char* DEFAULT_CLOUD_ERROR_TEXT = "An error occurred while syncing with the cloud. Please try again later.";
