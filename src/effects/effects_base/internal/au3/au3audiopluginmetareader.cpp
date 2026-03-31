@@ -45,6 +45,7 @@ muse::RetVal<muse::audio::AudioResourceMetaList> Au3AudioPluginMetaReader::readM
     }
 
     std::vector<PluginDescriptor> descriptors;
+    ::PluginDescriptor empty;
 
     wxString wxPluginPath = au3::wxFromString(pluginPath.toString());
     muse::String errorStr;
@@ -56,26 +57,36 @@ muse::RetVal<muse::audio::AudioResourceMetaList> Au3AudioPluginMetaReader::readM
         auto numPlugins = m_pluginProvider.DiscoverPluginsAtPath(
             wxPluginPath, errorMessage, [&](PluginProvider* provider, ComponentInterface* ident) -> const PluginID&
         {
-            //Workaround: use DefaultRegistrationCallback to create all descriptors for us
-            //and then put a copy into result
-            auto& id = PluginManager::DefaultRegistrationCallback(provider, ident);
-            if (const auto ptr = PluginManager::Get().GetPlugin(id)) {
-                auto desc = *ptr;
-                try
-                {
-                    if (validator) {
-                        validator->Validate(*ident);
-                    }
-                }
-                catch (...)
-                {
-                    desc.SetEnabled(false);
-                    desc.SetValid(false);
-                }
-                descriptors.emplace_back(std::move(desc));
+            const auto effect = dynamic_cast<const EffectDefinitionInterface*>(ident);
+            IF_ASSERT_FAILED(effect) {
+                return empty.GetID();
             }
-            return id;
+
+            descriptors.push_back({});
+            auto& desc = descriptors.back();
+            desc.SetProviderID(PluginManager::GetID(provider));
+            desc.SetPluginType(PluginTypeEffect);
+            desc.SetPath(ident->GetPath());
+            desc.SetSymbol(ident->GetSymbol());
+            desc.SetVendor(ident->GetVendor().Internal());
+            desc.SetVersion(ident->GetVersion());
+            desc.SetEffectFamily(provider->GetOptionalFamilySymbol().Internal());
+
+            desc.SetID(PluginManager::GetID(effect));
+            desc.SetEffectType(effect->GetClassification());
+            desc.SetEffectFamily(effect->GetFamily().Internal());
+            desc.SetEffectGroup(effect->GetGroup());
+            desc.SetEffectInteractive(effect->IsInteractive());
+            desc.SetEffectDefault(effect->IsDefault());
+            desc.SetRealtimeSupport(effect->RealtimeSupport());
+            desc.SetEffectAutomatable(effect->SupportsAutomation());
+
+            desc.SetEnabled(true);
+            desc.SetValid(true);
+
+            return desc.GetID();
         });
+
         if (!errorMessage.empty()) {
             ok = false;
             errorStr = au3::wxToString(errorMessage.Debug());
