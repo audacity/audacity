@@ -63,6 +63,17 @@ void ProjectsPageModel::openCloudProject(const QString& cloudProjectId, const QS
                                                                              localPath), displayNameOverride));
 }
 
+void ProjectsPageModel::openCloudAudioFile(const QString& cloudItemId)
+{
+    if (cloudItemId.isEmpty()) {
+        return;
+    }
+
+    muse::actions::ActionQuery query("audacity://cloud/open-audio-file");
+    query.addParam("audioId", muse::Val(cloudItemId.toStdString()));
+    dispatcher()->dispatch(query);
+}
+
 void ProjectsPageModel::openProjectManager()
 {
     platformInteractive()->openUrl(audioComService()->projectManagerUrl());

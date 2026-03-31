@@ -12,7 +12,6 @@
 #include "au3cloud/iau3audiocomservice.h"
 #include "au3cloud/iauthorization.h"
 #include "framework/interactive/iinteractive.h"
-#include "framework/actions/iactionsdispatcher.h"
 
 namespace au::project {
 class CloudAudioFilesModel : public AbstractItemModel, public muse::async::Asyncable, public muse::Contextable
@@ -24,7 +23,6 @@ class CloudAudioFilesModel : public AbstractItemModel, public muse::async::Async
 
     muse::ContextInject<au::au3cloud::IAu3AudioComService> audioComService { this };
     muse::ContextInject<muse::IInteractive> interactive { this };
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
 
     Q_PROPERTY(State state READ state NOTIFY stateChanged)
     Q_PROPERTY(bool hasMore READ hasMore NOTIFY hasMoreChanged)
@@ -51,8 +49,6 @@ public:
     // Used by the view to request more items
     int desiredRowCount() const;
     void setDesiredRowCount(int count);
-
-    Q_INVOKABLE void openAudioFile(const QString& audioId);
 
 signals:
     void stateChanged();

@@ -73,6 +73,7 @@ public:
     Q_INVOKABLE void openOther();
     Q_INVOKABLE void openProject(const QString& scorePath, const QString& displayNameOverride);
     Q_INVOKABLE void openCloudProject(const QString& cloudProjectId, const QString& localPath, const QString& displayNameOverride);
+    Q_INVOKABLE void openCloudAudioFile(const QString& cloudItemId);
     Q_INVOKABLE void openProjectManager();
 
 signals:

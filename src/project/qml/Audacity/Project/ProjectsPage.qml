@@ -350,6 +350,10 @@ FocusScope {
                 item.navigationOrder = 6
             }
 
+            onOpenCloudAudioFileRequested: function (cloudItemId) {
+                Qt.callLater(projectsPageModel.openCloudAudioFile, cloudItemId)
+            }
+
             Connections {
                 target: refreshButton
                 function onClicked() {
