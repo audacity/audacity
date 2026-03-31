@@ -57,6 +57,9 @@ void Au3CloudActionsController::openSignInDialog(const muse::actions::ActionQuer
 void Au3CloudActionsController::openCloudProjectPage(const muse::actions::ActionQuery& query)
 {
     const auto slug = query.param("slug").toString();
+    if (slug.empty()) {
+        return;
+    }
 
     const auto url = audioComService()->getCloudProjectPage(slug);
     if (!url.empty()) {
@@ -67,6 +70,9 @@ void Au3CloudActionsController::openCloudProjectPage(const muse::actions::Action
 void Au3CloudActionsController::openCloudAudioPage(const muse::actions::ActionQuery& query)
 {
     const auto slug = query.param("slug").toString();
+    if (slug.empty()) {
+        return;
+    }
 
     const auto url = audioComService()->getCloudAudioPage(slug);
     if (!url.empty()) {

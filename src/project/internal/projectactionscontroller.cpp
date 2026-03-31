@@ -1096,6 +1096,10 @@ void ProjectActionsController::shareAudio()
 void ProjectActionsController::openCloudAudioFile(const muse::actions::ActionQuery& query)
 {
     const auto audioId = query.param("audioId").toString();
+    if (audioId.empty()) {
+        return;
+    }
+
     auto progress = audioComService()->openAudioFile(audioId);
     if (!progress) {
         return;
@@ -1116,6 +1120,10 @@ void ProjectActionsController::openCloudAudioFile(const muse::actions::ActionQue
         }
 
         auto newproject = createProjectInCurrentWindow();
+        if (!newproject) {
+            return;
+        }
+
         newproject->import(muse::io::path_t(result.val.toQString()));
         openPageIfNeed(PROJECT_PAGE_URI);
     });

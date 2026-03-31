@@ -569,6 +569,11 @@ muse::ProgressPtr Au3AudioComService::openAudioFile(const std::string& audioId)
 {
     muse::ProgressPtr progress = std::make_shared<muse::Progress>();
 
+    if (audioId.empty()) {
+        progress->finish(muse::make_ret(muse::Ret::Code::UnknownError, muse::trc("cloud", "Invalid audio ID")));
+        return progress;
+    }
+
     std::thread([this, audioId, progress]() {
         auto progressCallback = [progress](double p) -> bool {
             if (progress->isCanceled()) {
