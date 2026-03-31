@@ -14,9 +14,9 @@ NyquistPluginsMetaReader::NyquistPluginsMetaReader()
 
 bool NyquistPluginsMetaReader::canReadMeta(const io::path_t& pluginPath) const
 {
-    // Handle the special "Nyquist Prompt" plugin (which is not a file)
-    if (pluginPath.toString() == "Nyquist Prompt") {
-        return true;
+    // Nyquist prompt is a special case, that we treat as a built-in effect.
+    if (pluginPath.toString() == "Nyquist prompt") {
+        return false;
     }
 
     // Handle regular .ny files

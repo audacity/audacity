@@ -14,6 +14,8 @@ public:
         : Au3AudioPluginScanner(m_nyquistModule) {}
 
 private:
+    ::PluginPaths pluginPaths() const override;
+
     ::NyquistEffectsModule m_nyquistModule;
 };
 }

@@ -25,10 +25,7 @@ muse::io::paths_t Au3AudioPluginScanner::scanPlugins() const
 {
     muse::io::paths_t result;
 
-    const PluginPaths paths = m_pluginProvider.FindModulePaths(PluginManager::Get());
-
-    // Simply return the paths - don't register plugins here
-    // The AU4 framework will handle registration via subprocess validation
+    const PluginPaths paths = pluginPaths();
     for (const auto& path : paths) {
         const auto modulePath = path.BeforeFirst(';');
         auto convertedPath = muse::io::Dir::fromNativeSeparators(au3::wxToString(modulePath));
@@ -36,5 +33,10 @@ muse::io::paths_t Au3AudioPluginScanner::scanPlugins() const
     }
 
     return result;
+}
+
+PluginPaths Au3AudioPluginScanner::pluginPaths() const
+{
+    return m_pluginProvider.FindModulePaths(PluginManager::Get());
 }
 }

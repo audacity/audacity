@@ -5,6 +5,8 @@
 
 #include "framework/audioplugins/iaudiopluginsscanner.h"
 
+#include "au3-strings/Identifier.h" // PluginPaths
+
 class PluginProvider;
 
 namespace au::effects {
@@ -17,6 +19,9 @@ public:
     void init();
 
     muse::io::paths_t scanPlugins() const override;
+
+protected:
+    virtual ::PluginPaths pluginPaths() const;
 
 private:
     PluginProvider& m_pluginProvider;
