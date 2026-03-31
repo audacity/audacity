@@ -11,7 +11,7 @@
 #include "toast/toasttypes.h"
 
 namespace au::toast {
-class IToastProvider : MODULE_GLOBAL_EXPORT_INTERFACE
+class IToastProvider : MODULE_GLOBAL_INTERFACE
 {
     INTERFACE_ID(IToastProvider)
 public:

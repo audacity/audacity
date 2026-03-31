@@ -13,7 +13,7 @@
 #include "types/val.h"
 
 namespace au::importexport {
-class IExportConfiguration : MODULE_GLOBAL_EXPORT_INTERFACE
+class IExportConfiguration : MODULE_GLOBAL_INTERFACE
 {
     INTERFACE_ID(IExportConfiguration)
 

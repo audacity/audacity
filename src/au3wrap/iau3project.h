@@ -46,7 +46,7 @@ public:
     virtual uintptr_t au3ProjectPtr() const = 0;
 };
 
-class IAu3ProjectCreator : MODULE_GLOBAL_EXPORT_INTERFACE
+class IAu3ProjectCreator : MODULE_GLOBAL_INTERFACE
 {
     INTERFACE_ID(IAu3ProjectCreator)
 public:

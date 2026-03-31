@@ -8,7 +8,7 @@
 #include "effects/effects_base/effectstypes.h"
 
 namespace au::effects {
-class IAudioUnitEffectsRepository : MODULE_GLOBAL_EXPORT_INTERFACE
+class IAudioUnitEffectsRepository : MODULE_GLOBAL_INTERFACE
 {
     INTERFACE_ID(IAudioUnitEffectsRepository)
 public:

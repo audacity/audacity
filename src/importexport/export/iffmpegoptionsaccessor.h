@@ -7,7 +7,7 @@
 #include "modularity/imoduleinterface.h"
 
 namespace au::importexport {
-class IFFmpegOptionsAccessor : MODULE_GLOBAL_EXPORT_INTERFACE
+class IFFmpegOptionsAccessor : MODULE_GLOBAL_INTERFACE
 {
     INTERFACE_ID(IFFmpegOptionsAccessor)
 

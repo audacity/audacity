@@ -9,7 +9,7 @@
 #include "types/projectscenetypes.h"
 
 namespace au::projectscene {
-class IProjectSceneConfiguration : MODULE_GLOBAL_EXPORT_INTERFACE
+class IProjectSceneConfiguration : MODULE_GLOBAL_INTERFACE
 {
     INTERFACE_ID(IProjectSceneConfiguration)
 public:

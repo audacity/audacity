@@ -25,7 +25,7 @@
 #include "modularity/imoduleinterface.h"
 
 namespace au::appshell {
-class IAppMenuModelHook : MODULE_GLOBAL_EXPORT_INTERFACE
+class IAppMenuModelHook : MODULE_GLOBAL_INTERFACE
 {
     INTERFACE_ID(IAppMenuModelHook)
 
