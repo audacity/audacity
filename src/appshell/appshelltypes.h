@@ -30,24 +30,12 @@ using DockName = QString;
 
 // Panels:
 static const DockName TRACKS_PANEL_NAME("tracksPanel");
-static const DockName INSTRUMENTS_PANEL_NAME("instrumentsPanel");
-static const DockName INSPECTOR_PANEL_NAME("inspectorPanel");
-static const DockName SELECTION_FILTERS_PANEL_NAME("selectionFiltersPanel");
 static const DockName HISTORY_PANEL_NAME("historyPanel");
 static const DockName PLAYBACK_METER_PANEL_NAME("playbackMeterPanel");
-
-static const DockName NOTATION_NAVIGATOR_PANEL_NAME("notationNavigatorPanel");
-static const DockName NOTATION_BRAILLE_PANEL_NAME("notationBraillePanel");
-
-static const DockName MIXER_PANEL_NAME("mixerPanel");
-static const DockName PIANO_KEYBOARD_PANEL_NAME("pianoKeyboardPanel");
-static const DockName TIMELINE_PANEL_NAME("timelinePanel");
-static const DockName DRUMSET_PANEL_NAME("drumsetPanel");
 
 // Toolbars:
 static const DockName PROJECT_TOOLBAR_NAME("projectToolBar");
 static const DockName UNDO_REDO_TOOLBAR_NAME("undoRedoToolBar");
-static const DockName NOTE_INPUT_BAR_NAME("noteInputBar");
 static const DockName PLAYBACK_TOOLBAR_NAME("playbackToolBar");
 static const DockName WORKSPACES_TOOLBAR_NAME("workspacesToolBar");
 

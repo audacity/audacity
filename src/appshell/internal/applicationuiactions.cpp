@@ -38,8 +38,6 @@ using namespace muse::actions;
 using namespace muse::dock;
 
 static const ActionCode FULL_SCREEN_CODE("fullscreen");
-static const ActionCode TOGGLE_NAVIGATOR_ACTION_CODE("toggle-navigator");
-static const ActionCode TOGGLE_BRAILLE_ACTION_CODE("toggle-braille-panel");
 
 const UiActionList ApplicationUiActions::m_actions = {
     UiAction("quit",
@@ -60,20 +58,15 @@ const UiActionList ApplicationUiActions::m_actions = {
              TranslatableString("action", "Full screen"),
              Checkable::Yes
              ),
-    UiAction("about-musescore",
+    UiAction("about-audacity",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "&About MuseScore…")
+             TranslatableString("action", "&About Audacity…")
              ),
     UiAction("about-qt",
-             au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
-             TranslatableString("action", "About &Qt…")
-             ),
-    UiAction("about-musicxml",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "About &MusicXML…")
+             TranslatableString("action", "About &Qt…")
              ),
     UiAction("online-handbook",
              au::context::UiCtxUnknown,
@@ -109,14 +102,6 @@ const UiActionList ApplicationUiActions::m_actions = {
              TranslatableString("action", "Show/hide playback controls"),
              Checkable::Yes
              ),
-    UiAction("toggle-noteinput",
-             au::context::UiCtxProjectOpened,
-             au::context::CTX_ANY,
-             TranslatableString("action", "&Note input"),
-             TranslatableString("action", "Show/hide note input toolbar"),
-             Checkable::Yes
-             ),
-
     // Vertical panels
     UiAction("toggle-tracks",
              au::context::UiCtxProjectOpened,
@@ -125,68 +110,6 @@ const UiActionList ApplicationUiActions::m_actions = {
              TranslatableString("action", "Show/hide tracks"),
              Checkable::Yes
              ),
-    UiAction("toggle-instruments",
-             au::context::UiCtxProjectOpened,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Instr&uments"),
-             TranslatableString("action", "Open instruments dialog…"),
-             Checkable::Yes
-             ),
-    UiAction("inspector",
-             au::context::UiCtxProjectOpened,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Propert&ies"),
-             TranslatableString("action", "Show/hide properties"),
-             Checkable::Yes
-             ),
-    UiAction("toggle-selection-filter",
-             au::context::UiCtxProjectOpened,
-             au::context::CTX_PROJECT_OPENED,
-             TranslatableString("action", "Se&lection filter"),
-             TranslatableString("action", "Show/hide selection filter"),
-             Checkable::Yes
-             ),
-
-    // Navigator
-    UiAction(TOGGLE_NAVIGATOR_ACTION_CODE,
-             au::context::UiCtxProjectOpened,
-             au::context::CTX_ANY,
-             TranslatableString("action", "&Navigator"),
-             TranslatableString("action", "Show/hide navigator"),
-             Checkable::Yes
-             ),
-
-    // Braille panel
-    UiAction(TOGGLE_BRAILLE_ACTION_CODE,
-             au::context::UiCtxProjectOpened,
-             au::context::CTX_ANY,
-             TranslatableString("action", "&Braille"),
-             TranslatableString("action", "Show/hide braille panel"),
-             Checkable::Yes
-             ),
-
-    // Horizontal panels
-    UiAction("toggle-timeline",
-             au::context::UiCtxProjectOpened,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Tim&eline"),
-             TranslatableString("action", "Show/hide timeline"),
-             Checkable::Yes
-             ),
-    UiAction("toggle-piano-keyboard",
-             au::context::UiCtxProjectOpened,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Piano &keyboard"),
-             TranslatableString("action", "Show/hide piano keyboard"),
-             Checkable::Yes
-             ),
-    UiAction("toggle-scorecmp-tool",
-             au::context::UiCtxProjectOpened,
-             au::context::CTX_PROJECT_OPENED,
-             TranslatableString("action", "Score comparison tool"),
-             Checkable::Yes
-             ),
-
     // Status bar
     UiAction("toggle-statusbar",
              au::context::UiCtxProjectOpened,
@@ -276,15 +199,6 @@ void ApplicationUiActions::init()
         m_actionCheckedChanged.send({ FULL_SCREEN_CODE });
     });
 
-    configuration()->isNotationNavigatorVisibleChanged().onNotify(this, [this]() {
-        m_actionCheckedChanged.send({ TOGGLE_NAVIGATOR_ACTION_CODE });
-    });
-
-    //! TODO AU4
-    // brailleConfiguration()->braillePanelEnabledChanged().onNotify(this, [this]() {
-    //     m_actionCheckedChanged.send({ TOGGLE_BRAILLE_ACTION_CODE });
-    // });
-
     dockWindowProvider()->windowChanged().onNotify(this, [this]() {
         listenOpenedDocksChanged(dockWindowProvider()->window());
     });
@@ -347,15 +261,6 @@ bool ApplicationUiActions::actionChecked(const UiAction& act) const
         return false;
     }
 
-    if (dockName == NOTATION_NAVIGATOR_PANEL_NAME) {
-        return configuration()->isNotationNavigatorVisible();
-    }
-
-    //! TODO AU4
-    // if (dockName == NOTATION_BRAILLE_PANEL_NAME) {
-    //     return brailleConfiguration()->braillePanelEnabled();
-    // }
-
     const IDockWindow* window = dockWindowProvider()->window();
     return window ? window->isDockOpen(dockName) : false;
 }
@@ -374,19 +279,9 @@ const QMap<muse::actions::ActionCode, DockName>& ApplicationUiActions::toggleDoc
 {
     static const QMap<muse::actions::ActionCode, DockName> actionsMap {
         { "toggle-transport", PLAYBACK_TOOLBAR_NAME },
-        { "toggle-noteinput", NOTE_INPUT_BAR_NAME },
 
         { "toggle-tracks", TRACKS_PANEL_NAME },
-        { "toggle-instruments", INSTRUMENTS_PANEL_NAME },
-        { "inspector", INSPECTOR_PANEL_NAME },
-        { "toggle-selection-filter", SELECTION_FILTERS_PANEL_NAME },
         { "toggle-history", HISTORY_PANEL_NAME },
-
-        { TOGGLE_NAVIGATOR_ACTION_CODE, NOTATION_NAVIGATOR_PANEL_NAME },
-        { TOGGLE_BRAILLE_ACTION_CODE, NOTATION_BRAILLE_PANEL_NAME },
-
-        { "toggle-timeline", TIMELINE_PANEL_NAME },
-        { "toggle-piano-keyboard", PIANO_KEYBOARD_PANEL_NAME },
 
         { "toggle-statusbar", PROJECT_STATUSBAR_NAME },
     };

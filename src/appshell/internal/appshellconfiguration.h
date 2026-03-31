@@ -68,24 +68,18 @@ public:
     void setStartupModeType(StartupModeType type) override;
 
     muse::io::path_t startupProjectPath() const override;
-    void setStartupScorePath(const muse::io::path_t& scorePath) override;
+    void setStartupProjectPath(const muse::io::path_t& scorePath) override;
 
     muse::io::path_t userDataPath() const override;
 
     std::string handbookUrl() const override;
     std::string askForHelpUrl() const override;
-    std::string museScoreUrl() const override;
-    std::string museScoreForumUrl() const override;
-    std::string museScoreContributionUrl() const override;
-    std::string musicXMLLicenseUrl() const override;
-    std::string musicXMLLicenseDeedUrl() const override;
+    std::string appUrl() const override;
+    std::string forumUrl() const override;
+    std::string contributionUrl() const override;
 
     std::string audacityVersion() const override;
-    std::string museScoreRevision() const override;
-
-    bool isNotationNavigatorVisible() const override;
-    void setIsNotationNavigatorVisible(bool visible) const override;
-    muse::async::Notification isNotationNavigatorVisibleChanged() const override;
+    std::string appRevision() const override;
 
     bool needShowSplashScreen() const override;
     void setNeedShowSplashScreen(bool show) override;
@@ -108,10 +102,6 @@ public:
     muse::async::Notification isEffectsPanelVisibleChanged() const override;
 
 private:
-    std::string utmParameters(const std::string& utmMedium) const;
-
-    std::string currentLanguageCode() const;
-
     muse::io::path_t sessionDataPath() const;
     muse::io::path_t sessionFilePath() const;
 

@@ -44,17 +44,12 @@ static const Settings::Key WELCOME_DIALOG_LAST_SHOWN_INDEX(module_name, "applica
 static const Settings::Key STARTUP_MODE_TYPE(module_name, "application/startup/modeStart");
 static const Settings::Key STARTUP_SCORE_PATH(module_name, "application/startup/startScore");
 
-static const std::string MUSESCORE_ONLINE_HANDBOOK_URL_PATH("/handbook/4");
-static const std::string MUSESCORE_ASK_FOR_HELP_URL_PATH("/redirect/post/question");
-static const std::string MUSESCORE_FORUM_URL_PATH("/forum");
-static const std::string MUSESCORE_CONTRIBUTE_URL_PATH("/contribute");
-static const std::string MUSICXML_URL("https://w3.org");
-static const std::string MUSICXML_LICENSE_URL(MUSICXML_URL + "/community/about/process/final/");
-static const std::string MUSICXML_LICENSE_DEED_URL(MUSICXML_URL + "/community/about/process/fsa-deed/");
+static const std::string AUDACITY_URL("https://www.audacityteam.org/");
+static const std::string AUDACITY_MANUAL_URL("https://manual.audacityteam.org/");
+static const std::string AUDACITY_SUPPORT_URL("https://support.audacityteam.org/");
+static const std::string AUDACITY_FORUM_URL("https://forum.audacityteam.org/");
+static const std::string AUDACITY_CONTRIBUTE_URL("https://support.audacityteam.org/community/contributing");
 
-static const std::string UTM_MEDIUM_MENU("menu");
-
-static const QString NOTATION_NAVIGATOR_VISIBLE_KEY("showNavigator");
 static const Settings::Key SPLASH_SCREEN_VISIBLE_KEY(module_name, "ui/application/startup/showSplashScreen");
 
 static const muse::io::path_t SESSION_FILE("/session.json");
@@ -138,7 +133,7 @@ muse::io::path_t AppShellConfiguration::startupProjectPath() const
     return settings()->value(STARTUP_SCORE_PATH).toString();
 }
 
-void AppShellConfiguration::setStartupScorePath(const io::path_t& scorePath)
+void AppShellConfiguration::setStartupProjectPath(const io::path_t& scorePath)
 {
     settings()->setSharedValue(STARTUP_SCORE_PATH, Val(scorePath.toStdString()));
 }
@@ -150,52 +145,27 @@ muse::io::path_t AppShellConfiguration::userDataPath() const
 
 std::string AppShellConfiguration::handbookUrl() const
 {
-    std::string utm = utmParameters(UTM_MEDIUM_MENU);
-    std::string languageCode = currentLanguageCode();
-
-    QStringList params = {
-        "tag=handbook",
-        "locale=" + QString::fromStdString(languageCode),
-        QString::fromStdString(utm)
-    };
-
-    return museScoreUrl() + MUSESCORE_ONLINE_HANDBOOK_URL_PATH + "?" + params.join("&").toStdString();
+    return AUDACITY_MANUAL_URL;
 }
 
 std::string AppShellConfiguration::askForHelpUrl() const
 {
-    std::string languageCode = currentLanguageCode();
-
-    QStringList params = {
-        "locale=" + QString::fromStdString(languageCode)
-    };
-
-    return museScoreUrl() + MUSESCORE_ASK_FOR_HELP_URL_PATH + "?" + params.join("&").toStdString();
+    return AUDACITY_SUPPORT_URL;
 }
 
-std::string AppShellConfiguration::museScoreUrl() const
+std::string AppShellConfiguration::appUrl() const
 {
-    return globalConfiguration()->museScoreUrl();
+    return AUDACITY_URL;
 }
 
-std::string AppShellConfiguration::museScoreForumUrl() const
+std::string AppShellConfiguration::forumUrl() const
 {
-    return museScoreUrl() + MUSESCORE_FORUM_URL_PATH;
+    return AUDACITY_FORUM_URL;
 }
 
-std::string AppShellConfiguration::museScoreContributionUrl() const
+std::string AppShellConfiguration::contributionUrl() const
 {
-    return museScoreUrl() + MUSESCORE_CONTRIBUTE_URL_PATH;
-}
-
-std::string AppShellConfiguration::musicXMLLicenseUrl() const
-{
-    return MUSICXML_LICENSE_URL;
-}
-
-std::string AppShellConfiguration::musicXMLLicenseDeedUrl() const
-{
-    return MUSICXML_LICENSE_DEED_URL;
+    return AUDACITY_CONTRIBUTE_URL;
 }
 
 std::string AppShellConfiguration::audacityVersion() const
@@ -203,28 +173,9 @@ std::string AppShellConfiguration::audacityVersion() const
     return String(application()->version().toString() + u"." + application()->build()).toStdString();
 }
 
-std::string AppShellConfiguration::museScoreRevision() const
+std::string AppShellConfiguration::appRevision() const
 {
     return std::string();
-    //return MUSESCORE_REVISION;
-}
-
-bool AppShellConfiguration::isNotationNavigatorVisible() const
-{
-    return false;
-    //return uiConfiguration()->isVisible(NOTATION_NAVIGATOR_VISIBLE_KEY, false);
-}
-
-void AppShellConfiguration::setIsNotationNavigatorVisible(bool visible) const
-{
-    UNUSED(visible);
-    //uiConfiguration()->setIsVisible(NOTATION_NAVIGATOR_VISIBLE_KEY, visible);
-}
-
-muse::async::Notification AppShellConfiguration::isNotationNavigatorVisibleChanged() const
-{
-    return muse::async::Notification();
-    //return uiConfiguration()->isVisibleChanged(NOTATION_NAVIGATOR_VISIBLE_KEY);
 }
 
 bool AppShellConfiguration::needShowSplashScreen() const
@@ -313,23 +264,6 @@ async::Notification AppShellConfiguration::isEffectsPanelVisibleChanged() const
     return projectSceneConfiguration()->isEffectsPanelVisibleChanged();
 }
 
-std::string AppShellConfiguration::utmParameters(const std::string& utmMedium) const
-{
-    UNUSED(utmMedium);
-    return std::string();
-    // return "utm_source=desktop&utm_medium=" + utmMedium
-    //        + "&utm_content=" + MUSESCORE_REVISION
-    //        + "&utm_campaign=MuseScore" + MUSESCORE_VERSION;
-}
-
-std::string AppShellConfiguration::currentLanguageCode() const
-{
-    return std::string();
-    // QString languageCode = languagesConfiguration()->currentLanguageCode().val;
-    // QLocale locale(languageCode);
-
-    // return locale.bcp47Name().toStdString();
-}
 
 muse::io::path_t AppShellConfiguration::sessionDataPath() const
 {
