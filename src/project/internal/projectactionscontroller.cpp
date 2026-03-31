@@ -470,6 +470,11 @@ bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudI
         return saveProjectLocally(projectFilePath, SaveMode::Save);
     }, forceOverwrite);
 
+    if (!progress) {
+        LOGE() << "Failed to start cloud upload";
+        return false;
+    }
+
     progress->finished().onReceive(this, [this, exists, projectFilePath](const ProgressResult& result) {
         if (result.ret.success()) {
             if (exists) {
@@ -812,6 +817,10 @@ Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, cons
     }
 
     muse::ProgressPtr progress = audioComService()->openCloudProject(localPath, projectId.toStdString(), forceOverwrite);
+    if (!progress) {
+        return make_ret(Ret::Code::UnknownError);
+    }
+
     progress->finished().onReceive(this, [this, localPath](const ProgressResult& result) {
         if (!result.ret) {
             handleCloudOpenError(result.ret, localPath);
@@ -1046,6 +1055,10 @@ void ProjectActionsController::shareAudio()
     }
 
     auto progress = audioComService()->shareAudio(title);
+    if (!progress) {
+        return;
+    }
+
     progress->finished().onReceive(this, [this](const ProgressResult& result) {
         if (result.ret.success()) {
             const bool dismissable = false;
@@ -1084,6 +1097,9 @@ void ProjectActionsController::openCloudAudioFile(const muse::actions::ActionQue
 {
     const auto audioId = query.param("audioId").toString();
     auto progress = audioComService()->openAudioFile(audioId);
+    if (!progress) {
+        return;
+    }
 
     progress->finished().onReceive(this, [this, audioId](const ProgressResult& result) {
         if (!result.ret) {
