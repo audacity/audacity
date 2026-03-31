@@ -161,6 +161,7 @@ PluginPaths BuiltinEffectsModule::FindModulePaths(PluginManagerInterface&) const
 {
     // Not really libraries
     PluginPaths names;
+    names.reserve(mEffects.size());
     for ( const auto& pair : mEffects ) {
         names.push_back(pair.first);
     }
