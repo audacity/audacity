@@ -11,7 +11,7 @@
 
 namespace au::effects {
 PluginManagerTableViewModel::PluginManagerTableViewModel(QObject* parent)
-    : AbstractTableViewModel(parent), muse::Injectable(muse::iocCtxForQmlObject(this)) {}
+    : AbstractTableViewModel(parent) {}
 
 PluginManagerTableViewModel::~PluginManagerTableViewModel()
 {

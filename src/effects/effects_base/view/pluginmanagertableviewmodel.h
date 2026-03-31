@@ -23,12 +23,12 @@ enum class Type {
 Q_ENUM_NS(Type)
 }
 
-class PluginManagerTableViewModel : public muse::uicomponents::AbstractTableViewModel, public QQmlParserStatus, public muse::Injectable
+class PluginManagerTableViewModel : public muse::uicomponents::AbstractTableViewModel, public QQmlParserStatus
 {
     Q_OBJECT
     Q_INTERFACES(QQmlParserStatus)
 
-    muse::Inject<IEffectsProvider> effectsProvider{ this };
+    muse::GlobalInject<IEffectsProvider> effectsProvider;
 
 public:
     explicit PluginManagerTableViewModel(QObject* parent = nullptr);

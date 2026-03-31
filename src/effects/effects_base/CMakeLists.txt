@@ -110,8 +110,12 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/effectparameterslistmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/generatedeffectviewermodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/generatedeffectviewermodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/pluginmanagertoppanelmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/pluginmanagertoppanelmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/pluginmanagertableviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/pluginmanagertableviewmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/dropdownoptionsmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/dropdownoptionsmodel.h
     )
 
 # AU3
