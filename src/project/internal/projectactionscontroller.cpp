@@ -1117,13 +1117,13 @@ const char* SAVE_CONFLICT_REMOTE_BTN = "Discard and open latest";
 
 const char* OPEN_FORBIDDEN_TITLE = "Access denied";
 const char* OPEN_FORBIDDEN_MESSAGE
-    = "You don't have permission to sync this project. It may belong to a different account. Opened from local copy.";
+    = "You don’t have permission to sync this project. It may belong to a different account. Opened from local copy.";
 const char* OPEN_FORBIDDEN_NO_LOCAL_FILE_MESSAGE
-    = "You don't have access to this cloud project. It may belong to a different account.";
+    = "You don’t have access to this cloud project. It may belong to a different account.";
 
 const char* SAVE_FORBIDDEN_TITLE = "Access denied";
 const char* SAVE_FORBIDDEN_MESSAGE
-    = "You don't have permission to save this project to the cloud. It may belong to a different account.";
+    = "You don’t have permission to save this project to the cloud. It may belong to a different account.";
 
 const char* OPEN_NOT_FOUND_ERROR_TITLE = "Cloud project unavailable";
 const char* OPEN_NOT_FOUND_ERROR_MESSAGE
@@ -1149,7 +1149,7 @@ const char* CLOUD_SAVE_UNAVAILABLE_TEXT
 const char* DEFAULT_SYNC_ERROR_TITLE = "We encountered an issue syncing your file";
 const char* DEFAULT_SYNC_ERROR_TEXT
     =
-        "Don't worry, your changes will be saved to a temporary location and will be synchronized to your cloud copy when your internet connection resumes.";
+        "Don’t worry, your changes will be saved to a temporary location and will be synchronized to your cloud copy when your internet connection resumes.";
 
 const char* DEFAULT_CLOUD_ERROR_TITLE = "Cloud error";
 const char* DEFAULT_CLOUD_ERROR_TEXT = "An error occurred while syncing with the cloud. Please try again later.";
