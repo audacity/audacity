@@ -79,14 +79,14 @@ bool Au3EffectLoader::ensurePluginIsLoaded(const EffectId& effectId) const
     }
     const auto& path = it->path;
 
-    PluginID pluginId;
+    std::vector<PluginID> pluginIds;
     TranslatableString errorMessage{};
     int numPlugins = m_pluginProvider.DiscoverPluginsAtPath(
         au3::wxFromString(path.toString()), errorMessage,
         [&](PluginProvider* provider, ComponentInterface* ident) -> const PluginID&
     {
-        pluginId = PluginManager::DefaultRegistrationCallback(provider, ident);
-        return pluginId;
+        pluginIds.push_back(PluginManager::DefaultRegistrationCallback(provider, ident));
+        return pluginIds.back();
     });
 
     if (numPlugins == 0) {
@@ -94,10 +94,12 @@ bool Au3EffectLoader::ensurePluginIsLoaded(const EffectId& effectId) const
         return false;
     }
 
-    const auto ptr = PluginManager::Get().GetPlugin(pluginId);
-    if (!ptr) {
-        LOGE() << "failed register plugin: " << au3::wxToStdString(pluginId) << ", path: " << path;
-        return false;
+    for (const auto& pluginId : pluginIds) {
+        const auto ptr = PluginManager::Get().GetPlugin(pluginId);
+        if (!ptr) {
+            LOGE() << "failed register plugin: " << au3::wxToStdString(pluginId) << ", path: " << path;
+            return false;
+        }
     }
 
     return true;
