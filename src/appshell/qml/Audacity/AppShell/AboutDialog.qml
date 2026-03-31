@@ -29,7 +29,7 @@ import Audacity.AppShell
 StyledDialogView {
     id: root
 
-    title: qsTrc("appshell/about", "About MuseScore")
+    title: qsTrc("appshell/about", "About Audacity")
 
     contentHeight: 424
     contentWidth: 480
@@ -81,7 +81,7 @@ StyledDialogView {
 
                 StyledTextLabel {
                     anchors.horizontalCenter: parent.horizontalCenter
-                    text: qsTrc("appshell/about", "Version:") + " " + aboutModel.museScoreVersion()
+                    text: qsTrc("appshell/about", "Version:") + " " + aboutModel.appVersion()
                     font: ui.theme.bodyBoldFont
                 }
 
@@ -91,7 +91,7 @@ StyledDialogView {
 
                     StyledTextLabel {
                         anchors.verticalCenter: parent.verticalCenter
-                        text: qsTrc("appshell/about", "Revision:") + " " + aboutModel.museScoreRevision()
+                        text: qsTrc("appshell/about", "Revision:") + " " + aboutModel.appRevision()
                     }
 
                     FlatButton {
@@ -108,15 +108,15 @@ StyledDialogView {
             StyledTextLabel {
                 Layout.fillWidth: true
                 text: {
-                    let museScoreUrl = aboutModel.museScoreUrl()
+                    let websiteUrl = aboutModel.appUrl()
 
-                    //: %1 will be a link to the MuseScore website
+                    //: %1 will be a link to the Audacity website
                     let line1 = qsTrc("appshell/about", "Visit %1 for new versions and more information.")
-                                .arg(`<a href="${museScoreUrl.url}">${museScoreUrl.displayName}</a>`)
+                                .arg(`<a href="${websiteUrl.url}">${websiteUrl.displayName}</a>`)
 
                     let line2 = qsTrc("appshell/about", "Get <a href=\"%1\">help</a> with the program or <a href=\"%2\">contribute</a> to its development.")
-                                .arg(aboutModel.museScoreForumUrl().url)
-                                .arg(aboutModel.museScoreContributionUrl().url)
+                                .arg(aboutModel.forumUrl().url)
+                                .arg(aboutModel.contributionUrl().url)
 
                     return line1 + "<br>" + line2
                 }
@@ -128,7 +128,7 @@ StyledDialogView {
                 Layout.fillWidth: true
 
                 text: qsTrc("appshell/about", "For privacy information, see our <a href=\"%1\">privacy policy</a>.")
-                      .arg(aboutModel.museScorePrivacyPolicyUrl().url)
+                      .arg(aboutModel.privacyPolicyUrl().url)
 
                 wrapMode: Text.WordWrap
                 maximumLineCount: 3
@@ -136,7 +136,7 @@ StyledDialogView {
 
             StyledTextLabel {
                 Layout.fillWidth: true
-                text: qsTrc("appshell/about", "Copyright © 1999-2024 MuseScore BVBA and others.\nPublished under the <a href=\"%1\">GNU General Public License version 3</a>.")
+                text: qsTrc("appshell/about", "Copyright © 1999-2025 Audacity contributors and others.\nPublished under the <a href=\"%1\">GNU General Public License version 3</a>.")
                       .arg("https://www.gnu.org/licenses/gpl-3.0.html")
                       .replace("\n", "<br>")
 

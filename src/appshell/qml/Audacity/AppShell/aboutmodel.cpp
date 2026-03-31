@@ -35,7 +35,7 @@ AboutModel::AboutModel(QObject* parent)
 {
 }
 
-QString AboutModel::museScoreVersion() const
+QString AboutModel::appVersion() const
 {
     QString version = QString::fromStdString(configuration()->audacityVersion());
     return application()->unstable()
@@ -43,53 +43,41 @@ QString AboutModel::museScoreVersion() const
            : version;
 }
 
-QString AboutModel::museScoreRevision() const
+QString AboutModel::appRevision() const
 {
-    return QString::fromStdString(configuration()->museScoreRevision());
+    return QString::fromStdString(configuration()->appRevision());
 }
 
-QVariantMap AboutModel::museScoreUrl() const
+QVariantMap AboutModel::appUrl() const
 {
-    QUrl museScoreUrl(QString::fromStdString(configuration()->museScoreUrl()));
-    return makeUrl(museScoreUrl, false);
+    QUrl url(QString::fromStdString(configuration()->appUrl()));
+    return makeUrl(url, false);
 }
 
-QVariantMap AboutModel::museScoreForumUrl() const
+QVariantMap AboutModel::forumUrl() const
 {
-    QUrl museScoreForumUrl(QString::fromStdString(configuration()->museScoreForumUrl()));
-    return makeUrl(museScoreForumUrl);
+    QUrl url(QString::fromStdString(configuration()->forumUrl()));
+    return makeUrl(url);
 }
 
-QVariantMap AboutModel::museScoreContributionUrl() const
+QVariantMap AboutModel::contributionUrl() const
 {
-    QUrl museScoreContributionUrl(QString::fromStdString(configuration()->museScoreContributionUrl()));
-    return makeUrl(museScoreContributionUrl);
+    QUrl url(QString::fromStdString(configuration()->contributionUrl()));
+    return makeUrl(url);
 }
 
-QVariantMap AboutModel::museScorePrivacyPolicyUrl() const
+QVariantMap AboutModel::privacyPolicyUrl() const
 {
 //! TODO AU4
-    // QUrl museScorePrivacyPolicyUrl(QString::fromStdString(updateConfiguration()->museScorePrivacyPolicyUrl()));
-    // return makeUrl(museScorePrivacyPolicyUrl);
+    // QUrl url(QString::fromStdString(updateConfiguration()->privacyPolicyUrl()));
+    // return makeUrl(url);
     return QVariantMap();
-}
-
-QVariantMap AboutModel::musicXMLLicenseUrl() const
-{
-    QUrl musicXMLLicenseUrl(QString::fromStdString(configuration()->musicXMLLicenseUrl()));
-    return makeUrl(musicXMLLicenseUrl);
-}
-
-QVariantMap AboutModel::musicXMLLicenseDeedUrl() const
-{
-    QUrl musicXMLLicenseDeedUrl(QString::fromStdString(configuration()->musicXMLLicenseDeedUrl()));
-    return makeUrl(musicXMLLicenseDeedUrl);
 }
 
 void AboutModel::copyRevisionToClipboard() const
 {
     QApplication::clipboard()->setText(
-        QString("OS: %1, Arch.: %2, MuseScore version (%3-bit): %4-%5, revision: github-musescore-musescore-%6")
+        QString("OS: %1, Arch.: %2, Audacity version (%3-bit): %4-%5, revision: github-audacity-audacity-%6")
         .arg(QSysInfo::prettyProductName()
              + ((QSysInfo::productType() == "windows" && (QSysInfo::productVersion() == "10" || QSysInfo::productVersion() == "11"))
                 ? " or later" : ""))
