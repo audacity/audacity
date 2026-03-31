@@ -195,6 +195,7 @@ const PluginID& PluginManager::RegisterPlugin(
     plug.SetEffectInteractive(effect->IsInteractive());
     plug.SetEffectDefault(effect->IsDefault());
     plug.SetRealtimeSupport(effect->RealtimeSupport());
+    plug.SetSupportsMultipleClipSelection(effect->SupportsMultipleClipSelection());
     plug.SetEffectAutomatable(effect->SupportsAutomation());
 
     plug.SetEnabled(true);

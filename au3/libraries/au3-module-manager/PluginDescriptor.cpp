@@ -202,6 +202,16 @@ void PluginDescriptor::SetEffectLegacy(bool legacy)
     mEffectLegacy = legacy;
 }
 
+bool PluginDescriptor::SupportsMultipleClipSelection() const
+{
+    return mSupportsMultipleClipSelection;
+}
+
+void PluginDescriptor::SetSupportsMultipleClipSelection(bool supports)
+{
+    mSupportsMultipleClipSelection = supports;
+}
+
 void PluginDescriptor::SetRealtimeSupport(
     EffectDefinitionInterface::RealtimeSince realtime)
 {

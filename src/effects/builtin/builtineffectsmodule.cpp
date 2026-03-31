@@ -6,7 +6,6 @@
 #include "effects/effects_base/ieffectloadersregister.h"
 
 #include "internal/builtineffectsloader.h"
-#include "internal/builtineffectsrepository.h"
 #include "internal/builtineffectsmetareader.h"
 #include "internal/builtineffectsscanner.h"
 
@@ -29,14 +28,14 @@ std::string BuiltinEffectsModule::moduleName() const
 }
 
 BuiltinEffectsModule::BuiltinEffectsModule()
-    : m_effectLoader(std::make_shared<BuiltinEffectsLoader>()), m_pluginsScanner(std::make_shared<BuiltinEffectsScanner>())
+    : m_effectLoader(std::make_shared<BuiltinEffectsLoader>()), m_pluginsScanner(std::make_shared<BuiltinEffectsScanner>()), m_metaReader(
+        std::make_shared<BuiltinEffectsMetaReader>())
 {
 }
 
 void BuiltinEffectsModule::registerExports()
 {
     globalIoc()->registerExport<IBuiltinEffectsViewRegister>(moduleName(), new BuiltinEffectsViewRegister());
-    globalIoc()->registerExport<IBuiltinEffectsRepository>(moduleName(), new BuiltinEffectsRepository());
 }
 
 void BuiltinEffectsModule::resolveImports()
@@ -48,7 +47,7 @@ void BuiltinEffectsModule::resolveImports()
 
     const auto metaReaderRegister = globalIoc()->resolve<muse::audioplugins::IAudioPluginMetaReaderRegister>(moduleName());
     if (metaReaderRegister) {
-        metaReaderRegister->registerReader(std::make_shared<BuiltinEffectsMetaReader>());
+        metaReaderRegister->registerReader(m_metaReader);
     }
 
     auto loadersRegister = globalIoc()->resolve<IEffectLoadersRegister>(moduleName());
@@ -72,9 +71,15 @@ void BuiltinEffectsModule::onInit(const muse::IApplication::RunMode&)
 {
     m_effectLoader->init();
     m_pluginsScanner->init();
+    m_metaReader->init();
 }
 
 void BuiltinEffectsModule::onDelayedInit()
 {
+}
+
+void BuiltinEffectsModule::onDeinit()
+{
+    m_metaReader->deinit();
 }
 }

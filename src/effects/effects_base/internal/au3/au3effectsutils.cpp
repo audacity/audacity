@@ -11,8 +11,7 @@
 
 namespace au {
 effects::EffectMeta effects::toEffectMeta(const ::PluginDescriptor& desc, EffectFamily effectFamily, const muse::String& title,
-                                          const muse::String& description,
-                                          bool supportsMultipleClipSelection)
+                                          const muse::String& description)
 {
     EffectMeta meta;
 
@@ -27,7 +26,7 @@ effects::EffectMeta effects::toEffectMeta(const ::PluginDescriptor& desc, Effect
     meta.path = au3::wxToString(desc.GetPath());
     meta.category = utils::effectCategoryToString(toAu4EffectCategory(desc.GetEffectGroup()));
     meta.isRealtimeCapable = desc.IsEffectRealtime();
-    meta.supportsMultipleClipSelection = supportsMultipleClipSelection;
+    meta.supportsMultipleClipSelection = desc.SupportsMultipleClipSelection();
     meta.isActivated = desc.IsEnabled();
 
     return meta;

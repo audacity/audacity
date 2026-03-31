@@ -28,6 +28,7 @@ public:
     EffectType GetType() const override;
     EffectGroup GetGroup() const override { return EffectGroup::NoiseRemovalAndRepair; }
     bool IsInteractive() const override;
+    bool SupportsMultipleClipSelection() const override { return false; }
 
     // Effect implementation
 

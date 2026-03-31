@@ -116,6 +116,11 @@ bool LV2EffectBase::SupportsAutomation() const
     return true;
 }
 
+bool LV2EffectBase::SupportsMultipleClipSelection() const
+{
+    return true;
+}
+
 bool LV2EffectBase::InitializePlugin()
 {
     if (!mFeatures.mOk) {

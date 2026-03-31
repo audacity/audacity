@@ -3,16 +3,12 @@
  */
 #pragma once
 
-#include "modularity/ioc.h"
-
 #include "effects/builtin/ibuiltineffectsviewregister.h"
-#include "effects/builtin/ibuiltineffectsrepository.h"
-#include "modularity/ioc.h"
+#include "framework/global/modularity/ioc.h"
 
 namespace au::effects {
 class BuiltinCollectionLoader : public muse::Contextable
 {
-    muse::GlobalInject<IBuiltinEffectsRepository> builtinEffectsRepository;
     muse::GlobalInject<IBuiltinEffectsViewRegister> builtinEffectsViewRegister;
 
 public:

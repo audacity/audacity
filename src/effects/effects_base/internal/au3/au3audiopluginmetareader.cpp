@@ -118,10 +118,7 @@ muse::RetVal<muse::audio::AudioResourceMetaList> Au3AudioPluginMetaReader::readM
 
         const auto title = muse::String::fromStdString(desc.GetSymbol().Msgid().MSGID().GET().ToStdString());
 
-        // TODO in a follow-up commit will be a property of the AU3 effect type, then we could get the actual value.
-        constexpr auto supportsMultipleClipSelection = false;
-
-        const auto auMeta = toEffectMeta(desc, effectFamily, title, title, supportsMultipleClipSelection);
+        const auto auMeta = toEffectMeta(desc, effectFamily, title, title);
         auto museMeta = utils::auToMuseEffectMeta(auMeta);
         museMeta.type = this->metaType();
 

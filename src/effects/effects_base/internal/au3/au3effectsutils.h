@@ -75,6 +75,5 @@ constexpr ::EffectType toAu3EffectType(EffectType type)
     }
 }
 
-EffectMeta toEffectMeta(const ::PluginDescriptor& desc, EffectFamily, const muse::String& title, const muse::String& description,
-                        bool supportsMultipleClipSelection);
+EffectMeta toEffectMeta(const ::PluginDescriptor& desc, EffectFamily, const muse::String& title, const muse::String& description);
 }
