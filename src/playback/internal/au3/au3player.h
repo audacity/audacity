@@ -26,8 +26,8 @@ class Au3Player : public IPlayer, public muse::async::Asyncable, public muse::Co
 {
     muse::GlobalInject<au::audio::IAudioEngine> audioEngine;
 
-    muse::Inject<context::IGlobalContext> globalContext{ this };
-    muse::Inject<au::trackedit::ISelectionController> selectionController{ this };
+    muse::ContextInject<context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<au::trackedit::ISelectionController> selectionController{ this };
 
 public:
 

@@ -17,7 +17,7 @@ class Au3TrackeditClipboard : public ITrackeditClipboard, public muse::Contextab
 {
     muse::GlobalInject<IClipboardData> clipboardData;
 
-    muse::Inject<au::context::IGlobalContext> globalContext { this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext { this };
 
 public:
     Au3TrackeditClipboard(const muse::modularity::ContextPtr& ctx)

@@ -17,7 +17,7 @@ class Au3TrackeditProject : public ITrackeditProject, public muse::Contextable
 {
     muse::GlobalInject<muse::IGlobalConfiguration> globalConfiguration;
 
-    muse::Inject<trackedit::IProjectHistory> projectHistory { this };
+    muse::ContextInject<trackedit::IProjectHistory> projectHistory { this };
 
 public:
     explicit Au3TrackeditProject(const muse::modularity::ContextPtr& ctx, const std::shared_ptr<au::au3::IAu3Project>& au3project);

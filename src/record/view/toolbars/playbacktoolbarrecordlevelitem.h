@@ -43,9 +43,9 @@ class PlaybackToolBarRecordLevelItem : public muse::uicomponents::ToolBarItem
     muse::GlobalInject<record::IRecordConfiguration> recordConfiguration;
     muse::GlobalInject<record::IRecordMeterController> recordMeterController;
 
-    muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider{ this };
-    muse::Inject<record::IRecord> record{ this };
-    muse::Inject<record::IRecordController> recordController{ this };
+    muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider{ this };
+    muse::ContextInject<record::IRecord> record{ this };
+    muse::ContextInject<record::IRecordController> recordController{ this };
 
 public:
     explicit PlaybackToolBarRecordLevelItem(const muse::ui::UiAction& action, muse::uicomponents::ToolBarItemType::Type type,

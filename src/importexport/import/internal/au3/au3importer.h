@@ -15,9 +15,9 @@
 namespace au::importexport {
 class Au3Importer : public IImporter, public muse::Contextable
 {
-    muse::Inject<au::context::IGlobalContext> globalContext{ this };
-    muse::Inject<trackedit::ITracksInteraction> tracksInteraction{ this };
-    muse::Inject<trackedit::ISelectionController> selectionController{ this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<trackedit::ITracksInteraction> tracksInteraction{ this };
+    muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
 
 public:
     Au3Importer(const muse::modularity::ContextPtr& ctx)

@@ -11,7 +11,7 @@
 namespace au::importexport {
 class Au3LabelsImporter : public ILabelsImporter, public muse::Contextable
 {
-    muse::Inject<context::IGlobalContext> globalContext = { this };
+    muse::ContextInject<context::IGlobalContext> globalContext = { this };
 
 public:
     Au3LabelsImporter(const muse::modularity::ContextPtr& ctx)

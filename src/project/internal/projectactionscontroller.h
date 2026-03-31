@@ -39,16 +39,16 @@ class ProjectActionsController : public IProjectFilesController, public muse::ac
     muse::GlobalInject<muse::mi::IMultiWindowsProvider> multiwindowsProvider;
     muse::GlobalInject<toast::IToastService> toastService;
 
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
-    muse::Inject<muse::ui::IMainWindow> mainWindow { this };
-    muse::Inject<au::context::IGlobalContext> globalContext { this };
-    muse::Inject<muse::IInteractive> interactive { this };
-    muse::Inject<IOpenSaveProjectScenario> openSaveProjectScenario { this };
-    muse::Inject<trackedit::IProjectHistory> projectHistory { this };
-    muse::Inject<record::IRecordController> recordController { this };
-    muse::Inject<importexport::IImporter> importer { this };
-    muse::Inject<au3cloud::IAu3AudioComService> audioComService { this };
-    muse::Inject<au3cloud::IAuthorization> authorization { this };
+    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::ContextInject<muse::ui::IMainWindow> mainWindow { this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext { this };
+    muse::ContextInject<muse::IInteractive> interactive { this };
+    muse::ContextInject<IOpenSaveProjectScenario> openSaveProjectScenario { this };
+    muse::ContextInject<trackedit::IProjectHistory> projectHistory { this };
+    muse::ContextInject<record::IRecordController> recordController { this };
+    muse::ContextInject<importexport::IImporter> importer { this };
+    muse::ContextInject<au3cloud::IAu3AudioComService> audioComService { this };
+    muse::ContextInject<au3cloud::IAuthorization> authorization { this };
 
 public:
     ProjectActionsController(muse::modularity::ContextPtr ctx = nullptr);

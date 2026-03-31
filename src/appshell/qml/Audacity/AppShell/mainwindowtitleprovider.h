@@ -37,7 +37,7 @@ class MainWindowTitleProvider : public QObject, public muse::async::Asyncable, p
     Q_OBJECT
     QML_ELEMENT
 
-    muse::Inject<au::context::IGlobalContext> context { this };
+    muse::ContextInject<au::context::IGlobalContext> context { this };
 
     Q_PROPERTY(QString title READ title NOTIFY titleChanged)
     Q_PROPERTY(QString filePath READ filePath NOTIFY filePathChanged)

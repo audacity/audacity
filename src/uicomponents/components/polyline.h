@@ -61,7 +61,7 @@ class Polyline : public QQuickPaintedItem, public muse::async::Asyncable, public
 
     muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
 
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
 
 public:
     explicit Polyline(QQuickItem* parent = nullptr);

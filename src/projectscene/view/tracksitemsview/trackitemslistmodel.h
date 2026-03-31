@@ -37,13 +37,13 @@ class TrackItemsListModel : public QAbstractListModel, public muse::async::Async
     Q_PROPERTY(int cacheBufferPx READ cacheBufferPx CONSTANT)
 
 protected:
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher{ this };
-    muse::Inject<context::IGlobalContext> globalContext{ this };
-    muse::Inject<muse::IInteractive> interactive{ this };
-    muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
-    muse::Inject<trackedit::ISelectionController> selectionController{ this };
-    muse::Inject<trackedit::IProjectHistory> projectHistory{ this };
-    muse::Inject<trackedit::ITrackNavigationController> trackNavigationController{ this };
+    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<muse::IInteractive> interactive{ this };
+    muse::ContextInject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
+    muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
+    muse::ContextInject<trackedit::IProjectHistory> projectHistory{ this };
+    muse::ContextInject<trackedit::ITrackNavigationController> trackNavigationController{ this };
 
 public:
     explicit TrackItemsListModel(QObject* parent = nullptr);

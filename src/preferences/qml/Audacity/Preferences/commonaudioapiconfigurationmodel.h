@@ -63,7 +63,7 @@ class CommonAudioApiConfigurationModel : public QObject, public muse::async::Asy
 
     muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
 
-    muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider { this };
+    muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider { this };
 
 public:
     explicit CommonAudioApiConfigurationModel(QObject* parent = nullptr);

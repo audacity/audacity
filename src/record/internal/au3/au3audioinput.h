@@ -27,12 +27,12 @@ class Au3AudioInput : public IAudioInput, public muse::async::Asyncable, public 
     muse::GlobalInject<au::audio::IAudioEngine> audioEngine;
     muse::GlobalInject<record::IRecordMeterController> meterController;
 
-    muse::Inject<au::context::IGlobalContext> globalContext{ this };
-    muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider{ this };
-    muse::Inject<playback::IPlaybackController> playbackController{ this };
-    muse::Inject<record::IRecordController> controller{ this };
-    muse::Inject<trackedit::ISelectionController> selectionController{ this };
-    muse::Inject<trackedit::ITrackNavigationController> trackNavigationController{ this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider{ this };
+    muse::ContextInject<playback::IPlaybackController> playbackController{ this };
+    muse::ContextInject<record::IRecordController> controller{ this };
+    muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
+    muse::ContextInject<trackedit::ITrackNavigationController> trackNavigationController{ this };
 
 public:
     Au3AudioInput(const muse::modularity::ContextPtr& ctx);

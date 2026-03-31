@@ -15,7 +15,7 @@ class SpectrogramService final : public ISpectrogramService, public muse::Contex
 {
     muse::GlobalInject<IGlobalSpectrogramConfiguration> globalSpectrogramConfiguration;
 
-    muse::Inject<context::IGlobalContext> globalContext { this };
+    muse::ContextInject<context::IGlobalContext> globalContext { this };
 
 public:
     SpectrogramService(const muse::modularity::ContextPtr& ctx)

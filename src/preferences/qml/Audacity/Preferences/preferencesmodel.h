@@ -40,8 +40,8 @@ class PreferencesModel : public QAbstractItemModel, public muse::Contextable
 
     muse::GlobalInject<IAppShellConfiguration> configuration;
 
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
-    muse::Inject<muse::ui::IUiActionsRegister> actionsRegister { this };
+    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::ContextInject<muse::ui::IUiActionsRegister> actionsRegister { this };
 
     Q_PROPERTY(QString currentPageId READ currentPageId WRITE setCurrentPageId NOTIFY currentPageIdChanged)
 

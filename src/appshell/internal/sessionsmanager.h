@@ -44,8 +44,8 @@ class SessionsManager : public ISessionsManager, public muse::async::Asyncable, 
     muse::GlobalInject<muse::mi::IMultiWindowsProvider> multiwindowsProvider;
     muse::GlobalInject<au::au3::IAu3ProjectCreator> au3ProjectCreator;
 
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
-    muse::Inject<au::context::IGlobalContext> globalContext { this };
+    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext { this };
 
 public:
     SessionsManager(const muse::modularity::ContextPtr& ctx)

@@ -14,9 +14,9 @@ class DropController : public QObject, public muse::Contextable
 {
     Q_OBJECT
 
-    muse::Inject<au::context::IGlobalContext> globalContext{ this };
-    muse::Inject<importexport::IImporter> importer{ this };
-    muse::Inject<trackedit::ITracksInteraction> tracksInteraction{ this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<importexport::IImporter> importer{ this };
+    muse::ContextInject<trackedit::ITracksInteraction> tracksInteraction{ this };
 
 public:
     explicit DropController(QObject* parent = nullptr);

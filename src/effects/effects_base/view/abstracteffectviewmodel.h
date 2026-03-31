@@ -20,9 +20,9 @@ class AbstractEffectViewModel : public QObject, public muse::async::Asyncable, p
     Q_PROPERTY(bool isPreviewing READ isPreviewing NOTIFY isPreviewingChanged FINAL)
 
 protected:
-    muse::Inject<IEffectInstancesRegister> instancesRegister{ this };
-    muse::Inject<IEffectExecutionScenario> executionScenario{ this };
-    muse::Inject<au::playback::IPlayback> playback{ this };
+    muse::ContextInject<IEffectInstancesRegister> instancesRegister{ this };
+    muse::ContextInject<IEffectExecutionScenario> executionScenario{ this };
+    muse::ContextInject<au::playback::IPlayback> playback{ this };
 
 public:
     AbstractEffectViewModel(QObject* parent, int instanceId);

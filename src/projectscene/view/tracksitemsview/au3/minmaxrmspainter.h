@@ -11,7 +11,7 @@
 namespace au::projectscene {
 class MinMaxRMSPainter : public IMinMaxRMSPainter, public muse::Contextable
 {
-    muse::Inject<au::context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
 
 public:
     MinMaxRMSPainter(const muse::modularity::ContextPtr& ctx)

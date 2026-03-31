@@ -24,7 +24,7 @@ class TrackSpectrogramSettingsModel : public AbstractSpectrogramSettingsModel,  
 
     muse::GlobalInject<IGlobalSpectrogramConfiguration> globalSpectrogramConfiguration;
 
-    muse::Inject<ISpectrogramService> spectrogramService { this };
+    muse::ContextInject<ISpectrogramService> spectrogramService { this };
 
 public:
     TrackSpectrogramSettingsModel(QObject* parent = nullptr);

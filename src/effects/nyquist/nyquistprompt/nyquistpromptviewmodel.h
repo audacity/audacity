@@ -28,7 +28,7 @@ class NyquistPromptViewModel : public BuiltinEffectModel
 protected:
     muse::GlobalInject<IParameterExtractorRegistry> parameterExtractorRegistry;
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
-    muse::Inject<muse::IInteractive> interactive{ this };
+    muse::ContextInject<muse::IInteractive> interactive{ this };
 
 public:
     NyquistPromptViewModel(QObject* parent, int instanceId);

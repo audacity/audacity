@@ -34,7 +34,7 @@ class ChannelMappingTableViewModel : public muse::uicomponents::AbstractTableVie
 
     muse::GlobalInject<importexport::ExportConfiguration> exportConfiguration;
 
-    muse::Inject<context::IGlobalContext> globalContext = { this };
+    muse::ContextInject<context::IGlobalContext> globalContext = { this };
 
 public:
     explicit ChannelMappingTableViewModel(QObject* parent = nullptr);

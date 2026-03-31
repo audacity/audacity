@@ -21,9 +21,9 @@ class ProjectSceneActionsController : public IProjectSceneActionsController, pub
 {
     muse::GlobalInject<IProjectSceneConfiguration> configuration;
 
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
-    muse::Inject<au::context::IGlobalContext> globalContext { this };
-    muse::Inject<muse::IInteractive> interactive { this };
+    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext { this };
+    muse::ContextInject<muse::IInteractive> interactive { this };
 
 public:
     ProjectSceneActionsController(const muse::modularity::ContextPtr& ctx)

@@ -31,8 +31,8 @@ class SpectrogramChannelRulerModel : public QObject, public QQmlParserStatus, pu
 
     muse::GlobalInject<muse::ui::IUiConfiguration> uiConfig;
 
-    muse::Inject<ISpectrogramService> spectrogramService{ this };
-    muse::Inject<ISpectrogramViewService> spectrogramViewService{ this };
+    muse::ContextInject<ISpectrogramService> spectrogramService{ this };
+    muse::ContextInject<ISpectrogramViewService> spectrogramViewService{ this };
 
 public:
     SpectrogramChannelRulerModel(QObject* parent = nullptr);

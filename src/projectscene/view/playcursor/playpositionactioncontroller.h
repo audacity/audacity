@@ -38,8 +38,8 @@ class PlayPositionActionController : public QObject, public muse::actions::Actio
 
     Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
 
-    muse::Inject<context::IGlobalContext> globalContext{ this };
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
 
 public:
     PlayPositionActionController(QObject* parent = nullptr);

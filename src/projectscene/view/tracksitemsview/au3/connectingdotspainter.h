@@ -11,7 +11,7 @@
 namespace au::projectscene {
 class ConnectingDotsPainter : public IConnectingDotsPainter, public muse::Contextable
 {
-    muse::Inject<au::context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
 
 public:
     ConnectingDotsPainter(const muse::modularity::ContextPtr& ctx)

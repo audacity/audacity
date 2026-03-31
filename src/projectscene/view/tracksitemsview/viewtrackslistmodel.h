@@ -34,12 +34,12 @@ class ViewTracksListModel : public QAbstractListModel, public muse::async::Async
     muse::GlobalInject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
     muse::GlobalInject<playback::IPlaybackConfiguration> playbackConfiguration;
 
-    muse::Inject<au::context::IGlobalContext> globalContext{ this };
-    muse::Inject<trackedit::ISelectionController> selectionController{ this };
-    muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
-    muse::Inject<playback::ITrackPlaybackControl> trackPlaybackControl{ this };
-    muse::Inject<trackedit::ITrackNavigationController> trackNavigationController{ this };
-    muse::Inject<spectrogram::IFrequencySelectionController> frequencySelectionController{ this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
+    muse::ContextInject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
+    muse::ContextInject<playback::ITrackPlaybackControl> trackPlaybackControl{ this };
+    muse::ContextInject<trackedit::ITrackNavigationController> trackNavigationController{ this };
+    muse::ContextInject<spectrogram::IFrequencySelectionController> frequencySelectionController{ this };
 
 public:
     explicit ViewTracksListModel(QObject* parent = nullptr);

@@ -28,8 +28,8 @@ class GeneratedEffectViewerModel : public AbstractEffectViewModel
 
     muse::GlobalInject<IParameterExtractorRegistry> parameterExtractorRegistry;
 
-    muse::Inject<IEffectsProvider> effectsProvider{ this };
-    muse::Inject<au::context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<IEffectsProvider> effectsProvider{ this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
 
 public:
     explicit GeneratedEffectViewerModel(QObject* parent, EffectInstanceId instanceId);

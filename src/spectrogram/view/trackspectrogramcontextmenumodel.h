@@ -19,7 +19,7 @@ class TrackSpectrogramContextMenuModel : public muse::uicomponents::AbstractMenu
 
     muse::GlobalInject<ISpectralEffectsRegister> spectralEffectsRegister;
 
-    muse::Inject<IFrequencySelectionController> frequencySelectionController { this };
+    muse::ContextInject<IFrequencySelectionController> frequencySelectionController { this };
 
 public:
     TrackSpectrogramContextMenuModel(QObject* parent = nullptr);

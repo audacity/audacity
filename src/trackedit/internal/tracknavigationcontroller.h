@@ -25,11 +25,11 @@ enum class SelectionDirection {
 class TrackNavigationController : public ITrackNavigationController, public muse::actions::Actionable, public muse::async::Asyncable,
     public muse::Contextable
 {
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher{ this };
-    muse::Inject<muse::ui::INavigationController> navigationController{ this };
-    muse::Inject<au::context::IGlobalContext> globalContext{ this };
-    muse::Inject<au::trackedit::ISelectionController> selectionController{ this };
-    muse::Inject<au::trackedit::ITrackeditInteraction> trackeditInteraction{ this };
+    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<muse::ui::INavigationController> navigationController{ this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<au::trackedit::ISelectionController> selectionController{ this };
+    muse::ContextInject<au::trackedit::ITrackeditInteraction> trackeditInteraction{ this };
 
 public:
     TrackNavigationController(const muse::modularity::ContextPtr& ctx)

@@ -27,8 +27,8 @@ class TrackClipsListModel : public TrackItemsListModel
     muse::GlobalInject<projectscene::IProjectSceneConfiguration> projectSceneConfiguration;
     muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
 
-    muse::Inject<context::IGlobalContext> globalContext { this };
-    muse::Inject<muse::workspace::IWorkspaceManager> workspacesManager{ this };
+    muse::ContextInject<context::IGlobalContext> globalContext { this };
+    muse::ContextInject<muse::workspace::IWorkspaceManager> workspacesManager{ this };
 
 public:
     explicit TrackClipsListModel(QObject* parent = nullptr);

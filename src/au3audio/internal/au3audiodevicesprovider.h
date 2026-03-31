@@ -16,7 +16,7 @@ class Au3AudioDevicesProvider : public audio::IAudioDevicesProvider, public muse
 {
     muse::GlobalInject<au::audio::IAudioEngine> audioEngine;
 
-    muse::Inject<context::IGlobalContext> globalContext { this };
+    muse::ContextInject<context::IGlobalContext> globalContext { this };
 
 public:
     Au3AudioDevicesProvider(const muse::modularity::ContextPtr& ctx)

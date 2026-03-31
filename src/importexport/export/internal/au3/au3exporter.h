@@ -20,9 +20,9 @@ class Au3Exporter : public IExporter, public muse::Contextable
 {
     muse::GlobalInject<au::importexport::ExportConfiguration> exportConfiguration;
 
-    muse::Inject<au::context::IGlobalContext> globalContext{ this };
-    muse::Inject<au::trackedit::ISelectionController> selectionController{ this };
-    muse::Inject<au::playback::IPlaybackController> playbackController{ this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<au::trackedit::ISelectionController> selectionController{ this };
+    muse::ContextInject<au::playback::IPlaybackController> playbackController{ this };
 
 public:
     Au3Exporter(const muse::modularity::ContextPtr& ctx)

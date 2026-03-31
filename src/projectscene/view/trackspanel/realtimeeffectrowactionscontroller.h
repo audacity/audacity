@@ -19,7 +19,7 @@ class RealtimeEffectRowActionsController : public QObject, public muse::actions:
 
     Q_PROPERTY(bool enabled READ enabled WRITE setEnabled NOTIFY enabledChanged FINAL)
 
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
 
 public:
     explicit RealtimeEffectRowActionsController(QObject* parent = nullptr);

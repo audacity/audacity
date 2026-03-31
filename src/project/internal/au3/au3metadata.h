@@ -16,8 +16,8 @@
 namespace au::project {
 class Au3Metadata : public IMetadata, public muse::Contextable
 {
-    muse::Inject<au::context::IGlobalContext> globalContext { this };
-    muse::Inject<muse::IInteractive> interactive { this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext { this };
+    muse::ContextInject<muse::IInteractive> interactive { this };
 
 public:
     Au3Metadata(const muse::modularity::ContextPtr& ctx)

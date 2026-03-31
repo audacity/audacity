@@ -15,7 +15,7 @@ namespace au::effects {
 class EffectInstancesRegister : public IEffectInstancesRegister, public muse::Contextable
 {
     muse::GlobalInject<IParameterExtractorRegistry> parameterExtractorRegistry;
-    muse::Inject<IEffectsProvider> effectsProvider{ this };
+    muse::ContextInject<IEffectsProvider> effectsProvider{ this };
 
 public:
     EffectInstancesRegister(const muse::modularity::ContextPtr& ctx)

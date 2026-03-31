@@ -21,7 +21,7 @@ class Au3AudioOutput : public IAudioOutput, public muse::async::Asyncable, publi
 {
     muse::GlobalInject<au::audio::IAudioEngine> audioEngine;
 
-    muse::Inject<au::context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
 
 public:
     Au3AudioOutput(const muse::modularity::ContextPtr& ctx);

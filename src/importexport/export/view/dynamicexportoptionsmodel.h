@@ -19,7 +19,7 @@ class DynamicExportOptionsModel : public QAbstractListModel, public muse::async:
 
     muse::GlobalInject<IExportConfiguration> exportConfiguration;
 
-    muse::Inject<IExporter> exporter{ this };
+    muse::ContextInject<IExporter> exporter{ this };
 
 public:
     explicit DynamicExportOptionsModel(QObject* parent = nullptr);

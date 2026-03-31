@@ -32,10 +32,10 @@ class ProjectPageModel : public QObject, public muse::async::Asyncable, public m
     muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
     muse::GlobalInject<playback::IPlaybackConfiguration> playbackConfiguration;
 
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
-    muse::Inject<au::context::IGlobalContext> globalContext { this };
-    muse::Inject<muse::dock::IDockWindowProvider> dockWindowProvider { this };
-    muse::Inject<muse::ui::IUiState> uiState { this };
+    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext { this };
+    muse::ContextInject<muse::dock::IDockWindowProvider> dockWindowProvider { this };
+    muse::ContextInject<muse::ui::IUiState> uiState { this };
 
 //! TODO AU4
 //    INJECT(braille::IBrailleConfiguration, brailleConfiguration)

@@ -27,12 +27,12 @@ class Au3TracksInteraction : public ITracksInteraction, public muse::Contextable
     muse::GlobalInject<au::trackedit::ITrackeditConfiguration> configuration;
     muse::GlobalInject<au::playback::IPlaybackConfiguration> playbackConfiguration;
 
-    muse::Inject<muse::IInteractive> interactive{ this };
-    muse::Inject<au::context::IGlobalContext> globalContext{ this };
-    muse::Inject<au::trackedit::ISelectionController> selectionController{ this };
-    muse::Inject<au::trackedit::IProjectHistory> projectHistory{ this };
-    muse::Inject<au::trackedit::IClipsInteraction> clipsInteraction{ this };
-    muse::Inject<au::trackedit::ITrackNavigationController> trackNavigationController{ this };
+    muse::ContextInject<muse::IInteractive> interactive{ this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<au::trackedit::ISelectionController> selectionController{ this };
+    muse::ContextInject<au::trackedit::IProjectHistory> projectHistory{ this };
+    muse::ContextInject<au::trackedit::IClipsInteraction> clipsInteraction{ this };
+    muse::ContextInject<au::trackedit::ITrackNavigationController> trackNavigationController{ this };
 
 public:
     Au3TracksInteraction(const muse::modularity::ContextPtr& ctx);

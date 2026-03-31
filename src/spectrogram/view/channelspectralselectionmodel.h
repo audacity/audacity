@@ -41,10 +41,10 @@ class ChannelSpectralSelectionModel : public QObject, public QQmlParserStatus, p
     Q_PROPERTY(double selectionHeight READ selectionHeight NOTIFY selectionRangeChanged FINAL)
     Q_PROPERTY(bool verticalDragActive READ verticalDragActive NOTIFY verticalDragActiveChanged FINAL)
 
-    muse::Inject<ISpectrogramService> spectrogramService { this };
-    muse::Inject<IPeakFinderFactory> peakFinderFactory { this };
-    muse::Inject<IFrequencySelectionController> frequencySelectionController { this };
-    muse::Inject<ISpectrogramViewService> spectrogramViewService { this };
+    muse::ContextInject<ISpectrogramService> spectrogramService { this };
+    muse::ContextInject<IPeakFinderFactory> peakFinderFactory { this };
+    muse::ContextInject<IFrequencySelectionController> frequencySelectionController { this };
+    muse::ContextInject<ISpectrogramViewService> spectrogramViewService { this };
 
 public:
     ChannelSpectralSelectionModel(QObject* parent = nullptr);

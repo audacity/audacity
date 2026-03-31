@@ -23,7 +23,7 @@ class AudioUnitView : public QQuickItem, public muse::Contextable
 
     muse::GlobalInject<IEffectsConfiguration> configuration;
 
-    muse::Inject<IEffectInstancesRegister> instancesRegister{ this };
+    muse::ContextInject<IEffectInstancesRegister> instancesRegister{ this };
 
 public:
     AudioUnitView(QQuickItem* parent = nullptr);

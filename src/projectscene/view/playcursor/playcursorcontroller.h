@@ -41,8 +41,8 @@ class PlayCursorController : public QObject, public muse::async::Asyncable, publ
 
     Q_PROPERTY(double positionX READ positionX NOTIFY positionXChanged FINAL)
 
-    muse::Inject<context::IGlobalContext> globalContext{ this };
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
 
 public:
     PlayCursorController(QObject* parent = nullptr);
