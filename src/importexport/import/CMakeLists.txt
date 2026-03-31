@@ -17,6 +17,28 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/types/importtypes.h
 )
 
+# Loop Tempo Estimator (used for tempo detection on import)
+# Configure sparse checkout so only source/ and LICENSE are fetched
+set(_LTE_DIR ${CMAKE_SOURCE_DIR}/thirdparty/loop-tempo-estimator)
+if(NOT EXISTS ${_LTE_DIR}/source/CMakeLists.txt)
+    message(STATUS "Initializing loop-tempo-estimator submodule with sparse checkout...")
+    execute_process(
+        COMMAND git submodule init thirdparty/loop-tempo-estimator
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+    execute_process(
+        COMMAND git -C ${_LTE_DIR} sparse-checkout init --no-cone
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+    execute_process(
+        COMMAND git -C ${_LTE_DIR} sparse-checkout set /source/ /LICENSE
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+    execute_process(
+        COMMAND git submodule update thirdparty/loop-tempo-estimator
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+endif()
+if(NOT TARGET loop-tempo-estimator)
+    add_subdirectory(${_LTE_DIR}/source ${CMAKE_BINARY_DIR}/loop-tempo-estimator)
+endif()
+
 # AU3
 include(${CMAKE_CURRENT_LIST_DIR}/../../au3wrap/au3wrapDefs.cmake)
 
