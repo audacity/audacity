@@ -96,6 +96,8 @@ void VstEffectsModule::onInit(const muse::IApplication::RunMode&)
 void VstEffectsModule::onDeinit()
 {
     m_museVstModulesRepository->deinit();
+    m_effectLoader->deinit();
+    m_pluginsScanner->deinit();
     m_vstMetaReader->deinit();
 }
 

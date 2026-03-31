@@ -22,6 +22,11 @@ void Au3AudioPluginScanner::init()
     doInit();
 }
 
+void Au3AudioPluginScanner::deinit()
+{
+    m_pluginProvider.Terminate();
+}
+
 muse::io::paths_t Au3AudioPluginScanner::scanPlugins() const
 {
     muse::io::paths_t result;

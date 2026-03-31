@@ -88,6 +88,8 @@ void Lv2EffectsModule::onInit(const muse::IApplication::RunMode&)
 
 void Lv2EffectsModule::onDeinit()
 {
+    m_effectLoader->deinit();
+    m_pluginsScanner->deinit();
     m_metaReader->deinit();
 }
 

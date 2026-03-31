@@ -19,6 +19,7 @@ public:
     Au3EffectLoader(PluginProvider& provider, muse::audio::AudioResourceType resourceType);
 
     void init();
+    void deinit();
 
     EffectFamily family() const override;
     bool ensurePluginIsLoaded(const EffectId& effectId) const override;

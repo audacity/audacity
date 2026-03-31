@@ -17,6 +17,7 @@ public:
     Au3AudioPluginScanner(PluginProvider& provider);
 
     void init();
+    void deinit();
 
     muse::io::paths_t scanPlugins() const override;
 

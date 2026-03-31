@@ -98,6 +98,8 @@ void au::effects::NyquistEffectsModule::onAllInited(const muse::IApplication::Ru
 void au::effects::NyquistEffectsModule::onDeinit()
 {
     m_nyquistMetaReader->deinit();
+    m_effectLoader->deinit();
+    m_pluginsScanner->deinit();
 }
 
 muse::modularity::IContextSetup* au::effects::NyquistEffectsModule::newContext(const muse::modularity::ContextPtr& ctx) const

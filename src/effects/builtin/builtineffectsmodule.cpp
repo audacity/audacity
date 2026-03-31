@@ -80,6 +80,8 @@ void BuiltinEffectsModule::onDelayedInit()
 
 void BuiltinEffectsModule::onDeinit()
 {
+    m_effectLoader->deinit();
+    m_pluginsScanner->deinit();
     m_metaReader->deinit();
 }
 }

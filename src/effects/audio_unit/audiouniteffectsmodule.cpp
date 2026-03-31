@@ -74,6 +74,8 @@ void au::effects::AudioUnitEffectsModule::onInit(const muse::IApplication::RunMo
 
 void au::effects::AudioUnitEffectsModule::onDeinit()
 {
+    m_effectLoader->deinit();
+    m_pluginsScanner->deinit();
     m_metaReader->deinit();
 }
 

@@ -44,6 +44,11 @@ void Au3EffectLoader::init()
     doInit();
 }
 
+void Au3EffectLoader::deinit()
+{
+    m_pluginProvider.Terminate();
+}
+
 EffectFamily Au3EffectLoader::family() const
 {
     return toEffectFamily(m_resourceType);
