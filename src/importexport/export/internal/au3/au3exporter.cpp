@@ -113,6 +113,7 @@ public:
 void Au3Exporter::init()
 {
     RegisterExportPlugins();
+    ExportPluginRegistry::Get().Initialize();
 }
 
 muse::Ret Au3Exporter::exportData(const muse::io::path_t& path, const Options& options, muse::ProgressPtr progress)

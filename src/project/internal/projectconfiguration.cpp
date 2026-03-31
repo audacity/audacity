@@ -39,6 +39,7 @@ void ProjectConfiguration::init()
 
     muse::settings()->setDefaultValue(SHOULD_ASK_SAVE_LOCATION_TYPE, muse::Val(true));
     muse::settings()->setDefaultValue(LAST_USED_SAVE_LOCATION_TYPE, muse::Val(SaveLocationType::Undefined));
+    muse::settings()->setDefaultValue(LAST_SAVED_PROJECTS_PATH, muse::Val(globalConfiguration()->userDataPath() + "/Projects"));
 
     muse::settings()->setDefaultValue(AUTOSAVE_INTERVAL_KEY, muse::Val(5));
     muse::settings()->valueChanged(AUTOSAVE_INTERVAL_KEY).onReceive(nullptr, [this](const muse::Val& val) {
