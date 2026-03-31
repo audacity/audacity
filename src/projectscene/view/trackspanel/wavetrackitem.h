@@ -28,10 +28,10 @@ class WaveTrackItem : public TrackItem
     Q_PROPERTY(bool solo READ solo WRITE setSolo NOTIFY soloChanged)
     Q_PROPERTY(bool muted READ muted WRITE setMuted NOTIFY mutedChanged)
 
-    muse::Inject<playback::ITrackPlaybackControl> trackPlaybackControl{ this };
-    muse::Inject<playback::IPlayback> playback{ this };
-    muse::Inject<record::IRecord> record{ this };
-    muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider{ this };
+    muse::ContextInject<playback::ITrackPlaybackControl> trackPlaybackControl{ this };
+    muse::ContextInject<playback::IPlayback> playback{ this };
+    muse::ContextInject<record::IRecord> record{ this };
+    muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider{ this };
 
 public:
     explicit WaveTrackItem(QObject* parent = nullptr);

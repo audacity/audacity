@@ -13,7 +13,7 @@
 namespace au::spectrogram {
 class Au3PeakFinderFactory : public IPeakFinderFactory, public muse::Contextable
 {
-    muse::Inject<context::IGlobalContext> globalContext { this };
+    muse::ContextInject<context::IGlobalContext> globalContext { this };
 
 public:
     Au3PeakFinderFactory(const muse::modularity::ContextPtr& ctx);

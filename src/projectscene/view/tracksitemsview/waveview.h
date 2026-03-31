@@ -43,9 +43,9 @@ class WaveView : public QQuickPaintedItem, public muse::async::Asyncable, public
 
     muse::GlobalInject<IProjectSceneConfiguration> configuration;
 
-    muse::Inject<au::context::IGlobalContext> globalContext{ this };
-    muse::Inject<au::projectscene::IWavePainter> wavePainter{ this };
-    muse::Inject<au::trackedit::IProjectHistory> projectHistory{ this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<au::projectscene::IWavePainter> wavePainter{ this };
+    muse::ContextInject<au::trackedit::IProjectHistory> projectHistory{ this };
 
 public:
     WaveView(QQuickItem* parent = nullptr);

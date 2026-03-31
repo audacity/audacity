@@ -24,7 +24,7 @@ class Au3CloudService : public QObject, public muse::async::Asyncable, public IA
 
     muse::GlobalInject<muse::IPlatformInteractive> platformInteractive;
 
-    muse::Inject<muse::IInteractive> interactive { this };
+    muse::ContextInject<muse::IInteractive> interactive { this };
 
 public:
     Au3CloudService(const muse::modularity::ContextPtr& ctx)

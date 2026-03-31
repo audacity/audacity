@@ -15,9 +15,9 @@
 namespace au::trackedit {
 class Au3LabelsInteraction : public ILabelsInteraction, public muse::Contextable
 {
-    muse::Inject<context::IGlobalContext> globalContext{ this };
-    muse::Inject<ISelectionController> selectionController{ this };
-    muse::Inject<ITrackNavigationController> trackNavigationController{ this };
+    muse::ContextInject<context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<ISelectionController> selectionController{ this };
+    muse::ContextInject<ITrackNavigationController> trackNavigationController{ this };
 
 public:
     Au3LabelsInteraction(const muse::modularity::ContextPtr& ctx);

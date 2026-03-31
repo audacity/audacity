@@ -34,9 +34,9 @@ class SelectionStatusModel : public QObject, public muse::async::Asyncable, publ
 
     muse::GlobalInject<IProjectSceneConfiguration> configuration;
 
-    muse::Inject<context::IGlobalContext> globalContext { this };
-    muse::Inject<trackedit::ISelectionController> selectionController { this };
-    muse::Inject<playback::IPlayback> playback { this };
+    muse::ContextInject<context::IGlobalContext> globalContext { this };
+    muse::ContextInject<trackedit::ISelectionController> selectionController { this };
+    muse::ContextInject<playback::IPlayback> playback { this };
 
 public:
     explicit SelectionStatusModel(QObject* parent = nullptr);

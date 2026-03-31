@@ -22,9 +22,9 @@ class RealtimeEffectListModel : public QAbstractListModel, public muse::async::A
     Q_PROPERTY(bool isMasterTrack READ prop_isMasterTrack WRITE prop_setIsMasterTrack NOTIFY isMasterTrackChanged)
     Q_PROPERTY(bool trackEffectsActive READ prop_trackEffectsActive WRITE prop_setTrackEffectsActive NOTIFY trackEffectsActiveChanged)
 
-    muse::Inject<effects::IRealtimeEffectService> realtimeEffectService{ this };
-    muse::Inject<context::IGlobalContext> globalContext{ this };
-    muse::Inject<IRealtimeEffectPanelTrackSelection> trackSelection{ this };
+    muse::ContextInject<effects::IRealtimeEffectService> realtimeEffectService{ this };
+    muse::ContextInject<context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<IRealtimeEffectPanelTrackSelection> trackSelection{ this };
 
 public:
     explicit RealtimeEffectListModel(QObject* parent = nullptr);

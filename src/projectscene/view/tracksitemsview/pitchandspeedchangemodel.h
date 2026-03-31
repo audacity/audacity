@@ -17,9 +17,9 @@ class PitchAndSpeedChangeModel : public QObject, public muse::async::Asyncable, 
 {
     Q_OBJECT
 
-    muse::Inject<au::context::IGlobalContext> globalContext{ this };
-    muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
-    muse::Inject<trackedit::ISelectionController> selectionController{ this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
+    muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
 
     Q_PROPERTY(QString clipTitle READ clipTitle NOTIFY clipTitleChanged FINAL)
 

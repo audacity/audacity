@@ -6,11 +6,14 @@
 #include <gmock/gmock.h>
 
 #include "au3wrap/iau3project.h"
+#include "testing/testcontext.h"
 
 namespace au::au3 {
 class Au3ProjectMock : public IAu3Project
 {
 public:
+    Au3ProjectMock()
+        : IAu3Project(au::testutils::makeTestContext()) {}
     MOCK_METHOD(muse::Ret, open, (), (override));
     MOCK_METHOD(muse::Ret, load, (const muse::io::path_t& filePath, bool ignoreAutosave), (override));
     MOCK_METHOD(bool, save, (const muse::io::path_t& fileName), (override));
@@ -35,7 +38,7 @@ public:
 class Au3ProjectCreatorMock : public IAu3ProjectCreator
 {
 public:
-    MOCK_METHOD(std::shared_ptr<IAu3Project>, create, (), (const, override));
+    MOCK_METHOD(std::shared_ptr<IAu3Project>, create, (const muse::modularity::ContextPtr& ctx), (const, override));
     MOCK_METHOD(muse::Ret, removeUnsavedData, (const muse::io::path_t& projectPath), (const, override));
 };
 }

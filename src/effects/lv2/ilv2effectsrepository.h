@@ -8,7 +8,7 @@
 #include "effects/effects_base/effectstypes.h"
 
 namespace au::effects {
-class ILv2EffectsRepository : MODULE_GLOBAL_EXPORT_INTERFACE
+class ILv2EffectsRepository : MODULE_GLOBAL_INTERFACE
 {
     INTERFACE_ID(ILv2EffectsRepository)
 public:

@@ -34,7 +34,7 @@ class PlaybackPreferencesModel : public QObject, public muse::async::Asyncable, 
     muse::GlobalInject<muse::audio::IAudioConfiguration> audioConfiguration;
     muse::GlobalInject<playback::IPlaybackConfiguration> playbackConfiguration;
 
-    muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider { this };
+    muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider { this };
 
 public:
     explicit PlaybackPreferencesModel(QObject* parent = nullptr);

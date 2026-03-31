@@ -15,8 +15,8 @@ class AudacityProject;
 namespace au::spectrogram {
 class FrequencySelectionRestorer : public IFrequencySelectionRestorer, public muse::Contextable
 {
-    muse::Inject<au::context::IGlobalContext> globalContext { this };
-    muse::Inject<ISpectrogramService> spectrogramService { this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext { this };
+    muse::ContextInject<ISpectrogramService> spectrogramService { this };
 
 public:
     FrequencySelectionRestorer(const muse::modularity::ContextPtr& ctx)

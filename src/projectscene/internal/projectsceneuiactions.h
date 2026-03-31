@@ -17,7 +17,7 @@ class ProjectSceneUiActions : public muse::ui::IUiActionsModule, public muse::Co
 {
     muse::GlobalInject<IProjectSceneConfiguration> configuration;
 
-    muse::Inject<context::IUiContextResolver> uicontextResolver{ this };
+    muse::ContextInject<context::IUiContextResolver> uicontextResolver{ this };
 
 public:
     ProjectSceneUiActions(const muse::modularity::ContextPtr& ctx, std::shared_ptr<ProjectSceneActionsController> controller);

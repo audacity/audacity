@@ -37,7 +37,7 @@ namespace au::appshell {
 class WinFramelessWindowController : public QObject, public FramelessWindowController, public muse::Contextable
 {
     muse::ContextInject<muse::ui::IUiContextConfiguration> uiContextConfiguration = { this };
-    muse::Inject<muse::ui::IMainWindow> mainWindow { this };
+    muse::ContextInject<muse::ui::IMainWindow> mainWindow { this };
 
 public:
     explicit WinFramelessWindowController(QObject* parent = nullptr);

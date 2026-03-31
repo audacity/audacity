@@ -45,15 +45,15 @@ class Audacity4Project : public IAudacityProject, public muse::async::Asyncable,
 {
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
     muse::GlobalInject<IProjectConfiguration> configuration;
+    muse::GlobalInject<au3::IAu3ProjectCreator> au3ProjectCreator;
+    muse::GlobalInject<trackedit::ITrackeditProjectCreator> trackeditProjectCreator;
+    muse::GlobalInject<projectscene::IProjectViewStateCreator> viewStateCreator;
 
-    muse::Inject<au3::IAu3ProjectCreator> au3ProjectCreator { this };
-    muse::Inject<trackedit::ITrackeditProjectCreator> trackeditProjectCreator { this };
-    muse::Inject<projectscene::IProjectViewStateCreator> viewStateCreator { this };
-    muse::Inject<context::IGlobalContext> globalContext { this };
-    muse::Inject<au::trackedit::IProjectHistory> projectHistory { this };
-    muse::Inject<au::trackedit::ITrackeditClipboard> clipboard { this };
-    muse::Inject<IThumbnailCreator> thumbnailCreator { this };
-    muse::Inject<importexport::IImporter> importer { this };
+    muse::ContextInject<context::IGlobalContext> globalContext { this };
+    muse::ContextInject<au::trackedit::IProjectHistory> projectHistory { this };
+    muse::ContextInject<au::trackedit::ITrackeditClipboard> clipboard { this };
+    muse::ContextInject<IThumbnailCreator> thumbnailCreator { this };
+    muse::ContextInject<importexport::IImporter> importer { this };
 
 public:
     Audacity4Project(const muse::modularity::ContextPtr& ctx)

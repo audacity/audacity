@@ -14,7 +14,7 @@
 namespace au::spectrogram {
 class Au3SpectrogramPainter final : public ISpectrogramPainter, public muse::async::Asyncable, public muse::Contextable
 {
-    muse::Inject<context::IGlobalContext> globalContext { this };
+    muse::ContextInject<context::IGlobalContext> globalContext { this };
 
 public:
     Au3SpectrogramPainter(const muse::modularity::ContextPtr& ctx)

@@ -11,7 +11,7 @@
 namespace au::projectscene {
 class SamplesPainter : public ISamplesPainter, public muse::Contextable
 {
-    muse::Inject<au::context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
 
 public:
     SamplesPainter(const muse::modularity::ContextPtr& ctx)

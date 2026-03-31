@@ -15,7 +15,7 @@ class IFrequencySelectionRestorer;
 
 class FrequencySelectionController : public IFrequencySelectionController, public muse::Contextable, public muse::async::Asyncable
 {
-    muse::Inject<ISpectrogramService> spectrogramService{ this };
+    muse::ContextInject<ISpectrogramService> spectrogramService{ this };
 
 public:
     FrequencySelectionController(const muse::modularity::ContextPtr& ctx,

@@ -8,7 +8,7 @@
 #include "itrackdata.h"
 
 namespace au::trackedit {
-class IClipboardData : MODULE_GLOBAL_EXPORT_INTERFACE
+class IClipboardData : MODULE_GLOBAL_INTERFACE
 {
     INTERFACE_ID(IClipboardData)
 

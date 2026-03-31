@@ -44,7 +44,7 @@ class ProjectsPageModel : public QObject, public muse::Contextable
     muse::GlobalInject<muse::cloud::IAudioComService> audioComService;
     muse::GlobalInject<muse::IPlatformInteractive> platformInteractive;
 
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
 
     Q_PROPERTY(int tabIndex READ tabIndex WRITE setTabIndex NOTIFY tabIndexChanged)
     Q_PROPERTY(ViewType viewType READ viewType WRITE setViewType NOTIFY viewTypeChanged)

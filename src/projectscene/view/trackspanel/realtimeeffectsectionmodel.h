@@ -20,7 +20,7 @@ class RealtimeEffectSectionModel : public QObject, public muse::actions::Actiona
 
     muse::GlobalInject<IProjectSceneConfiguration> configuration;
 
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
 
 public:
     explicit RealtimeEffectSectionModel(QObject* parent = nullptr);

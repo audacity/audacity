@@ -473,7 +473,7 @@ TracksAndItems Au3TrackeditProject::buildTracksAndItems() const
 
 ITrackeditProjectPtr Au3TrackeditProjectCreator::create(const std::shared_ptr<IAu3Project>& au3project) const
 {
-    return std::make_shared<Au3TrackeditProject>(iocContext(), au3project);
+    return std::make_shared<Au3TrackeditProject>(au3project->iocContext(), au3project);
 }
 
 TimeSignatureRestorer::TimeSignatureRestorer(AudacityProject& project)

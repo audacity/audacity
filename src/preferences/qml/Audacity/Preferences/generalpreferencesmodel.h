@@ -47,7 +47,7 @@ class GeneralPreferencesModel : public QObject, public muse::async::Asyncable, p
     muse::GlobalInject<muse::shortcuts::IShortcutsConfiguration> shortcutsConfiguration;
     muse::GlobalInject<au::project::IProjectConfiguration> projectConfiguration;
 
-    muse::Inject<muse::IInteractive> interactive { this };
+    muse::ContextInject<muse::IInteractive> interactive { this };
 
     Q_PROPERTY(QVariantList languages READ languages NOTIFY languagesChanged)
     Q_PROPERTY(QString currentLanguageCode READ currentLanguageCode WRITE setCurrentLanguageCode NOTIFY currentLanguageCodeChanged)

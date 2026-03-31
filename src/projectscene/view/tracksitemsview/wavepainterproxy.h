@@ -12,10 +12,10 @@
 namespace au::projectscene {
 class WavePainterProxy : public IWavePainter, public muse::Contextable
 {
-    muse::Inject<au::context::IGlobalContext> globalContext{ this };
-    muse::Inject<IConnectingDotsPainter> connectingDotsPainter{ this };
-    muse::Inject<IMinMaxRMSPainter> minMaxRMSPainter{ this };
-    muse::Inject<ISamplesPainter> samplesPainter{ this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<IConnectingDotsPainter> connectingDotsPainter{ this };
+    muse::ContextInject<IMinMaxRMSPainter> minMaxRMSPainter{ this };
+    muse::ContextInject<ISamplesPainter> samplesPainter{ this };
 
 public:
     WavePainterProxy(const muse::modularity::ContextPtr& ctx)

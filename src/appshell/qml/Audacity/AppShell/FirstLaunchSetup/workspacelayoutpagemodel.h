@@ -53,7 +53,7 @@ class WorkspaceLayoutPageModel : public QObject, public muse::async::Asyncable, 
     muse::GlobalInject<muse::ui::IUiConfiguration> m_uiConfiguration;
 
 #ifdef MUSE_MODULE_WORKSPACE
-    muse::Inject<muse::workspace::IWorkspaceManager> m_workspaceManager { this };
+    muse::ContextInject<muse::workspace::IWorkspaceManager> m_workspaceManager { this };
 #endif
 
 public:

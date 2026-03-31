@@ -22,8 +22,8 @@ class LabelsTableViewTimecodeCell : public muse::uicomponents::TableViewCell, pu
     Q_PROPERTY(int upperTimeSignature READ upperTimeSignature NOTIFY timeSignatureChanged FINAL)
     Q_PROPERTY(int lowerTimeSignature READ lowerTimeSignature NOTIFY timeSignatureChanged FINAL)
 
-    muse::Inject<context::IGlobalContext> globalContext{ this };
-    muse::Inject<playback::IPlayback> playback{ this };
+    muse::ContextInject<context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<playback::IPlayback> playback{ this };
 
 public:
     explicit LabelsTableViewTimecodeCell(QObject* parent = nullptr);

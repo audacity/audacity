@@ -21,8 +21,8 @@ class PlaybackMeterPanelModel : public QObject, public muse::async::Asyncable, p
 
     muse::GlobalInject<IPlaybackConfiguration> configuration;
 
-    muse::Inject<IPlayback> playback{ this };
-    muse::Inject<IPlaybackController> playbackController{ this };
+    muse::ContextInject<IPlayback> playback{ this };
+    muse::ContextInject<IPlaybackController> playbackController{ this };
 
     Q_PROPERTY(float leftChannelPressure READ leftChannelPressure NOTIFY leftChannelPressureChanged)
     Q_PROPERTY(float leftChannelRMS READ leftChannelRMS NOTIFY leftChannelRMSChanged)

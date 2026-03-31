@@ -21,9 +21,9 @@ class HistoryPanelModel : public QAbstractListModel, public QQmlParserStatus, pu
 
     Q_PROPERTY(int currentIndex READ currentIndex NOTIFY currentIndexChanged)
 
-    muse::Inject<context::IGlobalContext> context = { this };
-    muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction = { this };
-    muse::Inject<trackedit::IProjectHistory> projectHistory = { this };
+    muse::ContextInject<context::IGlobalContext> context = { this };
+    muse::ContextInject<trackedit::ITrackeditInteraction> trackeditInteraction = { this };
+    muse::ContextInject<trackedit::IProjectHistory> projectHistory = { this };
 
 public:
     explicit HistoryPanelModel(QObject* parent = nullptr);

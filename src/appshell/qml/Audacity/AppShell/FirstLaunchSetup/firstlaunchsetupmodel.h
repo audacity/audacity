@@ -50,7 +50,7 @@ class FirstLaunchSetupModel : public QObject, public muse::async::Asyncable, pub
 
     muse::GlobalInject<IAppShellConfiguration> configuration;
 
-    muse::Inject<muse::IInteractive> interactive { this };
+    muse::ContextInject<muse::IInteractive> interactive { this };
 
 public:
     explicit FirstLaunchSetupModel(QObject* parent = nullptr);

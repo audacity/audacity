@@ -12,12 +12,11 @@
 #include "toast/itoastservice.h"
 
 namespace au::toast {
-class ToastService : public IToastService, public muse::Contextable
+class ToastService : public IToastService
 {
-    muse::Inject<IToastProvider> toastProvider { this };
+    muse::GlobalInject<IToastProvider> toastProvider;
 
 public:
-    ToastService(muse::modularity::ContextPtr ctx);
     muse::async::Promise<ToastActionCode> show(const std::string& title, const std::string& message, muse::ui::IconCode::Code iconCode,
                                                bool dismissible, const std::vector<ToastAction>& actions) override;
     muse::async::Promise<ToastActionCode> showWithTimeout(const std::string& title, const std::string& message,

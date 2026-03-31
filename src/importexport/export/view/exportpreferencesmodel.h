@@ -25,15 +25,16 @@ class ExportPreferencesModel : public QObject, public muse::async::Asyncable, pu
     Q_OBJECT
 
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher{ this };
-    muse::Inject<muse::IInteractive> interactive{ this };
     muse::GlobalInject<appshell::IAppShellConfiguration> configuration;
     muse::GlobalInject<IExportConfiguration> exportConfiguration;
-    muse::Inject<context::IGlobalContext> globalContext{ this };
-    muse::Inject<IExporter> exporter{ this };
-    muse::Inject<effects::IRealtimeEffectService> realtimeEffectService{ this };
-    muse::Inject<au::playback::IPlaybackController> playbackController{ this };
-    muse::Inject<trackedit::ISelectionController> selectionController{ this };
+
+    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<muse::IInteractive> interactive{ this };
+    muse::ContextInject<context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<IExporter> exporter{ this };
+    muse::ContextInject<effects::IRealtimeEffectService> realtimeEffectService{ this };
+    muse::ContextInject<au::playback::IPlaybackController> playbackController{ this };
+    muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
 
     Q_PROPERTY(QString currentProcess READ currentProcess NOTIFY currentProcessChanged)
     Q_PROPERTY(QVariantList processList READ processList NOTIFY processListChanged)

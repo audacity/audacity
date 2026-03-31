@@ -35,12 +35,12 @@ class EffectPresetsBarModel : public QObject, public muse::Contextable, public m
 
     muse::GlobalInject<IEffectsConfiguration> configuration;
 
-    muse::Inject<IEffectPresetsProvider> presetsController { this };
-    muse::Inject<IEffectInstancesRegister> instancesRegister { this };
-    muse::Inject<IEffectsProvider> effectsProvider { this };
-    muse::Inject<IEffectParametersProvider> parametersProvider { this };
-    muse::Inject<IPresetStatesRegister> presetStatesRegister { this };
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::ContextInject<IEffectPresetsProvider> presetsController { this };
+    muse::ContextInject<IEffectInstancesRegister> instancesRegister { this };
+    muse::ContextInject<IEffectsProvider> effectsProvider { this };
+    muse::ContextInject<IEffectParametersProvider> parametersProvider { this };
+    muse::ContextInject<IPresetStatesRegister> presetStatesRegister { this };
+    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
 
 public:
     explicit EffectPresetsBarModel(QObject* parent = nullptr);

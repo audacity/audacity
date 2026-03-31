@@ -14,8 +14,8 @@
 namespace au::playback {
 class PlaybackUiActions : public muse::ui::IUiActionsModule, public muse::async::Asyncable, public muse::Contextable
 {
-    muse::Inject<context::IUiContextResolver> uiContextResolver{ this };
-    muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider{ this };
+    muse::ContextInject<context::IUiContextResolver> uiContextResolver{ this };
+    muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider{ this };
 
 public:
     PlaybackUiActions(const muse::modularity::ContextPtr& ctx, std::shared_ptr<PlaybackController> controller);

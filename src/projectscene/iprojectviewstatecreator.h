@@ -6,7 +6,7 @@
 #include "iprojectviewstate.h"
 
 namespace au::projectscene {
-class IProjectViewStateCreator : MODULE_EXPORT_INTERFACE
+class IProjectViewStateCreator : MODULE_GLOBAL_INTERFACE
 {
     INTERFACE_ID(IProjectViewStateCreator)
 public:

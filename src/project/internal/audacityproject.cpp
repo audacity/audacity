@@ -19,7 +19,7 @@ static QString projectDefaultTitle()
 
 Ret Audacity4Project::createNew()
 {
-    m_au3Project = au3ProjectCreator()->create();
+    m_au3Project = au3ProjectCreator()->create(iocContext());
     if (!m_au3Project->open()) {
         return muse::make_ret(static_cast<Ret::Code>(au::project::Err::NoProjectError));
     }
@@ -137,7 +137,7 @@ muse::Ret Audacity4Project::doLoad(const io::path_t& path, const bool forceMode,
         return make_ret(Err::ProjectFileNotFound, path);
     }
 
-    m_au3Project = au3ProjectCreator()->create();
+    m_au3Project = au3ProjectCreator()->create(iocContext());
     ret = m_au3Project->load(path);
     if (!ret) {
         LOGE() << "Failed load:" << path;

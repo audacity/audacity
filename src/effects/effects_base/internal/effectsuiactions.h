@@ -17,9 +17,9 @@ class EffectsUiActions : public muse::ui::IUiActionsModule, public muse::async::
 {
     muse::GlobalInject<IEffectsConfiguration> configuration;
 
-    muse::Inject<context::IUiContextResolver> uicontextResolver{ this };
-    muse::Inject<IEffectsProvider> effectsProvider{ this };
-    muse::Inject<IEffectExecutionScenario> effectExecutionScenario{ this };
+    muse::ContextInject<context::IUiContextResolver> uicontextResolver{ this };
+    muse::ContextInject<IEffectsProvider> effectsProvider{ this };
+    muse::ContextInject<IEffectExecutionScenario> effectExecutionScenario{ this };
 
 public:
     EffectsUiActions(const muse::modularity::ContextPtr& ctx, std::shared_ptr<EffectsActionsController> controller);

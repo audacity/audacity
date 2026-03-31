@@ -21,7 +21,7 @@ class ScaleSectionParameterListModel : public AbstractSectionParametersListModel
     Q_INTERFACES(QQmlParserStatus)
 
 protected:
-    muse::Inject<ISpectrogramService> spectrogramService{ this };
+    muse::ContextInject<ISpectrogramService> spectrogramService{ this };
 
 public:
     explicit ScaleSectionParameterListModel(QObject* parent = nullptr);

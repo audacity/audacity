@@ -26,9 +26,9 @@ class SplitToolController : public QObject, public muse::actions::Actionable, pu
     Q_PROPERTY(double guidelinePosition READ guidelinePosition NOTIFY guidelinePositionChanged FINAL)
     Q_PROPERTY(bool guidelineVisible READ guidelineVisible NOTIFY guidelineVisibleChanged FINAL)
 
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher{ this };
-    muse::Inject<context::IGlobalContext> globalContext{ this };
-    muse::Inject<context::IUiContextResolver> uicontextResolver{ this };
+    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<context::IUiContextResolver> uicontextResolver{ this };
 
 public:
     SplitToolController(QObject* parent = nullptr);

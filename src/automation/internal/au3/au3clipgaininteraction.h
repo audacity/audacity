@@ -14,8 +14,8 @@
 namespace au::automation {
 class Au3ClipGainInteraction : public IClipGainInteraction, public muse::Contextable
 {
-    muse::Inject<au::context::IGlobalContext> globalContext{ this };
-    muse::Inject<au::trackedit::IProjectHistory> projectHistory{ this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<au::trackedit::IProjectHistory> projectHistory{ this };
 
 public:
     Au3ClipGainInteraction(const muse::modularity::ContextPtr& ctx);

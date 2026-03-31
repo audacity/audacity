@@ -33,9 +33,9 @@ namespace au::effects {
 class RealtimeEffectService : public IRealtimeEffectService, muse::async::Asyncable, public muse::Contextable,
     public std::enable_shared_from_this<RealtimeEffectService>
 {
-    muse::Inject<context::IGlobalContext> globalContext{ this };
-    muse::Inject<trackedit::IProjectHistory> projectHistory{ this };
-    muse::Inject<IEffectsProvider> effectsProvider{ this };
+    muse::ContextInject<context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<trackedit::IProjectHistory> projectHistory{ this };
+    muse::ContextInject<IEffectsProvider> effectsProvider{ this };
 
 public:
     RealtimeEffectService(const muse::modularity::ContextPtr& ctx)

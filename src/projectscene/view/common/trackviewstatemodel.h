@@ -35,9 +35,9 @@ class TrackViewStateModel : public QObject, public muse::Contextable, public mus
 
     muse::GlobalInject<playback::IPlaybackConfiguration> playbackConfiguration;
 
-    muse::Inject<context::IGlobalContext> globalContext{ this };
-    muse::Inject<playback::IPlaybackController> playbackController{ this };
-    muse::Inject<record::IRecordController> recordController{ this };
+    muse::ContextInject<context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<playback::IPlaybackController> playbackController{ this };
+    muse::ContextInject<record::IRecordController> recordController{ this };
 
 public:
     TrackViewStateModel(QObject* parent = nullptr);

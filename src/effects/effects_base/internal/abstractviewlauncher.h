@@ -11,8 +11,8 @@ namespace au::effects {
 class AbstractViewLauncher : public IEffectViewLauncher, public muse::Contextable
 {
 protected:
-    muse::Inject<muse::IInteractive> interactive{ this };
-    muse::Inject<IEffectInstancesRegister> instancesRegister{ this };
+    muse::ContextInject<muse::IInteractive> interactive{ this };
+    muse::ContextInject<IEffectInstancesRegister> instancesRegister{ this };
 
 public:
     AbstractViewLauncher(const muse::modularity::ContextPtr& ctx)

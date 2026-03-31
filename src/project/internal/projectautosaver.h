@@ -39,10 +39,10 @@ class ProjectAutoSaver : public IProjectAutoSaver, public muse::async::Asyncable
 {
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
     muse::GlobalInject<IProjectConfiguration> configuration;
+    muse::GlobalInject<au::au3::IAu3ProjectCreator> au3ProjectCreator;
 
-    muse::Inject<au::context::IGlobalContext> globalContext { this };
-    muse::Inject<au::au3::IAu3ProjectCreator> au3ProjectCreator { this };
-    // maybe use the muse::Inject<au::appshell::ISessionsManager> sessionsManager;
+    muse::ContextInject<au::context::IGlobalContext> globalContext { this };
+    // maybe use the muse::ContextInject<au::appshell::ISessionsManager> sessionsManager;
 
 public:
     ProjectAutoSaver(const muse::modularity::ContextPtr& ctx)

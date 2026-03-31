@@ -30,16 +30,16 @@ namespace au::effects {
 class EffectExecutionScenario : public IEffectExecutionScenario, public muse::Contextable
 {
     muse::GlobalInject<IEffectsConfiguration> effectsConfiguration;
-
-    muse::Inject<context::IGlobalContext> globalContext{ this };
-    muse::Inject<IEffectsProvider> effectsProvider{ this };
-    muse::Inject<IEffectInstancesRegister> effectInstancesRegister{ this };
-    muse::Inject<trackedit::ISelectionController> selectionController{ this };
-    muse::Inject<muse::IInteractive> interactive{ this };
-    muse::Inject<trackedit::IProjectHistory> projectHistory{ this };
-    muse::Inject<trackedit::ITrackNavigationController> trackNavigationController { this };
-    muse::Inject<spectrogram::IFrequencySelectionController> frequencySelectionController { this };
     muse::GlobalInject<spectrogram::IGlobalSpectrogramConfiguration> spectrogramConfiguration;
+
+    muse::ContextInject<context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<IEffectsProvider> effectsProvider{ this };
+    muse::ContextInject<IEffectInstancesRegister> effectInstancesRegister{ this };
+    muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
+    muse::ContextInject<muse::IInteractive> interactive{ this };
+    muse::ContextInject<trackedit::IProjectHistory> projectHistory{ this };
+    muse::ContextInject<trackedit::ITrackNavigationController> trackNavigationController { this };
+    muse::ContextInject<spectrogram::IFrequencySelectionController> frequencySelectionController { this };
 
 public:
     EffectExecutionScenario(const muse::modularity::ContextPtr& ctx)

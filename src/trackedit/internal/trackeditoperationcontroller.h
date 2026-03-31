@@ -22,15 +22,15 @@
 namespace au::trackedit {
 class TrackeditOperationController : public ITrackeditInteraction, public muse::Contextable, public muse::async::Asyncable
 {
-    muse::Inject<ITracksInteraction> tracksInteraction { this };
-    muse::Inject<IClipsInteraction> clipsInteraction { this };
-    muse::Inject<ILabelsInteraction> labelsInteraction { this };
-    muse::Inject<ITrackeditClipboard> clipboard { this };
-    muse::Inject<IProjectHistory> projectHistory { this };
-    muse::Inject<au::context::IGlobalContext> globalContext { this };
-    muse::Inject<importexport::IImporter> importer { this };
-    muse::Inject<au::trackedit::ISelectionController> selectionController{ this };
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<ITracksInteraction> tracksInteraction { this };
+    muse::ContextInject<IClipsInteraction> clipsInteraction { this };
+    muse::ContextInject<ILabelsInteraction> labelsInteraction { this };
+    muse::ContextInject<ITrackeditClipboard> clipboard { this };
+    muse::ContextInject<IProjectHistory> projectHistory { this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext { this };
+    muse::ContextInject<importexport::IImporter> importer { this };
+    muse::ContextInject<au::trackedit::ISelectionController> selectionController{ this };
+    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
 
 public:
     TrackeditOperationController(const muse::modularity::ContextPtr& ctx, std::unique_ptr<IUndoManager> undoManager);

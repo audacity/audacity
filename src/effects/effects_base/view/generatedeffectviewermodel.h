@@ -26,9 +26,10 @@ class GeneratedEffectViewerModel : public AbstractEffectViewModel
     Q_PROPERTY(int lowerTimeSignature READ lowerTimeSignature NOTIFY timeSignatureChanged FINAL)
     Q_PROPERTY(bool isPreviewAllowed READ isPreviewAllowed CONSTANT FINAL)
 
-    muse::Inject<IEffectsProvider> effectsProvider{ this };
-    muse::Inject<IParameterExtractorRegistry> parameterExtractorRegistry{ this };
-    muse::Inject<au::context::IGlobalContext> globalContext{ this };
+    muse::GlobalInject<IParameterExtractorRegistry> parameterExtractorRegistry;
+
+    muse::ContextInject<IEffectsProvider> effectsProvider{ this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
 
 public:
     explicit GeneratedEffectViewerModel(QObject* parent, EffectInstanceId instanceId);

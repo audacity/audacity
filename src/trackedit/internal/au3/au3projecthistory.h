@@ -14,7 +14,7 @@
 namespace au::trackedit {
 class Au3ProjectHistory : public IProjectHistory, public muse::Contextable
 {
-    muse::Inject<context::IGlobalContext> globalContext { this };
+    muse::ContextInject<context::IGlobalContext> globalContext { this };
 
 public:
     Au3ProjectHistory(const muse::modularity::ContextPtr& ctx)

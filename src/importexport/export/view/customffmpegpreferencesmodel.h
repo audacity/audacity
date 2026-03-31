@@ -22,9 +22,9 @@ class CustomFFmpegPreferencesModel : public QObject, public muse::async::Asyncab
     muse::GlobalInject<IExportConfiguration> exportConfiguration;
     muse::GlobalInject<muse::IGlobalConfiguration> globalConfiguration;
 
-    muse::Inject<IFFmpegOptionsAccessor> ffmpegOptionsAccessor { this };
-    muse::Inject<IExporter> exporter{ this };
-    muse::Inject<muse::IInteractive> interactive{ this };
+    muse::GlobalInject<IFFmpegOptionsAccessor> ffmpegOptionsAccessor;
+    muse::ContextInject<IExporter> exporter{ this };
+    muse::ContextInject<muse::IInteractive> interactive{ this };
 
     Q_PROPERTY(QString ffmpegVersion READ ffmpegVersion NOTIFY ffmpegVersionChanged)
     Q_PROPERTY(QString ffmpegLibraryPath READ ffmpegLibraryPath NOTIFY ffmpegLibraryPathChanged)

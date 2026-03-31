@@ -9,7 +9,7 @@
 #include "effects/effects_base/effectstypes.h"
 
 namespace au::effects {
-class IBuiltinEffectsRepository : MODULE_GLOBAL_EXPORT_INTERFACE
+class IBuiltinEffectsRepository : MODULE_GLOBAL_INTERFACE
 {
     INTERFACE_ID(IBuiltinEffectsRepository)
 public:

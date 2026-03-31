@@ -18,7 +18,7 @@ class DynamicsPlayStateModel : public QObject, public muse::async::Asyncable, pu
 
     Q_PROPERTY(au::effects::Stopwatch::PlayState playState READ playState NOTIFY playStateChanged)
 
-    muse::Inject<playback::IPlaybackController> playbackController { this };
+    muse::ContextInject<playback::IPlaybackController> playbackController { this };
 
 public:
     DynamicsPlayStateModel(QObject* parent = nullptr);

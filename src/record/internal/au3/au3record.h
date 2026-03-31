@@ -25,12 +25,13 @@ struct AudioIOStartStreamOptions;
 namespace au::record {
 class Au3Record : public IRecord, public muse::async::Asyncable, public muse::Contextable
 {
-    muse::Inject<au::context::IGlobalContext> globalContext{ this };
-    muse::Inject<au::audio::IAudioEngine> audioEngine{ this };
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher{ this };
-    muse::Inject<au::trackedit::IProjectHistory> projectHistory{ this };
-    muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
-    muse::Inject<au::trackedit::ISelectionController> selectionController{ this };
+    muse::GlobalInject<au::audio::IAudioEngine> audioEngine;
+
+    muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<au::trackedit::IProjectHistory> projectHistory{ this };
+    muse::ContextInject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
+    muse::ContextInject<au::trackedit::ISelectionController> selectionController{ this };
 
 public:
     Au3Record(const muse::modularity::ContextPtr& ctx)

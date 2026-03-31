@@ -11,8 +11,8 @@
 namespace au::spectrogram {
 class SpectrogramActionsController : public muse::actions::Actionable, public muse::Contextable
 {
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
-    muse::Inject<muse::IInteractive> interactive { this };
+    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::ContextInject<muse::IInteractive> interactive { this };
 
 public:
     SpectrogramActionsController(const muse::modularity::ContextPtr& ctx)

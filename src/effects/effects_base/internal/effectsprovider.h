@@ -39,10 +39,10 @@ class EffectsProvider : public IEffectsProvider, public muse::async::Asyncable, 
     muse::GlobalInject<INyquistEffectsRepository> nyquistEffectsRepository;
     muse::GlobalInject<IVstEffectsRepository> vstEffectsRepository;
 
-    muse::Inject<au::context::IGlobalContext> globalContext{ this };
-    muse::Inject<muse::IInteractive> interactive{ this };
-    muse::Inject<playback::IPlayback> playback{ this };
-    muse::Inject<IEffectViewLaunchRegister> viewLaunchRegister{ this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<muse::IInteractive> interactive{ this };
+    muse::ContextInject<playback::IPlayback> playback{ this };
+    muse::ContextInject<IEffectViewLaunchRegister> viewLaunchRegister{ this };
 
 public:
     EffectsProvider(const muse::modularity::ContextPtr& ctx)

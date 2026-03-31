@@ -17,8 +17,8 @@ class DeleteBehaviorOnboardingScenario : public muse::Contextable
 {
     muse::GlobalInject<ITrackeditConfiguration> configuration;
 
-    muse::Inject<muse::IInteractive> interactive { this };
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::ContextInject<muse::IInteractive> interactive { this };
+    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
 
 public:
     DeleteBehaviorOnboardingScenario(const muse::modularity::ContextPtr& ctx)
