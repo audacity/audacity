@@ -46,6 +46,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsuiactions.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsprovider.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsprovider.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectsproviderinitializer.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectsproviderinitializer.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsmenuprovider.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsmenuprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3effectloader.cpp

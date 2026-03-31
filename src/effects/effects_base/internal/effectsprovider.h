@@ -3,8 +3,11 @@
 */
 #pragma once
 
+#include "au3-utility/Observer.h"
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
+
+#include "framework/audioplugins/iaudiopluginmetareaderregister.h"
 
 #include "audioplugins/iknownaudiopluginsregister.h"
 #include "../ieffectsconfiguration.h"
@@ -17,16 +20,19 @@ class EffectSettingsAccess;
 class TrackList;
 
 namespace au::effects {
-class EffectsProvider : public IEffectsProvider, public muse::async::Asyncable
+class EffectsProvider : public IEffectsProvider, public muse::async::Asyncable, public std::enable_shared_from_this<EffectsProvider>
 {
     muse::GlobalInject<IEffectsConfiguration> configuration;
     muse::GlobalInject<muse::audioplugins::IKnownAudioPluginsRegister> knownPluginsRegister;
     muse::GlobalInject<IEffectLoadersRegister> effectLoadersRegister;
+    muse::GlobalInject<muse::audioplugins::IAudioPluginMetaReaderRegister> metaReaderRegister;
 
 public:
-    void init();
+    void deinit();
 
-    void reloadEffects();
+    void initOnce(muse::IInteractive& interactive,
+                  muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario) override;
+    muse::async::Notification initialized() const override;
 
     EffectMetaList effectMetaList() const override;
     muse::async::Notification effectMetaListChanged() const override;
@@ -41,9 +47,15 @@ public:
     bool supportsMultipleClipSelection(const EffectId& effectId) const override;
 
 private:
+    void reloadEffects();
+    void initializePlugins();
+
     muse::Ret doEffectPreview(EffectBase& effect, EffectSettings& settings);
 
     mutable EffectMetaList m_effects;
     muse::async::Notification m_effectsChanged;
+    muse::async::Notification m_initialized;
+
+    ::Observer::Subscription m_au3PluginsChangedSubscription;
 };
 }

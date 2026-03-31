@@ -88,6 +88,7 @@ public:
 
     /*! @pre `factory != nullptr` */
     void Initialize(ConfigFactory, PluginRegistryFactory);
+    void InitializePlugins();
     void Terminate();
 
     bool DropFile(const wxString& fileName);
@@ -181,12 +182,10 @@ private:
     PluginManager();
     ~PluginManager();
 
-    void InitializePlugins();
-
     //! Load from preferences
     void Load();
     //! Save to preferences
-    void Save(bool overwrite);
+    void Save();
 
     PluginDescriptor& CreatePlugin(const PluginID& id, ComponentInterface* ident, PluginType type);
 

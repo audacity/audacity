@@ -19,6 +19,6 @@ class Au3PluginRegistry : public ::IPluginRegistry
 
 public:
     void Load(::PluginMap&) override;
-    void Save(const ::PluginMap&, bool overwrite) override;
+    void Save(const ::PluginMap&) override;
 };
 }

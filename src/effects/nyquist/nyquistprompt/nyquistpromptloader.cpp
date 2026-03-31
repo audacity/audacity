@@ -20,6 +20,20 @@ void NyquistPromptLoader::preInit()
 
 void NyquistPromptLoader::init()
 {
+    qmlRegisterSingletonType<NyquistPromptViewModelFactory>("Audacity.Nyquist", 1, 0, "NyquistPromptViewModelFactory",
+                                                            [] (QQmlEngine*, QJSEngine*) -> QObject* {
+        return new NyquistPromptViewModelFactory();
+    });
+    const auto effectName = au3::wxToString(NyquistPromptEffect::Symbol.Internal());
+    builtinEffectsViewRegister()->regUrl(effectName, u"qrc:/nyquistprompt/NyquistPromptView.qml");
+
+    effectsProvider()->initialized().onNotify(this, [this]() {
+        registerNyquistPromptEffect();
+    });
+}
+
+void NyquistPromptLoader::registerNyquistPromptEffect()
+{
     for (const PluginDescriptor& desc : PluginManager::Get().PluginsOfType(PluginTypeEffect)) {
         const auto& symbol = desc.GetSymbol();
         if (symbol != NyquistPromptEffect::Symbol) {

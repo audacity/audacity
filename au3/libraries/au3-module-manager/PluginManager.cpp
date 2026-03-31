@@ -329,33 +329,22 @@ PluginManager::PluginManager()
 
 PluginManager::~PluginManager()
 {
-    // Ensure termination (harmless if already done)
-    Terminate();
 }
 
 void PluginManager::InitializePlugins()
 {
-    ModuleManager& moduleManager = ModuleManager::Get();
-    //ModuleManager::DiscoverProviders was called earlier, so we
-    //can be sure that providers are already loaded
+    // Load the registry first
+    Load();
 
-    //Check all known plugins to ensure they are still valid.
-    for (auto it = mRegisteredPlugins.begin(); it != mRegisteredPlugins.end();) {
-        auto& pluginDesc = it->second;
-        const auto pluginType = pluginDesc.GetPluginType();
-        if (pluginType == PluginTypeNone || pluginType == PluginTypeModule) {
-            ++it;
-            continue;
-        }
-
-        if (!moduleManager.CheckPluginExist(pluginDesc.GetProviderID(), pluginDesc.GetPath())) {
-            it = mRegisteredPlugins.erase(it);
-        } else {
-            ++it;
-        }
+    auto& mm = ModuleManager::Get();
+    mm.DiscoverProviders();
+    for (auto& [id, module] : mm.Providers()) {
+        RegisterPlugin(module.get());
+        // Allow the module to auto-register children
+        module->AutoRegisterPlugins(*this);
     }
 
-    Save(false);
+    NotifyPluginsChanged();
 }
 
 // ----------------------------------------------------------------------------
@@ -386,21 +375,8 @@ void PluginManager::Initialize(ConfigFactory factory, PluginRegistryFactory regi
     sFactory = move(factory);
     sRegistryFactory = move(registryFactory);
 
-    // Always load the registry first
-    Load();
-
     // And force load of setting to verify it's accessible
     GetSettings();
-
-    auto& mm = ModuleManager::Get();
-    mm.DiscoverProviders();
-    for (auto& [id, module] : mm.Providers()) {
-        RegisterPlugin(module.get());
-        // Allow the module to auto-register children
-        module->AutoRegisterPlugins(*this);
-    }
-
-    InitializePlugins();
 }
 
 void PluginManager::Terminate()
@@ -408,6 +384,10 @@ void PluginManager::Terminate()
     if (mSettings) {
         mSettings->Flush();
         mSettings.reset();
+    }
+
+    if (const auto registry = sRegistryFactory()) {
+        registry->Save(mRegisteredPlugins);
     }
 
     // Get rid of all non-module(effects?) plugins first
@@ -530,7 +510,7 @@ bool PluginManager::DropFile(const wxString& fileName)
                         mRegisteredPlugins[id].SetEnabled(enable);
                     }
                     // Make changes to enabled status persist:
-                    this->Save(true);
+                    this->Save();
                     this->NotifyPluginsChanged();
                 }
 
@@ -549,10 +529,10 @@ void PluginManager::Load()
     }
 }
 
-void PluginManager::Save(bool overwrite)
+void PluginManager::Save()
 {
     if (const auto registry = sRegistryFactory()) {
-        registry->Save(mRegisteredPlugins, overwrite);
+        registry->Save(mRegisteredPlugins);
     }
 }
 

@@ -25,6 +25,7 @@
 #include "internal/effectparametersprovider.h"
 #include "internal/parameterextractorregistry.h"
 #include "internal/effectloadersregister.h"
+#include "internal/effectsproviderinitializer.h"
 
 #include "view/effectpresetsbarmodel.h"
 #include "view/presetstatesregister.h"
@@ -97,7 +98,6 @@ void EffectsModule::onInit(const muse::IApplication::RunMode&)
     PluginManager::Get().Initialize(std::move(configFactory), std::move(pluginRegistryFactory));
 
     m_configuration->init();
-    m_effectsProvider->init();
 
     //! --- Diagnostics ---
     auto pr = globalIoc()->resolve<muse::diagnostics::IDiagnosticsPathsRegister>(mname);
@@ -108,18 +108,11 @@ void EffectsModule::onInit(const muse::IApplication::RunMode&)
 
 void EffectsModule::onAllInited(const muse::IApplication::RunMode&)
 {
-    //! NOTE On init, built-in, vst and other plugins are initialized.
-    //! After all, the provider can load effects of different types.
-    m_effectsProvider->reloadEffects();
 }
 
 void EffectsModule::onDeinit()
 {
-    PluginManager::Get().Terminate();
-}
-
-void EffectsModule::onDelayedInit()
-{
+    m_effectsProvider->deinit();
 }
 
 muse::modularity::IContextSetup* EffectsModule::newContext(const muse::modularity::ContextPtr& ctx) const
@@ -147,6 +140,7 @@ void EffectsContext::registerExports()
     ioc()->registerExport<IEffectViewController>(mname, std::make_shared<EffectViewController>(iocContext()));
     ioc()->registerExport<IPresetStatesRegister>(mname, new PresetStatesRegister());
     ioc()->registerExport<IRealtimeEffectService>(mname, m_realtimeEffectService);
+    ioc()->registerExport<IEffectsProviderInitializer>(mname, std::make_shared<EffectsProviderInitializer>(iocContext()));
 }
 
 void EffectsContext::onInit(const muse::IApplication::RunMode&)
@@ -154,6 +148,10 @@ void EffectsContext::onInit(const muse::IApplication::RunMode&)
     m_effectsMenuProvider->init();
     m_actionsController->init();
     m_realtimeEffectService->init();
+}
+
+void EffectsContext::onAllInited(const muse::IApplication::RunMode&)
+{
 }
 
 void EffectsContext::onDeinit()
