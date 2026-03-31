@@ -13,6 +13,9 @@ class Au3AudioPluginScanner : public muse::audioplugins::IAudioPluginsScanner
 public:
 
     Au3AudioPluginScanner(PluginProvider& provider);
+
+    void init();
+
     muse::io::paths_t scanPlugins() const override;
 
 private:

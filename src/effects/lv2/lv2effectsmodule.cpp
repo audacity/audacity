@@ -32,7 +32,8 @@ static void lv2_init_qrc()
 }
 
 Lv2EffectsModule::Lv2EffectsModule()
-    : m_metaReader{std::make_shared<Lv2PluginMetaReader>()}, m_effectLoader{std::make_shared<Lv2EffectLoader>()}
+    : m_metaReader{std::make_shared<Lv2PluginMetaReader>()}, m_effectLoader{std::make_shared<Lv2EffectLoader>()},
+    m_pluginsScanner{std::make_shared<Lv2PluginsScanner>()}
 {
 }
 
@@ -49,7 +50,7 @@ void Lv2EffectsModule::resolveImports()
 {
     auto scannerRegister = globalIoc()->resolve<muse::audioplugins::IAudioPluginsScannerRegister>(mname);
     if (scannerRegister) {
-        scannerRegister->registerScanner(std::make_shared<Lv2PluginsScanner>());
+        scannerRegister->registerScanner(m_pluginsScanner);
     }
 
     auto metaReaderRegister = globalIoc()->resolve<muse::audioplugins::IAudioPluginMetaReaderRegister>(mname);
@@ -82,6 +83,7 @@ void Lv2EffectsModule::onInit(const muse::IApplication::RunMode&)
 {
     m_metaReader->init();
     m_effectLoader->init();
+    m_pluginsScanner->init();
 }
 
 void Lv2EffectsModule::onDeinit()

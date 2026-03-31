@@ -11,6 +11,7 @@
 namespace au::effects {
 class AudioUnitPluginsMetaReader;
 class AudioUnitEffectLoader;
+class AudioUnitPluginsScanner;
 
 class AudioUnitEffectsModule : public muse::modularity::IModuleSetup
 {
@@ -29,6 +30,7 @@ public:
 private:
     const std::shared_ptr<AudioUnitPluginsMetaReader> m_metaReader;
     const std::shared_ptr<AudioUnitEffectLoader> m_effectLoader;
+    const std::shared_ptr<AudioUnitPluginsScanner> m_pluginsScanner;
 };
 
 class AudioUnitEffectsContext : public muse::modularity::IContextSetup

@@ -26,7 +26,8 @@ static void AudioUnitInitQrc()
 }
 
 au::effects::AudioUnitEffectsModule::AudioUnitEffectsModule()
-    : m_metaReader(std::make_shared<AudioUnitPluginsMetaReader>()), m_effectLoader(std::make_shared<AudioUnitEffectLoader>())
+    : m_metaReader(std::make_shared<AudioUnitPluginsMetaReader>()), m_effectLoader(std::make_shared<AudioUnitEffectLoader>()),
+    m_pluginsScanner(std::make_shared<AudioUnitPluginsScanner>())
 {
     AudioUnitInitQrc();
 }
@@ -44,7 +45,7 @@ void au::effects::AudioUnitEffectsModule::resolveImports()
 {
     auto scannerRegister = globalIoc()->resolve<muse::audioplugins::IAudioPluginsScannerRegister>(mname);
     if (scannerRegister) {
-        scannerRegister->registerScanner(std::make_shared<AudioUnitPluginsScanner>());
+        scannerRegister->registerScanner(m_pluginsScanner);
     }
 
     auto metaReaderRegister = globalIoc()->resolve<muse::audioplugins::IAudioPluginMetaReaderRegister>(mname);
@@ -68,6 +69,7 @@ void au::effects::AudioUnitEffectsModule::onInit(const muse::IApplication::RunMo
 {
     m_metaReader->init();
     m_effectLoader->init();
+    m_pluginsScanner->init();
 }
 
 void au::effects::AudioUnitEffectsModule::onDeinit()

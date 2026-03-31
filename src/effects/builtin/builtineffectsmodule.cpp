@@ -29,7 +29,7 @@ std::string BuiltinEffectsModule::moduleName() const
 }
 
 BuiltinEffectsModule::BuiltinEffectsModule()
-    : m_effectLoader(std::make_shared<BuiltinEffectsLoader>())
+    : m_effectLoader(std::make_shared<BuiltinEffectsLoader>()), m_pluginsScanner(std::make_shared<BuiltinEffectsScanner>())
 {
 }
 
@@ -43,7 +43,7 @@ void BuiltinEffectsModule::resolveImports()
 {
     const auto scannerRegister = globalIoc()->resolve<muse::audioplugins::IAudioPluginsScannerRegister>(moduleName());
     if (scannerRegister) {
-        scannerRegister->registerScanner(std::make_shared<BuiltinEffectsScanner>());
+        scannerRegister->registerScanner(m_pluginsScanner);
     }
 
     const auto metaReaderRegister = globalIoc()->resolve<muse::audioplugins::IAudioPluginMetaReaderRegister>(moduleName());
@@ -71,6 +71,7 @@ void BuiltinEffectsModule::registerUiTypes()
 void BuiltinEffectsModule::onInit(const muse::IApplication::RunMode&)
 {
     m_effectLoader->init();
+    m_pluginsScanner->init();
 }
 
 void BuiltinEffectsModule::onDelayedInit()

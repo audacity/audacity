@@ -16,6 +16,11 @@ Au3AudioPluginScanner::Au3AudioPluginScanner(PluginProvider& provider)
 {
 }
 
+void Au3AudioPluginScanner::init()
+{
+    m_pluginProvider.Initialize();
+}
+
 muse::io::paths_t Au3AudioPluginScanner::scanPlugins() const
 {
     muse::io::paths_t result;

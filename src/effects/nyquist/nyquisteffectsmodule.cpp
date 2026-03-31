@@ -52,9 +52,10 @@ void au::effects::NyquistEffectsModule::registerResources()
 
 void au::effects::NyquistEffectsModule::resolveImports()
 {
+    m_pluginsScanner = std::make_shared<NyquistPluginsScanner>();
     auto scannerRegister = globalIoc()->resolve<muse::audioplugins::IAudioPluginsScannerRegister>(mname);
     if (scannerRegister) {
-        scannerRegister->registerScanner(std::make_shared<NyquistPluginsScanner>());
+        scannerRegister->registerScanner(m_pluginsScanner);
     }
 
     m_nyquistMetaReader = std::make_shared<NyquistPluginsMetaReader>();
@@ -82,6 +83,7 @@ void au::effects::NyquistEffectsModule::onInit(const muse::IApplication::RunMode
 {
     m_nyquistMetaReader->init();
     m_effectLoader->init();
+    m_pluginsScanner->init();
     m_nyquistEffectsRepository->init();
 }
 

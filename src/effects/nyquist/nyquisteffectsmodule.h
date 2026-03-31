@@ -13,6 +13,7 @@ class NyquistEffectsRepository;
 class NyquistPluginsMetaReader;
 class NyquistPromptLoader;
 class NyquistEffectsLoader;
+class NyquistPluginsScanner;
 
 class NyquistEffectsModule : public muse::modularity::IModuleSetup
 {
@@ -35,6 +36,7 @@ private:
     const std::unique_ptr<NyquistEffectsRepository> m_nyquistEffectsRepository;
     std::shared_ptr<NyquistPluginsMetaReader> m_nyquistMetaReader;
     std::shared_ptr<NyquistEffectsLoader> m_effectLoader;
+    std::shared_ptr<NyquistPluginsScanner> m_pluginsScanner;
     std::unique_ptr<NyquistPromptLoader> m_nyquistPromptLoader;
 };
 

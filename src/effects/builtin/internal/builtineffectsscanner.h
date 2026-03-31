@@ -3,17 +3,18 @@
  */
 #pragma once
 
-#include "ibuiltineffectsrepository.h"
+#include "effects/effects_base/internal/au3/au3audiopluginscanner.h"
 
-#include "framework/audioplugins/iaudiopluginsscanner.h"
-#include "framework/global/modularity/ioc.h"
+#include "au3-effects/LoadEffects.h"
 
 namespace au::effects {
-class BuiltinEffectsScanner : public muse::audioplugins::IAudioPluginsScanner
+class BuiltinEffectsScanner : public Au3AudioPluginScanner
 {
-    muse::GlobalInject<IBuiltinEffectsRepository> builtinEffectsRepository;
-
 public:
-    muse::io::paths_t scanPlugins() const override;
+    BuiltinEffectsScanner()
+        : Au3AudioPluginScanner(m_module) {}
+
+private:
+    ::BuiltinEffectsModule m_module;
 };
 }

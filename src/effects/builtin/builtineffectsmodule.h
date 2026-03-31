@@ -8,6 +8,7 @@
 
 namespace au::effects {
 class BuiltinEffectsLoader;
+class BuiltinEffectsScanner;
 
 class BuiltinEffectsModule : public muse::modularity::IModuleSetup
 {
@@ -24,5 +25,6 @@ public:
 
 private:
     const std::shared_ptr<BuiltinEffectsLoader> m_effectLoader;
+    const std::shared_ptr<BuiltinEffectsScanner> m_pluginsScanner;
 };
 }
