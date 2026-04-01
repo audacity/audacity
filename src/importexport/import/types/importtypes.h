@@ -17,4 +17,13 @@ struct FileInfo
         return path.empty();
     }
 };
+
+/// Persisted "remember my choice" action for tempo detection dialogs on import.
+enum class LoopAction
+{
+    Ask,
+    MatchProjectToLoop,
+    MatchLoopToProject,
+    DoNothing,
+};
 }

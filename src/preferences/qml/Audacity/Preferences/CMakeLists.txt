@@ -14,6 +14,8 @@ qt_add_qml_module(preferences_qml
         editpreferencesmodel.h
         generalpreferencesmodel.cpp
         generalpreferencesmodel.h
+        musicpreferencesmodel.cpp
+        musicpreferencesmodel.h
         playbackpreferencesmodel.cpp
         playbackpreferencesmodel.h
         pluginpreferencesmodel.cpp
@@ -60,6 +62,7 @@ qt_add_qml_module(preferences_qml
         internal/MeterDbRangeSection.qml
         internal/MiscellaneousSection.qml
         internal/MixerSection.qml
+        MusicPreferencesPage.qml
         internal/MonoStereoConversionSection.qml
         internal/NumberFormatSection.qml
         internal/PasteBehaviorSection.qml

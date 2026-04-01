@@ -8,6 +8,8 @@
 
 namespace au::importexport {
 class Au3Importer;
+class ImporterConfiguration;
+
 class ImporterModule : public muse::modularity::IModuleSetup
 {
 public:
@@ -30,5 +32,6 @@ public:
 
 private:
     std::shared_ptr<Au3Importer> m_importer;
+    std::shared_ptr<ImporterConfiguration> m_configuration;
 };
 }
