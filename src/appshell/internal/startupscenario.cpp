@@ -98,7 +98,7 @@ void StartupScenario::setStartupMediaFiles(const muse::io::paths_t& files)
 
 muse::async::Promise<muse::Ret> StartupScenario::runOnSplashScreen()
 {
-    return muse::async::make_promise<muse::Ret>([this](auto resolve, auto) {
+    return muse::async::make_promise<muse::Ret>([](auto resolve, auto) {
         const muse::Ret ret = muse::make_ret(muse::Ret::Code::Ok);
         return resolve(ret);
     });
@@ -227,7 +227,7 @@ void StartupScenario::showStartupDialogsIfNeed(StartupModeType)
     };
 
     if (!configuration()->hasCompletedFirstLaunchSetup()) {
-        interactive()->open(FIRST_LAUNCH_SETUP_URI).then(this, [this, showWelcomePage](const muse::Val&, auto resolve) {
+        interactive()->open(FIRST_LAUNCH_SETUP_URI).then(this, [showWelcomePage](const muse::Val&, auto resolve) {
             showWelcomePage();
             return resolve();
         });
