@@ -56,7 +56,7 @@ PreferencesPage {
 
         SeparatorLine {}
 
-        BufferAndLatencySection {
+        SampleRateSection {
             apiModel: apiModel
 
             navigation.section: root.navigationSection
@@ -65,7 +65,7 @@ PreferencesPage {
 
         SeparatorLine {}
 
-        SampleRateSection {
+        BufferAndLatencySection {
             apiModel: apiModel
 
             navigation.section: root.navigationSection

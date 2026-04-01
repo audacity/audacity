@@ -43,65 +43,88 @@ BaseSection {
         playbackState.init()
     }
 
-    IncrementalPropertyControlWithTitle {
-        title: qsTrc("preferences", "Buffer length")
+    Row {
+        width: parent.width
+        spacing: root.spacing
 
-        currentValue: apiModel.bufferLength
+        Column {
+            width: root.columnWidth
 
-        enabled: !playbackState.isPlaying
+            IncrementalPropertyControlWithTitle {
+                title: qsTrc("preferences", "Buffer length")
 
-        columnWidth: root.columnWidth
-        spacing: root.columnSpacing
+                currentValue: apiModel.bufferLength
 
-        //: Abbreviation of "milliseconds"
-        measureUnitsSymbol: qsTrc("global", "ms")
+                enabled: !playbackState.isPlaying
 
-        navigation.name: "BufferLengthControl"
-        navigation.panel: root.navigation
-        navigation.row: 1
+                columnWidth: root.columnWidth
+                spacing: root.columnSpacing
 
-        onValueEdited: function (newValue) {
-            apiModel.bufferLengthSelected(newValue)
+                //: Abbreviation of "milliseconds"
+                measureUnitsSymbol: qsTrc("global", "ms")
+
+                navigation.name: "BufferLengthControl"
+                navigation.panel: root.navigation
+                navigation.row: 1
+                navigation.column: 0
+
+                onValueEdited: function (newValue) {
+                    apiModel.bufferLengthSelected(newValue)
+                }
+            }
         }
-    }
 
-    StyledTextLabel {
-        text: qsTrc("preferences", "Latency compensation")
+        Column {
+            width: root.columnWidth
+            spacing: root.columnSpacing
 
-        width: root.columnWidth
-        horizontalAlignment: Qt.AlignLeft
-        wrapMode: Text.WordWrap
-        maximumLineCount: 2
-    }
+            StyledTextLabel {
+                text: qsTrc("preferences", "Latency compensation")
 
-    CheckBox {
-        id: automaticCompensationCheckbox
+                width: root.columnWidth
+                horizontalAlignment: Qt.AlignLeft
+                wrapMode: Text.WordWrap
+                maximumLineCount: 2
+            }
 
-        text: qsTrc("preferences", "Automatic")
-        checked: apiModel.automaticCompensationEnabled
-        onClicked: apiModel.setAutomaticCompensationEnabled(!checked)
+            Row {
+                width: parent.width
+                spacing: 8
 
-        navigation.name: "AutomaticLatencyCompensationCheckBox"
-        navigation.panel: root.navigation
-        navigation.row: 2
-    }
+                IncrementalPropertyControl {
+                    currentValue: apiModel.latencyCompensation
 
-    IncrementalPropertyControl {
+                    enabled: !playbackState.isPlaying && !apiModel.automaticCompensationEnabled
+                    implicitWidth: 100
 
-        currentValue: apiModel.latencyCompensation
+                    //: Abbreviation of "milliseconds"
+                    measureUnitsSymbol: qsTrc("global", "ms")
 
-        enabled: !playbackState.isPlaying && !apiModel.automaticCompensationEnabled
-        implicitWidth: 100
+                    navigation.name: "LatencyCompensationControl"
+                    navigation.panel: root.navigation
+                    navigation.row: 1
+                    navigation.column: 1
 
-        //: Abbreviation of "milliseconds"
-        measureUnitsSymbol: qsTrc("global", "ms")
+                    onValueEdited: function (newValue) {
+                        apiModel.latencyCompensationSelected(newValue)
+                    }
+                }
 
-        navigation.name: "LatencyCompensationControl"
-        navigation.panel: root.navigation
-        navigation.row: 3
+                CheckBox {
+                    id: automaticCompensationCheckbox
 
-        onValueEdited: function (newValue) {
-            apiModel.latencyCompensationSelected(newValue)
+                    text: qsTrc("preferences", "Automatic")
+                    checked: apiModel.automaticCompensationEnabled
+                    onClicked: apiModel.setAutomaticCompensationEnabled(!checked)
+
+                    anchors.verticalCenter: parent.verticalCenter
+
+                    navigation.name: "AutomaticLatencyCompensationCheckBox"
+                    navigation.panel: root.navigation
+                    navigation.row: 1
+                    navigation.column: 2
+                }
+            }
         }
     }
 }
