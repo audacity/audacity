@@ -13,7 +13,7 @@ import Audacity.Cloud 1.0
 StyledDialogView {
     id: root
 
-    title: qsTrc("cloud/save", "Save to Audio.com")
+    title: qsTrc("cloud/save", "Save to audio.com")
 
     contentWidth: prv.contentWidth
     contentHeight: content.implicitHeight
