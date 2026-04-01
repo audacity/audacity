@@ -8,11 +8,9 @@ import Audacity.Effects
 StyledTableView {
     id: root
 
-    headerCapitalization: Font.MixedCase
+    required property PluginManagerTableViewModel tableViewModel
 
-    PluginManagerTableViewModel {
-        id: tableViewModel
-    }
+    headerCapitalization: Font.MixedCase
 
     model: tableViewModel
 

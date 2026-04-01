@@ -35,13 +35,15 @@ public:
     ~PluginManagerTableViewModel() override;
 
     Q_INVOKABLE void handleEdit(int row, int column);
+    Q_INVOKABLE void setSearchText(const QString& searchText);
 
 private:
     void classBegin() override {}
     void componentComplete() override;
 
     QVector<muse::uicomponents::TableViewHeader*> makeHorizontalHeaders();
-    QVector<muse::uicomponents::TableViewHeader*> makeVerticalHeaders();
-    QVector<QVector<muse::uicomponents::TableViewCell*> > makeTable();
+    QVector<muse::uicomponents::TableViewHeader*> makeVerticalHeaders(const EffectMetaList& effects);
+    QVector<QVector<muse::uicomponents::TableViewCell*> > makeTable(const EffectMetaList& effects);
+    void setTableRows(const EffectMetaList& effects);
 };
 }

@@ -21,8 +21,25 @@ PluginManagerTableViewModel::~PluginManagerTableViewModel()
 void PluginManagerTableViewModel::componentComplete()
 {
     setHorizontalHeaders(makeHorizontalHeaders());
-    setVerticalHeaders(makeVerticalHeaders());
-    setTable(makeTable());
+    const EffectMetaList effects = effectsProvider()->effectMetaList();
+    setTableRows(effects);
+}
+
+void PluginManagerTableViewModel::setTableRows(const EffectMetaList& effects)
+{
+    setVerticalHeaders(makeVerticalHeaders(effects));
+    setTable(makeTable(effects));
+}
+
+void PluginManagerTableViewModel::setSearchText(const QString& searchText)
+{
+    auto effects = effectsProvider()->effectMetaList();
+    const QString searchTextLower = searchText.toLower();
+    effects.erase(std::remove_if(effects.begin(), effects.end(), [&searchTextLower](const EffectMeta& meta) {
+        return !meta.title.toQString().toLower().contains(searchTextLower);
+    }), effects.end());
+
+    setTableRows(effects);
 }
 
 QVector<muse::uicomponents::TableViewHeader*> PluginManagerTableViewModel::makeHorizontalHeaders()
@@ -44,11 +61,10 @@ QVector<muse::uicomponents::TableViewHeader*> PluginManagerTableViewModel::makeH
     return hHeaders;
 }
 
-QVector<muse::uicomponents::TableViewHeader*> PluginManagerTableViewModel::makeVerticalHeaders()
+QVector<muse::uicomponents::TableViewHeader*> PluginManagerTableViewModel::makeVerticalHeaders(const EffectMetaList& effects)
 {
     using namespace muse::uicomponents;
 
-    const EffectMetaList effects = effectsProvider()->effectMetaList();
     QVector<TableViewHeader*> vHeaders;
 
     for (const auto& _ : effects) {
@@ -58,9 +74,8 @@ QVector<muse::uicomponents::TableViewHeader*> PluginManagerTableViewModel::makeV
     return vHeaders;
 }
 
-QVector<QVector<muse::uicomponents::TableViewCell*> > PluginManagerTableViewModel::makeTable()
+QVector<QVector<muse::uicomponents::TableViewCell*> > PluginManagerTableViewModel::makeTable(const EffectMetaList& effects)
 {
-    const EffectMetaList effects = effectsProvider()->effectMetaList();
     QVector<QVector<muse::uicomponents::TableViewCell*> > table;
 
     for (const auto& meta : effects) {

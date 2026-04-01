@@ -24,7 +24,7 @@ public:
 
     QString label() const { return m_label; }
 
-    void setOptions(const QList<DropdownOption>& options);
+    void setOptions(const std::vector<DropdownOption>& options);
 
     QVariantList options() const;
     QString currentTitle() const;
@@ -37,7 +37,7 @@ signals:
 
 private:
     const QString m_label;
-    QList<DropdownOption> m_options;
+    std::vector<DropdownOption> m_options;
     int m_selectedIndex = 0;
 };
 }

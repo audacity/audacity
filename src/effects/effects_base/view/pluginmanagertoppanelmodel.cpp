@@ -35,14 +35,14 @@ void PluginManagerTopPanelModel::componentComplete()
             { "enabled", muse::qtrc("effects", "Enabled") },
         });
 
-    QList<DropdownOption> typeOptions = { { "all", muse::qtrc("effects", "All") } };
+    std::vector<DropdownOption> typeOptions = { { "all", muse::qtrc("effects", "All") } };
     std::transform(families.begin(), families.end(), std::back_inserter(typeOptions), [](EffectFamily family) {
         const QString title = utils::effectFamilyToString(family);
         return DropdownOption { QString::number(static_cast<int>(family)), title };
     });
     m_typeModel->setOptions(typeOptions);
 
-    QList<DropdownOption> categoryOptions = { { "all", muse::qtrc("effects", "All") } };
+    std::vector<DropdownOption> categoryOptions = { { "all", muse::qtrc("effects", "All") } };
     std::transform(types.begin(), types.end(), std::back_inserter(categoryOptions), [](EffectType type) {
         const QString title = utils::effectTypeToString(type);
         return DropdownOption { QString::number(static_cast<int>(type)), title };

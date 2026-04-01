@@ -12,6 +12,8 @@ Row {
     padding: 8
     spacing: 16
 
+    signal searchTextChanged(string newText)
+
     PluginManagerTopPanelModel {
         id: topPanelModel
     }
@@ -31,6 +33,19 @@ Row {
             onHandleMenuItem: function (itemId) {
                 modelData.select(itemId)
             }
+        }
+    }
+
+    SearchField {
+        id: searchField
+
+        width: 200
+        height: 30
+
+        inputField.activeFocusOnPress: true
+
+        onSearchTextChanged: {
+            root.searchTextChanged(searchField.searchText)
         }
     }
 }

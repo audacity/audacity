@@ -25,6 +25,8 @@ StyledDialogView {
     // TODO
     {}
 
+    property PluginManagerTableViewModel tableViewModel: PluginManagerTableViewModel {}
+
     ColumnLayout {
         anchors.fill: parent
         spacing: 0
@@ -34,10 +36,16 @@ StyledDialogView {
 
             Layout.fillWidth: true
             Layout.preferredHeight: 48
+
+            onSearchTextChanged: function (newText) {
+                root.tableViewModel.setSearchText(newText)
+            }
         }
 
         PluginManagerTableView {
             id: tableView
+
+            tableViewModel: root.tableViewModel
 
             Layout.fillWidth: true
             Layout.fillHeight: true

@@ -11,7 +11,7 @@ DropdownOptionsModel::DropdownOptionsModel(const QString& label, QObject* parent
 {
 }
 
-void DropdownOptionsModel::setOptions(const QList<DropdownOption>& options)
+void DropdownOptionsModel::setOptions(const std::vector<DropdownOption>& options)
 {
     if (m_options == options) {
         return;
@@ -24,14 +24,7 @@ void DropdownOptionsModel::setOptions(const QList<DropdownOption>& options)
 
 QVariantList DropdownOptionsModel::options() const
 {
-    QVariantList result;
-    for (int i = 0; i < m_options.size(); ++i) {
-        QVariantMap item;
-        item["id"] = m_options[i].id;
-        item["title"] = m_options[i].title;
-        item["enabled"] = true;
-        item["selectable"] = true;
-        item["selected"] = (i == m_selectedIndex);
+    for (auto i = 0; i < static_cast<int>(m_options.size()); ++i) {
         result.append(item);
     }
     return result;
@@ -39,7 +32,7 @@ QVariantList DropdownOptionsModel::options() const
 
 QString DropdownOptionsModel::currentTitle() const
 {
-    if (m_selectedIndex >= 0 && m_selectedIndex < m_options.size()) {
+    if (m_selectedIndex >= 0 && m_selectedIndex < static_cast<int>(m_options.size())) {
         return m_options[m_selectedIndex].title;
     }
     return {};
@@ -47,7 +40,7 @@ QString DropdownOptionsModel::currentTitle() const
 
 void DropdownOptionsModel::select(const QString& optionId)
 {
-    for (int i = 0; i < m_options.size(); ++i) {
+    for (auto i = 0; i < static_cast<int>(m_options.size()); ++i) {
         if (m_options[i].id == optionId) {
             if (i != m_selectedIndex) {
                 m_selectedIndex = i;
