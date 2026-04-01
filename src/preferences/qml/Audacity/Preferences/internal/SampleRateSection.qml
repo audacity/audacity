@@ -44,7 +44,7 @@ BaseSection {
     }
 
     Row {
-        spacing: 8
+        spacing: root.spacing
 
         ComboBoxWithTitle {
             title: qsTrc("preferences", "Default sample rate")
@@ -65,11 +65,34 @@ BaseSection {
             }
         }
 
+        ComboBoxWithTitle {
+            title: qsTrc("preferences", "Default sample format")
+            columnWidth: root.columnWidth
+
+            enabled: !playbackState.isPlaying
+
+            currentIndex: indexOfValue(apiModel.defaultSampleFormat)
+            model: apiModel.defaultSampleFormatList
+
+            navigation.name: "DefaultSampleFormatBox"
+            navigation.panel: root.navigation
+            navigation.row: 1
+            navigation.column: 1
+
+            onValueEdited: function(newIndex, newValue) {
+                apiModel.defaultSampleFormatSelected(newValue)
+            }
+        }
+    }
+
+    Row {
+        visible: apiModel.otherSampleRate
+        spacing: root.spacing
+
         IncrementalPropertyControlWithTitle {
             currentValue: apiModel.defaultSampleRateValue
 
             enabled: !playbackState.isPlaying
-            visible: apiModel.otherSampleRate
 
             minValue: 1
             maxValue: 999999
@@ -78,30 +101,11 @@ BaseSection {
 
             navigation.name: "SampleRateControl"
             navigation.panel: root.navigation
-            navigation.row: 1
-            navigation.column: 1
+            navigation.row: 2
 
             onValueEdited: function(newValue) {
                 apiModel.defaultSampleRateValueSelected(newValue)
             }
-        }
-    }
-
-    ComboBoxWithTitle {
-        title: qsTrc("preferences", "Default sample format")
-        columnWidth: root.columnWidth
-
-        enabled: !playbackState.isPlaying
-
-        currentIndex: indexOfValue(apiModel.defaultSampleFormat)
-        model: apiModel.defaultSampleFormatList
-
-        navigation.name: "DefaultSampleFormatBox"
-        navigation.panel: root.navigation
-        navigation.row: 2
-
-        onValueEdited: function(newIndex, newValue) {
-            apiModel.defaultSampleFormatSelected(newValue)
         }
     }
 
