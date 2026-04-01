@@ -31,7 +31,7 @@ import Audacity.Preferences
 BaseSection {
     id: root
 
-    title: highContrastEnabled ? qsTrc("preferences", "High contrast themes") : qsTrc("preferences", "Themes")
+    title: highContrastEnabled ? qsTrc("preferences", "High-contrast theme") : qsTrc("preferences", "Theme")
     navigation.direction: NavigationPanel.Both
 
     property bool highContrastEnabled: false

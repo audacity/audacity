@@ -160,12 +160,12 @@ void NyquistPromptViewModel::debugEffect()
     // Show the debug output in a dialog
     if (!debugOutput.isEmpty()) {
         interactive()->info(
-            muse::trc("effects", "Nyquist Debug Output"),
+            muse::trc("effects", "Nyquist debug output"),
             debugOutput.toStdString()
             );
     } else {
         interactive()->info(
-            muse::trc("effects", "Nyquist Debug Output"),
+            muse::trc("effects", "Nyquist debug output"),
             muse::mtrc("effects", "No debug output generated.").toStdString()
             );
     }

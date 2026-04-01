@@ -10,7 +10,7 @@ import Audacity.BuiltinEffectsCollection
 BuiltinEffectBase {
     id: root
 
-    property string title: qsTrc("effects/noisereduction", "Noise Reduction")
+    property string title: qsTrc("effects/noisereduction", "Noise reduction")
     property bool isApplyAllowed: noiseReduction.isApplyAllowed
 
     implicitHeight: column.implicitHeight

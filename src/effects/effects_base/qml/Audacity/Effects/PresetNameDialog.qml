@@ -10,7 +10,7 @@ import Muse.UiComponents
 StyledDialogView {
     id: root
 
-    title: qsTrc("effects", "Save Preset")
+    title: qsTrc("effects", "Save preset")
 
     contentWidth: 280
     contentHeight: 80

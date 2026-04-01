@@ -51,7 +51,7 @@ QString GeneratedEffectViewerModel::computeEffectName(EffectInstanceId instanceI
     if (meta.isValid()) {
         return meta.title.toQString();
     }
-    return muse::qtrc("effects", "Unknown Effect");
+    return muse::qtrc("effects", "Unknown effect");
 }
 
 IParameterExtractorService* GeneratedEffectViewerModel::getParameterExtractor() const

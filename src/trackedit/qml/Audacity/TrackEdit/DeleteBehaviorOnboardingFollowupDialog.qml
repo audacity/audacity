@@ -42,7 +42,7 @@ StyledDialogView {
             width: parent.width - 32
             horizontalAlignment: Text.AlignLeft
 
-            text: qsTrc("trackedit/preferences", "Your delete behaviour has been set")
+            text: qsTrc("trackedit/preferences", "Your delete behavior has been set")
             wrapMode: Text.WordWrap
             font.bold: true
         }
@@ -58,7 +58,7 @@ StyledDialogView {
                 const line1 = qsTrc("trackedit/preferences", "You can change this at any time in %1.").arg(editingPrefsLink)
 
                 const shortcutsPrefsLink = '<a href="shortcuts-preferences">%1</a>'.arg(qsTrc("trackedit/preferences", "Shortcuts"))
-                const line2 = qsTrc("trackedit/preferences", "There are also a variety of new shortcuts that let you quickly access different delete behaviours. Go to %2 to learn more.").arg(shortcutsPrefsLink)
+                const line2 = qsTrc("trackedit/preferences", "There are also a variety of new shortcuts that let you quickly access different delete behaviors. Go to %2 to learn more.").arg(shortcutsPrefsLink)
 
                 return line1 + "<br/><br/>" + line2
             }
@@ -97,7 +97,7 @@ StyledDialogView {
             navigation.name: "OkButton"
             navigation.panel: navigationPanel
 
-            text: qsTrc("global", "Ok")
+            text: qsTrc("global", "OK")
             accentButton: true
             onClicked: function () {
                 root.hide()

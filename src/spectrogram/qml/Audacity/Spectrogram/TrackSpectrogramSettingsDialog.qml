@@ -129,7 +129,7 @@ StyledDialogView {
             navigation.name: "OKButton"
             navigation.order: 2
 
-            text: qsTrc("spectrogram/prefs", "Ok")
+            text: qsTrc("spectrogram/prefs", "OK")
             buttonRole: ButtonBoxModel.AcceptRole
             buttonId: ButtonBoxModel.Ok
             accentButton: true

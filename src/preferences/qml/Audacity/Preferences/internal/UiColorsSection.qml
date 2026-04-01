@@ -46,10 +46,10 @@ BaseSection {
 
         Repeater {
             model: [
-                { textRole: qsTrc("preferences", "Accent color:"), colorRole: ui.theme.accentColor, typeRole: AppearancePreferencesModel.AccentColor},
-                { textRole: qsTrc("preferences", "Text and icons:"), colorRole: ui.theme.fontPrimaryColor, typeRole: AppearancePreferencesModel.TextAndIconsColor},
-                { textRole: qsTrc("preferences", "Disabled text:"), colorRole: ui.theme.extra["black_color"], typeRole: AppearancePreferencesModel.DisabledColor},
-                { textRole: qsTrc("preferences", "Border color:"), colorRole: ui.theme.strokeColor, typeRole: AppearancePreferencesModel.BorderColor}
+                { textRole: qsTrc("preferences", "Accent color"), colorRole: ui.theme.accentColor, typeRole: AppearancePreferencesModel.AccentColor},
+                { textRole: qsTrc("preferences", "Text and icons"), colorRole: ui.theme.fontPrimaryColor, typeRole: AppearancePreferencesModel.TextAndIconsColor},
+                { textRole: qsTrc("preferences", "Disabled text"), colorRole: ui.theme.extra["black_color"], typeRole: AppearancePreferencesModel.DisabledColor},
+                { textRole: qsTrc("preferences", "Border color"), colorRole: ui.theme.strokeColor, typeRole: AppearancePreferencesModel.BorderColor}
             ]
 
             delegate: Row {

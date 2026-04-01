@@ -94,7 +94,7 @@ QString ColorSectionParameterListModel::controlLabel(Control control) const
     case ColorRange:
         return muse::qtrc("spectrogram/preferences", "Range");
     case ColorHighBoost:
-        return muse::qtrc("spectrogram/preferences", "High Boost");
+        return muse::qtrc("spectrogram/preferences", "High boost");
     default:
         assert(false);
         return QString{};

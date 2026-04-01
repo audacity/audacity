@@ -492,8 +492,8 @@ const UiActionList ProjectUiActions::m_actions = {
     UiAction("keep-tracks-synchronised",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Keep tracks synchronised"),
-             TranslatableString("action", "Keep tracks synchronised")
+             TranslatableString("action", "Keep tracks synchronized"),
+             TranslatableString("action", "Keep tracks synchronized")
              ),
 
     // generate menu

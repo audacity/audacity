@@ -462,7 +462,7 @@ bool ExportPreferencesModel::verifyExportPossible()
 {
     muse::Ret directoryExists = fileSystem()->makePath(directoryPath());
     if (!directoryExists || directoryPath().isEmpty()) {
-        interactive()->error(muse::trc("export", "Export Audio"), muse::trc("export", "Unable to create destination folder"));
+        interactive()->error(muse::trc("export", "Export audio"), muse::trc("export", "Unable to create destination folder"));
         return false;
     }
 
@@ -594,7 +594,7 @@ muse::Ret ExportPreferencesModel::warnAndDisableMasterFxBeforeExport() const
     auto cancelBtn = interactive()->buttonData(muse::IInteractive::Button::Cancel);
 
     const auto result = interactive()->questionSync(
-        muse::trc("export", "Export Audio"),
+        muse::trc("export", "Export audio"),
         muse::trc("export",
                   "To export with custom channel mapping, master effects must be turned off temporarily.\n\n"
                   "Master effects will be turned back on after export."),

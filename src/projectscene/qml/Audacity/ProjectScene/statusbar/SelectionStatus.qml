@@ -47,8 +47,8 @@ Row {
         enabled: selectionModel.isEnabled
 
         navigationPanel: root.navigationPanel
-        startAccessibleName: qsTrc("projectscene", "Selection Start")
-        endAccessibleName: qsTrc("projectscene", "Selection End")
+        startAccessibleName: qsTrc("projectscene", "Selection start")
+        endAccessibleName: qsTrc("projectscene", "Selection end")
 
         onStartValueChangeRequested: function (newValue) {
             selectionModel.startTime = newValue
