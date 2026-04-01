@@ -698,7 +698,7 @@ Ret Au3Record::doRecord(Au3Project& project,
             // leadInTimeSequences should be a subset of playbackSequences.
             const auto& range = transportSequences.playbackSequences;
             bool leadInTimeTrack = any_of(range.begin(), range.end(),
-                                       [&](const auto& pSequence) {
+                                          [&](const auto& pSequence) {
                 return shared.get() == pSequence->FindChannelGroup();
             });
             if (leadInTimeTrack) {
@@ -884,7 +884,8 @@ Ret Au3Record::doRecord(Au3Project& project,
         pendingTracks.UpdatePendingTracks();
     }
 
-    int token = audioEngine()->startStream(transportSequences, t0, t1, t1, project, false, audioStreamSampleRate, leadInTime, crossfadeData);
+    int token
+        = audioEngine()->startStream(transportSequences, t0, t1, t1, project, false, audioStreamSampleRate, leadInTime, crossfadeData);
 
     success = (token != 0);
 

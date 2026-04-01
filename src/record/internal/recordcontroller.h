@@ -64,6 +64,7 @@ private:
     enum class RecordStatus {
         Stopped = 0,
         Paused,
+        LeadIn,
         Running
     };
 
@@ -86,10 +87,8 @@ private:
 
     muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;
 
-    bool m_isLeadInRecording = false;
     muse::secs_t m_leadInRecordingStartTime = 0.0;
     std::vector<trackedit::TrackId> m_leadInRecordingTrackIds;
-    muse::async::Notification m_isLeadInRecordingChanged;
 };
 }
 

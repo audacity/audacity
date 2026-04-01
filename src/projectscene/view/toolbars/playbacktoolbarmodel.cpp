@@ -105,11 +105,6 @@ void PlaybackToolBarModel::load()
             reload();
         });
 
-        recordController()->isLeadInRecordingChanged().onNotify(this, [this]() {
-            updatePlayState();
-            updateRecordState();
-        });
-
         m_inited = true;
     }
 

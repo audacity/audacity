@@ -101,16 +101,6 @@ void RecordUiActions::init()
         m_actionEnabledChanged.send(codes);
     });
 
-    m_controller->isLeadInRecordingChanged().onNotify(this, [this]() {
-        ActionCodeList codes;
-
-        for (const UiAction& action : actionsList()) {
-            codes.push_back(action.code);
-        }
-
-        m_actionEnabledChanged.send(codes);
-    });
-
     m_controller->isMicMeteringOnChanged().onNotify(this, [this]() {
         m_actionCheckedChanged.send(ActionCodeList { RECORD_TOGGLE_MIC_METERING.toString() });
     });
