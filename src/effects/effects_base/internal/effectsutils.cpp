@@ -12,8 +12,12 @@ muse::String utils::effectFamilyToString(EffectFamily family)
     switch (family) {
     case EffectFamily::Builtin: return u"Audacity";
     case EffectFamily::VST3: return u"VST3";
+#ifdef Q_OS_LINUX
     case EffectFamily::LV2: return u"LV2";
+#endif
+#ifdef Q_OS_MACOS
     case EffectFamily::AudioUnit: return u"AudioUnit";
+#endif
     case EffectFamily::Nyquist: return u"Nyquist";
     default:
         assert(false);
@@ -27,10 +31,14 @@ EffectFamily utils::effectFamilyFromString(const muse::String& family)
         return EffectFamily::Builtin;
     } else if (family == u"VST3") {
         return EffectFamily::VST3;
+#ifdef Q_OS_LINUX
     } else if (family == u"LV2") {
         return EffectFamily::LV2;
+#endif
+#ifdef Q_OS_MACOS
     } else if (family == u"AudioUnit") {
         return EffectFamily::AudioUnit;
+#endif
     } else if (family == u"Nyquist") {
         return EffectFamily::Nyquist;
     }

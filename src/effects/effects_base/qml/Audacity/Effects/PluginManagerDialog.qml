@@ -34,6 +34,8 @@ StyledDialogView {
         PluginManagerTopPanel {
             id: topPanel
 
+            tableViewModel: root.tableViewModel
+
             Layout.fillWidth: true
             Layout.preferredHeight: 48
 

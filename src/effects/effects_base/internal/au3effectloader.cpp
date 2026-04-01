@@ -18,8 +18,12 @@ constexpr EffectFamily toEffectFamily(muse::audio::AudioResourceType type)
 {
     switch (type) {
     case muse::audio::AudioResourceType::VstPlugin:      return EffectFamily::VST3;
+#ifdef Q_OS_LINUX
     case muse::audio::AudioResourceType::Lv2Plugin:      return EffectFamily::LV2;
+#endif
+#ifdef Q_OS_MACOS
     case muse::audio::AudioResourceType::AudioUnit:      return EffectFamily::AudioUnit;
+#endif
     case muse::audio::AudioResourceType::NyquistPlugin:  return EffectFamily::Nyquist;
     case muse::audio::AudioResourceType::NativeEffect:  return EffectFamily::Builtin;
     case muse::audio::AudioResourceType::FluidSoundfont:

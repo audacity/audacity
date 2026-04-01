@@ -101,6 +101,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/effectsuiengine.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/effectsuiengine.h
     ${CMAKE_CURRENT_LIST_DIR}/view/effectsviewtypes.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/effectsviewutils.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/effectsviewutils.h
     ${CMAKE_CURRENT_LIST_DIR}/view/destructiveeffectviewerdialogmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/destructiveeffectviewerdialogmodel.h
@@ -110,8 +111,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/effectparameterslistmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/generatedeffectviewermodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/generatedeffectviewermodel.h
-    ${CMAKE_CURRENT_LIST_DIR}/view/pluginmanagertoppanelmodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/pluginmanagertoppanelmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/pluginmanagertableviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/pluginmanagertableviewmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/dropdownoptionsmodel.cpp

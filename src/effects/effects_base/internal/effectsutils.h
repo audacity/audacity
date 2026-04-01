@@ -36,8 +36,12 @@ constexpr muse::audio::AudioResourceType toMuseAudioResourceType(EffectFamily fa
 {
     switch (family) {
     case EffectFamily::VST3: return muse::audio::AudioResourceType::VstPlugin;
+#ifdef Q_OS_LINUX
     case EffectFamily::LV2: return muse::audio::AudioResourceType::Lv2Plugin;
+#endif
+#ifdef Q_OS_MACOS
     case EffectFamily::AudioUnit: return muse::audio::AudioResourceType::AudioUnit;
+#endif
     case EffectFamily::Nyquist: return muse::audio::AudioResourceType::NyquistPlugin;
     case EffectFamily::Builtin: return muse::audio::AudioResourceType::NativeEffect;
     case EffectFamily::Unknown: return muse::audio::AudioResourceType::Undefined;
@@ -51,8 +55,12 @@ constexpr EffectFamily fromMuseAudioResourceType(muse::audio::AudioResourceType 
 {
     switch (type) {
     case muse::audio::AudioResourceType::VstPlugin: return EffectFamily::VST3;
+#ifdef Q_OS_LINUX
     case muse::audio::AudioResourceType::Lv2Plugin: return EffectFamily::LV2;
+#endif
+#ifdef Q_OS_MACOS
     case muse::audio::AudioResourceType::AudioUnit: return EffectFamily::AudioUnit;
+#endif
     case muse::audio::AudioResourceType::NyquistPlugin: return EffectFamily::Nyquist;
     case muse::audio::AudioResourceType::NativeEffect: return EffectFamily::Builtin;
     case muse::audio::AudioResourceType::FluidSoundfont:

@@ -5,6 +5,7 @@ import QtQuick 2.15
 import QtQuick.Layouts
 import Muse.UiComponents
 import Audacity.UiComponents
+import Audacity.Effects
 
 Row {
     id: root
@@ -12,14 +13,42 @@ Row {
     padding: 8
     spacing: 16
 
+    required property PluginManagerTableViewModel tableViewModel
+
     signal searchTextChanged(string newText)
 
-    PluginManagerTopPanelModel {
-        id: topPanelModel
+    Component.onCompleted: {
+        tableViewModel.enabledDisabledSelectedIndex = Qt.binding(function () {
+            return showModel.selectedIndex
+        })
+        tableViewModel.effectFamilySelectedIndex = Qt.binding(function () {
+            return typeModel.selectedIndex
+        })
+        tableViewModel.effectTypeSelectedIndex = Qt.binding(function () {
+            return categoryModel.selectedIndex
+        })
+    }
+
+    DropdownOptionsModel {
+        id: showModel
+        label: qsTrc("effects", "Show")
+        options: tableViewModel.enabledDisabledOptions
+    }
+
+    DropdownOptionsModel {
+        id: typeModel
+        label: qsTrc("effects", "Type")
+        options: tableViewModel.effectFamilyOptions
+    }
+
+    DropdownOptionsModel {
+        id: categoryModel
+        label: qsTrc("effects", "Category")
+        options: tableViewModel.effectTypeOptions
     }
 
     Repeater {
-        model: [topPanelModel.showModel, topPanelModel.typeModel, topPanelModel.categoryModel]
+        model: [showModel, typeModel, categoryModel]
 
         DropdownWithTitle {
             width: 150

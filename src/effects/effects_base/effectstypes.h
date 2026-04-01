@@ -155,9 +155,14 @@ public:
         Unknown = -1,
         Builtin,
         VST3,
+#ifdef Q_OS_LINUX
         LV2,
+#endif
+#ifdef Q_OS_MACOS
         AudioUnit,
+#endif
         Nyquist,
+        _count
     };
     Q_ENUM(EffectFamily)
 };
@@ -185,6 +190,7 @@ enum class EffectType {
     Generator,
     Processor,
     Tool,
+    _count
 };
 
 struct EffectMeta {
