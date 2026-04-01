@@ -11,7 +11,7 @@ import Audacity.AppShell
 Page {
     id: root
 
-    title: qsTrc("appshell/gettingstarted", "Connect to your Audio.com account")
+    title: qsTrc("appshell/gettingstarted", "Connect to your audio.com account")
     titleTopMargin: 16
 
     QtObject {
