@@ -90,6 +90,8 @@ BaseSection {
         spacing: root.spacing
 
         IncrementalPropertyControlWithTitle {
+            title: qsTrc("preferences", "Custom sample rate")
+            columnWidth: root.columnWidth
             currentValue: apiModel.defaultSampleRateValue
 
             enabled: !playbackState.isPlaying
@@ -102,6 +104,7 @@ BaseSection {
             navigation.name: "SampleRateControl"
             navigation.panel: root.navigation
             navigation.row: 2
+            navigation.column: 0
 
             onValueEdited: function(newValue) {
                 apiModel.defaultSampleRateValueSelected(newValue)
