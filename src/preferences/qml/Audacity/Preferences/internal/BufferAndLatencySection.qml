@@ -90,7 +90,6 @@ BaseSection {
             Row {
                 width: parent.width
                 spacing: 8
-                anchors.left: parent.left
 
                 IncrementalPropertyControl {
                     currentValue: apiModel.latencyCompensation
