@@ -27,6 +27,7 @@
 #include "au3-import-export/ExportUtils.h"
 #include "au3-project-rate/ProjectRate.h"
 
+#include "au3audiocomtypeconv.h"
 #include "au3cloud/au3clouderrors.h"
 #include "au3cloud/cloudtypes.h"
 #include "au3wrap/au3types.h"
@@ -44,67 +45,6 @@ bool Au3AudioComService::enabled() const
 }
 
 namespace {
-au::au3cloud::ProjectList convertFromAu3PaginatedProject(const sync::PaginatedProjectsResponse& paginatedResponse)
-{
-    au::au3cloud::ProjectList projectList;
-
-    for (size_t i = 0; i < paginatedResponse.Items.size(); i++) {
-        const auto& projectInfo = paginatedResponse.Items[i];
-
-        au::au3cloud::ProjectList::Item item;
-        item.id = projectInfo.Id;
-        item.name = projectInfo.Name;
-        item.slug = projectInfo.Slug;
-        item.authorName = projectInfo.AuthorName;
-        item.username = projectInfo.Username;
-        item.details = projectInfo.Details;
-        item.lastSyncedSnapshotId = projectInfo.LastSyncedSnapshotId;
-        item.created = projectInfo.Created;
-        item.updated = projectInfo.Updated;
-        item.fileSize = projectInfo.HeadSnapshot.FileSize;
-
-        projectList.items.push_back(std::move(item));
-    }
-
-    projectList.meta.total = paginatedResponse.Pagination.TotalCount;
-    projectList.meta.batches = paginatedResponse.Pagination.PagesCount;
-    projectList.meta.thisBatchNumber = paginatedResponse.Pagination.CurrentPage;
-    projectList.meta.itemsPerBatch = paginatedResponse.Pagination.PageSize;
-
-    return projectList;
-}
-
-au::au3cloud::AudioList convertFromAu3CloudAudio(const sync::PaginatedAudioResponse& paginatedResponse,
-                                                 const muse::io::path_t& thumnailCacheDir)
-{
-    au::au3cloud::AudioList audioList;
-
-    for (size_t i = 0; i < paginatedResponse.Items.size(); i++) {
-        const auto& audioInfo = paginatedResponse.Items[i];
-
-        au::au3cloud::AudioList::Item item;
-        item.id = audioInfo.Id;
-        item.username = audioInfo.Username;
-        item.authorName = audioInfo.AuthorName;
-        item.slug = audioInfo.Slug;
-        item.title = audioInfo.Title;
-        item.tags = audioInfo.Tags;
-        item.created = audioInfo.Created;
-        item.fileSize = audioInfo.FileSize;
-        item.duration = audioInfo.Duration;
-        item.waveformPath = thumnailCacheDir.appendingComponent(audioInfo.Id).appendingSuffix("json");
-
-        audioList.items.push_back(std::move(item));
-    }
-
-    audioList.meta.total = paginatedResponse.Pagination.TotalCount;
-    audioList.meta.batches = paginatedResponse.Pagination.PagesCount;
-    audioList.meta.thisBatchNumber = paginatedResponse.Pagination.CurrentPage;
-    audioList.meta.itemsPerBatch = paginatedResponse.Pagination.PageSize;
-
-    return audioList;
-}
-
 muse::io::path_t getTempFileName(const muse::io::path_t tempDir, const std::string& ext)
 {
     auto timestamp = std::chrono::system_clock::now().time_since_epoch().count();
@@ -114,104 +54,6 @@ muse::io::path_t getTempFileName(const muse::io::path_t tempDir, const std::stri
     return tempDir
            .appendingComponent(oss.str())
            .appendingSuffix(ext);
-}
-
-au::au3cloud::Err cloudSyncErrorToErr(const std::optional<sync::CloudSyncError>& error)
-{
-    if (!error.has_value()) {
-        return Err::UnknownError;
-    }
-
-    using ErrorType = sync::CloudSyncError::ErrorType;
-    switch (error->Type) {
-    case ErrorType::None:
-        return Err::UnknownError;
-    case ErrorType::Authorization:
-        return Err::ProjectForbidden;
-    case ErrorType::ProjectLimitReached:
-        return Err::ProjectLimitReached;
-    case ErrorType::ProjectStorageLimitReached:
-        return Err::ProjectStorageLimitReached;
-    case ErrorType::ProjectVersionConflict:
-        return Err::ProjectVersionConflict;
-    case ErrorType::ProjectNotFound:
-        return Err::ProjectNotFound;
-    case ErrorType::DataUploadFailed:
-        return Err::DataUploadFailed;
-    case ErrorType::Network:
-        return Err::NetworkError;
-    case ErrorType::Server:
-        return Err::ServerError;
-    case ErrorType::Cancelled:
-        return Err::SyncCancelled;
-    case ErrorType::Aborted:
-        return Err::SyncAborted;
-    case ErrorType::ClientFailure:
-        return Err::ClientFailure;
-    }
-
-    return Err::UnknownError;
-}
-
-au::au3cloud::Err uploadResultToErr(UploadOperationCompleted::Result result)
-{
-    using Result = UploadOperationCompleted::Result;
-    switch (result) {
-    case Result::Success:
-        return Err::NoError;
-    case Result::Aborted:
-        return Err::UploadAborted;
-    case Result::FileNotFound:
-        return Err::UploadFileNotFound;
-    case Result::Unauthorized:
-        return Err::UploadUnauthorized;
-    case Result::InvalidData:
-        return Err::UploadInvalidData;
-    case Result::UnexpectedResponse:
-        return Err::UploadUnexpectedResponse;
-    case Result::UploadFailed:
-        return Err::UploadFailed;
-    }
-
-    return Err::UnknownError;
-}
-
-au::au3cloud::Err syncResultCodeToErr(audacity::cloud::audiocom::SyncResultCode code)
-{
-    switch (code) {
-    case SyncResultCode::Success:
-        return Err::NoError;
-    case SyncResultCode::Cancelled:
-        return Err::SyncResultCancelled;
-    case SyncResultCode::Expired:
-        return Err::SyncResultExpired;
-    case SyncResultCode::Conflict:
-        return Err::SyncResultConflict;
-    case SyncResultCode::ConnectionFailed:
-        return Err::SyncResultConnectionFailed;
-    case SyncResultCode::PaymentRequired:
-        return Err::SyncResultPaymentRequired;
-    case SyncResultCode::TooLarge:
-        return Err::SyncResultTooLarge;
-    case SyncResultCode::Unauthorized:
-        return Err::SyncResultUnauthorized;
-    case SyncResultCode::Forbidden:
-        return Err::SyncResultForbidden;
-    case SyncResultCode::NotFound:
-        return Err::SyncResultNotFound;
-    case SyncResultCode::UnexpectedResponse:
-        return Err::SyncResultUnexpectedResponse;
-    case SyncResultCode::InternalClientError:
-        return Err::SyncResultInternalClientError;
-    case SyncResultCode::InternalServerError:
-        return Err::SyncResultInternalServerError;
-    case SyncResultCode::SyncImpossible:
-        return Err::SyncResultSyncImpossible;
-    case SyncResultCode::UnknownError:
-        return Err::UnknownError;
-    }
-
-    return Err::UnknownError;
 }
 
 std::optional<sync::DBProjectData> getProjectDataFromDatabase(const muse::io::path_t& localPath)
