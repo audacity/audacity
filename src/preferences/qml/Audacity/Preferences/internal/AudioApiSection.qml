@@ -66,6 +66,7 @@ BaseSection {
                 navigation.name: "AudioApiBox"
                 navigation.panel: root.navigation
                 navigation.row: 1
+                navigation.column: 0
 
                 onValueEdited: function(newIndex, newValue) {
                     root.currentAudioApiIndexChangeRequested(newIndex)
@@ -83,7 +84,8 @@ BaseSection {
 
                 navigation.name: "RecordingDeviceBox"
                 navigation.panel: root.navigation
-                navigation.row: 3
+                navigation.row: 2
+                navigation.column: 0
 
                 onValueEdited: function(newIndex, newValue) {
                     apiModel.inputDeviceSelected(newValue)
@@ -106,7 +108,8 @@ BaseSection {
 
                 navigation.name: "PlaybackDeviceBox"
                 navigation.panel: root.navigation
-                navigation.row: 2
+                navigation.row: 1
+                navigation.column: 1
 
                 onValueEdited: function(newIndex, newValue) {
                     apiModel.outputDeviceSelected(newValue)
@@ -124,7 +127,8 @@ BaseSection {
 
                 navigation.name: "RecordingChannelsBox"
                 navigation.panel: root.navigation
-                navigation.row: 4
+                navigation.row: 2
+                navigation.column: 1
 
                 onValueEdited: function(newIndex, newValue) {
                     apiModel.inputChannelsSelected(newIndex)

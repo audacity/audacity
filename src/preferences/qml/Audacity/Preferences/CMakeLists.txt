@@ -44,7 +44,6 @@ qt_add_qml_module(preferences_qml
         internal/ClipStyleSection.qml
         internal/ColorAndWallpaperSection.qml
         internal/ComboBoxWithTitle.qml
-        internal/CommonAudioApiConfiguration.qml
         internal/CursorSection.qml
         internal/DefaultFilesSection.qml
         internal/DeleteBehaviorSection.qml
