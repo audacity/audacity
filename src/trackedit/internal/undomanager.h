@@ -14,8 +14,8 @@ namespace au::trackedit {
 class UndoManager : public IUndoManager, public muse::Contextable
 {
 private:
-    muse::Inject<au::context::IGlobalContext> globalContext { this };
-    muse::Inject<au::trackedit::IProjectHistory> projectHistory { this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext { this };
+    muse::ContextInject<au::trackedit::IProjectHistory> projectHistory { this };
 
 public:
     UndoManager(const muse::modularity::ContextPtr& ctx)

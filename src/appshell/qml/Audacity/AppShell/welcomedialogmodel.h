@@ -33,7 +33,6 @@
 #include "framework/actions/iactionsdispatcher.h"
 #include "framework/interactive/iplatforminteractive.h"
 #include "framework/ui/iuiconfiguration.h"
-
 #include "iappshellconfiguration.h"
 
 namespace au::appshell {
@@ -54,7 +53,7 @@ class WelcomeDialogModel : public QObject, public muse::Contextable, public muse
     muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
     muse::GlobalInject<muse::IPlatformInteractive> platformInteractive;
 
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
 
 public:
     WelcomeDialogModel();

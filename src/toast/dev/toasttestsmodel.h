@@ -17,8 +17,9 @@ class ToastTestsModel : public QObject, public muse::Contextable, public muse::a
 {
     Q_OBJECT
 
-    muse::Inject<IToastService> toastService = { this };
-    muse::Inject<muse::IInteractive> interactive = { this };
+    muse::GlobalInject<IToastService> toastService;
+
+    muse::ContextInject<muse::IInteractive> interactive = { this };
 
 public:
     explicit ToastTestsModel(QObject* parent = nullptr);

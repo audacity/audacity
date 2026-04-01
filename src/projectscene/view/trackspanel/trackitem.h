@@ -33,9 +33,9 @@ class TrackItem : public QObject, public muse::Contextable, public muse::async::
     Q_PROPERTY(bool isSelected READ isSelected NOTIFY isSelectedChanged)
     Q_PROPERTY(bool isFocused READ isFocused NOTIFY isFocusedChanged)
 
-    muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
-    muse::Inject<trackedit::ISelectionController> selectionController{ this };
-    muse::Inject<trackedit::ITrackNavigationController> trackNavigationController{ this };
+    muse::ContextInject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
+    muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
+    muse::ContextInject<trackedit::ITrackNavigationController> trackNavigationController{ this };
 
 public:
     explicit TrackItem(QObject* parent = nullptr);

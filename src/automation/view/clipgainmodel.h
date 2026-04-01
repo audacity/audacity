@@ -24,10 +24,10 @@ class ClipGainModel : public QAbstractListModel, public muse::async::Asyncable, 
 {
     Q_OBJECT
 
-    muse::Inject<IClipGainInteraction> clipGainInteraction{ this };
-    muse::Inject<trackedit::IClipsInteraction> clipsInteraction{ this };
-    muse::Inject<trackedit::IProjectHistory> projectHistory{ this };
-    muse::Inject<context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<IClipGainInteraction> clipGainInteraction{ this };
+    muse::ContextInject<trackedit::IClipsInteraction> clipsInteraction{ this };
+    muse::ContextInject<trackedit::IProjectHistory> projectHistory{ this };
+    muse::ContextInject<context::IGlobalContext> globalContext{ this };
 
     Q_PROPERTY(projectscene::ClipKey clipKey READ clipKey WRITE setClipKey NOTIFY clipKeyChanged FINAL)
 

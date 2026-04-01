@@ -25,10 +25,10 @@ class ProjectViewState : public QObject, public IProjectViewState, public muse::
     muse::GlobalInject<IProjectSceneConfiguration> configuration;
     muse::GlobalInject<au::playback::IPlaybackConfiguration> playbackConfiguration;
 
-    muse::Inject<au::context::IGlobalContext> globalContext{ this };
-    muse::Inject<trackedit::ISelectionController> selectionController{ this };
-    muse::Inject<spectrogram::IFrequencySelectionController> frequencySelectionController{ this };
-    muse::Inject<trackedit::IProjectHistory> projectHistory{ this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
+    muse::ContextInject<spectrogram::IFrequencySelectionController> frequencySelectionController{ this };
+    muse::ContextInject<trackedit::IProjectHistory> projectHistory{ this };
 
 public:
     ProjectViewState(const muse::modularity::ContextPtr& ctx);

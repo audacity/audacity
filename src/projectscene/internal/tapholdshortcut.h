@@ -18,8 +18,8 @@ class TapHoldShortcut : public QObject, public muse::Contextable, public muse::a
 {
     Q_OBJECT
 
-    muse::Inject<muse::shortcuts::IShortcutsRegister> shortcutsRegister{ this };
-    muse::Inject<context::IUiContextResolver> uicontextResolver{ this };
+    muse::ContextInject<muse::shortcuts::IShortcutsRegister> shortcutsRegister{ this };
+    muse::ContextInject<context::IUiContextResolver> uicontextResolver{ this };
 
 public:
     explicit TapHoldShortcut(muse::modularity::ContextPtr ctx, const std::string& action, QObject* target = nullptr);

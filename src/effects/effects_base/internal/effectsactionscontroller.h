@@ -30,15 +30,15 @@ class EffectsActionsController : public muse::actions::Actionable, public muse::
     muse::GlobalInject<IEffectsConfiguration> configuration;
     muse::GlobalInject<spectrogram::ISpectralEffectsRegister> spectralEffectsRegister;
 
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher{ this };
-    muse::Inject<muse::ui::IUiActionsRegister> uiActionsRegister{ this };
-    muse::Inject<IEffectExecutionScenario> effectExecutionScenario{ this };
-    muse::Inject<IEffectsProvider> effectsProvider{ this };
-    muse::Inject<IEffectPresetsScenario> presetsScenario{ this };
-    muse::Inject<IEffectInstancesRegister> instancesRegister{ this };
-    muse::Inject<muse::IInteractive> interactive{ this };
-    muse::Inject<au::playback::IPlaybackController> playbackController{ this };
-    muse::Inject<spectrogram::IFrequencySelectionController> frequencySelectionController{ this };
+    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<muse::ui::IUiActionsRegister> uiActionsRegister{ this };
+    muse::ContextInject<IEffectExecutionScenario> effectExecutionScenario{ this };
+    muse::ContextInject<IEffectsProvider> effectsProvider{ this };
+    muse::ContextInject<IEffectPresetsScenario> presetsScenario{ this };
+    muse::ContextInject<IEffectInstancesRegister> instancesRegister{ this };
+    muse::ContextInject<muse::IInteractive> interactive{ this };
+    muse::ContextInject<au::playback::IPlaybackController> playbackController{ this };
+    muse::ContextInject<spectrogram::IFrequencySelectionController> frequencySelectionController{ this };
 
 public:
     EffectsActionsController(const muse::modularity::ContextPtr& ctx)

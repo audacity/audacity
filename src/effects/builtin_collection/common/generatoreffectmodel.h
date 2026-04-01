@@ -23,8 +23,8 @@ class GeneratorEffectModel : public BuiltinEffectModel
     Q_PROPERTY(int lowerTimeSignature READ lowerTimeSignature NOTIFY lowerTimeSignatureChanged FINAL)
     Q_PROPERTY(bool isApplyAllowed READ isApplyAllowed NOTIFY isApplyAllowedChanged FINAL)
 
-    muse::Inject<au::context::IGlobalContext> globalContext{ this };
-    muse::Inject<au::playback::IPlayback> playback{ this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<au::playback::IPlayback> playback{ this };
 
 public:
     GeneratorEffectModel(QObject* parent, int instanceId);

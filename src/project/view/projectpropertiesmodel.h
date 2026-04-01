@@ -37,8 +37,8 @@ class ProjectPropertiesModel : public QAbstractListModel, public muse::async::As
 
     muse::GlobalInject<muse::IPlatformInteractive> platformInteractive;
 
-    muse::Inject<context::IGlobalContext> globalContext { this };
-    muse::Inject<IThumbnailCreator> thumbnailCreator { this };
+    muse::ContextInject<context::IGlobalContext> globalContext { this };
+    muse::ContextInject<IThumbnailCreator> thumbnailCreator { this };
 
     Q_PROPERTY(QString filePath READ filePath CONSTANT)
     Q_PROPERTY(QString version READ version CONSTANT)

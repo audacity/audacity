@@ -7,7 +7,6 @@
 #include "framework/global/async/asyncable.h"
 
 #include "au3-basic-ui/BasicUI.h"
-#include "au3-cloud-audiocom/ServiceConfig.h"
 #include "au3-import-export/ExportPluginRegistry.h"
 #include "au3-import-export/ExportUtils.h"
 #include "au3-mixer/MixerOptions.h"
@@ -378,7 +377,7 @@ std::vector<std::string> Au3Exporter::cloudPreferredAudioFormats() const
     const auto& registry = ExportPluginRegistry::Get();
 
     std::vector<std::string> result;
-    for (const auto& mimeType : audacity::cloud::audiocom::GetServiceConfig().GetPreferredAudioFormats(true)) {
+    for (const auto& mimeType : cloudConfiguration()->preferredAudioFormats()) {
         for (auto [plugin, formatIndex] : registry) {
             for (const auto& mime : plugin->GetMimeTypes(formatIndex)) {
                 if (mime == mimeType) {
@@ -417,7 +416,7 @@ ExportParameters Au3Exporter::cloudExportParameters(const std::string& format) c
     }
 
     for (const auto& mimeType : plugin->GetMimeTypes(fmt)) {
-        auto config = audacity::cloud::audiocom::GetServiceConfig().GetExportConfig(mimeType);
+        auto config = cloudConfiguration()->exportConfig(mimeType);
         ExportProcessor::Parameters au3Params;
         if (plugin->ParseConfig(fmt, config, au3Params)) {
             ExportParameters result;

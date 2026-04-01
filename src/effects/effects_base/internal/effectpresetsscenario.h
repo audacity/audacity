@@ -19,9 +19,9 @@ class EffectPresetsScenario : public IEffectPresetsScenario, public muse::Contex
 {
     muse::GlobalInject<muse::IGlobalConfiguration> globalConfiguration;
 
-    muse::Inject<muse::IInteractive> interactive{ this };
-    muse::Inject<IEffectPresetsProvider> presetsProvider{ this };
-    muse::Inject<IEffectInstancesRegister> instancesRegister{ this };
+    muse::ContextInject<muse::IInteractive> interactive{ this };
+    muse::ContextInject<IEffectPresetsProvider> presetsProvider{ this };
+    muse::ContextInject<IEffectInstancesRegister> instancesRegister{ this };
 
 public:
     EffectPresetsScenario(const muse::modularity::ContextPtr& ctx)

@@ -15,8 +15,9 @@ using Au3TrackDataPtr = std::shared_ptr<Au3TrackData>;
 
 class Au3TrackeditClipboard : public ITrackeditClipboard, public muse::Contextable
 {
-    muse::Inject<au::context::IGlobalContext> globalContext { this };
     muse::GlobalInject<IClipboardData> clipboardData;
+
+    muse::ContextInject<au::context::IGlobalContext> globalContext { this };
 
 public:
     Au3TrackeditClipboard(const muse::modularity::ContextPtr& ctx)

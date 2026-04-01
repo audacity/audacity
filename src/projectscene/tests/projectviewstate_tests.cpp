@@ -118,7 +118,8 @@ protected:
     const std::shared_ptr<NiceMock<trackedit::TrackeditProjectMock> > m_trackeditProjectMock
         = std::make_shared<NiceMock<trackedit::TrackeditProjectMock> >();
 
-    const std::shared_ptr<au3::Au3ProjectAccessor> m_au3ProjectAccessor = std::make_shared<au3::Au3ProjectAccessor>();
+    const std::shared_ptr<au3::Au3ProjectAccessor> m_au3ProjectAccessor = std::make_shared<au3::Au3ProjectAccessor>(
+        muse::modularity::globalCtx());
 };
 
 TEST_F(ProjectViewStateTests, tracksInRange_InputIntervalIsClosedOpen)

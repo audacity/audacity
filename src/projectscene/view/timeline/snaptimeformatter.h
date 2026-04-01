@@ -13,7 +13,7 @@ namespace au::projectscene {
 using Direction = DirectionType::Direction;
 class SnapTimeFormatter : public muse::Contextable
 {
-    muse::Inject<playback::IPlayback> playback{ this };
+    muse::ContextInject<playback::IPlayback> playback{ this };
 
 public:
     SnapTimeFormatter(const muse::modularity::ContextPtr& ctx)

@@ -15,7 +15,7 @@
 namespace au::record {
 class RecordUiActions : public muse::ui::IUiActionsModule, public muse::async::Asyncable, public muse::Contextable
 {
-    muse::Inject<context::IUiContextResolver> uicontextResolver{ this };
+    muse::ContextInject<context::IUiContextResolver> uicontextResolver{ this };
 
 public:
     RecordUiActions(const muse::modularity::ContextPtr& ctx, std::shared_ptr<RecordController> controller);

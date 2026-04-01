@@ -10,6 +10,7 @@
 #include "trackedit/tests/mocks/trackeditprojectmock.h"
 
 #include "trackedit/dom/label.h"
+#include "testing/testcontext.h"
 
 namespace au::projectscene {
 class TrackLabelsLayoutManagerTests : public ::testing::Test
@@ -17,9 +18,12 @@ class TrackLabelsLayoutManagerTests : public ::testing::Test
 protected:
     void SetUp() override
     {
+        m_testCtx = au::testutils::makeTestContext();
+
         m_layoutManager = new TrackLabelsLayoutManager();
 
         m_labelsModel = new TrackLabelsListModel();
+        m_labelsModel->setContext(m_testCtx);
 
         m_globalContext = std::make_shared<context::GlobalContextMock>();
         m_labelsModel->globalContext.set(m_globalContext);
@@ -86,6 +90,7 @@ protected:
     void createTimelineContext()
     {
         m_timelineContext = std::make_shared<projectscene::TimelineContext>();
+        m_timelineContext->setContext(m_testCtx);
 
         m_timelineContext->setFrameStartTime(0);
         m_timelineContext->setFrameEndTime(100);
@@ -93,6 +98,7 @@ protected:
         m_labelsModel->setTimelineContext(m_timelineContext.get());
     }
 
+    muse::modularity::ContextPtr m_testCtx;
     TrackLabelsLayoutManager* m_layoutManager = nullptr;
     TrackLabelsListModel* m_labelsModel = nullptr;
 

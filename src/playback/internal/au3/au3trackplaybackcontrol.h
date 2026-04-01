@@ -22,8 +22,8 @@ class Au3TrackPlaybackControl : public ITrackPlaybackControl, public muse::Conte
 {
     muse::GlobalInject<au::playback::IPlaybackConfiguration> playbackConfiguration;
 
-    muse::Inject<au::context::IGlobalContext> globalContext { this };
-    muse::Inject<au::trackedit::IProjectHistory> projectHistory { this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext { this };
+    muse::ContextInject<au::trackedit::IProjectHistory> projectHistory { this };
 
 public:
     Au3TrackPlaybackControl(const muse::modularity::ContextPtr& ctx)

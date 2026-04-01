@@ -28,6 +28,10 @@ muse::io::paths_t au::effects::NyquistPluginsScanner::scanPlugins() const
     // The AU4 framework will handle registration via subprocess validation
     for (const auto& path : paths) {
         const auto modulePath = path.BeforeFirst(';');
+        // Nyquist Prompt is handled by NyquistPromptLoader
+        if (modulePath == NYQUIST_PROMPT_ID) {
+            continue;
+        }
         auto convertedPath = muse::io::Dir::fromNativeSeparators(au3::wxToString(modulePath));
         result.emplace_back(convertedPath);
     }

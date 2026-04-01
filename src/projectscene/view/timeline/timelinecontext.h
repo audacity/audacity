@@ -63,11 +63,11 @@ class TimelineContext : public QObject, public muse::async::Asyncable, public mu
 
     muse::GlobalInject<IProjectSceneConfiguration> configuration;
 
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher{ this };
-    muse::Inject<context::IGlobalContext> globalContext{ this };
-    muse::Inject<trackedit::ISelectionController> selectionController{ this };
-    muse::Inject<playback::IPlayback> playback{ this };
-    muse::Inject<playback::IPlaybackController> playbackController{ this };
+    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
+    muse::ContextInject<playback::IPlayback> playback{ this };
+    muse::ContextInject<playback::IPlaybackController> playbackController{ this };
 
 public:
 

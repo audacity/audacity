@@ -452,12 +452,6 @@ void GuiApp::destroyContext(const modularity::ContextPtr& ctx)
 
         qDeleteAll(it->setups);
         m_contexts.erase(it);
-
-        // A second event-loop pass lets remaining DeferredDelete events complete.
-        QTimer::singleShot(0, [ctx]{
-            QCoreApplication::sendPostedEvents(nullptr, QEvent::DeferredDelete);
-            modularity::removeIoC(ctx);
-        });
     });
 
     // Processing QML garbage collection, and context deletion

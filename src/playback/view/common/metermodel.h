@@ -35,7 +35,7 @@ class MeterModel : public QObject, public muse::async::Asyncable, public muse::C
 
     muse::GlobalInject<IPlaybackConfiguration> configuration;
 
-    muse::Inject<IPlaybackMeterController> meterController{ this };
+    muse::GlobalInject<IPlaybackMeterController> meterController;
 
 public:
     explicit MeterModel(QObject* parent = nullptr);

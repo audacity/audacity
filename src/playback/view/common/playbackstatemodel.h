@@ -18,7 +18,7 @@ class PlaybackStateModel : public QObject, public muse::async::Asyncable, public
     Q_PROPERTY(bool isPaused READ isPaused NOTIFY isPlayingChanged FINAL)
     Q_PROPERTY(bool isStopped READ isStopped NOTIFY isPlayingChanged FINAL)
     Q_PROPERTY(double lastPlaybackSeekTime READ lastPlaybackSeekTime NOTIFY lastPlaybackSeekTimeChanged FINAL)
-    muse::Inject<au::playback::IPlaybackController> playbackController{ this };
+    muse::ContextInject<au::playback::IPlaybackController> playbackController{ this };
 
 public:
     explicit PlaybackStateModel(QObject* parent = nullptr);

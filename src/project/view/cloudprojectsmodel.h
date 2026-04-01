@@ -20,9 +20,9 @@ class CloudProjectsModel : public AbstractItemModel, public muse::async::Asyncab
 
     muse::GlobalInject<au::project::IProjectConfiguration> configuration;
 
-    muse::Inject<au::au3cloud::IAu3AudioComService> audioComService { this };
-    muse::Inject<au::au3cloud::IAuthorization> authorization { this };
-    muse::Inject<muse::IInteractive> interactive { this };
+    muse::ContextInject<au::au3cloud::IAu3AudioComService> audioComService { this };
+    muse::ContextInject<au::au3cloud::IAuthorization> authorization { this };
+    muse::ContextInject<muse::IInteractive> interactive { this };
 
     Q_PROPERTY(State state READ state NOTIFY stateChanged)
     Q_PROPERTY(bool hasMore READ hasMore NOTIFY hasMoreChanged)

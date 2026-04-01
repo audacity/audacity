@@ -112,8 +112,12 @@ if (AU_MODULE_EFFECTS_NYQUIST)
    list( APPEND LIBRARIES au3-nyquist-effects )
 endif()
 
+# au3-network-manager is a general networking library used by au3-musehub
+# and other modules, so it must be built unconditionally.
+list( APPEND LIBRARIES au3-network-manager)
+
 if (AU_BUILD_CLOUD_AUDIOCOM)
-   list( APPEND LIBRARIES au3-network-manager au3-url-schemes au3-cloud-audiocom)
+   list( APPEND LIBRARIES au3-url-schemes au3-cloud-audiocom)
 endif()
 
 if( DEFINED ${_OPT}has_crashreports AND ${_OPT}has_crashreports )

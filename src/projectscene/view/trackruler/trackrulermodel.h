@@ -23,8 +23,8 @@ class TrackRulerModel : public QObject, public muse::async::Asyncable, public mu
 
     muse::GlobalInject<au::playback::IPlaybackConfiguration> configuration;
 
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher{ this };
-    muse::Inject<au::context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
 
     Q_PROPERTY(std::vector<QVariantMap> fullSteps READ fullSteps NOTIFY fullStepsChanged)
     Q_PROPERTY(std::vector<QVariantMap> smallSteps READ smallSteps NOTIFY smallStepsChanged)

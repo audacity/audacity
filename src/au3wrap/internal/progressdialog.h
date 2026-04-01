@@ -14,7 +14,7 @@ using ProgressResult = BasicUI::ProgressResult;
 
 class ProgressDialog : public BasicUI::ProgressDialog, public muse::async::Asyncable, public muse::Contextable
 {
-    muse::Inject<muse::IInteractive> interactive { this };
+    muse::ContextInject<muse::IInteractive> interactive { this };
 
 public:
     ProgressDialog(const muse::modularity::ContextPtr& ctx, const TranslatableString& title = {});

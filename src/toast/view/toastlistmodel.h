@@ -18,7 +18,7 @@ class ToastListModel : public QAbstractListModel, public muse::async::Asyncable,
 {
     Q_OBJECT
 
-    muse::Inject<au::toast::IToastProvider> toastProvider{ this };
+    muse::GlobalInject<au::toast::IToastProvider> toastProvider;
 
 public:
     explicit ToastListModel(QObject* parent = nullptr);

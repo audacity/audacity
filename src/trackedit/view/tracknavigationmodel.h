@@ -15,10 +15,10 @@ class TrackNavigationModel : public QObject, public muse::async::Asyncable, publ
 {
     Q_OBJECT
 
-    muse::Inject<au::context::IGlobalContext> globalContext{ this };
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher{ this };
-    muse::Inject<muse::ui::INavigationController> navigationController{ this };
-    muse::Inject<ITrackNavigationController> tracksNavigationController{ this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<muse::ui::INavigationController> navigationController{ this };
+    muse::ContextInject<ITrackNavigationController> tracksNavigationController{ this };
 
     Q_PROPERTY(QList<muse::ui::NavigationPanel*> trackItemPanels READ trackItemPanels NOTIFY trackItemPanelsChanged)
     Q_PROPERTY(QList<muse::ui::NavigationPanel*> viewItemPanels READ viewItemPanels NOTIFY viewItemPanelsChanged)

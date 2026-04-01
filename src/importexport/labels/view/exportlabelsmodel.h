@@ -31,8 +31,8 @@ class ExportLabelsModel : public QObject, public muse::async::Asyncable, public 
     muse::GlobalInject<ILabelsConfiguration> configuration;
     muse::GlobalInject<muse::IPlatformInteractive> platformInteractive;
 
-    muse::Inject<context::IGlobalContext> globalContext = { this };
-    muse::Inject<ILabelsExporter> labelExporter = { this };
+    muse::ContextInject<context::IGlobalContext> globalContext = { this };
+    muse::ContextInject<ILabelsExporter> labelExporter = { this };
 
 public:
     explicit ExportLabelsModel(QObject* parent = nullptr);

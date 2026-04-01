@@ -43,9 +43,9 @@ void PluginRegistrationApp::setup()
         m->registerExports();
     }
 
-    // Create single context (id=0)
+    // Create single context (id=1)
     modularity::ContextPtr ctx = std::make_shared<modularity::Context>();
-    ctx->id = 0;
+    ctx->id = 1;
     std::vector<muse::modularity::IContextSetup*>& csetups = context(ctx).setups;
     for (modularity::IContextSetup* s : csetups) {
         s->registerExports();

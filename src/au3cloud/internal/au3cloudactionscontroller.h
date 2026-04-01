@@ -18,10 +18,10 @@ class Au3CloudActionsController : public muse::actions::Actionable, public muse:
 {
     muse::GlobalInject<muse::IPlatformInteractive> platformInteractive;
 
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
-    muse::Inject<muse::IInteractive> interactive { this };
-    muse::Inject<IAuthorization> authorization { this };
-    muse::Inject<IAu3AudioComService> audioComService { this };
+    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::ContextInject<muse::IInteractive> interactive { this };
+    muse::ContextInject<IAuthorization> authorization { this };
+    muse::ContextInject<IAu3AudioComService> audioComService { this };
 
 public:
     Au3CloudActionsController(muse::modularity::ContextPtr ctx = nullptr);

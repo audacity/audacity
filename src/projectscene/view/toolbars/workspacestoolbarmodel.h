@@ -14,7 +14,7 @@ class WorkspacesToolBarModel : public muse::uicomponents::AbstractToolBarModel
 {
     Q_OBJECT
 
-    muse::Inject<au::context::IGlobalContext> context{ this };
+    muse::ContextInject<au::context::IGlobalContext> context{ this };
 
 public:
     WorkspacesToolBarModel(QObject* parent = nullptr);

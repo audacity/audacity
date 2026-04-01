@@ -25,12 +25,15 @@
 #include <QtQml/qqmlregistration.h>
 
 #include "uicomponents/qml/Muse/UiComponents/abstractmenumodel.h"
+#include "au3cloud/iau3audiocomservice.h"
 
 namespace au::appshell {
 class PublishToolBarModel : public muse::uicomponents::AbstractMenuModel
 {
     Q_OBJECT
     QML_ELEMENT
+
+    muse::Inject<au::au3cloud::IAu3AudioComService> au3CloudService { this };
 
 public:
     PublishToolBarModel(QObject* parent = nullptr);

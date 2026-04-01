@@ -36,6 +36,11 @@ ProjectsPageModel::ProjectsPageModel(QObject* parent)
 {
 }
 
+bool ProjectsPageModel::cloudEnabled() const
+{
+    return au3CloudService()->enabled();
+}
+
 void ProjectsPageModel::createNewProject()
 {
     dispatcher()->dispatch("file-new");

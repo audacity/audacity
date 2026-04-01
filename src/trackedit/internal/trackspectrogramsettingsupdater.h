@@ -18,8 +18,8 @@ class TrackSpectrogramSettingsUpdater : public muse::async::Asyncable, public mu
 {
     muse::GlobalInject<spectrogram::IGlobalSpectrogramConfiguration> globalSpectrogramConfiguration;
 
-    muse::Inject<au::context::IGlobalContext> globalContext { this };
-    muse::Inject<spectrogram::ISpectrogramService> spectrogramService { this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext { this };
+    muse::ContextInject<spectrogram::ISpectrogramService> spectrogramService { this };
 
 public:
     TrackSpectrogramSettingsUpdater(const muse::modularity::ContextPtr& ctx)

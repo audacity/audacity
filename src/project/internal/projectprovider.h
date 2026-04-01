@@ -7,7 +7,7 @@
 namespace au::project {
 class ProjectProvider : public muse::mi::IProjectProvider, public muse::Contextable
 {
-    muse::Inject<au::context::IGlobalContext> globalContext { this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext { this };
 
 public:
     ProjectProvider(const muse::modularity::ContextPtr& ctx)

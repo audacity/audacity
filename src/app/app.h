@@ -40,7 +40,7 @@ class App : public muse::Contextable
     muse::GlobalInject<muse::IApplication> muapplication;
     muse::GlobalInject<muse::audioplugins::IRegisterAudioPluginsScenario> registerAudioPluginsScenario;
 
-    muse::Inject<appshell::IStartupScenario> startupScenario{ this };
+    muse::ContextInject<appshell::IStartupScenario> startupScenario{ this };
 
 public:
     App();

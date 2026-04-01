@@ -14,8 +14,8 @@ class AccountInfoModel : public QObject, public muse::async::Asyncable, public m
 {
     Q_OBJECT
 
-    muse::Inject<au::au3cloud::IAuthorization> authorization { this };
-    muse::Inject<muse::IInteractive> interactive { this };
+    muse::ContextInject<au::au3cloud::IAuthorization> authorization { this };
+    muse::ContextInject<muse::IInteractive> interactive { this };
 
     Q_PROPERTY(bool isAuthorized READ isAuthorized NOTIFY isAuthorizedChanged)
     Q_PROPERTY(QUrl avatarPath READ avatarPath NOTIFY isAuthorizedChanged)

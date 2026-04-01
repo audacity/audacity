@@ -22,9 +22,9 @@ class PlayRegionController : public QObject, public muse::async::Asyncable, publ
     Q_PROPERTY(double guidelinePosition READ guidelinePosition NOTIFY guidelinePositionChanged FINAL)
     Q_PROPERTY(bool guidelineVisible READ guidelineVisible NOTIFY guidelineVisibleChanged FINAL)
 
-    muse::Inject<playback::IPlaybackController> playbackController{ this };
-    muse::Inject<context::IUiContextResolver> uicontextResolver{ this };
-    muse::Inject<context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<playback::IPlaybackController> playbackController{ this };
+    muse::ContextInject<context::IUiContextResolver> uicontextResolver{ this };
+    muse::ContextInject<context::IGlobalContext> globalContext{ this };
 
     enum class UserInputAction {
         None,

@@ -27,12 +27,12 @@ class Au3ClipsInteraction : public IClipsInteraction, public muse::Contextable
 {
     muse::GlobalInject<au::trackedit::ITrackeditConfiguration> configuration;
 
-    muse::Inject<au::context::IGlobalContext> globalContext{ this };
-    muse::Inject<au::trackedit::ISelectionController> selectionController{ this };
-    muse::Inject<au::trackedit::IProjectHistory> projectHistory{ this };
-    muse::Inject<muse::IInteractive> interactive{ this };
-    muse::Inject<ITracksInteraction> tracksInteraction{ this };
-    muse::Inject<automation::IClipGainInteraction> clipGainInteraction{ this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<au::trackedit::ISelectionController> selectionController{ this };
+    muse::ContextInject<au::trackedit::IProjectHistory> projectHistory{ this };
+    muse::ContextInject<muse::IInteractive> interactive{ this };
+    muse::ContextInject<ITracksInteraction> tracksInteraction{ this };
+    muse::ContextInject<automation::IClipGainInteraction> clipGainInteraction{ this };
 
 public:
     Au3ClipsInteraction(const muse::modularity::ContextPtr& ctx);

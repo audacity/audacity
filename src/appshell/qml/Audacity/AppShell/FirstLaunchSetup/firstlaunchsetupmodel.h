@@ -28,6 +28,7 @@
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
 #include "framework/interactive/iinteractive.h"
+#include "au3cloud/iau3audiocomservice.h"
 
 #include "appshell/iappshellconfiguration.h"
 
@@ -50,7 +51,8 @@ class FirstLaunchSetupModel : public QObject, public muse::async::Asyncable, pub
 
     muse::GlobalInject<IAppShellConfiguration> configuration;
 
-    muse::Inject<muse::IInteractive> interactive { this };
+    muse::ContextInject<muse::IInteractive> interactive { this };
+    muse::ContextInject<au::au3cloud::IAu3AudioComService> au3CloudService { this };
 
 public:
     explicit FirstLaunchSetupModel(QObject* parent = nullptr);

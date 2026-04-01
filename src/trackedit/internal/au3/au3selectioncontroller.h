@@ -19,9 +19,9 @@
 namespace au::trackedit {
 class Au3SelectionController : public ISelectionController, public muse::async::Asyncable, public muse::Contextable
 {
-    muse::Inject<au::context::IGlobalContext> globalContext { this };
-    muse::Inject<IProjectHistory> projectHistory { this };
-    muse::Inject<spectrogram::IFrequencySelectionController> frequencySelectionController { this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext { this };
+    muse::ContextInject<IProjectHistory> projectHistory { this };
+    muse::ContextInject<spectrogram::IFrequencySelectionController> frequencySelectionController { this };
 
 public:
     Au3SelectionController(const muse::modularity::ContextPtr& ctx)

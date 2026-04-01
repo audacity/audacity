@@ -24,6 +24,7 @@ public:
 
 private:
     std::shared_ptr<ToastProvider> m_toastProvider;
+    std::shared_ptr<ToastService> m_toastService;
 };
 
 class ToastContext : public muse::modularity::IContextSetup
@@ -32,10 +33,6 @@ public:
     ToastContext(const muse::modularity::ContextPtr& ctx)
         : muse::modularity::IContextSetup(ctx) {}
 
-    void registerExports() override;
     void onDeinit() override;
-
-private:
-    std::shared_ptr<ToastService> m_toastService;
 };
 }

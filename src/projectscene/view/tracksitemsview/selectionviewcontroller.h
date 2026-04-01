@@ -36,13 +36,13 @@ class SelectionViewController : public QObject, public muse::async::Asyncable, p
 
     muse::GlobalInject<spectrogram::IGlobalSpectrogramConfiguration> spectrogramConfiguration;
 
-    muse::Inject<context::IGlobalContext> globalContext { this };
-    muse::Inject<trackedit::ISelectionController> selectionController { this };
-    muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction { this };
-    muse::Inject<trackedit::ITrackNavigationController> trackNavigationController { this };
+    muse::ContextInject<context::IGlobalContext> globalContext { this };
+    muse::ContextInject<trackedit::ISelectionController> selectionController { this };
+    muse::ContextInject<trackedit::ITrackeditInteraction> trackeditInteraction { this };
+    muse::ContextInject<trackedit::ITrackNavigationController> trackNavigationController { this };
 
-    muse::Inject<spectrogram::IFrequencySelectionController> frequencySelectionController { this };
-    muse::Inject<spectrogram::ISpectrogramService> spectrogramService { this };
+    muse::ContextInject<spectrogram::IFrequencySelectionController> frequencySelectionController { this };
+    muse::ContextInject<spectrogram::ISpectrogramService> spectrogramService { this };
 
 public:
     SelectionViewController(QObject* parent = nullptr);

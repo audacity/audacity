@@ -32,6 +32,8 @@ class IAu3AudioComService : MODULE_EXPORT_INTERFACE
 public:
     virtual ~IAu3AudioComService() = default;
 
+    virtual bool enabled() const = 0;
+
     virtual muse::async::Promise<ProjectList> downloadProjectList(size_t projectsPerBatch, size_t batchNumber,
                                                                   const FetchOptions& options = {}) = 0;
     virtual void clearProjectListCache() = 0;

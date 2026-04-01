@@ -16,6 +16,7 @@ BuiltinEffectBase {
 
     property string title: qsTrc("effects/nyquist", "Nyquist prompt")
     property bool isApplyAllowed: true
+    numNavigationPanels: 1
 
     width: prv.dialogWidth
     implicitHeight: Math.min(prv.dialogHeight, prv.maxDialogHeight)
@@ -24,6 +25,14 @@ BuiltinEffectBase {
     property alias viewModel: root.builtinEffectModel
 
     color: ui.theme.backgroundPrimaryColor
+
+    property NavigationPanel navPanel: NavigationPanel {
+        name: "NyquistPromptControls"
+        enabled: root.enabled && root.visible
+        direction: NavigationPanel.Vertical
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 1
+    }
 
     QtObject {
         id: prv
@@ -59,6 +68,10 @@ BuiltinEffectBase {
             FlatButton {
                 text: qsTrc("effects", "Debug")
                 transparent: true
+
+                navigation.panel: root.navPanel
+                navigation.order: 0
+
                 onClicked: {
                     viewModel.debugEffect()
                 }
@@ -71,6 +84,9 @@ BuiltinEffectBase {
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.minimumHeight: 200
+
+            navigation.panel: root.navPanel
+            navigation.order: 1
 
             currentText: viewModel.commandText
 
@@ -88,6 +104,10 @@ BuiltinEffectBase {
 
             FlatButton {
                 text: qsTrc("effects", "Load")
+
+                navigation.panel: root.navPanel
+                navigation.order: 2
+
                 onClicked: {
                     viewModel.loadScript()
                 }
@@ -96,6 +116,10 @@ BuiltinEffectBase {
             FlatButton {
                 text: qsTrc("effects", "Save")
                 accentButton: true
+
+                navigation.panel: root.navPanel
+                navigation.order: 3
+
                 onClicked: {
                     viewModel.saveScript()
                 }

@@ -5,6 +5,7 @@
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
+#include "au3cloud/iau3cloudconfiguration.h"
 
 #include "au3-import-export/Export.h"
 
@@ -19,10 +20,11 @@ using OptionsEditorUPtr = std::unique_ptr<ExportOptionsEditor>;
 class Au3Exporter : public IExporter, public muse::Contextable
 {
     muse::GlobalInject<au::importexport::ExportConfiguration> exportConfiguration;
+    muse::GlobalInject<au::au3cloud::IAu3CloudConfiguration> cloudConfiguration;
 
-    muse::Inject<au::context::IGlobalContext> globalContext{ this };
-    muse::Inject<au::trackedit::ISelectionController> selectionController{ this };
-    muse::Inject<au::playback::IPlaybackController> playbackController{ this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<au::trackedit::ISelectionController> selectionController{ this };
+    muse::ContextInject<au::playback::IPlaybackController> playbackController{ this };
 
 public:
     Au3Exporter(const muse::modularity::ContextPtr& ctx)

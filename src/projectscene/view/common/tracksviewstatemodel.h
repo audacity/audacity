@@ -25,7 +25,7 @@ class TracksViewStateModel : public QObject, public muse::Contextable, public mu
 
     Q_PROPERTY(bool snapEnabled READ snapEnabled NOTIFY snapEnabledChanged FINAL)
 
-    muse::Inject<context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<context::IGlobalContext> globalContext{ this };
 
 public:
     TracksViewStateModel(QObject* parent = nullptr);

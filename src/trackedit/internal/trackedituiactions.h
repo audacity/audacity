@@ -14,8 +14,8 @@
 namespace au::trackedit {
 class TrackeditUiActions : public muse::ui::IUiActionsModule, public muse::async::Asyncable, public muse::Contextable
 {
-    muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider { this };
-    muse::Inject<context::IUiContextResolver> uicontextResolver { this };
+    muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider { this };
+    muse::ContextInject<context::IUiContextResolver> uicontextResolver { this };
 
 public:
     TrackeditUiActions(const muse::modularity::ContextPtr& ctx, std::shared_ptr<TrackeditActionsController> controller);

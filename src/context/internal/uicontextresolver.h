@@ -39,13 +39,13 @@
 namespace au::context {
 class UiContextResolver : public muse::ui::IUiContextResolver, public muse::async::Asyncable, public muse::Contextable
 {
-    muse::Inject<muse::IInteractive> interactive { this };
-    muse::Inject<IGlobalContext> globalContext { this };
-    muse::Inject<muse::ui::INavigationController> navigationController { this };
-    muse::Inject<trackedit::ITrackNavigationController> trackNavigationController { this };
+    muse::ContextInject<muse::IInteractive> interactive { this };
+    muse::ContextInject<IGlobalContext> globalContext { this };
+    muse::ContextInject<muse::ui::INavigationController> navigationController { this };
+    muse::ContextInject<trackedit::ITrackNavigationController> trackNavigationController { this };
 
 #ifdef AU_BUILD_PLAYBACK_MODULE
-    muse::Inject<playback::IPlaybackController> playbackController { this };
+    muse::ContextInject<playback::IPlaybackController> playbackController { this };
 #endif
 public:
     UiContextResolver(const muse::modularity::ContextPtr& ctx);

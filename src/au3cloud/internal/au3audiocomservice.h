@@ -29,14 +29,16 @@ class Au3AudioComService : public IAu3AudioComService, public muse::async::Async
     muse::GlobalInject<muse::io::IFileSystem> filesystem;
     muse::GlobalInject<project::IProjectConfiguration> projectConfiguration;
 
-    muse::Inject<importexport::IExporter> exporter{ this };
-    muse::Inject<context::IGlobalContext> globalContext { this };
+    muse::ContextInject<importexport::IExporter> exporter{ this };
+    muse::ContextInject<context::IGlobalContext> globalContext { this };
 
 public:
     Au3AudioComService(const muse::modularity::ContextPtr& ctx)
         : muse::Contextable(ctx) {}
 
     void init();
+
+    bool enabled() const override;
 
     muse::async::Promise<ProjectList> downloadProjectList(size_t projectsPerBatch, size_t batchNumber,
                                                           const FetchOptions& options) override;

@@ -31,8 +31,10 @@ std::string ToastModule::moduleName() const
 void ToastModule::registerExports()
 {
     m_toastProvider = std::make_shared<ToastProvider>();
+    m_toastService = std::make_shared<ToastService>();
 
     globalIoc()->registerExport<IToastProvider>(mname, m_toastProvider);
+    globalIoc()->registerExport<IToastService>(mname, m_toastService);
 }
 
 void ToastModule::registerResources()
@@ -54,13 +56,6 @@ IContextSetup* ToastModule::newContext(const muse::modularity::ContextPtr& ctx) 
 // =====================================================
 // ToastContext
 // =====================================================
-
-void ToastContext::registerExports()
-{
-    m_toastService = std::make_shared<ToastService>(iocContext());
-
-    ioc()->registerExport<IToastService>(mname, m_toastService);
-}
 
 void ToastContext::onDeinit()
 {

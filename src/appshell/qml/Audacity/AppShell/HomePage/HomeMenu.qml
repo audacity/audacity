@@ -32,6 +32,7 @@ Item {
 
     property string currentPageName: ""
     property bool iconsOnly: false
+    property bool cloudEnabled: false
 
     signal selected(string name)
 
@@ -59,6 +60,7 @@ Item {
         spacing: 0
 
         AccountInfoButton {
+            visible: root.cloudEnabled
             title: qsTrc("appshell", "Cloud account")
 
             Layout.fillWidth: true

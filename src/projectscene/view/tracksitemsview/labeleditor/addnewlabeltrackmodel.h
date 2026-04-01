@@ -14,7 +14,7 @@ class AddNewLabelTrackModel : public QObject, public muse::Contextable
     Q_OBJECT
     QML_ELEMENT;
 
-    muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction = { this };
+    muse::ContextInject<trackedit::ITrackeditInteraction> trackeditInteraction = { this };
 
 public:
     explicit AddNewLabelTrackModel(QObject* parent = nullptr);

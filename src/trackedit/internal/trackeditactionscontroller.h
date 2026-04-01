@@ -33,15 +33,15 @@ class TrackeditActionsController : public ITrackeditActionsController, public mu
     muse::GlobalInject<trackedit::ITrackeditConfiguration> configuration;
     muse::GlobalInject<spectrogram::ISpectralEffectsRegister> spectralEffectsRegister;
 
-    muse::Inject<au::context::IGlobalContext> globalContext { this };
-    muse::Inject<audio::IAudioDevicesProvider> audioDevicesProvider { this };
-    muse::Inject<muse::actions::IActionsDispatcher> dispatcher { this };
-    muse::Inject<muse::IInteractive> interactive { this };
-    muse::Inject<trackedit::IProjectHistory> projectHistory { this };
-    muse::Inject<trackedit::ISelectionController> selectionController { this };
-    muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction { this };
-    muse::Inject<trackedit::ITrackNavigationController> trackNavigationController { this };
-    muse::Inject<spectrogram::IFrequencySelectionController> frequencySelectionController { this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext { this };
+    muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider { this };
+    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
+    muse::ContextInject<muse::IInteractive> interactive { this };
+    muse::ContextInject<trackedit::IProjectHistory> projectHistory { this };
+    muse::ContextInject<trackedit::ISelectionController> selectionController { this };
+    muse::ContextInject<trackedit::ITrackeditInteraction> trackeditInteraction { this };
+    muse::ContextInject<trackedit::ITrackNavigationController> trackNavigationController { this };
+    muse::ContextInject<spectrogram::IFrequencySelectionController> frequencySelectionController { this };
 
 public:
     TrackeditActionsController(const muse::modularity::ContextPtr& ctx)

@@ -25,6 +25,7 @@ public:
     void resolveImports() override;
     void onPreInit(const muse::IApplication::RunMode& runMode) override;
     void onInit(const muse::IApplication::RunMode& runMode) override;
+    void onAllInited(const muse::IApplication::RunMode& runMode) override;
     void onDeinit() override;
 
     muse::modularity::IContextSetup* newContext(const muse::modularity::ContextPtr& ctx) const override;

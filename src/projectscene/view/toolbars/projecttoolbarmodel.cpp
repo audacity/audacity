@@ -19,9 +19,13 @@ void ProjectToolBarModel::load()
 
     muse::actions::ActionCodeList itemsCodes = {
         "audio-setup",
-        "file-share-audio",
-        "get-effects"
     };
+
+    if (au3CloudService()->enabled()) {
+        itemsCodes.push_back("file-share-audio");
+    }
+
+    itemsCodes.push_back("get-effects");
 
     ToolBarItemList items;
     for (const ActionCode& code : itemsCodes) {

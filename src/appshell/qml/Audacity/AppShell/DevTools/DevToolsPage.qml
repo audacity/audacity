@@ -31,7 +31,6 @@ import "./ToastNotification"
 import "./CrashHandler"
 import "./KeyNav"
 import "./Preferences"
-import "./Cloud"
 
 DockPage {
     id: root
@@ -41,14 +40,30 @@ DockPage {
 
     function setCurrentCentral(name) {
         switch (name) {
-        case "settings": root.central = settingsComp; break
-        case "gallery": root.central = galleryComp; break
-        case "interactive": root.central = interactiveComp; break
-        case "toastnotification": root.central = toastNotificationComp; break
-        case "crashhandler": root.central = crashhandlerComp; break
-        case "extensions": root.central = extensionsComp; break
-        case "navigation": root.central = keynavComp; break
-        case "cloud": root.central = cloudComp; break
+        case "settings":
+            root.central = settingsComp
+            break
+        case "gallery":
+            root.central = galleryComp
+            break
+        case "interactive":
+            root.central = interactiveComp
+            break
+        case "toastnotification":
+            root.central = toastNotificationComp
+            break
+        case "crashhandler":
+            root.central = crashhandlerComp
+            break
+        case "extensions":
+            root.central = extensionsComp
+            break
+        case "navigation":
+            root.central = keynavComp
+            break
+        case "cloud":
+            root.central = cloudComp
+            break
         }
     }
 
@@ -73,17 +88,41 @@ DockPage {
                     anchors.fill: parent
 
                     model: [
-                        { "name": "settings", "title": "Settings" },
-                        { "name": "gallery", "title": "UI Gallery" },
-                        { "name": "interactive", "title": "Interactive" },
-                        { "name": "toastnotification", "title": "Toast Notification" },
-                        { "name": "crashhandler", "title": "Crash handler" },
-                        { "name": "extensions", "title": "Extensions" },
-                        { "name": "navigation", "title": "KeyNav" },
-                        { "name": "cloud", "title": "Cloud Tests" }
+                        {
+                            "name": "settings",
+                            "title": "Settings"
+                        },
+                        {
+                            "name": "gallery",
+                            "title": "UI Gallery"
+                        },
+                        {
+                            "name": "interactive",
+                            "title": "Interactive"
+                        },
+                        {
+                            "name": "toastnotification",
+                            "title": "Toast Notification"
+                        },
+                        {
+                            "name": "crashhandler",
+                            "title": "Crash handler"
+                        },
+                        {
+                            "name": "extensions",
+                            "title": "Extensions"
+                        },
+                        {
+                            "name": "navigation",
+                            "title": "KeyNav"
+                        },
+                        {
+                            "name": "cloud",
+                            "title": "Cloud Tests"
+                        }
                     ]
 
-                    onSelected: function(name) {
+                    onSelected: function (name) {
                         root.setCurrentCentral(name)
                     }
                 }
@@ -138,6 +177,8 @@ DockPage {
     Component {
         id: cloudComp
 
-        CloudTests {}
+        Loader {
+            source: "Cloud/CloudTests.qml"
+        }
     }
 }

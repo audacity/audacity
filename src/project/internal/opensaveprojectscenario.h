@@ -44,8 +44,8 @@ class OpenSaveProjectScenario : public IOpenSaveProjectScenario, public muse::Co
     muse::GlobalInject<muse::cloud::IMuseScoreComService> museScoreComService;
     muse::GlobalInject<muse::cloud::IAudioComService> audioComService;
 
-    muse::Inject<IProjectFilesController> projectFilesController { this };
-    muse::Inject<muse::IInteractive> interactive { this };
+    muse::ContextInject<IProjectFilesController> projectFilesController { this };
+    muse::ContextInject<muse::IInteractive> interactive { this };
 
 public:
     OpenSaveProjectScenario(const muse::modularity::ContextPtr& ctx)

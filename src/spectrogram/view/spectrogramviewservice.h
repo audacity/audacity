@@ -12,7 +12,7 @@
 namespace au::spectrogram {
 class SpectrogramViewService final : public ISpectrogramViewService, public muse::Injectable, public muse::async::Asyncable
 {
-    muse::Inject<IFrequencySelectionController> frequencySelectionController { this };
+    muse::ContextInject<IFrequencySelectionController> frequencySelectionController { this };
 
 public:
     SpectrogramViewService(const muse::modularity::ContextPtr& ctx)

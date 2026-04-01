@@ -11,7 +11,7 @@
 #include <vector>
 
 namespace au::playback {
-class IPlaybackMeterController : MODULE_EXPORT_INTERFACE
+class IPlaybackMeterController : MODULE_GLOBAL_INTERFACE
 {
     INTERFACE_ID(IPlaybackMeterController)
 

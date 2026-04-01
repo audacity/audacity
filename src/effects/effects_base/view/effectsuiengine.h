@@ -16,7 +16,7 @@ class EffectsUiEngine : public QObject, public IEffectsUiEngine, public muse::Co
 {
     Q_OBJECT
 
-    muse::Inject<muse::ui::IUiEngine> uiEngine{ this };
+    muse::ContextInject<muse::ui::IUiEngine> uiEngine{ this };
 
 public:
     EffectsUiEngine(const muse::modularity::ContextPtr& ctx)
