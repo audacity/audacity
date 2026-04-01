@@ -104,7 +104,7 @@ RetVal<muse::io::path_t> OpenSaveProjectScenario::askLocalPath(IAudacityProjectP
     muse::io::path_t defaultPath = configuration()->defaultSavingFilePath(project, filenameAddition);
 
     std::vector<std::string> filter {
-        muse::trc("project", "Audacity4 files") + " (*.aup4)"
+        muse::trc("project", "Audacity 4 files") + " (*.aup4)"
 
 #ifdef Q_OS_MAC
         + " (*)"
