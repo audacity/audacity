@@ -204,7 +204,7 @@ void BuiltinEffectsLoader::init()
                     );
         } else if (symbol == RemoveDCOffsetEffect::Symbol) {
             regMeta(desc,
-                    muse::mtrc("effects", "Remove DC Offset"),
+                    muse::mtrc("effects", "Remove DC offset"),
                     muse::mtrc("effects", "Removes DC offset from the audio"),
                     true
                     );
