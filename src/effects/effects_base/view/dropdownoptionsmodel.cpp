@@ -4,6 +4,7 @@
 #include "dropdownoptionsmodel.h"
 
 #include "framework/global/log.h"
+#include "types/translatablestring.h"
 
 namespace au::effects {
 DropdownOptionsModel::DropdownOptionsModel(const QString& label, QObject* parent)
@@ -22,9 +23,18 @@ void DropdownOptionsModel::setOptions(const std::vector<DropdownOption>& options
     emit currentChanged();
 }
 
-QVariantList DropdownOptionsModel::options() const
+muse::uicomponents::MenuItemList DropdownOptionsModel::options() const
 {
+    muse::uicomponents::MenuItemList result;
     for (auto i = 0; i < static_cast<int>(m_options.size()); ++i) {
+        auto item = new muse::uicomponents::MenuItem();
+        item->setId(m_options[i].id);
+        item->setTitle(muse::TranslatableString::untranslatable({ m_options[i].title }));
+        item->setSelectable(true);
+        item->setSelected((i == m_selectedIndex));
+        auto state = item->state();
+        state.enabled = true;
+        item->setState(state);
         result.append(item);
     }
     return result;

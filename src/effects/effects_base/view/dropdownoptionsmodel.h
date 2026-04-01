@@ -3,6 +3,8 @@
  */
 #pragma once
 
+#include "uicomponents/qml/Muse/UiComponents/menuitem.h"
+
 #include <QObject>
 
 namespace au::effects {
@@ -16,7 +18,7 @@ class DropdownOptionsModel : public QObject
     Q_OBJECT
 
     Q_PROPERTY(QString label READ label CONSTANT)
-    Q_PROPERTY(QVariantList options READ options NOTIFY optionsChanged)
+    Q_PROPERTY(muse::uicomponents::MenuItemList options READ options NOTIFY optionsChanged)
     Q_PROPERTY(QString currentTitle READ currentTitle NOTIFY currentChanged)
 
 public:
@@ -26,7 +28,7 @@ public:
 
     void setOptions(const std::vector<DropdownOption>& options);
 
-    QVariantList options() const;
+    muse::uicomponents::MenuItemList options() const;
     QString currentTitle() const;
 
     Q_INVOKABLE void select(const QString& optionId);
