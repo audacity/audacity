@@ -8,6 +8,7 @@
 
 #include "framework/ui/iuiactionsregister.h"
 
+#include "internal/au3cloudconfiguration.h"
 #include "internal/au3cloudservice.h"
 #include "internal/au3audiocomservice.h"
 #include "internal/au3cloudactionscontroller.h"
@@ -25,7 +26,11 @@ std::string Au3CloudModule::moduleName() const
     return mname;
 }
 
-void Au3CloudModule::registerExports() {}
+void Au3CloudModule::registerExports()
+{
+    m_cloudConfiguration = std::make_shared<Au3CloudConfiguration>();
+    globalIoc()->registerExport<IAu3CloudConfiguration>(mname, m_cloudConfiguration);
+}
 
 void Au3CloudModule::onInit(const muse::IApplication::RunMode&) {}
 

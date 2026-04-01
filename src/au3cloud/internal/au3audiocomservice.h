@@ -38,6 +38,8 @@ public:
 
     void init();
 
+    bool enabled() const override;
+
     muse::async::Promise<ProjectList> downloadProjectList(size_t projectsPerBatch, size_t batchNumber,
                                                           const FetchOptions& options) override;
     void clearProjectListCache() override;

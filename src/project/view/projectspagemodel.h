@@ -30,6 +30,7 @@
 #include "framework/interactive/iplatforminteractive.h"
 #include "framework/cloud/musescorecom/imusescorecomservice.h"
 #include "framework/cloud/audiocom/iaudiocomservice.h"
+#include "au3cloud/iau3audiocomservice.h"
 
 #include "iprojectconfiguration.h"
 
@@ -42,15 +43,19 @@ class ProjectsPageModel : public QObject, public muse::Contextable
 
     muse::GlobalInject<IProjectConfiguration> configuration;
     muse::GlobalInject<muse::cloud::IAudioComService> audioComService;
+    muse::Inject<au3cloud::IAu3AudioComService> au3CloudService { this };
     muse::GlobalInject<muse::IPlatformInteractive> platformInteractive;
 
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
 
+    Q_PROPERTY(bool cloudEnabled READ cloudEnabled CONSTANT)
     Q_PROPERTY(int tabIndex READ tabIndex WRITE setTabIndex NOTIFY tabIndexChanged)
     Q_PROPERTY(ViewType viewType READ viewType WRITE setViewType NOTIFY viewTypeChanged)
 
 public:
     explicit ProjectsPageModel(QObject* parent = nullptr);
+
+    bool cloudEnabled() const;
 
     int tabIndex() const;
     void setTabIndex(int index);

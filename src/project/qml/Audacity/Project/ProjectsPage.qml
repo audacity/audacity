@@ -160,6 +160,7 @@ FocusScope {
 
             StyledTabButton {
                 text: qsTrc("project", "Cloud projects")
+                visible: projectsPageModel.cloudEnabled
 
                 navigation.name: "CloudProjects"
                 navigation.panel: navTabPanel
@@ -168,6 +169,7 @@ FocusScope {
 
             StyledTabButton {
                 text: qsTrc("project", "Cloud audio files")
+                visible: projectsPageModel.cloudEnabled
 
                 navigation.name: "CloudAudioFiles"
                 navigation.panel: navTabPanel
@@ -290,28 +292,35 @@ FocusScope {
     Component {
         id: cloudProjectsComp
 
-        CloudProjectsView {
-            id: cloudProjectsView
+        Loader {
             anchors.fill: parent
+            source: "internal/ProjectsPage/CloudProjectsView.qml"
 
-            viewType: projectsPageModel.viewType
-            searchText: searchField.searchText
-
-            backgroundColor: background.color
-            sideMargin: prv.sideMargin
-
-            navigationSection: navSec
-            navigationOrder: 5
-
-            onOpenCloudProjectRequested: function (projectId, projectPath, displayName) {
-                Qt.callLater(projectsPageModel.openCloudProject, projectId, projectPath, displayName)
+            onLoaded: {
+                item.viewType = Qt.binding(function () {
+                    return projectsPageModel.viewType
+                })
+                item.searchText = Qt.binding(function () {
+                    return searchField.searchText
+                })
+                item.backgroundColor = Qt.binding(function () {
+                    return background.color
+                })
+                item.sideMargin = Qt.binding(function () {
+                    return prv.sideMargin
+                })
+                item.navigationSection = navSec
+                item.navigationOrder = 5
+                item.openCloudProjectRequested.connect(function (projectId, projectPath, displayName) {
+                    Qt.callLater(projectsPageModel.openCloudProject, projectId, projectPath, displayName)
+                })
             }
 
             Connections {
                 target: refreshButton
-
                 function onClicked() {
-                    cloudProjectsView.refresh()
+                    if (item)
+                        item.refresh()
                 }
             }
         }
@@ -320,24 +329,32 @@ FocusScope {
     Component {
         id: cloudAudioFilesComp
 
-        CloudAudioFilesView {
-            id: cloudAudioFilesView
+        Loader {
             anchors.fill: parent
+            source: "internal/ProjectsPage/CloudAudioFilesView.qml"
 
-            viewType: projectsPageModel.viewType
-            searchText: searchField.searchText
-
-            backgroundColor: background.color
-            sideMargin: prv.sideMargin
-
-            navigationSection: navSec
-            navigationOrder: 6
+            onLoaded: {
+                item.viewType = Qt.binding(function () {
+                    return projectsPageModel.viewType
+                })
+                item.searchText = Qt.binding(function () {
+                    return searchField.searchText
+                })
+                item.backgroundColor = Qt.binding(function () {
+                    return background.color
+                })
+                item.sideMargin = Qt.binding(function () {
+                    return prv.sideMargin
+                })
+                item.navigationSection = navSec
+                item.navigationOrder = 6
+            }
 
             Connections {
                 target: refreshButton
-
                 function onClicked() {
-                    cloudAudioFilesView.refresh()
+                    if (item)
+                        item.refresh()
                 }
             }
         }

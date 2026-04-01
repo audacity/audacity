@@ -33,7 +33,6 @@
 #include "framework/actions/iactionsdispatcher.h"
 #include "framework/interactive/iplatforminteractive.h"
 #include "framework/ui/iuiconfiguration.h"
-
 #include "iappshellconfiguration.h"
 
 namespace au::appshell {

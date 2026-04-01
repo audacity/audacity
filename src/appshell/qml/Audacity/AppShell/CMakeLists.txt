@@ -10,7 +10,6 @@ qt_add_qml_module(appshell_qml
         appmenumodel.h
         DevTools/Settings/settingslistmodel.cpp
         DevTools/Settings/settingslistmodel.h
-        FirstLaunchSetup/
         FirstLaunchSetup/clipvisualizationpagemodel.cpp
         FirstLaunchSetup/clipvisualizationpagemodel.h
         FirstLaunchSetup/firstlaunchsetupmodel.cpp
@@ -41,7 +40,6 @@ qt_add_qml_module(appshell_qml
         AboutDialog.qml
         AlphaWelcomePopup.qml
         AppWindow.qml
-        SigninAudiocomDialog.qml
         DevTools/CrashHandler/CrashHandlerDevTools.qml
         DevTools/DevToolsMenu.qml
         DevTools/DevToolsPage.qml
@@ -54,7 +52,6 @@ qt_add_qml_module(appshell_qml
         DevTools/KeyNav/KeyNavSubSection.qml
         DevTools/Preferences/SettingsPage.qml
         DevTools/ToastNotification/ToastNotificationTests.qml
-        DevTools/Cloud/CloudTests.qml
         FirstLaunchSetup/ClipVisualizationPage.qml
         FirstLaunchSetup/DoublePage.qml
         FirstLaunchSetup/FirstLaunchSetupDialog.qml
@@ -66,8 +63,8 @@ qt_add_qml_module(appshell_qml
         FirstLaunchSetup/WorkspaceLayoutPage.qml
         FirstLaunchSetup/SigninAudiocomPage.qml
         FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml
+        SigninAudiocomDialog.qml
         HomePage/CloudItem.qml
-        HomePage/AccountPage.qml
         HomePage/HomeMenu.qml
         HomePage/HomePage.qml
         HomePage/PluginsPage.qml
@@ -103,6 +100,14 @@ qt_add_qml_module(appshell_qml
         TARGET muse_shortcuts_qml
         TARGET muse_tours_qml
 )
+
+if (AU_BUILD_CLOUD_AUDIOCOM)
+    qt_target_qml_sources(appshell_qml
+        QML_FILES
+            DevTools/Cloud/CloudTests.qml
+            HomePage/AccountPage.qml
+    )
+endif()
 
 if (OS_IS_MAC)
     qt_target_qml_sources(appshell_qml

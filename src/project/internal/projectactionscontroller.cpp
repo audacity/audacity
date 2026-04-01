@@ -439,6 +439,11 @@ bool ProjectActionsController::saveProject(const muse::io::path_t& path)
 
 bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudInfo, SaveMode saveMode, bool forceOverwrite)
 {
+    if (!audioComService()->enabled()) {
+        LOGE() << "Cloud support is not available";
+        return false;
+    }
+
     if (!authorization()->ensureAuthorization()) {
         return false;
     }
@@ -788,6 +793,11 @@ IAudacityProjectPtr ProjectActionsController::createProjectInCurrentWindow()
 
 Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, const String& projectId, bool forceOverwrite)
 {
+    if (!audioComService()->enabled()) {
+        LOGE() << "Cloud support is not available";
+        return make_ret(Ret::Code::NotSupported);
+    }
+
     if (!authorization()->ensureAuthorization()) {
         return make_ret(Ret::Code::Cancel);
     }
@@ -989,6 +999,11 @@ void ProjectActionsController::warnProjectCannotBeOpened(const Ret& ret, const m
 
 void ProjectActionsController::shareAudio()
 {
+    if (!audioComService()->enabled()) {
+        LOGE() << "Cloud support is not available";
+        return;
+    }
+
     muse::UriQuery query(SAVE_TO_CLOUD_URI);
     query.addParam("formTitle", Val(trc("cloud", "Track title")));
     query.addParam("title", Val(trc("cloud", "Share audio")));
