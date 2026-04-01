@@ -66,6 +66,7 @@ BaseSection {
                 navigation.name: "BufferLengthControl"
                 navigation.panel: root.navigation
                 navigation.row: 1
+                navigation.column: 0
 
                 onValueEdited: function (newValue) {
                     apiModel.bufferLengthSelected(newValue)
@@ -102,7 +103,8 @@ BaseSection {
 
                     navigation.name: "LatencyCompensationControl"
                     navigation.panel: root.navigation
-                    navigation.row: 2
+                    navigation.row: 1
+                    navigation.column: 1
 
                     onValueEdited: function (newValue) {
                         apiModel.latencyCompensationSelected(newValue)
@@ -120,7 +122,8 @@ BaseSection {
 
                     navigation.name: "AutomaticLatencyCompensationCheckBox"
                     navigation.panel: root.navigation
-                    navigation.row: 2
+                    navigation.row: 1
+                    navigation.column: 2
                 }
             }
         }
