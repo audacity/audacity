@@ -468,6 +468,10 @@ bool Deserialize(const rapidjson::Value& value, CloudAudioInfo& audio)
         return {};
     }
 
+    if (value.HasMember("play") && value["play"].IsObject()) {
+        Deserialize(value["play"], "waveform", temp.WaveformUrl);
+    }
+
     audio = std::move(temp);
     return true;
 }

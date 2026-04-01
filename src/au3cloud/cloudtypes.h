@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include "framework/global/io/path.h"
+
 namespace au::au3cloud {
 struct NotAuthorized {
     std::string error;
@@ -57,6 +59,7 @@ struct AudioList {
         std::string slug;
         std::string title;
         std::vector<std::string> tags;
+        muse::io::path_t waveformPath;
 
         int64_t fileSize {};
         int64_t duration {};

@@ -143,6 +143,7 @@ struct CloudAudioInfo final
     std::string Slug;
     std::string Title;
     std::vector<std::string> Tags;
+    std::string WaveformUrl;
 
     int64_t FileSize {};
     int64_t Duration {};

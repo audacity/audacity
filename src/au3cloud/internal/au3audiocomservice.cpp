@@ -74,7 +74,8 @@ au::au3cloud::ProjectList convertFromAu3PaginatedProject(const sync::PaginatedPr
     return projectList;
 }
 
-au::au3cloud::AudioList convertFromAu3CloudAudio(const sync::PaginatedAudioResponse& paginatedResponse)
+au::au3cloud::AudioList convertFromAu3CloudAudio(const sync::PaginatedAudioResponse& paginatedResponse,
+                                                 const muse::io::path_t& thumnailCacheDir)
 {
     au::au3cloud::AudioList audioList;
 
@@ -91,6 +92,7 @@ au::au3cloud::AudioList convertFromAu3CloudAudio(const sync::PaginatedAudioRespo
         item.created = audioInfo.Created;
         item.fileSize = audioInfo.FileSize;
         item.duration = audioInfo.Duration;
+        item.waveformPath = thumnailCacheDir.appendingComponent(audioInfo.Id).appendingSuffix("json");
 
         audioList.items.push_back(std::move(item));
     }
@@ -362,7 +364,7 @@ muse::async::Promise<AudioList> Au3AudioComService::downloadAudioList(size_t aud
 
             const auto* paginatedResponse = std::get_if<sync::PaginatedAudioResponse>(&result);
             if (paginatedResponse) {
-                const auto audioList = convertFromAu3CloudAudio(*paginatedResponse);
+                const auto audioList = convertFromAu3CloudAudio(*paginatedResponse, projectConfiguration()->cloudProjectsPath());
                 {
                     std::lock_guard guard(m_cacheMutex);
                     m_audioListCache[batchNumber] = CachedAudioItem { audioList, std::chrono::system_clock::now() };
