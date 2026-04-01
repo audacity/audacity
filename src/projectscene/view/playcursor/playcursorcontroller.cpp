@@ -132,7 +132,7 @@ void PlayCursorController::updatePositionX(muse::secs_t secs)
 void PlayCursorController::onFrameTimeChanged()
 {
     double newPosition;
-    if (globalContext()->isRecording()) {
+    if (globalContext()->isRecording() && !recordController()->isLeadInRecording()) {
         newPosition = m_context->timeToPosition(globalContext()->recordPosition());
     } else {
         newPosition = m_context->timeToPosition(playbackState()->playbackPosition());

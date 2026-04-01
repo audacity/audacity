@@ -494,6 +494,11 @@ void Au3Player::updatePlaybackState()
             // Stream ended while not in playback mode (e.g., recording finished)
             m_timer.stop();
         }
+    } else if (m_playbackStatus.val == PlaybackStatus::Stopped
+               && m_timer.isActive() && AudioIO::Get()->IsCapturing()) {
+        // Recording has started after lead-in pre-roll — stop the playback timer
+        // to avoid conflicting with the recording system's playhead updates
+        m_timer.stop();
     }
 }
 

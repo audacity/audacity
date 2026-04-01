@@ -28,6 +28,7 @@
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
+#include "record/irecordcontroller.h"
 #include "actions/iactionsdispatcher.h"
 
 #include "../timeline/timelinecontext.h"
@@ -42,6 +43,7 @@ class PlayCursorController : public QObject, public muse::async::Asyncable, publ
     Q_PROPERTY(double positionX READ positionX NOTIFY positionXChanged FINAL)
 
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<record::IRecordController> recordController{ this };
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
 
 public:
