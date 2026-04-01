@@ -334,17 +334,8 @@ PluginManager::~PluginManager()
 
 void PluginManager::InitializePlugins()
 {
-    // Load the registry first
     Load();
-
-    auto& mm = ModuleManager::Get();
-    mm.DiscoverProviders();
-    for (auto& [id, module] : mm.Providers()) {
-        RegisterPlugin(module.get());
-        // Allow the module to auto-register children
-        module->AutoRegisterPlugins(*this);
-    }
-
+    ModuleManager::Get().DiscoverProviders();
     NotifyPluginsChanged();
 }
 
