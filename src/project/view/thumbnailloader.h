@@ -12,7 +12,7 @@
 namespace au::project {
 class ThumbnailLoader : public QObject
 {
-    Q_OBJECT;
+    Q_OBJECT
 
     Q_PROPERTY(QString path READ path WRITE setPath NOTIFY pathChanged)
 
@@ -20,6 +20,7 @@ class ThumbnailLoader : public QObject
     Q_PROPERTY(QPixmap thumbnail READ thumbnail NOTIFY thumbnailChanged)
 
     Q_PROPERTY(QSize thumbnailSize READ thumbnailSize WRITE setThumbnailSize NOTIFY thumbnailSizeChanged)
+    Q_PROPERTY(QColor backgroundColor READ backgroundColor WRITE setBackgroundColor NOTIFY backgroundColorChanged)
 
 public:
     ThumbnailLoader(QObject* parent = nullptr);
@@ -33,10 +34,14 @@ public:
     QSize thumbnailSize() const;
     void setThumbnailSize(const QSize& size);
 
+    QColor backgroundColor() const;
+    void setBackgroundColor(const QColor& color);
+
 signals:
     void pathChanged();
     void thumbnailChanged();
     void thumbnailSizeChanged();
+    void backgroundColorChanged();
 
 private:
     void loadThumbnail();
@@ -45,5 +50,6 @@ private:
     QPixmap m_thumbnail;
     QString m_path;
     QSize m_thumbnailSize;
+    QColor m_backgroundColor;
 };
 }

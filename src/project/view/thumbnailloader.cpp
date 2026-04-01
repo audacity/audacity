@@ -9,7 +9,7 @@
 using namespace au::project;
 
 namespace {
-QPixmap renderWaveformToPixmap(const QVector<float>& points, const QSize& size)
+QPixmap renderWaveformToPixmap(const QVector<float>& points, const QSize& size, const QColor& backgroundColor)
 {
     if (points.isEmpty() || size.isEmpty()) {
         return QPixmap();
@@ -21,7 +21,7 @@ QPixmap renderWaveformToPixmap(const QVector<float>& points, const QSize& size)
     QPainter painter(&pixmap);
     painter.setRenderHint(QPainter::Antialiasing, true);
 
-    painter.fillRect(QRectF(0, 0, size.width(), size.height()), QColor(0x38, 0x38, 0x38));
+    painter.fillRect(QRectF(0, 0, size.width(), size.height()), backgroundColor);
 
     painter.setPen(Qt::NoPen);
     painter.setBrush(QColor(0xE4, 0xE4, 0xE4));
@@ -82,6 +82,23 @@ void ThumbnailLoader::setThumbnailSize(const QSize& size)
     loadThumbnail();
 }
 
+QColor ThumbnailLoader::backgroundColor() const
+{
+    return m_backgroundColor;
+}
+
+void ThumbnailLoader::setBackgroundColor(const QColor& color)
+{
+    if (m_backgroundColor == color) {
+        return;
+    }
+
+    m_backgroundColor = color;
+    emit backgroundColorChanged();
+
+    loadThumbnail();
+}
+
 bool ThumbnailLoader::isThumbnailValid() const
 {
     return !m_thumbnail.isNull();
@@ -119,7 +136,7 @@ void ThumbnailLoader::loadThumbnail()
         points.append(static_cast<float>(qBound(0.0, v.toDouble(), 1.0)));
     }
 
-    setThumbnail(renderWaveformToPixmap(points, m_thumbnailSize));
+    setThumbnail(renderWaveformToPixmap(points, m_thumbnailSize, m_backgroundColor));
 }
 
 void ThumbnailLoader::setThumbnail(const QPixmap& thumbnail)
