@@ -476,7 +476,7 @@ bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudI
                                  dismissable,
             {
                 { trc("project", "Dismiss"), au::toast::ToastActionCode::None },
-                { trc("cloud", "View on Audio.com"), au::toast::ToastActionCode::Custom }
+                { trc("cloud", "View on audio.com"), au::toast::ToastActionCode::Custom }
             }
                                  ).onResolve(this, [this, url = result.val.toQString()](au::toast::ToastActionCode actionCode) {
                 if (actionCode == au::toast::ToastActionCode::Custom) {
@@ -1014,7 +1014,7 @@ void ProjectActionsController::shareAudio()
                                  dismissable,
             {
                 { trc("global", "Dismiss"), au::toast::ToastActionCode::None },
-                { trc("cloud", "View on Audio.com"), au::toast::ToastActionCode::Custom }
+                { trc("cloud", "View on audio.com"), au::toast::ToastActionCode::Custom }
             }
                                  ).onResolve(this, [this, url = result.val.toQString()](au::toast::ToastActionCode actionCode) {
                 if (actionCode == au::toast::ToastActionCode::Custom) {
