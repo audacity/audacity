@@ -11,6 +11,7 @@ class Au3CloudService;
 class Au3AudioComService;
 class Au3CloudActionsController;
 class CloudUiActions;
+class DownloadManager;
 
 class Au3CloudModule : public muse::modularity::IModuleSetup
 {
@@ -43,5 +44,6 @@ private:
     std::shared_ptr<Au3AudioComService> m_audioComService;
     std::shared_ptr<Au3CloudActionsController> m_actionsController;
     std::shared_ptr<CloudUiActions> m_uiActions;
+    std::shared_ptr<DownloadManager> m_downloadManager;
 };
 }

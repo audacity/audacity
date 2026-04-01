@@ -9,6 +9,7 @@
 
 #include "modularity/ioc.h"
 #include "iprojectconfiguration.h"
+#include "framework/global/io/ifilesystem.h"
 #include "au3cloud/iau3audiocomservice.h"
 #include "au3cloud/iauthorization.h"
 #include "framework/interactive/iinteractive.h"

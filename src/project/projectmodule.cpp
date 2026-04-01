@@ -40,6 +40,7 @@
 #include "view/cloudaudiofilesmodel.h"
 #include "view/cloudaudiofilecontextmenumodel.h"
 #include "view/projectthumbnailloader.h"
+#include "view/thumbnailloader.h"
 #include "view/pixmapprojectthumbnailview.h"
 #include "view/newprojectmodel.h"
 #include "internal/opensaveprojectscenario.h"
@@ -109,6 +110,7 @@ void ProjectModule::registerUiTypes()
     qmlRegisterType<CloudAudioFileContextMenuModel>("Audacity.Project", 1, 0, "CloudAudioFileContextMenuModel");
     qmlRegisterType<NewProjectModel>("Audacity.Project", 1, 0, "NewProjectModel");
     qmlRegisterType<ProjectThumbnailLoader>("Audacity.Project", 1, 0, "ProjectThumbnailLoader");
+    qmlRegisterType<ThumbnailLoader>("Audacity.Project", 1, 0, "ThumbnailLoader");
     qmlRegisterType<PixmapProjectThumbnailView>("Audacity.Project", 1, 0, "PixmapProjectThumbnailView");
     qmlRegisterType<ProjectPropertiesModel>("Audacity.Project", 1, 0, "ProjectPropertiesModel");
 

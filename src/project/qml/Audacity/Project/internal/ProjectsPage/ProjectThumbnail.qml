@@ -32,57 +32,38 @@ Item {
     property string suffix: ""
     property string placeholder: ""
 
-    ProjectThumbnailLoader {
-        id: thumbnailLoader
+    readonly property bool isJsonThumbnail: root.thumbnailUrl.endsWith(".json")
 
-        projectPath: root.path
+    ThumbnailLoader {
+        id: thumbnailLoader
+        path: root.thumbnailUrl
+        thumbnailSize: Qt.size(root.width, root.height)
     }
 
     Loader {
         anchors.fill: parent
         active: visible
 
-        sourceComponent: {
-            if (thumbnailLoader.isThumbnailValid) {
-                return projectThumbnailComp
-            }
+        sourceComponent: Rectangle {
+            anchors.fill: parent
+            color: ui.theme.backgroundSecondaryColor
 
-            return genericThumbnailComp
-        }
+            Image {
+                anchors.centerIn: parent
 
-        Component {
-            id: projectThumbnailComp
+                width: parent.width / 2
 
-            PixmapProjectThumbnailView {
-                anchors.fill: parent
-                thumbnail: thumbnailLoader.thumbnail
-            }
-        }
-
-        Component {
-            id: genericThumbnailComp
-
-            Rectangle {
-                anchors.fill: parent
-                color: ui.theme.backgroundSecondaryColor
-
-                Image {
-                    anchors.centerIn: parent
-
-                    width: parent.width / 2
-
-                    source: {
-                        switch (root.suffix) {
-                        default:
-                            return root.placeholder || "qrc:/resources/ProjectPlaceholder.svg"
-                        }
+                source: {
+                    switch (root.suffix) {
+                    default:
+                        return root.placeholder || "qrc:/resources/ProjectPlaceholder.svg"
                     }
-
-                    fillMode: Image.PreserveAspectFit
-
-                    // Prevent image from looking pixelated on low-res screens
-                    mipmap: true
                 }
+
+                fillMode: Image.PreserveAspectFit
+
+                // Prevent image from looking pixelated on low-res screens
+                mipmap: true
             }
         }
     }

@@ -25,4 +25,7 @@ Err cloudSyncErrorToErr(const std::optional<audacity::cloud::audiocom::sync::Clo
 Err uploadResultToErr(audacity::cloud::audiocom::UploadOperationCompleted::Result result);
 
 Err syncResultCodeToErr(audacity::cloud::audiocom::SyncResultCode code);
+
+std::vector<DownloadRequest> convertToDownloadRequests(const audacity::cloud::audiocom::sync::PaginatedAudioResponse& paginatedResponse,
+                                                       const muse::io::path_t& thumbnailCacheDir);
 }

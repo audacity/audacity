@@ -33,6 +33,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/oauthhttpserverreplyhandler.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiocomtypeconv.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiocomtypeconv.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/downloadmanager.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/downloadmanager.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/accountinfomodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/accountinfomodel.h

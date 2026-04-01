@@ -5,10 +5,12 @@
 #pragma once
 
 #include <map>
+#include <memory>
 #include <mutex>
 #include <optional>
 #include <string>
 
+#include "au3cloud/internal/downloadmanager.h"
 #include "framework/global/async/asyncable.h"
 #include "framework/global/async/promise.h"
 
@@ -38,7 +40,8 @@ class Au3AudioComService : public IAu3AudioComService, public muse::async::Async
 
 public:
     Au3AudioComService(const muse::modularity::ContextPtr& ctx)
-        : muse::Contextable(ctx) {}
+        : muse::Contextable(ctx), m_downloadManager(std::make_unique<DownloadManager>())
+    {}
 
     void init();
 
@@ -50,6 +53,7 @@ public:
 
     muse::async::Promise<AudioList> downloadAudioList(size_t audiosPerBatch, size_t batchNumber, const FetchOptions& options) override;
     void clearAudioListCache() override;
+    muse::async::Channel<std::string, muse::io::path_t> audioThumbnailFileUpdated() const override;
 
     muse::ProgressPtr uploadProject(au::project::IAudacityProjectPtr project, const std::string& name,
                                     std::function<bool()> projectSaveCallback, bool forceOverwrite = false) override;
@@ -99,5 +103,8 @@ private:
     std::mutex m_uploadSubscriptionsMutex;
 
     Observer::Subscription m_resumeSyncSubscription;
+
+    std::unique_ptr<DownloadManager> m_downloadManager;
+    muse::async::Channel<std::string, muse::io::path_t> m_audioThumbnailFileUpdatedChannel;
 };
 }

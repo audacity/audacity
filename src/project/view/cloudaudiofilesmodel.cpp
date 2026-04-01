@@ -50,6 +50,16 @@ void CloudAudioFilesModel::load()
     }, muse::async::Asyncable::Mode::SetReplace);
 
     connect(this, &CloudAudioFilesModel::desiredRowCountChanged, this, &CloudAudioFilesModel::loadItemsIfNecessary);
+
+    audioComService()->audioThumbnailFileUpdated().onReceive(this, [this](const std::string& audioId, const muse::io::path_t& path) {
+        for (int i = 0; i < static_cast<int>(m_items.size()); ++i) {
+            if (m_items[i][CLOUD_ITEM_ID_KEY].toString() == QString::fromStdString(audioId)) {
+                m_items[i][THUMBNAIL_URL_KEY] = path.toQString();
+                emit dataChanged(index(i), index(i));
+                break;
+            }
+        }
+    });
 }
 
 void CloudAudioFilesModel::reload()

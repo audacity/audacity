@@ -75,4 +75,10 @@ struct AudioList {
         int itemsPerBatch = 0;
     } meta;
 };
+
+struct DownloadRequest {
+    std::string id;
+    std::string url;
+    muse::io::path_t localPath;
+};
 }

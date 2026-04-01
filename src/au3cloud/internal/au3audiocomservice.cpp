@@ -88,6 +88,10 @@ void Au3AudioComService::init()
         });
     });
 
+    m_downloadManager->downloadCompleted().onReceive(this, [this](const std::string& audioId, const muse::io::path_t& path) {
+        m_audioThumbnailFileUpdatedChannel.send(audioId, path);
+    });
+
     appshellConfiguration()->aboutToRevertToFactorySettings().onNotify(this, []() {
         audacity::cloud::audiocom::sync::CloudProjectsDatabase::Get().CloseConnection();
     });
@@ -161,6 +165,11 @@ void Au3AudioComService::clearProjectListCache()
     m_projectsPerBatch = 0;
 }
 
+muse::async::Channel<std::string, muse::io::path_t> Au3AudioComService::audioThumbnailFileUpdated() const
+{
+    return m_audioThumbnailFileUpdatedChannel;
+}
+
 muse::async::Promise<AudioList> Au3AudioComService::downloadAudioList(size_t audiosPerBatch, size_t batchNumber,
                                                                       const FetchOptions& options)
 {
@@ -211,6 +220,9 @@ muse::async::Promise<AudioList> Au3AudioComService::downloadAudioList(size_t aud
                     std::lock_guard guard(m_cacheMutex);
                     m_audioListCache[batchNumber] = CachedAudioItem { audioList, std::chrono::system_clock::now() };
                 }
+
+                m_downloadManager->scheduleDownloads(convertToDownloadRequests(*paginatedResponse,
+                                                                               projectConfiguration()->cloudProjectsPath()));
 
                 (void)resolve(audioList);
             } else {

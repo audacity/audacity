@@ -162,4 +162,23 @@ Err syncResultCodeToErr(audacity::cloud::audiocom::SyncResultCode code)
 
     return Err::UnknownError;
 }
+
+std::vector<DownloadRequest> convertToDownloadRequests(const audacity::cloud::audiocom::sync::PaginatedAudioResponse& paginatedResponse,
+                                                       const muse::io::path_t& thumbnailCacheDir)
+{
+    std::vector<DownloadRequest> requests;
+
+    for (size_t i = 0; i < paginatedResponse.Items.size(); i++) {
+        const auto& audioInfo = paginatedResponse.Items[i];
+
+        DownloadRequest request;
+        request.id = audioInfo.Id;
+        request.url = audioInfo.WaveformUrl;
+        request.localPath = thumbnailCacheDir.appendingComponent(audioInfo.Id).appendingSuffix("json");
+
+        requests.push_back(std::move(request));
+    }
+
+    return requests;
+}
 }
