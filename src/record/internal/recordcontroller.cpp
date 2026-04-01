@@ -31,7 +31,21 @@ void RecordController::init()
         m_isRecordAllowedChanged.notify();
     });
 
+    record()->recordPositionChanged().onReceive(this, [this](const muse::secs_t&) {
+        if (m_isLeadInRecording) {
+            // Recording data has arrived — pre-roll is over, hide the indicator
+            m_isLeadInRecording = false;
+            m_leadInRecordingTrackIds.clear();
+            m_isLeadInRecordingChanged.notify();
+        }
+    });
+
     record()->recordingFinished().onNotify(this, [this]() {
+        if (m_isLeadInRecording) {
+            m_isLeadInRecording = false;
+            m_leadInRecordingTrackIds.clear();
+            m_isLeadInRecordingChanged.notify();
+        }
         if (isRecording()) {
             setCurrentRecordStatus(RecordStatus::Stopped);
         }
@@ -127,6 +141,11 @@ void RecordController::stop()
         return;
     }
 
+    if (m_isLeadInRecording) {
+        m_isLeadInRecording = false;
+        m_leadInRecordingTrackIds.clear();
+        m_isLeadInRecordingChanged.notify();
+    }
     setCurrentRecordStatus(RecordStatus::Stopped);
 }
 
@@ -136,8 +155,17 @@ void RecordController::leadInRecording()
         return;
     }
 
+    // Store the recording start position and selected tracks before starting
+    m_leadInRecordingStartTime = globalContext()->playbackState()->playbackPosition();
+    m_leadInRecordingTrackIds = selectionController()->selectedTracks();
+    m_isLeadInRecording = true;
+    m_isLeadInRecordingChanged.notify();
+
     Ret ret = record()->leadInRecording();
     if (!ret) {
+        m_isLeadInRecording = false;
+        m_leadInRecordingTrackIds.clear();
+        m_isLeadInRecordingChanged.notify();
         interactive()->error(muse::trc("record", "Lead-in Recording error"), ret.text());
         return;
     }
@@ -175,6 +203,26 @@ bool RecordController::isInputMonitoringOn() const
     return configuration()->isInputMonitoringOn();
 }
 
+bool RecordController::isLeadInRecording() const
+{
+    return m_isLeadInRecording;
+}
+
+muse::async::Notification RecordController::isLeadInRecordingChanged() const
+{
+    return m_isLeadInRecordingChanged;
+}
+
+muse::secs_t RecordController::leadInRecordingStartTime() const
+{
+    return m_leadInRecordingStartTime;
+}
+
+std::vector<au::trackedit::TrackId> RecordController::leadInRecordingTrackIds() const
+{
+    return m_leadInRecordingTrackIds;
+}
+
 void RecordController::setCurrentRecordStatus(RecordStatus status)
 {
     if (m_currentRecordStatus == status) {
@@ -192,7 +240,7 @@ bool RecordController::canReceiveAction(const ActionCode& code) const
     }
 
     if (code == RECORD_START_QUERY.toString()) {
-        return !playbackController()->isPlaying();
+        return !playbackController()->isPlaying() && !m_isLeadInRecording;
     }
 
     if (code == RECORD_LEAD_IN_RECORDING_QUERY.toString()) {

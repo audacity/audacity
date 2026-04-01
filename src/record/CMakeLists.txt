@@ -38,6 +38,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/toolbars/playbacktoolbarrecordlevelitem.h
     ${CMAKE_CURRENT_LIST_DIR}/view/common/recordmetermodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/common/recordmetermodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/common/leadinrecordingindicatormodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/common/leadinrecordingindicatormodel.h
     )
 
 # AU3

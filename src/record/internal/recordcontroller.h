@@ -13,6 +13,7 @@
 
 #include "context/iglobalcontext.h"
 #include "playback/iplaybackcontroller.h"
+#include "trackedit/iselectioncontroller.h"
 #include "record/irecordconfiguration.h"
 
 #include "record/irecord.h"
@@ -28,6 +29,7 @@ class RecordController : public IRecordController, public muse::actions::Actiona
     muse::ContextInject<muse::IInteractive> interactive{ this };
     muse::ContextInject<IRecord> record{ this };
     muse::ContextInject<playback::IPlaybackController> playbackController{ this };
+    muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
 
 public:
     RecordController(const muse::modularity::ContextPtr& ctx)
@@ -52,6 +54,11 @@ public:
 
     bool isInputMonitoringOn() const override;
     muse::async::Notification isInputMonitoringOnChanged() const override;
+
+    bool isLeadInRecording() const override;
+    muse::async::Notification isLeadInRecordingChanged() const override;
+    muse::secs_t leadInRecordingStartTime() const override;
+    std::vector<trackedit::TrackId> leadInRecordingTrackIds() const override;
 
 private:
     enum class RecordStatus {
@@ -78,6 +85,11 @@ private:
     RecordStatus m_currentRecordStatus = RecordStatus::Stopped;
 
     muse::async::Channel<muse::actions::ActionCode> m_actionCheckedChanged;
+
+    bool m_isLeadInRecording = false;
+    muse::secs_t m_leadInRecordingStartTime = 0.0;
+    std::vector<trackedit::TrackId> m_leadInRecordingTrackIds;
+    muse::async::Notification m_isLeadInRecordingChanged;
 };
 }
 

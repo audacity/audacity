@@ -16,6 +16,7 @@
 #include "internal/recorduiactions.h"
 #include "internal/au3/au3record.h"
 #include "view/common/recordmetermodel.h"
+#include "view/common/leadinrecordingindicatormodel.h"
 
 using namespace au::record;
 using namespace muse;
@@ -52,6 +53,7 @@ void RecordModule::registerResources()
 void RecordModule::registerUiTypes()
 {
     qmlRegisterType<RecordMeterModel>("Audacity.Record", 1, 0, "RecordMeterModel");
+    qmlRegisterType<LeadInRecordingIndicatorModel>("Audacity.Record", 1, 0, "LeadInRecordingIndicatorModel");
 }
 
 void RecordModule::onInit(const IApplication::RunMode& mode)
