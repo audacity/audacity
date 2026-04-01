@@ -173,7 +173,7 @@ ColumnLayout {
                     ToolTip {
                         id: bitrateTooltip
 
-                        text: qsTrc("export", "Bit Rate (bits/second) - influences the resulting file size and quality\nSome codecs may only accept specific values (128k, 192k, 256k etc)\n0 - automatic\nRecommended - 192000")
+                        text: qsTrc("export", "Bit rate (bits/second) - influences the resulting file size and quality\nSome codecs may only accept specific values (128k, 192k, 256k, etc.)\n0 - automatic\n192000 - recommended")
                     }
                 }
             }
