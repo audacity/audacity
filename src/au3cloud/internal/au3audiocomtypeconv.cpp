@@ -35,7 +35,7 @@ ProjectList convertFromAu3PaginatedProject(const audacity::cloud::audiocom::sync
 }
 
 AudioList convertFromAu3CloudAudio(const audacity::cloud::audiocom::sync::PaginatedAudioResponse& paginatedResponse,
-                                   const muse::io::path_t& thumnailCacheDir)
+                                   const muse::io::path_t& thumbnailCacheDir)
 {
     AudioList audioList;
 
@@ -52,7 +52,7 @@ AudioList convertFromAu3CloudAudio(const audacity::cloud::audiocom::sync::Pagina
         item.created = audioInfo.Created;
         item.fileSize = audioInfo.FileSize;
         item.duration = audioInfo.Duration;
-        item.waveformPath = thumnailCacheDir.appendingComponent(audioInfo.Id).appendingSuffix("json");
+        item.waveformPath = thumbnailCacheDir.appendingComponent(audioInfo.Id).appendingSuffix("json");
 
         audioList.items.push_back(std::move(item));
     }

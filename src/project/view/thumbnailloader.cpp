@@ -49,15 +49,13 @@ QPixmap ThumbnailLoader::renderWaveformToPixmap()
     }
 
     QPixmap pixmap(QSize(m_width, m_height));
-    pixmap.fill(Qt::transparent);
+    pixmap.fill(m_backgroundColor);
 
     QPainter painter(&pixmap);
     if (!painter.isActive()) {
         return QPixmap();
     }
     painter.setRenderHint(QPainter::Antialiasing, true);
-
-    painter.fillRect(QRectF(0, 0, m_width, m_height), m_backgroundColor);
 
     painter.setPen(Qt::NoPen);
     painter.setBrush(m_lineColor);
@@ -266,6 +264,10 @@ void ThumbnailLoader::loadThumbnail()
 
 void ThumbnailLoader::setThumbnail(const QPixmap& thumbnail)
 {
+    if (m_thumbnail.cacheKey() == thumbnail.cacheKey()) {
+        return;
+    }
+
     m_thumbnail = thumbnail;
     emit thumbnailChanged();
 }

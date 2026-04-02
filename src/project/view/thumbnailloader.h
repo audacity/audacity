@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include <QFileSystemWatcher>
 #include <QObject>
 #include <QPixmap>
 #include <QSize>

@@ -18,7 +18,7 @@ namespace au::au3cloud {
 ProjectList convertFromAu3PaginatedProject(const audacity::cloud::audiocom::sync::PaginatedProjectsResponse& paginatedResponse);
 
 AudioList convertFromAu3CloudAudio(const audacity::cloud::audiocom::sync::PaginatedAudioResponse& paginatedResponse,
-                                   const muse::io::path_t& thumnailCacheDir);
+                                   const muse::io::path_t& thumbnailCacheDir);
 
 Err cloudSyncErrorToErr(const std::optional<audacity::cloud::audiocom::sync::CloudSyncError>& error);
 
