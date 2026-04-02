@@ -556,6 +556,7 @@ muse::Ret Au3Record::leadInRecording()
                     crossfadeData.clear();
                     break;
                 }
+                break; // Use crossfade data from first track only
             }
         }
     }
