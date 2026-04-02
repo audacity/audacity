@@ -4,6 +4,7 @@
 #include "thumbnailloader.h"
 
 #include <QPixmap>
+#include <qnamespace.h>
 
 #include "framework/global/io/path.h"
 #include "modularity/ioc.h"
@@ -19,13 +20,13 @@ ThumbnailLoader::ThumbnailLoader(QObject* parent)
 {
 }
 
-QPixmap ThumbnailLoader::renderWaveformToPixmap(const muse::io::path_t& path, const QSize& size, const QColor& backgroundColor)
+QPixmap ThumbnailLoader::renderWaveformToPixmap()
 {
-    if (size.isEmpty()) {
+    if (m_width <= 0 || m_height <= 0) {
         return QPixmap();
     }
 
-    muse::RetVal<muse::ByteArray> result = filesystem()->readFile(path);
+    muse::RetVal<muse::ByteArray> result = filesystem()->readFile(m_path);
     if (!result.ret) {
         return QPixmap();
     }
@@ -43,11 +44,11 @@ QPixmap ThumbnailLoader::renderWaveformToPixmap(const muse::io::path_t& path, co
     for (const auto& v : arr) {
         points.push_back(static_cast<float>(qBound(0.0, v.toDouble(), 1.0)));
     }
-    if (points.empty() || size.isEmpty()) {
+    if (points.empty() || m_width <= 0 || m_height <= 0) {
         return QPixmap();
     }
 
-    QPixmap pixmap(size);
+    QPixmap pixmap(QSize(m_width, m_height));
     pixmap.fill(Qt::transparent);
 
     QPainter painter(&pixmap);
@@ -56,16 +57,16 @@ QPixmap ThumbnailLoader::renderWaveformToPixmap(const muse::io::path_t& path, co
     }
     painter.setRenderHint(QPainter::Antialiasing, true);
 
-    painter.fillRect(QRectF(0, 0, size.width(), size.height()), backgroundColor);
+    painter.fillRect(QRectF(0, 0, m_width, m_height), m_backgroundColor);
 
     painter.setPen(Qt::NoPen);
-    painter.setBrush(QColor(0xE4, 0xE4, 0xE4));
+    painter.setBrush(m_lineColor);
 
-    const double midY = size.height() / 2.0;
-    const double barWidth = size.width() / static_cast<double>(points.size());
+    const double midY = m_height / 2.0;
+    const double barWidth = m_width / static_cast<double>(points.size());
 
     for (unsigned i = 0; i < points.size(); ++i) {
-        const double barHeight = qMax(2.0, static_cast<double>(points[i]) * size.height() * 0.9);
+        const double barHeight = qMax(2.0, static_cast<double>(points[i]) * m_height * 0.9);
         painter.drawRect(QRectF(
                              i * barWidth,
                              midY - barHeight / 2.0,
@@ -74,27 +75,33 @@ QPixmap ThumbnailLoader::renderWaveformToPixmap(const muse::io::path_t& path, co
                              ));
     }
 
+    if (m_borderColor.isValid() && m_borderColor.alpha() > 0) {
+        painter.setPen(QPen(m_borderColor, 1));
+        painter.setBrush(Qt::NoBrush);
+        painter.drawRect(QRectF(0, 0, m_width, m_height).adjusted(0.5, 0.5, -0.5, -0.5));
+    }
+
     return pixmap;
 }
 
-QPixmap ThumbnailLoader::renderFromImage(const muse::io::path_t& path, const QSize& size, const QColor& backgroundColor)
+QPixmap ThumbnailLoader::renderFromImage()
 {
-    if (size.isEmpty()) {
+    if (m_width <= 0 || m_height <= 0) {
         return QPixmap();
     }
 
-    const bool isPlaceholder = !filesystem()->exists(path);
+    const bool isPlaceholder = !filesystem()->exists(m_path);
 
-    const QString pixmapPath = isPlaceholder ? QString(DEFAULT_PLACEHOLDER) : path.toQString();
+    const QString pixmapPath = isPlaceholder ? QString(DEFAULT_PLACEHOLDER) : m_path;
     QPixmap pixmap(pixmapPath);
     if (pixmap.isNull()) {
         return QPixmap();
     }
 
-    const QSize targetSize = isPlaceholder ? size / 2 : size;
-    QPixmap scaledPixmap = pixmap.scaled(targetSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    const QSize targetSize = isPlaceholder ? QSize(m_width / 2, m_height / 2) : QSize(m_width, m_height);
+    QPixmap scaledPixmap = pixmap.scaled(targetSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
 
-    QPixmap finalPixmap(size);
+    QPixmap finalPixmap(QSize(m_width, m_height));
     finalPixmap.fill(Qt::transparent);
 
     QPainter painter(&finalPixmap);
@@ -103,10 +110,16 @@ QPixmap ThumbnailLoader::renderFromImage(const muse::io::path_t& path, const QSi
     }
     painter.setRenderHint(QPainter::Antialiasing, true);
 
-    painter.fillRect(QRectF(0, 0, size.width(), size.height()), backgroundColor);
+    painter.fillRect(QRectF(0, 0, m_width, m_height), m_backgroundColor);
 
-    const QPointF center((size.width() - scaledPixmap.width()) / 2.0, (size.height() - scaledPixmap.height()) / 2.0);
+    const QPointF center((m_width - scaledPixmap.width()) / 2.0, (m_height - scaledPixmap.height()) / 2.0);
     painter.drawPixmap(center, scaledPixmap);
+
+    if (m_borderColor.isValid() && m_borderColor.alpha() > 0) {
+        painter.setPen(QPen(m_borderColor, 1));
+        painter.setBrush(Qt::NoBrush);
+        painter.drawRect(QRectF(0, 0, m_width, m_height).adjusted(0.5, 0.5, -0.5, -0.5));
+    }
 
     return finalPixmap;
 }
@@ -159,7 +172,9 @@ void ThumbnailLoader::setWidth(int width)
 
     m_width = width;
 
-    loadThumbnail();
+    if (m_width > 0 && m_height > 0) {
+        loadThumbnail();
+    }
 }
 
 int ThumbnailLoader::height() const
@@ -175,7 +190,9 @@ void ThumbnailLoader::setHeight(int height)
 
     m_height = height;
 
-    loadThumbnail();
+    if (m_width > 0 && m_height > 0) {
+        loadThumbnail();
+    }
 }
 
 QColor ThumbnailLoader::backgroundColor() const
@@ -190,7 +207,38 @@ void ThumbnailLoader::setBackgroundColor(const QColor& color)
     }
 
     m_backgroundColor = color;
-    emit backgroundColorChanged();
+
+    loadThumbnail();
+}
+
+QColor ThumbnailLoader::lineColor() const
+{
+    return m_lineColor;
+}
+
+void ThumbnailLoader::setLineColor(const QColor& color)
+{
+    if (m_lineColor == color) {
+        return;
+    }
+
+    m_lineColor = color;
+
+    loadThumbnail();
+}
+
+QColor ThumbnailLoader::borderColor() const
+{
+    return m_borderColor;
+}
+
+void ThumbnailLoader::setBorderColor(const QColor& color)
+{
+    if (m_borderColor == color) {
+        return;
+    }
+
+    m_borderColor = color;
 
     loadThumbnail();
 }
@@ -210,8 +258,8 @@ void ThumbnailLoader::loadThumbnail()
     const muse::io::path_t filePath(m_path);
     const QSize size(m_width, m_height);
     const QPixmap thumbnail = filePath.hasSuffix("json")
-                              ? renderWaveformToPixmap(filePath, size, m_backgroundColor)
-                              : renderFromImage(filePath, size, m_backgroundColor);
+                              ? renderWaveformToPixmap()
+                              : renderFromImage();
 
     setThumbnail(thumbnail);
 }

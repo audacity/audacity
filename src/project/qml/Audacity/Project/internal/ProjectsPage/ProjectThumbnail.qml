@@ -43,7 +43,9 @@ Item {
         path: root.path
         placeholder: root.placeholder
 
-        backgroundColor: ui.theme.backgroundTertiaryColor
+        backgroundColor: ui.theme.backgroundSecondaryColor
+        lineColor: ui.theme.strokeColor
+        borderColor: ui.theme.strokeColor
     }
 
     Loader {
