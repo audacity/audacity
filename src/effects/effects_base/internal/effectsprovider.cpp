@@ -151,25 +151,18 @@ bool EffectsProvider::loadEffect(const EffectId& effectId) const
 
 std::string EffectsProvider::effectName(const std::string& effectId) const
 {
-    const auto desc = PluginManager::Get().GetPlugin(effectId);
-    if (!desc) {
+    const auto it = std::find_if(m_effects.begin(), m_effects.end(), [&](const EffectMeta& meta) {
+        return meta.id == effectId;
+    });
+    if (it == m_effects.end()) {
         return "";
     }
-    return desc->GetSymbol().Msgid().Translation().ToStdString();
+    return it->title.toStdString();
 }
 
 std::string EffectsProvider::effectName(const effects::RealtimeEffectState& state) const
 {
     return effectName(state.GetID().ToStdString());
-}
-
-std::string EffectsProvider::effectSymbol(const std::string& effectId) const
-{
-    const auto desc = PluginManager::Get().GetPlugin(effectId);
-    if (!desc) {
-        return "";
-    }
-    return desc->GetSymbol().Internal().ToStdString();
 }
 
 bool EffectsProvider::supportsMultipleClipSelection(const EffectId& effectId) const

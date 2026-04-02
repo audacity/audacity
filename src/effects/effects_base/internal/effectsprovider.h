@@ -41,7 +41,6 @@ public:
     bool loadEffect(const EffectId& effectId) const override;
     std::string effectName(const std::string& effectId) const override;
     std::string effectName(const effects::RealtimeEffectState& state) const override;
-    std::string effectSymbol(const std::string& effectId) const override;
     Effect* effect(const EffectId& effectId) const override;
 
     bool supportsMultipleClipSelection(const EffectId& effectId) const override;
@@ -52,7 +51,7 @@ private:
 
     muse::Ret doEffectPreview(EffectBase& effect, EffectSettings& settings);
 
-    mutable EffectMetaList m_effects;
+    EffectMetaList m_effects;
     muse::async::Notification m_effectsChanged;
     muse::async::Notification m_initialized;
 

@@ -31,7 +31,6 @@ public:
     virtual bool loadEffect(const EffectId& effectId) const = 0;
     virtual std::string effectName(const std::string& effectId) const = 0;
     virtual std::string effectName(const effects::RealtimeEffectState& state) const = 0;
-    virtual std::string effectSymbol(const std::string& effectId) const = 0;
     virtual Effect* effect(const EffectId& effectId) const = 0;
 
     virtual bool supportsMultipleClipSelection(const EffectId& effectId) const = 0;
