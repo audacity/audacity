@@ -190,6 +190,7 @@ const PluginID& PluginManager::RegisterPlugin(
     plug.SetProviderID(PluginManager::GetID(provider));
 
     plug.SetEffectType(effect->GetClassification());
+    plug.SetDescription(effect->GetDescription().Translation());
     plug.SetEffectFamily(effect->GetFamily().Internal());
     plug.SetEffectGroup(effect->GetGroup());
     plug.SetEffectInteractive(effect->IsInteractive());

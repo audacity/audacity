@@ -74,6 +74,7 @@ muse::RetVal<muse::audio::AudioResourceMetaList> Au3AudioPluginMetaReader::readM
             desc.SetEffectFamily(provider->GetOptionalFamilySymbol().Internal());
 
             desc.SetID(PluginManager::GetID(effect));
+            desc.SetDescription(effect->GetDescription().Translation());
             desc.SetEffectType(effect->GetClassification());
             desc.SetEffectFamily(effect->GetFamily().Internal());
             desc.SetEffectGroup(effect->GetGroup());
@@ -113,17 +114,9 @@ muse::RetVal<muse::audio::AudioResourceMetaList> Au3AudioPluginMetaReader::readM
     }
 
     muse::audio::AudioResourceMetaList metaList;
+    metaList.reserve(descriptors.size());
     for (const PluginDescriptor& desc : descriptors) {
-        // For now - we will overwrite `museMeta.type` in the next conversion step
-        constexpr auto effectFamily = EffectFamily::Unknown;
-
-        const auto title = muse::String::fromStdString(desc.GetSymbol().Msgid().MSGID().GET().ToStdString());
-
-        const auto auMeta = toEffectMeta(desc, effectFamily, title, title);
-        auto museMeta = utils::auToMuseEffectMeta(auMeta);
-        museMeta.type = this->metaType();
-
-        metaList.emplace_back(std::move(museMeta));
+        metaList.emplace_back(utils::auToMuseEffectMeta(toEffectMeta(desc)));
     }
 
     return muse::RetVal<muse::audio::AudioResourceMetaList>::make_ok(metaList);

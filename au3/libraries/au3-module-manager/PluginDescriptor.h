@@ -59,6 +59,7 @@ public:
     // There is no translated version
 
     const wxString& GetVendor() const;
+    const wxString& GetDescription() const;
 
     bool IsEnabled() const;
     bool IsValid() const;
@@ -106,6 +107,7 @@ public:
     // the value will still be extracted for translation
     void SetVersion(const wxString& version);
     void SetVendor(const wxString& vendor);
+    void SetDescription(const wxString& description);
 
     // "family" should be an untranslated string wrapped in wxT()
     void SetEffectFamily(const wxString& family);
@@ -138,6 +140,7 @@ private:
     ComponentInterfaceSymbol mSymbol;
     wxString mVersion;
     wxString mVendor;
+    wxString mDescription;
     wxString mProviderID;
     bool mEnabled { false };
     bool mValid { false };

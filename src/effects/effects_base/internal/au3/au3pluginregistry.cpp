@@ -65,9 +65,7 @@ void Au3PluginRegistry::Save(const ::PluginMap& pluginMap)
             continue;
         }
 
-        const EffectFamily family = utils::effectFamilyFromString(au3::wxToString(plug.GetEffectFamily()));
-        const muse::String title = au3::wxToString(plug.GetSymbol().Msgid().MSGID().GET());
-        const EffectMeta meta = toEffectMeta(plug, family, title, muse::String {});
+        const EffectMeta meta = toEffectMeta(plug);
 
         AudioPluginInfo info;
         info.type = AudioPluginType::Fx;

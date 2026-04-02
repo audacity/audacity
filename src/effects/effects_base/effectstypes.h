@@ -44,6 +44,7 @@ using TrackId = long;
 using EffectChainLinkIndex = int;
 
 static const muse::String EFFECT_TITLE_ATTRIBUTE(u"title");
+static const muse::String EFFECT_DESCRIPTION_ATTRIBUTE(u"description");
 static const muse::String EFFECT_TYPE_ATTRIBUTE(u"type");
 static const muse::String EFFECT_CATEGORY_ATTRIBUTE(u"category");
 static const muse::String EFFECT_IS_REALTIME_CAPABLE_ATTRIBUTE(u"isRealtimeCapable");
