@@ -11,6 +11,8 @@
 
 #include "effectstypes.h"
 
+#include <functional>
+
 struct EffectSettings;
 namespace au::effects {
 class IEffectsProvider : MODULE_GLOBAL_EXPORT_INTERFACE
@@ -33,8 +35,10 @@ public:
     virtual Effect* effect(const EffectId& effectId) const = 0;
     virtual void setEffectActivated(const EffectId& effectId, bool activated) = 0;
 
+    using EffectFilter = std::function<bool (const EffectMeta&)>;
     virtual void rescanPlugins(muse::IInteractive& interactive,
-                               muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario) = 0;
+                               muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
+                               const EffectFilter& filter = nullptr) = 0;
     virtual void save() = 0;
 
     virtual bool supportsMultipleClipSelection(const EffectId& effectId) const = 0;

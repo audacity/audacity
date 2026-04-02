@@ -50,17 +50,15 @@ public:
 
     bool supportsMultipleClipSelection(const EffectId& effectId) const override;
 
-    void rescanPlugins(muse::IInteractive& interactive,
-                       muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario) override;
+    void rescanPlugins(muse::IInteractive& interactive, muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
+                       const EffectFilter& filter = nullptr) override;
     void save() override;
 
 private:
     void reloadEffects();
     IEffectLoaderPtr loader(const EffectId& effectId) const;
     bool doScanPlugins(muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
-                       const std::function<bool()>& doScanThirdPartyPlugins = nullptr);
-
-    muse::Ret doEffectPreview(EffectBase& effect, EffectSettings& settings);
+                       const std::function<bool()>& doScanThirdPartyPlugins = nullptr, const EffectFilter& filter = nullptr);
 
     EffectMetaList m_effects;
     muse::async::Notification m_effectsChanged;

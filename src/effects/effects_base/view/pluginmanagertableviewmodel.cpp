@@ -248,7 +248,9 @@ void PluginManagerTableViewModel::handleEdit(int row, int column)
 
 void PluginManagerTableViewModel::rescanPlugins()
 {
-    effectsProvider()->rescanPlugins(*interactive(), *registerAudioPluginsScenario());
+    effectsProvider()->rescanPlugins(*interactive(), *registerAudioPluginsScenario(), [this](const EffectMeta& meta) {
+        return m_effectFamilyFilter(meta) && m_effectTypeFilter(meta);
+    });
 }
 
 void PluginManagerTableViewModel::accept()

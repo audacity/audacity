@@ -42,7 +42,8 @@ void EffectsProvider::initOnce(muse::IInteractive& interactive,
 }
 
 void EffectsProvider::rescanPlugins(muse::IInteractive& interactive,
-                                    muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario)
+                                    muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
+                                    const EffectFilter& filter)
 {
     if (!doScanPlugins(registerAudioPluginsScenario)) {
         interactive.infoSync(muse::trc("audio", "Audio plugins scan completed"), muse::trc("audio", "All audio plugins are up to date."));
@@ -50,7 +51,8 @@ void EffectsProvider::rescanPlugins(muse::IInteractive& interactive,
 }
 
 bool EffectsProvider::doScanPlugins(muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
-                                    const std::function<bool()>& doScanThirdPartyPlugins)
+                                    const std::function<bool()>& doScanThirdPartyPlugins,
+                                    const EffectFilter& filter)
 {
     muse::audioplugins::PluginScanResult scanResult = registerAudioPluginsScenario.scanPlugins();
 
@@ -66,9 +68,27 @@ bool EffectsProvider::doScanPlugins(muse::audioplugins::IRegisterAudioPluginsSce
                 using namespace muse::audio;
                 const auto metaType = reader->metaType();
                 isAudacityPlugin = metaType == AudioResourceType::NyquistPlugin || metaType == AudioResourceType::NativeEffect;
+
+                if (filter != nullptr) {
+                    const muse::RetVal<muse::audio::AudioResourceMetaList> ret = reader->readMeta(*it);
+                    if (ret.ret) {
+                        std::vector<EffectMeta> effectMetas;
+                        std::transform(ret.val.begin(), ret.val.end(), std::back_inserter(effectMetas),
+                                       [path = *it](const muse::audio::AudioResourceMeta& meta) {
+                            return utils::museToAuEffectMeta(path, meta);
+                        });
+                        // Only skip if none of the effects pass the filter - better be safe here.
+                        if (std::none_of(effectMetas.begin(), effectMetas.end(), filter)) {
+                            it = thirdPartyPluginPaths.erase(it);
+                            continue;
+                        }
+                    }
+                }
+
                 break;
             }
         }
+
         assert(isAudacityPlugin.has_value());
         if (isAudacityPlugin.has_value() && *isAudacityPlugin) {
             audacityPluginPaths.push_back(*it);
