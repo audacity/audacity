@@ -57,6 +57,7 @@
 #include "graphiceq/graphiceqviewmodel.h"
 #include "invert/inverteffect.h"
 #include "reverse/reverseeffect.h"
+#include "removedcoffset/removedcoffseteffect.h"
 #include "repair/repaireffect.h"
 #include "truncatesilence/truncatesilenceeffect.h"
 #include "truncatesilence/truncatesilenceviewmodel.h"
@@ -85,6 +86,7 @@ void BuiltinEffectsLoader::preInit()
     static BuiltinEffectsModule::Registration< GraphicEq > regGraphicEq;
     static BuiltinEffectsModule::Registration< ClickRemovalEffect > regClickRemoval;
     static BuiltinEffectsModule::Registration< NormalizeEffect > regNormalize;
+    static BuiltinEffectsModule::Registration< RemoveDCOffsetEffect > regRemoveDCOffset;
     static BuiltinEffectsModule::Registration< ChirpEffect > regChirp;
     static BuiltinEffectsModule::Registration< ToneEffect > regTone;
     static BuiltinEffectsModule::Registration< ReverbEffect > regReverb;
@@ -199,6 +201,12 @@ void BuiltinEffectsLoader::init()
                     muse::mtrc("effects", "Normalize"),
                     muse::mtrc("effects", "Sets the peak amplitude of a one or more tracks"),
                     false
+                    );
+        } else if (symbol == RemoveDCOffsetEffect::Symbol) {
+            regMeta(desc,
+                    muse::mtrc("effects", "Remove DC offset"),
+                    muse::mtrc("effects", "Removes DC offset from the audio"),
+                    true
                     );
         } else if (symbol == FadeInEffect::Symbol) {
             regMeta(desc,
