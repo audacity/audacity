@@ -552,7 +552,7 @@ StyledDialogView {
                         StyledTextLabel {
                             id: oggWarning
 
-                            text: qsTrc("export", "Effective bitrate may vary")
+                            text: qsTrc("export", "Effective bit rate may vary")
                         }
                     }
                 }
