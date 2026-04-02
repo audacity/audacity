@@ -43,6 +43,8 @@ Item {
 
     property bool isCloudList: false
 
+    property bool thumbnailFull: false
+
     property alias view: view
 
     property alias navigation: navPanel
@@ -100,6 +102,8 @@ Item {
             visible: false
             itemInset: view.itemInset
             showBottomBorder: false
+
+            thumbnailFull: root.thumbnailFull
 
             navigation.panel: navPanel
             navigation.row: 0
@@ -227,6 +231,7 @@ Item {
                         columnSpacing: view.columnSpacing
 
                         isCloudItem: root.isCloudList
+                        thumbnailFull: root.thumbnailFull
 
                         placeholder: root.placeholder
 

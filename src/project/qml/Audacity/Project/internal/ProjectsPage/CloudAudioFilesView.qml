@@ -161,6 +161,7 @@ ProjectsView {
             sideMargin: root.sideMargin
 
             isCloudList: true
+            thumbnailFull: true
 
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrder

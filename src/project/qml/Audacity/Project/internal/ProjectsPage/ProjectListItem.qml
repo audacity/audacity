@@ -42,6 +42,7 @@ ListItemBlank {
     property string placeholder: ""
 
     property bool isCloudItem: false
+    property bool thumbnailFull: false
 
     implicitHeight: 64
 
@@ -89,10 +90,16 @@ ListItemBlank {
             }
 
             Loader {
+                Layout.fillWidth: root.thumbnailFull
+                Layout.fillHeight: root.thumbnailFull
+                Layout.preferredWidth: root.thumbnailFull ? -1 : 71
+                Layout.preferredHeight: root.thumbnailFull ? -1 : 40
+
                 sourceComponent: root.thumbnailComponent
             }
 
             Item {
+                visible: !root.thumbnailFull
                 Layout.fillWidth: true
             }
 
