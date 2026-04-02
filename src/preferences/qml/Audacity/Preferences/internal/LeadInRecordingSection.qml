@@ -55,7 +55,7 @@ BaseSection {
         minValue: 0
         maxValue: 100
         step: 1
-        decimals: 1
+        decimals: 0
 
         measureUnitsSymbol: " " + qsTrc("global", "ms")
 
