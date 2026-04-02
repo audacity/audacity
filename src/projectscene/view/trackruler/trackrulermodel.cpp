@@ -63,6 +63,9 @@ void TrackRulerModel::init()
         emit fullStepsChanged();
         emit smallStepsChanged();
     }, muse::async::Asyncable::Mode::SetReplace);
+
+    emit fullStepsChanged();
+    emit smallStepsChanged();
 }
 
 std::vector<QVariantMap> TrackRulerModel::fullSteps() const
