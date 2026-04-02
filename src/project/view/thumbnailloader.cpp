@@ -3,16 +3,16 @@
 */
 #include "thumbnailloader.h"
 
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QPainter>
+#include <QPen>
 #include <QPixmap>
-#include <qnamespace.h>
-
-#include "framework/global/io/path.h"
-#include "modularity/ioc.h"
 
 using namespace au::project;
 
 namespace {
-constexpr auto DEFAULT_PLACEHOLDER = ":/resources/ProjectPlaceholder.svg";
+const muse::io::path_t DEFAULT_PLACEHOLDER(":/resources/ProjectPlaceholder.svg");
 }
 
 ThumbnailLoader::ThumbnailLoader(QObject* parent)
@@ -20,43 +20,52 @@ ThumbnailLoader::ThumbnailLoader(QObject* parent)
 {
 }
 
-QPixmap ThumbnailLoader::renderWaveformToPixmap()
+muse::io::path_t ThumbnailLoader::selectSource() const
 {
-    if (m_width <= 0 || m_height <= 0) {
-        return QPixmap();
+    if (!m_path.empty() && filesystem()->exists(m_path)) {
+        return m_path;
     }
 
-    muse::RetVal<muse::ByteArray> result = filesystem()->readFile(m_path);
+    if (!m_placeholder.empty() && filesystem()->exists(m_placeholder)) {
+        return m_placeholder;
+    }
+
+    return DEFAULT_PLACEHOLDER;
+}
+
+void ThumbnailLoader::drawBorder(QPainter& painter) const
+{
+    if (!m_borderColor.isValid() || m_borderColor.alpha() == 0) {
+        return;
+    }
+    painter.setPen(QPen(m_borderColor, 1));
+    painter.setBrush(Qt::NoBrush);
+    painter.drawRect(QRectF(0, 0, m_width, m_height).adjusted(0.5, 0.5, -0.5, -0.5));
+}
+
+std::vector<float> ThumbnailLoader::parseWaveformData(const muse::io::path_t& source) const
+{
+    muse::RetVal<muse::ByteArray> result = filesystem()->readFile(source);
     if (!result.ret) {
-        return QPixmap();
+        return {};
     }
 
     const QJsonDocument doc = QJsonDocument::fromJson(result.val.toQByteArray());
     if (!doc.isArray()) {
-        return QPixmap();
+        return {};
     }
 
     const QJsonArray arr = doc.array();
-
     std::vector<float> points;
     points.reserve(arr.size());
-
     for (const auto& v : arr) {
         points.push_back(static_cast<float>(qBound(0.0, v.toDouble(), 1.0)));
     }
-    if (points.empty() || m_width <= 0 || m_height <= 0) {
-        return QPixmap();
-    }
+    return points;
+}
 
-    QPixmap pixmap(QSize(m_width, m_height));
-    pixmap.fill(m_backgroundColor);
-
-    QPainter painter(&pixmap);
-    if (!painter.isActive()) {
-        return QPixmap();
-    }
-    painter.setRenderHint(QPainter::Antialiasing, true);
-
+void ThumbnailLoader::drawWaveform(QPainter& painter, const std::vector<float>& points) const
+{
     painter.setPen(Qt::NoPen);
     painter.setBrush(m_lineColor);
 
@@ -72,32 +81,49 @@ QPixmap ThumbnailLoader::renderWaveformToPixmap()
                              barHeight
                              ));
     }
-
-    if (m_borderColor.isValid() && m_borderColor.alpha() > 0) {
-        painter.setPen(QPen(m_borderColor, 1));
-        painter.setBrush(Qt::NoBrush);
-        painter.drawRect(QRectF(0, 0, m_width, m_height).adjusted(0.5, 0.5, -0.5, -0.5));
-    }
-
-    return pixmap;
 }
 
-QPixmap ThumbnailLoader::renderFromImage()
+QPixmap ThumbnailLoader::renderWaveformToPixmap(const muse::io::path_t& source)
 {
     if (m_width <= 0 || m_height <= 0) {
         return QPixmap();
     }
 
-    const bool isPlaceholder = !filesystem()->exists(m_path);
+    const std::vector<float> points = parseWaveformData(source);
+    if (points.empty()) {
+        return QPixmap();
+    }
 
-    const QString pixmapPath = isPlaceholder ? QString(DEFAULT_PLACEHOLDER) : m_path;
-    QPixmap pixmap(pixmapPath);
+    QPixmap pixmap(QSize(m_width, m_height));
+    pixmap.fill(m_backgroundColor);
+
+    QPainter painter(&pixmap);
+    if (!painter.isActive()) {
+        return QPixmap();
+    }
+    painter.setRenderHint(QPainter::Antialiasing, true);
+
+    drawWaveform(painter, points);
+    drawBorder(painter);
+
+    return pixmap;
+}
+
+QPixmap ThumbnailLoader::renderFromImage(const muse::io::path_t& source)
+{
+    if (m_width <= 0 || m_height <= 0) {
+        return QPixmap();
+    }
+
+    QPixmap pixmap(source.toQString());
     if (pixmap.isNull()) {
         return QPixmap();
     }
 
-    const QSize targetSize = isPlaceholder ? QSize(m_width / 2, m_height / 2) : QSize(m_width, m_height);
-    QPixmap scaledPixmap = pixmap.scaled(targetSize, Qt::IgnoreAspectRatio, Qt::SmoothTransformation);
+    const bool isDefault = (source == m_placeholder) || (source == DEFAULT_PLACEHOLDER);
+    const auto aspectRatio = isDefault ? Qt::KeepAspectRatio : Qt::IgnoreAspectRatio;
+    const QSize targetSize = isDefault ? QSize(m_width / 2, m_height / 2) : QSize(m_width, m_height);
+    const QPixmap scaledPixmap = pixmap.scaled(targetSize, aspectRatio, Qt::SmoothTransformation);
 
     QPixmap finalPixmap(QSize(m_width, m_height));
     finalPixmap.fill(Qt::transparent);
@@ -107,33 +133,29 @@ QPixmap ThumbnailLoader::renderFromImage()
         return QPixmap();
     }
     painter.setRenderHint(QPainter::Antialiasing, true);
-
     painter.fillRect(QRectF(0, 0, m_width, m_height), m_backgroundColor);
 
     const QPointF center((m_width - scaledPixmap.width()) / 2.0, (m_height - scaledPixmap.height()) / 2.0);
     painter.drawPixmap(center, scaledPixmap);
 
-    if (m_borderColor.isValid() && m_borderColor.alpha() > 0) {
-        painter.setPen(QPen(m_borderColor, 1));
-        painter.setBrush(Qt::NoBrush);
-        painter.drawRect(QRectF(0, 0, m_width, m_height).adjusted(0.5, 0.5, -0.5, -0.5));
-    }
+    drawBorder(painter);
 
     return finalPixmap;
 }
 
 QString ThumbnailLoader::path() const
 {
-    return m_path;
+    return m_path.toQString();
 }
 
 void ThumbnailLoader::setPath(const QString& path)
 {
-    if (m_path == path) {
+    const muse::io::path_t newPath(path);
+    if (m_path == newPath) {
         return;
     }
 
-    m_path = path;
+    m_path = newPath;
     emit pathChanged();
 
     loadThumbnail();
@@ -141,18 +163,19 @@ void ThumbnailLoader::setPath(const QString& path)
 
 QString ThumbnailLoader::placeholder() const
 {
-    return m_placeholder;
+    return m_placeholder.toQString();
 }
 
 void ThumbnailLoader::setPlaceholder(const QString& placeholder)
 {
-    if (m_placeholder == placeholder) {
+    const muse::io::path_t newPlaceholder = placeholder.isEmpty() ? DEFAULT_PLACEHOLDER : muse::io::path_t(placeholder);
+    if (m_placeholder == newPlaceholder) {
         return;
     }
 
-    m_placeholder = placeholder.isEmpty() ? DEFAULT_PLACEHOLDER : placeholder;
+    m_placeholder = newPlaceholder;
 
-    if (m_path.isEmpty()) {
+    if (m_path.empty()) {
         loadThumbnail();
     }
 }
@@ -248,16 +271,14 @@ QPixmap ThumbnailLoader::thumbnail() const
 
 void ThumbnailLoader::loadThumbnail()
 {
-    if (m_path.isEmpty()) {
-        setThumbnail(QPixmap());
+    if (m_width <= 0 || m_height <= 0) {
         return;
     }
 
-    const muse::io::path_t filePath(m_path);
-    const QSize size(m_width, m_height);
-    const QPixmap thumbnail = filePath.hasSuffix("json")
-                              ? renderWaveformToPixmap()
-                              : renderFromImage();
+    const muse::io::path_t source = selectSource();
+    const QPixmap thumbnail = source.hasSuffix("json")
+                              ? renderWaveformToPixmap(source)
+                              : renderFromImage(source);
 
     setThumbnail(thumbnail);
 }

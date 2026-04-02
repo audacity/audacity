@@ -8,8 +8,13 @@
 #include <QPixmap>
 #include <QSize>
 
+#include <vector>
+
+#include "framework/global/io/path.h"
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/io/ifilesystem.h"
+
+class QPainter;
 
 namespace au::project {
 class ThumbnailLoader : public QObject, public muse::Contextable
@@ -61,14 +66,20 @@ signals:
     void thumbnailChanged();
 
 private:
+    muse::io::path_t selectSource() const;
+
     void loadThumbnail();
     void setThumbnail(const QPixmap& thumbnail);
 
-    QPixmap renderWaveformToPixmap();
-    QPixmap renderFromImage();
+    std::vector<float> parseWaveformData(const muse::io::path_t& source) const;
+    void drawWaveform(QPainter& painter, const std::vector<float>& points) const;
 
-    QString m_path;
-    QString m_placeholder;
+    QPixmap renderWaveformToPixmap(const muse::io::path_t& source);
+    QPixmap renderFromImage(const muse::io::path_t& source);
+    void drawBorder(QPainter& painter) const;
+
+    muse::io::path_t m_path;
+    muse::io::path_t m_placeholder;
 
     int m_width = 0;
     int m_height = 0;

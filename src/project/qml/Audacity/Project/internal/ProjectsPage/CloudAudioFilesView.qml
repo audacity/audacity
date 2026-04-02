@@ -43,7 +43,7 @@ ProjectsView {
 
     QtObject {
         id: prv
-        property string gridPlaceholderFile: "qrc:/resources/AudioFilePlaceholder.svg"
+        property string gridPlaceholderFile: ":/resources/AudioFilePlaceholder.svg"
         property bool updateDesiredRowCountScheduled: false
 
         readonly property var activeView: root.item
