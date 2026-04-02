@@ -153,6 +153,8 @@ ProjectsView {
             model: cloudProjectsModel
             searchText: root.searchText
 
+            isCloudList: true
+
             backgroundColor: root.backgroundColor
             sideMargin: root.sideMargin
 

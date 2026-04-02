@@ -28,7 +28,6 @@ using namespace au::project;
 const QString AbstractItemModel::NAME_KEY("name");
 const QString AbstractItemModel::SLUG_KEY("slug");
 const QString AbstractItemModel::PATH_KEY("path");
-const QString AbstractItemModel::SUFFIX_KEY("suffix");
 const QString AbstractItemModel::FILE_SIZE_KEY("fileSize");
 const QString AbstractItemModel::DURATION_KEY("duration");
 const QString AbstractItemModel::TIME_SINCE_MODIFIED_KEY("timeSinceModified");

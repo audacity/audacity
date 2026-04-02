@@ -78,80 +78,42 @@ ListItemBlank {
 
             spacing: 24
 
+            StyledTextLabel {
+                id: projectName
+
+                Layout.preferredWidth: 200
+
+                text: root.item.name ?? ""
+                font: ui.theme.largeBodyFont
+                horizontalAlignment: Text.AlignLeft
+            }
+
             Loader {
-                active: !(root.isCloudItem ?? false)
-                visible: active
-                Layout.fillWidth: active
+                sourceComponent: root.thumbnailComponent
+            }
 
-                sourceComponent: RowLayout {
-                    spacing: 24
-
-                    Loader {
-                        Layout.preferredWidth: 71
-                        Layout.preferredHeight: 40
-
-                        sourceComponent: root.thumbnailComponent
-
-                        layer.enabled: true
-                        layer.effect: RoundedCornersEffect {
-                            radius: 2
-                        }
-                    }
-
-                    StyledTextLabel {
-                        Layout.fillWidth: true
-
-                        text: root.item.name ?? ""
-                        font: ui.theme.largeBodyFont
-                        horizontalAlignment: Text.AlignLeft
-                    }
-                }
+            Item {
+                Layout.fillWidth: true
             }
 
             Loader {
                 active: root.isCloudItem ?? false
                 visible: active
-                Layout.fillWidth: active
 
-                sourceComponent: RowLayout {
-                    visible: root.item.isCloud
-                    spacing: 24
+                sourceComponent: CloudProjectIndicatorButton {
+                    id: cloudIndicator
 
-                    StyledTextLabel {
-                        id: cloudProjectName
+                    Layout.alignment: Qt.AlignTrailing | Qt.AlignVCenter
 
-                        Layout.preferredWidth: 200
+                    isProgress: false //cloudProjectStatusWatcher.isProgress
+                    isDownloadedAndUpToDate: true //cloudProjectStatusWatcher.isDownloadedAndUpToDate
 
-                        text: root.item.name ?? ""
-                        font: ui.theme.largeBodyFont
-                        horizontalAlignment: Text.AlignLeft
-                    }
-
-                    Image {
-                        id: previewImage
-
-                        Layout.fillWidth: true
-
-                        source: "qrc:/resources/Waveform.svg"
-                        horizontalAlignment: Image.AlignLeft
-                        verticalAlignment: Image.AlignVCenter
-                    }
-
-                    CloudProjectIndicatorButton {
-                        id: cloudIndicator
-
-                        Layout.alignment: Qt.AlignTrailing | Qt.AlignVCenter
-
-                        isProgress: false //cloudProjectStatusWatcher.isProgress
-                        isDownloadedAndUpToDate: true //cloudProjectStatusWatcher.isDownloadedAndUpToDate
-
-                        navigation.panel: root.navigation.panel
-                        navigation.row: root.navigation.row
-                        navigation.column: 3
-                        navigation.onActiveChanged: {
-                            if (navigation.active) {
-                                root.scrollIntoView()
-                            }
+                    navigation.panel: root.navigation.panel
+                    navigation.row: root.navigation.row
+                    navigation.column: 3
+                    navigation.onActiveChanged: {
+                        if (navigation.active) {
+                            root.scrollIntoView()
                         }
                     }
                 }

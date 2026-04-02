@@ -36,8 +36,13 @@ Item {
 
     ThumbnailLoader {
         id: thumbnailLoader
-        path: root.thumbnailUrl
-        thumbnailSize: Qt.size(root.width, root.height)
+
+        width: root.width
+        height: root.height
+
+        path: root.path
+        placeholder: root.placeholder
+
         backgroundColor: ui.theme.backgroundTertiaryColor
     }
 

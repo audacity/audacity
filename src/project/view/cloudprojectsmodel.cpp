@@ -143,7 +143,6 @@ void CloudProjectsModel::loadItemsIfNecessary()
                                     .appendingComponent(item.name)
                                     .appendingSuffix(au::project::AUP4)
                                     .toQString();
-                    obj[SUFFIX_KEY] = QString::fromStdString(au::project::AUP4);
                     obj[IS_CLOUD_KEY] = true;
                     obj[CLOUD_ITEM_ID_KEY] = QString::fromStdString(item.id);
                     obj[TIME_SINCE_MODIFIED_KEY]

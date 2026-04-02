@@ -150,7 +150,6 @@ void CloudAudioFilesModel::loadItemsIfNecessary()
                     obj[NAME_KEY] = QString::fromStdString(item.title);
                     obj[SLUG_KEY] = QString::fromStdString(item.slug);
                     obj[PATH_KEY] = ""; //configuration()->cloudProjectPath(item.id).toQString();
-                    obj[SUFFIX_KEY] = "";
                     obj[IS_CLOUD_KEY] = true;
                     obj[CLOUD_ITEM_ID_KEY] = QString::fromStdString(item.id);
                     obj[TIME_SINCE_MODIFIED_KEY]

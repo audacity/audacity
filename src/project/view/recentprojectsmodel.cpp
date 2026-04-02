@@ -79,7 +79,6 @@ void RecentProjectsModel::updateRecentProjects()
 
         obj[NAME_KEY] = file.displayName(false);
         obj[PATH_KEY] = file.path.toQString();
-        obj[SUFFIX_KEY] = QString::fromStdString(suffix);
         obj[FILE_SIZE_KEY] = fileSizeString;
         obj[IS_CLOUD_KEY] = configuration()->isCloudProject(file.path);
         // obj[CLOUD_PROJECT_ID_KEY] = configuration()->cloudProjectIdFromPath(file.path);

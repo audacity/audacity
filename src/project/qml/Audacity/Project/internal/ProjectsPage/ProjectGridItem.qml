@@ -32,7 +32,6 @@ FocusScope {
 
     property string name: ""
     property string path: ""
-    property string suffix: ""
     property alias timeSinceModified: timeSinceModified.text
     property string placeholder: ""
     property bool isCreateNew: false
