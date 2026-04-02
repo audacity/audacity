@@ -91,6 +91,7 @@ private:
 
     QList<Page> m_pages;
     int m_currentPageIndex = -1;
+    bool m_loaded = false;
 };
 }
 

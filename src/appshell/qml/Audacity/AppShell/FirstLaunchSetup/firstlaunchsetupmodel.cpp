@@ -43,16 +43,21 @@ FirstLaunchSetupModel::FirstLaunchSetupModel(QObject* parent)
         Page { CLIP_VISUALIZATION_PAGE, "audacity://project" },
         Page { WORKSPACE_LAYOUT_PAGE, "audacity://project" },
     };
+}
+
+void FirstLaunchSetupModel::load()
+{
+    if (m_loaded) {
+        return;
+    }
 
     if (au3CloudService()->enabled()) {
         m_pages.append(Page { SIGNIN_AUDIO_COM_PAGE, "audacity://project" });
         m_pages.append(Page { APP_UPDATES_AND_USAGE_INFO_PAGE, "audacity://project" });
     }
-}
 
-void FirstLaunchSetupModel::load()
-{
     setCurrentPageIndex(0);
+    m_loaded = true;
 }
 
 int FirstLaunchSetupModel::numberOfPages() const
