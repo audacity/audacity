@@ -21,9 +21,6 @@ public:
     void setTempoDetectionWorkspaces(const std::vector<std::string>& workspaces) override;
     muse::async::Notification tempoDetectionWorkspacesChanged() const override;
 
-    LoopAction emptyProjectLoopAction() const override;
-    void setEmptyProjectLoopAction(LoopAction action) override;
-
     LoopAction subsequentImportLoopAction() const override;
     void setSubsequentImportLoopAction(LoopAction action) override;
 

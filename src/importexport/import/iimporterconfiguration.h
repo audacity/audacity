@@ -29,9 +29,7 @@ public:
     virtual void setTempoDetectionWorkspaces(const std::vector<std::string>& workspaces) = 0;
     virtual muse::async::Notification tempoDetectionWorkspacesChanged() const = 0;
 
-    virtual LoopAction emptyProjectLoopAction() const = 0;
-    virtual void setEmptyProjectLoopAction(LoopAction action) = 0;
-
+    /// "Remember my choice" for the subsequent-import tempo detection dialog.
     virtual LoopAction subsequentImportLoopAction() const = 0;
     virtual void setSubsequentImportLoopAction(LoopAction action) = 0;
 };

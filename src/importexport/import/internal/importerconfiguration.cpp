@@ -13,7 +13,6 @@ static const std::string module_name("importer");
 
 static const muse::Settings::Key TEMPO_DETECTION_PREF(module_name, "importer/tempoDetectionPref");
 static const muse::Settings::Key TEMPO_DETECTION_WORKSPACES(module_name, "importer/tempoDetectionWorkspaces");
-static const muse::Settings::Key EMPTY_PROJECT_LOOP_ACTION(module_name, "importer/emptyProjectLoopAction");
 static const muse::Settings::Key SUBSEQUENT_IMPORT_LOOP_ACTION(module_name, "importer/subsequentImportLoopAction");
 
 void ImporterConfiguration::init()
@@ -29,7 +28,6 @@ void ImporterConfiguration::init()
         m_tempoDetectionWorkspacesChanged.notify();
     });
 
-    muse::settings()->setDefaultValue(EMPTY_PROJECT_LOOP_ACTION, muse::Val(static_cast<int>(LoopAction::Ask)));
     muse::settings()->setDefaultValue(SUBSEQUENT_IMPORT_LOOP_ACTION, muse::Val(static_cast<int>(LoopAction::Ask)));
 }
 
@@ -71,16 +69,6 @@ void ImporterConfiguration::setTempoDetectionWorkspaces(const std::vector<std::s
 muse::async::Notification ImporterConfiguration::tempoDetectionWorkspacesChanged() const
 {
     return m_tempoDetectionWorkspacesChanged;
-}
-
-LoopAction ImporterConfiguration::emptyProjectLoopAction() const
-{
-    return static_cast<LoopAction>(muse::settings()->value(EMPTY_PROJECT_LOOP_ACTION).toInt());
-}
-
-void ImporterConfiguration::setEmptyProjectLoopAction(LoopAction action)
-{
-    muse::settings()->setSharedValue(EMPTY_PROJECT_LOOP_ACTION, muse::Val(static_cast<int>(action)));
 }
 
 LoopAction ImporterConfiguration::subsequentImportLoopAction() const

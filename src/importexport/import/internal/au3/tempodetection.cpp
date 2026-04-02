@@ -127,18 +127,6 @@ std::optional<TempoDetectionResult> TempoDetection::detectTempo(
 
 void TempoDetection::showEmptyMusicWorkspaceDialog(double bpm, const std::vector<WaveTrack*>& waveTracks)
 {
-    const LoopAction savedAction = configuration()->emptyProjectLoopAction();
-    if (savedAction == LoopAction::MatchProjectToLoop) {
-        setRawAudioTempoOnClips(waveTracks, bpm);
-        setProjectTempo(bpm);
-        return;
-    } else if (savedAction == LoopAction::MatchLoopToProject) {
-        stretchClipsToProjectTempo(waveTracks, bpm);
-        return;
-    } else if (savedAction == LoopAction::DoNothing) {
-        return;
-    }
-
     std::string message = mtrc("import", "Loop tempo detected at %1 BPM. What would you like to do?")
                           .arg(static_cast<int>(std::round(bpm))).toStdString();
 
@@ -152,24 +140,13 @@ void TempoDetection::showEmptyMusicWorkspaceDialog(double bpm, const std::vector
         trc("import", "Loop Tempo Detected"),
         message,
         buttons,
-        BTN_MATCH_PROJECT,
-        IInteractive::WithDontShowAgainCheckBox);
+        BTN_MATCH_PROJECT);
 
     if (result.button() == BTN_MATCH_PROJECT) {
         setRawAudioTempoOnClips(waveTracks, bpm);
         setProjectTempo(bpm);
-        if (!result.showAgain()) {
-            configuration()->setEmptyProjectLoopAction(LoopAction::MatchProjectToLoop);
-        }
     } else if (result.button() == BTN_MATCH_LOOP) {
         stretchClipsToProjectTempo(waveTracks, bpm);
-        if (!result.showAgain()) {
-            configuration()->setEmptyProjectLoopAction(LoopAction::MatchLoopToProject);
-        }
-    } else {
-        if (!result.showAgain()) {
-            configuration()->setEmptyProjectLoopAction(LoopAction::DoNothing);
-        }
     }
 }
 
