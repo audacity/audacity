@@ -36,16 +36,32 @@ if(NOT EXISTS ${_LTE_DIR}/source/CMakeLists.txt)
     message(STATUS "Initializing loop-tempo-estimator submodule with sparse checkout...")
     execute_process(
         COMMAND git submodule init thirdparty/loop-tempo-estimator
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        RESULT_VARIABLE _lte_res)
+    if(NOT _lte_res EQUAL 0)
+        message(FATAL_ERROR "Failed to init loop-tempo-estimator submodule (exit code: ${_lte_res})")
+    endif()
     execute_process(
         COMMAND git -C ${_LTE_DIR} sparse-checkout init --no-cone
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        RESULT_VARIABLE _lte_res)
+    if(NOT _lte_res EQUAL 0)
+        message(FATAL_ERROR "Failed to configure sparse-checkout for loop-tempo-estimator (exit code: ${_lte_res})")
+    endif()
     execute_process(
         COMMAND git -C ${_LTE_DIR} sparse-checkout set /source/ /LICENSE
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        RESULT_VARIABLE _lte_res)
+    if(NOT _lte_res EQUAL 0)
+        message(FATAL_ERROR "Failed to set sparse-checkout paths for loop-tempo-estimator (exit code: ${_lte_res})")
+    endif()
     execute_process(
         COMMAND git submodule update thirdparty/loop-tempo-estimator
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
+        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        RESULT_VARIABLE _lte_res)
+    if(NOT _lte_res EQUAL 0)
+        message(FATAL_ERROR "Failed to update loop-tempo-estimator submodule (exit code: ${_lte_res})")
+    endif()
 endif()
 if(NOT TARGET loop-tempo-estimator)
     add_subdirectory(${_LTE_DIR}/source ${CMAKE_BINARY_DIR}/loop-tempo-estimator)
