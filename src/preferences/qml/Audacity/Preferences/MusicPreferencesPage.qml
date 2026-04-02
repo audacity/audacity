@@ -33,6 +33,12 @@ PreferencesPage {
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart
 
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
+
             rowSpacing: 16
 
             StyledTextLabel {
@@ -116,6 +122,12 @@ PreferencesPage {
 
             navigation.section: root.navigationSection
             navigation.order: musicImportsSection.navigationOrderEnd + 1
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
 
             CheckBox {
                 width: parent.width

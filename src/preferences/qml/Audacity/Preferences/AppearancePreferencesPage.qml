@@ -121,6 +121,12 @@ PreferencesPage {
             onClipStyleChangeRequested: function(clipStyle) {
                 appearanceModel.setClipStyle(clipStyle)
             }
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
         }
 
         SeparatorLine {}

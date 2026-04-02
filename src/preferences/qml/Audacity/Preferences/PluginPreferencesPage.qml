@@ -29,6 +29,12 @@ PreferencesPage {
 
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
         }
 
         SeparatorLine { }

@@ -35,43 +35,75 @@ PreferencesPage {
         spacing: root.sectionsSpacing
 
         PlaybackPerformanceSection {
+            id: playbackPerformanceSection
+
             playbackPreferencesModel: playbackPreferencesModel
 
             enabled: !(playbackState.isPaused || playbackState.isPlaying)
 
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
         }
 
         SeparatorLine {}
 
         SoloButtonSection {
+            id: soloButtonSection
+
             playbackPreferencesModel: playbackPreferencesModel
 
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart + 1
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
         }
 
         SeparatorLine {}
 
         CursorSection {
+            id: cursorSection
+
             playbackPreferencesModel: playbackPreferencesModel
 
             enabled: !(playbackState.isPaused || playbackState.isPlaying)
 
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart + 2
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
         }
 
         SeparatorLine {}
 
         RecordingBehaviorSection {
+            id: recordingBehaviorSection
+
             recordingPreferencesModel: recordingPreferencesModel
 
             enabled: !(playbackState.isPaused || playbackState.isPlaying)
 
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart + 3
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
         }
 
         SeparatorLine {}

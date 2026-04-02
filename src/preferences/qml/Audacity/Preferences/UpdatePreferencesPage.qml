@@ -38,6 +38,8 @@ PreferencesPage {
         spacing: root.sectionsSpacing
 
         AutomaticUpdateSection {
+            id: automaticUpdateSection
+
             isAppUpdatable: updateModel.isAppUpdatable()
             needCheckForNewAppVersion: updateModel.needCheckForNewAppVersion
             privacyPolicyUrl: updateModel.privacyPolicyUrl()
@@ -47,6 +49,12 @@ PreferencesPage {
 
             onNeedCheckForNewAppVersionChangeRequested: function(check) {
                 updateModel.needCheckForNewAppVersion = check
+            }
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
             }
         }
     }

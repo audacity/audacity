@@ -32,12 +32,17 @@ BaseSection {
         StyledListView {
             id: workspacesList
 
+            readonly property real availableRowWidth: width - leftMargin - rightMargin - visualScrollBarInset
+
             Layout.fillWidth: true
             Layout.preferredHeight: contentHeight + topMargin + bottomMargin
 
             leftMargin: 4
+            rightMargin: 4
             topMargin: 4
             bottomMargin: 4
+
+            contentWidth: availableRowWidth
 
             spacing: 8
 
@@ -48,7 +53,7 @@ BaseSection {
             delegate: CheckBox {
                 text: model.name
 
-                width: parent.width
+                width: ListView.view.contentWidth
 
                 checked: root.musicPreferencesModel.tempoDetectionWorkspaces.indexOf(model.name) !== -1
 
