@@ -213,6 +213,8 @@ void WaveView::setTimelineContext(TimelineContext* newContext)
         connect(m_context, &TimelineContext::selectionStartTimeChanged, this, &WaveView::updateView);
         connect(m_context, &TimelineContext::selectionEndTimeChanged, this, &WaveView::updateView);
         connect(m_context, &TimelineContext::zoomChanged, this, &WaveView::onWaveZoomChanged);
+
+        onWaveZoomChanged();
     }
 
     emit timelineContextChanged();
