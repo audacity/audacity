@@ -183,29 +183,45 @@ Rectangle {
                         anchors.right: parent.right
                         anchors.bottomMargin: 1
 
-                        WaveformRuler {
+                        Loader {
+                            id: waveformRulerLoader
+
                             Layout.fillWidth: true
                             Layout.fillHeight: true
 
+                            active: false
                             visible: model.isWaveformViewVisible
 
-                            isCollapsed: trackViewState.isTrackCollapsed
-                            channelHeightRatio: trackViewState.channelHeightRatio
+                            // Defer ruler creation, to speed up track loading
+                            Component.onCompleted: Qt.callLater(function() { waveformRulerLoader.active = Qt.binding(function() { return model.isWaveformViewVisible }) })
+
+                            sourceComponent: WaveformRuler {
+                                isCollapsed: trackViewState.isTrackCollapsed
+                                channelHeightRatio: trackViewState.channelHeightRatio
+                            }
                         }
 
                         SeparatorLine {
                             color: ui.theme.extra["waveform_ruler_tick_extension_color"]
                         }
 
-                        SpectrogramTrackRulers {
+                        Loader {
+                            id: spectrogramRulerLoader
+
                             Layout.fillWidth: true
                             Layout.fillHeight: true
 
+                            active: false
                             visible: model.isSpectrogramViewVisible
 
-                            trackId: model.trackId
-                            isStereo: model.isStereo
-                            channelHeightRatio: trackViewState.channelHeightRatio
+                            // Defer ruler creation, to speed up track loading
+                            Component.onCompleted: Qt.callLater(function() { spectrogramRulerLoader.active = Qt.binding(function() { return model.isSpectrogramViewVisible }) })
+
+                            sourceComponent: SpectrogramTrackRulers {
+                                trackId: model.trackId
+                                isStereo: model.isStereo
+                                channelHeightRatio: trackViewState.channelHeightRatio
+                            }
                         }
                     }
                 }
