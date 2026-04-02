@@ -8,7 +8,6 @@
 #include "io/path.h"
 
 namespace au::importexport {
-
 class TempoDetectionPref
 {
     Q_GADGET

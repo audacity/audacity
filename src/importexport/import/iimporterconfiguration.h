@@ -32,5 +32,6 @@ public:
     /// "Remember my choice" for the subsequent-import tempo detection dialog.
     virtual LoopAction subsequentImportLoopAction() const = 0;
     virtual void setSubsequentImportLoopAction(LoopAction action) = 0;
+    virtual muse::async::Notification subsequentImportLoopActionChanged() const = 0;
 };
 }

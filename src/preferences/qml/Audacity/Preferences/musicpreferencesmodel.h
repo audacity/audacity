@@ -23,6 +23,8 @@ class MusicPreferencesModel : public QObject, public muse::async::Asyncable, pub
 
     Q_PROPERTY(importexport::TempoDetectionPref::TempoDetection tempoDetectionPref READ tempoDetectionPref NOTIFY tempoDetectionPrefChanged)
     Q_PROPERTY(QVariantList tempoDetectionWorkspaces READ tempoDetectionWorkspaces NOTIFY tempoDetectionWorkspacesChanged)
+    Q_PROPERTY(
+        bool askBeforeSubsequentImport READ askBeforeSubsequentImport WRITE setAskBeforeSubsequentImport NOTIFY askBeforeSubsequentImportChanged)
 
 public:
     explicit MusicPreferencesModel(QObject* parent = nullptr);
@@ -36,8 +38,12 @@ public:
     Q_INVOKABLE void appendToTempoDetectionWorkspaces(const QString& workspaceName);
     Q_INVOKABLE void removeFromTempoDetectionWorkspaces(const QString& workspaceName);
 
+    bool askBeforeSubsequentImport() const;
+    void setAskBeforeSubsequentImport(bool ask);
+
 signals:
     void tempoDetectionPrefChanged();
     void tempoDetectionWorkspacesChanged();
+    void askBeforeSubsequentImportChanged();
 };
 }

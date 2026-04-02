@@ -18,6 +18,10 @@ void MusicPreferencesModel::init()
     importerConfiguration()->tempoDetectionWorkspacesChanged().onNotify(this, [this] {
         emit tempoDetectionWorkspacesChanged();
     });
+
+    importerConfiguration()->subsequentImportLoopActionChanged().onNotify(this, [this] {
+        emit askBeforeSubsequentImportChanged();
+    });
 }
 
 importexport::TempoDetectionPref::TempoDetection MusicPreferencesModel::tempoDetectionPref() const
@@ -57,5 +61,20 @@ void MusicPreferencesModel::removeFromTempoDetectionWorkspaces(const QString& wo
     auto workspaces = importerConfiguration()->tempoDetectionWorkspaces();
     workspaces.erase(std::remove(workspaces.begin(), workspaces.end(), workspaceName.toStdString()), workspaces.end());
     importerConfiguration()->setTempoDetectionWorkspaces(workspaces);
+}
+
+bool MusicPreferencesModel::askBeforeSubsequentImport() const
+{
+    return importerConfiguration()->subsequentImportLoopAction() == importexport::LoopAction::Ask;
+}
+
+void MusicPreferencesModel::setAskBeforeSubsequentImport(bool ask)
+{
+    if (askBeforeSubsequentImport() == ask) {
+        return;
+    }
+
+    importerConfiguration()->setSubsequentImportLoopAction(
+        ask ? importexport::LoopAction::Ask : importerConfiguration()->subsequentImportLoopAction());
 }
 }

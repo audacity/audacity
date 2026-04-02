@@ -29,6 +29,9 @@ void ImporterConfiguration::init()
     });
 
     muse::settings()->setDefaultValue(SUBSEQUENT_IMPORT_LOOP_ACTION, muse::Val(static_cast<int>(LoopAction::Ask)));
+    muse::settings()->valueChanged(SUBSEQUENT_IMPORT_LOOP_ACTION).onReceive(nullptr, [this](const muse::Val&) {
+        m_subsequentImportLoopActionChanged.notify();
+    });
 }
 
 TempoDetectionPref::TempoDetection ImporterConfiguration::tempoDetectionPref() const
@@ -79,4 +82,9 @@ LoopAction ImporterConfiguration::subsequentImportLoopAction() const
 void ImporterConfiguration::setSubsequentImportLoopAction(LoopAction action)
 {
     muse::settings()->setSharedValue(SUBSEQUENT_IMPORT_LOOP_ACTION, muse::Val(static_cast<int>(action)));
+}
+
+muse::async::Notification ImporterConfiguration::subsequentImportLoopActionChanged() const
+{
+    return m_subsequentImportLoopActionChanged;
 }

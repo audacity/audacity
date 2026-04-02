@@ -23,9 +23,11 @@ public:
 
     LoopAction subsequentImportLoopAction() const override;
     void setSubsequentImportLoopAction(LoopAction action) override;
+    muse::async::Notification subsequentImportLoopActionChanged() const override;
 
 private:
     muse::async::Notification m_tempoDetectionPrefChanged;
     muse::async::Notification m_tempoDetectionWorkspacesChanged;
+    muse::async::Notification m_subsequentImportLoopActionChanged;
 };
 }

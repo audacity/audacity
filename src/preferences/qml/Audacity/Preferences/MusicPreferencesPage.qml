@@ -27,6 +27,8 @@ PreferencesPage {
             id: musicImportsSection
 
             title: qsTrc("preferences", "Music imports")
+            navigation.direction: NavigationPanel.Both
+            navigationOrderEnd: workspaceSection.navigation.order
 
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart
@@ -101,6 +103,32 @@ PreferencesPage {
                             musicPreferencesModel.setTempoDetectionPref(TempoDetection.NEVER)
                         }
                     }
+                }
+            }
+        }
+
+        SeparatorLine {}
+
+        BaseSection {
+            id: detectionBehaviorSection
+
+            title: qsTrc("preferences", "When Audacity detects music in imported file")
+
+            navigation.section: root.navigationSection
+            navigation.order: musicImportsSection.navigationOrderEnd + 1
+
+            CheckBox {
+                width: parent.width
+
+                text: qsTrc("preferences", "Ask me each time")
+                checked: musicPreferencesModel.askBeforeSubsequentImport
+
+                navigation.name: "AskBeforeSubsequentImportCheckBox"
+                navigation.panel: detectionBehaviorSection.navigation
+                navigation.row: 0
+
+                onClicked: {
+                    musicPreferencesModel.askBeforeSubsequentImport = !checked
                 }
             }
         }
