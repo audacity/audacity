@@ -29,7 +29,8 @@
 #include "au3cloud/iau3audiocomservice.h"
 
 namespace au::au3cloud {
-class Au3AudioComService : public IAu3AudioComService, public muse::async::Asyncable, public muse::Contextable
+class Au3AudioComService : public IAu3AudioComService, public muse::async::Asyncable, public muse::Contextable,
+    public std::enable_shared_from_this<Au3AudioComService>
 {
     muse::GlobalInject<muse::io::IFileSystem> filesystem;
     muse::GlobalInject<project::IProjectConfiguration> projectConfiguration;

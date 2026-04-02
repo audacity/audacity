@@ -133,8 +133,15 @@ muse::async::Promise<ProjectList> Au3AudioComService::downloadProjectList(size_t
         }
     }
 
-    return muse::async::Promise<ProjectList>([this, projectsPerBatch, batchNumber](const auto& resolve, const auto& reject) {
-        std::thread([this, projectsPerBatch, batchNumber, resolve, reject]() {
+    return muse::async::Promise<ProjectList>([weak = weak_from_this(), projectsPerBatch, batchNumber](const auto& resolve,
+                                                                                                      const auto& reject) {
+        std::thread([weak, projectsPerBatch, batchNumber, resolve, reject]() {
+            auto self = weak.lock();
+            if (!self) {
+                (void)reject(static_cast<int>(muse::Ret::Code::UnknownError), "Service destroyed");
+                return;
+            }
+
             auto& cloudSyncService = CloudSyncService::Get();
             auto cancellationContext = audacity::concurrency::CancellationContext::Create();
             auto future = cloudSyncService.GetProjects(cancellationContext, batchNumber, projectsPerBatch, "");
@@ -144,8 +151,8 @@ muse::async::Promise<ProjectList> Au3AudioComService::downloadProjectList(size_t
             if (paginatedResponse) {
                 const auto projects = convertFromAu3PaginatedProject(*paginatedResponse);
                 {
-                    std::lock_guard guard(m_cacheMutex);
-                    m_projectListCache[batchNumber] = CachedProjectItem { projects, std::chrono::system_clock::now() };
+                    std::lock_guard guard(self->m_cacheMutex);
+                    self->m_projectListCache[batchNumber] = CachedProjectItem { projects, std::chrono::system_clock::now() };
                 }
 
                 (void)resolve(projects);
@@ -206,8 +213,14 @@ muse::async::Promise<AudioList> Au3AudioComService::downloadAudioList(size_t aud
         }
     }
 
-    return muse::async::Promise<AudioList>([this, audiosPerBatch, batchNumber](const auto& resolve, const auto& reject) {
-        std::thread([this, audiosPerBatch, batchNumber, resolve, reject]() {
+    return muse::async::Promise<AudioList>([weak = weak_from_this(), audiosPerBatch, batchNumber](const auto& resolve, const auto& reject) {
+        std::thread([weak, audiosPerBatch, batchNumber, resolve, reject]() {
+            auto self = weak.lock();
+            if (!self) {
+                (void)reject(static_cast<int>(muse::Ret::Code::UnknownError), "Service destroyed");
+                return;
+            }
+
             auto& cloudSyncService = CloudSyncService::Get();
             auto cancellationContext = audacity::concurrency::CancellationContext::Create();
             auto future = cloudSyncService.GetAudioList(cancellationContext, batchNumber, audiosPerBatch, "");
@@ -215,14 +228,14 @@ muse::async::Promise<AudioList> Au3AudioComService::downloadAudioList(size_t aud
 
             const auto* paginatedResponse = std::get_if<sync::PaginatedAudioResponse>(&result);
             if (paginatedResponse) {
-                const auto audioList = convertFromAu3CloudAudio(*paginatedResponse, projectConfiguration()->cloudProjectsPath());
+                const auto audioList = convertFromAu3CloudAudio(*paginatedResponse, self->projectConfiguration()->cloudProjectsPath());
                 {
-                    std::lock_guard guard(m_cacheMutex);
-                    m_audioListCache[batchNumber] = CachedAudioItem { audioList, std::chrono::system_clock::now() };
+                    std::lock_guard guard(self->m_cacheMutex);
+                    self->m_audioListCache[batchNumber] = CachedAudioItem { audioList, std::chrono::system_clock::now() };
                 }
 
-                m_downloadManager->scheduleDownloads(convertToDownloadRequests(*paginatedResponse,
-                                                                               projectConfiguration()->cloudProjectsPath()));
+                self->m_downloadManager->scheduleDownloads(convertToDownloadRequests(*paginatedResponse,
+                                                                                     self->projectConfiguration()->cloudProjectsPath()));
 
                 (void)resolve(audioList);
             } else {
@@ -257,8 +270,34 @@ muse::ProgressPtr Au3AudioComService::uploadProject(au::project::IAudacityProjec
         return progress;
     }
 
-    std::thread([this, project, progress, name, forceOverwrite,
+    auto& projectCloudExtension = audacity::cloud::audiocom::sync::ProjectCloudExtension::Get(*au3Project);
+    m_projectUploadSubscription = projectCloudExtension.SubscribeStatusChanged(
+        [this, project, progress](const audacity::cloud::audiocom::sync::CloudStatusChangedMessage& message) {
+        if (message.Status == audacity::cloud::audiocom::sync::ProjectSyncStatus::Syncing) {
+            progress->progress(message.Progress * 100, 100);
+        }
+
+        if (message.Status == audacity::cloud::audiocom::sync::ProjectSyncStatus::Synced) {
+            progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(getCloudProjectPage(project))));
+        }
+
+        if (message.Status == audacity::cloud::audiocom::sync::ProjectSyncStatus::Failed) {
+            progress->finish(make_ret(cloudSyncErrorToErr(message.Error)));
+        }
+    }, false);
+
+    const bool isSyncing = projectCloudExtension.IsSyncing();
+    const std::string currentSnapshotId = projectCloudExtension.GetSnapshotId();
+    const std::string cloudProjectId = projectCloudExtension.GetCloudProjectId();
+
+    std::thread([weak = weak_from_this(), project, progress, name, isSyncing, currentSnapshotId, cloudProjectId, forceOverwrite,
                  projectSaveCallback = std::move(projectSaveCallback)]() mutable {
+        auto self = weak.lock();
+        if (!self) {
+            progress->finish(muse::make_ret(muse::Ret::Code::InternalError, muse::trc("cloud", "Service destroyed")));
+            return;
+        }
+
         if (!project) {
             progress->finish(muse::make_ret(muse::Ret::Code::InternalError, muse::trc("cloud",
                                                                                       "Project was closed before upload started")));
@@ -335,7 +374,7 @@ muse::ProgressPtr Au3AudioComService::uploadProject(au::project::IAudacityProjec
         }
 
         if (projectSaveCallback) {
-            muse::async::Async::call(this, [project, projectSaveCallback = std::move(projectSaveCallback)]() {
+            muse::async::Async::call(self.get(), [project, projectSaveCallback = std::move(projectSaveCallback)]() {
                 bool ret = projectSaveCallback();
                 if (ret) {
                     return;
@@ -430,7 +469,12 @@ muse::ProgressPtr Au3AudioComService::openAudioFile(const std::string& audioId)
         return progress;
     }
 
-    std::thread([this, audioId, progress]() {
+    std::thread([weak = weak_from_this(), audioId, progress]() {
+        auto self = weak.lock();
+        if (!self) {
+            return;
+        }
+
         auto progressCallback = [progress](double p) -> bool {
             if (progress->isCanceled()) {
                 return false;
@@ -444,8 +488,8 @@ muse::ProgressPtr Au3AudioComService::openAudioFile(const std::string& audioId)
         auto downloadFuturePromise = std::make_shared<std::promise<DownloadFuture> >();
         std::future<DownloadFuture> downloadFutureResult = downloadFuturePromise->get_future();
 
-        muse::async::Async::call(this, [downloadFuturePromise, audioId,
-                                        progressCallback = std::move(progressCallback)]() mutable {
+        muse::async::Async::call(self.get(), [downloadFuturePromise, audioId,
+                                              progressCallback = std::move(progressCallback)]() mutable {
             // Important: CloudSyncService does not control access by locking but by calling convention,
             // We must ensure all operations on this service to be called on the main thread
             downloadFuturePromise->set_value(
@@ -458,13 +502,13 @@ muse::ProgressPtr Au3AudioComService::openAudioFile(const std::string& audioId)
             return;
         }
 
-        if (result.Status != sync::DownloadAudioResult::StatusCode::Succeeded) {
-            progress->finish(muse::make_ret(muse::Ret::Code::UnknownError, result.Result.Content));
-            return;
-        }
+        muse::async::Async::call(self.get(), [progress, result]() {
+            if (result.Status != sync::DownloadAudioResult::StatusCode::Succeeded) {
+                progress->finish(muse::make_ret(muse::Ret::Code::UnknownError, result.Result.Content));
+                return;
+            }
 
-        muse::async::Async::call(this, [this, progress, audioPath = result.AudioPath]() {
-            progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(muse::io::path_t(audioPath))));
+            progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(muse::io::path_t(result.AudioPath))));
         }, muse::runtime::mainThreadId());
     }).detach();
 
@@ -492,8 +536,13 @@ muse::ProgressPtr Au3AudioComService::openCloudProject(const muse::io::path_t& l
         }
     }
 
-    std::thread([this, progress, dbProjectData, path = localPath.toStdString(), cloudProjectId, forceOverwrite]() {
-        if (!forceOverwrite && isSnapshotUpToDate(dbProjectData)) {
+    std::thread([weak = weak_from_this(), progress, dbProjectData, path = localPath.toStdString(), cloudProjectId, forceOverwrite]() {
+        auto self = weak.lock();
+        if (!self) {
+            return;
+        }
+
+        if (!forceOverwrite && self->isSnapshotUpToDate(dbProjectData)) {
             progress->finish(muse::make_ok());
             return;
         }
@@ -538,14 +587,20 @@ muse::ProgressPtr Au3AudioComService::shareAudio(const std::string& title)
 {
     muse::ProgressPtr progress = std::make_shared<muse::Progress>();
 
-    std::thread([this, title, progress]() {
-        const auto preferredFormats = exporter()->cloudPreferredAudioFormats();
+    std::thread([weak = weak_from_this(), title, progress]() {
+        auto self = weak.lock();
+        if (!self) {
+            progress->finish(muse::make_ret(muse::Ret::Code::InternalError, muse::trc("cloud", "Service destroyed")));
+            return;
+        }
+
+        const auto preferredFormats = self->exporter()->cloudPreferredAudioFormats();
         if (preferredFormats.empty()) {
             progress->finish(make_ret(Err::NoExportPlugin));
             return;
         }
 
-        auto project = globalContext()->currentProject();
+        auto project = self->globalContext()->currentProject();
         if (!project) {
             progress->finish(muse::make_ret(muse::Ret::Code::InternalError, muse::trc("cloud", "No valid current project")));
             return;
@@ -555,7 +610,7 @@ muse::ProgressPtr Au3AudioComService::shareAudio(const std::string& title)
         const std::string format = preferredFormats[0];
 
         muse::ValList paramsList;
-        for (const auto& [id, val] : exporter()->cloudExportParameters(format)) {
+        for (const auto& [id, val] : self->exporter()->cloudExportParameters(format)) {
             muse::ValMap entry;
             entry["id"] = muse::Val(id);
             entry["value"] = std::visit([](auto v) -> muse::Val { return muse::Val(v); }, val);
@@ -572,18 +627,18 @@ muse::ProgressPtr Au3AudioComService::shareAudio(const std::string& title)
             = muse::Val(static_cast<int>(ProjectRate::Get(*au3Project).GetRate()));
         options[importexport::IExporter::OptionKey::Parameters] = muse::Val(paramsList);
 
-        const auto extensions = exporter()->formatExtensions(format);
+        const auto extensions = self->exporter()->formatExtensions(format);
         if (extensions.empty()) {
             progress->finish(make_ret(Err::NoExtensions));
             return;
         }
 
         const muse::io::path_t tempPath
-            = getTempFileName(projectConfiguration()->temporaryDir(), extensions.front());
+            = getTempFileName(self->projectConfiguration()->temporaryDir(), extensions.front());
 
-        const auto exportRet = exporter()->exportData(muse::io::path_t(tempPath), options, progress);
+        const auto exportRet = self->exporter()->exportData(muse::io::path_t(tempPath), options, progress);
         if (!exportRet) {
-            filesystem()->remove(tempPath);
+            self->filesystem()->remove(tempPath);
             progress->finish(exportRet);
             return;
         }
@@ -603,7 +658,7 @@ muse::ProgressPtr Au3AudioComService::shareAudio(const std::string& title)
             tempPath.toStdString(),
             title,
             isPublic,
-            [op, progress, tempPath, filesystem = filesystem()](const audacity::cloud::audiocom::UploadOperationCompleted& result) {
+            [op, progress, tempPath, filesystem = self->filesystem()](const audacity::cloud::audiocom::UploadOperationCompleted& result) {
             filesystem->remove(tempPath);
 
             if (result.result == audacity::cloud::audiocom::UploadOperationCompleted::Result::Success) {

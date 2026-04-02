@@ -8,6 +8,7 @@ ProjectList convertFromAu3PaginatedProject(const audacity::cloud::audiocom::sync
 {
     ProjectList projectList;
 
+    projectList.items.reserve(paginatedResponse.Items.size());
     for (size_t i = 0; i < paginatedResponse.Items.size(); i++) {
         const auto& projectInfo = paginatedResponse.Items[i];
 
@@ -39,6 +40,7 @@ AudioList convertFromAu3CloudAudio(const audacity::cloud::audiocom::sync::Pagina
 {
     AudioList audioList;
 
+    audioList.items.reserve(paginatedResponse.Items.size());
     for (size_t i = 0; i < paginatedResponse.Items.size(); i++) {
         const auto& audioInfo = paginatedResponse.Items[i];
 
@@ -52,7 +54,8 @@ AudioList convertFromAu3CloudAudio(const audacity::cloud::audiocom::sync::Pagina
         item.created = audioInfo.Created;
         item.fileSize = audioInfo.FileSize;
         item.duration = audioInfo.Duration;
-        item.waveformPath = thumbnailCacheDir.appendingComponent(audioInfo.Id).appendingSuffix("json");
+        item.waveformPath = audioInfo.Id.empty() ? muse::io::path_t() : thumbnailCacheDir.appendingComponent(audioInfo.Id).appendingSuffix(
+            "json");
 
         audioList.items.push_back(std::move(item));
     }
@@ -74,7 +77,7 @@ Err cloudSyncErrorToErr(const std::optional<audacity::cloud::audiocom::sync::Clo
     using ErrorType = audacity::cloud::audiocom::sync::CloudSyncError::ErrorType;
     switch (error->Type) {
     case ErrorType::None:
-        return Err::UnknownError;
+        return Err::NoError;
     case ErrorType::Authorization:
         return Err::ProjectForbidden;
     case ErrorType::ProjectLimitReached:
@@ -168,6 +171,7 @@ std::vector<DownloadRequest> convertToDownloadRequests(const audacity::cloud::au
 {
     std::vector<DownloadRequest> requests;
 
+    requests.reserve(paginatedResponse.Items.size());
     for (size_t i = 0; i < paginatedResponse.Items.size(); i++) {
         const auto& audioInfo = paginatedResponse.Items[i];
 

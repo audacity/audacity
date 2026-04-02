@@ -43,9 +43,6 @@ Item {
 
         width: root.width
         height: root.height
-
-        path: root.path
-        placeholder: root.placeholder
     }
 
     Loader {
