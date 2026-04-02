@@ -24,7 +24,6 @@ public:
                           muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario) = 0;
 
     virtual EffectMetaList effectMetaList() const = 0;
-    virtual muse::async::Notification initialized() const = 0;
     virtual muse::async::Notification effectMetaListChanged() const = 0;
 
     virtual EffectMeta meta(const EffectId& effectId) const = 0;
@@ -34,6 +33,7 @@ public:
     virtual Effect* effect(const EffectId& effectId) const = 0;
     virtual void setEffectActivated(const EffectId& effectId, bool activated) = 0;
 
+    virtual void rescanPlugins(muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario) = 0;
     virtual void save() = 0;
 
     virtual bool supportsMultipleClipSelection(const EffectId& effectId) const = 0;

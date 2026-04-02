@@ -5,6 +5,7 @@
 
 #include "ieffectsprovider.h"
 
+#include "framework/audioplugins/iregisteraudiopluginsscenario.h"
 #include "framework/global/modularity/ioc.h"
 #include "framework/uicomponents/qml/Muse/UiComponents/abstracttableviewmodel.h"
 
@@ -26,7 +27,7 @@ enum class Type {
 Q_ENUM_NS(Type)
 }
 
-class PluginManagerTableViewModel : public muse::uicomponents::AbstractTableViewModel, public QQmlParserStatus
+class PluginManagerTableViewModel : public muse::uicomponents::AbstractTableViewModel, public QQmlParserStatus, muse::Contextable
 {
     Q_OBJECT
     Q_INTERFACES(QQmlParserStatus)
@@ -45,6 +46,7 @@ class PluginManagerTableViewModel : public muse::uicomponents::AbstractTableView
         int effectTypeSelectedIndex READ effectTypeSelectedIndex WRITE setEffectTypeSelectedIndex NOTIFY effectTypeSelectedIndexChanged)
 
     muse::GlobalInject<IEffectsProvider> effectsProvider;
+    muse::ContextInject<muse::audioplugins::IRegisterAudioPluginsScenario> registerAudioPluginsScenario { this };
 
 public:
     explicit PluginManagerTableViewModel(QObject* parent = nullptr);
@@ -64,6 +66,7 @@ public:
 
     Q_INVOKABLE void handleEdit(int row, int column);
     Q_INVOKABLE void setSearchText(const QString& searchText);
+    Q_INVOKABLE void rescanPlugins();
     Q_INVOKABLE void cancel();
 
 signals:

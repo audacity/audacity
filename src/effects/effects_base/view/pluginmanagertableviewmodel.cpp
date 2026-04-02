@@ -9,13 +9,14 @@
 
 #include "framework/global/translation.h"
 #include "framework/uicomponents/qml/Muse/UiComponents/internal/tableviewcell.h"
+#include "modularity/ioc.h"
 #include "uicomponents/qml/Muse/UiComponents/menuitem.h"
 
 namespace au::effects {
 const PluginManagerTableViewModel::EffectFilter PluginManagerTableViewModel::allPassFilter = [](const EffectMeta&) { return true; };
 
 PluginManagerTableViewModel::PluginManagerTableViewModel(QObject* parent)
-    : AbstractTableViewModel(parent) {}
+    : AbstractTableViewModel(parent), Contextable(muse::iocCtxForQmlObject(this)) {}
 
 PluginManagerTableViewModel::~PluginManagerTableViewModel()
 {
@@ -231,6 +232,11 @@ void PluginManagerTableViewModel::handleEdit(int row, int column)
     m_editedEffects.insert(effects[row].id);
 
     cell->setValue(muse::Val(next));
+}
+
+void PluginManagerTableViewModel::rescanPlugins()
+{
+    effectsProvider()->rescanPlugins(*registerAudioPluginsScenario());
 }
 
 void PluginManagerTableViewModel::cancel()

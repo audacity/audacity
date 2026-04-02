@@ -63,6 +63,17 @@ StyledDialogView {
 
             buttons: [ButtonBoxModel.Ok, ButtonBoxModel.Cancel]
 
+            FlatButton {
+                text: qsTrc("effects", "Rescan plugins")
+                buttonRole: ButtonBoxModel.CustomRole
+                buttonId: ButtonBoxModel.CustomButton + 1
+                isLeftSide: true
+
+                onClicked: {
+                    root.tableViewModel.rescanPlugins()
+                }
+            }
+
             onStandardButtonClicked: function (buttonId) {
                 switch (buttonId) {
                 case ButtonBoxModel.Ok:

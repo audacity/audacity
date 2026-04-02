@@ -20,6 +20,35 @@ using namespace au::effects;
 void EffectsProvider::initOnce(muse::IInteractive& interactive,
                                muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario)
 {
+    const auto doScanThirdPartyPlugins = [&interactive]() {
+        auto ret = interactive.questionSync(muse::trc("appshell", "Scanning audio plugins"),
+                                            muse::trc(
+                                                "appshell",
+                                                "Audacity has found plugins that need to be scanned before use. Would you like to scan them now or skip?"),
+                                            { muse::IInteractive::ButtonData(
+                                                  muse::IInteractive::Button::Cancel,
+                                                  muse::trc("appshell", "Skip this time"),
+                                                  false),
+                                              muse::IInteractive::ButtonData(
+                                                  muse::IInteractive::Button::Apply, muse::trc("appshell", "Scan plugins"),
+                                                  true) },
+                                            int(muse::IInteractive::Button::NoButton),
+                                            {},
+                                            muse::trc("appshell", "Audio plugin scan"));
+        return ret.standardButton() == muse::IInteractive::Button::Apply;
+    };
+
+    doScanPlugins(registerAudioPluginsScenario, doScanThirdPartyPlugins);
+}
+
+void EffectsProvider::rescanPlugins(muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario)
+{
+    doScanPlugins(registerAudioPluginsScenario);
+}
+
+void EffectsProvider::doScanPlugins(muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
+                                    const std::function<bool()>& doScanThirdPartyPlugins)
+{
     muse::audioplugins::PluginScanResult scanResult = registerAudioPluginsScenario.scanPlugins();
 
     // Audacity plugins (built-in effects and nyquist plugins) are safe. Register them in-process,
@@ -52,24 +81,8 @@ void EffectsProvider::initOnce(muse::IInteractive& interactive,
         registerAudioPluginsScenario.registerPlugin(path);
     }
 
-    if (!thirdPartyPluginPaths.empty()) {
-        auto ret = interactive.questionSync(muse::trc("appshell", "Scanning audio plugins"),
-                                            muse::trc(
-                                                "appshell",
-                                                "Audacity has found plugins that need to be scanned before use. Would you like to scan them now or skip?"),
-                                            { muse::IInteractive::ButtonData(
-                                                  muse::IInteractive::Button::Cancel,
-                                                  muse::trc("appshell", "Skip this time"),
-                                                  false),
-                                              muse::IInteractive::ButtonData(
-                                                  muse::IInteractive::Button::Apply, muse::trc("appshell", "Scan plugins"),
-                                                  true) },
-                                            int(muse::IInteractive::Button::NoButton),
-                                            {},
-                                            muse::trc("appshell", "Audio plugin scan"));
-        if (ret.standardButton() == muse::IInteractive::Button::Apply) {
-            registerAudioPluginsScenario.registerNewPlugins(thirdPartyPluginPaths);
-        }
+    if (!thirdPartyPluginPaths.empty() && (doScanThirdPartyPlugins == nullptr || doScanThirdPartyPlugins())) {
+        registerAudioPluginsScenario.registerNewPlugins(thirdPartyPluginPaths);
     }
 
     // Providers must be available in ModuleManager for on-demand plugin loading.
@@ -100,11 +113,6 @@ void EffectsProvider::reloadEffects()
     });
 
     m_effectsChanged.notify();
-}
-
-muse::async::Notification EffectsProvider::initialized() const
-{
-    return m_initialized;
 }
 
 EffectMetaList EffectsProvider::effectMetaList() const
