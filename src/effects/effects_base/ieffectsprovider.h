@@ -33,7 +33,8 @@ public:
     virtual Effect* effect(const EffectId& effectId) const = 0;
     virtual void setEffectActivated(const EffectId& effectId, bool activated) = 0;
 
-    virtual void rescanPlugins(muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario) = 0;
+    virtual void rescanPlugins(muse::IInteractive& interactive,
+                               muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario) = 0;
     virtual void save() = 0;
 
     virtual bool supportsMultipleClipSelection(const EffectId& effectId) const = 0;

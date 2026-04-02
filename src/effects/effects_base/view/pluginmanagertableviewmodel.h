@@ -7,6 +7,7 @@
 
 #include "framework/audioplugins/iregisteraudiopluginsscenario.h"
 #include "framework/global/modularity/ioc.h"
+#include "framework/interactive/iinteractive.h"
 #include "framework/uicomponents/qml/Muse/UiComponents/abstracttableviewmodel.h"
 
 #include <QQmlParserStatus>
@@ -48,7 +49,9 @@ class PluginManagerTableViewModel : public muse::uicomponents::AbstractTableView
     Q_PROPERTY(int totalWidth READ totalWidth CONSTANT)
 
     muse::GlobalInject<IEffectsProvider> effectsProvider;
+
     muse::ContextInject<muse::audioplugins::IRegisterAudioPluginsScenario> registerAudioPluginsScenario { this };
+    muse::ContextInject<muse::IInteractive> interactive { this };
 
 public:
     explicit PluginManagerTableViewModel(QObject* parent = nullptr);

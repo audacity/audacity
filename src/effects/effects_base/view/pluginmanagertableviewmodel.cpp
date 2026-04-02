@@ -248,7 +248,7 @@ void PluginManagerTableViewModel::handleEdit(int row, int column)
 
 void PluginManagerTableViewModel::rescanPlugins()
 {
-    effectsProvider()->rescanPlugins(*registerAudioPluginsScenario());
+    effectsProvider()->rescanPlugins(*interactive(), *registerAudioPluginsScenario());
 }
 
 void PluginManagerTableViewModel::accept()
