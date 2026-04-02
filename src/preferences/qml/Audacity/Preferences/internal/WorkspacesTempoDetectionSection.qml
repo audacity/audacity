@@ -33,10 +33,11 @@ BaseSection {
             id: workspacesList
 
             Layout.fillWidth: true
-            Layout.preferredHeight: contentHeight
-            Layout.leftMargin: 2
-            Layout.topMargin: 2
-            Layout.bottomMargin: 2
+            Layout.preferredHeight: contentHeight + topMargin + bottomMargin
+
+            leftMargin: 4
+            topMargin: 4
+            bottomMargin: 4
 
             spacing: 8
 
