@@ -19,6 +19,12 @@ class IImporterConfiguration : MODULE_EXPORT_INTERFACE
 public:
     virtual ~IImporterConfiguration() = default;
 
+    /// Tri-state preference: Always / Workspace-dependent / Never.
+    virtual TempoDetectionPref::TempoDetection tempoDetectionPref() const = 0;
+    virtual void setTempoDetectionPref(TempoDetectionPref::TempoDetection pref) = 0;
+    virtual muse::async::Notification tempoDetectionPrefChanged() const = 0;
+
+    /// Workspaces in which tempo detection is enabled (used when pref == WORKSPACE_DEPENDENT).
     virtual std::vector<std::string> tempoDetectionWorkspaces() const = 0;
     virtual void setTempoDetectionWorkspaces(const std::vector<std::string>& workspaces) = 0;
     virtual muse::async::Notification tempoDetectionWorkspacesChanged() const = 0;

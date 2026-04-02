@@ -11,12 +11,19 @@ using namespace au::importexport;
 
 static const std::string module_name("importer");
 
+static const muse::Settings::Key TEMPO_DETECTION_PREF(module_name, "importer/tempoDetectionPref");
 static const muse::Settings::Key TEMPO_DETECTION_WORKSPACES(module_name, "importer/tempoDetectionWorkspaces");
 static const muse::Settings::Key EMPTY_PROJECT_LOOP_ACTION(module_name, "importer/emptyProjectLoopAction");
 static const muse::Settings::Key SUBSEQUENT_IMPORT_LOOP_ACTION(module_name, "importer/subsequentImportLoopAction");
 
 void ImporterConfiguration::init()
 {
+    muse::settings()->setDefaultValue(TEMPO_DETECTION_PREF,
+                                      muse::Val(static_cast<int>(TempoDetectionPref::TempoDetection::WORKSPACE_DEPENDENT)));
+    muse::settings()->valueChanged(TEMPO_DETECTION_PREF).onReceive(nullptr, [this](const muse::Val&) {
+        m_tempoDetectionPrefChanged.notify();
+    });
+
     muse::settings()->setDefaultValue(TEMPO_DETECTION_WORKSPACES, muse::Val(std::string("Music")));
     muse::settings()->valueChanged(TEMPO_DETECTION_WORKSPACES).onReceive(nullptr, [this](const muse::Val&) {
         m_tempoDetectionWorkspacesChanged.notify();
@@ -24,6 +31,24 @@ void ImporterConfiguration::init()
 
     muse::settings()->setDefaultValue(EMPTY_PROJECT_LOOP_ACTION, muse::Val(static_cast<int>(LoopAction::Ask)));
     muse::settings()->setDefaultValue(SUBSEQUENT_IMPORT_LOOP_ACTION, muse::Val(static_cast<int>(LoopAction::Ask)));
+}
+
+TempoDetectionPref::TempoDetection ImporterConfiguration::tempoDetectionPref() const
+{
+    return muse::settings()->value(TEMPO_DETECTION_PREF).toEnum<TempoDetectionPref::TempoDetection>();
+}
+
+void ImporterConfiguration::setTempoDetectionPref(TempoDetectionPref::TempoDetection pref)
+{
+    if (tempoDetectionPref() == pref) {
+        return;
+    }
+    muse::settings()->setSharedValue(TEMPO_DETECTION_PREF, muse::Val(static_cast<int>(pref)));
+}
+
+muse::async::Notification ImporterConfiguration::tempoDetectionPrefChanged() const
+{
+    return m_tempoDetectionPrefChanged;
 }
 
 std::vector<std::string> ImporterConfiguration::tempoDetectionWorkspaces() const

@@ -40,14 +40,21 @@ void TempoDetection::onFilesImported(
         return;
     }
 
-    auto currentWorkspace = workspacesManager()->currentWorkspace();
-    if (!currentWorkspace) {
+    const auto pref = configuration()->tempoDetectionPref();
+    if (pref == TempoDetectionPref::TempoDetection::NEVER) {
         return;
     }
-    const std::string wsName = currentWorkspace->name();
-    const auto enabledWorkspaces = configuration()->tempoDetectionWorkspaces();
-    if (std::find(enabledWorkspaces.begin(), enabledWorkspaces.end(), wsName) == enabledWorkspaces.end()) {
-        return;
+
+    if (pref == TempoDetectionPref::TempoDetection::WORKSPACE_DEPENDENT) {
+        auto currentWorkspace = workspacesManager()->currentWorkspace();
+        if (!currentWorkspace) {
+            return;
+        }
+        const std::string wsName = currentWorkspace->name();
+        const auto enabledWorkspaces = configuration()->tempoDetectionWorkspaces();
+        if (std::find(enabledWorkspaces.begin(), enabledWorkspaces.end(), wsName) == enabledWorkspaces.end()) {
+            return;
+        }
     }
 
     std::optional<TempoDetectionResult> bestResult;

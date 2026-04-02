@@ -3,9 +3,23 @@
 */
 #pragma once
 
+#include <QObject>
+
 #include "io/path.h"
 
 namespace au::importexport {
+
+class TempoDetectionPref
+{
+    Q_GADGET
+public:
+    enum class TempoDetection {
+        ALWAYS = 0,
+        WORKSPACE_DEPENDENT,
+        NEVER
+    };
+    Q_ENUM(TempoDetection)
+};
 struct FileInfo
 {
     muse::io::path_t path;

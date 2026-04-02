@@ -11,46 +11,51 @@ MusicPreferencesModel::MusicPreferencesModel(QObject* parent)
 
 void MusicPreferencesModel::init()
 {
+    importerConfiguration()->tempoDetectionPrefChanged().onNotify(this, [this] {
+        emit tempoDetectionPrefChanged();
+    });
+
     importerConfiguration()->tempoDetectionWorkspacesChanged().onNotify(this, [this] {
-        emit tempoDetectionEnabledChanged();
-    });
-
-    workspacesManager()->currentWorkspaceChanged().onNotify(this, [this] {
-        emit tempoDetectionEnabledChanged();
+        emit tempoDetectionWorkspacesChanged();
     });
 }
 
-bool MusicPreferencesModel::tempoDetectionEnabled() const
+importexport::TempoDetectionPref::TempoDetection MusicPreferencesModel::tempoDetectionPref() const
 {
-    auto currentWorkspace = workspacesManager()->currentWorkspace();
-    if (!currentWorkspace) {
-        return false;
-    }
-
-    const std::string wsName = currentWorkspace->name();
-    const auto workspaces = importerConfiguration()->tempoDetectionWorkspaces();
-    return std::find(workspaces.begin(), workspaces.end(), wsName) != workspaces.end();
+    return importerConfiguration()->tempoDetectionPref();
 }
 
-void MusicPreferencesModel::setTempoDetectionEnabled(bool enabled)
+void MusicPreferencesModel::setTempoDetectionPref(importexport::TempoDetectionPref::TempoDetection pref)
 {
-    auto currentWorkspace = workspacesManager()->currentWorkspace();
-    if (!currentWorkspace) {
-        return;
-    }
+    importerConfiguration()->setTempoDetectionPref(pref);
+}
 
-    const std::string wsName = currentWorkspace->name();
+QVariantList MusicPreferencesModel::tempoDetectionWorkspaces() const
+{
+    QVariantList result;
+    for (const auto& workspaceName : importerConfiguration()->tempoDetectionWorkspaces()) {
+        result << QString::fromStdString(workspaceName);
+    }
+    return result;
+}
+
+void MusicPreferencesModel::appendToTempoDetectionWorkspaces(const QString& workspaceName)
+{
     auto workspaces = importerConfiguration()->tempoDetectionWorkspaces();
-    auto it = std::find(workspaces.begin(), workspaces.end(), wsName);
-
-    if (enabled && it == workspaces.end()) {
-        workspaces.push_back(wsName);
-    } else if (!enabled && it != workspaces.end()) {
-        workspaces.erase(it);
-    } else {
-        return;
+    for (const auto& ws : workspaces) {
+        if (ws == workspaceName.toStdString()) {
+            return;
+        }
     }
 
+    workspaces.push_back(workspaceName.toStdString());
+    importerConfiguration()->setTempoDetectionWorkspaces(workspaces);
+}
+
+void MusicPreferencesModel::removeFromTempoDetectionWorkspaces(const QString& workspaceName)
+{
+    auto workspaces = importerConfiguration()->tempoDetectionWorkspaces();
+    workspaces.erase(std::remove(workspaces.begin(), workspaces.end(), workspaceName.toStdString()), workspaces.end());
     importerConfiguration()->setTempoDetectionWorkspaces(workspaces);
 }
 }

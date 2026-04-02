@@ -31,18 +31,76 @@ PreferencesPage {
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart
 
-            CheckBox {
+            rowSpacing: 16
+
+            StyledTextLabel {
+                text: qsTrc("preferences", "Detect tempo in imported files:")
+            }
+
+            RadioButtonGroup {
                 width: parent.width
+                height: workspaceSection.visible ? 80 + workspaceSection.height : 80
 
-                text: qsTrc("preferences", "Detect tempo in imported files")
-                checked: musicPreferencesModel.tempoDetectionEnabled
+                spacing: musicImportsSection.rowSpacing
+                orientation: Qt.Vertical
 
-                navigation.name: "TempoDetectionCheckBox"
-                navigation.panel: musicImportsSection.navigation
-                navigation.row: 0
+                Column {
+                    width: parent.width
+                    spacing: musicImportsSection.columnSpacing
 
-                onClicked: {
-                    musicPreferencesModel.setTempoDetectionEnabled(!checked)
+                    RoundedRadioButton {
+                        checked: musicPreferencesModel.tempoDetectionPref === TempoDetection.ALWAYS
+                        text: qsTrc("preferences", "Always")
+
+                        navigation.name: "TempoDetectionAlwaysRadioBtn"
+                        navigation.panel: musicImportsSection.navigation
+                        navigation.row: 0
+
+                        onToggled: {
+                            musicPreferencesModel.setTempoDetectionPref(TempoDetection.ALWAYS)
+                        }
+                    }
+
+                    RoundedRadioButton {
+                        id: workspaceRadioBtn
+
+                        checked: musicPreferencesModel.tempoDetectionPref === TempoDetection.WORKSPACE_DEPENDENT
+                        text: qsTrc("preferences", "Depending on workspace")
+
+                        navigation.name: "TempoDetectionWorkspaceDependentRadioBtn"
+                        navigation.panel: musicImportsSection.navigation
+                        navigation.row: 1
+
+                        onToggled: {
+                            musicPreferencesModel.setTempoDetectionPref(TempoDetection.WORKSPACE_DEPENDENT)
+                        }
+                    }
+
+                    WorkspacesTempoDetectionSection {
+                        id: workspaceSection
+
+                        x: 30
+
+                        visible: workspaceRadioBtn.checked
+
+                        musicPreferencesModel: musicPreferencesModel
+
+                        navigation.section: musicImportsSection.navigation.section
+                        navigation.order: musicImportsSection.navigation.order + 1
+                    }
+
+                    RoundedRadioButton {
+                        checked: musicPreferencesModel.tempoDetectionPref === TempoDetection.NEVER
+                        text: qsTrc("preferences", "Never")
+
+                        navigation.name: "TempoDetectionNeverRadioBtn"
+                        navigation.panel: musicImportsSection.navigation
+                        navigation.row: 3
+
+                        onToggled: {
+                            musicPreferencesModel.setTempoDetectionPref(TempoDetection.NEVER)
+                        }
+                    }
                 }
             }
         }

@@ -21,17 +21,23 @@ class MusicPreferencesModel : public QObject, public muse::async::Asyncable, pub
     muse::ContextInject<au::importexport::IImporterConfiguration> importerConfiguration { this };
     muse::ContextInject<muse::workspace::IWorkspaceManager> workspacesManager { this };
 
-    Q_PROPERTY(bool tempoDetectionEnabled READ tempoDetectionEnabled NOTIFY tempoDetectionEnabledChanged)
+    Q_PROPERTY(importexport::TempoDetectionPref::TempoDetection tempoDetectionPref READ tempoDetectionPref NOTIFY tempoDetectionPrefChanged)
+    Q_PROPERTY(QVariantList tempoDetectionWorkspaces READ tempoDetectionWorkspaces NOTIFY tempoDetectionWorkspacesChanged)
 
 public:
     explicit MusicPreferencesModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void init();
 
-    bool tempoDetectionEnabled() const;
-    Q_INVOKABLE void setTempoDetectionEnabled(bool enabled);
+    importexport::TempoDetectionPref::TempoDetection tempoDetectionPref() const;
+    Q_INVOKABLE void setTempoDetectionPref(importexport::TempoDetectionPref::TempoDetection pref);
+
+    QVariantList tempoDetectionWorkspaces() const;
+    Q_INVOKABLE void appendToTempoDetectionWorkspaces(const QString& workspaceName);
+    Q_INVOKABLE void removeFromTempoDetectionWorkspaces(const QString& workspaceName);
 
 signals:
-    void tempoDetectionEnabledChanged();
+    void tempoDetectionPrefChanged();
+    void tempoDetectionWorkspacesChanged();
 };
 }
