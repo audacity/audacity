@@ -55,24 +55,18 @@ public:
     virtual void setStartupModeType(StartupModeType type) = 0;
 
     virtual muse::io::path_t startupProjectPath() const = 0;
-    virtual void setStartupScorePath(const muse::io::path_t& scorePath) = 0;
+    virtual void setStartupProjectPath(const muse::io::path_t& scorePath) = 0;
 
     virtual muse::io::path_t userDataPath() const = 0;
 
     virtual std::string handbookUrl() const = 0;
     virtual std::string askForHelpUrl() const = 0;
-    virtual std::string museScoreUrl() const = 0;
-    virtual std::string museScoreForumUrl() const = 0;
-    virtual std::string museScoreContributionUrl() const = 0;
-    virtual std::string musicXMLLicenseUrl() const = 0;
-    virtual std::string musicXMLLicenseDeedUrl() const = 0;
+    virtual std::string appUrl() const = 0;
+    virtual std::string forumUrl() const = 0;
+    virtual std::string contributionUrl() const = 0;
 
     virtual std::string audacityVersion() const = 0;
-    virtual std::string museScoreRevision() const = 0;
-
-    virtual bool isNotationNavigatorVisible() const = 0;
-    virtual void setIsNotationNavigatorVisible(bool visible) const = 0;
-    virtual muse::async::Notification isNotationNavigatorVisibleChanged() const = 0;
+    virtual std::string appRevision() const = 0;
 
     virtual bool needShowSplashScreen() const = 0;
     virtual void setNeedShowSplashScreen(bool show) = 0;

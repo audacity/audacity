@@ -214,8 +214,8 @@ const UiActionList PlaybackUiActions::m_settingsActions = {
     UiAction("pan",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Pan score automatically"),
-             TranslatableString("action", "Pan score automatically during playback"),
+             TranslatableString("action", "Pan automatically"),
+             TranslatableString("action", "Pan automatically during playback"),
              IconCode::Code::PAN_SCORE,
              Checkable::Yes
              ),

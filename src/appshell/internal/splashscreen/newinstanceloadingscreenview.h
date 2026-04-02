@@ -36,7 +36,7 @@ class NewInstanceLoadingScreenView : public QWidget
     muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
 
 public:
-    explicit NewInstanceLoadingScreenView(bool forNewScore, const QString& openingFileName, QWidget* parent = nullptr);
+    explicit NewInstanceLoadingScreenView(bool forNewProject, const QString& openingFileName, QWidget* parent = nullptr);
 
 private:
     bool event(QEvent* event) override;

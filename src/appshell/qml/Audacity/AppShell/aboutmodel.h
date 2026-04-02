@@ -52,15 +52,12 @@ class AboutModel : public QObject, public muse::Contextable
 public:
     explicit AboutModel(QObject* parent = nullptr);
 
-    Q_INVOKABLE QString museScoreVersion() const;
-    Q_INVOKABLE QString museScoreRevision() const;
-    Q_INVOKABLE QVariantMap museScoreUrl() const;
-    Q_INVOKABLE QVariantMap museScoreForumUrl() const;
-    Q_INVOKABLE QVariantMap museScoreContributionUrl() const;
-    Q_INVOKABLE QVariantMap museScorePrivacyPolicyUrl() const;
-
-    Q_INVOKABLE QVariantMap musicXMLLicenseUrl() const;
-    Q_INVOKABLE QVariantMap musicXMLLicenseDeedUrl() const;
+    Q_INVOKABLE QString appVersion() const;
+    Q_INVOKABLE QString appRevision() const;
+    Q_INVOKABLE QVariantMap appUrl() const;
+    Q_INVOKABLE QVariantMap forumUrl() const;
+    Q_INVOKABLE QVariantMap contributionUrl() const;
+    Q_INVOKABLE QVariantMap privacyPolicyUrl() const;
 
     Q_INVOKABLE void copyRevisionToClipboard() const;
 

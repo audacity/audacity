@@ -55,7 +55,7 @@ void ApplicationActionController::init()
 
     dispatcher()->reg(this, "fullscreen", this, &ApplicationActionController::toggleFullScreen);
 
-    dispatcher()->reg(this, "about-musescore", this, &ApplicationActionController::openAboutDialog);
+    dispatcher()->reg(this, "about-audacity", this, &ApplicationActionController::openAboutDialog);
     dispatcher()->reg(this, "about-qt", this, &ApplicationActionController::openAboutQtDialog);
     dispatcher()->reg(this, "online-handbook", this, &ApplicationActionController::openOnlineHandbookPage);
     dispatcher()->reg(this, "ask-help", this, &ApplicationActionController::openAskForHelpPage);
@@ -258,7 +258,7 @@ void ApplicationActionController::toggleFullScreen()
 
 void ApplicationActionController::openAboutDialog()
 {
-    // interactive()->open("audacity://about/audacity");
+    interactive()->open("audacity://about/audacity");
 }
 
 void ApplicationActionController::openAboutQtDialog()

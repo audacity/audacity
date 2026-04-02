@@ -466,7 +466,7 @@ bool OpenSaveProjectScenario::warnBeforeSavingToExistingPubliclyVisibleCloudProj
 Ret OpenSaveProjectScenario::warnCloudNotAvailableForUploading(bool isPublishShare) const
 {
     if (isPublishShare) {
-        interactive()->warning(muse::trc("project/save", "Unable to connect to MuseScore.com"),
+        interactive()->warning(muse::trc("project/save", "Unable to connect to the cloud"),
                                muse::trc("project/save", "Please check your internet connection or try again later."));
         return make_ret(Ret::Code::Cancel);
     }
@@ -501,48 +501,48 @@ static std::string cloudStatusCodeErrorMessage(const Ret& ret, bool withHelp = f
 
     switch (ret.code()) {
     case int(cloud::Err::Status400_InvalidRequest):
-        //: %1 will be replaced with the error code that MuseScore.com returned; this might contain english text
+        //: %1 will be replaced with the error code that the cloud service returned; this might contain english text
         //: that is deliberately not translated
-        message = muse::qtrc("project/cloud", "MuseScore.com returned an error code: %1.")
+        message = muse::qtrc("project/cloud", "The cloud service returned an error code: %1.")
                   .arg("400 Invalid request").toStdString();
         break;
     case int(cloud::Err::Status401_AuthorizationRequired):
-        //: %1 will be replaced with the error code that MuseScore.com returned; this might contain english text
+        //: %1 will be replaced with the error code that the cloud service returned; this might contain english text
         //: that is deliberately not translated
-        message = muse::qtrc("project/cloud", "MuseScore.com returned an error code: %1.")
+        message = muse::qtrc("project/cloud", "The cloud service returned an error code: %1.")
                   .arg("401 Authorization required").toStdString();
         break;
     case int(cloud::Err::Status422_ValidationFailed):
-        //: %1 will be replaced with the error code that MuseScore.com returned; this might contain english text
+        //: %1 will be replaced with the error code that the cloud service returned; this might contain english text
         //: that is deliberately not translated
-        message = muse::qtrc("project/cloud", "MuseScore.com returned an error code: %1.")
+        message = muse::qtrc("project/cloud", "The cloud service returned an error code: %1.")
                   .arg("422 Validation failed").toStdString();
         break;
     case int(cloud::Err::Status429_RateLimitExceeded):
-        //: %1 will be replaced with the error code that MuseScore.com returned; this might contain english text
+        //: %1 will be replaced with the error code that the cloud service returned; this might contain english text
         //: that is deliberately not translated
-        message = muse::qtrc("project/cloud", "MuseScore.com returned an error code: %1.")
+        message = muse::qtrc("project/cloud", "The cloud service returned an error code: %1.")
                   .arg("429 Rate limit exceeded").toStdString();
         break;
     case int(cloud::Err::Status500_InternalServerError):
-        //: %1 will be replaced with the error code that MuseScore.com returned; this might contain english text
+        //: %1 will be replaced with the error code that the cloud service returned; this might contain english text
         //: that is deliberately not translated
-        message = muse::qtrc("project/cloud", "MuseScore.com returned an error code: %1.")
+        message = muse::qtrc("project/cloud", "The cloud service returned an error code: %1.")
                   .arg("500 Internal server error").toStdString();
         break;
     case int(cloud::Err::UnknownStatusCode): {
         if (const auto status = ret.data<int>("status", -1); status != -1) {
-            //: %1 will be replaced with the error code that MuseScore.com returned, which is a number.
-            message = muse::qtrc("project/cloud", "MuseScore.com returned an unknown error code: %1.")
+            //: %1 will be replaced with the error code that the cloud service returned, which is a number.
+            message = muse::qtrc("project/cloud", "The cloud service returned an unknown error code: %1.")
                       .arg(status).toStdString();
         } else {
-            message = muse::trc("project/cloud", "MuseScore.com returned an unknown error code.");
+            message = muse::trc("project/cloud", "The cloud service returned an unknown error code.");
         }
     } break;
     }
 
     if (withHelp) {
-        message += "\n\n" + muse::trc("project/cloud", "Please try again later, or get help for this problem on musescore.org.");
+        message += "\n\n" + muse::trc("project/cloud", "Please try again later, or get help for this problem on audacityteam.org.");
     }
 
     return message;

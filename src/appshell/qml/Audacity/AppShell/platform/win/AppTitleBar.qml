@@ -89,7 +89,7 @@ Rectangle {
             TextMetrics {
                 id: titleTextmetrics
 
-                text: qsTrc("appshell", "MuseScore 4")
+                text: qsTrc("appshell", "Audacity")
                 font: titleLabel.font
                 elide: Qt.ElideRight
                 elideWidth: titleLabel.width
