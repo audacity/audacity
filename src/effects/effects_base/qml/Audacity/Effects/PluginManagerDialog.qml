@@ -61,12 +61,16 @@ StyledDialogView {
             Layout.fillWidth: true
             Layout.margins: 12
 
-            buttons: [ButtonBoxModel.Close]
+            buttons: [ButtonBoxModel.Ok, ButtonBoxModel.Cancel]
 
             onStandardButtonClicked: function (buttonId) {
                 switch (buttonId) {
-                case ButtonBoxModel.Close:
+                case ButtonBoxModel.Ok:
                     root.accept()
+                    break
+                case ButtonBoxModel.Cancel:
+                    root.tableViewModel.cancel()
+                    root.reject()
                     break
                 }
             }

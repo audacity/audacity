@@ -19,14 +19,26 @@ PluginManagerTableViewModel::PluginManagerTableViewModel(QObject* parent)
 
 PluginManagerTableViewModel::~PluginManagerTableViewModel()
 {
+    if (m_resetOnClose) {
+        for (const auto& effectId : m_editedEffects) {
+            const auto it = std::find_if(m_initialState.begin(), m_initialState.end(), [&](const EffectMeta& meta) {
+                return meta.id == effectId;
+            });
+            IF_ASSERT_FAILED(it != m_initialState.end()) {
+                continue;
+            }
+            effectsProvider()->setEffectActivated(effectId, it->isActivated);
+        }
+    }
+
     effectsProvider()->save();
 }
 
 void PluginManagerTableViewModel::componentComplete()
 {
     setHorizontalHeaders(makeHorizontalHeaders());
-    const EffectMetaList effects = effectsProvider()->effectMetaList();
-    setTableRows(effects);
+    m_initialState = effectsProvider()->effectMetaList();
+    setTableRows(m_initialState);
 }
 
 void PluginManagerTableViewModel::setTableRows(EffectMetaList effects)
@@ -216,7 +228,13 @@ void PluginManagerTableViewModel::handleEdit(int row, int column)
     const bool next = !current;
 
     effectsProvider()->setEffectActivated(effects[row].id, next);
+    m_editedEffects.insert(effects[row].id);
 
     cell->setValue(muse::Val(next));
+}
+
+void PluginManagerTableViewModel::cancel()
+{
+    m_resetOnClose = true;
 }
 }

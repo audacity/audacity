@@ -12,6 +12,7 @@
 #include <QObject>
 
 #include <functional>
+#include <unordered_set>
 
 namespace au::effects {
 namespace PluginManagerTableViewCellType {
@@ -63,6 +64,7 @@ public:
 
     Q_INVOKABLE void handleEdit(int row, int column);
     Q_INVOKABLE void setSearchText(const QString& searchText);
+    Q_INVOKABLE void cancel();
 
 signals:
     void enabledDisabledSelectedIndexChanged();
@@ -77,6 +79,10 @@ private:
     QVector<muse::uicomponents::TableViewHeader*> makeVerticalHeaders(const EffectMetaList& effects);
     QVector<QVector<muse::uicomponents::TableViewCell*> > makeTable(const EffectMetaList& effects);
     void setTableRows(EffectMetaList effects);
+
+    EffectMetaList m_initialState;
+    std::unordered_set<EffectId> m_editedEffects;
+    bool m_resetOnClose = false;
 
     using EffectFilter = std::function<bool (const EffectMeta&)>;
     static const EffectFilter allPassFilter;
