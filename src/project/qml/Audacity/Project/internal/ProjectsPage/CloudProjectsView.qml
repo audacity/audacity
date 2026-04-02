@@ -163,8 +163,9 @@ ProjectsView {
             navigation.name: "CloudProjectsList"
             navigation.accessible.name: qsTrc("project", "Cloud projects list")
 
-            //onCreateNewProjectRequested: {}
-            //onOpenProjectRequested: function(projectPath, displayName) {}
+            onOpenCloudProjectRequested: function (cloudItemId, projectPath, displayName) {
+                root.openCloudProjectRequested(cloudItemId, projectPath, displayName)
+            }
 
             columns: [
                 ProjectsListView.ColumnItem {

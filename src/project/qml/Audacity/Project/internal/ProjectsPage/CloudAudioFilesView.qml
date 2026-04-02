@@ -166,6 +166,10 @@ ProjectsView {
             navigation.order: root.navigationOrder
             navigation.name: "CloudAudioFilesList"
 
+            onOpenCloudProjectRequested: function (id, _, _) {
+                root.openCloudAudioFileRequested(id)
+            }
+
             columns: [
                 ProjectsListView.ColumnItem {
                     id: modifiedColumn

@@ -49,6 +49,7 @@ Item {
 
     signal createNewProjectRequested
     signal openProjectRequested(var projectPath, var displayName)
+    signal openCloudProjectRequested(var projectId, var projectPath, var displayName)
 
     component ColumnItem: QtObject {
         property string header
@@ -234,7 +235,11 @@ Item {
                         navigation.column: 0
 
                         onClicked: {
-                            root.openProjectRequested(item.path, item.name)
+                            if (item.isCloud) {
+                                root.openCloudProjectRequested(item.itemId, item.path, item.name)
+                            } else {
+                                root.openProjectRequested(item.path, item.name)
+                            }
                         }
                     }
                 }

@@ -170,9 +170,7 @@ Item {
                         root.createNewProjectRequested()
                     } else if (!isNoResultsFound) {
                         if (item.isCloud) {
-                            var projectId = item.itemId ?? ""
-                            console.log("Open cloud project requested for project ID: " + projectId + ", path: " + item.path + ", name: " + item.name)
-                            root.openCloudProjectRequested(projectId, item.path, item.name)
+                            root.openCloudProjectRequested(item.itemId, item.path, item.name)
                         } else {
                             root.openProjectRequested(item.path, item.name)
                         }
