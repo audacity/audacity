@@ -301,6 +301,10 @@ FocusScope {
             path: root.path
             suffix: root.suffix
             placeholder: root.placeholder
+
+            backgroundColor: ui.theme.backgroundSecondaryColor
+            lineColor: Qt.rgba(ui.theme.fontPrimaryColor.r, ui.theme.fontPrimaryColor.g, ui.theme.fontPrimaryColor.b, 0.8)
+            borderColor: ui.theme.strokeColor
         }
     }
 }

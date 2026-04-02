@@ -55,6 +55,14 @@ ListItemBlank {
 
     focusBorder.anchors.bottomMargin: bottomBorder.visible ? bottomBorder.height : 0
 
+    QtObject {
+        id: prv
+
+        property color backgroundColor: root.thumbnailFull ? "transparent" : ui.theme.backgroundSecondaryColor
+        property color lineColor: Qt.rgba(ui.theme.fontPrimaryColor.r, ui.theme.fontPrimaryColor.g, ui.theme.fontPrimaryColor.b, 0.8)
+        property color borderColor: root.thumbnailFull ? "transparent" : ui.theme.strokeColor
+    }
+
     Component {
         id: defaultThumbnailComponent
 

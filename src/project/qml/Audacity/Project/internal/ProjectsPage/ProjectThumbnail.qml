@@ -34,6 +34,10 @@ Item {
 
     readonly property bool isJsonThumbnail: root.thumbnailUrl.endsWith(".json")
 
+    property alias backgroundColor: thumbnailLoader.backgroundColor
+    property alias lineColor: thumbnailLoader.lineColor
+    property alias borderColor: thumbnailLoader.borderColor
+
     ThumbnailLoader {
         id: thumbnailLoader
 
@@ -42,10 +46,6 @@ Item {
 
         path: root.path
         placeholder: root.placeholder
-
-        backgroundColor: ui.theme.backgroundSecondaryColor
-        lineColor: ui.theme.strokeColor
-        borderColor: ui.theme.strokeColor
     }
 
     Loader {
