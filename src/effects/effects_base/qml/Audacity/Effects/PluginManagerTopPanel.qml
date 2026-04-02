@@ -7,13 +7,11 @@ import Muse.UiComponents
 import Audacity.UiComponents
 import Audacity.Effects
 
-Row {
+Item {
     id: root
 
-    padding: 8
-    spacing: 16
-
     required property PluginManagerTableViewModel tableViewModel
+    readonly property int contentHeight: 30
 
     property NavigationPanel navigationPanel: NavigationPanel {
         name: "PluginManagerTopPanel"
@@ -54,66 +52,73 @@ Row {
 
     DropdownOptionsModel {
         id: showModel
-        label: qsTrc("effects", "Show")
+        label: qsTrc("effects", "Show:")
         options: tableViewModel.enabledDisabledOptions
     }
 
     DropdownOptionsModel {
         id: typeModel
-        label: qsTrc("effects", "Type")
+        label: qsTrc("effects", "Type:")
         options: tableViewModel.effectFamilyOptions
     }
 
     DropdownOptionsModel {
         id: categoryModel
-        label: qsTrc("effects", "Category")
+        label: qsTrc("effects", "Category:")
         options: tableViewModel.effectTypeOptions
     }
 
-    Repeater {
-        id: dropdownsRepeater
+    RowLayout {
+        id: rowLayout
 
-        model: [showModel, typeModel, categoryModel]
+        anchors.fill: parent
+        spacing: 16
 
-        DropdownWithTitle {
-            id: dropdown
+        Repeater {
+            id: dropdownsRepeater
 
-            width: 150
-            height: 30
+            model: [showModel, typeModel, categoryModel]
 
-            title: modelData.label
-            model: modelData.options
-            current: modelData.currentTitle
-            allowOptionToggle: false
+            DropdownWithTitle {
+                id: dropdown
 
-            navigation.name: modelData.label + "Dropdown"
-            navigation.panel: root.navigationPanel
+                Layout.preferredWidth: 260
+                Layout.preferredHeight: root.contentHeight
 
-            Component.onCompleted: {
-                // Don't know why `navigation.order: index` doesn't work here
-                navigation.order = index
-            }
+                title: modelData.label
+                model: modelData.options
+                current: modelData.currentTitle
+                allowOptionToggle: false
 
-            onHandleMenuItem: function (itemId) {
-                modelData.select(itemId)
+                navigation.name: modelData.label + "Dropdown"
+                navigation.panel: root.navigationPanel
+
+                Component.onCompleted: {
+                    // Don't know why `navigation.order: index` doesn't work here
+                    navigation.order = index
+                }
+
+                onHandleMenuItem: function (itemId) {
+                    modelData.select(itemId)
+                }
             }
         }
-    }
 
-    SearchField {
-        id: searchField
+        SearchField {
+            id: searchField
 
-        width: 200
-        height: 30
+            Layout.fillWidth: true
+            Layout.preferredHeight: root.contentHeight
 
-        navigation.name: "SearchField"
-        navigation.panel: root.navigationPanel
-        navigation.order: dropdownsRepeater.count
+            navigation.name: "SearchField"
+            navigation.panel: root.navigationPanel
+            navigation.order: dropdownsRepeater.count
 
-        inputField.activeFocusOnPress: true
+            inputField.activeFocusOnPress: true
 
-        onSearchTextChanged: {
-            root.searchTextChanged(searchField.searchText)
+            onSearchTextChanged: {
+                root.searchTextChanged(searchField.searchText)
+            }
         }
     }
 }

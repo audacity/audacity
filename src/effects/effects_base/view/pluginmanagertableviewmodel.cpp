@@ -13,6 +13,13 @@
 #include "uicomponents/qml/Muse/UiComponents/menuitem.h"
 
 namespace au::effects {
+namespace {
+constexpr auto enabledColumnWidth = 100;
+constexpr auto nameColumnWidth = 152;
+constexpr auto pathColumnWidth = 296;
+constexpr auto typeColumnWidth = 152;
+}
+
 const PluginManagerTableViewModel::EffectFilter PluginManagerTableViewModel::allPassFilter = [](const EffectMeta&) { return true; };
 
 PluginManagerTableViewModel::PluginManagerTableViewModel(QObject* parent)
@@ -51,6 +58,7 @@ void PluginManagerTableViewModel::setTableRows(EffectMetaList effects)
         return !combinedFilter(meta);
     }), effects.end());
 
+    setVerticalHeaders(makeVerticalHeaders(effects));
     setTable(makeTable(effects));
 }
 
@@ -159,6 +167,11 @@ void PluginManagerTableViewModel::setEffectTypeSelectedIndex(int index)
     setTableRows(effectsProvider()->effectMetaList());
 }
 
+int PluginManagerTableViewModel::totalWidth() const
+{
+    return enabledColumnWidth + nameColumnWidth + pathColumnWidth + typeColumnWidth;
+}
+
 QVector<muse::uicomponents::TableViewHeader*> PluginManagerTableViewModel::makeHorizontalHeaders()
 {
     using namespace muse::uicomponents;
@@ -167,15 +180,28 @@ QVector<muse::uicomponents::TableViewHeader*> PluginManagerTableViewModel::makeH
 
     hHeaders << makeHorizontalHeader(muse::qtrc("effects", "Enabled"),
                                      static_cast<TableViewCellType::Type>(PluginManagerTableViewCellType::Type::Enabled),
-                                     TableViewCellEditMode::Mode::StartInEdit, 100);
+                                     TableViewCellEditMode::Mode::StartInEdit, enabledColumnWidth);
     hHeaders << makeHorizontalHeader(muse::qtrc("effects", "Name"),
-                                     TableViewCellType::Type::String, TableViewCellEditMode::Mode::DoubleClick, 152);
+                                     TableViewCellType::Type::String, TableViewCellEditMode::Mode::DoubleClick, nameColumnWidth);
     hHeaders << makeHorizontalHeader(muse::qtrc("effects", "Path"),
-                                     TableViewCellType::Type::String, TableViewCellEditMode::Mode::DoubleClick, 296);
+                                     TableViewCellType::Type::String, TableViewCellEditMode::Mode::DoubleClick, pathColumnWidth);
     hHeaders << makeHorizontalHeader(muse::qtrc("effects", "Type"),
-                                     TableViewCellType::Type::String, TableViewCellEditMode::Mode::DoubleClick, 152);
+                                     TableViewCellType::Type::String, TableViewCellEditMode::Mode::DoubleClick, typeColumnWidth);
 
     return hHeaders;
+}
+
+QVector<muse::uicomponents::TableViewHeader*> PluginManagerTableViewModel::makeVerticalHeaders(const EffectMetaList& effects)
+{
+    using namespace muse::uicomponents;
+
+    QVector<TableViewHeader*> vHeaders;
+
+    for (auto i = 0; i < static_cast<int>(effects.size()); ++i) {
+        vHeaders << new TableViewHeader(this);
+    }
+
+    return vHeaders;
 }
 
 QVector<QVector<muse::uicomponents::TableViewCell*> > PluginManagerTableViewModel::makeTable(const EffectMetaList& effects)

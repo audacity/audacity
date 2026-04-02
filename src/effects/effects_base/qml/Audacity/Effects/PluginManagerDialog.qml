@@ -14,8 +14,9 @@ StyledDialogView {
 
     title: qsTrc("projectscene", "Manage plugins")
 
-    contentWidth: 880
+    contentWidth: tableViewModel.totalWidth
     contentHeight: 528
+    margins: 8
 
     Component.onDestruction: tableViewModel.aboutToDestroy()
 
@@ -31,7 +32,7 @@ StyledDialogView {
 
     ColumnLayout {
         anchors.fill: parent
-        spacing: 0
+        spacing: 8
 
         PluginManagerTopPanel {
             id: topPanel
@@ -39,7 +40,7 @@ StyledDialogView {
             tableViewModel: root.tableViewModel
 
             Layout.fillWidth: true
-            Layout.preferredHeight: 48
+            Layout.preferredHeight: topPanel.contentHeight
 
             navigationPanel.section: root.navigationSection
             navigationPanel.order: 1
@@ -61,13 +62,11 @@ StyledDialogView {
             navigationPanel.order: topPanel.navigationPanel.order + 1
         }
 
-        SeparatorLine {}
-
         ButtonBox {
             id: buttonBox
 
             Layout.fillWidth: true
-            Layout.margins: 12
+            Layout.margins: 0
 
             buttons: [ButtonBoxModel.Ok, ButtonBoxModel.Cancel]
 

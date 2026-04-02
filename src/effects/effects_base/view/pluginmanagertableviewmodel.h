@@ -45,6 +45,8 @@ class PluginManagerTableViewModel : public muse::uicomponents::AbstractTableView
     Q_PROPERTY(
         int effectTypeSelectedIndex READ effectTypeSelectedIndex WRITE setEffectTypeSelectedIndex NOTIFY effectTypeSelectedIndexChanged)
 
+    Q_PROPERTY(int totalWidth READ totalWidth CONSTANT)
+
     muse::GlobalInject<IEffectsProvider> effectsProvider;
     muse::ContextInject<muse::audioplugins::IRegisterAudioPluginsScenario> registerAudioPluginsScenario { this };
 
@@ -64,6 +66,8 @@ public:
     int effectTypeSelectedIndex() const { return m_effectTypeSelectedIndex; }
     void setEffectTypeSelectedIndex(int index);
 
+    int totalWidth() const;
+
     Q_INVOKABLE void handleEdit(int row, int column);
     Q_INVOKABLE void setSearchText(const QString& searchText);
     Q_INVOKABLE void rescanPlugins();
@@ -81,6 +85,7 @@ private:
     void componentComplete() override;
 
     QVector<muse::uicomponents::TableViewHeader*> makeHorizontalHeaders();
+    QVector<muse::uicomponents::TableViewHeader*> makeVerticalHeaders(const EffectMetaList& effects);
     QVector<QVector<muse::uicomponents::TableViewCell*> > makeTable(const EffectMetaList& effects);
     void setTableRows(EffectMetaList effects);
 
