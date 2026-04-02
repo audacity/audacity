@@ -51,7 +51,6 @@ void PluginManagerTableViewModel::setTableRows(EffectMetaList effects)
         return !combinedFilter(meta);
     }), effects.end());
 
-    setVerticalHeaders(makeVerticalHeaders(effects));
     setTable(makeTable(effects));
 }
 
@@ -177,19 +176,6 @@ QVector<muse::uicomponents::TableViewHeader*> PluginManagerTableViewModel::makeH
                                      TableViewCellType::Type::String, TableViewCellEditMode::Mode::DoubleClick, 152);
 
     return hHeaders;
-}
-
-QVector<muse::uicomponents::TableViewHeader*> PluginManagerTableViewModel::makeVerticalHeaders(const EffectMetaList& effects)
-{
-    using namespace muse::uicomponents;
-
-    QVector<TableViewHeader*> vHeaders;
-
-    for (const auto& _ : effects) {
-        vHeaders << new TableViewHeader(this);
-    }
-
-    return vHeaders;
 }
 
 QVector<QVector<muse::uicomponents::TableViewCell*> > PluginManagerTableViewModel::makeTable(const EffectMetaList& effects)

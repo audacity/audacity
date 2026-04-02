@@ -13,6 +13,7 @@ StyledTableView {
     headerCapitalization: Font.MixedCase
 
     model: tableViewModel
+    horizontalHeaderNavigationEnabled: false
 
     sourceComponentCallback: function (type) {
         switch (type) {
@@ -41,6 +42,11 @@ StyledTableView {
 
             signal changed(string stub)
             signal editingFinished
+
+            navigation.panel: navigationPanel
+            navigation.enabled: root.currentEditedCell === item
+            navigation.order: navigationRow
+            navigation.column: navigationColumnStart
 
             checked: val
             onClicked: {

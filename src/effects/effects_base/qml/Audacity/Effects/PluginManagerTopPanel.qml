@@ -15,7 +15,30 @@ Row {
 
     required property PluginManagerTableViewModel tableViewModel
 
+    property NavigationPanel navigationPanel: NavigationPanel {
+        name: "PluginManagerTopPanel"
+        direction: NavigationPanel.Horizontal
+        accessible.role: MUAccessible.ComboBox
+        accessible.name: showModel.label + ", " + typeModel.label + ", " + categoryModel.label + ", " + searchField.accessible.name
+    }
+
     signal searchTextChanged(string newText)
+
+    function focusOnFirst() {
+        dropdownsRepeater.itemAt(0).navigation.requestActive()
+    }
+
+    function readInfo() {
+        accessibleInfo.ignored = false
+        accessibleInfo.focused = true
+    }
+
+    AccessibleItem {
+        id: accessibleInfo
+        visualItem: root
+        role: MUAccessible.ComboBox
+        name: showModel.label + ", " + typeModel.label + ", " + categoryModel.label + ", " + searchField.accessible.name
+    }
 
     Component.onCompleted: {
         tableViewModel.enabledDisabledSelectedIndex = Qt.binding(function () {
@@ -48,9 +71,13 @@ Row {
     }
 
     Repeater {
+        id: dropdownsRepeater
+
         model: [showModel, typeModel, categoryModel]
 
         DropdownWithTitle {
+            id: dropdown
+
             width: 150
             height: 30
 
@@ -58,6 +85,14 @@ Row {
             model: modelData.options
             current: modelData.currentTitle
             allowOptionToggle: false
+
+            navigation.name: modelData.label + "Dropdown"
+            navigation.panel: root.navigationPanel
+
+            Component.onCompleted: {
+                // Don't know why `navigation.order: index` doesn't work here
+                navigation.order = index
+            }
 
             onHandleMenuItem: function (itemId) {
                 modelData.select(itemId)
@@ -70,6 +105,10 @@ Row {
 
         width: 200
         height: 30
+
+        navigation.name: "SearchField"
+        navigation.panel: root.navigationPanel
+        navigation.order: dropdownsRepeater.count
 
         inputField.activeFocusOnPress: true
 

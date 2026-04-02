@@ -17,13 +17,13 @@ StyledDialogView {
     contentWidth: 880
     contentHeight: 528
 
-    onNavigationActivateRequested:
-    // TODO
-    {}
+    onNavigationActivateRequested: {
+        topPanel.focusOnFirst()
+    }
 
-    onAccessibilityActivateRequested:
-    // TODO
-    {}
+    onAccessibilityActivateRequested: {
+        topPanel.readInfo()
+    }
 
     property PluginManagerTableViewModel tableViewModel: PluginManagerTableViewModel {}
 
@@ -39,6 +39,9 @@ StyledDialogView {
             Layout.fillWidth: true
             Layout.preferredHeight: 48
 
+            navigationPanel.section: root.navigationSection
+            navigationPanel.order: 1
+
             onSearchTextChanged: function (newText) {
                 root.tableViewModel.setSearchText(newText)
             }
@@ -51,6 +54,9 @@ StyledDialogView {
 
             Layout.fillWidth: true
             Layout.fillHeight: true
+
+            navigationPanel.section: root.navigationSection
+            navigationPanel.order: topPanel.navigationPanel.order + 1
         }
 
         SeparatorLine {}
@@ -62,6 +68,9 @@ StyledDialogView {
             Layout.margins: 12
 
             buttons: [ButtonBoxModel.Ok, ButtonBoxModel.Cancel]
+
+            navigationPanel.section: root.navigationSection
+            navigationPanel.order: tableView.navigationPanel.order + 1
 
             FlatButton {
                 text: qsTrc("effects", "Rescan plugins")
