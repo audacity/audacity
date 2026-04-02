@@ -18,9 +18,16 @@ const PluginManagerTableViewModel::EffectFilter PluginManagerTableViewModel::all
 PluginManagerTableViewModel::PluginManagerTableViewModel(QObject* parent)
     : AbstractTableViewModel(parent), Contextable(muse::iocCtxForQmlObject(this)) {}
 
-PluginManagerTableViewModel::~PluginManagerTableViewModel()
+void PluginManagerTableViewModel::componentComplete()
 {
-    if (m_resetOnClose) {
+    setHorizontalHeaders(makeHorizontalHeaders());
+    m_initialState = effectsProvider()->effectMetaList();
+    setTableRows(m_initialState);
+}
+
+void PluginManagerTableViewModel::aboutToDestroy()
+{
+    if (!m_changesConfirmed) {
         for (const auto& effectId : m_editedEffects) {
             const auto it = std::find_if(m_initialState.begin(), m_initialState.end(), [&](const EffectMeta& meta) {
                 return meta.id == effectId;
@@ -33,13 +40,6 @@ PluginManagerTableViewModel::~PluginManagerTableViewModel()
     }
 
     effectsProvider()->save();
-}
-
-void PluginManagerTableViewModel::componentComplete()
-{
-    setHorizontalHeaders(makeHorizontalHeaders());
-    m_initialState = effectsProvider()->effectMetaList();
-    setTableRows(m_initialState);
 }
 
 void PluginManagerTableViewModel::setTableRows(EffectMetaList effects)
@@ -225,8 +225,8 @@ void PluginManagerTableViewModel::rescanPlugins()
     effectsProvider()->rescanPlugins(*registerAudioPluginsScenario());
 }
 
-void PluginManagerTableViewModel::cancel()
+void PluginManagerTableViewModel::accept()
 {
-    m_resetOnClose = true;
+    m_changesConfirmed = true;
 }
 }

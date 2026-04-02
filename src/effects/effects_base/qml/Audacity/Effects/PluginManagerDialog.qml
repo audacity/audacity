@@ -17,6 +17,8 @@ StyledDialogView {
     contentWidth: 880
     contentHeight: 528
 
+    Component.onDestruction: tableViewModel.aboutToDestroy()
+
     onNavigationActivateRequested: {
         topPanel.focusOnFirst()
     }
@@ -86,10 +88,10 @@ StyledDialogView {
             onStandardButtonClicked: function (buttonId) {
                 switch (buttonId) {
                 case ButtonBoxModel.Ok:
+                    root.tableViewModel.accept()
                     root.accept()
                     break
                 case ButtonBoxModel.Cancel:
-                    root.tableViewModel.cancel()
                     root.reject()
                     break
                 }

@@ -50,7 +50,7 @@ class PluginManagerTableViewModel : public muse::uicomponents::AbstractTableView
 
 public:
     explicit PluginManagerTableViewModel(QObject* parent = nullptr);
-    ~PluginManagerTableViewModel() override;
+    ~PluginManagerTableViewModel() override = default;
 
     muse::uicomponents::MenuItemList enabledDisabledOptions() const;
     int enabledDisabledSelectedIndex() const { return m_enabledDisabledSelectedIndex; }
@@ -67,7 +67,9 @@ public:
     Q_INVOKABLE void handleEdit(int row, int column);
     Q_INVOKABLE void setSearchText(const QString& searchText);
     Q_INVOKABLE void rescanPlugins();
-    Q_INVOKABLE void cancel();
+    Q_INVOKABLE void aboutToDestroy();
+
+    Q_INVOKABLE void accept();
 
 signals:
     void enabledDisabledSelectedIndexChanged();
@@ -84,7 +86,7 @@ private:
 
     EffectMetaList m_initialState;
     std::unordered_set<EffectId> m_editedEffects;
-    bool m_resetOnClose = false;
+    bool m_changesConfirmed = false;
 
     using EffectFilter = std::function<bool (const EffectMeta&)>;
     static const EffectFilter allPassFilter;
