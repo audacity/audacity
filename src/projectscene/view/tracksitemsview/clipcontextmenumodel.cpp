@@ -48,6 +48,7 @@ void ClipContextMenuModel::load()
         makeSeparator(),
         makeItemWithArg("action://trackedit/cut"),
         makeItemWithArg("action://trackedit/copy"),
+        makeItemWithArg("action://delete"),
         makeItemWithArg("duplicate"),
         makeSeparator(),
         makeItemWithArg("split"),
