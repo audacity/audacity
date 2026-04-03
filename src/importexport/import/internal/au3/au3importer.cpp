@@ -164,7 +164,12 @@ bool au::importexport::Au3Importer::import(const muse::io::path_t& filePath)
     std::vector<WaveTrack*> importedWaveTracks;
     addImportedTracks(filePath, std::move(newTracks), &importedWaveTracks);
 
-    m_tempoDetection->onFilesImported({ filePath }, importedWaveTracks, acidTags, projectWasEmpty);
+    std::vector<trackedit::TrackId> dstTrackIds;
+    for (const auto* wt : importedWaveTracks) {
+        dstTrackIds.push_back(static_cast<trackedit::TrackId>(wt->GetId()));
+    }
+
+    m_tempoDetection->onFilesImported({ filePath }, importedWaveTracks, dstTrackIds, acidTags, projectWasEmpty);
 
     return true;
 }
@@ -230,7 +235,8 @@ bool au::importexport::Au3Importer::importIntoTrack(const muse::io::path_t& file
                                true /* isMultiSelectionCopy */, modifiedState);
     applyImportedProjectTitleIfNeeded(filePath);
 
-    m_tempoDetection->onFilesImported({ filePath }, importedWaveTracks, acidTags, projectWasEmpty);
+    std::vector<trackedit::TrackId> dstTrackIds(importedWaveTracks.size(), dstTrackId);
+    m_tempoDetection->onFilesImported({ filePath }, importedWaveTracks, dstTrackIds, acidTags, projectWasEmpty);
 
     return true;
 }

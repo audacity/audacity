@@ -13,6 +13,8 @@
 #include "au3-wave-track/WaveTrack.h"
 #include "au3-stretching-sequence/ClipInterface.h"
 
+#include "au3wrap/internal/domaccessor.h"
+
 #include "log.h"
 
 using namespace au::importexport;
@@ -33,6 +35,7 @@ TempoDetection::TempoDetection(const muse::modularity::ContextPtr& ctx)
 void TempoDetection::onFilesImported(
     const std::vector<muse::io::path_t>& filePaths,
     const std::vector<WaveTrack*>& waveTracks,
+    const std::vector<trackedit::TrackId>& dstTrackIds,
     const std::optional<LibFileFormats::AcidizerTags>& acidTags,
     bool projectWasEmpty)
 {
@@ -72,9 +75,9 @@ void TempoDetection::onFilesImported(
     }
 
     if (projectWasEmpty) {
-        showEmptyMusicWorkspaceDialog(bestResult->bpm, waveTracks);
+        showEmptyMusicWorkspaceDialog(bestResult->bpm, waveTracks, dstTrackIds);
     } else {
-        showSubsequentImportDialog(bestResult->bpm, waveTracks);
+        showSubsequentImportDialog(bestResult->bpm, waveTracks, dstTrackIds);
     }
 }
 
@@ -125,7 +128,8 @@ std::optional<TempoDetectionResult> TempoDetection::detectTempo(
     return std::nullopt;
 }
 
-void TempoDetection::showEmptyMusicWorkspaceDialog(double bpm, const std::vector<WaveTrack*>& waveTracks)
+void TempoDetection::showEmptyMusicWorkspaceDialog(double bpm, const std::vector<WaveTrack*>& waveTracks,
+                                                   const std::vector<trackedit::TrackId>& dstTrackIds)
 {
     std::string message = mtrc("import", "Loop tempo detected at %1 BPM. What would you like to do?")
                           .arg(static_cast<int>(std::round(bpm))).toStdString();
@@ -146,15 +150,16 @@ void TempoDetection::showEmptyMusicWorkspaceDialog(double bpm, const std::vector
         setRawAudioTempoOnClips(waveTracks, bpm);
         setProjectTempo(bpm);
     } else if (result.button() == BTN_MATCH_LOOP) {
-        stretchClipsToProjectTempo(waveTracks, bpm);
+        stretchClipsToProjectTempo(waveTracks, dstTrackIds, bpm);
     }
 }
 
-void TempoDetection::showSubsequentImportDialog(double bpm, const std::vector<WaveTrack*>& waveTracks)
+void TempoDetection::showSubsequentImportDialog(double bpm, const std::vector<WaveTrack*>& waveTracks,
+                                                const std::vector<trackedit::TrackId>& dstTrackIds)
 {
     const LoopAction savedAction = configuration()->subsequentImportLoopAction();
     if (savedAction == LoopAction::MatchLoopToProject) {
-        stretchClipsToProjectTempo(waveTracks, bpm);
+        stretchClipsToProjectTempo(waveTracks, dstTrackIds, bpm);
         return;
     } else if (savedAction == LoopAction::DoNothing) {
         return;
@@ -176,7 +181,7 @@ void TempoDetection::showSubsequentImportDialog(double bpm, const std::vector<Wa
         IInteractive::WithDontShowAgainCheckBox);
 
     if (result.button() == BTN_STRETCH_LOOP) {
-        stretchClipsToProjectTempo(waveTracks, bpm);
+        stretchClipsToProjectTempo(waveTracks, dstTrackIds, bpm);
         if (!result.showAgain()) {
             configuration()->setSubsequentImportLoopAction(LoopAction::MatchLoopToProject);
         }
@@ -200,32 +205,89 @@ void TempoDetection::setRawAudioTempoOnClips(const std::vector<WaveTrack*>& wave
     }
 }
 
-void TempoDetection::stretchClipsToProjectTempo(const std::vector<WaveTrack*>& waveTracks, double detectedBpm)
+void TempoDetection::stretchClipsToProjectTempo(const std::vector<WaveTrack*>& waveTracks,
+                                                const std::vector<trackedit::TrackId>& dstTrackIds,
+                                                double detectedBpm)
 {
     auto project = globalContext()->currentTrackeditProject();
     if (!project) {
         return;
     }
-    const double projectTempo = project->timeSignature().tempo;
 
-    // Mark clips with their original tempo and trigger boundary recalculation
-    // in a single pass. Passing std::nullopt as oldTempo tells
-    // OnProjectTempoChange this is an initial tempo assignment.
+    auto importedClips = collectImportedClipInfos(waveTracks, dstTrackIds);
+    applyTempoToClips(waveTracks, detectedBpm, project->timeSignature().tempo);
+    makeRoomAndCloseGaps(importedClips);
+}
+
+std::vector<ImportedClipInfo> TempoDetection::collectImportedClipInfos(
+    const std::vector<WaveTrack*>& waveTracks,
+    const std::vector<trackedit::TrackId>& dstTrackIds)
+{
+    std::vector<ImportedClipInfo> result;
+    for (size_t i = 0; i < waveTracks.size() && i < dstTrackIds.size(); ++i) {
+        for (const auto& interval : waveTracks[i]->SortedIntervalArray()) {
+            result.push_back({ dstTrackIds[i], interval->GetId(), interval->GetPlayEndTime() });
+        }
+    }
+    return result;
+}
+
+void TempoDetection::applyTempoToClips(const std::vector<WaveTrack*>& waveTracks,
+                                       double detectedBpm, double projectTempo)
+{
+    // Passing std::nullopt as oldTempo tells OnProjectTempoChange this is an
+    // initial tempo assignment — it will set mClipTempo and rescale boundaries.
     for (auto* track : waveTracks) {
         for (const auto& interval : track->SortedIntervalArray()) {
             interval->SetRawAudioTempo(detectedBpm);
             interval->OnProjectTempoChange(std::nullopt, projectTempo);
         }
     }
-
-    reloadProject();
 }
 
-void TempoDetection::reloadProject()
+void TempoDetection::makeRoomAndCloseGaps(const std::vector<ImportedClipInfo>& importedClips)
 {
-    auto project = globalContext()->currentTrackeditProject();
-    if (project) {
-        project->reload();
+    auto* au3Project = reinterpret_cast<AudacityProject*>(
+        globalContext()->currentProject()->au3ProjectPtr());
+
+    for (const auto& info : importedClips) {
+        // Find the adjacent right neighbour (split/trimmed during import)
+        // *before* makeRoomForClip may shift things around.
+        WaveTrack* dstTrack = au::au3::DomAccessor::findWaveTrack(
+            *au3Project, ::TrackId(info.dstTrackId));
+        std::shared_ptr<WaveClip> rightNeighbour;
+        if (dstTrack) {
+            const double sampleDuration = 1.0 / dstTrack->GetRate();
+            for (const auto& candidate : dstTrack->SortedIntervalArray()) {
+                if (candidate->GetId() == info.clipId) {
+                    continue;
+                }
+                const double candidateStart = candidate->GetPlayStartTime();
+                if (candidateStart >= info.endTimeBeforeStretch - sampleDuration) {
+                    const double distance = candidateStart - info.endTimeBeforeStretch;
+                    if (distance < sampleDuration && candidate->GetTrimLeft() > 0.0) {
+                        rightNeighbour = candidate;
+                    }
+                    break;
+                }
+            }
+        }
+
+        // If clip grew, push neighbours away.
+        trackeditInteraction()->makeRoomForClip(trackedit::ClipKey(info.dstTrackId, info.clipId));
+
+        // If clip shrank, close the gap by untrimming the right neighbour.
+        if (!rightNeighbour) {
+            continue;
+        }
+        const trackedit::ClipKey importedKey(info.dstTrackId, info.clipId);
+        const double gap = info.endTimeBeforeStretch - trackeditInteraction()->clipEndTime(importedKey);
+        if (gap > 0.0 && rightNeighbour->GetTrimLeft() > 0.0) {
+            const double untrimAmount = std::min(gap, rightNeighbour->GetTrimLeft());
+            trackedit::ClipKey neighbourKey(info.dstTrackId, rightNeighbour->GetId());
+            trackeditInteraction()->trimClipsLeft(
+                { neighbourKey }, -untrimAmount, 0.0, true, trackedit::UndoPushType::NONE);
+        }
     }
 }
 
