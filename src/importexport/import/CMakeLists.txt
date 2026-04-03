@@ -29,42 +29,17 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/types/importtypes.h
 )
 
-# Loop Tempo Estimator (used for tempo detection on import)
-# Configure sparse checkout so only source/ and LICENSE are fetched
-set(_LTE_DIR ${CMAKE_SOURCE_DIR}/thirdparty/loop-tempo-estimator)
-if(NOT EXISTS ${_LTE_DIR}/source/CMakeLists.txt)
-    message(STATUS "Initializing loop-tempo-estimator submodule with sparse checkout...")
-    execute_process(
-        COMMAND git submodule init thirdparty/loop-tempo-estimator
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        RESULT_VARIABLE _lte_res)
-    if(NOT _lte_res EQUAL 0)
-        message(FATAL_ERROR "Failed to init loop-tempo-estimator submodule (exit code: ${_lte_res})")
-    endif()
-    execute_process(
-        COMMAND git -C ${_LTE_DIR} sparse-checkout init --no-cone
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        RESULT_VARIABLE _lte_res)
-    if(NOT _lte_res EQUAL 0)
-        message(FATAL_ERROR "Failed to configure sparse-checkout for loop-tempo-estimator (exit code: ${_lte_res})")
-    endif()
-    execute_process(
-        COMMAND git -C ${_LTE_DIR} sparse-checkout set /source/ /LICENSE
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        RESULT_VARIABLE _lte_res)
-    if(NOT _lte_res EQUAL 0)
-        message(FATAL_ERROR "Failed to set sparse-checkout paths for loop-tempo-estimator (exit code: ${_lte_res})")
-    endif()
-    execute_process(
-        COMMAND git submodule update thirdparty/loop-tempo-estimator
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        RESULT_VARIABLE _lte_res)
-    if(NOT _lte_res EQUAL 0)
-        message(FATAL_ERROR "Failed to update loop-tempo-estimator submodule (exit code: ${_lte_res})")
-    endif()
-endif()
+# Loop Tempo Estimator (fetched automatically during configure)
 if(NOT TARGET loop-tempo-estimator)
-    add_subdirectory(${_LTE_DIR}/source ${CMAKE_BINARY_DIR}/loop-tempo-estimator)
+    set(LTE_VERSION "v0.0.3")
+
+    include(FetchContent)
+    FetchContent_Declare(
+        loop-tempo-estimator
+        URL https://github.com/saintmatthieu/loop-tempo-estimator/releases/download/${LTE_VERSION}/loop-tempo-estimator-${LTE_VERSION}.tar.gz
+        SOURCE_SUBDIR source
+    )
+    FetchContent_MakeAvailable(loop-tempo-estimator)
 endif()
 
 # AU3
