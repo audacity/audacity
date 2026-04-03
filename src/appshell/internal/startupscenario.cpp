@@ -98,7 +98,13 @@ void StartupScenario::setStartupMediaFiles(const muse::io::paths_t& files)
 
 muse::async::Promise<muse::Ret> StartupScenario::runOnSplashScreen()
 {
-    return muse::async::make_promise<muse::Ret>([](auto resolve, auto) {
+    return muse::async::make_promise<muse::Ret>([this](auto resolve, auto) {
+        if (multiwindowsProvider()->isFirstWindow()) {
+            if (appUpdateScenario() && appUpdateScenario()->needCheckForUpdate()) {
+                appUpdateScenario()->checkForUpdate(/*manual*/ false);
+            }
+        }
+
         const muse::Ret ret = muse::make_ret(muse::Ret::Code::Ok);
         return resolve(ret);
     });

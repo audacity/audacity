@@ -29,6 +29,7 @@
 #include "framework/interactive/iinteractive.h"
 #include "framework/actions/iactionsdispatcher.h"
 #include "framework/multiwindows/imultiwindowsprovider.h"
+#include "update/iappupdatescenario.h"
 
 #include "appshell/iappshellconfiguration.h"
 #include "appshell/internal/isessionsmanager.h"
@@ -44,6 +45,7 @@ class StartupScenario : public au::appshell::IStartupScenario, public muse::asyn
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::ContextInject<ISessionsManager> sessionsManager { this };
     muse::ContextInject<effects::IEffectsProviderInitializer> effectsProviderInitializer { this };
+    muse::ContextInject<muse::update::IAppUpdateScenario> appUpdateScenario { this };
 
 public:
     StartupScenario(const muse::modularity::ContextPtr& ctx)

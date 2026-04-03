@@ -684,12 +684,6 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Link account"),
              TranslatableString("action", "Link account")
              ),
-    UiAction("updates",
-             au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Updates"),
-             TranslatableString("action", "Updates")
-             ),
     UiAction("file-save-to-cloud",
              au::context::UiCtxAny,
              au::context::CTX_ANY,

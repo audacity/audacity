@@ -50,7 +50,7 @@ Q_MOC_INCLUDE(< QWindow >)
 // #include "workspace/iworkspacemanager.h"
 #include "project/irecentfilescontroller.h"
 // #include "extensions/iextensionsprovider.h"
-// #include "update/iupdateconfiguration.h"
+#include "update/iupdateconfiguration.h"
 
 namespace au::appshell {
 class AppMenuModel : public muse::uicomponents::AbstractMenuModel, public effects::IEffectMenuItemFactory
@@ -75,7 +75,7 @@ public:
     //! TODO AU4
     // muse::ContextInject<workspace::IWorkspaceManager> workspacesManager = { this };
     // muse::ContextInject<extensions::IExtensionsProvider> extensionsProvider = { this };
-    // muse::GlobalInject<update::IUpdateConfiguration> updateConfiguration = { this };
+    muse::GlobalInject<muse::update::IUpdateConfiguration> updateConfiguration;
 
 public:
     explicit AppMenuModel(QObject* parent = nullptr);

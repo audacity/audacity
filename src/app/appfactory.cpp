@@ -21,6 +21,7 @@
 #include "framework/dockwindow/dockmodule.h"
 #include "framework/cloud/cloudmodule.h"
 #include "framework/network/networkmodule.h"
+#include "framework/update/updatemodule.h"
 #include "framework/learn/learnmodule.h"
 #include "framework/languages/languagesmodule.h"
 #include "framework/workspace/workspacemodule.h"
@@ -133,6 +134,7 @@ std::shared_ptr<muse::IApplication> AppFactory::newGuiApp(const std::shared_ptr<
 #endif
     app->addModule(new muse::cloud::CloudModule());
     app->addModule(new muse::network::NetworkModule());
+    app->addModule(new muse::update::UpdateModule());
     app->addModule(new muse::extensions::ExtensionsModule());
 #ifdef MUSE_MODULE_AUTOBOT
     app->addModule(new muse::autobot::AutobotModule());

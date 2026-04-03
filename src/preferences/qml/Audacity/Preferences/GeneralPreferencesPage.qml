@@ -24,6 +24,7 @@ import QtQuick
 import Muse.Ui
 import Muse.UiComponents
 import Audacity.AppShell
+import Audacity.Preferences
 
 PreferencesPage {
     id: root
@@ -38,6 +39,14 @@ PreferencesPage {
         onReceivingUpdateForCurrentLanguage: function(current, total, status) {
             languagesSection.setUpdateProgress(current, total, status)
         }
+    }
+
+    UpdatePreferencesModel {
+        id: updateModel
+    }
+
+    UsageInfoPreferencesModel {
+        id: usageInfoModel
     }
 
     Column {
@@ -91,11 +100,40 @@ PreferencesPage {
 
         SeparatorLine { }
 
+        AutomaticUpdateSection {
+            isAppUpdatable: updateModel.isAppUpdatable()
+            needCheckForNewAppVersion: updateModel.needCheckForNewAppVersion
+            privacyPolicyUrl: updateModel.privacyPolicyUrl()
+
+            navigation.section: root.navigationSection
+            navigation.order: root.navigationOrderStart + 3
+
+            onNeedCheckForNewAppVersionChangeRequested: function(check) {
+                updateModel.needCheckForNewAppVersion = check
+            }
+        }
+
+        SeparatorLine { }
+
+        UsageInfoSection {
+            sendAnonymousUsageInfo: usageInfoModel.sendAnonymousUsageInfo
+            privacyPolicyUrl: updateModel.privacyPolicyUrl()
+
+            navigation.section: root.navigationSection
+            navigation.order: root.navigationOrderStart + 4
+
+            onSendAnonymousUsageInfoChangeRequested: function(send) {
+                usageInfoModel.sendAnonymousUsageInfo = send
+            }
+        }
+
+        SeparatorLine { }
+
         TemporaryFilesSection {
             id: temporaryFilesSection
 
             navigation.section: root.navigationSection
-            navigation.order: root.navigationOrderStart + 3
+            navigation.order: root.navigationOrderStart + 5
 
             temporaryPath: preferencesModel.temporaryDir
 
@@ -122,7 +160,7 @@ PreferencesPage {
             id: ffmpegLibrarySection
 
             navigation.section: root.navigationSection
-            navigation.order: root.navigationOrderStart + 4
+            navigation.order: root.navigationOrderStart + 6
 
             onFocusChanged: {
                 if (activeFocus) {
