@@ -231,8 +231,12 @@ bool au::importexport::Au3Importer::importIntoTrack(const muse::io::path_t& file
 
     bool modifiedState = false;
     selectionController()->setSelectedTracks({ dstTrackId }, true);
-    tracksInteraction()->paste(importedData, 0.0, false /* moveClips */, false /* moveAllTracks */,
-                               true /* isMultiSelectionCopy */, modifiedState);
+    muse::Ret pasteRet = tracksInteraction()->paste(importedData, 0.0, false /* moveClips */, false /* moveAllTracks */,
+                                                    true /* isMultiSelectionCopy */, modifiedState);
+    if (!pasteRet) {
+        return false;
+    }
+
     applyImportedProjectTitleIfNeeded(filePath);
 
     std::vector<trackedit::TrackId> dstTrackIds(importedWaveTracks.size(), dstTrackId);
