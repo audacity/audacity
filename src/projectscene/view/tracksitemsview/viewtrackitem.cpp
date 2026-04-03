@@ -39,6 +39,11 @@ QColor ViewTrackItem::color() const
     return m_color;
 }
 
+QColor ViewTrackItem::selectedColor() const
+{
+    return m_selectedColor;
+}
+
 double ViewTrackItem::x() const
 {
     return m_x;

@@ -20,13 +20,13 @@ static muse::testing::SuiteEnvironment trackedit_se
     std::shared_ptr<NiceMock<ProjectSceneConfigurationMock> > projectSceneConfigurator(new NiceMock<ProjectSceneConfigurationMock>(),
                                                                                        [](ProjectSceneConfigurationMock*) {}); // no delete
 
-    static std::vector<std::pair<std::string /*name*/, std::string /*color*/> > colors = {
-        { "blue", "#0000FF" },
-        { "red", "#FF0000" },
+    static std::vector<ClipColorInfo> colorInfos = {
+        { "blue", 1 },
+        { "red", 2 },
     };
 
-    ON_CALL(*projectSceneConfigurator, clipColors())
-    .WillByDefault(ReturnRef(colors));
+    ON_CALL(*projectSceneConfigurator, clipColorInfos())
+    .WillByDefault(ReturnRef(colorInfos));
 
     muse::modularity::globalIoc()->unregister<IProjectSceneConfiguration>("utests");
     muse::modularity::globalIoc()->registerExport<IProjectSceneConfiguration>("utests", projectSceneConfigurator);

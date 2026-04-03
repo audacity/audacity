@@ -7,6 +7,8 @@
 #include <QString>
 #include <QColor>
 
+#include "framework/global/modularity/ioc.h"
+#include "projectscene/iprojectsceneconfiguration.h"
 #include "projectscene/types/projectscenetypes.h"
 
 namespace au::projectscene {
@@ -17,6 +19,7 @@ class ViewTrackItem : public QObject
     Q_PROPERTY(TrackItemKey key READ key CONSTANT)
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged FINAL)
     Q_PROPERTY(QColor color READ color NOTIFY colorChanged FINAL)
+    Q_PROPERTY(QColor selectedColor READ selectedColor NOTIFY colorChanged FINAL)
     Q_PROPERTY(double x READ x WRITE setX NOTIFY xChanged FINAL)
     Q_PROPERTY(double width READ width WRITE setWidth NOTIFY widthChanged FINAL)
     Q_PROPERTY(double leftVisibleMargin READ leftVisibleMargin WRITE setLeftVisibleMargin NOTIFY leftVisibleMarginChanged FINAL)
@@ -35,6 +38,7 @@ public:
     QString title() const;
     void setTitle(const QString& newTitle);
     QColor color() const;
+    QColor selectedColor() const;
 
     double x() const;
     void setX(double newX);
@@ -81,6 +85,7 @@ protected:
     TrackItemKey m_key;
     QString m_title;
     QColor m_color;
+    QColor m_selectedColor;
     double m_x = 0.0;
     double m_width = 0.0;
     bool m_selected = false;

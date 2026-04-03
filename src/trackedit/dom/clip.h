@@ -6,7 +6,6 @@
 #include <vector>
 
 #include "global/types/string.h"
-#include "draw/types/color.h"
 #include "../trackedittypes.h"
 
 namespace au::trackedit {
@@ -17,7 +16,7 @@ struct Clip {
     ClipVersion clipVersion = -1;
 
     muse::String title;
-    muse::draw::Color color;
+    ClipColorIndex colorIndex = 0;
     int groupId = -1;
     double startTime = 0.0;
     double endTime = 0.0;
@@ -28,7 +27,6 @@ struct Clip {
     bool optimizeForVoice = false;
 
     bool stretchToMatchTempo = false;
-    bool hasCustomColor = false;
 
     inline bool isValid() const { return key.isValid(); }
 };

@@ -162,16 +162,16 @@ void ClipContextMenuModel::updateColorCheckedState()
         MenuItem& item = findItem(ActionCode(action));
         ActionQuery query(action);
 
-        if ((!clip.hasCustomColor && action == m_colorChangeActionCodeList.at(0))
-            || (clip.hasCustomColor && muse::draw::Color::fromString(query.param("color").toString()) == clip.color)) {
-            auto state = item.state();
-            state.checked = true;
-            item.setState(state);
-        } else {
-            auto state = item.state();
-            state.checked = false;
-            item.setState(state);
+        bool checked = false;
+        if (clip.colorIndex == trackedit::CLIP_COLOR_INDEX_NONE && action == m_colorChangeActionCodeList.at(0)) {
+            checked = true;
+        } else if (query.contains("colorindex") && query.param("colorindex").toInt() == clip.colorIndex) {
+            checked = true;
         }
+
+        auto state = item.state();
+        state.checked = checked;
+        item.setState(state);
     }
 }
 
@@ -197,11 +197,11 @@ MenuItemList ClipContextMenuModel::makeClipColourItems()
     items << makeSeparator();
     m_colorChangeActionCodeList.push_back("action://trackedit/clip/change-color-auto");
 
-    const auto& colors = projectSceneConfiguration()->clipColors();
-    for (const auto& color : colors) {
-        items << makeMenuItem(makeClipColorChangeAction(color.second).toString(),
-                              muse::TranslatableString("clip", muse::String::fromStdString(color.first)));
-        m_colorChangeActionCodeList.push_back(makeClipColorChangeAction(color.second).toString());
+    const auto& colorInfos = projectSceneConfiguration()->clipColorInfos();
+    for (const auto& info : colorInfos) {
+        items << makeMenuItem(makeClipColorChangeAction(info.index).toString(),
+                              muse::TranslatableString("clip", muse::String::fromStdString(info.name)));
+        m_colorChangeActionCodeList.push_back(makeClipColorChangeAction(info.index).toString());
     }
 
     return items;

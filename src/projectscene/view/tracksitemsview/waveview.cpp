@@ -6,7 +6,7 @@
 #include <QPainter>
 #include <QElapsedTimer>
 
-#include "draw/types/color.h"
+#include "global/types/color.h"
 #include "global/log.h"
 
 #include "au3/wavepainterutils.h"
@@ -103,7 +103,7 @@ IWavePainter::Params WaveView::getWavePainterParams() const
 
     projectscene::ClipStyles::Style clipStyle = configuration()->clipStyle();
     if (clipStyle == projectscene::ClipStyles::Style::COLORFUL) {
-        applyColorfulStyle(params, m_clipColor, m_clipSelected);
+        applyColorfulStyle(params, m_clipColor, m_clipSelectedColor, m_clipSelected);
     } else {
         applyClassicStyle(params, m_clipSelected);
     }
@@ -113,16 +113,17 @@ IWavePainter::Params WaveView::getWavePainterParams() const
 
 void WaveView::applyColorfulStyle(IWavePainter::Params& params,
                                   const QColor& clipColor,
+                                  const QColor& clipSelectedColor,
                                   bool selected) const
 {
     float bgAlpha = selected ? 0.8 : 0.9;
     float normalBgAlpha = 0.8;
     params.style.blankBrush = muse::blendQColors(BACKGROUND_COLOR, clipColor, bgAlpha);
     params.style.normalBackground = muse::blendQColors(BACKGROUND_COLOR, clipColor, normalBgAlpha);
-    params.style.selectedBackground = transformColor(params.style.normalBackground);
+    params.style.selectedBackground = muse::blendQColors(BACKGROUND_COLOR, clipSelectedColor, normalBgAlpha);
 
     params.style.envelopeBackground = muse::blendQColors(BACKGROUND_COLOR, clipColor, normalBgAlpha);
-    params.style.selectedEnvelopeBackground = transformColor(params.style.normalBackground);
+    params.style.selectedEnvelopeBackground = muse::blendQColors(BACKGROUND_COLOR, clipSelectedColor, normalBgAlpha);
 
     params.style.samplePen = muse::blendQColors(params.style.blankBrush, SAMPLES_BASE_COLOR, 0.8);
     params.style.selectedSamplePen = muse::blendQColors(params.style.blankBrush,
@@ -237,6 +238,22 @@ void WaveView::setClipColor(const QColor& newClipColor)
     }
     m_clipColor = newClipColor;
     emit clipColorChanged();
+
+    update();
+}
+
+QColor WaveView::clipSelectedColor() const
+{
+    return m_clipSelectedColor;
+}
+
+void WaveView::setClipSelectedColor(const QColor& newClipSelectedColor)
+{
+    if (m_clipSelectedColor == newClipSelectedColor) {
+        return;
+    }
+    m_clipSelectedColor = newClipSelectedColor;
+    emit clipSelectedColorChanged();
 
     update();
 }

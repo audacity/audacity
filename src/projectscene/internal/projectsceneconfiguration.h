@@ -41,7 +41,9 @@ public:
     void setIsEffectsPanelVisible(bool visible) override;
     muse::async::Notification isEffectsPanelVisibleChanged() const override;
 
-    const std::vector<std::pair<std::string, std::string> >& clipColors() const override;
+    const std::vector<ClipColorInfo>& clipColorInfos() const override;
+    QColor clipColor(trackedit::ClipColorIndex index) const override;
+    QColor clipSelectedColor(trackedit::ClipColorIndex index) const override;
 
     ClipStyles::Style clipStyle() const override;
     void setClipStyle(ClipStyles::Style style) override;

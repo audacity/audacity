@@ -28,6 +28,7 @@ Rectangle {
     property var canvas: null
     required property int headerHeight
     property color clipColor: ui.theme.extra["clip_color_1"]
+    property color clipSelectedColor: ui.theme.extra["clip_selected_color_1"]
     property color normalHeaderColor: root.currentClipStyle == ClipStyle.COLORFUL ? root.clipColor : root.classicHeaderColor
     property color selectedHeaderColor: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors(ui.theme.extra["white_color"], root.clipColor, 0.3) : classicHeaderColor
     property color normalHeaderHoveredColor: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors(ui.theme.extra["white_color"], root.clipColor, 0.8) : classicHeaderHoveredColor
@@ -568,7 +569,7 @@ Rectangle {
                 anchors.top: header.top
                 anchors.bottom: header.bottom
 
-                color: waveView.transformColor(clipColor)
+                color: root.clipSelectedColor
                 visible: root.isDataSelected && currentClipStyle == ClipStyle.COLORFUL
             }
 
@@ -836,6 +837,7 @@ Rectangle {
                 channelHeightRatio: showChannelSplitter ? root.channelHeightRatio : 1
 
                 clipColor: root.clipColor
+                clipSelectedColor: root.clipSelectedColor
                 clipSelected: root.clipSelected
                 isIsolationMode: root.isIsolationMode
                 multiSampleEdit: root.multiSampleEdit

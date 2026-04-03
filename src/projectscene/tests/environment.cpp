@@ -16,13 +16,13 @@ static muse::testing::SuiteEnvironment projectscene_se = muse::testing::SuiteEnv
                                                          .setDependencyModules({ new au::au3::Au3WrapModule(), }).setPreInit([](){
     std::shared_ptr<NiceMock<ProjectSceneConfigurationMock> > projectSceneConfigurator(new NiceMock<ProjectSceneConfigurationMock>(),
                                                                                        [](ProjectSceneConfigurationMock*) {}); // no delete
-    static std::vector<std::pair<std::string /*name*/, std::string /*color*/> > colors = {
-        { "blue", "#0000FF" },
-        { "red", "#FF0000" },
+    static std::vector<ClipColorInfo> colorInfos = {
+        { "blue", 1 },
+        { "red", 2 },
     };
 
-    ON_CALL(*projectSceneConfigurator, clipColors())
-    .WillByDefault(ReturnRef(colors));
+    ON_CALL(*projectSceneConfigurator, clipColorInfos())
+    .WillByDefault(ReturnRef(colorInfos));
 
     std::shared_ptr<NiceMock<ProjectConfigurationMock> > projectConfigurator(new NiceMock<ProjectConfigurationMock>(),
                                                                              [](ProjectConfigurationMock*){});

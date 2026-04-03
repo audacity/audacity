@@ -5,6 +5,7 @@ Rectangle {
     id: root
 
     required property color clipColor
+    property color clipSelectedColor: clipColor
     property bool collapsed: false
 
     //radius: 4
