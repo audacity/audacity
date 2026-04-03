@@ -1023,6 +1023,7 @@ Rectangle {
                 selectionEndTime: root.context.selectionEndTime
                 selectionStartFrequency: root.selectionStartFrequency
                 selectionEndFrequency: root.selectionEndFrequency
+                clipSelected: root.clipSelected
 
                 ChannelSplitter {
                     id: spectrogramChannelSplitter
