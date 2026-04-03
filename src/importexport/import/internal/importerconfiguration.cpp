@@ -76,7 +76,7 @@ muse::async::Notification ImporterConfiguration::tempoDetectionWorkspacesChanged
 
 LoopAction ImporterConfiguration::subsequentImportLoopAction() const
 {
-    return static_cast<LoopAction>(muse::settings()->value(SUBSEQUENT_IMPORT_LOOP_ACTION).toInt());
+    return muse::settings()->value(SUBSEQUENT_IMPORT_LOOP_ACTION).toEnum<LoopAction>();
 }
 
 void ImporterConfiguration::setSubsequentImportLoopAction(LoopAction action)
