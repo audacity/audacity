@@ -229,13 +229,21 @@ const std::vector<ClipColorInfo>& ProjectSceneConfiguration::clipColorInfos() co
 QColor ProjectSceneConfiguration::clipColor(trackedit::ClipColorIndex index) const
 {
     QString key = QString("clip_color_%1").arg(index);
-    return uiConfiguration()->currentTheme().extra[key].value<QColor>();
+    QColor color = uiConfiguration()->currentTheme().extra[key].value<QColor>();
+    if (!color.isValid()) {
+        color = uiConfiguration()->currentTheme().extra["clip_color_1"].value<QColor>();
+    }
+    return color;
 }
 
 QColor ProjectSceneConfiguration::clipSelectedColor(trackedit::ClipColorIndex index) const
 {
     QString key = QString("clip_selected_color_%1").arg(index);
-    return uiConfiguration()->currentTheme().extra[key].value<QColor>();
+    QColor color = uiConfiguration()->currentTheme().extra[key].value<QColor>();
+    if (!color.isValid()) {
+        color = uiConfiguration()->currentTheme().extra["clip_selected_color_1"].value<QColor>();
+    }
+    return color;
 }
 
 ClipStyles::Style ProjectSceneConfiguration::clipStyle() const

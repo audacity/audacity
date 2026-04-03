@@ -109,7 +109,7 @@ Rectangle {
     property alias navigation: navCtrl
 
     radius: 4
-    color: clipSelected ? ui.theme.extra["white_color"] : clipColor
+    color: clipSelected ? clipSelectedColor : clipColor
     border.color: ui.theme.extra["black_color"]
     opacity: root.moveActive && (clipSelected || clipIntersectsSelection) ? 0.5 : isAudible ? 1.0 : 0.3
 
@@ -569,7 +569,7 @@ Rectangle {
                 anchors.top: header.top
                 anchors.bottom: header.bottom
 
-                color: root.clipSelectedColor
+                color: root.selectedHeaderColor
                 visible: root.isDataSelected && currentClipStyle == ClipStyle.COLORFUL
             }
 

@@ -16,7 +16,7 @@ struct Clip {
     ClipVersion clipVersion = -1;
 
     muse::String title;
-    ClipColorIndex colorIndex = 0;
+    ClipColorIndex colorIndex = CLIP_COLOR_INDEX_NONE;
     int groupId = -1;
     double startTime = 0.0;
     double endTime = 0.0;

@@ -116,14 +116,20 @@ void WaveView::applyColorfulStyle(IWavePainter::Params& params,
                                   const QColor& clipSelectedColor,
                                   bool selected) const
 {
-    float bgAlpha = selected ? 0.8 : 0.9;
     float normalBgAlpha = 0.8;
-    params.style.blankBrush = muse::blendQColors(BACKGROUND_COLOR, clipColor, bgAlpha);
-    params.style.normalBackground = muse::blendQColors(BACKGROUND_COLOR, clipColor, normalBgAlpha);
-    params.style.selectedBackground = muse::blendQColors(BACKGROUND_COLOR, clipSelectedColor, normalBgAlpha);
-
-    params.style.envelopeBackground = muse::blendQColors(BACKGROUND_COLOR, clipColor, normalBgAlpha);
-    params.style.selectedEnvelopeBackground = muse::blendQColors(BACKGROUND_COLOR, clipSelectedColor, normalBgAlpha);
+    if (selected) {
+        params.style.blankBrush = clipSelectedColor;
+        params.style.normalBackground = clipSelectedColor;
+        params.style.selectedBackground = clipSelectedColor;
+        params.style.envelopeBackground = clipSelectedColor;
+        params.style.selectedEnvelopeBackground = clipSelectedColor;
+    } else {
+        params.style.blankBrush = muse::blendQColors(BACKGROUND_COLOR, clipColor, 0.9);
+        params.style.normalBackground = muse::blendQColors(BACKGROUND_COLOR, clipColor, normalBgAlpha);
+        params.style.selectedBackground = clipSelectedColor;
+        params.style.envelopeBackground = muse::blendQColors(BACKGROUND_COLOR, clipColor, normalBgAlpha);
+        params.style.selectedEnvelopeBackground = clipSelectedColor;
+    }
 
     params.style.samplePen = muse::blendQColors(params.style.blankBrush, SAMPLES_BASE_COLOR, 0.8);
     params.style.selectedSamplePen = muse::blendQColors(params.style.blankBrush,
