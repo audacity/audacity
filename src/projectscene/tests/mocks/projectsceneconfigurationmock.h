@@ -38,8 +38,8 @@ public:
     MOCK_METHOD(muse::async::Notification, isEffectsPanelVisibleChanged, (), (const, override));
 
     MOCK_METHOD((const std::vector<ClipColorInfo>&), clipColorInfos, (), (const, override));
-    MOCK_METHOD(QColor, clipColor, (trackedit::ClipColorIndex index), (const, override));
-    MOCK_METHOD(QColor, clipSelectedColor, (trackedit::ClipColorIndex index), (const, override));
+    MOCK_METHOD(muse::Color, clipColor, (trackedit::ClipColorIndex index), (const, override));
+    MOCK_METHOD(muse::Color, clipSelectedColor, (trackedit::ClipColorIndex index), (const, override));
 
     MOCK_METHOD(ClipStyles::Style, clipStyle, (), (const, override));
     MOCK_METHOD(void, setClipStyle, (ClipStyles::Style style), (override));

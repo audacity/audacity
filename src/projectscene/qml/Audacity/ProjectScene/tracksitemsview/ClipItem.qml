@@ -569,7 +569,7 @@ Rectangle {
                 anchors.top: header.top
                 anchors.bottom: header.bottom
 
-                color: root.selectedHeaderColor
+                color: waveView.transformColor(clipColor)
                 visible: root.isDataSelected && currentClipStyle == ClipStyle.COLORFUL
             }
 

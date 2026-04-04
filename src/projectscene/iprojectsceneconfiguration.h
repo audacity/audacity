@@ -1,13 +1,12 @@
 #pragma once
 
-#include <QColor>
-
 #include "async/channel.h"
 #include "async/notification.h"
 
 #include "modularity/imoduleinterface.h"
 #include "modularity/ioc.h"
 
+#include "global/types/color.h"
 #include "trackedit/trackedittypes.h"
 #include "types/projectscenetypes.h"
 
@@ -47,8 +46,8 @@ public:
     virtual muse::async::Notification isEffectsPanelVisibleChanged() const = 0;
 
     virtual const std::vector<ClipColorInfo>& clipColorInfos() const = 0;
-    virtual QColor clipColor(trackedit::ClipColorIndex index) const = 0;
-    virtual QColor clipSelectedColor(trackedit::ClipColorIndex index) const = 0;
+    virtual muse::Color clipColor(trackedit::ClipColorIndex index) const = 0;
+    virtual muse::Color clipSelectedColor(trackedit::ClipColorIndex index) const = 0;
 
     virtual ClipStyles::Style clipStyle() const = 0;
     virtual void setClipStyle(ClipStyles::Style style) = 0;

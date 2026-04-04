@@ -24,13 +24,13 @@ static muse::testing::SuiteEnvironment projectscene_se = muse::testing::SuiteEnv
     ON_CALL(*projectSceneConfigurator, clipColorInfos())
     .WillByDefault(ReturnRef(colorInfos));
     ON_CALL(*projectSceneConfigurator, clipColor(1))
-    .WillByDefault(Return(QColor(0x00, 0x00, 0xFF)));
+    .WillByDefault(Return(muse::Color(0x00, 0x00, 0xFF)));
     ON_CALL(*projectSceneConfigurator, clipColor(2))
-    .WillByDefault(Return(QColor(0xFF, 0x00, 0x00)));
+    .WillByDefault(Return(muse::Color(0xFF, 0x00, 0x00)));
     ON_CALL(*projectSceneConfigurator, clipSelectedColor(1))
-    .WillByDefault(Return(QColor(0x80, 0x80, 0xFF)));
+    .WillByDefault(Return(muse::Color(0x80, 0x80, 0xFF)));
     ON_CALL(*projectSceneConfigurator, clipSelectedColor(2))
-    .WillByDefault(Return(QColor(0xFF, 0x80, 0x80)));
+    .WillByDefault(Return(muse::Color(0xFF, 0x80, 0x80)));
 
     std::shared_ptr<NiceMock<ProjectConfigurationMock> > projectConfigurator(new NiceMock<ProjectConfigurationMock>(),
                                                                              [](ProjectConfigurationMock*){});

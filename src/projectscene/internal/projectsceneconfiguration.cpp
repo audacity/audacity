@@ -226,24 +226,24 @@ const std::vector<ClipColorInfo>& ProjectSceneConfiguration::clipColorInfos() co
     return infos;
 }
 
-QColor ProjectSceneConfiguration::clipColor(trackedit::ClipColorIndex index) const
+muse::Color ProjectSceneConfiguration::clipColor(trackedit::ClipColorIndex index) const
 {
     QString key = QString("clip_color_%1").arg(index);
     QColor color = uiConfiguration()->currentTheme().extra[key].value<QColor>();
     if (!color.isValid()) {
         color = uiConfiguration()->currentTheme().extra["clip_color_1"].value<QColor>();
     }
-    return color;
+    return muse::Color::fromQColor(color);
 }
 
-QColor ProjectSceneConfiguration::clipSelectedColor(trackedit::ClipColorIndex index) const
+muse::Color ProjectSceneConfiguration::clipSelectedColor(trackedit::ClipColorIndex index) const
 {
     QString key = QString("clip_selected_color_%1").arg(index);
     QColor color = uiConfiguration()->currentTheme().extra[key].value<QColor>();
     if (!color.isValid()) {
         color = uiConfiguration()->currentTheme().extra["clip_selected_color_1"].value<QColor>();
     }
-    return color;
+    return muse::Color::fromQColor(color);
 }
 
 ClipStyles::Style ProjectSceneConfiguration::clipStyle() const

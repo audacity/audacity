@@ -70,13 +70,13 @@ static muse::testing::SuiteEnvironment audacityproject_se
     ON_CALL(*projectSceneConfigurator, clipColorInfos())
     .WillByDefault(::testing::ReturnRef(colorInfos));
     ON_CALL(*projectSceneConfigurator, clipColor(1))
-    .WillByDefault(::testing::Return(QColor(0x00, 0x00, 0xFF)));
+    .WillByDefault(::testing::Return(muse::Color(0x00, 0x00, 0xFF)));
     ON_CALL(*projectSceneConfigurator, clipColor(2))
-    .WillByDefault(::testing::Return(QColor(0xFF, 0x00, 0x00)));
+    .WillByDefault(::testing::Return(muse::Color(0xFF, 0x00, 0x00)));
     ON_CALL(*projectSceneConfigurator, clipSelectedColor(1))
-    .WillByDefault(::testing::Return(QColor(0x80, 0x80, 0xFF)));
+    .WillByDefault(::testing::Return(muse::Color(0x80, 0x80, 0xFF)));
     ON_CALL(*projectSceneConfigurator, clipSelectedColor(2))
-    .WillByDefault(::testing::Return(QColor(0xFF, 0x80, 0x80)));
+    .WillByDefault(::testing::Return(muse::Color(0xFF, 0x80, 0x80)));
 
     muse::modularity::globalIoc()->unregister<au::projectscene::IProjectSceneConfiguration>("utests");
     muse::modularity::globalIoc()->registerExport<au::projectscene::IProjectSceneConfiguration>("utests", projectSceneConfigurator);
