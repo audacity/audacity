@@ -145,7 +145,7 @@ void RecordController::leadInRecording()
     }
 
     // Store the recording start position and selected tracks before starting
-    m_leadInRecordingStartTime = globalContext()->playbackState()->playbackPosition();
+    m_leadInRecordingStartTime = selectionController()->selectionStartTime();
     m_leadInRecordingTrackIds = selectionController()->selectedTracks();
 
     Ret ret = record()->leadInRecording();
