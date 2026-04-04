@@ -32,7 +32,7 @@ BaseSection {
         step: 0.5
         decimals: 1
 
-        measureUnitsSymbol: " " + qsTrc("global", "seconds")
+        measureUnitsSymbol: qsTrc("global", "seconds")
 
         navigation.name: "LeadInTimeDurationControl"
         navigation.panel: root.navigation
@@ -57,7 +57,7 @@ BaseSection {
         step: 1
         decimals: 0
 
-        measureUnitsSymbol: " " + qsTrc("global", "ms")
+        measureUnitsSymbol: qsTrc("global", "ms")
 
         navigation.name: "CrossfadeDurationControl"
         navigation.panel: root.navigation
