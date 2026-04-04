@@ -123,6 +123,10 @@ static const ActionCode LABEL_CUT_MULTI_CODE("label-cut-multi");
 static const ActionCode LABEL_COPY_CODE("label-copy");
 static const ActionCode LABEL_COPY_MULTI_CODE("label-copy-multi");
 
+static const ActionCode LABEL_TOGGLE_MARKER_CODE("label-toggle-marker");
+static const ActionCode LABEL_TRACK_EXPAND_CODE("label-track-expand-to-regions");
+static const ActionCode LABEL_TRACK_COLLAPSE_CODE("label-track-collapse-to-markers");
+
 static const ActionQuery PLAYBACK_SEEK_QUERY("action://playback/seek");
 
 static const ActionCode TRACK_VIEW_ITEM_MOVE_LEFT_CODE("track-view-item-move-left");
@@ -305,6 +309,10 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, LABEL_COPY_CODE, this, &TrackeditActionsController::labelCopy);
     dispatcher()->reg(this, LABEL_COPY_MULTI_CODE, this, &TrackeditActionsController::labelCopyMulti);
 
+    dispatcher()->reg(this, LABEL_TOGGLE_MARKER_CODE, this, &TrackeditActionsController::labelToggleMarker);
+    dispatcher()->reg(this, LABEL_TRACK_EXPAND_CODE, this, &TrackeditActionsController::labelTrackExpandToRegions);
+    dispatcher()->reg(this, LABEL_TRACK_COLLAPSE_CODE, this, &TrackeditActionsController::labelTrackCollapseToMarkers);
+
     dispatcher()->reg(this, TRACK_VIEW_ITEM_MOVE_LEFT_CODE, this, &TrackeditActionsController::moveFocusedItemLeft);
     dispatcher()->reg(this, TRACK_VIEW_ITEM_MOVE_RIGHT_CODE, this, &TrackeditActionsController::moveFocusedItemRight);
     dispatcher()->reg(this, TRACK_VIEW_ITEM_MOVE_UP_CODE, this, &TrackeditActionsController::moveFocusedItemUp);
@@ -363,7 +371,11 @@ bool TrackeditActionsController::isFocusedItemClip() const
     }
 
     const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    return prj ? prj->track(focusedItemKey.trackId)->type != TrackType::Label : false;
+    if (!prj) {
+        return false;
+    }
+    auto t = prj->track(focusedItemKey.trackId);
+    return t ? t->type != TrackType::Label : false;
 }
 
 ClipKeyList TrackeditActionsController::clipsForInteraction() const
@@ -388,7 +400,11 @@ bool TrackeditActionsController::isFocusedItemLabel() const
     }
 
     const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    return prj ? prj->track(focusedItemKey.trackId)->type == TrackType::Label : false;
+    if (!prj) {
+        return false;
+    }
+    auto t = prj->track(focusedItemKey.trackId);
+    return t ? t->type == TrackType::Label : false;
 }
 
 LabelKeyList TrackeditActionsController::labelsForInteraction() const
@@ -975,6 +991,36 @@ void TrackeditActionsController::labelCopyMulti()
 
         trackeditInteraction()->copyNonContinuousTrackDataIntoClipboard(track.id, selectedTrackLabels, offset);
     }
+}
+
+void TrackeditActionsController::labelToggleMarker(const ActionData& args)
+{
+    LabelKey labelKey = args.arg<LabelKey>(0);
+    if (!labelKey.isValid()) {
+        return;
+    }
+
+    trackeditInteraction()->toggleLabelMarker(labelKey);
+}
+
+void TrackeditActionsController::labelTrackExpandToRegions(const ActionData& args)
+{
+    TrackId trackId = args.arg<TrackId>(0);
+    if (trackId == INVALID_TRACK) {
+        return;
+    }
+
+    trackeditInteraction()->expandMarkersToRegions(trackId);
+}
+
+void TrackeditActionsController::labelTrackCollapseToMarkers(const ActionData& args)
+{
+    TrackId trackId = args.arg<TrackId>(0);
+    if (trackId == INVALID_TRACK) {
+        return;
+    }
+
+    trackeditInteraction()->collapseLabelsToMarkers(trackId);
 }
 
 void TrackeditActionsController::multiClipCut(const ActionData& args)

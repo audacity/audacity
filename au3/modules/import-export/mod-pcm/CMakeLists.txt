@@ -5,6 +5,8 @@ PCM (that is .wav file) import and export
 set( TARGET mod-pcm )
 
 set( SOURCES
+      CueTrackAttachment.cpp
+      CueTrackAttachment.h
       ImportPCM.cpp
       ExportPCM.cpp
       PCM.cpp
@@ -20,6 +22,7 @@ list (APPEND LIBRARIES
    PRIVATE
       lib-import-export-interface
       lib-file-formats-interface
+      au3-label-track
 )
 
 

@@ -1030,6 +1030,33 @@ bool TrackeditOperationController::stretchLabelsRight(const LabelKeyList& labelK
     return success;
 }
 
+bool TrackeditOperationController::toggleLabelMarker(const LabelKey& labelKey)
+{
+    if (labelsInteraction()->toggleLabelMarker(labelKey)) {
+        projectHistory()->pushHistoryState("Toggle marker", "Toggle marker");
+        return true;
+    }
+    return false;
+}
+
+bool TrackeditOperationController::expandMarkersToRegions(const TrackId& trackId)
+{
+    if (labelsInteraction()->expandMarkersToRegions(trackId)) {
+        projectHistory()->pushHistoryState("Expand markers to regions", "Expand markers");
+        return true;
+    }
+    return false;
+}
+
+bool TrackeditOperationController::collapseLabelsToMarkers(const TrackId& trackId)
+{
+    if (labelsInteraction()->collapseLabelsToMarkers(trackId)) {
+        projectHistory()->pushHistoryState("Collapse labels to markers", "Collapse labels");
+        return true;
+    }
+    return false;
+}
+
 muse::Progress TrackeditOperationController::progress() const
 {
     return tracksInteraction()->progress();

@@ -41,6 +41,7 @@ public:
     bool isCustomFFmpegExportFormat() const override;
     bool isOggExportFormat() const override;
     bool hasMetadata() const override;
+    bool hasChapters() const override;
 
     int maxChannels() const override;
     std::vector<int> sampleRateList() const override;

@@ -188,10 +188,19 @@ bool au::importexport::Au3Importer::importIntoTrack(const muse::io::path_t& file
         return false;
     }
 
+    committed = true;
+
+    auto& tracks = TrackList::Get(*project);
     std::string baseName = filename(filePath, false).toStdString();
     std::vector<ITrackDataPtr> importedData;
     for (auto& holder : tmpTracks) {
-        for (const auto& interval : dynamic_cast<WaveTrack*>(holder.get())->Intervals()) {
+        auto* waveTrack = dynamic_cast<WaveTrack*>(holder.get());
+        if (!waveTrack) {
+            // Add non-wave tracks (e.g. label tracks from cue import) directly to project
+            tracks.Add(holder);
+            continue;
+        }
+        for (const auto& interval : waveTrack->Intervals()) {
             interval->SetName(baseName);
         }
 

@@ -156,7 +156,7 @@ int ExportFLAC::GetFormatCount() const
 FormatInfo ExportFLAC::GetFormatInfo(int) const
 {
     return {
-        wxT("FLAC"), XO("FLAC Files"), { wxT("flac") }, FLAC__MAX_CHANNELS, true
+        wxT("FLAC"), XO("FLAC Files"), { wxT("flac") }, FLAC__MAX_CHANNELS, true, true
     };
 }
 
@@ -429,6 +429,19 @@ FLAC__StreamMetadataHandle FLACExportProcessor::MakeMetadata(AudacityProject* pr
                                                    v.mb_str(wxConvUTF8));
         if (!::FLAC__metadata_object_vorbiscomment_append_comment(metadata.get(),
                                                                   entry.get_entry(),
+                                                                  true)) {
+            return {};
+        }
+    }
+
+    // Add chapter marks as Vorbis Comment tags
+    for (const auto& [key, value] : FormatVorbisChapters(m_chapterMarks)) {
+        auto tag = key + "=" + value;
+        FLAC__StreamMetadata_VorbisComment_Entry vcentry;
+        vcentry.length = tag.size();
+        vcentry.entry = reinterpret_cast<FLAC__byte*>(const_cast<char*>(tag.c_str()));
+        if (!::FLAC__metadata_object_vorbiscomment_append_comment(metadata.get(),
+                                                                  vcentry,
                                                                   true)) {
             return {};
         }

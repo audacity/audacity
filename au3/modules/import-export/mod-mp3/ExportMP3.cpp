@@ -1231,7 +1231,7 @@ int ExportMP3::GetFormatCount() const
 FormatInfo ExportMP3::GetFormatInfo(int) const
 {
     return {
-        wxT("MP3"), XO("MP3 Files"), { wxT("mp3") }, 2u, true
+        wxT("MP3"), XO("MP3 Files"), { wxT("mp3") }, 2u, true, true
     };
 }
 
@@ -1476,6 +1476,9 @@ bool MP3ExportProcessor::Initialize(AudacityProject& project,
 
     bool endOfFile;
     context.id3len = AddTags(context.id3buffer, &endOfFile, metadata);
+    if (context.id3len && !endOfFile && !m_chapterMarks.empty()) {
+        InjectChapterFrames(context.id3buffer, context.id3len);
+    }
     if (context.id3len && !endOfFile) {
         if (context.id3len > context.outFile.Write(context.id3buffer.get(), context.id3len)) {
             // TODO: more precise message
@@ -1681,6 +1684,126 @@ unsigned long MP3ExportProcessor::AddTags(ArrayOf<char>& buffer, bool* endOfFile
 #else //ifdef USE_LIBID3TAG
     return 0;
 #endif
+}
+
+// Build ID3v2.3 CHAP and CTOC frames and inject them into an existing tag buffer.
+// The ID3v2 tag header (10 bytes) stores the payload size as a 4-byte syncsafe integer.
+// We append raw CHAP frames + a CTOC frame to the existing tag, then update the header size.
+void MP3ExportProcessor::InjectChapterFrames(ArrayOf<char>& buffer, unsigned long& len) const
+{
+    if (m_chapterMarks.empty() || len < 10) {
+        return;
+    }
+
+    // Helper: write a big-endian uint32 to a byte buffer
+    auto writeBE32 = [](unsigned char* dst, uint32_t val) {
+        dst[0] = (val >> 24) & 0xFF;
+        dst[1] = (val >> 16) & 0xFF;
+        dst[2] = (val >>  8) & 0xFF;
+        dst[3] =  val        & 0xFF;
+    };
+
+    // Helper: build TIT2 sub-frame (text frame for chapter title)
+    // Layout: "TIT2" (4) + size (4 BE) + flags (2) + encoding (1) + text
+    auto buildTIT2 = [&](const std::string& title) -> std::vector<unsigned char> {
+        std::vector<unsigned char> frame;
+        // encoding=3 (UTF-8), then UTF-8 text (no null terminator needed for single string)
+        size_t dataLen = 1 + title.size();
+        frame.resize(10 + dataLen);
+        memcpy(frame.data(), "TIT2", 4);
+        writeBE32(frame.data() + 4, static_cast<uint32_t>(dataLen));
+        frame[8] = 0; frame[9] = 0; // flags
+        frame[10] = 3; // UTF-8 encoding
+        memcpy(frame.data() + 11, title.data(), title.size());
+        return frame;
+    };
+
+    // Build all CHAP frames and collect element IDs for CTOC
+    std::vector<std::vector<unsigned char>> chapFrames;
+    std::vector<std::string> elementIds;
+    size_t totalChapBytes = 0;
+
+    size_t count = std::min(m_chapterMarks.size(), size_t(255));
+    for (size_t i = 0; i < count; ++i) {
+        const auto& mark = m_chapterMarks[i];
+
+        // Element ID: "ch0", "ch1", ... null-terminated
+        std::string elemId = "ch" + std::to_string(i);
+        elementIds.push_back(elemId);
+
+        uint32_t timeMs = static_cast<uint32_t>(mark.time * 1000.0 + 0.5);
+
+        // TIT2 sub-frame for the chapter title
+        auto tit2 = buildTIT2(mark.title);
+
+        // CHAP frame data: elementId\0 + startTime(4) + endTime(4) + startOffset(4) + endOffset(4) + sub-frames
+        size_t chapDataLen = (elemId.size() + 1) + 16 + tit2.size();
+        std::vector<unsigned char> chap(10 + chapDataLen);
+        memcpy(chap.data(), "CHAP", 4);
+        writeBE32(chap.data() + 4, static_cast<uint32_t>(chapDataLen));
+        chap[8] = 0; chap[9] = 0; // flags
+
+        unsigned char* p = chap.data() + 10;
+        memcpy(p, elemId.c_str(), elemId.size() + 1); p += elemId.size() + 1;
+        uint32_t endMs = (mark.endTime > 0)
+            ? static_cast<uint32_t>(mark.endTime * 1000.0 + 0.5)
+            : timeMs;
+        writeBE32(p, timeMs);          p += 4; // start time
+        writeBE32(p, endMs);           p += 4; // end time
+        writeBE32(p, 0xFFFFFFFFu);     p += 4; // start offset (unused)
+        writeBE32(p, 0xFFFFFFFFu);     p += 4; // end offset (unused)
+        memcpy(p, tit2.data(), tit2.size());
+
+        totalChapBytes += chap.size();
+        chapFrames.push_back(std::move(chap));
+    }
+
+    // Build CTOC frame: "toc\0" + flags(1) + entryCount(1) + elementId\0 ...
+    std::vector<unsigned char> ctocData;
+    {
+        std::string tocId = "toc";
+        // Data: tocId\0 + flags + entryCount + (elemId\0)*
+        size_t dataLen = (tocId.size() + 1) + 2;
+        for (const auto& eid : elementIds) {
+            dataLen += eid.size() + 1;
+        }
+        ctocData.resize(10 + dataLen);
+        memcpy(ctocData.data(), "CTOC", 4);
+        writeBE32(ctocData.data() + 4, static_cast<uint32_t>(dataLen));
+        ctocData[8] = 0; ctocData[9] = 0; // flags
+
+        unsigned char* p = ctocData.data() + 10;
+        memcpy(p, tocId.c_str(), tocId.size() + 1); p += tocId.size() + 1;
+        *p++ = 0x03; // flags: top-level=1, ordered=1
+        *p++ = static_cast<unsigned char>(elementIds.size());
+        for (const auto& eid : elementIds) {
+            memcpy(p, eid.c_str(), eid.size() + 1); p += eid.size() + 1;
+        }
+    }
+    totalChapBytes += ctocData.size();
+
+    // Create new buffer: old tag content + chapter frames
+    unsigned long newLen = len + totalChapBytes;
+    ArrayOf<char> newBuf { newLen };
+    memcpy(newBuf.get(), buffer.get(), len);
+
+    // Append CTOC first, then CHAP frames
+    char* dst = newBuf.get() + len;
+    memcpy(dst, ctocData.data(), ctocData.size()); dst += ctocData.size();
+    for (const auto& chap : chapFrames) {
+        memcpy(dst, chap.data(), chap.size()); dst += chap.size();
+    }
+
+    // Update the ID3v2 header size (bytes 6-9, syncsafe integer = 28-bit)
+    uint32_t payloadSize = newLen - 10;
+    unsigned char* hdr = reinterpret_cast<unsigned char*>(newBuf.get());
+    hdr[6] = (payloadSize >> 21) & 0x7F;
+    hdr[7] = (payloadSize >> 14) & 0x7F;
+    hdr[8] = (payloadSize >>  7) & 0x7F;
+    hdr[9] =  payloadSize        & 0x7F;
+
+    buffer = std::move(newBuf);
+    len = newLen;
 }
 
 #ifdef USE_LIBID3TAG

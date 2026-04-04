@@ -222,8 +222,8 @@ struct WaveBitmapCache::LookupHelper final
                 continue;
             }
 
-            const auto maxSampleRow = GetRowFromValue(columnData.max);
-            const auto minSampleRow = GetRowFromValue(columnData.min);
+            const auto maxSampleRow = std::clamp(GetRowFromValue(columnData.max), globalMaxRow, globalMinRow);
+            const auto minSampleRow = std::clamp(GetRowFromValue(columnData.min), globalMaxRow, globalMinRow);
 
             function.AddBand(selected ? backgroundColors.Selected : backgroundColors.Normal, globalMaxRow, globalMinRow);
 
@@ -248,12 +248,14 @@ struct WaveBitmapCache::LookupHelper final
 
             function.AddBand(zeroLineColor, zeroLineY, zeroLineY + 1);
 
-            function.AddBand(selected ? sampleColors.Selected : sampleColors.Normal, maxSampleRow,
-                             minSampleRow == maxSampleRow ? minSampleRow + 1 : minSampleRow);
+            if (minSampleRow >= maxSampleRow) {
+                function.AddBand(selected ? sampleColors.Selected : sampleColors.Normal, maxSampleRow,
+                                 minSampleRow == maxSampleRow ? minSampleRow + 1 : minSampleRow);
+            }
 
             if (showRMS) {
-                const auto rmsPositiveRow = GetRowFromValue(std::min(columnData.rms, columnData.max));
-                const auto rmsNegativeRow = GetRowFromValue(std::max(-columnData.rms, columnData.min));
+                const auto rmsPositiveRow = std::clamp(GetRowFromValue(std::min(columnData.rms, columnData.max)), globalMaxRow, globalMinRow);
+                const auto rmsNegativeRow = std::clamp(GetRowFromValue(std::max(-columnData.rms, columnData.min)), globalMaxRow, globalMinRow);
 
                 if (rmsNegativeRow >= rmsPositiveRow) {
                     function.AddBand(selected ? rmsColors.Selected : rmsColors.Normal, rmsPositiveRow, rmsNegativeRow);
