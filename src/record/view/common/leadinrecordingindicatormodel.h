@@ -19,7 +19,7 @@ class LeadInRecordingIndicatorModel : public QObject, public muse::async::Asynca
     Q_PROPERTY(double startTime READ startTime NOTIFY visibleChanged FINAL)
     Q_PROPERTY(QVariantList trackIds READ trackIds NOTIFY visibleChanged FINAL)
 
-    muse::Inject<IRecordController> recordController{ this };
+    muse::ContextInject<IRecordController> recordController{ this };
 
 public:
     explicit LeadInRecordingIndicatorModel(QObject* parent = nullptr);
