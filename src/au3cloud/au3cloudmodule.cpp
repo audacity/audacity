@@ -36,10 +36,6 @@ void Au3CloudModule::onInit(const muse::IApplication::RunMode&) {}
 
 void Au3CloudModule::onDeinit()
 {
-    auto acs = globalIoc()->resolve<IAu3AudioComService>(mname);
-    if (acs) {
-        acs->deinit();
-    }
 }
 
 void Au3CloudModule::registerUiTypes()
@@ -78,5 +74,12 @@ void Au3CloudContext::onInit(const muse::IApplication::RunMode&)
     auto ar = ioc()->resolve<muse::ui::IUiActionsRegister>(mname);
     if (ar) {
         ar->reg(m_uiActions);
+    }
+}
+
+void Au3CloudContext::onDeinit()
+{
+    if (m_audioComService) {
+        m_audioComService->deinit();
     }
 }
