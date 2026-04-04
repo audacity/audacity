@@ -28,24 +28,18 @@ public:
     MOCK_METHOD(void, setStartupModeType, (StartupModeType), (override));
 
     MOCK_METHOD(muse::io::path_t, startupProjectPath, (), (const, override));
-    MOCK_METHOD(void, setStartupScorePath, (const muse::io::path_t&), (override));
+    MOCK_METHOD(void, setStartupProjectPath, (const muse::io::path_t&), (override));
 
     MOCK_METHOD(muse::io::path_t, userDataPath, (), (const, override));
 
     MOCK_METHOD(std::string, handbookUrl, (), (const, override));
     MOCK_METHOD(std::string, askForHelpUrl, (), (const, override));
-    MOCK_METHOD(std::string, museScoreUrl, (), (const, override));
-    MOCK_METHOD(std::string, museScoreForumUrl, (), (const, override));
-    MOCK_METHOD(std::string, museScoreContributionUrl, (), (const, override));
-    MOCK_METHOD(std::string, musicXMLLicenseUrl, (), (const, override));
-    MOCK_METHOD(std::string, musicXMLLicenseDeedUrl, (), (const, override));
+    MOCK_METHOD(std::string, appUrl, (), (const, override));
+    MOCK_METHOD(std::string, forumUrl, (), (const, override));
+    MOCK_METHOD(std::string, contributionUrl, (), (const, override));
 
     MOCK_METHOD(std::string, audacityVersion, (), (const, override));
-    MOCK_METHOD(std::string, museScoreRevision, (), (const, override));
-
-    MOCK_METHOD(bool, isNotationNavigatorVisible, (), (const, override));
-    MOCK_METHOD(void, setIsNotationNavigatorVisible, (bool), (const, override));
-    MOCK_METHOD(muse::async::Notification, isNotationNavigatorVisibleChanged, (), (const, override));
+    MOCK_METHOD(std::string, appRevision, (), (const, override));
 
     MOCK_METHOD(bool, needShowSplashScreen, (), (const, override));
     MOCK_METHOD(void, setNeedShowSplashScreen, (bool), (override));
