@@ -69,4 +69,10 @@ public:
     std::shared_ptr<IAu3Project> create(const muse::modularity::ContextPtr& ctx) const override;
     [[nodiscard]] muse::Ret removeUnsavedData(const muse::io::path_t& projectPath) const override;
 };
+
+class Au3ProjectReader : public IAu3ProjectReader
+{
+public:
+    std::optional<std::vector<uint8_t> > readProjectThumbnail(const muse::io::path_t& projectPath) const override;
+};
 }

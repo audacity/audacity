@@ -24,16 +24,17 @@
 
 #include <QObject>
 
-#include "async/asyncable.h"
+#include "framework/global/async/asyncable.h"
 
-#include "irecentfilescontroller.h"
+#include "framework/global/modularity/ioc.h"
+#include "au3wrap/iau3project.h"
 
 namespace au::project {
 class ProjectThumbnailLoader : public QObject, public muse::async::Asyncable
 {
     Q_OBJECT;
 
-    // INJECT(IRecentFilesController, recentFilesController)
+    muse::GlobalInject<au::au3::IAu3ProjectReader> au3ProjectReader;
 
     Q_PROPERTY(QString projectPath READ projectPath WRITE setProjectPath NOTIFY projectPathChanged)
 

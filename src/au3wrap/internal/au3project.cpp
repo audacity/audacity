@@ -54,6 +54,17 @@ std::shared_ptr<IAu3Project> Au3ProjectCreator::create(const muse::modularity::C
     return std::make_shared<Au3ProjectAccessor>(ctx);
 }
 
+std::optional<std::vector<uint8_t> > Au3ProjectReader::readProjectThumbnail(const muse::io::path_t& projectPath) const
+{
+    const std::string sstr = projectPath.toStdString();
+    const FilePath fileName = wxString::FromUTF8(sstr.c_str(), sstr.size());
+    if (fileName.empty()) {
+        return std::nullopt;
+    }
+
+    return ProjectFileIO::ReadThumbnail(fileName);
+}
+
 muse::Ret Au3ProjectCreator::removeUnsavedData(const muse::io::path_t& projectPath) const
 {
     // Helper method to remove autosave data from a project file without keeping it open
