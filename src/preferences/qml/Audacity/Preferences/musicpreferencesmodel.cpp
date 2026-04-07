@@ -75,6 +75,6 @@ void MusicPreferencesModel::setAskBeforeSubsequentImport(bool ask)
     }
 
     importerConfiguration()->setSubsequentImportLoopAction(
-        ask ? importexport::LoopAction::Ask : importerConfiguration()->subsequentImportLoopAction());
+        ask ? importexport::LoopAction::Ask : importexport::LoopAction::MatchLoopToProject);
 }
 }
