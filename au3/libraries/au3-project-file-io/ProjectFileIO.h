@@ -16,7 +16,6 @@ Paul Licameli split from AudacityProject.h
 #include <optional>
 #include <unordered_set>
 #include <vector>
-#include <optional>
 
 #include <wx/event.h>
 

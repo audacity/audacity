@@ -478,10 +478,12 @@ void ProjectSerializer::WriteData(const wxString& value)
 
 void ProjectSerializer::WriteBlob(const wxString& name, const void* data, size_t size)
 {
+    assert(size <= static_cast<size_t>(std::numeric_limits<Length>::max()));
+
     mBuffer.AppendByte(FT_Blob);
     WriteName(name);
 
-    WriteLength(mBuffer, (Length)size);
+    WriteLength(mBuffer, static_cast<Length>(size));
     mBuffer.AppendData(data, size);
 }
 

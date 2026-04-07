@@ -390,7 +390,7 @@ Ret Audacity4Project::doSave(const muse::io::path_t& savePath, bool generateBack
         if (!pngData.has_value()) {
             LOGE() << "Failed to create thumbnail for: " << savePath;
         } else {
-            m_au3Project->saveThumbnail(std::move(pngData.value()));
+            m_au3Project->saveThumbnail(std::move(pngData).value());
         }
     }
 

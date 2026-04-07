@@ -110,14 +110,14 @@ Au3ProjectAccessor::Au3ProjectAccessor(const muse::modularity::ContextPtr& ctx)
     // Subscribe to undo manager changes for save status notifications
     mUndoSubscription = UndoManager::Get(m_data->projectRef()).Subscribe([this](const UndoRedoMessage& message) {
         switch (message.type) {
-        case UndoRedoMessage::Pushed:
-        case UndoRedoMessage::Modified:
-        case UndoRedoMessage::UndoOrRedo:
-        case UndoRedoMessage::Reset:
-            m_projectChanged.notify();
-            break;
-        default:
-            break;
+            case UndoRedoMessage::Pushed:
+            case UndoRedoMessage::Modified:
+            case UndoRedoMessage::UndoOrRedo:
+            case UndoRedoMessage::Reset:
+                m_projectChanged.notify();
+                break;
+            default:
+                break;
         }
     });
 }
