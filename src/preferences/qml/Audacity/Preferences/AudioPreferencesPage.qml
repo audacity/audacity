@@ -42,6 +42,8 @@ PreferencesPage {
         spacing: root.sectionsSpacing
 
         AudioApiSection {
+            id: audioApiSection
+
             currentAudioApiIndex: apiModel.currentAudioApiIndex
             audioApiList: apiModel.audioApiList()
             apiModel: apiModel
@@ -52,31 +54,61 @@ PreferencesPage {
             onCurrentAudioApiIndexChangeRequested: function(newIndex) {
                 apiModel.currentAudioApiIndex = newIndex
             }
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
         }
 
         SeparatorLine {}
 
         SampleRateSection {
+            id: sampleRateSection
+
             apiModel: apiModel
 
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart + 1
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
         }
 
         SeparatorLine {}
 
         BufferAndLatencySection {
+            id: bufferAndLatencySection
+
             apiModel: apiModel
 
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart + 2
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
         }
 
         SeparatorLine {}
 
         MeterDbRangeSection {
+           id: meterDbRangeSection
+
            navigation.section: root.navigationSection
            navigation.order: root.navigationOrderStart + 3
+
+           onFocusChanged: {
+               if (activeFocus) {
+                   root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+               }
+           }
         }
     }
 }

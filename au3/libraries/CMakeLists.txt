@@ -79,7 +79,6 @@ set( LIBRARIES
    au3-menus
 #   au3-note-track # not yet used in AU4
    au3-viewport
-#   au3-music-information-retrieval # not yet used in AU4
    au3-crypto
    au3-fft
    au3-concurrency

@@ -61,6 +61,12 @@ PreferencesPage {
             onCheckForUpdateRequested: {
                 preferencesModel.checkUpdateForCurrentLanguage()
             }
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
         }
 
         NumberFormatSection {
@@ -74,6 +80,12 @@ PreferencesPage {
 
             onNumberFormatSelected: function(numberFormatCode) {
                 preferencesModel.setNumberFormat(numberFormatCode)
+            }
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
             }
         }
 
@@ -90,6 +102,12 @@ PreferencesPage {
             onTemporaryFilesLocationChanged: function(path) {
                 preferencesModel.setTemporaryDir(path)
             }
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
         }
 
         FreeSpaceSection {
@@ -105,6 +123,12 @@ PreferencesPage {
 
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart + 4
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
         }
     }
 }

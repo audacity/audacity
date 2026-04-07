@@ -14,7 +14,7 @@ import Audacity.UiComponents 1.0
 BaseSection {
     id: root
 
-    property var editPreferencesModel: null
+    property var musicPreferencesModel: null
 
     navigation.direction: NavigationPanel.Both
 
@@ -55,17 +55,17 @@ BaseSection {
 
                 width: ListView.view.contentWidth
 
-                checked: root.editPreferencesModel.asymmetricWorkspaces.indexOf(model.name) !== -1
+                checked: root.musicPreferencesModel.tempoDetectionWorkspaces.indexOf(model.name) !== -1
 
-                navigation.name: model.name + "Box"
+                navigation.name: model.name + "TempoDetectionBox"
                 navigation.panel: root.navigation
                 navigation.row: model.index
 
                 onClicked: {
                     if (checked) {
-                        editPreferencesModel.removeFromAsymmetricWorkspaces(model.name)
+                        musicPreferencesModel.removeFromTempoDetectionWorkspaces(model.name)
                     } else {
-                        editPreferencesModel.appendToAsymmetricWorkspaces(model.name)
+                        musicPreferencesModel.appendToTempoDetectionWorkspaces(model.name)
                     }
                 }
             }
