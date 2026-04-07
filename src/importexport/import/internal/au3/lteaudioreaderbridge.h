@@ -26,7 +26,7 @@ public:
 private:
     void addChannel(size_t iChannel, float* buffer, long long start, size_t len) const;
 
-    std::shared_ptr<const ClipInterface> m_clip;
+    const std::shared_ptr<const ClipInterface> m_clip;
 
     // Cache for sample views (two channels, two alternating caches each
     // to handle back-and-forth access patterns used by the FFT algorithm)
