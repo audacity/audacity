@@ -75,7 +75,8 @@ enum FieldTypes
     FT_Raw,          // type, string length, string
     FT_Push,         // type only
     FT_Pop,          // type only
-    FT_Name          // type, ID, name length, name
+    FT_Name,         // type, ID, name length, name
+    FT_Blob          // type, ID, length, raw bytes
 };
 
 // Static so that the dict can be reused each time.
@@ -262,6 +263,17 @@ public:
         // The only data that is serialized by FT_Raw
         // is the boilerplate code like <?xml > and <!DOCTYPE>
         // which are ignored
+    }
+
+    void WriteBlob(const std::string_view& name, const void* data, size_t len)
+    {
+        if (mInTag) {
+            EmitStartTag();
+        }
+
+        if (XMLTagHandler* const handler = mHandlers.back()) {
+            handler->HandleXMLBlob(name, data, len);
+        }
     }
 
     bool Finalize()
@@ -462,6 +474,15 @@ void ProjectSerializer::WriteData(const wxString& value)
     Length len = value.length() * sizeof(wxStringCharType);
     WriteLength(mBuffer, len);
     mBuffer.AppendData(value.wx_str(), len);
+}
+
+void ProjectSerializer::WriteBlob(const wxString& name, const void* data, size_t size)
+{
+    mBuffer.AppendByte(FT_Blob);
+    WriteName(name);
+
+    WriteLength(mBuffer, (Length)size);
+    mBuffer.AppendData(data, size);
 }
 
 void ProjectSerializer::Write(const wxString& value)
@@ -711,6 +732,16 @@ bool ProjectSerializer::Decode(BufferedStreamReader& in, XMLTagHandler* handler)
             {
                 int len = ReadLength(in);
                 adapter.WriteRaw(ReadString(len));
+            }
+            break;
+
+            case FT_Blob:
+            {
+                id = ReadUShort(in);
+                const int len = ReadLength(in);
+                bytes.resize(len);
+                in.Read(bytes.data(), len);
+                adapter.WriteBlob(Lookup(id), bytes.data(), len);
             }
             break;
 
