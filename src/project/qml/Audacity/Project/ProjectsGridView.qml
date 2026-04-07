@@ -159,7 +159,6 @@ Item {
                 name: item.name
                 path: item.path ?? ""
                 suffix: item.suffix ?? ""
-                thumbnailUrl: item.thumbnailUrl ? Qt.resolvedUrl("file:" + item.thumbnailUrl) : ""
                 isCreateNew: item.isCreateNew
                 isNoResultsFound: item.isNoResultsFound
                 isCloud: item.isCloud

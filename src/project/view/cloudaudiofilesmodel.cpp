@@ -141,7 +141,6 @@ void CloudAudioFilesModel::loadItemsIfNecessary()
                     obj[FILE_SIZE_KEY] = (item.fileSize > 0) ? DataFormatter::formatFileSize(item.fileSize).toQString() : QString();
                     obj[DURATION_KEY] = (item.duration > 0) ? QTime(0, 0).addMSecs(static_cast<int>(item.duration)).toString(
                         "hh:mm:ss") : QString();
-                    obj[THUMBNAIL_URL_KEY] = "";
                     obj[IS_CREATE_NEW_KEY] = false;
                     obj[IS_NO_RESULTS_FOUND_KEY] = false;
 

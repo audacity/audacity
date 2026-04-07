@@ -57,7 +57,6 @@ protected:
     static const QString SUFFIX_KEY;
     static const QString FILE_SIZE_KEY;
     static const QString DURATION_KEY;
-    static const QString THUMBNAIL_URL_KEY;
     static const QString TIME_SINCE_MODIFIED_KEY;
     static const QString IS_CREATE_NEW_KEY;
     static const QString IS_NO_RESULTS_FOUND_KEY;
