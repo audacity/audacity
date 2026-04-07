@@ -325,7 +325,7 @@ MenuItem* AppMenuModel::makeRecordMenu()
         makeMenuItem("record-on-current-track"),
         makeMenuItem("record-on-new-track"),
         makeMenuItem("set-up-timed-recording"),
-        makeMenuItem("punch-and-roll-record"),
+        makeMenuItem("action://record/lead-in-recording"),
         makeSeparator(),
         makeMenuItem("toggle-sound-activated-recording"),
         makeMenuItem("set-sound-activation-level"),

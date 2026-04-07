@@ -29,7 +29,7 @@ using PRCrossfadeData = std::vector< std::vector < float > >;
 constexpr size_t TimeQueueGrainSize = 480;
 
 struct RecordingSchedule {
-    double mPreRoll{};
+    double mLeadInTime{};
     double mLatencyCompensation{}; // negative value usually
     double mDuration{};
     PRCrossfadeData mCrossfadeData;
@@ -39,7 +39,7 @@ struct RecordingSchedule {
     double mPosition{};
     bool mLatencyCorrected{};
 
-    double TotalCorrection() const { return mLatencyCompensation - mPreRoll; }
+    double TotalCorrection() const { return mLatencyCompensation - mLeadInTime; }
     double ToConsume() const;
     double Consumed() const;
     double ToDiscard() const;

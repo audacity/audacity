@@ -16,6 +16,7 @@ static const ActionQuery RECORD_STOP_QUERY("action://record/stop");
 static const ActionQuery RECORD_LEVEL_QUERY("action://record/level"); // doesn't have callback here
 static const ActionQuery RECORD_TOGGLE_MIC_METERING("action://record/toggle-mic-metering");
 static const ActionQuery RECORD_TOGGLE_INPUT_MONITORING("action://record/toggle-input-monitoring");
+static const ActionQuery RECORD_LEAD_IN_RECORDING_QUERY("action://record/lead-in-recording");
 
 void RecordController::init()
 {
@@ -24,9 +25,16 @@ void RecordController::init()
     dispatcher()->reg(this, RECORD_STOP_QUERY, this, &RecordController::stop);
     dispatcher()->reg(this, RECORD_TOGGLE_MIC_METERING, this, &RecordController::toggleMicMetering);
     dispatcher()->reg(this, RECORD_TOGGLE_INPUT_MONITORING, this, &RecordController::toggleInputMonitoring);
+    dispatcher()->reg(this, RECORD_LEAD_IN_RECORDING_QUERY, this, &RecordController::leadInRecording);
 
     playbackController()->isPlayingChanged().onNotify(this, [this]() {
         m_isRecordAllowedChanged.notify();
+    });
+
+    record()->recordPositionChanged().onReceive(this, [this](const muse::secs_t&) {
+        if (m_currentRecordStatus == RecordStatus::LeadIn) {
+            setCurrentRecordStatus(RecordStatus::Running);
+        }
     });
 
     record()->recordingFinished().onNotify(this, [this]() {
@@ -56,7 +64,9 @@ Notification RecordController::isRecordAllowedChanged() const
 
 bool RecordController::isRecording() const
 {
-    return m_currentRecordStatus == RecordStatus::Running || m_currentRecordStatus == RecordStatus::Paused;
+    return m_currentRecordStatus == RecordStatus::Running
+           || m_currentRecordStatus == RecordStatus::Paused
+           || m_currentRecordStatus == RecordStatus::LeadIn;
 }
 
 Channel<muse::secs_t> RecordController::recordPositionChanged() const
@@ -128,6 +138,26 @@ void RecordController::stop()
     setCurrentRecordStatus(RecordStatus::Stopped);
 }
 
+void RecordController::leadInRecording()
+{
+    IF_ASSERT_FAILED(record()) {
+        return;
+    }
+
+    // Store the recording start position and selected tracks before starting
+    m_leadInRecordingStartTime = selectionController()->selectionStartTime();
+    m_leadInRecordingTrackIds = selectionController()->selectedTracks();
+
+    Ret ret = record()->leadInRecording();
+    if (!ret) {
+        m_leadInRecordingTrackIds.clear();
+        interactive()->error(muse::trc("record", "Lead-in Recording error"), ret.text());
+        return;
+    }
+
+    setCurrentRecordStatus(RecordStatus::LeadIn);
+}
+
 void RecordController::toggleMicMetering()
 {
     configuration()->setIsMicMeteringOn(!configuration()->isMicMeteringOn());
@@ -158,10 +188,35 @@ bool RecordController::isInputMonitoringOn() const
     return configuration()->isInputMonitoringOn();
 }
 
+bool RecordController::isLeadInRecording() const
+{
+    return m_currentRecordStatus == RecordStatus::LeadIn;
+}
+
+muse::async::Notification RecordController::isLeadInRecordingChanged() const
+{
+    return m_isRecordingChanged;
+}
+
+muse::secs_t RecordController::leadInRecordingStartTime() const
+{
+    return m_leadInRecordingStartTime;
+}
+
+std::vector<au::trackedit::TrackId> RecordController::leadInRecordingTrackIds() const
+{
+    return m_leadInRecordingTrackIds;
+}
+
 void RecordController::setCurrentRecordStatus(RecordStatus status)
 {
     if (m_currentRecordStatus == status) {
         return;
+    }
+
+    // Clear lead-in data when leaving LeadIn state
+    if (m_currentRecordStatus == RecordStatus::LeadIn && status != RecordStatus::LeadIn) {
+        m_leadInRecordingTrackIds.clear();
     }
 
     m_currentRecordStatus = status;
@@ -175,7 +230,11 @@ bool RecordController::canReceiveAction(const ActionCode& code) const
     }
 
     if (code == RECORD_START_QUERY.toString()) {
-        return !playbackController()->isPlaying();
+        return !playbackController()->isPlaying() && m_currentRecordStatus != RecordStatus::LeadIn;
+    }
+
+    if (code == RECORD_LEAD_IN_RECORDING_QUERY.toString()) {
+        return !playbackController()->isPlaying() && !isRecording();
     }
 
     if (code == RECORD_STOP_QUERY.toString()) {

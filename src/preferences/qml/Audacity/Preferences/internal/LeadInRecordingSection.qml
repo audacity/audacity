@@ -7,55 +7,64 @@ import Muse.Ui 1.0
 import Muse.UiComponents
 
 import Audacity.UiComponents 1.0
-import Audacity.AppShell
 
 BaseSection {
     id: root
 
-    title: qsTrc("preferences", "Move cursor along the timeline during playback")
+    title: qsTrc("preferences", "Recording lead-in time")
     spacing: 16
 
-    property var playbackPreferencesModel: null
+    property var recordingPreferencesModel: null
 
     navigation.direction: NavigationPanel.Both
 
     IncrementalPropertyControlWithTitle {
-        title: qsTrc("preferences", "Short skip")
+        title: qsTrc("preferences", "Lead-in time before recording starts")
 
-        currentValue: playbackPreferencesModel.shortSkip
+        currentValue: recordingPreferencesModel.leadInTimeDuration
 
         columnWidth: root.columnWidth
         controlWidth: 120
         spacing: root.columnSpacing
 
+        minValue: 0
+        maxValue: 30
+        step: 0.5
+        decimals: 1
+
         measureUnitsSymbol: qsTrc("global", "seconds")
 
-        navigation.name: "ShortSkipControl"
+        navigation.name: "LeadInTimeDurationControl"
         navigation.panel: root.navigation
         navigation.row: 0
 
         onValueEdited: function (newValue) {
-            playbackPreferencesModel.setShortSkip(newValue)
+            recordingPreferencesModel.setLeadInTimeDuration(newValue)
         }
     }
 
     IncrementalPropertyControlWithTitle {
-        title: qsTrc("preferences", "Long skip")
+        title: qsTrc("preferences", "Crossfade")
 
-        currentValue: playbackPreferencesModel.longSkip
+        currentValue: recordingPreferencesModel.crossfadeDuration
 
         columnWidth: root.columnWidth
         controlWidth: 120
         spacing: root.columnSpacing
 
-        measureUnitsSymbol: qsTrc("global", "seconds")
+        minValue: 0
+        maxValue: 100
+        step: 1
+        decimals: 0
 
-        navigation.name: "LongSkipControl"
+        measureUnitsSymbol: qsTrc("global", "ms")
+
+        navigation.name: "CrossfadeDurationControl"
         navigation.panel: root.navigation
         navigation.row: 1
 
         onValueEdited: function (newValue) {
-            playbackPreferencesModel.setLongSkip(newValue)
+            recordingPreferencesModel.setCrossfadeDuration(newValue)
         }
     }
 }

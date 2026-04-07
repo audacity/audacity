@@ -40,9 +40,9 @@ class ApplicationUiActions : public muse::ui::IUiActionsModule, public muse::asy
 {
     muse::GlobalInject <IAppShellConfiguration> configuration;
 
-    muse::Inject <muse::ui::IMainWindow> mainWindow { this };
-    muse::Inject <muse::dock::IDockWindowProvider> dockWindowProvider { this };
-    muse::Inject <record::IRecordController> recordController { this };
+    muse::ContextInject<muse::ui::IMainWindow> mainWindow { this };
+    muse::ContextInject<muse::dock::IDockWindowProvider> dockWindowProvider { this };
+    muse::ContextInject<record::IRecordController> recordController { this };
 
 public:
     ApplicationUiActions(const muse::modularity::ContextPtr& ctx, std::shared_ptr<ApplicationActionController> controller);

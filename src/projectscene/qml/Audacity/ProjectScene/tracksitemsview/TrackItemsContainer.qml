@@ -27,6 +27,9 @@ Item {
     property bool ctrlPressed: false
     property bool hover: false
 
+    property bool isLeadInRecordingTrack: false
+    property double leadInRecordingStartTime: 0
+
     required property bool selectionInProgress
     required property bool selectionEditInProgress
     required property bool verticalSelectionEditInProgress
@@ -77,6 +80,40 @@ Item {
         anchors.fill: parent
         z: 1
         sourceComponent: root.contentComponent
+    }
+
+    // Lead-in recording start position indicator
+    Rectangle {
+        id: leadInRecordingLine
+
+        function updatePosition() {
+            if (root.context) {
+                x = root.context.timeToPosition(root.leadInRecordingStartTime)
+            }
+        }
+
+        anchors.top: root.top
+        anchors.bottom: root.bottom
+        anchors.bottomMargin: sep.thickness
+
+        width: 2
+        color: ui.theme.recordColor
+        opacity: 0.8
+        visible: root.isLeadInRecordingTrack
+        z: 2
+
+        onVisibleChanged: if (visible) updatePosition()
+
+        Connections {
+            target: root.context
+            function onFrameStartTimeChanged() { leadInRecordingLine.updatePosition() }
+            function onFrameEndTimeChanged() { leadInRecordingLine.updatePosition() }
+        }
+
+        Connections {
+            target: root
+            function onLeadInRecordingStartTimeChanged() { leadInRecordingLine.updatePosition() }
+        }
     }
 
     // Selection highlight

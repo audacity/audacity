@@ -8,6 +8,7 @@ import Audacity.ProjectScene
 import Audacity.Project
 import Audacity.Playback
 import Audacity.Spectrogram
+import Audacity.Record
 
 Rectangle {
     id: root
@@ -86,6 +87,10 @@ Rectangle {
 
     PlayRegionModel {
         id: playRegionModel
+    }
+
+    LeadInRecordingIndicatorModel {
+        id: leadInIndicator
     }
 
     ViewTracksListModel {
@@ -181,6 +186,7 @@ Rectangle {
 
         playbackState.init()
         playRegionModel.init()
+        leadInIndicator.init()
         selectionViewController.load()
         selectionContextMenuModel.load()
         canvasContextMenuModel.load()
@@ -812,6 +818,9 @@ Rectangle {
                             trackColor: itemData.color
                             headerHeight: prv.headerHeight
                             sampleRate: itemData.trackSampleRate
+
+                            isLeadInRecordingTrack: leadInIndicator.visible && leadInIndicator.trackIds.indexOf(itemData.trackId) !== -1
+                            leadInRecordingStartTime: leadInIndicator.startTime
 
                             isDataSelected: itemData.isDataSelected
                             isTrackSelected: itemData.isTrackSelected
