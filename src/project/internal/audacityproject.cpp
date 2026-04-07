@@ -385,17 +385,18 @@ Ret Audacity4Project::doSave(const muse::io::path_t& savePath, bool generateBack
         return make_ret(io::Err::FSNotExist);
     }
 
+    if (createThumbnail) {
+        std::optional<std::vector<uint8_t> > pngData = thumbnailCreator()->createThumbnail();
+        if (!pngData.has_value()) {
+            LOGE() << "Failed to create thumbnail for: " << savePath;
+        } else {
+            m_au3Project->saveThumbnail(std::move(pngData.value()));
+        }
+    }
+
     auto ret = m_au3Project->save(savePath);
     if (!ret) {
         return make_ret(Ret::Code::UnknownError);
-    }
-
-    if (createThumbnail) {
-        Ret ret = thumbnailCreator()->createThumbnail(savePath);
-        if (!ret) {
-            LOGE() << "Failed create thumbnail: " << ret.toString();
-            return ret;
-        }
     }
 
     return muse::make_ok();

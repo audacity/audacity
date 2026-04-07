@@ -6,6 +6,9 @@
 #include <string>
 #include <memory>
 
+#include <vector>
+#include <cstdint>
+
 #include "global/io/path.h"
 #include "global/types/ret.h"
 #include "global/async/notification.h"
@@ -25,6 +28,7 @@ public:
     [[nodiscard]] virtual muse::Ret open() = 0;
     [[nodiscard]] virtual muse::Ret load(const muse::io::path_t& filePath, bool ignoreAutosave = false) = 0;
     virtual bool save(const muse::io::path_t& fileName) = 0;
+    virtual void saveThumbnail(std::vector<uint8_t> pngData) = 0;
     virtual void close() = 0;
 
     virtual std::string title() const = 0;

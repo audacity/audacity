@@ -108,13 +108,12 @@ Rectangle {
     ProjectPropertiesModel {
         id: project
 
-        onCaptureThumbnail: function captureThumbnail(thumbnailUrl) {
+        onCaptureThumbnail: function captureThumbnail() {
             // hide playCursor for the time grabbing image
             playCursor.visible = false
             content.grabToImage(function (result) {
                 playCursor.visible = true
-                var success = result.saveToFile(thumbnailUrl)
-                project.onThumbnailCreated(success)
+                project.onThumbnailCreated(result.image)
             })
         }
     }
@@ -385,7 +384,7 @@ Rectangle {
                     hoverEnabled: true
                     cursorShape: pressed || timelineMouseArea.pressed ? Qt.ClosedHandCursor : Qt.OpenHandCursor
 
-                    onPressed: function(e) {
+                    onPressed: function (e) {
                         head.dragActive = true
                         head.dragPositionX = mapToItem(timeline, e.x, e.y).x
                         timeline.displayedPlayCursorX = head.dragPositionX

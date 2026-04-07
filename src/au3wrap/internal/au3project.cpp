@@ -20,6 +20,7 @@
 #include "au3-wave-track/WaveTrack.h"
 #include "au3-wave-track/WaveTrackUtilities.h"
 #include "au3-stretching-sequence/TempoChange.h"
+#include "projectthumbnail.h"
 
 //! HACK
 //! Static variable is not initialized
@@ -98,14 +99,14 @@ Au3ProjectAccessor::Au3ProjectAccessor(const muse::modularity::ContextPtr& ctx)
     // Subscribe to undo manager changes for save status notifications
     mUndoSubscription = UndoManager::Get(m_data->projectRef()).Subscribe([this](const UndoRedoMessage& message) {
         switch (message.type) {
-            case UndoRedoMessage::Pushed:
-            case UndoRedoMessage::Modified:
-            case UndoRedoMessage::UndoOrRedo:
-            case UndoRedoMessage::Reset:
-                m_projectChanged.notify();
-                break;
-            default:
-                break;
+        case UndoRedoMessage::Pushed:
+        case UndoRedoMessage::Modified:
+        case UndoRedoMessage::UndoOrRedo:
+        case UndoRedoMessage::Reset:
+            m_projectChanged.notify();
+            break;
+        default:
+            break;
         }
     });
 }
@@ -163,6 +164,11 @@ muse::Ret Au3ProjectAccessor::load(const muse::io::path_t& filePath, bool ignore
     updateSavedState();
 
     return ret;
+}
+
+void Au3ProjectAccessor::saveThumbnail(std::vector<uint8_t> pngData)
+{
+    ProjectThumbnail::Get(m_data->projectRef()).SetData(std::move(pngData));
 }
 
 bool Au3ProjectAccessor::save(const muse::io::path_t& filePath)

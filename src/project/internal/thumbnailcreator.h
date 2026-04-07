@@ -1,23 +1,27 @@
 #pragma once
 
-#include "ithumbnailcreator.h"
+#include <vector>
+#include <optional>
+#include <cstdint>
 
-#include "global/async/asyncable.h"
-#include "global/async/channel.h"
+#include "framework/global/async/asyncable.h"
+#include "framework/global/async/channel.h"
+#include "framework/global/async/notification.h"
+
+#include "ithumbnailcreator.h"
 
 namespace au::project {
 class ThumbnailCreator final : public IThumbnailCreator, public muse::async::Asyncable
 {
 public:
     ThumbnailCreator() = default;
-    void onThumbnailCreated(bool success) override;
-    muse::Ret createThumbnail(const muse::io::path_t& path) override;
-    muse::async::Channel<muse::io::path_t> captureThumbnailRequested() const override;
+
+    void onThumbnailCreated(std::vector<uint8_t> pngData) override;
+    std::optional<std::vector<uint8_t> > createThumbnail() override;
+    muse::async::Notification captureThumbnailRequested() const override;
 
 private:
-    static muse::io::path_t thumbnailPath(const muse::io::path_t& path);
-
-    muse::async::Channel<muse::io::path_t> m_createThumbnailRequested;
-    muse::async::Channel<bool> m_thumbnailCreated;
+    muse::async::Notification m_createThumbnailRequested;
+    muse::async::Channel<std::vector<uint8_t> > m_thumbnailCreated;
 };
 }

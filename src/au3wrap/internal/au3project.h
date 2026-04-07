@@ -28,6 +28,7 @@ public:
     [[nodiscard]] muse::Ret open() override;
     [[nodiscard]] muse::Ret load(const muse::io::path_t& filePath, bool ignoreAutosave) override;
     bool save(const muse::io::path_t& fileName) override;
+    void saveThumbnail(std::vector<uint8_t> pngData) override;
     void close() override;
 
     std::string title() const override;

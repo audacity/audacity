@@ -17,6 +17,7 @@ public:
     MOCK_METHOD(muse::Ret, open, (), (override));
     MOCK_METHOD(muse::Ret, load, (const muse::io::path_t& filePath, bool ignoreAutosave), (override));
     MOCK_METHOD(bool, save, (const muse::io::path_t& fileName), (override));
+    MOCK_METHOD(void, saveThumbnail, (std::vector<uint8_t> pngData), (override));
     MOCK_METHOD(void, close, (), (override));
 
     MOCK_METHOD(std::string, title, (), (const, override));
