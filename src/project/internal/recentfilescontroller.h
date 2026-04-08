@@ -19,21 +19,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-#ifndef MU_PROJECT_RECENTFILESCONTROLLER_H
-#define MU_PROJECT_RECENTFILESCONTROLLER_H
+#pragma once
 
 #include "irecentfilescontroller.h"
 
 #include <mutex>
 #include <map>
 
-#include "async/asyncable.h"
-#include "async/promise.h"
+#include "framework/global/async/asyncable.h"
 
-#include "modularity/ioc.h"
-#include "iprojectconfiguration.h"
-#include "io/ifilesystem.h"
-#include "multiwindows/imultiwindowsprovider.h"
+#include "framework/global/modularity/ioc.h"
+#include "project/iprojectconfiguration.h"
+#include "framework/global/io/ifilesystem.h"
+#include "framework/multiwindows/imultiwindowsprovider.h"
 
 namespace au::project {
 class RecentFilesController : public IRecentFilesController, public muse::async::Asyncable
@@ -52,8 +50,6 @@ public:
     void moveRecentFile(const muse::io::path_t& before, const RecentFile& after) override;
     void clearRecentFiles() override;
 
-    muse::async::Promise<QPixmap> thumbnail(const muse::io::path_t& file) const override;
-
 protected:
     virtual void prependPlatformRecentFile(const muse::io::path_t& path);
     virtual void clearPlatformRecentFiles();
@@ -63,8 +59,6 @@ private:
     void removeNonexistentFiles();
     void setRecentFilesList(const RecentFilesList& list, bool saveAndNotify);
     void saveRecentFilesList() const;
-
-    void cleanUpThumbnailCache(const RecentFilesList& files) const;
 
     mutable bool m_dirty = true;
     mutable RecentFilesList m_recentFilesList;
@@ -80,5 +74,3 @@ private:
     mutable std::map<muse::io::path_t, CachedThumbnail> m_thumbnailCache;
 };
 }
-
-#endif // MU_PROJECT_RECENTFILESCONTROLLER_H
