@@ -1355,14 +1355,17 @@ public:
 
 std::optional<std::vector<uint8_t> > ProjectFileIO::ReadThumbnail(const FilePath& fileName)
 {
+    // We won´t change the database. This will avoid shm and wal files to be created, and we won´t have to worry about them.
+    const wxString uri = wxString::Format("file:%s?immutable=1", fileName.ToUTF8());
+
     sqlite3* db = nullptr;
-    if (sqlite3_open_v2(
-            fileName.ToUTF8().data(), &db, SQLITE_OPEN_READONLY, nullptr)
-        != SQLITE_OK) {
+    const int openRc = sqlite3_open_v2(
+        uri.ToUTF8().data(), &db, SQLITE_OPEN_READONLY, nullptr);
+    auto closeDb = finally([db] { sqlite3_close(db); });
+
+    if (openRc != SQLITE_OK) {
         return std::nullopt;
     }
-
-    auto closeDb = finally([db] { sqlite3_close(db); });
 
     int64_t rowId = 0;
     sqlite3_stmt* stmt = nullptr;
@@ -1382,7 +1385,10 @@ std::optional<std::vector<uint8_t> > ProjectFileIO::ReadThumbnail(const FilePath
 
     BufferedProjectBlobStream stream(db, "main", "project", rowId);
     ThumbnailOnlyHandler handler;
-    ProjectSerializer::Decode(stream, &handler);
+    bool success = ProjectSerializer::Decode(stream, &handler);
+    if (!success) {
+        return std::nullopt;
+    }
 
     return handler.result.empty() ? std::nullopt : std::optional<std::vector<uint8_t> >(std::move(handler.result));
 }
