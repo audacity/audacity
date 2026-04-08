@@ -128,6 +128,9 @@ protected:
 
     Qt::KeyboardModifiers keyboardModifiers() const;
 
+    friend class TrackClipsSelectionTests;
+    friend class TrackLabelsSelectionTests;
+
     TimelineContext* m_context = nullptr;
     trackedit::TrackId m_trackId = -1;
     QList<ViewTrackItem*> m_items;

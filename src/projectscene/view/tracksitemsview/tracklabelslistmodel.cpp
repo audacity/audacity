@@ -244,20 +244,19 @@ void TrackLabelsListModel::selectLabel(const LabelKey& key)
             selectionController()->addSelectedLabel(key.key);
         }
     } else {
-        if (muse::contains(selectionController()->selectedLabels(), key.key)) {
-            return;
-        }
-
-        if (selectionController()->timeSelectionIsNotEmpty()
-            && muse::contains(selectionController()->labelsIntersectingRangeSelection(), key.key)) {
-            selectionController()->addSelectedLabel(key.key);
-        } else {
-            selectionController()->resetDataSelection();
-            selectionController()->resetSelectedClips();
-            selectionController()->setSelectedLabels(LabelKeyList({ key.key }), true);
+        if (!muse::contains(selectionController()->selectedLabels(), key.key)) {
+            if (selectionController()->timeSelectionIsNotEmpty()
+                && muse::contains(selectionController()->labelsIntersectingRangeSelection(), key.key)) {
+                selectionController()->addSelectedLabel(key.key);
+            } else {
+                selectionController()->resetDataSelection();
+                selectionController()->resetSelectedClips();
+                selectionController()->setSelectedLabels(LabelKeyList({ key.key }), true);
+            }
         }
     }
 
+    setFocusedItem(key);
     m_needToSelectTracksData = false;
 }
 

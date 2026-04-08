@@ -84,6 +84,7 @@ Item {
     }
 
     function openContextMenu() {
+        root.requestSelected()
         labelContextMenuLoader.show(Qt.point(width - 4, 4), labelContextMenuModel.items)
     }
 
@@ -291,6 +292,7 @@ Item {
         }
 
         onContextMenuOpenRequested: function (x, y) {
+            root.requestSelected()
             labelContextMenuLoader.show(Qt.point(x, y), labelContextMenuModel.items)
         }
 
