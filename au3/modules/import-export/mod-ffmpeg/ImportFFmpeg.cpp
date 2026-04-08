@@ -20,6 +20,8 @@ Licensed under the GNU General Public License v2 or later
 
 *//*******************************************************************/
 
+#include "ImportFFmpeg.h"
+
 #include "FFmpeg.h"
 #include "lib-ffmpeg-support/FFmpegFunctions.h"
 
@@ -148,31 +150,20 @@ static const auto exts = {
 
 class FFmpegImportFileHandle;
 
-/// A representative of FFmpeg loader in
-/// the Audacity import plugin list
-class FFmpegImportPlugin final : public ImportPlugin
+FFmpegImportPlugin::FFmpegImportPlugin()
+    : ImportPlugin(FileExtensions(exts.begin(), exts.end()))
 {
-public:
-    FFmpegImportPlugin()
-        : ImportPlugin(FileExtensions(exts.begin(), exts.end()))
-    {
-    }
+}
 
-    ~FFmpegImportPlugin() { }
+FFmpegImportPlugin::~FFmpegImportPlugin() { }
 
-    wxString GetPluginStringID() override { return wxT("libav"); }
-    TranslatableString GetPluginFormatDescription() override;
+wxString FFmpegImportPlugin::GetPluginStringID() { return wxT("libav"); }
 
-    TranslatableString FailureHint() const override
-    {
-        return !FFmpegFunctions::Load()
-               ? XO("Try installing FFmpeg.\n") : TranslatableString {};
-    }
-
-    ///! Probes the file and opens it if appropriate
-    std::unique_ptr<ImportFileHandle> Open(
-        const FilePath& Filename, AudacityProject*) override;
-};
+TranslatableString FFmpegImportPlugin::FailureHint() const
+{
+    return !FFmpegFunctions::Load()
+           ? XO("Try installing FFmpeg.\n") : TranslatableString {};
+}
 
 struct StreamContext final
 {
@@ -322,9 +313,6 @@ std::unique_ptr<ImportFileHandle> FFmpegImportPlugin::Open(
     return handle;
 }
 
-static Importer::RegisteredImportPlugin registered{ "FFmpeg",
-                                                    std::make_unique< FFmpegImportPlugin >()
-};
 
 FFmpegImportFileHandle::FFmpegImportFileHandle(const FilePath& name)
     : mName{name}

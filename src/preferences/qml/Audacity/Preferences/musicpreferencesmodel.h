@@ -18,7 +18,8 @@ class MusicPreferencesModel : public QObject, public muse::async::Asyncable, pub
     Q_OBJECT
     QML_ELEMENT
 
-    muse::ContextInject<au::importexport::IImporterConfiguration> importerConfiguration { this };
+    muse::GlobalInject<au::importexport::IImporterConfiguration> importerConfiguration;
+
     muse::ContextInject<muse::workspace::IWorkspaceManager> workspacesManager { this };
 
     Q_PROPERTY(importexport::TempoDetectionPref::TempoDetection tempoDetectionPref READ tempoDetectionPref NOTIFY tempoDetectionPrefChanged)

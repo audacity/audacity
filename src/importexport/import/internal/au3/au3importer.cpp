@@ -14,8 +14,6 @@
 #include "au3-project-file-io/ProjectFileIO.h"
 #include "au3-tags/Tags.h"
 
-#include "RegisterImportPlugins.h" // from au3/modules/import-export/ see IMPORT_EXPORT_MODULE in au3wrapDefs.cmake
-
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/wxtypes_convert.h"
 #include "au3wrap/internal/domaccessor.h"
@@ -93,11 +91,6 @@ au::importexport::Au3Importer::Au3Importer(const muse::modularity::ContextPtr& c
 }
 
 au::importexport::Au3Importer::~Au3Importer() = default;
-
-void au::importexport::Au3Importer::init()
-{
-    RegisterImportPlugins();
-}
 
 au::importexport::FileInfo au::importexport::Au3Importer::fileInfo(const muse::io::path_t& filePath)
 {

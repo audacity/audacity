@@ -11,36 +11,15 @@
 #include "mod-ogg/ImportOGG.h"
 #include "mod-flac/ImportFLAC.h"
 #include "mod-opus/ImportOpus.h"
+#include "mod-ffmpeg/ImportFFmpeg.h"
 
 void RegisterImportPlugins()
 {
-    static Importer::RegisteredImportPlugin sWavPackImportPlugin{
-        "WavPack",
-        std::make_unique< WavPackImportPlugin >()
-    };
-
-    static Importer::RegisteredImportPlugin sMP3ImportPlugin{
-        "MP3",
-        std::make_unique<MP3ImportPlugin>()
-    };
-
-    static Importer::RegisteredImportPlugin sPCMImportPlugin{
-        "PCM",
-        std::make_unique< PCMImportPlugin >()
-    };
-
-    static Importer::RegisteredImportPlugin sOGGImportPlugin{
-        "OGG",
-        std::make_unique< OggImportPlugin >()
-    };
-
-    static Importer::RegisteredImportPlugin sFLACImportPlugin{
-        "FLAC",
-        std::make_unique< FLACImportPlugin >()
-    };
-
-    static Importer::RegisteredImportPlugin sOpusImportPlugin{
-        "Opus",
-        std::make_unique< OpusImportPlugin >()
-    };
+    Importer::RegisteredImportPlugin("WavPack", std::make_unique<WavPackImportPlugin>());
+    Importer::RegisteredImportPlugin("MP3", std::make_unique<MP3ImportPlugin>());
+    Importer::RegisteredImportPlugin("PCM", std::make_unique<PCMImportPlugin>());
+    Importer::RegisteredImportPlugin("OGG", std::make_unique<OggImportPlugin>());
+    Importer::RegisteredImportPlugin("FLAC", std::make_unique<FLACImportPlugin>());
+    Importer::RegisteredImportPlugin("Opus", std::make_unique<OpusImportPlugin>());
+    Importer::RegisteredImportPlugin("FFmpeg", std::make_unique<FFmpegImportPlugin>());
 }
