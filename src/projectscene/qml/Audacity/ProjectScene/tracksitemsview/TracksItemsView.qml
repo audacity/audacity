@@ -901,7 +901,8 @@ Rectangle {
                             }
 
                             onRequestSelectionContextMenu: function (x, y) {
-                                selectionContextMenuLoader.show(Qt.point(x + canvasIndent.width, y + timelineHeader.height), selectionContextMenuModel.items)
+                                let mapped = trackClipsContainer.mapToItem(tracksItemsView, x, y)
+                                selectionContextMenuLoader.show(Qt.point(mapped.x + canvasIndent.width, mapped.y + timelineHeader.height), selectionContextMenuModel.items)
                             }
 
                             onSelectionResize: function (x1, x2, completed) {
@@ -1081,7 +1082,8 @@ Rectangle {
                             }
 
                             onRequestSelectionContextMenu: function (x, y) {
-                                selectionContextMenuLoader.show(Qt.point(x + canvasIndent.width, y + timelineHeader.height), selectionContextMenuModel.items)
+                                let mapped = trackItemLoader.item.mapToItem(tracksItemsView, x, y)
+                                selectionContextMenuLoader.show(Qt.point(mapped.x + canvasIndent.width, mapped.y + timelineHeader.height), selectionContextMenuModel.items)
                             }
 
                             onItemSelectedRequested: {
