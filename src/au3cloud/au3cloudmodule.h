@@ -25,6 +25,7 @@ public:
 
 private:
     std::shared_ptr<Au3CloudConfiguration> m_cloudConfiguration;
+    std::shared_ptr<Au3CloudService> m_cloudService;
 };
 
 class Au3CloudContext : public muse::modularity::IContextSetup
@@ -38,7 +39,6 @@ public:
     void onDeinit() override;
 
 private:
-    std::shared_ptr<Au3CloudService> m_cloudService;
     std::shared_ptr<Au3AudioComService> m_audioComService;
     std::shared_ptr<Au3CloudActionsController> m_actionsController;
     std::shared_ptr<CloudUiActions> m_uiActions;

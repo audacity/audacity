@@ -6,16 +6,19 @@
 #include "framework/global/async/asyncable.h"
 
 #include "modularity/ioc.h"
-#include "framework/interactive/iinteractive.h"
 #include "au3cloud/iauthorization.h"
+#include "framework/interactive/iinteractive.h"
+#include "framework/actions/iactionsdispatcher.h"
 
 namespace au::au3cloud {
 class AccountInfoModel : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
 
-    muse::ContextInject<au::au3cloud::IAuthorization> authorization { this };
+    muse::GlobalInject<au::au3cloud::IAuthorization> authorization;
+
     muse::ContextInject<muse::IInteractive> interactive { this };
+    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
 
     Q_PROPERTY(bool isAuthorized READ isAuthorized NOTIFY isAuthorizedChanged)
     Q_PROPERTY(QUrl avatarPath READ avatarPath NOTIFY isAuthorizedChanged)

@@ -17,7 +17,7 @@ class SigninAudiocomPageModel : public QObject, public muse::async::Asyncable, p
     Q_OBJECT
     QML_ELEMENT
 
-    muse::ContextInject<au::au3cloud::IAuthorization> authorization { this };
+    muse::GlobalInject<au::au3cloud::IAuthorization> authorization;
 
     Q_PROPERTY(bool authInProgress READ authInProgress NOTIFY authInProgressChanged)
     Q_PROPERTY(bool authorized READ authorized NOTIFY authorizedChanged)

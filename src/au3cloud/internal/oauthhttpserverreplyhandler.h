@@ -3,18 +3,15 @@
 #include <QOAuthOobReplyHandler>
 #include <QHostAddress>
 
-#include "framework/global/modularity/ioc.h"
-
 namespace au::au3cloud {
 class OAuthHttpServerReplyHandler : public QOAuthOobReplyHandler
 {
     Q_OBJECT
 
 public:
-    explicit OAuthHttpServerReplyHandler(const muse::modularity::ContextPtr& iocCtx, QObject* parent = nullptr);
-    explicit OAuthHttpServerReplyHandler(quint16 port, const muse::modularity::ContextPtr& iocCtx, QObject* parent = nullptr);
-    explicit OAuthHttpServerReplyHandler(const QHostAddress& address, quint16 port, const muse::modularity::ContextPtr& iocCtx,
-                                         QObject* parent = nullptr);
+    explicit OAuthHttpServerReplyHandler(QObject* parent = nullptr);
+    explicit OAuthHttpServerReplyHandler(quint16 port, QObject* parent = nullptr);
+    explicit OAuthHttpServerReplyHandler(const QHostAddress& address, quint16 port, QObject* parent = nullptr);
     ~OAuthHttpServerReplyHandler();
 
     QString callback() const override;
