@@ -286,53 +286,7 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Move cursor to closest zero crossing")
              ),
 
-    // view menu
-    UiAction("zoom-in",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Zoom in"),
-             TranslatableString("action", "Zoom in"),
-             IconCode::Code::ZOOM_IN
-             ),
-    UiAction("zoom-out",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Zoom out"),
-             TranslatableString("action", "Zoom out"),
-             IconCode::Code::ZOOM_OUT
-             ),
-    UiAction("zoom-to-selection",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Zoom to selection"),
-             TranslatableString("action", "Zoom to selection"),
-             IconCode::Code::FIT_SELECTION
-             ),
-    UiAction("zoom-toggle",
-             au::context::UiCtxProjectOpened,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Zoom toggle"),
-             TranslatableString("action", "Zoom toggle"),
-             IconCode::Code::ZOOM_TOGGLE
-             ),
-    UiAction("zoom-reset",
-             au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Zoom reset"),
-             TranslatableString("action", "Zoom reset")
-             ),
-    UiAction("fit-project-to-window",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Fit project to window"),
-             TranslatableString("action", "Fit project to window")
-             ),
-    UiAction("fit-view-to-project",
-             au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Fit view to project"),
-             TranslatableString("action", "Fit view to project")
-             ),
+    // view menu (zoom actions are in projectsceneuiactions.cpp)
     UiAction("collapse-all-tracks",
              au::context::UiCtxUnknown,
              au::context::CTX_ANY,

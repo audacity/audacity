@@ -44,11 +44,17 @@ static UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Zoom out"),
              IconCode::Code::ZOOM_OUT
              ),
-    UiAction("fit-selection",
+    UiAction("zoom-default",
              au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
-             TranslatableString("action", "Fit selection to width"),
-             TranslatableString("action", "Fit selection to width"),
+             TranslatableString("action", "Zoom default"),
+             TranslatableString("action", "Zoom default")
+             ),
+    UiAction("zoom-to-selection",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Zoom to selection"),
+             TranslatableString("action", "Zoom to selection"),
              IconCode::Code::FIT_SELECTION
              ),
     UiAction("zoom-to-fit-project",
@@ -57,6 +63,13 @@ static UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Zoom to fit project"),
              TranslatableString("action", "Zoom to fit project"),
              IconCode::Code::FIT_PROJECT
+             ),
+    UiAction("zoom-toggle",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Zoom toggle"),
+             TranslatableString("action", "Zoom toggle"),
+             IconCode::Code::ZOOM_TOGGLE
              ),
     UiAction("center-view-on-playhead",
              au::context::UiCtxProjectOpened,

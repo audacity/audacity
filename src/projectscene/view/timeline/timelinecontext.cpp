@@ -112,6 +112,7 @@ void TimelineContext::init(double frameWidth)
 
     dispatcher()->reg(this, "zoom-in", this, &TimelineContext::zoomIn);
     dispatcher()->reg(this, "zoom-out", this, &TimelineContext::zoomOut);
+    dispatcher()->reg(this, "zoom-default", this, &TimelineContext::zoomDefault);
     dispatcher()->reg(this, "zoom-to-selection", this, &TimelineContext::fitSelectionToWidth);
     dispatcher()->reg(this, "zoom-to-fit-project", this, &TimelineContext::fitProjectToWidth);
     dispatcher()->reg(this, "center-view-on-playhead", this, &TimelineContext::centerViewOnPlayhead);
@@ -485,6 +486,12 @@ void TimelineContext::zoomIn()
 void TimelineContext::zoomOut()
 {
     double newZoom = zoom() / 2.0;
+    setZoom(newZoom, findZoomFocusPosition());
+}
+
+void TimelineContext::zoomDefault()
+{
+    double newZoom = getZoomOfPreset(ZoomPresets::ZoomDefault);
     setZoom(newZoom, findZoomFocusPosition());
 }
 

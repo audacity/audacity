@@ -194,6 +194,7 @@ private:
 
     void zoomIn();
     void zoomOut();
+    void zoomDefault();
 
     qreal frameCenterPosition() const;
     qreal selectionCenterPosition() const;
