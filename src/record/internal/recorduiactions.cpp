@@ -24,7 +24,7 @@ static const ActionQuery RECORD_TOGGLE_INPUT_MONITORING("action://record/toggle-
 const UiActionList RecordUiActions::m_mainActions = {
     UiAction(RECORD_START_QUERY.toString(),
              au::context::UiCtxProjectOpened,
-             au::context::CTX_PROJECT_FOCUSED,
+             au::context::CTX_PROJECT_OPENED,
              TranslatableString("action", "Record"),
              TranslatableString("action", "Record"),
              IconCode::Code::RECORD_FILL

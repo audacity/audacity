@@ -858,7 +858,7 @@
         <seq>P</seq>
     </SC>
     <SC>
-        <key>record1st-choice</key>
+        <key>action://record/start</key>
         <seq>R</seq>
     </SC>
     <SC>
