@@ -22,6 +22,10 @@
 
 #include "startupscenario.h"
 
+#include <QDate>
+#include <QJsonDocument>
+#include <QJsonObject>
+
 #include "framework/global/log.h"
 #include "framework/global/types/uri.h"
 
@@ -100,7 +104,7 @@ muse::async::Promise<muse::Ret> StartupScenario::runOnSplashScreen()
 {
     return muse::async::make_promise<muse::Ret>([this](auto resolve, auto) {
         if (multiwindowsProvider()->isFirstWindow()) {
-            if (appUpdateScenario() && appUpdateScenario()->needCheckForUpdate()) {
+            if (appUpdateScenario() && appUpdateScenario()->needCheckForUpdate() && !alreadyCheckedForUpdateToday()) {
                 appUpdateScenario()->checkForUpdate(/*manual*/ false);
             }
         }
@@ -274,4 +278,17 @@ void StartupScenario::restoreLastSession()
     } else {
         sessionsManager()->reset();
     }
+}
+
+bool StartupScenario::alreadyCheckedForUpdateToday() const
+{
+    muse::io::path_t historyPath = updateConfiguration()->updateRequestHistoryJsonPath();
+    muse::RetVal<muse::ByteArray> rv = fileSystem()->readFile(historyPath);
+    if (!rv.ret) {
+        return false;
+    }
+
+    QJsonDocument doc = QJsonDocument::fromJson(rv.val.toQByteArrayNoCopy());
+    QDate previousRequestDay = QDate::fromString(doc.object().value("Previous-Request-Day").toString(), Qt::ISODate);
+    return previousRequestDay == QDate::currentDate();
 }
