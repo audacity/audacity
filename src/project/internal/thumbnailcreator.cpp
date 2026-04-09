@@ -2,44 +2,30 @@
 
 #include <QEventLoop>
 
-#include "global/io/fileinfo.h"
-
 using namespace au::project;
 
-constexpr auto FILE_SUFFIX = ".png";
-
-void ThumbnailCreator::onThumbnailCreated(const bool success)
+void ThumbnailCreator::onThumbnailCreated(std::vector<uint8_t> pngData)
 {
-    m_thumbnailCreated.send(success);
+    m_thumbnailCreated.send(pngData);
 }
 
-muse::async::Channel<muse::io::path_t> ThumbnailCreator::captureThumbnailRequested() const
+muse::async::Notification ThumbnailCreator::captureThumbnailRequested() const
 {
     return m_createThumbnailRequested;
 }
 
-muse::Ret ThumbnailCreator::createThumbnail(const muse::io::path_t& path)
+std::optional<std::vector<uint8_t> > ThumbnailCreator::createThumbnail()
 {
-    muse::Ret ret;
+    std::optional<std::vector<uint8_t> > result;
     QEventLoop loop;
-    m_thumbnailCreated.onReceive(this, [&loop, &ret](const bool ok) {
-        ret = ok ? muse::make_ok() : muse::make_ret(muse::Ret::Code::UnknownError);
+    m_thumbnailCreated.onReceive(this, [&loop, &result](std::vector<uint8_t> data) {
+        result = std::move(data);
         loop.quit();
     });
 
-    m_createThumbnailRequested.send(thumbnailPath(path));
+    m_createThumbnailRequested.notify();
     loop.exec();
     m_thumbnailCreated.disconnect(this);
 
-    return ret;
-}
-
-muse::io::path_t ThumbnailCreator::thumbnailPath(const muse::io::path_t& path)
-{
-    const muse::io::FileInfo fileInfo(path);
-    muse::io::path_t completePath = fileInfo.dirPath()
-                                    .appendingComponent(fileInfo.baseName())
-                                    .appendingSuffix(FILE_SUFFIX);
-
-    return completePath;
+    return result;
 }

@@ -21,6 +21,10 @@
  */
 #include "projectthumbnailloader.h"
 
+#include <QPixmap>
+
+#include "log.h"
+
 using namespace au::project;
 
 ProjectThumbnailLoader::ProjectThumbnailLoader(QObject* parent)
@@ -62,13 +66,22 @@ void ProjectThumbnailLoader::loadThumbnail()
         return;
     }
 
-    // recentFilesController()->thumbnail(m_scorePath)
-    // .onResolve(this, [this](const QPixmap& thumbnail) {
-    //     setThumbnail(thumbnail);
-    // }).onReject(this, [this](int code, const std::string& error) {
-    //     LOGE() << "Could not load thumbnail for " << m_scorePath << ": [" << code << "] " << error;
-    //     setThumbnail(QPixmap());
-    // });
+    const std::optional<std::vector<uint8_t> > pngData
+        = au3ProjectReader()->readProjectThumbnail(m_projectPath);
+
+    if (!pngData.has_value()) {
+        setThumbnail(QPixmap());
+        return;
+    }
+
+    QPixmap pixmap;
+    if (!pixmap.loadFromData(pngData->data(), static_cast<uint>(pngData->size()), "PNG")) {
+        LOGE() << "Failed to decode thumbnail for: " << m_projectPath;
+        setThumbnail(QPixmap());
+        return;
+    }
+
+    setThumbnail(pixmap);
 }
 
 void ProjectThumbnailLoader::setThumbnail(const QPixmap& thumbnail)

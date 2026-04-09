@@ -20,6 +20,7 @@
 #include "au3-wave-track/WaveTrack.h"
 #include "au3-wave-track/WaveTrackUtilities.h"
 #include "au3-stretching-sequence/TempoChange.h"
+#include "projectthumbnail.h"
 
 //! HACK
 //! Static variable is not initialized
@@ -51,6 +52,17 @@ std::shared_ptr<IAu3Project> Au3ProjectCreator::create(const muse::modularity::C
 {
     TrackColor::Init(randomIndex());
     return std::make_shared<Au3ProjectAccessor>(ctx);
+}
+
+std::optional<std::vector<uint8_t> > Au3ProjectReader::readProjectThumbnail(const muse::io::path_t& projectPath) const
+{
+    const std::string sstr = projectPath.toStdString();
+    const FilePath fileName = wxString::FromUTF8(sstr.c_str(), sstr.size());
+    if (fileName.empty()) {
+        return std::nullopt;
+    }
+
+    return ProjectFileIO::ReadThumbnail(fileName);
 }
 
 muse::Ret Au3ProjectCreator::removeUnsavedData(const muse::io::path_t& projectPath) const
@@ -163,6 +175,11 @@ muse::Ret Au3ProjectAccessor::load(const muse::io::path_t& filePath, bool ignore
     updateSavedState();
 
     return ret;
+}
+
+void Au3ProjectAccessor::saveThumbnail(std::vector<uint8_t> pngData)
+{
+    ProjectThumbnail::Get(m_data->projectRef()).SetData(std::move(pngData));
 }
 
 bool Au3ProjectAccessor::save(const muse::io::path_t& filePath)
