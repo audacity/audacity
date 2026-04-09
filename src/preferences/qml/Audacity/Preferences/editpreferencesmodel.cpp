@@ -219,6 +219,9 @@ int EditPreferencesModel::zoomPreset1() const
 
 void EditPreferencesModel::setZoomPreset1(int preset)
 {
+    if (zoomPreset1() == preset) {
+        return;
+    }
     projectsceneConfiguration()->setZoomPreset1(static_cast<projectscene::ZoomPresets::Preset>(preset));
     emit zoomPreset1Changed();
 }
@@ -230,6 +233,9 @@ int EditPreferencesModel::zoomPreset2() const
 
 void EditPreferencesModel::setZoomPreset2(int preset)
 {
+    if (zoomPreset2() == preset) {
+        return;
+    }
     projectsceneConfiguration()->setZoomPreset2(static_cast<projectscene::ZoomPresets::Preset>(preset));
     emit zoomPreset2Changed();
 }

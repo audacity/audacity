@@ -643,7 +643,9 @@ void TimelineContext::zoomToggle()
     double currentZ = m_zoom;
 
     // Choose the zoom that is most different to the current zoom
-    bool chooseFirst = std::fabs(std::log(zoom1 / currentZ)) > std::fabs(std::log(currentZ / zoom2));
+    double dist1 = std::fabs(std::log(zoom1) - std::log(currentZ));
+    double dist2 = std::fabs(std::log(zoom2) - std::log(currentZ));
+    bool chooseFirst = dist1 > dist2;
     double chosenZoom = chooseFirst ? zoom1 : zoom2;
     ZoomPresets::Preset chosenPreset = chooseFirst ? preset1 : preset2;
 
@@ -831,7 +833,7 @@ double TimelineContext::clampedZoom(double zoom) const
     double totalTimeRange = std::max(project ? project->totalTime().to_double() * 2.0 : 0.0, 4 * 60.0);
     double newTimeRange = m_frameWidth / newZoom;
 
-    if (!muse::is_zero(totalTimeRange) && muse::RealIsEqualOrMore(newTimeRange, totalTimeRange)) {
+    if (muse::RealIsEqualOrMore(newTimeRange, totalTimeRange)) {
         newZoom = m_frameWidth / totalTimeRange;
     }
 

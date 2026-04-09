@@ -28,7 +28,6 @@ BaseSection {
         horizontalAlignment: Text.AlignLeft
     }
 
-
     ComboBoxWithTitle {
         id: preset1Box
 
