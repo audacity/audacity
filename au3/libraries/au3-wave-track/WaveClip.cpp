@@ -291,7 +291,7 @@ WaveClip::WaveClip(
 
     mIsPlaceholder = orig.GetIsPlaceholder();
 
-    mColor = orig.mColor;
+    mColorIndex = orig.mColorIndex;
 
     mSelected = orig.mSelected;
 
@@ -358,7 +358,7 @@ WaveClip::WaveClip(
             WaveClip::NewSharedFrom(*cutline, factory, true, backup));
     }
 
-    mColor = orig.mColor;
+    mColorIndex = orig.mColorIndex;
 
     mSelected = orig.mSelected;
 
@@ -1100,7 +1100,7 @@ static constexpr auto ClipStretchToMatchTempo_attr = "clipStretchToMatchTempo";
 static constexpr auto ClipTempo_attr = "clipTempo";
 static constexpr auto Name_attr = "name";
 static constexpr auto GroupId_attr = "groupId";
-static constexpr auto Color_attr = "color";
+static constexpr auto ColorIndex_attr = "colorindex";
 static constexpr auto Selected_attr = "isSelected";
 
 bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList& attrs)
@@ -1171,9 +1171,10 @@ bool WaveClip::HandleXMLTag(const std::string_view& tag, const AttributesList& a
                     return false;
                 }
                 mGroupId = longValue;
-            } else if (attr == Color_attr) {
-                if (value.IsStringView()) {
-                    SetColor(value.ToWString());
+            } else if (attr == ColorIndex_attr) {
+                long colorIndexValue;
+                if (value.TryGet(colorIndexValue)) {
+                    SetColorIndex(static_cast<int>(colorIndexValue));
                 }
             } else if (attr == Selected_attr && value.TryGet(boolValue)) {
                 SetSelected(boolValue);
@@ -1255,7 +1256,7 @@ void WaveClip::WriteXML(size_t ii, XMLWriter& xmlFile) const
     xmlFile.WriteAttr(ClipStretchToMatchTempo_attr, mStretchToMatchProjectTempo);
     xmlFile.WriteAttr(Name_attr, mName);
     xmlFile.WriteAttr(GroupId_attr, static_cast<long>(mGroupId));
-    xmlFile.WriteAttr(Color_attr, mColor);
+    xmlFile.WriteAttr(ColorIndex_attr, mColorIndex);
     xmlFile.WriteAttr(Selected_attr, mSelected);
 
     if (mClipTempo) {
@@ -1925,14 +1926,14 @@ void WaveClip::SetGroupId(int64_t id)
     mGroupId = id;
 }
 
-void WaveClip::SetColor(const wxString& color)
+void WaveClip::SetColorIndex(int colorIndex)
 {
-    mColor = color;
+    mColorIndex = colorIndex;
 }
 
-const wxString& WaveClip::GetColor() const
+int WaveClip::GetColorIndex() const
 {
-    return mColor;
+    return mColorIndex;
 }
 
 void WaveClip::SetSelected(bool selected)

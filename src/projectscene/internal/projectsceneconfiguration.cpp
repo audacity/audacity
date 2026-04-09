@@ -209,21 +209,41 @@ muse::async::Notification ProjectSceneConfiguration::isEffectsPanelVisibleChange
     return m_effectsPanelVisible;
 }
 
-const std::vector<std::pair<std::string, std::string> >& ProjectSceneConfiguration::clipColors() const
+const std::vector<ClipColorInfo>& ProjectSceneConfiguration::clipColorInfos() const
 {
-    static std::vector<std::pair<std::string /*name*/, std::string /*color*/> > colors = {
-        { "Blue", uiConfiguration()->currentTheme().extra["clip_color_1"].toString().toStdString() },
-        { "Violet", uiConfiguration()->currentTheme().extra["clip_color_2"].toString().toStdString() },
-        { "Magenta", uiConfiguration()->currentTheme().extra["clip_color_3"].toString().toStdString() },
-        { "Red", uiConfiguration()->currentTheme().extra["clip_color_4"].toString().toStdString() },
-        { "Orange", uiConfiguration()->currentTheme().extra["clip_color_5"].toString().toStdString() },
-        { "Yellow", uiConfiguration()->currentTheme().extra["clip_color_6"].toString().toStdString() },
-        { "Green", uiConfiguration()->currentTheme().extra["clip_color_7"].toString().toStdString() },
-        { "Turquoise", uiConfiguration()->currentTheme().extra["clip_color_8"].toString().toStdString() },
-        { "Cyan", uiConfiguration()->currentTheme().extra["clip_color_9"].toString().toStdString() }
+    static const std::vector<ClipColorInfo> infos = {
+        { "Blue", 1 },
+        { "Violet", 2 },
+        { "Magenta", 3 },
+        { "Red", 4 },
+        { "Orange", 5 },
+        { "Yellow", 6 },
+        { "Green", 7 },
+        { "Turquoise", 8 },
+        { "Cyan", 9 }
     };
 
-    return colors;
+    return infos;
+}
+
+muse::Color ProjectSceneConfiguration::clipColor(trackedit::ClipColorIndex index) const
+{
+    QString key = QString("clip_color_%1").arg(index);
+    QColor color = uiConfiguration()->currentTheme().extra[key].value<QColor>();
+    if (!color.isValid()) {
+        color = uiConfiguration()->currentTheme().extra["clip_color_1"].value<QColor>();
+    }
+    return muse::Color::fromQColor(color);
+}
+
+muse::Color ProjectSceneConfiguration::clipSelectedColor(trackedit::ClipColorIndex index) const
+{
+    QString key = QString("clip_selected_color_%1").arg(index);
+    QColor color = uiConfiguration()->currentTheme().extra[key].value<QColor>();
+    if (!color.isValid()) {
+        color = uiConfiguration()->currentTheme().extra["clip_selected_color_1"].value<QColor>();
+    }
+    return muse::Color::fromQColor(color);
 }
 
 ClipStyles::Style ProjectSceneConfiguration::clipStyle() const

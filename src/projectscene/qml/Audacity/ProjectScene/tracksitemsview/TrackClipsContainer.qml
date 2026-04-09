@@ -262,6 +262,7 @@ TrackItemsContainer {
                                 property int index: loader.index
 
                                 clipColor: itemData.color
+                                clipSelectedColor: itemData.selectedColor
                                 collapsed: root.trackViewState.isTrackCollapsed
                             }
                         }
@@ -280,6 +281,7 @@ TrackItemsContainer {
 
                                 title: itemData.title
                                 clipColor: itemData.color
+                                clipSelectedColor: itemData.selectedColor
                                 groupId: itemData.groupId
                                 clipKey: itemData.key
                                 clipTime: itemData.time

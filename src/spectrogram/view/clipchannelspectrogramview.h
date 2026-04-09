@@ -30,6 +30,7 @@ class ClipChannelSpectrogramView : public QQuickPaintedItem, public muse::async:
         double selectionStartFrequency READ selectionStartFrequency WRITE setSelectionStartFrequency NOTIFY selectionFrequencyChanged FINAL)
     Q_PROPERTY(
         double selectionEndFrequency READ selectionEndFrequency WRITE setSelectionEndFrequency NOTIFY selectionFrequencyChanged FINAL)
+    Q_PROPERTY(bool clipSelected READ clipSelected WRITE setClipSelected NOTIFY clipSelectedChanged FINAL)
 
     muse::ContextInject<ISpectrogramService> spectrogramService{ this };
     muse::ContextInject<ISpectrogramPainter> spectrogramPainter { this };
@@ -72,6 +73,9 @@ public:
     double selectionEndFrequency() const;
     void setSelectionEndFrequency(double frequency);
 
+    bool clipSelected() const { return m_clipSelected; }
+    void setClipSelected(bool selected);
+
 signals:
     void clipIdChanged();
     void trackIdChanged();
@@ -83,6 +87,7 @@ signals:
     void selectionStartTimeChanged();
     void selectionEndTimeChanged();
     void selectionFrequencyChanged();
+    void clipSelectedChanged();
 
 private:
     void paint(QPainter* painter) override;
@@ -100,5 +105,6 @@ private:
     double m_selectionEndTime = 0.0;
     double m_selectionStartFrequency = SelectionInfo::UndefinedFrequency;
     double m_selectionEndFrequency = SelectionInfo::UndefinedFrequency;
+    bool m_clipSelected = false;
 };
 }

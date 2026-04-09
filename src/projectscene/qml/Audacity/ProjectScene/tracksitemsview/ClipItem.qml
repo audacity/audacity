@@ -28,6 +28,7 @@ Rectangle {
     property var canvas: null
     required property int headerHeight
     property color clipColor: ui.theme.extra["clip_color_1"]
+    property color clipSelectedColor: ui.theme.extra["clip_selected_color_1"]
     property color normalHeaderColor: root.currentClipStyle == ClipStyle.COLORFUL ? root.clipColor : root.classicHeaderColor
     property color selectedHeaderColor: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors(ui.theme.extra["white_color"], root.clipColor, 0.3) : classicHeaderColor
     property color normalHeaderHoveredColor: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors(ui.theme.extra["white_color"], root.clipColor, 0.8) : classicHeaderHoveredColor
@@ -108,7 +109,7 @@ Rectangle {
     property alias navigation: navCtrl
 
     radius: 4
-    color: clipSelected ? ui.theme.extra["white_color"] : clipColor
+    color: clipSelected ? clipSelectedColor : clipColor
     border.color: ui.theme.extra["black_color"]
     opacity: root.moveActive && (clipSelected || clipIntersectsSelection) ? 0.5 : isAudible ? 1.0 : 0.3
 
@@ -836,6 +837,7 @@ Rectangle {
                 channelHeightRatio: showChannelSplitter ? root.channelHeightRatio : 1
 
                 clipColor: root.clipColor
+                clipSelectedColor: root.clipSelectedColor
                 clipSelected: root.clipSelected
                 isIsolationMode: root.isIsolationMode
                 multiSampleEdit: root.multiSampleEdit
@@ -1021,6 +1023,7 @@ Rectangle {
                 selectionEndTime: root.context.selectionEndTime
                 selectionStartFrequency: root.selectionStartFrequency
                 selectionEndFrequency: root.selectionEndFrequency
+                clipSelected: root.clipSelected
 
                 ChannelSplitter {
                     id: spectrogramChannelSplitter

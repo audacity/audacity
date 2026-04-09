@@ -3,6 +3,8 @@
 */
 #pragma once
 
+#include "framework/global/modularity/ioc.h"
+#include "projectscene/iprojectsceneconfiguration.h"
 #include "trackedit/dom/label.h"
 
 #include "viewtrackitem.h"
@@ -11,6 +13,8 @@ namespace au::projectscene {
 class TrackLabelItem : public ViewTrackItem
 {
     Q_OBJECT
+
+    muse::GlobalInject<IProjectSceneConfiguration> configuration;
 
     Q_PROPERTY(int level READ level WRITE setLevel NOTIFY levelChanged FINAL)
 

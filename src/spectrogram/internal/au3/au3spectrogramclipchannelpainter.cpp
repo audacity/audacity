@@ -195,7 +195,7 @@ void Au3SpectrogramClipChannelPainter::fillImage(QImage& image,
         const auto w1 = sampleCount(
             0.5 + sampleRate / stretchRatio
             * (positionToTime(viewInfo, xx + 1 + leftOffset) - playStartTime));
-        bool maybeSelected = ssel0 <= w0 && w1 < ssel1;
+        bool maybeSelected = selectionInfo.clipSelected || (ssel0 <= w0 && w1 < ssel1);
         maybeSelected = maybeSelected || (xx == selectedX);
 
         // There used to be a pragma omp parallel for here. Can/Should we use QtConcurrent?

@@ -109,8 +109,7 @@ bool clipsPair(ITrackeditProjectPtr trackeditProjectPtr,
         //! For now these do not result in "autosave",
         //  and so should not be criteria under undo/redo refresh.
         //  This might change in future AU4 versions.
-        // first.color == second.color &&
-        // first.hasCustomColor == second.hasCustomColor &&
+        // first.colorIndex == second.colorIndex &&
         // first.optimizeForVoice == second.optimizeForVoice &&
         // first.stretchToMatchTempo == second.stretchToMatchTempo
     };
@@ -259,7 +258,7 @@ void notifyOfUndoRedo(const TracksAndItems& before,
             //! For now these do not result in "autosave",
             //  and so should not be criteria under undo/redo.
             //  This might change in future AU4 versions.
-            // first.color == second.color;
+            // first.colorIndex == second.colorIndex;
         };
 
         for (const Track& trackBefore : before.tracks) {

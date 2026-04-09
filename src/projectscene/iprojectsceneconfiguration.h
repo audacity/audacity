@@ -6,9 +6,15 @@
 #include "modularity/imoduleinterface.h"
 #include "modularity/ioc.h"
 
+#include "global/types/color.h"
+#include "trackedit/trackedittypes.h"
 #include "types/projectscenetypes.h"
 
 namespace au::projectscene {
+struct ClipColorInfo {
+    std::string name;
+    trackedit::ClipColorIndex index = 0;
+};
 class IProjectSceneConfiguration : MODULE_GLOBAL_INTERFACE
 {
     INTERFACE_ID(IProjectSceneConfiguration)
@@ -39,7 +45,9 @@ public:
     virtual void setIsEffectsPanelVisible(bool visible) = 0;
     virtual muse::async::Notification isEffectsPanelVisibleChanged() const = 0;
 
-    virtual const std::vector<std::pair<std::string, std::string> >& clipColors() const = 0;
+    virtual const std::vector<ClipColorInfo>& clipColorInfos() const = 0;
+    virtual muse::Color clipColor(trackedit::ClipColorIndex index) const = 0;
+    virtual muse::Color clipSelectedColor(trackedit::ClipColorIndex index) const = 0;
 
     virtual ClipStyles::Style clipStyle() const = 0;
     virtual void setClipStyle(ClipStyles::Style style) = 0;
