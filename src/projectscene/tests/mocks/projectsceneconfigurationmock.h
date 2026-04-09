@@ -75,5 +75,10 @@ public:
 
     MOCK_METHOD(int, labelEditorColumnFormat, (const std::string& columnName), (const, override));
     MOCK_METHOD(void, setLabelEditorColumnFormat, (const std::string& columnName, int format), (const, override));
+
+    MOCK_METHOD(ZoomPresets::Preset, zoomPreset1, (), (const, override));
+    MOCK_METHOD(void, setZoomPreset1, (ZoomPresets::Preset preset), (override));
+    MOCK_METHOD(ZoomPresets::Preset, zoomPreset2, (), (const, override));
+    MOCK_METHOD(void, setZoomPreset2, (ZoomPresets::Preset preset), (override));
 };
 }

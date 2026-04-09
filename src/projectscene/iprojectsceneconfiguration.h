@@ -83,5 +83,11 @@ public:
 
     virtual int labelEditorColumnFormat(const std::string& columnName) const = 0;
     virtual void setLabelEditorColumnFormat(const std::string& columnName, int format) const = 0;
+
+    virtual ZoomPresets::Preset zoomPreset1() const = 0;
+    virtual void setZoomPreset1(ZoomPresets::Preset preset) = 0;
+
+    virtual ZoomPresets::Preset zoomPreset2() const = 0;
+    virtual void setZoomPreset2(ZoomPresets::Preset preset) = 0;
 };
 }

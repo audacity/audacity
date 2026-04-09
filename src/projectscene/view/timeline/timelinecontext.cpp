@@ -2,6 +2,7 @@
 
 #include <QApplication>
 #include <QWheelEvent>
+#include <cmath>
 
 #include "global/types/number.h"
 
@@ -114,6 +115,7 @@ void TimelineContext::init(double frameWidth)
     dispatcher()->reg(this, "zoom-to-selection", this, &TimelineContext::fitSelectionToWidth);
     dispatcher()->reg(this, "zoom-to-fit-project", this, &TimelineContext::fitProjectToWidth);
     dispatcher()->reg(this, "center-view-on-playhead", this, &TimelineContext::centerViewOnPlayhead);
+    dispatcher()->reg(this, "zoom-toggle", this, &TimelineContext::zoomToggle);
 
     configuration()->playbackOnRulerClickEnabledChanged().onNotify(this, [this]() {
         emit playbackOnRulerClickEnabledChanged();
@@ -546,6 +548,105 @@ void TimelineContext::fitProjectToWidth()
 
     //! position view to begin
     shiftFrameTime(0.0 - m_frameStartTime);
+}
+
+double TimelineContext::getZoomOfPreset(ZoomPresets::Preset preset) const
+{
+    const double maxZoomOutFactor = 4.0;
+    const double pixelsPerUnit = 5.0;
+
+    double result = 1.0;
+    double totalTime = trackEditProject() ? static_cast<double>(trackEditProject()->totalTime()) : 0.0;
+    double zoomToFit = (totalTime > 0.0) ? m_frameWidth / totalTime : m_zoom;
+
+    switch (preset) {
+    default:
+    case ZoomPresets::ZoomDefault:
+        result = configuration()->zoom(iocContext());
+        break;
+    case ZoomPresets::ZoomToFit:
+        result = zoomToFit;
+        break;
+    case ZoomPresets::ZoomToSelection:
+        if (hasSelection()) {
+            result = m_frameWidth / (m_selectionEndTime - m_selectionStartTime);
+        } else {
+            result = m_zoom;
+        }
+        break;
+    case ZoomPresets::ZoomMinutes:
+        result = pixelsPerUnit / 60.0;
+        break;
+    case ZoomPresets::ZoomSeconds:
+        result = pixelsPerUnit;
+        break;
+    case ZoomPresets::Zoom5ths:
+        result = pixelsPerUnit * 5.0;
+        break;
+    case ZoomPresets::Zoom10ths:
+        result = pixelsPerUnit * 10.0;
+        break;
+    case ZoomPresets::Zoom20ths:
+        result = pixelsPerUnit * 20.0;
+        break;
+    case ZoomPresets::Zoom50ths:
+        result = pixelsPerUnit * 50.0;
+        break;
+    case ZoomPresets::Zoom100ths:
+        result = pixelsPerUnit * 100.0;
+        break;
+    case ZoomPresets::Zoom500ths:
+        result = pixelsPerUnit * 500.0;
+        break;
+    case ZoomPresets::ZoomMilliSeconds:
+        result = pixelsPerUnit * 1000.0;
+        break;
+    case ZoomPresets::ZoomSamples:
+        result = 44100.0;
+        break;
+    case ZoomPresets::Zoom4To1:
+        result = 44100.0 * 4;
+        break;
+    case ZoomPresets::MaxZoom:
+        result = ZOOM_MAX;
+        break;
+    }
+
+    if (result < (zoomToFit / maxZoomOutFactor)) {
+        result = zoomToFit / maxZoomOutFactor;
+    }
+
+    return result;
+}
+
+void TimelineContext::zoomToggle()
+{
+    ZoomPresets::Preset preset1 = configuration()->zoomPreset1();
+    ZoomPresets::Preset preset2 = configuration()->zoomPreset2();
+
+    double zoom1 = getZoomOfPreset(preset1);
+    double zoom2 = getZoomOfPreset(preset2);
+    double currentZ = m_zoom;
+
+    // Choose whichever preset is most different from the current zoom (in log space)
+    bool chooseFirst = std::fabs(std::log(zoom1 / currentZ)) > std::fabs(std::log(currentZ / zoom2));
+    double chosenZoom = chooseFirst ? zoom1 : zoom2;
+    ZoomPresets::Preset chosenPreset = chooseFirst ? preset1 : preset2;
+
+    if (chosenPreset == ZoomPresets::ZoomToFit) {
+        fitProjectToWidth();
+    } else if (chosenPreset == ZoomPresets::ZoomToSelection) {
+        fitSelectionToWidth();
+    } else {
+        double zoomPosition = findZoomFocusPosition();
+        setZoom(chosenZoom, zoomPosition);
+
+        double centerPosition = frameCenterPosition();
+        double centerTime = positionToTime(centerPosition);
+        zoomPosition = findZoomFocusPosition();
+        double zoomTime = positionToTime(zoomPosition);
+        shiftFrameTime(zoomTime - centerTime);
+    }
 }
 
 void TimelineContext::updateViewOnProjectTempoChange(double ratio)

@@ -183,6 +183,30 @@ public:
     Q_ENUM(AsymmetricStereoHeights)
 };
 
+class ZoomPresets
+{
+    Q_GADGET
+public:
+    enum Preset {
+        ZoomToFit = 0,
+        ZoomToSelection,
+        ZoomDefault,
+        ZoomMinutes,
+        ZoomSeconds,
+        Zoom5ths,
+        Zoom10ths,
+        Zoom20ths,
+        Zoom50ths,
+        Zoom100ths,
+        Zoom500ths,
+        ZoomMilliSeconds,
+        ZoomSamples,
+        Zoom4To1,
+        MaxZoom,
+    };
+    Q_ENUM(Preset)
+};
+
 constexpr const char16_t* COLOR_CHANGE_ACTION = u"action://trackedit/clip/change-color?colorindex=%1";
 inline muse::actions::ActionQuery makeClipColorChangeAction(trackedit::ClipColorIndex colorIndex)
 {

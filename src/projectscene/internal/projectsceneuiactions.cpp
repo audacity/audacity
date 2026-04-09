@@ -30,13 +30,6 @@ static UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Split tool"),
              IconCode::Code::SPLIT_TOOL
              ),
-    UiAction("zoom",
-             au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Zoom toggle"),
-             TranslatableString("action", "Zoom toggle"),
-             IconCode::Code::ZOOM_TOGGLE
-             ),
     UiAction("zoom-in",
              au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
@@ -335,7 +328,7 @@ const ToolConfig& ProjectSceneUiActions::defaultPlaybackToolBarConfig()
             { "zoom-out", true },
             { "zoom-to-selection", true },
             { "zoom-to-fit-project", true },
-            { "zoom", true },
+            { "zoom-toggle", true },
             // { "spectral-box-select", false },
             // { "spectral-brush", false },
             // { "", true },

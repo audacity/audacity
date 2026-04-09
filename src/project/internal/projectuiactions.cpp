@@ -309,10 +309,11 @@ const UiActionList ProjectUiActions::m_actions = {
              IconCode::Code::FIT_SELECTION
              ),
     UiAction("zoom-toggle",
-             au::context::UiCtxUnknown,
+             au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
              TranslatableString("action", "Zoom toggle"),
-             TranslatableString("action", "Zoom toggle")
+             TranslatableString("action", "Zoom toggle"),
+             IconCode::Code::ZOOM_TOGGLE
              ),
     UiAction("zoom-reset",
              au::context::UiCtxUnknown,

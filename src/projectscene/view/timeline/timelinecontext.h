@@ -201,6 +201,8 @@ private:
 
     void fitSelectionToWidth();
     void fitProjectToWidth();
+    void zoomToggle();
+    double getZoomOfPreset(ZoomPresets::Preset preset) const;
     void updateViewOnProjectTempoChange(double ratio);
 
     bool hasSelection() const;

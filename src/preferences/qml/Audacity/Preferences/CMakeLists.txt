@@ -89,6 +89,7 @@ qt_add_qml_module(preferences_qml
         internal/WorkspacesAsymmetricChannelsSection.qml
         internal/WorkspacesTempoDetectionSection.qml
         internal/ZoomSection.qml
+        internal/ZoomToggleSection.qml
         PlaybackPreferencesPage.qml
         PluginPreferencesPage.qml
         PreferencesDialog.qml
