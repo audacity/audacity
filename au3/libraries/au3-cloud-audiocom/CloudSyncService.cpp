@@ -339,13 +339,15 @@ CloudSyncService::SyncFuture CloudSyncService::OpenFromCloud(
     std::string projectId, std::string snapshotId, SyncMode mode,
     sync::ProgressCallback callback)
 {
+    if (mSyncInProcess.exchange(true)) {
+        auto blockedPromise = SyncPromise {};
+
+        blockedPromise.set_value({ sync::ProjectSyncResult::StatusCode::Blocked, {}, {} });
+        return blockedPromise.get_future();
+    }
+
     // Reset promise
     mSyncPromise = {};
-
-    if (mSyncInProcess.exchange(true)) {
-        CompleteSync({ sync::ProjectSyncResult::StatusCode::Blocked, {}, {} });
-        return mSyncPromise.get_future();
-    }
 
     if (projectId.empty()) {
         FailSync({ SyncResultCode::InternalClientError, "Empty projectId" });
