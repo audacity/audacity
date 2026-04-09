@@ -661,9 +661,10 @@ void TimelineContext::zoomToggle()
     } else if (chosenPreset == ZoomPresets::ZoomToSelection) {
         fitSelectionToWidth();
     } else {
-        double focusTime = m_selectionActive
-                           ? m_selectionStartTime + (m_selectionEndTime - m_selectionStartTime) / 2.0
-                           : playbackState()->playbackPosition();
+        auto [selStart, selEnd] = selectionRange();
+        double focusTime = (selEnd > selStart)
+                           ? selStart + (selEnd - selStart) / 2.0
+                           : static_cast<double>(playbackState()->playbackPosition());
 
         setZoom(chosenZoom, frameCenterPosition());
 
