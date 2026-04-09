@@ -13,6 +13,8 @@ BaseSection {
 
     property bool askBeforeConverting: true
 
+    navigationOrderEnd: root.navigation.order
+
     Column {
         width: parent.width
         spacing: 24

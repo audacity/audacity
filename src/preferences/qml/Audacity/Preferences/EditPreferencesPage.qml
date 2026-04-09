@@ -133,6 +133,12 @@ PreferencesPage {
             onZoomPreset2ChangeRequested: function(preset) {
                 editPreferencesModel.setZoomPreset2(preset)
             }
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
         }
     }
 }
