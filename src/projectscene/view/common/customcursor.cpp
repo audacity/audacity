@@ -4,7 +4,57 @@
 
 #include "customcursor.h"
 
+#include <QGuiApplication>
+#include <QScreen>
+#include <QPixmap>
+
+#include "log.h"
+
 using namespace au::projectscene;
+
+QCursor CustomCursor::createScaledCursor(const QString& source, int size)
+{
+    qreal dpr = 1.0;
+    if (QScreen* screen = QGuiApplication::primaryScreen()) {
+        dpr = screen->devicePixelRatio();
+    }
+
+    QPixmap pixmap(source);
+    if (pixmap.isNull()) {
+        LOGW() << "Failed to load bitmap from source: " << source;
+        return QCursor();
+    }
+
+    int physicalSize = qRound(size * dpr);
+    QPixmap scaled = pixmap.scaled(physicalSize, physicalSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    scaled.setDevicePixelRatio(dpr);
+    return QCursor(scaled);
+}
+
+void CustomCursor::setCursorShape(QQuickItem* item, const QString& source, int size)
+{
+    if (!item) {
+        return;
+    }
+
+    QCursor cursor = createScaledCursor(source, size);
+    if (cursor.shape() == Qt::BitmapCursor) {
+        item->setCursor(cursor);
+    }
+}
+
+void CustomCursor::overrideCursor(const QString& source, int size)
+{
+    QCursor cursor = createScaledCursor(source, size);
+    if (cursor.shape() == Qt::BitmapCursor) {
+        QGuiApplication::setOverrideCursor(cursor);
+    }
+}
+
+void CustomCursor::restoreCursor()
+{
+    QGuiApplication::restoreOverrideCursor();
+}
 
 CustomCursor::CustomCursor(QQuickItem*)
 {
@@ -12,12 +62,10 @@ CustomCursor::CustomCursor(QQuickItem*)
         if (m_active) {
             QGuiApplication::restoreOverrideCursor();
 
-            QPixmap pixmap(m_source);
-            if (!pixmap.isNull()) {
-                m_cursor = QCursor(pixmap.scaled(m_size, m_size, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+            QCursor cursor = createScaledCursor(m_source, m_size);
+            if (cursor.shape() == Qt::BitmapCursor) {
+                m_cursor = cursor;
                 QGuiApplication::setOverrideCursor(m_cursor);
-            } else {
-                qWarning() << "Failed to load bitmap from source:" << m_source;
             }
         } else {
             QGuiApplication::restoreOverrideCursor();

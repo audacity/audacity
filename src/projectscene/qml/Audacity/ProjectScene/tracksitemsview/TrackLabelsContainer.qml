@@ -69,8 +69,21 @@ TrackItemsContainer {
                     hoverEnabled: true
                     pressAndHoldInterval: 0
 
-                    cursorShape: root.selectionEditInProgress ? Qt.SizeHorCursor : Qt.IBeamCursor
+                    cursorShape: Qt.BlankCursor
                     enabled: !root.selectionInProgress
+
+                    function updateCustomCursor() {
+                        var src = root.selectionEditInProgress
+                            ? ":/images/customCursorShapes/SelectionLeft.png"
+                            : ":/images/customCursorShapes/IBeamCursor.png"
+                        CustomCursorProvider.setCursorShape(labelsContainerMouseArea, src, 32)
+                    }
+
+                    Component.onCompleted: updateCustomCursor()
+                    Connections {
+                        target: root
+                        function onSelectionEditInProgressChanged() { labelsContainerMouseArea.updateCustomCursor() }
+                    }
 
                     onPressed: function (e) {
                         e.accepted = false

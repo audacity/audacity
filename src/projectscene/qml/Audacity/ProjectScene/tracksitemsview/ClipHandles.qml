@@ -155,7 +155,9 @@ Item {
 
             anchors.fill: parent
             hoverEnabled: true
-            cursorShape: Qt.SizeHorCursor
+            cursorShape: Qt.BlankCursor
+
+            Component.onCompleted: CustomCursorProvider.setCursorShape(leftTrimMa, ":/images/customCursorShapes/ClipTrimLeft.png", 32)
 
             onPressed: function (e) {
                 root.clipStartEditRequested()
@@ -299,7 +301,9 @@ Item {
 
             anchors.fill: parent
             hoverEnabled: true
-            cursorShape: Qt.SizeHorCursor
+            cursorShape: Qt.BlankCursor
+
+            Component.onCompleted: CustomCursorProvider.setCursorShape(rightTrimMa, ":/images/customCursorShapes/ClipTrimRight.png", 32)
 
             onPressed: function (e) {
                 root.clipStartEditRequested()
@@ -461,7 +465,9 @@ Item {
             id: leftTimeMa
             anchors.fill: parent
             hoverEnabled: true
-            cursorShape: Qt.SizeHorCursor
+            cursorShape: Qt.BlankCursor
+
+            Component.onCompleted: CustomCursorProvider.setCursorShape(leftTimeMa, ":/images/customCursorShapes/ClipStretchLeft.png", 32)
 
             onPressed: {
                 root.clipStartEditRequested()
@@ -620,7 +626,9 @@ Item {
             id: rightTimeMa
             anchors.fill: parent
             hoverEnabled: true
-            cursorShape: Qt.SizeHorCursor
+            cursorShape: Qt.BlankCursor
+
+            Component.onCompleted: CustomCursorProvider.setCursorShape(rightTimeMa, ":/images/customCursorShapes/ClipStretchRight.png", 32)
 
             onPressed: {
                 root.clipStartEditRequested()

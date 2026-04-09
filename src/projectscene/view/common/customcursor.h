@@ -2,13 +2,16 @@
 * Audacity: A Digital Audio Editor
 */
 
+#pragma once
+
 #include <QObject>
 #include <QString>
 #include <QQuickItem>
 #include <QCursor>
 
-constexpr static int DEFAULT_CURSOR_SIZE = 26;
-
+namespace {
+constexpr static int DEFAULT_CURSOR_SIZE = 32;
+}
 namespace au::projectscene {
 class CustomCursor : public QObject
 {
@@ -29,6 +32,19 @@ public:
     void setActive(bool active);
     void setSource(QString source);
     void setSize(int size);
+
+    //! Create a DPI-aware QCursor from a pixmap source path, scaled to logical \a size
+    static QCursor createScaledCursor(const QString& source, int size);
+
+    //! Apply a custom pixmap cursor to a specific QQuickItem (HiDPI-aware)
+    Q_INVOKABLE static void setCursorShape(QQuickItem* item, const QString& source, int size = DEFAULT_CURSOR_SIZE);
+
+    //! Globally override the cursor with a custom pixmap (HiDPI-aware).
+    //! Use during drag operations to keep the cursor stable regardless of hover.
+    Q_INVOKABLE static void overrideCursor(const QString& source, int size = DEFAULT_CURSOR_SIZE);
+
+    //! Restore the cursor previously set with overrideCursor()
+    Q_INVOKABLE static void restoreCursor();
 
 signals:
     void activeChanged();

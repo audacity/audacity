@@ -1,5 +1,7 @@
 import QtQuick
 
+import Audacity.ProjectScene
+
 Item {
     id: root
 
@@ -62,7 +64,9 @@ Item {
 
         visible: isDataSelected && !root.selectionInProgress
         width: selRect.width >= 16 ? 8 : (selRect.width / 2)
-        cursorShape: Qt.SizeHorCursor
+        cursorShape: Qt.BlankCursor
+
+        Component.onCompleted: CustomCursorProvider.setCursorShape(leftMa, ":/images/customCursorShapes/SelectionLeft.png", 32)
 
         property real startX: 0
         property real startW: 0
@@ -74,7 +78,7 @@ Item {
             leftMa.startX = selRect.x
             leftMa.startW = selRect.width
             leftMa.x = selRect.x
-            centerMa.cursorShape = Qt.SizeHorCursor
+            CustomCursorProvider.overrideCursor(":/images/customCursorShapes/SelectionLeft.png", 32)
             handleGuideline(selRect.x, false)
         }
 
@@ -99,10 +103,11 @@ Item {
             leftMa.x = Qt.binding(function () {
                 return selRect.x
             })
-            leftMa.cursorShape = Qt.SizeHorCursor
-            centerMa.cursorShape = Qt.IBeamCursor
+            CustomCursorProvider.restoreCursor()
             handleGuideline(selRect.x, true)
         }
+
+        onCanceled: CustomCursorProvider.restoreCursor()
 
         onClicked: function (mouse) {
             if (mouse.button === Qt.RightButton) {
@@ -124,7 +129,9 @@ Item {
 
         visible: isDataSelected && !root.selectionInProgress
         width: selRect.width >= 16 ? 8 : (selRect.width / 2)
-        cursorShape: Qt.SizeHorCursor
+        cursorShape: Qt.BlankCursor
+
+        Component.onCompleted: CustomCursorProvider.setCursorShape(rightMa, ":/images/customCursorShapes/SelectionRight.png", 32)
 
         property real startX: 0
         property real startW: 0
@@ -135,7 +142,7 @@ Item {
             }
             rightMa.startW = selRect.width
             rightMa.x = selRect.x + selRect.width - rightMa.width
-            centerMa.cursorShape = Qt.SizeHorCursor
+            CustomCursorProvider.overrideCursor(":/images/customCursorShapes/SelectionRight.png", 32)
             handleGuideline(root.context.selectionEndPosition, false)
         }
 
@@ -159,10 +166,11 @@ Item {
             rightMa.x = Qt.binding(function () {
                 return selRect.x + selRect.width - rightMa.width
             })
-            rightMa.cursorShape = Qt.SizeHorCursor
-            centerMa.cursorShape = Qt.IBeamCursor
+            CustomCursorProvider.restoreCursor()
             handleGuideline(root.context.selectionEndPosition, true)
         }
+
+        onCanceled: CustomCursorProvider.restoreCursor()
 
         onClicked: function (mouse) {
             if (mouse.button === Qt.RightButton) {
