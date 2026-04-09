@@ -436,10 +436,7 @@ muse::ProgressPtr Au3AudioComService::uploadProject(au::project::IAudacityProjec
                 // Already syncing the current snapshot
                 return;
             }
-
-            muse::async::Async::call(this, [&projectCloudExtension]() {
-                projectCloudExtension.CancelSync();
-            }, muse::runtime::mainThreadId());
+            projectCloudExtension.CancelSync();
         }
 
         projectCloudExtension.OnSyncStarted();
@@ -466,18 +463,18 @@ muse::ProgressPtr Au3AudioComService::uploadProject(au::project::IAudacityProjec
                 if (ret) {
                     return;
                 }
-
-                au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
-                if (!au3Project) {
-                    return;
-                }
-
-                auto& projectCloudExtension = audacity::cloud::audiocom::sync::ProjectCloudExtension::Get(*au3Project);
-                projectCloudExtension.OnSyncCompleted(nullptr,
-                                                      audacity::cloud::audiocom::sync::CloudSyncError {
-                    audacity::cloud::audiocom::sync::CloudSyncError::Aborted, muse::trc("project", "Could not save project locally") },
-                                                      AudiocomTrace::SaveProjectSaveToCloudMenu);
             }, muse::runtime::mainThreadId());
+
+            au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
+            if (!au3Project) {
+                return;
+            }
+
+            auto& projectCloudExtension = audacity::cloud::audiocom::sync::ProjectCloudExtension::Get(*au3Project);
+            projectCloudExtension.OnSyncCompleted(nullptr,
+                                                  audacity::cloud::audiocom::sync::CloudSyncError {
+                audacity::cloud::audiocom::sync::CloudSyncError::Aborted, muse::trc("project", "Could not save project locally") },
+                                                  AudiocomTrace::SaveProjectSaveToCloudMenu);
         }
     }).detach();
 
@@ -561,44 +558,28 @@ muse::ProgressPtr Au3AudioComService::openCloudProject(const muse::io::path_t& l
             return true;
         };
 
-        using SyncFuture = CloudSyncService::SyncFuture;
-        auto syncFuturePromise = std::make_shared<std::promise<SyncFuture> >();
-        std::future<SyncFuture> syncFutureResult = syncFuturePromise->get_future();
-
-        muse::async::Async::call(this, [syncFuturePromise, cloudProjectId, forceOverwrite,
-                                        progressCallback = std::move(progressCallback)]() mutable {
-            // Important: CloudSyncService does not control access by locking but by calling convention,
-            // We must ensure all operations on this service to be called on the main thread
-            const auto syncMode = forceOverwrite
-                                  ? CloudSyncService::SyncMode::ForceOverwrite
-                                  : CloudSyncService::SyncMode::Normal;
-            auto future = CloudSyncService::Get().OpenFromCloud(
-                cloudProjectId, {},
-                syncMode,
-                std::move(progressCallback));
-
-            syncFuturePromise->set_value(std::move(future));
-        }, muse::runtime::mainThreadId());
-
-        auto syncFuture = syncFutureResult.get();
-        auto result = syncFuture.get();
+        const auto syncMode = forceOverwrite
+                              ? CloudSyncService::SyncMode::ForceOverwrite
+                              : CloudSyncService::SyncMode::Normal;
+        auto result = CloudSyncService::Get().OpenFromCloud(
+            cloudProjectId, {},
+            syncMode,
+            std::move(progressCallback)).get();
 
         if (progress->isCanceled()) {
             return;
         }
 
-        muse::async::Async::call(this, [this, progress, result = std::move(result)]() {
-            if (result.Status == sync::ProjectSyncResult::StatusCode::Succeeded) {
-                progress->finish(muse::make_ok());
-            } else {
-                const auto err = syncResultCodeToErr(result.Result.Code);
-                if (err == Err::SyncResultNotFound) {
-                    removeProjectFromDatabase(result.ProjectPath);
-                }
-
-                progress->finish(make_ret(err));
+        if (result.Status == sync::ProjectSyncResult::StatusCode::Succeeded) {
+            progress->finish(muse::make_ok());
+        } else {
+            const auto err = syncResultCodeToErr(result.Result.Code);
+            if (err == Err::SyncResultNotFound) {
+                removeProjectFromDatabase(result.ProjectPath);
             }
-        }, muse::runtime::mainThreadId());
+
+            progress->finish(make_ret(err));
+        }
     }).detach();
 
     return progress;
@@ -722,19 +703,7 @@ bool Au3AudioComService::isSnapshotUpToDate(const std::optional<sync::DBProjectD
 
 std::optional<std::string> Au3AudioComService::getHeadSnapshotID(const std::string& projectId)
 {
-    using HeadFuture = CloudSyncService::GetHeadSnapshotIDFuture;
-    auto headPromise = std::make_shared<std::promise<HeadFuture> >();
-    std::future<HeadFuture> headFutureResult = headPromise->get_future();
-
-    muse::async::Async::call(this, [headPromise, projectId]() {
-        // Important: CloudSyncService does not control access by locking but by calling convention,
-        // We must ensure all operations on this service to be called on the main thread
-        headPromise->set_value(CloudSyncService::Get().GetHeadSnapshotID(projectId));
-    }, muse::runtime::mainThreadId());
-
-    auto headFuture = headFutureResult.get();
-    auto headResult = headFuture.get();
-
+    const auto headResult = CloudSyncService::Get().GetHeadSnapshotID(projectId).get();
     if (const auto* snapshotId = std::get_if<std::string>(&headResult)) {
         return *snapshotId;
     }
