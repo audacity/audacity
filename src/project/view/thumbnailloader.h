@@ -4,15 +4,17 @@
 
 #pragma once
 
+#include <vector>
+
 #include <QObject>
 #include <QPixmap>
 #include <QSize>
 
-#include <vector>
-
 #include "framework/global/io/path.h"
+
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/io/ifilesystem.h"
+#include "au3wrap/iau3project.h"
 
 class QPainter;
 
@@ -22,6 +24,7 @@ class ThumbnailLoader : public QObject, public muse::Contextable
     Q_OBJECT
 
     muse::GlobalInject<muse::io::IFileSystem> filesystem;
+    muse::GlobalInject<au::au3::IAu3ProjectReader> au3ProjectReader;
 
     Q_PROPERTY(QString path READ path WRITE setPath NOTIFY pathChanged)
     Q_PROPERTY(QString placeholder READ placeholder WRITE setPlaceholder)
@@ -74,6 +77,7 @@ private:
     std::vector<float> parseWaveformData(const muse::io::path_t& source) const;
     void drawWaveform(QPainter& painter, const std::vector<float>& points) const;
 
+    QPixmap renderFromProject(const muse::io::path_t& source);
     QPixmap renderWaveformToPixmap(const muse::io::path_t& source);
     QPixmap renderFromImage(const muse::io::path_t& source);
     void drawBorder(QPainter& painter) const;

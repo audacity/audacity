@@ -67,9 +67,12 @@ ListItemBlank {
         id: defaultThumbnailComponent
 
         ProjectThumbnail {
-            path: root.item.path ?? ""
-            suffix: root.item.suffix ?? ""
+            path: root.item.thumbnailUrl ?? ""
             placeholder: root.placeholder
+
+            backgroundColor: ui.theme.backgroundSecondaryColor
+            lineColor: Qt.rgba(ui.theme.fontPrimaryColor.r, ui.theme.fontPrimaryColor.g, ui.theme.fontPrimaryColor.b, 0.8)
+            borderColor: ui.theme.strokeColor
         }
     }
 

@@ -160,7 +160,6 @@ ProjectsView {
             backgroundColor: root.backgroundColor
             sideMargin: root.sideMargin
 
-            isCloudList: true
             thumbnailFull: true
 
             navigation.section: root.navigationSection

@@ -8,6 +8,7 @@
 #include <QPainter>
 #include <QPen>
 #include <QPixmap>
+#include <qpixmap.h>
 
 using namespace au::project;
 
@@ -81,6 +82,27 @@ void ThumbnailLoader::drawWaveform(QPainter& painter, const std::vector<float>& 
                              barHeight
                              ));
     }
+}
+
+QPixmap ThumbnailLoader::renderFromProject(const muse::io::path_t& source)
+{
+    if (m_width <= 0 || m_height <= 0) {
+        return QPixmap();
+    }
+
+    const auto pngData = au3ProjectReader()->readProjectThumbnail(source);
+
+    if (!pngData.has_value()) {
+        return QPixmap();
+    }
+
+    QPixmap pixmap;
+    if (!pixmap.loadFromData(pngData->data(), static_cast<uint>(pngData->size()), "PNG")) {
+        LOGE() << "Failed to decode thumbnail for: " << source.toQString();
+        return QPixmap();
+    }
+
+    return pixmap;
 }
 
 QPixmap ThumbnailLoader::renderWaveformToPixmap(const muse::io::path_t& source)
@@ -276,9 +298,15 @@ void ThumbnailLoader::loadThumbnail()
     }
 
     const muse::io::path_t source = selectSource();
-    const QPixmap thumbnail = source.hasSuffix("json")
-                              ? renderWaveformToPixmap(source)
-                              : renderFromImage(source);
+
+    QPixmap thumbnail {};
+    if (source.hasSuffix("aup4")) {
+        thumbnail = renderFromProject(source);
+    } else if (source.hasSuffix("json")) {
+        thumbnail = renderWaveformToPixmap(source);
+    } else {
+        thumbnail = renderFromImage(source);
+    }
 
     setThumbnail(thumbnail);
 }

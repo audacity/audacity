@@ -143,6 +143,7 @@ void CloudProjectsModel::loadItemsIfNecessary()
                                     .appendingComponent(item.name)
                                     .appendingSuffix(au::project::AUP4)
                                     .toQString();
+                    obj[THUMBNAIL_URL_KEY] = obj[PATH_KEY];
                     obj[IS_CLOUD_KEY] = true;
                     obj[CLOUD_ITEM_ID_KEY] = QString::fromStdString(item.id);
                     obj[TIME_SINCE_MODIFIED_KEY]

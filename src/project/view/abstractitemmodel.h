@@ -55,6 +55,7 @@ protected:
     static const QString NAME_KEY;
     static const QString SLUG_KEY;
     static const QString PATH_KEY;
+    static const QString THUMBNAIL_URL_KEY;
     static const QString FILE_SIZE_KEY;
     static const QString DURATION_KEY;
     static const QString TIME_SINCE_MODIFIED_KEY;
