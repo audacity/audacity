@@ -50,8 +50,8 @@ const UiActionList ProjectUiActions::m_actions = {
     UiAction("project-import",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Import"),
-             TranslatableString("action", "Import")
+             TranslatableString("action", "Import..."),
+             TranslatableString("action", "Import...")
              ),
     UiAction("file-save",
              au::context::UiCtxAny,
@@ -74,8 +74,8 @@ const UiActionList ProjectUiActions::m_actions = {
     UiAction("export-audio",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "&Export audio"),
-             TranslatableString("action", "Export audio")
+             TranslatableString("action", "&Export audio..."),
+             TranslatableString("action", "Export audio...")
              ),
     UiAction("export-labels",
              au::context::UiCtxAny,
