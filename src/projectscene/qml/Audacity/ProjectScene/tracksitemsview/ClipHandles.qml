@@ -162,7 +162,7 @@ Item {
                 var src = root.altPressed
                     ? ":/images/customCursorShapes/ClipStretchLeft.png"
                     : ":/images/customCursorShapes/ClipTrimLeft.png"
-                CustomCursorProvider.setCursorShape(leftTrimMa, src, 32)
+                CustomCursorProvider.setCursorShape(leftTrimMa, src)
             }
 
             Component.onCompleted: updateCustomCursor()
@@ -320,7 +320,7 @@ Item {
                 var src = root.altPressed
                     ? ":/images/customCursorShapes/ClipStretchRight.png"
                     : ":/images/customCursorShapes/ClipTrimRight.png"
-                CustomCursorProvider.setCursorShape(rightTrimMa, src, 32)
+                CustomCursorProvider.setCursorShape(rightTrimMa, src)
             }
 
             Component.onCompleted: updateCustomCursor()
@@ -492,7 +492,7 @@ Item {
             hoverEnabled: true
             cursorShape: Qt.BlankCursor
 
-            Component.onCompleted: CustomCursorProvider.setCursorShape(leftTimeMa, ":/images/customCursorShapes/ClipStretchLeft.png", 32)
+            Component.onCompleted: CustomCursorProvider.setCursorShape(leftTimeMa, ":/images/customCursorShapes/ClipStretchLeft.png")
 
             onPressed: {
                 root.clipStartEditRequested()
@@ -653,7 +653,7 @@ Item {
             hoverEnabled: true
             cursorShape: Qt.BlankCursor
 
-            Component.onCompleted: CustomCursorProvider.setCursorShape(rightTimeMa, ":/images/customCursorShapes/ClipStretchRight.png", 32)
+            Component.onCompleted: CustomCursorProvider.setCursorShape(rightTimeMa, ":/images/customCursorShapes/ClipStretchRight.png")
 
             onPressed: {
                 root.clipStartEditRequested()

@@ -7,7 +7,8 @@
 #include <cmath>
 
 #include <QApplication>
-#include <QScreen>
+
+#include "view/common/customcursor.h"
 
 #include "internal/tapholdshortcut.h"
 #include "log.h"
@@ -20,16 +21,7 @@ SplitToolController::SplitToolController(QObject* parent)
 
 void SplitToolController::init(QObject* root)
 {
-    qreal dpr = 1.0;
-    if (QScreen* screen = QGuiApplication::primaryScreen()) {
-        dpr = screen->devicePixelRatio();
-    }
-
-    QPixmap pixmap(":/images/customCursorShapes/Split.png");
-    int physicalSize = qRound(32 * dpr);
-    QPixmap scaled = pixmap.scaled(physicalSize, physicalSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    scaled.setDevicePixelRatio(dpr);
-    m_cursor = QCursor(scaled);
+    m_cursor = CustomCursorProvider::createScaledCursor(":/images/customCursorShapes/Split.png", DEFAULT_CURSOR_SIZE);
 
     dispatcher()->reg(this, "split-tool", [this]() {
         setActive(!active());

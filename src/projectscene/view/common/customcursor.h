@@ -55,9 +55,13 @@ class CustomCursorProvider : public QObject
 {
     Q_OBJECT
 
+    Q_PROPERTY(int defaultSize READ defaultSize CONSTANT FINAL)
+
 public:
     explicit CustomCursorProvider(QObject* parent = nullptr);
     ~CustomCursorProvider() = default;
+
+    int defaultSize() const { return DEFAULT_CURSOR_SIZE; }
 
     //! Create a DPI-aware QCursor from a pixmap source path, scaled to logical \a size.
     //! If \a item is provided, its window's screen is used to read the device pixel ratio,
@@ -74,7 +78,7 @@ public:
 
     //! Globally override the cursor with a standard Qt cursor shape.
     //! Use during drag operations to keep the cursor stable regardless of hover.
-    Q_INVOKABLE static void overrideStandardCursor(int shape);
+    Q_INVOKABLE static void overrideStandardCursor(Qt::CursorShape shape);
 
     //! Restore the cursor previously set with overrideCursor() / overrideStandardCursor()
     Q_INVOKABLE static void restoreCursor();

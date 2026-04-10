@@ -159,11 +159,16 @@ TrackItemsContainer {
                     enabled: !root.selectionInProgress && (root.isNearSample || root.isBrush)
                     cursorShape: Qt.BlankCursor
 
+                    // While a selection edit is in progress the cursor on the track body
+                    // should indicate a horizontal resize. We reuse SelectionLeft.png as a
+                    // generic selection-edit cursor here — the actual left/right edge
+                    // direction is handled by ItemsSelection's own handle MouseAreas.
+                    readonly property string selectionEditCursor: ":/images/customCursorShapes/SelectionLeft.png"
+                    readonly property string idleCursor: ":/images/customCursorShapes/IBeamCursor.png"
+
                     function updateCustomCursor() {
-                        var src = root.selectionEditInProgress
-                            ? ":/images/customCursorShapes/SelectionLeft.png"
-                            : ":/images/customCursorShapes/IBeamCursor.png"
-                        CustomCursorProvider.setCursorShape(clipsContainerMouseArea, src, 32)
+                        var src = root.selectionEditInProgress ? selectionEditCursor : idleCursor
+                        CustomCursorProvider.setCursorShape(clipsContainerMouseArea, src)
                     }
 
                     Component.onCompleted: updateCustomCursor()

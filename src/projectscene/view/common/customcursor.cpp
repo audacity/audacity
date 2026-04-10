@@ -86,9 +86,9 @@ void CustomCursorProvider::overrideCursor(const QString& source, int size)
     }
 }
 
-void CustomCursorProvider::overrideStandardCursor(int shape)
+void CustomCursorProvider::overrideStandardCursor(Qt::CursorShape shape)
 {
-    QGuiApplication::setOverrideCursor(QCursor(static_cast<Qt::CursorShape>(shape)));
+    QGuiApplication::setOverrideCursor(QCursor(shape));
 }
 
 void CustomCursorProvider::restoreCursor()

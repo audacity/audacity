@@ -367,7 +367,7 @@ Rectangle {
 
         function updateCustomCursor() {
             if (!forbidden) {
-                CustomCursorProvider.setCursorShape(hoverArea, ":/images/customCursorShapes/IBeamCursor.png", 32)
+                CustomCursorProvider.setCursorShape(hoverArea, ":/images/customCursorShapes/IBeamCursor.png")
             }
         }
 
