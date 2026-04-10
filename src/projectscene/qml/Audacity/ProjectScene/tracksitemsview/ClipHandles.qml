@@ -11,6 +11,7 @@ Item {
     property var canvas: null
     property bool handlesHovered: false
     property bool handlesVisible: false
+    property bool altPressed: false
 
     property bool collapsed: false
     property int clipHeight: 114
@@ -157,7 +158,19 @@ Item {
             hoverEnabled: true
             cursorShape: Qt.BlankCursor
 
-            Component.onCompleted: CustomCursorProvider.setCursorShape(leftTrimMa, ":/images/customCursorShapes/ClipTrimLeft.png", 32)
+            function updateCustomCursor() {
+                var src = root.altPressed
+                    ? ":/images/customCursorShapes/ClipStretchLeft.png"
+                    : ":/images/customCursorShapes/ClipTrimLeft.png"
+                CustomCursorProvider.setCursorShape(leftTrimMa, src, 32)
+            }
+
+            Component.onCompleted: updateCustomCursor()
+
+            Connections {
+                target: root
+                function onAltPressedChanged() { leftTrimMa.updateCustomCursor() }
+            }
 
             onPressed: function (e) {
                 root.clipStartEditRequested()
@@ -303,7 +316,19 @@ Item {
             hoverEnabled: true
             cursorShape: Qt.BlankCursor
 
-            Component.onCompleted: CustomCursorProvider.setCursorShape(rightTrimMa, ":/images/customCursorShapes/ClipTrimRight.png", 32)
+            function updateCustomCursor() {
+                var src = root.altPressed
+                    ? ":/images/customCursorShapes/ClipStretchRight.png"
+                    : ":/images/customCursorShapes/ClipTrimRight.png"
+                CustomCursorProvider.setCursorShape(rightTrimMa, src, 32)
+            }
+
+            Component.onCompleted: updateCustomCursor()
+
+            Connections {
+                target: root
+                function onAltPressedChanged() { rightTrimMa.updateCustomCursor() }
+            }
 
             onPressed: function (e) {
                 root.clipStartEditRequested()

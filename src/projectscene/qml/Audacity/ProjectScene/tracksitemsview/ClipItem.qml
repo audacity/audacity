@@ -1099,6 +1099,7 @@ Rectangle {
         collapsed: root.collapsed
         clipHeight: root.height
         headerHeight: header.height
+        altPressed: root.altPressed
 
         clipNavigationPanel: root.clipNavigationPanel
 
