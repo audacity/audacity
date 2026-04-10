@@ -643,12 +643,11 @@ MenuItemList AppMenuModel::makeZoomItems()
     MenuItemList items {
         makeMenuItem("zoom-in"),
         makeMenuItem("zoom-out"),
+        makeMenuItem("zoom-default"),
         makeMenuItem("zoom-to-selection"),
         makeMenuItem("zoom-toggle"),
-        makeMenuItem("zoom-reset"),
         makeSeparator(),
         makeMenuItem("zoom-to-fit-project"),
-        makeMenuItem("fit-view-to-project"),
         makeMenuItem("collapse-all-tracks"),
         makeMenuItem("expand-all-tracks")
     };

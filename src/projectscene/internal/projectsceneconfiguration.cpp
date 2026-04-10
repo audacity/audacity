@@ -34,6 +34,8 @@ static const muse::Settings::Key PLAYBACK_ON_RULER_CLICK_ENABLED(moduleName, "pr
 static const muse::Settings::Key LABEL_EDITOR_COLUMN_FORMAT(moduleName, "projectscene/labelEditorColumnFormat");
 static const muse::Settings::Key UPDATE_DISPLAY_WHILE_PLAYING_ENABLED(moduleName, "projectscene/updateDisplayWhilePlayingEnabled");
 static const muse::Settings::Key PINNED_PLAY_HEAD_ENABLED(moduleName, "projectscene/pinnedPlayHeadEnabled");
+static const muse::Settings::Key ZOOM_PRESET_1(moduleName, "projectscene/zoomPreset1");
+static const muse::Settings::Key ZOOM_PRESET_2(moduleName, "projectscene/zoomPreset2");
 
 static constexpr bool DEFAULT_VERTICAL_RULERS_VISIBILITY = false;
 static constexpr bool DEFAULT_RMS_IN_WAVEFORM_VISIBILITY = false;
@@ -115,6 +117,9 @@ void ProjectSceneConfiguration::init()
     muse::settings()->valueChanged(PINNED_PLAY_HEAD_ENABLED).onReceive(nullptr, [this](const muse::Val&) {
         m_pinnedPlayHeadEnabledChanged.notify();
     });
+
+    muse::settings()->setDefaultValue(ZOOM_PRESET_1, muse::Val(static_cast<int>(ZoomPresets::ZoomDefault)));
+    muse::settings()->setDefaultValue(ZOOM_PRESET_2, muse::Val(static_cast<int>(ZoomPresets::Zoom4To1)));
 }
 
 bool ProjectSceneConfiguration::isVerticalRulersVisible() const
@@ -432,4 +437,24 @@ void ProjectSceneConfiguration::setPinnedPlayHeadEnabled(bool enabled)
 muse::async::Notification ProjectSceneConfiguration::pinnedPlayHeadEnabledChanged() const
 {
     return m_pinnedPlayHeadEnabledChanged;
+}
+
+ZoomPresets::Preset ProjectSceneConfiguration::zoomPreset1() const
+{
+    return muse::settings()->value(ZOOM_PRESET_1).toEnum<ZoomPresets::Preset>();
+}
+
+void ProjectSceneConfiguration::setZoomPreset1(ZoomPresets::Preset preset)
+{
+    muse::settings()->setSharedValue(ZOOM_PRESET_1, muse::Val(static_cast<int>(preset)));
+}
+
+ZoomPresets::Preset ProjectSceneConfiguration::zoomPreset2() const
+{
+    return muse::settings()->value(ZOOM_PRESET_2).toEnum<ZoomPresets::Preset>();
+}
+
+void ProjectSceneConfiguration::setZoomPreset2(ZoomPresets::Preset preset)
+{
+    muse::settings()->setSharedValue(ZOOM_PRESET_2, muse::Val(static_cast<int>(preset)));
 }

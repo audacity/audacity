@@ -80,6 +80,11 @@ public:
     int labelEditorColumnFormat(const std::string& columnName) const override;
     void setLabelEditorColumnFormat(const std::string& columnName, int format) const override;
 
+    ZoomPresets::Preset zoomPreset1() const override;
+    void setZoomPreset1(ZoomPresets::Preset preset) override;
+    ZoomPresets::Preset zoomPreset2() const override;
+    void setZoomPreset2(ZoomPresets::Preset preset) override;
+
 private:
     muse::ByteArray labelEditorColumnFormatJson() const;
 

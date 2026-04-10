@@ -37,6 +37,9 @@ class EditPreferencesModel : public QObject, public muse::async::Asyncable, publ
     Q_PROPERTY(bool pasteAsNewClip READ pasteAsNewClip NOTIFY pasteAsNewClipChanged)
     Q_PROPERTY(
         bool askBeforeConvertingToMonoOrStereo READ askBeforeConvertingToMonoOrStereo WRITE setAskBeforeConvertingToMonoOrStereo NOTIFY askBeforeConvertingToMonoOrStereoChanged)
+    Q_PROPERTY(int zoomPreset1 READ zoomPreset1 NOTIFY zoomPreset1Changed)
+    Q_PROPERTY(int zoomPreset2 READ zoomPreset2 NOTIFY zoomPreset2Changed)
+    Q_PROPERTY(QVariantList zoomPresetList READ zoomPresetList CONSTANT)
 
 public:
     explicit EditPreferencesModel(QObject* parent = nullptr);
@@ -71,6 +74,12 @@ public:
     bool askBeforeConvertingToMonoOrStereo() const;
     void setAskBeforeConvertingToMonoOrStereo(bool value);
 
+    int zoomPreset1() const;
+    Q_INVOKABLE void setZoomPreset1(int preset);
+    int zoomPreset2() const;
+    Q_INVOKABLE void setZoomPreset2(int preset);
+    QVariantList zoomPresetList() const;
+
     void asymmetricStereoHeightWorkspacesCleanUp();
 
 signals:
@@ -83,5 +92,7 @@ signals:
     void asymmetricWorkspacesChanged();
     void pasteAsNewClipChanged();
     void askBeforeConvertingToMonoOrStereoChanged();
+    void zoomPreset1Changed();
+    void zoomPreset2Changed();
 };
 }

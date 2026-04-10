@@ -194,6 +194,7 @@ private:
 
     void zoomIn();
     void zoomOut();
+    void zoomDefault();
 
     qreal frameCenterPosition() const;
     qreal selectionCenterPosition() const;
@@ -201,6 +202,10 @@ private:
 
     void fitSelectionToWidth();
     void fitProjectToWidth();
+    void zoomToggle();
+    double getZoomOfPreset(ZoomPresets::Preset preset) const;
+    double clampedZoom(double zoom) const;
+    std::pair<double, double> selectionRange() const;
     void updateViewOnProjectTempoChange(double ratio);
 
     bool hasSelection() const;

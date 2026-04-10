@@ -2,6 +2,7 @@
 
 #include <QApplication>
 #include <QWheelEvent>
+#include <cmath>
 
 #include "global/types/number.h"
 
@@ -111,9 +112,11 @@ void TimelineContext::init(double frameWidth)
 
     dispatcher()->reg(this, "zoom-in", this, &TimelineContext::zoomIn);
     dispatcher()->reg(this, "zoom-out", this, &TimelineContext::zoomOut);
+    dispatcher()->reg(this, "zoom-default", this, &TimelineContext::zoomDefault);
     dispatcher()->reg(this, "zoom-to-selection", this, &TimelineContext::fitSelectionToWidth);
     dispatcher()->reg(this, "zoom-to-fit-project", this, &TimelineContext::fitProjectToWidth);
     dispatcher()->reg(this, "center-view-on-playhead", this, &TimelineContext::centerViewOnPlayhead);
+    dispatcher()->reg(this, "zoom-toggle", this, &TimelineContext::zoomToggle);
 
     configuration()->playbackOnRulerClickEnabledChanged().onNotify(this, [this]() {
         emit playbackOnRulerClickEnabledChanged();
@@ -206,7 +209,7 @@ void TimelineContext::onWheel(double mouseX, const QPoint& pixelDelta, const QPo
     if (modifiers.testFlag(Qt::ControlModifier)) {
         double zoomSpeed = qPow(2.0, 1.0 / configuration()->mouseZoomPrecision());
         qreal absSteps = sqrt(stepsX * stepsX + stepsY * stepsY) * (stepsY > -stepsX ? 1 : -1);
-        double newZoom = zoom() * qPow(zoomSpeed, absSteps);
+        double newZoom = clampedZoom(zoom() * qPow(zoomSpeed, absSteps));
 
         setZoom(newZoom, mouseX);
     } else {
@@ -230,7 +233,7 @@ void TimelineContext::onWheel(double mouseX, const QPoint& pixelDelta, const QPo
 
 void TimelineContext::pinchToZoom(qreal scaleFactor, const QPointF& pos)
 {
-    double newZoom = zoom() * scaleFactor;
+    double newZoom = clampedZoom(zoom() * scaleFactor);
     setZoom(newZoom, pos.x());
 }
 
@@ -486,6 +489,12 @@ void TimelineContext::zoomOut()
     setZoom(newZoom, findZoomFocusPosition());
 }
 
+void TimelineContext::zoomDefault()
+{
+    double newZoom = getZoomOfPreset(ZoomPresets::ZoomDefault);
+    setZoom(newZoom, findZoomFocusPosition());
+}
+
 qreal TimelineContext::frameCenterPosition() const
 {
     return m_frameWidth / 2.0;
@@ -501,36 +510,52 @@ qreal TimelineContext::findZoomFocusPosition() const
 {
     double result = 0.0;
 
-    if (!hasSelection()) {
-        // No selection: zoom at the current playback position
-        result = timeToPosition(playbackState()->playbackPosition());
-    } else {
-        // Selection: zoom at the center of the selection
+    if (m_selectionActive) {
+        // Active range selection: zoom at the center of the selection
         result = selectionCenterPosition();
+    } else {
+        // No range selection: zoom at the current playback position
+        result = timeToPosition(playbackState()->playbackPosition());
     }
 
     return std::clamp(result, 0.0, m_frameWidth);
 }
 
+std::pair<double, double> TimelineContext::selectionRange() const
+{
+    if (m_selectionActive) {
+        return { m_selectionStartTime, m_selectionEndTime };
+    }
+
+    auto itemStart = selectionController()->leftMostSelectedItemStartTime();
+    auto itemEnd = selectionController()->rightMostSelectedItemEndTime();
+    if (itemStart.has_value() && itemEnd.has_value() && itemEnd.value() > itemStart.value()) {
+        return { static_cast<double>(itemStart.value()), static_cast<double>(itemEnd.value()) };
+    }
+
+    return { 0.0, 0.0 };
+}
+
 void TimelineContext::fitSelectionToWidth()
 {
-    if (!hasSelection()) {
+    auto [startTime, endTime] = selectionRange();
+    if (endTime <= startTime) {
         return;
     }
 
     double zoomPosition = findZoomFocusPosition();
 
-    double newZoom = m_frameWidth / (m_selectionEndTime - m_selectionStartTime);
+    double newZoom = m_frameWidth / (endTime - startTime);
     setZoom(newZoom, zoomPosition);
 
     double centerPosition = frameCenterPosition();
     double centerTime = positionToTime(centerPosition);
 
-    //! update values after zooming
-    zoomPosition = selectionCenterPosition();
-    double zoomTime = positionToTime(zoomPosition);
+    //! center view on the selection/item
+    double selCenter = startTime + (endTime - startTime) / 2.0;
+    double selCenterPosition = timeToPosition(selCenter);
+    double zoomTime = positionToTime(selCenterPosition);
 
-    //! position center to zoom position
     shiftFrameTime(zoomTime - centerTime);
 }
 
@@ -546,6 +571,106 @@ void TimelineContext::fitProjectToWidth()
 
     //! position view to begin
     shiftFrameTime(0.0 - m_frameStartTime);
+}
+
+double TimelineContext::getZoomOfPreset(ZoomPresets::Preset preset) const
+{
+    const double pixelsPerUnit = 5.0;
+
+    double result = 1.0;
+
+    switch (preset) {
+    default:
+    case ZoomPresets::ZoomDefault:
+        result = configuration()->zoom(iocContext());
+        break;
+    // ZoomToFit and ZoomToSelection calculated zoom values are used only to determine
+    // which preset to use. The actual zooming happens in separate functions
+    case ZoomPresets::ZoomToFit: {
+        double totalTime = trackEditProject() ? static_cast<double>(trackEditProject()->totalTime()) : 0.0;
+        result = (totalTime > 0.0) ? m_frameWidth / totalTime : m_zoom;
+        break;
+    }
+    case ZoomPresets::ZoomToSelection: {
+        auto [selStart, selEnd] = selectionRange();
+        result = (selEnd > selStart) ? m_frameWidth / (selEnd - selStart) : m_zoom;
+        break;
+    }
+    case ZoomPresets::ZoomMinutes:
+        result = pixelsPerUnit / 60.0;
+        break;
+    case ZoomPresets::ZoomSeconds:
+        result = pixelsPerUnit;
+        break;
+    case ZoomPresets::Zoom5ths:
+        result = pixelsPerUnit * 5.0;
+        break;
+    case ZoomPresets::Zoom10ths:
+        result = pixelsPerUnit * 10.0;
+        break;
+    case ZoomPresets::Zoom20ths:
+        result = pixelsPerUnit * 20.0;
+        break;
+    case ZoomPresets::Zoom50ths:
+        result = pixelsPerUnit * 50.0;
+        break;
+    case ZoomPresets::Zoom100ths:
+        result = pixelsPerUnit * 100.0;
+        break;
+    case ZoomPresets::Zoom500ths:
+        result = pixelsPerUnit * 500.0;
+        break;
+    case ZoomPresets::ZoomMilliSeconds:
+        result = pixelsPerUnit * 1000.0;
+        break;
+    case ZoomPresets::ZoomSamples:
+        // hardcoding samplerate here, because there is no single true sample rate:
+        // project, output and each track can have their own sample rates.
+        // By using a fixed value we ensure that zooming always stable
+        result = 44100.0;
+        break;
+    case ZoomPresets::Zoom4To1:
+        result = 44100.0 * 4;
+        break;
+    case ZoomPresets::MaxZoom:
+        result = ZOOM_MAX;
+        break;
+    }
+
+    return result;
+}
+
+void TimelineContext::zoomToggle()
+{
+    ZoomPresets::Preset preset1 = configuration()->zoomPreset1();
+    ZoomPresets::Preset preset2 = configuration()->zoomPreset2();
+
+    double zoom1 = getZoomOfPreset(preset1);
+    double zoom2 = getZoomOfPreset(preset2);
+    double currentZ = m_zoom;
+
+    // Choose the zoom that is most different to the current zoom
+    double dist1 = std::fabs(std::log(zoom1) - std::log(currentZ));
+    double dist2 = std::fabs(std::log(zoom2) - std::log(currentZ));
+    bool chooseFirst = dist1 > dist2;
+    double chosenZoom = chooseFirst ? zoom1 : zoom2;
+    ZoomPresets::Preset chosenPreset = chooseFirst ? preset1 : preset2;
+
+    if (chosenPreset == ZoomPresets::ZoomToFit) {
+        fitProjectToWidth();
+    } else if (chosenPreset == ZoomPresets::ZoomToSelection) {
+        fitSelectionToWidth();
+    } else {
+        auto [selStart, selEnd] = selectionRange();
+        double focusTime = (selEnd > selStart)
+                           ? selStart + (selEnd - selStart) / 2.0
+                           : static_cast<double>(playbackState()->playbackPosition());
+
+        setZoom(chosenZoom, frameCenterPosition());
+
+        double centerTime = positionToTime(frameCenterPosition());
+        shiftFrameTime(focusTime - centerTime);
+    }
 }
 
 void TimelineContext::updateViewOnProjectTempoChange(double ratio)
@@ -708,6 +833,21 @@ double TimelineContext::zoom() const
     return m_zoom;
 }
 
+double TimelineContext::clampedZoom(double zoom) const
+{
+    // we limit zoom to the total time range *2, but at least 4 minutes
+    double newZoom = std::max(ZOOM_MIN, std::min(ZOOM_MAX, zoom));
+    auto project = trackEditProject();
+    double totalTimeRange = std::max(project ? project->totalTime().to_double() * 2.0 : 0.0, 4 * 60.0);
+    double newTimeRange = m_frameWidth / newZoom;
+
+    if (muse::RealIsEqualOrMore(newTimeRange, totalTimeRange)) {
+        newZoom = m_frameWidth / totalTimeRange;
+    }
+
+    return newZoom;
+}
+
 void TimelineContext::setZoom(double zoom, double mouseX)
 {
     double newZoom = std::max(ZOOM_MIN, std::min(ZOOM_MAX, zoom));
@@ -719,14 +859,7 @@ void TimelineContext::setZoom(double zoom, double mouseX)
     double timeRange = m_frameEndTime - m_frameStartTime;
     double mouseTime = m_frameStartTime + (mouseX / m_frameWidth) * timeRange;
 
-    //we limit zoom to the total time range *2, but at least 4 minutes
-    double totalTimeRange = std::max(trackEditProject()->totalTime().to_double() * 2.0, 4 * 60.0);
-    double newTimeRange = (m_frameStartTime + m_frameWidth / newZoom) - m_frameStartTime;
-
-    if (!muse::is_zero(totalTimeRange) && muse::RealIsEqualOrMore(newTimeRange, totalTimeRange)) {
-        newTimeRange = totalTimeRange;
-        newZoom = m_frameWidth / totalTimeRange;
-    }
+    double newTimeRange = m_frameWidth / newZoom;
 
     m_zoom = newZoom;
     emit zoomChanged();
