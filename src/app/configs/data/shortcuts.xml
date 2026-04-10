@@ -396,7 +396,6 @@
     </SC>
     <SC>
         <key>export</key>
-        <seq>Ctrl+Shift+E</seq>
     </SC>
     <SC>
         <key>export-labels</key>
