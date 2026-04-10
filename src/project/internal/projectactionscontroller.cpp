@@ -252,10 +252,6 @@ void ProjectActionsController::openCloudProject(const muse::actions::ActionData&
         return;
     }
 
-    if (!ensureAuthorization()) {
-        return;
-    }
-
     const QString cloudProjectId = args.arg<QString>(0);
     const QUrl url = args.arg<QUrl>(1);
     const QString displayName = args.arg<QString>(2);
@@ -1115,6 +1111,10 @@ void ProjectActionsController::openCustomMapping()
 
 muse::Ret ProjectActionsController::ensureAuthorization()
 {
+    if (authorization()->isAuthorized()) {
+        return make_ret(Ret::Code::Ok);
+    }
+
     muse::actions::ActionQuery query("audacity://cloud/open-signin-dialog");
     query.addParam("sync", muse::Val(true));
     query.addParam("showTourPage", muse::Val(false));
