@@ -7,17 +7,45 @@
 #include <QGuiApplication>
 #include <QScreen>
 #include <QPixmap>
+#include <QWindow>
+#include <QQuickWindow>
 
 #include "log.h"
 
 using namespace au::projectscene;
 
-QCursor CustomCursor::createScaledCursor(const QString& source, int size)
+namespace {
+qreal resolveDevicePixelRatio(const QQuickItem* item)
 {
-    qreal dpr = 1.0;
-    if (QScreen* screen = QGuiApplication::primaryScreen()) {
-        dpr = screen->devicePixelRatio();
+    // Prefer the screen that currently owns the item's window, so cursors are
+    // sized correctly on multi-monitor setups with mixed DPI.
+    if (item) {
+        if (QQuickWindow* window = item->window()) {
+            if (QScreen* screen = window->screen()) {
+                return screen->devicePixelRatio();
+            }
+        }
     }
+
+    // Fall back to the screen of the currently focused window.
+    if (const QWindow* focused = QGuiApplication::focusWindow()) {
+        if (QScreen* screen = focused->screen()) {
+            return screen->devicePixelRatio();
+        }
+    }
+
+    // Last resort: the primary screen.
+    if (QScreen* screen = QGuiApplication::primaryScreen()) {
+        return screen->devicePixelRatio();
+    }
+
+    return 1.0;
+}
+}
+
+QCursor CustomCursor::createScaledCursor(const QString& source, int size, const QQuickItem* item)
+{
+    const qreal dpr = resolveDevicePixelRatio(item);
 
     QPixmap pixmap(source);
     if (pixmap.isNull()) {
@@ -25,10 +53,10 @@ QCursor CustomCursor::createScaledCursor(const QString& source, int size)
         return QCursor();
     }
 
-    int physicalSize = qRound(size * dpr);
-    QPixmap scaled = pixmap.scaled(physicalSize, physicalSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
-    scaled.setDevicePixelRatio(dpr);
-    return QCursor(scaled);
+    const int physicalSize = qRound(size * dpr);
+    QPixmap scaledPixmap = pixmap.scaled(physicalSize, physicalSize, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+    scaledPixmap.setDevicePixelRatio(dpr);
+    return QCursor(scaledPixmap);
 }
 
 void CustomCursor::setCursorShape(QQuickItem* item, const QString& source, int size)
@@ -37,7 +65,7 @@ void CustomCursor::setCursorShape(QQuickItem* item, const QString& source, int s
         return;
     }
 
-    QCursor cursor = createScaledCursor(source, size);
+    QCursor cursor = createScaledCursor(source, size, item);
     if (cursor.shape() == Qt::BitmapCursor) {
         item->setCursor(cursor);
     }

@@ -33,8 +33,11 @@ public:
     void setSource(QString source);
     void setSize(int size);
 
-    //! Create a DPI-aware QCursor from a pixmap source path, scaled to logical \a size
-    static QCursor createScaledCursor(const QString& source, int size);
+    //! Create a DPI-aware QCursor from a pixmap source path, scaled to logical \a size.
+    //! If \a item is provided, its window's screen is used to read the device pixel ratio,
+    //! so the cursor is correctly sized on the screen that currently owns the item
+    //! (important for multi-monitor setups with mixed DPI).
+    static QCursor createScaledCursor(const QString& source, int size, const QQuickItem* item = nullptr);
 
     //! Apply a custom pixmap cursor to a specific QQuickItem (HiDPI-aware)
     Q_INVOKABLE static void setCursorShape(QQuickItem* item, const QString& source, int size = DEFAULT_CURSOR_SIZE);
