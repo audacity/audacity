@@ -51,6 +51,11 @@ void CustomCursor::overrideCursor(const QString& source, int size)
     }
 }
 
+void CustomCursor::overrideStandardCursor(int shape)
+{
+    QGuiApplication::setOverrideCursor(QCursor(static_cast<Qt::CursorShape>(shape)));
+}
+
 void CustomCursor::restoreCursor()
 {
     QGuiApplication::restoreOverrideCursor();

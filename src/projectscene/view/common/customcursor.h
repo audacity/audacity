@@ -43,7 +43,11 @@ public:
     //! Use during drag operations to keep the cursor stable regardless of hover.
     Q_INVOKABLE static void overrideCursor(const QString& source, int size = DEFAULT_CURSOR_SIZE);
 
-    //! Restore the cursor previously set with overrideCursor()
+    //! Globally override the cursor with a standard Qt cursor shape.
+    //! Use during drag operations to keep the cursor stable regardless of hover.
+    Q_INVOKABLE static void overrideStandardCursor(int shape);
+
+    //! Restore the cursor previously set with overrideCursor() / overrideStandardCursor()
     Q_INVOKABLE static void restoreCursor();
 
 signals:

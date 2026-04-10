@@ -686,6 +686,14 @@ Rectangle {
 
                 property bool moveActive: false
 
+                onMoveActiveChanged: {
+                    if (moveActive) {
+                        CustomCursorProvider.overrideStandardCursor(Qt.ClosedHandCursor)
+                    } else {
+                        CustomCursorProvider.restoreCursor()
+                    }
+                }
+
                 ScrollBar.horizontal: null
                 ScrollBar.vertical: null
 
