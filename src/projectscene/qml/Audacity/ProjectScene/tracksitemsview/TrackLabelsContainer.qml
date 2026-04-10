@@ -78,10 +78,14 @@ TrackItemsContainer {
                     // direction is handled by ItemsSelection's own handle MouseAreas.
                     readonly property string selectionEditCursor: ":/images/customCursorShapes/SelectionLeft.png"
                     readonly property string idleCursor: ":/images/customCursorShapes/IBeamCursor.png"
+                    readonly property int iBeamSize: 26
 
                     function updateCustomCursor() {
-                        var src = root.selectionEditInProgress ? selectionEditCursor : idleCursor
-                        CustomCursorProvider.setCursorShape(labelsContainerMouseArea, src)
+                        if (root.selectionEditInProgress) {
+                            CustomCursorProvider.setCursorShape(labelsContainerMouseArea, selectionEditCursor)
+                        } else {
+                            CustomCursorProvider.setCursorShape(labelsContainerMouseArea, idleCursor, iBeamSize)
+                        }
                     }
 
                     Component.onCompleted: updateCustomCursor()

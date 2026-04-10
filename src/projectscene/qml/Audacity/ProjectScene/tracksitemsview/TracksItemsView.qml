@@ -516,7 +516,7 @@ Rectangle {
             preventStealing: true
             acceptedButtons: Qt.LeftButton | Qt.RightButton
 
-            Component.onCompleted: CustomCursorProvider.setCursorShape(mainMouseArea, ":/images/customCursorShapes/IBeamCursor.png")
+            Component.onCompleted: CustomCursorProvider.setCursorShape(mainMouseArea, ":/images/customCursorShapes/IBeamCursor.png", 26)
 
             hoverEnabled: true
 
