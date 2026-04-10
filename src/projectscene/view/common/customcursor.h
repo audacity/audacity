@@ -9,10 +9,11 @@
 #include <QQuickItem>
 #include <QCursor>
 
-namespace {
-constexpr static int DEFAULT_CURSOR_SIZE = 32;
-}
 namespace au::projectscene {
+constexpr static int DEFAULT_CURSOR_SIZE = 32;
+
+//! QML component that installs a global override cursor from a pixmap source
+//! while \a active is true. Instantiated from QML via CustomCursor {} elements.
 class CustomCursor : public QObject
 {
     Q_OBJECT
@@ -22,7 +23,7 @@ class CustomCursor : public QObject
     Q_PROPERTY(int size READ size WRITE setSize NOTIFY sizeChanged FINAL)
 
 public:
-    explicit CustomCursor(QQuickItem* parent = nullptr);
+    explicit CustomCursor(QObject* parent = nullptr);
     ~CustomCursor() = default;
 
     bool active() const;
@@ -32,6 +33,31 @@ public:
     void setActive(bool active);
     void setSource(QString source);
     void setSize(int size);
+
+signals:
+    void activeChanged();
+    void sourceChanged();
+    void sizeChanged();
+
+private:
+    void refresh();
+
+    bool m_active = false;
+    QString m_source;
+    QCursor m_cursor;
+    int m_size = DEFAULT_CURSOR_SIZE;
+};
+
+//! QML singleton exposing cursor helpers to QML code.
+//! Use CustomCursorProvider.setCursorShape(...) / overrideCursor(...) / restoreCursor()
+//! from QML to apply HiDPI-aware custom cursors.
+class CustomCursorProvider : public QObject
+{
+    Q_OBJECT
+
+public:
+    explicit CustomCursorProvider(QObject* parent = nullptr);
+    ~CustomCursorProvider() = default;
 
     //! Create a DPI-aware QCursor from a pixmap source path, scaled to logical \a size.
     //! If \a item is provided, its window's screen is used to read the device pixel ratio,
@@ -52,16 +78,5 @@ public:
 
     //! Restore the cursor previously set with overrideCursor() / overrideStandardCursor()
     Q_INVOKABLE static void restoreCursor();
-
-signals:
-    void activeChanged();
-    void sourceChanged();
-    void sizeChanged();
-
-private:
-    bool m_active = false;
-    QString m_source;
-    QCursor m_cursor;
-    int m_size = DEFAULT_CURSOR_SIZE;
 };
 }

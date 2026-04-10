@@ -43,7 +43,14 @@ qreal resolveDevicePixelRatio(const QQuickItem* item)
 }
 }
 
-QCursor CustomCursor::createScaledCursor(const QString& source, int size, const QQuickItem* item)
+// ---------- CustomCursorProvider ----------
+
+CustomCursorProvider::CustomCursorProvider(QObject* parent)
+    : QObject(parent)
+{
+}
+
+QCursor CustomCursorProvider::createScaledCursor(const QString& source, int size, const QQuickItem* item)
 {
     const qreal dpr = resolveDevicePixelRatio(item);
 
@@ -59,7 +66,7 @@ QCursor CustomCursor::createScaledCursor(const QString& source, int size, const 
     return QCursor(scaledPixmap);
 }
 
-void CustomCursor::setCursorShape(QQuickItem* item, const QString& source, int size)
+void CustomCursorProvider::setCursorShape(QQuickItem* item, const QString& source, int size)
 {
     if (!item) {
         return;
@@ -71,7 +78,7 @@ void CustomCursor::setCursorShape(QQuickItem* item, const QString& source, int s
     }
 }
 
-void CustomCursor::overrideCursor(const QString& source, int size)
+void CustomCursorProvider::overrideCursor(const QString& source, int size)
 {
     QCursor cursor = createScaledCursor(source, size);
     if (cursor.shape() == Qt::BitmapCursor) {
@@ -79,35 +86,40 @@ void CustomCursor::overrideCursor(const QString& source, int size)
     }
 }
 
-void CustomCursor::overrideStandardCursor(int shape)
+void CustomCursorProvider::overrideStandardCursor(int shape)
 {
     QGuiApplication::setOverrideCursor(QCursor(static_cast<Qt::CursorShape>(shape)));
 }
 
-void CustomCursor::restoreCursor()
+void CustomCursorProvider::restoreCursor()
 {
     QGuiApplication::restoreOverrideCursor();
 }
 
-CustomCursor::CustomCursor(QQuickItem*)
+// ---------- CustomCursor (QML component) ----------
+
+CustomCursor::CustomCursor(QObject* parent)
+    : QObject(parent)
 {
-    auto changeCursor = [this](){
-        if (m_active) {
-            QGuiApplication::restoreOverrideCursor();
+    connect(this, &CustomCursor::activeChanged, this, &CustomCursor::refresh);
+    connect(this, &CustomCursor::sourceChanged, this, &CustomCursor::refresh);
+    connect(this, &CustomCursor::sizeChanged, this, &CustomCursor::refresh);
+}
 
-            QCursor cursor = createScaledCursor(m_source, m_size);
-            if (cursor.shape() == Qt::BitmapCursor) {
-                m_cursor = cursor;
-                QGuiApplication::setOverrideCursor(m_cursor);
-            }
-        } else {
-            QGuiApplication::restoreOverrideCursor();
-        }
-    };
+void CustomCursor::refresh()
+{
+    if (!m_active) {
+        QGuiApplication::restoreOverrideCursor();
+        return;
+    }
 
-    connect(this, &CustomCursor::activeChanged, changeCursor);
-    connect(this, &CustomCursor::sourceChanged, changeCursor);
-    connect(this, &CustomCursor::sizeChanged, changeCursor);
+    QGuiApplication::restoreOverrideCursor();
+
+    QCursor cursor = CustomCursorProvider::createScaledCursor(m_source, m_size);
+    if (cursor.shape() == Qt::BitmapCursor) {
+        m_cursor = cursor;
+        QGuiApplication::setOverrideCursor(m_cursor);
+    }
 }
 
 bool CustomCursor::active() const

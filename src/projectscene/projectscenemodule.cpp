@@ -142,9 +142,9 @@ void ProjectSceneModule::registerUiTypes()
     qmlRegisterType<TracksViewStateModel>("Audacity.ProjectScene", 1, 0, "TracksViewStateModel");
     qmlRegisterType<TrackViewStateModel>("Audacity.ProjectScene", 1, 0, "TrackViewStateModel");
     qmlRegisterType<CustomCursor>("Audacity.ProjectScene", 1, 0, "CustomCursor");
-    qmlRegisterSingletonType<CustomCursor>("Audacity.ProjectScene", 1, 0, "CustomCursorProvider",
-                                           [](QQmlEngine*, QJSEngine*) -> QObject* {
-        return new CustomCursor();
+    qmlRegisterSingletonType<CustomCursorProvider>("Audacity.ProjectScene", 1, 0, "CustomCursorProvider",
+                                                   [](QQmlEngine*, QJSEngine*) -> QObject* {
+        return new CustomCursorProvider();
     });
 
     // toolbars
