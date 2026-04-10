@@ -59,6 +59,7 @@ Rectangle {
         width: 6
         height: parent.height
 
+        hoverEnabled: true
         cursorShape: Qt.OpenHandCursor
         acceptedButtons: Qt.NoButton
     }
@@ -72,6 +73,7 @@ Rectangle {
         width: 6
         height: parent.height
 
+        hoverEnabled: true
         cursorShape: Qt.SizeHorCursor
         acceptedButtons: Qt.NoButton
     }
@@ -85,6 +87,7 @@ Rectangle {
         width: 6
         height: parent.height
 
+        hoverEnabled: true
         cursorShape: Qt.SizeHorCursor
         acceptedButtons: Qt.NoButton
     }

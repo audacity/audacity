@@ -77,6 +77,8 @@ Rectangle {
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.RightButton
+        // Do not override the cursor shape set by PlayRegion underneath
+        cursorShape: undefined
         onClicked: function(e) {
             contextMenuModel.load()
             contextMenuLoader.show(Qt.point(e.x, e.y), contextMenuModel.items)
