@@ -66,16 +66,78 @@ QCursor CustomCursorProvider::createScaledCursor(const QString& source, int size
     return QCursor(scaledPixmap);
 }
 
+namespace {
+constexpr const char* kCursorSourceProp = "_customCursorSource";
+constexpr const char* kCursorSizeProp = "_customCursorSize";
+constexpr const char* kCursorItemHookedProp = "_customCursorItemHooked";
+constexpr const char* kCursorHookedWindowProp = "_customCursorHookedWindow";
+
+void applyStoredCursor(QQuickItem* item)
+{
+    if (!item) {
+        return;
+    }
+
+    const QString source = item->property(kCursorSourceProp).toString();
+    if (source.isEmpty()) {
+        return;
+    }
+
+    const int size = item->property(kCursorSizeProp).toInt();
+    QCursor cursor = CustomCursorProvider::createScaledCursor(source, size, item);
+    if (cursor.shape() == Qt::BitmapCursor) {
+        item->setCursor(cursor);
+    }
+}
+
+void hookScreenChanges(QQuickItem* item)
+{
+    if (!item) {
+        return;
+    }
+
+    // Hook the current window's screenChanged so the cursor is rebuilt with
+    // the correct device pixel ratio whenever the window moves between screens.
+    // We store a raw pointer of the hooked window on the item to avoid
+    // connecting the same window twice.
+    QQuickWindow* window = item->window();
+    if (window) {
+        const QVariant hookedVar = item->property(kCursorHookedWindowProp);
+        const auto previouslyHooked = hookedVar.value<QObject*>();
+        if (previouslyHooked != window) {
+            item->setProperty(kCursorHookedWindowProp, QVariant::fromValue<QObject*>(window));
+            QObject::connect(window, &QWindow::screenChanged, item, [item]() {
+                applyStoredCursor(item);
+            });
+        }
+    }
+
+    // The item's window may be set later or swapped. Hook windowChanged once.
+    if (!item->property(kCursorItemHookedProp).toBool()) {
+        item->setProperty(kCursorItemHookedProp, true);
+        QObject::connect(item, &QQuickItem::windowChanged, item, [item](QQuickWindow*) {
+            hookScreenChanges(item);
+            applyStoredCursor(item);
+        });
+    }
+}
+}
+
 void CustomCursorProvider::setCursorShape(QQuickItem* item, const QString& source, int size)
 {
     if (!item) {
         return;
     }
 
+    item->setProperty(kCursorSourceProp, source);
+    item->setProperty(kCursorSizeProp, size);
+
     QCursor cursor = createScaledCursor(source, size, item);
     if (cursor.shape() == Qt::BitmapCursor) {
         item->setCursor(cursor);
     }
+
+    hookScreenChanges(item);
 }
 
 void CustomCursorProvider::overrideCursor(const QString& source, int size)
