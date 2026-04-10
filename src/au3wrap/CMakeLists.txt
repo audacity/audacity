@@ -145,6 +145,7 @@ set(MODULE_SRC ${MODULE_SRC}
 
     # FFmpeg support (still compiled as sources, not yet converted to library)
     ${IMPORT_EXPORT_MODULE}/mod-ffmpeg/ImportFFmpeg.cpp
+    ${IMPORT_EXPORT_MODULE}/mod-ffmpeg/ImportFFmpeg.h
     ${IMPORT_EXPORT_MODULE}/mod-ffmpeg/ExportFFmpeg.cpp
     ${IMPORT_EXPORT_MODULE}/mod-ffmpeg/ExportFFmpeg.h
     ${IMPORT_EXPORT_MODULE}/mod-ffmpeg/FFmpegDefines.h

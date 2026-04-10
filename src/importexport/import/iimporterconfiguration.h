@@ -12,7 +12,7 @@
 #include <vector>
 
 namespace au::importexport {
-class IImporterConfiguration : MODULE_EXPORT_INTERFACE
+class IImporterConfiguration : MODULE_GLOBAL_INTERFACE
 {
     INTERFACE_ID(IImporterConfiguration)
 

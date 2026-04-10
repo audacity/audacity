@@ -39,11 +39,12 @@ struct TempoDetectionResult
 
 class TempoDetection : public muse::Contextable
 {
-    muse::Inject<muse::IInteractive> interactive{ this };
-    muse::Inject<muse::workspace::IWorkspaceManager> workspacesManager{ this };
-    muse::Inject<au::context::IGlobalContext> globalContext{ this };
-    muse::Inject<IImporterConfiguration> configuration{ this };
-    muse::Inject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
+    muse::GlobalInject<IImporterConfiguration> configuration;
+
+    muse::ContextInject<muse::IInteractive> interactive{ this };
+    muse::ContextInject<muse::workspace::IWorkspaceManager> workspacesManager{ this };
+    muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
 
 public:
     explicit TempoDetection(const muse::modularity::ContextPtr& ctx);

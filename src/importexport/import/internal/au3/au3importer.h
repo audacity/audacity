@@ -27,8 +27,6 @@ public:
     Au3Importer(const muse::modularity::ContextPtr& ctx);
     ~Au3Importer() override;
 
-    void init() override;
-
     FileInfo fileInfo(const muse::io::path_t& filePath) override;
 
     bool import(const muse::io::path_t& filePath) override;
