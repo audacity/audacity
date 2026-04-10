@@ -1125,7 +1125,9 @@ void ProjectActionsController::openCloudAudioFile(const muse::actions::ActionQue
             return;
         }
 
-        newproject->import(muse::io::path_t(result.val.toQString()));
+        const muse::io::path_t audioPath(result.val.toQString());
+        newproject->import(audioPath);
+        fileSystem()->remove(audioPath);
         openPageIfNeed(PROJECT_PAGE_URI);
     });
 

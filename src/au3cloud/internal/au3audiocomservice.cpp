@@ -499,6 +499,9 @@ muse::ProgressPtr Au3AudioComService::openAudioFile(const std::string& audioId)
         auto result = downloadFutureResult.get().get();
 
         if (progress->isCanceled()) {
+            if (!result.AudioPath.empty()) {
+                self->filesystem()->remove(muse::io::path_t(result.AudioPath));
+            }
             return;
         }
 
