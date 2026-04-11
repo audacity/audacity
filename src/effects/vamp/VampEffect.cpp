@@ -297,11 +297,14 @@ bool VampEffect::Init()
    // Use the first selected wave track, not the first wave track in the project.
    // Otherwise a Vamp effect may inherit rate/context from an unselected track.
    auto selected = inputTracks()->Selected<const WaveTrack>();
-   if (selected.empty()) {
+   if (selected.empty()) 
+   {
       mRate = mProjectRate;
-   } else {
+   } 
+   else 
+   {
       mRate = (*selected.begin())->GetRate();
-    }
+   }
 
    // The plugin must be reloaded to allow changing parameters
 
@@ -360,8 +363,9 @@ bool VampEffect::Process(EffectInstance &, EffectSettings &)
       GetBounds(*pTrack, &start, &len);
 
       // Selection may not intersect this selected track.
-      if (len == 0) {
-          continue;
+      if (len == 0) 
+      {
+         continue;
       }
       
       // TODO: more-than-two-channels
