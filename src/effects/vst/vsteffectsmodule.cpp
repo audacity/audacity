@@ -118,7 +118,7 @@ void VstEffectsContext::resolveImports()
 {
     auto lr = ioc()->resolve<IEffectViewLaunchRegister>(mname);
     if (lr) {
-        lr->regLauncher("VST3", std::make_shared<Vst3ViewLauncher>(iocContext()));
+        lr->regLauncher(EffectFamily::VST3, std::make_shared<Vst3ViewLauncher>(iocContext()));
     }
 }
 

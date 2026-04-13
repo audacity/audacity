@@ -96,7 +96,7 @@ void au::effects::AudioUnitEffectsContext::resolveImports()
 {
     auto launchRegister = ioc()->resolve<IEffectViewLaunchRegister>(mname);
     if (launchRegister) {
-        launchRegister->regLauncher("AudioUnit", std::make_shared<AudioUnitViewLauncher>(iocContext()));
+        launchRegister->regLauncher(EffectFamily::AudioUnit, std::make_shared<AudioUnitViewLauncher>(iocContext()));
     }
 }
 

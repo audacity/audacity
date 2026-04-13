@@ -121,7 +121,7 @@ void au::effects::NyquistEffectsContext::resolveImports()
 
     auto launchRegister = ioc()->resolve<IEffectViewLaunchRegister>(mname);
     if (launchRegister) {
-        launchRegister->regLauncher("Nyquist", std::make_shared<NyquistViewLauncher>(iocContext()));
+        launchRegister->regLauncher(EffectFamily::Nyquist, std::make_shared<NyquistViewLauncher>(iocContext()));
     }
 }
 

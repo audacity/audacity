@@ -11,37 +11,30 @@
 #include "au3-effects/EffectManager.h"
 #include "au3-realtime-effects/RealtimeEffectState.h"
 
-#include "au3-module-manager/PluginManager.h"
-
 #include "framework/global/log.h"
 
 namespace au::effects {
 namespace {
-IEffectViewLauncherPtr getLauncher(const EffectId& effectId, const IEffectViewLaunchRegister& launchRegister)
+IEffectViewLauncherPtr getLauncher(const EffectId& effectId, const IEffectsProvider& effectsProvider,
+                                   const IEffectViewLaunchRegister& launchRegister)
 {
-    PluginID pluginID = effectId.toStdString();
-    const PluginDescriptor* plug = PluginManager::Get().GetPlugin(pluginID);
-    if (!plug || !PluginManager::IsPluginAvailable(*plug)) {
-        LOGE() << "plugin not available, effectId: " << effectId;
-        return {};
-    }
-
-    const auto family = au::au3::wxToStdString(plug->GetEffectFamily());
+    const auto family = effectsProvider.meta(effectId).family;
     const auto launcher = launchRegister.launcher(family);
     IF_ASSERT_FAILED(launcher) {
-        LOGE() << "not found launcher for family:" << family;
+        LOGE() << "not found launcher for family:" << utils::effectFamilyToString(family);
         return {};
     }
     return launcher;
 }
 
-void callOnLauncher(const RealtimeEffectStatePtr& state, const IEffectViewLaunchRegister& launchRegister,
+void callOnLauncher(const RealtimeEffectStatePtr& state, const IEffectsProvider& effectsProvider,
+                    const IEffectViewLaunchRegister& launchRegister,
                     std::function<void(const IEffectViewLauncher&, const RealtimeEffectStatePtr&)> func)
 {
     IF_ASSERT_FAILED(state) {
         return;
     }
-    if (const auto launcher = getLauncher(au::au3::wxToString(state->GetID()), launchRegister)) {
+    if (const auto launcher = getLauncher(au::au3::wxToString(state->GetID()), effectsProvider, launchRegister)) {
         func(*launcher, state);
     }
 }
@@ -55,7 +48,7 @@ muse::Ret EffectViewController::showEffect(const EffectId& effectId, const Effec
         return muse::make_ret(muse::Ret::Code::NotSupported);
     }
 
-    const auto launcher = getLauncher(effectId, *viewLaunchRegister());
+    const auto launcher = getLauncher(effectId, *effectsProvider(), *viewLaunchRegister());
     if (!launcher) {
         return muse::make_ret(muse::Ret::Code::NotSupported);
     }
@@ -68,14 +61,16 @@ muse::Ret EffectViewController::showEffect(const EffectId& effectId, const Effec
 
 void EffectViewController::showEffect(const RealtimeEffectStatePtr& state) const
 {
-    callOnLauncher(state, *viewLaunchRegister(), [](const IEffectViewLauncher& launcher, const RealtimeEffectStatePtr& state) {
+    callOnLauncher(state, *effectsProvider(), *viewLaunchRegister(),
+                   [](const IEffectViewLauncher& launcher, const RealtimeEffectStatePtr& state) {
         launcher.showRealtimeEffect(state);
     });
 }
 
 void EffectViewController::hideEffect(const RealtimeEffectStatePtr& state) const
 {
-    callOnLauncher(state, *viewLaunchRegister(), [](const IEffectViewLauncher& launcher, const RealtimeEffectStatePtr& state) {
+    callOnLauncher(state, *effectsProvider(), *viewLaunchRegister(),
+                   [](const IEffectViewLauncher& launcher, const RealtimeEffectStatePtr& state) {
         launcher.hideRealtimeEffect(state);
     });
 }

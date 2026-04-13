@@ -8,6 +8,7 @@
 #include "global/modularity/imoduleinterface.h"
 
 #include "ieffectviewlauncher.h"
+#include "effectstypes.h"
 
 namespace au::effects {
 class IEffectViewLaunchRegister : MODULE_EXPORT_INTERFACE
@@ -17,7 +18,7 @@ class IEffectViewLaunchRegister : MODULE_EXPORT_INTERFACE
 public:
     virtual ~IEffectViewLaunchRegister() = default;
 
-    virtual void regLauncher(const std::string& family, const IEffectViewLauncherPtr& launcher) = 0;
-    virtual IEffectViewLauncherPtr launcher(const std::string& family) const = 0;
+    virtual void regLauncher(EffectFamily family, const IEffectViewLauncherPtr& launcher) = 0;
+    virtual IEffectViewLauncherPtr launcher(EffectFamily family) const = 0;
 };
 }

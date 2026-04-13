@@ -110,7 +110,7 @@ void Lv2EffectsContext::resolveImports()
 {
     auto lr = ioc()->resolve<IEffectViewLaunchRegister>(mname);
     if (lr) {
-        lr->regLauncher("LV2", std::make_shared<Lv2ViewLauncher>(iocContext()));
+        lr->regLauncher(EffectFamily::LV2, std::make_shared<Lv2ViewLauncher>(iocContext()));
     }
 }
 

@@ -5,12 +5,12 @@
 
 using namespace au::effects;
 
-void EffectViewLaunchRegister::regLauncher(const std::string& family, const IEffectViewLauncherPtr& launcher)
+void EffectViewLaunchRegister::regLauncher(EffectFamily family, const IEffectViewLauncherPtr& launcher)
 {
     m_data.insert({ family, launcher });
 }
 
-IEffectViewLauncherPtr EffectViewLaunchRegister::launcher(const std::string& family) const
+IEffectViewLauncherPtr EffectViewLaunchRegister::launcher(EffectFamily family) const
 {
     auto it = m_data.find(family);
     if (it != m_data.end()) {
