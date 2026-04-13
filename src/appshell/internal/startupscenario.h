@@ -24,6 +24,8 @@
 
 #include "istartupscenario.h"
 
+#include <QTimer>
+
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
 #include "framework/interactive/iinteractive.h"
@@ -32,6 +34,8 @@
 #include "update/iappupdatescenario.h"
 #include "update/iupdateconfiguration.h"
 #include "io/ifilesystem.h"
+#include "record/irecordcontroller.h"
+#include "playback/iplaybackcontroller.h"
 
 #include "appshell/iappshellconfiguration.h"
 #include "appshell/internal/isessionsmanager.h"
@@ -42,14 +46,16 @@ class StartupScenario : public au::appshell::IStartupScenario, public muse::asyn
 {
     muse::GlobalInject<IAppShellConfiguration> configuration;
     muse::GlobalInject<muse::mi::IMultiWindowsProvider> multiwindowsProvider;
+    muse::GlobalInject<muse::update::IUpdateConfiguration> updateConfiguration;
+    muse::GlobalInject<muse::io::IFileSystem> fileSystem;
 
     muse::ContextInject<muse::IInteractive> interactive { this };
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::ContextInject<ISessionsManager> sessionsManager { this };
     muse::ContextInject<effects::IEffectsProviderInitializer> effectsProviderInitializer { this };
     muse::ContextInject<muse::update::IAppUpdateScenario> appUpdateScenario { this };
-    muse::GlobalInject<muse::update::IUpdateConfiguration> updateConfiguration;
-    muse::GlobalInject<muse::io::IFileSystem> fileSystem;
+    muse::ContextInject<record::IRecordController> recordController { this };
+    muse::ContextInject<playback::IPlaybackController> playbackController { this };
 
 public:
     StartupScenario(const muse::modularity::ContextPtr& ctx)
@@ -79,11 +85,15 @@ private:
 
     void restoreLastSession();
     bool alreadyCheckedForUpdateToday() const;
+    bool isAudioActive() const;
+    void tryCheckForUpdate();
+    void startUpdateCheckTimer();
 
     std::string m_startupTypeStr;
     au::project::ProjectFile m_startupProjectFile;
     muse::io::paths_t m_startupMediaFiles;
     bool m_startupCompleted = false;
+    QTimer m_updateCheckTimer;
 };
 }
 

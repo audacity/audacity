@@ -104,9 +104,8 @@ muse::async::Promise<muse::Ret> StartupScenario::runOnSplashScreen()
 {
     return muse::async::make_promise<muse::Ret>([this](auto resolve, auto) {
         if (multiwindowsProvider()->isFirstWindow()) {
-            if (appUpdateScenario() && appUpdateScenario()->needCheckForUpdate() && !alreadyCheckedForUpdateToday()) {
-                appUpdateScenario()->checkForUpdate(/*manual*/ false);
-            }
+            tryCheckForUpdate();
+            startUpdateCheckTimer();
         }
 
         const muse::Ret ret = muse::make_ret(muse::Ret::Code::Ok);
@@ -278,6 +277,46 @@ void StartupScenario::restoreLastSession()
     } else {
         sessionsManager()->reset();
     }
+}
+
+void StartupScenario::tryCheckForUpdate()
+{
+    if (!appUpdateScenario() || !appUpdateScenario()->needCheckForUpdate()) {
+        return;
+    }
+
+    if (alreadyCheckedForUpdateToday()) {
+        return;
+    }
+
+    if (isAudioActive()) {
+        return;
+    }
+
+    appUpdateScenario()->checkForUpdate(/*manual*/ false);
+}
+
+void StartupScenario::startUpdateCheckTimer()
+{
+    static constexpr int CHECK_INTERVAL_MS = 12 * 60 * 60 * 1000; // 12 hours
+    m_updateCheckTimer.setInterval(CHECK_INTERVAL_MS);
+    QObject::connect(&m_updateCheckTimer, &QTimer::timeout, [this]() {
+        tryCheckForUpdate();
+    });
+    m_updateCheckTimer.start();
+}
+
+bool StartupScenario::isAudioActive() const
+{
+    if (recordController() && recordController()->isRecording()) {
+        return true;
+    }
+
+    if (playbackController() && playbackController()->isPlaying()) {
+        return true;
+    }
+
+    return false;
 }
 
 bool StartupScenario::alreadyCheckedForUpdateToday() const

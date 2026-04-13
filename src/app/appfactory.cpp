@@ -21,7 +21,11 @@
 #include "framework/dockwindow/dockmodule.h"
 #include "framework/cloud/cloudmodule.h"
 #include "framework/network/networkmodule.h"
+#ifdef MUSE_MODULE_UPDATE
 #include "framework/update/updatemodule.h"
+#else
+#include "framework/stubs/update/updatestubmodule.h"
+#endif
 #include "framework/learn/learnmodule.h"
 #include "framework/languages/languagesmodule.h"
 #include "framework/workspace/workspacemodule.h"

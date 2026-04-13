@@ -42,9 +42,7 @@ class AboutModel : public QObject, public muse::Contextable
 
     muse::GlobalInject<IAppShellConfiguration> configuration;
     muse::GlobalInject<muse::IGlobalConfiguration> globalConfiguration;
-
     muse::GlobalInject<muse::IApplication> application;
-
     muse::GlobalInject<muse::update::IUpdateConfiguration> updateConfiguration;
 
 public:

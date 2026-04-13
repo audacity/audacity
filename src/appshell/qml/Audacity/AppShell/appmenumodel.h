@@ -64,6 +64,7 @@ public:
     muse::GlobalInject<IAppShellConfiguration> configuration;
     muse::GlobalInject<IAppMenuModelHook> appMenuModelHook;
     muse::GlobalInject<effects::IEffectsProvider> effectsProvider;
+    muse::GlobalInject<muse::update::IUpdateConfiguration> updateConfiguration;
 
     muse::ContextInject<muse::actions::IActionsDispatcher> actionsDispatcher = { this };
     muse::ContextInject<muse::ui::IMainWindow> mainWindow { this };
@@ -75,7 +76,6 @@ public:
     //! TODO AU4
     // muse::ContextInject<workspace::IWorkspaceManager> workspacesManager = { this };
     // muse::ContextInject<extensions::IExtensionsProvider> extensionsProvider = { this };
-    muse::GlobalInject<muse::update::IUpdateConfiguration> updateConfiguration;
 
 public:
     explicit AppMenuModel(QObject* parent = nullptr);
