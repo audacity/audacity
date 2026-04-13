@@ -10,11 +10,9 @@
 #include "context/iglobalcontext.h"
 #include "playback/iplayback.h"
 
-#include "effects/lv2/ilv2effectsrepository.h"
-#include "effects/vst/ivsteffectsrepository.h"
-#include "effects/audio_unit/iaudiouniteffectsrepository.h"
 #include "audioplugins/iknownaudiopluginsregister.h"
 #include "../ieffectsconfiguration.h"
+#include "../ieffectloadersregister.h"
 #include "../ieffectviewlaunchregister.h"
 
 #include "../ieffectsprovider.h"
@@ -31,9 +29,7 @@ class EffectsProvider : public IEffectsProvider, public muse::async::Asyncable, 
 {
     muse::GlobalInject<IEffectsConfiguration> configuration;
     muse::GlobalInject<muse::audioplugins::IKnownAudioPluginsRegister> knownPluginsRegister;
-    muse::GlobalInject<IAudioUnitEffectsRepository> audioUnitEffectsRepository;
-    muse::GlobalInject<ILv2EffectsRepository> lv2EffectsRepository;
-    muse::GlobalInject<IVstEffectsRepository> vstEffectsRepository;
+    muse::GlobalInject<IEffectLoadersRegister> effectLoadersRegister;
 
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
     muse::ContextInject<muse::IInteractive> interactive{ this };

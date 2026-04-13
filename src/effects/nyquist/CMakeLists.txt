@@ -8,7 +8,6 @@ set(MODULE_QRC nyquist.qrc)
 set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/nyquisteffectsmodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/nyquisteffectsmodule.h
-    ${CMAKE_CURRENT_LIST_DIR}/inyquisteffectsrepository.h
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/nyquisteffectsrepository.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/nyquisteffectsrepository.h

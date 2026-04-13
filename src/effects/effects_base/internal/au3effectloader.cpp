@@ -1,7 +1,7 @@
 /*
  * Audacity: A Digital Audio Editor
  */
-#include "effectsrepositoryhelper.h"
+#include "au3effectloader.h"
 #include "effectsutils.h"
 
 #include "au3-components/PluginProvider.h"
@@ -16,18 +16,12 @@ namespace au::effects {
 constexpr EffectFamily toEffectFamily(muse::audio::AudioResourceType type)
 {
     switch (type) {
-    case muse::audio::AudioResourceType::VstPlugin:
-        return EffectFamily::VST3;
-    case muse::audio::AudioResourceType::Lv2Plugin:
-        return EffectFamily::LV2;
-    case muse::audio::AudioResourceType::AudioUnit:
-        return EffectFamily::AudioUnit;
-    case muse::audio::AudioResourceType::NyquistPlugin:
-        return EffectFamily::Nyquist;
-    case muse::audio::AudioResourceType::BuiltinEffect:
-        return EffectFamily::Builtin;
+    case muse::audio::AudioResourceType::VstPlugin:      return EffectFamily::VST3;
+    case muse::audio::AudioResourceType::Lv2Plugin:      return EffectFamily::LV2;
+    case muse::audio::AudioResourceType::AudioUnit:      return EffectFamily::AudioUnit;
+    case muse::audio::AudioResourceType::NyquistPlugin:  return EffectFamily::Nyquist;
+    case muse::audio::AudioResourceType::NativeEffect:  return EffectFamily::Builtin;
     case muse::audio::AudioResourceType::FluidSoundfont:
-    case muse::audio::AudioResourceType::MusePlugin:
     case muse::audio::AudioResourceType::MuseSamplerSoundPack:
         return EffectFamily::Unknown;
     default:
@@ -36,15 +30,20 @@ constexpr EffectFamily toEffectFamily(muse::audio::AudioResourceType type)
     }
 }
 
-EffectsRepositoryHelper::EffectsRepositoryHelper(PluginProvider& provider, muse::audio::AudioResourceType resourceType)
+Au3EffectLoader::Au3EffectLoader(PluginProvider& provider, muse::audio::AudioResourceType resourceType)
     : m_pluginProvider{provider}, m_resourceType{resourceType}
 {
     IF_ASSERT_FAILED(toEffectFamily(resourceType) != EffectFamily::Unknown) {
-        LOGE() << "Invalid AudioResourceType for EffectsRepositoryHelper: " << static_cast<int>(resourceType);
+        LOGE() << "Invalid AudioResourceType for Au3EffectLoader: " << static_cast<int>(resourceType);
     }
 }
 
-bool EffectsRepositoryHelper::ensurePluginIsLoaded(const EffectId& effectId) const
+EffectFamily Au3EffectLoader::family() const
+{
+    return toEffectFamily(m_resourceType);
+}
+
+bool Au3EffectLoader::ensurePluginIsLoaded(const EffectId& effectId) const
 {
     if (PluginManager::Get().IsPluginLoaded(au3::wxFromString(effectId))) {
         return true;
@@ -92,4 +91,4 @@ bool EffectsRepositoryHelper::ensurePluginIsLoaded(const EffectId& effectId) con
 
     return true;
 }
-}
+} // namespace au::effects

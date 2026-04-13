@@ -85,37 +85,12 @@ bool EffectsProvider::loadEffect(const EffectId& effectId) const
     if (it == m_effects.end()) {
         return false;
     }
-    if (it->family == EffectFamily::Builtin) {
-        // If an effect is not a VST and is in m_effects, then it's a built-in effect and it's loaded already.
-        return true;
-    }
-    if (it->family == EffectFamily::Nyquist) {
-        // Nyquist effects are loaded on-demand like built-in effects
-        return true;
-    }
-    switch (it->family) {
-    case EffectFamily::AudioUnit: {
-        IF_ASSERT_FAILED(audioUnitEffectsRepository()) {
-            return false;
-        }
-        return audioUnitEffectsRepository()->ensurePluginIsLoaded(effectId);
-    }
-    case EffectFamily::LV2: {
-        IF_ASSERT_FAILED(lv2EffectsRepository()) {
-            return false;
-        }
-        return lv2EffectsRepository()->ensurePluginIsLoaded(effectId);
-    }
-    case EffectFamily::VST3: {
-        IF_ASSERT_FAILED(vstEffectsRepository()) {
-            return false;
-        }
-        return vstEffectsRepository()->ensurePluginIsLoaded(effectId);
-    }
-    default:
-        LOGE() << "unknown family: " << static_cast<int>(it->family);
+    auto loader = effectLoadersRegister()->loader(it->family);
+    if (!loader) {
+        LOGE() << "no loader for family: " << static_cast<int>(it->family);
         return false;
     }
+    return loader->ensurePluginIsLoaded(effectId);
 }
 
 std::string EffectsProvider::effectName(const std::string& effectId) const

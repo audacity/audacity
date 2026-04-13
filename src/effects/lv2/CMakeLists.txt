@@ -8,12 +8,10 @@ set(MODULE_QRC lv2.qrc)
 set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml )
 
 set(MODULE_SRC
-    ${CMAKE_CURRENT_LIST_DIR}/ilv2effectsrepository.h
     ${CMAKE_CURRENT_LIST_DIR}/lv2effectsmodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/lv2effectsmodule.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/internal/lv2effectsrepository.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/lv2effectsrepository.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/lv2effectloader.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/lv2pluginmetareader.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/lv2pluginmetareader.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/lv2pluginsscanner.h

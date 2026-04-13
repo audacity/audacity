@@ -6,11 +6,12 @@
 #include "audioplugins/iaudiopluginsscannerregister.h"
 #include "audioplugins/iaudiopluginmetareaderregister.h"
 
+#include "effects/effects_base/ieffectloadersregister.h"
 #include "effects/effects_base/ieffectviewlaunchregister.h"
 #include "effects/effects_base/iparameterextractorregistry.h"
 #include "effects/effects_base/view/effectsviewutils.h"
 
-#include "internal/vsteffectsrepository.h"
+#include "internal/vst3effectloader.h"
 #include "internal/vst3pluginsscanner.h"
 #include "internal/vst3pluginsmetareader.h"
 #include "internal/vst3viewlauncher.h"
@@ -45,13 +46,10 @@ std::string VstEffectsModule::moduleName() const
 void VstEffectsModule::registerExports()
 {
     m_museVstModulesRepository = std::make_shared<MuseVstModulesRepository>();
-    m_vstEffectsRepository = std::make_shared<VstEffectsRepository>();
 
     // for muse
     globalIoc()->registerExport<muse::vst::IVstInstancesRegister>(mname, new MuseVstInstancesRegister());
     globalIoc()->registerExport<muse::vst::IVstModulesRepository>(mname, m_museVstModulesRepository);
-
-    globalIoc()->registerExport<IVstEffectsRepository>(mname, m_vstEffectsRepository);
 }
 
 void VstEffectsModule::resolveImports()
@@ -69,6 +67,11 @@ void VstEffectsModule::resolveImports()
     auto paramExtractorRegistry = globalIoc()->resolve<IParameterExtractorRegistry>(mname);
     if (paramExtractorRegistry) {
         paramExtractorRegistry->registerExtractor(std::make_shared<VstParameterExtractorService>());
+    }
+
+    auto loadersRegister = globalIoc()->resolve<IEffectLoadersRegister>(mname);
+    if (loadersRegister) {
+        loadersRegister->registerLoader(std::make_shared<Vst3EffectLoader>());
     }
 }
 

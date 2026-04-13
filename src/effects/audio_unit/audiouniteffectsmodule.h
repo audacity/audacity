@@ -9,7 +9,6 @@
 #include "modularity/imodulesetup.h"
 
 namespace au::effects {
-class AudioUnitEffectsRepository;
 class AudioUnitPluginsMetaReader;
 
 class AudioUnitEffectsModule : public muse::modularity::IModuleSetup

@@ -3,25 +3,23 @@
  */
 #pragma once
 
-#include "effects/effects_base/effectstypes.h"
+#include "effects/effects_base/ieffectloader.h"
 #include "framework/audioplugins/iknownaudiopluginsregister.h"
 #include "framework/global/modularity/ioc.h"
-#include "framework/global/io/path.h"
 
 class PluginProvider;
 
 namespace au::effects {
-class EffectsRepositoryHelper final
+class Au3EffectLoader : public IEffectLoader
 {
 public:
     muse::GlobalInject<muse::audioplugins::IKnownAudioPluginsRegister> knownPlugins;
 
 public:
-    EffectsRepositoryHelper(PluginProvider&, muse::audio::AudioResourceType);
+    Au3EffectLoader(PluginProvider& provider, muse::audio::AudioResourceType resourceType);
 
-    ~EffectsRepositoryHelper() = default;
-
-    bool ensurePluginIsLoaded(const EffectId& effectId) const;
+    EffectFamily family() const override;
+    bool ensurePluginIsLoaded(const EffectId& effectId) const override;
 
 private:
     PluginProvider& m_pluginProvider;

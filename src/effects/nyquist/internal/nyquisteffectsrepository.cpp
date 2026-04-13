@@ -11,7 +11,7 @@
 #include "spectrogram/spectrogramtypes.h"
 
 au::effects::NyquistEffectsRepository::NyquistEffectsRepository(const muse::modularity::ContextPtr& ctx)
-    : muse::Contextable(ctx), m_helper{m_module, muse::audio::AudioResourceType::NyquistPlugin}
+    : muse::Contextable(ctx), m_loader{m_module, muse::audio::AudioResourceType::NyquistPlugin}
 {
 }
 
@@ -65,9 +65,4 @@ au::effects::EffectMetaList au::effects::NyquistEffectsRepository::effectMetaLis
     }
 
     return effects;
-}
-
-bool au::effects::NyquistEffectsRepository::ensurePluginIsLoaded(const EffectId& effectId) const
-{
-    return m_helper.ensurePluginIsLoaded(effectId);
 }

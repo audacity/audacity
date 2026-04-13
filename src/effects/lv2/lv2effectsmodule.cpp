@@ -6,10 +6,11 @@
 #include "audioplugins/iaudiopluginsscannerregister.h"
 #include "audioplugins/iaudiopluginmetareaderregister.h"
 
+#include "effects/effects_base/ieffectloadersregister.h"
 #include "effects/effects_base/ieffectviewlaunchregister.h"
 #include "effects/effects_base/view/effectsviewutils.h"
 
-#include "internal/lv2effectsrepository.h"
+#include "internal/lv2effectloader.h"
 #include "internal/lv2pluginmetareader.h"
 #include "internal/lv2pluginsscanner.h"
 #include "internal/lv2viewlauncher.h"
@@ -42,7 +43,6 @@ std::string Lv2EffectsModule::moduleName() const
 
 void Lv2EffectsModule::registerExports()
 {
-    globalIoc()->registerExport<ILv2EffectsRepository>(mname, std::make_shared<Lv2EffectsRepository>());
 }
 
 void Lv2EffectsModule::resolveImports()
@@ -55,6 +55,11 @@ void Lv2EffectsModule::resolveImports()
     auto metaReaderRegister = globalIoc()->resolve<muse::audioplugins::IAudioPluginMetaReaderRegister>(mname);
     if (metaReaderRegister) {
         metaReaderRegister->registerReader(m_metaReader);
+    }
+
+    auto loadersRegister = globalIoc()->resolve<IEffectLoadersRegister>(mname);
+    if (loadersRegister) {
+        loadersRegister->registerLoader(std::make_shared<Lv2EffectLoader>());
     }
 
     // auto ir = ioc()->resolve<IInteractiveUriRegister>(mname);

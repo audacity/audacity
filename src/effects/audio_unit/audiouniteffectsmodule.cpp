@@ -6,10 +6,11 @@
 #include "audioplugins/iaudiopluginsscannerregister.h"
 #include "audioplugins/iaudiopluginmetareaderregister.h"
 
+#include "effects/effects_base/ieffectloadersregister.h"
 #include "effects/effects_base/ieffectviewlaunchregister.h"
 #include "effects/effects_base/view/effectsviewutils.h"
 
-#include "internal/audiouniteffectsrepository.h"
+#include "internal/audiouniteffectloader.h"
 #include "internal/audiounitpluginsscanner.h"
 #include "internal/audiounitpluginsmetareader.h"
 #include "internal/audiounitviewlauncher.h"
@@ -37,7 +38,6 @@ std::string au::effects::AudioUnitEffectsModule::moduleName() const
 
 void au::effects::AudioUnitEffectsModule::registerExports()
 {
-    globalIoc()->registerExport<IAudioUnitEffectsRepository>(mname, std::make_shared<AudioUnitEffectsRepository>());
 }
 
 void au::effects::AudioUnitEffectsModule::resolveImports()
@@ -50,6 +50,11 @@ void au::effects::AudioUnitEffectsModule::resolveImports()
     auto metaReaderRegister = globalIoc()->resolve<muse::audioplugins::IAudioPluginMetaReaderRegister>(mname);
     if (metaReaderRegister) {
         metaReaderRegister->registerReader(m_metaReader);
+    }
+
+    auto loadersRegister = globalIoc()->resolve<IEffectLoadersRegister>(mname);
+    if (loadersRegister) {
+        loadersRegister->registerLoader(std::make_shared<AudioUnitEffectLoader>());
     }
 }
 

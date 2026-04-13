@@ -10,7 +10,6 @@
 
 namespace au::effects {
 class Lv2PluginMetaReader;
-class Lv2EffectsRepository;
 
 class Lv2EffectsModule : public muse::modularity::IModuleSetup
 {

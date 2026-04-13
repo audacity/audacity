@@ -27,6 +27,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/ieffectparametersprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/iparameterextractorregistry.h
     ${CMAKE_CURRENT_LIST_DIR}/ipresetstatesregister.h
+    ${CMAKE_CURRENT_LIST_DIR}/ieffectloader.h
+    ${CMAKE_CURRENT_LIST_DIR}/ieffectloadersregister.h
     # interfaces for optional services
     ${CMAKE_CURRENT_LIST_DIR}/iparameterextractorservice.h
 
@@ -45,8 +47,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsmenuprovider.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsmenuprovider.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/effectsrepositoryhelper.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/effectsrepositoryhelper.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3effectloader.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3effectloader.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectloadersregister.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectloadersregister.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsutils.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsutils.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectinstancesregister.cpp

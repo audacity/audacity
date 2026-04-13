@@ -22,6 +22,7 @@
 #include "internal/effectviewlaunchregister.h"
 #include "internal/effectparametersprovider.h"
 #include "internal/parameterextractorregistry.h"
+#include "internal/effectloadersregister.h"
 
 #include "view/effectpresetsbarmodel.h"
 #include "view/presetstatesregister.h"
@@ -51,6 +52,7 @@ void EffectsModule::registerExports()
 
     globalIoc()->registerExport<IEffectsConfiguration>(mname, m_configuration);
     globalIoc()->registerExport<IParameterExtractorRegistry>(mname, new ParameterExtractorRegistry());
+    globalIoc()->registerExport<IEffectLoadersRegister>(mname, new EffectLoadersRegister());
 }
 
 void EffectsModule::resolveImports()
