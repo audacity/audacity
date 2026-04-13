@@ -161,6 +161,10 @@ option(AU_USE_LIBCURL "Use libcurl for HTTP requests" OFF)
 # === Pack ===
 option(AU_RUN_LRELEASE "Generate .qm files" ON)
 
+# === Tests ===
+set(APP_WORKSPACE_CONFIG_FILE "${CMAKE_CURRENT_LIST_DIR}/src/app/configs/workspaces.cfg")
+set(APP_BUILTIN_WORKSPACES_DIR "${CMAKE_CURRENT_LIST_DIR}/share/workspaces")
+
 # === Compile ===
 option(MU_COMPILE_INSTALL_QTQML_FILES "Whether to bundle qml files along with the installation (relevant on MacOS only)" ON)
 option(MUSE_COMPILE_USE_UNITY "Use unity build." ON)
