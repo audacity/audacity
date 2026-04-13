@@ -77,6 +77,9 @@ Rectangle {
     MouseArea {
         anchors.fill: parent
         acceptedButtons: Qt.RightButton
+        // MouseArea defaults cursorShape to ArrowCursor even with acceptedButtons: Qt.RightButton.
+        // Setting undefined lets the underlying PlayRegion cursors through.
+        cursorShape: undefined
         onClicked: function(e) {
             contextMenuModel.load()
             contextMenuLoader.show(Qt.point(e.x, e.y), contextMenuModel.items)

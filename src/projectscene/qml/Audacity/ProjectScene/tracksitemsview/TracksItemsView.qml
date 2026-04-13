@@ -458,6 +458,8 @@ Rectangle {
         readonly property string smoothShape: ":/images/customCursorShapes/Smooth.png"
         readonly property string leftTrimShape: ":/images/customCursorShapes/ClipTrimLeft.png"
         readonly property string rightTrimShape: ":/images/customCursorShapes/ClipTrimRight.png"
+        readonly property string leftStretchShape: ":/images/customCursorShapes/ClipStretchLeft.png"
+        readonly property string rightStretchShape: ":/images/customCursorShapes/ClipStretchRight.png"
 
         active: {
             // Don't show custom cursor during playback for sample editing
@@ -476,7 +478,11 @@ Rectangle {
                 return pencilShape
             }
 
-            return content.leftTrimContainsMouse || content.leftTrimPressedButtons ? leftTrimShape : rightTrimShape
+            var isLeft = content.leftTrimContainsMouse || content.leftTrimPressedButtons
+            if (root.altPressed) {
+                return isLeft ? leftStretchShape : rightStretchShape
+            }
+            return isLeft ? leftTrimShape : rightTrimShape
         }
         size: content.isIsolationMode || (!content.isBrush && content.isNearSample) ? 36 : 26
     }
@@ -509,7 +515,8 @@ Rectangle {
 
             preventStealing: true
             acceptedButtons: Qt.LeftButton | Qt.RightButton
-            cursorShape: Qt.IBeamCursor
+
+            Component.onCompleted: CustomCursorProvider.setCursorShape(mainMouseArea, ":/images/customCursorShapes/IBeamCursor.png", 26)
 
             hoverEnabled: true
 
@@ -678,6 +685,14 @@ Rectangle {
                 clip: false // do not clip so clip handles are visible
 
                 property bool moveActive: false
+
+                onMoveActiveChanged: {
+                    if (moveActive) {
+                        CustomCursorProvider.overrideStandardCursor(Qt.ClosedHandCursor)
+                    } else {
+                        CustomCursorProvider.restoreCursor()
+                    }
+                }
 
                 ScrollBar.horizontal: null
                 ScrollBar.vertical: null

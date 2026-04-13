@@ -361,13 +361,19 @@ Rectangle {
         anchors.fill: parent
 
         hoverEnabled: true
-        cursorShape: {
-            // Show forbidden cursor during playback for sample editing
-            if ((root.isNearSample || root.isIsolationMode) && playbackState.isPlaying) {
-                return Qt.ForbiddenCursor
+
+        readonly property bool forbidden: (root.isNearSample || root.isIsolationMode) && playbackState.isPlaying
+        cursorShape: forbidden ? Qt.ForbiddenCursor : Qt.BlankCursor
+
+        function updateCustomCursor() {
+            if (!forbidden) {
+                CustomCursorProvider.setCursorShape(hoverArea, ":/images/customCursorShapes/IBeamCursor.png", 26)
             }
-            return Qt.IBeamCursor
         }
+
+        Component.onCompleted: updateCustomCursor()
+        onForbiddenChanged: updateCustomCursor()
+
         acceptedButtons: Qt.RightButton
 
         visible: root.enableCursorInteraction
@@ -1093,6 +1099,7 @@ Rectangle {
         collapsed: root.collapsed
         clipHeight: root.height
         headerHeight: header.height
+        altPressed: root.altPressed
 
         clipNavigationPanel: root.clipNavigationPanel
 
