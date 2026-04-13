@@ -543,20 +543,11 @@ void TimelineContext::fitSelectionToWidth()
         return;
     }
 
-    double zoomPosition = findZoomFocusPosition();
-
     double newZoom = m_frameWidth / (endTime - startTime);
-    setZoom(newZoom, zoomPosition);
+    setZoom(newZoom, 0.0);
 
-    double centerPosition = frameCenterPosition();
-    double centerTime = positionToTime(centerPosition);
-
-    //! center view on the selection/item
-    double selCenter = startTime + (endTime - startTime) / 2.0;
-    double selCenterPosition = timeToPosition(selCenter);
-    double zoomTime = positionToTime(selCenterPosition);
-
-    shiftFrameTime(zoomTime - centerTime);
+    //! position view to start of selection
+    shiftFrameTime(startTime - m_frameStartTime);
 }
 
 void TimelineContext::fitProjectToWidth()
