@@ -43,6 +43,7 @@ muse::io::paths_t Au3AudioPluginScanner::scanPlugins() const
 
 PluginPaths Au3AudioPluginScanner::pluginPaths() const
 {
+    // PluginManager still needed here by some effect modules for the implementation of custom paths.
     return m_pluginProvider.FindModulePaths(PluginManager::Get());
 }
 }

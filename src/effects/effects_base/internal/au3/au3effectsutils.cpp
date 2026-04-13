@@ -9,6 +9,8 @@
 
  #include "au3-module-manager/PluginDescriptor.h"
 
+ #include "framework/global/stringutils.h"
+
 namespace au {
 effects::EffectMeta effects::toEffectMeta(const ::PluginDescriptor& desc)
 {
@@ -29,5 +31,16 @@ effects::EffectMeta effects::toEffectMeta(const ::PluginDescriptor& desc)
     meta.isActivated = desc.IsEnabled();
 
     return meta;
+}
+
+PluginID effects::effectId(const EffectDefinitionInterface* effect)
+{
+    return muse::strings::join({
+            std::string { "Effect" },
+            effect->GetFamily().Internal().ToStdString(),
+            effect->GetVendor().Internal().ToStdString(),
+            effect->GetSymbol().Internal().ToStdString(),
+            effect->GetPath().ToStdString()
+        }, "_");
 }
 }

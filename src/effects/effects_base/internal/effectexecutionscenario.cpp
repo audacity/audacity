@@ -13,7 +13,6 @@
 #include "au3-project/Project.h"
 #include "au3-effects/Effect.h"
 #include "au3-effects/MixAndRender.h"
-#include "au3-module-manager/PluginManager.h"
 
 #include "au3-track/Track.h"
 #include "au3-wave-track/WaveTrack.h"
@@ -334,7 +333,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
         }
 
         if (!(flags & EffectManager::kSkipState)) {
-            const auto shortDesc = PluginManager::Get().GetName(ID).Translation().ToStdString();
+            const auto shortDesc = effectsProvider()->effectName(effectId.toStdString());
             const auto longDesc = muse::mtrc("effects", "Applied effect: %1").arg(muse::String { shortDesc.c_str() }).toStdString();
             projectHistory()->pushHistoryState(longDesc, shortDesc);
         }

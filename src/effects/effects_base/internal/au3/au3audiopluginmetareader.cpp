@@ -4,7 +4,6 @@
 
 #include "au3-components/PluginProvider.h"
 #include "au3-strings/TranslatableString.h"
-#include "au3-module-manager/PluginManager.h"
 #include "au3-module-manager/ModuleManager.h"
 
 #include "au3wrap/internal/wxtypes_convert.h"
@@ -65,7 +64,7 @@ muse::RetVal<muse::audio::AudioResourceMetaList> Au3AudioPluginMetaReader::readM
 
             descriptors.push_back({});
             auto& desc = descriptors.back();
-            desc.SetProviderID(PluginManager::GetID(provider));
+            desc.SetProviderID(ModuleManager::GetID(provider));
             desc.SetPluginType(PluginTypeEffect);
             desc.SetPath(ident->GetPath());
             desc.SetSymbol(ident->GetSymbol());
@@ -73,7 +72,7 @@ muse::RetVal<muse::audio::AudioResourceMetaList> Au3AudioPluginMetaReader::readM
             desc.SetVersion(ident->GetVersion());
             desc.SetEffectFamily(provider->GetOptionalFamilySymbol().Internal());
 
-            desc.SetID(PluginManager::GetID(effect));
+            desc.SetID(effects::effectId(effect));
             desc.SetDescription(effect->GetDescription().Translation());
             desc.SetEffectType(effect->GetClassification());
             desc.SetEffectFamily(effect->GetFamily().Internal());

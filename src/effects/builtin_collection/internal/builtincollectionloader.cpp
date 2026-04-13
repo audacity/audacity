@@ -8,7 +8,6 @@
 #include "global/translation.h"
 #include "global/log.h"
 
-#include "au3-module-manager/PluginManager.h"
 #include "au3-effects/LoadEffects.h"
 
 #include "au3wrap/internal/wxtypes_convert.h"

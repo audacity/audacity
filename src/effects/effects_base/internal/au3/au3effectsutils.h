@@ -76,4 +76,6 @@ constexpr ::EffectType toAu3EffectType(EffectType type)
 }
 
 EffectMeta toEffectMeta(const ::PluginDescriptor& desc);
+
+::PluginID effectId(const EffectDefinitionInterface* effect);
 }
