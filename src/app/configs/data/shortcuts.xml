@@ -395,9 +395,6 @@
         <seq>Ctrl+W</seq>
     </SC>
     <SC>
-        <key>export</key>
-    </SC>
-    <SC>
         <key>export-labels</key>
     </SC>
     <SC>
