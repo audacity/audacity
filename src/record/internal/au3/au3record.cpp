@@ -676,6 +676,11 @@ Ret Au3Record::doRecord(Au3Project& project,
 {
     //! NOTE: copied fromProjectAudioManager::DoRecord
 
+    // Reset record position to the new start time so stale values from a
+    // previous recording session are never visible to the UI.
+    m_recordPosition.set(t0);
+    m_anchorPosition = t0;
+
     if (audioEngine()->isBusy()) {
         LOGE() << "Audio IO is busy";
         return make_ret(Ret::Code::InternalError);
