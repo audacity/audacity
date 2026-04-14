@@ -629,6 +629,17 @@ secs_t Au3Record::recordPosition() const
     return m_recordPosition.val;
 }
 
+std::vector<trackedit::ClipKey> Au3Record::recordingClipKeys() const
+{
+    std::vector<trackedit::ClipKey> keys;
+    for (const auto& rd : m_recordData) {
+        if (!rd.deferredClipCreation) {
+            keys.push_back(rd.clipKey);
+        }
+    }
+    return keys;
+}
+
 Notification Au3Record::recordingFinished() const
 {
     return m_recordingFinished;

@@ -14,5 +14,11 @@ public:
     MOCK_METHOD(muse::async::Notification, currentTrackeditProjectChanged, (), (const, override));
     MOCK_METHOD(void, setPlayer, (const au::playback::IPlayerPtr&), (override));
     MOCK_METHOD(context::IPlaybackStatePtr, playbackState, (), (const, override));
+
+    MOCK_METHOD(bool, isRecording, (), (const, override));
+    MOCK_METHOD(muse::async::Notification, isRecordingChanged, (), (const, override));
+    MOCK_METHOD(muse::secs_t, recordPosition, (), (const, override));
+    MOCK_METHOD(muse::async::Channel<muse::secs_t>, recordPositionChanged, (), (const, override));
+    MOCK_METHOD(std::vector<trackedit::ClipKey>, recordingClipKeys, (), (const, override));
 };
 }

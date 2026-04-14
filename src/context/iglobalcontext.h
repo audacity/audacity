@@ -3,11 +3,14 @@
 */
 #pragma once
 
+#include <vector>
+
 #include "framework/global/modularity/imoduleinterface.h"
 #include "framework/global/async/notification.h"
 
 #include "project/iaudacityproject.h"
 #include "playback/iplayer.h"
+#include "trackedit/trackedittypes.h"
 #include "iplaybackstate.h"
 
 namespace au::context {
@@ -33,5 +36,7 @@ public:
 
     virtual muse::secs_t recordPosition() const = 0;
     virtual muse::async::Channel<muse::secs_t> recordPositionChanged() const = 0;
+
+    virtual std::vector<trackedit::ClipKey> recordingClipKeys() const = 0;
 };
 }
