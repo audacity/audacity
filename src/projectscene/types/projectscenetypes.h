@@ -55,6 +55,8 @@ class TrackItemTime
 {
     Q_GADGET
 
+    Q_PROPERTY(double startTime MEMBER startTime CONSTANT)
+
 public:
 
     double startTime = 0.0;

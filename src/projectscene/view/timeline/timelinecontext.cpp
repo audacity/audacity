@@ -57,6 +57,25 @@ void TimelineContext::init(double frameWidth)
     m_scrollTimer.setInterval(16); // scroll at ~60 FPS
     connect(&m_scrollTimer, &QTimer::timeout, [this](){ autoScrollView(m_autoScrollStep); });
 
+    m_animationTimer.setInterval(ANIMATION_FRAME_MS);
+    connect(&m_animationTimer, &QTimer::timeout, [this]() {
+        double elapsed = m_animationElapsed.elapsed();
+        double t = std::min(elapsed / static_cast<double>(ANIMATION_DURATION_MS), 1.0);
+
+        // Cubic ease-out: f(t) = 1 - (1-t)^3
+        double inv = 1.0 - t;
+        double eased = 1.0 - (inv * inv * inv);
+
+        double current = m_animationStartValue + (m_animationTargetValue - m_animationStartValue) * eased;
+
+        if (t >= 1.0) {
+            m_animationTimer.stop();
+            moveToFrameTime(m_animationTargetValue);
+        } else {
+            moveToFrameTime(current);
+        }
+    });
+
     initToViewState(frameWidth);
 
     if (const auto vs = viewState()) {
@@ -314,6 +333,23 @@ void TimelineContext::insureVisible(double posSec)
     moveToFrameTime(newFrameTime);
 }
 
+void TimelineContext::animatedInsureVisible(double posSec)
+{
+    if (posSec >= m_frameStartTime && posSec <= m_frameEndTime) {
+        return;
+    }
+
+    const double frameTime = m_frameEndTime - m_frameStartTime;
+
+    if (posSec > m_frameEndTime) {
+        // Scrolling right: place clip start at ~75% of view width
+        animateToFrameTime(posSec - frameTime * 0.75);
+    } else {
+        // Scrolling left: place clip start at ~25% of view width
+        animateToFrameTime(posSec - frameTime * 0.25);
+    }
+}
+
 void TimelineContext::autoScrollView(double scrollStep)
 {
     if (!muse::RealIsEqualOrMore(scrollStep, 0.0)) {
@@ -397,6 +433,14 @@ void TimelineContext::moveToFrameTime(double startTime)
 {
     setFrameStartTime(std::max(startTime, 0.0));
     updateFrameTime();
+}
+
+void TimelineContext::animateToFrameTime(double targetStartTime)
+{
+    m_animationStartValue = m_frameStartTime;
+    m_animationTargetValue = std::max(targetStartTime, 0.0);
+    m_animationElapsed.start();
+    m_animationTimer.start();
 }
 
 void TimelineContext::shiftFrameTime(double shift)

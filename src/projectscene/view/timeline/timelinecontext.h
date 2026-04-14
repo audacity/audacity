@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QElapsedTimer>
 #include <QObject>
 #include <QTimer>
 
@@ -117,6 +118,7 @@ public:
     void centerViewOnPlayhead(const muse::actions::ActionData& args);
     void centerOnTime(double secs);
     Q_INVOKABLE void insureVisible(double posSec);
+    Q_INVOKABLE void animatedInsureVisible(double posSec);
     Q_INVOKABLE void startAutoScroll(double posSec);
     Q_INVOKABLE void stopAutoScroll();
 
@@ -213,6 +215,7 @@ private:
     void shiftFrameTimeOnStep(int direction);
     void updateFrameTime();
     void autoScrollView(double scrollStep);
+    void animateToFrameTime(double targetStartTime);
 
     void setSelectionStartTime(double time);
     void setSelectionEndTime(double time);
@@ -267,5 +270,12 @@ private:
 
     QTimer m_scrollTimer;
     double m_autoScrollStep = 0.0;
+
+    static constexpr int ANIMATION_DURATION_MS = 500;
+    static constexpr int ANIMATION_FRAME_MS = 16;
+    QTimer m_animationTimer;
+    QElapsedTimer m_animationElapsed;
+    double m_animationStartValue = 0.0;
+    double m_animationTargetValue = 0.0;
 };
 }
