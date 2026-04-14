@@ -105,10 +105,11 @@ void MainWindowTitleProvider::update()
     }
 
     const QString projectTitle = project->title().toQString();
+    const bool projectModified = project->hasUnsavedChanges();
     setTitle(projectTitle.isEmpty()
              ? muse::qtrc("appshell", "Audacity 4")
-             : muse::qtrc("appshell", "%1 - Audacity 4").arg(projectTitle));
+             : muse::qtrc("appshell", "%1 %2- Audacity 4").arg(projectTitle, projectModified ? QString("* ") : QString()));
 
     setFilePath(project->path().toQString());
-    setFileModified(project->hasUnsavedChanges());
+    setFileModified(projectModified);
 }
