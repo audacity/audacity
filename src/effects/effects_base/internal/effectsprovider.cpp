@@ -39,6 +39,11 @@ void EffectsProvider::initOnce(muse::IInteractive& interactive,
     };
 
     doScanPlugins(registerAudioPluginsScenario, doScanThirdPartyPlugins);
+
+    // Register for future changes
+    knownPluginsRegister()->pluginInfoListChanged().onNotify(this, [this]() {
+        reloadEffects();
+    });
 }
 
 void EffectsProvider::rescanPlugins(muse::IInteractive& interactive,
@@ -112,11 +117,6 @@ bool EffectsProvider::doScanPlugins(muse::audioplugins::IRegisterAudioPluginsSce
     ModuleManager::Get().DiscoverProviders();
 
     reloadEffects();
-
-    // Register for future changes
-    knownPluginsRegister()->pluginInfoListChanged().onNotify(this, [this]() {
-        reloadEffects();
-    });
 
     return !thirdPartyPluginPaths.empty();
 }
