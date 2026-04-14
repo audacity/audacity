@@ -62,6 +62,10 @@ void TrackNavigationController::init()
         m_selectionStart = std::nullopt;
     });
 
+    dispatcher()->reg(this, "nav-escape", [this] {
+        navigationController()->setIsHighlight(false);
+    });
+
     selectionController()->tracksSelected().onReceive(this, [this](const trackedit::TrackIdList& trackIds) {
         if (trackIds.size() == 1) {
             // The idea here is that range selection also supports the base track to be selected using the mouse.
@@ -377,6 +381,11 @@ void TrackNavigationController::navigateToLastTrack()
 
 void TrackNavigationController::navigateToNextItem()
 {
+    if (!navigationController()->isHighlight()) {
+        dispatcher()->dispatch("play-position-increase");
+        return;
+    }
+
     TrackItemKeyList itemsKeys = sortedItemsKeys(m_focusedItemKey.trackId);
 
     if (m_focusedItemKey.itemId == INVALID_TRACK_ITEM) {
@@ -400,6 +409,11 @@ void TrackNavigationController::navigateToNextItem()
 
 void TrackNavigationController::navigateToPrevItem()
 {
+    if (!navigationController()->isHighlight()) {
+        dispatcher()->dispatch("play-position-decrease");
+        return;
+    }
+
     TrackItemKeyList itemsKeys = sortedItemsKeys(m_focusedItemKey.trackId);
 
     if (m_focusedItemKey.itemId == INVALID_TRACK_ITEM) {
@@ -449,30 +463,11 @@ TrackItemKey TrackNavigationController::findClosestItemOnTrack(const TrackId& tr
         return TrackItemKey { trackId, INVALID_TRACK_ITEM };
     }
 
-    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
-    if (!prj) {
-        return itemsKeys.front();
-    }
-
     TrackItemKey closest = itemsKeys.front();
     double closestDiff = std::numeric_limits<double>::max();
 
-    std::optional<Track> track = prj->track(trackId);
-    if (!track.has_value()) {
-        return closest;
-    }
-
     for (const auto& itemKey : itemsKeys) {
-        double st = 0.0;
-        if (track->type == TrackType::Label) {
-            Label l = prj->label(itemKey);
-            st = l.startTime;
-        } else {
-            Clip c = prj->clip(itemKey);
-            st = c.startTime;
-        }
-
-        double diff = std::abs(st - referenceStartTime);
+        double diff = std::abs(itemStartTime(itemKey) - referenceStartTime);
         if (diff < closestDiff) {
             closestDiff = diff;
             closest = itemKey;

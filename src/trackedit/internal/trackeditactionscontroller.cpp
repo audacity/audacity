@@ -642,6 +642,7 @@ void TrackeditActionsController::doGlobalDelete()
 void TrackeditActionsController::doGlobalCancel()
 {
     trackeditInteraction()->notifyAboutCancelDragEdit();
+    trackNavigationController()->setIsNavigationActive(false);
 }
 
 void TrackeditActionsController::doGlobalDeletePerClipRipple()

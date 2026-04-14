@@ -431,9 +431,9 @@ void ApplicationActionController::doGlobalCancel()
 {
     if (isProjectOpenedAndFocused()) {
         dispatcher()->dispatch("action://trackedit/cancel");
-    } else {
-        dispatcher()->dispatch("nav-escape");
     }
+
+    dispatcher()->dispatch("nav-escape");
 }
 
 void ApplicationActionController::doGlobalTrigger()
