@@ -218,7 +218,7 @@ bool Au3ClipsInteraction::resetClipSpeed(const ClipKey& clipKey)
     return doChangeClipSpeed(clipKey, 1);
 }
 
-bool Au3ClipsInteraction::changeClipColor(const ClipKey& clipKey, const std::string& newColor)
+bool Au3ClipsInteraction::changeClipColor(const ClipKey& clipKey, ClipColorIndex colorIndex)
 {
     WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), ::TrackId(clipKey.trackId));
     IF_ASSERT_FAILED(waveTrack) {
@@ -230,7 +230,7 @@ bool Au3ClipsInteraction::changeClipColor(const ClipKey& clipKey, const std::str
         return false;
     }
 
-    clip->SetColor(newColor);
+    clip->SetColorIndex(colorIndex);
 
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));

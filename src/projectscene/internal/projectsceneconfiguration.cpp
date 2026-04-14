@@ -34,6 +34,8 @@ static const muse::Settings::Key PLAYBACK_ON_RULER_CLICK_ENABLED(moduleName, "pr
 static const muse::Settings::Key LABEL_EDITOR_COLUMN_FORMAT(moduleName, "projectscene/labelEditorColumnFormat");
 static const muse::Settings::Key UPDATE_DISPLAY_WHILE_PLAYING_ENABLED(moduleName, "projectscene/updateDisplayWhilePlayingEnabled");
 static const muse::Settings::Key PINNED_PLAY_HEAD_ENABLED(moduleName, "projectscene/pinnedPlayHeadEnabled");
+static const muse::Settings::Key ZOOM_PRESET_1(moduleName, "projectscene/zoomPreset1");
+static const muse::Settings::Key ZOOM_PRESET_2(moduleName, "projectscene/zoomPreset2");
 
 static constexpr bool DEFAULT_VERTICAL_RULERS_VISIBILITY = false;
 static constexpr bool DEFAULT_RMS_IN_WAVEFORM_VISIBILITY = false;
@@ -115,6 +117,9 @@ void ProjectSceneConfiguration::init()
     muse::settings()->valueChanged(PINNED_PLAY_HEAD_ENABLED).onReceive(nullptr, [this](const muse::Val&) {
         m_pinnedPlayHeadEnabledChanged.notify();
     });
+
+    muse::settings()->setDefaultValue(ZOOM_PRESET_1, muse::Val(static_cast<int>(ZoomPresets::ZoomDefault)));
+    muse::settings()->setDefaultValue(ZOOM_PRESET_2, muse::Val(static_cast<int>(ZoomPresets::Zoom4To1)));
 }
 
 bool ProjectSceneConfiguration::isVerticalRulersVisible() const
@@ -209,21 +214,41 @@ muse::async::Notification ProjectSceneConfiguration::isEffectsPanelVisibleChange
     return m_effectsPanelVisible;
 }
 
-const std::vector<std::pair<std::string, std::string> >& ProjectSceneConfiguration::clipColors() const
+const std::vector<ClipColorInfo>& ProjectSceneConfiguration::clipColorInfos() const
 {
-    static std::vector<std::pair<std::string /*name*/, std::string /*color*/> > colors = {
-        { "Blue", uiConfiguration()->currentTheme().extra["clip_color_1"].toString().toStdString() },
-        { "Violet", uiConfiguration()->currentTheme().extra["clip_color_2"].toString().toStdString() },
-        { "Magenta", uiConfiguration()->currentTheme().extra["clip_color_3"].toString().toStdString() },
-        { "Red", uiConfiguration()->currentTheme().extra["clip_color_4"].toString().toStdString() },
-        { "Orange", uiConfiguration()->currentTheme().extra["clip_color_5"].toString().toStdString() },
-        { "Yellow", uiConfiguration()->currentTheme().extra["clip_color_6"].toString().toStdString() },
-        { "Green", uiConfiguration()->currentTheme().extra["clip_color_7"].toString().toStdString() },
-        { "Turquoise", uiConfiguration()->currentTheme().extra["clip_color_8"].toString().toStdString() },
-        { "Cyan", uiConfiguration()->currentTheme().extra["clip_color_9"].toString().toStdString() }
+    static const std::vector<ClipColorInfo> infos = {
+        { "Blue", 1 },
+        { "Violet", 2 },
+        { "Magenta", 3 },
+        { "Red", 4 },
+        { "Orange", 5 },
+        { "Yellow", 6 },
+        { "Green", 7 },
+        { "Turquoise", 8 },
+        { "Cyan", 9 }
     };
 
-    return colors;
+    return infos;
+}
+
+muse::Color ProjectSceneConfiguration::clipColor(trackedit::ClipColorIndex index) const
+{
+    QString key = QString("clip_color_%1").arg(index);
+    QColor color = uiConfiguration()->currentTheme().extra[key].value<QColor>();
+    if (!color.isValid()) {
+        color = uiConfiguration()->currentTheme().extra["clip_color_1"].value<QColor>();
+    }
+    return muse::Color::fromQColor(color);
+}
+
+muse::Color ProjectSceneConfiguration::clipSelectedColor(trackedit::ClipColorIndex index) const
+{
+    QString key = QString("clip_selected_color_%1").arg(index);
+    QColor color = uiConfiguration()->currentTheme().extra[key].value<QColor>();
+    if (!color.isValid()) {
+        color = uiConfiguration()->currentTheme().extra["clip_selected_color_1"].value<QColor>();
+    }
+    return muse::Color::fromQColor(color);
 }
 
 ClipStyles::Style ProjectSceneConfiguration::clipStyle() const
@@ -412,4 +437,24 @@ void ProjectSceneConfiguration::setPinnedPlayHeadEnabled(bool enabled)
 muse::async::Notification ProjectSceneConfiguration::pinnedPlayHeadEnabledChanged() const
 {
     return m_pinnedPlayHeadEnabledChanged;
+}
+
+ZoomPresets::Preset ProjectSceneConfiguration::zoomPreset1() const
+{
+    return muse::settings()->value(ZOOM_PRESET_1).toEnum<ZoomPresets::Preset>();
+}
+
+void ProjectSceneConfiguration::setZoomPreset1(ZoomPresets::Preset preset)
+{
+    muse::settings()->setSharedValue(ZOOM_PRESET_1, muse::Val(static_cast<int>(preset)));
+}
+
+ZoomPresets::Preset ProjectSceneConfiguration::zoomPreset2() const
+{
+    return muse::settings()->value(ZOOM_PRESET_2).toEnum<ZoomPresets::Preset>();
+}
+
+void ProjectSceneConfiguration::setZoomPreset2(ZoomPresets::Preset preset)
+{
+    muse::settings()->setSharedValue(ZOOM_PRESET_2, muse::Val(static_cast<int>(preset)));
 }

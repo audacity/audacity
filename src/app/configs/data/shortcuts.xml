@@ -395,14 +395,14 @@
         <seq>Ctrl+W</seq>
     </SC>
     <SC>
-        <key>export</key>
-        <seq>Ctrl+Shift+E</seq>
-    </SC>
-    <SC>
         <key>export-labels</key>
     </SC>
     <SC>
-        <key>import-audio</key>
+        <key>export-audio</key>
+        <seq>Ctrl+Shift+E</seq>
+    </SC>
+    <SC>
+        <key>project-import</key>
         <seq>Ctrl+Shift+I</seq>
     </SC>
     <SC>
@@ -858,11 +858,11 @@
         <seq>P</seq>
     </SC>
     <SC>
-        <key>record1st-choice</key>
+        <key>action://record/start</key>
         <seq>R</seq>
     </SC>
     <SC>
-        <key>punch-and-roll</key>
+        <key>action://record/lead-in-recording</key>
         <seq>Shift+D</seq>
     </SC>
     <SC>

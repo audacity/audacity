@@ -46,5 +46,9 @@ void AccountInfoModel::signOut() const
 
 void AccountInfoModel::openAuthorizationDialog() const
 {
-    authorization()->ensureAuthorization();
+    muse::actions::ActionQuery query("audacity://cloud/open-signin-dialog");
+    query.addParam("sync", muse::Val(true));
+    query.addParam("showTourPage", muse::Val(false));
+
+    dispatcher()->dispatch(query);
 }

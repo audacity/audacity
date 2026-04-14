@@ -149,6 +149,16 @@ void ClipChannelSpectrogramView::setSelectionEndFrequency(double frequency)
     update();
 }
 
+void ClipChannelSpectrogramView::setClipSelected(bool selected)
+{
+    if (m_clipSelected == selected) {
+        return;
+    }
+    m_clipSelected = selected;
+    emit clipSelectedChanged();
+    update();
+}
+
 void ClipChannelSpectrogramView::paint(QPainter* painter)
 {
     const auto project = globalContext()->currentProject();
@@ -163,7 +173,7 @@ void ClipChannelSpectrogramView::paint(QPainter* painter)
     const auto startFrequency = noSelection ? SelectionInfo::UndefinedFrequency : m_selectionStartFrequency;
     const auto endFrequency = noSelection ? SelectionInfo::UndefinedFrequency : m_selectionEndFrequency;
 
-    const SelectionInfo selectionInfo { m_selectionStartTime, m_selectionEndTime, startFrequency, endFrequency };
+    const SelectionInfo selectionInfo { m_selectionStartTime, m_selectionEndTime, startFrequency, endFrequency, m_clipSelected };
 
     const QQuickItem* const item = viewportItem();
     IF_ASSERT_FAILED(item) {

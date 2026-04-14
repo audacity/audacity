@@ -37,7 +37,9 @@ public:
     MOCK_METHOD(void, setIsEffectsPanelVisible, (bool visible), (override));
     MOCK_METHOD(muse::async::Notification, isEffectsPanelVisibleChanged, (), (const, override));
 
-    MOCK_METHOD((const std::vector<std::pair<std::string, std::string> >&), clipColors, (), (const, override));
+    MOCK_METHOD((const std::vector<ClipColorInfo>&), clipColorInfos, (), (const, override));
+    MOCK_METHOD(muse::Color, clipColor, (trackedit::ClipColorIndex index), (const, override));
+    MOCK_METHOD(muse::Color, clipSelectedColor, (trackedit::ClipColorIndex index), (const, override));
 
     MOCK_METHOD(ClipStyles::Style, clipStyle, (), (const, override));
     MOCK_METHOD(void, setClipStyle, (ClipStyles::Style style), (override));
@@ -73,5 +75,10 @@ public:
 
     MOCK_METHOD(int, labelEditorColumnFormat, (const std::string& columnName), (const, override));
     MOCK_METHOD(void, setLabelEditorColumnFormat, (const std::string& columnName, int format), (const, override));
+
+    MOCK_METHOD(ZoomPresets::Preset, zoomPreset1, (), (const, override));
+    MOCK_METHOD(void, setZoomPreset1, (ZoomPresets::Preset preset), (override));
+    MOCK_METHOD(ZoomPresets::Preset, zoomPreset2, (), (const, override));
+    MOCK_METHOD(void, setZoomPreset2, (ZoomPresets::Preset preset), (override));
 };
 }

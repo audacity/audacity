@@ -3,6 +3,8 @@
 */
 #pragma once
 
+#include "framework/global/modularity/ioc.h"
+#include "projectscene/iprojectsceneconfiguration.h"
 #include "trackedit/dom/clip.h"
 
 #include "viewtrackitem.h"
@@ -11,6 +13,8 @@ namespace au::projectscene {
 class TrackClipItem : public ViewTrackItem
 {
     Q_OBJECT
+
+    muse::GlobalInject<IProjectSceneConfiguration> configuration;
 
     Q_PROPERTY(int groupId READ groupId NOTIFY groupIdChanged FINAL)
     Q_PROPERTY(int pitch READ pitch NOTIFY pitchChanged FINAL)

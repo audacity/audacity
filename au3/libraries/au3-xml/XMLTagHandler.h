@@ -63,6 +63,11 @@ public:
     // It is optional to override this method.
     virtual void HandleXMLContent(const std::string_view& WXUNUSED(content)) {}
 
+    // This method will be called when a binary blob attribute has been
+    // encountered (written via ProjectSerializer::WriteBlob).
+    // It is optional to override this method.
+    virtual void HandleXMLBlob(const std::string_view& WXUNUSED(name), const void* WXUNUSED(data), size_t WXUNUSED(len)) {}
+
     // If the XML document has children of your tag, this method
     // should be called.  Typically you should construct a NEW
     // object for the child, insert it into your own local data

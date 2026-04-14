@@ -43,9 +43,9 @@ class ProjectsPageModel : public QObject, public muse::Contextable
 
     muse::GlobalInject<IProjectConfiguration> configuration;
     muse::GlobalInject<muse::cloud::IAudioComService> audioComService;
-    muse::Inject<au3cloud::IAu3AudioComService> au3CloudService { this };
     muse::GlobalInject<muse::IPlatformInteractive> platformInteractive;
 
+    muse::ContextInject<au3cloud::IAu3AudioComService> au3CloudService { this };
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
 
     Q_PROPERTY(bool cloudEnabled READ cloudEnabled CONSTANT)

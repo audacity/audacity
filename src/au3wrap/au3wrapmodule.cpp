@@ -43,6 +43,7 @@ std::string Au3WrapModule::moduleName() const
 void Au3WrapModule::registerExports()
 {
     globalIoc()->registerExport<IAu3ProjectCreator>(moduleName(), new Au3ProjectCreator());
+    globalIoc()->registerExport<IAu3ProjectReader>(moduleName(), new Au3ProjectReader());
 }
 
 void Au3WrapModule::onPreInit(const muse::IApplication::RunMode&)

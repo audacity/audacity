@@ -1,9 +1,11 @@
 #pragma once
 
-#include "modularity/imoduleinterface.h"
-#include "global/async/channel.h"
-#include "global/types/ret.h"
-#include "global/io/path.h"
+#include <vector>
+#include <optional>
+#include <cstdint>
+
+#include "framework/global/modularity/imoduleinterface.h"
+#include "framework/global/async/notification.h"
 
 namespace au::project {
 class IThumbnailCreator : MODULE_EXPORT_INTERFACE
@@ -12,10 +14,10 @@ class IThumbnailCreator : MODULE_EXPORT_INTERFACE
 
 public:
     virtual ~IThumbnailCreator() = default;
-    virtual muse::Ret createThumbnail(const muse::io::path_t& path) = 0;
 
-    //for internal use
-    virtual muse::async::Channel<muse::io::path_t> captureThumbnailRequested() const = 0;
-    virtual void onThumbnailCreated(bool success) = 0;
+    virtual std::optional<std::vector<uint8_t> > createThumbnail() = 0;
+
+    virtual muse::async::Notification captureThumbnailRequested() const = 0;
+    virtual void onThumbnailCreated(std::vector<uint8_t> pngData) = 0;
 };
 }

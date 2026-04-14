@@ -1,12 +1,15 @@
 #include "trackcolor.h"
 
+#include "trackedit/trackedittypes.h"
+
 using namespace au::au3;
+using namespace au::trackedit;
 
 static const AttachedTrackObjects::RegisteredFactory keyTrackColor{
     [](Track& track) -> std::shared_ptr<TrackColor> { return std::make_shared<TrackColor>(track); }
 };
 
-static constexpr auto ColorAttr = "color";
+static constexpr auto ColorIndexAttr = "colorindex";
 
 static size_t lastColorIndex = 0;
 
@@ -28,16 +31,9 @@ void TrackColor::Init(size_t index)
 void TrackColor::CopyTo(Track& track) const
 {
     auto& color = Get(&track);
-    color.SetColor(mColor);
-
-    // Keep track of the latest used color
-    const auto colors = projectSceneConfiguration()->clipColors();
-    const auto colorString = mColor.toString();
-    for (size_t i = 0; i < colors.size(); ++i) {
-        if (colors[i].second == colorString) {
-            lastColorIndex = i;
-            break;
-        }
+    color.SetColorIndex(mColorIndex);
+    if (mColorIndex > 0) {
+        lastColorIndex = static_cast<size_t>(mColorIndex - 1);
     }
 }
 
@@ -62,31 +58,33 @@ void TrackColor::Reparent(const std::shared_ptr<Track>& parent)
 
 void TrackColor::WriteXMLAttributes(XMLWriter& writer) const
 {
-    writer.WriteAttr(ColorAttr, mColor.toString());
+    writer.WriteAttr(ColorIndexAttr, mColorIndex);
 }
 
 bool TrackColor::HandleXMLAttribute(const std::string_view& attr, const XMLAttributeValueView& valueView)
 {
-    if (attr == ColorAttr) {
-        mColor = muse::draw::Color::fromString(valueView.ToWString());
+    if (attr == ColorIndexAttr) {
+        long nValue;
+        if (valueView.TryGet(nValue)) {
+            mColorIndex = static_cast<ClipColorIndex>(nValue);
+        }
         return true;
     }
 
     return false;
 }
 
-muse::draw::Color TrackColor::GetColor() const
+ClipColorIndex TrackColor::GetColorIndex() const
 {
-    return mColor;
+    return mColorIndex;
 }
 
-void TrackColor::SetColor(const muse::draw::Color& color)
+void TrackColor::SetColorIndex(ClipColorIndex colorIndex)
 {
-    mColor = color;
+    mColorIndex = colorIndex;
 }
 
 void TrackColor::assignColor()
 {
-    const auto colors = projectSceneConfiguration()->clipColors();
-    mColor = muse::draw::Color::fromString(colors[++lastColorIndex % colors.size()].second);
+    mColorIndex = static_cast<ClipColorIndex>((++lastColorIndex % CLIP_COLOR_COUNT) + 1);
 }

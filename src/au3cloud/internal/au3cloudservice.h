@@ -10,7 +10,6 @@
 
 #include "framework/global/modularity/ioc.h"
 #include "framework/interactive/iplatforminteractive.h"
-#include "framework/interactive/iinteractive.h"
 
 #include "au3cloud/iauthorization.h"
 #include "au3cloud/iusageinfo.h"
@@ -18,18 +17,13 @@
 #include "oauthhttpserverreplyhandler.h"
 
 namespace au::au3cloud {
-class Au3CloudService : public QObject, public muse::async::Asyncable, public IAuthorization, public IUsageInfo, public muse::Contextable
+class Au3CloudService : public QObject, public muse::async::Asyncable, public IAuthorization, public IUsageInfo
 {
     Q_OBJECT
 
     muse::GlobalInject<muse::IPlatformInteractive> platformInteractive;
 
-    muse::ContextInject<muse::IInteractive> interactive { this };
-
 public:
-    Au3CloudService(const muse::modularity::ContextPtr& ctx)
-        : muse::Contextable(ctx) {}
-
     void init();
 
     void registerWithPassword(const std::string& email, const std::string& password) override;
@@ -41,8 +35,6 @@ public:
 
     muse::ValCh<AuthState> authState() const override;
     bool isAuthorized() const override;
-    muse::Ret ensureAuthorization() override;
-    void openSignInDialog() override;
 
     bool getSendAnonymousUsageInfo() const override;
     void setSendAnonymousUsageInfo(bool allow) override;

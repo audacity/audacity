@@ -325,7 +325,7 @@ MenuItem* AppMenuModel::makeRecordMenu()
         makeMenuItem("record-on-current-track"),
         makeMenuItem("record-on-new-track"),
         makeMenuItem("set-up-timed-recording"),
-        makeMenuItem("punch-and-roll-record"),
+        makeMenuItem("action://record/lead-in-recording"),
         makeSeparator(),
         makeMenuItem("toggle-sound-activated-recording"),
         makeMenuItem("set-sound-activation-level"),
@@ -643,12 +643,11 @@ MenuItemList AppMenuModel::makeZoomItems()
     MenuItemList items {
         makeMenuItem("zoom-in"),
         makeMenuItem("zoom-out"),
+        makeMenuItem("zoom-default"),
         makeMenuItem("zoom-to-selection"),
         makeMenuItem("zoom-toggle"),
-        makeMenuItem("zoom-reset"),
         makeSeparator(),
         makeMenuItem("zoom-to-fit-project"),
-        makeMenuItem("fit-view-to-project"),
         makeMenuItem("collapse-all-tracks"),
         makeMenuItem("expand-all-tracks")
     };

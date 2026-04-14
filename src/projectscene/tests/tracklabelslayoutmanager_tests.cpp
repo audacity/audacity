@@ -50,7 +50,7 @@ protected:
         trackedit::TrackItemKey key(1, itemId);
         m_labelsModel->m_allLabelList.push_back(au::trackedit::Label { key,
                                                                        title,
-                                                                       muse::draw::Color(255, 255, 255), startTime, endTime });
+                                                                       1, startTime, endTime });
 
         ON_CALL(*m_trackEditProject, label(key))
         .WillByDefault(testing::Return(m_labelsModel->m_allLabelList.back()));

@@ -7,16 +7,34 @@
 #include "modularity/ioc.h"
 
 #include "internal/au3/au3importer.h"
+#include "internal/importerconfiguration.h"
+
+#include "RegisterImportPlugins.h" // from au3/modules/import-export/ see IMPORT_EXPORT_MODULE in au3wrapDefs.cmake
 
 using namespace au::importexport;
 
 static const std::string mname("importer");
 
-ImporterModule::ImporterModule() {}
+ImporterModule::ImporterModule()
+{
+    RegisterImportPlugins();
+}
 
 std::string ImporterModule::moduleName() const
 {
     return mname;
+}
+
+void ImporterModule::registerExports()
+{
+    m_configuration = std::make_shared<ImporterConfiguration>();
+
+    globalIoc()->registerExport<IImporterConfiguration>(mname, m_configuration);
+}
+
+void ImporterModule::onInit(const muse::IApplication::RunMode&)
+{
+    m_configuration->init();
 }
 
 muse::modularity::IContextSetup* ImporterModule::newContext(const muse::modularity::ContextPtr& ctx) const
@@ -37,7 +55,6 @@ void ImporterContext::registerExports()
 
 void ImporterContext::onInit(const muse::IApplication::RunMode&)
 {
-    m_importer->init();
 }
 
 void ImporterContext::onDeinit()

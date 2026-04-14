@@ -444,7 +444,7 @@ bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudI
         return false;
     }
 
-    if (!authorization()->ensureAuthorization()) {
+    if (!ensureAuthorization()) {
         return false;
     }
 
@@ -798,7 +798,7 @@ Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, cons
         return make_ret(Ret::Code::NotSupported);
     }
 
-    if (!authorization()->ensureAuthorization()) {
+    if (!ensureAuthorization()) {
         return make_ret(Ret::Code::Cancel);
     }
 
@@ -816,7 +816,7 @@ Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, cons
             return;
         }
 
-        if (!authorization()->ensureAuthorization()) {
+        if (!ensureAuthorization()) {
             return;
         }
 
@@ -1107,6 +1107,21 @@ void ProjectActionsController::openMetadataDialog()
 void ProjectActionsController::openCustomMapping()
 {
     interactive()->open(CUSTOM_MAPPING);
+}
+
+muse::Ret ProjectActionsController::ensureAuthorization()
+{
+    if (authorization()->isAuthorized()) {
+        return make_ret(Ret::Code::Ok);
+    }
+
+    muse::actions::ActionQuery query("audacity://cloud/open-signin-dialog");
+    query.addParam("sync", muse::Val(true));
+    query.addParam("showTourPage", muse::Val(false));
+
+    dispatcher()->dispatch(query);
+
+    return authorization()->isAuthorized() ? make_ret(Ret::Code::Ok) : make_ret(Ret::Code::Cancel);
 }
 
 namespace {

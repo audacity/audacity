@@ -11,9 +11,11 @@ Paul Licameli split from AudacityProject.h
 #ifndef __AUDACITY_PROJECT_FILE_IO__
 #define __AUDACITY_PROJECT_FILE_IO__
 
+#include <cstdint>
 #include <memory>
 #include <optional>
 #include <unordered_set>
+#include <vector>
 
 #include <wx/event.h>
 
@@ -180,6 +182,10 @@ private:
 public:
     //! Remove any files associated with a project at given path; return true if successful
     static bool RemoveProject(const FilePath& filename);
+
+    // Read only the thumbnail blob from a project file without opening it fully.
+    // Returns none if the file has no thumbnail or cannot be read.
+    static std::optional<std::vector<uint8_t> > ReadThumbnail(const FilePath& fileName);
 
     // Object manages the temporary backing-up of project paths while
     // trying to overwrite with new contents, and restoration in case of failure

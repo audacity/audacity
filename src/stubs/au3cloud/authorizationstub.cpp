@@ -38,12 +38,3 @@ bool AuthorizationStub::isAuthorized() const
 {
     return false;
 }
-
-muse::Ret AuthorizationStub::ensureAuthorization()
-{
-    return muse::make_ret(muse::Ret::Code::NotSupported);
-}
-
-void AuthorizationStub::openSignInDialog()
-{
-}

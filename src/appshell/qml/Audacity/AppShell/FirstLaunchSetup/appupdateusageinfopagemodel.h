@@ -15,7 +15,7 @@ class AppUpdateUsageInfoPageModel : public QObject, public muse::Contextable
     Q_OBJECT
     QML_ELEMENT
 
-    muse::ContextInject<au::au3cloud::IUsageInfo> usageInfo { this };
+    muse::GlobalInject<au::au3cloud::IUsageInfo> usageInfo;
 
 public:
     explicit AppUpdateUsageInfoPageModel(QObject* parent = nullptr);

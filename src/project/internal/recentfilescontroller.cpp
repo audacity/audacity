@@ -21,12 +21,10 @@
  */
 #include "recentfilescontroller.h"
 
-#include "global/concurrency/concurrent.h"
-#include "global/async/async.h"
-#include "global/defer.h"
-#include "global/serialization/json.h"
-
-#include "multiwindows/resourcelockguard.h"
+#include "framework/global/async/async.h"
+#include "framework/global/defer.h"
+#include "framework/global/serialization/json.h"
+#include "framework/multiwindows/resourcelockguard.h"
 
 using namespace au::project;
 using namespace muse;
@@ -206,8 +204,6 @@ void RecentFilesController::setRecentFilesList(const RecentFilesList& list, cons
 
     m_recentFilesList = list;
 
-    cleanUpThumbnailCache(list);
-
     if (saveAndNotify) {
         saveRecentFilesList();
 
@@ -244,52 +240,4 @@ void RecentFilesController::saveRecentFilesList() const
     if (!ret) {
         LOGE() << "Failed to save recent files list: " << ret.toString();
     }
-}
-
-Promise<QPixmap> RecentFilesController::thumbnail(const muse::io::path_t& filePath) const
-{
-    // TODO: doublecheck if this code is used anywhere
-    return Promise<QPixmap>([this, filePath](const auto& resolve, const auto& reject) {
-        if (filePath.empty()) {
-            return reject(static_cast<int>(Ret::Code::UnknownError), "Invalid file specified");
-        }
-
-        Concurrent::run([this, filePath, resolve, reject]() {
-            std::lock_guard lock(m_thumbnailCacheMutex);
-
-            DateTime lastModified = fileSystem()->lastModified(filePath);
-
-            auto it = m_thumbnailCache.find(filePath);
-            if (it != m_thumbnailCache.cend()) {
-                if (lastModified == it->second.lastModified) {
-                    (void)resolve(it->second.thumbnail);
-                    return;
-                }
-            }
-        });
-
-        return Promise<QPixmap>::Result::unchecked();
-    }, PromiseType::AsyncByBody);
-}
-
-void RecentFilesController::cleanUpThumbnailCache(const RecentFilesList& files) const
-{
-    Concurrent::run([this, files] {
-        std::lock_guard lock(m_thumbnailCacheMutex);
-
-        if (files.empty()) {
-            m_thumbnailCache.clear();
-        } else {
-            std::map<muse::io::path_t, CachedThumbnail> cleanedCache;
-
-            for (const RecentFile& file : files) {
-                auto it = m_thumbnailCache.find(file.path);
-                if (it != m_thumbnailCache.cend()) {
-                    cleanedCache[file.path] = it->second;
-                }
-            }
-
-            m_thumbnailCache = cleanedCache;
-        }
-    });
 }

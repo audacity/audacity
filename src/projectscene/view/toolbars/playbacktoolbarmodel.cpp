@@ -170,20 +170,23 @@ void PlaybackToolBarModel::updatePlayState()
 
     bool isPlaying = playbackController()->isPlaying();
     bool isRecording = recordController()->isRecording();
+    bool isLeadIn = recordController()->isLeadInRecording();
 
-    ActionCode code = isPlaying ? PLAYBACK_PAUSE_QUERY.toString() : PLAYBACK_PLAY_QUERY.toString();
-    if (isRecording) {
+    ActionCode code = (isPlaying || isLeadIn) ? PLAYBACK_PAUSE_QUERY.toString() : PLAYBACK_PLAY_QUERY.toString();
+    if (isRecording && !isLeadIn) {
         code = RECORD_PAUSE_QUERY.toString();
     }
 
     UiAction action = uiActionsRegister()->action(code);
     item->setAction(action);
 
-    item->setSelected(isPlaying);
+    // During lead-in, show as playing (green background) since audio is playing back
+    bool showAsPlaying = isPlaying || isLeadIn;
+    item->setSelected(showAsPlaying);
 
     QColor iconColor = uiConfiguration()->currentTheme().values.value(muse::ui::PLAY_COLOR).value<QColor>();
     QColor backgroundColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::BUTTON_COLOR).toString());
-    if (isPlaying) {
+    if (showAsPlaying) {
         iconColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::FONT_PRIMARY_COLOR).toString());
         backgroundColor = uiConfiguration()->currentTheme().values.value(muse::ui::PLAY_COLOR).value<QColor>();
     } else if (isRecording) {
@@ -219,12 +222,14 @@ void PlaybackToolBarModel::updateRecordState()
     }
 
     bool isRecording = recordController()->isRecording();
+    bool isLeadIn = recordController()->isLeadInRecording();
 
-    item->setSelected(isRecording);
+    // During lead-in pre-roll, the button should not appear as actively recording
+    item->setSelected(isRecording && !isLeadIn);
 
     QColor iconColor = uiConfiguration()->currentTheme().values.value(muse::ui::RECORD_COLOR).value<QColor>();
     QColor backgroundColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::BUTTON_COLOR).toString());
-    if (isRecording) {
+    if (isRecording && !isLeadIn) {
         iconColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::BACKGROUND_PRIMARY_COLOR).toString());
         backgroundColor = uiConfiguration()->currentTheme().values.value(muse::ui::RECORD_COLOR).value<QColor>();
     }

@@ -1726,15 +1726,13 @@ void TrackeditActionsController::setClipColor(const muse::actions::ActionQuery& 
         return;
     }
 
-    std::string newColor;
-    if (q.contains("color")) {
-        newColor = q.param("color").toString();
-    } else {
-        newColor = "";
+    trackedit::ClipColorIndex colorIndex = trackedit::CLIP_COLOR_INDEX_NONE;
+    if (q.contains("colorindex")) {
+        colorIndex = q.param("colorindex").toInt();
     }
 
     auto clipKey = selectedClips.front();
-    trackeditInteraction()->changeClipColor(clipKey, newColor);
+    trackeditInteraction()->changeClipColor(clipKey, colorIndex);
     notifyActionCheckedChanged(q.toString());
 }
 
@@ -1745,14 +1743,12 @@ void TrackeditActionsController::setTrackColor(const muse::actions::ActionQuery&
         return;
     }
 
-    std::string color;
-    if (q.contains("color")) {
-        color = q.param("color").toString();
-    } else {
-        color = "";
+    trackedit::ClipColorIndex colorIndex = trackedit::CLIP_COLOR_INDEX_NONE;
+    if (q.contains("colorindex")) {
+        colorIndex = q.param("colorindex").toInt();
     }
 
-    trackeditInteraction()->changeTracksColor(tracks, color);
+    trackeditInteraction()->changeTracksColor(tracks, colorIndex);
     notifyActionCheckedChanged(q.toString());
 }
 

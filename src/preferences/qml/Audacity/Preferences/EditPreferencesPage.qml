@@ -32,6 +32,12 @@ PreferencesPage {
 
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
         }
 
         SeparatorLine {}
@@ -44,6 +50,12 @@ PreferencesPage {
 
             navigation.section: root.navigationSection
             navigation.order: effectBehaviorSection.navigationOrderEnd + 1
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
         }
 
         SeparatorLine {}
@@ -56,6 +68,12 @@ PreferencesPage {
 
             navigation.section: root.navigationSection
             navigation.order: deleteBehaviorSection.navigationOrderEnd + 1
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
         }
 
         SeparatorLine {}
@@ -67,6 +85,12 @@ PreferencesPage {
 
             navigation.section: root.navigationSection
             navigation.order: pasteBehaviorSection.navigationOrderEnd + 1
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
         }
 
         SeparatorLine {}
@@ -79,8 +103,41 @@ PreferencesPage {
             navigation.section: root.navigationSection
             navigation.order: asymmetricStereoHeightsSection.navigationOrderEnd + 1
 
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
+
             onAskBeforeConvertingChanged: {
                 editPreferencesModel.askBeforeConvertingToMonoOrStereo = askBeforeConverting
+            }
+        }
+
+        SeparatorLine {}
+
+        ZoomToggleSection {
+            id: zoomToggleSection
+
+            zoomPresetModel: editPreferencesModel.zoomPresetList
+            zoomPreset1: editPreferencesModel.zoomPreset1
+            zoomPreset2: editPreferencesModel.zoomPreset2
+
+            navigation.section: root.navigationSection
+            navigation.order: monoStereoConversionSection.navigationOrderEnd + 1
+
+            onZoomPreset1ChangeRequested: function(preset) {
+                editPreferencesModel.setZoomPreset1(preset)
+            }
+
+            onZoomPreset2ChangeRequested: function(preset) {
+                editPreferencesModel.setZoomPreset2(preset)
+            }
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
             }
         }
     }

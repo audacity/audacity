@@ -25,7 +25,6 @@ class Track;
 class TrackList;
 class WaveTrack;
 class XMLTagHandler;
-class ClipMirAudioReader;
 
 using TrackHolders = std::vector<std::shared_ptr<Track> >;
 
@@ -112,11 +111,7 @@ public:
                           const std::function<void(const TranslatableString& /*unlinkReason*/)>& onUnlink);
 
 private:
-    bool ImportAndRunTempoDetection(
-        const std::vector<FilePath>& fileNames, bool addToHistory);
-
-    bool DoImport(
-        const FilePath& fileName, bool addToHistory, std::shared_ptr<ClipMirAudioReader>& resultingReader);
+    bool DoImport(const FilePath& fileName, bool addToHistory);
 
     /*!
      @param fileName a path assumed to exist and contain an .aup3 project

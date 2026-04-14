@@ -41,7 +41,9 @@ public:
     void setIsEffectsPanelVisible(bool visible) override;
     muse::async::Notification isEffectsPanelVisibleChanged() const override;
 
-    const std::vector<std::pair<std::string, std::string> >& clipColors() const override;
+    const std::vector<ClipColorInfo>& clipColorInfos() const override;
+    muse::Color clipColor(trackedit::ClipColorIndex index) const override;
+    muse::Color clipSelectedColor(trackedit::ClipColorIndex index) const override;
 
     ClipStyles::Style clipStyle() const override;
     void setClipStyle(ClipStyles::Style style) override;
@@ -77,6 +79,11 @@ public:
 
     int labelEditorColumnFormat(const std::string& columnName) const override;
     void setLabelEditorColumnFormat(const std::string& columnName, int format) const override;
+
+    ZoomPresets::Preset zoomPreset1() const override;
+    void setZoomPreset1(ZoomPresets::Preset preset) override;
+    ZoomPresets::Preset zoomPreset2() const override;
+    void setZoomPreset2(ZoomPresets::Preset preset) override;
 
 private:
     muse::ByteArray labelEditorColumnFormatJson() const;

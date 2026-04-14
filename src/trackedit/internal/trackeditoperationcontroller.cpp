@@ -107,14 +107,14 @@ bool TrackeditOperationController::resetClipSpeed(const ClipKey& clipKey)
     return false;
 }
 
-bool TrackeditOperationController::changeClipColor(const ClipKey& clipKey, const std::string& color)
+bool TrackeditOperationController::changeClipColor(const ClipKey& clipKey, ClipColorIndex colorIndex)
 {
-    return clipsInteraction()->changeClipColor(clipKey, color);
+    return clipsInteraction()->changeClipColor(clipKey, colorIndex);
 }
 
-bool TrackeditOperationController::changeTracksColor(const TrackIdList& tracksIds, const std::string& color)
+bool TrackeditOperationController::changeTracksColor(const TrackIdList& tracksIds, ClipColorIndex colorIndex)
 {
-    if (tracksInteraction()->changeTracksColor(tracksIds, color)) {
+    if (tracksInteraction()->changeTracksColor(tracksIds, colorIndex)) {
         projectHistory()->pushHistoryState("Changed track color", "Changed track color");
         return true;
     }

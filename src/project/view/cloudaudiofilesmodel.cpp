@@ -27,7 +27,11 @@ void CloudAudioFilesModel::load()
             setState(State::Loading);
             loadItemsIfNecessary();
         } else {
-            authorization()->openSignInDialog();
+            muse::actions::ActionQuery query("audacity://cloud/open-signin-dialog");
+            query.addParam("sync", muse::Val(false));
+            query.addParam("showTourPage", muse::Val(false));
+            dispatcher()->dispatch(query);
+
             setState(State::NotSignedIn);
         }
     };
@@ -141,7 +145,6 @@ void CloudAudioFilesModel::loadItemsIfNecessary()
                     obj[FILE_SIZE_KEY] = (item.fileSize > 0) ? DataFormatter::formatFileSize(item.fileSize).toQString() : QString();
                     obj[DURATION_KEY] = (item.duration > 0) ? QTime(0, 0).addMSecs(static_cast<int>(item.duration)).toString(
                         "hh:mm:ss") : QString();
-                    obj[THUMBNAIL_URL_KEY] = "";
                     obj[IS_CREATE_NEW_KEY] = false;
                     obj[IS_NO_RESULTS_FOUND_KEY] = false;
 

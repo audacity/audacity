@@ -67,8 +67,6 @@ set( SOURCES
       $<$<BOOL:${${_OPT}bundle_gplv3}>:AboutDialogGPLv3Text.cpp>
       AdornedRulerPanel.cpp
       AdornedRulerPanel.h
-      AnalyzedWaveClip.cpp
-      AnalyzedWaveClip.h
       AudacityApp.cpp
       AudacityApp.h
       $<$<BOOL:${wxIS_MAC}>:AudacityApp.mm>
@@ -76,8 +74,6 @@ set( SOURCES
       AudacityFileConfig.h
       AudacityHeaders.cpp
       AudacityHeaders.h
-      AudacityMirProject.cpp
-      AudacityMirProject.h
       AudioPasteDialog.cpp
       AudioPasteDialog.h
       AutoRecoveryDialog.cpp
@@ -94,8 +90,6 @@ set( SOURCES
       CellularPanel.h
       Clipboard.cpp
       Clipboard.h
-      ClipMirAudioReader.cpp
-      ClipMirAudioReader.h
       CommonCommandFlags.cpp
       CommonCommandFlags.h
       CrashReport.cpp
@@ -1282,7 +1276,6 @@ set( AUDACITY_LIBRARIES
    lib-export-ui-interface
    lib-wave-track-paint-interface
    lib-wave-track-fft-interface
-   lib-music-information-retrieval-interface
    lib-preference-pages-interface
    lib-audacity-application-logic-interface
    lib-builtin-effects-interface

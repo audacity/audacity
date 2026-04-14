@@ -89,16 +89,15 @@ TEST_F(Au3TracksInteractionTests, ChangeTrackColor)
     const std::shared_ptr<Au3WaveClip> au3Clip = DomAccessor::findWaveClip(project, trackMinSilenceId, 0);
 
     //! [WHEN] Change the color of the track
-    m_tracksInteraction->changeTracksColor({ trackMinSilenceId }, "#48BECF");
+    m_tracksInteraction->changeTracksColor({ trackMinSilenceId }, 9);
 
-    //! [THEN] Clip color is cleared to follow the track color
+    //! [THEN] Clip color index is cleared to follow the track color
     const std::shared_ptr<Au3WaveClip> au3UpdatedClip = DomAccessor::findWaveClip(project, trackMinSilenceId, 0);
-    EXPECT_EQ(au3UpdatedClip->GetColor(), "");
+    EXPECT_EQ(au3UpdatedClip->GetColorIndex(), 0);
 
-    //! [THEN] Track color is changed
+    //! [THEN] Track color index is changed
     const auto& waveTrack = DomAccessor::findWaveTrack(project, Au3TrackId { trackMinSilenceId });
-    const auto& trackColor = TrackColor::Get(waveTrack).GetColor();
-    EXPECT_EQ(trackColor.toString(), "#48BECF");
+    EXPECT_EQ(TrackColor::Get(waveTrack).GetColorIndex(), 9);
 
     // Cleanup
     removeTrack(trackMinSilenceId);

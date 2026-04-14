@@ -12,7 +12,11 @@
 
 #include "../../iimporter.h"
 
+#include <memory>
+
 namespace au::importexport {
+class TempoDetection;
+
 class Au3Importer : public IImporter, public muse::Contextable
 {
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
@@ -20,10 +24,8 @@ class Au3Importer : public IImporter, public muse::Contextable
     muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
 
 public:
-    Au3Importer(const muse::modularity::ContextPtr& ctx)
-        : muse::Contextable(ctx) {}
-
-    void init() override;
+    Au3Importer(const muse::modularity::ContextPtr& ctx);
+    ~Au3Importer() override;
 
     FileInfo fileInfo(const muse::io::path_t& filePath) override;
 
@@ -33,7 +35,10 @@ public:
     std::vector<std::string> supportedExtensions() const override;
 
 private:
+    bool isProjectEmpty() const;
     void applyImportedProjectTitleIfNeeded(const muse::io::path_t& filePath);
-    void addImportedTracks(const muse::io::path_t& fileName, TrackHolders&& newTracks);
+    void addImportedTracks(const muse::io::path_t& fileName, TrackHolders&& newTracks, std::vector<WaveTrack*>* outWaveTracks = nullptr);
+
+    const std::unique_ptr<TempoDetection> m_tempoDetection;
 };
 }

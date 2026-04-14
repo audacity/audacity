@@ -56,6 +56,7 @@ struct SelectionInfo {
     const double endTime = 0.0;
     const double startFrequency = UndefinedFrequency;
     const double endFrequency = UndefinedFrequency;
+    const bool clipSelected = false;
 };
 
 struct ClipChannelInfo {

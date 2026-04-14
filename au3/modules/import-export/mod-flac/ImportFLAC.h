@@ -90,5 +90,5 @@ private:
     FLAC__uint64 mNumSamples;
     FLAC__uint64 mSamplesDone;
     bool mStreamInfoDone;
-    WaveTrack::Holder mTrack;
+    TrackListHolder mTracks;
 };

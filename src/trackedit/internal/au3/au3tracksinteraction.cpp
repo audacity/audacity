@@ -112,7 +112,7 @@ bool Au3TracksInteraction::changeTrackTitle(const TrackId trackId, const muse::S
     return true;
 }
 
-bool Au3TracksInteraction::changeTracksColor(const TrackIdList& tracksIds, const std::string& color)
+bool Au3TracksInteraction::changeTracksColor(const TrackIdList& tracksIds, ClipColorIndex colorIndex)
 {
     for (const TrackId& trackId : tracksIds) {
         Au3Track* track = DomAccessor::findTrack(projectRef(), ::TrackId(trackId));
@@ -121,15 +121,15 @@ bool Au3TracksInteraction::changeTracksColor(const TrackIdList& tracksIds, const
         }
 
         auto& trackColor = TrackColor::Get(track);
-        trackColor.SetColor(muse::draw::Color::fromString(color));
+        trackColor.SetColorIndex(colorIndex);
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         prj->notifyAboutTrackChanged(DomConverter::track(track));
 
         if (Au3WaveTrack* waveTrack = dynamic_cast<Au3WaveTrack*>(track)) {
             for (auto& clips: DomAccessor::waveClipsAsList(waveTrack)) {
-                //Set it back to auto
-                clips->SetColor("");
+                //Set it back to auto (inherit from track)
+                clips->SetColorIndex(CLIP_COLOR_INDEX_NONE);
                 prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clips.get()));
             }
         } else if (Au3LabelTrack* labelTrack = dynamic_cast<Au3LabelTrack*>(track)) {

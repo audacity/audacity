@@ -217,7 +217,7 @@ module.exports = {
     {
         api.keyboard.key("Shift+R")
     },
-    PunchAndRoll: function()
+    LeadInRecording: function()
     {
         api.keyboard.key("Shift+D")
     },

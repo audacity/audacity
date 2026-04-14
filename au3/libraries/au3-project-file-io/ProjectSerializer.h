@@ -58,6 +58,7 @@ public:
 
     void WriteData(const wxString& value) override;
     void Write(const wxString& data) override;
+    void WriteBlob(const wxString& name, const void* data, size_t size);
 
     const MemoryStream& GetDict() const;
     const MemoryStream& GetData() const;

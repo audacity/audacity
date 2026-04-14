@@ -17,6 +17,7 @@ set( SOURCES
       FFmpegPresets.cpp
       FFmpegPresets.h
       ImportFFmpeg.cpp
+      ImportFFmpeg.h
 )
 
 set( LIBRARIES
