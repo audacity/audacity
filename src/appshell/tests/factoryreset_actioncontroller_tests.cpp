@@ -269,4 +269,30 @@ TEST_F(FactoryResetActionTests, ConfirmRestart_MultiWindow_QuitsAll)
     confirmWarningDialog();
     confirmRestartDialog();
 }
+
+/**
+ * @brief Confirm both dialogs, but user rejects project close — no restart.
+ */
+TEST_F(FactoryResetActionTests, ConfirmRestart_ProjectCloseRejected_NoRestart)
+{
+    //! [GIVEN] Restart dialog will appear
+    setupRestartDialog();
+
+    //! [GIVEN] Project close is rejected by user
+    EXPECT_CALL(*m_projectFilesController, closeOpenedProject(false))
+    .WillOnce(Return(false));
+
+    //! [THEN] Settings are still reset (happens before restart attempt)
+    EXPECT_CALL(*m_configuration, revertToFactorySettings(false, false, false))
+    .Times(1);
+
+    //! [THEN] No restart occurs
+    EXPECT_CALL(*m_application, restart()).Times(0);
+    EXPECT_CALL(*m_multiWindowsProvider, quitAllAndRestartLast()).Times(0);
+
+    //! [WHEN] User confirms both dialogs
+    triggerRevertToFactory();
+    confirmWarningDialog();
+    confirmRestartDialog();
+}
 }
