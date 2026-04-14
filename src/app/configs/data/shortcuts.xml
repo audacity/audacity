@@ -151,12 +151,12 @@
     </SC>
 
     <SC>
-        <key>track-view-next-track</key>
-        <seq>Down</seq>
+        <key>track-view-above-item</key>
+        <seq>Up</seq>
     </SC>
     <SC>
-        <key>track-view-prev-track</key>
-        <seq>Up</seq>
+        <key>track-view-below-item</key>
+        <seq>Down</seq>
     </SC>
     <SC>
         <key>track-view-first-track</key>

@@ -72,8 +72,13 @@ private:
 
     void navigateToNextItem();
     void navigateToPrevItem();
+    void navigateToAboveItem();
+    void navigateToBelowItem();
     void navigateToFirstItem();
     void navigateToLastItem();
+
+    TrackItemKey findClosestItemOnTrack(const TrackId& trackId, double referenceStartTime) const;
+    double itemStartTime(const TrackItemKey& key) const;
 
     void toggleSelection();
     void trackRangeSelection();
@@ -93,6 +98,8 @@ private:
 
     std::optional<TrackId> m_selectionStart;
     std::optional<TrackId> m_lastSelectedTrack;
+
+    std::optional<double> m_savedItemStartTime;
 
     TrackItemKey m_focusedItemKey;
     muse::async::Channel<TrackItemKey, bool /*highlight*/> m_focusedItemChanged;

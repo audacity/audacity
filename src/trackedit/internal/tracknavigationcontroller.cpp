@@ -28,6 +28,8 @@ static const muse::actions::ActionCode TRACK_VIEW_TRACK_SELECTION_NEXT_CODE("tra
 
 static const muse::actions::ActionCode TRACK_VIEW_NEXT_ITEM_CODE("track-view-next-item");
 static const muse::actions::ActionCode TRACK_VIEW_PREV_ITEM_CODE("track-view-prev-item");
+static const muse::actions::ActionCode TRACK_VIEW_ABOVE_ITEM_CODE("track-view-above-item");
+static const muse::actions::ActionCode TRACK_VIEW_BELOW_ITEM_CODE("track-view-below-item");
 
 static const muse::actions::ActionCode TRACK_VIEW_ITEM_CONTEXT_MENU_CODE("track-view-item-context-menu");
 
@@ -45,6 +47,8 @@ void TrackNavigationController::init()
 
     dispatcher()->reg(this, TRACK_VIEW_NEXT_ITEM_CODE, this, &TrackNavigationController::navigateToNextItem);
     dispatcher()->reg(this, TRACK_VIEW_PREV_ITEM_CODE, this, &TrackNavigationController::navigateToPrevItem);
+    dispatcher()->reg(this, TRACK_VIEW_ABOVE_ITEM_CODE, this, &TrackNavigationController::navigateToAboveItem);
+    dispatcher()->reg(this, TRACK_VIEW_BELOW_ITEM_CODE, this, &TrackNavigationController::navigateToBelowItem);
 
     dispatcher()->reg(this, TRACK_VIEW_TOGGLE_SELECTION_CODE, this, &TrackNavigationController::toggleSelection);
     dispatcher()->reg(this, TRACK_RANGE_SELECTION_CODE, this, &TrackNavigationController::trackRangeSelection);
@@ -390,6 +394,8 @@ void TrackNavigationController::navigateToNextItem()
             break;
         }
     }
+
+    m_savedItemStartTime = std::nullopt;
 }
 
 void TrackNavigationController::navigateToPrevItem()
@@ -409,6 +415,145 @@ void TrackNavigationController::navigateToPrevItem()
                 setFocusedItem(itemsKeys.at(i - 1), true /*highlight*/);
             }
             break;
+        }
+    }
+
+    m_savedItemStartTime = std::nullopt;
+}
+
+double TrackNavigationController::itemStartTime(const TrackItemKey& key) const
+{
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return 0.0;
+    }
+
+    std::optional<Track> track = prj->track(key.trackId);
+    if (!track.has_value()) {
+        return 0.0;
+    }
+
+    if (track->type == TrackType::Label) {
+        Label l = prj->label(key);
+        return l.startTime;
+    }
+
+    Clip c = prj->clip(key);
+    return c.startTime;
+}
+
+TrackItemKey TrackNavigationController::findClosestItemOnTrack(const TrackId& trackId, double referenceStartTime) const
+{
+    TrackItemKeyList itemsKeys = sortedItemsKeys(trackId);
+    if (itemsKeys.empty()) {
+        return TrackItemKey { trackId, INVALID_TRACK_ITEM };
+    }
+
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return itemsKeys.front();
+    }
+
+    TrackItemKey closest = itemsKeys.front();
+    double closestDiff = std::numeric_limits<double>::max();
+
+    std::optional<Track> track = prj->track(trackId);
+    if (!track.has_value()) {
+        return closest;
+    }
+
+    for (const auto& itemKey : itemsKeys) {
+        double st = 0.0;
+        if (track->type == TrackType::Label) {
+            Label l = prj->label(itemKey);
+            st = l.startTime;
+        } else {
+            Clip c = prj->clip(itemKey);
+            st = c.startTime;
+        }
+
+        double diff = std::abs(st - referenceStartTime);
+        if (diff < closestDiff) {
+            closestDiff = diff;
+            closest = itemKey;
+        }
+    }
+
+    return closest;
+}
+
+void TrackNavigationController::navigateToAboveItem()
+{
+    if (m_focusedItemKey.itemId == INVALID_TRACK_ITEM) {
+        navigateToPrevTrack();
+        return;
+    }
+
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return;
+    }
+
+    std::vector<Track> trackList = prj->trackList();
+    if (trackList.empty()) {
+        return;
+    }
+
+    if (!m_savedItemStartTime.has_value()) {
+        m_savedItemStartTime = itemStartTime(m_focusedItemKey);
+    }
+
+    const TrackId currentTrackId = m_focusedItemKey.trackId;
+
+    for (size_t i = 0; i < trackList.size(); ++i) {
+        if (trackList[i].id == currentTrackId) {
+            for (size_t j = i; j > 0; --j) {
+                TrackId candidateId = trackList[j - 1].id;
+                if (!isTrackItemsEmpty(candidateId)) {
+                    TrackItemKey closest = findClosestItemOnTrack(candidateId, *m_savedItemStartTime);
+                    setFocusedItem(closest, true /*highlight*/);
+                    return;
+                }
+            }
+            return;
+        }
+    }
+}
+
+void TrackNavigationController::navigateToBelowItem()
+{
+    if (m_focusedItemKey.itemId == INVALID_TRACK_ITEM) {
+        navigateToNextTrack();
+        return;
+    }
+
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return;
+    }
+
+    std::vector<Track> trackList = prj->trackList();
+    if (trackList.empty()) {
+        return;
+    }
+
+    if (!m_savedItemStartTime.has_value()) {
+        m_savedItemStartTime = itemStartTime(m_focusedItemKey);
+    }
+
+    const TrackId currentTrackId = m_focusedItemKey.trackId;
+
+    for (size_t i = 0; i < trackList.size(); ++i) {
+        if (trackList[i].id == currentTrackId) {
+            for (size_t j = i + 1; j < trackList.size(); ++j) {
+                TrackId candidateId = trackList[j].id;
+                if (!isTrackItemsEmpty(candidateId)) {
+                    TrackItemKey closest = findClosestItemOnTrack(candidateId, *m_savedItemStartTime);
+                    setFocusedItem(closest, true /*highlight*/);
+                    return;
+                }
+            }
+            return;
         }
     }
 }
