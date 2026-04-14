@@ -196,6 +196,10 @@ void Au3Record::init()
 {
     m_audioInput = std::make_shared<Au3AudioInput>(iocContext());
 
+    m_smoothRecordTimer.setInterval(16);
+    m_smoothRecordTimer.setTimerType(Qt::PreciseTimer);
+    m_smoothRecordTimer.callOnTimeout([this]() { updateSmoothRecordPosition(); });
+
     audioEngine()->updateRequested().onNotify(this, [this]() {
         if (m_recordData.empty()) {
             return;
@@ -256,8 +260,14 @@ void Au3Record::init()
             trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
             prj->notifyAboutClipAdded(DomConverter::clip(origWaveTrack, origClip.get()));
 
-            if (!muse::RealIsEqual(m_recordPosition.val.to_double(), origClip->GetPlayEndTime())) {
-                m_recordPosition.set(origClip->GetPlayEndTime());
+            // Recalibrate smooth interpolation anchor to actual data position
+            double actualEndTime = origClip->GetPlayEndTime();
+            m_wallClockAnchor = std::chrono::steady_clock::now();
+            m_anchorPosition = actualEndTime;
+
+            // Start smooth timer now that recording has begun (deferred clip case)
+            if (!m_smoothRecordTimer.isActive()) {
+                m_smoothRecordTimer.start();
             }
             return;
         }
@@ -281,9 +291,10 @@ void Au3Record::init()
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         prj->notifyAboutClipChanged(DomConverter::clip(origWaveTrack, origClip.get()));
 
-        if (!muse::RealIsEqual(m_recordPosition.val.to_double(), origClip->GetPlayEndTime())) {
-            m_recordPosition.set(origClip->GetPlayEndTime());
-        }
+        // Recalibrate smooth interpolation anchor to actual data position
+        double actualEndTime = origClip->GetPlayEndTime();
+        m_wallClockAnchor = std::chrono::steady_clock::now();
+        m_anchorPosition = actualEndTime;
     });
 
     audioEngine()->finished().onNotify(this, [this]() {

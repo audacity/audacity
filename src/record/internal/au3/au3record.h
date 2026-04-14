@@ -5,6 +5,8 @@
 #pragma once
 
 #include <vector>
+#include <chrono>
+#include <QTimer>
 
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
@@ -75,6 +77,8 @@ private:
 
     void notifyAboutRecordClipsChanged();
 
+    void updateSmoothRecordPosition();
+
     mutable muse::async::Channel<float> m_playbackVolumeChanged;
 
     IAudioInputPtr m_audioInput;
@@ -82,6 +86,11 @@ private:
 
     muse::ValCh<muse::secs_t> m_recordPosition;
     muse::async::Notification m_recordingFinished;
+
+    // Smooth recording position interpolation (16ms timer, like playback)
+    QTimer m_smoothRecordTimer;
+    std::chrono::steady_clock::time_point m_wallClockAnchor;
+    double m_anchorPosition = 0.0;
 
     context::IPlaybackStatePtr playbackState() const;
 };
