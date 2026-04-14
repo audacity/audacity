@@ -25,7 +25,7 @@ static const ActionQuery RECORD_LEAD_IN_RECORDING_QUERY("action://record/lead-in
 const UiActionList RecordUiActions::m_mainActions = {
     UiAction(RECORD_START_QUERY.toString(),
              au::context::UiCtxProjectOpened,
-             au::context::CTX_PROJECT_FOCUSED,
+             au::context::CTX_PROJECT_OPENED,
              TranslatableString("action", "Record"),
              TranslatableString("action", "Record"),
              IconCode::Code::RECORD_FILL
