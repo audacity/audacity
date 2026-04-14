@@ -13,6 +13,8 @@
 
 #include "framework/global/modularity/ioc.h"
 #include "framework/global/io/ifilesystem.h"
+
+#include "appshell/iappshellconfiguration.h"
 #include "project/iprojectconfiguration.h"
 #include "importexport/export/iexporter.h"
 #include "context/iglobalcontext.h"
@@ -28,6 +30,7 @@ class Au3AudioComService : public IAu3AudioComService, public muse::async::Async
 {
     muse::GlobalInject<muse::io::IFileSystem> filesystem;
     muse::GlobalInject<project::IProjectConfiguration> projectConfiguration;
+    muse::GlobalInject<appshell::IAppShellConfiguration> appshellConfiguration;
 
     muse::ContextInject<importexport::IExporter> exporter{ this };
     muse::ContextInject<context::IGlobalContext> globalContext { this };

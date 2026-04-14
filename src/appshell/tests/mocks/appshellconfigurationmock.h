@@ -52,7 +52,8 @@ public:
     MOCK_METHOD(void, rollbackSettings, (), (override));
     MOCK_METHOD(muse::async::Notification, settingsApplied, (), (const, override));
 
-    MOCK_METHOD(void, revertToFactorySettings, (bool, bool, bool), (const, override));
+    MOCK_METHOD(void, revertToFactorySettings, (bool, bool, bool), (override));
+    MOCK_METHOD(muse::async::Notification, aboutToRevertToFactorySettings, (), (const, override));
 
     MOCK_METHOD(muse::io::paths_t, sessionProjectsPaths, (), (const, override));
     MOCK_METHOD(muse::Ret, setSessionProjectsPaths, (const muse::io::paths_t&), (override));
