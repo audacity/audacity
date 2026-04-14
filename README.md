@@ -2,7 +2,7 @@
 
 [![Coverage](https://s3.us-east-1.amazonaws.com/extensions.musescore.org/test/code_coverage/au_coverage_badge.svg?)](https://github.com/audacity/audacity/actions/workflows/au4_check_unit_tests.yml)
 
-[**Audacity**](https://www.audacityteam.org) is an easy-to-use, multi-track audio editor and recorder for Windows, macOS, GNU/Linux and other operating systems.
+[**Audacity**](https://www.audacityteam.org) is an easy-to-use, multi-track audio editor and recorder for Windows, macOS, GNU/Linux and other operating systems. More info can be found on the [Audacity website](https://www.audacityteam.org).
 
 ## This repository is currently undergoing major structural change
 
