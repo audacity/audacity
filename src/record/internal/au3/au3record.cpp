@@ -260,13 +260,19 @@ void Au3Record::init()
             trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
             prj->notifyAboutClipAdded(DomConverter::clip(origWaveTrack, origClip.get()));
 
-            // Recalibrate smooth interpolation anchor to actual data position
+            // Recalibrate smooth interpolation anchor only if actual data is ahead
             double actualEndTime = origClip->GetPlayEndTime();
-            m_wallClockAnchor = std::chrono::steady_clock::now();
-            m_anchorPosition = actualEndTime;
+            double currentSmooth = m_anchorPosition
+                                   + std::chrono::duration<double>(std::chrono::steady_clock::now() - m_wallClockAnchor).count();
+            if (actualEndTime > currentSmooth) {
+                m_wallClockAnchor = std::chrono::steady_clock::now();
+                m_anchorPosition = actualEndTime;
+            }
 
             // Start smooth timer now that recording has begun (deferred clip case)
             if (!m_smoothRecordTimer.isActive()) {
+                m_anchorPosition = actualEndTime;
+                m_wallClockAnchor = std::chrono::steady_clock::now();
                 m_smoothRecordTimer.start();
             }
             return;
@@ -291,10 +297,14 @@ void Au3Record::init()
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         prj->notifyAboutClipChanged(DomConverter::clip(origWaveTrack, origClip.get()));
 
-        // Recalibrate smooth interpolation anchor to actual data position
+        // Recalibrate smooth interpolation anchor only if actual data is ahead
         double actualEndTime = origClip->GetPlayEndTime();
-        m_wallClockAnchor = std::chrono::steady_clock::now();
-        m_anchorPosition = actualEndTime;
+        double currentSmooth = m_anchorPosition
+                               + std::chrono::duration<double>(std::chrono::steady_clock::now() - m_wallClockAnchor).count();
+        if (actualEndTime > currentSmooth) {
+            m_wallClockAnchor = std::chrono::steady_clock::now();
+            m_anchorPosition = actualEndTime;
+        }
     });
 
     audioEngine()->finished().onNotify(this, [this]() {
@@ -629,7 +639,7 @@ secs_t Au3Record::recordPosition() const
     return m_recordPosition.val;
 }
 
-std::vector<trackedit::ClipKey> Au3Record::recordingClipKeys() const
+std::vector<au::trackedit::ClipKey> Au3Record::recordingClipKeys() const
 {
     std::vector<trackedit::ClipKey> keys;
     for (const auto& rd : m_recordData) {
