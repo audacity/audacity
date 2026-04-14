@@ -80,7 +80,9 @@ public:
     virtual muse::async::Notification settingsApplied() const = 0;
 
     virtual void revertToFactorySettings(bool keepDefaultSettings = false, bool notifyAboutChanges = true,
-                                         bool notifyOtherInstances = true) const = 0;
+                                         bool notifyOtherInstances = true) = 0;
+
+    virtual muse::async::Notification aboutToRevertToFactorySettings() const = 0;
 
     virtual muse::io::paths_t sessionProjectsPaths() const = 0;
     virtual muse::Ret setSessionProjectsPaths(const muse::io::paths_t& paths) = 0;

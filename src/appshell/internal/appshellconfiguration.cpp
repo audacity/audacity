@@ -21,10 +21,8 @@
  */
 #include "appshellconfiguration.h"
 
-#include <QFileInfo>
 #include <QJsonArray>
 #include <QJsonDocument>
-#include <QStandardPaths>
 
 #include "framework/global/settings.h"
 #include "framework/global/log.h"
@@ -225,9 +223,15 @@ muse::async::Notification AppShellConfiguration::settingsApplied() const
     return m_settingsApplied;
 }
 
-void AppShellConfiguration::revertToFactorySettings(bool keepDefaultSettings, bool notifyAboutChanges, bool notifyOtherInstances) const
+void AppShellConfiguration::revertToFactorySettings(bool keepDefaultSettings, bool notifyAboutChanges, bool notifyOtherInstances)
 {
+    m_aboutToRevertToFactorySettings.notify();
     settings()->reset(keepDefaultSettings, notifyAboutChanges, notifyOtherInstances);
+}
+
+muse::async::Notification AppShellConfiguration::aboutToRevertToFactorySettings() const
+{
+    return m_aboutToRevertToFactorySettings;
 }
 
 muse::io::paths_t AppShellConfiguration::sessionProjectsPaths() const
