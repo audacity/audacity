@@ -52,3 +52,7 @@ muse::ProgressPtr Au3AudioComServiceStub::resumeProjectSync(au::project::IAudaci
 {
     return nullptr;
 }
+
+void Au3AudioComServiceStub::deinit()
+{
+}
