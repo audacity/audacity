@@ -301,6 +301,7 @@ void Au3Record::init()
         if (m_recordData.empty()) {
             return;
         }
+        m_smoothRecordTimer.stop();
         m_recordPosition.set(m_recordPosition.val);
         m_recordingFinished.notify();
     });
@@ -309,6 +310,7 @@ void Au3Record::init()
         if (m_recordData.empty()) {
             return;
         }
+        m_smoothRecordTimer.stop();
         for (const RecordData& recordEntry : m_recordData) {
             // Skip deferred clips that were never created (cancelled during lead-in time)
             if (recordEntry.deferredClipCreation) {
@@ -442,6 +444,7 @@ muse::Ret Au3Record::pause()
         return make_ret(Err::RecordingStopError);
     }
 
+    m_smoothRecordTimer.stop();
     audioEngine()->pauseStream(true);
 
     return make_ok();
@@ -903,6 +906,16 @@ Ret Au3Record::doRecord(Au3Project& project,
 
     if (success) {
         ProjectAudioIO::Get(*p).SetAudioIOToken(token);
+
+        // Start smooth recording position timer (for non-deferred clips).
+        // Deferred clips (lead-in) start the timer in the recordingClipChanged handler.
+        bool hasNonDeferredClips = std::any_of(m_recordData.begin(), m_recordData.end(),
+                                               [](const RecordData& rd) { return !rd.deferredClipCreation; });
+        if (hasNonDeferredClips) {
+            m_anchorPosition = t0;
+            m_wallClockAnchor = std::chrono::steady_clock::now();
+            m_smoothRecordTimer.start();
+        }
     } else {
         cancelRecording();
 
@@ -915,8 +928,20 @@ Ret Au3Record::doRecord(Au3Project& project,
     return make_ok();
 }
 
+void Au3Record::updateSmoothRecordPosition()
+{
+    using namespace std::chrono;
+    double elapsed = duration<double>(steady_clock::now() - m_wallClockAnchor).count();
+    double smoothPos = m_anchorPosition + elapsed;
+
+    if (!muse::RealIsEqual(m_recordPosition.val.to_double(), smoothPos)) {
+        m_recordPosition.set(smoothPos);
+    }
+}
+
 void Au3Record::cancelRecording()
 {
+    m_smoothRecordTimer.stop();
     Au3Project& project = projectRef();
     PendingTracks::Get(project).ClearPendingTracks();
 }
