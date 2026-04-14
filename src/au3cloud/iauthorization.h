@@ -10,7 +10,7 @@
 
 #include "cloudtypes.h"
 namespace au::au3cloud {
-class IAuthorization : MODULE_EXPORT_INTERFACE
+class IAuthorization : MODULE_GLOBAL_INTERFACE
 {
     INTERFACE_ID(IAuthorization)
 
@@ -26,7 +26,5 @@ public:
 
     virtual muse::ValCh<AuthState> authState() const = 0;
     virtual bool isAuthorized() const = 0;
-    virtual muse::Ret ensureAuthorization() = 0;
-    virtual void openSignInDialog() = 0;
 };
 }

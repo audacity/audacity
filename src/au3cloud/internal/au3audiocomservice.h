@@ -80,7 +80,13 @@ private:
 
     std::mutex m_cacheMutex;
 
-    Observer::Subscription m_projectUploadSubscription;
+    struct UploadSubscriptionEntry {
+        Observer::Subscription subscription;
+        std::shared_ptr<std::atomic<bool> > done;
+    };
+    std::vector<UploadSubscriptionEntry> m_projectUploadSubscriptions;
+    std::mutex m_uploadSubscriptionsMutex;
+
     Observer::Subscription m_resumeSyncSubscription;
 };
 }

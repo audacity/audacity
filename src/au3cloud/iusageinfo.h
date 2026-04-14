@@ -6,7 +6,7 @@
 #include "framework/global/modularity/imoduleinterface.h"
 
 namespace au::au3cloud {
-class IUsageInfo : MODULE_EXPORT_INTERFACE
+class IUsageInfo : MODULE_GLOBAL_INTERFACE
 {
     INTERFACE_ID(IUsageInfo)
 public:

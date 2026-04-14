@@ -15,7 +15,7 @@ class CloudTestsModel : public QObject, public muse::async::Asyncable, public mu
 {
     Q_OBJECT
 
-    muse::ContextInject<IAuthorization> authorization = { this };
+    muse::GlobalInject<IAuthorization> authorization;
 
     Q_PROPERTY(bool isAuthorized READ isAuthorized NOTIFY isAuthorizedChanged)
     Q_PROPERTY(QUrl avatarPath READ avatarPath NOTIFY avatarPathChanged)
