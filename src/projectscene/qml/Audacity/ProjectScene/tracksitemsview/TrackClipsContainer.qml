@@ -258,12 +258,14 @@ TrackItemsContainer {
                         asynchronous: false
 
                         sourceComponent: {
-                            if ((itemData.x + itemData.width) < (0 - clipsModel.cacheBufferPx)) {
-                                return null
-                            }
+                            if (!itemData.focused) {
+                                if ((itemData.x + itemData.width) < (0 - clipsModel.cacheBufferPx)) {
+                                    return null
+                                }
 
-                            if (itemData.x > (clipsContainer.width + clipsModel.cacheBufferPx)) {
-                                return null
+                                if (itemData.x > (clipsContainer.width + clipsModel.cacheBufferPx)) {
+                                    return null
+                                }
                             }
 
                             //! NOTE This optimization is disabled, it is probably not needed,

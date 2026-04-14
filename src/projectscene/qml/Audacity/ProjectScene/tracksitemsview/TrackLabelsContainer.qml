@@ -146,12 +146,14 @@ TrackItemsContainer {
                         visible: y < root.height
 
                         sourceComponent: {
-                            if ((itemData.x + itemData.width) < (0 - labelsModel.cacheBufferPx)) {
-                                return null
-                            }
+                            if (!itemData.focused) {
+                                if ((itemData.x + itemData.width) < (0 - labelsModel.cacheBufferPx)) {
+                                    return null
+                                }
 
-                            if (itemData.x > (labelsContainer.width + labelsModel.cacheBufferPx)) {
-                                return null
+                                if (itemData.x > (labelsContainer.width + labelsModel.cacheBufferPx)) {
+                                    return null
+                                }
                             }
 
                             return labelComp
