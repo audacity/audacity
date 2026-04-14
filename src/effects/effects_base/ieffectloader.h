@@ -14,7 +14,8 @@ public:
     virtual ~IEffectLoader() = default;
 
     virtual EffectFamily family() const = 0;
-    virtual bool ensurePluginIsLoaded(const EffectId& effectId) const = 0;
+    virtual bool ensurePluginIsLoaded(const EffectId& effectId) = 0;
+    virtual Effect* effect(const EffectId& effectId) const = 0;
 };
 
 using IEffectLoaderPtr = std::shared_ptr<IEffectLoader>;

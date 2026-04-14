@@ -7,7 +7,7 @@
 #include "global/io/file.h"
 
 #include "au3-effects/Effect.h"
-#include "au3-effects/EffectManager.h"
+#include "au3-effects/EffectManager.h" // GetUserPresets
 #include "au3-module-manager/PluginManager.h"
 
 #include "au3wrap/internal/wxtypes_convert.h"
@@ -21,17 +21,13 @@ using namespace au::effects;
 
 static const PresetId DEFAULT_PRESET("default");
 
-const EffectSettingsManager& EffectPresetsProvider::settingsManager(const EffectId& effectId) const
-{
-    Effect* effect = effectsProvider()->effect(effectId);
-    DO_ASSERT(effect);
-    return effect->GetDefinition();
-}
-
 PresetIdList EffectPresetsProvider::factoryPresets(const EffectId& effectId) const
 {
-    const EffectSettingsManager& sm = settingsManager(effectId);
-    return sm.GetFactoryPresets();
+    const Effect* effect = effectsProvider()->effect(effectId);
+    IF_ASSERT_FAILED(effect) {
+        return {};
+    }
+    return effect->GetFactoryPresets();
 }
 
 PresetIdList EffectPresetsProvider::userPresets(const EffectId& effectId) const
@@ -57,7 +53,10 @@ muse::async::Channel<PresetSavedInfo> EffectPresetsProvider::presetSaved() const
 Ret EffectPresetsProvider::applyPreset(const EffectInstanceId& effectInstanceId, const PresetId& presetId)
 {
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(effectInstanceId);
-    const EffectSettingsManager& sm = settingsManager(effectId);
+    const Effect* effect = effectsProvider()->effect(effectId);
+    IF_ASSERT_FAILED(effect) {
+        return make_ret(Err::InternalError);
+    }
     const EffectSettingsAccessPtr access = instancesRegister()->settingsAccessById(effectInstanceId);
 
     Ret ret;
@@ -69,7 +68,7 @@ Ret EffectPresetsProvider::applyPreset(const EffectInstanceId& effectInstanceId,
         OptionalMessage msg;
         access->ModifySettings([&](EffectSettings& settings)
         {
-            msg = sm.LoadFactoryDefaults(settings);
+            msg = effect->LoadFactoryDefaults(settings);
             return nullptr;
         });
         ret = msg ? muse::make_ok() : make_ret(Err::InternalError);
@@ -87,7 +86,7 @@ Ret EffectPresetsProvider::applyPreset(const EffectInstanceId& effectInstanceId,
 
             OptionalMessage msg;
             access->ModifySettings([&](EffectSettings& settings) {
-                msg = sm.LoadFactoryPreset(idx, settings);
+                msg = effect->LoadFactoryPreset(idx, settings);
                 return nullptr;
             });
             ret = msg ? muse::make_ok() : make_ret(Err::InternalError);
@@ -101,7 +100,7 @@ Ret EffectPresetsProvider::applyPreset(const EffectInstanceId& effectInstanceId,
     if (!isApplied) {
         OptionalMessage msg;
         access->ModifySettings([&](EffectSettings& settings) {
-            msg = sm.LoadUserPreset(UserPresetsGroup(wxString(presetId)), settings);
+            msg = effect->LoadUserPreset(UserPresetsGroup(wxString(presetId)), settings);
             return nullptr;
         });
         ret = msg ? muse::make_ok() : make_ret(Err::InternalError);
@@ -129,7 +128,10 @@ bool EffectPresetsProvider::hasUserPresetWithName(const EffectId& effectId, cons
 Ret EffectPresetsProvider::saveCurrentAsPreset(const EffectInstanceId& effectInstanceId, const std::string& presetName)
 {
     const EffectId effectId = instancesRegister()->effectIdByInstanceId(effectInstanceId);
-    const EffectSettingsManager& sm = settingsManager(effectId);
+    const Effect* effect = effectsProvider()->effect(effectId);
+    IF_ASSERT_FAILED(effect) {
+        return make_ret(Err::InternalError);
+    }
 
     instancesRegister()->requestUpdateSettings(effectInstanceId);
     const EffectSettings* settings = instancesRegister()->settingsById(effectInstanceId);
@@ -137,7 +139,7 @@ Ret EffectPresetsProvider::saveCurrentAsPreset(const EffectInstanceId& effectIns
         return make_ret(Err::InternalError);
     }
 
-    bool ok = sm.SaveUserPreset(UserPresetsGroup(wxString(presetName)), *settings);
+    bool ok = effect->SaveUserPreset(UserPresetsGroup(wxString(presetName)), *settings);
 
     if (ok) {
         m_userPresetsChanged.send(effectId);

@@ -19,8 +19,7 @@ void au::effects::NyquistEffectsRepository::init()
 {
     for (const auto& meta : effectMetaList()) {
         if (meta.category == utils::effectCategoryToString(EffectCategory::SpectralTools)) {
-            const NyquistBase* const nyquistEffect
-                = dynamic_cast<const NyquistBase*>(EffectManager::Get().GetEffect(au3::wxFromString(meta.id)));
+            const NyquistBase* const nyquistEffect = dynamic_cast<const NyquistBase*>(effectsProvider()->effect(meta.id));
             if (!nyquistEffect) {
                 continue;
             }

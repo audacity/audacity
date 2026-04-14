@@ -126,7 +126,7 @@ void Lv2ViewModel::doInit()
     }
 
     const EffectId id = instancesRegister()->effectIdByInstanceId(instanceId());
-    const LV2Effect* const effect = dynamic_cast<LV2Effect*>(EffectManager::Get().GetEffect(id.toStdString()));
+    const LV2Effect* const effect = dynamic_cast<LV2Effect*>(effectsProvider()->effect(id));
     IF_ASSERT_FAILED(effect) {
         return;
     }

@@ -3,12 +3,7 @@
  */
 #include "nyquistpromptloader.h"
 
-#include "effects/effects_base/internal/au3/au3effectsutils.h"
-
-#include "au3-module-manager/PluginManager.h"
 #include "au3-effects/LoadEffects.h"
-
-#include "framework/global/translation.h"
 
 namespace au::effects {
 void NyquistPromptLoader::preInit()

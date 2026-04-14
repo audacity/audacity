@@ -35,9 +35,6 @@ public:
     muse::Ret exportPreset(const EffectInstanceId& effectInstanceId, const muse::io::path_t& filePath) override;
 
 private:
-
-    const EffectSettingsManager& settingsManager(const EffectId& effectId) const;
-
     muse::async::Channel<EffectId> m_userPresetsChanged;
     muse::async::Channel<PresetSavedInfo> m_presetSaved;
 };

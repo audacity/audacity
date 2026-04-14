@@ -9,7 +9,6 @@
 #include "framework/interactive/iinteractiveuriregister.h"
 #include "framework/diagnostics/idiagnosticspathsregister.h"
 
-#include "internal/au3/au3pluginregistry.h"
 #include "internal/effectconfigsettings.h"
 #include "internal/effectsprovider.h"
 #include "internal/effectsmenuprovider.h"
@@ -88,14 +87,11 @@ void EffectsModule::registerUiTypes()
 
 void EffectsModule::onPreInit(const muse::IApplication::RunMode&)
 {
-    // TODO: we probably can now just pass the Au3CommonSettings stub ?
     auto configFactory = [](const FilePath& localFileName) -> std::unique_ptr<audacity::BasicSettings> {
         return std::make_unique<au3::EffectConfigSettings>(localFileName.ToStdString());
     };
 
-    auto pluginRegistryFactory = [] { return std::make_unique<Au3PluginRegistry>(); };
-
-    PluginManager::Get().Initialize(std::move(configFactory), std::move(pluginRegistryFactory));
+    PluginManager::Get().Initialize(std::move(configFactory));
 }
 
 void EffectsModule::onInit(const muse::IApplication::RunMode&)
@@ -116,6 +112,7 @@ void EffectsModule::onAllInited(const muse::IApplication::RunMode&)
 void EffectsModule::onDeinit()
 {
     m_effectsProvider->deinit();
+    PluginManager::Get().Terminate();
 }
 
 muse::modularity::IContextSetup* EffectsModule::newContext(const muse::modularity::ContextPtr& ctx) const

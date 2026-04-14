@@ -7,11 +7,10 @@
 #include "au3wrap/internal/wxtypes_convert.h"
 
 #include "au3-effects/Effect.h"
-#include "au3-components/EffectInterface.h"
 #include "au3-effects/EffectManager.h"
 #include "au3-realtime-effects/RealtimeEffectState.h"
 
-#include "au3-module-manager/PluginManager.h"
+#include "au3-module-manager/ModuleManager.h"
 
 #include "framework/global/log.h"
 
@@ -70,25 +69,21 @@ void EffectsProvider::initOnce(muse::IInteractive& interactive,
         }
     }
 
-    // Now `known_audio_plugins.json` is completely initialized and the plugin manager can load from it.
-    PluginManager::Get().InitializePlugins();
+    // Providers must be available in ModuleManager for on-demand plugin loading.
+    ModuleManager::Get().DiscoverProviders();
 
     reloadEffects();
 
     m_initialized.notify();
 
     // Register for future changes
-    m_au3PluginsChangedSubscription = PluginManager::Get().Subscribe([this, self = weak_from_this()](::PluginsChangedMessage) {
-        if (self.expired()) {
-            return;
-        }
+    knownPluginsRegister()->pluginInfoListChanged().onNotify(this, [this]() {
         reloadEffects();
     });
 }
 
 void EffectsProvider::deinit()
 {
-    PluginManager::Get().Terminate();
 }
 
 void EffectsProvider::reloadEffects()
@@ -133,17 +128,21 @@ EffectMeta EffectsProvider::meta(const EffectId& effectId) const
     return EffectMeta();
 }
 
-bool EffectsProvider::loadEffect(const EffectId& effectId) const
+IEffectLoaderPtr EffectsProvider::loader(const EffectId& effectId) const
 {
     const auto it = std::find_if(m_effects.begin(), m_effects.end(), [&](const EffectMeta& meta) {
         return meta.id == effectId;
     });
     if (it == m_effects.end()) {
-        return false;
+        return nullptr;
     }
-    auto loader = effectLoadersRegister()->loader(it->family);
+    return effectLoadersRegister()->loader(it->family);
+}
+
+bool EffectsProvider::loadEffect(const EffectId& effectId) const
+{
+    const IEffectLoaderPtr loader = this->loader(effectId);
     if (!loader) {
-        LOGE() << "no loader for family: " << static_cast<int>(it->family);
         return false;
     }
     return loader->ensurePluginIsLoaded(effectId);
@@ -182,18 +181,11 @@ Effect* EffectsProvider::effect(const EffectId& effectId) const
     if (!loadEffect(effectId)) {
         return nullptr;
     }
-    PluginID pluginID = effectId.toStdString();
-    const PluginDescriptor* plug = PluginManager::Get().GetPlugin(pluginID);
-    if (!plug || !PluginManager::IsPluginAvailable(*plug)) {
-        LOGE() << "plugin not available, effectId: " << effectId;
+
+    const IEffectLoaderPtr loader = this->loader(effectId);
+    if (!loader) {
         return nullptr;
     }
 
-    Effect* effect = dynamic_cast<Effect*>(EffectManager::Get().GetEffect(pluginID));
-    IF_ASSERT_FAILED(effect) {
-        LOGE() << "effect not available, effectId: " << effectId;
-        return nullptr;
-    }
-
-    return effect;
+    return loader->effect(effectId);
 }

@@ -18,7 +18,6 @@
 #include "internal/vstparameterextractorservice.h"
 
 #include "internal/musevstpluginsregister.h"
-#include "internal/musevstmodulesrepository.h"
 
 #include "view/vstviewmodel.h"
 
@@ -46,11 +45,8 @@ std::string VstEffectsModule::moduleName() const
 
 void VstEffectsModule::registerExports()
 {
-    m_museVstModulesRepository = std::make_shared<MuseVstModulesRepository>();
-
     // for muse
     globalIoc()->registerExport<muse::vst::IVstInstancesRegister>(mname, new MuseVstInstancesRegister());
-    globalIoc()->registerExport<muse::vst::IVstModulesRepository>(mname, m_museVstModulesRepository);
 }
 
 void VstEffectsModule::resolveImports()
@@ -87,7 +83,6 @@ void VstEffectsModule::registerUiTypes()
 
 void VstEffectsModule::onInit(const muse::IApplication::RunMode&)
 {
-    m_museVstModulesRepository->init();
     m_vstMetaReader->init();
     m_effectLoader->init();
     m_pluginsScanner->init();
@@ -95,7 +90,6 @@ void VstEffectsModule::onInit(const muse::IApplication::RunMode&)
 
 void VstEffectsModule::onDeinit()
 {
-    m_museVstModulesRepository->deinit();
     m_effectLoader->deinit();
     m_pluginsScanner->deinit();
     m_vstMetaReader->deinit();

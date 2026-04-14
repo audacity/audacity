@@ -333,19 +333,11 @@ PluginManager::~PluginManager()
 {
 }
 
-void PluginManager::InitializePlugins()
-{
-    Load();
-    ModuleManager::Get().DiscoverProviders();
-    NotifyPluginsChanged();
-}
-
 // ----------------------------------------------------------------------------
 // PluginManager implementation
 // ----------------------------------------------------------------------------
 
 static PluginManager::ConfigFactory sFactory;
-static PluginManager::PluginRegistryFactory sRegistryFactory;
 
 // ============================================================================
 //
@@ -363,10 +355,9 @@ PluginManager& PluginManager::Get()
     return *mInstance;
 }
 
-void PluginManager::Initialize(ConfigFactory factory, PluginRegistryFactory registryFactory)
+void PluginManager::Initialize(ConfigFactory factory)
 {
     sFactory = move(factory);
-    sRegistryFactory = move(registryFactory);
 
     // And force load of setting to verify it's accessible
     GetSettings();
@@ -379,20 +370,6 @@ void PluginManager::Terminate()
         mSettings.reset();
     }
 
-    if (const auto registry = sRegistryFactory()) {
-        registry->Save(mRegisteredPlugins);
-    }
-
-    // Get rid of all non-module(effects?) plugins first
-    for (auto& p : mRegisteredPlugins) {
-        auto& desc = p.second;
-        if (desc.GetPluginType() == PluginTypeEffect) {
-            mLoadedInterfaces.erase(desc.GetID());
-        }
-    }
-
-    // Now get rid of others
-    mRegisteredPlugins.clear();
     mLoadedInterfaces.clear();
 }
 
@@ -503,7 +480,6 @@ bool PluginManager::DropFile(const wxString& fileName)
                         mRegisteredPlugins[id].SetEnabled(enable);
                     }
                     // Make changes to enabled status persist:
-                    this->Save();
                     this->NotifyPluginsChanged();
                 }
 
@@ -513,20 +489,6 @@ bool PluginManager::DropFile(const wxString& fileName)
     }
 
     return false;
-}
-
-void PluginManager::Load()
-{
-    if (const auto registry = sRegistryFactory()) {
-        registry->Load(mRegisteredPlugins);
-    }
-}
-
-void PluginManager::Save()
-{
-    if (const auto registry = sRegistryFactory()) {
-        registry->Save(mRegisteredPlugins);
-    }
 }
 
 void PluginManager::NotifyPluginsChanged()
@@ -841,17 +803,6 @@ PluginID PluginManager::OldGetID(const EffectDefinitionInterface* effect)
                             effect->GetVendor().Internal(),
                             effect->GetSymbol().Internal(),
                             effect->GetPath());
-}
-
-PluginID PluginManager::GetID(const EffectDefinitionInterface* effect)
-{
-    return wxJoin(wxArrayStringEx {
-        GetPluginTypeString(PluginTypeEffect),
-        effect->GetFamily().Internal(),
-        effect->GetVendor().Internal(),
-        effect->GetSymbol().Internal(),
-        effect->GetPath()
-    }, '_');
 }
 
 Identifier PluginManager::GetEffectNameFromID(const PluginID& ID)

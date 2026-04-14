@@ -178,7 +178,9 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
 
     {
         //! NOTE Step 2.1 - get effect settings
-        settings = em.GetDefaultSettings(ID);
+        settings = em.GetDefaultSettings(ID, [&](const PluginID& id) -> EffectSettingsManager* {
+            return effect;
+        });
         IF_ASSERT_FAILED(settings) {
             return make_ret(Err::UnknownError);
         }

@@ -13,6 +13,7 @@
 #include "effects/builtin/ibuiltineffectsviewregister.h"
 #include "effects/effects_base/ieffectsuiengine.h"
 #include "effects/effects_base/ieffectinstancesregister.h"
+#include "effects/effects_base/ieffectsprovider.h"
 
 namespace au::effects {
 class BuiltinEffectViewLoader : public QObject, public muse::async::Asyncable, muse::Contextable
@@ -23,6 +24,7 @@ class BuiltinEffectViewLoader : public QObject, public muse::async::Asyncable, m
 
     muse::GlobalInject<IBuiltinEffectsViewRegister> viewRegister;
     muse::GlobalInject<IEffectInstancesRegister> instancesRegister;
+    muse::GlobalInject<IEffectsProvider> effectsProvider;
 
     muse::ContextInject<IEffectsUiEngine> engine { this };
 

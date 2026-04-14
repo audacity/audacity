@@ -2,15 +2,16 @@
  * Audacity: A Digital Audio Editor
  */
 #include "au3effectloader.h"
+#include "au3-module-manager/PluginDescriptor.h"
 #include "effectsutils.h"
+#include "au3/au3effectsutils.h"
 
 #include "au3-components/PluginProvider.h"
-#include "au3-strings/TranslatableString.h"
-#include "au3-module-manager/PluginManager.h"
+#include "au3-effects/Effect.h"
 #include "au3-module-manager/ModuleManager.h"
 
-#include "au3wrap/internal/wxtypes_convert.h"
-#include "log.h"
+#include "framework/global/io/path.h"
+#include "framework/global/log.h"
 
 namespace au::effects {
 constexpr EffectFamily toEffectFamily(muse::audio::AudioResourceType type)
@@ -54,9 +55,10 @@ EffectFamily Au3EffectLoader::family() const
     return toEffectFamily(m_resourceType);
 }
 
-bool Au3EffectLoader::ensurePluginIsLoaded(const EffectId& effectId) const
+bool Au3EffectLoader::ensurePluginIsLoaded(const EffectId& effectId)
 {
-    if (PluginManager::Get().IsPluginLoaded(au3::wxFromString(effectId))) {
+    if (m_loadedInterfaces.find(effectId) != m_loadedInterfaces.end()) {
+        // already loaded
         return true;
     }
 
@@ -77,31 +79,49 @@ bool Au3EffectLoader::ensurePluginIsLoaded(const EffectId& effectId) const
                << ", got " << static_cast<int>(it->meta.type);
         return false;
     }
-    const auto& path = it->path;
+    const muse::io::path_t& path = it->path;
 
-    std::vector<PluginID> pluginIds;
-    TranslatableString errorMessage{};
-    int numPlugins = m_pluginProvider.DiscoverPluginsAtPath(
-        au3::wxFromString(path.toString()), errorMessage,
-        [&](PluginProvider* provider, ComponentInterface* ident) -> const PluginID&
+    ::TranslatableString errorMessage{};
+    ::PluginDescriptor desc;
+    ::PluginPath au3path;
+
+    // We need the complete effect's path, e.g. in VST a .vst3 bundle (one path) may contain several effects.
+    // Hence an effect's UUID is appended to the .vst3 path for disambiguation.
+    m_pluginProvider.DiscoverPluginsAtPath(
+        path.toStdString(), errorMessage, [&](PluginProvider*, ComponentInterface* ident) -> const PluginID&
     {
-        pluginIds.push_back(PluginManager::DefaultRegistrationCallback(provider, ident));
-        return pluginIds.back();
+        const auto effect = dynamic_cast<const EffectDefinitionInterface*>(ident);
+        IF_ASSERT_FAILED(effect) {
+            return desc.GetID();
+        }
+        if (effects::effectId(effect) == effectId.toStdString()) {
+            au3path = ident->GetPath();
+            desc.SetID(effectId.toStdString());
+        }
+        return desc.GetID();
     });
 
-    if (numPlugins == 0) {
-        LOGE() << "not found plugin: " << path;
+    if (au3path.empty()) {
+        LOGE() << "Failed to find plugin path for effect: " << effectId;
         return false;
     }
 
-    for (const auto& pluginId : pluginIds) {
-        const auto ptr = PluginManager::Get().GetPlugin(pluginId);
-        if (!ptr) {
-            LOGE() << "failed register plugin: " << au3::wxToStdString(pluginId) << ", path: " << path;
-            return false;
-        }
+    m_loadedInterfaces.emplace(effectId, m_pluginProvider.LoadPlugin(au3path));
+    if (!m_loadedInterfaces.at(effectId)) {
+        LOGE() << "Failed to load plugin: " << effectId;
+        m_loadedInterfaces.erase(effectId);
+        return false;
     }
 
     return true;
+}
+
+Effect* Au3EffectLoader::effect(const EffectId& effectId) const
+{
+    auto it = m_loadedInterfaces.find(effectId);
+    if (it != m_loadedInterfaces.end()) {
+        return dynamic_cast<Effect*>(it->second.get());
+    }
+    return nullptr;
 }
 } // namespace au::effects

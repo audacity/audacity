@@ -31,7 +31,7 @@ bool MuseVstModulesRepository::exists(const muse::audio::AudioResourceId& resour
 muse::vst::PluginModulePtr MuseVstModulesRepository::pluginModule(const muse::audio::AudioResourceId& resourceId) const
 {
     PluginID pluginId = resourceId;
-    EffectPlugin* plug = EffectManager::Get().GetEffect(pluginId);
+    EffectPlugin* plug = effectsProvider()->effect(muse::String::fromStdString(resourceId));
     IF_ASSERT_FAILED(plug) {
         LOGE() << "plug not available, pluginId: " << resourceId;
         return nullptr;

@@ -28,8 +28,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/musevstplugininstance.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/musevstpluginsregister.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/musevstpluginsregister.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/musevstmodulesrepository.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/musevstmodulesrepository.h
 )
 
 # AU3

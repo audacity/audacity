@@ -3,12 +3,18 @@
 */
 #pragma once
 
+#include "effects/effects_base/ieffectsprovider.h"
+
 // from muse
 #include "vst/ivstmodulesrepository.h"
+
+#include "framework/global/modularity/ioc.h"
 
 namespace au::effects {
 class MuseVstModulesRepository : public muse::vst::IVstModulesRepository
 {
+    muse::GlobalInject<IEffectsProvider> effectsProvider;
+
 public:
     MuseVstModulesRepository() = default;
 

@@ -4,6 +4,7 @@
 #pragma once
 
 #include "effects/effects_base/internal/au3effectloader.h"
+#include "effects/effects_base/ieffectsprovider.h"
 #include "spectrogram/ispectraleffectsregister.h"
 
 #include "framework/global/modularity/ioc.h"
@@ -15,6 +16,7 @@ class NyquistEffectsRepository
 {
     muse::GlobalInject<muse::audioplugins::IKnownAudioPluginsRegister> knownPlugins;
     muse::GlobalInject<spectrogram::ISpectralEffectsRegister> spectralEffectsRegister;
+    muse::GlobalInject<IEffectsProvider> effectsProvider;
 
 public:
     NyquistEffectsRepository();

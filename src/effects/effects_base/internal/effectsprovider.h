@@ -3,7 +3,6 @@
 */
 #pragma once
 
-#include "au3-utility/Observer.h"
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
 
@@ -20,7 +19,7 @@ class EffectSettingsAccess;
 class TrackList;
 
 namespace au::effects {
-class EffectsProvider : public IEffectsProvider, public muse::async::Asyncable, public std::enable_shared_from_this<EffectsProvider>
+class EffectsProvider : public IEffectsProvider, public muse::async::Asyncable
 {
     muse::GlobalInject<IEffectsConfiguration> configuration;
     muse::GlobalInject<muse::audioplugins::IKnownAudioPluginsRegister> knownPluginsRegister;
@@ -47,14 +46,12 @@ public:
 
 private:
     void reloadEffects();
-    void initializePlugins();
+    IEffectLoaderPtr loader(const EffectId& effectId) const;
 
     muse::Ret doEffectPreview(EffectBase& effect, EffectSettings& settings);
 
     EffectMetaList m_effects;
     muse::async::Notification m_effectsChanged;
     muse::async::Notification m_initialized;
-
-    ::Observer::Subscription m_au3PluginsChangedSubscription;
 };
 }

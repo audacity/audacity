@@ -7,8 +7,6 @@
 
 #include <map>
 
-typedef std::map<PluginID, PluginDescriptor> PluginMap;
-
 class IPluginRegistry
 {
 public:

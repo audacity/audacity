@@ -23,9 +23,9 @@
 #include "PluginDescriptor.h"
 #include "au3-utility/Observer.h"
 
-#include "IPluginRegistry.h"
-
 class wxArrayString;
+
+typedef std::map<PluginID, PluginDescriptor> PluginMap;
 
 namespace audacity {
 class BasicSettings;
@@ -84,11 +84,8 @@ public:
     // BasicSettings
     using ConfigFactory = std::function<std::unique_ptr<audacity::BasicSettings>(const FilePath& localFilename)>;
 
-    using PluginRegistryFactory = std::function<std::unique_ptr<IPluginRegistry>()>;
-
     /*! @pre `factory != nullptr` */
-    void Initialize(ConfigFactory, PluginRegistryFactory);
-    void InitializePlugins();
+    void Initialize(ConfigFactory);
     void Terminate();
 
     bool DropFile(const wxString& fileName);
@@ -98,7 +95,6 @@ public:
     static PluginID GetID(const PluginProvider* provider);
     static PluginID GetID(const ComponentInterface* command);
     static PluginID OldGetID(const EffectDefinitionInterface* effect);
-    static PluginID GetID(const EffectDefinitionInterface* effect);
     //! Parse English effect name from the result of
     //! GetID(const EffectDefinitionInterface*)
     static Identifier GetEffectNameFromID(const PluginID& ID);
@@ -182,11 +178,6 @@ private:
     PluginManager();
     ~PluginManager();
 
-    //! Load from preferences
-    void Load();
-    //! Save to preferences
-    void Save();
-
     PluginDescriptor& CreatePlugin(const PluginID& id, ComponentInterface* ident, PluginType type);
 
     audacity::BasicSettings* GetSettings();
@@ -218,17 +209,10 @@ private:
     bool mDirty;
     int mCurrentIndex;
 
-    PluginMap mRegisteredPlugins;
+    PluginMap mRegisteredPlugins; // TODO not used anymore - remove
     std::map<PluginID, std::unique_ptr<ComponentInterface> > mLoadedInterfaces;
     std::vector<PluginDescriptor> mEffectPluginsCleared;
 };
-
-// Defining these special names in the low-level PluginManager.h
-// is unfortunate
-// Internal name should be stable across versions
-#define NYQUIST_PROMPT_ID wxT("Nyquist prompt")
-// User-visible name might change in later versions
-#define NYQUIST_PROMPT_NAME XO("Nyquist prompt")
 
 // Latest version of the plugin registry config
 constexpr auto REGVERCUR = "1.5";

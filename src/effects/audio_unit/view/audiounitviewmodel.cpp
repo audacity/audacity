@@ -54,7 +54,7 @@ void AudioUnitViewModel::doInit()
     }
 
     const EffectId id = instancesRegister()->effectIdByInstanceId(instanceId());
-    const AudioUnitEffectBase* const effect = dynamic_cast<AudioUnitEffectBase*>(EffectManager::Get().GetEffect(id.toStdString()));
+    const AudioUnitEffectBase* const effect = dynamic_cast<AudioUnitEffectBase*>(effectsProvider()->effect(id));
 
     IF_ASSERT_FAILED(effect) {
         return;
