@@ -75,11 +75,6 @@ const wxString& PluginDescriptor::GetVendor() const
     return mVendor;
 }
 
-const wxString& PluginDescriptor::GetDescription() const
-{
-    return mDescription;
-}
-
 bool PluginDescriptor::IsEnabled() const
 {
     return mEnabled;
@@ -123,11 +118,6 @@ void PluginDescriptor::SetVersion(const wxString& version)
 void PluginDescriptor::SetVendor(const wxString& vendor)
 {
     mVendor = vendor;
-}
-
-void PluginDescriptor::SetDescription(const wxString& description)
-{
-    mDescription = description;
 }
 
 void PluginDescriptor::SetEnabled(bool enable)
@@ -210,16 +200,6 @@ void PluginDescriptor::SetEffectDefault(bool dflt)
 void PluginDescriptor::SetEffectLegacy(bool legacy)
 {
     mEffectLegacy = legacy;
-}
-
-bool PluginDescriptor::SupportsMultipleClipSelection() const
-{
-    return mSupportsMultipleClipSelection;
-}
-
-void PluginDescriptor::SetSupportsMultipleClipSelection(bool supports)
-{
-    mSupportsMultipleClipSelection = supports;
 }
 
 void PluginDescriptor::SetRealtimeSupport(

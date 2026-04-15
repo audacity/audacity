@@ -22,7 +22,8 @@ class AudioUnitView : public QQuickItem, public muse::Contextable
     Q_PROPERTY(int minimumWidth READ minimumWidth WRITE setMinimumWidth NOTIFY minimumWidthChanged FINAL)
 
     muse::GlobalInject<IEffectsConfiguration> configuration;
-    muse::GlobalInject<IEffectInstancesRegister> instancesRegister;
+
+    muse::ContextInject<IEffectInstancesRegister> instancesRegister{ this };
 
 public:
     AudioUnitView(QQuickItem* parent = nullptr);

@@ -10,8 +10,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/builtineffectscollectionmodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/builtineffectscollectionmodule.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/internal/builtincollectionloader.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/builtincollectionloader.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/builtineffectsloader.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/builtineffectsloader.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/builtinviewlauncher.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/builtinviewlauncher.h
 

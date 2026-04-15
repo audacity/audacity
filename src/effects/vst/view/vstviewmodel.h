@@ -11,6 +11,7 @@
 #include "effects/effects_base/irealtimeeffectservice.h"
 #include "effects/effects_base/effectstypes.h"
 #include "effects/effects_base/view/abstracteffectviewmodel.h"
+#include "effects/effects_base/ieffectsprovider.h"
 
 class VST3Instance;
 class EffectSettingsAccess;
@@ -22,6 +23,7 @@ class VstViewModel : public AbstractEffectViewModel
 public:
     muse::ContextInject<IRealtimeEffectService> realtimeEffectService{ this };
     muse::ContextInject<trackedit::IProjectHistory> projectHistory{ this };
+    muse::ContextInject<IEffectsProvider> effectsProvider{ this };
 
 public:
     VstViewModel(QObject* parent, int instanceId);

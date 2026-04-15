@@ -3,32 +3,35 @@
 */
 #pragma once
 
-#include "effects/effects_base/internal/au3effectloader.h"
-#include "effects/effects_base/ieffectsprovider.h"
+#include "../inyquisteffectsrepository.h"
 #include "spectrogram/ispectraleffectsregister.h"
 
 #include "framework/global/modularity/ioc.h"
+#include "framework/audioplugins/iaudiopluginsscanner.h"
+#include "framework/audioplugins/iaudiopluginmetareader.h"
 
 #include "au3-nyquist-effects/LoadNyquist.h"
 
 namespace au::effects {
-class NyquistEffectsRepository
+class NyquistEffectsRepository : public INyquistEffectsRepository, public muse::Contextable
 {
-    muse::GlobalInject<muse::audioplugins::IKnownAudioPluginsRegister> knownPlugins;
     muse::GlobalInject<spectrogram::ISpectralEffectsRegister> spectralEffectsRegister;
-    muse::GlobalInject<IEffectsProvider> effectsProvider;
 
 public:
-    NyquistEffectsRepository();
+    NyquistEffectsRepository(const muse::modularity::ContextPtr& ctx,
+                             std::unique_ptr<muse::audioplugins::IAudioPluginsScanner> nyquistPluginScanner,
+                             std::shared_ptr<muse::audioplugins::IAudioPluginMetaReader> nyquistPluginMetaReader);
 
     void init();
 
-private:
-    EffectMetaList effectMetaList() const;
+    EffectMetaList effectMetaList() const override;
+    bool ensurePluginIsLoaded(const EffectId& effectId) const override;
 
+private:
     // This member forces the linker to include LoadNyquist.cpp,
     // which contains DECLARE_BUILTIN_PROVIDER for the Nyquist module
     ::NyquistEffectsModule m_module;
-    Au3EffectLoader m_loader;
+    const std::unique_ptr<muse::audioplugins::IAudioPluginsScanner> m_nyquistPluginScanner;
+    const std::shared_ptr<muse::audioplugins::IAudioPluginMetaReader> m_nyquistPluginMetaReader;
 };
 }

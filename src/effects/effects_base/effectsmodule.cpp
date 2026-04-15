@@ -16,15 +16,12 @@
 #include "internal/effectsactionscontroller.h"
 #include "internal/effectinstancesregister.h"
 #include "internal/effectexecutionscenario.h"
-#include "internal/effectviewcontroller.h"
 #include "internal/realtimeeffectservice.h"
 #include "internal/effectpresetsprovider.h"
 #include "internal/effectpresetsscenario.h"
 #include "internal/effectviewlaunchregister.h"
 #include "internal/effectparametersprovider.h"
 #include "internal/parameterextractorregistry.h"
-#include "internal/effectloadersregister.h"
-#include "internal/effectsproviderinitializer.h"
 
 #include "view/effectpresetsbarmodel.h"
 #include "view/presetstatesregister.h"
@@ -51,13 +48,9 @@ std::string EffectsModule::moduleName() const
 void EffectsModule::registerExports()
 {
     m_configuration = std::make_shared<EffectsConfiguration>();
-    m_effectsProvider = std::make_shared<EffectsProvider>();
 
     globalIoc()->registerExport<IEffectsConfiguration>(mname, m_configuration);
-    globalIoc()->registerExport<IEffectsProvider>(mname, m_effectsProvider);
     globalIoc()->registerExport<IParameterExtractorRegistry>(mname, new ParameterExtractorRegistry());
-    globalIoc()->registerExport<IEffectLoadersRegister>(mname, new EffectLoadersRegister());
-    globalIoc()->registerExport<IEffectInstancesRegister>(mname, new EffectInstancesRegister());
 }
 
 void EffectsModule::resolveImports()
@@ -85,17 +78,12 @@ void EffectsModule::registerUiTypes()
     qmlRegisterUncreatableType<ViewerComponentTypes>("Audacity.Effects", 1, 0, "ViewerComponentType", "Not creatable from QML");
 }
 
-void EffectsModule::onPreInit(const muse::IApplication::RunMode&)
-{
-    auto configFactory = [](const FilePath& localFileName) -> std::unique_ptr<audacity::BasicSettings> {
-        return std::make_unique<au3::EffectConfigSettings>(localFileName.ToStdString());
-    };
-
-    PluginManager::Get().Initialize(std::move(configFactory));
-}
-
 void EffectsModule::onInit(const muse::IApplication::RunMode&)
 {
+    PluginManager::Get().Initialize([](const FilePath& localFileName) {
+        return std::make_unique<au3::EffectConfigSettings>(localFileName.ToStdString());
+    });
+
     m_configuration->init();
 
     //! --- Diagnostics ---
@@ -105,14 +93,13 @@ void EffectsModule::onInit(const muse::IApplication::RunMode&)
     }
 }
 
-void EffectsModule::onAllInited(const muse::IApplication::RunMode&)
-{
-}
-
 void EffectsModule::onDeinit()
 {
-    m_effectsProvider->deinit();
     PluginManager::Get().Terminate();
+}
+
+void EffectsModule::onDelayedInit()
+{
 }
 
 muse::modularity::IContextSetup* EffectsModule::newContext(const muse::modularity::ContextPtr& ctx) const
@@ -126,32 +113,37 @@ muse::modularity::IContextSetup* EffectsModule::newContext(const muse::modularit
 
 void EffectsContext::registerExports()
 {
+    m_effectsProvider = std::make_shared<EffectsProvider>(iocContext());
     m_effectsMenuProvider = std::make_shared<EffectsMenuProvider>(iocContext());
     m_actionsController = std::make_shared<EffectsActionsController>(iocContext());
     m_realtimeEffectService = std::make_shared<RealtimeEffectService>(iocContext());
 
+    ioc()->registerExport<IEffectsProvider>(mname, m_effectsProvider);
     ioc()->registerExport<IEffectsMenuProvider>(mname, m_effectsMenuProvider);
     ioc()->registerExport<IEffectsUiEngine>(mname, std::make_shared<EffectsUiEngine>(iocContext()));
     ioc()->registerExport<IEffectPresetsProvider>(mname, std::make_shared<EffectPresetsProvider>(iocContext()));
     ioc()->registerExport<IEffectPresetsScenario>(mname, std::make_shared<EffectPresetsScenario>(iocContext()));
-    ioc()->registerExport<IEffectParametersProvider>(mname, new EffectParametersProvider(iocContext()));
-    ioc()->registerExport<IEffectExecutionScenario>(mname, std::make_shared<EffectExecutionScenario>(iocContext()));
     ioc()->registerExport<IEffectViewLaunchRegister>(mname, new EffectViewLaunchRegister());
-    ioc()->registerExport<IEffectViewController>(mname, std::make_shared<EffectViewController>(iocContext()));
+    ioc()->registerExport<IEffectParametersProvider>(mname, new EffectParametersProvider(iocContext()));
+    ioc()->registerExport<IEffectInstancesRegister>(mname, new EffectInstancesRegister(iocContext()));
+    ioc()->registerExport<IEffectExecutionScenario>(mname, std::make_shared<EffectExecutionScenario>(iocContext()));
     ioc()->registerExport<IPresetStatesRegister>(mname, new PresetStatesRegister());
     ioc()->registerExport<IRealtimeEffectService>(mname, m_realtimeEffectService);
-    ioc()->registerExport<IEffectsProviderInitializer>(mname, std::make_shared<EffectsProviderInitializer>(iocContext()));
 }
 
 void EffectsContext::onInit(const muse::IApplication::RunMode&)
 {
     m_effectsMenuProvider->init();
+    m_effectsProvider->init();
     m_actionsController->init();
     m_realtimeEffectService->init();
 }
 
 void EffectsContext::onAllInited(const muse::IApplication::RunMode&)
 {
+    //! NOTE On init, built-in, vst and other plugins are initialized.
+    //! After all, the provider can load effects of different types.
+    m_effectsProvider->reloadEffects();
 }
 
 void EffectsContext::onDeinit()

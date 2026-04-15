@@ -3,21 +3,23 @@
  */
 #pragma once
 
-#include "effects/builtin/ibuiltineffectsviewregister.h"
-#include "effects/effects_base/ieffectsprovider.h"
-
 #include "framework/global/modularity/ioc.h"
-#include "framework/global/async/asyncable.h"
+#include "effects/builtin/ibuiltineffectsviewregister.h"
+#include "effects/builtin/ibuiltineffectsrepository.h"
 
 class WaveChannel;
 
 namespace au::effects {
-class NyquistPromptLoader : public muse::async::Asyncable
+class NyquistPromptLoader : public muse::Contextable
 {
+    muse::GlobalInject<IBuiltinEffectsRepository> builtinEffectsRepository;
     muse::GlobalInject<IBuiltinEffectsViewRegister> builtinEffectsViewRegister;
-    muse::GlobalInject<IEffectsProvider> effectsProvider;
 
 public:
+
+    NyquistPromptLoader(const muse::modularity::ContextPtr& ctx)
+        : muse::Contextable(ctx) {}
+
     static void preInit();
     void init();
 };

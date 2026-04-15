@@ -34,10 +34,10 @@ class EffectPresetsBarModel : public QObject, public muse::Contextable, public m
         bool persistLastUsedPreset READ persistLastUsedPreset WRITE setPersistLastUsedPreset NOTIFY persistLastUsedPresetChanged FINAL)
 
     muse::GlobalInject<IEffectsConfiguration> configuration;
-    muse::GlobalInject<IEffectsProvider> effectsProvider;
-    muse::GlobalInject<IEffectInstancesRegister> instancesRegister;
 
     muse::ContextInject<IEffectPresetsProvider> presetsController { this };
+    muse::ContextInject<IEffectInstancesRegister> instancesRegister { this };
+    muse::ContextInject<IEffectsProvider> effectsProvider { this };
     muse::ContextInject<IEffectParametersProvider> parametersProvider { this };
     muse::ContextInject<IPresetStatesRegister> presetStatesRegister { this };
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };

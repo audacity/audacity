@@ -10,9 +10,12 @@ set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml)
 set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/audiouniteffectsmodule.cpp
     ${CMAKE_CURRENT_LIST_DIR}/audiouniteffectsmodule.h
+    ${CMAKE_CURRENT_LIST_DIR}/iaudiouniteffectsrepository.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/internal/audiouniteffectloader.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/audiouniteffectsrepository.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/audiouniteffectsrepository.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/internal/audiounitpluginsscanner.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/audiounitpluginsscanner.h
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/audiounitpluginsmetareader.cpp

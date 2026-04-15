@@ -64,7 +64,6 @@ public:
     EffectGroup GetGroup() const override { return EffectGroup::DelayAndReverb; }
     RegistryPaths GetFactoryPresets() const override;
     OptionalMessage LoadFactoryPreset(int id, EffectSettings& settings) const override;
-    bool SupportsMultipleClipSelection() const override { return true; }
 
     RealtimeSince RealtimeSupport() const override;
 

@@ -25,8 +25,6 @@
 
 class wxArrayString;
 
-typedef std::map<PluginID, PluginDescriptor> PluginMap;
-
 namespace audacity {
 class BasicSettings;
 }
@@ -36,6 +34,8 @@ class BasicSettings;
 // PluginManager
 //
 ///////////////////////////////////////////////////////////////////////////////
+
+typedef std::map<PluginID, PluginDescriptor> PluginMap;
 
 typedef wxArrayString PluginIDs;
 
@@ -53,7 +53,7 @@ public:
     // PluginManagerInterface implementation
 
     bool IsPluginRegistered(
-        const PluginPath& path, const ::TranslatableString* pSymbol) override;
+        const PluginPath& path, const TranslatableString* pSymbol) override;
 
     bool IsPluginLoaded(const wxString& ID) const;
 
@@ -82,10 +82,10 @@ public:
 
     // Initialization must inject a factory to make a concrete subtype of
     // BasicSettings
-    using ConfigFactory = std::function<std::unique_ptr<audacity::BasicSettings>(const FilePath& localFilename)>;
-
+    using ConfigFactory = std::function<
+        std::unique_ptr<audacity::BasicSettings>(const FilePath& localFilename) >;
     /*! @pre `factory != nullptr` */
-    void Initialize(ConfigFactory);
+    void Initialize(ConfigFactory factory);
     void Terminate();
 
     bool DropFile(const wxString& fileName);
@@ -95,6 +95,7 @@ public:
     static PluginID GetID(const PluginProvider* provider);
     static PluginID GetID(const ComponentInterface* command);
     static PluginID OldGetID(const EffectDefinitionInterface* effect);
+    static PluginID GetID(const EffectDefinitionInterface* effect);
     //! Parse English effect name from the result of
     //! GetID(const EffectDefinitionInterface*)
     static Identifier GetEffectNameFromID(const PluginID& ID);
@@ -149,7 +150,7 @@ public:
     void EnablePlugin(const PluginID& ID, bool enable);
 
     const ComponentInterfaceSymbol& GetSymbol(const PluginID& ID) const;
-    ::TranslatableString GetName(const PluginID& ID) const;
+    TranslatableString GetName(const PluginID& ID) const;
     CommandID GetCommandIdentifier(const PluginID& ID) const;
     const PluginID& GetByCommandIdentifier(const CommandID& strTarget);
     ComponentInterface* Load(const PluginID& ID);
@@ -168,7 +169,16 @@ public:
         std::unique_ptr<EffectDefinitionInterface> effect, PluginType type);
     void UnregisterPlugin(const PluginID& ID);
 
+    //! Load from preferences
+    void Load();
+    //! Save to preferences
+    void Save();
+
     void NotifyPluginsChanged();
+
+    //! What is the plugin registry version number now in the file?
+    //! (Save() updates it)
+    const PluginRegistryVersion& GetRegistryVersion() const override;
 
     PluginPaths ReadCustomPaths(const PluginProvider& provider) override;
     void StoreCustomPaths(const PluginProvider& provider, const PluginPaths& paths) override;
@@ -177,6 +187,11 @@ private:
     // private! Use Get()
     PluginManager();
     ~PluginManager();
+
+    void InitializePlugins();
+
+    void LoadGroup(audacity::BasicSettings* pRegistry, PluginType type);
+    void SaveGroup(audacity::BasicSettings* pRegistry, PluginType type);
 
     PluginDescriptor& CreatePlugin(const PluginID& id, ComponentInterface* ident, PluginType type);
 
@@ -209,10 +224,19 @@ private:
     bool mDirty;
     int mCurrentIndex;
 
-    PluginMap mRegisteredPlugins; // TODO not used anymore - remove
+    PluginMap mRegisteredPlugins;
     std::map<PluginID, std::unique_ptr<ComponentInterface> > mLoadedInterfaces;
     std::vector<PluginDescriptor> mEffectPluginsCleared;
+
+    PluginRegistryVersion mRegver;
 };
+
+// Defining these special names in the low-level PluginManager.h
+// is unfortunate
+// Internal name should be stable across versions
+#define NYQUIST_PROMPT_ID wxT("Nyquist prompt")
+// User-visible name might change in later versions
+#define NYQUIST_PROMPT_NAME XO("Nyquist prompt")
 
 // Latest version of the plugin registry config
 constexpr auto REGVERCUR = "1.5";

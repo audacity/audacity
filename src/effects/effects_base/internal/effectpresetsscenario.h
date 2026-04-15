@@ -18,10 +18,10 @@ namespace au::effects {
 class EffectPresetsScenario : public IEffectPresetsScenario, public muse::Contextable
 {
     muse::GlobalInject<muse::IGlobalConfiguration> globalConfiguration;
-    muse::GlobalInject<IEffectInstancesRegister> instancesRegister;
 
-    muse::Inject<muse::IInteractive> interactive{ this };
-    muse::Inject<IEffectPresetsProvider> presetsProvider{ this };
+    muse::ContextInject<muse::IInteractive> interactive{ this };
+    muse::ContextInject<IEffectPresetsProvider> presetsProvider{ this };
+    muse::ContextInject<IEffectInstancesRegister> instancesRegister{ this };
 
 public:
     EffectPresetsScenario(const muse::modularity::ContextPtr& ctx)

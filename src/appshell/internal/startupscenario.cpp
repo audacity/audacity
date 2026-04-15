@@ -98,7 +98,7 @@ void StartupScenario::setStartupMediaFiles(const muse::io::paths_t& files)
 
 muse::async::Promise<muse::Ret> StartupScenario::runOnSplashScreen()
 {
-    return muse::async::make_promise<muse::Ret>([](auto resolve, auto) {
+    return muse::async::make_promise<muse::Ret>([this](auto resolve, auto) {
         const muse::Ret ret = muse::make_ret(muse::Ret::Code::Ok);
         return resolve(ret);
     });
@@ -133,7 +133,30 @@ void StartupScenario::runAfterSplashScreen()
         muse::async::Channel<muse::Uri> mut = opened;
         mut.disconnect(this);
 
-        effectsProviderInitializer()->callAfterSplashScreen();
+        static bool pluginsScanned = false;
+        if (!pluginsScanned) {
+            pluginsScanned = true;
+
+            muse::audioplugins::PluginScanResult scanResult = registerAudioPluginsScenario()->scanPlugins();
+
+            registerAudioPluginsScenario()->unregisterRemovedPlugins(scanResult.missingPluginIds);
+
+            if (!scanResult.newPluginPaths.empty()) {
+                auto ret = interactive()->questionSync(muse::trc("appshell", "Scanning audio plugins"),
+                                                       muse::trc(
+                                                           "appshell",
+                                                           "Audacity has found plugins that need to be scanned before use. Would you like to scan them now or skip?"),
+                                                       { muse::IInteractive::ButtonData(
+                                                             muse::IInteractive::Button::Cancel, muse::trc("appshell", "Skip this time"),
+                                                             false),
+                                                         muse::IInteractive::ButtonData(
+                                                             muse::IInteractive::Button::Apply, muse::trc("appshell", "Scan plugins"),
+                                                             true) });
+                if (ret.standardButton() == muse::IInteractive::Button::Apply) {
+                    registerAudioPluginsScenario()->registerNewPlugins(scanResult.newPluginPaths);
+                }
+            }
+        }
 
         onStartupPageOpened(modeType);
     });
@@ -227,7 +250,7 @@ void StartupScenario::showStartupDialogsIfNeed(StartupModeType)
     };
 
     if (!configuration()->hasCompletedFirstLaunchSetup()) {
-        interactive()->open(FIRST_LAUNCH_SETUP_URI).then(this, [showWelcomePage](const muse::Val&, auto resolve) {
+        interactive()->open(FIRST_LAUNCH_SETUP_URI).then(this, [this, showWelcomePage](const muse::Val&, auto resolve) {
             showWelcomePage();
             return resolve();
         });

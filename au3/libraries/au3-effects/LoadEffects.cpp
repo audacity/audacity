@@ -13,6 +13,8 @@
 
 #include "LoadEffects.h"
 
+#include "au3-preferences/Prefs.h"
+
 #include "Effect.h"
 #include "au3-module-manager/ModuleManager.h"
 #include "au3-module-manager/PluginManager.h"
@@ -141,10 +143,16 @@ void BuiltinEffectsModule::AutoRegisterPlugins(PluginManagerInterface& pm)
 {
     // Assume initial PluginManager::Save is not yet done
 
+    // The set of built-in functions that are realtime capable may differ with
+    // the plugin registry version
+    bool rediscoverAll = !Regver_eq(pm.GetRegistryVersion(), REGVERCUR);
+
     TranslatableString ignoredErrMsg;
     for (const auto& pair : mEffects) {
         const auto& path = pair.first;
-        if (!pm.IsPluginRegistered(path, &pair.second->name.Msgid())) {
+        if (rediscoverAll
+            || !pm.IsPluginRegistered(path, &pair.second->name.Msgid())
+            ) {
             DiscoverPluginsAtPath(path, ignoredErrMsg, [&](PluginProvider* provider, ComponentInterface* ident) -> const PluginID&
             {
                 const auto& pluginId = PluginManagerInterface::DefaultRegistrationCallback(provider, ident);
@@ -161,7 +169,6 @@ PluginPaths BuiltinEffectsModule::FindModulePaths(PluginManagerInterface&) const
 {
     // Not really libraries
     PluginPaths names;
-    names.reserve(mEffects.size());
     for ( const auto& pair : mEffects ) {
         names.push_back(pair.first);
     }
