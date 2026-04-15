@@ -875,6 +875,10 @@ Ret ProjectActionsController::doOpenProject(const io::path_t& filePath)
             muse::IInteractive::ButtonData(
                 muse::IInteractive::Button::Ok, muse::trc("project/open", "Ok"), false)
         });
+
+        // When saving we do a full project rewrite
+        // We need to save the project immediately to remove the time track from the project file and avoid showing this message repeatedly
+        saveProject(SaveMode::Save);
     }
 
     projectHistory()->init();
