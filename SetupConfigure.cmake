@@ -161,6 +161,8 @@ set(MUSE_APP_INSTALL_RESOURCES_LOCATION "${AU4_INSTALL_NAME}")
 
 include(${MUSE_FRAMEWORK_SRC_PATH}/cmake/MuseSetupConfiguration.cmake)
 
+configure_file(${CMAKE_CURRENT_LIST_DIR}/src/app/app_config.h.in app_config.h)
+
 ###########################################
 # Global definitions
 ###########################################

@@ -7,6 +7,7 @@
 #include "pluginregistrationapp.h"
 
 #include "muse_framework_config.h"
+#include "app_config.h"
 
 #include "framework/diagnostics/diagnosticsmodule.h"
 #include "framework/draw/drawmodule.h"
