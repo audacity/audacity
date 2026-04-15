@@ -154,6 +154,9 @@ option(AU_USE_SOUNDTOUCH "Build with SoundTouch support for pitch/tempo effects"
 # Networking
 option(AU_USE_LIBCURL "Use libcurl for HTTP requests" OFF)
 
+# Time track
+option(AU_LOAD_TIMETRACK "Load time track from Audacity 3 projects" OFF)
+
 # === Setup ===
 
 # === Pack ===
