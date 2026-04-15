@@ -141,7 +141,7 @@ void TempoDetection::showEmptyMusicWorkspaceDialog(double bpm, const std::vector
     };
 
     IInteractive::Result result = interactive()->questionSync(
-        trc("import", "Loop Tempo Detected"),
+        trc("import", "Loop tempo detected"),
         message,
         buttons,
         BTN_MATCH_PROJECT);
@@ -174,7 +174,7 @@ void TempoDetection::showSubsequentImportDialog(double bpm, const std::vector<Wa
     };
 
     IInteractive::Result result = interactive()->questionSync(
-        trc("import", "Loop Tempo Detected"),
+        trc("import", "Loop tempo detected"),
         message,
         buttons,
         BTN_STRETCH_LOOP,
