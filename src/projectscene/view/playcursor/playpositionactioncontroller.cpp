@@ -113,6 +113,8 @@ void PlayPositionActionController::applySingleStep(Direction direction)
         q.addParam("seekTime", muse::Val(secs));
         q.addParam("triggerPlay", muse::Val(false));
         dispatcher()->dispatch(q);
+
+        m_context->animatedInsureVisible(secs);
     }
 }
 
