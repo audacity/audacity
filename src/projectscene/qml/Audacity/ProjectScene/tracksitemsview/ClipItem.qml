@@ -840,6 +840,8 @@ Rectangle {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
 
+                fillColor: root.clipSelected ? root.clipSelectedColor : root.clipColor
+
                 channelHeightRatio: showChannelSplitter ? root.channelHeightRatio : 1
 
                 clipColor: root.clipColor
