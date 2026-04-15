@@ -72,6 +72,8 @@ class TimelineContext : public QObject, public muse::async::Asyncable, public mu
 
 public:
 
+    static constexpr int ANIMATION_DURATION_MS = 500;
+
     TimelineContext(QObject* parent = nullptr);
 
     double frameStartTime() const;
@@ -135,6 +137,9 @@ public:
 
     void moveToFrameTime(double startTime);
     void shiftFrameTime(double secs);
+
+    void animatedCenterOnTime(double secs);
+    bool isAnimating() const;
 
     qreal startHorizontalScrollPosition() const;
     qreal horizontalScrollbarSize() const;
@@ -271,7 +276,6 @@ private:
     QTimer m_scrollTimer;
     double m_autoScrollStep = 0.0;
 
-    static constexpr int ANIMATION_DURATION_MS = 500;
     static constexpr int ANIMATION_FRAME_MS = 16;
     QTimer m_animationTimer;
     QElapsedTimer m_animationElapsed;

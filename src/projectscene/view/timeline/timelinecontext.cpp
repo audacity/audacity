@@ -350,6 +350,18 @@ void TimelineContext::animatedInsureVisible(double posSec)
     }
 }
 
+void TimelineContext::animatedCenterOnTime(double secs)
+{
+    const double frameTime = m_frameEndTime - m_frameStartTime;
+    const double targetStartTime = secs - frameTime * 0.5;
+    animateToFrameTime(targetStartTime);
+}
+
+bool TimelineContext::isAnimating() const
+{
+    return m_animationTimer.isActive();
+}
+
 void TimelineContext::autoScrollView(double scrollStep)
 {
     if (!muse::RealIsEqualOrMore(scrollStep, 0.0)) {
