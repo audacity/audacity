@@ -17,6 +17,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/ieffectsmenuprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectsconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectsuiengine.h
+    ${CMAKE_CURRENT_LIST_DIR}/ieffectviewcontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectinstancesregister.h
     ${CMAKE_CURRENT_LIST_DIR}/ieffectexecutionscenario.h
     ${CMAKE_CURRENT_LIST_DIR}/irealtimeeffectservice.h
@@ -27,12 +28,12 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/ieffectparametersprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/iparameterextractorregistry.h
     ${CMAKE_CURRENT_LIST_DIR}/ipresetstatesregister.h
+    ${CMAKE_CURRENT_LIST_DIR}/ieffectloader.h
+    ${CMAKE_CURRENT_LIST_DIR}/ieffectloadersregister.h
     # interfaces for optional services
     ${CMAKE_CURRENT_LIST_DIR}/iparameterextractorservice.h
 
     # internal
-    ${CMAKE_CURRENT_LIST_DIR}/internal/abstractaudiopluginmetareader.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/abstractaudiopluginmetareader.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/abstractviewlauncher.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/abstractviewlauncher.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectconfigsettings.cpp
@@ -45,12 +46,18 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsuiactions.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsprovider.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsprovider.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectsproviderinitializer.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectsproviderinitializer.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsmenuprovider.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsmenuprovider.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/effectsrepositoryhelper.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/effectsrepositoryhelper.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/effectsutils.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3effectloader.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3effectloader.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectloadersregister.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectloadersregister.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsutils.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectsutils.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectviewcontroller.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectviewcontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectinstancesregister.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectinstancesregister.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectexecutionscenario.cpp
@@ -73,6 +80,11 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/parameterextractorregistry.h
 
     # AU3
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3audiopluginmetareader.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3audiopluginmetareader.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3audiopluginscanner.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3audiopluginscanner.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3effectsutils.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3effectsutils.h
 
     # view
