@@ -867,6 +867,7 @@ Ret ProjectActionsController::doOpenProject(const io::path_t& filePath)
 
     globalContext()->setCurrentProject(project);
 
+#ifndef AU_LOAD_TIMETRACK
     if (project->trackeditProject()->timeTrackFound()) {
         interactive()->infoSync(muse::trc("project/open", "Time Track not supported"),
                                 muse::trc("project/open",
@@ -880,6 +881,7 @@ Ret ProjectActionsController::doOpenProject(const io::path_t& filePath)
         // We need to save the project immediately to remove the time track from the project file and avoid showing this message repeatedly
         saveProject(SaveMode::Save);
     }
+#endif
 
     projectHistory()->init();
 
