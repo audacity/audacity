@@ -58,6 +58,8 @@ void CommandLineParser::init()
 
     m_parser.addOption(QCommandLineOption("session-type", "Startup with given session type", "type"));
     m_parser.addOption(internalCommandLineOption("import-media-file", "Import media file on startup", "path"));
+    m_parser.addOption(internalCommandLineOption("project-display-name-override", "Display name override", "name"));
+    m_parser.addOption(internalCommandLineOption("cloud-project-id", "Cloud project id", "id"));
 
     // Audio plugins
     m_parser.addOption(QCommandLineOption("register-audio-plugin",
@@ -103,89 +105,97 @@ void CommandLineParser::parse(int argc, char** argv)
     }
 
     if (m_parser.isSet("d")) {
-        m_options.app.loggerLevel = muse::logger::Level::Debug;
+        m_options->global.loggerLevel = muse::logger::Level::Debug;
     }
 
     if (m_parser.isSet("D")) {
         std::optional<double> val = doubleValue("D");
         if (val) {
-            m_options.ui.physicalDotsPerInch = val;
+            m_options->ui.physicalDotsPerInch = val;
         } else {
             LOGE() << "Option: -D not recognized DPI value: " << m_parser.value("D");
         }
     }
 
     if (m_parser.isSet("session-type")) {
-        m_options.startup.type = m_parser.value("session-type").toStdString();
+        m_options->startup.type = m_parser.value("session-type").toStdString();
+    }
+
+    if (m_parser.isSet("project-display-name-override")) {
+        m_options->startup.projectDisplayNameOverride = m_parser.value("project-display-name-override");
+    }
+
+    if (m_parser.isSet("cloud-project-id")) {
+        m_options->startup.cloudProjectId = m_parser.value("cloud-project-id");
     }
 
     if (m_parser.isSet("import-media-file")) {
         for (const QString& file : m_parser.values("import-media-file")) {
-            m_options.startup.mediaFiles.emplace_back(fromUserInputPath(file));
+            m_options->startup.mediaFiles.emplace_back(fromUserInputPath(file));
         }
     }
 
     if (m_parser.isSet("F") || m_parser.isSet("R")) {
-        m_options.app.revertToFactorySettings = true;
+        m_options->app.revertToFactorySettings = true;
     }
 
     // Audio plugin registration
     if (m_parser.isSet("register-audio-plugin")) {
-        m_runMode = IApplication::RunMode::AudioPluginRegistration;
-        m_audioPluginRegistration.pluginPath = fromUserInputPath(m_parser.value("register-audio-plugin"));
-        m_audioPluginRegistration.failedPlugin = false;
+        m_options->runMode = IApplication::RunMode::AudioPluginRegistration;
+        m_options->audioPluginRegistration.pluginPath = fromUserInputPath(m_parser.value("register-audio-plugin"));
+        m_options->audioPluginRegistration.failedPlugin = false;
     }
 
     // Self-test mode for plugin registration
     if (m_parser.isSet("plugin-registration-self-test")) {
-        m_runMode = IApplication::RunMode::AudioPluginRegistration;
-        m_audioPluginRegistration.selfTest = true;
+        m_options->runMode = IApplication::RunMode::AudioPluginRegistration;
+        m_options->audioPluginRegistration.selfTest = true;
     }
 
     if (m_parser.isSet("register-failed-audio-plugin")) {
         QStringList args1 = m_parser.positionalArguments();
-        m_runMode = IApplication::RunMode::AudioPluginRegistration;
-        m_audioPluginRegistration.pluginPath = fromUserInputPath(m_parser.value("register-failed-audio-plugin"));
-        m_audioPluginRegistration.failedPlugin = true;
-        m_audioPluginRegistration.failCode = !args1.empty() ? args1[0].toInt() : -1;
+        m_options->runMode = IApplication::RunMode::AudioPluginRegistration;
+        m_options->audioPluginRegistration.pluginPath = fromUserInputPath(m_parser.value("register-failed-audio-plugin"));
+        m_options->audioPluginRegistration.failedPlugin = true;
+        m_options->audioPluginRegistration.failCode = !args1.empty() ? args1[0].toInt() : -1;
     }
 
     // Autobot
     if (m_parser.isSet("test-case")) {
-        m_runMode = IApplication::RunMode::ConsoleApp;
-        m_autobot.testCaseNameOrFile = fromUserInputPath(m_parser.value("test-case"));
+        m_options->runMode = IApplication::RunMode::ConsoleApp;
+        m_options->autobot.testCaseNameOrFile = fromUserInputPath(m_parser.value("test-case"));
     }
 
     if (m_parser.isSet("test-case-context")) {
-        m_autobot.testCaseContextNameOrFile = fromUserInputPath(m_parser.value("test-case-context"));
+        m_options->autobot.testCaseContextNameOrFile = fromUserInputPath(m_parser.value("test-case-context"));
     }
 
     if (m_parser.isSet("test-case-context-value")) {
-        m_autobot.testCaseContextValue = m_parser.value("test-case-context-value");
+        m_options->autobot.testCaseContextValue = m_parser.value("test-case-context-value");
     }
 
     if (m_parser.isSet("test-case-func")) {
-        m_autobot.testCaseFunc = m_parser.value("test-case-func");
+        m_options->autobot.testCaseFunc = m_parser.value("test-case-func");
     }
 
     if (m_parser.isSet("test-case-func-args")) {
-        m_autobot.testCaseFuncArgs = m_parser.value("test-case-func-args");
+        m_options->autobot.testCaseFuncArgs = m_parser.value("test-case-func-args");
     }
 
     // Startup
-    if (m_runMode == IApplication::RunMode::GuiApp) {
+    if (m_options->runMode == IApplication::RunMode::GuiApp) {
         for (const QString& file : projectfiles) {
             const muse::io::path_t filePath(file);
             if (project::isAudacityFile(filePath)) {
-                if (!m_options.startup.projectUrl.has_value()) {
-                    m_options.startup.projectUrl = QUrl::fromUserInput(file, QDir::currentPath(), QUrl::AssumeLocalFile);
+                if (!m_options->startup.projectUrl.has_value()) {
+                    m_options->startup.projectUrl = QUrl::fromUserInput(file, QDir::currentPath(), QUrl::AssumeLocalFile);
                 }
-                m_options.startup.mediaFiles.clear();
+                m_options->startup.mediaFiles.clear();
                 continue;
             }
 
-            if (!m_options.startup.projectUrl.has_value()) {
-                m_options.startup.mediaFiles.emplace_back(filePath);
+            if (!m_options->startup.projectUrl.has_value()) {
+                m_options->startup.mediaFiles.emplace_back(filePath);
             }
         }
     }
@@ -199,22 +209,12 @@ void CommandLineParser::processBuiltinArgs(const QCoreApplication& app)
 
 muse::IApplication::RunMode CommandLineParser::runMode() const
 {
-    return m_runMode;
+    return m_options->runMode;
 }
 
-const CommandLineParser::Options& CommandLineParser::options() const
+std::shared_ptr<AudacityCmdOptions> CommandLineParser::options() const
 {
     return m_options;
-}
-
-CommandLineParser::Autobot CommandLineParser::autobot() const
-{
-    return m_autobot;
-}
-
-CommandLineParser::AudioPluginRegistration CommandLineParser::audioPluginRegistration() const
-{
-    return m_audioPluginRegistration;
 }
 
 void CommandLineParser::printLongVersion() const

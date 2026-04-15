@@ -90,24 +90,25 @@
 using namespace muse;
 using namespace au::app;
 
-std::shared_ptr<muse::IApplication> AppFactory::newApp(const CommandLineParser& parser) const
+std::shared_ptr<muse::IApplication> AppFactory::newApp(const std::shared_ptr<AudacityCmdOptions>& options) const
 {
-    IApplication::RunMode runMode = parser.runMode();
-
-    switch (runMode) {
-    case IApplication::RunMode::GuiApp:
-        return newGuiApp(parser.options());
-    case IApplication::RunMode::ConsoleApp:
-        // No console mode for now
-        return newGuiApp(parser.options());
-    case IApplication::RunMode::AudioPluginRegistration:
-        return newPluginRegistrationApp(parser.audioPluginRegistration());
+    IF_ASSERT_FAILED(options) {
+        return nullptr;
     }
 
-    return newGuiApp(parser.options());
+    switch (options->runMode) {
+    case IApplication::RunMode::GuiApp:
+    case IApplication::RunMode::ConsoleApp:
+        // No console mode for now
+        return newGuiApp(options);
+    case IApplication::RunMode::AudioPluginRegistration:
+        return newPluginRegistrationApp(options);
+    }
+
+    return newGuiApp(options);
 }
 
-std::shared_ptr<muse::IApplication> AppFactory::newGuiApp(const CommandLineParser::Options& options) const
+std::shared_ptr<muse::IApplication> AppFactory::newGuiApp(const std::shared_ptr<AudacityCmdOptions>& options) const
 {
     std::shared_ptr<GuiApp> app = std::make_shared<GuiApp>(options);
 
@@ -168,9 +169,9 @@ std::shared_ptr<muse::IApplication> AppFactory::newGuiApp(const CommandLineParse
     return app;
 }
 
-std::shared_ptr<muse::IApplication> AppFactory::newPluginRegistrationApp(const CommandLineParser::AudioPluginRegistration& task) const
+std::shared_ptr<muse::IApplication> AppFactory::newPluginRegistrationApp(const std::shared_ptr<AudacityCmdOptions>& options) const
 {
-    std::shared_ptr<PluginRegistrationApp> app = std::make_shared<PluginRegistrationApp>(task);
+    std::shared_ptr<PluginRegistrationApp> app = std::make_shared<PluginRegistrationApp>(options);
 
     app->addModule(new muse::audioplugins::AudioPluginsModule());
     app->addModule(new muse::actions::ActionsModule());

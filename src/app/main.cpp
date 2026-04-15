@@ -128,13 +128,6 @@ int main(int argc, char** argv)
     QGuiApplication::setDesktopFileName("org.audacityteam.Audacity" MUSE_APP_INSTALL_SUFFIX ".desktop");
 #endif
 
-    // ====================================================
-    // Parse command line options
-    // ====================================================
-    au::app::CommandLineParser commandLineParser;
-    commandLineParser.init();
-    commandLineParser.parse(argc, argv);
-
     // Force the 8-bit text encoding to UTF-8. This is the default encoding on all supported platforms except for MSVC under Windows, which
     // would otherwise default to the local ANSI code page and cause corruption of any non-ANSI Unicode characters in command-line arguments.
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("UTF-8"));
@@ -171,6 +164,13 @@ int main(int argc, char** argv)
 #endif
 
     // ====================================================
+    // Parse command line options
+    // ====================================================
+    au::app::CommandLineParser commandLineParser;
+    commandLineParser.init();
+    commandLineParser.parse(argcFinal, argvFinal);
+
+    // ====================================================
     // Create QApplication based on run mode
     // ====================================================
     QCoreApplication* qApplication = nullptr;
@@ -189,7 +189,7 @@ int main(int argc, char** argv)
     // Create and run the application
     // ====================================================
     au::app::AppFactory factory;
-    std::shared_ptr<muse::IApplication> app = factory.newApp(commandLineParser);
+    std::shared_ptr<muse::IApplication> app = factory.newApp(commandLineParser.options());
 
     app->setup();
 
