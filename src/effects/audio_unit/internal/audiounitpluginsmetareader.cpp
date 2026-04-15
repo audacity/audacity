@@ -11,7 +11,7 @@
 using namespace muse::audio;
 
 au::effects::AudioUnitPluginsMetaReader::AudioUnitPluginsMetaReader()
-    : AbstractAudioPluginMetaReader(m_module)
+    : Au3AudioPluginMetaReader(m_module)
 {
 }
 

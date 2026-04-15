@@ -87,7 +87,7 @@ public:
     /// The caption is for message boxes to show in case of errors.
     /// Might throw.
     XMLFileWriter(
-        const FilePath& outputPath, const TranslatableString& caption, bool keepBackup = false);
+        const FilePath& outputPath, const ::TranslatableString& caption, bool keepBackup = false);
 
     virtual ~XMLFileWriter();
 
@@ -112,7 +112,7 @@ public:
 private:
 
     void ThrowException(
-        const wxFileName& fileName, const TranslatableString& caption)
+        const wxFileName& fileName, const ::TranslatableString& caption)
     {
         throw FileException{ FileException::Cause::Write, fileName, caption };
     }
@@ -122,7 +122,7 @@ private:
     void CloseWithoutEndingTags(); // for auto-save files
 
     const FilePath mOutputPath;
-    const TranslatableString mCaption;
+    const ::TranslatableString mCaption;
     FilePath mBackupName;
     const bool mKeepBackup;
 

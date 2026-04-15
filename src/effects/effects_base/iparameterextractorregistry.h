@@ -11,7 +11,7 @@ namespace au::effects {
 //! Registry for parameter extractor services.
 //! Plugin modules (VST, LV2, AudioUnit) register their extractors here.
 //! EffectParametersProvider uses this to lookup the appropriate extractor.
-class IParameterExtractorRegistry : MODULE_GLOBAL_INTERFACE
+class IParameterExtractorRegistry : MODULE_GLOBAL_EXPORT_INTERFACE
 {
     INTERFACE_ID(IParameterExtractorRegistry)
 

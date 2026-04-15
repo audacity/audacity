@@ -3,7 +3,7 @@
 */
 #include "builtineffectscollectionmodule.h"
 
-#include "internal/builtineffectsloader.h"
+#include "internal/builtincollectionloader.h"
 #include "internal/builtinviewlauncher.h"
 
 #include "common/valuewarper/valuewarper.h"
@@ -45,14 +45,14 @@ void BuiltinEffectsCollectionModule::onPreInit(const muse::IApplication::RunMode
 {
     //! NOTE preInit() only creates static Registration objects (doesn't use `this`).
     //! Must run at module level before Au3WrapModule::onInit() sets sInitialized = true.
-    BuiltinEffectsLoader::preInit();
+    BuiltinCollectionLoader::preInit();
 
-    m_builtinEffectsLoader = std::make_unique<BuiltinEffectsLoader>(muse::modularity::globalCtx());
+    m_builtinCollectionLoader = std::make_unique<BuiltinCollectionLoader>(muse::modularity::globalCtx());
 }
 
 void BuiltinEffectsCollectionModule::onInit(const muse::IApplication::RunMode&)
 {
-    m_builtinEffectsLoader->init();
+    m_builtinCollectionLoader->init();
 }
 
 muse::modularity::IContextSetup* BuiltinEffectsCollectionModule::newContext(const muse::modularity::ContextPtr& ctx) const
@@ -77,7 +77,7 @@ void BuiltinEffectsCollectionContext::resolveImports()
 {
     auto lr = ioc()->resolve<IEffectViewLaunchRegister>(mname);
     if (lr) {
-        lr->regLauncher("Audacity" /*builtin*/, std::make_shared<BuiltinViewLauncher>(iocContext()));
+        lr->regLauncher(EffectFamily::Builtin, std::make_shared<BuiltinViewLauncher>(iocContext()));
     }
 }
 

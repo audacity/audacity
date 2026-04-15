@@ -126,7 +126,7 @@ void Lv2ViewModel::doInit()
     }
 
     const EffectId id = instancesRegister()->effectIdByInstanceId(instanceId());
-    const LV2Effect* const effect = dynamic_cast<LV2Effect*>(EffectManager::Get().GetEffect(id.toStdString()));
+    const LV2Effect* const effect = dynamic_cast<LV2Effect*>(effectsProvider()->effect(id));
     IF_ASSERT_FAILED(effect) {
         return;
     }
@@ -178,7 +178,7 @@ void Lv2ViewModel::doStartPreview()
 
 void Lv2ViewModel::doStopPreview()
 {
-    effectsProvider()->stopPreview();
+    executionScenario()->stopPreview();
 }
 
 std::optional<XID> Lv2ViewModel::x11Window() const
@@ -300,8 +300,6 @@ bool Lv2ViewModel::buildFancy()
     if (auto idleUi = tryCreateLv2IdleUi(*m_suilInstance, isExternalUi)) {
         m_pluginUi = std::move(idleUi);
     } else {
-        const auto uri = lilv_node_as_uri(uiType);
-
         m_unsupportedUiReason = "Idle UI creation failed";
         emit unsupportedUiReasonChanged();
         return false;

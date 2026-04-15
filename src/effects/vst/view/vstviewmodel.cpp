@@ -137,5 +137,5 @@ void VstViewModel::doStartPreview()
 
 void VstViewModel::doStopPreview()
 {
-    effectsProvider()->stopPreview();
+    executionScenario()->stopPreview();
 }

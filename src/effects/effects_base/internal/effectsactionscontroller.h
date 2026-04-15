@@ -29,13 +29,13 @@ class EffectsActionsController : public muse::actions::Actionable, public muse::
 {
     muse::GlobalInject<IEffectsConfiguration> configuration;
     muse::GlobalInject<spectrogram::ISpectralEffectsRegister> spectralEffectsRegister;
+    muse::GlobalInject<IEffectsProvider> effectsProvider;
+    muse::GlobalInject<IEffectInstancesRegister> instancesRegister;
 
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
     muse::ContextInject<muse::ui::IUiActionsRegister> uiActionsRegister{ this };
     muse::ContextInject<IEffectExecutionScenario> effectExecutionScenario{ this };
-    muse::ContextInject<IEffectsProvider> effectsProvider{ this };
     muse::ContextInject<IEffectPresetsScenario> presetsScenario{ this };
-    muse::ContextInject<IEffectInstancesRegister> instancesRegister{ this };
     muse::ContextInject<muse::IInteractive> interactive{ this };
     muse::ContextInject<au::playback::IPlaybackController> playbackController{ this };
     muse::ContextInject<spectrogram::IFrequencySelectionController> frequencySelectionController{ this };

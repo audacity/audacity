@@ -9,9 +9,11 @@
 #include "modularity/imodulesetup.h"
 
 namespace au::effects {
-class VstEffectsRepository;
 class MuseVstModulesRepository;
 class Vst3PluginsMetaReader;
+class Vst3EffectLoader;
+class Vst3PluginsScanner;
+
 class VstEffectsModule : public muse::modularity::IModuleSetup
 {
 public:
@@ -30,8 +32,8 @@ public:
 private:
 
     const std::shared_ptr<Vst3PluginsMetaReader> m_vstMetaReader;
-    std::shared_ptr<MuseVstModulesRepository> m_museVstModulesRepository;
-    std::shared_ptr<VstEffectsRepository> m_vstEffectsRepository;
+    const std::shared_ptr<Vst3EffectLoader> m_effectLoader;
+    const std::shared_ptr<Vst3PluginsScanner> m_pluginsScanner;
 };
 
 class VstEffectsContext : public muse::modularity::IContextSetup

@@ -2,7 +2,7 @@
  * Audacity: A Digital Audio Editor
  */
 #include "nyquistprompteffect.h"
-#include "au3-module-manager/PluginManager.h" // NYQUIST_PROMPT_ID
+#include "au3-effects/EffectBase.h" // NYQUIST_PROMPT_ID
 
 namespace au::effects {
 const ComponentInterfaceSymbol NyquistPromptEffect::Symbol { NYQUIST_PROMPT_ID };

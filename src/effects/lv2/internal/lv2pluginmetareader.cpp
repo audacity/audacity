@@ -3,30 +3,27 @@
  */
 #include "lv2pluginmetareader.h"
 #include "au3-module-manager/PluginManager.h"
-#include "au3-module-manager/PluginManager.h"
-#include "au3-strings/TranslatableString.h"
 
 namespace au::effects {
 Lv2PluginMetaReader::Lv2PluginMetaReader()
-    : AbstractAudioPluginMetaReader{m_module} {}
+    : Au3AudioPluginMetaReader{m_module} {}
 
 muse::audio::AudioResourceType Lv2PluginMetaReader::metaType() const
 {
     return muse::audio::AudioResourceType::Lv2Plugin;
 }
 
-void Lv2PluginMetaReader::doInit(const muse::IApplication::RunMode&)
+void Lv2PluginMetaReader::doInit()
 {
-    m_module.Initialize();
+    // This won't actually register the LV2 plugins on the manager
+    // but is needed to load the plugins in gWorld.
+    m_module.AutoRegisterPlugins(::PluginManager::Get());
 }
 
 bool Lv2PluginMetaReader::canReadMeta(const muse::io::path_t& path) const
 {
     const wxString wxPath{ path.c_str() };
     m_module.LoadBundle(wxPath);
-    const std::vector<wxString> paths = m_module.FindModulePaths(PluginManager::Get());
-    return std::any_of(paths.begin(), paths.end(), [&](const wxString& modulePath) {
-        return wxPath == modulePath;
-    });
+    return m_module.CheckPluginExist(wxPath);
 }
 }

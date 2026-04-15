@@ -8,7 +8,7 @@ using namespace au::effects;
 using namespace muse;
 
 Vst3PluginsMetaReader::Vst3PluginsMetaReader()
-    : AbstractAudioPluginMetaReader{m_module}
+    : Au3AudioPluginMetaReader{m_module}
 {
 }
 
