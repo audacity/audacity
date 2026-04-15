@@ -239,7 +239,8 @@ struct WaveBitmapCache::LookupHelper final
                     const auto envelopeEndNegativeRow = std::clamp(GetRowFromValue(-envelopeValue + 0.5) + 1, zeroLineY, globalMinRow);
 
                     if (envelopeEndNegativeRow != envelopeEndPositiveRow) {
-                        function.AddBand(selected ? envelopeColors.Selected : envelopeColors.Normal, envelopeEndPositiveRow, envelopeEndNegativeRow);
+                        function.AddBand(selected ? envelopeColors.Selected : envelopeColors.Normal, envelopeEndPositiveRow,
+                                         envelopeEndNegativeRow);
                     }
                 }
 
@@ -353,10 +354,17 @@ bool WaveBitmapCache::InitializeElement(
     }
 
     if (!mLookupHelper->PerformLookup(this, key)) {
-        const auto width = 1;
+        const auto width = CacheElementWidth;
         const auto height = mPaintParameters.Height;
-        const auto bytes = element.Allocate(width, height);
-        std::memset(bytes, 0, width * height * 3);
+        auto* bytes = element.Allocate(width, height);
+        const auto blankColor = Triplet(mPaintParameters.BlankColor);
+        for (uint32_t i = 0; i < width * height; ++i) {
+            *bytes++ = blankColor.r;
+            *bytes++ = blankColor.g;
+            *bytes++ = blankColor.b;
+        }
+        element.AvailableColumns = width;
+        element.IsComplete = false;
         return true;
     }
 
