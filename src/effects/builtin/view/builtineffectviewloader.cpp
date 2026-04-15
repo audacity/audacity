@@ -53,7 +53,7 @@ void BuiltinEffectViewLoader::load(int instanceId, QObject* itemParent, QObject*
     // TODO: could instancesRegister have a `typeByInstanceId` method?
     const auto effectId = instancesRegister()->effectIdByInstanceId(instanceId).toStdString();
 
-    const Effect* const effect = effectsProvider()->effect(muse::String::fromStdString(effectId));
+    const auto effect = dynamic_cast<Effect*>(EffectManager::Get().GetEffect(effectId));
     IF_ASSERT_FAILED(effect) {
         LOGE() << "effect not available, instanceId: " << instanceId << ", effectId: " << effectId;
         return;

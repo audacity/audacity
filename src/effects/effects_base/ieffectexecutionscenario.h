@@ -25,6 +25,5 @@ public:
     virtual muse::Ret repeatLastProcessor() = 0;
 
     virtual muse::Ret previewEffect(const EffectInstanceId& effectInstanceId, EffectSettings& settings) = 0;
-    virtual void stopPreview() = 0;
 };
 }

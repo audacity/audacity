@@ -8,6 +8,7 @@
 #include <QObject>
 #include <QTimer>
 
+#include "effects/effects_base/ieffectsprovider.h"
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "playback/iplayback.h"
@@ -28,6 +29,7 @@ class AudioUnitViewModel : public AbstractEffectViewModel
     muse::ContextInject<IRealtimeEffectService> realtimeEffectService{ this };
     muse::ContextInject<au::playback::IPlayback> playback{ this };
     muse::ContextInject<trackedit::IProjectHistory> projectHistory{ this };
+    muse::ContextInject<IEffectsProvider> effectsProvider{ this };
 
 public:
     AudioUnitViewModel(QObject* parent, int instanceId);

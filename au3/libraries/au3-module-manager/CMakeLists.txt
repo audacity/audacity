@@ -16,7 +16,6 @@ set( SOURCES
 #   PluginIPCUtils.h
    ConfigInterface.cpp
    ConfigInterface.h
-   IPluginRegistry.h
    ModuleManager.cpp
    ModuleManager.h
    ModuleSettings.cpp

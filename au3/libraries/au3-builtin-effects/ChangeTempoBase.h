@@ -29,7 +29,6 @@ public:
 
     EffectType GetType() const override;
     bool SupportsAutomation() const override;
-    bool SupportsMultipleClipSelection() const override;
 
     // Effect implementation
 

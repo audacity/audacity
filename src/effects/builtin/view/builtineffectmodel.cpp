@@ -59,7 +59,7 @@ void BuiltinEffectModel::doStartPreview()
 
 void BuiltinEffectModel::doStopPreview()
 {
-    executionScenario()->stopPreview();
+    effectsProvider()->stopPreview();
 }
 
 void BuiltinEffectModel::modifySettings(const std::function<void(EffectSettings& settings)>& modifier)

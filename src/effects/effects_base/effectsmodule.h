@@ -22,16 +22,14 @@ public:
     void resolveImports() override;
     void registerResources() override;
     void registerUiTypes() override;
-    void onPreInit(const muse::IApplication::RunMode& mode) override;
     void onInit(const muse::IApplication::RunMode& mode) override;
-    void onAllInited(const muse::IApplication::RunMode& mode) override;
     void onDeinit() override;
+    void onDelayedInit() override;
 
     muse::modularity::IContextSetup* newContext(const muse::modularity::ContextPtr& ctx) const override;
 
 private:
     std::shared_ptr<EffectsConfiguration> m_configuration;
-    std::shared_ptr<EffectsProvider> m_effectsProvider;
 };
 
 class EffectsContext : public muse::modularity::IContextSetup
@@ -46,6 +44,7 @@ public:
     void onDeinit() override;
 
 private:
+    std::shared_ptr<EffectsProvider> m_effectsProvider;
     std::shared_ptr<EffectsMenuProvider> m_effectsMenuProvider;
     std::shared_ptr<EffectsActionsController> m_actionsController;
     std::shared_ptr<RealtimeEffectService> m_realtimeEffectService;

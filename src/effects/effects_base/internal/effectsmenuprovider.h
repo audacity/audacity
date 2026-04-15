@@ -12,8 +12,9 @@
 namespace au::effects {
 class EffectsMenuProvider : public IEffectsMenuProvider, public muse::async::Asyncable, public muse::Contextable
 {
-    muse::GlobalInject<IEffectsConfiguration> configuration;
-    muse::GlobalInject<IEffectsProvider> effectsProvider;
+    muse::GlobalInject<effects::IEffectsConfiguration> configuration;
+
+    muse::ContextInject<effects::IEffectsProvider> effectsProvider{ this };
 
 public:
     EffectsMenuProvider(const muse::modularity::ContextPtr& ctx)

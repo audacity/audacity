@@ -4,6 +4,7 @@
 #include "realtimeeffectviewerdialogmodel.h"
 #include "au3-realtime-effects/RealtimeEffectState.h"
 #include "au3-effects/EffectPlugin.h"
+#include "au3-module-manager/PluginManager.h"
 #include "trackedit/trackedittypes.h"
 #include "trackedit/itrackeditproject.h"
 #include "au3wrap/internal/wxtypes_convert.h"
@@ -80,7 +81,25 @@ EffectFamily RealtimeEffectViewerDialogModel::prop_effectFamily() const
         return EffectFamily::Unknown;
     }
     const auto effectId = m_effectState->GetID().ToStdString();
-    return effectsProvider()->meta(muse::String::fromStdString(effectId)).family;
+    const PluginDescriptor* const plug = PluginManager::Get().GetPlugin(effectId);
+    if (!plug || !PluginManager::IsPluginAvailable(*plug)) {
+        return EffectFamily::Unknown;
+    }
+    const std::string family = au3::wxToStdString(plug->GetEffectFamily());
+    if (family == "VST3") {
+        return EffectFamily::VST3;
+    } else if (family == "LV2") {
+        return EffectFamily::LV2;
+    } else if (family == "AudioUnit") {
+        return EffectFamily::AudioUnit;
+    } else if (family == "Audacity") {
+        return EffectFamily::Builtin;
+    } else if (family == "Nyquist") {
+        return EffectFamily::Nyquist;
+    } else {
+        assert(false);
+        return EffectFamily::Unknown;
+    }
 }
 
 bool RealtimeEffectViewerDialogModel::prop_isActive() const

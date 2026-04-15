@@ -59,7 +59,6 @@ public:
     // There is no translated version
 
     const wxString& GetVendor() const;
-    const wxString& GetDescription() const;
 
     bool IsEnabled() const;
     bool IsValid() const;
@@ -82,11 +81,11 @@ public:
     bool IsEffectLegacy() const;
     bool IsEffectRealtime() const;
     bool IsEffectAutomatable() const;
-    bool SupportsMultipleClipSelection() const;
 
     // Importer plugins only
 
     const wxString& GetImporterIdentifier() const;
+    const TranslatableString& GetImporterFilterDescription() const;
     const FileExtensions& GetImporterExtensions() const;
 
     void WriteXML(XMLWriter& writer) const;
@@ -107,7 +106,6 @@ public:
     // the value will still be extracted for translation
     void SetVersion(const wxString& version);
     void SetVendor(const wxString& vendor);
-    void SetDescription(const wxString& description);
 
     // "family" should be an untranslated string wrapped in wxT()
     void SetEffectFamily(const wxString& family);
@@ -116,7 +114,6 @@ public:
     void SetEffectDefault(bool dflt);
     void SetEffectInteractive(bool interactive);
     void SetEffectLegacy(bool legacy);
-    void SetSupportsMultipleClipSelection(bool supports);
     void SetRealtimeSupport(EffectDefinitionInterface::RealtimeSince realtime);
 
     //! for serialization
@@ -127,6 +124,7 @@ public:
     void SetEffectAutomatable(bool automatable);
 
     void SetImporterIdentifier(const wxString& identifier);
+    void SetImporterFilterDescription(const TranslatableString& filterDesc);
     void SetImporterExtensions(FileExtensions extensions);
 
 private:
@@ -140,7 +138,6 @@ private:
     ComponentInterfaceSymbol mSymbol;
     wxString mVersion;
     wxString mVendor;
-    wxString mDescription;
     wxString mProviderID;
     bool mEnabled { false };
     bool mValid { false };
@@ -156,7 +153,6 @@ private:
     EffectDefinitionInterface::RealtimeSince mEffectRealtime {
         EffectDefinitionInterface::RealtimeSince::Never };
     bool mEffectAutomatable { false };
-    bool mSupportsMultipleClipSelection { false };
 
     // Importers
 

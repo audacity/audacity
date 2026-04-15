@@ -28,7 +28,7 @@ public:
     explicit FileException(
         Cause cause_, //!< What kind of file operation failed
         const wxFileName& fileName_, //!< Which file suffered a failure
-        const ::TranslatableString& caption = XO("File Error"), //!< Shown in message box frame, not the main message
+        const TranslatableString& caption = XO("File Error"), //!< Shown in message box frame, not the main message
         const wxFileName& renameTarget_ = {} //!< A second file name, only for renaming failure
         )
     // DV: We consider a FileException to be internal for now.
@@ -50,11 +50,11 @@ public:
 
     ~FileException() override;
 
-    static ::TranslatableString WriteFailureMessage(const wxFileName& fileName);
+    static TranslatableString WriteFailureMessage(const wxFileName& fileName);
 
 protected:
     //! %Format an error message appropriate for the @ref Cause.
-    ::TranslatableString ErrorMessage() const override;
+    TranslatableString ErrorMessage() const override;
     wxString ErrorHelpUrl() const override;
 
 public:

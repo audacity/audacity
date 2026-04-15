@@ -7,15 +7,9 @@
 #include "modularity/imodulesetup.h"
 
 namespace au::effects {
-class BuiltinEffectsLoader;
-class BuiltinEffectsScanner;
-class BuiltinEffectsMetaReader;
-
 class BuiltinEffectsModule : public muse::modularity::IModuleSetup
 {
 public:
-    BuiltinEffectsModule();
-
     std::string moduleName() const override;
     void registerExports() override;
     void resolveImports() override;
@@ -23,11 +17,5 @@ public:
     void registerUiTypes() override;
     void onInit(const muse::IApplication::RunMode& mode) override;
     void onDelayedInit() override;
-    void onDeinit() override;
-
-private:
-    const std::shared_ptr<BuiltinEffectsLoader> m_effectLoader;
-    const std::shared_ptr<BuiltinEffectsScanner> m_pluginsScanner;
-    const std::shared_ptr<BuiltinEffectsMetaReader> m_metaReader;
 };
 }

@@ -41,8 +41,6 @@ protected:
     // generated results and true is returned. Otherwise, return false.
     bool Process(EffectInstance& instance, EffectSettings& settings) override;
 
-    bool SupportsMultipleClipSelection() const override final { return false; }
-
     const bool mPreserveUnderlyingClipBoundaries;
 };
 

@@ -43,16 +43,6 @@ using RealtimeEffectStatePtr = std::shared_ptr<RealtimeEffectState>;
 using TrackId = long;
 using EffectChainLinkIndex = int;
 
-static const muse::String EFFECT_TITLE_ATTRIBUTE(u"title");
-static const muse::String EFFECT_DESCRIPTION_ATTRIBUTE(u"description");
-static const muse::String EFFECT_TYPE_ATTRIBUTE(u"type");
-static const muse::String EFFECT_CATEGORY_ATTRIBUTE(u"category");
-static const muse::String EFFECT_IS_REALTIME_CAPABLE_ATTRIBUTE(u"isRealtimeCapable");
-static const muse::String EFFECT_SUPPORTS_MULTIPLE_CLIP_SELECTION_ATTRIBUTE(u"supportsMultipleClipSelection");
-static const muse::String EFFECT_VERSION_ATTRIBUTE(u"version");
-static const muse::String EFFECT_MODULE_ATTRIBUTE(u"module");
-static const muse::String EFFECT_ACTIVATED_ATTRIBUTE(u"activated"); // `AudioPluginInfo`'s `enabled` field actually has semantic "valid".
-
 enum class EffectMenuOrganization {
     Grouped = 0,
     Flat = 1,
@@ -164,7 +154,7 @@ public:
 
 using EffectFamily = EffectFamilies::EffectFamily;
 
-enum class EffectCategory {
+enum class BuiltinEffectCategoryId {
     Unspecified = -1,
     None,
     VolumeAndCompression,
@@ -194,15 +184,12 @@ struct EffectMeta {
     muse::String title;
     muse::String description;
     muse::String vendor;
-    muse::String version;
-    muse::String module;
     muse::io::path_t path;
 
     muse::String category;
 
     bool isRealtimeCapable = false;
     bool supportsMultipleClipSelection = true;
-    bool isActivated = true;
 
     bool isValid() const { return !id.empty(); }
 };

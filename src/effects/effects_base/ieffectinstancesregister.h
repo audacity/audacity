@@ -12,7 +12,7 @@
 struct EffectSettings;
 
 namespace au::effects {
-class IEffectInstancesRegister : MODULE_GLOBAL_EXPORT_INTERFACE
+class IEffectInstancesRegister : MODULE_EXPORT_INTERFACE
 {
     INTERFACE_ID(IEffectInstancesRegister)
 

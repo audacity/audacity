@@ -72,6 +72,25 @@ using ConfigConstReference
     =TypeListVisitor::VariantOfReferences_t<true, ConfigValueTypes>;
 }
 
+//! Type of plugin registry version information
+using PluginRegistryVersion = wxString;
+
+MODULE_MANAGER_API
+bool Regver_eq(
+    const PluginRegistryVersion& regver1, const PluginRegistryVersion& regver2);
+
+// Compare registry versions
+MODULE_MANAGER_API
+bool Regver_lt(
+    const PluginRegistryVersion& regver1, const PluginRegistryVersion& regver2);
+
+// Compare registry versions
+inline bool Regver_le(
+    const PluginRegistryVersion& regver1, const PluginRegistryVersion& regver2)
+{
+    return !Regver_lt(regver2, regver1);
+}
+
 class MODULE_MANAGER_API PluginManagerInterface /* not final */
 {
 public:
@@ -118,6 +137,9 @@ public:
 
     virtual bool RemoveConfigSubgroup(ConfigurationType type, const PluginID& ID, const RegistryPath& group) = 0;
     virtual bool RemoveConfig(ConfigurationType type, const PluginID& ID, const RegistryPath& group, const RegistryPath& key) = 0;
+
+    //! What is the plugin registry version number now in the file?
+    virtual const PluginRegistryVersion& GetRegistryVersion() const = 0;
 };
 
 #endif // __AUDACITY_PLUGININTERFACE_H__
