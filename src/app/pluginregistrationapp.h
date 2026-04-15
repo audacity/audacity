@@ -4,47 +4,24 @@
 #ifndef AU_APP_PLUGINREGISTRATIONAPP_H
 #define AU_APP_PLUGINREGISTRATIONAPP_H
 
-#include <QList>
 #include <memory>
-#include <vector>
 
-#include "modularity/imodulesetup.h"
 #include "global/internal/baseapplication.h"
-#include "global/globalmodule.h"
-#include "commandlineparser.h"
+
+#include "cmdoptions.h"
 
 namespace au::app {
-class PluginRegistrationApp : public muse::BaseApplication, public std::enable_shared_from_this<PluginRegistrationApp>
+class PluginRegistrationApp : public muse::BaseApplication
 {
 public:
-    PluginRegistrationApp(const CommandLineParser::AudioPluginRegistration& task);
+    PluginRegistrationApp(const std::shared_ptr<AudacityCmdOptions>& options);
 
-    void addModule(muse::modularity::IModuleSetup* module);
-
-    void setup() override;
-    void finish() override;
-
-    muse::modularity::ContextPtr setupNewContext(const muse::StringList& args = {}) override;
-    void destroyContext(const muse::modularity::ContextPtr& ctx) override;
-    size_t contextCount() const override;
-    std::vector<muse::modularity::ContextPtr> contexts() const override;
+protected:
+    void startupScenario(const muse::modularity::ContextPtr& ctxId) override;
 
 private:
-    int runSelfTest();
-    int processAudioPluginRegistration();
-
-    struct Context {
-        muse::modularity::ContextPtr ctx;
-        std::vector<muse::modularity::IContextSetup*> setups;
-    };
-
-    Context& context(const muse::modularity::ContextPtr& ctx);
-
-    CommandLineParser::AudioPluginRegistration m_task;
-    muse::GlobalModule* m_globalModule = nullptr;
-    QList<muse::modularity::IModuleSetup*> m_modules;
-
-    std::vector<Context> m_contexts;
+    int runSelfTest(const muse::modularity::ContextPtr& ctxId);
+    int processAudioPluginRegistration(const muse::modularity::ContextPtr& ctxId);
 };
 }
 
