@@ -10,6 +10,7 @@
 
 #include <catch2/catch.hpp>
 
+#include <memory>
 #include <string>
 #include <string_view>
 #include <type_traits>
@@ -33,6 +34,36 @@ struct CacheElement : GraphicsDataCacheElementBase
 
     GraphicsDataCacheKey Key;
 };
+
+class InvalidationTestCache final : public GraphicsDataCache<CacheElement>
+{
+public:
+    InvalidationTestCache()
+        : GraphicsDataCache<CacheElement>(44100, [] { return std::make_unique<CacheElement>(); })
+    {
+    }
+
+    using GraphicsDataCacheBase::InvalidatePixelRange;
+    using GraphicsDataCacheBase::InvalidateOtherZoomLevels;
+
+    size_t initializations = 0;
+
+private:
+    bool InitializeElement(const GraphicsDataCacheKey& key, CacheElement& element) override
+    {
+        element = key;
+        element.IsComplete = true;
+        ++initializations;
+        return true;
+    }
+};
+
+size_t InitializationsDuringLookup(InvalidationTestCache& cache, const ZoomInfo& zoomInfo, double t0, double t1)
+{
+    const size_t before = cache.initializations;
+    REQUIRE(!cache.PerformLookup(zoomInfo, t0, t1).empty());
+    return cache.initializations - before;
+}
 
 void CheckCacheElementLookup(GraphicsDataCache<CacheElement>& cache, const ZoomInfo& zoomInfo, double t0, double t1, size_t count)
 {
@@ -111,5 +142,39 @@ TEST_CASE("graphics-data-cache", "")
                                    - info.TimeToPosition(t0) / GraphicsDataCacheBase::CacheElementWidth;
 
         CheckCacheElementLookup(cache, info, t0, t1, itemsCount);
+    }
+}
+
+TEST_CASE("graphics-data-cache-invalidation", "")
+{
+    const ZoomInfo zoomA(0.0, 100.0);
+    const ZoomInfo zoomB(0.0, 200.0);
+
+    InvalidationTestCache cache;
+
+    REQUIRE(InitializationsDuringLookup(cache, zoomA, 0.0, 10.0) > 0);
+    REQUIRE(InitializationsDuringLookup(cache, zoomB, 0.0, 10.0) > 0);
+
+    SECTION("Cached elements are reused")
+    {
+        REQUIRE(InitializationsDuringLookup(cache, zoomA, 0.0, 10.0) == 0);
+        REQUIRE(InitializationsDuringLookup(cache, zoomB, 0.0, 10.0) == 0);
+    }
+
+    SECTION("Pixel range invalidation touches only the given zoom and range")
+    {
+        // 1000 pixels at zoom A span 4 elements; pixels [300, 400) lie in the second one
+        cache.InvalidatePixelRange(zoomA.GetZoom(), 300, 400);
+
+        REQUIRE(InitializationsDuringLookup(cache, zoomA, 0.0, 10.0) == 1);
+        REQUIRE(InitializationsDuringLookup(cache, zoomB, 0.0, 10.0) == 0);
+    }
+
+    SECTION("Other zoom levels are invalidated, the given one is kept")
+    {
+        cache.InvalidateOtherZoomLevels(zoomB.GetZoom());
+
+        REQUIRE(InitializationsDuringLookup(cache, zoomB, 0.0, 10.0) == 0);
+        REQUIRE(InitializationsDuringLookup(cache, zoomA, 0.0, 10.0) == 4);
     }
 }
