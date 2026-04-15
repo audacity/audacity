@@ -464,19 +464,7 @@ muse::ProgressPtr Au3AudioComService::openAudioFile(const std::string& audioId)
             return true;
         };
 
-        using DownloadFuture = CloudSyncService::DownloadAudioFuture;
-        auto downloadFuturePromise = std::make_shared<std::promise<DownloadFuture> >();
-        std::future<DownloadFuture> downloadFutureResult = downloadFuturePromise->get_future();
-
-        muse::async::Async::call(self.get(), [downloadFuturePromise, audioId,
-                                              progressCallback = std::move(progressCallback)]() mutable {
-            // Important: CloudSyncService does not control access by locking but by calling convention,
-            // We must ensure all operations on this service to be called on the main thread
-            downloadFuturePromise->set_value(
-                CloudSyncService::Get().DownloadCloudAudio(audioId, std::move(progressCallback)));
-        }, muse::runtime::mainThreadId());
-
-        auto result = downloadFutureResult.get().get();
+        auto result = CloudSyncService::Get().DownloadCloudAudio(audioId, std::move(progressCallback)).get();
 
         if (progress->isCanceled()) {
             if (!result.AudioPath.empty()) {
@@ -485,14 +473,12 @@ muse::ProgressPtr Au3AudioComService::openAudioFile(const std::string& audioId)
             return;
         }
 
-        muse::async::Async::call(self.get(), [progress, result]() {
-            if (result.Status != sync::DownloadAudioResult::StatusCode::Succeeded) {
-                progress->finish(muse::make_ret(muse::Ret::Code::UnknownError, result.Result.Content));
-                return;
-            }
+        if (result.Status != sync::DownloadAudioResult::StatusCode::Succeeded) {
+            progress->finish(muse::make_ret(muse::Ret::Code::UnknownError, result.Result.Content));
+            return;
+        }
 
-            progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(muse::io::path_t(result.AudioPath))));
-        }, muse::runtime::mainThreadId());
+        progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(muse::io::path_t(result.AudioPath))));
     }).detach();
 
     return progress;

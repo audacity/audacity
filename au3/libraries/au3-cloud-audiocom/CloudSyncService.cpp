@@ -902,13 +902,15 @@ CloudSyncService::DownloadAudioFuture CloudSyncService::DownloadCloudAudio(
     std::string_view audioId,
     sync::ProgressCallback callback)
 {
-    mDownloadAudioPromise = {};
-
     if (mDownloadInProcess.exchange(true)) {
-        mDownloadAudioPromise.set_value(
+        auto blockedPromise = DownloadAudioPromise {};
+
+        blockedPromise.set_value(
             { sync::DownloadAudioResult::StatusCode::Blocked, {}, {} });
-        return mDownloadAudioPromise.get_future();
+        return blockedPromise.get_future();
     }
+
+    mDownloadAudioPromise = {};
 
     if (audioId.empty()) {
         mDownloadAudioPromise.set_value(

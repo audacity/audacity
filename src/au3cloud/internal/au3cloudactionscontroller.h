@@ -9,9 +9,10 @@
 
 #include "framework/global/modularity/ioc.h"
 #include "framework/interactive/iplatforminteractive.h"
-#include "framework/actions/iactionsdispatcher.h"
 #include "au3cloud/iauthorization.h"
+#include "framework/actions/iactionsdispatcher.h"
 #include "au3cloud/iau3audiocomservice.h"
+#include "framework/interactive/iinteractive.h"
 
 namespace au::au3cloud {
 class Au3CloudActionsController : public muse::actions::Actionable, public muse::async::Asyncable, public muse::Contextable
