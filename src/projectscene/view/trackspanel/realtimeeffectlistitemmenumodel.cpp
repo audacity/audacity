@@ -50,7 +50,7 @@ void RealtimeEffectListItemMenuModel::handleMenuItem(const QString& itemId)
     } else {
         const auto effectId = effects::effectIdFromAction(menuItem.id());
         if (const RealtimeEffectStatePtr newState = realtimeEffectService()->replaceRealtimeEffect(*tId, m_effectState, effectId)) {
-            effectsProvider()->showEffect(newState);
+            effectViewController()->showEffect(newState);
         }
     }
 }

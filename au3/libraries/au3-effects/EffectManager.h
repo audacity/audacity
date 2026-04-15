@@ -67,9 +67,11 @@ public:
         kRepeatNyquistPrompt = 0x10,
     };
 
+    using EffectLoader = std::function<EffectSettingsManager* (const PluginID&)>;
+
     /*! Find the singleton EffectInstanceFactory for ID. */
     static const EffectInstanceFactory*
-    GetInstanceFactory(const PluginID& ID);
+    GetInstanceFactory(const PluginID& ID, const EffectLoader& effectLoader);
 
     /** Get the singleton instance of the EffectManager. Probably not safe
         for multi-thread use. */
@@ -85,32 +87,15 @@ public:
     using EffectPresetDialog = std::function<std::optional<wxString>(
                                                  EffectPlugin&, const wxString& preset)>;
 
-    //! Here solely for the purpose of Nyquist Workbench until a better solution is devised.
-    /** Register an effect so it can be executed.
-      uEffect is expected to be a self-hosting Nyquist effect */
-    const PluginID& RegisterEffect(std::unique_ptr<EffectPlugin> uEffect);
-    //! Used only by Nyquist Workbench module
-    void UnregisterEffect(const PluginID& ID);
-
-    TranslatableString GetEffectFamilyName(const PluginID& ID);
-    TranslatableString GetVendorName(const PluginID& ID);
-
-    bool IsHidden(const PluginID& ID);
-
-    bool HasPresets(const PluginID& ID);
-    wxString
-    GetPreset(const PluginID& ID, const wxString& params, EffectPresetDialog);
-    wxString GetDefaultPreset(const PluginID& ID);
-
     /** Allow effects to disable saving the state at run time */
     void SetSkipStateFlag(bool flag);
     bool GetSkipStateFlag();
 
     /*! Return an effect by its ID. */
-    EffectPlugin* GetEffect(const PluginID& ID);
+    EffectPlugin* GetEffect(const PluginID& ID, const EffectLoader& effectLoader);
 
     /*! Get default settings by effect ID.  May return nullptr */
-    EffectSettings* GetDefaultSettings(const PluginID& ID);
+    EffectSettings* GetDefaultSettings(const PluginID& ID, const EffectLoader& effectLoader);
 
     /*! Get effect and default settings by effect ID. */
     /*!
@@ -118,10 +103,10 @@ public:
      (if first member is not null, then the second is not null)
      */
     std::pair<EffectPlugin*, EffectSettings*>
-    GetEffectAndDefaultSettings(const PluginID& ID);
+    GetEffectAndDefaultSettings(const PluginID& ID, const EffectLoader& effectLoader);
 
 private:
-    EffectAndDefaultSettings& DoGetEffect(const PluginID& ID);
+    EffectAndDefaultSettings& DoGetEffect(const PluginID& ID, const EffectLoader& effectLoader);
 
     EffectMap mEffects;
     EffectOwnerMap mHostEffects;

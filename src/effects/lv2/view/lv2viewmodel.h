@@ -18,8 +18,6 @@
 #include <QObject>
 #include <QQuickItem>
 
-#include <variant>
-
 class LV2PortUIStates;
 struct LV2EffectOutputs;
 typedef unsigned long XID;
@@ -32,8 +30,9 @@ class Lv2ViewModel : public AbstractEffectViewModel
     Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged FINAL)
     Q_PROPERTY(QString unsupportedUiReason READ unsupportedUiReason NOTIFY unsupportedUiReasonChanged FINAL)
 
+    muse::GlobalInject<IEffectsProvider> effectsProvider;
+
     muse::ContextInject<trackedit::IProjectHistory> projectHistory { this };
-    muse::ContextInject<IEffectsProvider> effectsProvider{ this };
 
 public:
     Lv2ViewModel(QObject* parent, int instanceId, const QString& effectState);

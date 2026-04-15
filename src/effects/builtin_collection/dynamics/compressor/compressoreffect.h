@@ -26,6 +26,7 @@ public:
     RealtimeSince RealtimeSupport() const override;
     RegistryPaths GetFactoryPresets() const override;
     OptionalMessage LoadFactoryPreset(int id, EffectSettings& settings) const override;
+    bool SupportsMultipleClipSelection() const override { return true; }
 
     std::shared_ptr<::EffectInstance> MakeInstance() const override;
     std::unique_ptr<EffectOutputs> MakeOutputs() const override;

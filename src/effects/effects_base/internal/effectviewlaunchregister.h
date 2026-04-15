@@ -13,11 +13,11 @@ class EffectViewLaunchRegister : public IEffectViewLaunchRegister
 public:
     EffectViewLaunchRegister() = default;
 
-    void regLauncher(const std::string& family, const IEffectViewLauncherPtr& launcher) override;
-    IEffectViewLauncherPtr launcher(const std::string& family) const override;
+    void regLauncher(EffectFamily family, const IEffectViewLauncherPtr& launcher) override;
+    IEffectViewLauncherPtr launcher(EffectFamily family) const override;
 
 private:
 
-    std::map<std::string, IEffectViewLauncherPtr> m_data;
+    std::map<EffectFamily, IEffectViewLauncherPtr> m_data;
 };
 }

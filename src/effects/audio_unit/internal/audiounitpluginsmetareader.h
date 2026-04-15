@@ -3,11 +3,11 @@
 */
 #pragma once
 
-#include "effects/effects_base/internal/abstractaudiopluginmetareader.h"
+#include "effects/effects_base/internal/au3/au3audiopluginmetareader.h"
 #include "au3-audio-unit/AudioUnitEffectsModule.h"
 
 namespace au::effects {
-class AudioUnitPluginsMetaReader : public AbstractAudioPluginMetaReader
+class AudioUnitPluginsMetaReader : public Au3AudioPluginMetaReader
 {
 public:
     AudioUnitPluginsMetaReader();

@@ -149,7 +149,7 @@ void GeneratedEffectViewerModel::doStartPreview()
 
 void GeneratedEffectViewerModel::doStopPreview()
 {
-    effectsProvider()->stopPreview();
+    executionScenario()->stopPreview();
 }
 
 bool GeneratedEffectViewerModel::isPreviewAllowed() const

@@ -28,11 +28,11 @@
 #include "framework/global/modularity/ioc.h"
 #include "framework/interactive/iinteractive.h"
 #include "framework/actions/iactionsdispatcher.h"
-#include "framework/audioplugins/iregisteraudiopluginsscenario.h"
 #include "framework/multiwindows/imultiwindowsprovider.h"
 
 #include "appshell/iappshellconfiguration.h"
 #include "appshell/internal/isessionsmanager.h"
+#include "effects/effects_base/ieffectsproviderinitializer.h"
 
 namespace au::appshell {
 class StartupScenario : public au::appshell::IStartupScenario, public muse::async::Asyncable, public muse::Contextable
@@ -42,8 +42,8 @@ class StartupScenario : public au::appshell::IStartupScenario, public muse::asyn
 
     muse::ContextInject<muse::IInteractive> interactive { this };
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
-    muse::ContextInject<muse::audioplugins::IRegisterAudioPluginsScenario> registerAudioPluginsScenario { this };
     muse::ContextInject<ISessionsManager> sessionsManager { this };
+    muse::ContextInject<effects::IEffectsProviderInitializer> effectsProviderInitializer { this };
 
 public:
     StartupScenario(const muse::modularity::ContextPtr& ctx)
