@@ -221,17 +221,6 @@ bool ApplicationActionController::quit()
         if (pfc && !pfc->closeOpenedProject()) {
             return false;
         }
-
-        auto window = muse::modularity::ioc(ctx)->resolve<muse::ui::IMainWindow>("appshell");
-
-        IF_ASSERT_FAILED(window) {
-            continue;
-        }
-
-        if (auto w = window->qWindow()) {
-            w->hide();
-            w->deleteLater();
-        }
     }
 
     QCoreApplication::exit();
