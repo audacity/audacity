@@ -441,7 +441,10 @@ void TrackList::DeletionEvent(std::weak_ptr<Track> node, bool duringReplace)
 
 void TrackList::AdditionEvent(TrackNodePointer node)
 {
-   QueueEvent({ TrackListEvent::ADDITION, *node });
+   // Publish immediately rather than using CallAfter
+   // see issue #8440
+   TrackListEvent event{ TrackListEvent::ADDITION, *node };
+   Publish(std::move(event));
 }
 
 void TrackList::ResizingEvent(TrackNodePointer node)
