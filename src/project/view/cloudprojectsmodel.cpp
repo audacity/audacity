@@ -24,12 +24,8 @@ CloudProjectsModel::CloudProjectsModel(QObject* parent)
 
 void CloudProjectsModel::load()
 {
-    auto onUserAuthorizedChanged = [this](au::au3cloud::AuthState status) {
-        if (std::holds_alternative<au::au3cloud::Authorizing>(status)) {
-            return;
-        }
-
-        if (std::holds_alternative<au::au3cloud::Authorized>(status) || (authorization()->ensureAuthorization())) {
+    auto onUserAuthorizedChanged = [this](bool authorized) {
+        if (authorized) {
             setState(State::Loading);
             loadItemsIfNecessary();
         } else {
@@ -40,14 +36,16 @@ void CloudProjectsModel::load()
 
             setState(State::NotSignedIn);
         }
-
-        setState(State::NotSignedIn);
     };
 
-    onUserAuthorizedChanged(authorization()->authState().val);
+    auto isAuthorized = [](au::au3cloud::AuthState authState) {
+        return std::holds_alternative<au::au3cloud::Authorized>(authState);
+    };
 
-    authorization()->authState().ch.onReceive(this, [onUserAuthorizedChanged](au::au3cloud::AuthState authState) {
-        onUserAuthorizedChanged(std::move(authState));
+    onUserAuthorizedChanged(isAuthorized(authorization()->authState().val));
+
+    authorization()->authState().ch.onReceive(this, [isAuthorized, onUserAuthorizedChanged](au::au3cloud::AuthState authState) {
+        onUserAuthorizedChanged(isAuthorized(std::move(authState)));
     }, muse::async::Asyncable::Mode::SetReplace);
 
     connect(this, &CloudProjectsModel::desiredRowCountChanged, this, &CloudProjectsModel::loadItemsIfNecessary);

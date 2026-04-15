@@ -21,7 +21,6 @@ class Au3CloudActionsController : public muse::actions::Actionable, public muse:
 
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
     muse::ContextInject<muse::IInteractive> interactive { this };
-    muse::ContextInject<IAuthorization> authorization { this };
     muse::ContextInject<IAu3AudioComService> audioComService { this };
 
 public:

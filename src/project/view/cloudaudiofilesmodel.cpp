@@ -23,12 +23,8 @@ CloudAudioFilesModel::CloudAudioFilesModel(QObject* parent)
 
 void CloudAudioFilesModel::load()
 {
-    auto onUserAuthorizedChanged = [this](au::au3cloud::AuthState status) {
-        if (std::holds_alternative<au::au3cloud::Authorizing>(status)) {
-            return;
-        }
-
-        if (std::holds_alternative<au::au3cloud::Authorized>(status) || (authorization()->ensureAuthorization())) {
+    auto onUserAuthorizedChanged = [this](bool authorized) {
+        if (authorized) {
             setState(State::Loading);
             loadItemsIfNecessary();
         } else {
@@ -39,14 +35,16 @@ void CloudAudioFilesModel::load()
 
             setState(State::NotSignedIn);
         }
-
-        setState(State::NotSignedIn);
     };
 
-    onUserAuthorizedChanged(authorization()->authState().val);
+    auto isAuthorized = [](au::au3cloud::AuthState authState) {
+        return std::holds_alternative<au::au3cloud::Authorized>(authState);
+    };
 
-    authorization()->authState().ch.onReceive(this, [onUserAuthorizedChanged](au::au3cloud::AuthState authState) {
-        onUserAuthorizedChanged(std::move(authState));
+    onUserAuthorizedChanged(isAuthorized(authorization()->authState().val));
+
+    authorization()->authState().ch.onReceive(this, [isAuthorized, onUserAuthorizedChanged](au::au3cloud::AuthState authState) {
+        onUserAuthorizedChanged(isAuthorized(std::move(authState)));
     }, muse::async::Asyncable::Mode::SetReplace);
 
     connect(this, &CloudAudioFilesModel::desiredRowCountChanged, this, &CloudAudioFilesModel::loadItemsIfNecessary);
@@ -150,7 +148,7 @@ void CloudAudioFilesModel::loadItemsIfNecessary()
                     obj[NAME_KEY] = QString::fromStdString(item.title);
                     obj[SLUG_KEY] = QString::fromStdString(item.slug);
                     obj[PATH_KEY] = ""; //configuration()->cloudProjectPath(item.id).toQString();
-                    obj[THUMBNAIL_URL_KEY] = filesystem()->exists(item.waveformPath) ? item.waveformPath.toQString() : QString();
+                    obj[THUMBNAIL_URL_KEY] = item.waveformPath.toQString();
                     obj[IS_CLOUD_KEY] = true;
                     obj[CLOUD_ITEM_ID_KEY] = QString::fromStdString(item.id);
                     obj[TIME_SINCE_MODIFIED_KEY]

@@ -270,28 +270,8 @@ muse::ProgressPtr Au3AudioComService::uploadProject(au::project::IAudacityProjec
         return progress;
     }
 
-    auto& projectCloudExtension = audacity::cloud::audiocom::sync::ProjectCloudExtension::Get(*au3Project);
-    m_projectUploadSubscription = projectCloudExtension.SubscribeStatusChanged(
-        [this, project, progress](const audacity::cloud::audiocom::sync::CloudStatusChangedMessage& message) {
-        if (message.Status == audacity::cloud::audiocom::sync::ProjectSyncStatus::Syncing) {
-            progress->progress(message.Progress * 100, 100);
-        }
-
-        if (message.Status == audacity::cloud::audiocom::sync::ProjectSyncStatus::Synced) {
-            progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(getCloudProjectPage(project))));
-        }
-
-        if (message.Status == audacity::cloud::audiocom::sync::ProjectSyncStatus::Failed) {
-            progress->finish(make_ret(cloudSyncErrorToErr(message.Error)));
-        }
-    }, false);
-
-    const bool isSyncing = projectCloudExtension.IsSyncing();
-    const std::string currentSnapshotId = projectCloudExtension.GetSnapshotId();
-    const std::string cloudProjectId = projectCloudExtension.GetCloudProjectId();
-
-    std::thread([weak = weak_from_this(), project, progress, name, isSyncing, currentSnapshotId, cloudProjectId, forceOverwrite,
-                 projectSaveCallback = std::move(projectSaveCallback)]() mutable {
+    std::thread([weak = weak_from_this(), project, progress, name, forceOverwrite, projectSaveCallback = std::move(
+                     projectSaveCallback)]() mutable {
         auto self = weak.lock();
         if (!self) {
             progress->finish(muse::make_ret(muse::Ret::Code::InternalError, muse::trc("cloud", "Service destroyed")));
@@ -324,18 +304,18 @@ muse::ProgressPtr Au3AudioComService::uploadProject(au::project::IAudacityProjec
 
         auto done = std::make_shared<std::atomic<bool> >(false);
         {
-            std::lock_guard guard(m_uploadSubscriptionsMutex);
+            std::lock_guard guard(self->m_uploadSubscriptionsMutex);
 
-            m_projectUploadSubscriptions.erase(
+            self->m_projectUploadSubscriptions.erase(
                 std::remove_if(
-                    m_projectUploadSubscriptions.begin(),
-                    m_projectUploadSubscriptions.end(),
+                    self->m_projectUploadSubscriptions.begin(),
+                    self->m_projectUploadSubscriptions.end(),
                     [](const UploadSubscriptionEntry& e) { return e.done->load(); }),
-                m_projectUploadSubscriptions.end());
+                self->m_projectUploadSubscriptions.end());
 
-            m_projectUploadSubscriptions.push_back(
+            self->m_projectUploadSubscriptions.push_back(
                 { projectCloudExtension.SubscribeStatusChanged(
-                      [this, project, progress, done](
+                      [self, project, progress, done](
                           const audacity::cloud::audiocom::sync::CloudStatusChangedMessage& message) {
                     if (done->load()) {
                         return;
@@ -347,7 +327,7 @@ muse::ProgressPtr Au3AudioComService::uploadProject(au::project::IAudacityProjec
 
                     if (message.Status == audacity::cloud::audiocom::sync::ProjectSyncStatus::Synced) {
                         done->store(true);
-                        progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(getCloudProjectPage(project))));
+                        progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(self->getCloudProjectPage(project))));
                     }
 
                     if (message.Status == audacity::cloud::audiocom::sync::ProjectSyncStatus::Failed) {
