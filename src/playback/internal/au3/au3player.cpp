@@ -548,18 +548,28 @@ void Au3Player::updatePlaybackPosition()
         return;
     }
 
-    const auto timeDiff = duration_cast<milliseconds>(steady_clock::now() - m_currentTarget->time).count() / 1000.0;
-    const auto extrapolation = static_cast<long long>(m_currentTarget->consumedSamples + timeDiff * sampleRate);
-    // Never progress by more samples than really have been output.
-    const auto expectedConsumedNow = std::min(static_cast<long long>(m_currentTarget->consumedSamples), extrapolation);
+    const double timeDiff = duration<double>(steady_clock::now() - m_currentTarget->time).count();
+    const long long anchorSamples = static_cast<long long>(m_currentTarget->consumedSamples);
+    const long long extrapolation = anchorSamples + static_cast<long long>(timeDiff * sampleRate);
 
-    if (static_cast<long long>(m_consumedSamplesSoFar) >= expectedConsumedNow) {
+    const long long maxAheadSamples = static_cast<long long>(0.050 * sampleRate);
+    const long long maxBehindSamples = static_cast<long long>(0.020 * sampleRate);
+    const long long drift = extrapolation - anchorSamples;
+
+    long long target;
+    if (drift > maxAheadSamples || drift < -maxBehindSamples) {
+        target = anchorSamples;
+    } else {
+        target = extrapolation;
+    }
+
+    if (static_cast<long long>(m_consumedSamplesSoFar) >= target) {
         // User isn't hearing audio yet - wait some more. (`expectedConsumedNow` can be negative.)
         return;
     }
 
-    audioEngine()->updateTimePosition(expectedConsumedNow - m_consumedSamplesSoFar);
-    m_consumedSamplesSoFar = expectedConsumedNow;
+    audioEngine()->updateTimePosition(target - m_consumedSamplesSoFar);
+    m_consumedSamplesSoFar = target;
     updatePlaybackState();
 }
 
