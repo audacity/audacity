@@ -124,4 +124,13 @@ private:
 
 ENUMERATE_TRACK_TYPE(TimeTrack);
 
+class TIME_TRACK_API TimeTrackDetector final : public ClientData::Base
+{
+public:
+    static TimeTrackDetector& Get(AudacityProject& project);
+    static const TimeTrackDetector& Get(const AudacityProject& project);
+
+    bool found { false };
+};
+
 #endif // __AUDACITY_TIMETRACK__

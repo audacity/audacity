@@ -1,6 +1,7 @@
 #include "domconverter.h"
 
 #include "au3-label-track/LabelTrack.h"
+#include "au3-time-track/TimeTrack.h"
 #include "au3-track/Track.h"
 #include "au3-wave-track/WaveClip.h"
 #include "au3-wave-track/WaveTrack.h"
@@ -18,6 +19,10 @@ au::trackedit::TrackType trackType(const Au3Track* track)
 {
     if (dynamic_cast<const LabelTrack*>(track)) {
         return au::trackedit::TrackType::Label;
+    }
+
+    if (dynamic_cast<const TimeTrack*>(track)) {
+        return au::trackedit::TrackType::Undefined;
     }
 
     switch (track->NChannels()) {

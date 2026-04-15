@@ -25,9 +25,32 @@
 #define TIMETRACK_MIN 0.01
 #define TIMETRACK_MAX 10.0
 
-static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
+static const AudacityProject::AttachedObjects::RegisteredFactory sTimeTrackDetectorKey {
+    [](AudacityProject&) {
+        return std::make_shared<TimeTrackDetector>();
+    }
+};
+
+TimeTrackDetector& TimeTrackDetector::Get(AudacityProject& project)
+{
+    return project.AttachedObjects::Get<TimeTrackDetector>(sTimeTrackDetectorKey);
+}
+
+const TimeTrackDetector& TimeTrackDetector::Get(const AudacityProject& project)
+{
+    return Get(const_cast<AudacityProject&>(project));
+}
+
+static ProjectFileIORegistry::ObjectReaderEntry readerEntry {
     "timetrack",
-    TimeTrack::New
+    [](AudacityProject& project) -> XMLTagHandler* {
+        TimeTrackDetector::Get(project).found = true;
+#ifdef AU_LOAD_TIMETRACK
+        return TimeTrack::New(project);
+#else
+        return nullptr;
+#endif
+    }
 };
 
 wxString TimeTrack::GetDefaultName()
