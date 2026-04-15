@@ -24,7 +24,7 @@ constexpr EffectFamily toEffectFamily(muse::audio::AudioResourceType type)
     case muse::audio::AudioResourceType::NyquistPlugin:
         return EffectFamily::Nyquist;
     case muse::audio::AudioResourceType::FluidSoundfont:
-    case muse::audio::AudioResourceType::MusePlugin:
+    case muse::audio::AudioResourceType::NativeEffect:
     case muse::audio::AudioResourceType::MuseSamplerSoundPack:
         return EffectFamily::Unknown;
     default:

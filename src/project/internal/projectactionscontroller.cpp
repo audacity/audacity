@@ -406,7 +406,7 @@ bool ProjectActionsController::closeOpenedProject(const bool quitApp)
     }
 
     if (result) {
-        interactive()->closeAllDialogs();
+        interactive()->closeAllDialogsSync();
 
         project->close();
 
