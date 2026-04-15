@@ -102,17 +102,24 @@ Item {
         visible: root.isLeadInRecordingTrack
         z: 2
 
-        onVisibleChanged: if (visible) updatePosition()
+        onVisibleChanged: if (visible)
+            updatePosition()
 
         Connections {
             target: root.context
-            function onFrameStartTimeChanged() { leadInRecordingLine.updatePosition() }
-            function onFrameEndTimeChanged() { leadInRecordingLine.updatePosition() }
+            function onFrameStartTimeChanged() {
+                leadInRecordingLine.updatePosition()
+            }
+            function onFrameEndTimeChanged() {
+                leadInRecordingLine.updatePosition()
+            }
         }
 
         Connections {
             target: root
-            function onLeadInRecordingStartTimeChanged() { leadInRecordingLine.updatePosition() }
+            function onLeadInRecordingStartTimeChanged() {
+                leadInRecordingLine.updatePosition()
+            }
         }
     }
 
