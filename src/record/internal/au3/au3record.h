@@ -5,8 +5,7 @@
 #pragma once
 
 #include <vector>
-#include <chrono>
-#include <QTimer>
+#include <QVariantAnimation>
 
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
@@ -89,9 +88,7 @@ private:
     muse::ValCh<muse::secs_t> m_recordPosition;
     muse::async::Notification m_recordingFinished;
 
-    // Smooth recording position interpolation (16ms timer, like playback)
-    QTimer m_smoothRecordTimer;
-    std::chrono::steady_clock::time_point m_wallClockAnchor;
+    QVariantAnimation m_smoothRecordAnim;
     double m_anchorPosition = 0.0;
 
     context::IPlaybackStatePtr playbackState() const;

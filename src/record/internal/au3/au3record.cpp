@@ -196,9 +196,12 @@ void Au3Record::init()
 {
     m_audioInput = std::make_shared<Au3AudioInput>(iocContext());
 
-    m_smoothRecordTimer.setInterval(16);
-    m_smoothRecordTimer.setTimerType(Qt::PreciseTimer);
-    m_smoothRecordTimer.callOnTimeout([this]() { updateSmoothRecordPosition(); });
+    m_smoothRecordAnim.setStartValue(0.0);
+    m_smoothRecordAnim.setEndValue(std::numeric_limits<double>::max());
+    m_smoothRecordAnim.setDuration(std::numeric_limits<int>::max());
+    m_smoothRecordAnim.setLoopCount(1);
+    QObject::connect(&m_smoothRecordAnim, &QVariantAnimation::valueChanged,
+                     [this](const QVariant&) { updateSmoothRecordPosition(); });
 
     audioEngine()->updateRequested().onNotify(this, [this]() {
         if (m_recordData.empty()) {
@@ -260,20 +263,18 @@ void Au3Record::init()
             trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
             prj->notifyAboutClipAdded(DomConverter::clip(origWaveTrack, origClip.get()));
 
-            // Recalibrate smooth interpolation anchor only if actual data is ahead
+            // Start smooth animation now that recording has begun (deferred clip case),
+            // or recalibrate the anchor if actual data is ahead of the interpolated position.
             double actualEndTime = origClip->GetPlayEndTime();
-            double currentSmooth = m_anchorPosition
-                                   + std::chrono::duration<double>(std::chrono::steady_clock::now() - m_wallClockAnchor).count();
-            if (actualEndTime > currentSmooth) {
-                m_wallClockAnchor = std::chrono::steady_clock::now();
+            if (m_smoothRecordAnim.state() == QAbstractAnimation::Stopped) {
                 m_anchorPosition = actualEndTime;
-            }
-
-            // Start smooth timer now that recording has begun (deferred clip case)
-            if (!m_smoothRecordTimer.isActive()) {
-                m_anchorPosition = actualEndTime;
-                m_wallClockAnchor = std::chrono::steady_clock::now();
-                m_smoothRecordTimer.start();
+                m_smoothRecordAnim.start();
+            } else {
+                double currentSmooth = m_anchorPosition + m_smoothRecordAnim.currentTime() / 1000.0;
+                if (actualEndTime > currentSmooth) {
+                    m_anchorPosition = actualEndTime;
+                    m_smoothRecordAnim.setCurrentTime(0);
+                }
             }
             return;
         }
@@ -304,11 +305,10 @@ void Au3Record::init()
 
         // Recalibrate smooth interpolation anchor only if actual data is ahead
         double actualEndTime = origClip->GetPlayEndTime();
-        double currentSmooth = m_anchorPosition
-                               + std::chrono::duration<double>(std::chrono::steady_clock::now() - m_wallClockAnchor).count();
+        double currentSmooth = m_anchorPosition + m_smoothRecordAnim.currentTime() / 1000.0;
         if (actualEndTime > currentSmooth) {
-            m_wallClockAnchor = std::chrono::steady_clock::now();
             m_anchorPosition = actualEndTime;
+            m_smoothRecordAnim.setCurrentTime(0);
         }
     });
 
@@ -316,7 +316,7 @@ void Au3Record::init()
         if (m_recordData.empty()) {
             return;
         }
-        m_smoothRecordTimer.stop();
+        m_smoothRecordAnim.stop();
         m_recordPosition.set(m_recordPosition.val);
         m_recordingFinished.notify();
     });
@@ -325,7 +325,7 @@ void Au3Record::init()
         if (m_recordData.empty()) {
             return;
         }
-        m_smoothRecordTimer.stop();
+        m_smoothRecordAnim.stop();
         for (const RecordData& recordEntry : m_recordData) {
             // Skip deferred clips that were never created (cancelled during lead-in time)
             if (recordEntry.deferredClipCreation) {
@@ -459,7 +459,7 @@ muse::Ret Au3Record::pause()
         return make_ret(Err::RecordingStopError);
     }
 
-    m_smoothRecordTimer.stop();
+    m_smoothRecordAnim.pause();
     audioEngine()->pauseStream(true);
 
     return make_ok();
@@ -938,14 +938,13 @@ Ret Au3Record::doRecord(Au3Project& project,
     if (success) {
         ProjectAudioIO::Get(*p).SetAudioIOToken(token);
 
-        // Start smooth recording position timer (for non-deferred clips).
-        // Deferred clips (lead-in) start the timer in the recordingClipChanged handler.
+        // Start smooth recording position animation (for non-deferred clips).
+        // Deferred clips (lead-in) start the animation in the recordingClipChanged handler.
         bool hasNonDeferredClips = std::any_of(m_recordData.begin(), m_recordData.end(),
                                                [](const RecordData& rd) { return !rd.deferredClipCreation; });
         if (hasNonDeferredClips) {
             m_anchorPosition = t0;
-            m_wallClockAnchor = std::chrono::steady_clock::now();
-            m_smoothRecordTimer.start();
+            m_smoothRecordAnim.start();
         }
     } else {
         cancelRecording();
@@ -961,9 +960,7 @@ Ret Au3Record::doRecord(Au3Project& project,
 
 void Au3Record::updateSmoothRecordPosition()
 {
-    using namespace std::chrono;
-    double elapsed = duration<double>(steady_clock::now() - m_wallClockAnchor).count();
-    double smoothPos = m_anchorPosition + elapsed;
+    double smoothPos = m_anchorPosition + m_smoothRecordAnim.currentTime() / 1000.0;
 
     if (!muse::RealIsEqual(m_recordPosition.val.to_double(), smoothPos)) {
         m_recordPosition.set(smoothPos);
@@ -972,7 +969,7 @@ void Au3Record::updateSmoothRecordPosition()
 
 void Au3Record::cancelRecording()
 {
-    m_smoothRecordTimer.stop();
+    m_smoothRecordAnim.stop();
     Au3Project& project = projectRef();
     PendingTracks::Get(project).ClearPendingTracks();
 }

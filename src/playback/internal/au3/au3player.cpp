@@ -34,10 +34,20 @@ Au3Player::Au3Player(const muse::modularity::ContextPtr& ctx)
             m_reachedEnd.val = false;
         }
 
-        if (st != PlaybackStatus::Stopped) {
-            m_timer.start();
-        } else {
-            m_timer.stop();
+        switch (st) {
+            case PlaybackStatus::Running:
+                if (m_smoothAnim.state() == QAbstractAnimation::Paused) {
+                    m_smoothAnim.resume();
+                } else {
+                    m_smoothAnim.start();
+                }
+                break;
+            case PlaybackStatus::Paused:
+                m_smoothAnim.pause();
+                break;
+            case PlaybackStatus::Stopped:
+                m_smoothAnim.stop();
+                break;
         }
     });
 
@@ -61,9 +71,12 @@ Au3Player::Au3Player(const muse::modularity::ContextPtr& ctx)
         });
     });
 
-    m_timer.setInterval(16);
-    m_timer.setTimerType(Qt::PreciseTimer);
-    m_timer.callOnTimeout([this]() { updatePlaybackPosition(); });
+    m_smoothAnim.setStartValue(0.0);
+    m_smoothAnim.setEndValue(std::numeric_limits<double>::max());
+    m_smoothAnim.setDuration(std::numeric_limits<int>::max());
+    m_smoothAnim.setLoopCount(1);
+    QObject::connect(&m_smoothAnim, &QVariantAnimation::valueChanged,
+                     [this](const QVariant&) { updatePlaybackPosition(); });
 }
 
 bool Au3Player::isBusy() const
@@ -247,10 +260,10 @@ void Au3Player::seek(const muse::secs_t newPosition, bool applyIfPlaying)
     int token = ProjectAudioIO::Get(projectRef()).GetAudioIOToken();
     bool isStreamActive = AudioIO::Get()->IsStreamActive(token);
     if (isStreamActive && m_playbackStatus.val == PlaybackStatus::Stopped
-        && !m_timer.isActive()) {
+        && m_smoothAnim.state() == QAbstractAnimation::Stopped) {
         m_currentTarget.reset();
         m_consumedSamplesSoFar = 0;
-        m_timer.start();
+        m_smoothAnim.start();
     }
 }
 
@@ -492,15 +505,15 @@ void Au3Player::updatePlaybackState()
         if (playbackStatus() == PlaybackStatus::Running
             || playbackStatus() == PlaybackStatus::Paused) {
             m_playbackStatus.set(PlaybackStatus::Stopped);
-        } else if (m_timer.isActive()) {
+        } else if (m_smoothAnim.state() != QAbstractAnimation::Stopped) {
             // Stream ended while not in playback mode (e.g., recording finished)
-            m_timer.stop();
+            m_smoothAnim.stop();
         }
     } else if (m_playbackStatus.val == PlaybackStatus::Stopped
-               && m_timer.isActive() && AudioIO::Get()->IsCapturing()) {
-        // Recording has started after lead-in pre-roll — stop the playback timer
+               && m_smoothAnim.state() != QAbstractAnimation::Stopped && AudioIO::Get()->IsCapturing()) {
+        // Recording has started after lead-in pre-roll — stop the playback animation
         // to avoid conflicting with the recording system's playhead updates
-        m_timer.stop();
+        m_smoothAnim.stop();
     }
 }
 
