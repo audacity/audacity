@@ -82,6 +82,40 @@ void GraphicsDataCacheBase::Invalidate()
     mLookup.clear();
 }
 
+void GraphicsDataCacheBase::InvalidatePixelRange(
+    double pixelsPerSecond, int64_t firstPixel, int64_t lastPixel)
+{
+    if (firstPixel >= lastPixel || pixelsPerSecond <= 0.0) {
+        return;
+    }
+
+    const double samplesPerPixel = mScaledSampleRate / pixelsPerSecond;
+
+    for (auto& item : mLookup) {
+        if (!IsSamePPS(mScaledSampleRate, item.Key.PixelsPerSecond, pixelsPerSecond)) {
+            continue;
+        }
+
+        const auto elementFirstPixel = static_cast<int64_t>(
+            item.Key.FirstSample / samplesPerPixel + 0.5);
+        const auto elementLastPixel
+            =elementFirstPixel + static_cast<int64_t>(CacheElementWidth);
+
+        if (elementFirstPixel < lastPixel && elementLastPixel > firstPixel) {
+            item.Data->IsComplete = false;
+        }
+    }
+}
+
+void GraphicsDataCacheBase::InvalidateOtherZoomLevels(double pixelsPerSecond)
+{
+    for (auto& item : mLookup) {
+        if (!IsSamePPS(mScaledSampleRate, item.Key.PixelsPerSecond, pixelsPerSecond)) {
+            item.Data->IsComplete = false;
+        }
+    }
+}
+
 double GraphicsDataCacheBase::GetScaledSampleRate() const noexcept
 {
     return mScaledSampleRate;
@@ -331,10 +365,15 @@ void GraphicsDataCacheBase::DisposeNewItems()
 GraphicsDataCacheBase::Lookup::iterator
 GraphicsDataCacheBase::FindKey(GraphicsDataCacheKey key)
 {
-    return std::find_if(
-        mLookup.begin(), mLookup.end(),
-        [sampleRate = mScaledSampleRate, key](auto lhs)
-    { return IsSameKey(sampleRate, lhs.Key, key); });
+    auto it = std::lower_bound(
+        mLookup.begin(), mLookup.end(), key,
+        [sampleRate = mScaledSampleRate](const LookupElement& elem, const GraphicsDataCacheKey& k)
+    { return IsKeyLess(sampleRate, elem.Key, k); });
+
+    if (it != mLookup.end() && IsSameKey(mScaledSampleRate, it->Key, key)) {
+        return it;
+    }
+    return mLookup.end();
 }
 
 void GraphicsDataCacheBase::PerformCleanup()
