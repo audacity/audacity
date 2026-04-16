@@ -14,6 +14,7 @@ StyledTableView {
 
     model: tableViewModel
     horizontalHeaderNavigationEnabled: true
+    displayTruncatedTextOnHover: true
 
     sourceComponentCallback: function (type) {
         switch (type) {
