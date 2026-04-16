@@ -14,5 +14,5 @@
     });
 
 namespace au::effects::utils {
-muse::uicomponents::MenuItemList toMenuItemList(const std::vector<DropdownOption>&, int selectedIndex);
+muse::uicomponents::MenuItemList toMenuItemList(const std::vector<DropdownOption>&, int selectedIndex, QObject* parent = nullptr);
 }

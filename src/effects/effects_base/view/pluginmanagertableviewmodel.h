@@ -57,15 +57,15 @@ public:
     explicit PluginManagerTableViewModel(QObject* parent = nullptr);
     ~PluginManagerTableViewModel() override = default;
 
-    muse::uicomponents::MenuItemList enabledDisabledOptions() const;
+    muse::uicomponents::MenuItemList enabledDisabledOptions();
     int enabledDisabledSelectedIndex() const { return m_enabledDisabledSelectedIndex; }
     void setEnabledDisabledSelectedIndex(int index);
 
-    muse::uicomponents::MenuItemList effectFamilyOptions() const;
+    muse::uicomponents::MenuItemList effectFamilyOptions();
     int effectFamilySelectedIndex() const { return m_effectFamilySelectedIndex; }
     void setEffectFamilySelectedIndex(int index);
 
-    muse::uicomponents::MenuItemList effectTypeOptions() const;
+    muse::uicomponents::MenuItemList effectTypeOptions();
     int effectTypeSelectedIndex() const { return m_effectTypeSelectedIndex; }
     void setEffectTypeSelectedIndex(int index);
 

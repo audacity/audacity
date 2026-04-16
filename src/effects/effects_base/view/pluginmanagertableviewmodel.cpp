@@ -77,13 +77,13 @@ void PluginManagerTableViewModel::setSearchText(const QString& searchText)
     setTableRows(effects);
 }
 
-muse::uicomponents::MenuItemList PluginManagerTableViewModel::enabledDisabledOptions() const
+muse::uicomponents::MenuItemList PluginManagerTableViewModel::enabledDisabledOptions()
 {
     return utils::toMenuItemList({
             { "all", muse::qtrc("effects", "All") },
             { "disabled", muse::qtrc("effects", "Disabled") },
             { "enabled", muse::qtrc("effects", "Enabled") },
-        }, m_enabledDisabledSelectedIndex);
+        }, m_enabledDisabledSelectedIndex, this);
 }
 
 void PluginManagerTableViewModel::setEnabledDisabledSelectedIndex(int index)
@@ -113,13 +113,13 @@ void PluginManagerTableViewModel::setEnabledDisabledSelectedIndex(int index)
     setTableRows(effectsProvider()->effectMetaList());
 }
 
-muse::uicomponents::MenuItemList PluginManagerTableViewModel::effectFamilyOptions() const
+muse::uicomponents::MenuItemList PluginManagerTableViewModel::effectFamilyOptions()
 {
     std::vector<DropdownOption> options = { { "all", muse::qtrc("effects", "All") } };
     for (auto i = 0; i < static_cast<int>(EffectFamily::_count); ++i) {
         options.push_back({ QString::number(i), utils::effectFamilyToString(static_cast<EffectFamily>(i)) });
     }
-    return utils::toMenuItemList(options, m_effectFamilySelectedIndex);
+    return utils::toMenuItemList(options, m_effectFamilySelectedIndex, this);
 }
 
 void PluginManagerTableViewModel::setEffectFamilySelectedIndex(int index)
@@ -142,13 +142,13 @@ void PluginManagerTableViewModel::setEffectFamilySelectedIndex(int index)
     setTableRows(effectsProvider()->effectMetaList());
 }
 
-muse::uicomponents::MenuItemList PluginManagerTableViewModel::effectTypeOptions() const
+muse::uicomponents::MenuItemList PluginManagerTableViewModel::effectTypeOptions()
 {
     std::vector<DropdownOption> options = { { "all", muse::qtrc("effects", "All") } };
     for (auto i = 0; i < static_cast<int>(EffectType::_count); ++i) {
         options.push_back({ QString::number(i), utils::effectTypeToString(static_cast<EffectType>(i)) });
     }
-    return utils::toMenuItemList(options, m_effectTypeSelectedIndex);
+    return utils::toMenuItemList(options, m_effectTypeSelectedIndex, this);
 }
 
 void PluginManagerTableViewModel::setEffectTypeSelectedIndex(int index)
