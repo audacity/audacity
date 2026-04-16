@@ -20,6 +20,11 @@ constexpr auto enabledColumnWidth = 100;
 constexpr auto nameColumnWidth = 152;
 constexpr auto pathColumnWidth = 296;
 constexpr auto typeColumnWidth = 152;
+
+constexpr auto enabledDisabledColumnIndex = 0;
+constexpr auto nameColumnIndex = 1;
+constexpr auto pathColumnIndex = 2;
+constexpr auto typeColumnIndex = 3;
 }
 
 const PluginManagerTableViewModel::EffectFilter PluginManagerTableViewModel::allPassFilter = [](const EffectMeta&) { return true; };
@@ -34,6 +39,12 @@ void PluginManagerTableViewModel::componentComplete()
         initRows();
     });
     initRows();
+
+    // Initial sort: start from least important.
+    toggleColumnSort(enabledDisabledColumnIndex);
+    toggleColumnSort(pathColumnIndex);
+    toggleColumnSort(typeColumnIndex);
+    toggleColumnSort(nameColumnIndex);
 }
 
 void PluginManagerTableViewModel::initRows()
@@ -280,9 +291,9 @@ void PluginManagerTableViewModel::toggleColumnSort(int column)
             m_sortPipeline.erase(m_sortPipeline.begin());
         }
     } else {
-        it->ascending = !it->ascending;
-        it = m_sortPipeline.erase(it);
-        m_sortPipeline.push_back({ column, it->ascending });
+        const auto ascending = !it->ascending;
+        m_sortPipeline.erase(it);
+        m_sortPipeline.push_back({ column, ascending });
     }
 
     setTableRows(effectsProvider()->effectMetaList());
@@ -294,16 +305,16 @@ void PluginManagerTableViewModel::applySorting(EffectMetaList& effects) const
         std::stable_sort(effects.begin(), effects.end(), [&entry](const EffectMeta& a, const EffectMeta& b) {
             bool isLess = false;
             switch (entry.column) {
-                case 0: // Enabled
+                case enabledDisabledColumnIndex:
                     isLess = static_cast<int>(a.isActivated) < static_cast<int>(b.isActivated);
                     break;
-                case 1: // Name
+                case nameColumnIndex:
                     isLess = muse::strings::lessThanCaseInsensitive(a.title, b.title);
                     break;
-                case 2: // Path
+                case pathColumnIndex:
                     isLess = muse::strings::lessThanCaseInsensitive(a.path.toString(), b.path.toString());
                     break;
-                case 3: // Type
+                case typeColumnIndex:
                     isLess = muse::strings::lessThanCaseInsensitive(utils::effectFamilyToString(a.family),
                                                                     utils::effectFamilyToString(b.family));
                     break;
