@@ -46,6 +46,7 @@ public:
     bool IsDefault() const override;
     RealtimeSince RealtimeSupport() const override;
     bool SupportsAutomation() const override;
+    bool SupportsMultipleClipSelection() const override;
 
     bool SaveSettings(
         const EffectSettings& settings, CommandParameters& parms) const override;

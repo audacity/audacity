@@ -4,44 +4,35 @@
 
 #pragma once
 
-#include "framework/global/types/ret.h"
+#include "framework/audioplugins/iregisteraudiopluginsscenario.h"
+#include "framework/interactive/iinteractive.h"
 #include "framework/global/async/notification.h"
 #include "framework/global/modularity/imoduleinterface.h"
-
-#include "au3wrap/au3types.h"
 
 #include "effectstypes.h"
 
 struct EffectSettings;
 namespace au::effects {
-class IEffectsProvider : MODULE_EXPORT_INTERFACE
+class IEffectsProvider : MODULE_GLOBAL_EXPORT_INTERFACE
 {
     INTERFACE_ID(IEffectsProvider)
 
 public:
     virtual ~IEffectsProvider() = default;
 
+    virtual void initOnce(muse::IInteractive& interactive,
+                          muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario) = 0;
+
     virtual EffectMetaList effectMetaList() const = 0;
+    virtual muse::async::Notification initialized() const = 0;
     virtual muse::async::Notification effectMetaListChanged() const = 0;
 
     virtual EffectMeta meta(const EffectId& effectId) const = 0;
     virtual bool loadEffect(const EffectId& effectId) const = 0;
     virtual std::string effectName(const std::string& effectId) const = 0;
     virtual std::string effectName(const effects::RealtimeEffectState& state) const = 0;
-    virtual std::string effectSymbol(const std::string& effectId) const = 0;
     virtual Effect* effect(const EffectId& effectId) const = 0;
 
     virtual bool supportsMultipleClipSelection(const EffectId& effectId) const = 0;
-
-    virtual muse::Ret showEffect(const EffectId& effectId, const EffectInstanceId& instanceId) = 0;
-
-    virtual void showEffect(const RealtimeEffectStatePtr& state) const = 0;
-    virtual void hideEffect(const RealtimeEffectStatePtr& state) const = 0;
-
-    virtual muse::Ret performEffect(au3::Au3Project& project, Effect* effect, std::shared_ptr<EffectInstance> effectInstance,
-                                    EffectSettings& settings) = 0;
-
-    virtual muse::Ret previewEffect(const EffectId& effectId, EffectSettings& settings) = 0;
-    virtual void stopPreview() = 0;
 };
 }

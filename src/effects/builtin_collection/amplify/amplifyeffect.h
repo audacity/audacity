@@ -46,6 +46,7 @@ public:
     ::EffectGroup GetGroup() const override;
     OptionalMessage LoadFactoryDefaults(EffectSettings& settings) const override;
     OptionalMessage DoLoadFactoryDefaults(EffectSettings& settings);
+    bool SupportsMultipleClipSelection() const override { return false; }
 
     unsigned GetAudioInCount() const override;
     unsigned GetAudioOutCount() const override;

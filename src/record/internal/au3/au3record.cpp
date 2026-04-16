@@ -588,6 +588,10 @@ muse::Ret Au3Record::leadInRecording()
     Ret ret = doRecord(project, transportTracks, t1, DBL_MAX, false, rateOfSelected, leadInTime, pCrossfadeData);
 
     if (ret) {
+        // Initialize recording position to punch point so that cancelling
+        // during lead-in returns to the correct position
+        m_recordPosition.set(t1);
+
         // Set playhead to lead-in time start and trigger position tracking.
         // With isDefaultPlayTrackPolicy=false, the stream time starts from
         // t1-leadInTime so this will align with the actual audio position.

@@ -3,12 +3,18 @@
 */
 #pragma once
 
-#include "audioplugins/iaudiopluginsscanner.h"
+#include "effects/effects_base/internal/au3/au3audiopluginscanner.h"
+
+#include "au3-audio-unit/AudioUnitEffectsModule.h"
 
 namespace au::effects {
-class AudioUnitPluginsScanner : public muse::audioplugins::IAudioPluginsScanner
+class AudioUnitPluginsScanner : public Au3AudioPluginScanner
 {
 public:
-    muse::io::paths_t scanPlugins() const override;
+    AudioUnitPluginsScanner()
+        : Au3AudioPluginScanner(m_auModule) {}
+
+private:
+    ::AudioUnitEffectsModule m_auModule;
 };
 }

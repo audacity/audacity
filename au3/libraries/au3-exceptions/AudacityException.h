@@ -68,7 +68,7 @@ protected:
     //! If default-constructed with empty caption, it makes no message box.
     explicit MessageBoxException(
         ExceptionType exceptionType, //!< Exception type
-        const TranslatableString& caption //!< Shown in message box's frame; not the actual message
+        const ::TranslatableString& caption //!< Shown in message box's frame; not the actual message
         );
     ~MessageBoxException() override;
 
@@ -76,11 +76,11 @@ protected:
 
 public:
     //! %Format the error message for this exception.
-    virtual TranslatableString ErrorMessage() const = 0;
+    virtual ::TranslatableString ErrorMessage() const = 0;
     virtual wxString ErrorHelpUrl() const { return helpUrl; }
 
 private:
-    TranslatableString caption; //!< Stored caption
+    ::TranslatableString caption; //!< Stored caption
     ExceptionType exceptionType; //!< Exception type
 
     mutable bool moved { false }; //!< Whether @c *this has been the source of a copy
@@ -94,8 +94,8 @@ class EXCEPTIONS_API SimpleMessageBoxException /* not final */ : public MessageB
 public:
     explicit SimpleMessageBoxException(
         ExceptionType exceptionType,      //!< Exception type
-        const TranslatableString& message_, //<! Message to show
-        const TranslatableString& caption = XO("Message"), //<! Short caption in frame around message
+        const ::TranslatableString& message_, //<! Message to show
+        const ::TranslatableString& caption = XO("Message"), //<! Short caption in frame around message
         const wxString& helpUrl_ = "" // Optional URL for help.
         )
         : MessageBoxException{exceptionType, caption}
@@ -111,10 +111,10 @@ public:
         SimpleMessageBoxException&&) = delete;
 
     // Format a default, internationalized error message for this exception.
-    virtual TranslatableString ErrorMessage() const override;
+    virtual ::TranslatableString ErrorMessage() const override;
 
 private:
-    TranslatableString message; //!< Stored message
+    ::TranslatableString message; //!< Stored message
 };
 
 //! A default template parameter for @ref GuardedCall

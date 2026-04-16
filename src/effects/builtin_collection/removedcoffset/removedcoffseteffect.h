@@ -35,6 +35,7 @@ public:
     ::EffectType GetType() const override;
     EffectGroup GetGroup() const override { return EffectGroup::VolumeAndCompression; }
     bool IsInteractive() const override { return false; }
+    bool SupportsMultipleClipSelection() const override { return true; }
 
     bool Process(::EffectInstance& instance, ::EffectSettings& settings) override;
 

@@ -43,6 +43,7 @@ protected:
 
 private:
     EffectType GetType() const override;
+    bool SupportsMultipleClipSelection() const override { return true; }
 
     bool ProcessLabelTrack(LabelTrack* track);
     /*!

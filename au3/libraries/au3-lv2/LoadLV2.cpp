@@ -153,6 +153,13 @@ const FileExtensions& LV2EffectsModule::GetFileExtensions()
 
 void LV2EffectsModule::AutoRegisterPlugins(PluginManagerInterface& pluginManager)
 {
+    static bool alreadyLoaded = false;
+    if (alreadyLoaded) {
+        // avoid warnings like `lilv_world_add_plugin(): warning: Reloading plugin <http://...>`
+        return;
+    }
+    alreadyLoaded = true;
+
     //Plugins aren't registered in PluginManager here, but
     //instead we update `LV2_PATH` and run `lilv_world_load_all`
     //to register bundles within LV2 module.
@@ -200,6 +207,8 @@ void LV2EffectsModule::AutoRegisterPlugins(PluginManagerInterface& pluginManager
     // Tell SUIL where to find his GUI support modules
 #endif
 
+    /* Plugin manager isn't necessarily initialized at this point and `ReadCustomPaths` would crash.
+       It probably will be a good thing to implement custom plugin paths in AU4 at some stage anyway.
     {
         auto customPaths = pluginManager.ReadCustomPaths(*this);
         if (!customPaths.empty()) {
@@ -208,6 +217,8 @@ void LV2EffectsModule::AutoRegisterPlugins(PluginManagerInterface& pluginManager
             newVar += wxString::Format(";%s", wxJoin(wxarr, ';'));
         }
     }
+    */
+
     // Start with the LV2_PATH environment variable (if any)
     wxString pathVar = mStartupPathVar;
     if (mStartupPathVar.empty()) {

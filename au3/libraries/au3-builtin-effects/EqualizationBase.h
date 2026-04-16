@@ -41,6 +41,7 @@ public:
     EffectGroup GetGroup() const override { return EffectGroup::EqAndFilters; }
     OptionalMessage LoadFactoryDefaults(EffectSettings& settings) const override;
     OptionalMessage DoLoadFactoryDefaults(EffectSettings& settings);
+    bool SupportsMultipleClipSelection() const override { return true; }
 
     RegistryPaths GetFactoryPresets() const override;
     OptionalMessage

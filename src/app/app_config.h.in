@@ -1,0 +1,9 @@
+/* ============================================== */
+/* Modules                                        */
+/* ============================================== */
+#cmakedefine AU_BUILD_CLOUD_AUDIOCOM 1
+
+#cmakedefine AU_MODULE_EFFECTS_VST 1
+#cmakedefine AU_MODULE_EFFECTS_NYQUIST 1
+#cmakedefine AU_MODULE_EFFECTS_LV2 1
+#cmakedefine AU_MODULE_EFFECTS_AUDIO_UNIT 1

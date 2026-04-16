@@ -34,6 +34,7 @@ public:
 
     virtual std::vector<TrackId> trackIdList() const = 0;
     virtual std::vector<Track> trackList() const = 0;
+    virtual bool timeTrackFound() const = 0;
     virtual std::optional<Track> track(TrackId trackId) const = 0;
     virtual Clip clip(const ClipKey& key) const = 0;
     virtual Label label(const LabelKey& key) const = 0;
