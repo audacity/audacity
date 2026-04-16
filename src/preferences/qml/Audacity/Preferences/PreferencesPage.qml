@@ -90,7 +90,10 @@ Rectangle {
         rightMargin: root.sideMargin
         bottomMargin: root.sideMargin
 
-        ScrollBar.vertical: StyledScrollBar { id: scrollBar }
+        ScrollBar.vertical: StyledScrollBar {
+            id: scrollBar
+            policy: flickable.isScrollable ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff
+        }
 
         Item {
             id: content

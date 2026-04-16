@@ -405,13 +405,6 @@ MenuItem* AppMenuModel::makeExtraMenu()
         makeMenuItem("regular-interval-labels"),
     };
 
-    //! TODO AU4
-    // put on top
-    // if (updateConfiguration()->isAppUpdatable()) {
-    //     helpItems.push_front(makeSeparator());
-    //     helpItems.push_front(makeMenuItem("check-update"));
-    // }
-
     return makeMenu(TranslatableString("appshell/menu/extra", "&Extra"), extraItems, "menu-extra");
 }
 
@@ -424,19 +417,16 @@ MenuItem* AppMenuModel::makeHelpMenu()
         makeMenu(TranslatableString("appshell/menu/diagnostics", "Diagnostics"), makeDiagnosticsItems(), "menu-diagnostics", false),
         makeSeparator(),
         makeMenuItem("link-account"),
-        makeMenuItem("updates"),
         makeMenuItem("about-audacity"),
         makeMenuItem("about-qt", MenuItemRole::AboutQtRole),
         makeSeparator(),
         makeMenuItem("revert-factory")
     };
 
-    //! TODO AU4
-    // put on top
-    // if (updateConfiguration()->isAppUpdatable()) {
-    //     helpItems.push_front(makeSeparator());
-    //     helpItems.push_front(makeMenuItem("check-update"));
-    // }
+    if (updateConfiguration()->isAppUpdatable()) {
+        helpItems.push_front(makeSeparator());
+        helpItems.push_front(makeMenuItem("check-update"));
+    }
 
     return makeMenu(TranslatableString("appshell/menu/help", "&Help"), helpItems, "menu-help");
 }

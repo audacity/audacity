@@ -22,6 +22,10 @@
 
 #include "startupscenario.h"
 
+#include <QDate>
+#include <QJsonDocument>
+#include <QJsonObject>
+
 #include "framework/global/log.h"
 #include "framework/global/types/uri.h"
 
@@ -98,7 +102,12 @@ void StartupScenario::setStartupMediaFiles(const muse::io::paths_t& files)
 
 muse::async::Promise<muse::Ret> StartupScenario::runOnSplashScreen()
 {
-    return muse::async::make_promise<muse::Ret>([](auto resolve, auto) {
+    return muse::async::make_promise<muse::Ret>([this](auto resolve, auto) {
+        if (multiwindowsProvider()->isFirstWindow()) {
+            tryCheckForUpdate();
+            startUpdateCheckTimer();
+        }
+
         const muse::Ret ret = muse::make_ret(muse::Ret::Code::Ok);
         return resolve(ret);
     });
@@ -268,4 +277,57 @@ void StartupScenario::restoreLastSession()
     } else {
         sessionsManager()->reset();
     }
+}
+
+void StartupScenario::tryCheckForUpdate()
+{
+    if (!appUpdateScenario() || !appUpdateScenario()->needCheckForUpdate()) {
+        return;
+    }
+
+    if (alreadyCheckedForUpdateToday()) {
+        return;
+    }
+
+    if (isAudioActive()) {
+        return;
+    }
+
+    appUpdateScenario()->checkForUpdate(/*manual*/ false);
+}
+
+void StartupScenario::startUpdateCheckTimer()
+{
+    static constexpr int CHECK_INTERVAL_MS = 12 * 60 * 60 * 1000; // 12 hours
+    m_updateCheckTimer.setInterval(CHECK_INTERVAL_MS);
+    QObject::connect(&m_updateCheckTimer, &QTimer::timeout, [this]() {
+        tryCheckForUpdate();
+    });
+    m_updateCheckTimer.start();
+}
+
+bool StartupScenario::isAudioActive() const
+{
+    if (recordController() && recordController()->isRecording()) {
+        return true;
+    }
+
+    if (playbackController() && playbackController()->isPlaying()) {
+        return true;
+    }
+
+    return false;
+}
+
+bool StartupScenario::alreadyCheckedForUpdateToday() const
+{
+    muse::io::path_t historyPath = updateConfiguration()->updateRequestHistoryJsonPath();
+    muse::RetVal<muse::ByteArray> rv = fileSystem()->readFile(historyPath);
+    if (!rv.ret) {
+        return false;
+    }
+
+    QJsonDocument doc = QJsonDocument::fromJson(rv.val.toQByteArrayNoCopy());
+    QDate previousRequestDay = QDate::fromString(doc.object().value("Previous-Request-Day").toString(), Qt::ISODate);
+    return previousRequestDay == QDate::currentDate();
 }
