@@ -94,14 +94,14 @@ void EffectsProvider::reloadEffects()
     muse::audio::AudioResourceIdList staleIds;
 
     for (const auto& info : knownPlugins) {
-        if (!info.enabled) {
-            continue;
-        }
         // Entries written by older code lack required attributes (e.g. "type").
         // Unregister them so they are re-scanned with current metadata on the
         // next plugin registration pass instead of crashing here.
         if (info.meta.attributeVal(EFFECT_TYPE_ATTRIBUTE).empty()) {
             staleIds.push_back(info.meta.id);
+            continue;
+        }
+        if (!info.enabled) {
             continue;
         }
         m_effects.push_back(utils::museToAuEffectMeta(info.path, info.meta));
