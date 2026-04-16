@@ -296,6 +296,8 @@ void ProjectActionsController::importFiles(const muse::actions::ActionData& args
 void ProjectActionsController::importStartupMedia(const muse::actions::ActionData& args)
 {
     const QStringList files = !args.empty() ? args.arg<QStringList>(0) : QStringList();
+    const bool removeAfterImport = args.count() >= 2 ? args.arg<bool>(1) : false;
+
     muse::io::paths_t filePaths;
     filePaths.reserve(files.size());
     for (const QString& file : files) {
@@ -303,6 +305,12 @@ void ProjectActionsController::importStartupMedia(const muse::actions::ActionDat
     }
 
     Ret ret = processMediaFiles(filePaths);
+    if (removeAfterImport) {
+        for (const auto& filePath : filePaths) {
+            fileSystem()->remove(filePath);
+        }
+    }
+
     if (!ret) {
         openPageIfNeed(HOME_PAGE_URI);
     }
@@ -1116,7 +1124,9 @@ void ProjectActionsController::openCloudAudioFile(const muse::actions::ActionQue
         const auto project = globalContext()->currentProject();
         if (project) {
             QStringList args;
-            args << "--session-type" << "start-with-new" << localPath;
+            args << "--session-type" << "start-with-new";
+            args << "--import-media-file" << localPath;
+            args << "--remove-media-after-import";
             multiwindowsProvider()->openNewWindow(args);
             return;
         }

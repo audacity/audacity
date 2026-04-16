@@ -88,6 +88,7 @@ void GuiApp::doStartupScenario(const muse::modularity::ContextPtr& ctxId)
     startupScenario->setStartupType(options->startup.type);
     startupScenario->setStartupProjectFile(projectFile);
     startupScenario->setStartupMediaFiles(options->startup.mediaFiles);
+    startupScenario->setRemoveMediaFilesAfterImport(options->startup.removeMediaFilesAfterImport);
 
     startupScenario->runOnSplashScreen();
 

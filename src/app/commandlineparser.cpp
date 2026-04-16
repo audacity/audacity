@@ -57,6 +57,7 @@ void CommandLineParser::init()
 
     m_parser.addOption(QCommandLineOption("session-type", "Startup with given session type", "type"));
     m_parser.addOption(internalCommandLineOption("import-media-file", "Import media file on startup", "path"));
+    m_parser.addOption(internalCommandLineOption("remove-media-after-import", "Remove imported media files after import"));
     m_parser.addOption(internalCommandLineOption("project-display-name-override", "Display name override", "name"));
     m_parser.addOption(internalCommandLineOption("cloud-project-id", "Cloud project id", "id"));
 
@@ -132,6 +133,10 @@ void CommandLineParser::parse(int argc, char** argv)
         for (const QString& file : m_parser.values("import-media-file")) {
             m_options->startup.mediaFiles.emplace_back(fromUserInputPath(file));
         }
+    }
+
+    if (m_parser.isSet("remove-media-after-import")) {
+        m_options->startup.removeMediaFilesAfterImport = true;
     }
 
     if (m_parser.isSet("F")) {
