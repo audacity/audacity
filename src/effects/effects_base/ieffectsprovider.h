@@ -38,7 +38,7 @@ public:
     using EffectFilter = std::function<bool (const EffectMeta&)>;
     virtual void rescanPlugins(muse::IInteractive& interactive,
                                muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
-                               const EffectFilter& filter = nullptr) = 0;
+                               const EffectFilter& exclude = nullptr) = 0;
     virtual void save() = 0;
 
     virtual bool supportsMultipleClipSelection(const EffectId& effectId) const = 0;

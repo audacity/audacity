@@ -29,6 +29,7 @@ effects::EffectMeta effects::toEffectMeta(const ::PluginDescriptor& desc)
     meta.isRealtimeCapable = desc.IsEffectRealtime();
     meta.supportsMultipleClipSelection = desc.SupportsMultipleClipSelection();
     meta.isActivated = desc.IsEnabled();
+    meta.isLoadable = desc.IsValid();
 
     return meta;
 }

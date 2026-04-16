@@ -204,7 +204,7 @@ T attributeValue(const muse::audio::AudioResourceMeta& meta, const muse::String&
 }
 }
 
-EffectMeta utils::museToAuEffectMeta(const muse::io::path_t& path, const muse::audio::AudioResourceMeta& meta)
+EffectMeta utils::museToAuEffectMeta(const muse::io::path_t& path, const muse::audio::AudioResourceMeta& meta, bool enabled)
 {
     EffectMeta effectMeta;
     effectMeta.path = path;
@@ -220,6 +220,7 @@ EffectMeta utils::museToAuEffectMeta(const muse::io::path_t& path, const muse::a
     effectMeta.version = attributeValue(meta, EFFECT_VERSION_ATTRIBUTE);
     effectMeta.module = attributeValue(meta, EFFECT_MODULE_ATTRIBUTE);
     effectMeta.isActivated = attributeValue<bool>(meta, EFFECT_ACTIVATED_ATTRIBUTE);
+    effectMeta.isLoadable = enabled;
 
     return effectMeta;
 }
@@ -448,7 +449,7 @@ MenuItemList makeFlatList(const EffectMetaList& effects, IEffectMenuItemFactory&
 void removeAlsoDisabledEffects(EffectMetaList& effects, const utils::EffectFilter& filter)
 {
     effects.erase(std::remove_if(effects.begin(), effects.end(), [&](const EffectMeta& meta) {
-        return !meta.isActivated || filter(meta);
+        return !meta.isLoadable || !meta.isActivated || filter(meta);
     }), effects.end());
 }
 } // namespace

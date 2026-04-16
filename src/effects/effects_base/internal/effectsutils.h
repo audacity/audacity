@@ -29,7 +29,7 @@ muse::String effectFamilyToString(EffectFamily family);
 EffectFamily effectFamilyFromString(const muse::String& family);
 
 muse::audio::AudioResourceMeta auToMuseEffectMeta(const EffectMeta& meta);
-EffectMeta museToAuEffectMeta(const muse::io::path_t& path, const muse::audio::AudioResourceMeta& meta);
+EffectMeta museToAuEffectMeta(const muse::io::path_t& path, const muse::audio::AudioResourceMeta& meta, bool enabled = true);
 
 // TODO: may `EffectFamily` be superseded by `AudioResourceType`?
 constexpr muse::audio::AudioResourceType toMuseAudioResourceType(EffectFamily family)

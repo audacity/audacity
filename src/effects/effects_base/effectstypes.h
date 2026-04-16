@@ -209,6 +209,7 @@ struct EffectMeta {
     bool isRealtimeCapable = false;
     bool supportsMultipleClipSelection = true;
     bool isActivated = true;
+    bool isLoadable = true;
 
     bool isValid() const { return !id.empty(); }
 };

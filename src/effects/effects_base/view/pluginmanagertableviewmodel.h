@@ -88,6 +88,8 @@ private:
     void classBegin() override {}
     void componentComplete() override;
 
+    void initRows();
+
     QVector<muse::uicomponents::TableViewHeader*> makeHorizontalHeaders();
     QVector<muse::uicomponents::TableViewHeader*> makeVerticalHeaders(const EffectMetaList& effects);
     QVector<QVector<muse::uicomponents::TableViewCell*> > makeTable(const EffectMetaList& effects);
@@ -101,13 +103,13 @@ private:
     static const EffectFilter allPassFilter;
 
     int m_enabledDisabledSelectedIndex = 0;
-    EffectFilter m_enabledDisabledEffectFilter = allPassFilter;
+    EffectFilter m_acceptEnabledDisabledState = allPassFilter;
 
     int m_effectFamilySelectedIndex = 0;
-    EffectFilter m_effectFamilyFilter = allPassFilter;
+    EffectFilter m_acceptFamily = allPassFilter;
 
     int m_effectTypeSelectedIndex = 0;
-    EffectFilter m_effectTypeFilter = allPassFilter;
+    EffectFilter m_acceptType = allPassFilter;
 
     struct SortEntry {
         int column = -1;

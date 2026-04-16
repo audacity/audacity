@@ -42,6 +42,9 @@ void EffectsProvider::initOnce(muse::IInteractive& interactive,
 
     doScanPlugins(registerAudioPluginsScenario, doScanThirdPartyPlugins);
 
+    // Providers must be available in ModuleManager for on-demand plugin loading.
+    ModuleManager::Get().DiscoverProviders();
+
     // Register for future changes
     knownPluginsRegister()->pluginInfoListChanged().onNotify(this, [this]() {
         reloadEffects();
@@ -50,16 +53,22 @@ void EffectsProvider::initOnce(muse::IInteractive& interactive,
 
 void EffectsProvider::rescanPlugins(muse::IInteractive& interactive,
                                     muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
-                                    const EffectFilter& filter)
+                                    const EffectFilter& exclude)
 {
-    if (!doScanPlugins(registerAudioPluginsScenario, {}, filter)) {
+    // Also rescan failed plugins
+    auto removeFromConfig = [](const EffectMeta& meta) {
+        return !meta.isLoadable;
+    };
+    doSave(std::move(removeFromConfig));
+
+    if (!doScanPlugins(registerAudioPluginsScenario, {}, exclude)) {
         interactive.infoSync(muse::trc("audio", "Audio plugins scan completed"), muse::trc("audio", "All audio plugins are up to date."));
     }
 }
 
 bool EffectsProvider::doScanPlugins(muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
                                     const std::function<bool()>& doScanThirdPartyPlugins,
-                                    const EffectFilter& filter)
+                                    const EffectFilter& exclude)
 {
     muse::audioplugins::PluginScanResult scanResult = registerAudioPluginsScenario.scanPlugins();
 
@@ -75,8 +84,8 @@ bool EffectsProvider::doScanPlugins(muse::audioplugins::IRegisterAudioPluginsSce
         }
     }
 
-    if (filter != nullptr) {
-        // Erase plugins using the filter
+    if (exclude != nullptr) {
+        // Erase plugins matching exclude
         auto it = thirdPartyPluginPaths.begin();
         while (it != thirdPartyPluginPaths.end()) {
             const auto& reader = pathToMetaReader.at(*it);
@@ -90,8 +99,8 @@ bool EffectsProvider::doScanPlugins(muse::audioplugins::IRegisterAudioPluginsSce
             std::transform(ret.val.begin(), ret.val.end(), std::back_inserter(effectMetas), [path = *it](const auto& meta) {
                 return utils::museToAuEffectMeta(path, meta);
             });
-            // Only skip if none of the effects pass the filter - better be safe here.
-            if (std::none_of(effectMetas.begin(), effectMetas.end(), filter)) {
+            // Only skip if all effects of this bundle are excluded - better be safe here.
+            if (std::all_of(effectMetas.begin(), effectMetas.end(), exclude)) {
                 it = thirdPartyPluginPaths.erase(it);
                 continue;
             }
@@ -129,12 +138,9 @@ bool EffectsProvider::doScanPlugins(muse::audioplugins::IRegisterAudioPluginsSce
         registerAudioPluginsScenario.registerNewPlugins(thirdPartyPluginPaths);
     }
 
-    // Providers must be available in ModuleManager for on-demand plugin loading.
-    ModuleManager::Get().DiscoverProviders();
-
     reloadEffects();
 
-    return !thirdPartyPluginPaths.empty();
+    return !audacityPluginPaths.empty() || !thirdPartyPluginPaths.empty();
 }
 
 void EffectsProvider::deinit()
@@ -146,11 +152,9 @@ void EffectsProvider::reloadEffects()
     m_effects.clear();
 
     const auto knownPlugins = knownPluginsRegister()->pluginInfoList();
-    std::for_each(knownPlugins.begin(), knownPlugins.end(),
-                  [this](const muse::audioplugins::AudioPluginInfo& info) {
-        if (info.enabled) {
-            m_effects.push_back(utils::museToAuEffectMeta(info.path, info.meta));
-        }
+    std::transform(knownPlugins.begin(), knownPlugins.end(), std::back_inserter(m_effects),
+                   [](const muse::audioplugins::AudioPluginInfo& info) {
+        return utils::museToAuEffectMeta(info.path, info.meta, info.enabled);
     });
 
     m_effectsChanged.notify();
@@ -255,15 +259,23 @@ void EffectsProvider::setEffectActivated(const EffectId& effectId, bool activate
 
 void EffectsProvider::save()
 {
+    doSave();
+}
+
+void EffectsProvider::doSave(EffectFilter removeFromConfig)
+{
     muse::audioplugins::AudioPluginInfoList newPlugins;
-    newPlugins.reserve(m_effects.size());
 
     for (const auto& meta : m_effects) {
+        if (removeFromConfig != nullptr && removeFromConfig(meta)) {
+            continue;
+        }
+
         muse::audioplugins::AudioPluginInfo info;
         info.type = muse::audioplugins::AudioPluginType::Fx;
         info.meta = utils::auToMuseEffectMeta(meta);
         info.path = meta.path;
-        info.enabled = true;
+        info.enabled = meta.isLoadable;
 
         newPlugins.push_back(std::move(info));
     }

@@ -30,6 +30,14 @@ PluginManagerTableViewModel::PluginManagerTableViewModel(QObject* parent)
 void PluginManagerTableViewModel::componentComplete()
 {
     setHorizontalHeaders(makeHorizontalHeaders());
+    effectsProvider()->effectMetaListChanged().onNotify(this, [this]() {
+        initRows();
+    });
+    initRows();
+}
+
+void PluginManagerTableViewModel::initRows()
+{
     m_initialState = effectsProvider()->effectMetaList();
     setTableRows(m_initialState);
 }
@@ -54,7 +62,7 @@ void PluginManagerTableViewModel::aboutToDestroy()
 void PluginManagerTableViewModel::setTableRows(EffectMetaList effects)
 {
     const auto combinedFilter = [&] (const EffectMeta& meta) {
-        return m_enabledDisabledEffectFilter(meta) && m_effectFamilyFilter(meta) && m_effectTypeFilter(meta);
+        return meta.isLoadable && m_acceptEnabledDisabledState(meta) && m_acceptFamily(meta) && m_acceptType(meta);
     };
     effects.erase(std::remove_if(effects.begin(), effects.end(), [&combinedFilter](const EffectMeta& meta) {
         return !combinedFilter(meta);
@@ -97,13 +105,13 @@ void PluginManagerTableViewModel::setEnabledDisabledSelectedIndex(int index)
 
     switch (index) {
     case 0:
-        m_enabledDisabledEffectFilter = allPassFilter;
+        m_acceptEnabledDisabledState = allPassFilter;
         break;
     case 1:
-        m_enabledDisabledEffectFilter = [](const EffectMeta& meta) { return !meta.isActivated; };
+        m_acceptEnabledDisabledState = [](const EffectMeta& meta) { return !meta.isActivated; };
         break;
     case 2:
-        m_enabledDisabledEffectFilter = [](const EffectMeta& meta) { return meta.isActivated; };
+        m_acceptEnabledDisabledState = [](const EffectMeta& meta) { return meta.isActivated; };
         break;
     default:
         assert(false);
@@ -132,9 +140,9 @@ void PluginManagerTableViewModel::setEffectFamilySelectedIndex(int index)
     emit effectFamilySelectedIndexChanged();
 
     if (index == 0) {
-        m_effectFamilyFilter = allPassFilter;
+        m_acceptFamily = allPassFilter;
     } else {
-        m_effectFamilyFilter = [family = static_cast<EffectFamily>(index - 1)](const EffectMeta& meta) {
+        m_acceptFamily = [family = static_cast<EffectFamily>(index - 1)](const EffectMeta& meta) {
             return meta.family == family;
         };
     }
@@ -161,9 +169,9 @@ void PluginManagerTableViewModel::setEffectTypeSelectedIndex(int index)
     emit effectTypeSelectedIndexChanged();
 
     if (index == 0) {
-        m_effectTypeFilter = allPassFilter;
+        m_acceptType = allPassFilter;
     } else {
-        m_effectTypeFilter = [type = static_cast<EffectType>(index - 1)](const EffectMeta& meta) {
+        m_acceptType = [type = static_cast<EffectType>(index - 1)](const EffectMeta& meta) {
             return meta.type == type;
         };
     }
@@ -254,9 +262,10 @@ void PluginManagerTableViewModel::handleEdit(int row, int column)
 
 void PluginManagerTableViewModel::rescanPlugins()
 {
-    effectsProvider()->rescanPlugins(*interactive(), *registerAudioPluginsScenario(), [this](const EffectMeta& meta) {
-        return m_effectFamilyFilter(meta) && m_effectTypeFilter(meta);
-    });
+    const auto excludeFromScan = [this](const EffectMeta& meta) {
+        return !m_acceptFamily(meta) || !m_acceptType(meta);
+    };
+    effectsProvider()->rescanPlugins(*interactive(), *registerAudioPluginsScenario(), excludeFromScan);
 }
 
 void PluginManagerTableViewModel::toggleColumnSort(int column)
