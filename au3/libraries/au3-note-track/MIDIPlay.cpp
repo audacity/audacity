@@ -324,7 +324,7 @@ Time (in seconds, = total_sample_count / sample_rate)
   This ensures MIDI is synchronized with audio.
 
   \par Midi While Recording Only or Without Audio Playback
-  To reduce duplicate code and to ensure recording is synchronised with
+  To reduce duplicate code and to ensure recording is synchronized with
   MIDI, a portaudio stream will always be used, even when there is no
   actual audio output.  For recording, this ensures that the recorded
   audio will by synchronized with the MIDI (otherwise, it gets out-of-
