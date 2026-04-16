@@ -8,6 +8,7 @@
  #include "pluginmanagertableviewverticalheader.h"
  #include "effectsviewutils.h"
 
+ #include "framework/global/stringutils.h"
 #include "framework/global/translation.h"
 #include "framework/global/modularity/ioc.h"
 #include "framework/uicomponents/qml/Muse/UiComponents/internal/tableviewcell.h"
@@ -58,6 +59,8 @@ void PluginManagerTableViewModel::setTableRows(EffectMetaList effects)
     effects.erase(std::remove_if(effects.begin(), effects.end(), [&combinedFilter](const EffectMeta& meta) {
         return !combinedFilter(meta);
     }), effects.end());
+
+    applySorting(effects);
 
     setVerticalHeaders(makeVerticalHeaders(effects));
     setTable(makeTable(effects));
@@ -254,6 +257,53 @@ void PluginManagerTableViewModel::rescanPlugins()
     effectsProvider()->rescanPlugins(*interactive(), *registerAudioPluginsScenario(), [this](const EffectMeta& meta) {
         return m_effectFamilyFilter(meta) && m_effectTypeFilter(meta);
     });
+}
+
+void PluginManagerTableViewModel::toggleColumnSort(int column)
+{
+    auto it = std::find_if(m_sortPipeline.begin(), m_sortPipeline.end(), [column](const SortEntry& entry) {
+        return entry.column == column;
+    });
+
+    if (it == m_sortPipeline.end()) {
+        m_sortPipeline.push_back({ column, true });
+        if (m_sortPipeline.size() > 4) {
+            m_sortPipeline.erase(m_sortPipeline.begin());
+        }
+    } else {
+        it->ascending = !it->ascending;
+        it = m_sortPipeline.erase(it);
+        m_sortPipeline.push_back({ column, it->ascending });
+    }
+
+    setTableRows(effectsProvider()->effectMetaList());
+}
+
+void PluginManagerTableViewModel::applySorting(EffectMetaList& effects) const
+{
+    for (const auto& entry : m_sortPipeline) {
+        std::stable_sort(effects.begin(), effects.end(), [&entry](const EffectMeta& a, const EffectMeta& b) {
+            bool isLess = false;
+            switch (entry.column) {
+                case 0: // Enabled
+                    isLess = static_cast<int>(a.isActivated) < static_cast<int>(b.isActivated);
+                    break;
+                case 1: // Name
+                    isLess = muse::strings::lessThanCaseInsensitive(a.title, b.title);
+                    break;
+                case 2: // Path
+                    isLess = muse::strings::lessThanCaseInsensitive(a.path.toString(), b.path.toString());
+                    break;
+                case 3: // Type
+                    isLess = muse::strings::lessThanCaseInsensitive(utils::effectFamilyToString(a.family),
+                                                                    utils::effectFamilyToString(b.family));
+                    break;
+                default:
+                    assert(false);
+            }
+            return entry.ascending ? isLess : !isLess;
+        });
+    }
 }
 
 void PluginManagerTableViewModel::accept()

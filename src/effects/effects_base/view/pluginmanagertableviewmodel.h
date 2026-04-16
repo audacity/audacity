@@ -73,6 +73,7 @@ public:
 
     Q_INVOKABLE void handleEdit(int row, int column);
     Q_INVOKABLE void setSearchText(const QString& searchText);
+    Q_INVOKABLE void toggleColumnSort(int column);
     Q_INVOKABLE void rescanPlugins();
     Q_INVOKABLE void aboutToDestroy();
 
@@ -107,5 +108,13 @@ private:
 
     int m_effectTypeSelectedIndex = 0;
     EffectFilter m_effectTypeFilter = allPassFilter;
+
+    struct SortEntry {
+        int column = -1;
+        bool ascending = true;
+    };
+    std::vector<SortEntry> m_sortPipeline;
+
+    void applySorting(EffectMetaList& effects) const;
 };
 }

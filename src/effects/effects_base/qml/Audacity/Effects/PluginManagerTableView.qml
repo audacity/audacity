@@ -13,7 +13,7 @@ StyledTableView {
     headerCapitalization: Font.MixedCase
 
     model: tableViewModel
-    horizontalHeaderNavigationEnabled: false
+    horizontalHeaderNavigationEnabled: true
 
     sourceComponentCallback: function (type) {
         switch (type) {
@@ -21,6 +21,10 @@ StyledTableView {
             return enabledComp
         }
         return null
+    }
+
+    onHorizontalHeaderClicked: function (column) {
+        tableViewModel.toggleColumnSort(column)
     }
 
     Component {
