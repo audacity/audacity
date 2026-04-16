@@ -69,19 +69,15 @@ void PluginManagerTableViewModel::aboutToDestroy()
 void PluginManagerTableViewModel::setTableRows(EffectMetaList effects)
 {
     const QString searchTextLower = m_searchText.toLower();
-    effects.erase(std::remove_if(effects.begin(), effects.end(), [&searchTextLower](const EffectMeta& meta) {
-        return !meta.title.toQString().toLower().contains(searchTextLower);
-    }), effects.end());
 
-    const auto combinedFilter = [&] (const EffectMeta& meta) {
-        return meta.isLoadable && m_acceptEnabledDisabledState(meta) && m_acceptFamily(meta) && m_acceptType(meta);
-    };
-    effects.erase(std::remove_if(effects.begin(), effects.end(), [&combinedFilter](const EffectMeta& meta) {
-        return !combinedFilter(meta);
+    effects.erase(std::remove_if(effects.begin(), effects.end(), [this, &searchTextLower](const EffectMeta& meta) {
+        if (!meta.title.toQString().toLower().contains(searchTextLower)) {
+            return true;
+        }
+        return !m_acceptEnabledDisabledState(meta) || !m_acceptFamily(meta) || !m_acceptType(meta);
     }), effects.end());
 
     applySorting(effects);
-
     setVerticalHeaders(makeVerticalHeaders(effects));
     setTable(makeTable(effects));
 }
@@ -230,9 +226,14 @@ QVector<QVector<muse::uicomponents::TableViewCell*> > PluginManagerTableViewMode
     QVector<QVector<muse::uicomponents::TableViewCell*> > table;
 
     for (const auto& meta : effects) {
+        auto title = meta.title.toQString();
+        if (!meta.isLoadable) {
+            title = muse::qtrc("effects", "%1 (broken)").arg(title);
+        }
+
         QVector<muse::uicomponents::TableViewCell*> row;
-        row.append(makeCell(muse::Val(meta.isActivated)));
-        row.append(makeCell(muse::Val(meta.title.toQString())));
+        row.append(makeCell(muse::Val(meta.isActivated && meta.isLoadable)));
+        row.append(makeCell(muse::Val(std::move(title))));
         row.append(makeCell(muse::Val(meta.path.toQString())));
         row.append(makeCell(muse::Val(utils::effectFamilyToString(meta.family).toQString())));
         table.append(row);
@@ -250,6 +251,10 @@ void PluginManagerTableViewModel::handleEdit(int row, int column)
     PluginManagerTableViewVerticalHeader* const verticalHeader
         = dynamic_cast<PluginManagerTableViewVerticalHeader*>(findVerticalHeader(row));
     IF_ASSERT_FAILED(verticalHeader) {
+        return;
+    }
+
+    if (!effectsProvider()->meta(verticalHeader->effectId()).isLoadable) {
         return;
     }
 
