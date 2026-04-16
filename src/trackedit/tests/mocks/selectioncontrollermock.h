@@ -76,6 +76,11 @@ public:
     MOCK_METHOD(trackedit::secs_t, selectionStartTime, (), (const override));
     MOCK_METHOD(void, setSelectionStartTime, (trackedit::secs_t), (override));
 
+    MOCK_METHOD(void, extendSelectionStart, (secs_t), (override));
+    MOCK_METHOD(void, extendSelectionEnd, (secs_t), (override));
+    MOCK_METHOD(void, contractSelectionStart, (secs_t), (override));
+    MOCK_METHOD(void, contractSelectionEnd, (secs_t), (override));
+
     MOCK_METHOD(bool, selectionContainsGroup, (), (const, override));
     MOCK_METHOD(bool, isSelectionGrouped, (), (const, override));
 

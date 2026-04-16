@@ -2078,6 +2078,11 @@ void TrackeditActionsController::moveFocusedItemDown()
 
 void TrackeditActionsController::extendFocusedItemBoundaryLeft()
 {
+    if (!navigationController()->isHighlight()) {
+        dispatcher()->dispatch("sel-ext-left");
+        return;
+    }
+
     TrackItemKey focusedItemKey = trackNavigationController()->focusedItem();
     if (!focusedItemKey.isValid()) {
         return;
@@ -2096,6 +2101,11 @@ void TrackeditActionsController::extendFocusedItemBoundaryLeft()
 
 void TrackeditActionsController::extendFocusedItemBoundaryRight()
 {
+    if (!navigationController()->isHighlight()) {
+        dispatcher()->dispatch("sel-ext-right");
+        return;
+    }
+
     TrackItemKey focusedItemKey = trackNavigationController()->focusedItem();
     if (!focusedItemKey.isValid()) {
         return;
@@ -2114,6 +2124,11 @@ void TrackeditActionsController::extendFocusedItemBoundaryRight()
 
 void TrackeditActionsController::reduceFocusedItemBoundaryLeft()
 {
+    if (!navigationController()->isHighlight()) {
+        dispatcher()->dispatch("sel-cntr-right");
+        return;
+    }
+
     TrackItemKey focusedItemKey = trackNavigationController()->focusedItem();
     if (!focusedItemKey.isValid()) {
         return;
@@ -2132,6 +2147,11 @@ void TrackeditActionsController::reduceFocusedItemBoundaryLeft()
 
 void TrackeditActionsController::reduceFocusedItemBoundaryRight()
 {
+    if (!navigationController()->isHighlight()) {
+        dispatcher()->dispatch("sel-cntr-left");
+        return;
+    }
+
     TrackItemKey focusedItemKey = trackNavigationController()->focusedItem();
     if (!focusedItemKey.isValid()) {
         return;

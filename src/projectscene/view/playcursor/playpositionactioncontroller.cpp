@@ -29,6 +29,10 @@ using namespace muse::actions;
 
 static const ActionCode PLAY_POSITION_DECREASE("play-position-decrease");
 static const ActionCode PLAY_POSITION_INCREASE("play-position-increase");
+static const ActionCode SEL_EXT_LEFT("sel-ext-left");
+static const ActionCode SEL_EXT_RIGHT("sel-ext-right");
+static const ActionCode SEL_CNTR_LEFT("sel-cntr-left");
+static const ActionCode SEL_CNTR_RIGHT("sel-cntr-right");
 static const ActionQuery PLAYBACK_SEEK_QUERY("action://playback/seek");
 
 au::projectscene::PlayPositionActionController::PlayPositionActionController(QObject* parent)
@@ -40,6 +44,10 @@ void PlayPositionActionController::init()
 {
     dispatcher()->reg(this, PLAY_POSITION_DECREASE, this, &PlayPositionActionController::playPositionDecrease);
     dispatcher()->reg(this, PLAY_POSITION_INCREASE, this, &PlayPositionActionController::playPositionIncrease);
+    dispatcher()->reg(this, SEL_EXT_LEFT, this, &PlayPositionActionController::selectionExtendLeft);
+    dispatcher()->reg(this, SEL_EXT_RIGHT, this, &PlayPositionActionController::selectionExtendRight);
+    dispatcher()->reg(this, SEL_CNTR_LEFT, this, &PlayPositionActionController::selectionContractLeft);
+    dispatcher()->reg(this, SEL_CNTR_RIGHT, this, &PlayPositionActionController::selectionContractRight);
 
     globalContext()->currentProjectChanged().onNotify(this, [this](){
         onProjectChanged();
@@ -88,25 +96,8 @@ void PlayPositionActionController::snapCurrentPosition()
 
 void PlayPositionActionController::applySingleStep(Direction direction)
 {
-    IProjectViewStatePtr viewState = globalContext()->currentProject()->viewState();
-    bool snapEnabled = viewState->isSnapEnabled();
-
     const muse::secs_t currentPlaybackPosition = playbackState()->playbackPosition();
-    muse::secs_t secs = 0;
-
-    if (snapEnabled) {
-        const double currentXPosition = m_context->timeToPosition(currentPlaybackPosition);
-        secs = m_context->singleStepToTime(currentXPosition, direction, viewState->snap().val);
-    } else {
-        double newXPosition = 0.0;
-        if (direction == Direction::Left) {
-            newXPosition = m_context->timeToPosition(currentPlaybackPosition) - 1;
-        } else {
-            newXPosition = m_context->timeToPosition(currentPlaybackPosition) + 1;
-        }
-
-        secs = m_context->positionToTime(newXPosition);
-    }
+    const muse::secs_t secs = stepFromTime(currentPlaybackPosition, direction);
 
     if (muse::RealIsEqualOrMore(secs, 0.0)) {
         muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
@@ -116,6 +107,54 @@ void PlayPositionActionController::applySingleStep(Direction direction)
 
         m_context->animatedInsureVisible(secs);
     }
+}
+
+muse::secs_t PlayPositionActionController::stepFromTime(muse::secs_t from, Direction direction) const
+{
+    IProjectViewStatePtr viewState = globalContext()->currentProject()->viewState();
+    const bool snapEnabled = viewState->isSnapEnabled();
+
+    if (snapEnabled) {
+        const double currentXPosition = m_context->timeToPosition(from);
+        return m_context->singleStepToTime(currentXPosition, direction, viewState->snap().val);
+    }
+
+    const double newXPosition = m_context->timeToPosition(from) + (direction == Direction::Left ? -1 : 1);
+    return m_context->positionToTime(newXPosition);
+}
+
+void PlayPositionActionController::selectionExtendLeft()
+{
+    const muse::secs_t from = selectionController()->timeSelectionIsNotEmpty()
+                              ? selectionController()->dataSelectedStartTime()
+                              : playbackState()->playbackPosition();
+    selectionController()->extendSelectionStart(stepFromTime(from, Direction::Left));
+}
+
+void PlayPositionActionController::selectionExtendRight()
+{
+    const muse::secs_t from = selectionController()->timeSelectionIsNotEmpty()
+                              ? selectionController()->dataSelectedEndTime()
+                              : playbackState()->playbackPosition();
+    selectionController()->extendSelectionEnd(stepFromTime(from, Direction::Right));
+}
+
+void PlayPositionActionController::selectionContractLeft()
+{
+    if (!selectionController()->timeSelectionIsNotEmpty()) {
+        return;
+    }
+    const muse::secs_t from = selectionController()->dataSelectedStartTime();
+    selectionController()->contractSelectionStart(stepFromTime(from, Direction::Right));
+}
+
+void PlayPositionActionController::selectionContractRight()
+{
+    if (!selectionController()->timeSelectionIsNotEmpty()) {
+        return;
+    }
+    const muse::secs_t from = selectionController()->dataSelectedEndTime();
+    selectionController()->contractSelectionEnd(stepFromTime(from, Direction::Left));
 }
 
 void PlayPositionActionController::onProjectChanged()
