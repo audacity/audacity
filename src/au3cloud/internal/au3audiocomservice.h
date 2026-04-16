@@ -22,7 +22,9 @@
 #include "importexport/export/iexporter.h"
 #include "context/iglobalcontext.h"
 
+#include "au3-cloud-audiocom/CloudSyncService.h"
 #include "au3-cloud-audiocom/sync/CloudProjectsDatabase.h"
+#include "au3-concurrency/concurrency/CancellationContext.h"
 #include "au3-utility/Observer.h"
 
 #include "au3cloud/cloudtypes.h"
@@ -76,8 +78,12 @@ private:
     std::string getCloudProjectPage(au::project::IAudacityProjectPtr project);
 
     static void removeProjectFromDatabase(const muse::io::path_t& localPath);
-    bool isSnapshotUpToDate(const std::optional<audacity::cloud::audiocom::sync::DBProjectData>& dbProjectData);
-    std::optional<std::string> getHeadSnapshotID(const std::string& projectId);
+    bool isSnapshotUpToDate(
+        const std::optional<audacity::cloud::audiocom::sync::DBProjectData>& dbProjectData,
+        audacity::cloud::audiocom::sync::ProgressCallback progressCallback, audacity::concurrency::CancellationContextPtr context);
+    std::optional<std::string> getHeadSnapshotID(
+        const std::string& projectId, audacity::cloud::audiocom::sync::ProgressCallback progressCallback,
+        audacity::concurrency::CancellationContextPtr context);
 
     struct CachedProjectItem {
         ProjectList projectList;

@@ -137,7 +137,9 @@ void PerformProjectGetRequest(
 void GetProjectInfo(
     OAuthService& oAuthService, const ServiceConfig& serviceConfig,
     std::string projectId,
-    std::function<void(sync::ProjectInfo, ResponseResult)> callback)
+    std::function<void(sync::ProjectInfo, ResponseResult)> callback,
+    sync::ProgressCallback progressCallback = nullptr,
+    concurrency::CancellationContextPtr context = nullptr)
 {
     assert(callback);
 
@@ -160,13 +162,15 @@ void GetProjectInfo(
         }
 
         callback(std::move(*projectInfo), std::move(result));
-    });
+    }, progressCallback, std::move(context));
 }
 
 void GetSnapshotInfo(
     OAuthService& oAuthService, const ServiceConfig& serviceConfig,
     std::string projectId, std::string snapshotId,
-    std::function<void(sync::SnapshotInfo, ResponseResult result)> callback)
+    std::function<void(sync::SnapshotInfo, ResponseResult result)> callback,
+    sync::ProgressCallback progressCallback = nullptr,
+    concurrency::CancellationContextPtr context = nullptr)
 {
     assert(callback);
 
@@ -189,7 +193,7 @@ void GetSnapshotInfo(
         }
 
         callback(std::move(*snapshotInfo), std::move(result));
-    });
+    }, progressCallback, std::move(context));
 }
 
 void GetSnapshotInfo(
@@ -197,7 +201,9 @@ void GetSnapshotInfo(
     std::string projectId, std::string snapshotId,
     std::function<
         void(sync::ProjectInfo, sync::SnapshotInfo, ResponseResult result)>
-    callback)
+    callback,
+    sync::ProgressCallback progressCallback = nullptr,
+    concurrency::CancellationContextPtr context = nullptr)
 {
     assert(callback);
 
@@ -205,7 +211,7 @@ void GetSnapshotInfo(
         oAuthService, serviceConfig, projectId,
         [callback   = std::move(callback), projectId,
          snapshotId = std::move(snapshotId), &oAuthService,
-         &serviceConfig](sync::ProjectInfo projectInfo, ResponseResult result)
+         &serviceConfig, progressCallback, context](sync::ProjectInfo projectInfo, ResponseResult result)
     {
         if (result.Code != SyncResultCode::Success) {
             callback({}, {}, std::move(result));
@@ -234,8 +240,8 @@ void GetSnapshotInfo(
             callback(
                 std::move(projectInfo), std::move(snapshotInfo),
                 std::move(result));
-        });
-    });
+        }, progressCallback, context);
+    }, progressCallback, context);
 }
 
 bool HasAutosave(const std::string& path)
@@ -357,7 +363,8 @@ CloudSyncService::GetProjectsFuture CloudSyncService::GetProjects(
 
 CloudSyncService::SyncFuture CloudSyncService::OpenFromCloud(
     std::string projectId, std::string snapshotId, SyncMode mode,
-    sync::ProgressCallback callback)
+    sync::ProgressCallback callback,
+    concurrency::CancellationContextPtr context)
 {
     if (mSyncInProcess.exchange(true)) {
         auto blockedPromise = SyncPromise {};
@@ -382,16 +389,20 @@ CloudSyncService::SyncFuture CloudSyncService::OpenFromCloud(
 
     GetSnapshotInfo(
         GetOAuthService(), GetServiceConfig(), projectId, snapshotId,
-        [this, mode](
+        [this, mode, context](
             sync::ProjectInfo projectInfo, sync::SnapshotInfo snapshotInfo,
             ResponseResult result)
     {
         if (result.Code != SyncResultCode::Success) {
-            FailSync(std::move(result));
+            if (context && context->Cancelled()) {
+                CompleteSync({ sync::ProjectSyncResult::StatusCode::Cancelled, {}, {} });
+            } else {
+                FailSync(std::move(result));
+            }
         } else {
             SyncCloudSnapshot(projectInfo, snapshotInfo, mode);
         }
-    });
+    }, [this](double) { return mProgressCallback(0.0); }, context);
 
     return mSyncPromise.get_future();
 }
@@ -494,7 +505,9 @@ CloudSyncService::GetProjectState(const std::string& projectId)
 }
 
 CloudSyncService::GetHeadSnapshotIDFuture
-CloudSyncService::GetHeadSnapshotID(std::string_view projectId)
+CloudSyncService::GetHeadSnapshotID(
+    std::string_view projectId, sync::ProgressCallback progressCallback,
+    concurrency::CancellationContextPtr context)
 {
     auto promise = std::make_shared<GetHeadSnapshotIDPromise>();
 
@@ -508,7 +521,7 @@ CloudSyncService::GetHeadSnapshotID(std::string_view projectId)
         } else {
             promise->set_value({ projectInfo.HeadSnapshot.Id });
         }
-    });
+    }, progressCallback, std::move(context));
 
     return promise->get_future();
 }
@@ -623,12 +636,14 @@ void CloudSyncService::SyncCloudSnapshot(
             / (state.BlocksTotal + 1.0));
 
         if (state.IsComplete()) {
-            const bool success = state.Result.Code == SyncResultCode::Success;
+            const auto statusCode
+                =state.Result.Code == SyncResultCode::Success
+                  ? sync::ProjectSyncResult::StatusCode::Succeeded
+                  : state.Result.Code == SyncResultCode::Cancelled
+                  ? sync::ProjectSyncResult::StatusCode::Cancelled
+                  : sync::ProjectSyncResult::StatusCode::Failed;
 
-            CompleteSync({ success
-                           ? sync::ProjectSyncResult::StatusCode::Succeeded
-                           : sync::ProjectSyncResult::StatusCode::Failed,
-                           std::move(state.Result), std::move(path) });
+            CompleteSync({ statusCode, std::move(state.Result), std::move(path) });
         }
     },
         mode == SyncMode::ForceNew);

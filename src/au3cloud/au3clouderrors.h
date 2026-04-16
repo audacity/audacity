@@ -12,6 +12,7 @@ static constexpr int AU3_CLOUD_FIRST = 6000;
 enum class Err {
     Undefined    = int(muse::Ret::Code::Undefined),
     NoError      = int(muse::Ret::Code::Ok),
+    Cancelled    = int(muse::Ret::Code::Cancel),
     UnknownError = AU3_CLOUD_FIRST,
 
     NoExportPlugin,
@@ -58,6 +59,9 @@ enum class Err {
 
     // openAudioFile
     DownloadAudioResultCancel,
+
+    // openCloudProject
+    OpenProjectCancelled,
 };
 
 inline muse::Ret make_ret(Err e)

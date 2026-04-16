@@ -506,35 +506,38 @@ muse::ProgressPtr Au3AudioComService::openCloudProject(const muse::io::path_t& l
         }
     }
 
-    std::thread([weak = weak_from_this(), progress, dbProjectData, path = localPath.toStdString(), cloudProjectId, forceOverwrite]() {
+    auto progressCallback = [progress](double p) -> bool {
+        if (progress->isCanceled()) {
+            return false;
+        }
+
+        progress->progress(static_cast<int64_t>(p * 100), 100);
+        return true;
+    };
+
+    auto cancellationContext = audacity::concurrency::CancellationContext::Create();
+
+    std::thread([weak = weak_from_this(), progress, dbProjectData, cloudProjectId, forceOverwrite,
+                 cancellationContext, progressCallback = std::move(progressCallback)]() mutable {
         auto self = weak.lock();
         if (!self) {
             return;
         }
 
-        if (!forceOverwrite && self->isSnapshotUpToDate(dbProjectData)) {
+        auto cancelCheck = [progress](double) -> bool { return !progress->isCanceled(); };
+        if (!forceOverwrite && self->isSnapshotUpToDate(dbProjectData, cancelCheck, cancellationContext)) {
             progress->finish(muse::make_ok());
             return;
         }
 
-        auto progressCallback = [progress](double p) -> bool {
-            if (progress->isCanceled()) {
-                return false;
-            }
-
-            progress->progress(static_cast<int64_t>(p * 100), 100);
-            return true;
-        };
-
         const auto syncMode = forceOverwrite
                               ? CloudSyncService::SyncMode::ForceOverwrite
                               : CloudSyncService::SyncMode::Normal;
-        auto result = CloudSyncService::Get().OpenFromCloud(
-            cloudProjectId, {},
-            syncMode,
-            std::move(progressCallback)).get();
+        const auto result = CloudSyncService::Get().OpenFromCloud(
+            cloudProjectId, {}, syncMode, std::move(progressCallback), cancellationContext).get();
 
-        if (progress->isCanceled()) {
+        if (result.Status == sync::ProjectSyncResult::StatusCode::Cancelled) {
+            progress->finish(make_ret(Err::OpenProjectCancelled));
             return;
         }
 
@@ -543,7 +546,7 @@ muse::ProgressPtr Au3AudioComService::openCloudProject(const muse::io::path_t& l
         } else {
             const auto err = syncResultCodeToErr(result.Result.Code);
             if (err == Err::SyncResultNotFound) {
-                removeProjectFromDatabase(result.ProjectPath);
+                self->removeProjectFromDatabase(result.ProjectPath);
             }
 
             progress->finish(make_ret(err));
@@ -659,13 +662,17 @@ void Au3AudioComService::removeProjectFromDatabase(const muse::io::path_t& local
     }
 }
 
-bool Au3AudioComService::isSnapshotUpToDate(const std::optional<sync::DBProjectData>& dbProjectData)
+bool Au3AudioComService::isSnapshotUpToDate(
+    const std::optional<sync::DBProjectData>& dbProjectData,
+    sync::ProgressCallback progressCallback,
+    CancellationContextPtr context)
 {
     if (!dbProjectData.has_value()) {
         return false;
     }
 
-    std::optional<std::string> headSnapshotId = getHeadSnapshotID(dbProjectData->ProjectId);
+    std::optional<std::string> headSnapshotId
+        = getHeadSnapshotID(dbProjectData->ProjectId, progressCallback, context);
     if (!headSnapshotId.has_value()) {
         return false;
     }
@@ -675,9 +682,13 @@ bool Au3AudioComService::isSnapshotUpToDate(const std::optional<sync::DBProjectD
     return snapshotsMatch && fullyDownloaded;
 }
 
-std::optional<std::string> Au3AudioComService::getHeadSnapshotID(const std::string& projectId)
+std::optional<std::string> Au3AudioComService::getHeadSnapshotID(
+    const std::string& projectId,
+    sync::ProgressCallback progressCallback,
+    CancellationContextPtr context)
 {
-    const auto headResult = CloudSyncService::Get().GetHeadSnapshotID(projectId).get();
+    const auto headResult
+        = CloudSyncService::Get().GetHeadSnapshotID(projectId, progressCallback, std::move(context)).get();
     if (const auto* snapshotId = std::get_if<std::string>(&headResult)) {
         return *snapshotId;
     }

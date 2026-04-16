@@ -1370,6 +1370,9 @@ void ProjectActionsController::handleCloudOpenError(const muse::Ret& error, cons
         }
         break;
     }
+    case Err::Cancelled:
+    case Err::OpenProjectCancelled:
+        break;
     default: {
         interactive()->infoSync(trc("project", OPEN_DEFAULT_ERROR_TITLE), trc("project", OPEN_DEFAULT_ERROR_MESSAGE));
         break;
