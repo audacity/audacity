@@ -76,10 +76,22 @@ bool EffectsProvider::doScanPlugins(muse::audioplugins::IRegisterAudioPluginsSce
     const auto metaReaders = metaReaderRegister()->readers();
 
     std::map<muse::io::path_t, muse::audioplugins::IAudioPluginMetaReaderPtr> pathToMetaReader;
-    for (const auto& reader : metaReaders) {
-        for (const auto& path : thirdPartyPluginPaths) {
-            if (reader->canReadMeta(path)) {
-                pathToMetaReader[path] = reader;
+    {
+        auto it = thirdPartyPluginPaths.begin();
+        while (it != thirdPartyPluginPaths.end()) {
+            const auto& path = *it;
+            auto found = false;
+            for (const auto& reader : metaReaders) {
+                if (reader->canReadMeta(path)) {
+                    pathToMetaReader[path] = reader;
+                    found = true;
+                    break;
+                }
+            }
+            IF_ASSERT_FAILED(found) {
+                it = thirdPartyPluginPaths.erase(it);
+            } else {
+                ++it;
             }
         }
     }
