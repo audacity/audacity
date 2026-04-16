@@ -298,27 +298,30 @@ void PluginManagerTableViewModel::toggleColumnSort(int column)
 void PluginManagerTableViewModel::applySorting(EffectMetaList& effects) const
 {
     for (const auto& entry : m_sortPipeline) {
-        std::stable_sort(effects.begin(), effects.end(), [&entry](const EffectMeta& a, const EffectMeta& b) {
-            bool isLess = false;
+        const auto cmp = [&entry](const EffectMeta& a, const EffectMeta& b) {
             switch (entry.column) {
-                case enabledDisabledColumnIndex:
-                    isLess = static_cast<int>(a.isActivated) < static_cast<int>(b.isActivated);
-                    break;
-                case nameColumnIndex:
-                    isLess = muse::strings::lessThanCaseInsensitive(a.title, b.title);
-                    break;
-                case pathColumnIndex:
-                    isLess = muse::strings::lessThanCaseInsensitive(a.path.toString(), b.path.toString());
-                    break;
-                case typeColumnIndex:
-                    isLess = muse::strings::lessThanCaseInsensitive(utils::effectFamilyToString(a.family),
-                                                                    utils::effectFamilyToString(b.family));
-                    break;
-                default:
-                    assert(false);
+            case enabledDisabledColumnIndex:
+                return static_cast<int>(a.isActivated) < static_cast<int>(b.isActivated);
+            case nameColumnIndex:
+                return muse::strings::lessThanCaseInsensitive(a.title, b.title);
+            case pathColumnIndex:
+                return muse::strings::lessThanCaseInsensitive(a.path.toString(), b.path.toString());
+            case typeColumnIndex:
+                return muse::strings::lessThanCaseInsensitive(utils::effectFamilyToString(a.family),
+                                                              utils::effectFamilyToString(b.family));
+            default:
+                assert(false);
             }
-            return entry.ascending ? isLess : !isLess;
-        });
+            return false;
+        };
+
+        if (entry.ascending) {
+            std::stable_sort(effects.begin(), effects.end(), cmp);
+        } else {
+            std::stable_sort(effects.begin(), effects.end(), [&cmp](const EffectMeta& a, const EffectMeta& b) {
+                return cmp(b, a);
+            });
+        }
     }
 }
 
