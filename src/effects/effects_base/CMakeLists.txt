@@ -113,6 +113,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/generatedeffectviewermodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/pluginmanagertableviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/pluginmanagertableviewmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/pluginmanagertableviewverticalheader.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/pluginmanagertableviewverticalheader.h
     ${CMAKE_CURRENT_LIST_DIR}/view/dropdownoptionsmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/dropdownoptionsmodel.h
     )

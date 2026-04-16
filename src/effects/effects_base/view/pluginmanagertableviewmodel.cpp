@@ -5,12 +5,13 @@
  #include "pluginmanagertableviewmodel.h"
 
  #include "internal/effectsutils.h"
+ #include "pluginmanagertableviewverticalheader.h"
  #include "effectsviewutils.h"
 
 #include "framework/global/translation.h"
+#include "framework/global/modularity/ioc.h"
 #include "framework/uicomponents/qml/Muse/UiComponents/internal/tableviewcell.h"
-#include "modularity/ioc.h"
-#include "uicomponents/qml/Muse/UiComponents/menuitem.h"
+#include "framework/uicomponents/qml/Muse/UiComponents/menuitem.h"
 
 namespace au::effects {
 namespace {
@@ -198,7 +199,9 @@ QVector<muse::uicomponents::TableViewHeader*> PluginManagerTableViewModel::makeV
     QVector<TableViewHeader*> vHeaders;
 
     for (auto i = 0; i < static_cast<int>(effects.size()); ++i) {
-        vHeaders << new TableViewHeader(this);
+        auto* header = new PluginManagerTableViewVerticalHeader(this);
+        header->setEffectId(effects[i].id);
+        vHeaders << header;
     }
 
     return vHeaders;
@@ -226,22 +229,22 @@ void PluginManagerTableViewModel::handleEdit(int row, int column)
         return;
     }
 
-    const EffectMetaList effects = effectsProvider()->effectMetaList();
-
-    if (row >= static_cast<int>(effects.size())) {
+    PluginManagerTableViewVerticalHeader* const verticalHeader
+        = dynamic_cast<PluginManagerTableViewVerticalHeader*>(findVerticalHeader(row));
+    IF_ASSERT_FAILED(verticalHeader) {
         return;
     }
 
     muse::uicomponents::TableViewCell* const cell = findCell(row, column);
-    if (!cell) {
+    IF_ASSERT_FAILED(cell) {
         return;
     }
 
     const bool current = cell->value().toBool();
     const bool next = !current;
 
-    effectsProvider()->setEffectActivated(effects[row].id, next);
-    m_editedEffects.insert(effects[row].id);
+    effectsProvider()->setEffectActivated(verticalHeader->effectId(), next);
+    m_editedEffects.insert(verticalHeader->effectId());
 
     cell->setValue(muse::Val(next));
 }
