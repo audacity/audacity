@@ -10,6 +10,7 @@
 #include "modularity/ioc.h"
 #include "iprojectconfiguration.h"
 #include "au3cloud/iau3audiocomservice.h"
+#include "framework/global/io/ifilesystem.h"
 #include "au3cloud/iauthorization.h"
 #include "framework/interactive/iinteractive.h"
 #include "framework/actions/iactionsdispatcher.h"
@@ -21,6 +22,7 @@ class CloudAudioFilesModel : public AbstractItemModel, public muse::async::Async
 
     muse::GlobalInject<au::project::IProjectConfiguration> configuration;
     muse::GlobalInject<au::au3cloud::IAuthorization> authorization;
+    muse::GlobalInject<muse::io::IFileSystem> fileSystem;
 
     muse::ContextInject<au::au3cloud::IAu3AudioComService> audioComService { this };
     muse::ContextInject<muse::IInteractive> interactive { this };
