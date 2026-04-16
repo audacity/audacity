@@ -140,7 +140,7 @@ ProjectsView {
             navigation.name: "CloudAudioFilesGrid"
             navigation.accessible.name: qsTrc("project", "Cloud audio files grid")
 
-            onOpenCloudProjectRequested: function (id, _, _) {
+            onOpenCloudProjectRequested: function (id, _slug, _path) {
                 root.openCloudAudioFileRequested(id)
             }
         }
@@ -166,7 +166,7 @@ ProjectsView {
             navigation.order: root.navigationOrder
             navigation.name: "CloudAudioFilesList"
 
-            onOpenCloudProjectRequested: function (id, _, _) {
+            onOpenCloudProjectRequested: function (id, _slug, _path) {
                 root.openCloudAudioFileRequested(id)
             }
 

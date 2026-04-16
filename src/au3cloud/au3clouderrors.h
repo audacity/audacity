@@ -58,7 +58,7 @@ enum class Err {
     SyncResultUnknownError,
 
     // openAudioFile
-    DownloadAudioResultCancel,
+    DownloadAudioResultCancelled,
 
     // openCloudProject
     OpenProjectCancelled,

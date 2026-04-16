@@ -105,7 +105,8 @@ void PerformProjectGetRequest(
 
         if (progressCallback) {
             response->setDownloadProgressCallback([context, progressCallback] (int64_t current, int64_t expected) {
-                if (!progressCallback(static_cast<double>(current) / expected)) {
+                const double progress = expected > 0 ? static_cast<double>(current) / expected : 0.0;
+                if (!progressCallback(progress)) {
                     context->Cancel();
                 }
             });
@@ -910,7 +911,8 @@ void CloudSyncService::DownloadAudio(const std::string& name, const std::string&
     // Called each time, since downloading for update progress status.
     response->setDownloadProgressCallback([this, context]
                                           (int64_t current, int64_t expected) {
-        mDownloadProgress.store(static_cast<double>(current) / expected);
+        const double progress = expected > 0 ? static_cast<double>(current) / expected : 0.0;
+        mDownloadProgress.store(progress);
 
         if (mAudioProgressUpdateQueued.exchange(true)) {
             return;

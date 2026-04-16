@@ -1106,16 +1106,17 @@ void ProjectActionsController::openCloudAudioFile(const muse::actions::ActionQue
         return;
     }
 
-    progress->finished().onReceive(this, [this, audioId](const ProgressResult& result) {
+    progress->finished().onReceive(this, [this](const ProgressResult& result) {
         if (!result.ret) {
             handleCloudAudioOpenError(result.ret);
             return;
         }
 
+        const auto localPath = result.val.toQString();
         const auto project = globalContext()->currentProject();
         if (project) {
             QStringList args;
-            args << "--session-type" << "start-with-new" << result.val.toQString();
+            args << "--session-type" << "start-with-new" << localPath;
             multiwindowsProvider()->openNewWindow(args);
             return;
         }
@@ -1125,9 +1126,13 @@ void ProjectActionsController::openCloudAudioFile(const muse::actions::ActionQue
             return;
         }
 
-        const muse::io::path_t audioPath(result.val.toQString());
-        newproject->import(audioPath);
-        fileSystem()->remove(audioPath);
+        const auto importRet = newproject->import(muse::io::paths_t { localPath });
+        fileSystem()->remove(localPath);
+        if (!importRet) {
+            LOGE() << importRet.toString();
+            return;
+        }
+
         openPageIfNeed(PROJECT_PAGE_URI);
     });
 
@@ -1524,7 +1529,7 @@ void ProjectActionsController::handleCloudAudioOpenError(const muse::Ret& error)
     const auto err = static_cast<Err>(error.code());
 
     switch (err) {
-    case Err::DownloadAudioResultCancel:
+    case Err::DownloadAudioResultCancelled:
         break;
     default:
         interactive()->error(muse::trc("cloud", "Open audio from cloud"), error.toString());

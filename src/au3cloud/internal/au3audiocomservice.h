@@ -69,13 +69,13 @@ public:
     muse::ProgressPtr shareAudio(const std::string& title) override;
     muse::ProgressPtr openAudioFile(const std::string& audioId) override;
 
-    std::string getCloudProjectPage(const std::string& slug) override;
-    std::string getCloudAudioPage(const std::string& slug) override;
+    std::string getCloudProjectPage(const std::string& slug) const override;
+    std::string getCloudAudioPage(const std::string& slug) const override;
 
     void deinit() override;
 
 private:
-    std::string getCloudProjectPage(au::project::IAudacityProjectPtr project);
+    std::string getCloudProjectPage(au::project::IAudacityProjectPtr project) const;
 
     static void removeProjectFromDatabase(const muse::io::path_t& localPath);
     bool isSnapshotUpToDate(

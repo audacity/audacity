@@ -59,7 +59,7 @@ ListItemBlank {
         id: prv
 
         property color backgroundColor: root.thumbnailFull ? "transparent" : ui.theme.backgroundSecondaryColor
-        property color lineColor: Qt.rgba(ui.theme.fontPrimaryColor.r, ui.theme.fontPrimaryColor.g, ui.theme.fontPrimaryColor.b, 0.8)
+        property color lineColor: Qt.alpha(ui.theme.fontPrimaryColor, 0.8)
         property color borderColor: root.thumbnailFull ? "transparent" : ui.theme.strokeColor
     }
 
@@ -70,9 +70,9 @@ ListItemBlank {
             path: root.item.thumbnailUrl ?? ""
             placeholder: root.placeholder
 
-            backgroundColor: ui.theme.backgroundSecondaryColor
-            lineColor: Qt.rgba(ui.theme.fontPrimaryColor.r, ui.theme.fontPrimaryColor.g, ui.theme.fontPrimaryColor.b, 0.8)
-            borderColor: ui.theme.strokeColor
+            backgroundColor: prv.backgroundColor
+            lineColor: prv.lineColor
+            borderColor: prv.borderColor
         }
     }
 
@@ -117,11 +117,10 @@ ListItemBlank {
             Loader {
                 active: root.isCloudItem ?? false
                 visible: active
+                Layout.alignment: Qt.AlignTrailing | Qt.AlignVCenter
 
                 sourceComponent: CloudProjectIndicatorButton {
                     id: cloudIndicator
-
-                    Layout.alignment: Qt.AlignTrailing | Qt.AlignVCenter
 
                     isProgress: false //cloudProjectStatusWatcher.isProgress
                     isDownloadedAndUpToDate: true //cloudProjectStatusWatcher.isDownloadedAndUpToDate

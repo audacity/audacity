@@ -12,6 +12,7 @@
 #include "framework/global/async/promise.h"
 #include "framework/global/progress.h"
 #include "framework/global/io/path.h"
+#include "framework/global/async/channel.h"
 
 #include "project/iaudacityproject.h"
 #include "cloudtypes.h"
@@ -55,8 +56,8 @@ public:
     virtual muse::ProgressPtr shareAudio(const std::string& title) = 0;
     virtual muse::ProgressPtr openAudioFile(const std::string& audioId) = 0;
 
-    virtual std::string getCloudProjectPage(const std::string& slug) = 0;
-    virtual std::string getCloudAudioPage(const std::string& slug) = 0;
+    virtual std::string getCloudProjectPage(const std::string& slug) const = 0;
+    virtual std::string getCloudAudioPage(const std::string& slug) const = 0;
 
     virtual void deinit() = 0;
 };

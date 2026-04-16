@@ -411,7 +411,7 @@ muse::ProgressPtr Au3AudioComService::resumeProjectSync(au::project::IAudacityPr
     return progress;
 }
 
-std::string Au3AudioComService::getCloudProjectPage(au::project::IAudacityProjectPtr project)
+std::string Au3AudioComService::getCloudProjectPage(au::project::IAudacityProjectPtr project) const
 {
     au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
 
@@ -419,7 +419,7 @@ std::string Au3AudioComService::getCloudProjectPage(au::project::IAudacityProjec
     return projectCloudExtension.GetCloudProjectPage(AudiocomTrace::SaveProjectSaveToCloudMenu);
 }
 
-std::string Au3AudioComService::getCloudProjectPage(const std::string& slug)
+std::string Au3AudioComService::getCloudProjectPage(const std::string& slug) const
 {
     auto& oauthService = GetOAuthService();
     const auto& serviceConfig = GetServiceConfig();
@@ -430,7 +430,7 @@ std::string Au3AudioComService::getCloudProjectPage(const std::string& slug)
     return oauthService.MakeAudioComAuthorizeURL(userId, projectPage);
 }
 
-std::string Au3AudioComService::getCloudAudioPage(const std::string& slug)
+std::string Au3AudioComService::getCloudAudioPage(const std::string& slug) const
 {
     auto& oauthService = GetOAuthService();
     const auto& serviceConfig = GetServiceConfig();
@@ -472,7 +472,7 @@ muse::ProgressPtr Au3AudioComService::openAudioFile(const std::string& audioId)
 
         if (result.Status != sync::DownloadAudioResult::StatusCode::Succeeded) {
             if (result.Status == sync::DownloadAudioResult::StatusCode::Cancelled) {
-                progress->finish(make_ret(Err::DownloadAudioResultCancel));
+                progress->finish(make_ret(Err::DownloadAudioResultCancelled));
             } else {
                 progress->finish(make_ret(Err::UnknownError));
             }

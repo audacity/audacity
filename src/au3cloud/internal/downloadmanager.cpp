@@ -12,6 +12,7 @@
 #include "framework/global/types/bytearray.h"
 
 #include "au3cloud/cloudtypes.h"
+#include "thirdparty/kors_logger/src/log_base.h"
 
 using namespace au::au3cloud;
 
@@ -57,24 +58,27 @@ void DownloadManager::startDownload(const std::string& id, const std::string& ur
                                std::static_pointer_cast<QIODevice>(buffer),
                                headers);
 
-    if (!retVal.ret) {
+    {
         std::lock_guard lock(m_mutex);
-        m_inProgressIds.erase(id);
-        return;
-    }
 
-    m_activeManagers[id] = std::move(manager);
+        if (!retVal.ret) {
+            m_inProgressIds.erase(id);
+            return;
+        }
+
+        m_activeManagers[id] = std::move(manager);
+    }
 
     retVal.val.finished().onReceive(this,
                                     [this, id, destPath, buffer](const muse::ProgressResult& res) {
-        m_activeManagers.erase(id);
-
         {
             std::lock_guard lock(m_mutex);
+            m_activeManagers.erase(id);
             m_inProgressIds.erase(id);
         }
 
         if (!res.ret) {
+            LOGE() << "Download failed for id " << id;
             return;
         }
 
@@ -82,6 +86,8 @@ void DownloadManager::startDownload(const std::string& id, const std::string& ur
         const muse::Ret writeRet = filesystem()->writeFile(destPath, data);
         if (writeRet) {
             m_downloadCompleted.send(id, destPath);
+        } else {
+            LOGE() << "Failed to write downloaded file for id " << id;
         }
     });
 }

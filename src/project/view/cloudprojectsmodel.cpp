@@ -41,6 +41,8 @@ void CloudProjectsModel::load()
         if (std::holds_alternative<au::au3cloud::Authorized>(authState)) {
             setState(State::Loading);
             loadItemsIfNecessary();
+        } else {
+            setState(State::NotSignedIn);
         }
     }, muse::async::Asyncable::Mode::SetReplace);
 

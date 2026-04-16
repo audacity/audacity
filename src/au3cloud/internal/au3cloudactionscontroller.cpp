@@ -58,24 +58,32 @@ void Au3CloudActionsController::openCloudProjectPage(const muse::actions::Action
 {
     const auto slug = query.param("slug").toString();
     if (slug.empty()) {
+        LOGE() << "Cannot open cloud project page: empty slug";
         return;
     }
 
     const auto url = audioComService()->getCloudProjectPage(slug);
-    if (!url.empty()) {
-        platformInteractive()->openUrl(url);
+    if (url.empty()) {
+        LOGE() << "Cannot open cloud project page: empty URL";
+        return;
     }
+
+    platformInteractive()->openUrl(url);
 }
 
 void Au3CloudActionsController::openCloudAudioPage(const muse::actions::ActionQuery& query)
 {
     const auto slug = query.param("slug").toString();
     if (slug.empty()) {
+        LOGE() << "Cannot open cloud audio page: empty slug";
         return;
     }
 
     const auto url = audioComService()->getCloudAudioPage(slug);
-    if (!url.empty()) {
-        platformInteractive()->openUrl(url);
+    if (url.empty()) {
+        LOGE() << "Cannot open cloud audio page: empty URL";
+        return;
     }
+
+    platformInteractive()->openUrl(url);
 }
