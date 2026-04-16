@@ -61,6 +61,11 @@ void PluginManagerTableViewModel::aboutToDestroy()
 
 void PluginManagerTableViewModel::setTableRows(EffectMetaList effects)
 {
+    const QString searchTextLower = m_searchText.toLower();
+    effects.erase(std::remove_if(effects.begin(), effects.end(), [&searchTextLower](const EffectMeta& meta) {
+        return !meta.title.toQString().toLower().contains(searchTextLower);
+    }), effects.end());
+
     const auto combinedFilter = [&] (const EffectMeta& meta) {
         return meta.isLoadable && m_acceptEnabledDisabledState(meta) && m_acceptFamily(meta) && m_acceptType(meta);
     };
@@ -76,13 +81,8 @@ void PluginManagerTableViewModel::setTableRows(EffectMetaList effects)
 
 void PluginManagerTableViewModel::setSearchText(const QString& searchText)
 {
-    auto effects = effectsProvider()->effectMetaList();
-    const QString searchTextLower = searchText.toLower();
-    effects.erase(std::remove_if(effects.begin(), effects.end(), [&searchTextLower](const EffectMeta& meta) {
-        return !meta.title.toQString().toLower().contains(searchTextLower);
-    }), effects.end());
-
-    setTableRows(effects);
+    m_searchText = searchText;
+    setTableRows(effectsProvider()->effectMetaList());
 }
 
 muse::uicomponents::MenuItemList PluginManagerTableViewModel::enabledDisabledOptions()

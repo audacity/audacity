@@ -98,6 +98,7 @@ private:
     EffectMetaList m_initialState;
     std::unordered_set<EffectId> m_editedEffects;
     bool m_changesConfirmed = false;
+    QString m_searchText;
 
     using EffectFilter = std::function<bool (const EffectMeta&)>;
     static const EffectFilter allPassFilter;
