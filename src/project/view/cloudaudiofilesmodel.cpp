@@ -23,28 +23,24 @@ CloudAudioFilesModel::CloudAudioFilesModel(QObject* parent)
 
 void CloudAudioFilesModel::load()
 {
-    auto onUserAuthorizedChanged = [this](bool authorized) {
-        if (authorized) {
+    const auto authState = authorization()->authState().val;
+    if (std::holds_alternative<au::au3cloud::Authorized>(authState)) {
+        setState(State::Loading);
+        loadItemsIfNecessary();
+    } else if (std::holds_alternative<au::au3cloud::NotAuthorized>(authState)) {
+        muse::actions::ActionQuery query("audacity://cloud/open-signin-dialog");
+        query.addParam("sync", muse::Val(false));
+        query.addParam("showTourPage", muse::Val(false));
+        dispatcher()->dispatch(query);
+
+        setState(State::NotSignedIn);
+    }
+
+    authorization()->authState().ch.onReceive(this, [this](au::au3cloud::AuthState authState) {
+        if (std::holds_alternative<au::au3cloud::Authorized>(authState)) {
             setState(State::Loading);
             loadItemsIfNecessary();
-        } else {
-            muse::actions::ActionQuery query("audacity://cloud/open-signin-dialog");
-            query.addParam("sync", muse::Val(false));
-            query.addParam("showTourPage", muse::Val(false));
-            dispatcher()->dispatch(query);
-
-            setState(State::NotSignedIn);
         }
-    };
-
-    auto isAuthorized = [](au::au3cloud::AuthState authState) {
-        return std::holds_alternative<au::au3cloud::Authorized>(authState);
-    };
-
-    onUserAuthorizedChanged(isAuthorized(authorization()->authState().val));
-
-    authorization()->authState().ch.onReceive(this, [isAuthorized, onUserAuthorizedChanged](au::au3cloud::AuthState authState) {
-        onUserAuthorizedChanged(isAuthorized(std::move(authState)));
     }, muse::async::Asyncable::Mode::SetReplace);
 
     connect(this, &CloudAudioFilesModel::desiredRowCountChanged, this, &CloudAudioFilesModel::loadItemsIfNecessary);
