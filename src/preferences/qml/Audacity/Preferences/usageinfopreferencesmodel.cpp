@@ -6,7 +6,7 @@
 using namespace au::appshell;
 
 UsageInfoPreferencesModel::UsageInfoPreferencesModel(QObject* parent)
-    : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
+    : QObject(parent)
 {
 }
 

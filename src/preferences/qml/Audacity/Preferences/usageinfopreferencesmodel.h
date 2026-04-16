@@ -10,12 +10,12 @@
 #include "au3cloud/iusageinfo.h"
 
 namespace au::appshell {
-class UsageInfoPreferencesModel : public QObject, public muse::Contextable
+class UsageInfoPreferencesModel : public QObject
 {
     Q_OBJECT
     QML_ELEMENT
 
-    muse::ContextInject<au::au3cloud::IUsageInfo> usageInfo { this };
+    muse::GlobalInject<au::au3cloud::IUsageInfo> usageInfo;
 
     Q_PROPERTY(bool sendAnonymousUsageInfo READ sendAnonymousUsageInfo WRITE setSendAnonymousUsageInfo NOTIFY sendAnonymousUsageInfoChanged)
 
