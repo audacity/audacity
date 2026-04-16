@@ -91,12 +91,27 @@ void EffectsProvider::reloadEffects()
     m_effects.clear();
 
     const auto knownPlugins = knownPluginsRegister()->pluginInfoList();
-    std::for_each(knownPlugins.begin(), knownPlugins.end(),
-                  [this](const muse::audioplugins::AudioPluginInfo& info) {
-        if (info.enabled) {
-            m_effects.push_back(utils::museToAuEffectMeta(info.path, info.meta));
+    muse::audio::AudioResourceIdList staleIds;
+
+    for (const auto& info : knownPlugins) {
+        if (!info.enabled) {
+            continue;
         }
-    });
+        // Entries written by older code lack required attributes (e.g. "type").
+        // Unregister them so they are re-scanned with current metadata on the
+        // next plugin registration pass instead of crashing here.
+        if (info.meta.attributeVal(EFFECT_TYPE_ATTRIBUTE).empty()) {
+            staleIds.push_back(info.meta.id);
+            continue;
+        }
+        m_effects.push_back(utils::museToAuEffectMeta(info.path, info.meta));
+    }
+
+    if (!staleIds.empty()) {
+        LOGW() << "Unregistering " << staleIds.size()
+               << " plugin(s) with missing metadata — they will be re-scanned on next launch";
+        knownPluginsRegister()->unregisterPlugins(staleIds);
+    }
 
     m_effectsChanged.notify();
 }
