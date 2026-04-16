@@ -14,6 +14,8 @@
 
 #include "framework/global/log.h"
 
+#include <map>
+
 using namespace muse;
 using namespace au::effects;
 
@@ -50,7 +52,7 @@ void EffectsProvider::rescanPlugins(muse::IInteractive& interactive,
                                     muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
                                     const EffectFilter& filter)
 {
-    if (!doScanPlugins(registerAudioPluginsScenario)) {
+    if (!doScanPlugins(registerAudioPluginsScenario, {}, filter)) {
         interactive.infoSync(muse::trc("audio", "Audio plugins scan completed"), muse::trc("audio", "All audio plugins are up to date."));
     }
 }
@@ -61,41 +63,55 @@ bool EffectsProvider::doScanPlugins(muse::audioplugins::IRegisterAudioPluginsSce
 {
     muse::audioplugins::PluginScanResult scanResult = registerAudioPluginsScenario.scanPlugins();
 
-    // Audacity plugins (built-in effects and nyquist plugins) are safe. Register them in-process,
-    // because out-of-process registration is slow and users may opt out.
     muse::io::paths_t& thirdPartyPluginPaths = scanResult.newPluginPaths;
+    const auto metaReaders = metaReaderRegister()->readers();
+
+    std::map<muse::io::path_t, muse::audioplugins::IAudioPluginMetaReaderPtr> pathToMetaReader;
+    for (const auto& reader : metaReaders) {
+        for (const auto& path : thirdPartyPluginPaths) {
+            if (reader->canReadMeta(path)) {
+                pathToMetaReader[path] = reader;
+            }
+        }
+    }
+
+    if (filter != nullptr) {
+        // Erase plugins using the filter
+        auto it = thirdPartyPluginPaths.begin();
+        while (it != thirdPartyPluginPaths.end()) {
+            const auto& reader = pathToMetaReader.at(*it);
+            const muse::RetVal<muse::audio::AudioResourceMetaList> ret = reader->readMeta(*it);
+            IF_ASSERT_FAILED(ret.ret) {
+                it = thirdPartyPluginPaths.erase(it);
+                continue;
+            }
+
+            std::vector<EffectMeta> effectMetas;
+            std::transform(ret.val.begin(), ret.val.end(), std::back_inserter(effectMetas), [path = *it](const auto& meta) {
+                return utils::museToAuEffectMeta(path, meta);
+            });
+            // Only skip if none of the effects pass the filter - better be safe here.
+            if (std::none_of(effectMetas.begin(), effectMetas.end(), filter)) {
+                it = thirdPartyPluginPaths.erase(it);
+                continue;
+            }
+
+            // All good.
+            ++it;
+        }
+    }
+
+    // Audacity plugins (built-in effects and nyquist plugins) are safe. Register them in-process,
+    // because out-of-process registration is slow and users may opt out. Remove them from the list of plugins.
     muse::io::paths_t audacityPluginPaths;
     auto it = thirdPartyPluginPaths.begin();
     while (it != thirdPartyPluginPaths.end()) {
-        std::optional<bool> isAudacityPlugin;
-        for (const auto& reader : metaReaderRegister()->readers()) {
-            if (reader->canReadMeta(*it)) {
-                using namespace muse::audio;
-                const auto metaType = reader->metaType();
-                isAudacityPlugin = metaType == AudioResourceType::NyquistPlugin || metaType == AudioResourceType::NativeEffect;
+        const auto& reader = pathToMetaReader.at(*it);
+        const auto metaType = reader->metaType();
 
-                if (filter != nullptr) {
-                    const muse::RetVal<muse::audio::AudioResourceMetaList> ret = reader->readMeta(*it);
-                    if (ret.ret) {
-                        std::vector<EffectMeta> effectMetas;
-                        std::transform(ret.val.begin(), ret.val.end(), std::back_inserter(effectMetas),
-                                       [path = *it](const muse::audio::AudioResourceMeta& meta) {
-                            return utils::museToAuEffectMeta(path, meta);
-                        });
-                        // Only skip if none of the effects pass the filter - better be safe here.
-                        if (std::none_of(effectMetas.begin(), effectMetas.end(), filter)) {
-                            it = thirdPartyPluginPaths.erase(it);
-                            continue;
-                        }
-                    }
-                }
-
-                break;
-            }
-        }
-
-        assert(isAudacityPlugin.has_value());
-        if (isAudacityPlugin.has_value() && *isAudacityPlugin) {
+        using namespace muse::audio;
+        const auto isAudacityPlugin = metaType == AudioResourceType::NyquistPlugin || metaType == AudioResourceType::NativeEffect;
+        if (isAudacityPlugin) {
             audacityPluginPaths.push_back(*it);
             it = thirdPartyPluginPaths.erase(it);
         } else {
