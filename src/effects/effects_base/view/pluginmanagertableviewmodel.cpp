@@ -35,22 +35,18 @@ PluginManagerTableViewModel::PluginManagerTableViewModel(QObject* parent)
 void PluginManagerTableViewModel::componentComplete()
 {
     setHorizontalHeaders(makeHorizontalHeaders());
+    m_initialState = effectsProvider()->effectMetaList();
+    setTableRows(m_initialState);
+
     effectsProvider()->effectMetaListChanged().onNotify(this, [this]() {
-        initRows();
+        setTableRows(effectsProvider()->effectMetaList());
     });
-    initRows();
 
     // Initial sort: start from least important.
     toggleColumnSort(enabledDisabledColumnIndex);
     toggleColumnSort(pathColumnIndex);
     toggleColumnSort(typeColumnIndex);
     toggleColumnSort(nameColumnIndex);
-}
-
-void PluginManagerTableViewModel::initRows()
-{
-    m_initialState = effectsProvider()->effectMetaList();
-    setTableRows(m_initialState);
 }
 
 void PluginManagerTableViewModel::aboutToDestroy()
