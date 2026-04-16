@@ -22,12 +22,43 @@ void LabelContextMenuModel::load()
         return item;
     };
 
+    MenuItemList cutAndItems {
+        makeMenuItem("cut-leave-gap",
+                     muse::TranslatableString("label", "Cut and leave gap")),
+        makeMenuItem("cut-per-track-ripple",
+                     muse::TranslatableString("label", "Cut and close gap on this track")),
+        makeMenuItem("cut-all-tracks-ripple",
+                     muse::TranslatableString("label", "Cut and close gap on all tracks")),
+    };
+
+    MenuItemList pasteAndItems {
+        makeMenuItem("action://trackedit/paste-overlap",
+                     muse::TranslatableString("label", "Paste and overlap")),
+        makeMenuItem("action://trackedit/paste-insert",
+                     muse::TranslatableString("label", "Paste and make room on this track")),
+        makeMenuItem("action://trackedit/paste-insert-all-tracks-ripple",
+                     muse::TranslatableString("label", "Paste and make room on all tracks")),
+    };
+
+    MenuItemList deleteAndItems {
+        makeMenuItem("delete-leave-gap",
+                     muse::TranslatableString("label", "Delete and leave gap")),
+        makeMenuItem("delete-per-track-ripple",
+                     muse::TranslatableString("label", "Delete and close gap on this track")),
+        makeMenuItem("delete-all-tracks-ripple",
+                     muse::TranslatableString("label", "Delete and close gap on all tracks")),
+    };
+
     MenuItemList items {
         makeItemWithArg("rename-item", muse::TranslatableString("label", "Rename label")),
         makeSeparator(),
         makeItemWithArg("action://trackedit/cut"),
         makeItemWithArg("action://trackedit/copy"),
         makeItemWithArg("label-delete"),
+        makeSeparator(),
+        makeMenu(muse::TranslatableString("label", "Cut and…"), cutAndItems, "menu-cut-and"),
+        makeMenu(muse::TranslatableString("label", "Paste and…"), pasteAndItems, "menu-paste-and"),
+        makeMenu(muse::TranslatableString("label", "Delete and…"), deleteAndItems, "menu-delete-and"),
     };
 
     setItems(items);
