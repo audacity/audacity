@@ -41,6 +41,7 @@
 #include "au3-network-manager/NetworkManager.h"
 #include "au3-network-manager/Request.h"
 
+#include "au3-concurrency/concurrency/CancellationContext.h"
 namespace audacity::cloud::audiocom {
 namespace {
 std::mutex& GetResponsesMutex()
@@ -73,7 +74,9 @@ void RemovePendingRequest(audacity::network_manager::IResponse* request)
 
 void PerformProjectGetRequest(
     OAuthService& oAuthService, std::string url,
-    std::function<void(ResponseResult)> dataCallback)
+    std::function<void(ResponseResult)> dataCallback,
+    sync::ProgressCallback progressCallback = nullptr,
+    concurrency::CancellationContextPtr context = nullptr)
 {
     assert(oAuthService.HasAccessToken());
 
@@ -97,14 +100,31 @@ void PerformProjectGetRequest(
 
     auto response = NetworkManager::GetInstance().doGet(request);
 
+    if (context) {
+        context->OnCancelled(response);
+
+        if (progressCallback) {
+            response->setDownloadProgressCallback([context, progressCallback] (int64_t current, int64_t expected) {
+                if (!progressCallback(static_cast<double>(current) / expected)) {
+                    context->Cancel();
+                }
+            });
+        }
+    }
+
     response->setRequestFinishedCallback(
-        [dataCallback = std::move(dataCallback)](auto response)
+        [dataCallback = std::move(dataCallback), context](auto response)
     {
         BasicUI::CallAfter(
-            [dataCallback = std::move(dataCallback), response]
+            [dataCallback = std::move(dataCallback), response, context]
         {
             auto removeRequest
                 =finally([response] { RemovePendingRequest(response); });
+
+            if (context && context->Cancelled()) {
+                dataCallback({ SyncResultCode::Cancelled });
+                return;
+            }
 
             dataCallback(GetResponseResult(*response, true));
         });
@@ -667,7 +687,9 @@ void CloudSyncService::ReportUploadStats(
 void GetAudioInfo(
     OAuthService& oAuthService, const ServiceConfig& serviceConfig,
     std::string audioId,
-    std::function<void(sync::CloudAudioFullInfo, ResponseResult)> callback)
+    std::function<void(sync::CloudAudioFullInfo, ResponseResult)> callback,
+    sync::ProgressCallback progressCallback = nullptr,
+    concurrency::CancellationContextPtr context = nullptr)
 {
     assert(callback);
 
@@ -689,13 +711,15 @@ void GetAudioInfo(
         }
 
         callback(std::move(*audioInfo), std::move(result));
-    });
+    }, progressCallback, std::move(context));
 }
 
 void GetAudioDownloadInfo(
     OAuthService& oAuthService, const ServiceConfig& serviceConfig,
     std::string audioId,
-    std::function<void(sync::CloudAudioDownloadInfo, ResponseResult)> callback)
+    std::function<void(sync::CloudAudioDownloadInfo, ResponseResult)> callback,
+    sync::ProgressCallback progressCallback = nullptr,
+    concurrency::CancellationContextPtr context = nullptr)
 {
     assert(callback);
 
@@ -717,7 +741,7 @@ void GetAudioDownloadInfo(
         }
 
         callback(std::move(*downloadInfo), std::move(result));
-    });
+    }, progressCallback, std::move(context));
 }
 
 CloudSyncService::GetAudioInfoFuture GetAudioInfo(
@@ -821,7 +845,8 @@ CloudSyncService::GetAudioListFuture CloudSyncService::GetAudioList(
     return promise->get_future();
 }
 
-void CloudSyncService::DownloadAudio(const std::string& name, const std::string& format, const std::string& url)
+void CloudSyncService::DownloadAudio(const std::string& name, const std::string& format, const std::string& url,
+                                     concurrency::CancellationContextPtr context)
 {
     using namespace audacity::network_manager;
     using namespace sync;
@@ -829,25 +854,26 @@ void CloudSyncService::DownloadAudio(const std::string& name, const std::string&
     const Request request(url);
     auto response = NetworkManager::GetInstance().doGet(request);
 
+    if (context) {
+        context->OnCancelled(response);
+    }
+
     const auto filename = sync::MakeSafeFilePath(wxFileName::GetTempDir(), audacity::ToWXString(name), format);
     auto audioFile = std::make_shared<std::ofstream>(filename.ToStdString(), std::ios::binary);
 
-    response->setRequestFinishedCallback([response, this, filename, name, format, audioFile]
+    response->setRequestFinishedCallback([response, this, filename, name, format, audioFile, context]
                                          (IResponse*) {
         if (audioFile && audioFile->is_open()) {
             audioFile->close();
         }
 
         if (response->getError() != NetworkError::NoError) {
-            BasicUI::CallAfter([this] {
-                ShowErrorDialog({},
-                                XC("Error importing cloud audio", "cloud sync"),
-                                XC("Can't download cloud audio", "update dialog"),
-                                wxString(),
-                                BasicUI::ErrorDialogOptions { BasicUI::ErrorDialogType::ModalErrorReport });
-
-                mDownloadInProcess.store(false);
-                mDownloadAudioPromise.set_value({ DownloadAudioResult::StatusCode::Failed, {}, {} });
+            const auto statusCode = context && context->Cancelled()
+                                    ? DownloadAudioResult::StatusCode::Cancelled
+                                    : DownloadAudioResult::StatusCode::Failed;
+            mDownloadInProcess.store(false);
+            BasicUI::CallAfter([this, statusCode] {
+                mDownloadAudioPromise.set_value({ statusCode, {}, {} });
             });
 
             return;
@@ -867,7 +893,7 @@ void CloudSyncService::DownloadAudio(const std::string& name, const std::string&
                                          );
 
     // Called each time, since downloading for update progress status.
-    response->setDownloadProgressCallback([this]
+    response->setDownloadProgressCallback([this, context]
                                           (int64_t current, int64_t expected) {
         mDownloadProgress.store(static_cast<double>(current) / expected);
 
@@ -875,8 +901,14 @@ void CloudSyncService::DownloadAudio(const std::string& name, const std::string&
             return;
         }
 
-        BasicUI::CallAfter([this] {
-            mProgressCallback(mDownloadProgress.load());
+        BasicUI::CallAfter([this, context] {
+            if (mProgressCallback) {
+                if (!mProgressCallback(mDownloadProgress.load())) {
+                    if (context) {
+                        context->Cancel();
+                    }
+                }
+            }
             mAudioProgressUpdateQueued.store(false);
         });
     }
@@ -900,7 +932,8 @@ void CloudSyncService::DownloadAudio(const std::string& name, const std::string&
 
 CloudSyncService::DownloadAudioFuture CloudSyncService::DownloadCloudAudio(
     std::string_view audioId,
-    sync::ProgressCallback callback)
+    sync::ProgressCallback callback,
+    concurrency::CancellationContextPtr context)
 {
     if (mDownloadInProcess.exchange(true)) {
         auto blockedPromise = DownloadAudioPromise {};
@@ -927,12 +960,15 @@ CloudSyncService::DownloadAudioFuture CloudSyncService::DownloadCloudAudio(
     }
 
     GetAudioInfo(GetOAuthService(), GetServiceConfig(), std::string(audioId),
-                 [this](sync::CloudAudioFullInfo audioInfo, ResponseResult result)
+                 [this, context](sync::CloudAudioFullInfo audioInfo, ResponseResult result)
     {
         if (result.Code != SyncResultCode::Success) {
             mDownloadInProcess.store(false);
+            const auto statusCode = context && context->Cancelled()
+                                    ? sync::DownloadAudioResult::StatusCode::Cancelled
+                                    : sync::DownloadAudioResult::StatusCode::Failed;
             mDownloadAudioPromise.set_value(
-                { sync::DownloadAudioResult::StatusCode::Failed,
+                { statusCode,
                   std::move(result),
                   {} });
             return;
@@ -948,12 +984,15 @@ CloudSyncService::DownloadAudioFuture CloudSyncService::DownloadCloudAudio(
         }
 
         GetAudioDownloadInfo(GetOAuthService(), GetServiceConfig(), audioInfo.Id,
-                             [this, audioInfo](sync::CloudAudioDownloadInfo downloadInfo, ResponseResult result)
+                             [this, audioInfo, context](sync::CloudAudioDownloadInfo downloadInfo, ResponseResult result)
         {
             if (result.Code != SyncResultCode::Success) {
                 mDownloadInProcess.store(false);
+                const auto statusCode = context && context->Cancelled()
+                                        ? sync::DownloadAudioResult::StatusCode::Cancelled
+                                        : sync::DownloadAudioResult::StatusCode::Failed;
                 mDownloadAudioPromise.set_value(
-                    { sync::DownloadAudioResult::StatusCode::Failed,
+                    { statusCode,
                       std::move(result),
                       {} });
             } else {
@@ -976,12 +1015,12 @@ CloudSyncService::DownloadAudioFuture CloudSyncService::DownloadCloudAudio(
                 if (item == downloadInfo.Items.end()) {
                     item = downloadInfo.Items.begin();
                 }
-                DownloadAudio(audioInfo.Title, item->Format, item->Url);
+                DownloadAudio(audioInfo.Title, item->Format, item->Url, context);
             }
-        }
-                             );
-    }
-                 );
+            //The "real" progress is tracked in DownloadAudio
+            // but we need to update the progress to receive cancellation information
+        }, [this](double) { return mProgressCallback(0.0); }, context);
+    }, [this](double) { return mProgressCallback(0.0); }, context);
 
     return mDownloadAudioPromise.get_future();
 }

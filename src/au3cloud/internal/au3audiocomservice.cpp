@@ -8,6 +8,7 @@
 #include <chrono>
 #include <cstdint>
 #include <thread>
+#include <utility>
 
 #include "framework/global/async/async.h"
 #include "framework/global/runtime.h"
@@ -449,32 +450,32 @@ muse::ProgressPtr Au3AudioComService::openAudioFile(const std::string& audioId)
         return progress;
     }
 
-    std::thread([weak = weak_from_this(), audioId, progress]() {
-        auto self = weak.lock();
-        if (!self) {
-            return;
-        }
-
-        auto progressCallback = [progress](double p) -> bool {
-            if (progress->isCanceled()) {
-                return false;
-            }
-
-            progress->progress(static_cast<int64_t>(p * 100), 100);
-            return true;
-        };
-
-        auto result = CloudSyncService::Get().DownloadCloudAudio(audioId, std::move(progressCallback)).get();
-
+    auto progressCallback = [progress](double p) -> bool {
         if (progress->isCanceled()) {
-            if (!result.AudioPath.empty()) {
-                self->filesystem()->remove(muse::io::path_t(result.AudioPath));
-            }
-            return;
+            return false;
         }
+
+        progress->progress(static_cast<int64_t>(p * 100), 100);
+        return true;
+    };
+
+    auto cancellationContext = audacity::concurrency::CancellationContext::Create();
+    auto future = CloudSyncService::Get().DownloadCloudAudio(audioId, std::move(progressCallback), cancellationContext);
+
+    // Blocked is resolved synchronously (another download is already in progress)
+    if (future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
+        return nullptr;
+    }
+
+    std::thread([future = std::move(future), progress]() mutable {
+        const auto result = future.get();
 
         if (result.Status != sync::DownloadAudioResult::StatusCode::Succeeded) {
-            progress->finish(muse::make_ret(muse::Ret::Code::UnknownError, result.Result.Content));
+            if (result.Status == sync::DownloadAudioResult::StatusCode::Cancelled) {
+                progress->finish(make_ret(Err::DownloadAudioResultCancel));
+            } else {
+                progress->finish(make_ret(Err::UnknownError));
+            }
             return;
         }
 

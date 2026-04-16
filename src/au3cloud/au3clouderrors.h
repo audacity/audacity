@@ -55,6 +55,9 @@ enum class Err {
     SyncResultInternalServerError,
     SyncResultSyncImpossible,
     SyncResultUnknownError,
+
+    // openAudioFile
+    DownloadAudioResultCancel,
 };
 
 inline muse::Ret make_ret(Err e)

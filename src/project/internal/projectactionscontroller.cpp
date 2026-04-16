@@ -1108,7 +1108,7 @@ void ProjectActionsController::openCloudAudioFile(const muse::actions::ActionQue
 
     progress->finished().onReceive(this, [this, audioId](const ProgressResult& result) {
         if (!result.ret) {
-            interactive()->error(muse::trc("cloud", "Open audio from cloud"), result.ret.toString());
+            handleCloudAudioOpenError(result.ret);
             return;
         }
 
@@ -1511,6 +1511,20 @@ void ProjectActionsController::handleCloudSaveError(const muse::Ret& error)
         break;
     default:
         interactive()->infoSync(DEFAULT_CLOUD_ERROR_TITLE, DEFAULT_CLOUD_ERROR_TEXT);
+        break;
+    }
+}
+
+void ProjectActionsController::handleCloudAudioOpenError(const muse::Ret& error)
+{
+    using Err = au::au3cloud::Err;
+    const auto err = static_cast<Err>(error.code());
+
+    switch (err) {
+    case Err::DownloadAudioResultCancel:
+        break;
+    default:
+        interactive()->error(muse::trc("cloud", "Open audio from cloud"), error.toString());
         break;
     }
 }

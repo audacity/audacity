@@ -57,6 +57,7 @@ struct DownloadAudioResult final
         Succeeded,
         Failed,
         Blocked,
+        Cancelled,
     };
 
     StatusCode Status { StatusCode::Failed };
@@ -126,7 +127,7 @@ public:
         concurrency::CancellationContextPtr context, int page, int pageSize, std::string_view searchString);
 
     [[nodiscard]] DownloadAudioFuture DownloadCloudAudio(
-        std::string_view audioId, sync::ProgressCallback callback);
+        std::string_view audioId, sync::ProgressCallback callback, concurrency::CancellationContextPtr context = nullptr);
 
     //! Open the project from the cloud. This operation is asynchronous.
     [[nodiscard]] SyncFuture OpenFromCloud(
@@ -157,7 +158,8 @@ private:
     void SyncCloudSnapshot(
         const sync::ProjectInfo& projectInfo, const sync::SnapshotInfo& snapshotInfo, SyncMode mode);
 
-    void DownloadAudio(const std::string& name, const std::string& format, const std::string& url);
+    void DownloadAudio(const std::string& name, const std::string& format, const std::string& url,
+                       concurrency::CancellationContextPtr context = nullptr);
 
     void UpdateDowloadProgress(double downloadProgress);
 

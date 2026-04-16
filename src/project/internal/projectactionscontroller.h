@@ -116,6 +116,7 @@ private:
     muse::Ret openPageIfNeed(muse::Uri pageUri);
 
     void handleCloudOpenError(const muse::Ret& error, const muse::io::path_t& localPath);
+    void handleCloudAudioOpenError(const muse::Ret& error);
     void handleCloudSaveError(const muse::Ret& error);
 
     void shareAudio();
