@@ -29,7 +29,7 @@ BaseSection {
 
         minValue: 0
         maxValue: 30
-        step: 0.5
+        step: 1
         decimals: 1
 
         measureUnitsSymbol: qsTrc("global", "seconds")
@@ -55,7 +55,7 @@ BaseSection {
         minValue: 0
         maxValue: 100
         step: 1
-        decimals: 0
+        decimals: 1
 
         measureUnitsSymbol: qsTrc("global", "ms")
 
