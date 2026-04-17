@@ -57,25 +57,12 @@ void TimelineContext::init(double frameWidth)
     m_scrollTimer.setInterval(16); // scroll at ~60 FPS
     connect(&m_scrollTimer, &QTimer::timeout, [this](){ autoScrollView(m_autoScrollStep); });
 
-    m_animationTimer.setInterval(ANIMATION_FRAME_MS);
-    connect(&m_animationTimer, &QTimer::timeout, [this]() {
-        double elapsed = m_animationElapsed.elapsed();
-        double t = std::min(elapsed / static_cast<double>(ANIMATION_DURATION_MS), 1.0);
-
-        // Cubic ease-out: f(t) = 1 - (1-t)^3
-        double inv = 1.0 - t;
-        double eased = 1.0 - (inv * inv * inv);
-
-        double current = m_animationStartValue + (m_animationTargetValue - m_animationStartValue) * eased;
-        double frameStart = (t >= 1.0) ? m_animationTargetValue : current;
-
+    m_frameStartAnimation.setDuration(ANIMATION_DURATION_MS);
+    m_frameStartAnimation.setEasingCurve(QEasingCurve::OutCubic);
+    connect(&m_frameStartAnimation, &QVariantAnimation::valueChanged, this, [this](const QVariant& value) {
         //! NOTE Bypass moveToFrameTime() so we don't cancel our own animation.
-        setFrameStartTime(std::max(frameStart, 0.0));
+        setFrameStartTime(std::max(value.toDouble(), 0.0));
         updateFrameTime();
-
-        if (t >= 1.0) {
-            m_animationTimer.stop();
-        }
     });
 
     initToViewState(frameWidth);
@@ -361,7 +348,7 @@ void TimelineContext::animatedCenterOnTime(double secs)
 
 bool TimelineContext::isAnimating() const
 {
-    return m_animationTimer.isActive();
+    return m_frameStartAnimation.state() == QAbstractAnimation::Running;
 }
 
 void TimelineContext::autoScrollView(double scrollStep)
@@ -453,16 +440,15 @@ void TimelineContext::moveToFrameTime(double startTime)
 void TimelineContext::animateToFrameTime(double targetStartTime)
 {
     stopAnimation();
-    m_animationStartValue = m_frameStartTime;
-    m_animationTargetValue = std::max(targetStartTime, 0.0);
-    m_animationElapsed.start();
-    m_animationTimer.start();
+    m_frameStartAnimation.setStartValue(m_frameStartTime);
+    m_frameStartAnimation.setEndValue(std::max(targetStartTime, 0.0));
+    m_frameStartAnimation.start();
 }
 
 void TimelineContext::stopAnimation()
 {
-    if (m_animationTimer.isActive()) {
-        m_animationTimer.stop();
+    if (m_frameStartAnimation.state() == QAbstractAnimation::Running) {
+        m_frameStartAnimation.stop();
     }
 }
 

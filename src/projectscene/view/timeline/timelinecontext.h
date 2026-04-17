@@ -1,8 +1,8 @@
 #pragma once
 
-#include <QElapsedTimer>
 #include <QObject>
 #include <QTimer>
+#include <QVariantAnimation>
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
@@ -277,10 +277,6 @@ private:
     QTimer m_scrollTimer;
     double m_autoScrollStep = 0.0;
 
-    static constexpr int ANIMATION_FRAME_MS = 16;
-    QTimer m_animationTimer;
-    QElapsedTimer m_animationElapsed;
-    double m_animationStartValue = 0.0;
-    double m_animationTargetValue = 0.0;
+    QVariantAnimation m_frameStartAnimation;
 };
 }
