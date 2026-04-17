@@ -1508,7 +1508,6 @@ muse::Ret Au3TracksInteraction::makeRoomForDataOnTracks(const std::vector<TrackI
 
         //! NOTE need to snap begin just like Paste() function do
         secs_t snappedBegin = dstWaveTrack->SnapToSample(begin);
-        secs_t insertDuration = trackData.at(i)->track()->GetEndTime();
 
         // if paste into existing clip and there is a single clip to paste,
         // we need to make room for the clip to be extended
@@ -1517,11 +1516,23 @@ muse::Ret Au3TracksInteraction::makeRoomForDataOnTracks(const std::vector<TrackI
             && dstWaveTrack->GetClipAtTime(begin) != nullptr) {
             secs_t currentClipEnd = dstWaveTrack->GetClipAtTime(begin)->GetPlayEndTime();
             snappedBegin = dstWaveTrack->SnapToSample(currentClipEnd);
+            secs_t insertDuration = trackToPaste->GetEndTime();
+            auto ok = clipsInteraction()->makeRoomForDataOnTrack(tracksIds.at(i), snappedBegin, snappedBegin + insertDuration);
+            if (!ok) {
+                return make_ret(trackedit::Err::FailedToMakeRoomForClip);
+            }
+            continue;
         }
 
-        auto ok = clipsInteraction()->makeRoomForDataOnTrack(tracksIds.at(i), snappedBegin, snappedBegin + insertDuration);
-        if (!ok) {
-            return make_ret(trackedit::Err::FailedToMakeRoomForClip);
+        // Clear only the ranges actually occupied by the clipboard clips so
+        // that existing destination clips in the gaps between them stay intact.
+        for (const auto& interval : trackToPaste->Intervals()) {
+            auto ok = clipsInteraction()->makeRoomForDataOnTrack(tracksIds.at(i),
+                                                                 snappedBegin + interval->GetPlayStartTime(),
+                                                                 snappedBegin + interval->GetPlayEndTime());
+            if (!ok) {
+                return make_ret(trackedit::Err::FailedToMakeRoomForClip);
+            }
         }
     }
 
