@@ -62,14 +62,15 @@ void EffectsProvider::rescanPlugins(muse::IInteractive& interactive,
                                     muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
                                     const EffectFilter& exclude)
 {
-    if (!doScanPlugins(registerAudioPluginsScenario, {}, exclude)) {
+    if (doScanPlugins(registerAudioPluginsScenario, {}, exclude) == NewPluginsRegistered::No) {
         interactive.infoSync(muse::trc("audio", "Audio plugins scan completed"), muse::trc("audio", "All audio plugins are up to date."));
     }
 }
 
-bool EffectsProvider::doScanPlugins(muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
-                                    const std::function<bool()>& doScanThirdPartyPlugins,
-                                    const EffectFilter& exclude)
+EffectsProvider::NewPluginsRegistered EffectsProvider::doScanPlugins(
+    muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
+    const std::function<bool()>& doScanThirdPartyPlugins,
+    const EffectFilter& exclude)
 {
     muse::audioplugins::PluginScanResult scanResult = registerAudioPluginsScenario.scanPlugins();
 
@@ -153,7 +154,7 @@ bool EffectsProvider::doScanPlugins(muse::audioplugins::IRegisterAudioPluginsSce
 
     reloadEffects();
 
-    return !audacityPluginPaths.empty() || !thirdPartyPluginPaths.empty();
+    return !audacityPluginPaths.empty() || !thirdPartyPluginPaths.empty() ? NewPluginsRegistered::Yes : NewPluginsRegistered::No;
 }
 
 void EffectsProvider::deinit()

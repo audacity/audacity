@@ -58,8 +58,14 @@ public:
 private:
     void reloadEffects();
     IEffectLoaderPtr loader(const EffectId& effectId) const;
-    bool doScanPlugins(muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
-                       const std::function<bool()>& doScanThirdPartyPlugins = nullptr, const EffectFilter& accept = nullptr);
+
+    enum NewPluginsRegistered {
+        Yes,
+        No,
+    };
+
+    NewPluginsRegistered doScanPlugins(muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
+                                       const std::function<bool()>& doScanThirdPartyPlugins = nullptr, const EffectFilter& accept = nullptr);
     void doSave(EffectFilter removeFromConfig = nullptr);
 
     EffectMetaList m_effects;
