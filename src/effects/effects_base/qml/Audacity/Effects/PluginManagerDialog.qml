@@ -12,11 +12,11 @@ import Audacity.Effects
 StyledDialogView {
     id: root
 
-    title: qsTrc("projectscene", "Manage plugins")
+    title: qsTrc("effects", "Manage plugins")
 
     contentWidth: tableViewModel.totalWidth
     contentHeight: 528
-    margins: 8
+    margins: 12
 
     Component.onDestruction: tableViewModel.aboutToDestroy()
 
@@ -32,7 +32,7 @@ StyledDialogView {
 
     ColumnLayout {
         anchors.fill: parent
-        spacing: 8
+        spacing: 12
 
         PluginManagerTopPanel {
             id: topPanel
@@ -62,37 +62,92 @@ StyledDialogView {
             navigationPanel.order: topPanel.navigationPanel.order + 1
         }
 
-        ButtonBox {
+        RowLayout {
             id: buttonBox
+
+            spacing: 12
 
             Layout.fillWidth: true
             Layout.margins: 0
 
-            buttons: [ButtonBoxModel.Ok, ButtonBoxModel.Cancel]
+            NavigationPanel {
+                id: buttonBoxNavigationPanel
 
-            navigationPanel.section: root.navigationSection
-            navigationPanel.order: tableView.navigationPanel.order + 1
+                section: root.navigationSection
+                order: tableView.navigationPanel.order + 1
+            }
 
             FlatButton {
+                id: rescanButton
+
+                Layout.alignment: Qt.AlignVCenter
+                Layout.preferredHeight: 32
+                Layout.preferredWidth: implicitWidth
+
+                navigation.panel: buttonBoxNavigationPanel
+                navigation.order: cancelButton.navigation.order + 1
+
                 text: qsTrc("effects", "Rescan plugins")
-                buttonRole: ButtonBoxModel.CustomRole
-                buttonId: ButtonBoxModel.CustomButton + 1
-                isLeftSide: true
 
                 onClicked: {
                     root.tableViewModel.rescanPlugins()
                 }
             }
 
-            onStandardButtonClicked: function (buttonId) {
-                switch (buttonId) {
-                case ButtonBoxModel.Ok:
+            CheckBox {
+                id: alsoRescanBrokenPluginsCheckBox
+
+                Layout.alignment: Qt.AlignVCenter
+                Layout.preferredWidth: implicitWidth
+
+                navigation.panel: buttonBoxNavigationPanel
+                navigation.order: rescanButton.navigation.order + 1
+
+                text: qsTrc("effects", "Include plugins with errors")
+                checked: root.tableViewModel.alsoRescanBrokenPlugins
+
+                onClicked: {
+                    root.tableViewModel.alsoRescanBrokenPlugins = !checked
+                }
+            }
+
+            Item {
+                id: spacer
+                Layout.fillWidth: true
+            }
+
+            FlatButton {
+                id: okButton
+
+                Layout.alignment: Qt.AlignVCenter
+                Layout.preferredHeight: 32
+                Layout.preferredWidth: implicitWidth
+
+                navigation.panel: buttonBoxNavigationPanel
+                navigation.order: 0
+
+                text: qsTrc("effects", "OK")
+
+                onClicked: {
                     root.tableViewModel.accept()
                     root.accept()
-                    break
-                case ButtonBoxModel.Cancel:
+                }
+            }
+
+            FlatButton {
+                id: cancelButton
+
+                Layout.alignment: Qt.AlignVCenter
+                Layout.preferredHeight: 32
+                Layout.preferredWidth: implicitWidth
+
+                navigation.panel: buttonBoxNavigationPanel
+                navigation.order: okButton.navigation.order + 1
+
+                text: qsTrc("effects", "Cancel")
+
+                onClicked: {
                     root.reject()
-                    break
                 }
             }
         }

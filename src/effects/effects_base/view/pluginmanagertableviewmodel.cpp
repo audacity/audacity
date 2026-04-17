@@ -187,6 +187,16 @@ int PluginManagerTableViewModel::totalWidth() const
     return enabledColumnWidth + nameColumnWidth + pathColumnWidth + typeColumnWidth;
 }
 
+void PluginManagerTableViewModel::setAlsoRescanBrokenPlugins(bool alsoRescanBrokenPlugins)
+{
+    if (alsoRescanBrokenPlugins == m_alsoRescanBrokenPlugins) {
+        return;
+    }
+
+    m_alsoRescanBrokenPlugins = alsoRescanBrokenPlugins;
+    emit alsoRescanBrokenPluginsChanged();
+}
+
 QVector<muse::uicomponents::TableViewHeader*> PluginManagerTableViewModel::makeHorizontalHeaders()
 {
     using namespace muse::uicomponents;
@@ -274,6 +284,12 @@ void PluginManagerTableViewModel::handleEdit(int row, int column)
 
 void PluginManagerTableViewModel::rescanPlugins()
 {
+    if (m_alsoRescanBrokenPlugins) {
+        effectsProvider()->forgetPlugins([](const EffectMeta& meta) {
+            return !meta.isLoadable;
+        });
+    }
+
     const auto excludeFromScan = [this](const EffectMeta& meta) {
         return !m_acceptFamily(meta) || !m_acceptType(meta);
     };

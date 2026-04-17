@@ -51,16 +51,17 @@ void EffectsProvider::initOnce(muse::IInteractive& interactive,
     });
 }
 
+void EffectsProvider::forgetPlugins(const EffectFilter& forget)
+{
+    doSave([&forget](const EffectMeta& meta) {
+        return forget == nullptr || forget(meta);
+    });
+}
+
 void EffectsProvider::rescanPlugins(muse::IInteractive& interactive,
                                     muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
                                     const EffectFilter& exclude)
 {
-    // Also rescan failed plugins
-    auto removeFromConfig = [](const EffectMeta& meta) {
-        return !meta.isLoadable;
-    };
-    doSave(std::move(removeFromConfig));
-
     if (!doScanPlugins(registerAudioPluginsScenario, {}, exclude)) {
         interactive.infoSync(muse::trc("audio", "Audio plugins scan completed"), muse::trc("audio", "All audio plugins are up to date."));
     }

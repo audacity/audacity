@@ -47,6 +47,8 @@ class PluginManagerTableViewModel : public muse::uicomponents::AbstractTableView
         int effectTypeSelectedIndex READ effectTypeSelectedIndex WRITE setEffectTypeSelectedIndex NOTIFY effectTypeSelectedIndexChanged)
 
     Q_PROPERTY(int totalWidth READ totalWidth CONSTANT)
+    Q_PROPERTY(
+        bool alsoRescanBrokenPlugins READ alsoRescanBrokenPlugins WRITE setAlsoRescanBrokenPlugins NOTIFY alsoRescanBrokenPluginsChanged)
 
     muse::GlobalInject<IEffectsProvider> effectsProvider;
 
@@ -71,6 +73,9 @@ public:
 
     int totalWidth() const;
 
+    bool alsoRescanBrokenPlugins() const { return m_alsoRescanBrokenPlugins; }
+    void setAlsoRescanBrokenPlugins(bool alsoRescanBrokenPlugins);
+
     Q_INVOKABLE void handleEdit(int row, int column);
     Q_INVOKABLE void setSearchText(const QString& searchText);
     Q_INVOKABLE void toggleColumnSort(int column);
@@ -83,6 +88,7 @@ signals:
     void enabledDisabledSelectedIndexChanged();
     void effectFamilySelectedIndexChanged();
     void effectTypeSelectedIndexChanged();
+    void alsoRescanBrokenPluginsChanged();
 
 private:
     void classBegin() override {}
@@ -103,6 +109,8 @@ private:
 
     int m_enabledDisabledSelectedIndex = 0;
     EffectFilter m_acceptEnabledDisabledState = allPassFilter;
+
+    bool m_alsoRescanBrokenPlugins = false;
 
     int m_effectFamilySelectedIndex = 0;
     EffectFilter m_acceptFamily = allPassFilter;
