@@ -12,7 +12,7 @@ StyledTableView {
 
     headerCapitalization: Font.MixedCase
 
-    model: tableViewModel
+    model: tableViewModel.sortFilterProxy
     horizontalHeaderNavigationEnabled: true
     displayTruncatedTextOnHover: true
 

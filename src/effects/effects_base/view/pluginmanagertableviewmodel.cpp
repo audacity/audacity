@@ -6,9 +6,9 @@
 
  #include "internal/effectsutils.h"
  #include "pluginmanagertableviewverticalheader.h"
+ #include "pluginmanagersortfilterproxy.h"
  #include "effectsviewutils.h"
 
- #include "framework/global/stringutils.h"
 #include "framework/global/translation.h"
 #include "framework/global/modularity/ioc.h"
 #include "framework/uicomponents/qml/Muse/UiComponents/internal/tableviewcell.h"
@@ -20,33 +20,32 @@ constexpr auto enabledColumnWidth = 100;
 constexpr auto nameColumnWidth = 152;
 constexpr auto pathColumnWidth = 296;
 constexpr auto typeColumnWidth = 152;
-
-constexpr auto enabledDisabledColumnIndex = 0;
-constexpr auto nameColumnIndex = 1;
-constexpr auto pathColumnIndex = 2;
-constexpr auto typeColumnIndex = 3;
 }
 
 const PluginManagerTableViewModel::EffectFilter PluginManagerTableViewModel::allPassFilter = [](const EffectMeta&) { return true; };
 
 PluginManagerTableViewModel::PluginManagerTableViewModel(QObject* parent)
-    : AbstractTableViewModel(parent), Contextable(muse::iocCtxForQmlObject(this)) {}
+    : AbstractTableViewModel(parent), Contextable(muse::iocCtxForQmlObject(this)),
+    m_sortFilterProxy(new PluginManagerSortFilterProxy(this))
+{
+    m_sortFilterProxy->setSourceModel(this);
+}
 
 void PluginManagerTableViewModel::componentComplete()
 {
     setHorizontalHeaders(makeHorizontalHeaders());
     m_initialState = effectsProvider()->effectMetaList();
-    setTableRows(m_initialState);
+    rebuildSourceTable(m_initialState);
 
     effectsProvider()->effectMetaListChanged().onNotify(this, [this]() {
-        setTableRows(effectsProvider()->effectMetaList());
+        rebuildSourceTable(effectsProvider()->effectMetaList());
     });
 
     // Initial sort: start from least important.
-    toggleColumnSort(enabledDisabledColumnIndex);
-    toggleColumnSort(pathColumnIndex);
-    toggleColumnSort(typeColumnIndex);
-    toggleColumnSort(nameColumnIndex);
+    m_sortFilterProxy->toggleColumnSort(enabledDisabledColumnIndex);
+    m_sortFilterProxy->toggleColumnSort(pathColumnIndex);
+    m_sortFilterProxy->toggleColumnSort(typeColumnIndex);
+    m_sortFilterProxy->toggleColumnSort(nameColumnIndex);
 }
 
 void PluginManagerTableViewModel::aboutToDestroy()
@@ -66,26 +65,26 @@ void PluginManagerTableViewModel::aboutToDestroy()
     effectsProvider()->save();
 }
 
-void PluginManagerTableViewModel::setTableRows(EffectMetaList effects)
+void PluginManagerTableViewModel::rebuildSourceTable(EffectMetaList effects)
 {
-    const QString searchTextLower = m_searchText.toLower();
-
-    effects.erase(std::remove_if(effects.begin(), effects.end(), [this, &searchTextLower](const EffectMeta& meta) {
-        if (!meta.title.toQString().toLower().contains(searchTextLower)) {
-            return true;
-        }
-        return !m_acceptEnabledDisabledState(meta) || !m_acceptFamily(meta) || !m_acceptType(meta);
-    }), effects.end());
-
-    applySorting(effects);
-    setVerticalHeaders(makeVerticalHeaders(effects));
-    setTable(makeTable(effects));
+    m_allEffects = std::move(effects);
+    setVerticalHeaders(makeVerticalHeaders(m_allEffects));
+    setTable(makeTable(m_allEffects));
+    m_sortFilterProxy->invalidateFilters();
 }
 
 void PluginManagerTableViewModel::setSearchText(const QString& searchText)
 {
+    if (m_searchText == searchText) {
+        return;
+    }
     m_searchText = searchText;
-    setTableRows(effectsProvider()->effectMetaList());
+    m_sortFilterProxy->invalidateFilters();
+}
+
+void PluginManagerTableViewModel::toggleColumnSort(int column)
+{
+    m_sortFilterProxy->toggleColumnSort(column);
 }
 
 muse::uicomponents::MenuItemList PluginManagerTableViewModel::enabledDisabledOptions()
@@ -121,7 +120,7 @@ void PluginManagerTableViewModel::setEnabledDisabledSelectedIndex(int index)
         break;
     }
 
-    setTableRows(effectsProvider()->effectMetaList());
+    m_sortFilterProxy->invalidateFilters();
 }
 
 muse::uicomponents::MenuItemList PluginManagerTableViewModel::effectFamilyOptions()
@@ -150,7 +149,7 @@ void PluginManagerTableViewModel::setEffectFamilySelectedIndex(int index)
         };
     }
 
-    setTableRows(effectsProvider()->effectMetaList());
+    m_sortFilterProxy->invalidateFilters();
 }
 
 muse::uicomponents::MenuItemList PluginManagerTableViewModel::effectTypeOptions()
@@ -179,7 +178,7 @@ void PluginManagerTableViewModel::setEffectTypeSelectedIndex(int index)
         };
     }
 
-    setTableRows(effectsProvider()->effectMetaList());
+    m_sortFilterProxy->invalidateFilters();
 }
 
 int PluginManagerTableViewModel::totalWidth() const
@@ -195,6 +194,11 @@ void PluginManagerTableViewModel::setAlsoRescanBrokenPlugins(bool alsoRescanBrok
 
     m_alsoRescanBrokenPlugins = alsoRescanBrokenPlugins;
     emit alsoRescanBrokenPluginsChanged();
+}
+
+au::uicomponents::TableSortFilterProxyModel* PluginManagerTableViewModel::sortFilterProxy() const
+{
+    return m_sortFilterProxy;
 }
 
 QVector<muse::uicomponents::TableViewHeader*> PluginManagerTableViewModel::makeHorizontalHeaders()
@@ -252,14 +256,15 @@ QVector<QVector<muse::uicomponents::TableViewCell*> > PluginManagerTableViewMode
     return table;
 }
 
-void PluginManagerTableViewModel::handleEdit(int row, int column)
+void PluginManagerTableViewModel::handleEdit(int proxyRow, int column)
 {
-    if (!isRowValid(row) || column != 0) {
+    const int sourceRow = m_sortFilterProxy->mapRowToSource(proxyRow);
+    if (!isRowValid(sourceRow) || column != 0) {
         return;
     }
 
     PluginManagerTableViewVerticalHeader* const verticalHeader
-        = dynamic_cast<PluginManagerTableViewVerticalHeader*>(findVerticalHeader(row));
+        = dynamic_cast<PluginManagerTableViewVerticalHeader*>(findVerticalHeader(sourceRow));
     IF_ASSERT_FAILED(verticalHeader) {
         return;
     }
@@ -268,7 +273,7 @@ void PluginManagerTableViewModel::handleEdit(int row, int column)
         return;
     }
 
-    muse::uicomponents::TableViewCell* const cell = findCell(row, column);
+    muse::uicomponents::TableViewCell* const cell = findCell(sourceRow, column);
     IF_ASSERT_FAILED(cell) {
         return;
     }
@@ -280,6 +285,14 @@ void PluginManagerTableViewModel::handleEdit(int row, int column)
     m_editedEffects.insert(verticalHeader->effectId());
 
     cell->setValue(muse::Val(next));
+
+    // Keep m_allEffects in sync so the proxy sees the new value when re-sorting.
+    if (sourceRow < static_cast<int>(m_allEffects.size())) {
+        m_allEffects[sourceRow].isActivated = next;
+    }
+
+    const QModelIndex idx = index(sourceRow, column);
+    emit dataChanged(idx, idx);
 }
 
 void PluginManagerTableViewModel::rescanPlugins()
@@ -294,56 +307,6 @@ void PluginManagerTableViewModel::rescanPlugins()
         return !m_acceptFamily(meta) || !m_acceptType(meta);
     };
     effectsProvider()->rescanPlugins(*interactive(), *registerAudioPluginsScenario(), excludeFromScan);
-}
-
-void PluginManagerTableViewModel::toggleColumnSort(int column)
-{
-    auto it = std::find_if(m_sortPipeline.begin(), m_sortPipeline.end(), [column](const SortEntry& entry) {
-        return entry.column == column;
-    });
-
-    if (it == m_sortPipeline.end()) {
-        m_sortPipeline.push_back({ column, true });
-        if (m_sortPipeline.size() > 4) {
-            m_sortPipeline.erase(m_sortPipeline.begin());
-        }
-    } else {
-        const auto ascending = !it->ascending;
-        m_sortPipeline.erase(it);
-        m_sortPipeline.push_back({ column, ascending });
-    }
-
-    setTableRows(effectsProvider()->effectMetaList());
-}
-
-void PluginManagerTableViewModel::applySorting(EffectMetaList& effects) const
-{
-    for (const auto& entry : m_sortPipeline) {
-        const auto cmp = [&entry](const EffectMeta& a, const EffectMeta& b) {
-            switch (entry.column) {
-            case enabledDisabledColumnIndex:
-                return static_cast<int>(a.isActivated) < static_cast<int>(b.isActivated);
-            case nameColumnIndex:
-                return muse::strings::lessThanCaseInsensitive(a.title, b.title);
-            case pathColumnIndex:
-                return muse::strings::lessThanCaseInsensitive(a.path.toString(), b.path.toString());
-            case typeColumnIndex:
-                return muse::strings::lessThanCaseInsensitive(utils::effectFamilyToString(a.family),
-                                                              utils::effectFamilyToString(b.family));
-            default:
-                assert(false);
-            }
-            return false;
-        };
-
-        if (entry.ascending) {
-            std::stable_sort(effects.begin(), effects.end(), cmp);
-        } else {
-            std::stable_sort(effects.begin(), effects.end(), [&cmp](const EffectMeta& a, const EffectMeta& b) {
-                return cmp(b, a);
-            });
-        }
-    }
 }
 
 void PluginManagerTableViewModel::accept()

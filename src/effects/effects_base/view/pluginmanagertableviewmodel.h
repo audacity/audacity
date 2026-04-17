@@ -16,7 +16,13 @@
 #include <functional>
 #include <unordered_set>
 
+namespace au::uicomponents {
+class TableSortFilterProxyModel;
+}
+
 namespace au::effects {
+class PluginManagerSortFilterProxy;
+
 namespace PluginManagerTableViewCellType {
 Q_NAMESPACE;
 QML_ELEMENT;
@@ -50,6 +56,8 @@ class PluginManagerTableViewModel : public muse::uicomponents::AbstractTableView
     Q_PROPERTY(
         bool alsoRescanBrokenPlugins READ alsoRescanBrokenPlugins WRITE setAlsoRescanBrokenPlugins NOTIFY alsoRescanBrokenPluginsChanged)
 
+    Q_PROPERTY(au::uicomponents::TableSortFilterProxyModel * sortFilterProxy READ sortFilterProxy CONSTANT)
+
     muse::GlobalInject<IEffectsProvider> effectsProvider;
 
     muse::ContextInject<muse::audioplugins::IRegisterAudioPluginsScenario> registerAudioPluginsScenario { this };
@@ -76,13 +84,18 @@ public:
     bool alsoRescanBrokenPlugins() const { return m_alsoRescanBrokenPlugins; }
     void setAlsoRescanBrokenPlugins(bool alsoRescanBrokenPlugins);
 
-    Q_INVOKABLE void handleEdit(int row, int column);
+    au::uicomponents::TableSortFilterProxyModel* sortFilterProxy() const;
+
+    Q_INVOKABLE void handleEdit(int proxyRow, int column);
     Q_INVOKABLE void setSearchText(const QString& searchText);
     Q_INVOKABLE void toggleColumnSort(int column);
     Q_INVOKABLE void rescanPlugins();
     Q_INVOKABLE void aboutToDestroy();
 
     Q_INVOKABLE void accept();
+
+    // Used by the sort/filter proxy; not intended for QML.
+    const EffectMetaList& allEffects() const { return m_allEffects; }
 
 signals:
     void enabledDisabledSelectedIndexChanged();
@@ -91,14 +104,23 @@ signals:
     void alsoRescanBrokenPluginsChanged();
 
 private:
+    friend class PluginManagerSortFilterProxy;
+
+    static constexpr auto enabledDisabledColumnIndex = 0;
+    static constexpr auto nameColumnIndex = 1;
+    static constexpr auto pathColumnIndex = 2;
+    static constexpr auto typeColumnIndex = 3;
+    static constexpr auto columnCount = 4;
+
     void classBegin() override {}
     void componentComplete() override;
 
     QVector<muse::uicomponents::TableViewHeader*> makeHorizontalHeaders();
     QVector<muse::uicomponents::TableViewHeader*> makeVerticalHeaders(const EffectMetaList& effects);
     QVector<QVector<muse::uicomponents::TableViewCell*> > makeTable(const EffectMetaList& effects);
-    void setTableRows(EffectMetaList effects);
+    void rebuildSourceTable(EffectMetaList effects);
 
+    EffectMetaList m_allEffects;
     EffectMetaList m_initialState;
     std::unordered_set<EffectId> m_editedEffects;
     bool m_changesConfirmed = false;
@@ -118,12 +140,6 @@ private:
     int m_effectTypeSelectedIndex = 0;
     EffectFilter m_acceptType = allPassFilter;
 
-    struct SortEntry {
-        int column = -1;
-        bool ascending = true;
-    };
-    std::vector<SortEntry> m_sortPipeline;
-
-    void applySorting(EffectMetaList& effects) const;
+    PluginManagerSortFilterProxy* const m_sortFilterProxy;
 };
 }
