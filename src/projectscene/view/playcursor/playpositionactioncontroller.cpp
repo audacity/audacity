@@ -111,7 +111,12 @@ void PlayPositionActionController::applySingleStep(Direction direction)
 
 muse::secs_t PlayPositionActionController::stepFromTime(muse::secs_t from, Direction direction) const
 {
-    IProjectViewStatePtr viewState = globalContext()->currentProject()->viewState();
+    auto currentProject = globalContext()->currentProject();
+    if (!currentProject) {
+        return from;
+    }
+
+    IProjectViewStatePtr viewState = currentProject->viewState();
     const bool snapEnabled = viewState->isSnapEnabled();
 
     if (snapEnabled) {

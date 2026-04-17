@@ -63,6 +63,7 @@ void TrackNavigationController::init()
     });
 
     dispatcher()->reg(this, "nav-escape", [this] {
+        m_savedItemStartTime = std::nullopt;
         navigationController()->setIsHighlight(false);
     });
 
