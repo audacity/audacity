@@ -245,7 +245,7 @@ void TrackLabelsListModel::selectLabel(const LabelKey& key)
         }
     } else {
         if (!muse::contains(selectionController()->selectedLabels(), key.key)) {
-            if (selectionController()->timeSelectionIsNotEmpty()
+            if (!selectionController()->timeSelectionIsEmpty()
                 && muse::contains(selectionController()->labelsIntersectingRangeSelection(), key.key)) {
                 selectionController()->addSelectedLabel(key.key);
             } else {
@@ -319,7 +319,7 @@ bool TrackLabelsListModel::moveSelectedLabels(const LabelKey& key, bool complete
     // Labels can only be moved to label tracks
     TrackItemsListModel::MoveOffset moveOffset = calculateMoveOffset(item, key, { trackedit::TrackType::Label }, completed);
     if (vs->moveInitiated()) {
-        if (selectionController()->timeSelectionIsNotEmpty()) {
+        if (!selectionController()->timeSelectionIsEmpty()) {
             ok = trackeditInteraction()->moveRangeSelection(moveOffset.timeOffset, completed);
         } else {
             auto selectedLabels = selectionController()->selectedLabels();
@@ -327,7 +327,7 @@ bool TrackLabelsListModel::moveSelectedLabels(const LabelKey& key, bool complete
         }
     }
 
-    if (ok && !selectionController()->timeSelectionIsNotEmpty() && isTrackDataSelected()) {
+    if (ok && selectionController()->timeSelectionIsEmpty() && isTrackDataSelected()) {
         doSelectTracksData(key);
     }
 
@@ -450,7 +450,7 @@ void TrackLabelsListModel::doSelectTracksData(const LabelKey& key)
 
 bool TrackLabelsListModel::isTrackDataSelected() const
 {
-    return !selectionController()->selectedTracks().empty() && selectionController()->timeSelectionIsNotEmpty();
+    return !selectionController()->selectedTracks().empty() && !selectionController()->timeSelectionIsEmpty();
 }
 
 void TrackLabelsListModel::resetSelectedTracksData()

@@ -73,7 +73,7 @@ public:
     // data selection
     void setSelectedTrackAudioData(trackedit::TrackId trackId) override;
     void resetDataSelection() override;
-    bool timeSelectionIsNotEmpty() const override;
+    bool timeSelectionIsEmpty() const override;
     bool timeSelectionHasAudioData() const override;
     bool isDataSelectedOnTrack(TrackId trackId) const override;
     void setSelectedAllAudioData(const std::optional<secs_t>& fromTime = std::nullopt,

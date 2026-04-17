@@ -130,7 +130,7 @@ muse::secs_t PlayPositionActionController::stepFromTime(muse::secs_t from, Direc
 
 void PlayPositionActionController::selectionExtendLeft()
 {
-    if (!selectionController()->timeSelectionIsNotEmpty()) {
+    if (selectionController()->timeSelectionIsEmpty()) {
         selectionController()->initSelectionAtPlayhead();
     }
     const muse::secs_t from = selectionController()->dataSelectedStartTime();
@@ -142,7 +142,7 @@ void PlayPositionActionController::selectionExtendLeft()
 
 void PlayPositionActionController::selectionExtendRight()
 {
-    if (!selectionController()->timeSelectionIsNotEmpty()) {
+    if (selectionController()->timeSelectionIsEmpty()) {
         selectionController()->initSelectionAtPlayhead();
     }
     const muse::secs_t from = selectionController()->dataSelectedEndTime();
@@ -151,7 +151,7 @@ void PlayPositionActionController::selectionExtendRight()
 
 void PlayPositionActionController::selectionContractLeft()
 {
-    if (!selectionController()->timeSelectionIsNotEmpty()) {
+    if (selectionController()->timeSelectionIsEmpty()) {
         return;
     }
     const muse::secs_t end = selectionController()->dataSelectedEndTime();
@@ -164,7 +164,7 @@ void PlayPositionActionController::selectionContractLeft()
 
 void PlayPositionActionController::selectionContractRight()
 {
-    if (!selectionController()->timeSelectionIsNotEmpty()) {
+    if (selectionController()->timeSelectionIsEmpty()) {
         return;
     }
     const muse::secs_t start = selectionController()->dataSelectedStartTime();

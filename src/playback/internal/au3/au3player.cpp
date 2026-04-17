@@ -453,7 +453,7 @@ void Au3Player::setLoopRegionActive(const bool active)
         double start = 0;
         double end = 0;
 
-        if (selectionController()->timeSelectionIsNotEmpty()) {
+        if (!selectionController()->timeSelectionIsEmpty()) {
             start = selectionController()->dataSelectedStartTime();
             end = selectionController()->dataSelectedEndTime();
         } else if (selectionController()->leftMostSelectedItemStartTime().has_value()) {

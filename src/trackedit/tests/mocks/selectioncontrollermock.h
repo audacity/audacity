@@ -53,7 +53,7 @@ public:
 
     MOCK_METHOD(void, setSelectedTrackAudioData, (TrackId), (override));
     MOCK_METHOD(void, resetDataSelection, (), (override));
-    MOCK_METHOD(bool, timeSelectionIsNotEmpty, (), (const, override));
+    MOCK_METHOD(bool, timeSelectionIsEmpty, (), (const, override));
     MOCK_METHOD(bool, timeSelectionHasAudioData, (), (const, override));
     MOCK_METHOD(bool, isDataSelectedOnTrack, (TrackId), (const, override));
     MOCK_METHOD(void, setSelectedAllAudioData, (const std::optional<secs_t>&, const std::optional<secs_t>&), (override));
