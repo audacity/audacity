@@ -871,52 +871,11 @@ void Au3SelectionController::setDataSelectedEndTime(au::trackedit::secs_t time, 
     }
 }
 
-void Au3SelectionController::extendSelectionStart(secs_t newStart)
+void Au3SelectionController::initSelectionAtPlayhead()
 {
-    if (!timeSelectionIsNotEmpty()) {
-        const secs_t playhead = globalContext()->playbackState()->playbackPosition();
-        setDataSelectedStartTime(playhead, true);
-        setDataSelectedEndTime(playhead, true);
-    }
-
-    if (muse::RealIsEqualOrMore(newStart, 0.0)) {
-        setDataSelectedStartTime(newStart, true);
-    }
-}
-
-void Au3SelectionController::extendSelectionEnd(secs_t newEnd)
-{
-    if (!timeSelectionIsNotEmpty()) {
-        const secs_t playhead = globalContext()->playbackState()->playbackPosition();
-        setDataSelectedStartTime(playhead, true);
-        setDataSelectedEndTime(playhead, true);
-    }
-
-    setDataSelectedEndTime(newEnd, true);
-}
-
-void Au3SelectionController::contractSelectionStart(secs_t newStart)
-{
-    if (!timeSelectionIsNotEmpty()) {
-        return;
-    }
-
-    if (muse::RealIsEqualOrMore(newStart, m_selectedEndTime.val)) {
-        newStart = m_selectedEndTime.val;
-    }
-    setDataSelectedStartTime(newStart, true);
-}
-
-void Au3SelectionController::contractSelectionEnd(secs_t newEnd)
-{
-    if (!timeSelectionIsNotEmpty()) {
-        return;
-    }
-
-    if (muse::RealIsEqualOrLess(newEnd, m_selectedStartTime.val)) {
-        newEnd = m_selectedStartTime.val;
-    }
-    setDataSelectedEndTime(newEnd, true);
+    const secs_t playhead = globalContext()->playbackState()->playbackPosition();
+    setDataSelectedStartTime(playhead, true);
+    setDataSelectedEndTime(playhead, true);
 }
 
 bool Au3SelectionController::selectionContainsGroup() const

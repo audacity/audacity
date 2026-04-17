@@ -97,10 +97,7 @@ public:
     trackedit::secs_t selectionStartTime() const override;
     void setSelectionStartTime(trackedit::secs_t time) override;
 
-    void extendSelectionStart(secs_t newStart) override;
-    void extendSelectionEnd(secs_t newEnd) override;
-    void contractSelectionStart(secs_t newStart) override;
-    void contractSelectionEnd(secs_t newEnd) override;
+    void initSelectionAtPlayhead() override;
 
     // grouping
     bool selectionContainsGroup() const override;

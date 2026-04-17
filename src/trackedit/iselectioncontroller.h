@@ -100,10 +100,7 @@ public:
     virtual trackedit::secs_t selectionStartTime() const = 0;
     virtual void setSelectionStartTime(trackedit::secs_t time) = 0;
 
-    virtual void extendSelectionStart(secs_t newStart) = 0;
-    virtual void extendSelectionEnd(secs_t newEnd) = 0;
-    virtual void contractSelectionStart(secs_t newStart) = 0;
-    virtual void contractSelectionEnd(secs_t newEnd) = 0;
+    virtual void initSelectionAtPlayhead() = 0;
 
     // grouping
     virtual bool selectionContainsGroup() const = 0;

@@ -16,8 +16,6 @@ using namespace au::trackedit;
 static const muse::actions::ActionCode TRACK_VIEW_NEXT_PANEL_CODE("track-view-next-panel");
 static const muse::actions::ActionCode TRACK_VIEW_PREV_PANEL_CODE("track-view-prev-panel");
 
-static const muse::actions::ActionCode TRACK_VIEW_NEXT_TRACK_CODE("track-view-next-track");
-static const muse::actions::ActionCode TRACK_VIEW_PREV_TRACK_CODE("track-view-prev-track");
 static const muse::actions::ActionCode TRACK_VIEW_FIRST_TRACK_CODE("track-view-first-track");
 static const muse::actions::ActionCode TRACK_VIEW_LAST_TRACK_CODE("track-view-last-track");
 
@@ -40,8 +38,6 @@ void TrackNavigationController::init()
     dispatcher()->reg(this, TRACK_VIEW_NEXT_PANEL_CODE, this, &TrackNavigationController::navigateToNextPanel);
     dispatcher()->reg(this, TRACK_VIEW_PREV_PANEL_CODE, this, &TrackNavigationController::navigateToPrevPanel);
 
-    dispatcher()->reg(this, TRACK_VIEW_NEXT_TRACK_CODE, this, &TrackNavigationController::navigateToNextTrack);
-    dispatcher()->reg(this, TRACK_VIEW_PREV_TRACK_CODE, this, &TrackNavigationController::navigateToPrevTrack);
     dispatcher()->reg(this, TRACK_VIEW_FIRST_TRACK_CODE, this, &TrackNavigationController::navigateToFirstTrack);
     dispatcher()->reg(this, TRACK_VIEW_LAST_TRACK_CODE, this, &TrackNavigationController::navigateToLastTrack);
 
@@ -444,7 +440,7 @@ double TrackNavigationController::itemStartTime(const TrackItemKey& key) const
     }
 
     std::optional<Track> track = prj->track(key.trackId);
-    if (!track.has_value()) {
+    if (!track.has_value() || track->type == TrackType::Undefined) {
         return 0.0;
     }
 
