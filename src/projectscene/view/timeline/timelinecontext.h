@@ -140,6 +140,7 @@ public:
 
     void animatedCenterOnTime(double secs);
     bool isAnimating() const;
+    void stopAnimation();
 
     qreal startHorizontalScrollPosition() const;
     qreal horizontalScrollbarSize() const;

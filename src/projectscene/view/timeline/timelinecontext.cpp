@@ -67,12 +67,14 @@ void TimelineContext::init(double frameWidth)
         double eased = 1.0 - (inv * inv * inv);
 
         double current = m_animationStartValue + (m_animationTargetValue - m_animationStartValue) * eased;
+        double frameStart = (t >= 1.0) ? m_animationTargetValue : current;
+
+        //! NOTE Bypass moveToFrameTime() so we don't cancel our own animation.
+        setFrameStartTime(std::max(frameStart, 0.0));
+        updateFrameTime();
 
         if (t >= 1.0) {
             m_animationTimer.stop();
-            moveToFrameTime(m_animationTargetValue);
-        } else {
-            moveToFrameTime(current);
         }
     });
 
@@ -443,16 +445,25 @@ void TimelineContext::onResizeFrameContentHeight(double frameHeight)
 
 void TimelineContext::moveToFrameTime(double startTime)
 {
+    stopAnimation();
     setFrameStartTime(std::max(startTime, 0.0));
     updateFrameTime();
 }
 
 void TimelineContext::animateToFrameTime(double targetStartTime)
 {
+    stopAnimation();
     m_animationStartValue = m_frameStartTime;
     m_animationTargetValue = std::max(targetStartTime, 0.0);
     m_animationElapsed.start();
     m_animationTimer.start();
+}
+
+void TimelineContext::stopAnimation()
+{
+    if (m_animationTimer.isActive()) {
+        m_animationTimer.stop();
+    }
 }
 
 void TimelineContext::shiftFrameTime(double shift)
@@ -460,6 +471,8 @@ void TimelineContext::shiftFrameTime(double shift)
     if (muse::is_zero(shift)) {
         return;
     }
+
+    stopAnimation();
 
     double timeShift = shift;
     double endTimeShift = shift;

@@ -134,7 +134,7 @@ void PlayCursorController::updatePositionX(muse::secs_t secs)
                 }
             } else {
                 double predictedSecs = secs + ANIMATION_DURATION_SEC;
-                if (predictedSecs < m_context->frameStartTime() || secs > m_context->frameEndTime()) {
+                if (predictedSecs < m_context->frameStartTime() || predictedSecs > m_context->frameEndTime()) {
                     if (zoomTooClose) {
                         m_context->insureVisible(secs);
                     } else {
