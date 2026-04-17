@@ -117,6 +117,8 @@ jobs:
 
       - name: Pack and send to s3
         if: steps.configure.outputs.DO_PUSH_TO_S3 == 'true'
+        env:
+          S3_UPLOAD_URL: s3://audacity-updates/languages/4.0/
         run: bash ./buildscripts/ci/translation/s3_packandsend.sh
 
       - name: Upload artifacts on GitHub
