@@ -31,6 +31,7 @@ import "./ToastNotification"
 import "./CrashHandler"
 import "./KeyNav"
 import "./Preferences"
+import "./Table"
 
 DockPage {
     id: root
@@ -63,6 +64,9 @@ DockPage {
             break
         case "cloud":
             root.central = cloudComp
+            break
+        case "table":
+            root.central = tableComp
             break
         }
     }
@@ -119,6 +123,10 @@ DockPage {
                         {
                             "name": "cloud",
                             "title": "Cloud Tests"
+                        },
+                        {
+                            "name": "table",
+                            "title": "Table"
                         }
                     ]
 
@@ -180,5 +188,11 @@ DockPage {
         Loader {
             source: "Cloud/CloudTests.qml"
         }
+    }
+
+    Component {
+        id: tableComp
+
+        TableTests {}
     }
 }

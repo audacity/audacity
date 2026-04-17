@@ -41,8 +41,7 @@ void UiComponentsModule::registerUiTypes()
     qmlRegisterType<TimecodeModel>("Audacity.UiComponents", 1, 0, "TimecodeModel");
     qmlRegisterType<BPMModel>("Audacity.UiComponents", 1, 0, "BPMModel");
     qmlRegisterType<FrequencyModel>("Audacity.UiComponents", 1, 0, "FrequencyModel");
-    qmlRegisterUncreatableType<TableSortFilterProxyModel>("Audacity.UiComponents", 1, 0, "TableSortFilterProxyModel",
-                                                          "TableSortFilterProxyModel is created in C++");
+    qmlRegisterType<TableSortFilterProxyModel>("Audacity.UiComponents", 1, 0, "TableSortFilterProxyModel");
 }
 
 void UiComponentsModule::onInit(const muse::IApplication::RunMode& mode)
