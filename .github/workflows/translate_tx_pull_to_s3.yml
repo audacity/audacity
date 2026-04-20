@@ -22,7 +22,7 @@ on:
 
 jobs:
   tx_pull:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     if: github.event_name != 'schedule' || github.repository == 'audacity/audacity'
     steps:
       - name: Check preconditions
@@ -78,6 +78,10 @@ jobs:
           target: "desktop"
           arch: "linux_gcc_64"
           cache: true
+
+      - name: Install cmake
+        if: steps.configure.outputs.DO_PUSH_TO_S3 == 'true'
+        run: sudo apt-get update && sudo apt-get install -y cmake
 
       - name: Setup environment for pushing to S3
         if: steps.configure.outputs.DO_PUSH_TO_S3 == 'true'
