@@ -24,6 +24,8 @@
 
 #include <QObject>
 #include <QtQml/qqmlregistration.h>
+#include <qbytearrayview.h>
+#include <qtmetamacros.h>
 
 #include "modularity/ioc.h"
 #include "iappshellconfiguration.h"
@@ -55,6 +57,7 @@ public:
     Q_INVOKABLE QVariantMap contributionUrl() const;
     Q_INVOKABLE QVariantMap privacyPolicyUrl() const;
     Q_INVOKABLE QVariantList creditList() const;
+    Q_INVOKABLE QString gplText() const;
 
     Q_INVOKABLE void copyRevisionToClipboard() const;
 

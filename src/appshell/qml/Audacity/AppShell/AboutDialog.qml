@@ -80,6 +80,7 @@ StyledDialogView {
 
             Layout.fillWidth: true
             Layout.fillHeight: true
+            Layout.bottomMargin: prv.contentMargin
 
             currentIndex: tabBar.currentIndex
 
@@ -147,7 +148,7 @@ StyledDialogView {
 
                         height: creditsInner.height + prv.contentTextMargin * 2
 
-                        color: ui.theme.isDark ? ui.theme.extra["black_color"] : ui.theme.extra["white_color"]
+                        color: ui.theme.backgroundSecondaryColor
 
                         Column {
                             id: creditsInner
@@ -276,11 +277,13 @@ StyledDialogView {
                     id: legalContent
                     width: legalFlickable.width
 
+                    anchors.margins: prv.contentMargin
+
+                    spacing: prv.contentSpacing
+
                     Column {
                         anchors.left: parent.left
                         anchors.right: parent.right
-                        anchors.leftMargin: prv.contentMargin
-                        anchors.rightMargin: prv.contentMargin
 
                         spacing: prv.versionTextSpacing
 
@@ -300,6 +303,39 @@ StyledDialogView {
 
                             text: qsTrc("appshell/about", "App update checking and error reporting require network access. These features are optional.\nSee our Privacy policy for more info.")
                             font: ui.theme.bodyFont
+                        }
+                    }
+
+                    Rectangle {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.leftMargin: prv.contentMargin
+                        anchors.rightMargin: prv.contentMargin
+
+                        height: gplInner.height + prv.contentTextMargin * 2
+
+                        color: ui.theme.backgroundSecondaryColor
+
+                        Column {
+                            id: gplInner
+
+                            anchors.top: parent.top
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+
+                            anchors.margins: prv.contentTextMargin
+
+                            Text {
+                                width: parent.width
+                                horizontalAlignment: Text.AlignLeft
+
+                                textFormat: Text.RichText
+                                wrapMode: Text.WordWrap
+                                text: aboutModel.gplText()
+
+                                color: ui.theme.fontPrimaryColor
+                                font: ui.theme.bodyFont
+                            }
                         }
                     }
                 }
