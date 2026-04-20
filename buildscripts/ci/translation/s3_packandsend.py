@@ -38,6 +38,10 @@ def processTsFile(prefix, langCode, data):
     tsFilePath = outputDir + filename + ".ts"
     qmFilePath = outputDir + filename + ".qm"
 
+    if not os.path.isfile(tsFilePath):
+        print(prefix + ' ' + lang_code + " skipped (no .ts file — not 100% translated on Transifex yet)")
+        return False
+
     lang_time = int(os.path.getmtime(tsFilePath))
     cur_time = int(time.time())
 
