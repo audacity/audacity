@@ -105,8 +105,9 @@ ProjectsView {
             return notSignedInComp
         case CloudProjectsModel.Error:
             return errorComp
-        case CloudProjectsModel.Fine:
         case CloudProjectsModel.Loading:
+            return loadingComp
+        case CloudProjectsModel.Fine:
             break
         }
 
@@ -307,6 +308,25 @@ ProjectsView {
 
                 title: qsTrc("project", "You are not signed in")
                 body: qsTrc("project", "Please sign in to view your online projects")
+            }
+        }
+    }
+
+    Component {
+        id: loadingComp
+
+        Item {
+            anchors.fill: parent
+
+            Message {
+                anchors.top: parent.top
+                anchors.topMargin: Math.max(parent.height / 3 - height / 2, 0)
+                anchors.left: parent.left
+                anchors.leftMargin: root.sideMargin
+                anchors.right: parent.right
+                anchors.rightMargin: root.sideMargin
+
+                title: qsTrc("global", "Loading...")
             }
         }
     }

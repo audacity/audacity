@@ -38,11 +38,14 @@ void CloudProjectsModel::load()
     }
 
     authorization()->authState().ch.onReceive(this, [this](au::au3cloud::AuthState authState) {
-        if (std::holds_alternative<au::au3cloud::Authorized>(authState)) {
-            setState(State::Loading);
-            loadItemsIfNecessary();
-        } else {
+        if (std::holds_alternative < au::au3cloud::NotAuthorized>(authState)) {
             setState(State::NotSignedIn);
+            return;
+        }
+
+        setState(State::Loading);
+        if (std::holds_alternative<au::au3cloud::Authorized>(authState)) {
+            loadItemsIfNecessary();
         }
     }, muse::async::Asyncable::Mode::SetReplace);
 

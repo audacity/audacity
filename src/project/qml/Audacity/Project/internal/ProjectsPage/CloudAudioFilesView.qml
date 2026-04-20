@@ -108,8 +108,9 @@ ProjectsView {
             return notSignedInComp
         case CloudAudioFilesModel.Error:
             return errorComp
-        case CloudAudioFilesModel.Fine:
         case CloudAudioFilesModel.Loading:
+            return loadingComp
+        case CloudAudioFilesModel.Fine:
             break
         }
 
@@ -379,6 +380,25 @@ ProjectsView {
 
                 title: qsTrc("project", "You are not signed in")
                 body: qsTrc("project", "Please sign in to view your online files")
+            }
+        }
+    }
+
+    Component {
+        id: loadingComp
+
+        Item {
+            anchors.fill: parent
+
+            Message {
+                anchors.top: parent.top
+                anchors.topMargin: Math.max(parent.height / 3 - height / 2, 0)
+                anchors.left: parent.left
+                anchors.leftMargin: root.sideMargin
+                anchors.right: parent.right
+                anchors.rightMargin: root.sideMargin
+
+                title: qsTrc("global", "Loading...")
             }
         }
     }
