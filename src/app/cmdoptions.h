@@ -27,13 +27,13 @@ struct AudacityCmdOptions : public muse::CmdOptions {
         muse::io::paths_t mediaFiles;
     } startup;
 
-    struct Autobot {
+    struct Testflow {
         QString testCaseNameOrFile;
         QString testCaseContextNameOrFile;
         QString testCaseContextValue;
         QString testCaseFunc;
         QString testCaseFuncArgs;
-    } autobot;
+    } testflow;
 
     struct AudioPluginRegistration {
         muse::io::path_t pluginPath;

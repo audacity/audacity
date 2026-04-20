@@ -29,7 +29,7 @@ var testCase = {
             name: "Check if the Effects are enabled", func: function () {
                 var controls = api.navigation.controls("MasterEffectsSection", "Master effects bypass")
                 if (controls[0].enabled === false) {
-                    api.autobot.error("Effects Panel is not enabled.")
+                    api.testflow.error("Effects Panel is not enabled.")
                 }
             }
         },
@@ -37,6 +37,6 @@ var testCase = {
 }
 
 function main() {
-    api.autobot.setInterval(1000)
-    api.autobot.runTestCase(testCase)
+    api.testflow.setInterval(1000)
+    api.testflow.runTestCase(testCase)
 }

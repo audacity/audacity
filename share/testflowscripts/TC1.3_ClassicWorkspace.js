@@ -24,7 +24,7 @@ var testCase = {
             name: "Count the Workspace toolbar items", func: function () {
                 var controls = api.navigation.controls("PlaybackSection", "ToolBarView")
                 if (controls.length !== 17) {
-                    api.autobot.error("Control count is not 17")
+                    api.testflow.error("Control count is not 17")
                 }
             }
         }
@@ -32,6 +32,6 @@ var testCase = {
 }
 
 function main() {
-    api.autobot.setInterval(1000)
-    api.autobot.runTestCase(testCase)
+    api.testflow.setInterval(1000)
+    api.testflow.runTestCase(testCase)
 }

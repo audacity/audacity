@@ -80,8 +80,8 @@
 #include "stubs/audio_unit/audiouniteffectsstubmodule.h"
 #endif
 
-#ifdef MUSE_MODULE_AUTOBOT
-#include "autobot/autobotmodule.h"
+#ifdef MUSE_MODULE_TESTFLOW
+#include "testflow/testflowmodule.h"
 #endif
 
 #ifdef MUSE_MODULE_EXTENSIONS
@@ -140,8 +140,8 @@ std::shared_ptr<muse::IApplication> AppFactory::newGuiApp(const std::shared_ptr<
     app->addModule(new muse::network::NetworkModule());
     app->addModule(new muse::update::UpdateModule());
     app->addModule(new muse::extensions::ExtensionsModule());
-#ifdef MUSE_MODULE_AUTOBOT
-    app->addModule(new muse::autobot::AutobotModule());
+#ifdef MUSE_MODULE_TESTFLOW
+    app->addModule(new muse::testflow::TestflowModule());
 #endif
 
     // Audacity modules
