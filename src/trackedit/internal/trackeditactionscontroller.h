@@ -159,6 +159,8 @@ private:
     void selectTrackStartToCursor();
     void selectCursorToTrackEnd();
     void selectTrackStartToEnd();
+    void setSelection(const muse::actions::ActionQuery& query);
+    void selectTrackByIndex(const muse::actions::ActionQuery& query);
     void moveCursorToClosestZeroCrossing();
 
     void setClipColor(const muse::actions::ActionQuery& q);
