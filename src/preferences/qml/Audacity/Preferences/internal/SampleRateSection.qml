@@ -115,7 +115,7 @@ BaseSection {
     StyledTextLabel {
         text: qsTrc("preferences",
                 "Default sample rates and formats apply to newly created tracks only. " +
-                "Recording into existing tracks will use the track\'s sample rate and format instead.")
+                "Recording into existing tracks will use the track’s sample rate and format instead.")
         width: root.width
 
         horizontalAlignment: Text.AlignLeft
