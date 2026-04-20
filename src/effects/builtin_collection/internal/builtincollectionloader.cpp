@@ -42,6 +42,7 @@
 #include "reverb/reverbeffect.h"
 #include "reverb/reverbviewmodel.h"
 #include "paulstretch/paulstretcheffect.h"
+#include "paulstretch/paulstretchviewmodel.h"
 #include "tonegen/toneviewmodel.h"
 #include "dtmfgen/dtmfgenerator.h"
 #include "dtmfgen/dtmfviewmodel.h"
@@ -144,6 +145,9 @@ void BuiltinCollectionLoader::init()
 
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(ReverbViewModelFactory);
     regView(ReverbEffect::Symbol, u"qrc:/reverb/ReverbView.qml");
+
+    REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(PaulstretchViewModelFactory);
+    regView(PaulstretchEffect::Symbol, u"qrc:/paulstretch/PaulstretchView.qml");
 
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(NoiseViewModelFactory);
     regView(NoiseGenerator::Symbol, u"qrc:/noisegen/NoiseView.qml");

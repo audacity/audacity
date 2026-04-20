@@ -1,3 +1,6 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
 /**********************************************************************
 
    Audacity: A Digital Audio Editor
@@ -10,6 +13,7 @@
 
 #include "au3-command-parameters/ShuttleAutomation.h"
 #include "au3-effects/StatefulEffect.h"
+
 #include <cfloat>
 
 class WaveChannel;
@@ -39,7 +43,7 @@ public:
 
     ::EffectType GetType() const override;
     ::EffectGroup GetGroup() const override { return EffectGroup::PitchAndTempo; }
-    bool SupportsMultipleClipSelection() const override { return false; }
+    bool SupportsMultipleClipSelection() const override { return true; }
 
     // Effect implementation
 
