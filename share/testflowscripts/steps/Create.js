@@ -3,8 +3,6 @@
  */
 
 
-var Navigation = require("Navigation.js")
-
 module.exports = {
     newMonoTrack: function () {
         api.dispatcher.dispatch("new-mono-track")
