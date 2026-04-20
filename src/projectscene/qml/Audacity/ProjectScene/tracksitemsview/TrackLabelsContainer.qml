@@ -146,12 +146,14 @@ TrackItemsContainer {
                         visible: y < root.height
 
                         sourceComponent: {
-                            if ((itemData.x + itemData.width) < (0 - labelsModel.cacheBufferPx)) {
-                                return null
-                            }
+                            if (!itemData.focused) {
+                                if ((itemData.x + itemData.width) < (0 - labelsModel.cacheBufferPx)) {
+                                    return null
+                                }
 
-                            if (itemData.x > (labelsContainer.width + labelsModel.cacheBufferPx)) {
-                                return null
+                                if (itemData.x > (labelsContainer.width + labelsModel.cacheBufferPx)) {
+                                    return null
+                                }
                             }
 
                             return labelComp
@@ -188,7 +190,7 @@ TrackItemsContainer {
                                 navigation.accessible.name: Boolean(itemData) ? itemData.title : ""
                                 navigation.onActiveChanged: {
                                     if (navigation.active) {
-                                        root.context.insureVisible(root.context.positionToTime(itemData.x))
+                                        root.context.animatedInsureVisible(itemData.time.startTime)
                                         root.insureVerticallyVisible()
                                     }
                                 }

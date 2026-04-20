@@ -27,6 +27,7 @@
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
 #include "actions/iactionsdispatcher.h"
+#include "trackedit/iselectioncontroller.h"
 
 #include "../timeline/timelinecontext.h"
 
@@ -40,6 +41,7 @@ class PlayPositionActionController : public QObject, public muse::actions::Actio
 
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
+    muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
 
 public:
     PlayPositionActionController(QObject* parent = nullptr);
@@ -52,6 +54,11 @@ public:
     void playPositionDecrease();
     void playPositionIncrease();
 
+    void selectionExtendLeft();
+    void selectionExtendRight();
+    void selectionContractLeft();
+    void selectionContractRight();
+
 signals:
     void timelineContextChanged();
 
@@ -60,6 +67,8 @@ private:
 
     void snapCurrentPosition();
     void applySingleStep(Direction direction);
+
+    muse::secs_t stepFromTime(muse::secs_t from, Direction direction) const;
 
     context::IPlaybackStatePtr playbackState() const;
 

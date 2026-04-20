@@ -204,10 +204,10 @@ muse::Ret Au3Exporter::exportData(const muse::io::path_t& path, const Options& o
     // TODO: implement other ExportProcessType's selections
     if (processType == ExportProcessType::SELECTED_AUDIO) {
         m_t0
-            = selectionController()->timeSelectionIsNotEmpty() ? selectionController()->dataSelectedStartTime()
+            = !selectionController()->timeSelectionIsEmpty() ? selectionController()->dataSelectedStartTime()
               : selectionController()->leftMostSelectedClipStartTime().value_or(0.0);
         m_t1
-            = selectionController()->timeSelectionIsNotEmpty() ? selectionController()->dataSelectedEndTime()
+            = !selectionController()->timeSelectionIsEmpty() ? selectionController()->dataSelectedEndTime()
               : selectionController()->rightMostSelectedClipEndTime().value_or(0.0);
         m_selectedOnly = true;
     } else if (processType == ExportProcessType::AUDIO_IN_LOOP_REGION) {

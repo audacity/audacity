@@ -133,7 +133,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
                 }
                 t0 = selectionController()->dataSelectedStartTime();
                 t1 = selectionController()->dataSelectedEndTime();
-                isTimeSelection = selectionController()->timeSelectionIsNotEmpty();
+                isTimeSelection = !selectionController()->timeSelectionIsEmpty();
             } else if (!isTrackSelection) {
                 // Select all tracks without modifying time selection
                 const auto prj = globalContext()->currentTrackeditProject();

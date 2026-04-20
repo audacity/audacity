@@ -57,6 +57,14 @@ void TimelineContext::init(double frameWidth)
     m_scrollTimer.setInterval(16); // scroll at ~60 FPS
     connect(&m_scrollTimer, &QTimer::timeout, [this](){ autoScrollView(m_autoScrollStep); });
 
+    m_frameStartAnimation.setDuration(ANIMATION_DURATION_MS);
+    m_frameStartAnimation.setEasingCurve(QEasingCurve::OutCubic);
+    connect(&m_frameStartAnimation, &QVariantAnimation::valueChanged, this, [this](const QVariant& value) {
+        //! NOTE Bypass moveToFrameTime() so we don't cancel our own animation.
+        setFrameStartTime(std::max(value.toDouble(), 0.0));
+        updateFrameTime();
+    });
+
     initToViewState(frameWidth);
 
     if (const auto vs = viewState()) {
@@ -314,6 +322,35 @@ void TimelineContext::insureVisible(double posSec)
     moveToFrameTime(newFrameTime);
 }
 
+void TimelineContext::animatedInsureVisible(double posSec)
+{
+    if (posSec >= m_frameStartTime && posSec <= m_frameEndTime) {
+        return;
+    }
+
+    const double frameTime = m_frameEndTime - m_frameStartTime;
+
+    if (posSec > m_frameEndTime) {
+        // Scrolling right: place clip start at ~75% of view width
+        animateToFrameTime(posSec - frameTime * 0.75);
+    } else {
+        // Scrolling left: place clip start at ~25% of view width
+        animateToFrameTime(posSec - frameTime * 0.25);
+    }
+}
+
+void TimelineContext::animatedCenterOnTime(double secs)
+{
+    const double frameTime = m_frameEndTime - m_frameStartTime;
+    const double targetStartTime = secs - frameTime * 0.5;
+    animateToFrameTime(targetStartTime);
+}
+
+bool TimelineContext::isAnimating() const
+{
+    return m_frameStartAnimation.state() == QAbstractAnimation::Running;
+}
+
 void TimelineContext::autoScrollView(double scrollStep)
 {
     if (!muse::RealIsEqualOrMore(scrollStep, 0.0)) {
@@ -395,8 +432,24 @@ void TimelineContext::onResizeFrameContentHeight(double frameHeight)
 
 void TimelineContext::moveToFrameTime(double startTime)
 {
+    stopAnimation();
     setFrameStartTime(std::max(startTime, 0.0));
     updateFrameTime();
+}
+
+void TimelineContext::animateToFrameTime(double targetStartTime)
+{
+    stopAnimation();
+    m_frameStartAnimation.setStartValue(m_frameStartTime);
+    m_frameStartAnimation.setEndValue(std::max(targetStartTime, 0.0));
+    m_frameStartAnimation.start();
+}
+
+void TimelineContext::stopAnimation()
+{
+    if (m_frameStartAnimation.state() == QAbstractAnimation::Running) {
+        m_frameStartAnimation.stop();
+    }
 }
 
 void TimelineContext::shiftFrameTime(double shift)
@@ -404,6 +457,8 @@ void TimelineContext::shiftFrameTime(double shift)
     if (muse::is_zero(shift)) {
         return;
     }
+
+    stopAnimation();
 
     double timeShift = shift;
     double endTimeShift = shift;

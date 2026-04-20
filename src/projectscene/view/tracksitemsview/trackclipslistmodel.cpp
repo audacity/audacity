@@ -390,7 +390,7 @@ bool TrackClipsListModel::moveSelectedClips(const ClipKey& key, bool completed)
     }, completed);
 
     if (vs->moveInitiated()) {
-        if (selectionController()->timeSelectionIsNotEmpty()) {
+        if (!selectionController()->timeSelectionIsEmpty()) {
             trackeditInteraction()->moveRangeSelection(moveOffset.timeOffset, completed);
         } else {
             ClipKeyList selectedClips = selectionController()->selectedClipsInTrackOrder();
