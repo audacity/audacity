@@ -81,6 +81,7 @@ private:
     void doGlobalDisjoin();
     void doGlobalDuplicate();
 
+    void doGlobalCutLeaveGap();
     void doGlobalCutPerClipRipple();
     void doGlobalCutPerTrackRipple();
     void doGlobalCutAllTracksRipple();
@@ -90,6 +91,7 @@ private:
     void pasteInsert();
     void pasteInsertRipple();
 
+    void doGlobalDeleteLeaveGap();
     void doGlobalDeletePerClipRipple();
     void doGlobalDeletePerTrackRipple();
     void doGlobalDeleteAllTracksRipple();

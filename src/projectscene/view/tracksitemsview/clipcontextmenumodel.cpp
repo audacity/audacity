@@ -41,6 +41,24 @@ void ClipContextMenuModel::load()
 
     auto colorItems = makeClipColourItems();
 
+    MenuItemList cutAndItems {
+        makeMenuItem("cut-leave-gap",
+                     muse::TranslatableString("clip", "Cut and leave gap")),
+        makeMenuItem("cut-per-track-ripple",
+                     muse::TranslatableString("clip", "Cut and close gap on this track")),
+        makeMenuItem("cut-all-tracks-ripple",
+                     muse::TranslatableString("clip", "Cut and close gap on all tracks")),
+    };
+
+    MenuItemList deleteAndItems {
+        makeMenuItem("delete-leave-gap",
+                     muse::TranslatableString("clip", "Delete and leave gap")),
+        makeMenuItem("delete-per-track-ripple",
+                     muse::TranslatableString("clip", "Delete and close gap on this track")),
+        makeMenuItem("delete-all-tracks-ripple",
+                     muse::TranslatableString("clip", "Delete and close gap on all tracks")),
+    };
+
     MenuItemList items {
         makeItemWithArg("clip-properties"),
         makeItemWithArg("rename-item", muse::TranslatableString("clip", "Rename clip")),
@@ -48,11 +66,13 @@ void ClipContextMenuModel::load()
         makeSeparator(),
         makeItemWithArg("action://trackedit/cut"),
         makeItemWithArg("action://trackedit/copy"),
-        makeItemWithArg("action://delete"),
         makeItemWithArg("duplicate"),
+        makeItemWithArg("action://trackedit/delete"),
+        makeSeparator(),
+        makeMenu(muse::TranslatableString("clip", "Cut and…"), cutAndItems, "menu-cut-and"),
+        makeMenu(muse::TranslatableString("clip", "Delete and…"), deleteAndItems, "menu-delete-and"),
         makeSeparator(),
         makeItemWithArg("split"),
-        makeSeparator(),
         makeItemWithArg("clip-export"),
         makeSeparator(),
         enableStretchItem,

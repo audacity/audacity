@@ -66,6 +66,13 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Clear selection"),
              TranslatableString("action", "Clear selection")
              ),
+    UiAction("cut-leave-gap",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Cut and leave gap"),
+             TranslatableString("action", "Cut and leave gap"),
+             IconCode::Code::CUT
+             ),
     UiAction("cut-per-clip-ripple",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
@@ -86,6 +93,20 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Cut and close gap (all tracks)"),
              TranslatableString("action", "Cut and close gap (all tracks)"),
              IconCode::Code::CUT
+             ),
+    UiAction("delete-leave-gap",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Delete and leave gap"),
+             TranslatableString("action", "Delete and leave gap"),
+             IconCode::Code::DELETE_TANK
+             ),
+    UiAction("delete-per-clip-ripple",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Delete and close gap (per clip)"),
+             TranslatableString("action", "Delete and close gap (per clip)"),
+             IconCode::Code::DELETE_TANK
              ),
     UiAction("delete-per-track-ripple",
              au::context::UiCtxAny,
