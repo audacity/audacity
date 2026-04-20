@@ -22,7 +22,7 @@ on:
 
 jobs:
   tx_pull:
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-latest
     if: github.event_name != 'schedule' || github.repository == 'audacity/audacity'
     steps:
       - name: Check preconditions
