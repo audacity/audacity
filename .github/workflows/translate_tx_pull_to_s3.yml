@@ -31,12 +31,12 @@ jobs:
             echo "::error::TRANSIFEX_API_TOKEN is empty"
             exit 1
           fi
-          if [ -z "${{ secrets.S3_KEY }}" ]; then
-            echo "::error::S3_KEY is empty"
+          if [ -z "${{ secrets.AU_S3_KEY }}" ]; then
+            echo "::error::AU_S3_KEY is empty"
             exit 1
           fi
-          if [ -z "${{ secrets.S3_SECRET }}" ]; then
-            echo "::error::S3_SECRET is empty"
+          if [ -z "${{ secrets.AU_S3_SECRET }}" ]; then
+            echo "::error::AU_S3_SECRET is empty"
             exit 1
           fi
 
@@ -48,17 +48,13 @@ jobs:
 
           if [[ "${{ github.event_name }}" == "schedule" ]]; then
             DO_CREATE_PR="${{ github.event.schedule == '0 12 * * Sun'}}"
-            # TODO: Re-enable once S3_KEY and S3_SECRET are properly configured
-            # DO_PUSH_TO_S3='true'
-            DO_PUSH_TO_S3='false'
+            DO_PUSH_TO_S3='true'
           else
             if [[ "${{ inputs.create_pull_request }}" == "true" ]]; then
               DO_CREATE_PR='true'
             fi
             if [[ "${{ inputs.push_to_s3 }}" == "true" ]]; then
-              # TODO: Re-enable once S3_KEY and S3_SECRET are properly configured
-              # DO_PUSH_TO_S3='true'
-              DO_PUSH_TO_S3='false'
+              DO_PUSH_TO_S3='true'
             fi
           fi
 
@@ -86,7 +82,7 @@ jobs:
       - name: Setup environment for pushing to S3
         if: steps.configure.outputs.DO_PUSH_TO_S3 == 'true'
         run: |
-          bash ./buildscripts/ci/tools/s3_install.sh --s3_key ${{ secrets.S3_KEY }} --s3_secret ${{ secrets.S3_SECRET }}
+          bash ./buildscripts/ci/tools/s3_install.sh --s3_key ${{ secrets.AU_S3_KEY }} --s3_secret ${{ secrets.AU_S3_SECRET }}
 
           bash ./buildscripts/ci/tools/make_build_number.sh
           BUILD_NUMBER=$(cat ./build.artifacts/env/build_number.env)
@@ -121,11 +117,13 @@ jobs:
 
       - name: Pack and send to s3
         if: steps.configure.outputs.DO_PUSH_TO_S3 == 'true'
+        env:
+          S3_UPLOAD_URL: s3://audacity-updates/languages/4.0/
         run: bash ./buildscripts/ci/translation/s3_packandsend.sh
 
       - name: Upload artifacts on GitHub
         if: steps.configure.outputs.DO_PUSH_TO_S3 == 'true'
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: Audacity_locale_${{ env.BUILD_NUMBER }}
           path: ./share/locale
