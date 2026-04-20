@@ -41,6 +41,7 @@
 #include "tonegen/toneeffect.h"
 #include "reverb/reverbeffect.h"
 #include "reverb/reverbviewmodel.h"
+#include "paulstretch/paulstretcheffect.h"
 #include "tonegen/toneviewmodel.h"
 #include "dtmfgen/dtmfgenerator.h"
 #include "dtmfgen/dtmfviewmodel.h"
@@ -89,6 +90,7 @@ void BuiltinCollectionLoader::preInit()
     static BuiltinEffectsModule::Registration< ChirpEffect > regChirp;
     static BuiltinEffectsModule::Registration< ToneEffect > regTone;
     static BuiltinEffectsModule::Registration< ReverbEffect > regReverb;
+    static BuiltinEffectsModule::Registration< PaulstretchEffect > regPaulstretch;
     static BuiltinEffectsModule::Registration< SilenceGenerator > regSilence;
     static BuiltinEffectsModule::Registration< NoiseGenerator > regNoise;
     static BuiltinEffectsModule::Registration< NoiseReductionEffect > regNoiseReduction;

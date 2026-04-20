@@ -53,8 +53,8 @@ set( SOURCES
 #   NoiseReductionBase.h
 #   NormalizeBase.cpp
 #   NormalizeBase.h
-   PaulstretchBase.cpp
-   PaulstretchBase.h
+#   PaulstretchBase.cpp
+#   PaulstretchBase.h
    PhaserBase.cpp
    PhaserBase.h
    PlotSpectrumBase.cpp

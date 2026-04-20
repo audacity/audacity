@@ -2,17 +2,17 @@
 
   Audacity: A Digital Audio Editor
 
-  PaulstretchBase.cpp
+  paulstretcheffect.cpp
 
   Nasca Octavian Paul (Paul Nasca)
 
 *******************************************************************//**
 
-\class PaulstretchBase
+\class PaulstretchEffect
 \brief An Extreme Time Stretch and Time Smear effect
 
 *//*******************************************************************/
-#include "PaulstretchBase.h"
+#include "paulstretcheffect.h"
 #include "au3-basic-ui/BasicUI.h"
 #include "au3-effects/EffectOutputTracks.h"
 #include "au3-fft/FFT.h"
@@ -23,15 +23,17 @@
 #include <cfloat> // FLT_MAX
 #include <cmath>
 
-const ComponentInterfaceSymbol PaulstretchBase::Symbol { XO("Paulstretch") };
+using namespace au::effects;
 
-const EffectParameterMethods& PaulstretchBase::Parameters() const
+const ComponentInterfaceSymbol PaulstretchEffect::Symbol { XO("Paulstretch") };
+
+const EffectParameterMethods& PaulstretchEffect::Parameters() const
 {
-    static CapturedParameters<PaulstretchBase, Amount, Time> parameters;
+    static CapturedParameters<PaulstretchEffect, Amount, Time> parameters;
     return parameters;
 }
 
-/// \brief Class that helps EffectPaulStretch.  It does the FFTs and inner loop
+/// \brief Class that helps PaulstretchEffect.  It does the FFTs and inner loop
 /// of the effect.
 class PaulStretch
 {
@@ -75,45 +77,45 @@ private:
     const Floats fft_smps, fft_c, fft_s, fft_freq, fft_tmp;
 };
 
-PaulstretchBase::PaulstretchBase()
+PaulstretchEffect::PaulstretchEffect()
 {
     Parameters().Reset(*this);
 
     SetLinearEffectFlag(true);
 }
 
-PaulstretchBase::~PaulstretchBase()
+PaulstretchEffect::~PaulstretchEffect()
 {
 }
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol PaulstretchBase::GetSymbol() const
+ComponentInterfaceSymbol PaulstretchEffect::GetSymbol() const
 {
     return Symbol;
 }
 
-TranslatableString PaulstretchBase::GetDescription() const
+TranslatableString PaulstretchEffect::GetDescription() const
 {
     return XO(
         "Paulstretch is only for an extreme time-stretch or \"stasis\" effect");
 }
 
-ManualPageID PaulstretchBase::ManualPage() const
+ManualPageID PaulstretchEffect::ManualPage() const
 {
     return L"Paulstretch";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType PaulstretchBase::GetType() const
+EffectType PaulstretchEffect::GetType() const
 {
     return EffectTypeProcess;
 }
 
 // Effect implementation
 
-double PaulstretchBase::CalcPreviewInputLength(
+double PaulstretchEffect::CalcPreviewInputLength(
     const EffectSettings&, double previewLength) const
 {
     // FIXME: Preview is currently at the project rate, but should really be
@@ -128,7 +130,7 @@ double PaulstretchBase::CalcPreviewInputLength(
     return minLength;
 }
 
-bool PaulstretchBase::Process(EffectInstance&, EffectSettings&)
+bool PaulstretchEffect::Process(EffectInstance&, EffectSettings&)
 {
     // Pass true because sync lock adjustment is needed
     EffectOutputTracks outputs { *mTracks, GetType(), { { mT0, mT1 } } };
@@ -176,7 +178,7 @@ bool PaulstretchBase::Process(EffectInstance&, EffectSettings&)
     return true;
 }
 
-bool PaulstretchBase::ProcessOne(
+bool PaulstretchEffect::ProcessOne(
     const WaveChannel& track, WaveChannel& outputTrack, double t0, double t1,
     int count)
 {
@@ -329,7 +331,7 @@ bool PaulstretchBase::ProcessOne(
     return false;
 }
 
-size_t PaulstretchBase::GetBufferSize(double rate) const
+size_t PaulstretchEffect::GetBufferSize(double rate) const
 {
     // Audacity's fft requires a power of 2
     float tmp = rate * mTime_resolution / 2.0;

@@ -100,6 +100,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/reverb/reverbeffect.h
     ${CMAKE_CURRENT_LIST_DIR}/reverb/reverbviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/reverb/reverbviewmodel.h
+
+    ${CMAKE_CURRENT_LIST_DIR}/paulstretch/paulstretcheffect.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/paulstretch/paulstretcheffect.h
     ${CMAKE_CURRENT_LIST_DIR}/tonegen/toneviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/tonegen/toneviewmodel.h
 
