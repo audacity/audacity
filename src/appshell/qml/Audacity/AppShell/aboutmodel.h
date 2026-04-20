@@ -54,6 +54,7 @@ public:
     Q_INVOKABLE QVariantMap forumUrl() const;
     Q_INVOKABLE QVariantMap contributionUrl() const;
     Q_INVOKABLE QVariantMap privacyPolicyUrl() const;
+    Q_INVOKABLE QVariantList creditList() const;
 
     Q_INVOKABLE void copyRevisionToClipboard() const;
 

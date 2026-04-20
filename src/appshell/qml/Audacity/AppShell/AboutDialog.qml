@@ -24,6 +24,7 @@ import QtQuick.Layouts 1.15
 
 import Muse.Ui 1.0
 import Muse.UiComponents
+
 import Audacity.AppShell
 
 StyledDialogView {
@@ -31,117 +32,277 @@ StyledDialogView {
 
     title: qsTrc("appshell/about", "About Audacity")
 
-    contentHeight: 424
-    contentWidth: 480
+    contentHeight: 600
+    contentWidth: 720
 
     AboutModel {
         id: aboutModel
     }
 
+    QtObject {
+        id: prv
+
+        readonly property int tabTopMargin: 11
+        readonly property int tabBottomMargin: 11
+        readonly property int tabButtonSpacing: 32
+
+        readonly property int versionTextSpacing: 12
+
+        readonly property int contentMargin: 16
+        readonly property int contentSpacing: 16
+        readonly property int contentTextMargin: 12
+        readonly property int contentTextSpacing: 8
+    }
+
     ColumnLayout {
         anchors.fill: parent
-        spacing: 30
+        spacing: 0
 
-        ColumnLayout {
-            id: content
+        StyledTabBar {
+            id: tabBar
+
+            Layout.topMargin: prv.tabTopMargin
+            Layout.bottomMargin: prv.tabBottomMargin
+            Layout.alignment: Qt.AlignHCenter
+            spacing: prv.tabButtonSpacing
+
+            StyledTabButton {
+                text: qsTrc("appshell/about", "Audacity")
+            }
+
+            StyledTabButton {
+                text: qsTrc("appshell/about", "Legal")
+            }
+        }
+
+        StackLayout {
+            id: stackLayout
 
             Layout.fillWidth: true
             Layout.fillHeight: true
-            Layout.topMargin: 36
-            Layout.leftMargin: 40
-            Layout.rightMargin: 40
 
-            spacing: 32
+            currentIndex: tabBar.currentIndex
 
-            Image {
-                id: logo
-                Layout.alignment: Qt.AlignHCenter
+            StyledFlickable {
+                id: audacityFlickable
+                contentHeight: audacityContent.height
 
-                source: "qrc:/qml/resources/mu_logo.svg"
-                sourceSize: Qt.size(100, 100)
+                Column {
+                    id: audacityContent
+                    width: audacityFlickable.width
 
-                MouseArea {
-                    anchors.fill: parent
+                    spacing: prv.contentSpacing
 
-                    property int clickCount: 0
+                    Image {
+                        width: parent.width
+                        source: "qrc:/resources/AboutBanner.png"
+                        fillMode: Image.PreserveAspectFit
 
-                    onClicked: {
-                        clickCount++
+                        MouseArea {
+                            anchors.fill: parent
 
-                        if (clickCount % 3 == 0) {
-                            aboutModel.toggleDevMode()
+                            property int clickCount: 0
+
+                            onClicked: {
+                                clickCount++
+                                if (clickCount % 3 === 0) {
+                                    aboutModel.toggleDevMode()
+                                }
+                            }
+                        }
+                    }
+
+                    Column {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.leftMargin: prv.contentMargin
+                        anchors.rightMargin: prv.contentMargin
+
+                        spacing: prv.versionTextSpacing
+
+                        StyledTextLabel {
+                            width: parent.width
+
+                            horizontalAlignment: Text.AlignHCenter
+
+                            text: aboutModel.appVersion()
+                            font: ui.theme.headerBoldFont
+                        }
+
+                        StyledTextLabel {
+                            width: parent.width
+
+                            horizontalAlignment: Text.AlignHCenter
+
+                            text: qsTrc("appshell/about", "Audacity the free, open source, cross-platform software for recording and editing sounds.")
+                            font: ui.theme.bodyFont
+                        }
+                    }
+
+                    Rectangle {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.leftMargin: prv.contentMargin
+                        anchors.rightMargin: prv.contentMargin
+
+                        height: creditsInner.height + prv.contentTextMargin * 2
+
+                        color: ui.theme.isDark ? ui.theme.extra["black_color"] : ui.theme.extra["white_color"]
+
+                        Column {
+                            id: creditsInner
+
+                            anchors.top: parent.top
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+
+                            anchors.margins: prv.contentTextMargin
+
+                            spacing: prv.contentTextSpacing
+
+                            StyledTextLabel {
+                                width: parent.width
+                                text: qsTrc("appshell/about", "Credits")
+                                font: ui.theme.bodyBoldFont
+                                horizontalAlignment: Text.AlignLeft
+                            }
+
+                            Repeater {
+                                model: aboutModel.creditList()
+
+                                Column {
+                                    width: parent.width
+                                    spacing: prv.contentTextSpacing
+
+                                    Loader {
+                                        width: parent.width
+
+                                        readonly property bool hasSubtitle: modelData.subtitle && modelData.subtitle.length > 0
+
+                                        sourceComponent: hasSubtitle ? titleWithSubtitle : titleOnly
+
+                                        Component {
+                                            id: titleOnly
+
+                                            StyledTextLabel {
+                                                width: parent.width
+
+                                                horizontalAlignment: Text.AlignLeft
+
+                                                text: modelData.title
+                                                font: ui.theme.bodyBoldFont
+                                            }
+                                        }
+
+                                        Component {
+                                            id: titleWithSubtitle
+
+                                            Column {
+                                                width: parent.width
+                                                spacing: prv.contentTextSpacing
+
+                                                StyledTextLabel {
+                                                    width: parent.width
+
+                                                    horizontalAlignment: Text.AlignLeft
+
+                                                    text: modelData.title
+                                                    font: ui.theme.bodyBoldFont
+                                                }
+
+                                                StyledTextLabel {
+                                                    width: parent.width
+
+                                                    horizontalAlignment: Text.AlignLeft
+
+                                                    text: modelData.subtitle
+                                                    font: ui.theme.bodyFont
+                                                }
+                                            }
+                                        }
+                                    }
+
+                                    StyledTextLabel {
+                                        width: parent.width
+
+                                        horizontalAlignment: Text.AlignLeft
+
+                                        text: modelData.credits.map(function (c) {
+                                            let isUrl = c.url && c.url.length > 0
+
+                                            if (isUrl) {
+                                                return qsTrc("appshell/about", "%1").arg('<a href="' + c.url + '">' + c.name + '</a>')
+                                            }
+
+                                            return c.role ? c.name + ", " + c.role : c.name
+                                        }).join("<br>")
+                                    }
+                                }
+                            }
+
+                            StyledTextLabel {
+                                text: {
+                                    let websiteUrl = aboutModel.appUrl()
+
+                                    qsTrc("appshell/about", "Audacity website: %1").arg('<a href="' + websiteUrl.url + '">' + websiteUrl.displayName + '</a>')
+                                }
+                                font: ui.theme.bodyFont
+                            }
+
+                            Column {
+                                width: parent.width
+                                spacing: 0
+
+                                StyledTextLabel {
+                                    text: qsTrc("appshell/about", "<b>Audacity®</b> software is copyright © 1999-2024 Audacity Team.")
+                                    font: ui.theme.bodyFont
+                                }
+
+                                StyledTextLabel {
+                                    text: qsTrc("appshell/about", "The name <b>Audacity</b> is a registered trademark.")
+                                    font: ui.theme.bodyFont
+                                }
+                            }
                         }
                     }
                 }
             }
 
-            Column {
-                spacing: 8
-                Layout.fillWidth: true
+            StyledFlickable {
+                id: legalFlickable
+                contentHeight: legalContent.height
 
-                StyledTextLabel {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    text: qsTrc("appshell/about", "Version:") + " " + aboutModel.appVersion()
-                    font: ui.theme.bodyBoldFont
-                }
+                Column {
+                    id: legalContent
+                    width: legalFlickable.width
 
-                Row {
-                    spacing: 4
-                    anchors.horizontalCenter: parent.horizontalCenter
+                    Column {
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.leftMargin: prv.contentMargin
+                        anchors.rightMargin: prv.contentMargin
 
-                    StyledTextLabel {
-                        anchors.verticalCenter: parent.verticalCenter
-                        text: qsTrc("appshell/about", "Revision:") + " " + aboutModel.appRevision()
-                    }
+                        spacing: prv.versionTextSpacing
 
-                    FlatButton {
-                        anchors.verticalCenter: parent.verticalCenter
-                        icon: IconCode.COPY
+                        StyledTextLabel {
+                            width: parent.width
 
-                        onClicked: {
-                            aboutModel.copyRevisionToClipboard()
+                            horizontalAlignment: Text.AlignHCenter
+
+                            text: qsTrc("appshell/about", "Privacy Policy")
+                            font: ui.theme.headerBoldFont
+                        }
+
+                        StyledTextLabel {
+                            width: parent.width
+
+                            horizontalAlignment: Text.AlignHCenter
+
+                            text: qsTrc("appshell/about", "App update checking and error reporting require network access. These features are optional.\nSee our Privacy policy for more info.")
+                            font: ui.theme.bodyFont
                         }
                     }
                 }
-            }
-
-            StyledTextLabel {
-                Layout.fillWidth: true
-                text: {
-                    let websiteUrl = aboutModel.appUrl()
-
-                    //: %1 will be a link to the Audacity website
-                    let line1 = qsTrc("appshell/about", "Visit %1 for new versions and more information.")
-                                .arg(`<a href="${websiteUrl.url}">${websiteUrl.displayName}</a>`)
-
-                    let line2 = qsTrc("appshell/about", "Get <a href=\"%1\">help</a> with the program or <a href=\"%2\">contribute</a> to its development.")
-                                .arg(aboutModel.forumUrl().url)
-                                .arg(aboutModel.contributionUrl().url)
-
-                    return line1 + "<br>" + line2
-                }
-                wrapMode: Text.WordWrap
-                maximumLineCount: 3
-            }
-
-            StyledTextLabel {
-                Layout.fillWidth: true
-
-                text: qsTrc("appshell/about", "For privacy information, see our <a href=\"%1\">privacy policy</a>.")
-                      .arg(aboutModel.privacyPolicyUrl().url)
-
-                wrapMode: Text.WordWrap
-                maximumLineCount: 3
-            }
-
-            StyledTextLabel {
-                Layout.fillWidth: true
-                text: qsTrc("appshell/about", "Copyright © 1999-2026 Audacity contributors and others.\nPublished under the <a href=\"%1\">GNU General Public License version 3</a>.")
-                      .arg("https://www.gnu.org/licenses/gpl-3.0.html")
-                      .replace("\n", "<br>")
-
-                wrapMode: Text.WordWrap
-                maximumLineCount: 3
             }
         }
 
@@ -149,8 +310,6 @@ StyledDialogView {
             Layout.alignment: Qt.AlignRight
             Layout.rightMargin: 16
             Layout.bottomMargin: 16
-
-            spacing: 12
 
             FlatButton {
                 text: qsTrc("global", "OK")

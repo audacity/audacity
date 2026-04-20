@@ -76,6 +76,7 @@ qt_add_resources(appshell appshell_resources
     PREFIX
         /
     FILES
+        resources/AboutBanner.png
         resources/Classic.svg
         resources/Colorful.svg
         resources/LoadingScreen.svg
