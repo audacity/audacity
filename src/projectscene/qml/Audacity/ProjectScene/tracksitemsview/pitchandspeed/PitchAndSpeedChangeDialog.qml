@@ -21,7 +21,6 @@ StyledDialogView {
 
     modal: true
     resizable: false
-    alwaysOnTop: true
 
     PitchAndSpeedChangeModel {
         id: changeModel
