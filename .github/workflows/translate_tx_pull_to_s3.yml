@@ -84,7 +84,7 @@ jobs:
         run: |
           bash ./buildscripts/ci/tools/s3_install.sh --s3_key ${{ secrets.AU_S3_KEY }} --s3_secret ${{ secrets.AU_S3_SECRET }}
 
-          bash ./buildscripts/ci/tools/make_build_number.sh
+          cmake -P ./buildscripts/ci/common/make_build_number_env.cmake
           BUILD_NUMBER=$(cat ./build.artifacts/env/build_number.env)
 
           echo "BUILD_NUMBER=$BUILD_NUMBER" | tee -a $GITHUB_ENV
