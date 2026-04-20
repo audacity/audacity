@@ -30,9 +30,12 @@ bool PluginManagerSortFilterProxy::acceptsRow(int sourceRow) const
 
     if (!m_view->m_searchText.isEmpty()) {
         const QString searchTextLower = m_view->m_searchText.toLower();
-        if (!meta.title.toQString().toLower().contains(searchTextLower)) {
-            return false;
+        for (auto str : { meta.title, meta.path.toString() }) {
+            if (str.toQString().toLower().contains(searchTextLower)) {
+                return true;
+            }
         }
+        return false;
     }
 
     return m_view->m_acceptEnabledDisabledState(meta)
@@ -75,6 +78,8 @@ int PluginManagerSortFilterProxy::compareCells(int column, int leftSourceRow, in
         return cmpStr(a.path.toString(), b.path.toString());
     case PluginManagerTableViewModel::typeColumnIndex:
         return cmpStr(utils::effectFamilyToString(a.family), utils::effectFamilyToString(b.family));
+    case PluginManagerTableViewModel::vendorColumnIndex:
+        return cmpStr(a.vendor, b.vendor);
     default:
         break;
     }
