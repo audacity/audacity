@@ -35,7 +35,8 @@ static const ActionCode CUT_PER_CLIP_RIPPLE_CODE("cut-per-clip-ripple");
 static const ActionCode CUT_PER_TRACK_RIPPLE_CODE("cut-per-track-ripple");
 static const ActionCode CUT_ALL_TRACKS_RIPPLE_CODE("cut-all-tracks-ripple");
 
-static const ActionCode DELETE_LEAVE_GAP_CODE("split-delete");
+static const ActionCode CUT_LEAVE_GAP_CODE("cut-leave-gap");
+static const ActionCode DELETE_LEAVE_GAP_CODE("delete-leave-gap");
 static const ActionCode DELETE_PER_CLIP_RIPPLE_CODE("delete-per-clip-ripple");
 static const ActionCode DELETE_PER_TRACK_RIPPLE_CODE("delete-per-track-ripple");
 static const ActionCode DELETE_ALL_TRACKS_RIPPLE_CODE("delete-all-tracks-ripple");
@@ -139,9 +140,12 @@ constexpr double MIN_CLIP_WIDTH = 3.0;
 // In principle, disabled are actions that modify the data involved in playback.
 static const std::vector<ActionCode> actionsDisabledDuringRecording {
     TRACKEDIT_CUT_CODE,
+    CUT_LEAVE_GAP_CODE,
     CUT_PER_CLIP_RIPPLE_CODE,
     CUT_PER_TRACK_RIPPLE_CODE,
+    CUT_ALL_TRACKS_RIPPLE_CODE,
     TRACKEDIT_DELETE_CODE,
+    DELETE_LEAVE_GAP_CODE,
     DELETE_PER_CLIP_RIPPLE_CODE,
     DELETE_PER_TRACK_RIPPLE_CODE,
     DELETE_ALL_TRACKS_RIPPLE_CODE,
@@ -213,10 +217,12 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, DISJOIN_CODE, this, &TrackeditActionsController::doGlobalDisjoin);
     dispatcher()->reg(this, DUPLICATE_CODE, this, &TrackeditActionsController::doGlobalDuplicate);
 
+    dispatcher()->reg(this, CUT_LEAVE_GAP_CODE, this, &TrackeditActionsController::doGlobalCutLeaveGap);
     dispatcher()->reg(this, CUT_PER_CLIP_RIPPLE_CODE, this, &TrackeditActionsController::doGlobalCutPerClipRipple);
     dispatcher()->reg(this, CUT_PER_TRACK_RIPPLE_CODE, this, &TrackeditActionsController::doGlobalCutPerTrackRipple);
     dispatcher()->reg(this, CUT_ALL_TRACKS_RIPPLE_CODE, this, &TrackeditActionsController::doGlobalCutAllTracksRipple);
 
+    dispatcher()->reg(this, DELETE_LEAVE_GAP_CODE, this, &TrackeditActionsController::doGlobalDeleteLeaveGap);
     dispatcher()->reg(this, DELETE_PER_CLIP_RIPPLE_CODE, this, &TrackeditActionsController::doGlobalDeletePerClipRipple);
     dispatcher()->reg(this, DELETE_PER_TRACK_RIPPLE_CODE, this, &TrackeditActionsController::doGlobalDeletePerTrackRipple);
     dispatcher()->reg(this, DELETE_ALL_TRACKS_RIPPLE_CODE, this, &TrackeditActionsController::doGlobalDeleteAllTracksRipple);
@@ -488,6 +494,31 @@ void TrackeditActionsController::doGlobalCut()
     }
 }
 
+void TrackeditActionsController::doGlobalCutLeaveGap()
+{
+    if (!selectionController()->timeSelectionIsEmpty()) {
+        auto selectedTracks = selectionController()->selectedTracks();
+        secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
+        secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
+
+        dispatcher()->dispatch(RANGE_SELECTION_SPLIT_CUT,
+                               ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
+
+        frequencySelectionController()->resetFrequencySelection();
+        return;
+    }
+
+    if (isFocusedItemClip()) {
+        dispatcher()->dispatch(MULTI_CLIP_CUT_CODE, ActionData::make_arg1(false));
+        return;
+    }
+
+    if (isFocusedItemLabel()) {
+        dispatcher()->dispatch(LABEL_CUT_MULTI_CODE, ActionData::make_arg1(false));
+        return;
+    }
+}
+
 void TrackeditActionsController::doGlobalCutPerClipRipple()
 {
     auto moveClips = ActionData::make_arg1(false);
@@ -636,13 +667,41 @@ void TrackeditActionsController::doGlobalDelete()
     }
 
     interactive()->errorSync(muse::trc("trackedit", "No audio selected"),
-                             muse::trc("trackedit", "Select the audio for Delete then try again."));
+                             muse::trc("trackedit", "Select the audio to delete and try again."));
 }
 
 void TrackeditActionsController::doGlobalCancel()
 {
     trackeditInteraction()->notifyAboutCancelDragEdit();
     trackNavigationController()->setIsNavigationActive(false);
+}
+
+void TrackeditActionsController::doGlobalDeleteLeaveGap()
+{
+    if (!selectionController()->timeSelectionIsEmpty()) {
+        auto selectedTracks = selectionController()->selectedTracks();
+        secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
+        secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
+
+        dispatcher()->dispatch(RANGE_SELECTION_SPLIT_DELETE,
+                               ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
+
+        frequencySelectionController()->resetFrequencySelection();
+        return;
+    }
+
+    if (isFocusedItemClip()) {
+        dispatcher()->dispatch(MULTI_CLIP_DELETE_CODE, ActionData::make_arg1(false));
+        return;
+    }
+
+    if (isFocusedItemLabel()) {
+        dispatcher()->dispatch(LABEL_DELETE_MULTI_CODE, ActionData::make_arg1(false));
+        return;
+    }
+
+    interactive()->errorSync(muse::trc("trackedit", "No audio selected"),
+                             muse::trc("trackedit", "Select the audio to delete and try again."));
 }
 
 void TrackeditActionsController::doGlobalDeletePerClipRipple()
@@ -665,7 +724,7 @@ void TrackeditActionsController::doGlobalDeletePerClipRipple()
     }
 
     interactive()->errorSync(muse::trc("trackedit", "No audio selected"),
-                             muse::trc("trackedit", "Select the audio for Delete then try again."));
+                             muse::trc("trackedit", "Select the audio to delete and try again."));
 }
 
 void TrackeditActionsController::doGlobalDeletePerTrackRipple()
@@ -688,7 +747,7 @@ void TrackeditActionsController::doGlobalDeletePerTrackRipple()
     }
 
     interactive()->errorSync(muse::trc("trackedit", "No audio selected"),
-                             muse::trc("trackedit", "Select the audio for Delete then try again."));
+                             muse::trc("trackedit", "Select the audio to delete and try again."));
 }
 
 void TrackeditActionsController::doGlobalDeleteAllTracksRipple()
@@ -719,7 +778,7 @@ void TrackeditActionsController::doGlobalDeleteAllTracksRipple()
     }
 
     interactive()->errorSync(muse::trc("trackedit", "No audio selected"),
-                             muse::trc("trackedit", "Select the audio for Delete then try again."));
+                             muse::trc("trackedit", "Select the audio to delete and try again."));
 }
 
 void TrackeditActionsController::doGlobalSplit()

@@ -323,8 +323,17 @@
         <key>curs-next-clip-boundary</key>
     </SC>
     <SC>
+        <key>cut-leave-gap</key>
+    </SC>
+    <SC>
+        <key>cut-per-clip-ripple</key>
+    </SC>
+    <SC>
         <key>cut-per-track-ripple</key>
         <seq>Ctrl+Shift+X</seq>
+    </SC>
+    <SC>
+        <key>cut-all-tracks-ripple</key>
     </SC>
     <SC>
         <key>duplicate</key>
@@ -361,6 +370,12 @@
     <SC>
         <key>preferences</key>
         <seq>Ctrl+,</seq>
+    </SC>
+    <SC>
+        <key>delete-leave-gap</key>
+    </SC>
+    <SC>
+        <key>delete-per-clip-ripple</key>
     </SC>
     <SC>
         <key>delete-per-track-ripple</key>
