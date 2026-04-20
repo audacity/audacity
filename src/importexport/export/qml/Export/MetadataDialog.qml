@@ -20,7 +20,6 @@ StyledDialogView {
     contentHeight: 625
 
     modal: true
-    alwaysOnTop: true
 
     property NavigationPanel navigation: NavigationPanel {
         name: root.title

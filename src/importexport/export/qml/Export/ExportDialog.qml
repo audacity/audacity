@@ -24,7 +24,6 @@ StyledDialogView {
     margins: 12
 
     modal: true
-    alwaysOnTop: true
 
     property int dropdownWidth: 358
     property int smallDropdownWidth: 364 * 0.65
