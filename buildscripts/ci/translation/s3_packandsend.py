@@ -34,12 +34,12 @@ s3Url = getS3Url()
 
 def processTsFile(prefix, langCode, data):
     print("Processing " + langCode)
-    filename = prefix + '_' + lang_code
+    filename = prefix + '_' + langCode
     tsFilePath = outputDir + filename + ".ts"
     qmFilePath = outputDir + filename + ".qm"
 
     if not os.path.isfile(tsFilePath):
-        print(prefix + ' ' + lang_code + " skipped (no .ts file — not 100% translated on Transifex yet)")
+        print(prefix + ' ' + langCode + " skipped (no .ts file — not 100% translated on Transifex yet)")
         return False
 
     lang_time = int(os.path.getmtime(tsFilePath))
@@ -62,18 +62,18 @@ def processTsFile(prefix, langCode, data):
         hash_file.update(file.read())
         file.close()
 
-        if lang_code not in data:
-            data[lang_code] = {}
-        if prefix not in data[lang_code]:
-            data[lang_code][prefix] = {}
+        if langCode not in data:
+            data[langCode] = {}
+        if prefix not in data[langCode]:
+            data[langCode][prefix] = {}
 
-        data[lang_code][prefix]["file_name"] = filename + ".qm"
-        data[lang_code][prefix]["hash"] = str(hash_file.hexdigest())
-        data[lang_code][prefix]["file_size"] = file_size
+        data[langCode][prefix]["file_name"] = filename + ".qm"
+        data[langCode][prefix]["hash"] = str(hash_file.hexdigest())
+        data[langCode][prefix]["file_size"] = file_size
 
         return True
     else:
-        print(prefix + ' ' + lang_code + " not changed")
+        print(prefix + ' ' + langCode + " not changed")
         return False
 
 
