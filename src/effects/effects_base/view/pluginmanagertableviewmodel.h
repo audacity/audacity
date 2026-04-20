@@ -108,9 +108,10 @@ private:
 
     static constexpr auto enabledDisabledColumnIndex = 0;
     static constexpr auto nameColumnIndex = 1;
-    static constexpr auto pathColumnIndex = 2;
-    static constexpr auto typeColumnIndex = 3;
-    static constexpr auto columnCount = 4;
+    static constexpr auto vendorColumnIndex = 2;
+    static constexpr auto pathColumnIndex = 3;
+    static constexpr auto typeColumnIndex = 4;
+    static constexpr auto columnCount = 5;
 
     void classBegin() override {}
     void componentComplete() override;

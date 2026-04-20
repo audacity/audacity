@@ -18,6 +18,7 @@ namespace au::effects {
 namespace {
 constexpr auto enabledColumnWidth = 100;
 constexpr auto nameColumnWidth = 152;
+constexpr auto vendorColumnWidth = 152;
 constexpr auto pathColumnWidth = 296;
 constexpr auto typeColumnWidth = 152;
 }
@@ -45,6 +46,7 @@ void PluginManagerTableViewModel::componentComplete()
     m_sortFilterProxy->toggleColumnSort(enabledDisabledColumnIndex);
     m_sortFilterProxy->toggleColumnSort(pathColumnIndex);
     m_sortFilterProxy->toggleColumnSort(typeColumnIndex);
+    m_sortFilterProxy->toggleColumnSort(vendorColumnIndex);
     m_sortFilterProxy->toggleColumnSort(nameColumnIndex);
 }
 
@@ -183,7 +185,7 @@ void PluginManagerTableViewModel::setEffectTypeSelectedIndex(int index)
 
 int PluginManagerTableViewModel::totalWidth() const
 {
-    return enabledColumnWidth + nameColumnWidth + pathColumnWidth + typeColumnWidth;
+    return enabledColumnWidth + nameColumnWidth + vendorColumnWidth + pathColumnWidth + typeColumnWidth;
 }
 
 void PluginManagerTableViewModel::setAlsoRescanBrokenPlugins(bool alsoRescanBrokenPlugins)
@@ -212,6 +214,8 @@ QVector<muse::uicomponents::TableViewHeader*> PluginManagerTableViewModel::makeH
                                      TableViewCellEditMode::Mode::StartInEdit, enabledColumnWidth);
     hHeaders << makeHorizontalHeader(muse::qtrc("effects", "Name"),
                                      TableViewCellType::Type::String, TableViewCellEditMode::Mode::DoubleClick, nameColumnWidth);
+    hHeaders << makeHorizontalHeader(muse::qtrc("effects", "Vendor"),
+                                     TableViewCellType::Type::String, TableViewCellEditMode::Mode::DoubleClick, vendorColumnWidth);
     hHeaders << makeHorizontalHeader(muse::qtrc("effects", "Path"),
                                      TableViewCellType::Type::String, TableViewCellEditMode::Mode::DoubleClick, pathColumnWidth);
     hHeaders << makeHorizontalHeader(muse::qtrc("effects", "Type"),
@@ -248,6 +252,7 @@ QVector<QVector<muse::uicomponents::TableViewCell*> > PluginManagerTableViewMode
         QVector<muse::uicomponents::TableViewCell*> row;
         row.append(makeCell(muse::Val(meta.isActivated && meta.isLoadable)));
         row.append(makeCell(muse::Val(std::move(title))));
+        row.append(makeCell(muse::Val(meta.vendor.toQString())));
         row.append(makeCell(muse::Val(meta.path.toQString())));
         row.append(makeCell(muse::Val(utils::effectFamilyToString(meta.family).toQString())));
         table.append(row);

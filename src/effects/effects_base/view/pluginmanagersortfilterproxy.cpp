@@ -30,7 +30,7 @@ bool PluginManagerSortFilterProxy::acceptsRow(int sourceRow) const
 
     if (!m_view->m_searchText.isEmpty()) {
         const QString searchTextLower = m_view->m_searchText.toLower();
-        for (auto str : { meta.title, meta.path.toString() }) {
+        for (auto str : { meta.title, meta.vendor, meta.path.toString() }) {
             if (str.toQString().toLower().contains(searchTextLower)) {
                 return true;
             }
