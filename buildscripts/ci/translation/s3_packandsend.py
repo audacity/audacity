@@ -40,7 +40,8 @@ def processTsFile(prefix, langCode, data):
 
     if not os.path.isfile(tsFilePath):
         print(prefix + ' ' + langCode + " skipped (no .ts file — not 100% translated on Transifex yet)")
-        return False
+        removed = data.pop(langCode, None) is not None
+        return False, removed
 
     lang_time = int(os.path.getmtime(tsFilePath))
     cur_time = int(time.time())
@@ -71,10 +72,10 @@ def processTsFile(prefix, langCode, data):
         data[langCode][prefix]["hash"] = str(hash_file.hexdigest())
         data[langCode][prefix]["file_size"] = file_size
 
-        return True
+        return True, True
     else:
         print(prefix + ' ' + langCode + " not changed")
-        return False
+        return False, False
 
 
 newDetailsFile = False
@@ -100,8 +101,8 @@ else:
 
 translationChanged = newDetailsFile
 for lang_code, languageProps in langCodeNameDict.items():
-    updateAudacity = processTsFile("audacity", lang_code, data)
-    translationChanged = updateAudacity or translationChanged
+    updateAudacity, detailsChanged = processTsFile("audacity", lang_code, data)
+    translationChanged = detailsChanged or translationChanged
 
     if updateAudacity:
         # create a zip file, compute size, hash, add it to json and save to s3
