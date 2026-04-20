@@ -844,6 +844,11 @@ muse::Ret EffectExecutionScenario::doPreviewEffect(const EffectId& effectId, Eff
         if (!success) {
             return muse::make_ret(muse::Ret::Code::InternalError);
         }
+
+        // Time-warping effects (e.g. Paulstretch) may update mT1 during
+        // Process() to reflect the new selection end after stretching.
+        // Read it back so the playback region covers the processed output.
+        newCtx.t1 = effect.mT1;
     }
 
     //! ============================================================================
