@@ -325,7 +325,7 @@ MenuItem* AppMenuModel::makeRecordMenu()
         makeMenuItem("record-on-current-track"),
         makeMenuItem("record-on-new-track"),
         makeMenuItem("set-up-timed-recording"),
-        makeMenuItem("punch-and-roll-record"),
+        makeMenuItem("action://record/lead-in-recording"),
         makeSeparator(),
         makeMenuItem("toggle-sound-activated-recording"),
         makeMenuItem("set-sound-activation-level"),
@@ -405,13 +405,6 @@ MenuItem* AppMenuModel::makeExtraMenu()
         makeMenuItem("regular-interval-labels"),
     };
 
-    //! TODO AU4
-    // put on top
-    // if (updateConfiguration()->isAppUpdatable()) {
-    //     helpItems.push_front(makeSeparator());
-    //     helpItems.push_front(makeMenuItem("check-update"));
-    // }
-
     return makeMenu(TranslatableString("appshell/menu/extra", "&Extra"), extraItems, "menu-extra");
 }
 
@@ -424,19 +417,16 @@ MenuItem* AppMenuModel::makeHelpMenu()
         makeMenu(TranslatableString("appshell/menu/diagnostics", "Diagnostics"), makeDiagnosticsItems(), "menu-diagnostics", false),
         makeSeparator(),
         makeMenuItem("link-account"),
-        makeMenuItem("updates"),
         makeMenuItem("about-audacity"),
         makeMenuItem("about-qt", MenuItemRole::AboutQtRole),
         makeSeparator(),
         makeMenuItem("revert-factory")
     };
 
-    //! TODO AU4
-    // put on top
-    // if (updateConfiguration()->isAppUpdatable()) {
-    //     helpItems.push_front(makeSeparator());
-    //     helpItems.push_front(makeMenuItem("check-update"));
-    // }
+    if (updateConfiguration()->isAppUpdatable()) {
+        helpItems.push_front(makeSeparator());
+        helpItems.push_front(makeMenuItem("check-update"));
+    }
 
     return makeMenu(TranslatableString("appshell/menu/help", "&Help"), helpItems, "menu-help");
 }
@@ -643,12 +633,11 @@ MenuItemList AppMenuModel::makeZoomItems()
     MenuItemList items {
         makeMenuItem("zoom-in"),
         makeMenuItem("zoom-out"),
+        makeMenuItem("zoom-default"),
         makeMenuItem("zoom-to-selection"),
         makeMenuItem("zoom-toggle"),
-        makeMenuItem("zoom-reset"),
         makeSeparator(),
         makeMenuItem("zoom-to-fit-project"),
-        makeMenuItem("fit-view-to-project"),
         makeMenuItem("collapse-all-tracks"),
         makeMenuItem("expand-all-tracks")
     };

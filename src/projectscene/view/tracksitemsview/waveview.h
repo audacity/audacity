@@ -22,6 +22,7 @@ class WaveView : public QQuickPaintedItem, public muse::async::Asyncable, public
     Q_PROPERTY(TimelineContext * context READ timelineContext WRITE setTimelineContext NOTIFY timelineContextChanged FINAL)
     Q_PROPERTY(ClipKey clipKey READ clipKey WRITE setClipKey NOTIFY clipKeyChanged FINAL)
     Q_PROPERTY(QColor clipColor READ clipColor WRITE setClipColor NOTIFY clipColorChanged FINAL)
+    Q_PROPERTY(QColor clipSelectedColor READ clipSelectedColor WRITE setClipSelectedColor NOTIFY clipSelectedColorChanged FINAL)
     Q_PROPERTY(bool clipSelected READ clipSelected WRITE setClipSelected NOTIFY clipSelectedChanged FINAL)
     Q_PROPERTY(double channelHeightRatio READ channelHeightRatio WRITE setChannelHeightRatio NOTIFY channelHeightRatioChanged FINAL)
 
@@ -57,6 +58,8 @@ public:
     void setClipKey(const ClipKey& newClipKey);
     QColor clipColor() const;
     void setClipColor(const QColor& newClipColor);
+    QColor clipSelectedColor() const;
+    void setClipSelectedColor(const QColor& newClipSelectedColor);
     bool clipSelected() const;
     void setClipSelected(bool newClipSelected);
     double startTime() const { return m_clipTime.startTime; }
@@ -98,6 +101,7 @@ signals:
     void timelineContextChanged();
     void clipKeyChanged();
     void clipColorChanged();
+    void clipSelectedColorChanged();
     void clipTimeChanged();
     void clipSelectedChanged();
     void channelHeightRatioChanged();
@@ -112,7 +116,7 @@ private:
     void updateView();
     void onWaveZoomChanged();
     IWavePainter::Params getWavePainterParams() const;
-    void applyColorfulStyle(IWavePainter::Params& params, const QColor& clipColor, bool selected) const;
+    void applyColorfulStyle(IWavePainter::Params& params, const QColor& clipColor, const QColor& clipSelectedColor, bool selected) const;
     void applyClassicStyle(IWavePainter::Params& params, bool selected) const;
     void pushProjectHistorySampleEdit();
 
@@ -121,6 +125,7 @@ private:
     TimelineContext* m_context = nullptr;
     ClipKey m_clipKey;
     QColor m_clipColor;
+    QColor m_clipSelectedColor;
     double m_clipLeft = 0;
     double m_channelHeightRatio = 0.5;
     bool m_clipSelected = false;

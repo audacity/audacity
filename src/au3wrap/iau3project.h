@@ -5,6 +5,9 @@
 
 #include <string>
 #include <memory>
+#include <vector>
+#include <cstdint>
+#include <optional>
 
 #include "global/io/path.h"
 #include "global/types/ret.h"
@@ -25,6 +28,7 @@ public:
     [[nodiscard]] virtual muse::Ret open() = 0;
     [[nodiscard]] virtual muse::Ret load(const muse::io::path_t& filePath, bool ignoreAutosave = false) = 0;
     virtual bool save(const muse::io::path_t& fileName) = 0;
+    virtual void saveThumbnail(std::vector<uint8_t> pngData) = 0;
     virtual void close() = 0;
 
     virtual std::string title() const = 0;
@@ -55,5 +59,14 @@ public:
     virtual std::shared_ptr<IAu3Project> create(const muse::modularity::ContextPtr& ctx) const = 0;
 
     [[nodiscard]] virtual muse::Ret removeUnsavedData(const muse::io::path_t& projectPath) const = 0;
+};
+
+class IAu3ProjectReader : MODULE_GLOBAL_INTERFACE
+{
+    INTERFACE_ID(IAu3ProjectReader)
+public:
+    virtual ~IAu3ProjectReader() = default;
+
+    virtual std::optional<std::vector<uint8_t> > readProjectThumbnail(const muse::io::path_t& projectPath) const = 0;
 };
 }

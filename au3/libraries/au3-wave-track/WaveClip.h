@@ -842,8 +842,8 @@ public:
     int64_t GetGroupId() const;
     void SetGroupId(int64_t id);
 
-    void SetColor(const wxString& color);
-    const wxString& GetColor() const;
+    void SetColorIndex(int colorIndex);
+    int GetColorIndex() const;
 
     //! Selection state for clip selection persistence
     void SetSelected(bool selected);
@@ -1067,7 +1067,7 @@ private:
 
     int64_t mGroupId = -1;
 
-    wxString mColor;
+    int mColorIndex = 0;
 
     bool mSelected{ false };
 };

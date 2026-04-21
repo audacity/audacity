@@ -7,6 +7,7 @@
 #include "pluginregistrationapp.h"
 
 #include "muse_framework_config.h"
+#include "app_config.h"
 
 #include "framework/diagnostics/diagnosticsmodule.h"
 #include "framework/draw/drawmodule.h"
@@ -20,6 +21,11 @@
 #include "framework/dockwindow/dockmodule.h"
 #include "framework/cloud/cloudmodule.h"
 #include "framework/network/networkmodule.h"
+#ifdef MUSE_MODULE_UPDATE
+#include "framework/update/updatemodule.h"
+#else
+#include "framework/stubs/update/updatestubmodule.h"
+#endif
 #include "framework/learn/learnmodule.h"
 #include "framework/languages/languagesmodule.h"
 #include "framework/workspace/workspacemodule.h"
@@ -89,24 +95,25 @@
 using namespace muse;
 using namespace au::app;
 
-std::shared_ptr<muse::IApplication> AppFactory::newApp(const CommandLineParser& parser) const
+std::shared_ptr<muse::IApplication> AppFactory::newApp(const std::shared_ptr<AudacityCmdOptions>& options) const
 {
-    IApplication::RunMode runMode = parser.runMode();
-
-    switch (runMode) {
-    case IApplication::RunMode::GuiApp:
-        return newGuiApp(parser.options());
-    case IApplication::RunMode::ConsoleApp:
-        // No console mode for now
-        return newGuiApp(parser.options());
-    case IApplication::RunMode::AudioPluginRegistration:
-        return newPluginRegistrationApp(parser.audioPluginRegistration());
+    IF_ASSERT_FAILED(options) {
+        return nullptr;
     }
 
-    return newGuiApp(parser.options());
+    switch (options->runMode) {
+    case IApplication::RunMode::GuiApp:
+    case IApplication::RunMode::ConsoleApp:
+        // No console mode for now
+        return newGuiApp(options);
+    case IApplication::RunMode::AudioPluginRegistration:
+        return newPluginRegistrationApp(options);
+    }
+
+    return newGuiApp(options);
 }
 
-std::shared_ptr<muse::IApplication> AppFactory::newGuiApp(const CommandLineParser::Options& options) const
+std::shared_ptr<muse::IApplication> AppFactory::newGuiApp(const std::shared_ptr<AudacityCmdOptions>& options) const
 {
     std::shared_ptr<GuiApp> app = std::make_shared<GuiApp>(options);
 
@@ -131,6 +138,7 @@ std::shared_ptr<muse::IApplication> AppFactory::newGuiApp(const CommandLineParse
 #endif
     app->addModule(new muse::cloud::CloudModule());
     app->addModule(new muse::network::NetworkModule());
+    app->addModule(new muse::update::UpdateModule());
     app->addModule(new muse::extensions::ExtensionsModule());
 #ifdef MUSE_MODULE_AUTOBOT
     app->addModule(new muse::autobot::AutobotModule());
@@ -167,9 +175,9 @@ std::shared_ptr<muse::IApplication> AppFactory::newGuiApp(const CommandLineParse
     return app;
 }
 
-std::shared_ptr<muse::IApplication> AppFactory::newPluginRegistrationApp(const CommandLineParser::AudioPluginRegistration& task) const
+std::shared_ptr<muse::IApplication> AppFactory::newPluginRegistrationApp(const std::shared_ptr<AudacityCmdOptions>& options) const
 {
-    std::shared_ptr<PluginRegistrationApp> app = std::make_shared<PluginRegistrationApp>(task);
+    std::shared_ptr<PluginRegistrationApp> app = std::make_shared<PluginRegistrationApp>(options);
 
     app->addModule(new muse::audioplugins::AudioPluginsModule());
     app->addModule(new muse::actions::ActionsModule());

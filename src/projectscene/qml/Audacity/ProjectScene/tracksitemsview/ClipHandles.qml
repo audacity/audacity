@@ -11,6 +11,7 @@ Item {
     property var canvas: null
     property bool handlesHovered: false
     property bool handlesVisible: false
+    property bool altPressed: false
 
     property bool collapsed: false
     property int clipHeight: 114
@@ -155,7 +156,21 @@ Item {
 
             anchors.fill: parent
             hoverEnabled: true
-            cursorShape: Qt.SizeHorCursor
+            cursorShape: Qt.BlankCursor
+
+            function updateCustomCursor() {
+                var src = root.altPressed
+                    ? ":/images/customCursorShapes/ClipStretchLeft.png"
+                    : ":/images/customCursorShapes/ClipTrimLeft.png"
+                CustomCursorProvider.setCursorShape(leftTrimMa, src)
+            }
+
+            Component.onCompleted: updateCustomCursor()
+
+            Connections {
+                target: root
+                function onAltPressedChanged() { leftTrimMa.updateCustomCursor() }
+            }
 
             onPressed: function (e) {
                 root.clipStartEditRequested()
@@ -299,7 +314,21 @@ Item {
 
             anchors.fill: parent
             hoverEnabled: true
-            cursorShape: Qt.SizeHorCursor
+            cursorShape: Qt.BlankCursor
+
+            function updateCustomCursor() {
+                var src = root.altPressed
+                    ? ":/images/customCursorShapes/ClipStretchRight.png"
+                    : ":/images/customCursorShapes/ClipTrimRight.png"
+                CustomCursorProvider.setCursorShape(rightTrimMa, src)
+            }
+
+            Component.onCompleted: updateCustomCursor()
+
+            Connections {
+                target: root
+                function onAltPressedChanged() { rightTrimMa.updateCustomCursor() }
+            }
 
             onPressed: function (e) {
                 root.clipStartEditRequested()
@@ -461,7 +490,9 @@ Item {
             id: leftTimeMa
             anchors.fill: parent
             hoverEnabled: true
-            cursorShape: Qt.SizeHorCursor
+            cursorShape: Qt.BlankCursor
+
+            Component.onCompleted: CustomCursorProvider.setCursorShape(leftTimeMa, ":/images/customCursorShapes/ClipStretchLeft.png")
 
             onPressed: {
                 root.clipStartEditRequested()
@@ -620,7 +651,9 @@ Item {
             id: rightTimeMa
             anchors.fill: parent
             hoverEnabled: true
-            cursorShape: Qt.SizeHorCursor
+            cursorShape: Qt.BlankCursor
+
+            Component.onCompleted: CustomCursorProvider.setCursorShape(rightTimeMa, ":/images/customCursorShapes/ClipStretchRight.png")
 
             onPressed: {
                 root.clipStartEditRequested()

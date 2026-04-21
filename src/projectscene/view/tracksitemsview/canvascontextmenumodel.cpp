@@ -21,8 +21,18 @@ void CanvasContextMenuModel::load()
 
 MenuItemList CanvasContextMenuModel::makeItems()
 {
+    MenuItemList pasteAndItems {
+        makeMenuItem("action://trackedit/paste-overlap",
+                     muse::TranslatableString("canvas", "Paste and overlap")),
+        makeMenuItem("action://trackedit/paste-insert",
+                     muse::TranslatableString("canvas", "Paste and make room on this track")),
+        makeMenuItem("action://trackedit/paste-insert-all-tracks-ripple",
+                     muse::TranslatableString("canvas", "Paste and make room on all tracks")),
+    };
+
     MenuItemList items {
         makeMenuItem("action://trackedit/paste-default"),
+        makeMenu(muse::TranslatableString("canvas", "Paste and…"), pasteAndItems, "menu-paste-and"),
         makeSeparator(),
         makeMenuItem("new-mono-track"),
         makeMenuItem("new-stereo-track"),

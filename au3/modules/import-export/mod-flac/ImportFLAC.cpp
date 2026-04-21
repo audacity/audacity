@@ -129,7 +129,7 @@ FLAC__StreamDecoderWriteStatus MyFLACFile::write_callback(const FLAC__Frame* fra
     // Don't let C++ exceptions propagate through libflac
     return GuardedCall< FLAC__StreamDecoderWriteStatus >([&] {
         unsigned chn = 0;
-        ImportUtils::ForEachChannel(*mFile->mTrack, [&](auto& channel)
+        ImportUtils::ForEachChannel(*mFile->mTracks, [&](auto& channel)
         {
             if (frame->header.bits_per_sample == 8) {
                 auto tmp = ArrayOf< short > { frame->header.blocksize };
@@ -141,7 +141,11 @@ FLAC__StreamDecoderWriteStatus MyFLACFile::write_callback(const FLAC__Frame* fra
                                      frame->header.blocksize, 1,
                                      int16Sample);
             } else if (frame->header.bits_per_sample <= 16) {
-                channel.AppendBuffer((samplePtr)buffer[chn],
+                auto tmp = ArrayOf< short >{ frame->header.blocksize };
+                for (unsigned int s = 0; s < frame->header.blocksize; s++) {
+                    tmp[s] = buffer[chn][s];
+                }
+                channel.AppendBuffer((samplePtr)tmp.get(),
                                      int16Sample,
                                      frame->header.blocksize, 1,
                                      int16Sample);
@@ -329,7 +333,7 @@ void FLACImportFileHandle::Import(
 
     wxASSERT(mStreamInfoDone);
 
-    mTrack = ImportUtils::NewWaveTrack(*trackFactory, mNumChannels, mFormat, mSampleRate);
+    mTracks = trackFactory->CreateMany(mNumChannels, ImportUtils::ChooseFormat(mFormat), mSampleRate);
 
     mFile->mImportProgressListener = &progressListener;
 
@@ -346,7 +350,7 @@ void FLACImportFileHandle::Import(
         return;
     }
 
-    ImportUtils::FinalizeImport(outTracks, *mTrack);
+    ImportUtils::FinalizeImport(outTracks, std::move(*mTracks));
 
     wxString comment;
     wxString description;

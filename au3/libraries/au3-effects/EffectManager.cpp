@@ -35,61 +35,6 @@ EffectManager& EffectManager::Get()
     return em;
 }
 
-// Here solely for the purpose of Nyquist Workbench until
-// a better solution is devised.
-const PluginID& EffectManager::RegisterEffect(
-    std::unique_ptr<EffectPlugin> uEffect)
-{
-    auto pEffect = uEffect.get();
-    const PluginID& ID
-        =PluginManager::Get().RegisterPlugin(std::move(uEffect), PluginTypeEffect);
-    mEffects[ID] = { pEffect, {} };
-    return ID;
-}
-
-// Here solely for the purpose of Nyquist Workbench until
-// a better solution is devised.
-void EffectManager::UnregisterEffect(const PluginID& ID)
-{
-    PluginID id = ID;
-    PluginManager::Get().UnregisterPlugin(id);
-    mEffects.erase(id);
-}
-
-TranslatableString EffectManager::GetEffectFamilyName(const PluginID& ID)
-{
-    if (auto description = PluginManager::Get().GetPlugin(ID)) {
-        return TranslatableString { description->GetEffectFamily(), {} };
-    }
-
-    auto effect = GetEffect(ID);
-    if (effect) {
-        return effect->GetDefinition().GetFamily().Msgid();
-    }
-    return {};
-}
-
-TranslatableString EffectManager::GetVendorName(const PluginID& ID)
-{
-    if (auto description = PluginManager::Get().GetPlugin(ID)) {
-        return TranslatableString { description->GetVendor(), {} };
-    }
-
-    auto effect = GetEffect(ID);
-    if (effect) {
-        return effect->GetDefinition().GetVendor().Msgid();
-    }
-    return {};
-}
-
-bool EffectManager::IsHidden(const PluginID& ID)
-{
-    if (auto effect = GetEffect(ID)) {
-        return effect->GetDefinition().IsHiddenFromMenus();
-    }
-    return false;
-}
-
 void EffectManager::SetSkipStateFlag(bool flag)
 {
     mSkipStateFlag = flag;
@@ -121,96 +66,20 @@ RegistryPaths GetUserPresets(EffectPlugin& host)
     return presets;
 }
 
-bool EffectManager::HasPresets(const PluginID& ID)
+EffectPlugin* EffectManager::GetEffect(const PluginID& ID, const EffectLoader& effectLoader)
 {
-    auto effect = GetEffect(ID);
-
-    if (!effect) {
-        return false;
-    }
-
-    return GetUserPresets(*effect).size() > 0
-           || effect->GetDefinition().GetFactoryPresets().size() > 0
-           || HasCurrentSettings(*effect)
-           || HasFactoryDefaults(*effect);
+    return DoGetEffect(ID, effectLoader).effect;
 }
 
-// This function is used only in the macro programming user interface
-wxString EffectManager::GetPreset(
-    const PluginID& ID, const wxString& params, EffectPresetDialog dialog)
+EffectSettings* EffectManager::GetDefaultSettings(const PluginID& ID, const EffectLoader& effectLoader)
 {
-    auto effect = GetEffect(ID);
-
-    if (!effect) {
-        return wxEmptyString;
-    }
-
-    CommandParameters eap(params);
-
-    wxString preset;
-    if (eap.HasEntry(wxT("Use Preset"))) {
-        preset = eap.Read(wxT("Use Preset"));
-    }
-
-    if (const auto answer = dialog(*effect, preset)) {
-        preset = *answer;
-    } else {
-        preset = wxEmptyString;
-    }
-
-    if (preset.empty()) {
-        return preset;
-    }
-
-    // This cleans a config "file" backed by a string in memory.
-    eap.DeleteAll();
-
-    eap.Write(wxT("Use Preset"), preset);
-    eap.GetParameters(preset);
-
-    return preset;
-}
-
-// This function is used only in the macro programming user interface
-wxString EffectManager::GetDefaultPreset(const PluginID& ID)
-{
-    auto effect = GetEffect(ID);
-
-    if (!effect) {
-        return wxEmptyString;
-    }
-
-    wxString preset;
-    if (HasCurrentSettings(*effect)) {
-        preset = EffectPlugin::kCurrentSettingsIdent;
-    } else if (HasFactoryDefaults(*effect)) {
-        preset = EffectPlugin::kFactoryDefaultsIdent;
-    }
-
-    if (!preset.empty()) {
-        CommandParameters eap;
-
-        eap.Write(wxT("Use Preset"), preset);
-        eap.GetParameters(preset);
-    }
-
-    return preset;
-}
-
-EffectPlugin* EffectManager::GetEffect(const PluginID& ID)
-{
-    return DoGetEffect(ID).effect;
-}
-
-EffectSettings* EffectManager::GetDefaultSettings(const PluginID& ID)
-{
-    return GetEffectAndDefaultSettings(ID).second;
+    return GetEffectAndDefaultSettings(ID, effectLoader).second;
 }
 
 std::pair<EffectPlugin*, EffectSettings*>
-EffectManager::GetEffectAndDefaultSettings(const PluginID& ID)
+EffectManager::GetEffectAndDefaultSettings(const PluginID& ID, const EffectLoader& effectLoader)
 {
-    auto& results = DoGetEffect(ID);
+    auto& results = DoGetEffect(ID, effectLoader);
     if (results.effect) {
         return { results.effect, &results.settings };
     } else {
@@ -250,19 +119,18 @@ void InitializePreset(
 }
 
 std::pair<ComponentInterface*, EffectSettings>
-LoadComponent(const PluginID& ID)
+LoadComponent(EffectSettingsManager* manager)
 {
-    if (auto result = dynamic_cast<EffectSettingsManager*>(
-            PluginManager::Get().Load(ID))) {
-        auto settings = result->MakeSettings();
-        InitializePreset(*result, settings);
-        return { result, std::move(settings) };
+    if (manager) {
+        auto settings = manager->MakeSettings();
+        InitializePreset(*manager, settings);
+        return { manager, std::move(settings) };
     }
     return { nullptr, {} };
 }
 }
 
-EffectAndDefaultSettings& EffectManager::DoGetEffect(const PluginID& ID)
+EffectAndDefaultSettings& EffectManager::DoGetEffect(const PluginID& ID, const EffectLoader& effectLoader)
 {
     static EffectAndDefaultSettings empty;
 
@@ -275,7 +143,7 @@ EffectAndDefaultSettings& EffectManager::DoGetEffect(const PluginID& ID)
         return iter->second;
     } else {
         // This will instantiate the effect client if it hasn't already been done
-        auto [component, settings] = LoadComponent(ID);
+        auto [component, settings] = LoadComponent(effectLoader(ID));
         if (!component) {
             return empty;
         }
@@ -289,7 +157,7 @@ EffectAndDefaultSettings& EffectManager::DoGetEffect(const PluginID& ID)
 }
 
 const EffectInstanceFactory*
-EffectManager::GetInstanceFactory(const PluginID& ID)
+EffectManager::GetInstanceFactory(const PluginID& ID, const EffectLoader& effectLoader)
 {
-    return Get().GetEffect(ID);
+    return Get().GetEffect(ID, effectLoader);
 }

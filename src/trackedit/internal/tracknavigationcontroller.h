@@ -12,7 +12,7 @@
 #include "framework/ui/inavigationcontroller.h"
 #include "trackedit/iselectioncontroller.h"
 #include "context/iglobalcontext.h"
-#include "itrackeditinteraction.h"
+#include "trackedit/itrackeditinteraction.h"
 
 #include "trackedit/internal/itracknavigationcontroller.h"
 
@@ -52,6 +52,8 @@ public:
     muse::async::Channel<TrackItemKey> openContextMenuRequested() const override;
 
 private:
+    friend class TrackNavigationControllerTests;
+
     TrackItemKey focusedItemKey() const;
     bool isFocusedItemValid() const;
     bool isFocusedItemLabel() const;
@@ -72,8 +74,13 @@ private:
 
     void navigateToNextItem();
     void navigateToPrevItem();
+    void navigateToAboveItem();
+    void navigateToBelowItem();
     void navigateToFirstItem();
     void navigateToLastItem();
+
+    TrackItemKey findClosestItemOnTrack(const TrackId& trackId, double referenceStartTime) const;
+    double itemStartTime(const TrackItemKey& key) const;
 
     void toggleSelection();
     void trackRangeSelection();
@@ -93,6 +100,8 @@ private:
 
     std::optional<TrackId> m_selectionStart;
     std::optional<TrackId> m_lastSelectedTrack;
+
+    std::optional<double> m_savedItemStartTime;
 
     TrackItemKey m_focusedItemKey;
     muse::async::Channel<TrackItemKey, bool /*highlight*/> m_focusedItemChanged;

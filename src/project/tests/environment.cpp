@@ -62,13 +62,21 @@ static muse::testing::SuiteEnvironment audacityproject_se
     {
     });
 
-    static std::vector<std::pair<std::string /*name*/, std::string /*color*/> > colors = {
-        { "blue", "#0000FF" },
-        { "red", "#FF0000" },
+    static std::vector<au::projectscene::ClipColorInfo> colorInfos = {
+        { "blue", 1 },
+        { "red", 2 },
     };
 
-    ON_CALL(*projectSceneConfigurator, clipColors())
-    .WillByDefault(::testing::ReturnRef(colors));
+    ON_CALL(*projectSceneConfigurator, clipColorInfos())
+    .WillByDefault(::testing::ReturnRef(colorInfos));
+    ON_CALL(*projectSceneConfigurator, clipColor(1))
+    .WillByDefault(::testing::Return(muse::Color(0x00, 0x00, 0xFF)));
+    ON_CALL(*projectSceneConfigurator, clipColor(2))
+    .WillByDefault(::testing::Return(muse::Color(0xFF, 0x00, 0x00)));
+    ON_CALL(*projectSceneConfigurator, clipSelectedColor(1))
+    .WillByDefault(::testing::Return(muse::Color(0x80, 0x80, 0xFF)));
+    ON_CALL(*projectSceneConfigurator, clipSelectedColor(2))
+    .WillByDefault(::testing::Return(muse::Color(0xFF, 0x80, 0x80)));
 
     muse::modularity::globalIoc()->unregister<au::projectscene::IProjectSceneConfiguration>("utests");
     muse::modularity::globalIoc()->registerExport<au::projectscene::IProjectSceneConfiguration>("utests", projectSceneConfigurator);

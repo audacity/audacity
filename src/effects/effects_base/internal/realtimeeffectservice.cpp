@@ -7,6 +7,7 @@
 
 #include "au3-wave-track/WaveTrack.h"
 #include "au3-effects/EffectManager.h"
+#include "au3-effects/Effect.h"
 #include "au3-realtime-effects/RealtimeEffectState.h"
 #include "au3-realtime-effects/RealtimeEffectList.h"
 
@@ -426,7 +427,9 @@ const EffectInstanceFactory* RealtimeEffectService::getInstanceFactory(const Plu
     if (!provider->loadEffect(EffectId::fromStdString(id.ToStdString()))) {
         return nullptr;
     }
-    return EffectManager::GetInstanceFactory(id);
+    return EffectManager::GetInstanceFactory(id, [provider](const PluginID& id) -> EffectSettingsManager* {
+        return provider->effect(muse::String::fromStdString(id.ToStdString()));
+    });
 }
 }
 

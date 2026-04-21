@@ -390,7 +390,7 @@ bool TrackClipsListModel::moveSelectedClips(const ClipKey& key, bool completed)
     }, completed);
 
     if (vs->moveInitiated()) {
-        if (selectionController()->timeSelectionIsNotEmpty()) {
+        if (!selectionController()->timeSelectionIsEmpty()) {
             trackeditInteraction()->moveRangeSelection(moveOffset.timeOffset, completed);
         } else {
             ClipKeyList selectedClips = selectionController()->selectedClipsInTrackOrder();
@@ -746,13 +746,14 @@ void TrackClipsListModel::selectClip(const ClipKey& key)
                 selectionController()->addSelectedClip(key.key);
             }
         } else {
-            if (muse::contains(selectionController()->selectedClips(), key.key)) {
-                return;
+            if (!muse::contains(selectionController()->selectedClips(), key.key)) {
+                selectionController()->resetSelectedLabels();
+                selectionController()->setSelectedClips(ClipKeyList({ key.key }), complete);
             }
-            selectionController()->resetSelectedLabels();
-            selectionController()->setSelectedClips(ClipKeyList({ key.key }), complete);
         }
     }
+
+    setFocusedItem(key);
 }
 
 void TrackClipsListModel::resetSelectedClips()

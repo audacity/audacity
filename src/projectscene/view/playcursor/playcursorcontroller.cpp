@@ -31,6 +31,7 @@ static const ActionQuery PLAYBACK_SEEK_QUERY("action://playback/seek");
 static const ActionQuery PLAYBACK_CHANGE_PLAY_REGION_QUERY("action://playback/play-region-change");
 
 static constexpr int SCROLL_SUPPRESSION_TIMEOUT_MS = 3000;
+static constexpr double ANIMATION_DURATION_SEC = TimelineContext::ANIMATION_DURATION_MS / 1000.0;
 
 PlayCursorController::PlayCursorController(QObject* parent)
     : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
@@ -116,11 +117,30 @@ void PlayCursorController::updatePositionX(muse::secs_t secs)
         const bool updateDisplayWhilePlaying = m_context->updateDisplayWhilePlayingEnabled();
         const bool pinnedPlayHead = m_context->pinnedPlayHeadEnabled();
 
-        if (updateDisplayWhilePlaying && !m_viewUpdatesSuppressed) {
+        if (updateDisplayWhilePlaying && !m_viewUpdatesSuppressed && !m_context->isAnimating()) {
+            const double halfFrameDuration = (m_context->frameEndTime() - m_context->frameStartTime()) * 0.5;
+            const bool zoomTooClose = halfFrameDuration < ANIMATION_DURATION_SEC;
+
             if (pinnedPlayHead) {
-                ensureCursorAtCenter(secs);
+                if (secs < m_context->frameStartTime() || secs > m_context->frameEndTime()) {
+                    if (zoomTooClose) {
+                        ensureCursorAtCenter(secs);
+                    } else {
+                        double predictedSecs = secs + ANIMATION_DURATION_SEC;
+                        m_context->animatedCenterOnTime(predictedSecs);
+                    }
+                } else {
+                    ensureCursorAtCenter(secs);
+                }
             } else {
-                m_context->insureVisible(secs);
+                double predictedSecs = secs + ANIMATION_DURATION_SEC;
+                if (predictedSecs < m_context->frameStartTime() || predictedSecs > m_context->frameEndTime()) {
+                    if (zoomTooClose) {
+                        m_context->insureVisible(secs);
+                    } else {
+                        m_context->animatedInsureVisible(predictedSecs);
+                    }
+                }
             }
         }
     }
@@ -132,7 +152,7 @@ void PlayCursorController::updatePositionX(muse::secs_t secs)
 void PlayCursorController::onFrameTimeChanged()
 {
     double newPosition;
-    if (globalContext()->isRecording()) {
+    if (globalContext()->isRecording() && !recordController()->isLeadInRecording()) {
         newPosition = m_context->timeToPosition(globalContext()->recordPosition());
     } else {
         newPosition = m_context->timeToPosition(playbackState()->playbackPosition());

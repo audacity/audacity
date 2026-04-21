@@ -112,7 +112,7 @@ bool Au3TracksInteraction::changeTrackTitle(const TrackId trackId, const muse::S
     return true;
 }
 
-bool Au3TracksInteraction::changeTracksColor(const TrackIdList& tracksIds, const std::string& color)
+bool Au3TracksInteraction::changeTracksColor(const TrackIdList& tracksIds, ClipColorIndex colorIndex)
 {
     for (const TrackId& trackId : tracksIds) {
         Au3Track* track = DomAccessor::findTrack(projectRef(), ::TrackId(trackId));
@@ -121,15 +121,15 @@ bool Au3TracksInteraction::changeTracksColor(const TrackIdList& tracksIds, const
         }
 
         auto& trackColor = TrackColor::Get(track);
-        trackColor.SetColor(muse::draw::Color::fromString(color));
+        trackColor.SetColorIndex(colorIndex);
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         prj->notifyAboutTrackChanged(DomConverter::track(track));
 
         if (Au3WaveTrack* waveTrack = dynamic_cast<Au3WaveTrack*>(track)) {
             for (auto& clips: DomAccessor::waveClipsAsList(waveTrack)) {
-                //Set it back to auto
-                clips->SetColor("");
+                //Set it back to auto (inherit from track)
+                clips->SetColorIndex(CLIP_COLOR_INDEX_NONE);
                 prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clips.get()));
             }
         } else if (Au3LabelTrack* labelTrack = dynamic_cast<Au3LabelTrack*>(track)) {
@@ -1508,7 +1508,6 @@ muse::Ret Au3TracksInteraction::makeRoomForDataOnTracks(const std::vector<TrackI
 
         //! NOTE need to snap begin just like Paste() function do
         secs_t snappedBegin = dstWaveTrack->SnapToSample(begin);
-        secs_t insertDuration = trackData.at(i)->track()->GetEndTime();
 
         // if paste into existing clip and there is a single clip to paste,
         // we need to make room for the clip to be extended
@@ -1517,11 +1516,23 @@ muse::Ret Au3TracksInteraction::makeRoomForDataOnTracks(const std::vector<TrackI
             && dstWaveTrack->GetClipAtTime(begin) != nullptr) {
             secs_t currentClipEnd = dstWaveTrack->GetClipAtTime(begin)->GetPlayEndTime();
             snappedBegin = dstWaveTrack->SnapToSample(currentClipEnd);
+            secs_t insertDuration = trackToPaste->GetEndTime();
+            auto ok = clipsInteraction()->makeRoomForDataOnTrack(tracksIds.at(i), snappedBegin, snappedBegin + insertDuration);
+            if (!ok) {
+                return make_ret(trackedit::Err::FailedToMakeRoomForClip);
+            }
+            continue;
         }
 
-        auto ok = clipsInteraction()->makeRoomForDataOnTrack(tracksIds.at(i), snappedBegin, snappedBegin + insertDuration);
-        if (!ok) {
-            return make_ret(trackedit::Err::FailedToMakeRoomForClip);
+        // Clear only the ranges actually occupied by the clipboard clips so
+        // that existing destination clips in the gaps between them stay intact.
+        for (const auto& interval : trackToPaste->Intervals()) {
+            auto ok = clipsInteraction()->makeRoomForDataOnTrack(tracksIds.at(i),
+                                                                 snappedBegin + interval->GetPlayStartTime(),
+                                                                 snappedBegin + interval->GetPlayEndTime());
+            if (!ok) {
+                return make_ret(trackedit::Err::FailedToMakeRoomForClip);
+            }
         }
     }
 

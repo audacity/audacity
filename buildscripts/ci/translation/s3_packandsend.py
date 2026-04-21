@@ -14,6 +14,10 @@ outputDir = "share/locale/"
 
 
 def getS3Url():
+    override = os.environ.get("S3_UPLOAD_URL")
+    if override:
+        return override if override.endswith('/') else override + '/'
+
     configPath = "src/app/configs/languages.cfg"
     configFile = open(configPath, "r+")
     configJson = json.load(configFile)

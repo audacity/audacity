@@ -10,6 +10,7 @@
         <file>configs/workspaces.cfg</file>
         <file>configs/languages.cfg</file>
         <file>configs/ui.cfg</file>
+        <file>configs/update.cfg</file>
         <file alias="resources/appIcon.png">../../share/icons/AppIcon/AU4_AppIcon_96x96.png</file>
     </qresource>
 </RCC>

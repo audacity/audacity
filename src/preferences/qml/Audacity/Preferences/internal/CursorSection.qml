@@ -28,7 +28,7 @@ BaseSection {
         controlWidth: 120
         spacing: root.columnSpacing
 
-        measureUnitsSymbol: " " + qsTrc("global", "seconds")
+        measureUnitsSymbol: qsTrc("global", "seconds")
 
         navigation.name: "ShortSkipControl"
         navigation.panel: root.navigation
@@ -48,7 +48,7 @@ BaseSection {
         controlWidth: 120
         spacing: root.columnSpacing
 
-        measureUnitsSymbol: " " + qsTrc("global", "seconds")
+        measureUnitsSymbol: qsTrc("global", "seconds")
 
         navigation.name: "LongSkipControl"
         navigation.panel: root.navigation

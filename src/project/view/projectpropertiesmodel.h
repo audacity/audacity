@@ -23,6 +23,7 @@
 #pragma once
 
 #include <QAbstractListModel>
+#include <QVariant>
 
 #include "framework/global/modularity/ioc.h"
 #include "framework/interactive/iplatforminteractive.h"
@@ -49,7 +50,7 @@ public:
     explicit ProjectPropertiesModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void init();
-    Q_INVOKABLE void onThumbnailCreated(bool success);
+    Q_INVOKABLE void onThumbnailCreated(const QVariant& image);
 
     QVariant data(const QModelIndex& index, int role) const override;
     bool setData(const QModelIndex& index, const QVariant& value, int role) override;
@@ -69,7 +70,7 @@ public:
 
 signals:
     void propertyAdded(int index);
-    void captureThumbnail(QString path);
+    void captureThumbnail();
 
 private:
     enum Roles {

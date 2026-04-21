@@ -281,15 +281,11 @@ void TrackContextMenuModel::updateColorCheckedState()
         MenuItem& item = findItem(ActionCode(action));
         ActionQuery query(action);
 
-        if (muse::draw::Color::fromString(query.param("color").toString()) == track.value().color) {
-            auto state = item.state();
-            state.checked = true;
-            item.setState(state);
-        } else {
-            auto state = item.state();
-            state.checked = false;
-            item.setState(state);
-        }
+        bool checked = query.contains("colorindex")
+                       && query.param("colorindex").toInt() == track.value().colorIndex;
+        auto state = item.state();
+        state.checked = checked;
+        item.setState(state);
     }
 }
 
@@ -422,11 +418,11 @@ muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackColorItems()
     m_colorChangeActionCodeList.clear();
 
     MenuItemList items;
-    const auto& colors = projectSceneConfiguration()->clipColors();
-    for (const auto& color : colors) {
-        items << makeMenuItem(makeTrackColorChangeAction(color.second).toString(),
-                              muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, muse::String::fromStdString(color.first)));
-        m_colorChangeActionCodeList.push_back(makeTrackColorChangeAction(color.second).toString());
+    const auto& colorInfos = projectSceneConfiguration()->clipColorInfos();
+    for (const auto& info : colorInfos) {
+        items << makeMenuItem(makeTrackColorChangeAction(info.index).toString(),
+                              muse::TranslatableString(TRANSLATABLE_STRING_CONTEXT, muse::String::fromStdString(info.name)));
+        m_colorChangeActionCodeList.push_back(makeTrackColorChangeAction(info.index).toString());
     }
 
     return items;

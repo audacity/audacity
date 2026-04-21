@@ -33,7 +33,7 @@ class PublishToolBarModel : public muse::uicomponents::AbstractMenuModel
     Q_OBJECT
     QML_ELEMENT
 
-    muse::Inject<au::au3cloud::IAu3AudioComService> au3CloudService { this };
+    muse::ContextInject<au::au3cloud::IAu3AudioComService> au3CloudService { this };
 
 public:
     PublishToolBarModel(QObject* parent = nullptr);

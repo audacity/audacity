@@ -186,7 +186,7 @@ void PlaybackSchedule::Init(
 
     mT0      = t0;
     if (pRecordingSchedule) {
-        mT0 -= pRecordingSchedule->mPreRoll;
+        mT0 -= pRecordingSchedule->mLeadInTime;
     }
 
     mT1      = t1;

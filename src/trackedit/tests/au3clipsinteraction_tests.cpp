@@ -80,11 +80,11 @@ TEST_F(Au3ClipsInteractionTests, ChangeClipColor)
     })));
 
     //! [WHEN] Change the color of the clip
-    m_clipsInteraction->changeClipColor(ClipKey { au3WaveTrack->GetId(), au3Clip->GetId() }, "red");
+    m_clipsInteraction->changeClipColor(ClipKey { au3WaveTrack->GetId(), au3Clip->GetId() }, 4);
 
-    //! [THEN] The color is updated
+    //! [THEN] The color index is updated
     const std::shared_ptr<Au3WaveClip> au3UpdatedClip = DomAccessor::findWaveClip(project, au3WaveTrack->GetId(), 0);
-    EXPECT_EQ(au3UpdatedClip->GetColor(), "red");
+    EXPECT_EQ(au3UpdatedClip->GetColorIndex(), 4);
 
     // Cleanup
     removeTrack(trackMinSilenceId);
@@ -100,7 +100,7 @@ TEST_F(Au3ClipsInteractionTests, ClipColorRetainedWhenClipIsCopied)
     const Au3WaveTrack* track = DomAccessor::findWaveTrack(project, Au3TrackId(trackId));
     const std::shared_ptr<Au3WaveClip> clip = DomAccessor::findWaveClip(project, track->GetId(), 0);
 
-    m_clipsInteraction->changeClipColor(ClipKey { track->GetId(), clip->GetId() }, "red");
+    m_clipsInteraction->changeClipColor(ClipKey { track->GetId(), clip->GetId() }, 4);
 
     const Au3Track::Holder trackCopy = track->Copy(clip->GetSequenceStartTime(), clip->GetSequenceEndTime());
     ASSERT_NE(trackCopy, nullptr) << "Failed to copy clip";

@@ -21,7 +21,7 @@ class EffectParametersListModel : public QAbstractListModel, public muse::Contex
 {
     Q_OBJECT
 
-    muse::ContextInject<IEffectInstancesRegister> instancesRegister{ this };
+    muse::GlobalInject<IEffectInstancesRegister> instancesRegister;
     muse::ContextInject<IEffectParametersProvider> parametersProvider{ this };
 
 public:

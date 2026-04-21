@@ -1,7 +1,7 @@
 #include "domconverter.h"
 
 #include "au3-label-track/LabelTrack.h"
-#include "au3-mixer/Envelope.h"
+#include "au3-time-track/TimeTrack.h"
 #include "au3-track/Track.h"
 #include "au3-wave-track/WaveClip.h"
 #include "au3-wave-track/WaveTrack.h"
@@ -19,6 +19,10 @@ au::trackedit::TrackType trackType(const Au3Track* track)
 {
     if (dynamic_cast<const LabelTrack*>(track)) {
         return au::trackedit::TrackType::Label;
+    }
+
+    if (dynamic_cast<const TimeTrack*>(track)) {
+        return au::trackedit::TrackType::Undefined;
     }
 
     switch (track->NChannels()) {
@@ -92,10 +96,9 @@ au::trackedit::Clip DomConverter::clip(const Au3WaveTrack* waveTrack, const Au3W
     clip.title = wxToString(au3clip->GetName());
     clip.startTime = au3clip->GetPlayStartTime();
     clip.endTime = au3clip->GetPlayEndTime();
-    clip.color = (!wxToString(au3clip->GetColor()).isEmpty()) ? muse::draw::Color(au3clip->GetColor()) : TrackColor::Get(
-        waveTrack).GetColor();
+    int clipIdx = au3clip->GetColorIndex();
+    clip.colorIndex = (clipIdx != 0) ? clipIdx : TrackColor::Get(waveTrack).GetColorIndex();
     clip.groupId = au3clip->GetGroupId();
-    clip.hasCustomColor = !wxToString(au3clip->GetColor()).isEmpty();
     clip.stereo = au3clip->NChannels() > 1;
 
     clip.pitch = au3clip->GetCentShift();
@@ -114,10 +117,10 @@ au::trackedit::Track DomConverter::track(const Au3Track* track)
     au4t.title = wxToString(track->GetName());
     au4t.type = trackType(track);
 
-    au4t.color = TrackColor::Get(track).GetColor();
-    if (!au4t.color.isValid()) { // todo
+    au4t.colorIndex = TrackColor::Get(track).GetColorIndex();
+    if (au4t.colorIndex == 0) {
         TrackColor::Get(track).assignColor();
-        au4t.color = TrackColor::Get(track).GetColor();
+        au4t.colorIndex = TrackColor::Get(track).GetColorIndex();
     }
 
     au4t.format = trackFormat(track);
@@ -144,7 +147,7 @@ au::trackedit::Label DomConverter::label(const Au3LabelTrack* labelTrack, const 
     label.lowFrequency = au3label->getLowFrequency();
     label.highFrequency = au3label->getHighFrequency();
 
-    label.color = TrackColor::Get(labelTrack).GetColor();
+    label.colorIndex = TrackColor::Get(labelTrack).GetColorIndex();
 
     return label;
 }

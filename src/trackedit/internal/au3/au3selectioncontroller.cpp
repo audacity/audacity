@@ -118,7 +118,7 @@ void Au3SelectionController::onHistoryEvent(const trackedit::HistoryEvent& event
 
 ClipKeyList Au3SelectionController::findClipsIntersectingRangeSelection() const
 {
-    if (!timeSelectionIsNotEmpty() || selectedTracks().empty()) {
+    if (timeSelectionIsEmpty() || selectedTracks().empty()) {
         return {};
     }
 
@@ -699,15 +699,15 @@ void Au3SelectionController::resetDataSelection()
     setLabelsIntersectingRangeSelection({});
 }
 
-bool Au3SelectionController::timeSelectionIsNotEmpty() const
+bool Au3SelectionController::timeSelectionIsEmpty() const
 {
-    return muse::RealIsEqualOrMore(m_selectedEndTime.val, 0.0) && !muse::RealIsEqualOrLess(
+    return !muse::RealIsEqualOrMore(m_selectedEndTime.val, 0.0) || muse::RealIsEqualOrLess(
         m_selectedEndTime.val, m_selectedStartTime.val);
 }
 
 bool au::trackedit::Au3SelectionController::timeSelectionHasAudioData() const
 {
-    if (!timeSelectionIsNotEmpty() || m_selectedTracks.val.empty()) {
+    if (timeSelectionIsEmpty() || m_selectedTracks.val.empty()) {
         return false;
     }
 
@@ -727,7 +727,7 @@ bool au::trackedit::Au3SelectionController::timeSelectionHasAudioData() const
 
 bool Au3SelectionController::isDataSelectedOnTrack(TrackId trackId) const
 {
-    return muse::contains(m_selectedTracks.val, trackId) && timeSelectionIsNotEmpty();
+    return muse::contains(m_selectedTracks.val, trackId) && !timeSelectionIsEmpty();
 }
 
 void Au3SelectionController::setSelectedAllAudioData(const std::optional<secs_t>& fromTime, const std::optional<secs_t>& toTime)
@@ -778,7 +778,7 @@ void Au3SelectionController::setLabelsIntersectingRangeSelection(const LabelKeyL
 
 LabelKeyList Au3SelectionController::findLabelsIntersectingRangeSelection() const
 {
-    if (!timeSelectionIsNotEmpty() || selectedTracks().empty()) {
+    if (timeSelectionIsEmpty() || selectedTracks().empty()) {
         return {};
     }
 
@@ -869,6 +869,13 @@ void Au3SelectionController::setDataSelectedEndTime(au::trackedit::secs_t time, 
         setLabelsIntersectingRangeSelection(findLabelsIntersectingRangeSelection());
         projectHistory()->modifyState(false);
     }
+}
+
+void Au3SelectionController::initSelectionAtPlayhead()
+{
+    const secs_t playhead = globalContext()->playbackState()->playbackPosition();
+    setDataSelectedStartTime(playhead, true);
+    setDataSelectedEndTime(playhead, true);
 }
 
 bool Au3SelectionController::selectionContainsGroup() const

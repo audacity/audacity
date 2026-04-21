@@ -52,7 +52,7 @@ int computeRightCrossedIndex(const AutomationDragSession& session, double time)
     int idx = session.originalIndex;
     for (int i = session.originalIndex + 1; i < static_cast<int>(session.originalPoints.size()); ++i) {
         const double pointTime = session.originalPoints[i].xValue;
-        if (pointTime > session.originalXValue && pointTime <= time) {
+        if (pointTime > session.originalXValue && pointTime < time) {
             idx = i;
         } else {
             break;
@@ -67,7 +67,7 @@ int computeLeftCrossedIndex(const AutomationDragSession& session, double time)
     int idx = session.originalIndex;
     for (int i = session.originalIndex - 1; i >= 0; --i) {
         const double pointTime = session.originalPoints[i].xValue;
-        if (pointTime < session.originalXValue && pointTime >= time) {
+        if (pointTime < session.originalXValue && pointTime > time) {
             idx = i;
         } else {
             break;
@@ -186,8 +186,11 @@ bool Au3ClipGainInteraction::setClipGainPoint(const trackedit::ClipKey& clipKey,
     if (auto prj = globalContext()->currentTrackeditProject()) {
         prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
     }
-    projectHistory()->pushHistoryState(muse::trc("trackedit", "Added enveloped point"), muse::trc("trackedit",
-                                                                                                  "Clip envelope edit"));
+
+    if (completed) {
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Added enveloped point"), muse::trc("trackedit",
+                                                                                                      "Clip envelope edit"));
+    }
 
     m_clipEnvelopeChanged.send(clipKey, completed);
     return true;
@@ -216,8 +219,11 @@ bool Au3ClipGainInteraction::removeClipGainPoint(const trackedit::ClipKey& clipK
     if (auto prj = globalContext()->currentTrackeditProject()) {
         prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
     }
-    projectHistory()->pushHistoryState(muse::trc("trackedit", "Removed enveloped point"), muse::trc("trackedit",
-                                                                                                    "Clip envelope edit"));
+
+    if (completed) {
+        projectHistory()->pushHistoryState(muse::trc("trackedit", "Removed enveloped point"), muse::trc("trackedit",
+                                                                                                        "Clip envelope edit"));
+    }
 
     m_clipEnvelopeChanged.send(clipKey, completed);
     return true;

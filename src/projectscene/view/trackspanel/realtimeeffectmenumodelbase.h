@@ -6,8 +6,7 @@
 #include "internal/irealtimeeffectpaneltrackselection.h"
 #include "uicomponents/qml/Muse/UiComponents/abstractmenumodel.h"
 #include "trackedit/trackedittypes.h"
-#include "effects/effects_base/ieffectsconfiguration.h"
-#include "effects/effects_base/ieffectsprovider.h"
+#include "effects/effects_base/ieffectviewcontroller.h"
 #include "effects/effects_base/ieffectsmenuprovider.h"
 #include "effects/effects_base/irealtimeeffectservice.h"
 #include "effects/effects_base/effectstypes.h"
@@ -33,7 +32,7 @@ protected:
     bool isMasterTrack() const { return m_isMasterTrack; }
     muse::uicomponents::MenuItemList effectMenus();
 
-    muse::ContextInject<effects::IEffectsProvider> effectsProvider{ this };
+    muse::ContextInject<effects::IEffectViewController> effectViewController{ this };
     muse::ContextInject<effects::IRealtimeEffectService> realtimeEffectService{ this };
 
 signals:

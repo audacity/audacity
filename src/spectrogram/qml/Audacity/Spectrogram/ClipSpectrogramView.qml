@@ -26,6 +26,7 @@ Item {
     required property double selectionEndTime
     required property double selectionStartFrequency
     required property double selectionEndFrequency
+    required property bool clipSelected
 
     function update() {
         for (let i = 0; i < repeater.count; i++) {
@@ -82,6 +83,7 @@ Item {
                 selectionEndTime: root.selectionEndTime
                 selectionStartFrequency: root.selectionStartFrequency
                 selectionEndFrequency: root.selectionEndFrequency
+                clipSelected: root.clipSelected
 
                 MouseArea {
                     anchors.fill: parent

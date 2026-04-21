@@ -50,8 +50,8 @@ const UiActionList ProjectUiActions::m_actions = {
     UiAction("project-import",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "Import"),
-             TranslatableString("action", "Import")
+             TranslatableString("action", "Import…"),
+             TranslatableString("action", "Import…")
              ),
     UiAction("file-save",
              au::context::UiCtxAny,
@@ -74,8 +74,8 @@ const UiActionList ProjectUiActions::m_actions = {
     UiAction("export-audio",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "&Export audio"),
-             TranslatableString("action", "Export audio")
+             TranslatableString("action", "&Export audio…"),
+             TranslatableString("action", "Export audio…")
              ),
     UiAction("export-labels",
              au::context::UiCtxAny,
@@ -286,52 +286,7 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Move cursor to closest zero crossing")
              ),
 
-    // view menu
-    UiAction("zoom-in",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Zoom in"),
-             TranslatableString("action", "Zoom in"),
-             IconCode::Code::ZOOM_IN
-             ),
-    UiAction("zoom-out",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Zoom out"),
-             TranslatableString("action", "Zoom out"),
-             IconCode::Code::ZOOM_OUT
-             ),
-    UiAction("zoom-to-selection",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Zoom to selection"),
-             TranslatableString("action", "Zoom to selection"),
-             IconCode::Code::FIT_SELECTION
-             ),
-    UiAction("zoom-toggle",
-             au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Zoom toggle"),
-             TranslatableString("action", "Zoom toggle")
-             ),
-    UiAction("zoom-reset",
-             au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Zoom reset"),
-             TranslatableString("action", "Zoom reset")
-             ),
-    UiAction("fit-project-to-window",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Fit project to window"),
-             TranslatableString("action", "Fit project to window")
-             ),
-    UiAction("fit-view-to-project",
-             au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Fit view to project"),
-             TranslatableString("action", "Fit view to project")
-             ),
+    // view menu (zoom actions are in projectsceneuiactions.cpp)
     UiAction("collapse-all-tracks",
              au::context::UiCtxUnknown,
              au::context::CTX_ANY,
@@ -396,12 +351,6 @@ const UiActionList ProjectUiActions::m_actions = {
              au::context::CTX_ANY,
              TranslatableString("action", "Set up timed recording"),
              TranslatableString("action", "Set up timed recording")
-             ),
-    UiAction("punch-and-roll-record",
-             au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Punch and roll record"),
-             TranslatableString("action", "Punch and roll record")
              ),
     UiAction("toggle-sound-activated-recording",
              au::context::UiCtxUnknown,
@@ -734,12 +683,6 @@ const UiActionList ProjectUiActions::m_actions = {
              au::context::CTX_ANY,
              TranslatableString("action", "Link account"),
              TranslatableString("action", "Link account")
-             ),
-    UiAction("updates",
-             au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Updates"),
-             TranslatableString("action", "Updates")
              ),
     UiAction("file-save-to-cloud",
              au::context::UiCtxAny,

@@ -99,6 +99,12 @@ enum class HistoryEvent {
     RestoredState,
     NewState,
 };
+
+// 1-based index into theme clip_color_N / clip_selected_color_N slots.
+// 0 means "no custom color" (clip inherits from track).
+using ClipColorIndex = int;
+static constexpr ClipColorIndex CLIP_COLOR_INDEX_NONE = 0;
+static constexpr int CLIP_COLOR_COUNT = 9;
 }
 
 inline muse::logger::Stream& operator<<(muse::logger::Stream& s, const au::trackedit::TrackItemKey& k)

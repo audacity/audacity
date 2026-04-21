@@ -87,7 +87,7 @@ void ExportPreferencesModel::init()
     if ((exportConfiguration()->processType() == ExportProcessType::AUDIO_IN_LOOP_REGION
          && !playbackController()->loopRegion().isValid())
         || (exportConfiguration()->processType() == ExportProcessType::SELECTED_AUDIO
-            && !selectionController()->timeSelectionIsNotEmpty())) {
+            && selectionController()->timeSelectionIsEmpty())) {
         setCurrentProcess(QString::fromStdString(EXPORT_PROCESS_MAPPING[ExportProcessType::FULL_PROJECT_AUDIO]));
     }
 
@@ -174,7 +174,7 @@ void ExportPreferencesModel::setCurrentProcess(const QString& newProcess)
         return;
     }
 
-    const bool timeEmpty = !selectionController()->timeSelectionIsNotEmpty();
+    const bool timeEmpty = selectionController()->timeSelectionIsEmpty();
     const bool noClips = !selectionController()->hasSelectedClips();
     const bool moreThanOneClip = selectionController()->selectedClips().size() > 1;
     if (type == ExportProcessType::SELECTED_AUDIO

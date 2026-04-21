@@ -2,6 +2,7 @@
 
 #include <QObject>
 #include <QTimer>
+#include <QVariantAnimation>
 
 #include "modularity/ioc.h"
 #include "context/iglobalcontext.h"
@@ -71,6 +72,8 @@ class TimelineContext : public QObject, public muse::async::Asyncable, public mu
 
 public:
 
+    static constexpr int ANIMATION_DURATION_MS = 500;
+
     TimelineContext(QObject* parent = nullptr);
 
     double frameStartTime() const;
@@ -117,6 +120,7 @@ public:
     void centerViewOnPlayhead(const muse::actions::ActionData& args);
     void centerOnTime(double secs);
     Q_INVOKABLE void insureVisible(double posSec);
+    Q_INVOKABLE void animatedInsureVisible(double posSec);
     Q_INVOKABLE void startAutoScroll(double posSec);
     Q_INVOKABLE void stopAutoScroll();
 
@@ -133,6 +137,10 @@ public:
 
     void moveToFrameTime(double startTime);
     void shiftFrameTime(double secs);
+
+    void animatedCenterOnTime(double secs);
+    bool isAnimating() const;
+    void stopAnimation();
 
     qreal startHorizontalScrollPosition() const;
     qreal horizontalScrollbarSize() const;
@@ -194,6 +202,7 @@ private:
 
     void zoomIn();
     void zoomOut();
+    void zoomDefault();
 
     qreal frameCenterPosition() const;
     qreal selectionCenterPosition() const;
@@ -201,6 +210,10 @@ private:
 
     void fitSelectionToWidth();
     void fitProjectToWidth();
+    void zoomToggle();
+    double getZoomOfPreset(ZoomPresets::Preset preset) const;
+    double clampedZoom(double zoom) const;
+    std::pair<double, double> selectionRange() const;
     void updateViewOnProjectTempoChange(double ratio);
 
     bool hasSelection() const;
@@ -208,6 +221,7 @@ private:
     void shiftFrameTimeOnStep(int direction);
     void updateFrameTime();
     void autoScrollView(double scrollStep);
+    void animateToFrameTime(double targetStartTime);
 
     void setSelectionStartTime(double time);
     void setSelectionEndTime(double time);
@@ -262,5 +276,7 @@ private:
 
     QTimer m_scrollTimer;
     double m_autoScrollStep = 0.0;
+
+    QVariantAnimation m_frameStartAnimation;
 };
 }

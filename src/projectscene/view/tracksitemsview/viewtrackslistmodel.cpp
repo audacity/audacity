@@ -286,7 +286,7 @@ QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
         return static_cast<int>(track.rate);
     }
     case IsDataSelectedRole: {
-        return muse::contains(selectionController()->selectedTracks(), track.id) && selectionController()->timeSelectionIsNotEmpty();
+        return muse::contains(selectionController()->selectedTracks(), track.id) && !selectionController()->timeSelectionIsEmpty();
     }
     case IsTrackSelectedRole: {
         return muse::contains(selectionController()->selectedTracks(), track.id);
@@ -356,7 +356,7 @@ QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
         return playback::PlaybackMeterDbRange::toDouble(playbackConfiguration()->playbackMeterDbRange());
 
     case ColorRole: {
-        return QVariant::fromValue(track.color.toQColor());
+        return QVariant::fromValue(projectSceneConfiguration()->clipColor(track.colorIndex).toQColor());
     }
 
     default:

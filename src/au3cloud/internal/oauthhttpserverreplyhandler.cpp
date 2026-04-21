@@ -15,10 +15,10 @@
 
 using namespace au::au3cloud;
 
-class OAuthHttpServerReplyHandler::Impl : public muse::Contextable
+class OAuthHttpServerReplyHandler::Impl
 {
 public:
-    explicit Impl(OAuthHttpServerReplyHandler* p, const muse::modularity::ContextPtr& iocCtx);
+    explicit Impl(OAuthHttpServerReplyHandler* p);
     ~Impl();
 
     QTcpServer m_httpServer;
@@ -70,8 +70,8 @@ private:
     OAuthHttpServerReplyHandler* m_public = nullptr;
 };
 
-OAuthHttpServerReplyHandler::Impl::Impl(OAuthHttpServerReplyHandler* p, const muse::modularity::ContextPtr& iocCtx)
-    : muse::Contextable(iocCtx), m_public(p)
+OAuthHttpServerReplyHandler::Impl::Impl(OAuthHttpServerReplyHandler* p)
+    : m_public(p)
 {
     QObject::connect(&m_httpServer, &QTcpServer::newConnection, [this]() { onClientConnected(); });
 }
@@ -291,18 +291,17 @@ bool OAuthHttpServerReplyHandler::Impl::HttpRequest::readHeader(QTcpSocket* sock
     return false;
 }
 
-OAuthHttpServerReplyHandler::OAuthHttpServerReplyHandler(const muse::modularity::ContextPtr& iocCtx, QObject* parent)
-    : OAuthHttpServerReplyHandler(QHostAddress::Any, 0, iocCtx, parent)
+OAuthHttpServerReplyHandler::OAuthHttpServerReplyHandler(QObject* parent)
+    : OAuthHttpServerReplyHandler(QHostAddress::Any, 0, parent)
 {}
 
-OAuthHttpServerReplyHandler::OAuthHttpServerReplyHandler(quint16 port, const muse::modularity::ContextPtr& iocCtx, QObject* parent)
-    : OAuthHttpServerReplyHandler(QHostAddress::Any, port, iocCtx, parent)
+OAuthHttpServerReplyHandler::OAuthHttpServerReplyHandler(quint16 port, QObject* parent)
+    : OAuthHttpServerReplyHandler(QHostAddress::Any, port, parent)
 {}
 
 OAuthHttpServerReplyHandler::OAuthHttpServerReplyHandler(const QHostAddress& address, quint16 port,
-                                                         const muse::modularity::ContextPtr& iocCtx,
                                                          QObject* parent)
-    : QOAuthOobReplyHandler(parent), m_impl(std::make_unique<Impl>(this, iocCtx))
+    : QOAuthOobReplyHandler(parent), m_impl(std::make_unique<Impl>(this))
 {
     listen(address, port);
 }

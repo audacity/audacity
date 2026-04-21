@@ -67,6 +67,12 @@ BaseSection {
                     editPreferencesModel.setPasteAsNewClip(!checked)
                 }
             }
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.forceActiveFocus()
+                }
+            }
         }
     }
 }

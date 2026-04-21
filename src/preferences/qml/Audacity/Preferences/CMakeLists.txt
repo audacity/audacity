@@ -14,6 +14,8 @@ qt_add_qml_module(preferences_qml
         editpreferencesmodel.h
         generalpreferencesmodel.cpp
         generalpreferencesmodel.h
+        musicpreferencesmodel.cpp
+        musicpreferencesmodel.h
         playbackpreferencesmodel.cpp
         playbackpreferencesmodel.h
         pluginpreferencesmodel.cpp
@@ -26,6 +28,8 @@ qt_add_qml_module(preferences_qml
         recordingpreferencesmodel.h
         updatepreferencesmodel.cpp
         updatepreferencesmodel.h
+        usageinfopreferencesmodel.cpp
+        usageinfopreferencesmodel.h
     QML_FILES
         AdvancedPreferencesPage.qml
         AppearancePreferencesPage.qml
@@ -54,11 +58,13 @@ qt_add_qml_module(preferences_qml
         internal/FreeSpaceSection.qml
         internal/IncrementalPropertyControlWithTitle.qml
         internal/KeyboardLayoutsSection.qml
+        internal/LeadInRecordingSection.qml
         internal/LanguagesSection.qml
         internal/MeiSection.qml
         internal/MeterDbRangeSection.qml
         internal/MiscellaneousSection.qml
         internal/MixerSection.qml
+        MusicPreferencesPage.qml
         internal/MonoStereoConversionSection.qml
         internal/NumberFormatSection.qml
         internal/PasteBehaviorSection.qml
@@ -82,8 +88,11 @@ qt_add_qml_module(preferences_qml
         internal/ThemesSection.qml
         internal/UiColorsSection.qml
         internal/UiFontSection.qml
+        internal/UsageInfoSection.qml
         internal/WorkspacesAsymmetricChannelsSection.qml
+        internal/WorkspacesTempoDetectionSection.qml
         internal/ZoomSection.qml
+        internal/ZoomToggleSection.qml
         PlaybackPreferencesPage.qml
         PluginPreferencesPage.qml
         PreferencesDialog.qml

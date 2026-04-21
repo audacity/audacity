@@ -50,7 +50,7 @@ Q_MOC_INCLUDE(< QWindow >)
 // #include "workspace/iworkspacemanager.h"
 #include "project/irecentfilescontroller.h"
 // #include "extensions/iextensionsprovider.h"
-// #include "update/iupdateconfiguration.h"
+#include "update/iupdateconfiguration.h"
 
 namespace au::appshell {
 class AppMenuModel : public muse::uicomponents::AbstractMenuModel, public effects::IEffectMenuItemFactory
@@ -63,19 +63,19 @@ public:
     muse::GlobalInject<effects::IEffectsConfiguration> effectsConfiguration;
     muse::GlobalInject<IAppShellConfiguration> configuration;
     muse::GlobalInject<IAppMenuModelHook> appMenuModelHook;
+    muse::GlobalInject<effects::IEffectsProvider> effectsProvider;
+    muse::GlobalInject<muse::update::IUpdateConfiguration> updateConfiguration;
 
     muse::ContextInject<muse::actions::IActionsDispatcher> actionsDispatcher = { this };
     muse::ContextInject<muse::ui::IMainWindow> mainWindow { this };
     muse::ContextInject<muse::ui::INavigationController> navigationController = { this };
     muse::ContextInject<muse::ui::IUiActionsRegister> uiActionsRegister = { this };
     muse::ContextInject<effects::IEffectsMenuProvider> effectsMenuProvider = { this };
-    muse::ContextInject<effects::IEffectsProvider> effectsProvider = { this };
     muse::ContextInject<trackedit::IProjectHistory> projectHistory = { this };
 
     //! TODO AU4
     // muse::ContextInject<workspace::IWorkspaceManager> workspacesManager = { this };
     // muse::ContextInject<extensions::IExtensionsProvider> extensionsProvider = { this };
-    // muse::GlobalInject<update::IUpdateConfiguration> updateConfiguration = { this };
 
 public:
     explicit AppMenuModel(QObject* parent = nullptr);

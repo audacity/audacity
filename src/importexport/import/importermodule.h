@@ -8,6 +8,8 @@
 
 namespace au::importexport {
 class Au3Importer;
+class ImporterConfiguration;
+
 class ImporterModule : public muse::modularity::IModuleSetup
 {
 public:
@@ -15,7 +17,13 @@ public:
 
     std::string moduleName() const override;
 
+    void registerExports() override;
+    void onInit(const muse::IApplication::RunMode& mode) override;
+
     muse::modularity::IContextSetup* newContext(const muse::modularity::ContextPtr& ctx) const override;
+
+private:
+    std::shared_ptr<ImporterConfiguration> m_configuration;
 };
 
 class ImporterContext : public muse::modularity::IContextSetup

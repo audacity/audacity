@@ -45,6 +45,7 @@ private:
     void addPanels(const TrackId& trackId, int pos);
     void resetPanelOrder();
     void addDefaultNavigation();
+    void handleArrowKeyFallback(muse::ui::NavigationEvent* event);
 
     void activateNavigation(const TrackId& trackId, bool highlight = false);
     void activateNavigation(const TrackItemKey& itemKey, bool highlight = false);

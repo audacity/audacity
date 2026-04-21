@@ -32,11 +32,17 @@ BaseSection {
         StyledListView {
             id: workspacesList
 
+            readonly property real availableRowWidth: width - leftMargin - rightMargin - visualScrollBarInset
+
             Layout.fillWidth: true
-            Layout.preferredHeight: contentHeight
-            Layout.leftMargin: 2
-            Layout.topMargin: 2
-            Layout.bottomMargin: 2
+            Layout.preferredHeight: contentHeight + topMargin + bottomMargin
+
+            leftMargin: 4
+            rightMargin: 4
+            topMargin: 4
+            bottomMargin: 4
+
+            contentWidth: availableRowWidth
 
             spacing: 8
 
@@ -47,7 +53,7 @@ BaseSection {
             delegate: CheckBox {
                 text: model.name
 
-                width: parent.width
+                width: ListView.view.contentWidth
 
                 checked: root.editPreferencesModel.asymmetricWorkspaces.indexOf(model.name) !== -1
 

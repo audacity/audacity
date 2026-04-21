@@ -47,8 +47,6 @@ EffectStyledDialogView {
         loadViewer()
     }
 
-    alwaysOnTop: true
-
     // Listen to UI mode changes from the presets bar menu
     Connections {
         target: presetsBar.presetsBarModel

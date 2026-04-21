@@ -157,7 +157,29 @@ TrackItemsContainer {
                     hoverEnabled: true
                     pressAndHoldInterval: 0
                     enabled: !root.selectionInProgress && (root.isNearSample || root.isBrush)
-                    cursorShape: root.selectionEditInProgress ? Qt.SizeHorCursor : Qt.IBeamCursor
+                    cursorShape: Qt.BlankCursor
+
+                    // While a selection edit is in progress the cursor on the track body
+                    // should indicate a horizontal resize. We reuse SelectionLeft.png as a
+                    // generic selection-edit cursor here — the actual left/right edge
+                    // direction is handled by ItemsSelection's own handle MouseAreas.
+                    readonly property string selectionEditCursor: ":/images/customCursorShapes/SelectionLeft.png"
+                    readonly property string idleCursor: ":/images/customCursorShapes/IBeamCursor.png"
+                    readonly property int iBeamSize: 26
+
+                    function updateCustomCursor() {
+                        if (root.selectionEditInProgress) {
+                            CustomCursorProvider.setCursorShape(clipsContainerMouseArea, selectionEditCursor)
+                        } else {
+                            CustomCursorProvider.setCursorShape(clipsContainerMouseArea, idleCursor, iBeamSize)
+                        }
+                    }
+
+                    Component.onCompleted: updateCustomCursor()
+                    Connections {
+                        target: root
+                        function onSelectionEditInProgressChanged() { clipsContainerMouseArea.updateCustomCursor() }
+                    }
 
                     anchors.fill: parent
 
@@ -236,12 +258,14 @@ TrackItemsContainer {
                         asynchronous: false
 
                         sourceComponent: {
-                            if ((itemData.x + itemData.width) < (0 - clipsModel.cacheBufferPx)) {
-                                return null
-                            }
+                            if (!itemData.focused) {
+                                if ((itemData.x + itemData.width) < (0 - clipsModel.cacheBufferPx)) {
+                                    return null
+                                }
 
-                            if (itemData.x > (clipsContainer.width + clipsModel.cacheBufferPx)) {
-                                return null
+                                if (itemData.x > (clipsContainer.width + clipsModel.cacheBufferPx)) {
+                                    return null
+                                }
                             }
 
                             //! NOTE This optimization is disabled, it is probably not needed,
@@ -262,6 +286,7 @@ TrackItemsContainer {
                                 property int index: loader.index
 
                                 clipColor: itemData.color
+                                clipSelectedColor: itemData.selectedColor
                                 collapsed: root.trackViewState.isTrackCollapsed
                             }
                         }
@@ -280,6 +305,7 @@ TrackItemsContainer {
 
                                 title: itemData.title
                                 clipColor: itemData.color
+                                clipSelectedColor: itemData.selectedColor
                                 groupId: itemData.groupId
                                 clipKey: itemData.key
                                 clipTime: itemData.time
@@ -330,7 +356,7 @@ TrackItemsContainer {
                                 navigation.accessible.name: Boolean(itemData) ? itemData.title : ""
                                 navigation.onActiveChanged: {
                                     if (navigation.active) {
-                                        root.context.insureVisible(root.context.positionToTime(itemData.x))
+                                        root.context.animatedInsureVisible(itemData.time.startTime)
                                         root.insureVerticallyVisible()
                                     }
                                 }

@@ -138,7 +138,7 @@ jobs:
 
     - name: Upload build for self-test
       if: env.DO_BUILD == 'true'
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: selftest-build-linux
         path: ./build.install/
@@ -165,7 +165,7 @@ jobs:
 
     - name: Upload artifacts on GitHub
       if: env.DO_BUILD == 'true'
-      uses: actions/upload-artifact@v6
+      uses: actions/upload-artifact@v7
       with:
         name: ${{ env.UPLOAD_ARTIFACT_NAME }}
         path: ./build.artifacts/

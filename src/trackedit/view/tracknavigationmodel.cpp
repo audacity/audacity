@@ -161,13 +161,14 @@ void TrackNavigationModel::addPanels(const TrackId& trackId, int pos)
 
     connect(trackPanel, &muse::ui::NavigationPanel::navigationEvent, this,
             [this, trackId](muse::ui::NavigationEvent* event) {
-        if (event->type() != muse::ui::NavigationEvent::AboutActive) {
+        if (event->type() == muse::ui::NavigationEvent::AboutActive) {
+            if (tracksNavigationController()->focusedTrack() != trackId) {
+                tracksNavigationController()->setFocusedTrack(trackId);
+            }
             return;
         }
 
-        if (tracksNavigationController()->focusedTrack() != trackId) {
-            tracksNavigationController()->setFocusedTrack(trackId);
-        }
+        handleArrowKeyFallback(event);
     });
 
     muse::ui::NavigationPanel* itemsPanel = new muse::ui::NavigationPanel(this);
@@ -176,6 +177,11 @@ void TrackNavigationModel::addPanels(const TrackId& trackId, int pos)
     itemsPanel->setOrder(2 * pos + 1);
     itemsPanel->setSection(m_section);
     itemsPanel->componentComplete();
+
+    connect(itemsPanel, &muse::ui::NavigationPanel::navigationEvent, this,
+            [this](muse::ui::NavigationEvent* event) {
+        handleArrowKeyFallback(event);
+    });
 
     m_trackItemPanels.append(trackPanel);
     m_viewItemPanels.append(itemsPanel);
@@ -196,6 +202,19 @@ void TrackNavigationModel::resetPanelOrder()
 
     emit trackItemPanelsChanged();
     emit viewItemPanelsChanged();
+}
+
+void TrackNavigationModel::handleArrowKeyFallback(muse::ui::NavigationEvent* event)
+{
+    if (!tracksNavigationController()->isNavigationEnabled()) {
+        if (event->type() == muse::ui::NavigationEvent::Right) {
+            event->setAccepted(true);
+            dispatcher()->dispatch("play-position-increase");
+        } else if (event->type() == muse::ui::NavigationEvent::Left) {
+            event->setAccepted(true);
+            dispatcher()->dispatch("play-position-decrease");
+        }
+    }
 }
 
 void TrackNavigationModel::moveFocusTo(const QVariant& trackId)

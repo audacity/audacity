@@ -87,7 +87,7 @@ private:
 
     void setupConnections();
 
-    bool quit();
+    bool quit(const muse::io::path_t& installerPath = "");
     void restart();
 
     void toggleFullScreen();

@@ -4,10 +4,13 @@
 #ifndef AU_RECORD_IRECORDONTROLLER_H
 #define AU_RECORD_IRECORDONTROLLER_H
 
+#include <vector>
+
 #include "framework/global/modularity/imoduleinterface.h"
 #include "framework/global/async/notification.h"
 #include "framework/global/async/channel.h"
 #include "framework/global/types/secs.h"
+#include "trackedit/trackedittypes.h"
 
 namespace au::record {
 class IRecordController : MODULE_EXPORT_INTERFACE
@@ -31,6 +34,11 @@ public:
 
     virtual bool isInputMonitoringOn() const = 0;
     virtual muse::async::Notification isInputMonitoringOnChanged() const = 0;
+
+    virtual bool isLeadInRecording() const = 0;
+    virtual muse::async::Notification isLeadInRecordingChanged() const = 0;
+    virtual muse::secs_t leadInRecordingStartTime() const = 0;
+    virtual std::vector<trackedit::TrackId> leadInRecordingTrackIds() const = 0;
 };
 }
 

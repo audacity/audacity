@@ -55,6 +55,8 @@ class TrackItemTime
 {
     Q_GADGET
 
+    Q_PROPERTY(double startTime MEMBER startTime CONSTANT)
+
 public:
 
     double startTime = 0.0;
@@ -183,18 +185,40 @@ public:
     Q_ENUM(AsymmetricStereoHeights)
 };
 
-constexpr const char16_t* COLOR_CHANGE_ACTION = u"action://trackedit/clip/change-color?color=%1";
-inline muse::actions::ActionQuery makeClipColorChangeAction(const std::string& colorHex)
+class ZoomPresets
 {
-    return muse::actions::ActionQuery(muse::String(COLOR_CHANGE_ACTION).arg(muse::String::fromStdString(
-                                                                                colorHex)));
+    Q_GADGET
+public:
+    enum Preset {
+        ZoomToFit = 0,
+        ZoomToSelection,
+        ZoomDefault,
+        ZoomMinutes,
+        ZoomSeconds,
+        Zoom5ths,
+        Zoom10ths,
+        Zoom20ths,
+        Zoom50ths,
+        Zoom100ths,
+        Zoom500ths,
+        ZoomMilliSeconds,
+        ZoomSamples,
+        Zoom4To1,
+        MaxZoom,
+    };
+    Q_ENUM(Preset)
+};
+
+constexpr const char16_t* COLOR_CHANGE_ACTION = u"action://trackedit/clip/change-color?colorindex=%1";
+inline muse::actions::ActionQuery makeClipColorChangeAction(trackedit::ClipColorIndex colorIndex)
+{
+    return muse::actions::ActionQuery(muse::String(COLOR_CHANGE_ACTION).arg(colorIndex));
 }
 
-constexpr const char16_t* TRACK_COLOR_CHANGE_ACTION = u"action://trackedit/track/change-color?color=%1";
-inline muse::actions::ActionQuery makeTrackColorChangeAction(const std::string& colorHex)
+constexpr const char16_t* TRACK_COLOR_CHANGE_ACTION = u"action://trackedit/track/change-color?colorindex=%1";
+inline muse::actions::ActionQuery makeTrackColorChangeAction(trackedit::ClipColorIndex colorIndex)
 {
-    return muse::actions::ActionQuery(muse::String(TRACK_COLOR_CHANGE_ACTION).arg(muse::String::fromStdString(
-                                                                                      colorHex)));
+    return muse::actions::ActionQuery(muse::String(TRACK_COLOR_CHANGE_ACTION).arg(colorIndex));
 }
 }
 

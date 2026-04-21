@@ -53,10 +53,23 @@ Rectangle {
     }
 
     function ensureContentVisibleRequested(contentRect) {
-        if (flickable.contentY + flickable.height < contentRect.y + contentRect.height) {
-            flickable.contentY += contentRect.y + contentRect.height - (flickable.contentY + flickable.height)
-        } else if (flickable.contentY > contentRect.y) {
-            flickable.contentY -= flickable.contentY - contentRect.y
+        const overscroll = 60
+
+        const { contentY, height, topMargin, bottomMargin, contentHeight } = flickable
+
+        const visibleTop = contentY
+        const visibleBottom = contentY + height - topMargin - bottomMargin
+
+        const itemTop = contentRect.y
+        const itemBottom = itemTop + contentRect.height
+
+        const maxY = contentHeight - height + topMargin + bottomMargin
+        const minY = -topMargin
+
+        if (itemBottom > visibleBottom) {
+            flickable.contentY = Math.min(itemBottom - height + topMargin + bottomMargin + overscroll, maxY)
+        } else if (itemTop < visibleTop) {
+            flickable.contentY = Math.max(itemTop - overscroll, minY)
         }
     }
 
@@ -77,7 +90,10 @@ Rectangle {
         rightMargin: root.sideMargin
         bottomMargin: root.sideMargin
 
-        ScrollBar.vertical: StyledScrollBar { id: scrollBar }
+        ScrollBar.vertical: StyledScrollBar {
+            id: scrollBar
+            policy: flickable.isScrollable ? ScrollBar.AlwaysOn : ScrollBar.AlwaysOff
+        }
 
         Item {
             id: content

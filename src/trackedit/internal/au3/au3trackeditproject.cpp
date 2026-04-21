@@ -1,6 +1,7 @@
 #include "au3trackeditproject.h"
 
 #include "au3-track/Track.h"
+#include "au3-time-track/TimeTrack.h"
 #include "au3-numeric-formats/ProjectTimeSignature.h"
 #include "au3-stretching-sequence/TempoChange.h"
 #include "au3-project-history/UndoManager.h"
@@ -49,6 +50,11 @@ Au3TrackeditProject::Au3TrackeditProject(const muse::modularity::ContextPtr& ctx
 Au3TrackeditProject::~Au3TrackeditProject()
 {
     m_impl->tracksSubc.Reset();
+}
+
+bool Au3TrackeditProject::timeTrackFound() const
+{
+    return TimeTrackDetector::Get(*m_impl->prj).found;
 }
 
 std::vector<int64_t> Au3TrackeditProject::groupsIdsList() const

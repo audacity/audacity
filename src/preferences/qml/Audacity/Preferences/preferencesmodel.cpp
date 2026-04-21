@@ -174,7 +174,8 @@ void PreferencesModel::load(const QString& currentPageId)
                                                        "Spectral display"), IconCode::Code::SPECTROGRAM,
                  "Preferences/SpectrogramPreferencesPage.qml"),
 
-        makeItem("music", QT_TRANSLATE_NOOP("preferences", "Music"), IconCode::Code::METRONOME, ""),
+        makeItem("music", QT_TRANSLATE_NOOP("preferences", "Music"), IconCode::Code::METRONOME,
+                 "Preferences/MusicPreferencesPage.qml"),
 
         makeItem("cloud", QT_TRANSLATE_NOOP("preferences", "Cloud"), IconCode::Code::CLOUD, ""),
 

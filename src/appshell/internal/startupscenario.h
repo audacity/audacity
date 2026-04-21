@@ -24,26 +24,38 @@
 
 #include "istartupscenario.h"
 
+#include <QTimer>
+
 #include "framework/global/async/asyncable.h"
 #include "framework/global/modularity/ioc.h"
 #include "framework/interactive/iinteractive.h"
 #include "framework/actions/iactionsdispatcher.h"
-#include "framework/audioplugins/iregisteraudiopluginsscenario.h"
 #include "framework/multiwindows/imultiwindowsprovider.h"
+#include "update/iappupdatescenario.h"
+#include "update/iupdateconfiguration.h"
+#include "io/ifilesystem.h"
+#include "record/irecordcontroller.h"
+#include "playback/iplaybackcontroller.h"
 
 #include "appshell/iappshellconfiguration.h"
 #include "appshell/internal/isessionsmanager.h"
+#include "effects/effects_base/ieffectsproviderinitializer.h"
 
 namespace au::appshell {
 class StartupScenario : public au::appshell::IStartupScenario, public muse::async::Asyncable, public muse::Contextable
 {
     muse::GlobalInject<IAppShellConfiguration> configuration;
     muse::GlobalInject<muse::mi::IMultiWindowsProvider> multiwindowsProvider;
+    muse::GlobalInject<muse::update::IUpdateConfiguration> updateConfiguration;
+    muse::GlobalInject<muse::io::IFileSystem> fileSystem;
 
     muse::ContextInject<muse::IInteractive> interactive { this };
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
-    muse::ContextInject<muse::audioplugins::IRegisterAudioPluginsScenario> registerAudioPluginsScenario { this };
     muse::ContextInject<ISessionsManager> sessionsManager { this };
+    muse::ContextInject<effects::IEffectsProviderInitializer> effectsProviderInitializer { this };
+    muse::ContextInject<muse::update::IAppUpdateScenario> appUpdateScenario { this };
+    muse::ContextInject<record::IRecordController> recordController { this };
+    muse::ContextInject<playback::IPlaybackController> playbackController { this };
 
 public:
     StartupScenario(const muse::modularity::ContextPtr& ctx)
@@ -72,11 +84,16 @@ private:
     void openProject(const au::project::ProjectFile& file);
 
     void restoreLastSession();
+    bool alreadyCheckedForUpdateToday() const;
+    bool isAudioActive() const;
+    void tryCheckForUpdate();
+    void startUpdateCheckTimer();
 
     std::string m_startupTypeStr;
     au::project::ProjectFile m_startupProjectFile;
     muse::io::paths_t m_startupMediaFiles;
     bool m_startupCompleted = false;
+    QTimer m_updateCheckTimer;
 };
 }
 

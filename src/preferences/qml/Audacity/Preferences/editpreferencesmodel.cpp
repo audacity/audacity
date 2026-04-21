@@ -4,6 +4,7 @@
 #include "editpreferencesmodel.h"
 
 #include "settings.h"
+#include "translation.h"
 
 namespace au::appshell {
 EditPreferencesModel::EditPreferencesModel(QObject* parent)
@@ -209,5 +210,54 @@ void EditPreferencesModel::setPasteAsNewClip(bool value)
         return;
     }
     trackeditConfiguration()->setPasteAsNewClip(value);
+}
+
+int EditPreferencesModel::zoomPreset1() const
+{
+    return static_cast<int>(projectsceneConfiguration()->zoomPreset1());
+}
+
+void EditPreferencesModel::setZoomPreset1(int preset)
+{
+    if (zoomPreset1() == preset) {
+        return;
+    }
+    projectsceneConfiguration()->setZoomPreset1(static_cast<projectscene::ZoomPresets::Preset>(preset));
+    emit zoomPreset1Changed();
+}
+
+int EditPreferencesModel::zoomPreset2() const
+{
+    return static_cast<int>(projectsceneConfiguration()->zoomPreset2());
+}
+
+void EditPreferencesModel::setZoomPreset2(int preset)
+{
+    if (zoomPreset2() == preset) {
+        return;
+    }
+    projectsceneConfiguration()->setZoomPreset2(static_cast<projectscene::ZoomPresets::Preset>(preset));
+    emit zoomPreset2Changed();
+}
+
+QVariantList EditPreferencesModel::zoomPresetList() const
+{
+    QVariantList list;
+    list << QVariantMap{ { "title", muse::qtrc("appshell/preferences", "Fit to Width") }, { "value", 0 } };
+    list << QVariantMap{ { "title", muse::qtrc("appshell/preferences", "Zoom to Selection") }, { "value", 1 } };
+    list << QVariantMap{ { "title", muse::qtrc("appshell/preferences", "Zoom Default") }, { "value", 2 } };
+    list << QVariantMap{ { "title", muse::qtrc("appshell/preferences", "Minutes") }, { "value", 3 } };
+    list << QVariantMap{ { "title", muse::qtrc("appshell/preferences", "Seconds") }, { "value", 4 } };
+    list << QVariantMap{ { "title", muse::qtrc("appshell/preferences", "5ths of Seconds") }, { "value", 5 } };
+    list << QVariantMap{ { "title", muse::qtrc("appshell/preferences", "10ths of Seconds") }, { "value", 6 } };
+    list << QVariantMap{ { "title", muse::qtrc("appshell/preferences", "20ths of Seconds") }, { "value", 7 } };
+    list << QVariantMap{ { "title", muse::qtrc("appshell/preferences", "50ths of Seconds") }, { "value", 8 } };
+    list << QVariantMap{ { "title", muse::qtrc("appshell/preferences", "100ths of Seconds") }, { "value", 9 } };
+    list << QVariantMap{ { "title", muse::qtrc("appshell/preferences", "500ths of Seconds") }, { "value", 10 } };
+    list << QVariantMap{ { "title", muse::qtrc("appshell/preferences", "MilliSeconds") }, { "value", 11 } };
+    list << QVariantMap{ { "title", muse::qtrc("appshell/preferences", "Samples") }, { "value", 12 } };
+    list << QVariantMap{ { "title", muse::qtrc("appshell/preferences", "4 Pixels per Sample") }, { "value", 13 } };
+    list << QVariantMap{ { "title", muse::qtrc("appshell/preferences", "Max Zoom") }, { "value", 14 } };
+    return list;
 }
 }

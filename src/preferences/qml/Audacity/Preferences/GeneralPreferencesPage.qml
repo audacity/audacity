@@ -24,6 +24,7 @@ import QtQuick
 import Muse.Ui
 import Muse.UiComponents
 import Audacity.AppShell
+import Audacity.Preferences
 
 PreferencesPage {
     id: root
@@ -38,6 +39,14 @@ PreferencesPage {
         onReceivingUpdateForCurrentLanguage: function(current, total, status) {
             languagesSection.setUpdateProgress(current, total, status)
         }
+    }
+
+    UpdatePreferencesModel {
+        id: updateModel
+    }
+
+    UsageInfoPreferencesModel {
+        id: usageInfoModel
     }
 
     Column {
@@ -61,6 +70,12 @@ PreferencesPage {
             onCheckForUpdateRequested: {
                 preferencesModel.checkUpdateForCurrentLanguage()
             }
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
         }
 
         NumberFormatSection {
@@ -75,6 +90,53 @@ PreferencesPage {
             onNumberFormatSelected: function(numberFormatCode) {
                 preferencesModel.setNumberFormat(numberFormatCode)
             }
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
+        }
+
+        SeparatorLine { }
+
+        AutomaticUpdateSection {
+            isAppUpdatable: updateModel.isAppUpdatable()
+            needCheckForNewAppVersion: updateModel.needCheckForNewAppVersion
+            privacyPolicyUrl: updateModel.privacyPolicyUrl()
+
+            navigation.section: root.navigationSection
+            navigation.order: root.navigationOrderStart + 3
+
+            onNeedCheckForNewAppVersionChangeRequested: function(check) {
+                updateModel.needCheckForNewAppVersion = check
+            }
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
+        }
+
+        SeparatorLine { }
+
+        UsageInfoSection {
+            sendAnonymousUsageInfo: usageInfoModel.sendAnonymousUsageInfo
+            privacyPolicyUrl: updateModel.privacyPolicyUrl()
+
+            navigation.section: root.navigationSection
+            navigation.order: root.navigationOrderStart + 4
+
+            onSendAnonymousUsageInfoChangeRequested: function(send) {
+                usageInfoModel.sendAnonymousUsageInfo = send
+            }
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
         }
 
         SeparatorLine { }
@@ -83,12 +145,18 @@ PreferencesPage {
             id: temporaryFilesSection
 
             navigation.section: root.navigationSection
-            navigation.order: root.navigationOrderStart + 3
+            navigation.order: root.navigationOrderStart + 5
 
             temporaryPath: preferencesModel.temporaryDir
 
             onTemporaryFilesLocationChanged: function(path) {
                 preferencesModel.setTemporaryDir(path)
+            }
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
             }
         }
 
@@ -104,7 +172,13 @@ PreferencesPage {
             id: ffmpegLibrarySection
 
             navigation.section: root.navigationSection
-            navigation.order: root.navigationOrderStart + 4
+            navigation.order: root.navigationOrderStart + 6
+
+            onFocusChanged: {
+                if (activeFocus) {
+                    root.ensureContentVisibleRequested(Qt.rect(x, y, width, height))
+                }
+            }
         }
     }
 }

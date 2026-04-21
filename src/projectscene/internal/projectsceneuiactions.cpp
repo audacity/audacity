@@ -30,13 +30,6 @@ static UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Split tool"),
              IconCode::Code::SPLIT_TOOL
              ),
-    UiAction("zoom",
-             au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Zoom toggle"),
-             TranslatableString("action", "Zoom toggle"),
-             IconCode::Code::ZOOM_TOGGLE
-             ),
     UiAction("zoom-in",
              au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
@@ -51,11 +44,17 @@ static UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Zoom out"),
              IconCode::Code::ZOOM_OUT
              ),
-    UiAction("fit-selection",
+    UiAction("zoom-default",
              au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
-             TranslatableString("action", "Fit selection to width"),
-             TranslatableString("action", "Fit selection to width"),
+             TranslatableString("action", "Zoom default"),
+             TranslatableString("action", "Zoom default")
+             ),
+    UiAction("zoom-to-selection",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Zoom to selection"),
+             TranslatableString("action", "Zoom to selection"),
              IconCode::Code::FIT_SELECTION
              ),
     UiAction("zoom-to-fit-project",
@@ -64,6 +63,13 @@ static UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Zoom to fit project"),
              TranslatableString("action", "Zoom to fit project"),
              IconCode::Code::FIT_PROJECT
+             ),
+    UiAction("zoom-toggle",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Zoom toggle"),
+             TranslatableString("action", "Zoom toggle"),
+             IconCode::Code::ZOOM_TOGGLE
              ),
     UiAction("center-view-on-playhead",
              au::context::UiCtxProjectOpened,
@@ -189,6 +195,30 @@ static UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Move play cursor right"),
              TranslatableString("action", "Move play cursor right")
              ),
+    UiAction("sel-ext-left",
+             au::context::UiCtxProjectOpened,
+             muse::shortcuts::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Extend selection left"),
+             TranslatableString("action", "Extend selection left")
+             ),
+    UiAction("sel-ext-right",
+             au::context::UiCtxProjectOpened,
+             muse::shortcuts::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Extend selection right"),
+             TranslatableString("action", "Extend selection right")
+             ),
+    UiAction("sel-cntr-left",
+             au::context::UiCtxProjectOpened,
+             muse::shortcuts::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Contract selection from left"),
+             TranslatableString("action", "Contract selection from left")
+             ),
+    UiAction("sel-cntr-right",
+             au::context::UiCtxProjectOpened,
+             muse::shortcuts::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Contract selection from right"),
+             TranslatableString("action", "Contract selection from right")
+             ),
     UiAction("clip-pitch-speed",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
@@ -245,31 +275,33 @@ ProjectSceneUiActions::ProjectSceneUiActions(const muse::modularity::ContextPtr&
 
 void ProjectSceneUiActions::init()
 {
-    const auto& colors = configuration()->clipColors();
+    const auto& colorInfos = configuration()->clipColorInfos();
     m_actions.clear();
-    m_actions.reserve(2 * colors.size() + STATIC_ACTIONS.size());
+    m_actions.reserve(2 * colorInfos.size() + STATIC_ACTIONS.size());
 
-    for (const auto& color : colors) {
+    for (const auto& info : colorInfos) {
+        muse::Color resolved = configuration()->clipColor(info.index);
+
         UiAction clipColorAction;
-        clipColorAction.code = muse::actions::ActionQuery(makeClipColorChangeAction(color.second)).toString();
+        clipColorAction.code = muse::actions::ActionQuery(makeClipColorChangeAction(info.index)).toString();
         clipColorAction.uiCtx = context::UiCtxProjectOpened;
         clipColorAction.scCtx = context::CTX_PROJECT_FOCUSED;
         clipColorAction.description = muse::TranslatableString("action", "Change clip color");
         clipColorAction.title = muse::TranslatableString("action", "Change clip color");
         clipColorAction.iconCode = IconCode::Code::FRETBOARD_MARKER_CIRCLE_FILLED;
-        clipColorAction.iconColor = QString::fromStdString(color.second);
+        clipColorAction.iconColor = QString::fromStdString(resolved.toString());
         clipColorAction.checkable = Checkable::Yes;
 
         m_actions.push_back(std::move(clipColorAction));
 
         UiAction trackColorAction;
-        trackColorAction.code = muse::actions::ActionQuery(makeTrackColorChangeAction(color.second)).toString();
+        trackColorAction.code = muse::actions::ActionQuery(makeTrackColorChangeAction(info.index)).toString();
         trackColorAction.uiCtx = context::UiCtxProjectOpened;
         trackColorAction.scCtx = context::CTX_PROJECT_FOCUSED;
         trackColorAction.description = muse::TranslatableString("action", "Change track color");
         trackColorAction.title = muse::TranslatableString("action", "Change track color");
         trackColorAction.iconCode = IconCode::Code::FRETBOARD_MARKER_CIRCLE_FILLED;
-        trackColorAction.iconColor = QString::fromStdString(color.second);
+        trackColorAction.iconColor = QString::fromStdString(resolved.toString());
         trackColorAction.checkable = Checkable::Yes;
 
         m_actions.push_back(std::move(trackColorAction));
@@ -333,7 +365,7 @@ const ToolConfig& ProjectSceneUiActions::defaultPlaybackToolBarConfig()
             { "zoom-out", true },
             { "zoom-to-selection", true },
             { "zoom-to-fit-project", true },
-            { "zoom", true },
+            { "zoom-toggle", true },
             // { "spectral-box-select", false },
             // { "spectral-brush", false },
             // { "", true },

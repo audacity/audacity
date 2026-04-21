@@ -16,11 +16,8 @@ Paul Licameli split from AudacityProject.cpp
 #include <wx/evtloop.h>
 #endif
 
-#include "AnalyzedWaveClip.h"
 #include "AudacityMessageBox.h"
-#include "AudacityMirProject.h"
 #include "BasicUI.h"
-#include "ClipMirAudioReader.h"
 #include "CodeConversions.h"
 #include "Export.h"
 #include "HelpText.h"
@@ -28,7 +25,6 @@ Paul Licameli split from AudacityProject.cpp
 #include "ImportPlugin.h"
 #include "ImportProgressListener.h"
 #include "Legacy.h"
-#include "MusicInformationRetrieval.h"
 #include "PlatformCompatibility.h"
 #include "Project.h"
 #include "ProjectFileIO.h"
@@ -1326,9 +1322,11 @@ bool ProjectFileManager::Import(const FilePath& fileName, bool addToHistory)
 bool ProjectFileManager::Import(wxArrayString fileNames, bool addToHistory)
 {
     fileNames.Sort(FileNames::CompareNoCase);
-    if (!ProjectFileManager::Get(mProject).ImportAndRunTempoDetection(
-            std::vector<wxString> { fileNames.begin(), fileNames.end() },
-            addToHistory)) {
+    const auto success = std::all_of(
+        fileNames.begin(), fileNames.end(), [&](const wxString& fileName) {
+        return DoImport(fileName, addToHistory);
+    });
+    if (!success) {
         return false;
     }
     // Last track in the project is the one that was just added. Use it for
@@ -1355,78 +1353,8 @@ bool ProjectFileManager::Import(wxArrayString fileNames, bool addToHistory)
     return true;
 }
 
-namespace {
-std::vector<std::shared_ptr<MIR::AnalyzedAudioClip> > RunTempoDetection(
-    const std::vector<std::shared_ptr<ClipMirAudioReader> >& readers,
-    const MIR::ProjectInterface& project, bool projectWasEmpty)
-{
-    const auto isBeatsAndMeasures = project.ViewIsBeatsAndMeasures();
-    const auto projectTempo = project.GetTempo();
-
-    using namespace BasicUI;
-    auto progress = MakeProgress(
-        XO("Music Information Retrieval"), XO("Analyzing imported audio"),
-        ProgressShowCancel);
-    auto count = 0;
-    const auto reportProgress = [&](double progressFraction) {
-        const auto result = progress->Poll(
-            (count + progressFraction) / readers.size() * 1000, 1000);
-        if (result != ProgressResult::Success) {
-            throw UserException {}
-        }
-    };
-
-    std::vector<std::shared_ptr<MIR::AnalyzedAudioClip> > analyzedClips;
-    analyzedClips.reserve(readers.size());
-    std::transform(
-        readers.begin(), readers.end(), std::back_inserter(analyzedClips),
-        [&](const std::shared_ptr<ClipMirAudioReader>& reader) {
-        const MIR::ProjectSyncInfoInput input {
-            *reader,      reader->filename, reader->tags,       reportProgress,
-            projectTempo, projectWasEmpty,  isBeatsAndMeasures,
-        };
-        auto syncInfo = MIR::GetProjectSyncInfo(input);
-        ++count;
-        return std::make_shared<AnalyzedWaveClip>(reader, syncInfo);
-    });
-    return analyzedClips;
-}
-} // namespace
-
-bool ProjectFileManager::ImportAndRunTempoDetection(
-    const std::vector<FilePath>& fileNames, bool addToHistory)
-{
-    const auto projectWasEmpty
-        =TrackList::Get(mProject).Any<WaveTrack>().empty();
-    std::vector<std::shared_ptr<ClipMirAudioReader> > resultingReaders;
-    const auto success = std::all_of(
-        fileNames.begin(), fileNames.end(), [&](const FilePath& fileName) {
-        std::shared_ptr<ClipMirAudioReader> resultingReader;
-        const auto success = DoImport(fileName, addToHistory, resultingReader);
-        if (success && resultingReader) {
-            resultingReaders.push_back(std::move(resultingReader));
-        }
-        return success;
-    });
-    // At the moment, one failing import doesn't revert the project state, hence
-    // we still run the analysis on what was successfully imported.
-    // TODO implement reverting of the project state on failure.
-    if (!resultingReaders.empty()) {
-        const auto pProj = mProject.shared_from_this();
-        BasicUI::CallAfter([=] {
-            AudacityMirProject mirInterface { *pProj };
-            const auto analyzedClips
-                =RunTempoDetection(resultingReaders, mirInterface, projectWasEmpty);
-            MIR::SynchronizeProject(analyzedClips, mirInterface, projectWasEmpty);
-        });
-    }
-    return success;
-}
-
-// If pNewTrackList is passed in non-NULL, it gets filled with the pointers to NEW tracks.
 bool ProjectFileManager::DoImport(
-    const FilePath& fileName, bool addToHistory,
-    std::shared_ptr<ClipMirAudioReader>& resultingReader)
+    const FilePath& fileName, bool addToHistory)
 {
     auto& project = mProject;
     auto& projectFileIO = ProjectFileIO::Get(project);
@@ -1511,17 +1439,6 @@ bool ProjectFileManager::DoImport(
         const auto projectTempo = ProjectTimeSignature::Get(project).GetTempo();
         for (auto track : newTracks) {
             DoProjectTempoChange(*track, projectTempo);
-        }
-
-        if (newTracks.size() == 1) {
-            const auto waveTrack = dynamic_cast<WaveTrack*>(newTracks[0].get());
-            // Also check that the track has a clip, as protection against empty
-            // file import.
-            if (waveTrack && !waveTrack->GetClipInterfaces().empty()) {
-                resultingReader.reset(new ClipMirAudioReader {
-                    std::move(acidTags), fileName.ToStdString(),
-                    *waveTrack });
-            }
         }
 
         if (addToHistory) {

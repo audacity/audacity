@@ -163,8 +163,8 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenStopped)
     .WillOnce(Return(std::nullopt));
 
     //! [GIVEN] No time selection
-    EXPECT_CALL(*m_selectionController, timeSelectionIsNotEmpty())
-    .WillOnce(Return(false));
+    EXPECT_CALL(*m_selectionController, timeSelectionIsEmpty())
+    .WillOnce(Return(true));
 
     //! [GIVEN] No loop region active
     EXPECT_CALL(*m_player, isLoopRegionActive())
@@ -226,8 +226,8 @@ TEST_F(PlaybackControllerTests, TogglePlay_WithSelection)
 
     //! [GIVEN] There is selection from 10 to 20 secs
     PlaybackRegion selectionRegion = { secs_t(10.0), secs_t(20.0) };
-    EXPECT_CALL(*m_selectionController, timeSelectionIsNotEmpty())
-    .WillOnce(Return(true));
+    EXPECT_CALL(*m_selectionController, timeSelectionIsEmpty())
+    .WillOnce(Return(false));
     EXPECT_CALL(*m_selectionController, dataSelectedStartTime())
     .WillOnce(Return(selectionRegion.start));
     EXPECT_CALL(*m_selectionController, dataSelectedEndTime())
@@ -299,7 +299,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_WithIgnoreSelection)
     .WillByDefault(Return(Qt::ShiftModifier));
 
     //! [THEN] No checking selection
-    EXPECT_CALL(*m_selectionController, timeSelectionIsNotEmpty())
+    EXPECT_CALL(*m_selectionController, timeSelectionIsEmpty())
     .Times(0);
 
     //! [THEN] Expect that playback region will be reseted and playback will be seek to previous seek position
@@ -437,7 +437,7 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenPaused_WithIgnoreSelection)
     .WillRepeatedly(Return());
 
     //! [THEN] No checking selection
-    EXPECT_CALL(*m_selectionController, timeSelectionIsNotEmpty())
+    EXPECT_CALL(*m_selectionController, timeSelectionIsEmpty())
     .Times(0);
 
     //! [THEN] Player should start playing
@@ -476,8 +476,8 @@ TEST_F(PlaybackControllerTests, TogglePlay_WhenPaused_WithChangingSelection)
 
     //! [THEN] Expect that playbeck should run from selection start position
     PlaybackRegion selectionRegion = { secs_t(10.0), secs_t(20.0) };
-    EXPECT_CALL(*m_selectionController, timeSelectionIsNotEmpty())
-    .WillOnce(Return(true));
+    EXPECT_CALL(*m_selectionController, timeSelectionIsEmpty())
+    .WillOnce(Return(false));
     EXPECT_CALL(*m_selectionController, dataSelectedStartTime())
     .WillOnce(Return(selectionRegion.start));
     EXPECT_CALL(*m_selectionController, dataSelectedEndTime())
@@ -515,8 +515,8 @@ TEST_F(PlaybackControllerTests, TogglePlay_WithSelection_StartTimeIsMoreThanTota
 
     //! [GIVEN] There is selection from 10 to 20 secs
     PlaybackRegion selectionRegion = { secs_t(1000.0), secs_t(2000.0) };
-    EXPECT_CALL(*m_selectionController, timeSelectionIsNotEmpty())
-    .WillOnce(Return(true));
+    EXPECT_CALL(*m_selectionController, timeSelectionIsEmpty())
+    .WillOnce(Return(false));
     EXPECT_CALL(*m_selectionController, dataSelectedStartTime())
     .WillOnce(Return(selectionRegion.start));
     EXPECT_CALL(*m_selectionController, dataSelectedEndTime())

@@ -1327,6 +1327,72 @@ bool ProjectFileIO::RemoveProject(const FilePath& filename)
     return success;
 }
 
+namespace {
+class ThumbnailOnlyHandler final : public XMLTagHandler
+{
+public:
+    bool HandleXMLTag(const std::string_view& tag, const AttributesList&) override
+    {
+        return tag == "project" || tag == "thumbnail";
+    }
+
+    XMLTagHandler* HandleXMLChild(const std::string_view& tag) override
+    {
+        return (tag == "thumbnail") ? this : nullptr;
+    }
+
+    void HandleXMLBlob(const std::string_view& name, const void* data, size_t len) override
+    {
+        if (name == "data") {
+            const auto* bytes = static_cast<const uint8_t*>(data);
+            result.assign(bytes, bytes + len);
+        }
+    }
+
+    std::vector<uint8_t> result;
+};
+}
+
+std::optional<std::vector<uint8_t> > ProjectFileIO::ReadThumbnail(const FilePath& fileName)
+{
+    // We won´t change the database. This will avoid shm and wal files to be created, and we won´t have to worry about them.
+    const wxString uri = wxString::Format("file:%s?immutable=1", fileName.ToUTF8());
+
+    sqlite3* db = nullptr;
+    const int openRc = sqlite3_open_v2(
+        uri.ToUTF8().data(), &db, SQLITE_OPEN_READONLY, nullptr);
+    auto closeDb = finally([db] { sqlite3_close(db); });
+
+    if (openRc != SQLITE_OK) {
+        return std::nullopt;
+    }
+
+    int64_t rowId = 0;
+    sqlite3_stmt* stmt = nullptr;
+    if (sqlite3_prepare_v2(
+            db, "SELECT ROWID FROM main.project WHERE id = 1;",
+            -1, &stmt, nullptr)
+        != SQLITE_OK) {
+        return std::nullopt;
+    }
+
+    auto finalizeStmt = finally([stmt] { sqlite3_finalize(stmt); });
+
+    if (sqlite3_step(stmt) != SQLITE_ROW) {
+        return std::nullopt;
+    }
+    rowId = sqlite3_column_int64(stmt, 0);
+
+    BufferedProjectBlobStream stream(db, "main", "project", rowId);
+    ThumbnailOnlyHandler handler;
+    bool success = ProjectSerializer::Decode(stream, &handler);
+    if (!success) {
+        return std::nullopt;
+    }
+
+    return handler.result.empty() ? std::nullopt : std::optional<std::vector<uint8_t> >(std::move(handler.result));
+}
+
 ProjectFileIO::BackupProject::BackupProject(
     ProjectFileIO& projectFileIO, const FilePath& path)
 {

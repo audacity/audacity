@@ -78,7 +78,7 @@ protected:
             // structure.tracks.back().type = TrackType::Undefined;
         }
 
-        structure.tracks.back().color = muse::draw::Color(std::rand() % 256, std::rand() % 256, std::rand() % 256);
+        structure.tracks.back().colorIndex = (std::rand() % 9) + 1;
     }
 
     static void addClipToTrack(TracksAndItems& structure, TrackId trackId, int j)
@@ -91,12 +91,11 @@ protected:
         newClip.title = std::to_string(j).c_str();
 
         if (j % 2 == 0) {
-            newClip.color = muse::draw::Color(std::rand() % 256, std::rand() % 256, std::rand() % 256);
-            newClip.hasCustomColor = true;
+            newClip.colorIndex = (std::rand() % 9) + 1;
             newClip.optimizeForVoice = false;
             newClip.stretchToMatchTempo = true;
         } else {
-            newClip.hasCustomColor = false;
+            newClip.colorIndex = CLIP_COLOR_INDEX_NONE;
             newClip.optimizeForVoice = true;
             newClip.stretchToMatchTempo = false;
         }
@@ -112,7 +111,7 @@ protected:
         newLabel.title = std::to_string(j).c_str();
         newLabel.startTime = j * 10.0;
         newLabel.endTime = (j + 1) * 10.0;
-        newLabel.color = muse::draw::Color(std::rand() % 256, std::rand() % 256, std::rand() % 256);
+        newLabel.colorIndex = (std::rand() % 9) + 1;
     }
 
     std::shared_ptr<TrackeditProjectMock> m_trackEditProject;

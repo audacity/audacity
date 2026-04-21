@@ -16,7 +16,8 @@ void TrackLabelItem::setLabel(const trackedit::Label& label)
 {
     m_key = TrackItemKey(label.key);
     m_title = label.title;
-    m_color = label.color.toQColor();
+    m_color = configuration()->clipColor(label.colorIndex).toQColor();
+    m_selectedColor = configuration()->clipSelectedColor(label.colorIndex).toQColor();
 
     emit titleChanged();
     emit colorChanged();

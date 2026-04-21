@@ -58,7 +58,7 @@ struct AudioIOStartStreamOptions
     std::shared_ptr< AudioIOListener > listener;
     double rate;
     mutable std::optional<double> pStartTime;
-    double preRoll{ 0.0 };
+    double leadInTime{ 0.0 };
 
     bool playNonWaveTracks{ true };
     bool inputMonitoring{ false };

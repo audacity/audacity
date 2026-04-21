@@ -8,6 +8,7 @@ import Audacity.ProjectScene
 import Audacity.Project
 import Audacity.Playback
 import Audacity.Spectrogram
+import Audacity.Record
 
 Rectangle {
     id: root
@@ -88,6 +89,10 @@ Rectangle {
         id: playRegionModel
     }
 
+    LeadInRecordingIndicatorModel {
+        id: leadInIndicator
+    }
+
     ViewTracksListModel {
         id: tracksModel
 
@@ -103,13 +108,12 @@ Rectangle {
     ProjectPropertiesModel {
         id: project
 
-        onCaptureThumbnail: function captureThumbnail(thumbnailUrl) {
+        onCaptureThumbnail: function captureThumbnail() {
             // hide playCursor for the time grabbing image
             playCursor.visible = false
             content.grabToImage(function (result) {
                 playCursor.visible = true
-                var success = result.saveToFile(thumbnailUrl)
-                project.onThumbnailCreated(success)
+                project.onThumbnailCreated(result.image)
             })
         }
     }
@@ -181,6 +185,7 @@ Rectangle {
 
         playbackState.init()
         playRegionModel.init()
+        leadInIndicator.init()
         selectionViewController.load()
         selectionContextMenuModel.load()
         canvasContextMenuModel.load()
@@ -379,7 +384,7 @@ Rectangle {
                     hoverEnabled: true
                     cursorShape: pressed || timelineMouseArea.pressed ? Qt.ClosedHandCursor : Qt.OpenHandCursor
 
-                    onPressed: function(e) {
+                    onPressed: function (e) {
                         head.dragActive = true
                         head.dragPositionX = mapToItem(timeline, e.x, e.y).x
                         timeline.displayedPlayCursorX = head.dragPositionX
@@ -453,6 +458,8 @@ Rectangle {
         readonly property string smoothShape: ":/images/customCursorShapes/Smooth.png"
         readonly property string leftTrimShape: ":/images/customCursorShapes/ClipTrimLeft.png"
         readonly property string rightTrimShape: ":/images/customCursorShapes/ClipTrimRight.png"
+        readonly property string leftStretchShape: ":/images/customCursorShapes/ClipStretchLeft.png"
+        readonly property string rightStretchShape: ":/images/customCursorShapes/ClipStretchRight.png"
 
         active: {
             // Don't show custom cursor during playback for sample editing
@@ -471,7 +478,11 @@ Rectangle {
                 return pencilShape
             }
 
-            return content.leftTrimContainsMouse || content.leftTrimPressedButtons ? leftTrimShape : rightTrimShape
+            var isLeft = content.leftTrimContainsMouse || content.leftTrimPressedButtons
+            if (root.altPressed) {
+                return isLeft ? leftStretchShape : rightStretchShape
+            }
+            return isLeft ? leftTrimShape : rightTrimShape
         }
         size: content.isIsolationMode || (!content.isBrush && content.isNearSample) ? 36 : 26
     }
@@ -504,7 +515,8 @@ Rectangle {
 
             preventStealing: true
             acceptedButtons: Qt.LeftButton | Qt.RightButton
-            cursorShape: Qt.IBeamCursor
+
+            Component.onCompleted: CustomCursorProvider.setCursorShape(mainMouseArea, ":/images/customCursorShapes/IBeamCursor.png", 26)
 
             hoverEnabled: true
 
@@ -674,6 +686,14 @@ Rectangle {
 
                 property bool moveActive: false
 
+                onMoveActiveChanged: {
+                    if (moveActive) {
+                        CustomCursorProvider.overrideStandardCursor(Qt.ClosedHandCursor)
+                    } else {
+                        CustomCursorProvider.restoreCursor()
+                    }
+                }
+
                 ScrollBar.horizontal: null
                 ScrollBar.vertical: null
 
@@ -813,6 +833,9 @@ Rectangle {
                             headerHeight: prv.headerHeight
                             sampleRate: itemData.trackSampleRate
 
+                            isLeadInRecordingTrack: leadInIndicator.visible && leadInIndicator.trackIds.indexOf(itemData.trackId) !== -1
+                            leadInRecordingStartTime: leadInIndicator.startTime
+
                             isDataSelected: itemData.isDataSelected
                             isTrackSelected: itemData.isTrackSelected
                             isTrackFocused: itemData.isTrackFocused
@@ -892,7 +915,8 @@ Rectangle {
                             }
 
                             onRequestSelectionContextMenu: function (x, y) {
-                                selectionContextMenuLoader.show(Qt.point(x + canvasIndent.width, y + timelineHeader.height), selectionContextMenuModel.items)
+                                let mapped = trackClipsContainer.mapToItem(tracksItemsView, x, y)
+                                selectionContextMenuLoader.show(Qt.point(mapped.x + canvasIndent.width, mapped.y + timelineHeader.height), selectionContextMenuModel.items)
                             }
 
                             onSelectionResize: function (x1, x2, completed) {
@@ -1072,7 +1096,8 @@ Rectangle {
                             }
 
                             onRequestSelectionContextMenu: function (x, y) {
-                                selectionContextMenuLoader.show(Qt.point(x + canvasIndent.width, y + timelineHeader.height), selectionContextMenuModel.items)
+                                let mapped = trackItemLoader.item.mapToItem(tracksItemsView, x, y)
+                                selectionContextMenuLoader.show(Qt.point(mapped.x + canvasIndent.width, mapped.y + timelineHeader.height), selectionContextMenuModel.items)
                             }
 
                             onItemSelectedRequested: {

@@ -28,7 +28,11 @@ void CloudProjectsModel::load()
             setState(State::Loading);
             loadItemsIfNecessary();
         } else {
-            authorization()->openSignInDialog();
+            muse::actions::ActionQuery query("audacity://cloud/open-signin-dialog");
+            query.addParam("sync", muse::Val(false));
+            query.addParam("showTourPage", muse::Val(false));
+            dispatcher()->dispatch(query);
+
             setState(State::NotSignedIn);
         }
     };
@@ -142,7 +146,6 @@ void CloudProjectsModel::loadItemsIfNecessary()
                     obj[TIME_SINCE_MODIFIED_KEY]
                         = DataFormatter::formatTimeSince(Date::fromQDate(QDateTime::fromSecsSinceEpoch(
                                                                              static_cast<qint64>(item.updated)).date())).toQString();
-                    obj[THUMBNAIL_URL_KEY] = "";
                     obj[FILE_SIZE_KEY] = (item.fileSize > 0) ? DataFormatter::formatFileSize(item.fileSize).toQString() : QString();
                     obj[IS_CREATE_NEW_KEY] = false;
                     obj[IS_NO_RESULTS_FOUND_KEY] = false;

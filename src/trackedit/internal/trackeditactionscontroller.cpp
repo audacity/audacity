@@ -35,7 +35,8 @@ static const ActionCode CUT_PER_CLIP_RIPPLE_CODE("cut-per-clip-ripple");
 static const ActionCode CUT_PER_TRACK_RIPPLE_CODE("cut-per-track-ripple");
 static const ActionCode CUT_ALL_TRACKS_RIPPLE_CODE("cut-all-tracks-ripple");
 
-static const ActionCode DELETE_LEAVE_GAP_CODE("split-delete");
+static const ActionCode CUT_LEAVE_GAP_CODE("cut-leave-gap");
+static const ActionCode DELETE_LEAVE_GAP_CODE("delete-leave-gap");
 static const ActionCode DELETE_PER_CLIP_RIPPLE_CODE("delete-per-clip-ripple");
 static const ActionCode DELETE_PER_TRACK_RIPPLE_CODE("delete-per-track-ripple");
 static const ActionCode DELETE_ALL_TRACKS_RIPPLE_CODE("delete-all-tracks-ripple");
@@ -139,9 +140,12 @@ constexpr double MIN_CLIP_WIDTH = 3.0;
 // In principle, disabled are actions that modify the data involved in playback.
 static const std::vector<ActionCode> actionsDisabledDuringRecording {
     TRACKEDIT_CUT_CODE,
+    CUT_LEAVE_GAP_CODE,
     CUT_PER_CLIP_RIPPLE_CODE,
     CUT_PER_TRACK_RIPPLE_CODE,
+    CUT_ALL_TRACKS_RIPPLE_CODE,
     TRACKEDIT_DELETE_CODE,
+    DELETE_LEAVE_GAP_CODE,
     DELETE_PER_CLIP_RIPPLE_CODE,
     DELETE_PER_TRACK_RIPPLE_CODE,
     DELETE_ALL_TRACKS_RIPPLE_CODE,
@@ -213,10 +217,12 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, DISJOIN_CODE, this, &TrackeditActionsController::doGlobalDisjoin);
     dispatcher()->reg(this, DUPLICATE_CODE, this, &TrackeditActionsController::doGlobalDuplicate);
 
+    dispatcher()->reg(this, CUT_LEAVE_GAP_CODE, this, &TrackeditActionsController::doGlobalCutLeaveGap);
     dispatcher()->reg(this, CUT_PER_CLIP_RIPPLE_CODE, this, &TrackeditActionsController::doGlobalCutPerClipRipple);
     dispatcher()->reg(this, CUT_PER_TRACK_RIPPLE_CODE, this, &TrackeditActionsController::doGlobalCutPerTrackRipple);
     dispatcher()->reg(this, CUT_ALL_TRACKS_RIPPLE_CODE, this, &TrackeditActionsController::doGlobalCutAllTracksRipple);
 
+    dispatcher()->reg(this, DELETE_LEAVE_GAP_CODE, this, &TrackeditActionsController::doGlobalDeleteLeaveGap);
     dispatcher()->reg(this, DELETE_PER_CLIP_RIPPLE_CODE, this, &TrackeditActionsController::doGlobalDeletePerClipRipple);
     dispatcher()->reg(this, DELETE_PER_TRACK_RIPPLE_CODE, this, &TrackeditActionsController::doGlobalDeletePerTrackRipple);
     dispatcher()->reg(this, DELETE_ALL_TRACKS_RIPPLE_CODE, this, &TrackeditActionsController::doGlobalDeleteAllTracksRipple);
@@ -407,7 +413,7 @@ LabelKeyList TrackeditActionsController::labelsForInteraction() const
 
 void TrackeditActionsController::doGlobalCopy()
 {
-    if (selectionController()->timeSelectionIsNotEmpty()) {
+    if (!selectionController()->timeSelectionIsEmpty()) {
         dispatcher()->dispatch(RANGE_SELECTION_COPY_CODE);
         return;
     }
@@ -425,7 +431,7 @@ void TrackeditActionsController::doGlobalCopy()
 
 void TrackeditActionsController::doGlobalCut()
 {
-    const bool isTrackSelected = !selectionController()->timeSelectionIsNotEmpty() && !selectionController()->selectedTracks().empty()
+    const bool isTrackSelected = selectionController()->timeSelectionIsEmpty() && !selectionController()->selectedTracks().empty()
                                  && !selectionController()->hasSelectedClips() && !selectionController()->hasSelectedLabels();
 
     const bool wasSet = configuration()->deleteBehavior() != DeleteBehavior::NotSet;
@@ -465,7 +471,32 @@ void TrackeditActionsController::doGlobalCut()
         }
     }
 
-    if (selectionController()->timeSelectionIsNotEmpty()) {
+    if (!selectionController()->timeSelectionIsEmpty()) {
+        auto selectedTracks = selectionController()->selectedTracks();
+        secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
+        secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
+
+        dispatcher()->dispatch(RANGE_SELECTION_SPLIT_CUT,
+                               ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
+
+        frequencySelectionController()->resetFrequencySelection();
+        return;
+    }
+
+    if (isFocusedItemClip()) {
+        dispatcher()->dispatch(MULTI_CLIP_CUT_CODE, ActionData::make_arg1(false));
+        return;
+    }
+
+    if (isFocusedItemLabel()) {
+        dispatcher()->dispatch(LABEL_CUT_MULTI_CODE, ActionData::make_arg1(false));
+        return;
+    }
+}
+
+void TrackeditActionsController::doGlobalCutLeaveGap()
+{
+    if (!selectionController()->timeSelectionIsEmpty()) {
         auto selectedTracks = selectionController()->selectedTracks();
         secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
         secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
@@ -491,7 +522,7 @@ void TrackeditActionsController::doGlobalCut()
 void TrackeditActionsController::doGlobalCutPerClipRipple()
 {
     auto moveClips = ActionData::make_arg1(false);
-    if (selectionController()->timeSelectionIsNotEmpty()) {
+    if (!selectionController()->timeSelectionIsEmpty()) {
         dispatcher()->dispatch(RANGE_SELECTION_CUT_CODE, moveClips);
         return;
     }
@@ -510,7 +541,7 @@ void TrackeditActionsController::doGlobalCutPerClipRipple()
 void TrackeditActionsController::doGlobalCutPerTrackRipple()
 {
     auto moveClips = ActionData::make_arg1(true);
-    if (selectionController()->timeSelectionIsNotEmpty()) {
+    if (!selectionController()->timeSelectionIsEmpty()) {
         dispatcher()->dispatch(RANGE_SELECTION_CUT_CODE, moveClips);
         return;
     }
@@ -533,7 +564,7 @@ void TrackeditActionsController::doGlobalCutAllTracksRipple()
     project::IAudacityProjectPtr project = globalContext()->currentProject();
     auto tracks = project->trackeditProject()->trackIdList();
 
-    if (selectionController()->timeSelectionIsNotEmpty()) {
+    if (!selectionController()->timeSelectionIsEmpty()) {
         secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
         secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
 
@@ -558,7 +589,7 @@ void TrackeditActionsController::doGlobalCutAllTracksRipple()
 
 void TrackeditActionsController::doGlobalDelete()
 {
-    const bool isTrackSelected = !selectionController()->timeSelectionIsNotEmpty() && !selectionController()->selectedTracks().empty()
+    const bool isTrackSelected = selectionController()->timeSelectionIsEmpty() && !selectionController()->selectedTracks().empty()
                                  && !selectionController()->hasSelectedClips() && !selectionController()->hasSelectedLabels();
 
     const bool wasSet = configuration()->deleteBehavior() != DeleteBehavior::NotSet;
@@ -607,7 +638,7 @@ void TrackeditActionsController::doGlobalDelete()
         }
     }
 
-    if (selectionController()->timeSelectionIsNotEmpty()) {
+    if (!selectionController()->timeSelectionIsEmpty()) {
         auto selectedTracks = selectionController()->selectedTracks();
         secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
         secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
@@ -636,19 +667,48 @@ void TrackeditActionsController::doGlobalDelete()
     }
 
     interactive()->errorSync(muse::trc("trackedit", "No audio selected"),
-                             muse::trc("trackedit", "Select the audio for Delete then try again."));
+                             muse::trc("trackedit", "Select the audio to delete and try again."));
 }
 
 void TrackeditActionsController::doGlobalCancel()
 {
     trackeditInteraction()->notifyAboutCancelDragEdit();
+    trackNavigationController()->setIsNavigationActive(false);
+}
+
+void TrackeditActionsController::doGlobalDeleteLeaveGap()
+{
+    if (!selectionController()->timeSelectionIsEmpty()) {
+        auto selectedTracks = selectionController()->selectedTracks();
+        secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
+        secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
+
+        dispatcher()->dispatch(RANGE_SELECTION_SPLIT_DELETE,
+                               ActionData::make_arg3<TrackIdList, secs_t, secs_t>(selectedTracks, selectedStartTime, selectedEndTime));
+
+        frequencySelectionController()->resetFrequencySelection();
+        return;
+    }
+
+    if (isFocusedItemClip()) {
+        dispatcher()->dispatch(MULTI_CLIP_DELETE_CODE, ActionData::make_arg1(false));
+        return;
+    }
+
+    if (isFocusedItemLabel()) {
+        dispatcher()->dispatch(LABEL_DELETE_MULTI_CODE, ActionData::make_arg1(false));
+        return;
+    }
+
+    interactive()->errorSync(muse::trc("trackedit", "No audio selected"),
+                             muse::trc("trackedit", "Select the audio to delete and try again."));
 }
 
 void TrackeditActionsController::doGlobalDeletePerClipRipple()
 {
     auto moveClips = ActionData::make_arg1(false);
 
-    if (selectionController()->timeSelectionIsNotEmpty()) {
+    if (!selectionController()->timeSelectionIsEmpty()) {
         dispatcher()->dispatch(RANGE_SELECTION_DELETE_CODE, moveClips);
         return;
     }
@@ -664,14 +724,14 @@ void TrackeditActionsController::doGlobalDeletePerClipRipple()
     }
 
     interactive()->errorSync(muse::trc("trackedit", "No audio selected"),
-                             muse::trc("trackedit", "Select the audio for Delete then try again."));
+                             muse::trc("trackedit", "Select the audio to delete and try again."));
 }
 
 void TrackeditActionsController::doGlobalDeletePerTrackRipple()
 {
     auto moveClips = ActionData::make_arg1(true);
 
-    if (selectionController()->timeSelectionIsNotEmpty()) {
+    if (!selectionController()->timeSelectionIsEmpty()) {
         dispatcher()->dispatch(RANGE_SELECTION_DELETE_CODE, moveClips);
         return;
     }
@@ -687,7 +747,7 @@ void TrackeditActionsController::doGlobalDeletePerTrackRipple()
     }
 
     interactive()->errorSync(muse::trc("trackedit", "No audio selected"),
-                             muse::trc("trackedit", "Select the audio for Delete then try again."));
+                             muse::trc("trackedit", "Select the audio to delete and try again."));
 }
 
 void TrackeditActionsController::doGlobalDeleteAllTracksRipple()
@@ -697,7 +757,7 @@ void TrackeditActionsController::doGlobalDeleteAllTracksRipple()
     project::IAudacityProjectPtr project = globalContext()->currentProject();
     auto tracks = project->trackeditProject()->trackIdList();
 
-    if (selectionController()->timeSelectionIsNotEmpty()) {
+    if (!selectionController()->timeSelectionIsEmpty()) {
         secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
         secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
 
@@ -718,7 +778,7 @@ void TrackeditActionsController::doGlobalDeleteAllTracksRipple()
     }
 
     interactive()->errorSync(muse::trc("trackedit", "No audio selected"),
-                             muse::trc("trackedit", "Select the audio for Delete then try again."));
+                             muse::trc("trackedit", "Select the audio to delete and try again."));
 }
 
 void TrackeditActionsController::doGlobalSplit()
@@ -730,7 +790,7 @@ void TrackeditActionsController::doGlobalSplit()
     }
 
     std::vector<secs_t> pivots;
-    if (selectionController()->timeSelectionIsNotEmpty()) {
+    if (!selectionController()->timeSelectionIsEmpty()) {
         pivots.push_back(selectionController()->dataSelectedStartTime());
         pivots.push_back(selectionController()->dataSelectedEndTime());
     } else {
@@ -742,7 +802,7 @@ void TrackeditActionsController::doGlobalSplit()
 
 void TrackeditActionsController::doGlobalSplitIntoNewTrack()
 {
-    if (selectionController()->timeSelectionIsNotEmpty()) {
+    if (!selectionController()->timeSelectionIsEmpty()) {
         TrackIdList selectedTracks = selectionController()->selectedTracks();
         secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
         secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
@@ -771,7 +831,7 @@ void TrackeditActionsController::doGlobalJoin()
 
 void TrackeditActionsController::doGlobalDisjoin()
 {
-    if (selectionController()->timeSelectionIsNotEmpty()) {
+    if (!selectionController()->timeSelectionIsEmpty()) {
         TrackIdList selectedTracks = selectionController()->selectedTracks();
         secs_t selectedStartTime = selectionController()->dataSelectedStartTime();
         secs_t selectedEndTime = selectionController()->dataSelectedEndTime();
@@ -1726,15 +1786,13 @@ void TrackeditActionsController::setClipColor(const muse::actions::ActionQuery& 
         return;
     }
 
-    std::string newColor;
-    if (q.contains("color")) {
-        newColor = q.param("color").toString();
-    } else {
-        newColor = "";
+    trackedit::ClipColorIndex colorIndex = trackedit::CLIP_COLOR_INDEX_NONE;
+    if (q.contains("colorindex")) {
+        colorIndex = q.param("colorindex").toInt();
     }
 
     auto clipKey = selectedClips.front();
-    trackeditInteraction()->changeClipColor(clipKey, newColor);
+    trackeditInteraction()->changeClipColor(clipKey, colorIndex);
     notifyActionCheckedChanged(q.toString());
 }
 
@@ -1745,14 +1803,12 @@ void TrackeditActionsController::setTrackColor(const muse::actions::ActionQuery&
         return;
     }
 
-    std::string color;
-    if (q.contains("color")) {
-        color = q.param("color").toString();
-    } else {
-        color = "";
+    trackedit::ClipColorIndex colorIndex = trackedit::CLIP_COLOR_INDEX_NONE;
+    if (q.contains("colorindex")) {
+        colorIndex = q.param("colorindex").toInt();
     }
 
-    trackeditInteraction()->changeTracksColor(tracks, color);
+    trackeditInteraction()->changeTracksColor(tracks, colorIndex);
     notifyActionCheckedChanged(q.toString());
 }
 
@@ -2081,6 +2137,11 @@ void TrackeditActionsController::moveFocusedItemDown()
 
 void TrackeditActionsController::extendFocusedItemBoundaryLeft()
 {
+    if (!navigationController()->isHighlight()) {
+        dispatcher()->dispatch("sel-ext-left");
+        return;
+    }
+
     TrackItemKey focusedItemKey = trackNavigationController()->focusedItem();
     if (!focusedItemKey.isValid()) {
         return;
@@ -2099,6 +2160,11 @@ void TrackeditActionsController::extendFocusedItemBoundaryLeft()
 
 void TrackeditActionsController::extendFocusedItemBoundaryRight()
 {
+    if (!navigationController()->isHighlight()) {
+        dispatcher()->dispatch("sel-ext-right");
+        return;
+    }
+
     TrackItemKey focusedItemKey = trackNavigationController()->focusedItem();
     if (!focusedItemKey.isValid()) {
         return;
@@ -2117,6 +2183,11 @@ void TrackeditActionsController::extendFocusedItemBoundaryRight()
 
 void TrackeditActionsController::reduceFocusedItemBoundaryLeft()
 {
+    if (!navigationController()->isHighlight()) {
+        dispatcher()->dispatch("sel-cntr-right");
+        return;
+    }
+
     TrackItemKey focusedItemKey = trackNavigationController()->focusedItem();
     if (!focusedItemKey.isValid()) {
         return;
@@ -2135,6 +2206,11 @@ void TrackeditActionsController::reduceFocusedItemBoundaryLeft()
 
 void TrackeditActionsController::reduceFocusedItemBoundaryRight()
 {
+    if (!navigationController()->isHighlight()) {
+        dispatcher()->dispatch("sel-cntr-left");
+        return;
+    }
+
     TrackItemKey focusedItemKey = trackNavigationController()->focusedItem();
     if (!focusedItemKey.isValid()) {
         return;

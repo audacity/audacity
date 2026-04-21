@@ -22,7 +22,7 @@ void AddEffectMenuModel::handleMenuItem(const QString& itemId)
 
     const auto effectId = effects::effectIdFromAction(menuItem.id());
     if (const auto state = realtimeEffectService()->addRealtimeEffect(*tId, effectId)) {
-        effectsProvider()->showEffect(state);
+        effectViewController()->showEffect(state);
     }
 }
 

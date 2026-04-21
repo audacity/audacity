@@ -76,7 +76,7 @@ public:
     // data selection
     virtual void setSelectedTrackAudioData(trackedit::TrackId trackId) = 0;
     virtual void resetDataSelection() = 0;
-    virtual bool timeSelectionIsNotEmpty() const = 0;
+    virtual bool timeSelectionIsEmpty() const = 0;
     virtual bool timeSelectionHasAudioData() const = 0;
     virtual bool isDataSelectedOnTrack(TrackId trackId) const = 0;
     virtual void setSelectedAllAudioData(const std::optional<secs_t>& fromTime = std::nullopt,
@@ -99,6 +99,8 @@ public:
 
     virtual trackedit::secs_t selectionStartTime() const = 0;
     virtual void setSelectionStartTime(trackedit::secs_t time) = 0;
+
+    virtual void initSelectionAtPlayhead() = 0;
 
     // grouping
     virtual bool selectionContainsGroup() const = 0;
