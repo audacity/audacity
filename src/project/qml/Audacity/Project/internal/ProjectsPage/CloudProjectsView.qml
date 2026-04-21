@@ -32,7 +32,7 @@ ProjectsView {
     }
 
     Connections {
-        target: root.item ? root.item.view : null
+        target: (root.item && root.item.view) ? root.item.view : null
 
         function onContentYChanged() {
             prv.updateDesiredRowCount()
