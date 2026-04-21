@@ -19,6 +19,7 @@
 
 #include "appshell/iappshellconfiguration.h"
 #include "project/iprojectconfiguration.h"
+#include "au3cloud/iauthorization.h"
 #include "importexport/export/iexporter.h"
 #include "context/iglobalcontext.h"
 
@@ -37,6 +38,7 @@ class Au3AudioComService : public IAu3AudioComService, public muse::async::Async
     muse::GlobalInject<muse::io::IFileSystem> filesystem;
     muse::GlobalInject<project::IProjectConfiguration> projectConfiguration;
     muse::GlobalInject<appshell::IAppShellConfiguration> appshellConfiguration;
+    muse::GlobalInject<au::au3cloud::IAuthorization> authorization;
 
     muse::ContextInject<importexport::IExporter> exporter{ this };
     muse::ContextInject<context::IGlobalContext> globalContext { this };

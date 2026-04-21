@@ -93,6 +93,13 @@ void Au3AudioComService::init()
         m_audioThumbnailFileUpdatedChannel.send(audioId, path);
     });
 
+    authorization()->authState().ch.onReceive(this, [this](const AuthState& authState) {
+        if (std::holds_alternative<NotAuthorized>(authState)) {
+            clearAudioListCache();
+            clearProjectListCache();
+        }
+    });
+
     appshellConfiguration()->aboutToRevertToFactorySettings().onNotify(this, []() {
         audacity::cloud::audiocom::sync::CloudProjectsDatabase::Get().CloseConnection();
     });
