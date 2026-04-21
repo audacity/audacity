@@ -635,8 +635,14 @@ muse::io::paths_t ProjectActionsController::selectImportFiles()
 
 IInteractive::Button ProjectActionsController::askAboutSavingProject(IAudacityProjectPtr project)
 {
-    std::string title = muse::qtrc("project", "Do you want to save changes to the project “%1” before closing?")
-                        .arg(project->displayName()).toStdString();
+    std::string title;
+
+    if (project->isNewlyCreated()) {
+        title = muse::qtrc("project", "Do you want to save changes to the project before closing?").toStdString();
+    } else {
+        title = muse::qtrc("project", "Do you want to save changes to the project “%1” before closing?")
+                .arg(project->displayName()).toStdString();
+    }
 
     std::string body = muse::trc("project", "Your changes will be lost if you don’t save them.");
 
