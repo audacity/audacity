@@ -1085,7 +1085,7 @@ void ProjectActionsController::shareAudio()
                 }
             });
         } else {
-            //handleCloudError(result.ret);
+            handleCloudSaveError(result.ret);
         }
     });
 
@@ -1523,9 +1523,9 @@ void ProjectActionsController::handleCloudSaveError(const muse::Ret& error)
     case Err::DataUploadFailed:
     case Err::ServerError:
     case Err::ClientFailure:
-        interactive()->infoSync(DEFAULT_SYNC_ERROR_TITLE, DEFAULT_SYNC_ERROR_TEXT);
-        break;
+    case Err::UploadFailed:
     case Err::SyncCancelled:
+        interactive()->infoSync(DEFAULT_SYNC_ERROR_TITLE, DEFAULT_SYNC_ERROR_TEXT);
         break;
     default:
         interactive()->infoSync(DEFAULT_CLOUD_ERROR_TITLE, DEFAULT_CLOUD_ERROR_TEXT);
