@@ -637,8 +637,7 @@ IInteractive::Button ProjectActionsController::askAboutSavingProject(IAudacityPr
 {
     std::string title;
 
-    muse::io::path_t displayName = project->displayName();
-    if (muse::io::suffix(displayName) == "aup4unsaved") {
+    if (project->isNewlyCreated()) {
         title = muse::qtrc("project", "Do you want to save changes to the project before closing?").toStdString();
     } else {
         title = muse::qtrc("project", "Do you want to save changes to the project “%1” before closing?")
