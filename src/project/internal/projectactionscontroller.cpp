@@ -1109,7 +1109,7 @@ void ProjectActionsController::openCloudAudioFile(const muse::actions::ActionQue
         return;
     }
 
-    auto progress = audioComService()->openAudioFile(audioId);
+    auto progress = audioComService()->downloadAudioFile(audioId);
     if (!progress) {
         return;
     }

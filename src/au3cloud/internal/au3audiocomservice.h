@@ -67,7 +67,7 @@ public:
     muse::ProgressPtr resumeProjectSync(au::project::IAudacityProjectPtr project) override;
 
     muse::ProgressPtr shareAudio(const std::string& title) override;
-    muse::ProgressPtr openAudioFile(const std::string& audioId) override;
+    muse::ProgressPtr downloadAudioFile(const std::string& audioId) override;
 
     std::string getCloudProjectPage(const std::string& slug) const override;
     std::string getCloudAudioPage(const std::string& slug) const override;

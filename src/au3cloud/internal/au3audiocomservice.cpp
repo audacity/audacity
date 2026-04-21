@@ -441,7 +441,7 @@ std::string Au3AudioComService::getCloudAudioPage(const std::string& slug) const
     return oauthService.MakeAudioComAuthorizeURL(userId, audioPage);
 }
 
-muse::ProgressPtr Au3AudioComService::openAudioFile(const std::string& audioId)
+muse::ProgressPtr Au3AudioComService::downloadAudioFile(const std::string& audioId)
 {
     muse::ProgressPtr progress = std::make_shared<muse::Progress>();
 

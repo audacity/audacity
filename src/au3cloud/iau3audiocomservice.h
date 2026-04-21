@@ -54,7 +54,7 @@ public:
     virtual muse::ProgressPtr resumeProjectSync(au::project::IAudacityProjectPtr project) = 0;
 
     virtual muse::ProgressPtr shareAudio(const std::string& title) = 0;
-    virtual muse::ProgressPtr openAudioFile(const std::string& audioId) = 0;
+    virtual muse::ProgressPtr downloadAudioFile(const std::string& audioId) = 0;
 
     virtual std::string getCloudProjectPage(const std::string& slug) const = 0;
     virtual std::string getCloudAudioPage(const std::string& slug) const = 0;
