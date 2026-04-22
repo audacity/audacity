@@ -117,13 +117,8 @@ static const ActionQuery SET_TRACK_VIEW_MULTI("action://trackedit/track-view-mul
 
 static const ActionCode LABEL_ADD_CODE("label-add");
 
-static const ActionCode LABEL_DELETE_CODE("label-delete");
 static const ActionCode LABEL_DELETE_MULTI_CODE("label-delete-multi");
-
-static const ActionCode LABEL_CUT_CODE("label-cut");
 static const ActionCode LABEL_CUT_MULTI_CODE("label-cut-multi");
-
-static const ActionCode LABEL_COPY_CODE("label-copy");
 static const ActionCode LABEL_COPY_MULTI_CODE("label-copy-multi");
 
 static const ActionQuery PLAYBACK_SEEK_QUERY("action://playback/seek");
@@ -306,13 +301,8 @@ void TrackeditActionsController::init()
 
     dispatcher()->reg(this, LABEL_ADD_CODE, this, &TrackeditActionsController::addLabel);
 
-    dispatcher()->reg(this, LABEL_DELETE_CODE, this, &TrackeditActionsController::labelDelete);
     dispatcher()->reg(this, LABEL_DELETE_MULTI_CODE, this, &TrackeditActionsController::labelDeleteMulti);
-
-    dispatcher()->reg(this, LABEL_CUT_CODE, this, &TrackeditActionsController::labelCut);
     dispatcher()->reg(this, LABEL_CUT_MULTI_CODE, this, &TrackeditActionsController::labelCutMulti);
-
-    dispatcher()->reg(this, LABEL_COPY_CODE, this, &TrackeditActionsController::labelCopy);
     dispatcher()->reg(this, LABEL_COPY_MULTI_CODE, this, &TrackeditActionsController::labelCopyMulti);
 
     dispatcher()->reg(this, TRACK_VIEW_ITEM_MOVE_LEFT_CODE, this, &TrackeditActionsController::moveFocusedItemLeft);
@@ -937,18 +927,6 @@ void TrackeditActionsController::multiClipDelete(const ActionData& args)
     trackeditInteraction()->removeClips(selectedClips, moveClips);
 }
 
-void TrackeditActionsController::labelDelete(const ActionData& args)
-{
-    LabelKey labelKey = args.arg<LabelKey>(0);
-    if (!labelKey.isValid()) {
-        return;
-    }
-
-    selectionController()->resetSelectedLabels();
-
-    trackeditInteraction()->removeLabel(labelKey);
-}
-
 void TrackeditActionsController::labelDeleteMulti(const ActionData& args)
 {
     bool moveLabels = false;
@@ -965,18 +943,6 @@ void TrackeditActionsController::labelDeleteMulti(const ActionData& args)
     selectionController()->resetSelectedLabels();
 
     trackeditInteraction()->removeLabels(selectedLabelKeys, moveLabels);
-}
-
-void TrackeditActionsController::labelCut(const ActionData& args)
-{
-    LabelKey labelKey = args.arg<LabelKey>(0);
-    if (!labelKey.isValid()) {
-        return;
-    }
-
-    selectionController()->resetSelectedLabels();
-
-    trackeditInteraction()->cutLabel(labelKey);
 }
 
 void TrackeditActionsController::labelCutMulti(const muse::actions::ActionData& args)
@@ -997,17 +963,6 @@ void TrackeditActionsController::labelCutMulti(const muse::actions::ActionData& 
     selectionController()->resetSelectedLabels();
 
     trackeditInteraction()->removeLabels(selectedLabelKeys, moveClips);
-}
-
-void TrackeditActionsController::labelCopy(const ActionData& args)
-{
-    LabelKey labelKey = args.arg<LabelKey>(0);
-    if (!labelKey.isValid()) {
-        return;
-    }
-
-    trackeditInteraction()->clearClipboard();
-    trackeditInteraction()->copyLabel(labelKey);
 }
 
 void TrackeditActionsController::labelCopyMulti()

@@ -345,27 +345,6 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Add label"),
              TranslatableString("action", "Add label")
              ),
-    UiAction("label-delete",
-             au::context::UiCtxProjectOpened,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Delete label"),
-             TranslatableString("action", "Delete label"),
-             IconCode::Code::DELETE_TANK
-             ),
-    UiAction("label-cut",
-             au::context::UiCtxProjectOpened,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Cut label"),
-             TranslatableString("action", "Cut label"),
-             IconCode::Code::CUT
-             ),
-    UiAction("label-copy",
-             au::context::UiCtxProjectOpened,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Copy label"),
-             TranslatableString("action", "Copy label"),
-             IconCode::Code::COPY
-             ),
     UiAction("trim-audio-outside-selection",
              au::context::UiCtxProjectOpened,
              au::context::CTX_ANY,
