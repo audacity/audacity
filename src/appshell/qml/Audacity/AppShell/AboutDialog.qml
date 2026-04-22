@@ -38,10 +38,8 @@ StyledDialogView {
 
         readonly property string versionSubtitle: qsTrc("appshell/about", "Audacity the free, open source, cross-platform software for recording and editing sounds.")
 
-        readonly property string privacyPolicyUrl: "https://www.audacityteam.org/legal/privacy-notice/"
-        readonly property string privacyPolicyLink: "<a href=\"%1\">%2</a>".arg(prv.privacyPolicyUrl).arg(qsTrc("appshell/about", "privacy policy"))
         readonly property string privacyTitle: qsTrc("appshell/about", "Privacy")
-        readonly property string privacySubtitle: qsTrc("appshell/about", "App update checking and error reporting require network access. These features are optional.<br>See our %1 for more info.").arg(prv.privacyPolicyLink)
+        readonly property string privacySubtitle: qsTrc("appshell/about", "App update checking and error reporting require network access. These features are optional.<br>See our %1 for more info.")
     }
 
     ColumnLayout {
@@ -235,8 +233,7 @@ StyledDialogView {
                             StyledTextLabel {
                                 text: {
                                     let websiteUrl = aboutModel.appUrl()
-
-                                    qsTrc("appshell/about", "Audacity website: %1").arg('<a href="' + websiteUrl.url + '">' + websiteUrl.displayName + '</a>')
+                                    return qsTrc("appshell/about", "Audacity website: %1").arg('<a href="' + websiteUrl.url + '">' + websiteUrl.displayName + '</a>')
                                 }
                                 font: ui.theme.bodyFont
                             }
@@ -246,7 +243,7 @@ StyledDialogView {
                                 spacing: 0
 
                                 StyledTextLabel {
-                                    text: qsTrc("appshell/about", "<b>Audacity®</b> software is copyright © 1999-2024 Audacity Team.")
+                                    text: qsTrc("appshell/about", "<b>Audacity®</b> software is copyright © 1999-%1 Audacity Team.").arg(new Date().getFullYear())
                                     font: ui.theme.bodyFont
                                 }
 
@@ -286,7 +283,10 @@ StyledDialogView {
                         horizontalAlignment: Text.AlignHCenter
                         textFormat: Text.RichText
 
-                        text: prv.privacySubtitle
+                        text: {
+                            let privacyUrl = aboutModel.privacyPolicyUrl()
+                            return prv.privacySubtitle.arg("<a href=\"%1\">%2</a>".arg(privacyUrl.url).arg(qsTrc("appshell/about", "privacy policy")))
+                        }
                         font: ui.theme.bodyFont
                     }
                 }
@@ -320,15 +320,15 @@ StyledDialogView {
 
                             anchors.margins: prv.contentTextMargin
 
-                            Text {
+                            StyledTextLabel {
                                 width: parent.width
-                                horizontalAlignment: Text.AlignLeft
 
+                                horizontalAlignment: Text.AlignLeft
                                 textFormat: Text.RichText
                                 wrapMode: Text.WordWrap
+
                                 text: aboutModel.gplText()
 
-                                color: ui.theme.fontPrimaryColor
                                 font: ui.theme.bodyFont
                             }
                         }

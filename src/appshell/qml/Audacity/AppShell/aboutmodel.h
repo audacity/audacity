@@ -5,14 +5,13 @@
 
 #include <QObject>
 #include <QtQml/qqmlregistration.h>
-#include <qbytearrayview.h>
-#include <qtmetamacros.h>
 
 #include "framework/global/modularity/ioc.h"
 #include "iappshellconfiguration.h"
 #include "framework/global/iglobalconfiguration.h"
 #include "framework/global/iapplication.h"
 #include "framework/update/iupdateconfiguration.h"
+#include "framework/global/io/ifilesystem.h"
 
 class QUrl;
 
@@ -26,6 +25,7 @@ class AboutModel : public QObject, public muse::Contextable
     muse::GlobalInject<muse::IGlobalConfiguration> globalConfiguration;
     muse::GlobalInject<muse::IApplication> application;
     muse::GlobalInject<muse::update::IUpdateConfiguration> updateConfiguration;
+    muse::GlobalInject<muse::io::IFileSystem> fileSystem;
 
 public:
     explicit AboutModel(QObject* parent = nullptr);

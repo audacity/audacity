@@ -88,6 +88,7 @@ qt_add_resources(appshell appshell_resources
         resources/welcomedialog/AudioDotCom_Dark.png
         resources/welcomedialog/AudioDotCom_Light.png
         resources/welcomedialog/Audacity_Merch_Store.png
+        resources/gpl-30.html
 )
 
 target_link_libraries(appshell PRIVATE
