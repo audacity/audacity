@@ -885,7 +885,6 @@ MenuItemList AppMenuModel::makeAnalyzeItems()
         makeSeparator(),
         makeMenuItem("contrast-analyzer"),
         makeMenuItem("plot-spectrum"),
-        makeMenuItem("analyzer-omitted"),
         makeSeparator(),
     };
 
