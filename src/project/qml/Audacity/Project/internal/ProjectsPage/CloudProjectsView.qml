@@ -318,15 +318,11 @@ ProjectsView {
         Item {
             anchors.fill: parent
 
-            Message {
-                anchors.top: parent.top
-                anchors.topMargin: Math.max(parent.height / 3 - height / 2, 0)
-                anchors.left: parent.left
-                anchors.leftMargin: root.sideMargin
-                anchors.right: parent.right
-                anchors.rightMargin: root.sideMargin
-
-                title: qsTrc("global", "Loading...")
+            StyledBusyIndicator {
+                anchors.centerIn: parent
+                width: 40
+                height: 40
+                running: true
             }
         }
     }
