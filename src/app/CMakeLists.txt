@@ -163,6 +163,8 @@ qt_add_executable(${EXECUTABLE_NAME}
     pluginregistrationapp.h
     commandlineparser.cpp
     commandlineparser.h
+    winleaktracker.cpp
+    winleaktracker.h
 )
 
 ###########################################

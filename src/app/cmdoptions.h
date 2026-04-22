@@ -17,6 +17,7 @@ namespace au::app {
 struct AudacityCmdOptions : public muse::CmdOptions {
     struct {
         std::optional<bool> revertToFactorySettings;
+        bool memoryLeakReport = false;
     } app;
 
     struct {
