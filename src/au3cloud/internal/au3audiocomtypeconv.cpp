@@ -22,7 +22,7 @@ ProjectList convertFromAu3PaginatedProject(const audacity::cloud::audiocom::sync
         item.lastSyncedSnapshotId = projectInfo.LastSyncedSnapshotId;
         item.created = projectInfo.Created;
         item.updated = projectInfo.Updated;
-        item.fileSize = projectInfo.HeadSnapshot.FileSize;
+        item.fileSize = projectInfo.Size;
 
         projectList.items.push_back(std::move(item));
     }

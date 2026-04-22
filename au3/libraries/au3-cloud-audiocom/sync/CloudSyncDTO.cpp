@@ -269,6 +269,10 @@ bool Deserialize(const rapidjson::Value& value, ProjectInfo& projectInfo)
         return {};
     }
 
+    if (!Deserialize(value, "size", tempProject.Size)) {
+        return {};
+    }
+
     Deserialize(value, "head", tempProject.HeadSnapshot);
     Deserialize(
         value, "latest_synced_snapshot_id", tempProject.LastSyncedSnapshotId);
