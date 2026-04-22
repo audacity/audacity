@@ -42,8 +42,7 @@ StyledDialogView {
     QtObject {
         id: prv
 
-        readonly property int tabTopMargin: 11
-        readonly property int tabBottomMargin: 11
+        readonly property int tabSpacing: 16
         readonly property int tabButtonSpacing: 32
 
         readonly property int versionTextSpacing: 12
@@ -52,17 +51,24 @@ StyledDialogView {
         readonly property int contentSpacing: 16
         readonly property int contentTextMargin: 12
         readonly property int contentTextSpacing: 8
+
+        readonly property int btnMargins: 8
+
+        readonly property string versionSubtitle: qsTrc("appshell/about", "Audacity the free, open source, cross-platform software for recording and editing sounds.")
+
+        readonly property string privacyPolicyUrl: "https://www.audacityteam.org/legal/privacy-notice/"
+        readonly property string privacyPolicyLink: "<a href=\"%1\">%2</a>".arg(prv.privacyPolicyUrl).arg(qsTrc("appshell/about", "privacy policy"))
+        readonly property string privacyTitle: qsTrc("appshell/about", "Privacy")
+        readonly property string privacySubtitle: qsTrc("appshell/about", "App update checking and error reporting require network access. These features are optional.<br>See our %1 for more info.").arg(prv.privacyPolicyLink)
     }
 
     ColumnLayout {
         anchors.fill: parent
-        spacing: 0
+        spacing: prv.tabSpacing
 
         StyledTabBar {
             id: tabBar
 
-            Layout.topMargin: prv.tabTopMargin
-            Layout.bottomMargin: prv.tabBottomMargin
             Layout.alignment: Qt.AlignHCenter
             spacing: prv.tabButtonSpacing
 
@@ -80,67 +86,70 @@ StyledDialogView {
 
             Layout.fillWidth: true
             Layout.fillHeight: true
-            Layout.bottomMargin: prv.contentMargin
 
             currentIndex: tabBar.currentIndex
 
-            StyledFlickable {
-                id: audacityFlickable
-                contentHeight: audacityContent.height
+            ColumnLayout {
+                id: audacityContent
 
-                Column {
-                    id: audacityContent
-                    width: audacityFlickable.width
+                spacing: prv.contentSpacing
 
-                    spacing: prv.contentSpacing
+                Image {
+                    Layout.fillWidth: true
 
-                    Image {
-                        width: parent.width
-                        source: "qrc:/resources/AboutBanner.png"
-                        fillMode: Image.PreserveAspectFit
+                    source: "qrc:/resources/AboutBanner.png"
+                    sourceSize.width: root.contentWidth
 
-                        MouseArea {
-                            anchors.fill: parent
+                    MouseArea {
+                        anchors.fill: parent
 
-                            property int clickCount: 0
+                        property int clickCount: 0
 
-                            onClicked: {
-                                clickCount++
-                                if (clickCount % 3 === 0) {
-                                    aboutModel.toggleDevMode()
-                                }
+                        onClicked: {
+                            clickCount++
+                            if (clickCount % 3 === 0) {
+                                aboutModel.toggleDevMode()
                             }
                         }
                     }
+                }
 
-                    Column {
-                        anchors.left: parent.left
-                        anchors.right: parent.right
-                        anchors.leftMargin: prv.contentMargin
-                        anchors.rightMargin: prv.contentMargin
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: implicitHeight
 
-                        spacing: prv.versionTextSpacing
+                    spacing: prv.versionTextSpacing
 
-                        StyledTextLabel {
-                            width: parent.width
+                    StyledTextLabel {
+                        Layout.fillWidth: true
 
-                            horizontalAlignment: Text.AlignHCenter
+                        horizontalAlignment: Text.AlignHCenter
 
-                            text: aboutModel.appVersion()
-                            font: ui.theme.headerBoldFont
-                        }
-
-                        StyledTextLabel {
-                            width: parent.width
-
-                            horizontalAlignment: Text.AlignHCenter
-
-                            text: qsTrc("appshell/about", "Audacity the free, open source, cross-platform software for recording and editing sounds.")
-                            font: ui.theme.bodyFont
-                        }
+                        text: aboutModel.appVersion()
+                        font: ui.theme.tabBoldFont
                     }
 
+                    StyledTextLabel {
+                        Layout.fillWidth: true
+
+                        horizontalAlignment: Text.AlignHCenter
+
+                        text: prv.versionSubtitle
+                        font: ui.theme.bodyFont
+                    }
+                }
+
+                StyledFlickable {
+                    id: audacityFlickable
+
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+
+                    contentHeight: creditsContainer.height
+
                     Rectangle {
+                        id: creditsContainer
+
                         anchors.left: parent.left
                         anchors.right: parent.right
                         anchors.leftMargin: prv.contentMargin
@@ -164,7 +173,7 @@ StyledDialogView {
                             StyledTextLabel {
                                 width: parent.width
                                 text: qsTrc("appshell/about", "Credits")
-                                font: ui.theme.bodyBoldFont
+                                font: ui.theme.largeBodyBoldFont
                                 horizontalAlignment: Text.AlignLeft
                             }
 
@@ -269,44 +278,48 @@ StyledDialogView {
                 }
             }
 
-            StyledFlickable {
-                id: legalFlickable
-                contentHeight: legalContent.height
+            ColumnLayout {
+                id: privacyContent
+
+                spacing: prv.contentSpacing
 
                 Column {
-                    id: legalContent
-                    width: legalFlickable.width
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: implicitHeight
 
-                    anchors.margins: prv.contentMargin
+                    spacing: prv.versionTextSpacing
 
-                    spacing: prv.contentSpacing
+                    StyledTextLabel {
+                        width: parent.width
 
-                    Column {
-                        anchors.left: parent.left
-                        anchors.right: parent.right
+                        horizontalAlignment: Text.AlignHCenter
 
-                        spacing: prv.versionTextSpacing
-
-                        StyledTextLabel {
-                            width: parent.width
-
-                            horizontalAlignment: Text.AlignHCenter
-
-                            text: qsTrc("appshell/about", "Privacy Policy")
-                            font: ui.theme.headerBoldFont
-                        }
-
-                        StyledTextLabel {
-                            width: parent.width
-
-                            horizontalAlignment: Text.AlignHCenter
-
-                            text: qsTrc("appshell/about", "App update checking and error reporting require network access. These features are optional.\nSee our Privacy policy for more info.")
-                            font: ui.theme.bodyFont
-                        }
+                        text: prv.privacyTitle
+                        font: ui.theme.tabBoldFont
                     }
 
+                    StyledTextLabel {
+                        width: parent.width
+
+                        horizontalAlignment: Text.AlignHCenter
+                        textFormat: Text.RichText
+
+                        text: prv.privacySubtitle
+                        font: ui.theme.bodyFont
+                    }
+                }
+
+                StyledFlickable {
+                    id: legalFlickable
+
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+
+                    contentHeight: gplContainer.height
+
                     Rectangle {
+                        id: gplContainer
+
                         anchors.left: parent.left
                         anchors.right: parent.right
                         anchors.leftMargin: prv.contentMargin
@@ -342,13 +355,19 @@ StyledDialogView {
             }
         }
 
-        RowLayout {
-            Layout.alignment: Qt.AlignRight
-            Layout.rightMargin: 16
-            Layout.bottomMargin: 16
+        ColumnLayout {
+            Layout.fillWidth: true
+            spacing: 0
+
+            SeparatorLine {
+                Layout.fillWidth: true
+            }
 
             FlatButton {
-                text: qsTrc("global", "OK")
+                Layout.alignment: Qt.AlignRight
+                Layout.margins: prv.btnMargins
+
+                text: qsTrc("global", "Close")
 
                 onClicked: {
                     root.hide()
