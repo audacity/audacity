@@ -3,6 +3,8 @@
 */
 #pragma once
 
+#include <string>
+
 #include "framework/global/types/ret.h"
 #include "framework/global/async/notification.h"
 #include "framework/global/async/channel.h"
@@ -19,6 +21,7 @@ public:
     virtual ~IEffectExecutionScenario() = default;
 
     virtual muse::Ret performEffect(const EffectId& effectId) = 0;
+    virtual muse::Ret performEffect(const EffectId& effectId, const std::string& params) = 0;
     virtual bool lastProcessorIsAvailable() const = 0;
     virtual muse::async::Notification lastProcessorIsNowAvailable() const = 0;
     virtual muse::async::Channel<EffectId> lastProcessorIdChanged() const = 0;

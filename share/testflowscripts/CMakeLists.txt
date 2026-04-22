@@ -4,12 +4,12 @@
 
 # Scripts
 install(DIRECTORY .
-    DESTINATION ${AU4_SHARE_NAME}${AU4_INSTALL_NAME}autobotscripts
+    DESTINATION ${AU4_SHARE_NAME}${AU4_INSTALL_NAME}testflowscripts
     FILES_MATCHING PATTERN "*.js"
 )
 
 # Steps
 install(DIRECTORY steps/
-    DESTINATION ${AU4_SHARE_NAME}${AU4_INSTALL_NAME}autobotscripts/steps
+    DESTINATION ${AU4_SHARE_NAME}${AU4_INSTALL_NAME}testflowscripts/steps
     FILES_MATCHING PATTERN "*.js"
 )

@@ -3,11 +3,10 @@
  */
 
 var Home = require("steps/Home.js")
-var ClipNavigation = require("steps/ClipNavigation.js")
 
 var testCase = {
-    name: "TC1.2: Basic Test with Helper Functions",
-    description: "Select The Clip, Move the Clip",
+    name: "TC1.3: Basic Test with Helper Functions, Creating Projects",
+    description: "Test the Project Open Functions",
     steps: [
         {
             name: "Close project (if opened) and go to home to start", func: function () {
@@ -19,16 +18,11 @@ var testCase = {
             name: "Open Recent Project", func: function () {
                 Home.openLastProject()
             }
-        },
-        {
-            name: "Enter Clip Editing mode", func: function () {
-                ClipNavigation.enterClip()
-            }
         }
     ]
-}
+};
 
 function main() {
-    api.autobot.setInterval(1000)
-    api.autobot.runTestCase(testCase)
+    api.testflow.setInterval(1000)
+    api.testflow.runTestCase(testCase)
 }

@@ -100,6 +100,8 @@ static const ActionCode SELECT_RIGHT_OF_PLAYBACK_POS("select-right-of-playback-p
 static const ActionCode SELECT_TRACK_START_TO_CURSOR("select-track-start-to-cursor");
 static const ActionCode SELECT_CURSOR_TO_TRACK_END("select-cursor-to-track-end");
 static const ActionCode SELECT_TRACK_START_TO_END("select-track-start-to-end");
+static const ActionQuery SET_SELECTION("action://trackedit/set-selection");
+static const ActionQuery SELECT_TRACK("action://trackedit/select-track");
 static const ActionCode SELECT_ZERO_CROSSING("zero-cross");
 
 static const ActionQuery AUTO_COLOR_QUERY("action://trackedit/clip/change-color-auto");
@@ -286,6 +288,8 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, SELECT_TRACK_START_TO_CURSOR, this, &TrackeditActionsController::selectTrackStartToCursor);
     dispatcher()->reg(this, SELECT_CURSOR_TO_TRACK_END, this, &TrackeditActionsController::selectCursorToTrackEnd);
     dispatcher()->reg(this, SELECT_TRACK_START_TO_END, this, &TrackeditActionsController::selectTrackStartToEnd);
+    dispatcher()->reg(this, SET_SELECTION, this, &TrackeditActionsController::setSelection);
+    dispatcher()->reg(this, SELECT_TRACK, this, &TrackeditActionsController::selectTrackByIndex);
     dispatcher()->reg(this, SELECT_ZERO_CROSSING, this, &TrackeditActionsController::moveCursorToClosestZeroCrossing);
 
     dispatcher()->reg(this, AUTO_COLOR_QUERY, this, &TrackeditActionsController::setClipColor);
@@ -1765,6 +1769,43 @@ void TrackeditActionsController::selectTrackStartToEnd()
     if (leftmostItemStartTime.has_value() && rightmostItemEndTime.has_value()) {
         selectionController()->setDataSelectedStartTime(leftmostItemStartTime.value(), true);
         selectionController()->setDataSelectedEndTime(rightmostItemEndTime.value(), true);
+    }
+}
+
+void TrackeditActionsController::setSelection(const muse::actions::ActionQuery& query)
+{
+    if (!query.contains("start") || !query.contains("end")) {
+        LOGE() << "set-selection missing required 'start' or 'end' param";
+        return;
+    }
+
+    const double startTime = query.param("start").toDouble();
+    const double endTime = query.param("end").toDouble();
+    if (startTime < 0.0 || endTime < startTime) {
+        LOGE() << "set-selection invalid range: start=" << startTime << " end=" << endTime;
+        return;
+    }
+
+    selectionController()->setDataSelectedStartTime(startTime, true);
+    selectionController()->setDataSelectedEndTime(endTime, true);
+}
+
+void TrackeditActionsController::selectTrackByIndex(const muse::actions::ActionQuery& query)
+{
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return;
+    }
+
+    if (!query.contains("trackIndex")) {
+        LOGE() << "select-track missing required 'trackIndex' param";
+        return;
+    }
+
+    const int trackIndex = query.param("trackIndex").toInt();
+    auto ids = prj->trackIdList();
+    if (trackIndex >= 0 && trackIndex < static_cast<int>(ids.size())) {
+        selectionController()->setSelectedTracks({ ids[trackIndex] }, true);
     }
 }
 

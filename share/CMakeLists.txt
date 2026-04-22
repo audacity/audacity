@@ -3,7 +3,7 @@
 #
 
 add_subdirectory(locale)
-add_subdirectory(autobotscripts)
+add_subdirectory(testflowscripts)
 add_subdirectory(icons)
 add_subdirectory(workspaces)
 
