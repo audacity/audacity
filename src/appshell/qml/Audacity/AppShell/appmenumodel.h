@@ -136,6 +136,7 @@ private:
     muse::uicomponents::MenuItemList makeAnalyzeItems();
 
     void setItemIsChecked(const QString& itemId, bool checked);
+    void clearRecentFilesShortcuts();
 
     void updateUndoRedoItems();
 

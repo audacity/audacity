@@ -89,6 +89,8 @@ void AppMenuModel::load()
 
     setupConnections();
 
+    clearRecentFilesShortcuts();
+
     //! NOTE: removes some undesired platform-specific items
     //! (such as "Start Dictation" and "Special Characters" on macOS)
     appMenuModelHook()->onAppMenuInited();
@@ -134,6 +136,10 @@ void AppMenuModel::setupConnections()
         }
     });
 
+    shortcutsRegister()->shortcutsChanged().onNotify(this, [this]() {
+        clearRecentFilesShortcuts();
+    });
+
     effectsProvider()->effectMetaListChanged().onNotify(this, [this]() {
         onEffectsChanged();
     });
@@ -149,6 +155,19 @@ void AppMenuModel::setupConnections()
     configuration()->isEffectsPanelVisibleChanged().onNotify(this, [this]() {
         setItemIsChecked("toggle-effects", configuration()->isEffectsPanelVisible());
     });
+}
+
+void AppMenuModel::clearRecentFilesShortcuts()
+{
+    MenuItem& recentItem = findMenu("menu-file-open");
+    if (!recentItem.isValid()) {
+        return;
+    }
+    for (MenuItem* subItem : recentItem.subitems()) {
+        if (subItem && subItem->action().code == "file-open") {
+            subItem->setShortcuts({});
+        }
+    }
 }
 
 void AppMenuModel::setItemIsChecked(const QString& itemId, bool checked)
