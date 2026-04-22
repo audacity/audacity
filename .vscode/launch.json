@@ -10,6 +10,7 @@
             "args": [
                 // Comment this out to run audacity in plugin registration mode
                 // "--register-audio-plugin", "C:/Program Files/Common Files/VST3/Your plugin.vst3"
+                "--memory-leak-report"
             ],
             "environment": [
                 {
