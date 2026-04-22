@@ -552,29 +552,8 @@ MenuItemList AppMenuModel::makeLabelItems()
     MenuItemList items {
         makeMenuItem("label-add"),
         makeMenuItem("paste-new-label"),
-        makeMenu(TranslatableString("appshell/menu/audio-actions", "Audio actions across labels"),
-                 makeAudioActionsItems(), "menu-audio-actions", false),
         makeSeparator(),
         makeMenuItem("manage-labels"),
-    };
-
-    return items;
-}
-
-MenuItemList AppMenuModel::makeAudioActionsItems()
-{
-    MenuItemList items {
-        makeMenuItem("cut-labels"),
-        makeMenuItem("split-cut-labels"),
-        makeMenuItem("copy-labels"),
-        makeMenuItem("delete-labels"),
-        makeMenuItem("split-delete-labels"),
-        makeSeparator(),
-        makeMenuItem("split-labels"),
-        makeMenuItem("join-labels"),
-        makeSeparator(),
-        makeMenuItem("silence-labels"),
-        makeMenuItem("disjoin-labels"),
     };
 
     return items;

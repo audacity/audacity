@@ -493,42 +493,6 @@
         <key>type-to-create-label</key>
     </SC>
     <SC>
-        <key>cut-labels</key>
-        <seq>Alt+X</seq>
-    </SC>
-    <SC>
-        <key>delete-labels</key>
-        <seq>Alt+K</seq>
-    </SC>
-    <SC>
-        <key>split-cut-labels</key>
-        <seq>Alt+Shift+X</seq>
-    </SC>
-    <SC>
-        <key>split-delete-labels</key>
-        <seq>Alt+Shift+K</seq>
-    </SC>
-    <SC>
-        <key>silence-labels</key>
-        <seq>Alt+L</seq>
-    </SC>
-    <SC>
-        <key>copy-labels</key>
-        <seq>Alt+Shift+C</seq>
-    </SC>
-    <SC>
-        <key>split-labels</key>
-        <seq>Alt+I</seq>
-    </SC>
-    <SC>
-        <key>join-labels</key>
-        <seq>Alt+J</seq>
-    </SC>
-    <SC>
-        <key>disjoin-labels</key>
-        <seq>Alt+Shift+J</seq>
-    </SC>
-    <SC>
         <key>new-label-track</key>
     </SC>
     <SC>
