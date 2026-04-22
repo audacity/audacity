@@ -20,6 +20,8 @@ std::string Au3CloudModule::moduleName() const
 void Au3CloudModule::registerExports()
 {
     globalIoc()->registerExport<IAu3CloudConfiguration>(mname, new Au3CloudConfigurationStub());
+    globalIoc()->registerExport<IAuthorization>(mname, new AuthorizationStub());
+    globalIoc()->registerExport<IUsageInfo>(mname, new UsageInfoStub());
 }
 
 muse::modularity::IContextSetup* Au3CloudModule::newContext(const muse::modularity::ContextPtr& ctx) const
@@ -34,6 +36,4 @@ muse::modularity::IContextSetup* Au3CloudModule::newContext(const muse::modulari
 void Au3CloudStubContext::registerExports()
 {
     ioc()->registerExport<IAu3AudioComService>(mname, new Au3AudioComServiceStub(iocContext()));
-    ioc()->registerExport<IAuthorization>(mname, new AuthorizationStub(iocContext()));
-    ioc()->registerExport<IUsageInfo>(mname, new UsageInfoStub(iocContext()));
 }

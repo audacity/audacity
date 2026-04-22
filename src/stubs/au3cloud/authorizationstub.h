@@ -7,12 +7,9 @@
 #include "framework/global/modularity/ioc.h"
 
 namespace au::au3cloud {
-class AuthorizationStub : public IAuthorization, public muse::Injectable
+class AuthorizationStub : public IAuthorization
 {
 public:
-    AuthorizationStub(const muse::modularity::ContextPtr& ctx)
-        : muse::Injectable(ctx) {}
-
     void registerWithPassword(const std::string& email, const std::string& password) override;
     void signInWithPassword(const std::string& email, const std::string& password) override;
     void signInWithSocial(const std::string& provider) override;
