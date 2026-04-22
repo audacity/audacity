@@ -83,6 +83,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/undomanager.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/undomanager.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/api/projectapi.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/api/projectapi.h
+
     ${CMAKE_CURRENT_LIST_DIR}/view/deletebehaviorpanelmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/deletebehaviorpanelmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/pastebehaviorpanelmodel.cpp
