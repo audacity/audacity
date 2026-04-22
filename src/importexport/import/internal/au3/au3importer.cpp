@@ -243,6 +243,7 @@ bool au::importexport::Au3Importer::importFromSystemClipboard(
 {
     // this is basically the same as drag&drop import so utilizing DropController to do the job
     projectscene::DropController dc;
+    dc.setContext(iocContext());
 
     trackedit::TrackId startingTrack = -1;
     auto selectedTracks = selectionController()->selectedTracks();
