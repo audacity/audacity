@@ -50,20 +50,20 @@ struct ThanksEntry {
 };
 
 const std::array<CreditEntry, 14> sTeamMembers = { {
-    { "Antons \xc4\x8cinakovs", "quality assurance" },
-    { "Matthieu Hodgkinson", "developer" },
-    { "Martin Keary", nullptr },
     { "dozzzzer", "quality assurance" },
-    { "Yana Larina", "project manager" },
-    { "Dmitry Makarenko", "developer" },
-    { "Dilson's Pickles", "designer" },
+    { "Igor Korsukov", "developer" },
     { "Jessica Williamson", "designer" },
-    { "Grzegorz Wojciechowski", "developer" },
-    { "Paul Martin", "developer" },
+    { "Paul Martin", "audio developer, @luapmartin" },
+    { "Alexander Dawson", "designer" },
     { "Gabriel Sartori", "developer" },
-    { "Johan Althoff (teetow)", "designer" },
+    { "Yana Larina", "project manager" },
+    { "Matthieu Hodgkinson", "audio developer" },
+    { "Dmitry Makarenko", "developer" },
     { "Elnur Ismailzada", "developer" },
-    { "Igor Korsukov", "developer" }
+    { "Johan Althoff", "designer" },
+    { "Martin Keary", nullptr },
+    { "Grzegorz Wojciechowski", "developer" },
+    { "Antons \xc4\x8cinakovs", "quality assurance" }
 } };
 
 const std::array<CreditEntry, 28> sEmeritusTeam = { {
