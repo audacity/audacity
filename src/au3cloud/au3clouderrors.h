@@ -59,6 +59,7 @@ enum class Err {
 
     // downloadAudioFile
     DownloadAudioResultCancelled,
+    DownloadAudioResultFailed,
 
     // openCloudProject
     OpenProjectCancelled,

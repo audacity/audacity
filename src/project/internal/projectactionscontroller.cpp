@@ -1278,6 +1278,9 @@ const char* DEFAULT_SYNC_ERROR_TEXT
 
 const char* DEFAULT_CLOUD_ERROR_TITLE = "Cloud error";
 const char* DEFAULT_CLOUD_ERROR_TEXT = "An error occurred while syncing with the cloud. Please try again later.";
+
+const char* DOWNLOAD_CLOUD_AUDIO_ERROR_TITLE = "Error downloading audio from cloud";
+const char* DOWNLOAD_CLOUD_AUDIO_ERROR_TEXT = "Can't download audio from cloud.";
 }
 
 void ProjectActionsController::handleCloudOpenError(const muse::Ret& error, const io::path_t& localPath)
@@ -1539,10 +1542,14 @@ void ProjectActionsController::handleCloudAudioOpenError(const muse::Ret& error)
     const auto err = static_cast<Err>(error.code());
 
     switch (err) {
+    case Err::DownloadAudioResultFailed:
+        interactive()->infoSync(muse::trc("cloud", DOWNLOAD_CLOUD_AUDIO_ERROR_TITLE),
+                                muse::trc("cloud", DOWNLOAD_CLOUD_AUDIO_ERROR_TEXT));
+        break;
     case Err::DownloadAudioResultCancelled:
         break;
     default:
-        interactive()->error(muse::trc("cloud", "Open audio from cloud"), error.toString());
+        interactive()->infoSync(muse::trc("cloud", "Open audio from cloud"), error.toString());
         break;
     }
 }

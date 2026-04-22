@@ -480,6 +480,8 @@ muse::ProgressPtr Au3AudioComService::downloadAudioFile(const std::string& audio
         if (result.Status != sync::DownloadAudioResult::StatusCode::Succeeded) {
             if (result.Status == sync::DownloadAudioResult::StatusCode::Cancelled) {
                 progress->finish(make_ret(Err::DownloadAudioResultCancelled));
+            } else if (result.Status == sync::DownloadAudioResult::StatusCode::Failed) {
+                progress->finish(make_ret(Err::DownloadAudioResultFailed));
             } else {
                 progress->finish(make_ret(Err::UnknownError));
             }
