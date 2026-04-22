@@ -136,10 +136,6 @@ void AppMenuModel::setupConnections()
         }
     });
 
-    shortcutsRegister()->shortcutsChanged().onNotify(this, [this]() {
-        clearRecentFilesShortcuts();
-    });
-
     effectsProvider()->effectMetaListChanged().onNotify(this, [this]() {
         onEffectsChanged();
     });
