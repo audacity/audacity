@@ -63,9 +63,9 @@ public:
 
     bool warnBeforeSavingToExistingPubliclyVisibleCloudProject() const override;
 
-    void showCloudOpenError(const muse::Ret& ret) const override;
-    muse::Ret showCloudSaveError(const muse::Ret& ret, const CloudProjectInfo& info, bool isPublishShare,
-                                 bool alreadyAttempted) const override;
+    muse::Ret showCloudOpenError(const muse::Ret& ret, const muse::io::path_t& localPath) const override;
+    muse::Ret showCloudSaveError(const muse::Ret& ret) const override;
+    muse::Ret showCloudAudioOpenError(const muse::Ret& ret) const override;
     muse::Ret showAudioCloudShareError(const muse::Ret& ret) const override;
 
 private:
