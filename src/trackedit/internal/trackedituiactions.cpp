@@ -191,7 +191,7 @@ UiActionList STATIC_ACTIONS = {
              ),
     UiAction("track-change-rate-custom",
              au::context::UiCtxAny,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Other…"),
              TranslatableString("action", "Other…"),
              Checkable::Yes
@@ -542,7 +542,7 @@ void TrackeditUiActions::init()
                                                                                                                             format))))
               .toString();
         formatAction.uiCtx = context::UiCtxAny;
-        formatAction.scCtx = context::CTX_ANY;
+        formatAction.scCtx = context::CTX_DISABLED;
         formatAction.description = muse::TranslatableString("action", "Change track format");
         formatAction.title = muse::TranslatableString("action", "Change track format");
         formatAction.checkable = Checkable::Yes;
@@ -555,7 +555,7 @@ void TrackeditUiActions::init()
             = muse::actions::ActionQuery(muse::String(TRACK_RATE_CHANGE_ACTION).arg(muse::String::number(static_cast<int>(sampleRate)))).
               toString();
         rateAction.uiCtx = context::UiCtxAny;
-        rateAction.scCtx = context::CTX_ANY;
+        rateAction.scCtx = context::CTX_DISABLED;
         rateAction.description = muse::TranslatableString("action", "Change track sample rate");
         rateAction.title = muse::TranslatableString("action", "Change track sample rate");
         rateAction.checkable = Checkable::Yes;

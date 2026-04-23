@@ -269,7 +269,7 @@ const UiActionList ProjectUiActions::m_actions = {
              ),
     UiAction("select-next-clip",
              au::context::UiCtxAny,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Next clip"),
              TranslatableString("action", "Next clip")
              ),
@@ -428,13 +428,13 @@ const UiActionList ProjectUiActions::m_actions = {
              ),
     UiAction("sort-by-time",
              au::context::UiCtxAny,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Sort by time"),
              TranslatableString("action", "Sort by time")
              ),
     UiAction("sort-by-name",
              au::context::UiCtxAny,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Sort by name"),
              TranslatableString("action", "Sort by name")
              ),
@@ -606,7 +606,7 @@ const UiActionList ProjectUiActions::m_actions = {
              ),
     UiAction("benchmark",
              au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Benchmark"),
              TranslatableString("action", "Benchmark")
              ),
@@ -620,19 +620,19 @@ const UiActionList ProjectUiActions::m_actions = {
     // help menu
     UiAction("tutorials",
              au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Tutorials"),
              TranslatableString("action", "Tutorials")
              ),
     UiAction("device-info",
              au::context::UiCtxAny,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Device info"),
              TranslatableString("action", "Device info")
              ),
     UiAction("midi-device-info",
              au::context::UiCtxAny,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "MIDI device info"),
              TranslatableString("action", "MIDI device info")
              ),
@@ -644,37 +644,37 @@ const UiActionList ProjectUiActions::m_actions = {
              ),
     UiAction("crash-report",
              au::context::UiCtxAny,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Crash report"),
              TranslatableString("action", "Crash report")
              ),
     UiAction("raise-segfault",
              au::context::UiCtxAny,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Raise segfault"),
              TranslatableString("action", "Raise segfault")
              ),
     UiAction("throw-exception",
              au::context::UiCtxAny,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Throw exception"),
              TranslatableString("action", "Throw exception")
              ),
     UiAction("violate-assertion",
              au::context::UiCtxAny,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Violate assertion"),
              TranslatableString("action", "Violate assertion")
              ),
     UiAction("menu-tree",
              au::context::UiCtxAny,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Menu tree"),
              TranslatableString("action", "Menu tree")
              ),
     UiAction("frame-statistics",
              au::context::UiCtxAny,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Frame statistics"),
              TranslatableString("action", "Frame statistics")
              ),
@@ -701,7 +701,7 @@ const UiActionList ProjectUiActions::m_actions = {
 
     UiAction("project-properties",
              au::context::UiCtxAny,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Project propert&ies…"),
              TranslatableString("action", "Project properties…")
              )
