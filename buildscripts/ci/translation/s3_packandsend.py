@@ -34,9 +34,14 @@ s3Url = getS3Url()
 
 def processTsFile(prefix, langCode, data):
     print("Processing " + langCode)
-    filename = prefix + '_' + lang_code
+    filename = prefix + '_' + langCode
     tsFilePath = outputDir + filename + ".ts"
     qmFilePath = outputDir + filename + ".qm"
+
+    if not os.path.isfile(tsFilePath):
+        print(prefix + ' ' + langCode + " skipped (no .ts file — not 100% translated on Transifex yet)")
+        removed = data.pop(langCode, None) is not None
+        return False, removed
 
     lang_time = int(os.path.getmtime(tsFilePath))
     cur_time = int(time.time())
@@ -58,19 +63,19 @@ def processTsFile(prefix, langCode, data):
         hash_file.update(file.read())
         file.close()
 
-        if lang_code not in data:
-            data[lang_code] = {}
-        if prefix not in data[lang_code]:
-            data[lang_code][prefix] = {}
+        if langCode not in data:
+            data[langCode] = {}
+        if prefix not in data[langCode]:
+            data[langCode][prefix] = {}
 
-        data[lang_code][prefix]["file_name"] = filename + ".qm"
-        data[lang_code][prefix]["hash"] = str(hash_file.hexdigest())
-        data[lang_code][prefix]["file_size"] = file_size
+        data[langCode][prefix]["file_name"] = filename + ".qm"
+        data[langCode][prefix]["hash"] = str(hash_file.hexdigest())
+        data[langCode][prefix]["file_size"] = file_size
 
-        return True
+        return True, True
     else:
-        print(prefix + ' ' + lang_code + " not changed")
-        return False
+        print(prefix + ' ' + langCode + " not changed")
+        return False, False
 
 
 newDetailsFile = False
@@ -96,8 +101,8 @@ else:
 
 translationChanged = newDetailsFile
 for lang_code, languageProps in langCodeNameDict.items():
-    updateAudacity = processTsFile("audacity", lang_code, data)
-    translationChanged = updateAudacity or translationChanged
+    updateAudacity, detailsChanged = processTsFile("audacity", lang_code, data)
+    translationChanged = detailsChanged or translationChanged
 
     if updateAudacity:
         # create a zip file, compute size, hash, add it to json and save to s3
