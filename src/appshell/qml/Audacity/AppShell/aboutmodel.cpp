@@ -28,7 +28,7 @@ struct ThanksEntry {
     const char* name;
 };
 
-const CreditEntry sTeamMembers[] =  {
+constexpr CreditEntry sTeamMembers[] =  {
     { "dozzzzer", "quality assurance" },
     { "Igor Korsukov", "developer" },
     { "Jessica Williamson", "designer" },
@@ -45,7 +45,7 @@ const CreditEntry sTeamMembers[] =  {
     { "Antons \xc4\x8cinakovs", "quality assurance" }
 };
 
-const CreditEntry sEmeritusTeam[] = {
+constexpr CreditEntry sEmeritusTeam[] = {
     { "Gale Andrews", "quality assurance" },
     { "Richard Ash", "developer" },
     { "Christian Brochec", "documentation and support, French" },
@@ -76,7 +76,7 @@ const CreditEntry sEmeritusTeam[] = {
     { "Casper Jeukendrup", "developer" }
 };
 
-const CreditEntry sContributors[] = {
+constexpr CreditEntry sContributors[] = {
     { "Leo Wattenberg", "designer" },
     { "Peter Jonas", "developer" },
     { "Lynn Allan", "developer" },
@@ -144,12 +144,12 @@ const CreditEntry sContributors[] = {
     { "Wing Yu", "developer" },
 };
 
-const CreditEntry sGraphics[] = {
+constexpr CreditEntry sGraphics[] = {
     { "Shinta Carolinasari", "web developer" },
     { "Bayu Rizaldhan Rayes", "graphics" },
 };
 
-const LibraryEntry sLibraries[] = {
+constexpr LibraryEntry sLibraries[] = {
     { "expat", "https://libexpat.github.io/" },
     { "FLAC", "https://xiph.org/flac/" },
     { "LAME", "http://lame.sourceforge.net/" },
@@ -168,7 +168,7 @@ const LibraryEntry sLibraries[] = {
     { "wxWidgets", "https://wxwidgets.org/" },
 };
 
-const ThanksEntry sThanks[] = {
+constexpr ThanksEntry sThanks[] = {
     { "Dave Beydler" },
     { "Brian Cameron" },
     { "Jason Cohen" },
