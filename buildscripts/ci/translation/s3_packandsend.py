@@ -39,7 +39,7 @@ def processTsFile(prefix, langCode, data):
     qmFilePath = outputDir + filename + ".qm"
 
     if not os.path.isfile(tsFilePath):
-        print(prefix + ' ' + langCode + " skipped (no .ts file — not 100% translated on Transifex yet)")
+        print(prefix + ' ' + langCode + " skipped (no .ts file — not sufficiently translated on Transifex yet)")
         removed = data.pop(langCode, None) is not None
         return False, removed
 
