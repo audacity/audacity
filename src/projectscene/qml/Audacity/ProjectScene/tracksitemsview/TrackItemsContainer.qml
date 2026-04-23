@@ -97,7 +97,7 @@ Item {
         anchors.bottomMargin: sep.thickness
 
         width: 2
-        color: ui.theme.recordColor
+        color: ui.theme.extra["record_color"]
         opacity: 0.8
         visible: root.isLeadInRecordingTrack
         z: 2
