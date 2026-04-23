@@ -448,7 +448,7 @@ const UiActionList ProjectUiActions::m_actions = {
     // generate menu
     UiAction("generate-plugin-manager",
              au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Plugin manager"),
              TranslatableString("action", "Plugin manager")
              ),
@@ -462,7 +462,7 @@ const UiActionList ProjectUiActions::m_actions = {
     // effects menu
     UiAction("effect-plugin-manager",
              au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Plugin manager"),
              TranslatableString("action", "Plugin manager")
              ),
@@ -500,7 +500,7 @@ const UiActionList ProjectUiActions::m_actions = {
     // analyze menu
     UiAction("analyze-plugin-manager",
              au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Plugin manager"),
              TranslatableString("action", "Plugin manager")
              ),
@@ -526,7 +526,7 @@ const UiActionList ProjectUiActions::m_actions = {
     // tools menu
     UiAction("tools-plugin-manager",
              au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Plugin manager"),
              TranslatableString("action", "Plugin manager")
              ),
