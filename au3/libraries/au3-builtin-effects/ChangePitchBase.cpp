@@ -49,7 +49,7 @@ const EffectParameterMethods& ChangePitchBase::Parameters() const
     return parameters;
 }
 
-const ComponentInterfaceSymbol ChangePitchBase::Symbol { XO("Change Pitch") };
+const ComponentInterfaceSymbol ChangePitchBase::Symbol { XO("Change pitch") };
 
 ChangePitchBase::ChangePitchBase()
 {
