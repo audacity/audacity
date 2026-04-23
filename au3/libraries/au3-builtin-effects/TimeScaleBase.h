@@ -37,6 +37,7 @@ public:
     // EffectDefinitionInterface implementation
 
     EffectType GetType() const override;
+    EffectGroup GetGroup() const override { return EffectGroup::PitchAndTempo; }
 
     // Effect implementation
 

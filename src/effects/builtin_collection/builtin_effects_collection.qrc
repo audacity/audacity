@@ -31,6 +31,7 @@
         <file>tonegen/ToneView.qml</file>
         <file>dtmfgen/DtmfView.qml</file>
         <file>silencegen/SilenceView.qml</file>
+        <file>slidingstretch/SlidingStretchView.qml</file>
         <file>reverb/ReverbView.qml</file>
         <file>paulstretch/PaulstretchView.qml</file>
         <file>noisegen/NoiseView.qml</file>

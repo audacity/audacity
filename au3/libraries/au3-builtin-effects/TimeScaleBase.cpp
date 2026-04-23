@@ -32,8 +32,8 @@ const EffectParameterMethods& TimeScaleBase::Parameters() const
 // TimeScaleBase
 //
 
-const ComponentInterfaceSymbol TimeScaleBase::Symbol { wxT("Sliding Stretch"),
-                                                       XO("Sliding Stretch") };
+const ComponentInterfaceSymbol TimeScaleBase::Symbol { wxT("Sliding stretch"),
+                                                       XO("Sliding stretch") };
 
 TimeScaleBase::TimeScaleBase()
 {

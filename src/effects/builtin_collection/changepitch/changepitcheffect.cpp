@@ -5,7 +5,7 @@
 #include "au3-effects/LoadEffects.h"
 
 namespace au::effects {
-const ComponentInterfaceSymbol ChangePitchEffect::Symbol { XO("Change Pitch") };
+const ComponentInterfaceSymbol ChangePitchEffect::Symbol { XO("Change pitch") };
 
 ChangePitchEffect::ChangePitchEffect()
 {
