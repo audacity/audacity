@@ -1,5 +1,4 @@
 import QtQuick
-import QtQuick.Layouts
 import Muse.UiComponents
 import Audacity.Effects
 import Audacity.BuiltinEffects
@@ -11,24 +10,74 @@ BuiltinEffectBase {
     property string title: qsTrc("effects/slidingstretch", "Sliding stretch")
     property bool isApplyAllowed: true
 
-    width: 400
-    implicitHeight: 300
+    width: 528
+    implicitHeight: mainGrid.height
 
     builtinEffectModel: SlidingStretchViewModelFactory.createModel(root, root.instanceId)
-    numNavigationPanels: 1
+    numNavigationPanels: 4
     property alias slidingStretch: root.builtinEffectModel
-    property NavigationPanel normalizeNavigationPanel: NavigationPanel {
-        name: "SlidingStretchControls"
-        enabled: root.enabled && root.visible
-        direction: NavigationPanel.Horizontal
-        section: root.dialogView ? root.dialogView.navigationSection : null
-        order: 1
+
+    QtObject {
+        id: prv
+
+        readonly property int cardWidth: (mainGrid.width - mainGrid.columnSpacing) / 2
+        readonly property int shortCardHeight: 92
+        readonly property int tallCardHeight: 156
     }
 
-    Rectangle {
-        anchors.fill: parent
-        color: "transparent"
-        border.color: "transparent"
-        border.width: 0
+    Grid {
+        id: mainGrid
+
+        anchors.top: parent.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+
+        columns: 2
+        columnSpacing: 16
+        rowSpacing: 16
+
+        SlidingStretchCard {
+            width: prv.cardWidth
+            height: prv.shortCardHeight
+            mode: "tempo"
+            title: qsTrc("effects/slidingstretch", "Initial tempo change")
+
+            navPanel.section: root.dialogView.navigationSection
+            navPanel.order: 0
+            navPanel.name: "SlidingStretchInitialTempo"
+        }
+
+        SlidingStretchCard {
+            width: prv.cardWidth
+            height: prv.shortCardHeight
+            mode: "tempo"
+            title: qsTrc("effects/slidingstretch", "Final tempo change")
+
+            navPanel.section: root.dialogView.navigationSection
+            navPanel.order: 1
+            navPanel.name: "SlidingStretchFinalTempo"
+        }
+
+        SlidingStretchCard {
+            width: prv.cardWidth
+            height: prv.tallCardHeight
+            mode: "pitch"
+            title: qsTrc("effects/slidingstretch", "Initial pitch shift")
+
+            navPanel.section: root.dialogView.navigationSection
+            navPanel.order: 2
+            navPanel.name: "SlidingStretchInitialPitch"
+        }
+
+        SlidingStretchCard {
+            width: prv.cardWidth
+            height: prv.tallCardHeight
+            mode: "pitch"
+            title: qsTrc("effects/slidingstretch", "Final pitch shift")
+
+            navPanel.section: root.dialogView.navigationSection
+            navPanel.order: 3
+            navPanel.name: "SlidingStretchFinalPitch"
+        }
     }
 }
