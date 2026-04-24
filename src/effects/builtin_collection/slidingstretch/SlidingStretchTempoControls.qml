@@ -42,6 +42,7 @@ Row {
         minValue: tempo.min
         maxValue: tempo.max
         step: tempo.step
+        decimals: tempo.decimals
         measureUnitsSymbol: tempo.unit
         currentValue: tempo.value
         onValueEdited: function (newValue) {

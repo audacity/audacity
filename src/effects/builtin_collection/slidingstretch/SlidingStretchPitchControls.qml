@@ -43,6 +43,7 @@ Column {
             minValue: pitchSemitones.min
             maxValue: pitchSemitones.max
             step: pitchSemitones.step
+            decimals: pitchSemitones.decimals
             measureUnitsSymbol: "" // "semitones" is too long. The label already indicates the unit.
             currentValue: pitchSemitones.value
             onValueEdited: function (newValue) {
@@ -94,7 +95,7 @@ Column {
 
                 minValue: pitchPct.min
                 maxValue: pitchPct.max
-                decimals: 0
+                decimals: pitchPct.decimals
                 step: pitchPct.step
                 measureUnitsSymbol: pitchPct.unit
                 currentValue: pitchPct.value

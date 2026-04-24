@@ -71,6 +71,12 @@ public:
         return param.step;
     }
 
+    int decimals() const final override
+    {
+        const auto& param = m_getter(effect<EffectType>());
+        return param.decimals;
+    }
+
     double defaultValue() const final override
     {
         const auto& param = m_getter(effect<EffectType>());
