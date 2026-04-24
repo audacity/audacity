@@ -3,13 +3,12 @@
 */
 #include "builtineffectmodel.h"
 
-#include "framework/global/defer.h"
 #include "framework/global/log.h"
 
 using namespace au::effects;
 
 BuiltinEffectModel::BuiltinEffectModel(QObject* parent, int instanceId)
-    : AbstractEffectViewModel(parent, instanceId)
+    : AbstractEffectViewModel(parent, instanceId), BuiltinEffectInstanceAccess(instanceId)
 {
     assert(m_instanceId != -1);
 }
@@ -17,9 +16,6 @@ BuiltinEffectModel::BuiltinEffectModel(QObject* parent, int instanceId)
 void BuiltinEffectModel::doInit()
 {
     instancesRegister()->settingsChanged(m_instanceId).onNotify(this, [this]() {
-        if (m_selfNotificationDepth > 0) {
-            return;
-        }
         doReload();
     });
 
@@ -28,27 +24,6 @@ void BuiltinEffectModel::doInit()
     });
 
     doReload();
-}
-
-std::shared_ptr<au::effects::EffectInstance> BuiltinEffectModel::instance() const
-{
-    return instancesRegister()->instanceById(m_instanceId);
-}
-
-const EffectSettings& BuiltinEffectModel::settings() const
-{
-    const EffectSettings* s = instancesRegister()->settingsById(m_instanceId);
-    IF_ASSERT_FAILED(s) {
-        static EffectSettings null;
-        return null;
-    }
-
-    return *s;
-}
-
-EffectSettingsAccessPtr BuiltinEffectModel::settingsAccess() const
-{
-    return instancesRegister()->settingsAccessById(m_instanceId);
 }
 
 void BuiltinEffectModel::doStartPreview()
@@ -64,24 +39,6 @@ void BuiltinEffectModel::doStartPreview()
 void BuiltinEffectModel::doStopPreview()
 {
     executionScenario()->stopPreview();
-}
-
-void BuiltinEffectModel::modifySettings(const std::function<void(EffectSettings& settings)>& modifier)
-{
-    const EffectSettingsAccessPtr access = this->settingsAccess();
-    IF_ASSERT_FAILED(access) {
-        return;
-    }
-    access->ModifySettings([&](EffectSettings& settings) {
-        modifier(settings);
-        return nullptr;
-    });
-
-    ++m_selfNotificationDepth;
-    DEFER {
-        --m_selfNotificationDepth;
-    };
-    instancesRegister()->notifyAboutSettingsChanged(m_instanceId);
 }
 
 void BuiltinEffectModel::commitSettings()
