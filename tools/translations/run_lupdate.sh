@@ -35,7 +35,7 @@ fi
 
 LUPDATE=lupdate
 SRC_DIR=src
-TS_FILE=share/locale/audacity_${1:-en}.ts
+TS_FILE=share/locale/audacity4_${1:-en}.ts
 DEFAULT_LUPDATE_ARGS=(
     -recursive
     -tr-function-alias translate+=trc

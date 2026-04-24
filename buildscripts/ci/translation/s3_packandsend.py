@@ -104,7 +104,7 @@ else:
 
 translationChanged = newDetailsFile
 for lang_code, languageProps in langCodeNameDict.items():
-    updateAudacity, detailsChangedAudacity = processTsFile("audacity", lang_code, data)
+    updateAudacity, detailsChangedAudacity = processTsFile("audacity4", lang_code, data)
     updateMuseFramework, detailsChangedMuseFramework = processTsFile("museframework", lang_code, data)
     translationChanged = detailsChangedAudacity or detailsChangedMuseFramework or translationChanged
 
@@ -113,7 +113,7 @@ for lang_code, languageProps in langCodeNameDict.items():
         zipName = 'locale_' + lang_code + '.zip'
         zipPath = outputDir + zipName
         myzip = zipfile.ZipFile(zipPath, mode='w')
-        for prefix in ('audacity', 'museframework'):
+        for prefix in ('audacity4', 'museframework'):
             qmFilePath = outputDir + prefix + '_' + lang_code + ".qm"
             if os.path.isfile(qmFilePath):
                 myzip.write(qmFilePath, prefix + '_' + lang_code + ".qm")
