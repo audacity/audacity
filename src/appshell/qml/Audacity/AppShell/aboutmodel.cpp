@@ -237,12 +237,25 @@ QVariantMap makeSection(const char* title, const QVariantList& credits)
     return s;
 }
 
-QVariantMap makeSection(const char* title, const char* subtitle, QVariantList credits)
+QVariantMap makeSection(const char* title, const char* subtitle, const QVariantList& credits)
 {
     QVariantMap s;
     s["title"]   = muse::qtrc("appshell/about", title);
     s["subtitle"] = muse::qtrc("appshell/about", subtitle);
-    s["credits"] = std::move(credits);
+    s["credits"] = credits;
+    return s;
+}
+
+QVariantMap makeSection(const char* title, QString rawCredit)
+{
+    QVariantMap rawCreditMap;
+    rawCreditMap["raw"] = rawCredit;
+
+    QVariantMap s;
+    s["title"]   = muse::qtrc("appshell/about", title);
+    s["credits"] = QVariantList{
+        rawCreditMap
+    };
     return s;
 }
 }
@@ -310,14 +323,28 @@ void AboutModel::toggleDevMode()
 
 QVariantList AboutModel::creditList() const
 {
-    return {
-        makeSection("Audacity Team Members", buildCredits(sTeamMembers)),
-        makeSection("Emeritus", "Distinguished Audacity Team members, not currently active", buildCredits(sEmeritusTeam)),
-        makeSection("Contributors", buildCredits(sContributors)),
-        makeSection("Website and Graphics", buildCredits(sGraphics)),
-        makeSection("Libraries", "Audacity includes code from the following projects:", buildCredits(sLibraries)),
-        makeSection("Special Thanks", buildCredits(sThanks)),
-    };
+    static const QVariantList cached = [] {
+        QVariantList creditList = {
+            makeSection("Audacity Team Members", buildCredits(sTeamMembers)),
+            makeSection("Emeritus", "Distinguished Audacity Team members, not currently active", buildCredits(sEmeritusTeam)),
+            makeSection("Contributors", buildCredits(sContributors)),
+            makeSection("Website and Graphics", buildCredits(sGraphics)),
+        };
+
+        /* i18n-hint: Replace this with the names of the translators for your language.
+            This will appear in the Translators section of the About dialog.
+            For example: "French translation by Jane Doe<br>John Smith"
+            Leave untranslated to hide the Translators section. */
+        QString translationCredits = muse::qtrc("appshell/about", "translator_credits");
+        if (translationCredits != "translator_credits") {
+            creditList.append(makeSection("Translators", translationCredits));
+        }
+
+        creditList.append(makeSection("Libraries", "Audacity includes code from the following projects:", buildCredits(sLibraries)));
+        creditList.append(makeSection("Special Thanks", buildCredits(sThanks)));
+        return creditList;
+    }();
+    return cached;
 }
 
 QVariantMap AboutModel::makeUrl(const QUrl& url, bool showPath) const

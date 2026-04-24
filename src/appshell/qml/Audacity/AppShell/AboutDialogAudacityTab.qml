@@ -170,12 +170,19 @@ ColumnLayout {
                             width: parent.width
 
                             horizontalAlignment: Text.AlignLeft
+                            wrapMode: Text.WordWrap
+                            textFormat: Text.RichText
+                            font: ui.theme.bodyFont
 
                             text: modelData.credits.map(function (c) {
-                                let isUrl = c.url && c.url.length > 0
+                                let isRaw = c.raw && c.raw.length > 0
+                                if (isRaw) {
+                                    return c.raw
+                                }
 
+                                let isUrl = c.url && c.url.length > 0
                                 if (isUrl) {
-                                    return qsTrc("appshell/about", "%1").arg('<a href="' + c.url + '">' + c.name + '</a>')
+                                    return '<a href="' + c.url + '">' + c.name + '</a>'
                                 }
 
                                 return c.role ? c.name + ", " + c.role : c.name
