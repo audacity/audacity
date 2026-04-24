@@ -12,6 +12,8 @@ from urllib.parse import urlparse, urlunparse
 period = 300
 outputDir = "share/locale/"
 
+TRANSLATION_PREFIXES = ("audacity4", "museframework")
+
 
 def getS3Url():
     override = os.environ.get("S3_UPLOAD_URL")
@@ -104,16 +106,17 @@ else:
 
 translationChanged = newDetailsFile
 for lang_code, languageProps in langCodeNameDict.items():
-    updateAudacity, detailsChangedAudacity = processTsFile("audacity4", lang_code, data)
-    updateMuseFramework, detailsChangedMuseFramework = processTsFile("museframework", lang_code, data)
-    translationChanged = detailsChangedAudacity or detailsChangedMuseFramework or translationChanged
+    results = [processTsFile(p, lang_code, data) for p in TRANSLATION_PREFIXES]
+    anyUpdated = any(update for update, _ in results)
+    anyDetailsChanged = any(changed for _, changed in results)
+    translationChanged = anyDetailsChanged or translationChanged
 
-    if updateAudacity or updateMuseFramework:
+    if anyUpdated:
         # create a zip file, compute size, hash, add it to json and save to s3
         zipName = 'locale_' + lang_code + '.zip'
         zipPath = outputDir + zipName
         myzip = zipfile.ZipFile(zipPath, mode='w')
-        for prefix in ('audacity4', 'museframework'):
+        for prefix in TRANSLATION_PREFIXES:
             qmFilePath = outputDir + prefix + '_' + lang_code + ".qm"
             if os.path.isfile(qmFilePath):
                 myzip.write(qmFilePath, prefix + '_' + lang_code + ".qm")
