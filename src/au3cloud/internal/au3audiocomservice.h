@@ -86,6 +86,8 @@ private:
     std::optional<std::string> getHeadSnapshotID(
         const std::string& projectId, audacity::cloud::audiocom::sync::ProgressCallback progressCallback,
         audacity::concurrency::CancellationContextPtr context);
+    std::optional<ProjectList::Item> findCachedProject(const std::string& projectId) const;
+    muse::Ret checkUnsyncedProject(const std::string& cloudProjectId) const;
 
     struct CachedProjectItem {
         ProjectList projectList;
@@ -102,7 +104,7 @@ private:
     std::map<size_t, CachedAudioItem> m_audioListCache;
     size_t m_audiosPerBatch = 0;
 
-    std::mutex m_cacheMutex;
+    mutable std::mutex m_cacheMutex;
 
     struct UploadSubscriptionEntry {
         Observer::Subscription subscription;

@@ -23,6 +23,7 @@
 #include "opensaveprojectscenario.h"
 
 #include "cloud/clouderrors.h"
+#include "interactive/iinteractive.h"
 #include "projecterrors.h"
 #include "translation.h"
 #include "types/uri.h"
@@ -96,6 +97,12 @@ const char* DEFAULT_CLOUD_ERROR_TEXT = "An error occurred while syncing with the
 
 const char* DOWNLOAD_CLOUD_AUDIO_ERROR_TITLE = "Error downloading audio from cloud";
 const char* DOWNLOAD_CLOUD_AUDIO_ERROR_TEXT = "Can't download audio from cloud.";
+
+const char* PROJECT_INCOMPLETE_TITLE = "Cloud project incomplete";
+const char* PROJECT_INCOMPLETE_TEXT
+    = "No version of this project has been fully uploaded to audio.com. It cannot be loaded.";
+const char* PROJECT_NOT_FULLY_SYNCED_TEXT
+    = "The latest version of this project was not fully uploaded to audio.com. You can load the last complete version instead.";
 }
 
 RetVal<SaveLocation> OpenSaveProjectScenario::askSaveLocation(IAudacityProjectPtr project, SaveMode mode,
@@ -620,7 +627,7 @@ Ret OpenSaveProjectScenario::showCloudOpenError(const Ret& error, const muse::io
             interactive()->buttonData(IInteractive::Button::Cancel),
             IInteractive::ButtonData(useLocalBtn, trc("project", OPEN_CONFLICT_LOCAL_BTN), false, false,
                                      IInteractive::ButtonRole::ApplyRole),
-            IInteractive::ButtonData(useRemoteBtn, trc("project", OPEN_CONFLICT_REMOTE_BTN), /*accent=*/ true, false,
+            IInteractive::ButtonData(useRemoteBtn, trc("project", OPEN_CONFLICT_REMOTE_BTN), true, false,
                                      IInteractive::ButtonRole::ApplyRole),
         };
         IInteractive::Result conflictResult = interactive()->infoSync(trc("project", OPEN_CONFLICT_TITLE),
@@ -636,6 +643,41 @@ Ret OpenSaveProjectScenario::showCloudOpenError(const Ret& error, const muse::io
     case Err::Cancelled:
     case Err::OpenProjectCancelled:
         break;
+    case Err::CloudProjectNotFullySynced: {
+        const int visitAudioComBtn = static_cast<int>(IInteractive::Button::CustomButton);
+        const int loadLatestBtn = static_cast<int>(IInteractive::Button::CustomButton) + 1;
+        IInteractive::ButtonDatas buttons {
+            IInteractive::ButtonData(IInteractive::Button::Cancel, muse::trc("global", "Cancel"), true),
+            IInteractive::ButtonData(visitAudioComBtn, trc("project", "Visit audio.com"), false, false,
+                                     IInteractive::ButtonRole::ApplyRole),
+            IInteractive::ButtonData(loadLatestBtn, trc("project", "Load latest"), false, false,
+                                     IInteractive::ButtonRole::ApplyRole),
+        };
+        IInteractive::Result result
+            = interactive()->infoSync(PROJECT_INCOMPLETE_TITLE, PROJECT_NOT_FULLY_SYNCED_TEXT, buttons,
+                                      static_cast<int>(IInteractive::Button::Cancel));
+        if (result.isButton(visitAudioComBtn)) {
+            return Ret(IOpenSaveProjectScenario::RET_CODE_OPEN_ON_AUDIOCOM);
+        } else if (result.isButton(loadLatestBtn)) {
+            return Ret(IOpenSaveProjectScenario::RET_CODE_LOAD_LATEST_SYNCED);
+        }
+        break;
+    }
+    case Err::CloudProjectNeverSynced: {
+        const int visitAudioComBtn = static_cast<int>(IInteractive::Button::CustomButton);
+        IInteractive::ButtonDatas buttons {
+            IInteractive::ButtonData(visitAudioComBtn, trc("project", "Visit audio.com"), false, false,
+                                     IInteractive::ButtonRole::RejectRole),
+            interactive()->buttonData(IInteractive::Button::Ok),
+        };
+        IInteractive::Result result
+            = interactive()->infoSync(PROJECT_INCOMPLETE_TITLE, PROJECT_INCOMPLETE_TEXT, buttons,
+                                      static_cast<int>(IInteractive::Button::Ok));
+        if (result.isButton(visitAudioComBtn)) {
+            return Ret(IOpenSaveProjectScenario::RET_CODE_OPEN_ON_AUDIOCOM);
+        }
+        break;
+    }
     default:
         interactive()->infoSync(trc("project", OPEN_DEFAULT_ERROR_TITLE), trc("project", OPEN_DEFAULT_ERROR_MESSAGE));
         break;

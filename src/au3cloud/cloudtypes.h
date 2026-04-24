@@ -40,6 +40,7 @@ struct ProjectList {
 
         int64_t created {};
         int64_t updated {};
+        int64_t headSnapshotSynced {};
     };
 
     std::vector<Item> items;

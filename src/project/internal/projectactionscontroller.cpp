@@ -2,6 +2,7 @@
 
 #include <QFileDialog>
 
+#include "au3cloud/internal/au3audiocomservice.h"
 #include "framework/global/async/async.h"
 #include "framework/global/defer.h"
 #include "framework/global/translation.h"
@@ -830,9 +831,10 @@ Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, cons
         return make_ret(Ret::Code::UnknownError);
     }
 
-    progress->finished().onReceive(this, [this, localPath](const ProgressResult& result) {
+    const std::string cloudProjectIdStr = projectId.toStdString();
+    progress->finished().onReceive(this, [this, localPath, cloudProjectIdStr](const ProgressResult& result) {
         if (!result.ret) {
-            handleCloudOpenError(result.ret, localPath);
+            handleCloudOpenError(result.ret, localPath, cloudProjectIdStr);
             return;
         }
 
@@ -1219,7 +1221,8 @@ muse::Ret ProjectActionsController::ensureAuthorization()
     return authorization()->isAuthorized() ? make_ret(Ret::Code::Ok) : make_ret(Ret::Code::Cancel);
 }
 
-void ProjectActionsController::handleCloudOpenError(const muse::Ret& error, const io::path_t& localPath)
+void ProjectActionsController::handleCloudOpenError(const muse::Ret& error, const io::path_t& localPath,
+                                                    const std::string& cloudProjectId)
 {
     using Err = au::au3cloud::Err;
     const auto err = static_cast<Err>(error.code());
@@ -1257,6 +1260,14 @@ void ProjectActionsController::handleCloudOpenError(const muse::Ret& error, cons
     }
     case IOpenSaveProjectScenario::RET_CODE_OPEN_CLOUD_FORCE:
         openCloudProject(localPath, {}, true);
+        break;
+    case IOpenSaveProjectScenario::RET_CODE_LOAD_LATEST_SYNCED:
+        openCloudProject(localPath, muse::String::fromStdString(cloudProjectId), true);
+        break;
+    case IOpenSaveProjectScenario::RET_CODE_OPEN_ON_AUDIOCOM:
+        if (!cloudProjectId.empty()) {
+            platformInteractive()->openUrl(audioComService()->getCloudProjectPage(cloudProjectId));
+        }
         break;
     default:
         break;

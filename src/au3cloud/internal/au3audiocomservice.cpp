@@ -515,6 +515,16 @@ muse::ProgressPtr Au3AudioComService::openCloudProject(const muse::io::path_t& l
         }
     }
 
+    if (!forceOverwrite) {
+        const auto unsyncedRet = checkUnsyncedProject(cloudProjectId);
+        if (!unsyncedRet) {
+            muse::async::Async::call(this, [progress, unsyncedRet]() {
+                progress->finish(unsyncedRet);
+            });
+            return progress;
+        }
+    }
+
     auto progressCallback = [progress](double p) -> bool {
         if (progress->isCanceled()) {
             return false;
@@ -703,6 +713,35 @@ std::optional<std::string> Au3AudioComService::getHeadSnapshotID(
     }
 
     return std::nullopt;
+}
+
+std::optional<ProjectList::Item> Au3AudioComService::findCachedProject(const std::string& projectId) const
+{
+    std::lock_guard guard(m_cacheMutex);
+    for (const auto& [_, cached] : m_projectListCache) {
+        for (const auto& item : cached.projectList.items) {
+            if (item.id == projectId) {
+                return item;
+            }
+        }
+    }
+    return std::nullopt;
+}
+
+muse::Ret Au3AudioComService::checkUnsyncedProject(const std::string& cloudProjectId) const
+{
+    const auto cachedProject = findCachedProject(cloudProjectId);
+    if (!cachedProject || cachedProject->headSnapshotSynced != 0) {
+        return muse::make_ok();
+    }
+
+    const auto localState = CloudSyncService::GetProjectState(cloudProjectId);
+    if (localState == CloudSyncService::ProjectState::PendingSync) {
+        return muse::make_ok();
+    }
+
+    const bool hasValidSnapshot = !cachedProject->lastSyncedSnapshotId.empty();
+    return make_ret(hasValidSnapshot ? Err::CloudProjectNotFullySynced : Err::CloudProjectNeverSynced);
 }
 
 void Au3AudioComService::deinit()
