@@ -21,11 +21,14 @@
  */
 #include "appshellconfiguration.h"
 
+#include <QFileInfo>
 #include <QJsonArray>
 #include <QJsonDocument>
+#include <QStandardPaths>
 
-#include "global/settings.h"
-#include "global/log.h"
+#include "framework/global/settings.h"
+#include "framework/global/log.h"
+
 #include "appshell/appshelltypes.h"
 
 // #include "multiwindows/resourcelockguard.h"
@@ -222,9 +225,9 @@ muse::async::Notification AppShellConfiguration::settingsApplied() const
     return m_settingsApplied;
 }
 
-void AppShellConfiguration::revertToFactorySettings(bool keepDefaultSettings, bool notifyAboutChanges) const
+void AppShellConfiguration::revertToFactorySettings(bool keepDefaultSettings, bool notifyAboutChanges, bool notifyOtherInstances) const
 {
-    settings()->reset(keepDefaultSettings, notifyAboutChanges);
+    settings()->reset(keepDefaultSettings, notifyAboutChanges, notifyOtherInstances);
 }
 
 muse::io::paths_t AppShellConfiguration::sessionProjectsPaths() const
