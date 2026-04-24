@@ -73,9 +73,10 @@ const char* SAVE_FORBIDDEN_TITLE = "Access denied";
 const char* SAVE_FORBIDDEN_MESSAGE
     = "You don't have permission to save this project to the cloud. It may belong to a different account.";
 
-const char* PRJ_SIZE_EXCEEDED_TITLE = "Project size limit exceeded";
-const char* PRJ_SIZE_EXCEEDED_TEXT
-    = "Your project exceeds the maximum size of 10GB. Please consider reducing its size or save it to your computer.";
+const char* PRJ_STORAGE_LIMIT_TITLE = "Your project storage limit has been reached";
+const char* PRJ_STORAGE_LIMIT_TEXT
+    =
+        "You may need to remove your older projects to make space available. For more options, visit audio.com.\n\nYou can also save this project locally to avoid losing changes.";
 
 const char* PRJ_LIMIT_REACHED_TITLE = "Your project limit has been reached";
 const char* PRJ_LIMIT_REACHED_TEXT
@@ -686,10 +687,10 @@ Ret OpenSaveProjectScenario::showCloudOpenError(const Ret& error, const muse::io
     return muse::make_ok();
 }
 
-Ret OpenSaveProjectScenario::showCloudSaveError(const Ret& error) const
+Ret OpenSaveProjectScenario::showCloudSaveError(const Ret& ret) const
 {
     using Err = au::au3cloud::Err;
-    const auto err = static_cast<Err>(error.code());
+    const auto err = static_cast<Err>(ret.code());
 
     switch (err) {
     case Err::ProjectLimitReached:
@@ -699,8 +700,8 @@ Ret OpenSaveProjectScenario::showCloudSaveError(const Ret& error) const
             interactive()->buttonData(IInteractive::Button::Cancel),
             IInteractive::ButtonData(saveLocallyBtn, trc("project", "Save to computer"), /*accent=*/ true),
         };
-        const char* title = err == Err::ProjectLimitReached ? PRJ_LIMIT_REACHED_TITLE : PRJ_SIZE_EXCEEDED_TITLE;
-        const char* text = err == Err::ProjectLimitReached ? PRJ_LIMIT_REACHED_TEXT : PRJ_SIZE_EXCEEDED_TEXT;
+        const char* title = err == Err::ProjectLimitReached ? PRJ_LIMIT_REACHED_TITLE : PRJ_STORAGE_LIMIT_TITLE;
+        const char* text = err == Err::ProjectLimitReached ? PRJ_LIMIT_REACHED_TEXT : PRJ_STORAGE_LIMIT_TEXT;
         IInteractive::Result result = interactive()->infoSync(title, text, buttons, saveLocallyBtn, {},
                                                               trc("cloud", "Save to audio.com"));
         if (result.isButton(IInteractive::Button::Save)) {

@@ -486,29 +486,30 @@ bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudI
     }
 
     progress->finished().onReceive(this, [this, exists, projectFilePath](const ProgressResult& result) {
-        if (result.ret.success()) {
-            if (exists) {
-                return;
-            }
-
-            const bool dismissable = false;
-            toastService()->show(trc("global", "Success"),
-                                 trc("project",
-                                     "All saved changes will now update to the cloud.\nYou can manage this file from your updated projects page on audio.com"),
-                                 muse::ui::IconCode::Code::TICK,
-                                 dismissable,
-            {
-                { trc("project", "Dismiss"), au::toast::ToastActionCode::None },
-                { trc("cloud", "View on audio.com"), au::toast::ToastActionCode::Custom }
-            }
-                                 ).onResolve(this, [this, url = result.val.toQString()](au::toast::ToastActionCode actionCode) {
-                if (actionCode == au::toast::ToastActionCode::Custom) {
-                    platformInteractive()->openUrl(url);
-                }
-            });
-        } else {
+        if (!result.ret.success()) {
             handleCloudSaveError(result.ret);
+            return;
         }
+
+        if (exists) {
+            return;
+        }
+
+        const bool dismissable = false;
+        toastService()->show(trc("global", "Success"),
+                             trc("project",
+                                 "All saved changes will now update to the cloud.\nYou can manage this file from your updated projects page on audio.com"),
+                             muse::ui::IconCode::Code::TICK,
+                             dismissable,
+        {
+            { trc("project", "Dismiss"), au::toast::ToastActionCode::None },
+            { trc("cloud", "View on audio.com"), au::toast::ToastActionCode::Custom }
+        }
+                             ).onResolve(this, [this, url = result.val.toQString()](au::toast::ToastActionCode actionCode) {
+            if (actionCode == au::toast::ToastActionCode::Custom) {
+                platformInteractive()->openUrl(url);
+            }
+        });
     });
 
     const bool dismissible = false;
