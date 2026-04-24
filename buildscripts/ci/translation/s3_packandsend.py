@@ -40,7 +40,10 @@ def processTsFile(prefix, langCode, data):
 
     if not os.path.isfile(tsFilePath):
         print(prefix + ' ' + langCode + " skipped (no .ts file — not sufficiently translated on Transifex yet)")
-        removed = data.pop(langCode, None) is not None
+        removed = False
+        if langCode in data and prefix in data[langCode]:
+            data[langCode].pop(prefix)
+            removed = True
         return False, removed
 
     lang_time = int(os.path.getmtime(tsFilePath))
@@ -101,16 +104,19 @@ else:
 
 translationChanged = newDetailsFile
 for lang_code, languageProps in langCodeNameDict.items():
-    updateAudacity, detailsChanged = processTsFile("audacity", lang_code, data)
-    translationChanged = detailsChanged or translationChanged
+    updateAudacity, detailsChangedAudacity = processTsFile("audacity", lang_code, data)
+    updateMuseFramework, detailsChangedMuseFramework = processTsFile("museframework", lang_code, data)
+    translationChanged = detailsChangedAudacity or detailsChangedMuseFramework or translationChanged
 
-    if updateAudacity:
+    if updateAudacity or updateMuseFramework:
         # create a zip file, compute size, hash, add it to json and save to s3
         zipName = 'locale_' + lang_code + '.zip'
         zipPath = outputDir + zipName
         myzip = zipfile.ZipFile(zipPath, mode='w')
-        qmFilePath = outputDir + 'audacity_' + lang_code + ".qm"
-        myzip.write(qmFilePath, 'audacity_' + lang_code + ".qm")
+        for prefix in ('audacity', 'museframework'):
+            qmFilePath = outputDir + prefix + '_' + lang_code + ".qm"
+            if os.path.isfile(qmFilePath):
+                myzip.write(qmFilePath, prefix + '_' + lang_code + ".qm")
         myzip.close()
 
         # get zip file size

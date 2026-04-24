@@ -54,9 +54,20 @@ run_indented() {
 # We only need to update one ts file per "resource", that will be sent to Transifex.
 # We get .ts files for other languages from Transifex.
 
+# audacity
 echo "Audacity:"
 echo "Running" "${LUPDATE}" "${DEFAULT_LUPDATE_ARGS[@]}" ${LUPDATE_ARGS} "${SRC_DIR}" -ts "${TS_FILE}"
 run_indented "${LUPDATE}" "${DEFAULT_LUPDATE_ARGS[@]}" ${LUPDATE_ARGS} "${SRC_DIR}" -ts "${TS_FILE}"
+
+echo ""
+
+# museframework
+MUSE_FRAMEWORK_DIR=muse_framework/framework
+TS_FILE=share/locale/museframework_${1:-en}.ts
+
+echo "Muse Framework:"
+echo "Running" "${LUPDATE}" "${DEFAULT_LUPDATE_ARGS[@]}" ${LUPDATE_ARGS} "${MUSE_FRAMEWORK_DIR}" -ts "${TS_FILE}"
+run_indented "${LUPDATE}" "${DEFAULT_LUPDATE_ARGS[@]}" ${LUPDATE_ARGS} "${MUSE_FRAMEWORK_DIR}" -ts "${TS_FILE}"
 
 echo ""
 
