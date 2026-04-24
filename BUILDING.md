@@ -9,12 +9,13 @@
 * A package manager (tested: Choco on Windows, homebrew on macOS)
 * A CMake generator (tested: Ninja)
 * A C++ compiler (tested: MSVC on Windows, g++ on Linux)
-* Qt 6.9.1, 'Desktop' with 'Additional Libraries':
+* Qt 6.9.1 'Desktop' (macOS) or 'MSVC 2022 ARM64/64-bit' (Windows) with 'Additional Libraries':
   * Qt 5 Compatibility Module
   * Qt Network Authorization
   * Qt Shader Tools
   * Qt State Machines
 
+NB: Bear in mind that, by default, only the latest version of Qt is available for installation. To view older versions, click 'Show > Archive' in the top-right corner of the Qt Online Installer, next to the search bar.
 
 ## Setup
 
