@@ -13,6 +13,9 @@ class SlidingStretchViewModel : public BuiltinEffectModel
 public:
     SlidingStretchViewModel(QObject* parent, int instanceId);
 
+    Q_INVOKABLE double pctToSemitones(double pct) const;
+    Q_INVOKABLE double semitonesToPct(double semitones) const;
+
 private:
     void doReload() override;
 };

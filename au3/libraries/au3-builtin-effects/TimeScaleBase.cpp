@@ -84,8 +84,9 @@ double TimeScaleBase::CalcPreviewInputLength(
     if (inputLength == 0.0) {
         return 0.0;
     } else {
-        double rateStart1 = PercentChangeToRatio(m_RatePercentChangeStart);
-        double rateEnd1 = PercentChangeToRatio(m_RatePercentChangeEnd);
+        const auto& params = GetSettings(settings);
+        double rateStart1 = PercentChangeToRatio(params.m_RatePercentChangeStart);
+        double rateEnd1 = PercentChangeToRatio(params.m_RatePercentChangeEnd);
         double tOut = previewLength / inputLength;
         double t = SBSMSBase::getInvertedStretchedTime(
             rateStart1, rateEnd1, slideTypeRate, tOut);
@@ -101,10 +102,11 @@ std::any TimeScaleBase::BeginPreview(const EffectSettings& settings)
 
 bool TimeScaleBase::Process(EffectInstance& instance, EffectSettings& settings)
 {
-    double pitchStart1 = PercentChangeToRatio(m_PitchPercentChangeStart);
-    double pitchEnd1 = PercentChangeToRatio(m_PitchPercentChangeEnd);
-    double rateStart1 = PercentChangeToRatio(m_RatePercentChangeStart);
-    double rateEnd1 = PercentChangeToRatio(m_RatePercentChangeEnd);
+    const auto& params = GetSettings(settings);
+    double pitchStart1 = PercentChangeToRatio(params.m_PitchPercentChangeStart);
+    double pitchEnd1 = PercentChangeToRatio(params.m_PitchPercentChangeEnd);
+    double rateStart1 = PercentChangeToRatio(params.m_RatePercentChangeStart);
+    double rateEnd1 = PercentChangeToRatio(params.m_RatePercentChangeEnd);
 
     if (bPreview) {
         double t = (mT1 - mT0) / previewSelectedDuration;

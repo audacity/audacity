@@ -6,7 +6,12 @@ import Muse.UiComponents
 RoundedRectangle {
     id: root
 
+    required property var viewModel
     required property string mode
+    property var tempoParam: null
+    property var pitchSemitonesParam: null
+    property var pitchPctParam: null
+
     property alias title: titleLabel.text
 
     property NavigationPanel navPanel: NavigationPanel {}
@@ -44,6 +49,8 @@ RoundedRectangle {
             navPanel: root.navPanel
             navigationPrefix: root.navigationPrefix
             valueFieldWidth: root.valueFieldWidth
+
+            tempo: root.tempoParam
         }
     }
 
@@ -56,6 +63,10 @@ RoundedRectangle {
             navPanel: root.navPanel
             navigationPrefix: root.navigationPrefix
             valueFieldWidth: root.valueFieldWidth
+
+            viewModel: root.viewModel
+            pitchSemitones: root.pitchSemitonesParam
+            pitchPct: root.pitchPctParam
         }
     }
 }

@@ -9,18 +9,27 @@
 **********************************************************************/
 #pragma once
 
-#if USE_SBSMS
-
 #include "SBSMSBase.h"
 #include "au3-command-parameters/ShuttleAutomation.h"
+#include "au3-effects/Effect.h"
 
-class BUILTIN_EFFECTS_API TimeScaleBase : public SBSMSBase
+struct TimeScaleBaseParams
+{
+    double m_RatePercentChangeStart = 0.;
+    double m_RatePercentChangeEnd = 0.;
+    double m_PitchHalfStepsStart = 0.;
+    double m_PitchHalfStepsEnd = 0.;
+    double m_PitchPercentChangeStart = 0.;
+    double m_PitchPercentChangeEnd = 0.;
+};
+
+class BUILTIN_EFFECTS_API TimeScaleBase : public EffectWithSettings<TimeScaleBaseParams, SBSMSBase>
 {
 public:
-    static inline TimeScaleBase*
+    static inline TimeScaleBaseParams*
     FetchParameters(TimeScaleBase& e, EffectSettings&)
     {
-        return &e;
+        return &e.m_params;
     }
 
     static const ComponentInterfaceSymbol Symbol;
@@ -46,7 +55,7 @@ public:
     double CalcPreviewInputLength(
         const EffectSettings& settings, double previewLength) const override;
 
-protected:
+public:
     // TimeScaleBase implementation
 
     static double PercentChangeToRatio(double percentChange);
@@ -57,17 +66,12 @@ protected:
     double previewSelectedDuration;
     SlideType slideTypeRate;
     SlideType slideTypePitch;
-    double m_RatePercentChangeStart;
-    double m_RatePercentChangeEnd;
-    double m_PitchHalfStepsStart;
-    double m_PitchHalfStepsEnd;
-    double m_PitchPercentChangeStart;
-    double m_PitchPercentChangeEnd;
+    TimeScaleBaseParams m_params;
 
     const EffectParameterMethods& Parameters() const override;
 
     static constexpr EffectParameter RatePercentStart {
-        &TimeScaleBase::m_RatePercentChangeStart,
+        &TimeScaleBaseParams::m_RatePercentChangeStart,
         L"RatePercentChangeStart",
         0.0,
         -90.0,
@@ -75,7 +79,7 @@ protected:
         1
     };
     static constexpr EffectParameter RatePercentEnd {
-        &TimeScaleBase::m_RatePercentChangeEnd,
+        &TimeScaleBaseParams::m_RatePercentChangeEnd,
         L"RatePercentChangeEnd",
         0.0,
         -90.0,
@@ -83,7 +87,7 @@ protected:
         1
     };
     static constexpr EffectParameter HalfStepsStart {
-        &TimeScaleBase::m_PitchHalfStepsStart,
+        &TimeScaleBaseParams::m_PitchHalfStepsStart,
         L"PitchHalfStepsStart",
         0.0,
         -12.0,
@@ -91,7 +95,7 @@ protected:
         1
     };
     static constexpr EffectParameter HalfStepsEnd {
-        &TimeScaleBase::m_PitchHalfStepsEnd,
+        &TimeScaleBaseParams::m_PitchHalfStepsEnd,
         L"PitchHalfStepsEnd",
         0.0,
         -12.0,
@@ -99,7 +103,7 @@ protected:
         1
     };
     static constexpr EffectParameter PitchPercentStart {
-        &TimeScaleBase::m_PitchPercentChangeStart,
+        &TimeScaleBaseParams::m_PitchPercentChangeStart,
         L"PitchPercentChangeStart",
         0.0,
         -50.0,
@@ -107,7 +111,7 @@ protected:
         1
     };
     static constexpr EffectParameter PitchPercentEnd {
-        &TimeScaleBase::m_PitchPercentChangeEnd,
+        &TimeScaleBaseParams::m_PitchPercentChangeEnd,
         L"PitchPercentChangeEnd",
         0.0,
         -50.0,
@@ -115,5 +119,3 @@ protected:
         1
     };
 };
-
-#endif // USE_SBSMS

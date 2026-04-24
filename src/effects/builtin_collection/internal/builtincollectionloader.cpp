@@ -50,6 +50,7 @@
 #include "silencegen/silenceviewmodel.h"
 #include "au3-builtin-effects/TimeScaleBase.h"
 #include "slidingstretch/slidingstretchviewmodel.h"
+#include "slidingstretch/slidingstretchsettingmodel.h"
 #include "noisegen/noisegenerator.h"
 #include "noisegen/noiseviewmodel.h"
 #include "noisereduction/noisereductioneffect.h"
@@ -165,6 +166,7 @@ void BuiltinCollectionLoader::init()
     regView(SilenceGenerator::Symbol, u"qrc:/silencegen/SilenceView.qml");
 
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(SlidingStretchViewModelFactory);
+    REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(SlidingStretchSettingModelFactory);
     regView(TimeScaleBase::Symbol, u"qrc:/slidingstretch/SlidingStretchView.qml");
 
     qmlRegisterType<DynamicsTimeline>("Audacity.BuiltinEffectsCollection", 1, 0, "DynamicsTimeline");

@@ -7,9 +7,17 @@ Column {
 
     required property NavigationPanel navPanel
     required property string navigationPrefix
+    required property var viewModel
+    required property var pitchSemitones
+    required property var pitchPct
     property int valueFieldWidth: 64
 
     spacing: 16
+
+    Component.onCompleted: {
+        pitchSemitones.init()
+        pitchPct.init()
+    }
 
     RowLayout {
         width: parent.width
@@ -18,11 +26,13 @@ Column {
             Layout.alignment: Qt.AlignLeft
             Layout.fillWidth: true
 
-            text: qsTrc("effects/slidingstretch", "Semitones (-12 → 12)")
+            text: qsTrc("effects/slidingstretch", "Semitones (%1 → %2)").arg(pitchSemitones.min).arg(pitchSemitones.max)
             horizontalAlignment: Text.AlignLeft
         }
 
         IncrementalPropertyControl {
+            id: semitonesControl
+
             Layout.alignment: Qt.AlignRight
             Layout.preferredWidth: root.valueFieldWidth
 
@@ -30,11 +40,15 @@ Column {
             navigation.order: 0
             navigation.name: root.navigationPrefix + "SemitoneChangeValue"
 
-            minValue: -12
-            maxValue: 12
-            decimals: 0
-            step: 1
-            currentValue: -12
+            minValue: pitchSemitones.min
+            maxValue: pitchSemitones.max
+            step: pitchSemitones.step
+            measureUnitsSymbol: "" // "semitones" is too long. The label already indicates the unit.
+            currentValue: pitchSemitones.value
+            onValueEdited: function (newValue) {
+                pitchSemitones.value = newValue
+                pitchPct.value = root.viewModel.semitonesToPct(newValue)
+            }
         }
     }
 
@@ -51,12 +65,19 @@ Column {
             spacing: 16
 
             StyledSlider {
+                id: percentageSlider
+
                 Layout.alignment: Qt.AlignLeft
                 Layout.fillWidth: true
-                from: -50
-                to: 100
-                value: -50
-                stepSize: 1
+
+                from: pitchPct.min
+                to: pitchPct.max
+                stepSize: pitchPct.step
+                value: pitchPct.value
+                onValueChanged: {
+                    pitchPct.value = value
+                    pitchSemitones.value = root.viewModel.pctToSemitones(value)
+                }
 
                 navigation.panel: root.navPanel
                 navigation.order: 1
@@ -71,12 +92,16 @@ Column {
                 navigation.order: 2
                 navigation.name: root.navigationPrefix + "PercentageChangeValue"
 
-                minValue: -50
-                maxValue: 100
+                minValue: pitchPct.min
+                maxValue: pitchPct.max
                 decimals: 0
-                step: 1
-                measureUnitsSymbol: "%"
-                currentValue: -50
+                step: pitchPct.step
+                measureUnitsSymbol: pitchPct.unit
+                currentValue: pitchPct.value
+                onValueEdited: function (newValue) {
+                    pitchPct.value = newValue
+                    pitchSemitones.value = root.viewModel.pctToSemitones(newValue)
+                }
             }
         }
     }

@@ -6,9 +6,14 @@ Row {
 
     required property NavigationPanel navPanel
     required property string navigationPrefix
+    required property var tempo
     property int valueFieldWidth: 64
 
     spacing: 16
+
+    Component.onCompleted: {
+        tempo.init()
+    }
 
     StyledSlider {
         anchors.verticalCenter: parent.verticalCenter
@@ -18,10 +23,13 @@ Row {
         navigation.order: 0
         navigation.name: root.navigationPrefix + "ChangeSlider"
 
-        from: -90
-        to: 500
-        value: -90
-        stepSize: 1
+        from: tempo.min
+        to: tempo.max
+        stepSize: tempo.step
+        value: tempo.value
+        onValueChanged: {
+            tempo.value = value
+        }
     }
 
     IncrementalPropertyControl {
@@ -31,11 +39,13 @@ Row {
         navigation.order: 1
         navigation.name: root.navigationPrefix + "ChangeValue"
 
-        minValue: -90
-        maxValue: 500
-        decimals: 0
-        step: 1
-        measureUnitsSymbol: "%"
-        currentValue: -90
+        minValue: tempo.min
+        maxValue: tempo.max
+        step: tempo.step
+        measureUnitsSymbol: tempo.unit
+        currentValue: tempo.value
+        onValueEdited: function (newValue) {
+            tempo.value = newValue
+        }
     }
 }

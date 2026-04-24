@@ -40,6 +40,8 @@ BuiltinEffectBase {
             width: prv.cardWidth
             height: prv.shortCardHeight
             mode: "tempo"
+            tempoParam: SlidingStretchSettingModelFactory.createModel(root, root.instanceId, "initialTempo")
+            viewModel: slidingStretch
             title: qsTrc("effects/slidingstretch", "Initial tempo change")
 
             navPanel.section: root.dialogView.navigationSection
@@ -51,6 +53,8 @@ BuiltinEffectBase {
             width: prv.cardWidth
             height: prv.shortCardHeight
             mode: "tempo"
+            tempoParam: SlidingStretchSettingModelFactory.createModel(root, root.instanceId, "finalTempo")
+            viewModel: slidingStretch
             title: qsTrc("effects/slidingstretch", "Final tempo change")
 
             navPanel.section: root.dialogView.navigationSection
@@ -62,6 +66,9 @@ BuiltinEffectBase {
             width: prv.cardWidth
             height: prv.tallCardHeight
             mode: "pitch"
+            pitchSemitonesParam: SlidingStretchSettingModelFactory.createModel(root, root.instanceId, "initialPitchSemitones")
+            pitchPctParam: SlidingStretchSettingModelFactory.createModel(root, root.instanceId, "initialPitchPct")
+            viewModel: slidingStretch
             title: qsTrc("effects/slidingstretch", "Initial pitch shift")
 
             navPanel.section: root.dialogView.navigationSection
@@ -73,6 +80,9 @@ BuiltinEffectBase {
             width: prv.cardWidth
             height: prv.tallCardHeight
             mode: "pitch"
+            pitchSemitonesParam: SlidingStretchSettingModelFactory.createModel(root, root.instanceId, "finalPitchSemitones")
+            pitchPctParam: SlidingStretchSettingModelFactory.createModel(root, root.instanceId, "finalPitchPct")
+            viewModel: slidingStretch
             title: qsTrc("effects/slidingstretch", "Final pitch shift")
 
             navPanel.section: root.dialogView.navigationSection

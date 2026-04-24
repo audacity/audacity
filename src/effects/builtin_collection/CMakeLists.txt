@@ -119,6 +119,8 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/slidingstretch/slidingstretchviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/slidingstretch/slidingstretchviewmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/slidingstretch/slidingstretchsettingmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/slidingstretch/slidingstretchsettingmodel.h
 
     ${CMAKE_CURRENT_LIST_DIR}/noisegen/noisegenerator.cpp
     ${CMAKE_CURRENT_LIST_DIR}/noisegen/noisegenerator.h
