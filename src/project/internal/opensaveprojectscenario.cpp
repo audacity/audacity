@@ -561,59 +561,6 @@ Ret OpenSaveProjectScenario::warnCloudNotAvailableForSharingAudio() const
     return make_ret(Ret::Code::Cancel);
 }
 
-static std::string cloudStatusCodeErrorMessage(const Ret& ret, bool withHelp = false)
-{
-    std::string message;
-
-    switch (ret.code()) {
-    case int(cloud::Err::Status400_InvalidRequest):
-        //: %1 will be replaced with the error code that the cloud service returned; this might contain english text
-        //: that is deliberately not translated
-        message = muse::qtrc("project/cloud", "The cloud service returned an error code: %1.")
-                  .arg("400 Invalid request").toStdString();
-        break;
-    case int(cloud::Err::Status401_AuthorizationRequired):
-        //: %1 will be replaced with the error code that the cloud service returned; this might contain english text
-        //: that is deliberately not translated
-        message = muse::qtrc("project/cloud", "The cloud service returned an error code: %1.")
-                  .arg("401 Authorization required").toStdString();
-        break;
-    case int(cloud::Err::Status422_ValidationFailed):
-        //: %1 will be replaced with the error code that the cloud service returned; this might contain english text
-        //: that is deliberately not translated
-        message = muse::qtrc("project/cloud", "The cloud service returned an error code: %1.")
-                  .arg("422 Validation failed").toStdString();
-        break;
-    case int(cloud::Err::Status429_RateLimitExceeded):
-        //: %1 will be replaced with the error code that the cloud service returned; this might contain english text
-        //: that is deliberately not translated
-        message = muse::qtrc("project/cloud", "The cloud service returned an error code: %1.")
-                  .arg("429 Rate limit exceeded").toStdString();
-        break;
-    case int(cloud::Err::Status500_InternalServerError):
-        //: %1 will be replaced with the error code that the cloud service returned; this might contain english text
-        //: that is deliberately not translated
-        message = muse::qtrc("project/cloud", "The cloud service returned an error code: %1.")
-                  .arg("500 Internal server error").toStdString();
-        break;
-    case int(cloud::Err::UnknownStatusCode): {
-        if (const auto status = ret.data<int>("status", -1); status != -1) {
-            //: %1 will be replaced with the error code that the cloud service returned, which is a number.
-            message = muse::qtrc("project/cloud", "The cloud service returned an unknown error code: %1.")
-                      .arg(status).toStdString();
-        } else {
-            message = muse::trc("project/cloud", "The cloud service returned an unknown error code.");
-        }
-    } break;
-    }
-
-    if (withHelp) {
-        message += "\n\n" + muse::trc("project/cloud", "Please try again later, or get help for this problem on audacityteam.org.");
-    }
-
-    return message;
-}
-
 Ret OpenSaveProjectScenario::showCloudOpenError(const Ret& error, const muse::io::path_t& localPath) const
 {
     using Err = au::au3cloud::Err;
