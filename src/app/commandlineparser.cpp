@@ -54,7 +54,6 @@ void CommandLineParser::init()
     m_parser.addOption(QCommandLineOption({ "D", "monitor-resolution" }, "Specify monitor resolution", "DPI"));
 
     m_parser.addOption(QCommandLineOption({ "F", "factory-settings" }, "Use factory settings"));
-    m_parser.addOption(QCommandLineOption({ "R", "revert-settings" }, "Revert to factory settings, but keep default preferences"));
 
     m_parser.addOption(QCommandLineOption("session-type", "Startup with given session type", "type"));
     m_parser.addOption(internalCommandLineOption("import-media-file", "Import media file on startup", "path"));
@@ -135,7 +134,7 @@ void CommandLineParser::parse(int argc, char** argv)
         }
     }
 
-    if (m_parser.isSet("F") || m_parser.isSet("R")) {
+    if (m_parser.isSet("F")) {
         m_options->app.revertToFactorySettings = true;
     }
 
