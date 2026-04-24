@@ -19,7 +19,7 @@ const SlidingStretchSettingModel::LabelMap labelsMap = {
 }
 
 SlidingStretchSettingModel::SlidingStretchSettingModel(QObject* parent, int instanceId)
-    : EffectSettingModelImpl<TimeScaleBase>(parent, instanceId, labelsMap, [this](const TimeScaleBase& effect) {
+    : EffectSettingModelImpl<SlidingStretchEffect>(parent, instanceId, labelsMap, [this](const SlidingStretchEffect& effect) {
     if (m_paramId == "initialTempo") {
         return effect.RatePercentStart;
     } else if (m_paramId == "finalTempo") {

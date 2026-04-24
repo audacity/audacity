@@ -117,6 +117,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/silencegen/silencegenerator.h
     ${CMAKE_CURRENT_LIST_DIR}/silencegen/silenceviewmodel.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/slidingstretch/slidingstretcheffect.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/slidingstretch/slidingstretcheffect.h
     ${CMAKE_CURRENT_LIST_DIR}/slidingstretch/slidingstretchviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/slidingstretch/slidingstretchviewmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/slidingstretch/slidingstretchsettingmodel.cpp

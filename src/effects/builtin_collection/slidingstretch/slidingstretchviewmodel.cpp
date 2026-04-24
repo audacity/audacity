@@ -3,7 +3,7 @@
 */
 #include "slidingstretchviewmodel.h"
 
-#include "au3-builtin-effects/TimeScaleBase.h"
+#include "slidingstretcheffect.h"
 
 namespace au::effects {
 SlidingStretchViewModel::SlidingStretchViewModel(QObject* parent, int instanceId)
@@ -17,11 +17,11 @@ void SlidingStretchViewModel::doReload()
 
 double SlidingStretchViewModel::pctToSemitones(double pct) const
 {
-    return TimeScaleBase::PercentChangeToHalfSteps(pct);
+    return SlidingStretchEffect::PercentChangeToHalfSteps(pct);
 }
 
 double SlidingStretchViewModel::semitonesToPct(double semitones) const
 {
-    return TimeScaleBase::HalfStepsToPercentChange(semitones);
+    return SlidingStretchEffect::HalfStepsToPercentChange(semitones);
 }
 }

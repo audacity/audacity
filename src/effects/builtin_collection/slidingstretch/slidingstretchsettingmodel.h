@@ -4,10 +4,10 @@
 #pragma once
 
 #include "../common/effectsettingmodelimpl.h"
-#include "au3-builtin-effects/TimeScaleBase.h"
+#include "slidingstretcheffect.h"
 
 namespace au::effects {
-class SlidingStretchSettingModel : public EffectSettingModelImpl<TimeScaleBase>
+class SlidingStretchSettingModel : public EffectSettingModelImpl<SlidingStretchEffect>
 {
 public:
     SlidingStretchSettingModel(QObject* parent, int instanceId);

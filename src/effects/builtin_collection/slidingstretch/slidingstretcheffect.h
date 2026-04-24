@@ -1,3 +1,6 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
 /**********************************************************************
 
   Audacity: A Digital Audio Editor
@@ -9,11 +12,12 @@
 **********************************************************************/
 #pragma once
 
-#include "SBSMSBase.h"
+#include "au3-builtin-effects/SBSMSBase.h"
 #include "au3-command-parameters/ShuttleAutomation.h"
 #include "au3-effects/Effect.h"
 
-struct TimeScaleBaseParams
+namespace au::effects {
+struct SlidingStretchEffectParams
 {
     double m_RatePercentChangeStart = 0.;
     double m_RatePercentChangeEnd = 0.;
@@ -23,19 +27,19 @@ struct TimeScaleBaseParams
     double m_PitchPercentChangeEnd = 0.;
 };
 
-class BUILTIN_EFFECTS_API TimeScaleBase : public EffectWithSettings<TimeScaleBaseParams, SBSMSBase>
+class SlidingStretchEffect : public EffectWithSettings<SlidingStretchEffectParams, SBSMSBase>
 {
 public:
-    static inline TimeScaleBaseParams*
-    FetchParameters(TimeScaleBase& e, EffectSettings&)
+    static inline SlidingStretchEffectParams*
+    FetchParameters(SlidingStretchEffect& e, EffectSettings&)
     {
         return &e.m_params;
     }
 
     static const ComponentInterfaceSymbol Symbol;
 
-    TimeScaleBase();
-    virtual ~TimeScaleBase();
+    SlidingStretchEffect();
+    virtual ~SlidingStretchEffect() override;
 
     // ComponentInterface implementation
 
@@ -45,7 +49,7 @@ public:
 
     // EffectDefinitionInterface implementation
 
-    EffectType GetType() const override;
+    ::EffectType GetType() const override;
     EffectGroup GetGroup() const override { return EffectGroup::PitchAndTempo; }
 
     // Effect implementation
@@ -56,7 +60,7 @@ public:
         const EffectSettings& settings, double previewLength) const override;
 
 public:
-    // TimeScaleBase implementation
+    // SlidingStretchEffect implementation
 
     static double PercentChangeToRatio(double percentChange);
     static double HalfStepsToPercentChange(double halfSteps);
@@ -66,12 +70,12 @@ public:
     double previewSelectedDuration;
     SlideType slideTypeRate;
     SlideType slideTypePitch;
-    TimeScaleBaseParams m_params;
+    SlidingStretchEffectParams m_params;
 
     const EffectParameterMethods& Parameters() const override;
 
     static constexpr EffectParameter RatePercentStart {
-        &TimeScaleBaseParams::m_RatePercentChangeStart,
+        &SlidingStretchEffectParams::m_RatePercentChangeStart,
         L"RatePercentChangeStart",
         0.0,
         -90.0,
@@ -79,7 +83,7 @@ public:
         1
     };
     static constexpr EffectParameter RatePercentEnd {
-        &TimeScaleBaseParams::m_RatePercentChangeEnd,
+        &SlidingStretchEffectParams::m_RatePercentChangeEnd,
         L"RatePercentChangeEnd",
         0.0,
         -90.0,
@@ -87,23 +91,25 @@ public:
         1
     };
     static constexpr EffectParameter HalfStepsStart {
-        &TimeScaleBaseParams::m_PitchHalfStepsStart,
+        &SlidingStretchEffectParams::m_PitchHalfStepsStart,
         L"PitchHalfStepsStart",
         0.0,
         -12.0,
         12.0,
-        1
+        1,
+        2 // Step is one but we leave the possibility of showing cent values.
     };
     static constexpr EffectParameter HalfStepsEnd {
-        &TimeScaleBaseParams::m_PitchHalfStepsEnd,
+        &SlidingStretchEffectParams::m_PitchHalfStepsEnd,
         L"PitchHalfStepsEnd",
         0.0,
         -12.0,
         12.0,
-        1
+        1,
+        2
     };
     static constexpr EffectParameter PitchPercentStart {
-        &TimeScaleBaseParams::m_PitchPercentChangeStart,
+        &SlidingStretchEffectParams::m_PitchPercentChangeStart,
         L"PitchPercentChangeStart",
         0.0,
         -50.0,
@@ -111,7 +117,7 @@ public:
         1
     };
     static constexpr EffectParameter PitchPercentEnd {
-        &TimeScaleBaseParams::m_PitchPercentChangeEnd,
+        &SlidingStretchEffectParams::m_PitchPercentChangeEnd,
         L"PitchPercentChangeEnd",
         0.0,
         -50.0,
@@ -119,3 +125,4 @@ public:
         1
     };
 };
+}
