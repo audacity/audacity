@@ -162,7 +162,7 @@ muse::audio::AudioResourceMeta utils::auToMuseEffectMeta(const EffectMeta& meta)
     // Store the plugin name (from $name directive) for display
     museMeta.attributes.emplace(EFFECT_TITLE_ATTRIBUTE, meta.title);
     museMeta.attributes.emplace(EFFECT_DESCRIPTION_ATTRIBUTE, meta.description);
-    museMeta.attributes.emplace(EFFECT_SUPPORTS_MULTIPLE_CLIP_SELECTION_ATTRIBUTE, meta.supportsMultipleClipSelection ? u"true" : u"false");
+    museMeta.attributes.emplace(EFFECT_PARAMS_ARE_INPUT_AGNOSTIC_ATTRIBUTE, meta.paramsAreInputAgnostic ? u"true" : u"false");
     museMeta.attributes.emplace(EFFECT_IS_REALTIME_CAPABLE_ATTRIBUTE, meta.isRealtimeCapable ? u"true" : u"false");
     museMeta.attributes.emplace(EFFECT_TYPE_ATTRIBUTE, utils::effectTypeToString(meta.type));
     museMeta.attributes.emplace(EFFECT_VERSION_ATTRIBUTE, meta.version);
@@ -208,7 +208,7 @@ EffectMeta utils::museToAuEffectMeta(const muse::io::path_t& path, const muse::a
     effectMeta.description = effectMeta.title; // TODO use attributeValue(meta, EFFECT_DESCRIPTION_ATTRIBUTE);
     effectMeta.category = attributeValue(meta, EFFECT_CATEGORY_ATTRIBUTE);
     effectMeta.isRealtimeCapable = attributeValue<bool>(meta, EFFECT_IS_REALTIME_CAPABLE_ATTRIBUTE);
-    effectMeta.supportsMultipleClipSelection = attributeValue<bool>(meta, EFFECT_SUPPORTS_MULTIPLE_CLIP_SELECTION_ATTRIBUTE);
+    effectMeta.paramsAreInputAgnostic = attributeValue<bool>(meta, EFFECT_PARAMS_ARE_INPUT_AGNOSTIC_ATTRIBUTE);
     effectMeta.version = attributeValue(meta, EFFECT_VERSION_ATTRIBUTE);
     effectMeta.module = attributeValue(meta, EFFECT_MODULE_ATTRIBUTE);
     effectMeta.isActivated = attributeValue<bool>(meta, EFFECT_ACTIVATED_ATTRIBUTE);

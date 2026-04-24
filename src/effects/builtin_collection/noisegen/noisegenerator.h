@@ -45,7 +45,6 @@ public:
     ::EffectType GetType() const override;
     RegistryPaths GetFactoryPresets() const override;
     OptionalMessage LoadFactoryPreset(int id, EffectSettings& settings) const override;
-    bool SupportsMultipleClipSelection() const override { return false; }
 
     struct Instance : public PerTrackEffect::Instance, public EffectInstanceWithBlockSize {
         explicit Instance(const PerTrackEffect& effect);

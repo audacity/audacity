@@ -55,7 +55,7 @@ public:
     // Effect implementation
 
     std::any BeginPreview(const EffectSettings& settings) override;
-    bool Process(EffectInstance& instance, EffectSettings& settings) override;
+    bool Process(::EffectInstance& instance, EffectSettings& settings) override;
     double CalcPreviewInputLength(
         const EffectSettings& settings, double previewLength) const override;
 

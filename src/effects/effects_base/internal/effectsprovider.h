@@ -42,7 +42,7 @@ public:
     std::string effectName(const effects::RealtimeEffectState& state) const override;
     Effect* effect(const EffectId& effectId) const override;
 
-    bool supportsMultipleClipSelection(const EffectId& effectId) const override;
+    bool paramsAreInputAgnostic(const EffectId& effectId) const override;
 
 private:
     void reloadEffects();

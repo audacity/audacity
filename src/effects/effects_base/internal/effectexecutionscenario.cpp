@@ -133,7 +133,7 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
             return make_ret(Err::EffectNotFound);
         }
 
-        if (numSelectedClips > 1 && !effectsProvider()->supportsMultipleClipSelection(effectId)) {
+        if (numSelectedClips > 1 && !effectsProvider()->paramsAreInputAgnostic(effectId)) {
             return make_ret(Err::EffectMultipleClipSelectionNotSupported);
         }
 

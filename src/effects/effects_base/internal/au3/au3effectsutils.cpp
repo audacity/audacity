@@ -27,7 +27,7 @@ effects::EffectMeta effects::toEffectMeta(const ::PluginDescriptor& desc)
     meta.path = au3::wxToString(desc.GetPath());
     meta.category = utils::effectCategoryToString(toAu4EffectCategory(desc.GetEffectGroup()));
     meta.isRealtimeCapable = desc.IsEffectRealtime();
-    meta.supportsMultipleClipSelection = desc.SupportsMultipleClipSelection();
+    meta.paramsAreInputAgnostic = desc.ParamsAreInputAgnostic();
     meta.isActivated = desc.IsEnabled();
 
     return meta;

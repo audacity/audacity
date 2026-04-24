@@ -167,11 +167,11 @@ std::string EffectsProvider::effectName(const effects::RealtimeEffectState& stat
     return effectName(state.GetID().ToStdString());
 }
 
-bool EffectsProvider::supportsMultipleClipSelection(const EffectId& effectId) const
+bool EffectsProvider::paramsAreInputAgnostic(const EffectId& effectId) const
 {
     for (const EffectMeta& meta : m_effects) {
         if (meta.id == effectId) {
-            return meta.supportsMultipleClipSelection;
+            return meta.paramsAreInputAgnostic;
         }
     }
 

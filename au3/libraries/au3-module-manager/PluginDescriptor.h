@@ -82,7 +82,7 @@ public:
     bool IsEffectLegacy() const;
     bool IsEffectRealtime() const;
     bool IsEffectAutomatable() const;
-    bool SupportsMultipleClipSelection() const;
+    bool ParamsAreInputAgnostic() const;
 
     // Importer plugins only
 
@@ -116,7 +116,7 @@ public:
     void SetEffectDefault(bool dflt);
     void SetEffectInteractive(bool interactive);
     void SetEffectLegacy(bool legacy);
-    void SetSupportsMultipleClipSelection(bool supports);
+    void SetParamsAreInputAgnostic(bool supports);
     void SetRealtimeSupport(EffectDefinitionInterface::RealtimeSince realtime);
 
     //! for serialization
@@ -156,7 +156,7 @@ private:
     EffectDefinitionInterface::RealtimeSince mEffectRealtime {
         EffectDefinitionInterface::RealtimeSince::Never };
     bool mEffectAutomatable { false };
-    bool mSupportsMultipleClipSelection { false };
+    bool mParamsAreInputAgnostic { false };
 
     // Importers
 
