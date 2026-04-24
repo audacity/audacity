@@ -139,60 +139,6 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Paste new label"),
              TranslatableString("action", "Paste new label")
              ),
-    UiAction("cut-labels",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Cut labels"),
-             TranslatableString("action", "Cut labels")
-             ),
-    UiAction("split-cut-labels",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Cut labels and leave gap"),
-             TranslatableString("action", "Cut labels and leave gap")
-             ),
-    UiAction("copy-labels",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Copy labels"),
-             TranslatableString("action", "Copy labels")
-             ),
-    UiAction("delete-labels",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Delete labels"),
-             TranslatableString("action", "Delete labels")
-             ),
-    UiAction("split-delete-labels",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Delete labels and leave gap"),
-             TranslatableString("action", "Delete labels and leave gap")
-             ),
-    UiAction("split-labels",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Split labels"),
-             TranslatableString("action", "Split labels")
-             ),
-    UiAction("join-labels",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Merge labels"),
-             TranslatableString("action", "Merge labels")
-             ),
-    UiAction("silence-labels",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Silence labels"),
-             TranslatableString("action", "Silence labels")
-             ),
-    UiAction("disjoin-labels",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Disjoin labels"),
-             TranslatableString("action", "Disjoin labels")
-             ),
     UiAction("manage-labels",
              au::context::UiCtxUnknown,
              au::context::CTX_ANY,
@@ -269,7 +215,7 @@ const UiActionList ProjectUiActions::m_actions = {
              ),
     UiAction("select-next-clip",
              au::context::UiCtxAny,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Next clip"),
              TranslatableString("action", "Next clip")
              ),
@@ -428,13 +374,13 @@ const UiActionList ProjectUiActions::m_actions = {
              ),
     UiAction("sort-by-time",
              au::context::UiCtxAny,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Sort by time"),
              TranslatableString("action", "Sort by time")
              ),
     UiAction("sort-by-name",
              au::context::UiCtxAny,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Sort by name"),
              TranslatableString("action", "Sort by name")
              ),
@@ -448,21 +394,15 @@ const UiActionList ProjectUiActions::m_actions = {
     // generate menu
     UiAction("generate-plugin-manager",
              au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Plugin manager"),
              TranslatableString("action", "Plugin manager")
-             ),
-    UiAction("generate-omitted",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "(Omitted)"),
-             TranslatableString("action", "(Omitted)")
              ),
 
     // effects menu
     UiAction("effect-plugin-manager",
              au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Plugin manager"),
              TranslatableString("action", "Plugin manager")
              ),
@@ -490,17 +430,11 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Fav effect #3"),
              TranslatableString("action", "Fav effect #3")
              ),
-    UiAction("plugins-omitted",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "(Plugins omitted)"),
-             TranslatableString("action", "(Plugins omitted)")
-             ),
 
     // analyze menu
     UiAction("analyze-plugin-manager",
              au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Plugin manager"),
              TranslatableString("action", "Plugin manager")
              ),
@@ -516,17 +450,11 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Plot spectrum"),
              TranslatableString("action", "Plot spectrum")
              ),
-    UiAction("analyzer-omitted",
-             au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
-             TranslatableString("action", "(Omitted)"),
-             TranslatableString("action", "(Omitted)")
-             ),
 
     // tools menu
     UiAction("tools-plugin-manager",
              au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Plugin manager"),
              TranslatableString("action", "Plugin manager")
              ),
@@ -606,7 +534,7 @@ const UiActionList ProjectUiActions::m_actions = {
              ),
     UiAction("benchmark",
              au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Benchmark"),
              TranslatableString("action", "Benchmark")
              ),
@@ -620,19 +548,19 @@ const UiActionList ProjectUiActions::m_actions = {
     // help menu
     UiAction("tutorials",
              au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Tutorials"),
              TranslatableString("action", "Tutorials")
              ),
     UiAction("device-info",
              au::context::UiCtxAny,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Device info"),
              TranslatableString("action", "Device info")
              ),
     UiAction("midi-device-info",
              au::context::UiCtxAny,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "MIDI device info"),
              TranslatableString("action", "MIDI device info")
              ),
@@ -644,37 +572,37 @@ const UiActionList ProjectUiActions::m_actions = {
              ),
     UiAction("crash-report",
              au::context::UiCtxAny,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Crash report"),
              TranslatableString("action", "Crash report")
              ),
     UiAction("raise-segfault",
              au::context::UiCtxAny,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Raise segfault"),
              TranslatableString("action", "Raise segfault")
              ),
     UiAction("throw-exception",
              au::context::UiCtxAny,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Throw exception"),
              TranslatableString("action", "Throw exception")
              ),
     UiAction("violate-assertion",
              au::context::UiCtxAny,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Violate assertion"),
              TranslatableString("action", "Violate assertion")
              ),
     UiAction("menu-tree",
              au::context::UiCtxAny,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Menu tree"),
              TranslatableString("action", "Menu tree")
              ),
     UiAction("frame-statistics",
              au::context::UiCtxAny,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Frame statistics"),
              TranslatableString("action", "Frame statistics")
              ),
@@ -701,7 +629,7 @@ const UiActionList ProjectUiActions::m_actions = {
 
     UiAction("project-properties",
              au::context::UiCtxAny,
-             au::context::CTX_ANY,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Project propert&ies…"),
              TranslatableString("action", "Project properties…")
              )

@@ -54,7 +54,7 @@ void LabelContextMenuModel::load()
         makeSeparator(),
         makeItemWithArg("action://trackedit/cut"),
         makeItemWithArg("action://trackedit/copy"),
-        makeItemWithArg("label-delete"),
+        makeItemWithArg("action://trackedit/delete"),
         makeSeparator(),
         makeMenu(muse::TranslatableString("label", "Cut and…"), cutAndItems, "menu-cut-and"),
         makeMenu(muse::TranslatableString("label", "Paste and…"), pasteAndItems, "menu-paste-and"),

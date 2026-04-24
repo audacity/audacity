@@ -176,13 +176,8 @@ private:
 
     void addLabel();
 
-    void labelDelete(const muse::actions::ActionData& args);
     void labelDeleteMulti(const muse::actions::ActionData& args);
-
-    void labelCut(const muse::actions::ActionData& args);
     void labelCutMulti(const muse::actions::ActionData& args);
-
-    void labelCopy(const muse::actions::ActionData& args);
     void labelCopyMulti();
 
     void moveFocusedItemLeft();

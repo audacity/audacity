@@ -297,7 +297,7 @@ void ProjectSceneUiActions::init()
         UiAction trackColorAction;
         trackColorAction.code = muse::actions::ActionQuery(makeTrackColorChangeAction(info.index)).toString();
         trackColorAction.uiCtx = context::UiCtxProjectOpened;
-        trackColorAction.scCtx = context::CTX_PROJECT_FOCUSED;
+        trackColorAction.scCtx = context::CTX_DISABLED;
         trackColorAction.description = muse::TranslatableString("action", "Change track color");
         trackColorAction.title = muse::TranslatableString("action", "Change track color");
         trackColorAction.iconCode = IconCode::Code::FRETBOARD_MARKER_CIRCLE_FILLED;
