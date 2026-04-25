@@ -6,6 +6,12 @@ Audacity: A Digital Audio Editor
 
 **********************************************************************/
 
-#include "ModuleConstants.h"
+void CVSDEncode()
+{
 
-DEFINE_MODULE_ENTRIES
+}
+
+void CVSDDecode()
+{
+
+}

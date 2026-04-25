@@ -41,24 +41,19 @@ public:
   TranslatableString GetPluginFormatDescription() override;
   std::unique_ptr<ImportFileHandle> Open(
      const FilePath &Filename, AudacityProject*) override;
+
 };
 
-class CVSDImportFileHandle final : public ImportFileHandleEx
+class CVSDImportFileHandle final : public ImportFileHandle
 {
 public:
-  CVSDImportFileHandle(const FilePath & filename)
-  :  ImportFileHandleEx(filename)
-  {
-  }
-
   ~CVSDImportFileHandle() override;
 
+  FilePath GetFilename();
+
   TranslatableString GetFileDescription() override;
+
   ByteCount GetFileUncompressedBytes() override;
-  void Import(
-     ImportProgressListener& progressListener, WaveTrackFactory* trackFactory,
-     TrackHolders& outTracks, Tags* tags,
-     std::optional<LibFileFormats::AcidizerTags>& outAcidTags) override;
 
   wxInt32 GetStreamCount() override;
 
@@ -68,35 +63,19 @@ public:
   }
 
   void SetStreamUsage(wxInt32 StreamID, bool Use) override;
-private:
-  std::unique_ptr<wxFFile> mFile;
-
-  ArrayOf<int> mStreamUsage;
-  TranslatableStrings mStreamInfo;
-  std::vector<TrackListHolder> mStreams;
-};
-
-class CVSDImportFileHandle final : public ImportFileHandleEx
-{
-public:
-  CVSDImportFileHandle(const FilePath & filename)
-  :  ImportFileHandleEx(filename)
-  {
-  }
-  ~CVSDImportFileHandle() override;
-
-  TranslatableString GetFileDescription() override;
-  ByteCount GetFileUncompressedBytes() override;
 
   void Import(
      ImportProgressListener& progressListener, WaveTrackFactory* trackFactory,
      TrackHolders& outTracks, Tags* tags,
      std::optional<LibFileFormats::AcidizerTags>& outAcidTags) override;
 
-  wxInt32 GetStreamCount() override;
-  void SetStreamUsage(wxInt32 StreamID, bool Use) override;
+  void Cancel() override;
+
+  void Stop() override;
 
 private:
+  std::unique_ptr<wxFFile> mFile;
+
   ArrayOf<int> mStreamUsage;
   TranslatableStrings mStreamInfo;
   std::vector<TrackListHolder> mStreams;
