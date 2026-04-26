@@ -22,13 +22,14 @@ public:
     muse::async::Promise<AudioList> downloadAudioList(size_t audiosPerBatch, size_t batchNumber, const FetchOptions& options) override;
     void clearAudioListCache() override;
 
-    muse::ProgressPtr uploadProject(au::project::IAudacityProjectPtr project, const std::string& name,
-                                    std::function<bool()> projectSaveCallback = nullptr, bool forceOverwrite = false) override;
-    muse::ProgressPtr shareAudio(const std::string& title) override;
+    muse::RetVal<muse::ProgressPtr> uploadProject(au::project::IAudacityProjectPtr project, const std::string& name,
+                                                  std::function<bool()> projectSaveCallback = nullptr, bool forceOverwrite = false) override;
+    muse::RetVal<muse::ProgressPtr> shareAudio(const std::string& title) override;
+    muse::RetVal<muse::ProgressPtr> downloadAudioFile(const std::string& audioId) override;
 
-    muse::ProgressPtr openCloudProject(const muse::io::path_t& localPath, const std::string& projectId = {},
-                                       bool forceOverwrite = false) override;
-    muse::ProgressPtr resumeProjectSync(au::project::IAudacityProjectPtr project) override;
+    muse::RetVal<muse::ProgressPtr> openCloudProject(const muse::io::path_t& localPath, const std::string& projectId = {},
+                                                     bool forceOverwrite = false) override;
+    muse::RetVal<muse::ProgressPtr> resumeProjectSync(au::project::IAudacityProjectPtr project) override;
     void deinit() override;
 };
 }

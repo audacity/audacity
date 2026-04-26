@@ -32,25 +32,30 @@ void Au3AudioComServiceStub::clearAudioListCache()
 {
 }
 
-muse::ProgressPtr Au3AudioComServiceStub::uploadProject(au::project::IAudacityProjectPtr, const std::string&,
-                                                        std::function<bool()>, bool)
+muse::RetVal<muse::ProgressPtr> Au3AudioComServiceStub::uploadProject(au::project::IAudacityProjectPtr, const std::string&,
+                                                                      std::function<bool()>, bool)
 {
-    return nullptr;
+    return muse::RetVal<muse::ProgressPtr>::make_ret(muse::Ret::Code::NotSupported);
 }
 
-muse::ProgressPtr Au3AudioComServiceStub::shareAudio(const std::string&)
+muse::RetVal<muse::ProgressPtr> Au3AudioComServiceStub::shareAudio(const std::string&)
 {
-    return nullptr;
+    return muse::RetVal<muse::ProgressPtr>::make_ret(muse::Ret::Code::NotSupported);
 }
 
-muse::ProgressPtr Au3AudioComServiceStub::openCloudProject(const muse::io::path_t&, const std::string&, bool)
+muse::RetVal<muse::ProgressPtr> Au3AudioComServiceStub::downloadAudioFile(const std::string&)
 {
-    return nullptr;
+    return muse::RetVal<muse::ProgressPtr>::make_ret(muse::Ret::Code::NotSupported);
 }
 
-muse::ProgressPtr Au3AudioComServiceStub::resumeProjectSync(au::project::IAudacityProjectPtr)
+muse::RetVal<muse::ProgressPtr> Au3AudioComServiceStub::openCloudProject(const muse::io::path_t&, const std::string&, bool)
 {
-    return nullptr;
+    return muse::RetVal<muse::ProgressPtr>::make_ret(muse::Ret::Code::NotSupported);
+}
+
+muse::RetVal<muse::ProgressPtr> Au3AudioComServiceStub::resumeProjectSync(au::project::IAudacityProjectPtr)
+{
+    return muse::RetVal<muse::ProgressPtr>::make_ret(muse::Ret::Code::NotSupported);
 }
 
 void Au3AudioComServiceStub::deinit()
