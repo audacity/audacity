@@ -5244,12 +5244,12 @@ Recommandé - 192000</translation>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="46"/>
         <source>Load template</source>
-        <translation>Load template</translation>
+        <translation>Charger un modèle</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="61"/>
         <source>Save template</source>
-        <translation>Save template</translation>
+        <translation>Enregistrer le modèle</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="76"/>
@@ -5659,12 +5659,12 @@ Master effects will be turned back on after export.</translation>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.cpp" line="166"/>
         <source>Error saving template</source>
-        <translation>Error saving template</translation>
+        <translation>Erreur d&apos;enregistrement du modèle</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.cpp" line="167"/>
         <source>Unable to save metadata template into given file.</source>
-        <translation>Unable to save metadata template into given file.</translation>
+        <translation>Impossible d&apos;enregistrer le modèle de métadonnées dans le fichier spécifié.</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="67"/>
@@ -5706,13 +5706,13 @@ Master effects will be turned back on after export.</translation>
         <location filename="../../src/project/internal/au3/au3metadata.cpp" line="132"/>
         <location filename="../../src/project/internal/au3/au3metadata.cpp" line="171"/>
         <source>Error loading template</source>
-        <translation>Error loading template</translation>
+        <translation>Erreur de chargement du modèle</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/au3/au3metadata.cpp" line="133"/>
         <location filename="../../src/project/internal/au3/au3metadata.cpp" line="172"/>
         <source>Unable to load metadata template from given file.</source>
-        <translation>Unable to load metadata template from given file.</translation>
+        <translation>Impossible de charger le modèle de métadonnées à partir du fichier spécifié.</translation>
     </message>
     <message>
         <location filename="../../src/project/types/projectmeta.h" line="98"/>
@@ -6435,7 +6435,7 @@ Master effects will be turned back on after export.</translation>
         <location filename="../../src/project/qml/Audacity/Project/internal/NewProject/GeneralInfoView.qml" line="108"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/NewProject/GeneralInfoView.qml" line="110"/>
         <source>Subtitle</source>
-        <translation>Subtitle</translation>
+        <translation>Sous titre</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/NewProject/GeneralInfoView.qml" line="123"/>
@@ -6654,7 +6654,7 @@ Master effects will be turned back on after export.</translation>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="188"/>
         <source>Gain followers and receive project comments and ratings</source>
-        <translation>Gain followers and receive project comments and ratings</translation>
+        <translation>Gagnez des abonnés et recevez des commentaires et des évaluations sur vos projets</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="189"/>
