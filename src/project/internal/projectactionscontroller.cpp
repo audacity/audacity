@@ -468,7 +468,6 @@ bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudI
     }
 
     io::path_t projectFilePath = cloudProjectsPath.appendingComponent(cloudInfo.name).appendingSuffix(au::project::AUP4);
-    bool exists = io::FileInfo::exists(projectFilePath);
 
     IAudacityProjectPtr project = currentProject();
     if (!project) {
@@ -490,13 +489,9 @@ bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudI
         return false;
     }
 
-    progress->finished().onReceive(this, [this, exists, projectFilePath](const ProgressResult& result) {
+    progress->finished().onReceive(this, [this, projectFilePath](const ProgressResult& result) {
         if (!result.ret.success()) {
             handleCloudSaveError(result.ret);
-            return;
-        }
-
-        if (exists) {
             return;
         }
 
