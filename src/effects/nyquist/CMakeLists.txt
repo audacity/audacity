@@ -40,3 +40,7 @@ set(MODULE_LINK au3wrap effects_builtin au3-nyquist-effects)
 add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/libnyquist libnyquist)
 
 setup_module()
+
+if (AU_BUILD_EFFECTS_TESTS)
+    add_subdirectory(tests)
+endif()
