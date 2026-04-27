@@ -7,19 +7,15 @@
 #include "global/translation.h"
 
 namespace au::effects {
-namespace {
-const SlidingStretchSettingModel::LabelMap labelsMap = {
-    { "initialTempo", { muse::qtrc("effects", "Initial tempo change"), muse::qtrc("effects", "%") } },
-    { "finalTempo", { muse::qtrc("effects", "Final tempo change"), muse::qtrc("effects", "%") } },
-    { "initialPitchSemitones", { muse::qtrc("effects", "Initial pitch shift"), muse::qtrc("effects", "semitones") } },
-    { "finalPitchSemitones", { muse::qtrc("effects", "Final pitch shift"), muse::qtrc("effects", "semitones") } },
-    { "initialPitchPct", { muse::qtrc("effects", "Initial pitch shift"), muse::qtrc("effects", "%") } },
-    { "finalPitchPct", { muse::qtrc("effects", "Final pitch shift"), muse::qtrc("effects", "%") } },
-};
-}
-
 SlidingStretchSettingModel::SlidingStretchSettingModel(QObject* parent, int instanceId)
-    : EffectSettingModelImpl<SlidingStretchEffect>(parent, instanceId, labelsMap, [this](const SlidingStretchEffect& effect) {
+    : EffectSettingModelImpl<SlidingStretchEffect>(parent, instanceId, {
+        { "initialTempo", { muse::qtrc("effects", "Initial tempo change"), QString { "%" } } },
+        { "finalTempo", { muse::qtrc("effects", "Final tempo change"), QString { "%" } } },
+        { "initialPitchSemitones", { muse::qtrc("effects", "Initial pitch shift"), muse::qtrc("effects", "semitones") } },
+        { "finalPitchSemitones", { muse::qtrc("effects", "Final pitch shift"), muse::qtrc("effects", "semitones") } },
+        { "initialPitchPct", { muse::qtrc("effects", "Initial pitch shift"), QString { "%" } } },
+        { "finalPitchPct", { muse::qtrc("effects", "Final pitch shift"), QString { "%" } } },
+    }, [this](const SlidingStretchEffect& effect) {
     if (m_paramId == "initialTempo") {
         return effect.RatePercentStart;
     } else if (m_paramId == "finalTempo") {
