@@ -93,11 +93,11 @@ jobs:
 
           echo "BUILD_NUMBER=$BUILD_NUMBER" | tee -a $GITHUB_ENV
 
-      - name: Update .ts files (tx pull)
+      - name: Update .ts files (tx pull) above 79% and create new ts files
         uses: transifex/cli-action@v2
         with:
           token: ${{ secrets.TRANSIFEX_API_TOKEN }}
-          args: "pull -f"
+          args: "pull -a -f --minimum-perc=79"
 
       - name: Create Pull Request
         id: create-pr

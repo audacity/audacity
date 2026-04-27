@@ -159,6 +159,8 @@ private:
     void selectTrackStartToCursor();
     void selectCursorToTrackEnd();
     void selectTrackStartToEnd();
+    void setSelection(const muse::actions::ActionQuery& query);
+    void selectTrackByIndex(const muse::actions::ActionQuery& query);
     void moveCursorToClosestZeroCrossing();
 
     void setClipColor(const muse::actions::ActionQuery& q);
@@ -174,13 +176,8 @@ private:
 
     void addLabel();
 
-    void labelDelete(const muse::actions::ActionData& args);
     void labelDeleteMulti(const muse::actions::ActionData& args);
-
-    void labelCut(const muse::actions::ActionData& args);
     void labelCutMulti(const muse::actions::ActionData& args);
-
-    void labelCopy(const muse::actions::ActionData& args);
     void labelCopyMulti();
 
     void moveFocusedItemLeft();

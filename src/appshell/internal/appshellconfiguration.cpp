@@ -24,8 +24,9 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 
-#include "global/settings.h"
-#include "global/log.h"
+#include "framework/global/settings.h"
+#include "framework/global/log.h"
+
 #include "appshell/appshelltypes.h"
 
 // #include "multiwindows/resourcelockguard.h"
@@ -222,9 +223,15 @@ muse::async::Notification AppShellConfiguration::settingsApplied() const
     return m_settingsApplied;
 }
 
-void AppShellConfiguration::revertToFactorySettings(bool keepDefaultSettings, bool notifyAboutChanges) const
+void AppShellConfiguration::revertToFactorySettings(bool keepDefaultSettings, bool notifyAboutChanges, bool notifyOtherInstances)
 {
-    settings()->reset(keepDefaultSettings, notifyAboutChanges);
+    m_aboutToRevertToFactorySettings.notify();
+    settings()->reset(keepDefaultSettings, notifyAboutChanges, notifyOtherInstances);
+}
+
+muse::async::Notification AppShellConfiguration::aboutToRevertToFactorySettings() const
+{
+    return m_aboutToRevertToFactorySettings;
 }
 
 muse::io::paths_t AppShellConfiguration::sessionProjectsPaths() const

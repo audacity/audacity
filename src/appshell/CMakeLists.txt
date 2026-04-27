@@ -76,6 +76,7 @@ qt_add_resources(appshell appshell_resources
     PREFIX
         /
     FILES
+        resources/AboutBanner.png
         resources/Classic.svg
         resources/Colorful.svg
         resources/LoadingScreen.svg
@@ -87,6 +88,7 @@ qt_add_resources(appshell appshell_resources
         resources/welcomedialog/AudioDotCom_Dark.png
         resources/welcomedialog/AudioDotCom_Light.png
         resources/welcomedialog/Audacity_Merch_Store.png
+        resources/gpl-30.html
 )
 
 target_link_libraries(appshell PRIVATE
@@ -99,3 +101,7 @@ target_link_libraries(appshell PRIVATE
 )
 
 add_subdirectory(qml/Audacity/AppShell)
+
+if (AU_BUILD_APPSHELL_TESTS)
+    add_subdirectory(tests)
+endif()

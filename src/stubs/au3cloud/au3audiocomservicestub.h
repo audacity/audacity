@@ -29,5 +29,6 @@ public:
     muse::ProgressPtr openCloudProject(const muse::io::path_t& localPath, const std::string& projectId = {},
                                        bool forceOverwrite = false) override;
     muse::ProgressPtr resumeProjectSync(au::project::IAudacityProjectPtr project) override;
+    void deinit() override;
 };
 }

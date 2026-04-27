@@ -53,6 +53,7 @@ private:
     void notifyAboutSpectralEffectsAvailability();
 
     void onEffectTriggered(const muse::actions::ActionQuery& q);
+    void applyEffect(const muse::actions::ActionQuery& q);
     void repeatLastEffect();
 
     void applyPreset(const muse::actions::ActionQuery& q);

@@ -25,6 +25,9 @@
 #include "au3-transactions/TransactionScope.h"
 #include "au3-stretching-sequence/TempoChange.h"
 
+#include "au3-command-parameters/ShuttleAutomation.h"
+#include "au3-components/EffectAutomationParameters.h"
+
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/domconverter.h"
@@ -42,6 +45,32 @@ muse::Ret EffectExecutionScenario::performEffect(const EffectId& effectId)
 {
     au3::Au3Project& project = projectRef();
     return performEffectWithShowError(project, effectId, 0);
+}
+
+muse::Ret EffectExecutionScenario::performEffect(const EffectId& effectId, const std::string& params)
+{
+    EffectId resolved;
+    EffectId titleFallback;
+    // Search effect by id with a conviniece fallback to title for scripting
+    for (const auto& meta : effectsProvider()->effectMetaList()) {
+        if (meta.id == effectId) {
+            resolved = meta.id;
+            break;
+        }
+        if (titleFallback.empty() && meta.title == effectId) {
+            titleFallback = meta.id;
+        }
+    }
+    if (resolved.empty()) {
+        resolved = titleFallback;
+    }
+    if (resolved.empty()) {
+        LOGE() << "no effect found for symbol: " << effectId;
+        return make_ret(Err::EffectNotFound);
+    }
+
+    au3::Au3Project& project = projectRef();
+    return performEffectWithShowError(project, resolved, EffectManager::kConfigured, params);
 }
 
 au::au3::Au3Project& EffectExecutionScenario::projectRef()
@@ -66,9 +95,10 @@ std::pair<std::string, std::string> EffectExecutionScenario::makeErrorMsg(const 
 }
 
 muse::Ret EffectExecutionScenario::performEffectWithShowError(au3::Au3Project& project,
-                                                              const EffectId& effectId, unsigned int flags)
+                                                              const EffectId& effectId, unsigned int flags,
+                                                              const std::string& params)
 {
-    muse::Ret ret = doPerformEffect(project, effectId, flags);
+    muse::Ret ret = doPerformEffect(project, effectId, flags, params);
     if (!ret && muse::Ret::Code(ret.code()) != muse::Ret::Code::Cancel) {
         const auto msg = makeErrorMsg(ret, effectId);
         interactive()->error(msg.first, msg.second);
@@ -76,7 +106,8 @@ muse::Ret EffectExecutionScenario::performEffectWithShowError(au3::Au3Project& p
     return ret;
 }
 
-muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, const EffectId& effectId, unsigned flags)
+muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, const EffectId& effectId, unsigned flags,
+                                                   const std::string& params)
 {
     //! ============================================================================
     //! NOTE Step 1 - check input params (effect is present and available, selection)
@@ -183,6 +214,21 @@ muse::Ret EffectExecutionScenario::doPerformEffect(au3::Au3Project& project, con
         });
         IF_ASSERT_FAILED(settings) {
             return make_ret(Err::UnknownError);
+        }
+
+        //! NOTE Step 2.1b - apply script params if provided
+        if (!params.empty()) {
+            LOGD() << "Loading effect params: " << params;
+            CommandParameters eap(wxString::FromUTF8(params));
+            ShuttleSetAutomation shuttle;
+            shuttle.SetForValidating(&eap);
+            effect->VisitSettings(shuttle, *settings);
+            if (!shuttle.bOK) {
+                LOGE() << "Failed to load effect params: " << params;
+                return make_ret(Err::UnknownError, "Failed to load effect settings from serialized params");
+            }
+            shuttle.SetForWriting(&eap);
+            effect->VisitSettings(shuttle, *settings);
         }
 
         //! NOTE Step 2.2 - get oldDuration for EffectTypeGenerate

@@ -12,11 +12,15 @@
 
 #include <cassert>
 
+#include <wx/file.h>
+
 #include "au3-string-utils/CodeConversions.h"
 #include "au3-files/FileNames.h"
 
 namespace audacity::cloud::audiocom::sync {
 namespace {
+const auto databaseFileName = "/audiocom_sync.db";
+
 const char* createTableQuery
     =
         R"(
@@ -111,6 +115,13 @@ CloudProjectsDatabase& CloudProjectsDatabase::Get()
 {
     static CloudProjectsDatabase instance;
     return instance;
+}
+
+bool CloudProjectsDatabase::DatabaseExists()
+{
+    const auto configDir  = FileNames::ConfigDir();
+    const auto configPath = configDir + databaseFileName;
+    return wxFileExists(configPath);
 }
 
 sqlite::SafeConnection::Lock CloudProjectsDatabase::GetConnection()
@@ -899,7 +910,7 @@ bool CloudProjectsDatabase::OpenConnection()
     }
 
     const auto configDir  = FileNames::ConfigDir();
-    const auto configPath = configDir + "/audiocom_sync.db";
+    const auto configPath = configDir + databaseFileName;
 
     mConnection = sqlite::SafeConnection::Open(audacity::ToUTF8(configPath));
 
@@ -917,6 +928,12 @@ bool CloudProjectsDatabase::OpenConnection()
     }
 
     return RunMigrations();
+}
+
+void CloudProjectsDatabase::CloseConnection()
+{
+    auto lock = std::lock_guard { mConnectionMutex };
+    mConnection.reset();
 }
 
 bool CloudProjectsDatabase::RunMigrations()

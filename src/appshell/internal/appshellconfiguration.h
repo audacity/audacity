@@ -92,7 +92,9 @@ public:
     void rollbackSettings() override;
     muse::async::Notification settingsApplied() const override;
 
-    void revertToFactorySettings(bool keepDefaultSettings = false, bool notifyAboutChanges = true) const override;
+    void revertToFactorySettings(bool keepDefaultSettings = false, bool notifyAboutChanges = true,
+                                 bool notifyOtherInstances = true) override;
+    muse::async::Notification aboutToRevertToFactorySettings() const override;
 
     muse::io::paths_t sessionProjectsPaths() const override;
     muse::Ret setSessionProjectsPaths(const muse::io::paths_t& paths) override;
@@ -112,6 +114,7 @@ private:
 
     QString m_preferencesDialogCurrentPageId;
     muse::async::Notification m_settingsApplied;
+    muse::async::Notification m_aboutToRevertToFactorySettings;
 
     muse::async::Notification m_welcomeDialogShowOnStartupChanged;
 };

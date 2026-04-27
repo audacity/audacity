@@ -22,9 +22,9 @@
 #ifndef AU_APPSHELL_IAPPSHELLCONFIGURATION_H
 #define AU_APPSHELL_IAPPSHELLCONFIGURATION_H
 
-#include "types/ret.h"
-#include "io/path.h"
-#include "async/notification.h"
+#include "framework/global/types/ret.h"
+#include "framework/global/io/path.h"
+#include "framework/global/async/notification.h"
 
 #include "modularity/imoduleinterface.h"
 
@@ -79,7 +79,10 @@ public:
     virtual void rollbackSettings() = 0;
     virtual muse::async::Notification settingsApplied() const = 0;
 
-    virtual void revertToFactorySettings(bool keepDefaultSettings = false, bool notifyAboutChanges = true) const = 0;
+    virtual void revertToFactorySettings(bool keepDefaultSettings = false, bool notifyAboutChanges = true,
+                                         bool notifyOtherInstances = true) = 0;
+
+    virtual muse::async::Notification aboutToRevertToFactorySettings() const = 0;
 
     virtual muse::io::paths_t sessionProjectsPaths() const = 0;
     virtual muse::Ret setSessionProjectsPaths(const muse::io::paths_t& paths) = 0;

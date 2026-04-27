@@ -25,7 +25,7 @@ static UiActionList STATIC_ACTIONS = {
              ),
     UiAction("realtimeeffect-remove",
              au::context::UiCtxProjectOpened,
-             au::context::CTX_PROJECT_OPENED,
+             au::context::CTX_DISABLED,
              TranslatableString("action", "Remove realtime effect"),
              TranslatableString("action", "Remove realtime effect")
              ),
@@ -140,7 +140,9 @@ void EffectsUiActions::makeActions(EffectMetaList effects)
         m_actions.push_back(makeUiAction(EFFECT_OPEN_ACTION, e));
         if (e.isRealtimeCapable) {
             for (const auto& uri : { REALTIME_EFFECT_ADD_ACTION, REALTIME_EFFECT_REPLACE_ACTION }) {
-                m_actions.push_back(makeUiAction(uri, e));
+                UiAction action = makeUiAction(uri, e);
+                action.scCtx = au::context::CTX_DISABLED;
+                m_actions.push_back(std::move(action));
             }
         }
     }

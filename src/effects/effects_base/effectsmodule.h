@@ -43,7 +43,6 @@ public:
     void registerExports() override;
     void onInit(const muse::IApplication::RunMode& mode) override;
     void onAllInited(const muse::IApplication::RunMode& mode) override;
-    void onDeinit() override;
 
 private:
     std::shared_ptr<EffectsMenuProvider> m_effectsMenuProvider;

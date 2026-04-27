@@ -38,6 +38,8 @@ qt_add_qml_module(appshell_qml
         welcomedialogmodel.h
     QML_FILES
         AboutDialog.qml
+        AboutDialogAudacityTab.qml
+        AboutDialogPrivacyTab.qml
         AlphaWelcomePopup.qml
         AppWindow.qml
         DevTools/CrashHandler/CrashHandlerDevTools.qml

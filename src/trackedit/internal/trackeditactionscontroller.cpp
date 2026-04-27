@@ -100,6 +100,8 @@ static const ActionCode SELECT_RIGHT_OF_PLAYBACK_POS("select-right-of-playback-p
 static const ActionCode SELECT_TRACK_START_TO_CURSOR("select-track-start-to-cursor");
 static const ActionCode SELECT_CURSOR_TO_TRACK_END("select-cursor-to-track-end");
 static const ActionCode SELECT_TRACK_START_TO_END("select-track-start-to-end");
+static const ActionQuery SET_SELECTION("action://trackedit/set-selection");
+static const ActionQuery SELECT_TRACK("action://trackedit/select-track");
 static const ActionCode SELECT_ZERO_CROSSING("zero-cross");
 
 static const ActionQuery AUTO_COLOR_QUERY("action://trackedit/clip/change-color-auto");
@@ -115,13 +117,8 @@ static const ActionQuery SET_TRACK_VIEW_MULTI("action://trackedit/track-view-mul
 
 static const ActionCode LABEL_ADD_CODE("label-add");
 
-static const ActionCode LABEL_DELETE_CODE("label-delete");
 static const ActionCode LABEL_DELETE_MULTI_CODE("label-delete-multi");
-
-static const ActionCode LABEL_CUT_CODE("label-cut");
 static const ActionCode LABEL_CUT_MULTI_CODE("label-cut-multi");
-
-static const ActionCode LABEL_COPY_CODE("label-copy");
 static const ActionCode LABEL_COPY_MULTI_CODE("label-copy-multi");
 
 static const ActionQuery PLAYBACK_SEEK_QUERY("action://playback/seek");
@@ -286,6 +283,8 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, SELECT_TRACK_START_TO_CURSOR, this, &TrackeditActionsController::selectTrackStartToCursor);
     dispatcher()->reg(this, SELECT_CURSOR_TO_TRACK_END, this, &TrackeditActionsController::selectCursorToTrackEnd);
     dispatcher()->reg(this, SELECT_TRACK_START_TO_END, this, &TrackeditActionsController::selectTrackStartToEnd);
+    dispatcher()->reg(this, SET_SELECTION, this, &TrackeditActionsController::setSelection);
+    dispatcher()->reg(this, SELECT_TRACK, this, &TrackeditActionsController::selectTrackByIndex);
     dispatcher()->reg(this, SELECT_ZERO_CROSSING, this, &TrackeditActionsController::moveCursorToClosestZeroCrossing);
 
     dispatcher()->reg(this, AUTO_COLOR_QUERY, this, &TrackeditActionsController::setClipColor);
@@ -302,13 +301,8 @@ void TrackeditActionsController::init()
 
     dispatcher()->reg(this, LABEL_ADD_CODE, this, &TrackeditActionsController::addLabel);
 
-    dispatcher()->reg(this, LABEL_DELETE_CODE, this, &TrackeditActionsController::labelDelete);
     dispatcher()->reg(this, LABEL_DELETE_MULTI_CODE, this, &TrackeditActionsController::labelDeleteMulti);
-
-    dispatcher()->reg(this, LABEL_CUT_CODE, this, &TrackeditActionsController::labelCut);
     dispatcher()->reg(this, LABEL_CUT_MULTI_CODE, this, &TrackeditActionsController::labelCutMulti);
-
-    dispatcher()->reg(this, LABEL_COPY_CODE, this, &TrackeditActionsController::labelCopy);
     dispatcher()->reg(this, LABEL_COPY_MULTI_CODE, this, &TrackeditActionsController::labelCopyMulti);
 
     dispatcher()->reg(this, TRACK_VIEW_ITEM_MOVE_LEFT_CODE, this, &TrackeditActionsController::moveFocusedItemLeft);
@@ -933,18 +927,6 @@ void TrackeditActionsController::multiClipDelete(const ActionData& args)
     trackeditInteraction()->removeClips(selectedClips, moveClips);
 }
 
-void TrackeditActionsController::labelDelete(const ActionData& args)
-{
-    LabelKey labelKey = args.arg<LabelKey>(0);
-    if (!labelKey.isValid()) {
-        return;
-    }
-
-    selectionController()->resetSelectedLabels();
-
-    trackeditInteraction()->removeLabel(labelKey);
-}
-
 void TrackeditActionsController::labelDeleteMulti(const ActionData& args)
 {
     bool moveLabels = false;
@@ -961,18 +943,6 @@ void TrackeditActionsController::labelDeleteMulti(const ActionData& args)
     selectionController()->resetSelectedLabels();
 
     trackeditInteraction()->removeLabels(selectedLabelKeys, moveLabels);
-}
-
-void TrackeditActionsController::labelCut(const ActionData& args)
-{
-    LabelKey labelKey = args.arg<LabelKey>(0);
-    if (!labelKey.isValid()) {
-        return;
-    }
-
-    selectionController()->resetSelectedLabels();
-
-    trackeditInteraction()->cutLabel(labelKey);
 }
 
 void TrackeditActionsController::labelCutMulti(const muse::actions::ActionData& args)
@@ -993,17 +963,6 @@ void TrackeditActionsController::labelCutMulti(const muse::actions::ActionData& 
     selectionController()->resetSelectedLabels();
 
     trackeditInteraction()->removeLabels(selectedLabelKeys, moveClips);
-}
-
-void TrackeditActionsController::labelCopy(const ActionData& args)
-{
-    LabelKey labelKey = args.arg<LabelKey>(0);
-    if (!labelKey.isValid()) {
-        return;
-    }
-
-    trackeditInteraction()->clearClipboard();
-    trackeditInteraction()->copyLabel(labelKey);
 }
 
 void TrackeditActionsController::labelCopyMulti()
@@ -1765,6 +1724,43 @@ void TrackeditActionsController::selectTrackStartToEnd()
     if (leftmostItemStartTime.has_value() && rightmostItemEndTime.has_value()) {
         selectionController()->setDataSelectedStartTime(leftmostItemStartTime.value(), true);
         selectionController()->setDataSelectedEndTime(rightmostItemEndTime.value(), true);
+    }
+}
+
+void TrackeditActionsController::setSelection(const muse::actions::ActionQuery& query)
+{
+    if (!query.contains("start") || !query.contains("end")) {
+        LOGE() << "set-selection missing required 'start' or 'end' param";
+        return;
+    }
+
+    const double startTime = query.param("start").toDouble();
+    const double endTime = query.param("end").toDouble();
+    if (startTime < 0.0 || endTime < startTime) {
+        LOGE() << "set-selection invalid range: start=" << startTime << " end=" << endTime;
+        return;
+    }
+
+    selectionController()->setDataSelectedStartTime(startTime, true);
+    selectionController()->setDataSelectedEndTime(endTime, true);
+}
+
+void TrackeditActionsController::selectTrackByIndex(const muse::actions::ActionQuery& query)
+{
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return;
+    }
+
+    if (!query.contains("trackIndex")) {
+        LOGE() << "select-track missing required 'trackIndex' param";
+        return;
+    }
+
+    const int trackIndex = query.param("trackIndex").toInt();
+    auto ids = prj->trackIdList();
+    if (trackIndex >= 0 && trackIndex < static_cast<int>(ids.size())) {
+        selectionController()->setSelectedTracks({ ids[trackIndex] }, true);
     }
 }
 

@@ -1,29 +1,12 @@
 /*
- * SPDX-License-Identifier: GPL-3.0-only
- * MuseScore-CLA-applies
- *
- * MuseScore
- * Music Composition & Notation
- *
- * Copyright (C) 2021-2024 MuseScore BVBA and others
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 3 as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+* Audacity: A Digital Audio Editor
+*/
 import QtQuick 2.15
 import QtQuick.Layouts 1.15
 
 import Muse.Ui 1.0
 import Muse.UiComponents
+
 import Audacity.AppShell
 
 StyledDialogView {
@@ -31,129 +14,70 @@ StyledDialogView {
 
     title: qsTrc("appshell/about", "About Audacity")
 
-    contentHeight: 424
-    contentWidth: 480
+    contentHeight: 600
+    contentWidth: 720
 
     AboutModel {
         id: aboutModel
     }
 
+    QtObject {
+        id: prv
+
+        readonly property int tabSpacing: 16
+        readonly property int tabButtonSpacing: 32
+        readonly property int btnMargins: 8
+    }
+
     ColumnLayout {
         anchors.fill: parent
-        spacing: 30
+        spacing: prv.tabSpacing
 
-        ColumnLayout {
-            id: content
+        StyledTabBar {
+            id: tabBar
 
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            Layout.topMargin: 36
-            Layout.leftMargin: 40
-            Layout.rightMargin: 40
+            Layout.alignment: Qt.AlignHCenter
+            spacing: prv.tabButtonSpacing
 
-            spacing: 32
-
-            Image {
-                id: logo
-                Layout.alignment: Qt.AlignHCenter
-
-                source: "qrc:/qml/resources/mu_logo.svg"
-                sourceSize: Qt.size(100, 100)
-
-                MouseArea {
-                    anchors.fill: parent
-
-                    property int clickCount: 0
-
-                    onClicked: {
-                        clickCount++
-
-                        if (clickCount % 3 == 0) {
-                            aboutModel.toggleDevMode()
-                        }
-                    }
-                }
+            StyledTabButton {
+                text: qsTrc("appshell/about", "Audacity")
             }
 
-            Column {
-                spacing: 8
-                Layout.fillWidth: true
-
-                StyledTextLabel {
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    text: qsTrc("appshell/about", "Version:") + " " + aboutModel.appVersion()
-                    font: ui.theme.bodyBoldFont
-                }
-
-                Row {
-                    spacing: 4
-                    anchors.horizontalCenter: parent.horizontalCenter
-
-                    StyledTextLabel {
-                        anchors.verticalCenter: parent.verticalCenter
-                        text: qsTrc("appshell/about", "Revision:") + " " + aboutModel.appRevision()
-                    }
-
-                    FlatButton {
-                        anchors.verticalCenter: parent.verticalCenter
-                        icon: IconCode.COPY
-
-                        onClicked: {
-                            aboutModel.copyRevisionToClipboard()
-                        }
-                    }
-                }
-            }
-
-            StyledTextLabel {
-                Layout.fillWidth: true
-                text: {
-                    let websiteUrl = aboutModel.appUrl()
-
-                    //: %1 will be a link to the Audacity website
-                    let line1 = qsTrc("appshell/about", "Visit %1 for new versions and more information.")
-                                .arg(`<a href="${websiteUrl.url}">${websiteUrl.displayName}</a>`)
-
-                    let line2 = qsTrc("appshell/about", "Get <a href=\"%1\">help</a> with the program or <a href=\"%2\">contribute</a> to its development.")
-                                .arg(aboutModel.forumUrl().url)
-                                .arg(aboutModel.contributionUrl().url)
-
-                    return line1 + "<br>" + line2
-                }
-                wrapMode: Text.WordWrap
-                maximumLineCount: 3
-            }
-
-            StyledTextLabel {
-                Layout.fillWidth: true
-
-                text: qsTrc("appshell/about", "For privacy information, see our <a href=\"%1\">privacy policy</a>.")
-                      .arg(aboutModel.privacyPolicyUrl().url)
-
-                wrapMode: Text.WordWrap
-                maximumLineCount: 3
-            }
-
-            StyledTextLabel {
-                Layout.fillWidth: true
-                text: qsTrc("appshell/about", "Copyright © 1999-2026 Audacity contributors and others.\nPublished under the <a href=\"%1\">GNU General Public License version 3</a>.")
-                      .arg("https://www.gnu.org/licenses/gpl-3.0.html")
-                      .replace("\n", "<br>")
-
-                wrapMode: Text.WordWrap
-                maximumLineCount: 3
+            StyledTabButton {
+                text: qsTrc("appshell/about", "Legal")
             }
         }
 
-        RowLayout {
-            Layout.alignment: Qt.AlignRight
-            Layout.rightMargin: 16
-            Layout.bottomMargin: 16
+        StackLayout {
+            id: stackLayout
 
-            spacing: 12
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
+            currentIndex: tabBar.currentIndex
+
+            AboutDialogAudacityTab {
+                model: aboutModel
+            }
+
+            AboutDialogPrivacyTab {
+                model: aboutModel
+            }
+        }
+
+        ColumnLayout {
+            Layout.fillWidth: true
+            spacing: 0
+
+            SeparatorLine {
+                Layout.fillWidth: true
+            }
 
             FlatButton {
-                text: qsTrc("global", "OK")
+                Layout.alignment: Qt.AlignRight
+                Layout.margins: prv.btnMargins
+
+                text: qsTrc("global", "Close")
 
                 onClicked: {
                     root.hide()

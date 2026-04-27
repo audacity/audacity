@@ -40,6 +40,6 @@ var testCase = {
 }
 
 function main() {
-    api.autobot.setInterval(1000)
-    api.autobot.runTestCase(testCase)
+    api.testflow.setInterval(1000)
+    api.testflow.runTestCase(testCase)
 }
