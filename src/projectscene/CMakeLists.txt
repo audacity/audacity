@@ -59,6 +59,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackitem.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/wavetrackitem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/wavetrackitem.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/volumepressuremeteritem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/volumepressuremeteritem.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/labeltrackitem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/labeltrackitem.h
     ${CMAKE_CURRENT_LIST_DIR}/view/trackspanel/trackcontextmenumodel.cpp
