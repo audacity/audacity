@@ -75,12 +75,7 @@ muse::async::Notification GlobalContext::isRecordingChanged() const
     return recordController()->isRecordingChanged();
 }
 
-muse::secs_t GlobalContext::recordPosition() const
+std::vector<au::trackedit::ClipKey> GlobalContext::recordingClipKeys() const
 {
-    return recordController()->recordPosition();
-}
-
-muse::async::Channel<muse::secs_t> GlobalContext::recordPositionChanged() const
-{
-    return recordController()->recordPositionChanged();
+    return recordController()->recordingClipKeys();
 }

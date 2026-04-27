@@ -256,9 +256,7 @@ void Au3Record::init()
             trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
             prj->notifyAboutClipAdded(DomConverter::clip(origWaveTrack, origClip.get()));
 
-            if (!muse::RealIsEqual(m_recordPosition.val.to_double(), origClip->GetPlayEndTime())) {
-                m_recordPosition.set(origClip->GetPlayEndTime());
-            }
+            m_recordPosition.set(origClip->GetPlayEndTime());
             return;
         }
 
@@ -281,9 +279,7 @@ void Au3Record::init()
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         prj->notifyAboutClipChanged(DomConverter::clip(origWaveTrack, origClip.get()));
 
-        if (!muse::RealIsEqual(m_recordPosition.val.to_double(), origClip->GetPlayEndTime())) {
-            m_recordPosition.set(origClip->GetPlayEndTime());
-        }
+        m_recordPosition.set(origClip->GetPlayEndTime());
     });
 
     audioEngine()->finished().onNotify(this, [this]() {
@@ -329,7 +325,7 @@ void Au3Record::init()
         commitRecording();
 
         muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
-        q.addParam("seekTime", muse::Val(globalContext()->recordPosition()));
+        q.addParam("seekTime", muse::Val(m_recordPosition.val));
         q.addParam("triggerPlay", muse::Val(false));
         dispatcher()->dispatch(q);
 
@@ -619,6 +615,17 @@ secs_t Au3Record::recordPosition() const
     return m_recordPosition.val;
 }
 
+std::vector<au::trackedit::ClipKey> Au3Record::recordingClipKeys() const
+{
+    std::vector<trackedit::ClipKey> keys;
+    for (const auto& rd : m_recordData) {
+        if (!rd.deferredClipCreation) {
+            keys.push_back(rd.clipKey);
+        }
+    }
+    return keys;
+}
+
 Notification Au3Record::recordingFinished() const
 {
     return m_recordingFinished;
@@ -639,6 +646,8 @@ Ret Au3Record::doRecord(Au3Project& project,
                         std::vector<std::vector<float> >* crossfadeData)
 {
     //! NOTE: copied fromProjectAudioManager::DoRecord
+
+    m_recordPosition.set(t0);
 
     if (audioEngine()->isBusy()) {
         LOGE() << "Audio IO is busy";

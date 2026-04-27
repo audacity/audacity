@@ -238,6 +238,17 @@ void TrackClipsListModel::updateItemMetrics(ViewTrackItem* viewItem)
         return;
     }
 
+    // Extend recording clip's visual boundary to the smooth record position
+    if (globalContext()->isRecording()) {
+        for (const auto& rk : globalContext()->recordingClipKeys()) {
+            if (rk == item->key().key) {
+                double projectedEnd = globalContext()->playbackState()->playbackPosition().to_double();
+                clip.endTime = std::max(clip.endTime, projectedEnd);
+                break;
+            }
+        }
+    }
+
     //! NOTE The first step is to calculate the position and width
     const double cacheTime = cacheBufferPx() / m_context->zoom();
 
