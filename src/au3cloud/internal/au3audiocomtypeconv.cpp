@@ -176,6 +176,10 @@ std::vector<DownloadRequest> convertToDownloadRequests(const audacity::cloud::au
     for (size_t i = 0; i < paginatedResponse.Items.size(); i++) {
         const auto& audioInfo = paginatedResponse.Items[i];
 
+        if (audioInfo.Id.empty()) {
+            continue;
+        }
+
         DownloadRequest request;
         request.id = audioInfo.Id;
         request.url = audioInfo.WaveformUrl;

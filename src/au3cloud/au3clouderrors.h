@@ -60,6 +60,7 @@ enum class Err {
     // downloadAudioFile
     DownloadAudioResultCancelled,
     DownloadAudioResultFailed,
+    DownloadAudioResultBlocked,
 
     // openCloudProject
     OpenProjectCancelled,

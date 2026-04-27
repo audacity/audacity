@@ -802,6 +802,7 @@ Ret OpenSaveProjectScenario::showCloudAudioOpenError(const Ret& error) const
                                 trc("cloud", DOWNLOAD_CLOUD_AUDIO_ERROR_TEXT));
         break;
     case Err::DownloadAudioResultCancelled:
+    case Err::DownloadAudioResultBlocked:
         break;
     default:
         interactive()->infoSync(trc("cloud", "Open audio from cloud"), error.toString());

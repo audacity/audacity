@@ -887,9 +887,9 @@ void CloudSyncService::DownloadAudio(const std::string& name, const std::string&
             const auto statusCode = context && context->Cancelled()
                                     ? DownloadAudioResult::StatusCode::Cancelled
                                     : DownloadAudioResult::StatusCode::Failed;
-            mDownloadInProcess.store(false);
             BasicUI::CallAfter([this, statusCode] {
                 mDownloadAudioPromise.set_value({ statusCode, {}, {} });
+                mDownloadInProcess.store(false);
             });
 
             return;

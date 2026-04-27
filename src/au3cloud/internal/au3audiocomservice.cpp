@@ -468,7 +468,12 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::downloadAudioFile(const std:
 
     // Blocked is resolved synchronously (another download is already in progress)
     if (future.wait_for(std::chrono::seconds(0)) == std::future_status::ready) {
-        return muse::RetVal<muse::ProgressPtr>::make_ok(nullptr);
+        const auto result = future.get();
+        if (result.Status == sync::DownloadAudioResult::StatusCode::Blocked) {
+            return muse::RetVal<muse::ProgressPtr>::make_ret(static_cast<int>(Err::DownloadAudioResultBlocked),
+                                                             "Download already in progress");
+        }
+        return muse::RetVal<muse::ProgressPtr>::make_ret(muse::Ret::Code::UnknownError, "Failed to start audio download");
     }
 
     std::thread([future = std::move(future), progress]() mutable {

@@ -11,7 +11,6 @@ class Au3CloudService;
 class Au3AudioComService;
 class Au3CloudActionsController;
 class CloudUiActions;
-class DownloadManager;
 
 class Au3CloudModule : public muse::modularity::IModuleSetup
 {
