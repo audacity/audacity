@@ -770,8 +770,19 @@ Ret OpenSaveProjectScenario::showCloudSaveError(const Ret& ret) const
     case Err::ClientFailure:
     case Err::UploadFailed:
     case Err::SyncCancelled:
-        interactive()->infoSync(DEFAULT_SYNC_ERROR_TITLE, DEFAULT_SYNC_ERROR_TEXT);
+    {
+        if (cloudConfiguration()->shouldWarnOnSyncError()) {
+            const IInteractive::ButtonData okBtn = interactive()->buttonData(IInteractive::Button::Ok);
+            const auto result = interactive()->infoSync(DEFAULT_SYNC_ERROR_TITLE, DEFAULT_SYNC_ERROR_TEXT, { okBtn },
+                                                        static_cast<int>(IInteractive::Button::Ok),
+                                                        IInteractive::Option::WithIcon | IInteractive::Option::WithDontShowAgainCheckBox);
+
+            if (!result.showAgain()) {
+                cloudConfiguration()->setWarnOnSyncError(false);
+            }
+        }
         break;
+    }
     default:
         interactive()->infoSync(DEFAULT_CLOUD_ERROR_TITLE, DEFAULT_CLOUD_ERROR_TEXT);
         break;

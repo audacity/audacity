@@ -35,6 +35,7 @@
 
 #include "project/iprojectconfiguration.h"
 #include "project/iprojectfilescontroller.h"
+#include "au3cloud/iau3cloudconfiguration.h"
 
 namespace au::project {
 class OpenSaveProjectScenario : public IOpenSaveProjectScenario, public muse::Contextable
@@ -43,6 +44,7 @@ class OpenSaveProjectScenario : public IOpenSaveProjectScenario, public muse::Co
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
     muse::GlobalInject<muse::cloud::IMuseScoreComService> museScoreComService;
     muse::GlobalInject<muse::cloud::IAudioComService> audioComService;
+    muse::GlobalInject<au::au3cloud::IAu3CloudConfiguration> cloudConfiguration;
 
     muse::ContextInject<IProjectFilesController> projectFilesController { this };
     muse::ContextInject<muse::IInteractive> interactive { this };
