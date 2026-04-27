@@ -12,6 +12,7 @@ set( MODULES
    mod-cl
    mod-lof
    mod-aup
+   mod-cvsd
 )
 
 if ( USE_LIBOGG AND USE_LIBVORBIS )
