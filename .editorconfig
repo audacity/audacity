@@ -31,4 +31,4 @@ indent_size = 4
 
 [*.{bat,ps1}]
 end_of_line = crlf
-ident_size = 4
+indent_size = 4
