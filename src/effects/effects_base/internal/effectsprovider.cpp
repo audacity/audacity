@@ -63,7 +63,10 @@ void EffectsProvider::initOnce(muse::IInteractive& interactive,
                                                   false),
                                               muse::IInteractive::ButtonData(
                                                   muse::IInteractive::Button::Apply, muse::trc("appshell", "Scan plugins"),
-                                                  true) });
+                                                  true) },
+                                            int(muse::IInteractive::Button::NoButton),
+                                            {},
+                                            muse::trc("appshell", "Audio plugin scan"));
         if (ret.standardButton() == muse::IInteractive::Button::Apply) {
             registerAudioPluginsScenario.registerNewPlugins(thirdPartyPluginPaths);
         }
