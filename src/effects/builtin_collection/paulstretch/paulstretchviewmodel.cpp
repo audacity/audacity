@@ -30,10 +30,13 @@ double PaulstretchViewModel::amount() const
 void PaulstretchViewModel::setAmount(double newAmount)
 {
     auto& pe = effect<PaulstretchEffect>();
-    if (muse::is_equal<double>(pe.mAmount, newAmount)) {
+    const auto clamped = std::clamp(newAmount, PaulstretchEffect::Amount.min, PaulstretchEffect::Amount.max);
+    // Don't use `muse::is_equal(pe.mAmount, newAmount)`:
+    // we want decimal increments to be possible even for values of 1,000,000 or more, which `is_equal` would reject.
+    if (pe.mAmount == clamped) {
         return;
     }
-    pe.mAmount = static_cast<float>(newAmount);
+    pe.mAmount = clamped;
     emit amountChanged();
 }
 
@@ -45,10 +48,12 @@ double PaulstretchViewModel::timeResolution() const
 void PaulstretchViewModel::setTimeResolution(double newTimeResolution)
 {
     auto& pe = effect<PaulstretchEffect>();
-    if (muse::is_equal<double>(pe.mTime_resolution, newTimeResolution)) {
+    const auto clamped = std::clamp(newTimeResolution, PaulstretchEffect::Time.min, PaulstretchEffect::Time.max);
+    // Same as above: don't use `muse::is_equal
+    if (pe.mTime_resolution == clamped) {
         return;
     }
-    pe.mTime_resolution = static_cast<float>(newTimeResolution);
+    pe.mTime_resolution = clamped;
     emit timeResolutionChanged();
 }
 

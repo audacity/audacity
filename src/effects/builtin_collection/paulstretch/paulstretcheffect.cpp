@@ -20,7 +20,6 @@
 #include "au3-track/TimeWarper.h"
 #include "au3-wave-track/WaveTrack.h"
 #include <algorithm>
-#include <cfloat> // FLT_MAX
 #include <cmath>
 
 using namespace au::effects;
@@ -334,10 +333,13 @@ bool PaulstretchEffect::ProcessOne(
 size_t PaulstretchEffect::GetBufferSize(double rate) const
 {
     // Audacity's fft requires a power of 2
-    float tmp = rate * mTime_resolution / 2.0;
+    auto tmp = rate * mTime_resolution / 2.0;
     tmp = log(tmp) / log(2.0);
     tmp = pow(2.0, floor(tmp + 0.5));
 
+    if (!std::isfinite(tmp) || tmp > static_cast<double>(std::numeric_limits<size_t>::max())) {
+        return 0;
+    }
     auto stmp = size_t(tmp);
     if (stmp != tmp) {
         // overflow

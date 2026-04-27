@@ -51,8 +51,8 @@ public:
         const EffectSettings& settings, double previewLength) const override;
     bool Process(::EffectInstance& instance, EffectSettings& settings) override;
 
-    float mAmount;
-    float mTime_resolution; // seconds
+    double mAmount = Amount.def;
+    double mTime_resolution = Time.def; // seconds
 
 protected:
     // PaulstretchEffect implementation
@@ -66,13 +66,13 @@ protected:
 
 public:
     static constexpr EffectParameter Amount {
-        &PaulstretchEffect::mAmount, L"Stretch Factor", 10.0f, 1.0, FLT_MAX, 1
+        &PaulstretchEffect::mAmount, L"Stretch Factor", 10.0, 1.0, 1e20, 1
     };
     static constexpr EffectParameter Time { &PaulstretchEffect::mTime_resolution,
                                             L"Time Resolution",
-                                            0.25f,
-                                            0.00099f,
-                                            FLT_MAX,
+                                            0.25,
+                                            0.00099,
+                                            1e20, // Things go berserk beyond this point - should still be enough to go crazy :D
                                             1 };
 };
 }
