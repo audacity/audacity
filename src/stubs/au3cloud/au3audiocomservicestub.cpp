@@ -58,6 +58,21 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComServiceStub::resumeProjectSync(au::pr
     return muse::RetVal<muse::ProgressPtr>::make_ret(muse::Ret::Code::NotSupported);
 }
 
+muse::async::Channel<std::string, muse::io::path_t> Au3AudioComServiceStub::audioThumbnailFileUpdated() const
+{
+    return {};
+}
+
+std::string Au3AudioComServiceStub::getCloudAudioPage(const std::string& /*unused*/) const
+{
+    return {};
+}
+
+std::string Au3AudioComServiceStub::getCloudProjectPage(const std::string& /*unused*/) const
+{
+    return {};
+}
+
 void Au3AudioComServiceStub::deinit()
 {
 }

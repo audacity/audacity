@@ -21,6 +21,7 @@ public:
 
     muse::async::Promise<AudioList> downloadAudioList(size_t audiosPerBatch, size_t batchNumber, const FetchOptions& options) override;
     void clearAudioListCache() override;
+    muse::async::Channel<std::string, muse::io::path_t> audioThumbnailFileUpdated() const override;
 
     muse::RetVal<muse::ProgressPtr> uploadProject(au::project::IAudacityProjectPtr project, const std::string& name,
                                                   std::function<bool()> projectSaveCallback = nullptr, bool forceOverwrite = false) override;
@@ -30,6 +31,10 @@ public:
     muse::RetVal<muse::ProgressPtr> openCloudProject(const muse::io::path_t& localPath, const std::string& projectId = {},
                                                      bool forceOverwrite = false) override;
     muse::RetVal<muse::ProgressPtr> resumeProjectSync(au::project::IAudacityProjectPtr project) override;
+
+    std::string getCloudProjectPage(const std::string& slug) const override;
+    std::string getCloudAudioPage(const std::string& audioId) const override;
+
     void deinit() override;
 };
 }
