@@ -170,6 +170,7 @@ Rectangle {
 
                 inputField.color: root.labelColor
                 textSidePadding: 0
+                allowNewLineByEnter: false
 
                 onTextChanged: function (text) {
                     titleEdit.newTitle = text

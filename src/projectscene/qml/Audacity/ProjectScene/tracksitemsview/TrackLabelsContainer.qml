@@ -139,7 +139,7 @@ TrackItemsContainer {
                         width: itemData.width
                         x: itemData.x
                         y: (itemData.visualHeight + 2) * itemData.level
-                        z: itemData.level
+                        z: Boolean(labelLoader.item) && labelLoader.item.isEditing ? 1000 : itemData.level
 
                         asynchronous: true
 
