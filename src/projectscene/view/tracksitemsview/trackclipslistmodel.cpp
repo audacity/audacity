@@ -84,6 +84,12 @@ void TrackClipsListModel::onReload()
         });
     }, muse::async::Asyncable::Mode::SetReplace);
 
+    globalContext()->playbackState()->playbackPositionChanged().onReceive(this, [this](muse::secs_t) {
+        if (globalContext()->isRecording()) {
+            updateItemsMetrics();
+        }
+    }, muse::async::Asyncable::Mode::SetReplace);
+
     m_allClipList.onItemChanged(this, [this](const Clip& clip) {
         for (size_t i = 0; i < m_allClipList.size(); ++i) {
             if (m_allClipList.at(i).key != clip.key) {

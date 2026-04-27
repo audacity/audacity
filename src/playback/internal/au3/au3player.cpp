@@ -36,8 +36,18 @@ Au3Player::Au3Player(const muse::modularity::ContextPtr& ctx)
 
         if (st != PlaybackStatus::Stopped) {
             m_timer.start();
-        } else {
+        } else if (!AudioIO::Get()->IsStreamActive()) {
             m_timer.stop();
+        }
+    });
+
+    // Start position tracking timer when recording begins (the timer normally
+    // starts on PlaybackStatus change, but recording doesn't change that status).
+    globalContext()->isRecordingChanged().onNotify(this, [this]() {
+        if (globalContext()->isRecording() && !m_timer.isActive()) {
+            m_currentTarget.reset();
+            m_consumedSamplesSoFar = 0;
+            m_timer.start();
         }
     });
 
@@ -493,14 +503,9 @@ void Au3Player::updatePlaybackState()
             || playbackStatus() == PlaybackStatus::Paused) {
             m_playbackStatus.set(PlaybackStatus::Stopped);
         } else if (m_timer.isActive()) {
-            // Stream ended while not in playback mode (e.g., recording finished)
+            // Stream ended (playback or recording finished)
             m_timer.stop();
         }
-    } else if (m_playbackStatus.val == PlaybackStatus::Stopped
-               && m_timer.isActive() && AudioIO::Get()->IsCapturing()) {
-        // Recording has started after lead-in pre-roll — stop the playback timer
-        // to avoid conflicting with the recording system's playhead updates
-        m_timer.stop();
     }
 }
 
@@ -532,6 +537,9 @@ void Au3Player::updatePlaybackPosition()
     }
 
     if (!m_currentTarget.has_value()) {
+        // No DAC callbacks available (e.g. recording-only without overdub playback).
+        // Fall back to reading GetStreamTime() directly so the playhead still updates.
+        updatePlaybackState();
         return;
     }
 
