@@ -276,6 +276,11 @@ void Au3Record::init()
             recordedClip->linkedToPendingClip = true;
         }
 
+        // Invalidate waveform cache on the original clip so new audio data gets painted.
+        // MarkChanged() is only called on the pendingClip by the audio engine; the origClip
+        // shares data via LinkToOtherSource but its WaveformPainter cache is never notified.
+        origClip->MarkChanged();
+
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         prj->notifyAboutClipChanged(DomConverter::clip(origWaveTrack, origClip.get()));
 

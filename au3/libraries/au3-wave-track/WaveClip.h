@@ -943,16 +943,17 @@ public:
 
     void LinkToOtherSource(WaveClip& newClip);
 
+    //! Called by mutating operations; notifies listeners.
+    //! Also needed externally when data changes through linked sources (e.g. recording).
+    /*! @excsafety{No-fail} */
+    void MarkChanged() noexcept;
+
 private:
     static void TransferSequence(WaveClip& origClip, WaveClip& newClip);
     static void FixSplitCutlines(
         WaveClipHolders& myCutlines, WaveClipHolders& newCutlines);
 
     size_t GreatestAppendBufferLen() const;
-
-    //! Called by mutating operations; notifies listeners
-    /*! @excsafety{No-fail} */
-    void MarkChanged() noexcept;
 
     // Always gives non-negative answer, not more than sample sequence length
     // even if t0 really falls outside that range
