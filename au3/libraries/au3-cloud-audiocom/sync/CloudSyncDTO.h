@@ -97,7 +97,7 @@ struct ProjectInfo final
     std::string Slug;
     std::string Name;
     std::string Details;
-    int64_t Size;
+    int64_t Size {};
 
     SnapshotInfo HeadSnapshot;
     std::string LastSyncedSnapshotId;
