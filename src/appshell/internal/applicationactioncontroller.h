@@ -41,7 +41,6 @@
 #include "record/irecordcontroller.h"
 #include "context/iuicontextresolver.h"
 #include "context/iglobalcontext.h"
-
 //! TODO AU4
 // #include "languages/ilanguagesservice.h"
 #include "multiwindows/imultiwindowsprovider.h"
@@ -66,7 +65,11 @@ class ApplicationActionController : public QObject, public IApplicationActionCon
     muse::ContextInject<record::IRecordController> recordController { this };
     muse::ContextInject<context::IUiContextResolver> uiContextResolver { this };
     muse::ContextInject<context::IGlobalContext> globalContext { this };
+
 public:
+
+    friend class FactoryResetActionTests;
+
     ApplicationActionController(const muse::modularity::ContextPtr& ctx)
         : muse::Contextable(ctx) {}
 

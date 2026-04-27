@@ -49,5 +49,7 @@ public:
     virtual muse::ProgressPtr openCloudProject(const muse::io::path_t& localPath, const std::string& projectId = {},
                                                bool forceOverwrite = false) = 0;
     virtual muse::ProgressPtr resumeProjectSync(au::project::IAudacityProjectPtr project) = 0;
+
+    virtual void deinit() = 0;
 };
 }

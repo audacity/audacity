@@ -111,6 +111,6 @@ void GuiApp::applyCommandLineOptions(const std::shared_ptr<muse::CmdOptions>& op
     }
 
     if (options->app.revertToFactorySettings) {
-        appshellConfiguration()->revertToFactorySettings(options->app.revertToFactorySettings.value());
+        appshellConfiguration()->revertToFactorySettings();
     }
 }

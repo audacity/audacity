@@ -242,6 +242,10 @@ void Au3AudioComService::init()
             }
         });
     });
+
+    appshellConfiguration()->aboutToRevertToFactorySettings().onNotify(this, []() {
+        audacity::cloud::audiocom::sync::CloudProjectsDatabase::Get().CloseConnection();
+    });
 }
 
 muse::async::Promise<ProjectList> Au3AudioComService::downloadProjectList(size_t projectsPerBatch, size_t batchNumber,
@@ -725,4 +729,9 @@ std::optional<std::string> Au3AudioComService::getHeadSnapshotID(const std::stri
     }
 
     return std::nullopt;
+}
+
+void Au3AudioComService::deinit()
+{
+    audacity::cloud::audiocom::sync::CloudProjectsDatabase::Get().CloseConnection();
 }

@@ -153,7 +153,3 @@ void EffectsContext::onInit(const muse::IApplication::RunMode&)
 void EffectsContext::onAllInited(const muse::IApplication::RunMode&)
 {
 }
-
-void EffectsContext::onDeinit()
-{
-}

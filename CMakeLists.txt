@@ -98,6 +98,7 @@ set(MUSE_MODULE_UI_TESTS OFF)
 set(MUSE_MODULE_UPDATE ON)
 set(MUSE_MODULE_UPDATE_QML ON)
 set(MUSE_MODULE_WORKSPACE ON)
+set(MUSE_MODULE_WORKSPACE_TESTS ON)
 set(MUSE_MODULE_VST ON)
 set(MUSE_MODULE_VST_QML ON)
 
@@ -110,6 +111,7 @@ option(AU_BUILD_EFFECTS_BUILTIN_TESTS "Build builtin-effect tests" ON)
 option(AU_BUILD_EFFECTS_MODULE "Build effects module" ON)
 option(AU_BUILD_EFFECTS_TESTS "Build effects tests" ON)
 option(AU_BUILD_PLAYBACK_MODULE "Build playback module" ON)
+option(AU_BUILD_APPSHELL_TESTS "Build appshell tests" ON)
 option(AU_BUILD_PLAYBACK_TESTS "Build playback tests" ON)
 option(AU_BUILD_PROJECT_TESTS "Build project tests" ON)
 option(AU_BUILD_PROJECTSCENE_MODULE "Build projectscene modules" ON)
@@ -147,6 +149,10 @@ option(AU_LOAD_TIMETRACK "Load time track from Audacity 3 projects" OFF)
 
 # === Pack ===
 option(AU_RUN_LRELEASE "Generate .qm files" ON)
+
+# === Tests ===
+set(APP_WORKSPACE_CONFIG_FILE "${CMAKE_CURRENT_LIST_DIR}/src/app/configs/workspaces.cfg")
+set(APP_BUILTIN_WORKSPACES_DIR "${CMAKE_CURRENT_LIST_DIR}/share/workspaces")
 
 # === Compile ===
 option(MU_COMPILE_INSTALL_QTQML_FILES "Whether to bundle qml files along with the installation (relevant on MacOS only)" ON)

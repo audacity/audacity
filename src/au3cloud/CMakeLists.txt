@@ -36,8 +36,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/accountinfomodel.h
     )
 
-set(MODULE_INCLUDE ${AU3_LIBRARIES})
-
 set(MODULE_LINK au3wrap Qt6::Network Qt6::NetworkAuth)
 
 setup_module()

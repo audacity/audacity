@@ -81,9 +81,12 @@ class CloudProjectsDatabase final
 
 public:
     static CloudProjectsDatabase& Get();
+    static bool DatabaseExists();
 
     sqlite::SafeConnection::Lock GetConnection();
     const sqlite::SafeConnection::Lock GetConnection() const;
+
+    void CloseConnection();
 
     std::optional<DBProjectData>
     GetProjectData(std::string_view projectId) const;
@@ -104,7 +107,7 @@ public:
     GetBlockHash(std::string_view projectId, int64_t blockId) const;
 
     void UpdateBlockHashes(
-        std::string_view projectId, const std::vector<std::pair<int64_t, std::string>>& hashes);
+        std::string_view projectId, const std::vector<std::pair<int64_t, std::string> >& hashes);
 
     bool UpdateProjectData(const DBProjectData& projectData);
 
