@@ -142,6 +142,10 @@ void TimelineContext::init(double frameWidth)
         emit lastPlaybackSeekPositionChanged();
     });
 
+    projectHistory()->historyChanged().onReceive(this, [this](auto) {
+        updateFrameTime();
+    });
+
     onProjectChanged();
 }
 
