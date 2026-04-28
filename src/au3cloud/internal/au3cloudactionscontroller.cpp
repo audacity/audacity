@@ -26,7 +26,7 @@ Au3CloudActionsController::Au3CloudActionsController(muse::modularity::ContextPt
 void Au3CloudActionsController::init()
 {
     dispatcher()->reg(this, OPEN_SIGNIN_DIALOG_ACTION, this, &Au3CloudActionsController::openSignInDialog);
-    dispatcher()->reg(this, OPEN_CREATE_ACCOUNT_DIALOG_ACTION, this, &Au3CloudActionsController::openSignInDialog);
+    dispatcher()->reg(this, OPEN_CREATE_ACCOUNT_DIALOG_ACTION, this, &Au3CloudActionsController::openCreateAccountDialog);
     dispatcher()->reg(this, OPEN_CLOUD_PROJECT_PAGE_ACTION, this, &Au3CloudActionsController::openCloudProjectPage);
     dispatcher()->reg(this, OPEN_CLOUD_AUDIO_PAGE_ACTION, this, &Au3CloudActionsController::openCloudAudioPage);
 }

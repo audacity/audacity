@@ -80,13 +80,15 @@ FocusScope {
         userAvatarUrl: model.avatarPath
 
         onSignInRequested: {
-            model.openAuthorizationDialog()
+            model.openSignInDialog()
         }
 
         onSignOutRequested: {
             model.signOut()
         }
 
-        onCreateAccountRequested: {}
+        onCreateAccountRequested: {
+            model.openCreateAccountDialog()
+        }
     }
 }

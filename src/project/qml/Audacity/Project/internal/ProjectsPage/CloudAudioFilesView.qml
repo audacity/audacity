@@ -425,7 +425,7 @@ ProjectsView {
 
                         text: qsTrc("cloud", "Sign in")
                         onClicked: {
-                            Qt.callLater(accountModel.openAuthorizationDialog)
+                            Qt.callLater(accountModel.openSignInDialog)
                         }
                     }
 
@@ -434,7 +434,9 @@ ProjectsView {
                         navigation.order: 2
 
                         text: qsTrc("cloud", "Create account")
-                        onClicked: {}
+                        onClicked: {
+                            Qt.callLater(accountModel.openCreateAccountDialog)
+                        }
                     }
                 }
             }

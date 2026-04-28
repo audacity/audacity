@@ -44,9 +44,18 @@ void AccountModel::signOut() const
     authorization()->signOut();
 }
 
-void AccountModel::openAuthorizationDialog() const
+void AccountModel::openSignInDialog() const
 {
     muse::actions::ActionQuery query("audacity://cloud/open-signin-dialog");
+    query.addParam("sync", muse::Val(true));
+    query.addParam("showTourPage", muse::Val(false));
+
+    dispatcher()->dispatch(query);
+}
+
+void AccountModel::openCreateAccountDialog() const
+{
+    muse::actions::ActionQuery query("audacity://cloud/open-create-account-dialog");
     query.addParam("sync", muse::Val(true));
     query.addParam("showTourPage", muse::Val(false));
 

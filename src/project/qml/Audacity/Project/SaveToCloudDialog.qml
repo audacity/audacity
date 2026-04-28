@@ -51,7 +51,7 @@ StyledDialogView {
                 }
                 root.hide()
             } else {
-                model.openAuthorizationDialog()
+                model.openSignInDialog()
             }
         }
     }
