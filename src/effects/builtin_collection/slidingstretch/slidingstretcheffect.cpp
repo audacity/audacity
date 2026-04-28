@@ -41,8 +41,6 @@ const ComponentInterfaceSymbol SlidingStretchEffect::Symbol { wxT("Sliding stret
 
 SlidingStretchEffect::SlidingStretchEffect()
 {
-    Parameters().Reset(*this);
-
     slideTypeRate = SlideLinearOutputRate;
     slideTypePitch = SlideLinearOutputRate;
     bPreview = false;

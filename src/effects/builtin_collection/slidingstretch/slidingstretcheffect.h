@@ -30,12 +30,6 @@ struct SlidingStretchEffectParams
 class SlidingStretchEffect : public EffectWithSettings<SlidingStretchEffectParams, SBSMSBase>
 {
 public:
-    static inline SlidingStretchEffectParams*
-    FetchParameters(SlidingStretchEffect& e, EffectSettings&)
-    {
-        return &e.m_params;
-    }
-
     static const ComponentInterfaceSymbol Symbol;
 
     SlidingStretchEffect();
@@ -70,7 +64,6 @@ public:
     double previewSelectedDuration;
     SlideType slideTypeRate;
     SlideType slideTypePitch;
-    SlidingStretchEffectParams m_params;
 
     const EffectParameterMethods& Parameters() const override;
 
