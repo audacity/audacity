@@ -36,9 +36,9 @@ Item {
         readonly property int spaceM: 8
         readonly property int spaceL: 12
 
-        readonly property int labelWidth: 192
-        readonly property int controlWidth: 160
-        readonly property int numericControlWidth: 160
+        readonly property int labelWidth: 140
+        readonly property int controlWidth: 140
+        readonly property int numericControlWidth: 100
         readonly property int compactInputWidth: 80
         readonly property int valueDisplayWidth: 160
     }
@@ -53,9 +53,11 @@ Item {
         StyledTextLabel {
             id: paramLabel
             Layout.preferredWidth: prv.labelWidth
+            Layout.maximumWidth: prv.labelWidth
             Layout.alignment: Qt.AlignVCenter
             text: parameterData ? parameterData.name : ""
             horizontalAlignment: Text.AlignRight
+            verticalAlignment: Text.AlignVCenter
             wrapMode: Text.WordWrap
         }
 
