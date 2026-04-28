@@ -97,7 +97,8 @@ Rectangle {
         id: tracksModel
 
         onTotalTracksHeightChanged: {
-            timeline.context.onResizeFrameContentHeight(tracksModel.totalTracksHeight)
+            timeline.context.onResizeFrameContentHeight(
+                tracksModel.totalTracksHeight + tracksViewState.tracksVerticalScrollPadding)
         }
 
         onEscapePressed: {
@@ -677,6 +678,11 @@ Rectangle {
 
             verticalScrollbarSize: timeline.context.verticalScrollbarSize
             startVerticalScrollPosition: timeline.context.startVerticalScrollPosition
+
+            scrollbarThickness: 12
+            scrollbarAlwaysVisibleWhenNeeded: true
+            scrollbarOpacityNormal: 0.5
+            scrollbarOpacityPressed: 0.8
 
             StyledListView {
                 id: tracksItemsView

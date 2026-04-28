@@ -142,6 +142,10 @@ void TimelineContext::init(double frameWidth)
         emit lastPlaybackSeekPositionChanged();
     });
 
+    projectHistory()->historyChanged().onReceive(this, [this](auto) {
+        updateFrameTime();
+    });
+
     onProjectChanged();
 }
 
@@ -1150,7 +1154,8 @@ qreal TimelineContext::horizontalScrollableSize() const
         return 0.0;
     }
 
-    double maxEndTime = std::max(m_lastZoomEndTime, project->totalTime().to_double());
+    double totalTime = project->totalTime().to_double();
+    double maxEndTime = std::max(m_lastZoomEndTime, totalTime + (m_frameEndTime - m_frameStartTime) * 3 / 4);
     return timeToContentPosition(maxEndTime);
 }
 

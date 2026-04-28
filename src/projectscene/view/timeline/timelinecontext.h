@@ -14,6 +14,7 @@
 #include "playback/iplayback.h"
 #include "playback/iplaybackcontroller.h"
 #include "trackedit/iselectioncontroller.h"
+#include "trackedit/iprojecthistory.h"
 
 //! NOTE This class does two things:
 //! 1. This is a context that is passed to other classes
@@ -67,6 +68,7 @@ class TimelineContext : public QObject, public muse::async::Asyncable, public mu
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
     muse::ContextInject<context::IGlobalContext> globalContext{ this };
     muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
+    muse::ContextInject<trackedit::IProjectHistory> projectHistory{ this };
     muse::ContextInject<playback::IPlayback> playback{ this };
     muse::ContextInject<playback::IPlaybackController> playbackController{ this };
 
