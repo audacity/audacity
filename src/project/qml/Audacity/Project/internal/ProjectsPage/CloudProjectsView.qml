@@ -21,6 +21,12 @@ ProjectsView {
 
     AccountModel {
         id: accountModel
+
+        onIsAuthorizedChanged: {
+            if (accountModel.isAuthorized) {
+                cloudProjectsModel.load()
+            }
+        }
     }
 
     CloudProjectsModel {
@@ -35,7 +41,10 @@ ProjectsView {
 
     Component.onCompleted: {
         accountModel.init()
-        cloudProjectsModel.load()
+
+        if (accountModel.isAuthorized) {
+            cloudProjectsModel.load()
+        }
     }
 
     Connections {
@@ -107,9 +116,11 @@ ProjectsView {
     }
 
     sourceComponent: {
-        switch (cloudProjectsModel.state) {
-        case CloudProjectsModel.NotSignedIn:
+        if (!accountModel.isAuthorized) {
             return notSignedInComp
+        }
+
+        switch (cloudProjectsModel.state) {
         case CloudProjectsModel.Error:
             return errorComp
         case CloudProjectsModel.Loading:

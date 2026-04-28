@@ -7,7 +7,6 @@
 #include "framework/global/dataformatter.h"
 #include "framework/global/types/datetime.h"
 
-#include "au3cloud/cloudtypes.h"
 #include "project/types/projecttypes.h"
 
 using namespace muse;
@@ -24,25 +23,8 @@ CloudProjectsModel::CloudProjectsModel(QObject* parent)
 
 void CloudProjectsModel::load()
 {
-    const auto authState = authorization()->authState().val;
-    if (std::holds_alternative<au::au3cloud::Authorized>(authState)) {
-        setState(State::Loading);
-        loadItemsIfNecessary();
-    } else if (std::holds_alternative<au::au3cloud::NotAuthorized>(authState)) {
-        setState(State::NotSignedIn);
-    }
-
-    authorization()->authState().ch.onReceive(this, [this](au::au3cloud::AuthState authState) {
-        if (std::holds_alternative < au::au3cloud::NotAuthorized>(authState)) {
-            setState(State::NotSignedIn);
-            return;
-        }
-
-        setState(State::Loading);
-        if (std::holds_alternative<au::au3cloud::Authorized>(authState)) {
-            loadItemsIfNecessary();
-        }
-    }, muse::async::Asyncable::Mode::SetReplace);
+    setState(State::Loading);
+    loadItemsIfNecessary();
 
     connect(this, &CloudProjectsModel::desiredRowCountChanged, this, &CloudProjectsModel::loadItemsIfNecessary);
 }
@@ -108,7 +90,7 @@ void CloudProjectsModel::loadItemsIfNecessary()
         return;
     }
 
-    if (m_state == State::Error || m_state == State::NotSignedIn) {
+    if (m_state == State::Error) {
         return;
     }
 
