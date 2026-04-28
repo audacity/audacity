@@ -118,14 +118,13 @@ Item {
     Component {
         id: dropdownControl
 
-        // Wrapper Item needed to properly communicate size to parent Loader via implicitWidth/Height
-        Item {
-            implicitWidth: dropdown.width
-            implicitHeight: dropdown.height
+        RowLayout {
+            spacing: prv.spaceL
 
             StyledDropdown {
                 id: dropdown
-                width: prv.controlWidth
+                Layout.preferredWidth: prv.controlWidth
+                Layout.alignment: Qt.AlignVCenter
 
                 currentIndex: parameterData ? parameterData.currentEnumIndex : 0
 
@@ -156,6 +155,15 @@ Item {
 
                     root.gestureEnded(root.parameterId)
                 }
+            }
+
+            StyledTextLabel {
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignVCenter
+                text: parameterData ? parameterData.units : ""
+                visible: parameterData && parameterData.units && parameterData.units.length > 0
+                horizontalAlignment: Text.AlignLeft
+                elide: Text.ElideRight
             }
         }
     }
@@ -206,22 +214,20 @@ Item {
     Component {
         id: numericControl
 
-        // Wrapper Item needed to properly communicate size to parent Loader via implicitWidth/Height
-        Item {
-            implicitWidth: numericInput.width
-            implicitHeight: numericInput.height
+        RowLayout {
+            spacing: prv.spaceL
 
             IncrementalPropertyControl {
                 id: numericInput
-                width: prv.numericControlWidth
+                Layout.preferredWidth: prv.numericControlWidth
+                Layout.alignment: Qt.AlignVCenter
 
-                // Always use normalized values (0.0 to 1.0) like AU3 does
                 currentValue: parameterData ? parameterData.currentValue : 0
                 minValue: parameterData ? parameterData.minValue : 0
                 maxValue: parameterData ? parameterData.maxValue : 1
                 step: parameterData && parameterData.stepSize > 0 ? parameterData.stepSize : 0.01
                 decimals: parameterData && parameterData.isInteger ? 0 : 2
-                measureUnitsSymbol: ""  // Don't show units here, show in formatted label
+                measureUnitsSymbol: ""
                 enabled: parameterData ? !parameterData.isReadOnly : false
 
                 // Track editing state for gesture
@@ -256,6 +262,15 @@ Item {
                     }
                 }
             }
+
+            StyledTextLabel {
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignVCenter
+                text: parameterData ? parameterData.units : ""
+                visible: parameterData && parameterData.units && parameterData.units.length > 0
+                horizontalAlignment: Text.AlignLeft
+                elide: Text.ElideRight
+            }
         }
     }
 
@@ -263,13 +278,12 @@ Item {
     Component {
         id: timeControl
 
-        // Wrapper Item needed to properly communicate size to parent Loader via implicitWidth/Height
-        Item {
-            implicitWidth: timecode.width
-            implicitHeight: timecode.height
+        RowLayout {
+            spacing: prv.spaceL
 
             Timecode {
                 id: timecode
+                Layout.alignment: Qt.AlignVCenter
 
                 value: parameterData ? parameterData.currentValue : 0
                 mode: TimecodeModeSelector.Duration
@@ -290,6 +304,15 @@ Item {
                         root.gestureEnded(root.parameterId)
                     }
                 }
+            }
+
+            StyledTextLabel {
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignVCenter
+                text: parameterData ? parameterData.units : ""
+                visible: parameterData && parameterData.units && parameterData.units.length > 0
+                horizontalAlignment: Text.AlignLeft
+                elide: Text.ElideRight
             }
         }
     }
@@ -344,14 +367,13 @@ Item {
     Component {
         id: textControl
 
-        // Wrapper Item needed to properly communicate size to parent Loader via implicitWidth/Height
-        Item {
-            implicitWidth: textField.width
-            implicitHeight: textField.height
+        RowLayout {
+            spacing: prv.spaceL
 
             TextInputField {
                 id: textField
-                width: prv.controlWidth
+                Layout.preferredWidth: prv.controlWidth
+                Layout.alignment: Qt.AlignVCenter
 
                 currentText: parameterData ? parameterData.currentValueString : ""
                 enabled: parameterData ? !parameterData.isReadOnly : false
@@ -361,6 +383,15 @@ Item {
                     root.stringValueChanged(root.parameterId, newTextValue)
                     root.gestureEnded(root.parameterId)
                 }
+            }
+
+            StyledTextLabel {
+                Layout.fillWidth: true
+                Layout.alignment: Qt.AlignVCenter
+                text: parameterData ? parameterData.units : ""
+                visible: parameterData && parameterData.units && parameterData.units.length > 0
+                horizontalAlignment: Text.AlignLeft
+                elide: Text.ElideRight
             }
         }
     }
