@@ -24,7 +24,7 @@ FocusScope {
         readonly property real actualCellHeight: 200
     }
 
-    AccountInfoModel {
+    AccountModel {
         id: model
     }
 

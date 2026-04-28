@@ -56,7 +56,7 @@ StyledDialogView {
         }
     }
 
-    AccountInfoModel {
+    AccountModel {
         id: model
     }
 
