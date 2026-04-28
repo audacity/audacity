@@ -38,10 +38,6 @@ void PluginManagerTableViewModel::componentComplete()
     m_initialState = effectsProvider()->effectMetaList();
     rebuildSourceTable(m_initialState);
 
-    effectsProvider()->effectMetaListChanged().onNotify(this, [this]() {
-        rebuildSourceTable(effectsProvider()->effectMetaList());
-    });
-
     // Initial sort: start from least important.
     m_sortFilterProxy->toggleColumnSort(s_enabledDisabledColumnIndex);
     m_sortFilterProxy->toggleColumnSort(s_pathColumnIndex);
