@@ -23,6 +23,12 @@ ProjectsView {
 
     AccountModel {
         id: accountModel
+
+        onIsAuthorizedChanged: {
+            if (accountModel.isAuthorized) {
+                cloudAudioFilesModel.load()
+            }
+        }
     }
 
     CloudAudioFilesModel {
@@ -37,7 +43,10 @@ ProjectsView {
 
     Component.onCompleted: {
         accountModel.init()
-        cloudAudioFilesModel.load()
+
+        if (accountModel.isAuthorized) {
+            cloudAudioFilesModel.load()
+        }
     }
 
     Connections {
@@ -110,9 +119,11 @@ ProjectsView {
     }
 
     sourceComponent: {
-        switch (cloudAudioFilesModel.state) {
-        case CloudAudioFilesModel.NotSignedIn:
+        if (!accountModel.isAuthorized) {
             return notSignedInComp
+        }
+
+        switch (cloudAudioFilesModel.state) {
         case CloudAudioFilesModel.Error:
             return errorComp
         case CloudAudioFilesModel.Loading:

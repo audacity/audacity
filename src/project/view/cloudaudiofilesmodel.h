@@ -11,7 +11,6 @@
 #include "iprojectconfiguration.h"
 #include "au3cloud/iau3audiocomservice.h"
 #include "framework/global/io/ifilesystem.h"
-#include "au3cloud/iauthorization.h"
 #include "framework/interactive/iinteractive.h"
 
 namespace au::project {
@@ -20,7 +19,6 @@ class CloudAudioFilesModel : public AbstractItemModel, public muse::async::Async
     Q_OBJECT
 
     muse::GlobalInject<au::project::IProjectConfiguration> configuration;
-    muse::GlobalInject<au::au3cloud::IAuthorization> authorization;
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
 
     muse::ContextInject<au::au3cloud::IAu3AudioComService> audioComService { this };
@@ -37,7 +35,6 @@ public:
     enum class State {
         Fine,
         Loading,
-        NotSignedIn,
         Error
     };
     Q_ENUM(State)
