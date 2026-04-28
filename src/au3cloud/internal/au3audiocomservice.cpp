@@ -284,12 +284,6 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::uploadProject(au::project::I
             return;
         }
 
-        if (!project) {
-            progress->finish(muse::make_ret(muse::Ret::Code::InternalError, muse::trc("cloud",
-                                                                                      "Project was closed before upload started")));
-            return;
-        }
-
         au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
         if (!au3Project) {
             progress->finish(muse::make_ret(muse::Ret::Code::InternalError, muse::trc("cloud", "Invalid project")));
@@ -297,7 +291,6 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::uploadProject(au::project::I
         }
 
         auto& projectCloudExtension = audacity::cloud::audiocom::sync::ProjectCloudExtension::Get(*au3Project);
-
         if (projectCloudExtension.IsSyncing()) {
             projectCloudExtension.CancelSync();
         }
@@ -319,9 +312,10 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::uploadProject(au::project::I
                     [](const UploadSubscriptionEntry& e) { return e.done->load(); }),
                 self->m_projectUploadSubscriptions.end());
 
+            const auto cloudProjectPage = projectCloudExtension.GetCloudProjectPage(AudiocomTrace::SaveProjectSaveToCloudMenu);
             self->m_projectUploadSubscriptions.push_back(
                 { projectCloudExtension.SubscribeStatusChanged(
-                      [self, project, progress, done](
+                      [progress, done, cloudProjectPage](
                           const audacity::cloud::audiocom::sync::CloudStatusChangedMessage& message) {
                     if (done->load()) {
                         return;
@@ -333,7 +327,7 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::uploadProject(au::project::I
 
                     if (message.Status == audacity::cloud::audiocom::sync::ProjectSyncStatus::Synced) {
                         done->store(true);
-                        progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(self->getCloudProjectPage(project))));
+                        progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(cloudProjectPage)));
                     }
 
                     if (message.Status == audacity::cloud::audiocom::sync::ProjectSyncStatus::Failed) {
@@ -354,7 +348,6 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::uploadProject(au::project::I
             AudiocomTrace::SaveProjectSaveToCloudMenu);
 
         auto result = future.get();
-
         if (!result.Response) {
             return;
         }
@@ -365,18 +358,18 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::uploadProject(au::project::I
                 if (ret) {
                     return;
                 }
+
+                au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
+                if (!au3Project) {
+                    return;
+                }
+
+                auto& projectCloudExtension = audacity::cloud::audiocom::sync::ProjectCloudExtension::Get(*au3Project);
+                projectCloudExtension.OnSyncCompleted(nullptr,
+                                                      audacity::cloud::audiocom::sync::CloudSyncError {
+                    audacity::cloud::audiocom::sync::CloudSyncError::Aborted, muse::trc("project", "Could not save project locally") },
+                                                      AudiocomTrace::SaveProjectSaveToCloudMenu);
             }, muse::runtime::mainThreadId());
-
-            au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
-            if (!au3Project) {
-                return;
-            }
-
-            auto& projectCloudExtension = audacity::cloud::audiocom::sync::ProjectCloudExtension::Get(*au3Project);
-            projectCloudExtension.OnSyncCompleted(nullptr,
-                                                  audacity::cloud::audiocom::sync::CloudSyncError {
-                audacity::cloud::audiocom::sync::CloudSyncError::Aborted, muse::trc("project", "Could not save project locally") },
-                                                  AudiocomTrace::SaveProjectSaveToCloudMenu);
         }
     }).detach();
 
@@ -414,14 +407,6 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::resumeProjectSync(au::projec
     audacity::cloud::audiocom::sync::ResumeProjectUpload(projectCloudExtension, {});
 
     return muse::RetVal<muse::ProgressPtr>::make_ok(progress);
-}
-
-std::string Au3AudioComService::getCloudProjectPage(au::project::IAudacityProjectPtr project) const
-{
-    au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
-
-    auto& projectCloudExtension = audacity::cloud::audiocom::sync::ProjectCloudExtension::Get(*au3Project);
-    return projectCloudExtension.GetCloudProjectPage(AudiocomTrace::SaveProjectSaveToCloudMenu);
 }
 
 std::string Au3AudioComService::getCloudProjectPage(const std::string& slug) const
