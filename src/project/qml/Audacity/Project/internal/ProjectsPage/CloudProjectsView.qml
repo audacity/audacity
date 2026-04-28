@@ -7,7 +7,9 @@ import QtQuick.Controls 2.15
 
 import Muse.Ui 1.0
 import Muse.UiComponents
+
 import Audacity.Project 1.0
+import Audacity.Cloud 1.0
 
 ProjectsView {
     id: root
@@ -15,6 +17,10 @@ ProjectsView {
     function refresh() {
         cloudProjectsModel.reload()
         prv.updateDesiredRowCount()
+    }
+
+    AccountModel {
+        id: accountModel
     }
 
     CloudProjectsModel {
@@ -28,6 +34,7 @@ ProjectsView {
     }
 
     Component.onCompleted: {
+        accountModel.init()
         cloudProjectsModel.load()
     }
 
@@ -298,7 +305,7 @@ ProjectsView {
         Item {
             anchors.fill: parent
 
-            Message {
+            Column {
                 anchors.top: parent.top
                 anchors.topMargin: Math.max(parent.height / 3 - height / 2, 0)
                 anchors.left: parent.left
@@ -306,8 +313,47 @@ ProjectsView {
                 anchors.right: parent.right
                 anchors.rightMargin: root.sideMargin
 
-                title: qsTrc("project", "You are not signed in")
-                body: qsTrc("project", "Please sign in to view your online projects")
+                spacing: 32
+
+                Message {
+                    width: parent.width
+
+                    title: qsTrc("project", "You are not signed in")
+                    body: qsTrc("project", "Please sign in to view your online projects")
+                }
+
+                Row {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    width: implicitWidth
+                    spacing: 12
+
+                    NavigationPanel {
+                        id: navPanel
+                        name: "SignInButtons"
+                        section: root.navigationSection
+                        order: root.navigationOrder
+                        direction: NavigationPanel.Horizontal
+                        accessible.name: qsTrc("cloud", "Sign in buttons")
+                    }
+
+                    FlatButton {
+                        navigation.panel: navPanel
+                        navigation.order: 1
+
+                        text: qsTrc("cloud", "Sign in")
+                        onClicked: {
+                            Qt.callLater(accountModel.openAuthorizationDialog)
+                        }
+                    }
+
+                    FlatButton {
+                        navigation.panel: navPanel
+                        navigation.order: 2
+
+                        text: qsTrc("cloud", "Create account")
+                        onClicked: {}
+                    }
+                }
             }
         }
     }

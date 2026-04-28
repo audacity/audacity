@@ -29,11 +29,6 @@ void CloudProjectsModel::load()
         setState(State::Loading);
         loadItemsIfNecessary();
     } else if (std::holds_alternative<au::au3cloud::NotAuthorized>(authState)) {
-        muse::actions::ActionQuery query("audacity://cloud/open-signin-dialog");
-        query.addParam("sync", muse::Val(false));
-        query.addParam("showTourPage", muse::Val(false));
-        dispatcher()->dispatch(query);
-
         setState(State::NotSignedIn);
     }
 
