@@ -13,7 +13,7 @@ StyledDialogView {
 
     property alias isCreateAccountMode: signinPage.isCreateAccountMode
 
-    title: qsTrc("appshell/gettingstarted", "Sign in to audio.com")
+    title: isCreateAccountMode ? qsTrc("cloud", "Create an account on audio.com") : qsTrc("cloud", "Sign in to audio.com")
 
     contentHeight: content.implicitHeight
     contentWidth: content.implicitWidth
