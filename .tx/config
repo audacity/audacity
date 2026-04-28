@@ -2,7 +2,13 @@
 host = https://app.transifex.com
 
 [o:audacity:p:audacity:r:audacity4]
-file_filter = share/locale/audacity_<lang>.ts
-source_file = share/locale/audacity_en.ts
+file_filter = share/locale/audacity4_<lang>.ts
+source_file = share/locale/audacity4_en.ts
+source_lang = en
+type        = QT
+
+[o:audacity:p:audacity:r:museframework]
+file_filter = share/locale/museframework_<lang>.ts
+source_file = share/locale/museframework_en.ts
 source_lang = en
 type        = QT

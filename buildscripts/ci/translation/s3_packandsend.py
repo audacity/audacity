@@ -12,6 +12,8 @@ from urllib.parse import urlparse, urlunparse
 period = 300
 outputDir = "share/locale/"
 
+TRANSLATION_PREFIXES = ("audacity4", "museframework")
+
 
 def getS3Url():
     override = os.environ.get("S3_UPLOAD_URL")
@@ -40,7 +42,10 @@ def processTsFile(prefix, langCode, data):
 
     if not os.path.isfile(tsFilePath):
         print(prefix + ' ' + langCode + " skipped (no .ts file — not sufficiently translated on Transifex yet)")
-        removed = data.pop(langCode, None) is not None
+        removed = False
+        if langCode in data and prefix in data[langCode]:
+            data[langCode].pop(prefix)
+            removed = True
         return False, removed
 
     lang_time = int(os.path.getmtime(tsFilePath))
@@ -101,16 +106,20 @@ else:
 
 translationChanged = newDetailsFile
 for lang_code, languageProps in langCodeNameDict.items():
-    updateAudacity, detailsChanged = processTsFile("audacity", lang_code, data)
-    translationChanged = detailsChanged or translationChanged
+    results = [processTsFile(p, lang_code, data) for p in TRANSLATION_PREFIXES]
+    anyUpdated = any(update for update, _ in results)
+    anyDetailsChanged = any(changed for _, changed in results)
+    translationChanged = anyDetailsChanged or translationChanged
 
-    if updateAudacity:
+    if anyUpdated:
         # create a zip file, compute size, hash, add it to json and save to s3
         zipName = 'locale_' + lang_code + '.zip'
         zipPath = outputDir + zipName
         myzip = zipfile.ZipFile(zipPath, mode='w')
-        qmFilePath = outputDir + 'audacity_' + lang_code + ".qm"
-        myzip.write(qmFilePath, 'audacity_' + lang_code + ".qm")
+        for prefix in TRANSLATION_PREFIXES:
+            qmFilePath = outputDir + prefix + '_' + lang_code + ".qm"
+            if os.path.isfile(qmFilePath):
+                myzip.write(qmFilePath, prefix + '_' + lang_code + ".qm")
         myzip.close()
 
         # get zip file size
