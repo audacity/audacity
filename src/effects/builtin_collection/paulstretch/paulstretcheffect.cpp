@@ -428,12 +428,6 @@ void PaulStretch::process(float* smps, size_t nsmps)
 
     FFT(poolsize, true, fft_c.get(), fft_s.get(), fft_smps.get(), fft_tmp.get());
 
-    float max = 0.0, max2 = 0.0;
-    for (size_t i = 0; i < poolsize; i++) {
-        max = std::max(max, fabsf(fft_tmp[i]));
-        max2 = std::max(max2, fabsf(fft_smps[i]));
-    }
-
     // make the output buffer
     float tmp = 1.0 / (float)out_bufsize * M_PI;
     float hinv_sqrt2 = 0.853553390593f; //(1.0+1.0/sqrt(2))*0.5;
