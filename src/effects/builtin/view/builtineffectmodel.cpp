@@ -3,6 +3,7 @@
 */
 #include "builtineffectmodel.h"
 
+#include "framework/global/defer.h"
 #include "framework/global/log.h"
 
 using namespace au::effects;
@@ -16,6 +17,9 @@ BuiltinEffectModel::BuiltinEffectModel(QObject* parent, int instanceId)
 void BuiltinEffectModel::doInit()
 {
     instancesRegister()->settingsChanged(m_instanceId).onNotify(this, [this]() {
+        if (m_selfNotificationDepth > 0) {
+            return;
+        }
         doReload();
     });
 
@@ -73,6 +77,10 @@ void BuiltinEffectModel::modifySettings(const std::function<void(EffectSettings&
         return nullptr;
     });
 
+    ++m_selfNotificationDepth;
+    DEFER {
+        --m_selfNotificationDepth;
+    };
     instancesRegister()->notifyAboutSettingsChanged(m_instanceId);
 }
 
