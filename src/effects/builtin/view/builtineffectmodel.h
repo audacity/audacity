@@ -78,5 +78,7 @@ private:
     void doStopPreview() override;
 
     EffectSettingsAccessPtr settingsAccess() const;
+
+    int m_selfNotificationDepth = 0;
 };
 }
