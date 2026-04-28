@@ -80,7 +80,7 @@ void ProjectSceneConfiguration::init()
     });
 
     muse::settings()->setDefaultValue(STEREO_HEIGHTS_PREF,
-                                      muse::Val(StereoHeightsPref::AsymmetricStereoHeights::WORKSPACE_DEPENDENT));
+                                      muse::Val(StereoHeightsPref::AsymmetricStereoHeights::NEVER));
     muse::settings()->valueChanged(STEREO_HEIGHTS_PREF).onReceive(nullptr, [this](const muse::Val&) {
         m_asymmetricStereoHeightsChanged.notify();
     });
