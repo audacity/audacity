@@ -106,12 +106,12 @@ signals:
 private:
     friend class PluginManagerSortFilterProxy;
 
-    static constexpr auto enabledDisabledColumnIndex = 0;
-    static constexpr auto nameColumnIndex = 1;
-    static constexpr auto vendorColumnIndex = 2;
-    static constexpr auto pathColumnIndex = 3;
-    static constexpr auto typeColumnIndex = 4;
-    static constexpr auto columnCount = 5;
+    static constexpr auto s_enabledDisabledColumnIndex = 0;
+    static constexpr auto s_nameColumnIndex = 1;
+    static constexpr auto s_vendorColumnIndex = 2;
+    static constexpr auto s_pathColumnIndex = 3;
+    static constexpr auto s_typeColumnIndex = 4;
+    static constexpr auto s_columnCount = 5;
 
     void classBegin() override {}
     void componentComplete() override;

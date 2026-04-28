@@ -12,7 +12,7 @@ namespace au::effects {
 PluginManagerSortFilterProxy::PluginManagerSortFilterProxy(PluginManagerTableViewModel* view)
     : au::uicomponents::TableSortFilterProxyModel(view), m_view(view)
 {
-    setMaxSortKeys(PluginManagerTableViewModel::columnCount);
+    setMaxSortKeys(PluginManagerTableViewModel::s_columnCount);
 }
 
 bool PluginManagerSortFilterProxy::acceptsRow(int sourceRow) const
@@ -70,15 +70,15 @@ int PluginManagerSortFilterProxy::compareCells(int column, int leftSourceRow, in
     };
 
     switch (column) {
-    case PluginManagerTableViewModel::enabledDisabledColumnIndex:
+    case PluginManagerTableViewModel::s_enabledDisabledColumnIndex:
         return cmpBool(a.isActivated, b.isActivated);
-    case PluginManagerTableViewModel::nameColumnIndex:
+    case PluginManagerTableViewModel::s_nameColumnIndex:
         return cmpStr(a.title, b.title);
-    case PluginManagerTableViewModel::pathColumnIndex:
+    case PluginManagerTableViewModel::s_pathColumnIndex:
         return cmpStr(a.path.toString(), b.path.toString());
-    case PluginManagerTableViewModel::typeColumnIndex:
+    case PluginManagerTableViewModel::s_typeColumnIndex:
         return cmpStr(utils::effectFamilyToString(a.family), utils::effectFamilyToString(b.family));
-    case PluginManagerTableViewModel::vendorColumnIndex:
+    case PluginManagerTableViewModel::s_vendorColumnIndex:
         return cmpStr(a.vendor, b.vendor);
     default:
         break;

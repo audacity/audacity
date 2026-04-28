@@ -43,11 +43,11 @@ void PluginManagerTableViewModel::componentComplete()
     });
 
     // Initial sort: start from least important.
-    m_sortFilterProxy->toggleColumnSort(enabledDisabledColumnIndex);
-    m_sortFilterProxy->toggleColumnSort(pathColumnIndex);
-    m_sortFilterProxy->toggleColumnSort(typeColumnIndex);
-    m_sortFilterProxy->toggleColumnSort(vendorColumnIndex);
-    m_sortFilterProxy->toggleColumnSort(nameColumnIndex);
+    m_sortFilterProxy->toggleColumnSort(s_enabledDisabledColumnIndex);
+    m_sortFilterProxy->toggleColumnSort(s_pathColumnIndex);
+    m_sortFilterProxy->toggleColumnSort(s_typeColumnIndex);
+    m_sortFilterProxy->toggleColumnSort(s_vendorColumnIndex);
+    m_sortFilterProxy->toggleColumnSort(s_nameColumnIndex);
 }
 
 void PluginManagerTableViewModel::aboutToDestroy()
