@@ -54,19 +54,6 @@ bool SigninAudiocomPageModel::authorized() const
     return std::holds_alternative<au3cloud::Authorized>(m_state);
 }
 
-bool SigninAudiocomPageModel::isRegistering() const
-{
-    return m_isRegistering;
-}
-
-void SigninAudiocomPageModel::setIsRegistering(bool isRegistering)
-{
-    if (m_isRegistering != isRegistering) {
-        m_isRegistering = isRegistering;
-        emit isRegisteringChanged();
-    }
-}
-
 bool SigninAudiocomPageModel::showErrorMessage() const
 {
     return !m_errorMessage.isEmpty();

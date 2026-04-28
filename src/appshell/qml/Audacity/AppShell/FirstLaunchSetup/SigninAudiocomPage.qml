@@ -11,6 +11,8 @@ import Audacity.AppShell
 Page {
     id: root
 
+    property bool isCreateAccountMode: false
+
     title: qsTrc("appshell/gettingstarted", "Connect to your audio.com account")
     titleTopMargin: 16
 
@@ -58,7 +60,7 @@ Page {
                 return
             }
 
-            model.isRegistering ? model.signUpWithEmail(emailInputField.inputField.text, passwordInputField.inputField.text) : model.signInWithEmail(emailInputField.inputField.text, passwordInputField.inputField.text)
+            root.isCreateAccountMode ? model.signUpWithEmail(emailInputField.inputField.text, passwordInputField.inputField.text) : model.signInWithEmail(emailInputField.inputField.text, passwordInputField.inputField.text)
         }
     }
 
@@ -239,7 +241,7 @@ Page {
                 }
 
                 FocusableControl {
-                    visible: !model.isRegistering
+                    visible: !root.isCreateAccountMode
 
                     implicitWidth: forgotPasswordLabel.implicitWidth
                     implicitHeight: forgotPasswordLabel.implicitHeight
@@ -343,7 +345,7 @@ Page {
                 accentButton: true
 
                 text: {
-                    if (model.isRegistering) {
+                    if (root.isCreateAccountMode) {
                         return prv.formButtonTextCreateAccount
                     }
 
@@ -364,7 +366,7 @@ Page {
             spacing: prv.textLinkSpacing
 
             StyledTextLabel {
-                text: model.isRegistering ? prv.haveAccountText : prv.noAccountText
+                text: root.isCreateAccountMode ? prv.haveAccountText : prv.noAccountText
             }
 
             FocusableControl {
@@ -381,23 +383,23 @@ Page {
                     section: root.navigationSection
                     direction: NavigationPanel.Vertical
                     order: root.navigationStartRow + 6
-                    accessible.name: model.isRegistering ? qsTrc("appshell/gettingstarted", "Sign in link") : qsTrc("appshell/gettingstarted", "Create account link")
+                    accessible.name: root.isCreateAccountMode ? qsTrc("appshell/gettingstarted", "Sign in link") : qsTrc("appshell/gettingstarted", "Create account link")
                 }
 
                 navigation.name: "AccountLink"
                 navigation.panel: accountLinkPanel
                 navigation.row: 0
                 navigation.column: 0
-                navigation.accessible.name: model.isRegistering ? prv.signInLinkText : prv.createAccountLinkText
+                navigation.accessible.name: root.isCreateAccountMode ? prv.signInLinkText : prv.createAccountLinkText
 
                 onNavigationTriggered: {
-                    model.isRegistering = !model.isRegistering
+                    root.isCreateAccountMode = !root.isCreateAccountMode
                 }
 
                 StyledTextLabel {
                     id: accountLinkLabel
                     anchors.fill: parent
-                    text: model.isRegistering ? prv.signInLinkText : prv.createAccountLinkText
+                    text: root.isCreateAccountMode ? prv.signInLinkText : prv.createAccountLinkText
                     color: ui.theme.linkColor
                     font.underline: true
 
@@ -406,7 +408,7 @@ Page {
                         cursorShape: Qt.PointingHandCursor
 
                         onClicked: {
-                            model.isRegistering = !model.isRegistering
+                            root.isCreateAccountMode = !root.isCreateAccountMode
                         }
                     }
                 }
