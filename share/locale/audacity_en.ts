@@ -38,17 +38,9 @@
         <translation type="unfinished">Full screen</translation>
     </message>
     <message>
-        <source>&amp;About MuseScore…</source>
-        <translation type="unfinished">&amp;About MuseScore…</translation>
-    </message>
-    <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="69"/>
         <source>About &amp;Qt…</source>
         <translation type="unfinished">About &amp;Qt…</translation>
-    </message>
-    <message>
-        <source>About &amp;MusicXML…</source>
-        <translation type="unfinished">About &amp;MusicXML…</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="74"/>
@@ -96,14 +88,6 @@
         <translation type="unfinished">Show/hide playback controls</translation>
     </message>
     <message>
-        <source>&amp;Note input</source>
-        <translation type="unfinished">&amp;Note input</translation>
-    </message>
-    <message>
-        <source>Show/hide note input toolbar</source>
-        <translation type="unfinished">Show/hide note input toolbar</translation>
-    </message>
-    <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="109"/>
         <source>&amp;Tracks</source>
         <translation type="unfinished">&amp;Tracks</translation>
@@ -112,66 +96,6 @@
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="110"/>
         <source>Show/hide tracks</source>
         <translation type="unfinished">Show/hide tracks</translation>
-    </message>
-    <message>
-        <source>Instr&amp;uments</source>
-        <translation type="unfinished">Instr&amp;uments</translation>
-    </message>
-    <message>
-        <source>Open instruments dialog…</source>
-        <translation type="unfinished">Open instruments dialog…</translation>
-    </message>
-    <message>
-        <source>Propert&amp;ies</source>
-        <translation type="unfinished">Propert&amp;ies</translation>
-    </message>
-    <message>
-        <source>Show/hide properties</source>
-        <translation type="unfinished">Show/hide properties</translation>
-    </message>
-    <message>
-        <source>Se&amp;lection filter</source>
-        <translation type="unfinished">Se&amp;lection filter</translation>
-    </message>
-    <message>
-        <source>Show/hide selection filter</source>
-        <translation type="unfinished">Show/hide selection filter</translation>
-    </message>
-    <message>
-        <source>&amp;Navigator</source>
-        <translation type="unfinished">&amp;Navigator</translation>
-    </message>
-    <message>
-        <source>Show/hide navigator</source>
-        <translation type="unfinished">Show/hide navigator</translation>
-    </message>
-    <message>
-        <source>&amp;Braille</source>
-        <translation type="unfinished">&amp;Braille</translation>
-    </message>
-    <message>
-        <source>Show/hide braille panel</source>
-        <translation type="unfinished">Show/hide braille panel</translation>
-    </message>
-    <message>
-        <source>Tim&amp;eline</source>
-        <translation type="unfinished">Tim&amp;eline</translation>
-    </message>
-    <message>
-        <source>Show/hide timeline</source>
-        <translation type="unfinished">Show/hide timeline</translation>
-    </message>
-    <message>
-        <source>Piano &amp;keyboard</source>
-        <translation type="unfinished">Piano &amp;keyboard</translation>
-    </message>
-    <message>
-        <source>Show/hide piano keyboard</source>
-        <translation type="unfinished">Show/hide piano keyboard</translation>
-    </message>
-    <message>
-        <source>Score comparison tool</source>
-        <translation type="unfinished">Score comparison tool</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="64"/>
@@ -570,14 +494,6 @@
         <translation type="unfinished">Pan automatically during playback</translation>
     </message>
     <message>
-        <source>Pan score automatically</source>
-        <translation type="unfinished">Pan score automatically</translation>
-    </message>
-    <message>
-        <source>Pan score automatically during playback</source>
-        <translation type="unfinished">Pan score automatically during playback</translation>
-    </message>
-    <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="23"/>
         <source>&amp;New…</source>
         <translation type="unfinished">&amp;New…</translation>
@@ -598,22 +514,10 @@
         <translation type="unfinished">Open…</translation>
     </message>
     <message>
-        <source>&amp;Open cloud project…</source>
-        <translation type="unfinished">&amp;Open cloud project…</translation>
-    </message>
-    <message>
-        <source>Open cloud project…</source>
-        <translation type="unfinished">Open cloud project…</translation>
-    </message>
-    <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="35"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="36"/>
         <source>Open</source>
         <translation type="unfinished">Open</translation>
-    </message>
-    <message>
-        <source>Open cloud audio</source>
-        <translation type="unfinished">Open cloud audio</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="41"/>
@@ -624,10 +528,6 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="42"/>
         <source>Clear recent files</source>
         <translation type="unfinished">Clear recent files</translation>
-    </message>
-    <message>
-        <source>Import</source>
-        <translation type="unfinished">Import</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="53"/>
@@ -654,14 +554,6 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="66"/>
         <source>Save backup</source>
         <translation type="unfinished">Save backup</translation>
-    </message>
-    <message>
-        <source>&amp;Export audio</source>
-        <translation type="unfinished">&amp;Export audio</translation>
-    </message>
-    <message>
-        <source>Export audio</source>
-        <translation type="unfinished">Export audio</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="77"/>
@@ -739,42 +631,6 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="134"/>
         <source>Paste new label</source>
         <translation type="unfinished">Paste new label</translation>
-    </message>
-    <message>
-        <source>Cut labels</source>
-        <translation type="unfinished">Cut labels</translation>
-    </message>
-    <message>
-        <source>Cut labels and leave gap</source>
-        <translation type="unfinished">Cut labels and leave gap</translation>
-    </message>
-    <message>
-        <source>Copy labels</source>
-        <translation type="unfinished">Copy labels</translation>
-    </message>
-    <message>
-        <source>Delete labels</source>
-        <translation type="unfinished">Delete labels</translation>
-    </message>
-    <message>
-        <source>Delete labels and leave gap</source>
-        <translation type="unfinished">Delete labels and leave gap</translation>
-    </message>
-    <message>
-        <source>Split labels</source>
-        <translation type="unfinished">Split labels</translation>
-    </message>
-    <message>
-        <source>Merge labels</source>
-        <translation type="unfinished">Merge labels</translation>
-    </message>
-    <message>
-        <source>Silence labels</source>
-        <translation type="unfinished">Silence labels</translation>
-    </message>
-    <message>
-        <source>Disjoin labels</source>
-        <translation type="unfinished">Disjoin labels</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="139"/>
@@ -899,18 +755,6 @@
         <translation type="unfinished">Zoom toggle</translation>
     </message>
     <message>
-        <source>Zoom reset</source>
-        <translation type="unfinished">Zoom reset</translation>
-    </message>
-    <message>
-        <source>Fit project to window</source>
-        <translation type="unfinished">Fit project to window</translation>
-    </message>
-    <message>
-        <source>Fit view to project</source>
-        <translation type="unfinished">Fit view to project</translation>
-    </message>
-    <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="233"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="234"/>
         <source>Collapse all tracks</source>
@@ -969,10 +813,6 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="293"/>
         <source>Set up timed recording</source>
         <translation type="unfinished">Set up timed recording</translation>
-    </message>
-    <message>
-        <source>Punch and roll record</source>
-        <translation type="unfinished">Punch and roll record</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="298"/>
@@ -1053,10 +893,6 @@
         <translation type="unfinished">Sort by name</translation>
     </message>
     <message>
-        <source>Keep tracks synchronised</source>
-        <translation type="unfinished">Keep tracks synchronised</translation>
-    </message>
-    <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="392"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="393"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="400"/>
@@ -1067,10 +903,6 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="453"/>
         <source>Plugin manager</source>
         <translation type="unfinished">Plugin manager</translation>
-    </message>
-    <message>
-        <source>(Omitted)</source>
-        <translation type="unfinished">(Omitted)</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="406"/>
@@ -1095,10 +927,6 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="425"/>
         <source>Fav effect #3</source>
         <translation type="unfinished">Fav effect #3</translation>
-    </message>
-    <message>
-        <source>(Plugins omitted)</source>
-        <translation type="unfinished">(Plugins omitted)</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="47"/>
@@ -1285,14 +1113,6 @@
         <translation type="unfinished">Link account</translation>
     </message>
     <message>
-        <source>Updates</source>
-        <translation type="unfinished">Updates</translation>
-    </message>
-    <message>
-        <source>About Audacity</source>
-        <translation type="unfinished">About Audacity</translation>
-    </message>
-    <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="612"/>
         <source>Save to clo&amp;ud…</source>
         <translation type="unfinished">Save to clo&amp;ud…</translation>
@@ -1329,10 +1149,6 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="30"/>
         <source>Split tool</source>
         <translation type="unfinished">Split tool</translation>
-    </message>
-    <message>
-        <source>Fit selection to width</source>
-        <translation type="unfinished">Fit selection to width</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="63"/>
@@ -1746,10 +1562,6 @@
         <translation type="unfinished">Below item</translation>
     </message>
     <message>
-        <source>Spectogram</source>
-        <translation type="unfinished">Spectogram</translation>
-    </message>
-    <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="248"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="249"/>
         <source>Multi-view</source>
@@ -1838,18 +1650,6 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="346"/>
         <source>Add label</source>
         <translation type="unfinished">Add label</translation>
-    </message>
-    <message>
-        <source>Delete label</source>
-        <translation type="unfinished">Delete label</translation>
-    </message>
-    <message>
-        <source>Cut label</source>
-        <translation type="unfinished">Cut label</translation>
-    </message>
-    <message>
-        <source>Copy label</source>
-        <translation type="unfinished">Copy label</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="351"/>
@@ -1946,14 +1746,6 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="447"/>
         <source>Previous item</source>
         <translation type="unfinished">Previous item</translation>
-    </message>
-    <message>
-        <source>Next track</source>
-        <translation type="unfinished">Next track</translation>
-    </message>
-    <message>
-        <source>Previous track</source>
-        <translation type="unfinished">Previous track</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="466"/>
@@ -2057,10 +1849,6 @@
         <translation type="unfinished">All</translation>
     </message>
     <message>
-        <source>MuseScore</source>
-        <translation type="unfinished">MuseScore</translation>
-    </message>
-    <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/MainToolBar.qml" line="64"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/WindowContent.qml" line="61"/>
         <source>Main toolbar</source>
@@ -2070,10 +1858,6 @@
         <location filename="../../src/appshell/qml/Audacity/AppShell/platform/AppMenuBar.qml" line="71"/>
         <source>Application menu</source>
         <translation type="unfinished">Application menu</translation>
-    </message>
-    <message>
-        <source>MuseScore 4</source>
-        <translation type="unfinished">MuseScore 4</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="157"/>
@@ -2122,30 +1906,35 @@
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="325"/>
-        <source>This action will reset all your app preferences and delete all custom palettes and custom shortcuts. The list of recent projects will also be cleared.
+        <source>This action will reset all your app preferences and custom UI configurations. It also deletes your custom workspaces and shortcuts. You will also need to scan all third party plugins again.
 
 This action will not delete any of your projects.</source>
-        <translation type="unfinished">This action will reset all your app preferences and delete all custom palettes and custom shortcuts. The list of recent projects will also be cleared.
+        <translation type="unfinished">This action will reset all your app preferences and custom UI configurations. It also deletes your custom workspaces and shortcuts. You will also need to scan all third party plugins again.
 
 This action will not delete any of your projects.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="334"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="337"/>
         <source>Revert</source>
         <translation type="unfinished">Revert</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="346"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="339"/>
+        <source>Revert to factory settings</source>
+        <translation type="unfinished">Revert to factory settings</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="351"/>
         <source>Would you like to restart Audacity now?</source>
         <translation type="unfinished">Would you like to restart Audacity now?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="347"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="352"/>
         <source>Audacity needs to be restarted for these changes to take effect.</source>
         <translation type="unfinished">Audacity needs to be restarted for these changes to take effect.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="352"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="358"/>
         <source>Restart</source>
         <translation type="unfinished">Restart</translation>
     </message>
@@ -2195,6 +1984,11 @@ This action will not delete any of your projects.</translation>
         <translation type="unfinished">Scan plugins</translation>
     </message>
     <message>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="69"/>
+        <source>Audio plugin scan</source>
+        <translation type="unfinished">Audio plugin scan</translation>
+    </message>
+    <message>
         <location filename="../../src/appshell/internal/startupscenario.cpp" line="282"/>
         <source>The previous session quit unexpectedly.</source>
         <translation type="unfinished">The previous session quit unexpectedly.</translation>
@@ -2231,10 +2025,6 @@ This action will not delete any of your projects.</translation>
         <translation type="unfinished">%1 %2- Audacity 4</translation>
     </message>
     <message>
-        <source>%1 - Audacity 4</source>
-        <translation type="unfinished">%1 - Audacity 4</translation>
-    </message>
-    <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/Main.wasm.qml" line="36"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/platform/win/AppTitleBar.qml" line="92"/>
         <source>Audacity</source>
@@ -2243,37 +2033,6 @@ This action will not delete any of your projects.</translation>
 </context>
 <context>
     <name>appshell/about</name>
-    <message>
-        <source>About MuseScore</source>
-        <translation type="unfinished">About MuseScore</translation>
-    </message>
-    <message>
-        <source>Version:</source>
-        <translation type="unfinished">Version:</translation>
-    </message>
-    <message>
-        <source>Revision:</source>
-        <translation type="unfinished">Revision:</translation>
-    </message>
-    <message>
-        <source>Visit %1 for new versions and more information.</source>
-        <extracomment>%1 will be a link to the MuseScore website</extracomment>
-        <translation type="unfinished">Visit %1 for new versions and more information.</translation>
-    </message>
-    <message>
-        <source>Get &lt;a href=&quot;%1&quot;&gt;help&lt;/a&gt; with the program or &lt;a href=&quot;%2&quot;&gt;contribute&lt;/a&gt; to its development.</source>
-        <translation type="unfinished">Get &lt;a href=&quot;%1&quot;&gt;help&lt;/a&gt; with the program or &lt;a href=&quot;%2&quot;&gt;contribute&lt;/a&gt; to its development.</translation>
-    </message>
-    <message>
-        <source>For privacy information, see our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt;.</source>
-        <translation type="unfinished">For privacy information, see our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt;.</translation>
-    </message>
-    <message>
-        <source>Copyright © 1999-2024 MuseScore BVBA and others.
-Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License version 3&lt;/a&gt;.</source>
-        <translation type="unfinished">Copyright © 1999-2024 MuseScore BVBA and others.
-Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License version 3&lt;/a&gt;.</translation>
-    </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutMusicXMLDialog.qml" line="32"/>
         <source>About MusicXML</source>
@@ -2896,13 +2655,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
     </message>
 </context>
 <context>
-    <name>appshell/menu/audio-actions</name>
-    <message>
-        <source>Audio actions across labels</source>
-        <translation type="unfinished">Audio actions across labels</translation>
-    </message>
-</context>
-<context>
     <name>appshell/menu/clip</name>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="241"/>
@@ -2948,10 +2700,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <source>Test&amp;flow</source>
         <translation type="unfinished">Test&amp;flow</translation>
     </message>
-    <message>
-        <source>Auto&amp;bot</source>
-        <translation type="unfinished">Auto&amp;bot</translation>
-    </message>
 </context>
 <context>
     <name>appshell/menu/diagnostics</name>
@@ -2984,10 +2732,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="469"/>
         <source>Test&amp;flow</source>
         <translation type="unfinished">Test&amp;flow</translation>
-    </message>
-    <message>
-        <source>Auto&amp;bot</source>
-        <translation type="unfinished">Auto&amp;bot</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="474"/>
@@ -3288,10 +3032,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation type="unfinished">VBL</translation>
     </message>
     <message>
-        <source>Accent color:</source>
-        <translation type="unfinished">Accent color:</translation>
-    </message>
-    <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioEngineSection.qml" line="33"/>
         <source>Audio engine</source>
         <translation type="unfinished">Audio engine</translation>
@@ -3317,14 +3057,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation type="unfinished">Update checking requires network access. In order to protect your privacy, Audacity does not store any personal information. See our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt; for more info.</translation>
     </message>
     <message>
-        <source>Check to see if a new version of MuseScore is available</source>
-        <translation type="unfinished">Check to see if a new version of MuseScore is available</translation>
-    </message>
-    <message>
-        <source>Update checking requires network access. In order to protect your privacy, MuseScore does not store any personal information. See our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt; for more info.</source>
-        <translation type="unfinished">Update checking requires network access. In order to protect your privacy, MuseScore does not store any personal information. See our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt; for more info.</translation>
-    </message>
-    <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutoSaveSection.qml" line="32"/>
         <source>Auto save</source>
         <translation type="unfinished">Auto save</translation>
@@ -3333,10 +3065,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutoSaveSection.qml" line="51"/>
         <source>Auto save every</source>
         <translation type="unfinished">Auto save every</translation>
-    </message>
-    <message>
-        <source>Auto save every:</source>
-        <translation type="unfinished">Auto save every:</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CharsetsSection.qml" line="31"/>
@@ -3419,14 +3147,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MidiDevicesSection.qml" line="65"/>
         <source>MIDI output</source>
         <translation type="unfinished">MIDI output</translation>
-    </message>
-    <message>
-        <source>MIDI input:</source>
-        <translation type="unfinished">MIDI input:</translation>
-    </message>
-    <message>
-        <source>MIDI output:</source>
-        <translation type="unfinished">MIDI output:</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MidiSection.qml" line="41"/>
@@ -3532,14 +3252,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ProgramStartSection.qml" line="81"/>
         <source>Choose starting project</source>
         <translation type="unfinished">Choose starting project</translation>
-    </message>
-    <message>
-        <source>Publish to MuseScore.com</source>
-        <translation type="unfinished">Publish to MuseScore.com</translation>
-    </message>
-    <message>
-        <source>Always prompt to share on Audio.com after publishing to MuseScore.com</source>
-        <translation type="unfinished">Always prompt to share on Audio.com after publishing to MuseScore.com</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/RemoteControlSection.qml" line="33"/>
@@ -3995,40 +3707,40 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation type="unfinished">You are not signed in</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="265"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="270"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="291"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="269"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="274"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="295"/>
         <source>Invalid project</source>
         <translation type="unfinished">Invalid project</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="279"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="575"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="283"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="584"/>
         <source>Service destroyed</source>
         <translation type="unfinished">Service destroyed</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="284"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="288"/>
         <source>Project was closed before upload started</source>
         <translation type="unfinished">Project was closed before upload started</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="448"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="452"/>
         <source>Invalid audio ID</source>
         <translation type="unfinished">Invalid audio ID</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="505"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="514"/>
         <source>Project not found in cloud database</source>
         <translation type="unfinished">Project not found in cloud database</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="587"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="596"/>
         <source>No valid current project</source>
         <translation type="unfinished">No valid current project</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="650"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="659"/>
         <source>Upload succeeded but payload is missing</source>
         <translation type="unfinished">Upload succeeded but payload is missing</translation>
     </message>
@@ -4081,7 +3793,7 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation type="unfinished">Save to audio.com</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="796"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="808"/>
         <source>Open audio from cloud</source>
         <translation type="unfinished">Open audio from cloud</translation>
     </message>
@@ -4129,10 +3841,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation type="unfinished">Unknown parameter type: %1</translation>
     </message>
     <message>
-        <source>Save Preset</source>
-        <translation type="unfinished">Save Preset</translation>
-    </message>
-    <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="13"/>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="48"/>
         <source>Save preset</source>
@@ -4142,10 +3850,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="44"/>
         <source>Preset name</source>
         <translation type="unfinished">Preset name</translation>
-    </message>
-    <message>
-        <source>Enter Nyquist Command:</source>
-        <translation type="unfinished">Enter Nyquist Command:</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="63"/>
@@ -4237,134 +3941,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation type="unfinished">Output</translation>
     </message>
     <message>
-        <source>Amplify</source>
-        <translation type="unfinished">Amplify</translation>
-    </message>
-    <message>
-        <source>Increases or decreases the volume of the audio you have selected</source>
-        <translation type="unfinished">Increases or decreases the volume of the audio you have selected</translation>
-    </message>
-    <message>
-        <source>Loudness normalization</source>
-        <translation type="unfinished">Loudness normalization</translation>
-    </message>
-    <message>
-        <source>Sets the loudness of one or more tracks</source>
-        <translation type="unfinished">Sets the loudness of one or more tracks</translation>
-    </message>
-    <message>
-        <source>Graphic EQ</source>
-        <translation type="unfinished">Graphic EQ</translation>
-    </message>
-    <message>
-        <source>Adjusts the balance between frequency components</source>
-        <translation type="unfinished">Adjusts the balance between frequency components</translation>
-    </message>
-    <message>
-        <source>Click removal</source>
-        <translation type="unfinished">Click removal</translation>
-    </message>
-    <message>
-        <source>Click removal is designed to remove clicks on audio tracks</source>
-        <translation type="unfinished">Click removal is designed to remove clicks on audio tracks</translation>
-    </message>
-    <message>
-        <source>Compressor</source>
-        <translation type="unfinished">Compressor</translation>
-    </message>
-    <message>
-        <source>Reduces “dynamic range”, or differences between loud and quiet parts</source>
-        <translation type="unfinished">Reduces “dynamic range”, or differences between loud and quiet parts</translation>
-    </message>
-    <message>
-        <source>Limiter</source>
-        <translation type="unfinished">Limiter</translation>
-    </message>
-    <message>
-        <source>Augments loudness while minimizing distortion</source>
-        <translation type="unfinished">Augments loudness while minimizing distortion</translation>
-    </message>
-    <message>
-        <source>Normalize</source>
-        <translation type="unfinished">Normalize</translation>
-    </message>
-    <message>
-        <source>Sets the peak amplitude of a one or more tracks</source>
-        <translation type="unfinished">Sets the peak amplitude of a one or more tracks</translation>
-    </message>
-    <message>
-        <source>Fade in</source>
-        <translation type="unfinished">Fade in</translation>
-    </message>
-    <message>
-        <source>Applies a linear fade-in to the selected audio</source>
-        <translation type="unfinished">Applies a linear fade-in to the selected audio</translation>
-    </message>
-    <message>
-        <source>Fade out</source>
-        <translation type="unfinished">Fade out</translation>
-    </message>
-    <message>
-        <source>Applies a linear fade-out to the selected audio</source>
-        <translation type="unfinished">Applies a linear fade-out to the selected audio</translation>
-    </message>
-    <message>
-        <source>Invert</source>
-        <translation type="unfinished">Invert</translation>
-    </message>
-    <message>
-        <source>Flips the audio samples upside-down, reversing their polarity</source>
-        <translation type="unfinished">Flips the audio samples upside-down, reversing their polarity</translation>
-    </message>
-    <message>
-        <source>Repair</source>
-        <translation type="unfinished">Repair</translation>
-    </message>
-    <message>
-        <source>Reverse</source>
-        <translation type="unfinished">Reverse</translation>
-    </message>
-    <message>
-        <source>Reverses the selected audio</source>
-        <translation type="unfinished">Reverses the selected audio</translation>
-    </message>
-    <message>
-        <source>Truncate silence</source>
-        <translation type="unfinished">Truncate silence</translation>
-    </message>
-    <message>
-        <source>Automatically reduces the length of passages where the volume is below a specified level</source>
-        <translation type="unfinished">Automatically reduces the length of passages where the volume is below a specified level</translation>
-    </message>
-    <message>
-        <source>Change pitch</source>
-        <translation type="unfinished">Change pitch</translation>
-    </message>
-    <message>
-        <source>Changes the pitch of a track without changing its tempo</source>
-        <translation type="unfinished">Changes the pitch of a track without changing its tempo</translation>
-    </message>
-    <message>
-        <source>Generates an ascending or descending tone of one of four types</source>
-        <translation type="unfinished">Generates an ascending or descending tone of one of four types</translation>
-    </message>
-    <message>
-        <source>Tone</source>
-        <translation type="unfinished">Tone</translation>
-    </message>
-    <message>
-        <source>Generates a constant frequency tone of one of four types</source>
-        <translation type="unfinished">Generates a constant frequency tone of one of four types</translation>
-    </message>
-    <message>
-        <source>Reverb</source>
-        <translation type="unfinished">Reverb</translation>
-    </message>
-    <message>
-        <source>Reverb effect</source>
-        <translation type="unfinished">Reverb effect</translation>
-    </message>
-    <message>
         <location filename="../../src/effects/effects_base/effecterrors.h" line="39"/>
         <source>Effect load failed</source>
         <translation type="unfinished">Effect load failed</translation>
@@ -4420,10 +3996,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation type="unfinished">Preset “%1” already exists, replace?</translation>
     </message>
     <message>
-        <source>Delete Preset</source>
-        <translation type="unfinished">Delete Preset</translation>
-    </message>
-    <message>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="89"/>
         <source>Delete preset</source>
         <translation type="unfinished">Delete preset</translation>
@@ -4449,10 +4021,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation type="unfinished">Export effect parameters</translation>
     </message>
     <message>
-        <source>Import Effect Parameters</source>
-        <translation type="unfinished">Import Effect Parameters</translation>
-    </message>
-    <message>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="133"/>
         <source>%1: is not a valid presets file.</source>
         <translation type="unfinished">%1: is not a valid presets file.</translation>
@@ -4461,10 +4029,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="135"/>
         <source>%1: is for a different Effect, Generator or Analyzer.</source>
         <translation type="unfinished">%1: is for a different Effect, Generator or Analyzer.</translation>
-    </message>
-    <message>
-        <source>Export Effect Parameters</source>
-        <translation type="unfinished">Export Effect Parameters</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="622"/>
@@ -4508,10 +4072,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation type="unfinished">Save as…</translation>
     </message>
     <message>
-        <source>Unknown Effect</source>
-        <translation type="unfinished">Unknown Effect</translation>
-    </message>
-    <message>
         <location filename="../../src/effects/effects_base/view/generatedeffectviewermodel.cpp" line="54"/>
         <source>Unknown effect</source>
         <translation type="unfinished">Unknown effect</translation>
@@ -4525,10 +4085,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="42"/>
         <source>Nyquist prompt</source>
         <translation type="unfinished">Nyquist prompt</translation>
-    </message>
-    <message>
-        <source>Nyquist prompt effect</source>
-        <translation type="unfinished">Nyquist prompt effect</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="48"/>
@@ -4565,10 +4121,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation type="unfinished">Nyquist debug output</translation>
     </message>
     <message>
-        <source>Nyquist Debug Output</source>
-        <translation type="unfinished">Nyquist Debug Output</translation>
-    </message>
-    <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="169"/>
         <source>No debug output generated.</source>
         <translation type="unfinished">No debug output generated.</translation>
@@ -4599,10 +4151,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
 </context>
 <context>
     <name>effects/changepitch</name>
-    <message>
-        <source>Change Pitch</source>
-        <translation type="unfinished">Change Pitch</translation>
-    </message>
     <message>
         <location filename="../../src/effects/builtin_collection/changepitch/changepitchviewmodel.cpp" line="22"/>
         <source>Change pitch</source>
@@ -4807,10 +4355,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <source>Silence duration</source>
         <translation type="unfinished">Silence duration</translation>
     </message>
-    <message>
-        <source>Generates DTMF signal</source>
-        <translation type="unfinished">Generates DTMF signal</translation>
-    </message>
 </context>
 <context>
     <name>effects/graphiceq</name>
@@ -4894,14 +4438,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation type="unfinished">Duration</translation>
     </message>
     <message>
-        <source>Noise</source>
-        <translation type="unfinished">Noise</translation>
-    </message>
-    <message>
-        <source>Generates noise</source>
-        <translation type="unfinished">Generates noise</translation>
-    </message>
-    <message>
         <location filename="../../src/effects/builtin_collection/noisegen/noiseviewmodel.cpp" line="26"/>
         <source>White</source>
         <comment>not a color, but &apos;white noise&apos; having a uniform spectrum</comment>
@@ -4922,10 +4458,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
 </context>
 <context>
     <name>effects/noisereduction</name>
-    <message>
-        <source>Noise Reduction</source>
-        <translation type="unfinished">Noise Reduction</translation>
-    </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="68"/>
         <source>Step 1</source>
@@ -4988,10 +4520,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation type="unfinished">Noise only</translation>
     </message>
     <message>
-        <source>Reduces noise in the audio</source>
-        <translation type="unfinished">Reduces noise in the audio</translation>
-    </message>
-    <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductionviewmodel.cpp" line="150"/>
         <source>Warning</source>
         <translation type="unfinished">Warning</translation>
@@ -5031,6 +4559,24 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="17"/>
         <source>Nyquist prompt</source>
         <translation type="unfinished">Nyquist prompt</translation>
+    </message>
+</context>
+<context>
+    <name>effects/paulstretch</name>
+    <message>
+        <location filename="../../src/effects/builtin_collection/paulstretch/PaulstretchView.qml" line="11"/>
+        <source>Paulstretch</source>
+        <translation type="unfinished">Paulstretch</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/paulstretch/paulstretchviewmodel.cpp" line="62"/>
+        <source>Stretch factor</source>
+        <translation type="unfinished">Stretch factor</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/paulstretch/paulstretchviewmodel.cpp" line="87"/>
+        <source>Time resolution</source>
+        <translation type="unfinished">Time resolution</translation>
     </message>
 </context>
 <context>
@@ -5094,17 +4640,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="110"/>
         <source>Stereo width</source>
         <translation type="unfinished">Stereo width</translation>
-    </message>
-</context>
-<context>
-    <name>effects/silence</name>
-    <message>
-        <source>Silence</source>
-        <translation type="unfinished">Silence</translation>
-    </message>
-    <message>
-        <source>Generates silence</source>
-        <translation type="unfinished">Generates silence</translation>
     </message>
 </context>
 <context>
@@ -5431,10 +4966,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation type="unfinished">Effective bit rate may vary</translation>
     </message>
     <message>
-        <source>Effective bitrate may vary</source>
-        <translation type="unfinished">Effective bitrate may vary</translation>
-    </message>
-    <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="564"/>
         <source>Rendering</source>
         <translation type="unfinished">Rendering</translation>
@@ -5545,16 +5076,6 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
 Some codecs may only accept specific values (128k, 192k, 256k, etc.)
 0 - automatic
 192000 - recommended</translation>
-    </message>
-    <message>
-        <source>Bit Rate (bits/second) - influences the resulting file size and quality
-Some codecs may only accept specific values (128k, 192k, 256k etc)
-0 - automatic
-Recommended - 192000</source>
-        <translation type="unfinished">Bit Rate (bits/second) - influences the resulting file size and quality
-Some codecs may only accept specific values (128k, 192k, 256k etc)
-0 - automatic
-Recommended - 192000</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="208"/>
@@ -5676,10 +5197,6 @@ Recommended - 192000</translation>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="184"/>
         <source>Export selected audio requires a selection of audio data in the project. Please return to the project, make a selection and then try again.</source>
         <translation type="unfinished">Export selected audio requires a selection of audio data in the project. Please return to the project, make a selection and then try again.</translation>
-    </message>
-    <message>
-        <source>Export Audio</source>
-        <translation type="unfinished">Export Audio</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="465"/>
@@ -5888,10 +5405,6 @@ Master effects will be turned back on after export.</translation>
         <translation type="unfinished">Success!</translation>
     </message>
     <message>
-        <source>Ok</source>
-        <translation type="unfinished">Ok</translation>
-    </message>
-    <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="136"/>
         <source>Skip</source>
         <translation type="unfinished">Skip</translation>
@@ -5931,6 +5444,11 @@ Master effects will be turned back on after export.</translation>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="635"/>
         <source>Open</source>
         <translation type="unfinished">Open</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/paulstretch/paulstretchviewmodel.cpp" line="112"/>
+        <source>s</source>
+        <translation type="unfinished">s</translation>
     </message>
 </context>
 <context>
@@ -6650,14 +6168,6 @@ Master effects will be turned back on after export.</translation>
         <translation type="unfinished">Invert project</translation>
     </message>
     <message>
-        <source>High contrast themes</source>
-        <translation type="unfinished">High contrast themes</translation>
-    </message>
-    <message>
-        <source>Themes</source>
-        <translation type="unfinished">Themes</translation>
-    </message>
-    <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ThemesSection.qml" line="34"/>
         <source>High-contrast theme</source>
         <translation type="unfinished">High-contrast theme</translation>
@@ -6703,22 +6213,6 @@ Master effects will be turned back on after export.</translation>
         <translation type="unfinished">Border color</translation>
     </message>
     <message>
-        <source>Accent color:</source>
-        <translation type="unfinished">Accent color:</translation>
-    </message>
-    <message>
-        <source>Text and icons:</source>
-        <translation type="unfinished">Text and icons:</translation>
-    </message>
-    <message>
-        <source>Disabled text:</source>
-        <translation type="unfinished">Disabled text:</translation>
-    </message>
-    <message>
-        <source>Border color:</source>
-        <translation type="unfinished">Border color:</translation>
-    </message>
-    <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiFontSection.qml" line="31"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="160"/>
         <source>Appearance</source>
@@ -6733,14 +6227,6 @@ Master effects will be turned back on after export.</translation>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiFontSection.qml" line="59"/>
         <source>Body text size</source>
         <translation type="unfinished">Body text size</translation>
-    </message>
-    <message>
-        <source>Font face:</source>
-        <translation type="unfinished">Font face:</translation>
-    </message>
-    <message>
-        <source>Body text size:</source>
-        <translation type="unfinished">Body text size:</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PreferencesDialog.qml" line="31"/>
@@ -7228,7 +6714,7 @@ Master effects will be turned back on after export.</translation>
         <translation type="unfinished">Accent color</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="374"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="378"/>
         <source>Could not save project locally</source>
         <translation type="unfinished">Could not save project locally</translation>
     </message>
@@ -7265,10 +6751,6 @@ Master effects will be turned back on after export.</translation>
         <translation type="unfinished">Imported multiple files</translation>
     </message>
     <message>
-        <source>Audacity4 files</source>
-        <translation type="unfinished">Audacity4 files</translation>
-    </message>
-    <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="240"/>
         <source>Error opening file</source>
         <translation type="unfinished">Error opening file</translation>
@@ -7277,12 +6759,6 @@ Master effects will be turned back on after export.</translation>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="241"/>
         <source>Could not open file: %1</source>
         <translation type="unfinished">Could not open file: %1</translation>
-    </message>
-    <message>
-        <source>All saved changes will now update to the cloud. 
-You can manage this file from your updated projects page on audio.com</source>
-        <translation type="unfinished">All saved changes will now update to the cloud. 
-You can manage this file from your updated projects page on audio.com</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="505"/>
@@ -7415,10 +6891,6 @@ You can manage this file from your updated projects page on audio.com</translati
         <translation type="unfinished">Save to computer</translation>
     </message>
     <message>
-        <source>Save to Computer</source>
-        <translation type="unfinished">Save to Computer</translation>
-    </message>
-    <message>
         <location filename="../../src/project/internal/projectconfiguration.cpp" line="172"/>
         <source>Untitled</source>
         <translation type="unfinished">Untitled</translation>
@@ -7506,24 +6978,6 @@ Please remove the write protection by checking the file’s properties, ensuring
         <location filename="../../src/project/qml/Audacity/Project/AlsoShareAudioComDialog.qml" line="165"/>
         <source>Remember my choice</source>
         <translation type="unfinished">Remember my choice</translation>
-    </message>
-    <message>
-        <source>MuseScore.com returned an error code: %1.</source>
-        <extracomment>%1 will be replaced with the error code that MuseScore.com returned; this might contain english text that is deliberately not translated</extracomment>
-        <translation type="unfinished">MuseScore.com returned an error code: %1.</translation>
-    </message>
-    <message>
-        <source>MuseScore.com returned an unknown error code: %1.</source>
-        <extracomment>%1 will be replaced with the error code that MuseScore.com returned, which is a number.</extracomment>
-        <translation type="unfinished">MuseScore.com returned an unknown error code: %1.</translation>
-    </message>
-    <message>
-        <source>MuseScore.com returned an unknown error code.</source>
-        <translation type="unfinished">MuseScore.com returned an unknown error code.</translation>
-    </message>
-    <message>
-        <source>Please try again later, or get help for this problem on musescore.org.</source>
-        <translation type="unfinished">Please try again later, or get help for this problem on musescore.org.</translation>
     </message>
 </context>
 <context>
@@ -7641,10 +7095,6 @@ Please remove the write protection by checking the file’s properties, ensuring
         <translation type="unfinished">How would you like to save?</translation>
     </message>
     <message>
-        <source>Save to the Cloud (free)</source>
-        <translation type="unfinished">Save to the Cloud (free)</translation>
-    </message>
-    <message>
         <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="79"/>
         <source>Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others. Cloud saving is free for a limited number of projects.</source>
         <translation type="unfinished">Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others. Cloud saving is free for a limited number of projects.</translation>
@@ -7720,10 +7170,6 @@ Please remove the write protection by checking the file’s properties, ensuring
         <translation type="unfinished">Your saved changes will be publicly visible. We will also need to generate a new MP3 for public playback.</translation>
     </message>
     <message>
-        <source>Unable to connect to MuseScore.com</source>
-        <translation type="unfinished">Unable to connect to MuseScore.com</translation>
-    </message>
-    <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="544"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="554"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="568"/>
@@ -7745,34 +7191,34 @@ Please remove the write protection by checking the file’s properties, ensuring
 <context>
     <name>project/share</name>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="805"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="817"/>
         <source>Your audio could not be shared</source>
         <translation type="unfinished">Your audio could not be shared</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="813"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="825"/>
         <source>Your audio.com account needs to be verified first. Please activate your account via the link in the activation email.</source>
         <translation type="unfinished">Your audio.com account needs to be verified first. Please activate your account via the link in the activation email.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="819"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="831"/>
         <source>Audio.com returned an unknown error code: %1.</source>
         <extracomment>%1 will be replaced with the error code that audio.com returned, which is a number.</extracomment>
         <translation type="unfinished">Audio.com returned an unknown error code: %1.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="822"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="834"/>
         <source>Audio.com returned an unknown error code.</source>
         <translation type="unfinished">Audio.com returned an unknown error code.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="824"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="831"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="836"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="843"/>
         <source>Please try again later, or get help for this problem on audio.com.</source>
         <translation type="unfinished">Please try again later, or get help for this problem on audio.com.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="827"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="839"/>
         <source>Could not connect to audio.com. Please check your internet connection or try again later.</source>
         <translation type="unfinished">Could not connect to audio.com. Please check your internet connection or try again later.</translation>
     </message>
@@ -7801,14 +7247,6 @@ Please remove the write protection by checking the file’s properties, ensuring
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml" line="51"/>
         <source>Selection end</source>
         <translation type="unfinished">Selection end</translation>
-    </message>
-    <message>
-        <source>Selection Start</source>
-        <translation type="unfinished">Selection Start</translation>
-    </message>
-    <message>
-        <source>Selection End</source>
-        <translation type="unfinished">Selection End</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml" line="71"/>
@@ -8147,29 +7585,9 @@ Please remove the write protection by checking the file’s properties, ensuring
         <translation type="unfinished">CDDA frames (75 fps)</translation>
     </message>
     <message>
-        <source>Video Frames (24 fps)</source>
-        <translation type="unfinished">Video Frames (24 fps)</translation>
-    </message>
-    <message>
-        <source>NTSC Frames (29.97 fps)</source>
-        <translation type="unfinished">NTSC Frames (29.97 fps)</translation>
-    </message>
-    <message>
-        <source>NTSC Frames (30 fps)</source>
-        <translation type="unfinished">NTSC Frames (30 fps)</translation>
-    </message>
-    <message>
-        <source>PAL Frames (25 fps)</source>
-        <translation type="unfinished">PAL Frames (25 fps)</translation>
-    </message>
-    <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="236"/>
         <source>Video frames</source>
         <translation type="unfinished">Video frames</translation>
-    </message>
-    <message>
-        <source>CDDA Frames (75 fps)</source>
-        <translation type="unfinished">CDDA Frames (75 fps)</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="245"/>
@@ -8259,10 +7677,6 @@ Please remove the write protection by checking the file’s properties, ensuring
         <location filename="../../src/record/qml/Audacity/Record/internal/RecordLevelPopup.qml" line="229"/>
         <source>Show mic metering when not recording</source>
         <translation type="unfinished">Show mic metering when not recording</translation>
-    </message>
-    <message>
-        <source>Recorded Audio</source>
-        <translation type="unfinished">Recorded Audio</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/au3/au3record.cpp" line="919"/>
@@ -8581,10 +7995,6 @@ Error code: %1</translation>
         <translation type="unfinished">High boost</translation>
     </message>
     <message>
-        <source>High Boost</source>
-        <translation type="unfinished">High Boost</translation>
-    </message>
-    <message>
         <location filename="../../src/spectrogram/view/scalesectionparameterlistmodel.cpp" line="51"/>
         <source>Hz</source>
         <translation type="unfinished">Hz</translation>
@@ -8621,10 +8031,6 @@ Error code: %1</translation>
         <location filename="../../src/spectrogram/qml/Audacity/Spectrogram/TrackSpectrogramSettingsDialog.qml" line="132"/>
         <source>OK</source>
         <translation type="unfinished">OK</translation>
-    </message>
-    <message>
-        <source>Ok</source>
-        <translation type="unfinished">Ok</translation>
     </message>
 </context>
 <context>
@@ -8752,10 +8158,6 @@ Do you wish to continue?</translation>
         <translation type="unfinished">No audio selected</translation>
     </message>
     <message>
-        <source>Select the audio for Delete then try again.</source>
-        <translation type="unfinished">Select the audio for Delete then try again.</translation>
-    </message>
-    <message>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="664"/>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="698"/>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="721"/>
@@ -8815,10 +8217,6 @@ Do you wish to continue?</translation>
         <translation type="unfinished">Delete preference</translation>
     </message>
     <message>
-        <source>Your delete behaviour has been set</source>
-        <translation type="unfinished">Your delete behaviour has been set</translation>
-    </message>
-    <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="45"/>
         <source>Your delete behavior has been set</source>
         <translation type="unfinished">Your delete behavior has been set</translation>
@@ -8842,10 +8240,6 @@ Do you wish to continue?</translation>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="61"/>
         <source>There are also a variety of new shortcuts that let you quickly access different delete behaviors. Go to %2 to learn more.</source>
         <translation type="unfinished">There are also a variety of new shortcuts that let you quickly access different delete behaviors. Go to %2 to learn more.</translation>
-    </message>
-    <message>
-        <source>There are also a variety of new shortcuts that let you quickly access different delete behaviours. Go to %2 to learn more.</source>
-        <translation type="unfinished">There are also a variety of new shortcuts that let you quickly access different delete behaviours. Go to %2 to learn more.</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorPanel.qml" line="15"/>
