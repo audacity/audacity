@@ -3,6 +3,9 @@
 */
 #include "au3cloudactionscontroller.h"
 
+#include "framework/actions/actiontypes.h"
+#include "framework/global/types/uri.h"
+
 using namespace au::au3cloud;
 
 namespace {
@@ -10,6 +13,7 @@ const muse::Uri SIGNIN_URI("audacity://signin/audiocom");
 const char* TOUR_PAGE_URL { "https://audio.com/tour?mtm_campaign=audacitydesktop&mtm_content=app_launch_reg" };
 
 const muse::actions::ActionQuery OPEN_SIGNIN_DIALOG_ACTION("audacity://cloud/open-signin-dialog");
+const muse::actions::ActionQuery OPEN_CREATE_ACCOUNT_DIALOG_ACTION("audacity://cloud/open-create-account-dialog");
 const muse::actions::ActionQuery OPEN_CLOUD_PROJECT_PAGE_ACTION("audacity://cloud/open-project-page");
 const muse::actions::ActionQuery OPEN_CLOUD_AUDIO_PAGE_ACTION("audacity://cloud/open-audio-page");
 }
@@ -22,6 +26,7 @@ Au3CloudActionsController::Au3CloudActionsController(muse::modularity::ContextPt
 void Au3CloudActionsController::init()
 {
     dispatcher()->reg(this, OPEN_SIGNIN_DIALOG_ACTION, this, &Au3CloudActionsController::openSignInDialog);
+    dispatcher()->reg(this, OPEN_CREATE_ACCOUNT_DIALOG_ACTION, this, &Au3CloudActionsController::openSignInDialog);
     dispatcher()->reg(this, OPEN_CLOUD_PROJECT_PAGE_ACTION, this, &Au3CloudActionsController::openCloudProjectPage);
     dispatcher()->reg(this, OPEN_CLOUD_AUDIO_PAGE_ACTION, this, &Au3CloudActionsController::openCloudAudioPage);
 }
@@ -29,6 +34,14 @@ void Au3CloudActionsController::init()
 bool Au3CloudActionsController::canReceiveAction(const muse::actions::ActionCode&) const
 {
     return true;
+}
+
+void Au3CloudActionsController::openCreateAccountDialog(const muse::actions::ActionQuery& query)
+{
+    auto newQuery = query;
+    newQuery.addParam("isCreateAccountMode", muse::Val(true));
+
+    openSignInDialog(newQuery);
 }
 
 void Au3CloudActionsController::openSignInDialog(const muse::actions::ActionQuery& query)
@@ -39,14 +52,18 @@ void Au3CloudActionsController::openSignInDialog(const muse::actions::ActionQuer
 
     const bool showTourPage = query.param("showTourPage").toBool();
     const bool sync = query.param("sync").toBool();
+    const bool isCreateAccountMode = query.param("isCreateAccountMode", muse::Val(false)).toBool();
+
+    muse::UriQuery uri(SIGNIN_URI);
+    uri.addParam("isCreateAccountMode", muse::Val(isCreateAccountMode));
 
     if (sync) {
-        muse::RetVal<muse::Val> rv = interactive()->openSync(SIGNIN_URI);
+        muse::RetVal<muse::Val> rv = interactive()->openSync(uri);
         if (!rv.ret) {
             return;
         }
     } else {
-        interactive()->open(SIGNIN_URI);
+        interactive()->open(uri);
     }
 
     if (showTourPage) {
