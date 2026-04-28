@@ -97,7 +97,8 @@ Rectangle {
         id: tracksModel
 
         onTotalTracksHeightChanged: {
-            timeline.context.onResizeFrameContentHeight(tracksModel.totalTracksHeight)
+            timeline.context.onResizeFrameContentHeight(
+                tracksModel.totalTracksHeight + tracksViewState.tracksVerticalScrollPadding)
         }
 
         onEscapePressed: {
