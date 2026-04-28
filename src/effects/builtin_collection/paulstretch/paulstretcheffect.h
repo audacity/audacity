@@ -1,7 +1,10 @@
+/*
+ * Audacity: A Digital Audio Editor
+ */
 /**********************************************************************
 
    Audacity: A Digital Audio Editor
-   PaulstretchBase.h
+   paulstretcheffect.h
 
    Nasca Octavian Paul (Paul Nasca)
 
@@ -10,23 +13,25 @@
 
 #include "au3-command-parameters/ShuttleAutomation.h"
 #include "au3-effects/StatefulEffect.h"
+
 #include <cfloat>
 
 class WaveChannel;
 
-class BUILTIN_EFFECTS_API PaulstretchBase : public StatefulEffect
+namespace au::effects {
+class PaulstretchEffect : public StatefulEffect
 {
 public:
-    static inline PaulstretchBase*
-    FetchParameters(PaulstretchBase& e, EffectSettings&)
+    static inline PaulstretchEffect*
+    FetchParameters(PaulstretchEffect& e, EffectSettings&)
     {
         return &e;
     }
 
     static const ComponentInterfaceSymbol Symbol;
 
-    PaulstretchBase();
-    virtual ~PaulstretchBase();
+    PaulstretchEffect();
+    virtual ~PaulstretchEffect();
 
     // ComponentInterface implementation
 
@@ -36,34 +41,38 @@ public:
 
     // EffectDefinitionInterface implementation
 
-    EffectType GetType() const override;
+    ::EffectType GetType() const override;
+    ::EffectGroup GetGroup() const override { return EffectGroup::PitchAndTempo; }
+    bool SupportsMultipleClipSelection() const override { return true; }
 
     // Effect implementation
 
     double CalcPreviewInputLength(
         const EffectSettings& settings, double previewLength) const override;
-    bool Process(EffectInstance& instance, EffectSettings& settings) override;
+    bool Process(::EffectInstance& instance, EffectSettings& settings) override;
+
+    double mAmount = Amount.def;
+    double mTime_resolution = Time.def; // seconds
 
 protected:
-    // PaulstretchBase implementation
+    // PaulstretchEffect implementation
 
     size_t GetBufferSize(double rate) const;
 
     bool ProcessOne(
         const WaveChannel& track, WaveChannel& outputTrack, double t0, double t1, int count);
 
-    float mAmount;
-    float mTime_resolution; // seconds
-
     const EffectParameterMethods& Parameters() const override;
 
+public:
     static constexpr EffectParameter Amount {
-        &PaulstretchBase::mAmount, L"Stretch Factor", 10.0f, 1.0, FLT_MAX, 1
+        &PaulstretchEffect::mAmount, L"Stretch Factor", 10.0, 1.0, 1e20, 1
     };
-    static constexpr EffectParameter Time { &PaulstretchBase::mTime_resolution,
+    static constexpr EffectParameter Time { &PaulstretchEffect::mTime_resolution,
                                             L"Time Resolution",
-                                            0.25f,
-                                            0.00099f,
-                                            FLT_MAX,
+                                            0.25,
+                                            0.00099,
+                                            1e20, // Things go berserk beyond this point - should still be enough to go crazy :D
                                             1 };
 };
+}
