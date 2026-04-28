@@ -23,3 +23,12 @@ std::string Au3CloudConfigurationStub::exportConfig(const std::string&) const
 {
     return {};
 }
+
+bool Au3CloudConfigurationStub::shouldWarnOnSyncError() const
+{
+    return false;
+}
+
+void Au3CloudConfigurationStub::setWarnOnSyncError(bool /*warn*/)
+{
+}

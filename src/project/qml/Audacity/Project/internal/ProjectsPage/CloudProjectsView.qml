@@ -32,7 +32,7 @@ ProjectsView {
     }
 
     Connections {
-        target: root.item ? root.item.view : null
+        target: (root.item && root.item.view) ? root.item.view : null
 
         function onContentYChanged() {
             prv.updateDesiredRowCount()
@@ -105,8 +105,9 @@ ProjectsView {
             return notSignedInComp
         case CloudProjectsModel.Error:
             return errorComp
-        case CloudProjectsModel.Fine:
         case CloudProjectsModel.Loading:
+            return loadingComp
+        case CloudProjectsModel.Fine:
             break
         }
 
@@ -153,6 +154,8 @@ ProjectsView {
             model: cloudProjectsModel
             searchText: root.searchText
 
+            isCloudList: true
+
             backgroundColor: root.backgroundColor
             sideMargin: root.sideMargin
 
@@ -161,8 +164,9 @@ ProjectsView {
             navigation.name: "CloudProjectsList"
             navigation.accessible.name: qsTrc("project", "Cloud projects list")
 
-            //onCreateNewProjectRequested: {}
-            //onOpenProjectRequested: function(projectPath, displayName) {}
+            onOpenCloudProjectRequested: function (cloudItemId, projectPath, displayName) {
+                root.openCloudProjectRequested(cloudItemId, projectPath, displayName)
+            }
 
             columns: [
                 ProjectsListView.ColumnItem {
@@ -304,6 +308,21 @@ ProjectsView {
 
                 title: qsTrc("project", "You are not signed in")
                 body: qsTrc("project", "Please sign in to view your online projects")
+            }
+        }
+    }
+
+    Component {
+        id: loadingComp
+
+        Item {
+            anchors.fill: parent
+
+            StyledBusyIndicator {
+                anchors.centerIn: parent
+                width: 40
+                height: 40
+                running: true
             }
         }
     }

@@ -3,6 +3,7 @@
 */
 #include "cloudprojectsmodel.h"
 
+#include "framework/global/async/asyncable.h"
 #include "framework/global/dataformatter.h"
 #include "framework/global/types/datetime.h"
 
@@ -23,29 +24,30 @@ CloudProjectsModel::CloudProjectsModel(QObject* parent)
 
 void CloudProjectsModel::load()
 {
-    auto onUserAuthorizedChanged = [this](bool authorized) {
-        if (authorized) {
-            setState(State::Loading);
-            loadItemsIfNecessary();
-        } else {
-            muse::actions::ActionQuery query("audacity://cloud/open-signin-dialog");
-            query.addParam("sync", muse::Val(false));
-            query.addParam("showTourPage", muse::Val(false));
-            dispatcher()->dispatch(query);
+    const auto authState = authorization()->authState().val;
+    if (std::holds_alternative<au::au3cloud::Authorized>(authState)) {
+        setState(State::Loading);
+        loadItemsIfNecessary();
+    } else if (std::holds_alternative<au::au3cloud::NotAuthorized>(authState)) {
+        muse::actions::ActionQuery query("audacity://cloud/open-signin-dialog");
+        query.addParam("sync", muse::Val(false));
+        query.addParam("showTourPage", muse::Val(false));
+        dispatcher()->dispatch(query);
 
+        setState(State::NotSignedIn);
+    }
+
+    authorization()->authState().ch.onReceive(this, [this](au::au3cloud::AuthState authState) {
+        if (std::holds_alternative < au::au3cloud::NotAuthorized>(authState)) {
             setState(State::NotSignedIn);
+            return;
         }
-    };
 
-    auto isAuthorized = [](au::au3cloud::AuthState authState) {
-        return std::holds_alternative<au::au3cloud::Authorized>(authState);
-    };
-
-    onUserAuthorizedChanged(isAuthorized(authorization()->authState().val));
-
-    authorization()->authState().ch.onReceive(this, [isAuthorized, onUserAuthorizedChanged](au::au3cloud::AuthState authState) {
-        onUserAuthorizedChanged(isAuthorized(std::move(authState)));
-    });
+        setState(State::Loading);
+        if (std::holds_alternative<au::au3cloud::Authorized>(authState)) {
+            loadItemsIfNecessary();
+        }
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     connect(this, &CloudProjectsModel::desiredRowCountChanged, this, &CloudProjectsModel::loadItemsIfNecessary);
 }
@@ -140,7 +142,7 @@ void CloudProjectsModel::loadItemsIfNecessary()
                                     .appendingComponent(item.name)
                                     .appendingSuffix(au::project::AUP4)
                                     .toQString();
-                    obj[SUFFIX_KEY] = QString::fromStdString(au::project::AUP4);
+                    obj[THUMBNAIL_URL_KEY] = obj[PATH_KEY];
                     obj[IS_CLOUD_KEY] = true;
                     obj[CLOUD_ITEM_ID_KEY] = QString::fromStdString(item.id);
                     obj[TIME_SINCE_MODIFIED_KEY]

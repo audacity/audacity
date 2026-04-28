@@ -43,12 +43,15 @@ Item {
 
     property bool isCloudList: false
 
+    property bool thumbnailFull: false
+
     property alias view: view
 
     property alias navigation: navPanel
 
     signal createNewProjectRequested
     signal openProjectRequested(var projectPath, var displayName)
+    signal openCloudProjectRequested(var projectId, var projectPath, var displayName)
 
     component ColumnItem: QtObject {
         property string header
@@ -99,6 +102,8 @@ Item {
             visible: false
             itemInset: view.itemInset
             showBottomBorder: false
+
+            thumbnailFull: root.thumbnailFull
 
             navigation.panel: navPanel
             navigation.row: 0
@@ -226,6 +231,7 @@ Item {
                         columnSpacing: view.columnSpacing
 
                         isCloudItem: root.isCloudList
+                        thumbnailFull: root.thumbnailFull
 
                         placeholder: root.placeholder
 
@@ -234,7 +240,11 @@ Item {
                         navigation.column: 0
 
                         onClicked: {
-                            root.openProjectRequested(item.path, item.name)
+                            if (item.isCloud) {
+                                root.openCloudProjectRequested(item.itemId, item.path, item.name)
+                            } else {
+                                root.openProjectRequested(item.path, item.name)
+                            }
                         }
                     }
                 }

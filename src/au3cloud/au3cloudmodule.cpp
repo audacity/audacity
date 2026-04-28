@@ -41,6 +41,7 @@ void Au3CloudModule::registerExports()
 void Au3CloudModule::onInit(const muse::IApplication::RunMode&)
 {
     m_cloudService->init();
+    m_cloudConfiguration->init();
 }
 
 void Au3CloudModule::onDeinit()

@@ -158,7 +158,7 @@ Item {
 
                 name: item.name
                 path: item.path ?? ""
-                suffix: item.suffix ?? ""
+                thumbnailUrl: item.thumbnailUrl ?? ""
                 isCreateNew: item.isCreateNew
                 isNoResultsFound: item.isNoResultsFound
                 isCloud: item.isCloud
@@ -170,8 +170,7 @@ Item {
                         root.createNewProjectRequested()
                     } else if (!isNoResultsFound) {
                         if (item.isCloud) {
-                            var projectId = item.itemId ?? ""
-                            root.openCloudProjectRequested(projectId, item.path, item.name)
+                            root.openCloudProjectRequested(item.itemId, item.path, item.name)
                         } else {
                             root.openProjectRequested(item.path, item.name)
                         }

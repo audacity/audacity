@@ -9,7 +9,13 @@
 using namespace au::au3cloud;
 
 const muse::ui::UiActionList CloudUiActions::m_actions = {
-    muse::ui::UiAction("audio-view-on-audiocom",
+    muse::ui::UiAction("audacity://cloud/open-project-page",
+                       au::context::UiCtxAny,
+                       au::context::CTX_ANY,
+                       muse::TranslatableString("action", "View project on audio.com"),
+                       muse::TranslatableString("action", "View project on audio.com")
+                       ),
+    muse::ui::UiAction("audacity://cloud/open-audio-page",
                        au::context::UiCtxAny,
                        au::context::CTX_ANY,
                        muse::TranslatableString("action", "View on audio.com"),

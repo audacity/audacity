@@ -348,6 +348,9 @@ FocusScope {
                 })
                 item.navigationSection = navSec
                 item.navigationOrder = 6
+                item.openCloudAudioFileRequested.connect(function (cloudItemId) {
+                    Qt.callLater(projectsPageModel.openCloudAudioFile, cloudItemId)
+                })
             }
 
             Connections {

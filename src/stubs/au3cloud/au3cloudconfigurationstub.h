@@ -14,5 +14,8 @@ public:
 
     std::vector<std::string> preferredAudioFormats() const override;
     std::string exportConfig(const std::string& mimeType) const override;
+
+    bool shouldWarnOnSyncError() const override;
+    void setWarnOnSyncError(bool warn) override;
 };
 }

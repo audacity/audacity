@@ -49,9 +49,19 @@ public:
     static constexpr int RET_CODE_CONFLICT_RESPONSE_PUBLISH_AS_NEW_SCORE = 1236;
     static constexpr int RET_CODE_CONFLICT_RESPONSE_REPLACE = 1237;
 
-    virtual void showCloudOpenError(const muse::Ret& ret) const = 0;
-    virtual muse::Ret showCloudSaveError(const muse::Ret& ret, const CloudProjectInfo& info, bool publishMode,
-                                         bool alreadyAttempted) const = 0;
+    static constexpr int RET_CODE_OPEN_LOCAL = 1238;
+    static constexpr int RET_CODE_SAVE_LOCALLY = 1239;
+    static constexpr int RET_CODE_SAVE_TO_CLOUD = 1240;
+    static constexpr int RET_CODE_OPEN_CLOUD_FORCE = 1241;
+    static constexpr int RET_CODE_CLOSE_AND_OPEN_CLOUD_FORCE = 1242;
+    static constexpr int RET_CODE_SAVE_LOCALLY_AND_REMOVE_CACHE = 1243;
+    static constexpr int RET_CODE_SAVE_TO_CLOUD_FORCE = 1244;
+    static constexpr int RET_CODE_OPEN_ON_AUDIOCOM = 1245;
+    static constexpr int RET_CODE_LOAD_LATEST_SYNCED = 1246;
+
+    virtual muse::Ret showCloudOpenError(const muse::Ret& ret, const muse::io::path_t& localPath) const = 0;
+    virtual muse::Ret showCloudSaveError(const muse::Ret& ret) const = 0;
+    virtual muse::Ret showCloudAudioOpenError(const muse::Ret& ret) const = 0;
     virtual muse::Ret showAudioCloudShareError(const muse::Ret& ret) const = 0;
 };
 }

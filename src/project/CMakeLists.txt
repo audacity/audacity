@@ -102,6 +102,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/cloudprojectstatuswatcher.h
     ${CMAKE_CURRENT_LIST_DIR}/view/projectthumbnailloader.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/projectthumbnailloader.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/thumbnailloader.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/thumbnailloader.h
     ${CMAKE_CURRENT_LIST_DIR}/view/pixmapprojectthumbnailview.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/pixmapprojectthumbnailview.h
     ${CMAKE_CURRENT_LIST_DIR}/view/newprojectmodel.cpp

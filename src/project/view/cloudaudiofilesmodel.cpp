@@ -3,6 +3,7 @@
 */
 #include "cloudaudiofilesmodel.h"
 
+#include "framework/global/async/asyncable.h"
 #include "framework/global/dataformatter.h"
 #include "framework/global/types/datetime.h"
 
@@ -22,31 +23,42 @@ CloudAudioFilesModel::CloudAudioFilesModel(QObject* parent)
 
 void CloudAudioFilesModel::load()
 {
-    auto onUserAuthorizedChanged = [this](bool authorized) {
-        if (authorized) {
-            setState(State::Loading);
-            loadItemsIfNecessary();
-        } else {
-            muse::actions::ActionQuery query("audacity://cloud/open-signin-dialog");
-            query.addParam("sync", muse::Val(false));
-            query.addParam("showTourPage", muse::Val(false));
-            dispatcher()->dispatch(query);
+    const auto authState = authorization()->authState().val;
+    if (std::holds_alternative<au::au3cloud::Authorized>(authState)) {
+        setState(State::Loading);
+        loadItemsIfNecessary();
+    } else if (std::holds_alternative<au::au3cloud::NotAuthorized>(authState)) {
+        muse::actions::ActionQuery query("audacity://cloud/open-signin-dialog");
+        query.addParam("sync", muse::Val(false));
+        query.addParam("showTourPage", muse::Val(false));
+        dispatcher()->dispatch(query);
 
+        setState(State::NotSignedIn);
+    }
+
+    authorization()->authState().ch.onReceive(this, [this](au::au3cloud::AuthState authState) {
+        if (std::holds_alternative < au::au3cloud::NotAuthorized>(authState)) {
             setState(State::NotSignedIn);
+            return;
         }
-    };
 
-    auto isAuthorized = [](au::au3cloud::AuthState authState) {
-        return std::holds_alternative<au::au3cloud::Authorized>(authState);
-    };
-
-    onUserAuthorizedChanged(isAuthorized(authorization()->authState().val));
-
-    authorization()->authState().ch.onReceive(this, [isAuthorized, onUserAuthorizedChanged](au::au3cloud::AuthState authState) {
-        onUserAuthorizedChanged(isAuthorized(std::move(authState)));
-    });
+        setState(State::Loading);
+        if (std::holds_alternative<au::au3cloud::Authorized>(authState)) {
+            loadItemsIfNecessary();
+        }
+    }, muse::async::Asyncable::Mode::SetReplace);
 
     connect(this, &CloudAudioFilesModel::desiredRowCountChanged, this, &CloudAudioFilesModel::loadItemsIfNecessary);
+
+    audioComService()->audioThumbnailFileUpdated().onReceive(this, [this](const std::string& audioId, const muse::io::path_t& path) {
+        for (int i = 0; i < static_cast<int>(m_items.size()); ++i) {
+            if (m_items[i][CLOUD_ITEM_ID_KEY].toString() == QString::fromStdString(audioId)) {
+                m_items[i][THUMBNAIL_URL_KEY] = path.toQString();
+                emit dataChanged(index(i), index(i));
+                break;
+            }
+        }
+    });
 }
 
 void CloudAudioFilesModel::reload()
@@ -135,8 +147,9 @@ void CloudAudioFilesModel::loadItemsIfNecessary()
                     QVariantMap obj;
 
                     obj[NAME_KEY] = QString::fromStdString(item.title);
+                    obj[SLUG_KEY] = QString::fromStdString(item.slug);
                     obj[PATH_KEY] = ""; //configuration()->cloudProjectPath(item.id).toQString();
-                    obj[SUFFIX_KEY] = "";
+                    obj[THUMBNAIL_URL_KEY] = fileSystem()->exists(item.waveformPath) ? item.waveformPath.toQString() : QString();
                     obj[IS_CLOUD_KEY] = true;
                     obj[CLOUD_ITEM_ID_KEY] = QString::fromStdString(item.id);
                     obj[TIME_SINCE_MODIFIED_KEY]

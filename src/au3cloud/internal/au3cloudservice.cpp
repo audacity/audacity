@@ -51,9 +51,12 @@ void Au3CloudService::init()
     });
 
     auto& oauthService = audacity::cloud::audiocom::GetOAuthService();
-    const auto NO_ACCESS_TOKEN = muse::qtrc("appshell/gettingstarted", "No access token");
-    m_authState.set(AuthState(NotAuthorized(NO_ACCESS_TOKEN.toStdString())));
-    oauthService.ValidateAuth(nullptr, AudiocomTrace::ignore, true);
+    if (oauthService.HasRefreshToken()) {
+        m_authState.set(AuthState(Authorizing()));
+    } else {
+        const auto NO_ACCESS_TOKEN = muse::qtrc("appshell/gettingstarted", "No access token");
+        m_authState.set(AuthState(NotAuthorized(NO_ACCESS_TOKEN.toStdString())));
+    }
     m_authSubscription
         = oauthService.Subscribe([this](const audacity::cloud::audiocom::AuthStateChangedMessage& message)
     {
@@ -72,6 +75,7 @@ void Au3CloudService::init()
             service.ClearUserData();
         }
     });
+    oauthService.ValidateAuth(nullptr, AudiocomTrace::ignore, true);
 
     auto& userService = audacity::cloud::audiocom::GetUserService();
     m_userDataSubscription

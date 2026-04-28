@@ -97,6 +97,7 @@ struct ProjectInfo final
     std::string Slug;
     std::string Name;
     std::string Details;
+    int64_t Size {};
 
     SnapshotInfo HeadSnapshot;
     std::string LastSyncedSnapshotId;
@@ -143,6 +144,7 @@ struct CloudAudioInfo final
     std::string Slug;
     std::string Title;
     std::vector<std::string> Tags;
+    std::string WaveformUrl;
 
     int64_t FileSize {};
     int64_t Duration {};

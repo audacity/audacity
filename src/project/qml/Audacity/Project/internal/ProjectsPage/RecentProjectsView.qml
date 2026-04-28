@@ -99,6 +99,10 @@ ProjectsView {
                 root.openProjectRequested(projectPath, displayName)
             }
 
+            onOpenCloudProjectRequested: function (projectId, projectPath, displayName) {
+                root.openCloudProjectRequested(projectId, projectPath, displayName)
+            }
+
             columns: [
                 ProjectsListView.ColumnItem {
                     id: modifiedColumn

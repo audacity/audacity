@@ -35,6 +35,7 @@
 
 #include "project/iprojectconfiguration.h"
 #include "project/iprojectfilescontroller.h"
+#include "au3cloud/iau3cloudconfiguration.h"
 
 namespace au::project {
 class OpenSaveProjectScenario : public IOpenSaveProjectScenario, public muse::Contextable
@@ -43,6 +44,7 @@ class OpenSaveProjectScenario : public IOpenSaveProjectScenario, public muse::Co
     muse::GlobalInject<muse::io::IFileSystem> fileSystem;
     muse::GlobalInject<muse::cloud::IMuseScoreComService> museScoreComService;
     muse::GlobalInject<muse::cloud::IAudioComService> audioComService;
+    muse::GlobalInject<au::au3cloud::IAu3CloudConfiguration> cloudConfiguration;
 
     muse::ContextInject<IProjectFilesController> projectFilesController { this };
     muse::ContextInject<muse::IInteractive> interactive { this };
@@ -63,9 +65,9 @@ public:
 
     bool warnBeforeSavingToExistingPubliclyVisibleCloudProject() const override;
 
-    void showCloudOpenError(const muse::Ret& ret) const override;
-    muse::Ret showCloudSaveError(const muse::Ret& ret, const CloudProjectInfo& info, bool isPublishShare,
-                                 bool alreadyAttempted) const override;
+    muse::Ret showCloudOpenError(const muse::Ret& ret, const muse::io::path_t& localPath) const override;
+    muse::Ret showCloudSaveError(const muse::Ret& ret) const override;
+    muse::Ret showCloudAudioOpenError(const muse::Ret& ret) const override;
     muse::Ret showAudioCloudShareError(const muse::Ret& ret) const override;
 
 private:

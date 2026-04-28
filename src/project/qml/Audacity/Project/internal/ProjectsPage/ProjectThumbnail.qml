@@ -28,62 +28,25 @@ import Audacity.Project 1.0
 Item {
     id: root
 
-    property string path: ""
-    property string suffix: ""
-    property string placeholder: ""
+    property alias path: thumbnailLoader.path
+    property alias placeholder: thumbnailLoader.placeholder
 
-    ProjectThumbnailLoader {
+    property alias backgroundColor: thumbnailLoader.backgroundColor
+    property alias lineColor: thumbnailLoader.lineColor
+    property alias borderColor: thumbnailLoader.borderColor
+
+    ThumbnailLoader {
         id: thumbnailLoader
 
-        projectPath: root.path
+        width: root.width
+        height: root.height
     }
 
-    Loader {
+    PixmapProjectThumbnailView {
+        id: pixmapThumbnail
+
         anchors.fill: parent
-        active: visible
 
-        sourceComponent: {
-            if (thumbnailLoader.isThumbnailValid) {
-                return projectThumbnailComp
-            }
-
-            return genericThumbnailComp
-        }
-
-        Component {
-            id: projectThumbnailComp
-
-            PixmapProjectThumbnailView {
-                anchors.fill: parent
-                thumbnail: thumbnailLoader.thumbnail
-            }
-        }
-
-        Component {
-            id: genericThumbnailComp
-
-            Rectangle {
-                anchors.fill: parent
-                color: ui.theme.backgroundSecondaryColor
-
-                Image {
-                    anchors.centerIn: parent
-
-                    width: parent.width / 2
-
-                    source: {
-                        switch (root.suffix) {
-                        default:
-                            return root.placeholder || "qrc:/resources/ProjectPlaceholder.svg"
-                        }
-                    }
-
-                    fillMode: Image.PreserveAspectFit
-
-                    // Prevent image from looking pixelated on low-res screens
-                    mipmap: true
-                }
-            }
-        }
+        thumbnail: thumbnailLoader.thumbnail
     }
 }

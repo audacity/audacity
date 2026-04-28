@@ -51,7 +51,7 @@ Item {
         enabled: root.enabled && root.visible
 
         accessible.role: MUAccessible.Button
-        accessible.name: prv.toolTipText
+        //accessible.name: prv.toolTipText
         accessible.visualItem: root
         accessible.enabled: navCtrl.enabled
 

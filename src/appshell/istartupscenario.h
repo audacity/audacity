@@ -45,6 +45,8 @@ public:
     virtual void setStartupProjectFile(const std::optional<project::ProjectFile>& file) = 0;
     virtual const muse::io::paths_t& startupMediaFiles() const = 0;
     virtual void setStartupMediaFiles(const muse::io::paths_t& files) = 0;
+    virtual bool removeMediaFilesAfterImport() const = 0;
+    virtual void setRemoveMediaFilesAfterImport(bool remove) = 0;
 
     virtual muse::async::Promise<muse::Ret> runOnSplashScreen() = 0;
     virtual void runAfterSplashScreen() = 0;

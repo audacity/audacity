@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include "framework/global/io/path.h"
+
 namespace au::au3cloud {
 struct NotAuthorized {
     std::string error;
@@ -38,6 +40,7 @@ struct ProjectList {
 
         int64_t created {};
         int64_t updated {};
+        int64_t headSnapshotSynced {};
     };
 
     std::vector<Item> items;
@@ -57,6 +60,7 @@ struct AudioList {
         std::string slug;
         std::string title;
         std::vector<std::string> tags;
+        muse::io::path_t waveformPath;
 
         int64_t fileSize {};
         int64_t duration {};
@@ -71,5 +75,11 @@ struct AudioList {
         int thisBatchNumber = 0;
         int itemsPerBatch = 0;
     } meta;
+};
+
+struct DownloadRequest {
+    std::string id;
+    std::string url;
+    muse::io::path_t localPath;
 };
 }

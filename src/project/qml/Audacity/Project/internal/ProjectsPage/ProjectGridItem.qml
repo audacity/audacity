@@ -32,7 +32,7 @@ FocusScope {
 
     property string name: ""
     property string path: ""
-    property string suffix: ""
+    property string thumbnailUrl: ""
     property alias timeSinceModified: timeSinceModified.text
     property string placeholder: ""
     property bool isCreateNew: false
@@ -299,9 +299,12 @@ FocusScope {
         id: projectItemComp
 
         ProjectThumbnail {
-            path: root.path
-            suffix: root.suffix
+            path: root.thumbnailUrl
             placeholder: root.placeholder
+
+            backgroundColor: ui.theme.backgroundSecondaryColor
+            lineColor: Qt.alpha(ui.theme.fontPrimaryColor, 0.8)
+            borderColor: ui.theme.strokeColor
         }
     }
 }

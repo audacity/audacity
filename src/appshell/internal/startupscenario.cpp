@@ -100,6 +100,16 @@ void StartupScenario::setStartupMediaFiles(const muse::io::paths_t& files)
     m_startupMediaFiles = files;
 }
 
+bool StartupScenario::removeMediaFilesAfterImport() const
+{
+    return m_removeMediaFilesAfterImport;
+}
+
+void StartupScenario::setRemoveMediaFilesAfterImport(bool remove)
+{
+    m_removeMediaFilesAfterImport = remove;
+}
+
 muse::async::Promise<muse::Ret> StartupScenario::runOnSplashScreen()
 {
     return muse::async::make_promise<muse::Ret>([this](auto resolve, auto) {
@@ -184,7 +194,8 @@ void StartupScenario::onStartupPageOpened(StartupModeType modeType)
             files << file.toQString();
         }
 
-        dispatcher()->dispatch("project-import-startup-media", ActionData::make_arg1<QStringList>(files));
+        dispatcher()->dispatch("project-import-startup-media",
+                               ActionData::make_arg2<QStringList, bool>(files, m_removeMediaFilesAfterImport));
         return;
     }
 

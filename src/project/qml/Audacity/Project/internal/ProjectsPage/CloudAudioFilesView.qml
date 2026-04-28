@@ -34,7 +34,7 @@ ProjectsView {
     }
 
     Connections {
-        target: root.item ? root.item.view : null
+        target: (root.item && root.item.view) ? root.item.view : null
 
         function onContentYChanged() {
             prv.updateDesiredRowCount()
@@ -43,7 +43,7 @@ ProjectsView {
 
     QtObject {
         id: prv
-        property string gridPlaceholderFile: "qrc:/resources/AudioFilePlaceholder.svg"
+        property string gridPlaceholderFile: ":/resources/AudioFilePlaceholder.svg"
         property bool updateDesiredRowCountScheduled: false
 
         readonly property var activeView: root.item
@@ -108,8 +108,9 @@ ProjectsView {
             return notSignedInComp
         case CloudAudioFilesModel.Error:
             return errorComp
-        case CloudAudioFilesModel.Fine:
         case CloudAudioFilesModel.Loading:
+            return loadingComp
+        case CloudAudioFilesModel.Fine:
             break
         }
 
@@ -140,8 +141,9 @@ ProjectsView {
             navigation.name: "CloudAudioFilesGrid"
             navigation.accessible.name: qsTrc("project", "Cloud audio files grid")
 
-            //onCreateNewProjectRequested: {}
-            //onOpenProjectRequested: function(projectPath, displayName) {}
+            onOpenCloudProjectRequested: function (id, _slug, _path) {
+                root.openCloudAudioFileRequested(id)
+            }
         }
     }
 
@@ -159,11 +161,15 @@ ProjectsView {
             backgroundColor: root.backgroundColor
             sideMargin: root.sideMargin
 
-            isCloudList: true
+            thumbnailFull: true
 
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrder
             navigation.name: "CloudAudioFilesList"
+
+            onOpenCloudProjectRequested: function (id, _slug, _path) {
+                root.openCloudAudioFileRequested(id)
+            }
 
             columns: [
                 ProjectsListView.ColumnItem {
@@ -299,7 +305,9 @@ ProjectsView {
 
                             CloudAudioFileContextMenuModel {
                                 id: contextMenuModel
-                                cloudItemId: item.itemId
+
+                                audioId: item.itemId ?? ""
+                                slug: item.slug ?? ""
                             }
 
                             Component.onCompleted: contextMenuModel.load()
@@ -372,6 +380,21 @@ ProjectsView {
 
                 title: qsTrc("project", "You are not signed in")
                 body: qsTrc("project", "Please sign in to view your online files")
+            }
+        }
+    }
+
+    Component {
+        id: loadingComp
+
+        Item {
+            anchors.fill: parent
+
+            StyledBusyIndicator {
+                anchors.centerIn: parent
+                width: 40
+                height: 40
+                running: true
             }
         }
     }

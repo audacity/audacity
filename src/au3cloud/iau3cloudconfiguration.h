@@ -22,5 +22,8 @@ public:
 
     virtual std::vector<std::string> preferredAudioFormats() const = 0;
     virtual std::string exportConfig(const std::string& mimeType) const = 0;
+
+    virtual bool shouldWarnOnSyncError() const = 0;
+    virtual void setWarnOnSyncError(bool warn) = 0;
 };
 }

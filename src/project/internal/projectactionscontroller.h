@@ -115,10 +115,12 @@ private:
 
     muse::Ret openPageIfNeed(muse::Uri pageUri);
 
-    void handleCloudOpenError(const muse::Ret& error, const muse::io::path_t& localPath);
+    void handleCloudOpenError(const muse::Ret& error, const muse::io::path_t& localPath, const std::string& cloudProjectId = {});
+    void handleCloudAudioOpenError(const muse::Ret& error);
     void handleCloudSaveError(const muse::Ret& error);
 
     void shareAudio();
+    void openCloudAudioFile(const muse::actions::ActionQuery& query);
 
     void openCustomFFmpegOptions();
     void openMetadataDialog();

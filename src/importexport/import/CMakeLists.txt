@@ -31,7 +31,7 @@ set(MODULE_SRC
 
 # Loop Tempo Estimator (fetched automatically during configure)
 if(NOT TARGET loop-tempo-estimator)
-    set(LTE_VERSION "v0.0.3")
+    set(LTE_VERSION "v0.0.4")
 
     include(FetchContent)
     FetchContent_Declare(
