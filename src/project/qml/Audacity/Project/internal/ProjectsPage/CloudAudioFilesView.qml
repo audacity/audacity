@@ -17,6 +17,10 @@ ProjectsView {
     id: root
 
     function refresh() {
+        if (!accountModel.isAuthorized) {
+            return
+        }
+
         cloudAudioFilesModel.reload()
         prv.updateDesiredRowCount()
     }

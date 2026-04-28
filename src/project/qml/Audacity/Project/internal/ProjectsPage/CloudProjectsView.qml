@@ -15,6 +15,10 @@ ProjectsView {
     id: root
 
     function refresh() {
+        if (!accountModel.isAuthorized) {
+            return
+        }
+
         cloudProjectsModel.reload()
         prv.updateDesiredRowCount()
     }
