@@ -63,6 +63,7 @@ private:
     void importPreset(const muse::actions::ActionQuery& q);
     void exportPreset(const muse::actions::ActionQuery& q);
     void toggleVendorUI(const muse::actions::ActionQuery& q);
+    void openPluginManager();
 
     std::shared_ptr<EffectsUiActions> m_uiActions;
     muse::async::Channel<muse::actions::ActionCodeList> m_canReceiveActionsChanged;

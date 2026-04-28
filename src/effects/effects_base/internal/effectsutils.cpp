@@ -12,8 +12,12 @@ muse::String utils::effectFamilyToString(EffectFamily family)
     switch (family) {
     case EffectFamily::Builtin: return u"Audacity";
     case EffectFamily::VST3: return u"VST3";
+#ifdef Q_OS_LINUX
     case EffectFamily::LV2: return u"LV2";
+#endif
+#ifdef Q_OS_MACOS
     case EffectFamily::AudioUnit: return u"AudioUnit";
+#endif
     case EffectFamily::Nyquist: return u"Nyquist";
     default:
         assert(false);
@@ -27,10 +31,14 @@ EffectFamily utils::effectFamilyFromString(const muse::String& family)
         return EffectFamily::Builtin;
     } else if (family == u"VST3") {
         return EffectFamily::VST3;
+#ifdef Q_OS_LINUX
     } else if (family == u"LV2") {
         return EffectFamily::LV2;
+#endif
+#ifdef Q_OS_MACOS
     } else if (family == u"AudioUnit") {
         return EffectFamily::AudioUnit;
+#endif
     } else if (family == u"Nyquist") {
         return EffectFamily::Nyquist;
     }
@@ -196,7 +204,7 @@ T attributeValue(const muse::audio::AudioResourceMeta& meta, const muse::String&
 }
 }
 
-EffectMeta utils::museToAuEffectMeta(const muse::io::path_t& path, const muse::audio::AudioResourceMeta& meta)
+EffectMeta utils::museToAuEffectMeta(const muse::io::path_t& path, const muse::audio::AudioResourceMeta& meta, bool enabled)
 {
     EffectMeta effectMeta;
     effectMeta.path = path;
@@ -212,6 +220,7 @@ EffectMeta utils::museToAuEffectMeta(const muse::io::path_t& path, const muse::a
     effectMeta.version = attributeValue(meta, EFFECT_VERSION_ATTRIBUTE);
     effectMeta.module = attributeValue(meta, EFFECT_MODULE_ATTRIBUTE);
     effectMeta.isActivated = attributeValue<bool>(meta, EFFECT_ACTIVATED_ATTRIBUTE);
+    effectMeta.isLoadable = enabled;
 
     return effectMeta;
 }
@@ -436,6 +445,13 @@ MenuItemList makeFlatList(const EffectMetaList& effects, IEffectMenuItemFactory&
     }
     return items;
 }
+
+void removeAlsoDisabledEffects(EffectMetaList& effects, const utils::EffectFilter& filter)
+{
+    effects.erase(std::remove_if(effects.begin(), effects.end(), [&](const EffectMeta& meta) {
+        return !meta.isLoadable || !meta.isActivated || filter(meta);
+    }), effects.end());
+}
 } // namespace
 
 muse::uicomponents::MenuItemList utils::destructiveEffectMenu(EffectMenuOrganization organization,
@@ -443,7 +459,7 @@ muse::uicomponents::MenuItemList utils::destructiveEffectMenu(EffectMenuOrganiza
                                                               const EffectFilter& filter,
                                                               IEffectMenuItemFactory& effectMenu)
 {
-    effects.erase(std::remove_if(effects.begin(), effects.end(), filter), effects.end());
+    impl::removeAlsoDisabledEffects(effects, filter);
     if (organization == EffectMenuOrganization::Flat) {
         return impl::makeFlatList(effects, effectMenu);
     } else {
@@ -457,7 +473,7 @@ muse::uicomponents::MenuItemList utils::realtimeEffectMenu(EffectMenuOrganizatio
                                                            const EffectFilter& filter,
                                                            IEffectMenuItemFactory& effectMenu)
 {
-    effects.erase(std::remove_if(effects.begin(), effects.end(), filter), effects.end());
+    impl::removeAlsoDisabledEffects(effects, filter);
     if (organization == EffectMenuOrganization::Flat) {
         return impl::makeFlatList(effects, effectMenu);
     } else {

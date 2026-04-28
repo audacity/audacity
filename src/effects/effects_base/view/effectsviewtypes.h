@@ -22,4 +22,9 @@ public:
 };
 
 using ViewerComponentType = ViewerComponentTypes::Type;
+
+struct DropdownOption {
+    QString id;
+    QString title;
+};
 }

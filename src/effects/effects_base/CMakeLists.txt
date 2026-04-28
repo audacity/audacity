@@ -101,6 +101,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/effectsuiengine.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/effectsuiengine.h
     ${CMAKE_CURRENT_LIST_DIR}/view/effectsviewtypes.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/effectsviewutils.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/effectsviewutils.h
     ${CMAKE_CURRENT_LIST_DIR}/view/destructiveeffectviewerdialogmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/destructiveeffectviewerdialogmodel.h
@@ -110,6 +111,14 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/effectparameterslistmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/generatedeffectviewermodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/generatedeffectviewermodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/pluginmanagersortfilterproxy.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/pluginmanagersortfilterproxy.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/pluginmanagertableviewmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/pluginmanagertableviewmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/pluginmanagertableviewverticalheader.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/pluginmanagertableviewverticalheader.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/dropdownoptionsmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/dropdownoptionsmodel.h
     )
 
 # AU3
@@ -118,7 +127,7 @@ include(${CMAKE_CURRENT_LIST_DIR}/../../au3wrap/au3wrapDefs.cmake)
 set(MODULE_INCLUDE ${AU3_INCLUDE})
 set(MODULE_DEF ${AU3_DEF})
 
-set(MODULE_LINK au3wrap)
+set(MODULE_LINK au3wrap uicomponents)
 
 set(MODULE_USE_UNITY OFF)
 

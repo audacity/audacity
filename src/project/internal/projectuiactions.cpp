@@ -385,21 +385,14 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Keep tracks synchronized")
              ),
 
-    // generate menu
-    UiAction("generate-plugin-manager",
-             au::context::UiCtxUnknown,
-             au::context::CTX_DISABLED,
+    UiAction("plugin-manager",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
              TranslatableString("action", "Plugin manager"),
              TranslatableString("action", "Plugin manager")
              ),
 
     // effects menu
-    UiAction("effect-plugin-manager",
-             au::context::UiCtxUnknown,
-             au::context::CTX_DISABLED,
-             TranslatableString("action", "Plugin manager"),
-             TranslatableString("action", "Plugin manager")
-             ),
     UiAction("add-realtime-effects",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
@@ -426,12 +419,6 @@ const UiActionList ProjectUiActions::m_actions = {
              ),
 
     // analyze menu
-    UiAction("analyze-plugin-manager",
-             au::context::UiCtxUnknown,
-             au::context::CTX_DISABLED,
-             TranslatableString("action", "Plugin manager"),
-             TranslatableString("action", "Plugin manager")
-             ),
     UiAction("contrast-analyzer",
              au::context::UiCtxUnknown,
              au::context::CTX_ANY,
@@ -446,12 +433,6 @@ const UiActionList ProjectUiActions::m_actions = {
              ),
 
     // tools menu
-    UiAction("tools-plugin-manager",
-             au::context::UiCtxUnknown,
-             au::context::CTX_DISABLED,
-             TranslatableString("action", "Plugin manager"),
-             TranslatableString("action", "Plugin manager")
-             ),
     UiAction("manage-macros",
              au::context::UiCtxUnknown,
              au::context::CTX_ANY,

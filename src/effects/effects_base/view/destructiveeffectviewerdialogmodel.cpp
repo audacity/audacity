@@ -92,10 +92,12 @@ ViewerComponentType DestructiveEffectViewerDialogModel::viewerComponentType() co
 {
     const EffectFamily family = effectFamily();
 
+#ifdef Q_OS_MACOS
     // Audio Units always use AudioUnitViewer, which handles both vendor UI and Apple's generic UI internally
     if (family == EffectFamily::AudioUnit) {
         return ViewerComponentType::AudioUnit;
     }
+#endif
 
     // Built-in effects always use their custom viewers
     if (family == EffectFamily::Builtin) {
@@ -114,8 +116,10 @@ ViewerComponentType DestructiveEffectViewerDialogModel::viewerComponentType() co
 
     // Use the appropriate vendor UI
     switch (family) {
+#ifdef Q_OS_LINUX
     case EffectFamily::LV2:
         return ViewerComponentType::Lv2;
+#endif
     case EffectFamily::VST3:
         return ViewerComponentType::Vst;
     default:

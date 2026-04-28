@@ -120,6 +120,7 @@ bool ProjectActionsController::canReceiveAction(const muse::actions::ActionCode&
             "continue-last-session",
             "clear-recent",
             "audacity://cloud/open-audio-file",
+            "plugin-manager",
         };
 
         return muse::contains(DONT_REQUIRE_OPEN_PROJECT, code);
@@ -910,7 +911,7 @@ Ret ProjectActionsController::doOpenProject(const io::path_t& filePath)
                                           "The project contains a time track, which is not yet supported in Audacity 4, and will need to be removed. This does not affect your original Audacity 3 project."),
         {
             muse::IInteractive::ButtonData(
-                muse::IInteractive::Button::Ok, muse::trc("project/open", "Ok"), false)
+                muse::IInteractive::Button::Ok, muse::trc("project/open", "OK"), false)
         });
 
         // When saving we do a full project rewrite
