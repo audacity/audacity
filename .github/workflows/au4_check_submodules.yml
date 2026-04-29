@@ -32,9 +32,8 @@ jobs:
         fi
         echo "Pinned commit: ${SHA}"
         TMP=$(mktemp -d)
-        git -C "${TMP}" init -q
-        git -C "${TMP}" remote add origin "${EXPECTED_URL}"
-        if ! git -C "${TMP}" fetch --depth=1 origin "${SHA}" 2>&1; then
-          echo "::error::muse_framework is pinned to ${SHA}, which is not fetchable from ${EXPECTED_URL}. Push the commit to the upstream repo before merging."
+        git clone --quiet --filter=tree:0 --no-checkout --single-branch --branch main "${EXPECTED_URL}" "${TMP}"
+        if ! git -C "${TMP}" merge-base --is-ancestor "${SHA}" origin/main; then
+          echo "::error::muse_framework is pinned to ${SHA}, which is not on the main branch of ${EXPECTED_URL}"
           exit 1
         fi
