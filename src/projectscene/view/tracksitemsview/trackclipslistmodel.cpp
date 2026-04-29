@@ -240,7 +240,7 @@ void TrackClipsListModel::updateItemMetrics(ViewTrackItem* viewItem)
 
     // Extend recording clip's visual boundary to the smooth record position
     if (globalContext()->isRecording()) {
-        for (const auto& rk : globalContext()->recordingClipKeys()) {
+        for (const auto& rk : recordController()->recordingClipKeys()) {
             if (rk == item->key().key) {
                 double projectedEnd = globalContext()->playbackState()->playbackPosition().to_double();
                 clip.endTime = std::max(clip.endTime, projectedEnd);

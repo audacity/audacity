@@ -32,7 +32,6 @@ public:
 
     bool isRecording() const override;
     muse::async::Notification isRecordingChanged() const override;
-    std::vector<trackedit::ClipKey> recordingClipKeys() const override;
 
 private:
     au::project::IAudacityProjectPtr m_currentProject;

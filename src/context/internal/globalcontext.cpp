@@ -74,8 +74,3 @@ muse::async::Notification GlobalContext::isRecordingChanged() const
 {
     return recordController()->isRecordingChanged();
 }
-
-std::vector<au::trackedit::ClipKey> GlobalContext::recordingClipKeys() const
-{
-    return recordController()->recordingClipKeys();
-}
