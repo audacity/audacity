@@ -1792,12 +1792,19 @@ bool LabelTrackView::DoChar(
    AudacityProject &project, NotifyingSelectedRegion &WXUNUSED(newSel),
    wxKeyEvent & event)
 {
-   // Check for modifiers and only allow shift.
+   // Check for modifiers and only allow text-producing modifier combinations
    //
    // We still need to check this or we will eat the top level menu accelerators
    // on Windows if our capture or key down handlers skipped the event.
    const int mods = event.GetModifiers();
-   if (mods != wxMOD_NONE && mods != wxMOD_SHIFT) {
+   if ((mods & ~(wxMOD_SHIFT | wxMOD_ALTGR))
+      // Since wxMOD_ALTGR = wxMOD_ALT | wxMOD_CONTROL, we need to check
+      // if it is AltGr, Alt or Ctrl
+#ifndef __WXMAC__
+      // The Alt is used as text-producing modifier only on macOs
+      || ((mods & wxMOD_ALTGR) == wxMOD_ALT)
+#endif
+      || ((mods & wxMOD_ALTGR) == wxMOD_CONTROL)) {
       event.Skip();
       return false;
    }

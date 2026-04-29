@@ -96,7 +96,20 @@ bool TextEditHelper::IsSelectionEmpty()
 
 bool TextEditHelper::CaptureKey(int, int mods)
 {
-   return mods == wxMOD_NONE || mods == wxMOD_SHIFT;
+   // Check for modifiers and only allow text-producing modifier combinations
+   if (mods & ~(wxMOD_SHIFT | wxMOD_ALTGR))
+      return false;
+
+   // Since wxMOD_ALTGR = wxMOD_ALT | wxMOD_CONTROL, we need to check
+   // if it is AltGr, Alt or Ctrl
+
+#ifndef __WXMAC__
+   // The Alt is used as text-producing modifier only on macOs
+   if ((mods & wxMOD_ALTGR) == wxMOD_ALT)
+      return false;
+#endif
+
+   return (mods & wxMOD_ALTGR) != wxMOD_CONTROL;
 }
 
 bool TextEditHelper::OnKeyDown(int keyCode, int mods, AudacityProject* project)
@@ -128,7 +141,7 @@ bool TextEditHelper::OnKeyDown(int keyCode, int mods, AudacityProject* project)
                     wchar = mText.at(mCurrentCursorPos - 1);
                     mText.erase(mCurrentCursorPos - 1, 1);
                     mCurrentCursorPos--;
-                    if (((int)wchar > 0xDFFF) || ((int)wchar < 0xDC00)) 
+                    if (((int)wchar > 0xDFFF) || ((int)wchar < 0xDC00))
                     {
                         delegate->OnTextModified(project, mText);
                         more = false;
@@ -158,7 +171,7 @@ bool TextEditHelper::OnKeyDown(int keyCode, int mods, AudacityProject* project)
                 while ((mCurrentCursorPos < len) && more) {
                     wchar = mText.at(mCurrentCursorPos);
                     mText.erase(mCurrentCursorPos, 1);
-                    if (((int)wchar > 0xDBFF) || ((int)wchar < 0xD800)) 
+                    if (((int)wchar > 0xDBFF) || ((int)wchar < 0xD800))
                     {
                         delegate->OnTextModified(project, mText);
                         more = false;
@@ -287,7 +300,7 @@ bool TextEditHelper::OnClick(const wxMouseEvent& event, AudacityProject*)
         bool result = false;
         if (mBBox.Contains(event.GetPosition()))
         {
-            if (event.LeftDown()) 
+            if (event.LeftDown())
             {
                 mRightDragging = false;
                 auto position = FindCursorIndex(event.GetPosition());
@@ -405,7 +418,7 @@ bool TextEditHelper::Draw(wxDC& dc, const wxRect& rect)
             dc.DrawRectangle(wxRect(left, rect.GetTop() + (rect.GetHeight() - cursorHeight) / 2, right - left, cursorHeight));
         }
 
-        
+
         dc.SetTextBackground(wxTransparentColour);
         dc.SetTextForeground(mTextColor);
         dc.SetFont(wxFont(wxFontInfo()));
@@ -511,7 +524,7 @@ int TextEditHelper::FindCursorIndex(const wxPoint& point)
 
         // Get the width of the last character
         dc.GetTextExtent(subString.Right(1), &oneWidth, NULL);
-        
+
         if (layout == wxLayout_RightToLeft)
         {
             auto bound = mBBox.GetRight() - partWidth + offsetX + oneWidth / 2;

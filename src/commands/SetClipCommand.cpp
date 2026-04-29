@@ -63,6 +63,7 @@ bool SetClipCommand::VisitSettings( SettingsVisitorBase<Const> & S ){
    // Allowing a negative start time is not a mistake.
    // It will be used in demonstrating time before zero.
    S.OptionalN( bHasT0             ).Define(     mT0,             wxT("Start"),      0.0, -5.0, 1000000.0);
+   S.OptionalN( bHasName           ).Define(     mName,           wxT("Name"),       _("Unnamed"));
    return true;
 };
 bool SetClipCommand::VisitSettings( SettingsVisitor & S )
