@@ -50,9 +50,10 @@ Paul Licameli split from AudacityProject.cpp
 
 #include "au3-sqlite-helpers/sqlite/SQLiteUtils.h"
 
-// Don't change this unless the file format changes
-// in an irrevocable way
-#define AUDACITY_FILE_FORMAT_VERSION "1.3.0"
+// Identifies the XML format version embedded in the project blob.
+// Update this only when making irrevocable changes to the XML schema.
+// For db schema changes, bump PRAGMA user_version / ProjectFormatVersion instead.
+#define AUDACITY_FILE_FORMAT_VERSION "2.0.0"
 
 #undef NO_SHM
 #if !defined(__WXMSW__)
