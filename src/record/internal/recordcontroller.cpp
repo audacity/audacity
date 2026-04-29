@@ -79,6 +79,11 @@ secs_t RecordController::recordPosition() const
     return record()->recordPosition();
 }
 
+const std::vector<au::trackedit::ClipKey>& RecordController::recordingClipKeys() const
+{
+    return record()->recordingClipKeys();
+}
+
 Notification RecordController::isRecordingChanged() const
 {
     return m_isRecordingChanged;

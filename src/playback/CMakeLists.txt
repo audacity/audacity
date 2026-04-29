@@ -53,6 +53,10 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/view/common/playbackmetermodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/common/metermodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/common/metermodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/common/volumepressuremeteritembase.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/common/volumepressuremeteritembase.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/common/horizontalvolumepressuremeteritem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/common/horizontalvolumepressuremeteritem.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/panels/playbackmeterpanelmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/panels/playbackmeterpanelmodel.h

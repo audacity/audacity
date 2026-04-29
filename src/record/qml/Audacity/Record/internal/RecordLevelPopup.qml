@@ -49,8 +49,8 @@ StyledPopupView {
     contentHeight: prv.contentHeight
 
     onOpened: {
-        leftVolumePressure.requestPaint()
-        rightVolumePressure.requestPaint()
+        leftVolumePressure.update()
+        rightVolumePressure.update()
     }
 
     RecordMeterModel {

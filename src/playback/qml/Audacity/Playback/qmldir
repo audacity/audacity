@@ -4,6 +4,7 @@ VerticalVolumeSlider 1.0 components/VerticalVolumeSlider.qml
 VolumeSlider 1.0 components/VolumeSlider.qml
 HorizontalVolumePressureMeter 1.0 components/HorizontalVolumePressureMeter.qml
 HorizontalVolumePressureRuler 1.0 components/HorizontalVolumePressureRuler.qml
+singleton MeterStyle 1.0 components/MeterStyle.qml
 
 PlaybackMeterCustomisePopup 1.0 toolbars/PlaybackMeterCustomisePopup.qml
 PlaybackLevel 1.0 toolbars/PlaybackLevel.qml
