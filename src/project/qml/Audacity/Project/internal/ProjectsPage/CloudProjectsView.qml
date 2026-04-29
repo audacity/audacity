@@ -29,6 +29,8 @@ ProjectsView {
         onIsAuthorizedChanged: {
             if (accountModel.isAuthorized) {
                 cloudProjectsModel.load()
+            } else {
+                cloudProjectsModel.clear()
             }
         }
     }
@@ -344,7 +346,7 @@ ProjectsView {
 
                     NavigationPanel {
                         id: navPanel
-                        name: "SignInButtons"
+                        name: "ProjectSignInButtons"
                         section: root.navigationSection
                         order: root.navigationOrder
                         direction: NavigationPanel.Horizontal

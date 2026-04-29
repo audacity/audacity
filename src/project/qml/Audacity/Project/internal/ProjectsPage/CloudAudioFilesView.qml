@@ -31,6 +31,8 @@ ProjectsView {
         onIsAuthorizedChanged: {
             if (accountModel.isAuthorized) {
                 cloudAudioFilesModel.load()
+            } else {
+                cloudAudioFilesModel.clear()
             }
         }
     }
@@ -416,7 +418,7 @@ ProjectsView {
 
                     NavigationPanel {
                         id: navPanel
-                        name: "SignInButtons"
+                        name: "CloudAudioFilesSignInButtons"
                         section: root.navigationSection
                         order: root.navigationOrder
                         direction: NavigationPanel.Horizontal

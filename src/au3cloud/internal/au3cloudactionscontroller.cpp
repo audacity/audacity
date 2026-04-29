@@ -16,6 +16,8 @@ const muse::actions::ActionQuery OPEN_SIGNIN_DIALOG_ACTION("audacity://cloud/ope
 const muse::actions::ActionQuery OPEN_CREATE_ACCOUNT_DIALOG_ACTION("audacity://cloud/open-create-account-dialog");
 const muse::actions::ActionQuery OPEN_CLOUD_PROJECT_PAGE_ACTION("audacity://cloud/open-project-page");
 const muse::actions::ActionQuery OPEN_CLOUD_AUDIO_PAGE_ACTION("audacity://cloud/open-audio-page");
+
+constexpr const char* createAccountModeParam = "isCreateAccountMode";
 }
 
 Au3CloudActionsController::Au3CloudActionsController(muse::modularity::ContextPtr ctx)
@@ -39,7 +41,7 @@ bool Au3CloudActionsController::canReceiveAction(const muse::actions::ActionCode
 void Au3CloudActionsController::openCreateAccountDialog(const muse::actions::ActionQuery& query)
 {
     auto newQuery = query;
-    newQuery.addParam("isCreateAccountMode", muse::Val(true));
+    newQuery.addParam(createAccountModeParam, muse::Val(true));
 
     openSignInDialog(newQuery);
 }
@@ -52,10 +54,10 @@ void Au3CloudActionsController::openSignInDialog(const muse::actions::ActionQuer
 
     const bool showTourPage = query.param("showTourPage").toBool();
     const bool sync = query.param("sync").toBool();
-    const bool isCreateAccountMode = query.param("isCreateAccountMode", muse::Val(false)).toBool();
+    const bool isCreateAccountMode = query.param(createAccountModeParam, muse::Val(false)).toBool();
 
     muse::UriQuery uri(SIGNIN_URI);
-    uri.addParam("isCreateAccountMode", muse::Val(isCreateAccountMode));
+    uri.addParam(createAccountModeParam, muse::Val(isCreateAccountMode));
 
     if (sync) {
         muse::RetVal<muse::Val> rv = interactive()->openSync(uri);
