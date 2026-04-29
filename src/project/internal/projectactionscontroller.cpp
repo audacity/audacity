@@ -905,12 +905,12 @@ Ret ProjectActionsController::doOpenProject(const io::path_t& filePath)
 #ifndef AU_LOAD_TIMETRACK
     const auto trackeditProject = project->trackeditProject();
     if (trackeditProject && trackeditProject->timeTrackFound()) {
-        interactive()->infoSync(muse::trc("project/open", "Time Track not supported"),
+        interactive()->infoSync(muse::trc("project/open", "Time track not supported"),
                                 muse::trc("project/open",
                                           "The project contains a time track, which is not yet supported in Audacity 4, and will need to be removed. This does not affect your original Audacity 3 project."),
         {
             muse::IInteractive::ButtonData(
-                muse::IInteractive::Button::Ok, muse::trc("project/open", "Ok"), false)
+                muse::IInteractive::Button::Ok, muse::trc("project/open", "OK"), false)
         });
 
         // When saving we do a full project rewrite

@@ -68,7 +68,7 @@ const UiActionList RecordUiActions::m_mainActions = {
     UiAction(RECORD_LEAD_IN_RECORDING_QUERY.toString(),
              au::context::UiCtxProjectOpened,
              au::context::CTX_PROJECT_FOCUSED,
-             TranslatableString("action", "Lead-in Recording"),
+             TranslatableString("action", "Lead-in recording"),
              TranslatableString("action", "Start lead-in recording"),
              IconCode::Code::RECORD_FILL
              ),

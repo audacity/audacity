@@ -151,7 +151,7 @@ void RecordController::leadInRecording()
     Ret ret = record()->leadInRecording();
     if (!ret) {
         m_leadInRecordingTrackIds.clear();
-        interactive()->error(muse::trc("record", "Lead-in Recording error"), ret.text());
+        interactive()->error(muse::trc("record", "Lead-in recording error"), ret.text());
         return;
     }
 
