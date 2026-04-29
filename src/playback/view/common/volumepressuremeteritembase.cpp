@@ -57,11 +57,10 @@ void VolumePressureMeterItemBase::setMeterModel(MeterModel* model)
 
 void VolumePressureMeterItemBase::setCurrentVolumePressure(qreal v)
 {
-    if (m_currentVolumePressure == v) {
-        return;
+    if (m_currentVolumePressure != v) {
+        m_currentVolumePressure = v;
+        emit currentVolumePressureChanged();
     }
-    m_currentVolumePressure = v;
-    emit currentVolumePressureChanged();
 
     if (!std::isnan(v)) {
         m_maxPeak = std::max(m_maxPeak, v);
