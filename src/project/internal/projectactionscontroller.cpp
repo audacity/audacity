@@ -87,6 +87,35 @@ void ProjectActionsController::init()
     dispatcher()->reg(this, OPEN_CUSTOM_FFMPEG_OPTIONS, this, &ProjectActionsController::openCustomFFmpegOptions);
     dispatcher()->reg(this, OPEN_METADATA_DIALOG, this, &ProjectActionsController::openMetadataDialog);
     dispatcher()->reg(this, OPEN_CUSTOM_MAPPING, this, &ProjectActionsController::openCustomMapping);
+
+    globalContext()->currentTrackeditProjectChanged().onNotify(this, [this]() {
+        listenTrackeditProjectChanges();
+    });
+
+    listenTrackeditProjectChanges();
+
+    recordController()->isRecordingChanged().onNotify(this, [this]() {
+        m_actionEnabledChanged.send(prohibitedActionsWhileRecording());
+    });
+}
+
+void ProjectActionsController::listenTrackeditProjectChanges()
+{
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return;
+    }
+
+    prj->hasAudioContent().ch.onReceive(this, [this](bool) {
+        m_actionEnabledChanged.send({ "file-share-audio" });
+    }, muse::async::Asyncable::Mode::SetReplace);
+
+    m_actionEnabledChanged.send({ "file-share-audio" });
+}
+
+muse::async::Channel<muse::actions::ActionCodeList> ProjectActionsController::actionEnabledChanged() const
+{
+    return m_actionEnabledChanged;
 }
 
 const muse::actions::ActionCodeList& ProjectActionsController::prohibitedActionsWhileRecording() const
@@ -125,6 +154,13 @@ bool ProjectActionsController::canReceiveAction(const muse::actions::ActionCode&
         return muse::contains(DONT_REQUIRE_OPEN_PROJECT, code);
     } else if (recordController()->isRecording()) {
         return !muse::contains(prohibitedActionsWhileRecording(), code);
+    } else if (code == "file-share-audio") {
+        trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+        if (!prj) {
+            return false;
+        }
+
+        return prj->hasAudioContent().val;
     }
 
     return true;
