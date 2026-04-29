@@ -85,14 +85,15 @@ Item {
     function makeMenuItem(parentMenu, itemInfo) {
             var menuItem = menuItemComponent.createObject(parentMenu)
 
-            setUpMenuItem(menuItem, itemInfo)
+            setUpMenuItem(menuItem, itemInfo, parentMenu.id)
 
             return menuItem
     }
 
-    function setUpMenuItem(menuItem, itemInfo) {
+    function setUpMenuItem(menuItem, itemInfo, parentMenuId) {
         menuItem.id = itemInfo.id
-        menuItem.text = itemInfo.title + "\t" + itemInfo.portableShortcuts
+        var shortcut = parentMenuId === "menu-file-open" ? "" : itemInfo.portableShortcuts
+        menuItem.text = itemInfo.title + "\t" + shortcut
         menuItem.enabled = itemInfo.enabled
         menuItem.checked = itemInfo.checked
         menuItem.checkable = itemInfo.checkable
@@ -141,7 +142,7 @@ Item {
                     if (isMenu) {
                         setUpMenu(items[i].subMenu, item)
                     } else {
-                        setUpMenuItem(items[i], item)
+                        setUpMenuItem(items[i], item, id)
                     }
                 }
             }
