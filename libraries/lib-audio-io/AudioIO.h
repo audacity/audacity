@@ -304,6 +304,11 @@ public:
    size_t              mNumCaptureChannels;
    /*! Read by a worker thread but unchanging during playback */
    size_t              mNumPlaybackChannels;
+   /*! Read by a worker thread but unchanging during playback */
+   //! Actual channel count opened with PortAudio (may be larger than
+   //! mNumPlaybackChannels to match the device's native channel count
+   //! and bypass PortAudio's odd-channel duplication behavior).
+   size_t              mDevicePlaybackChannels{ 0 };
    sampleFormat        mCaptureFormat;
    double              mCaptureRate{};
    unsigned long long  mLostSamples{ 0 };
