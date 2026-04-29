@@ -157,6 +157,9 @@ Rectangle {
                 property string newTitle: ""
                 property real contentWidth: textMetrics.advanceWidth
                 property real contentHeight: scrollableContentHeight
+                property bool _editEscaped: false
+
+                allowNewLineByEnter: false
 
                 TextMetrics {
                     id: textMetrics
@@ -182,15 +185,22 @@ Rectangle {
                 }
 
                 onEscaped: {
-                    titleLoader.isEditState = false
+                    titleEdit._editEscaped = true
                 }
 
                 onFocusChanged: {
                     if (!titleEdit.focus) {
                         titleEdit.visible = false
-                        titleEdit.accepted()
-
-                        root.editFinished()
+                        Qt.callLater(function() {
+                            var escaped = titleEdit._editEscaped
+                            titleEdit._editEscaped = false
+                            if (!escaped) {
+                                titleEdit.accepted()
+                            } else {
+                                titleLoader.isEditState = false
+                            }
+                            root.editFinished()
+                        })
                     }
                 }
             }
