@@ -32,7 +32,7 @@ void NoiseReductionViewModel::setReduction(int newReduction)
     if (reduction() == newReduction) {
         return;
     }
-    modifySettings([&](EffectSettings& settings) {
+    modifySettings<NoiseReductionSettings>([&](EffectSettings& settings) {
         settings.cast<NoiseReductionSettings>()->mNoiseGain = newReduction;
     });
     emit reductionChanged();
@@ -58,7 +58,7 @@ void NoiseReductionViewModel::setSensitivity(double newSensitivity)
     if (muse::is_equal(sensitivity(), newSensitivity)) {
         return;
     }
-    modifySettings([&](EffectSettings& settings) {
+    modifySettings<NoiseReductionSettings>([&](EffectSettings& settings) {
         settings.cast<NoiseReductionSettings>()->mNewSensitivity = newSensitivity;
     });
     emit sensitivityChanged();
@@ -84,7 +84,7 @@ void NoiseReductionViewModel::setFrequencySmoothingBands(int newFrequencySmoothi
     if (frequencySmoothingBands() == newFrequencySmoothingBands) {
         return;
     }
-    modifySettings([&](EffectSettings& settings) {
+    modifySettings<NoiseReductionSettings>([&](EffectSettings& settings) {
         settings.cast<NoiseReductionSettings>()->mFreqSmoothingBands = static_cast<double>(newFrequencySmoothingBands);
     });
     emit frequencySmoothingBandsChanged();
@@ -110,7 +110,7 @@ void NoiseReductionViewModel::setReductionMode(int mode)
     if (reductionMode() == mode) {
         return;
     }
-    modifySettings([&](EffectSettings& settings) {
+    modifySettings<NoiseReductionSettings>([&](EffectSettings& settings) {
         settings.cast<NoiseReductionSettings>()->mNoiseReductionChoice = static_cast<NoiseReductionChoice>(mode);
     });
     emit reductionModeChanged();
@@ -130,14 +130,14 @@ void NoiseReductionViewModel::getNoiseProfile()
     }
 
     const auto wasAllowed = isApplyAllowed();
-    modifySettings([&](EffectSettings& settings) {
+    modifySettings<NoiseReductionSettings>([&](EffectSettings& settings) {
         settings.cast<NoiseReductionSettings>()->mDoProfile = true;
     });
 
     auto& fx = effect<NoiseReductionEffect>();
     auto success = false;
 
-    modifySettings([&](EffectSettings& settings) {
+    modifySettings<NoiseReductionSettings>([&](EffectSettings& settings) {
         fx.ResetLastError();
         success = fx.Process(*instance, settings);
     });

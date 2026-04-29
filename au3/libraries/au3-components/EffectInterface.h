@@ -102,6 +102,19 @@ public:
 
     bool GetActive() const { return mActive; }
     void SetActive(bool value) { mActive = value; }
+
+    bool operator==(const EffectSettingsExtra& other) const
+    {
+        return mDurationFormat == other.mDurationFormat
+               && mDuration == other.mDuration
+               && mActive == other.mActive;
+    }
+
+    bool operator!=(const EffectSettingsExtra& other) const
+    {
+        return !(*this == other);
+    }
+
 private:
     NumericFormatID mDurationFormat{};
     double mDuration{}; //!< @invariant non-negative

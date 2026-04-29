@@ -42,7 +42,7 @@ public:
         if (muse::is_equal(value(), newValue)) {
             return;
         }
-        modifySettings([this, newValue](EffectSettings& settings) {
+        modifySettings<SettingsType>([this, newValue](EffectSettings& settings) {
             auto* s = settings.cast<SettingsType>();
             IF_ASSERT_FAILED(s) {
                 return;

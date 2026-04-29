@@ -27,6 +27,21 @@ struct SlidingStretchEffectParams
     double m_PitchPercentChangeEnd = 0.;
 };
 
+constexpr bool operator==(const SlidingStretchEffectParams& lhs, const SlidingStretchEffectParams& rhs)
+{
+    return lhs.m_RatePercentChangeStart == rhs.m_RatePercentChangeStart
+           && lhs.m_RatePercentChangeEnd == rhs.m_RatePercentChangeEnd
+           && lhs.m_PitchHalfStepsStart == rhs.m_PitchHalfStepsStart
+           && lhs.m_PitchHalfStepsEnd == rhs.m_PitchHalfStepsEnd
+           && lhs.m_PitchPercentChangeStart == rhs.m_PitchPercentChangeStart
+           && lhs.m_PitchPercentChangeEnd == rhs.m_PitchPercentChangeEnd;
+}
+
+constexpr bool operator!=(const SlidingStretchEffectParams& lhs, const SlidingStretchEffectParams& rhs)
+{
+    return !(lhs == rhs);
+}
+
 class SlidingStretchEffect : public EffectWithSettings<SlidingStretchEffectParams, SBSMSBase>
 {
 public:

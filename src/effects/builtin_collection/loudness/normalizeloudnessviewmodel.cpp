@@ -44,9 +44,7 @@ bool NormalizeLoudnessViewModel::useRmsAlgorithm() const
 void NormalizeLoudnessViewModel::setUseRmsAlgorithm(bool useRmsAlgorithm)
 {
     auto& e = effect<NormalizeLoudnessEffect>();
-    modifySettings([&e, useRmsAlgorithm](EffectSettings&) {
-        e.mNormalizeTo = useRmsAlgorithm ? NormalizeLoudnessEffect::kRMS : NormalizeLoudnessEffect::kLoudness;
-    });
+    e.mNormalizeTo = useRmsAlgorithm ? NormalizeLoudnessEffect::kRMS : NormalizeLoudnessEffect::kLoudness;
     emit useRmsAlgorithmChanged();
 }
 
@@ -69,9 +67,7 @@ double NormalizeLoudnessViewModel::perceivedLoudnessTarget() const
 void NormalizeLoudnessViewModel::setPerceivedLoudnessTarget(double perceivedLoudnessTarget)
 {
     auto& e = effect<NormalizeLoudnessEffect>();
-    modifySettings([&e, perceivedLoudnessTarget](EffectSettings&) {
-        e.mLUFSLevel = perceivedLoudnessTarget;
-    });
+    e.mLUFSLevel = perceivedLoudnessTarget;
     emit perceivedLoudnessTargetChanged();
 }
 
@@ -84,9 +80,7 @@ double NormalizeLoudnessViewModel::rmsTarget() const
 void NormalizeLoudnessViewModel::setRmsTarget(double rmsTarget)
 {
     auto& e = effect<NormalizeLoudnessEffect>();
-    modifySettings([&e, rmsTarget](EffectSettings&) {
-        e.mRMSLevel = rmsTarget;
-    });
+    e.mRMSLevel = rmsTarget;
     emit rmsTargetChanged();
 }
 
@@ -128,9 +122,7 @@ bool NormalizeLoudnessViewModel::normalizeStereoChannelsIndependently() const
 void NormalizeLoudnessViewModel::setNormalizeStereoChannelsIndependently(bool normalizeStereoChannelsIndependently)
 {
     auto& e = effect<NormalizeLoudnessEffect>();
-    modifySettings([&e, normalizeStereoChannelsIndependently](EffectSettings&) {
-        e.mStereoInd = normalizeStereoChannelsIndependently;
-    });
+    e.mStereoInd = normalizeStereoChannelsIndependently;
     emit normalizeStereoChannelsIndependentlyChanged();
 }
 
@@ -153,9 +145,7 @@ bool NormalizeLoudnessViewModel::useDualMono() const
 void NormalizeLoudnessViewModel::setUseDualMono(bool newUseDualMono)
 {
     auto& e = effect<NormalizeLoudnessEffect>();
-    modifySettings([&e, newUseDualMono](EffectSettings&) {
-        e.mDualMono = newUseDualMono;
-    });
+    e.mDualMono = newUseDualMono;
     emit useDualMonoChanged();
 }
 }

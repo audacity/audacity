@@ -27,12 +27,12 @@ struct ReverbSettings
     double mDryGain { dryGainDefault };
     double mStereoWidth { stereoWidthDefault };
     bool mWetOnly { wetOnlyDefault };
-
-    friend bool operator==(const ReverbSettings& a, const ReverbSettings& b);
-
-    friend bool OnlySimpleParametersChanged(
-        const ReverbSettings& a, const ReverbSettings& b);
 };
+
+bool operator==(const ReverbSettings& a, const ReverbSettings& b);
+inline bool operator!=(const ReverbSettings& a, const ReverbSettings& b) { return !(a == b); }
+
+bool OnlySimpleParametersChanged(const ReverbSettings& a, const ReverbSettings& b);
 
 struct Reverb_priv_ex;
 

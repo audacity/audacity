@@ -30,18 +30,4 @@ EffectSettingsAccessPtr BuiltinEffectInstanceAccess::settingsAccess() const
 {
     return instancesRegister()->settingsAccessById(m_accessInstanceId);
 }
-
-void BuiltinEffectInstanceAccess::modifySettings(const std::function<void(EffectSettings& settings)>& modifier)
-{
-    const EffectSettingsAccessPtr access = this->settingsAccess();
-    IF_ASSERT_FAILED(access) {
-        return;
-    }
-    access->ModifySettings([&](EffectSettings& settings) {
-        modifier(settings);
-        return nullptr;
-    });
-
-    instancesRegister()->notifyAboutSettingsChanged(m_accessInstanceId);
-}
 }

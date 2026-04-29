@@ -32,6 +32,14 @@ struct DtmfSettings
     bool isApplyAllowed() const;
 };
 
+inline bool operator==(const DtmfSettings& a, const DtmfSettings& b)
+{
+    return a.dtmfSequence == b.dtmfSequence && a.dtmfTone == b.dtmfTone && a.dtmfSilence == b.dtmfSilence
+           && a.dtmfDutyCycle == b.dtmfDutyCycle && a.dtmfAmplitude == b.dtmfAmplitude;
+}
+
+inline bool operator!=(const DtmfSettings& a, const DtmfSettings& b) { return !(a == b); }
+
 class DtmfGenerator : public GeneratorEffect, public EffectWithSettings<DtmfSettings, PerTrackEffect>
 {
 public:
