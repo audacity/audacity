@@ -327,15 +327,7 @@ bool au::importexport::Au3Importer::isProjectEmpty() const
         return true;
     }
 
-    // Check for actual audio content (clips), not just tracks.
-    // The drop controller may create empty placeholder tracks before import,
-    // so trackIdList().empty() would incorrectly return false.
-    for (const auto& trackId : trackeditProject->trackIdList()) {
-        if (!trackeditProject->clipList(trackId).empty()) {
-            return false;
-        }
-    }
-    return true;
+    return !trackeditProject->hasAudioContent().val;
 }
 
 void au::importexport::Au3Importer::addImportedTracks(const muse::io::path_t& fileName, TrackHolders&& newTracks,
