@@ -77,8 +77,6 @@ public:
     void deinit() override;
 
 private:
-    std::string getCloudProjectPage(au::project::IAudacityProjectPtr project) const;
-
     static void removeProjectFromDatabase(const muse::io::path_t& localPath);
     bool isSnapshotUpToDate(
         const std::optional<audacity::cloud::audiocom::sync::DBProjectData>& dbProjectData,
