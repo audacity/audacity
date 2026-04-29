@@ -20,7 +20,7 @@ public:
     MOCK_METHOD(muse::secs_t, recordPosition, (), (const, override));
     MOCK_METHOD(muse::async::Channel<muse::secs_t>, recordPositionChanged, (), (const, override));
 
-    MOCK_METHOD(std::vector<trackedit::ClipKey>, recordingClipKeys, (), (const, override));
+    MOCK_METHOD(const std::vector<trackedit::ClipKey>&, recordingClipKeys, (), (const, override));
 
     MOCK_METHOD(bool, isMicMeteringOn, (), (const, override));
     MOCK_METHOD(muse::async::Notification, isMicMeteringOnChanged, (), (const, override));

@@ -29,7 +29,7 @@ public:
     virtual muse::secs_t recordPosition() const = 0;
     virtual muse::async::Channel<muse::secs_t> recordPositionChanged() const = 0;
 
-    virtual std::vector<trackedit::ClipKey> recordingClipKeys() const = 0;
+    virtual const std::vector<trackedit::ClipKey>& recordingClipKeys() const = 0;
 
     virtual bool isMicMeteringOn() const = 0;
     virtual muse::async::Notification isMicMeteringOnChanged() const = 0;

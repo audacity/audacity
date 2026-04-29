@@ -47,7 +47,7 @@ public:
     muse::secs_t recordPosition() const override;
     muse::async::Channel<muse::secs_t> recordPositionChanged() const override;
 
-    std::vector<trackedit::ClipKey> recordingClipKeys() const override;
+    const std::vector<trackedit::ClipKey>& recordingClipKeys() const override;
 
     bool canReceiveAction(const muse::actions::ActionCode& code) const override;
 

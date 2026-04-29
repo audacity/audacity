@@ -252,6 +252,7 @@ void Au3Record::init()
             origClip->LinkToOtherSource(*pendingClip.get());
             recordedClip->linkedToPendingClip = true;
             recordedClip->deferredClipCreation = false;
+            rebuildRecordingClipKeys();
 
             trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
             prj->notifyAboutClipAdded(DomConverter::clip(origWaveTrack, origClip.get()));
@@ -337,6 +338,7 @@ void Au3Record::init()
         auto& pendingTracks = PendingTracks::Get(projectRef());
         pendingTracks.ClearPendingTracks();
         m_recordData.clear();
+        rebuildRecordingClipKeys();
     });
 }
 
@@ -620,15 +622,20 @@ secs_t Au3Record::recordPosition() const
     return m_recordPosition.val;
 }
 
-std::vector<au::trackedit::ClipKey> Au3Record::recordingClipKeys() const
+const std::vector<au::trackedit::ClipKey>& Au3Record::recordingClipKeys() const
 {
-    std::vector<trackedit::ClipKey> keys;
+    return m_recordingClipKeys;
+}
+
+void Au3Record::rebuildRecordingClipKeys()
+{
+    m_recordingClipKeys.clear();
+    m_recordingClipKeys.reserve(m_recordData.size());
     for (const auto& rd : m_recordData) {
         if (!rd.deferredClipCreation) {
-            keys.push_back(rd.clipKey);
+            m_recordingClipKeys.push_back(rd.clipKey);
         }
     }
-    return keys;
 }
 
 Notification Au3Record::recordingFinished() const
@@ -751,6 +758,7 @@ Ret Au3Record::doRecord(Au3Project& project,
                 transportSequences.captureSequences.push_back(pending->SharedPointer<Au3WaveTrack>());
 
                 m_recordData.push_back(RecordData { trackedit::ClipKey(), pendingClip->GetId(), false, true });
+                rebuildRecordingClipKeys();
                 // Don't notify UI — clip will be created on original when recording starts
             } else {
                 // Normal recording: create clip on original track immediately
@@ -779,6 +787,7 @@ Ret Au3Record::doRecord(Au3Project& project,
                 transportSequences.captureSequences.push_back(pending->SharedPointer<Au3WaveTrack>());
 
                 m_recordData.push_back(RecordData { trackedit::ClipKey(wt->GetId(), newClip->GetId()), newClip->GetId(), false, false });
+                rebuildRecordingClipKeys();
 
                 trackedit::Clip _newClip = DomConverter::clip(pending, newClip.get());
                 trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
@@ -896,6 +905,7 @@ Ret Au3Record::doRecord(Au3Project& project,
             transportSequences.captureSequences.push_back(pending->SharedPointer<Au3WaveTrack>());
 
             m_recordData.push_back(RecordData { trackedit::ClipKey(newTrack->GetId(), newClip->GetId()), newClip->GetId(), false, false });
+            rebuildRecordingClipKeys();
 
             trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
             prj->notifyAboutTrackAdded(DomConverter::track(newTrack.get()));

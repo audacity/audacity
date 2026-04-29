@@ -53,7 +53,7 @@ public:
     muse::secs_t recordPosition() const override;
     muse::async::Channel<muse::secs_t> recordPositionChanged() const override;
 
-    std::vector<trackedit::ClipKey> recordingClipKeys() const override;
+    const std::vector<trackedit::ClipKey>& recordingClipKeys() const override;
 
     muse::async::Notification recordingFinished() const override;
 
@@ -77,10 +77,13 @@ private:
 
     void notifyAboutRecordClipsChanged();
 
+    void rebuildRecordingClipKeys();
+
     mutable muse::async::Channel<float> m_playbackVolumeChanged;
 
     IAudioInputPtr m_audioInput;
     std::vector<RecordData> m_recordData;
+    std::vector<trackedit::ClipKey> m_recordingClipKeys;
 
     muse::ValCh<muse::secs_t> m_recordPosition;
     muse::async::Notification m_recordingFinished;
