@@ -25,7 +25,6 @@ public:
 
     ::EffectType GetType() const override;
     EffectGroup GetGroup() const override { return EffectGroup::VolumeAndCompression; }
-    bool SupportsMultipleClipSelection() const override { return true; }
     RealtimeSince RealtimeSupport() const override;
     RegistryPaths GetFactoryPresets() const override;
     OptionalMessage LoadFactoryPreset(int id, EffectSettings& settings) const override;

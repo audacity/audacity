@@ -4,6 +4,8 @@
 #include "au3-components/SettingsVisitor.h"
 #include "../common/generatoreffect.h"
 
+#include "framework/global/types/number.h"
+
 namespace au::effects {
 struct NoiseSettings
 {
@@ -26,6 +28,16 @@ struct NoiseSettings
     bool isApplyAllowed() const;
 };
 
+constexpr bool operator==(const NoiseSettings& a, const NoiseSettings& b)
+{
+    return a.type == b.type && muse::is_equal(a.amplitude, b.amplitude);
+}
+
+constexpr bool operator!=(const NoiseSettings& a, const NoiseSettings& b)
+{
+    return !(a == b);
+}
+
 class NoiseGenerator : public GeneratorEffect, public EffectWithSettings <NoiseSettings, PerTrackEffect>
 {
 public:
@@ -45,7 +57,6 @@ public:
     ::EffectType GetType() const override;
     RegistryPaths GetFactoryPresets() const override;
     OptionalMessage LoadFactoryPreset(int id, EffectSettings& settings) const override;
-    bool SupportsMultipleClipSelection() const override { return false; }
 
     struct Instance : public PerTrackEffect::Instance, public EffectInstanceWithBlockSize {
         explicit Instance(const PerTrackEffect& effect);

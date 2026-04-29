@@ -3,9 +3,8 @@
  */
 #pragma once
 
-#include "effects/effects_base/ieffectinstancesregister.h"
-#include "effects/effects_base/ieffectexecutionscenario.h"
-#include "effects/effects_base/ieffectsprovider.h"
+#include "effects/effects_base/effectstypes.h"
+
 #include "playback/iplayback.h"
 
 #include "framework/global/async/asyncable.h"
@@ -21,10 +20,6 @@ class AbstractEffectViewModel : public QObject, public muse::async::Asyncable, p
     Q_PROPERTY(bool isPreviewing READ isPreviewing NOTIFY isPreviewingChanged FINAL)
 
 protected:
-    muse::GlobalInject<IEffectInstancesRegister> instancesRegister;
-    muse::GlobalInject<IEffectsProvider> effectsProvider;
-
-    muse::ContextInject<IEffectExecutionScenario> executionScenario{ this };
     muse::ContextInject<au::playback::IPlayback> playback{ this };
 
 public:

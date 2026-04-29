@@ -29,6 +29,7 @@ template<
     const Type min{}; //!< Minimum value
     const Type max{}; //!< Maximum value
     const Type step{}; //!< Step
+    const int decimals{}; //!< Number of decimals to show in the UI, if applicable
 };
 
 // Deduction guides

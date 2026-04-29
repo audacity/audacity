@@ -44,7 +44,6 @@ public:
         EffectSettings& settings, double sampleRate, ChannelNames chanMap) override;
     size_t ProcessBlock(
         EffectSettings& settings, const float* const* inBlock, float* const* outBlock, size_t blockLen) override;
-    bool SupportsMultipleClipSelection() const override { return false; }
 
 protected:
     double mSampleRate {};

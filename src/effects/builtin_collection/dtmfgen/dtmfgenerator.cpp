@@ -429,8 +429,8 @@ bool DtmfGenerator::MakeDtmfTone(
         // we are at the last buffer of 'len' size, so, offset is to
         // backup 'A' samples, from 'len'
         A = std::min<double>(len, (fs / kFadeInOut));
+        wxASSERT(len >= A);
         size_t offset = len - A;
-        wxASSERT(offset >= 0);
         for (size_t i = 0; i < A; i++) {
             buffer[i + offset] *= (1 - (i / A));
         }

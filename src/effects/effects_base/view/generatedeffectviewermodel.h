@@ -4,6 +4,8 @@
 #pragma once
 
 #include "abstracteffectviewmodel.h"
+#include "ieffectinstancesregister.h"
+#include "ieffectexecutionscenario.h"
 #include "ieffectsprovider.h"
 #include "../iparameterextractorregistry.h"
 #include "context/iglobalcontext.h"
@@ -26,10 +28,12 @@ class GeneratedEffectViewerModel : public AbstractEffectViewModel
     Q_PROPERTY(int lowerTimeSignature READ lowerTimeSignature NOTIFY timeSignatureChanged FINAL)
     Q_PROPERTY(bool isPreviewAllowed READ isPreviewAllowed CONSTANT FINAL)
 
+    muse::GlobalInject<IEffectInstancesRegister> instancesRegister;
     muse::GlobalInject<IEffectsProvider> effectsProvider;
     muse::GlobalInject<IParameterExtractorRegistry> parameterExtractorRegistry;
 
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<IEffectExecutionScenario> executionScenario{ this };
 
 public:
     explicit GeneratedEffectViewerModel(QObject* parent, EffectInstanceId instanceId);

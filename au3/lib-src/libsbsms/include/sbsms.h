@@ -49,7 +49,11 @@ typedef long (*SBSMSResampleCB)(void *cbData, SBSMSFrame *frame);
 class SBSMSInterface /* not final */ {
  public:
   virtual ~SBSMSInterface() {}
-  virtual long samples(audio *buf, long n) { return 0; }
+  virtual long samples(audio *buf, long n) { 
+    (void)buf;
+    (void)n;
+    return 0;
+  }
   virtual float getStretch(float t)=0;
   virtual float getMeanStretch(float t0, float t1)=0;
   virtual float getPitch(float t)=0;
@@ -79,11 +83,22 @@ class SBSMSRenderer {
  public:
   virtual ~SBSMSRenderer() {}
   virtual void startFrame() {}
-  virtual void startTime(int c, const TimeType &time, int n) {}
-  virtual void render(int c, SBSMSTrack *t) {}
-  virtual void endTime(int c) {}
+  virtual void startTime(int c, const TimeType &time, int n) {
+    (void)c;
+    (void)time;
+    (void)n;
+  }
+  virtual void render(int c, SBSMSTrack *track) {
+    (void)c;
+    (void)track;
+  }
+  virtual void endTime(int c) {
+    (void)c;
+  }
   virtual void endFrame() {}
-  virtual void end(const SampleCountType &samples) {}
+  virtual void end(const SampleCountType &samples) {
+    (void)samples;
+  }
 };
 
 enum SBSMSError {

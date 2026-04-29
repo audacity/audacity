@@ -102,6 +102,19 @@ public:
 
     bool GetActive() const { return mActive; }
     void SetActive(bool value) { mActive = value; }
+
+    bool operator==(const EffectSettingsExtra& other) const
+    {
+        return mDurationFormat == other.mDurationFormat
+               && mDuration == other.mDuration
+               && mActive == other.mActive;
+    }
+
+    bool operator!=(const EffectSettingsExtra& other) const
+    {
+        return !(*this == other);
+    }
+
 private:
     NumericFormatID mDurationFormat{};
     double mDuration{}; //!< @invariant non-negative
@@ -312,7 +325,15 @@ public:
     //! Whether the effect has any automatable controls.
     virtual bool SupportsAutomation() const = 0;
 
-    virtual bool SupportsMultipleClipSelection() const = 0;
+    //! True if none of the effect's parameters depend on the input audio (including its duration)
+    //! Useful to decide if an effect can be applied with the same settings on multiple selected clips one after the other.
+    virtual bool ParamsAreInputAgnostic() const
+    {
+        // False for generators, since the duration parameter depends on the selection length.
+        // Mostly true for other effects, except for e.g. Amplify, which has a "New peak amplitude"
+        // param that depends not only on the gain param but also the current input peak amplitude.
+        return GetType() != EffectTypeGenerate;
+    }
 
     //! Whether the effect dialog should have a Debug button; default, always false.
     virtual bool EnablesDebug() const;

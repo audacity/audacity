@@ -44,7 +44,9 @@ void DtmfViewModel::prop_setSequence(const QString& newSequence)
 
     const bool wasAllowed = isApplyAllowed();
 
-    mutSettings<DtmfSettings>().dtmfSequence = newSequence.toStdString();
+    modifySettings<DtmfSettings>([newSequence](EffectSettings& settings) {
+        settings.cast<DtmfSettings>()->dtmfSequence = newSequence.toStdString();
+    });
     emit sequenceChanged();
     recalculateDurations();
 
@@ -66,7 +68,9 @@ void DtmfViewModel::prop_setAmplitude(double newAmplitude)
 
     const bool wasAllowed = isApplyAllowed();
 
-    mutSettings<DtmfSettings>().dtmfAmplitude = newAmplitude;
+    modifySettings<DtmfSettings>([newAmplitude](EffectSettings& settings) {
+        settings.cast<DtmfSettings>()->dtmfAmplitude = newAmplitude;
+    });
     emit amplitudeChanged();
 
     if (wasAllowed != isApplyAllowed()) {
@@ -87,7 +91,9 @@ void DtmfViewModel::prop_setDutyCycle(double newDutyCycle)
 
     const bool wasAllowed = isApplyAllowed();
 
-    mutSettings<DtmfSettings>().dtmfDutyCycle = newDutyCycle;
+    modifySettings<DtmfSettings>([newDutyCycle](EffectSettings& settings) {
+        settings.cast<DtmfSettings>()->dtmfDutyCycle = newDutyCycle;
+    });
     emit dutyCycleChanged();
     recalculateDurations();
 
@@ -108,8 +114,8 @@ double DtmfViewModel::silenceDuration() const
 
 void DtmfViewModel::recalculateDurations()
 {
-    modifySettings([this](EffectSettings& settings) {
-        mutSettings<DtmfSettings>().Recalculate(settings);
+    modifySettings<DtmfSettings>([](EffectSettings& settings) {
+        settings.cast<DtmfSettings>()->Recalculate(settings);
     });
     emit toneDurationChanged();
     emit silenceDurationChanged();

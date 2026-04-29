@@ -80,11 +80,6 @@ bool ChangeTempoBase::SupportsAutomation() const
     return true;
 }
 
-bool ChangeTempoBase::SupportsMultipleClipSelection() const
-{
-    return true;
-}
-
 // Effect implementation
 
 double ChangeTempoBase::CalcPreviewInputLength(

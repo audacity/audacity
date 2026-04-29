@@ -204,8 +204,7 @@ EffectStyledDialogView {
                     EffectPresetsBar {
                         id: presetsBar
 
-                        anchors.left: parent.left
-                        anchors.right: parent.right
+                        width: parent.width
 
                         destructiveMode: true
                         navigationPanel: root.navigationPanel
@@ -265,10 +264,7 @@ EffectStyledDialogView {
                         width: root.contentWidth - prv.panelMargins * 2
                         spacing: prv.panelMargins
                         navigationPanel.section: root.navigationSection
-                        navigationPanel.order: (prv.showTopPanel ? 1 : 0) +
-                                                          (viewerModel.effectFamily == EffectFamily.Builtin ?
-                                                                  (prv.viewer ? prv.viewer.numNavigationPanels : 2)
-                                                                  : 0)
+                        navigationPanel.order: (prv.showTopPanel ? 1 : 0) + (viewerModel.effectFamily == EffectFamily.Builtin ? (prv.viewer ? prv.viewer.numNavigationPanels : 2) : 0)
 
                         //! TODO Move function to ButtonBox (Muse framework)
                         function buttonById(id) {

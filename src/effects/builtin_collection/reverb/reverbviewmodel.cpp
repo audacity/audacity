@@ -130,7 +130,7 @@ void ReverbViewModel::setParam(const QString& key, double val)
     IF_ASSERT_FAILED(s) {
         return;
     }
-    modifySettings([s, val](EffectSettings& settings)
+    modifySettings<ReverbSettings>([s, val](EffectSettings& settings)
     {
         s(*settings.cast<ReverbSettings>(), val);
         // saintmatthieu: Looks like non-null Message returns are only necessary for VST2 and AU effects but I haven't figured out why.
@@ -145,7 +145,7 @@ bool ReverbViewModel::wetOnly() const
 
 void ReverbViewModel::setWetOnly(bool newWetOnly)
 {
-    modifySettings([newWetOnly](EffectSettings& settings)
+    modifySettings<ReverbSettings>([newWetOnly](EffectSettings& settings)
     {
         settings.cast<ReverbSettings>()->mWetOnly = newWetOnly;
     });

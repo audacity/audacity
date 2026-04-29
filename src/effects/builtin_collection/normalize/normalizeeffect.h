@@ -40,7 +40,7 @@ public:
 
     ::EffectType GetType() const override;
     EffectGroup GetGroup() const override { return EffectGroup::VolumeAndCompression; }
-    bool SupportsMultipleClipSelection() const override { return false; }
+    bool ParamsAreInputAgnostic() const override { return false; }
 
     // Effect implementation
 

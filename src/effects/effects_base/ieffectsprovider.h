@@ -33,6 +33,6 @@ public:
     virtual std::string effectName(const effects::RealtimeEffectState& state) const = 0;
     virtual Effect* effect(const EffectId& effectId) const = 0;
 
-    virtual bool supportsMultipleClipSelection(const EffectId& effectId) const = 0;
+    virtual bool paramsAreInputAgnostic(const EffectId& effectId) const = 0;
 };
 }

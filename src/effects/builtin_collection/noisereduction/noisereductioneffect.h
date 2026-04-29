@@ -118,6 +118,18 @@ public:
     static constexpr double mReleaseTime = 0.1;
 };
 
+constexpr bool operator==(const NoiseReductionSettings& a, const NoiseReductionSettings& b)
+{
+    return a.mDoProfile == b.mDoProfile && a.mNewSensitivity == b.mNewSensitivity
+           && a.mFreqSmoothingBands == b.mFreqSmoothingBands && a.mNoiseGain == b.mNoiseGain
+           && a.mNoiseReductionChoice == b.mNoiseReductionChoice;
+}
+
+constexpr bool operator!=(const NoiseReductionSettings& a, const NoiseReductionSettings& b)
+{
+    return !(a == b);
+}
+
 class NoiseReductionEffect : public EffectWithSettings<NoiseReductionSettings, StatefulEffect>
 {
 public:
@@ -139,7 +151,6 @@ public:
 
     ::EffectType GetType() const override;
     EffectGroup GetGroup() const override { return EffectGroup::NoiseRemovalAndRepair; }
-    bool SupportsMultipleClipSelection() const override { return true; }
 
     // Effect implementation
 

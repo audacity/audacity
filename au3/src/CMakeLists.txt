@@ -407,8 +407,6 @@ set( SOURCES
       effects/StatefulEffectUIServices.h
       effects/StatelessPerTrackEffect.cpp
       effects/StatelessPerTrackEffect.h
-      effects/TimeScale.cpp
-      effects/TimeScale.h
       effects/ToneGen.cpp
       effects/ToneGen.h
       effects/TruncSilence.cpp

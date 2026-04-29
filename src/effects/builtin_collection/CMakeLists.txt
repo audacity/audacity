@@ -117,6 +117,13 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/silencegen/silencegenerator.h
     ${CMAKE_CURRENT_LIST_DIR}/silencegen/silenceviewmodel.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/slidingstretch/slidingstretcheffect.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/slidingstretch/slidingstretcheffect.h
+    ${CMAKE_CURRENT_LIST_DIR}/slidingstretch/slidingstretchviewmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/slidingstretch/slidingstretchviewmodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/slidingstretch/slidingstretchsettingmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/slidingstretch/slidingstretchsettingmodel.h
+
     ${CMAKE_CURRENT_LIST_DIR}/noisegen/noisegenerator.cpp
     ${CMAKE_CURRENT_LIST_DIR}/noisegen/noisegenerator.h
     ${CMAKE_CURRENT_LIST_DIR}/noisegen/noiseviewmodel.cpp
@@ -169,7 +176,7 @@ set(MODULE_DEF ${MODULE_DEF}
     # -DNOTE_TRACK_API=
 )
 
-set(MODULE_LINK au3wrap)
+set(MODULE_LINK au3wrap libsbsms)
 set(MODULE_LINK_PUBLIC au3-effects au3-builtin-effects)
 
 set(MODULE_USE_UNITY OFF)

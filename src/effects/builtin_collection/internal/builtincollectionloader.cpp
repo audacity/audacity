@@ -48,6 +48,9 @@
 #include "dtmfgen/dtmfviewmodel.h"
 #include "silencegen/silencegenerator.h"
 #include "silencegen/silenceviewmodel.h"
+#include "slidingstretch/slidingstretcheffect.h"
+#include "slidingstretch/slidingstretchviewmodel.h"
+#include "slidingstretch/slidingstretchsettingmodel.h"
 #include "noisegen/noisegenerator.h"
 #include "noisegen/noiseviewmodel.h"
 #include "noisereduction/noisereductioneffect.h"
@@ -93,6 +96,7 @@ void BuiltinCollectionLoader::preInit()
     static BuiltinEffectsModule::Registration< ReverbEffect > regReverb;
     static BuiltinEffectsModule::Registration< PaulstretchEffect > regPaulstretch;
     static BuiltinEffectsModule::Registration< SilenceGenerator > regSilence;
+    static BuiltinEffectsModule::Registration< SlidingStretchEffect > regSlidingStretch;
     static BuiltinEffectsModule::Registration< NoiseGenerator > regNoise;
     static BuiltinEffectsModule::Registration< NoiseReductionEffect > regNoiseReduction;
     static BuiltinEffectsModule::Registration< DtmfGenerator > regDtmf;
@@ -160,6 +164,10 @@ void BuiltinCollectionLoader::init()
 
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(SilenceViewModelFactory);
     regView(SilenceGenerator::Symbol, u"qrc:/silencegen/SilenceView.qml");
+
+    REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(SlidingStretchViewModelFactory);
+    REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(SlidingStretchSettingModelFactory);
+    regView(SlidingStretchEffect::Symbol, u"qrc:/slidingstretch/SlidingStretchView.qml");
 
     qmlRegisterType<DynamicsTimeline>("Audacity.BuiltinEffectsCollection", 1, 0, "DynamicsTimeline");
     qmlRegisterType<TimelineSourceModel>("Audacity.BuiltinEffectsCollection", 1, 0, "TimelineSourceModel");

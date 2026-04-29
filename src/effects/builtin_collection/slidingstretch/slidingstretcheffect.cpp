@@ -1,3 +1,6 @@
+/*
+* Audacity: A Digital Audio Editor
+*/
 /**********************************************************************
 
   Audacity: A Digital Audio Editor
@@ -8,37 +11,36 @@
 
 *******************************************************************//**
 
-\class TimeScaleBase
-\brief An TimeScaleBase does high quality sliding time scaling/pitch shifting
+\class SlidingStretchEffect
+\brief A SlidingStretchEffect does high quality sliding time scaling/pitch shifting
 
 *//*******************************************************************/
 
 #if USE_SBSMS
 
-#include "TimeScaleBase.h"
+#include "slidingstretcheffect.h"
 #include "au3-utility/MemoryX.h"
 #include <cmath>
 
-const EffectParameterMethods& TimeScaleBase::Parameters() const
+namespace au::effects {
+const EffectParameterMethods& SlidingStretchEffect::Parameters() const
 {
     static CapturedParameters<
-        TimeScaleBase, RatePercentStart, RatePercentEnd, HalfStepsStart,
+        SlidingStretchEffect, RatePercentStart, RatePercentEnd, HalfStepsStart,
         HalfStepsEnd, PitchPercentStart, PitchPercentEnd>
     parameters;
     return parameters;
 }
 
 //
-// TimeScaleBase
+// SlidingStretchEffect
 //
 
-const ComponentInterfaceSymbol TimeScaleBase::Symbol { wxT("Sliding Stretch"),
-                                                       XO("Sliding Stretch") };
+const ComponentInterfaceSymbol SlidingStretchEffect::Symbol { wxT("Sliding stretch"),
+                                                              XO("Sliding stretch") };
 
-TimeScaleBase::TimeScaleBase()
+SlidingStretchEffect::SlidingStretchEffect()
 {
-    Parameters().Reset(*this);
-
     slideTypeRate = SlideLinearOutputRate;
     slideTypePitch = SlideLinearOutputRate;
     bPreview = false;
@@ -47,45 +49,46 @@ TimeScaleBase::TimeScaleBase()
     SetLinearEffectFlag(true);
 }
 
-TimeScaleBase::~TimeScaleBase()
+SlidingStretchEffect::~SlidingStretchEffect()
 {
 }
 
 // ComponentInterface implementation
 
-ComponentInterfaceSymbol TimeScaleBase::GetSymbol() const
+ComponentInterfaceSymbol SlidingStretchEffect::GetSymbol() const
 {
     return Symbol;
 }
 
-TranslatableString TimeScaleBase::GetDescription() const
+TranslatableString SlidingStretchEffect::GetDescription() const
 {
     return XO("Allows continuous changes to the tempo and/or pitch");
 }
 
-ManualPageID TimeScaleBase::ManualPage() const
+ManualPageID SlidingStretchEffect::ManualPage() const
 {
     return L"Sliding_Stretch";
 }
 
 // EffectDefinitionInterface implementation
 
-EffectType TimeScaleBase::GetType() const
+::EffectType SlidingStretchEffect::GetType() const
 {
     return EffectTypeProcess;
 }
 
 // Effect implementation
 
-double TimeScaleBase::CalcPreviewInputLength(
+double SlidingStretchEffect::CalcPreviewInputLength(
     const EffectSettings& settings, double previewLength) const
 {
     double inputLength = settings.extra.GetDuration();
     if (inputLength == 0.0) {
         return 0.0;
     } else {
-        double rateStart1 = PercentChangeToRatio(m_RatePercentChangeStart);
-        double rateEnd1 = PercentChangeToRatio(m_RatePercentChangeEnd);
+        const auto& params = GetSettings(settings);
+        double rateStart1 = PercentChangeToRatio(params.m_RatePercentChangeStart);
+        double rateEnd1 = PercentChangeToRatio(params.m_RatePercentChangeEnd);
         double tOut = previewLength / inputLength;
         double t = SBSMSBase::getInvertedStretchedTime(
             rateStart1, rateEnd1, slideTypeRate, tOut);
@@ -93,18 +96,19 @@ double TimeScaleBase::CalcPreviewInputLength(
     }
 }
 
-std::any TimeScaleBase::BeginPreview(const EffectSettings& settings)
+std::any SlidingStretchEffect::BeginPreview(const EffectSettings& settings)
 {
     previewSelectedDuration = settings.extra.GetDuration();
     return { CopyableValueRestorer { bPreview, true } };
 }
 
-bool TimeScaleBase::Process(EffectInstance& instance, EffectSettings& settings)
+bool SlidingStretchEffect::Process(EffectInstance& instance, EffectSettings& settings)
 {
-    double pitchStart1 = PercentChangeToRatio(m_PitchPercentChangeStart);
-    double pitchEnd1 = PercentChangeToRatio(m_PitchPercentChangeEnd);
-    double rateStart1 = PercentChangeToRatio(m_RatePercentChangeStart);
-    double rateEnd1 = PercentChangeToRatio(m_RatePercentChangeEnd);
+    const auto& params = GetSettings(settings);
+    double pitchStart1 = PercentChangeToRatio(params.m_PitchPercentChangeStart);
+    double pitchEnd1 = PercentChangeToRatio(params.m_PitchPercentChangeEnd);
+    double rateStart1 = PercentChangeToRatio(params.m_RatePercentChangeStart);
+    double rateEnd1 = PercentChangeToRatio(params.m_RatePercentChangeEnd);
 
     if (bPreview) {
         double t = (mT1 - mT0) / previewSelectedDuration;
@@ -118,19 +122,20 @@ bool TimeScaleBase::Process(EffectInstance& instance, EffectSettings& settings)
     return SBSMSBase::Process(instance, settings);
 }
 
-double TimeScaleBase::PercentChangeToRatio(double percentChange)
+double SlidingStretchEffect::PercentChangeToRatio(double percentChange)
 {
     return 1.0 + percentChange / 100.0;
 }
 
-double TimeScaleBase::HalfStepsToPercentChange(double halfSteps)
+double SlidingStretchEffect::HalfStepsToPercentChange(double halfSteps)
 {
     return 100.0 * (pow(2.0, halfSteps / 12.0) - 1.0);
 }
 
-double TimeScaleBase::PercentChangeToHalfSteps(double percentChange)
+double SlidingStretchEffect::PercentChangeToHalfSteps(double percentChange)
 {
     return 12.0 * log2(PercentChangeToRatio(percentChange));
+}
 }
 
 #endif // USE_SBSMS
