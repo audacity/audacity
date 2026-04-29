@@ -7,6 +7,8 @@
 
 #include "framework/actions/actionable.h"
 #include "framework/actions/iactionsdispatcher.h"
+#include "framework/actions/actiontypes.h"
+#include "framework/global/async/channel.h"
 #include "framework/interactive/iinteractive.h"
 #include "framework/interactive/iplatforminteractive.h"
 #include "framework/ui/imainwindow.h"
@@ -70,6 +72,7 @@ public:
 
     bool isProjectOpened(const muse::io::path_t& projectPath) const;
     const muse::actions::ActionCodeList& prohibitedActionsWhileRecording() const;
+    muse::async::Channel<muse::actions::ActionCodeList> actionEnabledChanged() const;
 
 private:
     project::IAudacityProjectPtr currentProject() const;
@@ -127,6 +130,8 @@ private:
     void openCustomMapping();
 
     muse::Ret ensureAuthorization();
+
+    void listenTrackeditProjectChanges();
 
     bool m_isProjectSaving = false;
     bool m_isProjectClosing = false;

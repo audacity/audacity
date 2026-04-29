@@ -4,14 +4,12 @@
 #include "ui/iuiactionsmodule.h"
 #include "context/iuicontextresolver.h"
 #include "projectactionscontroller.h"
-#include "record/irecordcontroller.h"
 #include "async/asyncable.h"
 
 namespace au::project {
 class ProjectUiActions final : public muse::ui::IUiActionsModule, public muse::async::Asyncable, public muse::Contextable
 {
     muse::ContextInject<context::IUiContextResolver> uicontextResolver { this };
-    muse::ContextInject<record::IRecordController> recordController { this };
 
 public:
     explicit ProjectUiActions(const std::shared_ptr<ProjectActionsController>& controller);

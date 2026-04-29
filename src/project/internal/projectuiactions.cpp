@@ -636,8 +636,8 @@ ProjectUiActions::ProjectUiActions(const std::shared_ptr<ProjectActionsControlle
 
 void ProjectUiActions::init()
 {
-    recordController()->isRecordingChanged().onNotify(this, [this]() {
-        m_actionEnabledChanged.send(m_controller->prohibitedActionsWhileRecording());
+    m_controller->actionEnabledChanged().onReceive(this, [this](const muse::actions::ActionCodeList& codes) {
+        m_actionEnabledChanged.send(codes);
     });
 }
 
