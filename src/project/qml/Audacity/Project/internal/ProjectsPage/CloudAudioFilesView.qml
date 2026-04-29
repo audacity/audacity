@@ -7,7 +7,9 @@ import QtQuick.Controls 2.15
 
 import Muse.Ui 1.0
 import Muse.UiComponents
+
 import Audacity.Project 1.0
+import Audacity.Cloud 1.0
 
 import "../../."
 
@@ -15,8 +17,24 @@ ProjectsView {
     id: root
 
     function refresh() {
+        if (!accountModel.isAuthorized) {
+            return
+        }
+
         cloudAudioFilesModel.reload()
         prv.updateDesiredRowCount()
+    }
+
+    AccountModel {
+        id: accountModel
+
+        onIsAuthorizedChanged: {
+            if (accountModel.isAuthorized) {
+                cloudAudioFilesModel.load()
+            } else {
+                cloudAudioFilesModel.clear()
+            }
+        }
     }
 
     CloudAudioFilesModel {
@@ -30,7 +48,11 @@ ProjectsView {
     }
 
     Component.onCompleted: {
-        cloudAudioFilesModel.load()
+        accountModel.init()
+
+        if (accountModel.isAuthorized) {
+            cloudAudioFilesModel.load()
+        }
     }
 
     Connections {
@@ -103,9 +125,11 @@ ProjectsView {
     }
 
     sourceComponent: {
-        switch (cloudAudioFilesModel.state) {
-        case CloudAudioFilesModel.NotSignedIn:
+        if (!accountModel.isAuthorized) {
             return notSignedInComp
+        }
+
+        switch (cloudAudioFilesModel.state) {
         case CloudAudioFilesModel.Error:
             return errorComp
         case CloudAudioFilesModel.Loading:
@@ -370,7 +394,7 @@ ProjectsView {
         Item {
             anchors.fill: parent
 
-            Message {
+            Column {
                 anchors.top: parent.top
                 anchors.topMargin: Math.max(parent.height / 3 - height / 2, 0)
                 anchors.left: parent.left
@@ -378,8 +402,49 @@ ProjectsView {
                 anchors.right: parent.right
                 anchors.rightMargin: root.sideMargin
 
-                title: qsTrc("project", "You are not signed in")
-                body: qsTrc("project", "Please sign in to view your online files")
+                spacing: 32
+
+                Message {
+                    width: parent.width
+
+                    title: qsTrc("project", "You are not signed in")
+                    body: qsTrc("project", "Please sign in to view your online files")
+                }
+
+                Row {
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    width: implicitWidth
+                    spacing: 12
+
+                    NavigationPanel {
+                        id: navPanel
+                        name: "CloudAudioFilesSignInButtons"
+                        section: root.navigationSection
+                        order: root.navigationOrder
+                        direction: NavigationPanel.Horizontal
+                        accessible.name: qsTrc("cloud", "Sign in buttons")
+                    }
+
+                    FlatButton {
+                        navigation.panel: navPanel
+                        navigation.order: 1
+
+                        text: qsTrc("cloud", "Sign in")
+                        onClicked: {
+                            Qt.callLater(accountModel.openSignInDialog)
+                        }
+                    }
+
+                    FlatButton {
+                        navigation.panel: navPanel
+                        navigation.order: 2
+
+                        text: qsTrc("cloud", "Create account")
+                        onClicked: {
+                            Qt.callLater(accountModel.openCreateAccountDialog)
+                        }
+                    }
+                }
             }
         }
     }

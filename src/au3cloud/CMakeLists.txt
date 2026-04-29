@@ -36,8 +36,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/downloadmanager.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/downloadmanager.h
 
-    ${CMAKE_CURRENT_LIST_DIR}/view/accountinfomodel.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/view/accountinfomodel.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/accountmodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/accountmodel.h
     )
 
 set(MODULE_LINK au3wrap Qt6::Network Qt6::NetworkAuth)

@@ -7,8 +7,6 @@
 #include "framework/global/dataformatter.h"
 #include "framework/global/types/datetime.h"
 
-#include "au3cloud/cloudtypes.h"
-
 using namespace muse;
 using namespace au::project;
 
@@ -23,30 +21,8 @@ CloudAudioFilesModel::CloudAudioFilesModel(QObject* parent)
 
 void CloudAudioFilesModel::load()
 {
-    const auto authState = authorization()->authState().val;
-    if (std::holds_alternative<au::au3cloud::Authorized>(authState)) {
-        setState(State::Loading);
-        loadItemsIfNecessary();
-    } else if (std::holds_alternative<au::au3cloud::NotAuthorized>(authState)) {
-        muse::actions::ActionQuery query("audacity://cloud/open-signin-dialog");
-        query.addParam("sync", muse::Val(false));
-        query.addParam("showTourPage", muse::Val(false));
-        dispatcher()->dispatch(query);
-
-        setState(State::NotSignedIn);
-    }
-
-    authorization()->authState().ch.onReceive(this, [this](au::au3cloud::AuthState authState) {
-        if (std::holds_alternative < au::au3cloud::NotAuthorized>(authState)) {
-            setState(State::NotSignedIn);
-            return;
-        }
-
-        setState(State::Loading);
-        if (std::holds_alternative<au::au3cloud::Authorized>(authState)) {
-            loadItemsIfNecessary();
-        }
-    }, muse::async::Asyncable::Mode::SetReplace);
+    setState(State::Loading);
+    loadItemsIfNecessary();
 
     connect(this, &CloudAudioFilesModel::desiredRowCountChanged, this, &CloudAudioFilesModel::loadItemsIfNecessary);
 
@@ -122,7 +98,7 @@ void CloudAudioFilesModel::loadItemsIfNecessary()
         return;
     }
 
-    if (m_state == State::Error || m_state == State::NotSignedIn) {
+    if (m_state == State::Error) {
         return;
     }
 

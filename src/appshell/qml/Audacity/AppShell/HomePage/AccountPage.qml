@@ -24,7 +24,7 @@ FocusScope {
         readonly property real actualCellHeight: 200
     }
 
-    AccountInfoModel {
+    AccountModel {
         id: model
     }
 
@@ -80,13 +80,15 @@ FocusScope {
         userAvatarUrl: model.avatarPath
 
         onSignInRequested: {
-            model.openAuthorizationDialog()
+            model.openSignInDialog()
         }
 
         onSignOutRequested: {
             model.signOut()
         }
 
-        onCreateAccountRequested: {}
+        onCreateAccountRequested: {
+            model.openCreateAccountDialog()
+        }
     }
 }

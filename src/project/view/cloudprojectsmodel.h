@@ -10,9 +10,7 @@
 #include "modularity/ioc.h"
 #include "iprojectconfiguration.h"
 #include "au3cloud/iau3audiocomservice.h"
-#include "au3cloud/iauthorization.h"
 #include "framework/interactive/iinteractive.h"
-#include "framework/actions/iactionsdispatcher.h"
 
 namespace au::project {
 class CloudProjectsModel : public AbstractItemModel, public muse::async::Asyncable, public muse::Contextable
@@ -20,11 +18,8 @@ class CloudProjectsModel : public AbstractItemModel, public muse::async::Asyncab
     Q_OBJECT
 
     muse::GlobalInject<au::project::IProjectConfiguration> configuration;
-    muse::GlobalInject<au::au3cloud::IAuthorization> authorization;
-
     muse::ContextInject<au::au3cloud::IAu3AudioComService> audioComService { this };
     muse::ContextInject<muse::IInteractive> interactive { this };
-    muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher { this };
 
     Q_PROPERTY(State state READ state NOTIFY stateChanged)
     Q_PROPERTY(bool hasMore READ hasMore NOTIFY hasMoreChanged)
@@ -37,7 +32,6 @@ public:
     enum class State {
         Fine,
         Loading,
-        NotSignedIn,
         Error
     };
     Q_ENUM(State)
