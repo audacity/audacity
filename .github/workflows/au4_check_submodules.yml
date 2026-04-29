@@ -1,0 +1,40 @@
+name: '[AU4] Check: Submodules'
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check_muse_framework:
+    runs-on: ubuntu-latest
+    env:
+      EXPECTED_URL: https://github.com/musescore/framework_tmp.git
+    steps:
+    - name: Clone repository
+      uses: actions/checkout@v6
+
+    - name: Verify muse_framework submodule URL
+      run: |
+        ACTUAL_URL=$(git config -f .gitmodules submodule.muse_framework.url)
+        echo "Expected: ${EXPECTED_URL}"
+        echo "Actual:   ${ACTUAL_URL}"
+        if [ "${ACTUAL_URL}" != "${EXPECTED_URL}" ]; then
+          echo "::error file=.gitmodules::muse_framework submodule URL must be ${EXPECTED_URL}, found ${ACTUAL_URL}. Did you accidentally leave it pointing at a fork?"
+          exit 1
+        fi
+
+    - name: Verify muse_framework commit is in upstream
+      run: |
+        SHA=$(git ls-tree HEAD muse_framework | awk '{print $3}')
+        if [ -z "${SHA}" ]; then
+          echo "::error::Could not read muse_framework submodule SHA from index"
+          exit 1
+        fi
+        echo "Pinned commit: ${SHA}"
+        TMP=$(mktemp -d)
+        git -C "${TMP}" init -q
+        git -C "${TMP}" remote add origin "${EXPECTED_URL}"
+        if ! git -C "${TMP}" fetch --depth=1 origin "${SHA}" 2>&1; then
+          echo "::error::muse_framework is pinned to ${SHA}, which is not fetchable from ${EXPECTED_URL}. Push the commit to the upstream repo before merging."
+          exit 1
+        fi
