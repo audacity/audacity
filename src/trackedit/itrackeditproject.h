@@ -10,6 +10,7 @@
 
 #include "global/async/notifylist.h"
 #include "global/async/channel.h"
+#include "global/types/retval.h"
 
 #include "trackedittypes.h"
 #include "dom/track.h"
@@ -34,6 +35,7 @@ public:
 
     virtual std::vector<TrackId> trackIdList() const = 0;
     virtual std::vector<Track> trackList() const = 0;
+    virtual muse::ValCh<bool> hasAudioContent() const = 0;
     virtual bool timeTrackFound() const = 0;
     virtual std::optional<Track> track(TrackId trackId) const = 0;
     virtual Clip clip(const ClipKey& key) const = 0;

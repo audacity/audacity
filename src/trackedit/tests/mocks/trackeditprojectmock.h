@@ -13,6 +13,7 @@ class TrackeditProjectMock : public ITrackeditProject
 public:
     MOCK_METHOD(std::vector<TrackId>, trackIdList, (), (const, override));
     MOCK_METHOD(std::vector<Track>, trackList, (), (const, override));
+    MOCK_METHOD((muse::ValCh<bool>), hasAudioContent, (), (const, override));
     MOCK_METHOD(bool, timeTrackFound, (), (const, override));
     MOCK_METHOD(std::optional<Track>, track, (TrackId trackId), (const, override));
 
