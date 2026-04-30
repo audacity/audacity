@@ -18,7 +18,8 @@ Rectangle {
     y: 0
     height: parent.height / 2
 
-    color: Qt.rgba(ui.theme.accentColor.r, ui.theme.accentColor.g, ui.theme.accentColor.b, active ? ui.theme.accentOpacityNormal : ui.theme.accentOpacityHover)
+    color: ui.theme.accentColor
+    opacity: active ? ui.theme.accentOpacityNormal : ui.theme.accentOpacityHover
 
     function updatePosition() {
         let newX = context.timeToPosition(start)
