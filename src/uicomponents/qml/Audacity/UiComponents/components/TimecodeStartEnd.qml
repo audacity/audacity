@@ -39,6 +39,8 @@ RowLayout {
     Timecode {
         id: startTimecode
 
+        appearance: Timecode.Appearance.Clock
+
         mode: TimecodeModeSelector.TimePoint
         sampleRate: root.sampleRate
         tempo: root.tempo
@@ -60,6 +62,8 @@ RowLayout {
 
     Timecode {
         id: endTimecode
+
+        appearance: Timecode.Appearance.Clock
 
         mode: TimecodeModeSelector.TimePoint
         sampleRate: root.sampleRate
