@@ -34,8 +34,8 @@ Rectangle {
     signal endValueChangeRequested(var newValue)
     signal formatChangeRequested(var newFormat)
 
-    implicitWidth: layout.implicitWidth + 2 * border.width
-    implicitHeight: layout.implicitHeight + 2 * border.width
+    implicitWidth: layout.implicitWidth
+    implicitHeight: layout.implicitHeight
 
     color: ui.theme.backgroundQuarternaryColor
     radius: 3
@@ -45,7 +45,7 @@ Rectangle {
     RowLayout {
         id: layout
 
-        anchors.centerIn: parent
+        anchors.fill: parent
         spacing: 1
 
         Timecode {
