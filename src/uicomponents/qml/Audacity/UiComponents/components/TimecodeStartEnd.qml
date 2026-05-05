@@ -10,7 +10,7 @@ import Muse.UiComponents
 
 import Audacity.UiComponents 1.0
 
-RowLayout {
+Rectangle {
     id: root
 
     property alias startValue: startTimecode.value
@@ -34,57 +34,78 @@ RowLayout {
     signal endValueChangeRequested(var newValue)
     signal formatChangeRequested(var newFormat)
 
-    spacing: 1
+    implicitWidth: layout.implicitWidth + 2 * border.width
+    implicitHeight: layout.implicitHeight + 2 * border.width
 
-    Timecode {
-        id: startTimecode
+    color: ui.theme.backgroundQuarternaryColor
+    radius: 3
+    border.color: ui.theme.strokeColor
+    border.width: 1
 
-        appearance: Timecode.Appearance.Clock
+    RowLayout {
+        id: layout
 
-        mode: TimecodeModeSelector.TimePoint
-        sampleRate: root.sampleRate
-        tempo: root.tempo
-        upperTimeSignature: root.upperTimeSignature
-        lowerTimeSignature: root.lowerTimeSignature
+        anchors.centerIn: parent
+        spacing: 1
 
-        currentFormat: root.currentFormat
+        Timecode {
+            id: startTimecode
 
-        showMenu: false
+            appearance: Timecode.Appearance.Clock
+            backgroundColor: "transparent"
+            border: Border {
+                width: 0
+            }
 
-        navigation.panel: root.navigationPanel
-        navigation.row: 1
-        navigation.column: 1
+            mode: TimecodeModeSelector.TimePoint
+            sampleRate: root.sampleRate
+            tempo: root.tempo
+            upperTimeSignature: root.upperTimeSignature
+            lowerTimeSignature: root.lowerTimeSignature
 
-        onValueChangeRequested: function (newValue) {
-            root.startValueChangeRequested(newValue)
-        }
-    }
+            currentFormat: root.currentFormat
 
-    Timecode {
-        id: endTimecode
+            showMenu: false
 
-        appearance: Timecode.Appearance.Clock
+            navigation.panel: root.navigationPanel
+            navigation.row: 1
+            navigation.column: 1
 
-        mode: TimecodeModeSelector.TimePoint
-        sampleRate: root.sampleRate
-        tempo: root.tempo
-        upperTimeSignature: root.upperTimeSignature
-        lowerTimeSignature: root.lowerTimeSignature
-
-        currentFormat: root.currentFormat
-
-        backgroundLeftRadius: 0
-
-        navigation.panel: root.navigationPanel
-        navigation.row: startTimecode.navigation.row
-        navigation.column: startTimecode.navigationColumnEnd + 1
-
-        onValueChangeRequested: function (newValue) {
-            root.endValueChangeRequested(newValue)
+            onValueChangeRequested: function (newValue) {
+                root.startValueChangeRequested(newValue)
+            }
         }
 
-        onCurrentFormatChanged: function () {
-            root.formatChangeRequested(currentFormat)
+        Timecode {
+            id: endTimecode
+
+            appearance: Timecode.Appearance.Clock
+            backgroundColor: "transparent"
+            border: Border {
+                width: 0
+            }
+
+            mode: TimecodeModeSelector.TimePoint
+            sampleRate: root.sampleRate
+            tempo: root.tempo
+            upperTimeSignature: root.upperTimeSignature
+            lowerTimeSignature: root.lowerTimeSignature
+
+            currentFormat: root.currentFormat
+
+            backgroundLeftRadius: 0
+
+            navigation.panel: root.navigationPanel
+            navigation.row: startTimecode.navigation.row
+            navigation.column: startTimecode.navigationColumnEnd + 1
+
+            onValueChangeRequested: function (newValue) {
+                root.endValueChangeRequested(newValue)
+            }
+
+            onCurrentFormatChanged: function () {
+                root.formatChangeRequested(currentFormat)
+            }
         }
     }
 }
