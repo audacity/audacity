@@ -147,7 +147,7 @@ Item {
             }
 
             onAboutToShow: {
-                update()
+                load()
             }
         }
     }
