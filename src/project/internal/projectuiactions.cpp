@@ -29,6 +29,12 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "&Open…"),
              TranslatableString("action", "Open…")
              ),
+    UiAction("file-open-recent",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Open recent"),
+             TranslatableString("action", "Open recent project")
+             ),
     UiAction("audacity://cloud/open-audio-file",
              au::context::UiCtxAny,
              au::context::CTX_ANY,

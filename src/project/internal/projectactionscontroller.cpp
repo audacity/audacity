@@ -51,6 +51,7 @@ void ProjectActionsController::init()
 {
     dispatcher()->reg(this, "file-new", this, &ProjectActionsController::newProject);
     dispatcher()->reg(this, "file-open", this, &ProjectActionsController::open);
+    dispatcher()->reg(this, "file-open-recent", this, &ProjectActionsController::open);
     dispatcher()->reg(this, "cloud-file-open", this, &ProjectActionsController::openCloudProject);
     dispatcher()->reg(this, "clear-recent", this, &ProjectActionsController::clearRecentProjects);
     dispatcher()->reg(this, "project-import", this, &ProjectActionsController::importFiles);
@@ -92,10 +93,6 @@ void ProjectActionsController::init()
 const muse::actions::ActionCodeList& ProjectActionsController::prohibitedActionsWhileRecording() const
 {
     static const std::vector<muse::actions::ActionCode> PROHIBITED_WHILE_RECORDING {
-        "file-new",
-        "file-open",
-        "cloud-file-open",
-        "audacity://cloud/open-audio-file",
         "file-close",
         "project-import",
         "file-save",
@@ -115,6 +112,7 @@ bool ProjectActionsController::canReceiveAction(const muse::actions::ActionCode&
         static const std::unordered_set<actions::ActionCode> DONT_REQUIRE_OPEN_PROJECT {
             "file-new",
             "file-open",
+            "file-open-recent",
             "project-import-startup-media",
             "cloud-file-open",
             "continue-last-session",
