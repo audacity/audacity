@@ -354,9 +354,9 @@ bool SetTrackVisualsCommand::ApplyInner(
       auto &scaleType = WaveformSettings::Get(*wt).scaleType;
       switch (mScaleType) {
       default:
-      case kLinearAmp: scaleType = WaveformSettings::stLinearAmp;
-      case kLogarithmicDb: scaleType = WaveformSettings::stLogarithmicDb;
-      case kLinearDb: scaleType = WaveformSettings::stLinearDb;
+      case kLinearAmp: scaleType = WaveformSettings::stLinearAmp; break;
+      case kLogarithmicDb: scaleType = WaveformSettings::stLogarithmicDb; break;
+      case kLinearDb: scaleType = WaveformSettings::stLinearDb; break;
       }
    }
 
