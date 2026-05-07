@@ -14,6 +14,9 @@
 #include "trackedit/iprojecthistory.h"
 
 #include "effects/effects_base/view/abstracteffectviewmodel.h"
+#include "effects/effects_base/ieffectinstancesregister.h"
+#include "effects/effects_base/ieffectexecutionscenario.h"
+#include "effects/effects_base/ieffectsprovider.h"
 #include "effects/effects_base/irealtimeeffectservice.h"
 
 #include "au3-audio-unit/AudioUnitInstance.h"
@@ -24,7 +27,11 @@ class AudioUnitViewModel : public AbstractEffectViewModel
     Q_OBJECT
     Q_PROPERTY(QString title READ title NOTIFY titleChanged FINAL)
 
+    muse::GlobalInject<IEffectInstancesRegister> instancesRegister;
+    muse::GlobalInject<IEffectsProvider> effectsProvider;
+
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
+    muse::ContextInject<IEffectExecutionScenario> executionScenario{ this };
     muse::ContextInject<IRealtimeEffectService> realtimeEffectService{ this };
     muse::ContextInject<au::playback::IPlayback> playback{ this };
     muse::ContextInject<trackedit::IProjectHistory> projectHistory{ this };

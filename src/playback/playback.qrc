@@ -3,6 +3,7 @@
         <file>qml/Audacity/Playback/qmldir</file>
         <file>qml/Audacity/Playback/components/HorizontalVolumePressureMeter.qml</file>
         <file>qml/Audacity/Playback/components/HorizontalVolumePressureRuler.qml</file>
+        <file>qml/Audacity/Playback/components/MeterStyle.qml</file>
         <file>qml/Audacity/Playback/components/VerticalVolumeSlider.qml</file>
         <file>qml/Audacity/Playback/components/VolumeSlider.qml</file>
         <file>qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml</file>

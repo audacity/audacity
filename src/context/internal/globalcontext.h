@@ -32,8 +32,6 @@ public:
 
     bool isRecording() const override;
     muse::async::Notification isRecordingChanged() const override;
-    muse::secs_t recordPosition() const override;
-    muse::async::Channel<muse::secs_t> recordPositionChanged() const override;
 
 private:
     au::project::IAudacityProjectPtr m_currentProject;

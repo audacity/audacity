@@ -211,11 +211,6 @@ bool NyquistBase::IsInteractive() const
     return mControls.size() != 0;
 }
 
-bool NyquistBase::SupportsMultipleClipSelection() const
-{
-    return true;
-}
-
 bool NyquistBase::IsDefault() const
 {
     return mIsPrompt;

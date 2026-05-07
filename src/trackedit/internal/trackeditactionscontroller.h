@@ -140,6 +140,7 @@ private:
     void toggleStretchClipToMatchTempo(const muse::actions::ActionData& args);
     void openClipPitchAndSpeed();
     void renderClipPitchAndSpeed(const muse::actions::ActionData& args);
+    void resetClipPitchAndSpeed(const muse::actions::ActionData& args);
 
     void swapStereoChannels(const muse::actions::ActionData& args);
     void splitStereoToLR(const muse::actions::ActionData& args);

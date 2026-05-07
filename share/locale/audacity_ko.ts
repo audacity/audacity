@@ -15,285 +15,197 @@
 <context>
     <name>action</name>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="48"/>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="49"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="46"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="47"/>
         <source>Exit</source>
         <translation>종료</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="54"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="52"/>
         <source>Restart</source>
         <translation>다시 시작</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="59"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="57"/>
         <source>&amp;Full screen</source>
         <translation>&amp;전체 화면</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="60"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="58"/>
         <source>Full screen</source>
         <translation>전체 화면</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="66"/>
-        <source>&amp;About MuseScore…</source>
-        <translation>MuseScore 정보(&amp;A)…</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="71"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="69"/>
         <source>About &amp;Qt…</source>
         <translation>Qt 정보(&amp;Q)…</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="76"/>
-        <source>About &amp;MusicXML…</source>
-        <translation>MusicXML 정보(&amp;M)…</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="81"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="74"/>
         <source>Online &amp;handbook</source>
         <translation>온라인 핸드북(&amp;H)</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="82"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="75"/>
         <source>Open online handbook</source>
         <translation>온라인 핸드북 열기</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="87"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="80"/>
         <source>As&amp;k for help</source>
         <translation>도움 요청(&amp;K)</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="92"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="85"/>
         <source>Revert to &amp;factory settings</source>
         <translation>공장 초기 설정으로 되돌리기(&amp;F)</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="93"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="86"/>
         <source>Revert to factory settings</source>
         <translation>공장 초기 설정으로 되돌리기</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="100"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="93"/>
         <source>Restore the &amp;default layout</source>
         <translation>기본 레이아웃 복원(&amp;D)</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="101"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="94"/>
         <source>Restore the default layout</source>
         <translation>기본 레이아웃 복원</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="108"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="101"/>
         <source>&amp;Playback controls</source>
         <translation>재생 제어(&amp;P)</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="109"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="102"/>
         <source>Show/hide playback controls</source>
         <translation>재생 제어 표시/숨기기</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="115"/>
-        <source>&amp;Note input</source>
-        <translation>음표 입력(&amp;N)</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="116"/>
-        <source>Show/hide note input toolbar</source>
-        <translation>음표 입력 도구 모음 표시/숨기기</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="124"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="109"/>
         <source>&amp;Tracks</source>
         <translation>트랙(&amp;T)</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="125"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="110"/>
         <source>Show/hide tracks</source>
         <translation>트랙 표시/숨기기</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="131"/>
-        <source>Instr&amp;uments</source>
-        <translation>악기(&amp;U)</translation>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="64"/>
+        <source>&amp;About Audacity…</source>
+        <translation>오다시티 정보(&amp;A)…</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="132"/>
-        <source>Open instruments dialog…</source>
-        <translation>악기 대화 상자 열기…</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="138"/>
-        <source>Propert&amp;ies</source>
-        <translation>속성(&amp;I)</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="139"/>
-        <source>Show/hide properties</source>
-        <translation>속성 표시/숨기기</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="145"/>
-        <source>Se&amp;lection filter</source>
-        <translation>선택 필터(&amp;L)</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="146"/>
-        <source>Show/hide selection filter</source>
-        <translation>선택 필터 표시/숨기기</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="154"/>
-        <source>&amp;Navigator</source>
-        <translation>내비게이터(&amp;N)</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="155"/>
-        <source>Show/hide navigator</source>
-        <translation>내비게이터 표시/숨기기</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="163"/>
-        <source>&amp;Braille</source>
-        <translation>점자(&amp;B)</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="164"/>
-        <source>Show/hide braille panel</source>
-        <translation>점자 패널 표시/숨기기</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="172"/>
-        <source>Tim&amp;eline</source>
-        <translation>타임라인(&amp;E)</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="173"/>
-        <source>Show/hide timeline</source>
-        <translation>타임라인 표시/숨기기</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="179"/>
-        <source>Piano &amp;keyboard</source>
-        <translation>피아노 키보드(&amp;K)</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="180"/>
-        <source>Show/hide piano keyboard</source>
-        <translation>피아노 키보드 표시/숨기기</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="186"/>
-        <source>Score comparison tool</source>
-        <translation>악보 비교 도구</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="194"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="117"/>
         <source>&amp;Status bar</source>
         <translation>상태 표시줄(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="195"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="118"/>
         <source>Show/hide status bar</source>
         <translation>상태 표시줄 표시/숨기기</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="202"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="125"/>
         <source>&amp;Preferences</source>
         <translation>환경 설정(&amp;P)</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="203"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="126"/>
         <source>Preferences…</source>
         <translation>환경 설정…</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="209"/>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="210"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="132"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="133"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="24"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="25"/>
         <source>Copy</source>
         <translation>복사</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="217"/>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="218"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="140"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="141"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="31"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="32"/>
         <source>Cut</source>
         <translation>잘라내기</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="225"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="235"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="148"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="256"/>
         <source>&amp;Paste</source>
         <translation>붙여넣기(&amp;P)</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="226"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="236"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="149"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="257"/>
         <source>Paste</source>
         <translation>붙여넣기</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="233"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="156"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="38"/>
         <source>&amp;Undo</source>
         <translation>되돌리기(&amp;U)</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="234"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="157"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="167"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="39"/>
         <source>Undo</source>
         <translation>되돌리기</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="241"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="164"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="45"/>
         <source>&amp;Redo</source>
         <translation>재실행(&amp;R)</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="242"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="165"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="173"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="46"/>
         <source>Redo</source>
         <translation>재실행</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="249"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="172"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="52"/>
         <source>De&amp;lete</source>
         <translation>삭제(&amp;L)</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="250"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="173"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="174"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="175"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="53"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="144"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="165"/>
         <source>Delete</source>
         <translation>삭제</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="256"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="179"/>
         <source>&amp;Cancel</source>
         <translation>취소(&amp;C)</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="257"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="180"/>
         <source>Cancel</source>
         <translation>취소</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="263"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="186"/>
         <source>&amp;Trigger</source>
         <translation>트리거(&amp;T)</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="264"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="187"/>
         <source>Trigger</source>
         <translation>트리거</translation>
     </message>
@@ -310,6 +222,12 @@
     <message>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="15"/>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="16"/>
+        <source>View project on audio.com</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="21"/>
+        <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="22"/>
         <source>View on audio.com</source>
         <translation>audio.com에서 보기</translation>
     </message>
@@ -373,14 +291,14 @@
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="42"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="43"/>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="35"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="36"/>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="37"/>
         <source>Pause</source>
         <translation>일시 정지</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="49"/>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="42"/>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="43"/>
         <source>Stop</source>
         <translation>정지</translation>
     </message>
@@ -565,13 +483,13 @@
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="217"/>
-        <source>Pan score automatically</source>
-        <translation>악보 자동 이동</translation>
+        <source>Pan automatically</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="218"/>
-        <source>Pan score automatically during playback</source>
-        <translation>재생 중 악보 자동 이동</translation>
+        <source>Pan automatically during playback</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="23"/>
@@ -595,744 +513,626 @@
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="35"/>
-        <source>&amp;Open cloud project…</source>
-        <translation>클라우드 프로젝트 열기(&amp;O)…</translation>
-    </message>
-    <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="36"/>
-        <source>Open cloud project…</source>
-        <translation>클라우드 프로젝트 열기…</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="41"/>
         <source>Open</source>
         <translation>열기</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="42"/>
-        <source>Open cloud audio</source>
-        <translation>클라우드 오디오 열기</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="47"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="41"/>
         <source>&amp;Clear recent files</source>
         <translation>최근 파일 지우기(&amp;C)</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="48"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="42"/>
         <source>Clear recent files</source>
         <translation>최근 파일 지우기</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="53"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="54"/>
-        <source>Import</source>
-        <translation>가져오기</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="59"/>
         <source>&amp;Save project</source>
         <translation>프로젝트 저장(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="60"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="54"/>
         <source>Save project</source>
         <translation>프로젝트 저장</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="65"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="59"/>
         <source>Save &amp;as…</source>
         <translation>다른 이름으로 저장(&amp;A)…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="66"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="60"/>
         <source>Save as…</source>
         <translation>다른 이름으로 저장…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="71"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="72"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="65"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="66"/>
         <source>Save backup</source>
         <translation>백업 저장</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="77"/>
-        <source>&amp;Export audio</source>
-        <translation>오디오 내보내기(&amp;E)</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="78"/>
-        <source>Export audio</source>
-        <translation>오디오 내보내기</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="83"/>
         <source>&amp;Export labels</source>
         <translation>레이블 내보내기(&amp;E)</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="84"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="78"/>
         <source>Export labels</source>
         <translation>레이블 내보내기</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="89"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="83"/>
         <source>&amp;Export MIDI</source>
         <translation>MIDI 내보내기(&amp;E)</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="90"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="84"/>
         <source>Export MIDI</source>
         <translation>MIDI 내보내기</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="95"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="89"/>
         <source>&amp;Close project</source>
         <translation>프로젝트 닫기(&amp;C)</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="96"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="90"/>
         <source>Close project</source>
         <translation>프로젝트 닫기</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="103"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="104"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="423"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="424"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="125"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="126"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="138"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="97"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="98"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="312"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="313"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="146"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="147"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="159"/>
         <source>Duplicate</source>
         <translation>복제하기</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="109"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="110"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="103"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="104"/>
         <source>Insert</source>
         <translation>삽입</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="115"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="116"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="109"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="110"/>
         <source>Rename item</source>
         <translation>항목 이름 바꾸기</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="121"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="122"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="115"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="116"/>
         <source>Trim clip</source>
         <translation>클립 자르기</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="127"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="128"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="121"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="122"/>
         <source>Split into new track</source>
         <translation>새 트랙으로 분할</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="133"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="134"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="127"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="128"/>
         <source>Silence audio</source>
         <translation>오디오 무음 처리</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="139"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="140"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="133"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="134"/>
         <source>Paste new label</source>
         <translation>새 레이블 붙여넣기</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="145"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="146"/>
-        <source>Cut labels</source>
-        <translation>레이블 잘라내기</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="151"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="152"/>
-        <source>Cut labels and leave gap</source>
-        <translation>레이블 잘라내고 간격 남기기</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="157"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="158"/>
-        <source>Copy labels</source>
-        <translation>레이블 복사</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="163"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="164"/>
-        <source>Delete labels</source>
-        <translation>레이블 삭제</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="169"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="170"/>
-        <source>Delete labels and leave gap</source>
-        <translation>레이블 삭제하고 간격 남기기</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="175"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="176"/>
-        <source>Split labels</source>
-        <translation>레이블 분할</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="181"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="182"/>
-        <source>Merge labels</source>
-        <translation>레이블 병합</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="187"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="188"/>
-        <source>Silence labels</source>
-        <translation>레이블 무음 처리</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="193"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="194"/>
-        <source>Disjoin labels</source>
-        <translation>레이블 분리</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="199"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="200"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="139"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="140"/>
         <source>Manage labels</source>
         <translation>레이블 관리</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="205"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="206"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="145"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="146"/>
         <source>Metadata editor</source>
         <translation>메타데이터 편집기</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="213"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="214"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="153"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="154"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="60"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="61"/>
         <source>Select all</source>
         <translation>모두 선택</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="219"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="220"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="159"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="160"/>
         <source>Select all tracks</source>
         <translation>모든 트랙 선택</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="225"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="226"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="165"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="166"/>
         <source>Left of playback position</source>
         <translation>재생 위치 왼쪽</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="231"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="232"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="171"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="172"/>
         <source>Right of playback position</source>
         <translation>재생 위치 오른쪽</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="237"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="238"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="177"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="178"/>
         <source>Track start to cursor</source>
         <translation>트랙 시작부터 커서까지</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="243"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="244"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="183"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="184"/>
         <source>Cursor to track end</source>
         <translation>커서부터 트랙 끝까지</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="249"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="250"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="189"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="190"/>
         <source>Track start to end</source>
         <translation>트랙 시작부터 끝까지</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="255"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="256"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="195"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="196"/>
         <source>Previous clip boundary to cursor</source>
         <translation>이전 클립 경계부터 커서까지</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="261"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="262"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="201"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="202"/>
         <source>Cursor to next clip boundary</source>
         <translation>커서부터 다음 클립 경계까지</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="267"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="268"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="207"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="208"/>
         <source>Previous clip</source>
         <translation>이전 클립</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="273"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="274"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="213"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="214"/>
         <source>Next clip</source>
         <translation>다음 클립</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="279"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="280"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="219"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="220"/>
         <source>Toggle spectral selection</source>
         <translation>스펙트럼 선택 전환</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="285"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="286"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="225"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="226"/>
         <source>Move cursor to closest zero crossing</source>
         <translation>커서를 가장 가까운 영점 교차로 이동</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="293"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="294"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="43"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="44"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="36"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="37"/>
         <source>Zoom in</source>
         <translation>확대</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="300"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="301"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="50"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="51"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="43"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="44"/>
         <source>Zoom out</source>
         <translation>축소</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="307"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="308"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="50"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="51"/>
+        <source>Zoom default</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="56"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="57"/>
         <source>Zoom to selection</source>
         <translation>선택 영역에 맞게 확대</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="314"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="315"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="36"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="37"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="70"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="71"/>
         <source>Zoom toggle</source>
         <translation>확대/축소 전환</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="320"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="321"/>
-        <source>Zoom reset</source>
-        <translation>확대/축소 초기화</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="326"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="327"/>
-        <source>Fit project to window</source>
-        <translation>프로젝트를 창에 맞춤</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="332"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="333"/>
-        <source>Fit view to project</source>
-        <translation>보기를 프로젝트에 맞춤</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="338"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="339"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="233"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="234"/>
         <source>Collapse all tracks</source>
         <translation>모든 트랙 접기</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="344"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="345"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="239"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="240"/>
         <source>Expand all tracks</source>
         <translation>모든 트랙 펼치기</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="350"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="351"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="245"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="246"/>
         <source>Skip to selection start</source>
         <translation>선택 시작으로 이동</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="356"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="357"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="251"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="252"/>
         <source>Skip to selection end</source>
         <translation>선택 끝으로 이동</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="362"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="363"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="257"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="258"/>
         <source>Show effects</source>
         <translation>이펙트 표시</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="369"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="370"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="264"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="265"/>
         <source>Show metadata editor</source>
         <translation>메타데이터 편집기 표시</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="376"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="377"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="271"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="272"/>
         <source>Show history</source>
         <translation>기록 표시</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="385"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="386"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="280"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="281"/>
         <source>Record on current track</source>
         <translation>현재 트랙에 녹음</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="391"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="392"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="286"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="287"/>
         <source>Record on new track</source>
         <translation>새 트랙에 녹음</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="397"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="398"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="292"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="293"/>
         <source>Set up timed recording</source>
         <translation>예약 녹음 설정</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="403"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="404"/>
-        <source>Punch and roll record</source>
-        <translation>펀치 앤 롤 녹음</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="409"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="410"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="298"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="299"/>
         <source>Enable sound activating recording</source>
         <translation>사운드 활성화 녹음 사용</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="415"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="416"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="304"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="305"/>
         <source>Set sound activation level</source>
         <translation>사운드 활성화 레벨 설정</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="429"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="430"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="318"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="319"/>
         <source>Remove tracks</source>
         <translation>트랙 제거</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="435"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="436"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="324"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="325"/>
         <source>Mix-down to…</source>
         <translation>믹스다운 대상…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="441"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="442"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="330"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="331"/>
         <source>Align end to end</source>
         <translation>끝과 끝 맞추기</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="447"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="448"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="336"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="337"/>
         <source>Align together</source>
         <translation>함께 정렬</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="453"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="454"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="342"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="343"/>
         <source>Align start to zero</source>
         <translation>시작을 0에 맞추기</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="459"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="460"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="348"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="349"/>
         <source>Align start to playhead</source>
         <translation>시작을 재생 헤드에 맞추기</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="465"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="466"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="354"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="355"/>
         <source>Align start to selection end</source>
         <translation>시작을 선택 끝에 맞추기</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="471"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="472"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="360"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="361"/>
         <source>Align end to playhead</source>
         <translation>끝을 재생 헤드에 맞추기</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="477"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="478"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="366"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="367"/>
         <source>Align end to selection end</source>
         <translation>끝을 선택 끝에 맞추기</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="483"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="484"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="372"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="373"/>
         <source>Sort by time</source>
         <translation>시간순 정렬</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="489"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="490"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="378"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="379"/>
         <source>Sort by name</source>
         <translation>이름순 정렬</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="495"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="496"/>
-        <source>Keep tracks synchronised</source>
-        <translation>트랙 동기화 유지</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="503"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="504"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="517"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="518"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="555"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="556"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="581"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="582"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="392"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="393"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="400"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="401"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="432"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="433"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="452"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="453"/>
         <source>Plugin manager</source>
         <translation>플러그인 관리자</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="509"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="510"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="573"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="574"/>
-        <source>(Omitted)</source>
-        <translation>(생략됨)</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="523"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="524"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="406"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="407"/>
         <source>Add realtime effects</source>
         <translation>실시간 이펙트 추가</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="529"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="530"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="412"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="413"/>
         <source>Fav effect #1</source>
         <translation>즐겨찾기 이펙트 #1</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="535"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="536"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="418"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="419"/>
         <source>Fav effect #2</source>
         <translation>즐겨찾기 이펙트 #2</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="541"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="542"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="424"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="425"/>
         <source>Fav effect #3</source>
         <translation>즐겨찾기 이펙트 #3</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="547"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="548"/>
-        <source>(Plugins omitted)</source>
-        <translation>(플러그인 생략됨)</translation>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="47"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="48"/>
+        <source>Import…</source>
+        <translation>가져오기…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="561"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="562"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="71"/>
+        <source>&amp;Export audio…</source>
+        <translation>오디오 내보내기(&amp;E)…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="72"/>
+        <source>Export audio…</source>
+        <translation>오디오 내보내기…</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="384"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="385"/>
+        <source>Keep tracks synchronized</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="438"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="439"/>
         <source>Contrast analyzer</source>
         <translation>대비 분석기</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="567"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="568"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="444"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="445"/>
         <source>Plot spectrum</source>
         <translation>스펙트럼 표시</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="587"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="588"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="458"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="459"/>
         <source>Manage macros</source>
         <translation>매크로 관리</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="593"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="594"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="464"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="465"/>
         <source>Apply macros palette</source>
         <translation>매크로 팔레트 적용</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="599"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="600"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="470"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="471"/>
         <source>Macro fade ends</source>
         <translation>매크로 페이드 끝</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="605"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="606"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="476"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="477"/>
         <source>Macro MP3 conversion</source>
         <translation>매크로 MP3 변환</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="611"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="612"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="482"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="483"/>
         <source>Nyquist plugin installer</source>
         <translation>Nyquist 플러그인 설치기</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="617"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="618"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="488"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="489"/>
         <source>Nyquist prompt</source>
         <translation>Nyquist 프롬프트</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="623"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="624"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="494"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="495"/>
         <source>Sample data export</source>
         <translation>샘플 데이터 내보내기</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="629"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="630"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="500"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="501"/>
         <source>Sample data import</source>
         <translation>샘플 데이터 가져오기</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="635"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="636"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="506"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="507"/>
         <source>Raw data import</source>
         <translation>원시 데이터 가져오기</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="641"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="642"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="512"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="513"/>
         <source>Reset configuration</source>
         <translation>구성 초기화</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="649"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="650"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="520"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="521"/>
         <source>Previous window</source>
         <translation>이전 창</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="655"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="656"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="526"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="527"/>
         <source>Next window</source>
         <translation>다음 창</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="661"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="662"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="532"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="533"/>
         <source>Benchmark</source>
         <translation>벤치마크</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="667"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="668"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="538"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="539"/>
         <source>Regular interval labels</source>
         <translation>정규 간격 레이블</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="675"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="676"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="546"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="547"/>
         <source>Tutorials</source>
         <translation>튜토리얼</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="681"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="682"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="552"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="553"/>
         <source>Device info</source>
         <translation>장치 정보</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="687"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="688"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="558"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="559"/>
         <source>MIDI device info</source>
         <translation>MIDI 장치 정보</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="693"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="694"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="564"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="565"/>
         <source>Log</source>
         <translation>로그</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="699"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="700"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="570"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="571"/>
         <source>Crash report</source>
         <translation>충돌 보고서</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="705"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="706"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="576"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="577"/>
         <source>Raise segfault</source>
         <translation>세그폴트 발생</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="711"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="712"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="582"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="583"/>
         <source>Throw exception</source>
         <translation>예외 발생</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="717"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="718"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="588"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="589"/>
         <source>Violate assertion</source>
         <translation>어설션 위반</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="723"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="724"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="594"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="595"/>
         <source>Menu tree</source>
         <translation>메뉴 트리</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="729"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="730"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="600"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="601"/>
         <source>Frame statistics</source>
         <translation>프레임 통계</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="735"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="736"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="606"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="607"/>
         <source>Link account</source>
         <translation>계정 연결</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="741"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="742"/>
-        <source>Updates</source>
-        <translation>업데이트</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="747"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="748"/>
-        <source>About Audacity</source>
-        <translation>Audacity 정보</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="754"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="612"/>
         <source>Save to clo&amp;ud…</source>
         <translation>클라우드에 저장(&amp;U)…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="755"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="613"/>
         <source>Save to cloud…</source>
         <translation>클라우드에 저장…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="761"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="762"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="619"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="620"/>
         <source>Share audio</source>
         <translation>오디오 공유</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="769"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="627"/>
         <source>Project propert&amp;ies…</source>
         <translation>프로젝트 속성(&amp;I)…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="770"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="628"/>
         <source>Project properties…</source>
         <translation>프로젝트 속성…</translation>
     </message>
@@ -1349,205 +1149,233 @@
         <translation>분할 도구</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="57"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="58"/>
-        <source>Fit selection to width</source>
-        <translation>너비에 선택 영역 맞추기</translation>
-    </message>
-    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="63"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="64"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="65"/>
         <source>Zoom to fit project</source>
         <translation>프로젝트에 맞게 확대/축소</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="71"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="72"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="77"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="78"/>
         <source>Center view on playhead</source>
         <translation>보기를 재생 헤드에 맞춤</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="77"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="78"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="83"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="84"/>
         <source>Toggle spectral view</source>
         <translation>스펙트럼 보기 전환</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="84"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="85"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="90"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="91"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="92"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="97"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="98"/>
         <source>Spectral box select</source>
         <translation>스펙트럼 상자 선택</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="98"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="99"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="104"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="105"/>
         <source>Snapping</source>
         <translation>스냅핑</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="105"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="106"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="111"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="112"/>
         <source>Minutes &amp;&amp; seconds</source>
         <translation>분 &amp;&amp; 초</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="112"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="113"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="118"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="119"/>
         <source>Beats &amp;&amp; measures</source>
         <translation>박자 &amp;&amp; 마디</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="119"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="120"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="125"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="126"/>
         <source>Show vertical rulers</source>
         <translation>세로 눈금자 표시</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="126"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="127"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="132"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="133"/>
         <source>Show master track</source>
         <translation>마스터 트랙 표시</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="133"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="134"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="139"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="140"/>
         <source>Update display while playing</source>
         <translation>재생 중 화면 갱신</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="140"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="141"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="146"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="147"/>
         <source>Pinned play head</source>
         <translation>고정된 재생 헤드</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="147"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="148"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="153"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="154"/>
         <source>Click ruler to start playback</source>
         <translation>눈금자를 클릭해 재생 시작</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="155"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="161"/>
         <source>Clip properties</source>
         <translation>클립 속성</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="156"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="162"/>
         <source>Show clip properties</source>
         <translation>클립 속성 표시</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="161"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="162"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="167"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="168"/>
         <source>Rename clip</source>
         <translation>클립 이름 바꾸기</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="168"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="169"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="182"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="183"/>
         <source>Follow track color</source>
         <translation>트랙 색상 따르기</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="175"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="176"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="189"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="190"/>
         <source>Move play cursor left</source>
         <translation>재생 커서를 왼쪽으로 이동</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="181"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="182"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="195"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="196"/>
         <source>Move play cursor right</source>
         <translation>재생 커서를 오른쪽으로 이동</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="187"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="188"/>
-        <source>Pitch and speed</source>
-        <translation>피치 및 속도</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="193"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="194"/>
-        <source>Show RMS in waveform</source>
-        <translation>파형에 RMS 표시</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="200"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="201"/>
-        <source>Show clipping in waveform</source>
-        <translation>파형에 클리핑 표시</translation>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="202"/>
+        <source>Extend selection left</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="207"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="208"/>
+        <source>Extend selection right</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="213"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="214"/>
+        <source>Contract selection from left</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="219"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="220"/>
+        <source>Contract selection from right</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="225"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="226"/>
+        <source>Pitch and speed</source>
+        <translation>피치 및 속도</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="231"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="232"/>
+        <source>Show RMS in waveform</source>
+        <translation>파형에 RMS 표시</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="238"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="239"/>
+        <source>Show clipping in waveform</source>
+        <translation>파형에 클리핑 표시</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="245"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="246"/>
         <source>Half-wave</source>
         <translation>반파</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="214"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="215"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="252"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="253"/>
         <source>Show label editor</source>
         <translation>레이블 편집기 표시</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="220"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="221"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="258"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="259"/>
         <source>Move realtime effect up</source>
         <translation>실시간 이펙트를 위로 이동</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="226"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="227"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="264"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="265"/>
         <source>Move realtime effect down</source>
         <translation>실시간 이펙트를 아래로 이동</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="249"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="250"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="289"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="290"/>
         <source>Change clip color</source>
         <translation>클립 색상 변경</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="261"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="262"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="301"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="302"/>
         <source>Change track color</source>
         <translation>트랙 색상 변경</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="28"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="29"/>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="30"/>
         <source>Record</source>
         <translation>녹음</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="43"/>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="44"/>
         <source>Stop record</source>
         <translation>녹음 중지</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="49"/>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="50"/>
         <source>Record level</source>
         <translation>녹음 레벨</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="50"/>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="51"/>
         <source>Set record level</source>
         <translation>녹음 레벨 설정</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="56"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="57"/>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="58"/>
         <source>Show mic metering</source>
         <translation>마이크 미터 표시</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="63"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="64"/>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="65"/>
         <source>Turn on input monitoring</source>
         <translation>입력 모니터링 켜기</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="71"/>
+        <source>Lead-in Recording</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="72"/>
+        <source>Start lead-in recording</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/spectrogram/internal/spectrogramuiactions.cpp" line="18"/>
@@ -1564,250 +1392,262 @@
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="72"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="73"/>
-        <source>Cut and close gap (per clip)</source>
-        <translation>잘라내고 간격 닫기(클립별)</translation>
+        <source>Cut and leave gap</source>
+        <translation>잘라내고 갭은 유지</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="79"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="80"/>
-        <source>Cut and close gap (per track)</source>
-        <translation>잘라내고 간격 닫기(트랙별)</translation>
+        <source>Cut and close gap (per clip)</source>
+        <translation>잘라내고 간격 닫기(클립별)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="86"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="87"/>
-        <source>Cut and close gap (all tracks)</source>
-        <translation>잘라내고 간격 닫기(모든 트랙)</translation>
+        <source>Cut and close gap (per track)</source>
+        <translation>잘라내고 간격 닫기(트랙별)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="93"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="94"/>
-        <source>Delete and close gap (per track)</source>
-        <translation>삭제하고 간격 닫기(트랙별)</translation>
+        <source>Cut and close gap (all tracks)</source>
+        <translation>잘라내고 간격 닫기(모든 트랙)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="100"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="101"/>
-        <source>Delete and close gap (all tracks)</source>
-        <translation>삭제하고 간격 닫기(모든 트랙)</translation>
+        <source>Delete and leave gap</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="107"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="108"/>
+        <source>Delete and close gap (per clip)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="114"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="115"/>
+        <source>Delete and close gap (per track)</source>
+        <translation>삭제하고 간격 닫기(트랙별)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="121"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="122"/>
+        <source>Delete and close gap (all tracks)</source>
+        <translation>삭제하고 간격 닫기(모든 트랙)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="128"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="129"/>
         <source>Split</source>
         <translation>분할하기</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="113"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="114"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="134"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="135"/>
         <source>Join selected clips</source>
         <translation>선택한 클립 결합</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="119"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="120"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="140"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="141"/>
         <source>Split clips at silences</source>
         <translation>무음 지점에서 클립 분할</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="132"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="153"/>
         <source>Rename</source>
         <translation>이름 바꾸기</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="133"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="154"/>
         <source>Rename track</source>
         <translation>트랙 이름 바꾸기</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="139"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="160"/>
         <source>Duplicate track</source>
         <translation>트랙 복제</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="145"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="166"/>
         <source>Delete track</source>
         <translation>트랙 삭제</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="150"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="151"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="171"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="172"/>
         <source>Move track up</source>
         <translation>트랙을 위로 이동</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="156"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="157"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="177"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="178"/>
         <source>Move track down</source>
         <translation>트랙을 아래로 이동</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="162"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="163"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="183"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="184"/>
         <source>Move track to top</source>
         <translation>트랙을 맨 위로 이동</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="168"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="169"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="189"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="190"/>
         <source>Move track to bottom</source>
         <translation>트랙을 맨 아래로 이동</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="174"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="175"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="195"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="196"/>
         <source>Other…</source>
         <translation>기타…</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="181"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="182"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="202"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="203"/>
         <source>Make stereo track</source>
         <translation>스테레오 트랙 만들기</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="187"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="188"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="208"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="209"/>
         <source>Swap stereo channels</source>
         <translation>스테레오 채널 교환</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="193"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="194"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="214"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="215"/>
         <source>Split stereo to L/R mono</source>
         <translation>스테레오를 L/R 모노로 분할</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="199"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="200"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="220"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="221"/>
         <source>Split stereo to center mono</source>
         <translation>스테레오를 중앙 모노로 분할</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="205"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="206"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="226"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="227"/>
         <source>Resample track…</source>
         <translation>트랙 리샘플링…</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="211"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="212"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="232"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="233"/>
         <source>Waveform</source>
         <translation>파형</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="219"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="220"/>
-        <source>Spectogram</source>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="240"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="241"/>
+        <source>Spectrogram</source>
         <translation>스펙트로그램</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="227"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="228"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="453"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="454"/>
+        <source>Above item</source>
+        <translation>항목을 위로</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="459"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="460"/>
+        <source>Below item</source>
+        <translation>항목을 아래로</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="248"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="249"/>
         <source>Multi-view</source>
         <translation>다중 보기</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="242"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="243"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="263"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="264"/>
         <source>Paste (pushes clips on selected track)</source>
         <translation>붙여넣기(선택한 트랙의 클립 밀기)</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="249"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="250"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="270"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="271"/>
         <source>Paste (overlaps other clips)</source>
         <translation>붙여넣기(다른 클립과 겹치기)</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="256"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="257"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="277"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="278"/>
         <source>Paste (preserves synchronization on all tracks)</source>
         <translation>붙여넣기(모든 트랙의 동기화 유지)</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="263"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="264"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="284"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="285"/>
         <source>Merge selected clips</source>
         <translation>선택한 클립 병합</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="269"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="270"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="290"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="291"/>
         <source>Duplicate selected</source>
         <translation>선택 항목 복제</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="275"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="276"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="296"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="297"/>
         <source>Duplicate clip</source>
         <translation>클립 복제</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="281"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="282"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="302"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="303"/>
         <source>Export clip</source>
         <translation>클립 내보내기</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="287"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="288"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="308"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="309"/>
         <source>Stretch with tempo changes</source>
         <translation>템포 변경에 맞춰 늘리기</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="294"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="295"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="315"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="316"/>
         <source>Open pitch and speed dialog</source>
         <translation>피치 및 속도 대화 상자 열기</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="300"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="301"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="321"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="322"/>
         <source>Render pitch and speed</source>
         <translation>피치 및 속도 렌더링</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="306"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="307"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="327"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="328"/>
         <source>New mono track</source>
         <translation>새 모노 트랙</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="312"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="313"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="333"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="334"/>
         <source>New stereo track</source>
         <translation>새 스테레오 트랙</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="318"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="319"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="339"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="340"/>
         <source>New label track</source>
         <translation>새 레이블 트랙</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="324"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="325"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="345"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="346"/>
         <source>Add label</source>
         <translation>레이블 추가</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="330"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="331"/>
-        <source>Delete label</source>
-        <translation>레이블 삭제</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="337"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="338"/>
-        <source>Cut label</source>
-        <translation>레이블 잘라내기</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="344"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="345"/>
-        <source>Copy label</source>
-        <translation>레이블 복사</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="351"/>
@@ -1906,68 +1746,56 @@
         <translation>이전 항목</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="453"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="454"/>
-        <source>Next track</source>
-        <translation>다음 트랙</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="459"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="460"/>
-        <source>Previous track</source>
-        <translation>이전 트랙</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="465"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="466"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="467"/>
         <source>First track</source>
         <translation>첫 번째 트랙</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="471"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="472"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="473"/>
         <source>Last track</source>
         <translation>마지막 트랙</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="478"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="479"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="480"/>
         <source>Select track/track item</source>
         <translation>트랙/트랙 항목 선택</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="484"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="485"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="486"/>
         <source>Track range selection</source>
         <translation>트랙 범위 선택</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="490"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="491"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="492"/>
         <source>Multi track selection previous</source>
         <translation>이전 다중 트랙 선택</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="496"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="497"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="498"/>
         <source>Multi track selection next</source>
         <translation>다음 다중 트랙 선택</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="503"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="504"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="505"/>
         <source>Open item’s context menu</source>
         <translation>항목 컨텍스트 메뉴 열기</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="524"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="525"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="526"/>
         <source>Change track format</source>
         <translation>트랙 형식 변경</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="537"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="538"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="539"/>
         <source>Change track sample rate</source>
         <translation>트랙 샘플레이트 변경</translation>
     </message>
@@ -1976,23 +1804,23 @@
     <name>appshell</name>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/AccountPage.qml" line="63"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="62"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="64"/>
         <source>Cloud account</source>
         <translation>클라우드 계정</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="53"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="54"/>
         <source>Home menu</source>
         <translation>홈 메뉴</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="92"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="94"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/maintoolbarmodel.cpp" line="95"/>
         <source>Project</source>
         <translation>프로젝트</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="98"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="100"/>
         <source>Learn</source>
         <translation>알아보기</translation>
     </message>
@@ -2019,11 +1847,6 @@
         <translation>모두</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/Main.wasm.qml" line="36"/>
-        <source>MuseScore</source>
-        <translation>MuseScore</translation>
-    </message>
-    <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/MainToolBar.qml" line="64"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/WindowContent.qml" line="61"/>
         <source>Main toolbar</source>
@@ -2033,11 +1856,6 @@
         <location filename="../../src/appshell/qml/Audacity/AppShell/platform/AppMenuBar.qml" line="71"/>
         <source>Application menu</source>
         <translation>응용 프로그램 메뉴</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/platform/win/AppTitleBar.qml" line="92"/>
-        <source>MuseScore 4</source>
-        <translation>MuseScore 4</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="157"/>
@@ -2080,36 +1898,39 @@
         <translation>수신 측이 지원하는 경우 MIDI 2.0 출력 생성</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="326"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="324"/>
         <source>Are you sure you want to revert to factory settings?</source>
         <translation>정말 공장 초기 설정으로 되돌리시겠습니까?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="327"/>
-        <source>This action will reset all your app preferences and delete all custom palettes and custom shortcuts. The list of recent projects will also be cleared.
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="325"/>
+        <source>This action will reset all your app preferences and custom UI configurations. It also deletes your custom workspaces and shortcuts. You will also need to scan all third party plugins again.
 
 This action will not delete any of your projects.</source>
-        <translation>이 작업을 수행하면 모든 앱 환경 설정이 초기화되고 사용자 지정 팔레트와 사용자 지정 단축키가 모두 삭제됩니다. 최근 프로젝트 목록도 지워집니다.
-
-이 작업은 어떤 프로젝트도 삭제하지 않습니다.</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="336"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="337"/>
         <source>Revert</source>
         <translation>되돌리기</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="348"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="339"/>
+        <source>Revert to factory settings</source>
+        <translation>공장 초기 설정으로 되돌리기</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="351"/>
         <source>Would you like to restart Audacity now?</source>
         <translation>지금 Audacity를 다시 시작하시겠습니까?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="349"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="352"/>
         <source>Audacity needs to be restarted for these changes to take effect.</source>
         <translation>이 변경 사항을 적용하려면 Audacity를 다시 시작해야 합니다.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="354"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="358"/>
         <source>Restart</source>
         <translation>다시 시작</translation>
     </message>
@@ -2139,32 +1960,37 @@ This action will not delete any of your projects.</source>
         <translation>프로젝트를 불러오는 중…‎</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/startupscenario.cpp" line="145"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="56"/>
         <source>Scanning audio plugins</source>
         <translation>오디오 플러그인 검색 중</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/startupscenario.cpp" line="146"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="57"/>
         <source>Audacity has found plugins that need to be scanned before use. Would you like to scan them now or skip?</source>
         <translation>Audacity에서 사용 전에 검색해야 하는 플러그인을 찾았습니다. 지금 검색하시겠습니까, 아니면 건너뛰시겠습니까?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/startupscenario.cpp" line="150"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="62"/>
         <source>Skip this time</source>
         <translation>이번에는 건너뛰기</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/startupscenario.cpp" line="153"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="65"/>
         <source>Scan plugins</source>
         <translation>플러그인 검색</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/startupscenario.cpp" line="285"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="69"/>
+        <source>Audio plugin scan</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/startupscenario.cpp" line="282"/>
         <source>The previous session quit unexpectedly.</source>
         <translation>이전 세션이 예기치 않게 종료되었습니다.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/startupscenario.cpp" line="286"/>
+        <location filename="../../src/appshell/internal/startupscenario.cpp" line="283"/>
         <source>Do you want to restore the session?</source>
         <translation>세션을 복원하시겠습니까?</translation>
     </message>
@@ -2185,56 +2011,24 @@ This action will not delete any of your projects.</source>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/mainwindowtitleprovider.cpp" line="101"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/mainwindowtitleprovider.cpp" line="109"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/mainwindowtitleprovider.cpp" line="110"/>
         <source>Audacity 4</source>
         <translation>Audacity 4</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/mainwindowtitleprovider.cpp" line="110"/>
-        <source>%1 - Audacity 4</source>
-        <translation>%1 - Audacity 4</translation>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/mainwindowtitleprovider.cpp" line="111"/>
+        <source>%1 %2- Audacity 4</source>
+        <translation>%1 %2- Audacity 4</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/Main.wasm.qml" line="36"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/platform/win/AppTitleBar.qml" line="92"/>
+        <source>Audacity</source>
+        <translation>오다시티</translation>
     </message>
 </context>
 <context>
     <name>appshell/about</name>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="32"/>
-        <source>About MuseScore</source>
-        <translation>MuseScore 정보</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="84"/>
-        <source>Version:</source>
-        <translation>버전:</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="94"/>
-        <source>Revision:</source>
-        <translation>리비전:</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="114"/>
-        <source>Visit %1 for new versions and more information.</source>
-        <extracomment>%1 will be a link to the MuseScore website</extracomment>
-        <translation>새 버전과 자세한 정보는 %1에서 확인하십시오.</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="117"/>
-        <source>Get &lt;a href=&quot;%1&quot;&gt;help&lt;/a&gt; with the program or &lt;a href=&quot;%2&quot;&gt;contribute&lt;/a&gt; to its development.</source>
-        <translation>프로그램 관련 &lt;a href=&quot;%1&quot;&gt;도움말&lt;/a&gt;을 확인하거나 개발에 &lt;a href=&quot;%2&quot;&gt;기여&lt;/a&gt;할 수 있습니다.</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="130"/>
-        <source>For privacy information, see our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt;.</source>
-        <translation>개인정보 관련 정보는 &lt;a href=&quot;%1&quot;&gt;개인정보 처리방침&lt;/a&gt;을 참조하십시오.</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="139"/>
-        <source>Copyright © 1999-2024 MuseScore BVBA and others.
-Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License version 3&lt;/a&gt;.</source>
-        <translation>저작권 © 1999-2024 MuseScore BVBA 및 기타 기여자.
-&lt;a href=&quot;%1&quot;&gt;GNU General Public License version 3&lt;/a&gt;에 따라 배포됩니다.</translation>
-    </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutMusicXMLDialog.qml" line="32"/>
         <source>About MusicXML</source>
@@ -2261,9 +2055,69 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation>Audacity 4</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="42"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="272"/>
         <source>Unstable prerelease for %1</source>
         <translation>%1용 불안정 사전 릴리스</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="338"/>
+        <source>translator_credits</source>
+        <translation>한국어 번역 : 이환용&lt;hwan@ajou.ac.kr&gt;, 김동윤&lt;kenny122@ajou.ac.kr&gt;, 조성호&lt;darkcircle.0426@gmail.com&gt;, Potato &lt;sheppaul@gmail.com&gt;, 이정희 &lt;daemul72@gmail.com&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="15"/>
+        <source>About Audacity</source>
+        <translation>Audacity 정보</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="43"/>
+        <source>Audacity</source>
+        <translation>오다시티</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="47"/>
+        <source>Legal</source>
+        <translation>법률정보</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="28"/>
+        <source>Audacity the free, open source, cross-platform software for recording and editing sounds.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="109"/>
+        <source>Credits</source>
+        <translation>만든 사람</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="197"/>
+        <source>Audacity website: %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="207"/>
+        <source>&lt;b&gt;Audacity®&lt;/b&gt; software is copyright © 1999-%1 Audacity Team.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="212"/>
+        <source>The name &lt;b&gt;Audacity&lt;/b&gt; is a registered trademark.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogPrivacyTab.qml" line="27"/>
+        <source>Privacy</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogPrivacyTab.qml" line="28"/>
+        <source>App update checking and error reporting require network access. These features are optional.&lt;br&gt;See our %1 for more info.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogPrivacyTab.qml" line="54"/>
+        <source>privacy policy</source>
+        <translation>개인정보 처리방침</translation>
     </message>
 </context>
 <context>
@@ -2563,17 +2417,17 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation>사용 가능한 옵션</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="113"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="121"/>
         <source>Getting started</source>
         <translation>시작하기</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="131"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="139"/>
         <source>Accept &amp; continue</source>
         <translation>수락 후 계속(&amp;C)</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="137"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="145"/>
         <source>%1 of %2</source>
         <extracomment>%1 is the current page number, %2 is the total number of pages</extracomment>
         <translation>%1 / %2</translation>
@@ -2749,12 +2603,12 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation>선택한 작업 공간 레이아웃에서 인터페이스 요소의 배치를 미리 보여줍니다.</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="50"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="46"/>
         <source>Authorization failed</source>
         <translation>권한 부여 실패</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="58"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="57"/>
         <source>No access token</source>
         <translation>액세스 토큰 없음</translation>
     </message>
@@ -2797,14 +2651,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
     </message>
 </context>
 <context>
-    <name>appshell/menu/audio-actions</name>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="565"/>
-        <source>Audio actions across labels</source>
-        <translation>레이블 전체에 걸친 오디오 동작</translation>
-    </message>
-</context>
-<context>
     <name>appshell/menu/clip</name>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="241"/>
@@ -2812,7 +2658,7 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation>클립</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="545"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="535"/>
         <source>Rename clip</source>
         <translation>클립 이름 바꾸기</translation>
     </message>
@@ -2836,55 +2682,55 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
 <context>
     <name>appshell/menu/diagnostic</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="726"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="694"/>
         <source>&amp;System</source>
         <translation>시스템(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="736"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="704"/>
         <source>&amp;Accessibility</source>
         <translation>접근성(&amp;A)</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="743"/>
-        <source>Auto&amp;bot</source>
-        <translation>Auto&amp;bot</translation>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="711"/>
+        <source>Test&amp;flow</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>appshell/menu/diagnostics</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="424"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="417"/>
         <source>Diagnostics</source>
         <translation>진단</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="454"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="444"/>
         <source>&amp;System</source>
         <translation>시스템(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="476"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="466"/>
         <source>A&amp;ctions</source>
         <translation>동작(&amp;C)</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="477"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="467"/>
         <source>&amp;Accessibility</source>
         <translation>접근성(&amp;A)</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="478"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="468"/>
         <source>E&amp;xtensions</source>
         <translation>확장 기능(&amp;X)</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="479"/>
-        <source>Auto&amp;bot</source>
-        <translation>Auto&amp;bot</translation>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="469"/>
+        <source>Test&amp;flow</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="484"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="474"/>
         <source>&amp;Diagnostics</source>
         <translation>진단(&amp;D)</translation>
     </message>
@@ -2916,7 +2762,7 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
 <context>
     <name>appshell/menu/extra</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="415"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="408"/>
         <source>&amp;Extra</source>
         <translation>추가 기능(&amp;E)</translation>
     </message>
@@ -2977,7 +2823,7 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
 <context>
     <name>appshell/menu/help</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="441"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="431"/>
         <source>&amp;Help</source>
         <translation>도움말(&amp;H)</translation>
     </message>
@@ -3001,7 +2847,7 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
 <context>
     <name>appshell/menu/macros</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="872"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="840"/>
         <source>&amp;Macros</source>
         <translation>매크로(&amp;M)</translation>
     </message>
@@ -3162,7 +3008,7 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
 <context>
     <name>appshell/preferences</name>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="605"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="604"/>
         <source>Edit metadata</source>
         <translation>메타데이터 편집</translation>
     </message>
@@ -3182,11 +3028,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation>VBL</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AccentColorsSection.qml" line="64"/>
-        <source>Accent color:</source>
-        <translation>강조 색상:</translation>
-    </message>
-    <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioEngineSection.qml" line="33"/>
         <source>Audio engine</source>
         <translation>오디오 엔진</translation>
@@ -3203,13 +3044,13 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutomaticUpdateSection.qml" line="44"/>
-        <source>Check to see if a new version of MuseScore is available</source>
-        <translation>새 MuseScore 버전이 있는지 확인</translation>
+        <source>Check to see if a new version of Audacity is available</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutomaticUpdateSection.qml" line="60"/>
-        <source>Update checking requires network access. In order to protect your privacy, MuseScore does not store any personal information. See our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt; for more info.</source>
-        <translation>업데이트 확인에는 네트워크 접근이 필요합니다. 개인 정보를 보호하기 위해 MuseScore는 어떤 개인정보도 저장하지 않습니다. 자세한 내용은 &lt;a href=&quot;%1&quot;&gt;개인정보 처리방침&lt;/a&gt;을 참조하십시오.</translation>
+        <source>Update checking requires network access. In order to protect your privacy, Audacity does not store any personal information. See our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt; for more info.</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutoSaveSection.qml" line="32"/>
@@ -3218,8 +3059,8 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutoSaveSection.qml" line="51"/>
-        <source>Auto save every:</source>
-        <translation>자동 저장 간격:</translation>
+        <source>Auto save every</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CharsetsSection.qml" line="31"/>
@@ -3295,13 +3136,13 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MidiDevicesSection.qml" line="49"/>
-        <source>MIDI input:</source>
-        <translation>MIDI 입력:</translation>
+        <source>MIDI input</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MidiDevicesSection.qml" line="65"/>
-        <source>MIDI output:</source>
-        <translation>MIDI 출력:</translation>
+        <source>MIDI output</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MidiSection.qml" line="41"/>
@@ -3409,16 +3250,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation>시작 프로젝트 선택</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PublishMuseScoreComSection.qml" line="32"/>
-        <source>Publish to MuseScore.com</source>
-        <translation>MuseScore.com에 게시</translation>
-    </message>
-    <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PublishMuseScoreComSection.qml" line="43"/>
-        <source>Always prompt to share on Audio.com after publishing to MuseScore.com</source>
-        <translation>MuseScore.com에 게시한 뒤 Audio.com 공유 여부를 항상 묻기</translation>
-    </message>
-    <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/RemoteControlSection.qml" line="33"/>
         <source>OSC remote control</source>
         <translation>OSC 원격 제어</translation>
@@ -3472,6 +3303,121 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomSection.qml" line="96"/>
         <source>Mouse zoom precision:</source>
         <translation>마우스 확대/축소 정밀도:</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AccentColorsSection.qml" line="64"/>
+        <source>Accent color</source>
+        <translation>강조 색상</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UsageInfoSection.qml" line="14"/>
+        <source>Usage info</source>
+        <translation>사용 정보</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UsageInfoSection.qml" line="25"/>
+        <source>Send anonymous usage info</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UsageInfoSection.qml" line="39"/>
+        <source>To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This ID does not contain any personally identifiable information. Want to know more? Check out our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt;.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="14"/>
+        <source>Zoom toggle (magnifying glass)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="26"/>
+        <source>A special tool in the top bar that toggles between two different zoom states.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="34"/>
+        <source>Zoom state 1:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="55"/>
+        <source>Zoom state 2:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="246"/>
+        <source>Fit to Width</source>
+        <translation>너비에 맞추기</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="247"/>
+        <source>Zoom to Selection</source>
+        <translation>선택 영역 확대</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="248"/>
+        <source>Zoom Default</source>
+        <translation>줌 기본값</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="249"/>
+        <source>Minutes</source>
+        <translation>분</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="250"/>
+        <source>Seconds</source>
+        <translation>초</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="251"/>
+        <source>5ths of Seconds</source>
+        <translation>5분의 1초</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="252"/>
+        <source>10ths of Seconds</source>
+        <translation>10분의 1초</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="253"/>
+        <source>20ths of Seconds</source>
+        <translation>20분의 1초</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="254"/>
+        <source>50ths of Seconds</source>
+        <translation>50분의 1초</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="255"/>
+        <source>100ths of Seconds</source>
+        <translation>100분의 1초</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="256"/>
+        <source>500ths of Seconds</source>
+        <translation>500분의 1초</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="257"/>
+        <source>MilliSeconds</source>
+        <translation>밀리초</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="258"/>
+        <source>Samples</source>
+        <translation>샘플</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="259"/>
+        <source>4 Pixels per Sample</source>
+        <translation>샘플당 4픽셀</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="260"/>
+        <source>Max Zoom</source>
+        <translation>최대 확대</translation>
     </message>
 </context>
 <context>
@@ -3617,27 +3563,90 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
     </message>
 </context>
 <context>
+    <name>canvas</name>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/canvascontextmenumodel.cpp" line="26"/>
+        <source>Paste and overlap</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/canvascontextmenumodel.cpp" line="28"/>
+        <source>Paste and make room on this track</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/canvascontextmenumodel.cpp" line="30"/>
+        <source>Paste and make room on all tracks</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/canvascontextmenumodel.cpp" line="35"/>
+        <source>Paste and…</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
     <name>clip</name>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="46"/>
+        <source>Cut and leave gap</source>
+        <translation>잘라내고 갭은 유지</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="48"/>
+        <source>Cut and close gap on this track</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="50"/>
+        <source>Cut and close gap on all tracks</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="55"/>
+        <source>Delete and leave gap</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="57"/>
+        <source>Delete and close gap on this track</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="59"/>
+        <source>Delete and close gap on all tracks</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="64"/>
         <source>Rename clip</source>
         <translation>클립 이름 바꾸기</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="47"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="65"/>
         <source>Clip color</source>
         <translation>클립 색상</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="72"/>
+        <source>Cut and…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="73"/>
+        <source>Delete and…</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>clips</name>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1059"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1068"/>
         <source>Select</source>
         <translation>선택</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1059"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1068"/>
         <source>Deselect</source>
         <translation>선택 해제</translation>
     </message>
@@ -3683,8 +3692,8 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="22"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1195"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1324"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="604"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="724"/>
         <source>Save</source>
         <translation>저장</translation>
     </message>
@@ -3694,29 +3703,40 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation>로그인 하지 않았습니다</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="382"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="388"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="422"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="269"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="274"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="295"/>
         <source>Invalid project</source>
         <translation>잘못된 프로젝트</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="415"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="283"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="584"/>
+        <source>Service destroyed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="288"/>
         <source>Project was closed before upload started</source>
         <translation>업로드가 시작되기 전에 프로젝트가 닫혔습니다.</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="539"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="452"/>
+        <source>Invalid audio ID</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="514"/>
         <source>Project not found in cloud database</source>
         <translation>클라우드 데이터베이스에서 프로젝트를 찾을 수 없습니다.</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="615"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="596"/>
         <source>No valid current project</source>
         <translation>유효한 현재 프로젝트가 없습니다.</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="678"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="659"/>
         <source>Upload succeeded but payload is missing</source>
         <translation>업로드에는 성공했지만 페이로드가 없습니다.</translation>
     </message>
@@ -3726,42 +3746,52 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation>로그인에 성공했습니다! 이제 Audacity로 돌아가도 됩니다.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="479"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1017"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="506"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1088"/>
         <source>View on audio.com</source>
         <translation>audio.com에서 보기</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="993"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1060"/>
         <source>Track title</source>
         <translation>트랙 제목</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="994"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1061"/>
         <source>Share audio</source>
         <translation>오디오 공유</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="995"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1062"/>
         <source>Share</source>
         <translation>공유</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1012"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1083"/>
         <source>Audio shared to audio.com</source>
         <translation>오디오가 audio.com에 공유되었습니다.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1032"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1103"/>
         <source>Sharing audio to audio.com…</source>
         <translation>오디오를 audio.com에 공유하는 중…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1190"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1293"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1319"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1162"/>
+        <source>Downloading audio from cloud…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="599"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="706"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="719"/>
         <source>Save to audio.com</source>
         <translation>audio.com에 저장</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="808"/>
+        <source>Open audio from cloud</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -3781,7 +3811,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="17"/>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="256"/>
         <source>Chirp</source>
         <translation>짹짹</translation>
     </message>
@@ -3810,8 +3839,8 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="13"/>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="48"/>
-        <source>Save Preset</source>
-        <translation>프리셋 저장</translation>
+        <source>Save preset</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="44"/>
@@ -3819,27 +3848,27 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation>프리셋 이름</translation>
     </message>
     <message>
-        <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="54"/>
-        <source>Enter Nyquist Command:</source>
-        <translation>Nyquist 명령 입력:</translation>
+        <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="63"/>
+        <source>Enter Nyquist command:</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="60"/>
+        <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="69"/>
         <source>Debug</source>
         <translation>디버그</translation>
     </message>
     <message>
-        <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="77"/>
+        <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="93"/>
         <source>Enter Nyquist code here…</source>
         <translation>여기에 Nyquist 코드를 입력하십시오…</translation>
     </message>
     <message>
-        <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="90"/>
+        <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="106"/>
         <source>Load</source>
         <translation>불러오기</translation>
     </message>
     <message>
-        <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="97"/>
+        <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="117"/>
         <location filename="../../src/effects/effects_base/view/effectsavecontextmenu.cpp" line="76"/>
         <source>Save</source>
         <translation>저장</translation>
@@ -3908,167 +3937,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation>출력</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="146"/>
-        <source>Amplify</source>
-        <translation>증폭</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="147"/>
-        <source>Increases or decreases the volume of the audio you have selected</source>
-        <translation>선택한 오디오의 음량을 올리거나 내리세요</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="154"/>
-        <source>Loudness normalization</source>
-        <translation>라우드니스 정규화</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="155"/>
-        <source>Sets the loudness of one or more tracks</source>
-        <translation>한 개 이상 트랙의 음량을 설정합니다</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="163"/>
-        <source>Graphic EQ</source>
-        <translation>그래픽 EQ</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="164"/>
-        <source>Adjusts the balance between frequency components</source>
-        <translation>주파수 성분 간의 균형을 조정합니다.</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="171"/>
-        <source>Click removal</source>
-        <translation>클릭 제거</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="172"/>
-        <source>Click removal is designed to remove clicks on audio tracks</source>
-        <translation>클릭 제거는 오디오 트랙의 클릭음을 제거하도록 설계되었습니다.</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="181"/>
-        <source>Compressor</source>
-        <translation>컴프레서</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="182"/>
-        <source>Reduces “dynamic range”, or differences between loud and quiet parts</source>
-        <translation>“다이내믹 레인지”, 즉 큰 부분과 작은 부분의 차이를 줄입니다.</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="191"/>
-        <source>Limiter</source>
-        <translation>리미터</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="192"/>
-        <source>Augments loudness while minimizing distortion</source>
-        <translation>왜곡을 최소화하면서 음량을 높입니다.</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="199"/>
-        <source>Normalize</source>
-        <translation>노멀라이즈</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="200"/>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="224"/>
-        <source>Sets the peak amplitude of a one or more tracks</source>
-        <translation>한 개 이상 트랙의 피크 진폭을 설정합니다</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="205"/>
-        <source>Fade in</source>
-        <translation>페이드 인</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="206"/>
-        <source>Applies a linear fade-in to the selected audio</source>
-        <translation>선택된 오디오에 선형 페이드인을 적용합니다</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="211"/>
-        <source>Fade out</source>
-        <translation>페이드 아웃</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="212"/>
-        <source>Applies a linear fade-out to the selected audio</source>
-        <translation>선택된 오디오에 선형 페이드아웃을 적용합니다</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="217"/>
-        <source>Invert</source>
-        <translation>뒤집기: 상하로</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="218"/>
-        <source>Flips the audio samples upside-down, reversing their polarity</source>
-        <translation>오디오 샘플의 극성을 반전하여 위아래로 뒤집습니다</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="223"/>
-        <source>Repair</source>
-        <translation>수정</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="229"/>
-        <source>Reverse</source>
-        <translation>뒤집기: 좌우로</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="230"/>
-        <source>Reverses the selected audio</source>
-        <translation>선택한 오디오의 앞뒤를 뒤바꿉니다</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="237"/>
-        <source>Truncate silence</source>
-        <translation>무음 잘라내기</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="238"/>
-        <source>Automatically reduces the length of passages where the volume is below a specified level</source>
-        <translation>음량이 지정한 레벨 이하인 패시지의길이를 자동으로 줄입니다</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="247"/>
-        <source>Change pitch</source>
-        <translation>피치 변경</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="248"/>
-        <source>Changes the pitch of a track without changing its tempo</source>
-        <translation>템포 변경 없이 피치를 변경</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="257"/>
-        <source>Generates an ascending or descending tone of one of four types</source>
-        <translation>네 유형 중 하나의 상승 또는 하강 톤을 만듭니다</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="264"/>
-        <source>Tone</source>
-        <translation>톤</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="265"/>
-        <source>Generates a constant frequency tone of one of four types</source>
-        <translation>네 유형 중 하나의 지속적인 주파수 톤을 만듭니다</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="272"/>
-        <source>Reverb</source>
-        <translation>리버브</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="273"/>
-        <source>Reverb effect</source>
-        <translation>리버브 이펙트</translation>
-    </message>
-    <message>
         <location filename="../../src/effects/effects_base/effecterrors.h" line="39"/>
         <source>Effect load failed</source>
         <translation>이펙트 불러오기 실패</translation>
@@ -4114,7 +3982,7 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation>프리셋 불일치</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="329"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="385"/>
         <source>Applied effect: %1</source>
         <translation>적용된 이펙트: %1</translation>
     </message>
@@ -4125,8 +3993,8 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="89"/>
-        <source>Delete Preset</source>
-        <translation>프리셋 삭제</translation>
+        <source>Delete preset</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="90"/>
@@ -4140,8 +4008,13 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="117"/>
-        <source>Import Effect Parameters</source>
-        <translation>이펙트 매개 변수 가져오기</translation>
+        <source>Import effect parameters</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="148"/>
+        <source>Export effect parameters</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="133"/>
@@ -4154,17 +4027,12 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation>%1: 다른 이펙트, 생성기 또는 분석기용입니다.</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="148"/>
-        <source>Export Effect Parameters</source>
-        <translation>이펙트 매개 변수 내보내기</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="369"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="622"/>
         <source>Generating %1…</source>
         <translation>%1 생성 중…</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="369"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="622"/>
         <source>Applying %1…</source>
         <translation>%1 적용 중…</translation>
     </message>
@@ -4179,7 +4047,7 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation>제공 UI와 대체 UI 간 전환</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="232"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="233"/>
         <source>Master</source>
         <translation>마스터</translation>
     </message>
@@ -4201,8 +4069,8 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
     </message>
     <message>
         <location filename="../../src/effects/effects_base/view/generatedeffectviewermodel.cpp" line="54"/>
-        <source>Unknown Effect</source>
-        <translation>알 수 없는 이펙트</translation>
+        <source>Unknown effect</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/view/generatedeffectviewermodel.cpp" line="70"/>
@@ -4210,15 +4078,9 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation>이 이펙트에는 사용할 수 있는 매개변수가 없습니다.</translation>
     </message>
     <message>
-        <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptloader.cpp" line="35"/>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="42"/>
         <source>Nyquist prompt</source>
         <translation>Nyquist 프롬프트</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptloader.cpp" line="36"/>
-        <source>Nyquist prompt effect</source>
-        <translation>Nyquist 프롬프트 이펙트</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="48"/>
@@ -4251,8 +4113,8 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="163"/>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="168"/>
-        <source>Nyquist Debug Output</source>
-        <translation>Nyquist 디버그 출력</translation>
+        <source>Nyquist debug output</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="169"/>
@@ -4287,7 +4149,7 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
     <name>effects/changepitch</name>
     <message>
         <location filename="../../src/effects/builtin_collection/changepitch/changepitchviewmodel.cpp" line="22"/>
-        <source>Change Pitch</source>
+        <source>Change pitch</source>
         <translation>피치 변경</translation>
     </message>
     <message>
@@ -4435,7 +4297,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
     <name>effects/dtmf</name>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="19"/>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="296"/>
         <source>DTMF tones</source>
         <translation>DTMF 톤</translation>
     </message>
@@ -4489,11 +4350,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="267"/>
         <source>Silence duration</source>
         <translation>무음 지속 시간</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="297"/>
-        <source>Generates DTMF signal</source>
-        <translation>DTMF 신호를 생성합니다.</translation>
     </message>
 </context>
 <context>
@@ -4578,16 +4434,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation>지속 시간</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="280"/>
-        <source>Noise</source>
-        <translation>노이즈</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="281"/>
-        <source>Generates noise</source>
-        <translation>잡음을 생성합니다.</translation>
-    </message>
-    <message>
         <location filename="../../src/effects/builtin_collection/noisegen/noiseviewmodel.cpp" line="26"/>
         <source>White</source>
         <comment>not a color, but 'white noise' having a uniform spectrum</comment>
@@ -4608,11 +4454,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
 </context>
 <context>
     <name>effects/noisereduction</name>
-    <message>
-        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="13"/>
-        <source>Noise Reduction</source>
-        <translation>노이즈 리덕션</translation>
-    </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="68"/>
         <source>Step 1</source>
@@ -4639,8 +4480,8 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation>필터링할 오디오 전체를 선택하고 제거할 잡음의 양을 정한 다음, “적용”을 클릭하여 잡음을 줄이십시오.</translation>
     </message>
     <message>
+        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="13"/>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="141"/>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="288"/>
         <source>Noise reduction</source>
         <translation>노이즈 리덕션</translation>
     </message>
@@ -4673,11 +4514,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="280"/>
         <source>Noise only</source>
         <translation>잡음만</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="289"/>
-        <source>Reduces noise in the audio</source>
-        <translation>오디오의 잡음을 줄입니다.</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductionviewmodel.cpp" line="150"/>
@@ -4719,6 +4555,24 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="17"/>
         <source>Nyquist prompt</source>
         <translation>Nyquist 프롬프트</translation>
+    </message>
+</context>
+<context>
+    <name>effects/paulstretch</name>
+    <message>
+        <location filename="../../src/effects/builtin_collection/paulstretch/PaulstretchView.qml" line="11"/>
+        <source>Paulstretch</source>
+        <translation>폴스트레치 (20x 이상 늘이기)</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/paulstretch/paulstretchviewmodel.cpp" line="62"/>
+        <source>Stretch factor</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/paulstretch/paulstretchviewmodel.cpp" line="87"/>
+        <source>Time resolution</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -4782,19 +4636,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="110"/>
         <source>Stereo width</source>
         <translation>스테레오 폭</translation>
-    </message>
-</context>
-<context>
-    <name>effects/silence</name>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="304"/>
-        <source>Silence</source>
-        <translation>무음</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="305"/>
-        <source>Generates silence</source>
-        <translation>무음을 생성합니다.</translation>
     </message>
 </context>
 <context>
@@ -5020,7 +4861,7 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="16"/>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="356"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="355"/>
         <source>Edit mapping</source>
         <translation>매핑 편집</translation>
     </message>
@@ -5031,100 +4872,102 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="19"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="465"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="597"/>
         <source>Export audio</source>
         <translation>오디오 내보내기</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="77"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="76"/>
         <source>Export</source>
         <translation>내보내기</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="92"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="91"/>
         <source>Type</source>
         <translation>유형</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="129"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="128"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="65"/>
         <source>File</source>
         <translation>파일</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="143"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="142"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="76"/>
         <source>File name</source>
         <translation>파일 이름</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="177"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="176"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="143"/>
         <source>Folder</source>
         <translation>폴더</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="213"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="212"/>
         <source>Format</source>
         <translation>형식</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="250"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="249"/>
         <source>Audio options</source>
         <translation>오디오 옵션</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="267"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="266"/>
         <source>Channels</source>
         <translation>채널</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="292"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="291"/>
         <source>Mono</source>
         <translation>모노</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="310"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="309"/>
         <source>Stereo</source>
         <translation>스테레오</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="327"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="326"/>
         <source>Custom mapping</source>
         <translation>사용자 지정 매핑</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="374"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="373"/>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="183"/>
         <source>Sample rate</source>
         <translation>샘플레이트</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="419"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="418"/>
         <source>Open custom FFmpeg format options</source>
         <translation>사용자 FFmpeg 형식 옵션 열기</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="440"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="439"/>
         <source>Format:</source>
         <translation>형식:</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="464"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="463"/>
         <source>Codec:</source>
         <translation>코덱:</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="555"/>
-        <source>Effective bitrate may vary</source>
-        <translation>실효 비트레이트는 달라질 수 있습니다.</translation>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="554"/>
+        <source>Effective bit rate may vary</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="565"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="564"/>
         <source>Rendering</source>
         <translation>렌더링</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="575"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="574"/>
         <source>Trim blank space before first clip</source>
         <translation>첫번째 클립 앞부분의 공백 제거</translation>
     </message>
@@ -5221,14 +5064,11 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="176"/>
-        <source>Bit Rate (bits/second) - influences the resulting file size and quality
-Some codecs may only accept specific values (128k, 192k, 256k etc)
+        <source>Bit rate (bits/second) - influences the resulting file size and quality
+Some codecs may only accept specific values (128k, 192k, 256k, etc.)
 0 - automatic
-Recommended - 192000</source>
-        <translation>비트레이트 (초당 비트) - 파일 크기와 품질에 영향을 줍니다
-어떤 코덱은 특정한 값(128k, 192k, 256k 등)만 받아들일 수 있습니다
-0 - 자동
-추천 - 192000</translation>
+192000 - recommended</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="208"/>
@@ -5332,53 +5172,47 @@ Recommended - 192000</source>
         <translation>루프 구간의 오디오 내보내기</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="173"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="171"/>
         <source>No loop region</source>
         <translation>루프 구간 없음</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="174"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="172"/>
         <source>Export audio in loop region requires a loop in the project. Please go back, create a loop and try again.</source>
         <translation>루프 구간에서 오디오를 내보내려면 프로젝트에 루프가 있어야 합니다. 돌아가서 루프를 만든 뒤 다시 시도하십시오.</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="185"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="183"/>
         <source>No selected audio</source>
         <translation>선택한 오디오 없음</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="186"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="184"/>
         <source>Export selected audio requires a selection of audio data in the project. Please return to the project, make a selection and then try again.</source>
         <translation>선택한 오디오를 내보내려면 프로젝트에서 오디오 데이터를 선택해야 합니다. 프로젝트로 돌아가 선택한 후 다시 시도하십시오.</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="467"/>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="599"/>
-        <source>Export Audio</source>
-        <translation>오디오 내보내기</translation>
-    </message>
-    <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="467"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="465"/>
         <source>Unable to create destination folder</source>
         <translation>대상 폴더를 생성할 수 없음</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="523"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="521"/>
         <source>Do you want to overwrite?</source>
         <translation>덮어쓰시겠습니까?</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="524"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="522"/>
         <source>Overwrite</source>
         <translation>덮어쓰기</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="536"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="534"/>
         <source>Export error</source>
         <translation>내보내기 오류</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="600"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="598"/>
         <source>To export with custom channel mapping, master effects must be turned off temporarily.
 
 Master effects will be turned back on after export.</source>
@@ -5398,10 +5232,10 @@ Master effects will be turned back on after export.</source>
 <context>
     <name>global</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="156"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AlphaWelcomePopup.qml" line="155"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="279"/>
         <location filename="../../src/importexport/export/qml/Export/CustomFFmpegDialog.qml" line="143"/>
+        <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="100"/>
         <source>OK</source>
         <translation>확인</translation>
     </message>
@@ -5419,7 +5253,7 @@ Master effects will be turned back on after export.</source>
         <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="179"/>
         <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="200"/>
         <location filename="../../src/effects/builtin_collection/tonegen/ToneView.qml" line="84"/>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="77"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="102"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/CustomRateDialog.qml" line="23"/>
         <source>Hz</source>
         <translation>Hz</translation>
@@ -5428,33 +5262,35 @@ Master effects will be turned back on after export.</source>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="327"/>
         <location filename="../../src/importexport/export/qml/Export/CustomFFmpegDialog.qml" line="131"/>
         <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="94"/>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="621"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="620"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="240"/>
         <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="159"/>
         <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="117"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="98"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="453"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="475"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="527"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="549"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="651"/>
         <source>Cancel</source>
         <translation>취소</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="344"/>
         <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="105"/>
-        <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="128"/>
+        <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="127"/>
         <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="171"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingDialog.qml" line="93"/>
         <source>Apply</source>
         <translation>적용</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="638"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="637"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="255"/>
         <source>Export</source>
         <translation>내보내기</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="116"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="80"/>
+        <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="115"/>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="266"/>
         <source>Close</source>
         <translation>닫기</translation>
@@ -5476,8 +5312,9 @@ Master effects will be turned back on after export.</source>
         <translation>분</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="57"/>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="97"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="64"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="101"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="60"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputPlaySection.qml" line="69"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputSection.qml" line="98"/>
         <source>ms</source>
@@ -5487,6 +5324,7 @@ Master effects will be turned back on after export.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CursorSection.qml" line="31"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CursorSection.qml" line="51"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="35"/>
         <source>seconds</source>
         <translation>초</translation>
     </message>
@@ -5503,49 +5341,49 @@ Master effects will be turned back on after export.</source>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/NewProject/TitleListView.qml" line="123"/>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/ProjectGridItem.qml" line="294"/>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectsGridView.qml" line="210"/>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectsListView.qml" line="284"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/ProjectGridItem.qml" line="293"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectsGridView.qml" line="208"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectsListView.qml" line="294"/>
         <source>No results found</source>
         <translation>결과를 찾을 수 없음</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="210"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="216"/>
         <source>Duration</source>
         <comment>file duration</comment>
         <translation>길이</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="231"/>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="269"/>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="232"/>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/RecentProjectsView.qml" line="167"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="237"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="275"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="236"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/RecentProjectsView.qml" line="171"/>
         <source>Unknown</source>
         <translation>알 수 없음</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="248"/>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="211"/>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/RecentProjectsView.qml" line="146"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="254"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="215"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/RecentProjectsView.qml" line="150"/>
         <source>Size</source>
         <comment>file size</comment>
         <translation>크기</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="334"/>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="266"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="342"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="270"/>
         <source>Please check your internet connection or try again later.</source>
         <translation>인터넷 연결을 확인하거나 나중에 다시 시도하십시오.</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="127"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="118"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="126"/>
         <source>Back</source>
         <translation>뒤로</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="138"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="131"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="139"/>
         <source>Next</source>
         <translation>다음</translation>
     </message>
@@ -5560,12 +5398,7 @@ Master effects will be turned back on after export.</source>
         <translation>성공!</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="100"/>
-        <source>Ok</source>
-        <translation>확인</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="128"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="136"/>
         <source>Skip</source>
         <translation>건너뛰기</translation>
     </message>
@@ -5585,13 +5418,13 @@ Master effects will be turned back on after export.</source>
         <translation>모든 파일</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="472"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1011"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="499"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1082"/>
         <source>Success</source>
         <translation>성공</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1016"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1087"/>
         <source>Dismiss</source>
         <translation>닫기</translation>
     </message>
@@ -5604,6 +5437,47 @@ Master effects will be turned back on after export.</source>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="635"/>
         <source>Open</source>
         <translation>열기</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/paulstretch/paulstretchviewmodel.cpp" line="112"/>
+        <source>s</source>
+        <translation>s</translation>
+    </message>
+</context>
+<context>
+    <name>import</name>
+    <message>
+        <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="134"/>
+        <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="168"/>
+        <source>Loop tempo detected at %1 BPM. What would you like to do?</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="138"/>
+        <source>Match project tempo to loop</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="139"/>
+        <source>Match loop to project tempo</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="140"/>
+        <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="173"/>
+        <source>Do nothing</source>
+        <translation>아무것도 안함</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="144"/>
+        <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="177"/>
+        <source>Loop Tempo Detected</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="172"/>
+        <source>Stretch loop to project tempo</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -5627,20 +5501,80 @@ Master effects will be turned back on after export.</source>
 <context>
     <name>label</name>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="26"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="27"/>
+        <source>Cut and leave gap</source>
+        <translation>잘라내고 갭은 유지</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="29"/>
+        <source>Cut and close gap on this track</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="31"/>
+        <source>Cut and close gap on all tracks</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="36"/>
+        <source>Paste and overlap</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="38"/>
+        <source>Paste and make room on this track</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="40"/>
+        <source>Paste and make room on all tracks</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="45"/>
+        <source>Delete and leave gap</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="47"/>
+        <source>Delete and close gap on this track</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="49"/>
+        <source>Delete and close gap on all tracks</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="53"/>
         <source>Rename label</source>
         <translation>레이블 이름 바꾸기</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="59"/>
+        <source>Cut and…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="60"/>
+        <source>Paste and…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="61"/>
+        <source>Delete and…</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>metadata</name>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="71"/>
+        <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="70"/>
         <source>tag</source>
         <translation>태그</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="73"/>
+        <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="72"/>
         <source>value</source>
         <translation>값</translation>
     </message>
@@ -5743,6 +5677,49 @@ Master effects will be turned back on after export.</source>
         <location filename="../../src/project/types/projectmeta.h" line="104"/>
         <source>Comments</source>
         <translation>설명</translation>
+    </message>
+</context>
+<context>
+    <name>multiclip</name>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="26"/>
+        <source>Cut and leave gap</source>
+        <translation>잘라내고 갭은 유지</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="28"/>
+        <source>Cut and close gap on this track</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="30"/>
+        <source>Cut and close gap on all tracks</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="35"/>
+        <source>Delete and leave gap</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="37"/>
+        <source>Delete and close gap on this track</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="39"/>
+        <source>Delete and close gap on all tracks</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="47"/>
+        <source>Cut and…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="48"/>
+        <source>Delete and…</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -5879,12 +5856,12 @@ Master effects will be turned back on after export.</source>
 <context>
     <name>preferences</name>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/AdvancedPreferencesPage.qml" line="66"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/AdvancedPreferencesPage.qml" line="72"/>
         <source>Preference</source>
         <translation>환경 설정</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/AdvancedPreferencesPage.qml" line="68"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/AdvancedPreferencesPage.qml" line="74"/>
         <source>Value</source>
         <translation>값</translation>
     </message>
@@ -5912,16 +5889,19 @@ Master effects will be turned back on after export.</source>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsymmetricStereoHeightsSection.qml" line="73"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="61"/>
         <source>Always</source>
         <translation>항상</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsymmetricStereoHeightsSection.qml" line="88"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="76"/>
         <source>Depending on workspace</source>
         <translation>작업 공간에 따라</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsymmetricStereoHeightsSection.qml" line="114"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="102"/>
         <source>Never</source>
         <translation>안 함</translation>
     </message>
@@ -5931,7 +5911,7 @@ Master effects will be turned back on after export.</source>
         <translation>입력 및 출력</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="54"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="58"/>
         <source>Host</source>
         <translation>호스트</translation>
     </message>
@@ -5941,17 +5921,17 @@ Master effects will be turned back on after export.</source>
         <translation>버퍼 및 지연 시간</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="47"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="54"/>
         <source>Buffer length</source>
         <translation>버퍼 길이</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="69"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="82"/>
         <source>Latency compensation</source>
         <translation>지연 보정</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="80"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="116"/>
         <source>Automatic</source>
         <translation>자동</translation>
     </message>
@@ -5971,17 +5951,17 @@ Master effects will be turned back on after export.</source>
         <translation>클래식</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CommonAudioApiConfiguration.qml" line="47"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="101"/>
         <source>Playback device</source>
         <translation>재생 장치</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CommonAudioApiConfiguration.qml" line="63"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="77"/>
         <source>Recording device</source>
         <translation>녹음 장치</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CommonAudioApiConfiguration.qml" line="79"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="120"/>
         <source>Recording channels</source>
         <translation>녹음 채널</translation>
     </message>
@@ -6066,7 +6046,7 @@ Master effects will be turned back on after export.</source>
         <translation>모노 및 스테레오 변환(&amp;S)</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MonoStereoConversionSection.qml" line="25"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MonoStereoConversionSection.qml" line="27"/>
         <source>Always convert to mono without prompt</source>
         <translation>묻지 않고 항상 모노로 변환</translation>
     </message>
@@ -6126,9 +6106,19 @@ Master effects will be turned back on after export.</source>
         <translation>기본 샘플레이트</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="91"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="69"/>
         <source>Default sample format</source>
         <translation>기본 샘플 형식</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="93"/>
+        <source>Custom sample rate</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="116"/>
+        <source>Default sample rates and formats apply to newly created tracks only. Recording into existing tracks will use the track’s sample rate and format instead.</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SoloButtonSection.qml" line="15"/>
@@ -6172,12 +6162,12 @@ Master effects will be turned back on after export.</source>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ThemesSection.qml" line="34"/>
-        <source>High contrast themes</source>
-        <translation>고대비 테마</translation>
+        <source>High-contrast theme</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ThemesSection.qml" line="34"/>
-        <source>Themes</source>
+        <source>Theme</source>
         <translation>테마</translation>
     </message>
     <message>
@@ -6197,23 +6187,23 @@ Master effects will be turned back on after export.</source>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="49"/>
-        <source>Accent color:</source>
-        <translation>강조 색상:</translation>
+        <source>Accent color</source>
+        <translation>강조 색상</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="50"/>
-        <source>Text and icons:</source>
-        <translation>텍스트 및 아이콘:</translation>
+        <source>Text and icons</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="51"/>
-        <source>Disabled text:</source>
-        <translation>비활성화된 텍스트:</translation>
+        <source>Disabled text</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="52"/>
-        <source>Border color:</source>
-        <translation>테두리 색상:</translation>
+        <source>Border color</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiFontSection.qml" line="31"/>
@@ -6223,13 +6213,13 @@ Master effects will be turned back on after export.</source>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiFontSection.qml" line="44"/>
-        <source>Font face:</source>
-        <translation>글꼴:</translation>
+        <source>Font face</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiFontSection.qml" line="59"/>
-        <source>Body text size:</source>
-        <translation>본문 텍스트 크기:</translation>
+        <source>Body text size</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PreferencesDialog.qml" line="31"/>
@@ -6357,24 +6347,59 @@ Master effects will be turned back on after export.</source>
         <translation>음악</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="179"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="180"/>
         <source>Cloud</source>
         <translation>클라우드</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="181"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="182"/>
         <source>Shortcuts</source>
         <translation>단축키</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="184"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="185"/>
         <source>Plugins</source>
         <translation>플러그인</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="187"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="188"/>
         <source>Advanced options</source>
         <translation>고급 옵션</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="14"/>
+        <source>Recording lead-in time</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="22"/>
+        <source>Lead-in time before recording starts</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="47"/>
+        <source>Crossfade</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="29"/>
+        <source>Music imports</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="45"/>
+        <source>Detect tempo in imported files:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="121"/>
+        <source>When Audacity detects music in imported file</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="135"/>
+        <source>Ask me each time</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -6449,41 +6474,41 @@ Master effects will be turned back on after export.</source>
         <translation>저작권</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="141"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="142"/>
         <source>Cloud audio files grid</source>
         <translation>클라우드 오디오 파일 그리드</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="172"/>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="173"/>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/RecentProjectsView.qml" line="108"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="178"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="177"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/RecentProjectsView.qml" line="112"/>
         <source>Modified</source>
         <extracomment>Stands for &quot;Last time that this project was modified&quot;. Used as the header of this column in the scores list.</extracomment>
         <translation>수정됨</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="333"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="341"/>
         <source>Unable to load online files</source>
         <translation>온라인 파일을 불러올 수 없음</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="353"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="361"/>
         <source>You don’t have any online files yet</source>
         <translation>아직 온라인 파일이 없습니다.</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="354"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="362"/>
         <source>Files will appear here when you save a file to the cloud, or publish a project</source>
         <translation>파일을 클라우드에 저장하거나 프로젝트를 게시하면 여기에 표시됩니다.</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="373"/>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="305"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="381"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="309"/>
         <source>You are not signed in</source>
         <translation>로그인 하지 않았습니다</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="374"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="382"/>
         <source>Please sign in to view your online files</source>
         <translation>온라인 파일을 보려면 로그인하십시오.</translation>
     </message>
@@ -6498,32 +6523,32 @@ Master effects will be turned back on after export.</source>
         <translation>프로젝트 다운로드</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="137"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="138"/>
         <source>Cloud projects grid</source>
         <translation>클라우드 프로젝트 그리드</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="162"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="165"/>
         <source>Cloud projects list</source>
         <translation>클라우드 프로젝트 목록</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="265"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="269"/>
         <source>Unable to load online projects</source>
         <translation>온라인 프로젝트를 불러올 수 없음</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="285"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="289"/>
         <source>You don’t have any online projects yet</source>
         <translation>아직 온라인 프로젝트가 없습니다.</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="286"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="290"/>
         <source>Projects will appear here when you publish a project</source>
         <translation>프로젝트를 게시하면 여기에 표시됩니다.</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="306"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="310"/>
         <source>Please sign in to view your online projects</source>
         <translation>온라인 프로젝트를 보려면 로그인하십시오.</translation>
     </message>
@@ -6539,7 +6564,7 @@ Master effects will be turned back on after export.</source>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="34"/>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectsListView.qml" line="108"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectsListView.qml" line="113"/>
         <location filename="../../src/project/view/recentprojectsmodel.cpp" line="66"/>
         <source>New project</source>
         <translation>새 프로젝트</translation>
@@ -6555,12 +6580,12 @@ Master effects will be turned back on after export.</source>
         <translation>프로젝트 그리드</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectsListView.qml" line="82"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectsListView.qml" line="85"/>
         <source>Projects list</source>
         <translation>프로젝트 목록</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectsListView.qml" line="156"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectsListView.qml" line="161"/>
         <source>Name</source>
         <translation>이름</translation>
     </message>
@@ -6591,48 +6616,48 @@ Master effects will be turned back on after export.</source>
         <translation>클라우드 프로젝트</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="170"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="171"/>
         <source>Cloud audio files</source>
         <translation>클라우드 오디오 파일</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="185"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="187"/>
         <source>View buttons</source>
         <translation>보기 버튼</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="197"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="199"/>
         <source>Refresh</source>
         <translation>새로 고침</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="211"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="213"/>
         <source>Grid view</source>
         <translation>그리드 보기</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="216"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="218"/>
         <source>List view</source>
         <translation>목록 보기</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="364"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="384"/>
         <source>Projects actions</source>
         <extracomment>accessibility name for the panel at the bottom of the &quot;Projects&quot; page</extracomment>
         <translation>프로젝트 작업</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="379"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="399"/>
         <source>Project manager (online)</source>
         <translation>프로젝트 관리자(온라인)</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="398"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="418"/>
         <source>New</source>
         <translation>새로 만들기</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="410"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="430"/>
         <source>Open other…</source>
         <translation>다른 항목 열기…</translation>
     </message>
@@ -6682,19 +6707,19 @@ Master effects will be turned back on after export.</source>
         <translation>강조 색상</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="473"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="378"/>
         <source>Could not save project locally</source>
         <translation>프로젝트를 로컬에 저장할 수 없습니다.</translation>
     </message>
     <message>
-        <location filename="../../src/au3wrap/internal/au3project.cpp" line="139"/>
+        <location filename="../../src/au3wrap/internal/au3project.cpp" line="151"/>
         <source>Project loading failed</source>
         <translation>프로젝트 불러오기 실패</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="477"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="554"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="601"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="475"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="578"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="625"/>
         <source>All supported files</source>
         <translation>지원하는 모든 파일</translation>
     </message>
@@ -6719,135 +6744,142 @@ Master effects will be turned back on after export.</source>
         <translation>여러 파일을 가져왔습니다.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="107"/>
-        <source>Audacity4 files</source>
-        <translation>Audacity 4 파일</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="235"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="240"/>
         <source>Error opening file</source>
         <translation>파일을 여는 중 오류</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="236"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="241"/>
         <source>Could not open file: %1</source>
         <translation>파일을 열 수 없음: %1</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="473"/>
-        <source>All saved changes will now update to the cloud. 
-You can manage this file from your updated projects page on audio.com</source>
-        <translation>이제 저장된 모든 변경 사항이 클라우드에 업데이트됩니다.
-audio.com의 업데이트된 프로젝트 페이지에서 이 파일을 관리할 수 있습니다.</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="478"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="505"/>
         <source>Dismiss</source>
         <translation>닫기</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="494"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="518"/>
         <source>Upload project to audio.com…</source>
         <translation>프로젝트를 audio.com에 업로드…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="555"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="579"/>
         <source>Audacity project files</source>
         <translation>Audacity 프로젝트 파일</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="556"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="580"/>
         <source>Audacity 3 files</source>
         <translation>Audacity 3 파일</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="557"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="181"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="581"/>
         <source>Audacity 4 files</source>
         <translation>Audacity 4 파일</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="558"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="652"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="670"/>
+        <source>Visit audio.com</source>
+        <translation>audio.com 방문하기</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="654"/>
+        <source>Load latest</source>
+        <translation>최근 파일 로딩</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="500"/>
+        <source>All saved changes will now update to the cloud.
+You can manage this file from your updated projects page on audio.com</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="582"/>
         <source>Importable audio and media files</source>
         <translation>가져올 수 있는 오디오 및 미디어 파일</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="571"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="620"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="595"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="644"/>
         <source>Open</source>
         <translation>열기</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="602"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="626"/>
         <source>Audio files</source>
         <translation>오디오 파일</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="603"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="627"/>
         <source>Video files</source>
         <translation>동영상 파일</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="604"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="628"/>
         <source>Game media files</source>
         <translation>게임 미디어 파일</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="605"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="629"/>
         <source>Streaming files</source>
         <translation>스트리밍 파일</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="606"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="630"/>
         <source>Animation and image files</source>
         <translation>애니메이션 및 이미지 파일</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="607"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="631"/>
         <source>Raw files</source>
         <translation>원시 파일</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="633"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="660"/>
+        <source>Do you want to save changes to the project before closing?</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="662"/>
         <source>Do you want to save changes to the project “%1” before closing?</source>
         <translation>닫기 전에 프로젝트 “%1”의 변경 사항을 저장하시겠습니까?</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="636"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="666"/>
         <source>Your changes will be lost if you don’t save them.</source>
         <translation>저장하지 않으면 변경 사항이 손실됩니다.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="827"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="872"/>
         <source>Resuming sync to audio.com…</source>
         <translation>audio.com 동기화 다시 시작 중…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="837"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="882"/>
         <source>Syncing project from cloud…</source>
         <translation>클라우드에서 프로젝트 동기화 중…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="980"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1042"/>
         <location filename="../../src/project/projecterrors.cpp" line="32"/>
         <location filename="../../src/project/projecterrors.cpp" line="51"/>
         <source>Cannot read file %1</source>
         <translation>파일을 읽을 수 없음 %1</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="985"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1047"/>
         <source>An error occurred while reading this file.</source>
         <translation>이 파일을 읽는 중 오류가 발생했습니다.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1187"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1316"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1372"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="597"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="701"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="717"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="756"/>
         <source>Save to computer</source>
-        <translation>컴퓨터에 저장</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1286"/>
-        <source>Save to Computer</source>
         <translation>컴퓨터에 저장</translation>
     </message>
     <message>
@@ -6939,32 +6971,6 @@ Please remove the write protection by checking the file’s properties, ensuring
         <source>Remember my choice</source>
         <translation>내 선택 기억</translation>
     </message>
-    <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="506"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="512"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="518"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="524"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="530"/>
-        <source>MuseScore.com returned an error code: %1.</source>
-        <extracomment>%1 will be replaced with the error code that MuseScore.com returned; this might contain english text that is deliberately not translated</extracomment>
-        <translation>MuseScore.com에서 오류 코드 %1을(를) 반환했습니다.</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="536"/>
-        <source>MuseScore.com returned an unknown error code: %1.</source>
-        <extracomment>%1 will be replaced with the error code that MuseScore.com returned, which is a number.</extracomment>
-        <translation>MuseScore.com에서 알 수 없는 오류 코드 %1을(를) 반환했습니다.</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="539"/>
-        <source>MuseScore.com returned an unknown error code.</source>
-        <translation>MuseScore.com에서 알 수 없는 오류 코드를 반환했습니다.</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="545"/>
-        <source>Please try again later, or get help for this problem on musescore.org.</source>
-        <translation>나중에 다시 시도하거나 musescore.org에서 이 문제에 대한 도움을 받으십시오.</translation>
-    </message>
 </context>
 <context>
     <name>project/history</name>
@@ -6990,34 +6996,49 @@ Please remove the write protection by checking the file’s properties, ensuring
 <context>
     <name>project/open</name>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="406"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="480"/>
         <source>Legacy project file</source>
         <translation>레거시 프로젝트 파일</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="407"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="481"/>
         <source>You have opened an Audacity 3 project. It must be converted before you can use it in Audacity 4.</source>
         <translation>Audacity 3 프로젝트를 열었습니다. Audacity 4에서 사용하려면 먼저 변환해야 합니다.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="412"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="486"/>
         <source>Cancel</source>
         <translation>취소</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="415"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="489"/>
         <source>Save as new project</source>
         <translation>새 프로젝트로 저장</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="442"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="516"/>
         <source>The project was saved as “%1”</source>
         <translation>프로젝트가 “%1”(으)로 저장되었습니다.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="445"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="519"/>
         <source>Continue</source>
         <translation>계속</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="908"/>
+        <source>Time Track not supported</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="909"/>
+        <source>The project contains a time track, which is not yet supported in Audacity 4, and will need to be removed. This does not affect your original Audacity 3 project.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="913"/>
+        <source>Ok</source>
+        <translation>확인</translation>
     </message>
 </context>
 <context>
@@ -7066,11 +7087,6 @@ Please remove the write protection by checking the file’s properties, ensuring
         <translation>어떤 방식으로 저장 하겠습니까?</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="78"/>
-        <source>Save to the Cloud (free)</source>
-        <translation>클라우드에 저장 (무료)</translation>
-    </message>
-    <message>
         <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="79"/>
         <source>Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others. Cloud saving is free for a limited number of projects.</source>
         <translation>프로젝트는 audio.com에 비공개로 백업 됩니다. 당신은 어떤 장치에서든 본인의 작업에 접근할 수 있고, 다른 사람과 공동 작업을 할 수 있습니다.클라우드 저장은 무료로 제공되고 프로젝트 개수에 제한이 있습니다.</translation>
@@ -7081,6 +7097,7 @@ Please remove the write protection by checking the file’s properties, ensuring
         <translation>클라우드에 저장</translation>
     </message>
     <message>
+        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="78"/>
         <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="86"/>
         <source>Save to the cloud (free)</source>
         <translation>클라우드에 저장(무료)</translation>
@@ -7097,7 +7114,7 @@ Please remove the write protection by checking the file’s properties, ensuring
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="97"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="476"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="550"/>
         <source>Save to computer</source>
         <translation>컴퓨터에 저장</translation>
     </message>
@@ -7107,62 +7124,58 @@ Please remove the write protection by checking the file’s properties, ensuring
         <translation>컴퓨터에 저장</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="93"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="167"/>
         <source>Save project</source>
         <translation>프로젝트 저장</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="98"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="172"/>
         <source>copy</source>
         <comment>a copy of a file</comment>
         <extracomment>used to form a filename suggestion, like &quot;originalFile - copy&quot;</extracomment>
         <translation>사본</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="101"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="175"/>
         <source>selection</source>
         <extracomment>used to form a filename suggestion, like &quot;originalFile - selection&quot;</extracomment>
         <translation>선택 영역</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="190"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="264"/>
         <source>Log in or create a new account on Audio.com to share your music.</source>
         <translation>음악을 공유하려면 Audio.com에 로그인하거나 새 계정을 만드십시오.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="454"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="528"/>
         <source>Publish</source>
         <translation>게시</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="458"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="532"/>
         <source>Publish changes online?</source>
         <translation>변경 사항을 온라인에 게시하시겠습니까?</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="459"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="533"/>
         <source>Your saved changes will be publicly visible. We will also need to generate a new MP3 for public playback.</source>
         <translation>저장한 변경 사항은 공개적으로 표시됩니다. 공개 재생을 위해 새 MP3도 생성해야 합니다.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="469"/>
-        <source>Unable to connect to MuseScore.com</source>
-        <translation>MuseScore.com에 연결할 수 없습니다.</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="470"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="480"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="494"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="544"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="554"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="568"/>
         <source>Please check your internet connection or try again later.</source>
         <translation>인터넷 연결을 확인하거나 나중에 다시 시도하십시오.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="479"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="543"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="553"/>
         <source>Unable to connect to the cloud</source>
         <translation>클라우드에 연결할 수 없습니다.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="493"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="567"/>
         <source>Unable to connect to Audio.com</source>
         <translation>Audio.com에 연결할 수 없습니다.</translation>
     </message>
@@ -7170,34 +7183,34 @@ Please remove the write protection by checking the file’s properties, ensuring
 <context>
     <name>project/share</name>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="703"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="817"/>
         <source>Your audio could not be shared</source>
         <translation>오디오를 공유할 수 없습니다.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="711"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="825"/>
         <source>Your audio.com account needs to be verified first. Please activate your account via the link in the activation email.</source>
         <translation>먼저 audio.com 계정을 인증해야 합니다. 활성화 이메일의 링크를 통해 계정을 활성화하십시오.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="717"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="831"/>
         <source>Audio.com returned an unknown error code: %1.</source>
         <extracomment>%1 will be replaced with the error code that audio.com returned, which is a number.</extracomment>
         <translation>Audio.com에서 알 수 없는 오류 코드 %1을(를) 반환했습니다.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="720"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="834"/>
         <source>Audio.com returned an unknown error code.</source>
         <translation>Audio.com에서 알 수 없는 오류 코드를 반환했습니다.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="722"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="729"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="836"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="843"/>
         <source>Please try again later, or get help for this problem on audio.com.</source>
         <translation>나중에 다시 시도하거나 audio.com에서 이 문제에 대한 도움을 받으십시오.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="725"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="839"/>
         <source>Could not connect to audio.com. Please check your internet connection or try again later.</source>
         <translation>audio.com에 연결할 수 없습니다. 인터넷 연결을 확인하거나 나중에 다시 시도하십시오.</translation>
     </message>
@@ -7219,13 +7232,13 @@ Please remove the write protection by checking the file’s properties, ensuring
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml" line="50"/>
-        <source>Selection Start</source>
-        <translation>선택 시작</translation>
+        <source>Selection start</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml" line="51"/>
-        <source>Selection End</source>
-        <translation>선택 끝</translation>
+        <source>Selection end</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml" line="71"/>
@@ -7540,33 +7553,33 @@ Please remove the write protection by checking the file’s properties, ensuring
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="230"/>
-        <source>Video Frames (24 fps)</source>
-        <translation>비디오 프레임(24 fps)</translation>
+        <source>Video frames (24 fps)</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="231"/>
-        <source>NTSC Frames (29.97 fps)</source>
-        <translation>NTSC 프레임(29.97 fps)</translation>
+        <source>NTSC frames (29.97 fps)</source>
+        <translation>NTSC 프레임 (29.97 fps)</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="232"/>
-        <source>NTSC Frames (30 fps)</source>
-        <translation>NTSC 프레임(30 fps)</translation>
+        <source>NTSC frames (30 fps)</source>
+        <translation>NTSC 프레임 (30 fps)</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="233"/>
-        <source>PAL Frames (25 fps)</source>
-        <translation>PAL 프레임(25 fps)</translation>
+        <source>PAL frames (25 fps)</source>
+        <translation>PAL 프레임 (25 fps)</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="242"/>
+        <source>CDDA frames (75 fps)</source>
+        <translation>CDDA 프레임 (75 fps)</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="236"/>
         <source>Video frames</source>
         <translation>비디오 프레임</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="242"/>
-        <source>CDDA Frames (75 fps)</source>
-        <translation>CDDA 프레임(75 fps)</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="245"/>
@@ -7658,45 +7671,133 @@ Please remove the write protection by checking the file’s properties, ensuring
         <translation>녹음하지 않을 때 마이크 미터 표시</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/au3/au3record.cpp" line="706"/>
-        <source>Recorded Audio</source>
-        <translation>녹음된 오디오</translation>
-    </message>
-    <message>
-        <location filename="../../src/record/internal/au3/au3record.cpp" line="706"/>
+        <location filename="../../src/record/internal/au3/au3record.cpp" line="919"/>
         <source>Record</source>
         <translation>녹음</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcontroller.cpp" line="94"/>
-        <location filename="../../src/record/internal/recordcontroller.cpp" line="109"/>
-        <location filename="../../src/record/internal/recordcontroller.cpp" line="124"/>
+        <location filename="../../src/record/internal/au3/au3record.cpp" line="919"/>
+        <source>Recorded audio</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="104"/>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="119"/>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="134"/>
         <source>Recording error</source>
         <translation>녹음 오류</translation>
     </message>
     <message>
-        <location filename="../../src/record/recorderrors.h" line="32"/>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="154"/>
+        <source>Lead-in Recording error</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/recorderrors.h" line="35"/>
         <source>Error opening recording device.
 Error code: %1</source>
         <translation>녹음 장치를 여는 중 오류가 발생했습니다.
 오류 코드: %1</translation>
     </message>
     <message>
-        <location filename="../../src/record/recorderrors.h" line="33"/>
+        <location filename="../../src/record/recorderrors.h" line="36"/>
         <source>Cannot stop recording</source>
         <translation>녹음을 중지할 수 없습니다.</translation>
     </message>
     <message>
-        <location filename="../../src/record/recorderrors.h" line="35"/>
+        <location filename="../../src/record/recorderrors.h" line="38"/>
         <source>The tracks selected for recording must all have the same sampling rate</source>
         <translation>녹음을 위해 선택된 트랙은 모두 같은 샘플링 레이트를 갖고 있어야 합니다</translation>
     </message>
     <message>
-        <location filename="../../src/record/recorderrors.h" line="38"/>
+        <location filename="../../src/record/recorderrors.h" line="41"/>
         <source>Too few tracks are selected for recording at this sample rate.
 (Audacity requires two channels at the same sample rate foreach stereo track)</source>
         <translation>이 샘플레이트로 녹음하기에 선택된 트랙 수가 너무 적습니다.
 (Audacity에서는 각 스테레오 트랙마다 동일한 샘플레이트의 두 채널이 필요합니다.)</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/recorderrors.h" line="45"/>
+        <source>Please select a time within a clip.</source>
+        <translation>클립 내의 시간을 선택하세요.</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/recorderrors.h" line="48"/>
+        <source>Please select a track for lead-in recording.</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>selection</name>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="26"/>
+        <source>Cut and leave gap</source>
+        <translation>잘라내고 갭은 유지</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="28"/>
+        <source>Cut and close gap</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="30"/>
+        <source>Cut and close gap on this track</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="32"/>
+        <source>Cut and close gap on all tracks</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="37"/>
+        <source>Paste and overlap</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="39"/>
+        <source>Paste and make room on this track</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="41"/>
+        <source>Paste and make room on all tracks</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="46"/>
+        <source>Delete and leave gap</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="48"/>
+        <source>Delete and close gap</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="50"/>
+        <source>Delete and close gap on this track</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="52"/>
+        <source>Delete and close gap on all tracks</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="62"/>
+        <source>Cut and…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="63"/>
+        <source>Paste and…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="64"/>
+        <source>Delete and…</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -7882,8 +7983,8 @@ Error code: %1</source>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/colorsectionparameterlistmodel.cpp" line="97"/>
-        <source>High Boost</source>
-        <translation>고역 부스트</translation>
+        <source>High boost</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/scalesectionparameterlistmodel.cpp" line="51"/>
@@ -7920,7 +8021,7 @@ Error code: %1</source>
     </message>
     <message>
         <location filename="../../src/spectrogram/qml/Audacity/Spectrogram/TrackSpectrogramSettingsDialog.qml" line="132"/>
-        <source>Ok</source>
+        <source>OK</source>
         <translation>확인</translation>
     </message>
 </context>
@@ -7974,29 +8075,29 @@ Error code: %1</source>
 <context>
     <name>trackedit</name>
     <message>
-        <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="189"/>
+        <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="191"/>
         <source>Added enveloped point</source>
         <translation>엔벌로프 포인트 추가됨</translation>
     </message>
     <message>
-        <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="189"/>
-        <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="219"/>
-        <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="339"/>
+        <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="191"/>
+        <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="224"/>
+        <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="345"/>
         <source>Clip envelope edit</source>
         <translation>클립 엔벌로프 편집</translation>
     </message>
     <message>
-        <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="219"/>
+        <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="224"/>
         <source>Removed enveloped point</source>
         <translation>엔벌로프 포인트 제거됨</translation>
     </message>
     <message>
-        <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="339"/>
+        <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="345"/>
         <source>Dragged enveloped point</source>
         <translation>엔벌로프 포인트 드래그됨</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="601"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="631"/>
         <source>Set looping region in/out</source>
         <translation>루프 구간 시작/끝 설정</translation>
     </message>
@@ -8040,40 +8141,42 @@ Do you wish to continue?</source>
 계속하시겠습니까?</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="638"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="666"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="689"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="663"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="697"/>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="720"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="743"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="774"/>
         <source>No audio selected</source>
         <translation>오디오가 선택되지 않음</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="639"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="667"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="690"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="664"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="698"/>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="721"/>
-        <source>Select the audio for Delete then try again.</source>
-        <translation>삭제할 오디오를 선택한 다음 다시 시도하십시오.</translation>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="744"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="775"/>
+        <source>Select the audio to delete and try again.</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1120"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1134"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1148"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1139"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1153"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1167"/>
         <source>Paste error</source>
         <translation>붙여넣기 오류</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1587"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1606"/>
         <source>Applying</source>
         <translation>적용 중</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1795"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1847"/>
         <source>Set rate</source>
         <translation>레이트 설정</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1952"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="2004"/>
         <source>Resample</source>
         <translation>리샘플링</translation>
     </message>
@@ -8107,8 +8210,8 @@ Do you wish to continue?</source>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="45"/>
-        <source>Your delete behaviour has been set</source>
-        <translation>삭제 동작이 설정되었습니다.</translation>
+        <source>Your delete behavior has been set</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="57"/>
@@ -8127,8 +8230,8 @@ Do you wish to continue?</source>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="61"/>
-        <source>There are also a variety of new shortcuts that let you quickly access different delete behaviours. Go to %2 to learn more.</source>
-        <translation>다양한 삭제 동작에 빠르게 접근할 수 있는 새로운 단축키도 여러 가지 제공됩니다. 자세한 내용은 %2에서 확인하십시오.</translation>
+        <source>There are also a variety of new shortcuts that let you quickly access different delete behaviors. Go to %2 to learn more.</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorPanel.qml" line="15"/>

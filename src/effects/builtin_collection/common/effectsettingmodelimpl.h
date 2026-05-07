@@ -42,7 +42,7 @@ public:
         if (muse::is_equal(value(), newValue)) {
             return;
         }
-        modifySettings([this, newValue](EffectSettings& settings) {
+        modifySettings<SettingsType>([this, newValue](EffectSettings& settings) {
             auto* s = settings.cast<SettingsType>();
             IF_ASSERT_FAILED(s) {
                 return;
@@ -69,6 +69,12 @@ public:
     {
         const auto& param = m_getter(effect<EffectType>());
         return param.step;
+    }
+
+    int decimals() const final override
+    {
+        const auto& param = m_getter(effect<EffectType>());
+        return param.decimals;
     }
 
     double defaultValue() const final override

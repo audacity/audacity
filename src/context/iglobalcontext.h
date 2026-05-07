@@ -30,8 +30,5 @@ public:
 
     virtual bool isRecording() const = 0;
     virtual muse::async::Notification isRecordingChanged() const = 0;
-
-    virtual muse::secs_t recordPosition() const = 0;
-    virtual muse::async::Channel<muse::secs_t> recordPositionChanged() const = 0;
 };
 }

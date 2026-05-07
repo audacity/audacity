@@ -321,6 +321,12 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Render pitch and speed"),
              TranslatableString("action", "Render pitch and speed")
              ),
+    UiAction("clip-reset-pitch-speed",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+             TranslatableString("action", "Reset pitch and speed"),
+             TranslatableString("action", "Reset pitch and speed")
+             ),
     UiAction("new-mono-track",
              au::context::UiCtxAny,
              au::context::CTX_ANY,

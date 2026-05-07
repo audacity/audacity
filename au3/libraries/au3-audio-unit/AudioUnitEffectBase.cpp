@@ -174,11 +174,6 @@ bool AudioUnitEffectBase::SupportsAutomation() const
     return supports;
 }
 
-bool AudioUnitEffectBase::SupportsMultipleClipSelection() const
-{
-    return true;
-}
-
 std::shared_ptr<EffectInstance> AudioUnitEffectBase::MakeInstance() const
 {
     bool useLatency;

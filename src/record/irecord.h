@@ -5,12 +5,14 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
 #include "async/notification.h"
 #include "global/types/ret.h"
 
 #include "modularity/imoduleinterface.h"
 
+#include "trackedit/trackedittypes.h"
 #include "iaudioinput.h"
 
 namespace au::record {
@@ -27,8 +29,9 @@ public:
 
     virtual IAudioInputPtr audioInput() const = 0;
 
-    virtual muse::secs_t recordPosition() const = 0;
     virtual muse::async::Channel<muse::secs_t> recordPositionChanged() const = 0;
+
+    virtual const std::vector<trackedit::ClipKey>& recordingClipKeys() const = 0;
 
     virtual muse::async::Notification recordingFinished() const = 0;
 };

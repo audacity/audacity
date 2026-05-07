@@ -81,7 +81,7 @@ muse::RetVal<muse::audio::AudioResourceMetaList> Au3AudioPluginMetaReader::readM
             desc.SetEffectDefault(effect->IsDefault());
             desc.SetRealtimeSupport(effect->RealtimeSupport());
             desc.SetEffectAutomatable(effect->SupportsAutomation());
-            desc.SetSupportsMultipleClipSelection(effect->SupportsMultipleClipSelection());
+            desc.SetParamsAreInputAgnostic(effect->ParamsAreInputAgnostic());
 
             desc.SetEnabled(true);
             desc.SetValid(true);

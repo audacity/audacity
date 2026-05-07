@@ -21,7 +21,6 @@ class SigninAudiocomPageModel : public QObject, public muse::async::Asyncable, p
 
     Q_PROPERTY(bool authInProgress READ authInProgress NOTIFY authInProgressChanged)
     Q_PROPERTY(bool authorized READ authorized NOTIFY authorizedChanged)
-    Q_PROPERTY(bool isRegistering READ isRegistering WRITE setIsRegistering NOTIFY isRegisteringChanged)
 
     Q_PROPERTY(bool showErrorMessage READ showErrorMessage NOTIFY showErrorMessageChanged)
     Q_PROPERTY(QString errorMessage READ errorMessage NOTIFY errorMessageChanged)
@@ -36,7 +35,6 @@ public:
 
     bool authInProgress() const;
     bool authorized() const;
-    bool isRegistering() const;
 
     bool showErrorMessage() const;
     QString errorMessage() const;
@@ -44,19 +42,14 @@ public:
 signals:
     void authInProgressChanged();
     void authorizedChanged();
-    void isRegisteringChanged();
 
     void showErrorMessageChanged();
     void errorMessageChanged();
-public slots:
-    void setIsRegistering(bool isRegistering);
 
 private:
     void setErrorMessage(const QString& message);
 
     au::au3cloud::AuthState m_state = au::au3cloud::AuthState(au::au3cloud::NotAuthorized());
-    bool m_isRegistering = false;
-
     QString m_errorMessage;
 };
 }

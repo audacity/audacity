@@ -9,6 +9,7 @@
 #include "workspace/iworkspacemanager.h"
 #include "iprojectsceneconfiguration.h"
 #include "context/iglobalcontext.h"
+#include "record/irecordcontroller.h"
 
 #include "trackitemslistmodel.h"
 #include "trackclipitem.h"
@@ -28,6 +29,7 @@ class TrackClipsListModel : public TrackItemsListModel
     muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
 
     muse::ContextInject<context::IGlobalContext> globalContext { this };
+    muse::ContextInject<au::record::IRecordController> recordController { this };
     muse::ContextInject<muse::workspace::IWorkspaceManager> workspacesManager{ this };
 
 public:

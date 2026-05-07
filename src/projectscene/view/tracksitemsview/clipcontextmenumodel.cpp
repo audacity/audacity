@@ -6,12 +6,16 @@
 #include "spectrogram/spectrogramtypes.h"
 #include "trackedit/dom/track.h"
 #include "framework/global/translation.h"
+#include "global/realfn.h"
 
 using namespace au::projectscene;
 using namespace muse::uicomponents;
 using namespace muse::actions;
 
 static const ActionCode ENABLE_STRETCH_CODE("stretch-clip-to-match-tempo");
+static const ActionCode RENDER_PITCH_SPEED_CODE("clip-render-pitch-speed");
+static const ActionCode RESET_PITCH_SPEED_CODE("clip-reset-pitch-speed");
+static const ActionCodeList PITCH_SPEED_CODES { RENDER_PITCH_SPEED_CODE, RESET_PITCH_SPEED_CODE };
 
 namespace {
 //! NOTE: can be moved to the framework
@@ -38,6 +42,12 @@ void ClipContextMenuModel::load()
 
     auto enableStretchItem = makeItemWithArg(ENABLE_STRETCH_CODE);
     updateStretchEnabledState(*enableStretchItem);
+
+    auto renderPitchSpeedItem = makeItemWithArg(RENDER_PITCH_SPEED_CODE);
+    updatePitchSpeedModifiedEnabledState(*renderPitchSpeedItem);
+
+    auto resetPitchSpeedItem = makeItemWithArg(RESET_PITCH_SPEED_CODE);
+    updatePitchSpeedModifiedEnabledState(*resetPitchSpeedItem);
 
     auto colorItems = makeClipColourItems();
 
@@ -77,7 +87,8 @@ void ClipContextMenuModel::load()
         makeSeparator(),
         enableStretchItem,
         makeItemWithArg("clip-pitch-speed-open"),
-        makeItemWithArg("clip-render-pitch-speed"),
+        resetPitchSpeedItem,
+        renderPitchSpeedItem,
     };
 
     const auto project = globalContext()->currentProject();
@@ -147,6 +158,13 @@ void ClipContextMenuModel::onActionsStateChanges(const muse::actions::ActionCode
         updateStretchEnabledState(item);
     }
 
+    if (containsAny(codes, PITCH_SPEED_CODES)) {
+        for (const auto& code : PITCH_SPEED_CODES) {
+            MenuItem& item = findItem(ActionCode(code));
+            updatePitchSpeedModifiedEnabledState(item);
+        }
+    }
+
     if (containsAny(codes, m_colorChangeActionCodeList)) {
         updateColorCheckedState();
     }
@@ -164,6 +182,23 @@ void ClipContextMenuModel::updateStretchEnabledState(MenuItem& item)
     }
     auto state = item.state();
     state.checked = clip.stretchToMatchTempo;
+    item.setState(state);
+}
+
+void ClipContextMenuModel::updatePitchSpeedModifiedEnabledState(MenuItem& item)
+{
+    project::IAudacityProjectPtr project = globalContext()->currentProject();
+    if (!project) {
+        return;
+    }
+    auto clip = project->trackeditProject()->clip(m_clipKey.key);
+    if (!clip.isValid()) {
+        return;
+    }
+
+    const bool hasPitchOrSpeed = clip.pitch != 0 || !muse::RealIsEqual(clip.speed, 1.0);
+    auto state = item.state();
+    state.enabled = state.enabled && hasPitchOrSpeed;
     item.setState(state);
 }
 

@@ -59,7 +59,9 @@ void NoiseViewModel::prop_setAmplitude(double newAmplitude)
         return;
     }
 
-    mutSettings<NoiseSettings>().amplitude = newAmplitude;
+    modifySettings<NoiseSettings>([newAmplitude](EffectSettings& settings) {
+        settings.cast<NoiseSettings>()->amplitude = newAmplitude;
+    });
     emit amplitudeChanged();
 
     if (wasAllowed != isApplyAllowed()) {
@@ -84,7 +86,9 @@ void NoiseViewModel::prop_setType(int type)
         return;
     }
 
-    mutSettings<NoiseSettings>().type = noiseType;
+    modifySettings<NoiseSettings>([noiseType](EffectSettings& settings) {
+        settings.cast<NoiseSettings>()->type = noiseType;
+    });
     emit typeChanged();
 
     if (wasAllowed != isApplyAllowed()) {

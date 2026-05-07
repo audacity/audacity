@@ -48,7 +48,7 @@ static const muse::String EFFECT_DESCRIPTION_ATTRIBUTE(u"description");
 static const muse::String EFFECT_TYPE_ATTRIBUTE(u"type");
 static const muse::String EFFECT_CATEGORY_ATTRIBUTE(u"category");
 static const muse::String EFFECT_IS_REALTIME_CAPABLE_ATTRIBUTE(u"isRealtimeCapable");
-static const muse::String EFFECT_SUPPORTS_MULTIPLE_CLIP_SELECTION_ATTRIBUTE(u"supportsMultipleClipSelection");
+static const muse::String EFFECT_PARAMS_ARE_INPUT_AGNOSTIC_ATTRIBUTE(u"paramsAreInputAgnostic");
 static const muse::String EFFECT_VERSION_ATTRIBUTE(u"version");
 static const muse::String EFFECT_MODULE_ATTRIBUTE(u"module");
 static const muse::String EFFECT_ACTIVATED_ATTRIBUTE(u"activated"); // `AudioPluginInfo`'s `enabled` field actually has semantic "valid".
@@ -155,9 +155,14 @@ public:
         Unknown = -1,
         Builtin,
         VST3,
+#ifdef Q_OS_LINUX
         LV2,
+#endif
+#ifdef Q_OS_MACOS
         AudioUnit,
+#endif
         Nyquist,
+        _count
     };
     Q_ENUM(EffectFamily)
 };
@@ -185,6 +190,7 @@ enum class EffectType {
     Generator,
     Processor,
     Tool,
+    _count
 };
 
 struct EffectMeta {
@@ -201,8 +207,9 @@ struct EffectMeta {
     muse::String category;
 
     bool isRealtimeCapable = false;
-    bool supportsMultipleClipSelection = true;
+    bool paramsAreInputAgnostic = true;
     bool isActivated = true;
+    bool isLoadable = true;
 
     bool isValid() const { return !id.empty(); }
 };

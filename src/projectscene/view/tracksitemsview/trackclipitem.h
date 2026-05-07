@@ -19,6 +19,8 @@ class TrackClipItem : public ViewTrackItem
     Q_PROPERTY(int groupId READ groupId NOTIFY groupIdChanged FINAL)
     Q_PROPERTY(int pitch READ pitch NOTIFY pitchChanged FINAL)
     Q_PROPERTY(int speedPercentage READ speedPercentage NOTIFY speedPercentageChanged FINAL)
+    Q_PROPERTY(bool isPitchModified READ isPitchModified NOTIFY pitchChanged FINAL)
+    Q_PROPERTY(bool isSpeedModified READ isSpeedModified NOTIFY speedPercentageChanged FINAL)
     // Q_PROPERTY(QObject * envelopeModel READ envelopeModel NOTIFY envelopeModelChanged)
 
 public:
@@ -30,6 +32,9 @@ public:
 
     int pitch() const;
     int speedPercentage() const;
+    bool isPitchModified() const;
+    bool isSpeedModified() const;
+    double speed() const;
 
 signals:
     void groupIdChanged();

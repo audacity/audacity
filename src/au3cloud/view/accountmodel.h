@@ -11,7 +11,7 @@
 #include "framework/actions/iactionsdispatcher.h"
 
 namespace au::au3cloud {
-class AccountInfoModel : public QObject, public muse::async::Asyncable, public muse::Contextable
+class AccountModel : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT
 
@@ -25,11 +25,12 @@ class AccountInfoModel : public QObject, public muse::async::Asyncable, public m
     Q_PROPERTY(QString displayName READ displayName NOTIFY isAuthorizedChanged)
 
 public:
-    explicit AccountInfoModel(QObject* parent = nullptr);
+    explicit AccountModel(QObject* parent = nullptr);
 
     Q_INVOKABLE void init();
     Q_INVOKABLE void signOut() const;
-    Q_INVOKABLE void openAuthorizationDialog() const;
+    Q_INVOKABLE void openSignInDialog() const;
+    Q_INVOKABLE void openCreateAccountDialog() const;
 
     bool isAuthorized() const;
     QUrl avatarPath() const;

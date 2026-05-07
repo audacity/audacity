@@ -15,285 +15,197 @@
 <context>
     <name>action</name>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="48"/>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="49"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="46"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="47"/>
         <source>Exit</source>
         <translation>Ելք</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="54"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="52"/>
         <source>Restart</source>
         <translation>Վերագործարկել</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="59"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="57"/>
         <source>&amp;Full screen</source>
         <translation>&amp;Լիաէկրան</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="60"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="58"/>
         <source>Full screen</source>
         <translation>Լիաէկրան</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="66"/>
-        <source>&amp;About MuseScore…</source>
-        <translation>MuseCore-ի &amp;մասին...</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="71"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="69"/>
         <source>About &amp;Qt…</source>
         <translation>&amp;Qt-ի մասին...</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="76"/>
-        <source>About &amp;MusicXML…</source>
-        <translation>&amp;MusicXML-ի մասին...</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="81"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="74"/>
         <source>Online &amp;handbook</source>
         <translation>Առցանց &amp;ձեռնարկ</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="82"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="75"/>
         <source>Open online handbook</source>
         <translation>Բացել առցանց ձեռնարկ</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="87"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="80"/>
         <source>As&amp;k for help</source>
         <translation>Օգնություն խ&amp;նդրել</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="92"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="85"/>
         <source>Revert to &amp;factory settings</source>
         <translation>Վերակայել &amp;գործարանային կարգավորումներին</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="93"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="86"/>
         <source>Revert to factory settings</source>
         <translation>Վերակայել գործարանային կարգավորումներին</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="100"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="93"/>
         <source>Restore the &amp;default layout</source>
         <translation>Վերականգնել &amp;լռելյայն դասավորութ․</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="101"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="94"/>
         <source>Restore the default layout</source>
         <translation>Վերականգնել լռելյայն դասավորութ․</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="108"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="101"/>
         <source>&amp;Playback controls</source>
         <translation>&amp;Նվագարկչի տարրեր</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="109"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="102"/>
         <source>Show/hide playback controls</source>
         <translation>Ցուցադրել/թաքցնել նվագարկչի տարրերը</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="115"/>
-        <source>&amp;Note input</source>
-        <translation>&amp;Նոտայի մուտք</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="116"/>
-        <source>Show/hide note input toolbar</source>
-        <translation>Ցուցադրել/թաքցնել նոտաների մուտքագրման գործիքագոտին</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="124"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="109"/>
         <source>&amp;Tracks</source>
         <translation>&amp;Թրեքներ</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="125"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="110"/>
         <source>Show/hide tracks</source>
         <translation>Ցուցադրել/թաքցնել թրեքները</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="131"/>
-        <source>Instr&amp;uments</source>
-        <translation>Գոր&amp;ծիքներ</translation>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="64"/>
+        <source>&amp;About Audacity…</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="132"/>
-        <source>Open instruments dialog…</source>
-        <translation>Բացել գործիքների պատուհանը․․․</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="138"/>
-        <source>Propert&amp;ies</source>
-        <translation>Կարգավ&amp;որումներ</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="139"/>
-        <source>Show/hide properties</source>
-        <translation>Ցուցադրել/թաքցնել հատկությունները</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="145"/>
-        <source>Se&amp;lection filter</source>
-        <translation>Ըն&amp;տրության ֆիլտր</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="146"/>
-        <source>Show/hide selection filter</source>
-        <translation>Ցուցադրել/թաքցնել ընտրության ֆիլտրը</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="154"/>
-        <source>&amp;Navigator</source>
-        <translation>&amp;Նավիգատոր</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="155"/>
-        <source>Show/hide navigator</source>
-        <translation>Ցուցադրել/թաքցնել նավիգատորը</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="163"/>
-        <source>&amp;Braille</source>
-        <translation>&amp;Բրայլի վահանակ</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="164"/>
-        <source>Show/hide braille panel</source>
-        <translation>Ցուցադրել/թաքցնել Բրայլի վահանակը</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="172"/>
-        <source>Tim&amp;eline</source>
-        <translation>Ժամ&amp;անակացույց</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="173"/>
-        <source>Show/hide timeline</source>
-        <translation>Ցուցադրել/թաքցնել ժամանակացույցը</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="179"/>
-        <source>Piano &amp;keyboard</source>
-        <translation>&amp;Դաշնամուր</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="180"/>
-        <source>Show/hide piano keyboard</source>
-        <translation>Ցուցադրել/թաքցնել դաշնամուրը</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="186"/>
-        <source>Score comparison tool</source>
-        <translation>Միավորների համեմատման գործիք</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="194"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="117"/>
         <source>&amp;Status bar</source>
         <translation>&amp;Կարգավիճակի գոտի</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="195"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="118"/>
         <source>Show/hide status bar</source>
         <translation>Ցուցադրել/թաքցնել կարգավիճակը</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="202"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="125"/>
         <source>&amp;Preferences</source>
         <translation>&amp;Կարգավորումներ</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="203"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="126"/>
         <source>Preferences…</source>
         <translation>&amp;Կարգավորումներ...</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="209"/>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="210"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="132"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="133"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="24"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="25"/>
         <source>Copy</source>
         <translation>Պատճենել</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="217"/>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="218"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="140"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="141"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="31"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="32"/>
         <source>Cut</source>
         <translation>Կտրել</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="225"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="235"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="148"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="256"/>
         <source>&amp;Paste</source>
         <translation>&amp;Տեղադրել</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="226"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="236"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="149"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="257"/>
         <source>Paste</source>
         <translation>Տեղադրել</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="233"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="156"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="38"/>
         <source>&amp;Undo</source>
         <translation>&amp;Հետարկել</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="234"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="157"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="167"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="39"/>
         <source>Undo</source>
         <translation>Հետարկել</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="241"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="164"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="45"/>
         <source>&amp;Redo</source>
         <translation>&amp;Վերականգնել</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="242"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="165"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="173"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="46"/>
         <source>Redo</source>
         <translation>Վերականգնել</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="249"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="172"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="52"/>
         <source>De&amp;lete</source>
         <translation>Ջն&amp;ջել</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="250"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="173"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="174"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="175"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="53"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="144"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="165"/>
         <source>Delete</source>
         <translation>Ջնջել</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="256"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="179"/>
         <source>&amp;Cancel</source>
         <translation>&amp;Չեղարկել</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="257"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="180"/>
         <source>Cancel</source>
         <translation>Չեղարկել</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="263"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="186"/>
         <source>&amp;Trigger</source>
         <translation>Տրիգեր</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="264"/>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="187"/>
         <source>Trigger</source>
         <translation>&amp;Տրիգեր</translation>
     </message>
@@ -310,6 +222,12 @@
     <message>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="15"/>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="16"/>
+        <source>View project on audio.com</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="21"/>
+        <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="22"/>
         <source>View on audio.com</source>
         <translation>Դիտել audio.com-ում</translation>
     </message>
@@ -373,14 +291,14 @@
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="42"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="43"/>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="35"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="36"/>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="37"/>
         <source>Pause</source>
         <translation>Դադարեցնել</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="49"/>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="42"/>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="43"/>
         <source>Stop</source>
         <translation>Կանգնեցնել</translation>
     </message>
@@ -565,13 +483,13 @@
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="217"/>
-        <source>Pan score automatically</source>
-        <translation>Ավտոմատ կերպով փոխեք միավորը</translation>
+        <source>Pan automatically</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="218"/>
-        <source>Pan score automatically during playback</source>
-        <translation>Ավտոմատ կերպով փոխեք միավորը նվագարկման ընթացքում</translation>
+        <source>Pan automatically during playback</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="23"/>
@@ -595,744 +513,626 @@
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="35"/>
-        <source>&amp;Open cloud project…</source>
-        <translation>&amp;Բացել ամպային նախագիծը...</translation>
-    </message>
-    <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="36"/>
-        <source>Open cloud project…</source>
-        <translation>Բացել ամպային նախագիծը...</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="41"/>
         <source>Open</source>
         <translation>Բացել</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="42"/>
-        <source>Open cloud audio</source>
-        <translation>Բացել ամպային աուդիոն</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="47"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="41"/>
         <source>&amp;Clear recent files</source>
         <translation>&amp;Մաքրել ընթացիկ ֆայլերը</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="48"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="42"/>
         <source>Clear recent files</source>
         <translation>Մաքրել ընթացիկ ֆայլերը</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="53"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="54"/>
-        <source>Import</source>
-        <translation>Ներմուծել</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="59"/>
         <source>&amp;Save project</source>
         <translation>&amp;Պահպանել նախագիծը</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="60"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="54"/>
         <source>Save project</source>
         <translation>Պահպանել նախագիծը</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="65"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="59"/>
         <source>Save &amp;as…</source>
         <translation>Պահպանել &amp;որպես...</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="66"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="60"/>
         <source>Save as…</source>
         <translation>Պահպանել որպես...</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="71"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="72"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="65"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="66"/>
         <source>Save backup</source>
         <translation>Պահպանել պահուստ. պատճենը</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="77"/>
-        <source>&amp;Export audio</source>
-        <translation>&amp;Արտածել աուդիոն</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="78"/>
-        <source>Export audio</source>
-        <translation>Արտածել աուդիոն</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="83"/>
         <source>&amp;Export labels</source>
         <translation>&amp;Արտածել լեյբլները</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="84"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="78"/>
         <source>Export labels</source>
         <translation>Արտածել լեյբլները</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="89"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="83"/>
         <source>&amp;Export MIDI</source>
         <translation>&amp;Արտածել MIDI-ն</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="90"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="84"/>
         <source>Export MIDI</source>
         <translation>Արտածել MIDI-ն</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="95"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="89"/>
         <source>&amp;Close project</source>
         <translation>&amp;Փակել նախագիծը</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="96"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="90"/>
         <source>Close project</source>
         <translation>Փակել նախագիծը</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="103"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="104"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="423"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="424"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="125"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="126"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="138"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="97"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="98"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="312"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="313"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="146"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="147"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="159"/>
         <source>Duplicate</source>
         <translation>Կրկնօրինակել</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="109"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="110"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="103"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="104"/>
         <source>Insert</source>
         <translation>Տեղադրել</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="115"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="116"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="109"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="110"/>
         <source>Rename item</source>
         <translation>Վերանվանել տարրը</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="121"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="122"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="115"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="116"/>
         <source>Trim clip</source>
         <translation>Կտրել հոլովակը</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="127"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="128"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="121"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="122"/>
         <source>Split into new track</source>
         <translation>Առանձնացնել նոր թրեքի</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="133"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="134"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="127"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="128"/>
         <source>Silence audio</source>
         <translation>Լռեցնել աուդիոն</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="139"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="140"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="133"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="134"/>
         <source>Paste new label</source>
         <translation>Տեղադրել նոր լեյբլը</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="145"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="146"/>
-        <source>Cut labels</source>
-        <translation>Կտրել լեյբլները</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="151"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="152"/>
-        <source>Cut labels and leave gap</source>
-        <translation>Կտրել լեյբլները և թողեք բացատ</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="157"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="158"/>
-        <source>Copy labels</source>
-        <translation>Պատճենել լեյբլները</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="163"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="164"/>
-        <source>Delete labels</source>
-        <translation>Ջնջել լեյբլները</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="169"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="170"/>
-        <source>Delete labels and leave gap</source>
-        <translation>Ջնջել լեյբլները և թողեք բացատ</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="175"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="176"/>
-        <source>Split labels</source>
-        <translation>Առանձնացնել լեյբլները</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="181"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="182"/>
-        <source>Merge labels</source>
-        <translation>Միավորել լեյբլները</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="187"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="188"/>
-        <source>Silence labels</source>
-        <translation>Լռեցնել լեյբլները</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="193"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="194"/>
-        <source>Disjoin labels</source>
-        <translation>Բաժանել լեյբլները</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="199"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="200"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="139"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="140"/>
         <source>Manage labels</source>
         <translation>Կառավարել լեյբլները</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="205"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="206"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="145"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="146"/>
         <source>Metadata editor</source>
         <translation>Մետատվյալների խմբագրիչ</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="213"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="214"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="153"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="154"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="60"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="61"/>
         <source>Select all</source>
         <translation>Ընտրել բոլորը</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="219"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="220"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="159"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="160"/>
         <source>Select all tracks</source>
         <translation>Ընտրել բոլոր թրեքները</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="225"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="226"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="165"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="166"/>
         <source>Left of playback position</source>
         <translation>Նվագարկման դիրքի ձախ կողմ</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="231"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="232"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="171"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="172"/>
         <source>Right of playback position</source>
         <translation>Նվագարկման դիրքի աջ կողմ</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="237"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="238"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="177"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="178"/>
         <source>Track start to cursor</source>
         <translation>Թրեքի սկզբից կուրսորը</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="243"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="244"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="183"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="184"/>
         <source>Cursor to track end</source>
         <translation>Կուրսորից թրեքի ավարտ</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="249"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="250"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="189"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="190"/>
         <source>Track start to end</source>
         <translation>Թրեքի սկզբից ավարտ</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="255"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="256"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="195"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="196"/>
         <source>Previous clip boundary to cursor</source>
         <translation>Նախորդ հոլովակի սահմանից կուրսորը</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="261"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="262"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="201"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="202"/>
         <source>Cursor to next clip boundary</source>
         <translation>Կուրսորից հաջորդ հոլովակի սահման</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="267"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="268"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="207"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="208"/>
         <source>Previous clip</source>
         <translation>Նախորդ հոլովակ</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="273"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="274"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="213"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="214"/>
         <source>Next clip</source>
         <translation>Հաջորդ հոլովակ</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="279"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="280"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="219"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="220"/>
         <source>Toggle spectral selection</source>
         <translation>Միացնել/անջատել սպեկտրալ ընտրությունը</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="285"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="286"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="225"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="226"/>
         <source>Move cursor to closest zero crossing</source>
         <translation>Տեղափոխեք կուրսորը մոտակա զրոյական հատման կետին</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="293"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="294"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="43"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="44"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="36"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="37"/>
         <source>Zoom in</source>
         <translation>Խոշորացնել</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="300"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="301"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="50"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="51"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="43"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="44"/>
         <source>Zoom out</source>
         <translation>Մանրացնել</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="307"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="308"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="50"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="51"/>
+        <source>Zoom default</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="56"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="57"/>
         <source>Zoom to selection</source>
         <translation>Խոշորացնել ընտրված հատվածը</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="314"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="315"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="36"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="37"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="70"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="71"/>
         <source>Zoom toggle</source>
         <translation>Խոշորացման անջատիչ</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="320"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="321"/>
-        <source>Zoom reset</source>
-        <translation>Խոշորացման վերակայում</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="326"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="327"/>
-        <source>Fit project to window</source>
-        <translation>Նախագիծը հարմարեցնել պատուհանին</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="332"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="333"/>
-        <source>Fit view to project</source>
-        <translation>Հարմարեցնել տեսքը նախագծին</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="338"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="339"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="233"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="234"/>
         <source>Collapse all tracks</source>
         <translation>Ծալել բոլոր թրեքները</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="344"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="345"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="239"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="240"/>
         <source>Expand all tracks</source>
         <translation>Ընդարձակել բոլոր թրեքները</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="350"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="351"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="245"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="246"/>
         <source>Skip to selection start</source>
         <translation>Անցնել ընտրության սկզբին</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="356"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="357"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="251"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="252"/>
         <source>Skip to selection end</source>
         <translation>Անցնել ընտրության ավարտին</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="362"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="363"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="257"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="258"/>
         <source>Show effects</source>
         <translation>Ցուցադրել էֆեկտները</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="369"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="370"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="264"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="265"/>
         <source>Show metadata editor</source>
         <translation>Ցուցադրել մետատվյալների խմբագրիչ</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="376"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="377"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="271"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="272"/>
         <source>Show history</source>
         <translation>Ցուցադրել պատմությունը</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="385"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="386"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="280"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="281"/>
         <source>Record on current track</source>
         <translation>Ձայնագրել ընթացիկ թրեքի վրա</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="391"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="392"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="286"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="287"/>
         <source>Record on new track</source>
         <translation>Ձայնագրել նոր թրեքի վրա</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="397"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="398"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="292"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="293"/>
         <source>Set up timed recording</source>
         <translation>Կարգավորել ժամային ձայնագրութ․</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="403"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="404"/>
-        <source>Punch and roll record</source>
-        <translation>Փանչ-ն-ռոլլ ձայնագրութ․</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="409"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="410"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="298"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="299"/>
         <source>Enable sound activating recording</source>
         <translation>Միացնել ձայնով ակտիվացվող ձայնագրութ.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="415"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="416"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="304"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="305"/>
         <source>Set sound activation level</source>
         <translation>Սահմանել ձայնի ակտիվացման մակարդակը</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="429"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="430"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="318"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="319"/>
         <source>Remove tracks</source>
         <translation>Հեռացնել թրեքները</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="435"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="436"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="324"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="325"/>
         <source>Mix-down to…</source>
         <translation>Միքսավորել․․․</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="441"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="442"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="330"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="331"/>
         <source>Align end to end</source>
         <translation>Հավասարեցնել ծայրից ծայր</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="447"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="448"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="336"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="337"/>
         <source>Align together</source>
         <translation>Միասին հավասարեցնել</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="453"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="454"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="342"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="343"/>
         <source>Align start to zero</source>
         <translation>Հավասարեցնել սկզբից զրոյի</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="459"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="460"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="348"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="349"/>
         <source>Align start to playhead</source>
         <translation>Հավասարեցնել սկզբից նվագարկիչը</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="465"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="466"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="354"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="355"/>
         <source>Align start to selection end</source>
         <translation>Սկզբից ընտրության ավարտ հավասարեցնել</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="471"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="472"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="360"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="361"/>
         <source>Align end to playhead</source>
         <translation>Հավասարեցնել վերջից նվագարկիչը</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="477"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="478"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="366"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="367"/>
         <source>Align end to selection end</source>
         <translation>Հավասարեցնել վերջից ընտրության ավարտ</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="483"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="484"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="372"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="373"/>
         <source>Sort by time</source>
         <translation>Դասավորել ըստ ժամի</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="489"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="490"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="378"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="379"/>
         <source>Sort by name</source>
         <translation>Դասավորել ըստ անվան</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="495"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="496"/>
-        <source>Keep tracks synchronised</source>
-        <translation>Պահպանեք թրեքները սինքրոնացված</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="503"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="504"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="517"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="518"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="555"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="556"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="581"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="582"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="392"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="393"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="400"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="401"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="432"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="433"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="452"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="453"/>
         <source>Plugin manager</source>
         <translation>Պլագինի Մենեջեր</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="509"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="510"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="573"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="574"/>
-        <source>(Omitted)</source>
-        <translation>(Բաց թողնված)</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="523"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="524"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="406"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="407"/>
         <source>Add realtime effects</source>
         <translation>Ավելացնել իրական ժամանակի էֆեկտներ</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="529"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="530"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="412"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="413"/>
         <source>Fav effect #1</source>
         <translation>Նախընտրելի էֆեկտ #1</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="535"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="536"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="418"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="419"/>
         <source>Fav effect #2</source>
         <translation>Նախընտրելի էֆեկտ #2</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="541"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="542"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="424"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="425"/>
         <source>Fav effect #3</source>
         <translation>Նախընտրելի էֆեկտ #3</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="547"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="548"/>
-        <source>(Plugins omitted)</source>
-        <translation>(Պլագինները բաց են թողնված)</translation>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="47"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="48"/>
+        <source>Import…</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="561"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="562"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="71"/>
+        <source>&amp;Export audio…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="72"/>
+        <source>Export audio…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="384"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="385"/>
+        <source>Keep tracks synchronized</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="438"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="439"/>
         <source>Contrast analyzer</source>
         <translation>Կոնտրաստի վերլուծիչ</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="567"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="568"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="444"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="445"/>
         <source>Plot spectrum</source>
         <translation>Գծագրի սպեկտր</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="587"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="588"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="458"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="459"/>
         <source>Manage macros</source>
         <translation>Կառավարել մակրոները</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="593"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="594"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="464"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="465"/>
         <source>Apply macros palette</source>
         <translation>Կիրառել մակրոների պալիտրան</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="599"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="600"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="470"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="471"/>
         <source>Macro fade ends</source>
         <translation>Մակրո նվազեցման ավարտ</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="605"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="606"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="476"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="477"/>
         <source>Macro MP3 conversion</source>
         <translation>Մակրո MP3 փոխակերպում</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="611"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="612"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="482"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="483"/>
         <source>Nyquist plugin installer</source>
         <translation>Nyquist պլագինի տեղադրիչ</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="617"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="618"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="488"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="489"/>
         <source>Nyquist prompt</source>
         <translation>Nyquist հրահանգ</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="623"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="624"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="494"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="495"/>
         <source>Sample data export</source>
         <translation>Նմուշ. տվյալների արտածում</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="629"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="630"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="500"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="501"/>
         <source>Sample data import</source>
         <translation>Նմուշ. տվյալների ներմուծում</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="635"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="636"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="506"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="507"/>
         <source>Raw data import</source>
         <translation>Չմշակված տվյալի ներմուծում</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="641"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="642"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="512"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="513"/>
         <source>Reset configuration</source>
         <translation>Վերակայել կարգավորումը</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="649"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="650"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="520"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="521"/>
         <source>Previous window</source>
         <translation>Նախորդ պատուհան</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="655"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="656"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="526"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="527"/>
         <source>Next window</source>
         <translation>Հաջորդ պատուհան</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="661"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="662"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="532"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="533"/>
         <source>Benchmark</source>
         <translation>Չափանիշ</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="667"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="668"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="538"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="539"/>
         <source>Regular interval labels</source>
         <translation>Կանոնավոր ինտերվալային լեյբլներ</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="675"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="676"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="546"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="547"/>
         <source>Tutorials</source>
         <translation>Ձեռնարկներ</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="681"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="682"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="552"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="553"/>
         <source>Device info</source>
         <translation>Սարքի տեղեկութ․</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="687"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="688"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="558"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="559"/>
         <source>MIDI device info</source>
         <translation>MIDI սարքի մասին տեղեկութ․</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="693"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="694"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="564"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="565"/>
         <source>Log</source>
         <translation>Գրանցամատյան</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="699"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="700"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="570"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="571"/>
         <source>Crash report</source>
         <translation>Վթարի մասին հաղորդում</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="705"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="706"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="576"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="577"/>
         <source>Raise segfault</source>
         <translation>Բարձրացնել սեգֆալտը</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="711"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="712"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="582"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="583"/>
         <source>Throw exception</source>
         <translation>Հաղորդել բացառություն</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="717"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="718"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="588"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="589"/>
         <source>Violate assertion</source>
         <translation>Խախտել հայտարարութ․</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="723"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="724"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="594"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="595"/>
         <source>Menu tree</source>
         <translation>Մենյու - Ծառ</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="729"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="730"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="600"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="601"/>
         <source>Frame statistics</source>
         <translation>Կադրի վիճակագրություն</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="735"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="736"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="606"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="607"/>
         <source>Link account</source>
         <translation>Կապել հաշիվը</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="741"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="742"/>
-        <source>Updates</source>
-        <translation>Թարմացումներ</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="747"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="748"/>
-        <source>About Audacity</source>
-        <translation>Audacity-ի մասին</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="754"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="612"/>
         <source>Save to clo&amp;ud…</source>
         <translation>Պահպանել ամ&amp;պում</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="755"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="613"/>
         <source>Save to cloud…</source>
         <translation>Պահպանել ամպում...</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="761"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="762"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="619"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="620"/>
         <source>Share audio</source>
         <translation>Կիսվել աուդիոն</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="769"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="627"/>
         <source>Project propert&amp;ies…</source>
         <translation>Նախագծի կար&amp;գավ․-ներ․․․</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="770"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="628"/>
         <source>Project properties…</source>
         <translation>Նախագծի հատկություններ․․․</translation>
     </message>
@@ -1349,205 +1149,233 @@
         <translation>Առանձնացում</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="57"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="58"/>
-        <source>Fit selection to width</source>
-        <translation>Ընտրվածը հարմարեցնել լայնությանը</translation>
-    </message>
-    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="63"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="64"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="65"/>
         <source>Zoom to fit project</source>
         <translation>Խոշորացնել՝ նախագծին համապատասխանեցնելու համար</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="71"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="72"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="77"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="78"/>
         <source>Center view on playhead</source>
         <translation>Կենտրոնական տեսք նվագարկիչի վրա</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="77"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="78"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="83"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="84"/>
         <source>Toggle spectral view</source>
         <translation>Միացնել/անջատել սպեկտրալ տեսքը</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="84"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="85"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="90"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="91"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="92"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="97"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="98"/>
         <source>Spectral box select</source>
         <translation>Սպեկտրալ դաշտի ընտրություն</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="98"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="99"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="104"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="105"/>
         <source>Snapping</source>
         <translation>Կպչում</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="105"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="106"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="111"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="112"/>
         <source>Minutes &amp;&amp; seconds</source>
         <translation>Րոպե &amp;&amp; վայրկյան</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="112"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="113"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="118"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="119"/>
         <source>Beats &amp;&amp; measures</source>
         <translation>Հարվածեր &amp;&amp; չափումներ</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="119"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="120"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="125"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="126"/>
         <source>Show vertical rulers</source>
         <translation>Ցուցադրել ուղղահայաց քանոնները</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="126"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="127"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="132"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="133"/>
         <source>Show master track</source>
         <translation>Ցուցադրել գլխավոր թրեքը</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="133"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="134"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="139"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="140"/>
         <source>Update display while playing</source>
         <translation>Թարմացրեք էկրանը նվագարկման ընթացքում</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="140"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="141"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="146"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="147"/>
         <source>Pinned play head</source>
         <translation>Ամրացված նվագարկման գլխիկ</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="147"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="148"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="153"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="154"/>
         <source>Click ruler to start playback</source>
         <translation>Սեղմեք քանոնի վրա՝ նվագարկման համար։</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="155"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="161"/>
         <source>Clip properties</source>
         <translation>Հոլովակի հատկություններ</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="156"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="162"/>
         <source>Show clip properties</source>
         <translation>Ցուցադրել հոլովակի հատկությունները</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="161"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="162"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="167"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="168"/>
         <source>Rename clip</source>
         <translation>Վերանվանել հոլովակը</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="168"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="169"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="182"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="183"/>
         <source>Follow track color</source>
         <translation>Հետևել թրեքի գույնին</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="175"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="176"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="189"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="190"/>
         <source>Move play cursor left</source>
         <translation>Տեղափոխել նվագ․ կուրսորը ձախ</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="181"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="182"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="195"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="196"/>
         <source>Move play cursor right</source>
         <translation>Տեղափոխել նվագ․ կուրսորը աջ</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="187"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="188"/>
-        <source>Pitch and speed</source>
-        <translation>Տոն և արագություն</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="193"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="194"/>
-        <source>Show RMS in waveform</source>
-        <translation>Ցուցադրել միջին քառ․ արմատը ալիքաձևով</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="200"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="201"/>
-        <source>Show clipping in waveform</source>
-        <translation>Ցուցադրել կտրվածքները ալիքաձևով</translation>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="202"/>
+        <source>Extend selection left</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="207"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="208"/>
+        <source>Extend selection right</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="213"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="214"/>
+        <source>Contract selection from left</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="219"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="220"/>
+        <source>Contract selection from right</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="225"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="226"/>
+        <source>Pitch and speed</source>
+        <translation>Տոն և արագություն</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="231"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="232"/>
+        <source>Show RMS in waveform</source>
+        <translation>Ցուցադրել միջին քառ․ արմատը ալիքաձևով</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="238"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="239"/>
+        <source>Show clipping in waveform</source>
+        <translation>Ցուցադրել կտրվածքները ալիքաձևով</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="245"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="246"/>
         <source>Half-wave</source>
         <translation>Կիսաալիքային</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="214"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="215"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="252"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="253"/>
         <source>Show label editor</source>
         <translation>Ցուցադրել լեյբլի Խմբագրիչը</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="220"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="221"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="258"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="259"/>
         <source>Move realtime effect up</source>
         <translation>Տեղափոխել իրական ժամ․ էֆեկտը վերև</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="226"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="227"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="264"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="265"/>
         <source>Move realtime effect down</source>
         <translation>Տեղափոխել իրական ժամ․ էֆեկտը ներքև</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="249"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="250"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="289"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="290"/>
         <source>Change clip color</source>
         <translation>Փոխել հոլովակի գույնը</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="261"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="262"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="301"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="302"/>
         <source>Change track color</source>
         <translation>Փոխել թրեքի գույնը</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="28"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="29"/>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="30"/>
         <source>Record</source>
         <translation>Ձայնագրել</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="43"/>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="44"/>
         <source>Stop record</source>
         <translation>Կանգնեցնել ձայնագրումը</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="49"/>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="50"/>
         <source>Record level</source>
         <translation>Ձայնագրման մակարդակ</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="50"/>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="51"/>
         <source>Set record level</source>
         <translation>Սահմանել ձայնագ․ մակարդակը</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="56"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="57"/>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="58"/>
         <source>Show mic metering</source>
         <translation>Ցուցադրել միկրոֆոնի չափումը</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recorduiactions.cpp" line="63"/>
         <location filename="../../src/record/internal/recorduiactions.cpp" line="64"/>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="65"/>
         <source>Turn on input monitoring</source>
         <translation>Միացնել մուտքային մոնիթորինգը</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="71"/>
+        <source>Lead-in Recording</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recorduiactions.cpp" line="72"/>
+        <source>Start lead-in recording</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/spectrogram/internal/spectrogramuiactions.cpp" line="18"/>
@@ -1564,250 +1392,262 @@
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="72"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="73"/>
-        <source>Cut and close gap (per clip)</source>
-        <translation>Կտրել և փակել բացը (յուր․ հոլովակի համար)</translation>
+        <source>Cut and leave gap</source>
+        <translation>Կտրել և թողնել բացատ</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="79"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="80"/>
-        <source>Cut and close gap (per track)</source>
-        <translation>Կտրել և փակել բացը (յուր․ թրեքի համար)</translation>
+        <source>Cut and close gap (per clip)</source>
+        <translation>Կտրել և փակել բացը (յուր․ հոլովակի համար)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="86"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="87"/>
-        <source>Cut and close gap (all tracks)</source>
-        <translation>Կտրել և փակել բացը (բոլոր թրեքների համար)</translation>
+        <source>Cut and close gap (per track)</source>
+        <translation>Կտրել և փակել բացը (յուր․ թրեքի համար)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="93"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="94"/>
-        <source>Delete and close gap (per track)</source>
-        <translation>Ջնջել և փակել բացը (յուր․ թրեքի համար)</translation>
+        <source>Cut and close gap (all tracks)</source>
+        <translation>Կտրել և փակել բացը (բոլոր թրեքների համար)</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="100"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="101"/>
-        <source>Delete and close gap (all tracks)</source>
-        <translation>Ջնջել և փակել բացը (բոլոր թրեքների համար)</translation>
+        <source>Delete and leave gap</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="107"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="108"/>
+        <source>Delete and close gap (per clip)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="114"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="115"/>
+        <source>Delete and close gap (per track)</source>
+        <translation>Ջնջել և փակել բացը (յուր․ թրեքի համար)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="121"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="122"/>
+        <source>Delete and close gap (all tracks)</source>
+        <translation>Ջնջել և փակել բացը (բոլոր թրեքների համար)</translation>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="128"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="129"/>
         <source>Split</source>
         <translation>Առանձնացնել</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="113"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="114"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="134"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="135"/>
         <source>Join selected clips</source>
         <translation>Միավորել ընտրված հոլովակները</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="119"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="120"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="140"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="141"/>
         <source>Split clips at silences</source>
         <translation>Առանձնացնել հոլովակը լռության ժամանակ</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="132"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="153"/>
         <source>Rename</source>
         <translation>Վերանվանել</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="133"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="154"/>
         <source>Rename track</source>
         <translation>Վերանվանել թրեքը</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="139"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="160"/>
         <source>Duplicate track</source>
         <translation>Կրկնօրինակել թրեքը</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="145"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="166"/>
         <source>Delete track</source>
         <translation>Ջնջել թրեքը</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="150"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="151"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="171"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="172"/>
         <source>Move track up</source>
         <translation>Տեղափոխել թրեքը վերև</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="156"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="157"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="177"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="178"/>
         <source>Move track down</source>
         <translation>Տեղափոխել թրեքը ներքև</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="162"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="163"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="183"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="184"/>
         <source>Move track to top</source>
         <translation>Տեղափոխել թրեքը ամենավերև</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="168"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="169"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="189"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="190"/>
         <source>Move track to bottom</source>
         <translation>Տեղափոխել թրեքը ամենաներքև</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="174"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="175"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="195"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="196"/>
         <source>Other…</source>
         <translation>Այլ...</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="181"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="182"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="202"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="203"/>
         <source>Make stereo track</source>
         <translation>Պատրաստել ստերեո թրեք</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="187"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="188"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="208"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="209"/>
         <source>Swap stereo channels</source>
         <translation>Փոխարինել ստերեո ազդանշանները</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="193"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="194"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="214"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="215"/>
         <source>Split stereo to L/R mono</source>
         <translation>Ստերեոյի առանձնացումը ձախ/աջ մոնոյի</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="199"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="200"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="220"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="221"/>
         <source>Split stereo to center mono</source>
         <translation>Ստերեոյի առանձնացումը կենտրոն․ մոնոյի</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="205"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="206"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="226"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="227"/>
         <source>Resample track…</source>
         <translation>Վերաձևակերպել թրեքը․․․</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="211"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="212"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="232"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="233"/>
         <source>Waveform</source>
         <translation>Ալիքաձև</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="219"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="220"/>
-        <source>Spectogram</source>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="240"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="241"/>
+        <source>Spectrogram</source>
         <translation>Սպեկտրոգրամ</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="227"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="228"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="453"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="454"/>
+        <source>Above item</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="459"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="460"/>
+        <source>Below item</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="248"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="249"/>
         <source>Multi-view</source>
         <translation>Բազմադիտում</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="242"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="243"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="263"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="264"/>
         <source>Paste (pushes clips on selected track)</source>
         <translation>Տեղադրել (կտրում է հոլովակները ընտրված թրեքի վրա)</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="249"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="250"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="270"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="271"/>
         <source>Paste (overlaps other clips)</source>
         <translation>Տեղադրել (համընկնում է մյուս հոլովակների հետ)</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="256"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="257"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="277"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="278"/>
         <source>Paste (preserves synchronization on all tracks)</source>
         <translation>Տեղադրել (պահպանում է սինքրոնացումը բոլոր թրեքներում)</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="263"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="264"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="284"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="285"/>
         <source>Merge selected clips</source>
         <translation>Միաձուլել ընտրված հոլովակները</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="269"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="270"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="290"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="291"/>
         <source>Duplicate selected</source>
         <translation>Կրկնօրինակել ընտրութ․</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="275"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="276"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="296"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="297"/>
         <source>Duplicate clip</source>
         <translation>Կրկնօրինակել հոլովակը</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="281"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="282"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="302"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="303"/>
         <source>Export clip</source>
         <translation>Արտածել հոլովակը</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="287"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="288"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="308"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="309"/>
         <source>Stretch with tempo changes</source>
         <translation>Ձգում տեմպի փոփոխություններով</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="294"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="295"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="315"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="316"/>
         <source>Open pitch and speed dialog</source>
         <translation>Բացել &quot;Տոն և արագություն&quot; պատուհանը</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="300"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="301"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="321"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="322"/>
         <source>Render pitch and speed</source>
         <translation>Ռենդերավորել տոնայնութ. և արագութ.</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="306"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="307"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="327"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="328"/>
         <source>New mono track</source>
         <translation>Նոր մոնո թրեք</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="312"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="313"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="333"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="334"/>
         <source>New stereo track</source>
         <translation>Նոր ստերեո թրեք</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="318"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="319"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="339"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="340"/>
         <source>New label track</source>
         <translation>Նոր լեյբլի թրեք</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="324"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="325"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="345"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="346"/>
         <source>Add label</source>
         <translation>Ավելացնել լեյբլը</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="330"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="331"/>
-        <source>Delete label</source>
-        <translation>Ջնջել լեյբլը</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="337"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="338"/>
-        <source>Cut label</source>
-        <translation>Կտրել լեյբլը</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="344"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="345"/>
-        <source>Copy label</source>
-        <translation>Պատճենել լեյբլը</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="351"/>
@@ -1906,68 +1746,56 @@
         <translation>Նախորդ տարր</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="453"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="454"/>
-        <source>Next track</source>
-        <translation>Հաջորդ թրեք</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="459"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="460"/>
-        <source>Previous track</source>
-        <translation>Նախորդ թրեք</translation>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="465"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="466"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="467"/>
         <source>First track</source>
         <translation>Առաջին թրեք</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="471"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="472"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="473"/>
         <source>Last track</source>
         <translation>Վերջին թրեք</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="478"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="479"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="480"/>
         <source>Select track/track item</source>
         <translation>Ընտրեք թրեք/թրեքի տարր</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="484"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="485"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="486"/>
         <source>Track range selection</source>
         <translation>Թրեքի միջակայքի ընտրութ․</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="490"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="491"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="492"/>
         <source>Multi track selection previous</source>
         <translation>Բազմակի թրեքների ընտրություն - Ետ</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="496"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="497"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="498"/>
         <source>Multi track selection next</source>
         <translation>Բազմակի թրեքների ընտրություն - Առաջ</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="503"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="504"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="505"/>
         <source>Open item’s context menu</source>
         <translation>Բացել տարրի համատեքստային ցանկը</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="524"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="525"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="526"/>
         <source>Change track format</source>
         <translation>Փոխել թրեքի ձևաչափը</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="537"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="538"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="539"/>
         <source>Change track sample rate</source>
         <translation>Փոխել թրեքի նմուշ. հաճախ.</translation>
     </message>
@@ -1976,23 +1804,23 @@
     <name>appshell</name>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/AccountPage.qml" line="63"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="62"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="64"/>
         <source>Cloud account</source>
         <translation>Ամպային հաշիվ</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="53"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="54"/>
         <source>Home menu</source>
         <translation>Գլխավոր մենյու</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="92"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="94"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/maintoolbarmodel.cpp" line="95"/>
         <source>Project</source>
         <translation>Նախագիծ</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="98"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/HomeMenu.qml" line="100"/>
         <source>Learn</source>
         <translation>Իմանալ</translation>
     </message>
@@ -2019,11 +1847,6 @@
         <translation>Բոլորը</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/Main.wasm.qml" line="36"/>
-        <source>MuseScore</source>
-        <translation>MuseScore</translation>
-    </message>
-    <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/MainToolBar.qml" line="64"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/WindowContent.qml" line="61"/>
         <source>Main toolbar</source>
@@ -2033,11 +1856,6 @@
         <location filename="../../src/appshell/qml/Audacity/AppShell/platform/AppMenuBar.qml" line="71"/>
         <source>Application menu</source>
         <translation>Հավելվածի մենյու</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/platform/win/AppTitleBar.qml" line="92"/>
-        <source>MuseScore 4</source>
-        <translation>MuseScore 4</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="157"/>
@@ -2080,36 +1898,39 @@
         <translation>Արտադրել MIDI 2.0 ելք, եթե այն աջակցվում է ընդունիչի կողմից</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="326"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="324"/>
         <source>Are you sure you want to revert to factory settings?</source>
         <translation>Վստա՞հ եք, որ ուզում եք վերադառնալ գործարանային կարգավորումներին։</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="327"/>
-        <source>This action will reset all your app preferences and delete all custom palettes and custom shortcuts. The list of recent projects will also be cleared.
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="325"/>
+        <source>This action will reset all your app preferences and custom UI configurations. It also deletes your custom workspaces and shortcuts. You will also need to scan all third party plugins again.
 
 This action will not delete any of your projects.</source>
-        <translation>Այս գործողությունը կվերակայի ձեր բոլոր հավելվածների կարգավորումները և կջնջի բոլոր հատուկ պալիտրաները և հատուկ կարճուղիները։ Վերջին նախագծերի ցանկը նույնպես կմաքրվի։
-
-Այս գործողությունը չի ջնջի ձեր նախագծերից ոչ մեկը։</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="336"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="337"/>
         <source>Revert</source>
         <translation>Հետարկել</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="348"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="339"/>
+        <source>Revert to factory settings</source>
+        <translation>Վերակայել գործարանային կարգավորումներին</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="351"/>
         <source>Would you like to restart Audacity now?</source>
         <translation>Կցանկանայի՞ք վերագործարկել Audacity-ն հիմա։</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="349"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="352"/>
         <source>Audacity needs to be restarted for these changes to take effect.</source>
         <translation>Այս փոփոխությունները ուժի մեջ մտնելու համար Audacity-ն պետք է վերագործարկվի։</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="354"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="358"/>
         <source>Restart</source>
         <translation>Վերագործարկել</translation>
     </message>
@@ -2139,32 +1960,37 @@ This action will not delete any of your projects.</source>
         <translation>Նախագծի բեռնում...</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/startupscenario.cpp" line="145"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="56"/>
         <source>Scanning audio plugins</source>
         <translation>Աուդիո պլագինների սկանավորում</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/startupscenario.cpp" line="146"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="57"/>
         <source>Audacity has found plugins that need to be scanned before use. Would you like to scan them now or skip?</source>
         <translation>Audacity-ն գտել է պլագիններ, որոնք օգտագործելուց առաջ պետք է սկանավորվեն: Կցանկանայի՞ք սկանավորել դրանք հիմա, թե՞ բաց թողնել:</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/startupscenario.cpp" line="150"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="62"/>
         <source>Skip this time</source>
         <translation>Այս պահին բաց թողել</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/startupscenario.cpp" line="153"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="65"/>
         <source>Scan plugins</source>
         <translation>Սկանավորել պլագինները</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/startupscenario.cpp" line="285"/>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="69"/>
+        <source>Audio plugin scan</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/startupscenario.cpp" line="282"/>
         <source>The previous session quit unexpectedly.</source>
         <translation>Նախորդ սեսիան անսպասելիորեն ընդհատվեց։</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/startupscenario.cpp" line="286"/>
+        <location filename="../../src/appshell/internal/startupscenario.cpp" line="283"/>
         <source>Do you want to restore the session?</source>
         <translation>Վերականգնե՞լ սեսիան։</translation>
     </message>
@@ -2185,56 +2011,24 @@ This action will not delete any of your projects.</source>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/mainwindowtitleprovider.cpp" line="101"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/mainwindowtitleprovider.cpp" line="109"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/mainwindowtitleprovider.cpp" line="110"/>
         <source>Audacity 4</source>
         <translation>Audacity 4</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/mainwindowtitleprovider.cpp" line="110"/>
-        <source>%1 - Audacity 4</source>
-        <translation>%1 - Audacity 4</translation>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/mainwindowtitleprovider.cpp" line="111"/>
+        <source>%1 %2- Audacity 4</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/Main.wasm.qml" line="36"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/platform/win/AppTitleBar.qml" line="92"/>
+        <source>Audacity</source>
+        <translation>Audacity</translation>
     </message>
 </context>
 <context>
     <name>appshell/about</name>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="32"/>
-        <source>About MuseScore</source>
-        <translation>MuseCore-ի մասին</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="84"/>
-        <source>Version:</source>
-        <translation>Տարբերակ`</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="94"/>
-        <source>Revision:</source>
-        <translation>Վերանայում՝</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="114"/>
-        <source>Visit %1 for new versions and more information.</source>
-        <extracomment>%1 will be a link to the MuseScore website</extracomment>
-        <translation>Այցելեք %1՝ նոր տարբերակների և ավելի շատ տեղեկությունների համար։</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="117"/>
-        <source>Get &lt;a href=&quot;%1&quot;&gt;help&lt;/a&gt; with the program or &lt;a href=&quot;%2&quot;&gt;contribute&lt;/a&gt; to its development.</source>
-        <translation>Ստացեք &lt;a href=&quot;%1&quot;&gt;օգնություն&lt;/a&gt; ծրագրի հետ կապված կամ &lt;a href=&quot;%2&quot;&gt;նպաստեք&lt;/a&gt; դրա զարգացմանը։</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="130"/>
-        <source>For privacy information, see our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt;.</source>
-        <translation>Գաղտնիության վերաբերյալ տեղեկությունների համար տե՛ս մեր &lt;a href=&quot;%1&quot;&gt;գաղտնիության քաղաքականությունը&lt;/a&gt;։</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="139"/>
-        <source>Copyright © 1999-2024 MuseScore BVBA and others.
-Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License version 3&lt;/a&gt;.</source>
-        <translation>Հեղինակային իրավունք © 1999-2024 MuseScore BVBA և ուրիշներ։
-Հրատարակված է &lt;a href=&quot;%1&quot;&gt;GNU General Public License տարբերակ 3&lt;/a&gt;-ով։</translation>
-    </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutMusicXMLDialog.qml" line="32"/>
         <source>About MusicXML</source>
@@ -2261,9 +2055,71 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation>Audacity 4</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="42"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="272"/>
         <source>Unstable prerelease for %1</source>
         <translation>%1-ի անկայուն նախնական թողարկում</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="338"/>
+        <source>translator_credits</source>
+        <translation>Հավելվածի հայաֆիկացում`
+Արամ բլոգ - www.aramblog.yn.lt, aramvardanyan@gmx.com՝ նախնական տարբերակ
+ArsenTech - https://github.com/ArsenTech՝ թարմացում և սպասարկում</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="15"/>
+        <source>About Audacity</source>
+        <translation>Audacity-ի մասին</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="43"/>
+        <source>Audacity</source>
+        <translation>Audacity</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="47"/>
+        <source>Legal</source>
+        <translation>Իրավական</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="28"/>
+        <source>Audacity the free, open source, cross-platform software for recording and editing sounds.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="109"/>
+        <source>Credits</source>
+        <translation>Հեղինակներ</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="197"/>
+        <source>Audacity website: %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="207"/>
+        <source>&lt;b&gt;Audacity®&lt;/b&gt; software is copyright © 1999-%1 Audacity Team.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogAudacityTab.qml" line="212"/>
+        <source>The name &lt;b&gt;Audacity&lt;/b&gt; is a registered trademark.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogPrivacyTab.qml" line="27"/>
+        <source>Privacy</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogPrivacyTab.qml" line="28"/>
+        <source>App update checking and error reporting require network access. These features are optional.&lt;br&gt;See our %1 for more info.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogPrivacyTab.qml" line="54"/>
+        <source>privacy policy</source>
+        <translation>գաղտնիութ․ քաղաքականութ․</translation>
     </message>
 </context>
 <context>
@@ -2563,17 +2419,17 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation>Հասանելի ընտրանք</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="113"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="121"/>
         <source>Getting started</source>
         <translation>Սկսնակների համար</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="131"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="139"/>
         <source>Accept &amp; continue</source>
         <translation>Ընդունել և շարունակել</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="137"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="145"/>
         <source>%1 of %2</source>
         <extracomment>%1 is the current page number, %2 is the total number of pages</extracomment>
         <translation>%1-ը %2-ից</translation>
@@ -2749,12 +2605,12 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation>Ընտրված աշխատատարածքի դասավորության նախադիտում, որը ցույց է տալիս ինտերֆեյսի տարրերի դասավորությունը</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="50"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="46"/>
         <source>Authorization failed</source>
         <translation>Չստացվեց նույնականացնել</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="58"/>
+        <location filename="../../src/au3cloud/internal/au3cloudservice.cpp" line="57"/>
         <source>No access token</source>
         <translation>Մուտքի տոկեն չկա</translation>
     </message>
@@ -2797,14 +2653,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
     </message>
 </context>
 <context>
-    <name>appshell/menu/audio-actions</name>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="565"/>
-        <source>Audio actions across labels</source>
-        <translation>Աուդիո գործողություններ լեյբլների միջև</translation>
-    </message>
-</context>
-<context>
     <name>appshell/menu/clip</name>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="241"/>
@@ -2812,7 +2660,7 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation>Հոլովակ</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="545"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="535"/>
         <source>Rename clip</source>
         <translation>Վերանվանել հոլովակը</translation>
     </message>
@@ -2836,55 +2684,55 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
 <context>
     <name>appshell/menu/diagnostic</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="726"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="694"/>
         <source>&amp;System</source>
         <translation>&amp;Համակարգ</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="736"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="704"/>
         <source>&amp;Accessibility</source>
         <translation>&amp;Հասանելիություն</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="743"/>
-        <source>Auto&amp;bot</source>
-        <translation>Ավտո&amp;բոտ</translation>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="711"/>
+        <source>Test&amp;flow</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>appshell/menu/diagnostics</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="424"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="417"/>
         <source>Diagnostics</source>
         <translation>Ախտորոշում</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="454"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="444"/>
         <source>&amp;System</source>
         <translation>&amp;Համակարգ</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="476"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="466"/>
         <source>A&amp;ctions</source>
         <translation>Գ&amp;ործողություններ</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="477"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="467"/>
         <source>&amp;Accessibility</source>
         <translation>&amp;Հասանելիություն</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="478"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="468"/>
         <source>E&amp;xtensions</source>
         <translation>Ը&amp;նդլայնումներ</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="479"/>
-        <source>Auto&amp;bot</source>
-        <translation>Ավտո&amp;բոտ</translation>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="469"/>
+        <source>Test&amp;flow</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="484"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="474"/>
         <source>&amp;Diagnostics</source>
         <translation>&amp;Ախտորոշում</translation>
     </message>
@@ -2916,7 +2764,7 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
 <context>
     <name>appshell/menu/extra</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="415"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="408"/>
         <source>&amp;Extra</source>
         <translation>&amp;Լրացուցիչ</translation>
     </message>
@@ -2977,7 +2825,7 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
 <context>
     <name>appshell/menu/help</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="441"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="431"/>
         <source>&amp;Help</source>
         <translation>&amp;Օգնություն</translation>
     </message>
@@ -3001,7 +2849,7 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
 <context>
     <name>appshell/menu/macros</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="872"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="840"/>
         <source>&amp;Macros</source>
         <translation>&amp;Մակրոներ</translation>
     </message>
@@ -3162,7 +3010,7 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
 <context>
     <name>appshell/preferences</name>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="605"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="604"/>
         <source>Edit metadata</source>
         <translation>Խմբագրել մետատվյալները</translation>
     </message>
@@ -3182,11 +3030,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation>VBL</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AccentColorsSection.qml" line="64"/>
-        <source>Accent color:</source>
-        <translation>Շեշտադրման գույն՝</translation>
-    </message>
-    <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioEngineSection.qml" line="33"/>
         <source>Audio engine</source>
         <translation>Աուդիո շարժիչ</translation>
@@ -3203,13 +3046,13 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutomaticUpdateSection.qml" line="44"/>
-        <source>Check to see if a new version of MuseScore is available</source>
-        <translation>Ստուգեք, թե արդյոք MuseScore-ի նոր տարբերակը հասանելի է</translation>
+        <source>Check to see if a new version of Audacity is available</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutomaticUpdateSection.qml" line="60"/>
-        <source>Update checking requires network access. In order to protect your privacy, MuseScore does not store any personal information. See our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt; for more info.</source>
-        <translation>Թարմացումների ստուգումը պահանջում է ցանցային հասանելիություն: Ձեր գաղտնիությունը պաշտպանելու համար MuseScore-ը չի պահում որևէ անձնական տեղեկություն: Լրացուցիչ տեղեկությունների համար տե՛ս մեր &lt;a href=&quot;%1&quot;&gt;գաղտնիության քաղաքականությունը&lt;/a&gt;:</translation>
+        <source>Update checking requires network access. In order to protect your privacy, Audacity does not store any personal information. See our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt; for more info.</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutoSaveSection.qml" line="32"/>
@@ -3218,8 +3061,8 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutoSaveSection.qml" line="51"/>
-        <source>Auto save every:</source>
-        <translation>Ավտոմատ կերպով պահպանել յուր.՝</translation>
+        <source>Auto save every</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CharsetsSection.qml" line="31"/>
@@ -3295,13 +3138,13 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MidiDevicesSection.qml" line="49"/>
-        <source>MIDI input:</source>
-        <translation>MIDI մուտք՝</translation>
+        <source>MIDI input</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MidiDevicesSection.qml" line="65"/>
-        <source>MIDI output:</source>
-        <translation>MIDI ելք՝</translation>
+        <source>MIDI output</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MidiSection.qml" line="41"/>
@@ -3409,16 +3252,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation>Ընտրեք մեկնարկային նախագիծը</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PublishMuseScoreComSection.qml" line="32"/>
-        <source>Publish to MuseScore.com</source>
-        <translation>Հրապարակել այն MuseScore.com-ին</translation>
-    </message>
-    <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PublishMuseScoreComSection.qml" line="43"/>
-        <source>Always prompt to share on Audio.com after publishing to MuseScore.com</source>
-        <translation>MuseScore.com-ում հրապարակելուց հետո միշտ հուշել Audio.com-ում կիսվել</translation>
-    </message>
-    <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/RemoteControlSection.qml" line="33"/>
         <source>OSC remote control</source>
         <translation>OSC հեռակառավարիչ</translation>
@@ -3472,6 +3305,121 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomSection.qml" line="96"/>
         <source>Mouse zoom precision:</source>
         <translation>Մկնիկի խոշորացման ճշգրտութ․՝</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AccentColorsSection.qml" line="64"/>
+        <source>Accent color</source>
+        <translation>Շեշտադրման գույն</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UsageInfoSection.qml" line="14"/>
+        <source>Usage info</source>
+        <translation>Օգտագործման տեղեկութ․</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UsageInfoSection.qml" line="25"/>
+        <source>Send anonymous usage info</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UsageInfoSection.qml" line="39"/>
+        <source>To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This ID does not contain any personally identifiable information. Want to know more? Check out our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt;.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="14"/>
+        <source>Zoom toggle (magnifying glass)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="26"/>
+        <source>A special tool in the top bar that toggles between two different zoom states.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="34"/>
+        <source>Zoom state 1:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="55"/>
+        <source>Zoom state 2:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="246"/>
+        <source>Fit to Width</source>
+        <translation>Հարմարեցնել լայնությանը</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="247"/>
+        <source>Zoom to Selection</source>
+        <translation>Խոշորացնել ընտրված հատվածը</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="248"/>
+        <source>Zoom Default</source>
+        <translation>Խոշորացման լռելյայն</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="249"/>
+        <source>Minutes</source>
+        <translation>Րոպե</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="250"/>
+        <source>Seconds</source>
+        <translation>Վայրկյաններ</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="251"/>
+        <source>5ths of Seconds</source>
+        <translation>5-րդ վայրկյան</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="252"/>
+        <source>10ths of Seconds</source>
+        <translation>10-րդ վայրկյան</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="253"/>
+        <source>20ths of Seconds</source>
+        <translation>20-րդ վայրկյան</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="254"/>
+        <source>50ths of Seconds</source>
+        <translation>50-րդ վայրկյան</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="255"/>
+        <source>100ths of Seconds</source>
+        <translation>100-րդ վայրկյան</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="256"/>
+        <source>500ths of Seconds</source>
+        <translation>500-րդ վայրկյան</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="257"/>
+        <source>MilliSeconds</source>
+        <translation>Միլիվայրկյան</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="258"/>
+        <source>Samples</source>
+        <translation>Սեմփլներ</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="259"/>
+        <source>4 Pixels per Sample</source>
+        <translation>4 պիքսել/սեմփլ</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="260"/>
+        <source>Max Zoom</source>
+        <translation>Առավել․ խոշորացում</translation>
     </message>
 </context>
 <context>
@@ -3617,27 +3565,90 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
     </message>
 </context>
 <context>
+    <name>canvas</name>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/canvascontextmenumodel.cpp" line="26"/>
+        <source>Paste and overlap</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/canvascontextmenumodel.cpp" line="28"/>
+        <source>Paste and make room on this track</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/canvascontextmenumodel.cpp" line="30"/>
+        <source>Paste and make room on all tracks</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/canvascontextmenumodel.cpp" line="35"/>
+        <source>Paste and…</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
     <name>clip</name>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="46"/>
+        <source>Cut and leave gap</source>
+        <translation>Կտրել և թողնել բացատ</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="48"/>
+        <source>Cut and close gap on this track</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="50"/>
+        <source>Cut and close gap on all tracks</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="55"/>
+        <source>Delete and leave gap</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="57"/>
+        <source>Delete and close gap on this track</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="59"/>
+        <source>Delete and close gap on all tracks</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="64"/>
         <source>Rename clip</source>
         <translation>Վերանվանել հոլովակը</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="47"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="65"/>
         <source>Clip color</source>
         <translation>Հոլովակի գույն</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="72"/>
+        <source>Cut and…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="73"/>
+        <source>Delete and…</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>clips</name>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1059"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1068"/>
         <source>Select</source>
         <translation>Ընտրել</translation>
     </message>
     <message>
-        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1059"/>
+        <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1068"/>
         <source>Deselect</source>
         <translation>Անջատել ընտրութ․</translation>
     </message>
@@ -3683,8 +3694,8 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="22"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1195"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1324"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="604"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="724"/>
         <source>Save</source>
         <translation>Պահպանել</translation>
     </message>
@@ -3694,29 +3705,40 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation>Դուք մուտք չեք գործել</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="382"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="388"/>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="422"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="269"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="274"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="295"/>
         <source>Invalid project</source>
         <translation>Անվավեր նախագիծ</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="415"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="283"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="584"/>
+        <source>Service destroyed</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="288"/>
         <source>Project was closed before upload started</source>
         <translation>Նախագիծը փակվել էր նախքան վերբեռնումը</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="539"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="452"/>
+        <source>Invalid audio ID</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="514"/>
         <source>Project not found in cloud database</source>
         <translation>Ամպային տվյալների բազայում նախագիծը չի գտնվել</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="615"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="596"/>
         <source>No valid current project</source>
         <translation>Ընթացիկ նախագիծ չկա</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="678"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="659"/>
         <source>Upload succeeded but payload is missing</source>
         <translation>Վերբեռնումը ստացվեց, բայց բեռը բացակայում է</translation>
     </message>
@@ -3726,42 +3748,52 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation>Մուտք գործումը ստացվեց։ Կարող եք վերադառնալ Audacity։</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="479"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1017"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="506"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1088"/>
         <source>View on audio.com</source>
         <translation>Դիտել audio.com-ում</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="993"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1060"/>
         <source>Track title</source>
         <translation>Թրեքի վերնագիր</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="994"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1061"/>
         <source>Share audio</source>
         <translation>Կիսվել աուդիոն</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="995"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1062"/>
         <source>Share</source>
         <translation>Կիսվել</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1012"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1083"/>
         <source>Audio shared to audio.com</source>
         <translation>Աուդիոն կիսվել է audio.com-ում</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1032"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1103"/>
         <source>Sharing audio to audio.com…</source>
         <translation>Աուդիոյի կիսվում audio.com-ին</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1190"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1293"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1319"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1162"/>
+        <source>Downloading audio from cloud…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="599"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="706"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="719"/>
         <source>Save to audio.com</source>
         <translation>Պահպանել audio.com կայքում</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="808"/>
+        <source>Open audio from cloud</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -3781,7 +3813,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="17"/>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="256"/>
         <source>Chirp</source>
         <translation>Ծլվլոց</translation>
     </message>
@@ -3810,8 +3841,8 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="13"/>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="48"/>
-        <source>Save Preset</source>
-        <translation>Պահպանել նախադրվածը</translation>
+        <source>Save preset</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="44"/>
@@ -3819,27 +3850,27 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation>Նախադրվածի անուն</translation>
     </message>
     <message>
-        <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="54"/>
-        <source>Enter Nyquist Command:</source>
-        <translation>Մուտքագրեք Nyquist հրամանը՝</translation>
+        <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="63"/>
+        <source>Enter Nyquist command:</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="60"/>
+        <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="69"/>
         <source>Debug</source>
         <translation>Վրիպազերծում</translation>
     </message>
     <message>
-        <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="77"/>
+        <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="93"/>
         <source>Enter Nyquist code here…</source>
         <translation>Մուտքագրեք Nyquist կոդը այստեղ․․․</translation>
     </message>
     <message>
-        <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="90"/>
+        <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="106"/>
         <source>Load</source>
         <translation>Բեռնել</translation>
     </message>
     <message>
-        <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="97"/>
+        <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="117"/>
         <location filename="../../src/effects/effects_base/view/effectsavecontextmenu.cpp" line="76"/>
         <source>Save</source>
         <translation>Պահպանել</translation>
@@ -3908,167 +3939,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation>Ելք</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="146"/>
-        <source>Amplify</source>
-        <translation>Ուժեղացնել</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="147"/>
-        <source>Increases or decreases the volume of the audio you have selected</source>
-        <translation>Ընտրված աուդիոյի ձայնի մակարդակը մեծացնում կամ նվազեցնում է</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="154"/>
-        <source>Loudness normalization</source>
-        <translation>Բարձրության նորմալացում</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="155"/>
-        <source>Sets the loudness of one or more tracks</source>
-        <translation>Սահմանում է մեկ կամ մի քանի թրեքների բարձրությունը</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="163"/>
-        <source>Graphic EQ</source>
-        <translation>Գրաֆիկական էկվալայզեր</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="164"/>
-        <source>Adjusts the balance between frequency components</source>
-        <translation>Կարգավորում է հաճախականության բաղադրիչների միջև հավասարակշռությունը</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="171"/>
-        <source>Click removal</source>
-        <translation>Կտտոցների հեռացում</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="172"/>
-        <source>Click removal is designed to remove clicks on audio tracks</source>
-        <translation>Կտտոցների հեռացումը նախատեսված է աուդիո թրեքերի վրա կտտոցները հեռացնելու համար</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="181"/>
-        <source>Compressor</source>
-        <translation>Կոմպրեսոր</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="182"/>
-        <source>Reduces “dynamic range”, or differences between loud and quiet parts</source>
-        <translation>Կրճատում է «դինամիկ տիրույթը» կամ աղմկոտ և հանգիստ մասերի միջև եղած տարբերությունները։</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="191"/>
-        <source>Limiter</source>
-        <translation>Սահմանափակիչ</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="192"/>
-        <source>Augments loudness while minimizing distortion</source>
-        <translation>Բարձրացնում է ձայնը՝ միաժամանակ նվազագույնի հասցնելով աղավաղումը</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="199"/>
-        <source>Normalize</source>
-        <translation>Նորմալացնել</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="200"/>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="224"/>
-        <source>Sets the peak amplitude of a one or more tracks</source>
-        <translation>Սահմանում է մեկ կամ մի քանի թրեքների գագաթնակետային ամպլիտուդը</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="205"/>
-        <source>Fade in</source>
-        <translation>Աճեցնել</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="206"/>
-        <source>Applies a linear fade-in to the selected audio</source>
-        <translation>Ընտրված աուդիոյին կիրառում է գծային աճեցում</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="211"/>
-        <source>Fade out</source>
-        <translation>Նվազեցնել</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="212"/>
-        <source>Applies a linear fade-out to the selected audio</source>
-        <translation>Ընտրված աուդիոյին կիրառում է գծային նվազեցում</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="217"/>
-        <source>Invert</source>
-        <translation>Շրջել</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="218"/>
-        <source>Flips the audio samples upside-down, reversing their polarity</source>
-        <translation>Աուդիո սեմփլները շրջում է գլխիվայր՝ փոխելով դրանց բևեռականությունը</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="223"/>
-        <source>Repair</source>
-        <translation>Վերանորոգել</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="229"/>
-        <source>Reverse</source>
-        <translation>Հակադարձել</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="230"/>
-        <source>Reverses the selected audio</source>
-        <translation>Հետ է շրջում ընտրված աուդիոն</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="237"/>
-        <source>Truncate silence</source>
-        <translation>Կտրել լռությունը</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="238"/>
-        <source>Automatically reduces the length of passages where the volume is below a specified level</source>
-        <translation>Ավտոմատ կերպով կրճատում է հատվածների տևողությունը, երբ ձայնի ծավալը նշված մակարդակից ցածր է</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="247"/>
-        <source>Change pitch</source>
-        <translation>Փոխել տոնայնությունը</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="248"/>
-        <source>Changes the pitch of a track without changing its tempo</source>
-        <translation>Փոխում է թրեքի տոնայնությունը՝ առանց փոխելու դրա տեմպը</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="257"/>
-        <source>Generates an ascending or descending tone of one of four types</source>
-        <translation>Առաջացնում է չորս տեսակներից մեկի աճող կամ նվազող տոն</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="264"/>
-        <source>Tone</source>
-        <translation>Տոն</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="265"/>
-        <source>Generates a constant frequency tone of one of four types</source>
-        <translation>Առաջացնում է չորս տեսակներից մեկի հաստատուն հաճախակ․ տոն</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="272"/>
-        <source>Reverb</source>
-        <translation>Ռևերբերացիա</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="273"/>
-        <source>Reverb effect</source>
-        <translation>Ռևերբ․ էֆեկտ</translation>
-    </message>
-    <message>
         <location filename="../../src/effects/effects_base/effecterrors.h" line="39"/>
         <source>Effect load failed</source>
         <translation>Չստացվեց բեռնել էֆեկտը</translation>
@@ -4114,7 +3984,7 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation>Նախադրվածի անհամապատասխանութ․</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="329"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="385"/>
         <source>Applied effect: %1</source>
         <translation>Կիրառված էֆեկտ՝ %1</translation>
     </message>
@@ -4125,8 +3995,8 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="89"/>
-        <source>Delete Preset</source>
-        <translation>Ջնջել նախադրվածը</translation>
+        <source>Delete preset</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="90"/>
@@ -4140,8 +4010,13 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="117"/>
-        <source>Import Effect Parameters</source>
-        <translation>Ներմուծման էֆեկտի պարամետրեր</translation>
+        <source>Import effect parameters</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="148"/>
+        <source>Export effect parameters</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="133"/>
@@ -4154,17 +4029,12 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation>%1՝ նախատեսված է տարբեր էֆեկտի, գեներատորի կամ վերլուծիչի համար։</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="148"/>
-        <source>Export Effect Parameters</source>
-        <translation>Արտածման էֆեկտի պարամետրեր</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="369"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="622"/>
         <source>Generating %1…</source>
         <translation>%1-ի ստեղծում…</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="369"/>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="622"/>
         <source>Applying %1…</source>
         <translation>%1-ի կիրառում․․․</translation>
     </message>
@@ -4179,7 +4049,7 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation>Փոխարկե մատակարարի UI-ի և պահեստային UI-ի միջև</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="232"/>
+        <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="233"/>
         <source>Master</source>
         <translation>Գլխավոր</translation>
     </message>
@@ -4201,8 +4071,8 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
     </message>
     <message>
         <location filename="../../src/effects/effects_base/view/generatedeffectviewermodel.cpp" line="54"/>
-        <source>Unknown Effect</source>
-        <translation>Անհայտ էֆեկտ</translation>
+        <source>Unknown effect</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/view/generatedeffectviewermodel.cpp" line="70"/>
@@ -4210,15 +4080,9 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation>Այս էֆեկտի համար պարամետրեր հասանելի չեն</translation>
     </message>
     <message>
-        <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptloader.cpp" line="35"/>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="42"/>
         <source>Nyquist prompt</source>
         <translation>Nyquist հրահանգ</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptloader.cpp" line="36"/>
-        <source>Nyquist prompt effect</source>
-        <translation>Nyquist էֆեկտի հրահանգ</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="48"/>
@@ -4251,8 +4115,8 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="163"/>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="168"/>
-        <source>Nyquist Debug Output</source>
-        <translation>Nyquist վրիպազերծման արդյունք</translation>
+        <source>Nyquist debug output</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="169"/>
@@ -4287,7 +4151,7 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
     <name>effects/changepitch</name>
     <message>
         <location filename="../../src/effects/builtin_collection/changepitch/changepitchviewmodel.cpp" line="22"/>
-        <source>Change Pitch</source>
+        <source>Change pitch</source>
         <translation>Փոխել տոնայնությունը</translation>
     </message>
     <message>
@@ -4435,7 +4299,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
     <name>effects/dtmf</name>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="19"/>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="296"/>
         <source>DTMF tones</source>
         <translation>DTMF տոներ</translation>
     </message>
@@ -4489,11 +4352,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="267"/>
         <source>Silence duration</source>
         <translation>Լռության տևողություն</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="297"/>
-        <source>Generates DTMF signal</source>
-        <translation>Ստեղծում է DTMF ազդանշան</translation>
     </message>
 </context>
 <context>
@@ -4578,16 +4436,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation>Տևողություն</translation>
     </message>
     <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="280"/>
-        <source>Noise</source>
-        <translation>Աղմուկ</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="281"/>
-        <source>Generates noise</source>
-        <translation>Ստեղծում է աղմուկ</translation>
-    </message>
-    <message>
         <location filename="../../src/effects/builtin_collection/noisegen/noiseviewmodel.cpp" line="26"/>
         <source>White</source>
         <comment>not a color, but 'white noise' having a uniform spectrum</comment>
@@ -4608,11 +4456,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
 </context>
 <context>
     <name>effects/noisereduction</name>
-    <message>
-        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="13"/>
-        <source>Noise Reduction</source>
-        <translation>Աղմուկի նվազեցում</translation>
-    </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="68"/>
         <source>Step 1</source>
@@ -4639,8 +4482,8 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <translation>Ընտրեք բոլոր այն աուդիո ֆայլերը, որոնք ցանկանում եք զտել, ընտրեք, թե որքան աղմուկ եք ուզում զտել, ապա սեղմեք «Կիրառել»՝ աղմուկը նվազեցնելու համար։</translation>
     </message>
     <message>
+        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="13"/>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="141"/>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="288"/>
         <source>Noise reduction</source>
         <translation>Աղմուկի նվազեցում</translation>
     </message>
@@ -4673,11 +4516,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="280"/>
         <source>Noise only</source>
         <translation>Միայն աղմուկ</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="289"/>
-        <source>Reduces noise in the audio</source>
-        <translation>Նվազեցնում է ձայնի աղմուկը</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductionviewmodel.cpp" line="150"/>
@@ -4719,6 +4557,24 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="17"/>
         <source>Nyquist prompt</source>
         <translation>Nyquist հրահանգ</translation>
+    </message>
+</context>
+<context>
+    <name>effects/paulstretch</name>
+    <message>
+        <location filename="../../src/effects/builtin_collection/paulstretch/PaulstretchView.qml" line="11"/>
+        <source>Paulstretch</source>
+        <translation>Paulstretch</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/paulstretch/paulstretchviewmodel.cpp" line="62"/>
+        <source>Stretch factor</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/paulstretch/paulstretchviewmodel.cpp" line="87"/>
+        <source>Time resolution</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -4782,19 +4638,6 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="110"/>
         <source>Stereo width</source>
         <translation>Ստերեո լայնություն</translation>
-    </message>
-</context>
-<context>
-    <name>effects/silence</name>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="304"/>
-        <source>Silence</source>
-        <translation>Լռություն</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/internal/builtineffectsloader.cpp" line="305"/>
-        <source>Generates silence</source>
-        <translation>Ստեղծում է լռություն</translation>
     </message>
 </context>
 <context>
@@ -5020,7 +4863,7 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="16"/>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="356"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="355"/>
         <source>Edit mapping</source>
         <translation>Փոխել քարտեզագրումը</translation>
     </message>
@@ -5031,100 +4874,102 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="19"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="465"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="597"/>
         <source>Export audio</source>
         <translation>Արտածել աուդիոն</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="77"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="76"/>
         <source>Export</source>
         <translation>Արտածել</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="92"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="91"/>
         <source>Type</source>
         <translation>Տեսակ</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="129"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="128"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="65"/>
         <source>File</source>
         <translation>Ֆայլ</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="143"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="142"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="76"/>
         <source>File name</source>
         <translation>Ֆայլի անուն</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="177"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="176"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="143"/>
         <source>Folder</source>
         <translation>Պանակ</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="213"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="212"/>
         <source>Format</source>
         <translation>Ձևաչափ</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="250"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="249"/>
         <source>Audio options</source>
         <translation>Աուդիո ընտրանքներ</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="267"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="266"/>
         <source>Channels</source>
         <translation>Ազդանշաններ</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="292"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="291"/>
         <source>Mono</source>
         <translation>Մոնո</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="310"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="309"/>
         <source>Stereo</source>
         <translation>Ստերեո</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="327"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="326"/>
         <source>Custom mapping</source>
         <translation>Անհատականացված քարտեզագրում</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="374"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="373"/>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="183"/>
         <source>Sample rate</source>
         <translation>Նմուշ․ հաճախականութ․</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="419"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="418"/>
         <source>Open custom FFmpeg format options</source>
         <translation>Բացեք FFmpeg-ի ձևաչափի ընտրանքները</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="440"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="439"/>
         <source>Format:</source>
         <translation>Ձևաչափ՝</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="464"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="463"/>
         <source>Codec:</source>
         <translation>Կոդեկ՝</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="555"/>
-        <source>Effective bitrate may vary</source>
-        <translation>Արդյունավետ բիթային արագությունը կարող է տարբերվել</translation>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="554"/>
+        <source>Effective bit rate may vary</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="565"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="564"/>
         <source>Rendering</source>
         <translation>Ռենդերինգ</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="575"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="574"/>
         <source>Trim blank space before first clip</source>
         <translation>Կտրեք առաջին հոլովակից առաջ դատարկ տարածքը</translation>
     </message>
@@ -5221,14 +5066,11 @@ Published under the &lt;a href=&quot;%1&quot;&gt;GNU General Public License vers
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="176"/>
-        <source>Bit Rate (bits/second) - influences the resulting file size and quality
-Some codecs may only accept specific values (128k, 192k, 256k etc)
+        <source>Bit rate (bits/second) - influences the resulting file size and quality
+Some codecs may only accept specific values (128k, 192k, 256k, etc.)
 0 - automatic
-Recommended - 192000</source>
-        <translation>Բիթային արագություն (բիթեր/վայրկյան) - ազդում է արդյունքում ստացված ֆայլի չափի և որակի վրա
-Որոշ կոդեկներ կարող են ընդունել միայն որոշակի արժեքներ (128 կԲ, 192 կԲ, 256 կԲ և այլն)
-0 - ավտոմատ
-Խորհուրդ է տրվում - 192000</translation>
+192000 - recommended</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="208"/>
@@ -5332,53 +5174,47 @@ Recommended - 192000</source>
         <translation>Արտածել աուդիոն ցիկլային տարածքում</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="173"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="171"/>
         <source>No loop region</source>
         <translation>Ցիկլային տարածք չկա</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="174"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="172"/>
         <source>Export audio in loop region requires a loop in the project. Please go back, create a loop and try again.</source>
         <translation>Աուդիոյի արտածումը ցիկլային տարածքում պահանջում է նախագծում ցիկլ։ Խնդրում ենք վերադառնալ, ստեղծել ցիկլ և փորձել կրկին։</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="185"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="183"/>
         <source>No selected audio</source>
         <translation>Ընտրված աուդիո չկա</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="186"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="184"/>
         <source>Export selected audio requires a selection of audio data in the project. Please return to the project, make a selection and then try again.</source>
         <translation>Ընտրված աուդիոն արտածելու համար անհրաժեշտ է նախագծում աուդիո տվյալների ընտրություն: Խնդրում ենք վերադառնալ նախագծին, կատարել ընտրություն և կրկին փորձել:</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="467"/>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="599"/>
-        <source>Export Audio</source>
-        <translation>Արտածել աուդիոն</translation>
-    </message>
-    <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="467"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="465"/>
         <source>Unable to create destination folder</source>
         <translation>Չստացվեց ստեղծել նպատակակետային պանակ</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="523"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="521"/>
         <source>Do you want to overwrite?</source>
         <translation>Ուզո՞ւմ եք վերագրել։</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="524"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="522"/>
         <source>Overwrite</source>
         <translation>Վերագրել</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="536"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="534"/>
         <source>Export error</source>
         <translation>Արտածման սխալ</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="600"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="598"/>
         <source>To export with custom channel mapping, master effects must be turned off temporarily.
 
 Master effects will be turned back on after export.</source>
@@ -5398,10 +5234,10 @@ Master effects will be turned back on after export.</source>
 <context>
     <name>global</name>
     <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="156"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AlphaWelcomePopup.qml" line="155"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="279"/>
         <location filename="../../src/importexport/export/qml/Export/CustomFFmpegDialog.qml" line="143"/>
+        <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="100"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
@@ -5419,7 +5255,7 @@ Master effects will be turned back on after export.</source>
         <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="179"/>
         <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="200"/>
         <location filename="../../src/effects/builtin_collection/tonegen/ToneView.qml" line="84"/>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="77"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="102"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/CustomRateDialog.qml" line="23"/>
         <source>Hz</source>
         <translation>Հց</translation>
@@ -5428,33 +5264,35 @@ Master effects will be turned back on after export.</source>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="327"/>
         <location filename="../../src/importexport/export/qml/Export/CustomFFmpegDialog.qml" line="131"/>
         <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="94"/>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="621"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="620"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="240"/>
         <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="159"/>
         <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="117"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="98"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="453"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="475"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="527"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="549"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="651"/>
         <source>Cancel</source>
         <translation>Չեղարկել</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="344"/>
         <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="105"/>
-        <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="128"/>
+        <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="127"/>
         <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="171"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingDialog.qml" line="93"/>
         <source>Apply</source>
         <translation>Կիրառել</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="638"/>
+        <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="637"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="255"/>
         <source>Export</source>
         <translation>Արտածել</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="116"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="80"/>
+        <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="115"/>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="266"/>
         <source>Close</source>
         <translation>Փակել</translation>
@@ -5476,8 +5314,9 @@ Master effects will be turned back on after export.</source>
         <translation>րոպե</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="57"/>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="97"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="64"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="101"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="60"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputPlaySection.qml" line="69"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputSection.qml" line="98"/>
         <source>ms</source>
@@ -5487,6 +5326,7 @@ Master effects will be turned back on after export.</source>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CursorSection.qml" line="31"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CursorSection.qml" line="51"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="35"/>
         <source>seconds</source>
         <translation>վարկյան</translation>
     </message>
@@ -5503,49 +5343,49 @@ Master effects will be turned back on after export.</source>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/NewProject/TitleListView.qml" line="123"/>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/ProjectGridItem.qml" line="294"/>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectsGridView.qml" line="210"/>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectsListView.qml" line="284"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/ProjectGridItem.qml" line="293"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectsGridView.qml" line="208"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectsListView.qml" line="294"/>
         <source>No results found</source>
         <translation>Արդյունքներ չեն գտնվել</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="210"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="216"/>
         <source>Duration</source>
         <comment>file duration</comment>
         <translation>Տևողություն</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="231"/>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="269"/>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="232"/>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/RecentProjectsView.qml" line="167"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="237"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="275"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="236"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/RecentProjectsView.qml" line="171"/>
         <source>Unknown</source>
         <translation>Անհայտ</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="248"/>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="211"/>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/RecentProjectsView.qml" line="146"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="254"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="215"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/RecentProjectsView.qml" line="150"/>
         <source>Size</source>
         <comment>file size</comment>
         <translation>Չափ</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="334"/>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="266"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="342"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="270"/>
         <source>Please check your internet connection or try again later.</source>
         <translation>Խնդրում ենք ստուգել ձեր ինտերնետային կապը կամ փորձել կրկին ավելի ուշ։</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="127"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="118"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="126"/>
         <source>Back</source>
         <translation>Ետ</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="138"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="131"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="139"/>
         <source>Next</source>
         <translation>Հաջորդը</translation>
     </message>
@@ -5560,12 +5400,7 @@ Master effects will be turned back on after export.</source>
         <translation>Ստացվեց!</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="100"/>
-        <source>Ok</source>
-        <translation>Լավ</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="128"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="136"/>
         <source>Skip</source>
         <translation>Բաց թողել</translation>
     </message>
@@ -5585,13 +5420,13 @@ Master effects will be turned back on after export.</source>
         <translation>Բոլոր ֆայլերը</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="472"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1011"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="499"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1082"/>
         <source>Success</source>
         <translation>Ստացվեց</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1016"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1087"/>
         <source>Dismiss</source>
         <translation>Փակել</translation>
     </message>
@@ -5604,6 +5439,47 @@ Master effects will be turned back on after export.</source>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="635"/>
         <source>Open</source>
         <translation>Բացել</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/paulstretch/paulstretchviewmodel.cpp" line="112"/>
+        <source>s</source>
+        <translation>վ</translation>
+    </message>
+</context>
+<context>
+    <name>import</name>
+    <message>
+        <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="134"/>
+        <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="168"/>
+        <source>Loop tempo detected at %1 BPM. What would you like to do?</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="138"/>
+        <source>Match project tempo to loop</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="139"/>
+        <source>Match loop to project tempo</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="140"/>
+        <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="173"/>
+        <source>Do nothing</source>
+        <translation>Ոչինչ չանել</translation>
+    </message>
+    <message>
+        <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="144"/>
+        <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="177"/>
+        <source>Loop Tempo Detected</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/importexport/import/internal/au3/tempodetection.cpp" line="172"/>
+        <source>Stretch loop to project tempo</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -5627,20 +5503,80 @@ Master effects will be turned back on after export.</source>
 <context>
     <name>label</name>
     <message>
-        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="26"/>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="27"/>
+        <source>Cut and leave gap</source>
+        <translation>Կտրել և թողնել բացատ</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="29"/>
+        <source>Cut and close gap on this track</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="31"/>
+        <source>Cut and close gap on all tracks</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="36"/>
+        <source>Paste and overlap</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="38"/>
+        <source>Paste and make room on this track</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="40"/>
+        <source>Paste and make room on all tracks</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="45"/>
+        <source>Delete and leave gap</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="47"/>
+        <source>Delete and close gap on this track</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="49"/>
+        <source>Delete and close gap on all tracks</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="53"/>
         <source>Rename label</source>
         <translation>Վերանվանել լեյբլը</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="59"/>
+        <source>Cut and…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="60"/>
+        <source>Paste and…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="61"/>
+        <source>Delete and…</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>metadata</name>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="71"/>
+        <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="70"/>
         <source>tag</source>
         <translation>թեգ</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="73"/>
+        <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="72"/>
         <source>value</source>
         <translation>արժեք</translation>
     </message>
@@ -5743,6 +5679,49 @@ Master effects will be turned back on after export.</source>
         <location filename="../../src/project/types/projectmeta.h" line="104"/>
         <source>Comments</source>
         <translation>Մեկնաբանություններ</translation>
+    </message>
+</context>
+<context>
+    <name>multiclip</name>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="26"/>
+        <source>Cut and leave gap</source>
+        <translation>Կտրել և թողնել բացատ</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="28"/>
+        <source>Cut and close gap on this track</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="30"/>
+        <source>Cut and close gap on all tracks</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="35"/>
+        <source>Delete and leave gap</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="37"/>
+        <source>Delete and close gap on this track</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="39"/>
+        <source>Delete and close gap on all tracks</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="47"/>
+        <source>Cut and…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="48"/>
+        <source>Delete and…</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -5879,12 +5858,12 @@ Master effects will be turned back on after export.</source>
 <context>
     <name>preferences</name>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/AdvancedPreferencesPage.qml" line="66"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/AdvancedPreferencesPage.qml" line="72"/>
         <source>Preference</source>
         <translation>Կարգավորում</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/AdvancedPreferencesPage.qml" line="68"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/AdvancedPreferencesPage.qml" line="74"/>
         <source>Value</source>
         <translation>Արժեք</translation>
     </message>
@@ -5912,16 +5891,19 @@ Master effects will be turned back on after export.</source>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsymmetricStereoHeightsSection.qml" line="73"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="61"/>
         <source>Always</source>
         <translation>Միշտ</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsymmetricStereoHeightsSection.qml" line="88"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="76"/>
         <source>Depending on workspace</source>
         <translation>Կախված աշխատատարածքից</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AsymmetricStereoHeightsSection.qml" line="114"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="102"/>
         <source>Never</source>
         <translation>Երբեք</translation>
     </message>
@@ -5931,7 +5913,7 @@ Master effects will be turned back on after export.</source>
         <translation>Մուտքային և ելքային տվյալներ</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="54"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="58"/>
         <source>Host</source>
         <translation>Հոսթ</translation>
     </message>
@@ -5941,17 +5923,17 @@ Master effects will be turned back on after export.</source>
         <translation>Բուֆեր և լատենտութ․</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="47"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="54"/>
         <source>Buffer length</source>
         <translation>Բուֆերի երկարութ․</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="69"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="82"/>
         <source>Latency compensation</source>
         <translation>Լատենտութ․ փոխհատուցում</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="80"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="116"/>
         <source>Automatic</source>
         <translation>Ավտոմատ</translation>
     </message>
@@ -5971,17 +5953,17 @@ Master effects will be turned back on after export.</source>
         <translation>Դասական</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CommonAudioApiConfiguration.qml" line="47"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="101"/>
         <source>Playback device</source>
         <translation>Նվագարկիչ</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CommonAudioApiConfiguration.qml" line="63"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="77"/>
         <source>Recording device</source>
         <translation>Ձայնագրիչ</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CommonAudioApiConfiguration.qml" line="79"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="120"/>
         <source>Recording channels</source>
         <translation>Ձայնագրման ազդանշաններ</translation>
     </message>
@@ -6066,7 +6048,7 @@ Master effects will be turned back on after export.</source>
         <translation>Մոնո և Ստերեո փոխակերպում</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MonoStereoConversionSection.qml" line="25"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MonoStereoConversionSection.qml" line="27"/>
         <source>Always convert to mono without prompt</source>
         <translation>Միշտ փոխարկել մոնոի առանց հարցման</translation>
     </message>
@@ -6126,9 +6108,19 @@ Master effects will be turned back on after export.</source>
         <translation>Լռելյայն նմուշ․ հաճախականութ․</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="91"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="69"/>
         <source>Default sample format</source>
         <translation>Լռելյայն սեմփլի ձևաչափ</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="93"/>
+        <source>Custom sample rate</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="116"/>
+        <source>Default sample rates and formats apply to newly created tracks only. Recording into existing tracks will use the track’s sample rate and format instead.</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SoloButtonSection.qml" line="15"/>
@@ -6172,13 +6164,13 @@ Master effects will be turned back on after export.</source>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ThemesSection.qml" line="34"/>
-        <source>High contrast themes</source>
-        <translation>Բարձր կոնտրաստով ոճեր</translation>
+        <source>High-contrast theme</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ThemesSection.qml" line="34"/>
-        <source>Themes</source>
-        <translation>Ոճեր</translation>
+        <source>Theme</source>
+        <translation>Ոճ</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ThemesSection.qml" line="80"/>
@@ -6197,23 +6189,23 @@ Master effects will be turned back on after export.</source>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="49"/>
-        <source>Accent color:</source>
-        <translation>Շեշտադրման գույն՝</translation>
+        <source>Accent color</source>
+        <translation>Շեշտադրման գույն</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="50"/>
-        <source>Text and icons:</source>
-        <translation>Տեքստ և պատկերակներ՝</translation>
+        <source>Text and icons</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="51"/>
-        <source>Disabled text:</source>
-        <translation>Անջատված տեքստ՝</translation>
+        <source>Disabled text</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiColorsSection.qml" line="52"/>
-        <source>Border color:</source>
-        <translation>Եզրագծի գույն՝</translation>
+        <source>Border color</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiFontSection.qml" line="31"/>
@@ -6223,13 +6215,13 @@ Master effects will be turned back on after export.</source>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiFontSection.qml" line="44"/>
-        <source>Font face:</source>
-        <translation>Տառատեսակ՝</translation>
+        <source>Font face</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiFontSection.qml" line="59"/>
-        <source>Body text size:</source>
-        <translation>Տեքստի չափը՝</translation>
+        <source>Body text size</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PreferencesDialog.qml" line="31"/>
@@ -6357,24 +6349,59 @@ Master effects will be turned back on after export.</source>
         <translation>Երաժշտություն</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="179"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="180"/>
         <source>Cloud</source>
         <translation>Ամպ</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="181"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="182"/>
         <source>Shortcuts</source>
         <translation>Դյուրանցումներ</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="184"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="185"/>
         <source>Plugins</source>
         <translation>Պլագիններ</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="187"/>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="188"/>
         <source>Advanced options</source>
         <translation>Ընդլայնված ընտրանքներ</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="14"/>
+        <source>Recording lead-in time</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="22"/>
+        <source>Lead-in time before recording starts</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="47"/>
+        <source>Crossfade</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="29"/>
+        <source>Music imports</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="45"/>
+        <source>Detect tempo in imported files:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="121"/>
+        <source>When Audacity detects music in imported file</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="135"/>
+        <source>Ask me each time</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -6449,41 +6476,41 @@ Master effects will be turned back on after export.</source>
         <translation>Հեղինակային իրավունք</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="141"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="142"/>
         <source>Cloud audio files grid</source>
         <translation>Ամպային աուդիո ֆայեր - Ցանց</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="172"/>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="173"/>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/RecentProjectsView.qml" line="108"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="178"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="177"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/RecentProjectsView.qml" line="112"/>
         <source>Modified</source>
         <extracomment>Stands for &quot;Last time that this project was modified&quot;. Used as the header of this column in the scores list.</extracomment>
         <translation>Փոփոխվել է</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="333"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="341"/>
         <source>Unable to load online files</source>
         <translation>Չհաջողվեց բեռնել առցանց ֆայլերը</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="353"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="361"/>
         <source>You don’t have any online files yet</source>
         <translation>Դուք դեռ չունեք որևէ առցանց ֆայլ</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="354"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="362"/>
         <source>Files will appear here when you save a file to the cloud, or publish a project</source>
         <translation>Ֆայլերը կհայտնվեն այստեղ, երբ դուք պահեք ֆայլը ամպում կամ հրապարակեք նախագիծը</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="373"/>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="305"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="381"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="309"/>
         <source>You are not signed in</source>
         <translation>Դուք մուտք չեք գործել</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="374"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="382"/>
         <source>Please sign in to view your online files</source>
         <translation>Մուտք գործեք՝ Ձեր առցանց ֆայլերը դիտելու համար</translation>
     </message>
@@ -6498,32 +6525,32 @@ Master effects will be turned back on after export.</source>
         <translation>Ներբեռնել նախագիծը</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="137"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="138"/>
         <source>Cloud projects grid</source>
         <translation>Ամպային նախագծեր - Ցանց</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="162"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="165"/>
         <source>Cloud projects list</source>
         <translation>Ամպային նախագծեր - Ցուցակ</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="265"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="269"/>
         <source>Unable to load online projects</source>
         <translation>Հնարավոր չէ բեռնել առցանց նախագծերը</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="285"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="289"/>
         <source>You don’t have any online projects yet</source>
         <translation>Դուք դեռ չունեք որևէ առցանց նախագիծ</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="286"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="290"/>
         <source>Projects will appear here when you publish a project</source>
         <translation>Նախագծերը կհայտնվեն այստեղ, երբ դուք հրապարակեք նախագիծը</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="306"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="310"/>
         <source>Please sign in to view your online projects</source>
         <translation>Մուտք գործեք՝ Ձեր առցանց նախագծերը դիտելու համար</translation>
     </message>
@@ -6539,7 +6566,7 @@ Master effects will be turned back on after export.</source>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="34"/>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectsListView.qml" line="108"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectsListView.qml" line="113"/>
         <location filename="../../src/project/view/recentprojectsmodel.cpp" line="66"/>
         <source>New project</source>
         <translation>Նոր նախագիծ</translation>
@@ -6555,12 +6582,12 @@ Master effects will be turned back on after export.</source>
         <translation>Նախագծեր - Ցանց</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectsListView.qml" line="82"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectsListView.qml" line="85"/>
         <source>Projects list</source>
         <translation>Նախագծեր - Ցուցակ</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectsListView.qml" line="156"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectsListView.qml" line="161"/>
         <source>Name</source>
         <translation>Անուն</translation>
     </message>
@@ -6591,48 +6618,48 @@ Master effects will be turned back on after export.</source>
         <translation>Ամպային նախագծեր</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="170"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="171"/>
         <source>Cloud audio files</source>
         <translation>Ամպային աուդիո ֆայեր</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="185"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="187"/>
         <source>View buttons</source>
         <translation>Ցուցադրել կոճակները</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="197"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="199"/>
         <source>Refresh</source>
         <translation>Թարմացնել</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="211"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="213"/>
         <source>Grid view</source>
         <translation>Ցանցային տեսք</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="216"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="218"/>
         <source>List view</source>
         <translation>Ցուցակի տեսք</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="364"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="384"/>
         <source>Projects actions</source>
         <extracomment>accessibility name for the panel at the bottom of the &quot;Projects&quot; page</extracomment>
         <translation>Նախագծեր - Գործողություններ</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="379"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="399"/>
         <source>Project manager (online)</source>
         <translation>Նախագծի մենեջեր (առցանց)</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="398"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="418"/>
         <source>New</source>
         <translation>Նոր</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="410"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="430"/>
         <source>Open other…</source>
         <translation>Բացել այլ…</translation>
     </message>
@@ -6682,19 +6709,19 @@ Master effects will be turned back on after export.</source>
         <translation>Շեշտադրման գույն</translation>
     </message>
     <message>
-        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="473"/>
+        <location filename="../../src/au3cloud/internal/au3audiocomservice.cpp" line="378"/>
         <source>Could not save project locally</source>
         <translation>Հնարավոր չէ նախագիծը տեղում պահել</translation>
     </message>
     <message>
-        <location filename="../../src/au3wrap/internal/au3project.cpp" line="139"/>
+        <location filename="../../src/au3wrap/internal/au3project.cpp" line="151"/>
         <source>Project loading failed</source>
         <translation>Չստացվեց բեռնել նախագիծը</translation>
     </message>
     <message>
-        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="477"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="554"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="601"/>
+        <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="475"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="578"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="625"/>
         <source>All supported files</source>
         <translation>Բոլոր աջակցվող ֆայլերը</translation>
     </message>
@@ -6719,135 +6746,142 @@ Master effects will be turned back on after export.</source>
         <translation>Ներմուծված են բազմաթիվ ֆայլեր</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="107"/>
-        <source>Audacity4 files</source>
-        <translation>Audacity4 ֆայլեր</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="235"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="240"/>
         <source>Error opening file</source>
         <translation>Ֆայլի բացումը չստացվեց</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="236"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="241"/>
         <source>Could not open file: %1</source>
         <translation>Չհաջողվեց բացել ֆայլը՝ %1</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="473"/>
-        <source>All saved changes will now update to the cloud. 
-You can manage this file from your updated projects page on audio.com</source>
-        <translation>Բոլոր պահպանված փոփոխությունները այժմ կթարմացվեն ամպում:
-Դուք կարող եք կառավարել այս ֆայլը ձեր վերբեռնված նախագծերի էջից audio.com կայքում:</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="478"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="505"/>
         <source>Dismiss</source>
         <translation>Փակել</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="494"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="518"/>
         <source>Upload project to audio.com…</source>
         <translation>Վերբեռնել նախագիծը audio.com-ում…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="555"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="579"/>
         <source>Audacity project files</source>
         <translation>Audacity նախագծի ֆայլեր</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="556"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="580"/>
         <source>Audacity 3 files</source>
         <translation>Audacity 3 ֆայլեր</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="557"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="181"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="581"/>
         <source>Audacity 4 files</source>
         <translation>Audacity 4 ֆայլեր</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="558"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="652"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="670"/>
+        <source>Visit audio.com</source>
+        <translation>Այցելել audio.com կայքը</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="654"/>
+        <source>Load latest</source>
+        <translation>Բեռնել նորագույնը</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="500"/>
+        <source>All saved changes will now update to the cloud.
+You can manage this file from your updated projects page on audio.com</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="582"/>
         <source>Importable audio and media files</source>
         <translation>Ներմուծվող աուդիո և մեդիա ֆայլեր</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="571"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="620"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="595"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="644"/>
         <source>Open</source>
         <translation>Բացել</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="602"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="626"/>
         <source>Audio files</source>
         <translation>Աուդիո ֆայլեր</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="603"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="627"/>
         <source>Video files</source>
         <translation>Տեսանյութեր</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="604"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="628"/>
         <source>Game media files</source>
         <translation>Խաղի մեդիա ֆայլեր</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="605"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="629"/>
         <source>Streaming files</source>
         <translation>Հոսքային ֆայլեր</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="606"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="630"/>
         <source>Animation and image files</source>
         <translation>Անիմացիոն և պատկերային ֆայլեր</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="607"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="631"/>
         <source>Raw files</source>
         <translation>Չմշակված ֆայլեր</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="633"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="660"/>
+        <source>Do you want to save changes to the project before closing?</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="662"/>
         <source>Do you want to save changes to the project “%1” before closing?</source>
         <translation>Ցանկանո՞ւմ եք պահպանել «%1» նախագծի փոփոխությունները փակելուց առաջ։</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="636"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="666"/>
         <source>Your changes will be lost if you don’t save them.</source>
         <translation>Ձեր փոփոխությունները կկորչեն, եթե չպահպանեք դրանք։</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="827"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="872"/>
         <source>Resuming sync to audio.com…</source>
         <translation>Audio.com-ի հետ սինքրոնացումը վերսկսվում է…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="837"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="882"/>
         <source>Syncing project from cloud…</source>
         <translation>Նախագիծը սինքրոնացվում է ամպից…</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="980"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1042"/>
         <location filename="../../src/project/projecterrors.cpp" line="32"/>
         <location filename="../../src/project/projecterrors.cpp" line="51"/>
         <source>Cannot read file %1</source>
         <translation>Չհաջողվեց ընթերցել %1 ֆայլը</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="985"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1047"/>
         <source>An error occurred while reading this file.</source>
         <translation>Այս ֆայլը կարդալիս սխալ տեղի ունեցավ։</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1187"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1316"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1372"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="597"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="701"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="717"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="756"/>
         <source>Save to computer</source>
-        <translation>Պահպանել համակարգչում</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1286"/>
-        <source>Save to Computer</source>
         <translation>Պահպանել համակարգչում</translation>
     </message>
     <message>
@@ -6939,32 +6973,6 @@ Please remove the write protection by checking the file’s properties, ensuring
         <source>Remember my choice</source>
         <translation>Հիշե՛ք իմ ընտրությունը</translation>
     </message>
-    <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="506"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="512"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="518"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="524"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="530"/>
-        <source>MuseScore.com returned an error code: %1.</source>
-        <extracomment>%1 will be replaced with the error code that MuseScore.com returned; this might contain english text that is deliberately not translated</extracomment>
-        <translation>MuseScore.com-ը վերադարձել է սխալի կոդ՝ %1։</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="536"/>
-        <source>MuseScore.com returned an unknown error code: %1.</source>
-        <extracomment>%1 will be replaced with the error code that MuseScore.com returned, which is a number.</extracomment>
-        <translation>MuseScore.com-ը վերադարձել է անհայտ սխալի կոդ՝ %1։</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="539"/>
-        <source>MuseScore.com returned an unknown error code.</source>
-        <translation>MuseScore.com-ը վերադարձել է անհայտ սխալի կոդ։</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="545"/>
-        <source>Please try again later, or get help for this problem on musescore.org.</source>
-        <translation>Խնդրում ենք փորձել կրկին ավելի ուշ կամ օգնություն ստանալ այս խնդրի համար musescore.org կայքում։</translation>
-    </message>
 </context>
 <context>
     <name>project/history</name>
@@ -6990,34 +6998,49 @@ Please remove the write protection by checking the file’s properties, ensuring
 <context>
     <name>project/open</name>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="406"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="480"/>
         <source>Legacy project file</source>
         <translation>Հնացած նախագծի ֆայլ</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="407"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="481"/>
         <source>You have opened an Audacity 3 project. It must be converted before you can use it in Audacity 4.</source>
         <translation>Դուք բացել եք Audacity 3 նախագիծ։ Այն պետք է փոխակերպվի, նախքան այն Audacity 4-ում օգտագործելը։</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="412"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="486"/>
         <source>Cancel</source>
         <translation>Չեղարկել</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="415"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="489"/>
         <source>Save as new project</source>
         <translation>Պահպանել որպես նոր նախագիծ</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="442"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="516"/>
         <source>The project was saved as “%1”</source>
         <translation>Նախագիծը պահպանվել է որպես «%1»</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="445"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="519"/>
         <source>Continue</source>
         <translation>Շարունակել</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="908"/>
+        <source>Time Track not supported</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="909"/>
+        <source>The project contains a time track, which is not yet supported in Audacity 4, and will need to be removed. This does not affect your original Audacity 3 project.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="913"/>
+        <source>Ok</source>
+        <translation>Լավ</translation>
     </message>
 </context>
 <context>
@@ -7066,11 +7089,6 @@ Please remove the write protection by checking the file’s properties, ensuring
         <translation>Ինչպե՞ս կցանկանայիք պահպանել։</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="78"/>
-        <source>Save to the Cloud (free)</source>
-        <translation>Պահպանել ամպում (անվճար)</translation>
-    </message>
-    <message>
         <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="79"/>
         <source>Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others. Cloud saving is free for a limited number of projects.</source>
         <translation>Ձեր նախագիծը գաղտնի պահուստավորված է audio.com կայքում: Դուք կարող եք մուտք գործել ձեր աշխատանքին ցանկացած սարքից և համագործակցել ձեր նախագծի վրա ուրիշների հետ: Ամպային պահպանումը անվճար է սահմանափակ թվով նախագծի համար:</translation>
@@ -7081,6 +7099,7 @@ Please remove the write protection by checking the file’s properties, ensuring
         <translation>Պահպանել ամպում</translation>
     </message>
     <message>
+        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="78"/>
         <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="86"/>
         <source>Save to the cloud (free)</source>
         <translation>Պահպանել ամպում (անվճար)</translation>
@@ -7097,7 +7116,7 @@ Please remove the write protection by checking the file’s properties, ensuring
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="97"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="476"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="550"/>
         <source>Save to computer</source>
         <translation>Պահպանել համակարգչում</translation>
     </message>
@@ -7107,62 +7126,58 @@ Please remove the write protection by checking the file’s properties, ensuring
         <translation>Պահպանել Ձեր համակարգչում</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="93"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="167"/>
         <source>Save project</source>
         <translation>Պահպանել նախագիծը</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="98"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="172"/>
         <source>copy</source>
         <comment>a copy of a file</comment>
         <extracomment>used to form a filename suggestion, like &quot;originalFile - copy&quot;</extracomment>
         <translation>պատճեյեօ</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="101"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="175"/>
         <source>selection</source>
         <extracomment>used to form a filename suggestion, like &quot;originalFile - selection&quot;</extracomment>
         <translation>ընտրութ․</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="190"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="264"/>
         <source>Log in or create a new account on Audio.com to share your music.</source>
         <translation>Մուտք գործեք կամ ստեղծեք նոր հաշիվ Audio.com կայքում՝ ձեր երաժշտությունը կիսվելու համար։</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="454"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="528"/>
         <source>Publish</source>
         <translation>Հրատարակել</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="458"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="532"/>
         <source>Publish changes online?</source>
         <translation>Հրապարակե՞լ փոփոխությունները առցանց։</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="459"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="533"/>
         <source>Your saved changes will be publicly visible. We will also need to generate a new MP3 for public playback.</source>
         <translation>Ձեր պահպանված փոփոխությունները կլինեն հանրությանը տեսանելի։ Մենք նաև պետք է ստեղծենք նոր MP3 ֆայլ հանրային նվագարկման համար։</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="469"/>
-        <source>Unable to connect to MuseScore.com</source>
-        <translation>Չհաջողվեց կապվել MuseScore.com կայքին</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="470"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="480"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="494"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="544"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="554"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="568"/>
         <source>Please check your internet connection or try again later.</source>
         <translation>Խնդրում ենք ստուգել ձեր ինտերնետային կապը կամ փորձել կրկին ավելի ուշ։</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="479"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="543"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="553"/>
         <source>Unable to connect to the cloud</source>
         <translation>Չհաջողվեց կապվել ամպին</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="493"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="567"/>
         <source>Unable to connect to Audio.com</source>
         <translation>Չհաջողվեց կապվել Audio.com կայքին</translation>
     </message>
@@ -7170,34 +7185,34 @@ Please remove the write protection by checking the file’s properties, ensuring
 <context>
     <name>project/share</name>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="703"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="817"/>
         <source>Your audio could not be shared</source>
         <translation>Ձեր աուդիոն չհաջողվեց կիսվել</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="711"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="825"/>
         <source>Your audio.com account needs to be verified first. Please activate your account via the link in the activation email.</source>
         <translation>Ձեր audio.com հաշիվը նախ պետք է հաստատվի։ Խնդրում ենք ակտիվացնել ձեր հաշիվը՝ օգտագործելով ակտիվացման էլ. փոստում նշված հղումը։</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="717"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="831"/>
         <source>Audio.com returned an unknown error code: %1.</source>
         <extracomment>%1 will be replaced with the error code that audio.com returned, which is a number.</extracomment>
         <translation>Audio.com-ը վերադարձել է անհայտ սխալի կոդ՝ %1.</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="720"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="834"/>
         <source>Audio.com returned an unknown error code.</source>
         <translation>Audio.com-ը վերադարձել է անհայտ սխալի կոդ։</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="722"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="729"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="836"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="843"/>
         <source>Please try again later, or get help for this problem on audio.com.</source>
         <translation>Խնդրում ենք կրկին փորձել ավելի ուշ կամ օգնություն ստանալ այս խնդրի համար audio.com կայքում։</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="725"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="839"/>
         <source>Could not connect to audio.com. Please check your internet connection or try again later.</source>
         <translation>Հնարավոր չէ միանալ audio.com կայքին։ Ստուգեք ձեր ինտերնետ կապը կամ փորձեք կրկին ավելի ուշ։</translation>
     </message>
@@ -7219,13 +7234,13 @@ Please remove the write protection by checking the file’s properties, ensuring
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml" line="50"/>
-        <source>Selection Start</source>
-        <translation>Ընտրության սկիզբ</translation>
+        <source>Selection start</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml" line="51"/>
-        <source>Selection End</source>
-        <translation>Ընտրության ավարտ</translation>
+        <source>Selection end</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml" line="71"/>
@@ -7540,33 +7555,33 @@ Please remove the write protection by checking the file’s properties, ensuring
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="230"/>
-        <source>Video Frames (24 fps)</source>
-        <translation>Տեսանյութի կադրեր (24 կադր/վրկ)</translation>
+        <source>Video frames (24 fps)</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="231"/>
-        <source>NTSC Frames (29.97 fps)</source>
+        <source>NTSC frames (29.97 fps)</source>
         <translation>NTSC կադրեր (29.97 կադր/վրկ)</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="232"/>
-        <source>NTSC Frames (30 fps)</source>
+        <source>NTSC frames (30 fps)</source>
         <translation>NTSC կադեր (30 կադր/վրկ)</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="233"/>
-        <source>PAL Frames (25 fps)</source>
+        <source>PAL frames (25 fps)</source>
         <translation>PAL կադրեր (25 կադր/վրկ)</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="242"/>
+        <source>CDDA frames (75 fps)</source>
+        <translation>CDDA կադրեր (75 կադր/վրկ)</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="236"/>
         <source>Video frames</source>
         <translation>Տեսանյութի կադրեր</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="242"/>
-        <source>CDDA Frames (75 fps)</source>
-        <translation>CDDA կադրեր (75 կադր/վրկ)</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="245"/>
@@ -7658,45 +7673,133 @@ Please remove the write protection by checking the file’s properties, ensuring
         <translation>Ցուցադրել միկրոֆոնի չափումը, երբ չեք ձայնագրում</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/au3/au3record.cpp" line="706"/>
-        <source>Recorded Audio</source>
-        <translation>Ձայնագրված աուդիո</translation>
-    </message>
-    <message>
-        <location filename="../../src/record/internal/au3/au3record.cpp" line="706"/>
+        <location filename="../../src/record/internal/au3/au3record.cpp" line="919"/>
         <source>Record</source>
         <translation>Ձայնագրել</translation>
     </message>
     <message>
-        <location filename="../../src/record/internal/recordcontroller.cpp" line="94"/>
-        <location filename="../../src/record/internal/recordcontroller.cpp" line="109"/>
-        <location filename="../../src/record/internal/recordcontroller.cpp" line="124"/>
+        <location filename="../../src/record/internal/au3/au3record.cpp" line="919"/>
+        <source>Recorded audio</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="104"/>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="119"/>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="134"/>
         <source>Recording error</source>
         <translation>Ձայնագրման սխալ</translation>
     </message>
     <message>
-        <location filename="../../src/record/recorderrors.h" line="32"/>
+        <location filename="../../src/record/internal/recordcontroller.cpp" line="154"/>
+        <source>Lead-in Recording error</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/record/recorderrors.h" line="35"/>
         <source>Error opening recording device.
 Error code: %1</source>
         <translation>Սխալ՝ ձայնագրիչը բացելիս։
 Սխալի կոդ՝ %1։</translation>
     </message>
     <message>
-        <location filename="../../src/record/recorderrors.h" line="33"/>
+        <location filename="../../src/record/recorderrors.h" line="36"/>
         <source>Cannot stop recording</source>
         <translation>Չհաջողվեց կանգնեցնել ձայնագրությունը</translation>
     </message>
     <message>
-        <location filename="../../src/record/recorderrors.h" line="35"/>
+        <location filename="../../src/record/recorderrors.h" line="38"/>
         <source>The tracks selected for recording must all have the same sampling rate</source>
         <translation>Ձայնագրման համար ընտրված թրեքները պետք է ունենան նույն նմուշ․ հաճախականությունը</translation>
     </message>
     <message>
-        <location filename="../../src/record/recorderrors.h" line="38"/>
+        <location filename="../../src/record/recorderrors.h" line="41"/>
         <source>Too few tracks are selected for recording at this sample rate.
 (Audacity requires two channels at the same sample rate foreach stereo track)</source>
         <translation>Այս նմուշ․ հաճախականությամբ ձայնագրման համար ընտրված են չափազանց քիչ ձայնագրություններ։
 (Audacity-ն պահանջում է երկու ալիք նույն նմուշ․ հաճախականությամբ յուրաքանչյուր ստերեո ձայնագրության համար):</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/recorderrors.h" line="45"/>
+        <source>Please select a time within a clip.</source>
+        <translation>Խնդրում ենք ընտրել ժամանակահատված հոլովակի մեջ։</translation>
+    </message>
+    <message>
+        <location filename="../../src/record/recorderrors.h" line="48"/>
+        <source>Please select a track for lead-in recording.</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>selection</name>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="26"/>
+        <source>Cut and leave gap</source>
+        <translation>Կտրել և թողնել բացատ</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="28"/>
+        <source>Cut and close gap</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="30"/>
+        <source>Cut and close gap on this track</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="32"/>
+        <source>Cut and close gap on all tracks</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="37"/>
+        <source>Paste and overlap</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="39"/>
+        <source>Paste and make room on this track</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="41"/>
+        <source>Paste and make room on all tracks</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="46"/>
+        <source>Delete and leave gap</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="48"/>
+        <source>Delete and close gap</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="50"/>
+        <source>Delete and close gap on this track</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="52"/>
+        <source>Delete and close gap on all tracks</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="62"/>
+        <source>Cut and…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="63"/>
+        <source>Paste and…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="64"/>
+        <source>Delete and…</source>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -7882,8 +7985,8 @@ Error code: %1</source>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/colorsectionparameterlistmodel.cpp" line="97"/>
-        <source>High Boost</source>
-        <translation>Բարձր ուժեղացում</translation>
+        <source>High boost</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/scalesectionparameterlistmodel.cpp" line="51"/>
@@ -7920,8 +8023,8 @@ Error code: %1</source>
     </message>
     <message>
         <location filename="../../src/spectrogram/qml/Audacity/Spectrogram/TrackSpectrogramSettingsDialog.qml" line="132"/>
-        <source>Ok</source>
-        <translation>Լավ</translation>
+        <source>OK</source>
+        <translation>OK</translation>
     </message>
 </context>
 <context>
@@ -7974,29 +8077,29 @@ Error code: %1</source>
 <context>
     <name>trackedit</name>
     <message>
-        <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="189"/>
+        <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="191"/>
         <source>Added enveloped point</source>
         <translation>Ավելացված է ծրարված կետ</translation>
     </message>
     <message>
-        <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="189"/>
-        <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="219"/>
-        <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="339"/>
+        <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="191"/>
+        <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="224"/>
+        <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="345"/>
         <source>Clip envelope edit</source>
         <translation>Կտրել ծրարի խմբագրումը</translation>
     </message>
     <message>
-        <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="219"/>
+        <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="224"/>
         <source>Removed enveloped point</source>
         <translation>Հեռացված է ծրարված կետը</translation>
     </message>
     <message>
-        <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="339"/>
+        <location filename="../../src/automation/internal/au3/au3clipgaininteraction.cpp" line="345"/>
         <source>Dragged enveloped point</source>
         <translation>Քաշված է ծրարված կետը</translation>
     </message>
     <message>
-        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="601"/>
+        <location filename="../../src/playback/internal/playbackcontroller.cpp" line="631"/>
         <source>Set looping region in/out</source>
         <translation>Սահմանել ցիկլային տարածքի մուտքը/ելքը</translation>
     </message>
@@ -8040,40 +8143,42 @@ Do you wish to continue?</source>
 Ցանկանո՞ւմ եք շարունակել։</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="638"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="666"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="689"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="663"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="697"/>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="720"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="743"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="774"/>
         <source>No audio selected</source>
         <translation>Աուդիոն ընտրված չէ</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="639"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="667"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="690"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="664"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="698"/>
         <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="721"/>
-        <source>Select the audio for Delete then try again.</source>
-        <translation>Ընտրեք աուդիոն` ջնջելու համար, հետո կրկին փորձեք։</translation>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="744"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="775"/>
+        <source>Select the audio to delete and try again.</source>
+        <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1120"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1134"/>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1148"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1139"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1153"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1167"/>
         <source>Paste error</source>
         <translation>Տեղադրման սխալ</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1587"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1606"/>
         <source>Applying</source>
         <translation>Կիրառում</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1795"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1847"/>
         <source>Set rate</source>
         <translation>Սահմանել հաճախակ․</translation>
     </message>
     <message>
-        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="1952"/>
+        <location filename="../../src/trackedit/internal/trackeditactionscontroller.cpp" line="2004"/>
         <source>Resample</source>
         <translation>Վերաձևակերպել</translation>
     </message>
@@ -8107,8 +8212,8 @@ Do you wish to continue?</source>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="45"/>
-        <source>Your delete behaviour has been set</source>
-        <translation>Ձեր ջնջման վարքագիծը սահմանված է</translation>
+        <source>Your delete behavior has been set</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="57"/>
@@ -8127,8 +8232,8 @@ Do you wish to continue?</source>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="61"/>
-        <source>There are also a variety of new shortcuts that let you quickly access different delete behaviours. Go to %2 to learn more.</source>
-        <translation>Կան նաև մի շարք նոր կարճուղիներ, որոնք թույլ են տալիս արագորեն մուտք գործել տարբեր ջնջման վարքագծերի: Ավելին իմանալու համար այցելեք %2:</translation>
+        <source>There are also a variety of new shortcuts that let you quickly access different delete behaviors. Go to %2 to learn more.</source>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorPanel.qml" line="15"/>

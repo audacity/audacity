@@ -49,6 +49,8 @@ bool ProjectFormatVersion::IsValid() const noexcept
     return Major != 0;
 }
 
+// ProjectFormatVersion / PRAGMA user_version tracks the SQLite database schema (tables, columns, indexes).
+// For XML schema changes, bump AUDACITY_FILE_FORMAT_VERSION instead.
 const ProjectFormatVersion SupportedProjectFormatVersion = {
     AUDACITY_VERSION, AUDACITY_RELEASE, AUDACITY_REVISION, AUDACITY_MODLEVEL
 };

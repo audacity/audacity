@@ -22,6 +22,9 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/components/timecodemodeselector.cpp
 
+    ${CMAKE_CURRENT_LIST_DIR}/components/tablesortfilterproxymodel.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/components/tablesortfilterproxymodel.h
+
     ${CMAKE_CURRENT_LIST_DIR}/components/internal/numeric/numericviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/components/internal/numeric/numericviewmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/components/internal/numeric/timecodeformatter.cpp

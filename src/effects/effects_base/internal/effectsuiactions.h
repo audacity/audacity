@@ -22,7 +22,7 @@ class EffectsUiActions : public muse::ui::IUiActionsModule, public muse::async::
     muse::ContextInject<IEffectExecutionScenario> effectExecutionScenario{ this };
 
 public:
-    EffectsUiActions(const muse::modularity::ContextPtr& ctx, std::shared_ptr<EffectsActionsController> controller);
+    EffectsUiActions(const muse::modularity::ContextPtr& ctx, EffectsActionsController* controller);
 
     void reload();
 
@@ -39,7 +39,7 @@ public:
 private:
     void makeActions(EffectMetaList effects);
     muse::ui::UiActionList m_actions;
-    const std::shared_ptr<EffectsActionsController> m_controller;
+    EffectsActionsController* const m_controller = nullptr;
     muse::async::Channel<muse::ui::UiActionList> m_actionsChanged;
     muse::async::Channel<muse::actions::ActionCodeList> m_actionCheckedChanged;
 };

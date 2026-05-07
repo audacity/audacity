@@ -84,6 +84,17 @@ void TrackClipsListModel::onReload()
         });
     }, muse::async::Asyncable::Mode::SetReplace);
 
+    globalContext()->playbackState()->playbackPositionChanged().onReceive(this, [this](muse::secs_t) {
+        if (!globalContext()->isRecording()) {
+            return;
+        }
+        for (const auto& rk : recordController()->recordingClipKeys()) {
+            if (TrackClipItem* item = clipItemByKey(rk)) {
+                updateItemMetrics(item);
+            }
+        }
+    }, muse::async::Asyncable::Mode::SetReplace);
+
     m_allClipList.onItemChanged(this, [this](const Clip& clip) {
         for (size_t i = 0; i < m_allClipList.size(); ++i) {
             if (m_allClipList.at(i).key != clip.key) {
@@ -230,6 +241,17 @@ void TrackClipsListModel::updateItemMetrics(ViewTrackItem* viewItem)
     trackedit::Clip clip = prj->clip(item->key().key);
     if (!clip.isValid()) {
         return;
+    }
+
+    // Extend recording clip's visual boundary to the smooth record position
+    if (globalContext()->isRecording()) {
+        for (const auto& rk : recordController()->recordingClipKeys()) {
+            if (rk == item->key().key) {
+                double projectedEnd = globalContext()->playbackState()->playbackPosition().to_double();
+                clip.endTime = std::max(clip.endTime, projectedEnd);
+                break;
+            }
+        }
     }
 
     //! NOTE The first step is to calculate the position and width
@@ -617,6 +639,13 @@ bool TrackClipsListModel::stretchLeftClip(const ClipKey& key, bool completed, Cl
         } else {
             newStartTime = m_context->applySnapToItem(newStartTime);
         }
+
+        const double naturalDuration = (item->time().endTime - item->time().startTime) / item->speed();
+        const double originalStartTime = item->time().endTime - naturalDuration;
+        const double snapThreshold = 8.0 / m_context->zoom();
+        if (std::abs(newStartTime - originalStartTime) < snapThreshold) {
+            newStartTime = originalStartTime;
+        }
     }
 
     double minClipTime = MIN_CLIP_WIDTH / m_context->zoom();
@@ -685,6 +714,13 @@ bool TrackClipsListModel::stretchRightClip(const ClipKey& key, bool completed, C
             newEndTime = m_context->applySnapToTime(newEndTime);
         } else {
             newEndTime = m_context->applySnapToItem(newEndTime);
+        }
+
+        const double naturalDuration = (item->time().endTime - item->time().startTime) / item->speed();
+        const double originalEndTime = item->time().startTime + naturalDuration;
+        const double snapThreshold = 8.0 / m_context->zoom();
+        if (std::abs(newEndTime - originalEndTime) < snapThreshold) {
+            newEndTime = originalEndTime;
         }
     }
 

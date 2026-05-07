@@ -22,7 +22,9 @@ Rectangle {
     required property bool isWaveformViewVisible
     required property bool isSpectrogramViewVisible
     property int pitch: 0
+    property bool isPitchModified: false
     property int speedPercentage: 0
+    property bool isSpeedModified: false
     property bool showChannelSplitter: false
     property alias channelHeightRatio: waveChannelSplitter.channelHeightRatio
     property var canvas: null
@@ -612,8 +614,7 @@ Rectangle {
                         root.editTitle()
                     } else {
                         //! NOTE Handle singleClick logic
-                        if ((!root.multiClipsSelected || (e.modifiers & Qt.ShiftModifier))
-                                && !(root.isDataSelected && isWithinRange(e.x, headerSelectionRectangle.x, headerSelectionRectangle.width))) {
+                        if ((!root.multiClipsSelected || (e.modifiers & Qt.ShiftModifier)) && !(root.isDataSelected && isWithinRange(e.x, headerSelectionRectangle.x, headerSelectionRectangle.width))) {
                             root.requestSelected()
                         }
 
@@ -755,7 +756,7 @@ Rectangle {
                     }
                     icon: root.pitch > 0 ? IconCode.ARROW_UP : IconCode.ARROW_DOWN
 
-                    visible: root.pitch !== 0 && header.width > (60 + pitchBtn.implicitWidth + speedBtn.implicitWidth * (root.speedPercentage !== 100.0) + menuBtn.implicitWidth)
+                    visible: root.isPitchModified && header.width > (60 + pitchBtn.implicitWidth + speedBtn.implicitWidth * (root.isSpeedModified ? 1 : 0) + menuBtn.implicitWidth)
 
                     onClicked: function (mouse) {
                         if (mouse.modifiers & Qt.ControlModifier) {
@@ -774,7 +775,7 @@ Rectangle {
                     icon: IconCode.CLOCK
                     text: root.speedPercentage + "%"
 
-                    visible: root.speedPercentage !== 100.0 && header.width > (60 + speedBtn.implicitWidth + menuBtn.implicitWidth)
+                    visible: root.isSpeedModified && header.width > (60 + speedBtn.implicitWidth + menuBtn.implicitWidth)
 
                     onClicked: function (mouse) {
                         if (mouse.modifiers & Qt.ControlModifier) {
@@ -805,7 +806,7 @@ Rectangle {
                         Qt.callLater(menuModel.handleMenuItem, itemId)
                     }
 
-                    onClicked: function(mouse) {
+                    onClicked: function (mouse) {
                         if (root.multiClipsSelected || root.groupId != -1) {
                             prv.ensureMultiMenuLoaded()
                         } else {
@@ -839,6 +840,8 @@ Rectangle {
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+
+                fillColor: root.clipSelected ? root.clipSelectedColor : root.clipColor
 
                 channelHeightRatio: showChannelSplitter ? root.channelHeightRatio : 1
 
@@ -922,7 +925,6 @@ Rectangle {
                     ghostPointRadius: 3.0
                     ghostPointOutlineColor: ui.theme.extra["audio_envelope_point"]
 
-
                     points: clipGainModel.points
                     defaultValue: clipGainModel.defaultValue
 
@@ -939,17 +941,17 @@ Rectangle {
                         automation.init()
                     }
 
-                    onPointMoved: function(index, x, y, completed) {
+                    onPointMoved: function (index, x, y, completed) {
                         clipGainModel.setPoint(index, x, y, completed)
                         tooltip.gain = gainToDb(y)
                         tooltip.show(true)
                     }
 
-                    onPointAdded: function(x, y, completed) {
+                    onPointAdded: function (x, y, completed) {
                         clipGainModel.addPoint(x, y, completed)
                     }
 
-                    onPointRemoved: function(index, completed) {
+                    onPointRemoved: function (index, completed) {
                         clipGainModel.removePoint(index, completed)
                     }
 
@@ -958,7 +960,7 @@ Rectangle {
                         tooltip.hide(true)
                     }
 
-                    onInteractionFinished: function() {
+                    onInteractionFinished: function () {
                         if (!automation.hasActivePoint) {
                             tooltip.hide(true)
                         }

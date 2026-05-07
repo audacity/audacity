@@ -1,36 +1,36 @@
 /*
 * Audacity: A Digital Audio Editor
 */
-#include "accountinfomodel.h"
+#include "accountmodel.h"
 
 #include "framework/global/io/path.h"
 #include "framework/global/types/retval.h"
 
 using namespace au::au3cloud;
 
-AccountInfoModel::AccountInfoModel(QObject* parent)
+AccountModel::AccountModel(QObject* parent)
     : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
 }
 
-void AccountInfoModel::init()
+void AccountModel::init()
 {
     authorization()->authState().ch.onReceive(this, [this] (const auto&) {
         emit isAuthorizedChanged();
     });
 }
 
-bool AccountInfoModel::isAuthorized() const
+bool AccountModel::isAuthorized() const
 {
     return std::holds_alternative<au3cloud::Authorized>(authorization()->authState().val);
 }
 
-QUrl AccountInfoModel::avatarPath() const
+QUrl AccountModel::avatarPath() const
 {
     return muse::io::path_t{ authorization()->accountInfo().avatarPath }.toQUrl();
 }
 
-QString AccountInfoModel::displayName() const
+QString AccountModel::displayName() const
 {
     std::string displayName
         = !authorization()->accountInfo().displayName.empty()
@@ -39,14 +39,23 @@ QString AccountInfoModel::displayName() const
     return QString::fromStdString(displayName);
 }
 
-void AccountInfoModel::signOut() const
+void AccountModel::signOut() const
 {
     authorization()->signOut();
 }
 
-void AccountInfoModel::openAuthorizationDialog() const
+void AccountModel::openSignInDialog() const
 {
     muse::actions::ActionQuery query("audacity://cloud/open-signin-dialog");
+    query.addParam("sync", muse::Val(true));
+    query.addParam("showTourPage", muse::Val(false));
+
+    dispatcher()->dispatch(query);
+}
+
+void AccountModel::openCreateAccountDialog() const
+{
+    muse::actions::ActionQuery query("audacity://cloud/open-create-account-dialog");
     query.addParam("sync", muse::Val(true));
     query.addParam("showTourPage", muse::Val(false));
 

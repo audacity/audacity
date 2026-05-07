@@ -99,7 +99,7 @@ bool Au3LabelsInteraction::addLabelToSelection()
         muse::secs_t playbackPos = playbackState->playbackPosition();
         selectedRegion.setTimes(playbackPos, playbackPos);
     } else if (globalContext()->isRecording()) {
-        muse::secs_t recordPos = globalContext()->recordPosition();
+        muse::secs_t recordPos = playbackState->playbackPosition();
         selectedRegion.setTimes(recordPos, recordPos);
     } else {
         selectedRegion.setTimes(selectionController()->dataSelectedStartTime(),

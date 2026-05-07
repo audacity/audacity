@@ -3,25 +3,42 @@
  */
 #pragma once
 
-#include "effects/builtin/view/builtineffectmodel.h"
+#include "effects/builtin/view/builtineffectinstanceaccess.h"
+#include "effects/effects_base/irealtimeeffectservice.h"
+#include "framework/global/async/asyncable.h"
+#include "framework/global/modularity/ioc.h"
+#include "trackedit/iprojecthistory.h"
+
+#include <QObject>
 
 namespace au::effects {
-class BuiltinEffectSettingModel : public BuiltinEffectModel
+class BuiltinEffectSettingModel : public QObject, public muse::async::Asyncable, public muse::Contextable,
+    public BuiltinEffectInstanceAccess
 {
     Q_OBJECT
+    Q_PROPERTY(EffectInstanceId instanceId READ instanceId CONSTANT FINAL)
     Q_PROPERTY(QString paramId READ paramId WRITE setParamId NOTIFY paramIdChanged FINAL)
     Q_PROPERTY(double value READ value WRITE setValue NOTIFY valueChanged FINAL)
 
     Q_PROPERTY(double min READ min CONSTANT FINAL)
     Q_PROPERTY(double max READ max CONSTANT FINAL)
     Q_PROPERTY(double step READ step CONSTANT FINAL)
+    Q_PROPERTY(int decimals READ decimals CONSTANT FINAL)
     Q_PROPERTY(double defaultValue READ defaultValue CONSTANT FINAL)
     Q_PROPERTY(QString title READ title CONSTANT FINAL)
     Q_PROPERTY(QString unit READ unit CONSTANT FINAL)
 
+    muse::ContextInject<IRealtimeEffectService> realtimeEffectService{ this };
+    muse::ContextInject<trackedit::IProjectHistory> projectHistory{ this };
+
 public:
     BuiltinEffectSettingModel(QObject* parent, int instanceId);
     ~BuiltinEffectSettingModel() override = default;
+
+    Q_INVOKABLE void init();
+    Q_INVOKABLE void commitSettings();
+
+    EffectInstanceId instanceId() const { return m_accessInstanceId; }
 
     QString paramId() const;
     void setParamId(const QString& newParamId);
@@ -32,6 +49,7 @@ public:
     virtual double min() const = 0;
     virtual double max() const = 0;
     virtual double step() const = 0;
+    virtual int decimals() const = 0;
     virtual double defaultValue() const = 0;
     virtual QString title() const = 0;
     virtual QString unit() const = 0;
@@ -42,10 +60,6 @@ signals:
 
 protected:
     QString m_paramId;
-
-private:
-    void doReload() override;
-    void doUpdateSettings() override;
 };
 
 class AbstractBuiltinEffectSettingModelFactory : public QObject

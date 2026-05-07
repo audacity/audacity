@@ -86,6 +86,11 @@ bool TrackeditInteraction::renderClipPitchAndSpeed(const ClipKey& clipKey)
     return withPlaybackStop(&ITrackeditInteraction::renderClipPitchAndSpeed, clipKey);
 }
 
+bool TrackeditInteraction::resetClipPitchAndSpeed(const ClipKey& clipKey)
+{
+    return withPlaybackStop(&ITrackeditInteraction::resetClipPitchAndSpeed, clipKey);
+}
+
 void TrackeditInteraction::clearClipboard()
 {
     return m_interaction->clearClipboard();

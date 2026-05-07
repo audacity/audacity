@@ -32,6 +32,14 @@ struct DtmfSettings
     bool isApplyAllowed() const;
 };
 
+inline bool operator==(const DtmfSettings& a, const DtmfSettings& b)
+{
+    return a.dtmfSequence == b.dtmfSequence && a.dtmfTone == b.dtmfTone && a.dtmfSilence == b.dtmfSilence
+           && a.dtmfDutyCycle == b.dtmfDutyCycle && a.dtmfAmplitude == b.dtmfAmplitude;
+}
+
+inline bool operator!=(const DtmfSettings& a, const DtmfSettings& b) { return !(a == b); }
+
 class DtmfGenerator : public GeneratorEffect, public EffectWithSettings<DtmfSettings, PerTrackEffect>
 {
 public:
@@ -51,7 +59,6 @@ public:
     ComponentInterfaceSymbol GetSymbol() const override;
     TranslatableString GetDescription() const override;
     ManualPageID ManualPage() const override;
-    bool SupportsMultipleClipSelection() const override { return false; }
 
     // EffectDefinitionInterface implementation
 

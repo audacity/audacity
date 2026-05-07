@@ -19,7 +19,6 @@ public:
     ::EffectType GetType() const override;
     EffectGroup GetGroup() const override { return EffectGroup::Special; }
     bool IsInteractive() const override;
-    bool SupportsMultipleClipSelection() const override { return true; }
 
     // Effect implementation
     bool Process(::EffectInstance& instance, ::EffectSettings& settings) override;

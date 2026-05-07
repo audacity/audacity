@@ -14,7 +14,6 @@ public:
     ::EffectType GetType() const override;
     EffectGroup GetGroup() const override { return EffectGroup::Fading; }
     bool IsInteractive() const override;
-    bool SupportsMultipleClipSelection() const override { return true; }
 
     unsigned GetAudioInCount() const override;
     unsigned GetAudioOutCount() const override;

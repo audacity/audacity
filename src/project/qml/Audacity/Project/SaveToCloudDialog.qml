@@ -51,12 +51,12 @@ StyledDialogView {
                 }
                 root.hide()
             } else {
-                model.openAuthorizationDialog()
+                model.openSignInDialog()
             }
         }
     }
 
-    AccountInfoModel {
+    AccountModel {
         id: model
     }
 

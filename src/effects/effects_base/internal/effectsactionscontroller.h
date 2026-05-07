@@ -24,8 +24,7 @@
 
 namespace au::effects {
 class EffectsUiActions;
-class EffectsActionsController : public muse::actions::Actionable, public muse::async::Asyncable, public muse::Contextable,
-    public std::enable_shared_from_this<EffectsActionsController>
+class EffectsActionsController : public muse::actions::Actionable, public muse::async::Asyncable, public muse::Contextable
 {
     muse::GlobalInject<IEffectsConfiguration> configuration;
     muse::GlobalInject<spectrogram::ISpectralEffectsRegister> spectralEffectsRegister;
@@ -63,6 +62,7 @@ private:
     void importPreset(const muse::actions::ActionQuery& q);
     void exportPreset(const muse::actions::ActionQuery& q);
     void toggleVendorUI(const muse::actions::ActionQuery& q);
+    void openPluginManager();
 
     std::shared_ptr<EffectsUiActions> m_uiActions;
     muse::async::Channel<muse::actions::ActionCodeList> m_canReceiveActionsChanged;

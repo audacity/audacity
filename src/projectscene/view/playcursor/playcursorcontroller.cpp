@@ -47,10 +47,6 @@ void PlayCursorController::init()
         updatePositionX(secs);
     });
 
-    globalContext()->recordPositionChanged().onReceive(this, [this](muse::secs_t secs){
-        updatePositionX(secs);
-    });
-
     playbackState()->playbackStatusChanged().onReceive(this, [this](playback::PlaybackStatus status) {
         if (status == playback::PlaybackStatus::Running) {
             clearScrollSuppression(); // so that the cursor is immediately updated when playback starts
@@ -151,12 +147,7 @@ void PlayCursorController::updatePositionX(muse::secs_t secs)
 
 void PlayCursorController::onFrameTimeChanged()
 {
-    double newPosition;
-    if (globalContext()->isRecording() && !recordController()->isLeadInRecording()) {
-        newPosition = m_context->timeToPosition(globalContext()->recordPosition());
-    } else {
-        newPosition = m_context->timeToPosition(playbackState()->playbackPosition());
-    }
+    double newPosition = m_context->timeToPosition(playbackState()->playbackPosition());
 
     if (m_positionX != newPosition) {
         m_positionX = newPosition;

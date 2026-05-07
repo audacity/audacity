@@ -11,7 +11,9 @@ import Audacity.AppShell
 StyledDialogView {
     id: root
 
-    title: qsTrc("appshell/gettingstarted", "Sign in to audio.com")
+    property alias isCreateAccountMode: signinPage.isCreateAccountMode
+
+    title: isCreateAccountMode ? qsTrc("cloud", "Create an account on audio.com") : qsTrc("cloud", "Sign in to audio.com")
 
     contentHeight: content.implicitHeight
     contentWidth: content.implicitWidth

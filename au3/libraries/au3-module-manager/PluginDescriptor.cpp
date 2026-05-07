@@ -212,14 +212,14 @@ void PluginDescriptor::SetEffectLegacy(bool legacy)
     mEffectLegacy = legacy;
 }
 
-bool PluginDescriptor::SupportsMultipleClipSelection() const
+bool PluginDescriptor::ParamsAreInputAgnostic() const
 {
-    return mSupportsMultipleClipSelection;
+    return mParamsAreInputAgnostic;
 }
 
-void PluginDescriptor::SetSupportsMultipleClipSelection(bool supports)
+void PluginDescriptor::SetParamsAreInputAgnostic(bool value)
 {
-    mSupportsMultipleClipSelection = supports;
+    mParamsAreInputAgnostic = value;
 }
 
 void PluginDescriptor::SetRealtimeSupport(

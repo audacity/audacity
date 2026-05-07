@@ -10,11 +10,9 @@ jobs:
     steps:
     - name: Clone repository
       uses: actions/checkout@v6
-
-    - name: Fetch Muse CI scripts
-      run: |
-        cmake -P ./buildscripts/ci/checkcodestyle/ci_fetch.cmake
+      with:
+        submodules: true
 
     - name: Test coding style
       run: |
-        cmake -P ./buildscripts/ci/checkcodestyle/_deps/checkcodestyle.cmake ./src/
+        cmake -P ./muse_framework/buildscripts/ci/checkcodestyle/checkcodestyle.cmake ./src/

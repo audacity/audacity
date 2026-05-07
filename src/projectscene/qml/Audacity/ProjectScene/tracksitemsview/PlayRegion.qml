@@ -18,7 +18,8 @@ Rectangle {
     y: 0
     height: parent.height / 2
 
-    color: active ? ui.theme.extra["play_region_active_color"] : ui.theme.extra["play_region_inactive_color"]
+    color: ui.theme.accentColor
+    opacity: active ? ui.theme.accentOpacityNormal : ui.theme.accentOpacityHover
 
     function updatePosition() {
         let newX = context.timeToPosition(start)

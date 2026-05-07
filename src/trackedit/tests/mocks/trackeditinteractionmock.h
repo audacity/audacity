@@ -30,6 +30,7 @@ public:
     MOCK_METHOD(bool, changeTracksColor, (const TrackIdList&, ClipColorIndex), (override));
     MOCK_METHOD(bool, changeClipOptimizeForVoice, (const ClipKey&, bool), (override));
     MOCK_METHOD(bool, renderClipPitchAndSpeed, (const ClipKey&), (override));
+    MOCK_METHOD(bool, resetClipPitchAndSpeed, (const ClipKey&), (override));
     MOCK_METHOD(void, clearClipboard, (), (override));
     MOCK_METHOD(muse::Ret, pasteFromClipboard, (secs_t, bool, bool), (override));
     MOCK_METHOD(bool, cutClipIntoClipboard, (const ClipKey&), (override));

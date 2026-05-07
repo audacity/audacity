@@ -421,7 +421,7 @@ TEST_F(Au3LabelsInteractionsTests, AddLabelToSelectionWhenRecordingIsActive)
     const double recordPosition = 3.5;
     ON_CALL(*m_globalContext, isRecording())
     .WillByDefault(Return(true));
-    ON_CALL(*m_globalContext, recordPosition())
+    ON_CALL(*m_playbackState, playbackPosition())
     .WillByDefault(Return(recordPosition));
 
     //! [EXPECT] The project is notified about a new label being added but NOT about a new track

@@ -54,36 +54,9 @@ void UiContextResolver::init()
     });
 #endif
 
-    //! TODO AU4
-    // globalContext()->currentProjectChanged().onNotify(this, [this]() {
-    //     auto project = globalContext()->currentProject();
-    //     if (notation) {
-    //         notation->interaction()->selectionChanged().onNotify(this, [this]() {
-    //             notifyAboutContextChanged();
-    //         });
-
-    //         notation->interaction()->textEditingStarted().onNotify(this, [this]() {
-    //             notifyAboutContextChanged();
-    //         });
-
-    //         notation->interaction()->textEditingEnded().onReceive(this, [this](engraving::TextBase*) {
-    //             notifyAboutContextChanged();
-    //         });
-
-    //         notation->undoStack()->stackChanged().onNotify(this, [this]() {
-    //             notifyAboutContextChanged();
-    //         });
-
-    //         notation->interaction()->noteInput()->noteInputStarted().onNotify(this, [this]() {
-    //             notifyAboutContextChanged();
-    //         });
-
-    //         notation->interaction()->noteInput()->noteInputEnded().onNotify(this, [this]() {
-    //             notifyAboutContextChanged();
-    //         });
-    //     }
-    //     notifyAboutContextChanged();
-    // });
+    globalContext()->currentProjectChanged().onNotify(this, [this]() {
+        notifyAboutContextChanged();
+    });
 
     navigationController()->navigationChanged().onNotify(this, [this]() {
         notifyAboutContextChanged();

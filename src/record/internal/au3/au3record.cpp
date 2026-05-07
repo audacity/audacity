@@ -252,13 +252,12 @@ void Au3Record::init()
             origClip->LinkToOtherSource(*pendingClip.get());
             recordedClip->linkedToPendingClip = true;
             recordedClip->deferredClipCreation = false;
+            rebuildRecordingClipKeys();
 
             trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
             prj->notifyAboutClipAdded(DomConverter::clip(origWaveTrack, origClip.get()));
 
-            if (!muse::RealIsEqual(m_recordPosition.val.to_double(), origClip->GetPlayEndTime())) {
-                m_recordPosition.set(origClip->GetPlayEndTime());
-            }
+            m_recordPosition.set(origClip->GetPlayEndTime());
             return;
         }
 
@@ -278,12 +277,15 @@ void Au3Record::init()
             recordedClip->linkedToPendingClip = true;
         }
 
+        // Invalidate waveform cache on the original clip so new audio data gets painted.
+        // MarkChanged() is only called on the pendingClip by the audio engine; the origClip
+        // shares data via LinkToOtherSource but its WaveformPainter cache is never notified.
+        origClip->MarkChanged();
+
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         prj->notifyAboutClipChanged(DomConverter::clip(origWaveTrack, origClip.get()));
 
-        if (!muse::RealIsEqual(m_recordPosition.val.to_double(), origClip->GetPlayEndTime())) {
-            m_recordPosition.set(origClip->GetPlayEndTime());
-        }
+        m_recordPosition.set(origClip->GetPlayEndTime());
     });
 
     audioEngine()->finished().onNotify(this, [this]() {
@@ -329,13 +331,14 @@ void Au3Record::init()
         commitRecording();
 
         muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
-        q.addParam("seekTime", muse::Val(globalContext()->recordPosition()));
+        q.addParam("seekTime", muse::Val(m_recordPosition.val));
         q.addParam("triggerPlay", muse::Val(false));
         dispatcher()->dispatch(q);
 
         auto& pendingTracks = PendingTracks::Get(projectRef());
         pendingTracks.ClearPendingTracks();
         m_recordData.clear();
+        rebuildRecordingClipKeys();
     });
 }
 
@@ -614,9 +617,20 @@ muse::async::Channel<muse::secs_t> Au3Record::recordPositionChanged() const
     return m_recordPosition.ch;
 }
 
-secs_t Au3Record::recordPosition() const
+const std::vector<au::trackedit::ClipKey>& Au3Record::recordingClipKeys() const
 {
-    return m_recordPosition.val;
+    return m_recordingClipKeys;
+}
+
+void Au3Record::rebuildRecordingClipKeys()
+{
+    m_recordingClipKeys.clear();
+    m_recordingClipKeys.reserve(m_recordData.size());
+    for (const auto& rd : m_recordData) {
+        if (!rd.deferredClipCreation) {
+            m_recordingClipKeys.push_back(rd.clipKey);
+        }
+    }
 }
 
 Notification Au3Record::recordingFinished() const
@@ -639,6 +653,8 @@ Ret Au3Record::doRecord(Au3Project& project,
                         std::vector<std::vector<float> >* crossfadeData)
 {
     //! NOTE: copied fromProjectAudioManager::DoRecord
+
+    m_recordPosition.set(t0);
 
     if (audioEngine()->isBusy()) {
         LOGE() << "Audio IO is busy";
@@ -737,6 +753,7 @@ Ret Au3Record::doRecord(Au3Project& project,
                 transportSequences.captureSequences.push_back(pending->SharedPointer<Au3WaveTrack>());
 
                 m_recordData.push_back(RecordData { trackedit::ClipKey(), pendingClip->GetId(), false, true });
+                rebuildRecordingClipKeys();
                 // Don't notify UI — clip will be created on original when recording starts
             } else {
                 // Normal recording: create clip on original track immediately
@@ -765,6 +782,7 @@ Ret Au3Record::doRecord(Au3Project& project,
                 transportSequences.captureSequences.push_back(pending->SharedPointer<Au3WaveTrack>());
 
                 m_recordData.push_back(RecordData { trackedit::ClipKey(wt->GetId(), newClip->GetId()), newClip->GetId(), false, false });
+                rebuildRecordingClipKeys();
 
                 trackedit::Clip _newClip = DomConverter::clip(pending, newClip.get());
                 trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
@@ -882,6 +900,7 @@ Ret Au3Record::doRecord(Au3Project& project,
             transportSequences.captureSequences.push_back(pending->SharedPointer<Au3WaveTrack>());
 
             m_recordData.push_back(RecordData { trackedit::ClipKey(newTrack->GetId(), newClip->GetId()), newClip->GetId(), false, false });
+            rebuildRecordingClipKeys();
 
             trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
             prj->notifyAboutTrackAdded(DomConverter::track(newTrack.get()));

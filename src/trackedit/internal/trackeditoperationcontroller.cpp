@@ -126,6 +126,17 @@ bool TrackeditOperationController::changeClipOptimizeForVoice(const ClipKey& cli
     return clipsInteraction()->changeClipOptimizeForVoice(clipKey, optimize);
 }
 
+bool TrackeditOperationController::resetClipPitchAndSpeed(const ClipKey& clipKey)
+{
+    const bool pitchOk = clipsInteraction()->resetClipPitch(clipKey);
+    const bool speedOk = clipsInteraction()->resetClipSpeed(clipKey);
+    if (pitchOk || speedOk) {
+        projectHistory()->pushHistoryState("Reset Clip Pitch and Speed", "Reset Clip Pitch and Speed");
+        return true;
+    }
+    return false;
+}
+
 bool TrackeditOperationController::renderClipPitchAndSpeed(const ClipKey& clipKey)
 {
     if (clipsInteraction()->renderClipPitchAndSpeed(clipKey)) {

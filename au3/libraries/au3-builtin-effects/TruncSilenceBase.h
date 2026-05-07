@@ -45,7 +45,6 @@ public:
 
     EffectType GetType() const override;
     EffectGroup GetGroup() const override { return EffectGroup::Special; }
-    bool SupportsMultipleClipSelection() const override { return true; }
     bool LoadSettings(
         const CommandParameters& parms, EffectSettings& settings) const override;
 

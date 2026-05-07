@@ -129,7 +129,6 @@ public:
     EffectType GetClassification() const override;
     EffectFamilySymbol GetFamily() const override;
     bool IsInteractive() const override;
-    bool SupportsMultipleClipSelection() const override;
     bool IsDefault() const override;
     bool EnablesDebug() const override;
 

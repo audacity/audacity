@@ -5,3 +5,5 @@ EffectPresetsBar 1.0 EffectPresetsBar.qml
 EffectStyledDialogView 1.0 EffectStyledDialogView.qml
 GeneratedEffectViewer 1.0 GeneratedEffectViewer.qml
 ParameterControl 1.0 ParameterControl.qml
+PluginManagerTopPanel 1.0 PluginManagerTopPanel.qml
+PluginManagerTableView 1.0 PluginManagerTableView.qml

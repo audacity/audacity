@@ -43,7 +43,6 @@ public:
 
     ::EffectType GetType() const override;
     ::EffectGroup GetGroup() const override { return EffectGroup::PitchAndTempo; }
-    bool SupportsMultipleClipSelection() const override { return true; }
 
     // Effect implementation
 

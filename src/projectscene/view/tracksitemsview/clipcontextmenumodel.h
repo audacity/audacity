@@ -35,6 +35,7 @@ signals:
 private:
     void onActionsStateChanges(const muse::actions::ActionCodeList& codes) override;
     void updateStretchEnabledState(muse::uicomponents::MenuItem& item);
+    void updatePitchSpeedModifiedEnabledState(muse::uicomponents::MenuItem& item);
 
     muse::uicomponents::MenuItemList makeClipColourItems();
     void updateColorCheckedState();

@@ -43,6 +43,7 @@ public:
     virtual bool changeTracksColor(const TrackIdList& tracksIds, ClipColorIndex colorIndex) = 0;
     virtual bool changeClipOptimizeForVoice(const ClipKey& clipKey, bool optimize) = 0;
     virtual bool renderClipPitchAndSpeed(const ClipKey& clipKey) = 0;
+    virtual bool resetClipPitchAndSpeed(const ClipKey& clipKey) = 0;
     virtual void clearClipboard() = 0;
     virtual muse::Ret pasteFromClipboard(secs_t begin, bool moveClips, bool moveAllTracks=false) = 0;
     virtual bool cutClipIntoClipboard(const ClipKey& clipKey) = 0;

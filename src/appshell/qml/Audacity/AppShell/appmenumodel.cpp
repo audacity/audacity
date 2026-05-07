@@ -801,7 +801,7 @@ muse::uicomponents::MenuItem* AppMenuModel::makeMenuEffect(const muse::String& t
 MenuItemList AppMenuModel::makeEffectsItems()
 {
     MenuItemList items {
-        makeMenuItem("effect-plugin-manager"),
+        makeMenuItem("plugin-manager"),
         makeMenuItem("add-realtime-effects"),
         makeSeparator(),
         makeMenuItem("repeat-last-effect"),
@@ -819,7 +819,7 @@ MenuItemList AppMenuModel::makeEffectsItems()
 MenuItemList AppMenuModel::makeGeneratorItems()
 {
     MenuItemList items {
-        makeMenuItem("generate-plugin-manager"),
+        makeMenuItem("plugin-manager"),
         makeSeparator(),
     };
 
@@ -834,7 +834,7 @@ MenuItemList AppMenuModel::makeGeneratorItems()
 MenuItemList AppMenuModel::makeToolItems()
 {
     MenuItemList items {
-        makeMenuItem("tools-plugin-manager"),
+        makeMenuItem("plugin-manager"),
         makeSeparator(),
         makeMenuItem("manage-macros"),
         makeMenu(TranslatableString("appshell/menu/macros", "&Macros"), makeMacrosItems(), "menu-macros", false),
@@ -860,7 +860,7 @@ MenuItemList AppMenuModel::makeToolItems()
 MenuItemList AppMenuModel::makeAnalyzeItems()
 {
     MenuItemList items {
-        makeMenuItem("analyze-plugin-manager"),
+        makeMenuItem("plugin-manager"),
         makeSeparator(),
         makeMenuItem("contrast-analyzer"),
         makeMenuItem("plot-spectrum"),

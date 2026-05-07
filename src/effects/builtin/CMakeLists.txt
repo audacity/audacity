@@ -20,6 +20,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/builtineffectsscanner.h
 
     # view
+    ${CMAKE_CURRENT_LIST_DIR}/view/builtineffectinstanceaccess.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/builtineffectinstanceaccess.h
     ${CMAKE_CURRENT_LIST_DIR}/view/builtineffectmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/builtineffectmodel.h
     ${CMAKE_CURRENT_LIST_DIR}/view/builtineffectviewloader.cpp

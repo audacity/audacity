@@ -10,6 +10,8 @@ qt_add_qml_module(appshell_qml
         appmenumodel.h
         DevTools/Settings/settingslistmodel.cpp
         DevTools/Settings/settingslistmodel.h
+        DevTools/Table/tabletestsmodel.cpp
+        DevTools/Table/tabletestsmodel.h
         FirstLaunchSetup/clipvisualizationpagemodel.cpp
         FirstLaunchSetup/clipvisualizationpagemodel.h
         FirstLaunchSetup/firstlaunchsetupmodel.cpp
@@ -53,6 +55,7 @@ qt_add_qml_module(appshell_qml
         DevTools/KeyNav/KeyNavSection.qml
         DevTools/KeyNav/KeyNavSubSection.qml
         DevTools/Preferences/SettingsPage.qml
+        DevTools/Table/TableTests.qml
         DevTools/ToastNotification/ToastNotificationTests.qml
         FirstLaunchSetup/ClipVisualizationPage.qml
         FirstLaunchSetup/DoublePage.qml
@@ -148,6 +151,7 @@ fixup_qml_module_dependencies(appshell_qml)
 # Necessary for the auto-generated sources
 target_include_directories(appshell_qml PRIVATE
     DevTools/Settings
+    DevTools/Table
     FirstLaunchSetup
     PublishPage
 )

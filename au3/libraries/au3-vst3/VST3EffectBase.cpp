@@ -102,11 +102,6 @@ bool VST3EffectBase::SupportsAutomation() const
     return true;
 }
 
-bool VST3EffectBase::SupportsMultipleClipSelection() const
-{
-    return true;
-}
-
 bool VST3EffectBase::SaveSettings(
     const EffectSettings& settings, CommandParameters& parms) const
 {
