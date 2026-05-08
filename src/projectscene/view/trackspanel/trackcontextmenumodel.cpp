@@ -162,6 +162,11 @@ void TrackContextMenuModel::load()
     updateTrackRateState();
     updateTrackMonoState();
     updateTrackViewCheckedState();
+    updateRecordingState();
+
+    globalContext()->isRecordingChanged().onNotify(this, [this]() {
+        updateRecordingState();
+    }, muse::async::Asyncable::Mode::SetReplace);
 }
 
 au::trackedit::TrackId TrackContextMenuModel::trackId() const
@@ -411,6 +416,25 @@ void TrackContextMenuModel::updateTrackMonoState()
     auto state = makeStereoItem.state();
     state.enabled = canMakeStereo;
     makeStereoItem.setState(state);
+}
+
+void TrackContextMenuModel::updateRecordingState()
+{
+    bool recording = globalContext()->isRecording();
+
+    MenuItem& formatMenu = findMenu(QString::fromUtf8(TRACK_FORMAT_MENU_ID));
+    if (formatMenu.isValid()) {
+        auto state = formatMenu.state();
+        state.enabled = !recording;
+        formatMenu.setState(state);
+    }
+
+    MenuItem& rateMenu = findMenu(QString::fromUtf8(TRACK_RATE_MENU_ID));
+    if (rateMenu.isValid()) {
+        auto state = rateMenu.state();
+        state.enabled = !recording;
+        rateMenu.setState(state);
+    }
 }
 
 muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackColorItems()
