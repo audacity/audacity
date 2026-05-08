@@ -6,6 +6,8 @@ set( TARGET mod-cvsd )
 
 set( SOURCES
         ImportCVSD.cpp
+        ExportCVSD.cpp
+        CVSD.h
         CVSD.cpp
 )
 
