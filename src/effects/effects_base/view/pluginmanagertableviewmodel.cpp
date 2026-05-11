@@ -312,10 +312,7 @@ void PluginManagerTableViewModel::rescanPlugins()
         });
     }
 
-    const auto excludeFromScan = [this](const EffectMeta& meta) {
-        return !m_acceptFamily(meta) || !m_acceptType(meta);
-    };
-    effectsProvider()->rescanPlugins(iocContext(), *interactive(), *registerAudioPluginsScenario(), excludeFromScan);
+    effectsProvider()->rescanPlugins(iocContext(), *interactive(), *registerAudioPluginsScenario());
 
     rebuildSourceTable(effectsProvider()->effectMetaList());
 }

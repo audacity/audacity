@@ -6,7 +6,7 @@
 #include <QCoreApplication>
 
 #include "modularity/ioc.h"
-#include "audioplugins/iregisteraudiopluginsscenario.h"
+#include "framework/audioplugins/iregisteraudiopluginsscenario.h"
 #include "types/ret.h"
 
 #include "log.h"

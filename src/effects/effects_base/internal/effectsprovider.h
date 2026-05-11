@@ -54,8 +54,7 @@ public:
     bool hasEffectFamily(EffectFamily family) const override;
 
     void rescanPlugins(const muse::modularity::ContextPtr& ctx, muse::IInteractive& interactive,
-                       muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
-                       const EffectFilter& exclude = nullptr) override;
+                       muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario) override;
     void forgetPlugins(const EffectFilter& forget = nullptr) override;
     void save() override;
 
@@ -70,7 +69,7 @@ private:
 
     NewPluginsRegistered doScanPlugins(const muse::modularity::ContextPtr& ctx,
                                        muse::audioplugins::IRegisterAudioPluginsScenario& registerAudioPluginsScenario,
-                                       const std::function<bool()>& doScanThirdPartyPlugins = nullptr, const EffectFilter& accept = nullptr);
+                                       const std::function<bool()>& doScanThirdPartyPlugins = nullptr);
     void doSave(EffectFilter removeFromConfig = nullptr);
 
     EffectMetaList m_effects;

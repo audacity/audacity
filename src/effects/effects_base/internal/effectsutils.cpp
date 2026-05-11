@@ -5,6 +5,12 @@
 #include "effectsutils.h"
 #include "effectstypes.h"
 
+#include "effects/vst/internal/vsttypes.h"
+#include "effects/audio_unit/internal/audiounittypes.h"
+#include "effects/lv2/internal/lv2types.h"
+#include "effects/nyquist/internal/nyquisttypes.h"
+#include "effects/builtin/internal/builtintypes.h"
+
 #include "au3-components/EffectInterface.h"
 
 #include "framework/global/log.h"
@@ -52,6 +58,54 @@ EffectFamily utils::effectFamilyFromString(const muse::String& family)
     }
     assert(false);
     return EffectFamily::Unknown;
+}
+
+std::string utils::effectFamilyToCacheType(EffectFamily family)
+{
+    switch (family) {
+    case EffectFamily::VST3:      return std::string(vst::AUDIO_RESOURCE_TYPE_NAME);
+#ifdef Q_OS_MACOS
+    case EffectFamily::AudioUnit: return std::string(audio_unit::AUDIO_RESOURCE_TYPE_NAME);
+#endif
+#ifdef Q_OS_LINUX
+    case EffectFamily::LV2:       return std::string(lv2::AUDIO_RESOURCE_TYPE_NAME);
+#endif
+    case EffectFamily::Nyquist:   return std::string(nyquist::AUDIO_RESOURCE_TYPE_NAME);
+    case EffectFamily::Builtin:   return std::string(builtin::AUDIO_RESOURCE_TYPE_NAME);
+    case EffectFamily::Unknown:
+    case EffectFamily::_count:
+        break;
+    }
+    return {};
+}
+
+EffectFamily utils::effectFamilyFromCacheType(const std::string& cacheType)
+{
+    if (cacheType == vst::AUDIO_RESOURCE_TYPE_NAME) {
+        return EffectFamily::VST3;
+    }
+#ifdef Q_OS_MACOS
+    if (cacheType == audio_unit::AUDIO_RESOURCE_TYPE_NAME) {
+        return EffectFamily::AudioUnit;
+    }
+#endif
+#ifdef Q_OS_LINUX
+    if (cacheType == lv2::AUDIO_RESOURCE_TYPE_NAME) {
+        return EffectFamily::LV2;
+    }
+#endif
+    if (cacheType == nyquist::AUDIO_RESOURCE_TYPE_NAME) {
+        return EffectFamily::Nyquist;
+    }
+    if (cacheType == builtin::AUDIO_RESOURCE_TYPE_NAME) {
+        return EffectFamily::Builtin;
+    }
+    return EffectFamily::Unknown;
+}
+
+bool utils::isFamilyType(const muse::audioplugins::PluginMeta& meta, EffectFamily family)
+{
+    return utils::effectFamilyFromCacheType(meta.type) == family;
 }
 
 namespace {
@@ -220,13 +274,13 @@ EffectType utils::effectTypeFromString(const muse::String& type)
     return EffectType::Unknown;
 }
 
-muse::audio::AudioResourceMeta utils::auToMuseEffectMeta(const EffectMeta& meta)
+muse::audioplugins::PluginMeta utils::auToMuseEffectMeta(const EffectMeta& meta)
 {
-    muse::audio::AudioResourceMeta museMeta;
+    muse::audioplugins::PluginMeta museMeta;
     // Use the AU3 plugin ID (same as Audio Unit does)
     // This is necessary for looking up the plugin in PluginManager later
     museMeta.id = meta.id.toStdString();
-    museMeta.type = toMuseAudioResourceType(meta.family);
+    museMeta.type = utils::effectFamilyToCacheType(meta.family);
     museMeta.vendor = meta.vendor.toStdString();
 
     // Add attributes using the map interface
@@ -258,33 +312,37 @@ bool value<bool>(const muse::String& str)
 }
 
 template<typename T = muse::String>
-T attributeValue(const muse::audio::AudioResourceMeta& meta, const muse::String& key, bool enabled)
+T attributeValue(const muse::audioplugins::PluginMeta& meta, const muse::String& key, bool isLoadable)
 {
     const auto valStr = meta.attributeVal(key);
-    IF_ASSERT_FAILED(!enabled || !valStr.empty()) {
+    IF_ASSERT_FAILED(!isLoadable || !valStr.empty()) {
         return {};
     }
     return value<T>(valStr);
 }
 }
 
-EffectMeta utils::museToAuEffectMeta(const muse::io::path_t& path, const muse::audio::AudioResourceMeta& meta, bool enabled)
+EffectMeta utils::museToAuEffectMeta(const muse::io::path_t& path, const muse::audioplugins::PluginMeta& meta,
+                                     muse::audioplugins::AudioPluginState state)
 {
+    // only Validated entries are guaranteed complete meta; gate the asserts on that
+    const bool isLoadable = (state == muse::audioplugins::AudioPluginState::Validated);
+
     EffectMeta effectMeta;
     effectMeta.path = path;
     effectMeta.id = muse::String::fromStdString(meta.id);
-    effectMeta.family = fromMuseAudioResourceType(meta.type);
+    effectMeta.family = utils::effectFamilyFromCacheType(meta.type);
     effectMeta.vendor = muse::String::fromStdString(meta.vendor);
-    effectMeta.type = utils::effectTypeFromString(attributeValue(meta, EFFECT_TYPE_ATTRIBUTE, enabled));
-    effectMeta.title = attributeValue(meta, EFFECT_TITLE_ATTRIBUTE, enabled);
-    effectMeta.description = effectMeta.title; // TODO use attributeValue(meta, EFFECT_DESCRIPTION_ATTRIBUTE, enabled);
-    effectMeta.category = attributeValue(meta, EFFECT_CATEGORY_ATTRIBUTE, enabled);
-    effectMeta.isRealtimeCapable = attributeValue<bool>(meta, EFFECT_IS_REALTIME_CAPABLE_ATTRIBUTE, enabled);
-    effectMeta.paramsAreInputAgnostic = attributeValue<bool>(meta, EFFECT_PARAMS_ARE_INPUT_AGNOSTIC_ATTRIBUTE, enabled);
-    effectMeta.version = attributeValue(meta, EFFECT_VERSION_ATTRIBUTE, enabled);
-    effectMeta.module = attributeValue(meta, EFFECT_MODULE_ATTRIBUTE, enabled);
-    effectMeta.isActivated = attributeValue<bool>(meta, EFFECT_ACTIVATED_ATTRIBUTE, enabled);
-    effectMeta.isLoadable = enabled;
+    effectMeta.type = utils::effectTypeFromString(attributeValue(meta, EFFECT_TYPE_ATTRIBUTE, isLoadable));
+    effectMeta.title = attributeValue(meta, EFFECT_TITLE_ATTRIBUTE, isLoadable);
+    effectMeta.description = effectMeta.title; // TODO use attributeValue(meta, EFFECT_DESCRIPTION_ATTRIBUTE, isLoadable);
+    effectMeta.category = attributeValue(meta, EFFECT_CATEGORY_ATTRIBUTE, isLoadable);
+    effectMeta.isRealtimeCapable = attributeValue<bool>(meta, EFFECT_IS_REALTIME_CAPABLE_ATTRIBUTE, isLoadable);
+    effectMeta.paramsAreInputAgnostic = attributeValue<bool>(meta, EFFECT_PARAMS_ARE_INPUT_AGNOSTIC_ATTRIBUTE, isLoadable);
+    effectMeta.version = attributeValue(meta, EFFECT_VERSION_ATTRIBUTE, isLoadable);
+    effectMeta.module = attributeValue(meta, EFFECT_MODULE_ATTRIBUTE, isLoadable);
+    effectMeta.isActivated = attributeValue<bool>(meta, EFFECT_ACTIVATED_ATTRIBUTE, isLoadable);
+    effectMeta.state = state;
 
     return effectMeta;
 }
@@ -513,7 +571,7 @@ MenuItemList makeFlatList(const EffectMetaList& effects, IEffectMenuItemFactory&
 void removeAlsoDisabledEffects(EffectMetaList& effects, const utils::EffectFilter& filter)
 {
     effects.erase(std::remove_if(effects.begin(), effects.end(), [&](const EffectMeta& meta) {
-        return !meta.isLoadable || !meta.isActivated || filter(meta);
+        return !meta.isLoadable() || !meta.isActivated || filter(meta);
     }), effects.end());
 }
 } // namespace
