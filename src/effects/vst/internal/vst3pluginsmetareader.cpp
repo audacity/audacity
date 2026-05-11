@@ -4,20 +4,21 @@
 
 #include "vst3pluginsmetareader.h"
 
+#include "internal/vsttypes.h"
+
 using namespace au::effects;
-using namespace muse;
 
 Vst3PluginsMetaReader::Vst3PluginsMetaReader()
     : Au3AudioPluginMetaReader{m_module}
 {
 }
 
-bool Vst3PluginsMetaReader::canReadMeta(const io::path_t& pluginPath) const
+bool Vst3PluginsMetaReader::canReadMeta(const muse::io::path_t& pluginPath) const
 {
-    return io::suffix(pluginPath) == "vst3";
+    return muse::io::suffix(pluginPath) == "vst3";
 }
 
-audioplugins::AudioResourceType Vst3PluginsMetaReader::metaType() const
+muse::audioplugins::AudioResourceType Vst3PluginsMetaReader::metaType() const
 {
-    return "VstPlugin";
+    return std::string(vst::AUDIO_RESOURCE_TYPE_NAME);
 }

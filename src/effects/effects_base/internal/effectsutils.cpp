@@ -3,6 +3,7 @@
  */
 
 #include "effectsutils.h"
+#include "effectsbridge.h"
 #include "effectstypes.h"
 
 #include "au3-components/EffectInterface.h"
@@ -220,13 +221,13 @@ EffectType utils::effectTypeFromString(const muse::String& type)
     return EffectType::Unknown;
 }
 
-muse::audio::AudioResourceMeta utils::auToMuseEffectMeta(const EffectMeta& meta)
+muse::audioplugins::AudioResourceMeta utils::auToMuseEffectMeta(const EffectMeta& meta)
 {
-    muse::audio::AudioResourceMeta museMeta;
+    muse::audioplugins::AudioResourceMeta museMeta;
     // Use the AU3 plugin ID (same as Audio Unit does)
     // This is necessary for looking up the plugin in PluginManager later
     museMeta.id = meta.id.toStdString();
-    museMeta.type = toMuseAudioResourceType(meta.family);
+    museMeta.type = toWireString(meta.family);
     museMeta.vendor = meta.vendor.toStdString();
 
     // Add attributes using the map interface
@@ -258,33 +259,33 @@ bool value<bool>(const muse::String& str)
 }
 
 template<typename T = muse::String>
-T attributeValue(const muse::audio::AudioResourceMeta& meta, const muse::String& key, bool enabled)
+T attributeValue(const muse::audioplugins::AudioResourceMeta& meta, const muse::String& key, bool isLoadable)
 {
     const auto valStr = meta.attributeVal(key);
-    IF_ASSERT_FAILED(!enabled || !valStr.empty()) {
+    IF_ASSERT_FAILED(!isLoadable || !valStr.empty()) {
         return {};
     }
     return value<T>(valStr);
 }
 }
 
-EffectMeta utils::museToAuEffectMeta(const muse::io::path_t& path, const muse::audio::AudioResourceMeta& meta, bool enabled)
+EffectMeta utils::museToAuEffectMeta(const muse::io::path_t& path, const muse::audioplugins::AudioResourceMeta& meta, bool isLoadable)
 {
     EffectMeta effectMeta;
     effectMeta.path = path;
     effectMeta.id = muse::String::fromStdString(meta.id);
-    effectMeta.family = fromMuseAudioResourceType(meta.type);
+    effectMeta.family = fromWireString(meta.type);
     effectMeta.vendor = muse::String::fromStdString(meta.vendor);
-    effectMeta.type = utils::effectTypeFromString(attributeValue(meta, EFFECT_TYPE_ATTRIBUTE, enabled));
-    effectMeta.title = attributeValue(meta, EFFECT_TITLE_ATTRIBUTE, enabled);
-    effectMeta.description = effectMeta.title; // TODO use attributeValue(meta, EFFECT_DESCRIPTION_ATTRIBUTE, enabled);
-    effectMeta.category = attributeValue(meta, EFFECT_CATEGORY_ATTRIBUTE, enabled);
-    effectMeta.isRealtimeCapable = attributeValue<bool>(meta, EFFECT_IS_REALTIME_CAPABLE_ATTRIBUTE, enabled);
-    effectMeta.paramsAreInputAgnostic = attributeValue<bool>(meta, EFFECT_PARAMS_ARE_INPUT_AGNOSTIC_ATTRIBUTE, enabled);
-    effectMeta.version = attributeValue(meta, EFFECT_VERSION_ATTRIBUTE, enabled);
-    effectMeta.module = attributeValue(meta, EFFECT_MODULE_ATTRIBUTE, enabled);
-    effectMeta.isActivated = attributeValue<bool>(meta, EFFECT_ACTIVATED_ATTRIBUTE, enabled);
-    effectMeta.isLoadable = enabled;
+    effectMeta.type = utils::effectTypeFromString(attributeValue(meta, EFFECT_TYPE_ATTRIBUTE, isLoadable));
+    effectMeta.title = attributeValue(meta, EFFECT_TITLE_ATTRIBUTE, isLoadable);
+    effectMeta.description = effectMeta.title; // TODO use attributeValue(meta, EFFECT_DESCRIPTION_ATTRIBUTE, isLoadable);
+    effectMeta.category = attributeValue(meta, EFFECT_CATEGORY_ATTRIBUTE, isLoadable);
+    effectMeta.isRealtimeCapable = attributeValue<bool>(meta, EFFECT_IS_REALTIME_CAPABLE_ATTRIBUTE, isLoadable);
+    effectMeta.paramsAreInputAgnostic = attributeValue<bool>(meta, EFFECT_PARAMS_ARE_INPUT_AGNOSTIC_ATTRIBUTE, isLoadable);
+    effectMeta.version = attributeValue(meta, EFFECT_VERSION_ATTRIBUTE, isLoadable);
+    effectMeta.module = attributeValue(meta, EFFECT_MODULE_ATTRIBUTE, isLoadable);
+    effectMeta.isActivated = attributeValue<bool>(meta, EFFECT_ACTIVATED_ATTRIBUTE, isLoadable);
+    effectMeta.isLoadable = isLoadable;
 
     return effectMeta;
 }

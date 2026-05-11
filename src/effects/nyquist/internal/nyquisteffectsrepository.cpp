@@ -3,6 +3,7 @@
 */
 #include "nyquisteffectsrepository.h"
 
+#include "effects/effects_base/internal/effectsbridge.h"
 #include "effects/effects_base/internal/effectsutils.h"
 #include "effects/effects_base/effectstypes.h"
 #include "au3wrap/internal/wxtypes_convert.h"
@@ -11,7 +12,7 @@
 #include "spectrogram/spectrogramtypes.h"
 
 au::effects::NyquistEffectsRepository::NyquistEffectsRepository()
-    : m_loader{m_module, muse::audio::AudioResourceType::NyquistPlugin}
+    : m_loader{m_module, EffectFamily::Nyquist}
 {
 }
 
@@ -69,15 +70,13 @@ void au::effects::NyquistEffectsRepository::registerSpectralEffects()
 au::effects::EffectMetaList au::effects::NyquistEffectsRepository::effectMetaList() const
 {
     using namespace muse::audioplugins;
-    using namespace muse::audio;
 
     EffectMetaList effects;
 
     const std::vector<AudioPluginInfo> allEffects = knownPlugins()->pluginInfoList();
 
-    const std::string& nyquistTypeName = resourceTypeName(muse::audio::AudioResourceType::NyquistPlugin);
     for (const AudioPluginInfo& info : allEffects) {
-        if (info.meta.type != nyquistTypeName) {
+        if (!isResourceType(info.meta, EffectFamily::Nyquist)) {
             continue;
         }
 

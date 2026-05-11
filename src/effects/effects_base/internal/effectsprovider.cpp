@@ -2,6 +2,7 @@
 * Audacity: A Digital Audio Editor
 */
 #include "effectsprovider.h"
+#include "effectsbridge.h"
 #include "effectsutils.h"
 
 #include "au3-basic-ui/BasicUI.h"
@@ -143,7 +144,8 @@ EffectsProvider::NewPluginsRegistered EffectsProvider::doScanPlugins(
         const auto& reader = pathToMetaReader.at(*it);
         const auto metaType = reader->metaType();
 
-        const bool isAudacityPlugin = metaType == "NyquistPlugin" || metaType == "NativeEffect";
+        const EffectFamily family = fromWireString(metaType);
+        const bool isAudacityPlugin = family == EffectFamily::Nyquist || family == EffectFamily::Builtin;
         if (isAudacityPlugin) {
             audacityPluginPaths.push_back(*it);
             it = thirdPartyPluginPaths.erase(it);
@@ -178,8 +180,8 @@ void EffectsProvider::reloadEffects()
     const auto knownPlugins = knownPluginsRegister()->pluginInfoList();
     std::transform(knownPlugins.begin(), knownPlugins.end(), std::back_inserter(m_effects),
                    [](const muse::audioplugins::AudioPluginInfo& info) {
-        const bool usable = info.state == muse::audioplugins::AudioPluginState::Validated;
-        return utils::museToAuEffectMeta(info.path, info.meta, usable);
+        const bool isLoadable = info.state == muse::audioplugins::AudioPluginState::Validated;
+        return utils::museToAuEffectMeta(info.path, info.meta, isLoadable);
     });
 
     m_effectsChanged.notify();

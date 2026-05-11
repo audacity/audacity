@@ -8,7 +8,7 @@
 
 #include "au3-audio-unit/AudioUnitEffectsModule.h"
 
-using namespace muse::audio;
+#include "audiounittypes.h"
 
 au::effects::AudioUnitPluginsMetaReader::AudioUnitPluginsMetaReader()
     : Au3AudioPluginMetaReader(m_module)
@@ -17,7 +17,7 @@ au::effects::AudioUnitPluginsMetaReader::AudioUnitPluginsMetaReader()
 
 muse::audioplugins::AudioResourceType au::effects::AudioUnitPluginsMetaReader::metaType() const
 {
-    return "AudioUnit";
+    return std::string(au::effects::audio_unit::AUDIO_RESOURCE_TYPE_NAME);
 }
 
 bool au::effects::AudioUnitPluginsMetaReader::canReadMeta(const muse::io::path_t& path) const

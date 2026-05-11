@@ -12,7 +12,7 @@ class Lv2EffectLoader final : public Au3EffectLoader
 {
 public:
     Lv2EffectLoader()
-        : Au3EffectLoader(m_module, muse::audio::AudioResourceType::Lv2Plugin) {}
+        : Au3EffectLoader(m_module, EffectFamily::LV2) {}
 
 private:
     void doInit() override

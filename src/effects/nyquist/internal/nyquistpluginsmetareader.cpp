@@ -4,6 +4,8 @@
 
 #include "nyquistpluginsmetareader.h"
 
+#include "nyquisttypes.h"
+
 using namespace au::effects;
 using namespace muse;
 
@@ -25,5 +27,5 @@ bool NyquistPluginsMetaReader::canReadMeta(const io::path_t& pluginPath) const
 
 audioplugins::AudioResourceType NyquistPluginsMetaReader::metaType() const
 {
-    return "NyquistPlugin";
+    return std::string(nyquist::AUDIO_RESOURCE_TYPE_NAME);
 }
