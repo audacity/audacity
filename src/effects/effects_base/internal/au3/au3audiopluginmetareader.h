@@ -1,6 +1,6 @@
 #pragma once
 
-#include "audioplugins/iaudiopluginmetareader.h"
+#include "framework/audioplugins/iaudiopluginmetareader.h"
 #include "global/iapplication.h"
 
 class PluginProvider;
