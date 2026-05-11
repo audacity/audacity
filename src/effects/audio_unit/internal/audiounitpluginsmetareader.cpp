@@ -15,9 +15,9 @@ au::effects::AudioUnitPluginsMetaReader::AudioUnitPluginsMetaReader()
 {
 }
 
-AudioResourceType au::effects::AudioUnitPluginsMetaReader::metaType() const
+muse::audioplugins::AudioResourceType au::effects::AudioUnitPluginsMetaReader::metaType() const
 {
-    return AudioResourceType::AudioUnit;
+    return "AudioUnit";
 }
 
 bool au::effects::AudioUnitPluginsMetaReader::canReadMeta(const muse::io::path_t& path) const

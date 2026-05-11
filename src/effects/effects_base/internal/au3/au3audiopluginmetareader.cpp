@@ -38,7 +38,7 @@ void Au3AudioPluginMetaReader::deinit()
     m_terminated = true;
 }
 
-muse::RetVal<muse::audio::AudioResourceMetaList> Au3AudioPluginMetaReader::readMeta(const muse::io::path_t& pluginPath) const
+muse::RetVal<muse::audioplugins::AudioResourceMetaList> Au3AudioPluginMetaReader::readMeta(const muse::io::path_t& pluginPath) const
 {
     IF_ASSERT_FAILED(m_initialized && !m_terminated) {
         return make_ret(muse::Ret::Code::InternalError);
@@ -113,12 +113,12 @@ muse::RetVal<muse::audio::AudioResourceMetaList> Au3AudioPluginMetaReader::readM
         return effects::make_ret(effects::Err::EffectLoadFailed);
     }
 
-    muse::audio::AudioResourceMetaList metaList;
+    muse::audioplugins::AudioResourceMetaList metaList;
     metaList.reserve(descriptors.size());
     for (const PluginDescriptor& desc : descriptors) {
         metaList.emplace_back(utils::auToMuseEffectMeta(toEffectMeta(desc)));
     }
 
-    return muse::RetVal<muse::audio::AudioResourceMetaList>::make_ok(metaList);
+    return muse::RetVal<muse::audioplugins::AudioResourceMetaList>::make_ok(metaList);
 }
 }

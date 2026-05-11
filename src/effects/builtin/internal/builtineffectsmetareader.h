@@ -13,7 +13,7 @@ class BuiltinEffectsMetaReader : public Au3AudioPluginMetaReader
 public:
     BuiltinEffectsMetaReader();
 
-    muse::audio::AudioResourceType metaType() const override;
+    muse::audioplugins::AudioResourceType metaType() const override;
     bool canReadMeta(const muse::io::path_t& pluginPath) const override;
 
 private:

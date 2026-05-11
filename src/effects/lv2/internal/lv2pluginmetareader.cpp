@@ -8,9 +8,9 @@ namespace au::effects {
 Lv2PluginMetaReader::Lv2PluginMetaReader()
     : Au3AudioPluginMetaReader{m_module} {}
 
-muse::audio::AudioResourceType Lv2PluginMetaReader::metaType() const
+muse::audioplugins::AudioResourceType Lv2PluginMetaReader::metaType() const
 {
-    return muse::audio::AudioResourceType::Lv2Plugin;
+    return "Lv2Plugin";
 }
 
 void Lv2PluginMetaReader::doInit()

@@ -74,13 +74,14 @@ bool Au3EffectLoader::ensurePluginIsLoaded(const EffectId& effectId)
         LOGE() << "plugin not in registry: " << effectId;
         return false;
     }
-    if (!it->enabled) {
-        LOGW() << "plugin disabled: " << effectId;
+    if (it->state != muse::audioplugins::AudioPluginState::Validated) {
+        LOGW() << "plugin not validated: " << effectId;
         return false;
     }
-    if (it->meta.type != m_resourceType) {
-        LOGE() << "Effect families don't match: expected " << static_cast<int>(m_resourceType)
-               << ", got " << static_cast<int>(it->meta.type);
+    const std::string& expectedType = muse::audio::resourceTypeName(m_resourceType);
+    if (it->meta.type != expectedType) {
+        LOGE() << "Effect families don't match: expected " << expectedType
+               << ", got " << it->meta.type;
         return false;
     }
     const muse::io::path_t& path = it->path;

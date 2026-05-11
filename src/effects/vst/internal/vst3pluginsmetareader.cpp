@@ -17,7 +17,7 @@ bool Vst3PluginsMetaReader::canReadMeta(const io::path_t& pluginPath) const
     return io::suffix(pluginPath) == "vst3";
 }
 
-audio::AudioResourceType Vst3PluginsMetaReader::metaType() const
+audioplugins::AudioResourceType Vst3PluginsMetaReader::metaType() const
 {
-    return audio::AudioResourceType::VstPlugin;
+    return "VstPlugin";
 }

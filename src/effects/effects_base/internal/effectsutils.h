@@ -42,29 +42,31 @@ EffectFamily effectFamilyFromString(const muse::String& family);
 muse::audio::AudioResourceMeta auToMuseEffectMeta(const EffectMeta& meta);
 EffectMeta museToAuEffectMeta(const muse::io::path_t& path, const muse::audio::AudioResourceMeta& meta, bool enabled = true);
 
-// TODO: may `EffectFamily` be superseded by `AudioResourceType`?
-constexpr muse::audio::AudioResourceType toMuseAudioResourceType(EffectFamily family)
+// Maps Audacity's EffectFamily to the audioplugins string identifier used by
+// AudioResourceMeta::type. Mirrors muse::audio::resourceTypeName for the
+// engine-side enum.
+inline muse::audioplugins::AudioResourceType toMuseAudioResourceType(EffectFamily family)
 {
     switch (family) {
-    case EffectFamily::VST3: return muse::audio::AudioResourceType::VstPlugin;
+    case EffectFamily::VST3: return muse::audio::resourceTypeName(muse::audio::AudioResourceType::VstPlugin);
 #ifdef Q_OS_LINUX
-    case EffectFamily::LV2: return muse::audio::AudioResourceType::Lv2Plugin;
+    case EffectFamily::LV2: return muse::audio::resourceTypeName(muse::audio::AudioResourceType::Lv2Plugin);
 #endif
 #ifdef Q_OS_MACOS
-    case EffectFamily::AudioUnit: return muse::audio::AudioResourceType::AudioUnit;
+    case EffectFamily::AudioUnit: return muse::audio::resourceTypeName(muse::audio::AudioResourceType::AudioUnit);
 #endif
-    case EffectFamily::Nyquist: return muse::audio::AudioResourceType::NyquistPlugin;
-    case EffectFamily::Builtin: return muse::audio::AudioResourceType::NativeEffect;
-    case EffectFamily::Unknown: return muse::audio::AudioResourceType::Undefined;
+    case EffectFamily::Nyquist: return muse::audio::resourceTypeName(muse::audio::AudioResourceType::NyquistPlugin);
+    case EffectFamily::Builtin: return muse::audio::resourceTypeName(muse::audio::AudioResourceType::NativeEffect);
+    case EffectFamily::Unknown: return {};
     default:
         assert(false);
-        return muse::audio::AudioResourceType::Undefined;
+        return {};
     }
 }
 
-constexpr EffectFamily fromMuseAudioResourceType(muse::audio::AudioResourceType type)
+inline EffectFamily fromMuseAudioResourceType(const muse::audioplugins::AudioResourceType& type)
 {
-    switch (type) {
+    switch (muse::audio::resourceTypeFromString(type)) {
     case muse::audio::AudioResourceType::VstPlugin: return EffectFamily::VST3;
 #ifdef Q_OS_LINUX
     case muse::audio::AudioResourceType::Lv2Plugin: return EffectFamily::LV2;

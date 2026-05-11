@@ -7,6 +7,7 @@
 
 #include "au3-components/ComponentInterface.h"
 
+#include "framework/audio/common/audiotypes.h"
 #include "framework/audioplugins/iknownaudiopluginsregister.h"
 #include "framework/global/modularity/ioc.h"
 

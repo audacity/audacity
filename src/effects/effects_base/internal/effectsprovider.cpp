@@ -143,8 +143,7 @@ EffectsProvider::NewPluginsRegistered EffectsProvider::doScanPlugins(
         const auto& reader = pathToMetaReader.at(*it);
         const auto metaType = reader->metaType();
 
-        using namespace muse::audio;
-        const auto isAudacityPlugin = metaType == AudioResourceType::NyquistPlugin || metaType == AudioResourceType::NativeEffect;
+        const bool isAudacityPlugin = metaType == "NyquistPlugin" || metaType == "NativeEffect";
         if (isAudacityPlugin) {
             audacityPluginPaths.push_back(*it);
             it = thirdPartyPluginPaths.erase(it);
@@ -179,7 +178,8 @@ void EffectsProvider::reloadEffects()
     const auto knownPlugins = knownPluginsRegister()->pluginInfoList();
     std::transform(knownPlugins.begin(), knownPlugins.end(), std::back_inserter(m_effects),
                    [](const muse::audioplugins::AudioPluginInfo& info) {
-        return utils::museToAuEffectMeta(info.path, info.meta, info.enabled);
+        const bool usable = info.state == muse::audioplugins::AudioPluginState::Validated;
+        return utils::museToAuEffectMeta(info.path, info.meta, usable);
     });
 
     m_effectsChanged.notify();
@@ -306,10 +306,11 @@ void EffectsProvider::doSave(EffectFilter removeFromConfig)
         }
 
         muse::audioplugins::AudioPluginInfo info;
-        info.type = muse::audioplugins::AudioPluginType::Fx;
         info.meta = utils::auToMuseEffectMeta(meta);
         info.path = meta.path;
-        info.enabled = meta.isLoadable;
+        info.state = meta.isLoadable
+                     ? muse::audioplugins::AudioPluginState::Validated
+                     : muse::audioplugins::AudioPluginState::Error;
 
         newPlugins.push_back(std::move(info));
     }

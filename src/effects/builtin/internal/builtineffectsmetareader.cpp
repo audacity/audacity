@@ -9,9 +9,9 @@ BuiltinEffectsMetaReader::BuiltinEffectsMetaReader()
 {
 }
 
-muse::audio::AudioResourceType BuiltinEffectsMetaReader::metaType() const
+muse::audioplugins::AudioResourceType BuiltinEffectsMetaReader::metaType() const
 {
-    return muse::audio::AudioResourceType::NativeEffect;
+    return "NativeEffect";
 }
 
 bool BuiltinEffectsMetaReader::canReadMeta(const muse::io::path_t& pluginPath) const

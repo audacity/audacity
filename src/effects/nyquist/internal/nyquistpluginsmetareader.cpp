@@ -23,7 +23,7 @@ bool NyquistPluginsMetaReader::canReadMeta(const io::path_t& pluginPath) const
     return io::suffix(pluginPath) == "ny";
 }
 
-audio::AudioResourceType NyquistPluginsMetaReader::metaType() const
+audioplugins::AudioResourceType NyquistPluginsMetaReader::metaType() const
 {
-    return muse::audio::AudioResourceType::NyquistPlugin;
+    return "NyquistPlugin";
 }

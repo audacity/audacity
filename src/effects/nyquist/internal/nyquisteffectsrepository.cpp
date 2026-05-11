@@ -75,8 +75,9 @@ au::effects::EffectMetaList au::effects::NyquistEffectsRepository::effectMetaLis
 
     const std::vector<AudioPluginInfo> allEffects = knownPlugins()->pluginInfoList();
 
+    const std::string& nyquistTypeName = resourceTypeName(muse::audio::AudioResourceType::NyquistPlugin);
     for (const AudioPluginInfo& info : allEffects) {
-        if (info.meta.type != AudioResourceType::NyquistPlugin) {
+        if (info.meta.type != nyquistTypeName) {
             continue;
         }
 
