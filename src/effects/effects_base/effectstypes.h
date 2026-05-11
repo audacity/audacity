@@ -13,6 +13,8 @@
 #include "framework/global/types/ratio.h"
 #include "framework/actions/actiontypes.h"
 
+#include "framework/audioplugins/audiopluginstypes.h"
+
 class Effect;
 class EffectInstanceEx;
 class RealtimeEffectState;
@@ -243,9 +245,13 @@ struct EffectMeta {
     bool isRealtimeCapable = false;
     bool paramsAreInputAgnostic = true;
     bool isActivated = true;
-    bool isLoadable = true;
+
+    // Framework cache lifecycle state. Carried verbatim so a user-driven
+    // save() round-trips Discovered/Missing/Error instead of collapsing them.
+    muse::audioplugins::AudioPluginState state = muse::audioplugins::AudioPluginState::Validated;
 
     bool isValid() const { return !id.empty(); }
+    bool isLoadable() const { return state == muse::audioplugins::AudioPluginState::Validated; }
 };
 
 using EffectMetaList = std::vector<EffectMeta>;

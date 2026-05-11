@@ -269,8 +269,13 @@ T attributeValue(const muse::audioplugins::AudioResourceMeta& meta, const muse::
 }
 }
 
-EffectMeta utils::museToAuEffectMeta(const muse::io::path_t& path, const muse::audioplugins::AudioResourceMeta& meta, bool isLoadable)
+EffectMeta utils::museToAuEffectMeta(const muse::io::path_t& path, const muse::audioplugins::AudioResourceMeta& meta,
+                                     muse::audioplugins::AudioPluginState state)
 {
+    // A Validated entry must carry complete metadata, so the attribute asserts
+    // are gated on that; Discovered/Missing/Error entries may have sparse meta.
+    const bool isLoadable = (state == muse::audioplugins::AudioPluginState::Validated);
+
     EffectMeta effectMeta;
     effectMeta.path = path;
     effectMeta.id = muse::String::fromStdString(meta.id);
@@ -285,7 +290,7 @@ EffectMeta utils::museToAuEffectMeta(const muse::io::path_t& path, const muse::a
     effectMeta.version = attributeValue(meta, EFFECT_VERSION_ATTRIBUTE, isLoadable);
     effectMeta.module = attributeValue(meta, EFFECT_MODULE_ATTRIBUTE, isLoadable);
     effectMeta.isActivated = attributeValue<bool>(meta, EFFECT_ACTIVATED_ATTRIBUTE, isLoadable);
-    effectMeta.isLoadable = isLoadable;
+    effectMeta.state = state;
 
     return effectMeta;
 }
@@ -514,7 +519,7 @@ MenuItemList makeFlatList(const EffectMetaList& effects, IEffectMenuItemFactory&
 void removeAlsoDisabledEffects(EffectMetaList& effects, const utils::EffectFilter& filter)
 {
     effects.erase(std::remove_if(effects.begin(), effects.end(), [&](const EffectMeta& meta) {
-        return !meta.isLoadable || !meta.isActivated || filter(meta);
+        return !meta.isLoadable() || !meta.isActivated || filter(meta);
     }), effects.end());
 }
 } // namespace

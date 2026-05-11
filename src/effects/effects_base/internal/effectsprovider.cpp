@@ -172,7 +172,10 @@ EffectsProvider::NewPluginsRegistered EffectsProvider::doScanPlugins(
         // scanPlugins() can re-offer them on the next launch. Validate runs
         // the full out-of-process scan.
         const bool validate = (doScanThirdPartyPlugins == nullptr || doScanThirdPartyPlugins());
-        registerAudioPluginsScenario.registerNewPlugins(thirdPartyPluginPaths, validate);
+        const muse::Ret ret = registerAudioPluginsScenario.registerNewPlugins(thirdPartyPluginPaths, validate);
+        if (!ret) {
+            LOGE() << "Failed to register new plugins: " << ret.toString();
+        }
     }
 
     reloadEffects();
@@ -191,8 +194,7 @@ void EffectsProvider::reloadEffects()
     const auto knownPlugins = knownPluginsRegister()->pluginInfoList();
     std::transform(knownPlugins.begin(), knownPlugins.end(), std::back_inserter(m_effects),
                    [](const muse::audioplugins::AudioPluginInfo& info) {
-        const bool isLoadable = info.state == muse::audioplugins::AudioPluginState::Validated;
-        return utils::museToAuEffectMeta(info.path, info.meta, isLoadable);
+        return utils::museToAuEffectMeta(info.path, info.meta, info.state);
     });
 
     m_effectsChanged.notify();
@@ -311,14 +313,6 @@ void EffectsProvider::save()
 
 void EffectsProvider::doSave(EffectFilter removeFromConfig)
 {
-    // TODO(state-lifecycle): doSave rebuilds the cache from m_effects and
-    // overwrites each entry's state based on meta.isLoadable
-    // (Validated/Error). Entries that were marked Missing by doScanPlugins
-    // round-trip here as Error and the Missing semantics are lost. doSave
-    // runs only from user-driven paths (save()/forgetPlugins()) so the scan
-    // path stays correct, but a follow-up should plumb the framework state
-    // through EffectMeta (or refactor doSave to use surgical setPluginsState
-    // / unregisterPlugins) so user-initiated save() preserves Missing.
     muse::audioplugins::AudioPluginInfoList newPlugins;
 
     for (const auto& meta : m_effects) {
@@ -329,19 +323,21 @@ void EffectsProvider::doSave(EffectFilter removeFromConfig)
         muse::audioplugins::AudioPluginInfo info;
         info.meta = utils::auToMuseEffectMeta(meta);
         info.path = meta.path;
-        info.state = meta.isLoadable
-                     ? muse::audioplugins::AudioPluginState::Validated
-                     : muse::audioplugins::AudioPluginState::Error;
+        info.state = meta.state;
 
         newPlugins.push_back(std::move(info));
     }
 
     const auto filePath = audioPluginsConfiguration()->knownAudioPluginsFilePath();
     if (fileSystem()->exists(filePath)) {
-        // Remove the file and reload the register.
+        // Remove the cache so the register starts clean.
         fileSystem()->remove(filePath);
-        knownPluginsRegister()->load();
     }
+    // Always (re)load: on first launch the cache may not exist yet, but the
+    // register still needs to be in the loaded state for registerPlugins
+    // (it asserts m_loaded). load() handles the no-file case by initializing
+    // an empty register.
+    knownPluginsRegister()->load();
 
     knownPluginsRegister()->registerPlugins(newPlugins);
 }

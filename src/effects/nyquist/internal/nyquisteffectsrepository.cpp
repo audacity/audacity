@@ -80,7 +80,7 @@ au::effects::EffectMetaList au::effects::NyquistEffectsRepository::effectMetaLis
             continue;
         }
 
-        EffectMeta meta = utils::museToAuEffectMeta(info.path, info.meta);
+        EffectMeta meta = utils::museToAuEffectMeta(info.path, info.meta, info.state);
         effects.push_back(std::move(meta));
     }
 

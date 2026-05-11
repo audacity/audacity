@@ -40,5 +40,6 @@ muse::String effectFamilyToString(EffectFamily family);
 EffectFamily effectFamilyFromString(const muse::String& family);
 
 muse::audioplugins::AudioResourceMeta auToMuseEffectMeta(const EffectMeta& meta);
-EffectMeta museToAuEffectMeta(const muse::io::path_t& path, const muse::audioplugins::AudioResourceMeta& meta, bool isLoadable = true);
+EffectMeta museToAuEffectMeta(const muse::io::path_t& path, const muse::audioplugins::AudioResourceMeta& meta,
+                              muse::audioplugins::AudioPluginState state = muse::audioplugins::AudioPluginState::Validated);
 }

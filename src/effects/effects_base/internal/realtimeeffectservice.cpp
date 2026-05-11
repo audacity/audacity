@@ -441,7 +441,7 @@ bool RealtimeEffectService::isAvailable(const RealtimeEffectStatePtr& state) con
     // cache entries pass that. `isLoadable` (= state == Validated) is what gates
     // actual usability; anything else routes to the missing-plugin popup.
     const auto meta = effectsProvider()->meta(muse::String::fromStdString(state->GetID().ToStdString()));
-    return meta.isValid() && meta.isLoadable;
+    return meta.isValid() && meta.isLoadable();
 }
 }
 
