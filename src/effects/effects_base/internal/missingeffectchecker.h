@@ -4,6 +4,7 @@
 #pragma once
 
 #include "imissingeffectchecker.h"
+#include "ieffectsprovider.h"
 #include "irealtimeeffectservice.h"
 
 #include "context/iglobalcontext.h"
@@ -16,6 +17,7 @@ namespace au::effects {
 class MissingEffectChecker : public IMissingEffectChecker, public muse::Contextable, public muse::async::Asyncable
 {
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
+    muse::GlobalInject<IEffectsProvider> effectsProvider;
     muse::ContextInject<IRealtimeEffectService> realtimeEffectService{ this };
     muse::ContextInject<muse::IInteractive> interactive{ this };
 

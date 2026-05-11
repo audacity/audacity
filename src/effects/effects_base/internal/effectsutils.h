@@ -39,48 +39,15 @@ EffectCategory effectCategoryFromString(const muse::String& category);
 muse::String effectFamilyToString(EffectFamily family);
 EffectFamily effectFamilyFromString(const muse::String& family);
 
-muse::audio::AudioResourceMeta auToMuseEffectMeta(const EffectMeta& meta);
-EffectMeta museToAuEffectMeta(const muse::io::path_t& path, const muse::audio::AudioResourceMeta& meta, bool enabled = true);
+// Persistence identifier for a plugin family in the muse_framework cache
+// (PluginMeta::type); distinct from effectFamilyToString's display label.
+std::string effectFamilyToCacheType(EffectFamily family);
+EffectFamily effectFamilyFromCacheType(const std::string& cacheType);
 
-// TODO: may `EffectFamily` be superseded by `AudioResourceType`?
-constexpr muse::audio::AudioResourceType toMuseAudioResourceType(EffectFamily family)
-{
-    switch (family) {
-    case EffectFamily::VST3: return muse::audio::AudioResourceType::VstPlugin;
-#ifdef Q_OS_LINUX
-    case EffectFamily::LV2: return muse::audio::AudioResourceType::Lv2Plugin;
-#endif
-#ifdef Q_OS_MACOS
-    case EffectFamily::AudioUnit: return muse::audio::AudioResourceType::AudioUnit;
-#endif
-    case EffectFamily::Nyquist: return muse::audio::AudioResourceType::NyquistPlugin;
-    case EffectFamily::Builtin: return muse::audio::AudioResourceType::NativeEffect;
-    case EffectFamily::Unknown: return muse::audio::AudioResourceType::Undefined;
-    default:
-        assert(false);
-        return muse::audio::AudioResourceType::Undefined;
-    }
-}
+// True if the cached plugin meta belongs to the given family.
+bool isFamilyType(const muse::audioplugins::PluginMeta& meta, EffectFamily family);
 
-constexpr EffectFamily fromMuseAudioResourceType(muse::audio::AudioResourceType type)
-{
-    switch (type) {
-    case muse::audio::AudioResourceType::VstPlugin: return EffectFamily::VST3;
-#ifdef Q_OS_LINUX
-    case muse::audio::AudioResourceType::Lv2Plugin: return EffectFamily::LV2;
-#endif
-#ifdef Q_OS_MACOS
-    case muse::audio::AudioResourceType::AudioUnit: return EffectFamily::AudioUnit;
-#endif
-    case muse::audio::AudioResourceType::NyquistPlugin: return EffectFamily::Nyquist;
-    case muse::audio::AudioResourceType::NativeEffect: return EffectFamily::Builtin;
-    case muse::audio::AudioResourceType::FluidSoundfont:
-    case muse::audio::AudioResourceType::MuseSamplerSoundPack:
-    case muse::audio::AudioResourceType::Undefined:
-        return EffectFamily::Unknown;
-    default:
-        assert(false);
-        return EffectFamily::Unknown;
-    }
-}
+muse::audioplugins::PluginMeta auToMuseEffectMeta(const EffectMeta& meta);
+EffectMeta museToAuEffectMeta(const muse::io::path_t& path, const muse::audioplugins::PluginMeta& meta,
+                              muse::audioplugins::AudioPluginState state = muse::audioplugins::AudioPluginState::Validated);
 }

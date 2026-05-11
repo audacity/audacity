@@ -14,32 +14,11 @@
 #include "framework/global/log.h"
 
 namespace au::effects {
-constexpr EffectFamily toEffectFamily(muse::audio::AudioResourceType type)
+Au3EffectLoader::Au3EffectLoader(PluginProvider& provider, EffectFamily family)
+    : m_pluginProvider{provider}, m_family{family}
 {
-    switch (type) {
-    case muse::audio::AudioResourceType::VstPlugin:      return EffectFamily::VST3;
-#ifdef Q_OS_LINUX
-    case muse::audio::AudioResourceType::Lv2Plugin:      return EffectFamily::LV2;
-#endif
-#ifdef Q_OS_MACOS
-    case muse::audio::AudioResourceType::AudioUnit:      return EffectFamily::AudioUnit;
-#endif
-    case muse::audio::AudioResourceType::NyquistPlugin:  return EffectFamily::Nyquist;
-    case muse::audio::AudioResourceType::NativeEffect:  return EffectFamily::Builtin;
-    case muse::audio::AudioResourceType::FluidSoundfont:
-    case muse::audio::AudioResourceType::MuseSamplerSoundPack:
-        return EffectFamily::Unknown;
-    default:
-        assert(false && "Unknown AudioResourceType");
-        return EffectFamily::Unknown;
-    }
-}
-
-Au3EffectLoader::Au3EffectLoader(PluginProvider& provider, muse::audio::AudioResourceType resourceType)
-    : m_pluginProvider{provider}, m_resourceType{resourceType}
-{
-    IF_ASSERT_FAILED(toEffectFamily(resourceType) != EffectFamily::Unknown) {
-        LOGE() << "Invalid AudioResourceType for Au3EffectLoader: " << static_cast<int>(resourceType);
+    IF_ASSERT_FAILED(m_family != EffectFamily::Unknown) {
+        LOGE() << "Invalid EffectFamily for Au3EffectLoader: " << static_cast<int>(m_family);
     }
 }
 
@@ -56,7 +35,7 @@ void Au3EffectLoader::deinit()
 
 EffectFamily Au3EffectLoader::family() const
 {
-    return toEffectFamily(m_resourceType);
+    return m_family;
 }
 
 bool Au3EffectLoader::ensurePluginIsLoaded(const EffectId& effectId)
@@ -74,13 +53,13 @@ bool Au3EffectLoader::ensurePluginIsLoaded(const EffectId& effectId)
         LOGE() << "plugin not in registry: " << effectId;
         return false;
     }
-    if (!it->enabled) {
-        LOGW() << "plugin disabled: " << effectId;
+    if (it->state != muse::audioplugins::AudioPluginState::Validated) {
+        LOGW() << "plugin not validated: " << effectId;
         return false;
     }
-    if (it->meta.type != m_resourceType) {
-        LOGE() << "Effect families don't match: expected " << static_cast<int>(m_resourceType)
-               << ", got " << static_cast<int>(it->meta.type);
+    if (!utils::isFamilyType(it->meta, m_family)) {
+        LOGE() << "Effect families don't match: expected " << utils::effectFamilyToCacheType(m_family)
+               << ", got " << it->meta.type;
         return false;
     }
     const muse::io::path_t& path = it->path;

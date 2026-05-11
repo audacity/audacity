@@ -11,7 +11,7 @@ class AudioUnitEffectLoader final : public Au3EffectLoader
 {
 public:
     AudioUnitEffectLoader()
-        : Au3EffectLoader(m_module, muse::audio::AudioResourceType::AudioUnit) {}
+        : Au3EffectLoader(m_module, EffectFamily::AudioUnit) {}
 
 private:
     ::AudioUnitEffectsModule m_module;

@@ -20,6 +20,7 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/audiounitviewlauncher.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/audiounitviewlauncher.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/audiounittypes.h
 
     ${CMAKE_CURRENT_LIST_DIR}/view/audiounitview.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/audiounitview.h

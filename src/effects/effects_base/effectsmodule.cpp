@@ -27,6 +27,7 @@
 #include "internal/effectloadersregister.h"
 #include "internal/effectsproviderinitializer.h"
 #include "internal/missingeffectchecker.h"
+#include "internal/knownaudiopluginsconfigurator.h"
 
 #include "view/effectpresetsbarmodel.h"
 #include "view/presetstatesregister.h"
@@ -74,6 +75,9 @@ void EffectsModule::resolveImports()
         ir->registerQmlUri(muse::Uri("audacity://effects/presets/input_name"), "Audacity/Effects/PresetNameDialog.qml");
         ir->registerQmlUri(muse::Uri("audacity://effects/plugin_manager"), "Audacity/Effects/PluginManagerDialog.qml");
     }
+
+    // must run before the audioplugins cache loads in onInit
+    KnownAudioPluginsConfigurator().init();
 }
 
 void EffectsModule::registerResources()
