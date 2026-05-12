@@ -154,14 +154,25 @@ EffectsProvider::NewPluginsRegistered EffectsProvider::doScanPlugins(
         }
     }
 
-    registerAudioPluginsScenario.unregisterRemovedPlugins(scanResult.missingPluginIds);
+    // Mark missing/rediscovered without deleting cache entries — the framework
+    // wants to preserve the meta so the user can still see "the plugin I had
+    // is gone". Mirrors RegisterAudioPluginsScenario::updatePluginsRegistry()
+    // which MuseScore uses for the same purpose.
+    knownPluginsRegister()->setPluginsState(scanResult.missingPluginIds,
+                                            muse::audioplugins::AudioPluginState::Missing);
+    knownPluginsRegister()->setPluginsState(scanResult.rediscoveredPluginIds,
+                                            muse::audioplugins::AudioPluginState::Validated);
 
     for (const io::path_t& path : audacityPluginPaths) {
         registerAudioPluginsScenario.registerPlugin(path);
     }
 
-    if (!thirdPartyPluginPaths.empty() && (doScanThirdPartyPlugins == nullptr || doScanThirdPartyPlugins())) {
-        registerAudioPluginsScenario.registerNewPlugins(thirdPartyPluginPaths);
+    if (!thirdPartyPluginPaths.empty()) {
+        // Skip ("validate later") still records the plugins as Discovered so
+        // scanPlugins() can re-offer them on the next launch. Validate runs
+        // the full out-of-process scan.
+        const bool validate = (doScanThirdPartyPlugins == nullptr || doScanThirdPartyPlugins());
+        registerAudioPluginsScenario.registerNewPlugins(thirdPartyPluginPaths, validate);
     }
 
     reloadEffects();
@@ -300,6 +311,14 @@ void EffectsProvider::save()
 
 void EffectsProvider::doSave(EffectFilter removeFromConfig)
 {
+    // TODO(state-lifecycle): doSave rebuilds the cache from m_effects and
+    // overwrites each entry's state based on meta.isLoadable
+    // (Validated/Error). Entries that were marked Missing by doScanPlugins
+    // round-trip here as Error and the Missing semantics are lost. doSave
+    // runs only from user-driven paths (save()/forgetPlugins()) so the scan
+    // path stays correct, but a follow-up should plumb the framework state
+    // through EffectMeta (or refactor doSave to use surgical setPluginsState
+    // / unregisterPlugins) so user-initiated save() preserves Missing.
     muse::audioplugins::AudioPluginInfoList newPlugins;
 
     for (const auto& meta : m_effects) {
