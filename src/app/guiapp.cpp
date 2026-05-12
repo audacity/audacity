@@ -3,7 +3,13 @@
  */
 #include "guiapp.h"
 
-#include "modularity/ioc.h"
+#include <QCoreApplication>
+
+#include "framework/global/modularity/ioc.h"
+#include "framework/ui/imainwindow.h"
+#include "framework/actions/iactionsdispatcher.h"
+#include "framework/actions/actiontypes.h"
+
 #include "appshell/istartupscenario.h"
 #include "appshell/internal/splashscreen/splashscreen.h"
 #include "project/types/projecttypes.h"
@@ -113,5 +119,51 @@ void GuiApp::applyCommandLineOptions(const std::shared_ptr<muse::CmdOptions>& op
 
     if (options->app.revertToFactorySettings) {
         appshellConfiguration()->revertToFactorySettings();
+    }
+}
+
+void GuiApp::doSetup(const std::shared_ptr<muse::CmdOptions>& options)
+{
+    muse::ui::GuiApplication::doSetup(options);
+
+    const QString appId = QCoreApplication::applicationName();
+    if (!m_singleInstance.start(appId)) {
+        return;
+    }
+
+    m_singleInstance.messageReceived().onReceive(this, [this](const QStringList& args) {
+        onSecondInstanceArgs(args);
+    });
+}
+
+void GuiApp::onSecondInstanceArgs(const QStringList& args)
+{
+    LOGI() << "second instance handed off args: " << args;
+
+    // Raise the fisrt window when the instance is activated
+    // TODO: define rules which window should be activated, ie first, last, last used
+    const auto& contexts = muse::ui::GuiApplication::contexts();
+    if (contexts.empty()) {
+        return;
+    }
+    const auto& ctx = contexts.front();
+
+    auto window = muse::modularity::ioc(ctx)->resolve<muse::ui::IMainWindow>("app");
+    if (window) {
+        window->requestShowOnFront();
+    }
+
+    // parse arguments forwarded by the second instance
+    auto parsed = std::dynamic_pointer_cast<AudacityCmdOptions>(makeContextOptions(muse::StringList(args)));
+    if (!parsed) {
+        return;
+    }
+
+    if (parsed->startup.projectUrl.has_value()) {
+        auto dispatcher = muse::modularity::ioc(ctx)->resolve<muse::actions::IActionsDispatcher>("app");
+        if (dispatcher) {
+            dispatcher->dispatch("file-open",
+                                 muse::actions::ActionData::make_arg1<QUrl>(parsed->startup.projectUrl.value()));
+        }
     }
 }
