@@ -11,6 +11,7 @@
 #include "mod-flac/ExportFLAC.h"
 #include "mod-opus/ExportOpus.h"
 #include "mod-mp2/ExportMP2.h"
+#include "mod-cvsd/ExportCVSD.cpp"
 
 #include "RegisterExportPlugins.h"
 
@@ -39,6 +40,11 @@ void RegisterExportPlugins()
     static ExportPluginRegistry::RegisteredPlugin sOGGPlugin{
         "OGG",
         []{ return std::make_unique< ExportOGG >(); }
+    };
+
+    static ExportPluginRegistry::RegisteredPlugin sCVSDPlugin{
+        "CVSD",
+        []{ return std::make_unique< ExportCVSD >(); }
     };
 
     static ExportPluginRegistry::RegisteredPlugin sFLACPlugin{
