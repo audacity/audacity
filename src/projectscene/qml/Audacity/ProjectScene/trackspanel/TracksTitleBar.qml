@@ -60,7 +60,7 @@ Item {
             Layout.preferredWidth: root.effectsSectionWidth
             Layout.preferredHeight: root.height
 
-            color: ui.theme.backgroundPrimaryColor
+            color: ui.theme.backgroundSecondaryColor
             border.color: "transparent"
             border.width: padding
             visible: root.showEffectsSection
@@ -96,7 +96,7 @@ Item {
                     navigation.panel: effectsTitleBar.navigation
                     navigation.order: 0
 
-                    normalColor: ui.theme.backgroundPrimaryColor
+                    normalColor: ui.theme.backgroundSecondaryColor
                     hoverHitColor: ui.theme.buttonColor
                     icon: IconCode.CLOSE_X_ROUNDED
                     transparent: true
@@ -113,7 +113,7 @@ Item {
         Rectangle {
             id: buttonContainer
 
-            color: ui.theme.backgroundPrimaryColor
+            color: ui.theme.backgroundSecondaryColor
 
             width: root.verticalPanelDefaultWidth
             Layout.fillWidth: true

@@ -72,6 +72,11 @@ ListItemBlank {
 
     background.opacity: (!root.isSelected || hoverHandler.hovered) ? 0.7 : 1
 
+    background.anchors.leftMargin: spacer.width
+    background.anchors.rightMargin: -background.radius
+    background.anchors.bottomMargin: bottomSeparator.thickness
+    background.radius: 4
+
     signal renameTrackRequested()
     signal duplicateRequested()
     signal deleteRequested()
