@@ -20,6 +20,10 @@ discovery, and a duplex callback-driven stream lifecycle.
 #include <string_view>
 #include <vector>
 
+#if defined(_WIN32) && !defined(WIN32_LEAN_AND_MEAN)
+#define WIN32_LEAN_AND_MEAN
+#endif
+
 #include <RtAudio.h>
 
 namespace audacity::rta {
