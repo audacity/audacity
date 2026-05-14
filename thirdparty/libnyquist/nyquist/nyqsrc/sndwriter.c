@@ -93,26 +93,23 @@
             max_sample = -s; \
         }
 
-// should be looking for local portaudio
-#include "portaudio.h"
-
-void finish_audio();
-
 long flush_count = 0; /* how many samples to write to finish */
 
-#define D if (0) 
+#define D if (0)
 
-int sndwrite_trace = 0;	/* debugging */
+int sndwrite_trace = 0; /* debugging */
 
-static int portaudio_initialized = false; /* is PortAudio initialized? */
-
-void portaudio_exit()
+/* whenever we jump to toplevel, make sure any audio playback is closed */
+void local_toplevel(void)
 {
-    if (portaudio_initialized) {
-        Pa_Terminate();
-    }
 }
 
+/* portaudio_exit -- entry point invoked from Nyquist's platform shutdown
+ * code; nothing to release since Audacity routes playback through its own
+ * audio engine rather than letting Nyquist drive the device directly. */
+void portaudio_exit(void)
+{
+}
 
 // sound_save_sound - implements s-save for mono sounds
 sample_type sound_save_sound(LVAL s_as_lval, int64_t n, SF_INFO *sf_info,
@@ -136,137 +133,22 @@ typedef struct {
 } sound_state_node, *sound_state_type;
 
 
-static int portaudio_error(PaError err, char *problem)
-{
-    char msgbuffer[256];
-    if (err != paNoError) {
-        snprintf(msgbuffer, sizeof(msgbuffer), 
-                 "%s, error %d, %s.", problem, (int) err, 
-                                Pa_GetErrorText(err));
-        xlerrprint("warning", NULL, msgbuffer, s_unbound);
-        return true;
-    }
-    return false;
-}
-
-
-PaStream *audio_stream = NULL;
-
-
-/* whenever we jump to toplevel, make sure audio is closed */
-void local_toplevel(void)
-{
-    if (audio_stream) {
-        finish_audio();
-    }
-}
-
-
+/* prepare_audio -- when invoked from s-save with `play=TRUE`, this would
+ * historically open an output device for playback while writing. Audacity
+ * doesn't route Nyquist playback this way (effects feed their result back
+ * into the host audio engine), so playback is unavailable here. */
 LVAL prepare_audio(LVAL play, SF_INFO *sf_info)
 {
-    PaStreamParameters output_parameters;
-    int i, j = -1;
-    int num_devices;
-    const PaDeviceInfo *device_info = NULL;
-    const PaHostApiInfo *host_info;
-    // list tells us to list devices
-    LVAL list = xlenter("*SND-LIST-DEVICES*");
-    // pref tells us which device to open
-    LVAL pref = xlenter("*SND-DEVICE*");
-    int pref_num = -1;
-    unsigned char *pref_string = NULL;
-    list = getvalue(list);
-    if (list == s_unbound) list = NULL;
-    pref = getvalue(pref);
-    if (pref == s_unbound) pref = NULL;
-    if (stringp(pref)) pref_string = getstring(pref);
-    else if (fixp(pref)) pref_num = (int) getfixnum(pref);
-
-    if (!portaudio_initialized) {
-        if (portaudio_error(Pa_Initialize(), 
-                            "could not initialize portaudio")) {
-            return NIL;
-        }
-        portaudio_initialized = TRUE;
-    }
-
-    output_parameters.device = Pa_GetDefaultOutputDevice(); 
-    output_parameters.channelCount = sf_info->channels;
-    output_parameters.sampleFormat = paFloat32;
-    output_parameters.hostApiSpecificStreamInfo = NULL;
-    /* remember that Nyquist has to do GC */
-    output_parameters.suggestedLatency = sound_latency;
-
-    // Initialize the audio stream for output
-    // If this is Linux, prefer to open ALSA device
-    num_devices = Pa_GetDeviceCount();
-    // nyquist_printf("num_devices %d\n", num_devices);
-    for (i = 0; i < num_devices; i++) {
-        device_info = Pa_GetDeviceInfo(i);
-        host_info = Pa_GetHostApiInfo(device_info->hostApi);
-        if (list) {
-            nyquist_printf("PortAudio %d: %s -- %s\n", i,
-                           device_info->name, host_info->name);
-        }
-        if (j == -1) {
-            if (pref_num >= 0 && pref_num == i) j = i;
-            else if (pref_string &&
-                     strstr(device_info->name, (char *) pref_string)) j = i;
-        }
-        // giving preference to first ALSA device seems to be a bad idea
-        // if (j == -1 && host_info->type == paALSA) {
-        //     j = i;
-        // }
-    }
-    if (j != -1) {
-        output_parameters.device = j;
-    }
-    if (list) {
-        nyquist_printf("... Default device is %d\n",
-                       Pa_GetDefaultOutputDevice());
-        nyquist_printf("... Selected device %d for output\n",
-                       output_parameters.device);
-    }
-    if (device_info) {
-        if (portaudio_error(
-                Pa_OpenStream(&audio_stream, NULL /* input */, &output_parameters,
-                    sf_info->samplerate, max_sample_block_len, 
-                    paClipOff, NULL /* callback */, NULL /* userdata */),
-                "could not open audio")) {
-            nyquist_printf("audio device name: %s\n", device_info->name);
-            audio_stream = NULL;
-            return NIL;
-        }
-    } else {
-        nyquist_printf("warning: no audio device found\n");
-        return NIL;
-    }
-    flush_count = (long) (sf_info->samplerate * (sound_latency + 0.2));
-
-    if (portaudio_error(Pa_StartStream(audio_stream),
-                        "could not start audio")) {
-        return NIL;
-    }
-
-    return play;
+    (void)play;
+    (void)sf_info;
+    return NIL;
 }
 
 
-/* finish_audio -- flush the remaining samples, then close */
-/**/
+/* finish_audio -- companion to prepare_audio; no-op for the same reason. */
 void finish_audio(void)
 {
-    /* portaudio_error(Pa_StopStream(audio_stream), "could not stop stream"); */
-    /* write Latency frames of audio to make sure all samples are played */
-    float zero[MAX_SND_CHANNELS * 16];
-    int i;
-    for (i = 0; i < MAX_SND_CHANNELS * 16; i++) zero[i] = 0.0F;
-    while (flush_count > 0) {
-        Pa_WriteStream(audio_stream, zero, 16);
-        flush_count -= 16;
-    }
-    portaudio_error(Pa_CloseStream(audio_stream), "could not close audio");
-    audio_stream = NULL;
+    flush_count = 0;
 }
 
 
@@ -693,11 +575,6 @@ sample_type sound_save_sound(LVAL s_as_lval, int64_t n, SF_INFO *sf_info,
         if (sndfile) {
             sf_writef_float(sndfile, samps, togo);
         }
-        if (audio_stream) {
-            PaError err = Pa_WriteStream(audio_stream, samps, togo);
-			if (err != paNoError) gprintf(TRANS, "Pa_WriteStream %d\n", err);
-            sound_frames += togo;
-        }
 
         n -= togo;
         *ntotal += togo;
@@ -852,16 +729,6 @@ D       nyquist_printf("save scale factor %ld = %g\n", i, state[i].scale);
                     *float_bufp++ = s;
                 }
             }
-        }
-        /* Here we have interleaved floats. Before converting to the sound
-           file format, call PortAudio to play them. */
-        if (audio_stream) {
-            PaError err = Pa_WriteStream(audio_stream, buf,
-                                         (unsigned long) togo);
-            if (err) {
-                printf("Pa_WriteStream error %d\n", err);
-            }
-            sound_frames += togo;
         }
         if (sndfile) sf_writef_float(sndfile, buf, togo);
 

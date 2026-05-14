@@ -35,7 +35,7 @@ other settings.
 #include <wx/textctrl.h>
 #include <wx/bmpbuttn.h>
 
-#include "portaudio.h"
+#include "au3-audio-devices/RtAudioBackend.h"
 
 #include "Prefs.h"
 #include "ShuttleGui.h"
@@ -135,19 +135,21 @@ void DevicePrefs::Populate()
  */
 void DevicePrefs::GetNamesAndLabels()
 {
-    // Gather list of hosts.  Only added hosts that have devices attached.
-    // FIXME: TRAP_ERR PaErrorCode not handled in DevicePrefs GetNamesAndLabels()
-    // With an error code won't add hosts, but won't report a problem either.
-    int nDevices = Pa_GetDeviceCount();
-    for (int i = 0; i < nDevices; i++) {
-        const PaDeviceInfo* info = Pa_GetDeviceInfo(i);
-        if ((info != NULL) && (info->maxOutputChannels > 0 || info->maxInputChannels > 0)) {
-            wxString name = wxSafeConvertMB2WX(Pa_GetHostApiInfo(info->hostApi)->name);
-            if (!make_iterator_range(mHostNames)
-                .contains(Verbatim(name))) {
-                mHostNames.push_back(Verbatim(name));
-                mHostLabels.push_back(name);
-            }
+    namespace rta = audacity::rta;
+    // Gather host APIs that actually expose at least one device.
+    for (const auto& api : rta::compiledApis()) {
+        const auto devices = rta::enumerateDevices(api.api);
+        const bool hasUsableDevice = std::any_of(devices.begin(), devices.end(),
+            [](const rta::DeviceInfo& d) {
+                return d.maxOutputChannels > 0 || d.maxInputChannels > 0;
+            });
+        if (!hasUsableDevice) {
+            continue;
+        }
+        const wxString name = wxString::FromUTF8(api.displayName.c_str());
+        if (!make_iterator_range(mHostNames).contains(Verbatim(name))) {
+            mHostNames.push_back(Verbatim(name));
+            mHostLabels.push_back(name);
         }
     }
 
@@ -196,7 +198,7 @@ void DevicePrefs::PopulateOrExchange(ShuttleGui& S)
             mHost = S.TieChoice(XXO("&Host:"), HostSetting);
 
             S.AddPrompt(XXO("Using:"));
-            S.AddFixedText(Verbatim(wxSafeConvertMB2WX(Pa_GetVersionText())));
+            S.AddFixedText(Verbatim(wxString::FromUTF8(RtAudio::getVersion().c_str())));
         }
         S.EndMultiColumn();
     }
@@ -321,27 +323,24 @@ void DevicePrefs::OnHost(wxCommandEvent& e)
         return;
     }
 
+    namespace rta = audacity::rta;
     // Find the index for the host API selected
     int index = -1;
     auto apiName = mHostLabels[mHost->GetCurrentSelection()];
-    int nHosts = Pa_GetHostApiCount();
-    for (int i = 0; i < nHosts; ++i) {
-        wxString name = wxSafeConvertMB2WX(Pa_GetHostApiInfo(i)->name);
-        if (name == apiName) {
-            index = i;
+    const auto apiList = rta::compiledApis();
+    for (size_t i = 0; i < apiList.size(); ++i) {
+        if (wxString::FromUTF8(apiList[i].displayName.c_str()) == apiName) {
+            index = static_cast<int>(i);
             break;
         }
     }
-    // We should always find the host!
     if (index < 0) {
         wxLogDebug(wxT("DevicePrefs::OnHost(): API index not found"));
         return;
     }
 
-    int nDevices = Pa_GetDeviceCount();
-
-    // FIXME: TRAP_ERR PaErrorCode not handled.  nDevices can be negative number.
-    if (nDevices == 0) {
+    const auto devices = rta::enumerateDevices(apiList[index].api);
+    if (devices.empty()) {
         mHost->Clear();
         mHost->Append(_("No audio interfaces"), (void*)NULL);
         mHost->SetSelection(0);

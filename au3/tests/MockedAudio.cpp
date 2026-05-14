@@ -10,14 +10,8 @@
 **********************************************************************/
 #include "MockedAudio.h"
 
-#include <portaudio.h>
+// The audio backend initializes itself per-stream; this fixture has no
+// global setup to perform.
 
-MockedAudio::MockedAudio()
-{
-    Pa_Initialize();
-}
-
-MockedAudio::~MockedAudio()
-{
-    Pa_Terminate();
-}
+MockedAudio::MockedAudio()  = default;
+MockedAudio::~MockedAudio() = default;

@@ -6,7 +6,7 @@
 
   Dominic Mazzoni
 
-  Use the PortAudio library to play and record sound
+  Play and record sound through the system audio backend
 
 **********************************************************************/
 
@@ -42,9 +42,26 @@ class Resample;
 
 class AudacityProject;
 
-struct PaStreamCallbackTimeInfo;
-typedef unsigned long PaStreamCallbackFlags;
-typedef int PaError;
+struct AudioStreamCallbackTimeInfo
+{
+    double inputBufferAdcTime;
+    double currentTime;
+    double outputBufferDacTime;
+};
+
+using AudioStreamCallbackFlags = unsigned int;
+
+// Callback-flag bits (mirrors RtAudio's RTAUDIO_INPUT_OVERFLOW values so the
+// bridge function can pass `statusFlags` through without translation).
+constexpr AudioStreamCallbackFlags AudioStreamInputOverflow  = 0x2;
+constexpr AudioStreamCallbackFlags AudioStreamPrimingOutput  = 0x10;
+
+enum AudioCallbackResult
+{
+    AudioCallbackContinue = 0,
+    AudioCallbackComplete = 1,
+    AudioCallbackAbort    = 2,
+};
 
 namespace RealtimeEffects {
 class ProcessingScope;
@@ -71,31 +88,23 @@ struct AudioIOEvent {
     bool on;
 };
 
-/** brief The function which is called from PortAudio's callback thread
- * context to collect and deliver audio for / from the sound device.
+/** \brief Called from the audio backend's callback thread to deliver/collect
+ *  audio samples.
  *
- * This covers recording, playback, and doing both simultaneously. It is
- * also invoked to do monitoring and software playthrough. Note that dealing
- * with the two buffers needs some care to ensure that the right things
- * happen for all possible cases.
- * @param inputBuffer Buffer of length framesPerBuffer containing samples
- * from the sound card, or null if not capturing audio. Note that the data
- * type will depend on the format of audio data that was chosen when the
- * stream was created (so could be floats or various integers)
- * @param outputBuffer Uninitialised buffer of length framesPerBuffer which
- * will be sent to the sound card after the callback, or null if not playing
- * audio back.
- * @param framesPerBuffer The length of the playback and recording buffers
- * @param timeInfo Pointer to PortAudio time information
- * structure, which tells us how long we have been playing / recording
- * @param statusFlags PortAudio stream status flags
- * @param userData pointer to user-defined data structure. Provided for
- * flexibility by PortAudio, but not used by Audacity - the data is stored in
- * the AudioIO class instead.
+ *  Covers playback, recording, monitoring, and software playthrough.
+ *  @param inputBuffer Interleaved float32 samples from the device, or null
+ *                     when not capturing.
+ *  @param outputBuffer Interleaved float32 buffer to fill, or null when not
+ *                      playing back.
+ *  @param framesPerBuffer Frame count for both buffers.
+ *  @param streamTime Stream-relative clock in seconds.
+ *  @param statusFlags Bitmask of AudioStream* flags (overflow / priming).
+ *  @param userData Unused; AudioIO retrieves its state from the singleton.
  */
-int audacityAudioCallback(
-    const void* inputBuffer, void* outputBuffer, unsigned long framesPerBuffer, const PaStreamCallbackTimeInfo* timeInfo,
-    PaStreamCallbackFlags statusFlags, void* userData);
+void audacityAudioCallback(
+    const float* inputBuffer, float* outputBuffer,
+    unsigned int framesPerBuffer, double streamTime,
+    AudioStreamCallbackFlags statusFlags, void* userData);
 
 class AudioIOExt;
 
@@ -106,10 +115,12 @@ public:
     ~AudioIoCallback() override;
 
 public:
-    // This function executes in a thread spawned by the PortAudio library
+    // Executes on the audio backend's callback thread.
     int AudioCallback(
-        constSamplePtr inputBuffer, float* outputBuffer, unsigned long framesPerBuffer, const PaStreamCallbackTimeInfo* timeInfo,
-        const PaStreamCallbackFlags statusFlags, void* userData);
+        constSamplePtr inputBuffer, float* outputBuffer,
+        unsigned long framesPerBuffer,
+        const AudioStreamCallbackTimeInfo* timeInfo,
+        AudioStreamCallbackFlags statusFlags, void* userData);
 
     //! @name iteration over extensions, supporting range-for syntax
     //! @{
@@ -204,7 +215,7 @@ public:
     bool FillOutputBuffers(
         float* outputFloats, unsigned long framesPerBuffer, float* outputMeterFloats);
     void DrainInputBuffers(
-        constSamplePtr inputBuffer, unsigned long framesPerBuffer, const PaStreamCallbackFlags statusFlags, float* tempFloats);
+        constSamplePtr inputBuffer, unsigned long framesPerBuffer, const AudioStreamCallbackFlags statusFlags, float* tempFloats);
     void UpdateTimePosition(
         unsigned long framesPerBuffer);
     void DoPlaythrough(
@@ -318,7 +329,7 @@ public:
 
     //! Not (yet) used; should perhaps be atomic when it is
     double mLastRecordingOffset;
-    PaError mLastPaError;
+    int mLastStreamError;
 
 protected:
     static size_t MinValue(
@@ -347,7 +358,7 @@ protected:
     static bool mCachedBestRatePlaying;
     static bool mCachedBestRateCapturing;
 
-    // Serialize main thread and PortAudio thread's attempts to pause and change
+    // Serialize main thread and audio callback thread's attempts to pause and change
     // the state used by the third, Audio thread.
     wxMutex mSuspendAudioThread;
 
@@ -411,7 +422,6 @@ private:
     using AudioIOBase::mAudioIOExt;
 };
 
-struct PaStreamInfo;
 
 class AUDIO_IO_API AudioIO final : public AudioIoCallback, public Observer::Publisher<AudioIOEvent>
 {
@@ -488,7 +498,7 @@ public:
     void CallAfterRecording(PostRecordingAction action);
 
 public:
-    wxString LastPaErrorString();
+    wxString LastStreamErrorText();
 
     wxLongLong GetLastPlaybackTime() const { return mLastPlaybackTimeMillis; }
     std::shared_ptr<AudacityProject> GetOwningProject() const
@@ -567,7 +577,7 @@ public:
 private:
     bool DelayingActions() const;
 
-    /** \brief Opens the portaudio stream(s) used to do playback or recording
+    /** \brief Opens the audio stream(s) used to do playback or recording
      * (or both) through.
      *
      * The sampleRate passed is the Project Rate of the active project. It may
@@ -577,14 +587,14 @@ private:
      * if necessary. The captureFormat is used for recording only, the playback
      * being floating point always. Returns true if the stream opened successfully
      * and false if it did not. */
-    bool StartPortAudioStream(const AudioIOStartStreamOptions& options, unsigned int numPlaybackChannels, unsigned int numCaptureChannels);
+    bool StartAudioStream(const AudioIOStartStreamOptions& options, unsigned int numPlaybackChannels, unsigned int numCaptureChannels);
 
     void SetOwningProject(const std::shared_ptr<AudacityProject>& pProject);
     void ResetOwningProject();
 
     /*!
      Called in a loop from another worker thread that does not have the low-latency constraints
-     of the PortAudio callback thread.  Does less frequent and larger batches of work that may
+     of the audio callback thread.  Does less frequent and larger batches of work that may
      include memory allocations and database operations.  RingBuffer objects mediate the transfer
      between threads, to overcome the mismatch of their batch sizes.
      */

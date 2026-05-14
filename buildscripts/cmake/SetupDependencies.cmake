@@ -68,7 +68,7 @@ endfunction()
 
 populate(wxwidgets "wxwidgets/3.1.3.9")
 populate(expat "expat/2.0.5")
-populate(portaudio "portaudio/19.7.0")
+# Audio backend deps live in SetupRtAudio.cmake
 populate(libmp3lame "libmp3lame/3.100")
 populate(wavpack "wavpack/5.7.0")
 populate(mpg123 "mpg123/1.31.2")

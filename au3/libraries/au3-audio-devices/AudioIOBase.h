@@ -22,13 +22,7 @@ Paul Licameli split from AudioIO.h
 #include <wx/string.h>
 #include "au3-utility/MemoryX.h"
 #include "IMeterSender.h"
-
-struct PaDeviceInfo;
-typedef void PaStream;
-
-#if USE_PORTMIXER
-typedef void PxMixer;
-#endif
+#include "RtAudioBackend.h"
 
 class AudioIOBase;
 
@@ -318,8 +312,6 @@ public:
 
 protected:
     static std::unique_ptr<AudioIOBase> ugAudioIO;
-    static wxString DeviceName(const PaDeviceInfo* info);
-    static wxString HostName(const PaDeviceInfo* info);
 
     std::weak_ptr<AudacityProject> mOwningProject;
 
@@ -333,24 +325,17 @@ protected:
     /*! Read by worker threads but unchanging during playback */
     double mRate;
 
-    PaStream* mPortStreamV19;
+    /// Backing audio stream. AudioIO owns its lifecycle; AudioIOBase looks at
+    /// it for IsStreamActive / IsMonitoring queries.
+    audacity::rta::DuplexStream mStream;
 
     std::weak_ptr<IMeterSender> mInputMeter{};
     std::weak_ptr<IMeterSender> mOutputMeter{};
 
-   #if USE_PORTMIXER
-    PxMixer* mPortMixer;
-    float mPreviousHWPlaythrough;
-   #endif /* USE_PORTMIXER */
-
-    /** @brief Can we control the hardware input level?
-     *
-     * This flag is set to true if using portmixer to control the
-     * input volume seems to be working (and so we offer the user the control),
-     * and to false (locking the control out) otherwise. This avoids stupid
-     * scaled clipping problems when trying to do software emulated input volume
-     * control */
-    bool mInputMixerWorks;
+    /// Hardware input level control is not exposed by the audio backend; the
+    /// UI uses this flag to decide whether to offer a hardware slider versus
+    /// the software-emulated one.
+    static constexpr bool mInputMixerWorks = false;
 
     // For cacheing supported sample rates
     static std::map<int, std::vector<long> > mCachedPlaybackRates;
@@ -369,14 +354,6 @@ protected:
      * default device index.
      */
     static int getRecordDevIndex(const wxString& devName = {});
-
-    /** \brief get the index of the device selected in the preferences.
-     *
-     * If the device isn't found, returns -1
-     */
-#if USE_PORTMIXER
-    static int getRecordSourceIndex(PxMixer* portMixer);
-#endif
 
     /** \brief get the index of the supplied (named) playback device, or the
      * device selected in the preferences if none given.

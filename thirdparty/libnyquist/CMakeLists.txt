@@ -68,7 +68,7 @@ set( SOURCES
       nyquist/nyqsrc/sndread.c
       nyquist/nyqsrc/sndseq.c
       nyquist/nyqsrc/sndsliders.c
-      nyquist/nyqsrc/sndwritepa.c
+      nyquist/nyqsrc/sndwriter.c
       nyquist/nyqsrc/sound.c
       nyquist/nyqsrc/stats.c
       nyquist/nyqsrc/stoponzero.c
@@ -290,7 +290,6 @@ set( OPTIONS
 
 set( LIBRARIES
    PRIVATE
-      portaudio::portaudio
       SndFile::sndfile
 )
 

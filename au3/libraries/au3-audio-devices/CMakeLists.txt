@@ -20,11 +20,13 @@ set( SOURCES
    DeviceManager.cpp
    DeviceManager.h
    IMeterSender.h
+   RtAudioBackend.cpp
+   RtAudioBackend.h
 )
 set( LIBRARIES
+   PUBLIC
+   rtaudio::rtaudio
    PRIVATE
-   portaudio::portaudio
-   $<$<BOOL:${USE_PORTMIXER}>:portmixer>
    au3-preferences-interface
    wxBase
 )
