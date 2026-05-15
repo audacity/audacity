@@ -133,6 +133,8 @@ Item {
         CheckBox {
             navigation.panel: root.navigationPanel
             navigation.order: root.navigationOrderStart
+            navigation.accessible.name: parameterData ? parameterData.name : ""
+            navigation.accessible.description: parameterData ? parameterData.description : ""
 
             checked: parameterData ? parameterData.isToggleChecked : false
             enabled: parameterData ? !parameterData.isReadOnly : false
@@ -164,6 +166,8 @@ Item {
 
                 navigation.panel: root.navigationPanel
                 navigation.order: root.navigationOrderStart
+                navigation.accessible.name: parameterData ? parameterData.name + (dropdown.displayText ? ": " + dropdown.displayText : "") : ""
+                navigation.accessible.description: parameterData ? parameterData.description : ""
 
                 currentIndex: parameterData ? parameterData.currentEnumIndex : 0
 
@@ -215,6 +219,8 @@ Item {
 
                 navigation.panel: root.navigationPanel
                 navigation.order: root.navigationOrderStart
+                navigation.accessible.name: parameterData ? parameterData.name : ""
+                navigation.accessible.description: parameterData ? parameterData.description : ""
 
                 from: parameterData ? parameterData.minValue : 0
                 to: parameterData ? parameterData.maxValue : 1
@@ -244,6 +250,8 @@ Item {
 
                 navigation.panel: root.navigationPanel
                 navigation.order: slider.navigation.order + 1
+                navigation.accessible.name: parameterData ? parameterData.name : ""
+                navigation.accessible.description: parameterData ? parameterData.description : ""
 
                 onGestureStarted: root.gestureStarted(root.parameterId)
                 onGestureEnded: root.gestureEnded(root.parameterId)
@@ -268,6 +276,8 @@ Item {
 
                 navigation.panel: root.navigationPanel
                 navigation.order: root.navigationOrderStart
+                navigation.accessible.name: parameterData ? parameterData.name : ""
+                navigation.accessible.description: parameterData ? parameterData.description : ""
 
                 onGestureStarted: root.gestureStarted(root.parameterId)
                 onGestureEnded: root.gestureEnded(root.parameterId)
@@ -292,6 +302,10 @@ Item {
             Timecode {
                 id: timecode
                 Layout.alignment: Qt.AlignVCenter
+
+                // NumericView composes accessible.name as `accessibleName +
+                // valueString`; the parameter label is the prefix here.
+                accessibleName: parameterData ? parameterData.name + ": " : ""
 
                 value: parameterData ? parameterData.currentValue : 0
                 mode: TimecodeModeSelector.Duration
@@ -337,6 +351,11 @@ Item {
                 // (not `navigation.panel`) and accepts row/column orders.
                 navigation: root.navigationPanel
                 navigationRowOrderStart: root.navigationOrderStart
+
+                // FilePicker prepends pathFieldTitle to its inner pathField's
+                // accessible name, which is the only hook it exposes for the
+                // parameter label.
+                pathFieldTitle: parameterData ? parameterData.name : ""
 
                 path: parameterData ? parameterData.currentValueString : ""
 
@@ -391,6 +410,8 @@ Item {
 
                 navigation.panel: root.navigationPanel
                 navigation.order: root.navigationOrderStart
+                navigation.accessible.name: parameterData ? parameterData.name + ": " + (textField.currentText || "") : ""
+                navigation.accessible.description: parameterData ? parameterData.description : ""
 
                 currentText: parameterData ? parameterData.currentValueString : ""
                 enabled: parameterData ? !parameterData.isReadOnly : false
