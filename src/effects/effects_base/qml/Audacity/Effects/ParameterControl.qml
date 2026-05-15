@@ -303,6 +303,13 @@ Item {
                 id: timecode
                 Layout.alignment: Qt.AlignVCenter
 
+                // Timecode (NumericView) does expose `navigation` -- as a
+                // `property NavigationControl` instance, not a `property
+                // alias`. Group-binding sub-properties on it still works.
+                navigation.panel: root.navigationPanel
+                navigation.order: root.navigationOrderStart
+                navigation.accessible.description: parameterData ? parameterData.description : ""
+
                 // NumericView composes accessible.name as `accessibleName +
                 // valueString`; the parameter label is the prefix here.
                 accessibleName: parameterData ? parameterData.name + ": " : ""
