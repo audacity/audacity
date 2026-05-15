@@ -67,10 +67,11 @@ ListItemBlank {
     focusBorder.anchors.rightMargin: 24 + separatorLine.width
     focusBorder.anchors.bottomMargin: 2
 
-    background.color: (root.isSelected || hoverHandler.hovered) ?
-                   ui.theme.backgroundPrimaryColor : ui.theme.backgroundSecondaryColor
+    background.color: root.isSelected ? ui.theme.extra["track_header_active_color"]
+                   : (hoverHandler.hovered ? ui.theme.extra["track_header_hover_color"]
+                                           : ui.theme.extra["track_header_color"])
 
-    background.opacity: (!root.isSelected || hoverHandler.hovered) ? 0.7 : 1
+    background.opacity: 1
 
     background.anchors.leftMargin: spacer.width
     background.anchors.rightMargin: -background.radius
@@ -272,20 +273,6 @@ ListItemBlank {
         }
     }
 
-    Rectangle {
-        id: trackHeaderBorder
-
-        anchors.fill: parent
-        anchors.rightMargin: -radius
-        anchors.leftMargin: spacer.width
-        anchors.bottomMargin: bottomSeparator.thickness
-
-        color: "transparent"
-        border.width: 1
-        border.color: ui.theme.strokeColor
-
-        radius: 4
-    }
 
     SeparatorLine {
         id: bottomSeparator
