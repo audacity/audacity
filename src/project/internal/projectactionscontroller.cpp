@@ -1,6 +1,9 @@
 #include "projectactionscontroller.h"
 
 #include <QFileDialog>
+#include <QString>
+#include <QFileInfo>
+#include <QDir>
 
 #include "au3cloud/internal/au3audiocomservice.h"
 #include "framework/global/async/async.h"
@@ -19,6 +22,18 @@
 #include "audacityproject.h"
 #include "projecterrors.h"
 #include "project/types/projecttypes.h"
+#include "importexport/export/OriginalFileInfo.h"
+
+#include "au3-import-export/Export.h"
+#include "au3-import-export/ExportPluginRegistry.h"
+#include "au3-import-export/ExportProgressUI.h"
+#include "au3-import-export/ExportPlugin.h"
+#include "au3-project/Project.h"
+#include "au3-project-file-io/ProjectFileIO.h"
+#include "au3-files/wxFileNameWrapper.h"
+#include "au3wrap/au3types.h"
+#include "au3-track/Track.h"
+#include "au3-wave-track/WaveTrack.h"
 
 using namespace muse;
 using namespace au::project;
@@ -68,6 +83,7 @@ void ProjectActionsController::init()
     dispatcher()->reg(this, OPEN_CLOUD_AUDIO_FILE_URI, this, &ProjectActionsController::openCloudAudioFile);
 
     dispatcher()->reg(this, "export-audio", this, &ProjectActionsController::exportAudio);
+    dispatcher()->reg(this, "export-overwrite-original", this, &ProjectActionsController::exportOverwriteOriginal);
     dispatcher()->reg(this, "export-labels", this, &ProjectActionsController::exportLabels);
     dispatcher()->reg(this, "export-midi", this, &ProjectActionsController::exportMIDI);
 
@@ -155,6 +171,25 @@ bool ProjectActionsController::canReceiveAction(const muse::actions::ActionCode&
     }
 
     const bool recording = recordController()->isRecording();
+
+    if (code == "export-overwrite-original") {
+        // Check if original file is a project file (not supported)
+        auto au3Project = reinterpret_cast<AudacityProject*>(currentProject()->au3ProjectPtr());
+        if (au3Project) {
+            auto& fileInfo = OriginalFileInfo::Get(*au3Project);
+            if (fileInfo.HasOriginalFile()) {
+                QString path = QString::fromStdString(fileInfo.GetOriginalFilePath().toStdString());
+                QString ext = QFileInfo(path).suffix().toLower();
+                // Hide menu if it's a project file
+                if (ext == "aup" || ext == "aup3" || ext == "aup4") {
+                    return false;
+                }
+            } else {
+                return false;  // Hide if no original file
+            }
+        }
+        return true;
+    }
 
     if (code == "file-share-audio") {
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
@@ -1281,6 +1316,142 @@ void ProjectActionsController::openCloudAudioFile(const muse::actions::ActionQue
 void ProjectActionsController::exportAudio()
 {
     interactive()->open(EXPORT_URI);
+}
+
+void ProjectActionsController::exportOverwriteOriginal()
+{
+    // Get current project
+    auto project = globalContext()->currentProject();
+    if (!project) {
+        return;
+    }
+    
+    // Get the original file info for this project
+    auto au3ProjectPtr = reinterpret_cast<AudacityProject*>(project->au3ProjectPtr());
+    auto& fileInfo = OriginalFileInfo::Get(*au3ProjectPtr);
+    
+    // Check if we have original file information and only one file was imported
+    if (!fileInfo.HasOriginalFile()) {
+        interactive()->error(
+            muse::trc("project", "Overwrite Original"),
+            muse::trc("project", "No original file information available. "
+                                  "Make sure to import a file first."));
+        return;
+    }
+    
+    QString originalFilePath = fileInfo.GetOriginalFilePath();
+    
+    // Check if we can write to the directory (even if original file is missing)
+    QFileInfo fileInfo2(originalFilePath);
+    QDir dir = fileInfo2.dir();
+    if (!dir.exists() || !QFileInfo(dir.absolutePath()).isWritable()) {
+        interactive()->error(
+            muse::trc("project", "Overwrite Original"),
+            muse::trc("project", "Cannot write to the directory where the original file was located."));
+        return;
+    }
+    
+    // Show confirmation dialog
+    IInteractive::Result result = interactive()->warningSync(
+        muse::trc("project", "Overwrite Original"),
+        muse::trc("project", "This will overwrite the original file. Continue?"),
+        { IInteractive::Button::No, IInteractive::Button::Yes },
+        IInteractive::Button::No);
+    
+    if (result.standardButton() != IInteractive::Button::Yes) {
+        return;  // User cancelled
+    }
+    
+    // Get the Au3Project for export operations
+    auto au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
+    if (!au3Project) {
+        interactive()->error(
+            muse::trc("project", "Overwrite Original"),
+            muse::trc("project", "Failed to access project data."));
+        return;
+    }
+    
+    // Get the format ID and find the export plugin
+    QString formatID = fileInfo.GetExportFormatID();
+    wxString wxFormatID = wxString(formatID.toStdString());
+    auto [plugin, formatIndex] = ExportPluginRegistry::Get().FindFormat(wxFormatID);
+    
+    if (plugin == nullptr) {
+        std::string message = "The export format for the original file is no longer available: " + formatID.toStdString();
+        interactive()->error(
+            muse::trc("project", "Overwrite Original"),
+            message);
+        return;
+    }
+    
+    // Get project info needed for export
+    auto& tracks = ::TrackList::Get(*au3Project);
+    
+    // Get audio duration
+    double endTime = tracks.GetEndTime();
+    
+    // Collect channel and sample rate info from tracks
+    int numChannels = 1;
+    double sampleRate = 44100.0;
+    
+    // Get channel info from available tracks  
+    for (const auto pTrack : tracks.Any<WaveTrack>()) {
+        if (pTrack && pTrack->NChannels() > numChannels) {
+            numChannels = pTrack->NChannels();
+        }
+        if (pTrack && pTrack->GetRate() > 0) {
+            sampleRate = pTrack->GetRate();
+            break;  // Use sample rate from first track found
+        }
+    }
+    
+    // Get default export parameters from plugin
+    auto parameters = ExportProcessor::Parameters();
+    
+    // Create export file wrapper (convert QString to wxString for legacy API)
+    wxFileNameWrapper fileName(wxString(originalFilePath.toStdString()));
+    
+    // Build and execute export task
+    ExportResult exportResult = ExportResult::Error;
+    ExportProgressUI::ExceptionWrappedCall([&]
+    {
+        try {
+            auto builder = ExportTaskBuilder{}
+                .SetFileName(fileName)
+                .SetRange(0.0, endTime, false)
+                .SetParameters(parameters)
+                .SetPlugin(plugin, formatIndex)
+                .SetNumChannels(numChannels)
+                .SetSampleRate(sampleRate);
+            
+            exportResult = ExportProgressUI::Show(builder.Build(*au3Project));
+        }
+        catch (const ExportErrorException& e) {
+            std::string message = "Export failed: " + std::string(e.GetMessage().Translation().utf8_str());
+            interactive()->error(
+                muse::trc("project", "Overwrite Original - Export Error"),
+                message);
+        }
+        catch (...) {
+            interactive()->error(
+                muse::trc("project", "Overwrite Original - Export Error"),
+                muse::trc("project", "An unexpected error occurred during export."));
+        }
+    });
+    
+    // Show result message
+    if (exportResult == ExportResult::Success) {
+        std::string message = "Successfully overwrote the original file:\n" + originalFilePath.toStdString();
+        interactive()->info(
+            muse::trc("project", "Overwrite Original"),
+            message);
+    } else if (exportResult == ExportResult::Stopped) {
+        // User stopped the export - this is normal, don't show error
+    } else {
+        interactive()->error(
+            muse::trc("project", "Overwrite Original - Export Error"),
+            muse::trc("project", "Failed to overwrite the original file. Please try again."));
+    }
 }
 
 void ProjectActionsController::exportLabels(const actions::ActionData& args)

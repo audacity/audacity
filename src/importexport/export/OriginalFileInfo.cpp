@@ -1,0 +1,94 @@
+/**********************************************************************
+
+Audacity: A Digital Audio Editor
+
+OriginalFileInfo.cpp
+
+**********************************************************************/
+
+#include "OriginalFileInfo.h"
+#include <map>
+#include <memory>
+
+namespace {
+    // Simple map-based storage for OriginalFileInfo per project (identified by pointer)
+    // Note: Uses pointer address as key - this is safe as long as projects exist
+    // This is session-scoped and cleared when projects are destroyed
+    std::map<void*, std::shared_ptr<OriginalFileInfo>> gOriginalFileInfoMap;
+}
+
+OriginalFileInfo& OriginalFileInfo::Get(AudacityProject& project)
+{
+    void* projectPtr = &project;
+    auto it = gOriginalFileInfoMap.find(projectPtr);
+    if (it == gOriginalFileInfoMap.end()) {
+        auto info = std::make_shared<OriginalFileInfo>(project);
+        gOriginalFileInfoMap[projectPtr] = info;
+        return *info;
+    }
+    return *it->second;
+}
+
+OriginalFileInfo::OriginalFileInfo(AudacityProject& project)
+    : mProject(project)
+{
+}
+
+OriginalFileInfo::~OriginalFileInfo()
+{
+    // Clean up from the map when destroyed
+    void* projectPtr = &mProject;
+    auto it = gOriginalFileInfoMap.find(projectPtr);
+    if (it != gOriginalFileInfoMap.end()) {
+        gOriginalFileInfoMap.erase(it);
+    }
+}
+
+void OriginalFileInfo::SetOriginalFile(const QString& filePath, const QString& displayName)
+{
+    mOriginalFilePath = filePath;
+    mOriginalFileName = displayName;
+}
+
+const QString& OriginalFileInfo::GetOriginalFilePath() const
+{
+    return mOriginalFilePath;
+}
+
+const QString& OriginalFileInfo::GetOriginalFileName() const
+{
+    return mOriginalFileName;
+}
+
+void OriginalFileInfo::SetExportFormatID(const QString& formatID)
+{
+    mExportFormatID = formatID;
+}
+
+const QString& OriginalFileInfo::GetExportFormatID() const
+{
+    return mExportFormatID;
+}
+
+void OriginalFileInfo::IncrementImportedFileCount()
+{
+    ++mImportedFileCount;
+}
+
+int OriginalFileInfo::GetImportedFileCount() const
+{
+    return mImportedFileCount;
+}
+
+void OriginalFileInfo::Clear()
+{
+    mOriginalFilePath.clear();
+    mOriginalFileName.clear();
+    mExportFormatID.clear();
+    mImportedFileCount = 0;
+}
+
+bool OriginalFileInfo::HasOriginalFile() const
+{
+    return !mOriginalFilePath.isEmpty() && mImportedFileCount == 1;
+}

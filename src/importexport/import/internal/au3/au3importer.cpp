@@ -3,6 +3,7 @@
 #include "framework/global/io/path.h"
 
 #include "au3-basic-ui/BasicUI.h"
+#include "importexport/export/OriginalFileInfo.h"
 #include "au3-stretching-sequence/TempoChange.h"
 #include "au3-track/Track.h"
 #include "au3-wave-track/WaveClip.h"
@@ -341,6 +342,21 @@ void au::importexport::Au3Importer::addImportedTracks(const muse::io::path_t& fi
     std::vector<Track*> results;
 
     wxFileName fn(wxFromString(fileName.toString()));
+    
+    // Capture original file info for "Overwrite Original" feature
+    // Check if this is the first import (not whether project is physically empty)
+    auto& fileInfo = OriginalFileInfo::Get(*project);
+    if (fileInfo.GetImportedFileCount() == 0) {
+        // First file being imported - capture its path and format
+        QString filePath = QString::fromStdString(fileName.toString().toStdString());
+        QString displayName = QString::fromStdString(fn.GetName().ToStdString());
+        QString formatID = QString::fromStdString(fn.GetExt().Upper().ToStdString());
+        
+        fileInfo.SetOriginalFile(filePath, displayName);
+        fileInfo.SetExportFormatID(formatID);
+    }
+    // Increment import count on every import (whether first or subsequent)
+    fileInfo.IncrementImportedFileCount();
 
     double newRate = 0;
     wxString trackNameBase = fn.GetName();

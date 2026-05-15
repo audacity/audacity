@@ -208,6 +208,7 @@ MenuItem* AppMenuModel::makeFileMenu()
         makeSeparator(),
 
         makeMenuItem("export-audio"),
+        makeMenuItem("export-overwrite-original"),
         makeMenu(TranslatableString("appshell/menu/export-other", "&Export other"), makeExportItems(), "menu-export-other"),
         makeMenuItem("file-share-audio"),
 
