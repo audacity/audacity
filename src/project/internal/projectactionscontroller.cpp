@@ -938,7 +938,24 @@ Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, cons
         syncProgress->finished().onReceive(this, [this](const ProgressResult& result) {
             if (!result.ret.success()) {
                 handleCloudSaveError(result.ret);
+                return;
             }
+
+            const bool dismissable = false;
+            toastService()->show(trc("global", "Success"),
+                                 trc("project",
+                                     "All saved changes will now update to the cloud.\nYou can manage this file from your updated projects page on audio.com"),
+                                 muse::ui::IconCode::Code::TICK,
+                                 dismissable,
+            {
+                { trc("project", "Dismiss"), au::toast::ToastActionCode::None },
+                { trc("cloud", "View on audio.com"), au::toast::ToastActionCode::Custom }
+            }
+                                 ).onResolve(this, [this, url = result.val.toQString()](au::toast::ToastActionCode actionCode) {
+                if (actionCode == au::toast::ToastActionCode::Custom) {
+                    platformInteractive()->openUrl(url);
+                }
+            });
         });
 
         const bool dismissible = false;

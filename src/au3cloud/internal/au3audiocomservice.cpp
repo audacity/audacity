@@ -380,13 +380,13 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::resumeProjectSync(au::projec
 
     auto progress = createSyncProgress();
     m_resumeSyncSubscription = projectCloudExtension.SubscribeStatusChanged(
-        [progress](const audacity::cloud::audiocom::sync::CloudStatusChangedMessage& message) {
+        [progress, project](const audacity::cloud::audiocom::sync::CloudStatusChangedMessage& message) {
         if (message.Status == audacity::cloud::audiocom::sync::ProjectSyncStatus::Syncing) {
             progress->progress(message.Progress * 100, 100);
         }
 
         if (message.Status == audacity::cloud::audiocom::sync::ProjectSyncStatus::Synced) {
-            progress->finish(muse::make_ok());
+            progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(::getCloudProjectPage(project))));
         }
 
         if (message.Status == audacity::cloud::audiocom::sync::ProjectSyncStatus::Failed) {
@@ -749,7 +749,7 @@ muse::Ret Au3AudioComService::checkUnsyncedProject(const std::string& cloudProje
 muse::ProgressPtr Au3AudioComService::createSyncProgress()
 {
     if (m_syncInProgress) {
-        m_syncInProgress->finish(muse::make_ok());
+        m_syncInProgress->cancel();
     }
 
     m_syncInProgress = std::make_shared<muse::Progress>();
