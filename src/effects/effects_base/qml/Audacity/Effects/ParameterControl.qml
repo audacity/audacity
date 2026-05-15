@@ -22,6 +22,12 @@ Item {
     property int upperTimeSignature: 0
     property int lowerTimeSignature: 0
 
+    // Navigation: provided by the parent so Up/Down/Tab can be handled by the
+    // inner controls (e.g. IncrementalPropertyControl's own NavigationEvent
+    // handler) instead of bubbling up to the dialog ButtonBox.
+    property NavigationPanel navigationPanel: null
+    property int navigationOrderStart: 0
+
     signal valueChanged(string parameterId, double value)
     signal stringValueChanged(string parameterId, string stringValue)
     signal gestureStarted(string parameterId)
@@ -125,6 +131,9 @@ Item {
         id: toggleControl
 
         CheckBox {
+            navigation.panel: root.navigationPanel
+            navigation.order: root.navigationOrderStart
+
             checked: parameterData ? parameterData.isToggleChecked : false
             enabled: parameterData ? !parameterData.isReadOnly : false
 
@@ -152,6 +161,9 @@ Item {
                 id: dropdown
                 Layout.maximumWidth: prv.dropdownMaxWidth
                 Layout.alignment: Qt.AlignVCenter
+
+                navigation.panel: root.navigationPanel
+                navigation.order: root.navigationOrderStart
 
                 currentIndex: parameterData ? parameterData.currentEnumIndex : 0
 
@@ -201,6 +213,9 @@ Item {
                 Layout.minimumWidth: prv.controlWidth
                 Layout.alignment: Qt.AlignVCenter
 
+                navigation.panel: root.navigationPanel
+                navigation.order: root.navigationOrderStart
+
                 from: parameterData ? parameterData.minValue : 0
                 to: parameterData ? parameterData.maxValue : 1
                 value: parameterData ? parameterData.currentValue : 0
@@ -227,6 +242,9 @@ Item {
                 Layout.alignment: Qt.AlignVCenter
                 parameterData: root.parameterData
 
+                navigation.panel: root.navigationPanel
+                navigation.order: slider.navigation.order + 1
+
                 onGestureStarted: root.gestureStarted(root.parameterId)
                 onGestureEnded: root.gestureEnded(root.parameterId)
                 onValueCommitted: function (v) {
@@ -247,6 +265,9 @@ Item {
                 Layout.preferredWidth: prv.numericControlWidth
                 Layout.alignment: Qt.AlignVCenter
                 parameterData: root.parameterData
+
+                navigation.panel: root.navigationPanel
+                navigation.order: root.navigationOrderStart
 
                 onGestureStarted: root.gestureStarted(root.parameterId)
                 onGestureEnded: root.gestureEnded(root.parameterId)
@@ -311,6 +332,12 @@ Item {
                 Layout.preferredWidth: prv.filePickerWidth
                 Layout.alignment: Qt.AlignVCenter
 
+                // FilePicker uses a different navigation API than the other
+                // Muse controls: it takes the panel directly via `navigation`
+                // (not `navigation.panel`) and accepts row/column orders.
+                navigation: root.navigationPanel
+                navigationRowOrderStart: root.navigationOrderStart
+
                 path: parameterData ? parameterData.currentValueString : ""
 
                 pickerType: {
@@ -361,6 +388,9 @@ Item {
                 id: textField
                 Layout.preferredWidth: prv.textControlWidth
                 Layout.alignment: Qt.AlignVCenter
+
+                navigation.panel: root.navigationPanel
+                navigation.order: root.navigationOrderStart
 
                 currentText: parameterData ? parameterData.currentValueString : ""
                 enabled: parameterData ? !parameterData.isReadOnly : false

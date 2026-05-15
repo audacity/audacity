@@ -15,6 +15,28 @@ Rectangle {
 
     required property int instanceId
 
+    // Navigation wiring: the dialog passes itself in via `dialogView` so we
+    // can attach our parameters NavigationPanel to its NavigationSection.
+    // `numNavigationPanels` mirrors the BuiltinEffectBase contract used by
+    // DestructiveEffectsViewerDialog to order its bottom ButtonBox.
+    property var dialogView: null
+    property int numNavigationPanels: 1
+
+    property NavigationPanel parametersNavigationPanel: NavigationPanel {
+        name: "GeneratedEffectParameters"
+        enabled: root.enabled && root.visible
+        // Horizontal so the panel only traverses Left/Right between controls;
+        // Up/Down are left untouched and reach the focused control's own
+        // navigation handler (e.g. IncrementalPropertyControl's
+        // increment/decrement). With `Both`, the panel additionally tries
+        // to move focus on Up/Down after the control has already consumed
+        // the event, which kicks focus out after a single keypress.
+        // Matches the working pattern in AmplifyView.qml.
+        direction: NavigationPanel.Horizontal
+        section: root.dialogView ? root.dialogView.navigationSection : null
+        order: 1
+    }
+
     implicitWidth: prv.dialogWidth
     implicitHeight: {
         // why 2 times spaceXL? and 2 times spaceM?
@@ -107,6 +129,12 @@ Rectangle {
                             tempo: viewModel.tempo
                             upperTimeSignature: viewModel.upperTimeSignature
                             lowerTimeSignature: viewModel.lowerTimeSignature
+
+                            navigationPanel: root.parametersNavigationPanel
+                            // 10 slots per row leave headroom for parameter
+                            // types that pair multiple sub-controls (slider +
+                            // incremental, label + dropdown, ...).
+                            navigationOrderStart: index * 10
 
                             onGestureStarted: function (parameterId) {
                                 viewModel.parametersModel.beginGesture(parameterId)
