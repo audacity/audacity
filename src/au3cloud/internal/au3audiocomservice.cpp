@@ -3,10 +3,10 @@
 */
 #include "au3audiocomservice.h"
 
-#include <algorithm>
 #include <atomic>
 #include <chrono>
 #include <cstdint>
+#include <memory>
 #include <thread>
 #include <utility>
 
@@ -14,6 +14,7 @@
 #include "framework/global/runtime.h"
 #include "framework/global/types/ret.h"
 #include "framework/global/io/dir.h"
+#include "framework/global/progress.h"
 
 #include "au3-cloud-audiocom/CloudSyncService.h"
 #include "au3-cloud-audiocom/OAuthService.h"
@@ -291,8 +292,10 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::uploadProject(au::project::I
         }
 
         auto& projectCloudExtension = audacity::cloud::audiocom::sync::ProjectCloudExtension::Get(*au3Project);
-        if (projectCloudExtension.IsSyncing()) {
-            projectCloudExtension.CancelSync();
+
+        self->m_resumeSyncSubscription.Reset();
+        if (self->m_uploadDone) {
+            self->m_uploadDone->store(true);
         }
 
         projectCloudExtension.OnSyncStarted();
@@ -302,41 +305,29 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::uploadProject(au::project::I
                                 : audacity::cloud::audiocom::sync::UploadMode::Normal;
 
         auto done = std::make_shared<std::atomic<bool> >(false);
-        {
-            std::lock_guard guard(self->m_uploadSubscriptionsMutex);
+        self->m_uploadDone = done;
+        self->m_uploadSubscription = projectCloudExtension.SubscribeStatusChanged(
+            [progress, done, project](
+                const audacity::cloud::audiocom::sync::CloudStatusChangedMessage& message) {
+            if (done->load()) {
+                return;
+            }
 
-            self->m_projectUploadSubscriptions.erase(
-                std::remove_if(
-                    self->m_projectUploadSubscriptions.begin(),
-                    self->m_projectUploadSubscriptions.end(),
-                    [](const UploadSubscriptionEntry& e) { return e.done->load(); }),
-                self->m_projectUploadSubscriptions.end());
+            if (message.Status == audacity::cloud::audiocom::sync::ProjectSyncStatus::Syncing) {
+                progress->progress(message.Progress * 100, 100);
+            }
 
-            self->m_projectUploadSubscriptions.push_back(
-                { projectCloudExtension.SubscribeStatusChanged(
-                      [progress, done, project](
-                          const audacity::cloud::audiocom::sync::CloudStatusChangedMessage& message) {
-                    if (done->load()) {
-                        return;
-                    }
+            if (message.Status == audacity::cloud::audiocom::sync::ProjectSyncStatus::Synced) {
+                done->store(true);
+                progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(::getCloudProjectPage(project))));
+            }
 
-                    if (message.Status == audacity::cloud::audiocom::sync::ProjectSyncStatus::Syncing) {
-                        progress->progress(message.Progress * 100, 100);
-                    }
-
-                    if (message.Status == audacity::cloud::audiocom::sync::ProjectSyncStatus::Synced) {
-                        done->store(true);
-                        progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(::getCloudProjectPage(project))));
-                    }
-
-                    if (message.Status == audacity::cloud::audiocom::sync::ProjectSyncStatus::Failed) {
-                        done->store(true);
-                        progress->finish(make_ret(cloudSyncErrorToErr(message.Error)));
-                    }
-                },
-                      false),
-                  done });
-        }
+            if (message.Status == audacity::cloud::audiocom::sync::ProjectSyncStatus::Failed) {
+                done->store(true);
+                progress->finish(make_ret(cloudSyncErrorToErr(message.Error)));
+            }
+        },
+            false);
 
         auto future = audacity::cloud::audiocom::sync::LocalProjectSnapshot::Create(
             audacity::cloud::audiocom::GetServiceConfig(),
@@ -415,19 +406,12 @@ muse::ValCh<bool> Au3AudioComService::syncingInProgressChanged() const
 
 void Au3AudioComService::stopProjectSync()
 {
-    if (!m_syncInProgress.empty()) {
-        for (auto& progress : m_syncInProgress) {
-            if (progress) {
-                progress->cancel();
-            }
-        }
+    if (m_syncInProgress) {
+        m_syncInProgress->cancel();
     }
 
-    {
-        std::lock_guard guard(m_uploadSubscriptionsMutex);
-        m_projectUploadSubscriptions.clear();
-    }
-
+    m_uploadSubscription.Reset();
+    m_uploadDone.reset();
     m_resumeSyncSubscription.Reset();
 }
 
@@ -764,33 +748,24 @@ muse::Ret Au3AudioComService::checkUnsyncedProject(const std::string& cloudProje
 
 muse::ProgressPtr Au3AudioComService::createSyncProgress()
 {
-    auto progress = std::make_shared<muse::Progress>();
-    m_syncInProgress.push_back(progress);
+    if (m_syncInProgress) {
+        m_syncInProgress->finish(muse::make_ok());
+    }
 
-    progress->canceled().onNotify(this, [this, progress]() {
-        auto it = std::find(m_syncInProgress.begin(), m_syncInProgress.end(), progress);
-        if (it != m_syncInProgress.end()) {
-            m_syncInProgress.erase(it);
-        }
+    m_syncInProgress = std::make_shared<muse::Progress>();
 
-        if (m_syncInProgress.empty()) {
-            m_syncingInProgressChangedChannel.set(false);
-        }
+    m_syncInProgress->canceled().onNotify(this, [this]() {
+        m_syncInProgress.reset();
+        m_syncingInProgressChangedChannel.set(false);
     });
 
-    progress->finished().onReceive(this, [this, progress](const auto&) {
-        auto it = std::find(m_syncInProgress.begin(), m_syncInProgress.end(), progress);
-        if (it != m_syncInProgress.end()) {
-            m_syncInProgress.erase(it);
-        }
-
-        if (m_syncInProgress.empty()) {
-            m_syncingInProgressChangedChannel.set(false);
-        }
+    m_syncInProgress->finished().onReceive(this, [this](const auto&) {
+        m_syncInProgress.reset();
+        m_syncingInProgressChangedChannel.set(false);
     });
 
     m_syncingInProgressChangedChannel.set(true);
-    return progress;
+    return m_syncInProgress;
 }
 
 void Au3AudioComService::deinit()
