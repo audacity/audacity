@@ -646,10 +646,10 @@ void OnPaste(const CommandContext &context)
             member->TypeSwitch(
                [&](WaveTrack &wn){
                   bPastedSomething = true;
-                  const auto srcWaveTrack = static_cast<const WaveTrack*>(src);
                   // If the destination track is still empty, preserve the source
                   // sample rate and format (16 PCM, 24PCM or 32 bits) rather than forcing project defaults.
                   if (wn.GetNumClips() == 0) {
+                     const auto srcWaveTrack = static_cast<const WaveTrack*>(src);
                      wn.SetRate(srcWaveTrack->GetRate());
                      wn.ConvertToSampleFormat(srcWaveTrack->GetSampleFormat());
                   }
@@ -670,10 +670,10 @@ void OnPaste(const CommandContext &context)
                   {
                      // When the source is mono, may paste its only channel
                      // repeatedly into a stereo track
-                     const auto pastedTrack = std::static_pointer_cast<WaveTrack>(srcWaveTrack->Duplicate());
+                     const auto pastedTrack = std::static_pointer_cast<WaveTrack>(src->Duplicate());
                      pastedTrack->MonoToStereo();
                      wn.ClearAndPaste(
-                        t0, t1, *srcWaveTrack,
+                        t0, t1, *pastedTrack,
                         preserveExistingBoundaries, merge, &warper,
                         clearByTrimming);
                   }
