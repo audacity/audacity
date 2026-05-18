@@ -85,9 +85,6 @@ void GuiApp::doStartupScenario(const muse::modularity::ContextPtr& ctxId)
         if (options->startup.projectDisplayNameOverride.has_value()) {
             file.displayNameOverride = options->startup.projectDisplayNameOverride.value();
         }
-        if (options->startup.cloudProjectId.has_value()) {
-            file.cloudProjectId = options->startup.cloudProjectId.value();
-        }
         projectFile = file;
     }
 
@@ -95,6 +92,14 @@ void GuiApp::doStartupScenario(const muse::modularity::ContextPtr& ctxId)
     startupScenario->setStartupProjectFile(projectFile);
     startupScenario->setStartupMediaFiles(options->startup.mediaFiles);
     startupScenario->setRemoveMediaFilesAfterImport(options->startup.removeMediaFilesAfterImport);
+
+    if (options->startup.startupUrl.has_value()) {
+        auto dispatcher = muse::modularity::ioc(ctxId)->resolve<muse::actions::IActionsDispatcher>("app");
+        if (dispatcher) {
+            dispatcher->dispatch("open-url",
+                                 muse::actions::ActionData::make_arg1<QString>(options->startup.startupUrl.value()));
+        }
+    }
 
     startupScenario->runOnSplashScreen();
 
@@ -163,11 +168,18 @@ void GuiApp::onSecondInstanceArgs(const QStringList& args)
         return;
     }
 
+    auto dispatcher = muse::modularity::ioc(ctx)->resolve<muse::actions::IActionsDispatcher>("app");
+    if (!dispatcher) {
+        return;
+    }
+
+    if (parsed->startup.startupUrl.has_value()) {
+        dispatcher->dispatch("open-url",
+                             muse::actions::ActionData::make_arg1<QString>(parsed->startup.startupUrl.value()));
+    }
+
     if (parsed->startup.projectUrl.has_value()) {
-        auto dispatcher = muse::modularity::ioc(ctx)->resolve<muse::actions::IActionsDispatcher>("app");
-        if (dispatcher) {
-            dispatcher->dispatch("file-open",
-                                 muse::actions::ActionData::make_arg1<QUrl>(parsed->startup.projectUrl.value()));
-        }
+        dispatcher->dispatch("file-open",
+                             muse::actions::ActionData::make_arg1<QUrl>(parsed->startup.projectUrl.value()));
     }
 }

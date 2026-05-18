@@ -199,7 +199,7 @@ Ret ProjectActionsController::openProject(const ProjectFile& file)
             filename = resolved.val;
         }
 
-        return openProject(filename, file.displayNameOverride, file.cloudProjectId);
+        return openProject(filename, file.displayNameOverride);
     }
 
     //! TODO: Fix me
@@ -310,6 +310,16 @@ void ProjectActionsController::openCloudProject(const muse::actions::ActionData&
     const QString cloudProjectId = args.arg<QString>(0);
     const QUrl url = args.arg<QUrl>(1);
     const QString displayName = args.arg<QString>(2);
+
+    //! An empty URL means the project is not in the local cloud DB yet, so
+    //! route into the download flow and let audioComService resolve the path.
+    if (url.isEmpty()) {
+        Ret ret = openCloudProject({}, cloudProjectId);
+        if (!ret) {
+            openPageIfNeed(HOME_PAGE_URI);
+        }
+        return;
+    }
 
     Ret ret = openProject(muse::io::path_t(url), displayName, cloudProjectId);
     if (!ret) {
@@ -858,9 +868,6 @@ muse::Ret ProjectActionsController::openProject(const muse::io::path_t& path, co
 
         if (!displayNameOverride.isEmpty()) {
             args << "--project-display-name-override" << displayNameOverride;
-        }
-        if (!projectId.empty()) {
-            args << "--cloud-project-id" << projectId;
         }
         multiwindowsProvider()->openNewWindow(args);
         return make_ret(Ret::Code::Ok);
