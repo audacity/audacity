@@ -108,9 +108,9 @@ You will also be able to change to the scripts directory and run ./graph.pl to g
       
 Generally, steps 1-5 are only needed the first-time you configure. Then, after you've generated the solution, you can open it in Visual Studio next time. If the project configuration has changed, the IDE will invoke CMake internally. 
 
-### Building with ASIO support on Windows
+### Building with ASIO support on Windows (EXPERIMENTAL)
 
-To enable ASIO support, please select `audacity_has_asio_support=On` in CMake after the initial configuration and then run select **Configure** again as described above. ASIO is only supported on Windows and only for 64-bit builds.
+To enable (EXPERIMENTAL) ASIO support, please select `audacity_has_asio_support=On` in CMake after the initial configuration and then run select **Configure** again as described above. ASIO is only supported (EXPERIMENTAL) on Windows and only for 64-bit builds.
 
 ## macOS
 
