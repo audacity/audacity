@@ -4,7 +4,6 @@
 #pragma once
 
 #include "effects/builtin/view/builtineffectmodel.h"
-#include "../common/params.h"
 
 namespace au::effects {
 class AmplifyEffect;
@@ -64,7 +63,6 @@ public:
     void setCanClip(bool newClipping);
 
     bool isApplyAllowed() const;
-    void setIsApplyAllowed(bool isApplyAllowed);
 
 signals:
     void ampValueChanged();
@@ -76,11 +74,6 @@ private:
     void doReload() override;
 
     void update();
-
-    Param<db_t> m_amp;
-    db_t m_newPeak = 0.0f;
-    bool m_canClip = false;
-    bool m_isApplyAllowed = false;
 };
 
 class AmplifyViewModelFactory : public EffectViewModelFactory<AmplifyViewModel>
