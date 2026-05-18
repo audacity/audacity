@@ -18,6 +18,8 @@ struct AudacityCmdOptions : public muse::CmdOptions {
     struct {
         std::optional<bool> revertToFactorySettings;
         bool memoryLeakReport = false;
+        bool version = false;
+        bool longVersion = false;
     } app;
 
     struct {

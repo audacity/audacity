@@ -3,10 +3,16 @@
  */
 #include "commandlineparser.h"
 
+#include <cstdio>
+
+#include <QCoreApplication>
 #include <QDir>
+#include <QtGlobal>
 
 #include "global/io/dir.h"
 #include "project/types/projecttypes.h"
+
+#include "muse_framework_config.h"
 
 #include "log.h"
 
@@ -104,9 +110,12 @@ void CommandLineParser::parse(int argc, char** argv)
         projectfiles << fromUserInputPath(arg);
     }
 
+    if (m_parser.isSet("version")) {
+        m_options->app.version = true;
+    }
+
     if (m_parser.isSet("long-version")) {
-        printLongVersion();
-        exit(EXIT_SUCCESS);
+        m_options->app.longVersion = true;
     }
 
     if (m_parser.isSet("d")) {
@@ -230,7 +239,32 @@ std::shared_ptr<AudacityCmdOptions> CommandLineParser::options() const
     return m_options;
 }
 
+void CommandLineParser::printVersion() const
+{
+    printf("%s %s\n",
+           QCoreApplication::applicationName().toUtf8().constData(),
+           QCoreApplication::applicationVersion().toUtf8().constData());
+}
+
 void CommandLineParser::printLongVersion() const
 {
-    NOT_IMPLEMENTED;
+    printVersion();
+
+#ifdef MUSE_APP_UNSTABLE
+    printf("Channel: unstable\n");
+#endif
+
+#ifdef MUSE_APP_REVISION
+    if (*MUSE_APP_REVISION) {
+        printf("Revision: %s\n", MUSE_APP_REVISION);
+    }
+#endif
+
+#ifdef MUSE_APP_BUILD_NUMBER
+    if (*MUSE_APP_BUILD_NUMBER) {
+        printf("Build: %s\n", MUSE_APP_BUILD_NUMBER);
+    }
+#endif
+
+    printf("Qt: %s (built against %s)\n", qVersion(), QT_VERSION_STR);
 }

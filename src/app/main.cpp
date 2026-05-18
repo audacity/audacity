@@ -164,6 +164,16 @@ int main(int argc, char** argv)
     commandLineParser.init();
     commandLineParser.parse(argcFinal, argvFinal);
 
+    if (commandLineParser.options()->app.version) {
+        commandLineParser.printVersion();
+        return 0;
+    }
+
+    if (commandLineParser.options()->app.longVersion) {
+        commandLineParser.printLongVersion();
+        return 0;
+    }
+
 #ifdef Q_OS_WIN
     if (commandLineParser.options()->app.memoryLeakReport) {
         au::app::winleaktracker::install();
