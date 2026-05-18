@@ -88,14 +88,6 @@
                 <RegistryKey Key="MIMEAssociations">
                     <RegistryValue Name="application/x-audacity" Value="Audacity.aup4.$(var.ProgIdSuffix)" Type="string" />
                 </RegistryKey>
-
-                <!-- URL associations -->
-                <RegistryKey Key="UrlAssociations">
-                    <RegistryValue Name="audacity" Value="Audacity.Url.audacity.$(var.ProgIdSuffix)" Type="string" />
-                </RegistryKey>
-
-                <!-- Open verb (TODO: this entry does not seem to be mentioned anywhere in the documentation, so does it make sense?) -->
-                <RegistryValue Key="shell\open\command" Value="&quot;[INSTALL_ROOT]bin\$(var.ExeName)&quot; &quot;%1&quot;" Type="string" />
             </RegistryKey>
 
             <RegistryValue Root="$(var.RegistryRoot)" Key="SOFTWARE\RegisteredApplications" Name="$(var.ProdName)" Value="$(var.CapabilitiesKey)" Type="string" />
@@ -134,21 +126,6 @@
                 <RegistryValue Value="Audacity.aup4.$(var.ProgIdSuffix)" Type="string" />
                 <?endif?>
                 <RegistryValue Name="Content Type" Value="application/x-audacity" Type="string" />
-            </RegistryKey>
-
-            <!-- audacity URL scheme -->
-            <RegistryKey Root="$(var.RegistryRoot)" Key="SOFTWARE\Classes\Audacity.Url.audacity.$(var.ProgIdSuffix)">
-                <RegistryValue Value="Audacity URL" Type="string" />
-                <RegistryValue Key="DefaultIcon" Value="[INSTALL_ROOT]bin\$(var.ExeName),1" Type="string" />
-                <RegistryValue Key="shell\open\command" Value="&quot;[INSTALL_ROOT]bin\$(var.ExeName)&quot; &quot;%1&quot;" Type="string" />
-            </RegistryKey>
-            <?ifndef MUSE_APP_IS_PRERELEASE?>
-            <RegistryValue Root="$(var.RegistryRoot)" Key="SOFTWARE\Classes\Audacity.Url.audacity\CurVer" Value="Audacity.Url.audacity.$(var.ProgIdSuffix)" Type="string" />
-            <?endif?>
-
-            <RegistryKey Root="$(var.RegistryRoot)" Key="SOFTWARE\Classes\audacity">
-                <RegistryValue Name="URL Protocol" Value="" Type="string" />
-                <RegistryValue Value="URL:Audacity URL" Type="string" />
             </RegistryKey>
         </Component>
 

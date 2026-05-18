@@ -8,6 +8,7 @@
 
 #include "au3cloud/iau3audiocomservice.h"
 #include "au3cloud/iusageinfo.h"
+#include "framework/global/log.h"
 #include "framework/ui/iuiactionsregister.h"
 
 #include "internal/au3cloudconfiguration.h"
@@ -17,6 +18,8 @@
 #include "internal/clouduiactions.h"
 
 #include "view/accountmodel.h"
+
+#include "internal/customschemeregistrar.h"
 
 using namespace au::au3cloud;
 
@@ -41,6 +44,10 @@ void Au3CloudModule::onInit(const muse::IApplication::RunMode&)
 {
     m_cloudService->init();
     m_cloudConfiguration->init();
+
+    if (!registerCustomScheme(QStringLiteral("audacity"))) {
+        LOGW() << "Failed to register audacity:// URL scheme";
+    }
 }
 
 void Au3CloudModule::onDeinit()
