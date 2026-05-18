@@ -33,6 +33,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/downloadmanager.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/downloadmanager.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/internal/cloudurlhandler.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/cloudurlhandler.h
+
     ${CMAKE_CURRENT_LIST_DIR}/view/accountmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/accountmodel.h
     )

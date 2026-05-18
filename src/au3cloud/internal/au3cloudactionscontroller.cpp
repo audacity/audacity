@@ -6,6 +6,8 @@
 #include "framework/actions/actiontypes.h"
 #include "framework/global/types/uri.h"
 
+#include "cloudurlhandler.h"
+
 using namespace au::au3cloud;
 
 namespace {
@@ -25,12 +27,25 @@ Au3CloudActionsController::Au3CloudActionsController(muse::modularity::ContextPt
 {
 }
 
+Au3CloudActionsController::~Au3CloudActionsController() = default;
+
 void Au3CloudActionsController::init()
 {
+    m_urlHandler = std::make_unique<CloudUrlHandler>(iocContext());
+
     dispatcher()->reg(this, OPEN_SIGNIN_DIALOG_ACTION, this, &Au3CloudActionsController::openSignInDialog);
     dispatcher()->reg(this, OPEN_CREATE_ACCOUNT_DIALOG_ACTION, this, &Au3CloudActionsController::openCreateAccountDialog);
     dispatcher()->reg(this, OPEN_CLOUD_PROJECT_PAGE_ACTION, this, &Au3CloudActionsController::openCloudProjectPage);
     dispatcher()->reg(this, OPEN_CLOUD_AUDIO_PAGE_ACTION, this, &Au3CloudActionsController::openCloudAudioPage);
+    dispatcher()->reg(this, "open-url", this, &Au3CloudActionsController::openUrl);
+}
+
+void Au3CloudActionsController::openUrl(const muse::actions::ActionData& args)
+{
+    if (args.empty()) {
+        return;
+    }
+    m_urlHandler->handle(args.arg<QString>(0));
 }
 
 bool Au3CloudActionsController::canReceiveAction(const muse::actions::ActionCode&) const

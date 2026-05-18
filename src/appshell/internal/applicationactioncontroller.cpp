@@ -189,10 +189,12 @@ bool ApplicationActionController::eventFilter(QObject* watched, QEvent* event)
         return true;
     }
 
+    //! on macOS custom URL opened from browser are also passed as QEvent::FileOpen
     if (event->type() == QEvent::FileOpen && watched == qApp) {
         const QFileOpenEvent* openEvent = static_cast<const QFileOpenEvent*>(event);
         const QUrl url = openEvent->url();
 
+        // TODO: isUrlSupported - is misleading, as it does not handle audio.com urls
         if (projectFilesController()->isUrlSupported(url)) {
             if (startupScenario()->startupCompleted()) {
                 dispatcher()->dispatch("file-open", ActionData::make_arg1<QUrl>(url));
@@ -202,6 +204,15 @@ bool ApplicationActionController::eventFilter(QObject* watched, QEvent* event)
 
             return true;
         }
+
+        if (auto mw = mainWindow()) {
+            if (QWindow* window = mw->qWindow(); window && !window->isVisible()) {
+                window->setVisible(true);
+            }
+            mw->requestShowOnFront();
+        }
+        dispatcher()->dispatch("open-url", ActionData::make_arg1<QString>(url.toString(QUrl::FullyEncoded)));
+        return true;
     }
 
     return QObject::eventFilter(watched, event);
