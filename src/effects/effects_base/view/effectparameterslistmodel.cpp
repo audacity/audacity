@@ -272,11 +272,37 @@ bool EffectParametersListModel::hasParameters() const
 
 void EffectParametersListModel::reloadParameters()
 {
-    beginResetModel();
+    ParameterInfoList freshParams = parametersProvider()->parameters(m_instanceId);
 
-    m_parameters = parametersProvider()->parameters(m_instanceId);
+    // Detect a structural change: count differs, or any row's id/type
+    // changed. Anything else (currentValue, stepSize, min/max, units, ...)
+    // can be updated in place via dataChanged without destroying the QML
+    // delegates -- which is what keeps keyboard focus alive when the user
+    // is arrow-keying / typing through an input field.
+    bool structural = (freshParams.size() != m_parameters.size());
+    if (!structural) {
+        for (size_t i = 0; i < freshParams.size(); ++i) {
+            if (m_parameters[i].id != freshParams[i].id
+                || m_parameters[i].type != freshParams[i].type) {
+                structural = true;
+                break;
+            }
+        }
+    }
 
-    endResetModel();
+    if (structural) {
+        beginResetModel();
+        m_parameters = std::move(freshParams);
+        endResetModel();
+    } else {
+        for (size_t i = 0; i < freshParams.size(); ++i) {
+            m_parameters[i] = std::move(freshParams[i]);
+            const QModelIndex idx = createIndex(static_cast<int>(i), 0);
+            // Empty roles list = all roles changed; lets every QML binding
+            // on parameterData.* re-evaluate.
+            emit dataChanged(idx, idx);
+        }
+    }
 
     emit hasParametersChanged();
 }
