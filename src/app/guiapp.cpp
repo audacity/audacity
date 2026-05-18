@@ -5,6 +5,7 @@
 
 #include <QCoreApplication>
 
+#include "framework/global/async/async.h"
 #include "framework/global/modularity/ioc.h"
 #include "framework/ui/imainwindow.h"
 #include "framework/actions/iactionsdispatcher.h"
@@ -141,7 +142,9 @@ void GuiApp::doSetup(const std::shared_ptr<muse::CmdOptions>& options)
     }
 
     m_singleInstance.messageReceived().onReceive(this, [this](const QStringList& args) {
-        onSecondInstanceArgs(args);
+        muse::async::Async::call(this, [this, args]() {
+            onSecondInstanceArgs(args);
+        });
     });
 }
 
@@ -162,7 +165,6 @@ void GuiApp::onSecondInstanceArgs(const QStringList& args)
         window->requestShowOnFront();
     }
 
-    // parse arguments forwarded by the second instance
     auto parsed = std::dynamic_pointer_cast<AudacityCmdOptions>(makeContextOptions(muse::StringList(args)));
     if (!parsed) {
         return;
@@ -181,5 +183,16 @@ void GuiApp::onSecondInstanceArgs(const QStringList& args)
     if (parsed->startup.projectUrl.has_value()) {
         dispatcher->dispatch("file-open",
                              muse::actions::ActionData::make_arg1<QUrl>(parsed->startup.projectUrl.value()));
+    }
+
+    if (!parsed->startup.mediaFiles.empty()) {
+        QStringList files;
+        files.reserve(static_cast<int>(parsed->startup.mediaFiles.size()));
+        for (const auto& file : parsed->startup.mediaFiles) {
+            files << file.toQString();
+        }
+        dispatcher->dispatch("project-import-startup-media",
+                             muse::actions::ActionData::make_arg2<QStringList, bool>(
+                                 files, parsed->startup.removeMediaFilesAfterImport));
     }
 }
