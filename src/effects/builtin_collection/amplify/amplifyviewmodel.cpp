@@ -87,17 +87,17 @@ QString AmplifyViewModel::newPeakLabel() const
 float AmplifyViewModel::newPeakValue() const
 {
     const auto& ae = effect<AmplifyEffect>();
-    return au::shared::Decibel::fromLinear(ae.ratio() * ae.peak()).raw();
+    return au::shared::Decibel::fromLinear(ae.ratio() * ae.inputPeak()).raw();
 }
 
 void AmplifyViewModel::setNewPeakValue(float newNewPeakValue)
 {
     auto& ae = effect<AmplifyEffect>();
     const au::shared::Decibel newNewPeak { newNewPeakValue };
-    if (au::shared::Decibel::fromLinear(ae.ratio() * ae.peak()) == newNewPeak) {
+    if (au::shared::Decibel::fromLinear(ae.ratio() * ae.inputPeak()) == newNewPeak) {
         return;
     }
-    const ratio_t ratio = newNewPeak.toLinear() / ae.peak();
+    const ratio_t ratio = newNewPeak.toLinear() / ae.inputPeak();
     ae.setAmp(au::shared::Decibel::fromLinear(ratio));
     update();
 }
@@ -105,13 +105,13 @@ void AmplifyViewModel::setNewPeakValue(float newNewPeakValue)
 float AmplifyViewModel::newPeakMin() const
 {
     const auto& ae = effect<AmplifyEffect>();
-    return (ae.amp().min + au::shared::Decibel::fromLinear(ae.peak())).raw();
+    return (ae.amp().min + au::shared::Decibel::fromLinear(ae.inputPeak())).raw();
 }
 
 float AmplifyViewModel::newPeakMax() const
 {
     const auto& ae = effect<AmplifyEffect>();
-    return (ae.amp().max + au::shared::Decibel::fromLinear(ae.peak())).raw();
+    return (ae.amp().max + au::shared::Decibel::fromLinear(ae.inputPeak())).raw();
 }
 
 QString AmplifyViewModel::newPeakMeasureUnitsSymbol() const
@@ -153,5 +153,5 @@ void AmplifyViewModel::setCanClip(bool newClipping)
 bool AmplifyViewModel::isApplyAllowed() const
 {
     const auto& ae = effect<AmplifyEffect>();
-    return ae.canClip() || ae.ratio() * ae.peak() <= 1.0f;
+    return ae.canClip() || ae.ratio() * ae.inputPeak() <= 1.0f;
 }

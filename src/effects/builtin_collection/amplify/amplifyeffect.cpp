@@ -67,19 +67,14 @@ ComponentInterfaceSymbol AmplifyEffect::GetSymbol() const
     return Symbol;
 }
 
-float AmplifyEffect::peak() const
+float AmplifyEffect::inputPeak() const
 {
-    return static_cast<float>(mPeak);
+    return static_cast<float>(mInputPeak);
 }
 
 ratio_t AmplifyEffect::defaultRatio() const
 {
-    return 1.0 / mPeak;
-}
-
-au::shared::Decibel AmplifyEffect::defaultAmp() const
-{
-    return au::shared::Decibel::fromLinear(defaultRatio());
+    return 1.0 / mInputPeak;
 }
 
 ratio_t AmplifyEffect::ratio() const
@@ -113,7 +108,7 @@ bool AmplifyEffect::isApplyAllowed() const
         return true;
     }
 
-    if (!(mPeak > 0.0)) {
+    if (!(mInputPeak > 0.0)) {
         return false;
     }
 
@@ -166,7 +161,7 @@ OptionalMessage AmplifyEffect::DoLoadFactoryDefaults(EffectSettings& /*settings*
 {
     Init();
 
-    const auto newRatio = mPeak > 0.0 ? 1.0 / mPeak : 1.0;
+    const auto newRatio = mInputPeak > 0.0 ? 1.0 / mInputPeak : 1.0;
     mCanClip = false;
 
     SetRatio(newRatio);
@@ -188,22 +183,22 @@ bool AmplifyEffect::Init()
     if (hasPitchOrSpeed) {
         range = MakeOutputTracks()->Get().Selected<const Au3WaveTrack>();
     }
-    mPeak = 0.0;
+    mInputPeak = 0.0;
     for (auto t : range) {
         for (const auto& pChannel : t->Channels()) {
             auto pair = WaveChannelUtilities::GetMinMax(*pChannel, mT0, mT1); // may throw
             const float min = pair.first, max = pair.second;
             const float newpeak = std::max(fabs(min), fabs(max));
-            mPeak = std::max<double>(mPeak, newpeak);
+            mInputPeak = std::max<double>(mInputPeak, newpeak);
         }
     }
-    return !muse::RealIsEqualOrMore(0.0, mPeak);
+    return !muse::RealIsEqualOrMore(0.0, mInputPeak);
 }
 
 std::any AmplifyEffect::BeginPreview(const EffectSettings& /*settings*/)
 {
     return { std::pair { CopyableValueRestorer(mRatio),
-                         CopyableValueRestorer(mPeak) } };
+                         CopyableValueRestorer(mInputPeak) } };
 }
 
 void AmplifyEffect::SetRatio(double newRatio)

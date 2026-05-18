@@ -25,9 +25,7 @@ public:
     // fot view
     // ====================
     // properties
-    float peak() const;
-    ratio_t defaultRatio() const;
-    shared::Decibel defaultAmp() const;
+    float inputPeak() const;
 
     // params
     ratio_t ratio() const;
@@ -72,12 +70,13 @@ protected:
 
     // AmplifyEffect implementation
 protected:
-    double mPeak = 0.0;
+    double mInputPeak = 0.0;
     double mRatio = 1.0;
     bool mCanClip = true;
 
 private:
     const EffectParameterMethods& Parameters() const override;
+    ratio_t defaultRatio() const;
 
 protected:
     static constexpr EffectParameter Ratio {
