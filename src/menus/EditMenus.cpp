@@ -646,6 +646,13 @@ void OnPaste(const CommandContext &context)
             member->TypeSwitch(
                [&](WaveTrack &wn){
                   bPastedSomething = true;
+                  // If the destination track is still empty, preserve the source
+                  // sample rate and format (16 PCM, 24PCM or 32 bits) rather than forcing project defaults.
+                  if (wn.GetNumClips() == 0) {
+                     const auto srcWaveTrack = static_cast<const WaveTrack*>(src);
+                     wn.SetRate(srcWaveTrack->GetRate());
+                     wn.ConvertToSampleFormat(srcWaveTrack->GetSampleFormat());
+                  }
                   // For correct remapping of preserved split lines:
                   PasteTimeWarper warper{ t1, t0 + src->GetEndTime() };
                   const auto newClipOnPaste =
