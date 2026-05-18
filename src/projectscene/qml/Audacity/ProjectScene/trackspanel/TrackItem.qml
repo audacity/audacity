@@ -205,6 +205,7 @@ ListItemBlank {
             anchors.right: rightSideContainer.left
             anchors.bottomMargin: bottomSeparator.thickness
             orientation: Qt.Vertical
+            color: ui.theme.backgroundSecondaryColor
         }
 
         Loader {
@@ -212,9 +213,9 @@ ListItemBlank {
 
             anchors.right: parent.right
             anchors.top: parent.top
-            anchors.topMargin: 5
+            anchors.topMargin: 6
             anchors.bottom: parent.bottom
-            anchors.bottomMargin: 5
+            anchors.bottomMargin: 6
 
             width: 24
         }
