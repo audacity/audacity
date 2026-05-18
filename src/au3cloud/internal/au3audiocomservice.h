@@ -64,7 +64,7 @@ public:
                                                   std::function<bool()> projectSaveCallback, bool forceOverwrite = false) override;
 
     muse::RetVal<muse::ProgressPtr> openCloudProject(const muse::io::path_t& localPath, const std::string& projectId = {},
-                                                     bool forceOverwrite = false) override;
+                                                     const std::string& snapshotId = {}, bool forceOverwrite = false) override;
 
     muse::RetVal<muse::ProgressPtr> resumeProjectSync(au::project::IAudacityProjectPtr project) override;
     muse::ValCh<bool> syncingInProgressChanged() const override;

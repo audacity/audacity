@@ -43,7 +43,7 @@ void ApplicationActionController::preInit()
     qApp->installEventFilter(this);
 
 #ifdef Q_OS_MAC
-	// Re-open window when user clicks the dock icon while all windows are closed 
+    // Re-open window when user clicks the dock icon while all windows are closed
     connect(qApp, &QGuiApplication::applicationStateChanged, this, [this](Qt::ApplicationState state) {
         if (state != Qt::ApplicationActive) {
             return;

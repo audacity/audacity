@@ -49,21 +49,28 @@ bool CloudUrlHandler::tryHandleProjectLink(const QUrl& parsed)
         return false;
     }
 
+    const QString snapshotId = query.queryItemValue(QStringLiteral("snapshotId"));
+
     //! When the project is in the local cloud DB we pass its path directly for
     //! an immediate open; otherwise an empty URL routes openCloudProject into
-    //! the standard download/auth/sync flow.
-    using namespace audacity::cloud::audiocom::sync;
-    const auto local = CloudProjectsDatabase::Get().GetProjectData(projectId.toStdString());
-
+    //! the standard download/auth/sync flow. If a specific snapshot is
+    //! requested we skip the local fast-path so the cloud flow can fetch it.
     QUrl localUrl;
-    if (local.has_value() && !local->LocalPath.empty()) {
-        localUrl = QUrl::fromLocalFile(QString::fromStdString(local->LocalPath));
+    if (snapshotId.isEmpty()) {
+        using namespace audacity::cloud::audiocom::sync;
+        const auto local = CloudProjectsDatabase::Get().GetProjectData(projectId.toStdString());
+        if (local.has_value() && !local->LocalPath.empty()) {
+            localUrl = QUrl::fromLocalFile(QString::fromStdString(local->LocalPath));
+        }
     }
 
     using namespace muse::actions;
-    dispatcher()->dispatch(
-        "cloud-file-open",
-        ActionData::make_arg3<QString, QUrl, QString>(projectId, localUrl, QString()));
+    ActionData data;
+    data.setArg<QString>(0, projectId);
+    data.setArg<QUrl>(1, localUrl);
+    data.setArg<QString>(2, QString());
+    data.setArg<QString>(3, snapshotId);
+    dispatcher()->dispatch("cloud-file-open", data);
 
     return true;
 }
