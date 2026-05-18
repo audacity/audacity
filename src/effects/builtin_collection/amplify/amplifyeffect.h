@@ -1,5 +1,7 @@
 #pragma once
 
+#include "shared/types/decibel.h"
+
 #include "au3-components/SettingsVisitor.h"
 #include "au3-effects/StatefulPerTrackEffect.h"
 
@@ -25,12 +27,12 @@ public:
     // properties
     float peak() const;
     ratio_t defaultRatio() const;
-    db_t defaultAmp() const;
+    shared::Decibel defaultAmp() const;
 
     // params
     ratio_t ratio() const;
-    Param<db_t> amp() const;      // dB
-    void setAmp(db_t v);
+    Param<shared::Decibel> amp() const;
+    void setAmp(shared::Decibel v);
 
     bool canClip() const;
     void setCanClip(bool v);
@@ -74,7 +76,7 @@ protected:
 
     double mRatio = 1.0;
     double mRatioClip =1.0; // maximum value of mRatio which does not cause clipping
-    double mAmp = 0.0;
+    shared::Decibel mAmp {};
     double mNewPeak = 1.0;
     bool mCanClip = true;
 

@@ -53,7 +53,7 @@ AmplifyEffect::Instance::~Instance()
 
 AmplifyEffect::AmplifyEffect()
 {
-    mAmp = Amp.def;
+    mAmp = au::shared::Decibel { Amp.def };
     // Ratio.def == DB_TO_LINEAR(Amp.def)
     Parameters().Reset(*this);
     mRatioClip = 0.0;
@@ -81,9 +81,9 @@ ratio_t AmplifyEffect::defaultRatio() const
     return 1.0 / mPeak;
 }
 
-db_t AmplifyEffect::defaultAmp() const
+au::shared::Decibel AmplifyEffect::defaultAmp() const
 {
-    return muse::linear_to_db(defaultRatio());
+    return au::shared::Decibel::fromLinear(defaultRatio());
 }
 
 ratio_t AmplifyEffect::ratio() const
@@ -91,14 +91,14 @@ ratio_t AmplifyEffect::ratio() const
     return mRatio;
 }
 
-Param<db_t> AmplifyEffect::amp() const
+Param<au::shared::Decibel> AmplifyEffect::amp() const
 {
-    return make_param<db_t>(muse::linear_to_db(mRatio), muse::linear_to_db(Ratio.min), muse::linear_to_db(Ratio.max));
+    return { au::shared::Decibel::fromLinear(mRatio), au::shared::Decibel::fromLinear(Ratio.min), au::shared::Decibel::fromLinear(Ratio.max) };
 }
 
-void AmplifyEffect::setAmp(db_t v)
+void AmplifyEffect::setAmp(au::shared::Decibel v)
 {
-    mRatio = std::clamp<ratio_t>(muse::db_to_linear(v), Ratio.min, Ratio.max);
+    mRatio = std::clamp<ratio_t>(v.toLinear(), Ratio.min, Ratio.max);
 }
 
 bool AmplifyEffect::canClip() const
@@ -219,12 +219,12 @@ std::any AmplifyEffect::BeginPreview(const EffectSettings& /*settings*/)
 void AmplifyEffect::ClampRatio()
 {
     // limit range of gain
-    double dBInit = LINEAR_TO_DB(mRatio);
-    double dB = std::clamp<double>(dBInit, Amp.min, Amp.max);
+    const au::shared::Decibel dBInit = au::shared::Decibel::fromLinear(mRatio);
+    const au::shared::Decibel dB = std::clamp(dBInit, au::shared::Decibel { Amp.min }, au::shared::Decibel { Amp.max });
     if (dB != dBInit) {
-        mRatio = DB_TO_LINEAR(dB);
+        mRatio = dB.toLinear();
     }
 
-    mAmp = LINEAR_TO_DB(mRatio);
-    mNewPeak = LINEAR_TO_DB(mRatio * mPeak);
+    mAmp = au::shared::Decibel::fromLinear(mRatio);
+    mNewPeak = au::shared::Decibel::fromLinear(mRatio * mPeak).raw();
 }

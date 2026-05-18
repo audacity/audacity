@@ -40,14 +40,14 @@ QString AmplifyViewModel::ampLabel() const
 
 float AmplifyViewModel::ampValue() const
 {
-    return effect<AmplifyEffect>().amp().val;
+    return effect<AmplifyEffect>().amp().val.raw();
 }
 
 void AmplifyViewModel::setAmpValue(float newAmpValue)
 {
     auto& ae = effect<AmplifyEffect>();
-    const db_t newAmp = newAmpValue;
-    if (muse::is_equal<db_t>(ae.amp().val, newAmp)) {
+    const au::shared::Decibel newAmp { newAmpValue };
+    if (ae.amp().val == newAmp) {
         return;
     }
     ae.setAmp(newAmp);
@@ -56,12 +56,12 @@ void AmplifyViewModel::setAmpValue(float newAmpValue)
 
 float AmplifyViewModel::ampMin() const
 {
-    return effect<AmplifyEffect>().amp().min;
+    return effect<AmplifyEffect>().amp().min.raw();
 }
 
 float AmplifyViewModel::ampMax() const
 {
-    return effect<AmplifyEffect>().amp().max;
+    return effect<AmplifyEffect>().amp().max.raw();
 }
 
 QString AmplifyViewModel::ampMeasureUnitsSymbol() const
@@ -87,31 +87,31 @@ QString AmplifyViewModel::newPeakLabel() const
 float AmplifyViewModel::newPeakValue() const
 {
     const auto& ae = effect<AmplifyEffect>();
-    return muse::linear_to_db(ae.ratio() * ae.peak());
+    return au::shared::Decibel::fromLinear(ae.ratio() * ae.peak()).raw();
 }
 
 void AmplifyViewModel::setNewPeakValue(float newNewPeakValue)
 {
     auto& ae = effect<AmplifyEffect>();
-    const db_t newNewPeak = newNewPeakValue;
-    if (muse::is_equal<db_t>(newPeakValue(), newNewPeak)) {
+    const au::shared::Decibel newNewPeak { newNewPeakValue };
+    if (au::shared::Decibel::fromLinear(ae.ratio() * ae.peak()) == newNewPeak) {
         return;
     }
-    const ratio_t ratio = muse::db_to_linear(newNewPeak) / ae.peak();
-    ae.setAmp(muse::linear_to_db(ratio));
+    const ratio_t ratio = newNewPeak.toLinear() / ae.peak();
+    ae.setAmp(au::shared::Decibel::fromLinear(ratio));
     update();
 }
 
 float AmplifyViewModel::newPeakMin() const
 {
     const auto& ae = effect<AmplifyEffect>();
-    return ae.amp().min + muse::linear_to_db(ae.peak());
+    return (ae.amp().min + au::shared::Decibel::fromLinear(ae.peak())).raw();
 }
 
 float AmplifyViewModel::newPeakMax() const
 {
     const auto& ae = effect<AmplifyEffect>();
-    return ae.amp().max + muse::linear_to_db(ae.peak());
+    return (ae.amp().max + au::shared::Decibel::fromLinear(ae.peak())).raw();
 }
 
 QString AmplifyViewModel::newPeakMeasureUnitsSymbol() const

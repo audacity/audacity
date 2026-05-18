@@ -5,6 +5,10 @@
 
 #include "effects/effects_base/effectstypes.h" // IWYU pragma: export
 
+#include "framework/global/types/number.h"
+
+#include <cmath>
+
 namespace au::effects {
 template<typename T>
 struct Param

@@ -15,6 +15,9 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/axis/axisticks.cpp
     ${CMAKE_CURRENT_LIST_DIR}/axis/axislabel.h
     ${CMAKE_CURRENT_LIST_DIR}/axis/axislabel.cpp
+
+    ${CMAKE_CURRENT_LIST_DIR}/types/decibel.h
+    ${CMAKE_CURRENT_LIST_DIR}/types/decibel.cpp
 )
 
 setup_module()
