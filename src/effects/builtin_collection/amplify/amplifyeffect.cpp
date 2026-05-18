@@ -74,6 +74,9 @@ float AmplifyEffect::inputPeak() const
 
 ratio_t AmplifyEffect::defaultRatio() const
 {
+    if (muse::RealIsEqualOrLess(mInputPeak, 0.0)) {
+        return 1.0;
+    }
     return 1.0 / mInputPeak;
 }
 
@@ -84,12 +87,33 @@ ratio_t AmplifyEffect::ratio() const
 
 Param<au::shared::Decibel> AmplifyEffect::amp() const
 {
-    return { au::shared::Decibel::fromLinear(mRatio), au::shared::Decibel::fromLinear(Ratio.min), au::shared::Decibel::fromLinear(Ratio.max) };
+    using namespace shared;
+    return { Decibel::fromLinear(mRatio), Decibel::fromLinear(Ratio.min), Decibel::fromLinear(Ratio.max) };
 }
 
-void AmplifyEffect::setAmp(au::shared::Decibel v)
+void AmplifyEffect::setAmp(shared::Decibel v)
 {
-    mRatio = std::clamp<ratio_t>(v.toLinear(), Ratio.min, Ratio.max);
+    SetRatio(v.toLinear());
+}
+
+Param<au::shared::Decibel> AmplifyEffect::newPeak() const
+{
+    using namespace shared;
+    if (muse::RealIsEqualOrLess(mInputPeak, 0.0)) {
+        return { Decibel{}, Decibel{}, Decibel{} };
+    }
+    return { Decibel::fromLinear(mRatio * mInputPeak), Decibel::fromLinear(Ratio.min * mInputPeak), Decibel::fromLinear(
+                 Ratio.max * mInputPeak) };
+}
+
+void AmplifyEffect::setNewPeak(shared::Decibel v)
+{
+    if (muse::RealIsEqualOrLess(mInputPeak, 0.0)) {
+        return;
+    }
+
+    const double newRatio = v.toLinear() / mInputPeak;
+    SetRatio(newRatio);
 }
 
 bool AmplifyEffect::canClip() const
@@ -108,7 +132,7 @@ bool AmplifyEffect::isApplyAllowed() const
         return true;
     }
 
-    if (!(mInputPeak > 0.0)) {
+    if (muse::RealIsEqualOrLess(mInputPeak, 0.0)) {
         return false;
     }
 
@@ -161,7 +185,7 @@ OptionalMessage AmplifyEffect::DoLoadFactoryDefaults(EffectSettings& /*settings*
 {
     Init();
 
-    const auto newRatio = mInputPeak > 0.0 ? 1.0 / mInputPeak : 1.0;
+    const auto newRatio =  muse::RealIsEqualOrLess(mInputPeak, 0.0) ? 1.0 : 1.0 / mInputPeak;
     mCanClip = false;
 
     SetRatio(newRatio);
@@ -192,7 +216,7 @@ bool AmplifyEffect::Init()
             mInputPeak = std::max<double>(mInputPeak, newpeak);
         }
     }
-    return !muse::RealIsEqualOrMore(0.0, mInputPeak);
+    return !muse::RealIsEqualOrLess(mInputPeak, 0.0);
 }
 
 std::any AmplifyEffect::BeginPreview(const EffectSettings& /*settings*/)

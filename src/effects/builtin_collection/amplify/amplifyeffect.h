@@ -29,8 +29,12 @@ public:
 
     // params
     ratio_t ratio() const;
+
     Param<shared::Decibel> amp() const;
     void setAmp(shared::Decibel v);
+
+    Param<shared::Decibel> newPeak() const;
+    void setNewPeak(shared::Decibel v);
 
     bool canClip() const;
     void setCanClip(bool v);

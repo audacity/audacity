@@ -31,7 +31,7 @@ BuiltinEffectBase {
     }
 
     Component.onCompleted: {
-        ampSlider.value = amplify.ampValue
+        amplify.newPeakValue = 0
     }
 
     Column {

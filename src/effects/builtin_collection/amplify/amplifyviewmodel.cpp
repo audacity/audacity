@@ -18,13 +18,6 @@ AmplifyViewModel::AmplifyViewModel(QObject* parent, int instanceId)
 void AmplifyViewModel::doReload()
 {
     emit canClipChanged();
-    update();
-}
-
-void AmplifyViewModel::update()
-{
-    emit ampValueChanged();
-    emit newPeakValueChanged();
     emit isApplyAllowedChanged();
 }
 
@@ -46,12 +39,12 @@ float AmplifyViewModel::ampValue() const
 void AmplifyViewModel::setAmpValue(float newAmpValue)
 {
     auto& ae = effect<AmplifyEffect>();
-    const au::shared::Decibel newAmp { newAmpValue };
+    const shared::Decibel newAmp { newAmpValue };
     if (ae.amp().val == newAmp) {
         return;
     }
     ae.setAmp(newAmp);
-    update();
+    emit isApplyAllowedChanged();
 }
 
 float AmplifyViewModel::ampMin() const
@@ -87,31 +80,27 @@ QString AmplifyViewModel::newPeakLabel() const
 float AmplifyViewModel::newPeakValue() const
 {
     const auto& ae = effect<AmplifyEffect>();
-    return au::shared::Decibel::fromLinear(ae.ratio() * ae.inputPeak()).raw();
+    return shared::Decibel::fromLinear(ae.ratio() * ae.inputPeak()).raw();
 }
 
 void AmplifyViewModel::setNewPeakValue(float newNewPeakValue)
 {
-    auto& ae = effect<AmplifyEffect>();
-    const au::shared::Decibel newNewPeak { newNewPeakValue };
-    if (au::shared::Decibel::fromLinear(ae.ratio() * ae.inputPeak()) == newNewPeak) {
+    if (muse::is_equal(newNewPeakValue, newPeakValue())) {
         return;
     }
-    const ratio_t ratio = newNewPeak.toLinear() / ae.inputPeak();
-    ae.setAmp(au::shared::Decibel::fromLinear(ratio));
-    update();
+
+    effect<AmplifyEffect>().setNewPeak(shared::Decibel(newNewPeakValue));
+    emit isApplyAllowedChanged();
 }
 
 float AmplifyViewModel::newPeakMin() const
 {
-    const auto& ae = effect<AmplifyEffect>();
-    return (ae.amp().min + au::shared::Decibel::fromLinear(ae.inputPeak())).raw();
+    return effect<AmplifyEffect>().newPeak().min.raw();
 }
 
 float AmplifyViewModel::newPeakMax() const
 {
-    const auto& ae = effect<AmplifyEffect>();
-    return (ae.amp().max + au::shared::Decibel::fromLinear(ae.inputPeak())).raw();
+    return effect<AmplifyEffect>().newPeak().max.raw();
 }
 
 QString AmplifyViewModel::newPeakMeasureUnitsSymbol() const
@@ -147,7 +136,7 @@ void AmplifyViewModel::setCanClip(bool newClipping)
     }
     ae.setCanClip(newClipping);
     emit canClipChanged();
-    update();
+    emit isApplyAllowedChanged();
 }
 
 bool AmplifyViewModel::isApplyAllowed() const

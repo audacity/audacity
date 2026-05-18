@@ -14,17 +14,17 @@ class AmplifyViewModel : public BuiltinEffectModel
     Q_PROPERTY(QString effectTitle READ effectTitle CONSTANT FINAL)
 
     Q_PROPERTY(QString ampLabel READ ampLabel CONSTANT FINAL)
-    Q_PROPERTY(float ampValue READ ampValue WRITE setAmpValue NOTIFY ampValueChanged FINAL)
-    Q_PROPERTY(float ampMin READ ampMin NOTIFY ampValueChanged FINAL)
-    Q_PROPERTY(float ampMax READ ampMax NOTIFY ampValueChanged FINAL)
+    Q_PROPERTY(float ampValue READ ampValue WRITE setAmpValue NOTIFY isApplyAllowedChanged FINAL)
+    Q_PROPERTY(float ampMin READ ampMin NOTIFY isApplyAllowedChanged FINAL)
+    Q_PROPERTY(float ampMax READ ampMax NOTIFY isApplyAllowedChanged FINAL)
     Q_PROPERTY(QString ampMeasureUnitsSymbol READ ampMeasureUnitsSymbol CONSTANT FINAL)
     Q_PROPERTY(int ampDecimals READ ampDecimals CONSTANT FINAL)
     Q_PROPERTY(double ampStep READ ampStep CONSTANT FINAL)
 
     Q_PROPERTY(QString newPeakLabel READ newPeakLabel CONSTANT FINAL)
-    Q_PROPERTY(float newPeakValue READ newPeakValue WRITE setNewPeakValue NOTIFY newPeakValueChanged FINAL)
-    Q_PROPERTY(float newPeakMin READ newPeakMin NOTIFY newPeakValueChanged FINAL)
-    Q_PROPERTY(float newPeakMax READ newPeakMax NOTIFY newPeakValueChanged FINAL)
+    Q_PROPERTY(float newPeakValue READ newPeakValue WRITE setNewPeakValue NOTIFY isApplyAllowedChanged FINAL)
+    Q_PROPERTY(float newPeakMin READ newPeakMin NOTIFY isApplyAllowedChanged FINAL)
+    Q_PROPERTY(float newPeakMax READ newPeakMax NOTIFY isApplyAllowedChanged FINAL)
     Q_PROPERTY(QString newPeakMeasureUnitsSymbol READ newPeakMeasureUnitsSymbol CONSTANT FINAL)
     Q_PROPERTY(int newPeakDecimals READ newPeakDecimals CONSTANT FINAL)
     Q_PROPERTY(double newPeakStep READ newPeakStep CONSTANT FINAL)
@@ -65,15 +65,11 @@ public:
     bool isApplyAllowed() const;
 
 signals:
-    void ampValueChanged();
-    void newPeakValueChanged();
     void canClipChanged();
     void isApplyAllowedChanged();
 
 private:
     void doReload() override;
-
-    void update();
 };
 
 class AmplifyViewModelFactory : public EffectViewModelFactory<AmplifyViewModel>
