@@ -36,10 +36,10 @@ audacity_find_package(opusfile OPTION_NAME opusfile)
 audacity_find_package(Vorbis OPTION_NAME libvorbis)
 audacity_find_package(SndFile CONAN_PACKAGE_NAME libsndfile OPTION_NAME libsndfile)
 
-# Allow building with ASIO for windows users
+# Allow building with ASIO for windows users (EXPERIMENTAL)
 cmake_dependent_option(
    ${_OPT}has_asio_support
-   "Build Audacity with ASIO support"
+   "Build Audacity with ASIO support (EXPERIMENTAL)"
    False
    "WIN32 AND IS_64BIT"
    False
