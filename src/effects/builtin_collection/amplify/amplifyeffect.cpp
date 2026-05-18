@@ -53,11 +53,7 @@ AmplifyEffect::Instance::~Instance()
 
 AmplifyEffect::AmplifyEffect()
 {
-    mAmp = au::shared::Decibel { Amp.def };
-    // Ratio.def == DB_TO_LINEAR(Amp.def)
     Parameters().Reset(*this);
-    mRatioClip = 0.0;
-    mPeak = 0.0;
 
     SetLinearEffectFlag(true);
 }
@@ -170,16 +166,10 @@ OptionalMessage AmplifyEffect::DoLoadFactoryDefaults(EffectSettings& /*settings*
 {
     Init();
 
-    mRatioClip = 0.0;
-    if (mPeak > 0.0) {
-        mRatio = 1.0 / mPeak;
-        mRatioClip = mRatio;
-    } else {
-        mRatio = 1.0;
-    }
+    const auto newRatio = mPeak > 0.0 ? 1.0 / mPeak : 1.0;
     mCanClip = false;
 
-    ClampRatio();
+    SetRatio(newRatio);
     return { nullptr };
 }
 
@@ -216,15 +206,7 @@ std::any AmplifyEffect::BeginPreview(const EffectSettings& /*settings*/)
                          CopyableValueRestorer(mPeak) } };
 }
 
-void AmplifyEffect::ClampRatio()
+void AmplifyEffect::SetRatio(double newRatio)
 {
-    // limit range of gain
-    const au::shared::Decibel dBInit = au::shared::Decibel::fromLinear(mRatio);
-    const au::shared::Decibel dB = std::clamp(dBInit, au::shared::Decibel { Amp.min }, au::shared::Decibel { Amp.max });
-    if (dB != dBInit) {
-        mRatio = dB.toLinear();
-    }
-
-    mAmp = au::shared::Decibel::fromLinear(mRatio);
-    mNewPeak = au::shared::Decibel::fromLinear(mRatio * mPeak).raw();
+    mRatio = std::clamp<double>(newRatio, Ratio.min, Ratio.max);
 }

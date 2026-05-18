@@ -68,16 +68,12 @@ protected:
     };
 
 protected:
-    void ClampRatio();
+    void SetRatio(double);
 
     // AmplifyEffect implementation
 protected:
-    double mPeak = 1.0;
-
+    double mPeak = 0.0;
     double mRatio = 1.0;
-    double mRatioClip =1.0; // maximum value of mRatio which does not cause clipping
-    shared::Decibel mAmp {};
-    double mNewPeak = 1.0;
     bool mCanClip = true;
 
 private:
@@ -86,10 +82,6 @@ private:
 protected:
     static constexpr EffectParameter Ratio {
         &AmplifyEffect::mRatio, L"Ratio", 0.9f, 0.003162f, 316.227766f, 1.0f
-    };
-    // Amp is not saved in settings!
-    static constexpr EffectParameter Amp {
-        &AmplifyEffect::mAmp, L"", -0.91515f, -50.0f, 50.0f, 10.0f
     };
     static constexpr EffectParameter Clipping {
         &AmplifyEffect::mCanClip, L"AllowClipping", false, false, true, 1
