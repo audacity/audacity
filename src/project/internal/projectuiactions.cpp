@@ -62,8 +62,8 @@ const UiActionList ProjectUiActions::m_actions = {
     UiAction("file-save",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
-             TranslatableString("action", "&Save project"),
-             TranslatableString("action", "Save project")
+             TranslatableString("action", "&Save"),
+             TranslatableString("action", "Save")
              ),
     UiAction("file-save-as",
              au::context::UiCtxAny,

@@ -125,6 +125,7 @@ const muse::actions::ActionCodeList& ProjectActionsController::prohibitedActions
         "file-close",
         "project-import",
         "file-save",
+        "file-save-to-cloud",
         "file-save-as",
         "file-save-backup",
         "export-audio",

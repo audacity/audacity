@@ -202,6 +202,7 @@ MenuItem* AppMenuModel::makeFileMenu()
         makeSeparator(),
 
         makeMenuItem("file-save"),
+        makeMenuItem("file-save-to-cloud"),
         makeMenuItem("file-save-as"),
         makeMenuItem("file-save-backup"),
 
@@ -209,6 +210,7 @@ MenuItem* AppMenuModel::makeFileMenu()
 
         makeMenuItem("export-audio"),
         makeMenu(TranslatableString("appshell/menu/export-other", "&Export other"), makeExportItems(), "menu-export-other"),
+        makeMenuItem("file-share-audio"),
 
         makeSeparator(),
 
