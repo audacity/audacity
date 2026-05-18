@@ -126,6 +126,10 @@ void GuiApp::doSetup(const std::shared_ptr<muse::CmdOptions>& options)
 {
     muse::ui::GuiApplication::doSetup(options);
 
+    if (qEnvironmentVariableIsSet("AU_ALLOW_MULTIPLE_PROCESSES")) {
+        return;
+    }
+
     const QString appId = QCoreApplication::applicationName();
     if (!m_singleInstance.start(appId)) {
         return;
@@ -140,10 +144,10 @@ void GuiApp::onSecondInstanceArgs(const QStringList& args)
 {
     LOGI() << "second instance handed off args: " << args;
 
-    // Raise the fisrt window when the instance is activated
+    // Raise the first window when the instance is activated
     // TODO: define rules which window should be activated, ie first, last, last used
     const auto& contexts = muse::ui::GuiApplication::contexts();
-    if (contexts.empty()) {
+    IF_ASSERT_FAILED(!contexts.empty()) {
         return;
     }
     const auto& ctx = contexts.front();

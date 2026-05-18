@@ -178,17 +178,19 @@ int main(int argc, char** argv)
     if (commandLineParser.runMode() == muse::IApplication::RunMode::AudioPluginRegistration) {
         qApplication = new QCoreApplication(argcFinal, argvFinal);
     } else {
-        QStringList forwardedArgs;
-        forwardedArgs.reserve(argcFinal - 1);
-        for (int i = 1; i < argcFinal; ++i) {
-            forwardedArgs.append(QString::fromUtf8(argvFinal[i]));
+        if (!qEnvironmentVariableIsSet("AU_ALLOW_MULTIPLE_PROCESSES")) {
+            QStringList forwardedArgs;
+            forwardedArgs.reserve(argcFinal - 1);
+            for (int i = 1; i < argcFinal; ++i) {
+                forwardedArgs.append(QString::fromUtf8(argvFinal[i]));
+            }
+            if (muse::mi::activateExistingInstance(QString::fromLatin1(appName), forwardedArgs)) {
+                LOGI() << "existing Audacity instance activated";
+                LOGI() << "exiting";
+                return 0;
+            }
         }
-        if (muse::mi::activateExistingInstance(QString::fromLatin1(appName), forwardedArgs)) {
-            LOGI() << "existing Audacity instance activated";
-            LOGI() << "exiting";
-            return 0;
-        }
-        
+
         QApplication* guiApp = new QApplication(argcFinal, argvFinal);
         guiApp->setQuitOnLastWindowClosed(false);
         qApplication = guiApp;

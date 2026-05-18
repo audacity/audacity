@@ -5,7 +5,6 @@
 
 #include <memory>
 
-#include <QString>
 #include <QStringList>
 
 #include "framework/global/async/asyncable.h"
