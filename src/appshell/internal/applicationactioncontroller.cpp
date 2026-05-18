@@ -41,6 +41,20 @@ using namespace muse::actions;
 void ApplicationActionController::preInit()
 {
     qApp->installEventFilter(this);
+
+#ifdef Q_OS_MAC
+	// Re-open window when user clicks the dock icon while all windows are closed 
+    connect(qApp, &QGuiApplication::applicationStateChanged, this, [this](Qt::ApplicationState state) {
+        if (state != Qt::ApplicationActive) {
+            return;
+        }
+        QWindow* window = mainWindow() ? mainWindow()->qWindow() : nullptr;
+        if (window && !window->isVisible()) {
+            window->show();
+            window->requestActivate();
+        }
+    });
+#endif
 }
 
 void ApplicationActionController::init()
@@ -178,9 +192,21 @@ bool ApplicationActionController::eventFilter(QObject* watched, QEvent* event)
             event->accept();
             return true;
         }
+#ifdef Q_OS_MAC
+        // On macos closing the last window does not exit the app
+        if (!projectFilesController()->closeOpenedProject()) {
+            event->ignore();
+            return true;
+        }
+        // Instead we hide the window, it will be shown when needed
+        mainWindow()->qWindow()->setVisible(false);
+        event->accept();
+        return true;
+#else
         const bool accepted = quit();
         event->setAccepted(accepted);
         return true;
+#endif
     }
 
     if (event->type() == QEvent::Quit) {
@@ -197,6 +223,14 @@ bool ApplicationActionController::eventFilter(QObject* watched, QEvent* event)
         // TODO: isUrlSupported - is misleading, as it does not handle audio.com urls
         if (projectFilesController()->isUrlSupported(url)) {
             if (startupScenario()->startupCompleted()) {
+                // On macos the main window may be hidden, show and raise it
+                // before loading the project
+                if (auto mw = mainWindow()) {
+                    if (QWindow* window = mw->qWindow(); window && !window->isVisible()) {
+                        window->setVisible(true);
+                    }
+                    mw->requestShowOnFront();
+                }
                 dispatcher()->dispatch("file-open", ActionData::make_arg1<QUrl>(url));
             } else {
                 startupScenario()->setStartupProjectFile(project::ProjectFile { url });
