@@ -93,13 +93,8 @@ void GuiApp::doStartupScenario(const muse::modularity::ContextPtr& ctxId)
     startupScenario->setStartupProjectFile(projectFile);
     startupScenario->setStartupMediaFiles(options->startup.mediaFiles);
     startupScenario->setRemoveMediaFilesAfterImport(options->startup.removeMediaFilesAfterImport);
-
     if (options->startup.startupUrl.has_value()) {
-        auto dispatcher = muse::modularity::ioc(ctxId)->resolve<muse::actions::IActionsDispatcher>("app");
-        if (dispatcher) {
-            dispatcher->dispatch("open-url",
-                                 muse::actions::ActionData::make_arg1<QString>(options->startup.startupUrl.value()));
-        }
+        startupScenario->setStartupUrl(options->startup.startupUrl.value());
     }
 
     startupScenario->runOnSplashScreen();

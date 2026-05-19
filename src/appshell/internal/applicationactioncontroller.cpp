@@ -239,13 +239,18 @@ bool ApplicationActionController::eventFilter(QObject* watched, QEvent* event)
             return true;
         }
 
-        if (auto mw = mainWindow()) {
-            if (QWindow* window = mw->qWindow(); window && !window->isVisible()) {
-                window->setVisible(true);
+        const QString urlStr = url.toString(QUrl::FullyEncoded);
+        if (startupScenario()->startupCompleted()) {
+            if (auto mw = mainWindow()) {
+                if (QWindow* window = mw->qWindow(); window && !window->isVisible()) {
+                    window->setVisible(true);
+                }
+                mw->requestShowOnFront();
             }
-            mw->requestShowOnFront();
+            dispatcher()->dispatch("open-url", ActionData::make_arg1<QString>(urlStr));
+        } else {
+            startupScenario()->setStartupUrl(urlStr);
         }
-        dispatcher()->dispatch("open-url", ActionData::make_arg1<QString>(url.toString(QUrl::FullyEncoded)));
         return true;
     }
 
