@@ -139,12 +139,6 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Paste new label"),
              TranslatableString("action", "Paste new label")
              ),
-    UiAction("manage-labels",
-             au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Manage labels"),
-             TranslatableString("action", "Manage labels")
-             ),
     // select menu
     UiAction("select-all",
              au::context::UiCtxAny,

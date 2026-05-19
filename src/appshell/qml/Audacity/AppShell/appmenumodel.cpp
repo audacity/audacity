@@ -554,7 +554,7 @@ MenuItemList AppMenuModel::makeLabelItems()
         makeMenuItem("label-add"),
         makeMenuItem("paste-new-label"),
         makeSeparator(),
-        makeMenuItem("manage-labels"),
+        makeMenuItem("open-label-editor", TranslatableString("action", "Manage labels")),
     };
 
     return items;
