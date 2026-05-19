@@ -552,8 +552,7 @@ bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudI
     }
 
     if (!progress) {
-        LOGE() << "Failed to start cloud upload";
-        return false;
+        return true;
     }
 
     progress->finished().onReceive(this, [this, projectFilePath](const ProgressResult& result) {

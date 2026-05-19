@@ -74,6 +74,27 @@ std::string getCloudProjectPage(au::project::IAudacityProjectPtr project)
     auto& projectCloudExtension = audacity::cloud::audiocom::sync::ProjectCloudExtension::Get(*au3Project);
     return projectCloudExtension.GetCloudProjectPage(AudiocomTrace::SaveProjectSaveToCloudMenu);
 }
+
+bool needsNewSnapshot(au::project::IAudacityProjectPtr project,
+                      const audacity::cloud::audiocom::sync::ProjectCloudExtension& extension,
+                      bool forceOverwrite)
+{
+    if (forceOverwrite) {
+        return true;
+    }
+
+    IF_ASSERT_FAILED(extension.IsCloudProject()) {
+        return true;
+    }
+
+    if (project->needSave().val) {
+        return true;
+    }
+
+    const auto status = extension.GetCurrentSyncStatus();
+    return status != audacity::cloud::audiocom::sync::ProjectSyncStatus::Synced
+           && status != audacity::cloud::audiocom::sync::ProjectSyncStatus::Syncing;
+}
 }
 
 void Au3AudioComService::init()
@@ -275,9 +296,13 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::uploadProject(au::project::I
         return muse::RetVal<muse::ProgressPtr>::make_ret(muse::Ret::Code::InternalError, muse::trc("cloud", "Invalid project"));
     }
 
-    muse::ProgressPtr progress = createSyncProgress();
-
     auto& projectCloudExtension = audacity::cloud::audiocom::sync::ProjectCloudExtension::Get(*au3Project);
+
+    if (!needsNewSnapshot(project, projectCloudExtension, forceOverwrite)) {
+        return muse::RetVal<muse::ProgressPtr>::make_ok(nullptr);
+    }
+
+    muse::ProgressPtr progress = createSyncProgress();
 
     m_resumeSyncSubscription.Reset();
     if (m_uploadDone) {
