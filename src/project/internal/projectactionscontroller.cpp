@@ -58,6 +58,7 @@ void ProjectActionsController::init()
     dispatcher()->reg(this, "project-import-startup-media", this, &ProjectActionsController::importStartupMedia);
 
     dispatcher()->reg(this, "file-save", [this]() { saveProject(SaveMode::Save); });
+    dispatcher()->reg(this, "file-save-to-cloud", [this]() { saveProject(SaveMode::Save, SaveLocationType::Cloud); });
     //! TODO AU4: decide whether to implement these functions from scratch in AU4 or
     //! to install our own implementation of the UI (BasicUI API)
     //! right now there's only BasicUI stub which means there's no progress dialog shown on saving
@@ -125,6 +126,7 @@ const muse::actions::ActionCodeList& ProjectActionsController::prohibitedActions
         "file-close",
         "project-import",
         "file-save",
+        "file-save-to-cloud",
         "file-save-as",
         "file-save-backup",
         "export-audio",
