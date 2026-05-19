@@ -71,12 +71,6 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Save &as…"),
              TranslatableString("action", "Save as…")
              ),
-    UiAction("file-save-backup",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Save backup"),
-             TranslatableString("action", "Save backup")
-             ),
     UiAction("export-audio",
              au::context::UiCtxAny,
              au::context::CTX_ANY,

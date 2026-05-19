@@ -204,7 +204,6 @@ MenuItem* AppMenuModel::makeFileMenu()
         makeMenuItem("file-save"),
         makeMenuItem("file-save-to-cloud"),
         makeMenuItem("file-save-as"),
-        makeMenuItem("file-save-backup"),
 
         makeSeparator(),
 
