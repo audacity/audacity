@@ -1454,6 +1454,40 @@ void ProjectActionsController::exportOverwriteOriginal()
     }
 }
 
+muse::String ProjectActionsController::getOverwriteOriginalTitle() const
+{
+    auto currentProj = currentProject();
+    if (!currentProj) {
+        return muse::String("Overwrite original");
+    }
+    
+    auto au3Project = reinterpret_cast<AudacityProject*>(currentProj->au3ProjectPtr());
+    if (!au3Project) {
+        return muse::String("Overwrite original");
+    }
+    
+    auto& fileInfo = OriginalFileInfo::Get(*au3Project);
+    if (!fileInfo.HasOriginalFile()) {
+        return muse::String("Overwrite original");
+    }
+    
+    // Get just the filename (not full path)
+    QString fullPath = fileInfo.GetOriginalFileName();
+    if (fullPath.isEmpty()) {
+        fullPath = fileInfo.GetOriginalFilePath();
+    }
+    
+    // Extract just the filename if it's a full path
+    QFileInfo fi(fullPath);
+    QString fileName = fi.fileName();
+    if (fileName.isEmpty()) {
+        fileName = fullPath;
+    }
+    
+    std::string titleStr = std::string("Overwrite ") + fileName.toStdString();
+    return muse::String::fromStdString(titleStr);
+}
+
 void ProjectActionsController::exportLabels(const actions::ActionData& args)
 {
     muse::UriQuery query(EXPORT_LABELS_URI);

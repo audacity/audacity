@@ -31,6 +31,11 @@
 
 #include "log.h"
 
+#include "context/iglobalcontext.h"
+#include "importexport/export/OriginalFileInfo.h"
+#include "audacityproject.h"
+#include <QFileInfo>
+
 using namespace au::appshell;
 using namespace muse;
 using namespace muse::ui;
@@ -144,6 +149,7 @@ void AppMenuModel::setupConnections()
 
     projectHistory()->historyChanged().onReceive(this, [this](auto) {
         updateUndoRedoItems();
+        updateOverwriteOriginalTitle();
     });
 
     configuration()->isEffectsPanelVisibleChanged().onNotify(this, [this]() {
@@ -173,7 +179,44 @@ void AppMenuModel::updateUndoRedoItems()
                       ? TranslatableString("action", "Redo")
                       : TranslatableString("action", "Redo ‘%1’").arg(redoActionName));
 }
-
+void AppMenuModel::updateOverwriteOriginalTitle()
+{
+    try {
+        MenuItem& item = findItem(ActionCode("action://export-overwrite-original"));
+        
+        // Try to get the current project and its original file info
+        if (auto currentProj = mainWindow()->currentAudacityProject()) {
+            auto au3Project = reinterpret_cast<AudacityProject*>(currentProj->au3ProjectPtr());
+            if (au3Project) {
+                auto& fileInfo = OriginalFileInfo::Get(*au3Project);
+                if (fileInfo.HasOriginalFile()) {
+                    // Get the display name (filename without path)
+                    QString displayName = fileInfo.GetOriginalFileName();
+                    if (displayName.isEmpty()) {
+                        displayName = fileInfo.GetOriginalFilePath();
+                    }
+                    
+                    // Extract just the filename if it's a full path
+                    QFileInfo fi(displayName);
+                    QString fileName = fi.fileName();
+                    if (fileName.isEmpty()) {
+                        fileName = displayName;
+                    }
+                    
+                    // Set the title with the filename
+                    std::string titleStr = "Overwrite " + fileName.toStdString();
+                    item.setTitle(TranslatableString("action", titleStr));
+                    return;
+                }
+            }
+        }
+        
+        // Fallback: use default title if no original file
+        item.setTitle(TranslatableString("action", "Overwrite original"));
+    } catch (...) {
+        // Item not found - this is okay, menu might not be fully initialized yet
+    }
+}
 MenuItem* AppMenuModel::makeMenuItem(const actions::ActionCode& actionCode, MenuItemRole menuRole)
 {
     MenuItem* item = makeMenuItem(actionCode);
