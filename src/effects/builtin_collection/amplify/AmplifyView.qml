@@ -14,13 +14,7 @@ BuiltinEffectBase {
     implicitHeight: column.height
     numNavigationPanels: 1
 
-    builtinEffectModel: {
-        var model = AmplifyViewModelFactory.createModel(root, root.instanceId)
-        model.ampValueChanged.connect(function () {
-            ampSlider.value = model.ampValue
-        })
-        return model
-    }
+    builtinEffectModel: AmplifyViewModelFactory.createModel(root, root.instanceId)
     property alias amplify: root.builtinEffectModel
     property NavigationPanel amplifyNavigationPanel: NavigationPanel {
         name: "AmplifyControls"
