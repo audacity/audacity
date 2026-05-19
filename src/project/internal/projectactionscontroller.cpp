@@ -1351,17 +1351,6 @@ void ProjectActionsController::exportOverwriteOriginal()
         return;
     }
     
-    // Show confirmation dialog
-    IInteractive::Result result = interactive()->warningSync(
-        muse::trc("project", "Overwrite Original"),
-        muse::trc("project", "This will overwrite the original file. Continue?"),
-        { IInteractive::Button::No, IInteractive::Button::Yes },
-        IInteractive::Button::No);
-    
-    if (result.standardButton() != IInteractive::Button::Yes) {
-        return;  // User cancelled
-    }
-    
     // Get the Au3Project for export operations
     auto au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
     if (!au3Project) {
@@ -1441,10 +1430,8 @@ void ProjectActionsController::exportOverwriteOriginal()
     
     // Show result message
     if (exportResult == ExportResult::Success) {
-        std::string message = "Successfully overwrote the original file:\n" + originalFilePath.toStdString();
-        interactive()->info(
-            muse::trc("project", "Overwrite Original"),
-            message);
+        std::string fileName = QFileInfo(originalFilePath).fileName().toStdString();
+        toastService()->showSuccess("Overwrite Original", "Overwrote " + fileName);
     } else if (exportResult == ExportResult::Stopped) {
         // User stopped the export - this is normal, don't show error
     } else {

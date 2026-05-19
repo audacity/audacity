@@ -33,8 +33,11 @@
 
 #include "context/iglobalcontext.h"
 #include "importexport/export/OriginalFileInfo.h"
-#include "audacityproject.h"
+#include "project/iaudacityproject.h"
 #include <QFileInfo>
+
+// Forward declaration
+class AudacityProject;
 
 using namespace au::appshell;
 using namespace muse;
@@ -185,7 +188,8 @@ void AppMenuModel::updateOverwriteOriginalTitle()
         MenuItem& item = findItem(ActionCode("action://export-overwrite-original"));
         
         // Try to get the current project and its original file info
-        if (auto currentProj = mainWindow()->currentAudacityProject()) {
+        auto currentProj = globalContext()->currentProject();
+        if (currentProj) {
             auto au3Project = reinterpret_cast<AudacityProject*>(currentProj->au3ProjectPtr());
             if (au3Project) {
                 auto& fileInfo = OriginalFileInfo::Get(*au3Project);
@@ -205,7 +209,7 @@ void AppMenuModel::updateOverwriteOriginalTitle()
                     
                     // Set the title with the filename
                     std::string titleStr = "Overwrite " + fileName.toStdString();
-                    item.setTitle(TranslatableString("action", titleStr));
+                    item.setTitle(TranslatableString("action", muse::String::fromStdString(titleStr)));
                     return;
                 }
             }
