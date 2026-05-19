@@ -93,13 +93,13 @@ QPixmap ThumbnailLoader::renderFromProject(const muse::io::path_t& source)
     const auto pngData = au3ProjectReader()->readProjectThumbnail(source);
 
     if (!pngData.has_value()) {
-        return QPixmap();
+        return renderFromImage(m_placeholder.empty() ? DEFAULT_PLACEHOLDER : m_placeholder);
     }
 
     QPixmap pixmap;
     if (!pixmap.loadFromData(pngData->data(), static_cast<uint>(pngData->size()), "PNG")) {
         LOGE() << "Failed to decode thumbnail for: " << source.toQString();
-        return QPixmap();
+        return renderFromImage(m_placeholder.empty() ? DEFAULT_PLACEHOLDER : m_placeholder);
     }
 
     return pixmap;
@@ -113,7 +113,7 @@ QPixmap ThumbnailLoader::renderWaveformToPixmap(const muse::io::path_t& source)
 
     const std::vector<float> points = parseWaveformData(source);
     if (points.empty()) {
-        return QPixmap();
+        return renderFromImage(m_placeholder.empty() ? DEFAULT_PLACEHOLDER : m_placeholder);
     }
 
     QPixmap pixmap(QSize(m_width, m_height));

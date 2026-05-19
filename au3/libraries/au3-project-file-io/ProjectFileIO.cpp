@@ -17,6 +17,7 @@ Paul Licameli split from AudacityProject.cpp
 
 #include <wx/crt.h>
 #include <wx/log.h>
+#include <wx/filesys.h>
 #include <wx/sstream.h>
 #include <wx/utils.h>
 
@@ -1357,11 +1358,11 @@ public:
 std::optional<std::vector<uint8_t> > ProjectFileIO::ReadThumbnail(const FilePath& fileName)
 {
     // We won´t change the database. This will avoid shm and wal files to be created, and we won´t have to worry about them.
-    const wxString uri = wxString::Format("file:%s?immutable=1", fileName.ToUTF8());
+    wxString uri = wxFileSystem::FileNameToURL(fileName) + "?immutable=1";
 
     sqlite3* db = nullptr;
     const int openRc = sqlite3_open_v2(
-        uri.ToUTF8().data(), &db, SQLITE_OPEN_READONLY, nullptr);
+        uri.ToUTF8().data(), &db, SQLITE_OPEN_READONLY | SQLITE_OPEN_URI, nullptr);
     auto closeDb = finally([db] { sqlite3_close(db); });
 
     if (openRc != SQLITE_OK) {
