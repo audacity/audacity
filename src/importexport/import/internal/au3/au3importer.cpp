@@ -112,8 +112,91 @@ std::optional<ExportValue> closestNumericOptionValue(const ExportOption& option,
     return closest;
 }
 
+std::optional<int> mp3VbrPresetForBitRate(double bitRate)
+{
+    if (bitRate <= 0.0) {
+        return std::nullopt;
+    }
+
+    const double kbps = bitRate > 1000.0 ? bitRate / 1000.0 : bitRate;
+    if (kbps >= 230.0) {
+        return 0;
+    }
+    if (kbps >= 200.0) {
+        return 1;
+    }
+    if (kbps >= 180.0) {
+        return 2;
+    }
+    if (kbps >= 170.0) {
+        return 3;
+    }
+    if (kbps >= 140.0) {
+        return 4;
+    }
+    if (kbps >= 120.0) {
+        return 5;
+    }
+    return 6;
+}
+
+bool applyMp3CodecSettings(ExportOptionsEditor& editor, const QVariantMap& codecSettings)
+{
+    if (editor.GetName() != "mp3" || !codecSettings.contains("bitRate")) {
+        return false;
+    }
+
+    const auto vbrPreset = mp3VbrPresetForBitRate(codecSettings.value("bitRate").toDouble());
+    if (!vbrPreset) {
+        return false;
+    }
+
+    for (int index = 0; index < editor.GetOptionsCount(); ++index) {
+        ExportOption option;
+        if (!editor.GetOption(index, option)) {
+            continue;
+        }
+
+        const bool isModeOption = std::any_of(option.values.cbegin(), option.values.cend(), [](const ExportValue& value) {
+            const auto str = std::get_if<std::string>(&value);
+            return str && *str == "VBR";
+        });
+
+        if (isModeOption) {
+            editor.SetValue(option.id, std::string("VBR"));
+            break;
+        }
+    }
+
+    for (int index = 0; index < editor.GetOptionsCount(); ++index) {
+        ExportOption option;
+        if (!editor.GetOption(index, option)) {
+            continue;
+        }
+
+        const bool isVisibleVbrQualityOption = (option.flags & ExportOption::Hidden) == 0
+                                               && option.values.size() == 10
+                                               && std::all_of(
+            option.values.cbegin(), option.values.cend(), [](const ExportValue& value) {
+                const auto numeric = std::get_if<int>(&value);
+                return numeric && *numeric >= 0 && *numeric <= 9;
+            });
+
+        if (isVisibleVbrQualityOption) {
+            editor.SetValue(option.id, *vbrPreset);
+            return true;
+        }
+    }
+
+    return true;
+}
+
 void applyCodecSettings(ExportOptionsEditor& editor, const QVariantMap& codecSettings)
 {
+    if (applyMp3CodecSettings(editor, codecSettings)) {
+        return;
+    }
+
     const bool hasBitDepth = codecSettings.contains("bitDepth");
     const bool hasBitRate = codecSettings.contains("bitRate");
     const double bitDepth = codecSettings.value("bitDepth").toDouble();
@@ -483,7 +566,7 @@ void au::importexport::Au3Importer::addImportedTracks(const muse::io::path_t& fi
     auto& tracks = TrackList::Get(*project);
     auto& projectFileIO = ProjectFileIO::Get(*project);
 
-    std::vector<Track*> results;
+    std::vector<WaveTrack*> results;
 
     wxFileName fn(wxFromString(fileName.toString()));
     

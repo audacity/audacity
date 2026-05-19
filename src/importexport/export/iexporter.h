@@ -16,8 +16,6 @@
 #include "types/ret.h"
 
 namespace au::importexport {
-using ExportParameters = std::vector<std::tuple<int, OptionValue> >;
-
 class IExporter : MODULE_EXPORT_INTERFACE
 {
     INTERFACE_ID(IExporter)
