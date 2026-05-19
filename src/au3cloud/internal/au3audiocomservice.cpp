@@ -414,6 +414,17 @@ void Au3AudioComService::stopProjectSync()
         if (au3Project) {
             auto& projectCloudExtension = audacity::cloud::audiocom::sync::ProjectCloudExtension::Get(*au3Project);
             projectCloudExtension.CancelSync();
+
+            // Remove pending snapshots
+            auto& db = sync::CloudProjectsDatabase::Get();
+            const auto projectId = projectCloudExtension.GetCloudProjectId();
+            if (!projectId.empty()) {
+                for (const auto& snapshot : db.GetPendingSnapshots(projectId)) {
+                    db.RemovePendingProjectBlocks(projectId, snapshot.SnapshotId);
+                    db.RemovePendingProjectBlob(projectId, snapshot.SnapshotId);
+                    db.RemovePendingSnapshot(projectId, snapshot.SnapshotId);
+                }
+            }
         }
     }
 
