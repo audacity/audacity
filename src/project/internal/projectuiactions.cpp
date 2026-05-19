@@ -145,13 +145,6 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Manage labels"),
              TranslatableString("action", "Manage labels")
              ),
-    UiAction("manage-metadata",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Metadata editor"),
-             TranslatableString("action", "Metadata editor")
-             ),
-
     // select menu
     UiAction("select-all",
              au::context::UiCtxAny,
@@ -264,12 +257,11 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Show effects panel"),
              Checkable::Yes
              ),
-    UiAction("toggle-metadata-editor",
-             au::context::UiCtxUnknown,
+    UiAction("open-metadata-editor",
+             au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Show metadata editor"),
-             TranslatableString("action", "Show metadata editor"),
-             Checkable::Yes
+             TranslatableString("action", "Show metadata editor")
              ),
     UiAction("toggle-history",
              au::context::UiCtxAny,

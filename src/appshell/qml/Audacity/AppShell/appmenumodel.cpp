@@ -243,7 +243,7 @@ MenuItem* AppMenuModel::makeEditMenu()
         makeMenu(TranslatableString("appshell/menu/label", "Label"), makeLabelItems(), "menu-label"),
         makeMenuItem("silence-audio"),
         makeSeparator(),
-        makeMenuItem("manage-metadata"),
+        makeMenuItem("open-metadata-editor", TranslatableString("action", "Metadata editor")),
         makeSeparator(),
         makeMenuItem("preference-dialog", MenuItemRole::PreferencesRole)
     };
@@ -299,8 +299,8 @@ MenuItem* AppMenuModel::makeViewMenu()
     }
 
     viewItems << makeSeparator()
-              << makeMenuItem("toggle-label-editor")
-              << makeMenuItem("toggle-metadata-editor")
+              << makeMenuItem("open-label-editor")
+              << makeMenuItem("open-metadata-editor")
               << makeMenuItem("toggle-history")
               << makeSeparator()
 #ifdef MUSE_MODULE_WORKSPACE
