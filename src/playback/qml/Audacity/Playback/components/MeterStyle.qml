@@ -18,5 +18,6 @@ QtObject {
     readonly property color gradientColorYellow: ui.theme.extra["meter_gradient_yellow_color"]
     readonly property color gradientColorRed: ui.theme.extra["meter_clipped_color"]
     readonly property color meterBackgroundColor: ui.theme.extra["meter_background_color"]
+    readonly property color meterStrokeColor: ui.theme.extra["meter_stroke_color"]
     readonly property color maxPeakMarkerColor: ui.theme.extra["meter_max_peak_marker_color"]
 }

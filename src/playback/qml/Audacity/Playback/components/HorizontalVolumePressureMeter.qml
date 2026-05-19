@@ -24,5 +24,6 @@ HorizontalVolumePressureMeterItem {
     gradientColorYellow: MeterStyle.gradientColorYellow
     gradientColorRed: MeterStyle.gradientColorRed
     meterBackgroundColor: MeterStyle.meterBackgroundColor
+    meterStrokeColor: MeterStyle.meterStrokeColor
     maxPeakMarkerColor: MeterStyle.maxPeakMarkerColor
 }
