@@ -5,6 +5,7 @@
 
 #include <qobjectdefs.h>
 #include <string>
+#include <variant>
 #include <vector>
 
 namespace au::importexport {

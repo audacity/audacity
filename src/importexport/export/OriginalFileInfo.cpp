@@ -70,6 +70,26 @@ const QString& OriginalFileInfo::GetExportFormatID() const
     return mExportFormatID;
 }
 
+void OriginalFileInfo::SetCodecSettings(const QVariantMap& settings)
+{
+    mCodecSettings = settings;
+}
+
+const QVariantMap& OriginalFileInfo::GetCodecSettings() const
+{
+    return mCodecSettings;
+}
+
+void OriginalFileInfo::SetExportParameters(const au::importexport::ExportParameters& parameters)
+{
+    mExportParameters = parameters;
+}
+
+const au::importexport::ExportParameters& OriginalFileInfo::GetExportParameters() const
+{
+    return mExportParameters;
+}
+
 void OriginalFileInfo::IncrementImportedFileCount()
 {
     ++mImportedFileCount;
@@ -85,6 +105,8 @@ void OriginalFileInfo::Clear()
     mOriginalFilePath.clear();
     mOriginalFileName.clear();
     mExportFormatID.clear();
+    mCodecSettings.clear();
+    mExportParameters.clear();
     mImportedFileCount = 0;
 }
 

@@ -15,9 +15,10 @@ the original file's codec and format settings.
 #define __AUDACITY_ORIGINAL_FILE_INFO__
 
 #include <QString>
-#include <vector>
-#include <tuple>
+#include <QVariantMap>
 #include <memory>
+
+#include "types/exporttypes.h"
 
 // Forward declaration
 class AudacityProject;
@@ -53,6 +54,20 @@ public:
     /// Get the export format ID
     const QString& GetExportFormatID() const;
 
+    /// Set codec-specific properties read from the source file.
+    /// Examples include sampleRate, bitRate, bitDepth, quality, or any
+    /// format-specific export option needed to reproduce the original file.
+    void SetCodecSettings(const QVariantMap& settings);
+
+    /// Get codec-specific properties read from the source file.
+    const QVariantMap& GetCodecSettings() const;
+
+    /// Set the exact export option values to use when overwriting.
+    void SetExportParameters(const au::importexport::ExportParameters& parameters);
+
+    /// Get the exact export option values to use when overwriting.
+    const au::importexport::ExportParameters& GetExportParameters() const;
+
     /// Increment the count of imported files
     /// If more than 1 file has been imported, the "Overwrite Original" menu
     /// entry should be disabled/hidden
@@ -72,6 +87,8 @@ private:
     QString mOriginalFilePath;
     QString mOriginalFileName;
     QString mExportFormatID;
+    QVariantMap mCodecSettings;
+    au::importexport::ExportParameters mExportParameters;
     int mImportedFileCount{0};
 };
 
