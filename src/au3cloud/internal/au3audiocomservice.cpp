@@ -408,6 +408,15 @@ muse::ValCh<bool> Au3AudioComService::syncingInProgressChanged() const
 
 void Au3AudioComService::stopProjectSync()
 {
+    auto project = globalContext()->currentProject();
+    if (project) {
+        au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
+        if (au3Project) {
+            auto& projectCloudExtension = audacity::cloud::audiocom::sync::ProjectCloudExtension::Get(*au3Project);
+            projectCloudExtension.CancelSync();
+        }
+    }
+
     if (m_syncInProgress) {
         m_syncInProgress->cancel();
     }

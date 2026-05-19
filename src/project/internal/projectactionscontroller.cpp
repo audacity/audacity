@@ -592,8 +592,9 @@ bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudI
         { trc("global", "Stop"), au::toast::ToastActionCode::Custom }
     },
         showProgressInfo
-        ).onResolve(this, [progress = progress](const au::toast::ToastActionCode& actionCode) {
+        ).onResolve(this, [this, progress = progress](const au::toast::ToastActionCode& actionCode) {
         if (actionCode == au::toast::ToastActionCode::Custom) {
+            audioComService()->stopProjectSync();
             progress->cancel();
         }
     });
@@ -971,8 +972,9 @@ Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, cons
             { trc("global", "Stop"), au::toast::ToastActionCode::Custom }
         },
             showProgressInfo
-            ).onResolve(this, [progress = syncProgress](const au::toast::ToastActionCode& actionCode) {
+            ).onResolve(this, [this, progress = syncProgress](const au::toast::ToastActionCode& actionCode) {
             if (actionCode == au::toast::ToastActionCode::Custom) {
+                audioComService()->stopProjectSync();
                 progress->cancel();
             }
         });
