@@ -759,21 +759,29 @@ muse::Ret Au3AudioComService::checkUnsyncedProject(const std::string& cloudProje
 
 muse::ProgressPtr Au3AudioComService::createSyncProgress()
 {
-    if (m_syncInProgress) {
-        m_syncInProgress->cancel();
+    auto oldProgress = std::exchange(m_syncInProgress, std::make_shared<muse::Progress>());
+
+    std::weak_ptr<muse::Progress> weakProgress = m_syncInProgress;
+
+    m_syncInProgress->canceled().onNotify(this, [this, weakProgress]() {
+        if (weakProgress.lock() != m_syncInProgress) {
+            return;
+        }
+        m_syncInProgress.reset();
+        m_syncingInProgressChangedChannel.set(false);
+    });
+
+    m_syncInProgress->finished().onReceive(this, [this, weakProgress](const auto&) {
+        if (weakProgress.lock() != m_syncInProgress) {
+            return;
+        }
+        m_syncInProgress.reset();
+        m_syncingInProgressChangedChannel.set(false);
+    });
+
+    if (oldProgress) {
+        oldProgress->cancel();
     }
-
-    m_syncInProgress = std::make_shared<muse::Progress>();
-
-    m_syncInProgress->canceled().onNotify(this, [this]() {
-        m_syncInProgress.reset();
-        m_syncingInProgressChangedChannel.set(false);
-    });
-
-    m_syncInProgress->finished().onReceive(this, [this](const auto&) {
-        m_syncInProgress.reset();
-        m_syncingInProgressChangedChannel.set(false);
-    });
 
     m_syncingInProgressChangedChannel.set(true);
     return m_syncInProgress;
