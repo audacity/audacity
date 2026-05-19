@@ -186,7 +186,7 @@ set(MODULE_DEF ${MODULE_DEF}
     # -DNOTE_TRACK_API=
 )
 
-set(MODULE_LINK au3wrap libsbsms)
+set(MODULE_LINK au3wrap libsbsms shared)
 set(MODULE_LINK_PUBLIC au3-effects au3-builtin-effects)
 
 set(MODULE_USE_UNITY OFF)
