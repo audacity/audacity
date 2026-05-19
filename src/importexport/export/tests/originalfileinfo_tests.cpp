@@ -48,6 +48,7 @@ TEST(OriginalFileInfoTests, RemembersImportedFilePathFormatAndCodecSettings)
 
     QVariantMap codecSettings;
     codecSettings.insert("sampleRate", 48000);
+    codecSettings.insert("channels", 2);
     codecSettings.insert("bitRate", 256000);
     codecSettings.insert("bitDepth", 24);
 
@@ -64,6 +65,7 @@ TEST(OriginalFileInfoTests, RemembersImportedFilePathFormatAndCodecSettings)
     EXPECT_EQ(info.GetOriginalFileName(), "original.wav");
     EXPECT_EQ(info.GetExportFormatID(), "WAV");
     EXPECT_EQ(info.GetCodecSettings().value("sampleRate").toInt(), 48000);
+    EXPECT_EQ(info.GetCodecSettings().value("channels").toInt(), 2);
     EXPECT_EQ(info.GetCodecSettings().value("bitRate").toInt(), 256000);
     EXPECT_EQ(info.GetCodecSettings().value("bitDepth").toInt(), 24);
     EXPECT_EQ(info.GetExportParameters(), exportParameters);

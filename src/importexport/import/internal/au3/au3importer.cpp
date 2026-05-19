@@ -10,6 +10,10 @@
 #include "au3-wave-track/WaveTrack.h"
 #include "au3-import-export/ImportPlugin.h"
 #include "au3-import-export/ImportProgressListener.h"
+#include "au3-import-export/ExportPlugin.h"
+#include "au3-import-export/ExportPluginRegistry.h"
+#include "au3-import-export/ExportUtils.h"
+#include "au3-preferences/Prefs.h"
 #include "au3-numeric-formats/ProjectTimeSignature.h"
 #include "au3-project/Project.h"
 #include "au3-project-file-io/ProjectFileIO.h"
@@ -24,11 +28,151 @@
 
 #include "tempodetection.h"
 
+#include <QFileInfo>
+#include <QVariantMap>
+
+#include <algorithm>
+#include <cmath>
+#include <limits>
+#include <optional>
+#include <type_traits>
+#include <tuple>
+#include <variant>
+
 using au::trackedit::ITrackDataPtr;
 using au::trackedit::Au3TrackData;
 using Au3TrackDataPtr = std::shared_ptr<Au3TrackData>;
 
 using namespace au::au3;
+
+namespace {
+int bitDepthFromSampleFormat(sampleFormat format)
+{
+    if (format == int16Sample) {
+        return 16;
+    }
+    if (format == int24Sample) {
+        return 24;
+    }
+    if (format == floatSample) {
+        return 32;
+    }
+    return 0;
+}
+
+std::tuple<ExportPlugin*, int> findExportFormat(const wxString& formatID, const wxString& extension)
+{
+    if (!formatID.empty()) {
+        auto [plugin, formatIndex] = ExportPluginRegistry::Get().FindFormat(formatID);
+        if (plugin) {
+            return { plugin, formatIndex };
+        }
+    }
+
+    for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
+        const FormatInfo formatInfo = plugin->GetFormatInfo(formatIndex);
+        if (formatInfo.extensions.Index(extension, false) != wxNOT_FOUND) {
+            return { plugin, formatIndex };
+        }
+    }
+
+    return { nullptr, -1 };
+}
+
+std::optional<double> numericValue(const ExportValue& value)
+{
+    return std::visit([](const auto& v) -> std::optional<double> {
+        using T = std::decay_t<decltype(v)>;
+        if constexpr (std::is_same_v<T, int> || std::is_same_v<T, double>) {
+            return static_cast<double>(v);
+        } else {
+            return std::nullopt;
+        }
+    }, value);
+}
+
+std::optional<ExportValue> closestNumericOptionValue(const ExportOption& option, double target)
+{
+    std::optional<ExportValue> closest;
+    double closestDistance = std::numeric_limits<double>::max();
+
+    for (const auto& value : option.values) {
+        const auto numeric = numericValue(value);
+        if (!numeric) {
+            continue;
+        }
+
+        const double distance = std::abs(*numeric - target);
+        if (distance < closestDistance) {
+            closest = value;
+            closestDistance = distance;
+        }
+    }
+
+    return closest;
+}
+
+void applyCodecSettings(ExportOptionsEditor& editor, const QVariantMap& codecSettings)
+{
+    const bool hasBitDepth = codecSettings.contains("bitDepth");
+    const bool hasBitRate = codecSettings.contains("bitRate");
+    const double bitDepth = codecSettings.value("bitDepth").toDouble();
+    double bitRate = codecSettings.value("bitRate").toDouble();
+    if (bitRate > 1000.0) {
+        bitRate /= 1000.0;
+    }
+
+    for (int index = 0; index < editor.GetOptionsCount(); ++index) {
+        ExportOption option;
+        if (!editor.GetOption(index, option)) {
+            continue;
+        }
+
+        const std::string title = option.title.Translation().Lower().ToStdString();
+        const bool isBitDepth = title.find("bit depth") != std::string::npos;
+        const bool isBitRate = title.find("bit rate") != std::string::npos
+                               || title.find("bitrate") != std::string::npos
+                               || title.find("quality") != std::string::npos;
+
+        if (hasBitDepth && isBitDepth) {
+            if (auto value = closestNumericOptionValue(option, bitDepth)) {
+                editor.SetValue(option.id, *value);
+            }
+        } else if (hasBitRate && isBitRate) {
+            const auto value = closestNumericOptionValue(option, bitRate);
+            const auto numeric = value ? numericValue(*value) : std::nullopt;
+            if (value && numeric && *numeric >= 32.0) {
+                editor.SetValue(option.id, *value);
+            }
+        }
+    }
+}
+
+au::importexport::ExportParameters exportParametersFor(ExportPlugin& plugin, int formatIndex,
+                                                       const QVariantMap& codecSettings)
+{
+    au::importexport::ExportParameters parameters;
+
+    auto editor = plugin.CreateOptionsEditor(formatIndex, nullptr);
+    if (!editor) {
+        return parameters;
+    }
+
+    if (gPrefs) {
+        editor->Load(*gPrefs);
+    }
+
+    applyCodecSettings(*editor, codecSettings);
+
+    for (const auto& [id, value] : ExportUtils::ParametersFromEditor(*editor)) {
+        parameters.emplace_back(id, std::visit([](const auto& v) -> au::importexport::OptionValue {
+            return v;
+        }, value));
+    }
+
+    return parameters;
+}
+}
 
 class ImportProgress final : public ImportProgressListener
 {
@@ -346,14 +490,19 @@ void au::importexport::Au3Importer::addImportedTracks(const muse::io::path_t& fi
     // Capture original file info for "Overwrite Original" feature
     // Check if this is the first import (not whether project is physically empty)
     auto& fileInfo = OriginalFileInfo::Get(*project);
-    if (fileInfo.GetImportedFileCount() == 0) {
+    const bool captureOriginalFileInfo = fileInfo.GetImportedFileCount() == 0;
+    if (captureOriginalFileInfo) {
         // First file being imported - capture its path and format
         QString filePath = QString::fromStdString(fileName.toString().toStdString());
-        QString displayName = QString::fromStdString(fn.GetName().ToStdString());
-        QString formatID = QString::fromStdString(fn.GetExt().Upper().ToStdString());
+        QString displayName = QString::fromStdString(fn.GetFullName().ToStdString());
+        const wxString extension = fn.GetExt();
+        const wxString formatID = extension.Upper();
+        auto [plugin, formatIndex] = findExportFormat(formatID, extension);
         
         fileInfo.SetOriginalFile(filePath, displayName);
-        fileInfo.SetExportFormatID(formatID);
+        fileInfo.SetExportFormatID(QString::fromStdString(plugin
+                                                           ? plugin->GetFormatInfo(formatIndex).format.ToStdString()
+                                                           : formatID.ToStdString()));
     }
     // Increment import count on every import (whether first or subsequent)
     fileInfo.IncrementImportedFileCount();
@@ -412,6 +561,55 @@ void au::importexport::Au3Importer::addImportedTracks(const muse::io::path_t& fi
                 interval->SetName(trackName);
             }
         });
+    }
+
+    if (captureOriginalFileInfo) {
+        QVariantMap codecSettings;
+        codecSettings.insert("format", fileInfo.GetExportFormatID());
+        codecSettings.insert("fileExtension", QString::fromStdString(fn.GetExt().Lower().ToStdString()));
+
+        int channels = 0;
+        int bitDepth = 0;
+        double sampleRate = 0.0;
+        double importedDuration = 0.0;
+        for (const auto* wt : results) {
+            if (!wt) {
+                continue;
+            }
+
+            channels = std::max(channels, static_cast<int>(wt->NChannels()));
+            if (sampleRate <= 0.0) {
+                sampleRate = wt->GetRate();
+            }
+            if (bitDepth == 0) {
+                bitDepth = bitDepthFromSampleFormat(wt->GetSampleFormat());
+            }
+            importedDuration = std::max(importedDuration, wt->GetEndTime());
+        }
+
+        if (sampleRate > 0.0) {
+            codecSettings.insert("sampleRate", static_cast<int>(std::lround(sampleRate)));
+        }
+        if (channels > 0) {
+            codecSettings.insert("channels", channels);
+        }
+        if (bitDepth > 0) {
+            codecSettings.insert("bitDepth", bitDepth);
+        }
+
+        const QFileInfo originalFile(fileInfo.GetOriginalFilePath());
+        if (originalFile.exists() && originalFile.size() > 0) {
+            if (importedDuration > 0.0) {
+                codecSettings.insert("bitRate", static_cast<qlonglong>((originalFile.size() * 8.0) / importedDuration));
+            }
+        }
+
+        fileInfo.SetCodecSettings(codecSettings);
+
+        auto [plugin, formatIndex] = findExportFormat(wxString(fileInfo.GetExportFormatID().toStdString()), fn.GetExt());
+        if (plugin) {
+            fileInfo.SetExportParameters(exportParametersFor(*plugin, formatIndex, codecSettings));
+        }
     }
 
     applyImportedProjectTitleIfNeeded(fileName);

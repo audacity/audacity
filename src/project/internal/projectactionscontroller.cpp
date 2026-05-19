@@ -4,6 +4,7 @@
 #include <QString>
 #include <QFileInfo>
 #include <QDir>
+#include <variant>
 
 #include "au3cloud/internal/au3audiocomservice.h"
 #include "framework/global/async/async.h"
@@ -56,6 +57,22 @@ static const muse::actions::ActionCode OPEN_CUSTOM_FFMPEG_OPTIONS("open-custom-f
 static const muse::actions::ActionCode OPEN_METADATA_DIALOG("open-metadata-dialog");
 static const muse::actions::ActionCode OPEN_CUSTOM_MAPPING("open-custom-mapping");
 static const muse::actions::ActionQuery OPEN_CLOUD_AUDIO_FILE_URI("audacity://cloud/open-audio-file");
+
+namespace {
+ExportProcessor::Parameters toAu3ExportParameters(const au::importexport::ExportParameters& parameters)
+{
+    ExportProcessor::Parameters result;
+    result.reserve(parameters.size());
+
+    for (const auto& [id, value] : parameters) {
+        result.emplace_back(id, std::visit([](const auto& v) -> ExportValue {
+            return v;
+        }, value));
+    }
+
+    return result;
+}
+}
 
 ProjectActionsController::ProjectActionsController(muse::modularity::ContextPtr ctx)
     : muse::Contextable(ctx)
@@ -1360,6 +1377,8 @@ void ProjectActionsController::exportOverwriteOriginal()
         return;
     }
     
+    const QVariantMap codecSettings = fileInfo.GetCodecSettings();
+
     // Get the format ID and find the export plugin
     QString formatID = fileInfo.GetExportFormatID();
     wxString wxFormatID = wxString(formatID.toStdString());
@@ -1379,23 +1398,25 @@ void ProjectActionsController::exportOverwriteOriginal()
     // Get audio duration
     double endTime = tracks.GetEndTime();
     
-    // Collect channel and sample rate info from tracks
-    int numChannels = 1;
-    double sampleRate = 44100.0;
+    // Prefer the source file's remembered audio properties. If they are not
+    // available, fall back to the current project tracks.
+    const bool hasRememberedChannels = codecSettings.contains("channels");
+    const bool hasRememberedSampleRate = codecSettings.contains("sampleRate");
+    int numChannels = hasRememberedChannels ? codecSettings.value("channels").toInt() : 1;
+    double sampleRate = hasRememberedSampleRate ? codecSettings.value("sampleRate").toDouble() : 44100.0;
     
     // Get channel info from available tracks  
     for (const auto pTrack : tracks.Any<WaveTrack>()) {
-        if (pTrack && pTrack->NChannels() > numChannels) {
-            numChannels = pTrack->NChannels();
+        if (!hasRememberedChannels && pTrack && pTrack->NChannels() > numChannels) {
+            numChannels = static_cast<int>(pTrack->NChannels());
         }
-        if (pTrack && pTrack->GetRate() > 0) {
+        if (!hasRememberedSampleRate && pTrack && pTrack->GetRate() > 0) {
             sampleRate = pTrack->GetRate();
             break;  // Use sample rate from first track found
         }
     }
     
-    // Get default export parameters from plugin
-    auto parameters = ExportProcessor::Parameters();
+    auto parameters = toAu3ExportParameters(fileInfo.GetExportParameters());
     
     // Create export file wrapper (convert QString to wxString for legacy API)
     wxFileNameWrapper fileName(wxString(originalFilePath.toStdString()));
