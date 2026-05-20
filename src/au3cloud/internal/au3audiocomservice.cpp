@@ -545,7 +545,7 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::downloadAudioFile(const std:
 }
 
 muse::RetVal<muse::ProgressPtr> Au3AudioComService::openCloudProject(const muse::io::path_t& localPath, const std::string& projectId,
-                                                                     bool forceOverwrite)
+                                                                     const std::string& snapshotId, bool forceOverwrite)
 {
     const auto dbProjectData = getProjectDataFromDatabase(localPath);
     if (dbProjectData.has_value() && !filesystem()->exists(localPath)) {
@@ -583,15 +583,19 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::openCloudProject(const muse:
 
     auto cancellationContext = audacity::concurrency::CancellationContext::Create();
 
-    std::thread([weak = weak_from_this(), progress, dbProjectData, cloudProjectId, forceOverwrite,
+    std::thread([weak = weak_from_this(), progress, dbProjectData, cloudProjectId, snapshotId, forceOverwrite,
                  cancellationContext, progressCallback = std::move(progressCallback)]() mutable {
         auto self = weak.lock();
         if (!self) {
             return;
         }
 
+        //! When an explicit snapshot is requested, skip the local fast-path:
+        //! the local copy reflects whichever snapshot was last synced, which
+        //! may not be the one the URL is asking for.
         auto cancelCheck = [progress](double) -> bool { return !progress->isCanceled(); };
-        if (!forceOverwrite && self->isSnapshotUpToDate(dbProjectData, cancelCheck, cancellationContext)) {
+        if (!forceOverwrite && snapshotId.empty()
+            && self->isSnapshotUpToDate(dbProjectData, cancelCheck, cancellationContext)) {
             const auto normalizedLocalPath = muse::io::Dir::fromNativeSeparators(muse::io::path_t(dbProjectData->LocalPath));
             progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(muse::io::path_t(normalizedLocalPath))));
             return;
@@ -601,7 +605,7 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::openCloudProject(const muse:
                               ? CloudSyncService::SyncMode::ForceOverwrite
                               : CloudSyncService::SyncMode::Normal;
         const auto result = CloudSyncService::Get().OpenFromCloud(
-            cloudProjectId, {}, syncMode, std::move(progressCallback), cancellationContext).get();
+            cloudProjectId, snapshotId, syncMode, std::move(progressCallback), cancellationContext).get();
 
         if (result.Status == sync::ProjectSyncResult::StatusCode::Cancelled) {
             progress->finish(make_ret(Err::OpenProjectCancelled));

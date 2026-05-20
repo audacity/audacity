@@ -31,9 +31,10 @@ public:
 
     std::shared_ptr<AudacityCmdOptions> options() const;
 
-private:
+    void printVersion() const;
     void printLongVersion() const;
 
+private:
     QCommandLineParser m_parser;
     const std::shared_ptr<AudacityCmdOptions> m_options = std::make_shared<AudacityCmdOptions>();
 };

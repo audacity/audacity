@@ -15,6 +15,8 @@
 #include "framework/interactive/iinteractive.h"
 
 namespace au::au3cloud {
+class CloudUrlHandler;
+
 class Au3CloudActionsController : public muse::actions::Actionable, public muse::async::Asyncable, public muse::Contextable
 {
     muse::GlobalInject<muse::IPlatformInteractive> platformInteractive;
@@ -26,6 +28,7 @@ class Au3CloudActionsController : public muse::actions::Actionable, public muse:
 
 public:
     Au3CloudActionsController(muse::modularity::ContextPtr ctx = nullptr);
+    ~Au3CloudActionsController();
 
     void init();
 
@@ -36,5 +39,8 @@ private:
     void openCreateAccountDialog(const muse::actions::ActionQuery& query);
     void openCloudProjectPage(const muse::actions::ActionQuery& query);
     void openCloudAudioPage(const muse::actions::ActionQuery& query);
+    void openUrl(const muse::actions::ActionData& args);
+
+    std::unique_ptr<CloudUrlHandler> m_urlHandler;
 };
 }

@@ -146,7 +146,6 @@ struct SaveLocation
 struct ProjectFile {
     QUrl url;
     QString displayNameOverride = {};
-    QString cloudProjectId = {};
 
     ProjectFile() = default;
 

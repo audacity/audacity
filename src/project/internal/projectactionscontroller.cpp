@@ -199,7 +199,7 @@ Ret ProjectActionsController::openProject(const ProjectFile& file)
             filename = resolved.val;
         }
 
-        return openProject(filename, file.displayNameOverride, file.cloudProjectId);
+        return openProject(filename, file.displayNameOverride);
     }
 
     //! TODO: Fix me
@@ -303,13 +303,25 @@ void ProjectActionsController::open(const muse::actions::ActionData& args)
 
 void ProjectActionsController::openCloudProject(const muse::actions::ActionData& args)
 {
-    if (args.count() != 3) {
+    if (args.count() < 3) {
         return;
     }
 
     const QString cloudProjectId = args.arg<QString>(0);
     const QUrl url = args.arg<QUrl>(1);
     const QString displayName = args.arg<QString>(2);
+    const QString snapshotId = args.count() >= 4 ? args.arg<QString>(3) : QString();
+
+    //! An empty URL means the project is not in the local cloud DB yet (or a
+    //! specific snapshot was requested, which can't be served from local), so
+    //! route into the download flow and let audioComService resolve the path.
+    if (url.isEmpty()) {
+        Ret ret = openCloudProject({}, cloudProjectId, snapshotId);
+        if (!ret) {
+            openPageIfNeed(HOME_PAGE_URI);
+        }
+        return;
+    }
 
     Ret ret = openProject(muse::io::path_t(url), displayName, cloudProjectId);
     if (!ret) {
@@ -859,9 +871,6 @@ muse::Ret ProjectActionsController::openProject(const muse::io::path_t& path, co
         if (!displayNameOverride.isEmpty()) {
             args << "--project-display-name-override" << displayNameOverride;
         }
-        if (!projectId.empty()) {
-            args << "--cloud-project-id" << projectId;
-        }
         multiwindowsProvider()->openNewWindow(args);
         return make_ret(Ret::Code::Ok);
     }
@@ -890,7 +899,8 @@ IAudacityProjectPtr ProjectActionsController::createProjectInCurrentWindow()
     return project;
 }
 
-Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, const String& projectId, bool forceOverwrite)
+Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, const String& projectId,
+                                               const String& snapshotId, bool forceOverwrite)
 {
     if (!audioComService()->enabled()) {
         LOGE() << "Cloud support is not available";
@@ -902,7 +912,8 @@ Ret ProjectActionsController::openCloudProject(const io::path_t& localPath, cons
     }
 
     const std::string cloudProjectIdStr = projectId.toStdString();
-    auto [openRet, progress] = audioComService()->openCloudProject(localPath, cloudProjectIdStr, forceOverwrite);
+    const std::string snapshotIdStr = snapshotId.toStdString();
+    auto [openRet, progress] = audioComService()->openCloudProject(localPath, cloudProjectIdStr, snapshotIdStr, forceOverwrite);
     if (!openRet) {
         handleCloudOpenError(openRet, localPath, cloudProjectIdStr);
         return openRet;
@@ -1375,10 +1386,10 @@ void ProjectActionsController::handleCloudOpenError(const muse::Ret& error, cons
         break;
     }
     case IOpenSaveProjectScenario::RET_CODE_OPEN_CLOUD_FORCE:
-        openCloudProject(localPath, {}, true);
+        openCloudProject(localPath, {}, {}, true);
         break;
     case IOpenSaveProjectScenario::RET_CODE_LOAD_LATEST_SYNCED:
-        openCloudProject(localPath, muse::String::fromStdString(cloudProjectId), true);
+        openCloudProject(localPath, muse::String::fromStdString(cloudProjectId), {}, true);
         break;
     case IOpenSaveProjectScenario::RET_CODE_OPEN_ON_AUDIOCOM:
         if (!cloudProjectId.empty()) {
@@ -1427,7 +1438,7 @@ void ProjectActionsController::handleCloudSaveError(const muse::Ret& error)
     case IOpenSaveProjectScenario::RET_CODE_CLOSE_AND_OPEN_CLOUD_FORCE: {
         const io::path_t localPath = project->path();
         closeOpenedProject(false);
-        openCloudProject(localPath, {}, true);
+        openCloudProject(localPath, {}, {}, true);
         break;
     }
     default:
