@@ -4,6 +4,7 @@
 #include <QString>
 #include <QFileInfo>
 #include <QDir>
+#include <tuple>
 #include <variant>
 
 #include "au3cloud/internal/au3audiocomservice.h"
@@ -59,6 +60,21 @@ static const muse::actions::ActionCode OPEN_CUSTOM_MAPPING("open-custom-mapping"
 static const muse::actions::ActionQuery OPEN_CLOUD_AUDIO_FILE_URI("audacity://cloud/open-audio-file");
 
 namespace {
+bool canWriteOriginalFilePath(const QString& originalFilePath)
+{
+    if (originalFilePath.isEmpty()) {
+        return false;
+    }
+
+    const QFileInfo fileInfo(originalFilePath);
+    const QDir dir = fileInfo.dir();
+    if (!dir.exists() || !QFileInfo(dir.absolutePath()).isWritable()) {
+        return false;
+    }
+
+    return !fileInfo.exists() || fileInfo.isWritable();
+}
+
 ExportProcessor::Parameters toAu3ExportParameters(const au::importexport::ExportParameters& parameters)
 {
     ExportProcessor::Parameters result;
@@ -195,10 +211,18 @@ bool ProjectActionsController::canReceiveAction(const muse::actions::ActionCode&
         if (au3Project) {
             auto& fileInfo = OriginalFileInfo::Get(*au3Project);
             if (fileInfo.HasOriginalFile()) {
-                QString path = QString::fromStdString(fileInfo.GetOriginalFilePath().toStdString());
+                QString path = fileInfo.GetOriginalFilePath();
                 QString ext = QFileInfo(path).suffix().toLower();
                 // Hide menu if it's a project file
                 if (ext == "aup" || ext == "aup3" || ext == "aup4") {
+                    return false;
+                }
+                if (!canWriteOriginalFilePath(path)) {
+                    return false;
+                }
+
+                const auto pluginAndFormat = ExportPluginRegistry::Get().FindFormat(wxString(fileInfo.GetExportFormatID().toStdString()));
+                if (std::get<0>(pluginAndFormat) == nullptr) {
                     return false;
                 }
             } else {
@@ -1354,13 +1378,8 @@ void ProjectActionsController::exportOverwriteOriginal()
     
     QString originalFilePath = fileInfo.GetOriginalFilePath();
     
-    // Check if we can write to the directory (even if original file is missing)
-    QFileInfo fileInfo2(originalFilePath);
-    QDir dir = fileInfo2.dir();
-    if (!dir.exists() || !QFileInfo(dir.absolutePath()).isWritable()) {
-        interactive()->error(
-            muse::trc("project", "Overwrite Original"),
-            muse::trc("project", "Cannot write to the directory where the original file was located."));
+    // Return silently if the action was invoked after the menu state went stale.
+    if (!canWriteOriginalFilePath(originalFilePath)) {
         return;
     }
     
@@ -1381,10 +1400,6 @@ void ProjectActionsController::exportOverwriteOriginal()
     auto [plugin, formatIndex] = ExportPluginRegistry::Get().FindFormat(wxFormatID);
     
     if (plugin == nullptr) {
-        std::string message = "The export format for the original file is no longer available: " + formatID.toStdString();
-        interactive()->error(
-            muse::trc("project", "Overwrite Original"),
-            message);
         return;
     }
     
