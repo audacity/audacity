@@ -1347,12 +1347,8 @@ void ProjectActionsController::exportOverwriteOriginal()
     auto au3ProjectPtr = reinterpret_cast<AudacityProject*>(project->au3ProjectPtr());
     auto& fileInfo = OriginalFileInfo::Get(*au3ProjectPtr);
     
-    // Check if we have original file information and only one file was imported
+    // Return silently if no original file info (menu should be disabled)
     if (!fileInfo.HasOriginalFile()) {
-        interactive()->error(
-            muse::trc("project", "Overwrite Original"),
-            muse::trc("project", "No original file information available. "
-                                  "Make sure to import a file first."));
         return;
     }
     
