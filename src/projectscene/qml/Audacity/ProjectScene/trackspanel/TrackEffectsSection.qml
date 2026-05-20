@@ -91,7 +91,7 @@ Rectangle {
         Rectangle {
             id: effectListContainer
             visible: prv.enabled
-            color: ui.theme.backgroundSecondaryColor
+            color: ui.theme.backgroundTertiaryColor
             Layout.preferredHeight: !effectList.empty * Math.min(effectList.implicitHeight, root.height - prv.addEffectButtonHeight - 2 * prv.addEffectButtonMargin - prv.headerHeight - separator.height)
             Layout.alignment: Qt.AlignHCenter | Qt.AlignVTop
             Layout.fillWidth: true

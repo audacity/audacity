@@ -67,14 +67,10 @@ ListItemBlank {
     focusBorder.anchors.rightMargin: 24 + separatorLine.width
     focusBorder.anchors.bottomMargin: 2
 
-    readonly property bool isHighContrast: ui.theme.backgroundPrimaryColor.toString() === ui.theme.backgroundSecondaryColor.toString()
-
     background.color: root.isSelected
-                   ? (root.isHighContrast ? ui.theme.accentColor : ui.theme.extra["track_header_active_color"])
+                   ? ui.theme.extra["track_header_active_color"]
                    : (hoverHandler.hovered ? ui.theme.extra["track_header_hover_color"]
                                            : ui.theme.extra["track_header_color"])
-
-    background.opacity: (root.isSelected && root.isHighContrast) ? ui.theme.accentOpacityNormal : 1
 
     background.anchors.leftMargin: spacer.width
     background.anchors.rightMargin: -background.radius
@@ -208,7 +204,7 @@ ListItemBlank {
             anchors.right: rightSideContainer.left
             anchors.bottomMargin: bottomSeparator.thickness
             orientation: Qt.Vertical
-            color: root.isHighContrast ? ui.theme.strokeColor : ui.theme.extra["track_header_separator_color"]
+            color: ui.theme.extra["track_header_separator_color"]
         }
 
         Loader {

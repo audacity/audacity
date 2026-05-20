@@ -60,7 +60,7 @@ Item {
             Layout.preferredWidth: root.effectsSectionWidth
             Layout.preferredHeight: root.height
 
-            color: ui.theme.backgroundSecondaryColor
+            color: ui.theme.backgroundPrimaryColor
             border.color: "transparent"
             border.width: padding
             visible: root.showEffectsSection
@@ -96,7 +96,7 @@ Item {
                     navigation.panel: effectsTitleBar.navigation
                     navigation.order: 0
 
-                    normalColor: ui.theme.backgroundSecondaryColor
+                    normalColor: ui.theme.backgroundPrimaryColor
                     hoverHitColor: ui.theme.buttonColor
                     icon: IconCode.CLOSE_X_ROUNDED
                     transparent: true
