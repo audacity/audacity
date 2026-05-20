@@ -63,7 +63,6 @@ void ProjectActionsController::init()
     //! to install our own implementation of the UI (BasicUI API)
     //! right now there's only BasicUI stub which means there's no progress dialog shown on saving
     dispatcher()->reg(this, "file-save-as", [this]() { saveProject(SaveMode::SaveAs); });
-    dispatcher()->reg(this, "file-save-backup", [this]() { saveProject(SaveMode::SaveCopy); });
 
     dispatcher()->reg(this, "file-share-audio", this, &ProjectActionsController::shareAudio);
     dispatcher()->reg(this, OPEN_CLOUD_AUDIO_FILE_URI, this, &ProjectActionsController::openCloudAudioFile);
@@ -72,7 +71,7 @@ void ProjectActionsController::init()
     dispatcher()->reg(this, "export-labels", this, &ProjectActionsController::exportLabels);
     dispatcher()->reg(this, "export-midi", this, &ProjectActionsController::exportMIDI);
 
-    dispatcher()->reg(this, "manage-metadata", this, &ProjectActionsController::openMetadataDialog);
+    dispatcher()->reg(this, "open-metadata-editor", this, &ProjectActionsController::openMetadataDialog);
 
     dispatcher()->reg(this, "file-close", [this]() {
         // reset preferred export sample rate
@@ -128,7 +127,6 @@ const muse::actions::ActionCodeList& ProjectActionsController::prohibitedActions
         "file-save",
         "file-save-to-cloud",
         "file-save-as",
-        "file-save-backup",
         "export-audio",
         "export-labels",
         "export-midi",

@@ -71,12 +71,6 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Save &as…"),
              TranslatableString("action", "Save as…")
              ),
-    UiAction("file-save-backup",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Save backup"),
-             TranslatableString("action", "Save backup")
-             ),
     UiAction("export-audio",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
@@ -133,31 +127,12 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Split into new track"),
              TranslatableString("action", "Split into new track")
              ),
-    UiAction("silence-audio",
-             au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Silence audio"),
-             TranslatableString("action", "Silence audio")
-             ),
     UiAction("paste-new-label",
              au::context::UiCtxUnknown,
              au::context::CTX_ANY,
              TranslatableString("action", "Paste new label"),
              TranslatableString("action", "Paste new label")
              ),
-    UiAction("manage-labels",
-             au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Manage labels"),
-             TranslatableString("action", "Manage labels")
-             ),
-    UiAction("manage-metadata",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Metadata editor"),
-             TranslatableString("action", "Metadata editor")
-             ),
-
     // select menu
     UiAction("select-all",
              au::context::UiCtxAny,
@@ -270,12 +245,11 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "Show effects panel"),
              Checkable::Yes
              ),
-    UiAction("toggle-metadata-editor",
-             au::context::UiCtxUnknown,
+    UiAction("open-metadata-editor",
+             au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Show metadata editor"),
-             TranslatableString("action", "Show metadata editor"),
-             Checkable::Yes
+             TranslatableString("action", "Show metadata editor")
              ),
     UiAction("toggle-history",
              au::context::UiCtxAny,
