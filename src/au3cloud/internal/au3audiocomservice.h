@@ -108,12 +108,8 @@ private:
 
     mutable std::mutex m_cacheMutex;
 
-    struct UploadSubscriptionEntry {
-        Observer::Subscription subscription;
-        std::shared_ptr<std::atomic<bool> > done;
-    };
-    std::vector<UploadSubscriptionEntry> m_projectUploadSubscriptions;
-    std::mutex m_uploadSubscriptionsMutex;
+    Observer::Subscription m_uploadSubscription;
+    std::shared_ptr<std::atomic<bool> > m_uploadDone;
 
     Observer::Subscription m_resumeSyncSubscription;
 
@@ -121,6 +117,6 @@ private:
     muse::async::Channel<std::string, muse::io::path_t> m_audioThumbnailFileUpdatedChannel;
 
     muse::ValCh<bool> m_syncingInProgressChangedChannel;
-    std::vector<muse::ProgressPtr> m_syncInProgress;
+    muse::ProgressPtr m_syncInProgress;
 };
 }
