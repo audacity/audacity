@@ -67,6 +67,7 @@ Rectangle {
 
         property bool playRegionActivated: false
         readonly property int headerHeight: 20
+        readonly property int listHeaderHeight: 2
 
         function cancelClipDragEdit() {
             if (mainMouseArea.pressed) {
@@ -152,7 +153,7 @@ Rectangle {
     TracksViewStateModel {
         id: tracksViewState
         onTracksVerticalOffsetChanged: {
-            tracksItemsView.contentY = tracksViewState.tracksVerticalOffset
+            tracksItemsView.contentY = tracksViewState.tracksVerticalOffset - prv.listHeaderHeight
         }
     }
 
@@ -214,7 +215,7 @@ Rectangle {
 
         //! NOTE setting verticalY has to be done after tracks are loaded,
         // otherwise project always starts at the very top
-        Qt.callLater(() => tracksItemsView.contentY = tracksViewState.tracksVerticalOffset)
+        Qt.callLater(() => tracksItemsView.contentY = tracksViewState.tracksVerticalOffset - prv.listHeaderHeight)
     }
 
     Rectangle {
@@ -743,7 +744,7 @@ Rectangle {
 
                 function insureVerticallyVisible(item) {
                     var itemViewY = item.mapToItem(tracksItemsView.contentItem, Qt.point(0, 0)).y
-                    tracksViewState.insureVerticallyVisible(tracksItemsView.contentY, tracksItemsView.height, itemViewY, item.height)
+                    tracksViewState.insureVerticallyVisible(tracksItemsView.contentY + prv.listHeaderHeight, tracksItemsView.height, itemViewY + prv.listHeaderHeight, item.height)
                 }
 
                 signal itemMoveRequested(var itemKey, bool completed)
@@ -758,7 +759,7 @@ Rectangle {
                 signal clearPreviewImportClip(var excludeTrackIds)
 
                 header: Rectangle {
-                    height: 2
+                    height: prv.listHeaderHeight
                     width: parent.width
                     color: "transparent"
                 }
@@ -775,7 +776,7 @@ Rectangle {
                     if (verticalScrollLocked) {
                         contentY = lockedVerticalScrollPosition
                     } else {
-                        tracksViewState.changeTracksVerticalOffset(tracksItemsView.contentY)
+                        tracksViewState.changeTracksVerticalOffset(tracksItemsView.contentY + prv.listHeaderHeight)
                         timeline.context.startVerticalScrollPosition = tracksItemsView.contentY
                     }
                 }
