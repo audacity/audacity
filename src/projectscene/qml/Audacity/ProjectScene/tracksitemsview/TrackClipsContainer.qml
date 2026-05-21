@@ -359,7 +359,7 @@ TrackItemsContainer {
                                 navigation.column: itemData ? Math.floor(itemData.x) : 0
                                 navigation.accessible.name: Boolean(itemData) ? itemData.title : ""
                                 navigation.onActiveChanged: {
-                                    if (navigation.active) {
+                                    if (navigation.highlight) {
                                         root.context.animatedInsureVisible(itemData.time.startTime)
                                         root.insureVerticallyVisible()
                                     }

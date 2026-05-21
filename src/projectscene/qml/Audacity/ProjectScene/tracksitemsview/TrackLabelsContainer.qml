@@ -91,7 +91,9 @@ TrackItemsContainer {
                     Component.onCompleted: updateCustomCursor()
                     Connections {
                         target: root
-                        function onSelectionEditInProgressChanged() { labelsContainerMouseArea.updateCustomCursor() }
+                        function onSelectionEditInProgressChanged() {
+                            labelsContainerMouseArea.updateCustomCursor()
+                        }
                     }
 
                     onPressed: function (e) {
@@ -189,7 +191,7 @@ TrackItemsContainer {
                                 navigation.column: Boolean(itemData) ? Math.floor(itemData.x) : 0
                                 navigation.accessible.name: Boolean(itemData) ? itemData.title : ""
                                 navigation.onActiveChanged: {
-                                    if (navigation.active) {
+                                    if (navigation.highlight) {
                                         root.context.animatedInsureVisible(itemData.time.startTime)
                                         root.insureVerticallyVisible()
                                     }
