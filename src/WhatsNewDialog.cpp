@@ -41,12 +41,16 @@
 #include "../images/Cloud_low_res.xpm"
 
 #include "../images/Audacity40Video.h"
+#include "../images/Audacity4Release.h"
 #include "../images/OpenVinoMH.h"
 #include "../images/AudacityMerchStore.h"
 #include "../images/AudioDotComPromo.h"
+#include "../images/AudioDotComPromoLight.h"
+#include "../images/AudioDotComPromoDark.h"
 #include "../images/AudacityPromo.h"
 #include "../images/AudacityFeatureSurvey.h"
 #include "../images/MuseHubPromo.h"
+#include "../images/MuseHubSoapPromo.h"
 #include "menus/CloudLoginHelper.h"
 
 namespace
@@ -65,12 +69,14 @@ namespace
 #endif
 
 const char* WhatsNewURL = "https://youtu.be/QYM3TWf_G38?utm_source=au-app-au4-video&utm_medium=au-app-au4-video&utm_campaign=au-app-au4-video";
+const char* BetaURL = "http://audacityteam.org/next?utm_campaign=Beta%20Awareness&utm_source=AU3%20Popup";
 const char* ChangeLogURL = "https://support.audacityteam.org/additional-resources/changelog";
 const char* OpenVinoURL = "https://www.musehub.com/en-gb/plugin/openvino-ai-tools?utm_source=au-app-3-7-6-mh-welcome-open-vino&utm_medium=au-app-3-7-6-mh-welcome-open-vino&utm_campaign=au-app-3-7-6-mh-welcome-open-vino";
 const char* PromoURL = "https://audacityteam.org/audacitypromo";
 const char* AudioComURL = "https://audio.com/audacity/auth/sign-in?mtm_campaign=audacitydesktop&mtm_content=app_launch_popup";
-const char* AudacitySurveyURL = "http://audacityteam.org/survey?utm_source=au-app-survey&utm_medium=survey&utm_campaign=au-app-welcome-au-app-survey-survey&utm_id=au-app-welcome";
+const char* AudacitySurveyURL = "https://audacityteam.org/survey";
 const char* AudacityMerchStoreURL = "https://audacity-shop.fourthwall.com/en-gbp/?utm_source=au-app-merch-store&utm_medium=merch-25y&utm_campaign=au-app-welcome-au-app-merch-store-merch-25y&utm_id=au-app-welcome";
+const char* MuseHubURL = "https://www.musehub.com/plugin/soap-voice-cleaner?utm_source=au-app&utm_medium=au-app-welcome-soap&utm_campaign=au-app-welcome-soap-mh";
 
 constexpr auto WindowWidth = 812;
 
@@ -144,11 +150,35 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
    std::vector<CarouselSnapshot> snapshots;
    snapshots.reserve(5);
 
+   // Render bitmaps at physical-pixel size so they stay sharp on HiDPI/Retina,
+   // and tag them with the matching scale factor so wx lays them out using the
+   // intended logical size (width x height points), not the physical size.
+   //
+   // Skipped on Windows: in wx 3.1.3 the MSW wxBitmap ignores the scale factor
+   // (see msw/bitmap.h: WXUNUSED(scale), GetScaleFactor() hardcoded to 1.0).
+   // Multiplying the rescale target by GetContentScaleFactor() there would just
+   // produce an oversized bitmap drawn at its physical size, making the image
+   // bigger than the carousel slot and the surrounding buttons look smaller
+   // in relation.
+#if defined(__WXMSW__)
+   const double scale = 1.0;
+#else
+   const double scale = GetContentScaleFactor();
+#endif
+   auto makeBitmap = [&](const unsigned char* data, size_t len) {
+      wxImage img = LoadEmbeddedImage(data, len);
+      img = Rescale(img,
+                    static_cast<int>(width * scale),
+                    static_cast<int>(height * scale));
+      img = RoundedImage(img, 12);
+      return wxBitmap(img, -1, scale);
+   };
+
    snapshots.push_back(CarouselSnapshot(
-      XXO("Video: how we're redesigning Audacity for the future"),
-      RoundedImage(Rescale(LoadEmbeddedImage(Audacity40Video_png, Audacity40Video_png_len), width, height), 12),
-      WhatsNewURL,
-      XXO("Watch video"),
+      XXO("Try the new Audacity 4 Beta release"),
+      makeBitmap(Audacity4Release_png, Audacity4Release_png_len),
+      BetaURL,
+      XXO("Test the Beta release"),
       XXO("")
    ));
 
@@ -158,46 +188,64 @@ void WhatsNewDialog::Populate(ShuttleGui& S)
          CloudLoginHelper::Get().ShowLoginDialog();
       };
 
+      const bool dark = theTheme.IsUsingDarkAppearance();
+      const unsigned char* audioDotComData = dark
+         ? AudioDotComPromoDark_png
+         : AudioDotComPromoLight_png;
+      const unsigned int audioDotComLen = dark
+         ? AudioDotComPromoDark_png_len
+         : AudioDotComPromoLight_png_len;
+
       snapshots.push_back(CarouselSnapshot(
          XXO("Complete your Audacity cloud setup with audio.com"),
-         RoundedImage(Rescale(LoadEmbeddedImage(AudioDotComPromo_png, AudioDotComPromo_png_len), width, height), 12),
+         makeBitmap(audioDotComData, audioDotComLen),
          displayLoginDialog,
          XXO("Continue"),
          XXO("")
       ));
    }
 
-#if defined (__WXOSX__) || defined(__WXMSW__)
+#if 0
    snapshots.push_back(CarouselSnapshot(
       XXO("Get our free OpenVino AI tools"),
-      RoundedImage(Rescale(LoadEmbeddedImage(OpenVinoMH_png, OpenVinoMH_png_len), width, height), 12),
+      makeBitmap(OpenVinoMH_png, OpenVinoMH_png_len),
       OpenVinoURL,
       XXO("Get it on MuseHub"),
       XXO("")
    ));
 #endif
 
-   if (ModuleManager::Get().CheckModuleLoaded("mod-musehub-ui")) {
+   if (SHOW_MUSEHUB) {
+      if (ModuleManager::Get().CheckModuleLoaded("mod-musehub-ui")) {
 
-      auto displayMuseHub = []() {
-         GetEffectsHelper::Get().GetEffects();
-      };
+         snapshots.push_back(CarouselSnapshot(
+            XXO("Soap Voice Cleaner: studio-quality voice-over sound"),
+            makeBitmap(MuseHubPromo_png, MuseHubPromo_png_len),
+            MuseHubURL,
+            XXO("Get it on MuseHub"),
+            XXO("")
+         ));
 
-      snapshots.push_back(CarouselSnapshot(
-         XXO("Explore free plugins for sculpting your audio"),
-         RoundedImage(Rescale(LoadEmbeddedImage(MuseHubPromo_jpg, MuseHubPromo_jpg_len), width, height), 12),
-         displayMuseHub,
-         XXO("View free plugins"),
-         XXO("")
-      ));
+         auto displayMuseHub = []() {
+            GetEffectsHelper::Get().GetEffects();
+         };
+
+         snapshots.push_back(CarouselSnapshot(
+            XXO("Explore free plugins for sculpting your audio"),
+            makeBitmap(MuseHubPromo_jpg, MuseHubPromo_jpg_len),
+            displayMuseHub,
+            XXO("View free plugins"),
+            XXO("")
+         ));
+      }
    }
 
    snapshots.push_back(CarouselSnapshot(
-      XXO("25th Anniversary Merchandise!"),
-      RoundedImage(Rescale(LoadEmbeddedImage(AudacityMerchStore_png, AudacityMerchStore_png_len), width, height), 12),
-      AudacityMerchStoreURL,
-      XXO("Visit now"),
-      XXO("Visit our new Audacity merch store")
+      XXO("Help us decide the future of Audacity"),
+      makeBitmap(AudacityFeatureSurvey_png, AudacityFeatureSurvey_png_len),
+      AudacitySurveyURL,
+      XXO("Take part in survey"),
+      XXO("")
    ));
 
 

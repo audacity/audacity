@@ -81,14 +81,17 @@ void ImageCarousel::OnPaint(wxPaintEvent& event) {
    DrawTitle(dc, size);
 
    wxBitmap& bmp = m_snapshots[m_currentIndex].bitmap;
+   // Layout in logical (point) coordinates so HiDPI bitmaps don't break centering.
+   const int bmpW = static_cast<int>(bmp.GetScaledWidth());
+   const int bmpH = static_cast<int>(bmp.GetScaledHeight());
    // center image
-   int x = (size.GetWidth() - bmp.GetWidth()) / 2;
-   int y = (size.GetHeight() - bmp.GetHeight()) / 2 - 20;
+   int x = (size.GetWidth() - bmpW) / 2;
+   int y = (size.GetHeight() - bmpH) / 2 - 20;
 
    dc.DrawBitmap(bmp, x, y, true);
 
    // save rect size for mouse-click purposes
-   m_imageRect = wxRect(x, y, bmp.GetWidth(), bmp.GetHeight());
+   m_imageRect = wxRect(x, y, bmpW, bmpH);
 
    DrawDots(dc, size);
 }
@@ -123,11 +126,15 @@ void ImageCarousel::UpdateButtons()
 {
    wxSize clientSize = GetClientSize();
    const wxBitmap& bmp = m_snapshots[m_currentIndex].bitmap;
-   int x = (clientSize.GetWidth() - bmp.GetWidth()) / 2;
-   int y = (clientSize.GetHeight() - bmp.GetHeight()) / 2 - 20;
+   // Use logical (point) sizes so button placement matches the painted image
+   // location on HiDPI displays.
+   const int bmpW = static_cast<int>(bmp.GetScaledWidth());
+   const int bmpH = static_cast<int>(bmp.GetScaledHeight());
+   int x = (clientSize.GetWidth() - bmpW) / 2;
+   int y = (clientSize.GetHeight() - bmpH) / 2 - 20;
 
-   m_btnLeft->SetPosition(wxPoint(x - m_btnLeft->GetSize().GetWidth() - 36, y + bmp.GetHeight() / 2 - 24));
-   m_btnRight->SetPosition(wxPoint(x + bmp.GetWidth() + 36, y + bmp.GetHeight() / 2 - 24));
+   m_btnLeft->SetPosition(wxPoint(x - m_btnLeft->GetSize().GetWidth() - 36, y + bmpH / 2 - 24));
+   m_btnRight->SetPosition(wxPoint(x + bmpW + 36, y + bmpH / 2 - 24));
 
    const auto translated = m_snapshots[m_currentIndex].buttonText.Translation();
    m_btnMiddle->SetLabel(translated);
@@ -170,9 +177,9 @@ void ImageCarousel::UpdateButtons()
 #endif
 
 #if defined(__WXMSW__) || defined(__WXOSX__)
-   m_btnMiddle->SetPosition(wxPoint(x + bmp.GetWidth() / 2 - m_btnMiddle->GetSize().GetWidth() / 2 , y + bmp.GetHeight() + 22));
+   m_btnMiddle->SetPosition(wxPoint(x + bmpW / 2 - m_btnMiddle->GetSize().GetWidth() / 2 , y + bmpH + 22));
 #else
-   m_btnMiddle->SetPosition(wxPoint(x + bmp.GetWidth() / 2 - m_btnMiddle->GetSize().GetWidth() / 2 , y + bmp.GetHeight() + FromDIP(10)));
+   m_btnMiddle->SetPosition(wxPoint(x + bmpW / 2 - m_btnMiddle->GetSize().GetWidth() / 2 , y + bmpH + FromDIP(10)));
 #endif
 }
 
