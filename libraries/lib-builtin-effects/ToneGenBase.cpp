@@ -39,18 +39,12 @@ const EnumValueSymbol ToneGenBase::kWaveStrings[nWaveforms] = {
 
 const EffectParameterMethods& ToneGenBase::Parameters() const
 {
-   static const auto postSet = [](ToneGenBase&, EffectSettings&, ToneGenBase& e,
-                                  bool updating) {
-      if (updating)
-         e.PostSet();
-      return true;
-   };
    static CapturedParameters<
       ToneGenBase, StartFreq, EndFreq, StartAmp, EndAmp, Waveform, Interp>
-      chirpParameters { postSet };
+      chirpParameters;
    static CapturedParameters<
       ToneGenBase, Frequency, Amplitude, Waveform, Interp>
-      toneParameters { postSet };
+      toneParameters;
    if (mChirp)
       return chirpParameters;
    else
@@ -95,6 +89,7 @@ bool ToneGenBase::ProcessInitialize(
    mSampleRate = sampleRate;
    mPositionInCycles = 0.0;
    mSample = 0;
+   PostSet();  // needed when generator is called from macro or script
    return true;
 }
 
