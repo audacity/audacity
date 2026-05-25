@@ -145,6 +145,8 @@ if (NOT OS_IS_MAC)
     target_link_libraries(appshell_qml PRIVATE Qt6::GuiPrivate)
 endif(NOT OS_IS_MAC)
 
+target_link_libraries(appshell_qml PRIVATE exporter)
+
 fixup_qml_module_dependencies(appshell_qml)
 
 # Necessary for the auto-generated sources
