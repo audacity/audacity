@@ -1437,7 +1437,7 @@ void ProjectActionsController::exportOverwriteOriginal()
     ExportProgressUI::ExceptionWrappedCall([&]
     {
         try {
-            auto builder = ExportTaskBuilder{}
+            auto builder = ExportTaskBuilder {}
                 .SetFileName(fileName)
                 .SetRange(0.0, endTime, false)
                 .SetParameters(parameters)

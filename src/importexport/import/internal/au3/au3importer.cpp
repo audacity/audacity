@@ -116,6 +116,7 @@ std::optional<ExportValue> closestNumericOptionValue(const ExportOption& option,
  * Therefore we chuck whatever average we find into LAME's VBR presets.
  * Chosen bitrates derived from https://wiki.hydrogenaudio.org/index.php?title=LAME#Recommended_encoder_settings
  */
+
 std::optional<int> mp3VbrPresetForBitRate(double bitRate)
 {
     if (bitRate <= 0.0) {
