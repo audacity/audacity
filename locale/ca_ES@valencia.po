@@ -5,9 +5,9 @@
 # empar <montoro_mde@gva.es>, 2019.
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.6\n"
+"Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-11-25 18:02+0300\n"
+"POT-Creation-Date: 2026-05-26 16:41+0300\n"
 "PO-Revision-Date: 2019-09-30 13:51+0200\n"
 "Last-Translator: Alfredo vicente <alviboi@gmail.com>\n"
 "Language-Team: Catalan <kde-i18n-ca@kde.org>\n"
@@ -256,6 +256,7 @@ msgstr ""
 #: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#: src/update/Audacity40PromoDialog.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Error"
 msgstr "Error"
@@ -1370,7 +1371,7 @@ msgid "Compress Excess Silence"
 msgstr "Comprimeix el silenci sobrant"
 
 #: libraries/lib-builtin-effects/TruncSilenceBase.cpp
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/TruncSilence.cpp resources/EffectsMenuDefaults.xml
 msgid "Truncate Silence"
 msgstr "Trunca un silenci"
 
@@ -2140,6 +2141,10 @@ msgstr "Anomena els fitxers:"
 #, fuzzy
 msgid "WebVTT file"
 msgstr "Fitxers MP3"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "Podcast Chapters"
+msgstr ""
 
 #: libraries/lib-label-track/LabelTrack.cpp
 #, fuzzy
@@ -6978,6 +6983,10 @@ msgid "Unable to create target file for writing"
 msgstr "No s'ha pogut obrir el fitxer de destinació per a escriure-hi"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
+msgid "Unsupported bytes-per-sample value for WavPack export"
+msgstr ""
+
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #, fuzzy
 msgid "Exporting selected audio as WavPack"
 msgstr "S'està exportant l'àudio seleccionat com a %s"
@@ -8478,7 +8487,7 @@ msgstr "Lloc web d'Audacity: "
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, c-format
-msgid "%s software is copyright %s 1999-2024 %s Team."
+msgid "%s software is copyright %s 1999-2026 %s Team."
 msgstr ""
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -11180,7 +11189,7 @@ msgstr "S'ha aplicat l'efecte: %s"
 msgid "Realtime Effects"
 msgstr "Habilita els efectes"
 
-#: src/RealtimeEffectPanel.cpp src/WhatsNewDialog.cpp
+#: src/RealtimeEffectPanel.cpp
 msgid "Watch video"
 msgstr ""
 
@@ -11914,7 +11923,11 @@ msgid "Welcome to Audacity!"
 msgstr "Us donem la benvinguda a l'Audacity!"
 
 #: src/WhatsNewDialog.cpp
-msgid "Video: how we're redesigning Audacity for the future"
+msgid "Try the new Audacity 4 Beta release"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Test the Beta release"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -11923,6 +11936,10 @@ msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Get our free OpenVino AI tools"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Soap Voice Cleaner: studio-quality voice-over sound"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -11935,17 +11952,12 @@ msgid "View free plugins"
 msgstr "Gestiona els connectors"
 
 #: src/WhatsNewDialog.cpp
-msgid "25th Anniversary Merchandise!"
+msgid "Help us decide the future of Audacity"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-msgid "Visit now"
+msgid "Take part in survey"
 msgstr ""
-
-#: src/WhatsNewDialog.cpp
-#, fuzzy
-msgid "Visit our new Audacity merch store"
-msgstr "S'està guardant un projecte d'Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -12447,6 +12459,10 @@ msgstr "Color 2"
 msgid "Color 3"
 msgstr "Color 3"
 
+#: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
+msgid "Unnamed"
+msgstr "Sense nom"
+
 #: src/commands/SetClipCommand.cpp
 msgid "At:"
 msgstr "A:"
@@ -12567,10 +12583,6 @@ msgstr "Defineix diversos valors per al projecte."
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track Status"
 msgstr "Estableix l'estat de la pista"
-
-#: src/commands/SetTrackInfoCommand.cpp
-msgid "Unnamed"
-msgstr "Sense nom"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Focused"
@@ -14680,6 +14692,35 @@ msgstr "Comprimeix en :"
 msgid "Trunc&ate tracks independently"
 msgstr "Trunca les pistes de forma independent"
 
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Truncate Location"
+msgstr "Trunca en:"
+
+#: src/effects/TruncSilence.cpp
+msgid "Remove silence from &beginning"
+msgstr ""
+
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Remove silence from &middle"
+msgstr "S'han importat les etiquetes des de «%s»"
+
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Remove silence from &end"
+msgstr "S'han importat les etiquetes des de «%s»"
+
+#: src/effects/TruncSilence.cpp
+msgid ""
+"At least one location option must be selected.\n"
+"\n"
+"Please select at least one of:\n"
+"* Remove silence from beginning\n"
+"* Remove silence from middle\n"
+"* Remove silence from end"
+msgstr ""
+
 #: src/effects/VST/VSTEffect.cpp
 msgid "Save VST Preset As:"
 msgstr "Guarda el valor predefinit VST com a:"
@@ -15445,8 +15486,18 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr "A partir de l'an&terior límit del clip fins al cursor"
 
 #: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Previous Clip Boundary to Cursor"
+msgstr "A partir de l'an&terior límit del clip fins al cursor"
+
+#: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "A partir del cursor fins al se&güent límit del clip"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Cursor to Next Clip Boundary"
+msgstr "A partir del cursor fins al següent límit del clip"
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -20349,6 +20400,42 @@ msgstr ""
 msgid "Remind me later"
 msgstr ""
 
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to fetch Audacity 4 release information. Please try again later."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to parse Audacity 4 release information. Please try again later."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "No Audacity 4 installer available for your platform."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+#, fuzzy
+msgid "Unable to create installer file. Please check write permissions."
+msgstr "No s'ha pogut obrir el fitxer de destinació per a escriure-hi"
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+#, fuzzy
+msgid "Audacity update"
+msgstr "Registre d'Audacity"
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+#, fuzzy, c-format
+msgid "Downloading %s"
+msgstr "Baixa"
+
+#: src/update/Audacity40PromoDialog.cpp
+#, fuzzy
+msgid "Download Error"
+msgstr "Baixa"
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Failed to download Audacity 4 installer. Please try again later."
+msgstr ""
+
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
 #, fuzzy
@@ -20399,16 +20486,6 @@ msgstr "Error carregant metadades"
 msgctxt "update dialog"
 msgid "Can't open the Audacity download link."
 msgstr ""
-
-#: src/update/UpdateManager.cpp
-#, fuzzy
-msgid "Audacity update"
-msgstr "Registre d'Audacity"
-
-#: src/update/UpdateManager.cpp
-#, fuzzy, c-format
-msgid "Downloading %s"
-msgstr "Baixa"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -22384,6 +22461,10 @@ msgstr "Es&pectral"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Visit our new Audacity merch store"
+#~ msgstr "S'està guardant un projecte d'Audacity"
 
 #, fuzzy
 #~ msgid "What's new in Audacity"

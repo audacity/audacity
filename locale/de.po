@@ -11,9 +11,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.6\n"
+"Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-11-25 18:02+0300\n"
+"POT-Creation-Date: 2026-05-26 16:41+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Link Winterberg, 2025\n"
 "Language-Team: German (https://app.transifex.com/audacity/teams/164520/de/)\n"
@@ -244,6 +244,7 @@ msgstr ""
 #: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#: src/update/Audacity40PromoDialog.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Error"
 msgstr "Fehler"
@@ -1332,7 +1333,7 @@ msgid "Compress Excess Silence"
 msgstr "Überschüssige Stille komprimieren"
 
 #: libraries/lib-builtin-effects/TruncSilenceBase.cpp
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/TruncSilence.cpp resources/EffectsMenuDefaults.xml
 msgid "Truncate Silence"
 msgstr "Stille kürzen"
 
@@ -2080,6 +2081,10 @@ msgstr "SubRip-Textdatei"
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "WebVTT file"
 msgstr "WebVTT-Datei"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "Podcast Chapters"
+msgstr ""
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Supported label file"
@@ -6825,6 +6830,10 @@ msgid "Unable to create target file for writing"
 msgstr "Zieldatei zum Schreiben kann nicht erstellt werden"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
+msgid "Unsupported bytes-per-sample value for WavPack export"
+msgstr ""
+
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Exporting selected audio as WavPack"
 msgstr "Ausgewählte Audiodaten als WavPack exportieren"
 
@@ -8249,8 +8258,8 @@ msgstr "%s-Webseite: "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, c-format
-msgid "%s software is copyright %s 1999-2024 %s Team."
+#, fuzzy, c-format
+msgid "%s software is copyright %s 1999-2026 %s Team."
 msgstr "%s-Software unterliegt dem Urheberrecht %s 1999-2024 %s-Team."
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -10936,7 +10945,7 @@ msgstr "Echtzeit-Effekte für %s"
 msgid "Realtime Effects"
 msgstr "Echtzeit-Effekte"
 
-#: src/RealtimeEffectPanel.cpp src/WhatsNewDialog.cpp
+#: src/RealtimeEffectPanel.cpp
 msgid "Watch video"
 msgstr "Video ansehen"
 
@@ -11662,7 +11671,11 @@ msgid "Welcome to Audacity!"
 msgstr "Willkommen bei Audacity!"
 
 #: src/WhatsNewDialog.cpp
-msgid "Video: how we're redesigning Audacity for the future"
+msgid "Try the new Audacity 4 Beta release"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Test the Beta release"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -11671,6 +11684,10 @@ msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Get our free OpenVino AI tools"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Soap Voice Cleaner: studio-quality voice-over sound"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -11683,15 +11700,11 @@ msgid "View free plugins"
 msgstr "Kostenlose Erweiterungen und Geräuschen holen"
 
 #: src/WhatsNewDialog.cpp
-msgid "25th Anniversary Merchandise!"
+msgid "Help us decide the future of Audacity"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-msgid "Visit now"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "Visit our new Audacity merch store"
+msgid "Take part in survey"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -12186,6 +12199,10 @@ msgstr "Farbe 2"
 msgid "Color 3"
 msgstr "Farbe 3"
 
+#: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
+msgid "Unnamed"
+msgstr "Unbenannt"
+
 #: src/commands/SetClipCommand.cpp
 msgid "At:"
 msgstr "Bei:"
@@ -12303,10 +12320,6 @@ msgstr "Setzt verschiedene Werte für ein Projekt."
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track Status"
 msgstr "Spurstatus einstellen"
-
-#: src/commands/SetTrackInfoCommand.cpp
-msgid "Unnamed"
-msgstr "Unbenannt"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Focused"
@@ -14321,6 +14334,35 @@ msgstr "K&omprimieren bis:"
 msgid "Trunc&ate tracks independently"
 msgstr "Spuren un&abhängig kürzen"
 
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Truncate Location"
+msgstr "K&ürzen bis:"
+
+#: src/effects/TruncSilence.cpp
+msgid "Remove silence from &beginning"
+msgstr ""
+
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Remove silence from &middle"
+msgstr "%s aus %s entfernt"
+
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Remove silence from &end"
+msgstr "%s aus %s entfernt"
+
+#: src/effects/TruncSilence.cpp
+msgid ""
+"At least one location option must be selected.\n"
+"\n"
+"Please select at least one of:\n"
+"* Remove silence from beginning\n"
+"* Remove silence from middle\n"
+"* Remove silence from end"
+msgstr ""
+
 #: src/effects/VST/VSTEffect.cpp
 msgid "Save VST Preset As:"
 msgstr "VST-Voreinstellung speichern unter:"
@@ -15055,8 +15097,18 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr "&Vorherige Clipgrenze bis Cursor"
 
 #: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Previous Clip Boundary to Cursor"
+msgstr "&Vorherige Clipgrenze bis Cursor"
+
+#: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "Cursor bis n&ächste Clipgrenze"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Cursor to Next Clip Boundary"
+msgstr "Cursor zu vorheriger Clipgrenze"
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -19805,6 +19857,41 @@ msgstr ""
 msgid "Remind me later"
 msgstr ""
 
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to fetch Audacity 4 release information. Please try again later."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to parse Audacity 4 release information. Please try again later."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "No Audacity 4 installer available for your platform."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+#, fuzzy
+msgid "Unable to create installer file. Please check write permissions."
+msgstr "Zieldatei zum Schreiben kann nicht erstellt werden"
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+msgid "Audacity update"
+msgstr "Audacity Aktualisierung"
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+#, c-format
+msgid "Downloading %s"
+msgstr "Downloade %s"
+
+#: src/update/Audacity40PromoDialog.cpp
+#, fuzzy
+msgid "Download Error"
+msgstr "Download"
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Failed to download Audacity 4 installer. Please try again later."
+msgstr ""
+
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
 msgid "No Updates Available"
@@ -19850,15 +19937,6 @@ msgstr "Fehler bei Download der Aktualisierung"
 msgctxt "update dialog"
 msgid "Can't open the Audacity download link."
 msgstr "Der Download-Link von Audacity kann nicht geöffnet werden."
-
-#: src/update/UpdateManager.cpp
-msgid "Audacity update"
-msgstr "Audacity Aktualisierung"
-
-#: src/update/UpdateManager.cpp
-#, c-format
-msgid "Downloading %s"
-msgstr "Downloade %s"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp

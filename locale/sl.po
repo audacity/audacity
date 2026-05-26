@@ -10,9 +10,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.6\n"
+"Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-12-03 19:52+0300\n"
+"POT-Creation-Date: 2026-05-26 16:41+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Dmitry Makarenko, 2025\n"
 "Language-Team: Slovenian (https://app.transifex.com/audacity/teams/164520/sl/)\n"
@@ -243,6 +243,7 @@ msgstr ""
 #: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#: src/update/Audacity40PromoDialog.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Error"
 msgstr "Napaka"
@@ -1331,7 +1332,7 @@ msgid "Compress Excess Silence"
 msgstr "Stisni odvečno tišino"
 
 #: libraries/lib-builtin-effects/TruncSilenceBase.cpp
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/TruncSilence.cpp resources/EffectsMenuDefaults.xml
 msgid "Truncate Silence"
 msgstr "Poreži tišino"
 
@@ -2075,6 +2076,10 @@ msgstr "Besedilna datoteka SubRip"
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "WebVTT file"
 msgstr "Datoteka WebVTT"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "Podcast Chapters"
+msgstr ""
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Supported label file"
@@ -6820,6 +6825,10 @@ msgid "Unable to create target file for writing"
 msgstr "Ciljne datoteke za pisanje ni mogoče ustvariti"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
+msgid "Unsupported bytes-per-sample value for WavPack export"
+msgstr ""
+
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Exporting selected audio as WavPack"
 msgstr "Izvažanje izbranega zvoka kot WavPack"
 
@@ -8244,8 +8253,8 @@ msgstr "Spletišče %s: "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, c-format
-msgid "%s software is copyright %s 1999-2024 %s Team."
+#, fuzzy, c-format
+msgid "%s software is copyright %s 1999-2026 %s Team."
 msgstr "Programje %s je avtorsko zaščitilo %s 1999-2024 ekipa %s."
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -10933,7 +10942,7 @@ msgstr "Učinki v realnem času za %s"
 msgid "Realtime Effects"
 msgstr "Učinki v realnem času"
 
-#: src/RealtimeEffectPanel.cpp src/WhatsNewDialog.cpp
+#: src/RealtimeEffectPanel.cpp
 msgid "Watch video"
 msgstr "Pokaži videoposnetek"
 
@@ -11658,8 +11667,12 @@ msgid "Welcome to Audacity!"
 msgstr "Dobrodošli v Audacity!"
 
 #: src/WhatsNewDialog.cpp
-msgid "Video: how we're redesigning Audacity for the future"
-msgstr "Video: kako preoblikujemo Audacity za prihodnost"
+msgid "Try the new Audacity 4 Beta release"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Test the Beta release"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
@@ -11670,6 +11683,10 @@ msgid "Get our free OpenVino AI tools"
 msgstr "Prosta orodja OpenVino AI"
 
 #: src/WhatsNewDialog.cpp
+msgid "Soap Voice Cleaner: studio-quality voice-over sound"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
 msgid "Explore free plugins for sculpting your audio"
 msgstr "Raziščite proste vstavke za oblikovanje vaših posnetkov"
 
@@ -11678,16 +11695,12 @@ msgid "View free plugins"
 msgstr "Pokaži proste vstavke"
 
 #: src/WhatsNewDialog.cpp
-msgid "25th Anniversary Merchandise!"
-msgstr "Blago z logotipom ob 25. obletnici"
+msgid "Help us decide the future of Audacity"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
-msgid "Visit now"
-msgstr "Obišči zdaj"
-
-#: src/WhatsNewDialog.cpp
-msgid "Visit our new Audacity merch store"
-msgstr "Obiščite našo novo trgovino z blagom Audacity"
+msgid "Take part in survey"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -12181,6 +12194,10 @@ msgstr "Barva 2"
 msgid "Color 3"
 msgstr "Barva 3"
 
+#: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
+msgid "Unnamed"
+msgstr "Neimenovano"
+
 #: src/commands/SetClipCommand.cpp
 msgid "At:"
 msgstr "Pri:"
@@ -12298,10 +12315,6 @@ msgstr "Določa različne vrednosti projekta."
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track Status"
 msgstr "Določite stanje steze"
-
-#: src/commands/SetTrackInfoCommand.cpp
-msgid "Unnamed"
-msgstr "Neimenovano"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Focused"
@@ -14316,6 +14329,35 @@ msgstr "S&tisni na:"
 msgid "Trunc&ate tracks independently"
 msgstr "Porež&i steze neodvisno"
 
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Truncate Location"
+msgstr "Pore&ži na:"
+
+#: src/effects/TruncSilence.cpp
+msgid "Remove silence from &beginning"
+msgstr ""
+
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Remove silence from &middle"
+msgstr "Odstranjeno: %s iz %s"
+
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Remove silence from &end"
+msgstr "Odstranjeno: %s iz %s"
+
+#: src/effects/TruncSilence.cpp
+msgid ""
+"At least one location option must be selected.\n"
+"\n"
+"Please select at least one of:\n"
+"* Remove silence from beginning\n"
+"* Remove silence from middle\n"
+"* Remove silence from end"
+msgstr ""
+
 #: src/effects/VST/VSTEffect.cpp
 msgid "Save VST Preset As:"
 msgstr "Shrani prednastavitev VST kot:"
@@ -15056,8 +15098,18 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr "Meja pre&dhodnega posnetka do kazalke"
 
 #: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Previous Clip Boundary to Cursor"
+msgstr "Meja pre&dhodnega posnetka do kazalke"
+
+#: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "Kazalka do meje nas&lednjega posnetka"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Cursor to Next Clip Boundary"
+msgstr "Kazalka do meje naslednjega posnetka"
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -19808,6 +19860,41 @@ msgstr "Ne, hvala"
 msgid "Remind me later"
 msgstr "Spomni me kasneje"
 
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to fetch Audacity 4 release information. Please try again later."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to parse Audacity 4 release information. Please try again later."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "No Audacity 4 installer available for your platform."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+#, fuzzy
+msgid "Unable to create installer file. Please check write permissions."
+msgstr "Ciljne datoteke za pisanje ni mogoče ustvariti"
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+msgid "Audacity update"
+msgstr "Posodobitev Audacity"
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+#, c-format
+msgid "Downloading %s"
+msgstr "Prenašanje %s"
+
+#: src/update/Audacity40PromoDialog.cpp
+#, fuzzy
+msgid "Download Error"
+msgstr "Prenesi"
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Failed to download Audacity 4 installer. Please try again later."
+msgstr ""
+
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
 msgid "No Updates Available"
@@ -19853,15 +19940,6 @@ msgstr "Napaka pri prenašanju posodobitve"
 msgctxt "update dialog"
 msgid "Can't open the Audacity download link."
 msgstr "Povezave za prenos Audacity ni moč odpreti."
-
-#: src/update/UpdateManager.cpp
-msgid "Audacity update"
-msgstr "Posodobitev Audacity"
-
-#: src/update/UpdateManager.cpp
-#, c-format
-msgid "Downloading %s"
-msgstr "Prenašanje %s"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -21765,3 +21843,15 @@ msgstr "Spektralna orodja"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Opuščeno"
+
+#~ msgid "Video: how we're redesigning Audacity for the future"
+#~ msgstr "Video: kako preoblikujemo Audacity za prihodnost"
+
+#~ msgid "25th Anniversary Merchandise!"
+#~ msgstr "Blago z logotipom ob 25. obletnici"
+
+#~ msgid "Visit now"
+#~ msgstr "Obišči zdaj"
+
+#~ msgid "Visit our new Audacity merch store"
+#~ msgstr "Obiščite našo novo trgovino z blagom Audacity"

@@ -5,9 +5,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.6\n"
+"Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-12-03 19:18+0300\n"
+"POT-Creation-Date: 2026-05-26 16:41+0300\n"
 "PO-Revision-Date: 2025-12-01 12:24+0100\n"
 "Last-Translator: A. Regnander <anton_r_3@hotmail.com>\n"
 "Language-Team: swedish <musselasse@gmail.com, anton_r_3@hotmail.com>\n"
@@ -241,6 +241,7 @@ msgstr ""
 #: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#: src/update/Audacity40PromoDialog.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Error"
 msgstr "Fel"
@@ -1329,7 +1330,7 @@ msgid "Compress Excess Silence"
 msgstr "Komprimera överdriven tystnad"
 
 #: libraries/lib-builtin-effects/TruncSilenceBase.cpp
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/TruncSilence.cpp resources/EffectsMenuDefaults.xml
 msgid "Truncate Silence"
 msgstr "Trunkera tystnad"
 
@@ -2074,6 +2075,10 @@ msgstr "SubRib text fil"
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "WebVTT file"
 msgstr "WebVTT fil"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "Podcast Chapters"
+msgstr ""
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Supported label file"
@@ -6819,6 +6824,10 @@ msgid "Unable to create target file for writing"
 msgstr "Kunde inte skapa målfil att skriva till"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
+msgid "Unsupported bytes-per-sample value for WavPack export"
+msgstr ""
+
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Exporting selected audio as WavPack"
 msgstr "Exporterar valt ljud som WavPack"
 
@@ -8237,8 +8246,8 @@ msgstr "%s webbplats: "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, c-format
-msgid "%s software is copyright %s 1999-2024 %s Team."
+#, fuzzy, c-format
+msgid "%s software is copyright %s 1999-2026 %s Team."
 msgstr "%s mjukvaran är copyrightskyddad %s 1999-2023 %s Team."
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -10929,7 +10938,7 @@ msgstr "Realtime effekter för %s"
 msgid "Realtime Effects"
 msgstr "Realtime Effekter"
 
-#: src/RealtimeEffectPanel.cpp src/WhatsNewDialog.cpp
+#: src/RealtimeEffectPanel.cpp
 msgid "Watch video"
 msgstr "Se video"
 
@@ -11654,8 +11663,12 @@ msgid "Welcome to Audacity!"
 msgstr "Välkommen to Audacity!"
 
 #: src/WhatsNewDialog.cpp
-msgid "Video: how we're redesigning Audacity for the future"
-msgstr "Video: hur vi omdesignade Audacity för framtiden"
+msgid "Try the new Audacity 4 Beta release"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Test the Beta release"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
@@ -11666,6 +11679,10 @@ msgid "Get our free OpenVino AI tools"
 msgstr "Få vår fria OpenVino AI verktyg"
 
 #: src/WhatsNewDialog.cpp
+msgid "Soap Voice Cleaner: studio-quality voice-over sound"
+msgstr "Soap Voice Cleaner: röstinspelning i studiokvalitet"
+
+#: src/WhatsNewDialog.cpp
 msgid "Explore free plugins for sculpting your audio"
 msgstr "Utforska gratis plugins för att skulptera ditt ljud"
 
@@ -11674,16 +11691,12 @@ msgid "View free plugins"
 msgstr "Se fria plugins"
 
 #: src/WhatsNewDialog.cpp
-msgid "25th Anniversary Merchandise!"
-msgstr "25-årsjubileumsvaror!"
+msgid "Help us decide the future of Audacity"
+msgstr "Hjälp oss bestämma framtiden för Audacity"
 
 #: src/WhatsNewDialog.cpp
-msgid "Visit now"
-msgstr "Besök nu"
-
-#: src/WhatsNewDialog.cpp
-msgid "Visit our new Audacity merch store"
-msgstr "Besök vår nya Audacity-butik"
+msgid "Take part in survey"
+msgstr "Ta aktivt del i undersökning"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -12177,6 +12190,10 @@ msgstr "Färg 2"
 msgid "Color 3"
 msgstr "Färg 3"
 
+#: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
+msgid "Unnamed"
+msgstr "Namnlös"
+
 #: src/commands/SetClipCommand.cpp
 msgid "At:"
 msgstr "Vid:"
@@ -12294,10 +12311,6 @@ msgstr "Ändrar olika värden för ett projekt."
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track Status"
 msgstr "Ändra spårstatus"
-
-#: src/commands/SetTrackInfoCommand.cpp
-msgid "Unnamed"
-msgstr "Namnlös"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Focused"
@@ -14312,6 +14325,35 @@ msgstr "K&omprimera till:"
 msgid "Trunc&ate tracks independently"
 msgstr "Trun&kera spår oberoende"
 
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Truncate Location"
+msgstr "Tr&unkera till:"
+
+#: src/effects/TruncSilence.cpp
+msgid "Remove silence from &beginning"
+msgstr ""
+
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Remove silence from &middle"
+msgstr "Raderat %s från %s"
+
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Remove silence from &end"
+msgstr "Raderat %s från %s"
+
+#: src/effects/TruncSilence.cpp
+msgid ""
+"At least one location option must be selected.\n"
+"\n"
+"Please select at least one of:\n"
+"* Remove silence from beginning\n"
+"* Remove silence from middle\n"
+"* Remove silence from end"
+msgstr ""
+
 #: src/effects/VST/VSTEffect.cpp
 msgid "Save VST Preset As:"
 msgstr "Spara VST-förinställning som:"
@@ -15046,8 +15088,18 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr "Föreg&ående klippgräns till markör"
 
 #: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Previous Clip Boundary to Cursor"
+msgstr "Föreg&ående klippgräns till markör"
+
+#: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "Från markören till nä&sta klippgräns"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Cursor to Next Clip Boundary"
+msgstr "Från markören till nästa klippgräns"
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -19797,6 +19849,41 @@ msgstr "Nej tack"
 msgid "Remind me later"
 msgstr "Påminn mig senare"
 
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to fetch Audacity 4 release information. Please try again later."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to parse Audacity 4 release information. Please try again later."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "No Audacity 4 installer available for your platform."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+#, fuzzy
+msgid "Unable to create installer file. Please check write permissions."
+msgstr "Kunde inte skapa målfil att skriva till"
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+msgid "Audacity update"
+msgstr "Audacity uppdatering"
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+#, c-format
+msgid "Downloading %s"
+msgstr "Laddar ned %s"
+
+#: src/update/Audacity40PromoDialog.cpp
+#, fuzzy
+msgid "Download Error"
+msgstr "Ladda ned"
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Failed to download Audacity 4 installer. Please try again later."
+msgstr ""
+
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
 msgid "No Updates Available"
@@ -19842,15 +19929,6 @@ msgstr "Fel vid nedladdning av uppdatering"
 msgctxt "update dialog"
 msgid "Can't open the Audacity download link."
 msgstr "Kan inte öppna Audacitys nerladdningslänk."
-
-#: src/update/UpdateManager.cpp
-msgid "Audacity update"
-msgstr "Audacity uppdatering"
-
-#: src/update/UpdateManager.cpp
-#, c-format
-msgid "Downloading %s"
-msgstr "Laddar ned %s"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -21756,6 +21834,18 @@ msgstr "Spektralverktyg"
 msgid "Legacy"
 msgstr "Gammal"
 
+#~ msgid "Video: how we're redesigning Audacity for the future"
+#~ msgstr "Video: hur vi omdesignade Audacity för framtiden"
+
+#~ msgid "25th Anniversary Merchandise!"
+#~ msgstr "25-årsjubileumsvaror!"
+
+#~ msgid "Visit now"
+#~ msgstr "Besök nu"
+
+#~ msgid "Visit our new Audacity merch store"
+#~ msgstr "Besök vår nya Audacity-butik"
+
 #~ msgid "Open Fro&m Cloud..."
 #~ msgstr "Öppna fr&ån moln..."
 
@@ -21833,15 +21923,6 @@ msgstr "Gammal"
 
 #~ msgid "Watch the release video"
 #~ msgstr "Se releasevideon"
-
-#~ msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-#~ msgstr "Soap Voice Cleaner: röstinspelning i studiokvalitet"
-
-#~ msgid "Help us decide the future of Audacity"
-#~ msgstr "Hjälp oss bestämma framtiden för Audacity"
-
-#~ msgid "Take part in survey"
-#~ msgstr "Ta aktivt del i undersökning"
 
 #~ msgid "Audacity feature survey"
 #~ msgstr "Funktionsundersökning för Audacity"

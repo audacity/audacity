@@ -10,9 +10,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.6\n"
+"Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-11-25 18:02+0300\n"
+"POT-Creation-Date: 2026-05-26 16:41+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Catarina Anabela, 2025\n"
 "Language-Team: Indonesian (https://app.transifex.com/audacity/teams/164520/id/)\n"
@@ -243,6 +243,7 @@ msgstr ""
 #: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#: src/update/Audacity40PromoDialog.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Error"
 msgstr "Kesalahan"
@@ -1331,7 +1332,7 @@ msgid "Compress Excess Silence"
 msgstr "Kompres Keheningan yang Berlebihan"
 
 #: libraries/lib-builtin-effects/TruncSilenceBase.cpp
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/TruncSilence.cpp resources/EffectsMenuDefaults.xml
 msgid "Truncate Silence"
 msgstr "Pangkas Keheningan"
 
@@ -2077,6 +2078,10 @@ msgstr "Berkas teks SubRip"
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "WebVTT file"
 msgstr "Berkas SubRip"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "Podcast Chapters"
+msgstr ""
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Supported label file"
@@ -6821,6 +6826,10 @@ msgid "Unable to create target file for writing"
 msgstr "Tidak dapat membuat berkas target untuk ditulis"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
+msgid "Unsupported bytes-per-sample value for WavPack export"
+msgstr ""
+
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Exporting selected audio as WavPack"
 msgstr "Mengekspor audio terpilih sebagai WavPack"
 
@@ -8242,8 +8251,8 @@ msgstr "situs web %s: "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, c-format
-msgid "%s software is copyright %s 1999-2024 %s Team."
+#, fuzzy, c-format
+msgid "%s software is copyright %s 1999-2026 %s Team."
 msgstr "Perangkat lunak %s adalah hak cipta %s 1999-2024 Tim %s."
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -10923,7 +10932,7 @@ msgstr "Efek realtime untuk %s"
 msgid "Realtime Effects"
 msgstr "Efek Realtime"
 
-#: src/RealtimeEffectPanel.cpp src/WhatsNewDialog.cpp
+#: src/RealtimeEffectPanel.cpp
 msgid "Watch video"
 msgstr "Tonton video"
 
@@ -11648,7 +11657,11 @@ msgid "Welcome to Audacity!"
 msgstr "Selamat datang di Audacity!"
 
 #: src/WhatsNewDialog.cpp
-msgid "Video: how we're redesigning Audacity for the future"
+msgid "Try the new Audacity 4 Beta release"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Test the Beta release"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -11660,6 +11673,10 @@ msgid "Get our free OpenVino AI tools"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
+msgid "Soap Voice Cleaner: studio-quality voice-over sound"
+msgstr "Soap Pembersih Suara: hasil sulih suara sejernih studio"
+
+#: src/WhatsNewDialog.cpp
 msgid "Explore free plugins for sculpting your audio"
 msgstr ""
 
@@ -11669,16 +11686,12 @@ msgid "View free plugins"
 msgstr "Dapatkan plugin & suara gratis"
 
 #: src/WhatsNewDialog.cpp
-msgid "25th Anniversary Merchandise!"
-msgstr "Merchandise Hari Jadi ke-25!"
+msgid "Help us decide the future of Audacity"
+msgstr "Bantu kami menentukan masa depan Audacity"
 
 #: src/WhatsNewDialog.cpp
-msgid "Visit now"
-msgstr "Kunjungi sekarang"
-
-#: src/WhatsNewDialog.cpp
-msgid "Visit our new Audacity merch store"
-msgstr "Kunjungi toko merchandise Audacity baru kami"
+msgid "Take part in survey"
+msgstr "Ambil bagian dalam survei"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -12172,6 +12185,10 @@ msgstr "Warna 2"
 msgid "Color 3"
 msgstr "Warna 3"
 
+#: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
+msgid "Unnamed"
+msgstr "Tak Bernama"
+
 #: src/commands/SetClipCommand.cpp
 msgid "At:"
 msgstr "Di:"
@@ -12289,10 +12306,6 @@ msgstr "Menetapkan berbagai nilai untuk sebuah proyek."
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track Status"
 msgstr "Atur Status Trek"
-
-#: src/commands/SetTrackInfoCommand.cpp
-msgid "Unnamed"
-msgstr "Tak Bernama"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Focused"
@@ -14307,6 +14320,35 @@ msgstr "K&ompres ke:"
 msgid "Trunc&ate tracks independently"
 msgstr "Pang&kas trek secara mandiri"
 
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Truncate Location"
+msgstr "Pa&ngkas ke:"
+
+#: src/effects/TruncSilence.cpp
+msgid "Remove silence from &beginning"
+msgstr ""
+
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Remove silence from &middle"
+msgstr "Membuang %s dari %s"
+
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Remove silence from &end"
+msgstr "Membuang %s dari %s"
+
+#: src/effects/TruncSilence.cpp
+msgid ""
+"At least one location option must be selected.\n"
+"\n"
+"Please select at least one of:\n"
+"* Remove silence from beginning\n"
+"* Remove silence from middle\n"
+"* Remove silence from end"
+msgstr ""
+
 #: src/effects/VST/VSTEffect.cpp
 msgid "Save VST Preset As:"
 msgstr "Simpan VST Preset Sebagai:"
@@ -15038,8 +15080,18 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr "Batas Klip Sebelum Sebelumnya ke Kursor"
 
 #: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Previous Clip Boundary to Cursor"
+msgstr "Batas Klip Sebelum Sebelumnya ke Kursor"
+
+#: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "Kursor ke Batas Klip be&rikutnya"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Cursor to Next Clip Boundary"
+msgstr "Kursor ke Batas Klip Berikutnya"
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -19786,6 +19838,41 @@ msgstr ""
 msgid "Remind me later"
 msgstr ""
 
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to fetch Audacity 4 release information. Please try again later."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to parse Audacity 4 release information. Please try again later."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "No Audacity 4 installer available for your platform."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+#, fuzzy
+msgid "Unable to create installer file. Please check write permissions."
+msgstr "Tidak dapat membuat berkas target untuk ditulis"
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+msgid "Audacity update"
+msgstr "Pembaruan Audacity"
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+#, c-format
+msgid "Downloading %s"
+msgstr "Mengunduh %s"
+
+#: src/update/Audacity40PromoDialog.cpp
+#, fuzzy
+msgid "Download Error"
+msgstr "Unduh"
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Failed to download Audacity 4 installer. Please try again later."
+msgstr ""
+
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
 msgid "No Updates Available"
@@ -19831,15 +19918,6 @@ msgstr "Kesalahan mengunduh update"
 msgctxt "update dialog"
 msgid "Can't open the Audacity download link."
 msgstr "Tidak dapat membuka tautan unduhan Audacity."
-
-#: src/update/UpdateManager.cpp
-msgid "Audacity update"
-msgstr "Pembaruan Audacity"
-
-#: src/update/UpdateManager.cpp
-#, c-format
-msgid "Downloading %s"
-msgstr "Mengunduh %s"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -21745,6 +21823,15 @@ msgstr "Alat Spektral"
 msgid "Legacy"
 msgstr "Terdahulu"
 
+#~ msgid "25th Anniversary Merchandise!"
+#~ msgstr "Merchandise Hari Jadi ke-25!"
+
+#~ msgid "Visit now"
+#~ msgstr "Kunjungi sekarang"
+
+#~ msgid "Visit our new Audacity merch store"
+#~ msgstr "Kunjungi toko merchandise Audacity baru kami"
+
 #~ msgid "Open Fro&m Cloud..."
 #~ msgstr "Buka dar&i Awan..."
 
@@ -21821,15 +21908,6 @@ msgstr "Terdahulu"
 
 #~ msgid "Watch the release video"
 #~ msgstr "Tonton video rilis"
-
-#~ msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-#~ msgstr "Soap Pembersih Suara: hasil sulih suara sejernih studio"
-
-#~ msgid "Help us decide the future of Audacity"
-#~ msgstr "Bantu kami menentukan masa depan Audacity"
-
-#~ msgid "Take part in survey"
-#~ msgstr "Ambil bagian dalam survei"
 
 #~ msgid "Audacity feature survey"
 #~ msgstr "Survei fitur Audacity"

@@ -4,9 +4,9 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.6\n"
+"Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-11-25 18:02+0300\n"
+"POT-Creation-Date: 2026-05-26 16:41+0300\n"
 "PO-Revision-Date: 2021-06-11 23:23+0200\n"
 "Last-Translator: Osoitz Elkorobarrutia <oelkoro@gmail.com>, 2017\n"
 "Language-Team: Basque (https://www.transifex.com/librezale/teams/76773/eu/)\n"
@@ -247,6 +247,7 @@ msgstr ""
 #: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#: src/update/Audacity40PromoDialog.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Error"
 msgstr "Errorea"
@@ -1341,7 +1342,7 @@ msgid "Compress Excess Silence"
 msgstr "Konprimitu gehiegizko isiltasuna"
 
 #: libraries/lib-builtin-effects/TruncSilenceBase.cpp
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/TruncSilence.cpp resources/EffectsMenuDefaults.xml
 msgid "Truncate Silence"
 msgstr "Moztu isiltasuna"
 
@@ -2119,6 +2120,10 @@ msgstr "Testu fitxategia"
 #, fuzzy
 msgid "WebVTT file"
 msgstr "HTML fitxategia"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "Podcast Chapters"
+msgstr ""
 
 #: libraries/lib-label-track/LabelTrack.cpp
 #, fuzzy
@@ -6972,6 +6977,10 @@ msgid "Unable to create target file for writing"
 msgstr "Ezin da ireki helburuko fitxategia bertan idazteko"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
+msgid "Unsupported bytes-per-sample value for WavPack export"
+msgstr ""
+
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 #, fuzzy
 msgid "Exporting selected audio as WavPack"
 msgstr "Hautatutako audioa %s gisa esportatzen"
@@ -8484,7 +8493,7 @@ msgstr "%s -ren webgunea: "
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, fuzzy, c-format
-msgid "%s software is copyright %s 1999-2024 %s Team."
+msgid "%s software is copyright %s 1999-2026 %s Team."
 msgstr "%s software egile eskubideak ditu %s 1999-2020 %s taldea."
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -11196,7 +11205,7 @@ msgstr "Aplikatutako efektua: %s"
 msgid "Realtime Effects"
 msgstr "Gaitu efektuak"
 
-#: src/RealtimeEffectPanel.cpp src/WhatsNewDialog.cpp
+#: src/RealtimeEffectPanel.cpp
 msgid "Watch video"
 msgstr ""
 
@@ -11930,7 +11939,11 @@ msgid "Welcome to Audacity!"
 msgstr "Ongi etorri Audacity-ra!"
 
 #: src/WhatsNewDialog.cpp
-msgid "Video: how we're redesigning Audacity for the future"
+msgid "Try the new Audacity 4 Beta release"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Test the Beta release"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -11939,6 +11952,10 @@ msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Get our free OpenVino AI tools"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Soap Voice Cleaner: studio-quality voice-over sound"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -11951,17 +11968,12 @@ msgid "View free plugins"
 msgstr "Kudeatu pluginak"
 
 #: src/WhatsNewDialog.cpp
-msgid "25th Anniversary Merchandise!"
+msgid "Help us decide the future of Audacity"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-msgid "Visit now"
+msgid "Take part in survey"
 msgstr ""
-
-#: src/WhatsNewDialog.cpp
-#, fuzzy
-msgid "Visit our new Audacity merch store"
-msgstr "Hau ez da Audacity proiektu fitxategia"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -12457,6 +12469,10 @@ msgstr "2 kolorea"
 msgid "Color 3"
 msgstr "3 kolorea"
 
+#: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
+msgid "Unnamed"
+msgstr "Izen gabea"
+
 #: src/commands/SetClipCommand.cpp
 msgid "At:"
 msgstr "Hemen:"
@@ -12574,10 +12590,6 @@ msgstr "Ezartzen du hainbat balio proiektuan."
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track Status"
 msgstr "Ezarri pisten egoera"
-
-#: src/commands/SetTrackInfoCommand.cpp
-msgid "Unnamed"
-msgstr "Izen gabea"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Focused"
@@ -14613,6 +14625,35 @@ msgstr "K&onprimitu hona:"
 msgid "Trunc&ate tracks independently"
 msgstr "Mo&ztu pistak banaka"
 
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Truncate Location"
+msgstr "&Moztu hona:"
+
+#: src/effects/TruncSilence.cpp
+msgid "Remove silence from &beginning"
+msgstr ""
+
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Remove silence from &middle"
+msgstr "Etiketak inportatu dira `%s'(e)tik"
+
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Remove silence from &end"
+msgstr "Etiketak inportatu dira `%s'(e)tik"
+
+#: src/effects/TruncSilence.cpp
+msgid ""
+"At least one location option must be selected.\n"
+"\n"
+"Please select at least one of:\n"
+"* Remove silence from beginning\n"
+"* Remove silence from middle\n"
+"* Remove silence from end"
+msgstr ""
+
 #: src/effects/VST/VSTEffect.cpp
 msgid "Save VST Preset As:"
 msgstr "Gorde VST aurre-ezarpena honela:"
@@ -15375,8 +15416,18 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr "Kurtsorea &aurreko kliparen mugara"
 
 #: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Previous Clip Boundary to Cursor"
+msgstr "Kurtsorea &aurreko kliparen mugara"
+
+#: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "Kurtsorea &hurrengo kliparen mugara"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Cursor to Next Clip Boundary"
+msgstr "Kurtsorea hurrengo kliparen mugara"
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -20241,6 +20292,42 @@ msgstr ""
 msgid "Remind me later"
 msgstr ""
 
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to fetch Audacity 4 release information. Please try again later."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to parse Audacity 4 release information. Please try again later."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "No Audacity 4 installer available for your platform."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+#, fuzzy
+msgid "Unable to create installer file. Please check write permissions."
+msgstr "Ezin da ireki helburuko fitxategia bertan idazteko"
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+#, fuzzy
+msgid "Audacity update"
+msgstr "Audacity audioa"
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+#, fuzzy, c-format
+msgid "Downloading %s"
+msgstr "Deskargatu"
+
+#: src/update/Audacity40PromoDialog.cpp
+#, fuzzy
+msgid "Download Error"
+msgstr "Deskargatu"
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Failed to download Audacity 4 installer. Please try again later."
+msgstr ""
+
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
 #, fuzzy
@@ -20290,16 +20377,6 @@ msgstr "Errorea eguneraketa deskargatzen."
 msgctxt "update dialog"
 msgid "Can't open the Audacity download link."
 msgstr "Ezin da ireki Audacityren deskarga esteka."
-
-#: src/update/UpdateManager.cpp
-#, fuzzy
-msgid "Audacity update"
-msgstr "Audacity audioa"
-
-#: src/update/UpdateManager.cpp
-#, fuzzy, c-format
-msgid "Downloading %s"
-msgstr "Deskargatu"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -22239,6 +22316,10 @@ msgstr "Es&pektrala"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Visit our new Audacity merch store"
+#~ msgstr "Hau ez da Audacity proiektu fitxategia"
 
 #, fuzzy
 #~ msgid "What's new in Audacity"

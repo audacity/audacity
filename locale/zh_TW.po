@@ -11,9 +11,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.6\n"
+"Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-11-25 18:02+0300\n"
+"POT-Creation-Date: 2026-05-26 16:41+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Jesse Lin <jesselin.com@gmail.com>, 2025\n"
 "Language-Team: Chinese (Taiwan) (https://app.transifex.com/audacity/teams/164520/zh_TW/)\n"
@@ -244,6 +244,7 @@ msgstr ""
 #: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#: src/update/Audacity40PromoDialog.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Error"
 msgstr "錯誤"
@@ -1332,7 +1333,7 @@ msgid "Compress Excess Silence"
 msgstr "壓縮多餘的靜音"
 
 #: libraries/lib-builtin-effects/TruncSilenceBase.cpp
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/TruncSilence.cpp resources/EffectsMenuDefaults.xml
 msgid "Truncate Silence"
 msgstr "截斷靜音"
 
@@ -2078,6 +2079,10 @@ msgstr "SubRip 文字檔案"
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "WebVTT file"
 msgstr "WebVTT 檔案"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "Podcast Chapters"
+msgstr ""
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Supported label file"
@@ -6810,6 +6815,10 @@ msgid "Unable to create target file for writing"
 msgstr "無法寫入目標檔案"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
+msgid "Unsupported bytes-per-sample value for WavPack export"
+msgstr ""
+
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Exporting selected audio as WavPack"
 msgstr "將選擇的聲音輸出成 WavPack"
 
@@ -8240,8 +8249,8 @@ msgstr "%s 網站: "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, c-format
-msgid "%s software is copyright %s 1999-2024 %s Team."
+#, fuzzy, c-format
+msgid "%s software is copyright %s 1999-2026 %s Team."
 msgstr "%s 軟體的著作權自 %s 1999-2024 歸屬於 %s 團隊。"
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -10922,7 +10931,7 @@ msgstr "%s的即時效果"
 msgid "Realtime Effects"
 msgstr "即時效果"
 
-#: src/RealtimeEffectPanel.cpp src/WhatsNewDialog.cpp
+#: src/RealtimeEffectPanel.cpp
 msgid "Watch video"
 msgstr "觀看影片"
 
@@ -11640,7 +11649,11 @@ msgid "Welcome to Audacity!"
 msgstr "歡迎使用 Audacity！"
 
 #: src/WhatsNewDialog.cpp
-msgid "Video: how we're redesigning Audacity for the future"
+msgid "Try the new Audacity 4 Beta release"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Test the Beta release"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -11652,6 +11665,10 @@ msgid "Get our free OpenVino AI tools"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
+msgid "Soap Voice Cleaner: studio-quality voice-over sound"
+msgstr "Soap Voice Cleaner: 錄音室等級的配音"
+
+#: src/WhatsNewDialog.cpp
 msgid "Explore free plugins for sculpting your audio"
 msgstr ""
 
@@ -11661,16 +11678,12 @@ msgid "View free plugins"
 msgstr "取得免費外掛以及音效"
 
 #: src/WhatsNewDialog.cpp
-msgid "25th Anniversary Merchandise!"
-msgstr "二十五周年紀念商品"
+msgid "Help us decide the future of Audacity"
+msgstr "幫我們決定AUDACITY的未來"
 
 #: src/WhatsNewDialog.cpp
-msgid "Visit now"
-msgstr "立即拜訪"
-
-#: src/WhatsNewDialog.cpp
-msgid "Visit our new Audacity merch store"
-msgstr "參觀新的AUDACITY 周邊商品小舖"
+msgid "Take part in survey"
+msgstr "參加問卷調查"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -12164,6 +12177,10 @@ msgstr "色彩2"
 msgid "Color 3"
 msgstr "色彩3"
 
+#: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
+msgid "Unnamed"
+msgstr "未命名"
+
 #: src/commands/SetClipCommand.cpp
 msgid "At:"
 msgstr "於："
@@ -12281,10 +12298,6 @@ msgstr "設定專案的各種值。"
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track Status"
 msgstr "設定軌道狀態"
-
-#: src/commands/SetTrackInfoCommand.cpp
-msgid "Unnamed"
-msgstr "未命名"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Focused"
@@ -14296,6 +14309,35 @@ msgstr "壓縮為(&O)："
 msgid "Trunc&ate tracks independently"
 msgstr "個別截斷軌道(&A)"
 
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Truncate Location"
+msgstr "截斷至(&U)："
+
+#: src/effects/TruncSilence.cpp
+msgid "Remove silence from &beginning"
+msgstr ""
+
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Remove silence from &middle"
+msgstr "移除 %s移除來源%s"
+
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Remove silence from &end"
+msgstr "移除 %s移除來源%s"
+
+#: src/effects/TruncSilence.cpp
+msgid ""
+"At least one location option must be selected.\n"
+"\n"
+"Please select at least one of:\n"
+"* Remove silence from beginning\n"
+"* Remove silence from middle\n"
+"* Remove silence from end"
+msgstr ""
+
 #: src/effects/VST/VSTEffect.cpp
 msgid "Save VST Preset As:"
 msgstr "將 VST 預設集另存為："
@@ -15027,8 +15069,18 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr "前一個片段邊界到游標(&V)"
 
 #: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Previous Clip Boundary to Cursor"
+msgstr "前一個片段邊界到游標(&V)"
+
+#: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "游標到下一個片段邊界(&X)"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Cursor to Next Clip Boundary"
+msgstr "將游標移到下一個片段邊界"
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -19772,6 +19824,41 @@ msgstr ""
 msgid "Remind me later"
 msgstr ""
 
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to fetch Audacity 4 release information. Please try again later."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to parse Audacity 4 release information. Please try again later."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "No Audacity 4 installer available for your platform."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+#, fuzzy
+msgid "Unable to create installer file. Please check write permissions."
+msgstr "無法寫入目標檔案"
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+msgid "Audacity update"
+msgstr "Audacity 更新"
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+#, c-format
+msgid "Downloading %s"
+msgstr "下載中 %s"
+
+#: src/update/Audacity40PromoDialog.cpp
+#, fuzzy
+msgid "Download Error"
+msgstr "下載"
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Failed to download Audacity 4 installer. Please try again later."
+msgstr ""
+
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
 msgid "No Updates Available"
@@ -19817,15 +19904,6 @@ msgstr "下載更新時發生錯誤"
 msgctxt "update dialog"
 msgid "Can't open the Audacity download link."
 msgstr "無法打開Audacity下載連結."
-
-#: src/update/UpdateManager.cpp
-msgid "Audacity update"
-msgstr "Audacity 更新"
-
-#: src/update/UpdateManager.cpp
-#, c-format
-msgid "Downloading %s"
-msgstr "下載中 %s"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -21729,6 +21807,15 @@ msgstr "頻譜工具"
 msgid "Legacy"
 msgstr "傳統"
 
+#~ msgid "25th Anniversary Merchandise!"
+#~ msgstr "二十五周年紀念商品"
+
+#~ msgid "Visit now"
+#~ msgstr "立即拜訪"
+
+#~ msgid "Visit our new Audacity merch store"
+#~ msgstr "參觀新的AUDACITY 周邊商品小舖"
+
 #~ msgid "Open Fro&m Cloud..."
 #~ msgstr "從雲端開啟(&M)..."
 
@@ -21805,15 +21892,6 @@ msgstr "傳統"
 
 #~ msgid "Watch the release video"
 #~ msgstr "觀看發布影片"
-
-#~ msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-#~ msgstr "Soap Voice Cleaner: 錄音室等級的配音"
-
-#~ msgid "Help us decide the future of Audacity"
-#~ msgstr "幫我們決定AUDACITY的未來"
-
-#~ msgid "Take part in survey"
-#~ msgstr "參加問卷調查"
 
 #~ msgid "Audacity feature survey"
 #~ msgstr "Audacity 功能問卷調查"

@@ -15,9 +15,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.6\n"
+"Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-12-03 19:52+0300\n"
+"POT-Creation-Date: 2026-05-26 16:41+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Dmitry Makarenko, 2025\n"
 "Language-Team: Turkish (https://app.transifex.com/audacity/teams/164520/tr/)\n"
@@ -248,6 +248,7 @@ msgstr ""
 #: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#: src/update/Audacity40PromoDialog.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Error"
 msgstr "Sorun"
@@ -1336,7 +1337,7 @@ msgid "Compress Excess Silence"
 msgstr "Aşırı sessizliği sıkıştır"
 
 #: libraries/lib-builtin-effects/TruncSilenceBase.cpp
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/TruncSilence.cpp resources/EffectsMenuDefaults.xml
 msgid "Truncate Silence"
 msgstr "Sessizliği buda"
 
@@ -2081,6 +2082,10 @@ msgstr "SubRip metin dosyası"
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "WebVTT file"
 msgstr "WebVTT dosyası"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "Podcast Chapters"
+msgstr ""
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Supported label file"
@@ -6826,6 +6831,10 @@ msgid "Unable to create target file for writing"
 msgstr "Hedef dosya yazılmak üzere oluşturulamadı"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
+msgid "Unsupported bytes-per-sample value for WavPack export"
+msgstr ""
+
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Exporting selected audio as WavPack"
 msgstr "Seçilmiş ses WavPack olarak dışa aktarılıyor"
 
@@ -8244,8 +8253,8 @@ msgstr "%s sitesi: "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, c-format
-msgid "%s software is copyright %s 1999-2024 %s Team."
+#, fuzzy, c-format
+msgid "%s software is copyright %s 1999-2026 %s Team."
 msgstr "%s uygulamasının telif hakkı %s 1999-2024 %s ekibine aittir."
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -10931,7 +10940,7 @@ msgstr "%s için gerçek zamanlı etkiler"
 msgid "Realtime Effects"
 msgstr "Gerçek zamanlı etkiler"
 
-#: src/RealtimeEffectPanel.cpp src/WhatsNewDialog.cpp
+#: src/RealtimeEffectPanel.cpp
 msgid "Watch video"
 msgstr "Görüntüyü izle"
 
@@ -11656,8 +11665,12 @@ msgid "Welcome to Audacity!"
 msgstr "Audacity uygulamasına hoş geldiniz!"
 
 #: src/WhatsNewDialog.cpp
-msgid "Video: how we're redesigning Audacity for the future"
-msgstr "Video: Audacity'yi geleceğe nasıl yeniden tasarlıyoruz"
+msgid "Try the new Audacity 4 Beta release"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Test the Beta release"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
@@ -11668,6 +11681,10 @@ msgid "Get our free OpenVino AI tools"
 msgstr "Ücretsiz OpenVino AI araçlarımızı edinin"
 
 #: src/WhatsNewDialog.cpp
+msgid "Soap Voice Cleaner: studio-quality voice-over sound"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
 msgid "Explore free plugins for sculpting your audio"
 msgstr "Sesinizi şekillendirmek için ücretsiz eklentileri keşfedin"
 
@@ -11676,16 +11693,12 @@ msgid "View free plugins"
 msgstr "Ücretsiz eklentileri görüntüleyin"
 
 #: src/WhatsNewDialog.cpp
-msgid "25th Anniversary Merchandise!"
-msgstr "25. Yıl Dönümü Ürünleri!"
+msgid "Help us decide the future of Audacity"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
-msgid "Visit now"
-msgstr "Şimdi ziyaret edin"
-
-#: src/WhatsNewDialog.cpp
-msgid "Visit our new Audacity merch store"
-msgstr "Yeni Audacity ürün mağazamızı ziyaret edin"
+msgid "Take part in survey"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -12179,6 +12192,10 @@ msgstr "2. renk"
 msgid "Color 3"
 msgstr "3. renk"
 
+#: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
+msgid "Unnamed"
+msgstr "Adsız"
+
 #: src/commands/SetClipCommand.cpp
 msgid "At:"
 msgstr "Zaman:"
@@ -12296,10 +12313,6 @@ msgstr "Bir proje için çeşitli değerler ayarlar."
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track Status"
 msgstr "İz durumunu Ayarla"
-
-#: src/commands/SetTrackInfoCommand.cpp
-msgid "Unnamed"
-msgstr "Adsız"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Focused"
@@ -14314,6 +14327,35 @@ msgstr "Şuna &sıkıştır:"
 msgid "Trunc&ate tracks independently"
 msgstr "İzleri bağımsız &olarak buda"
 
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Truncate Location"
+msgstr "Şuna &buda:"
+
+#: src/effects/TruncSilence.cpp
+msgid "Remove silence from &beginning"
+msgstr ""
+
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Remove silence from &middle"
+msgstr "%s, %s üzerinden silindi"
+
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Remove silence from &end"
+msgstr "%s, %s üzerinden silindi"
+
+#: src/effects/TruncSilence.cpp
+msgid ""
+"At least one location option must be selected.\n"
+"\n"
+"Please select at least one of:\n"
+"* Remove silence from beginning\n"
+"* Remove silence from middle\n"
+"* Remove silence from end"
+msgstr ""
+
 #: src/effects/VST/VSTEffect.cpp
 msgid "Save VST Preset As:"
 msgstr "Hazır VST ayarlarını farklı kaydet:"
@@ -15048,8 +15090,18 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr "Ö&nceki parça sınırından imlece"
 
 #: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Previous Clip Boundary to Cursor"
+msgstr "Ö&nceki parça sınırından imlece"
+
+#: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "İmleçten s&onraki parça sınırına"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Cursor to Next Clip Boundary"
+msgstr "İmleci sonraki parça sınırına taşı"
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -19800,6 +19852,41 @@ msgstr "Hayır, teşekkürler"
 msgid "Remind me later"
 msgstr "Daha sonra hatırlat"
 
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to fetch Audacity 4 release information. Please try again later."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to parse Audacity 4 release information. Please try again later."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "No Audacity 4 installer available for your platform."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+#, fuzzy
+msgid "Unable to create installer file. Please check write permissions."
+msgstr "Hedef dosya yazılmak üzere oluşturulamadı"
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+msgid "Audacity update"
+msgstr "Audacity güncelleme"
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+#, c-format
+msgid "Downloading %s"
+msgstr "%s indiriliyor"
+
+#: src/update/Audacity40PromoDialog.cpp
+#, fuzzy
+msgid "Download Error"
+msgstr "İndir"
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Failed to download Audacity 4 installer. Please try again later."
+msgstr ""
+
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
 msgid "No Updates Available"
@@ -19845,15 +19932,6 @@ msgstr "Güncelleme indirilirken sorun çıktı"
 msgctxt "update dialog"
 msgid "Can't open the Audacity download link."
 msgstr "Audacity indirme bağlantısı açılamadı."
-
-#: src/update/UpdateManager.cpp
-msgid "Audacity update"
-msgstr "Audacity güncelleme"
-
-#: src/update/UpdateManager.cpp
-#, c-format
-msgid "Downloading %s"
-msgstr "%s indiriliyor"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -21758,3 +21836,15 @@ msgstr "Spektral araçlar"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Eski"
+
+#~ msgid "Video: how we're redesigning Audacity for the future"
+#~ msgstr "Video: Audacity'yi geleceğe nasıl yeniden tasarlıyoruz"
+
+#~ msgid "25th Anniversary Merchandise!"
+#~ msgstr "25. Yıl Dönümü Ürünleri!"
+
+#~ msgid "Visit now"
+#~ msgstr "Şimdi ziyaret edin"
+
+#~ msgid "Visit our new Audacity merch store"
+#~ msgstr "Yeni Audacity ürün mağazamızı ziyaret edin"

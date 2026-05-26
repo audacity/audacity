@@ -11,9 +11,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.6\n"
+"Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-12-03 19:18+0300\n"
+"POT-Creation-Date: 2026-05-26 16:41+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Mihai Vasiliu <mihai.vasiliu.93@gmail.com>, 2025\n"
 "Language-Team: Romanian (https://app.transifex.com/audacity/teams/164520/ro/)\n"
@@ -244,6 +244,7 @@ msgstr ""
 #: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#: src/update/Audacity40PromoDialog.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Error"
 msgstr "Eroare"
@@ -1332,7 +1333,7 @@ msgid "Compress Excess Silence"
 msgstr "Comprimă liniștea în exces"
 
 #: libraries/lib-builtin-effects/TruncSilenceBase.cpp
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/TruncSilence.cpp resources/EffectsMenuDefaults.xml
 msgid "Truncate Silence"
 msgstr "Trunchiază liniștea"
 
@@ -2077,6 +2078,10 @@ msgstr "Fișier text SubRip"
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "WebVTT file"
 msgstr "FIșier WebVTT"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "Podcast Chapters"
+msgstr ""
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Supported label file"
@@ -6824,6 +6829,10 @@ msgid "Unable to create target file for writing"
 msgstr "Nu s-a putut crea fișierul țintă pentru scriere"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
+msgid "Unsupported bytes-per-sample value for WavPack export"
+msgstr ""
+
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Exporting selected audio as WavPack"
 msgstr "Se exportă audio selectat ca WavPack"
 
@@ -8245,8 +8254,8 @@ msgstr "Sit web %s: "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, c-format
-msgid "%s software is copyright %s 1999-2024 %s Team."
+#, fuzzy, c-format
+msgid "%s software is copyright %s 1999-2026 %s Team."
 msgstr "Programul software %s are copyright %s 1999-2024, echipa %s."
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -10939,7 +10948,7 @@ msgstr "Efecte în timp real pentru %s"
 msgid "Realtime Effects"
 msgstr "Efecte în timp real"
 
-#: src/RealtimeEffectPanel.cpp src/WhatsNewDialog.cpp
+#: src/RealtimeEffectPanel.cpp
 msgid "Watch video"
 msgstr "Urmărește video"
 
@@ -11664,8 +11673,12 @@ msgid "Welcome to Audacity!"
 msgstr "Bun venit la Audacity!"
 
 #: src/WhatsNewDialog.cpp
-msgid "Video: how we're redesigning Audacity for the future"
-msgstr "Video: Cum reproiectăm Audacity pentru viitor"
+msgid "Try the new Audacity 4 Beta release"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Test the Beta release"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
@@ -11676,6 +11689,10 @@ msgid "Get our free OpenVino AI tools"
 msgstr "Obține uneltele noastre cu IA gratuite OpenVino"
 
 #: src/WhatsNewDialog.cpp
+msgid "Soap Voice Cleaner: studio-quality voice-over sound"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
 msgid "Explore free plugins for sculpting your audio"
 msgstr "Explorează plugin-uri gratuite pentru modelarea audioului tău"
 
@@ -11684,16 +11701,12 @@ msgid "View free plugins"
 msgstr "Vezi plugin-urile gratuite"
 
 #: src/WhatsNewDialog.cpp
-msgid "25th Anniversary Merchandise!"
-msgstr "Materiale promoționale pentru a 25-a aniversare!"
+msgid "Help us decide the future of Audacity"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
-msgid "Visit now"
-msgstr "Vizitează acum"
-
-#: src/WhatsNewDialog.cpp
-msgid "Visit our new Audacity merch store"
-msgstr "Vizitează noul nostru magazin de materiale promoționale Audacity"
+msgid "Take part in survey"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -12187,6 +12200,10 @@ msgstr "Culoare 2"
 msgid "Color 3"
 msgstr "Culoare 3"
 
+#: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
+msgid "Unnamed"
+msgstr "Fără nume"
+
 #: src/commands/SetClipCommand.cpp
 msgid "At:"
 msgstr "La:"
@@ -12304,10 +12321,6 @@ msgstr "Setează diverse valori pentru un proiect."
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track Status"
 msgstr "Setează stare pistă"
-
-#: src/commands/SetTrackInfoCommand.cpp
-msgid "Unnamed"
-msgstr "Fără nume"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Focused"
@@ -14322,6 +14335,35 @@ msgstr "C&omprimă la:"
 msgid "Trunc&ate tracks independently"
 msgstr "Trunchi&ază pistele independent"
 
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Truncate Location"
+msgstr "Tr&unchiază la:"
+
+#: src/effects/TruncSilence.cpp
+msgid "Remove silence from &beginning"
+msgstr ""
+
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Remove silence from &middle"
+msgstr "Eliminat %s din %s"
+
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Remove silence from &end"
+msgstr "Eliminat %s din %s"
+
+#: src/effects/TruncSilence.cpp
+msgid ""
+"At least one location option must be selected.\n"
+"\n"
+"Please select at least one of:\n"
+"* Remove silence from beginning\n"
+"* Remove silence from middle\n"
+"* Remove silence from end"
+msgstr ""
+
 #: src/effects/VST/VSTEffect.cpp
 msgid "Save VST Preset As:"
 msgstr "Salvează presetare VST ca:"
@@ -15059,8 +15101,18 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr "De la limita de clip &precedentă la cursor"
 
 #: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Previous Clip Boundary to Cursor"
+msgstr "De la limita de clip &precedentă la cursor"
+
+#: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "De la cursor la limita de clip &următoare"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Cursor to Next Clip Boundary"
+msgstr "De la cursor la limita de clip următoare"
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -19810,6 +19862,41 @@ msgstr "Nu, mulțumesc"
 msgid "Remind me later"
 msgstr "Amintește-mi mai târziu"
 
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to fetch Audacity 4 release information. Please try again later."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to parse Audacity 4 release information. Please try again later."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "No Audacity 4 installer available for your platform."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+#, fuzzy
+msgid "Unable to create installer file. Please check write permissions."
+msgstr "Nu s-a putut crea fișierul țintă pentru scriere"
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+msgid "Audacity update"
+msgstr "Actualizare Audacity"
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+#, c-format
+msgid "Downloading %s"
+msgstr "Se descarcă %s"
+
+#: src/update/Audacity40PromoDialog.cpp
+#, fuzzy
+msgid "Download Error"
+msgstr "Descarcă"
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Failed to download Audacity 4 installer. Please try again later."
+msgstr ""
+
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
 msgid "No Updates Available"
@@ -19855,15 +19942,6 @@ msgstr "Eroare la descărcarea actualizării"
 msgctxt "update dialog"
 msgid "Can't open the Audacity download link."
 msgstr "Nu se poate deschide legătura de descărcare Audacity."
-
-#: src/update/UpdateManager.cpp
-msgid "Audacity update"
-msgstr "Actualizare Audacity"
-
-#: src/update/UpdateManager.cpp
-#, c-format
-msgid "Downloading %s"
-msgstr "Se descarcă %s"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -21769,3 +21847,15 @@ msgstr "Unelte spectrale"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Învechite"
+
+#~ msgid "Video: how we're redesigning Audacity for the future"
+#~ msgstr "Video: Cum reproiectăm Audacity pentru viitor"
+
+#~ msgid "25th Anniversary Merchandise!"
+#~ msgstr "Materiale promoționale pentru a 25-a aniversare!"
+
+#~ msgid "Visit now"
+#~ msgstr "Vizitează acum"
+
+#~ msgid "Visit our new Audacity merch store"
+#~ msgstr "Vizitează noul nostru magazin de materiale promoționale Audacity"

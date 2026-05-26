@@ -13,9 +13,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.6\n"
+"Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-12-03 19:18+0300\n"
+"POT-Creation-Date: 2026-05-26 16:41+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Kimmo Kujansuu <mrkujansuu@gmail.com>, 2025\n"
 "Language-Team: Finnish (https://app.transifex.com/audacity/teams/164520/fi/)\n"
@@ -246,6 +246,7 @@ msgstr ""
 #: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#: src/update/Audacity40PromoDialog.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Error"
 msgstr "Virhe"
@@ -1334,7 +1335,7 @@ msgid "Compress Excess Silence"
 msgstr "Pakkaa liika hiljaisuus"
 
 #: libraries/lib-builtin-effects/TruncSilenceBase.cpp
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/TruncSilence.cpp resources/EffectsMenuDefaults.xml
 msgid "Truncate Silence"
 msgstr "Lyhennä hiljaisuus"
 
@@ -2079,6 +2080,10 @@ msgstr "SubRip-tekstitiedosto"
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "WebVTT file"
 msgstr "WebVTT -tiedosto"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "Podcast Chapters"
+msgstr ""
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Supported label file"
@@ -6824,6 +6829,10 @@ msgid "Unable to create target file for writing"
 msgstr "Kohdetiedostoa ei voi luoda kirjoittamista varten"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
+msgid "Unsupported bytes-per-sample value for WavPack export"
+msgstr ""
+
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Exporting selected audio as WavPack"
 msgstr "Valittu ääni viedään WavPack-muodossa"
 
@@ -8242,8 +8251,8 @@ msgstr "%s-verkkosivusto: "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, c-format
-msgid "%s software is copyright %s 1999-2024 %s Team."
+#, fuzzy, c-format
+msgid "%s software is copyright %s 1999-2026 %s Team."
 msgstr "%s software is copyright %s 1999-2024 %s Team."
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -10933,7 +10942,7 @@ msgstr "Reaaliaikaiset tehosteet kohteelle %s"
 msgid "Realtime Effects"
 msgstr "Reaaliaikaiset tehosteet"
 
-#: src/RealtimeEffectPanel.cpp src/WhatsNewDialog.cpp
+#: src/RealtimeEffectPanel.cpp
 msgid "Watch video"
 msgstr "Katso video"
 
@@ -11658,8 +11667,12 @@ msgid "Welcome to Audacity!"
 msgstr "Tervetuloa käyttämään Audacityä!"
 
 #: src/WhatsNewDialog.cpp
-msgid "Video: how we're redesigning Audacity for the future"
-msgstr "Video: suunnittelemme Audacityn uudelleen tulevaisuutta varten"
+msgid "Try the new Audacity 4 Beta release"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Test the Beta release"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
@@ -11670,6 +11683,10 @@ msgid "Get our free OpenVino AI tools"
 msgstr "Hanki ilmaiset OpenVino AI-työkalut"
 
 #: src/WhatsNewDialog.cpp
+msgid "Soap Voice Cleaner: studio-quality voice-over sound"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
 msgid "Explore free plugins for sculpting your audio"
 msgstr "Selaa ilmaisia liitännäisiä äänen muokkaamista varten"
 
@@ -11678,16 +11695,12 @@ msgid "View free plugins"
 msgstr "Näytä ilmaiset laajennukset"
 
 #: src/WhatsNewDialog.cpp
-msgid "25th Anniversary Merchandise!"
-msgstr "25-vuotisjuhlatuotteita!"
+msgid "Help us decide the future of Audacity"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
-msgid "Visit now"
-msgstr "Käy nyt"
-
-#: src/WhatsNewDialog.cpp
-msgid "Visit our new Audacity merch store"
-msgstr "Käy uudessa Audacity-tuotekaupassamme"
+msgid "Take part in survey"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -12181,6 +12194,10 @@ msgstr "Väri 2"
 msgid "Color 3"
 msgstr "Väri 3"
 
+#: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
+msgid "Unnamed"
+msgstr "Nimetön"
+
 #: src/commands/SetClipCommand.cpp
 msgid "At:"
 msgstr "Kohta:"
@@ -12298,10 +12315,6 @@ msgstr "Määrittää projektille eri arvoja."
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track Status"
 msgstr "Aseta raidan tila"
-
-#: src/commands/SetTrackInfoCommand.cpp
-msgid "Unnamed"
-msgstr "Nimetön"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Focused"
@@ -14316,6 +14329,35 @@ msgstr "&Pakkaa:"
 msgid "Trunc&ate tracks independently"
 msgstr "Lyhennä r&aidat itsenäisesti"
 
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Truncate Location"
+msgstr "Ly&hennä:"
+
+#: src/effects/TruncSilence.cpp
+msgid "Remove silence from &beginning"
+msgstr ""
+
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Remove silence from &middle"
+msgstr "%s poistettiin kohteesta %s"
+
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Remove silence from &end"
+msgstr "%s poistettiin kohteesta %s"
+
+#: src/effects/TruncSilence.cpp
+msgid ""
+"At least one location option must be selected.\n"
+"\n"
+"Please select at least one of:\n"
+"* Remove silence from beginning\n"
+"* Remove silence from middle\n"
+"* Remove silence from end"
+msgstr ""
+
 #: src/effects/VST/VSTEffect.cpp
 msgid "Save VST Preset As:"
 msgstr "Tallenna VST-esiasetus nimellä:"
@@ -15050,8 +15092,18 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr "E&dellisen leikkeen reunasta kohdistimeen"
 
 #: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Previous Clip Boundary to Cursor"
+msgstr "E&dellisen leikkeen reunasta kohdistimeen"
+
+#: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "Kohdistimesta &seuraavan leikkeen reunaan"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Cursor to Next Clip Boundary"
+msgstr "Kohdistimesta seuraavan leikkeen reunaan"
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -19796,6 +19848,41 @@ msgstr "Ei kiitos"
 msgid "Remind me later"
 msgstr "Muistuta myöhemmin"
 
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to fetch Audacity 4 release information. Please try again later."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to parse Audacity 4 release information. Please try again later."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "No Audacity 4 installer available for your platform."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+#, fuzzy
+msgid "Unable to create installer file. Please check write permissions."
+msgstr "Kohdetiedostoa ei voi luoda kirjoittamista varten"
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+msgid "Audacity update"
+msgstr "Audacityn päivitys"
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+#, c-format
+msgid "Downloading %s"
+msgstr "Ladataan %s"
+
+#: src/update/Audacity40PromoDialog.cpp
+#, fuzzy
+msgid "Download Error"
+msgstr "Lataa"
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Failed to download Audacity 4 installer. Please try again later."
+msgstr ""
+
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
 msgid "No Updates Available"
@@ -19841,15 +19928,6 @@ msgstr "Virhe päivityksen lataamisessa"
 msgctxt "update dialog"
 msgid "Can't open the Audacity download link."
 msgstr "Audacityn latauslinkkiä ei voitu avata."
-
-#: src/update/UpdateManager.cpp
-msgid "Audacity update"
-msgstr "Audacityn päivitys"
-
-#: src/update/UpdateManager.cpp
-#, c-format
-msgid "Downloading %s"
-msgstr "Ladataan %s"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -21754,3 +21832,15 @@ msgstr "Spektrityökalut"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Perinteinen"
+
+#~ msgid "Video: how we're redesigning Audacity for the future"
+#~ msgstr "Video: suunnittelemme Audacityn uudelleen tulevaisuutta varten"
+
+#~ msgid "25th Anniversary Merchandise!"
+#~ msgstr "25-vuotisjuhlatuotteita!"
+
+#~ msgid "Visit now"
+#~ msgstr "Käy nyt"
+
+#~ msgid "Visit our new Audacity merch store"
+#~ msgstr "Käy uudessa Audacity-tuotekaupassamme"

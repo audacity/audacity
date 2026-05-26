@@ -11,9 +11,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.6\n"
+"Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-12-03 19:18+0300\n"
+"POT-Creation-Date: 2026-05-26 16:41+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: brad freedom <brad.freedom@gmail.com>, 2025\n"
 "Language-Team: Vietnamese (https://app.transifex.com/audacity/teams/164520/vi/)\n"
@@ -242,6 +242,7 @@ msgstr ""
 #: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#: src/update/Audacity40PromoDialog.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Error"
 msgstr "Lỗi"
@@ -1328,7 +1329,7 @@ msgid "Compress Excess Silence"
 msgstr "Nén khoảng lặng thừa"
 
 #: libraries/lib-builtin-effects/TruncSilenceBase.cpp
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/TruncSilence.cpp resources/EffectsMenuDefaults.xml
 msgid "Truncate Silence"
 msgstr "Truncate Silence - Cắt bỏ khoảng lặng"
 
@@ -2070,6 +2071,10 @@ msgstr "Tập tin phụ đề"
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "WebVTT file"
 msgstr "Tập tin WebVTT"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "Podcast Chapters"
+msgstr ""
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Supported label file"
@@ -6807,6 +6812,10 @@ msgid "Unable to create target file for writing"
 msgstr "Không thể tạo tập tin như định dạng để xuất dữ liệu"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
+msgid "Unsupported bytes-per-sample value for WavPack export"
+msgstr ""
+
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Exporting selected audio as WavPack"
 msgstr "Xuất audio đã chọn dưới dạng WavPack"
 
@@ -8222,8 +8231,8 @@ msgstr "%s trang mạng:"
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, c-format
-msgid "%s software is copyright %s 1999-2024 %s Team."
+#, fuzzy, c-format
+msgid "%s software is copyright %s 1999-2026 %s Team."
 msgstr "%s phần mềm có bản quyền %s 1999-2024 %s Đội."
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -10899,7 +10908,7 @@ msgstr "Hiệu ứng thời gian thực cho %s"
 msgid "Realtime Effects"
 msgstr "Hiệu ứng thời gian thực"
 
-#: src/RealtimeEffectPanel.cpp src/WhatsNewDialog.cpp
+#: src/RealtimeEffectPanel.cpp
 msgid "Watch video"
 msgstr "Xem video"
 
@@ -11621,8 +11630,12 @@ msgid "Welcome to Audacity!"
 msgstr "Xin chào!"
 
 #: src/WhatsNewDialog.cpp
-msgid "Video: how we're redesigning Audacity for the future"
-msgstr "Video: cách chúng tôi thiết kế lại Audacity cho tương lai"
+msgid "Try the new Audacity 4 Beta release"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Test the Beta release"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
@@ -11633,6 +11646,10 @@ msgid "Get our free OpenVino AI tools"
 msgstr "Tải xuống công cụ AI OpenVino miễn phí của chúng tôi"
 
 #: src/WhatsNewDialog.cpp
+msgid "Soap Voice Cleaner: studio-quality voice-over sound"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
 msgid "Explore free plugins for sculpting your audio"
 msgstr "Khám phá các plugin miễn phí để chỉnh sửa âm thanh của bạn"
 
@@ -11641,16 +11658,12 @@ msgid "View free plugins"
 msgstr "Xem plugin miễn phí"
 
 #: src/WhatsNewDialog.cpp
-msgid "25th Anniversary Merchandise!"
-msgstr "Sản phẩm kỷ niệm 25 năm!"
+msgid "Help us decide the future of Audacity"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
-msgid "Visit now"
-msgstr "Truy cập ngay"
-
-#: src/WhatsNewDialog.cpp
-msgid "Visit our new Audacity merch store"
-msgstr "Ghé thăm Merch Store Audacity mới của chúng tôi"
+msgid "Take part in survey"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -12144,6 +12157,10 @@ msgstr "Màu 2"
 msgid "Color 3"
 msgstr "Màu 3"
 
+#: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
+msgid "Unnamed"
+msgstr "Không tên"
+
 #: src/commands/SetClipCommand.cpp
 msgid "At:"
 msgstr "Ở :"
@@ -12261,10 +12278,6 @@ msgstr "Đặt các giá trị cho dự án"
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track Status"
 msgstr "Đặt thuộc tính track"
-
-#: src/commands/SetTrackInfoCommand.cpp
-msgid "Unnamed"
-msgstr "Không tên"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Focused"
@@ -14279,6 +14292,35 @@ msgstr "&Nén thành"
 msgid "Trunc&ate tracks independently"
 msgstr "Cắ&t các track độc lập"
 
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Truncate Location"
+msgstr "&Cắt đến"
+
+#: src/effects/TruncSilence.cpp
+msgid "Remove silence from &beginning"
+msgstr ""
+
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Remove silence from &middle"
+msgstr "Loại bỏ %s từ %s"
+
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Remove silence from &end"
+msgstr "Loại bỏ %s từ %s"
+
+#: src/effects/TruncSilence.cpp
+msgid ""
+"At least one location option must be selected.\n"
+"\n"
+"Please select at least one of:\n"
+"* Remove silence from beginning\n"
+"* Remove silence from middle\n"
+"* Remove silence from end"
+msgstr ""
+
 #: src/effects/VST/VSTEffect.cpp
 msgid "Save VST Preset As:"
 msgstr "Lưu thiết lập sẵn VST tên:"
@@ -15010,8 +15052,18 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr "Đường biên độ clip &trước đó đến con trỏ"
 
 #: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Previous Clip Boundary to Cursor"
+msgstr "Đường biên độ clip &trước đó đến con trỏ"
+
+#: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "Con trỏ chuyển đến biên độ clip tiếp &theo"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Cursor to Next Clip Boundary"
+msgstr "Con trỏ chuyển đến biên độ clip tiếp theo"
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -19753,6 +19805,41 @@ msgstr "Không, cảm ơn"
 msgid "Remind me later"
 msgstr "Nhắc tôi sau nhé"
 
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to fetch Audacity 4 release information. Please try again later."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to parse Audacity 4 release information. Please try again later."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "No Audacity 4 installer available for your platform."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+#, fuzzy
+msgid "Unable to create installer file. Please check write permissions."
+msgstr "Không thể tạo tập tin như định dạng để xuất dữ liệu"
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+msgid "Audacity update"
+msgstr "Bản cập nhật Audacity"
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+#, c-format
+msgid "Downloading %s"
+msgstr "Đang tải về %s"
+
+#: src/update/Audacity40PromoDialog.cpp
+#, fuzzy
+msgid "Download Error"
+msgstr "Tải về"
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Failed to download Audacity 4 installer. Please try again later."
+msgstr ""
+
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
 msgid "No Updates Available"
@@ -19798,15 +19885,6 @@ msgstr "Lỗi tải bản cập nhật."
 msgctxt "update dialog"
 msgid "Can't open the Audacity download link."
 msgstr "Không mở được đường dẫn để tải Audacity về."
-
-#: src/update/UpdateManager.cpp
-msgid "Audacity update"
-msgstr "Bản cập nhật Audacity"
-
-#: src/update/UpdateManager.cpp
-#, c-format
-msgid "Downloading %s"
-msgstr "Đang tải về %s"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -21710,3 +21788,15 @@ msgstr "Spectral Tools-Công cụ âm phổ"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Phiên bản cũ"
+
+#~ msgid "Video: how we're redesigning Audacity for the future"
+#~ msgstr "Video: cách chúng tôi thiết kế lại Audacity cho tương lai"
+
+#~ msgid "25th Anniversary Merchandise!"
+#~ msgstr "Sản phẩm kỷ niệm 25 năm!"
+
+#~ msgid "Visit now"
+#~ msgstr "Truy cập ngay"
+
+#~ msgid "Visit our new Audacity merch store"
+#~ msgstr "Ghé thăm Merch Store Audacity mới của chúng tôi"

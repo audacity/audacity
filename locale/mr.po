@@ -9,9 +9,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.6\n"
+"Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-11-25 18:02+0300\n"
+"POT-Creation-Date: 2026-05-26 16:41+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
 "Last-Translator: Link Winterberg, 2024\n"
 "Language-Team: Marathi (https://app.transifex.com/audacity/teams/164520/mr/)\n"
@@ -238,6 +238,7 @@ msgstr ""
 #: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#: src/update/Audacity40PromoDialog.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Error"
 msgstr "त्रुटी"
@@ -1327,7 +1328,7 @@ msgid "Compress Excess Silence"
 msgstr "जास्तीची शांतता संकुचित करा"
 
 #: libraries/lib-builtin-effects/TruncSilenceBase.cpp
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/TruncSilence.cpp resources/EffectsMenuDefaults.xml
 msgid "Truncate Silence"
 msgstr "शांतता छाटून टाका"
 
@@ -2054,6 +2055,10 @@ msgstr ""
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "WebVTT file"
+msgstr ""
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "Podcast Chapters"
 msgstr ""
 
 #: libraries/lib-label-track/LabelTrack.cpp
@@ -6709,6 +6714,10 @@ msgid "Unable to create target file for writing"
 msgstr ""
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
+msgid "Unsupported bytes-per-sample value for WavPack export"
+msgstr ""
+
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Exporting selected audio as WavPack"
 msgstr ""
 
@@ -8125,7 +8134,7 @@ msgstr "%s संकेतस्थळ : "
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
 #, c-format
-msgid "%s software is copyright %s 1999-2024 %s Team."
+msgid "%s software is copyright %s 1999-2026 %s Team."
 msgstr ""
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -10719,7 +10728,7 @@ msgstr ""
 msgid "Realtime Effects"
 msgstr ""
 
-#: src/RealtimeEffectPanel.cpp src/WhatsNewDialog.cpp
+#: src/RealtimeEffectPanel.cpp
 msgid "Watch video"
 msgstr ""
 
@@ -11441,7 +11450,11 @@ msgid "Welcome to Audacity!"
 msgstr "ऑड्यासिटीमध्ये आपले स्वागत आहे!"
 
 #: src/WhatsNewDialog.cpp
-msgid "Video: how we're redesigning Audacity for the future"
+msgid "Try the new Audacity 4 Beta release"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Test the Beta release"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -11450,6 +11463,10 @@ msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Get our free OpenVino AI tools"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Soap Voice Cleaner: studio-quality voice-over sound"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -11462,15 +11479,11 @@ msgid "View free plugins"
 msgstr "नवीन प्लग-इन सुरू करा"
 
 #: src/WhatsNewDialog.cpp
-msgid "25th Anniversary Merchandise!"
+msgid "Help us decide the future of Audacity"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-msgid "Visit now"
-msgstr ""
-
-#: src/WhatsNewDialog.cpp
-msgid "Visit our new Audacity merch store"
+msgid "Take part in survey"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
@@ -11965,6 +11978,10 @@ msgstr "रंग २"
 msgid "Color 3"
 msgstr "रंग ३"
 
+#: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
+msgid "Unnamed"
+msgstr "अनामिक"
+
 #: src/commands/SetClipCommand.cpp
 msgid "At:"
 msgstr "कडे:"
@@ -12082,10 +12099,6 @@ msgstr "प्रकल्पसाठी भिन्न मूल्ये स
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track Status"
 msgstr "गीतपट्ट्याच्या स्थितीची रचना करा"
-
-#: src/commands/SetTrackInfoCommand.cpp
-msgid "Unnamed"
-msgstr "अनामिक"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Focused"
@@ -14100,6 +14113,33 @@ msgstr "मध्ये संकुचित करा:"
 msgid "Trunc&ate tracks independently"
 msgstr "स्वतंत्रपणे गीतपट्टा काटछाट करा"
 
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Truncate Location"
+msgstr "यावर छाटून टाका:"
+
+#: src/effects/TruncSilence.cpp
+msgid "Remove silence from &beginning"
+msgstr ""
+
+#: src/effects/TruncSilence.cpp
+msgid "Remove silence from &middle"
+msgstr ""
+
+#: src/effects/TruncSilence.cpp
+msgid "Remove silence from &end"
+msgstr ""
+
+#: src/effects/TruncSilence.cpp
+msgid ""
+"At least one location option must be selected.\n"
+"\n"
+"Please select at least one of:\n"
+"* Remove silence from beginning\n"
+"* Remove silence from middle\n"
+"* Remove silence from end"
+msgstr ""
+
 #: src/effects/VST/VSTEffect.cpp
 msgid "Save VST Preset As:"
 msgstr "VST प्रेसेट म्हणून जतन करा:"
@@ -14834,8 +14874,18 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr "मागील फीत सीमा ते कर्सर (&v)"
 
 #: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Previous Clip Boundary to Cursor"
+msgstr "मागील फीत सीमा ते कर्सर (&v)"
+
+#: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "पुढील फीत सीमेवर कर्सर(&x)"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Cursor to Next Clip Boundary"
+msgstr "कर्सर ते पुढच्या फीतच्या सीमेवर"
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -19558,6 +19608,40 @@ msgstr ""
 msgid "Remind me later"
 msgstr ""
 
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to fetch Audacity 4 release information. Please try again later."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to parse Audacity 4 release information. Please try again later."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "No Audacity 4 installer available for your platform."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to create installer file. Please check write permissions."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+msgid "Audacity update"
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+#, c-format
+msgid "Downloading %s"
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+#, fuzzy
+msgid "Download Error"
+msgstr "डाउनलोड करा"
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Failed to download Audacity 4 installer. Please try again later."
+msgstr ""
+
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
 msgid "No Updates Available"
@@ -19602,15 +19686,6 @@ msgstr ""
 #: src/update/UpdateManager.cpp
 msgctxt "update dialog"
 msgid "Can't open the Audacity download link."
-msgstr ""
-
-#: src/update/UpdateManager.cpp
-msgid "Audacity update"
-msgstr ""
-
-#: src/update/UpdateManager.cpp
-#, c-format
-msgid "Downloading %s"
 msgstr ""
 
 #. i18n-hint: Window title of the app update notice dialog.

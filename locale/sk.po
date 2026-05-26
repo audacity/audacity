@@ -3,9 +3,9 @@
 # Audacity Team <audacity-translation@lists.sourceforge.net>, YEAR.
 msgid ""
 msgstr ""
-"Project-Id-Version: audacity 3.7.6\n"
+"Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2025-12-03 19:18+0300\n"
+"POT-Creation-Date: 2026-05-26 16:41+0300\n"
 "PO-Revision-Date: 2025-11-27 10:00+0100\n"
 "Last-Translator: Marco Oros <marco.oros93@gmail.com>\n"
 "Language-Team: Marco Oros\n"
@@ -238,6 +238,7 @@ msgstr ""
 #: src/menus/TrackMenus.cpp src/menus/TransportMenus.cpp
 #: src/prefs/DirectoriesPrefs.cpp src/prefs/KeyConfigPrefs.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
+#: src/update/Audacity40PromoDialog.cpp
 #: src/widgets/UnwritableLocationErrorDialog.cpp
 msgid "Error"
 msgstr "Chyba"
@@ -1326,7 +1327,7 @@ msgid "Compress Excess Silence"
 msgstr "Stlačiť nadmerné ticho"
 
 #: libraries/lib-builtin-effects/TruncSilenceBase.cpp
-#: resources/EffectsMenuDefaults.xml
+#: src/effects/TruncSilence.cpp resources/EffectsMenuDefaults.xml
 msgid "Truncate Silence"
 msgstr "Skrátiť ticho"
 
@@ -2071,6 +2072,10 @@ msgstr "Textový súbor SubRip"
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "WebVTT file"
 msgstr "Súbor WebVTT"
+
+#: libraries/lib-label-track/LabelTrack.cpp
+msgid "Podcast Chapters"
+msgstr ""
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Supported label file"
@@ -6813,6 +6818,10 @@ msgid "Unable to create target file for writing"
 msgstr "Nie je možné vytvoriť cieľový súbor na zápis"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
+msgid "Unsupported bytes-per-sample value for WavPack export"
+msgstr ""
+
+#: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Exporting selected audio as WavPack"
 msgstr "Exportovanie vybraného audia ako WavPack"
 
@@ -8234,8 +8243,8 @@ msgstr "%s webstránka: "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, c-format
-msgid "%s software is copyright %s 1999-2024 %s Team."
+#, fuzzy, c-format
+msgid "%s software is copyright %s 1999-2026 %s Team."
 msgstr "%s softvér je chránený autorskými právami %s 1999-2024 %s Team."
 
 #. i18n-hint Audacity's name substitutes for %s
@@ -10922,7 +10931,7 @@ msgstr "Efekty v reálnom čase pre %s"
 msgid "Realtime Effects"
 msgstr "Realtime Efekty"
 
-#: src/RealtimeEffectPanel.cpp src/WhatsNewDialog.cpp
+#: src/RealtimeEffectPanel.cpp
 msgid "Watch video"
 msgstr "Pozrite si video"
 
@@ -11647,8 +11656,12 @@ msgid "Welcome to Audacity!"
 msgstr "Vitajte v Audacity!"
 
 #: src/WhatsNewDialog.cpp
-msgid "Video: how we're redesigning Audacity for the future"
-msgstr "Video: ako prerábame Audacity pre budúcnosť"
+msgid "Try the new Audacity 4 Beta release"
+msgstr ""
+
+#: src/WhatsNewDialog.cpp
+msgid "Test the Beta release"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
@@ -11659,6 +11672,10 @@ msgid "Get our free OpenVino AI tools"
 msgstr "Získajte naše bezplatné OpenVino AI nástroje"
 
 #: src/WhatsNewDialog.cpp
+msgid "Soap Voice Cleaner: studio-quality voice-over sound"
+msgstr "Mydlový čistič hlasu: zvuk hlasu v štúdiu"
+
+#: src/WhatsNewDialog.cpp
 msgid "Explore free plugins for sculpting your audio"
 msgstr "Preskúmajte bezplatné pluginy na tvarovanie zvuku"
 
@@ -11667,16 +11684,12 @@ msgid "View free plugins"
 msgstr "Zobraziť bezplatné pluginy"
 
 #: src/WhatsNewDialog.cpp
-msgid "25th Anniversary Merchandise!"
-msgstr "25. výročie tovaru!"
+msgid "Help us decide the future of Audacity"
+msgstr "Pomôžte nám rozhodnúť sa o budúcnosti Audacity"
 
 #: src/WhatsNewDialog.cpp
-msgid "Visit now"
-msgstr "Navštívte teraz"
-
-#: src/WhatsNewDialog.cpp
-msgid "Visit our new Audacity merch store"
-msgstr "Navštívte náš nový obchod Audacity Merch Store"
+msgid "Take part in survey"
+msgstr "Zapojte sa do prieskumu"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -12170,6 +12183,10 @@ msgstr "Farba 2"
 msgid "Color 3"
 msgstr "Farba 3"
 
+#: src/commands/SetClipCommand.cpp src/commands/SetTrackInfoCommand.cpp
+msgid "Unnamed"
+msgstr "Nepomenovaný"
+
 #: src/commands/SetClipCommand.cpp
 msgid "At:"
 msgstr "Pri:"
@@ -12287,10 +12304,6 @@ msgstr "Nastaví rôzne hodnoty pre projekt."
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Set Track Status"
 msgstr "Nastaviť stav stopy"
-
-#: src/commands/SetTrackInfoCommand.cpp
-msgid "Unnamed"
-msgstr "Nepomenovaný"
 
 #: src/commands/SetTrackInfoCommand.cpp
 msgid "Focused"
@@ -14305,6 +14318,35 @@ msgstr "Ko&mprimovať na:"
 msgid "Trunc&ate tracks independently"
 msgstr "Stopy skracovať &nezávisle"
 
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Truncate Location"
+msgstr "S&krátiť na:"
+
+#: src/effects/TruncSilence.cpp
+msgid "Remove silence from &beginning"
+msgstr ""
+
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Remove silence from &middle"
+msgstr "Odstránené %s z %s"
+
+#: src/effects/TruncSilence.cpp
+#, fuzzy
+msgid "Remove silence from &end"
+msgstr "Odstránené %s z %s"
+
+#: src/effects/TruncSilence.cpp
+msgid ""
+"At least one location option must be selected.\n"
+"\n"
+"Please select at least one of:\n"
+"* Remove silence from beginning\n"
+"* Remove silence from middle\n"
+"* Remove silence from end"
+msgstr ""
+
 #: src/effects/VST/VSTEffect.cpp
 msgid "Save VST Preset As:"
 msgstr "Uložiť predvoľbu VST ako:"
@@ -15042,8 +15084,18 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr "Od okraja pred&ošlého strihu po kurzor"
 
 #: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Previous Clip Boundary to Cursor"
+msgstr "Od okraja pred&ošlého strihu po kurzor"
+
+#: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "Od kurzoru po okraj ďa&lšieho strihu"
+
+#: src/menus/ClipMenus.cpp
+#, fuzzy
+msgid "Select Cursor to Next Clip Boundary"
+msgstr "Kurzor na okraj ďalšieho strihu"
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -19793,6 +19845,41 @@ msgstr "Nie, ďakujem"
 msgid "Remind me later"
 msgstr "Upozorniť ma neskôr"
 
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to fetch Audacity 4 release information. Please try again later."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Unable to parse Audacity 4 release information. Please try again later."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "No Audacity 4 installer available for your platform."
+msgstr ""
+
+#: src/update/Audacity40PromoDialog.cpp
+#, fuzzy
+msgid "Unable to create installer file. Please check write permissions."
+msgstr "Nie je možné vytvoriť cieľový súbor na zápis"
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+msgid "Audacity update"
+msgstr "Aktualizácia AudacityAudacity Audio"
+
+#: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
+#, c-format
+msgid "Downloading %s"
+msgstr "Sťahuje sa %s"
+
+#: src/update/Audacity40PromoDialog.cpp
+#, fuzzy
+msgid "Download Error"
+msgstr "Stiahnuť"
+
+#: src/update/Audacity40PromoDialog.cpp
+msgid "Failed to download Audacity 4 installer. Please try again later."
+msgstr ""
+
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
 msgid "No Updates Available"
@@ -19838,15 +19925,6 @@ msgstr "Chyba sťahovania aktualizácie"
 msgctxt "update dialog"
 msgid "Can't open the Audacity download link."
 msgstr "Nemôžem otvoriť odkaz na stiahnutie programu Audacity."
-
-#: src/update/UpdateManager.cpp
-msgid "Audacity update"
-msgstr "Aktualizácia AudacityAudacity Audio"
-
-#: src/update/UpdateManager.cpp
-#, c-format
-msgid "Downloading %s"
-msgstr "Sťahuje sa %s"
 
 #. i18n-hint: Window title of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
@@ -21752,6 +21830,18 @@ msgstr "Spektrálne nástroje"
 msgid "Legacy"
 msgstr "Pravidlá"
 
+#~ msgid "Video: how we're redesigning Audacity for the future"
+#~ msgstr "Video: ako prerábame Audacity pre budúcnosť"
+
+#~ msgid "25th Anniversary Merchandise!"
+#~ msgstr "25. výročie tovaru!"
+
+#~ msgid "Visit now"
+#~ msgstr "Navštívte teraz"
+
+#~ msgid "Visit our new Audacity merch store"
+#~ msgstr "Navštívte náš nový obchod Audacity Merch Store"
+
 #~ msgid "Open Fro&m Cloud..."
 #~ msgstr "Ot&voriť z  Cloudu..."
 
@@ -21831,15 +21921,6 @@ msgstr "Pravidlá"
 
 #~ msgid "Watch the release video"
 #~ msgstr "Pozrite si video z vydania"
-
-#~ msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-#~ msgstr "Mydlový čistič hlasu: zvuk hlasu v štúdiu"
-
-#~ msgid "Help us decide the future of Audacity"
-#~ msgstr "Pomôžte nám rozhodnúť sa o budúcnosti Audacity"
-
-#~ msgid "Take part in survey"
-#~ msgstr "Zapojte sa do prieskumu"
 
 #~ msgid "Audacity feature survey"
 #~ msgstr "Prieskum funkcií Audacity"
