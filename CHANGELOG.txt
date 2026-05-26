@@ -1,5 +1,20 @@
 List of significant changes and bug fixes going back to version 1.1.0
 
+Changes in version 3.7.8
+
+This is a patch release. It contains the following changes:
+
+   * #10688 Fixed an exception thrown when pasting into a newly-created track (Thanks, David Bailes (@DavidBailes)!)
+   * #10870, #10884, #10775, #10629 Fixed tone generation, waveform-scale setting, SetClip Name parameter, and clip-boundary command names for scripting and macros (Thanks, David Bailes (@DavidBailes)!)
+   * #10947 Fixed paste into an empty audio track not preserving the source sample rate (Thanks, Juan Gabriel Colonna (@juancolonna)!) 
+   * #10776 Allowed AltGr modifier in label and clip name editing (Thanks, Davide Peressoni (@DPDmancul)!)
+   * #9938 Added options to choose where silence is truncated (start/middle/end) (Thanks, Noah Rosenfield (@nosenfield)!)
+   * #9935 Added Podcast 2.0 chapters JSON export for label tracks (Thanks, Noah Rosenfield (@nosenfield)!)
+   * #10103 Improve UI on HiDPI displays on Linux/wxGTK (Thanks, Ivan A. Melnikov (@iv-m)!)
+   * #10099 Fixed MixerBoard Mute and Solo button display (Thanks, Ivan A. Melnikov (@iv-m)!)
+   * #10681 Fixed multichannel FLAC import
+   * #10999 Fixed envelope being broken after joining clips
+
 Changes in version 3.7.7
 
 This is a hotfix release. It fixes the following bugs:
