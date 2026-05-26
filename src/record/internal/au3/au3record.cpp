@@ -294,6 +294,14 @@ void Au3Record::init()
         }
         m_recordPosition.set(m_recordPosition.val);
         m_recordingFinished.notify();
+
+        muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
+        q.addParam("seekTime", muse::Val(m_recordPosition.val));
+        q.addParam("triggerPlay", muse::Val(false));
+        dispatcher()->dispatch(q);
+
+        m_recordData.clear();
+        rebuildRecordingClipKeys();
     });
 
     audioEngine()->commitRequested().onNotify(this, [this]() {
@@ -332,14 +340,6 @@ void Au3Record::init()
         pendingTracks.ClearPendingTracks();
 
         commitRecording();
-
-        muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
-        q.addParam("seekTime", muse::Val(m_recordPosition.val));
-        q.addParam("triggerPlay", muse::Val(false));
-        dispatcher()->dispatch(q);
-
-        m_recordData.clear();
-        rebuildRecordingClipKeys();
     });
 }
 
