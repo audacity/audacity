@@ -17,7 +17,7 @@ public:
 
 private:
     virtual void doInit() {}
-    muse::RetVal<muse::audioplugins::AudioResourceMetaList> readMeta(const muse::io::path_t& pluginPath) const override;
+    muse::RetVal<muse::audioplugins::PluginMetaList> readMeta(const muse::io::path_t& pluginPath) const override;
 
     PluginProvider& m_pluginProvider;
     bool m_initialized = false;

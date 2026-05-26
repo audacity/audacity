@@ -15,7 +15,7 @@ au::effects::AudioUnitPluginsMetaReader::AudioUnitPluginsMetaReader()
 {
 }
 
-muse::audioplugins::AudioResourceType au::effects::AudioUnitPluginsMetaReader::metaType() const
+muse::audioplugins::PluginType au::effects::AudioUnitPluginsMetaReader::metaType() const
 {
     return std::string(au::effects::audio_unit::AUDIO_RESOURCE_TYPE_NAME);
 }

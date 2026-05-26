@@ -11,7 +11,7 @@ class AudioUnitPluginsMetaReader : public Au3AudioPluginMetaReader
 {
 public:
     AudioUnitPluginsMetaReader();
-    muse::audioplugins::AudioResourceType metaType() const override;
+    muse::audioplugins::PluginType metaType() const override;
     bool canReadMeta(const muse::io::path_t& path) const override;
 private:
     ::AudioUnitEffectsModule m_module;

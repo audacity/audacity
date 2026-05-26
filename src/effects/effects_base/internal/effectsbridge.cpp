@@ -53,7 +53,7 @@ EffectFamily fromWireString(const std::string& s)
     return EffectFamily::Unknown;
 }
 
-bool isResourceType(const muse::audioplugins::AudioResourceMeta& meta, EffectFamily family)
+bool isResourceType(const muse::audioplugins::PluginMeta& meta, EffectFamily family)
 {
     return fromWireString(meta.type) == family;
 }

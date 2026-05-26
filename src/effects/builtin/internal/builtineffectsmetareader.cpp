@@ -10,7 +10,7 @@ BuiltinEffectsMetaReader::BuiltinEffectsMetaReader()
 {
 }
 
-muse::audioplugins::AudioResourceType BuiltinEffectsMetaReader::metaType() const
+muse::audioplugins::PluginType BuiltinEffectsMetaReader::metaType() const
 {
     return std::string(au::effects::builtin::AUDIO_RESOURCE_TYPE_NAME);
 }

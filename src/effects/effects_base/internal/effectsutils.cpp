@@ -221,9 +221,9 @@ EffectType utils::effectTypeFromString(const muse::String& type)
     return EffectType::Unknown;
 }
 
-muse::audioplugins::AudioResourceMeta utils::auToMuseEffectMeta(const EffectMeta& meta)
+muse::audioplugins::PluginMeta utils::auToMuseEffectMeta(const EffectMeta& meta)
 {
-    muse::audioplugins::AudioResourceMeta museMeta;
+    muse::audioplugins::PluginMeta museMeta;
     // Use the AU3 plugin ID (same as Audio Unit does)
     // This is necessary for looking up the plugin in PluginManager later
     museMeta.id = meta.id.toStdString();
@@ -259,7 +259,7 @@ bool value<bool>(const muse::String& str)
 }
 
 template<typename T = muse::String>
-T attributeValue(const muse::audioplugins::AudioResourceMeta& meta, const muse::String& key, bool isLoadable)
+T attributeValue(const muse::audioplugins::PluginMeta& meta, const muse::String& key, bool isLoadable)
 {
     const auto valStr = meta.attributeVal(key);
     IF_ASSERT_FAILED(!isLoadable || !valStr.empty()) {
@@ -269,7 +269,7 @@ T attributeValue(const muse::audioplugins::AudioResourceMeta& meta, const muse::
 }
 }
 
-EffectMeta utils::museToAuEffectMeta(const muse::io::path_t& path, const muse::audioplugins::AudioResourceMeta& meta,
+EffectMeta utils::museToAuEffectMeta(const muse::io::path_t& path, const muse::audioplugins::PluginMeta& meta,
                                      muse::audioplugins::AudioPluginState state)
 {
     // A Validated entry must carry complete metadata, so the attribute asserts

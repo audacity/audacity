@@ -12,7 +12,7 @@ class NyquistPluginsMetaReader : public Au3AudioPluginMetaReader
 {
 public:
     NyquistPluginsMetaReader();
-    muse::audioplugins::AudioResourceType metaType() const override;
+    muse::audioplugins::PluginType metaType() const override;
     bool canReadMeta(const muse::io::path_t& pluginPath) const override;
 
 private:

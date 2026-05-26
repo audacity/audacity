@@ -11,7 +11,7 @@ class Vst3PluginsMetaReader : public Au3AudioPluginMetaReader
 {
 public:
     Vst3PluginsMetaReader();
-    muse::audioplugins::AudioResourceType metaType() const override;
+    muse::audioplugins::PluginType metaType() const override;
     bool canReadMeta(const muse::io::path_t& pluginPath) const override;
 
 private:

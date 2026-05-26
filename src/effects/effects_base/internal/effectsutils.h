@@ -39,7 +39,7 @@ EffectCategory effectCategoryFromString(const muse::String& category);
 muse::String effectFamilyToString(EffectFamily family);
 EffectFamily effectFamilyFromString(const muse::String& family);
 
-muse::audioplugins::AudioResourceMeta auToMuseEffectMeta(const EffectMeta& meta);
-EffectMeta museToAuEffectMeta(const muse::io::path_t& path, const muse::audioplugins::AudioResourceMeta& meta,
+muse::audioplugins::PluginMeta auToMuseEffectMeta(const EffectMeta& meta);
+EffectMeta museToAuEffectMeta(const muse::io::path_t& path, const muse::audioplugins::PluginMeta& meta,
                               muse::audioplugins::AudioPluginState state = muse::audioplugins::AudioPluginState::Validated);
 }

@@ -11,7 +11,7 @@ namespace au::effects {
 Lv2PluginMetaReader::Lv2PluginMetaReader()
     : Au3AudioPluginMetaReader{m_module} {}
 
-muse::audioplugins::AudioResourceType Lv2PluginMetaReader::metaType() const
+muse::audioplugins::PluginType Lv2PluginMetaReader::metaType() const
 {
     return std::string(lv2::AUDIO_RESOURCE_TYPE_NAME);
 }

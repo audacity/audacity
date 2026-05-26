@@ -19,5 +19,5 @@
 namespace au::effects {
 std::string toWireString(EffectFamily family);
 EffectFamily fromWireString(const std::string& s);
-bool isResourceType(const muse::audioplugins::AudioResourceMeta& meta, EffectFamily family);
+bool isResourceType(const muse::audioplugins::PluginMeta& meta, EffectFamily family);
 }
