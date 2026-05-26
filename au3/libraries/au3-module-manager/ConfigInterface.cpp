@@ -79,7 +79,14 @@ bool SetConfigValue(const EffectDefinitionInterface& ident,
 {
     auto& pluginManager = PluginManager::Get();
     const auto& id = pluginManager.GetID(&ident);
-    return pluginManager.SetConfigValue(type, id, group, key, value);
+    if (pluginManager.SetConfigValue(type, id, group, key, value)) {
+        return true;
+    }
+
+    if (auto id2 = pluginManager.OldGetID(&ident); id != id2) {
+        return pluginManager.SetConfigValue(type, id2, group, key, value);
+    }
+    return false;
 }
 
 bool RemoveConfigSubgroup(const EffectDefinitionInterface& ident,
