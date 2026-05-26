@@ -192,6 +192,13 @@ public:
    // Reclaim resources after finished with theme editing
    void DeleteUnusedThemes();
 
+   //! Is the current theme one of the dark variants?
+   bool IsUsingDarkAppearance() const
+   {
+      return mPreferredSystemAppearance == PreferredSystemAppearance::Dark
+          || mPreferredSystemAppearance == PreferredSystemAppearance::HighContrastDark;
+   }
+
 protected:
    FilePath mThemeDir;
 
