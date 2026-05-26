@@ -292,7 +292,11 @@ bool PluginManager::SetConfigValue(ConfigurationType type, const PluginID& ID,
 bool PluginManager::RemoveConfigSubgroup(ConfigurationType type,
                                          const PluginID& ID, const RegistryPath& group)
 {
-    bool result = GetSettings()->DeleteGroup(Group(type, ID, group));
+    const auto path = Group(type, ID, group);
+    if (path.empty()) {
+        return false;
+    }
+    bool result = GetSettings()->DeleteGroup(path);
     if (result) {
         GetSettings()->Flush();
     }
@@ -303,7 +307,11 @@ bool PluginManager::RemoveConfigSubgroup(ConfigurationType type,
 bool PluginManager::RemoveConfig(ConfigurationType type, const PluginID& ID,
                                  const RegistryPath& group, const RegistryPath& key)
 {
-    bool result = GetSettings()->DeleteEntry(Key(type, ID, group, key));
+    const auto fullKey = Key(type, ID, group, key);
+    if (fullKey.empty()) {
+        return false;
+    }
+    bool result = GetSettings()->DeleteEntry(fullKey);
     if (result) {
         GetSettings()->Flush();
     }
@@ -1012,6 +1020,14 @@ RegistryPath PluginManager::Group(ConfigurationType type,
                                   const PluginID& ID, const RegistryPath& group)
 {
     auto path = SettingsPath(type, ID);
+
+    // If we have no per-plugin prefix (plugin not in mRegisteredPlugins),
+    // return empty rather than fall back to a prefix-less group. Otherwise
+    // all callers would read from / write to the same shared config group,
+    // leaking data across plugins (e.g. user presets).
+    if (path.empty()) {
+        return path;
+    }
 
     wxFileName ff(group);
     if (!ff.GetName().empty()) {
