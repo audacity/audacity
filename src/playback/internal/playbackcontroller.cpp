@@ -406,6 +406,10 @@ void PlaybackController::onSeekAction(const muse::actions::ActionQuery& q)
         return;
     }
 
+    if (recordController()->isRecording()) {
+        return;
+    }
+
     const muse::secs_t secs = q.param("seekTime").toDouble();
     const bool triggerPlay = q.param("triggerPlay").toBool();
 
