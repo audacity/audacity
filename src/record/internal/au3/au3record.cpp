@@ -328,6 +328,9 @@ void Au3Record::init()
             trackeditInteraction()->makeRoomForClip(clipKey);
         }
 
+        auto& pendingTracks = PendingTracks::Get(projectRef());
+        pendingTracks.ClearPendingTracks();
+
         commitRecording();
 
         muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
@@ -335,8 +338,6 @@ void Au3Record::init()
         q.addParam("triggerPlay", muse::Val(false));
         dispatcher()->dispatch(q);
 
-        auto& pendingTracks = PendingTracks::Get(projectRef());
-        pendingTracks.ClearPendingTracks();
         m_recordData.clear();
         rebuildRecordingClipKeys();
     });

@@ -25,6 +25,8 @@ and TimeTrack.
 #include <wx/textfile.h>
 #include <wx/log.h>
 
+#include "PendingTracks.h"
+
 #include "au3-basic-ui/BasicUI.h"
 #include "au3-project/Project.h"
 
@@ -341,9 +343,8 @@ TrackListHolder TrackList::Create(AudacityProject* pOwner)
 TrackListHolder TrackList::Duplicate() const
 {
     const auto duplicate = TrackList::Create(nullptr);
-    for (auto pTrack : *this) {
-        if (pTrack->GetId() == TrackId{}) {
-            // Don't copy a pending added track
+    for (const auto* pTrack : *this) {
+        if ((mOwner != nullptr) && PendingTracks::Get(*mOwner).FindPendingTrack(*pTrack) != nullptr) {
             continue;
         }
         duplicate->Add(
