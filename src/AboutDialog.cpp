@@ -139,6 +139,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Yana Larina"), roleTeamMember);
    AddCredit(wxT("Dmitry Makarenko"), developerFormat, roleTeamMember);
    AddCredit(wxT("Dilson's Pickles"), designerFormat, roleTeamMember);
+   AddCredit(wxT("Gabriel Sartori"), developerFormat, roleTeamMember);
    AddCredit(wxT("Leo Wattenberg"), designerFormat, roleTeamMember);
    AddCredit(wxT("Jessica Williamson"), designerFormat, roleTeamMember);
    AddCredit(wxT("Grzegorz Wojciechowski"), developerFormat, roleTeamMember);
@@ -190,6 +191,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("David Bryant"), developerFormat, roleContributor);
    AddCredit(wxT("Chris Cannam"), developerFormat, roleContributor);
    AddCredit(wxT("Subhradeep Chakraborty"), developerFormat, roleContributor);
+   AddCredit(wxT("Juan Gabriel Colonna"), developerFormat, roleContributor);
    AddCredit(wxT("Cory Cook"), developerFormat, roleContributor);
    AddCredit(wxT("Craig DeForest"), developerFormat, roleContributor);
    AddCredit(wxT("Edgar Franke (Edgar-RFT)"), developerFormat, roleContributor);
@@ -215,6 +217,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Max Maisel"), developerFormat, roleContributor);
    AddCredit(wxT("Pietro Marcello"), developerFormat, roleContributor);
    AddCredit(wxT("Greg Mekkes"), developerFormat, roleContributor);
+   AddCredit(wxT("Ivan Melnikov"), developerFormat, roleContributor);
    AddCredit(wxT("Abe Milde"), developerFormat, roleContributor);
    AddCredit(wxT("Ryan Miller"), testerFormat, roleContributor);
    AddCredit(wxT("Paul Nasca"), developerFormat, roleContributor);
@@ -224,6 +227,7 @@ void AboutDialog::CreateCreditsList()
    AddCredit(wxT("Andr\u00E9 Pinto"), developerFormat, roleContributor);
    AddCredit(wxT("Pokechu22"), developerFormat, roleContributor);
    AddCredit(wxT("Jean Claude Risset"), composerFormat, roleContributor);
+   AddCredit(wxT("Noah Rosenfield"), developerFormat, roleContributor);
    AddCredit(wxT("RuRo"), developerFormat, roleContributor);
    AddCredit(wxT("Augustus Saunders"), developerFormat, roleContributor);
    AddCredit(wxT("Benjamin Schwartz"), developerFormat, roleContributor);
