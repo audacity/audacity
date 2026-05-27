@@ -1366,13 +1366,6 @@ muse::Ret ProjectActionsController::ensureAuthorization()
 void ProjectActionsController::handleCloudOpenError(const muse::Ret& error, const io::path_t& localPath,
                                                     const std::string& cloudProjectId)
 {
-    using Err = au::au3cloud::Err;
-    const auto err = static_cast<Err>(error.code());
-
-    if (err == Err::SyncResultNotFound && fileSystem()->exists(localPath)) {
-        doOpenProject(localPath);
-    }
-
     const auto ret = openSaveProjectScenario()->showCloudOpenError(error, localPath);
 
     switch (ret.code()) {
@@ -1380,24 +1373,46 @@ void ProjectActionsController::handleCloudOpenError(const muse::Ret& error, cons
         doOpenProject(localPath);
         break;
     case IOpenSaveProjectScenario::RET_CODE_SAVE_LOCALLY_AND_REMOVE_CACHE: {
+        const auto ret = doOpenProject(localPath);
+        if (!ret) {
+            LOGE() << ret.toString();
+            break;
+        }
+
         IAudacityProjectPtr project = currentProject();
         if (!project) {
             break;
         }
+
         const auto askRet = openSaveProjectScenario()->askLocalPath(project, SaveMode::Save);
         if (!askRet.ret || askRet.val.empty()) {
             break;
         }
-        saveProjectLocally(askRet.val, SaveMode::Save);
-        fileSystem()->remove(localPath);
+
+        audioComService()->deleteCloudProject(localPath);
+
+        const auto newPath = askRet.val;
+        saveProjectLocally(newPath, SaveMode::Save);
+
+        if (newPath != localPath) {
+            fileSystem()->remove(localPath);
+        }
         break;
     }
     case IOpenSaveProjectScenario::RET_CODE_SAVE_TO_CLOUD: {
+        const auto ret = doOpenProject(localPath);
+        if (!ret) {
+            LOGE() << ret.toString();
+            break;
+        }
+
         IAudacityProjectPtr project = currentProject();
         if (!project) {
             break;
         }
-        saveProjectToCloud(CloudProjectInfo { QUrl {}, {}, project->displayName() });
+
+        audioComService()->deleteCloudProject(localPath);
+        saveProjectToCloud(CloudProjectInfo { QUrl {}, {}, project->displayName() }, CloudSaveMode::CreateNew);
         break;
     }
     case IOpenSaveProjectScenario::RET_CODE_OPEN_CLOUD_FORCE:
@@ -1440,8 +1455,15 @@ void ProjectActionsController::handleCloudSaveError(const muse::Ret& error)
         if (!askRet.ret || askRet.val.empty()) {
             break;
         }
-        saveProjectLocally(askRet.val, SaveMode::Save);
-        fileSystem()->remove(oldPath);
+
+        audioComService()->deleteCloudProject(oldPath);
+
+        const auto newPath = askRet.val;
+        saveProjectLocally(newPath, SaveMode::Save);
+
+        if (newPath != oldPath) {
+            fileSystem()->remove(oldPath);
+        }
         break;
     }
     case IOpenSaveProjectScenario::RET_CODE_SAVE_TO_CLOUD:
