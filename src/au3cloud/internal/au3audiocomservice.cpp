@@ -10,6 +10,7 @@
 #include <thread>
 #include <utility>
 
+#include "au3-cloud-audiocom/sync/ProjectUploadOperation.h"
 #include "framework/global/async/async.h"
 #include "framework/global/runtime.h"
 #include "framework/global/types/ret.h"
@@ -77,9 +78,9 @@ std::string getCloudProjectPage(au::project::IAudacityProjectPtr project)
 
 bool needsNewSnapshot(au::project::IAudacityProjectPtr project,
                       const audacity::cloud::audiocom::sync::ProjectCloudExtension& extension,
-                      bool forceOverwrite)
+                      UploadMode uploadMode)
 {
-    if (forceOverwrite) {
+    if (uploadMode == UploadMode::ForceOverwrite) {
         return true;
     }
 
@@ -95,6 +96,20 @@ bool needsNewSnapshot(au::project::IAudacityProjectPtr project,
     const auto status = extension.GetCurrentSyncStatus();
     return status != audacity::cloud::audiocom::sync::ProjectSyncStatus::Synced
            && status != audacity::cloud::audiocom::sync::ProjectSyncStatus::Syncing;
+}
+
+sync::UploadMode toAu3UploadMode(UploadMode mode)
+{
+    switch (mode) {
+    case UploadMode::Normal:
+        return sync::UploadMode::Normal;
+    case UploadMode::CreateNew:
+        return sync::UploadMode::CreateNew;
+    case UploadMode::ForceOverwrite:
+        return sync::UploadMode::ForceOverwrite;
+    default:
+        return sync::UploadMode::Normal;
+    }
 }
 }
 
@@ -286,7 +301,7 @@ void Au3AudioComService::clearAudioListCache()
 }
 
 muse::RetVal<muse::ProgressPtr> Au3AudioComService::uploadProject(au::project::IAudacityProjectPtr project, const std::string& name,
-                                                                  std::function<bool()> projectSaveCallback, bool forceOverwrite)
+                                                                  std::function<bool()> projectSaveCallback, UploadMode uploadMode)
 {
     if (!project) {
         return muse::RetVal<muse::ProgressPtr>::make_ret(muse::Ret::Code::InternalError, muse::trc("cloud", "Invalid project"));
@@ -299,7 +314,7 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::uploadProject(au::project::I
 
     auto& projectCloudExtension = audacity::cloud::audiocom::sync::ProjectCloudExtension::Get(*au3Project);
 
-    if (!needsNewSnapshot(project, projectCloudExtension, forceOverwrite)) {
+    if (!needsNewSnapshot(project, projectCloudExtension, uploadMode)) {
         return muse::RetVal<muse::ProgressPtr>::make_ok(nullptr);
     }
 
@@ -311,10 +326,6 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::uploadProject(au::project::I
     }
 
     projectCloudExtension.OnSyncStarted();
-
-    const auto uploadMode = forceOverwrite
-                            ? audacity::cloud::audiocom::sync::UploadMode::ForceOverwrite
-                            : audacity::cloud::audiocom::sync::UploadMode::Normal;
 
     auto done = std::make_shared<std::atomic<bool> >(false);
     m_uploadDone = done;
@@ -341,7 +352,7 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::uploadProject(au::project::I
     },
         false);
 
-    std::thread([weak = weak_from_this(), project, progress, name, uploadMode,
+    std::thread([weak = weak_from_this(), project, progress, name, uploadMode = toAu3UploadMode(uploadMode),
                  projectSaveCallback = std::move(projectSaveCallback)]() mutable {
         auto self = weak.lock();
         if (!self) {

@@ -42,6 +42,21 @@ static const muse::actions::ActionCode OPEN_METADATA_DIALOG("open-metadata-dialo
 static const muse::actions::ActionCode OPEN_CUSTOM_MAPPING("open-custom-mapping");
 static const muse::actions::ActionQuery OPEN_CLOUD_AUDIO_FILE_URI("audacity://cloud/open-audio-file");
 
+namespace {
+au::au3cloud::UploadMode toUploadMode(CloudSaveMode mode)
+{
+    switch (mode) {
+    case CloudSaveMode::CreateNew:
+        return au::au3cloud::UploadMode::CreateNew;
+    case CloudSaveMode::ForceOverwrite:
+        return au::au3cloud::UploadMode::ForceOverwrite;
+    case CloudSaveMode::Normal:
+    default:
+        return au::au3cloud::UploadMode::Normal;
+    }
+}
+}
+
 ProjectActionsController::ProjectActionsController(muse::modularity::ContextPtr ctx)
     : muse::Contextable(ctx)
 {
@@ -530,7 +545,7 @@ bool ProjectActionsController::saveProject(const muse::io::path_t& path)
     return saveProject(SaveMode::Save);
 }
 
-bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudInfo, SaveMode saveMode, bool forceOverwrite)
+bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudInfo, CloudSaveMode cloudSaveMode)
 {
     if (!audioComService()->enabled()) {
         LOGE() << "Cloud support is not available";
@@ -557,7 +572,7 @@ bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudI
 
     auto [uploadRet, progress] = audioComService()->uploadProject(project, cloudInfo.name.toStdString(), [this, projectFilePath]() {
         return saveProjectLocally(projectFilePath, SaveMode::Save);
-    }, forceOverwrite);
+    }, toUploadMode(cloudSaveMode));
 
     if (!uploadRet) {
         handleCloudSaveError(uploadRet);
@@ -821,7 +836,7 @@ bool ProjectActionsController::saveProjectAt(const SaveLocation& location, SaveM
     }
 
     if (location.isCloud()) {
-        return saveProjectToCloud(location.cloudInfo(), saveMode);
+        return saveProjectToCloud(location.cloudInfo());
     }
 
     return false;
@@ -1383,7 +1398,7 @@ void ProjectActionsController::handleCloudOpenError(const muse::Ret& error, cons
         if (!project) {
             break;
         }
-        saveProjectToCloud(CloudProjectInfo { QUrl {}, {}, project->displayName() }, SaveMode::Save);
+        saveProjectToCloud(CloudProjectInfo { QUrl {}, {}, project->displayName() });
         break;
     }
     case IOpenSaveProjectScenario::RET_CODE_OPEN_CLOUD_FORCE:
@@ -1431,10 +1446,10 @@ void ProjectActionsController::handleCloudSaveError(const muse::Ret& error)
         break;
     }
     case IOpenSaveProjectScenario::RET_CODE_SAVE_TO_CLOUD:
-        saveProjectToCloud(CloudProjectInfo { QUrl {}, {}, project->displayName() }, SaveMode::Save);
+        saveProjectToCloud(CloudProjectInfo { QUrl {}, {}, project->displayName() });
         break;
     case IOpenSaveProjectScenario::RET_CODE_SAVE_TO_CLOUD_FORCE:
-        saveProjectToCloud(CloudProjectInfo { QUrl {}, {}, project->displayName() }, SaveMode::Save, true);
+        saveProjectToCloud(CloudProjectInfo { QUrl {}, {}, project->displayName() }, CloudSaveMode::ForceOverwrite);
         break;
     case IOpenSaveProjectScenario::RET_CODE_CLOSE_AND_OPEN_CLOUD_FORCE: {
         const io::path_t localPath = project->path();

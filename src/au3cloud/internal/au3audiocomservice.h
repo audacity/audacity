@@ -61,7 +61,7 @@ public:
     muse::async::Channel<std::string, muse::io::path_t> audioThumbnailFileUpdated() const override;
 
     muse::RetVal<muse::ProgressPtr> uploadProject(au::project::IAudacityProjectPtr project, const std::string& name,
-                                                  std::function<bool()> projectSaveCallback, bool forceOverwrite = false) override;
+                                                  std::function<bool()> projectSaveCallback, UploadMode uploadMode) override;
 
     muse::RetVal<muse::ProgressPtr> openCloudProject(const muse::io::path_t& localPath, const std::string& projectId = {},
                                                      const std::string& snapshotId = {}, bool forceOverwrite = false) override;
