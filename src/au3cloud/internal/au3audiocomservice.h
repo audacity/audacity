@@ -77,10 +77,11 @@ public:
     std::string getCloudProjectPage(const muse::io::path_t& projectPath) const override;
     std::string getCloudAudioPage(const std::string& slug) const override;
 
+    void deleteCloudProject(const muse::io::path_t& localPath) const override;
+
     void deinit() override;
 
 private:
-    static void removeProjectFromDatabase(const muse::io::path_t& localPath);
     muse::ProgressPtr createSyncProgress();
     bool isSnapshotUpToDate(
         const std::optional<audacity::cloud::audiocom::sync::DBProjectData>& dbProjectData,
