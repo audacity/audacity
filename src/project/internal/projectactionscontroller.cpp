@@ -1445,7 +1445,7 @@ void ProjectActionsController::handleCloudSaveError(const muse::Ret& error)
         break;
     }
     case IOpenSaveProjectScenario::RET_CODE_SAVE_TO_CLOUD:
-        saveProjectToCloud(CloudProjectInfo { QUrl {}, {}, project->displayName() });
+        saveProjectToCloud(CloudProjectInfo { QUrl {}, {}, project->displayName() }, CloudSaveMode::CreateNew);
         break;
     case IOpenSaveProjectScenario::RET_CODE_SAVE_TO_CLOUD_FORCE:
         saveProjectToCloud(CloudProjectInfo { QUrl {}, {}, project->displayName() }, CloudSaveMode::ForceOverwrite);
