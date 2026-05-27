@@ -1446,9 +1446,16 @@ void ProjectActionsController::handleCloudSaveError(const muse::Ret& error)
         break;
     }
     case IOpenSaveProjectScenario::RET_CODE_SAVE_TO_CLOUD:
+        if (!project) {
+            return;
+        }
+        audioComService()->deleteCloudProject(project->path());
         saveProjectToCloud(CloudProjectInfo { QUrl {}, {}, project->displayName() }, CloudSaveMode::CreateNew);
         break;
     case IOpenSaveProjectScenario::RET_CODE_SAVE_TO_CLOUD_FORCE:
+        if (!project) {
+            return;
+        }
         saveProjectToCloud(CloudProjectInfo { QUrl {}, {}, project->displayName() }, CloudSaveMode::ForceOverwrite);
         break;
     case IOpenSaveProjectScenario::RET_CODE_CLOSE_AND_OPEN_CLOUD_FORCE: {
