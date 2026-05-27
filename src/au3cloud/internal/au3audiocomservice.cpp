@@ -617,10 +617,6 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::openCloudProject(const muse:
             progress->finish(muse::RetVal<muse::Val>::make_ok(muse::Val(muse::io::path_t(normalizedLocalPath))));
         } else {
             const auto err = syncResultCodeToErr(result.Result.Code);
-            if (err == Err::SyncResultNotFound) {
-                self->removeProjectFromDatabase(muse::io::Dir::fromNativeSeparators(muse::io::path_t(result.ProjectPath)));
-            }
-
             progress->finish(make_ret(err));
         }
     }).detach();
