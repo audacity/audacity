@@ -67,7 +67,7 @@ public:
     bool closeOpenedProject(bool quitApp = false) override;
     bool saveProject(const muse::io::path_t& path = muse::io::path_t()) override;
     bool saveProjectLocally(const muse::io::path_t& filePath = muse::io::path_t(), SaveMode saveMode = SaveMode::Save) override;
-    bool saveProjectToCloud(const CloudProjectInfo& cloudInfo, SaveMode saveMode = SaveMode::Save, bool forceOverwrite = false) override;
+    bool saveProjectToCloud(const CloudProjectInfo& cloudInfo, CloudSaveMode cloudSaveMode = CloudSaveMode::Normal) override;
 
     const ProjectBeingDownloaded& projectBeingDownloaded() const override;
     muse::async::Notification projectBeingDownloadedChanged() const override;

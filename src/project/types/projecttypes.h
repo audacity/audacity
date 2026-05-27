@@ -56,6 +56,13 @@ enum class SaveMode
     AutoSave
 };
 
+enum class CloudSaveMode
+{
+    Normal,
+    CreateNew,
+    ForceOverwrite,
+};
+
 enum class SaveLocationType
 {
     Undefined,
