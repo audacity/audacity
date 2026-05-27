@@ -63,6 +63,11 @@ muse::async::Channel<std::string, muse::io::path_t> Au3AudioComServiceStub::audi
     return {};
 }
 
+bool Au3AudioComServiceStub::isCloudProject(const muse::io::path_t&) const
+{
+    return false;
+}
+
 std::string Au3AudioComServiceStub::getCloudAudioPage(const std::string& /*unused*/) const
 {
     return {};
