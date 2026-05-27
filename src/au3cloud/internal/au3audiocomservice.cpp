@@ -80,7 +80,7 @@ bool needsNewSnapshot(au::project::IAudacityProjectPtr project,
                       const audacity::cloud::audiocom::sync::ProjectCloudExtension& extension,
                       UploadMode uploadMode)
 {
-    if (uploadMode == UploadMode::ForceOverwrite) {
+    if (uploadMode == UploadMode::ForceOverwrite || uploadMode == UploadMode::CreateNew) {
         return true;
     }
 
