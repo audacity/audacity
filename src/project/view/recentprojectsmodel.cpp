@@ -31,7 +31,7 @@ using namespace muse;
 using namespace au::project;
 
 RecentProjectsModel::RecentProjectsModel(QObject* parent)
-    : AbstractItemModel(parent)
+    : AbstractItemModel(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
 }
 
@@ -89,7 +89,7 @@ void RecentProjectsModel::updateRecentProjects()
         RetVal<uint64_t> fileSize = fileSystem()->fileSize(file.path);
         QString fileSizeString = (fileSize.ret && fileSize.val > 0) ? DataFormatter::formatFileSize(fileSize.val).toQString() : QString();
 
-        const bool isCloud = configuration()->isCloudProject(file.path);
+        const bool isCloud = audioComService()->isCloudProject(file.path);
 
         obj[NAME_KEY] = file.displayName(false);
         obj[PATH_KEY] = file.path.toQString();
@@ -97,7 +97,6 @@ void RecentProjectsModel::updateRecentProjects()
         obj[FILE_SIZE_KEY] = fileSizeString;
         obj[IS_CLOUD_KEY] = isCloud;
         obj[SHOW_INDICATOR_KEY] = obj[IS_CLOUD_KEY];
-        // obj[CLOUD_PROJECT_ID_KEY] = configuration()->cloudProjectIdFromPath(file.path);
         obj[TIME_SINCE_MODIFIED_KEY] = DataFormatter::formatTimeSince(io::FileInfo(file.path).lastModified().date()).toQString();
         obj[IS_CREATE_NEW_KEY] = false;
         obj[IS_NO_RESULTS_FOUND_KEY] = false;

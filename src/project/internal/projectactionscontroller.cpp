@@ -892,7 +892,7 @@ muse::Ret ProjectActionsController::openProject(const muse::io::path_t& path, co
     }
 
     //! Step 5. If it's a cloud project, download the latest version
-    if (configuration()->isCloudProject(actualPath)) {
+    if (audioComService()->isCloudProject(actualPath)) {
         return openCloudProject(actualPath, projectId);
     }
 

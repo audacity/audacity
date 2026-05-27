@@ -97,11 +97,6 @@ void ProjectConfiguration::setCloudProjectsPath(const muse::io::path_t& path)
     cloudConfiguration()->setCloudProjectsPath(path);
 }
 
-bool ProjectConfiguration::isCloudProject(const muse::io::path_t& projectPath) const
-{
-    return muse::io::dirpath(projectPath) == cloudProjectsPath();
-}
-
 muse::io::path_t ProjectConfiguration::lastOpenedProjectsPath() const
 {
     return muse::settings()->value(LAST_OPENED_PROJECTS_PATH).toPath();

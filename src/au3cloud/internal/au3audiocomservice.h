@@ -77,6 +77,8 @@ public:
     std::string getCloudProjectPage(const muse::io::path_t& projectPath) const override;
     std::string getCloudAudioPage(const std::string& slug) const override;
 
+    bool isCloudProject(const muse::io::path_t& projectPath) const override;
+
     void deleteCloudProject(const muse::io::path_t& localPath) const override;
 
     void deinit() override;
