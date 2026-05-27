@@ -22,7 +22,6 @@ struct EffectInfo {
    std::string code;
    std::string title;
    std::string subtitle;
-   std::string category;
 };
 
 struct EffectsGroup {

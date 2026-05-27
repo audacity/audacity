@@ -10,6 +10,9 @@
 **********************************************************************/
 #include "GetEffectsDialog.h"
 
+#include <wx/arrstr.h>
+#include <wx/control.h>
+#include <wx/dcclient.h>
 #include <wx/font.h>
 #include <wx/image.h>
 #include <wx/mstream.h>
@@ -261,6 +264,27 @@ void GetEffectsDialog::AddLoadingErrorPage() {
    m_treebook->AddPage(page, loadingPluginsTabText.Translation());
 }
 
+// Wraps the label to the given width and, if it exceeds two lines,
+// collapses the overflow into a single right-elided second line.
+static void EllipsizeToTwoLines(wxStaticText* ctrl, int width) {
+   ctrl->Wrap(width);
+
+   wxArrayString lines = wxSplit(ctrl->GetLabel(), '\n', '\0');
+   if (lines.size() <= 2)
+      return;
+
+   wxString secondLine = lines[1];
+   for (size_t i = 2; i < lines.size(); ++i)
+      secondLine += " " + lines[i];
+
+   wxClientDC dc(ctrl);
+   dc.SetFont(ctrl->GetFont());
+   secondLine = wxControl::Ellipsize(
+      secondLine, dc, wxELLIPSIZE_END, width, wxELLIPSIZE_FLAGS_NONE);
+
+   ctrl->SetLabel(lines[0] + "\n" + secondLine);
+}
+
 void GetEffectsDialog::AddEffectsPage(const std::string& group, const std::vector<EffectInfo>& effects) {
    wxScrolledWindow* page = safenew wxScrolledWindow();
    page->Hide();
@@ -288,12 +312,14 @@ void GetEffectsDialog::AddEffectsPage(const std::string& group, const std::vecto
 
       wxPanel* textPanel = safenew wxPanel(itemPanel);
 
-      wxStaticText* title = safenew wxStaticText(textPanel, wxID_ANY, elem.title);
+      wxStaticText* title = safenew wxStaticText(textPanel, wxID_ANY, wxControl::EscapeMnemonics(elem.title));
       wxFont titleFont = title->GetFont().MakeBold().MakeLarger();
+      titleFont.SetPointSize(titleFont.GetPointSize() - 1);
       title->SetFont(titleFont);
+      EllipsizeToTwoLines(title, getEffectButtonWidth);
 
-      wxStaticText* description = safenew wxStaticText(textPanel, wxID_ANY, elem.subtitle);
-      description->Wrap(getEffectButtonWidth - 20);
+      wxStaticText* description = safenew wxStaticText(textPanel, wxID_ANY, wxControl::EscapeMnemonics(elem.subtitle));
+      EllipsizeToTwoLines(description, getEffectButtonWidth - 20);
 
       GradientButton* button = safenew GradientButton(
             textPanel, wxID_ANY, getItOnMusehubButtonText.Translation(),
