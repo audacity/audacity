@@ -23,8 +23,8 @@
 
 namespace audacity::musehub {
 static const std::string becomeAPartnerUrl = "https://developer.musehub.com/muse-partners-help/introduction/becoming-a-muse-partner";
-static const std::string musehubAPIEndpointUrl = "https://cosmos-customer-webservice.azurewebsites.net/graphql";
-static const std::string musehubAPIDevEndpointUrl = "https://cosmos-customer-webservice-dev.azurewebsites.net/graphql";
+static const std::string musehubAPIEndpointUrl = "https://cosmos-customer-webservice.azurewebsites.net/graphql/v3";
+static const std::string musehubAPIDevEndpointUrl = "https://cosmos-customer-webservice-dev.azurewebsites.net/graphql/v3";
 static const std::string musehubEffectUrl = "https://www.musehub.com/plugin/";
 
 static const std::string musehubEffectUtmSource = "utm_source=au-app-get-fx-panel";
@@ -34,44 +34,37 @@ static const std::string musehubEffectUtmCampaignPrefix = "utm_campaign=au-app-g
 static const std::string getEffectsQuery
     =
         R"(
-query EffectsQuery($locale: String!) {
-         product_pages_configuration {
-            audacityPageSections {
-               ... on ProductPageSectionDynamic {
-                  title(locale: { locale: $locale })
-                  productCards {
-                     ... on ProductCardRegular {
-                        iconImageUrl
-                        product(locale: { locale: $locale }) {
-                           ... on ProductPlugin {
-                              code
-                              title
-                              subtitle
-                              category
-                           }
-                        }
-                     }
-                  }
-               }
-               ... on ProductPageSectionRegular {
-                  title(locale: { locale: $locale })
-                  productCards {
-                     ... on ProductCardRegular {
-                        iconImageUrl
-                        product(locale: { locale: $locale }) {
-                           ... on ProductPlugin {
-                              code
-                              title
-                              subtitle
-                              category
-                           }
-                        }
-                     }
-                  }
-              }
+    query EffectsQuery($locale: String) {
+      product_pages_configuration {
+        audacityPageSections {
+          ... on ProductPageSectionDynamic {
+            title(locale: { locale: $locale })
+            productCards {
+              ...CardFields
             }
-         }
+          }
+          ... on ProductPageSectionRegular {
+            title(locale: { locale: $locale })
+            productCards {
+              ...CardFields
+            }
+          }
+        }
       }
+    }
+
+    fragment CardFields on ProductCardRegular {
+      iconImageUrl
+      product(locale: { locale: $locale }) {
+        ... on ProductBase {
+          id
+          title
+          subtitle
+          iconImageUrl
+          code
+        }
+      }
+    }
 )";
 
 static std::optional<EffectInfo> parseEffect(const rapidjson::Value& effectObj)
@@ -80,8 +73,7 @@ static std::optional<EffectInfo> parseEffect(const rapidjson::Value& effectObj)
         || !effectObj.HasMember("iconImageUrl")
         || !effectObj["product"].HasMember("code")
         || !effectObj["product"].HasMember("title")
-        || !effectObj["product"].HasMember("subtitle")
-        || !effectObj["product"].HasMember("category")) {
+        || !effectObj["product"].HasMember("subtitle")) {
         assert(false);
         return std::nullopt;
     }
@@ -91,7 +83,6 @@ static std::optional<EffectInfo> parseEffect(const rapidjson::Value& effectObj)
         effectObj["product"]["code"].GetString(),
         effectObj["product"]["title"].GetString(),
         effectObj["product"]["subtitle"].GetString(),
-        effectObj["product"]["category"].GetString(),
     };
 }
 

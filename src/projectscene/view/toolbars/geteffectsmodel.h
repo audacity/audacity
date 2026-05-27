@@ -54,7 +54,6 @@ private:
         QString code;
         QString title;
         QString subtitle;
-        QString category;
     };
 
     struct EffectsGroupData {

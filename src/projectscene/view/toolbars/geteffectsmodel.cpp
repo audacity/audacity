@@ -44,7 +44,6 @@ void GetEffectsModel::load()
                     effectData.code = QString::fromStdString(effect.code);
                     effectData.title = QString::fromStdString(effect.title);
                     effectData.subtitle = QString::fromStdString(effect.subtitle);
-                    effectData.category = QString::fromStdString(effect.category);
                     if (effectData.code == "openvino-ai-tools") {
                         // TODO: add support for OpenVino AI Tools in Audacity 4
                         // disable Open Vino AI Tools from listing until support is added
@@ -100,7 +99,6 @@ QVariantList GetEffectsModel::effectsGroups() const
             effectMap["code"] = effect.code;
             effectMap["title"] = effect.title;
             effectMap["subtitle"] = effect.subtitle;
-            effectMap["category"] = effect.category;
             effectsList.append(effectMap);
         }
         QVariantMap groupMap;
