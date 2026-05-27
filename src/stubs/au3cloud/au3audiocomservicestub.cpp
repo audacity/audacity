@@ -33,7 +33,7 @@ void Au3AudioComServiceStub::clearAudioListCache()
 }
 
 muse::RetVal<muse::ProgressPtr> Au3AudioComServiceStub::uploadProject(au::project::IAudacityProjectPtr, const std::string&,
-                                                                      std::function<bool()>, bool)
+                                                                      std::function<bool()>, UploadMode)
 {
     return muse::RetVal<muse::ProgressPtr>::make_ret(muse::Ret::Code::NotSupported);
 }
