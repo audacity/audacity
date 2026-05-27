@@ -24,7 +24,8 @@ public:
     muse::async::Channel<std::string, muse::io::path_t> audioThumbnailFileUpdated() const override;
 
     muse::RetVal<muse::ProgressPtr> uploadProject(au::project::IAudacityProjectPtr project, const std::string& name,
-                                                  std::function<bool()> projectSaveCallback = nullptr, bool forceOverwrite = false) override;
+                                                  std::function<bool()> projectSaveCallback = nullptr,
+                                                  UploadMode uploadMode = UploadMode::Normal) override;
     muse::RetVal<muse::ProgressPtr> shareAudio(const std::string& title) override;
     muse::RetVal<muse::ProgressPtr> downloadAudioFile(const std::string& audioId) override;
 
