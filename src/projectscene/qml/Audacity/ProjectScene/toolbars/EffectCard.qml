@@ -103,8 +103,9 @@ Rectangle {
                 text: root.title
                 font: ui.theme.largeBodyBoldFont
                 horizontalAlignment: Text.AlignLeft
-                maximumLineCount: 1
+                maximumLineCount: 2
                 elide: Text.ElideRight
+                wrapMode: Text.Wrap
             }
 
             StyledTextLabel {
