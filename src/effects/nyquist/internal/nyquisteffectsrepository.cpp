@@ -17,7 +17,28 @@ au::effects::NyquistEffectsRepository::NyquistEffectsRepository()
 
 void au::effects::NyquistEffectsRepository::init()
 {
-    for (const auto& meta : effectMetaList()) {
+    if (!effectsProvider()) {
+        return;
+    }
+
+    effectsProvider()->effectMetaListChanged().onNotify(this, [this]() {
+        registerSpectralEffects();
+    });
+}
+
+void au::effects::NyquistEffectsRepository::registerSpectralEffects()
+{
+    if (m_spectralEffectsRegistered) {
+        return;
+    }
+
+    const EffectMetaList metaList = effectMetaList();
+    if (metaList.empty()) {
+        return;
+    }
+    m_spectralEffectsRegistered = true;
+
+    for (const auto& meta : metaList) {
         if (meta.category == utils::effectCategoryToString(EffectCategory::SpectralTools)) {
             const NyquistBase* const nyquistEffect = dynamic_cast<const NyquistBase*>(effectsProvider()->effect(meta.id));
             if (!nyquistEffect) {
