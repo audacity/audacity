@@ -3,10 +3,10 @@
  */
 #pragma once
 
-#include "trackedit/dom/track.h"
 #include "au3wrap/au3types.h"
 
 #include "au3-track/Track.h"
+#include "../../types/trackviewtype.h"
 
 namespace au::au3 {
 class TrackViewTypeAttachment : public TrackAttachment
@@ -21,11 +21,11 @@ public:
     void WriteXMLAttributes(XMLWriter& writer) const override;
     bool HandleXMLAttribute(const std::string_view& attr, const XMLAttributeValueView& valueView) override;
 
-    trackedit::TrackViewType GetTrackViewType() const;
-    void SetTrackViewType(const trackedit::TrackViewType&);
+    projectscene::TrackViewType GetTrackViewType() const;
+    void SetTrackViewType(const projectscene::TrackViewType&);
 
 private:
     std::weak_ptr<Au3Track> mTrack;
-    trackedit::TrackViewType mTrackViewType = trackedit::TrackViewType::Undefined;
+    projectscene::TrackViewType mTrackViewType = projectscene::TrackViewType::Undefined;
 };
 }

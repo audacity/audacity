@@ -14,9 +14,9 @@ namespace {
 constexpr const char* TRACK_FORMAT_CHANGE_ACTION = "action://trackedit/track/change-format?format=%1";
 constexpr const char* TRACK_RATE_CHANGE_ACTION = "action://trackedit/track/change-rate?rate=%1";
 
-constexpr const char* TRACK_VIEW_WAVEFORM_ACTION = "action://trackedit/track-view-waveform";
-constexpr const char* TRACK_VIEW_SPECTROGRAM_ACTION = "action://trackedit/track-view-spectrogram";
-constexpr const char* TRACK_VIEW_MULTI_ACTION = "action://trackedit/track-view-multi";
+constexpr const char* TRACK_VIEW_WAVEFORM_ACTION = "action://projectscene/track-view-waveform";
+constexpr const char* TRACK_VIEW_SPECTROGRAM_ACTION = "action://projectscene/track-view-spectrogram";
+constexpr const char* TRACK_VIEW_MULTI_ACTION = "action://projectscene/track-view-multi";
 constexpr const char* TRACK_VIEW_HALF_WAVE_ACTION = "action://projectscene/track-view-half-wave";
 
 constexpr const char* TRACK_COLOR_MENU_ID = "trackColorMenu";
@@ -306,17 +306,17 @@ void TrackContextMenuModel::updateTrackViewCheckedState()
         MenuItem& item = findItem(viewTypeCode);
         auto state = item.state();
         switch (viewType) {
-        case trackedit::TrackViewType::Waveform:
+        case TrackViewType::Waveform:
             state.checked = (viewTypeCode == TRACK_VIEW_WAVEFORM_ACTION);
             break;
-        case trackedit::TrackViewType::Spectrogram:
+        case TrackViewType::Spectrogram:
             state.checked = (viewTypeCode == TRACK_VIEW_SPECTROGRAM_ACTION);
             break;
-        case trackedit::TrackViewType::WaveformAndSpectrogram:
+        case TrackViewType::WaveformAndSpectrogram:
             state.checked = (viewTypeCode == TRACK_VIEW_MULTI_ACTION);
             break;
         default:
-            assert(viewType == trackedit::TrackViewType::Undefined);
+            assert(viewType == TrackViewType::Undefined);
             state.checked = false;
         }
         item.setState(state);

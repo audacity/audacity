@@ -260,10 +260,10 @@ int ViewTracksListModel::rowCount(const QModelIndex&) const
 }
 
 namespace {
-au::trackedit::TrackViewType getTrackViewType(const au::project::IAudacityProjectPtr& prj, const au::trackedit::TrackId& trackId)
+au::projectscene::TrackViewType getTrackViewType(const au::project::IAudacityProjectPtr& prj, const au::trackedit::TrackId& trackId)
 {
     if (!prj) {
-        return au::trackedit::TrackViewType::Undefined;
+        return au::projectscene::TrackViewType::Undefined;
     }
     const auto viewState = prj->viewState();
     return viewState->trackViewType(trackId).val;
@@ -332,12 +332,12 @@ QVariant ViewTracksListModel::data(const QModelIndex& index, int role) const
 
     case IsWaveformViewVisibleRole: {
         const auto vt = getTrackViewType(globalContext()->currentProject(), track.id);
-        return vt == trackedit::TrackViewType::Waveform || vt == trackedit::TrackViewType::WaveformAndSpectrogram;
+        return vt == TrackViewType::Waveform || vt == TrackViewType::WaveformAndSpectrogram;
     }
 
     case IsSpectrogramViewVisibleRole: {
         const auto vt = getTrackViewType(globalContext()->currentProject(), track.id);
-        return vt == trackedit::TrackViewType::Spectrogram || vt == trackedit::TrackViewType::WaveformAndSpectrogram;
+        return vt == TrackViewType::Spectrogram || vt == TrackViewType::WaveformAndSpectrogram;
     }
 
     case FrequencySelectionRole: {

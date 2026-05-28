@@ -32,13 +32,6 @@ enum class TrackRulerType : int {
     DbLog
 };
 
-enum class TrackViewType : int {
-    Undefined = -1,
-    Waveform,
-    Spectrogram,
-    WaveformAndSpectrogram,
-};
-
 struct TrackFormatInfo {
     TrackFormat format;
     const char* description;

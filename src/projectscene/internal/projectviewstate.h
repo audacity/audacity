@@ -78,8 +78,8 @@ public:
     muse::ValCh<bool> isHalfWave(const trackedit::TrackId& trackId) const override;
     void toggleHalfWave(const trackedit::TrackId& trackId) override;
 
-    muse::ValCh<trackedit::TrackViewType> trackViewType(const trackedit::TrackId& trackId) const override;
-    void setTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType) override;
+    muse::ValCh<TrackViewType> trackViewType(const trackedit::TrackId& trackId) const override;
+    void setTrackViewType(const trackedit::TrackId& trackId, TrackViewType viewType) override;
     void toggleGlobalSpectrogramView() override;
     bool globalSpectrogramToggleIsOn() const override;
     muse::async::Notification globalSpectrogramToggleIsOnChanged() const override;
@@ -138,7 +138,7 @@ private:
         muse::ValCh<std::pair<float, float> > verticalDisplayBounds;
         muse::ValCh<bool> isHalfWave;
         muse::ValCh<int> rulerType;
-        muse::ValCh<trackedit::TrackViewType> viewType;
+        muse::ValCh<TrackViewType> viewType;
     };
 
     mutable muse::ValCh<int> m_totalTracksHeight;
@@ -146,7 +146,7 @@ private:
 
     TrackData& makeTrackData(const trackedit::TrackId& trackId) const;
     void recomputeTotalTrackHeight();
-    bool doSetTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType);
+    bool doSetTrackViewType(const trackedit::TrackId& trackId, TrackViewType viewType);
 
     bool eventFilter(QObject* watched, QEvent* event) override;
 

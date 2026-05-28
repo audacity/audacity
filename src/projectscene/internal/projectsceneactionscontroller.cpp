@@ -21,6 +21,10 @@ static const ActionCode TOGGLE_UPDATE_DISPLAY_WHILE_PLAYING_CODE("toggle-update-
 static const ActionCode TOGGLE_PINNED_PLAY_HEAD_CODE("toggle-pinned-play-head");
 static const ActionCode TOGGLE_PLAYBACK_ON_RULER_CLICK_ENABLED_CODE("toggle-playback-on-ruler-click-enabled");
 static const ActionQuery TOGGLE_TRACK_HALF_WAVE("action://projectscene/track-view-half-wave");
+static const ActionQuery SET_TRACK_VIEW_WAVEFORM("action://projectscene/track-view-waveform");
+static const ActionQuery SET_TRACK_VIEW_SPECTROGRAM("action://projectscene/track-view-spectrogram");
+static const ActionQuery SET_TRACK_VIEW_MULTI("action://projectscene/track-view-multi");
+static const ActionQuery TOGGLE_GLOBAL_VIEW_SPECTROGRAM("action://projectscene/global-view-spectrogram");
 static const ActionCode LABEL_OPEN_EDITOR_CODE("open-label-editor");
 static const ActionCode CLIP_GAIN_CODE("clip-gain");
 
@@ -40,6 +44,10 @@ void ProjectSceneActionsController::init()
     dispatcher()->reg(this, TOGGLE_PLAYBACK_ON_RULER_CLICK_ENABLED_CODE, this,
                       &ProjectSceneActionsController::togglePlaybackOnRulerClickEnabled);
     dispatcher()->reg(this, TOGGLE_TRACK_HALF_WAVE, this, &ProjectSceneActionsController::toggleTrackHalfWave);
+    dispatcher()->reg(this, SET_TRACK_VIEW_WAVEFORM, this, &ProjectSceneActionsController::changeTrackViewToWaveform);
+    dispatcher()->reg(this, SET_TRACK_VIEW_SPECTROGRAM, this, &ProjectSceneActionsController::changeTrackViewToSpectrogram);
+    dispatcher()->reg(this, SET_TRACK_VIEW_MULTI, this, &ProjectSceneActionsController::changeTrackViewToWaveformAndSpectrogram);
+    dispatcher()->reg(this, TOGGLE_GLOBAL_VIEW_SPECTROGRAM, this, &ProjectSceneActionsController::toggleGlobalSpectrogramView);
     dispatcher()->reg(this, LABEL_OPEN_EDITOR_CODE, this, &ProjectSceneActionsController::openLabelEditor);
     dispatcher()->reg(this, CLIP_GAIN_CODE, this, &ProjectSceneActionsController::toggleAutomation);
 }
@@ -159,6 +167,26 @@ void ProjectSceneActionsController::toggleAutomation()
     viewState->setClipGainAutomationEnabled(enablingAutomation);
 }
 
+void ProjectSceneActionsController::toggleGlobalSpectrogramView()
+{
+    const auto project = globalContext()->currentProject();
+    IF_ASSERT_FAILED(project) {
+        return;
+    }
+
+    const auto viewState = project->viewState();
+    IF_ASSERT_FAILED(viewState) {
+        return;
+    }
+
+    const bool enablingGlobalSpectrogram = !viewState->globalSpectrogramToggleIsOn();
+    if (enablingGlobalSpectrogram && viewState->clipGainAutomationEnabled().val) {
+        viewState->setClipGainAutomationEnabled(false);
+    }
+
+    viewState->toggleGlobalSpectrogramView();
+}
+
 void ProjectSceneActionsController::toggleTrackHalfWave(const muse::actions::ActionQuery& q)
 {
     IF_ASSERT_FAILED(q.params().size() >= 1) {
@@ -174,6 +202,51 @@ void ProjectSceneActionsController::toggleTrackHalfWave(const muse::actions::Act
     }
     viewState->toggleHalfWave(trackId);
     notifyActionCheckedChanged(TOGGLE_TRACK_HALF_WAVE.toString());
+}
+
+void ProjectSceneActionsController::changeTrackViewToWaveform(const muse::actions::ActionQuery& q)
+{
+    changeTrackView(q, TrackViewType::Waveform);
+}
+
+void ProjectSceneActionsController::changeTrackViewToSpectrogram(const muse::actions::ActionQuery& q)
+{
+    changeTrackView(q, TrackViewType::Spectrogram);
+}
+
+void ProjectSceneActionsController::changeTrackViewToWaveformAndSpectrogram(const muse::actions::ActionQuery& q)
+{
+    changeTrackView(q, TrackViewType::WaveformAndSpectrogram);
+}
+
+void ProjectSceneActionsController::changeTrackView(const muse::actions::ActionQuery& q, TrackViewType trackView)
+{
+    IF_ASSERT_FAILED(q.params().size() >= 1) {
+        return;
+    }
+    const auto trackId = q.param("trackId").toInt();
+    const auto prj = globalContext()->currentProject();
+    IF_ASSERT_FAILED(prj) {
+        return;
+    }
+    const auto viewState = prj->viewState();
+    IF_ASSERT_FAILED(viewState) {
+        return;
+    }
+    viewState->setTrackViewType(trackId, trackView);
+    switch (trackView) {
+    case TrackViewType::Waveform:
+        notifyActionCheckedChanged(SET_TRACK_VIEW_WAVEFORM.toString());
+        break;
+    case TrackViewType::Spectrogram:
+        notifyActionCheckedChanged(SET_TRACK_VIEW_SPECTROGRAM.toString());
+        break;
+    case TrackViewType::WaveformAndSpectrogram:
+        notifyActionCheckedChanged(SET_TRACK_VIEW_MULTI.toString());
+        break;
+    default:
+        assert(false);
+    }
 }
 
 bool ProjectSceneActionsController::actionChecked(const ActionCode& actionCode) const
