@@ -559,20 +559,20 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::downloadAudioFile(const std:
 muse::RetVal<muse::ProgressPtr> Au3AudioComService::openCloudProject(const muse::io::path_t& localPath, const std::string& projectId,
                                                                      const std::string& snapshotId, bool forceOverwrite)
 {
-    const auto dbProjectData = getProjectDataFromDatabase(localPath);
-    if (dbProjectData.has_value() && !filesystem()->exists(localPath)) {
-        deleteCloudProject(localPath);
+    auto dbProjectData = getProjectDataFromDatabase(localPath);
+    std::string cloudProjectId = projectId;
+    if (cloudProjectId.empty() && dbProjectData) {
+        cloudProjectId = dbProjectData->ProjectId;
     }
 
-    std::string cloudProjectId = projectId;
+    if (dbProjectData.has_value() && !filesystem()->exists(localPath)) {
+        deleteCloudProject(localPath);
+        dbProjectData.reset();
+    }
 
     if (cloudProjectId.empty()) {
-        cloudProjectId = dbProjectData ? dbProjectData->ProjectId : "";
-
-        if (cloudProjectId.empty()) {
-            return muse::RetVal<muse::ProgressPtr>::make_ret(
-                muse::Ret::Code::UnknownError, muse::trc("cloud", "Project not found in cloud database"));
-        }
+        return muse::RetVal<muse::ProgressPtr>::make_ret(
+            muse::Ret::Code::UnknownError, muse::trc("cloud", "Project not found in cloud database"));
     }
 
     if (!forceOverwrite) {
