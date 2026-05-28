@@ -10,13 +10,13 @@
 #include <thread>
 #include <utility>
 
-#include "au3-cloud-audiocom/sync/ProjectUploadOperation.h"
 #include "framework/global/async/async.h"
 #include "framework/global/runtime.h"
 #include "framework/global/types/ret.h"
 #include "framework/global/io/dir.h"
 #include "framework/global/progress.h"
 
+#include "au3-cloud-audiocom/sync/ProjectUploadOperation.h"
 #include "au3-cloud-audiocom/CloudSyncService.h"
 #include "au3-cloud-audiocom/OAuthService.h"
 #include "au3-cloud-audiocom/UserService.h"
