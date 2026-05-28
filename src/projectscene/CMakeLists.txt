@@ -37,6 +37,8 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/types/trackviewtype.h
 
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/trackhalfwaveattachment.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/au3/trackhalfwaveattachment.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/trackheightattachment.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/trackheightattachment.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/trackrulertypeattachment.cpp

@@ -47,7 +47,17 @@ bool TrackViewTypeAttachment::HandleXMLAttribute(const std::string_view& attr, c
 {
     int nValue;
     if (attr == TrackViewTypeAttr && valueView.TryGet(nValue)) {
-        mTrackViewType = static_cast<projectscene::TrackViewType>(nValue);
+        switch (nValue) {
+        case static_cast<int>(projectscene::TrackViewType::Undefined):
+        case static_cast<int>(projectscene::TrackViewType::Waveform):
+        case static_cast<int>(projectscene::TrackViewType::Spectrogram):
+        case static_cast<int>(projectscene::TrackViewType::WaveformAndSpectrogram):
+            mTrackViewType = static_cast<projectscene::TrackViewType>(nValue);
+            break;
+        default:
+            mTrackViewType = projectscene::TrackViewType::Undefined;
+            break;
+        }
         return true;
     }
     return false;

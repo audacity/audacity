@@ -124,6 +124,7 @@ void TrackContextMenuModel::load()
         updateTrackRateState();
         updateTrackMonoState();
         updateTrackViewCheckedState();
+        updateHalfWaveCheckedState();
     }, muse::async::Asyncable::Mode::SetReplace);
 
     selectionController()->tracksSelected().onReceive(this, [this](const trackedit::TrackIdList&) {
@@ -162,6 +163,7 @@ void TrackContextMenuModel::load()
     updateTrackRateState();
     updateTrackMonoState();
     updateTrackViewCheckedState();
+    updateHalfWaveCheckedState();
     updateRecordingState();
 
     globalContext()->isRecordingChanged().onNotify(this, [this]() {
@@ -239,22 +241,7 @@ void TrackContextMenuModel::onActionsStateChanges(const muse::actions::ActionCod
     }
 
     if (containsAny(codes, { ActionCode(TRACK_VIEW_HALF_WAVE_ACTION) })) {
-        const auto project = globalContext()->currentProject();
-        if (!project) {
-            return;
-        }
-
-        const auto viewState = project->viewState();
-        if (!viewState) {
-            return;
-        }
-
-        const bool isHalfWave = viewState->isHalfWave(m_trackId).val;
-
-        MenuItem& item = findItem(ActionCode(TRACK_VIEW_HALF_WAVE_ACTION));
-        auto state = item.state();
-        state.checked = isHalfWave;
-        item.setState(state);
+        updateHalfWaveCheckedState();
     }
 
     for (const auto& formatInfo : au::trackedit::availableTrackFormats()) {
@@ -292,6 +279,28 @@ void TrackContextMenuModel::updateColorCheckedState()
         state.checked = checked;
         item.setState(state);
     }
+}
+
+void TrackContextMenuModel::updateHalfWaveCheckedState()
+{
+    const auto project = globalContext()->currentProject();
+    if (!project) {
+        return;
+    }
+
+    const auto viewState = project->viewState();
+    if (!viewState) {
+        return;
+    }
+
+    MenuItem& item = findItem(ActionCode(TRACK_VIEW_HALF_WAVE_ACTION));
+    if (!item.isValid()) {
+        return;
+    }
+
+    auto state = item.state();
+    state.checked = viewState->isHalfWave(m_trackId).val;
+    item.setState(state);
 }
 
 void TrackContextMenuModel::updateTrackViewCheckedState()
@@ -502,7 +511,10 @@ muse::uicomponents::MenuItemList TrackContextMenuModel::makeTrackVisualizationIt
             muse::actions::ActionQuery query(action);
             query.addParam("trackId", muse::Val { m_trackId });
             items.push_back(makeMenuItem(query.toString()));
-            m_trackViewTypeChangeActionCodeList.push_back(action);
+            // Half-wave is not a view type, thus should not be added to the list
+            if (action != TRACK_VIEW_HALF_WAVE_ACTION) {
+                m_trackViewTypeChangeActionCodeList.push_back(action);
+            }
         }
     }
 

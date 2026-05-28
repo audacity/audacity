@@ -268,6 +268,7 @@ static UiActionList STATIC_ACTIONS = {
              au::context::CTX_PROJECT_OPENED,
              TranslatableString("action", "Half-wave"),
              TranslatableString("action", "Half-wave"),
+             IconCode::Code::WAVEFORM_HALFWAVE,
              Checkable::Yes
              ),
     UiAction("open-label-editor",

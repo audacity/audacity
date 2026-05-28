@@ -20,6 +20,7 @@
 
 #include "au3/waveformscale.h"
 #include "au3/viewinfo.h"
+#include "au3/trackhalfwaveattachment.h"
 #include "au3/trackheightattachment.h"
 #include "au3/trackrulertypeattachment.h"
 #include "au3/trackviewtypeattachment.h"
@@ -845,11 +846,20 @@ void ProjectViewState::toggleHalfWave(const trackedit::TrackId& trackId)
     auto it = m_tracks.find(trackId);
     if (it != m_tracks.end()) {
         bool isHalfWave = (verticalMin == 0.0f);
+        const bool newHalfWave = !isHalfWave;
         setVerticalDisplayBounds(project, trackId,
                                  { isHalfWave ? -verticalMax : 0.0f, verticalMax });
         it->second.verticalDisplayBounds.set(
             { isHalfWave ? -verticalMax : 0.0f, verticalMax });
-        it->second.isHalfWave.set(!isHalfWave);
+        it->second.isHalfWave.set(newHalfWave);
+
+        au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
+        if (au::au3::Au3WaveTrack* waveTrack = au::au3::DomAccessor::findWaveTrack(*au3Project, au::au3::Au3TrackId(trackId))) {
+            au::au3::TrackHalfWaveAttachment::Get(waveTrack).SetHalfWave(newHalfWave);
+            projectHistory()->modifyState();
+            projectHistory()->markUnsaved();
+        }
+
         m_verticalRulerWidth.set(calculateVerticalRulerWidth());
     }
 }
