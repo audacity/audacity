@@ -3,7 +3,6 @@
  */
 #include "au3effectloader.h"
 #include "au3-module-manager/PluginDescriptor.h"
-#include "au3-module-manager/PluginManager.h"
 #include "effectsutils.h"
 #include "au3/au3effectsutils.h"
 
@@ -116,15 +115,6 @@ bool Au3EffectLoader::ensurePluginIsLoaded(const EffectId& effectId)
         LOGE() << "Failed to load plugin: " << effectId;
         m_loadedInterfaces.erase(effectId);
         return false;
-    }
-
-    // Ensure the plugin appears in PluginManager::mRegisteredPlugins so that
-    // PluginSettings paths can resolve a per-plugin prefix. Without this,
-    // SettingsPath() returns empty and per-plugin config (e.g. user presets)
-    // cannot be read or written. Loader-specific doInit() may also register
-    // plugins upfront; registering again here is a safe overwrite.
-    if (auto* effectDef = dynamic_cast<EffectDefinitionInterface*>(m_loadedInterfaces.at(effectId).get())) {
-        ::PluginManager::Get().RegisterPlugin(&m_pluginProvider, effectDef, PluginTypeEffect);
     }
 
     return true;

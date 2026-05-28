@@ -8,7 +8,6 @@
 
 #include "au3-effects/Effect.h"
 #include "au3-effects/EffectManager.h" // GetUserPresets
-#include "au3-module-manager/ConfigInterface.h"
 #include "au3-module-manager/PluginManager.h"
 
 #include "au3wrap/internal/wxtypes_convert.h"
@@ -156,14 +155,10 @@ Ret EffectPresetsProvider::saveCurrentAsPreset(const EffectInstanceId& effectIns
 
 muse::Ret EffectPresetsProvider::deletePreset(const EffectId& effectId, const PresetId& presetId)
 {
-    const Effect* effect = effectsProvider()->effect(effectId);
-    IF_ASSERT_FAILED(effect) {
-        return make_ret(Err::InternalError);
-    }
-
-    bool ok = PluginSettings::RemoveConfigSubgroup(
-        effect->GetDefinition(),
+    auto& pluginManager = PluginManager::Get();
+    bool ok = pluginManager.RemoveConfigSubgroup(
         PluginSettings::Private,
+        au3::wxFromString(effectId),
         UserPresetsGroup(presetId)
         );
 
