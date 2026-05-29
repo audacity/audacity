@@ -38,7 +38,7 @@ Rectangle {
     readonly property color classicHeaderColor: ui.theme.extra["classic_clip_header_color"]
     readonly property color classicHeaderHoveredColor: ui.theme.extra["classic_clip_header_hover_color"]
     property int currentClipStyle: ClipStyle.COLORFUL
-    property int groupId: -1
+    property bool isGrouped: false
     property bool clipSelected: false
     property bool clipIntersectsSelection: false
     property bool clipFocused: false
@@ -263,7 +263,7 @@ Rectangle {
     }
 
     function openContextMenu() {
-        if (root.multiClipsSelected || root.groupId != -1) {
+        if (root.multiClipsSelected || root.isGrouped) {
             prv.ensureMultiMenuLoaded()
         } else {
             prv.ensureSingleMenuLoaded()
@@ -385,7 +385,7 @@ Rectangle {
         }
 
         onClicked: function (e) {
-            if (root.multiClipsSelected || root.groupId != -1) {
+            if (root.multiClipsSelected || root.isGrouped) {
                 prv.ensureMultiMenuLoaded()
                 if (!root.multiClipsSelected || (e.modifiers & Qt.ShiftModifier)) {
                     if (!root.clipSelected) {
@@ -800,7 +800,7 @@ Rectangle {
 
                     mouseArea.visible: root.enableCursorInteraction
 
-                    menuModel: (root.multiClipsSelected || root.groupId != -1) ? multiClipContextMenuModel : singleClipContextMenuModel
+                    menuModel: (root.multiClipsSelected || root.isGrouped) ? multiClipContextMenuModel : singleClipContextMenuModel
 
                     visible: header.width > (60 + menuBtn.implicitWidth)
 
@@ -813,7 +813,7 @@ Rectangle {
                     }
 
                     onClicked: function (mouse) {
-                        if (root.multiClipsSelected || root.groupId != -1) {
+                        if (root.multiClipsSelected || root.isGrouped) {
                             prv.ensureMultiMenuLoaded()
                         } else {
                             prv.ensureSingleMenuLoaded()

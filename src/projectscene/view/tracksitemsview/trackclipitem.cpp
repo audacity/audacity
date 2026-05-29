@@ -31,9 +31,9 @@ void TrackClipItem::setClip(const trackedit::Clip& clip)
     emit timeChanged();
 }
 
-int TrackClipItem::groupId() const
+bool TrackClipItem::isGrouped() const
 {
-    return m_groupId;
+    return m_groupId != -1;
 }
 
 int TrackClipItem::pitch() const
