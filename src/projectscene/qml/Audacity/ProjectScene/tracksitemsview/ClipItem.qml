@@ -385,8 +385,14 @@ Rectangle {
         }
 
         onClicked: function (e) {
-            if (root.multiClipsSelected) {
+            if (root.multiClipsSelected || root.groupId != -1) {
                 prv.ensureMultiMenuLoaded()
+                if (!root.multiClipsSelected || (e.modifiers & Qt.ShiftModifier)) {
+                    if (!root.clipSelected) {
+                        root.requestSelectionReset()
+                    }
+                    root.requestSelected()
+                }
                 multiClipContextMenuLoader.show(Qt.point(e.x, e.y), multiClipContextMenuModel.items)
             } else {
                 prv.ensureSingleMenuLoaded()
