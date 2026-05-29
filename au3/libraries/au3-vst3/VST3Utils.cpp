@@ -123,7 +123,7 @@ std::string VST3Utils::GetParameterUnitStdString(Steinberg::Vst::IEditController
     // Try to get unit info if the controller supports it
     try {
         auto unitInfo = Steinberg::FUnknownPtr<Steinberg::Vst::IUnitInfo>(controller);
-        if (unitInfo) {
+        if (unitInfo && info.unitId != Steinberg::Vst::kRootUnitId) {
             Steinberg::Vst::UnitInfo uInfo;
             if (unitInfo->getUnitInfo(info.unitId, uInfo) == Steinberg::kResultOk) {
                 // Check if there's a unit name
