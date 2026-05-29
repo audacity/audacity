@@ -19,6 +19,7 @@ class RealtimeEffectListModel : public QAbstractListModel, public muse::async::A
     Q_OBJECT
 
     Q_PROPERTY(QString trackName READ prop_trackName NOTIFY trackNameChanged)
+    Q_PROPERTY(bool trackSupportsEffects READ prop_trackSupportsEffects NOTIFY trackNameChanged)
     Q_PROPERTY(bool isMasterTrack READ prop_isMasterTrack WRITE prop_setIsMasterTrack NOTIFY isMasterTrackChanged)
     Q_PROPERTY(bool trackEffectsActive READ prop_trackEffectsActive WRITE prop_setTrackEffectsActive NOTIFY trackEffectsActiveChanged)
 
@@ -34,6 +35,7 @@ public:
     Q_INVOKABLE void moveRow(int from, int to);
 
     QString prop_trackName() const;
+    bool prop_trackSupportsEffects() const;
 
     bool prop_trackEffectsActive() const;
     void prop_setTrackEffectsActive(bool active);

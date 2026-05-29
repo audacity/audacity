@@ -16,6 +16,7 @@ Rectangle {
     readonly property int topMargin: 8
     property alias isMasterTrack: trackEffectListModel.isMasterTrack
     property alias trackName: trackEffectListModel.trackName
+    property alias trackSupportsEffects: trackEffectListModel.trackSupportsEffects
     property alias trackEffectsActive: trackEffectListModel.trackEffectsActive
     property bool empty: trackEffectList.count == 0
     property alias count: trackEffectList.count
