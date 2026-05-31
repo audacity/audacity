@@ -13,7 +13,7 @@ OriginalFileInfo.cpp
 namespace {
     // Simple map-based storage for OriginalFileInfo per project (identified by pointer)
     // Note: Uses pointer address as key - this is safe as long as projects exist
-    // This is session-scoped and cleared when projects are destroyed
+    // This is session-scoped and cleared when the process exits.
     std::map<void*, std::shared_ptr<OriginalFileInfo>> gOriginalFileInfoMap;
 }
 
@@ -36,12 +36,8 @@ OriginalFileInfo::OriginalFileInfo(AudacityProject& project)
 
 OriginalFileInfo::~OriginalFileInfo()
 {
-    // Clean up from the map when destroyed
-    void* projectPtr = &mProject;
-    auto it = gOriginalFileInfoMap.find(projectPtr);
-    if (it != gOriginalFileInfoMap.end()) {
-        gOriginalFileInfoMap.erase(it);
-    }
+    // The static map owns these instances. Do not erase from it here: during
+    // static destruction the map is already erasing its nodes.
 }
 
 void OriginalFileInfo::SetOriginalFile(const QString& filePath, const QString& displayName)
