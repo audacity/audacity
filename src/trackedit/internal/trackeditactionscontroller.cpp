@@ -271,7 +271,7 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, TRACK_RESAMPLE, this, &TrackeditActionsController::resampleTracks);
 
     dispatcher()->reg(this, TRIM_AUDIO_OUTSIDE_SELECTION, this, &TrackeditActionsController::trimAudioOutsideSelection);
-    dispatcher()->reg(this, SILENCE_AUDIO_SELECTION, this, &TrackeditActionsController::silenceAudioSelection);
+    dispatcher()->reg(this, SILENCE_AUDIO_SELECTION, this, &TrackeditActionsController::doGlobalSilence);
 
     dispatcher()->reg(this, STRETCH_ENABLED_CODE, this, &TrackeditActionsController::toggleStretchClipToMatchTempo);
 
@@ -1544,6 +1544,25 @@ void TrackeditActionsController::trimAudioOutsideSelection()
     trackeditInteraction()->trimTracksData(tracksIdsToTrim, selectedStartTime, selectedEndTime);
 }
 
+void TrackeditActionsController::doGlobalSilence()
+{
+    if (!selectionController()->timeSelectionIsEmpty()) {
+        silenceAudioSelection();
+        return;
+    }
+
+    ClipKeyList selectedClips = clipsForInteraction();
+    if (!selectedClips.empty()) {
+        silenceClips(selectedClips);
+        return;
+    }
+
+    const auto selectedTracks = selectionController()->selectedTracks();
+    if (!selectedTracks.empty()) {
+        silenceTracks();
+    }
+}
+
 void TrackeditActionsController::silenceAudioSelection()
 {
     project::IAudacityProjectPtr project = globalContext()->currentProject();
@@ -1566,6 +1585,27 @@ void TrackeditActionsController::silenceAudioSelection()
     }
 
     trackeditInteraction()->silenceTracksData(tracksIdsToSilence, selectedStartTime, selectedEndTime);
+}
+
+void TrackeditActionsController::silenceClips(const ClipKeyList& clipKeys)
+{
+    trackeditInteraction()->silenceClips(clipKeys);
+}
+
+void TrackeditActionsController::silenceTracks()
+{
+    const TrackIdList selectedTracks = selectionController()->selectedTracks();
+    if (selectedTracks.empty()) {
+        return;
+    }
+
+    const std::optional<secs_t> selectedStartTime = selectionController()->selectedTracksStartTime();
+    const std::optional<secs_t> selectedEndTime = selectionController()->selectedTracksEndTime();
+    if (!selectedStartTime.has_value() || !selectedEndTime.has_value()) {
+        return;
+    }
+
+    trackeditInteraction()->silenceTracksData(selectedTracks, selectedStartTime.value(), selectedEndTime.value());
 }
 
 void TrackeditActionsController::toggleStretchClipToMatchTempo(const ActionData& args)
