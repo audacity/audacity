@@ -3,6 +3,8 @@
  */
 #include <gtest/gtest.h>
 
+#include <set>
+
 #include "../view/timeline/snaptimeformatter.h"
 
 namespace au::projectscene {
@@ -137,5 +139,51 @@ TEST_F(SnapTimeFormatterTests, SingleStep_Beats)
     snap = { SnapType::HundredTwentyEighth, true, false };
     EXPECT_EQ(m_formatter->singleStep(0.0, snap, Direction::Right, m_timeSignature), 0.015625);
     EXPECT_EQ(m_formatter->singleStep(2.0, snap, Direction::Left, m_timeSignature), 1.984375);
+}
+
+TEST_F(SnapTimeFormatterTests, SnapToItem_EmptyBoundaries_ReturnsInput)
+{
+    const std::set<muse::secs_t> boundaries;
+    EXPECT_EQ(m_formatter->snapToItem(1.234, 0.5, boundaries), 1.234);
+}
+
+TEST_F(SnapTimeFormatterTests, SnapToItem_WithinTolerance_SnapsToBoundary)
+{
+    const std::set<muse::secs_t> boundaries{ 1.0, 5.0, 9.0 };
+    const muse::secs_t tolerance = 0.2;
+
+    // Approaching a boundary from either side snaps to it.
+    EXPECT_EQ(m_formatter->snapToItem(4.85, tolerance, boundaries), 5.0);
+    EXPECT_EQ(m_formatter->snapToItem(5.15, tolerance, boundaries), 5.0);
+    // Already exactly on a boundary.
+    EXPECT_EQ(m_formatter->snapToItem(9.0, tolerance, boundaries), 9.0);
+}
+
+TEST_F(SnapTimeFormatterTests, SnapToItem_OutsideTolerance_ReturnsInput)
+{
+    const std::set<muse::secs_t> boundaries{ 1.0, 5.0 };
+    const muse::secs_t tolerance = 0.1;
+
+    EXPECT_EQ(m_formatter->snapToItem(5.5, tolerance, boundaries), 5.5);
+    EXPECT_EQ(m_formatter->snapToItem(3.0, tolerance, boundaries), 3.0);
+}
+
+TEST_F(SnapTimeFormatterTests, SnapToItem_PicksClosestOfStraddlingBoundaries)
+{
+    const std::set<muse::secs_t> boundaries{ 2.0, 3.0 };
+    const muse::secs_t tolerance = 1.0;
+
+    EXPECT_EQ(m_formatter->snapToItem(2.4, tolerance, boundaries), 2.0);
+    EXPECT_EQ(m_formatter->snapToItem(2.6, tolerance, boundaries), 3.0);
+}
+
+TEST_F(SnapTimeFormatterTests, SnapToItem_SnapsToBoundaryAtZero)
+{
+    // A boundary at t=0 is a legitimate snap target, not a "no snap" sentinel.
+    const std::set<muse::secs_t> boundaries{ 0.0, 4.0 };
+    const muse::secs_t tolerance = 0.2;
+
+    EXPECT_EQ(m_formatter->snapToItem(0.1, tolerance, boundaries), 0.0);
+    EXPECT_EQ(m_formatter->snapToItem(0.0, tolerance, boundaries), 0.0);
 }
 }
