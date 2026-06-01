@@ -497,6 +497,13 @@ TrackItemsContainer {
 
                                     trackItemMousePositionChanged(xWithinTrack, yWithinTrack, itemData.key)
 
+                                    // While a trim/stretch handle is held the guideline must follow the
+                                    // dragged clip edge (driven by handleClipGuideline), not the mouse
+                                    // position, so don't snap the guideline to the cursor here.
+                                    if (root.leftTrimPressedButtons || root.rightTrimPressedButtons) {
+                                        return
+                                    }
+
                                     let time = root.context.findGuideline(root.context.positionToTime(xWithinTrack, true))
                                     root.triggerItemGuideline(time, false)
                                 }
@@ -751,8 +758,12 @@ TrackItemsContainer {
 
     function handleClipGuideline(clipKey, direction, completed) {
         let guidelinePos = clipsModel.findGuideline(clipKey, direction)
-        if (root.context.isGuidelineValid(guidelinePos)) {
-            triggerItemGuideline(guidelinePos, completed)
+        // Always notify, even when there's no snap: passing an invalid time hides any
+        // guideline that was shown on a previous step, so it doesn't linger once the
+        // dragged edge moves out of snapping range.
+        if (!root.context.isGuidelineValid(guidelinePos)) {
+            guidelinePos = -1
         }
+        triggerItemGuideline(guidelinePos, completed)
     }
 }
