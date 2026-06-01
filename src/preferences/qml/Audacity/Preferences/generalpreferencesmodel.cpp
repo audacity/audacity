@@ -65,7 +65,7 @@ void GeneralPreferencesModel::checkUpdateForCurrentLanguage()
     m_languageUpdateProgress.finished().onReceive(this, [this, languageCode](const muse::ProgressResult& res) {
         if (res.ret.code() == static_cast<int>(Err::AlreadyUpToDate)) {
             //: %1 is the name of the language whose translation files are up to date
-            QString msg = muse::qtrc("preferences", "Your version of %1 is up to date.")
+            QString msg = muse::qtrc("preferences", "Your version of “%1” is up to date.")
                           .arg(languagesService()->language(languageCode).name);
             interactive()->info(msg.toStdString(), std::string());
         }

@@ -247,7 +247,7 @@ QVector<QVector<muse::uicomponents::TableViewCell*> > PluginManagerTableViewMode
         auto title = meta.title.toQString();
         if (!meta.isLoadable) {
             //: %1 is the name of the plugin that failed to load
-            title = muse::qtrc("effects", "%1 (broken)").arg(title);
+            title = muse::qtrc("effects", "“%1” (broken)").arg(title);
         }
 
         QVector<muse::uicomponents::TableViewCell*> row;
