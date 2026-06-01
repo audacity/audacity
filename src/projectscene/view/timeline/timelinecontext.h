@@ -75,6 +75,7 @@ class TimelineContext : public QObject, public muse::async::Asyncable, public mu
 public:
 
     static constexpr int ANIMATION_DURATION_MS = 500;
+    static constexpr double INVALID_GUIDELINE_TIME = -1.0;
 
     TimelineContext(QObject* parent = nullptr);
 
@@ -132,7 +133,9 @@ public:
     double applySnapToTime(double time) const;
     double applySnapToItem(double time) const;
     Q_INVOKABLE double applyDetectedSnap(double time) const;
+
     Q_INVOKABLE double findGuideline(double time) const;
+    Q_INVOKABLE bool isGuidelineValid(double guidelineTime) const;
 
     Q_INVOKABLE void updateMousePositionTime(double mouseX);
     Q_INVOKABLE double mousePositionTime() const;

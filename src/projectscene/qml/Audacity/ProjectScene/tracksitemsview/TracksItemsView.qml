@@ -1274,7 +1274,7 @@ Rectangle {
         time = timeline.context.applyDetectedSnap(time)
         let guidelineTimePos = timeline.context.findGuideline(time)
 
-        if (guidelineTimePos !== -1) {
+        if (timeline.context.isGuidelineValid(guidelineTimePos)) {
             root.guidelinePos = timeline.context.timeToPosition(guidelineTimePos)
 
             root.guidelineVisible = root.guidelinePos >= 0 ? !completed : false

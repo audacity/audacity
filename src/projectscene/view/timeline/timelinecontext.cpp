@@ -865,7 +865,12 @@ double TimelineContext::findGuideline(double time) const
         }
     }
 
-    return -1.0;
+    return INVALID_GUIDELINE_TIME;
+}
+
+bool TimelineContext::isGuidelineValid(double guidelineTime) const
+{
+    return !muse::RealIsEqual(guidelineTime, INVALID_GUIDELINE_TIME);
 }
 
 void TimelineContext::updateMousePositionTime(double mouseX)

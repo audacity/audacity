@@ -731,7 +731,7 @@ TrackItemsContainer {
 
     function handleClipGuideline(clipKey, direction, completed) {
         let guidelinePos = clipsModel.findGuideline(clipKey, direction)
-        if (guidelinePos) {
+        if (root.context.isGuidelineValid(guidelinePos)) {
             triggerItemGuideline(guidelinePos, completed)
         }
     }
