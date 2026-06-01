@@ -385,14 +385,21 @@ Rectangle {
         }
 
         onClicked: function (e) {
-            if (root.multiClipsSelected || root.isGrouped) {
+            if (root.multiClipsSelected) {
                 prv.ensureMultiMenuLoaded()
-                if (!root.multiClipsSelected || (e.modifiers & Qt.ShiftModifier)) {
+                if (e.modifiers & Qt.ShiftModifier) {
                     if (!root.clipSelected) {
                         root.requestSelectionReset()
                     }
                     root.requestSelected()
                 }
+                multiClipContextMenuLoader.show(Qt.point(e.x, e.y), multiClipContextMenuModel.items)
+            } else if (root.isGrouped) {
+                prv.ensureMultiMenuLoaded()
+                if (!root.clipSelected) {
+                    root.requestSelectionReset()
+                }
+                root.requestSelected()
                 multiClipContextMenuLoader.show(Qt.point(e.x, e.y), multiClipContextMenuModel.items)
             } else {
                 prv.ensureSingleMenuLoaded()
