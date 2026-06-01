@@ -218,6 +218,9 @@ MuseScorePortable
 *.user
 /share/locale/*placeholder.ts
 /share/locale/*.qm
+# Derived from share/nyquist-plug-ins/*.ny by extract_nyquist_strings.py
+# (run via run_lupdate.sh). Never hand-edit; never commit.
+/tools/translations/nyquist_strings.cpp.generated
 /share/instruments/tsv
 Doc
 DocLib
