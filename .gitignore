@@ -221,6 +221,10 @@ MuseScorePortable
 # Derived from share/nyquist-plug-ins/*.ny by extract_nyquist_strings.py
 # (run via run_lupdate.sh). Never hand-edit; never commit.
 /tools/translations/nyquist_strings.cpp.generated
+# Diagnostic outputs from the au3->au4 migration pipeline.
+/share/locale/po_import_collisions.*.txt
+/share/locale/po_reuse_collisions.*.txt
+/tools/translations/au4_scan_paths.txt
 /share/instruments/tsv
 Doc
 DocLib
