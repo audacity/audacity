@@ -156,7 +156,7 @@ TrackItemsContainer {
                     propagateComposedEvents: true
                     hoverEnabled: true
                     pressAndHoldInterval: 0
-                    enabled: !root.selectionInProgress && (root.isNearSample || root.isBrush)
+                    enabled: !root.selectionInProgress
                     cursorShape: Qt.BlankCursor
 
                     // While a selection edit is in progress the cursor on the track body
@@ -185,8 +185,15 @@ TrackItemsContainer {
 
                     anchors.fill: parent
 
+                    // Only grab mouse buttons in sample/brush editing; otherwise let
+                    // presses fall through to the main area (selection, seek, etc.)
+                    // while still receiving hover moves to drive the snap guideline.
+                    onPressed: function (e) {
+                        e.accepted = root.isNearSample || root.isBrush || root.altPressed
+                    }
+
                     onDoubleClicked: function (e) {
-                        e.accepted = true
+                        e.accepted = root.isNearSample || root.isBrush || root.altPressed
                     }
 
                     onPressAndHold: function (e) {
@@ -226,19 +233,32 @@ TrackItemsContainer {
                     }
 
                     onPositionChanged: function (e) {
-                        clipsContainer.mapToAllClips(e, function (clipItem, mouseEvent) {
-                            clipItem.mousePositionChanged(mouseEvent.x, mouseEvent.y)
-                            clipItem.setLastSample(mouseEvent.x, mouseEvent.y)
-                        })
+                        if (root.isNearSample || root.isBrush) {
+                            clipsContainer.mapToAllClips(e, function (clipItem, mouseEvent) {
+                                clipItem.mousePositionChanged(mouseEvent.x, mouseEvent.y)
+                                clipItem.setLastSample(mouseEvent.x, mouseEvent.y)
+                            })
+                        }
+
+                        // Show the snap guideline while hovering the empty track body
+                        // (the area between/around clips that no ClipItem covers).
+                        let time = root.context.findGuideline(root.context.positionToTime(e.x, true))
+                        root.triggerItemGuideline(time, false)
                     }
 
                     onContainsMouseChanged: function () {
-                        clipsContainer.mapToAllClips({
-                            x: mouseX,
-                            y: mouseY
-                        }, function (clipItem, mouseEvent) {
-                            clipItem.setContainsMouse(containsMouse)
-                        })
+                        if (root.isNearSample || root.isBrush) {
+                            clipsContainer.mapToAllClips({
+                                x: mouseX,
+                                y: mouseY
+                            }, function (clipItem, mouseEvent) {
+                                clipItem.setContainsMouse(containsMouse)
+                            })
+                        }
+
+                        if (!containsMouse) {
+                            root.triggerItemGuideline(0, true)
+                        }
                     }
                 }
 
