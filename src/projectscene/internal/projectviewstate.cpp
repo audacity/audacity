@@ -1045,12 +1045,6 @@ void ProjectViewState::updateItemsBoundaries(bool excludeCurrentSelection, const
 
     std::set<muse::secs_t> boundaries;
     const auto& selectedClips = selectionController()->selectedClips();
-    const auto& selectedLabels = selectionController()->selectedLabels();
-
-    if (selectedClips.empty() && selectedLabels.empty()) {
-        setItemsBoundaries({});
-        return;
-    }
 
     for (const auto& trackId : prj->trackIdList()) {
         // Add clips boundaries
