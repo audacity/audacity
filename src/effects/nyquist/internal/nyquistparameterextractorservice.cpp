@@ -117,7 +117,7 @@ ParameterInfo convertControl(const NyqControl& ctrl)
             return {};
         }
         const auto utf8 = s.utf8_str();
-        return mtrc("effects/nyquist", utf8.data());
+        return mtrc("effects-nyquist", utf8.data());
     };
     info.name = translateNyquist(ctrl.name);
     // Nyquist's ctrl.label is a freeform descriptor (e.g. "30 - 300 beats/minute"),
@@ -161,7 +161,7 @@ ParameterInfo convertControl(const NyqControl& ctrl)
 
         for (size_t i = 0; i < ctrl.choices.size(); ++i) {
             const auto& choice = ctrl.choices[i];
-            info.enumValues.push_back(String::fromStdString(choice.Msgid().translated().toStdString()));
+            info.enumValues.push_back(String::fromQString(choice.Msgid().translated()));
             info.enumIndices.push_back(static_cast<double>(i));
         }
 
@@ -405,7 +405,7 @@ muse::String NyquistParameterExtractorService::getParameterValueString(EffectIns
         // Return the choice label for the given index
         int index = static_cast<int>(value);
         if (index >= 0 && index < static_cast<int>(ctrl->choices.size())) {
-            return String::fromStdString(ctrl->choices[index].Msgid().translated().toStdString());
+            return String::fromQString(ctrl->choices[index].Msgid().translated());
         }
         return String::number(index);
     }

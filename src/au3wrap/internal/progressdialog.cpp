@@ -5,7 +5,6 @@
 #include <QCoreApplication>
 
 #include "progressdialog.h"
-#include "wxtypes_convert.h"
 
 namespace au::au3 {
 ProgressDialog::ProgressDialog(const muse::modularity::ContextPtr& ctx, const std::string& title)
@@ -17,7 +16,7 @@ ProgressDialog::ProgressDialog(const muse::modularity::ContextPtr& ctx, const st
 }
 
 ProgressDialog::ProgressDialog(const muse::modularity::ContextPtr& ctx, const ::TranslatableString& title)
-    : ProgressDialog{ctx, au::au3::wxToStdString(title.translated().toStdString())}
+    : ProgressDialog{ctx, title.translated().toStdString()}
 {
 }
 
@@ -35,7 +34,7 @@ void ProgressDialog::Reinit()
 
 void ProgressDialog::SetDialogTitle(const ::TranslatableString& title)
 {
-    m_progressTitle = au::au3::wxToStdString(title.translated().toStdString());
+    m_progressTitle = title.translated().toStdString();
 }
 
 void ProgressDialog::start()
@@ -60,7 +59,7 @@ ProgressResult ProgressDialog::Poll(unsigned long long numerator, unsigned long 
     start();
 
     if (!message.empty()) {
-        m_progressMessage = au::au3::wxToStdString(message.translated().toStdString());
+        m_progressMessage = message.translated().toStdString();
     }
 
     // Push the new fraction/message into muse::Progress unconditionally.
@@ -82,6 +81,6 @@ ProgressResult ProgressDialog::Poll(unsigned long long numerator, unsigned long 
 
 void ProgressDialog::SetMessage(const ::TranslatableString& message)
 {
-    m_progressMessage = au::au3::wxToStdString(message.translated().toStdString());
+    m_progressMessage = message.translated().toStdString();
 }
 }

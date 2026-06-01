@@ -235,9 +235,8 @@ private:
                     mProjectId, mSnapshotId);
                 FailSync(
                     { SyncResultCode::InternalClientError,
-                      ToUTF8(
-                          TranslatableString("cloud-audiocom", "Local project data was removed before the sync has completed")
-                          .Translation()) });
+                      TranslatableString("cloud-audiocom", "Local project data was removed before the sync has completed")
+                      .Translation() });
                 return;
             }
         }

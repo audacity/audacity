@@ -30,7 +30,7 @@ FileException::~FileException()
         return WriteFailureMessage(fileName);
     case Cause::Rename:
         format
-            =::TranslatableString("files", "Audacity successfully wrote a file in %1 but failed to rename it as %2.");
+            = TranslatableString("files", "Audacity successfully wrote a file in %1 but failed to rename it as %2.");
     default:
         break;
     }

@@ -646,6 +646,9 @@ ExportResult PCMExportProcessor::Process(ExportProcessorDelegate& delegate)
                 //Used to give this error message
 #if 0
                 AudacityMessageBox(
+                    /*: %s will be the error message from libsndfile, which
+                     * is usually something unhelpful (and untranslated) like "system
+                     * error" */
                     TranslatableString("import-export", "Error while writing %1 file (disk full?).\nLibsndfile says \"%2\"")
                     .Format(formatStr, wxString::FromAscii(buffer2)));
 #else

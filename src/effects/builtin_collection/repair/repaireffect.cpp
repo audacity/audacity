@@ -68,7 +68,7 @@ bool Repair::Process(EffectInstance&, EffectSettings&)
             const auto repairLen = repair1 - repair0;
             if (TimeStretching::HasPitchOrSpeed(*track, repair_t0, repair_t1)) {
                 mLastError
-                    =::TranslatableString("effects-repair", "The Repair effect cannot be applied within stretched or shrunk clips")
+                    = TranslatableString("effects-repair", "The Repair effect cannot be applied within stretched or shrunk clips")
                       .translated().toStdString();
                 bGoodResult = false;
                 break;

@@ -397,6 +397,7 @@ bool FFmpegImportFileHandle::InitCodecs()
 
             auto lang = std::string(streamMetadata.Get("language", {}));
 
+            /*: "codec" is short for a "coder-decoder" algorithm */
             auto strinfo = TranslatableString("import-export", "Index[%1] Codec[%2], Language[%3], Bitrate[%4], Channels[%5], Duration[%6]")
                            .Format(
                 stream->GetIndex(),

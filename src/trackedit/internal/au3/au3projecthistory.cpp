@@ -8,8 +8,6 @@
 #include "au3-project-history/UndoManager.h"
 #include "au3-project/Project.h"
 
-#include "au3wrap/internal/wxtypes_convert.h"
-
 using namespace au::trackedit;
 using namespace au::au3;
 
@@ -151,7 +149,7 @@ const muse::TranslatableString Au3ProjectHistory::topMostUndoActionName() const
     TranslatableString actionName;
     undoManager.GetShortDescription(currentStateIndex, &actionName);
 
-    return muse::TranslatableString::untranslatable(wxToString(actionName.translated().toStdString()));
+    return muse::TranslatableString::untranslatable(muse::String::fromQString(actionName.translated()));
 }
 
 const muse::TranslatableString Au3ProjectHistory::topMostRedoActionName() const
@@ -168,7 +166,7 @@ const muse::TranslatableString Au3ProjectHistory::topMostRedoActionName() const
     TranslatableString actionName;
     undoManager.GetShortDescription(currentStateIndex + 1, &actionName);
 
-    return muse::TranslatableString::untranslatable(wxToString(actionName.translated().toStdString()));
+    return muse::TranslatableString::untranslatable(muse::String::fromQString(actionName.translated()));
 }
 
 size_t Au3ProjectHistory::undoRedoActionCount() const
@@ -193,7 +191,7 @@ const muse::TranslatableString Au3ProjectHistory::lastActionNameAtIdx(size_t idx
     TranslatableString actionName;
     undoManager.GetShortDescription(idx, &actionName);
 
-    return muse::TranslatableString::untranslatable(wxToString(actionName.translated().toStdString()));
+    return muse::TranslatableString::untranslatable(muse::String::fromQString(actionName.translated()));
 }
 
 muse::async::Channel<HistoryEvent> Au3ProjectHistory::historyChanged() const

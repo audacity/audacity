@@ -1568,7 +1568,7 @@ void ProjectFileIO::SetProjectTitle(int number)
     // is none.
     if (number >= 0) {
         name
-            =/*: The %02i is the project number, the %s is the project name.*/
+            =/*: %1 is the project number, %2 is the project name.*/
               TranslatableString("project-file-io", "[Project %1] Audacity \"%2\"")
               .Format(number + 1,
                       name.empty() ? TranslatableString("project-file-io", "<untitled>") : TranslatableString::untranslatable((const char*)name))
@@ -1681,7 +1681,7 @@ bool ProjectFileIO::HandleXMLTag(const std::string_view& tag, const AttributesLi
     int codeVer = ((cver * 100) + crel) * 100 + crev;
 
     if (codeVer < fileVer) {
-        /*: %s will be replaced by the version number.*/
+        /*: %1 is the Audacity version that saved the file, %2 is the running version.*/
         auto msg = TranslatableString("project-file-io", "This file was saved using Audacity %1.\nYou are using Audacity %2. You may need to upgrade to a newer version to open this file.")
                    .Format(audacityVersion, AUDACITY_VERSION_STRING);
 

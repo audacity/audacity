@@ -30,7 +30,7 @@ namespace {
 ExportPlugin* formatPlugin(const std::string& format)
 {
     for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
-        if (plugin->GetFormatInfo(formatIndex).description.translated().toStdString() == format) {
+        if (plugin->GetFormatInfo(formatIndex).description.msgid().toStdString() == format) {
             return plugin;
         }
     }
@@ -339,7 +339,7 @@ std::vector<std::string> Au3Exporter::formatsList() const
 {
     std::vector<std::string> formatsList;
     for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
-        formatsList.push_back(plugin->GetFormatInfo(formatIndex).description.translated().toStdString());
+        formatsList.push_back(plugin->GetFormatInfo(formatIndex).description.msgid().toStdString());
     }
 
     return formatsList;
@@ -348,7 +348,7 @@ std::vector<std::string> Au3Exporter::formatsList() const
 int Au3Exporter::formatIndex(const std::string& format) const
 {
     for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
-        if (plugin->GetFormatInfo(formatIndex).description.translated().toStdString() == format) {
+        if (plugin->GetFormatInfo(formatIndex).description.msgid().toStdString() == format) {
             return formatIndex;
         }
     }
@@ -359,7 +359,7 @@ int Au3Exporter::formatIndex(const std::string& format) const
 std::vector<std::string> Au3Exporter::formatExtensions(const std::string& format) const
 {
     for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
-        if (plugin->GetFormatInfo(formatIndex).description.translated().toStdString() == format) {
+        if (plugin->GetFormatInfo(formatIndex).description.msgid().toStdString() == format) {
             auto extensions = plugin->GetFormatInfo(formatIndex).extensions;
             if (!extensions.empty()) {
                 std::vector<std::string> result;
@@ -383,7 +383,7 @@ std::vector<std::string> Au3Exporter::cloudPreferredAudioFormats() const
         for (auto [plugin, formatIndex] : registry) {
             for (const auto& mime : plugin->GetMimeTypes(formatIndex)) {
                 if (mime == mimeType) {
-                    result.push_back(plugin->GetFormatInfo(formatIndex).description.translated().toStdString());
+                    result.push_back(plugin->GetFormatInfo(formatIndex).description.msgid().toStdString());
                     break;
                 }
             }
@@ -393,7 +393,7 @@ std::vector<std::string> Au3Exporter::cloudPreferredAudioFormats() const
     if (result.empty()) {
         // Fallback to all formats if no preferred formats are found
         for (auto [plugin, formatIndex] : registry) {
-            result.push_back(plugin->GetFormatInfo(formatIndex).description.translated().toStdString());
+            result.push_back(plugin->GetFormatInfo(formatIndex).description.msgid().toStdString());
         }
     }
 
@@ -406,7 +406,7 @@ ExportParameters Au3Exporter::cloudExportParameters(const std::string& format) c
     int fmt = -1;
 
     for (auto [p, formatIndex] : ExportPluginRegistry::Get()) {
-        if (p->GetFormatInfo(formatIndex).description.translated().toStdString() == format) {
+        if (p->GetFormatInfo(formatIndex).description.msgid().toStdString() == format) {
             plugin = p;
             fmt = formatIndex;
             break;
@@ -457,7 +457,7 @@ bool Au3Exporter::hasMetadata() const
     std::string format = exportConfiguration()->currentFormat();
 
     for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
-        if (plugin->GetFormatInfo(formatIndex).description.translated().toStdString() == format) {
+        if (plugin->GetFormatInfo(formatIndex).description.msgid().toStdString() == format) {
             return plugin->GetFormatInfo(formatIndex).canMetaData;
         }
     }
@@ -470,7 +470,7 @@ int Au3Exporter::maxChannels() const
     std::string format = exportConfiguration()->currentFormat();
 
     for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
-        if (plugin->GetFormatInfo(formatIndex).description.translated().toStdString() == format) {
+        if (plugin->GetFormatInfo(formatIndex).description.msgid().toStdString() == format) {
             return plugin->GetFormatInfo(formatIndex).maxChannels;
         }
     }
@@ -558,7 +558,7 @@ OptionsEditorUPtr Au3Exporter::optionsEditor() const
     std::string format = exportConfiguration()->currentFormat();
 
     for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
-        if (plugin->GetFormatInfo(formatIndex).description.translated().toStdString() == format) {
+        if (plugin->GetFormatInfo(formatIndex).description.msgid().toStdString() == format) {
             auto editor = plugin->CreateOptionsEditor(formatIndex, nullptr);
             if (!editor) {
                 LOGE() << "error: failed to create options editor";
