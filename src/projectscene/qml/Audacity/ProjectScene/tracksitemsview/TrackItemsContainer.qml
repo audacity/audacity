@@ -69,10 +69,18 @@ Item {
         trackId: root.trackId
     }
 
+    // Mirrors TimelineContext::INVALID_GUIDELINE_TIME (not exposed to QML). Emitting
+    // triggerItemGuideline with this time hides the guideline.
+    readonly property real invalidGuidelineTime: -1
+
     function init() {
         trackViewState.init()
 
         root.initRequired()
+    }
+
+    function clearItemGuideline() {
+        root.triggerItemGuideline(root.invalidGuidelineTime, false)
     }
 
     Loader {

@@ -384,9 +384,6 @@ TrackItemsContainer {
     }
 
     function handleLabelGuideline(labelKey, direction, completed) {
-        let guidelinePos = labelsModel.findGuideline(labelKey, direction)
-        if (root.context.isGuidelineValid(guidelinePos)) {
-            triggerItemGuideline(guidelinePos, completed)
-        }
+        triggerItemGuideline(labelsModel.findGuideline(labelKey, direction), completed)
     }
 }

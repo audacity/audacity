@@ -257,7 +257,7 @@ TrackItemsContainer {
                         }
 
                         if (!containsMouse) {
-                            root.triggerItemGuideline(0, true)
+                            root.clearItemGuideline()
                         }
                     }
                 }
@@ -456,7 +456,7 @@ TrackItemsContainer {
                                 onClipEndEditRequested: function () {
                                     clipsModel.endEditItem(itemData.key)
 
-                                    root.triggerItemGuideline(false, -1)
+                                    root.clearItemGuideline()
                                 }
 
                                 onClipLeftTrimRequested: function (completed, action) {
@@ -757,13 +757,8 @@ TrackItemsContainer {
     }
 
     function handleClipGuideline(clipKey, direction, completed) {
-        let guidelinePos = clipsModel.findGuideline(clipKey, direction)
-        // Always notify, even when there's no snap: passing an invalid time hides any
-        // guideline that was shown on a previous step, so it doesn't linger once the
-        // dragged edge moves out of snapping range.
-        if (!root.context.isGuidelineValid(guidelinePos)) {
-            guidelinePos = -1
-        }
-        triggerItemGuideline(guidelinePos, completed)
+        // triggerItemGuideline hides the guideline when findGuideline reports no snap,
+        // so it doesn't linger once the dragged edge moves out of snapping range.
+        triggerItemGuideline(clipsModel.findGuideline(clipKey, direction), completed)
     }
 }

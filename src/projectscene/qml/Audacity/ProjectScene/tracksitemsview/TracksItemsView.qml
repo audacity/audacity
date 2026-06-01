@@ -1001,6 +1001,10 @@ Rectangle {
                             }
 
                             onTriggerItemGuideline: function (time, completed) {
+                                if (!timeline.context.isGuidelineValid(time)) {
+                                    root.invalidateGuideline()
+                                    return
+                                }
                                 root.guidelinePos = timeline.context.timeToPosition(time)
                                 root.guidelineVisible = root.guidelinePos >= 0 && !completed
                             }
@@ -1129,6 +1133,10 @@ Rectangle {
                             }
 
                             onTriggerItemGuideline: function (time, completed) {
+                                if (!timeline.context.isGuidelineValid(time)) {
+                                    root.invalidateGuideline()
+                                    return
+                                }
                                 root.guidelinePos = timeline.context.timeToPosition(time)
                                 root.guidelineVisible = root.guidelinePos >= 0 && !completed
                             }
@@ -1279,7 +1287,11 @@ Rectangle {
 
             root.guidelineVisible = root.guidelinePos >= 0 ? !completed : false
         } else {
-            root.guidelineVisible = false
+            root.invalidateGuideline()
         }
+    }
+
+    function invalidateGuideline() {
+        root.guidelineVisible = false
     }
 }
