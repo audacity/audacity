@@ -316,9 +316,9 @@ bool TrackLabelsListModel::moveSelectedLabels(const LabelKey& key, bool complete
 
     bool ok = false;
 
-    // Labels can only be moved to label tracks. Labels don't snap while being dragged.
+    // Labels can only be moved to label tracks.
     TrackItemsListModel::MoveOffset moveOffset
-        = calculateMoveOffset(item, key, { trackedit::TrackType::Label }, completed, /*applySnap*/ false);
+        = calculateMoveOffset(item, key, { trackedit::TrackType::Label }, completed);
     if (vs->moveInitiated()) {
         if (!selectionController()->timeSelectionIsEmpty()) {
             ok = trackeditInteraction()->moveRangeSelection(moveOffset.timeOffset, completed);

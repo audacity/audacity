@@ -612,6 +612,7 @@ void TrackItemsListModel::startEditItem(const TrackItemKey& key)
     vs->setItemEditEndTimeOffset(item->time().endTime - mousePositionTime);
 
     if (vs) {
+        vs->setEditedItem(key.key);
         vs->updateItemsBoundaries(true, key.key);
     }
 
@@ -633,6 +634,7 @@ void TrackItemsListModel::endEditItem(const TrackItemKey& key)
     vs->setItemEditStartTimeOffset(-1.0);
     vs->setItemEditEndTimeOffset(-1.0);
     vs->setMoveInitiated(false);
+    vs->setEditedItem(trackedit::TrackItemKey {});
 
     disconnectAutoScroll();
 
@@ -660,6 +662,7 @@ bool TrackItemsListModel::cancelItemDragEdit(const TrackItemKey& key)
 
     trackeditInteraction()->cancelItemDragEdit();
 
+    vs->setEditedItem(trackedit::TrackItemKey {});
     vs->updateItemsBoundaries(true);
 
     constexpr auto modifyState = false;
