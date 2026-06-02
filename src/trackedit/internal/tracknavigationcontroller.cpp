@@ -4,11 +4,14 @@
 
 #include "tracknavigationcontroller.h"
 
+#include <algorithm>
+
 #include "framework/global/async/async.h"
 #include "framework/global/containers.h"
 
 #include "au3wrap/internal/domaccessor.h"
 
+#include "itrackeditproject.h"
 #include "trackedit/trackedittypes.h"
 
 using namespace au::trackedit;
@@ -80,6 +83,18 @@ void TrackNavigationController::init()
                 if (!trackList.empty()) {
                     setFocusedTrack(trackList.front().id);
                 }
+
+                prj->trackAdded().onReceive(this, [this](const Track&) {
+                    revalidateFocusedTrack();
+                });
+
+                prj->trackInserted().onReceive(this, [this](const Track&, int) {
+                    revalidateFocusedTrack();
+                });
+
+                prj->trackRemoved().onReceive(this, [this](const Track&) {
+                    revalidateFocusedTrack();
+                });
             }
         });
     });
@@ -766,4 +781,19 @@ void TrackNavigationController::au3SetTrackFocused(const TrackId& trackId)
         au3::DomAccessor::clearAllTrackFocus(*au3Project);
         au3::DomAccessor::setTrackFocused(*au3Project, trackId, true);
     }
+}
+
+void TrackNavigationController::revalidateFocusedTrack()
+{
+    const TrackId focused = focusedTrack();
+    const TrackIdList tracks = selectionController()->orderedTrackList();
+    const bool focusedExists = std::any_of(tracks.begin(), tracks.end(),
+                                           [focused](const TrackId& t) { return t == focused; });
+
+    if (focusedExists) {
+        return;
+    }
+
+    const TrackId trackId = tracks.empty() ? INVALID_TRACK : tracks.front();
+    setFocusedTrack(trackId);
 }

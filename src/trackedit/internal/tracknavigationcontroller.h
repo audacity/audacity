@@ -95,6 +95,8 @@ private:
 
     void au3SetTrackFocused(const TrackId& trackId);
 
+    void revalidateFocusedTrack();
+
     bool m_isNavigationActive = false;
     muse::async::Notification m_isNavigationActiveChannel;
 
