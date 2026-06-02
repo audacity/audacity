@@ -66,7 +66,6 @@ private slots:
 
 private:
     context::IPlaybackStatePtr playbackState() const;
-    projectscene::IProjectViewStatePtr projectViewState() const;
 
     void updatePositionX(muse::secs_t secs);
     void ensureCursorAtCenter(muse::secs_t secs) const;
