@@ -10,6 +10,9 @@
 #include "framework/global/log.h"
 #include "framework/global/stringutils.h"
 
+#include <wx/string.h>
+#include "au3-strings/wxArrayStringEx.h"
+
 namespace au::effects {
 muse::String utils::effectFamilyToString(EffectFamily family)
 {
@@ -67,25 +70,27 @@ static const muse::String legacyEffectCategoryString{ "Legacy" };
 
 EffectId utils::effectId(const EffectDefinitionInterface* effect)
 {
-    return EffectId::fromStdString(muse::strings::join({
-            std::string { "Effect" },
-            effect->GetFamily().Internal().ToStdString(),
-            effect->GetVendor().Internal().ToStdString(),
-            effect->GetSymbol().Internal().ToStdString(),
-            effect->GetPath().ToStdString()
-        }, "_"));
+    // Using wxJoin/wxSplit for now, as they handle the presence of the separator being part of any of its constituents
+    // (e.g. an effect vendor that has an underscore in its name.)
+    // TODO add defense in muse::strings utils.
+    return EffectId::fromStdString(wxJoin(wxArrayStringEx {
+            wxString { "Effect" },
+            effect->GetFamily().Internal(),
+            effect->GetVendor().Internal(),
+            effect->GetSymbol().Internal(),
+            effect->GetPath()
+        }, '_').ToStdString());
 }
 
 namespace {
 std::string parseEffectIdPart(const effects::EffectId& effectId, size_t partIndex)
 {
-    std::vector<std::string> strings;
-    muse::strings::split(effectId.toStdString(), strings, "_");
+    const auto strings = wxSplit(effectId.toStdString(), '_');
     if (strings.size() != 5) {
         LOGW() << "Unexpected effect ID format: " << effectId;
     }
     if (partIndex < strings.size()) {
-        return strings[partIndex];
+        return strings[partIndex].ToStdString();
     }
     return {};
 }
