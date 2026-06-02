@@ -35,6 +35,7 @@ for shared and private configs - which need to move out.
 #include "au3-files/PlatformCompatibility.h"
 #include "au3-strings/Base64.h"
 #include "au3-utility/Variant.h"
+#include "IEffectIdResolver.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -346,6 +347,7 @@ PluginManager::~PluginManager()
 // ----------------------------------------------------------------------------
 
 static PluginManager::ConfigFactory sFactory;
+static std::unique_ptr<IEffectIdResolver> sEffectIdResolver;
 
 // ============================================================================
 //
@@ -363,9 +365,10 @@ PluginManager& PluginManager::Get()
     return *mInstance;
 }
 
-void PluginManager::Initialize(ConfigFactory factory)
+void PluginManager::Initialize(ConfigFactory factory, std::unique_ptr<IEffectIdResolver> resolver)
 {
     sFactory = move(factory);
+    sEffectIdResolver = std::move(resolver);
 
     // And force load of setting to verify it's accessible
     GetSettings();
@@ -803,6 +806,12 @@ PluginID PluginManager::GetID(const ComponentInterface* command)
                             command->GetPath());
 }
 
+PluginID PluginManager::GetID(const EffectDefinitionInterface* effect)
+{
+    assert(sEffectIdResolver);
+    return sEffectIdResolver ? sEffectIdResolver->EffectId(effect) : wxString {};
+}
+
 PluginID PluginManager::OldGetID(const EffectDefinitionInterface* effect)
 {
     return wxString::Format(wxT("%s_%s_%s_%s_%s"),
@@ -1003,21 +1012,11 @@ RegistryPath PluginManager::SettingsPath(
         family = plug.GetEffectFamily();     // empty for non-Effects
         vendor = plug.GetVendor();
         symbol = plug.GetSymbol().Internal();
-    } else if (ID.StartsWith(GetPluginTypeString(PluginTypeEffect) + wxT("_"))) {
-        // The plugin is not in the in-memory registry, but the ID itself is
-        // in the OldGetID form ("Effect_<family>_<vendor>_<symbol>_<path>"),
-        // which already carries every component this function needs. Parse
-        // them out instead of failing. This lets effect-config helpers
-        // (e.g. user-preset save/load/list/delete) work for plugins that
-        // were not pre-registered with PluginManager.
-        const wxArrayString parts = wxSplit(ID, '_');
-        if (parts.size() != 5) {
-            return {};
-        }
+    } else if (sEffectIdResolver->IsEffectId(ID)) {
         pluginType = PluginTypeEffect;
-        family = parts[1];
-        vendor = parts[2];
-        symbol = parts[3];
+        family = sEffectIdResolver->EffectFamily(ID);
+        vendor = sEffectIdResolver->EffectVendor(ID);
+        symbol = sEffectIdResolver->EffectName(ID);
     } else {
         return {};
     }

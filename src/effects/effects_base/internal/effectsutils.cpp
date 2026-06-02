@@ -12,6 +12,7 @@
 
 #include <wx/string.h>
 #include "au3-strings/wxArrayStringEx.h"
+#include "au3wrap/internal/wxtypes_convert.h"
 
 namespace au::effects {
 muse::String utils::effectFamilyToString(EffectFamily family)
@@ -73,27 +74,35 @@ EffectId utils::effectId(const EffectDefinitionInterface* effect)
     // Using wxJoin/wxSplit for now, as they handle the presence of the separator being part of any of its constituents
     // (e.g. an effect vendor that has an underscore in its name.)
     // TODO add defense in muse::strings utils.
-    return EffectId::fromStdString(wxJoin(wxArrayStringEx {
+    return au3::wxToString(wxJoin(wxArrayStringEx {
             wxString { "Effect" },
             effect->GetFamily().Internal(),
             effect->GetVendor().Internal(),
             effect->GetSymbol().Internal(),
             effect->GetPath()
-        }, '_').ToStdString());
+        }, '_'));
 }
 
 namespace {
+constexpr size_t effectIdPartCount = 5;
+
 std::string parseEffectIdPart(const effects::EffectId& effectId, size_t partIndex)
 {
-    const auto strings = wxSplit(effectId.toStdString(), '_');
-    if (strings.size() != 5) {
+    const auto strings = wxSplit(au3::wxFromString(effectId), '_');
+    if (strings.size() != effectIdPartCount) {
         LOGW() << "Unexpected effect ID format: " << effectId;
     }
     if (partIndex < strings.size()) {
-        return strings[partIndex].ToStdString();
+        return au3::wxToStdString(strings[partIndex]);
     }
     return {};
 }
+}
+
+bool utils::isEffectId(const EffectId& effectId)
+{
+    const auto strings = wxSplit(au3::wxFromString(effectId), '_');
+    return strings.size() == effectIdPartCount && strings[0] == wxString("Effect");
 }
 
 std::string utils::parseEffectName(const EffectId& effectId)

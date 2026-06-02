@@ -59,6 +59,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/missingeffectchecker.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsutils.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsutils.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectidresolver.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/effectidresolver.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectviewcontroller.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectviewcontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectinstancesregister.cpp
