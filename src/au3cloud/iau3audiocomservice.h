@@ -72,7 +72,7 @@ public:
 
     virtual bool isCloudProject(const muse::io::path_t& projectPath) const = 0;
 
-    virtual void deleteCloudProject(const muse::io::path_t& localPath) const = 0;
+    virtual void deleteCloudProject(const muse::io::path_t& localPath) = 0;
 
     virtual void deinit() = 0;
 };

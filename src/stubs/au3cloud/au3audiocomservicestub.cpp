@@ -68,7 +68,7 @@ bool Au3AudioComServiceStub::isCloudProject(const muse::io::path_t&) const
     return false;
 }
 
-void Au3AudioComServiceStub::deleteCloudProject(const muse::io::path_t&) const
+void Au3AudioComServiceStub::deleteCloudProject(const muse::io::path_t&)
 {
 }
 

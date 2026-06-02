@@ -1373,9 +1373,9 @@ void ProjectActionsController::handleCloudOpenError(const muse::Ret& error, cons
         doOpenProject(localPath);
         break;
     case IOpenSaveProjectScenario::RET_CODE_SAVE_LOCALLY_AND_REMOVE_CACHE: {
-        const auto ret = doOpenProject(localPath);
-        if (!ret) {
-            LOGE() << ret.toString();
+        const auto openRet = doOpenProject(localPath);
+        if (!openRet) {
+            LOGE() << openRet.toString();
             break;
         }
 
@@ -1400,9 +1400,9 @@ void ProjectActionsController::handleCloudOpenError(const muse::Ret& error, cons
         break;
     }
     case IOpenSaveProjectScenario::RET_CODE_SAVE_TO_CLOUD: {
-        const auto ret = doOpenProject(localPath);
-        if (!ret) {
-            LOGE() << ret.toString();
+        const auto openRet = doOpenProject(localPath);
+        if (!openRet) {
+            LOGE() << openRet.toString();
             break;
         }
 
@@ -1467,16 +1467,10 @@ void ProjectActionsController::handleCloudSaveError(const muse::Ret& error)
         break;
     }
     case IOpenSaveProjectScenario::RET_CODE_SAVE_TO_CLOUD:
-        if (!project) {
-            return;
-        }
         audioComService()->deleteCloudProject(project->path());
         saveProjectToCloud(CloudProjectInfo { QUrl {}, {}, project->displayName() }, CloudSaveMode::CreateNew);
         break;
     case IOpenSaveProjectScenario::RET_CODE_SAVE_TO_CLOUD_FORCE:
-        if (!project) {
-            return;
-        }
         saveProjectToCloud(CloudProjectInfo { QUrl {}, {}, project->displayName() }, CloudSaveMode::ForceOverwrite);
         break;
     case IOpenSaveProjectScenario::RET_CODE_CLOSE_AND_OPEN_CLOUD_FORCE: {
