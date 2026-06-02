@@ -79,7 +79,7 @@ public:
 
     bool isCloudProject(const muse::io::path_t& projectPath) const override;
 
-    void deleteCloudProject(const muse::io::path_t& localPath) const override;
+    void deleteCloudProject(const muse::io::path_t& localPath) override;
 
     void deinit() override;
 

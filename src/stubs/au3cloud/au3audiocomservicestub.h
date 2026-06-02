@@ -35,7 +35,7 @@ public:
 
     bool isCloudProject(const muse::io::path_t& projectPath) const override;
 
-    void deleteCloudProject(const muse::io::path_t& localPath) const override;
+    void deleteCloudProject(const muse::io::path_t& localPath) override;
 
     std::string getCloudProjectPage(const std::string& projectId) const override;
     std::string getCloudProjectPage(const muse::io::path_t& projectPath) const override;

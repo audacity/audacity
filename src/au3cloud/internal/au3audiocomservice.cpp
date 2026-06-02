@@ -739,7 +739,7 @@ bool Au3AudioComService::isCloudProject(const muse::io::path_t& projectPath) con
     return sync::CloudProjectsDatabase::Get().GetProjectDataForPath(projectPath.toStdString()).has_value();
 }
 
-void Au3AudioComService::deleteCloudProject(const muse::io::path_t& localPath) const
+void Au3AudioComService::deleteCloudProject(const muse::io::path_t& localPath)
 {
     auto dbData = sync::CloudProjectsDatabase::Get().GetProjectDataForPath(localPath.toStdString());
     if (dbData) {
