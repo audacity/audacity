@@ -13,6 +13,8 @@ Rectangle {
     property ViewTracksListModel model: null
     property var context: null
 
+    readonly property int listHeaderHeight: 2
+
     width: 32
     color: ui.theme.backgroundQuarternaryColor
 
@@ -40,7 +42,7 @@ Rectangle {
         TracksViewStateModel {
             id: tracksViewState
             onTracksVerticalOffsetChanged: {
-                verticalRulersListView.contentY = tracksViewState.tracksVerticalOffset
+                verticalRulersListView.contentY = tracksViewState.tracksVerticalOffset - root.listHeaderHeight
             }
         }
 
@@ -49,7 +51,7 @@ Rectangle {
         }
 
         header: Rectangle {
-            height: 2
+            height: root.listHeaderHeight
             width: parent.width
             color: "transparent"
         }
@@ -69,7 +71,7 @@ Rectangle {
             if (verticalScrollLocked) {
                 verticalRulersListView.contentY = lockedVerticalScrollPosition
             } else {
-                tracksViewState.changeTracksVerticalOffset(verticalRulersListView.contentY)
+                tracksViewState.changeTracksVerticalOffset(verticalRulersListView.contentY + root.listHeaderHeight)
             }
         }
 
@@ -193,7 +195,11 @@ Rectangle {
                             visible: model.isWaveformViewVisible
 
                             // Defer ruler creation, to speed up track loading
-                            Component.onCompleted: Qt.callLater(function() { waveformRulerLoader.active = Qt.binding(function() { return model.isWaveformViewVisible }) })
+                            Component.onCompleted: Qt.callLater(function () {
+                                waveformRulerLoader.active = Qt.binding(function () {
+                                    return model.isWaveformViewVisible
+                                })
+                            })
 
                             sourceComponent: WaveformRuler {
                                 isCollapsed: trackViewState.isTrackCollapsed
@@ -215,7 +221,11 @@ Rectangle {
                             visible: model.isSpectrogramViewVisible
 
                             // Defer ruler creation, to speed up track loading
-                            Component.onCompleted: Qt.callLater(function() { spectrogramRulerLoader.active = Qt.binding(function() { return model.isSpectrogramViewVisible }) })
+                            Component.onCompleted: Qt.callLater(function () {
+                                spectrogramRulerLoader.active = Qt.binding(function () {
+                                    return model.isSpectrogramViewVisible
+                                })
+                            })
 
                             sourceComponent: SpectrogramTrackRulers {
                                 trackId: model.trackId
