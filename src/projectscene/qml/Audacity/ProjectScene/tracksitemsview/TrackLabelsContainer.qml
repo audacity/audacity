@@ -349,7 +349,7 @@ TrackItemsContainer {
 
             labelsModel.moveSelectedLabels(itemKey, completed)
 
-            handleLabelGuideline(itemKey, Direction.Auto, completed)
+            // Labels neither snap nor show a snapping guideline while being dragged.
         }
 
         function onItemStartEditRequested(itemKey) {
