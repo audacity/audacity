@@ -28,7 +28,7 @@ std::shared_ptr<IPlaybackMeter> createMeter(PlaybackMeterType::MeterType meterTy
 }
 }
 
-PlaybackMeterController::PlaybackMeterController()
+void PlaybackMeterController::init()
 {
     configuration()->playbackMeterTypeChanged().onNotify(this, [this]() {
         m_meter = createMeter(configuration()->playbackMeterType(),
