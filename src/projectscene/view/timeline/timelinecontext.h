@@ -247,6 +247,8 @@ private:
 
     context::IPlaybackStatePtr playbackState() const;
 
+    friend struct SnapTestAccess;
+
     double m_frameWidth = 0.0;
     double m_frameHeight = 0.0;
     double m_frameContentHeight = 0.0;

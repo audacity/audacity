@@ -132,6 +132,7 @@ protected:
 
     friend class TrackClipsSelectionTests;
     friend class TrackLabelsSelectionTests;
+    friend class TrackItemsFindGuidelineTests;
 
     TimelineContext* m_context = nullptr;
     trackedit::TrackId m_trackId = -1;

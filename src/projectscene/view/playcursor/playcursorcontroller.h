@@ -79,5 +79,7 @@ private:
 
     QTimer m_scrollSuppressionTimer;
     bool m_viewUpdatesSuppressed = false;
+
+    friend struct SnapTestAccess;
 };
 }
