@@ -13,9 +13,18 @@ StyledDialogView {
     title: qsTrc("effects", "Save preset")
 
     contentWidth: 280
-    contentHeight: 80
+    contentHeight: 85
 
     margins: 16
+
+    readonly property string trimmedName: input.currentText.trim()
+    readonly property string invalidReason: {
+        if (/[\/\\]/.test(trimmedName)) {
+            return qsTrc("effects", "Preset name cannot contain / or \\")
+        }
+        return ""
+    }
+    readonly property bool isValid: trimmedName.length > 0 && invalidReason === ""
 
     Component.onCompleted: {
         Qt.callLater(input.forceActiveFocus)
@@ -29,13 +38,27 @@ StyledDialogView {
         order: 0
     }
 
+    QtObject {
+        id: prv
+
+        function submit() {
+            if (!root.isValid) {
+                return
+            }
+            root.ret = {
+                errcode: 0,
+                value: root.trimmedName
+            }
+            root.hide()
+        }
+    }
+
     TextInputField {
         id: input
+
         anchors.top: parent.top
-        anchors.bottom: bbox.top
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.bottomMargin: 16
 
         navigation.panel: presetNameNavPanel
         navigation.order: 1
@@ -44,30 +67,57 @@ StyledDialogView {
         hint: qsTrc("effects", "Preset name")
 
         onTextChanged: t => input.currentText = t
+        onAccepted: prv.submit()
+    }
+
+    StyledTextLabel {
+        id: errorLabel
+
+        anchors.top: input.bottom
+        anchors.topMargin: 4
+        anchors.left: parent.left
+        anchors.right: parent.right
+
+        horizontalAlignment: Text.AlignLeft
+
+        visible: root.invalidReason !== ""
+        Accessible.ignored: !visible
+
+        text: root.invalidReason
+        color: ui.theme.extra["error_text_color"]
+        font: Qt.font(Object.assign({}, ui.theme.bodyFont, { pointSize: ui.theme.bodyFont.pointSize - 1 }))
     }
 
     ButtonBox {
         id: bbox
+
         width: parent.width
         anchors.bottom: parent.bottom
 
-        buttons: [ ButtonBoxModel.Cancel, ButtonBoxModel.Ok]
         navigationPanel.section: root.navigationSection
         navigationPanel.order: 2
 
-        onStandardButtonClicked: function(buttonId) {
-            switch (buttonId) {
-            case ButtonBoxModel.Cancel:
-                root.reject()
-                return
-            case ButtonBoxModel.Ok:
-                root.ret = {
-                    errcode: 0,
-                    value: input.currentText
-                }
-                root.hide()
-                return
+        FlatButton {
+            text: qsTrc("global", "Cancel")
+            buttonRole: ButtonBoxModel.RejectRole
+            buttonId: ButtonBoxModel.Cancel
+            minWidth: 80
 
+            onClicked: {
+                root.reject()
+            }
+        }
+
+        FlatButton {
+            text: qsTrc("global", "OK")
+            buttonRole: ButtonBoxModel.AcceptRole
+            buttonId: ButtonBoxModel.Ok
+            accentButton: true
+            minWidth: 80
+            enabled: root.isValid
+
+            onClicked: {
+                prv.submit()
             }
         }
     }
