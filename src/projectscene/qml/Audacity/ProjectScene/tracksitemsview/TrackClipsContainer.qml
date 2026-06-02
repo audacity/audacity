@@ -759,14 +759,11 @@ TrackItemsContainer {
 
     function handleClipGuideline(clipKey, direction, completed) {
         // itemMoveRequested is broadcast to every track's container, but the guideline is
-        // shared across all of them. findGuideline returns undefined when this container
-        // doesn't own the dragged clip; such containers must not touch the guideline,
-        // otherwise they clobber the owning track's guideline. A number means we own the
-        // clip: a valid time draws the guideline, -1 hides it once out of snapping range.
-        let time = clipsModel.findGuideline(clipKey, direction)
-        if (typeof time !== "number") {
+        // shared across all of them. Only the container that owns the dragged clip may touch
+        // it, otherwise non-owners clobber the owning track's guideline.
+        if (!clipsModel.containsItem(clipKey)) {
             return
         }
-        triggerItemGuideline(time, completed)
+        triggerItemGuideline(clipsModel.findGuideline(clipKey, direction), completed)
     }
 }

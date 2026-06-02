@@ -182,34 +182,32 @@ QVariant TrackItemsListModel::prev(const TrackItemKey& key) const
     return neighbor(key, -1);
 }
 
-QVariant TrackItemsListModel::findGuideline(const TrackItemKey& key, DirectionType::Direction direction) const
+bool TrackItemsListModel::containsItem(const TrackItemKey& key) const
 {
-    auto vs = globalContext()->currentProject()->viewState();
-    if (!vs) {
-        return QVariant();
-    }
+    return itemByKey(key.key) != nullptr;
+}
 
+double TrackItemsListModel::findGuideline(const TrackItemKey& key, DirectionType::Direction direction) const
+{
     ViewTrackItem* item = itemByKey(key.key);
     if (!item) {
-        return QVariant();
+        return TimelineContext::INVALID_GUIDELINE_TIME;
     }
 
     if (direction != DirectionType::Direction::Right) {
-        double itemStartTime = item->time().startTime;
-        double guidelineTime = m_context->findGuideline(itemStartTime);
+        double guidelineTime = m_context->findGuideline(item->time().startTime);
         if (m_context->isGuidelineValid(guidelineTime)) {
-            return QVariant(guidelineTime);
+            return guidelineTime;
         }
     }
     if (direction != DirectionType::Direction::Left) {
-        double itemEndTime = item->time().endTime;
-        double guidelineTime = m_context->findGuideline(itemEndTime);
+        double guidelineTime = m_context->findGuideline(item->time().endTime);
         if (m_context->isGuidelineValid(guidelineTime)) {
-            return QVariant(guidelineTime);
+            return guidelineTime;
         }
     }
 
-    return QVariant(TimelineContext::INVALID_GUIDELINE_TIME);
+    return TimelineContext::INVALID_GUIDELINE_TIME;
 }
 
 void TrackItemsListModel::setFocusedItem(const TrackItemKey& key)

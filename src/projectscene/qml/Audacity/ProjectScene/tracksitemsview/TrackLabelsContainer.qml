@@ -350,7 +350,7 @@ TrackItemsContainer {
             labelsModel.moveSelectedLabels(itemKey, completed)
 
             // Labels neither snap nor show a snapping guideline while being dragged.
-            if (typeof labelsModel.findGuideline(itemKey, Direction.Auto) === "number") {
+            if (labelsModel.containsItem(itemKey)) {
                 root.clearItemGuideline()
             }
         }
@@ -388,14 +388,11 @@ TrackItemsContainer {
 
     function handleLabelGuideline(labelKey, direction, completed) {
         // itemMoveRequested is broadcast to every track's container, but the guideline is
-        // shared across all of them. findGuideline returns undefined when this container
-        // doesn't own the dragged item; such containers must not touch the guideline,
-        // otherwise they clobber the owning track's guideline. A number means we own the
-        // item: a valid time draws the guideline, -1 hides it once out of snapping range.
-        let time = labelsModel.findGuideline(labelKey, direction)
-        if (typeof time !== "number") {
+        // shared across all of them. Only the container that owns the dragged label may touch
+        // it, otherwise non-owners clobber the owning track's guideline.
+        if (!labelsModel.containsItem(labelKey)) {
             return
         }
-        triggerItemGuideline(time, completed)
+        triggerItemGuideline(labelsModel.findGuideline(labelKey, direction), completed)
     }
 }

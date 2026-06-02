@@ -66,7 +66,8 @@ public:
     Q_INVOKABLE QVariant next(const TrackItemKey& key) const;
     Q_INVOKABLE QVariant prev(const TrackItemKey& key) const;
 
-    Q_INVOKABLE QVariant findGuideline(const TrackItemKey& key, DirectionType::Direction direction) const;
+    Q_INVOKABLE bool containsItem(const TrackItemKey& key) const;
+    Q_INVOKABLE double findGuideline(const TrackItemKey& key, DirectionType::Direction direction) const;
 
     Q_INVOKABLE void setFocusedItem(const TrackItemKey& key);
     Q_INVOKABLE void resetFocusedItem();
