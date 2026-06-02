@@ -16,7 +16,7 @@ class TrackClipItem : public ViewTrackItem
 
     muse::GlobalInject<IProjectSceneConfiguration> configuration;
 
-    Q_PROPERTY(int groupId READ groupId NOTIFY groupIdChanged FINAL)
+    Q_PROPERTY(bool isGrouped READ isGrouped NOTIFY groupIdChanged FINAL)
     Q_PROPERTY(int pitch READ pitch NOTIFY pitchChanged FINAL)
     Q_PROPERTY(int speedPercentage READ speedPercentage NOTIFY speedPercentageChanged FINAL)
     Q_PROPERTY(bool isPitchModified READ isPitchModified NOTIFY pitchChanged FINAL)
@@ -28,7 +28,7 @@ public:
 
     void setClip(const trackedit::Clip& clip);
 
-    int groupId() const;
+    bool isGrouped() const;
 
     int pitch() const;
     int speedPercentage() const;
