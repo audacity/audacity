@@ -44,6 +44,7 @@ public:
 
     bool trimTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) override;
     bool silenceTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end) override;
+    bool silenceClips(const ClipKeyList& clipKeyList) override;
     bool changeTrackTitle(const trackedit::TrackId trackId, const muse::String& title) override;
 
     bool changeClipTitle(const ClipKey& clipKey, const muse::String& newTitle) override;
