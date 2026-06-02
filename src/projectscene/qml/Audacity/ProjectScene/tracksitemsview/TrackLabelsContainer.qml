@@ -384,6 +384,15 @@ TrackItemsContainer {
     }
 
     function handleLabelGuideline(labelKey, direction, completed) {
-        triggerItemGuideline(labelsModel.findGuideline(labelKey, direction), completed)
+        // itemMoveRequested is broadcast to every track's container, but the guideline is
+        // shared across all of them. findGuideline returns undefined when this container
+        // doesn't own the dragged item; such containers must not touch the guideline,
+        // otherwise they clobber the owning track's guideline. A number means we own the
+        // item: a valid time draws the guideline, -1 hides it once out of snapping range.
+        let time = labelsModel.findGuideline(labelKey, direction)
+        if (typeof time !== "number") {
+            return
+        }
+        triggerItemGuideline(time, completed)
     }
 }
