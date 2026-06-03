@@ -43,9 +43,10 @@ std::string PlaybackModule::moduleName() const
 void PlaybackModule::registerExports()
 {
     m_configuration = std::make_shared<PlaybackConfiguration>();
+    m_playbackMeterController = std::make_shared<PlaybackMeterController>();
 
     globalIoc()->registerExport<PlaybackConfiguration>(mname, m_configuration);
-    globalIoc()->registerExport<IPlaybackMeterController>(mname, std::make_shared<PlaybackMeterController>());
+    globalIoc()->registerExport<IPlaybackMeterController>(mname, m_playbackMeterController);
 }
 
 void PlaybackModule::registerResources()
@@ -88,6 +89,7 @@ void PlaybackModule::onInit(const IApplication::RunMode& mode)
     }
 
     m_configuration->init();
+    m_playbackMeterController->init();
 }
 
 IContextSetup* PlaybackModule::newContext(const muse::modularity::ContextPtr& ctx) const
