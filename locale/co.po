@@ -12,13 +12,12 @@
 # Patriccollu di Santa Maria è Sichè <Patrick.Santa-Maria@laposte.net>, 2025
 # Patriccollu di Santa Maria è Sichè <Patrick.Santa-Maria@laposte.net>, 2026
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
 "POT-Creation-Date: 2026-05-26 16:41+0300\n"
-"PO-Revision-Date: 2026-06-02 20:17+0200\n"
+"PO-Revision-Date: 2026-06-03 12:28+0200\n"
 "Last-Translator: Patriccollu di Santa Maria è Sichè <https://github.com/Patriccollu/Lingua_Corsa-Infurmatica/#readme>\n"
 "Language-Team: Corsican (https://app.transifex.com/audacity/teams/164520/co/)\n"
 "Language: co\n"
@@ -14331,7 +14330,7 @@ msgstr "Troncà e traccie indipendentemente"
 
 #: src/effects/TruncSilence.cpp
 msgid "Truncate Location"
-msgstr "Truncà a pusizione"
+msgstr "Pusizione di truncatura"
 
 #: src/effects/TruncSilence.cpp
 msgid "Remove silence from &beginning"
