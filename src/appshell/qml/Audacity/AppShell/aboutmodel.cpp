@@ -267,7 +267,8 @@ AboutModel::AboutModel(QObject* parent)
 
 QString AboutModel::appVersion() const
 {
-    QString version = QString::fromStdString(configuration()->audacityVersion());
+    const QString version = QString::fromStdString(
+        (application()->fullVersion().toString() + u"." + application()->build()).toStdString());
     return application()->unstable()
            ? muse::qtrc("appshell/about", "Unstable prerelease for %1").arg(version)
            : version;
@@ -311,7 +312,7 @@ void AboutModel::copyRevisionToClipboard() const
                 ? " or later" : ""))
         .arg(QSysInfo::currentCpuArchitecture())
         .arg(QSysInfo::WordSize)
-        .arg(application()->version().toString())
+        .arg(application()->fullVersion().toString())
         .arg(application()->build())
         .arg(application()->revision()));
 }
