@@ -801,7 +801,7 @@ wxString AudioIOBase::GetDeviceInfo() const
     wxTextOutputStream s(o, wxEOL_UNIX);
 
     if (IsStreamActive()) {
-        return TranslatableString("audio-devices", "Stream is active ... unable to gather information.\n")
+        return TranslatableString("audio-devices", "Stream is active … unable to gather information.\n")
                .Translation();
     }
 
@@ -896,14 +896,14 @@ wxString AudioIOBase::GetDeviceInfo() const
         //: %1 is the recording device number, %2 is the device name
         s << TranslatableString("audio-devices", "Selected recording device: %1 - %2\n").arg(recDeviceNum).arg(recDevice);
     } else {
-        s << TranslatableString("audio-devices", "No recording device found for '%1'.\n").arg(recDevice);
+        s << TranslatableString("audio-devices", "No recording device found for “%1”.\n").arg(recDevice);
     }
 
     if (havePlayDevice) {
         //: %1 is the playback device number, %2 is the device name
         s << TranslatableString("audio-devices", "Selected playback device: %1 - %2\n").arg(playDeviceNum).arg(playDevice);
     } else {
-        s << TranslatableString("audio-devices", "No playback device found for '%1'.\n").arg(playDevice);
+        s << TranslatableString("audio-devices", "No playback device found for “%1”.\n").arg(playDevice);
     }
 
     std::vector<long> supportedSampleRates;

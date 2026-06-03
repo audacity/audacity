@@ -85,7 +85,7 @@ bool NormalizeLoudnessEffect::Process(::EffectInstance&, EffectSettings&)
     // Iterate over each track
     EffectOutputTracks outputs { *mTracks, GetType(), { { mT0, mT1 } } };
     bool bGoodResult = true;
-    auto topMsg = TranslatableString("effects-loudness", "Normalizing Loudness...\n");
+    auto topMsg = TranslatableString("effects-loudness", "Normalizing Loudness…\n");
 
     AllocBuffers(outputs.Get());
     mProgressVal = 0;

@@ -79,7 +79,7 @@ ComponentInterfaceSymbol AutoDuckBase::GetSymbol() const
 
 TranslatableString AutoDuckBase::GetDescription() const
 {
-    return TranslatableString("builtin-effects", "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level");
+    return TranslatableString("builtin-effects", "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified “control” track reaches a particular level");
 }
 
 ManualPageID AutoDuckBase::ManualPage() const

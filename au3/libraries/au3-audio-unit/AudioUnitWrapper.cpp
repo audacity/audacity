@@ -289,7 +289,7 @@ TranslatableString AudioUnitWrapper::InterpretBlob(
 {
     size_t bufLen = buf.GetDataLen();
     if (!bufLen) {
-        return TranslatableString("audio-unit", "Failed to decode \"%1\" preset").arg(group);
+        return TranslatableString("audio-unit", "Failed to decode “%1” preset").arg(group);
     }
 
     // Create a CFData object that references the decoded preset
@@ -298,7 +298,7 @@ TranslatableString AudioUnitWrapper::InterpretBlob(
                                                         bufPtr, bufLen, kCFAllocatorNull)
     };
     if (!data) {
-        return TranslatableString("audio-unit", "Failed to convert \"%1\" preset to internal format")
+        return TranslatableString("audio-unit", "Failed to convert “%1” preset to internal format")
                .Format(group);
     }
 
@@ -310,13 +310,13 @@ TranslatableString AudioUnitWrapper::InterpretBlob(
                                      nullptr)
     };
     if (!content) {
-        return TranslatableString("audio-unit", "Failed to create property list for \"%1\" preset")
+        return TranslatableString("audio-unit", "Failed to create property list for “%1” preset")
                .Format(group);
     }
 
     // Finally, update the properties and parameters
     if (SetProperty(kAudioUnitProperty_ClassInfo, content.get())) {
-        return TranslatableString("audio-unit", "Failed to set class info for \"%1\" preset").arg(group);
+        return TranslatableString("audio-unit", "Failed to set class info for “%1” preset").arg(group);
     }
 
     // Repopulate the AudioUnitEffectSettings from the change of state in

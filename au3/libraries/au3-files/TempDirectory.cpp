@@ -57,7 +57,9 @@ wxString TempDirectory::TempDir()
     if (FileNames::IsOnFATFileSystem(path)) {
         BasicUI::ShowErrorDialog({},
                                  TranslatableString("files", "Unsuitable"),
-                                 TranslatableString("files", "The temporary files directory is on a FAT formatted drive.\nResetting to default location."),
+                                 //: FAT is a filesystem type name
+                                 TranslatableString("files",
+                                                    "The temporary files directory is on a FAT formatted drive.\nResetting to default location."),
                                  "Error:_Unsuitable_drive"
                                  );
 
@@ -119,7 +121,10 @@ bool TempDirectory::IsTempDirectoryNameOK(const FilePath& Name)
 #endif
 
     if (FATFilesystemDenied(NameCanonical,
-                            TranslatableString("files", "The temporary files directory is on a FAT formatted drive.\nResetting to default location."))) {
+                            TranslatableString("files",
+                                               //: FAT is a filesystem type name
+                                               "The temporary files directory is on a FAT formatted drive.\nResetting to default location.")))
+    {
         return false;
     }
 

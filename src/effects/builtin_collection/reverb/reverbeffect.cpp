@@ -117,7 +117,7 @@ ComponentInterfaceSymbol ReverbEffect::GetSymbol() const
 
 ::TranslatableString ReverbEffect::GetDescription() const
 {
-    return ::TranslatableString("effects-reverb", "Adds ambience or a \"hall effect\"");
+    return ::TranslatableString("effects-reverb", "Adds ambience or a “hall effect”");
 }
 
 ManualPageID ReverbEffect::ManualPage() const

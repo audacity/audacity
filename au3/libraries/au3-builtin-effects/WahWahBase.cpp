@@ -54,7 +54,7 @@ ComponentInterfaceSymbol WahWahBase::GetSymbol() const
 
 TranslatableString WahWahBase::GetDescription() const
 {
-    return TranslatableString("builtin-effects", "Rapid tone quality variations, like that guitar sound so popular in the 1970's");
+    return TranslatableString("builtin-effects", "Rapid tone quality variations, like that guitar sound so popular in the 1970’s");
 }
 
 ManualPageID WahWahBase::ManualPage() const

@@ -62,5 +62,7 @@ wxString FileException::ErrorHelpUrl() const
 ::TranslatableString
 FileException::WriteFailureMessage(const wxFileName& fileName)
 {
-    return ::TranslatableString("files", "Audacity failed to write to a file.\nPerhaps %1 is not writable or the disk is full.").arg(FileNames::AbbreviatePath(fileName));
+    //: %1 is a path where the project is about to be saved
+    return ::TranslatableString("files", "Audacity failed to write to a file.\nPerhaps %1 is not writable or the disk is full.").arg(FileNames::AbbreviatePath(
+                                                                                                                                         fileName));
 }

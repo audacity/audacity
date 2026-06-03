@@ -56,7 +56,7 @@ static const wxChar* KEY_Parameters = wxT("Parameters");
 NyquistBase::NyquistBase(const wxString& fName)
     : mIsPrompt{fName == NYQUIST_PROMPT_ID}
 {
-    mAction = TranslatableString("nyquist-effects", "Applying Nyquist Effect...");
+    mAction = TranslatableString("nyquist-effects", "Applying Nyquist Effect…");
     mExternal = false;
     mCompiler = false;
     mTrace = false;
@@ -486,7 +486,7 @@ bool NyquistBase::Init()
         if (const auto project = FindProject()) {
             if (!mSpectralSelectionEnabled || ((mF0 < 0.0) && (mF1 < 0.0))) {
                 mLastError
-                    = TranslatableString("nyquist-effects", "To use 'Spectral effects', enable 'Spectral Selection'\nin the track Spectrogram settings and select the\nfrequency range for the effect to act on.").Translation();
+                    = TranslatableString("nyquist-effects", "To use ‘Spectral effects’, enable ‘Spectral Selection’\nin the track Spectrogram settings and select the\nfrequency range for the effect to act on.").Translation();
                 return false;
             }
         }
@@ -652,7 +652,7 @@ bool NyquistBase::Process(EffectInstance&, EffectSettings& settings)
     mDebugOutput = {};
     if (!mHelpFile.empty() && !mHelpFileExists) {
         mDebugOutput
-            =TranslatableString("nyquist-effects", "error: File \"%1\" specified in header but not found in plug-in path.\n")
+            =TranslatableString("nyquist-effects", "error: File “%1” specified in header but not found in plug-in path.\n")
               .Format(mHelpFile);
     }
 
@@ -1386,7 +1386,7 @@ bool NyquistBase::ProcessOne(
         // Catch this first so that we can also handle other errors.
         mDebugOutput
             =/*: Don't translate ';type tool'.  */
-              TranslatableString("nyquist-effects", "';type tool' effects cannot return audio from Nyquist.\n")
+              TranslatableString("nyquist-effects", "‘;type tool’ effects cannot return audio from Nyquist.\n")
               + mDebugOutput;
         rval = nyx_error;
     }
@@ -1395,7 +1395,7 @@ bool NyquistBase::ProcessOne(
         // Catch this first so that we can also handle other errors.
         mDebugOutput
             =/*: Don't translate ';type tool'.  */
-              TranslatableString("nyquist-effects", "';type tool' effects cannot return labels from Nyquist.\n")
+              TranslatableString("nyquist-effects", "‘;type tool’ effects cannot return labels from Nyquist.\n")
               + mDebugOutput;
         rval = nyx_error;
     }
@@ -2364,7 +2364,7 @@ bool NyquistBase::ParseProgram(wxInputStream& stream)
         using namespace BasicUI;
         /* i1n-hint: SAL and LISP are names for variant syntaxes for the
          Nyquist programming language.  Leave them, and 'return', untranslated. */
-        mLastError = TranslatableString("nyquist-effects", "Your code looks like SAL syntax, but there is no \'return\' statement.\n\
+        mLastError = TranslatableString("nyquist-effects", "Your code looks like SAL syntax, but there is no ‘return’ statement.\n\
             For SAL, use a return statement such as:\n\treturn *track* * 0.1\n\
             or for LISP, begin with an open parenthesis such as:\n\t(mult *track* 0.1)\n .").Translation();
         return false;

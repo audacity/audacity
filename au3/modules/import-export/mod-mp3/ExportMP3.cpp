@@ -732,7 +732,7 @@ bool MP3Exporter::InitLibraryExternal(wxString libpath)
             beVersion(&v);
 
             //: %1.%2 is the lame_enc.dll version, %3.%4.%5 is the Audacity version
-            mBladeVersion = TranslatableString("import-export", "You are linking to lame_enc.dll v%1.%2. This version is not compatible with Audacity %3.%4.%5.\nPlease download the latest version of 'LAME for Audacity'.")
+            mBladeVersion = TranslatableString("import-export", "You are linking to lame_enc.dll v%1.%2. This version is not compatible with Audacity %3.%4.%5.\nPlease download the latest version of ‘LAME for Audacity’.")
                             .Format(
                 v.byMajorVersion,
                 v.byMinorVersion,

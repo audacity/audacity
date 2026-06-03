@@ -93,13 +93,13 @@ bool NormalizeEffect::Process(EffectInstance&, EffectSettings&)
     double progress = 0;
     TranslatableString topMsg;
     if (mDC && mGain) {
-        topMsg = TranslatableString("effects-normalize", "Removing DC offset and Normalizing...\n");
+        topMsg = TranslatableString("effects-normalize", "Removing DC offset and Normalizing…\n");
     } else if (mDC && !mGain) {
-        topMsg = TranslatableString("effects-normalize", "Removing DC offset...\n");
+        topMsg = TranslatableString("effects-normalize", "Removing DC offset…\n");
     } else if (!mDC && mGain) {
-        topMsg = TranslatableString("effects-normalize", "Normalizing without removing DC offset...\n");
+        topMsg = TranslatableString("effects-normalize", "Normalizing without removing DC offset…\n");
     } else if (!mDC && !mGain) {
-        topMsg = TranslatableString("effects-normalize", "Not doing anything...\n"); // shouldn't get here
+        topMsg = TranslatableString("effects-normalize", "Not doing anything…\n"); // shouldn't get here
     }
     for (auto track : outputs.Get().Selected<WaveTrack>()) {
         // Get start and end times from track

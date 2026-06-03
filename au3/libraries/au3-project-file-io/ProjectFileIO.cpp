@@ -454,7 +454,7 @@ DBConnection& ProjectFileIO::GetConnection()
             throw SimpleMessageBoxException
                   {
                       ExceptionType::Internal,
-                      TranslatableString("project-file-io", "Failed to open the project's database"),
+                      TranslatableString("project-file-io", "Failed to open the project’s database"),
                       TranslatableString("project-file-io", "Warning"),
                       "Error:_Disk_full_or_not_writable"
                   };
@@ -831,7 +831,7 @@ bool ProjectFileIO::DeleteBlocks(const BlockIDs& blockids, bool complement)
         ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::DeleteBlocks::create_function");
 
         /*: An error message.  Don't translate inset or blockids.*/
-        SetDBError(TranslatableString("project-file-io", "Unable to add 'inset' function (can't verify blockids)"));
+        SetDBError(TranslatableString("project-file-io", "Unable to add ‘inset’ function (can’t verify blockids)"));
         return false;
     }
 
@@ -1575,7 +1575,7 @@ void ProjectFileIO::SetProjectTitle(int number)
     if (number >= 0) {
         name
             =/*: %1 is the project number, %2 is the project name.*/
-              TranslatableString("project-file-io", "[Project %1] Audacity \"%2\"")
+              TranslatableString("project-file-io", "[Project %1] Audacity “%2”")
               .Format(number + 1,
                       name.empty() ? TranslatableString("project-file-io", "<untitled>") : TranslatableString::untranslatable((const char*)name))
               .Translation();
@@ -1692,7 +1692,7 @@ bool ProjectFileIO::HandleXMLTag(const std::string_view& tag, const AttributesLi
                    .Format(audacityVersion, AUDACITY_VERSION_STRING);
 
         ShowError(*ProjectFramePlacement(&project),
-                  TranslatableString("project-file-io", "Can't open project file"),
+                  TranslatableString("project-file-io", "Can’t open project file"),
                   msg,
                   "FAQ:Errors_opening_an_Audacity_project"
                   );
@@ -2167,7 +2167,7 @@ bool ProjectFileIO::SaveProject(
                 BasicUI::CallAfter([this]{
                     ShowError({},
                               TranslatableString("project-file-io", "Warning"),
-                              TranslatableString("project-file-io", "The project's database failed to reopen, possibly because of limited space on the storage device."),
+                              TranslatableString("project-file-io", "The project’s database failed to reopen, possibly because of limited space on the storage device."),
                               "Error:_Disk_full_or_not_writable"
                               );
                     Publish(ProjectFileIOMessage::ReconnectionFailure);

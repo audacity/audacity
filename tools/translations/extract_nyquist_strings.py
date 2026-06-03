@@ -15,6 +15,7 @@ NY_DIR = REPO / "share" / "nyquist-plug-ins"
 
 
 _STRING_RE = re.compile(r'"((?:\\.|[^"\\])*)"')
+_LISP_ESCAPE_RE = re.compile(r'\\(.)')
 
 
 def parse_lisp_strings_after(src: str, start: int, count: int) -> list[str] | None:
@@ -35,7 +36,7 @@ def parse_lisp_strings_after(src: str, start: int, count: int) -> list[str] | No
         m = _STRING_RE.match(src, i)
         if m is None:
             return None
-        out.append(m.group(1))
+        out.append(_LISP_ESCAPE_RE.sub(r'\1', m.group(1)))
         i = m.end()
     return out if len(out) == count else None
 

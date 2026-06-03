@@ -94,6 +94,7 @@ ExportOptionsEditor::SampleRateList ToSampleRateList(const int* rates)
 
 //: kbps abbreviates "thousands of bits per second"
 TranslatableString n_kbps(int n) { return TranslatableString("import-export", "%1 kbps").arg(n); }
+//: kbps abbreviates "thousands of bits per second"
 TranslatableString f_kbps(double d) { return TranslatableString("import-export", "%1 kbps").arg(d); }
 
 enum : int
@@ -294,7 +295,8 @@ const std::initializer_list<PlainExportOptionsEditor::OptionDesc> OPUSOptions {
             std::string("on"),
             ExportOption::TypeEnum,
             { std::string("off"), std::string("on"), std::string("constrained") },
-            { TranslatableString("import-export", "Off"), TranslatableString("import-export", "On"), TranslatableString("import-export", "Constrained") }
+            { TranslatableString("import-export", "Off"), TranslatableString("import-export", "On"), TranslatableString("import-export",
+                                                                                                                        "Constrained") }
         }, wxT("/FileFormats/OPUSVbrMode")
     },
     {
@@ -304,7 +306,8 @@ const std::initializer_list<PlainExportOptionsEditor::OptionDesc> OPUSOptions {
             ExportOption::TypeEnum,
             { std::string("voip"), std::string("audio"), std::string("lowdelay") },
             //: VOIP is "voice over IP"
-            { TranslatableString("import-export", "VOIP"), TranslatableString("import-export", "Audio"), TranslatableString("import-export", "Low Delay") }
+            { TranslatableString("import-export", "VOIP"), TranslatableString("import-export", "Audio"), TranslatableString("import-export",
+                                                                                                                            "Low Delay") }
         }, wxT("/FileFormats/OPUSApplication")
     },
     {
@@ -692,13 +695,16 @@ bool FFmpegExporter::Init(const char* shortname,
     const auto path = mName.GetFullPath();
     if ((mEncFormatDesc = mFFmpeg->GuessOutputFormat(shortname, OSINPUT(path), nullptr)) == nullptr) {
         //: %1 is the file path
-        throw ExportException(au3::qtToWx(TranslatableString("import-export", "FFmpeg : ERROR - Can't determine format description for file \"%1\".").arg(path).translated()));
+        throw ExportException(au3::qtToWx(TranslatableString("import-export",
+                                                             "FFmpeg : ERROR - Can’t determine format description for file “%1”.").arg(path)
+                                          .translated()));
     }
 
     // mEncFormatCtx is used by libavformat to carry around context data re our output file.
     mEncFormatCtx = mFFmpeg->CreateAVFormatContext();
     if (!mEncFormatCtx) {
-        throw ExportException(wxString::FromUTF8(au3::trc("import-export", "FFmpeg : ERROR - Can't allocate output format context.").c_str()));
+        throw ExportException(wxString::FromUTF8(au3::trc("import-export",
+                                                          "FFmpeg : ERROR - Can’t allocate output format context.").c_str()));
     }
 
     // Initialise the output format context.
@@ -708,7 +714,7 @@ bool FFmpegExporter::Init(const char* shortname,
     // At the moment Audacity can export only one audio stream
     if ((mEncAudioStream = mEncFormatCtx->CreateStream()) == nullptr) {
         //: %1 is the file path
-        throw ExportException(TranslatableString("import-export", "FFmpeg : ERROR - Can't add audio stream to output file \"%1\".")
+        throw ExportException(TranslatableString("import-export", "FFmpeg : ERROR - Can’t add audio stream to output file “%1”.")
                               .Format(path)
                               .Translation());
     }
@@ -735,7 +741,8 @@ bool FFmpegExporter::Init(const char* shortname,
 
         if (result != AVIOContextWrapper::OpenResult::Success) {
             //: %1 is the file path, %2 is the error code
-            throw ExportException(TranslatableString("import-export", "FFmpeg : ERROR - Can't open output file \"%1\" to write. Error code is %2.")
+            throw ExportException(TranslatableString("import-export",
+                                                     "FFmpeg : ERROR - Can’t open output file “%1” to write. Error code is %2.")
                                   .Format(path, static_cast<int>(result))
                                   .Translation());
         }
@@ -769,7 +776,8 @@ bool FFmpegExporter::Init(const char* shortname,
 
     if (err < 0) {
         //: %1 is the file path, %2 is the error code
-        throw ExportException(TranslatableString("import-export", "FFmpeg : ERROR - Can't write headers to output file \"%1\". Error code is %2.")
+        throw ExportException(TranslatableString("import-export",
+                                                 "FFmpeg : ERROR - Can’t write headers to output file “%1”. Error code is %2.")
                               .Format(path, err)
                               .Translation());
     }
@@ -989,7 +997,8 @@ bool FFmpegExporter::InitCodecs(int sampleRate,
     // Is the required audio codec compiled into libavcodec?
     if (codec == NULL) {
         /*: "codec" is short for a "coder-decoder" algorithm */
-        throw ExportException(TranslatableString("import-export", "FFmpeg cannot find audio codec 0x%1.\nSupport for this codec is probably not compiled in.")
+        throw ExportException(TranslatableString("import-export",
+                                                 "FFmpeg cannot find audio codec 0x%1.\nSupport for this codec is probably not compiled in.")
                               .Format(wxString::Format(wxT("%x"), static_cast<unsigned int>(codecID.value)))
                               .Translation());
     }
@@ -1076,7 +1085,7 @@ bool FFmpegExporter::InitCodecs(int sampleRate,
 
         /*: "codec" is short for a "coder-decoder" algorithm */
         //: %1 is the codec name, %2 is the codec id (hex), %3 is the error message
-        throw ExportException(TranslatableString("import-export", "Can't open audio codec \"%1\" (0x%2)\n\n%3")
+        throw ExportException(TranslatableString("import-export", "Can’t open audio codec “%1” (0x%2)\n\n%3")
                               .Format(codec->GetName(), wxString::Format(wxT("%x"), static_cast<unsigned int>(codecID.value)), errmsg)
                               .Translation());
     }
@@ -1100,7 +1109,8 @@ bool FFmpegExporter::InitCodecs(int sampleRate,
     mEncAudioFifoOutBuf = mFFmpeg->CreateMemoryBuffer<int16_t>(mEncAudioFifoOutBufSize);
 
     if (mEncAudioFifoOutBuf.empty()) {
-        throw ExportException(wxString::FromUTF8(au3::trc("import-export", "FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO.").c_str()));
+        throw ExportException(wxString::FromUTF8(au3::trc("import-export",
+                                                          "FFmpeg : ERROR - Can’t allocate buffer to read into from audio FIFO.").c_str()));
     }
 
     return true;
@@ -1128,7 +1138,8 @@ void FFmpegExporter::WritePacket(AVPacketWrapper& pkt)
     if (
         mFFmpeg->av_interleaved_write_frame(
             mEncFormatCtx->GetWrappedValue(), pkt.GetWrappedValue()) != 0) {
-        throw ExportException(wxString::FromUTF8(au3::trc("import-export", "FFmpeg : ERROR - Couldn't write audio frame to output file.").c_str()));
+        throw ExportException(wxString::FromUTF8(au3::trc("import-export",
+                                                          "FFmpeg : ERROR - Couldn’t write audio frame to output file.").c_str()));
     }
 }
 
@@ -1158,13 +1169,15 @@ int FFmpegExporter::EncodeAudio(AVPacketWrapper& pkt, int16_t* audio_samples, in
             mEncAudioCodecCtx->GetSampleFmt(), 0);
 
         if (buffer_size < 0) {
-            throw ExportException(wxString::FromUTF8(au3::trc("import-export", "FFmpeg : ERROR - Could not get sample buffer size").c_str()));
+            throw ExportException(wxString::FromUTF8(au3::trc("import-export",
+                                                              "FFmpeg : ERROR - Could not get sample buffer size").c_str()));
         }
 
         samples = mFFmpeg->CreateMemoryBuffer<uint8_t>(buffer_size);
 
         if (samples.empty()) {
-            throw ExportException(wxString::FromUTF8(au3::trc("import-export", "FFmpeg : ERROR - Could not allocate bytes for samples buffer").c_str()));
+            throw ExportException(wxString::FromUTF8(au3::trc("import-export",
+                                                              "FFmpeg : ERROR - Could not allocate bytes for samples buffer").c_str()));
         }
         /* setup the data pointers in the AVFrame */
         ret = mFFmpeg->avcodec_fill_audio_frame(
@@ -1393,13 +1406,16 @@ bool FFmpegExportProcessor::Initialize(AudacityProject& project,
     context.t1 = t1;
 
     if (!FFmpegFunctions::Load()) {
-        throw ExportException(wxString::FromUTF8(au3::trc("import-export", "Properly configured FFmpeg is required to proceed.\nYou can configure it at Preferences > General.").c_str()));
+        throw ExportException(wxString::FromUTF8(au3::trc("import-export",
+                                                          "Properly configured FFmpeg is required to proceed.\nYou can configure it at Preferences > General.")
+                                                 .c_str()));
     }
     // subformat index may not correspond directly to fmts[] index, convert it
     const auto adjustedFormatIndex = AdjustFormatIndex(context.subformat);
     if (channels > ExportFFmpegOptions::fmts[adjustedFormatIndex].maxchannels) {
         //: %1 is the requested channel count, %2 is the maximum supported
-        throw ExportException(TranslatableString("import-export", "Attempted to export %1 channels, but maximum number of channels for selected output format is %2")
+        throw ExportException(TranslatableString("import-export",
+                                                 "Attempted to export %1 channels, but maximum number of channels for selected output format is %2")
                               .Format(
                                   channels,
                                   ExportFFmpegOptions::fmts[adjustedFormatIndex].maxchannels)
@@ -1431,8 +1447,10 @@ bool FFmpegExportProcessor::Initialize(AudacityProject& project,
         =context.exporter->CreateMixer(project, selectionOnly, t0, t1, mixerSpec);
 
     context.status = selectionOnly
+                     //: %1 is format description
                      ? TranslatableString("import-export", "Exporting selected audio as %1")
                      .Format(ExportFFmpegOptions::fmts[adjustedFormatIndex].description)
+                     //: %1 is format description
                      : TranslatableString("import-export", "Exporting the audio as %1")
                      .Format(ExportFFmpegOptions::fmts[adjustedFormatIndex].description);
 
@@ -1561,9 +1579,11 @@ int FFmpegExporter::AskResample(int bitrate, int rate, int lowrate, int highrate
             {
                 S.AddTitle(
                     (bitrate == 0
-                     ? TranslatableString("import-export", "The project sample rate (%1) is not supported by the current output\nfile format. ")
+                     ? TranslatableString("import-export",
+                                          "The project sample rate (%1) is not supported by the current output\nfile format. ")
                      .Format(rate)
-                     : TranslatableString("import-export", "The project sample rate (%1) and bit rate (%2 kbps) combination is not\nsupported by the current output file format. ")
+                     : TranslatableString("import-export",
+                                          "The project sample rate (%1) and bit rate (%2 kbps) combination is not\nsupported by the current output file format. ")
                      .Format(rate, bitrate / 1000))
                     + TranslatableString("import-export", "You may resample to one of the rates below.")
                     );

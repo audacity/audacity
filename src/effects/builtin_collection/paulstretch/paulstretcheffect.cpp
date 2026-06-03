@@ -99,7 +99,7 @@ ComponentInterfaceSymbol PaulstretchEffect::GetSymbol() const
 
 ::TranslatableString PaulstretchEffect::GetDescription() const
 {
-    return ::TranslatableString("effects-paulstretch", "Paulstretch is only for an extreme time-stretch or \"stasis\" effect");
+    return ::TranslatableString("effects-paulstretch", "Paulstretch is only for an extreme time-stretch or “stasis” effect");
 }
 
 ManualPageID PaulstretchEffect::ManualPage() const
@@ -221,7 +221,7 @@ bool PaulstretchEffect::ProcessOne(
                     /*: 'Time Resolution' is the name of a control in the
                        Paulstretch effect.*/
                     TranslatableString("effects-paulstretch",
-                                       "Audio selection too short to preview.\n\nTry increasing the audio selection to at least %1 seconds,\nor reducing the 'Time Resolution' to less than %2 seconds.")
+                                       "Audio selection too short to preview.\n\nTry increasing the audio selection to at least %1 seconds,\nor reducing the ‘Time Resolution’ to less than %2 seconds.")
                     .arg(
                         (minDuration / rate) + 0.05, // round up to 1/10 s.
                         floor(maxTimeRes * 10.0) / 10.0),
@@ -231,7 +231,7 @@ bool PaulstretchEffect::ProcessOne(
                     /*: 'Time Resolution' is the name of a control in the
                        Paulstretch effect.*/
                     TranslatableString("effects-paulstretch",
-                                       "Unable to Preview.\n\nFor the current audio selection, the maximum\n'Time Resolution' is %1 seconds.")
+                                       "Unable to Preview.\n\nFor the current audio selection, the maximum\n‘Time Resolution’ is %1 seconds.")
                     .arg(floor(maxTimeRes * 10.0) / 10.0),
                     MessageBoxOptions {}.IconStyle(Icon::Warning));
             }
@@ -240,7 +240,7 @@ bool PaulstretchEffect::ProcessOne(
                 /*: 'Time Resolution' is the name of a control in the
                    Paulstretch effect.*/
                 TranslatableString("effects-paulstretch",
-                                   "The 'Time Resolution' is too long for the selection.\n\nTry increasing the audio selection to at least %1 seconds,\nor reducing the 'Time Resolution' to less than %2 seconds.")
+                                   "The ‘Time Resolution’ is too long for the selection.\n\nTry increasing the audio selection to at least %1 seconds,\nor reducing the ‘Time Resolution’ to less than %2 seconds.")
                 .arg(
                     (minDuration / rate) + 0.05, // round up to 1/10 s.
                     floor(maxTimeRes * 10.0) / 10.0),

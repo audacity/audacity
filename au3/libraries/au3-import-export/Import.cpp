@@ -497,7 +497,7 @@ bool Importer::Import(
     if (wxFileName(fName).GetExt() == wxT("doc")) {
         errorMessage
             //: %1 is the name of the file
-            =TranslatableString("import-export", "\"%1\" \nis a not an audio file. \nAudacity cannot open this type of file.")
+            =TranslatableString("import-export", "“%1” \nis a not an audio file. \nAudacity cannot open this type of file.")
               .Format(fName);
         return false;
     }
@@ -623,7 +623,7 @@ bool Importer::Import(
             auto dialog
                 = BasicUI::MakeGenericProgress({}, TranslatableString("import-export", "Importing files"),
                                                //: %1 is the name of the file being imported
-                                               TranslatableString("import-export", "Importing %1...").arg(fName.AfterLast(wxFileName::GetPathSeparator())), dialogStyle);
+                                               TranslatableString("import-export", "Importing %1…").arg(fName.AfterLast(wxFileName::GetPathSeparator())), dialogStyle);
             while (err != 0 || s.st_blocks == 0)
             {
                 BasicUI::Yield();
@@ -694,7 +694,7 @@ bool Importer::Import(
         // if someone has sent us a .cda file, send them away
         if (extension.IsSameAs(wxT("cda"), false)) {
             /*: %s will be the filename */
-            errorMessage = TranslatableString("import-export", "\"%1\" is an audio CD track. \nAudacity cannot open audio CDs directly. \nExtract (rip) the CD tracks to an audio format that \nAudacity can import, such as WAV or AIFF.")
+            errorMessage = TranslatableString("import-export", "“%1” is an audio CD track. \nAudacity cannot open audio CDs directly. \nExtract (rip) the CD tracks to an audio format that \nAudacity can import, such as WAV or AIFF.")
                            .Format(fName);
             return false;
         }
@@ -702,14 +702,14 @@ bool Importer::Import(
         // playlist type files
         if ((extension.IsSameAs(wxT("m3u"), false)) || (extension.IsSameAs(wxT("ram"), false)) || (extension.IsSameAs(wxT("pls"), false))) {
             /*: %s will be the filename */
-            errorMessage = TranslatableString("import-export", "\"%1\" is a playlist file. \nAudacity cannot open this file because it only contains links to other files. \nYou may be able to open it in a text editor and download the actual audio files.")
+            errorMessage = TranslatableString("import-export", "“%1” is a playlist file. \nAudacity cannot open this file because it only contains links to other files. \nYou may be able to open it in a text editor and download the actual audio files.")
                            .Format(fName);
             return false;
         }
         //WMA files of various forms
         if ((extension.IsSameAs(wxT("wma"), false)) || (extension.IsSameAs(wxT("asf"), false))) {
             /*: %s will be the filename */
-            errorMessage = TranslatableString("import-export", "\"%1\" is a Windows Media Audio file. \nAudacity cannot open this type of file due to patent restrictions. \nYou need to convert it to a supported audio format, such as WAV or AIFF.")
+            errorMessage = TranslatableString("import-export", "“%1” is a Windows Media Audio file. \nAudacity cannot open this type of file due to patent restrictions. \nYou need to convert it to a supported audio format, such as WAV or AIFF.")
                            .Format(fName);
             return false;
         }
@@ -719,21 +719,21 @@ bool Importer::Import(
             || (extension.IsSameAs(wxT("m4a"),
                                    false)) || (extension.IsSameAs(wxT("m4r"), false)) || (extension.IsSameAs(wxT("mp4"), false))) {
             /*: %s will be the filename */
-            errorMessage = TranslatableString("import-export", "\"%1\" is an Advanced Audio Coding file.\nWithout the optional FFmpeg library, Audacity cannot open this type of file.\nOtherwise, you need to convert it to a supported audio format, such as WAV or AIFF.")
+            errorMessage = TranslatableString("import-export", "“%1” is an Advanced Audio Coding file.\nWithout the optional FFmpeg library, Audacity cannot open this type of file.\nOtherwise, you need to convert it to a supported audio format, such as WAV or AIFF.")
                            .Format(fName);
             return false;
         }
         // encrypted itunes files
         if ((extension.IsSameAs(wxT("m4p"), false))) {
             /*: %s will be the filename */
-            errorMessage = TranslatableString("import-export", "\"%1\" is an encrypted audio file. \nThese typically are from an online music store. \nAudacity cannot open this type of file due to the encryption. \nTry recording the file into Audacity, or burn it to audio CD then \nextract the CD track to a supported audio format such as WAV or AIFF.")
+            errorMessage = TranslatableString("import-export", "“%1” is an encrypted audio file. \nThese typically are from an online music store. \nAudacity cannot open this type of file due to the encryption. \nTry recording the file into Audacity, or burn it to audio CD then \nextract the CD track to a supported audio format such as WAV or AIFF.")
                            .Format(fName);
             return false;
         }
         // Real Inc. files of various sorts
         if ((extension.IsSameAs(wxT("ra"), false)) || (extension.IsSameAs(wxT("rm"), false)) || (extension.IsSameAs(wxT("rpm"), false))) {
             /*: %s will be the filename */
-            errorMessage = TranslatableString("import-export", "\"%1\" is a RealPlayer media file. \nAudacity cannot open this proprietary format. \nYou need to convert it to a supported audio format, such as WAV or AIFF.")
+            errorMessage = TranslatableString("import-export", "“%1” is a RealPlayer media file. \nAudacity cannot open this proprietary format. \nYou need to convert it to a supported audio format, such as WAV or AIFF.")
                            .Format(fName);
             return false;
         }
@@ -741,7 +741,7 @@ bool Importer::Import(
         // Other notes-based formats
         if ((extension.IsSameAs(wxT("kar"), false)) || (extension.IsSameAs(wxT("mod"), false)) || (extension.IsSameAs(wxT("rmi"), false))) {
             /*: %s will be the filename */
-            errorMessage = TranslatableString("import-export", "\"%1\" is a notes-based file, not an audio file. \nAudacity cannot open this type of file. \nTry converting it to an audio file such as WAV or AIFF and \nthen import it, or record it into Audacity.")
+            errorMessage = TranslatableString("import-export", "“%1” is a notes-based file, not an audio file. \nAudacity cannot open this type of file. \nTry converting it to an audio file such as WAV or AIFF and \nthen import it, or record it into Audacity.")
                            .Format(fName);
             return false;
         }
@@ -749,7 +749,7 @@ bool Importer::Import(
         // MusePack files
         if ((extension.IsSameAs(wxT("mp+"), false)) || (extension.IsSameAs(wxT("mpc"), false)) || (extension.IsSameAs(wxT("mpp"), false))) {
             /*: %s will be the filename */
-            errorMessage = TranslatableString("import-export", "\"%1\" is a Musepack audio file. \nAudacity cannot open this type of file. \nIf you think it might be an mp3 file, rename it to end with \".mp3\" \nand try importing it again. Otherwise you need to convert it to a supported audio \nformat, such as WAV or AIFF.")
+            errorMessage = TranslatableString("import-export", "“%1” is a Musepack audio file. \nAudacity cannot open this type of file. \nIf you think it might be an mp3 file, rename it to end with “.mp3” \nand try importing it again. Otherwise you need to convert it to a supported audio \nformat, such as WAV or AIFF.")
                            .Format(fName);
             return false;
         }
@@ -757,7 +757,7 @@ bool Importer::Import(
         // WavPack files
         if ((extension.IsSameAs(wxT("wv"), false)) || (extension.IsSameAs(wxT("wvc"), false))) {
             /*: %s will be the filename */
-            errorMessage = TranslatableString("import-export", "\"%1\" is a Wavpack audio file. \nAudacity cannot open this type of file. \nYou need to convert it to a supported audio format, such as WAV or AIFF.")
+            errorMessage = TranslatableString("import-export", "“%1” is a Wavpack audio file. \nAudacity cannot open this type of file. \nYou need to convert it to a supported audio format, such as WAV or AIFF.")
                            .Format(fName);
             return false;
         }
@@ -765,7 +765,7 @@ bool Importer::Import(
         // AC3 files
         if ((extension.IsSameAs(wxT("ac3"), false))) {
             /*: %s will be the filename */
-            errorMessage = TranslatableString("import-export", "\"%1\" is a Dolby Digital audio file. \nAudacity cannot currently open this type of file. \nYou need to convert it to a supported audio format, such as WAV or AIFF.")
+            errorMessage = TranslatableString("import-export", "“%1” is a Dolby Digital audio file. \nAudacity cannot currently open this type of file. \nYou need to convert it to a supported audio format, such as WAV or AIFF.")
                            .Format(fName);
             return false;
         }
@@ -773,7 +773,7 @@ bool Importer::Import(
         // Speex files
         if ((extension.IsSameAs(wxT("spx"), false))) {
             /*: %s will be the filename */
-            errorMessage = TranslatableString("import-export", "\"%1\" is an Ogg Speex audio file. \nAudacity cannot currently open this type of file. \nYou need to convert it to a supported audio format, such as WAV or AIFF.")
+            errorMessage = TranslatableString("import-export", "“%1” is an Ogg Speex audio file. \nAudacity cannot currently open this type of file. \nYou need to convert it to a supported audio format, such as WAV or AIFF.")
                            .Format(fName);
             return false;
         }
@@ -786,13 +786,13 @@ bool Importer::Import(
             || (extension.IsSameAs(wxT("avi"),
                                    false)) || (extension.IsSameAs(wxT("wmv"), false)) || (extension.IsSameAs(wxT("rv"), false))) {
             /*: %s will be the filename */
-            errorMessage = TranslatableString("import-export", "\"%1\" is a video file. \nAudacity cannot currently open this type of file. \nYou need to extract the audio to a supported format, such as WAV or AIFF.")
+            errorMessage = TranslatableString("import-export", "“%1” is a video file. \nAudacity cannot currently open this type of file. \nYou need to extract the audio to a supported format, such as WAV or AIFF.")
                            .Format(fName);
             return false;
         }
 
         if (!wxFileExists(fName)) {
-            errorMessage = TranslatableString("import-export", "File \"%1\" not found.").arg(fName);
+            errorMessage = TranslatableString("import-export", "File “%1” not found.").arg(fName);
             return false;
         }
 
@@ -807,7 +807,7 @@ bool Importer::Import(
         }
 
         /*: %s will be the filename */
-        errorMessage = TranslatableString("import-export", "Audacity did not recognize the type of the file '%1'.\n\n%2For uncompressed files, also try File > Import > Raw Data.")
+        errorMessage = TranslatableString("import-export", "Audacity did not recognize the type of the file “%1”.\n\n%2For uncompressed files, also try File > Import > Raw Data.")
                        .Format(fName, extraMessages);
     } else {
         // We DO have a plugin for this file, but import failed.
@@ -824,7 +824,7 @@ bool Importer::Import(
         }
 
         /*: %s will be the filename */
-        errorMessage = TranslatableString("import-export", "Audacity recognized the type of the file '%1'.\nImporters supposedly supporting such files are:\n%2,\nbut none of them understood this file format.")
+        errorMessage = TranslatableString("import-export", "Audacity recognized the type of the file “%1”.\nImporters supposedly supporting such files are:\n%2,\nbut none of them understood this file format.")
                        .Format(fName, pluglist);
     }
 

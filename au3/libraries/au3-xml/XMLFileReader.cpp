@@ -43,7 +43,7 @@ bool XMLFileReader::Parse(XMLTagHandler* baseHandler,
 {
     wxFFile theXMLFile(fname, wxT("rb"));
     if (!theXMLFile.IsOpened()) {
-        mErrorStr = TranslatableString("xml", "Could not open file: \"%1\"").arg(fname);
+        mErrorStr = TranslatableString("xml", "Could not open file: “%1”").arg(fname);
         return false;
     }
 
@@ -125,7 +125,7 @@ bool XMLFileReader::Parse(XMLTagHandler* baseHandler,
         return true;
     } else {
         //: %1 is the file path
-        mErrorStr = TranslatableString("xml", "Could not load file: \"%1\"").arg(fname);
+        mErrorStr = TranslatableString("xml", "Could not load file: “%1”").arg(fname);
         return false;
     }
 }

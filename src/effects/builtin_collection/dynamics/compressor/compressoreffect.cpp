@@ -55,7 +55,7 @@ ComponentInterfaceSymbol CompressorEffect::GetSymbol() const
 
 ::TranslatableString CompressorEffect::GetDescription() const
 {
-    return ::TranslatableString("effects-dynamics", "Reduces \"dynamic range\", or differences between loud and quiet parts.");
+    return ::TranslatableString("effects-dynamics", "Reduces “dynamic range”, or differences between loud and quiet parts.");
 }
 
 ManualPageID CompressorEffect::ManualPage() const

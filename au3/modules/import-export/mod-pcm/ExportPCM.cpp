@@ -578,14 +578,17 @@ bool PCMExportProcessor::Initialize(AudacityProject& project,
             if (byteCount > 4.295e9) {
                 //Temporary translation hack, to say 'WAV or AIFF' rather than 'WAV'
                 const auto message
-                    =TranslatableString("import-export", "You have attempted to Export a WAV or AIFF file which would be greater than 4GB.\nAudacity cannot do this, the Export was abandoned.");
+                    =TranslatableString("import-export",
+                                        "You have attempted to Export a WAV or AIFF file which would be greater than 4GB.\nAudacity cannot do this, the Export was abandoned.");
                 throw ExportErrorException(message,
                                            wxT("Size_limits_for_WAV_and_AIFF_files"));
             }
         }
 
         context.status = (selectionOnly
+                          //: %1 is a format description
                           ? TranslatableString("import-export", "Exporting the selected audio as %1")
+                          //: %1 is a format description
                           : TranslatableString("import-export", "Exporting the audio as %1")).arg(formatStr);
 
         wxASSERT(info.channels >= 0);
@@ -650,7 +653,7 @@ ExportResult PCMExportProcessor::Process(ExportProcessorDelegate& delegate)
                     /*: %s will be the error message from libsndfile, which
                      * is usually something unhelpful (and untranslated) like "system
                      * error" */
-                    TranslatableString("import-export", "Error while writing %1 file (disk full?).\nLibsndfile says \"%2\"")
+                    TranslatableString("import-export", "Error while writing %1 file (disk full?).\nLibsndfile says “%2”")
                     .Format(formatStr, wxString::FromAscii(buffer2)));
 #else
                 // But better to give the same error message as for

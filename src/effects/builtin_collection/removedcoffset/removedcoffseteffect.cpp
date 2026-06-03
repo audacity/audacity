@@ -64,7 +64,7 @@ bool RemoveDCOffsetEffect::Process(::EffectInstance&, ::EffectSettings&)
     EffectOutputTracks outputs { *mTracks, GetType(), { { mT0, mT1 } } };
     bool bGoodResult = true;
     double progress = 0;
-    TranslatableString topMsg = TranslatableString("effects-removedcoffset", "Removing DC offset...\n");
+    TranslatableString topMsg = TranslatableString("effects-removedcoffset", "Removing DC offset…\n");
 
     for (auto track : outputs.Get().Selected<WaveTrack>()) {
         double trackStart = track->GetStartTime();

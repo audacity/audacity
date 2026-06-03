@@ -52,7 +52,7 @@ $copyright (_ "GNU General Public License v2.0")
         (throw 'error-message
           (format nil (_ "~aNotch filter parameters cannot be applied.~%~
                       Try increasing the low frequency bound~%~
-                      or reduce the filter 'Width'.")
+                      or reduce the filter ‘Width’.")
                   p-err)))
       ;; low pass frequency is above Nyquist so do nothing
       ((and (not f1) (>= f0 (/ *sound-srate* 2.0)))
