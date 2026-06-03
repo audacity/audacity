@@ -11,6 +11,7 @@
 #include <utility>
 
 #include "framework/global/async/async.h"
+#include "framework/global/log.h"
 #include "framework/global/runtime.h"
 #include "framework/global/types/ret.h"
 #include "framework/global/io/dir.h"
@@ -80,36 +81,42 @@ bool needsNewSnapshot(au::project::IAudacityProjectPtr project,
                       const audacity::cloud::audiocom::sync::ProjectCloudExtension& extension,
                       UploadMode uploadMode)
 {
-    if (uploadMode == UploadMode::ForceOverwrite || uploadMode == UploadMode::CreateNew) {
+    switch (uploadMode) {
+    case UploadMode::CreateNew:
         return true;
-    }
-
-    if (!extension.IsCloudProject()) {
-        // It is a new project that has never been synced
+    case UploadMode::ForceOverwrite:
         return true;
-    }
+    case UploadMode::NormalUpdate:
+    {
+        if (!extension.IsCloudProject()) {
+            return true;
+        }
 
-    if (project->needSave().val) {
-        return true;
-    }
+        if (project->needSave().val) {
+            return true;
+        }
 
-    const auto status = extension.GetCurrentSyncStatus();
-    return status != audacity::cloud::audiocom::sync::ProjectSyncStatus::Synced
-           && status != audacity::cloud::audiocom::sync::ProjectSyncStatus::Syncing;
+        const auto status = extension.GetCurrentSyncStatus();
+        return status != audacity::cloud::audiocom::sync::ProjectSyncStatus::Synced
+               && status != audacity::cloud::audiocom::sync::ProjectSyncStatus::Syncing;
+    }
+    default:
+        DO_ASSERT(false);
+    }
 }
 
 sync::UploadMode toAu3UploadMode(UploadMode mode)
 {
     switch (mode) {
-    case UploadMode::Normal:
+    case UploadMode::NormalUpdate:
         return sync::UploadMode::Normal;
     case UploadMode::CreateNew:
         return sync::UploadMode::CreateNew;
     case UploadMode::ForceOverwrite:
         return sync::UploadMode::ForceOverwrite;
-    default:
-        return sync::UploadMode::Normal;
     }
+
+    return sync::UploadMode::Normal;
 }
 }
 
@@ -566,8 +573,12 @@ muse::RetVal<muse::ProgressPtr> Au3AudioComService::openCloudProject(const muse:
     }
 
     if (dbProjectData.has_value() && !filesystem()->exists(localPath)) {
-        deleteCloudProject(localPath);
-        dbProjectData.reset();
+        const auto deleteRet = deleteCloudProject(localPath);
+        if (deleteRet) {
+            dbProjectData.reset();
+        } else {
+            LOGW() << "Failed to remove stale cloud project entry: " << deleteRet.toString();
+        }
     }
 
     if (cloudProjectId.empty()) {
@@ -739,12 +750,19 @@ bool Au3AudioComService::isCloudProject(const muse::io::path_t& projectPath) con
     return sync::CloudProjectsDatabase::Get().GetProjectDataForPath(projectPath.toStdString()).has_value();
 }
 
-void Au3AudioComService::deleteCloudProject(const muse::io::path_t& localPath)
+muse::Ret Au3AudioComService::deleteCloudProject(const muse::io::path_t& localPath)
 {
     auto dbData = sync::CloudProjectsDatabase::Get().GetProjectDataForPath(localPath.toStdString());
-    if (dbData) {
-        sync::CloudProjectsDatabase::Get().DeleteProject(dbData->ProjectId);
+    if (!dbData) {
+        // Nothing cached for this path, treat as already deleted
+        return muse::make_ok();
     }
+
+    if (!sync::CloudProjectsDatabase::Get().DeleteProject(dbData->ProjectId)) {
+        return muse::make_ret(muse::Ret::Code::UnknownError, muse::trc("cloud", "Failed to delete cloud project from database"));
+    }
+
+    return muse::make_ok();
 }
 
 bool Au3AudioComService::isSnapshotUpToDate(
