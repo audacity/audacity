@@ -671,6 +671,34 @@ Rectangle {
             }
         }
 
+        // Drives the snap guideline while hovering empty project space below the last track.
+        HoverHandler {
+            id: emptyAreaGuidelineHandler
+
+            enabled: root.interactionState !== TracksItemsView.State.DraggingItem
+
+            onPointChanged: {
+                if (!hovered) {
+                    return
+                }
+
+                let pos = point.position
+                if (tracksViewState.trackAtPosition(pos.x, pos.y) !== -1) {
+                    // Over a track: let the track container own the guideline.
+                    return
+                }
+
+                timeline.updateCursorPosition(pos.x, pos.y)
+                root.handleGuideline(pos.x, false)
+            }
+
+            onHoveredChanged: {
+                if (!hovered) {
+                    root.invalidateGuideline()
+                }
+            }
+        }
+
         StyledViewScrollAndZoomArea {
             id: tracksItemsViewArea
 
