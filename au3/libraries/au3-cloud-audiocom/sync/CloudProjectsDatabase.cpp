@@ -210,19 +210,21 @@ cloud::audiocom::sync::CloudProjectsDatabase::GetCloudProjects() const
     return result;
 }
 
-void cloud::audiocom::sync::CloudProjectsDatabase::DeleteProject(
+bool cloud::audiocom::sync::CloudProjectsDatabase::DeleteProject(
     std::string_view projectId)
 {
     auto connection = GetConnection();
 
     if (!connection) {
-        return;
+        return false;
     }
 
     auto tx = connection->BeginTransaction("DeleteProject");
-    if (DeleteProject(connection, projectId)) {
-        tx.Commit();
+    if (!DeleteProject(connection, projectId)) {
+        return false;
     }
+
+    return tx.Commit().IsOk();
 }
 
 bool CloudProjectsDatabase::MarkProjectAsSynced(

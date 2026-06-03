@@ -25,8 +25,8 @@ enum class CachePolicy {
 };
 
 enum class UploadMode {
-    Normal,
     CreateNew,
+    NormalUpdate,
     ForceOverwrite,
 };
 
@@ -55,7 +55,7 @@ public:
 
     virtual muse::RetVal<muse::ProgressPtr> uploadProject(au::project::IAudacityProjectPtr project, const std::string& name,
                                                           std::function<bool()> projectSaveCallback = nullptr,
-                                                          UploadMode uploadMode = UploadMode::Normal) = 0;
+                                                          UploadMode uploadMode = UploadMode::NormalUpdate) = 0;
 
     virtual muse::RetVal<muse::ProgressPtr> openCloudProject(const muse::io::path_t& localPath, const std::string& projectId = {},
                                                              const std::string& snapshotId = {}, bool forceOverwrite = false) = 0;
@@ -72,7 +72,7 @@ public:
 
     virtual bool isCloudProject(const muse::io::path_t& projectPath) const = 0;
 
-    virtual void deleteCloudProject(const muse::io::path_t& localPath) = 0;
+    virtual muse::Ret deleteCloudProject(const muse::io::path_t& localPath) = 0;
 
     virtual void deinit() = 0;
 };

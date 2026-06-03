@@ -58,8 +58,8 @@ enum class SaveMode
 
 enum class CloudSaveMode
 {
-    Normal,
     CreateNew,
+    NormalUpdate,
     ForceOverwrite,
 };
 
