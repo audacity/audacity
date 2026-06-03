@@ -29,6 +29,20 @@ const UiActionList ProjectUiActions::m_actions = {
              TranslatableString("action", "&Open…"),
              TranslatableString("action", "Open…")
              ),
+    UiAction("project-show-in-folder",
+             au::context::UiCtxAny,
+             au::context::CTX_ANY,
+#if defined(Q_OS_MAC)
+             TranslatableString("action", "Show in Finder"),
+             TranslatableString("action", "Show in Finder")
+#elif defined(Q_OS_WIN)
+             TranslatableString("action", "Show in Explorer"),
+             TranslatableString("action", "Show in Explorer")
+#else
+             TranslatableString("action", "Show in File Manager"),
+             TranslatableString("action", "Show in File Manager")
+#endif
+             ),
     UiAction("file-open-recent",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
