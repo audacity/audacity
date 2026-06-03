@@ -17,6 +17,12 @@ if (OS_IS_WIN)
     set(APP_OUTPUT_NAME ${MUSE_APP_NAME}${MUSE_APP_VERSION_MAJOR})
 
     include(GetCompilerInfo)
+    
+    set(WINDOWS_VERSION_RC ${PROJECT_BINARY_DIR}/windows_version.rc)
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/windows_version.rc.in
+        ${WINDOWS_VERSION_RC}
+        @ONLY)
 
     if (CC_IS_MSVC)
         # MSVC recognizes a *.rc file and will invoke the resource compiler to link it
@@ -30,6 +36,16 @@ if (OS_IS_WIN)
             WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}/share/icons
             )
         set_source_files_properties(${PROJECT_BINARY_DIR}/windows_icons_rc.o PROPERTIES generated true)
+
+        set(WINDOWS_VERSION_RC_OBJ ${PROJECT_BINARY_DIR}/windows_version_rc.o)
+        add_custom_command(
+            OUTPUT ${WINDOWS_VERSION_RC_OBJ}
+            COMMAND ${CMAKE_RC_COMPILER} -i windows_version.rc -o ${WINDOWS_VERSION_RC_OBJ}
+            DEPENDS ${WINDOWS_VERSION_RC}
+            WORKING_DIRECTORY ${PROJECT_BINARY_DIR}
+            )
+        set_source_files_properties(${WINDOWS_VERSION_RC_OBJ} PROPERTIES generated true)
+        set(WINDOWS_VERSION_RC ${WINDOWS_VERSION_RC_OBJ})
     endif()
 
 elseif(OS_IS_LIN)
@@ -139,6 +155,7 @@ set (AUDACITY_APPEND_SRC)
 
 if (OS_IS_WIN)
     list(APPEND AUDACITY_APPEND_SRC ${WINDOWS_ICONS_RC})
+    list(APPEND AUDACITY_APPEND_SRC ${WINDOWS_VERSION_RC})
 endif()
 
 ###########################################

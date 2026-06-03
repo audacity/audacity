@@ -25,6 +25,17 @@
 using namespace au::appshell;
 using namespace au::project;
 
+namespace {
+static QString appDisplayName()
+{
+#ifdef AU4_APP_TITLE_VERSION
+    return QString::fromUtf8(AU4_APP_TITLE_VERSION);
+#else
+    return QStringLiteral("Audacity 4");
+#endif
+}
+}
+
 MainWindowTitleProvider::MainWindowTitleProvider(QObject* parent)
     : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
@@ -98,7 +109,7 @@ void MainWindowTitleProvider::update()
     IAudacityProjectPtr project = context()->currentProject();
 
     if (!project) {
-        setTitle(muse::qtrc("appshell", "Audacity 4"));
+        setTitle(appDisplayName());
         setFilePath("");
         setFileModified(false);
         return;
@@ -107,8 +118,8 @@ void MainWindowTitleProvider::update()
     const QString projectTitle = project->title().toQString();
     const bool projectModified = project->hasUnsavedChanges();
     setTitle(projectTitle.isEmpty()
-             ? muse::qtrc("appshell", "Audacity 4")
-             : muse::qtrc("appshell", "%1 %2- Audacity 4").arg(projectTitle, projectModified ? QString("* ") : QString()));
+             ? appDisplayName()
+             : muse::qtrc("appshell", "%1 %2- %3").arg(projectTitle, projectModified ? QString("* ") : QString(), appDisplayName()));
 
     setFilePath(project->path().toQString());
     setFileModified(projectModified);
