@@ -311,21 +311,6 @@ if (OS_IS_WIN)
         configure_file(${PROJECT_SOURCE_DIR}/build/PortableApps/appinfo.ini.in     ${CMAKE_INSTALL_PREFIX}/../../App/AppInfo/appinfo.ini   @ONLY)
     endif (WIN_PORTABLE)
 
-    # TODO
-    # install( DIRECTORY "${_LIB_OUTPUT}/"
-    #          TYPE LIB
-    #          USE_SOURCE_PERMISSIONS
-    #      )
-
-    install( DIRECTORY "${_LIB_OUTPUT}/"
-              TYPE BIN
-              USE_SOURCE_PERMISSIONS
-          )
-
-    set_target_properties(${EXECUTABLE_NAME} PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY "${CMAKE_INSTALL_PREFIX}/bin"
-    )
-
     if (MSVC)
         set_target_properties(${EXECUTABLE_NAME} PROPERTIES
             VS_DEBUGGER_COMMAND "${CMAKE_INSTALL_PREFIX}/bin/${APP_OUTPUT_NAME}.exe"
