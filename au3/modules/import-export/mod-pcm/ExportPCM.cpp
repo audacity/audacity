@@ -544,6 +544,7 @@ bool PCMExportProcessor::Initialize(AudacityProject& project,
         }
 
         if (!sf) {
+            //: %1 is the file path
             throw ExportException(au3::qtToWx(TranslatableString("import-export", "Cannot export audio to %1").arg(path).translated()));
         }
         // Retrieve tags if not given a set

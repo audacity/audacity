@@ -299,6 +299,7 @@ bool FLACExportProcessor::Initialize(AudacityProject& project,
 #else
     const auto path = fName.GetFullPath();
     if (!context.f.Open(path, wxT("w+b"))) {
+        //: %1 is the file path
         throw ExportException(TranslatableString("import-export", "FLAC export couldn't open %1")
                               .Format(path)
                               .Translation());

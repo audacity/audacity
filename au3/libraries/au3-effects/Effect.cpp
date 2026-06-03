@@ -270,6 +270,7 @@ OptionalMessage Effect::LoadSettingsFromString(
     if (!result) {
         using namespace BasicUI;
         ShowMessageBox(
+            //: %1 is the effect name, %2 is the preset name
             TranslatableString("effects", "%1: Could not load settings below. Default settings will be used.\n\n%2")
             .Format(GetName(), preset),
             MessageBoxOptions {}.Caption(GetName()));

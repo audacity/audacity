@@ -633,9 +633,10 @@ muse::Ret EffectExecutionScenario::performEffectInternal(au3::Au3Project& projec
             auto name = effect->GetName();
 
             const std::string title
+            //: %1 is the name of the effect being run
                 = (effect->GetType()
                    == EffectTypeGenerate ? muse::qtrc("effects", "Generating %1…") : muse::qtrc("effects", "Applying %1…")).arg(
-                      QString::fromStdString(name.translated().toStdString())).toStdString();
+                      name.translated()).toStdString();
 
             au3::ProgressDialog progress{ iocContext(), title };
             auto vr = valueRestorer<BasicUI::ProgressDialog*>(effect->mProgress, &progress);

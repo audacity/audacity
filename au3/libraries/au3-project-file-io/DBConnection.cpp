@@ -88,6 +88,7 @@ void DBConnection::SetError(
     mpErrors->mLastError = msg;
 
     mpErrors->mLibraryError = errorCode && libraryError.empty()
+                              //: %1 is the SQLite error code, %2 is the error message
                               ? TranslatableString("project-file-io", "(%1): %2").arg(errorCode).arg(sqlite3_errstr(errorCode))
                               : libraryError;
 
@@ -115,6 +116,7 @@ void DBConnection::SetDBError(
                            : errorCode;
 
     mpErrors->mLastError = msg.empty()
+                           //: %1 is the SQLite error code, %2 is the error message
                            ? TranslatableString("project-file-io", "(%1): %2").arg(mpErrors->mErrorCode).arg(sqlite3_errstr(mpErrors->mErrorCode))
                            : msg;
 
@@ -242,6 +244,7 @@ bool DBConnection::Close()
         // Get access to the active project
         auto project = mpProject.lock();
         if (project) {
+            //: %1 is the name of the project being checkpointed
             title = TranslatableString("project-file-io", "Checkpointing %1").arg(project->GetProjectName());
         }
 
@@ -530,8 +533,10 @@ void DBConnection::CheckpointThread(sqlite3* db, const FilePath& fileName)
             // TODO: Should we return the actual error message if it's not a
             // disk full condition?
             auto message1 = rc == SQLITE_FULL
+                            //: %1 is the file path
                             ? TranslatableString("project-file-io", "Could not write to %1.\n").arg(path)
                             : TranslatableString{};
+            //: %1 is an additional detail message, possibly empty
             auto message = TranslatableString("project-file-io", "Disk is full.\n%1").arg(message1);
 
             // Stop trying to checkpoint
@@ -615,6 +620,7 @@ bool DBConnectionTransactionScopeImpl::TransactionStart(const wxString& name)
         ADD_EXCEPTION_CONTEXT("sqlite3.context", "TransactionScope::TransactionStart");
 
         mConnection.SetDBError(
+            //: %1 is the name of the savepoint
             TranslatableString("project-file-io", "Failed to create savepoint:\n\n%1").arg(name)
             );
         sqlite3_free(errmsg);
@@ -638,6 +644,7 @@ bool DBConnectionTransactionScopeImpl::TransactionCommit(const wxString& name)
         ADD_EXCEPTION_CONTEXT("sqlite3.context", "TransactionScope::TransactionCommit");
 
         mConnection.SetDBError(
+            //: %1 is the name of the savepoint
             TranslatableString("project-file-io", "Failed to release savepoint:\n\n%1").arg(name)
             );
         sqlite3_free(errmsg);
@@ -660,6 +667,7 @@ bool DBConnectionTransactionScopeImpl::TransactionRollback(const wxString& name)
         ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
         ADD_EXCEPTION_CONTEXT("sqlite3.context", "TransactionScope::TransactionRollback");
         mConnection.SetDBError(
+            //: %1 is the name of the savepoint
             TranslatableString("project-file-io", "Failed to release savepoint:\n\n%1").arg(name)
             );
         sqlite3_free(errmsg);

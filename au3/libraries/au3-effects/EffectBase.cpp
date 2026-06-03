@@ -192,6 +192,7 @@ bool EffectBase::DoEffect(EffectSettings& settings,
         auto name = GetName();
         auto progress = MakeProgress(
             name,
+            //: %1 is the name of the effect being applied
             TranslatableString("effects", "Applying %1...").arg(name),
             ProgressShowCancel
             );

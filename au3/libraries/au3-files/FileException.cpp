@@ -21,14 +21,17 @@ FileException::~FileException()
     TranslatableString format;
     switch (cause) {
     case Cause::Open:
+        //: %1 is the file path
         format = TranslatableString("files", "Audacity failed to open a file in %1.");
         break;
     case Cause::Read:
+        //: %1 is the file path
         format = TranslatableString("files", "Audacity failed to read from a file in %1.");
         break;
     case Cause::Write:
         return WriteFailureMessage(fileName);
     case Cause::Rename:
+        //: %1 is the original file path, %2 is the file name it was being renamed to
         format
             = TranslatableString("files", "Audacity successfully wrote a file in %1 but failed to rename it as %2.");
     default:

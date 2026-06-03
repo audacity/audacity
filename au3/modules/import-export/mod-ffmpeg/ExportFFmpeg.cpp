@@ -289,6 +289,7 @@ const std::initializer_list<PlainExportOptionsEditor::OptionDesc> OPUSOptions {
     },
     {
         {
+            //: VBR is "variable bit rate"
             OPUSOptionIDVBRMode, TranslatableString("import-export", "Vbr Mode"),
             std::string("on"),
             ExportOption::TypeEnum,
@@ -302,6 +303,7 @@ const std::initializer_list<PlainExportOptionsEditor::OptionDesc> OPUSOptions {
             std::string("audio"),
             ExportOption::TypeEnum,
             { std::string("voip"), std::string("audio"), std::string("lowdelay") },
+            //: VOIP is "voice over IP"
             { TranslatableString("import-export", "VOIP"), TranslatableString("import-export", "Audio"), TranslatableString("import-export", "Low Delay") }
         }, wxT("/FileFormats/OPUSApplication")
     },
@@ -689,6 +691,7 @@ bool FFmpegExporter::Init(const char* shortname,
     // and the default video/audio codecs that the format uses.
     const auto path = mName.GetFullPath();
     if ((mEncFormatDesc = mFFmpeg->GuessOutputFormat(shortname, OSINPUT(path), nullptr)) == nullptr) {
+        //: %1 is the file path
         throw ExportException(au3::qtToWx(TranslatableString("import-export", "FFmpeg : ERROR - Can't determine format description for file \"%1\".").arg(path).translated()));
     }
 
@@ -704,6 +707,7 @@ bool FFmpegExporter::Init(const char* shortname,
 
     // At the moment Audacity can export only one audio stream
     if ((mEncAudioStream = mEncFormatCtx->CreateStream()) == nullptr) {
+        //: %1 is the file path
         throw ExportException(TranslatableString("import-export", "FFmpeg : ERROR - Can't add audio stream to output file \"%1\".")
                               .Format(path)
                               .Translation());
@@ -730,6 +734,7 @@ bool FFmpegExporter::Init(const char* shortname,
             =mEncFormatCtx->OpenOutputContext(path);
 
         if (result != AVIOContextWrapper::OpenResult::Success) {
+            //: %1 is the file path, %2 is the error code
             throw ExportException(TranslatableString("import-export", "FFmpeg : ERROR - Can't open output file \"%1\" to write. Error code is %2.")
                                   .Format(path, static_cast<int>(result))
                                   .Translation());
@@ -763,6 +768,7 @@ bool FFmpegExporter::Init(const char* shortname,
         =mFFmpeg->avformat_write_header(mEncFormatCtx->GetWrappedValue(), nullptr);
 
     if (err < 0) {
+        //: %1 is the file path, %2 is the error code
         throw ExportException(TranslatableString("import-export", "FFmpeg : ERROR - Can't write headers to output file \"%1\". Error code is %2.")
                               .Format(path, err)
                               .Translation());
@@ -984,7 +990,7 @@ bool FFmpegExporter::InitCodecs(int sampleRate,
     if (codec == NULL) {
         /*: "codec" is short for a "coder-decoder" algorithm */
         throw ExportException(TranslatableString("import-export", "FFmpeg cannot find audio codec 0x%1.\nSupport for this codec is probably not compiled in.")
-                              .Format(static_cast<const unsigned int>(codecID.value))
+                              .Format(wxString::Format(wxT("%x"), static_cast<unsigned int>(codecID.value)))
                               .Translation());
     }
 
@@ -1069,8 +1075,9 @@ bool FFmpegExporter::InitCodecs(int sampleRate,
         }
 
         /*: "codec" is short for a "coder-decoder" algorithm */
+        //: %1 is the codec name, %2 is the codec id (hex), %3 is the error message
         throw ExportException(TranslatableString("import-export", "Can't open audio codec \"%1\" (0x%2)\n\n%3")
-                              .Format(codec->GetName(), codecID.value, errmsg)
+                              .Format(codec->GetName(), wxString::Format(wxT("%x"), static_cast<unsigned int>(codecID.value)), errmsg)
                               .Translation());
     }
 
@@ -1391,6 +1398,7 @@ bool FFmpegExportProcessor::Initialize(AudacityProject& project,
     // subformat index may not correspond directly to fmts[] index, convert it
     const auto adjustedFormatIndex = AdjustFormatIndex(context.subformat);
     if (channels > ExportFFmpegOptions::fmts[adjustedFormatIndex].maxchannels) {
+        //: %1 is the requested channel count, %2 is the maximum supported
         throw ExportException(TranslatableString("import-export", "Attempted to export %1 channels, but maximum number of channels for selected output format is %2")
                               .Format(
                                   channels,

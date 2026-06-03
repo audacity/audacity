@@ -64,6 +64,7 @@ bool XMLFileReader::Parse(XMLTagHandler* baseHandler,
                 XML_ErrorString(XML_GetErrorCode(mParser)) // , {}
                 );
 
+            //: %1 is the parser error message, %2 is the line number in the file
             mErrorStr = TranslatableString("xml", "Error: %1 at line %2").arg(mLibraryErrorStr).arg((long unsigned int)XML_GetCurrentLineNumber(mParser));
 
             theXMLFile.Close();
@@ -123,6 +124,7 @@ bool XMLFileReader::Parse(XMLTagHandler* baseHandler,
     if (mBaseHandler) {
         return true;
     } else {
+        //: %1 is the file path
         mErrorStr = TranslatableString("xml", "Could not load file: \"%1\"").arg(fname);
         return false;
     }
@@ -260,6 +262,7 @@ bool XMLFileReader::ParseBuffer(
                 XML_ErrorString(XML_GetErrorCode(mParser)) // , {}
                 );
 
+        //: %1 is the parser error message, %2 is the line number in the file
         mErrorStr = TranslatableString("xml", "Error: %1 at line %2")
                     .Format(
             mLibraryErrorStr,

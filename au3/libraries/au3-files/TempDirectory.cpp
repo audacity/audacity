@@ -140,6 +140,7 @@ bool TempDirectory::FATFilesystemDenied(const FilePath& path,
     if (FileNames::IsOnFATFileSystem(path)) {
         BasicUI::ShowErrorDialog(placement,
                                  TranslatableString("files", "Unsuitable"),
+                                 //: %1 is a message describing why the drive is unsuitable
                                  TranslatableString("files", "%1\n\nFor tips on suitable drives, click the help button.").arg(msg),
                                  "Error:_Unsuitable_drive"
                                  );

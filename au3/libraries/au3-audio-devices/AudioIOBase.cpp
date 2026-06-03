@@ -834,6 +834,7 @@ wxString AudioIOBase::GetDeviceInfo() const
 
         info = Pa_GetDeviceInfo(j);
         if (!info) {
+            //: %1 is the device index number
             s << TranslatableString("audio-devices", "Device info unavailable for: %1\n").arg(j);
             continue;
         }
@@ -892,12 +893,14 @@ wxString AudioIOBase::GetDeviceInfo() const
 
     s << wxT("==============================\n");
     if (haveRecDevice) {
+        //: %1 is the recording device number, %2 is the device name
         s << TranslatableString("audio-devices", "Selected recording device: %1 - %2\n").arg(recDeviceNum).arg(recDevice);
     } else {
         s << TranslatableString("audio-devices", "No recording device found for '%1'.\n").arg(recDevice);
     }
 
     if (havePlayDevice) {
+        //: %1 is the playback device number, %2 is the device name
         s << TranslatableString("audio-devices", "Selected playback device: %1 - %2\n").arg(playDeviceNum).arg(playDevice);
     } else {
         s << TranslatableString("audio-devices", "No playback device found for '%1'.\n").arg(playDevice);
@@ -970,6 +973,7 @@ wxString AudioIOBase::GetDeviceInfo() const
         }
 
         if (error) {
+            //: %1 is a PortAudio error code returned while opening the devices
             s << TranslatableString("audio-devices", "Received %1 while opening devices\n").arg(error);
             return o.GetString();
         }
@@ -989,6 +993,7 @@ wxString AudioIOBase::GetDeviceInfo() const
         cnt = Px_GetNumMixers(stream);
         for (int i = 0; i < cnt; i++) {
             wxString name = wxSafeConvertMB2WX(Px_GetMixerName(stream, i));
+            //: %1 is the mixer index number, %2 is the mixer name
             s << TranslatableString("audio-devices", "%1 - %2\n").arg(i).arg(name);
         }
 
@@ -997,6 +1002,7 @@ wxString AudioIOBase::GetDeviceInfo() const
         cnt = Px_GetNumInputSources(PortMixer);
         for (int i = 0; i < cnt; i++) {
             wxString name = wxSafeConvertMB2WX(Px_GetInputSourceName(PortMixer, i));
+            //: %1 is the recording source index number, %2 is the source name
             s << TranslatableString("audio-devices", "%1 - %2\n").arg(i).arg(name);
         }
 
@@ -1005,6 +1011,7 @@ wxString AudioIOBase::GetDeviceInfo() const
         cnt = Px_GetNumOutputVolumes(PortMixer);
         for (int i = 0; i < cnt; i++) {
             wxString name = wxSafeConvertMB2WX(Px_GetOutputVolumeName(PortMixer, i));
+            //: %1 is the playback volume index number, %2 is the volume control name
             s << TranslatableString("audio-devices", "%1 - %2\n").arg(i).arg(name);
         }
 

@@ -52,6 +52,7 @@ TranslatableString AudioUnitEffectBase::SaveBlobToConfig(
     // Base64 encode the returned binary property list
     auto parms = wxBase64Encode(blob, len);
     if (!allowEmpty && parms.IsEmpty()) {
+        //: %1 is the preset file path
         return TranslatableString("audio-unit", "Failed to encode preset from \"%1\"").arg(path);
     }
 
@@ -462,6 +463,7 @@ TranslatableString AudioUnitEffectBase::Export(
     // Create the file
     wxFFile f(path, wxT("wb"));
     if (!f.IsOpened()) {
+        //: %1 is the preset file path
         return TranslatableString("audio-unit", "Couldn't open \"%1\"").arg(path);
     }
 
@@ -476,6 +478,7 @@ TranslatableString AudioUnitEffectBase::Export(
     // Write XML data
     auto length = CFDataGetLength(data.get());
     if (f.Write(CFDataGetBytePtr(data.get()), length) != length || f.Error()) {
+        //: %1 is the preset file path
         return TranslatableString("audio-unit", "Failed to write XML preset to \"%1\"").arg(path);
     }
 
@@ -489,6 +492,7 @@ TranslatableString AudioUnitEffectBase::Import(
     // Open the preset
     wxFFile f(path, wxT("r"));
     if (!f.IsOpened()) {
+        //: %1 is the preset file path
         return TranslatableString("audio-unit", "Couldn't open \"%1\"").arg(path);
     }
 
@@ -496,6 +500,7 @@ TranslatableString AudioUnitEffectBase::Import(
     size_t len = f.Length();
     wxMemoryBuffer buf(len);
     if (f.Read(buf.GetData(), len) != len || f.Error()) {
+        //: %1 is the preset file path
         return TranslatableString("audio-unit", "Unable to read the preset from \"%1\"").arg(path);
     }
     buf.SetDataLen(len);

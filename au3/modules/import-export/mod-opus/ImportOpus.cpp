@@ -333,6 +333,7 @@ void OpusImportFileHandle::NotifyImportFailed(
     ImportProgressListener& progressListener, const TranslatableString& error)
 {
     ImportUtils::ShowMessageBox(
+        //: %1 is the error message
         TranslatableString("import-export", "Failed to decode Opus file: %1").arg(error));
 
     if (IsCancelled()) {

@@ -496,6 +496,7 @@ bool Importer::Import(
     // Bug #2647: Peter has a Word 2000 .doc file that is recognized and imported by FFmpeg.
     if (wxFileName(fName).GetExt() == wxT("doc")) {
         errorMessage
+            //: %1 is the name of the file
             =TranslatableString("import-export", "\"%1\" \nis a not an audio file. \nAudacity cannot open this type of file.")
               .Format(fName);
         return false;
@@ -621,6 +622,7 @@ bool Importer::Import(
                               | BasicUI::ProgressSmooth;
             auto dialog
                 = BasicUI::MakeGenericProgress({}, TranslatableString("import-export", "Importing files"),
+                                               //: %1 is the name of the file being imported
                                                TranslatableString("import-export", "Importing %1...").arg(fName.AfterLast(wxFileName::GetPathSeparator())), dialogStyle);
             while (err != 0 || s.st_blocks == 0)
             {
@@ -679,6 +681,7 @@ bool Importer::Import(
     // If so, notify the user of this fact
     for (const auto& unusableImportPlugin : sUnusableImportPluginList()) {
         if (unusableImportPlugin->SupportsExtension(extension)) {
+            //: %1 is the name of an audio file format, such as "MP3"
             errorMessage = TranslatableString("import-export", "This version of Audacity was not compiled with %1 support.")
                            .Format(unusableImportPlugin->GetPluginFormatDescription());
             return false;
@@ -814,6 +817,7 @@ bool Importer::Import(
             if (pluglist.empty()) {
                 pluglist = plugin->GetPluginFormatDescription();
             } else {
+                //: %1 is the list of importers so far, %2 is the next importer's format name being appended
                 pluglist = TranslatableString("import-export", "%1, %2")
                            .Format(pluglist, plugin->GetPluginFormatDescription());
             }

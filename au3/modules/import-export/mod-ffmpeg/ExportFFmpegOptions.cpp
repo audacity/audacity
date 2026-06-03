@@ -345,6 +345,7 @@ CompatibilityEntry ExportFFmpegOptions::CompatibilityList[] =
 // PRL:  I can't find where this preference is used!
 ChoiceSetting AACProfiles { wxT("/FileFormats/FFmpegAACProfile"),
                             {
+                                //: LC is the AAC "Low Complexity" profile
                                 { wxT("1") /*FF_PROFILE_AAC_LOW*/, TranslatableString("import-export", "LC") },
                                 { wxT("0") /*FF_PROFILE_AAC_MAIN*/, TranslatableString("import-export", "Main") },
                                 // {wxT("2") /*FF_PROFILE_AAC_SSR*/, XO("SSR")}, //SSR is not supported
@@ -469,6 +470,7 @@ const TranslatableStrings PredictionOrderMethodNames {
     TranslatableString("import-export", "4-level"),
     TranslatableString("import-export", "8-level"),
     TranslatableString("import-export", "Full search"),
+    //: "Log" is short for "logarithmic"
     TranslatableString("import-export", "Log search"),
 };
 }

@@ -62,6 +62,7 @@ public:
         constexpr double ProgressSteps { 1000.0 };
         if (!mProgressDialog) {
             wxFileName ff(mImportFileHandle->GetFilename());
+            //: %1 is the description of the file format being imported
             auto title = TranslatableString("import-export", "Importing %1").arg(mImportFileHandle->GetFileDescription());
             mProgressDialog = BasicUI::MakeProgress(title, ::au3::untranslatable(ff.GetFullName()));
         }

@@ -134,6 +134,7 @@ wxString FileNames::FormatWildcard(const FileTypes& fileTypes)
                 mask = defaultDescription(extensions);
             }
             if (fileType.appendExtensions) {
+                //: %1 is the list of file extension glob patterns, such as "*.txt;*.xml"
                 mask.Join(::TranslatableString("files", "(%1)").arg(globs), " ");
             }
             result += mask.Translation();
@@ -705,6 +706,7 @@ bool FileNames::WritableLocationCheck(const FilePath& path,
         using namespace BasicUI;
         ShowMessageBox(
             message
+            //: %1 is the folder path that is not writable
             + TranslatableString("files", "\n%1 does not have write permissions.").arg(path),
             MessageBoxOptions {}
             .Caption(::TranslatableString("files", "Error"))

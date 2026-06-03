@@ -78,6 +78,7 @@ bool RemoveDCOffsetEffect::Process(::EffectInstance&, ::EffectSettings&)
             const auto channels = track->Channels();
 
             auto msg = ::TranslatableString::untranslatable(
+                //: %1 is the name of the track being analyzed
                 topMsg.translated() + TranslatableString("effects-removedcoffset", "Analyzing: %1").arg(trackName).translated());
 
             const auto progressReport = [&](double fraction) {
@@ -95,6 +96,7 @@ bool RemoveDCOffsetEffect::Process(::EffectInstance&, ::EffectSettings&)
                 progress += 1.0 / double(2 * GetNumWaveTracks());
 
                 msg = ::TranslatableString::untranslatable(
+                    //: %1 is the name of the track being processed
                     topMsg.translated() + TranslatableString("effects-removedcoffset", "Processing: %1").arg(trackName).translated());
                 if (false == (bGoodResult = ProcessOne(*channel, msg, progress, offset))) {
                     goto break2;

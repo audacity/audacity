@@ -124,9 +124,11 @@ bool NormalizeEffect::Process(EffectInstance&, EffectSettings&)
             const bool oneChannel = (channels.size() == 1 || mStereoInd);
             auto msg = oneChannel
                        ? ::TranslatableString::untranslatable(
+                //: %1 is the name of the track being analyzed
                 topMsg.translated() + TranslatableString("effects-normalize", "Analyzing: %1").arg(trackName).translated())
                        // TODO: more-than-two-channels-message
                        : ::TranslatableString::untranslatable(
+                //: %1 is the name of the track being analyzed
                 topMsg.translated() + TranslatableString("effects-normalize", "Analyzing first track of stereo pair: %1").arg(
                     trackName).translated());
 
@@ -153,6 +155,7 @@ bool NormalizeEffect::Process(EffectInstance&, EffectSettings&)
                 if (!oneChannel) {
                     msg = ::TranslatableString::untranslatable(
                         topMsg.translated()
+                        //: %1 is the name of the track being analyzed
                         + TranslatableString("effects-normalize", "Analyzing second track of stereo pair: %1").arg(trackName).translated());
                 }
             }
@@ -161,18 +164,21 @@ bool NormalizeEffect::Process(EffectInstance&, EffectSettings&)
                 if (track->NChannels() == 1) {
                     // really mono
                     msg = ::TranslatableString::untranslatable(
+                        //: %1 is the name of the track being processed
                         topMsg.translated() + TranslatableString("effects-normalize", "Processing: %1").arg(trackName).translated());
                 } else {
                     //'stereo tracks independently'
                     // TODO: more-than-two-channels-message
                     msg = ::TranslatableString::untranslatable(
                         topMsg.translated()
+                        //: %1 is the name of the track being processed
                         + TranslatableString("effects-normalize", "Processing stereo channels independently: %1").arg(
                             trackName).translated());
                 }
             } else {
                 // TODO: more-than-two-channels-message
                 msg = ::TranslatableString::untranslatable(
+                    //: %1 is the name of the track being processed
                     topMsg.translated() + TranslatableString("effects-normalize", "Processing first track of stereo pair: %1").arg(
                         trackName).translated());
             }
@@ -195,6 +201,7 @@ bool NormalizeEffect::Process(EffectInstance&, EffectSettings&)
                 // TODO: more-than-two-channels-message
                 msg = ::TranslatableString::untranslatable(
                     topMsg.translated()
+                    //: %1 is the name of the track being processed
                     + TranslatableString("effects-normalize", "Processing second track of stereo pair: %1").arg(trackName).translated());
             }
         }

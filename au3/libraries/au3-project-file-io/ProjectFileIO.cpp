@@ -426,9 +426,9 @@ ProjectFileIO::ProjectFileIO(AudacityProject& project)
     if (wxGetDiskSpace(path, NULL, &freeSpace)) {
         if (freeSpace < wxLongLong(wxLL(100 * 1048576))) {
             auto volume = FileNames::AbbreviatePath(path);
-            /*: %s will be replaced by the drive letter (on Windows) */
             BasicUI::ShowErrorDialog({},
                                      TranslatableString("project-file-io", "Warning"),
+                                     //: %1 is the drive or volume name
                                      TranslatableString("project-file-io", "There is very little free disk space left on %1\nPlease select a bigger temporary directory location in\nDirectories Preferences.").arg(volume),
                                      "Error:_Disk_full_or_not_writable"
                                      );
@@ -513,6 +513,7 @@ bool ProjectFileIO::OpenConnection(FilePath fileName /* = {}  */)
     if (rc != SQLITE_OK) {
         // Must use SetError() here since we do not have an active DB
         SetError(
+            //: %1 is the database file path
             TranslatableString("project-file-io", "Failed to open database file:\n\n%1").arg(fileName),
             {},
             rc
@@ -646,6 +647,7 @@ int ProjectFileIO::Exec(const char* query, const ExecCB& callback, bool silent)
         ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
 
         SetDBError(
+            //: %1 is the SQL command that failed to execute
             TranslatableString("project-file-io", "Failed to execute a project file command:\n\n%1").arg(query),
             TranslatableString::untranslatable(errmsg),
             rc
@@ -877,6 +879,7 @@ bool ProjectFileIO::DeleteBlocks(const BlockIDs& blockids, bool complement)
     // Mark the project recovered if we deleted any rows
     int changes = sqlite3_changes(db);
     if (changes > 0) {
+        //: %1 is the number of deleted orphan blocks
         wxLogInfo(wxString::FromUTF8(TranslatableString("project-file-io", "Total orphan blocks deleted %1").Translation().c_str()), changes);
         mRecovered = true;
     }
@@ -1030,6 +1033,7 @@ bool ProjectFileIO::CopyTo(const FilePath& destpath,
                 "sqlite3.context", "ProjectGileIO::CopyTo.prepare");
 
             SetDBError(
+                //: %1 is the SQL command that could not be prepared
                 TranslatableString("project-file-io", "Unable to prepare project file command:\n\n%1").arg(sql)
                 );
             return false;
@@ -1077,6 +1081,7 @@ bool ProjectFileIO::CopyTo(const FilePath& destpath,
                     "sqlite3.context", "ProjectGileIO::CopyTo.step");
 
                 SetDBError(
+                    //: %1 is the SQL command that failed
                     TranslatableString("project-file-io", "Failed to update the project file.\nThe following command failed:\n\n%1").arg(sql)
                     );
                 return false;
@@ -1258,6 +1263,7 @@ bool ProjectFileIO::RenameOrWarn(const FilePath& src, const FilePath& dst)
     if (!success) {
         ShowError(*ProjectFramePlacement(&mProject),
                   TranslatableString("project-file-io", "Error Writing to File"),
+                  //: %1 is the file path
                   TranslatableString("project-file-io", "Audacity failed to write file %1.\nPerhaps disk is full or not writable.\nFor tips on freeing up space, click the help button.")
                   .Format(dst),
                   "Error:_Disk_full_or_not_writable"
@@ -1846,6 +1852,7 @@ bool ProjectFileIO::WriteDoc(const char* table,
         ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::WriteDoc::prepare");
 
         SetDBError(
+            //: %1 is the SQL command that could not be prepared
             TranslatableString("project-file-io", "Unable to prepare project file command:\n\n%1").arg(sql)
             );
         return false;
@@ -1870,6 +1877,7 @@ bool ProjectFileIO::WriteDoc(const char* table,
 
     const auto reportError = [this](auto sql) {
         SetDBError(
+            //: %1 is the SQL command that failed
             TranslatableString("project-file-io", "Failed to update the project file.\nThe following command failed:\n\n%1")
             .Format(sql));
     };
@@ -2232,6 +2240,7 @@ bool ProjectFileIO::SaveProject(
                 // Additional help via a Help button links to the manual.
                 ShowError({},
                           TranslatableString("project-file-io", "Error Saving Project"),
+                          //: %1 is the underlying error message
                           TranslatableString("project-file-io", "The project failed to open, possibly due to limited space\non the storage device.\n\n%1").arg(GetLastError()),
                           "Error:_Disk_full_or_not_writable");
 
@@ -2251,6 +2260,7 @@ bool ProjectFileIO::SaveProject(
             // Additional help via a Help button links to the manual.
             ShowError({},
                       TranslatableString("project-file-io", "Error Saving Project"),
+                      //: %1 is the underlying error message
                       TranslatableString("project-file-io", "Unable to remove autosave information, possibly due to limited space\non the storage device.\n\n%1").arg(GetLastError()),
                       "Error:_Disk_full_or_not_writable");
 

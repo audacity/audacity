@@ -465,6 +465,7 @@ bool PluginManager::DropFile(const wxString& fileName)
                 if (!nPlugIns) {
                     // Unlikely after the dry run succeeded
                     ShowMessageBox(
+                        //: %1 is the error message explaining why registration failed
                         TranslatableString("module-manager", "Failed to register:\n%1").arg(errMsg));
                     return true;
                 }

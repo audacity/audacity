@@ -89,6 +89,7 @@ void Module::ShowLoadFailureError(const wxString& Error)
 {
     auto ShortName = wxFileName(mName).GetName();
     DoMessageBox(
+        //: %1 is the module name, %2 is the system error message
         TranslatableString("module-manager", "Unable to load the \"%1\" module.\n\nError: %2")
         .Format(ShortName, Error));
     wxLogMessage(wxT("Unable to load the module \"%s\". Error: %s"), mName, Error);
@@ -131,6 +132,7 @@ bool Module::Load(wxString& deferredErrorMessage)
     wxString moduleVersion = versionFn();
     if (!IsVersionCompatible(moduleVersion)) {
         DoMessageBox(
+            //: %1 is the module name, %2 is the Audacity version string the module targets
             TranslatableString("module-manager", "The module \"%1\" is matched with Audacity version \"%2\".\n\nIt will not be loaded.")
             .Format(ShortName, moduleVersion));
         wxLogMessage(wxT("The module \"%s\" is matched with Audacity version \"%s\". It will not be loaded."), mName, moduleVersion);

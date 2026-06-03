@@ -109,6 +109,7 @@ bool NormalizeLoudnessEffect::Process(::EffectInstance&, EffectSettings&)
         mSteps = (mNormalizeTo == kLoudness) ? 2 : 1;
 
         mProgressMsg = TranslatableString::untranslatable(
+            //: %1 is the name of the track being analyzed
             topMsg.translated() + TranslatableString("effects-loudness", "Analyzing: %1").arg(trackName).translated());
 
         const auto channels = pTrack->Channels();
@@ -176,6 +177,7 @@ bool NormalizeLoudnessEffect::Process(::EffectInstance&, EffectSettings&)
             }
 
             mProgressMsg = TranslatableString::untranslatable(
+                //: %1 is the name of the track being processed
                 topMsg.translated() + TranslatableString("effects-loudness", "Processing: %1").arg(trackName).translated());
             if (!ProcessOne(track, nChannels, curT0, curT1, mult, nullptr)) {
                 // Processing failed -> abort

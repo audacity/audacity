@@ -16,9 +16,9 @@
 #include <string_view>
 
 namespace {
-/*: kbps abbreviates "thousands of bits per second" */
 TranslatableString n_kbps(int n)
 {
+    /*: kbit/s abbreviates "kilobits per second" */
     return TranslatableString("import-export", "%1 kbit/s").arg(n);
 }
 
