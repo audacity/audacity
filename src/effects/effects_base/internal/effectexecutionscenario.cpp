@@ -17,7 +17,6 @@
 #include "au3-track/Track.h"
 #include "au3-wave-track/WaveTrack.h"
 #include "au3-project-rate/ProjectRate.h"
-#include "au3-menus/CommandManager.h"
 #include "au3-effects/EffectManager.h"
 #include "au3-module-manager/ConfigInterface.h"
 #include "au3-numeric-formats/NumericConverterFormats.h"

@@ -46,6 +46,7 @@ set( LIBRARIES
    PRIVATE
    rapidjson::rapidjson
    au3-effects-interface
+   au3-strings-interface
    wxBase
    SndFile::sndfile
 )

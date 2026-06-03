@@ -31,6 +31,7 @@ set( LIBRARIES
       au3-mixer-interface
       au3-graphics-interface
       au3-wave-track-interface
+      au3-strings-interface
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""

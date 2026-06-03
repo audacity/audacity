@@ -29,6 +29,7 @@ set( LIBRARIES
    au3-mixer-interface
    au3-project-rate-interface
    au3-realtime-effects
+   au3-strings-interface
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

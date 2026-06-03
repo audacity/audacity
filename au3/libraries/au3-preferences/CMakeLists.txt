@@ -22,9 +22,10 @@ set( SOURCES
    Prefs.cpp
    Prefs.h
 )
-set( LIBRARIES 
+set( LIBRARIES
    au3-basic-ui-interface
    au3-components-interface
+   au3-strings-interface
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

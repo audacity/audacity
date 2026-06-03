@@ -22,6 +22,7 @@ set( LIBRARIES
    PRIVATE
    "-framework AudioUnit"
    "-framework AudioToolbox"
+   au3-strings-interface
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

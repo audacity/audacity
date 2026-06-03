@@ -35,6 +35,7 @@ set( LIBRARIES
    au3-channel
    au3-mixer
    au3-time-and-pitch
+   au3-strings-interface
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

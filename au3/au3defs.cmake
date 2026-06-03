@@ -159,9 +159,6 @@ macro(audacity_library NAME SOURCES IMPORT_TARGETS ADDITIONAL_DEFINES ADDITIONAL
             ${CMAKE_CURRENT_SOURCE_DIR}
     )
 
-    # TranslatableString uses QString and wxBase.
-    target_link_libraries(${au3_target_name} PUBLIC Qt6::Core wxBase)
-
     # Add PRIVATE include directories for AU3 library dependencies
     # This allows the library to include headers from its dependencies
     set(_private_includes "")
