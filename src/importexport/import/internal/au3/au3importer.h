@@ -11,6 +11,7 @@
 #include "au3-import-export/Import.h"
 
 #include "../../iimporter.h"
+#include "importexport/labels/ilabelsimporter.h"
 
 #include <memory>
 
@@ -22,6 +23,7 @@ class Au3Importer : public IImporter, public muse::Contextable
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
     muse::ContextInject<trackedit::ITracksInteraction> tracksInteraction{ this };
     muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
+    muse::ContextInject<ILabelsImporter> labelsImporter{ this };
 
 public:
     Au3Importer(const muse::modularity::ContextPtr& ctx);

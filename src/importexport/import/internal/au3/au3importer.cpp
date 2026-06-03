@@ -119,6 +119,13 @@ au::importexport::FileInfo au::importexport::Au3Importer::fileInfo(const muse::i
 
 bool au::importexport::Au3Importer::import(const muse::io::path_t& filePath)
 {
+    const std::string ext = suffix(filePath);
+    for (const std::string& labelExt : labelsImporter()->supportedExtensions()) {
+        if (labelExt == ext) {
+            return labelsImporter()->importData(filePath).success();
+        }
+    }
+
     const bool projectWasEmpty = isProjectEmpty();
 
     Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
@@ -273,7 +280,7 @@ bool au::importexport::Au3Importer::importFromSystemClipboard(
 
 std::vector<std::string> au::importexport::Au3Importer::supportedExtensions() const
 {
-    static const std::vector<std::string> supportedExtensions = [] {
+    static const std::vector<std::string> audioExtensions = [] {
         std::unordered_set<std::string> uniq;
 
         const auto fileTypes = Importer::Get().GetFileTypes(FileNames::FileType {});
@@ -304,7 +311,11 @@ std::vector<std::string> au::importexport::Au3Importer::supportedExtensions() co
         return out;
     }();
 
-    return supportedExtensions;
+    // Audio formats (from au3) plus whatever the labels importer handles.
+    std::vector<std::string> out = audioExtensions;
+    const std::vector<std::string> labelExtensions = labelsImporter()->supportedExtensions();
+    out.insert(out.end(), labelExtensions.cbegin(), labelExtensions.cend());
+    return out;
 }
 
 void au::importexport::Au3Importer::applyImportedProjectTitleIfNeeded(const muse::io::path_t& filePath)
