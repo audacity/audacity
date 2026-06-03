@@ -1007,7 +1007,7 @@ Ret ProjectActionsController::doOpenProject(const io::path_t& filePath)
     IAudacityProjectPtr project = rv.val;
 
     // Check if this is an autosave of a newly created project
-    if (!project->isNewlyCreated()) {
+    if (!project->isNewlyCreated() && !au::project::isAudacityUnsavedFile(project->path())) {
         recentFilesController()->prependRecentFile(makeRecentFile(project));
     }
 
