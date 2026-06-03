@@ -13,18 +13,21 @@
 
 *//*******************************************************************/
 #include "paulstretcheffect.h"
+
+#include <algorithm>
+#include <cmath>
+
 #include "au3-basic-ui/BasicUI.h"
 #include "au3-effects/EffectOutputTracks.h"
 #include "au3-fft/FFT.h"
 #include "au3-preferences/Prefs.h"
 #include "au3-track/TimeWarper.h"
+#include "au3-strings/TranslatableString.h"
 #include "au3-wave-track/WaveTrack.h"
-#include <algorithm>
-#include <cmath>
 
 using namespace au::effects;
 
-const ComponentInterfaceSymbol PaulstretchEffect::Symbol { XO("Paulstretch") };
+const ComponentInterfaceSymbol PaulstretchEffect::Symbol { TranslatableString("effects-paulstretch", "Paulstretch") };
 
 const EffectParameterMethods& PaulstretchEffect::Parameters() const
 {
@@ -94,10 +97,9 @@ ComponentInterfaceSymbol PaulstretchEffect::GetSymbol() const
     return Symbol;
 }
 
-TranslatableString PaulstretchEffect::GetDescription() const
+::TranslatableString PaulstretchEffect::GetDescription() const
 {
-    return XO(
-        "Paulstretch is only for an extreme time-stretch or \"stasis\" effect");
+    return ::TranslatableString("effects-paulstretch", "Paulstretch is only for an extreme time-stretch or \"stasis\" effect");
 }
 
 ManualPageID PaulstretchEffect::ManualPage() const
@@ -181,7 +183,7 @@ bool PaulstretchEffect::ProcessOne(
     const WaveChannel& track, WaveChannel& outputTrack, double t0, double t1,
     int count)
 {
-    const auto badAllocMessage = XO("Requested value exceeds memory capacity.");
+    const auto badAllocMessage = TranslatableString("effects-paulstretch", "Requested value exceeds memory capacity.");
 
     const auto rate = track.GetTrack().GetRate();
     const auto stretch_buf_size = GetBufferSize(rate);
@@ -216,33 +218,30 @@ bool PaulstretchEffect::ProcessOne(
 
             if ((minDuration / mProjectRate) < defaultPreviewLen) {
                 ShowMessageBox(
-                    /* i18n-hint: 'Time Resolution' is the name of a control in the
+                    /*: 'Time Resolution' is the name of a control in the
                        Paulstretch effect.*/
-                    XO("Audio selection too short to preview.\n\n"
-                       "Try increasing the audio selection to at least %.1f seconds,\n"
-                       "or reducing the 'Time Resolution' to less than %.1f seconds.")
-                    .Format(
+                    TranslatableString("effects-paulstretch",
+                                       "Audio selection too short to preview.\n\nTry increasing the audio selection to at least %1 seconds,\nor reducing the 'Time Resolution' to less than %2 seconds.")
+                    .arg(
                         (minDuration / rate) + 0.05, // round up to 1/10 s.
                         floor(maxTimeRes * 10.0) / 10.0),
                     MessageBoxOptions {}.IconStyle(Icon::Warning));
             } else {
                 ShowMessageBox(
-                    /* i18n-hint: 'Time Resolution' is the name of a control in the
+                    /*: 'Time Resolution' is the name of a control in the
                        Paulstretch effect.*/
-                    XO("Unable to Preview.\n\n"
-                       "For the current audio selection, the maximum\n"
-                       "'Time Resolution' is %.1f seconds.")
-                    .Format(floor(maxTimeRes * 10.0) / 10.0),
+                    TranslatableString("effects-paulstretch",
+                                       "Unable to Preview.\n\nFor the current audio selection, the maximum\n'Time Resolution' is %1 seconds.")
+                    .arg(floor(maxTimeRes * 10.0) / 10.0),
                     MessageBoxOptions {}.IconStyle(Icon::Warning));
             }
         } else {
             ShowMessageBox(
-                /* i18n-hint: 'Time Resolution' is the name of a control in the
+                /*: 'Time Resolution' is the name of a control in the
                    Paulstretch effect.*/
-                XO("The 'Time Resolution' is too long for the selection.\n\n"
-                   "Try increasing the audio selection to at least %.1f seconds,\n"
-                   "or reducing the 'Time Resolution' to less than %.1f seconds.")
-                .Format(
+                TranslatableString("effects-paulstretch",
+                                   "The 'Time Resolution' is too long for the selection.\n\nTry increasing the audio selection to at least %1 seconds,\nor reducing the 'Time Resolution' to less than %2 seconds.")
+                .arg(
                     (minDuration / rate) + 0.05, // round up to 1/10 s.
                     floor(maxTimeRes * 10.0) / 10.0),
                 MessageBoxOptions {}.IconStyle(Icon::Warning));

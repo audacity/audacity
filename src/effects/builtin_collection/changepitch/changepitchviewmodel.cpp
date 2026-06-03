@@ -100,8 +100,8 @@ QStringList ChangePitchViewModel::pitchChoices() const
         const double midiNote = PitchToMIDInote(i, 0);
         // Get the pitch name with both sharp and flat notation
         TranslatableString pitchName = PitchName(midiNote, PitchNameChoice::Both);
-        // Convert AU3 TranslatableString to QString
-        QString qStr = au3::wxToQString(pitchName.Translation());
+        // Convert AU3 ::TranslatableString to QString
+        QString qStr = au3::wxToQString(pitchName.translated().toStdString());
         choices.append(qStr);
     }
     return choices;

@@ -17,17 +17,17 @@
 *//*******************************************************************/
 #include "normalizeloudnesseffect.h"
 
-#include "au3-effects/EffectOutputTracks.h"
-#include "au3-math/EBUR128.h"
-#include "au3-wave-track/WaveChannelUtilities.h"
-#include "au3-wave-track/WaveTrack.h"
-#include "au3-command-parameters/ShuttleAutomation.h"
-
 #include <cmath>
 
+#include "au3-command-parameters/ShuttleAutomation.h"
+#include "au3-effects/EffectOutputTracks.h"
+#include "au3-math/EBUR128.h"
+#include "au3-strings/TranslatableString.h"
+#include "au3-wave-track/WaveChannelUtilities.h"
+#include "au3-wave-track/WaveTrack.h"
+
 namespace au::effects {
-const ComponentInterfaceSymbol NormalizeLoudnessEffect::Symbol { XO(
-                                                                     "Loudness Normalization") };
+const ComponentInterfaceSymbol NormalizeLoudnessEffect::Symbol { TranslatableString("effects-loudness", "Loudness Normalization") };
 
 const EffectParameterMethods& NormalizeLoudnessEffect::Parameters() const
 {
@@ -54,9 +54,9 @@ ComponentInterfaceSymbol NormalizeLoudnessEffect::GetSymbol() const
     return Symbol;
 }
 
-TranslatableString NormalizeLoudnessEffect::GetDescription() const
+::TranslatableString NormalizeLoudnessEffect::GetDescription() const
 {
-    return XO("Sets the loudness of one or more tracks");
+    return ::TranslatableString("effects-loudness", "Sets the loudness of one or more tracks");
 }
 
 ManualPageID NormalizeLoudnessEffect::ManualPage() const
@@ -85,7 +85,7 @@ bool NormalizeLoudnessEffect::Process(::EffectInstance&, EffectSettings&)
     // Iterate over each track
     EffectOutputTracks outputs { *mTracks, GetType(), { { mT0, mT1 } } };
     bool bGoodResult = true;
-    auto topMsg = XO("Normalizing Loudness...\n");
+    auto topMsg = TranslatableString("effects-loudness", "Normalizing Loudness...\n");
 
     AllocBuffers(outputs.Get());
     mProgressVal = 0;
@@ -108,7 +108,8 @@ bool NormalizeLoudnessEffect::Process(::EffectInstance&, EffectSettings&)
         // This affects only the progress indicator update during ProcessOne
         mSteps = (mNormalizeTo == kLoudness) ? 2 : 1;
 
-        mProgressMsg = topMsg + XO("Analyzing: %s").Format(trackName);
+        mProgressMsg = TranslatableString::untranslatable(
+            topMsg.translated() + TranslatableString("effects-loudness", "Analyzing: %1").arg(trackName).translated());
 
         const auto channels = pTrack->Channels();
         auto nChannels = mStereoInd ? 1 : channels.size();
@@ -174,7 +175,8 @@ bool NormalizeLoudnessEffect::Process(::EffectInstance&, EffectSettings&)
                 mult = sqrt(mult);
             }
 
-            mProgressMsg = topMsg + XO("Processing: %s").Format(trackName);
+            mProgressMsg = TranslatableString::untranslatable(
+                topMsg.translated() + TranslatableString("effects-loudness", "Processing: %1").arg(trackName).translated());
             if (!ProcessOne(track, nChannels, curT0, curT1, mult, nullptr)) {
                 // Processing failed -> abort
                 return false;

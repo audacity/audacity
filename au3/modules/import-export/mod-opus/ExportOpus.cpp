@@ -16,10 +16,10 @@
 #include <string_view>
 
 namespace {
-/* i18n-hint: kbps abbreviates "thousands of bits per second" */
+/*: kbps abbreviates "thousands of bits per second" */
 TranslatableString n_kbps(int n)
 {
-    return XO("%d kbit/s").Format(n);
+    return TranslatableString("import-export", "%1 kbit/s").arg(n);
 }
 
 enum : int
@@ -43,7 +43,7 @@ enum : int
 const std::initializer_list<PlainExportOptionsEditor::OptionDesc> OPUSOptions {
     {
         {
-            OPUSOptionIDBitRate, XO("Quality"),
+            OPUSOptionIDBitRate, TranslatableString("import-export", "Quality"),
             OPUS_AUTO,
             ExportOption::TypeEnum,
             {
@@ -79,14 +79,14 @@ const std::initializer_list<PlainExportOptionsEditor::OptionDesc> OPUSOptions {
                 n_kbps(160),
                 n_kbps(192),
                 n_kbps(256),
-                XO("Auto"),
-                XO("Maximum")
+                TranslatableString("import-export", "Auto"),
+                TranslatableString("import-export", "Maximum")
             }
         }, wxT("/FileFormats/OPUS/Bitrate")
     },
     {
         {
-            OPUSOptionIDFrameDuration, XO("Frame Duration"),
+            OPUSOptionIDFrameDuration, TranslatableString("import-export", "Frame Duration"),
             200,
             ExportOption::TypeEnum,
             {
@@ -98,36 +98,36 @@ const std::initializer_list<PlainExportOptionsEditor::OptionDesc> OPUSOptions {
                 600,
             },
             {
-                XO("2.5 ms"),
-                XO("5 ms"),
-                XO("10 ms"),
-                XO("20 ms"),
-                XO("40 ms"),
-                XO("60 ms"),
+                TranslatableString("import-export", "2.5 ms"),
+                TranslatableString("import-export", "5 ms"),
+                TranslatableString("import-export", "10 ms"),
+                TranslatableString("import-export", "20 ms"),
+                TranslatableString("import-export", "40 ms"),
+                TranslatableString("import-export", "60 ms"),
             }
         }, wxT("/FileFormats/OPUS/FrameDuration")
     },
     {
         {
-            OPUSOptionIDVBRMode, XO("VBR Mode"),
+            OPUSOptionIDVBRMode, TranslatableString("import-export", "VBR Mode"),
             VBRMode::VBR,
             ExportOption::TypeEnum,
             { VBRMode::CBR, VBRMode::VBR, VBRMode::CVBR },
-            { XO("Off"), XO("On"), XO("Constrained") }
+            { TranslatableString("import-export", "Off"), TranslatableString("import-export", "On"), TranslatableString("import-export", "Constrained") }
         }, wxT("/FileFormats/OPUS/VbrMode")
     },
     {
         {
-            OPUSOptionIDApplication, XO("Optimize for"),
+            OPUSOptionIDApplication, TranslatableString("import-export", "Optimize for"),
             OPUS_APPLICATION_AUDIO,
             ExportOption::TypeEnum,
             { OPUS_APPLICATION_VOIP, OPUS_APPLICATION_AUDIO, OPUS_APPLICATION_RESTRICTED_LOWDELAY },
-            { XO("Speech"), XO("Audio"), XO("Low Delay") }
+            { TranslatableString("import-export", "Speech"), TranslatableString("import-export", "Audio"), TranslatableString("import-export", "Low Delay") }
         }, wxT("/FileFormats/OPUS/Application")
     },
     {
         {
-            OPUSOptionIDCutoff, XO("Cutoff"),
+            OPUSOptionIDCutoff, TranslatableString("import-export", "Cutoff"),
             OPUS_AUTO,
             ExportOption::TypeEnum,
             {
@@ -139,12 +139,12 @@ const std::initializer_list<PlainExportOptionsEditor::OptionDesc> OPUSOptions {
                 OPUS_BANDWIDTH_FULLBAND,
             },
             {
-                XO("Auto"),
-                XO("Narrowband"),
-                XO("Mediumband"),
-                XO("Wideband"),
-                XO("Super Wideband"),
-                XO("Fullband")
+                TranslatableString("import-export", "Auto"),
+                TranslatableString("import-export", "Narrowband"),
+                TranslatableString("import-export", "Mediumband"),
+                TranslatableString("import-export", "Wideband"),
+                TranslatableString("import-export", "Super Wideband"),
+                TranslatableString("import-export", "Fullband")
             }
         }, wxT("/FileFormats/OPUS/Cutoff")
     },
@@ -192,7 +192,7 @@ int ExportOpus::GetFormatCount() const
 FormatInfo ExportOpus::GetFormatInfo(int) const
 {
     return {
-        wxT("Opus"), XO("Opus Files"), { wxT("opus") }, 255, true
+        wxT("Opus"), TranslatableString("import-export", "Opus Files"), { wxT("opus") }, 255, true
     };
 }
 
@@ -313,7 +313,7 @@ bool OpusExportProcessor::Initialize(
     context.sampleRate = int32_t(sampleRate);
 
     if (!IsValidSampleRate(context.sampleRate)) {
-        throw ExportException(XO("Unsupported sample rate").Translation());
+        throw ExportException(TranslatableString("import-export", "Unsupported sample rate").Translation());
     }
 
     context.t0 = t0;
@@ -340,8 +340,8 @@ bool OpusExportProcessor::Initialize(
     // Number of samples per frame per channel
     context.opus.frameSize = frameMultiplier * context.sampleRate / 10000;
 
-    context.status = selectionOnly ? XO("Exporting selected audio as Opus")
-                     : XO("Exporting the audio as Opus");
+    context.status = selectionOnly ? TranslatableString("import-export", "Exporting selected audio as Opus")
+                     : TranslatableString("import-export", "Exporting the audio as Opus");
 
     // Create opus encoder
     int error;
@@ -373,35 +373,35 @@ bool OpusExportProcessor::Initialize(
     }
 
     if (error != OPUS_OK) {
-        FailExport(XO("Unable to create Opus encoder"), error);
+        FailExport(TranslatableString("import-export", "Unable to create Opus encoder"), error);
     }
 
     error = opus_multistream_encoder_ctl(
         context.opus.encoder, OPUS_SET_BITRATE(bitRate));
 
     if (error != OPUS_OK) {
-        FailExport(XO("Unable to set bitrate"), error);
+        FailExport(TranslatableString("import-export", "Unable to set bitrate"), error);
     }
 
     error = opus_multistream_encoder_ctl(
         context.opus.encoder, OPUS_SET_COMPLEXITY(complexity));
 
     if (error != OPUS_OK) {
-        FailExport(XO("Unable to set complexity"), error);
+        FailExport(TranslatableString("import-export", "Unable to set complexity"), error);
     }
 
     error = opus_multistream_encoder_ctl(
         context.opus.encoder, OPUS_SET_BANDWIDTH(cutoff));
 
     if (error != OPUS_OK) {
-        FailExport(XO("Unable to set bandwidth"), error);
+        FailExport(TranslatableString("import-export", "Unable to set bandwidth"), error);
     }
 
     error = opus_multistream_encoder_ctl(
         context.opus.encoder, OPUS_SET_VBR(vbrMode == VBRMode::CBR ? 0 : 1));
 
     if (error != OPUS_OK) {
-        FailExport(XO("Unable to set VBR mode"), error);
+        FailExport(TranslatableString("import-export", "Unable to set VBR mode"), error);
     }
 
     if (vbrMode == VBRMode::CVBR) {
@@ -409,7 +409,7 @@ bool OpusExportProcessor::Initialize(
             context.opus.encoder, OPUS_SET_VBR_CONSTRAINT(1));
 
         if (error != OPUS_OK) {
-            FailExport(XO("Unable to set CVBR mode"), error);
+            FailExport(TranslatableString("import-export", "Unable to set CVBR mode"), error);
         }
     }
 
@@ -420,7 +420,7 @@ bool OpusExportProcessor::Initialize(
         context.opus.encoder, OPUS_GET_LOOKAHEAD(&lookahead));
 
     if (error != OPUS_OK) {
-        FailExport(XO("Unable to get lookahead"), error);
+        FailExport(TranslatableString("import-export", "Unable to get lookahead"), error);
     }
 
     // Latency is always in 48k encoded samples
@@ -428,7 +428,7 @@ bool OpusExportProcessor::Initialize(
     if (
         calculatedPreskip < 0
         || calculatedPreskip >= std::numeric_limits<uint16_t>::max()) {
-        FailExport(XO("Failed to calculate correct preskip"), OPUS_BAD_ARG);
+        FailExport(TranslatableString("import-export", "Failed to calculate correct preskip"), OPUS_BAD_ARG);
     }
     // It is safe to cast to uint16_t here
     context.opus.preskip = uint16_t(calculatedPreskip);
@@ -443,7 +443,7 @@ bool OpusExportProcessor::Initialize(
     if (
         !context.outFile.Create(fName.GetFullPath(), true)
         || !context.outFile.IsOpened()) {
-        throw ExportException(_("Unable to open target file for writing"));
+        throw ExportException(TranslatableString("import-export", "Unable to open target file for writing").Translation());
     }
 
     WriteOpusHeader();
@@ -518,7 +518,7 @@ ExportResult OpusExportProcessor::Process(ExportProcessorDelegate& delegate)
             context.ogg.audioStreamPacket.GetBufferSize());
 
         if (result < 0) {
-            FailExport(XO("Failed to encode input buffer"), result);
+            FailExport(TranslatableString("import-export", "Failed to encode input buffer"), result);
         }
 
         // granulePos is the index of the last real sample in the packet at 48k rate
@@ -560,7 +560,7 @@ ExportResult OpusExportProcessor::Process(ExportProcessorDelegate& delegate)
             context.ogg.audioStreamPacket.GetBufferSize());
 
         if (result < 0) {
-            FailExport(XO("Failed to encode input buffer"), result);
+            FailExport(TranslatableString("import-export", "Failed to encode input buffer"), result);
         }
 
         granulePos += samplesOut * context.opus.sampleRateFactor;

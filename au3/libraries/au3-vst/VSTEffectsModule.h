@@ -35,7 +35,7 @@ public:
     ComponentInterfaceSymbol GetSymbol() const override;
     VendorSymbol GetVendor() const override;
     wxString GetVersion() const override;
-    TranslatableString GetDescription() const override;
+    ::TranslatableString GetDescription() const override;
 
     // PluginProvider implementation
 
@@ -50,7 +50,7 @@ public:
     void AutoRegisterPlugins(PluginManagerInterface& pm) override;
     PluginPaths FindModulePaths(PluginManagerInterface& pm, BasicUI::ProgressDialog* progress = nullptr) const override;
     unsigned DiscoverPluginsAtPath(
-        const PluginPath& path, TranslatableString& errMsg, const RegistrationCallback& callback)
+        const PluginPath& path, ::TranslatableString& errMsg, const RegistrationCallback& callback)
     override;
 
     bool CheckPluginExist(const PluginPath& path) const override;

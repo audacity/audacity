@@ -10,11 +10,15 @@
 ***********************************************************************/
 #include "removedcoffseteffect.h"
 
-#include "au3-effects/EffectOutputTracks.h"
+#include <cmath>
+
+#include "framework/global/types/translatablestring.h"
+
 #include "au3-command-parameters/ShuttleAutomation.h"
+#include "au3-effects/EffectOutputTracks.h"
+#include "au3-strings/TranslatableString.h"
 #include "au3-wave-track/WaveChannelUtilities.h"
 #include "au3-wave-track/WaveTrack.h"
-#include <cmath>
 
 namespace au::effects {
 const EffectParameterMethods& RemoveDCOffsetEffect::Parameters() const
@@ -23,7 +27,7 @@ const EffectParameterMethods& RemoveDCOffsetEffect::Parameters() const
     return parameters;
 }
 
-const ComponentInterfaceSymbol RemoveDCOffsetEffect::Symbol { XO("Remove DC offset") };
+const ComponentInterfaceSymbol RemoveDCOffsetEffect::Symbol { TranslatableString("effects-removedcoffset", "Remove DC offset") };
 
 RemoveDCOffsetEffect::RemoveDCOffsetEffect()
 {
@@ -40,9 +44,9 @@ ComponentInterfaceSymbol RemoveDCOffsetEffect::GetSymbol() const
     return Symbol;
 }
 
-TranslatableString RemoveDCOffsetEffect::GetDescription() const
+::TranslatableString RemoveDCOffsetEffect::GetDescription() const
 {
-    return XO("Removes DC offset (centers audio on 0.0 vertically)");
+    return ::TranslatableString("effects-removedcoffset", "Removes DC offset (centers audio on 0.0 vertically)");
 }
 
 ManualPageID RemoveDCOffsetEffect::ManualPage() const
@@ -60,7 +64,7 @@ bool RemoveDCOffsetEffect::Process(::EffectInstance&, ::EffectSettings&)
     EffectOutputTracks outputs { *mTracks, GetType(), { { mT0, mT1 } } };
     bool bGoodResult = true;
     double progress = 0;
-    TranslatableString topMsg = XO("Removing DC offset...\n");
+    TranslatableString topMsg = TranslatableString("effects-removedcoffset", "Removing DC offset...\n");
 
     for (auto track : outputs.Get().Selected<WaveTrack>()) {
         double trackStart = track->GetStartTime();
@@ -73,7 +77,8 @@ bool RemoveDCOffsetEffect::Process(::EffectInstance&, ::EffectSettings&)
             wxString trackName = track->GetName();
             const auto channels = track->Channels();
 
-            auto msg = topMsg + XO("Analyzing: %s").Format(trackName);
+            auto msg = ::TranslatableString::untranslatable(
+                topMsg.translated() + TranslatableString("effects-removedcoffset", "Analyzing: %1").arg(trackName).translated());
 
             const auto progressReport = [&](double fraction) {
                 return !TotalProgress(
@@ -89,7 +94,8 @@ bool RemoveDCOffsetEffect::Process(::EffectInstance&, ::EffectSettings&)
                 }
                 progress += 1.0 / double(2 * GetNumWaveTracks());
 
-                msg = topMsg + XO("Processing: %s").Format(trackName);
+                msg = ::TranslatableString::untranslatable(
+                    topMsg.translated() + TranslatableString("effects-removedcoffset", "Processing: %1").arg(trackName).translated());
                 if (false == (bGoodResult = ProcessOne(*channel, msg, progress, offset))) {
                     goto break2;
                 }
@@ -151,7 +157,7 @@ bool RemoveDCOffsetEffect::AnalyseTrackData(
 }
 
 bool RemoveDCOffsetEffect::ProcessOne(
-    WaveChannel& track, const TranslatableString& msg, double& progress,
+    WaveChannel& track, const ::TranslatableString& msg, double& progress,
     float offset)
 {
     bool rc = true;

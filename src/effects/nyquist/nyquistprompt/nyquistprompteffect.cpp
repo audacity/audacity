@@ -2,6 +2,9 @@
  * Audacity: A Digital Audio Editor
  */
 #include "nyquistprompteffect.h"
+
+#include "framework/global/types/translatablestring.h"
+
 #include "au3-effects/EffectBase.h" // NYQUIST_PROMPT_ID
 
 namespace au::effects {
@@ -17,6 +20,6 @@ ComponentInterfaceSymbol NyquistPromptEffect::GetSymbol() const
 
 EffectFamilySymbol NyquistPromptEffect::GetFamily() const
 {
-    return { wxT("Audacity"), XO("Built-in") };
+    return { wxT("Audacity"), ::TranslatableString("effects-nyquist", "Built-in") };
 }
 }

@@ -30,7 +30,7 @@ const EffectParameterMethods& ChangeTempoBase::Parameters() const
     return parameters;
 }
 
-const ComponentInterfaceSymbol ChangeTempoBase::Symbol { XO("Change Tempo") };
+const ComponentInterfaceSymbol ChangeTempoBase::Symbol { TranslatableString("builtin-effects", "Change Tempo") };
 
 ChangeTempoBase::ChangeTempoBase()
 {
@@ -60,7 +60,7 @@ ComponentInterfaceSymbol ChangeTempoBase::GetSymbol() const
 
 TranslatableString ChangeTempoBase::GetDescription() const
 {
-    return XO("Changes the tempo of a selection without changing its pitch");
+    return TranslatableString("builtin-effects", "Changes the tempo of a selection without changing its pitch");
 }
 
 ManualPageID ChangeTempoBase::ManualPage() const
@@ -111,7 +111,7 @@ bool ChangeTempoBase::Process(EffectInstance&, EffectSettings& settings)
     if (mUseSBSMS) {
         double tempoRatio = 1.0 + m_PercentChange / 100.0;
         SBSMSBase proxy;
-        proxy.mProxyEffectName = XO("High Quality Tempo Change");
+        proxy.mProxyEffectName = TranslatableString("builtin-effects", "High Quality Tempo Change");
         proxy.setParameters(tempoRatio, 1.0);
         //! Already processing; don't make a dialog
         success = Delegate(proxy, settings);

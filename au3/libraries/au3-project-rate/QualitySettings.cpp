@@ -20,9 +20,9 @@ IntSetting QualitySettings::DefaultSampleRate{
 EnumSetting< sampleFormat > QualitySettings::SampleFormatSetting{
     L"/SamplingRate/DefaultProjectSampleFormatChoice",
     {
-        { L"Format16Bit", XO("16-bit") },
-        { L"Format24Bit", XO("24-bit") },
-        { L"Format32BitFloat", XO("32-bit float") }
+        { L"Format16Bit", TranslatableString("project-rate", "16-bit") },
+        { L"Format24Bit", TranslatableString("project-rate", "24-bit") },
+        { L"Format32BitFloat", TranslatableString("project-rate", "32-bit float") }
     },
     2, // floatSample
 

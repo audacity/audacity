@@ -50,13 +50,13 @@ namespace FileNames {
 struct FileType {
     FileType() = default;
 
-    FileType(TranslatableString d, FileExtensions e, bool a = false)
+    FileType(::TranslatableString d, FileExtensions e, bool a = false)
         : description{std::move(d)}
         , extensions(std::move(e))
         , appendExtensions{a}
     {}
 
-    TranslatableString description;
+    ::TranslatableString description;
     FileExtensions extensions;
     // Whether to extend the displayed description with mention of the
     // extensions:
@@ -205,7 +205,7 @@ FILES_API void FindFilesInPathList(const wxString& pattern, const FilePaths& pat
 
 //! Check location on writable access and return true if checked successfully.
 // message is the explanation that is to be displayed to the user if the location is unwritable.
-FILES_API bool WritableLocationCheck(const FilePath& path, const TranslatableString& message);
+FILES_API bool WritableLocationCheck(const FilePath& path, const ::TranslatableString& message);
 
 // wxString compare function for sorting case, which is needed to load correctly.
 FILES_API int CompareNoCase(const wxString& first, const wxString& second);

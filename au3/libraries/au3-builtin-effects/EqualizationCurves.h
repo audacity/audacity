@@ -16,7 +16,7 @@
 #include "au3-xml/XMLTagHandler.h"
 
 #include <vector>
-class TranslatableString;
+#include "au3-strings/TranslatableString.h"
 
 //! One point in a curve
 class BUILTIN_EFFECTS_API EQPoint

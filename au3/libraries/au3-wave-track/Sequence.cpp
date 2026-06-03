@@ -517,8 +517,8 @@ void Sequence::Paste(sampleCount s, const Sequence* src)
     if (src->mSampleFormats.Stored() != format) {
         wxLogError(
             wxT("Sequence::Paste: Sample format to be pasted, %s, does not match destination format, %s."),
-            GetSampleFormatStr(src->mSampleFormats.Stored()).Debug(),
-            GetSampleFormatStr(format).Debug());
+            au3::qtToWx(GetSampleFormatStr(src->mSampleFormats.Stored()).debugStr()),
+            au3::qtToWx(GetSampleFormatStr(format).debugStr()));
         THROW_INCONSISTENCY_EXCEPTION;
     }
 
@@ -1007,15 +1007,15 @@ void Sequence::WriteXML(XMLWriter& xmlFile) const
             // find a reproducible case.
             using namespace BasicUI;
             auto sMsg
-                =XO("Sequence has block file exceeding maximum %s samples per block.\nTruncating to this maximum length.")
+                =TranslatableString("wave-track", "Sequence has block file exceeding maximum %1 samples per block.\nTruncating to this maximum length.")
                   .Format(Internat::ToString(((wxLongLong)mMaxSamples).ToDouble(), 0));
             ShowMessageBox(
                 sMsg,
                 MessageBoxOptions {}
-                .Caption(XO("Warning - Truncating Overlong Block File"))
+                .Caption(TranslatableString("wave-track", "Warning - Truncating Overlong Block File"))
                 .IconStyle(Icon::Warning)
                 .ButtonStyle(Button::Ok));
-            wxLogWarning(sMsg.Translation()); //Debug?
+            wxLogWarning("%s", wxString::FromUTF8(sMsg.Translation().c_str())); //Debug?
 //         bb.sb->SetLength(mMaxSamples);
         }
 

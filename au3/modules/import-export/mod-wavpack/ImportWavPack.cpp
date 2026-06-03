@@ -36,7 +36,7 @@
 
 #include "ImportWavPack.h"
 
-#define DESC XO("WavPack files")
+#define DESC TranslatableString("import-export", "WavPack files")
 
 static const auto exts = {
     wxT("wv")
@@ -223,9 +223,10 @@ void WavPackImportFileHandle::Import(
         } while (!IsCancelled() && !IsStopped() && samplesRead != 0);
     }
 
-    if (WavpackGetNumErrors(mWavPackContext)) {
+    if (const int numErrors = WavpackGetNumErrors(mWavPackContext)) {
         ImportUtils::ShowMessageBox(
-            XO("Encountered %d errors decoding WavPack file!").Format(WavpackGetNumErrors(mWavPackContext)));
+            //: %1 is the number of errors
+            TranslatableString("import-export", "Encountered %1 errors decoding WavPack file!", nullptr, numErrors).arg(numErrors));
     }
 
     if (IsCancelled()) {

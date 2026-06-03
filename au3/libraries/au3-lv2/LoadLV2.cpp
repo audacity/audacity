@@ -101,7 +101,7 @@ wxString LV2EffectsModule::GetVersion() const
     return LV2EFFECTS_VERSION;
 }
 
-TranslatableString LV2EffectsModule::GetDescription() const
+::TranslatableString LV2EffectsModule::GetDescription() const
 {
     return XO("Provides LV2 Effects support to Audacity");
 }
@@ -289,7 +289,7 @@ PluginPaths LV2EffectsModule::FindModulePaths(PluginManagerInterface&,
 }
 
 unsigned LV2EffectsModule::DiscoverPluginsAtPath(
-    const PluginPath& path, TranslatableString& errMsg,
+    const PluginPath& path, ::TranslatableString& errMsg,
     const RegistrationCallback& callback)
 {
     errMsg = {};

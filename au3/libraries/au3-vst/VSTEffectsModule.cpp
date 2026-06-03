@@ -91,7 +91,7 @@ wxString VSTEffectsModule::GetVersion() const
     return AUDACITY_VERSION_STRING;
 }
 
-TranslatableString VSTEffectsModule::GetDescription() const
+::TranslatableString VSTEffectsModule::GetDescription() const
 {
     return XO("Adds the ability to use VST effects in Audacity.");
 }
@@ -262,7 +262,7 @@ PluginPaths VSTEffectsModule::FindModulePaths(PluginManagerInterface& pm, BasicU
 }
 
 unsigned VSTEffectsModule::DiscoverPluginsAtPath(
-    const PluginPath& path, TranslatableString& errMsg,
+    const PluginPath& path, ::TranslatableString& errMsg,
     const RegistrationCallback& callback)
 {
     VSTEffectBase effect(path);

@@ -346,8 +346,8 @@ int SFFileCloser::operator()(SNDFILE* sf) const
         char buffer[1000];
         sf_error_str(sf, buffer, 1000);
         BasicUI::ShowMessageBox(
-            /* i18n-hint: %s will be the error message from the libsndfile software library */
-            XO("Error (file may not have been written): %s")
+            /*: %s will be the error message from the libsndfile software library */
+            TranslatableString("file-formats", "Error (file may not have been written): %1")
             // Not attempting to localize error messages
             // from the library
             .Format(buffer));

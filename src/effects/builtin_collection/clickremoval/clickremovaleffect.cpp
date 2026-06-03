@@ -28,11 +28,14 @@
 
 *//*******************************************************************/
 #include "clickremovaleffect.h"
+
+#include <cmath>
+
 #include "au3-effects/EffectOutputTracks.h"
 #include "au3-preferences/Prefs.h"
 #include "au3-command-parameters/ShuttleAutomation.h"
+#include "au3-strings/TranslatableString.h"
 #include "au3-wave-track/WaveTrack.h"
-#include <cmath>
 
 namespace au::effects {
 namespace {
@@ -45,7 +48,7 @@ const EffectParameterMethods& ClickRemovalEffect::Parameters() const
     return parameters;
 }
 
-const ComponentInterfaceSymbol ClickRemovalEffect::Symbol { XO("Click removal") };
+const ComponentInterfaceSymbol ClickRemovalEffect::Symbol { TranslatableString("effects-clickremoval", "Click removal") };
 
 ClickRemovalEffect::ClickRemovalEffect()
 {
@@ -67,9 +70,9 @@ ComponentInterfaceSymbol ClickRemovalEffect::GetSymbol() const
     return Symbol;
 }
 
-TranslatableString ClickRemovalEffect::GetDescription() const
+::TranslatableString ClickRemovalEffect::GetDescription() const
 {
-    return XO("Click removal is designed to remove clicks on audio tracks");
+    return ::TranslatableString("effects-clickremoval", "Click removal is designed to remove clicks on audio tracks");
 }
 
 ManualPageID ClickRemovalEffect::ManualPage() const
@@ -119,7 +122,9 @@ bool ClickRemovalEffect::Process(::EffectInstance&, EffectSettings&)
 done:
     if (bGoodResult && !mbDidSomething) { // Processing successful, but
                                           // ineffective.
-        mLastError = XO("Algorithm not effective on this audio. Nothing changed.").Translation().ToStdString();
+        mLastError
+            = TranslatableString("effects-clickremoval",
+                                 "Algorithm not effective on this audio. Nothing changed.").translated().toStdString();
         return false;
     }
 
@@ -135,7 +140,7 @@ bool ClickRemovalEffect::ProcessOne(
 {
     if (len <= windowSize / 2) {
         static_assert(windowSize / 2 == 4096);
-        mLastError = XO("Selection must be larger than 4096 samples.").Translation().ToStdString();
+        mLastError = TranslatableString("effects-clickremoval", "Selection must be larger than 4096 samples.").translated().toStdString();
         return false;
     }
 

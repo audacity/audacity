@@ -111,7 +111,7 @@ private:
         }
 
         const auto result = mProgress->Poll(mTopIndex, mTopTotal,
-                                            XO("Searching VST3 in: %s").Format(elidePath(path)));
+                                            TranslatableString("vst3", "Searching VST3 in: %1").arg(elidePath(path)));
         if (result == BasicUI::ProgressResult::Cancelled) {
             mCancelled = true;
             return false;
@@ -158,12 +158,12 @@ PluginPath VST3EffectsModule::GetPath() const
 
 ComponentInterfaceSymbol VST3EffectsModule::GetSymbol() const
 {
-    return XO("VST3 Effects");
+    return TranslatableString("vst3", "VST3 Effects");
 }
 
 VendorSymbol VST3EffectsModule::GetVendor() const
 {
-    return XO("The Audacity Team");
+    return TranslatableString("vst3", "The Audacity Team");
 }
 
 wxString VST3EffectsModule::GetVersion() const
@@ -173,7 +173,7 @@ wxString VST3EffectsModule::GetVersion() const
 
 TranslatableString VST3EffectsModule::GetDescription() const
 {
-    return XO("Adds the ability to use VST3 effects in Audacity.");
+    return TranslatableString("vst3", "Adds the ability to use VST3 effects in Audacity.");
 }
 
 bool VST3EffectsModule::Initialize()
@@ -267,7 +267,7 @@ VST3EffectsModule::FindModulePaths(PluginManagerInterface& pluginManager,
             return true;
         }
         const auto pollResult = progress->Poll(i * kSubSteps, topTotalScaled,
-                                               XO("Looking in: %s").Format(elidePath(path)));
+                                               TranslatableString("vst3", "Looking in: %1").arg(elidePath(path)));
         return pollResult != BasicUI::ProgressResult::Cancelled;
     };
 
@@ -336,7 +336,7 @@ unsigned VST3EffectsModule::DiscoverPluginsAtPath(const PluginPath& path, Transl
     }
     catch (std::exception& e)
     {
-        errMsg = XO("VST3 module error: %s").Format(e.what());
+        errMsg = TranslatableString("vst3", "VST3 module error: %1").arg(e.what());
     }
 
     return 0u;

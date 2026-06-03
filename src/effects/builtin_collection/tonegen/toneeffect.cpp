@@ -2,11 +2,14 @@
 * Audacity: A Digital Audio Editor
 */
 #include "toneeffect.h"
+
+#include "au3-strings/TranslatableString.h"
+
 #include "log.h"
 
 using namespace au::effects;
 
-const ComponentInterfaceSymbol ToneEffect::Symbol{ XO("Tone") };
+const ComponentInterfaceSymbol ToneEffect::Symbol{ TranslatableString("effects-tonegen", "Tone") };
 
 ToneEffect::ToneEffect()
     : ToneGenBase(Type::Tone), GeneratorEffect(mT0, mT1)

@@ -44,15 +44,15 @@ for drawing different aspects of the label and its text box.
 #include "au3-track/TimeWarper.h"
 #include "au3-basic-ui/BasicUI.h"
 
-const FileNames::FileType LabelTrack::SubripFiles{ XO("SubRip text file"), { wxT("srt") }, true };
-const FileNames::FileType LabelTrack::WebVTTFiles{ XO("WebVTT file"), { wxT("vtt") }, true };
+const FileNames::FileType LabelTrack::SubripFiles{ TranslatableString("label-track", "SubRip text file"), { wxT("srt") }, true };
+const FileNames::FileType LabelTrack::WebVTTFiles{ TranslatableString("label-track", "WebVTT file"), { wxT("vtt") }, true };
 
 EnumSetting<bool> LabelStyleSetting {
     wxT("/FileFormats/LabelStyleChoice"),
     {
-        EnumValueSymbol { wxT("Standard"), XXO("S&tandard") },
+        EnumValueSymbol { wxT("Standard"), TranslatableString("label-track", "S&tandard") },
         EnumValueSymbol { wxT("Extended"),
-                          XXO("E&xtended (with frequency ranges)") },
+                          TranslatableString("label-track", "E&xtended (with frequency ranges)") },
     },
     0, // true
 
@@ -122,7 +122,7 @@ static ProjectFileIORegistry::ObjectReaderEntry readerEntry{
 
 wxString LabelTrack::GetDefaultName()
 {
-    return _("Labels");
+    return wxString::FromUTF8(au3::trc("label-track", "Labels").c_str());
 }
 
 LabelTrack* LabelTrack::New(AudacityProject& project)
@@ -175,7 +175,7 @@ LabelTrack::LabelTrack(const LabelTrack& orig, ProtectedCreationArg&& a)
 static const Track::TypeInfo& typeInfo()
 {
     static Track::TypeInfo info{
-        { "label", "label", XO("Label Track") }, true, &Track::ClassTypeInfo() };
+        { "label", "label", TranslatableString("label-track", "Label Track") }, true, &Track::ClassTypeInfo() };
     return info;
 }
 
@@ -754,7 +754,7 @@ LabelFormat LabelTrack::FormatForFileName(const wxString& fileName)
 void LabelTrack::Import(wxTextFile& in, LabelFormat format)
 {
     if (format == LabelFormat::WEBVTT) {
-        BasicUI::ShowMessageBox(XO("Importing WebVTT files is not currently supported."));
+        BasicUI::ShowMessageBox(TranslatableString("label-track", "Importing WebVTT files is not currently supported."));
         return;
     }
 
@@ -778,7 +778,7 @@ void LabelTrack::Import(wxTextFile& in, LabelFormat format)
         }
     }
     if (error) {
-        BasicUI::ShowMessageBox(XO("One or more saved labels could not be read."));
+        BasicUI::ShowMessageBox(TranslatableString("label-track", "One or more saved labels could not be read."));
     }
     SortLabels();
 }

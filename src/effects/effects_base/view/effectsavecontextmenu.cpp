@@ -73,7 +73,7 @@ void EffectSaveContextMenu::reload()
         ActionQuery q("action://effects/presets/save");
         q.addParam("instanceId", Val(m_instanceId));
         q.addParam("presetId", Val(currentPreset));
-        MenuItem* item = makeMenuItem(q.toString(), TranslatableString("effects", "Save"));
+        MenuItem* item = makeMenuItem(q.toString(), muse::TranslatableString("effects", "Save"));
         if (!m_canSave) {
             item->setState(ui::UiActionState::make_disabled());
         }
@@ -83,7 +83,7 @@ void EffectSaveContextMenu::reload()
     {
         ActionQuery q("action://effects/presets/save_as");
         q.addParam("instanceId", Val(m_instanceId));
-        MenuItem* item = makeMenuItem(q.toString(), TranslatableString("effects", "Save as…"));
+        MenuItem* item = makeMenuItem(q.toString(), muse::TranslatableString("effects", "Save as…"));
         items << item;
     }
 

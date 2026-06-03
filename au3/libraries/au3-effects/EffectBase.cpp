@@ -192,7 +192,7 @@ bool EffectBase::DoEffect(EffectSettings& settings,
         auto name = GetName();
         auto progress = MakeProgress(
             name,
-            XO("Applying %s...").Format(name),
+            TranslatableString("effects", "Applying %1...").arg(name),
             ProgressShowCancel
             );
         auto vr = valueRestorer(mProgress, progress.get());

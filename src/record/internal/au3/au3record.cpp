@@ -3,6 +3,7 @@
 */
 
 #include "au3record.h"
+#include "au3-strings/TranslatableString.h"
 
 #include "framework/global/translation.h"
 #include "framework/global/log.h"
@@ -683,8 +684,8 @@ Ret Au3Record::doRecord(Au3Project& project,
         wxString name;
         for (auto i = 1;; ++i) {
             //i18n-hint a numerical suffix added to distinguish otherwise like-named clips when new record started
-            name = (::TranslatableString{ wxT("%s #%d"), {} }.Context("clip name template"))
-                   .Format(track.GetName(), i).Translation();
+            name = ::au3::qtToWx(::TranslatableString("audacity", "%1 #%2", "clip name template")
+                                 .arg(track.GetName()).arg(i).translated());
             if (!track.HasClipNamed(name)) {
                 break;
             }

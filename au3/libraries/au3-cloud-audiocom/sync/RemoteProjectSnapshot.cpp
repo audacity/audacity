@@ -166,9 +166,8 @@ std::shared_ptr<RemoteProjectSnapshot> RemoteProjectSnapshot::Sync(
     if (snapshot->mAttachedDBNames.empty()) {
         snapshot->mCallback(
             { { SyncResultCode::InternalClientError,
-                audacity::ToUTF8(
-                    XO("Failed to attach to the Cloud project database")
-                    .Translation()) },
+                TranslatableString("cloud-audiocom", "Failed to attach to the Cloud project database")
+                    .Translation() },
                 0,
                 0,
                 false });
@@ -283,9 +282,9 @@ void RemoteProjectSnapshot::SetupBlocksCopy(
 
             if (!copyBlocksStatement) {
                 OnFailure({ SyncResultCode::InternalClientError,
-                            audacity::ToUTF8(copyBlocksStatement.GetError()
+                            copyBlocksStatement.GetError()
                                              .GetErrorString()
-                                             .Translation()) });
+                                             .Translation() });
 
                 return false;
             }
@@ -294,10 +293,10 @@ void RemoteProjectSnapshot::SetupBlocksCopy(
 
             if (!result.IsOk()) {
                 OnFailure({ SyncResultCode::InternalClientError,
-                            audacity::ToUTF8(result.GetErrors()
+                            result.GetErrors()
                                              .front()
                                              .GetErrorString()
-                                             .Translation()) });
+                                             .Translation() });
                 return false;
             }
 
@@ -484,9 +483,9 @@ void RemoteProjectSnapshot::OnProjectBlobDownloaded(
 
     if (!updateProjectStatement) {
         OnFailure({ SyncResultCode::InternalClientError,
-                    audacity::ToUTF8(updateProjectStatement.GetError()
+                    updateProjectStatement.GetError()
                                      .GetErrorString()
-                                     .Translation()) });
+                                     .Translation() });
         return;
     }
 
@@ -504,8 +503,7 @@ void RemoteProjectSnapshot::OnProjectBlobDownloaded(
     if (!result.IsOk()) {
         OnFailure(
             { SyncResultCode::InternalClientError,
-              audacity::ToUTF8(
-                  result.GetErrors().front().GetErrorString().Translation()) });
+              result.GetErrors().front().GetErrorString().Translation() });
 
         return;
     }
@@ -515,9 +513,9 @@ void RemoteProjectSnapshot::OnProjectBlobDownloaded(
 
     if (!deleteAutosaveStatement) {
         OnFailure({ SyncResultCode::InternalClientError,
-                    audacity::ToUTF8(deleteAutosaveStatement.GetError()
+                    deleteAutosaveStatement.GetError()
                                      .GetErrorString()
-                                     .Translation()) });
+                                     .Translation() });
         return;
     }
 
@@ -526,14 +524,13 @@ void RemoteProjectSnapshot::OnProjectBlobDownloaded(
     if (!result.IsOk()) {
         OnFailure(
             { SyncResultCode::InternalClientError,
-              audacity::ToUTF8(
-                  result.GetErrors().front().GetErrorString().Translation()) });
+              result.GetErrors().front().GetErrorString().Translation() });
         return;
     }
 
     if (auto error = transaction.Commit(); error.IsError()) {
         OnFailure({ SyncResultCode::InternalClientError,
-                    audacity::ToUTF8(error.GetErrorString().Translation()) });
+                    error.GetErrorString().Translation() });
         return;
     }
 
@@ -552,8 +549,8 @@ void RemoteProjectSnapshot::OnBlockDownloaded(
     if (!blockData) {
         OnFailure(
             { SyncResultCode::InternalClientError,
-              audacity::ToUTF8(XO("Failed to decompress the Cloud project block")
-                               .Translation()) });
+              TranslatableString("cloud-audiocom", "Failed to decompress the Cloud project block")
+                               .Translation() });
         return;
     }
 
@@ -571,8 +568,7 @@ void RemoteProjectSnapshot::OnBlockDownloaded(
     if (!result.IsOk()) {
         OnFailure(
             { SyncResultCode::InternalClientError,
-              audacity::ToUTF8(
-                  result.GetErrors().front().GetErrorString().Translation()) });
+              result.GetErrors().front().GetErrorString().Translation() });
         return;
     }
 
@@ -584,8 +580,7 @@ void RemoteProjectSnapshot::OnBlockDownloaded(
     if (!blockStatement) {
         OnFailure(
             { SyncResultCode::InternalClientError,
-              audacity::ToUTF8(
-                  blockStatement.GetError().GetErrorString().Translation()) });
+              blockStatement.GetError().GetErrorString().Translation() });
         return;
     }
 
@@ -610,14 +605,13 @@ void RemoteProjectSnapshot::OnBlockDownloaded(
     if (!result.IsOk()) {
         OnFailure(
             { SyncResultCode::InternalClientError,
-              audacity::ToUTF8(
-                  result.GetErrors().front().GetErrorString().Translation()) });
+              result.GetErrors().front().GetErrorString().Translation() });
         return;
     }
 
     if (auto error = transaction.Commit(); error.IsError()) {
         OnFailure({ SyncResultCode::InternalClientError,
-                    audacity::ToUTF8(error.GetErrorString().Translation()) });
+                    error.GetErrorString().Translation() });
         return;
     }
 

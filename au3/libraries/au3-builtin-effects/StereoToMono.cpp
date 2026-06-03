@@ -23,7 +23,7 @@ ComponentInterfaceSymbol StereoToMono::GetSymbol() const
     return Symbol;
 }
 
-TranslatableString StereoToMono::GetDescription() const
+::TranslatableString StereoToMono::GetDescription() const
 {
     return XO("Converts stereo tracks to mono");
 }

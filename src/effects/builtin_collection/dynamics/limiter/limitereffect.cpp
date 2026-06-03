@@ -7,9 +7,10 @@
 #include "au3-builtin-effects/CompressorInstance.h"
 #include "au3-dynamic-range-processor/DynamicRangeProcessorDummyOutputs.h"
 #include "au3-dynamic-range-processor/DynamicRangeProcessorUtils.h"
+#include "au3-strings/TranslatableString.h"
 
 namespace au::effects {
-const ComponentInterfaceSymbol LimiterEffect::Symbol { XO("Limiter") };
+const ComponentInterfaceSymbol LimiterEffect::Symbol { TranslatableString("effects-dynamics", "Limiter") };
 
 const EffectParameterMethods& LimiterEffect::Parameters() const
 {
@@ -45,9 +46,9 @@ ComponentInterfaceSymbol LimiterEffect::GetSymbol() const
     return Symbol;
 }
 
-TranslatableString LimiterEffect::GetDescription() const
+::TranslatableString LimiterEffect::GetDescription() const
 {
-    return XO("Augments loudness while minimizing distortion.");
+    return ::TranslatableString("effects-dynamics", "Augments loudness while minimizing distortion.");
 }
 
 ManualPageID LimiterEffect::ManualPage() const
@@ -71,7 +72,7 @@ RegistryPaths LimiterEffect::GetFactoryPresets() const
     RegistryPaths paths(presets.size());
     std::transform(
         presets.begin(), presets.end(), paths.begin(), [](const auto& preset) {
-        return RegistryPath { preset.name.Translation() };
+        return RegistryPath { preset.name.translated().toStdString() };
     });
     return paths;
 }

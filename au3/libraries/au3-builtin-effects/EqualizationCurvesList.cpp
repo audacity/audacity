@@ -277,7 +277,7 @@ void EqualizationCurvesList::setCurve(const wxString& curveName)
     if (i == mCurves.size()) {
         using namespace BasicUI;
         ShowMessageBox(
-            XO("Requested curve not found, using 'unnamed'"),
+            TranslatableString("builtin-effects", "Requested curve not found, using 'unnamed'"),
             MessageBoxOptions {}.IconStyle(Icon::Error));
         setCurve();
     } else {

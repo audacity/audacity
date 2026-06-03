@@ -21,12 +21,12 @@ double SnapToSamples(const AudacityProject& project)
 SnapRegistryItemRegistrator secondsAndSamples {
     SnapFunctionItems("time",
                       SnapFunctionGroup(
-                          "time", { XO("Seconds && samples"), false },
-                          TimeInvariantSnapFunction("seconds", XO("Seconds"), 1.0),
-                          TimeInvariantSnapFunction("deciseconds", XO("Deciseconds"), 10.0),
-                          TimeInvariantSnapFunction("centiseconds", XO("Centiseconds"), 100.0),
-                          TimeInvariantSnapFunction("milliseconds", XO("Milliseconds"), 1000.0),
-                          TimeInvariantSnapFunction("samples", XO("Samples"), SnapToSamples))
+                          "time", { TranslatableString("snapping", "Seconds && samples"), false },
+                          TimeInvariantSnapFunction("seconds", TranslatableString("snapping", "Seconds"), 1.0),
+                          TimeInvariantSnapFunction("deciseconds", TranslatableString("snapping", "Deciseconds"), 10.0),
+                          TimeInvariantSnapFunction("centiseconds", TranslatableString("snapping", "Centiseconds"), 100.0),
+                          TimeInvariantSnapFunction("milliseconds", TranslatableString("snapping", "Milliseconds"), 1000.0),
+                          TimeInvariantSnapFunction("samples", TranslatableString("snapping", "Samples"), SnapToSamples))
                       ),
     Registry::Placement { {}, { Registry::OrderingHint::After, "beats" } }
 };

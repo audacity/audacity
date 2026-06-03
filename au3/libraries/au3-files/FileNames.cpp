@@ -45,21 +45,21 @@ used throughout Audacity into this one place.
 #endif
 
 const FileNames::FileType
-FileNames::AllFiles{ XO("All files"), { wxT("") } }
-/* i18n-hint an Audacity project is the state of the program, stored as
+FileNames::AllFiles{ TranslatableString("files", "All files"), { wxT("") } }
+/*: an Audacity project is the state of the program, stored as
      files that can be reopened to resume the session later */
-, FileNames::AudacityProjects{ XO("AUP3 project files"), { wxT("aup3") }, true },
+, FileNames::AudacityProjects{ TranslatableString("files", "AUP3 project files"), { wxT("aup3") }, true },
 FileNames::DynamicLibraries{
 #if defined(__WXMSW__)
-    XO("Dynamically Linked Libraries"), { wxT("dll") }, true
+    TranslatableString("files", "Dynamically Linked Libraries"), { wxT("dll") }, true
 #elif defined(__WXMAC__)
-    XO("Dynamic Libraries"), { wxT("dylib") }, true
+    TranslatableString("files", "Dynamic Libraries"), { wxT("dylib") }, true
 #else
-    XO("Dynamically Linked Libraries"), { wxT("so*") }, true
+    TranslatableString("files", "Dynamically Linked Libraries"), { wxT("so*") }, true
 #endif
 },
-FileNames::TextFiles{ XO("Text files"), { wxT("txt") }, true },
-FileNames::XMLFiles{ XO("XML files"), { wxT("xml"), wxT("XML") }, true }
+FileNames::TextFiles{ TranslatableString("files", "Text files"), { wxT("txt") }, true },
+FileNames::XMLFiles{ TranslatableString("files", "XML files"), { wxT("xml"), wxT("XML") }, true }
 ;
 
 wxString FileNames::FormatWildcard(const FileTypes& fileTypes)
@@ -105,12 +105,12 @@ wxString FileNames::FormatWildcard(const FileTypes& fileTypes)
         // Assume extensions is not empty
         wxString exts = extensions[0];
         for (size_t ii = 1, size = extensions.size(); ii < size; ++ii ) {
-            exts += XO(", ").Translation();
+            exts += TranslatableString("files", ", ").Translation();
             exts += extensions[ii];
         }
-        /* i18n-hint a type or types such as "txt" or "txt, xml" will be
+        /*: a type or types such as "txt" or "txt, xml" will be
            substituted for %s */
-        return XO("%s files").Format(exts);
+        return ::TranslatableString("files", "%1 files").arg(exts);
     };
 
     if (fileTypes.size() == 1 && fileTypes[0].description.empty()) {
@@ -134,7 +134,7 @@ wxString FileNames::FormatWildcard(const FileTypes& fileTypes)
                 mask = defaultDescription(extensions);
             }
             if (fileType.appendExtensions) {
-                mask.Join(XO("(%s)").Format(globs), " ");
+                mask.Join(::TranslatableString("files", "(%1)").arg(globs), " ");
             }
             result += mask.Translation();
             result += '|';
@@ -697,7 +697,7 @@ void FileNames::FindFilesInPathList(const wxString& pattern,
 }
 
 bool FileNames::WritableLocationCheck(const FilePath& path,
-                                      const TranslatableString& message)
+                                      const ::TranslatableString& message)
 {
     bool status = wxFileName::IsDirWritable(path);
 
@@ -705,9 +705,9 @@ bool FileNames::WritableLocationCheck(const FilePath& path,
         using namespace BasicUI;
         ShowMessageBox(
             message
-            + XO("\n%s does not have write permissions.").Format(path),
+            + TranslatableString("files", "\n%1 does not have write permissions.").arg(path),
             MessageBoxOptions {}
-            .Caption(XO("Error"))
+            .Caption(::TranslatableString("files", "Error"))
             .IconStyle(Icon::Error)
             .ButtonStyle(Button::Ok)
             );

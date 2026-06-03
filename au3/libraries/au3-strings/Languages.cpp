@@ -210,7 +210,7 @@ void GetLanguages(FilePaths pathList,
             auto str = wxString::FromUTF8(utf8Name);
             auto code = str.BeforeFirst(' ');
             auto name = str.AfterFirst(' ');
-            localLanguageName[code] = Verbatim(name);
+            localLanguageName[code] = TranslatableString::untranslatable(name);
         }
         return localLanguageName;
     }();
@@ -240,7 +240,7 @@ void GetLanguages(FilePaths pathList,
 
         wxString fullCode = info->CanonicalName;
         wxString code = fullCode.Left(2);
-        auto name = Verbatim(info->Description);
+        auto name = TranslatableString::untranslatable(info->Description);
 
         // Logic: Languages codes are sometimes hierarchical, with a
         // general language code and then a subheading.  For example,
@@ -290,7 +290,7 @@ void GetLanguages(FilePaths pathList,
     {
         wxString code;
         code = wxT("en-simple");
-        auto name = XO("Simplified");
+        auto name = TranslatableString("strings", "Simplified");
         if (TranslationExists(pathList, code)) {
             tempCodes.push_back(code);
             tempNames.push_back(name);
@@ -307,7 +307,7 @@ void GetLanguages(FilePaths pathList,
     std::sort(tempNames.begin(), tempNames.end(), TranslationLess);
 
     // Add system language
-    langNames.push_back(XO("System"));
+    langNames.push_back(TranslatableString("strings", "System"));
     langCodes.push_back(wxT("System"));
 
     for (j=0; j < tempNames.size(); j++) {

@@ -4,335 +4,335 @@
 
  @file TranslatableString.h
 
- Paul Licameli split from Types.h
+ Qt-native deferred-translation string. Lookup goes through
+ QCoreApplication::translate; the Qt catalogue pipeline
+ (lupdate/.ts/lrelease/.qm + QTranslator) is the single source of truth.
+
+ wxString interop lives in WxMuseStringCompat.h, included at the end.
+ Audacity-i18n helpers (au3::trc, au3::argDecay, au3::wxToQt, au3::qtToWx,
+ au3::untranslatable(wxString)) stay in the au3:: namespace; the class
+ itself is at global scope.
 
  **********************************************************************/
 
 #ifndef __AUDACITY_TRANSLATABLE_STRING__
 #define __AUDACITY_TRANSLATABLE_STRING__
 
-#include <stddef.h> // for size_t
+#include <QCoreApplication>
+#include <QString>
+
+#include <algorithm>
+#include <cstring>
 #include <functional>
-#include <wx/string.h>
-
-class Identifier;
-
+#include <memory>
+#include <string>
+#include <tuple>
+#include <type_traits>
 #include <vector>
 
-//! Holds a msgid for the translation catalog; may also bind format arguments
-/*!
- Different string-valued accessors for the msgid itself, and for the
- user-visible translation with substitution of captured format arguments.
- Also an accessor for format substitution into the English msgid, for debug-
- only outputs.
- The msgid should be used only in unusual cases and the translation more often
+class wxString;
+class TranslatableString;
 
- Implicit conversions to and from wxString are intentionally disabled
-*/
-class STRINGS_API TranslatableString
+namespace au3 {
+
+//! Forward decl of the wxString overload (defined in WxMuseStringCompat.h)
+//! so it's visible at template definition time -- two-phase lookup in
+//! TranslatableString::arg() would otherwise freeze on the primary template
+//! below and never see the wxString specialisation.
+QString argDecay(const wxString& s);
+
+inline std::string trc(const char* context, const char* key,
+                       const char* disambiguation = nullptr, int n = -1)
 {
-    enum class Request;
-    template< size_t N > struct PluralTemp;
+    return QCoreApplication::translate(context, key, disambiguation, n).toUtf8().toStdString();
+}
 
+template<class T>
+inline auto argDecay(const T& t)
+{
+    if constexpr (std::is_array_v<T> && std::is_same_v<std::remove_extent_t<T>, char>) {
+        return QString::fromUtf8(static_cast<const char*>(t));
+    } else if constexpr (std::is_array_v<T> && std::is_same_v<std::remove_extent_t<T>, wchar_t>) {
+        return QString::fromWCharArray(static_cast<const wchar_t*>(t));
+    } else if constexpr (std::is_same_v<T, const char*> || std::is_same_v<T, char*>) {
+        return QString::fromUtf8(t);
+    } else if constexpr (std::is_same_v<T, const wchar_t*> || std::is_same_v<T, wchar_t*>) {
+        return QString::fromWCharArray(t);
+    } else if constexpr (std::is_same_v<T, std::string>) {
+        return QString::fromStdString(t);
+    } else if constexpr (std::is_same_v<T, std::wstring>) {
+        return QString::fromStdWString(t);
+    } else {
+        return t;
+    }
+}
+
+} // namespace au3
+
+class TranslatableString
+{
 public:
-    //! A special string value that will have no screen reader pronunciation
-    static const TranslatableString Inaudible;
-
-    //! A multi-purpose function, depending on the enum argument
-    /*! the string
-       argument is unused in some cases
-       If there is no function, defaults are empty context string, no plurals,
-       and no substitutions */
-    using Formatter = std::function< wxString (const wxString&, Request) >;
-
-    TranslatableString() {}
-
-    /*! Supply {} for the second argument to cause lookup of the msgid with
-       empty context string (default context) rather than the null context */
-    explicit TranslatableString(wxString str, Formatter formatter)
-        : mFormatter{std::move(formatter)}
-    {
-        mMsgid.swap(str);
-    }
-
-    // copy and move
-    TranslatableString(const TranslatableString&) = default;
-    TranslatableString& operator=(const TranslatableString&) = default;
-    TranslatableString(TranslatableString&& str)
-        : mFormatter(std::move(str.mFormatter))
-    {
-        mMsgid.swap(str.mMsgid);
-    }
-
-    TranslatableString& operator=(TranslatableString&& str)
-    {
-        mFormatter = std::move(str.mFormatter);
-        mMsgid.swap(str.mMsgid);
-        return *this;
-    }
-
-    bool empty() const { return mMsgid.empty(); }
-
-    //! MSGID is the English lookup key in the catalog, not necessarily for user's eyes if locale is some other.
-    /*! The MSGID might not be all the information TranslatableString holds.
-       This is a deliberately ugly-looking function name.  Use with caution. */
-    Identifier MSGID() const;
-
-    wxString Translation() const { return DoFormat(false); }
-
-    //! Format as an English string for debugging logs and developers' eyes, not for end users
-    wxString Debug() const { return DoFormat(true); }
-
-    //! Warning: comparison of msgids only, which is not all of the information!
-    /*! This operator makes it easier to define a std::unordered_map on TranslatableStrings */
-    friend bool operator ==(
-        const TranslatableString& x, const TranslatableString& y)
-    { return x.mMsgid == y.mMsgid; }
-
-    friend bool operator !=(
-        const TranslatableString& x, const TranslatableString& y)
-    { return !(x == y); }
-
-    //! Returns true if context is NullContextFormatter
-    bool IsVerbatim() const;
-
-    //! Capture variadic format arguments (by copy) when there is no plural.
-    /*! The substitution is computed later in a call to Translate() after msgid is
-       looked up in the translation catalog.
-       Any format arguments that are also of type TranslatableString will be
-       translated too at substitution time, for non-debug formatting */
-    template< typename ... Args >
-    TranslatableString& Format(Args&&... args)
-    &
-    {
-        auto prevFormatter = mFormatter;
-        this->mFormatter = [prevFormatter, args ...]
-                           (const wxString& str, Request request) -> wxString {
-            switch (request) {
-            case Request::Context:
-                return TranslatableString::DoGetContext(prevFormatter);
-            case Request::Format:
-            case Request::DebugFormat:
-            default: {
-                bool debug = request == Request::DebugFormat;
-                return wxString::Format(
-                    TranslatableString::DoSubstitute(
-                        prevFormatter,
-                        str, TranslatableString::DoGetContext(prevFormatter),
-                        debug),
-                    TranslatableString::TranslateArgument(args, debug)...
-                    );
-            }
-            }
-        };
-        return *this;
-    }
-
-    template< typename ... Args >
-    TranslatableString && Format(Args && ... args)
-    && {
-        return std::move(Format(std::forward<Args>(args)...));
-    }
-
-    //! Choose a non-default and non-null disambiguating context for lookups
-    /*! This is meant to be the first of chain-call modifications of the
-       TranslatableString object; it will destroy any previously captured
-       information */
-    TranslatableString& Context(const wxString& context)
-    &
-    {
-        this->mFormatter = [context]
-                           (const wxString& str, Request request) -> wxString {
-            switch (request) {
-            case Request::Context:
-                return context;
-            case Request::DebugFormat:
-                return DoSubstitute({}, str, context, true);
-            case Request::Format:
-            default:
-                return DoSubstitute({}, str, context, false);
-            }
-        };
-        return *this;
-    }
-
-    TranslatableString&& Context(const wxString& context)
-    &&
-    {
-        return std::move(Context(context));
-    }
-
-    //! Append another translatable string
-    /*! lookup of msgids for
-       this and for the argument are both delayed until Translate() is invoked
-       on this, and then the formatter concatenates the translations */
-    TranslatableString& Join(
-        TranslatableString arg, const wxString& separator = {}) &;
-    TranslatableString&& Join(
-        TranslatableString arg, const wxString& separator = {})
-    && { return std::move(Join(std::move(arg), separator)); }
-
-    TranslatableString& operator +=(TranslatableString arg)
-    {
-        Join(std::move(arg));
-        return *this;
-    }
-
-    //! Implements the XP macro
-    /*! That macro specifies a second msgid, a list
-       of format arguments, and which of those format arguments selects among
-       messages; the translated strings to select among, depending on language,
-       might actually be more or fewer than two.  See Internat.h. */
-    template< size_t N >
-    PluralTemp< N > Plural(const wxString& pluralStr)
-    &&
-    {
-        return PluralTemp< N > { *this, pluralStr };
-    }
-
-    /*! Translated strings may still contain menu hot-key codes (indicated by &)
-       that wxWidgets interprets, and also trailing ellipses, that should be
-       removed for other uses. */
     enum StripOptions : unsigned {
-        // Values to be combined with bitwise OR
-        MenuCodes = 0x1,
-        Ellipses = 0x2,
-    };
-    TranslatableString& Strip(unsigned options = MenuCodes) &;
-    TranslatableString&& Strip(unsigned options = MenuCodes)
-    && { return std::move(Strip(options)); }
-
-    //! non-mutating, constructs another TranslatableString object
-    TranslatableString Stripped(unsigned options = MenuCodes) const
-    { return TranslatableString{ *this }.Strip(options); }
-
-    wxString StrippedTranslation() const { return Stripped().Translation(); }
-
-private:
-    static const Formatter NullContextFormatter;
-
-    //! Construct a TranslatableString that does no translation but passes str verbatim
-    explicit TranslatableString(wxString str)
-        : mFormatter{NullContextFormatter}
-    {
-        mMsgid.swap(str);
-    }
-
-    friend TranslatableString Verbatim(wxString str);
-
-    enum class Request {
-        Context,   //!< return a disambiguating context string
-        Format,    //!< Given the msgid, format the string for end users
-        DebugFormat, //!< Given the msgid, format the string for developers
+        StripMenuCodes = 0x1,
+        StripEllipses  = 0x2,
     };
 
-    static const wxChar* const NullContextName;
-    friend std::hash< TranslatableString >;
+    TranslatableString() = default;
 
-    static wxString DoGetContext(const Formatter& formatter);
-    static wxString DoSubstitute(
-        const Formatter& formatter, const wxString& format, const wxString& context, bool debug);
-    wxString DoFormat(bool debug) const
+    TranslatableString(const char* context, const char* source,
+                       const char* disambiguation = nullptr, int n = -1)
+        : m_context(context),
+          m_source(QString::fromUtf8(source)),
+          m_disambiguation(disambiguation),
+          m_n(n) {}
+
+    TranslatableString(const char* context, QString source,
+                       const char* disambiguation = nullptr, int n = -1)
+        : m_context(context),
+          m_source(std::move(source)),
+          m_disambiguation(disambiguation),
+          m_n(n) {}
+
+    static TranslatableString untranslatable(const char* s)
+    { return TranslatableString(nullptr, s); }
+    static TranslatableString untranslatable(const QString& s)
+    { return TranslatableString(nullptr, s); }
+    //! wxString overload lives in WxMuseStringCompat.h.
+
+    bool isEmpty()        const { return m_source.isEmpty(); }
+    bool empty()          const { return isEmpty(); }
+    bool isTranslatable() const { return m_context && m_context[0]; }
+
+    const QString& msgid() const { return m_source; }
+
+    QString translated() const { return translated(m_n); }
+
+    QString translated(int n) const
     {
-        return DoSubstitute(
-            mFormatter, mMsgid, DoGetContext(mFormatter), debug);
+        if (isEmpty()) {
+            return {};
+        }
+        QString res = isTranslatable()
+            ? QCoreApplication::translate(m_context, m_source.toUtf8().constData(),
+                                          m_disambiguation, n)
+            : m_source;
+        for (const auto& a : m_args) {
+            a->apply(res);
+        }
+        applyStrip(res);
+        for (const auto& j : m_joined) {
+            res += j.sep;
+            if (j.other) {
+                res += j.other->translated();
+            }
+        }
+        return res;
     }
 
-    static wxString DoChooseFormat(
-        const Formatter& formatter, const wxString& singular, const wxString& plural, unsigned nn, bool debug);
+    QString qTranslated() const { return translated(); }
+    QString qTranslated(int n) const { return translated(n); }
 
-    template< typename T > static const T& TranslateArgument(const T& arg, bool)
-    { return arg; }
-    //! This allows you to wrap arguments of Format in std::cref
-    /*! (So that they are captured (as if) by reference rather than by value) */
-    template< typename T > static auto TranslateArgument(
-        const std::reference_wrapper<T>& arg, bool debug)
-    -> decltype(
-        TranslatableString::TranslateArgument(arg.get(), debug))
-    { return TranslatableString::TranslateArgument(arg.get(), debug); }
-    static wxString TranslateArgument(const TranslatableString& arg, bool debug)
-    { return arg.DoFormat(debug); }
+    std::string Translation() const { return translated().toStdString(); }
 
-    template< size_t N > struct PluralTemp {
-        TranslatableString& ts;
-        const wxString& pluralStr;
-        template< typename ... Args >
-        TranslatableString && operator()(Args&&... args)
+    //! Source with args applied, no catalogue lookup. For diagnostics and
+    //! internal pattern matching where translation would be wrong.
+    QString debugStr() const
+    {
+        if (isEmpty()) {
+            return {};
+        }
+        QString res = m_source;
+        for (const auto& a : m_args) {
+            a->apply(res);
+        }
+        return res;
+    }
+
+    TranslatableString stripped(unsigned opts = StripMenuCodes) const
+    {
+        TranslatableString res = *this;
+        res.m_strip |= opts;
+        return res;
+    }
+
+    TranslatableString Join(const TranslatableString& other, const QString& sep = {}) const
+    {
+        TranslatableString res = *this;
+        res.m_joined.push_back({ std::make_shared<TranslatableString>(other), sep });
+        return res;
+    }
+
+    TranslatableString Join(const TranslatableString& other, const char* sep) const
+    {
+        return Join(other, QString::fromUtf8(sep));
+    }
+
+    TranslatableString operator+(const TranslatableString& rhs) const
+    {
+        return Join(rhs, QString());
+    }
+
+    TranslatableString& operator+=(const TranslatableString& rhs)
+    {
+        m_joined.push_back({ std::make_shared<TranslatableString>(rhs), QString() });
+        return *this;
+    }
+
+    //! Inline (not out-of-line) because GCC rejects the qualified
+    //! `struct ::TranslatableString::Arg` declarator that Clang accepts.
+    template<class... Args>
+    TranslatableString arg(const Args&... a) const
+    {
+        // au3::argDecay qualified so two-phase lookup picks up the wxString
+        // overload from WxMuseStringCompat.h; unqualified would freeze on
+        // the primary template above.
+        TranslatableString res = *this;
+        res.m_args.push_back(
+            std::make_shared<Arg<decltype(au3::argDecay(a))...> >(au3::argDecay(a)...));
+        return res;
+    }
+
+    template<class... Args>
+    TranslatableString Format(const Args&... a) const
+    {
+        TranslatableString res = *this;
+        ((res = res.arg(a)), ...);
+        return res;
+    }
+
+    bool operator==(const TranslatableString& other) const
+    {
+        return (m_context == other.m_context
+                || (m_context && other.m_context
+                    && std::strcmp(m_context, other.m_context) == 0))
+            && m_source == other.m_source
+            && (m_disambiguation == other.m_disambiguation
+                || (m_disambiguation && other.m_disambiguation
+                    && std::strcmp(m_disambiguation, other.m_disambiguation) == 0))
+            && m_n == other.m_n
+            && m_strip == other.m_strip
+            // vector::operator== would compare shared_ptr identity, not IArg::equals().
+            && m_args.size() == other.m_args.size()
+            && std::equal(m_args.begin(), m_args.end(), other.m_args.begin(),
+                          [](const std::shared_ptr<const IArg>& a,
+                             const std::shared_ptr<const IArg>& b) {
+                              return a == b || (a && b && a->equals(*b));
+                          });
+    }
+
+    bool operator!=(const TranslatableString& other) const { return !operator==(other); }
+
+    //! Public so the wxString Arg specialisation in WxMuseStringCompat.h
+    //! can plug in. Treat as private otherwise.
+    struct IArg {
+        virtual ~IArg() = default;
+        virtual void apply(QString& res) const = 0;
+        virtual bool equals(const IArg& other) const = 0;
+        bool operator==(const IArg& other) const { return equals(other); }
+    };
+
+    template<class... Args>
+    struct Arg : public IArg
+    {
+        std::tuple<Args...> args;
+
+        Arg(const Args&... a) : args(a...) {}
+
+        void apply(QString& res) const override
         {
-            // Pick from the pack the argument that specifies number
-            auto selector
-                =std::template get< N >(std::forward_as_tuple(args ...));
-            // We need an unsigned value.  Guard against negative values.
-            auto nn = static_cast<unsigned>(
-                std::max<unsigned long long>(0, selector)
-                );
-            auto plural = this->pluralStr;
-            auto prevFormatter = this->ts.mFormatter;
-            this->ts.mFormatter = [prevFormatter, plural, nn, args ...]
-                                  (const wxString& str, Request request) -> wxString {
-                switch (request) {
-                case Request::Context:
-                    return TranslatableString::DoGetContext(prevFormatter);
-                case Request::Format:
-                case Request::DebugFormat:
-                default:
-                {
-                    bool debug = request == Request::DebugFormat;
-                    return wxString::Format(
-                        TranslatableString::DoChooseFormat(
-                            prevFormatter, str, plural, nn, debug),
-                        TranslatableString::TranslateArgument(args, debug)...
-                        );
-                }
-                }
-            };
-            return std::move(ts);
+            res = std::apply(
+                [&](const Args&... a) { return res.arg(makeQArg(a)...); },
+                args);
+        }
+
+        template<class T>
+        static auto makeQArg(const T& t)
+        {
+            if constexpr (std::is_same_v<T, TranslatableString>) {
+                return t.translated();
+            } else {
+                return t;
+            }
+        }
+
+        bool equals(const IArg& other) const override
+        {
+            auto p = dynamic_cast<const Arg<Args...>*>(&other);
+            return p && p->args == args;
         }
     };
 
-    wxString mMsgid;
-    Formatter mFormatter;
+private:
+    void applyStrip(QString& res) const
+    {
+        if (!m_strip) {
+            return;
+        }
+        if (m_strip & StripMenuCodes) {
+            res = stripMenuCodes(res);
+        }
+        if (m_strip & StripEllipses) {
+            if (res.endsWith(QLatin1String("..."))) {
+                res.chop(3);
+            } else if (res.endsWith(QChar(0x2026))) {
+                res.chop(1);
+            }
+        }
+    }
+
+    static QString stripMenuCodes(const QString& in)
+    {
+        QString out;
+        out.reserve(in.size());
+        for (int i = 0; i < in.size(); ++i) {
+            QChar c = in.at(i);
+            if (c == QLatin1Char('\t')) {
+                break;
+            }
+            if (c == QLatin1Char('&')) {
+                ++i;
+                if (i >= in.size()) {
+                    break;
+                }
+                out += in.at(i);
+                continue;
+            }
+            out += c;
+        }
+        return out;
+    }
+
+    struct Joined {
+        std::shared_ptr<const TranslatableString> other;
+        QString sep;
+    };
+
+    const char* m_context        = nullptr;
+    QString     m_source;
+    const char* m_disambiguation = nullptr;
+    int         m_n              = -1;
+
+    std::vector<std::shared_ptr<const IArg> > m_args;
+    std::vector<Joined>                       m_joined;
+    unsigned                                  m_strip = 0;
 };
 
-inline TranslatableString operator +(
-    TranslatableString x, TranslatableString y)
-{
-    return std::move(x += std::move(y));
-}
+using TranslatableStrings = std::vector<::TranslatableString>;
 
-using TranslatableStrings = std::vector<TranslatableString>;
-
-//! For using std::unordered_map on TranslatableString
-/*! Note:  hashing on msgids only, which is not all of the information */
 namespace std {
-template<> struct hash< TranslatableString > {
-    size_t operator ()(const TranslatableString& str) const    // noexcept
+template<> struct hash<::TranslatableString> {
+    size_t operator()(const ::TranslatableString& s) const noexcept
     {
-        const wxString& stdstr = str.mMsgid.ToStdWstring();  // no allocations, a cheap fetch
-        using Hasher = hash< wxString >;
-        return Hasher{}(stdstr);
+        return qHash(s.msgid());
     }
 };
-}
+} // namespace std
 
-//! Allow TranslatableString to work with shift output operators
-template< typename Sink >
-inline Sink& operator <<(Sink& sink, const TranslatableString& str)
+inline bool TranslationLess(const ::TranslatableString& a, const ::TranslatableString& b)
 {
-    return sink << str.Translation();
+    return a.translated() < b.translated();
 }
 
-//! Require calls to the one-argument constructor to go through this distinct global function name.
-/*! This makes it easier to locate and
-   review the uses of this function, separately from the uses of the type. */
-inline TranslatableString Verbatim(wxString str)
-{ return TranslatableString(std::move(str)); }
-
-//! A commonly needed sort comparator, which depends on the language setting
-inline bool TranslationLess(
-    const TranslatableString& a, const TranslatableString& b)
-{
-    return a.Translation() < b.Translation();
-}
+#include "WxMuseStringCompat.h"
 
 #endif

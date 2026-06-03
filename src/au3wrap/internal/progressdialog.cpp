@@ -16,8 +16,8 @@ ProgressDialog::ProgressDialog(const muse::modularity::ContextPtr& ctx, const st
     m_progress.setMaxNumIncrements(200);
 }
 
-ProgressDialog::ProgressDialog(const muse::modularity::ContextPtr& ctx, const TranslatableString& title)
-    : ProgressDialog{ctx, au::au3::wxToStdString(title.Translation())}
+ProgressDialog::ProgressDialog(const muse::modularity::ContextPtr& ctx, const ::TranslatableString& title)
+    : ProgressDialog{ctx, au::au3::wxToStdString(title.translated().toStdString())}
 {
 }
 
@@ -33,9 +33,9 @@ void ProgressDialog::Reinit()
     m_lastEventPump = {};
 }
 
-void ProgressDialog::SetDialogTitle(const TranslatableString& title)
+void ProgressDialog::SetDialogTitle(const ::TranslatableString& title)
 {
-    m_progressTitle = au::au3::wxToStdString(title.Translation());
+    m_progressTitle = au::au3::wxToStdString(title.translated().toStdString());
 }
 
 void ProgressDialog::start()
@@ -55,12 +55,12 @@ void ProgressDialog::start()
     m_progress.start();
 }
 
-ProgressResult ProgressDialog::Poll(unsigned long long numerator, unsigned long long denominator, const TranslatableString& message)
+ProgressResult ProgressDialog::Poll(unsigned long long numerator, unsigned long long denominator, const ::TranslatableString& message)
 {
     start();
 
     if (!message.empty()) {
-        m_progressMessage = au::au3::wxToStdString(message.Translation());
+        m_progressMessage = au::au3::wxToStdString(message.translated().toStdString());
     }
 
     // Push the new fraction/message into muse::Progress unconditionally.
@@ -80,8 +80,8 @@ ProgressResult ProgressDialog::Poll(unsigned long long numerator, unsigned long 
     return ProgressResult::Success;
 }
 
-void ProgressDialog::SetMessage(const TranslatableString& message)
+void ProgressDialog::SetMessage(const ::TranslatableString& message)
 {
-    m_progressMessage = au::au3::wxToStdString(message.Translation());
+    m_progressMessage = au::au3::wxToStdString(message.translated().toStdString());
 }
 }

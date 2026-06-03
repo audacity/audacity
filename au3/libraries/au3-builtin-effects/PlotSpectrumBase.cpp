@@ -62,8 +62,8 @@ bool PlotSpectrumBase::GetAudio()
         if (track->GetRate() != mRate) {
             using namespace BasicUI;
             ShowMessageBox(
-                XO("To plot the spectrum, all selected tracks must have the same sample rate."),
-                MessageBoxOptions {}.Caption(XO("Error")).IconStyle(Icon::Error));
+                TranslatableString("builtin-effects", "To plot the spectrum, all selected tracks must have the same sample rate."),
+                MessageBoxOptions {}.Caption(TranslatableString("builtin-effects", "Error")).IconStyle(Icon::Error));
             mData.reset();
             mDataLen = 0;
             return false;
@@ -77,9 +77,8 @@ bool PlotSpectrumBase::GetAudio()
                 FillFormat::fillZero, false)) {
             using namespace BasicUI;
             ShowMessageBox(
-                XO(
-                    "Audio could not be analyzed. This may be due to a stretched or pitch-shifted clip.\nTry resetting any stretched clips, or mixing and rendering the tracks before analyzing"),
-                MessageBoxOptions {}.Caption(XO("Error")).IconStyle(Icon::Error));
+                TranslatableString("builtin-effects", "Audio could not be analyzed. This may be due to a stretched or pitch-shifted clip.\nTry resetting any stretched clips, or mixing and rendering the tracks before analyzing"),
+                MessageBoxOptions {}.Caption(TranslatableString("builtin-effects", "Error")).IconStyle(Icon::Error));
             mData.reset();
             mDataLen = 0;
             return false;
@@ -108,7 +107,7 @@ bool PlotSpectrumBase::GetAudio()
 
     if (warning) {
         auto msg
-            =XO("Too much audio was selected. Only the first %.1f seconds of audio will be analyzed.")
+            =TranslatableString("builtin-effects", "Too much audio was selected. Only the first %1 seconds of audio will be analyzed.")
               .Format(mDataLen / mRate);
         BasicUI::ShowMessageBox(msg);
     }

@@ -19,7 +19,7 @@ public:
     // ComponentInterface implementation
 
     ComponentInterfaceSymbol GetSymbol() const override;
-    TranslatableString GetDescription() const override;
+    ::TranslatableString GetDescription() const override;
 
     // EffectDefinitionInterface implementation
 

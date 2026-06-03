@@ -66,7 +66,7 @@ OggImportFileHandle::OggImportFileHandle(const FilePath& filename,
 
     for (int i = 0; i < links; ++i) {
         const auto& vi = mVorbisFile->vi[i];
-        auto strinfo = XO("Index[%02x] Version[%d], Channels[%d], Rate[%ld]")
+        auto strinfo = TranslatableString("import-export", "Index[%1] Version[%2], Channels[%3], Rate[%4]")
                        .Format(
             static_cast<unsigned int>(i),
             vi.version,
@@ -350,19 +350,19 @@ std::unique_ptr<ImportFileHandle> OggImportPlugin::Open(
 
         switch (err) {
         case OV_EREAD:
-            message = XO("Media read error");
+            message = TranslatableString("import-export", "Media read error");
             break;
         case OV_ENOTVORBIS:
-            message = XO("Not an Ogg Vorbis file");
+            message = TranslatableString("import-export", "Not an Ogg Vorbis file");
             break;
         case OV_EVERSION:
-            message = XO("Vorbis version mismatch");
+            message = TranslatableString("import-export", "Vorbis version mismatch");
             break;
         case OV_EBADHEADER:
-            message = XO("Invalid Vorbis bitstream header");
+            message = TranslatableString("import-export", "Invalid Vorbis bitstream header");
             break;
         case OV_EFAULT:
-            message = XO("Internal logic fault");
+            message = TranslatableString("import-export", "Internal logic fault");
             break;
         }
 

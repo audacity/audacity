@@ -418,10 +418,10 @@ bool PluginManager::DropFile(const wxString& fileName)
                 if (dst.Exists()) {
                     // Query whether to overwrite
                     bool overwrite = (MessageBoxResult::Yes == ShowMessageBox(
-                                          XO("Overwrite the plug-in file %s?")
+                                          TranslatableString("module-manager", "Overwrite the plug-in file %1?")
                                           .Format(dst.GetFullPath()),
                                           MessageBoxOptions {}
-                                          .Caption(XO("Plug-in already exists"))
+                                          .Caption(TranslatableString("module-manager", "Plug-in already exists"))
                                           .ButtonStyle(Button::YesNo)));
                     if (!overwrite) {
                         return true;
@@ -444,7 +444,7 @@ bool PluginManager::DropFile(const wxString& fileName)
 
                 if (!copied) {
                     ShowMessageBox(
-                        XO("Plug-in file is in use. Failed to overwrite"));
+                        TranslatableString("module-manager", "Plug-in file is in use. Failed to overwrite"));
                     return true;
                 }
 
@@ -465,27 +465,24 @@ bool PluginManager::DropFile(const wxString& fileName)
                 if (!nPlugIns) {
                     // Unlikely after the dry run succeeded
                     ShowMessageBox(
-                        XO("Failed to register:\n%s").Format(errMsg));
+                        TranslatableString("module-manager", "Failed to register:\n%1").arg(errMsg));
                     return true;
                 }
 
                 // Ask whether to enable the plug-ins
                 if (auto nIds = ids.size()) {
-                    auto message = XPC(
-                        /* i18n-hint A plug-in is an optional added program for a sound
-                         effect, or generator, or analyzer */
-                        "Enable this plug-in?\n",
-                        "Enable these plug-ins?\n",
-                        0,
-                        "plug-ins"
-                        )(nIds);
+                    /*: A plug-in is an optional added program for a sound
+                     effect, or generator, or analyzer.
+                     Plural form of "Enable this plug-in?": "Enable these plug-ins?" */
+                    auto message = TranslatableString(
+                        "module-manager", "Enable this plug-in?\n", "plug-ins", static_cast<int>(nIds));
                     for (const auto& name : names) {
-                        message.Join(Verbatim(name), wxT("\n"));
+                        message.Join(TranslatableString::untranslatable(name), "\n");
                     }
                     bool enable = (MessageBoxResult::Yes == ShowMessageBox(
                                        message,
                                        MessageBoxOptions {}
-                                       .Caption(XO("Enable new plug-ins"))
+                                       .Caption(TranslatableString("module-manager", "Enable new plug-ins"))
                                        .ButtonStyle(Button::YesNo)));
                     for (const auto& id : ids) {
                         mRegisteredPlugins[id].SetEnabled(enable);

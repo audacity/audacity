@@ -57,7 +57,7 @@ void Au3ProjectHistory::pushHistoryState(const std::string& longDescription, con
     LOGI() << "pushHistoryState(\"" << shortDescription << "\", " << flags << ")";
     auto& project = projectRef();
     UndoPush undoFlags = static_cast<UndoPush>(flags);
-    ::ProjectHistory::Get(project).PushState(TranslatableString { longDescription, {} }, TranslatableString { shortDescription, {} },
+    ::ProjectHistory::Get(project).PushState(::au3::untranslatable(longDescription), ::au3::untranslatable(shortDescription),
                                              undoFlags);
 
     m_interactionOngoing = false;
@@ -148,10 +148,10 @@ const muse::TranslatableString Au3ProjectHistory::topMostUndoActionName() const
 
     int currentStateIndex = undoManager.GetCurrentState();
 
-    ::TranslatableString actionName;
+    TranslatableString actionName;
     undoManager.GetShortDescription(currentStateIndex, &actionName);
 
-    return muse::TranslatableString::untranslatable(wxToString(actionName.Translation()));
+    return muse::TranslatableString::untranslatable(wxToString(actionName.translated().toStdString()));
 }
 
 const muse::TranslatableString Au3ProjectHistory::topMostRedoActionName() const
@@ -165,10 +165,10 @@ const muse::TranslatableString Au3ProjectHistory::topMostRedoActionName() const
 
     int currentStateIndex = undoManager.GetCurrentState();
 
-    ::TranslatableString actionName;
+    TranslatableString actionName;
     undoManager.GetShortDescription(currentStateIndex + 1, &actionName);
 
-    return muse::TranslatableString::untranslatable(wxToString(actionName.Translation()));
+    return muse::TranslatableString::untranslatable(wxToString(actionName.translated().toStdString()));
 }
 
 size_t Au3ProjectHistory::undoRedoActionCount() const
@@ -190,10 +190,10 @@ const muse::TranslatableString Au3ProjectHistory::lastActionNameAtIdx(size_t idx
     auto& project = projectRef();
     auto& undoManager = UndoManager::Get(project);
 
-    ::TranslatableString actionName;
+    TranslatableString actionName;
     undoManager.GetShortDescription(idx, &actionName);
 
-    return muse::TranslatableString::untranslatable(wxToString(actionName.Translation()));
+    return muse::TranslatableString::untranslatable(wxToString(actionName.translated().toStdString()));
 }
 
 muse::async::Channel<HistoryEvent> Au3ProjectHistory::historyChanged() const

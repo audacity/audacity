@@ -4,6 +4,7 @@
 
 #include "au3-effects/EffectOutputTracks.h"
 #include "au3-command-parameters/ShuttleAutomation.h"
+#include "au3-strings/TranslatableString.h"
 #include "au3-wave-track/TimeStretching.h"
 #include "au3-wave-track/WaveChannelUtilities.h"
 #include "au3-wave-track/WaveTrack.h"
@@ -43,7 +44,7 @@ const EffectParameterMethods& AmplifyEffect::Parameters() const
 // AmplifyEffect
 //
 
-const ComponentInterfaceSymbol AmplifyEffect::Symbol { XO("Amplify") };
+const ComponentInterfaceSymbol AmplifyEffect::Symbol { TranslatableString("effects-amplify", "Amplify") };
 
 AmplifyEffect::Instance::~Instance()
 {
@@ -198,7 +199,7 @@ bool AmplifyEffect::Init()
 {
     auto range = inputTracks()->Selected<const Au3WaveTrack>();
     if (range.empty() || muse::RealIsEqualOrMore(mT0, mT1)) {
-        mLastError = XO("No audio selected").Translation().ToStdString();
+        mLastError = TranslatableString("effects-amplify", "No audio selected").translated().toStdString();
         return false;
     }
     bool hasPitchOrSpeed = any_of(begin(range), end(range), [this](auto* pTrack) {

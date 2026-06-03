@@ -26,10 +26,10 @@ Some example strings are also given first, to document the syntax.
 
 // A translated string may also have an accompanying special comment
 
-// i18n-hint to lower oneself
+//: to lower oneself
 //XO("Get down"),
 
-/* i18n-hint An example of a longer special comment that can wrap lines.
+/*: An example of a longer special comment that can wrap lines.
  These comments must begin with the special word i18n-hint and immediately
  precede the source code line with the opening quotation mark.  The translators
  will see this comment text in the generated .po files, which they edit and
@@ -40,7 +40,7 @@ Some example strings are also given first, to document the syntax.
 //XO("Get down"),
 
 //XO(
-/* i18n-hint one more example of alternative correct placement of an
+/*: one more example of alternative correct placement of an
     internationalization comment.  All comments on different occurrences of the
     same string are collected in the template file.  */
 //   "Get down"),
@@ -50,10 +50,10 @@ Some example strings are also given first, to document the syntax.
 // The context string is not itself seen by users or translated by translators.
 // It only allows the code at runtime to choose the correct translation.
 
-// i18n-hint Have fun and dance
+//: Have fun and dance
 //XC("Get down", "party"),
 
-// i18n-hint Obtain the underfeathers of a goose
+//: Obtain the underfeathers of a goose
 //XC("Get down", "pillows"),
 
 // Strings may have blanks in which names are substituted, such as a file name.
@@ -70,12 +70,11 @@ Some example strings are also given first, to document the syntax.
 // lookup time.
 // Also %d is a blank appropriate for a number instead of a name.
 
-// i18n-hint
-//XP("Got down one time", "Got down %d times", 0),
+//: //XP("Got down one time", "Got down %d times", 0),
 
 // Finally, singular-plural pairs may also have context strings.
 
-// i18n-hint Obtained underfeathers of geese on one or more occasions
+//: Obtained underfeathers of geese on one or more occasions
 //XPC("Got down one time", "Got down %d times", 0, "pillows"),
 
 // About keyboard shortcuts:
@@ -96,5 +95,5 @@ Some example strings are also given first, to document the syntax.
 // //////////////////////////////////////////////// End examples
 #endif
 
-XO("Cut/Copy/Paste"),
-XXO("&Cut/Copy/Paste Toolbar"),
+TranslatableString("strings", "Cut/Copy/Paste"),
+TranslatableString("strings", "&Cut/Copy/Paste Toolbar"),

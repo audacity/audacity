@@ -149,7 +149,7 @@ muse::Ret Au3ProjectAccessor::load(const muse::io::path_t& filePath, bool ignore
     {
         auto ret = muse::Ret(projectFileIO.GetLastErrorCode());
         ret.setData("title", muse::mtrc("project", "Project loading failed").toStdString());
-        ret.setData("body", projectFileIO.GetLastError().Translation().ToStdString());
+        ret.setData("body", projectFileIO.GetLastError().translated().toStdString());
         ret.setData("path", filePath);
         return ret;
     }

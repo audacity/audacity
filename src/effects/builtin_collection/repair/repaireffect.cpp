@@ -8,13 +8,16 @@
 
 **********************************************************************/
 #include "repaireffect.h"
-#include "au3-effects/EffectOutputTracks.h"
-#include "au3-math/InterpolateAudio.h"
-#include "au3-wave-track/TimeStretching.h"
-#include "au3-wave-track/WaveTrack.h"
+
 #include <cmath>
 
-const ComponentInterfaceSymbol Repair::Symbol { XO("Repair") };
+#include "au3-effects/EffectOutputTracks.h"
+#include "au3-math/InterpolateAudio.h"
+#include "au3-strings/TranslatableString.h"
+#include "au3-wave-track/TimeStretching.h"
+#include "au3-wave-track/WaveTrack.h"
+
+const ComponentInterfaceSymbol Repair::Symbol { TranslatableString("effects-repair", "Repair") };
 
 // ComponentInterface implementation
 
@@ -23,9 +26,9 @@ ComponentInterfaceSymbol Repair::GetSymbol() const
     return Symbol;
 }
 
-TranslatableString Repair::GetDescription() const
+::TranslatableString Repair::GetDescription() const
 {
-    return XO("Sets the peak amplitude of a one or more tracks");
+    return ::TranslatableString("effects-repair", "Sets the peak amplitude of a one or more tracks");
 }
 
 // EffectDefinitionInterface implementation
@@ -65,15 +68,15 @@ bool Repair::Process(EffectInstance&, EffectSettings&)
             const auto repairLen = repair1 - repair0;
             if (TimeStretching::HasPitchOrSpeed(*track, repair_t0, repair_t1)) {
                 mLastError
-                    =XO("The Repair effect cannot be applied within stretched or shrunk clips")
-                      .Translation();
+                    =::TranslatableString("effects-repair", "The Repair effect cannot be applied within stretched or shrunk clips")
+                      .translated().toStdString();
                 bGoodResult = false;
                 break;
             }
             if (repairLen > 128) {
-                mLastError = XO(
-                    "The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n\nZoom in and select a tiny fraction of a second to repair.")
-                             .Translation();
+                mLastError = TranslatableString("effects-repair",
+                                                "The Repair effect is intended to be used on very short sections of damaged audio (up to 128 samples).\n\nZoom in and select a tiny fraction of a second to repair.")
+                             .translated().toStdString();
                 bGoodResult = false;
                 break;
             }
@@ -90,9 +93,9 @@ bool Repair::Process(EffectInstance&, EffectSettings&)
             const auto len = s1 - s0;
 
             if (s0 == repair0 && s1 == repair1) {
-                mLastError = XO(
-                    "The Repair effect needs some data to go on.\n\nPlease select an area to repair with some audio on at least one side (the more the better).")
-                             .Translation();
+                mLastError = TranslatableString("effects-repair",
+                                                "The Repair effect needs some data to go on.\n\nPlease select an area to repair with some audio on at least one side (the more the better).")
+                             .translated().toStdString();
                 bGoodResult = false;
                 break;
             }

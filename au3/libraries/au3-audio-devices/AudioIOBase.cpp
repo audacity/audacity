@@ -801,7 +801,7 @@ wxString AudioIOBase::GetDeviceInfo() const
     wxTextOutputStream s(o, wxEOL_UNIX);
 
     if (IsStreamActive()) {
-        return XO("Stream is active ... unable to gather information.\n")
+        return TranslatableString("audio-devices", "Stream is active ... unable to gather information.\n")
                .Translation();
     }
 
@@ -814,8 +814,8 @@ wxString AudioIOBase::GetDeviceInfo() const
     wxLogDebug(wxT("Portaudio reports %d audio devices"), cnt);
 
     s << wxT("==============================\n");
-    s << XO("Default recording device number: %d\n").Format(recDeviceNum);
-    s << XO("Default playback device number: %d\n").Format(playDeviceNum);
+    s << TranslatableString("audio-devices", "Default recording device number: %1\n").arg(recDeviceNum);
+    s << TranslatableString("audio-devices", "Default playback device number: %1\n").arg(playDeviceNum);
 
     auto recDevice = AudioIORecordingDevice.Read();
     auto playDevice = AudioIOPlaybackDevice.Read();
@@ -823,7 +823,7 @@ wxString AudioIOBase::GetDeviceInfo() const
 
     // This gets info on all available audio devices (input and output)
     if (cnt <= 0) {
-        s << XO("No devices found\n");
+        s << TranslatableString("audio-devices", "No devices found\n");
         return o.GetString();
     }
 
@@ -834,26 +834,26 @@ wxString AudioIOBase::GetDeviceInfo() const
 
         info = Pa_GetDeviceInfo(j);
         if (!info) {
-            s << XO("Device info unavailable for: %d\n").Format(j);
+            s << TranslatableString("audio-devices", "Device info unavailable for: %1\n").arg(j);
             continue;
         }
 
         wxString name = DeviceName(info);
-        s << XO("Device ID: %d\n").Format(j);
-        s << XO("Device name: %s\n").Format(name);
-        s << XO("Host name: %s\n").Format(HostName(info));
-        s << XO("Recording channels: %d\n").Format(info->maxInputChannels);
-        s << XO("Playback channels: %d\n").Format(info->maxOutputChannels);
-        s << XO("Low Recording Latency: %g\n").Format(info->defaultLowInputLatency);
-        s << XO("Low Playback Latency: %g\n").Format(info->defaultLowOutputLatency);
-        s << XO("High Recording Latency: %g\n").Format(info->defaultHighInputLatency);
-        s << XO("High Playback Latency: %g\n").Format(info->defaultHighOutputLatency);
+        s << TranslatableString("audio-devices", "Device ID: %1\n").arg(j);
+        s << TranslatableString("audio-devices", "Device name: %1\n").arg(name);
+        s << TranslatableString("audio-devices", "Host name: %1\n").arg(HostName(info));
+        s << TranslatableString("audio-devices", "Recording channels: %1\n").arg(info->maxInputChannels);
+        s << TranslatableString("audio-devices", "Playback channels: %1\n").arg(info->maxOutputChannels);
+        s << TranslatableString("audio-devices", "Low Recording Latency: %1\n").arg(info->defaultLowInputLatency);
+        s << TranslatableString("audio-devices", "Low Playback Latency: %1\n").arg(info->defaultLowOutputLatency);
+        s << TranslatableString("audio-devices", "High Recording Latency: %1\n").arg(info->defaultHighInputLatency);
+        s << TranslatableString("audio-devices", "High Playback Latency: %1\n").arg(info->defaultHighOutputLatency);
 
         if (info->maxOutputChannels) {
             auto rates = GetSupportedPlaybackRates(j);
 
-            /* i18n-hint: Supported, meaning made available by the system */
-            s << XO("Supported Playback Rates:\n");
+            /*: Supported, meaning made available by the system */
+            s << TranslatableString("audio-devices", "Supported Playback Rates:\n");
             for (int k = 0; k < (int)rates.size(); k++) {
                 s << wxT("    ") << (int)rates[k] << wxT("\n");
             }
@@ -862,8 +862,8 @@ wxString AudioIOBase::GetDeviceInfo() const
         if (info->maxInputChannels) {
             auto rates = GetSupportedCaptureRates(j);
 
-            /* i18n-hint: Supported, meaning made available by the system */
-            s << XO("Supported Capture Rates:\n");
+            /*: Supported, meaning made available by the system */
+            s << TranslatableString("audio-devices", "Supported Capture Rates:\n");
             for (int k = 0; k < (int)rates.size(); k++) {
                 s << wxT("    ") << (int)rates[k] << wxT("\n");
             }
@@ -892,15 +892,15 @@ wxString AudioIOBase::GetDeviceInfo() const
 
     s << wxT("==============================\n");
     if (haveRecDevice) {
-        s << XO("Selected recording device: %d - %s\n").Format(recDeviceNum, recDevice);
+        s << TranslatableString("audio-devices", "Selected recording device: %1 - %2\n").arg(recDeviceNum).arg(recDevice);
     } else {
-        s << XO("No recording device found for '%s'.\n").Format(recDevice);
+        s << TranslatableString("audio-devices", "No recording device found for '%1'.\n").arg(recDevice);
     }
 
     if (havePlayDevice) {
-        s << XO("Selected playback device: %d - %s\n").Format(playDeviceNum, playDevice);
+        s << TranslatableString("audio-devices", "Selected playback device: %1 - %2\n").arg(playDeviceNum).arg(playDevice);
     } else {
-        s << XO("No playback device found for '%s'.\n").Format(playDevice);
+        s << TranslatableString("audio-devices", "No playback device found for '%1'.\n").arg(playDevice);
     }
 
     std::vector<long> supportedSampleRates;
@@ -908,12 +908,12 @@ wxString AudioIOBase::GetDeviceInfo() const
     if (havePlayDevice && haveRecDevice) {
         supportedSampleRates = GetSupportedSampleRates(playDeviceNum, recDeviceNum);
 
-        s << XO("Supported Rates:\n");
+        s << TranslatableString("audio-devices", "Supported Rates:\n");
         for (int k = 0; k < (int)supportedSampleRates.size(); k++) {
             s << wxT("    ") << (int)supportedSampleRates[k] << wxT("\n");
         }
     } else {
-        s << XO("Cannot check mutual sample rates without both devices.\n");
+        s << TranslatableString("audio-devices", "Cannot check mutual sample rates without both devices.\n");
         return o.GetString();
     }
 
@@ -970,42 +970,42 @@ wxString AudioIOBase::GetDeviceInfo() const
         }
 
         if (error) {
-            s << XO("Received %d while opening devices\n").Format(error);
+            s << TranslatableString("audio-devices", "Received %1 while opening devices\n").arg(error);
             return o.GetString();
         }
 
         PxMixer* PortMixer = Px_OpenMixer(stream, recDeviceNum, playDeviceNum, 0);
 
         if (!PortMixer) {
-            s << XO("Unable to open Portmixer\n");
+            s << TranslatableString("audio-devices", "Unable to open Portmixer\n");
             Pa_CloseStream(stream);
             return o.GetString();
         }
 
         s << wxT("==============================\n");
-        s << XO("Available mixers:\n");
+        s << TranslatableString("audio-devices", "Available mixers:\n");
 
         // FIXME: ? PortMixer errors on query not reported in GetDeviceInfo
         cnt = Px_GetNumMixers(stream);
         for (int i = 0; i < cnt; i++) {
             wxString name = wxSafeConvertMB2WX(Px_GetMixerName(stream, i));
-            s << XO("%d - %s\n").Format(i, name);
+            s << TranslatableString("audio-devices", "%1 - %2\n").arg(i).arg(name);
         }
 
         s << wxT("==============================\n");
-        s << XO("Available recording sources:\n");
+        s << TranslatableString("audio-devices", "Available recording sources:\n");
         cnt = Px_GetNumInputSources(PortMixer);
         for (int i = 0; i < cnt; i++) {
             wxString name = wxSafeConvertMB2WX(Px_GetInputSourceName(PortMixer, i));
-            s << XO("%d - %s\n").Format(i, name);
+            s << TranslatableString("audio-devices", "%1 - %2\n").arg(i).arg(name);
         }
 
         s << wxT("==============================\n");
-        s << XO("Available playback volumes:\n");
+        s << TranslatableString("audio-devices", "Available playback volumes:\n");
         cnt = Px_GetNumOutputVolumes(PortMixer);
         for (int i = 0; i < cnt; i++) {
             wxString name = wxSafeConvertMB2WX(Px_GetOutputVolumeName(PortMixer, i));
-            s << XO("%d - %s\n").Format(i, name);
+            s << TranslatableString("audio-devices", "%1 - %2\n").arg(i).arg(name);
         }
 
         // Check, if PortMixer supports adjusting input levels on the interface
@@ -1027,8 +1027,8 @@ wxString AudioIOBase::GetDeviceInfo() const
 
         s << wxT("==============================\n");
         s << (EmulateMixerInputVol
-              ? XO("Recording volume is emulated\n")
-              : XO("Recording volume is native\n"));
+              ? TranslatableString("audio-devices", "Recording volume is emulated\n")
+              : TranslatableString("audio-devices", "Recording volume is native\n"));
 
         Px_CloseMixer(PortMixer);
     }    //end of massive if statement if a valid sample rate has been found

@@ -43,7 +43,7 @@ bool XMLFileReader::Parse(XMLTagHandler* baseHandler,
 {
     wxFFile theXMLFile(fname, wxT("rb"));
     if (!theXMLFile.IsOpened()) {
-        mErrorStr = XO("Could not open file: \"%s\"").Format(fname);
+        mErrorStr = TranslatableString("xml", "Could not open file: \"%1\"").arg(fname);
         return false;
     }
 
@@ -60,14 +60,11 @@ bool XMLFileReader::Parse(XMLTagHandler* baseHandler,
             // We could make a table of XOs if we wanted so that it could
             // If we do, uncomment the second constructor argument so it's not
             // a verbatim string
-            mLibraryErrorStr = Verbatim(
+            mLibraryErrorStr = TranslatableString::untranslatable(
                 XML_ErrorString(XML_GetErrorCode(mParser)) // , {}
                 );
 
-            mErrorStr = XO("Error: %s at line %lu").Format(
-                mLibraryErrorStr,
-                (long unsigned int)XML_GetCurrentLineNumber(mParser)
-                );
+            mErrorStr = TranslatableString("xml", "Error: %1 at line %2").arg(mLibraryErrorStr).arg((long unsigned int)XML_GetCurrentLineNumber(mParser));
 
             theXMLFile.Close();
             return false;
@@ -126,7 +123,7 @@ bool XMLFileReader::Parse(XMLTagHandler* baseHandler,
     if (mBaseHandler) {
         return true;
     } else {
-        mErrorStr = XO("Could not load file: \"%s\"").Format(fname);
+        mErrorStr = TranslatableString("xml", "Could not load file: \"%1\"").arg(fname);
         return false;
     }
 }
@@ -148,7 +145,7 @@ bool XMLFileReader::ParseString(XMLTagHandler* baseHandler,
     // the first-level handler actually got called, and didn't
     // return false.
     if (!mBaseHandler) {
-        mErrorStr = XO("Could not parse XML");
+        mErrorStr = TranslatableString("xml", "Could not parse XML");
         return false;
     }
 
@@ -171,7 +168,7 @@ bool XMLFileReader::ParseMemoryStream(
     }
 
     if (!mBaseHandler) {
-        mErrorStr = XO("Could not parse XML");
+        mErrorStr = TranslatableString("xml", "Could not parse XML");
         return false;
     }
 
@@ -259,17 +256,18 @@ bool XMLFileReader::ParseBuffer(
         // If we do, uncomment the second constructor argument so it's not
         // a verbatim string
         mLibraryErrorStr
-            =Verbatim(XML_ErrorString(XML_GetErrorCode(mParser)) // , {}
-                      );
+            =TranslatableString::untranslatable(
+                XML_ErrorString(XML_GetErrorCode(mParser)) // , {}
+                );
 
-        mErrorStr = XO("Error: %s at line %lu")
+        mErrorStr = TranslatableString("xml", "Error: %1 at line %2")
                     .Format(
             mLibraryErrorStr,
             (long unsigned int)XML_GetCurrentLineNumber(mParser));
 
         wxLogMessage(
             wxT("ParseString error: %s\n===begin===%s\n===end==="),
-            mErrorStr.Debug(), buffer);
+            au3::qtToWx(mErrorStr.debugStr()), buffer);
 
         return false;
     }

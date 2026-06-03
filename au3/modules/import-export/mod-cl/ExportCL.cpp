@@ -409,7 +409,7 @@ class CLExportProcessor : public ExportProcessor
 {
     struct
     {
-        TranslatableString status;
+        ::TranslatableString status;
         double t0;
         double t1;
         unsigned channels;

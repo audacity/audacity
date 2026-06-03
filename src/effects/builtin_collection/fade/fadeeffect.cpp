@@ -1,5 +1,7 @@
 #include "fadeeffect.h"
 
+#include "au3-strings/TranslatableString.h"
+
 namespace au::effects {
 FadeEffectBase::FadeEffectBase(bool fadeIn)
 {
@@ -59,7 +61,7 @@ size_t FadeEffectBase::ProcessBlock(
     return blockLen;
 }
 
-const ComponentInterfaceSymbol FadeInEffect::Symbol { XO("Fade In") };
+const ComponentInterfaceSymbol FadeInEffect::Symbol { TranslatableString("effects-fade", "Fade In") };
 
 FadeInEffect::FadeInEffect()
     : FadeEffectBase{true}
@@ -71,12 +73,12 @@ ComponentInterfaceSymbol FadeInEffect::GetSymbol() const
     return Symbol;
 }
 
-TranslatableString FadeInEffect::GetDescription() const
+::TranslatableString FadeInEffect::GetDescription() const
 {
-    return XO("Applies a linear fade-in to the selected audio");
+    return ::TranslatableString("effects-fade", "Applies a linear fade-in to the selected audio");
 }
 
-const ComponentInterfaceSymbol FadeOutEffect::Symbol { XO("Fade Out") };
+const ComponentInterfaceSymbol FadeOutEffect::Symbol { TranslatableString("effects-fade", "Fade Out") };
 
 FadeOutEffect::FadeOutEffect()
     : FadeEffectBase{false}
@@ -88,8 +90,8 @@ ComponentInterfaceSymbol FadeOutEffect::GetSymbol() const
     return Symbol;
 }
 
-TranslatableString FadeOutEffect::GetDescription() const
+::TranslatableString FadeOutEffect::GetDescription() const
 {
-    return XO("Applies a linear fade-out to the selected audio");
+    return ::TranslatableString("effects-fade", "Applies a linear fade-out to the selected audio");
 }
 }

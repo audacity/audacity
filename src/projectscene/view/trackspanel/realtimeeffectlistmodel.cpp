@@ -1,10 +1,13 @@
 /*
  * Audacity: A Digital Audio Editor
  */
+
+#include "framework/global/types/translatablestring.h"
+#include "framework/global/defer.h"
+
 #include "realtimeeffectlistmodel.h"
 #include "realtimeeffectlistitemmodel.h"
-#include "global/defer.h"
-#include "global/types/translatablestring.h"
+
 #include "log.h"
 
 using namespace muse;

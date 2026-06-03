@@ -127,7 +127,7 @@ struct Item {
         });
     }
 
-    Item&& ToolTip(const TranslatableString& tip)
+    Item&& ToolTip(const ::TranslatableString& tip)
     &&
     {
         mToolTip = tip;
@@ -135,7 +135,7 @@ struct Item {
     }
 
     // Menu codes in the translation will be stripped
-    Item&& Name(const TranslatableString& name)
+    Item&& Name(const ::TranslatableString& name)
     &&
     {
         mName = name;
@@ -144,7 +144,7 @@ struct Item {
 
     // Append a space, then the translation of the given string, to control name
     // (not the title or label:  this affects the screen reader behavior)
-    Item&& NameSuffix(const TranslatableString& suffix)
+    Item&& NameSuffix(const ::TranslatableString& suffix)
     &&
     {
         mNameSuffix = suffix;
@@ -224,9 +224,9 @@ struct Item {
     }
 
     std::function< void(wxWindow*) > mValidatorSetter;
-    TranslatableString mToolTip;
-    TranslatableString mName;
-    TranslatableString mNameSuffix;
+    ::TranslatableString mToolTip;
+    ::TranslatableString mName;
+    ::TranslatableString mNameSuffix;
 
     std::vector<std::pair<wxEventType, wxObjectEventFunction> > mRootConnections;
 
@@ -257,17 +257,17 @@ public:
     void ResetId();
 
 //-- Add functions.  These only add a widget or 2.
-    void HandleOptionality(const TranslatableString& Prompt);
-    wxStaticText* AddPrompt(const TranslatableString& Prompt, int wrapWidth = 0);
-    void AddUnits(const TranslatableString& Prompt, int wrapWidth = 0);
-    void AddTitle(const TranslatableString& Prompt, int wrapWidth = 0);
+    void HandleOptionality(const ::TranslatableString& Prompt);
+    wxStaticText* AddPrompt(const ::TranslatableString& Prompt, int wrapWidth = 0);
+    void AddUnits(const ::TranslatableString& Prompt, int wrapWidth = 0);
+    void AddTitle(const ::TranslatableString& Prompt, int wrapWidth = 0);
     wxWindow* AddWindow(wxWindow* pWindow, int PositionFlags = wxALIGN_CENTRE);
     wxSlider* AddSlider(
-        const TranslatableString& Prompt, int pos, int Max, int Min = 0);
-    wxSlider* AddVSlider(const TranslatableString& Prompt, int pos, int Max);
-    wxSpinCtrl* AddSpinCtrl(const TranslatableString& Prompt, int Value, int Max, int Min);
+        const ::TranslatableString& Prompt, int pos, int Max, int Min = 0);
+    wxSlider* AddVSlider(const ::TranslatableString& Prompt, int pos, int Max);
+    wxSpinCtrl* AddSpinCtrl(const ::TranslatableString& Prompt, int Value, int Max, int Min);
     SpinControl* AddSpinControl(
-        const wxSize& size, const TranslatableString& Prompt, double Value, double Max, double Min);
+        const wxSize& size, const ::TranslatableString& Prompt, double Value, double Max, double Min);
     wxTreeCtrl* AddTree();
 
     // Pass the same initValue to the sequence of calls to AddRadioButton and
@@ -276,14 +276,14 @@ public:
     // Spoken name of the button defaults to the same as the prompt
     // (after stripping menu codes):
     wxRadioButton* AddRadioButton(
-        const TranslatableString& Prompt, int selector = 0, int initValue = 0);
+        const ::TranslatableString& Prompt, int selector = 0, int initValue = 0);
     wxRadioButton* AddRadioButtonToGroup(
-        const TranslatableString& Prompt, int selector = 1, int initValue = 0);
+        const ::TranslatableString& Prompt, int selector = 1, int initValue = 0);
 
     // Only the last button specified as default (if more than one) will be
     // Always ORs the flags with wxALL (which affects borders):
     wxButton* AddButton(
-        const TranslatableString& Text, int PositionFlags = wxALIGN_CENTRE, bool setDefault = false);
+        const ::TranslatableString& Text, int PositionFlags = wxALIGN_CENTRE, bool setDefault = false);
     // Only the last button specified as default (if more than one) will be
     // Always ORs the flags with wxALL (which affects borders):
     wxBitmapButton* AddBitmapButton(
@@ -291,24 +291,24 @@ public:
     // When PositionFlags is 0, applies wxALL (which affects borders),
     // and either wxALIGN_CENTER (if bCenter) or else wxEXPAND
     wxStaticText* AddVariableText(
-        const TranslatableString& Str, bool bCenter = false, int PositionFlags = 0, int wrapWidth = 0);
+        const ::TranslatableString& Str, bool bCenter = false, int PositionFlags = 0, int wrapWidth = 0);
     ReadOnlyText* AddReadOnlyText(
-        const TranslatableString& Caption, const wxString& Value);
+        const ::TranslatableString& Caption, const wxString& Value);
     wxTextCtrl* AddTextBox(
-        const TranslatableString& Caption, const wxString& Value, const int nChars);
+        const ::TranslatableString& Caption, const wxString& Value, const int nChars);
     wxTextCtrl* AddNumericTextBox(
-        const TranslatableString& Caption, const wxString& Value, const int nChars, bool acceptEnter = false);
+        const ::TranslatableString& Caption, const wxString& Value, const int nChars, bool acceptEnter = false);
     wxTextCtrl* AddTextWindow(const wxString& Value);
     wxListBox* AddListBox(const wxArrayStringEx& choices);
 
     struct ListControlColumn {
         ListControlColumn(
-            const TranslatableString& h,
+            const ::TranslatableString& h,
             int f = wxLIST_FORMAT_LEFT, int w = wxLIST_AUTOSIZE)
             : heading(h), format(f), width(w)
         {}
 
-        TranslatableString heading;
+        ::TranslatableString heading;
         int format;
         int width;
     };
@@ -318,24 +318,24 @@ public:
         std::initializer_list<const ListControlColumn> columns = {}, long listControlStyles = 0);
 
     wxGrid* AddGrid();
-    wxCheckBox* AddCheckBox(const TranslatableString& Prompt, bool Selected);
-    wxCheckBox* AddCheckBoxOnRight(const TranslatableString& Prompt, bool Selected);
+    wxCheckBox* AddCheckBox(const ::TranslatableString& Prompt, bool Selected);
+    wxCheckBox* AddCheckBoxOnRight(const ::TranslatableString& Prompt, bool Selected);
 
     // These deleted overloads are meant to break compilation of old calls that
     // passed literal "true" and "false" strings
-    wxCheckBox* AddCheckBox(const TranslatableString& Prompt, const wxChar*) = delete;
-    wxCheckBox* AddCheckBox(const TranslatableString& Prompt, const char*) = delete;
-    wxCheckBox* AddCheckBoxOnRight(const TranslatableString& Prompt, const wxChar*) = delete;
-    wxCheckBox* AddCheckBoxOnRight(const TranslatableString& Prompt, const char*) = delete;
+    wxCheckBox* AddCheckBox(const ::TranslatableString& Prompt, const wxChar*) = delete;
+    wxCheckBox* AddCheckBox(const ::TranslatableString& Prompt, const char*) = delete;
+    wxCheckBox* AddCheckBoxOnRight(const ::TranslatableString& Prompt, const wxChar*) = delete;
+    wxCheckBox* AddCheckBoxOnRight(const ::TranslatableString& Prompt, const char*) = delete;
 
-    wxComboBox* AddCombo(const TranslatableString& Prompt, const wxString& Selected, const wxArrayStringEx& choices);
-    wxChoice* AddChoice(const TranslatableString& Prompt, const TranslatableStrings& choices, int Selected = -1);
-    wxChoice* AddChoice(const TranslatableString& Prompt, const TranslatableStrings& choices, const TranslatableString& selected);
+    wxComboBox* AddCombo(const ::TranslatableString& Prompt, const wxString& Selected, const wxArrayStringEx& choices);
+    wxChoice* AddChoice(const ::TranslatableString& Prompt, const TranslatableStrings& choices, int Selected = -1);
+    wxChoice* AddChoice(const ::TranslatableString& Prompt, const TranslatableStrings& choices, const ::TranslatableString& selected);
     void AddIcon(wxBitmap* pBmp);
     void AddFixedText(
-        const TranslatableString& Str, bool bCenter = false, int wrapWidth = 0);
+        const ::TranslatableString& Str, bool bCenter = false, int wrapWidth = 0);
     void AddConstTextBox(
-        const TranslatableString& Caption, const TranslatableString& Value);
+        const ::TranslatableString& Caption, const ::TranslatableString& Value);
 
 //-- Start and end functions.  These are used for sizer, or other window containers
 //   and create the appropriate widget.
@@ -361,7 +361,7 @@ public:
     void StartThreeColumn() { StartMultiColumn(3); }
     void EndThreeColumn() { EndMultiColumn(); }
 
-    wxStaticBox* StartStatic(const TranslatableString& Str, int iProp=0);
+    wxStaticBox* StartStatic(const ::TranslatableString& Str, int iProp=0);
     void EndStatic();
 
     wxNotebook* StartNotebook();
@@ -372,7 +372,7 @@ public:
 
     // Use within any kind of book control:
     // IDs of notebook pages cannot be chosen by the caller
-    wxNotebookPage* StartNotebookPage(const TranslatableString& Name);
+    wxNotebookPage* StartNotebookPage(const ::TranslatableString& Name);
 
     void EndNotebookPage();
 
@@ -389,71 +389,71 @@ public:
 //-- Tie functions both add controls and also read/write to them.
 
     wxTextCtrl* TieTextBox(
-        const TranslatableString& Caption, wxString& Value, const int nChars=0);
+        const ::TranslatableString& Caption, wxString& Value, const int nChars=0);
     wxTextCtrl* TieTextBox(
-        const TranslatableString& Prompt, int& Selected, const int nChars=0);
+        const ::TranslatableString& Prompt, int& Selected, const int nChars=0);
     wxTextCtrl* TieTextBox(
-        const TranslatableString& Prompt, double& Value, const int nChars=0);
+        const ::TranslatableString& Prompt, double& Value, const int nChars=0);
 
     wxTextCtrl* TieNumericTextBox(
-        const TranslatableString& Prompt, int& Value, const int nChars = 0, bool acceptEnter = false);
+        const ::TranslatableString& Prompt, int& Value, const int nChars = 0, bool acceptEnter = false);
     wxTextCtrl* TieNumericTextBox(
-        const TranslatableString& Prompt, double& Value, const int nChars = 0, bool acceptEnter = false);
+        const ::TranslatableString& Prompt, double& Value, const int nChars = 0, bool acceptEnter = false);
 
-    wxCheckBox* TieCheckBox(const TranslatableString& Prompt, bool& Var);
-    wxCheckBox* TieCheckBoxOnRight(const TranslatableString& Prompt, bool& Var);
+    wxCheckBox* TieCheckBox(const ::TranslatableString& Prompt, bool& Var);
+    wxCheckBox* TieCheckBoxOnRight(const ::TranslatableString& Prompt, bool& Var);
 
     wxChoice* TieChoice(
-        const TranslatableString& Prompt, TranslatableString& Selected, const TranslatableStrings& choices);
+        const ::TranslatableString& Prompt, ::TranslatableString& Selected, const TranslatableStrings& choices);
     wxChoice* TieChoice(
-        const TranslatableString& Prompt, int& Selected, const TranslatableStrings& choices);
+        const ::TranslatableString& Prompt, int& Selected, const TranslatableStrings& choices);
 
     wxSlider* TieSlider(
-        const TranslatableString& Prompt, int& pos, const int max, const int min = 0);
+        const ::TranslatableString& Prompt, int& pos, const int max, const int min = 0);
     wxSlider* TieSlider(
-        const TranslatableString& Prompt, double& pos, const double max, const double min = 0.0);
+        const ::TranslatableString& Prompt, double& pos, const double max, const double min = 0.0);
     wxSlider* TieSlider(
-        const TranslatableString& Prompt, float& pos, const float fMin, const float fMax);
+        const ::TranslatableString& Prompt, float& pos, const float fMin, const float fMax);
     wxSlider* TieVSlider(
-        const TranslatableString& Prompt, float& pos, const float fMin, const float fMax);
+        const ::TranslatableString& Prompt, float& pos, const float fMin, const float fMax);
 
     // Must be called between a StartRadioButtonGroup / EndRadioButtonGroup pair,
     // and as many times as there are values in the enumeration.
     wxRadioButton* TieRadioButton();
 
-    wxSpinCtrl* TieSpinCtrl(const TranslatableString& Prompt, int& Value, const int max, const int min = 0);
+    wxSpinCtrl* TieSpinCtrl(const ::TranslatableString& Prompt, int& Value, const int max, const int min = 0);
     SpinControl* TieSpinControl(
-        const wxSize& size, const TranslatableString& Prompt, double& Value, const double max, const double min = 0);
+        const wxSize& size, const ::TranslatableString& Prompt, double& Value, const double max, const double min = 0);
 
 //-- Variants of the standard Tie functions which do two step exchange in one go
 // Note that unlike the other Tie functions, ALL the arguments are const.
 // That's because the data is being exchanged between the dialog and mpShuttle
 // so it doesn't need an argument that is writeable.
     virtual wxCheckBox* TieCheckBox(
-        const TranslatableString& Prompt, const BoolSetting& Setting);
+        const ::TranslatableString& Prompt, const BoolSetting& Setting);
     virtual wxCheckBox* TieCheckBoxOnRight(
-        const TranslatableString& Prompt, const BoolSetting& Setting);
+        const ::TranslatableString& Prompt, const BoolSetting& Setting);
 
-    virtual wxChoice* TieChoice(const TranslatableString& Prompt, ChoiceSetting& choiceSetting);
+    virtual wxChoice* TieChoice(const ::TranslatableString& Prompt, ChoiceSetting& choiceSetting);
 
     // This overload presents what is really a numerical setting as a choice among
     // commonly used values, but the choice is not necessarily exhaustive.
     // This behaves just like the previous for building dialogs, but the
     // behavior is different when the call is intercepted for purposes of
     // emitting scripting information about Preferences.
-    virtual wxChoice* TieNumberAsChoice(const TranslatableString& Prompt, IntSetting& Setting, const TranslatableStrings& Choices,
+    virtual wxChoice* TieNumberAsChoice(const ::TranslatableString& Prompt, IntSetting& Setting, const TranslatableStrings& Choices,
                                         const std::vector<int>* pInternalChoices = nullptr, int iNoMatchSelector = 0);
 
     virtual wxTextCtrl* TieTextBox(
-        const TranslatableString& Prompt, const StringSetting& Setting, const int nChars);
+        const ::TranslatableString& Prompt, const StringSetting& Setting, const int nChars);
     virtual wxTextCtrl* TieIntegerTextBox(
-        const TranslatableString& Prompt, const IntSetting& Setting, const int nChars);
+        const ::TranslatableString& Prompt, const IntSetting& Setting, const int nChars);
     virtual wxTextCtrl* TieNumericTextBox(
-        const TranslatableString& Prompt, const DoubleSetting& Setting, const int nChars, bool acceptEnter = false);
+        const ::TranslatableString& Prompt, const DoubleSetting& Setting, const int nChars, bool acceptEnter = false);
     virtual wxSlider* TieSlider(
-        const TranslatableString& Prompt, const IntSetting& Setting, const int max, const int min = 0);
+        const ::TranslatableString& Prompt, const IntSetting& Setting, const int max, const int min = 0);
     virtual wxSpinCtrl* TieSpinCtrl(
-        const TranslatableString& Prompt, const IntSetting& Setting, const int max, const int min);
+        const ::TranslatableString& Prompt, const IntSetting& Setting, const int max, const int min);
 //-- End of variants.
     void SetBorder(int Border) { miBorder = Border; }
     int GetBorder() const noexcept;
@@ -524,17 +524,17 @@ protected:
 
 private:
     void DoDataShuttle(const wxString& Name, WrappedType& WrappedRef);
-    wxCheckBox* DoTieCheckBoxOnRight(const TranslatableString& Prompt, WrappedType& WrappedRef);
+    wxCheckBox* DoTieCheckBoxOnRight(const ::TranslatableString& Prompt, WrappedType& WrappedRef);
     wxTextCtrl* DoTieTextBox(
-        const TranslatableString& Prompt, WrappedType& WrappedRef, const int nChars);
+        const ::TranslatableString& Prompt, WrappedType& WrappedRef, const int nChars);
     wxTextCtrl* DoTieNumericTextBox(
-        const TranslatableString& Prompt, WrappedType& WrappedRef, const int nChars, bool acceptEnter = false);
-    wxCheckBox* DoTieCheckBox(const TranslatableString& Prompt, WrappedType& WrappedRef);
+        const ::TranslatableString& Prompt, WrappedType& WrappedRef, const int nChars, bool acceptEnter = false);
+    wxCheckBox* DoTieCheckBox(const ::TranslatableString& Prompt, WrappedType& WrappedRef);
     wxSlider* DoTieSlider(
-        const TranslatableString& Prompt, WrappedType& WrappedRef, const int max, const int min = 0);
-    wxSpinCtrl* DoTieSpinCtrl(const TranslatableString& Prompt, WrappedType& WrappedRef, const int max, const int min = 0);
+        const ::TranslatableString& Prompt, WrappedType& WrappedRef, const int max, const int min = 0);
+    wxSpinCtrl* DoTieSpinCtrl(const ::TranslatableString& Prompt, WrappedType& WrappedRef, const int max, const int min = 0);
     SpinControl* DoTieSpinControl(
-        const wxSize& size, const TranslatableString& Prompt, WrappedType& WrappedRef, const double max, const double min = 0);
+        const wxSize& size, const ::TranslatableString& Prompt, WrappedType& WrappedRef, const double max, const double min = 0);
 
     std::vector<EnumValueSymbol> mRadioSymbols;
     wxString mRadioSettingName; /// The setting controlled by a group.
@@ -542,7 +542,7 @@ private:
     int mRadioCount;      /// The index of this radio item.  -1 for none.
     wxString mRadioValueString; /// Unwrapped string value.
     wxRadioButton* DoAddRadioButton(
-        const TranslatableString& Prompt, int style, int selector, int initValue);
+        const ::TranslatableString& Prompt, int style, int selector, int initValue);
 
 protected:
     DialogDefinition::Item mItem;
@@ -615,14 +615,14 @@ public:
         return *this;
     }
 
-    ShuttleGui& ToolTip(const TranslatableString& tip)
+    ShuttleGui& ToolTip(const ::TranslatableString& tip)
     {
         std::move(mItem).ToolTip(tip);
         return *this;
     }
 
     // Menu codes in the translation will be stripped
-    ShuttleGui& Name(const TranslatableString& name)
+    ShuttleGui& Name(const ::TranslatableString& name)
     {
         std::move(mItem).Name(name);
         return *this;
@@ -630,7 +630,7 @@ public:
 
     // Append a space, then the translation of the given string, to control name
     // (not the title or label:  this affects the screen reader behavior)
-    ShuttleGui& NameSuffix(const TranslatableString& suffix)
+    ShuttleGui& NameSuffix(const ::TranslatableString& suffix)
     {
         std::move(mItem).NameSuffix(suffix);
         return *this;

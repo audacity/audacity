@@ -67,7 +67,7 @@ void AudioUnitViewModel::doInit()
 
     settingsToView();
 
-    setTitle(QString::fromStdString(effect->GetSymbol().Translation().ToStdString()));
+    setTitle(QString::fromStdString(effect->GetSymbol().Msgid().translated().toStdString()));
     connect(&m_settingsTimer, &QTimer::timeout, this, [this]() {
         checkSettingChangesFromUi();
     });

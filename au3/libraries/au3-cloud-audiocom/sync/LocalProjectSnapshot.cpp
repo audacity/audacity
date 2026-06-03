@@ -349,7 +349,7 @@ void LocalProjectSnapshot::UpdateProjectSnapshot()
 
     if (project == nullptr) {
         UploadFailed(MakeClientFailure(
-                         XO("Project was closed before snapshot was created")));
+                         TranslatableString("cloud-audiocom", "Project was closed before snapshot was created")));
         return;
     }
 
@@ -429,7 +429,7 @@ void LocalProjectSnapshot::UpdateProjectSnapshot()
 
         if (!result) {
             UploadFailed(MakeClientFailure(
-                             XO("Invalid Response: %s").Format(body).Translation()));
+                             TranslatableString("cloud-audiocom", "Invalid Response: %1").arg(body).Translation()));
 
             mCreateSnapshotPromise.set_value({});
             return;
@@ -448,7 +448,7 @@ void LocalProjectSnapshot::OnSnapshotCreated(
 
     if (project == nullptr) {
         UploadFailed(MakeClientFailure(
-                         XO("Project was closed before snapshot was created")));
+                         TranslatableString("cloud-audiocom", "Project was closed before snapshot was created")));
         return;
     }
 

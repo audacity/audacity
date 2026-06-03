@@ -336,8 +336,8 @@ void WaveTrackUtilities::ExpandCutLine(WaveTrack& track,
                     // Strong-guarantee in case of this path
                     throw SimpleMessageBoxException{
                               ExceptionType::BadUserAction,
-                              XO("There is not enough room available to expand the cut line"),
-                              XO("Warning"),
+                              TranslatableString("wave-track", "There is not enough room available to expand the cut line"),
+                              TranslatableString("wave-track", "Warning"),
                               "Error:_Insufficient_space_in_track"
                     };
                 }

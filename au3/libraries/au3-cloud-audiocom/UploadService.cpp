@@ -613,7 +613,7 @@ wxString GetUploadTempPath()
     }
 
     if (!FileNames::WritableLocationCheck(
-            tempPath, XO("Cannot proceed to upload."))) {
+            tempPath, TranslatableString("cloud-audiocom", "Cannot proceed to upload."))) {
         return {};
     }
 
