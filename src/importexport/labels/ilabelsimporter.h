@@ -3,6 +3,9 @@
 */
 #pragma once
 
+#include <string>
+#include <vector>
+
 #include "io/path.h"
 #include "types/ret.h"
 
@@ -17,5 +20,7 @@ public:
     virtual ~ILabelsImporter() = default;
 
     virtual muse::Ret importData(const muse::io::path_t& filePath) = 0;
+
+    virtual std::vector<std::string> supportedExtensions() const = 0;
 };
 }

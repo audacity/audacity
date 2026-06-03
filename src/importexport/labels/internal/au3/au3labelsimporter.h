@@ -18,5 +18,6 @@ public:
         : muse::Contextable(ctx) {}
 
     muse::Ret importData(const muse::io::path_t& filePath) override;
+    std::vector<std::string> supportedExtensions() const override;
 };
 }
