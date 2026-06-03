@@ -1,5 +1,7 @@
 #include "tracknavigationmodel.h"
 
+#include "global/translation.h"
+
 using namespace au::trackedit;
 
 static const QString makeTrackPanelName(const TrackId& trackId)
@@ -73,9 +75,18 @@ void TrackNavigationModel::load()
         for (size_t pos = 0; pos < tracks.size(); ++pos) {
             addPanels(tracks[pos].id, static_cast<int>(pos));
         }
+
+        if (tracks.empty()) {
+            addDefaultNavigation();
+        } else {
+            removeDefaultNavigation();
+        }
     });
 
     prj->trackAdded().onReceive(this, [this](const Track& track) {
+        if (m_trackItemPanels.isEmpty()) {
+            removeDefaultNavigation();
+        }
         const int pos = m_trackItemPanels.size();
         addPanels(track.id, pos);
         resetPanelOrder();
@@ -103,9 +114,16 @@ void TrackNavigationModel::load()
         }
 
         resetPanelOrder();
+
+        if (m_trackItemPanels.isEmpty()) {
+            addDefaultNavigation();
+        }
     });
 
     prj->trackInserted().onReceive(this, [this](const Track& track, int pos) {
+        if (m_trackItemPanels.isEmpty()) {
+            removeDefaultNavigation();
+        }
         addPanels(track.id, pos);
         resetPanelOrder();
     });
@@ -135,6 +153,10 @@ void TrackNavigationModel::load()
     for (const auto& track : trackList) {
         const int pos = m_trackItemPanels.size();
         addPanels(track.id, pos);
+    }
+
+    if (trackList.empty()) {
+        addDefaultNavigation();
     }
 
     tracksNavigationController()->focusedTrackChanged().onReceive(this, [this](const TrackId& trackId, bool highlight) {
@@ -204,6 +226,53 @@ void TrackNavigationModel::resetPanelOrder()
     emit viewItemPanelsChanged();
 }
 
+void TrackNavigationModel::addDefaultNavigation()
+{
+    if (!m_section) {
+        return;
+    }
+
+    if (!m_defaultPanel) {
+        m_defaultPanel = new muse::ui::NavigationPanel(this);
+        m_defaultPanel->setName("Default Track Panel");
+        m_defaultPanel->setIndex({ 0, 0 });
+        m_defaultPanel->setOrder(0);
+        m_defaultPanel->setSection(m_section);
+        m_defaultPanel->componentComplete();
+
+        m_defaultControl = new muse::ui::NavigationControl(this);
+        m_defaultControl->setName("Default Track Control");
+        m_defaultControl->setIndex({ 0, 0 });
+        m_defaultControl->setOrder(0);
+        m_defaultControl->setPanel(m_defaultPanel);
+        m_defaultControl->componentComplete();
+
+        muse::ui::AccessibleItem* accessible = m_defaultControl->accessible();
+        accessible->setRole(muse::ui::MUAccessible::Information);
+        accessible->setName(muse::qtrc("trackedit", "Tracks: Empty"));
+        accessible->componentComplete();
+    } else {
+        m_defaultPanel->setSection(m_section);
+    }
+
+    navigationController()->setDefaultNavigationControl(m_defaultControl);
+
+    navigationController()->requestActivateByName(
+        m_section->name().toStdString(),
+        m_defaultPanel->name().toStdString(),
+        m_defaultControl->name().toStdString());
+}
+
+void TrackNavigationModel::removeDefaultNavigation()
+{
+    if (!m_defaultPanel) {
+        return;
+    }
+
+    navigationController()->setDefaultNavigationControl(nullptr);
+    m_defaultPanel->setSection(nullptr);
+}
+
 void TrackNavigationModel::handleArrowKeyFallback(muse::ui::NavigationEvent* event)
 {
     if (!tracksNavigationController()->isNavigationEnabled()) {
@@ -224,6 +293,8 @@ void TrackNavigationModel::moveFocusTo(const QVariant& trackId)
 
 void TrackNavigationModel::cleanup()
 {
+    removeDefaultNavigation();
+
     clearPanels();
 
     navigationController()->resetNavigation();
