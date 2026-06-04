@@ -183,8 +183,7 @@ configure_file(${CMAKE_CURRENT_LIST_DIR}/src/app/app_config.h.in app_config.h)
 # modules config
 
 if (AU4_ALLOW_UPDATE_ON_PRERELEASE)
-    add_definitions(-DAU4_ALLOW_UPDATE_ON_PRERELEASE)
-    set(MUSESCORE_ALLOW_UPDATE_ON_PRERELEASE ON)
+    add_definitions(-DMUSESCORE_ALLOW_UPDATE_ON_PRERELEASE)
 endif()
 
 if (QT_SUPPORT)
