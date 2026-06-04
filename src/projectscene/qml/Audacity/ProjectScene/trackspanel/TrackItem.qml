@@ -222,7 +222,8 @@ ListItemBlank {
                 // Pass the event forward to allow
                 // child elements to handle the input
                 e.accepted = false
-                if(!root.isSelected) {
+                let toggleModifier = e.modifiers & Qt.ControlModifier
+                if (!root.isSelected || toggleModifier) {
                     root.selectionRequested(false)
                 }
             }

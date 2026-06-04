@@ -65,8 +65,12 @@ void SelectionViewController::onPressed(double x, double y, spectrogram::Spectro
         tracks = selectionController()->selectedTracks();
         TrackIdList newTracks = vs->tracksInRange(y, y);
         if (!newTracks.empty()) {
-            if (!muse::contains(tracks, newTracks.at(0))) {
-                tracks.push_back(newTracks.at(0));
+            const TrackId clickedTrack = newTracks.at(0);
+            auto it = std::find(tracks.begin(), tracks.end(), clickedTrack);
+            if (it == tracks.end()) {
+                tracks.push_back(clickedTrack);
+            } else {
+                tracks.erase(it);
             }
         }
     } else {
