@@ -56,7 +56,7 @@ static const wxChar* KEY_Parameters = wxT("Parameters");
 NyquistBase::NyquistBase(const wxString& fName)
     : mIsPrompt{fName == NYQUIST_PROMPT_ID}
 {
-    mAction = TranslatableString("nyquist-effects", "Applying Nyquist Effect…");
+    mAction = TranslatableString("effects-nyquist", "Applying Nyquist Effect…");
     mExternal = false;
     mCompiler = false;
     mTrace = false;
@@ -64,9 +64,9 @@ NyquistBase::NyquistBase(const wxString& fName)
     mDebug = false;
     mIsSal = false;
     mOK = false;
-    mAuthor = TranslatableString("nyquist-effects", "n/a");
-    mReleaseVersion = TranslatableString("nyquist-effects", "n/a");
-    mCopyright = TranslatableString("nyquist-effects", "n/a");
+    mAuthor = TranslatableString("effects-nyquist", "n/a");
+    mReleaseVersion = TranslatableString("effects-nyquist", "n/a");
+    mCopyright = TranslatableString("effects-nyquist", "n/a");
 
     // set clip/split handling when applying over clip boundary.
     mRestoreSplits = true; // Default: Restore split lines.
@@ -96,7 +96,7 @@ NyquistBase::NyquistBase(const wxString& fName)
         // Effect spawned from Nyquist Prompt
         /*: It is acceptable to translate this the same as for "Nyquist
          * Prompt" */
-        mName = TranslatableString("nyquist-effects", "Nyquist Worker");
+        mName = TranslatableString("effects-nyquist", "Nyquist Worker");
         return;
     }
 
@@ -108,7 +108,7 @@ NyquistBase::NyquistBase(const wxString& fName)
     ParseFile();
 
     if (!mOK && mInitError.empty()) {
-        mInitError = TranslatableString("nyquist-effects", "Ill-formed Nyquist plug-in header");
+        mInitError = TranslatableString("effects-nyquist", "Ill-formed Nyquist plug-in header");
     }
 }
 
@@ -135,7 +135,7 @@ ComponentInterfaceSymbol NyquistBase::GetSymbol() const
 VendorSymbol NyquistBase::GetVendor() const
 {
     if (mIsPrompt) {
-        return TranslatableString("nyquist-effects", "Audacity");
+        return TranslatableString("effects-nyquist", "Audacity");
     }
 
     return mAuthor;
@@ -486,7 +486,7 @@ bool NyquistBase::Init()
         if (const auto project = FindProject()) {
             if (!mSpectralSelectionEnabled || ((mF0 < 0.0) && (mF1 < 0.0))) {
                 mLastError
-                    = TranslatableString("nyquist-effects", "To use ‘Spectral effects’, enable ‘Spectral Selection’\nin the track Spectrogram settings and select the\nfrequency range for the effect to act on.").Translation();
+                    = TranslatableString("effects-nyquist", "To use ‘Spectral effects’, enable ‘Spectral Selection’\nin the track Spectrogram settings and select the\nfrequency range for the effect to act on.").Translation();
                 return false;
             }
         }
@@ -652,7 +652,7 @@ bool NyquistBase::Process(EffectInstance&, EffectSettings& settings)
     mDebugOutput = {};
     if (!mHelpFile.empty() && !mHelpFileExists) {
         mDebugOutput
-            =TranslatableString("nyquist-effects", "error: File “%1” specified in header but not found in plug-in path.\n")
+            =TranslatableString("effects-nyquist", "error: File “%1” specified in header but not found in plug-in path.\n")
               .Format(mHelpFile);
     }
 
@@ -818,7 +818,7 @@ bool NyquistBase::Process(EffectInstance&, EffectSettings& settings)
 
     // Nyquist Prompt does not require a selection, but effects do.
     if (!bOnePassTool && (mNumSelectedChannels == 0)) {
-        mLastError = TranslatableString("nyquist-effects", "Audio selection required.").Translation();
+        mLastError = TranslatableString("effects-nyquist", "Audio selection required.").Translation();
     }
 
     std::optional<TrackIterRange<WaveTrack> > pRange;
@@ -1376,9 +1376,9 @@ bool NyquistBase::ProcessOne(
         (rval != nyx_audio)
         && ((mCount + mCurNumChannels) == mNumSelectedChannels)) {
         if (mCurNumChannels == 1) {
-            TrackProgress(mCount, 1.0, TranslatableString("nyquist-effects", "Processing complete."));
+            TrackProgress(mCount, 1.0, TranslatableString("effects-nyquist", "Processing complete."));
         } else {
-            TrackGroupProgress(mCount, 1.0, TranslatableString("nyquist-effects", "Processing complete."));
+            TrackGroupProgress(mCount, 1.0, TranslatableString("effects-nyquist", "Processing complete."));
         }
     }
 
@@ -1386,7 +1386,7 @@ bool NyquistBase::ProcessOne(
         // Catch this first so that we can also handle other errors.
         mDebugOutput
             =/*: Don't translate ';type tool'.  */
-              TranslatableString("nyquist-effects", "‘;type tool’ effects cannot return audio from Nyquist.\n")
+              TranslatableString("effects-nyquist", "‘;type tool’ effects cannot return audio from Nyquist.\n")
               + mDebugOutput;
         rval = nyx_error;
     }
@@ -1395,7 +1395,7 @@ bool NyquistBase::ProcessOne(
         // Catch this first so that we can also handle other errors.
         mDebugOutput
             =/*: Don't translate ';type tool'.  */
-              TranslatableString("nyquist-effects", "‘;type tool’ effects cannot return labels from Nyquist.\n")
+              TranslatableString("effects-nyquist", "‘;type tool’ effects cannot return labels from Nyquist.\n")
               + mDebugOutput;
         rval = nyx_error;
     }
@@ -1405,8 +1405,8 @@ bool NyquistBase::ProcessOne(
         // Show error in debug window if trace enabled, otherwise log.
         if (mTrace) {
             /*: "%s" is replaced by name of plug-in.*/
-            mDebugOutput = TranslatableString("nyquist-effects", "nyx_error returned from %1.\n")
-                           .Format(mName.empty() ? TranslatableString("nyquist-effects", "plug-in") : mName)
+            mDebugOutput = TranslatableString("effects-nyquist", "nyx_error returned from %1.\n")
+                           .Format(mName.empty() ? TranslatableString("effects-nyquist", "plug-in") : mName)
                            + mDebugOutput;
             mDebug = true;
         } else {
@@ -1421,7 +1421,7 @@ bool NyquistBase::ProcessOne(
         if (GetType() == EffectTypeTool) {
             mProjectChanged = true;
         } else {
-            BasicUI::ShowMessageBox(TranslatableString("nyquist-effects", "Nyquist returned a list."));
+            BasicUI::ShowMessageBox(TranslatableString("effects-nyquist", "Nyquist returned a list."));
         }
         return true;
     }
@@ -1457,7 +1457,7 @@ bool NyquistBase::ProcessOne(
     }
 
     if (rval == nyx_double) {
-        auto str = TranslatableString("nyquist-effects", "Nyquist returned the value: %1").arg(nyx_get_double());
+        auto str = TranslatableString("effects-nyquist", "Nyquist returned the value: %1").arg(nyx_get_double());
         const auto isOk = GetType() != EffectTypeProcess || mIsPrompt;
         if (isOk) {
             BasicUI::ShowMessageBox(str);
@@ -1468,7 +1468,7 @@ bool NyquistBase::ProcessOne(
     }
 
     if (rval == nyx_int) {
-        auto str = TranslatableString("nyquist-effects", "Nyquist returned the value: %1").arg(nyx_get_int());
+        auto str = TranslatableString("effects-nyquist", "Nyquist returned the value: %1").arg(nyx_get_int());
         const auto isOk = GetType() != EffectTypeProcess || mIsPrompt;
         if (isOk) {
             BasicUI::ShowMessageBox(str);
@@ -1516,17 +1516,17 @@ bool NyquistBase::ProcessOne(
     int outChannels = nyx_get_audio_num_channels();
     if (outChannels > (int)mCurNumChannels) {
         mLastError = (
-            TranslatableString("nyquist-effects", "Nyquist returned too many audio channels.\n")).Translation();
+            TranslatableString("effects-nyquist", "Nyquist returned too many audio channels.\n")).Translation();
         return false;
     }
 
     if (outChannels == -1) {
-        mLastError = TranslatableString("nyquist-effects", "Nyquist returned one audio channel as an array.\n").Translation();
+        mLastError = TranslatableString("effects-nyquist", "Nyquist returned one audio channel as an array.\n").Translation();
         return false;
     }
 
     if (outChannels == 0) {
-        mLastError = TranslatableString("nyquist-effects", "Nyquist returned an empty array.\n").Translation();
+        mLastError = TranslatableString("effects-nyquist", "Nyquist returned an empty array.\n").Translation();
         return false;
     }
 
@@ -1547,7 +1547,7 @@ bool NyquistBase::ProcessOne(
 
     mOutputDuration = out->GetEndTime();
     if (mOutputDuration <= 0) {
-        mLastError = TranslatableString("nyquist-effects", "Nyquist returned nil audio.\n").Translation();
+        mLastError = TranslatableString("effects-nyquist", "Nyquist returned nil audio.\n").Translation();
         return false;
     }
 
@@ -1592,7 +1592,7 @@ wxString NyquistBase::NyquistToWxString(const char* nyqString)
     wxString str(nyqString, wxConvUTF8);
     if (nyqString != NULL && nyqString[0] && str.empty()) {
         // invalid UTF-8 string, convert as Latin-1
-        str = wxString::FromUTF8(au3::trc("nyquist-effects", "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]").c_str());
+        str = wxString::FromUTF8(au3::trc("effects-nyquist", "[Warning: Nyquist returned invalid UTF-8 string, converted here as Latin-1]").c_str());
         // TODO: internationalization of strings from Nyquist effects, at least
         // from those shipped with Audacity
         str += LAT1CTOWX(nyqString);
@@ -2032,7 +2032,7 @@ bool NyquistBase::Parse(
             // This is an unsupported plug-in version
             mOK = false;
             mInitError
-                =TranslatableString("nyquist-effects", "This version of Audacity does not support Nyquist plug-in version %1")
+                =TranslatableString("effects-nyquist", "This version of Audacity does not support Nyquist plug-in version %1")
                   .Format(v);
             return true;
         }
@@ -2212,12 +2212,6 @@ bool NyquistBase::Parse(
                             "Bad Nyquist 'control' type specification: '%s' in plug-in file '%s'.\nControl not created."),
                         tokens[3], mFileName.GetFullPath());
 
-                    // Too disturbing to show alert before Audacity frame is up.
-                    //    EffectUIServices::DoMessageBox(*this,
-                    //       str,
-                    //       wxOK | wxICON_EXCLAMATION,
-                    //       XO("Nyquist Warning") );
-
                     // Note that the AudacityApp's mLogger has not yet been created,
                     // so this brings up an alert box, but after the Audacity frame
                     // is up.
@@ -2293,7 +2287,7 @@ bool NyquistBase::Parse(
 bool NyquistBase::ParseProgram(wxInputStream& stream)
 {
     if (!stream.IsOk()) {
-        mInitError = TranslatableString("nyquist-effects", "Could not open file");
+        mInitError = TranslatableString("effects-nyquist", "Could not open file");
         return false;
     }
 
@@ -2364,7 +2358,7 @@ bool NyquistBase::ParseProgram(wxInputStream& stream)
         using namespace BasicUI;
         /* i1n-hint: SAL and LISP are names for variant syntaxes for the
          Nyquist programming language.  Leave them, and 'return', untranslated. */
-        mLastError = TranslatableString("nyquist-effects", "Your code looks like SAL syntax, but there is no ‘return’ statement.\n\
+        mLastError = TranslatableString("effects-nyquist", "Your code looks like SAL syntax, but there is no ‘return’ statement.\n\
             For SAL, use a return statement such as:\n\treturn *track* * 0.1\n\
             or for LISP, begin with an open parenthesis such as:\n\t(mult *track* 0.1)\n .").Translation();
         return false;
@@ -2602,7 +2596,7 @@ void NyquistBase::resolveFilePath(
     // If the directory is invalid, better to leave it as is (invalid) so that
     // the user sees the error rather than an unexpected file path.
     if (fname.wxFileName::IsOk() && fname.GetFullName().empty()) {
-        path = fname.GetPathWithSep() + wxString::FromUTF8(au3::trc("nyquist-effects", "untitled").c_str());
+        path = fname.GetPathWithSep() + wxString::FromUTF8(au3::trc("effects-nyquist", "untitled").c_str());
         if (!extension.empty()) {
             path = path + '.' + extension;
         }
