@@ -1,24 +1,132 @@
 List of significant changes and bug fixes going back to version 1.1.0
 
+Changes in version 4.0.0 beta 1
+
+Audacity 4 is a ground-up rebuild on the Qt framework.
+The most notable changes are a redesigned, customizable interface and a substantially reworked
+clip-editing workflow. Most other Audacity 3 features carry over.
+
+This is the first public beta, expect missing features and bugs.
+
+Changes in version 3.7.7
+
+This is a hotfix release. It fixes the following bugs:
+   * #10033, #10011 Fixed broken waveform scrolling and selection for some users introduced in 3.7.6
+
+Changes in version 3.7.6
+
+This is a patch release. It contains the following changes:
+
+   * #9742 Added FFmpeg 8 support
+   * #9709 Added Spectrogram Wavelet analysis (Thanks, Klaus Gram-Hansen (@kgramhans))
+   * #9565 Added middle-mouse drag panning over track panel (Thanks, Anders Jenbo (@AJenbo))
+   * #9863 Added "Import from audio.com" dialog to import audio files from audio.com
+   * #9838 Fixed unstable cloud audio uploads
+   * #9576 Allowed export as OGG/Opus when exporting with FFmpeg
+   * #9929 Fixed 16-bit FLAC import
+   * #9897 Library updates: libcurl to 8.17.0, wavpack to 5.7.0
+
+Changes in version 3.7.5
+
+This is a patch release. It contains the following changes:
+
+   * #8942 Windows on ARM support (Thanks, Vasanth K (@vask2108) and Linaro!)
+   * #9121 FLAC importer now supports 32-bit PCM (Thanks, Dr. K. D. Murray (@kdm9)!)
+   * #8851 Fixed crash when rendering spectrum view (Thanks, Hailey Somerville (@haileys)!)
+   * #9097 Fixed lost focus when registration window was closed
+   * #8932 Fixed crash on wav import (when audio file is up to 7 ms long)
+   * #4444 Fixed crash when using Macro Wizard
+   * #9100, #8890 Updated libopus to 1.5.2, updated libcurl to 8.12.1, updated libpng to 1.6.50
+
+Changes in version 3.7.4
+
+This is a patch release. It contains the following changes:
+
+   * #6890 Fixed a crash when closing a large unsaved project
+   * #8709 Fixed a crash when using real-time effects that activate delay compensation
+   * #8494 Fixed issue where Studio Fade Out creates a new clip when applied at the end of a clip
+   * #8442 Fixed incorrect waveform rendering on clipped audio
+   * #8559 Fixed unintended deletion of a clip when joining two clips with pitch adjustment
+   * #3003 Effect preview now works when the track is muted
+   * #8666 Fixed possible incorrect calculations in the Hamming window derivative (Thanks, witwald!)
+   * #8577 Fixed compilation issues on legacy macOS (Thanks, barracuda156!)
+
+Changes in version 3.7.3
+
+This is a hotfix release. It fixes the following bugs:
+   * #8426 Incorrect results when applying effects to multiple clips
+   * #8425 Truncate Silence fails to work properly when there is more than one silent part
+
+Changes in version 3.7.2
+
+This is a patch release. It contains the following changes:
+
+   * #8290 Fixed a crash when applying some effects across multiple tracks if one track is empty.
+   * #8157, #8155 Fixed some crashes emenating from the Mixer window.
+   * #7672 Returned the "Residue" option in noise reduction. (Thanks, Christopher Rooney!)
+   * #7809 Modules are now allowed to stick around when patch releases like this one are published. This means you likely won't need to update the OpenVINO again during 3.7.x.
+   * #7076 When adding a realtime effect to a track, the effect settings are now opened immediately.
+   * #7819 Added an infobox when saving a project in a new version breaks compatibility with an old one.
+   * #7740 Added a preference to turn off automatic tempo detection.
+   * #4169 When duplicating tracks, the duplicated tracks now have independent realtime effect instances.
+   * #7700 Fixed range-selection beyond the edge of a clip being destructive.
+   * #8013, #8008, #8004, #8009, #8003, #8005, #8071 Improved stability of cloud saving.
+   * #7410 Fixed pasting content from a clip at the beginning of itself being offset in time.
+   * #4231 macOS: Fixed AUSoundIsolation.
+   * #6342 Fixed audacity continuing to scroll after letting go of the scrollbar.
+   * #8110 Fixed black stripes appearing when zooming in while in the envelope or multi-tool.
+   * #8043 Added a new "get effects" button next to the Upload Audio button.
+   * #8211 Added UUID instance support. See this page for further info: https://forum.audacityteam.org/t/introducing-a-uuid-system-in-audacity-here-s-what-you-need-to-know/128561
+   * #7154 Fixed label texts using the wrong color in dark themes. (Thanks, GovindaMadhava!)
+   * #8261 Fixed tracks being incorrectly drawn on high zoom levels using high precision trackpads.
+   * #7902 Linux: Fixed FFmpeg loading in the Ubuntu 22.04 AppImage.
+
+Changes in version 3.7.1
+
+This is a patch release. It fixes the following bugs:
+
+   * #7797 Effects can be applied to time-stretched clips.
+   * #7620 Moving or renaming installation directory no longer re-enables disabled modules.
+   * #7652 Opening the "Adjust Playback Speed" dialog doesn't crash Audacity anymore.
+
+Changes in version 3.7.0
+
+The 3.7.x series is primarily maintenance releases while we're working on Audacity 4.0. 3.7.0 fixes the following bugs:
+
+   * #6233, #7397, #6900 Improved Linux compatibility.
+   * #6702 Improved contrast in the light theme.
+   * #7008 MP3 exports: Renamed "Insane" to "Excessive".
+   * #7570, #7452 Improved non-standard character handling for cloud saving.
+   * #7486 Renamed "Split cut/delete" to "Cut/delete and leave gap".
+   * #7293 Pasting clips no longer moves clips on other tracks if "editing clips can move other clips" is enabled.
+   * #7312, #7382 Fixed database compacting not working properly sometimes.
+   * #6851 Improved startup speed on systems with many audio devices.
+   * #7186 Multi view: Fixed the hitbox of the x being misaligned with the visuals. (Thanks, Kurtsley)
+   * #7468 macOS: Fixed VST presets path.
+   * #7571 Adding, removing, replacing and reordering of effects now is undoable.
+   * #7573 Closing a project upon turning a realtime effect stack on and off doesn't crash Audacity anymore.
+   * #7610 Canceling a stereo track mid-operation no longer crashes Audacity.
+   * #7385 Importing Opus files using libopus no longer shifts the audio data.
+
 Changes in version 3.6.4
 
-This is a patch release. It fixes the following bugs: 
+This is a patch release. It fixes the following bugs:
    * #7310 Fixed another crash when exiting Audacity. (Thanks, Joe Souza!)
    * #7312 Fixed projects not being compacted on close.
 
 Changes in version 3.6.3
 
-This is a patch release. It fixes the following bug: 
+This is a patch release. It fixes the following bug:
    * #7266 Fixed a crash when exiting Audacity. (Thanks, Joe Souza!)
 
 Changes in version 3.6.2
 
 This is a patch release. It adds a "Legacy" effects section containing the old Limiter, Compressor and Classic Filters.
 
- It also fixes the following bugs: 
+ It also fixes the following bugs:
    * #6995 Fixed a hang after undoing.
    * #6912 Fixed the zero line going missing.
-   * #6927 Fixed envelope appearance for clips offset from 0. 
+   * #6927 Fixed envelope appearance for clips offset from 0.
    * #6955 Fixed Audacity turning white on some systems.
    * #6857 Fixed the pitch indicator disappearing on Linux when hitting double digits.
    * #6941 Fixed cutting not putting clips into the clipboard.
@@ -36,7 +144,7 @@ This is a patch release. It adds a "Legacy" effects section containing the old L
    * #7124 Fixed the "editing clips can move other clips" preference desynchronizing multiple tracks.
 
  Other changes:
- 
+
    * #6736 The time track range now is a single dialog.
    * #6929 Reverted the behavior of selection change when importing a clip to the previous behavior.
 
@@ -52,7 +160,7 @@ This is a hotfix release. It fixes the following bugs:
 
 Changes in version 3.6.0
 
-Audacity 3.6 adds a master channel, and a new compressor and limiter. 
+Audacity 3.6 adds a master channel, and a new compressor and limiter.
 
  Major changes
 
@@ -71,13 +179,13 @@ Audacity 3.6 adds a master channel, and a new compressor and limiter.
 
    * Added FFmpeg 7 support.
    * You now can paste audio files into Audacity using Ctrl+V.
-   * Alternative waveform colors are now themeable by custom themes. 
+   * Alternative waveform colors are now themeable by custom themes.
    * Made the track header wider and simplified it a bit.
    * Removed the track name overlay preference and the "blend themes" preference.
    * Scripting: Added GetInfo: Type=Selection. (Thanks, Jonatã Bolzan Loss!)
-   * Added an Extra > Export > Export Selected Audio menu item. 
+   * Added an Extra > Export > Export Selected Audio menu item.
    * Import Raw: Added support for offsets larger than 2 GB.
-   * Redesigned the "what's new" dialog. 
+   * Redesigned the "what's new" dialog.
    * Added an option to the View menu to show/hide RMS in waveforms.
 
  Bugfixes
@@ -92,7 +200,7 @@ Audacity 3.6 adds a master channel, and a new compressor and limiter.
 Changes in version 3.5.1
 
  This is a hotfix release. It fixes the following bugs:
- 
+
    * #6322 Fixed a crash on launch on macOS 11 and older.
    * #6324 Fixed the update notification looking for alpha versions instead of release versions.
    * #6321 Fixed a freeze when using macros on multiple files.
@@ -102,15 +210,15 @@ Changes in version 3.5.0
 Audacity 3.5 adds cloud saving, beat detection, pitch shifting and more.
 
  Major changes
-   
+
    * Cloud project saving
      We've introduced a new cloud-saving feature that allows you to save your Audacity projects to audio.com. This allows you to work from any device, share & collaborate with others and restore previous versions if something went wrong.
    * Automatic tempo detection
-     Audacity can now automatically detect the tempo of imported loops, and adjust them to be in tempo. 
+     Audacity can now automatically detect the tempo of imported loops, and adjust them to be in tempo.
      Tempo detection is done via both audio analysis and metadata checking. If you want to prepare your loop for automatic tempo detection without relying on audio analysis, both acidizer tempo tags or simply writing "123 bpm" anywhere into the filename work.
      Automatic tempo detection can be turned off via Preferences -> Import/Export.
-   * Pitch shifting 
-     You now can non-destructively change the pitch of a clip by holding Alt and pressing the Up and Down arrow keys. Alternatively, you can click on the overflow menu (...) and select "Pitch and speed...". When changing the pitch this way, an arrow in the UI indicates how much you've shifted it. 
+   * Pitch shifting
+     You now can non-destructively change the pitch of a clip by holding Alt and pressing the Up and Down arrow keys. Alternatively, you can click on the overflow menu (...) and select "Pitch and speed...". When changing the pitch this way, an arrow in the UI indicates how much you've shifted it.
 
  Other changes
 
@@ -120,23 +228,23 @@ Audacity 3.5 adds cloud saving, beat detection, pitch shifting and more.
    * Added subtitle formats for labels. Export to WebVTT and SubRip and import of SubRip files is now supported. (Thanks, Pokechu22 and Larry Bordowitz!)
 
   Changes
-  
-   * Reworked the plugin manager. 
+
+   * Reworked the plugin manager.
    * Improved accessibility. (Thanks, David Bailes!)
-   * When zooming in vertically (Ctrl+scroll on the vertical scale), the zeroline now remains centered. Moving the vertical zoom off-center still is possible via Shift+scroll on the vertical scale. 
+   * When zooming in vertically (Ctrl+scroll on the vertical scale), the zeroline now remains centered. Moving the vertical zoom off-center still is possible via Shift+scroll on the vertical scale.
    * Changed the look of the selection adjust cursors (previously pointing fingers on Windows and macOS, now look like >| everywhere).
    * Changed the timeline options button from a green triangle to a settings gear. From it, you can switch between Beats & Measures or hh:mm:ss timeline rulers, set various preferences regarding to looping, as well as playhead behaviors: "Scroll view to playhead" (previously: "Update display while playing") and "Continuous scrolling" (previously: Pinned Play Head).
    * Improved BSD support. (Thanks, Brad Smith!)
    * macOS: Changed the Audacity.app icon on macOS to fit new design guidelines.
-   * Reordered some menus. 
+   * Reordered some menus.
    * Moved OK/Cancel buttons of effects to the bottom.
 
   Removals
 
   There have been a number of removals of niche features to simplify the app. This should make the app a bit less overwhelming to use, and also will speed up future development as fewer things need to be considered.
    * Removed the read-only mouse preferences page.
-   * Removed Printing options. 
-   * Removed Screenshot tool. To make a screenshot, use Win+Shift+S (Windows) or Cmd+Shift+4 (Mac) instead. 
+   * Removed Printing options.
+   * Removed Screenshot tool. To make a screenshot, use Win+Shift+S (Windows) or Cmd+Shift+4 (Mac) instead.
    * Removed Karaoke view.
    * Removed the "solo=none" preference.
    * Removed timeline tooltips preference.
@@ -145,7 +253,7 @@ Audacity 3.5 adds cloud saving, beat detection, pitch shifting and more.
    * Removed "scrolling left of zero" preference.
    * Replaced "Advanced Vertical Zooming" with new always-on behavior.
    * Removed some vertical zoom presets.
-   * Removed EQ XML to TXT converter, which was needed for the Audacity 2.3 -> 2.4 transition. It is now a plugin instead, downloadable at https://plugins.audacityteam.org/additional-resources/eq-curves/eq-xml-to-txt-converter. 
+   * Removed EQ XML to TXT converter, which was needed for the Audacity 2.3 -> 2.4 transition. It is now a plugin instead, downloadable at https://plugins.audacityteam.org/additional-resources/eq-curves/eq-xml-to-txt-converter.
    * Removed the "Vocal reduction and isolation" effect. As a replacement on Windows and Linux, the Intel OpenVINO plugins work better and on a wider array of content, including mono tracks. The old effect still can be downloaded from https://plugins.audacityteam.org/nyquist-plugins/effect-plugins/filters-and-eq#vocal-reduction-and-isolation
 
   Bugfixes
@@ -171,8 +279,8 @@ Changes in version 3.4.2
  This is a hotfix release. It fixes the following issues:
 
    * #5568 Fix a crash when opening projects with zero-length clips.
-   * #5032 When exporting a file, the sample rate of the tracks is now considered, and last-used sample rate is remembered. 
-   * #5555 Copy-pasting now pastes into audio again by default. 
+   * #5032 When exporting a file, the sample rate of the tracks is now considered, and last-used sample rate is remembered.
+   * #5555 Copy-pasting now pastes into audio again by default.
      This can be changed via Preferences -> Track Behavior -> Always paste audio as new clips.
    * #5549 Mix and render now also resets the gain for the resulting track.
    * #5571 Fix clips shifting to the right when effects are applied to them.
@@ -209,16 +317,16 @@ Audacity 3.4 adds a musical view, time stretching and a new exporter.
 
  Major changes
    * Music workflows
-     Audacity now features several music related features, such as switching between hh:mm:ss time and Beats & Measures, and time-stretching clips to align them to a song's tempo. 
+     Audacity now features several music related features, such as switching between hh:mm:ss time and Beats & Measures, and time-stretching clips to align them to a song's tempo.
    * Time stretching
-     Hold Alt (macOS: Option) while hovering over the top third of a clip edge to stretch it. 
+     Hold Alt (macOS: Option) while hovering over the top third of a clip edge to stretch it.
    * New exporter
      Audacity now features a new export window with easier access to options such as sample rate and custom mapping (for 5.1 or 7.1 audio). Additionally, the "Browse" button uses the native file browser now!
 
  Other changes
    * For MP3, Audacity now always uses Joint Stereo mode, which always delivers the best possible quality.
    * #4720 Simplified pasting logic.
-   * Simplified stereo tracks. Left and right channels now always have synchronized clip starts and ends, and the same sample rate in both channels. 
+   * Simplified stereo tracks. Left and right channels now always have synchronized clip starts and ends, and the same sample rate in both channels.
    * #5014 Added cursors trimming and stretching left and right, and changed the I-beam cursor to be less similar to either.
    * #4448 When importing audio, the project sample rate no longer changes.
    * #5204 The spectrogram colors are now perceptually uniform, and the colormap has gotten a name: Roseus. It also can be used for dataviz outside of Audacity, see https://github.com/dofuuz/roseus for more info! (Thanks, Myungchul Keum)
@@ -244,9 +352,9 @@ Audacity 3.4 adds a musical view, time stretching and a new exporter.
 
 Changes in version 3.3.3
 
- This is a hotfix release. It fixes the following bugs: 
+ This is a hotfix release. It fixes the following bugs:
    * #4618 Fixed EQ not scaling properly when resizing the window.
-   * #4743 Fixed the audio.com upload flow. 
+   * #4743 Fixed the audio.com upload flow.
 
 Changes in version 3.3.2
 
@@ -271,11 +379,11 @@ Changes in version 3.3.0
  Changes
    * Some of the built-in effects are now realtime capable (Bass & Treble, Distortion, Phaser, Reverb and Wahwah).
    * #4352 Added a new effect: Shelf Filter.
-   * Added an initial (beta) version of Beats and Measures. 
+   * Added an initial (beta) version of Beats and Measures.
    * #4414 Reworked the bottom toolbar dock:
       * Project Sample Rate is now found in Audio Setup -> Audio Settings (formerly known as Project Rate).
       * The Snapping Toolbar (formerly known as Snap-To) is now independent of the Selection Toolbar.
-      * Added a new Time Signature Toolbar (beta). It is hidden by default. 
+      * Added a new Time Signature Toolbar (beta). It is hidden by default.
    * #4212 Improved Zooming behavior slightly (more to come in the future).
    * #4393 Added a new ruler, Linear (dB). This ruler goes from 0 dBFS to -∞ dBFS and better reflects the volume as shown in the recording/playback meters.
    * #3820 When copying clips between projects, you now can choose between whether to copy smart clips or just the visible portion.
@@ -318,21 +426,21 @@ Changes in version 3.2.2
 
  This is a patch release for Audacity 3.2. It enables use of VST2 as realtime effects and fixes some bugs.
 
-   * #2850 VST2 effects are now realtime capable. 
+   * #2850 VST2 effects are now realtime capable.
      Additional plugins have been added to plugins.audacityteam.org
    * #3696 Improved accessibility of the meters
    * #3769 Fixed a crash when editing some macro parameters
    * #3792 Fixed some play commands getting stuck in play mode
    * #3670 Audacity no longer quietly discards changes in realtime effects but instead asks if you want to save before quitting
    * #3838 Plugin scanning now lets you skip individual plugins if scanning gets stuck on them
-   * #3980 Plugin scanning no longer produces "Audacity crashed" windows when a plugin fails validation, 
+   * #3980 Plugin scanning no longer produces "Audacity crashed" windows when a plugin fails validation,
      and no longer shows the plugins in the macOS dock during validation
    * #3883 Fixed an issue with labels losing focus on macOS Ventura
    * Fixed various plugin-specific issues
 
 Changes in version 3.2.1
 
- This is a patch release. It fixes some bugs and has minor improvements. 
+ This is a patch release. It fixes some bugs and has minor improvements.
 
     * #3686 Fixed Audacity crashing on startup on some systems.
     * #3694 Fixed a crash when applying Waves Berzerk Distortion Mono to a mono track
@@ -343,10 +451,10 @@ Changes in version 3.2.1
 
 Changes in version 3.2.0
 
- This version adds realtime effects and VST3. 
+ This version adds realtime effects and VST3.
 
  Prominent changes
-    * Added a new Effects button to the tracks menu, allowing you to place realtime effects. 
+    * Added a new Effects button to the tracks menu, allowing you to place realtime effects.
        Further information can be found can be found on https://support.audacityteam.org/audio-editing/using-realtime-effects
     * Merged the mixer bar with the meter bars.
     * Added a new Audio Setup button, replacing the Device Toolbar by default. The device toolbar can be re-added via the View > Toolbars menu.
@@ -360,24 +468,24 @@ Changes in version 3.2.0
     * VST3 effects are now supported.
     * The following plugin formats are now realtime capable: VST3, LV2, LADSPA, Audio Units.
     * Plugins now automatically get scanned, tested and enabled when Audacity starts.
- 
+
  System changes
     * Apple Silicon (arm64) is now supported on macOS
        Note: When using an arm64 Audacity, you must use arm64 versions of FFMPEG and plugins. Plugins for x86-64 (Intel macs) will not load.
-       For the time being, Audacity will continue to download x86-64 versions by default to avoid these incompatibilities, 
+       For the time being, Audacity will continue to download x86-64 versions by default to avoid these incompatibilities,
        but you can download an arm64 version from Github releases: https://github.com/audacity/audacity/releases
     * FFMPEG 5.0 (avformat 59) is now supported, in addition to avformat 55, 57 and 58
     * Added support for Wavpack
     * On Linux, Audacity can now be compiled without JACK present.
-    * Audacity now uses XDG directories on Linux. 
+    * Audacity now uses XDG directories on Linux.
        Note: If you are upgrading from a previous version, Audacity will keep using the ~/.audacity-data and ~/.audacity folders until you delete them.
     * Switched from mad to mpg123 as MP3 importer
- 
+
  License update
-    * Audacity binaries are now licensed under the GNU General Public License, Version 3. 
-      Most code files remain GPLv2-or-later, but VST3 support required this license update. 
+    * Audacity binaries are now licensed under the GNU General Public License, Version 3.
+      Most code files remain GPLv2-or-later, but VST3 support required this license update.
       More information can be found in the announcement post: https://github.com/audacity/audacity/discussions/2142
- 
+
  Removals
     * Removed the Zoom Tool. You can use the zoom buttons or Ctrl+Scroll (macOS: Cmd+Scroll) to zoom instead.
     * The Audacity Manual HTML pages are no longer included in the installation.
@@ -392,9 +500,9 @@ Changes in version 3.2.0
    * #2162 Fixed Punch and Roll not paying tracks in sync
    * #1889 Fixed clip titles changing name when applying some effects
    * #1624 During batch processing, Audacity will no longer stop to ask for a sample rate when an unsupported one is chosen, but choose the nearest supported one instead.
-   * #2265 Fixed mod-script-pipe not being installed on Linux 
+   * #2265 Fixed mod-script-pipe not being installed on Linux
    * #3571 Fixed GTK packaging in Appimages. This fixes various issues with icons, dropdowns and similar things not appearing properly.
-   * #3634 Improved M4A/AAC support. Previously the target bitrate was not honored at all, 
+   * #3634 Improved M4A/AAC support. Previously the target bitrate was not honored at all,
            now it can be set between 98 and 160 kbit/s (mono) or 196 and 320 kbit/s (stereo). The UI does not yet reflect these limits.
 
 Changes in version 3.1.3
@@ -426,8 +534,8 @@ Changes in version 3.1.3
 
 Changes in version 3.1.2:
 
- This is a hotfix release. It fixes the following bugs: 
- 
+ This is a hotfix release. It fixes the following bugs:
+
 	Fixed UTF8 support in clip titles #2135
 	Fixed data loss when joining clips #2123
 	Fixed a crash with exporting resampled tracks #2136
