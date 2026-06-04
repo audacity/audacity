@@ -29,6 +29,7 @@ Paul Licameli split from AudacityProject.cpp
 #include "ProjectWindow.h"
 #include "ProjectWindows.h"
 #include "SelectUtilities.h"
+#include "Tags.h"
 #include "TrackPanel.h"
 #include "TrackUtilities.h"
 #include "UndoManager.h"
@@ -741,6 +742,8 @@ void ProjectManager::ResetProjectToEmpty() {
 
    SelectUtilities::DoSelectAll( project );
    TrackUtilities::DoRemoveTracks( project );
+
+   Tags::Set( project, std::make_shared<Tags>() );
 
    WaveTrackFactory::Reset( project );
 
