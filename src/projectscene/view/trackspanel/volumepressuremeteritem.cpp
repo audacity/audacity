@@ -188,6 +188,11 @@ void VolumePressureMeterItem::drawBarStyleRMS(QPainter& p)
 
 void VolumePressureMeterItem::drawBarStyleGradient(QPainter& p)
 {
+    if (isClipping()) {
+        p.fillRect(QRectF(0, 0, m_indicatorWidth, indicatorHeight() + m_overloadHeight), clippedColor());
+        return;
+    }
+
     const qreal h = sampleValueToHeight(updatedVolumePressure());
     if (h > 0) {
         QLinearGradient grad(0, 0, 0, indicatorHeight());
