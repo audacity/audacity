@@ -63,6 +63,8 @@ class TimelineContext : public QObject, public muse::async::Asyncable, public mu
     Q_PROPERTY(bool pinnedPlayHeadEnabled READ pinnedPlayHeadEnabled NOTIFY pinnedPlayHeadEnabledChanged FINAL)
     Q_PROPERTY(double lastPlaybackSeekPosition READ lastPlaybackSeekPosition NOTIFY lastPlaybackSeekPositionChanged FINAL)
 
+    Q_PROPERTY(double invalidGuidelineTime READ invalidGuidelineTime CONSTANT FINAL)
+
     muse::GlobalInject<IProjectSceneConfiguration> configuration;
 
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
@@ -78,6 +80,8 @@ public:
     static constexpr double INVALID_GUIDELINE_TIME = -1.0;
 
     TimelineContext(QObject* parent = nullptr);
+
+    double invalidGuidelineTime() const { return INVALID_GUIDELINE_TIME; }
 
     double frameStartTime() const;
     void setFrameStartTime(double newFrameStartTime);
