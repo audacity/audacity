@@ -96,7 +96,6 @@ public:
     static PluginID GetID(const PluginProvider* provider);
     static PluginID GetID(const ComponentInterface* command);
     static PluginID GetID(const EffectDefinitionInterface* command);
-    static PluginID OldGetID(const EffectDefinitionInterface* effect);
     //! Parse English effect name from the result of
     //! GetID(const EffectDefinitionInterface*)
     static Identifier GetEffectNameFromID(const PluginID& ID);

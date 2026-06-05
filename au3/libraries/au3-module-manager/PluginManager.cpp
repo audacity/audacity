@@ -812,16 +812,6 @@ PluginID PluginManager::GetID(const EffectDefinitionInterface* effect)
     return sEffectIdResolver ? sEffectIdResolver->EffectId(effect) : wxString {};
 }
 
-PluginID PluginManager::OldGetID(const EffectDefinitionInterface* effect)
-{
-    return wxString::Format(wxT("%s_%s_%s_%s_%s"),
-                            GetPluginTypeString(PluginTypeEffect),
-                            effect->GetFamily().Internal(),
-                            effect->GetVendor().Internal(),
-                            effect->GetSymbol().Internal(),
-                            effect->GetPath());
-}
-
 Identifier PluginManager::GetEffectNameFromID(const PluginID& ID)
 {
     auto strings = wxSplit(ID, '_');
