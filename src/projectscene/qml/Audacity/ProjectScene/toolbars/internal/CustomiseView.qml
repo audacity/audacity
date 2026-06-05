@@ -68,6 +68,7 @@ StyledListView {
         height: loader.isSeparator ? 1 : 38
 
         isSelected: model.isSelected
+        keyboardRemovable: true
 
         onClicked: {
             itemDelegate.item.checked = !itemDelegate.item.checked
