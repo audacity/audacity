@@ -7044,7 +7044,7 @@ Please remove the write protection by checking the file’s properties, ensuring
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="913"/>
         <source>Ok</source>
-        <translation>Ок</translation>
+        <translation>Хорошо</translation>
     </message>
 </context>
 <context>
