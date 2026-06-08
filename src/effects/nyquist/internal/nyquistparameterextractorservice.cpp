@@ -19,14 +19,14 @@ namespace {
 ParameterType convertControlType(int nyqType)
 {
     switch (nyqType) {
-    case NYQ_CTRL_INT:
     case NYQ_CTRL_INT_TEXT:
     case NYQ_CTRL_FLOAT_TEXT:
-        // `float-text` renders as a plain numeric input (no slider) to match
-        // legacy AU3 semantics (au3/src/effects/nyquist/Nyquist.cpp:487-522)
+        // `int-text` and `float-text` renders as a plain numeric input (no slider)
+        // to match legacy AU3 semantics (au3/src/effects/nyquist/Nyquist.cpp:487-522)
         // and to avoid creating an unusable slider when the high bound is
         // `nil` (parsed as FLT_MAX in NyquistBase.cpp).
         return ParameterType::Numeric;
+    case NYQ_CTRL_INT:
     case NYQ_CTRL_FLOAT:
         return ParameterType::Slider;
     case NYQ_CTRL_CHOICE:
