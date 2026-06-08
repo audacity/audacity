@@ -1295,6 +1295,11 @@ Rectangle {
         }
     }
 
+    function handleGuideline(x, completed) {
+        let time = timeline.context.applyDetectedSnap(timeline.context.positionToTime(x))
+        root.applyItemGuideline(timeline.context.findGuideline(time), completed)
+    }
+
     function applyItemGuideline(time, completed) {
         if (!timeline.context.isGuidelineValid(time)) {
             root.invalidateGuideline()
@@ -1302,20 +1307,6 @@ Rectangle {
         }
         root.guidelinePos = timeline.context.timeToPosition(time)
         root.guidelineVisible = root.guidelinePos >= 0 && !completed
-    }
-
-    function handleGuideline(x, completed) {
-        let time = timeline.context.positionToTime(x)
-        time = timeline.context.applyDetectedSnap(time)
-        let guidelineTimePos = timeline.context.findGuideline(time)
-
-        if (timeline.context.isGuidelineValid(guidelineTimePos)) {
-            root.guidelinePos = timeline.context.timeToPosition(guidelineTimePos)
-
-            root.guidelineVisible = root.guidelinePos >= 0 ? !completed : false
-        } else {
-            root.invalidateGuideline()
-        }
     }
 
     function invalidateGuideline() {
