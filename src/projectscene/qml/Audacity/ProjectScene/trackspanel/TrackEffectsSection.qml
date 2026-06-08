@@ -114,7 +114,7 @@ Rectangle {
 
         FlatButton {
             id: addEffectButton
-            enabled: prv.enabled
+            enabled: prv.enabled && effectList.trackSupportsEffects
             Layout.fillWidth: true
             Layout.minimumHeight: prv.addEffectButtonHeight
             Layout.maximumHeight: prv.addEffectButtonHeight

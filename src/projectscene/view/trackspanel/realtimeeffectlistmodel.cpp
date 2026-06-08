@@ -299,6 +299,29 @@ QString RealtimeEffectListModel::prop_trackName() const
     return QString::fromStdString(*trackName);
 }
 
+bool RealtimeEffectListModel::prop_trackSupportsEffects() const
+{
+    const auto tId = trackId();
+    if (!tId.has_value()) {
+        return false;
+    }
+    if (m_isMasterTrack) {
+        return true;
+    }
+
+    const trackedit::ITrackeditProjectPtr project = globalContext()->currentTrackeditProject();
+    IF_ASSERT_FAILED(project) {
+        return false;
+    }
+
+    const auto track = project->track(*tId);
+    if (!track.has_value()) {
+        return false;
+    }
+
+    return track->type == trackedit::TrackType::Mono || track->type == trackedit::TrackType::Stereo;
+}
+
 QHash<int, QByteArray> RealtimeEffectListModel::roleNames() const
 {
     static const QHash<int, QByteArray> roles = {
