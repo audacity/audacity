@@ -62,7 +62,7 @@ if(BUILD_MODE MATCHES "RELEASE")
     set(MUSE_APP_UNSTABLE OFF)
     set(MUSE_APP_RELEASE_CHANNEL "stable")
     set(MUSE_APP_IS_PRERELEASE OFF)
-    set(AU4_ALLOW_UPDATE_ON_PRERELEASE OFF)
+    set(AU4_ALLOW_UPDATE_ON_PRERELEASE ON)
 endif()
 
 # Display version number and the release channel (unless it is a release) as the app title
@@ -183,7 +183,9 @@ configure_file(${CMAKE_CURRENT_LIST_DIR}/src/app/app_config.h.in app_config.h)
 # modules config
 
 if (AU4_ALLOW_UPDATE_ON_PRERELEASE)
+    add_definitions(-DAU4_ALLOW_UPDATE_ON_PRERELEASE)
     add_definitions(-DMUSESCORE_ALLOW_UPDATE_ON_PRERELEASE)
+    set(MUSESCORE_ALLOW_UPDATE_ON_PRERELEASE ON)
 endif()
 
 if (QT_SUPPORT)
