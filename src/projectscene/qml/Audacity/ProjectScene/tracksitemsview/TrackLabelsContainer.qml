@@ -390,6 +390,11 @@ TrackItemsContainer {
         if (!labelsModel.containsItem(labelKey)) {
             return
         }
-        triggerItemGuideline(labelsModel.findGuideline(labelKey, direction), completed)
+
+        if (completed) {
+            root.clearItemGuideline()
+            return
+        }
+        triggerItemGuideline(labelsModel.findGuideline(labelKey, direction), false)
     }
 }

@@ -1296,17 +1296,21 @@ Rectangle {
     }
 
     function handleGuideline(x, completed) {
+        if (completed) {
+            root.invalidateGuideline()
+            return
+        }
         let time = timeline.context.applyDetectedSnap(timeline.context.positionToTime(x))
-        root.applyItemGuideline(timeline.context.findGuideline(time), completed)
+        root.applyItemGuideline(timeline.context.findGuideline(time), false)
     }
 
     function applyItemGuideline(time, completed) {
-        if (!timeline.context.isGuidelineValid(time)) {
+        if (completed || !timeline.context.isGuidelineValid(time)) {
             root.invalidateGuideline()
             return
         }
         root.guidelinePos = timeline.context.timeToPosition(time)
-        root.guidelineVisible = root.guidelinePos >= 0 && !completed
+        root.guidelineVisible = root.guidelinePos >= 0
     }
 
     function invalidateGuideline() {

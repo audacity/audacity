@@ -783,6 +783,11 @@ TrackItemsContainer {
         if (!clipsModel.containsItem(clipKey)) {
             return
         }
-        triggerItemGuideline(clipsModel.findGuideline(clipKey, direction), completed)
+
+        if (completed) {
+            root.clearItemGuideline()
+            return
+        }
+        triggerItemGuideline(clipsModel.findGuideline(clipKey, direction), false)
     }
 }
