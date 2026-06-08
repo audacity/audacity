@@ -10,6 +10,10 @@
 #include "framework/global/log.h"
 #include "framework/global/stringutils.h"
 
+#include <wx/string.h>
+#include "au3-strings/wxArrayStringEx.h"
+#include "au3wrap/internal/wxtypes_convert.h"
+
 namespace au::effects {
 muse::String utils::effectFamilyToString(EffectFamily family)
 {
@@ -67,28 +71,38 @@ static const muse::String legacyEffectCategoryString{ "Legacy" };
 
 EffectId utils::effectId(const EffectDefinitionInterface* effect)
 {
-    return EffectId::fromStdString(muse::strings::join({
-            std::string { "Effect" },
-            effect->GetFamily().Internal().ToStdString(),
-            effect->GetVendor().Internal().ToStdString(),
-            effect->GetSymbol().Internal().ToStdString(),
-            effect->GetPath().ToStdString()
-        }, "_"));
+    // Using wxJoin/wxSplit for now, as they handle the presence of the separator being part of any of its constituents
+    // (e.g. an effect vendor that has an underscore in its name.)
+    // TODO add defense in muse::strings utils.
+    return au3::wxToString(wxJoin(wxArrayStringEx {
+            wxString { "Effect" },
+            effect->GetFamily().Internal(),
+            effect->GetVendor().Internal(),
+            effect->GetSymbol().Internal(),
+            effect->GetPath()
+        }, '_'));
 }
 
 namespace {
+constexpr size_t effectIdPartCount = 5;
+
 std::string parseEffectIdPart(const effects::EffectId& effectId, size_t partIndex)
 {
-    std::vector<std::string> strings;
-    muse::strings::split(effectId.toStdString(), strings, "_");
-    if (strings.size() != 5) {
+    const auto strings = wxSplit(au3::wxFromString(effectId), '_');
+    if (strings.size() != effectIdPartCount) {
         LOGW() << "Unexpected effect ID format: " << effectId;
     }
     if (partIndex < strings.size()) {
-        return strings[partIndex];
+        return au3::wxToStdString(strings[partIndex]);
     }
     return {};
 }
+}
+
+bool utils::isEffectId(const EffectId& effectId)
+{
+    const auto strings = wxSplit(au3::wxFromString(effectId), '_');
+    return strings.size() == effectIdPartCount && strings[0] == wxString("Effect");
 }
 
 std::string utils::parseEffectName(const EffectId& effectId)

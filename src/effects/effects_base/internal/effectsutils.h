@@ -23,6 +23,8 @@ muse::uicomponents::MenuItemList realtimeEffectMenu(EffectMenuOrganization organ
 
 EffectId effectId(const EffectDefinitionInterface* effect);
 
+bool isEffectId(const EffectId& effectId);
+
 std::string parseEffectName(const EffectId& effectId);
 std::string parseEffectVendor(const EffectId& effectId);
 std::string parseEffectFamily(const EffectId& effectId);

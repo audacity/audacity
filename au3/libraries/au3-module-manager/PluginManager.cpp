@@ -35,6 +35,7 @@ for shared and private configs - which need to move out.
 #include "au3-files/PlatformCompatibility.h"
 #include "au3-strings/Base64.h"
 #include "au3-utility/Variant.h"
+#include "IEffectIdResolver.h"
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -292,7 +293,11 @@ bool PluginManager::SetConfigValue(ConfigurationType type, const PluginID& ID,
 bool PluginManager::RemoveConfigSubgroup(ConfigurationType type,
                                          const PluginID& ID, const RegistryPath& group)
 {
-    bool result = GetSettings()->DeleteGroup(Group(type, ID, group));
+    const auto path = Group(type, ID, group);
+    if (path.empty()) {
+        return false;
+    }
+    bool result = GetSettings()->DeleteGroup(path);
     if (result) {
         GetSettings()->Flush();
     }
@@ -303,7 +308,11 @@ bool PluginManager::RemoveConfigSubgroup(ConfigurationType type,
 bool PluginManager::RemoveConfig(ConfigurationType type, const PluginID& ID,
                                  const RegistryPath& group, const RegistryPath& key)
 {
-    bool result = GetSettings()->DeleteEntry(Key(type, ID, group, key));
+    const auto fullKey = Key(type, ID, group, key);
+    if (fullKey.empty()) {
+        return false;
+    }
+    bool result = GetSettings()->DeleteEntry(fullKey);
     if (result) {
         GetSettings()->Flush();
     }
@@ -338,6 +347,7 @@ PluginManager::~PluginManager()
 // ----------------------------------------------------------------------------
 
 static PluginManager::ConfigFactory sFactory;
+static std::unique_ptr<IEffectIdResolver> sEffectIdResolver;
 
 // ============================================================================
 //
@@ -355,9 +365,10 @@ PluginManager& PluginManager::Get()
     return *mInstance;
 }
 
-void PluginManager::Initialize(ConfigFactory factory)
+void PluginManager::Initialize(ConfigFactory factory, std::unique_ptr<IEffectIdResolver> resolver)
 {
     sFactory = move(factory);
+    sEffectIdResolver = std::move(resolver);
 
     // And force load of setting to verify it's accessible
     GetSettings();
@@ -795,14 +806,10 @@ PluginID PluginManager::GetID(const ComponentInterface* command)
                             command->GetPath());
 }
 
-PluginID PluginManager::OldGetID(const EffectDefinitionInterface* effect)
+PluginID PluginManager::GetID(const EffectDefinitionInterface* effect)
 {
-    return wxString::Format(wxT("%s_%s_%s_%s_%s"),
-                            GetPluginTypeString(PluginTypeEffect),
-                            effect->GetFamily().Internal(),
-                            effect->GetVendor().Internal(),
-                            effect->GetSymbol().Internal(),
-                            effect->GetPath());
+    assert(sEffectIdResolver);
+    return sEffectIdResolver ? sEffectIdResolver->EffectId(effect) : wxString {};
 }
 
 Identifier PluginManager::GetEffectNameFromID(const PluginID& ID)
@@ -979,32 +986,44 @@ bool PluginManager::SetConfigValue(
 RegistryPath PluginManager::SettingsPath(
     ConfigurationType type, const PluginID& ID)
 {
-    bool shared = (type == ConfigurationType::Shared);
+    const bool shared = (type == ConfigurationType::Shared);
 
     // All the strings reported by PluginDescriptor and used in this function
     // persist in the plugin settings configuration file, so they should not
     // be changed across Audacity versions, or else compatibility of the
     // configuration files will break.
 
-    if (auto iter = mRegisteredPlugins.find(ID); iter == mRegisteredPlugins.end()) {
-        return {};
-    } else {
+    PluginType pluginType = PluginTypeNone;
+    wxString family, vendor, symbol;
+
+    if (auto iter = mRegisteredPlugins.find(ID); iter != mRegisteredPlugins.end()) {
         const PluginDescriptor& plug = iter->second;
-
-        wxString id = GetPluginTypeString(plug.GetPluginType())
-                      + wxT("_")
-                      + plug.GetEffectFamily()     // is empty for non-Effects
-                      + wxT("_")
-                      + plug.GetVendor()
-                      + wxT("_")
-                      + (shared ? wxString{} : plug.GetSymbol().Internal());
-
-        return SETROOT
-               + ConvertID(id)
-               + wxCONFIG_PATH_SEPARATOR
-               + (shared ? wxT("shared") : wxT("private"))
-               + wxCONFIG_PATH_SEPARATOR;
+        pluginType = plug.GetPluginType();
+        family = plug.GetEffectFamily();     // empty for non-Effects
+        vendor = plug.GetVendor();
+        symbol = plug.GetSymbol().Internal();
+    } else if (sEffectIdResolver->IsEffectId(ID)) {
+        pluginType = PluginTypeEffect;
+        family = sEffectIdResolver->EffectFamily(ID);
+        vendor = sEffectIdResolver->EffectVendor(ID);
+        symbol = sEffectIdResolver->EffectName(ID);
+    } else {
+        return {};
     }
+
+    const wxString id = GetPluginTypeString(pluginType)
+                        + wxT("_")
+                        + family
+                        + wxT("_")
+                        + vendor
+                        + wxT("_")
+                        + (shared ? wxString{} : symbol);
+
+    return SETROOT
+           + ConvertID(id)
+           + wxCONFIG_PATH_SEPARATOR
+           + (shared ? wxT("shared") : wxT("private"))
+           + wxCONFIG_PATH_SEPARATOR;
 }
 
 /* Return value is a key for lookup in a config file */
@@ -1012,6 +1031,13 @@ RegistryPath PluginManager::Group(ConfigurationType type,
                                   const PluginID& ID, const RegistryPath& group)
 {
     auto path = SettingsPath(type, ID);
+
+    // If we have no per-plugin prefix, return empty rather than fall back
+    // to a prefix-less group. Otherwise callers would read from / write to
+    // the same shared config group, leaking data across plugins.
+    if (path.empty()) {
+        return path;
+    }
 
     wxFileName ff(group);
     if (!ff.GetName().empty()) {
