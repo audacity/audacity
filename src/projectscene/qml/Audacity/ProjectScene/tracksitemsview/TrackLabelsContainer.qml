@@ -203,6 +203,13 @@ TrackItemsContainer {
 
                                     trackItemMousePositionChanged(xWithinTrack, yWithinTrack, itemData.key)
 
+                                    // While a label is being moved or stretched the guideline must follow the
+                                    // dragged label edge (driven by handleLabelGuideline), not the mouse position,
+                                    // so don't snap the guideline to the cursor here.
+                                    if (root.moveActive || itemData.isEditing) {
+                                        return
+                                    }
+
                                     let time = root.context.findGuideline(root.context.positionToTime(xWithinTrack, true))
                                     root.triggerItemGuideline(time, false)
                                 }
