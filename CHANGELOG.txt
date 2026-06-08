@@ -1,5 +1,13 @@
 List of significant changes and bug fixes going back to version 1.1.0
 
+Changes in version 4.0.0 beta 2
+
+   * #11103 Fixed crash when opening an AUP3 project via "Open other…"
+   * #10897, #11038 Fixed custom effect presets leaking across all effects
+   * #11040 Fixed missing clipping indication on gradient meters
+   * #10987 Disabled "Add effect" for label tracks
+   * #9171 Allow deselecting tracks with Cmd/Ctrl+click
+
 Changes in version 4.0.0 beta 1
 
 Audacity 4 is a ground-up rebuild on the Qt framework.
