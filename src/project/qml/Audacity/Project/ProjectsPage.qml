@@ -447,7 +447,7 @@ FocusScope {
                 text: qsTrc("project", "Open other…")
 
                 onClicked: {
-                    projectsPageModel.openOther()
+                    Qt.callLater(projectsPageModel.openOther)
                 }
             }
         }
