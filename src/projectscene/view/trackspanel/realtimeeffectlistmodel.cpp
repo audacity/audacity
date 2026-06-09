@@ -25,11 +25,19 @@ void RealtimeEffectListModel::onProjectChanged()
                 emit trackNameChanged();
             }
         });
-        const std::vector<au::trackedit::TrackId> trackIds = project->trackIdList();
-        for (const auto& trackId : trackIds) {
-            if (belongsWithMe(trackId)) {
-                // Project was just opened, we can use brute-force `onChanged`, it won't have an impact on scrollbar position or alike.
-                onChanged(trackId);
+        // Project was just opened, we can use brute-force `onChanged`, it won't have an impact on scrollbar position or alike.
+        if (m_isMasterTrack) {
+            // The master track is not part of `trackIdList()`, so populate it explicitly.
+            // Otherwise persisted master effects would not be shown on project open, and
+            // `m_trackEffectLists` would have no master entry when a `realtimeEffectAdded`
+            // event later arrives (causing an assert in `onAdded`).
+            onChanged(IRealtimeEffectService::masterTrackId);
+        } else {
+            const std::vector<au::trackedit::TrackId> trackIds = project->trackIdList();
+            for (const auto& trackId : trackIds) {
+                if (belongsWithMe(trackId)) {
+                    onChanged(trackId);
+                }
             }
         }
     } else {
