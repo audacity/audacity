@@ -63,6 +63,8 @@ class TimelineContext : public QObject, public muse::async::Asyncable, public mu
     Q_PROPERTY(bool pinnedPlayHeadEnabled READ pinnedPlayHeadEnabled NOTIFY pinnedPlayHeadEnabledChanged FINAL)
     Q_PROPERTY(double lastPlaybackSeekPosition READ lastPlaybackSeekPosition NOTIFY lastPlaybackSeekPositionChanged FINAL)
 
+    Q_PROPERTY(double invalidGuidelineTime READ invalidGuidelineTime CONSTANT FINAL)
+
     muse::GlobalInject<IProjectSceneConfiguration> configuration;
 
     muse::ContextInject<muse::actions::IActionsDispatcher> dispatcher{ this };
@@ -75,8 +77,11 @@ class TimelineContext : public QObject, public muse::async::Asyncable, public mu
 public:
 
     static constexpr int ANIMATION_DURATION_MS = 500;
+    static constexpr double INVALID_GUIDELINE_TIME = -1.0;
 
     TimelineContext(QObject* parent = nullptr);
+
+    double invalidGuidelineTime() const { return INVALID_GUIDELINE_TIME; }
 
     double frameStartTime() const;
     void setFrameStartTime(double newFrameStartTime);
@@ -132,7 +137,9 @@ public:
     double applySnapToTime(double time) const;
     double applySnapToItem(double time) const;
     Q_INVOKABLE double applyDetectedSnap(double time) const;
+
     Q_INVOKABLE double findGuideline(double time) const;
+    Q_INVOKABLE bool isGuidelineValid(double guidelineTime) const;
 
     Q_INVOKABLE void updateMousePositionTime(double mouseX);
     Q_INVOKABLE double mousePositionTime() const;
@@ -243,6 +250,8 @@ private:
     void saveViewState() const;
 
     context::IPlaybackStatePtr playbackState() const;
+
+    friend struct SnapTestAccess;
 
     double m_frameWidth = 0.0;
     double m_frameHeight = 0.0;

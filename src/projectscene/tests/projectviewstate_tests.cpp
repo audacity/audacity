@@ -16,8 +16,12 @@
 #include "trackedit/tests/mocks/trackeditprojectmock.h"
 #include "project/tests/mocks/audacityprojectmock.h"
 #include "trackedit/trackedittypes.h"
+#include "trackedit/dom/clip.h"
+#include "trackedit/dom/label.h"
 
 #include <gtest/gtest.h>
+
+#include <set>
 
 using namespace ::testing;
 using ::testing::_;
@@ -91,6 +95,42 @@ public:
         .WillByDefault(Return(getAllTracks()));
     }
 
+    static trackedit::Clip makeClip(trackedit::TrackId trackId, trackedit::TrackItemId itemId, double start, double end)
+    {
+        trackedit::Clip clip;
+        clip.key = { trackId, itemId };
+        clip.startTime = start;
+        clip.endTime = end;
+        return clip;
+    }
+
+    static trackedit::Label makeLabel(trackedit::TrackId trackId, trackedit::TrackItemId itemId, double start, double end)
+    {
+        trackedit::Label label;
+        label.key = { trackId, itemId };
+        label.startTime = start;
+        label.endTime = end;
+        return label;
+    }
+
+    static muse::async::NotifyList<trackedit::Clip> makeClipList(std::initializer_list<trackedit::Clip> clips)
+    {
+        muse::async::NotifyList<trackedit::Clip> list;
+        for (const auto& clip : clips) {
+            list.push_back(clip);
+        }
+        return list;
+    }
+
+    static muse::async::NotifyList<trackedit::Label> makeLabelList(std::initializer_list<trackedit::Label> labels)
+    {
+        muse::async::NotifyList<trackedit::Label> list;
+        for (const auto& label : labels) {
+            list.push_back(label);
+        }
+        return list;
+    }
+
 protected:
     std::shared_ptr<ProjectViewState> m_projectViewState = nullptr;
 
@@ -150,5 +190,106 @@ TEST_F(ProjectViewStateTests, tracksInRange_InputIntervalIsClosedOpen)
 
     // Outside
     EXPECT_EQ(TrackIdList({ }), m_projectViewState->tracksInRange(tracksBottom, tracksBottom + 1));
+}
+
+TEST_F(ProjectViewStateTests, UpdateItemsBoundaries_IncludesAllClipsWhenNothingSelected)
+{
+    using namespace trackedit;
+
+    // [GIVEN] Two tracks with one clip each and nothing currently selected.
+    const TrackId track1 = 1;
+    const TrackId track2 = 2;
+
+    ON_CALL(*m_trackeditProjectMock, trackIdList())
+    .WillByDefault(Return(TrackIdList { track1, track2 }));
+    ON_CALL(*m_trackeditProjectMock, clipList(track1))
+    .WillByDefault([](const TrackId&) { return makeClipList({ makeClip(1, 100, 1.0, 3.0) }); });
+    ON_CALL(*m_trackeditProjectMock, clipList(track2))
+    .WillByDefault([](const TrackId&) { return makeClipList({ makeClip(2, 200, 5.0, 8.0) }); });
+    ON_CALL(*m_trackeditProjectMock, labelList(_))
+    .WillByDefault([](const TrackId&) { return makeLabelList({}); });
+    ON_CALL(*m_selectionControllerMock, selectedClips())
+    .WillByDefault(Return(ClipKeyList {}));
+
+    // [WHEN] Boundaries are rebuilt.
+    m_projectViewState->updateItemsBoundaries(/*excludeCurrentSelection*/ false);
+
+    // [THEN] Every clip edge is a snap target, even though nothing is selected.
+    const std::set<muse::secs_t> expected { 1.0, 3.0, 5.0, 8.0 };
+    EXPECT_EQ(m_projectViewState->itemsBoundaries(), expected);
+}
+
+TEST_F(ProjectViewStateTests, UpdateItemsBoundaries_RangeSelectionKeepsSelectedClipEdges)
+{
+    using namespace trackedit;
+
+    // [GIVEN] One track with a selected clip and another, unselected clip.
+    const TrackId track1 = 1;
+    const Clip selected = makeClip(track1, 100, 2.0, 4.0);
+    const Clip other = makeClip(track1, 200, 6.0, 9.0);
+
+    ON_CALL(*m_trackeditProjectMock, trackIdList())
+    .WillByDefault(Return(TrackIdList { track1 }));
+    ON_CALL(*m_trackeditProjectMock, clipList(track1))
+    .WillByDefault([selected, other](const TrackId&) { return makeClipList({ selected, other }); });
+    ON_CALL(*m_trackeditProjectMock, labelList(_))
+    .WillByDefault([](const TrackId&) { return makeLabelList({}); });
+    ON_CALL(*m_selectionControllerMock, selectedClips())
+    .WillByDefault(Return(ClipKeyList { selected.key }));
+
+    // [WHEN/THEN] Without excluding the selection, both ends of the selected clip
+    // remain snap targets (so a range selection snaps at start AND end).
+    m_projectViewState->updateItemsBoundaries(/*excludeCurrentSelection*/ false);
+    EXPECT_EQ(m_projectViewState->itemsBoundaries(), (std::set<muse::secs_t> { 2.0, 4.0, 6.0, 9.0 }));
+
+    // [WHEN/THEN] Excluding the selection drops the selected clip's edges.
+    m_projectViewState->updateItemsBoundaries(/*excludeCurrentSelection*/ true);
+    EXPECT_EQ(m_projectViewState->itemsBoundaries(), (std::set<muse::secs_t> { 6.0, 9.0 }));
+}
+
+TEST_F(ProjectViewStateTests, UpdateItemsBoundaries_OmitsSpecifiedItemKey)
+{
+    using namespace trackedit;
+
+    // [GIVEN] A clip being dragged and a neighbour it could snap to.
+    const TrackId track1 = 1;
+    const Clip dragged = makeClip(track1, 100, 1.0, 2.0);
+    const Clip neighbour = makeClip(track1, 200, 4.0, 7.0);
+
+    ON_CALL(*m_trackeditProjectMock, trackIdList())
+    .WillByDefault(Return(TrackIdList { track1 }));
+    ON_CALL(*m_trackeditProjectMock, clipList(track1))
+    .WillByDefault([dragged, neighbour](const TrackId&) { return makeClipList({ dragged, neighbour }); });
+    ON_CALL(*m_trackeditProjectMock, labelList(_))
+    .WillByDefault([](const TrackId&) { return makeLabelList({}); });
+    ON_CALL(*m_selectionControllerMock, selectedClips())
+    .WillByDefault(Return(ClipKeyList {}));
+
+    // [WHEN] Boundaries are rebuilt omitting the dragged clip.
+    m_projectViewState->updateItemsBoundaries(/*excludeCurrentSelection*/ false, dragged.key);
+
+    // [THEN] The dragged clip's own edges are not snap targets (no snapping to itself).
+    EXPECT_EQ(m_projectViewState->itemsBoundaries(), (std::set<muse::secs_t> { 4.0, 7.0 }));
+}
+
+TEST_F(ProjectViewStateTests, UpdateItemsBoundaries_IncludesLabelBoundaries)
+{
+    using namespace trackedit;
+
+    // [GIVEN] A track whose label edges should also be snap targets.
+    const TrackId track1 = 1;
+
+    ON_CALL(*m_trackeditProjectMock, trackIdList())
+    .WillByDefault(Return(TrackIdList { track1 }));
+    ON_CALL(*m_trackeditProjectMock, clipList(_))
+    .WillByDefault([](const TrackId&) { return makeClipList({}); });
+    ON_CALL(*m_trackeditProjectMock, labelList(track1))
+    .WillByDefault([](const TrackId&) { return makeLabelList({ makeLabel(1, 300, 1.5, 3.5) }); });
+    ON_CALL(*m_selectionControllerMock, selectedClips())
+    .WillByDefault(Return(ClipKeyList {}));
+
+    m_projectViewState->updateItemsBoundaries(/*excludeCurrentSelection*/ false);
+
+    EXPECT_EQ(m_projectViewState->itemsBoundaries(), (std::set<muse::secs_t> { 1.5, 3.5 }));
 }
 } // namespace au::projectscene

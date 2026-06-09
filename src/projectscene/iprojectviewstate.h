@@ -90,6 +90,11 @@ public:
     virtual void setLastEditedClip(const trackedit::ClipKey& clipKey) = 0;
     virtual trackedit::ClipKey lastEditedClip() const = 0;
 
+    //! Key of the item currently being moved/trimmed/stretched. While set, it is always
+    //! omitted from itemsBoundaries so a drag never snaps the item to its own edges, even
+    //! when the boundary set is rebuilt mid-drag (e.g. from trackChanged notifications).
+    virtual void setEditedItem(const trackedit::TrackItemKey& key) = 0;
+
     virtual void setItemsBoundaries(const std::set<muse::secs_t>& boundaries) = 0;
     virtual std::set<muse::secs_t> itemsBoundaries() const = 0;
     virtual void updateItemsBoundaries(bool excludeCurrentSelection,
