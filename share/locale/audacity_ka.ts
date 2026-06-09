@@ -31,7 +31,7 @@
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="46"/>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="47"/>
         <source>Exit</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">გამოსვლა</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="52"/>
@@ -126,7 +126,7 @@
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="125"/>
         <source>&amp;Preferences</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">&amp;გამართვა</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="126"/>
@@ -236,7 +236,7 @@
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="245"/>
         <source>Metadata editor</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">მეტამონაცემების რედაქტორი</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="556"/>
@@ -279,12 +279,12 @@
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="45"/>
         <source>&amp;Save preset</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">პარამეტრის შენახვა</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="50"/>
         <source>&amp;Delete preset</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">პარამეტრის წაშლა</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="56"/>
@@ -387,7 +387,7 @@
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="98"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="99"/>
         <source>Rescan audio devices</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">აუდიო მოწყობილობების პოვნის ხელახლა ცდა</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="104"/>
@@ -443,19 +443,19 @@
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="140"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="141"/>
         <source>Change audio host</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">აუდიო ჰოსტის შეცვლა</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="147"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="148"/>
         <source>Change playback device</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">დამკვრელი მოწყობილობის შეცვლა</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="154"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="155"/>
         <source>Change recording device</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ჩამწერი მოწყობილობის შეცვლა</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="161"/>
@@ -621,17 +621,17 @@
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="97"/>
         <source>&amp;Export labels</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ჭდეების &amp;გატანა</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="98"/>
         <source>Export labels</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ჭდეების &amp;გატანა</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="103"/>
         <source>&amp;Export MIDI</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">MIDI-ის გატანა</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="104"/>
@@ -663,7 +663,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="123"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="124"/>
         <source>Insert</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ჩასმა</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="129"/>
@@ -719,7 +719,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="178"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="179"/>
         <source>Track start to cursor</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ტრეკის &amp;საწყისი კურსორთან</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="184"/>
@@ -731,7 +731,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="190"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="191"/>
         <source>Track start to end</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ტრეკის &amp;საწყისიდან ბოლომდე</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="196"/>
@@ -749,19 +749,19 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="208"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="209"/>
         <source>Previous clip</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">წინა კლიპი</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="214"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="215"/>
         <source>Next clip</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">შემდეგი კლიპი</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="220"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="221"/>
         <source>Toggle spectral selection</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">სპექტრის მონიშვნის &amp;გადართვა</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="226"/>
@@ -773,7 +773,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="234"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="235"/>
         <source>Collapse all tracks</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ყველა ტრეკის &amp;აკეცვა</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="240"/>
@@ -839,13 +839,13 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="304"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="305"/>
         <source>Set sound activation level</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ხმით გააქტიურების &amp;დონის დაყენება</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="318"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="319"/>
         <source>Remove tracks</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ტრეკების წაშლა</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="324"/>
@@ -953,7 +953,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="431"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="432"/>
         <source>Plot spectrum</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">სპექტრის დახატვა</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="439"/>
@@ -995,7 +995,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="475"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="476"/>
         <source>Sample data export</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">სემპლის მონაცემების გატანა</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="481"/>
@@ -1013,7 +1013,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="493"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="494"/>
         <source>Reset configuration</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">კონფიგურაციის გასუფთავება</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="501"/>
@@ -1160,13 +1160,13 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="50"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="51"/>
         <source>Zoom default</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ნაგულისხმები მასშტაბირება</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="56"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="57"/>
         <source>Zoom to selection</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">მონიშვნამდე &amp;გადიდება</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="63"/>
@@ -1262,7 +1262,7 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="167"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="168"/>
         <source>Rename clip</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">სახელის გადარქმევა</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="182"/>
@@ -1316,19 +1316,19 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="231"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="232"/>
         <source>Show RMS in waveform</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">&amp;კლიპინგის ჩვენება ტალღის ფორმაში</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="238"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="239"/>
         <source>Show clipping in waveform</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">კლიპინგის ჩვენება ტალღის ფორმაში</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="245"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="246"/>
         <source>Half-wave</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ნახევარტალღა</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="252"/>
@@ -1484,12 +1484,12 @@
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="153"/>
         <source>Rename</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">სახელის გადარქმევა</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="154"/>
         <source>Rename track</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ტრეკის სახელის გადარქმევა</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="160"/>
@@ -1535,13 +1535,13 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="202"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="203"/>
         <source>Make stereo track</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">სტერეო ტრეკის შექმნა</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="208"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="209"/>
         <source>Swap stereo channels</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">სტერეო არხების გადანაცვლება</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="214"/>
@@ -1577,7 +1577,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="248"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="249"/>
         <source>Multi-view</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">მრავალი</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="263"/>
@@ -1781,7 +1781,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="472"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="473"/>
         <source>First track</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">პირველი ტრეკი</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="478"/>
@@ -1870,7 +1870,7 @@
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="129"/>
         <source>Category:</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">კატეგორია:</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="137"/>
@@ -2086,7 +2086,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="535"/>
         <source>Rename clip</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">სახელის გადარქმევა</translation>
     </message>
 </context>
 <context>
@@ -2094,7 +2094,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="393"/>
         <source>Cursor</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">კურსორი</translation>
     </message>
 </context>
 <context>
@@ -2110,7 +2110,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="694"/>
         <source>&amp;System</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">სისტემა</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="704"/>
@@ -2128,12 +2128,12 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="417"/>
         <source>Diagnostics</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">დიაგნოსტიკა</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="444"/>
         <source>&amp;System</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">სისტემა</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="466"/>
@@ -2174,7 +2174,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="363"/>
         <source>&amp;Effect</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ეფექტი</translation>
     </message>
 </context>
 <context>
@@ -2182,7 +2182,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="211"/>
         <source>&amp;Export other</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">&amp;სხვის გატანა</translation>
     </message>
 </context>
 <context>
@@ -2190,7 +2190,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="408"/>
         <source>&amp;Extra</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">დამატე&amp;ბით</translation>
     </message>
 </context>
 <context>
@@ -2223,7 +2223,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="196"/>
         <source>Open &amp;recent</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ბოლოს გახსნილი ფაილი</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="220"/>
@@ -2236,7 +2236,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="392"/>
         <source>Focus</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ფოკუსი</translation>
     </message>
 </context>
 <context>
@@ -2285,7 +2285,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="383"/>
         <source>Mixer</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">მიქსერი</translation>
     </message>
 </context>
 <context>
@@ -2342,22 +2342,22 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="256"/>
         <source>Audio clips</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">აუდიო კლიპები</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="261"/>
         <source>Spectral</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">სპექტრი</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="270"/>
         <source>Region</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">მონაკვეთი</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="274"/>
         <source>Looping</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">დამარყუჟება</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="278"/>
@@ -2371,7 +2371,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="402"/>
         <source>Settings</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">გამართვა</translation>
     </message>
 </context>
 <context>
@@ -2379,7 +2379,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="292"/>
         <source>Skip to</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">გადასვლა</translation>
     </message>
 </context>
 <context>
@@ -2387,7 +2387,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="350"/>
         <source>Sort tracks</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ტრეკების დალაგება</translation>
     </message>
 </context>
 <context>
@@ -2395,7 +2395,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="373"/>
         <source>&amp;Tools</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ხელსაწყოები</translation>
     </message>
 </context>
 <context>
@@ -2441,7 +2441,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="15"/>
         <source>About Audacity</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Audacity-ის &amp;შესახებ</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="43"/>
@@ -3052,7 +3052,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="604"/>
         <source>Edit metadata</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">&amp;მეტამონაცემების ჩასწორება</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="261"/>
@@ -3181,7 +3181,7 @@ but this text needs to be kept very short</extracomment>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MidiDevicesSection.qml" line="44"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MidiSection.qml" line="31"/>
         <source>MIDI</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">MIDI</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MidiDevicesSection.qml" line="49"/>
@@ -3211,7 +3211,7 @@ but this text needs to be kept very short</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MixerSection.qml" line="34"/>
         <source>Mixer</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">მიქსერი</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MixerSection.qml" line="45"/>
@@ -3492,7 +3492,7 @@ but this text needs to be kept very short</extracomment>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="34"/>
         <source>Welcome</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">მოგესალმებით</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="115"/>
@@ -3616,7 +3616,7 @@ but this text needs to be kept very short</extracomment>
     <message>
         <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="50"/>
         <source>Host</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ჰოსტი</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="51"/>
@@ -4720,7 +4720,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="74"/>
         <source>Rename clip</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">სახელის გადარქმევა</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="75"/>
@@ -5200,7 +5200,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="298"/>
         <source>Preview</source>
         <extracomment>Shown on a button that starts effect preview</extracomment>
-        <translation type="unfinished"/>
+        <translation type="unfinished">მინიატურა</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/EffectPresetsBar.qml" line="101"/>
@@ -5256,7 +5256,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="211"/>
         <source>Path:</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">გეზი</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="241"/>
@@ -5292,7 +5292,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="55"/>
         <source>Show:</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ჩვენება:</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="61"/>
@@ -5302,7 +5302,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="67"/>
         <source>Category:</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">კატეგორია:</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="13"/>
@@ -5319,7 +5319,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="68"/>
         <source>Preset name</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">პრესეტის სახელი</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="63"/>
@@ -5329,7 +5329,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="69"/>
         <source>Debug</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ხარვეზების აღმოჩენა</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="93"/>
@@ -5339,7 +5339,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="106"/>
         <source>Load</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ჩატვირთვა</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="117"/>
@@ -5415,12 +5415,12 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="12"/>
         <source>Initial tempo change</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ტემპის ცვლილება დასაწყისში (%)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="13"/>
         <source>Final tempo change</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ტემპის ცვლილება ბოლოში (%)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="14"/>
@@ -5432,7 +5432,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="14"/>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="15"/>
         <source>semitones</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ნახევარტონები</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="15"/>
@@ -5448,7 +5448,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/effects_base/effecterrors.h" line="41"/>
         <source>Internal error</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">შიდა შეცდომა</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/effecterrors.h" line="43"/>
@@ -5941,7 +5941,7 @@ name into another alphabet.</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="289"/>
         <source>No audio selected.</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">აუდიო მონიშნული არაა</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="303"/>
@@ -7502,7 +7502,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="258"/>
         <source>Left</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">მარცხნივ</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="259"/>
@@ -7513,22 +7513,22 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="260"/>
         <source>Right</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">მარჯვენა</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="261"/>
         <source>Stereo</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">სტერეო</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="262"/>
         <source>Mono</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">მონო</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="263"/>
         <source>Sample data export</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">სემპლის მონაცემების გატანა</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="264"/>
@@ -8323,7 +8323,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/amplify/amplifyviewmodel.cpp" line="123"/>
         <source>Allow clipping</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">კლიპინგის დაშვება</translation>
     </message>
 </context>
 <context>
@@ -8352,7 +8352,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/changepitch/changepitchviewmodel.cpp" line="320"/>
         <source>Semitones</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ნახევარტონები</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/changepitch/changepitchviewmodel.cpp" line="403"/>
@@ -8445,7 +8445,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovalviewmodel.cpp" line="23"/>
         <source>Threshold (lower is more sensitive)</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ზღვრის არჩევა (დაბალი უფრო მგრძნობიარეა)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovalviewmodel.cpp" line="63"/>
@@ -8463,7 +8463,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/timeline/DynamicsPanel.qml" line="117"/>
         <source>Show:</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ჩვენება:</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/timeline/DynamicsPanel.qml" line="126"/>
@@ -8487,12 +8487,12 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="19"/>
         <source>DTMF tones</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">DTMF ტონები</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="65"/>
         <source>DTMF sequence</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">DTMF მიმდევრობა</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="97"/>
@@ -8502,7 +8502,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="106"/>
         <source>Amplitude (0-1)</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ამპლიტუდა (0-1)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="129"/>
@@ -8519,12 +8519,12 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="190"/>
         <source>Tone/silence ratio</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ტონის/სიჩუმის პროპორცია</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="239"/>
         <source>Duty cycle</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">მუშაობის ციკლი</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="243"/>
@@ -8534,7 +8534,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="253"/>
         <source>Tone duration</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ტონის ხანგრძლივობა</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="257"/>
@@ -8546,7 +8546,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="267"/>
         <source>Silence duration</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">სიჩუმის ხანგრძლივობა</translation>
     </message>
 </context>
 <context>
@@ -8643,7 +8643,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="131"/>
         <source>Normalize stereo channels independently</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">&amp;სტერეო არხების ცალ-ცალკე ნორმალიზაცია</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="136"/>
@@ -8661,7 +8661,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/noisegen/NoiseView.qml" line="67"/>
         <source>Amplitude (0-1)</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ამპლიტუდა (0-1)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisegen/NoiseView.qml" line="90"/>
@@ -8715,7 +8715,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="92"/>
         <source>Get noise profile</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ხარვეზის პროფილი</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="120"/>
@@ -8779,17 +8779,17 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="41"/>
         <source>Remove DC offset (center on 0.0 vertically)</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ნებისმიერი DC წანაცვლების წაშლა (ცენტრირება 0.0 ვერტიკალურად)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="62"/>
         <source>Normalize peak amplitude to</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ამპლიტუდის &amp;ნორმალიზაციის მნიშვნელობა</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="98"/>
         <source>Normalize stereo channels independently</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">&amp;სტერეო არხების ცალ-ცალკე ნორმალიზაცია</translation>
     </message>
 </context>
 <context>
@@ -8802,7 +8802,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretchviewmodel.cpp" line="62"/>
         <source>Stretch factor</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">გაწელვის ფაქტორი</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretchviewmodel.cpp" line="87"/>
@@ -8820,12 +8820,12 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/ReverbView.qml" line="272"/>
         <source>Wet only</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">მხოლოდ სველი</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="38"/>
         <source>Room size</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ოთახის ზომა (%)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="47"/>
@@ -8840,12 +8840,12 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="56"/>
         <source>Reverberance</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">რევერბერაცია (%)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="65"/>
         <source>Damping</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ჩაქრობა (%)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="74"/>
@@ -8870,7 +8870,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="110"/>
         <source>Stereo width</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">სტერეოს სიგანე (%)</translation>
     </message>
 </context>
 <context>
@@ -8893,12 +8893,12 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="45"/>
         <source>Initial tempo change</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ტემპის ცვლილება დასაწყისში (%)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="58"/>
         <source>Final tempo change</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ტემპის ცვლილება ბოლოში (%)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="72"/>
@@ -8931,7 +8931,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/ToneView.qml" line="102"/>
         <source>Amplitude (0-1)</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ამპლიტუდა (0-1)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/ToneView.qml" line="125"/>
@@ -9008,27 +9008,27 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="180"/>
         <source>Truncate to</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">მოჭრა</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="185"/>
         <source>Truncate detected silence</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ნაპოვნი სიჩუმის ამოჭრა</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="230"/>
         <source>Compress to</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">შეკუმშვა</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="235"/>
         <source>Compress excess silence</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ზედმეტი სიჩუმის შემოკლება</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="280"/>
         <source>Truncate tracks independently</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ტრეკების ცალცალკე მოჭრა</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="285"/>
@@ -9119,7 +9119,7 @@ cycles per second.</extracomment>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="101"/>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="102"/>
         <source>semitones</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ნახევარტონები</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="111"/>
@@ -9217,18 +9217,18 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="142"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="76"/>
         <source>File name</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ფაილის სახელი</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="176"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="143"/>
         <source>Folder</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">საქაღალდე</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="212"/>
         <source>Format</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ფორმატი</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="249"/>
@@ -9243,23 +9243,23 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="291"/>
         <source>Mono</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">მონო</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="309"/>
         <source>Stereo</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">სტერეო</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="326"/>
         <source>Custom mapping</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ასახვის ხელით მითითება</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="373"/>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="183"/>
         <source>Sample rate</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">სემპლის კოეფიციენტი</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="418"/>
@@ -9320,12 +9320,12 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="160"/>
         <source>Frame</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ჩარჩო</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="186"/>
         <source>PdO method</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">PdO მეთოდი</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="208"/>
@@ -9361,7 +9361,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="39"/>
         <source>Language</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ენა</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="62"/>
@@ -9382,7 +9382,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="151"/>
         <source>Bit rate</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ბიტური სიჩქარე</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="176"/>
@@ -9395,13 +9395,13 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="208"/>
         <source>Profile</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">პროფილი</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="30"/>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="17"/>
         <source>Metadata editor</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">მეტამონაცემების რედაქტორი</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="46"/>
@@ -9436,22 +9436,22 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="36"/>
         <source>Mux rate</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">მულტიპლექსირების კოეფიციენტი</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="74"/>
         <source>Packet size</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">პაკეტის ზომა</translation>
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="21"/>
         <source>Export labels</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ჭდეების &amp;გატანა</translation>
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="108"/>
         <source>File type</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ფაილის ტიპი</translation>
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="182"/>
@@ -9476,7 +9476,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="231"/>
         <source>All selected audio is muted</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ყველა მონიშნული ტრეკი დადუმებულია</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="38"/>
@@ -9486,7 +9486,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="39"/>
         <source>Export selected audio</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">მონიშნულ ხმის გატანა</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="40"/>
@@ -9801,7 +9801,7 @@ cycles per second.</extracomment>
         <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="171"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingDialog.qml" line="93"/>
         <source>Apply</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">გამოყენება</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="637"/>
@@ -9895,7 +9895,7 @@ cycles per second.</extracomment>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/DefaultProjectListView.qml" line="278"/>
         <source>Size</source>
         <comment>file size</comment>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ზომა</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="472"/>
@@ -9928,7 +9928,7 @@ cycles per second.</extracomment>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="136"/>
         <source>Skip</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">გამოტოვება</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretchviewmodel.cpp" line="112"/>
@@ -11824,7 +11824,7 @@ this is a Label track.</extracomment>
     <message>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="72"/>
         <source>value</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">მნიშვნელობა</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.cpp" line="121"/>
@@ -11876,13 +11876,13 @@ this is a Label track.</extracomment>
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="71"/>
         <location filename="../../src/project/internal/au3/au3metadata.h" line="41"/>
         <source>YEAR</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">წელი</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="73"/>
         <location filename="../../src/project/internal/au3/au3metadata.h" line="43"/>
         <source>COMMENTS</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">კომენტარები</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/au3/au3metadata.cpp" line="132"/>
@@ -12626,12 +12626,12 @@ cycles per second.</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="21"/>
         <source>Medium quality</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">საშუალო ხარისხი</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="22"/>
         <source>High quality</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">მაღალი ხარისხი</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="23"/>
@@ -12758,7 +12758,7 @@ cycles per second.</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="58"/>
         <source>Host</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ჰოსტი</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="77"/>
@@ -12783,7 +12783,7 @@ cycles per second.</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="54"/>
         <source>Buffer length</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ბაფერის სიგრძე</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="82"/>
@@ -12840,7 +12840,7 @@ appearance of older versions of Audacity</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/EffectOptionsSection.qml" line="14"/>
         <source>Effect menu organization</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ეფექტების მენიუს &amp;ორგანიზაცია</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/EffectOptionsSection.qml" line="34"/>
@@ -12865,12 +12865,12 @@ appearance of older versions of Audacity</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FreeSpaceSection.qml" line="40"/>
         <source>Free space</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">თავისუფალი ადგილი</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LanguagesSection.qml" line="52"/>
         <source>Language</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ენა</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LanguagesSection.qml" line="79"/>
@@ -12890,12 +12890,12 @@ appearance of older versions of Audacity</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="47"/>
         <source>Crossfade</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">კროსფეიდი</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MeterDbRangeSection.qml" line="15"/>
         <source>Meter dB range</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">მთვლელის დბ-ის &amp;დიაპაზონი</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MeterDbRangeSection.qml" line="27"/>
@@ -12985,17 +12985,17 @@ appearance of older versions of Audacity</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="33"/>
         <source>Sample rate</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">სემპლის კოეფიციენტი</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="50"/>
         <source>Default sample rate</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ნაგულისხმევი სემპლის სიჩქარე</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="69"/>
         <source>Default sample format</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">სემპლის ფორმატი ნაგულისხმებად</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="93"/>
@@ -13130,7 +13130,7 @@ themes.</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="135"/>
         <source>Ask me each time</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ყოველ ჯერზე კითხვა</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="51"/>
@@ -13211,7 +13211,7 @@ themes.</extracomment>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="43"/>
         <source>%1 (Mono) Recording channel</source>
         <extracomment>%1 is the recording channel number</extracomment>
-        <translation type="unfinished"/>
+        <translation type="unfinished">1 (მონო) ჩაწერის არხი</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="46"/>
@@ -13223,7 +13223,7 @@ themes.</extracomment>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="238"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="251"/>
         <source>Other</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">სხვა</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/generalpreferencesmodel.cpp" line="68"/>
@@ -13323,7 +13323,7 @@ themes.</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SpectrogramSelectionSection.qml" line="22"/>
         <source>Enable spectral selection</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">სპექტრის მონიშვნის ჩართვა</translation>
     </message>
 </context>
 <context>
@@ -14500,20 +14500,20 @@ user to select Cloud or local save.</extracomment>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="167"/>
         <source>Save project</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">პროექტის შენახვა</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="172"/>
         <source>copy</source>
         <comment>a copy of a file</comment>
         <extracomment>used to form a filename suggestion, like "originalFile - copy"</extracomment>
-        <translation type="unfinished"/>
+        <translation type="unfinished">კოპირება</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="175"/>
         <source>selection</source>
         <extracomment>used to form a filename suggestion, like "originalFile - selection"</extracomment>
-        <translation type="unfinished"/>
+        <translation type="unfinished">მონიშვნა</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="264"/>
@@ -14655,7 +14655,7 @@ user to select Cloud or local save.</extracomment>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml" line="123"/>
         <source>Try again</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">კიდევ &amp;ცდა</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml" line="176"/>
@@ -14723,7 +14723,7 @@ user to select Cloud or local save.</extracomment>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorDialog.qml" line="15"/>
         <source>Label editor</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ჭდის &amp;რედაქტორი</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml" line="58"/>
@@ -14759,7 +14759,7 @@ user to select Cloud or local save.</extracomment>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/GeneralSection.qml" line="41"/>
         <source>Optimize for voice</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ოპტიმიზაცია ხმისთვის</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/PitchAndSpeedChangeDialog.qml" line="17"/>
@@ -14774,7 +14774,7 @@ user to select Cloud or local save.</extracomment>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/PitchSection.qml" line="61"/>
         <source>Semitones</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ნახევარტონები</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/PitchSection.qml" line="109"/>
@@ -14789,17 +14789,17 @@ user to select Cloud or local save.</extracomment>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/SpeedSection.qml" line="48"/>
         <source>Speed</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">სიჩქარე %</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/AddNewTrackPopup.qml" line="42"/>
         <source>Mono</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">მონო</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/AddNewTrackPopup.qml" line="43"/>
         <source>Stereo</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">სტერეო</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/AddNewTrackPopup.qml" line="44"/>
@@ -14936,7 +14936,7 @@ user to select Cloud or local save.</extracomment>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="224"/>
         <source>Seconds &amp; samples</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">წამები &amp;&amp; სემპლები</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="230"/>
@@ -15034,7 +15034,7 @@ user to select Cloud or local save.</extracomment>
         <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="151"/>
         <source>%1 (Mono) Recording channel</source>
         <extracomment>%1 is the recording channel number</extracomment>
-        <translation type="unfinished"/>
+        <translation type="unfinished">1 (მონო) ჩაწერის არხი</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="154"/>
@@ -15563,7 +15563,7 @@ appearance of older versions of Audacity</extracomment>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="111"/>
         <source>Window type</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">ფანჯრის ტიპი</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="113"/>
@@ -15580,7 +15580,7 @@ i18n-hint: Title of the Gain slider, used to adjust the volume</extracomment>
     <message>
         <location filename="../../src/spectrogram/view/colorsectionparameterlistmodel.cpp" line="95"/>
         <source>Range</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">დიაპაზონის დაყენება</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/colorsectionparameterlistmodel.cpp" line="97"/>
@@ -15636,7 +15636,7 @@ cycles per second.</extracomment>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SpectrogramColorsSection.qml" line="62"/>
         <location filename="../../src/spectrogram/qml/Audacity/Spectrogram/TrackSpectrogramColorsSection.qml" line="72"/>
         <source>Scheme</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">სქემა</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/qml/Audacity/Spectrogram/TrackSpectrogramScaleSection.qml" line="25"/>
@@ -16158,7 +16158,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/CustomTimeDialog.qml" line="40"/>
         <source>Position:</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">თანამდებობა</translation>
     </message>
 </context>
 <context>

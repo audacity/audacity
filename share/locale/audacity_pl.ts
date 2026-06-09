@@ -5947,7 +5947,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="211"/>
         <source>Path:</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Ścieżka</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="241"/>
@@ -5993,12 +5993,12 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="12"/>
         <source>Initial tempo change</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Początkowa zmiana tempa (%)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="13"/>
         <source>Final tempo change</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Końcowa zmiana tempa (%)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="14"/>
@@ -6324,7 +6324,7 @@ name into another alphabet.</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="289"/>
         <source>No audio selected.</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Nie zaznaczono dźwięku</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="303"/>
@@ -7903,7 +7903,7 @@ prawy kanał</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="258"/>
         <source>Left</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">W &amp;lewo</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="259"/>
@@ -7914,7 +7914,7 @@ prawy kanał</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="260"/>
         <source>Right</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">W prawo</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="261"/>
@@ -9310,12 +9310,12 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="45"/>
         <source>Initial tempo change</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Początkowa zmiana tempa (%)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="58"/>
         <source>Final tempo change</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Końcowa zmiana tempa (%)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="72"/>

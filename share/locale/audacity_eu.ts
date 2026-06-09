@@ -31,7 +31,7 @@
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="46"/>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="47"/>
         <source>Exit</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Irten</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="52"/>
@@ -126,7 +126,7 @@
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="125"/>
         <source>&amp;Preferences</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">&amp;Hobespenak</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="126"/>
@@ -236,7 +236,7 @@
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="245"/>
         <source>Metadata editor</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Metadatuen editorea</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="556"/>
@@ -279,12 +279,12 @@
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="45"/>
         <source>&amp;Save preset</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Gorde aurre-ezarpena</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="50"/>
         <source>&amp;Delete preset</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Ezabatu aurre-ezarpena</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="56"/>
@@ -387,7 +387,7 @@
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="98"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="99"/>
         <source>Rescan audio devices</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Berreskaneatu audio gailuak</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="104"/>
@@ -443,19 +443,19 @@
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="140"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="141"/>
         <source>Change audio host</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Aldatu &amp;audio ostalaria</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="147"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="148"/>
         <source>Change playback device</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Aldatu &amp;erreproduzitzeko gailua</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="154"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="155"/>
         <source>Change recording device</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Aldatu &amp;grabatzeko gailua</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="161"/>
@@ -621,17 +621,17 @@
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="97"/>
         <source>&amp;Export labels</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Esportatu &amp;etiketak</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="98"/>
         <source>Export labels</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Esportatu &amp;etiketak</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="103"/>
         <source>&amp;Export MIDI</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Esportatu MIDI</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="104"/>
@@ -663,7 +663,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="123"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="124"/>
         <source>Insert</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Txertatu</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="129"/>
@@ -719,7 +719,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="178"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="179"/>
         <source>Track start to cursor</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Pistaren &amp;hasiera kurtsorera</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="184"/>
@@ -737,7 +737,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="196"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="197"/>
         <source>Previous clip boundary to cursor</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Kurtsorea &amp;aurreko kliparen mugara</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="202"/>
@@ -749,19 +749,19 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="208"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="209"/>
         <source>Previous clip</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Aurreko klipa</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="214"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="215"/>
         <source>Next clip</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Hurrengo klipa</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="220"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="221"/>
         <source>Toggle spectral selection</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Aldatu hautapen espektrala</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="226"/>
@@ -773,7 +773,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="234"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="235"/>
         <source>Collapse all tracks</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Tolestu pista guztiak</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="240"/>
@@ -845,7 +845,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="318"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="319"/>
         <source>Remove tracks</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Kendu pistak</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="324"/>
@@ -953,7 +953,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="431"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="432"/>
         <source>Plot spectrum</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Marraztu espektroa</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="439"/>
@@ -995,7 +995,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="475"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="476"/>
         <source>Sample data export</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Laginaren datuen esportazioa</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="481"/>
@@ -1160,13 +1160,13 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="50"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="51"/>
         <source>Zoom default</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Berezko Zooma</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="56"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="57"/>
         <source>Zoom to selection</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Zooma hautapenera</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="63"/>
@@ -1204,7 +1204,7 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="104"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="105"/>
         <source>Snapping</source>
-        <translation/>
+        <translation type="unfinished">(batzea)</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="111"/>
@@ -1262,7 +1262,7 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="167"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="168"/>
         <source>Rename clip</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Aldatu kliparen izena</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="182"/>
@@ -1322,13 +1322,13 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="238"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="239"/>
         <source>Show clipping in waveform</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Erakutsi mozketa uhin forman</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="245"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="246"/>
         <source>Half-wave</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">UhinErdia</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="252"/>
@@ -1484,12 +1484,12 @@
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="153"/>
         <source>Rename</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Berrizendatu</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="154"/>
         <source>Rename track</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Aldatu pistaren izena</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="160"/>
@@ -1535,13 +1535,13 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="202"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="203"/>
         <source>Make stereo track</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Egin pista estereoa</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="208"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="209"/>
         <source>Swap stereo channels</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Trukatu estereo &amp;kanalak</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="214"/>
@@ -1577,7 +1577,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="248"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="249"/>
         <source>Multi-view</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Ikuspegi anitza</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="263"/>
@@ -1781,7 +1781,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="472"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="473"/>
         <source>First track</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Lehen pista</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="478"/>
@@ -1870,7 +1870,7 @@
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="129"/>
         <source>Category:</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Kategoria:</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="137"/>
@@ -2086,7 +2086,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="535"/>
         <source>Rename clip</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Aldatu kliparen izena</translation>
     </message>
 </context>
 <context>
@@ -2094,7 +2094,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="393"/>
         <source>Cursor</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Kurtsorea</translation>
     </message>
 </context>
 <context>
@@ -2110,7 +2110,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="694"/>
         <source>&amp;System</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Sistema</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="704"/>
@@ -2128,12 +2128,12 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="417"/>
         <source>Diagnostics</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Diagnostikoak</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="444"/>
         <source>&amp;System</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Sistema</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="466"/>
@@ -2174,7 +2174,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="363"/>
         <source>&amp;Effect</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Efe&amp;ktua</translation>
     </message>
 </context>
 <context>
@@ -2190,7 +2190,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="408"/>
         <source>&amp;Extra</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Ext&amp;ra</translation>
     </message>
 </context>
 <context>
@@ -2223,7 +2223,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="196"/>
         <source>Open &amp;recent</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Ireki &amp;Azkenak</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="220"/>
@@ -2285,7 +2285,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="383"/>
         <source>Mixer</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Nahasgailua</translation>
     </message>
 </context>
 <context>
@@ -2342,22 +2342,22 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="256"/>
         <source>Audio clips</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Audio klipak</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="261"/>
         <source>Spectral</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Espektrala</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="270"/>
         <source>Region</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Eskualdea</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="274"/>
         <source>Looping</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Begiztak</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="278"/>
@@ -2371,7 +2371,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="402"/>
         <source>Settings</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Ezarpenak</translation>
     </message>
 </context>
 <context>
@@ -2379,7 +2379,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="292"/>
         <source>Skip to</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Saltatu hona</translation>
     </message>
 </context>
 <context>
@@ -2387,7 +2387,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="350"/>
         <source>Sort tracks</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Ordenatu pistak</translation>
     </message>
 </context>
 <context>
@@ -2395,7 +2395,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="373"/>
         <source>&amp;Tools</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">T&amp;resnak</translation>
     </message>
 </context>
 <context>
@@ -2441,7 +2441,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="15"/>
         <source>About Audacity</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Audacity-ri buruz</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="43"/>
@@ -3067,7 +3067,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="604"/>
         <source>Edit metadata</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Editatu &amp;metadatuak</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="261"/>
@@ -3196,7 +3196,7 @@ but this text needs to be kept very short</extracomment>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MidiDevicesSection.qml" line="44"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MidiSection.qml" line="31"/>
         <source>MIDI</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">MIDI</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MidiDevicesSection.qml" line="49"/>
@@ -3226,7 +3226,7 @@ but this text needs to be kept very short</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MixerSection.qml" line="34"/>
         <source>Mixer</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Nahasgailua</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MixerSection.qml" line="45"/>
@@ -3507,7 +3507,7 @@ but this text needs to be kept very short</extracomment>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="34"/>
         <source>Welcome</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Ongi etorri</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="115"/>
@@ -3631,7 +3631,7 @@ but this text needs to be kept very short</extracomment>
     <message>
         <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="50"/>
         <source>Host</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Ostalaria</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="51"/>
@@ -4736,7 +4736,7 @@ Saiatu luzatutako klipak berrezartzen, edo nahastu eta errendatu pistak aztertu 
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="74"/>
         <source>Rename clip</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Aldatu kliparen izena</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="75"/>
@@ -5216,7 +5216,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="298"/>
         <source>Preview</source>
         <extracomment>Shown on a button that starts effect preview</extracomment>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Aurrebista</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/EffectPresetsBar.qml" line="101"/>
@@ -5272,7 +5272,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="211"/>
         <source>Path:</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Bidea</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="241"/>
@@ -5308,7 +5308,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="55"/>
         <source>Show:</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Erakutsi</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="61"/>
@@ -5318,7 +5318,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="67"/>
         <source>Category:</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Kategoria:</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="13"/>
@@ -5335,7 +5335,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="68"/>
         <source>Preset name</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Aurre-ezarpenaren izena</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="63"/>
@@ -5345,7 +5345,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="69"/>
         <source>Debug</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Arazketa</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="93"/>
@@ -5355,7 +5355,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="106"/>
         <source>Load</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Kargatu</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="117"/>
@@ -5431,12 +5431,12 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="12"/>
         <source>Initial tempo change</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Hasierako tempo aldaketa (%)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="13"/>
         <source>Final tempo change</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Amaierako tempo aldaketa (%)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="14"/>
@@ -5464,7 +5464,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/effects_base/effecterrors.h" line="41"/>
         <source>Internal error</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Barne errorea</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/effecterrors.h" line="43"/>
@@ -5957,7 +5957,7 @@ name into another alphabet.</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="289"/>
         <source>No audio selected.</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Ez da audioa aukeratu</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="303"/>
@@ -6249,7 +6249,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="11"/>
         <source>Filter type</source>
-        <translation/>
+        <translation type="unfinished">Iragazki mota</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="12"/>
@@ -6579,7 +6579,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="76"/>
         <source>Fade TYPE</source>
-        <translation/>
+        <translation type="unfinished">Lausotze mota</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="77"/>
@@ -6730,7 +6730,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="106"/>
         <source>Number of Labels</source>
-        <translation/>
+        <translation type="unfinished">Etiketa zenbatekoa</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="107"/>
@@ -7517,7 +7517,7 @@ Iradokitako atalasearen ezarpena ~a dB.</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="258"/>
         <source>Left</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Ezkerra</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="259"/>
@@ -7528,7 +7528,7 @@ Iradokitako atalasearen ezarpena ~a dB.</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="260"/>
         <source>Right</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Eskuina</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="261"/>
@@ -7543,7 +7543,7 @@ Iradokitako atalasearen ezarpena ~a dB.</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="263"/>
         <source>Sample data export</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Laginaren datuen esportazioa</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="264"/>
@@ -8461,7 +8461,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovalviewmodel.cpp" line="23"/>
         <source>Threshold (lower is more sensitive)</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Atalasea (behera sentikorragoa da)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovalviewmodel.cpp" line="63"/>
@@ -8479,7 +8479,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/timeline/DynamicsPanel.qml" line="117"/>
         <source>Show:</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Erakutsi</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/timeline/DynamicsPanel.qml" line="126"/>
@@ -8503,7 +8503,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="19"/>
         <source>DTMF tones</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">DTMF tonuak</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="65"/>
@@ -8540,7 +8540,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="239"/>
         <source>Duty cycle</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Lanaldia</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="243"/>
@@ -8550,7 +8550,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="253"/>
         <source>Tone duration</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Tonuaren iraupena</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="257"/>
@@ -8562,7 +8562,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="267"/>
         <source>Silence duration</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Isiltasunaren iraupena</translation>
     </message>
 </context>
 <context>
@@ -8659,7 +8659,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="131"/>
         <source>Normalize stereo channels independently</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Normalizatu &amp;estereo kanalak modu independentean</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="136"/>
@@ -8731,7 +8731,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="92"/>
         <source>Get noise profile</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Atzeman zarata-profila</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="120"/>
@@ -8795,17 +8795,17 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="41"/>
         <source>Remove DC offset (center on 0.0 vertically)</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Kendu DC desplazamendua (zentratu 0.0 bertikalki)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="62"/>
         <source>Normalize peak amplitude to</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Normaldu gailur-anplitudea hona</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="98"/>
         <source>Normalize stereo channels independently</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Normalizatu &amp;estereo kanalak modu independentean</translation>
     </message>
 </context>
 <context>
@@ -8818,7 +8818,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretchviewmodel.cpp" line="62"/>
         <source>Stretch factor</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Luzapen faktorea</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretchviewmodel.cpp" line="87"/>
@@ -8836,12 +8836,12 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/ReverbView.qml" line="272"/>
         <source>Wet only</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Hezea soilik</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="38"/>
         <source>Room size</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Gelaren tamaina (%)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="47"/>
@@ -8856,12 +8856,12 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="56"/>
         <source>Reverberance</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Oihartzuna (%)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="65"/>
         <source>Damping</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Bustidura (%)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="74"/>
@@ -8886,7 +8886,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="110"/>
         <source>Stereo width</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Estero-zabalera (%)</translation>
     </message>
 </context>
 <context>
@@ -8909,12 +8909,12 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="45"/>
         <source>Initial tempo change</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Hasierako tempo aldaketa (%)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="58"/>
         <source>Final tempo change</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Amaierako tempo aldaketa (%)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="72"/>
@@ -9029,7 +9029,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="185"/>
         <source>Truncate detected silence</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Moztu antzemandako isiltasuna</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="230"/>
@@ -9039,12 +9039,12 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="235"/>
         <source>Compress excess silence</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Konprimitu gehiegizko isiltasuna</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="280"/>
         <source>Truncate tracks independently</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Moztu pistak modu independientean</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="285"/>
@@ -9233,7 +9233,7 @@ Jakinarazi mesedez Audacity taldeari: https://forum.audacityteam.org/.</translat
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="142"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="76"/>
         <source>File name</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Fitxategi-izena</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="176"/>
@@ -9244,7 +9244,7 @@ Jakinarazi mesedez Audacity taldeari: https://forum.audacityteam.org/.</translat
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="212"/>
         <source>Format</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Formatua</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="249"/>
@@ -9254,7 +9254,7 @@ Jakinarazi mesedez Audacity taldeari: https://forum.audacityteam.org/.</translat
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="266"/>
         <source>Channels</source>
-        <translation/>
+        <translation type="unfinished">Kanalak</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="291"/>
@@ -9275,7 +9275,7 @@ Jakinarazi mesedez Audacity taldeari: https://forum.audacityteam.org/.</translat
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="373"/>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="183"/>
         <source>Sample rate</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Lagin-tasa</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="418"/>
@@ -9336,12 +9336,12 @@ Jakinarazi mesedez Audacity taldeari: https://forum.audacityteam.org/.</translat
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="160"/>
         <source>Frame</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Fotograma</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="186"/>
         <source>PdO method</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">PdO metodoa</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="208"/>
@@ -9377,7 +9377,7 @@ Jakinarazi mesedez Audacity taldeari: https://forum.audacityteam.org/.</translat
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="39"/>
         <source>Language</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Hizkuntza</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="62"/>
@@ -9398,7 +9398,7 @@ Jakinarazi mesedez Audacity taldeari: https://forum.audacityteam.org/.</translat
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="151"/>
         <source>Bit rate</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Bit emaria</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="176"/>
@@ -9411,13 +9411,13 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="208"/>
         <source>Profile</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Profila</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="30"/>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="17"/>
         <source>Metadata editor</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Metadatuen editorea</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="46"/>
@@ -9452,22 +9452,22 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="36"/>
         <source>Mux rate</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Mux tasa</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="74"/>
         <source>Packet size</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Pakete-tamaina</translation>
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="21"/>
         <source>Export labels</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Esportatu &amp;etiketak</translation>
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="108"/>
         <source>File type</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Fitxategi mota</translation>
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="182"/>
@@ -9492,7 +9492,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="231"/>
         <source>All selected audio is muted</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Hautatutako audio denak mutututa daude</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="38"/>
@@ -9502,7 +9502,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="39"/>
         <source>Export selected audio</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Esportatu hautatutako audioa</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="40"/>
@@ -9819,7 +9819,7 @@ cycles per second.</extracomment>
         <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="171"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingDialog.qml" line="93"/>
         <source>Apply</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Aplikatu</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="637"/>
@@ -9913,7 +9913,7 @@ cycles per second.</extracomment>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/DefaultProjectListView.qml" line="278"/>
         <source>Size</source>
         <comment>file size</comment>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Tamaina</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="472"/>
@@ -9941,12 +9941,12 @@ cycles per second.</extracomment>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="108"/>
         <source>Success!</source>
-        <translation/>
+        <translation type="unfinished">Arrakasta</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="136"/>
         <source>Skip</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Saltatu</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretchviewmodel.cpp" line="112"/>
@@ -11250,7 +11250,7 @@ kbit/s abbreviates "kilobits per second"</extracomment>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="39"/>
         <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="289"/>
         <source>internal error</source>
-        <translation/>
+        <translation type="unfinished">Barne errorea</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="41"/>
@@ -11359,7 +11359,7 @@ kbit/s abbreviates "kilobits per second"</extracomment>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="129"/>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="219"/>
         <source>Encoding</source>
-        <translation/>
+        <translation type="unfinished">Kodeketa</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="198"/>
@@ -11418,7 +11418,7 @@ Libsndfile says “%2”</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="163"/>
         <source>WavPack Files</source>
-        <translation/>
+        <translation type="unfinished">WavPack fitxategiak</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.cpp" line="316"/>
@@ -11588,7 +11588,7 @@ Libsndfile says “%2”</source>
     <message>
         <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="53"/>
         <source>S&amp;tandard</source>
-        <translation/>
+        <translation type="unfinished">Estandarra</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="55"/>
@@ -11842,7 +11842,7 @@ this is a Label track.</extracomment>
     <message>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="72"/>
         <source>value</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Balioa</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.cpp" line="121"/>
@@ -11894,13 +11894,13 @@ this is a Label track.</extracomment>
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="71"/>
         <location filename="../../src/project/internal/au3/au3metadata.h" line="41"/>
         <source>YEAR</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Urtea</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="73"/>
         <location filename="../../src/project/internal/au3/au3metadata.h" line="43"/>
         <source>COMMENTS</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Iruzkinak</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/au3/au3metadata.cpp" line="132"/>
@@ -12644,12 +12644,12 @@ cycles per second.</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="21"/>
         <source>Medium quality</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Kalitate ertaina</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="22"/>
         <source>High quality</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Kalitate ona</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="23"/>
@@ -12776,7 +12776,7 @@ cycles per second.</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="58"/>
         <source>Host</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Ostalaria</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="77"/>
@@ -12801,7 +12801,7 @@ cycles per second.</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="54"/>
         <source>Buffer length</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Bufferraren luzera</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="82"/>
@@ -12888,7 +12888,7 @@ appearance of older versions of Audacity</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LanguagesSection.qml" line="52"/>
         <source>Language</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Hizkuntza</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LanguagesSection.qml" line="79"/>
@@ -12913,7 +12913,7 @@ appearance of older versions of Audacity</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MeterDbRangeSection.qml" line="15"/>
         <source>Meter dB range</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Neurtu dB &amp;bitartea</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MeterDbRangeSection.qml" line="27"/>
@@ -13003,7 +13003,7 @@ appearance of older versions of Audacity</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="33"/>
         <source>Sample rate</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Lagin-tasa</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="50"/>
@@ -13013,7 +13013,7 @@ appearance of older versions of Audacity</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="69"/>
         <source>Default sample format</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Laginaren &amp;formatu lehenetsia</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="93"/>
@@ -13148,7 +13148,7 @@ themes.</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="135"/>
         <source>Ask me each time</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Galde iezadazu aldiiro</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="51"/>
@@ -13229,7 +13229,7 @@ themes.</extracomment>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="43"/>
         <source>%1 (Mono) Recording channel</source>
         <extracomment>%1 is the recording channel number</extracomment>
-        <translation type="unfinished"/>
+        <translation type="unfinished">1 (mono) grabazio-kanala</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="46"/>
@@ -13241,7 +13241,7 @@ themes.</extracomment>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="238"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="251"/>
         <source>Other</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Bestelakoak</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/generalpreferencesmodel.cpp" line="68"/>
@@ -13341,7 +13341,7 @@ themes.</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SpectrogramSelectionSection.qml" line="22"/>
         <source>Enable spectral selection</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Gaitu hautapen espektrala</translation>
     </message>
 </context>
 <context>
@@ -14510,20 +14510,20 @@ user to select Cloud or local save.</extracomment>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="167"/>
         <source>Save project</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Gorde proiektua</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="172"/>
         <source>copy</source>
         <comment>a copy of a file</comment>
         <extracomment>used to form a filename suggestion, like "originalFile - copy"</extracomment>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Kopiatu</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="175"/>
         <source>selection</source>
         <extracomment>used to form a filename suggestion, like "originalFile - selection"</extracomment>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Hautapena</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="264"/>
@@ -14733,7 +14733,7 @@ user to select Cloud or local save.</extracomment>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorDialog.qml" line="15"/>
         <source>Label editor</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Etiketen &amp;editorea</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml" line="58"/>
@@ -14769,7 +14769,7 @@ user to select Cloud or local save.</extracomment>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/GeneralSection.qml" line="41"/>
         <source>Optimize for voice</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Optimizatu ahotserako</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/PitchAndSpeedChangeDialog.qml" line="17"/>
@@ -14825,7 +14825,7 @@ user to select Cloud or local save.</extracomment>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/audio/PanTooltip.qml" line="33"/>
         <source>Pan:</source>
-        <translation/>
+        <translation type="unfinished">Pan</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="127"/>
@@ -14946,7 +14946,7 @@ user to select Cloud or local save.</extracomment>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="224"/>
         <source>Seconds &amp; samples</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Segundoak eta laginak</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="230"/>
@@ -15044,7 +15044,7 @@ user to select Cloud or local save.</extracomment>
         <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="151"/>
         <source>%1 (Mono) Recording channel</source>
         <extracomment>%1 is the recording channel number</extracomment>
-        <translation type="unfinished"/>
+        <translation type="unfinished">1 (mono) grabazio-kanala</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="154"/>
@@ -15573,7 +15573,7 @@ appearance of older versions of Audacity</extracomment>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="111"/>
         <source>Window type</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Leiho &amp;mota</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="113"/>
@@ -15590,7 +15590,7 @@ i18n-hint: Title of the Gain slider, used to adjust the volume</extracomment>
     <message>
         <location filename="../../src/spectrogram/view/colorsectionparameterlistmodel.cpp" line="95"/>
         <source>Range</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Tartea</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/colorsectionparameterlistmodel.cpp" line="97"/>
@@ -16176,7 +16176,7 @@ Jarraitu nahi duzu?</translation>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/CustomTimeDialog.qml" line="40"/>
         <source>Position:</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Posizioa</translation>
     </message>
 </context>
 <context>

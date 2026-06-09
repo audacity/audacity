@@ -31,7 +31,7 @@
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="46"/>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="47"/>
         <source>Exit</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Изход</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="52"/>
@@ -126,7 +126,7 @@
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="125"/>
         <source>&amp;Preferences</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">&amp;Предпочитания…</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="126"/>
@@ -236,7 +236,7 @@
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="245"/>
         <source>Metadata editor</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Редактиране на метаданни…</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="556"/>
@@ -279,12 +279,12 @@
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="45"/>
         <source>&amp;Save preset</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Запазване</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="50"/>
         <source>&amp;Delete preset</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Изтриване</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="56"/>
@@ -387,7 +387,7 @@
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="98"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="99"/>
         <source>Rescan audio devices</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Ново сканиране на &amp;устройствата</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="104"/>
@@ -443,19 +443,19 @@
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="140"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="141"/>
         <source>Change audio host</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Смяна на аудиохоста</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="147"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="148"/>
         <source>Change playback device</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Смяна на входното устройство</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="154"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="155"/>
         <source>Change recording device</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Смяна на входното устройство</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="161"/>
@@ -621,17 +621,17 @@
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="97"/>
         <source>&amp;Export labels</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Ек&amp;спортиране на надписи…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="98"/>
         <source>Export labels</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Ек&amp;спортиране на надписи…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="103"/>
         <source>&amp;Export MIDI</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Експортиране на MIDI</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="104"/>
@@ -663,7 +663,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="123"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="124"/>
         <source>Insert</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Вмъкване</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="129"/>
@@ -719,7 +719,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="178"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="179"/>
         <source>Track start to cursor</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">От на&amp;чалото на пистата до курсора</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="184"/>
@@ -731,7 +731,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="190"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="191"/>
         <source>Track start to end</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">От началото на пистата до курсора</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="196"/>
@@ -749,19 +749,19 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="208"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="209"/>
         <source>Previous clip</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Предишен инструмент</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="214"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="215"/>
         <source>Next clip</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Следващ инструмент</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="220"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="221"/>
         <source>Toggle spectral selection</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Селекция</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="226"/>
@@ -773,7 +773,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="234"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="235"/>
         <source>Collapse all tracks</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Свиване на всички писти</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="240"/>
@@ -839,13 +839,13 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="304"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="305"/>
         <source>Set sound activation level</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Задействащо ниво на звука…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="318"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="319"/>
         <source>Remove tracks</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Премахване на писти</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="324"/>
@@ -953,7 +953,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="431"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="432"/>
         <source>Plot spectrum</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Чертане на спектър…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="439"/>
@@ -995,7 +995,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="475"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="476"/>
         <source>Sample data export</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Не е възможно да се експортира</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="481"/>
@@ -1013,7 +1013,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="493"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="494"/>
         <source>Reset configuration</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Потвърждение за изтриване на правило</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="501"/>
@@ -1160,13 +1160,13 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="50"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="51"/>
         <source>Zoom default</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Подразбирано увеличение</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="56"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="57"/>
         <source>Zoom to selection</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Мащабиране до селекцията</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="63"/>
@@ -1262,7 +1262,7 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="167"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="168"/>
         <source>Rename clip</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Преименуване…</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="182"/>
@@ -1316,13 +1316,13 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="231"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="232"/>
         <source>Show RMS in waveform</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Пок&amp;азване на отрязаните отчети</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="238"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="239"/>
         <source>Show clipping in waveform</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Показване на отрязаните отчети</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="245"/>
@@ -1484,12 +1484,12 @@
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="153"/>
         <source>Rename</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Преименуване…</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="154"/>
         <source>Rename track</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Предискретизиране на писта</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="160"/>
@@ -1535,13 +1535,13 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="202"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="203"/>
         <source>Make stereo track</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Превръщане в стереописта</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="208"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="209"/>
         <source>Swap stereo channels</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">2 (стерео) входни канала</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="214"/>
@@ -1577,7 +1577,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="248"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="249"/>
         <source>Multi-view</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Универсален</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="263"/>
@@ -1781,7 +1781,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="472"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="473"/>
         <source>First track</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Първа писта</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="478"/>
@@ -1870,7 +1870,7 @@
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="129"/>
         <source>Category:</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Категория:</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="137"/>
@@ -2086,7 +2086,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="535"/>
         <source>Rename clip</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Преименуване…</translation>
     </message>
 </context>
 <context>
@@ -2094,7 +2094,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="393"/>
         <source>Cursor</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Курсор наляво</translation>
     </message>
 </context>
 <context>
@@ -2110,7 +2110,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="694"/>
         <source>&amp;System</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Начална дата</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="704"/>
@@ -2128,12 +2128,12 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="417"/>
         <source>Diagnostics</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">-test (изпълнение на автодиагностика)</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="444"/>
         <source>&amp;System</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Начална дата</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="466"/>
@@ -2174,7 +2174,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="363"/>
         <source>&amp;Effect</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Ефекти</translation>
     </message>
 </context>
 <context>
@@ -2182,7 +2182,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="211"/>
         <source>&amp;Export other</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Експортиране на MIDI</translation>
     </message>
 </context>
 <context>
@@ -2223,7 +2223,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="196"/>
         <source>Open &amp;recent</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Последно използвани &amp;файлове…</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="220"/>
@@ -2285,7 +2285,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="383"/>
         <source>Mixer</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Смесител</translation>
     </message>
 </context>
 <context>
@@ -2342,17 +2342,17 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="256"/>
         <source>Audio clips</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Аудиофайл</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="261"/>
         <source>Spectral</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Спектър</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="270"/>
         <source>Region</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Възпроизвежданa област</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="274"/>
@@ -2371,7 +2371,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="402"/>
         <source>Settings</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Настройки…</translation>
     </message>
 </context>
 <context>
@@ -2379,7 +2379,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="292"/>
         <source>Skip to</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Превъртане до края</translation>
     </message>
 </context>
 <context>
@@ -2387,7 +2387,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="350"/>
         <source>Sort tracks</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Ниски писти</translation>
     </message>
 </context>
 <context>
@@ -2395,7 +2395,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="373"/>
         <source>&amp;Tools</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Инструменти</translation>
     </message>
 </context>
 <context>
@@ -2441,7 +2441,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="15"/>
         <source>About Audacity</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Относно Audacity…</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="43"/>
@@ -3052,7 +3052,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="604"/>
         <source>Edit metadata</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Редактиране на метаданни</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="261"/>
@@ -3181,7 +3181,7 @@ but this text needs to be kept very short</extracomment>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MidiDevicesSection.qml" line="44"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MidiSection.qml" line="31"/>
         <source>MIDI</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">MIDI…</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MidiDevicesSection.qml" line="49"/>
@@ -3211,7 +3211,7 @@ but this text needs to be kept very short</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MixerSection.qml" line="34"/>
         <source>Mixer</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Смесител</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MixerSection.qml" line="45"/>
@@ -3492,7 +3492,7 @@ but this text needs to be kept very short</extracomment>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="34"/>
         <source>Welcome</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Добре дошли</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="115"/>
@@ -3616,7 +3616,7 @@ but this text needs to be kept very short</extracomment>
     <message>
         <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="50"/>
         <source>Host</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Хост</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="51"/>
@@ -4026,7 +4026,7 @@ i18n-hint: n/a is an English abbreviation meaning "not applicable".</extracommen
     <message>
         <location filename="../../au3/libraries/au3-basic-ui/BasicUI.cpp" line="268"/>
         <source>Message</source>
-        <translation/>
+        <translation type="unfinished">&amp;Предискретизиране…</translation>
     </message>
 </context>
 <context>
@@ -4696,7 +4696,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="74"/>
         <source>Rename clip</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Преименуване…</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="75"/>
@@ -5176,7 +5176,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="298"/>
         <source>Preview</source>
         <extracomment>Shown on a button that starts effect preview</extracomment>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Мостра</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/EffectPresetsBar.qml" line="101"/>
@@ -5268,17 +5268,17 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="55"/>
         <source>Show:</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Показване на всички кодеци</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="61"/>
         <source>Type:</source>
-        <translation/>
+        <translation type="unfinished">Филтър</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="67"/>
         <source>Category:</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Категория:</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="13"/>
@@ -5295,7 +5295,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="68"/>
         <source>Preset name</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Настройка</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="63"/>
@@ -5305,7 +5305,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="69"/>
         <source>Debug</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Контрол</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="93"/>
@@ -5315,7 +5315,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="106"/>
         <source>Load</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Зареждане…</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="117"/>
@@ -5391,12 +5391,12 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="12"/>
         <source>Initial tempo change</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Промяна на темпото в началото (%)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="13"/>
         <source>Final tempo change</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Промяна на темпото в края (%)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="14"/>
@@ -5408,7 +5408,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="14"/>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="15"/>
         <source>semitones</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Интервал в полутонове</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="15"/>
@@ -5424,7 +5424,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/effects_base/effecterrors.h" line="41"/>
         <source>Internal error</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">(външна програма)</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/effecterrors.h" line="43"/>
@@ -5916,7 +5916,7 @@ name into another alphabet.</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="289"/>
         <source>No audio selected.</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Не е избрана верига</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="303"/>
@@ -7472,7 +7472,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="258"/>
         <source>Left</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Ляво</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="259"/>
@@ -7483,12 +7483,12 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="260"/>
         <source>Right</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Дясно</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="261"/>
         <source>Stereo</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Стерео</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="262"/>
@@ -7498,7 +7498,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="263"/>
         <source>Sample data export</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Не е възможно да се експортира</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="264"/>
@@ -8294,7 +8294,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/amplify/amplifyviewmodel.cpp" line="123"/>
         <source>Allow clipping</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Разрешаване на отрязани отчети</translation>
     </message>
 </context>
 <context>
@@ -8323,7 +8323,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/changepitch/changepitchviewmodel.cpp" line="320"/>
         <source>Semitones</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Интервал в полутонове</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/changepitch/changepitchviewmodel.cpp" line="403"/>
@@ -8416,12 +8416,12 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovalviewmodel.cpp" line="23"/>
         <source>Threshold (lower is more sensitive)</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Изберете праг (по-нисък – по-чувствително)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovalviewmodel.cpp" line="63"/>
         <source>Max spike width (higher is more sensitive)</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Макс. ширина на пик (по-висока – по-чувствително)</translation>
     </message>
 </context>
 <context>
@@ -8434,7 +8434,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/timeline/DynamicsPanel.qml" line="117"/>
         <source>Show:</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Показване на всички кодеци</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/timeline/DynamicsPanel.qml" line="126"/>
@@ -8458,12 +8458,12 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="19"/>
         <source>DTMF tones</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Тонално набиране…</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="65"/>
         <source>DTMF sequence</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Поредица за тонално набиране</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="97"/>
@@ -8473,7 +8473,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="106"/>
         <source>Amplitude (0-1)</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Амплитуда (0-1)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="129"/>
@@ -8490,12 +8490,12 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="190"/>
         <source>Tone/silence ratio</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Съотношение тон/тишина</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="239"/>
         <source>Duty cycle</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Период на включване</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="243"/>
@@ -8505,7 +8505,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="253"/>
         <source>Tone duration</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Продължителност на тона</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="257"/>
@@ -8517,7 +8517,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="267"/>
         <source>Silence duration</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Продължителност на тишината</translation>
     </message>
 </context>
 <context>
@@ -8614,7 +8614,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="131"/>
         <source>Normalize stereo channels independently</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Независимо нормализиране на стереоканалите</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="136"/>
@@ -8632,7 +8632,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/noisegen/NoiseView.qml" line="67"/>
         <source>Amplitude (0-1)</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Амплитуда (0-1)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisegen/NoiseView.qml" line="90"/>
@@ -8686,7 +8686,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="92"/>
         <source>Get noise profile</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Профилиране на шум</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="120"/>
@@ -8750,17 +8750,17 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="41"/>
         <source>Remove DC offset (center on 0.0 vertically)</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Премахване на отместването (верт. центриране около 0.0)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="62"/>
         <source>Normalize peak amplitude to</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Нормализиране на макс. амплитуда до</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="98"/>
         <source>Normalize stereo channels independently</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Независимо нормализиране на стереоканалите</translation>
     </message>
 </context>
 <context>
@@ -8773,7 +8773,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretchviewmodel.cpp" line="62"/>
         <source>Stretch factor</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Коефициент на удължаване</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretchviewmodel.cpp" line="87"/>
@@ -8811,12 +8811,12 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="56"/>
         <source>Reverberance</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Обратна връзка (%)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="65"/>
         <source>Damping</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Дълбочина (%)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="74"/>
@@ -8864,12 +8864,12 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="45"/>
         <source>Initial tempo change</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Промяна на темпото в началото (%)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="58"/>
         <source>Final tempo change</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Промяна на темпото в края (%)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="72"/>
@@ -8902,7 +8902,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/ToneView.qml" line="102"/>
         <source>Amplitude (0-1)</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Амплитуда (0-1)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/ToneView.qml" line="125"/>
@@ -8979,17 +8979,17 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="180"/>
         <source>Truncate to</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Премахване на тишина</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="185"/>
         <source>Truncate detected silence</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Премахване на тишина</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="230"/>
         <source>Compress to</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Компресия</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="235"/>
@@ -8999,7 +8999,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="280"/>
         <source>Truncate tracks independently</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Независимо нормализиране на стереоканалите</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="285"/>
@@ -9090,7 +9090,7 @@ cycles per second.</extracomment>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="101"/>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="102"/>
         <source>semitones</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Интервал в полутонове</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="111"/>
@@ -9120,7 +9120,7 @@ cycles per second.</extracomment>
     <message>
         <location filename="../../au3/libraries/au3-exceptions/AudacityException.h" line="98"/>
         <source>Message</source>
-        <translation/>
+        <translation type="unfinished">&amp;Предискретизиране…</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-exceptions/InconsistencyException.cpp" line="30"/>
@@ -9186,18 +9186,18 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="142"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="76"/>
         <source>File name</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Филтър</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="176"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="143"/>
         <source>Folder</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Папка за настройки</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="212"/>
         <source>Format</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Формат</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="249"/>
@@ -9217,7 +9217,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="309"/>
         <source>Stereo</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Стерео</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="326"/>
@@ -9228,7 +9228,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="373"/>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="183"/>
         <source>Sample rate</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Честота на дискретизация</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="418"/>
@@ -9289,12 +9289,12 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="160"/>
         <source>Frame</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Кадър</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="186"/>
         <source>PdO method</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Метод за РПр</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="208"/>
@@ -9330,7 +9330,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="39"/>
         <source>Language</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Език</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="62"/>
@@ -9351,7 +9351,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="151"/>
         <source>Bit rate</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Битове в секунда</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="176"/>
@@ -9364,13 +9364,13 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="208"/>
         <source>Profile</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Профил</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="30"/>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="17"/>
         <source>Metadata editor</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Редактиране на метаданни…</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="46"/>
@@ -9405,22 +9405,22 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="36"/>
         <source>Mux rate</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Мултиплексиране</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="74"/>
         <source>Packet size</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Размер на пакетите</translation>
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="21"/>
         <source>Export labels</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Ек&amp;спортиране на надписи…</translation>
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="108"/>
         <source>File type</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Филтър</translation>
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="182"/>
@@ -9445,7 +9445,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="231"/>
         <source>All selected audio is muted</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Целият избран звук е потиснат</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="38"/>
@@ -9455,7 +9455,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="39"/>
         <source>Export selected audio</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Експортиране на селекцията</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="40"/>
@@ -9768,7 +9768,7 @@ cycles per second.</extracomment>
         <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="171"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingDialog.qml" line="93"/>
         <source>Apply</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Прилагане на %1</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="637"/>
@@ -9862,7 +9862,7 @@ cycles per second.</extracomment>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/DefaultProjectListView.qml" line="278"/>
         <source>Size</source>
         <comment>file size</comment>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Размер</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="472"/>
@@ -11795,7 +11795,7 @@ this is a Label track.</extracomment>
     <message>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="72"/>
         <source>value</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Стойност</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.cpp" line="121"/>
@@ -11847,13 +11847,13 @@ this is a Label track.</extracomment>
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="71"/>
         <location filename="../../src/project/internal/au3/au3metadata.h" line="41"/>
         <source>YEAR</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Година</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="73"/>
         <location filename="../../src/project/internal/au3/au3metadata.h" line="43"/>
         <source>COMMENTS</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Коментари</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/au3/au3metadata.cpp" line="132"/>
@@ -12594,12 +12594,12 @@ cycles per second.</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="21"/>
         <source>Medium quality</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Качество</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="22"/>
         <source>High quality</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Качество</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="23"/>
@@ -12726,7 +12726,7 @@ cycles per second.</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="58"/>
         <source>Host</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Хост</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="77"/>
@@ -12751,7 +12751,7 @@ cycles per second.</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="54"/>
         <source>Buffer length</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Дължина</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="82"/>
@@ -12833,12 +12833,12 @@ appearance of older versions of Audacity</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FreeSpaceSection.qml" line="40"/>
         <source>Free space</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Свободно място</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LanguagesSection.qml" line="52"/>
         <source>Language</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Език</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LanguagesSection.qml" line="79"/>
@@ -12863,7 +12863,7 @@ appearance of older versions of Audacity</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MeterDbRangeSection.qml" line="15"/>
         <source>Meter dB range</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">&amp;Обхват на индикатора и вълната в дБ</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MeterDbRangeSection.qml" line="27"/>
@@ -12953,17 +12953,17 @@ appearance of older versions of Audacity</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="33"/>
         <source>Sample rate</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Честота на дискретизация</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="50"/>
         <source>Default sample rate</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Подразбирана &amp;честота на дискретизация</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="69"/>
         <source>Default sample format</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Подразбиран &amp;формат на данните</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="93"/>
@@ -13179,7 +13179,7 @@ themes.</extracomment>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="43"/>
         <source>%1 (Mono) Recording channel</source>
         <extracomment>%1 is the recording channel number</extracomment>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Край на запис</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="46"/>
@@ -13191,7 +13191,7 @@ themes.</extracomment>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="238"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="251"/>
         <source>Other</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Друго…</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/generalpreferencesmodel.cpp" line="68"/>
@@ -13291,7 +13291,7 @@ themes.</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SpectrogramSelectionSection.qml" line="22"/>
         <source>Enable spectral selection</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Селекция</translation>
     </message>
 </context>
 <context>
@@ -13636,7 +13636,7 @@ themes.</extracomment>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="717"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="756"/>
         <source>Save to computer</source>
-        <translation/>
+        <translation type="unfinished">Запазване на проект к&amp;ато…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="649"/>
@@ -14425,7 +14425,7 @@ user to select Cloud or local save.</extracomment>
         <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="97"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="550"/>
         <source>Save to computer</source>
-        <translation/>
+        <translation type="unfinished">Запазване на проект к&amp;ато…</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="103"/>
@@ -14435,20 +14435,20 @@ user to select Cloud or local save.</extracomment>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="167"/>
         <source>Save project</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Запазване на проект к&amp;ато…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="172"/>
         <source>copy</source>
         <comment>a copy of a file</comment>
         <extracomment>used to form a filename suggestion, like "originalFile - copy"</extracomment>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Копиране</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="175"/>
         <source>selection</source>
         <extracomment>used to form a filename suggestion, like "originalFile - selection"</extracomment>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Селекция</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="264"/>
@@ -14658,7 +14658,7 @@ user to select Cloud or local save.</extracomment>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorDialog.qml" line="15"/>
         <source>Label editor</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Редактиране на надпис</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml" line="58"/>
@@ -14709,7 +14709,7 @@ user to select Cloud or local save.</extracomment>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/PitchSection.qml" line="61"/>
         <source>Semitones</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Интервал в полутонове</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/PitchSection.qml" line="109"/>
@@ -14734,7 +14734,7 @@ user to select Cloud or local save.</extracomment>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/AddNewTrackPopup.qml" line="43"/>
         <source>Stereo</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Стерео</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/AddNewTrackPopup.qml" line="44"/>
@@ -14871,7 +14871,7 @@ user to select Cloud or local save.</extracomment>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="224"/>
         <source>Seconds &amp; samples</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Втора писта</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="230"/>
@@ -14969,7 +14969,7 @@ user to select Cloud or local save.</extracomment>
         <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="151"/>
         <source>%1 (Mono) Recording channel</source>
         <extracomment>%1 is the recording channel number</extracomment>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Край на запис</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="154"/>
@@ -15498,7 +15498,7 @@ appearance of older versions of Audacity</extracomment>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="111"/>
         <source>Window type</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">&amp;Тип на прозореца</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="113"/>
@@ -15515,7 +15515,7 @@ i18n-hint: Title of the Gain slider, used to adjust the volume</extracomment>
     <message>
         <location filename="../../src/spectrogram/view/colorsectionparameterlistmodel.cpp" line="95"/>
         <source>Range</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Преименуване…</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/colorsectionparameterlistmodel.cpp" line="97"/>
@@ -16094,7 +16094,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/CustomTimeDialog.qml" line="40"/>
         <source>Position:</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Позиция</translation>
     </message>
 </context>
 <context>

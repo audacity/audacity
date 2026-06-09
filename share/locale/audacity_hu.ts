@@ -31,7 +31,7 @@
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="46"/>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="47"/>
         <source>Exit</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Kilépés</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="52"/>
@@ -126,7 +126,7 @@
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="125"/>
         <source>&amp;Preferences</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">&amp;Beállítások…</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="126"/>
@@ -236,7 +236,7 @@
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="245"/>
         <source>Metadata editor</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Metaadat szerkesztő</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="556"/>
@@ -279,12 +279,12 @@
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="45"/>
         <source>&amp;Save preset</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Előbeállítás mentése</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="50"/>
         <source>&amp;Delete preset</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Előbeállítás törlése</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="56"/>
@@ -387,7 +387,7 @@
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="98"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="99"/>
         <source>Rescan audio devices</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Hangeszközök újralekérdezése</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="104"/>
@@ -443,19 +443,19 @@
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="140"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="141"/>
         <source>Change audio host</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">&amp;Hangkiszolgáló módosítása</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="147"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="148"/>
         <source>Change playback device</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">&amp;Lejátszóeszköz módosítása</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="154"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="155"/>
         <source>Change recording device</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">&amp;Felvevőeszköz módosítása</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="161"/>
@@ -621,17 +621,17 @@
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="97"/>
         <source>&amp;Export labels</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">&amp;Címkék exportálása…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="98"/>
         <source>Export labels</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">&amp;Címkék exportálása…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="103"/>
         <source>&amp;Export MIDI</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">MIDI exportálása</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="104"/>
@@ -663,7 +663,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="123"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="124"/>
         <source>Insert</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Beszúrás</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="129"/>
@@ -719,7 +719,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="178"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="179"/>
         <source>Track start to cursor</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Sáv eleje a &amp;kurzorihoz</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="184"/>
@@ -731,13 +731,13 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="190"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="191"/>
         <source>Track start to end</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Sáv eleje a &amp;végéhez</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="196"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="197"/>
         <source>Previous clip boundary to cursor</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Előző kliphatárok a kurzorhoz</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="202"/>
@@ -749,19 +749,19 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="208"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="209"/>
         <source>Previous clip</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Előző klip</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="214"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="215"/>
         <source>Next clip</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Következő klip</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="220"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="221"/>
         <source>Toggle spectral selection</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Spektrális kijelölés átváltása</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="226"/>
@@ -773,7 +773,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="234"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="235"/>
         <source>Collapse all tracks</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Minden sáv összecsukása</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="240"/>
@@ -839,13 +839,13 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="304"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="305"/>
         <source>Set sound activation level</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Hang aktiválási &amp;szint beállítása…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="318"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="319"/>
         <source>Remove tracks</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Sávok &amp;eltávolítása</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="324"/>
@@ -953,7 +953,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="431"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="432"/>
         <source>Plot spectrum</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Spektrum ábrázolása…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="439"/>
@@ -995,7 +995,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="475"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="476"/>
         <source>Sample data export</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Mintaadat exportálása</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="481"/>
@@ -1013,7 +1013,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="493"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="494"/>
         <source>Reset configuration</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Konfiguráció &amp;törlése</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="501"/>
@@ -1160,13 +1160,13 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="50"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="51"/>
         <source>Zoom default</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Alapértelmezett nagyítás</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="56"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="57"/>
         <source>Zoom to selection</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Nagyítás a kijelölésre</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="63"/>
@@ -1262,7 +1262,7 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="167"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="168"/>
         <source>Rename clip</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Klip átnevezése…</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="182"/>
@@ -1316,19 +1316,19 @@
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="231"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="232"/>
         <source>Show RMS in waveform</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">&amp;RMS megjelenítése a Hullámformában</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="238"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="239"/>
         <source>Show clipping in waveform</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Levágás megjelenítése a Hullámformában</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="245"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="246"/>
         <source>Half-wave</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">FélHullám</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="252"/>
@@ -1484,12 +1484,12 @@
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="153"/>
         <source>Rename</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Átnevezés…</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="154"/>
         <source>Rename track</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Sáv átnevezése</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="160"/>
@@ -1535,13 +1535,13 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="202"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="203"/>
         <source>Make stereo track</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Sztereósáv készítése</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="208"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="209"/>
         <source>Swap stereo channels</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Sztereó&amp;csatornák felcserélése</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="214"/>
@@ -1577,7 +1577,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="248"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="249"/>
         <source>Multi-view</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Többnézet</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="263"/>
@@ -1781,7 +1781,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="472"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="473"/>
         <source>First track</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Első sáv</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="478"/>
@@ -1870,7 +1870,7 @@
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="129"/>
         <source>Category:</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Kategória:</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="137"/>
@@ -2086,7 +2086,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="535"/>
         <source>Rename clip</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Klip átnevezése…</translation>
     </message>
 </context>
 <context>
@@ -2094,7 +2094,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="393"/>
         <source>Cursor</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Kurzor</translation>
     </message>
 </context>
 <context>
@@ -2110,7 +2110,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="694"/>
         <source>&amp;System</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Rendszer</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="704"/>
@@ -2128,12 +2128,12 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="417"/>
         <source>Diagnostics</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Diagnosztika</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="444"/>
         <source>&amp;System</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Rendszer</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="466"/>
@@ -2174,7 +2174,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="363"/>
         <source>&amp;Effect</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Hatás</translation>
     </message>
 </context>
 <context>
@@ -2182,7 +2182,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="211"/>
         <source>&amp;Export other</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">&amp;Továbbiak exportálása</translation>
     </message>
 </context>
 <context>
@@ -2190,7 +2190,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="408"/>
         <source>&amp;Extra</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Ext&amp;ra</translation>
     </message>
 </context>
 <context>
@@ -2223,7 +2223,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="196"/>
         <source>Open &amp;recent</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">&amp;Legutóbbi megnyitása…</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="220"/>
@@ -2236,7 +2236,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="392"/>
         <source>Focus</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Fókusz</translation>
     </message>
 </context>
 <context>
@@ -2285,7 +2285,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="383"/>
         <source>Mixer</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Keverő</translation>
     </message>
 </context>
 <context>
@@ -2342,22 +2342,22 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="256"/>
         <source>Audio clips</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Hangklipek</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="261"/>
         <source>Spectral</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Spektrális</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="270"/>
         <source>Region</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Terület</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="274"/>
         <source>Looping</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Hurok létrehozása</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="278"/>
@@ -2371,7 +2371,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="402"/>
         <source>Settings</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Beállítások</translation>
     </message>
 </context>
 <context>
@@ -2379,7 +2379,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="292"/>
         <source>Skip to</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Kihagyás idáig</translation>
     </message>
 </context>
 <context>
@@ -2387,7 +2387,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="350"/>
         <source>Sort tracks</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Sávok &amp;rendezése</translation>
     </message>
 </context>
 <context>
@@ -2395,7 +2395,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="373"/>
         <source>&amp;Tools</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Esz&amp;közök</translation>
     </message>
 </context>
 <context>
@@ -2441,7 +2441,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="15"/>
         <source>About Audacity</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Audacity névjegye…</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="43"/>
@@ -3057,7 +3057,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="604"/>
         <source>Edit metadata</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">&amp;Metaadat szerkesztése</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="261"/>
@@ -3186,7 +3186,7 @@ but this text needs to be kept very short</extracomment>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MidiDevicesSection.qml" line="44"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MidiSection.qml" line="31"/>
         <source>MIDI</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">MIDI…</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MidiDevicesSection.qml" line="49"/>
@@ -3216,7 +3216,7 @@ but this text needs to be kept very short</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MixerSection.qml" line="34"/>
         <source>Mixer</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Keverő</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MixerSection.qml" line="45"/>
@@ -3497,7 +3497,7 @@ but this text needs to be kept very short</extracomment>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="34"/>
         <source>Welcome</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Üdvözlünk</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="115"/>
@@ -3621,7 +3621,7 @@ but this text needs to be kept very short</extracomment>
     <message>
         <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="50"/>
         <source>Host</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Kiszolgáló</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="51"/>
@@ -4726,7 +4726,7 @@ Próbáld meg visszaállítani a nyújtást a klipeken, vagy keverd és renderel
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="74"/>
         <source>Rename clip</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Klip átnevezése…</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="75"/>
@@ -5206,7 +5206,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="298"/>
         <source>Preview</source>
         <extracomment>Shown on a button that starts effect preview</extracomment>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Előnézet</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/EffectPresetsBar.qml" line="101"/>
@@ -5262,7 +5262,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="211"/>
         <source>Path:</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Útvonal</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="241"/>
@@ -5298,7 +5298,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="55"/>
         <source>Show:</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Megjelenítés:</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="61"/>
@@ -5308,7 +5308,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="67"/>
         <source>Category:</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Kategória:</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="13"/>
@@ -5325,7 +5325,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="68"/>
         <source>Preset name</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Előbeállítás neve</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="63"/>
@@ -5335,7 +5335,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="69"/>
         <source>Debug</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Hibakeresés</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="93"/>
@@ -5345,7 +5345,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="106"/>
         <source>Load</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Betöltés…</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/NyquistPromptView.qml" line="117"/>
@@ -5421,12 +5421,12 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="12"/>
         <source>Initial tempo change</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Kezdeti tempóváltoztatás (%)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="13"/>
         <source>Final tempo change</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Végső tempóváltoztatás (%)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="14"/>
@@ -5438,7 +5438,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="14"/>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="15"/>
         <source>semitones</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">félhangok</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="15"/>
@@ -5454,7 +5454,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/effects_base/effecterrors.h" line="41"/>
         <source>Internal error</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Belső hiba</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/effecterrors.h" line="43"/>
@@ -5947,7 +5947,7 @@ name into another alphabet.</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="289"/>
         <source>No audio selected.</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Egy hang sincs kiválasztva</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="303"/>
@@ -7526,7 +7526,7 @@ Jobb csatorna</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="258"/>
         <source>Left</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Balra</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="259"/>
@@ -7537,22 +7537,22 @@ Jobb csatorna</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="260"/>
         <source>Right</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Jobbra</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="261"/>
         <source>Stereo</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Sztereó</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="262"/>
         <source>Mono</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Monó</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="263"/>
         <source>Sample data export</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Mintaadat exportálása</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="264"/>
@@ -8352,7 +8352,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/amplify/amplifyviewmodel.cpp" line="123"/>
         <source>Allow clipping</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Levágás engedélyezése</translation>
     </message>
 </context>
 <context>
@@ -8381,12 +8381,12 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/changepitch/changepitchviewmodel.cpp" line="320"/>
         <source>Semitones</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">félhangok</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/changepitch/changepitchviewmodel.cpp" line="403"/>
         <source>Cents</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">százalék</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/changepitch/changepitchviewmodel.cpp" line="448"/>
@@ -8406,7 +8406,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/changepitch/changepitchviewmodel.cpp" line="681"/>
         <source>Use high quality stretching (slow)</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Jó minőségű nyújtás használata (lassú)</translation>
     </message>
 </context>
 <context>
@@ -8474,12 +8474,12 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovalviewmodel.cpp" line="23"/>
         <source>Threshold (lower is more sensitive)</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Küszöbérték (minél alacsonyabb, annál érzékenyebb)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/clickremoval/clickremovalviewmodel.cpp" line="63"/>
         <source>Max spike width (higher is more sensitive)</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Legnagyobb tüskeszélesség (minél nagyobb, annál érzékenyebb)</translation>
     </message>
 </context>
 <context>
@@ -8492,7 +8492,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/timeline/DynamicsPanel.qml" line="117"/>
         <source>Show:</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Megjelenítés:</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/timeline/DynamicsPanel.qml" line="126"/>
@@ -8516,12 +8516,12 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="19"/>
         <source>DTMF tones</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">DTMF hangok</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="65"/>
         <source>DTMF sequence</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">DTMF &amp;sorozat</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="97"/>
@@ -8531,7 +8531,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="106"/>
         <source>Amplitude (0-1)</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Amplitúdó (0-1)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="129"/>
@@ -8548,12 +8548,12 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="190"/>
         <source>Tone/silence ratio</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Hang/csend aránya</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="239"/>
         <source>Duty cycle</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Működési ciklus</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="243"/>
@@ -8563,7 +8563,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="253"/>
         <source>Tone duration</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Hangszín időtartama</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="257"/>
@@ -8575,7 +8575,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="267"/>
         <source>Silence duration</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Némítása időtartama</translation>
     </message>
 </context>
 <context>
@@ -8672,7 +8672,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="131"/>
         <source>Normalize stereo channels independently</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">&amp;Sztereócsatornák önálló normalizálása</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnessviewmodel.cpp" line="136"/>
@@ -8690,7 +8690,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/noisegen/NoiseView.qml" line="67"/>
         <source>Amplitude (0-1)</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Amplitúdó (0-1)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisegen/NoiseView.qml" line="90"/>
@@ -8744,7 +8744,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="92"/>
         <source>Get noise profile</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Zajprofil készítése</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="120"/>
@@ -8808,17 +8808,17 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="41"/>
         <source>Remove DC offset (center on 0.0 vertically)</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">DC-eltolás eltávolítása (függőlegesen 0.0 helyre középre)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="62"/>
         <source>Normalize peak amplitude to</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Amplitúdócsúcs normalizálása erre</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="98"/>
         <source>Normalize stereo channels independently</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">&amp;Sztereócsatornák önálló normalizálása</translation>
     </message>
 </context>
 <context>
@@ -8831,7 +8831,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretchviewmodel.cpp" line="62"/>
         <source>Stretch factor</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Nyújtási tényező</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretchviewmodel.cpp" line="87"/>
@@ -8849,12 +8849,12 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/ReverbView.qml" line="272"/>
         <source>Wet only</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Csak nedves</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="38"/>
         <source>Room size</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Teremméret (%)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="47"/>
@@ -8869,12 +8869,12 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="56"/>
         <source>Reverberance</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Visszaverődés (%)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="65"/>
         <source>Damping</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Csillapítás (%)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="74"/>
@@ -8899,7 +8899,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="110"/>
         <source>Stereo width</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Sztereószélesség (%)</translation>
     </message>
 </context>
 <context>
@@ -8922,12 +8922,12 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="45"/>
         <source>Initial tempo change</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Kezdeti tempóváltoztatás (%)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="58"/>
         <source>Final tempo change</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Végső tempóváltoztatás (%)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="72"/>
@@ -8960,7 +8960,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/ToneView.qml" line="102"/>
         <source>Amplitude (0-1)</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Amplitúdó (0-1)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/ToneView.qml" line="125"/>
@@ -9037,27 +9037,27 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="180"/>
         <source>Truncate to</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Csonkítás eddig</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="185"/>
         <source>Truncate detected silence</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Felismert csend csonkítása</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="230"/>
         <source>Compress to</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Tömörítés eddig</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="235"/>
         <source>Compress excess silence</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Felesleges csend tömörítése</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="280"/>
         <source>Truncate tracks independently</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Sávok önálló &amp;csonkítása</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="285"/>
@@ -9148,7 +9148,7 @@ cycles per second.</extracomment>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="101"/>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="102"/>
         <source>semitones</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">félhangok</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="111"/>
@@ -9246,18 +9246,18 @@ Kérjük, tájékoztasd az Audacity csapatát a https://forum.audacityteam.org/ 
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="142"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="76"/>
         <source>File name</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Fájl neve</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="176"/>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="143"/>
         <source>Folder</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Mappa</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="212"/>
         <source>Format</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Formátum</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="249"/>
@@ -9272,23 +9272,23 @@ Kérjük, tájékoztasd az Audacity csapatát a https://forum.audacityteam.org/ 
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="291"/>
         <source>Mono</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Monó</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="309"/>
         <source>Stereo</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Sztereó</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="326"/>
         <source>Custom mapping</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Egyéni &amp;leképezés</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="373"/>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="183"/>
         <source>Sample rate</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Mintavételezési gyakoriság</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="418"/>
@@ -9349,12 +9349,12 @@ Kérjük, tájékoztasd az Audacity csapatát a https://forum.audacityteam.org/ 
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="160"/>
         <source>Frame</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Keret</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="186"/>
         <source>PdO method</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">PdO módszer</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="208"/>
@@ -9390,7 +9390,7 @@ Kérjük, tájékoztasd az Audacity csapatát a https://forum.audacityteam.org/ 
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="39"/>
         <source>Language</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Nyelv</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="62"/>
@@ -9411,7 +9411,7 @@ Kérjük, tájékoztasd az Audacity csapatát a https://forum.audacityteam.org/ 
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="151"/>
         <source>Bit rate</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Bitsebesség</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="176"/>
@@ -9424,13 +9424,13 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="208"/>
         <source>Profile</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Profil</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="30"/>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="17"/>
         <source>Metadata editor</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Metaadat szerkesztő</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MetadataControlPanel.qml" line="46"/>
@@ -9465,22 +9465,22 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="36"/>
         <source>Mux rate</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Mux-arány</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/MPEGOptionsSection.qml" line="74"/>
         <source>Packet size</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Csomagméret</translation>
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="21"/>
         <source>Export labels</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">&amp;Címkék exportálása…</translation>
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="108"/>
         <source>File type</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Fájltípus</translation>
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="182"/>
@@ -9505,7 +9505,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="231"/>
         <source>All selected audio is muted</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Összes kiválasztott hang el van némítva</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="38"/>
@@ -9515,7 +9515,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="39"/>
         <source>Export selected audio</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Kijelölt hang &amp;exportálása…</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="40"/>
@@ -9830,7 +9830,7 @@ cycles per second.</extracomment>
         <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="171"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingDialog.qml" line="93"/>
         <source>Apply</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Alkalmaz</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="637"/>
@@ -9924,7 +9924,7 @@ cycles per second.</extracomment>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/DefaultProjectListView.qml" line="278"/>
         <source>Size</source>
         <comment>file size</comment>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Méret</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="472"/>
@@ -9957,7 +9957,7 @@ cycles per second.</extracomment>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="136"/>
         <source>Skip</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Kihagyás</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/paulstretch/paulstretchviewmodel.cpp" line="112"/>
@@ -11855,7 +11855,7 @@ this is a Label track.</extracomment>
     <message>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="72"/>
         <source>value</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Érték</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.cpp" line="121"/>
@@ -11907,13 +11907,13 @@ this is a Label track.</extracomment>
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="71"/>
         <location filename="../../src/project/internal/au3/au3metadata.h" line="41"/>
         <source>YEAR</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Év</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.h" line="73"/>
         <location filename="../../src/project/internal/au3/au3metadata.h" line="43"/>
         <source>COMMENTS</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Megjegyzések</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/au3/au3metadata.cpp" line="132"/>
@@ -12656,12 +12656,12 @@ cycles per second.</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="21"/>
         <source>Medium quality</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Közepes minőség</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="22"/>
         <source>High quality</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Magas minőség</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="23"/>
@@ -12788,7 +12788,7 @@ cycles per second.</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="58"/>
         <source>Host</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Kiszolgáló</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="77"/>
@@ -12813,7 +12813,7 @@ cycles per second.</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="54"/>
         <source>Buffer length</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Pufferméret</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="82"/>
@@ -12870,7 +12870,7 @@ appearance of older versions of Audacity</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/EffectOptionsSection.qml" line="14"/>
         <source>Effect menu organization</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Hatás menü &amp;szervezete</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/EffectOptionsSection.qml" line="34"/>
@@ -12895,12 +12895,12 @@ appearance of older versions of Audacity</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/FreeSpaceSection.qml" line="40"/>
         <source>Free space</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Szabad hely</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LanguagesSection.qml" line="52"/>
         <source>Language</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Nyelv</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LanguagesSection.qml" line="79"/>
@@ -12920,12 +12920,12 @@ appearance of older versions of Audacity</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="47"/>
         <source>Crossfade</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Keresztátmenet</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MeterDbRangeSection.qml" line="15"/>
         <source>Meter dB range</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Mérő dB &amp;tartománya</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MeterDbRangeSection.qml" line="27"/>
@@ -13015,17 +13015,17 @@ appearance of older versions of Audacity</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="33"/>
         <source>Sample rate</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Mintavételezési gyakoriság</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="50"/>
         <source>Default sample rate</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Alapértelmezett mintavételezési gyakoriság</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="69"/>
         <source>Default sample format</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Alapé&amp;rtelmezett mintaformátum</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SampleRateSection.qml" line="93"/>
@@ -13160,7 +13160,7 @@ themes.</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="135"/>
         <source>Ask me each time</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Minden alkalommal kérdezz</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="51"/>
@@ -13241,7 +13241,7 @@ themes.</extracomment>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="43"/>
         <source>%1 (Mono) Recording channel</source>
         <extracomment>%1 is the recording channel number</extracomment>
-        <translation type="unfinished"/>
+        <translation type="unfinished">1 (monó) felvételi csatorna</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="46"/>
@@ -13253,7 +13253,7 @@ themes.</extracomment>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="238"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/commonaudioapiconfigurationmodel.cpp" line="251"/>
         <source>Other</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Egyéb…</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/generalpreferencesmodel.cpp" line="68"/>
@@ -13353,7 +13353,7 @@ themes.</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SpectrogramSelectionSection.qml" line="22"/>
         <source>Enable spectral selection</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Spektrális kijelölés &amp;engedélyezése</translation>
     </message>
 </context>
 <context>
@@ -14530,20 +14530,20 @@ user to select Cloud or local save.</extracomment>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="167"/>
         <source>Save project</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Projekt mentése</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="172"/>
         <source>copy</source>
         <comment>a copy of a file</comment>
         <extracomment>used to form a filename suggestion, like "originalFile - copy"</extracomment>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Másolás</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="175"/>
         <source>selection</source>
         <extracomment>used to form a filename suggestion, like "originalFile - selection"</extracomment>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Kijelölés</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="264"/>
@@ -14685,7 +14685,7 @@ user to select Cloud or local save.</extracomment>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml" line="123"/>
         <source>Try again</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Újrapróbálkozás</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml" line="176"/>
@@ -14753,7 +14753,7 @@ user to select Cloud or local save.</extracomment>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorDialog.qml" line="15"/>
         <source>Label editor</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">&amp;Címkeszerkesztő</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/LabelEditorTopPanel.qml" line="58"/>
@@ -14789,7 +14789,7 @@ user to select Cloud or local save.</extracomment>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/GeneralSection.qml" line="41"/>
         <source>Optimize for voice</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Optimalizálás hangra</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/PitchAndSpeedChangeDialog.qml" line="17"/>
@@ -14804,12 +14804,12 @@ user to select Cloud or local save.</extracomment>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/PitchSection.qml" line="61"/>
         <source>Semitones</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">félhangok</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/PitchSection.qml" line="109"/>
         <source>Cents</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">százalék</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/SpeedSection.qml" line="38"/>
@@ -14819,17 +14819,17 @@ user to select Cloud or local save.</extracomment>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/pitchandspeed/SpeedSection.qml" line="48"/>
         <source>Speed</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">sebesség %</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/AddNewTrackPopup.qml" line="42"/>
         <source>Mono</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Monó</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/AddNewTrackPopup.qml" line="43"/>
         <source>Stereo</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Sztereó</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/AddNewTrackPopup.qml" line="44"/>
@@ -14966,7 +14966,7 @@ user to select Cloud or local save.</extracomment>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="224"/>
         <source>Seconds &amp; samples</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Másodpercek és minták</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="230"/>
@@ -15064,7 +15064,7 @@ user to select Cloud or local save.</extracomment>
         <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="151"/>
         <source>%1 (Mono) Recording channel</source>
         <extracomment>%1 is the recording channel number</extracomment>
-        <translation type="unfinished"/>
+        <translation type="unfinished">1 (monó) felvételi csatorna</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/audiosetupcontextmenumodel.cpp" line="154"/>
@@ -15593,12 +15593,12 @@ appearance of older versions of Audacity</extracomment>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="111"/>
         <source>Window type</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Ablak&amp;típus</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="113"/>
         <source>Zero padding factor</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Nulla kitöltés tényező</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/colorsectionparameterlistmodel.cpp" line="93"/>
@@ -15610,7 +15610,7 @@ i18n-hint: Title of the Gain slider, used to adjust the volume</extracomment>
     <message>
         <location filename="../../src/spectrogram/view/colorsectionparameterlistmodel.cpp" line="95"/>
         <source>Range</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Tartomány…</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/colorsectionparameterlistmodel.cpp" line="97"/>
@@ -15666,7 +15666,7 @@ cycles per second.</extracomment>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/SpectrogramColorsSection.qml" line="62"/>
         <location filename="../../src/spectrogram/qml/Audacity/Spectrogram/TrackSpectrogramColorsSection.qml" line="72"/>
         <source>Scheme</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Séma</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/qml/Audacity/Spectrogram/TrackSpectrogramScaleSection.qml" line="25"/>
@@ -16191,7 +16191,7 @@ Biztos, hogy folytatod?</translation>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/CustomTimeDialog.qml" line="40"/>
         <source>Position:</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Pozíció</translation>
     </message>
 </context>
 <context>

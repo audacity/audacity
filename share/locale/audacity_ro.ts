@@ -962,7 +962,7 @@
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="79"/>
         <source>&amp;Save</source>
-        <translation/>
+        <translation type="unfinished">&amp;Salvează</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="80"/>
@@ -2147,7 +2147,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="387"/>
         <source>Device</source>
-        <translation/>
+        <translation type="unfinished">Dispozitiv</translation>
     </message>
 </context>
 <context>
@@ -2243,7 +2243,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="384"/>
         <source>Edit</source>
-        <translation/>
+        <translation type="unfinished">Editare</translation>
     </message>
 </context>
 <context>
@@ -2260,7 +2260,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="382"/>
         <source>Tools</source>
-        <translation/>
+        <translation type="unfinished">Bare de instrumente</translation>
     </message>
 </context>
 <context>
@@ -4392,7 +4392,7 @@ i18n-hint: n/a is an English abbreviation meaning "not applicable".</extracommen
     <message>
         <location filename="../../au3/libraries/au3-basic-ui/BasicUI.cpp" line="268"/>
         <source>Message</source>
-        <translation/>
+        <translation type="unfinished">&amp;Reeșantionează</translation>
     </message>
 </context>
 <context>
@@ -4939,7 +4939,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ToneGenBase.cpp" line="28"/>
         <source>Linear</source>
-        <translation/>
+        <translation type="unfinished">&amp;Liniar</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ToneGenBase.cpp" line="29"/>
@@ -6065,7 +6065,7 @@ name into another alphabet.</extracomment>
     <message>
         <location filename="../../au3/libraries/au3-effects/MixAndRender.cpp" line="132"/>
         <source>Mix and Render</source>
-        <translation/>
+        <translation type="unfinished">Mixează și randează</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-effects/MixAndRender.cpp" line="133"/>
@@ -6205,7 +6205,7 @@ name into another alphabet.</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/invert/inverteffect.cpp" line="15"/>
         <source>Invert</source>
-        <translation/>
+        <translation type="unfinished">Inversează</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/invert/inverteffect.cpp" line="26"/>
@@ -6280,7 +6280,7 @@ name into another alphabet.</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="289"/>
         <source>No audio selected.</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Nu sunt selectate suficiente date.</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="303"/>
@@ -6308,7 +6308,7 @@ name into another alphabet.</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="32"/>
         <source>Normalize</source>
-        <translation/>
+        <translation type="unfinished">Zoom &amp;normal</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="53"/>
@@ -7833,7 +7833,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="258"/>
         <source>Left</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Stânga</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="259"/>
@@ -7844,7 +7844,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="260"/>
         <source>Right</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Dreapta</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="261"/>
@@ -7869,7 +7869,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="265"/>
         <source>samples</source>
-        <translation/>
+        <translation type="unfinished">simplu</translation>
         <extracomment>i18n-hint: Name of time display format that shows time in samples (at the
 * current project sample rate).  For example the number of a sample at 1
 * second into a recording at 44.1KHz would be 44,100.</extracomment>
@@ -7882,7 +7882,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="267"/>
         <source>Linear</source>
-        <translation/>
+        <translation type="unfinished">&amp;Liniar</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="268"/>
@@ -8903,7 +8903,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="127"/>
         <source>Invert</source>
-        <translation/>
+        <translation type="unfinished">Inversează</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="142"/>
@@ -9038,7 +9038,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="92"/>
         <source>Get noise profile</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Obține profilul de zgomot</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="120"/>
@@ -9485,7 +9485,7 @@ cycles per second.</extracomment>
     <message>
         <location filename="../../au3/libraries/au3-exceptions/AudacityException.h" line="98"/>
         <source>Message</source>
-        <translation/>
+        <translation type="unfinished">&amp;Reeșantionează</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-exceptions/InconsistencyException.cpp" line="30"/>
@@ -10345,7 +10345,7 @@ cycles per second.</extracomment>
         <location filename="../../src/importexport/export/internal/au3/au3exporter.cpp" line="95"/>
         <location filename="../../au3/libraries/au3-import-export/ExportProgressUI.cpp" line="56"/>
         <source>Export</source>
-        <translation/>
+        <translation type="unfinished">Export</translation>
     </message>
     <message>
         <location filename="../../src/importexport/import/internal/au3/au3importer.cpp" line="66"/>
@@ -10925,7 +10925,7 @@ You can configure it at Preferences &gt; General.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1576"/>
         <source>Resample</source>
-        <translation/>
+        <translation type="unfinished">Reeșantionează</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1582"/>
@@ -11207,7 +11207,7 @@ Status: %1</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="231"/>
         <source>Preset</source>
-        <translation/>
+        <translation type="unfinished">Apăsați</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="232"/>
@@ -12474,7 +12474,7 @@ corresponds to a 16th note.</extracomment>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="701"/>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="749"/>
         <source>milliseconds</source>
-        <translation/>
+        <translation type="unfinished">hh:mm:ss + milisecunde</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="711"/>
@@ -12518,7 +12518,7 @@ corresponds to a 16th note.</extracomment>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="736"/>
         <source>centiseconds</source>
-        <translation/>
+        <translation type="unfinished">Timpul de întârziere (secunde)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="748"/>
@@ -12550,7 +12550,7 @@ corresponds to a 16th note.</extracomment>
         <extracomment>i18n-hint: Name of time display format that shows time in samples (at the
 * current project sample rate).  For example the number of a sample at 1
 * second into a recording at 44.1KHz would be 44,100.</extracomment>
-        <translation/>
+        <translation type="unfinished">simplu</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="774"/>
@@ -16182,7 +16182,7 @@ cycles per second.</extracomment>
         <location filename="../../au3/libraries/au3-time-track/TimeTrack.cpp" line="58"/>
         <location filename="../../au3/libraries/au3-time-track/TimeTrack.cpp" line="145"/>
         <source>Time Track</source>
-        <translation/>
+        <translation type="unfinished">Pistă de &amp;timp</translation>
         <extracomment>i18n-hint: This is for screen reader software and indicates that
 this is a Time track.</extracomment>
     </message>
@@ -16468,7 +16468,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/CustomTimeDialog.qml" line="40"/>
         <source>Position:</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Poziție</translation>
     </message>
 </context>
 <context>

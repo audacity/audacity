@@ -2491,7 +2491,7 @@ Cette action ne supprimera aucun de vos projets.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="291"/>
         <source>Zoom</source>
-        <translation/>
+        <translation type="unfinished">Zoom</translation>
     </message>
 </context>
 <context>
@@ -5054,7 +5054,7 @@ Essayez de reparamétrer tous les clips étirés, ou mixez et faites un rendu de
         <location filename="../../au3/libraries/au3-builtin-effects/ToneGenBase.cpp" line="37"/>
         <source>Triangle</source>
         <comment>waveform</comment>
-        <translation/>
+        <translation type="unfinished">Triangle</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/TruncSilenceBase.cpp" line="61"/>
@@ -5999,7 +5999,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="211"/>
         <source>Path:</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Chemin</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="241"/>
@@ -6045,12 +6045,12 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="12"/>
         <source>Initial tempo change</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Changement initial du tempo (%)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="13"/>
         <source>Final tempo change</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Changement final du tempo (%)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="14"/>
@@ -6378,7 +6378,7 @@ name into another alphabet.</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="289"/>
         <source>No audio selected.</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Pas d’audio sélectionné</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="303"/>
@@ -7977,7 +7977,7 @@ canal de droite</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="258"/>
         <source>Left</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Gauche (l)</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="259"/>
@@ -7988,7 +7988,7 @@ canal de droite</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="260"/>
         <source>Right</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Droit</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="261"/>
@@ -8419,7 +8419,7 @@ Daulton</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="341"/>
         <source>Triangle</source>
-        <translation/>
+        <translation type="unfinished">Triangle</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="342"/>
@@ -9389,12 +9389,12 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="45"/>
         <source>Initial tempo change</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Changement initial du tempo (%)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="58"/>
         <source>Final tempo change</source>
-        <translation type="unfinished"/>
+        <translation type="unfinished">Changement final du tempo (%)</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="72"/>
@@ -12122,7 +12122,7 @@ this is a Label track.</extracomment>
         <location filename="../../au3/libraries/au3-math/Dither.cpp" line="371"/>
         <source>Triangle</source>
         <comment>dither</comment>
-        <translation/>
+        <translation type="unfinished">Triangle</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/Dither.cpp" line="372"/>
