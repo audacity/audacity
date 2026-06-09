@@ -29,11 +29,11 @@
 #include <QWindow>
 #include <QMimeData>
 
-#include "async/async.h"
+#include "framework/global/async/async.h"
+#include "framework/global/defer.h"
+#include "framework/global/translation.h"
 
-#include "defer.h"
-#include "translation.h"
-#include "log.h"
+#include "project/types/projecttypes.h"
 
 using namespace au::appshell;
 using namespace muse::actions;
@@ -109,60 +109,74 @@ void ApplicationActionController::onDragEnterEvent(QDragEnterEvent* event)
     onDragMoveEvent(event);
 }
 
-void ApplicationActionController::onDragMoveEvent(QDragMoveEvent*)
+void ApplicationActionController::onDragMoveEvent(QDragMoveEvent* event)
 {
-    //! TODO AU4
-    // const QMimeData* mime = event->mimeData();
-    // QList<QUrl> urls = mime->urls();
-    // if (urls.count() > 0) {
-    //     const QUrl& url = urls.front();
-    //     if (projectFilesController()->isUrlSupported(url)
-    //         || (url.isLocalFile() && audio::synth::isSoundFont(io::path_t(url)))) {
-    //         event->setDropAction(Qt::LinkAction);
-    //         event->acceptProposedAction();
-    //     }
-    // }
+    if (isProjectOpened()) {
+        event->ignore();
+        return;
+    }
+
+    const QMimeData* mime = event->mimeData();
+    const QList<QUrl> urls = mime->urls();
+    for (const QUrl& url : urls) {
+        if (projectFilesController()->isUrlSupported(url)) {
+            event->acceptProposedAction();
+            return;
+        }
+    }
+
+    event->ignore();
 }
 
-void ApplicationActionController::onDropEvent(QDropEvent*)
+void ApplicationActionController::onDropEvent(QDropEvent* event)
 {
-    //! TODO AU4
-    // const QMimeData* mime = event->mimeData();
-    // QList<QUrl> urls = mime->urls();
-    // if (urls.count() > 0) {
-    //     const QUrl& url = urls.front();
-    //     LOGD() << url;
+    if (isProjectOpened()) {
+        event->ignore();
+        return;
+    }
 
-    //     bool shouldBeHandled = false;
+    const QMimeData* mime = event->mimeData();
+    const QList<QUrl> urls = mime->urls();
+    if (urls.isEmpty()) {
+        return;
+    }
 
-    //     if (projectFilesController()->isUrlSupported(url)) {
-    //         async::Async::call(this, [this, url]() {
-    //             Ret ret = projectFilesController()->openProject(url);
-    //             if (!ret) {
-    //                 LOGE() << ret.toString();
-    //             }
-    //         });
-    //         shouldBeHandled = true;
-    //     } else if (url.isLocalFile()) {
-    //         io::path_t filePath { url };
+    QList<QUrl> projectUrls;
+    QStringList mediaFiles;
 
-    //         if (audio::synth::isSoundFont(filePath)) {
-    //             async::Async::call(this, [this, filePath]() {
-    //                 Ret ret = soundFontRepository()->addSoundFont(filePath);
-    //                 if (!ret) {
-    //                     LOGE() << ret.toString();
-    //                 }
-    //             });
-    //             shouldBeHandled = true;
-    //         }
-    //     }
+    for (const QUrl& url : urls) {
+        if (!projectFilesController()->isUrlSupported(url)) {
+            continue;
+        }
 
-    //     if (shouldBeHandled) {
-    //         event->accept();
-    //     } else {
-    //         event->ignore();
-    //     }
-    // }
+        if (au::project::isAudacityFile(muse::io::path_t(url))) {
+            projectUrls << url;
+        } else {
+            mediaFiles << url.toLocalFile();
+        }
+    }
+
+    if (projectUrls.isEmpty() && mediaFiles.isEmpty()) {
+        event->ignore();
+        return;
+    }
+
+    event->accept();
+
+    if (!projectUrls.isEmpty()) {
+        muse::async::Async::call(this, [this, projectUrls]() {
+            for (const QUrl& url : projectUrls) {
+                dispatcher()->dispatch("file-open", ActionData::make_arg1<QUrl>(url));
+            }
+        });
+    }
+
+    if (!mediaFiles.isEmpty()) {
+        muse::async::Async::call(this, [this, mediaFiles]() {
+            dispatcher()->dispatch("project-import-startup-media",
+                                   ActionData::make_arg2<QStringList, bool>(mediaFiles, false));
+        });
+    }
 }
 
 bool ApplicationActionController::canReceiveAction(const ActionCode& code) const
