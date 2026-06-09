@@ -517,15 +517,14 @@ TrackItemsContainer {
                                     trackItemMousePositionChanged(xWithinTrack, yWithinTrack, itemData.key)
 
                                     // While a clip is being moved or a trim/stretch handle is held the
-                                    // guideline must follow the dragged clip edge (driven by
-                                    // handleClipGuideline), not the mouse position, so don't snap the
-                                    // guideline to the cursor here.
-                                    if (root.moveActive || root.leftTrimPressedButtons || root.rightTrimPressedButtons) {
-                                        return
+                                    // guideline follows the dragged clip edge (driven by handleClipGuideline),
+                                    // not the cursor — so only snap the guideline to the cursor when no such
+                                    // edit is in progress.
+                                    const editInProgress = root.moveActive || root.leftTrimPressedButtons || root.rightTrimPressedButtons
+                                    if (!editInProgress) {
+                                        let time = root.context.findGuideline(root.context.positionToTime(xWithinTrack, true))
+                                        root.updateItemGuideline(time)
                                     }
-
-                                    let time = root.context.findGuideline(root.context.positionToTime(xWithinTrack, true))
-                                    root.updateItemGuideline(time)
                                 }
 
                                 onRequestSelected: {
@@ -780,14 +779,13 @@ TrackItemsContainer {
         // itemMoveRequested is broadcast to every track's container, but the guideline is
         // shared across all of them. Only the container that owns the dragged clip may touch
         // it, otherwise non-owners clobber the owning track's guideline.
-        if (!clipsModel.containsItem(clipKey)) {
-            return
+        if (clipsModel.containsItem(clipKey)) {
+            if (completed) {
+                root.clearItemGuideline()
+            } else {
+                let time = clipsModel.findGuideline(clipKey, direction)
+                updateItemGuideline(time)
+            }
         }
-
-        if (completed) {
-            root.clearItemGuideline()
-            return
-        }
-        updateItemGuideline(clipsModel.findGuideline(clipKey, direction))
     }
 }

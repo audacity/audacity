@@ -80,6 +80,14 @@ Rectangle {
                 tracksClipsView.cancelClipDragEditRequested(root.hoveredClipKey)
             }
         }
+
+        function setGuidelinePosition(time) {
+            root.guidelinePos = timeline.context.timeToPosition(time)
+        }
+
+        function updateGuidelineVisibility() {
+            root.guidelineVisible = root.guidelinePos >= 0
+        }
     }
 
     PlaybackStateModel {
@@ -1029,7 +1037,7 @@ Rectangle {
                             }
 
                             onUpdateItemGuideline: function (time) {
-                                root.setGuidelineAtTime(time)
+                                root.updateGuidelineAtTime(time)
                             }
 
                             onHandleTimeGuideline: function (x) {
@@ -1156,7 +1164,7 @@ Rectangle {
                             }
 
                             onUpdateItemGuideline: function (time) {
-                                root.setGuidelineAtTime(time)
+                                root.updateGuidelineAtTime(time)
                             }
 
                             onHandleTimeGuideline: function (x) {
@@ -1297,20 +1305,12 @@ Rectangle {
 
     function snapGuidelineToPosition(x) {
         let time = timeline.context.applyDetectedSnap(timeline.context.positionToTime(x))
-        root.setGuidelineAtTime(timeline.context.findGuideline(time))
+        root.updateGuidelineAtTime(timeline.context.findGuideline(time))
     }
 
-    function setGuidelineAtTime(time) {
-        root.setGuidelinePosition(time)
-        root.updateGuidelineVisibility()
-    }
-
-    function setGuidelinePosition(time) {
-        root.guidelinePos = timeline.context.timeToPosition(time)
-    }
-
-    function updateGuidelineVisibility() {
-        root.guidelineVisible = root.guidelinePos >= 0
+    function updateGuidelineAtTime(time) {
+        prv.setGuidelinePosition(time)
+        prv.updateGuidelineVisibility()
     }
 
     function hideGuideline() {
