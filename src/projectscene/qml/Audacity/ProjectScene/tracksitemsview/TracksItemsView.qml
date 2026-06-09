@@ -1028,7 +1028,7 @@ Rectangle {
                                 })
                             }
 
-                            onTriggerItemGuideline: function (time) {
+                            onUpdateItemGuideline: function (time) {
                                 root.setGuidelineAtTime(time)
                             }
 
@@ -1155,7 +1155,7 @@ Rectangle {
                                 tracksItemsView.moveActive = !completed
                             }
 
-                            onTriggerItemGuideline: function (time) {
+                            onUpdateItemGuideline: function (time) {
                                 root.setGuidelineAtTime(time)
                             }
 
@@ -1301,11 +1301,15 @@ Rectangle {
     }
 
     function setGuidelineAtTime(time) {
-        if (!timeline.context.isGuidelineValid(time)) {
-            root.hideGuideline()
-            return
-        }
+        root.setGuidelinePosition(time)
+        root.updateGuidelineVisibility()
+    }
+
+    function setGuidelinePosition(time) {
         root.guidelinePos = timeline.context.timeToPosition(time)
+    }
+
+    function updateGuidelineVisibility() {
         root.guidelineVisible = root.guidelinePos >= 0
     }
 

@@ -262,7 +262,7 @@ TrackItemsContainer {
                         // Show the snap guideline while hovering the empty track body
                         // (the area between/around clips that no ClipItem covers).
                         let time = root.context.findGuideline(root.context.positionToTime(e.x, true))
-                        root.triggerItemGuideline(time)
+                        root.updateItemGuideline(time)
                     }
 
                     onContainsMouseChanged: function () {
@@ -525,7 +525,7 @@ TrackItemsContainer {
                                     }
 
                                     let time = root.context.findGuideline(root.context.positionToTime(xWithinTrack, true))
-                                    root.triggerItemGuideline(time)
+                                    root.updateItemGuideline(time)
                                 }
 
                                 onRequestSelected: {
@@ -788,6 +788,6 @@ TrackItemsContainer {
             root.clearItemGuideline()
             return
         }
-        triggerItemGuideline(clipsModel.findGuideline(clipKey, direction))
+        updateItemGuideline(clipsModel.findGuideline(clipKey, direction))
     }
 }

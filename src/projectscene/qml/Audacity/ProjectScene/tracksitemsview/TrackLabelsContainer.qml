@@ -211,7 +211,7 @@ TrackItemsContainer {
                                     }
 
                                     let time = root.context.findGuideline(root.context.positionToTime(xWithinTrack, true))
-                                    root.triggerItemGuideline(time)
+                                    root.updateItemGuideline(time)
                                 }
 
                                 onRequestSelected: {
@@ -402,6 +402,6 @@ TrackItemsContainer {
             root.clearItemGuideline()
             return
         }
-        triggerItemGuideline(labelsModel.findGuideline(labelKey, direction))
+        updateItemGuideline(labelsModel.findGuideline(labelKey, direction))
     }
 }

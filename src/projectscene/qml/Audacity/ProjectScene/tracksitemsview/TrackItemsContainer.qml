@@ -56,7 +56,7 @@ Item {
     signal insureVerticallyVisible
 
     signal handleTimeGuideline(real x, bool completed)
-    signal triggerItemGuideline(real time)
+    signal updateItemGuideline(real time)
     signal itemDragEditCanceled
 
     signal initRequired
@@ -80,7 +80,7 @@ Item {
             return
         }
 
-        root.triggerItemGuideline(root.context.invalidGuidelineTime)
+        root.updateItemGuideline(root.context.invalidGuidelineTime)
     }
 
     Loader {
