@@ -21,6 +21,8 @@ EffectStyledDialogView {
     title: viewerModel.title + " - " + viewerModel.trackName
     navigationSection.name: title
 
+    alwaysAboveApp: true
+
     contentWidth: Math.max(viewerLoader.width + prv.viewMargins * 2, prv.minimumWidth)
     contentHeight: {
         let height = 0
