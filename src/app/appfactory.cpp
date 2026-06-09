@@ -32,7 +32,6 @@
 
 #include "framework/multiwindows/multiwindowsmodule.h"
 
-#include "audiopluginsappconfigmodule.h"
 #include "appshell/appshellmodule.h"
 #include "context/contextmodule.h"
 #include "preferences/preferencesmodule.h"
@@ -128,7 +127,6 @@ std::shared_ptr<muse::IApplication> AppFactory::newGuiApp(const std::shared_ptr<
     app->addModule(new muse::diagnostics::DiagnosticsModule());
 
     app->addModule(new muse::audioplugins::AudioPluginsModule());
-    app->addModule(new au::app::AudioPluginsAppConfigModule());
     app->addModule(new muse::actions::ActionsModule());
     app->addModule(new muse::draw::DrawModule());
     app->addModule(new muse::workspace::WorkspaceModule());
@@ -188,7 +186,6 @@ std::shared_ptr<muse::IApplication> AppFactory::newPluginRegistrationApp(const s
     std::shared_ptr<PluginRegistrationApp> app = std::make_shared<PluginRegistrationApp>(options);
 
     app->addModule(new muse::audioplugins::AudioPluginsModule());
-    app->addModule(new au::app::AudioPluginsAppConfigModule());
     app->addModule(new muse::actions::ActionsModule());
 
     app->addModule(new au::effects::AudioUnitEffectsModule());

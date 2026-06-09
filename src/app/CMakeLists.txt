@@ -175,8 +175,6 @@ qt_add_executable(${EXECUTABLE_NAME}
     main.cpp
     appfactory.cpp
     appfactory.h
-    audiopluginsappconfigmodule.cpp
-    audiopluginsappconfigmodule.h
     guiapp.cpp
     guiapp.h
     pluginregistrationapp.cpp

@@ -69,6 +69,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectinstancesregister.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectexecutionscenario.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectexecutionscenario.h
+    ${CMAKE_CURRENT_LIST_DIR}/internal/knownaudiopluginsconfigurator.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/internal/knownaudiopluginsconfigurator.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/realtimeeffectrestorer.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/realtimeeffectrestorer.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/realtimeeffectservice.cpp
