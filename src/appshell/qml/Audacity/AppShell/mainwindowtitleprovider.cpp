@@ -119,8 +119,9 @@ void MainWindowTitleProvider::update()
     const bool projectModified = project->hasUnsavedChanges();
     setTitle(projectTitle.isEmpty()
              ? appDisplayName()
-             //: %1 is the project title, %2 is the modified marker ("* ") shown when there are unsaved changes, %3 is the app name
-             : muse::qtrc("appshell", "%1 %2- %3").arg(projectTitle, projectModified ? muse::qtrc("appshell", "* ") : QString(), appDisplayName()));
+             //: %1 is the project title, %2 is the modified marker ("*") shown when there are unsaved changes, %3 is the app name
+             : muse::qtrc("appshell", "%1 %2 - %3").arg(projectTitle, projectModified ? muse::qtrc("appshell", "*") : QString(),
+                                                        appDisplayName()));
 
     setFilePath(project->path().toQString());
     setFileModified(projectModified);
