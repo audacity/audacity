@@ -560,7 +560,7 @@ Rectangle {
                             selectionViewController.resetSelectedItems()
                             itemsSelection.visible = true
                         }
-                        handleGuideline(e.x, false)
+                        snapGuidelineToPosition(e.x)
 
                         splitToolController.mouseDown(e.x)
                         lastItemClickKey = null
@@ -596,7 +596,7 @@ Rectangle {
                     selectionViewController.onPositionChanged(e.x, e.y)
                     let trackId = tracksViewState.trackAtPosition(e.x, e.y)
 
-                    handleGuideline(e.x, false)
+                    snapGuidelineToPosition(e.x)
                 }
             }
 
@@ -627,7 +627,7 @@ Rectangle {
                         selectionViewController.onReleased(e.x, e.y)
                         itemsSelection.visible = false
                     }
-                    handleGuideline(e.x, true)
+                    hideGuideline()
                     if (e.modifiers & (Qt.ControlModifier | Qt.ShiftModifier)) {
                         playCursorController.seekToX(timeline.context.selectionStartPosition)
                     }
@@ -689,12 +689,12 @@ Rectangle {
                 }
 
                 timeline.updateCursorPosition(pos.x, pos.y)
-                root.handleGuideline(pos.x, false)
+                root.snapGuidelineToPosition(pos.x)
             }
 
             onHoveredChanged: {
                 if (!hovered) {
-                    root.invalidateGuideline()
+                    root.hideGuideline()
                 }
             }
         }
@@ -1029,11 +1029,11 @@ Rectangle {
                             }
 
                             onTriggerItemGuideline: function (time, completed) {
-                                root.applyItemGuideline(time, completed)
+                                root.setGuidelineAtTime(time, completed)
                             }
 
                             onHandleTimeGuideline: function (x) {
-                                root.handleGuideline(x)
+                                root.snapGuidelineToPosition(x)
                             }
 
                             Connections {
@@ -1156,11 +1156,11 @@ Rectangle {
                             }
 
                             onTriggerItemGuideline: function (time, completed) {
-                                root.applyItemGuideline(time, completed)
+                                root.setGuidelineAtTime(time, completed)
                             }
 
                             onHandleTimeGuideline: function (x) {
-                                root.handleGuideline(x)
+                                root.snapGuidelineToPosition(x)
                             }
 
                             onInsureVerticallyVisible: function () {
@@ -1295,25 +1295,21 @@ Rectangle {
         }
     }
 
-    function handleGuideline(x, completed) {
-        if (completed) {
-            root.invalidateGuideline()
-            return
-        }
+    function snapGuidelineToPosition(x) {
         let time = timeline.context.applyDetectedSnap(timeline.context.positionToTime(x))
-        root.applyItemGuideline(timeline.context.findGuideline(time), false)
+        root.setGuidelineAtTime(timeline.context.findGuideline(time), false)
     }
 
-    function applyItemGuideline(time, completed) {
+    function setGuidelineAtTime(time, completed) {
         if (completed || !timeline.context.isGuidelineValid(time)) {
-            root.invalidateGuideline()
+            root.hideGuideline()
             return
         }
         root.guidelinePos = timeline.context.timeToPosition(time)
         root.guidelineVisible = root.guidelinePos >= 0
     }
 
-    function invalidateGuideline() {
+    function hideGuideline() {
         root.guidelineVisible = false
     }
 }
