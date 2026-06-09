@@ -6,13 +6,11 @@
 #include <algorithm>
 #include <cmath>
 #include <vector>
-
 #include <string>
 
 #include "framework/global/types/string.h"
 #include "framework/global/types/ratio.h"
 #include "framework/actions/actiontypes.h"
-
 #include "framework/audioplugins/audiopluginstypes.h"
 
 class Effect;
