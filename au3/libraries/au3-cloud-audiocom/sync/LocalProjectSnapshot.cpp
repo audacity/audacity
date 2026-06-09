@@ -429,7 +429,7 @@ void LocalProjectSnapshot::UpdateProjectSnapshot()
 
         if (!result) {
             UploadFailed(MakeClientFailure(
-                             TranslatableString("cloud-audiocom", "Invalid Response: %1").arg(body).Translation()));
+                             TranslatableString("cloud-audiocom", "Invalid Response: %1").arg(body).translated().toStdString()));
 
             mCreateSnapshotPromise.set_value({});
             return;

@@ -167,7 +167,7 @@ std::shared_ptr<RemoteProjectSnapshot> RemoteProjectSnapshot::Sync(
         snapshot->mCallback(
             { { SyncResultCode::InternalClientError,
                 TranslatableString("cloud-audiocom", "Failed to attach to the Cloud project database")
-                    .Translation() },
+                    .translated().toStdString() },
                 0,
                 0,
                 false });
@@ -284,7 +284,7 @@ void RemoteProjectSnapshot::SetupBlocksCopy(
                 OnFailure({ SyncResultCode::InternalClientError,
                             copyBlocksStatement.GetError()
                                              .GetErrorString()
-                                             .Translation() });
+                                             .translated().toStdString() });
 
                 return false;
             }
@@ -296,7 +296,7 @@ void RemoteProjectSnapshot::SetupBlocksCopy(
                             result.GetErrors()
                                              .front()
                                              .GetErrorString()
-                                             .Translation() });
+                                             .translated().toStdString() });
                 return false;
             }
 
@@ -485,7 +485,7 @@ void RemoteProjectSnapshot::OnProjectBlobDownloaded(
         OnFailure({ SyncResultCode::InternalClientError,
                     updateProjectStatement.GetError()
                                      .GetErrorString()
-                                     .Translation() });
+                                     .translated().toStdString() });
         return;
     }
 
@@ -503,7 +503,7 @@ void RemoteProjectSnapshot::OnProjectBlobDownloaded(
     if (!result.IsOk()) {
         OnFailure(
             { SyncResultCode::InternalClientError,
-              result.GetErrors().front().GetErrorString().Translation() });
+              result.GetErrors().front().GetErrorString().translated().toStdString() });
 
         return;
     }
@@ -515,7 +515,7 @@ void RemoteProjectSnapshot::OnProjectBlobDownloaded(
         OnFailure({ SyncResultCode::InternalClientError,
                     deleteAutosaveStatement.GetError()
                                      .GetErrorString()
-                                     .Translation() });
+                                     .translated().toStdString() });
         return;
     }
 
@@ -524,13 +524,13 @@ void RemoteProjectSnapshot::OnProjectBlobDownloaded(
     if (!result.IsOk()) {
         OnFailure(
             { SyncResultCode::InternalClientError,
-              result.GetErrors().front().GetErrorString().Translation() });
+              result.GetErrors().front().GetErrorString().translated().toStdString() });
         return;
     }
 
     if (auto error = transaction.Commit(); error.IsError()) {
         OnFailure({ SyncResultCode::InternalClientError,
-                    error.GetErrorString().Translation() });
+                    error.GetErrorString().translated().toStdString() });
         return;
     }
 
@@ -550,7 +550,7 @@ void RemoteProjectSnapshot::OnBlockDownloaded(
         OnFailure(
             { SyncResultCode::InternalClientError,
               TranslatableString("cloud-audiocom", "Failed to decompress the Cloud project block")
-                               .Translation() });
+                               .translated().toStdString() });
         return;
     }
 
@@ -568,7 +568,7 @@ void RemoteProjectSnapshot::OnBlockDownloaded(
     if (!result.IsOk()) {
         OnFailure(
             { SyncResultCode::InternalClientError,
-              result.GetErrors().front().GetErrorString().Translation() });
+              result.GetErrors().front().GetErrorString().translated().toStdString() });
         return;
     }
 
@@ -580,7 +580,7 @@ void RemoteProjectSnapshot::OnBlockDownloaded(
     if (!blockStatement) {
         OnFailure(
             { SyncResultCode::InternalClientError,
-              blockStatement.GetError().GetErrorString().Translation() });
+              blockStatement.GetError().GetErrorString().translated().toStdString() });
         return;
     }
 
@@ -605,13 +605,13 @@ void RemoteProjectSnapshot::OnBlockDownloaded(
     if (!result.IsOk()) {
         OnFailure(
             { SyncResultCode::InternalClientError,
-              result.GetErrors().front().GetErrorString().Translation() });
+              result.GetErrors().front().GetErrorString().translated().toStdString() });
         return;
     }
 
     if (auto error = transaction.Commit(); error.IsError()) {
         OnFailure({ SyncResultCode::InternalClientError,
-                    error.GetErrorString().Translation() });
+                    error.GetErrorString().translated().toStdString() });
         return;
     }
 

@@ -880,7 +880,7 @@ bool ProjectFileIO::DeleteBlocks(const BlockIDs& blockids, bool complement)
     int changes = sqlite3_changes(db);
     if (changes > 0) {
         //: %1 is the number of deleted orphan blocks
-        wxLogInfo(wxString::FromUTF8(TranslatableString("project-file-io", "Total orphan blocks deleted %1").Translation().c_str()), changes);
+        wxLogInfo(TranslatableString("project-file-io", "Total orphan blocks deleted %1").Translation(), changes);
         mRecovered = true;
     }
 

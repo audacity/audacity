@@ -47,6 +47,13 @@ inline QString argDecay(const wxString& s)
 
 } // namespace au3
 
+//! Out-of-line so wxString is complete here. UTF-8 round-trip preserves
+//! non-ASCII on every platform, unlike wxString's locale-based std::string ctor.
+inline wxString TranslatableString::Translation() const
+{
+    return wxString::FromUTF8(translated().toUtf8().constData());
+}
+
 //! Stream operator (au3 convention) — emits the wxString translation,
 //! so `out << someTS` against wxTextOutputStream / wxString sinks keeps
 //! working. Lives in this header (rather than TranslatableString.h) so
@@ -54,5 +61,5 @@ inline QString argDecay(const wxString& s)
 template<typename Sink>
 inline Sink& operator<<(Sink& sink, const ::TranslatableString& s)
 {
-    return sink << wxString::FromUTF8(s.Translation().c_str());
+    return sink << s.Translation();
 }

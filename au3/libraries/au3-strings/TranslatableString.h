@@ -132,7 +132,10 @@ public:
     QString qTranslated() const { return translated(); }
     QString qTranslated(int n) const { return translated(n); }
 
-    std::string Translation() const { return translated().toStdString(); }
+    //! UTF-8-correct wxString; defined in WxMuseStringCompat.h where wxString
+    //! is complete. Returning std::string here would route every legacy call
+    //! site through wxString's locale-based implicit ctor and mangle non-ASCII.
+    wxString Translation() const;
 
     //! Source with args applied, no catalogue lookup. For diagnostics and
     //! internal pattern matching where translation would be wrong.

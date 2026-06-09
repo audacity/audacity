@@ -252,7 +252,7 @@ void Importer::SetLastOpenType(const FileNames::FileType& type)
     // string!
     // The bad consequences of a change of locale are not severe -- only that
     // a default choice of file type for an open dialog is not remembered
-    gPrefs->Write(wxT("/LastOpenType"), wxString::FromUTF8(type.description.Translation().c_str()));
+    gPrefs->Write(wxT("/LastOpenType"), type.description.Translation());
     gPrefs->Flush();
 }
 
@@ -262,7 +262,7 @@ void Importer::SetDefaultOpenType(const FileNames::FileType& type)
     // string!
     // The bad consequences of a change of locale are not severe -- only that
     // a default choice of file type for an open dialog is not remembered
-    gPrefs->Write(wxT("/DefaultOpenType"), wxString::FromUTF8(type.description.Translation().c_str()));
+    gPrefs->Write(wxT("/DefaultOpenType"), type.description.Translation());
     gPrefs->Flush();
 }
 

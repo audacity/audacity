@@ -236,7 +236,7 @@ private:
                 FailSync(
                     { SyncResultCode::InternalClientError,
                       TranslatableString("cloud-audiocom", "Local project data was removed before the sync has completed")
-                      .Translation() });
+                      .translated().toStdString() });
                 return;
             }
         }

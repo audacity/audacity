@@ -1015,7 +1015,7 @@ void Sequence::WriteXML(XMLWriter& xmlFile) const
                 .Caption(TranslatableString("wave-track", "Warning - Truncating Overlong Block File"))
                 .IconStyle(Icon::Warning)
                 .ButtonStyle(Button::Ok));
-            wxLogWarning("%s", wxString::FromUTF8(sMsg.Translation().c_str())); //Debug?
+            wxLogWarning("%s", sMsg.Translation()); //Debug?
 //         bb.sb->SetLength(mMaxSamples);
         }
 

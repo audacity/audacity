@@ -55,9 +55,9 @@ public:
     const wxString& Internal() const { return mInternal; }
     const ::TranslatableString& Msgid() const { return mMsgid; }
     const ::TranslatableString Stripped() const { return mMsgid.stripped(); }
-    const wxString Translation() const { return wxString::FromUTF8(mMsgid.Translation().c_str()); }
+    const wxString Translation() const { return mMsgid.Translation(); }
     const wxString StrippedTranslation() const
-    { return wxString::FromUTF8(Stripped().Translation().c_str()); }
+    { return Stripped().Translation(); }
 
     bool empty() const { return mInternal.empty(); }
 

@@ -836,7 +836,7 @@ bool NyquistBase::Process(EffectInstance&, EffectSettings& settings)
     for (; bOnePassTool || pRange->first != pRange->second;
          (void)(!pRange || (++pRange->first, true))) {
         // Prepare to accumulate more debug output in OutputCallback
-        mDebugOutputStr = wxString::FromUTF8(mDebugOutput.Translation().c_str());
+        mDebugOutputStr = mDebugOutput.Translation();
         // NOTE: muse's TranslatableString::arg snapshots the value; the
         // original code used std::cref to defer until rendering. We accept
         // that the rendered debug output may not include bytes appended

@@ -174,7 +174,7 @@ void BadPath(
     if (sBadPaths.insert(badPath).second) {
         auto msg = format.Format(badPath);
         // debug message
-        wxLogDebug("%s", wxString::FromUTF8(msg.Translation().c_str()));
+        wxLogDebug("%s", msg.Translation());
 #ifdef IS_ALPHA
         // user-visible message
         BasicUI::ShowMessageBox(msg);

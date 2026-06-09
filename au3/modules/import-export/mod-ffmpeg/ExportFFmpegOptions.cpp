@@ -563,7 +563,7 @@ std::vector<std::string> ExportFFmpegOptions::GetProfiles() const
 {
     std::vector<std::string> list;
     for (const auto& profile : AACProfiles.GetSymbols().GetMsgids()) {
-        list.push_back(profile.Translation());
+        list.push_back(profile.translated().toStdString());
     }
 
     return list;
@@ -573,7 +573,7 @@ std::vector<std::string> ExportFFmpegOptions::GetPredictionOrderMethods() const
 {
     std::vector<std::string> list;
     for (const auto& method : PredictionOrderMethodNames) {
-        list.push_back(method.Translation());
+        list.push_back(method.translated().toStdString());
     }
 
     return list;
