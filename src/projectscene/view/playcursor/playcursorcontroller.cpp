@@ -139,6 +139,8 @@ void PlayCursorController::updatePositionX(muse::secs_t secs)
                 }
             }
         }
+    } else {
+        m_context->insureVisible(secs);
     }
 
     m_positionX = m_context->timeToPosition(secs);
