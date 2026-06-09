@@ -128,6 +128,10 @@ void VolumePressureMeterItem::drawBackground(QPainter& p) const
     QPainterPath path;
     buildRoundedRectPath(path, 0, 0, m_indicatorWidth, height(), 2, true, true);
     p.fillPath(path, meterBackgroundColor());
+    if (meterStrokeColor().isValid() && meterStrokeColor().alpha() > 0) {
+        p.setPen(QPen(meterStrokeColor(), 1));
+        p.drawPath(path);
+    }
 }
 
 void VolumePressureMeterItem::drawClippedIndicator(QPainter& p) const

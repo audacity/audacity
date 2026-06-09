@@ -382,7 +382,7 @@ FocusScope {
         height: 48
         width: parent.width
 
-        color: ui.theme.backgroundSecondaryColor
+        color: ui.theme.backgroundTertiaryColor
 
         SeparatorLine {
             anchors.top: parent.top

@@ -53,6 +53,11 @@ Item {
         readonly property int listHeaderHeight: 2
     }
 
+    Rectangle {
+        anchors.fill: parent
+        color: ui.theme.backgroundSecondaryColor
+    }
+
     RowLayout {
 
         anchors.fill: parent
