@@ -1028,8 +1028,8 @@ Rectangle {
                                 })
                             }
 
-                            onTriggerItemGuideline: function (time, completed) {
-                                root.setGuidelineAtTime(time, completed)
+                            onTriggerItemGuideline: function (time) {
+                                root.setGuidelineAtTime(time)
                             }
 
                             onHandleTimeGuideline: function (x) {
@@ -1155,8 +1155,8 @@ Rectangle {
                                 tracksItemsView.moveActive = !completed
                             }
 
-                            onTriggerItemGuideline: function (time, completed) {
-                                root.setGuidelineAtTime(time, completed)
+                            onTriggerItemGuideline: function (time) {
+                                root.setGuidelineAtTime(time)
                             }
 
                             onHandleTimeGuideline: function (x) {
@@ -1297,11 +1297,11 @@ Rectangle {
 
     function snapGuidelineToPosition(x) {
         let time = timeline.context.applyDetectedSnap(timeline.context.positionToTime(x))
-        root.setGuidelineAtTime(timeline.context.findGuideline(time), false)
+        root.setGuidelineAtTime(timeline.context.findGuideline(time))
     }
 
-    function setGuidelineAtTime(time, completed) {
-        if (completed || !timeline.context.isGuidelineValid(time)) {
+    function setGuidelineAtTime(time) {
+        if (!timeline.context.isGuidelineValid(time)) {
             root.hideGuideline()
             return
         }
