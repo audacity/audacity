@@ -100,6 +100,7 @@ public:
 
 private:
     friend class Project_Audacity4ProjectTests;
+    friend class Project_RealtimeEffectsPersistenceTests;
 
     void setupProjectNotifications();
     void setPath(const muse::io::path_t& path);

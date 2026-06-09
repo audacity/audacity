@@ -11,6 +11,7 @@ set(MODULE_TEST_SRC
     ${CMAKE_CURRENT_LIST_DIR}/mocks/projectconfigurationmock.h
     ${CMAKE_CURRENT_LIST_DIR}/mocks/trackeditprojectcreatormock.h
     ${CMAKE_CURRENT_LIST_DIR}/audacityproject_tests.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/realtimeeffectspersistence_tests.cpp
 )
 
 set(MODULE_TEST_LINK
