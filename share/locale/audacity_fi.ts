@@ -540,12 +540,12 @@
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="59"/>
         <source>Save &amp;as…</source>
-        <translation>Tallenn&amp;a…</translation>
+        <translation>T&amp;allenna nimellä…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="60"/>
         <source>Save as…</source>
-        <translation>Tallenna…</translation>
+        <translation>Tallenna nimellä…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="65"/>
@@ -4067,7 +4067,7 @@ Tämä toiminto ei poista projektejasi.</translation>
     <message>
         <location filename="../../src/effects/effects_base/view/effectsavecontextmenu.cpp" line="86"/>
         <source>Save as…</source>
-        <translation>Tallenna…</translation>
+        <translation>Tallenna nimellä…</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/view/generatedeffectviewermodel.cpp" line="54"/>

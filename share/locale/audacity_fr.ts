@@ -4880,12 +4880,12 @@ Leo Wattenberg, Septembre 2024 (Migration vers Transifex)</translation>
         <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="16"/>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="355"/>
         <source>Edit mapping</source>
-        <translation>Edit mapping</translation>
+        <translation>Éditer les contrôles</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/CustomMappingDialog.qml" line="48"/>
         <source>Channel count</source>
-        <translation>Channel count</translation>
+        <translation>Nombre de canaux</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="19"/>
@@ -4950,7 +4950,7 @@ Leo Wattenberg, Septembre 2024 (Migration vers Transifex)</translation>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="326"/>
         <source>Custom mapping</source>
-        <translation>Custom mapping</translation>
+        <translation>Contrôles personnalisés</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="373"/>
@@ -4981,7 +4981,7 @@ Leo Wattenberg, Septembre 2024 (Migration vers Transifex)</translation>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="564"/>
         <source>Rendering</source>
-        <translation>Rendering</translation>
+        <translation>Rendu</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="574"/>
@@ -5072,7 +5072,7 @@ Leo Wattenberg, Septembre 2024 (Migration vers Transifex)</translation>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="112"/>
         <source>Cutoff</source>
-        <translation>Coupure</translation>
+        <translation>Cutoff</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="151"/>
@@ -5189,17 +5189,17 @@ Recommandé - 192000</translation>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="40"/>
         <source>Export audio in loop region</source>
-        <translation>Export audio in loop region</translation>
+        <translation>Exporter l&apos;audio dans une one de boucle</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="171"/>
         <source>No loop region</source>
-        <translation>No loop region</translation>
+        <translation>Aucune zone de boucle</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="172"/>
         <source>Export audio in loop region requires a loop in the project. Please go back, create a loop and try again.</source>
-        <translation>Export audio in loop region requires a loop in the project. Please go back, create a loop and try again.</translation>
+        <translation>Exporter l&apos;audio dans une zone de boucle nécessite une boucle dans le projet. Veuillez revenir en arrière et créer une boucle.</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="183"/>
@@ -5209,7 +5209,7 @@ Recommandé - 192000</translation>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="184"/>
         <source>Export selected audio requires a selection of audio data in the project. Please return to the project, make a selection and then try again.</source>
-        <translation>Export selected audio requires a selection of audio data in the project. Please return to the project, make a selection and then try again.</translation>
+        <translation>Exporter l&apos;audio sélectionné nécessite la sélection de données audio dans le projet. Veuillez retourner au projet, effectuer une sélection, puis réessayer.</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="465"/>
@@ -5865,12 +5865,12 @@ Master effects will be turned back on after export.</translation>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="64"/>
         <source>Loop in</source>
-        <translation>Loop in</translation>
+        <translation>Début de boucle</translation>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="110"/>
         <source>Loop out</source>
-        <translation>Loop out</translation>
+        <translation>Fin de boucle</translation>
     </message>
 </context>
 <context>
@@ -6747,7 +6747,7 @@ Master effects will be turned back on after export.</translation>
         <location filename="../../src/project/internal/audacityproject.cpp" line="72"/>
         <location filename="../../src/project/internal/audacityproject.cpp" line="104"/>
         <source>Imported file “%1”?</source>
-        <translation>Imported file “%1”?</translation>
+        <translation>Fichier importé “%1” ?</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/audacityproject.cpp" line="76"/>
@@ -6761,7 +6761,7 @@ Master effects will be turned back on after export.</translation>
         <location filename="../../src/project/internal/audacityproject.cpp" line="97"/>
         <location filename="../../src/project/internal/audacityproject.cpp" line="122"/>
         <source>Imported multiple files</source>
-        <translation>Imported multiple files</translation>
+        <translation>Plusieurs fichiers importés multiple files</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="240"/>
@@ -6781,7 +6781,7 @@ Master effects will be turned back on after export.</translation>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="518"/>
         <source>Upload project to audio.com…</source>
-        <translation>Upload project to audio.com…</translation>
+        <translation>Téléchargez le projet sur audio.com…</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="579"/>
@@ -7540,7 +7540,7 @@ Please remove the write protection by checking the file’s properties, ensuring
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="61"/>
         <source>Enable triplets</source>
-        <translation>Enable triplets</translation>
+        <translation>Activer les divisions irrégulières</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="217"/>
@@ -8120,7 +8120,7 @@ Code d’erreur : %1</translation>
     <message>
         <location filename="../../src/playback/internal/playbackcontroller.cpp" line="631"/>
         <source>Set looping region in/out</source>
-        <translation>Set looping region in/out</translation>
+        <translation>Définir le début et le fin de la lecture en boucle</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/au3/au3clipsinteraction.cpp" line="41"/>
