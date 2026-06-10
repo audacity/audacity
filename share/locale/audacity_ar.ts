@@ -1,15 +1,15 @@
-<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ar_EG">
+<?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="ar">
 <context>
     <name>Playback</name>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="65"/>
         <source>Meter style</source>
-        <translation type="unfinished">شكل العداد</translation>
+        <translation>شكل العداد</translation>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="96"/>
         <source>Meter type</source>
-        <translation type="unfinished">نوع العداد</translation>
+        <translation>نوع العداد</translation>
     </message>
 </context>
 <context>
@@ -31,22 +31,82 @@
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="46"/>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="47"/>
         <source>Exit</source>
-        <translation type="unfinished">اخرج</translation>
+        <translation>إغلاق</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="52"/>
         <source>Restart</source>
-        <translation type="unfinished"/>
+        <translation>إعادة التشغيل</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="57"/>
         <source>&amp;Full screen</source>
-        <translation type="unfinished"/>
+        <translation>و ملء الشاشة</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="58"/>
         <source>Full screen</source>
-        <translation type="unfinished"/>
+        <translation>ملء الشاشة</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="69"/>
+        <source>About &amp;Qt…</source>
+        <translation>حول Qt...</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="74"/>
+        <source>Online &amp;handbook</source>
+        <translation>الدليل الإلكتروني...</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="75"/>
+        <source>Open online handbook</source>
+        <translation>فتح الدليل الإلكتروني</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="80"/>
+        <source>As&amp;k for help</source>
+        <translation>اطلب المساعدة</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="85"/>
+        <source>Revert to &amp;factory settings</source>
+        <translation>الرجوع إلى إعدادات المصنع</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="86"/>
+        <source>Revert to factory settings</source>
+        <translation>الرجوع إلى إعدادات المصنع</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="93"/>
+        <source>Restore the &amp;default layout</source>
+        <translation>إعادة تعيين الواجهة</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="94"/>
+        <source>Restore the default layout</source>
+        <translation>إعادة تعيين الواجهة</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="101"/>
+        <source>&amp;Playback controls</source>
+        <translation>أدوات التحكم</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="102"/>
+        <source>Show/hide playback controls</source>
+        <translation>عرض/إخفاء أدوات التحكم</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="109"/>
+        <source>&amp;Tracks</source>
+        <translation>المقاطع</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="110"/>
+        <source>Show/hide tracks</source>
+        <translation>عرض/إخفاء المقاطع</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="64"/>
@@ -54,84 +114,24 @@
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="69"/>
-        <source>About &amp;Qt…</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="74"/>
-        <source>Online &amp;handbook</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="75"/>
-        <source>Open online handbook</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="80"/>
-        <source>As&amp;k for help</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="85"/>
-        <source>Revert to &amp;factory settings</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="86"/>
-        <source>Revert to factory settings</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="93"/>
-        <source>Restore the &amp;default layout</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="94"/>
-        <source>Restore the default layout</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="101"/>
-        <source>&amp;Playback controls</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="102"/>
-        <source>Show/hide playback controls</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="109"/>
-        <source>&amp;Tracks</source>
-        <translation>مقاطع</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="110"/>
-        <source>Show/hide tracks</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="117"/>
         <source>&amp;Status bar</source>
-        <translation type="unfinished"/>
+        <translation>شريط الحالة</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="118"/>
         <source>Show/hide status bar</source>
-        <translation type="unfinished"/>
+        <translation>عرض/إخفاء شريط الحالة</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="125"/>
         <source>&amp;Preferences</source>
-        <translation type="unfinished">التفضيلات</translation>
+        <translation>التفضيلات</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="126"/>
         <source>Preferences…</source>
-        <translation type="unfinished"/>
+        <translation>التفضيلات...</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="132"/>
@@ -139,7 +139,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="24"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="25"/>
         <source>Copy</source>
-        <translation>انسخ</translation>
+        <translation>نسخ</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="140"/>
@@ -154,13 +154,12 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="256"/>
         <source>&amp;Paste</source>
         <translation>لصق</translation>
-        <extracomment>i18n-hint: (verb)</extracomment>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="149"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="257"/>
         <source>Paste</source>
-        <translation>الصق</translation>
+        <translation>لصق</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="156"/>
@@ -179,14 +178,14 @@
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="164"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="45"/>
         <source>&amp;Redo</source>
-        <translation>كرر</translation>
+        <translation>إعادة</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="165"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="173"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="46"/>
         <source>Redo</source>
-        <translation>كرر</translation>
+        <translation>إعادة</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="172"/>
@@ -216,32 +215,22 @@
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="186"/>
         <source>&amp;Trigger</source>
-        <translation type="unfinished"/>
+        <translation>بدء التشغيل تلقائيا</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationuiactions.cpp" line="187"/>
         <source>Trigger</source>
-        <translation type="unfinished"/>
+        <translation>بدء التشغيل تلقائيا</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="168"/>
         <source>Undo ‘%1’</source>
-        <translation type="unfinished"/>
+        <translation>تراجع '1%'</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="174"/>
         <source>Redo ‘%1’</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="245"/>
-        <source>Metadata editor</source>
-        <translation type="unfinished">فتح محرر الميتا بيانات</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="556"/>
-        <source>Manage labels</source>
-        <translation type="unfinished"/>
+        <translation>إعادة '1%'</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="15"/>
@@ -253,58 +242,58 @@
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="21"/>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="22"/>
         <source>View on audio.com</source>
-        <translation type="unfinished"/>
+        <translation>انتقل إلى audio.com</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="24"/>
         <source>Repeat last effect</source>
-        <translation type="unfinished">كرر آخر تأثير</translation>
+        <translation>تكرار التأثير الأخير</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="29"/>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="30"/>
         <source>Remove realtime effect</source>
-        <translation type="unfinished"/>
+        <translation>إزالة التأثير المباشر</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="35"/>
         <source>&amp;Apply preset</source>
-        <translation type="unfinished"/>
+        <translation>تطبيق الإعداد المسبق</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="40"/>
         <source>Save preset as…</source>
-        <translation type="unfinished"/>
+        <translation>حفظ الإعداد المسبق كـ...</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="45"/>
         <source>&amp;Save preset</source>
-        <translation type="unfinished">احفظ المسبقة</translation>
+        <translation>حفظ الإعداد المسبق</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="50"/>
         <source>&amp;Delete preset</source>
-        <translation type="unfinished">احذف المحددة مسبقا</translation>
+        <translation>حذف الإعداد المسبق</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="56"/>
         <source>&amp;Import…</source>
-        <translation type="unfinished"/>
+        <translation>إدراج...</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="57"/>
         <source>Import preset</source>
-        <translation type="unfinished"/>
+        <translation>إدراج الإعداد المسبق</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="62"/>
         <source>&amp;Export…</source>
-        <translation type="unfinished"/>
+        <translation>تصدير...</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="63"/>
         <source>Export preset</source>
-        <translation type="unfinished"/>
+        <translation>صدير الإعداد المسبق</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="35"/>
@@ -329,181 +318,181 @@
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="50"/>
         <source>Stop playback</source>
-        <translation type="unfinished"/>
+        <translation>إيقاف العرض</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="56"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="57"/>
         <source>Rewind to start</source>
-        <translation type="unfinished"/>
+        <translation>العودة للبداية</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="63"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="64"/>
         <source>Rewind to end</source>
-        <translation type="unfinished"/>
+        <translation>العودة للنهاية</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="70"/>
         <source>Loop playback</source>
-        <translation type="unfinished"/>
+        <translation>تشغيل مستمر</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="71"/>
         <source>Toggle ‘Loop playback’</source>
-        <translation type="unfinished"/>
+        <translation>تفعيل/تعطيل "تشغيل مستمر"</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="78"/>
         <source>Audio setup</source>
-        <translation type="unfinished">ملف صوتي</translation>
+        <translation>ضبط الصوت</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="79"/>
         <source>Open audio setup context menu</source>
-        <translation type="unfinished"/>
+        <translation>فتح قائمة خيارات الصوت</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="85"/>
         <source>Get effects</source>
-        <translation type="unfinished"/>
+        <translation>الحصول على تأثيرات</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="86"/>
         <source>Open Get effects dialog</source>
-        <translation type="unfinished"/>
+        <translation>فتح خيارات الحصول على تأثيرات</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="92"/>
         <source>Audio settings</source>
-        <translation type="unfinished">أوضاع البرنامج المساعد</translation>
+        <translation>إعدادات الصوت</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="93"/>
         <source>Open audio setup dialog</source>
-        <translation type="unfinished"/>
+        <translation>فتح خيارات ضبط الصوت</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="98"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="99"/>
         <source>Rescan audio devices</source>
-        <translation type="unfinished">أعد تفحص أجهزة الصوت</translation>
+        <translation>تحديث قائمة أجهزة الصوت</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="104"/>
         <source>Metronome</source>
-        <translation type="unfinished"/>
+        <translation>ناظم الإيقاع</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="105"/>
         <source>Toggle metronome playback</source>
-        <translation type="unfinished"/>
+        <translation>تفعيل/تعطيل "صوت ناظم الإيقاع"</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="112"/>
         <source>Timecode</source>
-        <translation type="unfinished"/>
+        <translation>الرمز الزمني</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="113"/>
         <source>Set playback time</source>
-        <translation type="unfinished"/>
+        <translation>ضبط وقت التشغيل</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="119"/>
         <source>Tempo</source>
-        <translation type="unfinished">طبقة/درجة السرعة</translation>
+        <translation>سرعة الإيقاع</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="120"/>
         <source>Set playback tempo</source>
-        <translation type="unfinished"/>
+        <translation>ضبط السرعة الإيقاعية</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="126"/>
         <source>Time signature</source>
-        <translation type="unfinished">مقياس الوقت</translation>
+        <translation>الوزن الموسيقي</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="127"/>
         <source>Set playback time signature</source>
-        <translation type="unfinished"/>
+        <translation>ضبط الوزن الموسيقي</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="133"/>
         <source>Playback level</source>
-        <translation type="unfinished">مستوى التشغيل</translation>
+        <translation>مستوى صوت الخارج</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="134"/>
         <source>Set playback level</source>
-        <translation type="unfinished"/>
+        <translation>تحديد مستوى الصوت الخارج</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="140"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="141"/>
         <source>Change audio host</source>
-        <translation type="unfinished">غير مضيف الصوت</translation>
+        <translation>تغيير محرك الصوت</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="147"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="148"/>
         <source>Change playback device</source>
-        <translation type="unfinished">غير جهاز التشغيل</translation>
+        <translation>تغيير جهاز التشغيل</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="154"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="155"/>
         <source>Change recording device</source>
-        <translation type="unfinished">غير جهاز التسجيل</translation>
+        <translation>تغيير جهاز التسجيل</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="161"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="162"/>
         <source>Change input channels</source>
-        <translation type="unfinished"/>
+        <translation>تغيير قنوات التسجيل</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="168"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="169"/>
         <source>Toggle loop region</source>
-        <translation type="unfinished"/>
+        <translation>تفعيل/تعطيل حلقة التكرار</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="175"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="176"/>
         <source>Clear loop region</source>
-        <translation type="unfinished"/>
+        <translation>إلغاء منطقة التكرار</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="181"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="182"/>
         <source>Set loop region to selection</source>
-        <translation type="unfinished"/>
+        <translation>ضبط منطقة التكرار على التحديد</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="187"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="188"/>
         <source>Set selection to loop</source>
-        <translation type="unfinished"/>
+        <translation>ضبط التحديد على منطقة التكرار</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="193"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="194"/>
         <source>Set loop region in out</source>
-        <translation type="unfinished"/>
+        <translation>ضبط نقطتي البداية والنهاية للتكرار</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="199"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="200"/>
         <source>Creating a loop also selects audio</source>
-        <translation type="unfinished"/>
+        <translation>إنشاء تكرار يحدد المقطع الصوتي أيضا</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="209"/>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="210"/>
         <source>Play repeats</source>
-        <translation type="unfinished"/>
+        <translation>تشغيل التكرار</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="217"/>
@@ -518,40 +507,22 @@
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="23"/>
         <source>&amp;New…</source>
-        <translation type="unfinished"/>
+        <translation>جديد...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="24"/>
         <source>New…</source>
-        <translation type="unfinished"/>
+        <translation>جديد...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="29"/>
         <source>&amp;Open…</source>
-        <translation type="unfinished"/>
+        <translation>افتح...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="30"/>
         <source>Open…</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="36"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="37"/>
-        <source>Show in Finder</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="39"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="40"/>
-        <source>Show in Explorer</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="42"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="43"/>
-        <source>Show in File Manager</source>
-        <translation type="unfinished"/>
+        <translation>افتح...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="49"/>
@@ -575,78 +546,52 @@
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="67"/>
         <source>&amp;Clear recent files</source>
-        <translation type="unfinished"/>
+        <translation>مسح قائمة الملفات الأخيرة</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="68"/>
         <source>Clear recent files</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="73"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="74"/>
-        <source>Import…</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="79"/>
-        <source>&amp;Save</source>
-        <translation>حفظ</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="80"/>
-        <source>Save</source>
-        <translation>احفظ</translation>
+        <translation>مسح قائمة الملفات الأخيرة</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="85"/>
         <source>Save &amp;as…</source>
-        <translation type="unfinished"/>
+        <translation>حفظ كـ...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="86"/>
         <source>Save as…</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="91"/>
-        <source>&amp;Export audio…</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="92"/>
-        <source>Export audio…</source>
-        <translation type="unfinished"/>
+        <translation>حفظ كـ...</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="97"/>
         <source>&amp;Export labels</source>
-        <translation type="unfinished">صَدر العلامات</translation>
+        <translation>تصدير العلامات</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="98"/>
         <source>Export labels</source>
-        <translation type="unfinished">صَدر العلامات</translation>
+        <translation>تصدير العلامات</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="103"/>
         <source>&amp;Export MIDI</source>
-        <translation type="unfinished">صدر MIDI</translation>
+        <translation>تصدير MIDI</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="104"/>
         <source>Export MIDI</source>
-        <translation>صدر MIDI</translation>
+        <translation>تصدير MIDI</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="109"/>
         <source>&amp;Close project</source>
-        <translation type="unfinished"/>
+        <translation>إغلاق المشروع</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="110"/>
         <source>Close project</source>
-        <translation type="unfinished"/>
+        <translation>إغلاق المشروع</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="117"/>
@@ -657,37 +602,47 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="147"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="159"/>
         <source>Duplicate</source>
-        <translation>مضاعفة</translation>
+        <translation>نسخ متطابق</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="123"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="124"/>
         <source>Insert</source>
-        <translation type="unfinished">أدخل</translation>
+        <translation>إدخال</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="129"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="130"/>
         <source>Rename item</source>
-        <translation type="unfinished"/>
+        <translation>تغيير اسم العنصر</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="135"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="136"/>
         <source>Trim clip</source>
-        <translation type="unfinished"/>
+        <translation>تقليم المقطع</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="141"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="142"/>
         <source>Split into new track</source>
-        <translation type="unfinished"/>
+        <translation>فصل إلى مسار جديد</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="147"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="148"/>
         <source>Paste new label</source>
+        <translation>لصق علامة جديدة</translation>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="556"/>
+        <source>Manage labels</source>
         <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="245"/>
+        <source>Metadata editor</source>
+        <translation type="unfinished">فتح محرر الميتا بيانات</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="154"/>
@@ -770,6 +725,36 @@
         <translation type="unfinished"/>
     </message>
     <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="36"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="37"/>
+        <source>Zoom in</source>
+        <translation type="unfinished">زوم داخلا</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="43"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="44"/>
+        <source>Zoom out</source>
+        <translation type="unfinished">زوم خارجا</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="50"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="51"/>
+        <source>Zoom default</source>
+        <translation type="unfinished">زوم أساسيا</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="56"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="57"/>
+        <source>Zoom to selection</source>
+        <translation type="unfinished">زوم إلى الاختيار</translation>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="70"/>
+        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="71"/>
+        <source>Zoom toggle</source>
+        <translation type="unfinished">مفصل التزويم</translation>
+    </message>
+    <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="234"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="235"/>
         <source>Collapse all tracks</source>
@@ -792,12 +777,6 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="253"/>
         <source>Skip to selection end</source>
         <translation type="unfinished">تجاوز إلى نهاية الاختيار</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="258"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="259"/>
-        <source>Show effects panel</source>
-        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="265"/>
@@ -908,22 +887,10 @@
         <translation type="unfinished">رتب حسب الاسم</translation>
     </message>
     <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="384"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="385"/>
-        <source>Keep tracks synchronized</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="391"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="392"/>
         <source>Plugin manager</source>
         <translation type="unfinished">أوضاع البرنامج المساعد</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="399"/>
-        <location filename="../../src/project/internal/projectuiactions.cpp" line="400"/>
-        <source>Add track effects</source>
-        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="405"/>
@@ -941,6 +908,68 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="417"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="418"/>
         <source>Fav effect #3</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="73"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="74"/>
+        <source>Import…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="36"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="37"/>
+        <source>Show in Finder</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="39"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="40"/>
+        <source>Show in Explorer</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="42"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="43"/>
+        <source>Show in File Manager</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="79"/>
+        <source>&amp;Save</source>
+        <translation>حفظ</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="80"/>
+        <source>Save</source>
+        <translation>احفظ</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="91"/>
+        <source>&amp;Export audio…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="92"/>
+        <source>Export audio…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="258"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="259"/>
+        <source>Show effects panel</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="384"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="385"/>
+        <source>Keep tracks synchronized</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="399"/>
+        <location filename="../../src/project/internal/projectuiactions.cpp" line="400"/>
+        <source>Add track effects</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -1032,7 +1061,6 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="514"/>
         <source>Benchmark</source>
         <translation>الصُوَّة</translation>
-        <extracomment>i18n-hint: Benchmark means a software speed test</extracomment>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="519"/>
@@ -1104,7 +1132,7 @@
         <location filename="../../src/project/internal/projectuiactions.cpp" line="587"/>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="588"/>
         <source>Link account</source>
-        <translation type="unfinished">كمية الأرجحة</translation>
+        <translation>ربط الحساب</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="593"/>
@@ -1145,40 +1173,10 @@
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="36"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="37"/>
-        <source>Zoom in</source>
-        <translation type="unfinished">زوم داخلا</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="43"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="44"/>
-        <source>Zoom out</source>
-        <translation type="unfinished">زوم خارجا</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="50"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="51"/>
-        <source>Zoom default</source>
-        <translation type="unfinished">زوم أساسيا</translation>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="56"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="57"/>
-        <source>Zoom to selection</source>
-        <translation type="unfinished">زوم إلى الاختيار</translation>
-    </message>
-    <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="63"/>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="64"/>
         <source>Zoom to fit project</source>
         <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="70"/>
-        <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="71"/>
-        <source>Zoom toggle</source>
-        <translation type="unfinished">مفصل التزويم</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/internal/projectsceneuiactions.cpp" line="77"/>
@@ -1419,7 +1417,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="72"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="73"/>
         <source>Cut and leave gap</source>
-        <translation type="unfinished"/>
+        <translation>قص مع ترك فجوة</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="79"/>
@@ -1574,6 +1572,18 @@
         <translation>صورة طيفية</translation>
     </message>
     <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="459"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="460"/>
+        <source>Above item</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="465"/>
+        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="466"/>
+        <source>Below item</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="248"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="249"/>
         <source>Multi-view</source>
@@ -1679,7 +1689,7 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="364"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="365"/>
         <source>Silence</source>
-        <translation type="unfinished">سكون</translation>
+        <translation>إسكات</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="371"/>
@@ -1763,18 +1773,6 @@
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="452"/>
         <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="453"/>
         <source>Previous item</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="459"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="460"/>
-        <source>Above item</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="465"/>
-        <location filename="../../src/trackedit/internal/trackedituiactions.cpp" line="466"/>
-        <source>Below item</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -1875,13 +1873,8 @@
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/PluginsPage.qml" line="137"/>
         <source>All</source>
+        <extracomment>The title of an option to display the plugins from all categories.</extracomment>
         <translation>جميع</translation>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/Main.wasm.qml" line="36"/>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/platform/win/AppTitleBar.qml" line="92"/>
-        <source>Audacity</source>
-        <translation>Audacity</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/MainToolBar.qml" line="64"/>
@@ -1918,9 +1911,6 @@
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="291"/>
         <source>Tracks</source>
         <translation>المقاطع</translation>
-        <extracomment>i18n-hint: "Tracks" include audio recordings but also other collections of
-* data associated with a time line, such as sequences of labels, and musical
-* notes</extracomment>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="387"/>
@@ -1930,7 +1920,7 @@
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/ProjectPage/ProjectPage.qml" line="406"/>
         <source>History</source>
-        <translation>تاريخ</translation>
+        <translation>التاريخ</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MidiDevicesSection.qml" line="81"/>
@@ -1957,7 +1947,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="397"/>
         <source>Revert to factory settings</source>
-        <translation type="unfinished"/>
+        <translation>الرجوع إلى إعدادات المصنع</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="409"/>
@@ -1972,7 +1962,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="416"/>
         <source>Restart</source>
-        <translation type="unfinished"/>
+        <translation>إعادة التشغيل</translation>
     </message>
     <message>
         <location filename="../../src/appshell/internal/splashscreen/loadingscreenview.cpp" line="54"/>
@@ -1997,6 +1987,31 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/internal/splashscreen/newinstanceloadingscreenview.cpp" line="51"/>
         <source>Loading project…‎</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="28"/>
+        <source>Validate audio plugins</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="29"/>
+        <source>Audacity has found plugins that need to be validated before use. Would you like to validate them now or skip?</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="34"/>
+        <source>Skip this time</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="37"/>
+        <source>Validate</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="41"/>
+        <source>Audio plugin validation</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -2025,6 +2040,20 @@ This action will not delete any of your projects.</source>
         <translation type="unfinished"/>
     </message>
     <message>
+        <source>Audacity 4</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>%1 %2- Audacity 4</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/Main.wasm.qml" line="36"/>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/platform/win/AppTitleBar.qml" line="92"/>
+        <source>Audacity</source>
+        <translation>Audacity</translation>
+    </message>
+    <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/mainwindowtitleprovider.cpp" line="123"/>
         <source>%1 %2 - %3</source>
         <translation type="unfinished"/>
@@ -2032,31 +2061,6 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/mainwindowtitleprovider.cpp" line="123"/>
         <source>*</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="28"/>
-        <source>Validate audio plugins</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="29"/>
-        <source>Audacity has found plugins that need to be validated before use. Would you like to validate them now or skip?</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="34"/>
-        <source>Skip this time</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="37"/>
-        <source>Validate</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="41"/>
-        <source>Audio plugin validation</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -2207,7 +2211,6 @@ This action will not delete any of your projects.</source>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="388"/>
         <source>Select</source>
         <translation>اختيار</translation>
-        <extracomment>i18n-hint: (verb).  It instruct the user to select items.</extracomment>
     </message>
 </context>
 <context>
@@ -2269,7 +2272,6 @@ This action will not delete any of your projects.</source>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="243"/>
         <source>Label</source>
         <translation>علامة</translation>
-        <extracomment>i18n-hint: (noun)</extracomment>
     </message>
 </context>
 <context>
@@ -2310,7 +2312,6 @@ This action will not delete any of your projects.</source>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="334"/>
         <source>&amp;Record</source>
         <translation>سجل</translation>
-        <extracomment>i18n-hint: (verb)</extracomment>
     </message>
 </context>
 <context>
@@ -2363,7 +2364,6 @@ This action will not delete any of your projects.</source>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="278"/>
         <source>&amp;Select</source>
         <translation>اختر</translation>
-        <extracomment>i18n-hint: (verb) It's an item on a menu.</extracomment>
     </message>
 </context>
 <context>
@@ -2404,7 +2404,6 @@ This action will not delete any of your projects.</source>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="394"/>
         <source>Track</source>
         <translation>مقطع</translation>
-        <extracomment>i18n-hint: (noun).  A track contains waves, audio etc.</extracomment>
     </message>
 </context>
 <context>
@@ -2412,7 +2411,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="353"/>
         <source>&amp;Tracks</source>
-        <translation>مقاطع</translation>
+        <translation>المقاطع</translation>
     </message>
 </context>
 <context>
@@ -2433,11 +2432,46 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="291"/>
         <source>Zoom</source>
-        <translation>زوم</translation>
+        <translation>حجم العرض</translation>
     </message>
 </context>
 <context>
     <name>appshell/about</name>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutMusicXMLDialog.qml" line="32"/>
+        <source>About MusicXML</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutMusicXMLDialog.qml" line="59"/>
+        <source>MusicXML is an open file format for exchanging digital sheet music, supported by many applications.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutMusicXMLDialog.qml" line="71"/>
+        <source>Copyright © 2004-2021 the Contributors to the MusicXML Specification, published by the Music Notation Community Group under the W3C Community Final Specification Agreement (FSA):</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutMusicXMLDialog.qml" line="95"/>
+        <source>A human-readable summary is available:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AlphaWelcomePopup.qml" line="14"/>
+        <source>Audacity 4</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="273"/>
+        <source>Unstable prerelease for %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="339"/>
+        <source>translator_credits</source>
+        <translation>الترجمة العربية من قبل حسام الحمصي.</translation>
+    </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="15"/>
         <source>About Audacity</source>
@@ -2492,46 +2526,6 @@ This action will not delete any of your projects.</source>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialogPrivacyTab.qml" line="54"/>
         <source>privacy policy</source>
         <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutMusicXMLDialog.qml" line="32"/>
-        <source>About MusicXML</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutMusicXMLDialog.qml" line="59"/>
-        <source>MusicXML is an open file format for exchanging digital sheet music, supported by many applications.</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutMusicXMLDialog.qml" line="71"/>
-        <source>Copyright © 2004-2021 the Contributors to the MusicXML Specification, published by the Music Notation Community Group under the W3C Community Final Specification Agreement (FSA):</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutMusicXMLDialog.qml" line="95"/>
-        <source>A human-readable summary is available:</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AlphaWelcomePopup.qml" line="14"/>
-        <source>Audacity 4</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="273"/>
-        <source>Unstable prerelease for %1</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/aboutmodel.cpp" line="339"/>
-        <source>translator_credits</source>
-        <translation>الترجمة العربية من قبل حسام الحمصي.</translation>
-        <extracomment>i18n-hint: The translation of "translator_credits" will appear
-*  in the credits in the About Audacity window.  Use this to add
-*  your own name(s) to the credits.
-*
-*  For example:  "English translation by Dominic Mazzoni."</extracomment>
     </message>
 </context>
 <context>
@@ -2614,7 +2608,7 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/PlaybackPage.qml" line="36"/>
         <source>Watch video</source>
-        <translation/>
+        <translation>شاهد الفيديو</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="16"/>
@@ -2624,12 +2618,12 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="30"/>
         <source>Continue with Google</source>
-        <translation type="unfinished"/>
+        <translation>المتابعة مع Google</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="31"/>
         <source>Continue with Facebook</source>
-        <translation type="unfinished"/>
+        <translation>المتابعة مع Facebook</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="32"/>
@@ -2639,12 +2633,12 @@ This action will not delete any of your projects.</source>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="38"/>
         <source>Email</source>
-        <translation type="unfinished"/>
+        <translation>البريد الإلكتروني</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="39"/>
         <source>Password</source>
-        <translation type="unfinished"/>
+        <translation>كلمة السر</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="40"/>
@@ -2670,7 +2664,7 @@ This action will not delete any of your projects.</source>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="45"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="49"/>
         <source>Sign in</source>
-        <translation type="unfinished">حاذ النهاية</translation>
+        <translation>تسجيل الدخول</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="48"/>
@@ -2772,8 +2766,6 @@ This action will not delete any of your projects.</source>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="45"/>
         <source>Classic</source>
         <translation>كلاسيكي</translation>
-        <extracomment>i18n-hint: describing the "classic" or traditional
-appearance of older versions of Audacity</extracomment>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/clipvisualizationpagemodel.cpp" line="35"/>
@@ -2912,7 +2904,6 @@ appearance of older versions of Audacity</extracomment>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="237"/>
         <source>Light</source>
         <translation>خفيف</translation>
-        <extracomment>i18n-hint: Light meaning opposite of dark</extracomment>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="239"/>
@@ -2922,7 +2913,7 @@ appearance of older versions of Audacity</extracomment>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="241"/>
         <source>System</source>
-        <translation type="unfinished">تاريخ النظام</translation>
+        <translation>النظام</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="245"/>
@@ -2951,9 +2942,7 @@ appearance of older versions of Audacity</extracomment>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="34"/>
         <source>Modern</source>
-        <translation type="unfinished">النمط:</translation>
-        <extracomment>i18n-hint: This is the name of an effect preset.
-i18n-hint: This is the name of an effect preset</extracomment>
+        <translation>عصري</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="35"/>
@@ -3048,6 +3037,325 @@ i18n-hint: This is the name of an effect preset</extracomment>
     </message>
 </context>
 <context>
+    <name>appshell/menu/align</name>
+    <message>
+        <source>Align content</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/analyze</name>
+    <message>
+        <source>&amp;Analyze</source>
+        <translation>تحليل</translation>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/clip</name>
+    <message>
+        <source>Clip</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Rename clip</source>
+        <translation type="unfinished">أعد تسمية</translation>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/cursor</name>
+    <message>
+        <source>Cursor</source>
+        <translation type="unfinished">المؤشر</translation>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/device</name>
+    <message>
+        <source>Device</source>
+        <translation>جهاز</translation>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/diagnostic</name>
+    <message>
+        <source>&amp;System</source>
+        <translation type="unfinished">تاريخ النظام</translation>
+    </message>
+    <message>
+        <source>&amp;Accessibility</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Test&amp;flow</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/diagnostics</name>
+    <message>
+        <source>Diagnostics</source>
+        <translation type="unfinished">التشخيصات</translation>
+    </message>
+    <message>
+        <source>&amp;System</source>
+        <translation type="unfinished">تاريخ النظام</translation>
+    </message>
+    <message>
+        <source>A&amp;ctions</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>&amp;Accessibility</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>E&amp;xtensions</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Test&amp;flow</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>&amp;Diagnostics</source>
+        <translation>التشخيصات</translation>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/edit</name>
+    <message>
+        <source>&amp;Edit</source>
+        <translation>حرر</translation>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/effect</name>
+    <message>
+        <source>&amp;Effect</source>
+        <translation type="unfinished">تأثير</translation>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/export-other</name>
+    <message>
+        <source>&amp;Export other</source>
+        <translation type="unfinished">صدر MIDI</translation>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/extra</name>
+    <message>
+        <source>&amp;Extra</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/extraedit</name>
+    <message>
+        <source>Edit</source>
+        <translation>حرر</translation>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/extraselect</name>
+    <message>
+        <source>Select</source>
+        <translation>اختيار</translation>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/extratools</name>
+    <message>
+        <source>Tools</source>
+        <translation>الأدوات</translation>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/file</name>
+    <message>
+        <source>Open &amp;recent</source>
+        <translation type="unfinished">فتح ملف حديث</translation>
+    </message>
+    <message>
+        <source>&amp;File</source>
+        <translation>ملف</translation>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/focus</name>
+    <message>
+        <source>Focus</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/generate</name>
+    <message>
+        <source>&amp;Generate</source>
+        <translation>ولد</translation>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/help</name>
+    <message>
+        <source>&amp;Help</source>
+        <translation>مساعدة</translation>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/images</name>
+    <message>
+        <source>Images</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/label</name>
+    <message>
+        <source>Label</source>
+        <translation>علامة</translation>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/macros</name>
+    <message>
+        <source>&amp;Macros</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/mixer</name>
+    <message>
+        <source>Mixer</source>
+        <translation type="unfinished">المازج</translation>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/play</name>
+    <message>
+        <source>Play</source>
+        <translation>شغل</translation>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/playatspeed</name>
+    <message>
+        <source>Play at speed</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/record</name>
+    <message>
+        <source>&amp;Record</source>
+        <translation>سجل</translation>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/scriptables1</name>
+    <message>
+        <source>Scriptables1</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/scriptables2</name>
+    <message>
+        <source>Scriptables2</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/scrubbing</name>
+    <message>
+        <source>Scrubbing</source>
+        <translation>الفرك</translation>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/select</name>
+    <message>
+        <source>Audio clips</source>
+        <translation type="unfinished">ملف صوتي</translation>
+    </message>
+    <message>
+        <source>Spectral</source>
+        <translation type="unfinished">طيفي</translation>
+    </message>
+    <message>
+        <source>Region</source>
+        <translation type="unfinished">منطقة</translation>
+    </message>
+    <message>
+        <source>Looping</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>&amp;Select</source>
+        <translation>اختر</translation>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/settings</name>
+    <message>
+        <source>Settings</source>
+        <translation type="unfinished">أوضاع</translation>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/skip</name>
+    <message>
+        <source>Skip to</source>
+        <translation type="unfinished">تخطى إلى</translation>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/sort</name>
+    <message>
+        <source>Sort tracks</source>
+        <translation type="unfinished">رتب المقاطع</translation>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/tools</name>
+    <message>
+        <source>&amp;Tools</source>
+        <translation type="unfinished">الأدوات</translation>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/track</name>
+    <message>
+        <source>Track</source>
+        <translation>مقطع</translation>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/tracks</name>
+    <message>
+        <source>&amp;Tracks</source>
+        <translation>مقاطع</translation>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/view</name>
+    <message>
+        <source>W&amp;orkspaces</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>&amp;View</source>
+        <translation>عرض</translation>
+    </message>
+</context>
+<context>
+    <name>appshell/menu/zoom</name>
+    <message>
+        <source>Zoom</source>
+        <translation>حجم العرض</translation>
+    </message>
+</context>
+<context>
     <name>appshell/preferences</name>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="604"/>
@@ -3058,8 +3366,6 @@ i18n-hint: This is the name of an effect preset</extracomment>
         <location filename="../../src/importexport/export/qml/Export/internal/FLACOptionsSection.qml" line="261"/>
         <source>Use LPC</source>
         <translation>استخدم التشفير التنبؤي الخطي</translation>
-        <extracomment>i18n-hint:  Abbreviates "Linear Predictive Coding",
-but this text needs to be kept very short</extracomment>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="234"/>
@@ -3070,11 +3376,6 @@ but this text needs to be kept very short</extracomment>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="246"/>
         <source>VBL</source>
         <translation>VBL</translation>
-    </message>
-    <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AccentColorsSection.qml" line="64"/>
-        <source>Accent color</source>
-        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioEngineSection.qml" line="33"/>
@@ -3339,6 +3640,26 @@ but this text needs to be kept very short</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomSection.qml" line="32"/>
+        <source>Zoom</source>
+        <translation>حجم العرض</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomSection.qml" line="50"/>
+        <source>Default zoom:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomSection.qml" line="96"/>
+        <source>Mouse zoom precision:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AccentColorsSection.qml" line="64"/>
+        <source>Accent color</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UsageInfoSection.qml" line="14"/>
         <source>Usage info</source>
         <translation type="unfinished"/>
@@ -3351,21 +3672,6 @@ but this text needs to be kept very short</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UsageInfoSection.qml" line="39"/>
         <source>To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This ID does not contain any personally identifiable information. Want to know more? Check out our &lt;a href="%1"&gt;privacy policy&lt;/a&gt;.</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomSection.qml" line="32"/>
-        <source>Zoom</source>
-        <translation>زوم</translation>
-    </message>
-    <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomSection.qml" line="50"/>
-        <source>Default zoom:</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomSection.qml" line="96"/>
-        <source>Mouse zoom precision:</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -3396,12 +3702,12 @@ but this text needs to be kept very short</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="247"/>
         <source>Zoom to Selection</source>
-        <translation>زوم إلى الاختيار</translation>
+        <translation>التكبير إلى المحدد</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="248"/>
         <source>Zoom Default</source>
-        <translation>زوم أساسيا</translation>
+        <translation>التكبير الافتراضي</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="249"/>
@@ -3436,12 +3742,12 @@ but this text needs to be kept very short</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="255"/>
         <source>100ths of Seconds</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="256"/>
         <source>500ths of Seconds</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="257"/>
@@ -3461,7 +3767,7 @@ but this text needs to be kept very short</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/editpreferencesmodel.cpp" line="260"/>
         <source>Max Zoom</source>
-        <translation>أقصى تزويم</translation>
+        <translation>أقصى تكبير</translation>
     </message>
 </context>
 <context>
@@ -3522,7 +3828,7 @@ but this text needs to be kept very short</extracomment>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="50"/>
         <source>Watch video</source>
-        <translation/>
+        <translation>شاهد الفيديو</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="56"/>
@@ -3537,7 +3843,7 @@ but this text needs to be kept very short</extracomment>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="60"/>
         <source>Continue</source>
-        <translation type="unfinished">المساهمون</translation>
+        <translation>المتابعة</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/welcomedialogmodel.cpp" line="69"/>
@@ -3660,12 +3966,14 @@ but this text needs to be kept very short</extracomment>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="826"/>
         <source>No devices found
 </source>
-        <translation type="unfinished">لم يعثر على أجهزة</translation>
+        <translation>لم يتم العثور على أجهزة
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="838"/>
         <source>Device info unavailable for: %1
 </source>
+        <extracomment>%1 is the device index number</extracomment>
         <translation type="unfinished">معلومات الجهاز غير متوفرة.</translation>
     </message>
     <message>
@@ -3713,7 +4021,7 @@ but this text needs to be kept very short</extracomment>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="849"/>
         <source>Low Playback Latency: %1
 </source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="850"/>
@@ -3725,26 +4033,29 @@ but this text needs to be kept very short</extracomment>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="851"/>
         <source>High Playback Latency: %1
 </source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="857"/>
         <source>Supported Playback Rates:
 </source>
         <extracomment>Supported, meaning made available by the system</extracomment>
-        <translation type="unfinished"/>
+        <translation>معدلات التشغيل المدعومة:
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="867"/>
         <source>Supported Capture Rates:
 </source>
         <extracomment>Supported, meaning made available by the system</extracomment>
-        <translation type="unfinished"/>
+        <translation>نسب التقاط الصوت المدعومة:
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="897"/>
         <source>Selected recording device: %1 - %2
 </source>
+        <extracomment>%1 is the recording device number, %2 is the device name</extracomment>
         <translation>جهاز التسجيل المختار: %1 - %2
 </translation>
     </message>
@@ -3758,6 +4069,7 @@ but this text needs to be kept very short</extracomment>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="904"/>
         <source>Selected playback device: %1 - %2
 </source>
+        <extracomment>%1 is the playback device number, %2 is the device name</extracomment>
         <translation>جهاز التشغيل المختار: %1 - %2
 </translation>
     </message>
@@ -3771,32 +4083,36 @@ but this text needs to be kept very short</extracomment>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="914"/>
         <source>Supported Rates:
 </source>
-        <translation type="unfinished">معدَّلات العينة</translation>
-        <extracomment>i18n-hint: Supported, meaning made available by the system</extracomment>
+        <translation>النسب المدعومة:
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="919"/>
         <source>Cannot check mutual sample rates without both devices.
 </source>
-        <translation/>
+        <translation>"لا يمكن التحقق من معدلات العينات المتبادلة بدون الجهازبن معاً.
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="977"/>
         <source>Received %1 while opening devices
 </source>
-        <translation/>
+        <extracomment>%1 is a PortAudio error code returned while opening the devices</extracomment>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="984"/>
         <source>Unable to open Portmixer
 </source>
-        <translation type="unfinished">غير قادر على فتح ملف النوع.</translation>
+        <translation>تعذر فتح Portmixer
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="990"/>
         <source>Available mixers:
 </source>
-        <translation/>
+        <translation>أجهزة الـ mixer المتاحة:
+</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="997"/>
@@ -3804,6 +4120,11 @@ but this text needs to be kept very short</extracomment>
         <location filename="../../au3/libraries/au3-audio-devices/AudioIOBase.cpp" line="1015"/>
         <source>%1 - %2
 </source>
+        <extracomment>%1 is the mixer index number, %2 is the mixer name
+----------
+%1 is the recording source index number, %2 is the source name
+----------
+%1 is the playback volume index number, %2 is the volume control name</extracomment>
         <translation>%1 - %2
 </translation>
     </message>
@@ -3866,7 +4187,7 @@ but this text needs to be kept very short</extracomment>
     <message>
         <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="758"/>
         <source>Audacity Audio</source>
-        <translation type="unfinished">سجل Audacity</translation>
+        <translation>صوت Audacity</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-io/AudioIO.cpp" line="875"/>
@@ -3898,13 +4219,12 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="61"/>
         <source>Unable to store preset in config file</source>
-        <translation type="unfinished">غير قادر على قراءة ملف المسبقات.</translation>
+        <translation>تعذر تخزين الإعداد المسبق في ملف التكوين</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="118"/>
         <source>n/a</source>
-        <extracomment>i18n-hint: Can mean "not available," "not applicable," "no answer"
-i18n-hint: n/a is an English abbreviation meaning "not applicable".</extracomment>
+        <extracomment>Can mean "not available," "not applicable," "no answer"</extracomment>
         <translation>غير قابل للتطبيق</translation>
     </message>
     <message>
@@ -3929,14 +4249,14 @@ i18n-hint: n/a is an English abbreviation meaning "not applicable".</extracommen
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.h" line="24"/>
         <source>Audio Unit</source>
-        <extracomment>i18n-hint: the name of an Apple audio software protocol</extracomment>
+        <extracomment>the name of an Apple audio software protocol</extracomment>
         <translation>وحدة صوت</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="134"/>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectsModule.cpp" line="194"/>
         <source>Audio Unit Effects</source>
-        <extracomment>i18n-hint: Audio Unit is the name of an Apple audio software protocol</extracomment>
+        <extracomment>Audio Unit is the name of an Apple audio software protocol</extracomment>
         <translation>تأثيرات Audio Unit</translation>
     </message>
     <message>
@@ -4002,22 +4322,22 @@ i18n-hint: n/a is an English abbreviation meaning "not applicable".</extracommen
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="420"/>
         <source>Failed to set preset name</source>
-        <translation type="unfinished">غير قادر على قراءة ملف المسبقات.</translation>
+        <translation>فشل تعيين اسم الإعداد المسبق</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="425"/>
         <source>Failed to retrieve preset content</source>
-        <translation type="unfinished">غير قادر على استرداد وصف المجرى</translation>
+        <translation>فشل استرداد المحتوى المعين مسبقاً</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="434"/>
         <source>Failed to convert property list to XML data</source>
-        <translation/>
+        <translation>فشل تحويل لائحة الخصائص إلى بيانات XML</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitWrapper.cpp" line="439"/>
         <source>XML data is empty after conversion</source>
-        <translation type="unfinished">تحويل معدل العينة</translation>
+        <translation>بيانات XML أصبحت فارغة بعد التحويل</translation>
     </message>
 </context>
 <context>
@@ -4025,8 +4345,7 @@ i18n-hint: n/a is an English abbreviation meaning "not applicable".</extracommen
     <message>
         <location filename="../../src/shared/axis/axislabel.cpp" line="22"/>
         <source>k</source>
-        <translation/>
-        <extracomment>i18n-hint k abbreviating kilo meaning thousands</extracomment>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -4052,23 +4371,19 @@ i18n-hint: n/a is an English abbreviation meaning "not applicable".</extracommen
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/AutoDuckBase.cpp" line="128"/>
         <source>You selected a track which does not contain audio. AutoDuck can only process audio tracks.</source>
-        <extracomment>i18n-hint: Auto duck is the name of an effect that 'ducks'
-(reduces the volume) of the audio automatically when there is
-sound on another track.  Not as in 'Donald-Duck'!</extracomment>
+        <extracomment>Auto duck is the name of an effect that 'ducks' (reduces the volume) of the audio automatically when there is sound on another track. Not as in 'Donald-Duck'!</extracomment>
         <translation>لقد اخترت مقطعا لا يحتوي صوتا. تأثير الغمر التلقائي يعالج المقاطع الصوتية فقط.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/AutoDuckBase.cpp" line="144"/>
         <source>Auto Duck needs a control track which must be placed below the selected track(s).</source>
-        <extracomment>i18n-hint: Auto duck is the name of an effect that 'ducks' (reduces
-the volume) of the audio automatically when there is sound on another
-track.  Not as in 'Donald-Duck'!</extracomment>
+        <extracomment>Auto duck is the name of an effect that 'ducks' (reduces the volume) of the audio automatically when there is sound on another track. Not as in 'Donald-Duck'!</extracomment>
         <translation>الغمر التلقائي يحتاج إلى مقطع تحكم يجب وضعه تحت المقطاطع المختارة.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/AutoDuckBase.cpp" line="184"/>
         <source>Rendering Control-Track Time-Stretched Audio</source>
-        <translation/>
+        <translation>معالجة الصوت الزمني الممتد لمسار التحكم</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/BassTrebleBase.cpp" line="21"/>
@@ -4098,7 +4413,7 @@ track.  Not as in 'Donald-Duck'!</extracomment>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ChangeSpeedBase.cpp" line="21"/>
         <source>Change Speed and Pitch</source>
-        <translation type="unfinished">غير السرعة</translation>
+        <translation>تغيير السرعة والطبقة الصوتية</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ChangeSpeedBase.cpp" line="48"/>
@@ -4223,7 +4538,7 @@ Please select a section of a track.</source>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="65"/>
         <source>Blues drive sustain</source>
-        <translation/>
+        <translation>استدامة Blues drive</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="66"/>
@@ -4238,7 +4553,7 @@ Please select a section of a track.</source>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="68"/>
         <source>3rd Harmonic (Perfect Fifth)</source>
-        <translation>التوافقية الثالثة (خامس مثالي)</translation>
+        <translation>الموجة التوافقية الثالثة (الخامسة التامة)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="69"/>
@@ -4248,7 +4563,7 @@ Please select a section of a track.</source>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="70"/>
         <source>2nd Harmonic (Octave)</source>
-        <translation>التوافقية الثانية (جواب)</translation>
+        <translation>الموجة التوافقية الثانية (الأوكتاف)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/DistortionBase.cpp" line="71"/>
@@ -4339,7 +4654,7 @@ Please select a section of a track.</source>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="180"/>
         <source>100Hz Rumble</source>
-        <translation/>
+        <translation>دمدمة 100Hz</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="183"/>
@@ -4354,17 +4669,17 @@ Please select a section of a track.</source>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="188"/>
         <source>Bass Cut</source>
-        <translation type="unfinished">رفع الباس</translation>
+        <translation>قطع الترددات المنخفضة</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="190"/>
         <source>Low rolloff for speech</source>
-        <translation/>
+        <translation>قطع الترددات الدُنيا لتحسين الكلام</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="193"/>
         <source>RIAA</source>
-        <translation/>
+        <translation>RIAA</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="195"/>
@@ -4374,12 +4689,12 @@ Please select a section of a track.</source>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="198"/>
         <source>Treble Boost</source>
-        <translation type="unfinished">الحدة المرتفعة</translation>
+        <translation>تعزيز الترددات العالية</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="200"/>
         <source>Treble Cut</source>
-        <translation type="unfinished">الحدة المرتفعة</translation>
+        <translation>قطع الترددات العالية</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationBase.cpp" line="275"/>
@@ -4404,7 +4719,7 @@ Please select a section of a track.</source>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationCurves.cpp" line="120"/>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationCurves.cpp" line="121"/>
         <source>unnamed</source>
-        <extracomment>i18n-hint: name of the 'unnamed' custom curve</extracomment>
+        <extracomment>name of the 'unnamed' custom curve</extracomment>
         <translation>غير مسمى</translation>
     </message>
     <message>
@@ -4413,7 +4728,7 @@ Please select a section of a track.</source>
 %1
 Error message says:
 %2</source>
-        <extracomment>i18n-hint: EQ stands for 'Equalization'.</extracomment>
+        <extracomment>EQ stands for 'Equalization'.</extracomment>
         <translation>خطأ في تحميل منحنيات المُسَوّي من ملف:
 %1
 رسالة الخطأ تقول:
@@ -4432,7 +4747,7 @@ Error message says:
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationParameters.cpp" line="21"/>
         <source>B-spline</source>
-        <extracomment>i18n-hint: Technical term for a kind of curve.</extracomment>
+        <extracomment>Technical term for a kind of curve.</extracomment>
         <translation>شريحة-ب</translation>
     </message>
     <message>
@@ -4443,7 +4758,7 @@ Error message says:
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/EqualizationParameters.cpp" line="23"/>
         <source>Cubic</source>
-        <translation>مكعبي</translation>
+        <translation>تكعيبي</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/FindClippingBase.cpp" line="29"/>
@@ -4474,7 +4789,7 @@ Error message says:
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/LegacyCompressorBase.cpp" line="42"/>
         <source>Legacy Compressor</source>
-        <translation type="unfinished">ضاغط</translation>
+        <translation>الضاغط القديم</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/LegacyCompressorBase.cpp" line="69"/>
@@ -4494,7 +4809,7 @@ Error message says:
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/PlotSpectrumBase.cpp" line="65"/>
         <source>To plot the spectrum, all selected tracks must have the same sample rate.</source>
-        <translation type="unfinished">لرسم الطيف، يجب أن يكون لجميع المقاطع المختارة نفس معدّل العينة.</translation>
+        <translation>لرسم الطيف، يجب أن تكون جميع المسارات المحددة بنفس معدل العينات.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/PlotSpectrumBase.cpp" line="66"/>
@@ -4506,7 +4821,8 @@ Error message says:
         <location filename="../../au3/libraries/au3-builtin-effects/PlotSpectrumBase.cpp" line="80"/>
         <source>Audio could not be analyzed. This may be due to a stretched or pitch-shifted clip.
 Try resetting any stretched clips, or mixing and rendering the tracks before analyzing</source>
-        <translation/>
+        <translation>تعذّر تحليل الصوت. قد يكون هذا بسبب مقطع ممتد أو معدل الطبقة.
+جرب إعادة ضبط المقاطع الممتدة، أو ادمج المسارات واصدرها قبل التحليل.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/PlotSpectrumBase.cpp" line="110"/>
@@ -4531,30 +4847,30 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ScienFilterBase.cpp" line="40"/>
         <source>Butterworth</source>
-        <extracomment>i18n-hint: Butterworth is the name of the person after whom the filter type is named.</extracomment>
+        <extracomment>Butterworth is the name of the person after whom the filter type is named.</extracomment>
         <translation>Butterworth</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ScienFilterBase.cpp" line="43"/>
         <source>Chebyshev Type I</source>
-        <extracomment>i18n-hint: Chebyshev is the name of the person after whom the filter type is named.</extracomment>
+        <extracomment>Chebyshev is the name of the person after whom the filter type is named.</extracomment>
         <translation>Chebyshev نوع I</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ScienFilterBase.cpp" line="46"/>
         <source>Chebyshev Type II</source>
-        <extracomment>i18n-hint: Chebyshev is the name of the person after whom the filter type is named.</extracomment>
+        <extracomment>Chebyshev is the name of the person after whom the filter type is named.</extracomment>
         <translation>Chebyshev نوع II</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ScienFilterBase.cpp" line="51"/>
         <source>Lowpass</source>
-        <translation/>
+        <translation>مرشح الترددات المنخفضة</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ScienFilterBase.cpp" line="52"/>
         <source>Highpass</source>
-        <translation/>
+        <translation>مرشح الترددات العالية</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ScienFilterBase.cpp" line="76"/>
@@ -4564,7 +4880,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ScienFilterBase.cpp" line="108"/>
         <source>Performs IIR filtering that emulates analog filters</source>
-        <extracomment>i18n-hint: "infinite impulse response"</extracomment>
+        <extracomment>"infinite impulse response"</extracomment>
         <translation>يقوم بترشيح IIR التي تحاكي المصفيات التناظرية</translation>
     </message>
     <message>
@@ -4576,7 +4892,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../au3/libraries/au3-builtin-effects/SilenceBase.cpp" line="20"/>
         <source>Silence</source>
         <comment>generator</comment>
-        <translation type="unfinished">سكون</translation>
+        <translation>إسكات</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/SilenceBase.cpp" line="49"/>
@@ -4617,7 +4933,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../au3/libraries/au3-builtin-effects/ToneGenBase.cpp" line="37"/>
         <source>Triangle</source>
         <comment>waveform</comment>
-        <translation type="unfinished">مثلث</translation>
+        <translation>مثلث</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/TruncSilenceBase.cpp" line="61"/>
@@ -4678,7 +4994,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="56"/>
         <source>Cut and leave gap</source>
-        <translation type="unfinished"/>
+        <translation>قص مع ترك فجوة</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/clipcontextmenumodel.cpp" line="58"/>
@@ -4732,7 +5048,6 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1086"/>
         <source>Select</source>
         <translation>اختيار</translation>
-        <extracomment>i18n-hint: (verb).  It instruct the user to select items.</extracomment>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/ClipItem.qml" line="1086"/>
@@ -4763,7 +5078,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="538"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="253"/>
         <source>Sign in</source>
-        <translation type="unfinished">حاذ النهاية</translation>
+        <translation>تسجيل الدخول</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="169"/>
@@ -4776,22 +5091,6 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="548"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="263"/>
         <source>Create account</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/SigninAudiocomDialog.qml" line="16"/>
-        <source>Create an account on audio.com</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/SigninAudiocomDialog.qml" line="16"/>
-        <source>Sign in to audio.com</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="531"/>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="246"/>
-        <source>Sign in buttons</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -4850,23 +5149,11 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="599"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="706"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="719"/>
-        <source>Save to audio.com</source>
-        <translation/>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="812"/>
-        <source>Open audio from cloud</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="585"/>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="964"/>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1205"/>
         <source>View on audio.com</source>
-        <translation type="unfinished"/>
+        <translation>انتقل إلى audio.com</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1177"/>
@@ -4898,20 +5185,47 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <source>Downloading audio from cloud…</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="599"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="706"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="719"/>
+        <source>Save to audio.com</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="812"/>
+        <source>Open audio from cloud</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/SigninAudiocomDialog.qml" line="16"/>
+        <source>Create an account on audio.com</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/SigninAudiocomDialog.qml" line="16"/>
+        <source>Sign in to audio.com</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="531"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="246"/>
+        <source>Sign in buttons</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>cloud-audiocom</name>
     <message>
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/DataUploader.cpp" line="262"/>
         <source>File not found</source>
-        <translation type="unfinished">الملف "%1" لم يوجد.</translation>
-        <extracomment>i18n-hint: database operation has failed because the requested item was not found</extracomment>
+        <translation>الملف غير موجود</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/LocalProjectSnapshot.cpp" line="352"/>
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/LocalProjectSnapshot.cpp" line="451"/>
         <source>Project was closed before snapshot was created</source>
-        <translation/>
+        <translation>تم إغلاق المشروع قبل إنشاء لقطة منه</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/LocalProjectSnapshot.cpp" line="432"/>
@@ -4922,37 +5236,37 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/MixdownUploader.cpp" line="178"/>
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/MixdownUploader.cpp" line="189"/>
         <source>Export failed</source>
-        <translation type="unfinished">صدر الملفات إلى:</translation>
+        <translation>فشل التصدير</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/MixdownUploader.cpp" line="196"/>
         <source>Export error</source>
-        <translation type="unfinished">صدر MIDI</translation>
+        <translation>خطأ في التصدير</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/RemoteProjectSnapshot.cpp" line="169"/>
         <source>Failed to attach to the Cloud project database</source>
-        <translation type="unfinished">غير قادر على قراءة ملف المسبقات.</translation>
+        <translation>فشل الإرفاق بقاعدة بيانات المشروع السحابي</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/RemoteProjectSnapshot.cpp" line="552"/>
         <source>Failed to decompress the Cloud project block</source>
-        <translation type="unfinished">غير قادر على قراءة ملف المسبقات.</translation>
+        <translation>فشل في فك ضغط كتلة المشروع السحابي</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp" line="238"/>
         <source>Local project data was removed before the sync has completed</source>
-        <translation/>
+        <translation>تمت إزالة بيانات المشروع المحلية قبل اكتمال المزامنة</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp" line="323"/>
         <source>Failed to deserialize the response</source>
-        <translation type="unfinished">غير قادر على استرداد وصف المجرى</translation>
+        <translation>تعذرت إعادة تسلسل الاستجابة</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-cloud-audiocom/UploadService.cpp" line="616"/>
         <source>Cannot proceed to upload.</source>
-        <translation type="unfinished">لايوجد علامات للتصدير.</translation>
+        <translation>لا يمكن متابعة الرفع.</translation>
     </message>
 </context>
 <context>
@@ -4960,7 +5274,7 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
     <message>
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="16"/>
         <source>Save to audio.com</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -4969,201 +5283,200 @@ Try resetting any stretched clips, or mixing and rendering the tracks before ana
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="44"/>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="141"/>
         <source>Modern</source>
-        <extracomment>i18n-hint: This is the name of an effect preset.
-i18n-hint: This is the name of an effect preset</extracomment>
-        <translation type="unfinished">النمط:</translation>
+        <extracomment>This is the name of an effect preset.</extracomment>
+        <translation>عصري</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="47"/>
         <source>Glue Compressor</source>
-        <extracomment>i18n-hint: This is the name of an effect preset.</extracomment>
-        <translation type="unfinished">ضاغط</translation>
+        <extracomment>This is the name of an effect preset.</extracomment>
+        <translation>ضاغط الربط الصوتي</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="50"/>
         <source>Gentle</source>
-        <extracomment>i18n-hint: This is the name of an effect preset.</extracomment>
-        <translation/>
+        <extracomment>This is the name of an effect preset.</extracomment>
+        <translation>معتدل</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="53"/>
         <source>Beat Booster</source>
-        <extracomment>i18n-hint: This is the name of an effect preset.</extracomment>
-        <translation type="unfinished">رفع الباس</translation>
+        <extracomment>This is the name of an effect preset.</extracomment>
+        <translation>معزز الإيقاع</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="57"/>
         <source>Deep Dive Master</source>
-        <extracomment>i18n-hint: This is the name of an effect preset.</extracomment>
-        <translation/>
+        <extracomment>This is the name of an effect preset.</extracomment>
+        <translation>أستاذ الغوص العميق</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="60"/>
         <source>Beefy Master</source>
-        <extracomment>i18n-hint: This is the name of an effect preset.</extracomment>
-        <translation type="unfinished">الصق</translation>
+        <extracomment>This is the name of an effect preset.</extracomment>
+        <translation>معزز الترددات المنخفضة الرئيسي</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="63"/>
         <source>Make It Right Master</source>
-        <extracomment>i18n-hint: This is the name of an effect preset.</extracomment>
-        <translation/>
+        <extracomment>This is the name of an effect preset.</extracomment>
+        <translation>أداة الضبط الدقيق</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="66"/>
         <source>Brick Wall Master</source>
-        <extracomment>i18n-hint: This is the name of an effect preset.</extracomment>
-        <translation/>
+        <extracomment>This is the name of an effect preset.</extracomment>
+        <translation>أداة التحديد الصارم</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="70"/>
         <source>Lead Vocals</source>
-        <extracomment>i18n-hint: This is the name of an effect preset.</extracomment>
-        <translation type="unfinished">أزل المميز</translation>
+        <extracomment>This is the name of an effect preset.</extracomment>
+        <translation>الأصوات الرئيسية</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="73"/>
         <source>Fat Vocals</source>
-        <extracomment>i18n-hint: This is the name of an effect preset.</extracomment>
-        <translation type="unfinished">اعزل</translation>
+        <extracomment>This is the name of an effect preset.</extracomment>
+        <translation>الأصوات الممتلئة</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="76"/>
         <source>Power Vocals</source>
-        <extracomment>i18n-hint: This is the name of an effect preset.</extracomment>
-        <translation type="unfinished">أزل المميز</translation>
+        <extracomment>This is the name of an effect preset.</extracomment>
+        <translation>الأصوات القوية</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="79"/>
         <source>Vocal Control</source>
-        <extracomment>i18n-hint: This is the name of an effect preset.</extracomment>
-        <translation type="unfinished">أدوات ضبط النبرة</translation>
+        <extracomment>This is the name of an effect preset.</extracomment>
+        <translation>أدوات التحكم الصوتي</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="82"/>
         <source>Vocal Touch-Up</source>
-        <extracomment>i18n-hint: This is the name of an effect preset.</extracomment>
-        <translation/>
+        <extracomment>This is the name of an effect preset.</extracomment>
+        <translation>تنقية الأصوات</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="85"/>
         <source>Voice Memos Balancer</source>
-        <extracomment>i18n-hint: This is the name of an effect preset.</extracomment>
-        <translation/>
+        <extracomment>This is the name of an effect preset.</extracomment>
+        <translation>موازن التسجيلات الصوتية</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="88"/>
         <source>Podcast/Radio</source>
-        <extracomment>i18n-hint: This is the name of an effect preset.</extracomment>
-        <translation/>
+        <extracomment>This is the name of an effect preset.</extracomment>
+        <translation>بودكاست/راديو</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="92"/>
         <source>Piano</source>
-        <extracomment>i18n-hint: This is the name of an effect preset.</extracomment>
-        <translation/>
+        <extracomment>This is the name of an effect preset.</extracomment>
+        <translation>بيانو</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="95"/>
         <source>Acoustic Guitar</source>
-        <extracomment>i18n-hint: This is the name of an effect preset.</extracomment>
-        <translation/>
+        <extracomment>This is the name of an effect preset.</extracomment>
+        <translation>جيتار صوتي</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="98"/>
         <source>Bass Guitar</source>
-        <extracomment>i18n-hint: This is the name of an effect preset.</extracomment>
-        <translation type="unfinished">رفع الباس</translation>
+        <extracomment>This is the name of an effect preset.</extracomment>
+        <translation>الغيتار الكهربائي منخفض التردد</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="101"/>
         <source>Strings</source>
-        <extracomment>i18n-hint: This is the name of an effect preset. Strings is violins, etc</extracomment>
-        <translation type="unfinished">أوضاع</translation>
+        <extracomment>This is the name of an effect preset. Strings is violins, etc</extracomment>
+        <translation>السلاسل النصية</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="104"/>
         <source>Kick Drums</source>
-        <extracomment>i18n-hint: This is the name of an effect preset.</extracomment>
-        <translation/>
+        <extracomment>This is the name of an effect preset.</extracomment>
+        <translation>طبول الكيك</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="107"/>
         <source>Drums Control</source>
-        <extracomment>i18n-hint: This is the name of an effect preset.</extracomment>
-        <translation/>
+        <extracomment>This is the name of an effect preset.</extracomment>
+        <translation>تحكم الطبول</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="111"/>
         <source>Climax Impulser SFX</source>
-        <extracomment>i18n-hint: This is the name of an effect preset. SFX means sound effects.</extracomment>
-        <translation/>
+        <extracomment>This is the name of an effect preset. SFX means sound effects.</extracomment>
+        <translation>مؤثر نبضات الذروة</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="114"/>
         <source>Engine Breathing SFX</source>
-        <extracomment>i18n-hint: This is the name of an effect preset. SFX means sound effects.</extracomment>
-        <translation/>
+        <extracomment>This is the name of an effect preset. SFX means sound effects.</extracomment>
+        <translation>مؤثر تنفس المحرك</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="117"/>
         <source>Great Impact SFX</source>
-        <extracomment>i18n-hint: This is the name of an effect preset. SFX means sound effects.</extracomment>
-        <translation/>
+        <extracomment>This is the name of an effect preset. SFX means sound effects.</extracomment>
+        <translation>مؤثر الاصطدام القوي</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="120"/>
         <source>Great Body SFX</source>
-        <extracomment>i18n-hint: This is the name of an effect preset. SFX means sound effects.</extracomment>
-        <translation/>
+        <extracomment>This is the name of an effect preset. SFX means sound effects.</extracomment>
+        <translation>مؤثر الجسم الصوتي القوي</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="123"/>
         <source>Great Tail SFX</source>
-        <extracomment>i18n-hint: This is the name of an effect preset. SFX means sound effects.</extracomment>
-        <translation/>
+        <extracomment>This is the name of an effect preset. SFX means sound effects.</extracomment>
+        <translation>مؤثر النهاية الممتدة</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="126"/>
         <source>Smack Explosion SFX</source>
-        <extracomment>i18n-hint: This is the name of an effect preset. SFX means sound effects.</extracomment>
-        <translation/>
+        <extracomment>This is the name of an effect preset. SFX means sound effects.</extracomment>
+        <translation>صفعة انفجار SFX</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="132"/>
         <source>Master Limiter</source>
-        <extracomment>i18n-hint: This is the name of an effect preset.</extracomment>
-        <translation type="unfinished">الحاصر</translation>
+        <extracomment>This is the name of an effect preset.</extracomment>
+        <translation>المحدد الرئيسي</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="135"/>
         <source>SFX Limiter</source>
-        <extracomment>i18n-hint: This is the name of an effect preset. SFX means sound effects.</extracomment>
-        <translation type="unfinished">الحاصر</translation>
+        <extracomment>This is the name of an effect preset. SFX means sound effects.</extracomment>
+        <translation>محدد SFX</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="138"/>
         <source>VO Limiter</source>
-        <extracomment>i18n-hint: This is the name of an effect preset. VO means Voiceover.</extracomment>
-        <translation type="unfinished">الحاصر</translation>
+        <extracomment>This is the name of an effect preset. VO means Voiceover.</extracomment>
+        <translation>محدد VO</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="144"/>
         <source>Modern Punch</source>
-        <extracomment>i18n-hint: This is the name of an effect preset.</extracomment>
-        <translation/>
+        <extracomment>This is the name of an effect preset.</extracomment>
+        <translation>القوة الصوتية العصرية</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="147"/>
         <source>Modern Punch 2</source>
-        <extracomment>i18n-hint: This is the name of an effect preset.</extracomment>
-        <translation/>
+        <extracomment>This is the name of an effect preset.</extracomment>
+        <translation>القوة الصوتية العصرية 2</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-dynamic-range-processor/DynamicRangeProcessorUtils.h" line="150"/>
         <source>Play it Loud</source>
-        <extracomment>i18n-hint: This is the name of an effect preset.</extracomment>
-        <translation type="unfinished">أشغل الصوت</translation>
+        <extracomment>This is the name of an effect preset.</extracomment>
+        <translation>شغّل بصوت عالٍ</translation>
     </message>
 </context>
 <context>
@@ -5196,101 +5509,9 @@ i18n-hint: This is the name of an effect preset</extracomment>
         <translation type="unfinished">اختر محددة مسبقا</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="13"/>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="95"/>
-        <source>Missing plugins</source>
-        <translation type="unfinished">أدر الموصلات</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="103"/>
-        <source>Some plugins used in this project were not found. Double-click an entry to see its location.</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="119"/>
-        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="215"/>
-        <source>Name</source>
-        <translation>الاسم</translation>
-        <extracomment>i18n-hint: (noun).  It's the name of the project to recover.</extracomment>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="122"/>
-        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="219"/>
-        <source>Path</source>
-        <translation>طريق</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="146"/>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="129"/>
-        <source>OK</source>
-        <translation>حسنا</translation>
-        <extracomment>i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.</extracomment>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="157"/>
-        <source>Plugin details</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="199"/>
-        <source>Vendor:</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="205"/>
-        <source>Unknown</source>
-        <translation>مجهول</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="211"/>
-        <source>Path:</source>
-        <translation type="unfinished">طريق</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="241"/>
-        <source>Close</source>
-        <translation>إغلاق</translation>
-        <extracomment>i18n-hint verb</extracomment>
-    </message>
-    <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/ParameterControl.qml" line="458"/>
         <source>Unknown parameter type: %1</source>
         <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="15"/>
-        <source>Manage plugins</source>
-        <translation type="unfinished">أدر الموصلات</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="90"/>
-        <source>Rescan plugins</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="106"/>
-        <source>Include plugins with errors</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="147"/>
-        <source>Cancel</source>
-        <translation>ألغ</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="55"/>
-        <source>Show:</source>
-        <translation type="unfinished">أظهر:</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="61"/>
-        <source>Type:</source>
-        <translation>النوع:</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="67"/>
-        <source>Category:</source>
-        <translation type="unfinished">الفئة:</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="13"/>
@@ -5350,7 +5571,6 @@ i18n-hint: This is the name of an effect preset</extracomment>
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitersettingmodel.cpp" line="16"/>
         <source>dB</source>
         <translation>dB</translation>
-        <extracomment>i18n-hint: short form of 'decibels'.</extracomment>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/compressor/compressorsettingmodel.cpp" line="14"/>
@@ -5398,35 +5618,6 @@ i18n-hint: This is the name of an effect preset</extracomment>
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitersettingmodel.cpp" line="15"/>
         <source>Output</source>
         <translation>مخرجات</translation>
-        <extracomment>i18n-hint noun</extracomment>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="12"/>
-        <source>Initial tempo change</source>
-        <translation type="unfinished">تغير درجة السرعة الأول (%)</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="13"/>
-        <source>Final tempo change</source>
-        <translation type="unfinished">تغير درجة السرعة الأخير (%)</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="14"/>
-        <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="16"/>
-        <source>Initial pitch shift</source>
-        <translation type="unfinished">تغيير الطبقة الابتدائي</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="14"/>
-        <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="15"/>
-        <source>semitones</source>
-        <translation type="unfinished">أنصاف نغمات + أجزاء من مئة من نصف نغمة</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="15"/>
-        <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="17"/>
-        <source>Final pitch shift</source>
-        <translation type="unfinished">تغيير الطبقة النهائي</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/effecterrors.h" line="39"/>
@@ -5441,8 +5632,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/effects_base/effecterrors.h" line="43"/>
         <source>Unknown error</source>
-        <translation type="unfinished">مجهول</translation>
-        <extracomment>i18n-hint: database operation has failed due to the unknown error</extracomment>
+        <translation>خطأ غير معروف</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/effecterrors.h" line="45"/>
@@ -5480,18 +5670,6 @@ i18n-hint: This is the name of an effect preset</extracomment>
         <translation>التأثير المُطبَّق: %1</translation>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="637"/>
-        <source>Generating %1…</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="637"/>
-        <location filename="../../au3/libraries/au3-effects/EffectBase.cpp" line="196"/>
-        <source>Applying %1…</source>
-        <extracomment>%1 is the name of the effect being applied</extracomment>
-        <translation type="unfinished"/>
-    </message>
-    <message>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="49"/>
         <source>Preset “%1” already exists, replace?</source>
         <translation type="unfinished"/>
@@ -5518,6 +5696,11 @@ i18n-hint: This is the name of an effect preset</extracomment>
         <translation type="unfinished">حرر المتغيرات</translation>
     </message>
     <message>
+        <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="151"/>
+        <source>Export effect parameters</source>
+        <translation type="unfinished">حرر المتغيرات</translation>
+    </message>
+    <message>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="135"/>
         <source>%1: is not a valid presets file.</source>
         <extracomment>%1 is the path of the preset file being imported</extracomment>
@@ -5530,9 +5713,16 @@ i18n-hint: This is the name of an effect preset</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="151"/>
-        <source>Export effect parameters</source>
-        <translation type="unfinished">حرر المتغيرات</translation>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="637"/>
+        <source>Generating %1…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/internal/effectexecutionscenario.cpp" line="637"/>
+        <location filename="../../au3/libraries/au3-effects/EffectBase.cpp" line="196"/>
+        <source>Applying %1…</source>
+        <extracomment>%1 is the name of the effect being applied</extracomment>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsuiactions.cpp" line="68"/>
@@ -5548,7 +5738,6 @@ i18n-hint: This is the name of an effect preset</extracomment>
         <location filename="../../src/effects/effects_base/internal/realtimeeffectservice.cpp" line="233"/>
         <source>Master</source>
         <translation type="unfinished">الصق</translation>
-        <extracomment>i18n-hint: master channel display name</extracomment>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/view/effectpresetsbarmodel.cpp" line="104"/>
@@ -5564,7 +5753,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/effects_base/view/effectsavecontextmenu.cpp" line="86"/>
         <source>Save as…</source>
-        <translation type="unfinished"/>
+        <translation>حفظ كـ...</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/view/generatedeffectviewermodel.cpp" line="54"/>
@@ -5574,40 +5763,6 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/effects_base/view/generatedeffectviewermodel.cpp" line="70"/>
         <source>No parameters available for this effect</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="95"/>
-        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="130"/>
-        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="159"/>
-        <source>All</source>
-        <translation>جميع</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="96"/>
-        <source>Disabled</source>
-        <translation>غير ممَكن</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="97"/>
-        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="212"/>
-        <source>Enabled</source>
-        <translation>ممَكن</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="217"/>
-        <source>Vendor</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="221"/>
-        <source>Type</source>
-        <translation>النوع</translation>
-    </message>
-    <message>
-        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="250"/>
-        <source>“%1” (broken)</source>
-        <extracomment>%1 is the name of the plugin that failed to load</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -5621,20 +5776,18 @@ i18n-hint: This is the name of an effect preset</extracomment>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="101"/>
         <source>Nyquist scripts</source>
         <translation type="unfinished">حمل نص Nyquist</translation>
-        <extracomment>i18n-hint: Nyquist is the name of a programming language</extracomment>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="49"/>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="102"/>
         <source>Lisp scripts</source>
         <translation type="unfinished">أوقف النص</translation>
-        <extracomment>i18n-hint: Lisp is the name of a programming language</extracomment>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="50"/>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="103"/>
         <source>All files</source>
-        <translation type="unfinished">جميع الملفات|*</translation>
+        <translation>جميع الملفات</translation>
     </message>
     <message>
         <location filename="../../src/effects/nyquist/nyquistprompt/nyquistpromptviewmodel.cpp" line="58"/>
@@ -5658,6 +5811,165 @@ i18n-hint: This is the name of an effect preset</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="15"/>
+        <source>Manage plugins</source>
+        <translation type="unfinished">أدر الموصلات</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="90"/>
+        <source>Rescan plugins</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="106"/>
+        <source>Include plugins with errors</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="13"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="95"/>
+        <source>Missing plugins</source>
+        <translation type="unfinished">أدر الموصلات</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="103"/>
+        <source>Some plugins used in this project were not found. Double-click an entry to see its location.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="146"/>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="129"/>
+        <source>OK</source>
+        <translation>حسنا</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="157"/>
+        <source>Plugin details</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="199"/>
+        <source>Vendor:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="205"/>
+        <source>Unknown</source>
+        <translation>مجهول</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="211"/>
+        <source>Path:</source>
+        <translation type="unfinished">طريق</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="241"/>
+        <source>Close</source>
+        <translation>إغلاق</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="147"/>
+        <source>Cancel</source>
+        <translation>ألغ</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="55"/>
+        <source>Show:</source>
+        <translation type="unfinished">أظهر:</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="61"/>
+        <source>Type:</source>
+        <translation>النوع:</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTopPanel.qml" line="67"/>
+        <source>Category:</source>
+        <translation type="unfinished">الفئة:</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="12"/>
+        <source>Initial tempo change</source>
+        <translation type="unfinished">تغير درجة السرعة الأول (%)</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="13"/>
+        <source>Final tempo change</source>
+        <translation type="unfinished">تغير درجة السرعة الأخير (%)</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="14"/>
+        <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="16"/>
+        <source>Initial pitch shift</source>
+        <translation type="unfinished">تغيير الطبقة الابتدائي</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="14"/>
+        <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="15"/>
+        <source>semitones</source>
+        <translation type="unfinished">أنصاف نغمات + أجزاء من مئة من نصف نغمة</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="15"/>
+        <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="17"/>
+        <source>Final pitch shift</source>
+        <translation type="unfinished">تغيير الطبقة النهائي</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="95"/>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="130"/>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="159"/>
+        <source>All</source>
+        <translation>جميع</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="96"/>
+        <source>Disabled</source>
+        <translation>غير ممَكن</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="97"/>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="212"/>
+        <source>Enabled</source>
+        <translation>ممَكن</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="250"/>
+        <source>“%1” (broken)</source>
+        <extracomment>%1 is the name of the plugin that failed to load</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="119"/>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="215"/>
+        <source>Name</source>
+        <translation>الاسم</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="217"/>
+        <source>Vendor</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="122"/>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="219"/>
+        <source>Path</source>
+        <translation>طريق</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="221"/>
+        <source>Type</source>
+        <translation>النوع</translation>
+    </message>
+    <message>
+        <source>%1 (broken)</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Missing - %1</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
         <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistitemmodel.cpp" line="65"/>
         <source>Missing - “%1”</source>
         <extracomment>%1 is the name of the effect that is missing/unavailable</extracomment>
@@ -5678,6 +5990,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
         <source>%1: Could not load settings below. Default settings will be used.
 
 %2</source>
+        <extracomment>%1 is the effect name, %2 is the preset name</extracomment>
         <translation>%1: لم أتمكن من تحميل الأوضاع أدناه. ستستخدم الأوضاع الأساسية.
 
 %2</translation>
@@ -5685,10 +5998,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../au3/libraries/au3-effects/EffectBase.h" line="148"/>
         <source>Nyquist</source>
-        <extracomment>i18n-hint: "Nyquist" is an embedded interpreted programming language in
-Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
-In the translations of this and other strings, you may transliterate the
-name into another alphabet.</extracomment>
+        <extracomment>"Nyquist" is an embedded interpreted programming language in Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist). In the translations of this and other strings, you may transliterate the name into another alphabet.</extracomment>
         <translation>Nyquist</translation>
     </message>
     <message>
@@ -5799,7 +6109,7 @@ name into another alphabet.</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/limiter/limitereffect.cpp" line="51"/>
         <source>Augments loudness while minimizing distortion.</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -5867,12 +6177,12 @@ name into another alphabet.</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnesseffect.cpp" line="30"/>
         <source>Loudness Normalization</source>
-        <translation/>
+        <translation>توحيد مستوى الصوت</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnesseffect.cpp" line="59"/>
         <source>Sets the loudness of one or more tracks</source>
-        <translation type="unfinished">يعين سعة القمة لمقطع أو أكثر</translation>
+        <translation>تحديد مستوى الصوت لمسار أو عدة مسارات</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnesseffect.cpp" line="88"/>
@@ -5883,11 +6193,13 @@ name into another alphabet.</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnesseffect.cpp" line="113"/>
         <source>Analyzing: %1</source>
+        <extracomment>%1 is the name of the track being analyzed</extracomment>
         <translation>أحلل: %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/loudness/normalizeloudnesseffect.cpp" line="181"/>
         <source>Processing: %1</source>
+        <extracomment>%1 is the name of the track being processed</extracomment>
         <translation>أعالج: %1</translation>
     </message>
 </context>
@@ -5909,7 +6221,7 @@ name into another alphabet.</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="69"/>
         <source>Median</source>
-        <translation type="unfinished">متوسط</translation>
+        <translation>متوسط</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="70"/>
@@ -5991,11 +6303,13 @@ name into another alphabet.</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="128"/>
         <source>Analyzing: %1</source>
+        <extracomment>%1 is the name of the track being analyzed</extracomment>
         <translation>أحلل: %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="132"/>
         <source>Analyzing first track of stereo pair: %1</source>
+        <extracomment>%1 is the name of the track being analyzed</extracomment>
         <translation>أحلل المقطغ الأول من الزوج الثنائي: %1</translation>
     </message>
     <message>
@@ -6006,6 +6320,7 @@ name into another alphabet.</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="168"/>
         <source>Processing: %1</source>
+        <extracomment>%1 is the name of the track being processed</extracomment>
         <translation>أعالج: %1</translation>
     </message>
     <message>
@@ -6016,6 +6331,7 @@ name into another alphabet.</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/normalize/normalizeeffect.cpp" line="182"/>
         <source>Processing first track of stereo pair: %1</source>
+        <extracomment>%1 is the name of the track being processed</extracomment>
         <translation>أعالج المقطغ الأول من الزوج الثنائي: %1</translation>
     </message>
     <message>
@@ -6062,13 +6378,11 @@ name into another alphabet.</extracomment>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="69"/>
         <source>n/a</source>
         <translation>غير قابل للتطبيق</translation>
-        <extracomment>i18n-hint: Can mean "not available," "not applicable," "no answer"
-i18n-hint: n/a is an English abbreviation meaning "not applicable".</extracomment>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="99"/>
         <source>Nyquist Worker</source>
-        <extracomment>i18n-hint: It is acceptable to translate this the same as for "Nyquist Prompt"</extracomment>
+        <extracomment>It is acceptable to translate this the same as for "Nyquist * Prompt"</extracomment>
         <translation>عامل Nyquist</translation>
     </message>
     <message>
@@ -6124,7 +6438,7 @@ frequency range for the effect to act on.</source>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1408"/>
         <source>nyx_error returned from %1.
 </source>
-        <extracomment>i18n-hint: "%s" is replaced by name of plug-in.</extracomment>
+        <extracomment>"%s" is replaced by name of plug-in.</extracomment>
         <translation>خطأ_nyx رجع من %1.
 </translation>
     </message>
@@ -6136,8 +6450,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1424"/>
         <source>Nyquist returned a list.</source>
-        <translation type="unfinished">أرجع Nyquist صوت nil.
-</translation>
+        <translation>أرجعت Nyquist قائمة.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1460"/>
@@ -6202,7 +6515,6 @@ frequency range for the effect to act on.</source>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="2599"/>
         <source>untitled</source>
         <translation>غير معنون</translation>
-        <extracomment>i18n-hint: default exported file name when exporting from unsaved project</extracomment>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="8"/>
@@ -6217,7 +6529,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="10"/>
         <source>GNU General Public License v2.0</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="11"/>
@@ -6227,12 +6539,12 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="12"/>
         <source>Low-shelf</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="13"/>
         <source>High-shelf</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="14"/>
@@ -6247,7 +6559,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="16"/>
         <source>Error.~%Frequency set too high for selected track.</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="17"/>
@@ -6257,7 +6569,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="18"/>
         <source>Paul Licameli</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="19"/>
@@ -6269,7 +6581,7 @@ frequency range for the effect to act on.</source>
         <source>~aBandwidth is zero (the upper and lower~%~
                        frequencies are both ~a Hz).~%~
                        Please select a frequency range.</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="21"/>
@@ -6296,12 +6608,12 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="25"/>
         <source>~aLow frequency is undefined.</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="26"/>
         <source>~aHigh frequency is undefined.</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="27"/>
@@ -6313,14 +6625,14 @@ frequency range for the effect to act on.</source>
         <source>~aFrequency selection is too high for track sample rate.~%~
                         For the current track, the high frequency setting cannot~%~
                         be greater than ~a Hz</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="29"/>
         <source>~aBandwidth is zero (the upper and lower~%~
                          frequencies are both ~a Hz).~%~
                          Please select a frequency range.</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="30"/>
@@ -6330,7 +6642,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="31"/>
         <source>GNU General Public License v2.0 or later</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="32"/>
@@ -6405,7 +6717,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="46"/>
         <source>Handy Presets (override controls)</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="47"/>
@@ -6425,12 +6737,12 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="50"/>
         <source>Exponential In</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="51"/>
         <source>Exponential Out</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="52"/>
@@ -6492,7 +6804,7 @@ frequency range for the effect to act on.</source>
         <source>~adB values cannot be more than +100 dB.~%~%~
                                       Hint: 6 dB doubles the amplitude~%~
                                       -6 dB halves the amplitude.</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="64"/>
@@ -6512,17 +6824,17 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="68"/>
         <source>Benjamin Schwartz and Steve Daulton</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="69"/>
         <source>Threshold of Clipping (%)</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="70"/>
         <source>Reduce amplitude to allow for restored peaks (dB)</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="71"/>
@@ -6544,7 +6856,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="74"/>
         <source>Error.~%Crossfade Clips may only be applied to one track.</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="75"/>
@@ -6594,17 +6906,17 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="84"/>
         <source>Alternating Out / In</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="85"/>
         <source>Alternating In / Out</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="86"/>
         <source>Error.~%Select 2 (or more) tracks to crossfade.</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="87"/>
@@ -6624,17 +6936,17 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="90"/>
         <source>Bouncing Ball</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="91"/>
         <source>Reverse Bouncing Ball</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="92"/>
         <source>Delay level per echo (dB)</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="93"/>
@@ -6695,7 +7007,6 @@ frequency range for the effect to act on.</source>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="104"/>
         <source>Create labels based on</source>
         <translation>أنشئ العلامات استنادا إلى</translation>
-        <extracomment>i18n-hint: Refers to the controls 'Number of labels' and 'Label interval'.</extracomment>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="105"/>
@@ -6730,29 +7041,27 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="111"/>
         <source>Adjust label interval to fit length</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="112"/>
         <source>Label text</source>
         <translation>نص العلامة</translation>
-        <extracomment>i18n-hint: Do not translate '##1'</extracomment>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="113"/>
         <source>Label</source>
         <translation>علامة</translation>
-        <extracomment>i18n-hint: (noun)</extracomment>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="114"/>
         <source>Minimum number of digits in label</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="115"/>
         <source>None - Text Only</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="116"/>
@@ -6812,13 +7121,12 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="127"/>
         <source>Warning: Overlapping region labels.~%</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="128"/>
         <source>region labels</source>
         <translation>علامات المناطق</translation>
-        <extracomment>i18n-hint:  Type of label</extracomment>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="129"/>
@@ -6828,13 +7136,12 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="130"/>
         <source>~a~a ~a at intervals of ~a seconds.~%</source>
-        <translation/>
-        <extracomment>i18n-hint:  Number of labels produced at specified intervals.</extracomment>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="131"/>
         <source>~aRegion length = ~a seconds.</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="132"/>
@@ -6849,7 +7156,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="134"/>
         <source>Roll-off (dB per octave)</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="135"/>
@@ -6886,7 +7193,7 @@ frequency range for the effect to act on.</source>
         <source>Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~
                  Track sample rate is ~a Hz~%~
                  Frequency must be less than ~a Hz.</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="142"/>
@@ -6946,12 +7253,12 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="153"/>
         <source>Region around sounds</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="154"/>
         <source>Region between sounds</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="155"/>
@@ -6961,23 +7268,22 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="156"/>
         <source>Maximum trailing silence</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="157"/>
         <source>Sound ##1</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="158"/>
         <source>~ah ~am ~as</source>
-        <translation/>
-        <extracomment>i18n-hint: hours minutes and seconds. Do not translate "~a".</extracomment>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="159"/>
         <source>Too many silences detected.~%Only the first 10000 labels added.</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="160"/>
@@ -6990,7 +7296,7 @@ frequency range for the effect to act on.</source>
         <source>Labelling regions between sounds requires~%~
                  at least two sounds.~%~
                  Only one sound detected.</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="162"/>
@@ -7016,7 +7322,6 @@ frequency range for the effect to act on.</source>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="166"/>
         <source>Soft Clip</source>
         <translation>قطع خفيف</translation>
-        <extracomment>i18n-hint: clipping of wave peaks and troughs, not division of a track into clips</extracomment>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="167"/>
@@ -7027,13 +7332,13 @@ frequency range for the effect to act on.</source>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="168"/>
         <source>Input Gain (dB)
 mono/Left</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="169"/>
         <source>Input Gain (dB)
 Right channel</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="170"/>
@@ -7043,7 +7348,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="171"/>
         <source>Hold (ms)</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="172"/>
@@ -7068,12 +7373,12 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="176"/>
         <source>Gate</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="177"/>
         <source>Analyze Noise Level</source>
-        <translation type="unfinished">وقت التحليل:</translation>
+        <translation>تحليل مستوى التشويش</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="178"/>
@@ -7121,26 +7426,25 @@ Right channel</source>
                              Gate frequencies above: ~s kHz~%~
                              is too high for selected track.~%~
                              Set the control below ~a kHz.</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="187"/>
         <source>Error.~%~
                             Insufficient audio selected.~%~
                             Make the selection longer than ~a ms.</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="188"/>
         <source>Peak based on first ~a seconds ~a dB~%~
                Suggested Threshold Setting ~a dB.</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="189"/>
         <source>~ah ~am</source>
-        <translation/>
-        <extracomment>i18n-hint: hours and minutes. Do not translate "~a".</extracomment>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="190"/>
@@ -7162,7 +7466,7 @@ Right channel</source>
         <source>Error:~%~%Frequency (~a Hz) is too high for track sample rate.~%~%~
                Track sample rate is ~a Hz.~%~
                Frequency must be less than ~a Hz.</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="194"/>
@@ -7173,7 +7477,6 @@ Right channel</source>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="195"/>
         <source>Select file(s) to install</source>
         <translation type="unfinished">اختر المجرى/المجاري لتستورد</translation>
-        <extracomment>i18n-hint: "Browse..." is text on a button that launches a file browser.</extracomment>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="196"/>
@@ -7203,12 +7506,12 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="201"/>
         <source>All supported</source>
-        <translation type="unfinished">جميع الملفات|*|جميع الملفات المدعومة|</translation>
+        <translation>كل المدعوم</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="202"/>
         <source>All files</source>
-        <translation type="unfinished">جميع الملفات|*</translation>
+        <translation>جميع الملفات</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="203"/>
@@ -7223,12 +7526,12 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="205"/>
         <source>Allow</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="206"/>
         <source>Success.~%Files written to:~%~s~%</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="207"/>
@@ -7238,7 +7541,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="208"/>
         <source>Plug-ins installed.~%(Use the Plug-in Manager to enable effects):</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="209"/>
@@ -7253,7 +7556,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="211"/>
         <source>Not found or cannot be read:</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="212"/>
@@ -7268,17 +7571,17 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="214"/>
         <source>Cannot be written to plug-ins folder:</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="215"/>
         <source>Error.~%No file selected.</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="216"/>
         <source>Pluck</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="217"/>
@@ -7288,7 +7591,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="218"/>
         <source>Pluck MIDI pitch</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="219"/>
@@ -7298,12 +7601,12 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="220"/>
         <source>Abrupt</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="221"/>
         <source>Gradual</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="222"/>
@@ -7318,7 +7621,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="224"/>
         <source>Dominic Mazzoni, David R. Sky and Steve Daulton</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="225"/>
@@ -7338,7 +7641,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="228"/>
         <source>1 - 20 beats/measure</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="229"/>
@@ -7358,12 +7661,12 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="232"/>
         <source>Number of bars</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="233"/>
         <source>1 - 1000 bars</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="234"/>
@@ -7393,22 +7696,22 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="239"/>
         <source>Metronome Tick</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="240"/>
         <source>Ping (short)</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="241"/>
         <source>Ping (long)</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="242"/>
         <source>Cowbell</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="243"/>
@@ -7423,17 +7726,17 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="245"/>
         <source>Drip (short)</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="246"/>
         <source>Drip (long)</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="247"/>
         <source>MIDI pitch of strong beat</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="248"/>
@@ -7443,7 +7746,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="249"/>
         <source>MIDI pitch of weak beat</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="250"/>
@@ -7495,7 +7798,6 @@ Right channel</source>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="259"/>
         <source>dB</source>
         <translation>dB</translation>
-        <extracomment>i18n-hint: short form of 'decibels'.</extracomment>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="260"/>
@@ -7520,15 +7822,12 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="264"/>
         <source>Limit output to first</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="265"/>
         <source>samples</source>
         <translation>عينات</translation>
-        <extracomment>i18n-hint: Name of time display format that shows time in samples (at the
-* current project sample rate).  For example the number of a sample at 1
-* second into a recording at 44.1KHz would be 44,100.</extracomment>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="266"/>
@@ -7609,7 +7908,6 @@ Right channel</source>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="281"/>
         <source>L-R on Same Line</source>
         <translation>يمين-يسار على نفس الخط</translation>
-        <extracomment>i18n-hint: Left and Right</extracomment>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="282"/>
@@ -7620,7 +7918,6 @@ Right channel</source>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="283"/>
         <source>L Channel First</source>
         <translation>القناة اليسرى أولا</translation>
-        <extracomment>i18n-hint: L for Left</extracomment>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="284"/>
@@ -7636,7 +7933,6 @@ Right channel</source>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="286"/>
         <source>[-inf]</source>
         <translation>[-لانهاية]</translation>
-        <extracomment>i18n-hint abbreviates negative infinity</extracomment>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="287"/>
@@ -7656,35 +7952,35 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="290"/>
         <source>Sample Rate: ~a Hz.  Sample values on ~a scale.~%~a~%~a</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="291"/>
         <source>~a   ~a~%~aSample Rate: ~a Hz.~%Length processed: ~a samples ~a seconds.~a</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="292"/>
         <source>~a   ~a~%~aSample Rate: ~a Hz. Sample values on ~a scale.~%~
                      Length processed: ~a samples ~a seconds.~a</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="293"/>
         <source>~a~%Sample Rate: ~a Hz. Sample values on ~a scale. ~a.~%~aLength processed: ~a ~
                   samples, ~a seconds.~%Peak amplitude: ~a (linear) ~a dB.  Unweighted RMS: ~a dB.~%~
                   DC offset: ~a~a</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="294"/>
         <source>~a linear, ~a dB.</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="295"/>
         <source>Left: ~a lin, ~a dB | Right: ~a lin, ~a dB.</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="296"/>
@@ -7704,40 +8000,37 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="299"/>
         <source>Audio data analysis:</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="300"/>
         <source>&lt;b&gt;Sample Rate:&lt;/b&gt; &amp;nbsp;&amp;nbsp;~a Hz.</source>
-        <translation/>
+        <translation>&lt;b&gt;معدل العينة:&lt;/b&gt; &amp;nbsp;&amp;nbsp;~a Hz.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="301"/>
         <source>&lt;b&gt;Peak Amplitude:&lt;/b&gt; &amp;nbsp;&amp;nbsp;~a (linear) &amp;nbsp;&amp;nbsp;~a dB.</source>
-        <translation/>
-        <extracomment>i18n-hint: abbreviates "decibels"</extracomment>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="302"/>
         <source>&lt;b&gt;RMS&lt;/b&gt; (unweighted): &amp;nbsp;&amp;nbsp;~a dB.</source>
-        <translation/>
-        <extracomment>i18n-hint: RMS abbreviates root-mean-square, a method of averaging a signal; there also "weighted" versions of it but this isn't that</extracomment>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="303"/>
         <source>&lt;b&gt;DC Offset:&lt;/b&gt; &amp;nbsp;&amp;nbsp;~a</source>
-        <translation/>
-        <extracomment>i18n-hint: DC derives from "direct current" in electronics, really means the zero frequency component of a signal</extracomment>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="304"/>
         <source>~a linear, &amp;nbsp;&amp;nbsp;~a dB.</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="305"/>
         <source>Left: ~a lin, ~a dB | Right: ~a linear, &amp;nbsp;&amp;nbsp;~a dB.</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="306"/>
@@ -7767,7 +8060,7 @@ Right channel</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="311"/>
         <source>audio sample value analysis</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="312"/>
@@ -7794,7 +8087,7 @@ Right channel</source>
         <source>Produced with &lt;span&gt;Sample Data Export&lt;/span&gt; for
 &lt;a href="~a"&gt;Audacity&lt;/a&gt; by Steve
 Daulton</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="317"/>
@@ -7859,7 +8152,7 @@ Daulton</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="329"/>
         <source>Invalid data handling</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="330"/>
@@ -7905,12 +8198,12 @@ Daulton</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="337"/>
         <source>Error.~%Track sample rate below 100 Hz is not supported.</source>
-        <translation/>
+        <translation>خطأ.~% معدل عينة المسار الأقل من 100 Hz  غير مدعوم.</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="338"/>
         <source>Tremolo</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="339"/>
@@ -7925,7 +8218,7 @@ Daulton</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="341"/>
         <source>Triangle</source>
-        <translation type="unfinished">مثلث</translation>
+        <translation>مثلث</translation>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="342"/>
@@ -7955,7 +8248,7 @@ Daulton</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="347"/>
         <source>Vocoder</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="348"/>
@@ -7965,7 +8258,7 @@ Daulton</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="349"/>
         <source>Distance: (1 to 120, default = 20)</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="350"/>
@@ -7985,7 +8278,7 @@ Daulton</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="353"/>
         <source>Number of vocoder bands</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="354"/>
@@ -8010,7 +8303,7 @@ Daulton</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="358"/>
         <source>Error.~%No modulation carrier.</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -8079,11 +8372,13 @@ or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
     <message>
         <location filename="../../src/effects/builtin_collection/removedcoffset/removedcoffseteffect.cpp" line="82"/>
         <source>Analyzing: %1</source>
+        <extracomment>%1 is the name of the track being analyzed</extracomment>
         <translation>أحلل: %1</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/removedcoffset/removedcoffseteffect.cpp" line="100"/>
         <source>Processing: %1</source>
+        <extracomment>%1 is the name of the track being processed</extracomment>
         <translation>أعالج: %1</translation>
     </message>
 </context>
@@ -8102,7 +8397,7 @@ or reducing the ‘Time Resolution’ to less than %2 seconds.</source>
     <message>
         <location filename="../../src/effects/builtin_collection/repair/repaireffect.cpp" line="71"/>
         <source>The Repair effect cannot be applied within stretched or shrunk clips</source>
-        <translation/>
+        <translation>لا يمكن تطبيق تأثير الإصلاح على المقاطع الممتدة أو المنكمشة</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/repair/repaireffect.cpp" line="77"/>
@@ -8126,111 +8421,110 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="68"/>
         <source>Acoustic</source>
-        <extracomment>i18n-hint: This is the name of an effect preset</extracomment>
-        <translation/>
+        <extracomment>This is the name of an effect preset</extracomment>
+        <translation>صوتي</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="70"/>
         <source>Ambience</source>
-        <extracomment>i18n-hint: This is the name of an effect preset</extracomment>
-        <translation type="unfinished">سكون</translation>
+        <extracomment>This is the name of an effect preset</extracomment>
+        <translation>الأجواء المحيطة</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="72"/>
         <source>Artificial</source>
-        <extracomment>i18n-hint: This is the name of an effect preset</extracomment>
-        <translation/>
+        <extracomment>This is the name of an effect preset</extracomment>
+        <translation>اصطناعي</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="74"/>
         <source>Clean</source>
-        <extracomment>i18n-hint: This is the name of an effect preset</extracomment>
-        <translation type="unfinished">امسح</translation>
+        <extracomment>This is the name of an effect preset</extracomment>
+        <translation>امسح</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="76"/>
         <source>Modern</source>
-        <extracomment>i18n-hint: This is the name of an effect preset.
-i18n-hint: This is the name of an effect preset</extracomment>
-        <translation type="unfinished">النمط:</translation>
+        <extracomment>This is the name of an effect preset</extracomment>
+        <translation>عصري</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="79"/>
         <source>Vocal I</source>
-        <extracomment>i18n-hint: This is the name of an effect preset</extracomment>
+        <extracomment>This is the name of an effect preset</extracomment>
         <translation>لفظ 1</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="81"/>
         <source>Vocal II</source>
-        <extracomment>i18n-hint: This is the name of an effect preset</extracomment>
+        <extracomment>This is the name of an effect preset</extracomment>
         <translation>لفظ 2</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="83"/>
         <source>Dance Vocal</source>
-        <extracomment>i18n-hint: This is the name of an effect preset</extracomment>
-        <translation type="unfinished">اعزل</translation>
+        <extracomment>This is the name of an effect preset</extracomment>
+        <translation>أصوات الرقص</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="85"/>
         <source>Modern Vocal</source>
-        <extracomment>i18n-hint: This is the name of an effect preset</extracomment>
-        <translation type="unfinished">أزل المميز</translation>
+        <extracomment>This is the name of an effect preset</extracomment>
+        <translation>المعالجة الصوتية العصرية</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="87"/>
         <source>Voice Tail</source>
-        <extracomment>i18n-hint: This is the name of an effect preset</extracomment>
-        <translation/>
+        <extracomment>This is the name of an effect preset</extracomment>
+        <translation>ذيل الصوت</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="90"/>
         <source>Bathroom</source>
-        <extracomment>i18n-hint: This is the name of an effect preset</extracomment>
+        <extracomment>This is the name of an effect preset</extracomment>
         <translation>حمام</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="92"/>
         <source>Small Room Bright</source>
-        <extracomment>i18n-hint: This is the name of an effect preset</extracomment>
+        <extracomment>This is the name of an effect preset</extracomment>
         <translation>غرفة صغيرة مشرق</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="94"/>
         <source>Small Room Dark</source>
-        <extracomment>i18n-hint: This is the name of an effect preset</extracomment>
+        <extracomment>This is the name of an effect preset</extracomment>
         <translation>غرفة صغيرة مظلم</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="96"/>
         <source>Medium Room</source>
-        <extracomment>i18n-hint: This is the name of an effect preset</extracomment>
+        <extracomment>This is the name of an effect preset</extracomment>
         <translation>غرفة متوسطة</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="98"/>
         <source>Large Room</source>
-        <extracomment>i18n-hint: This is the name of an effect preset</extracomment>
+        <extracomment>This is the name of an effect preset</extracomment>
         <translation>غرفة كبيرة</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="100"/>
         <source>Church Hall</source>
-        <extracomment>i18n-hint: This is the name of an effect preset</extracomment>
+        <extracomment>This is the name of an effect preset</extracomment>
         <translation>قاعة كنيسة</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="102"/>
         <source>Cathedral</source>
-        <extracomment>i18n-hint: This is the name of an effect preset</extracomment>
+        <extracomment>This is the name of an effect preset</extracomment>
         <translation>كاثدرائية</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="104"/>
         <source>Big Cave</source>
-        <extracomment>i18n-hint: This is the name of an effect preset</extracomment>
-        <translation/>
+        <extracomment>This is the name of an effect preset</extracomment>
+        <translation>الكهف الكبير</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbeffect.cpp" line="111"/>
@@ -8412,14 +8706,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="293"/>
         <source>Duration</source>
-        <translation>الأمد</translation>
-        <extracomment>i18n-hint: This string is used to configure the controls which shows the recording
-* duration. As such it is important that only the alphabetic parts of the string
-* are translated, with the numbers left exactly as they are.
-* The string 'days' indicates that the first number in the control will be the number of days,
-* then the 'h' indicates the second number displayed is hours, the 'm' indicates the third
-* number displayed is minutes, and the 's' indicates that the fourth number displayed is
-* seconds.</extracomment>
+        <translation>المدة</translation>
     </message>
 </context>
 <context>
@@ -8461,7 +8748,6 @@ i18n-hint: This is the name of an effect preset</extracomment>
         <location filename="../../src/effects/builtin_collection/dynamics/timeline/DynamicsPanel.qml" line="131"/>
         <source>Output</source>
         <translation>مخرجات</translation>
-        <extracomment>i18n-hint noun</extracomment>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dynamics/timeline/DynamicsPanel.qml" line="136"/>
@@ -8494,14 +8780,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="129"/>
         <source>Duration</source>
-        <translation>الأمد</translation>
-        <extracomment>i18n-hint: This string is used to configure the controls which shows the recording
-* duration. As such it is important that only the alphabetic parts of the string
-* are translated, with the numbers left exactly as they are.
-* The string 'days' indicates that the first number in the control will be the number of days,
-* then the 'h' indicates the second number displayed is hours, the 'm' indicates the third
-* number displayed is minutes, and the 's' indicates that the fourth number displayed is
-* seconds.</extracomment>
+        <translation>المدة</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="190"/>
@@ -8528,7 +8807,6 @@ i18n-hint: This is the name of an effect preset</extracomment>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="271"/>
         <source>%1 ms</source>
         <translation>%1 ملي الثانية</translation>
-        <extracomment>i18n-hint milliseconds</extracomment>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/dtmfgen/DtmfView.qml" line="267"/>
@@ -8653,42 +8931,29 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/noisegen/NoiseView.qml" line="90"/>
         <source>Duration</source>
-        <translation>الأمد</translation>
-        <extracomment>i18n-hint: This string is used to configure the controls which shows the recording
-* duration. As such it is important that only the alphabetic parts of the string
-* are translated, with the numbers left exactly as they are.
-* The string 'days' indicates that the first number in the control will be the number of days,
-* then the 'h' indicates the second number displayed is hours, the 'm' indicates the third
-* number displayed is minutes, and the 's' indicates that the fourth number displayed is
-* seconds.</extracomment>
+        <translation>المدة</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisegen/noiseviewmodel.cpp" line="26"/>
         <source>White</source>
         <comment>not a color, but 'white noise' having a uniform spectrum</comment>
-        <translation type="unfinished">أبيض</translation>
+        <translation>أبيض</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisegen/noiseviewmodel.cpp" line="31"/>
         <source>Pink</source>
         <comment>not a color, but 'pink noise' having a spectrum with more power in low frequencies</comment>
-        <translation type="unfinished">وردي</translation>
+        <translation>وردي</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisegen/noiseviewmodel.cpp" line="35"/>
         <source>Brownian</source>
         <comment>a kind of noise spectrum also known as 'red' or 'brown'</comment>
-        <translation type="unfinished">براوني</translation>
+        <translation>براوني</translation>
     </message>
 </context>
 <context>
     <name>effects/noisereduction</name>
-    <message>
-        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="13"/>
-        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="141"/>
-        <source>Noise reduction</source>
-        <translation>تقليل الضجيج</translation>
-    </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="68"/>
         <source>Step 1</source>
@@ -8715,6 +8980,12 @@ i18n-hint: This is the name of an effect preset</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
+        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="13"/>
+        <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="141"/>
+        <source>Noise reduction</source>
+        <translation>تقليل الضجيج</translation>
+    </message>
+    <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="171"/>
         <source>Sensitivity</source>
         <translation>الحساسية</translation>
@@ -8733,7 +9004,6 @@ i18n-hint: This is the name of an effect preset</extracomment>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="238"/>
         <source>Output</source>
         <translation>مخرجات</translation>
-        <extracomment>i18n-hint noun</extracomment>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="265"/>
@@ -8777,6 +9047,13 @@ i18n-hint: This is the name of an effect preset</extracomment>
         <location filename="../../src/effects/builtin_collection/normalize/NormalizeView.qml" line="98"/>
         <source>Normalize stereo channels independently</source>
         <translation type="unfinished">طبع القنوات الثنائية على حدة</translation>
+    </message>
+</context>
+<context>
+    <name>effects/nyquist</name>
+    <message>
+        <source>Nyquist prompt</source>
+        <translation type="unfinished">تذكرة Nyquist</translation>
     </message>
 </context>
 <context>
@@ -8923,14 +9200,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/ToneView.qml" line="125"/>
         <source>Duration</source>
-        <translation>الأمد</translation>
-        <extracomment>i18n-hint: This string is used to configure the controls which shows the recording
-* duration. As such it is important that only the alphabetic parts of the string
-* are translated, with the numbers left exactly as they are.
-* The string 'days' indicates that the first number in the control will be the number of days,
-* then the 'h' indicates the second number displayed is hours, the 'm' indicates the third
-* number displayed is minutes, and the 's' indicates that the fourth number displayed is
-* seconds.</extracomment>
+        <translation>المدة</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/toneviewmodel.cpp" line="35"/>
@@ -8955,7 +9225,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/toneviewmodel.cpp" line="36"/>
         <source>Triangle</source>
-        <translation type="unfinished">مثلث</translation>
+        <translation>مثلث</translation>
     </message>
 </context>
 <context>
@@ -8978,14 +9248,7 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="75"/>
         <source>Duration</source>
-        <translation>الأمد</translation>
-        <extracomment>i18n-hint: This string is used to configure the controls which shows the recording
-* duration. As such it is important that only the alphabetic parts of the string
-* are translated, with the numbers left exactly as they are.
-* The string 'days' indicates that the first number in the control will be the number of days,
-* then the 'h' indicates the second number displayed is hours, the 'm' indicates the third
-* number displayed is minutes, and the 's' indicates that the fourth number displayed is
-* seconds.</extracomment>
+        <translation>المدة</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/truncatesilence/truncatesilenceviewmodel.cpp" line="120"/>
@@ -9028,14 +9291,13 @@ i18n-hint: This is the name of an effect preset</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="36"/>
         <source>s</source>
-        <extracomment>i18n-hint: short form of 'seconds'.</extracomment>
+        <extracomment>Abbreviation of "seconds"</extracomment>
         <translation>ثانية</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="37"/>
         <source>seconds</source>
         <translation>ثواني</translation>
-        <extracomment>i18n-hint: Name of time display format that shows time in seconds</extracomment>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="45"/>
@@ -9053,27 +9315,22 @@ i18n-hint: This is the name of an effect preset</extracomment>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="54"/>
         <source>samples</source>
         <translation>عينات</translation>
-        <extracomment>i18n-hint: Name of time display format that shows time in samples (at the
-* current project sample rate).  For example the number of a sample at 1
-* second into a recording at 44.1KHz would be 44,100.</extracomment>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="63"/>
         <source>Hz</source>
-        <extracomment>i18n-hint: Name of display format that shows frequency in hertz
-i18n-hint: This is the abbreviation for "Hertz", or
-cycles per second.</extracomment>
+        <extracomment>Abbreviation of "hertz"</extracomment>
         <translation>هرتز</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="64"/>
         <source>hertz</source>
-        <translation/>
+        <translation>هيرتز</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="72"/>
         <source>kHz</source>
-        <extracomment>i18n-hint: Name of display format that shows frequency in kilohertz</extracomment>
+        <extracomment>Abbreviation of "kilohertz"</extracomment>
         <translation>ألف هرتز</translation>
     </message>
     <message>
@@ -9084,7 +9341,7 @@ cycles per second.</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="82"/>
         <source>dB</source>
-        <extracomment>i18n-hint: short form of 'decibels'.</extracomment>
+        <extracomment>Abbreviation of "decibels"</extracomment>
         <translation>dB</translation>
     </message>
     <message>
@@ -9095,6 +9352,7 @@ cycles per second.</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="92"/>
         <source>%</source>
+        <extracomment>Symbol of "percent"</extracomment>
         <translation>%</translation>
     </message>
     <message>
@@ -9142,6 +9400,7 @@ cycles per second.</extracomment>
         <location filename="../../au3/libraries/au3-exceptions/InconsistencyException.cpp" line="30"/>
         <source>Internal error in %1 at %2 line %3.
 Please inform the Audacity team at https://forum.audacityteam.org/.</source>
+        <extracomment>%1 is the function name, %2 is the source file path, %3 is the line number in that file</extracomment>
         <translation>خطأ داخلي في %1 عند %2 سطر %3.
 من فضلك أخبر فريق Audacity عند /https://forum.audacityteam.org.</translation>
     </message>
@@ -9149,6 +9408,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
         <location filename="../../au3/libraries/au3-exceptions/InconsistencyException.cpp" line="35"/>
         <source>Internal error at %1 line %2.
 Please inform the Audacity team at https://forum.audacityteam.org/.</source>
+        <extracomment>%1 is the source file path, %2 is the line number in that file</extracomment>
         <translation>خطأ داخلي عند %1 سطر %2.
 من فضلك أخبر فريق Audacity عند /https://forum.audacityteam.org.</translation>
     </message>
@@ -9182,7 +9442,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="475"/>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="607"/>
         <source>Export audio</source>
-        <translation type="unfinished">صدر الصوت</translation>
+        <translation>تصدير الصوت</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="76"/>
@@ -9262,7 +9522,6 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="463"/>
         <source>Codec:</source>
         <translation>مشفر:</translation>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/ExportDialog.qml" line="554"/>
@@ -9327,7 +9586,7 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FormatAndCodecSection.qml" line="34"/>
         <source>Formats</source>
-        <translation type="unfinished">الصيغة:</translation>
+        <translation>الصيغ</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/FormatAndCodecSection.qml" line="40"/>
@@ -9353,13 +9612,12 @@ Please inform the Audacity team at https://forum.audacityteam.org/.</source>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="62"/>
         <source>Tag</source>
-        <translation>بطاقة</translation>
+        <translation>علامة</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="84"/>
         <source>Quality</source>
         <translation>الجودة</translation>
-        <extracomment>i18n-hint: meaning accuracy in reproduction of sounds</extracomment>
     </message>
     <message>
         <location filename="../../src/importexport/export/qml/Export/internal/GeneralOptionsSection.qml" line="112"/>
@@ -9433,7 +9691,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="21"/>
         <source>Export labels</source>
-        <translation type="unfinished">صَدر العلامات</translation>
+        <translation>تصدير العلامات</translation>
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/ExportLabelsDialog.qml" line="108"/>
@@ -9518,7 +9776,7 @@ Some codecs may only accept specific values (128k, 192k, 256k, etc.)
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="544"/>
         <source>Export error</source>
-        <translation type="unfinished">صدر MIDI</translation>
+        <translation>خطأ في التصدير</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/exportpreferencesmodel.cpp" line="608"/>
@@ -9546,56 +9804,56 @@ Master effects will be turned back on after export.</source>
     <message>
         <location filename="../../au3/libraries/au3-fft/FFT.cpp" line="351"/>
         <source>Bartlett</source>
-        <extracomment>i18n-hint a proper name</extracomment>
+        <extracomment>a proper name</extracomment>
         <translation>بارتلت</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-fft/FFT.cpp" line="354"/>
         <source>Hamming</source>
-        <extracomment>i18n-hint a proper name</extracomment>
+        <extracomment>a proper name</extracomment>
         <translation>هامينغ</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-fft/FFT.cpp" line="357"/>
         <source>Hann</source>
-        <extracomment>i18n-hint a proper name</extracomment>
+        <extracomment>a proper name</extracomment>
         <translation>هان</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-fft/FFT.cpp" line="360"/>
         <source>Blackman</source>
-        <extracomment>i18n-hint a proper name</extracomment>
+        <extracomment>a proper name</extracomment>
         <translation>بلاكمان</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-fft/FFT.cpp" line="363"/>
         <source>Blackman-Harris</source>
-        <extracomment>i18n-hint two proper names</extracomment>
+        <extracomment>two proper names</extracomment>
         <translation>بلاكمان-هاريس</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-fft/FFT.cpp" line="366"/>
         <source>Welch</source>
-        <extracomment>i18n-hint a proper name</extracomment>
+        <extracomment>a proper name</extracomment>
         <translation>ولتش</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-fft/FFT.cpp" line="369"/>
         <source>Gaussian(a=2.5)</source>
-        <extracomment>i18n-hint a mathematical function named for C. F. Gauss</extracomment>
-        <translation/>
+        <extracomment>a mathematical function named for C. F. Gauss</extracomment>
+        <translation>غاوسي (a = 2.5)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-fft/FFT.cpp" line="372"/>
         <source>Gaussian(a=3.5)</source>
-        <extracomment>i18n-hint a mathematical function named for C. F. Gauss</extracomment>
-        <translation/>
+        <extracomment>a mathematical function named for C. F. Gauss</extracomment>
+        <translation>غاوسي (a = 3.5)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-fft/FFT.cpp" line="375"/>
         <source>Gaussian(a=4.5)</source>
-        <extracomment>i18n-hint a mathematical function named for C. F. Gauss</extracomment>
-        <translation/>
+        <extracomment>a mathematical function named for C. F. Gauss</extracomment>
+        <translation>غاوسي (a = 4.5)</translation>
     </message>
 </context>
 <context>
@@ -9603,7 +9861,7 @@ Master effects will be turned back on after export.</source>
     <message>
         <location filename="../../au3/libraries/au3-file-formats/FileFormats.cpp" line="350"/>
         <source>Error (file may not have been written): %1</source>
-        <extracomment>i18n-hint: %s will be the error message from the libsndfile software library</extracomment>
+        <extracomment>%s will be the error message from the libsndfile software library</extracomment>
         <translation>خطأ (يُحتمل أن الملف لم يُكتب): %1</translation>
     </message>
 </context>
@@ -9612,22 +9870,26 @@ Master effects will be turned back on after export.</source>
     <message>
         <location filename="../../au3/libraries/au3-files/FileException.cpp" line="25"/>
         <source>Audacity failed to open a file in %1.</source>
+        <extracomment>%1 is the file path</extracomment>
         <translation>أخفق Audacity في فتح ملف في %1.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileException.cpp" line="29"/>
         <source>Audacity failed to read from a file in %1.</source>
+        <extracomment>%1 is the file path</extracomment>
         <translation>أخفق Audacity في القراءة من ملف في %1.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileException.cpp" line="36"/>
         <source>Audacity successfully wrote a file in %1 but failed to rename it as %2.</source>
+        <extracomment>%1 is the original file path, %2 is the file name it was being renamed to</extracomment>
         <translation>كتب Audacity ملفا في %1 بنجاح لكن أخفق في إعادة تسميته إلى %2.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileException.cpp" line="66"/>
         <source>Audacity failed to write to a file.
 Perhaps %1 is not writable or the disk is full.</source>
+        <extracomment>%1 is a path where the project is about to be saved</extracomment>
         <translation type="unfinished">أخفق Audacity في الكتابة إلى ملف.
 ربما %1 غير قابل للكتابة أو القرص ممتلئ.</translation>
     </message>
@@ -9639,14 +9901,13 @@ Perhaps %1 is not writable or the disk is full.</source>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="48"/>
         <source>All files</source>
-        <translation type="unfinished">جميع الملفات|*</translation>
+        <translation>جميع الملفات</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="51"/>
         <source>AUP3 project files</source>
-        <extracomment>i18n-hint an Audacity project is the state of the program, stored as
-files that can be reopened to resume the session later</extracomment>
-        <translation type="unfinished">احفظ ملفات بيانات المشروع</translation>
+        <extracomment>an Audacity project is the state of the program, stored as files that can be reopened to resume the session later</extracomment>
+        <translation>ملفات مشروع AUP3</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="54"/>
@@ -9667,7 +9928,7 @@ files that can be reopened to resume the session later</extracomment>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="62"/>
         <source>XML files</source>
-        <translation type="unfinished">ملفات MP3</translation>
+        <translation>ملفات XML</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="108"/>
@@ -9677,19 +9938,20 @@ files that can be reopened to resume the session later</extracomment>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="113"/>
         <source>%1 files</source>
-        <extracomment>i18n-hint a type or types such as "txt" or "txt, xml" will be
-substituted for %s</extracomment>
+        <extracomment>a type or types such as "txt" or "txt, xml" will be substituted for %s</extracomment>
         <translation type="unfinished">ملفات MP3</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="138"/>
         <source>(%1)</source>
+        <extracomment>%1 is the list of file extension glob patterns, such as "*.txt;*.xml"</extracomment>
         <translation>(%1)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="710"/>
         <source>
 %1 does not have write permissions.</source>
+        <extracomment>%1 is the folder path that is not writable</extracomment>
         <translation type="unfinished">المجلد %1 غير موجود. هل تريد إنشائه؟</translation>
     </message>
     <message>
@@ -9701,33 +9963,28 @@ substituted for %s</extracomment>
         <location filename="../../au3/libraries/au3-files/TempDirectory.cpp" line="59"/>
         <location filename="../../au3/libraries/au3-files/TempDirectory.cpp" line="147"/>
         <source>Unsuitable</source>
-        <translation type="unfinished">الوحدة غير ملائمة</translation>
+        <translation>غير مناسب</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/TempDirectory.cpp" line="61"/>
         <location filename="../../au3/libraries/au3-files/TempDirectory.cpp" line="124"/>
         <source>The temporary files directory is on a FAT formatted drive.
 Resetting to default location.</source>
-        <translation/>
+        <extracomment>FAT is a filesystem type name</extracomment>
+        <translation>دليل الملفات المؤقتة على محرك أقراص مهيأ بتنسيق FAT.
+إعادة التعيين إلى الموقع الافتراضي.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/TempDirectory.cpp" line="149"/>
         <source>%1
 
 For tips on suitable drives, click the help button.</source>
-        <translation/>
+        <extracomment>%1 is a message describing why the drive is unsuitable</extracomment>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
     <name>global</name>
-    <message>
-        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="80"/>
-        <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="115"/>
-        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="266"/>
-        <source>Close</source>
-        <translation>إغلاق</translation>
-        <extracomment>i18n-hint verb</extracomment>
-    </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AlphaWelcomePopup.qml" line="155"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/WelcomeDialog.qml" line="279"/>
@@ -9736,7 +9993,6 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="100"/>
         <source>OK</source>
         <translation>حسنا</translation>
-        <extracomment>i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.</extracomment>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="160"/>
@@ -9747,7 +10003,6 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="102"/>
         <source>dB</source>
         <translation>dB</translation>
-        <extracomment>i18n-hint: short form of 'decibels'.</extracomment>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/tonegen/ChirpView.qml" line="179"/>
@@ -9757,9 +10012,6 @@ For tips on suitable drives, click the help button.</source>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/CustomRateDialog.qml" line="23"/>
         <source>Hz</source>
         <translation>هرتز</translation>
-        <extracomment>i18n-hint: Name of display format that shows frequency in hertz
-i18n-hint: This is the abbreviation for "Hertz", or
-cycles per second.</extracomment>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/DestructiveEffectsViewerDialog.qml" line="324"/>
@@ -9793,6 +10045,13 @@ cycles per second.</extracomment>
         <translation>صدر</translation>
     </message>
     <message>
+        <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="80"/>
+        <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="115"/>
+        <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="266"/>
+        <source>Close</source>
+        <translation>إغلاق</translation>
+    </message>
+    <message>
         <location filename="../../src/importexport/labels/qml/Export/internal/LabelTracksSelectionView.qml" line="114"/>
         <source>Select all</source>
         <translation type="unfinished">اختر الجميع</translation>
@@ -9801,7 +10060,6 @@ cycles per second.</extracomment>
         <location filename="../../src/importexport/labels/qml/Export/internal/LabelTracksSelectionView.qml" line="128"/>
         <source>Clear</source>
         <translation>امسح</translation>
-        <extracomment>i18n-hint verb; to empty or erase</extracomment>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutoSaveSection.qml" line="75"/>
@@ -9825,7 +10083,6 @@ cycles per second.</extracomment>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="35"/>
         <source>seconds</source>
         <translation>ثواني</translation>
-        <extracomment>i18n-hint: Name of time display format that shows time in seconds</extracomment>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiFontSection.qml" line="67"/>
@@ -9839,13 +10096,6 @@ cycles per second.</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/CloudProjectSyncDialog.qml" line="75"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="604"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="983"/>
-        <source>Stop</source>
-        <translation>توقف</translation>
-    </message>
-    <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/NewProject/TitleListView.qml" line="123"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/ProjectGridItem.qml" line="297"/>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsGridView.qml" line="212"/>
@@ -9857,14 +10107,7 @@ cycles per second.</extracomment>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="310"/>
         <source>Duration</source>
         <comment>file duration</comment>
-        <translation>الأمد</translation>
-        <extracomment>i18n-hint: This string is used to configure the controls which shows the recording
-* duration. As such it is important that only the alphabetic parts of the string
-* are translated, with the numbers left exactly as they are.
-* The string 'days' indicates that the first number in the control will be the number of days,
-* then the 'h' indicates the second number displayed is hours, the 'm' indicates the third
-* number displayed is minutes, and the 's' indicates that the fourth number displayed is
-* seconds.</extracomment>
+        <translation>المدة</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="328"/>
@@ -9901,7 +10144,7 @@ cycles per second.</extracomment>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="150"/>
         <source>Done</source>
-        <translation/>
+        <translation>تم</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="108"/>
@@ -9912,12 +10155,6 @@ cycles per second.</extracomment>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/firstlaunchsetupmodel.cpp" line="136"/>
         <source>Skip</source>
         <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/effects/builtin_collection/paulstretch/paulstretchviewmodel.cpp" line="112"/>
-        <source>s</source>
-        <translation>ثانية</translation>
-        <extracomment>i18n-hint: short form of 'seconds'.</extracomment>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/reverb/reverbviewmodel.cpp" line="39"/>
@@ -9932,7 +10169,7 @@ cycles per second.</extracomment>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectpresetsscenario.cpp" line="109"/>
         <source>All files</source>
-        <translation type="unfinished">جميع الملفات|*</translation>
+        <translation>جميع الملفات</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="578"/>
@@ -9955,6 +10192,18 @@ cycles per second.</extracomment>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="635"/>
         <source>Open</source>
         <translation>افتح</translation>
+    </message>
+    <message>
+        <location filename="../../src/effects/builtin_collection/paulstretch/paulstretchviewmodel.cpp" line="112"/>
+        <source>s</source>
+        <translation>ثانية</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/qml/Audacity/Project/CloudProjectSyncDialog.qml" line="75"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="604"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="983"/>
+        <source>Stop</source>
+        <translation>توقف</translation>
     </message>
 </context>
 <context>
@@ -10004,6 +10253,7 @@ cycles per second.</extracomment>
     <message>
         <location filename="../../src/importexport/import/internal/au3/au3importer.cpp" line="66"/>
         <source>Importing %1</source>
+        <extracomment>%1 is the description of the file format being imported</extracomment>
         <translation>استورد %1</translation>
     </message>
     <message>
@@ -10029,17 +10279,17 @@ Error %1</source>
         <location filename="../../au3/libraries/au3-import-export/ExportProgressUI.cpp" line="92"/>
         <location filename="../../au3/libraries/au3-import-export/ExportProgressUI.h" line="49"/>
         <source>Export error</source>
-        <translation type="unfinished">صدر MIDI</translation>
+        <translation>خطأ في التصدير</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/ExportProgressUI.cpp" line="93"/>
         <source>Export completed with error.</source>
-        <translation type="unfinished">صدر الصوت المختار</translation>
+        <translation>اكتمل التصدير مع خطأ.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="215"/>
         <source>All supported files</source>
-        <translation type="unfinished">جميع الملفات|*|جميع الملفات المدعومة|</translation>
+        <translation>جميع الملفات المدعومة</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="500"/>
@@ -10052,7 +10302,7 @@ Audacity cannot open this type of file.</source>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="624"/>
         <source>Importing files</source>
-        <translation type="unfinished">استورد %1</translation>
+        <translation>استيراد الملفات</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="626"/>
@@ -10063,11 +10313,12 @@ Audacity cannot open this type of file.</source>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="631"/>
         <source>Operation was canceled by user</source>
-        <translation/>
+        <translation>تم إلغاء العملية من قبل المستخدم</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="685"/>
         <source>This version of Audacity was not compiled with %1 support.</source>
+        <extracomment>%1 is the name of an audio file format, such as "MP3"</extracomment>
         <translation>هذا الإصدار من Audacity لم يجمع مع دعم %1.</translation>
     </message>
     <message>
@@ -10188,6 +10439,7 @@ You need to extract the audio to a supported format, such as WAV or AIFF.</sourc
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="821"/>
         <source>%1, %2</source>
+        <extracomment>%1 is the list of importers so far, %2 is the next importer's format name being appended</extracomment>
         <translation>%1، %2</translation>
     </message>
     <message>
@@ -10202,11 +10454,12 @@ but none of them understood this file format.</source>
     <message>
         <location filename="../../au3/libraries/au3-import-export/ImportUtils.h" line="42"/>
         <source>Import Project</source>
-        <translation type="unfinished">استورد مسبقات</translation>
+        <translation>استورد مشروع</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="349"/>
         <source>LC</source>
+        <extracomment>LC is the AAC "Low Complexity" profile</extracomment>
         <translation>LC</translation>
     </message>
     <message>
@@ -10277,6 +10530,7 @@ but none of them understood this file format.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="474"/>
         <source>Log search</source>
+        <extracomment>"Log" is short for "logarithmic"</extracomment>
         <translation>بحث السجل</translation>
     </message>
     <message>
@@ -10288,12 +10542,12 @@ but none of them understood this file format.</source>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp" line="165"/>
         <source>Try installing FFmpeg.
 </source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp" line="401"/>
         <source>Index[%1] Codec[%2], Language[%3], Bitrate[%4], Channels[%5], Duration[%6]</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
+        <extracomment>"codec" is short for a "coder-decoder" algorithm</extracomment>
         <translation>الفهرس[%1] المشفر[%2]، اللغة[%3]، معدل العينة[%4]، القنوات[%5]، الأمد[%6]</translation>
     </message>
     <message>
@@ -10302,8 +10556,9 @@ but none of them understood this file format.</source>
         <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.h" line="23"/>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="119"/>
         <source>%1 kbps</source>
-        <extracomment>i18n-hint kbps abbreviates "thousands of bits per second"
-i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
+        <extracomment>kbps abbreviates "thousands of bits per second"
+----------
+kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
         <translation>%1 kbps</translation>
     </message>
     <message>
@@ -10337,41 +10592,42 @@ i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second</extracommen
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="282"/>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="101"/>
         <source>2.5 ms</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="283"/>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="102"/>
         <source>5 ms</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="284"/>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="103"/>
         <source>10 ms</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="285"/>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="104"/>
         <source>20 ms</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="286"/>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="105"/>
         <source>40 ms</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="287"/>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="106"/>
         <source>60 ms</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="294"/>
         <source>Vbr Mode</source>
+        <extracomment>VBR is "variable bit rate"</extracomment>
         <translation type="unfinished">النمط:</translation>
     </message>
     <message>
@@ -10384,7 +10640,7 @@ i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second</extracommen
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="298"/>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="116"/>
         <source>On</source>
-        <translation type="unfinished">افتح</translation>
+        <translation>تشغيل</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="298"/>
@@ -10400,6 +10656,7 @@ i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second</extracommen
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="309"/>
         <source>VOIP</source>
+        <extracomment>VOIP is "voice over IP"</extracomment>
         <translation>VOIP</translation>
     </message>
     <message>
@@ -10429,7 +10686,7 @@ i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second</extracommen
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="328"/>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="143"/>
         <source>Narrowband</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="329"/>
@@ -10441,13 +10698,13 @@ i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second</extracommen
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="330"/>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="145"/>
         <source>Wideband</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="331"/>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="146"/>
         <source>Super Wideband</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="332"/>
@@ -10488,19 +10745,19 @@ i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second</extracommen
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1000"/>
         <source>FFmpeg cannot find audio codec 0x%1.
 Support for this codec is probably not compiled in.</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
+        <extracomment>"codec" is short for a "coder-decoder" algorithm</extracomment>
         <translation>لا يستطيع FFmpeg إيجاد مشفر الصوت 0x%1.
 على الأرجح أن يكون دعم هذا المشفر غير مُكون.</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1075"/>
         <source>The codec reported a generic error (EPERM)</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1078"/>
         <source>The codec reported an invalid parameter (EINVAL)</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1088"/>
@@ -10559,17 +10816,20 @@ You can configure it at Preferences &gt; General.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1417"/>
         <source>Attempted to export %1 channels, but maximum number of channels for selected output format is %2</source>
+        <extracomment>%1 is the requested channel count, %2 is the maximum supported</extracomment>
         <translation>حاولت تصدير %1 قنوات، لكن العدد الأقصى من القنوات لصيغة المخرج المختارة هو %2</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1451"/>
         <source>Exporting selected audio as %1</source>
+        <extracomment>%1 is format description</extracomment>
         <translation>يتم الآن تصدير الصوت المختار كـ %1</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1454"/>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="592"/>
         <source>Exporting the audio as %1</source>
+        <extracomment>%1 is format description</extracomment>
         <translation>أصدر الصوت كـ %1</translation>
     </message>
     <message>
@@ -10615,7 +10875,7 @@ supported by the current output file format. </source>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="34"/>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="58"/>
         <source>Bit Depth</source>
-        <translation type="unfinished">عمق البت:</translation>
+        <translation>عمق البت</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-flac/ExportFLAC.cpp" line="38"/>
@@ -10759,57 +11019,57 @@ Status: %1</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.h" line="70"/>
         <source>MPEG2</source>
-        <translation/>
+        <translation>MPEG2</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.h" line="70"/>
         <source>MPEG1</source>
-        <translation/>
+        <translation>MPEG1</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="165"/>
         <source>220-260 kbps (Best Quality)</source>
-        <translation type="unfinished">%1 kbps (أفضل جودة)</translation>
+        <translation>220-260 kbps (أفضل جودة)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="166"/>
         <source>200-250 kbps</source>
-        <translation/>
+        <translation>200-250 kbps</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="167"/>
         <source>170-210 kbps</source>
-        <translation/>
+        <translation>170-210 kbps</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="168"/>
         <source>155-195 kbps</source>
-        <translation/>
+        <translation>155-195 kbps</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="169"/>
         <source>145-185 kbps</source>
-        <translation/>
+        <translation>145-185 kbps</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="170"/>
         <source>110-150 kbps</source>
-        <translation/>
+        <translation>110-150 kbps</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="171"/>
         <source>95-135 kbps</source>
-        <translation/>
+        <translation>95-135 kbps</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="172"/>
         <source>80-120 kbps</source>
-        <translation type="unfinished">%1 kbps</translation>
+        <translation>80-120 kbps</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="173"/>
         <source>65-105 kbps</source>
-        <translation/>
+        <translation>65-105 kbps</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="174"/>
@@ -10824,17 +11084,17 @@ Status: %1</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="184"/>
         <source>Extreme, 220-260 kbps</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="185"/>
         <source>Standard, 170-210 kbps</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="186"/>
         <source>Medium, 145-185 kbps</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="190"/>
@@ -10891,7 +11151,6 @@ Status: %1</source>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="51"/>
         <source>Quality</source>
         <translation>الجودة</translation>
-        <extracomment>i18n-hint: meaning accuracy in reproduction of sounds</extracomment>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="735"/>
@@ -10924,7 +11183,7 @@ Please download the latest version of ‘LAME for Audacity’.</source>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1091"/>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1114"/>
         <source>Primary shared object files</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="1092"/>
@@ -11040,17 +11299,17 @@ kbit/s abbreviates "kilobits per second"</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="186"/>
         <source>Unable to export - problem initialising</source>
-        <translation/>
+        <translation>غير قادر على التصدير - مشكلة في التثبيت</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="198"/>
         <source>Unable to export - problem creating stream</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="219"/>
         <source>Unable to export - problem with packets</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="227"/>
@@ -11121,12 +11380,12 @@ kbit/s abbreviates "kilobits per second"</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="121"/>
         <source>Optimize for</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="125"/>
         <source>Speech</source>
-        <translation type="unfinished">الخطاب النظيف</translation>
+        <translation>الكلام</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="195"/>
@@ -11136,7 +11395,7 @@ kbit/s abbreviates "kilobits per second"</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="316"/>
         <source>Unsupported sample rate</source>
-        <translation type="unfinished">نوع ملف غير مدعوم:</translation>
+        <translation>معدل عينة غير مدعوم</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="343"/>
@@ -11197,7 +11456,7 @@ kbit/s abbreviates "kilobits per second"</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="33"/>
         <source>no error</source>
-        <translation type="unfinished">مجهول</translation>
+        <translation>لا أخطاء</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="35"/>
@@ -11208,13 +11467,13 @@ kbit/s abbreviates "kilobits per second"</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="37"/>
         <source>buffer too small</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="39"/>
         <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="289"/>
         <source>internal error</source>
-        <translation type="unfinished">خطأ داخلي</translation>
+        <translation>خطأ داخلي</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="41"/>
@@ -11241,13 +11500,12 @@ kbit/s abbreviates "kilobits per second"</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="49"/>
         <source>Unknown error</source>
-        <translation type="unfinished">مجهول</translation>
-        <extracomment>i18n-hint: database operation has failed due to the unknown error</extracomment>
+        <translation>خطأ غير معروف</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="119"/>
         <source>Buffer overflow in OGG packet</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.h" line="249"/>
@@ -11267,7 +11525,7 @@ kbit/s abbreviates "kilobits per second"</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="152"/>
         <source>File has changed the number of channels in the middle.</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="287"/>
@@ -11287,7 +11545,7 @@ kbit/s abbreviates "kilobits per second"</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="299"/>
         <source>unsupported version</source>
-        <translation type="unfinished">جميع الملفات|*|جميع الملفات المدعومة|</translation>
+        <translation>إصدار غير مدعوم</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="303"/>
@@ -11297,7 +11555,7 @@ kbit/s abbreviates "kilobits per second"</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="305"/>
         <source>stream is not seekable</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="307"/>
@@ -11307,12 +11565,13 @@ kbit/s abbreviates "kilobits per second"</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ImportOpus.cpp" line="337"/>
         <source>Failed to decode Opus file: %1</source>
+        <extracomment>%1 is the error message</extracomment>
         <translation type="unfinished">أخفقت في تدوين %1</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="57"/>
         <source>AIFF (Apple/SGI)</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="61"/>
@@ -11323,7 +11582,7 @@ kbit/s abbreviates "kilobits per second"</extracomment>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="129"/>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="219"/>
         <source>Encoding</source>
-        <translation type="unfinished">التشفير:</translation>
+        <translation>الترميز</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="198"/>
@@ -11338,12 +11597,12 @@ kbit/s abbreviates "kilobits per second"</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="517"/>
         <source>GSM 6.10 requires mono</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="521"/>
         <source>WAVEX and GSM 6.10 formats are not compatible</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="534"/>
@@ -11353,17 +11612,19 @@ kbit/s abbreviates "kilobits per second"</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="548"/>
         <source>Cannot export audio to %1</source>
+        <extracomment>%1 is the file path</extracomment>
         <translation>لا يمكنني تصدير الصوت إلى %1</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="581"/>
         <source>You have attempted to Export a WAV or AIFF file which would be greater than 4GB.
 Audacity cannot do this, the Export was abandoned.</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="590"/>
         <source>Exporting the selected audio as %1</source>
+        <extracomment>%1 is a format description</extracomment>
         <translation>أصدر الصوت المختار كـ %1</translation>
     </message>
     <message>
@@ -11401,22 +11662,22 @@ Libsndfile says “%2”</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="21"/>
         <source>Low Quality (Fast)</source>
-        <translation type="unfinished">جودة منخفضة (الأسرع)</translation>
+        <translation>جودة منخفضة (سريع)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="22"/>
         <source>Normal Quality</source>
-        <translation type="unfinished">الجودة</translation>
+        <translation>جودة عادية</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="23"/>
         <source>High Quality (Slow)</source>
-        <translation type="unfinished">جودة عالية</translation>
+        <translation>جودة عالية (بطيء)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="24"/>
         <source>Very High Quality (Slowest)</source>
-        <translation type="unfinished">أفضل جودة (الأبطأ)</translation>
+        <translation>جودة عالية جداً (الأبطأ)</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="30"/>
@@ -11426,7 +11687,7 @@ Libsndfile says “%2”</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="34"/>
         <source>%1 bps</source>
-        <extracomment>i18n-hint bps abbreviates "bits per sample"</extracomment>
+        <extracomment>bps abbreviates "bits per sample"</extracomment>
         <translation type="unfinished">%1 ثواني</translation>
     </message>
     <message>
@@ -11437,7 +11698,7 @@ Libsndfile says “%2”</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="70"/>
         <source>Create Correction(.wvc) File</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ImportWavPack.cpp" line="39"/>
@@ -11447,7 +11708,15 @@ Libsndfile says “%2”</source>
     <message numerus="yes">
         <location filename="../../au3/modules/import-export/mod-wavpack/ImportWavPack.cpp" line="229"/>
         <source>Encountered %1 errors decoding WavPack file!</source>
-        <translation/>
+        <extracomment>%1 is the number of errors</extracomment>
+        <translation type="unfinished">
+            <numerusform/>
+            <numerusform/>
+            <numerusform/>
+            <numerusform/>
+            <numerusform/>
+            <numerusform/>
+        </translation>
     </message>
 </context>
 <context>
@@ -11473,7 +11742,7 @@ Libsndfile says “%2”</source>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="27"/>
         <source>Cut and leave gap</source>
-        <translation type="unfinished"/>
+        <translation>قص مع ترك فجوة</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labelcontextmenumodel.cpp" line="29"/>
@@ -11541,22 +11810,22 @@ Libsndfile says “%2”</source>
     <message>
         <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="47"/>
         <source>SubRip text file</source>
-        <translation type="unfinished">ملفات نص</translation>
+        <translation>ملف SubRip نصي</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="48"/>
         <source>WebVTT file</source>
-        <translation type="unfinished">ملفات MP3</translation>
+        <translation>ملف WebVTT</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="53"/>
         <source>S&amp;tandard</source>
-        <translation type="unfinished">قياسي</translation>
+        <translation>قياسي</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="55"/>
         <source>E&amp;xtended (with frequency ranges)</source>
-        <translation type="unfinished">يختار نطاق تردد.</translation>
+        <translation>ممتد (مع نطاقات ترددية)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="125"/>
@@ -11567,14 +11836,11 @@ Libsndfile says “%2”</source>
         <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="178"/>
         <source>Label Track</source>
         <translation>مقطع علامة</translation>
-        <extracomment>i18n-hint: (noun) it's the name of a kind of track.
-i18n-hint: This is for screen reader software and indicates that
-this is a Label track.</extracomment>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="757"/>
         <source>Importing WebVTT files is not currently supported.</source>
-        <translation/>
+        <translation>استيراد ملفات WebVTT غير مدعوم حالياً.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="781"/>
@@ -11598,7 +11864,7 @@ this is a Label track.</extracomment>
         <location filename="../../au3/libraries/au3-math/Dither.cpp" line="371"/>
         <source>Triangle</source>
         <comment>dither</comment>
-        <translation type="unfinished">مثلث</translation>
+        <translation>مثلث</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/Dither.cpp" line="372"/>
@@ -11610,13 +11876,13 @@ this is a Label track.</extracomment>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="85"/>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="112"/>
         <source>C</source>
-        <extracomment>i18n-hint: Name of a musical note in the 12-tone chromatic scale</extracomment>
+        <extracomment>Name of a musical note in the 12-tone chromatic scale</extracomment>
         <translation>دو</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="60"/>
         <source>C♯</source>
-        <extracomment>i18n-hint: Name of a musical note in the 12-tone chromatic scale</extracomment>
+        <extracomment>Name of a musical note in the 12-tone chromatic scale</extracomment>
         <translation>دو♯</translation>
     </message>
     <message>
@@ -11624,13 +11890,13 @@ this is a Label track.</extracomment>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="89"/>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="116"/>
         <source>D</source>
-        <extracomment>i18n-hint: Name of a musical note in the 12-tone chromatic scale</extracomment>
+        <extracomment>Name of a musical note in the 12-tone chromatic scale</extracomment>
         <translation>D</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="64"/>
         <source>D♯</source>
-        <extracomment>i18n-hint: Name of a musical note in the 12-tone chromatic scale</extracomment>
+        <extracomment>Name of a musical note in the 12-tone chromatic scale</extracomment>
         <translation>ري♯</translation>
     </message>
     <message>
@@ -11638,7 +11904,7 @@ this is a Label track.</extracomment>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="93"/>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="120"/>
         <source>E</source>
-        <extracomment>i18n-hint: Name of a musical note in the 12-tone chromatic scale</extracomment>
+        <extracomment>Name of a musical note in the 12-tone chromatic scale</extracomment>
         <translation>مي</translation>
     </message>
     <message>
@@ -11646,13 +11912,13 @@ this is a Label track.</extracomment>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="95"/>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="122"/>
         <source>F</source>
-        <extracomment>i18n-hint: Name of a musical note in the 12-tone chromatic scale</extracomment>
+        <extracomment>Name of a musical note in the 12-tone chromatic scale</extracomment>
         <translation>فا</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="70"/>
         <source>F♯</source>
-        <extracomment>i18n-hint: Name of a musical note in the 12-tone chromatic scale</extracomment>
+        <extracomment>Name of a musical note in the 12-tone chromatic scale</extracomment>
         <translation>فا♯</translation>
     </message>
     <message>
@@ -11660,13 +11926,13 @@ this is a Label track.</extracomment>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="99"/>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="126"/>
         <source>G</source>
-        <extracomment>i18n-hint: Name of a musical note in the 12-tone chromatic scale</extracomment>
+        <extracomment>Name of a musical note in the 12-tone chromatic scale</extracomment>
         <translation>G</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="74"/>
         <source>G♯</source>
-        <extracomment>i18n-hint: Name of a musical note in the 12-tone chromatic scale</extracomment>
+        <extracomment>Name of a musical note in the 12-tone chromatic scale</extracomment>
         <translation>صول♯</translation>
     </message>
     <message>
@@ -11674,13 +11940,13 @@ this is a Label track.</extracomment>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="103"/>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="130"/>
         <source>A</source>
-        <extracomment>i18n-hint: Name of a musical note in the 12-tone chromatic scale</extracomment>
+        <extracomment>Name of a musical note in the 12-tone chromatic scale</extracomment>
         <translation>لا</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="78"/>
         <source>A♯</source>
-        <extracomment>i18n-hint: Name of a musical note in the 12-tone chromatic scale</extracomment>
+        <extracomment>Name of a musical note in the 12-tone chromatic scale</extracomment>
         <translation>لا♯</translation>
     </message>
     <message>
@@ -11688,67 +11954,67 @@ this is a Label track.</extracomment>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="107"/>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="134"/>
         <source>B</source>
-        <extracomment>i18n-hint: Name of a musical note in the 12-tone chromatic scale</extracomment>
+        <extracomment>Name of a musical note in the 12-tone chromatic scale</extracomment>
         <translation>بل</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="87"/>
         <source>D♭</source>
-        <extracomment>i18n-hint: Name of a musical note in the 12-tone chromatic scale</extracomment>
+        <extracomment>Name of a musical note in the 12-tone chromatic scale</extracomment>
         <translation>ري♭</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="91"/>
         <source>E♭</source>
-        <extracomment>i18n-hint: Name of a musical note in the 12-tone chromatic scale</extracomment>
+        <extracomment>Name of a musical note in the 12-tone chromatic scale</extracomment>
         <translation>مي♭</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="97"/>
         <source>G♭</source>
-        <extracomment>i18n-hint: Name of a musical note in the 12-tone chromatic scale</extracomment>
+        <extracomment>Name of a musical note in the 12-tone chromatic scale</extracomment>
         <translation>صول♭</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="101"/>
         <source>A♭</source>
-        <extracomment>i18n-hint: Name of a musical note in the 12-tone chromatic scale</extracomment>
+        <extracomment>Name of a musical note in the 12-tone chromatic scale</extracomment>
         <translation>لا♭</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="105"/>
         <source>B♭</source>
-        <extracomment>i18n-hint: Name of a musical note in the 12-tone chromatic scale</extracomment>
+        <extracomment>Name of a musical note in the 12-tone chromatic scale</extracomment>
         <translation>دو♭</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="114"/>
         <source>C♯/D♭</source>
-        <extracomment>i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale</extracomment>
+        <extracomment>Two, alternate names of a musical note in the 12-tone chromatic scale</extracomment>
         <translation>دو♯/ري♭</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="118"/>
         <source>D♯/E♭</source>
-        <extracomment>i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale</extracomment>
+        <extracomment>Two, alternate names of a musical note in the 12-tone chromatic scale</extracomment>
         <translation>ري♯/مي♭</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="124"/>
         <source>F♯/G♭</source>
-        <extracomment>i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale</extracomment>
+        <extracomment>Two, alternate names of a musical note in the 12-tone chromatic scale</extracomment>
         <translation>فا♯/صول♭</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="128"/>
         <source>G♯/A♭</source>
-        <extracomment>i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale</extracomment>
+        <extracomment>Two, alternate names of a musical note in the 12-tone chromatic scale</extracomment>
         <translation>صول♯/لا♭</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/PitchName.cpp" line="132"/>
         <source>A♯/B♭</source>
-        <extracomment>i18n-hint: Two, alternate names of a musical note in the 12-tone chromatic scale</extracomment>
+        <extracomment>Two, alternate names of a musical note in the 12-tone chromatic scale</extracomment>
         <translation>لا♯/سي♭</translation>
     </message>
     <message>
@@ -11774,25 +12040,25 @@ this is a Label track.</extracomment>
     <message>
         <location filename="../../au3/libraries/au3-math/SampleFormat.cpp" line="63"/>
         <source>16-bit PCM</source>
-        <extracomment>i18n-hint: Audio data bit depth (precision): 16-bit integers</extracomment>
+        <extracomment>Audio data bit depth (precision): 16-bit integers</extracomment>
         <translation>16-بِت PCM</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/SampleFormat.cpp" line="66"/>
         <source>24-bit PCM</source>
-        <extracomment>i18n-hint: Audio data bit depth (precision): 24-bit integers</extracomment>
+        <extracomment>Audio data bit depth (precision): 24-bit integers</extracomment>
         <translation>24-بِت PCM</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/SampleFormat.cpp" line="69"/>
         <source>32-bit float</source>
-        <extracomment>i18n-hint: Audio data bit depth (precision): 32-bit floating point</extracomment>
+        <extracomment>Audio data bit depth (precision): 32-bit floating point</extracomment>
         <translation>32-بِت عائم</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-math/SampleFormat.cpp" line="71"/>
         <source>Unknown format</source>
-        <translation type="unfinished">مجهول</translation>
+        <translation>صيغة عير معروفة</translation>
     </message>
 </context>
 <context>
@@ -11811,7 +12077,7 @@ this is a Label track.</extracomment>
         <location filename="../../src/importexport/export/view/metadatamodel.cpp" line="121"/>
         <location filename="../../src/importexport/export/view/metadatamodel.cpp" line="150"/>
         <source>XML files</source>
-        <translation type="unfinished">ملفات MP3</translation>
+        <translation>ملفات XML</translation>
     </message>
     <message>
         <location filename="../../src/importexport/export/view/metadatamodel.cpp" line="133"/>
@@ -12005,6 +12271,7 @@ It will not be loaded.</source>
         <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="469"/>
         <source>Failed to register:
 %1</source>
+        <extracomment>%1 is the error message explaining why registration failed</extracomment>
         <translation>أخفقت في تدوين %1</translation>
     </message>
     <message numerus="yes">
@@ -12033,7 +12300,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="26"/>
         <source>Cut and leave gap</source>
-        <translation type="unfinished"/>
+        <translation>قص مع ترك فجوة</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/multiclipcontextmenumodel.cpp" line="28"/>
@@ -12085,52 +12352,44 @@ It will not be loaded.</source>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp" line="35"/>
         <source>bar</source>
-        <extracomment>i18n-hint: The music theory "bar"</extracomment>
-        <translation type="unfinished">شريط الأدوات</translation>
+        <extracomment>The music theory "bar"</extracomment>
+        <translation>شريط</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp" line="37"/>
         <source>beat</source>
-        <extracomment>i18n-hint: The music theory "beat"</extracomment>
-        <translation/>
+        <extracomment>The music theory "beat"</extracomment>
+        <translation>الإيقاع</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp" line="393"/>
         <source>bar:beat</source>
-        <extracomment>i18n-hint: "bar" and "beat" are musical notation elements.</extracomment>
-        <translation/>
+        <extracomment>"bar" and "beat" are musical notation elements.</extracomment>
+        <translation>شريط: إيقاع</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp" line="398"/>
         <source>bar:beat:tick</source>
-        <extracomment>i18n-hint: "bar" and "beat" are musical notation elements. "tick"
-corresponds to a 16th note.</extracomment>
-        <translation/>
+        <extracomment>"bar" and "beat" are musical notation elements. "tick" corresponds to a 16th note.</extracomment>
+        <translation>شريط: إيقاع: علامة</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="688"/>
         <source>01000,01000 seconds</source>
-        <extracomment>i18n-hint: Format string for displaying time in seconds. Change the comma
-* in the middle to the 1000s separator for your locale, and the 'seconds'
-* on the end to the word for seconds. Don't change the numbers.</extracomment>
+        <extracomment>Format string for displaying time in seconds. Change the comma * in the middle to the 1000s separator for your locale, and the 'seconds' * on the end to the word for seconds. Don't change the numbers.</extracomment>
         <translation>01000،01000 ثانية</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="694"/>
         <source>seconds + milliseconds</source>
-        <extracomment>i18n-hint: Name of time display format that shows time in seconds
-* and milliseconds (1/1000 second)</extracomment>
-        <translation type="unfinished">ملي ث + ث:د:س</translation>
+        <extracomment>Name of time display format that shows time in seconds * and milliseconds (1/1000 second)</extracomment>
+        <translation>ثانية + مللي ثانية</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="700"/>
         <source>01000,01000&gt;01000 seconds</source>
-        <extracomment>i18n-hint: Format string for displaying time in seconds and milliseconds
-* as fractional seconds. Change the comma in the middle to the 1000s separator
-* for your locale, and the 'seconds' on the end to the word for seconds.
-* Don't change the numbers. The decimal separator is specified using '&lt;' if
-* your languages uses a ',' or to '&gt;' if your language uses a '.'.</extracomment>
-        <translation type="unfinished">01000،01000 ثانية</translation>
+        <extracomment>Format string for displaying time in seconds and milliseconds * as fractional seconds. Change the comma in the middle to the 1000s separator * for your locale, and the 'seconds' on the end to the word for seconds. * Don't change the numbers. The decimal separator is specified using '&lt;' if * your languages uses a ',' or to '&gt;' if your language uses a '.'.</extracomment>
+        <translation>01000,01000&gt;01000 ثانية</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="701"/>
@@ -12141,40 +12400,25 @@ corresponds to a 16th note.</extracomment>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="711"/>
         <source>0100 h 060 m 060 s</source>
-        <extracomment>i18n-hint: Format string for displaying time in hours, minutes and
-* seconds. Change the 'h' to the abbreviation for hours, 'm' to the
-* abbreviation for minutes and 's' to the abbreviation for seconds. Don't
-* change the numbers unless there aren't 60 seconds in a minute in your
-* locale</extracomment>
+        <extracomment>Format string for displaying time in hours, minutes and * seconds. Change the 'h' to the abbreviation for hours, 'm' to the * abbreviation for minutes and 's' to the abbreviation for seconds. Don't * change the numbers unless there aren't 60 seconds in a minute in your * locale</extracomment>
         <translation>0100 س 060 د 060 ث</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="717"/>
         <source>dd:hh:mm:ss</source>
-        <extracomment>i18n-hint: Name of time display format that shows time in days, hours,
-* minutes and seconds</extracomment>
+        <extracomment>Name of time display format that shows time in days, hours, * minutes and seconds</extracomment>
         <translation>ي:س:د:ث</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="723"/>
         <source>0100 days 024 h 060 m 060 s</source>
-        <extracomment>i18n-hint: Format string for displaying time in days, hours, minutes and
-* seconds. Change the 'days' to the word for days, 'h' to the abbreviation
-* for hours, 'm' to the abbreviation for minutes and 's' to the
-* abbreviation for seconds. Don't change the numbers unless there aren't
-* 24 hours in a day in your locale</extracomment>
+        <extracomment>Format string for displaying time in days, hours, minutes and * seconds. Change the 'days' to the word for days, 'h' to the abbreviation * for hours, 'm' to the abbreviation for minutes and 's' to the * abbreviation for seconds. Don't change the numbers unless there aren't * 24 hours in a day in your locale</extracomment>
         <translation>0100 ي 024 س 060 د 060 ث</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="735"/>
         <source>0100 h 060 m 060&gt;0100 s</source>
-        <extracomment>i18n-hint: Format string for displaying time in hours, minutes, seconds
-* and hundredths of a second. Change the 'h' to the abbreviation for hours,
-* 'm' to the abbreviation for minutes and 's' to the abbreviation for seconds
-* (the hundredths are shown as decimal seconds). Don't change the numbers
-* unless there aren't 60 minutes in an hour in your locale.
-* The decimal separator is specified using '&lt;' if your language uses a ',' or
-* to '&gt;' if your language uses a '.'.</extracomment>
+        <extracomment>Format string for displaying time in hours, minutes, seconds * and hundredths of a second. Change the 'h' to the abbreviation for hours, * 'm' to the abbreviation for minutes and 's' to the abbreviation for seconds * (the hundredths are shown as decimal seconds). Don't change the numbers * unless there aren't 60 minutes in an hour in your locale. * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
         <translation>0100 س 060 د 060&gt;0100 ث</translation>
     </message>
     <message>
@@ -12185,342 +12429,251 @@ corresponds to a 16th note.</extracomment>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="748"/>
         <source>0100 h 060 m 060&gt;01000 s</source>
-        <extracomment>i18n-hint: Format string for displaying time in hours, minutes, seconds
-* and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to the
-* abbreviation for minutes and 's' to the abbreviation for seconds (the
-* milliseconds are shown as decimal seconds) . Don't change the numbers
-* unless there aren't 60 minutes in an hour in your locale.
-* The decimal separator is specified using '&lt;' if your language uses a ',' or
-* to '&gt;' if your language uses a '.'.</extracomment>
+        <extracomment>Format string for displaying time in hours, minutes, seconds * and milliseconds. Change the 'h' to the abbreviation for hours, 'm' to the * abbreviation for minutes and 's' to the abbreviation for seconds (the * milliseconds are shown as decimal seconds) . Don't change the numbers * unless there aren't 60 minutes in an hour in your locale. * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
         <translation>0100 س 060 د 060&lt;01000 ث</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="761"/>
         <source>0100 h 060 m 060 s+&gt;# samples</source>
-        <extracomment>i18n-hint: Format string for displaying time in hours, minutes, seconds
-* and samples. Change the 'h' to the abbreviation for hours, 'm' to the
-* abbreviation for minutes, 's' to the abbreviation for seconds and
-* translate samples . Don't change the numbers
-* unless there aren't 60 seconds in a minute in your locale.
-* The decimal separator is specified using '&lt;' if your language uses a ',' or
-* to '&gt;' if your language uses a '.'.</extracomment>
+        <extracomment>Format string for displaying time in hours, minutes, seconds * and samples. Change the 'h' to the abbreviation for hours, 'm' to the * abbreviation for minutes, 's' to the abbreviation for seconds and * translate samples . Don't change the numbers * unless there aren't 60 seconds in a minute in your locale. * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
         <translation>0100 س 060 د 060  ث+&gt;# عينات</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="769"/>
         <source>samples</source>
-        <extracomment>i18n-hint: Name of time display format that shows time in samples (at the
-* current project sample rate).  For example the number of a sample at 1
-* second into a recording at 44.1KHz would be 44,100.</extracomment>
+        <extracomment>Name of time display format that shows time in samples (at the * current project sample rate). For example the number of a sample at 1 * second into a recording at 44.1KHz would be 44,100.</extracomment>
         <translation>عينات</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="774"/>
         <source>01000,01000,01000 samples|#</source>
-        <extracomment>i18n-hint: Format string for displaying time in samples (lots of samples).
-* Change the ',' to the 1000s separator for your locale, and translate
-* samples. If 1000s aren't a base multiple for your number system, then you
-* can change the numbers to an appropriate one, and put a 0 on the front</extracomment>
+        <extracomment>Format string for displaying time in samples (lots of samples). * Change the ',' to the 1000s separator for your locale, and translate * samples. If 1000s aren't a base multiple for your number system, then you * can change the numbers to an appropriate one, and put a 0 on the front</extracomment>
         <translation>01000,01000،01000 عينات|#</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="780"/>
         <source>hh:mm:ss + film frames (24 fps)</source>
-        <extracomment>i18n-hint: Name of time display format that shows time in hours, minutes,
-* seconds and frames at 24 frames per second (commonly used for films)</extracomment>
+        <extracomment>Name of time display format that shows time in hours, minutes, * seconds and frames at 24 frames per second (commonly used for films)</extracomment>
         <translation>إطارات الفيلم (24 إ.ف.ث) + ث:د:س</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="788"/>
         <source>0100 h 060 m 060 s+&gt;24 frames</source>
-        <extracomment>i18n-hint: Format string for displaying time in hours, minutes, seconds
-* and frames at 24 frames per second. Change the 'h' to the abbreviation
-* for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
-* for seconds and translate 'frames' . Don't change the numbers
-* unless there aren't 60 seconds in a minute in your locale.
-* The decimal separator is specified using '&lt;' if your language uses a ',' or
-* to '&gt;' if your language uses a '.'.</extracomment>
+        <extracomment>Format string for displaying time in hours, minutes, seconds * and frames at 24 frames per second. Change the 'h' to the abbreviation * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation * for seconds and translate 'frames' . Don't change the numbers * unless there aren't 60 seconds in a minute in your locale. * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
         <translation>0100 س 060 د 060 ث+&gt;24 إطار</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="794"/>
         <source>film frames (24 fps)</source>
-        <extracomment>i18n-hint: Name of time display format that shows time in frames (lots of
-* frames) at 24 frames per second (commonly used for films)</extracomment>
+        <extracomment>Name of time display format that shows time in frames (lots of * frames) at 24 frames per second (commonly used for films)</extracomment>
         <translation>إطارات الفيلم (24 إ.ف.ث)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="799"/>
         <source>01000,01000 frames|24</source>
-        <extracomment>i18n-hint: Format string for displaying time in frames at 24 frames per
-* second. Change the comma
-* in the middle to the 1000s separator for your locale,
-* translate 'frames' and leave the rest alone</extracomment>
+        <extracomment>Format string for displaying time in frames at 24 frames per * second. Change the comma * in the middle to the 1000s separator for your locale, * translate 'frames' and leave the rest alone</extracomment>
         <translation>01000،01000 إطار|24</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="806"/>
         <source>hh:mm:ss + NTSC drop frames</source>
-        <extracomment>i18n-hint: Name of time display format that shows time in hours, minutes,
-* seconds and frames at NTSC TV drop-frame rate (used for American /
-* Japanese TV, and very odd)</extracomment>
+        <extracomment>Name of time display format that shows time in hours, minutes, * seconds and frames at NTSC TV drop-frame rate (used for American / * Japanese TV, and very odd)</extracomment>
         <translation>إطارات سقوط NTSC + ث:د:س</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="813"/>
         <source>0100 h 060 m 060 s+&gt;30 frames|N</source>
-        <extracomment>i18n-hint: Format string for displaying time in hours, minutes, seconds
-* and frames with NTSC drop frames. Change the 'h' to the abbreviation
-* for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
-* for seconds and translate 'frames'. Leave the |N alone, it's important!
-* The decimal separator is specified using '&lt;' if your language uses a ',' or
-* to '&gt;' if your language uses a '.'.</extracomment>
+        <extracomment>Format string for displaying time in hours, minutes, seconds * and frames with NTSC drop frames. Change the 'h' to the abbreviation * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation * for seconds and translate 'frames'. Leave the |N alone, it's important! * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
         <translation>0100 س 060 د 060 ث+&gt;30 إطار|N</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="820"/>
         <source>hh:mm:ss + NTSC non-drop frames</source>
-        <extracomment>i18n-hint: Name of time display format that shows time in hours, minutes,
-* seconds and frames at NTSC TV non-drop-frame rate (used for American /
-* Japanese TV, and doesn't quite match wall time</extracomment>
+        <extracomment>Name of time display format that shows time in hours, minutes, * seconds and frames at NTSC TV non-drop-frame rate (used for American / * Japanese TV, and doesn't quite match wall time</extracomment>
         <translation>إطارات NTSC غير ساقطة + ث:د:س</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="828"/>
         <source>0100 h 060 m 060 s+&gt;030 frames| .999000999</source>
-        <extracomment>i18n-hint: Format string for displaying time in hours, minutes, seconds
-* and frames with NTSC drop frames. Change the 'h' to the abbreviation
-* for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
-* for seconds and translate 'frames'. Leave the | .999000999 alone,
-* the whole things really is slightly off-speed!
-* The decimal separator is specified using '&lt;' if your language uses a ',' or
-* to '&gt;' if your language uses a '.'.</extracomment>
+        <extracomment>Format string for displaying time in hours, minutes, seconds * and frames with NTSC drop frames. Change the 'h' to the abbreviation * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation * for seconds and translate 'frames'. Leave the | .999000999 alone, * the whole things really is slightly off-speed! * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
         <translation>0100 س 060 د 060 ث+&gt;030 إطار| .999000999</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="834"/>
         <source>NTSC frames</source>
-        <extracomment>i18n-hint: Name of time display format that shows time in frames at NTSC
-* TV frame rate (used for American / Japanese TV</extracomment>
+        <extracomment>Name of time display format that shows time in frames at NTSC * TV frame rate (used for American / Japanese TV</extracomment>
         <translation>إطارات NTSC</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="840"/>
         <source>01000,01000 frames|29.97002997</source>
-        <extracomment>i18n-hint: Format string for displaying time in frames with NTSC frames.
-* Change the comma
-* in the middle to the 1000s separator for your locale,
-* translate 'frames' and leave the rest alone. That really is the frame
-* rate!</extracomment>
+        <extracomment>Format string for displaying time in frames with NTSC frames. * Change the comma * in the middle to the 1000s separator for your locale, * translate 'frames' and leave the rest alone. That really is the frame * rate!</extracomment>
         <translation>01000،01000 إطار|29,97002997</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="846"/>
         <source>hh:mm:ss + PAL frames (25 fps)</source>
-        <extracomment>i18n-hint: Name of time display format that shows time in hours, minutes,
-* seconds and frames at PAL TV frame rate (used for European TV)</extracomment>
+        <extracomment>Name of time display format that shows time in hours, minutes, * seconds and frames at PAL TV frame rate (used for European TV)</extracomment>
         <translation>إطارات PAL (25 إ.ف.ث) + ث:د:س</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="853"/>
         <source>0100 h 060 m 060 s+&gt;25 frames</source>
-        <extracomment>i18n-hint: Format string for displaying time in hours, minutes, seconds
-* and frames with PAL TV frames. Change the 'h' to the abbreviation
-* for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
-* for seconds and translate 'frames'. Nice simple time code!
-* The decimal separator is specified using '&lt;' if your language uses a ',' or
-* to '&gt;' if your language uses a '.'.</extracomment>
+        <extracomment>Format string for displaying time in hours, minutes, seconds * and frames with PAL TV frames. Change the 'h' to the abbreviation * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation * for seconds and translate 'frames'. Nice simple time code! * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
         <translation>0100 س 060 د 060 ث+&gt;25 إطار</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="859"/>
         <source>PAL frames (25 fps)</source>
-        <extracomment>i18n-hint: Name of time display format that shows time in frames at PAL
-* TV frame rate (used for European TV)</extracomment>
+        <extracomment>Name of time display format that shows time in frames at PAL * TV frame rate (used for European TV)</extracomment>
         <translation>إطارات PAL (25 إ.ف.ث)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="864"/>
         <source>01000,01000 frames|25</source>
-        <extracomment>i18n-hint: Format string for displaying time in frames with NTSC frames.
-* Change the comma
-* in the middle to the 1000s separator for your locale,
-* translate 'frames' and leave the rest alone.</extracomment>
+        <extracomment>Format string for displaying time in frames with NTSC frames. * Change the comma * in the middle to the 1000s separator for your locale, * translate 'frames' and leave the rest alone.</extracomment>
         <translation>01000،01000 إطار|25</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="870"/>
         <source>hh:mm:ss + CDDA frames (75 fps)</source>
-        <extracomment>i18n-hint: Name of time display format that shows time in hours, minutes,
-* seconds and frames at CD Audio frame rate (75 frames per second)</extracomment>
+        <extracomment>Name of time display format that shows time in hours, minutes, * seconds and frames at CD Audio frame rate (75 frames per second)</extracomment>
         <translation>إطارات CDDA (75 إ.ف.ث)+ ث:د:س</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="877"/>
         <source>0100 h 060 m 060 s+&gt;75 frames</source>
-        <extracomment>i18n-hint: Format string for displaying time in hours, minutes, seconds
-* and frames with CD Audio frames. Change the 'h' to the abbreviation
-* for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation
-* for seconds and translate 'frames'.
-* The decimal separator is specified using '&lt;' if your language uses a ',' or
-* to '&gt;' if your language uses a '.'.</extracomment>
+        <extracomment>Format string for displaying time in hours, minutes, seconds * and frames with CD Audio frames. Change the 'h' to the abbreviation * for hours, 'm' to the abbreviation for minutes, 's' to the abbreviation * for seconds and translate 'frames'. * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
         <translation>0100 س 060 د 060 ث+75, إطار</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="883"/>
         <source>CDDA frames (75 fps)</source>
-        <extracomment>i18n-hint: Name of time display format that shows time in frames at CD
-* Audio frame rate (75 frames per second)</extracomment>
+        <extracomment>Name of time display format that shows time in frames at CD * Audio frame rate (75 frames per second)</extracomment>
         <translation>إطارات CDDA (75 إ.ف.ث)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="888"/>
         <source>01000,01000 frames|75</source>
-        <extracomment>i18n-hint: Format string for displaying time in frames with CD Audio
-* frames. Change the comma
-* in the middle to the 1000s separator for your locale,
-* translate 'frames' and leave the rest alone</extracomment>
+        <extracomment>Format string for displaying time in frames with CD Audio * frames. Change the comma * in the middle to the 1000s separator for your locale, * translate 'frames' and leave the rest alone</extracomment>
         <translation>01000،01000 إطار|75</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="908"/>
         <source>010,01000&gt;0100 Hz</source>
-        <extracomment>i18n-hint: Format string for displaying frequency in hertz. Change
-* the decimal point for your locale. Don't change the numbers.
-* The decimal separator is specified using '&lt;' if your language uses a ',' or
-* to '&gt;' if your language uses a '.'.</extracomment>
-        <translation type="unfinished">0100000&gt;0100 هرتز</translation>
+        <extracomment>Format string for displaying frequency in hertz. Change * the decimal point for your locale. Don't change the numbers. * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
+        <translation>010,01000&gt;0100 Hz</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="909"/>
         <source>centihertz</source>
-        <translation/>
+        <translation>سنتي هرتز </translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="915"/>
         <source>kHz</source>
-        <extracomment>i18n-hint: Name of display format that shows frequency in kilohertz</extracomment>
+        <extracomment>Name of display format that shows frequency in kilohertz</extracomment>
         <translation>ألف هرتز</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="921"/>
         <source>01000&gt;01000 kHz|0.001</source>
-        <extracomment>i18n-hint: Format string for displaying frequency in kilohertz. Change
-* the decimal point for your locale. Don't change the numbers.
-* The decimal separator is specified using '&lt;' if your language uses a ',' or
-* to '&gt;' if your language uses a '.'.</extracomment>
+        <extracomment>Format string for displaying frequency in kilohertz. Change * the decimal point for your locale. Don't change the numbers. * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
         <translation>01000&gt;01000 kHz|0.001</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="922"/>
         <source>hertz</source>
-        <translation/>
+        <translation>هيرتز</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="943"/>
         <source>100&gt;01000 octaves|1.442695041</source>
-        <extracomment>i18n-hint: Format string for displaying log of frequency in octaves.
-* Change the decimal points for your locale. Don't change the numbers.
-* The decimal separator is specified using '&lt;' if your language uses a ',' or
-* to '&gt;' if your language uses a '.'.</extracomment>
+        <extracomment>Format string for displaying log of frequency in octaves. * Change the decimal points for your locale. Don't change the numbers. * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
         <translation>100&lt;01000 جوابات|1,442695041</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="945"/>
         <source>thousandths of octaves</source>
-        <extracomment>i18n-hint: an octave is a doubling of frequency</extracomment>
-        <translation type="unfinished">أجزاء من ألف من </translation>
+        <extracomment>an octave is a doubling of frequency</extracomment>
+        <translation>ألفيات الأوكتاف</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="952"/>
         <source>semitones + cents</source>
-        <extracomment>i18n-hint: Name of display format that shows log of frequency
-* in semitones and cents</extracomment>
+        <extracomment>Name of display format that shows log of frequency * in semitones and cents</extracomment>
         <translation>أنصاف نغمات + أجزاء من مئة من نصف نغمة</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="959"/>
         <source>1000 semitones &gt;0100 cents|17.312340491</source>
-        <extracomment>i18n-hint: Format string for displaying log of frequency in semitones
-* and cents.
-* Change the decimal points for your locale. Don't change the numbers.
-* The decimal separator is specified using '&lt;' if your language uses a ',' or
-* to '&gt;' if your language uses a '.'.</extracomment>
+        <extracomment>Format string for displaying log of frequency in semitones * and cents. * Change the decimal points for your locale. Don't change the numbers. * The decimal separator is specified using '&lt;' if your language uses a ',' or * to '&gt;' if your language uses a '.'.</extracomment>
         <translation>1000 نصف نغمة 0100, أجزاء من مئة من نصف نغمة|17,312340491</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="961"/>
         <source>hundredths of cents</source>
-        <extracomment>i18n-hint: a cent is a hundredth of a semitone (which is 1/12 octave)</extracomment>
-        <translation type="unfinished">أجزاء من مئة من </translation>
+        <extracomment>a cent is a hundredth of a semitone (which is 1/12 octave)</extracomment>
+        <translation>جزء من مائة من السنت</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="968"/>
         <source>decades</source>
-        <extracomment>i18n-hint: Name of display format that shows log of frequency
-* in decades</extracomment>
+        <extracomment>Name of display format that shows log of frequency * in decades</extracomment>
         <translation>عقود</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="972"/>
         <source>10&gt;01000 decades|0.434294482</source>
-        <extracomment>i18n-hint: Format string for displaying log of frequency in decades.
-* Change the decimal points for your locale. Don't change the numbers.</extracomment>
+        <extracomment>Format string for displaying log of frequency in decades. * Change the decimal points for your locale. Don't change the numbers.</extracomment>
         <translation>10&lt;01000 عقود|0,434294482</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp" line="974"/>
         <source>thousandths of decades</source>
-        <extracomment>i18n-hint: a decade is a tenfold increase of frequency</extracomment>
-        <translation type="unfinished">أجزاء من ألف من </translation>
+        <extracomment>a decade is a tenfold increase of frequency</extracomment>
+        <translation>جزء من ألف من العقود</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/NumericConverterFormats.cpp" line="86"/>
         <source>hh:mm:ss + samples</source>
-        <extracomment>i18n-hint: Name of time display format that shows time in hours,
-* minutes, seconds and samples (at the current project sample rate)</extracomment>
+        <extracomment>Name of time display format that shows time in hours, * minutes, seconds and samples (at the current project sample rate)</extracomment>
         <translation>عينات + ث:د:س</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/NumericConverterFormats.cpp" line="92"/>
         <source>seconds</source>
-        <extracomment>i18n-hint: Name of time display format that shows time in seconds</extracomment>
+        <extracomment>Name of time display format that shows time in seconds</extracomment>
         <translation>ثواني</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/NumericConverterFormats.cpp" line="99"/>
         <source>hh:mm:ss</source>
-        <extracomment>i18n-hint: Name of time display format that shows time in hours, minutes
-* and seconds</extracomment>
+        <extracomment>Name of time display format that shows time in hours, minutes * and seconds</extracomment>
         <translation>ث:د:س</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/NumericConverterFormats.cpp" line="106"/>
         <source>hh:mm:ss + milliseconds</source>
-        <extracomment>i18n-hint: Name of time display format that shows time in hours,
-* minutes, seconds and milliseconds (1/1000 second)</extracomment>
+        <extracomment>Name of time display format that shows time in hours, * minutes, seconds and milliseconds (1/1000 second)</extracomment>
         <translation>ملي ث + ث:د:س</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/NumericConverterFormats.cpp" line="113"/>
         <source>hh:mm:ss + hundredths</source>
-        <extracomment>i18n-hint: Name of time display format that shows time in hours,
-* minutes, seconds and hundredths of a second (1/100 second)</extracomment>
+        <extracomment>Name of time display format that shows time in hours, * minutes, seconds and hundredths of a second (1/100 second)</extracomment>
         <translation>أجزاء من المئة من الثانية + ثا:دق:سا</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/NumericConverterFormats.cpp" line="119"/>
         <source>Hz</source>
-        <extracomment>i18n-hint: Name of display format that shows frequency in hertz
-i18n-hint: This is the abbreviation for "Hertz", or
-cycles per second.</extracomment>
+        <extracomment>Name of display format that shows frequency in hertz</extracomment>
         <translation>هرتز</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/NumericConverterFormats.cpp" line="126"/>
         <source>octaves</source>
-        <extracomment>i18n-hint: Name of display format that shows log of frequency
-* in octaves</extracomment>
+        <extracomment>Name of display format that shows log of frequency * in octaves</extracomment>
         <translation>جوابات</translation>
     </message>
 </context>
@@ -12534,7 +12687,7 @@ cycles per second.</extracomment>
     <message>
         <location filename="../../au3/libraries/au3-playable-track/PlayableTrack.cpp" line="185"/>
         <source>Playable Track</source>
-        <translation type="unfinished">التشغيل</translation>
+        <translation>مقطع قابل للتشغيل</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-playable-track/PlayableTrack.cpp" line="194"/>
@@ -12582,20 +12735,17 @@ cycles per second.</extracomment>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="104"/>
         <source>Logarithmic (dB)</source>
-        <translation type="unfinished">لوغارثمي</translation>
-        <extracomment>i18n-hint: abbreviates decibels</extracomment>
+        <translation>لوغاريتمي (dB)</translation>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="108"/>
         <source>Linear (dB)</source>
-        <translation type="unfinished">خطي</translation>
-        <extracomment>i18n-hint: abbreviates decibels</extracomment>
+        <translation>خطي (dB)</translation>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="112"/>
         <source>Linear (amp)</source>
-        <translation type="unfinished">خطي</translation>
-        <extracomment>i18n-hint: abbreviates amplitude</extracomment>
+        <translation>خطّي (amp)</translation>
     </message>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="132"/>
@@ -12635,7 +12785,7 @@ cycles per second.</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="29"/>
         <source>Triangle</source>
-        <translation type="unfinished">مثلث</translation>
+        <translation>مثلث</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="30"/>
@@ -12645,7 +12795,7 @@ cycles per second.</extracomment>
     <message>
         <location filename="../../src/uicomponents/qml/Audacity/UiComponents/components/internal/TimeSignaturePopup.qml" line="44"/>
         <source>Time signature</source>
-        <translation type="unfinished">مقياس الوقت</translation>
+        <translation>الوزن الموسيقي</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="41"/>
@@ -12666,7 +12816,6 @@ cycles per second.</extracomment>
         <location filename="../../src/playback/internal/au3/au3trackplaybackcontrol.cpp" line="69"/>
         <source>Pan</source>
         <translation>التوزيع</translation>
-        <extracomment>i18n-hint: Title of the Pan slider, used to move the sound left or right</extracomment>
     </message>
 </context>
 <context>
@@ -12745,21 +12894,6 @@ cycles per second.</extracomment>
         <translation type="unfinished">المضيف</translation>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="77"/>
-        <source>Recording device</source>
-        <translation type="unfinished">جهاز التسجيل</translation>
-    </message>
-    <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="101"/>
-        <source>Playback device</source>
-        <translation type="unfinished">جهاز التشغيل</translation>
-    </message>
-    <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="120"/>
-        <source>Recording channels</source>
-        <translation type="unfinished">قنوات التسجيل</translation>
-    </message>
-    <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/BufferAndLatencySection.qml" line="33"/>
         <source>Buffer and latency</source>
         <translation type="unfinished"/>
@@ -12793,8 +12927,21 @@ cycles per second.</extracomment>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ClipStyleSection.qml" line="101"/>
         <source>Classic</source>
         <translation>كلاسيكي</translation>
-        <extracomment>i18n-hint: describing the "classic" or traditional
-appearance of older versions of Audacity</extracomment>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="101"/>
+        <source>Playback device</source>
+        <translation type="unfinished">جهاز التشغيل</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="77"/>
+        <source>Recording device</source>
+        <translation type="unfinished">جهاز التسجيل</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AudioApiSection.qml" line="120"/>
+        <source>Recording channels</source>
+        <translation type="unfinished">قنوات التسجيل</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/CursorSection.qml" line="15"/>
@@ -12862,21 +13009,6 @@ appearance of older versions of Audacity</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="14"/>
-        <source>Recording lead-in time</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="22"/>
-        <source>Lead-in time before recording starts</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="47"/>
-        <source>Crossfade</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/MeterDbRangeSection.qml" line="15"/>
         <source>Meter dB range</source>
         <translation type="unfinished">مدى dB المقياس</translation>
@@ -12925,31 +13057,6 @@ appearance of older versions of Audacity</extracomment>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PlaybackPerformanceSection.qml" line="50"/>
         <source>Dithering</source>
         <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="16"/>
-        <source>Choose plugin location</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="75"/>
-        <source>Remove</source>
-        <translation>أزل</translation>
-    </message>
-    <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="78"/>
-        <source>Remove location</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="98"/>
-        <source>The directory does not exist</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="107"/>
-        <source>Add new location</source>
-        <translation type="unfinished">أضف قانونا جديدا</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/RecordingBehaviorSection.qml" line="14"/>
@@ -13040,10 +13147,6 @@ appearance of older versions of Audacity</extracomment>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ThemesSection.qml" line="34"/>
         <source>Theme</source>
         <translation>الموضوع</translation>
-        <extracomment>i18n-hint: A theme is a consistent visual style across an application's
-graphical user interface, including choices of colors, and similarity of images
-such as those on button controls.  Audacity can load and save alternative
-themes.</extracomment>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ThemesSection.qml" line="80"/>
@@ -13097,46 +13200,6 @@ themes.</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="29"/>
-        <source>Music imports</source>
-        <translation type="unfinished">استوراد MP3</translation>
-    </message>
-    <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="45"/>
-        <source>Detect tempo in imported files:</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="121"/>
-        <source>When Audacity detects music in imported file</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="135"/>
-        <source>Ask me each time</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="51"/>
-        <source>Custom LV2 plugins location</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="52"/>
-        <source>Choose custom LV2 plugins location</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="80"/>
-        <source>Custom VST3 plugins location</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="81"/>
-        <source>Choose custom VST3 plugins location</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/PreferencesDialog.qml" line="31"/>
         <source>Preferences</source>
         <translation>التفضيلات</translation>
@@ -13150,6 +13213,10 @@ themes.</extracomment>
     <message>
         <location filename="../../src/importexport/export/view/customffmpegpreferencesmodel.cpp" line="130"/>
         <source>The selected path does not exist.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <source>Please select a path that contains %1</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -13210,6 +13277,10 @@ themes.</extracomment>
         <translation type="unfinished">آخر</translation>
     </message>
     <message>
+        <source>Your version of %1 is up to date.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/generalpreferencesmodel.cpp" line="68"/>
         <source>Your version of “%1” is up to date.</source>
         <extracomment>%1 is the name of the language whose translation files are up to date</extracomment>
@@ -13223,8 +13294,7 @@ themes.</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/generalpreferencesmodel.cpp" line="184"/>
         <source>%1 GB</source>
-        <translation/>
-        <extracomment>i18n-hint: Abbreviation for Giga bytes</extracomment>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/generalpreferencesmodel.cpp" line="204"/>
@@ -13244,7 +13314,7 @@ themes.</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="163"/>
         <source>Audio settings</source>
-        <translation type="unfinished">أوضاع البرنامج المساعد</translation>
+        <translation>إعدادات الصوت</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="166"/>
@@ -13269,12 +13339,12 @@ themes.</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="180"/>
         <source>Cloud</source>
-        <translation/>
+        <translation>سحابة</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="182"/>
         <source>Shortcuts</source>
-        <translation type="unfinished">قطع قطعير</translation>
+        <translation>الاختصارات</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="185"/>
@@ -13284,6 +13354,86 @@ themes.</extracomment>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/preferencesmodel.cpp" line="188"/>
         <source>Advanced options</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="14"/>
+        <source>Recording lead-in time</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="22"/>
+        <source>Lead-in time before recording starts</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/LeadInRecordingSection.qml" line="47"/>
+        <source>Crossfade</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="29"/>
+        <source>Music imports</source>
+        <translation type="unfinished">استوراد MP3</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="45"/>
+        <source>Detect tempo in imported files:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="121"/>
+        <source>When Audacity detects music in imported file</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/MusicPreferencesPage.qml" line="135"/>
+        <source>Ask me each time</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="16"/>
+        <source>Choose plugin location</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="75"/>
+        <source>Remove</source>
+        <translation>أزل</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="78"/>
+        <source>Remove location</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="98"/>
+        <source>The directory does not exist</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/internal/PluginLocationsSection.qml" line="107"/>
+        <source>Add new location</source>
+        <translation type="unfinished">أضف قانونا جديدا</translation>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="51"/>
+        <source>Custom LV2 plugins location</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="52"/>
+        <source>Choose custom LV2 plugins location</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="80"/>
+        <source>Custom VST3 plugins location</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/preferences/qml/Audacity/Preferences/PluginPreferencesPage.qml" line="81"/>
+        <source>Choose custom VST3 plugins location</source>
         <translation type="unfinished"/>
     </message>
 </context>
@@ -13362,13 +13512,6 @@ themes.</extracomment>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="167"/>
         <source>Cloud audio files grid</source>
         <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="213"/>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/DefaultProjectListView.qml" line="132"/>
-        <source>Name</source>
-        <translation>الاسم</translation>
-        <extracomment>i18n-hint: (noun).  It's the name of the project to recover.</extracomment>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="273"/>
@@ -13450,11 +13593,6 @@ themes.</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/DefaultProjectListView.qml" line="223"/>
-        <source>Cloud project indicator</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/RecentProjectsView.qml" line="41"/>
         <source>Recent projects grid</source>
         <translation type="unfinished"/>
@@ -13485,6 +13623,12 @@ themes.</extracomment>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsListView.qml" line="81"/>
         <source>Projects list</source>
         <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="213"/>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/DefaultProjectListView.qml" line="132"/>
+        <source>Name</source>
+        <translation>الاسم</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="88"/>
@@ -13586,7 +13730,7 @@ themes.</extracomment>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="223"/>
         <source>Watch video</source>
-        <translation/>
+        <translation>شاهد الفيديو</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="251"/>
@@ -13618,7 +13762,7 @@ themes.</extracomment>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="665"/>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="712"/>
         <source>All supported files</source>
-        <translation type="unfinished">جميع الملفات|*|جميع الملفات المدعومة|</translation>
+        <translation>جميع الملفات المدعومة</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/audacityproject.cpp" line="72"/>
@@ -13641,31 +13785,6 @@ themes.</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="181"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="668"/>
-        <source>Audacity 4 files</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="597"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="701"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="717"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="756"/>
-        <source>Save to computer</source>
-        <translation type="unfinished">احفظ المشروع</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="649"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="667"/>
-        <source>Visit audio.com</source>
-        <translation type="unfinished">قارن الصوت</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="651"/>
-        <source>Load latest</source>
-        <translation type="unfinished">تحميل الملفات</translation>
-    </message>
-    <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="291"/>
         <source>Error opening file</source>
         <translation>خطأ في فتح الملف</translation>
@@ -13674,13 +13793,6 @@ themes.</extracomment>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="292"/>
         <source>Could not open file: %1</source>
         <translation>لم أتمكن من فتح الملف: %1</translation>
-    </message>
-    <message>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="579"/>
-        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="958"/>
-        <source>All saved changes will now update to the cloud.
-You can manage this file from your updated projects page on audio.com</source>
-        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="584"/>
@@ -13703,6 +13815,30 @@ You can manage this file from your updated projects page on audio.com</source>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="667"/>
         <source>Audacity 3 files</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="181"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="668"/>
+        <source>Audacity 4 files</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="649"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="667"/>
+        <source>Visit audio.com</source>
+        <translation>زيارة audio.com</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="651"/>
+        <source>Load latest</source>
+        <translation type="unfinished">تحميل الملفات</translation>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="579"/>
+        <location filename="../../src/project/internal/projectactionscontroller.cpp" line="958"/>
+        <source>All saved changes will now update to the cloud.
+You can manage this file from your updated projects page on audio.com</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -13784,6 +13920,14 @@ You can manage this file from your updated projects page on audio.com</source>
         <translation type="unfinished"/>
     </message>
     <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="597"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="701"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="717"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="756"/>
+        <source>Save to computer</source>
+        <translation type="unfinished">احفظ المشروع</translation>
+    </message>
+    <message>
         <location filename="../../src/project/internal/projectconfiguration.cpp" line="172"/>
         <source>Untitled</source>
         <translation>غير معنون</translation>
@@ -13841,13 +13985,18 @@ Please check the file’s properties and permissions, ensure it is not stored on
 Please remove the write protection by checking the file’s properties, ensuring it is not stored on a write-protected drive or folder, or by running Audacity as an administrator.</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/DefaultProjectListView.qml" line="223"/>
+        <source>Cloud project indicator</source>
+        <translation type="unfinished"/>
+    </message>
 </context>
 <context>
     <name>project-file-io</name>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/SqliteSampleBlock.cpp" line="374"/>
         <source>Connection to project file is null</source>
-        <translation type="unfinished">افتش بيانات ملف المشروع</translation>
+        <translation>الاتصال بملف المشروع ملغي</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/SqliteSampleBlock.cpp" line="375"/>
@@ -13863,19 +14012,19 @@ Please remove the write protection by checking the file’s properties, ensuring
         <location filename="../../au3/libraries/au3-project-file-io/SqliteSampleBlock.cpp" line="1075"/>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1045"/>
         <source>Progress</source>
-        <extracomment>i18n-hint: This title appears on a dialog that indicates the progress
-in doing something.</extracomment>
+        <extracomment>This title appears on a dialog that indicates the progress in doing something.</extracomment>
         <translation>تقدم</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/SqliteSampleBlock.cpp" line="1075"/>
         <source>Discarding undo/redo history</source>
-        <translation/>
+        <translation>تجاهل سجل التراجع/إعادة التاريخ</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="92"/>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="120"/>
         <source>(%1): %2</source>
+        <extracomment>%1 is the SQLite error code, %2 is the error message</extracomment>
         <translation type="unfinished">%1: %2</translation>
     </message>
     <message>
@@ -13896,11 +14045,12 @@ in doing something.</extracomment>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="242"/>
         <source>Checkpointing project</source>
-        <translation type="unfinished">المشروع الحالي</translation>
+        <translation>نقطة فحص المشروع</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="248"/>
         <source>Checkpointing %1</source>
+        <extracomment>%1 is the name of the project being checkpointed</extracomment>
         <translation type="unfinished">استورد %1</translation>
     </message>
     <message>
@@ -13908,25 +14058,28 @@ in doing something.</extracomment>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1251"/>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2227"/>
         <source>This may take several seconds</source>
-        <translation/>
+        <translation>قد يستغرق ذلك عدة ثوانٍ</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="537"/>
         <source>Could not write to %1.
 </source>
+        <extracomment>%1 is the file path</extracomment>
         <translation type="unfinished">لم أتمكن من الكتابة إلى الملف: %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="540"/>
         <source>Disk is full.
 %1</source>
-        <translation/>
+        <extracomment>%1 is an additional detail message, possibly empty</extracomment>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/DBConnection.cpp" line="624"/>
         <source>Failed to create savepoint:
 
 %1</source>
+        <extracomment>%1 is the name of the savepoint</extracomment>
         <translation type="unfinished">أخفقت في تدوين %1</translation>
     </message>
     <message>
@@ -13935,6 +14088,7 @@ in doing something.</extracomment>
         <source>Failed to release savepoint:
 
 %1</source>
+        <extracomment>%1 is the name of the savepoint</extracomment>
         <translation type="unfinished">أخفقت في تدوين %1</translation>
     </message>
     <message>
@@ -13942,6 +14096,7 @@ in doing something.</extracomment>
         <source>There is very little free disk space left on %1
 Please select a bigger temporary directory location in
 Directories Preferences.</source>
+        <extracomment>%1 is the drive or volume name</extracomment>
         <translation type="unfinished">تبقت مساحة قرص قليلة جدا على هذا الحجم.
 من فضلك اختر مجلدا مؤقتا آخر في التفضيلات.</translation>
     </message>
@@ -13955,48 +14110,53 @@ Directories Preferences.</source>
         <source>Failed to open database file:
 
 %1</source>
+        <extracomment>%1 is the database file path</extracomment>
         <translation type="unfinished">أخفقت في إزالة %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="576"/>
         <source>Failed to discard connection</source>
-        <translation type="unfinished">أخفقت في إيجاد المشفر</translation>
+        <translation>فشل في تجاهل الاتصال</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="606"/>
         <source>Failed to restore connection</source>
-        <translation type="unfinished">غير قادر على استرداد وصف المجرى</translation>
+        <translation>فشل في استعادة الاتصال</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="651"/>
         <source>Failed to execute a project file command:
 
 %1</source>
+        <extracomment>%1 is the SQL command that failed to execute</extracomment>
         <translation type="unfinished">أخفقت في تدوين %1</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="724"/>
         <source>Project is in a read only directory
 (Unable to create the required temporary files)</source>
-        <extracomment>i18n-hint: An error message.</extracomment>
-        <translation/>
+        <extracomment>An error message.</extracomment>
+        <translation>المشروع في مجلد للقراءة فقط
+(تعذر إنشاء الملفات المؤقتة المطلوبة)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="745"/>
         <source>This is not an Audacity project file</source>
-        <translation type="unfinished">حفظ مشروع Audacity</translation>
+        <translation>هذا ليس ملف مشروع Audacity</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="761"/>
         <source>This project was created with a newer version of Audacity.
 
 You will need to upgrade to open it.</source>
-        <translation/>
+        <translation>تم إنشاء هذا المشروع باستخدام إصدار أحدث من Audacity.
+
+ستحتاج إلى الترقية لفتحه.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="780"/>
         <source>Unable to initialize the project file</source>
-        <translation type="unfinished">غير قادر على بدأ تيار MP3</translation>
+        <translation>تعذرت التهيئة الأولية لملف المشروع</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="834"/>
@@ -14008,76 +14168,84 @@ You will need to upgrade to open it.</source>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="852"/>
         <source>Project is read only
 (Unable to work with the blockfiles)</source>
-        <extracomment>i18n-hint: An error message.  Don't translate blockfiles.</extracomment>
-        <translation/>
+        <extracomment>An error message. Don't translate blockfiles.</extracomment>
+        <translation>المشروع للقراءة فقط
+ (غير قادر على العمل مع ملفات الكتل)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="855"/>
         <source>Project is locked
 (Unable to work with the blockfiles)</source>
-        <extracomment>i18n-hint: An error message.  Don't translate blockfiles.</extracomment>
-        <translation/>
+        <extracomment>An error message. Don't translate blockfiles.</extracomment>
+        <translation>المشروع مقفل
+(غير قادر على العمل مع ملفات الحظر)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="858"/>
         <source>Project is busy
 (Unable to work with the blockfiles)</source>
-        <extracomment>i18n-hint: An error message.  Don't translate blockfiles.</extracomment>
-        <translation/>
+        <extracomment>An error message. Don't translate blockfiles.</extracomment>
+        <translation>المشروع مشغول
+(غير قادر على العمل مع ملفات الحظر)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="861"/>
         <source>Project is corrupt
 (Unable to work with the blockfiles)</source>
-        <extracomment>i18n-hint: An error message.  Don't translate blockfiles.</extracomment>
-        <translation/>
+        <extracomment>An error message. Don't translate blockfiles.</extracomment>
+        <translation>المشروع تالف
+(غير قادر على العمل مع ملفات الحظر)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="864"/>
         <source>Some permissions issue
 (Unable to work with the blockfiles)</source>
-        <extracomment>i18n-hint: An error message.  Don't translate blockfiles.</extracomment>
-        <translation/>
+        <extracomment>An error message. Don't translate blockfiles.</extracomment>
+        <translation>توجد مشكلة في بعض الصلاحيات
+(تعذر العمل مع ملفات الحظر)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="867"/>
         <source>A disk I/O error
 (Unable to work with the blockfiles)</source>
-        <extracomment>i18n-hint: An error message.  Don't translate blockfiles.</extracomment>
-        <translation/>
+        <extracomment>An error message. Don't translate blockfiles.</extracomment>
+        <translation>خطأ في إدخال/إخراج القرص
+(غير قادر على العمل مع ملفات الحظر)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="870"/>
         <source>Not authorized
 (Unable to work with the blockfiles)</source>
-        <extracomment>i18n-hint: An error message.  Don't translate blockfiles.</extracomment>
-        <translation/>
+        <extracomment>An error message. Don't translate blockfiles.</extracomment>
+        <translation>غير مصرح به
+(غير قادر على العمل مع ملفات الحظر)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="873"/>
         <source>Unable to work with the blockfiles</source>
-        <extracomment>i18n-hint: An error message.  Don't translate blockfiles.</extracomment>
-        <translation type="unfinished">غير قادر على بدأ تيار MP3</translation>
+        <extracomment>An error message. Don't translate blockfiles.</extracomment>
+        <translation>تعذر العمل مع ملفات الكتل</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="883"/>
         <source>Total orphan blocks deleted %1</source>
+        <extracomment>%1 is the number of deleted orphan blocks</extracomment>
         <translation type="unfinished">ملف الكتلة اليتيم: '%1'</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="964"/>
         <source>Failed to rollback transaction during import</source>
-        <translation/>
+        <translation>فشل التراجع عن المعاملة أثناء الاستيراد</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="988"/>
         <source>Unable to attach destination database</source>
-        <translation type="unfinished">غير قادر على على تعيين حالة المجرى إلى متوقف.</translation>
+        <translation>تعذّر الربط بقاعدة بيانات الهدف</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="999"/>
         <source>Unable to switch to fast journaling mode</source>
-        <translation/>
+        <translation>تعذّر التبديل إلى وضع التسجيل السريع</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1037"/>
@@ -14085,12 +14253,13 @@ You will need to upgrade to open it.</source>
         <source>Unable to prepare project file command:
 
 %1</source>
+        <extracomment>%1 is the SQL command that could not be prepared</extracomment>
         <translation type="unfinished">غير قادر على قراءة ملف المسبقات.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1070"/>
         <source>Failed to bind SQL parameter</source>
-        <translation type="unfinished">أخفقت في إيجاد المشفر</translation>
+        <translation>فشل ربط معامل SQL</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1085"/>
@@ -14099,35 +14268,37 @@ You will need to upgrade to open it.</source>
 The following command failed:
 
 %1</source>
-        <translation/>
+        <extracomment>%1 is the SQL command that failed</extracomment>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1127"/>
         <source>Destination project could not be detached</source>
-        <translation/>
+        <translation>تعذر فصل المشروع الهدف</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1251"/>
         <source>Copying Project</source>
-        <translation type="unfinished">خطأ في فتح المشروع</translation>
+        <translation>نسخ المشروع</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1265"/>
         <source>Error Writing to File</source>
-        <translation type="unfinished">خطأ في كتابة الملف: "%1"</translation>
+        <translation>Error Writing to File</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1267"/>
         <source>Audacity failed to write file %1.
 Perhaps disk is full or not writable.
 For tips on freeing up space, click the help button.</source>
+        <extracomment>%1 is the file path</extracomment>
         <translation type="unfinished">أخفق Audacity في الكتابة إلى ملف.
 ربما %1 غير قابل للكتابة أو القرص ممتلئ.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1479"/>
         <source>Compacting project</source>
-        <translation type="unfinished">احفظ المشاريع</translation>
+        <translation>مشروع الدمج</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1578"/>
@@ -14143,14 +14314,14 @@ For tips on freeing up space, click the help button.</source>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1591"/>
         <source>(Recovered)</source>
-        <extracomment>i18n-hint: E.g this is recovered audio that had been lost.</extracomment>
+        <extracomment>E.g this is recovered audio that had been lost.</extracomment>
         <translation>(مسترجع)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1691"/>
         <source>This file was saved using Audacity %1.
 You are using Audacity %2. You may need to upgrade to a newer version to open this file.</source>
-        <extracomment>i18n-hint: %s will be replaced by the version number.</extracomment>
+        <extracomment>%1 is the Audacity version that saved the file, %2 is the running version.</extracomment>
         <translation>حفظ المشروع باستخدام Audacity %1.
 أنت تستخدم Audacity %2. قد تحتاج إلى أن تحدث إلى إصدار أحدث لتفتح هذا الملف.</translation>
     </message>
@@ -14162,7 +14333,7 @@ You are using Audacity %2. You may need to upgrade to a newer version to open th
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1811"/>
         <source>Failed to remove the autosave information from the project file.</source>
-        <translation/>
+        <translation>فشل في إزالة معلومات الحفظ التلقائي من ملف المشروع.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1874"/>
@@ -14170,12 +14341,12 @@ You are using Audacity %2. You may need to upgrade to a newer version to open th
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1934"/>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="1947"/>
         <source>Unable to bind to blob</source>
-        <translation type="unfinished">أخفقت في إيجاد المشفر</translation>
+        <translation>تعذر الربط بالنقطة</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2058"/>
         <source>Unable to parse project information.</source>
-        <translation type="unfinished">غير قادر على قراءة ملف المسبقات.</translation>
+        <translation>تعذر تحليل معلومات المشروع.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2170"/>
@@ -14185,7 +14356,7 @@ You are using Audacity %2. You may need to upgrade to a newer version to open th
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2186"/>
         <source>Saving project</source>
-        <translation type="unfinished">احفظ المشاريع</translation>
+        <translation>حفظ المشروع</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2188"/>
@@ -14198,7 +14369,7 @@ You are using Audacity %2. You may need to upgrade to a newer version to open th
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2227"/>
         <source>Syncing</source>
-        <translation/>
+        <translation>المزامنة</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2244"/>
@@ -14206,7 +14377,8 @@ You are using Audacity %2. You may need to upgrade to a newer version to open th
 on the storage device.
 
 %1</source>
-        <translation/>
+        <extracomment>%1 is the underlying error message</extracomment>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2264"/>
@@ -14214,23 +14386,24 @@ on the storage device.
 on the storage device.
 
 %1</source>
-        <translation/>
+        <extracomment>%1 is the underlying error message</extracomment>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2330"/>
         <source>Backing up project</source>
-        <translation type="unfinished">احفظ المشاريع الفارغة</translation>
+        <translation>النسخ الاحتياطي للمشروع</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectFileIO.cpp" line="2649"/>
         <source>Automatic database backup failed.</source>
-        <translation type="unfinished">الحفظ التلقائي ممكن:</translation>
+        <translation>فشل النسخ الاحتياطي التلقائي لقاعدة البيانات.</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-project-file-io/ProjectSerializer.cpp" line="94"/>
         <source>This recovery file was saved by Audacity 2.3.0 or before.
 You need to run that version of Audacity to recover the project.</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -14257,7 +14430,6 @@ You need to run that version of Audacity to recover the project.</source>
         <location filename="../../au3/libraries/au3-project-rate/QualitySettings.cpp" line="25"/>
         <source>32-bit float</source>
         <translation>32-بِت عائم</translation>
-        <extracomment>i18n-hint: Audio data bit depth (precision): 32-bit floating point</extracomment>
     </message>
 </context>
 <context>
@@ -14290,7 +14462,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/CloudProjectSyncDialog.qml" line="57"/>
         <source>Project is syncing with audio.com. Do you want to stop the sync process?</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -14344,7 +14516,7 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="519"/>
         <source>Continue</source>
-        <translation type="unfinished">المساهمون</translation>
+        <translation>المتابعة</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1020"/>
@@ -14360,7 +14532,6 @@ You need to run that version of Audacity to recover the project.</source>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="1025"/>
         <source>OK</source>
         <translation>حسنا</translation>
-        <extracomment>i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.</extracomment>
     </message>
 </context>
 <context>
@@ -14406,9 +14577,17 @@ You need to run that version of Audacity to recover the project.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="60"/>
         <source>How would you like to save?</source>
-        <translation/>
-        <extracomment>i18n-hint: A title that is shown on the first project save that allows the
-user to select Cloud or local save.</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="79"/>
+        <source>Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others. Cloud saving is free for a limited number of projects.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="80"/>
+        <source>Save to cloud</source>
+        <translation type="unfinished">حفظ السجل في:</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="78"/>
@@ -14417,19 +14596,9 @@ user to select Cloud or local save.</extracomment>
         <translation type="unfinished">حفظ السجل في:</translation>
     </message>
     <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="79"/>
-        <source>Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others. Cloud saving is free for a limited number of projects.</source>
-        <translation/>
-    </message>
-    <message>
-        <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="80"/>
-        <source>Save to cloud</source>
-        <translation type="unfinished">حفظ السجل في:</translation>
-    </message>
-    <message>
         <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="95"/>
         <source>On your computer</source>
-        <translation/>
+        <translation>على جهازك الشخصي</translation>
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="96"/>
@@ -14450,7 +14619,7 @@ user to select Cloud or local save.</extracomment>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="167"/>
         <source>Save project</source>
-        <translation type="unfinished">احفظ المشروع</translation>
+        <translation>حفظ المشروع</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="172"/>
@@ -14486,16 +14655,16 @@ user to select Cloud or local save.</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="543"/>
-        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="553"/>
-        <source>Unable to connect to the cloud</source>
-        <translation type="unfinished"/>
-    </message>
-    <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="544"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="554"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="568"/>
         <source>Please check your internet connection or try again later.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="543"/>
+        <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="553"/>
+        <source>Unable to connect to the cloud</source>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -14545,7 +14714,6 @@ user to select Cloud or local save.</extracomment>
         <location filename="../../src/projectscene/view/trackspanel/realtimeeffectlistmodel.cpp" line="289"/>
         <source>Master</source>
         <translation type="unfinished">الصق</translation>
-        <extracomment>i18n-hint: master channel display name</extracomment>
     </message>
 </context>
 <context>
@@ -14568,14 +14736,7 @@ user to select Cloud or local save.</extracomment>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/statusbar/SelectionStatus.qml" line="71"/>
         <source>Duration</source>
-        <translation>الأمد</translation>
-        <extracomment>i18n-hint: This string is used to configure the controls which shows the recording
-* duration. As such it is important that only the alphabetic parts of the string
-* are translated, with the numbers left exactly as they are.
-* The string 'days' indicates that the first number in the control will be the number of days,
-* then the 'h' indicates the second number displayed is hours, the 'm' indicates the third
-* number displayed is minutes, and the 's' indicates that the fourth number displayed is
-* seconds.</extracomment>
+        <translation>المدة</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/EffectCard.qml" line="128"/>
@@ -14585,7 +14746,7 @@ user to select Cloud or local save.</extracomment>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml" line="13"/>
         <source>Get effects</source>
-        <translation type="unfinished"/>
+        <translation>الحصول على تأثيرات</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml" line="96"/>
@@ -14595,7 +14756,7 @@ user to select Cloud or local save.</extracomment>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml" line="109"/>
         <source>Connection error</source>
-        <translation type="unfinished"/>
+        <translation>خطأ في الاتصال</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml" line="116"/>
@@ -14605,7 +14766,7 @@ user to select Cloud or local save.</extracomment>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml" line="123"/>
         <source>Try again</source>
-        <translation type="unfinished"/>
+        <translation>حاول مرة أُخرى</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/toolbars/GetEffectsDialog.qml" line="176"/>
@@ -14755,7 +14916,6 @@ user to select Cloud or local save.</extracomment>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/AddNewTrackPopup.qml" line="44"/>
         <source>Label</source>
         <translation>علامة</translation>
-        <extracomment>i18n-hint: (noun)</extracomment>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/audio/PanTooltip.qml" line="20"/>
@@ -14770,12 +14930,12 @@ user to select Cloud or local save.</extracomment>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="127"/>
         <source>Add effect</source>
-        <translation type="unfinished">جميع التأثيرات</translation>
+        <translation>إضافة تأثير</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="153"/>
         <source>Realtime effects are non-destructive and can be changed at any time.</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="154"/>
@@ -14798,9 +14958,6 @@ user to select Cloud or local save.</extracomment>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="135"/>
         <source>Tracks</source>
         <translation>المقاطع</translation>
-        <extracomment>i18n-hint: "Tracks" include audio recordings but also other collections of
-* data associated with a time line, such as sequences of labels, and musical
-* notes</extracomment>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/WaveTrackItem.qml" line="91"/>
@@ -14815,43 +14972,42 @@ user to select Cloud or local save.</extracomment>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="52"/>
         <source>Bar</source>
-        <translation type="unfinished">Bark</translation>
-        <extracomment>i18n-hint: The music theory "bar"</extracomment>
+        <translation>شريط</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="53"/>
         <source>1/2</source>
-        <translation type="unfinished">128</translation>
+        <translation>1/2</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="54"/>
         <source>1/4</source>
-        <translation/>
+        <translation>1/4</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="55"/>
         <source>1/8</source>
-        <translation type="unfinished">128</translation>
+        <translation>1/8</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="56"/>
         <source>1/16</source>
-        <translation/>
+        <translation>1/16</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="57"/>
         <source>1/32</source>
-        <translation/>
+        <translation>1/32</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="58"/>
         <source>1/64</source>
-        <translation/>
+        <translation>1/64</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="59"/>
         <source>1/128</source>
-        <translation/>
+        <translation>1/128</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="61"/>
@@ -14866,17 +15022,17 @@ user to select Cloud or local save.</extracomment>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="218"/>
         <source>Deciseconds</source>
-        <translation type="unfinished">أجزاء من مئة من الثانية</translation>
+        <translation>ديسي ثانية</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="219"/>
         <source>Centiseconds</source>
-        <translation type="unfinished">أجزاء من مئة من الثانية</translation>
+        <translation>سنيتي ثانية</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="220"/>
         <source>Milliseconds</source>
-        <translation type="unfinished">أجزاء من ألف من الثانية</translation>
+        <translation>ميلي ثانية</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="221"/>
@@ -14896,48 +15052,42 @@ user to select Cloud or local save.</extracomment>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="231"/>
         <source>NTSC frames (29.97 fps)</source>
-        <translation type="unfinished">إطارات CDDA (75 إ.ف.ث)</translation>
+        <translation>إطارات NTSC (29.97 إ.ف.ث)</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="232"/>
         <source>NTSC frames (30 fps)</source>
-        <translation type="unfinished">إطارات CDDA (75 إ.ف.ث)</translation>
+        <translation>إطارات NTSC (30 إ.ف.ث)</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="233"/>
         <source>PAL frames (25 fps)</source>
         <translation>إطارات PAL (25 إ.ف.ث)</translation>
-        <extracomment>i18n-hint: Name of time display format that shows time in frames at PAL
-* TV frame rate (used for European TV)</extracomment>
-    </message>
-    <message>
-        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="236"/>
-        <source>Video frames</source>
-        <translation type="unfinished">إطارات NTSC</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="242"/>
         <source>CDDA frames (75 fps)</source>
         <translation>إطارات CDDA (75 إ.ف.ث)</translation>
-        <extracomment>i18n-hint: Name of time display format that shows time in frames at CD
-* Audio frame rate (75 frames per second)</extracomment>
+    </message>
+    <message>
+        <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="236"/>
+        <source>Video frames</source>
+        <translation>إطارات الفيديو</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/toolbars/snaptoolbaritem.cpp" line="245"/>
         <source>CD frames</source>
-        <translation type="unfinished">إطارات NTSC</translation>
+        <translation>إطارات الأقراص المدمجة</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="67"/>
         <source>Track</source>
         <translation>مقطع</translation>
-        <extracomment>i18n-hint: (noun).  A track contains waves, audio etc.</extracomment>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="70"/>
         <source>Label text</source>
         <translation>نص العلامة</translation>
-        <extracomment>i18n-hint: Do not translate '##1'</extracomment>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="76"/>
@@ -14970,12 +15120,12 @@ user to select Cloud or local save.</extracomment>
     <message>
         <location filename="../../src/effects/builtin_collection/silencegen/SilenceView.qml" line="15"/>
         <source>Silence</source>
-        <translation type="unfinished">سكون</translation>
+        <translation>إسكات</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/silencegen/SilenceView.qml" line="41"/>
         <source>Duration:</source>
-        <translation>الأمد:</translation>
+        <translation>المدة:</translation>
     </message>
 </context>
 <context>
@@ -15017,13 +15167,13 @@ user to select Cloud or local save.</extracomment>
     </message>
     <message>
         <location filename="../../src/record/internal/au3/au3record.cpp" line="942"/>
-        <source>Recorded audio</source>
-        <translation type="unfinished">صوت مسجل</translation>
+        <source>Record</source>
+        <translation>سجل</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/au3/au3record.cpp" line="942"/>
-        <source>Record</source>
-        <translation>سجل</translation>
+        <source>Recorded audio</source>
+        <translation type="unfinished">صوت مسجل</translation>
     </message>
     <message>
         <location filename="../../src/record/internal/recordcontroller.cpp" line="99"/>
@@ -15052,7 +15202,7 @@ Error code: %1</source>
     <message>
         <location filename="../../src/record/recorderrors.h" line="38"/>
         <source>The tracks selected for recording must all have the same sampling rate</source>
-        <translation type="unfinished">لتطبق مرشحة، يجب أن يكون لجميع المقاطع المختارة نفس معدل العينة.</translation>
+        <translation>يجب أن يكون لجميع المسارات المحددة للتسجيل نفس معدل أخذ العينات</translation>
     </message>
     <message>
         <location filename="../../src/record/recorderrors.h" line="41"/>
@@ -15076,17 +15226,20 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-registries/Registry.cpp" line="189"/>
         <source>Plug-in group at %1 was merged with a previously defined group</source>
-        <translation/>
+        <extracomment>%1 is the registry path of the merged plug-in group</extracomment>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-registries/Registry.cpp" line="197"/>
         <source>Plug-in item at %1 conflicts with a previously defined item and was discarded</source>
-        <translation/>
+        <extracomment>%1 is the registry path of the conflicting plug-in item</extracomment>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-registries/Registry.cpp" line="205"/>
         <source>Plug-in items at %1 specify conflicting placements</source>
-        <translation/>
+        <extracomment>%1 is the registry path of the conflicting plug-in items</extracomment>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -15094,12 +15247,12 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-sample-track/SampleTrack.cpp" line="27"/>
         <source>Sample Track</source>
-        <translation type="unfinished">أعد أخذ عينات المقطع</translation>
+        <translation>عينة مقطع</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sample-track/SampleTrack.cpp" line="55"/>
         <source>Writable Sample Track</source>
-        <translation type="unfinished">أعد أخذ عينات المقطع</translation>
+        <translation>مسار العينة القابل للكتابة</translation>
     </message>
 </context>
 <context>
@@ -15107,7 +15260,7 @@ Error code: %1</source>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="26"/>
         <source>Cut and leave gap</source>
-        <translation type="unfinished"/>
+        <translation>قص مع ترك فجوة</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/selectioncontextmenumodel.cpp" line="28"/>
@@ -15180,134 +15333,130 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="68"/>
         <source>Beats</source>
-        <extracomment>i18n-hint: The music theory "beat"</extracomment>
-        <translation type="unfinished">النقرات</translation>
+        <extracomment>The music theory "beat"</extracomment>
+        <translation>الإيقاعات</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="70"/>
         <source>Bar</source>
-        <extracomment>i18n-hint: The music theory "bar"</extracomment>
-        <translation type="unfinished">Bark</translation>
+        <extracomment>The music theory "bar"</extracomment>
+        <translation>شريط</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="71"/>
         <source>1/2</source>
-        <translation type="unfinished">128</translation>
+        <translation>1/2</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="72"/>
         <source>1/4</source>
-        <translation/>
+        <translation>1/4</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="73"/>
         <source>1/8</source>
-        <translation type="unfinished">128</translation>
+        <translation>1/8</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="74"/>
         <source>1/16</source>
-        <translation/>
+        <translation>1/16</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="75"/>
         <source>1/32</source>
-        <translation/>
+        <translation>1/32</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="76"/>
         <source>1/64</source>
-        <translation/>
+        <translation>1/64</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="77"/>
         <source>1/128</source>
-        <translation/>
+        <translation>1/128</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="80"/>
         <source>Triplets</source>
-        <extracomment>i18n-hint: The music theory "triplet"</extracomment>
-        <translation/>
+        <extracomment>The music theory "triplet"</extracomment>
+        <translation>التوائم الثلاثة</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="82"/>
         <source>1/2 (triplets)</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="84"/>
         <source>1/4 (triplets)</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="86"/>
         <source>1/8 (triplets)</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="88"/>
         <source>1/16 (triplets)</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="90"/>
         <source>1/32 (triplets)</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="92"/>
         <source>1/64 (triplets)</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="94"/>
         <source>1/128 (triplets)</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/FrameSnapFunctions.cpp" line="18"/>
         <source>Video frames</source>
-        <translation type="unfinished">إطارات NTSC</translation>
+        <translation>إطارات الفيديو</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/FrameSnapFunctions.cpp" line="20"/>
         <source>Film frames (24 fps)</source>
-        <translation type="unfinished">إطارات الفيلم (24 إ.ف.ث)</translation>
+        <translation>إطارات الفيلم (24 إ.ف.ث)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/FrameSnapFunctions.cpp" line="22"/>
         <source>NTSC frames (29.97 fps)</source>
-        <translation type="unfinished">إطارات CDDA (75 إ.ف.ث)</translation>
+        <translation>إطارات NTSC (29.97 إ.ف.ث)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/FrameSnapFunctions.cpp" line="24"/>
         <source>NTSC frames (30 fps)</source>
-        <translation type="unfinished">إطارات CDDA (75 إ.ف.ث)</translation>
+        <translation>إطارات NTSC (30 إ.ف.ث)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/FrameSnapFunctions.cpp" line="25"/>
         <source>PAL frames (25 fps)</source>
         <translation>إطارات PAL (25 إ.ف.ث)</translation>
-        <extracomment>i18n-hint: Name of time display format that shows time in frames at PAL
-* TV frame rate (used for European TV)</extracomment>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/FrameSnapFunctions.cpp" line="27"/>
         <source>CD frames</source>
-        <translation type="unfinished">إطارات NTSC</translation>
+        <translation>إطارات الأقراص المدمجة</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/FrameSnapFunctions.cpp" line="28"/>
         <source>CDDA frames (75 fps)</source>
         <translation>إطارات CDDA (75 إ.ف.ث)</translation>
-        <extracomment>i18n-hint: Name of time display format that shows time in frames at CD
-* Audio frame rate (75 frames per second)</extracomment>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/TimeSnapFunctions.cpp" line="24"/>
         <source>Seconds &amp;&amp; samples</source>
-        <translation type="unfinished">ثاني أكبر</translation>
+        <translation>الثواني والعينات</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/TimeSnapFunctions.cpp" line="25"/>
@@ -15317,17 +15466,17 @@ Error code: %1</source>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/TimeSnapFunctions.cpp" line="26"/>
         <source>Deciseconds</source>
-        <translation type="unfinished">أجزاء من مئة من الثانية</translation>
+        <translation>ديسي ثانية</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/TimeSnapFunctions.cpp" line="27"/>
         <source>Centiseconds</source>
-        <translation type="unfinished">أجزاء من مئة من الثانية</translation>
+        <translation>سنيتي ثانية</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/TimeSnapFunctions.cpp" line="28"/>
         <source>Milliseconds</source>
-        <translation type="unfinished">أجزاء من ألف من الثانية</translation>
+        <translation>ميلي ثانية</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/TimeSnapFunctions.cpp" line="29"/>
@@ -15364,18 +15513,16 @@ Error code: %1</source>
         <location filename="../../src/spectrogram/view/abstractspectrogramsettingsmodel.cpp" line="38"/>
         <source>Classic</source>
         <translation>كلاسيكي</translation>
-        <extracomment>i18n-hint: describing the "classic" or traditional
-appearance of older versions of Audacity</extracomment>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/abstractspectrogramsettingsmodel.cpp" line="40"/>
         <source>Grayscale</source>
-        <translation type="unfinished">تدرج رمادي</translation>
+        <translation>تدرج رمادي</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/abstractspectrogramsettingsmodel.cpp" line="42"/>
         <source>Inverse grayscale</source>
-        <translation type="unfinished">مقياس خطي</translation>
+        <translation>تدرج الرمادي سلبي</translation>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/abstractspectrogramsettingsmodel.cpp" line="45"/>
@@ -15397,25 +15544,21 @@ appearance of older versions of Audacity</extracomment>
         <location filename="../../src/spectrogram/view/abstractspectrogramsettingsmodel.cpp" line="68"/>
         <source>Mel</source>
         <translation>Mel</translation>
-        <extracomment>i18n-hint: The name of a frequency scale in psychoacoustics</extracomment>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/abstractspectrogramsettingsmodel.cpp" line="70"/>
         <source>Bark</source>
         <translation>Bark</translation>
-        <extracomment>i18n-hint: The name of a frequency scale in psychoacoustics, named for Heinrich Barkhausen</extracomment>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/abstractspectrogramsettingsmodel.cpp" line="72"/>
         <source>ERB</source>
         <translation>ERB</translation>
-        <extracomment>i18n-hint: The name of a frequency scale in psychoacoustics, abbreviates Equivalent Rectangular Bandwidth</extracomment>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/abstractspectrogramsettingsmodel.cpp" line="74"/>
         <source>Period</source>
         <translation>مدة</translation>
-        <extracomment>i18n-hint: Time units, that is Period = 1 / Frequency</extracomment>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="18"/>
@@ -15426,13 +15569,11 @@ appearance of older versions of Audacity</extracomment>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="19"/>
         <source>Reassignment</source>
         <translation>إعادة تعيين</translation>
-        <extracomment>i18n-hint: the Reassignment algorithm for spectrograms</extracomment>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="20"/>
         <source>Pitch</source>
         <translation>طبقة</translation>
-        <extracomment>i18n-hint: (noun) Musical pitch.</extracomment>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="24"/>
@@ -15443,37 +15584,31 @@ appearance of older versions of Audacity</extracomment>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="25"/>
         <source>Bartlett</source>
         <translation>بارتلت</translation>
-        <extracomment>i18n-hint a proper name</extracomment>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="26"/>
         <source>Hamming</source>
         <translation>هامينغ</translation>
-        <extracomment>i18n-hint a proper name</extracomment>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="27"/>
         <source>Hann</source>
         <translation>هان</translation>
-        <extracomment>i18n-hint a proper name</extracomment>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="28"/>
         <source>Blackman</source>
         <translation>بلاكمان</translation>
-        <extracomment>i18n-hint a proper name</extracomment>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="29"/>
         <source>Blackman-Harris</source>
         <translation>بلاكمان-هاريس</translation>
-        <extracomment>i18n-hint two proper names</extracomment>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="30"/>
         <source>Welch</source>
         <translation>ولتش</translation>
-        <extracomment>i18n-hint a proper name</extracomment>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/algorithmsectionparameterlistmodel.cpp" line="31"/>
@@ -15524,8 +15659,6 @@ appearance of older versions of Audacity</extracomment>
         <location filename="../../src/spectrogram/view/colorsectionparameterlistmodel.cpp" line="93"/>
         <source>Gain</source>
         <translation>الزيادة</translation>
-        <extracomment>i18n-hint: title of the Gain slider, used to adjust the volume
-i18n-hint: Title of the Gain slider, used to adjust the volume</extracomment>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/colorsectionparameterlistmodel.cpp" line="95"/>
@@ -15541,9 +15674,6 @@ i18n-hint: Title of the Gain slider, used to adjust the volume</extracomment>
         <location filename="../../src/spectrogram/view/scalesectionparameterlistmodel.cpp" line="51"/>
         <source>Hz</source>
         <translation>هرتز</translation>
-        <extracomment>i18n-hint: Name of display format that shows frequency in hertz
-i18n-hint: This is the abbreviation for "Hertz", or
-cycles per second.</extracomment>
     </message>
     <message>
         <location filename="../../src/spectrogram/view/scalesectionparameterlistmodel.cpp" line="77"/>
@@ -15577,7 +15707,6 @@ cycles per second.</extracomment>
         <location filename="../../src/spectrogram/qml/Audacity/Spectrogram/TrackSpectrogramSettingsDialog.qml" line="132"/>
         <source>OK</source>
         <translation>حسنا</translation>
-        <extracomment>i18n-hint: In most languages OK is to be translated as OK.  It appears on a button.</extracomment>
     </message>
 </context>
 <context>
@@ -15599,169 +15728,169 @@ cycles per second.</extracomment>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="46"/>
         <source>SQLite3 error</source>
-        <translation type="unfinished">خطأ داخلي</translation>
+        <translation>خطأ SQLite3</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="59"/>
         <source>No error</source>
-        <extracomment>i18n-hint: database operation was successful</extracomment>
-        <translation type="unfinished">مجهول</translation>
+        <extracomment>database operation was successful</extracomment>
+        <translation>لا أخطاء</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="62"/>
         <source>Generic error</source>
-        <extracomment>i18n-hint: database operation has failed, but there is no specific reason</extracomment>
-        <translation type="unfinished">شامل</translation>
+        <extracomment>database operation has failed, but there is no specific reason</extracomment>
+        <translation>خطأ عام</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="65"/>
         <source>Internal logic error in SQLite</source>
-        <extracomment>i18n-hint: database operation has failed due to the internal error</extracomment>
+        <extracomment>database operation has failed due to the internal error</extracomment>
         <translation type="unfinished">خطأ منطقي داخلي</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="68"/>
         <source>Access permission denied</source>
-        <extracomment>i18n-hint: database operation has failed due to the permission error</extracomment>
-        <translation/>
+        <extracomment>database operation has failed due to the permission error</extracomment>
+        <translation>تم رفض إذن الدخول</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="71"/>
         <source>Callback routine requested an abort</source>
-        <extracomment>i18n-hint: database operation was aborted by the callback</extracomment>
-        <translation/>
+        <extracomment>database operation was aborted by the callback</extracomment>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="74"/>
         <source>The database file is locked</source>
-        <extracomment>i18n-hint: database operation has failed because database is locked</extracomment>
-        <translation/>
+        <extracomment>database operation has failed because database is locked</extracomment>
+        <translation>ملف قاعدة البيانات مقفل</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="77"/>
         <source>A table in the database is locked</source>
-        <extracomment>i18n-hint: database operation has failed because table is locked</extracomment>
-        <translation/>
+        <extracomment>database operation has failed because table is locked</extracomment>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="80"/>
         <source>A malloc() failed</source>
-        <extracomment>i18n-hint: database operation has failed due to the lack of memory</extracomment>
-        <translation/>
+        <extracomment>database operation has failed due to the lack of memory</extracomment>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="83"/>
         <source>Attempt to write a read-only database</source>
-        <extracomment>i18n-hint: database operation has failed because database is read-only</extracomment>
-        <translation/>
+        <extracomment>database operation has failed because database is read-only</extracomment>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="86"/>
         <source>Operation terminated</source>
-        <extracomment>i18n-hint: database operation was interrupted</extracomment>
-        <translation type="unfinished">التسجيل غير مسموح</translation>
+        <extracomment>database operation was interrupted</extracomment>
+        <translation>تم إنهاء العملية</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="89"/>
         <source>I/O error occurred</source>
-        <extracomment>i18n-hint: database operation has failed due to the I/O failure</extracomment>
-        <translation/>
+        <extracomment>database operation has failed due to the I/O failure</extracomment>
+        <translation>حدث خطأ في I/O</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="92"/>
         <source>The database disk image is malformed</source>
-        <extracomment>i18n-hint: database operation has failed due to the database corruption</extracomment>
-        <translation/>
+        <extracomment>database operation has failed due to the database corruption</extracomment>
+        <translation>صورة قرص قاعدة البيانات مشوهة</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="95"/>
         <source>File not found</source>
-        <extracomment>i18n-hint: database operation has failed because the requested item was not found</extracomment>
-        <translation type="unfinished">الملف "%1" لم يوجد.</translation>
+        <extracomment>database operation has failed because the requested item was not found</extracomment>
+        <translation>الملف غير موجود</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="98"/>
         <source>Insertion failed because the drive is full</source>
-        <extracomment>i18n-hint: database operation has failed because the drive is full</extracomment>
-        <translation/>
+        <extracomment>database operation has failed because the drive is full</extracomment>
+        <translation>فشل الإدراج لأن محرك الأقراص ممتلئ</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="101"/>
         <source>Unable to open the database file</source>
-        <extracomment>i18n-hint: database operation has failed because the file cannot be opened</extracomment>
-        <translation type="unfinished">أخفقت في إزالة %1</translation>
+        <extracomment>database operation has failed because the file cannot be opened</extracomment>
+        <translation>تعذر فتح ملف قاعدة البيانات</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="104"/>
         <source>Database lock protocol error</source>
-        <extracomment>i18n-hint: database operation has failed because the lock protocol has failed</extracomment>
-        <translation/>
+        <extracomment>database operation has failed because the lock protocol has failed</extracomment>
+        <translation>خطأ في بروتوكول قفل قاعدة البيانات</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="107"/>
         <source>The database schema changed</source>
-        <extracomment>i18n-hint: database operation has failed because the database schema has changed</extracomment>
-        <translation/>
+        <extracomment>database operation has failed because the database schema has changed</extracomment>
+        <translation>تم تغيير مخطط قاعدة البيانات</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="110"/>
         <source>String or BLOB exceeds size limit</source>
-        <extracomment>i18n-hint: database operation has failed because the string or BLOB exceeds size limit</extracomment>
-        <translation/>
+        <extracomment>database operation has failed because the string or BLOB exceeds size limit</extracomment>
+        <translation>السلسلة أو BLOB تتجاوز الحد الأقصى للحجم</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="113"/>
         <source>Abort due to constraint violation</source>
-        <extracomment>i18n-hint: database operation has failed due to the constraint violation</extracomment>
-        <translation/>
+        <extracomment>database operation has failed due to the constraint violation</extracomment>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="116"/>
         <source>Data type mismatch</source>
-        <extracomment>i18n-hint: database operation has failed due to the data type mismatch</extracomment>
-        <translation/>
+        <extracomment>database operation has failed due to the data type mismatch</extracomment>
+        <translation>عدم تطابق نوع البيانات</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="119"/>
         <source>Library used incorrectly</source>
-        <extracomment>i18n-hint: database operation has failed due to the library misuse</extracomment>
-        <translation/>
+        <extracomment>database operation has failed due to the library misuse</extracomment>
+        <translation>المكتبة مستخدمة بشكل غير صحيح</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="122"/>
         <source>The large file support is disabled</source>
-        <extracomment>i18n-hint: database operation has failed because the large file support is disabled</extracomment>
-        <translation/>
+        <extracomment>database operation has failed because the large file support is disabled</extracomment>
+        <translation>تم تعطيل دعم الملفات الكبيرة</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="125"/>
         <source>Authorization denied</source>
-        <extracomment>i18n-hint: database operation has failed due to the authorization error</extracomment>
-        <translation/>
+        <extracomment>database operation has failed due to the authorization error</extracomment>
+        <translation>المصادقة مطلوبة</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="128"/>
         <source>Not used</source>
-        <extracomment>i18n-hint: database operation has failed due to the format error</extracomment>
-        <translation type="unfinished"> (غير مستخدم):</translation>
+        <extracomment>database operation has failed due to the format error</extracomment>
+        <translation> غير مستخدم</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="131"/>
         <source>2nd parameter to sqlite3_bind out of range</source>
-        <extracomment>i18n-hint: database operation has failed because the parameter is out of range</extracomment>
-        <translation/>
+        <extracomment>database operation has failed because the parameter is out of range</extracomment>
+        <translation>المعامل الثاني إلى sqlite3_bind خارج النطاق</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="134"/>
         <source>File opened that is not a database file </source>
-        <extracomment>i18n-hint: database operation has failed because the file opened is not a database file</extracomment>
-        <translation type="unfinished">أخفقت في إزالة %1</translation>
+        <extracomment>database operation has failed because the file opened is not a database file</extracomment>
+        <translation>ملف تم فتحه ليس ملف قاعدة بيانات</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp" line="137"/>
         <source>Unknown error</source>
-        <extracomment>i18n-hint: database operation has failed due to the unknown error</extracomment>
-        <translation type="unfinished">مجهول</translation>
+        <extracomment>database operation has failed due to the unknown error</extracomment>
+        <translation>خطأ غير معروف</translation>
     </message>
 </context>
 <context>
@@ -15769,12 +15898,13 @@ cycles per second.</extracomment>
     <message>
         <location filename="../../au3/libraries/au3-strings/FutureStrings.h" line="98"/>
         <source>Cut/Copy/Paste</source>
-        <translation/>
+        <extracomment>to lower oneself An example of a longer special comment that can wrap lines. These comments must begin with the special word i18n-hint and immediately precede the source code line with the opening quotation mark. The translators will see this comment text in the generated .po files, which they edit and complete. This comment can give hints about unusual words, or the grammatical form of an English word (such as whether it's meant as noun or verb) when that is not clear from context. one more example of alternative correct placement of an internationalization comment. All comments on different occurrences of the same string are collected in the template file. Have fun and dance Obtain the underfeathers of a goose //XP("Got down one time", "Got down %d times", 0), Obtained underfeathers of geese on one or more occasions</extracomment>
+        <translation>قص/نسخ/لصق</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-strings/FutureStrings.h" line="99"/>
         <source>&amp;Cut/Copy/Paste Toolbar</source>
-        <translation/>
+        <translation>شريط أدوات &amp;قص/نسخ/لصق </translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-strings/Internat.cpp" line="190"/>
@@ -15789,30 +15919,30 @@ cycles per second.</extracomment>
     <message>
         <location filename="../../au3/libraries/au3-strings/Internat.cpp" line="197"/>
         <source>%1 KB</source>
-        <extracomment>i18n-hint: Abbreviation for Kilo bytes</extracomment>
-        <translation/>
+        <extracomment>Abbreviation for Kilo bytes</extracomment>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-strings/Internat.cpp" line="200"/>
         <source>%1 MB</source>
-        <extracomment>i18n-hint: Abbreviation for Mega bytes</extracomment>
-        <translation/>
+        <extracomment>Abbreviation for Mega bytes</extracomment>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-strings/Internat.cpp" line="203"/>
         <source>%1 GB</source>
-        <extracomment>i18n-hint: Abbreviation for Giga bytes</extracomment>
-        <translation/>
+        <extracomment>Abbreviation for Giga bytes</extracomment>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-strings/Languages.cpp" line="293"/>
         <source>Simplified</source>
-        <translation type="unfinished">!عرض مُبسَّط</translation>
+        <translation>مبسَّط</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-strings/Languages.cpp" line="310"/>
         <source>System</source>
-        <translation type="unfinished">تاريخ النظام</translation>
+        <translation>النظام</translation>
     </message>
 </context>
 <context>
@@ -15830,8 +15960,6 @@ cycles per second.</extracomment>
         <location filename="../../au3/libraries/au3-time-track/TimeTrack.cpp" line="145"/>
         <source>Time Track</source>
         <translation>مقطع وقت</translation>
-        <extracomment>i18n-hint: This is for screen reader software and indicates that
-this is a Time track.</extracomment>
     </message>
 </context>
 <context>
@@ -16034,7 +16162,7 @@ Do you wish to continue?</source>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="60"/>
         <source>Shortcuts</source>
-        <translation type="unfinished">قطع قطعير</translation>
+        <translation>الاختصارات</translation>
     </message>
     <message>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="61"/>
@@ -16160,132 +16288,96 @@ Do you wish to continue?</source>
         <location filename="../../src/uicomponents/components/frequencymodel.cpp" line="17"/>
         <source>Hz</source>
         <translation>هرتز</translation>
-        <extracomment>i18n-hint: Name of display format that shows frequency in hertz
-i18n-hint: This is the abbreviation for "Hertz", or
-cycles per second.</extracomment>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/frequencymodel.cpp" line="19"/>
         <source>kHz</source>
         <translation>ألف هرتز</translation>
-        <extracomment>i18n-hint: Name of display format that shows frequency in kilohertz</extracomment>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/internal/numeric/beatsformatter.cpp" line="44"/>
         <source>bar</source>
-        <translation type="unfinished">شريط الأدوات</translation>
-        <extracomment>i18n-hint: The music theory "bar"</extracomment>
+        <translation>شريط</translation>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/internal/numeric/beatsformatter.cpp" line="49"/>
         <source>beat</source>
-        <translation/>
-        <extracomment>i18n-hint: The music theory "beat"</extracomment>
+        <translation>الإيقاع</translation>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="18"/>
         <source>seconds</source>
         <translation>ثواني</translation>
-        <extracomment>i18n-hint: Name of time display format that shows time in seconds</extracomment>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="20"/>
         <source>seconds + milliseconds</source>
-        <translation type="unfinished">ملي ث + ث:د:س</translation>
-        <extracomment>i18n-hint: Name of time display format that shows time in seconds
-* and milliseconds (1/1000 second)</extracomment>
+        <translation>ثانية + مللي ثانية</translation>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="23"/>
         <source>hh:mm:ss</source>
         <translation>ث:د:س</translation>
-        <extracomment>i18n-hint: Name of time display format that shows time in hours, minutes
-* and seconds</extracomment>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="25"/>
         <source>dd:hh:mm:ss</source>
         <translation>ي:س:د:ث</translation>
-        <extracomment>i18n-hint: Name of time display format that shows time in days, hours,
-* minutes and seconds</extracomment>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="28"/>
         <source>hh:mm:ss + hundredths</source>
         <translation>أجزاء من المئة من الثانية + ثا:دق:سا</translation>
-        <extracomment>i18n-hint: Name of time display format that shows time in hours,
-* minutes, seconds and hundredths of a second (1/100 second)</extracomment>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="31"/>
         <source>hh:mm:ss + milliseconds</source>
         <translation>ملي ث + ث:د:س</translation>
-        <extracomment>i18n-hint: Name of time display format that shows time in hours,
-* minutes, seconds and milliseconds (1/1000 second)</extracomment>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="35"/>
         <source>hh:mm:ss + samples</source>
         <translation>عينات + ث:د:س</translation>
-        <extracomment>i18n-hint: Name of time display format that shows time in hours,
-* minutes, seconds and samples (at the current project sample rate)</extracomment>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="38"/>
         <source>samples</source>
         <translation>عينات</translation>
-        <extracomment>i18n-hint: Name of time display format that shows time in samples (at the
-* current project sample rate).  For example the number of a sample at 1
-* second into a recording at 44.1KHz would be 44,100.</extracomment>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="41"/>
         <source>hh:mm:ss + film frames (24 fps)</source>
         <translation>إطارات الفيلم (24 إ.ف.ث) + ث:د:س</translation>
-        <extracomment>i18n-hint: Name of time display format that shows time in hours, minutes,
-* seconds and frames at 24 frames per second (commonly used for films)</extracomment>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="44"/>
         <source>Film frames (24 fps)</source>
-        <translation type="unfinished">إطارات الفيلم (24 إ.ف.ث)</translation>
+        <translation>إطارات الفيلم (24 إ.ف.ث)</translation>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="48"/>
         <source>hh:mm:ss + NTSC drop frames</source>
         <translation>إطارات سقوط NTSC + ث:د:س</translation>
-        <extracomment>i18n-hint: Name of time display format that shows time in hours, minutes,
-* seconds and frames at NTSC TV drop-frame rate (used for American /
-* Japanese TV, and very odd)</extracomment>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="51"/>
         <source>hh:mm:ss + NTSC non-drop frames</source>
         <translation>إطارات NTSC غير ساقطة + ث:د:س</translation>
-        <extracomment>i18n-hint: Name of time display format that shows time in hours, minutes,
-* seconds and frames at NTSC TV non-drop-frame rate (used for American /
-* Japanese TV, and doesn't quite match wall time</extracomment>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="54"/>
         <source>NTSC frames</source>
         <translation>إطارات NTSC</translation>
-        <extracomment>i18n-hint: Name of time display format that shows time in frames at NTSC
-* TV frame rate (used for American / Japanese TV</extracomment>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="57"/>
         <source>hh:mm:ss + PAL frames (25 fps)</source>
         <translation>إطارات PAL (25 إ.ف.ث) + ث:د:س</translation>
-        <extracomment>i18n-hint: Name of time display format that shows time in hours, minutes,
-* seconds and frames at PAL TV frame rate (used for European TV)</extracomment>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="60"/>
         <source>PAL frames (25 fps)</source>
         <translation>إطارات PAL (25 إ.ف.ث)</translation>
-        <extracomment>i18n-hint: Name of time display format that shows time in frames at PAL
-* TV frame rate (used for European TV)</extracomment>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="64"/>
@@ -16296,21 +16388,16 @@ cycles per second.</extracomment>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="67"/>
         <source>CDDA frames (75 fps)</source>
         <translation>إطارات CDDA (75 إ.ف.ث)</translation>
-        <extracomment>i18n-hint: Name of time display format that shows time in frames at CD
-* Audio frame rate (75 frames per second)</extracomment>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="71"/>
         <source>bar:beat</source>
-        <translation/>
-        <extracomment>i18n-hint: "bar" and "beat" are musical notation elements.</extracomment>
+        <translation>شريط: إيقاع</translation>
     </message>
     <message>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="74"/>
         <source>bar:beat:tick</source>
-        <translation/>
-        <extracomment>i18n-hint: "bar" and "beat" are musical notation elements. "tick"
-corresponds to a 16th note.</extracomment>
+        <translation>شريط: إيقاع: علامة</translation>
     </message>
 </context>
 <context>
@@ -16318,13 +16405,13 @@ corresponds to a 16th note.</extracomment>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectBase.cpp" line="25"/>
         <source>VST3</source>
-        <translation/>
+        <translation>VST3</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectBase.cpp" line="60"/>
         <source>SubCategories: %1</source>
-        <extracomment>i18n-hint VST3 effect description string</extracomment>
-        <translation/>
+        <extracomment>VST3 effect description string</extracomment>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="114"/>
@@ -16334,7 +16421,7 @@ corresponds to a 16th note.</extracomment>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="161"/>
         <source>VST3 Effects</source>
-        <translation type="unfinished">تأثيرات VST</translation>
+        <translation>تأثيرات VST3 </translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-vst3/VST3EffectsModule.cpp" line="166"/>
@@ -16390,12 +16477,12 @@ Truncating to this maximum length.</source>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/TimeStretching.cpp" line="22"/>
         <source>Pre-processing</source>
-        <translation type="unfinished">أعالج: </translation>
+        <translation>المعالجة المسبقة</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/TimeStretching.cpp" line="67"/>
         <source>Rendering Clip</source>
-        <translation type="unfinished">أعد تسمية...</translation>
+        <translation>مقطع الإخراج</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/WaveChannelViewConstants.cpp" line="111"/>
@@ -16436,7 +16523,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/WaveTrack.cpp" line="2817"/>
         <source>A track has a corrupted sample sequence.</source>
-        <translation/>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track/WaveTrackUtilities.cpp" line="339"/>
@@ -16450,22 +16537,19 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="33"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="207"/>
         <source>Linear (amp)</source>
-        <translation type="unfinished">خطي</translation>
-        <extracomment>i18n-hint: abbreviates amplitude</extracomment>
+        <translation>خطّي (amp)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="34"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="208"/>
         <source>Logarithmic (dB)</source>
-        <translation type="unfinished">لوغارثمي</translation>
-        <extracomment>i18n-hint: abbreviates decibels</extracomment>
+        <translation>لوغاريتمي (dB)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="35"/>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="209"/>
         <source>Linear (dB)</source>
-        <translation type="unfinished">خطي</translation>
-        <extracomment>i18n-hint: abbreviates decibels</extracomment>
+        <translation>خطي (dB)</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-wave-track-settings/WaveformSettings.cpp" line="227"/>
@@ -16519,6 +16603,7 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="68"/>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="266"/>
         <source>Error: %1 at line %2</source>
+        <extracomment>%1 is the parser error message, %2 is the line number in the file</extracomment>
         <translation type="unfinished">خطأ: %1 عند خط %2</translation>
     </message>
     <message>
