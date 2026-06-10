@@ -57,9 +57,9 @@ jobs:
     - name: Checkout Audacity
       uses: actions/checkout@v2
     - name: Setup Dependencies
-      uses: audacity/audacity-actions/dependencies@v2
+      uses: audacity/audacity-actions/dependencies@v7
     - name: Configure
-      uses: audacity/audacity-actions/configure@v2
+      uses: audacity/audacity-actions/configure@v7
       with:
         generator: Unix Makefiles
         build_type: ${{ env.BUILD_TYPE }}
