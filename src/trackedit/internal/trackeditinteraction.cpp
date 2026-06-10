@@ -513,6 +513,11 @@ bool TrackeditInteraction::stretchLabelsRight(const LabelKeyList& labelKeyList, 
     return m_interaction->stretchLabelsRight(labelKeyList, deltaSec, completed);
 }
 
+void TrackeditInteraction::resetLabelStretchState()
+{
+    m_interaction->resetLabelStretchState();
+}
+
 muse::Progress TrackeditInteraction::progress() const
 {
     return m_interaction->progress();

@@ -59,8 +59,8 @@ public:
     Q_INVOKABLE void init();
     Q_INVOKABLE void reload();
 
-    Q_INVOKABLE void startEditItem(const TrackItemKey& key);
-    Q_INVOKABLE void endEditItem(const TrackItemKey& key);
+    Q_INVOKABLE virtual void startEditItem(const TrackItemKey& key);
+    Q_INVOKABLE virtual void endEditItem(const TrackItemKey& key);
     Q_INVOKABLE bool cancelItemDragEdit(const TrackItemKey& key);
 
     Q_INVOKABLE QVariant next(const TrackItemKey& key) const;

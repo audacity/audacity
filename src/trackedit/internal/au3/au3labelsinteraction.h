@@ -45,6 +45,8 @@ public:
     bool stretchLabelRight(const LabelKey& labelKey, secs_t newEndTime, bool completed) override;
     bool stretchLabelsRight(const LabelKeyList& labelKeys, secs_t deltaSec, bool completed) override;
 
+    void resetLabelStretchState() override;
+
     muse::Progress progress() const override;
 
 private:
@@ -59,7 +61,7 @@ private:
     muse::Progress m_progress;
     std::atomic<bool> m_busy = false;
 
-    std::optional<secs_t> m_stretchTime;
-    std::optional<LabelKey> m_stretchingLabelKey;
+    std::map<LabelKey, secs_t> m_leftStretchAnchors;
+    std::map<LabelKey, secs_t> m_rightStretchAnchors;
 };
 }

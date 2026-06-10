@@ -413,6 +413,20 @@ bool TrackLabelsListModel::stretchLabelRight(const LabelKey& key, const LabelKey
     return ok;
 }
 
+void TrackLabelsListModel::startEditItem(const TrackItemKey& key)
+{
+    trackeditInteraction()->resetLabelStretchState();
+
+    TrackItemsListModel::startEditItem(key);
+}
+
+void TrackLabelsListModel::endEditItem(const TrackItemKey& key)
+{
+    TrackItemsListModel::endEditItem(key);
+
+    trackeditInteraction()->resetLabelStretchState();
+}
+
 TrackLabelItem* TrackLabelsListModel::labelItemByKey(const trackedit::LabelKey& k) const
 {
     return static_cast<TrackLabelItem*>(itemByKey(k));

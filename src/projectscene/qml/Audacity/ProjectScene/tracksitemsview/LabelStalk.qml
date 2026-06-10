@@ -19,6 +19,7 @@ Rectangle {
     signal stretchRequested(bool completed)
     signal stretchStartRequested
     signal stretchEndRequested
+    signal stretchCanceled
     signal stretchMousePositionChanged(real x, real y)
 
     width: 1
@@ -80,6 +81,13 @@ Rectangle {
                 e.accepted = true
             } else {
                 e.accepted = false
+            }
+        }
+
+        onCanceled: {
+            if (root.isStretchInProgress) {
+                root.isStretchInProgress = false
+                root.stretchCanceled()
             }
         }
     }

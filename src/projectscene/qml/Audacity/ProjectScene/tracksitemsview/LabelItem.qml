@@ -52,6 +52,7 @@ Item {
 
     signal labelStartEditRequested
     signal labelEndEditRequested
+    signal labelCancelDragEditRequested
 
     signal labelLeftStretchRequested(bool unlink, bool completed)
     signal labelRightStretchRequested(bool unlink, bool completed)
@@ -208,6 +209,10 @@ Item {
         onStretchEndRequested: {
             root.labelEndEditRequested()
         }
+
+        onStretchCanceled: {
+            root.labelCancelDragEditRequested()
+        }
     }
 
     // Right Ear
@@ -251,6 +256,10 @@ Item {
 
         onStretchEndRequested: {
             root.labelEndEditRequested()
+        }
+
+        onStretchCanceled: {
+            root.labelCancelDragEditRequested()
         }
     }
 
@@ -394,6 +403,10 @@ Item {
         onStretchEndRequested: {
             root.labelEndEditRequested()
         }
+
+        onStretchCanceled: {
+            root.labelCancelDragEditRequested()
+        }
     }
 
     // Right Stalk
@@ -444,6 +457,10 @@ Item {
 
         onStretchEndRequested: {
             root.labelEndEditRequested()
+        }
+
+        onStretchCanceled: {
+            root.labelCancelDragEditRequested()
         }
     }
 

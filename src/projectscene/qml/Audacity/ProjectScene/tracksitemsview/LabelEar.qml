@@ -15,6 +15,7 @@ Canvas {
     signal stretchRequested(bool completed)
     signal stretchStartRequested
     signal stretchEndRequested
+    signal stretchCanceled
     signal stretchMousePositionChanged(real x, real y)
 
     width: 7
@@ -83,6 +84,10 @@ Canvas {
             root.stretchRequested(true)
             root.stretchEndRequested()
             e.accepted = true
+        }
+
+        onCanceled: {
+            root.stretchCanceled()
         }
     }
 }

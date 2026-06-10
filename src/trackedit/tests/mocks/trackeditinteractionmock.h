@@ -129,6 +129,8 @@ public:
     MOCK_METHOD(bool, stretchLabelRight, (const LabelKey&, secs_t, bool), (override));
     MOCK_METHOD(bool, stretchLabelsRight, (const LabelKeyList&, secs_t, bool), (override));
 
+    MOCK_METHOD(void, resetLabelStretchState, (), (override));
+
     MOCK_METHOD(muse::Progress, progress, (), (const, override));
 };
 }

@@ -253,6 +253,17 @@ TrackItemsContainer {
                                     itemData.isEditing = false
                                 }
 
+                                //! NOTE A stretch handle can lose its mouse grab without ever
+                                // receiving a release (a popup opens, the handle gets hidden, ...).
+                                // Cancel the drag edit so no half-finished stretch state survives.
+                                onLabelCancelDragEditRequested: function () {
+                                    if (labelsModel.cancelItemDragEdit(itemData.key)) {
+                                        root.itemDragEditCanceled()
+                                    }
+                                    itemData.isEditing = false
+                                    root.clearItemGuideline()
+                                }
+
                                 onLabelLeftStretchRequested: function (unlink, completed) {
                                     var leftLinkedLabelKey = layoutManager.leftLinkedLabel(itemData.key)
                                     labelsModel.stretchLabelLeft(itemData.key, leftLinkedLabelKey, unlink, completed)

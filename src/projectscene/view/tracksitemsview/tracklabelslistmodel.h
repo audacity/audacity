@@ -24,6 +24,9 @@ public:
     Q_INVOKABLE bool stretchLabelLeft(const LabelKey& key, const LabelKey& leftLinkedLabel, bool unlink, bool completed);
     Q_INVOKABLE bool stretchLabelRight(const LabelKey& key, const LabelKey& rightLinkedLabel, bool unlink, bool completed);
 
+    void startEditItem(const TrackItemKey& key) override;
+    void endEditItem(const TrackItemKey& key) override;
+
 private:
     friend class TrackLabelsLayoutManagerTests;
 
