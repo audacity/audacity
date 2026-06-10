@@ -39,8 +39,7 @@ const EffectParameterMethods& LegacyCompressorBase::Parameters() const
 // LegacyCompressorBase
 //----------------------------------------------------------------------------
 
-const ComponentInterfaceSymbol LegacyCompressorBase::Symbol { XO(
-                                                                  "Legacy Compressor") };
+const ComponentInterfaceSymbol LegacyCompressorBase::Symbol { TranslatableString("builtin-effects", "Legacy Compressor") };
 
 LegacyCompressorBase::LegacyCompressorBase()
 {
@@ -67,7 +66,7 @@ ComponentInterfaceSymbol LegacyCompressorBase::GetSymbol() const
 
 TranslatableString LegacyCompressorBase::GetDescription() const
 {
-    return XO("Compresses the dynamic range of audio");
+    return TranslatableString("builtin-effects", "Compresses the dynamic range of audio");
 }
 
 ManualPageID LegacyCompressorBase::ManualPage() const

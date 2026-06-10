@@ -17,7 +17,7 @@
 
 #define FLAC_HEADER "fLaC"
 
-#define DESC XO("FLAC files")
+#define DESC TranslatableString("import-export", "FLAC files")
 
 class FLACImportFileHandle;
 

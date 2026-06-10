@@ -38,15 +38,15 @@ void ExceptionWrappedCall(Callable callable)
     catch (ExportErrorException& e)
     {
         ShowExportErrorDialog(
-            e.GetMessage(), XO("Warning"), e.GetHelpPageId(), true);
+            e.GetMessage(), TranslatableString("import-export", "Warning"), e.GetHelpPageId(), true);
     }
     catch (ExportException& e)
     {
-        BasicUI::ShowMessageBox(TranslatableString { e.What(), {} });
+        BasicUI::ShowMessageBox(TranslatableString::untranslatable(e.What()));
     }
     catch (...)
     {
-        BasicUI::ShowMessageBox(XO("Export error"));
+        BasicUI::ShowMessageBox(TranslatableString("import-export", "Export error"));
     }
 }
 } // namespace ExportProgressUI

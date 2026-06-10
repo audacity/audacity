@@ -130,13 +130,13 @@ PluginPath AudioUnitEffectsModule::GetPath() const
 
 ComponentInterfaceSymbol AudioUnitEffectsModule::GetSymbol() const
 {
-    /* i18n-hint: Audio Unit is the name of an Apple audio software protocol */
-    return XO("Audio Unit Effects");
+    /*: Audio Unit is the name of an Apple audio software protocol */
+    return TranslatableString("audio-unit", "Audio Unit Effects");
 }
 
 VendorSymbol AudioUnitEffectsModule::GetVendor() const
 {
-    return XO("The Audacity Team");
+    return TranslatableString("audio-unit", "The Audacity Team");
 }
 
 wxString AudioUnitEffectsModule::GetVersion() const
@@ -147,7 +147,7 @@ wxString AudioUnitEffectsModule::GetVersion() const
 
 TranslatableString AudioUnitEffectsModule::GetDescription() const
 {
-    return XO("Provides Audio Unit Effects support to Audacity");
+    return TranslatableString("audio-unit", "Provides Audio Unit Effects support to Audacity");
 }
 
 // ============================================================================
@@ -191,11 +191,11 @@ PluginPaths AudioUnitEffectsModule::FindModulePaths(PluginManagerInterface&,
         TranslatableString label;
     };
     const Category categories[] = {
-        { kAudioUnitType_Effect, XO("Audio Unit Effects") },
-        { kAudioUnitType_Generator, XO("Audio Unit Generators") },
-        { kAudioUnitType_Mixer, XO("Audio Unit Mixers") },
-        { kAudioUnitType_MusicEffect, XO("Audio Unit Music Effects") },
-        { kAudioUnitType_Panner, XO("Audio Unit Panners") },
+        { kAudioUnitType_Effect, TranslatableString("audio-unit", "Audio Unit Effects") },
+        { kAudioUnitType_Generator, TranslatableString("audio-unit", "Audio Unit Generators") },
+        { kAudioUnitType_Mixer, TranslatableString("audio-unit", "Audio Unit Mixers") },
+        { kAudioUnitType_MusicEffect, TranslatableString("audio-unit", "Audio Unit Music Effects") },
+        { kAudioUnitType_Panner, TranslatableString("audio-unit", "Audio Unit Panners") },
     };
 
     constexpr unsigned long long total = sizeof(categories) / sizeof(categories[0]);
@@ -220,7 +220,7 @@ unsigned AudioUnitEffectsModule::DiscoverPluginsAtPath(
     wxString name;
     AudioComponent component = FindAudioUnit(path, name);
     if (component == NULL) {
-        errMsg = XO("Could not find component");
+        errMsg = TranslatableString("audio-unit", "Could not find component");
         return 0;
     }
 
@@ -228,7 +228,7 @@ unsigned AudioUnitEffectsModule::DiscoverPluginsAtPath(
     if (!effect.InitializePlugin()) {
         // TODO:  Is it worth it to discriminate all the ways SetHost might
         // return false?
-        errMsg = XO("Could not initialize component");
+        errMsg = TranslatableString("audio-unit", "Could not initialize component");
         return 0;
     }
 

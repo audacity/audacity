@@ -12,6 +12,7 @@
 
 #include "FileNames.h"
 #include "au3-basic-ui/BasicUI.h"
+#include "au3-strings/TranslatableString.h"
 
 namespace {
 struct TempDirChangedPublisher final : Observer::Publisher<FilePath>
@@ -55,9 +56,10 @@ wxString TempDirectory::TempDir()
 
     if (FileNames::IsOnFATFileSystem(path)) {
         BasicUI::ShowErrorDialog({},
-                                 XO("Unsuitable"),
-                                 XO("The temporary files directory is on a FAT formatted drive.\n"
-                                    "Resetting to default location."),
+                                 TranslatableString("files", "Unsuitable"),
+                                 //: FAT is a filesystem type name
+                                 TranslatableString("files",
+                                                    "The temporary files directory is on a FAT formatted drive.\nResetting to default location."),
                                  "Error:_Unsuitable_drive"
                                  );
 
@@ -119,8 +121,10 @@ bool TempDirectory::IsTempDirectoryNameOK(const FilePath& Name)
 #endif
 
     if (FATFilesystemDenied(NameCanonical,
-                            XO("The temporary files directory is on a FAT formatted drive.\n"
-                               "Resetting to default location."))) {
+                            TranslatableString("files",
+                                               //: FAT is a filesystem type name
+                                               "The temporary files directory is on a FAT formatted drive.\nResetting to default location.")))
+    {
         return false;
     }
 
@@ -140,8 +144,9 @@ bool TempDirectory::FATFilesystemDenied(const FilePath& path,
 {
     if (FileNames::IsOnFATFileSystem(path)) {
         BasicUI::ShowErrorDialog(placement,
-                                 XO("Unsuitable"),
-                                 XO("%s\n\nFor tips on suitable drives, click the help button.").Format(msg),
+                                 TranslatableString("files", "Unsuitable"),
+                                 //: %1 is a message describing why the drive is unsuitable
+                                 TranslatableString("files", "%1\n\nFor tips on suitable drives, click the help button.").arg(msg),
                                  "Error:_Unsuitable_drive"
                                  );
 

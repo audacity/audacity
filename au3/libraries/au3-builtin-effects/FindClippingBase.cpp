@@ -26,7 +26,7 @@ const EffectParameterMethods& FindClippingBase::Parameters() const
     return parameters;
 }
 
-const ComponentInterfaceSymbol FindClippingBase::Symbol { XO("Find Clipping") };
+const ComponentInterfaceSymbol FindClippingBase::Symbol { TranslatableString("builtin-effects", "Find Clipping") };
 
 FindClippingBase::FindClippingBase()
 {
@@ -46,7 +46,7 @@ ComponentInterfaceSymbol FindClippingBase::GetSymbol() const
 
 TranslatableString FindClippingBase::GetDescription() const
 {
-    return XO("Creates labels where clipping is detected");
+    return TranslatableString("builtin-effects", "Creates labels where clipping is detected");
 }
 
 ManualPageID FindClippingBase::ManualPage() const
@@ -67,7 +67,7 @@ bool FindClippingBase::Process(EffectInstance&, EffectSettings&)
 {
     std::shared_ptr<AddedAnalysisTrack> addedTrack;
     std::optional<ModifiedAnalysisTrack> modifiedTrack;
-    const wxString name { _("Clipping") };
+    const wxString name { wxString::FromUTF8(au3::trc("builtin-effects", "Clipping").c_str()) };
 
     auto clt = *inputTracks()->Any<const LabelTrack>().find_if(
         [&](const Track* track) { return track->GetName() == name; });
@@ -137,7 +137,7 @@ bool FindClippingBase::ProcessOne(
     }
     catch (const std::bad_alloc&)
     {
-        BasicUI::ShowMessageBox(XO("Requested value exceeds memory capacity."));
+        BasicUI::ShowMessageBox(TranslatableString("builtin-effects", "Requested value exceeds memory capacity."));
         return false;
     }
 
@@ -183,7 +183,7 @@ bool FindClippingBase::ProcessOne(
                          understood as an ordinal (i.e., not meaning "first", or
                          "second", etc.)
                          */
-                        XC("%lld of %lld", "find clipping")
+                        TranslatableString("builtin-effects", "%1 of %2", "find clipping")
                         .Format(
                             startrun.as_long_long(), (samps - mStop).as_long_long())
                         .Translation());

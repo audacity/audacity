@@ -39,6 +39,7 @@ set( SOURCES
 
 set( LIBRARIES
    au3-files-interface
+   au3-strings-interface
    wxwidgets::wxwidgets
 )
 

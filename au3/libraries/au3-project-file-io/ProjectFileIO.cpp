@@ -426,12 +426,10 @@ ProjectFileIO::ProjectFileIO(AudacityProject& project)
     if (wxGetDiskSpace(path, NULL, &freeSpace)) {
         if (freeSpace < wxLongLong(wxLL(100 * 1048576))) {
             auto volume = FileNames::AbbreviatePath(path);
-            /* i18n-hint: %s will be replaced by the drive letter (on Windows) */
             BasicUI::ShowErrorDialog({},
-                                     XO("Warning"),
-                                     XO("There is very little free disk space left on %s\n"
-                                        "Please select a bigger temporary directory location in\n"
-                                        "Directories Preferences.").Format(volume),
+                                     TranslatableString("project-file-io", "Warning"),
+                                     //: %1 is the drive or volume name
+                                     TranslatableString("project-file-io", "There is very little free disk space left on %1\nPlease select a bigger temporary directory location in\nDirectories Preferences.").arg(volume),
                                      "Error:_Disk_full_or_not_writable"
                                      );
         }
@@ -456,8 +454,8 @@ DBConnection& ProjectFileIO::GetConnection()
             throw SimpleMessageBoxException
                   {
                       ExceptionType::Internal,
-                      XO("Failed to open the project's database"),
-                      XO("Warning"),
+                      TranslatableString("project-file-io", "Failed to open the project’s database"),
+                      TranslatableString("project-file-io", "Warning"),
                       "Error:_Disk_full_or_not_writable"
                   };
         }
@@ -515,7 +513,8 @@ bool ProjectFileIO::OpenConnection(FilePath fileName /* = {}  */)
     if (rc != SQLITE_OK) {
         // Must use SetError() here since we do not have an active DB
         SetError(
-            XO("Failed to open database file:\n\n%s").Format(fileName),
+            //: %1 is the database file path
+            TranslatableString("project-file-io", "Failed to open database file:\n\n%1").arg(fileName),
             {},
             rc
             );
@@ -574,7 +573,7 @@ void ProjectFileIO::DiscardConnection()
         if (!mPrevConn->Close()) {
             // Store an error message
             SetDBError(
-                XO("Failed to discard connection")
+                TranslatableString("project-file-io", "Failed to discard connection")
                 );
         }
 
@@ -604,7 +603,7 @@ void ProjectFileIO::RestoreConnection()
         if (!curConn->Close()) {
             // Store an error message
             SetDBError(
-                XO("Failed to restore connection")
+                TranslatableString("project-file-io", "Failed to restore connection")
                 );
         }
     }
@@ -648,8 +647,9 @@ int ProjectFileIO::Exec(const char* query, const ExecCB& callback, bool silent)
         ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
 
         SetDBError(
-            XO("Failed to execute a project file command:\n\n%s").Format(query),
-            Verbatim(errmsg),
+            //: %1 is the SQL command that failed to execute
+            TranslatableString("project-file-io", "Failed to execute a project file command:\n\n%1").arg(query),
+            TranslatableString::untranslatable(errmsg),
             rc
             );
     }
@@ -720,8 +720,8 @@ bool ProjectFileIO::CheckVersion()
         // If at this point we get SQLITE_CANTOPEN, then the directory is read-only
         if (GetLastErrorCode() == SQLITE_CANTOPEN) {
             SetError(
-                /* i18n-hint: An error message. */
-                XO("Project is in a read only directory\n(Unable to create the required temporary files)"),
+                /*: An error message. */
+                TranslatableString("project-file-io", "Project is in a read only directory\n(Unable to create the required temporary files)"),
                 GetLibraryError()
                 );
         }
@@ -742,7 +742,7 @@ bool ProjectFileIO::CheckVersion()
 
     // It's a database that SQLite recognizes, but it's not one of ours
     if (wxStrtoul<char**>(result, nullptr, 10) != ProjectFileID) {
-        SetError(XO("This is not an Audacity project file"));
+        SetError(TranslatableString("project-file-io", "This is not an Audacity project file"));
         return false;
     }
 
@@ -758,7 +758,7 @@ bool ProjectFileIO::CheckVersion()
     // process it since we can't trust anything about it.
     if (SupportedProjectFormatVersion < version) {
         SetError(
-            XO("This project was created with a newer version of Audacity.\n\nYou will need to upgrade to open it.")
+            TranslatableString("project-file-io", "This project was created with a newer version of Audacity.\n\nYou will need to upgrade to open it.")
             );
         return false;
     }
@@ -777,7 +777,7 @@ bool ProjectFileIO::InstallSchema(sqlite3* db, const char* schema /* = "main" */
     rc = sqlite3_exec(db, sql, nullptr, nullptr, nullptr);
     if (rc != SQLITE_OK) {
         SetDBError(
-            XO("Unable to initialize the project file")
+            TranslatableString("project-file-io", "Unable to initialize the project file")
             );
         return false;
     }
@@ -830,8 +830,8 @@ bool ProjectFileIO::DeleteBlocks(const BlockIDs& blockids, bool complement)
         ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
         ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::DeleteBlocks::create_function");
 
-        /* i18n-hint: An error message.  Don't translate inset or blockids.*/
-        SetDBError(XO("Unable to add 'inset' function (can't verify blockids)"));
+        /*: An error message.  Don't translate inset or blockids.*/
+        SetDBError(TranslatableString("project-file-io", "Unable to add ‘inset’ function (can’t verify blockids)"));
         return false;
     }
 
@@ -848,29 +848,29 @@ bool ProjectFileIO::DeleteBlocks(const BlockIDs& blockids, bool complement)
         ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::GetBlob");
 
         if (rc == SQLITE_READONLY) {
-            /* i18n-hint: An error message.  Don't translate blockfiles.*/
-            SetDBError(XO("Project is read only\n(Unable to work with the blockfiles)"));
+            /*: An error message.  Don't translate blockfiles.*/
+            SetDBError(TranslatableString("project-file-io", "Project is read only\n(Unable to work with the blockfiles)"));
         } else if (rc == SQLITE_LOCKED) {
-            /* i18n-hint: An error message.  Don't translate blockfiles.*/
-            SetDBError(XO("Project is locked\n(Unable to work with the blockfiles)"));
+            /*: An error message.  Don't translate blockfiles.*/
+            SetDBError(TranslatableString("project-file-io", "Project is locked\n(Unable to work with the blockfiles)"));
         } else if (rc == SQLITE_BUSY) {
-            /* i18n-hint: An error message.  Don't translate blockfiles.*/
-            SetDBError(XO("Project is busy\n(Unable to work with the blockfiles)"));
+            /*: An error message.  Don't translate blockfiles.*/
+            SetDBError(TranslatableString("project-file-io", "Project is busy\n(Unable to work with the blockfiles)"));
         } else if (rc == SQLITE_CORRUPT) {
-            /* i18n-hint: An error message.  Don't translate blockfiles.*/
-            SetDBError(XO("Project is corrupt\n(Unable to work with the blockfiles)"));
+            /*: An error message.  Don't translate blockfiles.*/
+            SetDBError(TranslatableString("project-file-io", "Project is corrupt\n(Unable to work with the blockfiles)"));
         } else if (rc == SQLITE_PERM) {
-            /* i18n-hint: An error message.  Don't translate blockfiles.*/
-            SetDBError(XO("Some permissions issue\n(Unable to work with the blockfiles)"));
+            /*: An error message.  Don't translate blockfiles.*/
+            SetDBError(TranslatableString("project-file-io", "Some permissions issue\n(Unable to work with the blockfiles)"));
         } else if (rc == SQLITE_IOERR) {
-            /* i18n-hint: An error message.  Don't translate blockfiles.*/
-            SetDBError(XO("A disk I/O error\n(Unable to work with the blockfiles)"));
+            /*: An error message.  Don't translate blockfiles.*/
+            SetDBError(TranslatableString("project-file-io", "A disk I/O error\n(Unable to work with the blockfiles)"));
         } else if (rc == SQLITE_AUTH) {
-            /* i18n-hint: An error message.  Don't translate blockfiles.*/
-            SetDBError(XO("Not authorized\n(Unable to work with the blockfiles)"));
+            /*: An error message.  Don't translate blockfiles.*/
+            SetDBError(TranslatableString("project-file-io", "Not authorized\n(Unable to work with the blockfiles)"));
         } else {
-            /* i18n-hint: An error message.  Don't translate blockfiles.*/
-            SetDBError(XO("Unable to work with the blockfiles"));
+            /*: An error message.  Don't translate blockfiles.*/
+            SetDBError(TranslatableString("project-file-io", "Unable to work with the blockfiles"));
         }
 
         return false;
@@ -879,7 +879,8 @@ bool ProjectFileIO::DeleteBlocks(const BlockIDs& blockids, bool complement)
     // Mark the project recovered if we deleted any rows
     int changes = sqlite3_changes(db);
     if (changes > 0) {
-        wxLogInfo(XO("Total orphan blocks deleted %d").Translation(), changes);
+        //: %1 is the number of deleted orphan blocks
+        wxLogInfo(TranslatableString("project-file-io", "Total orphan blocks deleted %1").Translation(), changes);
         mRecovered = true;
     }
 
@@ -960,7 +961,7 @@ bool ProjectFileIO::CopyTo(const FilePath& destpath,
                     "sqlite3.context", "ProjectFileIO::CopyTo.cleanup");
 
                 SetDBError(
-                    XO("Failed to rollback transaction during import")
+                    TranslatableString("project-file-io", "Failed to rollback transaction during import")
                     );
             }
 
@@ -984,7 +985,7 @@ bool ProjectFileIO::CopyTo(const FilePath& destpath,
     rc = sqlite3_exec(db, sql, nullptr, nullptr, nullptr);
     if (rc != SQLITE_OK) {
         SetDBError(
-            XO("Unable to attach destination database")
+            TranslatableString("project-file-io", "Unable to attach destination database")
             );
         return false;
     }
@@ -995,7 +996,7 @@ bool ProjectFileIO::CopyTo(const FilePath& destpath,
     //        mode journal will be used and will briefly appear in the filesystem.
     if (pConn->FastMode("outbound") != SQLITE_OK) {
         SetDBError(
-            XO("Unable to switch to fast journaling mode")
+            TranslatableString("project-file-io", "Unable to switch to fast journaling mode")
             );
 
         return false;
@@ -1032,15 +1033,16 @@ bool ProjectFileIO::CopyTo(const FilePath& destpath,
                 "sqlite3.context", "ProjectGileIO::CopyTo.prepare");
 
             SetDBError(
-                XO("Unable to prepare project file command:\n\n%s").Format(sql)
+                //: %1 is the SQL command that could not be prepared
+                TranslatableString("project-file-io", "Unable to prepare project file command:\n\n%1").arg(sql)
                 );
             return false;
         }
 
-        /* i18n-hint: This title appears on a dialog that indicates the progress
+        /*: This title appears on a dialog that indicates the progress
            in doing something.*/
         auto progress
-            =BasicUI::MakeProgress(XO("Progress"), msg, ProgressShowCancel);
+            =BasicUI::MakeProgress(TranslatableString("project-file-io", "Progress"), msg, ProgressShowCancel);
         ProgressResult result = ProgressResult::Success;
 
         wxLongLong_t count = 0;
@@ -1065,7 +1067,7 @@ bool ProjectFileIO::CopyTo(const FilePath& destpath,
                     "sqlite3.context", "ProjectGileIO::CopyTo.bind");
 
                 SetDBError(
-                    XO("Failed to bind SQL parameter")
+                    TranslatableString("project-file-io", "Failed to bind SQL parameter")
                     );
 
                 return false;
@@ -1079,7 +1081,8 @@ bool ProjectFileIO::CopyTo(const FilePath& destpath,
                     "sqlite3.context", "ProjectGileIO::CopyTo.step");
 
                 SetDBError(
-                    XO("Failed to update the project file.\nThe following command failed:\n\n%s").Format(sql)
+                    //: %1 is the SQL command that failed
+                    TranslatableString("project-file-io", "Failed to update the project file.\nThe following command failed:\n\n%1").arg(sql)
                     );
                 return false;
             }
@@ -1121,7 +1124,7 @@ bool ProjectFileIO::CopyTo(const FilePath& destpath,
         ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::CopyTo::detach");
 
         SetDBError(
-            XO("Destination project could not be detached")
+            TranslatableString("project-file-io", "Destination project could not be detached")
             );
 
         return false;
@@ -1245,7 +1248,7 @@ bool ProjectFileIO::RenameOrWarn(const FilePath& src, const FilePath& dst)
     // Provides a progress dialog with indeterminate mode
     using namespace BasicUI;
     auto pd = MakeGenericProgress(*ProjectFramePlacement(&mProject),
-                                  XO("Copying Project"), XO("This may take several seconds"));
+                                  TranslatableString("project-file-io", "Copying Project"), TranslatableString("project-file-io", "This may take several seconds"));
     wxASSERT(pd);
 
     // Wait for the checkpoints to end
@@ -1259,10 +1262,9 @@ bool ProjectFileIO::RenameOrWarn(const FilePath& src, const FilePath& dst)
 
     if (!success) {
         ShowError(*ProjectFramePlacement(&mProject),
-                  XO("Error Writing to File"),
-                  XO("Audacity failed to write file %s.\n"
-                     "Perhaps disk is full or not writable.\n"
-                     "For tips on freeing up space, click the help button.")
+                  TranslatableString("project-file-io", "Error Writing to File"),
+                  //: %1 is the file path
+                  TranslatableString("project-file-io", "Audacity failed to write file %1.\nPerhaps disk is full or not writable.\nFor tips on freeing up space, click the help button.")
                   .Format(dst),
                   "Error:_Disk_full_or_not_writable"
                   );
@@ -1474,7 +1476,7 @@ void ProjectFileIO::Compact(
     // REVIEW: Compact can fail on the CopyTo with no error messages.  That's OK?
     // LLL: We could display an error message or just ignore the failure and allow
     // the file to be compacted the next time it's saved.
-    if (CopyTo(tempName, XO("Compacting project"), IsTemporary(), !tracks.empty(), tracks)) {
+    if (CopyTo(tempName, TranslatableString("project-file-io", "Compacting project"), IsTemporary(), !tracks.empty(), tracks)) {
         // Must close the database to rename it
         if (CloseConnection()) {
             // Only use the new file if it is actually smaller than the original.
@@ -1572,10 +1574,10 @@ void ProjectFileIO::SetProjectTitle(int number)
     // is none.
     if (number >= 0) {
         name
-            =/* i18n-hint: The %02i is the project number, the %s is the project name.*/
-              XO("[Project %02i] Audacity \"%s\"")
+            =/*: %1 is the project number, %2 is the project name.*/
+              TranslatableString("project-file-io", "[Project %1] Audacity “%2”")
               .Format(number + 1,
-                      name.empty() ? XO("<untitled>") : Verbatim((const char*)name))
+                      name.empty() ? TranslatableString("project-file-io", "<untitled>") : TranslatableString::untranslatable((const char*)name))
               .Translation();
     }
     // If we are not showing numbers, then <untitled> shows as 'Audacity'.
@@ -1585,8 +1587,8 @@ void ProjectFileIO::SetProjectTitle(int number)
 
     if (mRecovered) {
         name += wxT(" ");
-        /* i18n-hint: E.g this is recovered audio that had been lost.*/
-        name += _("(Recovered)");
+        /*: E.g this is recovered audio that had been lost.*/
+        name += wxString::FromUTF8(au3::trc("project-file-io", "(Recovered)").c_str());
     }
 
     if (name != mTitle) {
@@ -1685,13 +1687,12 @@ bool ProjectFileIO::HandleXMLTag(const std::string_view& tag, const AttributesLi
     int codeVer = ((cver * 100) + crel) * 100 + crev;
 
     if (codeVer < fileVer) {
-        /* i18n-hint: %s will be replaced by the version number.*/
-        auto msg = XO(
-            "This file was saved using Audacity %s.\nYou are using Audacity %s. You may need to upgrade to a newer version to open this file.")
+        /*: %1 is the Audacity version that saved the file, %2 is the running version.*/
+        auto msg = TranslatableString("project-file-io", "This file was saved using Audacity %1.\nYou are using Audacity %2. You may need to upgrade to a newer version to open this file.")
                    .Format(audacityVersion, AUDACITY_VERSION_STRING);
 
         ShowError(*ProjectFramePlacement(&project),
-                  XO("Can't open project file"),
+                  TranslatableString("project-file-io", "Can’t open project file"),
                   msg,
                   "FAQ:Errors_opening_an_Audacity_project"
                   );
@@ -1807,7 +1808,7 @@ bool ProjectFileIO::AutoSaveDelete(sqlite3* db /* = nullptr */)
         ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::AutoSaveDelete");
 
         SetDBError(
-            XO("Failed to remove the autosave information from the project file.")
+            TranslatableString("project-file-io", "Failed to remove the autosave information from the project file.")
             );
         return false;
     }
@@ -1851,7 +1852,8 @@ bool ProjectFileIO::WriteDoc(const char* table,
         ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::WriteDoc::prepare");
 
         SetDBError(
-            XO("Unable to prepare project file command:\n\n%s").Format(sql)
+            //: %1 is the SQL command that could not be prepared
+            TranslatableString("project-file-io", "Unable to prepare project file command:\n\n%1").arg(sql)
             );
         return false;
     }
@@ -1869,13 +1871,14 @@ bool ProjectFileIO::WriteDoc(const char* table,
         ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
         ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::WriteDoc::bind");
 
-        SetDBError(XO("Unable to bind to blob"));
+        SetDBError(TranslatableString("project-file-io", "Unable to bind to blob"));
         return false;
     }
 
     const auto reportError = [this](auto sql) {
         SetDBError(
-            XO("Failed to update the project file.\nThe following command failed:\n\n%s")
+            //: %1 is the SQL command that failed
+            TranslatableString("project-file-io", "Failed to update the project file.\nThe following command failed:\n\n%1")
             .Format(sql));
     };
 
@@ -1918,7 +1921,7 @@ bool ProjectFileIO::WriteDoc(const char* table,
             ADD_EXCEPTION_CONTEXT("sqlite3.col", column);
             ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::WriteDoc::openBlobStream");
 
-            SetDBError(XO("Unable to bind to blob"));
+            SetDBError(TranslatableString("project-file-io", "Unable to bind to blob"));
             return false;
         }
 
@@ -1928,7 +1931,7 @@ bool ProjectFileIO::WriteDoc(const char* table,
                 ADD_EXCEPTION_CONTEXT("sqlite3.col", column);
                 ADD_EXCEPTION_CONTEXT("sqlite3.context", "ProjectGileIO::WriteDoc::writeBlobStream");
                 // The user visible message is not changed, so there is no need for new strings
-                SetDBError(XO("Unable to bind to blob"));
+                SetDBError(TranslatableString("project-file-io", "Unable to bind to blob"));
                 return false;
             }
         }
@@ -1941,7 +1944,7 @@ bool ProjectFileIO::WriteDoc(const char* table,
                 "sqlite3.context", "ProjectGileIO::WriteDoc::writeBlobStream");
             // The user visible message is not changed, so there is no need for new
             // strings
-            SetDBError(XO("Unable to bind to blob"));
+            SetDBError(TranslatableString("project-file-io", "Unable to bind to blob"));
             return false;
         }
 
@@ -2052,7 +2055,7 @@ auto ProjectFileIO::LoadProject(const FilePath& fileName, bool ignoreAutosave)
 
         if (!success) {
             SetError(
-                XO("Unable to parse project information.")
+                TranslatableString("project-file-io", "Unable to parse project information.")
                 );
             return {};
         }
@@ -2163,10 +2166,8 @@ bool ProjectFileIO::SaveProject(
             if (!reopened) {
                 BasicUI::CallAfter([this]{
                     ShowError({},
-                              XO("Warning"),
-                              XO(
-                                  "The project's database failed to reopen, "
-                                  "possibly because of limited space on the storage device."),
+                              TranslatableString("project-file-io", "Warning"),
+                              TranslatableString("project-file-io", "The project’s database failed to reopen, possibly because of limited space on the storage device."),
                               "Error:_Disk_full_or_not_writable"
                               );
                     Publish(ProjectFileIOMessage::ReconnectionFailure);
@@ -2182,9 +2183,9 @@ bool ProjectFileIO::SaveProject(
     if (mFileName != fileName) {
         // Do NOT prune here since we need to retain the Undo history
         // after we switch to the new file.
-        if (!CopyTo(fileName, XO("Saving project"), false)) {
+        if (!CopyTo(fileName, TranslatableString("project-file-io", "Saving project"), false)) {
             ShowError({},
-                      XO("Error Saving Project"),
+                      TranslatableString("project-file-io", "Error Saving Project"),
                       FileException::WriteFailureMessage(fileName),
                       "Error:_Disk_full_or_not_writable"
                       );
@@ -2214,7 +2215,7 @@ bool ProjectFileIO::SaveProject(
                 auto rc =  newConn->Open(fileName);
                 if (rc != SQLITE_OK) {
                     // Capture the error string
-                    SetError(Verbatim(sqlite3_errstr(rc)));
+                    SetError(TranslatableString::untranslatable(sqlite3_errstr(rc)));
                     success = false;
                 }
                 done = true;
@@ -2223,7 +2224,7 @@ bool ProjectFileIO::SaveProject(
             // Provides a progress dialog with indeterminate mode
             using namespace BasicUI;
             auto pd = MakeGenericProgress({},
-                                          XO("Syncing"), XO("This may take several seconds"));
+                                          TranslatableString("project-file-io", "Syncing"), TranslatableString("project-file-io", "This may take several seconds"));
             wxASSERT(pd);
 
             // Wait for the checkpoints to end
@@ -2238,9 +2239,9 @@ bool ProjectFileIO::SaveProject(
             if (!success) {
                 // Additional help via a Help button links to the manual.
                 ShowError({},
-                          XO("Error Saving Project"),
-                          XO("The project failed to open, possibly due to limited space\n"
-                             "on the storage device.\n\n%s").Format(GetLastError()),
+                          TranslatableString("project-file-io", "Error Saving Project"),
+                          //: %1 is the underlying error message
+                          TranslatableString("project-file-io", "The project failed to open, possibly due to limited space\non the storage device.\n\n%1").arg(GetLastError()),
                           "Error:_Disk_full_or_not_writable");
 
                 newConn = nullptr;
@@ -2258,9 +2259,9 @@ bool ProjectFileIO::SaveProject(
         if (!AutoSaveDelete()) {
             // Additional help via a Help button links to the manual.
             ShowError({},
-                      XO("Error Saving Project"),
-                      XO("Unable to remove autosave information, possibly due to limited space\n"
-                         "on the storage device.\n\n%s").Format(GetLastError()),
+                      TranslatableString("project-file-io", "Error Saving Project"),
+                      //: %1 is the underlying error message
+                      TranslatableString("project-file-io", "Unable to remove autosave information, possibly due to limited space\non the storage device.\n\n%1").arg(GetLastError()),
                       "Error:_Disk_full_or_not_writable");
 
             newConn = nullptr;
@@ -2300,7 +2301,7 @@ bool ProjectFileIO::SaveProject(
 
     if (!UpdateSaved()) {
         ShowError(
-            {}, XO("Error Saving Project"),
+            {}, TranslatableString("project-file-io", "Error Saving Project"),
             FileException::WriteFailureMessage(fileName),
             "Error:_Disk_full_or_not_writable");
         return false;
@@ -2326,7 +2327,7 @@ bool ProjectFileIO::SaveProject(
 
 bool ProjectFileIO::SaveCopy(const FilePath& fileName)
 {
-    return CopyTo(fileName, XO("Backing up project"), false, true,
+    return CopyTo(fileName, TranslatableString("project-file-io", "Backing up project"), false, true,
                   { &TrackList::Get(mProject) });
 }
 
@@ -2645,8 +2646,8 @@ static ProjectHistory::AutoSave::Scope scope {
         if (!projectFileIO.AutoSave()) {
             throw SimpleMessageBoxException{
                       ExceptionType::Internal,
-                      XO("Automatic database backup failed."),
-                      XO("Warning"),
+                      TranslatableString("project-file-io", "Automatic database backup failed."),
+                      TranslatableString("project-file-io", "Warning"),
                       "Error:_Disk_full_or_not_writable"
             };
         }

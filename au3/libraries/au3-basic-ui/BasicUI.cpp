@@ -265,6 +265,6 @@ bool OpenInDefaultBrowser(const wxString& url)
 
 TranslatableString DefaultCaption()
 {
-    return XO("Message");
+    return TranslatableString("basic-ui", "Message");
 }
 }

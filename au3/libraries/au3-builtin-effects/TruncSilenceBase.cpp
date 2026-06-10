@@ -58,7 +58,7 @@ class RegionList : public std::list<Region>
 };
 
 const EnumValueSymbol TruncSilenceBase::kActionStrings[nActions] = {
-    { XO("Truncate Detected Silence") }, { XO("Compress Excess Silence") }
+    { TranslatableString("builtin-effects", "Truncate Detected Silence") }, { TranslatableString("builtin-effects", "Compress Excess Silence") }
 };
 
 static CommandParameters::ObsoleteMap kObsoleteActions[] = {
@@ -87,7 +87,7 @@ static const double DEF_MinTruncMs = 0.001;
 // Typical fraction of total time taken by detection (better to guess low)
 const double detectFrac = 0.4;
 
-const ComponentInterfaceSymbol TruncSilenceBase::Symbol { XO("Truncate silence") };
+const ComponentInterfaceSymbol TruncSilenceBase::Symbol { TranslatableString("builtin-effects", "Truncate silence") };
 
 TruncSilenceBase::TruncSilenceBase()
 {
@@ -120,8 +120,7 @@ ComponentInterfaceSymbol TruncSilenceBase::GetSymbol() const
 
 TranslatableString TruncSilenceBase::GetDescription() const
 {
-    return XO(
-        "Automatically reduces the length of passages where the volume is below a specified level");
+    return TranslatableString("builtin-effects", "Automatically reduces the length of passages where the volume is below a specified level");
 }
 
 ManualPageID TruncSilenceBase::ManualPage() const

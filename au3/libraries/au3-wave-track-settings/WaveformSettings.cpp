@@ -30,9 +30,9 @@ EnumSetting<WaveformSettings::ScaleTypeValues>
 WaveformSettings::waveformScaleSetting {
     waveformScaleKey,
     {
-        { wxT("Linear"), XO("Linear (amp)") },
-        { dbLogValueString, XO("Logarithmic (dB)") },
-        { dbLinValueString, XO("Linear (dB)") },
+        { wxT("Linear"), TranslatableString("wave-track-settings", "Linear (amp)") },
+        { dbLogValueString, TranslatableString("wave-track-settings", "Logarithmic (dB)") },
+        { dbLinValueString, TranslatableString("wave-track-settings", "Linear (dB)") },
     },
 
     0,   // linear
@@ -204,9 +204,9 @@ const EnumValueSymbols& WaveformSettings::GetScaleNames()
 {
     static const EnumValueSymbols result{
         // Keep in correspondence with ScaleTypeValues:
-        { wxT("Linear"), XO("Linear (amp)") },
-        { wxT("dB"), XO("Logarithmic (dB)") },
-        { wxT("LinearDB"), XO("Linear (dB)") },
+        { wxT("Linear"), TranslatableString("wave-track-settings", "Linear (amp)") },
+        { wxT("dB"), TranslatableString("wave-track-settings", "Logarithmic (dB)") },
+        { wxT("LinearDB"), TranslatableString("wave-track-settings", "Linear (dB)") },
     };
     return result;
 }
@@ -224,14 +224,14 @@ void WaveformSettings::GetRangeChoices(
     }
 
     static const std::initializer_list<TranslatableString> sChoices = {
-        XO("-36 dB (shallow range for high-amplitude editing)"),
-        XO("-48 dB (PCM range of 8 bit samples)"),
-        XO("-60 dB (PCM range of 10 bit samples)"),
-        XO("-72 dB (PCM range of 12 bit samples)"),
-        XO("-84 dB (PCM range of 14 bit samples)"),
-        XO("-96 dB (PCM range of 16 bit samples)"),
-        XO("-120 dB (approximate limit of human hearing)"),
-        XO("-145 dB (PCM range of 24 bit samples)"),
+        TranslatableString("wave-track-settings", "-36 dB (shallow range for high-amplitude editing)"),
+        TranslatableString("wave-track-settings", "-48 dB (PCM range of 8 bit samples)"),
+        TranslatableString("wave-track-settings", "-60 dB (PCM range of 10 bit samples)"),
+        TranslatableString("wave-track-settings", "-72 dB (PCM range of 12 bit samples)"),
+        TranslatableString("wave-track-settings", "-84 dB (PCM range of 14 bit samples)"),
+        TranslatableString("wave-track-settings", "-96 dB (PCM range of 16 bit samples)"),
+        TranslatableString("wave-track-settings", "-120 dB (approximate limit of human hearing)"),
+        TranslatableString("wave-track-settings", "-145 dB (PCM range of 24 bit samples)"),
     };
 
     if (pChoices) {

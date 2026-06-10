@@ -187,20 +187,20 @@ TranslatableString Internat::FormatSize(double size)
     TranslatableString sizeStr;
 
     if (size == -1) {
-        sizeStr = XO("Unable to determine");
+        sizeStr = TranslatableString("strings", "Unable to determine");
     } else {
         /* make it look nice, by formatting into k, MB, etc */
         if (size < 1024.0) {
-            sizeStr = XO("%s bytes").Format(ToDisplayString(size));
+            sizeStr = TranslatableString("strings", "%1 bytes").arg(ToDisplayString(size));
         } else if (size < 1024.0 * 1024.0) {
-            /* i18n-hint: Abbreviation for Kilo bytes */
-            sizeStr = XO("%s KB").Format(ToDisplayString(size / 1024.0, 1));
+            /*: Abbreviation for Kilo bytes */
+            sizeStr = TranslatableString("strings", "%1 KB").arg(ToDisplayString(size / 1024.0, 1));
         } else if (size < 1024.0 * 1024.0 * 1024.0) {
-            /* i18n-hint: Abbreviation for Mega bytes */
-            sizeStr = XO("%s MB").Format(ToDisplayString(size / (1024.0 * 1024.0), 1));
+            /*: Abbreviation for Mega bytes */
+            sizeStr = TranslatableString("strings", "%1 MB").arg(ToDisplayString(size / (1024.0 * 1024.0), 1));
         } else {
-            /* i18n-hint: Abbreviation for Giga bytes */
-            sizeStr = XO("%s GB").Format(ToDisplayString(size / (1024.0 * 1024.0 * 1024.0), 1));
+            /*: Abbreviation for Giga bytes */
+            sizeStr = TranslatableString("strings", "%1 GB").arg(ToDisplayString(size / (1024.0 * 1024.0 * 1024.0), 1));
         }
     }
 

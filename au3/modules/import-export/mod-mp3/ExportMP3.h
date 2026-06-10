@@ -35,7 +35,7 @@ enum MP3RateMode : unsigned {
 #define MP3_EXPORT_BUILT_IN 1
 #endif
 
-class TranslatableString;
+#include "au3-strings/TranslatableString.h"
 
 //----------------------------------------------------------------------------
 // Get MP3 library version

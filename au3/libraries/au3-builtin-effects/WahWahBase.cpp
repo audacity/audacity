@@ -29,7 +29,7 @@ const EffectParameterMethods& WahWahBase::Parameters() const
 // WahWahBase
 //
 
-const ComponentInterfaceSymbol WahWahBase::Symbol { XO("Wahwah") };
+const ComponentInterfaceSymbol WahWahBase::Symbol { TranslatableString("builtin-effects", "Wahwah") };
 
 std::shared_ptr<EffectInstance> WahWahBase::MakeInstance() const
 {
@@ -54,8 +54,7 @@ ComponentInterfaceSymbol WahWahBase::GetSymbol() const
 
 TranslatableString WahWahBase::GetDescription() const
 {
-    return XO(
-        "Rapid tone quality variations, like that guitar sound so popular in the 1970's");
+    return TranslatableString("builtin-effects", "Rapid tone quality variations, like that guitar sound so popular in the 1970’s");
 }
 
 ManualPageID WahWahBase::ManualPage() const

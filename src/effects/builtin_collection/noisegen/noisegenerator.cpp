@@ -1,12 +1,14 @@
 #include "noisegenerator.h"
-#include "au3-command-parameters/ShuttleAutomation.h"
+
 #include <cmath>
 
-#include "log.h"
+#include "au3-command-parameters/ShuttleAutomation.h"
+#include "au3-strings/TranslatableString.h"
 
+#include "log.h"
 using namespace au::effects;
 
-const ComponentInterfaceSymbol NoiseGenerator::Symbol { XO("Noise") };
+const ComponentInterfaceSymbol NoiseGenerator::Symbol { TranslatableString("effects-noisegen", "Noise") };
 
 NoiseGenerator::NoiseGenerator()
     : GeneratorEffect(mT0, mT1)
@@ -37,9 +39,9 @@ ComponentInterfaceSymbol NoiseGenerator::GetSymbol() const
     return Symbol;
 }
 
-TranslatableString NoiseGenerator::GetDescription() const
+::TranslatableString NoiseGenerator::GetDescription() const
 {
-    return XO("Generates one of three different types of noise");
+    return ::TranslatableString("effects-noisegen", "Generates one of three different types of noise");
 }
 
 ManualPageID NoiseGenerator::ManualPage() const

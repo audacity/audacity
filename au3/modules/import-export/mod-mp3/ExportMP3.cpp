@@ -115,8 +115,8 @@ enum : int {
 };
 
 namespace {
-/* i18n-hint: kbps is the bitrate of the MP3 file, kilobits per second*/
-inline TranslatableString n_kbps(int n) { return XO("%d kbps").Format(n); }
+/*: kbps is the bitrate of the MP3 file, kilobits per second*/
+inline TranslatableString n_kbps(int n) { return TranslatableString("import-export", "%1 kbps").arg(n); }
 }
 
 static const TranslatableStrings fixRateNames {
@@ -162,35 +162,35 @@ static const std::vector<ExportValue> fixRateValues {
 };
 
 static const TranslatableStrings varRateNames {
-    XO("220-260 kbps (Best Quality)"),
-    XO("200-250 kbps"),
-    XO("170-210 kbps"),
-    XO("155-195 kbps"),
-    XO("145-185 kbps"),
-    XO("110-150 kbps"),
-    XO("95-135 kbps"),
-    XO("80-120 kbps"),
-    XO("65-105 kbps"),
-    XO("45-85 kbps (Smaller files)"),
+    TranslatableString("import-export", "220-260 kbps (Best Quality)"),
+    TranslatableString("import-export", "200-250 kbps"),
+    TranslatableString("import-export", "170-210 kbps"),
+    TranslatableString("import-export", "155-195 kbps"),
+    TranslatableString("import-export", "145-185 kbps"),
+    TranslatableString("import-export", "110-150 kbps"),
+    TranslatableString("import-export", "95-135 kbps"),
+    TranslatableString("import-export", "80-120 kbps"),
+    TranslatableString("import-export", "65-105 kbps"),
+    TranslatableString("import-export", "45-85 kbps (Smaller files)"),
 };
 /*
 static const TranslatableStrings varModeNames {
-   XO("Fast"),
-   XO("Standard"),
+   TranslatableString("import-export", "Fast"),
+   TranslatableString("import-export", "Standard"),
 };
 */
 static const TranslatableStrings setRateNames {
-    XO("Excessive, 320 kbps"),
-    XO("Extreme, 220-260 kbps"),
-    XO("Standard, 170-210 kbps"),
-    XO("Medium, 145-185 kbps"),
+    TranslatableString("import-export", "Excessive, 320 kbps"),
+    TranslatableString("import-export", "Extreme, 220-260 kbps"),
+    TranslatableString("import-export", "Standard, 170-210 kbps"),
+    TranslatableString("import-export", "Medium, 145-185 kbps"),
 };
 
 static const TranslatableStrings setRateNamesShort {
-    XO("Excessive"),
-    XO("Extreme"),
-    XO("Standard"),
-    XO("Medium"),
+    TranslatableString("import-export", "Excessive"),
+    TranslatableString("import-export", "Extreme"),
+    TranslatableString("import-export", "Standard"),
+    TranslatableString("import-export", "Medium"),
 };
 
 static const std::vector< int > sampRates {
@@ -216,7 +216,7 @@ enum MP3OptionID : int {
 //Option order should exactly match to the id values
 const std::initializer_list<ExportOption> MP3Options {
     {
-        MP3OptionIDMode, XO("Bit Rate Mode"),
+        MP3OptionIDMode, TranslatableString("import-export", "Bit Rate Mode"),
         std::string("SET"),
         ExportOption::TypeEnum,
         {
@@ -228,35 +228,35 @@ const std::initializer_list<ExportOption> MP3Options {
             std::string("CBR")
         },
         {
-            XO("Preset"),
-            XO("Variable"),
-            XO("Average"),
-            XO("Constant")
+            TranslatableString("import-export", "Preset"),
+            TranslatableString("import-export", "Variable"),
+            TranslatableString("import-export", "Average"),
+            TranslatableString("import-export", "Constant")
         }
     },
     {
-        MP3OptionIDQualitySET, XO("Quality"),
+        MP3OptionIDQualitySET, TranslatableString("import-export", "Quality"),
         PRESET_STANDARD,
         ExportOption::TypeEnum,
         { 0, 1, 2, 3 },
         setRateNames
     },
     {
-        MP3OptionIDQualityVBR, XO("Quality"),
+        MP3OptionIDQualityVBR, TranslatableString("import-export", "Quality"),
         QUALITY_2,
         ExportOption::TypeEnum | ExportOption::Hidden,
         { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
         varRateNames
     },
     {
-        MP3OptionIDQualityABR, XO("Quality"),
+        MP3OptionIDQualityABR, TranslatableString("import-export", "Quality"),
         192,
         ExportOption::TypeEnum | ExportOption::Hidden,
         fixRateValues,
         fixRateNames
     },
     {
-        MP3OptionIDQualityCBR, XO("Quality"),
+        MP3OptionIDQualityCBR, TranslatableString("import-export", "Quality"),
         192,
         ExportOption::TypeEnum | ExportOption::Hidden,
         fixRateValues,
@@ -731,8 +731,8 @@ bool MP3Exporter::InitLibraryExternal(wxString libpath)
             be_version v;
             beVersion(&v);
 
-            mBladeVersion = XO(
-                "You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.\nPlease download the latest version of 'LAME for Audacity'.")
+            //: %1.%2 is the lame_enc.dll version, %3.%4.%5 is the Audacity version
+            mBladeVersion = TranslatableString("import-export", "You are linking to lame_enc.dll v%1.%2. This version is not compatible with Audacity %3.%4.%5.\nPlease download the latest version of ‘LAME for Audacity’.")
                             .Format(
                 v.byMajorVersion,
                 v.byMinorVersion,
@@ -1021,7 +1021,7 @@ wxString MP3Exporter::GetLibraryName()
 FileNames::FileTypes MP3Exporter::GetLibraryTypes()
 {
     return {
-        { XO("Only lame_enc.dll"), { wxT("lame_enc.dll") } },
+        { TranslatableString("import-export", "Only lame_enc.dll"), { wxT("lame_enc.dll") } },
         FileNames::DynamicLibraries,
         FileNames::AllFiles
     };
@@ -1060,10 +1060,10 @@ FileNames::FileTypes MP3Exporter::GetLibraryTypes()
     return {
         (sizeof(void*) == 8)
         ? FileNames::FileType{
-            XO("Only libmp3lame64bit.dylib"), { wxT("libmp3lame64bit.dylib") }
+            TranslatableString("import-export", "Only libmp3lame64bit.dylib"), { wxT("libmp3lame64bit.dylib") }
         }
         : FileNames::FileType{
-            XO("Only libmp3lame.dylib"), { wxT("libmp3lame.dylib") }
+            TranslatableString("import-export", "Only libmp3lame.dylib"), { wxT("libmp3lame.dylib") }
         }
         ,
         FileNames::DynamicLibraries,
@@ -1087,9 +1087,9 @@ wxString MP3Exporter::GetLibraryName()
 FileNames::FileTypes MP3Exporter::GetLibraryTypes()
 {
     return {
-        { XO("Only libmp3lame.so"), { wxT("libmp3lame.so") } },
-        { XO("Primary shared object files"), { wxT("so") }, true },
-        { XO("Extended libraries"), { wxT("so*") }, true },
+        { TranslatableString("import-export", "Only libmp3lame.so"), { wxT("libmp3lame.so") } },
+        { TranslatableString("import-export", "Primary shared object files"), { wxT("so") }, true },
+        { TranslatableString("import-export", "Extended libraries"), { wxT("so*") }, true },
         FileNames::AllFiles
     };
 }
@@ -1110,9 +1110,9 @@ wxString MP3Exporter::GetLibraryName()
 FileNames::FileTypes MP3Exporter::GetLibraryTypes()
 {
     return {
-        { XO("Only libmp3lame.so.0"), { wxT("libmp3lame.so.0") } },
-        { XO("Primary shared object files"), { wxT("so") }, true },
-        { XO("Extended libraries"), { wxT("so*") }, true },
+        { TranslatableString("import-export", "Only libmp3lame.so.0"), { wxT("libmp3lame.so.0") } },
+        { TranslatableString("import-export", "Primary shared object files"), { wxT("so") }, true },
+        { TranslatableString("import-export", "Extended libraries"), { wxT("so*") }, true },
         FileNames::AllFiles
     };
 }
@@ -1231,7 +1231,7 @@ int ExportMP3::GetFormatCount() const
 FormatInfo ExportMP3::GetFormatInfo(int) const
 {
     return {
-        wxT("MP3"), XO("MP3 Files"), { wxT("mp3") }, 2u, true
+        wxT("MP3"), TranslatableString("import-export", "MP3 Files"), { wxT("mp3") }, 2u, true
     };
 }
 
@@ -1331,10 +1331,10 @@ bool ExportMP3::CheckFileName(wxFileName& WXUNUSED(filename), int WXUNUSED(forma
     MP3Exporter exporter;
 
     if (!exporter.LoadEncoderLibrary(MP3Exporter::Maybe)) {
-        BasicUI::ShowMessageBox(XO("Could not open MP3 encoding library!"),
+        BasicUI::ShowMessageBox(TranslatableString("import-export", "Could not open MP3 encoding library!"),
                                 BasicUI::MessageBoxOptions()
                                 .IconStyle(BasicUI::Icon::Error)
-                                .Caption(XO("Error")));
+                                .Caption(TranslatableString("import-export", "Error")));
         gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
         gPrefs->Flush();
 
@@ -1364,19 +1364,19 @@ bool MP3ExportProcessor::Initialize(AudacityProject& project,
     if (!exporter.InitLibrary(wxT(""))) {
         gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
         gPrefs->Flush();
-        throw ExportException(_("Could not initialize MP3 encoding library!"));
+        throw ExportException(wxString::FromUTF8(au3::trc("import-export", "Could not initialize MP3 encoding library!").c_str()));
     }
 #else
     if (!exporter.LoadEncoderLibrary(MP3Exporter::Maybe)) {
         gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
         gPrefs->Flush();
-        throw ExportException(_("Could not open MP3 encoding library!"));
+        throw ExportException(wxString::FromUTF8(au3::trc("import-export", "Could not open MP3 encoding library!").c_str()));
     }
 
     if (!exporter.ValidLibraryLoaded()) {
         gPrefs->Write(wxT("/MP3/MP3LibPath"), wxString(wxT("")));
         gPrefs->Flush();
-        throw ExportException(_("Not a valid or supported MP3 encoding library!"));
+        throw ExportException(wxString::FromUTF8(au3::trc("import-export", "Not a valid or supported MP3 encoding library!").c_str()));
     }
 #endif // DISABLE_DYNAMIC_LOADING_LAME
 
@@ -1461,7 +1461,7 @@ bool MP3ExportProcessor::Initialize(AudacityProject& project,
 
     context.inSamples = exporter.InitializeStream(channels, rate);
     if (context.inSamples < 0) {
-        throw ExportException(_("Unable to initialize MP3 stream"));
+        throw ExportException(wxString::FromUTF8(au3::trc("import-export", "Unable to initialize MP3 stream").c_str()));
     }
 
     // Put ID3 tags at beginning of file
@@ -1471,7 +1471,7 @@ bool MP3ExportProcessor::Initialize(AudacityProject& project,
 
     // Open file for writing
     if (!context.outFile.Open(fName.GetFullPath(), wxT("w+b"))) {
-        throw ExportException(_("Unable to open target file for writing"));
+        throw ExportException(wxString::FromUTF8(au3::trc("import-export", "Unable to open target file for writing").c_str()));
     }
 
     bool endOfFile;
@@ -1495,18 +1495,18 @@ bool MP3ExportProcessor::Initialize(AudacityProject& project,
 
     if (rmode == "SET") {
         context.status = (selectionOnly
-                          ? XO("Exporting selected audio with %s preset")
-                          : XO("Exporting the audio with %s preset"))
+                          ? TranslatableString("import-export", "Exporting selected audio with %1 preset")
+                          : TranslatableString("import-export", "Exporting the audio with %1 preset"))
                          .Format(setRateNamesShort[quality]);
     } else if (rmode == "VBR") {
         context.status = (selectionOnly
-                          ? XO("Exporting selected audio with VBR quality %s")
-                          : XO("Exporting the audio with VBR quality %s"))
+                          ? TranslatableString("import-export", "Exporting selected audio with VBR quality %1")
+                          : TranslatableString("import-export", "Exporting the audio with VBR quality %1"))
                          .Format(varRateNames[quality]);
     } else {
         context.status = (selectionOnly
-                          ? XO("Exporting selected audio at %d Kbps")
-                          : XO("Exporting the audio at %d Kbps"))
+                          ? TranslatableString("import-export", "Exporting selected audio at %1 Kbps")
+                          : TranslatableString("import-export", "Exporting the audio at %1 Kbps"))
                          .Format(bitrate);
     }
 
@@ -1553,7 +1553,7 @@ ExportResult MP3ExportProcessor::Process(ExportProcessorDelegate& delegate)
             }
 
             if (bytes < 0) {
-                throw ExportException(XO("Error %ld returned from MP3 encoder")
+                throw ExportException(TranslatableString("import-export", "Error %1 returned from MP3 encoder")
                                       .Format(bytes)
                                       .Translation());
             }
@@ -1733,14 +1733,14 @@ void MP3ExportProcessor::AddFrame(struct id3_tag* tp, const wxString& n, const w
 TranslatableString GetMP3Version(bool prompt)
 {
     MP3Exporter exporter;
-    auto versionString = XO("MP3 export library not found");
+    auto versionString = TranslatableString("import-export", "MP3 export library not found");
 
 #ifndef DISABLE_DYNAMIC_LOADING_LAME
     if (exporter.LoadEncoderLibrary(prompt ? MP3Exporter::Yes : MP3Exporter::No)) {
 #endif // DISABLE_DYNAMIC_LOADING_LAME
-    versionString = Verbatim(exporter.GetLibraryVersion());
+    versionString = TranslatableString::untranslatable(exporter.GetLibraryVersion());
 #ifdef MP3_EXPORT_BUILT_IN
-    versionString.Join(XO("(Built-in)"), " ");
+    versionString.Join(TranslatableString("import-export", "(Built-in)"), " ");
 #endif
 
 #ifndef DISABLE_DYNAMIC_LOADING_LAME

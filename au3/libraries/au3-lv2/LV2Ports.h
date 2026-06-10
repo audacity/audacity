@@ -35,7 +35,7 @@ class LV2Port
 public:
     LV2Port(const LilvPort* port, int index, bool isInput,
             const wxString& symbol, const wxString& name,
-            const TranslatableString& group)
+            const ::TranslatableString& group)
         : mPort(port), mIndex(index), mIsInput(isInput)
         , mSymbol(symbol), mName(name), mGroup(group)
     {}
@@ -44,7 +44,7 @@ public:
     const bool mIsInput;
     const wxString mSymbol;
     const wxString mName;
-    const TranslatableString mGroup;
+    const ::TranslatableString mGroup;
 };
 
 //! Immutable description of an LV2 Audio port
@@ -62,7 +62,7 @@ class LV2AtomPort final : public LV2Port
 public:
     LV2AtomPort(const LilvPort* port, int index, bool isInput,
                 const wxString& symbol, const wxString& name,
-                const TranslatableString& group,
+                const ::TranslatableString& group,
                 uint32_t minimumSize, bool isMidi, bool wantsPosition)
         : LV2Port{port, index, isInput, symbol, name, group}
         , mMinimumSize{minimumSize}
@@ -132,7 +132,7 @@ class LV2CVPort final : public LV2Port
 public:
     LV2CVPort(const LilvPort* port, int index, bool isInput,
               const wxString& symbol, const wxString& name,
-              const TranslatableString& group,
+              const ::TranslatableString& group,
               float min, float max, float def, bool hasLo, bool hasHi)
         : LV2Port(port, index, isInput, symbol, name, group)
         , mMin{min}, mMax{max}, mDef{def}, mHasLo{hasLo}, mHasHi{hasHi}
@@ -167,7 +167,7 @@ class LV2_API LV2ControlPort final : public LV2Port
 public:
     LV2ControlPort(const LilvPort* port, int index, bool isInput,
                    const wxString& symbol, const wxString& name,
-                   const TranslatableString& group,
+                   const ::TranslatableString& group,
                    std::vector<double> scaleValues, wxArrayString scaleLabels,
                    const wxString& units,
                    float min, float max, float def, bool hasLo, bool hasHi,
@@ -287,7 +287,7 @@ public:
 
     LV2ControlPortArray mControlPorts;
     TranslatableStrings mGroups;
-    std::unordered_map<TranslatableString, std::vector<int> > mGroupMap;
+    std::unordered_map<::TranslatableString, std::vector<int> > mGroupMap;
     //! Mapping from index number among all ports, to position
     //! among the control ports only
     std::unordered_map<uint32_t, size_t> mControlPortMap;

@@ -77,8 +77,8 @@ void EQCurveReader::LoadCurves(const wxString& fileName, bool append)
     // If requested file doesn't exist...
     if (!fn.FileExists() && !GetDefaultFileName(fn)) {
         mCurves.clear();
-        /* i18n-hint: name of the 'unnamed' custom curve */
-        mCurves.push_back(_("unnamed"));   // we still need a default curve to use
+        /*: name of the 'unnamed' custom curve */
+        mCurves.push_back(wxString::FromUTF8(au3::trc("builtin-effects", "unnamed").c_str()));   // we still need a default curve to use
         return;
     }
 
@@ -94,13 +94,13 @@ void EQCurveReader::LoadCurves(const wxString& fileName, bool append)
     XMLFileReader reader;
     const wxString fullPath{ fn.GetFullPath() };
     if (!reader.Parse(this, fullPath)) {
-        /* i18n-hint: EQ stands for 'Equalization'.*/
-        auto msg = XO("Error Loading EQ Curves from file:\n%s\nError message says:\n%s")
+        /*: EQ stands for 'Equalization'.*/
+        auto msg = TranslatableString("builtin-effects", "Error Loading EQ Curves from file:\n%1\nError message says:\n%2")
                    .Format(fullPath, reader.GetErrorStr());
         // Inform user of load failure
         using namespace BasicUI;
         ShowMessageBox(msg, MessageBoxOptions {}.IconStyle(Icon::Error));
-        mCurves.push_back(_("unnamed"));  // we always need a default curve to use
+        mCurves.push_back(wxString::FromUTF8(au3::trc("builtin-effects", "unnamed").c_str()));  // we always need a default curve to use
         return;
     }
 
@@ -109,16 +109,16 @@ void EQCurveReader::LoadCurves(const wxString& fileName, bool append)
     int curve;
     EQCurve tempUnnamed(wxT("tempUnnamed"));
     for ( curve = 0; curve < numCurves - 1; curve++ ) {
-        if (mCurves[curve].Name == _("unnamed")) {
+        if (mCurves[curve].Name == wxString::FromUTF8(au3::trc("builtin-effects", "unnamed").c_str())) {
             tempUnnamed.points = mCurves[curve].points;
             mCurves.erase(mCurves.begin() + curve);
-            mCurves.push_back(_("unnamed"));  // add 'unnamed' back at the end
+            mCurves.push_back(wxString::FromUTF8(au3::trc("builtin-effects", "unnamed").c_str()));  // add 'unnamed' back at the end
             mCurves.back().points = tempUnnamed.points;
         }
     }
 
-    if (mCurves.back().Name != _("unnamed")) {
-        mCurves.push_back(_("unnamed"));   // we always need a default curve to use
+    if (mCurves.back().Name != wxString::FromUTF8(au3::trc("builtin-effects", "unnamed").c_str())) {
+        mCurves.push_back(wxString::FromUTF8(au3::trc("builtin-effects", "unnamed").c_str()));   // we always need a default curve to use
     }
     if (append == true) {
         mCurves.back().points = tempCustom.points;
@@ -298,7 +298,7 @@ void EQCurveWriter::SaveCurves(const wxString& fileName)
     GuardedCall([&] {
         // Create/Open the file
         const wxString fullPath { fn.GetFullPath() };
-        XMLFileWriter eqFile { fullPath, XO("Error Saving Equalization Curves") };
+        XMLFileWriter eqFile { fullPath, TranslatableString("builtin-effects", "Error Saving Equalization Curves") };
 
         // Write the curves
         WriteXML(eqFile);

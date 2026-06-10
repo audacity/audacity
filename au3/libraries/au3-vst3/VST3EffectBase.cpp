@@ -22,7 +22,7 @@
 
 EffectFamilySymbol VST3EffectBase::GetFamilySymbol()
 {
-    return XO("VST3");
+    return TranslatableString("vst3", "VST3");
 }
 
 VST3EffectBase::~VST3EffectBase() = default;
@@ -56,8 +56,8 @@ wxString VST3EffectBase::GetVersion() const
 
 TranslatableString VST3EffectBase::GetDescription() const
 {
-    //i18n-hint VST3 effect description string
-    return XO("SubCategories: %s").Format(mEffectClassInfo->subCategoriesString());
+    //: VST3 effect description string
+    return TranslatableString("vst3", "SubCategories: %1").arg(mEffectClassInfo->subCategoriesString());
 }
 
 EffectType VST3EffectBase::GetType() const

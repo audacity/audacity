@@ -365,7 +365,7 @@ double WaveTrack::ProjectNyquistFrequency(const AudacityProject& project)
            / 2.0;
 }
 
-static auto DefaultName = XO("Audio");
+static auto DefaultName = TranslatableString("wave-track", "Audio");
 
 WaveChannel::WaveChannel(WaveTrack& owner)
     : mOwner{owner}
@@ -378,10 +378,10 @@ wxString WaveTrack::GetDefaultAudioTrackNamePreference()
 {
     const auto name = AudioTrackNameSetting.ReadWithDefault(L"");
 
-    if (name.empty() || (name == DefaultName.MSGID())) {
+    if (name.empty() || (name == au3::qtToWx(DefaultName.msgid()))) {
         // When nothing was specified,
         // the default-default is whatever translation of...
-        /* i18n-hint: The default name for an audio track. */
+        /*: The default name for an audio track. */
         return DefaultName.Translation();
     } else {
         return name;
@@ -685,7 +685,7 @@ bool WaveTrack::LinkConsistencyFix(const bool doFix)
 static const Track::TypeInfo& typeInfo()
 {
     static const Track::TypeInfo info{
-        { "wave", "wave", XO("Wave Track") },
+        { "wave", "wave", TranslatableString("wave-track", "Wave Track") },
         true, &WritableSampleTrack::ClassTypeInfo() };
     return info;
 }
@@ -816,16 +816,16 @@ wxString WaveTrack::MakeClipCopyName(const wxString& originalName) const
         if (!HasClipNamed(name)) {
             return name;
         }
-        //i18n-hint Template for clip name generation on copy-paste
-        name = XC("%s.%i", "clip name template").Format(originalName, i).Translation();
+        //: Template for clip name generation on copy-paste
+        name = TranslatableString("wave-track", "%1.%2", "clip name template").arg(originalName).arg(i).Translation();
     }
 }
 
 wxString WaveTrack::MakeNewClipName() const
 {
     for (auto i = 1;; ++i) {
-        //i18n-hint Template for clip name generation on inserting new empty clip
-        auto name = XC("%s.%i", "clip name template").Format(GetName(), i).Translation();
+        //: Template for clip name generation on inserting new empty clip
+        auto name = TranslatableString("wave-track", "%1.%2", "clip name template").arg(GetName()).arg(i).Translation();
         if (!HasClipNamed(name)) {
             return name;
         }
@@ -2279,7 +2279,7 @@ void RebuildJoinedEnvelope(
     double lastT = 0.0;
     double lastV = 0.0;
 
-    auto emit = [&](double absT, double value) {
+    auto emitPoint = [&](double absT, double value) {
         const double relT = absT - offset;
         if (!hasLast || relT > lastT + interiorMargin) {
             rebuilt->Insert(relT, value);
@@ -2348,7 +2348,7 @@ void RebuildJoinedEnvelope(
         if (isFirst) {
             // Outer left edge: only keep if the user placed a real point.
             if (startExplicit) {
-                emit(playStart, startValue);
+                emitPoint(playStart, startValue);
             }
         } else {
             // Seam: pair pendingEnd from the previous clip with this clip's
@@ -2362,15 +2362,15 @@ void RebuildJoinedEnvelope(
                 =fabs(prev.value - startValue) <= kSeamValueTolerance;
             if (sameTime && sameValue) {
                 if (prev.isExplicit) {
-                    emit(prev.absT, prev.value);
+                    emitPoint(prev.absT, prev.value);
                 } else if (startExplicit) {
-                    emit(playStart, startValue);
+                    emitPoint(playStart, startValue);
                 }
             } else {
                 // Non-coincident seam, or coincident with different values:
                 // keep both points.
-                emit(prev.absT, prev.value);
-                emit(playStart, startValue);
+                emitPoint(prev.absT, prev.value);
+                emitPoint(playStart, startValue);
             }
         }
 
@@ -2380,7 +2380,7 @@ void RebuildJoinedEnvelope(
             const double absT = srcOffset + p.GetT();
             if (absT > playStart + interiorMargin
                 && absT < playEnd - interiorMargin) {
-                emit(absT, p.GetVal());
+                emitPoint(absT, p.GetVal());
             }
         }
 
@@ -2390,7 +2390,7 @@ void RebuildJoinedEnvelope(
         if (isLast) {
             // Outer right edge: only keep if the user placed a real point.
             if (endExplicit) {
-                emit(playEnd, endValue);
+                emitPoint(playEnd, endValue);
             }
         } else {
             // Defer; will be resolved against next clip's playStart.
@@ -2814,7 +2814,7 @@ std::optional<TranslatableString> WaveTrack::GetErrorOpening() const
         const auto width = pClip->NChannels();
         for (size_t ii = 0; ii < width; ++ii) {
             if (pClip->GetSequence(ii)->GetErrorOpening()) {
-                return XO("A track has a corrupted sample sequence.");
+                return TranslatableString("wave-track", "A track has a corrupted sample sequence.");
             }
         }
     }

@@ -18,7 +18,7 @@
 #include "au3-import-export/ImportProgressListener.h"
 #include "au3-project/Project.h"
 
-#define DESC XO("MP3 files")
+#define DESC TranslatableString("import-export", "MP3 files")
 
 #include <wx/string.h>
 #include <wx/log.h>

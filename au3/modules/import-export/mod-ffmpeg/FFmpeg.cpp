@@ -63,8 +63,7 @@ TranslatableString GetFFmpegVersion()
     auto ffmpeg = FFmpegFunctions::Load();
 
     if (ffmpeg) {
-        return Verbatim(
-            wxString::Format(
+        return TranslatableString::untranslatable(wxString::Format(
                 wxT("F(%d.%d.%d),C(%d.%d.%d),U(%d.%d.%d)"),
                 ffmpeg->AVFormatVersion.Major, ffmpeg->AVFormatVersion.Minor, ffmpeg->AVFormatVersion.Micro,
                 ffmpeg->AVCodecVersion.Major, ffmpeg->AVCodecVersion.Minor, ffmpeg->AVCodecVersion.Micro,
@@ -72,7 +71,7 @@ TranslatableString GetFFmpegVersion()
                 ));
     }
 
-    return XO("FFmpeg library not found");
+    return TranslatableString("import-export", "FFmpeg library not found");
 }
 
 bool FindFFmpegLibs()

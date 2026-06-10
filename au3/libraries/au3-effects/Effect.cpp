@@ -52,7 +52,7 @@ ComponentInterfaceSymbol Effect::GetSymbol() const
 
 VendorSymbol Effect::GetVendor() const
 {
-    return XO("Audacity");
+    return TranslatableString("effects", "Audacity");
 }
 
 wxString Effect::GetVersion() const
@@ -69,7 +69,7 @@ EffectFamilySymbol Effect::GetFamily() const
 {
     // Unusually, the internal and visible strings differ for the built-in
     // effect family.
-    return { wxT("Audacity"), XO("Built-in") };
+    return { wxT("Audacity"), TranslatableString("effects", "Built-in") };
 }
 
 bool Effect::IsInteractive() const
@@ -270,7 +270,8 @@ OptionalMessage Effect::LoadSettingsFromString(
     if (!result) {
         using namespace BasicUI;
         ShowMessageBox(
-            XO("%s: Could not load settings below. Default settings will be used.\n\n%s")
+            //: %1 is the effect name, %2 is the preset name
+            TranslatableString("effects", "%1: Could not load settings below. Default settings will be used.\n\n%2")
             .Format(GetName(), preset),
             MessageBoxOptions {}.Caption(GetName()));
         // We are using default settings and we still wish to continue.

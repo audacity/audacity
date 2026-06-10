@@ -25,16 +25,16 @@ frequency changes smoothly during the tone.
 
 const EnumValueSymbol ToneGenBase::kInterStrings[nInterpolations] = {
     // These are acceptable dual purpose internal/visible names
-    { XO("Linear") },
-    { XO("Logarithmic") }
+    { TranslatableString("builtin-effects", "Linear") },
+    { TranslatableString("builtin-effects", "Logarithmic") }
 };
 
 const EnumValueSymbol ToneGenBase::kWaveStrings[nWaveforms] = {
-    { XO("Sine") },
-    { XO("Square") },
-    { XO("Sawtooth") },
-    { XO("Square, no alias") },
-    { XC("Triangle", "waveform") }
+    { TranslatableString("builtin-effects", "Sine") },
+    { TranslatableString("builtin-effects", "Square") },
+    { TranslatableString("builtin-effects", "Sawtooth") },
+    { TranslatableString("builtin-effects", "Square, no alias") },
+    { TranslatableString("builtin-effects", "Triangle", "waveform") }
 };
 
 const EffectParameterMethods& ToneGenBase::Parameters() const

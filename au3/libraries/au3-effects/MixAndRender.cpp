@@ -129,8 +129,8 @@ Track::Holder MixAndRender(const TrackIterRange<const WaveTrack>& trackRange,
     auto updateResult = ProgressResult::Success;
     {
         auto effectiveFormat = mixer.EffectiveFormat();
-        auto pProgress = MakeProgress(XO("Mix and Render"),
-                                      XO("Mixing and rendering tracks"));
+        auto pProgress = MakeProgress(TranslatableString("effects", "Mix and Render"),
+                                      TranslatableString("effects", "Mixing and rendering tracks"));
 
         while (updateResult == ProgressResult::Success) {
             auto blockLen = mixer.Process();

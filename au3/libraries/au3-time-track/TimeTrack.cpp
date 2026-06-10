@@ -55,7 +55,7 @@ static ProjectFileIORegistry::ObjectReaderEntry readerEntry {
 
 wxString TimeTrack::GetDefaultName()
 {
-    return _("Time Track");
+    return wxString::FromUTF8(au3::trc("time-track", "Time Track").c_str());
 }
 
 TimeTrack* TimeTrack::New(AudacityProject& project)
@@ -142,7 +142,7 @@ void TimeTrack::SetRangeUpper(double upper)
 static const Track::TypeInfo& typeInfo()
 {
     static const Track::TypeInfo info{
-        { "time", "time", XO("Time Track") }, true, &Track::ClassTypeInfo() };
+        { "time", "time", TranslatableString("time-track", "Time Track") }, true, &Track::ClassTypeInfo() };
     return info;
 }
 

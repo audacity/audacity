@@ -48,7 +48,7 @@ public:
     LibraryPrefs(wxWindow* parent, wxWindowID winid);
     ~LibraryPrefs();
     ComponentInterfaceSymbol GetSymbol() const override;
-    TranslatableString GetDescription() const override;
+    ::TranslatableString GetDescription() const override;
 
     bool Commit() override;
     ManualPageID HelpPageName() override;

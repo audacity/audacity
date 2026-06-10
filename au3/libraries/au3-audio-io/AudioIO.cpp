@@ -266,11 +266,11 @@ AudioIO::AudioIO()
     PaError err = Pa_Initialize();
 
     if (err != paNoError) {
-        auto errStr = XO("Could not find any audio devices.\n");
-        errStr += XO("You will not be able to play or record audio.\n\n");
+        auto errStr = TranslatableString("audio-io", "Could not find any audio devices.\n");
+        errStr += TranslatableString("audio-io", "You will not be able to play or record audio.\n\n");
         wxString paErrStr = LAT1CTOWX(Pa_GetErrorText(err));
         if (!paErrStr.empty()) {
-            errStr += XO("Error: %s").Format(paErrStr);
+            errStr += TranslatableString("audio-io", "Error: %1").arg(paErrStr);
         }
         // XXX: we are in libaudacity, popping up dialogs not allowed!  A
         // long-term solution will probably involve exceptions
@@ -278,7 +278,7 @@ AudioIO::AudioIO()
         ShowMessageBox(
             errStr,
             MessageBoxOptions {}
-            .Caption(XO("Error Initializing Audio"))
+            .Caption(TranslatableString("audio-io", "Error Initializing Audio"))
             .IconStyle(Icon::Error)
             .ButtonStyle(Button::Ok));
 
@@ -755,7 +755,7 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
 #if (defined(__WXMAC__) || defined(__WXMSW__)) && wxCHECK_VERSION(3, 1, 0)
     // Don't want the system to sleep while audio I/O is active
     if (mPortStreamV19 != NULL && mLastPaError == paNoError) {
-        wxPowerResource::Acquire(wxPOWER_RESOURCE_SCREEN, _("Audacity Audio"));
+        wxPowerResource::Acquire(wxPOWER_RESOURCE_SCREEN, wxString::FromUTF8(au3::trc("audio-io", "Audacity Audio").c_str()));
     }
 #endif
 
@@ -872,10 +872,10 @@ void AudioIO::StartMonitoring(const AudioIOStartStreamOptions& options)
     const auto pOwningProject = mOwningProject.lock();
     if (!success) {
         using namespace BasicUI;
-        const auto msg = XO("Error opening recording device.\nError code: %s")
+        const auto msg = TranslatableString("audio-io", "Error opening recording device.\nError code: %1")
                          .Format(Get()->LastPaErrorString());
         ShowErrorDialog(*ProjectFramePlacement(pOwningProject.get()),
-                        XO("Error"), msg, wxT("Error_opening_sound_device"),
+                        TranslatableString("audio-io", "Error"), msg, wxT("Error_opening_sound_device"),
                         ErrorDialogOptions { ErrorDialogType::ModalErrorReport });
         return;
     }
@@ -1199,7 +1199,7 @@ int AudioIO::StartStream(const TransportSequences& sequences,
             StartStreamCleanup();
             // PRL: PortAudio error messages are sadly not internationalized
             BasicUI::ShowMessageBox(
-                Verbatim(LAT1CTOWX(Pa_GetErrorText(err))));
+                TranslatableString::untranslatable(LAT1CTOWX(Pa_GetErrorText(err))));
             return 0;
         }
     }
@@ -1457,7 +1457,7 @@ bool AudioIO::AllocateBuffers(
                 // In the extraordinarily rare case that we can't even afford
                 // 100 samples, just give up.
                 if (captureBufferSize < 100) {
-                    BasicUI::ShowMessageBox(XO("Out of memory!"));
+                    BasicUI::ShowMessageBox(TranslatableString("audio-io", "Out of memory!"));
                     return false;
                 }
 
@@ -1492,7 +1492,7 @@ bool AudioIO::AllocateBuffers(
             auto playbackBufferSize
                 =(size_t)lrint(mRate * mPlaybackRingBufferSecs.count());
             if (playbackBufferSize < 100 || mPlaybackSamplesToCopy < 100) {
-                BasicUI::ShowMessageBox(XO("Out of memory!"));
+                BasicUI::ShowMessageBox(TranslatableString("audio-io", "Out of memory!"));
                 return false;
             }
         }

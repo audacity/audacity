@@ -1,13 +1,16 @@
 #include "dtmfgenerator.h"
-#include "au3-command-parameters/ShuttleAutomation.h"
+
 #include <cmath>
+
+#include "au3-command-parameters/ShuttleAutomation.h"
+#include "au3-strings/TranslatableString.h"
 
 using namespace au::effects;
 
 // used for fadein/out needed to remove clicking noise
 static const double kFadeInOut = 250.0;
 
-const ComponentInterfaceSymbol DtmfGenerator::Symbol { XO("DTMF Tones") };
+const ComponentInterfaceSymbol DtmfGenerator::Symbol { TranslatableString("effects-dtmfgen", "DTMF Tones") };
 
 DtmfGenerator::DtmfGenerator()
     : GeneratorEffect(mT0, mT1)
@@ -44,9 +47,10 @@ ComponentInterfaceSymbol DtmfGenerator::GetSymbol() const
     return Symbol;
 }
 
-TranslatableString DtmfGenerator::GetDescription() const
+::TranslatableString DtmfGenerator::GetDescription() const
 {
-    return XO("Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones");
+    return ::TranslatableString("effects-dtmfgen",
+                                "Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones");
 }
 
 ManualPageID DtmfGenerator::ManualPage() const

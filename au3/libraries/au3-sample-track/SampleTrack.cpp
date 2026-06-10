@@ -24,7 +24,7 @@ SampleTrack::~SampleTrack() = default;
 static const Track::TypeInfo& typeInfo()
 {
     static const Track::TypeInfo info{
-        { "sample", "sample", XO("Sample Track") },
+        { "sample", "sample", TranslatableString("sample-track", "Sample Track") },
         true, &PlayableTrack::ClassTypeInfo() };
     return info;
 }
@@ -52,7 +52,7 @@ WritableSampleTrack::~WritableSampleTrack() = default;
 static const Track::TypeInfo& typeInfo2()
 {
     static const Track::TypeInfo info{
-        { "writable-sample", "writable-sample", XO("Writable Sample Track") },
+        { "writable-sample", "writable-sample", TranslatableString("sample-track", "Writable Sample Track") },
         true, &SampleTrack::ClassTypeInfo() };
     return info;
 }

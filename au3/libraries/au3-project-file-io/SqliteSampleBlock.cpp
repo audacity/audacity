@@ -371,8 +371,8 @@ DBConnection* SqliteSampleBlock::Conn() const
         throw SimpleMessageBoxException
               {
                   ExceptionType::Internal,
-                  XO("Connection to project file is null"),
-                  XO("Warning"),
+                  TranslatableString("project-file-io", "Connection to project file is null"),
+                  TranslatableString("project-file-io", "Warning"),
                   "Error:_Disk_full_or_not_writable"
               };
     }
@@ -1072,7 +1072,7 @@ void SqliteSampleBlockFactory::OnBeginPurge(size_t begin, size_t end)
             auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
                 std::chrono::system_clock::now() - purgeStartTime);
             if (elapsed >= ProgressDialogShowDelay) {
-                progressDialog = MakeProgress(XO("Progress"), XO("Discarding undo/redo history"), 0);
+                progressDialog = MakeProgress(TranslatableString("project-file-io", "Progress"), TranslatableString("project-file-io", "Discarding undo/redo history"), 0);
             }
         } else {
             progressDialog->Poll(nDeleted, nToDelete);

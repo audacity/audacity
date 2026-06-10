@@ -7,6 +7,7 @@
 #include <cmath>
 
 #include "au3wrap/internal/wxtypes_convert.h"
+#include "translation.h"
 
 // AU3 Nyquist effect base class
 #include "au3-nyquist-effects/NyquistBase.h"
@@ -106,10 +107,22 @@ ParameterInfo convertControl(const NyqControl& ctrl)
 
     // Use variable name as ID
     info.id = String::fromStdString(au::au3::wxToStdString(ctrl.var));
-    info.name = String::fromStdString(au::au3::wxToStdString(ctrl.name));
+
+    // ctrl.name / ctrl.label hold the SOURCE strings as parsed from the .ny
+    // script (UnQuoteMsgid in NyquistBase.cpp returns untranslatable so that
+    // mName / mAuthor / ... stay locale-stable for plugin identifier composition).
+    // Translate the display strings here instead
+    const auto translateNyquist = [](const wxString& s) -> String {
+        if (s.empty()) {
+            return {};
+        }
+        const auto utf8 = s.utf8_str();
+        return mtrc("effects-nyquist", utf8.data());
+    };
+    info.name = translateNyquist(ctrl.name);
     // Nyquist's ctrl.label is a freeform descriptor (e.g. "30 - 300 beats/minute"),
     // not a unit symbol. Map it to `description`; leave `units` empty.
-    info.description = String::fromStdString(au::au3::wxToStdString(ctrl.label));
+    info.description = translateNyquist(ctrl.label);
 
     info.type = convertControlType(ctrl.type);
 
@@ -148,7 +161,7 @@ ParameterInfo convertControl(const NyqControl& ctrl)
 
         for (size_t i = 0; i < ctrl.choices.size(); ++i) {
             const auto& choice = ctrl.choices[i];
-            info.enumValues.push_back(String::fromStdString(choice.Msgid().Translation().ToStdString()));
+            info.enumValues.push_back(String::fromQString(choice.Msgid().translated()));
             info.enumIndices.push_back(static_cast<double>(i));
         }
 
@@ -165,7 +178,7 @@ ParameterInfo convertControl(const NyqControl& ctrl)
 
         for (const auto& fileType : ctrl.fileTypes) {
             // Convert FileType to filter string format: "Description (*.ext1 *.ext2)"
-            wxString filterStr = fileType.description.Translation();
+            wxString filterStr = fileType.description.translated().toStdString();
 
             if (!fileType.extensions.empty()) {
                 wxString extList;
@@ -392,7 +405,7 @@ muse::String NyquistParameterExtractorService::getParameterValueString(EffectIns
         // Return the choice label for the given index
         int index = static_cast<int>(value);
         if (index >= 0 && index < static_cast<int>(ctrl->choices.size())) {
-            return String::fromStdString(ctrl->choices[index].Msgid().Translation().ToStdString());
+            return String::fromQString(ctrl->choices[index].Msgid().translated());
         }
         return String::number(index);
     }

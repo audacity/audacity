@@ -3,15 +3,16 @@
  */
 #include "compressoreffect.h"
 
+#include "framework/global/types/number.h"
+
 #include "au3-command-parameters/ShuttleAutomation.h"
 #include "au3-builtin-effects/CompressorInstance.h"
 #include "au3-dynamic-range-processor/DynamicRangeProcessorDummyOutputs.h"
 #include "au3-dynamic-range-processor/DynamicRangeProcessorUtils.h"
-
-#include "global/types/number.h"
+#include "au3-strings/TranslatableString.h"
 
 namespace au::effects {
-const ComponentInterfaceSymbol CompressorEffect::Symbol { XO("Compressor") };
+const ComponentInterfaceSymbol CompressorEffect::Symbol { TranslatableString("effects-dynamics", "Compressor") };
 
 const EffectParameterMethods& CompressorEffect::Parameters() const
 {
@@ -52,10 +53,9 @@ ComponentInterfaceSymbol CompressorEffect::GetSymbol() const
     return Symbol;
 }
 
-TranslatableString CompressorEffect::GetDescription() const
+::TranslatableString CompressorEffect::GetDescription() const
 {
-    return XO(
-        "Reduces \"dynamic range\", or differences between loud and quiet parts.");
+    return ::TranslatableString("effects-dynamics", "Reduces “dynamic range”, or differences between loud and quiet parts.");
 }
 
 ManualPageID CompressorEffect::ManualPage() const
@@ -79,7 +79,7 @@ RegistryPaths CompressorEffect::GetFactoryPresets() const
     RegistryPaths paths(presets.size());
     std::transform(
         presets.begin(), presets.end(), paths.begin(), [](const auto& preset) {
-        return RegistryPath { preset.name.Translation() };
+        return RegistryPath { preset.name.translated().toStdString() };
     });
     return paths;
 }

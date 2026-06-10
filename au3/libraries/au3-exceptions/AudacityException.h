@@ -95,7 +95,7 @@ public:
     explicit SimpleMessageBoxException(
         ExceptionType exceptionType,      //!< Exception type
         const ::TranslatableString& message_, //<! Message to show
-        const ::TranslatableString& caption = XO("Message"), //<! Short caption in frame around message
+        const ::TranslatableString& caption = ::TranslatableString("exceptions", "Message"), //<! Short caption in frame around message
         const wxString& helpUrl_ = "" // Optional URL for help.
         )
         : MessageBoxException{exceptionType, caption}

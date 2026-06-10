@@ -248,7 +248,7 @@ $control TEXT (_ "Label text") string "" (_ "Sound ##1")
     ((= (length snd-list) 0)
       (format nil
               (_ "No sounds found.~%~
-                 Try lowering 'Threshold level (dB)'.")))
+                 Try lowering ‘Threshold level (dB)’.")))
     ((and (= TYPE 3)
           (= (length snd-list) 1))
       (format nil

@@ -187,7 +187,7 @@ public:
 
     FilePath GetFilename() const override { return mFileName; }
 
-    TranslatableString GetFileDescription() override { return DESC; }
+    ::TranslatableString GetFileDescription() override { return DESC; }
 
     ByteCount GetFileUncompressedBytes() override
     {
@@ -240,7 +240,7 @@ public:
 
     wxString GetPluginStringID() override { return wxT("portsmf"); }
 
-    TranslatableString GetPluginFormatDescription() override { return DESC; }
+    ::TranslatableString GetPluginFormatDescription() override { return DESC; }
 
     std::unique_ptr<ImportFileHandle> Open(const FilePath& fileName,
                                            AudacityProject* project) override

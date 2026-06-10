@@ -19,8 +19,8 @@
 #include "twolame.h"
 
 namespace {
-// i18n-hint kbps abbreviates "thousands of bits per second"
-inline TranslatableString n_kbps(int n) { return XO("%d kbps").Format(n); }
+//: kbps abbreviates "thousands of bits per second"
+inline TranslatableString n_kbps(int n) { return TranslatableString("import-export", "%1 kbps").arg(n); }
 
 const TranslatableStrings BitRateMPEG1Names {
     n_kbps(32),
@@ -63,21 +63,21 @@ enum : int {
 
 const std::initializer_list<ExportOption> MP2Options {
     {
-        MP2OptionIDVersion, XO("Version"),
+        MP2OptionIDVersion, TranslatableString("import-export", "Version"),
         1,
         ExportOption::TypeEnum,
         { 0, 1 },
-        { XO("MPEG2"), XO("MPEG1") },
+        { TranslatableString("import-export", "MPEG2"), TranslatableString("import-export", "MPEG1") },
     },
     {
-        MP2OptionIDBitRateMPEG1, XO("Bit Rate"),
+        MP2OptionIDBitRateMPEG1, TranslatableString("import-export", "Bit Rate"),
         192,
         ExportOption::TypeEnum,
         { 32, 48, 56, 64, 80, 96, 112, 128, 160, 192, 224, 256, 320, 384 },
         BitRateMPEG1Names
     },
     {
-        MP2OptionIDBitRateMPEG2, XO("Bit Rate"),
+        MP2OptionIDBitRateMPEG2, TranslatableString("import-export", "Bit Rate"),
         96,
         ExportOption::TypeEnum | ExportOption::Hidden,
         { 8, 16, 24, 32, 40, 48, 56, 64, 80, 96, 112, 128, 144, 160 },

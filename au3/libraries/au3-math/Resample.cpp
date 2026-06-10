@@ -49,10 +49,10 @@ Resample::~Resample()
 
 //////////
 static const std::initializer_list<EnumValueSymbol> methodNames{
-    { wxT("LowQuality"), XO("Low Quality (Fastest)") },
-    { wxT("MediumQuality"), XO("Medium Quality") },
-    { wxT("HighQuality"), XO("High Quality") },
-    { wxT("BestQuality"), XO("Best Quality (Slowest)") }
+    { wxT("LowQuality"), TranslatableString("math", "Low Quality (Fastest)") },
+    { wxT("MediumQuality"), TranslatableString("math", "Medium Quality") },
+    { wxT("HighQuality"), TranslatableString("math", "High Quality") },
+    { wxT("BestQuality"), TranslatableString("math", "Best Quality (Slowest)") }
 };
 
 static auto intChoicesMethod = {

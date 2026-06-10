@@ -73,7 +73,7 @@ muse::RetVal<muse::audio::AudioResourceMetaList> Au3AudioPluginMetaReader::readM
             desc.SetEffectFamily(provider->GetOptionalFamilySymbol().Internal());
 
             desc.SetID(utils::effectId(effect).toStdString());
-            desc.SetDescription(effect->GetDescription().Translation());
+            desc.SetDescription(effect->GetDescription().translated().toStdString());
             desc.SetEffectType(effect->GetClassification());
             desc.SetEffectFamily(effect->GetFamily().Internal());
             desc.SetEffectGroup(effect->GetGroup());
@@ -91,7 +91,7 @@ muse::RetVal<muse::audio::AudioResourceMetaList> Au3AudioPluginMetaReader::readM
 
         if (!errorMessage.empty()) {
             ok = false;
-            errorStr = au3::wxToString(errorMessage.Debug());
+            errorStr = errorMessage.debugStr();
         } else if (numPlugins == 0) {
             ok = false;
             errorStr = "no plugins found";

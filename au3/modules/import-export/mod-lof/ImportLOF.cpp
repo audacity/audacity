@@ -104,7 +104,7 @@ public:
     ~LOFImportPlugin() { }
 
     wxString GetPluginStringID() override { return wxT("lof"); }
-    TranslatableString GetPluginFormatDescription() override;
+    ::TranslatableString GetPluginFormatDescription() override;
     std::unique_ptr<ImportFileHandle> Open(
         const FilePath& Filename, AudacityProject* pProject) override;
 };
@@ -115,7 +115,7 @@ public:
     LOFImportFileHandle(AudacityProject* pProject, const FilePath& name, std::unique_ptr<wxTextFile>&& file);
     ~LOFImportFileHandle();
 
-    TranslatableString GetFileDescription() override;
+    ::TranslatableString GetFileDescription() override;
     ByteCount GetFileUncompressedBytes() override;
     void Import(
         ImportProgressListener& progressListener, WaveTrackFactory* trackFactory, TrackHolders& outTracks, Tags* tags,
@@ -168,7 +168,7 @@ LOFImportFileHandle::LOFImportFileHandle(AudacityProject* pProject,
 {
 }
 
-TranslatableString LOFImportPlugin::GetPluginFormatDescription()
+::TranslatableString LOFImportPlugin::GetPluginFormatDescription()
 {
     return DESC;
 }
@@ -253,7 +253,7 @@ std::unique_ptr<ImportFileHandle> LOFImportPlugin::Open(
         pProject, filename, std::move(file));
 }
 
-TranslatableString LOFImportFileHandle::GetFileDescription()
+::TranslatableString LOFImportFileHandle::GetFileDescription()
 {
     return DESC;
 }

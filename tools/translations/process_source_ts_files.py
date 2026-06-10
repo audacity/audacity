@@ -41,7 +41,25 @@ num_errors = 0
 
 # Translation errors allowed in these files:
 ignored_files = {
-    # Add Audacity-specific files here if needed
+    # au3 source strings whose trailing "\n" / double spaces are intended
+    # might be fixed later
+    'au3/libraries/au3-audio-devices/AudioIOBase.cpp',
+    'au3/libraries/au3-audio-io/AudioIO.cpp',
+    'au3/libraries/au3-files/FileNames.cpp',
+    'au3/libraries/au3-module-manager/ModuleManager.cpp',
+    'au3/libraries/au3-module-manager/PluginManager.cpp',
+    'au3/libraries/au3-nyquist-effects/NyquistBase.cpp',
+    'au3/libraries/au3-project-file-io/DBConnection.cpp',
+    'au3/libraries/au3-sqlite-helpers/sqlite/Error.cpp',
+    'au3/libraries/au3-transactions/TransactionScope.cpp',
+    'au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp',
+    'au3/modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp',
+    # the "\n" tops a multi-line progress message.
+    'src/effects/builtin_collection/loudness/normalizeloudnesseffect.cpp',
+    'src/effects/builtin_collection/normalize/normalizeeffect.cpp',
+    'src/effects/builtin_collection/removedcoffset/removedcoffseteffect.cpp',
+    # Nyquist plug-in strings (Lisp ~% formatting), extracted stub.
+    'tools/translations/nyquist_strings.cpp.generated',
 }
 
 def eprint(*args, **kwargs):

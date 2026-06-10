@@ -16,8 +16,8 @@
 #include "au3-wave-track/WaveTrack.h"
 
 const ComponentInterfaceSymbol SilenceBase::Symbol
-/* i18n-hint: noun */
-{ XC("Silence", "generator") };
+/*: noun */
+{ TranslatableString("builtin-effects", "Silence", "generator") };
 
 namespace {
 // According to https://manual.audacityteam.org/man/silence.html,
@@ -46,7 +46,7 @@ ComponentInterfaceSymbol SilenceBase::GetSymbol() const
 
 TranslatableString SilenceBase::GetDescription() const
 {
-    return XO("Creates audio of zero amplitude");
+    return TranslatableString("builtin-effects", "Creates audio of zero amplitude");
 }
 
 ManualPageID SilenceBase::ManualPage() const

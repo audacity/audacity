@@ -40,7 +40,7 @@ const wxFileNameWrapper& ExportDiskFullError::GetFileName() const noexcept
 // The number happens to at one time have been a line number, but all
 // we need from them is that they be distinct.
 ExportErrorException::ExportErrorException(const wxString& code)
-    : mMessage(XO("Unable to export.\nError %s").Format(code))
+    : mMessage(TranslatableString("import-export", "Unable to export.\nError %1").arg(code))
     , mHelpPageId("Error:_Unable_to_export")
 {
 }

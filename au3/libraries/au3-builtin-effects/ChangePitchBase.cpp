@@ -49,7 +49,7 @@ const EffectParameterMethods& ChangePitchBase::Parameters() const
     return parameters;
 }
 
-const ComponentInterfaceSymbol ChangePitchBase::Symbol { XO("Change pitch") };
+const ComponentInterfaceSymbol ChangePitchBase::Symbol { TranslatableString("builtin-effects", "Change pitch") };
 
 ChangePitchBase::ChangePitchBase()
 {
@@ -77,7 +77,7 @@ ComponentInterfaceSymbol ChangePitchBase::GetSymbol() const
 
 TranslatableString ChangePitchBase::GetDescription() const
 {
-    return XO("Changes the pitch of a track without changing its tempo");
+    return TranslatableString("builtin-effects", "Changes the pitch of a track without changing its tempo");
 }
 
 ManualPageID ChangePitchBase::ManualPage() const
@@ -114,7 +114,7 @@ bool ChangePitchBase::Process(EffectInstance&, EffectSettings& settings)
     if (mUseSBSMS) {
         double pitchRatio = 1.0 + m_dPercentChange / 100.0;
         SBSMSBase proxy;
-        proxy.mProxyEffectName = XO("High Quality Pitch Change");
+        proxy.mProxyEffectName = TranslatableString("builtin-effects", "High Quality Pitch Change");
         proxy.setParameters(1.0, pitchRatio);
         //! Already processing; don't make a dialog
         return Delegate(proxy, settings);

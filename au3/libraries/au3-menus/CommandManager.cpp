@@ -769,7 +769,7 @@ TranslatableString CommandManager::DescribeCommandsAndShortcuts(
    if (BasicUI::IsUsingRtlLayout())
       mark = wxT("\u200f");
 
-   static const wxString &separatorFormat = wxT("%s / %s");
+   static const wxString &separatorFormat = wxT("%1 / %2");
    TranslatableString result;
    for (size_t ii = 0; ii < nCommands; ++ii) {
       const auto &pair = commands[ii];
@@ -789,14 +789,14 @@ TranslatableString CommandManager::DescribeCommandsAndShortcuts(
          auto keyStr = GetKeyFromName(name);
          if (!keyStr.empty()){
             auto keyString = keyStr.Display(true);
-            auto format = wxT("%s %s(%s)");
+            auto format = wxT("%1 %2(%3)");
 #ifdef __WXMAC__
             // The unicode controls push and pop left-to-right embedding.
             // This keeps the directionally weak characters, such as uparrow
             // for Shift, left of the key name,
             // consistently with how menu accelerators appear, even when the
             // system language is RTL.
-            format = wxT("%s %s(\u202a%s\u202c)");
+            format = wxT("%1 %2(\u202a%3\u202c)");
 #endif
             // The mark makes correctly placed parentheses for RTL, even
             // in the case that the piece is untranslated.

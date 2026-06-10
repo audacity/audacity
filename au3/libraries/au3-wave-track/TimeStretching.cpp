@@ -19,7 +19,7 @@
 #include <algorithm>
 
 const TranslatableString TimeStretching::defaultStretchRenderingTitle
-    =XO("Pre-processing");
+    =TranslatableString("wave-track", "Pre-processing");
 
 namespace {
 void trimRightOverlapping(WaveTrack& track)
@@ -64,7 +64,7 @@ void TimeStretching::WithClipRenderingProgress(
     const TranslatableString title)
 {
     return UserException::WithCancellableProgress(move(action),
-                                                  std::move(title), XO("Rendering Clip"));
+                                                  std::move(title), TranslatableString("wave-track", "Rendering Clip"));
 }
 
 bool TimeStretching::SetClipStretchRatio(

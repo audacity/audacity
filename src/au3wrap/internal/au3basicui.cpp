@@ -62,14 +62,14 @@ void Au3BasicUI::DoYield()
 {
 }
 
-void Au3BasicUI::DoShowErrorDialog(const BasicUI::WindowPlacement& placement, const TranslatableString& dlogTitle,
-                                   const TranslatableString& message, const ManualPageID& helpPage,
+void Au3BasicUI::DoShowErrorDialog(const BasicUI::WindowPlacement& placement, const ::TranslatableString& dlogTitle,
+                                   const ::TranslatableString& message, const ManualPageID& helpPage,
                                    const BasicUI::ErrorDialogOptions& options)
 {
     Q_UNUSED(helpPage);
 
-    LOGE() << dlogTitle.Translation().ToStdString();
-    LOGE() << message.Translation().ToStdString();
+    LOGE() << dlogTitle.translated().toStdString();
+    LOGE() << message.translated().toStdString();
 
     if (!options.log.empty()) {
         LOGE() << QString::fromStdWString(options.log);
@@ -77,13 +77,14 @@ void Au3BasicUI::DoShowErrorDialog(const BasicUI::WindowPlacement& placement, co
 
     auto inter = interactiveForContext(contextFromPlacement(placement));
     if (inter) {
-        inter->error(dlogTitle.Translation().ToStdString(), message.Translation().ToStdString());
+        inter->error(dlogTitle.translated().toStdString(), message.translated().toStdString());
     }
 }
 
-BasicUI::MessageBoxResult Au3BasicUI::DoMessageBox(const TranslatableString& message, BasicUI::MessageBoxOptions options)
+BasicUI::MessageBoxResult Au3BasicUI::DoMessageBox(const ::TranslatableString& message, BasicUI::MessageBoxOptions options)
 {
-    LOGI() << message.Translation().ToStdString();
+    const auto translatedMessage = message.translated().toStdString();
+    LOGI() << translatedMessage;
 
     auto inter = interactiveForContext(contextFromPlacement(options.parent));
     if (!inter) {
@@ -111,16 +112,16 @@ BasicUI::MessageBoxResult Au3BasicUI::DoMessageBox(const TranslatableString& mes
     switch (options.iconStyle) {
     case BasicUI::Icon::None:
     case BasicUI::Icon::Information:
-        iret = inter->infoSync("", message.Translation().ToStdString(), buttons);
+        iret = inter->infoSync("", translatedMessage, buttons);
         break;
     case BasicUI::Icon::Question:
-        iret = inter->questionSync("", message.Translation().ToStdString(), buttons);
+        iret = inter->questionSync("", translatedMessage, buttons);
         break;
     case BasicUI::Icon::Error:
-        iret = inter->errorSync("", message.Translation().ToStdString(), buttons);
+        iret = inter->errorSync("", translatedMessage, buttons);
         break;
     case BasicUI::Icon::Warning:
-        iret = inter->warningSync("", message.Translation().ToStdString(), buttons);
+        iret = inter->warningSync("", translatedMessage, buttons);
         break;
     default:
         iret = { static_cast<int>(muse::IInteractive::Button::NoButton) };
@@ -150,8 +151,8 @@ BasicUI::MessageBoxResult Au3BasicUI::DoMessageBox(const TranslatableString& mes
     return ret;
 }
 
-std::unique_ptr<BasicUI::ProgressDialog> Au3BasicUI::DoMakeProgress(const TranslatableString& title, const TranslatableString& message,
-                                                                    unsigned int flags, const TranslatableString& remainingLabelText)
+std::unique_ptr<BasicUI::ProgressDialog> Au3BasicUI::DoMakeProgress(const ::TranslatableString& title, const ::TranslatableString& message,
+                                                                    unsigned int flags, const ::TranslatableString& remainingLabelText)
 {
     Q_UNUSED(flags);
     Q_UNUSED(remainingLabelText);
@@ -174,8 +175,8 @@ struct MyGenericProgress : BasicUI::GenericProgressDialog {
 }
 
 std::unique_ptr<BasicUI::GenericProgressDialog> Au3BasicUI::DoMakeGenericProgress(const BasicUI::WindowPlacement& placement,
-                                                                                  const TranslatableString& title,
-                                                                                  const TranslatableString& message, int style)
+                                                                                  const ::TranslatableString& title,
+                                                                                  const ::TranslatableString& message, int style)
 {
     Q_UNUSED(placement);
     Q_UNUSED(title);
@@ -185,8 +186,8 @@ std::unique_ptr<BasicUI::GenericProgressDialog> Au3BasicUI::DoMakeGenericProgres
     return std::make_unique<MyGenericProgress>();
 }
 
-int Au3BasicUI::DoMultiDialog(const TranslatableString& message, const TranslatableString& title, const TranslatableStrings& buttons,
-                              const ManualPageID& helpPage, const TranslatableString& boxMsg, bool log)
+int Au3BasicUI::DoMultiDialog(const ::TranslatableString& message, const ::TranslatableString& title, const ::TranslatableStrings& buttons,
+                              const ManualPageID& helpPage, const ::TranslatableString& boxMsg, bool log)
 {
     Q_UNUSED(message);
     Q_UNUSED(buttons);

@@ -14,7 +14,7 @@ import Audacity.Nyquist
 BuiltinEffectBase {
     id: root
 
-    property string title: qsTrc("effects/nyquist", "Nyquist prompt")
+    property string title: qsTrc("effects-nyquist", "Nyquist prompt")
     property bool isApplyAllowed: true
     numNavigationPanels: 1
 

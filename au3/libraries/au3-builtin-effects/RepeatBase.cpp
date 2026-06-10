@@ -11,7 +11,7 @@ const EffectParameterMethods& RepeatBase::Parameters() const
     return parameters;
 }
 
-const ComponentInterfaceSymbol RepeatBase::Symbol { XO("Repeat") };
+const ComponentInterfaceSymbol RepeatBase::Symbol { TranslatableString("builtin-effects", "Repeat") };
 
 RepeatBase::RepeatBase()
 {
@@ -32,7 +32,7 @@ ComponentInterfaceSymbol RepeatBase::GetSymbol() const
 
 TranslatableString RepeatBase::GetDescription() const
 {
-    return XO("Repeats the selection the specified number of times");
+    return TranslatableString("builtin-effects", "Repeats the selection the specified number of times");
 }
 
 ManualPageID RepeatBase::ManualPage() const

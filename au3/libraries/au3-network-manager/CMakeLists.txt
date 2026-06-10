@@ -37,6 +37,7 @@ set ( LIBRARIES
     au3-concurrency-interface
 PRIVATE
     au3-exceptions-interface
+    au3-strings-interface
     wxBase
 )
 

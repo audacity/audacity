@@ -18,7 +18,7 @@ const EffectParameterMethods& BassTrebleBase::Parameters() const
     return parameters;
 }
 
-const ComponentInterfaceSymbol BassTrebleBase::Symbol { XO("Bass and Treble") };
+const ComponentInterfaceSymbol BassTrebleBase::Symbol { TranslatableString("builtin-effects", "Bass and Treble") };
 
 BassTrebleBase::BassTrebleBase()
 {
@@ -38,7 +38,7 @@ ComponentInterfaceSymbol BassTrebleBase::GetSymbol() const
 
 TranslatableString BassTrebleBase::GetDescription() const
 {
-    return XO("Simple tone control effect");
+    return TranslatableString("builtin-effects", "Simple tone control effect");
 }
 
 ManualPageID BassTrebleBase::ManualPage() const

@@ -99,10 +99,7 @@ QStringList ChangePitchViewModel::pitchChoices() const
         // Convert pitch index to MIDI note (using octave 0 as reference)
         const double midiNote = PitchToMIDInote(i, 0);
         // Get the pitch name with both sharp and flat notation
-        TranslatableString pitchName = PitchName(midiNote, PitchNameChoice::Both);
-        // Convert AU3 TranslatableString to QString
-        QString qStr = au3::wxToQString(pitchName.Translation());
-        choices.append(qStr);
+        choices.append(PitchName(midiNote, PitchNameChoice::Both).translated());
     }
     return choices;
 }
