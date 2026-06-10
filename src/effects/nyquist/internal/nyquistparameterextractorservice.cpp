@@ -61,11 +61,12 @@ int fractionalDigits(const wxString& str)
 }
 
 //! Display precision for a float control: the most precise of its declared
-//! default/min/max values, clamped to match ParameterInfo::numDecimals()'s cap.
+//! default/min/max values, clamped to ParameterInfo::maxNumDecimals so a
+//! numDecimalsOverride set from here never exceeds the auto-derive path's cap.
 int maxFractionalDigits(const wxString& a, const wxString& b, const wxString& c)
 {
     const int n = std::max({ fractionalDigits(a), fractionalDigits(b), fractionalDigits(c) });
-    return std::min(n, 6);
+    return std::min(n, ParameterInfo::maxNumDecimals);
 }
 
 //! Convert NyqControlType to AU4 ParameterType
