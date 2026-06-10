@@ -5,18 +5,17 @@
 #
 # Translators:
 # Link Winterberg, 2024
-# 王晨旭 <wcxu21@126.com>, 2025
-# , fuzzy
 # 绅士喵, 2025
+# 王晨旭 <wcxu21@126.com>, 2026
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-05-26 16:41+0300\n"
+"POT-Creation-Date: 2026-06-10 15:30+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: 王晨旭 <wcxu21@126.com>, 2025\n"
+"Last-Translator: 王晨旭 <wcxu21@126.com>, 2026\n"
 "Language-Team: Chinese (China) (https://app.transifex.com/audacity/teams/164520/zh_CN/)\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
@@ -2082,7 +2081,7 @@ msgstr "WebVTT 文件"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Podcast Chapters"
-msgstr ""
+msgstr "播客章节"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Supported label file"
@@ -6816,7 +6815,7 @@ msgstr "无法创建写入目标文件"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Unsupported bytes-per-sample value for WavPack export"
-msgstr ""
+msgstr "WavPack 导出时指定的每样本字节数无效"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Exporting selected audio as WavPack"
@@ -8172,13 +8171,15 @@ msgstr "关于 %s"
 #: src/AboutDialog.cpp
 msgid "translator_credits"
 msgstr ""
-"张敏（ZhangMin）zm1990s@gmail.com\n"
-"刘晓曦（Liu Xiao Xi）liouxiao@hotmail.com\n"
-"阮贝鸿（James Ruan）ruanbeihong@gmail.com\n"
-"余超（Chao YU）isaac.yc@gmail.com\n"
-"mkpoli\n"
-"WhiredPlanck\n"
-"大眼仔~旭（DaYanZai）wcxu21@126.com"
+"简体中文翻译：<br><ul>\n"
+"<li>大眼仔~旭（DaYanZai）wcxu21@126.com</li>\n"
+"<li>WhiredPlanck</li>\n"
+"<li>mkpoli</li>\n"
+"<li>余超（Chao YU）isaac.yc@gmail.com</li>\n"
+"<li>阮贝鸿（James Ruan）ruanbeihong@gmail.com</li>\n"
+"<li>刘晓曦（Liu Xiao Xi）liouxiao@hotmail.com</li>\n"
+"<li>张敏（ZhangMin）zm1990s@gmail.com</li>\n"
+"</ul>"
 
 #: src/AboutDialog.cpp
 msgid "<h3>"
@@ -8241,9 +8242,9 @@ msgstr "%s 网站： "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s software is copyright %s 1999-2026 %s Team."
-msgstr "%s 软件版权归 %s 1999-2024 %s 团队。"
+msgstr "%s 软件版权归 %s 1999-2026 %s 团队。"
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -11640,11 +11641,11 @@ msgstr "欢迎使用 Audacity!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Try the new Audacity 4 Beta release"
-msgstr ""
+msgstr "试试新的 Audacity 4 测试版版本"
 
 #: src/WhatsNewDialog.cpp
 msgid "Test the Beta release"
-msgstr ""
+msgstr "测试测试版版本"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
@@ -11656,7 +11657,7 @@ msgstr "获取我们的免费 OpenVINO AI 工具"
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-msgstr ""
+msgstr "Soap Voice Cleaner：录音室品质的画外音"
 
 #: src/WhatsNewDialog.cpp
 msgid "Explore free plugins for sculpting your audio"
@@ -11668,11 +11669,11 @@ msgstr "查看免费插件"
 
 #: src/WhatsNewDialog.cpp
 msgid "Help us decide the future of Audacity"
-msgstr ""
+msgstr "帮助我们决定 Audacity 的未来"
 
 #: src/WhatsNewDialog.cpp
 msgid "Take part in survey"
-msgstr ""
+msgstr "参与调查"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -14304,23 +14305,20 @@ msgid "Trunc&ate tracks independently"
 msgstr "分别截断轨道(&A)"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Truncate Location"
-msgstr "截断到(&U)："
+msgstr "截断位置"
 
 #: src/effects/TruncSilence.cpp
 msgid "Remove silence from &beginning"
-msgstr ""
+msgstr "从开始移除静音(&B)"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Remove silence from &middle"
-msgstr "删除 %s 从 %s"
+msgstr "从中间移除静音(&M)"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Remove silence from &end"
-msgstr "删除 %s 从 %s"
+msgstr "从结束移除静音(&E)"
 
 #: src/effects/TruncSilence.cpp
 msgid ""
@@ -14331,6 +14329,12 @@ msgid ""
 "* Remove silence from middle\n"
 "* Remove silence from end"
 msgstr ""
+"至少要选择一个位置选项。\n"
+"\n"
+"请至少选择一项：\n"
+"* 从开始移除静音\n"
+"* 从中间移除静音\n"
+"* 从结束移除静音"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Save VST Preset As:"
@@ -15062,18 +15066,16 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr "上一个片段边界到光标位置"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Previous Clip Boundary to Cursor"
-msgstr "上一个片段边界到光标位置"
+msgstr "选择上一个片段边界到光标位置"
 
 #: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "光标位置到下一个片段边界"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Cursor to Next Clip Boundary"
-msgstr "光标位置到下一个片段边界"
+msgstr "选择下一个片段边界到光标位置"
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -19815,20 +19817,19 @@ msgstr "稍后提醒我"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Unable to fetch Audacity 4 release information. Please try again later."
-msgstr ""
+msgstr "无法获取 Audacity 4 的发布信息。请稍后再试。"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Unable to parse Audacity 4 release information. Please try again later."
-msgstr ""
+msgstr "无法解析 Audacity 4 的发布信息。请稍后再试。"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "No Audacity 4 installer available for your platform."
-msgstr ""
+msgstr "您所在的平台暂无 Audacity 4 安装程序可供使用。"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Unable to create installer file. Please check write permissions."
-msgstr "无法创建写入目标文件"
+msgstr "无法创建安装文件。请检查写入权限。"
 
 #: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
 msgid "Audacity update"
@@ -19840,13 +19841,12 @@ msgid "Downloading %s"
 msgstr "正在下载 %s"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Download Error"
-msgstr "下载"
+msgstr "下载错误"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Failed to download Audacity 4 installer. Please try again later."
-msgstr ""
+msgstr "未能下载 Audacity 4 安装程序。请稍后再试。"
 
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
@@ -21796,15 +21796,3 @@ msgstr "频谱工具"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "传统"
-
-#~ msgid "Video: how we're redesigning Audacity for the future"
-#~ msgstr "视频：我们如何重新设计面向未来的 Audacity"
-
-#~ msgid "25th Anniversary Merchandise!"
-#~ msgstr "25 周年纪念商品！"
-
-#~ msgid "Visit now"
-#~ msgstr "立即访问"
-
-#~ msgid "Visit our new Audacity merch store"
-#~ msgstr "访问我们新的 Audacity 商品商店"

@@ -1,27 +1,26 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR Audacity Team
 # This file is distributed under the same license as the audacity package.
-# Patriccollu di Santa Maria è Sichè <Patrick.Santa-Maria@laposte.net>, 2021.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
 # Link Winterberg, 2024
-# Patriccollu di Santa Maria è Sichè <Patrick.Santa-Maria@laposte.net>, 2025
+# Patriccollu di Santa Maria è Sichè <Patrick.Santa-Maria@laposte.net>, 2026
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-05-26 16:41+0300\n"
-"PO-Revision-Date: 2025-12-02 19:03+0100\n"
-"Last-Translator: Patriccollu di Santa Maria è Sichè <https://github.com/Patriccollu/Lingua_Corsa-Infurmatica/#readme>\n"
+"POT-Creation-Date: 2026-06-10 15:30+0300\n"
+"PO-Revision-Date: 2024-09-20 19:15+0000\n"
+"Last-Translator: Patriccollu di Santa Maria è Sichè <Patrick.Santa-Maria@laposte.net>, 2026\n"
 "Language-Team: Corsican (https://app.transifex.com/audacity/teams/164520/co/)\n"
 "Language: co\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.8\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
 #: src/RealtimeEffectPanel.cpp
@@ -830,7 +829,7 @@ msgstr "Cumprime a stesa dinamica di l’audio"
 #: libraries/lib-builtin-effects/LoudnessBase.cpp
 #: resources/EffectsMenuDefaults.xml
 msgid "Loudness Normalization"
-msgstr "Nurmalisazione di a sunurità"
+msgstr "Nurmalizazione di a sunurità"
 
 #: libraries/lib-builtin-effects/LoudnessBase.cpp
 msgid "Sets the loudness of one or more tracks"
@@ -838,7 +837,7 @@ msgstr "Definisce a sunurità d’una o parechje traccie"
 
 #: libraries/lib-builtin-effects/LoudnessBase.cpp
 msgid "Normalizing Loudness...\n"
-msgstr "Nurmalisazione di a sunurità…\n"
+msgstr "Nurmalizazione di a sunurità…\n"
 
 #: libraries/lib-builtin-effects/LoudnessBase.cpp
 #: libraries/lib-builtin-effects/NormalizeBase.cpp
@@ -1339,7 +1338,7 @@ msgstr "Truncà u silenziu"
 
 #: libraries/lib-builtin-effects/TruncSilenceBase.cpp
 msgid "Automatically reduces the length of passages where the volume is below a specified level"
-msgstr "Riduce autumaticamente a longhezza di i passagi induve u vulume hè più bassu ch’un livellu specificatu"
+msgstr "Riduce autumaticamente a lunghezza di i passagi induve u vulume hè più bassu ch’un livellu specificatu"
 
 #: libraries/lib-builtin-effects/TruncSilenceBase.cpp
 msgid "When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group."
@@ -1352,7 +1351,7 @@ msgstr "Wahwah"
 
 #: libraries/lib-builtin-effects/WahWahBase.cpp
 msgid "Rapid tone quality variations, like that guitar sound so popular in the 1970's"
-msgstr "Variazioni rapide di a qualità di a tunalità, cum’è stu sonu di chitarra cusì populare di l’anni 70"
+msgstr "Variazioni rapide di a qualità di a tunalità, cum’è stu sonu di chitarra cusì pupulare di l’anni 70"
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
 msgctxt "cloud sync"
@@ -2080,7 +2079,7 @@ msgstr "Schedariu WebVTT"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Podcast Chapters"
-msgstr ""
+msgstr "Capituli di podcast"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Supported label file"
@@ -4333,7 +4332,7 @@ msgid ""
 "Truncating to this maximum length."
 msgstr ""
 "A sequenza hà un schedariu di bloccu chì eccede un massimu di %s campioni à u bloccu.\n"
-"Truncatura à sta longhezza massima."
+"Truncatura à sta lunghezza massima."
 
 #: libraries/lib-wave-track/Sequence.cpp
 msgid "Warning - Truncating Overlong Block File"
@@ -6828,7 +6827,7 @@ msgstr "Impussibule di creà u schedariu di destinazione per scriveci"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Unsupported bytes-per-sample value for WavPack export"
-msgstr ""
+msgstr "Valore non ricunnisciutu d’ottetti à u campione per l’espurtazione WavPack"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Exporting selected audio as WavPack"
@@ -7405,7 +7404,7 @@ msgstr "menu d’1 minutu"
 msgid "one minute ago"
 msgid_plural "%d minutes ago"
 msgstr[0] "1 minutu fà"
-msgstr[1] "%d minuti fà"
+msgstr[1] "%dminuti fà"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -8234,7 +8233,7 @@ msgstr "Traduttori"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s includes code from the following projects:"
-msgstr "%s inchjude u codice di sti prughjetti :"
+msgstr "%s include u codice di sti prughjetti :"
 
 #: src/AboutDialog.cpp
 msgid "Special thanks:"
@@ -8249,9 +8248,9 @@ msgstr "Situ web di %s : "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s software is copyright %s 1999-2026 %s Team."
-msgstr "U prugramma %s hè prutettu da i diritti d’autore %s 1999-2024 da a squadra %s."
+msgstr "U prugramma %s hè prutettu da dirittu d’autore %s 1999-2026 da a squadra %s."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -11663,11 +11662,11 @@ msgstr "Benvenuti in Audacity !"
 
 #: src/WhatsNewDialog.cpp
 msgid "Try the new Audacity 4 Beta release"
-msgstr ""
+msgstr "Pruvate a nova versione Audacity 4 Beta"
 
 #: src/WhatsNewDialog.cpp
 msgid "Test the Beta release"
-msgstr ""
+msgstr "Pruvà a versione Beta"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
@@ -12439,19 +12438,19 @@ msgstr "Pausa &massima :"
 
 #: src/effects/AutoDuck.cpp
 msgid "Outer fade &down length:"
-msgstr "Longhezza di scaghjatura esterna di chjususa :"
+msgstr "Lunghezza di scaghjatura esterna di chjususa :"
 
 #: src/effects/AutoDuck.cpp
 msgid "Outer fade &up length:"
-msgstr "Longhezza di scaghjatura esterna d’apertura :"
+msgstr "Lunghezza di scaghjatura esterna d’apertura :"
 
 #: src/effects/AutoDuck.cpp
 msgid "Inner fade d&own length:"
-msgstr "Longhezza di scaghjatura interna di chjususa :"
+msgstr "Lunghezza di scaghjatura interna di chjususa :"
 
 #: src/effects/AutoDuck.cpp
 msgid "Inner &fade up length:"
-msgstr "Longhezza di scaghjatura interna d’apertura :"
+msgstr "Lunghezza di scaghjatura interna d’apertura :"
 
 #: src/effects/AutoDuck.cpp src/effects/LegacyCompressor.cpp
 #: src/effects/TruncSilence.cpp
@@ -12652,15 +12651,15 @@ msgstr "&versu"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "Selection Length"
-msgstr "Longhezza di a selezzione"
+msgstr "Lunghezza di a selezzione"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "C&urrent Length:"
-msgstr "Longhezza &attuale :"
+msgstr "Lunghezza &attuale :"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "Current length of selection."
-msgstr "Longhezza attuale di a selezzione."
+msgstr "Lunghezza attuale di a selezzione."
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #: src/effects/ChangeSpeed.cpp
@@ -12670,7 +12669,7 @@ msgstr "da"
 
 #: src/effects/ChangeSpeed.cpp
 msgid "&New Length:"
-msgstr "&Nova longhezza :"
+msgstr "&Nova lunghezza :"
 
 #. i18n-hint: changing speed of audio "from" one value "to" another
 #: src/effects/ChangeSpeed.cpp
@@ -12706,7 +12705,7 @@ msgstr "&versu"
 
 #: src/effects/ChangeTempo.cpp
 msgid "Length (seconds)"
-msgstr "Longhezza (seconde)"
+msgstr "Lunghezza (seconde)"
 
 #. i18n-hint: changing tempo "from" one value "to" another
 #: src/effects/ChangeTempo.cpp
@@ -12723,7 +12722,7 @@ msgstr "&à"
 #: src/effects/ChangeTempo.cpp
 #, c-format
 msgid "Length in seconds from %s, to"
-msgstr "Longhezza in seconde da %s, fine à"
+msgstr "Lunghezza in seconde da %s, fine à"
 
 #: src/effects/ClickRemoval.cpp
 msgid "&Threshold (lower is more sensitive):"
@@ -13578,11 +13577,11 @@ msgstr "Scala &lineare di frequenza"
 
 #: src/effects/EqualizationUI.cpp
 msgid "Length of &Filter:"
-msgstr "Longhezza di u &filtru :"
+msgstr "Lunghezza di u &filtru :"
 
 #: src/effects/EqualizationUI.cpp
 msgid "Length of Filter"
-msgstr "Longhezza di u filtru"
+msgstr "Lunghezza di u filtru"
 
 #: src/effects/EqualizationUI.cpp
 msgid "&Select Curve:"
@@ -14042,21 +14041,21 @@ msgstr "&Numeru di volte à aghjunghje :"
 
 #: src/effects/Repeat.cpp
 msgid "Current selection length: dd:hh:mm:ss"
-msgstr "Longhezza di a selezzione attuale : gg:oo:mm:ss"
+msgstr "Lunghezza di a selezzione attuale : gg:oo:mm:ss"
 
 #: src/effects/Repeat.cpp
 msgid "New selection length: dd:hh:mm:ss"
-msgstr "Longhezza di a nova selezzione : gg:oo:mm:ss"
+msgstr "Lunghezza di a nova selezzione : gg:oo:mm:ss"
 
 #: src/effects/Repeat.cpp
 #, c-format
 msgid "Current selection length: %s"
-msgstr "Longhezza di a selezzione attuale : %s"
+msgstr "Lunghezza di a selezzione attuale : %s"
 
 #: src/effects/Repeat.cpp
 #, c-format
 msgid "New selection length: %s"
-msgstr "Longhezza di a nova selezzione : %s"
+msgstr "Lunghezza di a nova selezzione : %s"
 
 #: src/effects/Repeat.cpp
 msgid "Warning: No repeats."
@@ -14325,23 +14324,20 @@ msgid "Trunc&ate tracks independently"
 msgstr "Troncà e traccie indipendentemente"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Truncate Location"
-msgstr "Tr&oncà à :"
+msgstr "Pusizione di truncatura"
 
 #: src/effects/TruncSilence.cpp
 msgid "Remove silence from &beginning"
-msgstr ""
+msgstr "Caccià u silenziu da u &principiu"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Remove silence from &middle"
-msgstr "%s cacciatu in %s"
+msgstr "Caccià u silenziu da u &mezu"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Remove silence from &end"
-msgstr "%s cacciatu in %s"
+msgstr "Caccià u silenziu da a &fine"
 
 #: src/effects/TruncSilence.cpp
 msgid ""
@@ -14352,6 +14348,12 @@ msgid ""
 "* Remove silence from middle\n"
 "* Remove silence from end"
 msgstr ""
+"Ci vole à selezziunà omancu un’ozzione di pusizione.\n"
+"\n"
+"Selezziunatela trà st’ozzioni :\n"
+"* Caccià u silenziu da u principiu\n"
+"* Caccià u silenziu da u mezu\n"
+"* Caccià u silenziu da a fine"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Save VST Preset As:"
@@ -14756,7 +14758,7 @@ msgstr "Staccà i schedarii secondu :"
 
 #: src/export/ExportAudioDialog.cpp
 msgid "Include audio before first label"
-msgstr "Inchjude l’audio nanzu a prima etichetta"
+msgstr "Include l’audio nanzu a prima etichetta"
 
 #: src/export/ExportAudioDialog.cpp
 msgid "Name files:"
@@ -15087,18 +15089,16 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr "Cunfina à u &cursore di u pezzu precedente"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Previous Clip Boundary to Cursor"
-msgstr "Cunfina à u &cursore di u pezzu precedente"
+msgstr "Selezziunà Cunfina à u cursore di u pezzu precedente"
 
 #: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "Cursore à a cun&fina di u pezzu seguente"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Cursor to Next Clip Boundary"
-msgstr "Cursore à a cunfina di u pezzu seguente"
+msgstr "Selezziunà Cursore à a cunfina di u pezzu seguente"
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -16931,7 +16931,7 @@ msgstr "Tempu d’attesa"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "&Buffer length:"
-msgstr "&Longhezza di stampone :"
+msgstr "&Lunghezza di stampone :"
 
 #: src/prefs/DevicePrefs.cpp
 msgid "&Latency compensation:"
@@ -19848,20 +19848,19 @@ msgstr "Rammintatemi un altra volta"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Unable to fetch Audacity 4 release information. Please try again later."
-msgstr ""
+msgstr "Impussibule di riguarà l’infurmazione di a versione Audacity 4. Pruvate torna un altra volta."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Unable to parse Audacity 4 release information. Please try again later."
-msgstr ""
+msgstr "Impussibule d’analizà l’infurmazione di a versione Audacity 4. Pruvate torna un altra volta."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "No Audacity 4 installer available for your platform."
-msgstr ""
+msgstr "Ùn ci hè alcunu stalladore Audacity 4 dispunibule per a vostra piattaforma."
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Unable to create installer file. Please check write permissions."
-msgstr "Impussibule di creà u schedariu di destinazione per scriveci"
+msgstr "Impussibule di creà un schedariu di stalladore. Ci vole à verificà i permessi di scrittura."
 
 #: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
 msgid "Audacity update"
@@ -19873,13 +19872,12 @@ msgid "Downloading %s"
 msgstr "Scaricamentu di %s"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Download Error"
-msgstr "Scaricà"
+msgstr "Sbagliu di scaricamentu"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Failed to download Audacity 4 installer. Please try again later."
-msgstr ""
+msgstr "Fiascu per scaricà u stalladore Audacity 4. Pruvate torna un altra volta."
 
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
@@ -20712,11 +20710,11 @@ msgstr "Intervallu d’etichetta (seconde)"
 
 #: plug-ins/equalabel.ny
 msgid "Length of label region (seconds)"
-msgstr "Longhezza di a regione d’etichetta (seconde)"
+msgstr "Lunghezza di a regione d’etichetta (seconde)"
 
 #: plug-ins/equalabel.ny
 msgid "Adjust label interval to fit length"
-msgstr "Adatta l’intervallu d’etichetta à a longhezza"
+msgstr "Adatta l’intervallu d’etichetta à a lunghezza"
 
 #. i18n-hint: Do not translate '##1'
 #: plug-ins/equalabel.ny plug-ins/label-sounds.ny
@@ -20799,7 +20797,7 @@ msgstr "~a~a ~a à intervalli di ~a seconde.~%"
 #: plug-ins/equalabel.ny
 #, lisp-format
 msgid "~aRegion length = ~a seconds."
-msgstr "~aLonghezza di regione = ~a seconde."
+msgstr "~aLunghezza di regione = ~a seconde."
 
 #: plug-ins/highpass.ny resources/EffectsMenuDefaults.xml
 msgid "High-Pass Filter"
@@ -21404,7 +21402,7 @@ msgstr "Indice di tempu"
 
 #: plug-ins/sample-data-export.ny
 msgid "Include header information"
-msgstr "Inchjude l’infurmazione d’intestatura"
+msgstr "Include l’infurmazione d’intestatura"
 
 #: plug-ins/sample-data-export.ny
 msgid "Minimal"
@@ -21477,7 +21475,7 @@ msgid ""
 "                     Length processed: ~a samples ~a seconds.~a"
 msgstr ""
 "~a   ~a~%~aFrequenza di campiunariu : ~a Hz. Valori di campione nant’à a scala ~a.~%~\n"
-"                     Longhezza trattata : ~a campioni ~a seconde.~a"
+"                     Lunghezza trattata : ~a campioni ~a seconde.~a"
 
 #: plug-ins/sample-data-export.ny
 #, lisp-format
@@ -21679,7 +21677,7 @@ msgid ""
 "              (Invalid byte '~a' at byte number: ~a)"
 msgstr ""
 "Sbagliu :~%~\n"
-"              U schedariu deve cuntene solu testu ASCII in chjaru.~%~\n"
+"              U schedariu deve cuntene solu testu ASCII rozu.~%~\n"
 "              (Ottettu « ~a » inaccettevule à u numeru : ~a)"
 
 #: plug-ins/sample-data-import.ny
@@ -21690,7 +21688,7 @@ msgid ""
 "              '~a' is not a numeric value."
 msgstr ""
 "Sbagliu~%~\n"
-"              I dati devenu esse numeri in testu ASCII in chjaru.~%~\n"
+"              I dati devenu esse numeri in testu ASCII rozu.~%~\n"
 "              « ~a » ùn hè micca un valore numericu."
 
 #: plug-ins/sample-data-import.ny
@@ -21830,95 +21828,3 @@ msgstr "Attrezzi spettrali"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Classicu"
-
-#~ msgid "Video: how we're redesigning Audacity for the future"
-#~ msgstr "Video : cumu cuncepimu torna Audacity per l’avvene"
-
-#~ msgid "25th Anniversary Merchandise!"
-#~ msgstr "Prudutti derivati per u 25u anniversariu !"
-
-#~ msgid "Visit now"
-#~ msgstr "Visitate avà"
-
-#~ msgid "Visit our new Audacity merch store"
-#~ msgstr "Visitate a nostra buttea nova di prudutti derivati Audacity"
-
-#~ msgid "Open Fro&m Cloud..."
-#~ msgstr "Apre &da u Nivulu…"
-
-#~ msgid "<font color=\"#000000\">"
-#~ msgstr "<font color=\"#000000\">"
-
-#~ msgid "Sign up to Audacity's cloud saving platform"
-#~ msgstr "Cunnittitevi à a piattaforma d’arregistramentu in u nivulu d’Audacity"
-
-#~ msgid "and access your projects from anywhere!"
-#~ msgstr "è accidite à i vostri prughjetti in ogni locu !"
-
-#~ msgid "</font>"
-#~ msgstr "</font>"
-
-#, c-format
-#~ msgid "What's new in Audacity %s"
-#~ msgstr "Ciò chì hè novu in Audacity %s"
-
-#, c-format
-#~ msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
-#~ msgstr "Fighjate u [[%s|filmettu di a versione]] o lighjite u [[%s|ghjurnale di i cambiamenti]] per sapene di più annantu à ciò chì no avemu cambiatu in l’ultima versione !</p>"
-
-#, c-format
-#~ msgid "You can also read the [[%s|changelog]]</p>"
-#~ msgstr "Pudete leghje ancu u [[%s|ghjurnale di i cambiamenti]]</p>"
-
-#, c-format
-#~ msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
-#~ msgstr "<p>Fighjate a nostra [[%s|appiecazione Hub Muse]] per una scelta tamanta di moduli d’estensione audio per l’utilizatori d’Audacity</p>"
-
-#~ msgid "A vocal processing effect that enhances vocal clarity and depth."
-#~ msgstr "Un effettu di trattamentu vucale chì megliureghja a chjarezza è a prufundezza di a voce."
-
-#~ msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
-#~ msgstr "Un modulu d’estensione pulivalente di riverberazione per effetti sunori spaziosi è naturali."
-
-#~ msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
-#~ msgstr "Un modulu d’estensione d’amplificazione è di mudellizazione d’effetti per a chitarra chì permette tunalità realiste è soni persunalizavule."
-
-#~ msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
-#~ msgstr "Un modulu d’estensione reattivu di riverberazione chì s’adatta à a dinamica di a traccia per creà paisagi sunori immersivi."
-
-#~ msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
-#~ msgstr "Un modulu d’estensione multieffettu vucale chì megliureghja e traccie di voce per dà un risultatu prufessiunale."
-
-#~ msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
-#~ msgstr "Un modulu d’estensione d’effettu di bassu cuncepitu per pruvede un sonu di bassu chjaru è percutente."
-
-#~ msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
-#~ msgstr "Un modulu d’estensione per a perfezzione di u sonu acusticu chì megliureghja u calore è a chjarezza."
-
-#~ msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
-#~ msgstr "Un modulu d’estensione stunente d’amendamentu di a voce per creà effetti vucali prufessiunali chjari cum’è u cristallu."
-
-#~ msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
-#~ msgstr "Un attrezzu in tempu reale di staccamentu d’elementi sunori per isulà e voce, a batteria è l’altri istrumenti."
-
-#, c-format
-#~ msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
-#~ msgstr "Scuprite moduli d’estensione numerosi, creati da sviluppatori famosi, dispunibule nant’à [[%s|MuseHub]]."
-
-#~ msgid "A multiband compressor offering precise control over frequencies."
-#~ msgstr "Un cumpressore multibanda chì permette un cuntrollu precisu di e frequenze."
-
-#~ msgid "Ace Studio - The World's No.1 AI Singing Voice Generator."
-#~ msgstr "Ace Studio - U generatore IA di voce cantata n°1 à u mondu."
-
-#~ msgid "Continue for Cloud Storage"
-#~ msgstr "Cuntinuà per l’allucamentu nant’à u nivulu"
-
-#~ msgid "What's new in Audacity"
-#~ msgstr "Ciò chì hè novu in Audacity"
-
-#~ msgid "Watch the release video"
-#~ msgstr "Fighjà u filmettu di a versione"
-
-#~ msgid "Audacity feature survey"
-#~ msgstr "Inchiesta nant’à e funzioni d’Audacity"

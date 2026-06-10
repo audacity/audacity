@@ -4,16 +4,16 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
-# Link Winterberg, 2024
+# Link Winterberg, 2025
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-05-26 16:41+0300\n"
+"POT-Creation-Date: 2026-06-10 15:30+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: Link Winterberg, 2024\n"
+"Last-Translator: Link Winterberg, 2025\n"
 "Language-Team: Macedonian (https://app.transifex.com/audacity/teams/164520/mk/)\n"
 "Language: mk\n"
 "MIME-Version: 1.0\n"
@@ -6885,9 +6885,8 @@ msgid "Open &From Cloud"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Cloud &Project..."
-msgstr "Отворам Audacity проект"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Open Cloud &Audio File..."
@@ -16271,7 +16270,7 @@ msgstr ""
 #: src/prefs/RecordingPrefs.h
 msgctxt "preference"
 msgid "Recording"
-msgstr ""
+msgstr "Снимање"
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 msgid "De&vice:"

@@ -5,17 +5,16 @@
 #
 # Translators:
 # Link Winterberg, 2024
-# , fuzzy
-# ArsenTech Official, 2025
+# ArsenTech, 2026
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-05-26 16:41+0300\n"
+"POT-Creation-Date: 2026-06-10 15:30+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: ArsenTech Official, 2025\n"
+"Last-Translator: ArsenTech, 2026\n"
 "Language-Team: Armenian (https://app.transifex.com/audacity/teams/164520/hy/)\n"
 "Language: hy\n"
 "MIME-Version: 1.0\n"
@@ -8228,9 +8227,9 @@ msgstr "%s-ի կայք՝"
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s software is copyright %s 1999-2026 %s Team."
-msgstr "%s ծրագրի հեղինակային իրավունքը պատկանում է %s 1999-2024 %s թիմին։"
+msgstr ""
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -11637,7 +11636,7 @@ msgstr "Ստանալ մեր անվճար OpenVino AI գործիքներ"
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-msgstr ""
+msgstr "Soap Voice Cleaner՝ Ստուդիական որակի հնչյունավորման ձայն"
 
 #: src/WhatsNewDialog.cpp
 msgid "Explore free plugins for sculpting your audio"
@@ -11649,11 +11648,11 @@ msgstr "Դիտել անվճար պլագինները"
 
 #: src/WhatsNewDialog.cpp
 msgid "Help us decide the future of Audacity"
-msgstr ""
+msgstr "Օգնեք մեզ որոշել Audacity-ի ապագան"
 
 #: src/WhatsNewDialog.cpp
 msgid "Take part in survey"
-msgstr ""
+msgstr "Մասնակցեք հարցմանը"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -14279,23 +14278,20 @@ msgid "Trunc&ate tracks independently"
 msgstr "Կտրել թրեքները անկախ"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Truncate Location"
-msgstr "Կտ&րել մինչև՝"
+msgstr ""
 
 #: src/effects/TruncSilence.cpp
 msgid "Remove silence from &beginning"
 msgstr ""
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Remove silence from &middle"
-msgstr "Հեռացվել է %s-ը %s-ից"
+msgstr ""
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Remove silence from &end"
-msgstr "Հեռացվել է %s-ը %s-ից"
+msgstr ""
 
 #: src/effects/TruncSilence.cpp
 msgid ""
@@ -15041,18 +15037,16 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr "Նախ&որդ հոլովակի սահմանից մինչև կուրսորը"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Previous Clip Boundary to Cursor"
-msgstr "Նախ&որդ հոլովակի սահմանից մինչև կուրսորը"
+msgstr ""
 
 #: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "Կուրսորից հաջ&որդ հոլովակի սահմանը"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Cursor to Next Clip Boundary"
-msgstr "Կուրսորից հաջ․ հոլովակի սահման"
+msgstr ""
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -19806,9 +19800,8 @@ msgid "No Audacity 4 installer available for your platform."
 msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Unable to create installer file. Please check write permissions."
-msgstr "Չստացվեց ստեղծել գրելու համար նպատակակետային ֆայլ"
+msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
 msgid "Audacity update"
@@ -19820,9 +19813,8 @@ msgid "Downloading %s"
 msgstr "%s-ի ներբեռնում"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Download Error"
-msgstr "Ներբեռնել"
+msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Failed to download Audacity 4 installer. Please try again later."
@@ -21777,15 +21769,3 @@ msgstr "Սպեկտրալ գործիքներ"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Հին տարբերակ"
-
-#~ msgid "Video: how we're redesigning Audacity for the future"
-#~ msgstr "Տեսանյութ՝ ինչպես ենք մենք վերաձևավորում Audacity-ն ապագայի համար"
-
-#~ msgid "25th Anniversary Merchandise!"
-#~ msgstr "25-ամյակին նվիրված ապրանքներ!"
-
-#~ msgid "Visit now"
-#~ msgstr "Այցելեք հիմա"
-
-#~ msgid "Visit our new Audacity merch store"
-#~ msgstr "Այցելեք մեր նոր Audacity խանութը"

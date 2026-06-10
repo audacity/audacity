@@ -4,16 +4,16 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
-# Link Winterberg, 2024
+# Link Winterberg, 2025
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-05-26 16:41+0300\n"
+"POT-Creation-Date: 2026-06-10 15:30+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: Link Winterberg, 2024\n"
+"Last-Translator: Link Winterberg, 2025\n"
 "Language-Team: Tamil (https://app.transifex.com/audacity/teams/164520/ta/)\n"
 "Language: ta\n"
 "MIME-Version: 1.0\n"
@@ -1325,10 +1325,9 @@ msgid "Rapid tone quality variations, like that guitar sound so popular in the 1
 msgstr ""
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
-#, fuzzy
 msgctxt "cloud sync"
 msgid "Error importing cloud audio"
-msgstr "இறக்குவதில் வழு"
+msgstr ""
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
 msgctxt "update dialog"
@@ -4753,7 +4752,7 @@ msgstr "&சரி"
 #: modules/import-export/mod-opus/ExportOpus.cpp
 #, c-format
 msgid "%d kbps"
-msgstr ""
+msgstr "%d kbps"
 
 #: modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp
 #, c-format
@@ -6883,9 +6882,8 @@ msgid "Open from audio.com"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
-#, fuzzy
 msgid "Downloading audio"
-msgstr "ஒலி ஒலித்தல்"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
 #, c-format
@@ -6922,9 +6920,8 @@ msgid "Open &From Cloud"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Cloud &Project..."
-msgstr "Audacity திட்டம் திறக்கிறது"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Open Cloud &Audio File..."
@@ -7071,9 +7068,8 @@ msgid "Don't show this again"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Open cloud audio file"
-msgstr "ஒலியை முதல் சிட்டைக்குமுன் சேர்க்கவும்"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7096,9 +7092,8 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Title"
-msgstr "தட பெயர்"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Author"
@@ -7122,9 +7117,8 @@ msgid "Loading audio list..."
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Failed to get audio list"
-msgstr "%s இனை நீக்க முடியாதுள்ளது"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -12329,7 +12323,7 @@ msgstr ""
 #: src/effects/Contrast.cpp
 #, c-format
 msgid "%s dB"
-msgstr ""
+msgstr "%s dB"
 
 #: src/effects/Contrast.cpp
 msgid "zero"
@@ -12403,7 +12397,7 @@ msgstr "அளக்கப்பட்ட முன்னணி மட்டம�
 #: src/effects/Contrast.cpp
 #, c-format
 msgid "%.2f dB"
-msgstr ""
+msgstr "%.2f dB"
 
 #: src/effects/Contrast.cpp
 msgid "No foreground measured"
@@ -12898,7 +12892,7 @@ msgstr ""
 #: src/effects/ScienFilter.cpp
 #, c-format
 msgid "%d dB"
-msgstr ""
+msgstr "%d dB"
 
 #: src/effects/EqualizationCurvesDialog.cpp
 msgid "Manage Curves List"
@@ -13815,9 +13809,8 @@ msgid "Trunc&ate tracks independently"
 msgstr ""
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Truncate Location"
-msgstr "அமைதியை வெட்டு"
+msgstr ""
 
 #: src/effects/TruncSilence.cpp
 msgid "Remove silence from &beginning"
@@ -16371,7 +16364,7 @@ msgstr ""
 #: src/prefs/RecordingPrefs.h
 msgctxt "preference"
 msgid "Recording"
-msgstr ""
+msgstr "Google Translate"
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 msgid "De&vice:"
@@ -18852,7 +18845,7 @@ msgstr "&ஸ்டீரியோ தட்டுகள்"
 #: src/widgets/ASlider.cpp
 #, c-format
 msgid "%+.1f dB"
-msgstr ""
+msgstr "%+.1f dB"
 
 #. i18n-hint: Stereo pan setting
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
@@ -19242,9 +19235,8 @@ msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "இடது=உள்ளே ஜூம்,வலம்=வெளியே ஜூம்,நடு=சாதாரணம்"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Install Audacity 4"
-msgstr "Audacity பதிவுகள்"
+msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid ""
@@ -19294,9 +19286,8 @@ msgid "Downloading %s"
 msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Download Error"
-msgstr "தரவிறக்கம்"
+msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Failed to download Audacity 4 installer. Please try again later."

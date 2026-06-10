@@ -5,8 +5,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-05-26 16:41+0300\n"
-"PO-Revision-Date: 2025-11-27 10:00+0100\n"
+"POT-Creation-Date: 2026-06-10 15:30+0300\n"
+"PO-Revision-Date: 2026-05-29 22:18+0200\n"
 "Last-Translator: Marco Oros <marco.oros93@gmail.com>\n"
 "Language-Team: Marco Oros\n"
 "Language: sk\n"
@@ -2075,7 +2075,7 @@ msgstr "Súbor WebVTT"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Podcast Chapters"
-msgstr ""
+msgstr "Podcastové kapitoly"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Supported label file"
@@ -6819,7 +6819,7 @@ msgstr "Nie je možné vytvoriť cieľový súbor na zápis"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Unsupported bytes-per-sample value for WavPack export"
-msgstr ""
+msgstr "Nepodporovaná hodnota bajtov na vzorku pre export WavPacku"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Exporting selected audio as WavPack"
@@ -8243,7 +8243,7 @@ msgstr "%s webstránka: "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s software is copyright %s 1999-2026 %s Team."
 msgstr "%s softvér je chránený autorskými právami %s 1999-2024 %s Team."
 
@@ -11657,11 +11657,11 @@ msgstr "Vitajte v Audacity!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Try the new Audacity 4 Beta release"
-msgstr ""
+msgstr "Vyskúšajte nové vydanie Audacity 4 Beta"
 
 #: src/WhatsNewDialog.cpp
 msgid "Test the Beta release"
-msgstr ""
+msgstr "Vyskúšajte beta verziu"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
@@ -14319,23 +14319,20 @@ msgid "Trunc&ate tracks independently"
 msgstr "Stopy skracovať &nezávisle"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Truncate Location"
-msgstr "S&krátiť na:"
+msgstr "Skrátiť umiestnenie"
 
 #: src/effects/TruncSilence.cpp
 msgid "Remove silence from &beginning"
-msgstr ""
+msgstr "Odstrániť ticho na &začiatku"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Remove silence from &middle"
-msgstr "Odstránené %s z %s"
+msgstr "Odstrániť ticho v &strede"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Remove silence from &end"
-msgstr "Odstránené %s z %s"
+msgstr "Odstrániť ticho na &konci"
 
 #: src/effects/TruncSilence.cpp
 msgid ""
@@ -14346,6 +14343,12 @@ msgid ""
 "* Remove silence from middle\n"
 "* Remove silence from end"
 msgstr ""
+"Musí byť vybratá aspoň jedna možnosť umiestnenia.\n"
+"\n"
+"Vyberte aspoň jednu z týchto možností:\n"
+"* Odstrániť ticho na začiatku\n"
+"* Odstrániť ticho v strede\n"
+"* Odstrániť ticho na konci"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Save VST Preset As:"
@@ -15084,18 +15087,16 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr "Od okraja pred&ošlého strihu po kurzor"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Previous Clip Boundary to Cursor"
-msgstr "Od okraja pred&ošlého strihu po kurzor"
+msgstr "Vybrať Predchádzajúcu hranicu strihu na kurzor"
 
 #: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "Od kurzoru po okraj ďa&lšieho strihu"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Cursor to Next Clip Boundary"
-msgstr "Kurzor na okraj ďalšieho strihu"
+msgstr "Vybrať kurzor na ďalšiu hranicu strihu"
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -19847,20 +19848,19 @@ msgstr "Upozorniť ma neskôr"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Unable to fetch Audacity 4 release information. Please try again later."
-msgstr ""
+msgstr "Nie je možné načítať informácie o vydaní Audacity 4. Skúste to znova neskôr."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Unable to parse Audacity 4 release information. Please try again later."
-msgstr ""
+msgstr "Nie je možné analyzovať informácie o vydaní Audacity 4. Skúste to znova neskôr."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "No Audacity 4 installer available for your platform."
-msgstr ""
+msgstr "Pre vašu platformu nie je k dispozícii žiadny inštalačný program Audacity 4."
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Unable to create installer file. Please check write permissions."
-msgstr "Nie je možné vytvoriť cieľový súbor na zápis"
+msgstr "Nie je možné vytvoriť inštalačný súbor. Skontrolujte oprávnenia na zápis."
 
 #: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
 msgid "Audacity update"
@@ -19872,13 +19872,12 @@ msgid "Downloading %s"
 msgstr "Sťahuje sa %s"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Download Error"
-msgstr "Stiahnuť"
+msgstr "Chyba sťahovania"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Failed to download Audacity 4 installer. Please try again later."
-msgstr ""
+msgstr "Nepodarilo sa stiahnuť inštalačný program Audacity 4. Skúste to znova neskôr."
 
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp

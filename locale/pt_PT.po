@@ -5,16 +5,16 @@
 #
 # Translators:
 # Link Winterberg, 2024
-# Bruno Santos Ramalhete <bram.512@gmail.com>, 2025
+# Bruno Santos Ramalhete <bram.512@gmail.com>, 2026
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-05-26 16:41+0300\n"
+"POT-Creation-Date: 2026-06-10 15:30+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: Bruno Santos Ramalhete <bram.512@gmail.com>, 2025\n"
+"Last-Translator: Bruno Santos Ramalhete <bram.512@gmail.com>, 2026\n"
 "Language-Team: Portuguese (Portugal) (https://app.transifex.com/audacity/teams/164520/pt_PT/)\n"
 "Language: pt_PT\n"
 "MIME-Version: 1.0\n"
@@ -1354,10 +1354,9 @@ msgid "Rapid tone quality variations, like that guitar sound so popular in the 1
 msgstr "Variações de qualidade de tons rápidos, tal como o som de guitarra popular nos anos 1970"
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
-#, fuzzy
 msgctxt "cloud sync"
 msgid "Error importing cloud audio"
-msgstr "Erro ao Importar"
+msgstr ""
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
 msgctxt "update dialog"
@@ -7210,16 +7209,15 @@ msgid "Open from audio.com"
 msgstr "Abrir em audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
-#, fuzzy
 msgid "Downloading audio"
-msgstr "Transferindo %s"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to download audio from cloud.\n"
 "%s"
-msgstr "Falha ao codificar predefinição de \"%s\""
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
 msgid "Downloaded audio file does not exist."
@@ -7245,19 +7243,16 @@ msgid "Previews can be updated only for Cloud projects"
 msgstr "Previsões podem ser atualizadas apenas para projetos Cloud"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open &From Cloud"
-msgstr "Abrir da Cloud"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Cloud &Project..."
-msgstr "Abrir Projeto…"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Cloud &Audio File..."
-msgstr "At&ualizar Visualização de Áudio na Cloud"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Save &To Cloud..."
@@ -7400,9 +7395,8 @@ msgid "Don't show this again"
 msgstr "Não mostrar isto novamente"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Open cloud audio file"
-msgstr "At&ualizar Visualização de Áudio na Cloud"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7410,12 +7404,12 @@ msgid "less than 1 minute"
 msgstr "menos de 1 minuto"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "one minute ago"
 msgid_plural "%d minutes ago"
-msgstr[0] "há um minuto"
-msgstr[1] "%d minutos atrás"
-msgstr[2] "%d minutos atrás"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7427,9 +7421,8 @@ msgstr[1] "%d horas atrás"
 msgstr[2] "%d horas atrás"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Title"
-msgstr "Nome da Faixa"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Author"
@@ -7449,14 +7442,12 @@ msgid "Failed to authorize account"
 msgstr "Falha ao autorizar conta"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Loading audio list..."
-msgstr "Fazendo upload do áudio…"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Failed to get audio list"
-msgstr "Falha ao obter lista de projetos"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -8267,9 +8258,9 @@ msgstr "%s website: "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s software is copyright %s 1999-2026 %s Team."
-msgstr "%s software é copyright %s 1999-2024 %s Team."
+msgstr ""
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -11709,9 +11700,8 @@ msgid "Explore free plugins for sculpting your audio"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "View free plugins"
-msgstr "Obter plugins & sons gratuitos"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Help us decide the future of Audacity"
@@ -14349,23 +14339,20 @@ msgid "Trunc&ate tracks independently"
 msgstr "Trunc&ar faixas independentemente"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Truncate Location"
-msgstr "Tr&uncar para:"
+msgstr ""
 
 #: src/effects/TruncSilence.cpp
 msgid "Remove silence from &beginning"
 msgstr ""
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Remove silence from &middle"
-msgstr "Removido %s de %s"
+msgstr ""
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Remove silence from &end"
-msgstr "Removido %s de %s"
+msgstr ""
 
 #: src/effects/TruncSilence.cpp
 msgid ""
@@ -15114,18 +15101,16 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr "Clipe An&terior Limitado ao Cursor"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Previous Clip Boundary to Cursor"
-msgstr "Clipe An&terior Limitado ao Cursor"
+msgstr ""
 
 #: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "Cursor ao Próxi&mo Clipe Limitado"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Cursor to Next Clip Boundary"
-msgstr "Cursor para Clip Próximo Limite"
+msgstr ""
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -19847,9 +19832,8 @@ msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "Esquerdo=Ampliar, Direito=Diminuir, Meio=Normal"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Install Audacity 4"
-msgstr "&Instalar atualização"
+msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid ""
@@ -19886,9 +19870,8 @@ msgid "No Audacity 4 installer available for your platform."
 msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Unable to create installer file. Please check write permissions."
-msgstr "Impossível criar ficheiro alvo para escrita"
+msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
 msgid "Audacity update"
@@ -19900,9 +19883,8 @@ msgid "Downloading %s"
 msgstr "Transferindo %s"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Download Error"
-msgstr "Transferir"
+msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Failed to download Audacity 4 installer. Please try again later."
@@ -21858,92 +21840,3 @@ msgstr "Ferramentas Espectrais"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Legado"
-
-#~ msgid "25th Anniversary Merchandise!"
-#~ msgstr "Produtos do 25º Aniversário!"
-
-#~ msgid "Visit now"
-#~ msgstr "Visite agora"
-
-#~ msgid "Visit our new Audacity merch store"
-#~ msgstr "Visite a nossa nova loja de produtos do Audacity"
-
-#~ msgid "Open Fro&m Cloud..."
-#~ msgstr "Abrir E&m Cloud…"
-
-#~ msgid "<font color=\"#000000\">"
-#~ msgstr "<font color=\"#000000\">"
-
-#~ msgid "Sign up to Audacity's cloud saving platform"
-#~ msgstr "Registe-se na plataforma de nuvem do Audacity"
-
-#~ msgid "and access your projects from anywhere!"
-#~ msgstr "e tenha acesso aos seus projetos em todo o lado!"
-
-#~ msgid "</font>"
-#~ msgstr "</font>"
-
-#, c-format
-#~ msgid "What's new in Audacity %s"
-#~ msgstr "O que há de novo no Audacity %s"
-
-#, c-format
-#~ msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
-#~ msgstr "Veja o [[%s|release video]] ou leia o [[%s|changelog]] para saber mais sobre o que nós incluímos no último lançamento!</p>"
-
-#, c-format
-#~ msgid "You can also read the [[%s|changelog]]</p>"
-#~ msgstr "Você pode também ler o [[%s|changelog]]</p>"
-
-#, c-format
-#~ msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
-#~ msgstr "<p>Verifique a nossa [[%s|Muse Hub app]] para uma vasta gama de plugins áudio para os utilizadores do Audacity</p>"
-
-#~ msgid "A vocal processing effect that enhances vocal clarity and depth."
-#~ msgstr "Um efeito de processamento vocal que melhora a clareza vocal e  profundidade"
-
-#~ msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
-#~ msgstr "Um plugin de reverberação multifuncional para efeitos amplos e com som natural."
-
-#~ msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
-#~ msgstr "Um amplificador de guitarra e plugin de modelação de efeitos para tons realistas e sons personalizáveis."
-
-#~ msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
-#~ msgstr "Um plugin de reverberação responsivo que se adapta à dinâmica da faixa para paisagens sonoras envolventes."
-
-#~ msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
-#~ msgstr "Um plugin vocal multiefeito que melhora as faixas vocais para resultados profissionais."
-
-#~ msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
-#~ msgstr "Um plugin de efeitos de graves concebido para fornecer um som grave e nítido."
-
-#~ msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
-#~ msgstr "Um plugin para a perfeição do som acústico, aumentando o calor e a clareza."
-
-#~ msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
-#~ msgstr "Um incrível plugin de melhoramento de voz para efeitos vocais profissionais e nítidos."
-
-#~ msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
-#~ msgstr "Uma ferramenta de separação de hastes em tempo real para isolar vozes, bateria e instrumentos."
-
-#, c-format
-#~ msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
-#~ msgstr "Confira uma variedade de plugins de programadores conhecidos disponíveis em [[%s|MuseHub]]."
-
-#~ msgid "A multiband compressor offering precise control over frequencies."
-#~ msgstr "Um compressor multibanda que oferece um controlo preciso sobre as frequências."
-
-#~ msgid "Ace Studio - The World's No.1 AI Singing Voice Generator."
-#~ msgstr "Ace Studio - O Gerador de Voz para Canto No.1 no Mundo."
-
-#~ msgid "Continue for Cloud Storage"
-#~ msgstr "Continuar para Armazenamento na Cloud"
-
-#~ msgid "What's new in Audacity"
-#~ msgstr "O que há de novo no Audacity"
-
-#~ msgid "Watch the release video"
-#~ msgstr "Veja o vídeo de lançamento"
-
-#~ msgid "Audacity feature survey"
-#~ msgstr "Inquérito de recursos do Audacity"

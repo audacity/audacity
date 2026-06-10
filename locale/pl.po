@@ -6,15 +6,16 @@
 # Translators:
 # Link Winterberg, 2024
 # Grzegorz Pruchniakowski <grzegorz.pruchniakowski@gmail.com>, 2026
+# Grzegorz Wojciechowski, 2026
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-05-26 16:41+0300\n"
-"PO-Revision-Date: 2026-03-30 00:00+0000\n"
-"Last-Translator: Grzegorz Pruchniakowski <grzegorz.pruchniakowski@gmail.com>, 2026\n"
+"POT-Creation-Date: 2026-06-10 15:30+0300\n"
+"PO-Revision-Date: 2024-09-20 19:15+0000\n"
+"Last-Translator: Grzegorz Wojciechowski, 2026\n"
 "Language-Team: Polish (https://app.transifex.com/audacity/teams/164520/pl/)\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
@@ -2080,7 +2081,7 @@ msgstr "Plik WebVTT"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Podcast Chapters"
-msgstr ""
+msgstr "Rozdziały podcastu"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Supported label file"
@@ -6829,7 +6830,7 @@ msgstr "Nie można utworzyć pliku docelowego do zapisu"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Unsupported bytes-per-sample value for WavPack export"
-msgstr ""
+msgstr "Nieobsługiwana liczba bajtów na próbkę dla eksportu WavPack"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Exporting selected audio as WavPack"
@@ -8256,9 +8257,9 @@ msgstr "Strona internetowa %s: "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s software is copyright %s 1999-2026 %s Team."
-msgstr "%s jest chroniony prawem autorskim %s 1999-2026 Zespół %s."
+msgstr "Oprogramowanie %s jest objęte prawami autorskimi %s 1999-2026 zespołu %s."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -11671,11 +11672,11 @@ msgstr "Witaj w Audacity!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Try the new Audacity 4 Beta release"
-msgstr ""
+msgstr "Wypróbuj nową wersję Audacity 4 Beta"
 
 #: src/WhatsNewDialog.cpp
 msgid "Test the Beta release"
-msgstr ""
+msgstr "Przetestuj wersję Beta"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
@@ -11687,7 +11688,7 @@ msgstr "Uzyskaj nasze darmowe narzędzia OpenVino AI"
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-msgstr ""
+msgstr "Soap Voice Cleaner: dźwięk wokalu o jakości studyjnej"
 
 #: src/WhatsNewDialog.cpp
 msgid "Explore free plugins for sculpting your audio"
@@ -11699,11 +11700,11 @@ msgstr "Wyświetl darmowe wtyczki"
 
 #: src/WhatsNewDialog.cpp
 msgid "Help us decide the future of Audacity"
-msgstr ""
+msgstr "Pomóż nam zdecydować o przyszłości Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "Take part in survey"
-msgstr ""
+msgstr "Weź udział w badaniu"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -14333,23 +14334,20 @@ msgid "Trunc&ate tracks independently"
 msgstr "Obetnij ścieżki niez&ależnie"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Truncate Location"
-msgstr "&Obetnij do:"
+msgstr "Miejsce obcinania"
 
 #: src/effects/TruncSilence.cpp
 msgid "Remove silence from &beginning"
-msgstr ""
+msgstr "Usuń ciszę z &początku"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Remove silence from &middle"
-msgstr "Usunięto %s z %s"
+msgstr "Usuń ciszę ze &środka"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Remove silence from &end"
-msgstr "Usunięto %s z %s"
+msgstr "Usuń ciszę z &końca"
 
 #: src/effects/TruncSilence.cpp
 msgid ""
@@ -14360,6 +14358,12 @@ msgid ""
 "* Remove silence from middle\n"
 "* Remove silence from end"
 msgstr ""
+"Musi być wybrana co najmniej jedna opcja miejsca.\n"
+"\n"
+"Wybierz przynajmniej jedno z:\n"
+"* Usuń ciszę z początku\n"
+"* Usuń ciszę ze środka\n"
+"* Usuń ciszę z końca"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Save VST Preset As:"
@@ -15101,18 +15105,16 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr "Poprzednia granica przycięcia do k&ursora"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Previous Clip Boundary to Cursor"
-msgstr "Poprzednia granica przycięcia do k&ursora"
+msgstr "Zaznacz od granicy poprzedniego klipu do kursora"
 
 #: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "&Kursor do następnej granicy przycięcia"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Cursor to Next Clip Boundary"
-msgstr "Kursor do następnej granicy przycięcia"
+msgstr "Zaznacz od kursora do granicy następnego klipu"
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -19865,20 +19867,19 @@ msgstr "Przypomnij mi później"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Unable to fetch Audacity 4 release information. Please try again later."
-msgstr ""
+msgstr "Nie można pobrać informacji o wydaniu Audacity 4. Spróbuj ponownie później."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Unable to parse Audacity 4 release information. Please try again later."
-msgstr ""
+msgstr "Nie można odczytać informacji o wydaniu Audacity 4. Spróbuj ponownie później."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "No Audacity 4 installer available for your platform."
-msgstr ""
+msgstr "Brak instalatora Audacity 4 dla tej platformy."
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Unable to create installer file. Please check write permissions."
-msgstr "Nie można utworzyć pliku docelowego do zapisu"
+msgstr "Nie można utworzyć pliku instalatora. Sprawdź uprawnienia do zapisu."
 
 #: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
 msgid "Audacity update"
@@ -19890,13 +19891,12 @@ msgid "Downloading %s"
 msgstr "Pobieranie %s"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Download Error"
-msgstr "Pobierz"
+msgstr "Błąd pobierania"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Failed to download Audacity 4 installer. Please try again later."
-msgstr ""
+msgstr "Nie udało się pobrać instalatora Audacity 4. Spróbuj ponownie później."
 
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
@@ -21847,15 +21847,3 @@ msgstr "Narzędzia widma"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Stare"
-
-#~ msgid "Video: how we're redesigning Audacity for the future"
-#~ msgstr "Wideo: jak przeprojektowujemy Audacity z myślą o przyszłości"
-
-#~ msgid "25th Anniversary Merchandise!"
-#~ msgstr "25-lecie marki!"
-
-#~ msgid "Visit now"
-#~ msgstr "Odwiedź teraz"
-
-#~ msgid "Visit our new Audacity merch store"
-#~ msgstr "Odwiedź nasz nowy sklep Audacity"

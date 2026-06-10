@@ -4,17 +4,18 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
-# Link Winterberg, 2024
-# عمّار عبدالله, 2025
+# Link Winterberg, 2025
+# Abdulaziz Alhuzami, 2026
+# عمّار عبدالله, 2026
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-05-26 16:41+0300\n"
+"POT-Creation-Date: 2026-06-10 15:30+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: عمّار عبدالله, 2025\n"
+"Last-Translator: عمّار عبدالله, 2026\n"
 "Language-Team: Arabic (https://app.transifex.com/audacity/teams/164520/ar/)\n"
 "Language: ar\n"
 "MIME-Version: 1.0\n"
@@ -1353,10 +1354,9 @@ msgid "Rapid tone quality variations, like that guitar sound so popular in the 1
 msgstr "تغيرات نوع نغمة سريعة، مثل صوت القيثارة ذاك المشهور جدا في السبعينيات"
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
-#, fuzzy
 msgctxt "cloud sync"
 msgid "Error importing cloud audio"
-msgstr "خطأ في الاستوراد"
+msgstr ""
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
 msgctxt "update dialog"
@@ -7161,16 +7161,15 @@ msgid "Open from audio.com"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
-#, fuzzy
 msgid "Downloading audio"
-msgstr "رفع الصوت..."
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to download audio from cloud.\n"
 "%s"
-msgstr "فشل ترميز الإعداد المسبق من قبل \"%s\""
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
 msgid "Downloaded audio file does not exist."
@@ -7196,14 +7195,12 @@ msgid "Previews can be updated only for Cloud projects"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open &From Cloud"
-msgstr "الفتح من السحابة"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Cloud &Project..."
-msgstr "افتح مشروعا..."
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Open Cloud &Audio File..."
@@ -7350,9 +7347,8 @@ msgid "Don't show this again"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Open cloud audio file"
-msgstr "ضَمِّن الصوت قبل العلامة الأولى"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7360,15 +7356,15 @@ msgid "less than 1 minute"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "one minute ago"
 msgid_plural "%d minutes ago"
-msgstr[0] "%d دقيقة"
-msgstr[1] "%d دقيقة"
-msgstr[2] "%d دقائق"
-msgstr[3] "%d دقائق"
-msgstr[4] "%d دقيقة"
-msgstr[5] "%d دقيقة"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
+msgstr[4] ""
+msgstr[5] ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7383,9 +7379,8 @@ msgstr[4] ""
 msgstr[5] ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Title"
-msgstr "عنوان المقطع"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Author"
@@ -7405,14 +7400,12 @@ msgid "Failed to authorize account"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Loading audio list..."
-msgstr "رفع الصوت..."
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Failed to get audio list"
-msgstr "أخفقت في تخمين الصيغة"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -11574,9 +11567,8 @@ msgid "Explore free plugins for sculpting your audio"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "View free plugins"
-msgstr "احصل على إضافات وأصوات مجانية"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Help us decide the future of Audacity"
@@ -12607,7 +12599,7 @@ msgstr ""
 #: src/effects/ChangeTempo.cpp
 msgctxt "change tempo"
 msgid "t&o"
-msgstr ""
+msgstr "إلى"
 
 #: src/effects/ChangeTempo.cpp
 #, c-format
@@ -14209,9 +14201,8 @@ msgid "Trunc&ate tracks independently"
 msgstr ""
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Truncate Location"
-msgstr "قلم السكون"
+msgstr ""
 
 #: src/effects/TruncSilence.cpp
 msgid "Remove silence from &beginning"
@@ -14973,18 +14964,16 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr "حد المقطع الضمني السابق إلى المؤشر"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Previous Clip Boundary to Cursor"
-msgstr "حد المقطع الضمني السابق إلى المؤشر"
+msgstr ""
 
 #: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "المؤشر إلى حد المقطع الضمني التالي"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Cursor to Next Clip Boundary"
-msgstr "المؤشر إلى حد المقطع الضمني التالي"
+msgstr ""
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -15101,7 +15090,7 @@ msgstr "كتمت المقاطع المختارة لـ %.2f ثواني عند %.2
 #: src/menus/EditMenus.cpp
 msgctxt "command"
 msgid "Silence"
-msgstr ""
+msgstr "إسكات"
 
 #: src/menus/EditMenus.cpp
 #, c-format
@@ -16012,7 +16001,7 @@ msgstr ""
 
 #: src/menus/TimelineMenus.cpp
 msgid "Tim&eline"
-msgstr ""
+msgstr "الخط الزمني"
 
 #: src/menus/ToolbarMenus.cpp
 msgid "&Toolbars"
@@ -16754,7 +16743,7 @@ msgstr ""
 #: src/prefs/DevicePrefs.cpp
 #, c-format
 msgid "%i Hz"
-msgstr ""
+msgstr "%i هرتز"
 
 #. i18n-hint Software interface to audio devices
 #: src/prefs/DevicePrefs.cpp
@@ -18483,7 +18472,7 @@ msgstr ""
 
 #: src/toolbars/TimeSignatureToolBar.cpp
 msgid "Tempo"
-msgstr ""
+msgstr "سرعة الإيقاع"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
 msgid "Upper Time Signature"
@@ -19278,7 +19267,7 @@ msgstr "مقطع ثنائي"
 #: src/widgets/ASlider.cpp
 #, c-format
 msgid "%+.1f dB"
-msgstr ""
+msgstr "%+.1f dB"
 
 #. i18n-hint: Stereo pan setting
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
@@ -19668,9 +19657,8 @@ msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "أيسر=زوم داخلا، أيمن=زوم خارجا، أوسط=عادي"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Install Audacity 4"
-msgstr "اخرج من Audacity"
+msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid ""
@@ -19720,9 +19708,8 @@ msgid "Downloading %s"
 msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Download Error"
-msgstr "نزل"
+msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Failed to download Audacity 4 installer. Please try again later."
@@ -21506,7 +21493,7 @@ msgstr "نوع الشكل الموجي"
 
 #: plug-ins/tremolo.ny
 msgid "Triangle"
-msgstr ""
+msgstr "مثلث"
 
 #: plug-ins/tremolo.ny
 msgid "Inverse Sawtooth"
@@ -21619,10 +21606,3 @@ msgstr ""
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr ""
-
-#, c-format
-#~ msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
-#~ msgstr "شاهد [[%s|المقطع المضمن]] ، أو اقرأ [[%s|سجل التغييرات]] لمعرفة المزيد حول ما قمنا بتضمينه في الإصدار الأخير!</p>"
-
-#~ msgid "A multiband compressor offering precise control over frequencies."
-#~ msgstr "ضاغط متعدد النطاقات يوفر تحكماً دقيقاً في الترددات."

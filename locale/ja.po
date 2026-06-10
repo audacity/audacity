@@ -1,24 +1,21 @@
-# Japanese translation for Audacity.
-# Copyright (C) 2025 Audacity Team
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Audacity Team
 # This file is distributed under the same license as the audacity package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
 # Translators:
-# ThemeBoy <transifex@themeboy.com>, 2024
-# hokorobi <hokorobi.hokorobi@gmail.com>, 2024
-# Nishikori Shinki, 2024
-# ABE Tsunehiko, 2024
-# Thomas De Rocker, 2024
-# Beluga, 2024
-# 森の子リスのミーコの大冒険 <phroneris@gmail.com>, 2024
-# Tadahisa Sugisaki, 2025
+# Link Winterberg, 2024
+# Dmitry Makarenko, 2025
+# Tadahisa Sugisaki, 2026
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-05-26 16:41+0300\n"
+"POT-Creation-Date: 2026-06-10 15:30+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: Tadahisa Sugisaki, 2025\n"
+"Last-Translator: Tadahisa Sugisaki, 2026\n"
 "Language-Team: Japanese (https://app.transifex.com/audacity/teams/164520/ja/)\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
@@ -1329,7 +1326,7 @@ msgstr "三角波"
 
 #: libraries/lib-builtin-effects/TruncSilenceBase.cpp
 msgid "Truncate Detected Silence"
-msgstr "無音部を切り捨てる"
+msgstr "検出した無音部を切り詰める"
 
 #: libraries/lib-builtin-effects/TruncSilenceBase.cpp
 msgid "Compress Excess Silence"
@@ -1338,15 +1335,15 @@ msgstr "余分な無音部を圧縮"
 #: libraries/lib-builtin-effects/TruncSilenceBase.cpp
 #: src/effects/TruncSilence.cpp resources/EffectsMenuDefaults.xml
 msgid "Truncate Silence"
-msgstr "無音を切り詰める"
+msgstr "無音部を切り詰める"
 
 #: libraries/lib-builtin-effects/TruncSilenceBase.cpp
 msgid "Automatically reduces the length of passages where the volume is below a specified level"
-msgstr "音量が設定レベルより小さな部分の長さを自動的に切り詰めます"
+msgstr "設定レベルより小さな音量部の長さを自動的に切り詰めます"
 
 #: libraries/lib-builtin-effects/TruncSilenceBase.cpp
 msgid "When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group."
-msgstr "別々に独立して切り詰めを行う場合、選択できるオーディオトラックは、トラックの同期ロックグループごとに 1 つです。"
+msgstr "個別に切り詰める場合に、選択できるオーディオトラックは、トラックの同期ロックグループごとに 1 つです。"
 
 #: libraries/lib-builtin-effects/WahWahBase.cpp
 #: resources/EffectsMenuDefaults.xml
@@ -1355,7 +1352,7 @@ msgstr "ワウ（Wahwah）"
 
 #: libraries/lib-builtin-effects/WahWahBase.cpp
 msgid "Rapid tone quality variations, like that guitar sound so popular in the 1970's"
-msgstr "1970 年代ギターサウンドのような急激な音質変化です"
+msgstr "1970 年代ギターサウンドのような急激な音質変化"
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
 msgctxt "cloud sync"
@@ -2084,7 +2081,7 @@ msgstr "WebVTT ファイル"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Podcast Chapters"
-msgstr ""
+msgstr "Podcast チャプタ"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Supported label file"
@@ -6823,7 +6820,7 @@ msgstr "書き込むためのファイルを作成できません"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Unsupported bytes-per-sample value for WavPack export"
-msgstr ""
+msgstr "WavPack エクスポートで対応していないサンプルあたりのバイト数"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Exporting selected audio as WavPack"
@@ -7584,7 +7581,7 @@ msgstr "キャンセル(&C)"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
 msgid "&Try again"
-msgstr "再試行(&T)"
+msgstr "やり直す(&T)"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
 msgid "Account linked successfully!"
@@ -7633,8 +7630,8 @@ msgid ""
 "Sorry, but it seems the email or password you entered is incorrect.\n"
 "Please double-check your credentials and try again!"
 msgstr ""
-"申し訳ありませんが、入力されたメールアドレスまたはパスワードが正しくありません。\n"
-"認証情報を再確認して、もう一度お試しください!"
+"入力されたメールアドレスまたはパスワードが正しくありません。\n"
+"認証情報を再確認して、やり直してください!"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Create a free cloud storage account to access your projects and audio from any device"
@@ -7812,7 +7809,7 @@ msgstr "オーディオをアップロード中..."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading."
-msgstr "ファイルをアップロードできません。audio.com アカウントにリンクしていることを確認してから、再度アップロードしてください。"
+msgstr "ファイルをアップロードできません。audio.com アカウントにリンクしていることを確認してから、アップロードし直してください。"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Upload error"
@@ -7954,7 +7951,7 @@ msgstr "MuseHub.com に接続できません。接続を確認してやり直し
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Try again"
-msgstr "再試行"
+msgstr "やり直す"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp src/WhatsNewDialog.cpp
 msgid "Get it on MuseHub"
@@ -8184,9 +8181,9 @@ msgstr ""
 "日本語訳:<br>\n"
 "Atsushi Yoshida -2015<br>\n"
 "Phroneris 2018-2022<br>\n"
-"SakiPapa 2022-2025<br>\n"
-"Akira Nishimura 2023-2025<br>\n"
-"Shinki Nishikori 2024-2025"
+"Akira Nishimura 2023-2026<br>\n"
+"Shinki Nishikori 2024-2026<br>\n"
+"SakiPapa 2022-2026"
 
 #: src/AboutDialog.cpp
 msgid "<h3>"
@@ -8251,9 +8248,9 @@ msgstr "%s ウェブサイト: "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s software is copyright %s 1999-2026 %s Team."
-msgstr "%s ソフトウェア著作権保有 %s 1999～2024 %s チーム。"
+msgstr "%s ソフトウェア著作権保有 %s 1999～2026 %s チーム。"
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -11666,11 +11663,11 @@ msgstr "Audacity へようこそ!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Try the new Audacity 4 Beta release"
-msgstr ""
+msgstr "新しい Audacity 4 ベータ版を試す"
 
 #: src/WhatsNewDialog.cpp
 msgid "Test the Beta release"
-msgstr ""
+msgstr "ベータ版をテスト"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
@@ -11682,7 +11679,7 @@ msgstr "無料の OpenVino AI ツールを入手"
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-msgstr ""
+msgstr "Soap ボイスクリーナー：スタジオ品質のボイスオーバーサウンド"
 
 #: src/WhatsNewDialog.cpp
 msgid "Explore free plugins for sculpting your audio"
@@ -11694,11 +11691,11 @@ msgstr "無料のプラグインを表示"
 
 #: src/WhatsNewDialog.cpp
 msgid "Help us decide the future of Audacity"
-msgstr ""
+msgstr "Audacity の未来を決めるのに協力してください"
 
 #: src/WhatsNewDialog.cpp
 msgid "Take part in survey"
-msgstr ""
+msgstr "アンケートに協力する"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -13119,7 +13116,7 @@ msgstr "継続時間(&D):"
 
 #: src/effects/DtmfGen.cpp
 msgid "&Tone/silence ratio:"
-msgstr "トーンと無音の比(&T):"
+msgstr "トーン/無音の比率(&T):"
 
 #: src/effects/DtmfGen.cpp
 msgid "Duty cycle:"
@@ -13769,7 +13766,7 @@ msgstr "RMS dB"
 
 #: src/effects/Loudness.cpp
 msgid "Normalize &stereo channels independently"
-msgstr "ステレオチャンネルごとに独立してノーマライズ(&S)"
+msgstr "ステレオチャンネルを個別にノーマライズ(&S)"
 
 #: src/effects/Loudness.cpp
 msgid "&Treat mono as dual-mono (recommended)"
@@ -13963,7 +13960,7 @@ msgstr "最大振幅 dB"
 
 #: src/effects/Normalize.cpp
 msgid "N&ormalize stereo channels independently"
-msgstr "ステレオチャンネルごとにノーマライズ(&O)"
+msgstr "ステレオチャンネルを個別にノーマライズ(&O)"
 
 #. i18n-hint: This is how many times longer the sound will be, e.g. applying
 #. * the effect to a 1-second sample, with the default Stretch Factor of 10.0
@@ -14168,7 +14165,7 @@ msgstr "最終整列に強制"
 
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Ignore Silence at Beginnings and Endings"
-msgstr "最初と最後の無音部分を無視"
+msgstr "先頭と末尾の無音部分を無視"
 
 #: src/effects/ScoreAlignDialog.cpp
 msgid "Silence Threshold:"
@@ -14313,7 +14310,7 @@ msgstr "無音検出"
 
 #: src/effects/TruncSilence.cpp
 msgid "Tr&uncate to:"
-msgstr "切り詰め(&U):"
+msgstr "次まで切り詰める(&U):"
 
 #: src/effects/TruncSilence.cpp src/import/ImportRaw.cpp
 msgid "%"
@@ -14325,26 +14322,23 @@ msgstr "圧縮(&O):"
 
 #: src/effects/TruncSilence.cpp
 msgid "Trunc&ate tracks independently"
-msgstr "トラックごとに独立して切り詰め(&A)"
+msgstr "トラックを個別に切り詰める(&A)"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Truncate Location"
-msgstr "切り詰め(&U):"
+msgstr "切り詰める"
 
 #: src/effects/TruncSilence.cpp
 msgid "Remove silence from &beginning"
-msgstr ""
+msgstr "先頭から無音部を削除(&B)"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Remove silence from &middle"
-msgstr "「%s」を「%s」から消去"
+msgstr "中間にある無音部を削除(&M)"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Remove silence from &end"
-msgstr "「%s」を「%s」から消去"
+msgstr "末尾から無音部を削除(&E)"
 
 #: src/effects/TruncSilence.cpp
 msgid ""
@@ -14355,6 +14349,12 @@ msgid ""
 "* Remove silence from middle\n"
 "* Remove silence from end"
 msgstr ""
+"次から場所のオプションを少なくとも1つ選択してください。\n"
+"\n"
+"次から少なくとも1つを選択：\n"
+"* 先頭から無音部を削除\n"
+"* 中間から無音部を削除\n"
+"* 末尾から無音部を削除"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Save VST Preset As:"
@@ -15104,18 +15104,16 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr "前のクリップ境界からカーソルまで(&V)"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Previous Clip Boundary to Cursor"
-msgstr "前のクリップ境界からカーソルまで(&V)"
+msgstr "直前のクリップ境界からカーソルまでを選択"
 
 #: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "カーソルから次のクリップ境界まで(&X)"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Cursor to Next Clip Boundary"
-msgstr "カーソルを次のクリップ境界へ"
+msgstr "カーソルから次のクリップ境界までを選択"
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -15192,7 +15190,7 @@ msgstr "クリップ内容を貼り付けます。お待ちください"
 
 #: src/menus/EditMenus.cpp
 msgid "The content you are trying to paste will span across more tracks than you currently have available. Add more tracks and try again."
-msgstr "貼り付けようとしているコンテンツは、現在使用可能なトラック数を超えています。トラックを追加して、もう一度試してください。"
+msgstr "貼り付けようとしているコンテンツは、現在使用可能なトラック数を超えています。トラックを追加して、やり直してください。"
 
 #: src/menus/EditMenus.cpp
 msgid "There are not enough tracks selected to accommodate your copied content. Select additional tracks and try again."
@@ -19861,20 +19859,19 @@ msgstr "あとで通知"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Unable to fetch Audacity 4 release information. Please try again later."
-msgstr ""
+msgstr "Audacity 4 のリリース情報を取得できません。あとでやり直してください。"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Unable to parse Audacity 4 release information. Please try again later."
-msgstr ""
+msgstr "Audacity 4 のリリース情報を解析できません。あとでやり直してください。"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "No Audacity 4 installer available for your platform."
-msgstr ""
+msgstr "お使いのプラットフォームに対応した Audacity 4 のインストーラは提供されていません。"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Unable to create installer file. Please check write permissions."
-msgstr "書き込むためのファイルを作成できません"
+msgstr "インストーラファイルを作成できません。書き込み権があるかを確認してください。"
 
 #: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
 msgid "Audacity update"
@@ -19886,13 +19883,12 @@ msgid "Downloading %s"
 msgstr "%s をダウンロード中"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Download Error"
-msgstr "ダウンロード"
+msgstr "ダウンロードエラー"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Failed to download Audacity 4 installer. Please try again later."
-msgstr ""
+msgstr "Audacity 4 のインストーラをダウンロードできません。あとでやり直してください。"
 
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
@@ -21845,15 +21841,3 @@ msgstr "スペクトルツール"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "レガシー"
-
-#~ msgid "Video: how we're redesigning Audacity for the future"
-#~ msgstr "動画：未来を見据えた Audacity のデザイン刷新"
-
-#~ msgid "25th Anniversary Merchandise!"
-#~ msgstr "25周年記念商品!"
-
-#~ msgid "Visit now"
-#~ msgstr "今すぐ接続"
-
-#~ msgid "Visit our new Audacity merch store"
-#~ msgstr "新しい Audacity 販売ストアに接続"

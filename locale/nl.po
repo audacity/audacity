@@ -1,19 +1,21 @@
-# Dutch translation for Audacity.
-# Copyright (C) 2025 Audacity Team
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Audacity Team
 # This file is distributed under the same license as the audacity package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
-# Paval Shalamitski <yehekim@gmail.com>, 2023
-# Thomas De Rocker, 2023-2025
+# Link Winterberg, 2024
+# Dmitry Makarenko, 2025
+# Thomas De Rocker, 2026
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-05-26 16:41+0300\n"
+"POT-Creation-Date: 2026-06-10 15:30+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: Dmitry Makarenko, 2025\n"
+"Last-Translator: Thomas De Rocker, 2026\n"
 "Language-Team: Dutch (https://app.transifex.com/audacity/teams/164520/nl/)\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
@@ -2079,7 +2081,7 @@ msgstr "WebVTT-bestand"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Podcast Chapters"
-msgstr ""
+msgstr "Podcast hoofdstukken"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Supported label file"
@@ -6820,7 +6822,7 @@ msgstr "Niet in staat om doelbestand voor schrijven aan te maken"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Unsupported bytes-per-sample value for WavPack export"
-msgstr ""
+msgstr "Ongeldige waarde voor 'bytes per sample' bij WavPack-export"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Exporting selected audio as WavPack"
@@ -8241,9 +8243,9 @@ msgstr "%s-website: "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s software is copyright %s 1999-2026 %s Team."
-msgstr "%s-software is auteursrecht %s 1999-2024 %s-team."
+msgstr "%s-software is auteursrecht %s 1999-2026 %s-team."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -11644,11 +11646,11 @@ msgstr "Welkom bij Audacity!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Try the new Audacity 4 Beta release"
-msgstr ""
+msgstr "Probeer de nieuwe bètaversie van Audacity 4"
 
 #: src/WhatsNewDialog.cpp
 msgid "Test the Beta release"
-msgstr ""
+msgstr "Test de bètarelease"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
@@ -11660,7 +11662,7 @@ msgstr "Download onze gratis OpenVino-AI-tools"
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-msgstr ""
+msgstr "Soap Voice Cleaner: studio-kwaliteit voice-over geluid"
 
 #: src/WhatsNewDialog.cpp
 msgid "Explore free plugins for sculpting your audio"
@@ -11672,11 +11674,11 @@ msgstr "Gratis plug-ins bekijken"
 
 #: src/WhatsNewDialog.cpp
 msgid "Help us decide the future of Audacity"
-msgstr ""
+msgstr "Help ons om over de toekomst van Audacity te beslissen"
 
 #: src/WhatsNewDialog.cpp
 msgid "Take part in survey"
-msgstr ""
+msgstr "Deelnemen aan vragenlijst"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -14306,23 +14308,20 @@ msgid "Trunc&ate tracks independently"
 msgstr "Tracks onafhankelijk afkappen"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Truncate Location"
-msgstr "Afkappen tot:"
+msgstr "Locatie van afkappen"
 
 #: src/effects/TruncSilence.cpp
 msgid "Remove silence from &beginning"
-msgstr ""
+msgstr "Stilte aan het begin verwijderen"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Remove silence from &middle"
-msgstr "%s verwijderd van %s"
+msgstr "Stilte in het midden verwijderen"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Remove silence from &end"
-msgstr "%s verwijderd van %s"
+msgstr "Stilte aan het einde verwijderen"
 
 #: src/effects/TruncSilence.cpp
 msgid ""
@@ -14333,6 +14332,12 @@ msgid ""
 "* Remove silence from middle\n"
 "* Remove silence from end"
 msgstr ""
+"Er moet ten minste één locatieoptie worden geselecteerd.\n"
+"\n"
+"Selecteer ten minste één van de volgende opties:\n"
+"* Stilte aan het begin verwijderen\n"
+"* Stilte in het midden verwijderen\n"
+"* Stilte aan het einde verwijderen"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Save VST Preset As:"
@@ -14978,7 +14983,7 @@ msgstr "Samplerate:"
 #. i18n-hint: Guess format of raw file
 #: src/import/ImportRaw.cpp
 msgid "Detect"
-msgstr "Detacteren"
+msgstr "Detecteren"
 
 #: src/import/ImportRaw.cpp src/menus/FileMenus.cpp
 msgid "&Import"
@@ -15068,18 +15073,16 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr "Vorige clipgrens naar cursor"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Previous Clip Boundary to Cursor"
-msgstr "Vorige clipgrens naar cursor"
+msgstr "Van grens van vorige clip naar cursor selecteren"
 
 #: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "Cursor naar volgende clipgrens"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Cursor to Next Clip Boundary"
-msgstr "Cursor naar volgende clipgrens"
+msgstr "Van cursor naar grens van volgende clip selecteren"
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -19802,7 +19805,7 @@ msgstr "Links=Inzoomen, Rechts=Uitzoomen, Middel=Normaal"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Install Audacity 4"
-msgstr ""
+msgstr "Audacity 4 installeren"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid ""
@@ -19839,9 +19842,8 @@ msgid "No Audacity 4 installer available for your platform."
 msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Unable to create installer file. Please check write permissions."
-msgstr "Niet in staat om doelbestand voor schrijven aan te maken"
+msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
 msgid "Audacity update"
@@ -19853,9 +19855,8 @@ msgid "Downloading %s"
 msgstr "%s downloaden"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Download Error"
-msgstr "Downloaden"
+msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Failed to download Audacity 4 installer. Please try again later."
@@ -21812,15 +21813,3 @@ msgstr "Spectraal gereedschap"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Oud"
-
-#~ msgid "Video: how we're redesigning Audacity for the future"
-#~ msgstr "Video: hoe we Audacity opnieuw ontwerpen voor de toekomst"
-
-#~ msgid "25th Anniversary Merchandise!"
-#~ msgstr "25ste verjaardag koopwaar!"
-
-#~ msgid "Visit now"
-#~ msgstr "Nu bezoeken"
-
-#~ msgid "Visit our new Audacity merch store"
-#~ msgstr "Bezoek onze nieuwe Audacity merch-store"

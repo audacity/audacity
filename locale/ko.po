@@ -5,30 +5,25 @@
 #
 # Translators:
 # Link Winterberg, 2024
-# Jinhyeon Kim, 2024
 # lee tg, 2024
-# Paval Shalamitski <yehekim@gmail.com>, 2023
-# alexhojinpark, 2024
-# Dongyun Kim <kenny122@ajou.ac.kr>, 2023
-# Seong-ho Cho <darkcircle.0426@gmail.com>, 2023
-# Potato <sheppaul@naver.com>, 2023
 # JungHee Lee <daemul72@gmail.com>, 2025
-# LEE Hwanyong <hwan@ajou.ac.kr>, 2023-2025
+# LEE Hwanyong <hwan@ajou.ac.kr>, 2025
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-05-26 16:41+0300\n"
-"PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: LEE Hwanyong <hwan@ajou.ac.kr>, 2025\n"
+"POT-Creation-Date: 2026-06-10 15:30+0300\n"
+"PO-Revision-Date: 2026-05-30 10:10+0900\n"
+"Last-Translator: Hwanyong Lee <hwan@ajou.ac.kr>\n"
 "Language-Team: Korean (https://app.transifex.com/audacity/teams/164520/ko/)\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 3.9\n"
 
 #: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
 #: src/RealtimeEffectPanel.cpp
@@ -2086,7 +2081,7 @@ msgstr "WebVTT 파일"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Podcast Chapters"
-msgstr ""
+msgstr "팟캐스트 챕터"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Supported label file"
@@ -6832,7 +6827,7 @@ msgstr "대상 파일을 쓰기 위해 생성할 수 없습니다"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Unsupported bytes-per-sample value for WavPack export"
-msgstr ""
+msgstr "WavPack 내보내기에서 지원되지 않는 샘플당 바이트 수"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Exporting selected audio as WavPack"
@@ -8250,9 +8245,9 @@ msgstr "%s 웹사이트: "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s software is copyright %s 1999-2026 %s Team."
-msgstr "%s 소프트웨어의 저작권 %s 1999-2024 %s 팀."
+msgstr "%s 소프트웨어의 저작권 %s 1999-2026 %s 팀."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -11658,11 +11653,11 @@ msgstr "오다시티 사용을 환영합니다!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Try the new Audacity 4 Beta release"
-msgstr ""
+msgstr "새로운 Audacity 4 베타 버전을 사용해 보세요"
 
 #: src/WhatsNewDialog.cpp
 msgid "Test the Beta release"
-msgstr ""
+msgstr "베타 버전 사용해 보기"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
@@ -11674,7 +11669,7 @@ msgstr "OpenVino AI 도구를 무료로 받기"
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-msgstr ""
+msgstr "Soap Voice Cleaner: 스튜디오 품질의 음성 해설 사운드"
 
 #: src/WhatsNewDialog.cpp
 msgid "Explore free plugins for sculpting your audio"
@@ -11686,11 +11681,11 @@ msgstr "무료 플러그인 보기"
 
 #: src/WhatsNewDialog.cpp
 msgid "Help us decide the future of Audacity"
-msgstr ""
+msgstr "Audacity의 미래를 함께 결정해 주세요"
 
 #: src/WhatsNewDialog.cpp
 msgid "Take part in survey"
-msgstr ""
+msgstr "설문에 참여하세요"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -14317,23 +14312,20 @@ msgid "Trunc&ate tracks independently"
 msgstr "트랙을 독립적으로 무음 구간 단축(&A)"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Truncate Location"
-msgstr "무음 구간 단축(&U):"
+msgstr "위치 잘라버림"
 
 #: src/effects/TruncSilence.cpp
 msgid "Remove silence from &beginning"
-msgstr ""
+msgstr "시작부분에서 묵음을 제거 (&B)"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Remove silence from &middle"
-msgstr "%s가 제거됨 %s 중"
+msgstr "중간부분에서 묵음을 제거 (&M)"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Remove silence from &end"
-msgstr "%s가 제거됨 %s 중"
+msgstr "끝부분에서 묵음을 제거 (&E)"
 
 #: src/effects/TruncSilence.cpp
 msgid ""
@@ -14344,6 +14336,12 @@ msgid ""
 "* Remove silence from middle\n"
 "* Remove silence from end"
 msgstr ""
+"위치 옵션 중 하나 이상을 선택해야 합니다.\n"
+"\n"
+"다음 중 하나 이상을 선택해 주세요:\n"
+"* 시작 부분의 무음 제거\n"
+"* 중간 부분의 무음 제거\n"
+"* 끝 부분의 무음 제거"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Save VST Preset As:"
@@ -15076,18 +15074,16 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr "이전 클립 경계에서 커서로(&V)"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Previous Clip Boundary to Cursor"
-msgstr "이전 클립 경계에서 커서로(&V)"
+msgstr "커서 위치에 이전 클립 경계 설정"
 
 #: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "커서에서 다음 클립 경계로(&X)"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Cursor to Next Clip Boundary"
-msgstr "다음 클립의 경계로 커서 이동"
+msgstr "다음 클립 경계로 커서 이동"
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -19838,20 +19834,19 @@ msgstr "나중에 다시 알림"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Unable to fetch Audacity 4 release information. Please try again later."
-msgstr ""
+msgstr "Audacity 4 릴리스 정보를 가져올 수 없습니다. 잠시 후 다시 시도해 주세요."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Unable to parse Audacity 4 release information. Please try again later."
-msgstr ""
+msgstr "Audacity 4 릴리스 정보를 분석할 수 없습니다. 잠시 후 다시 시도해 주세요."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "No Audacity 4 installer available for your platform."
-msgstr ""
+msgstr "사용 중인 플랫폼용 Audacity 4 설치 프로그램이 없습니다."
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Unable to create installer file. Please check write permissions."
-msgstr "대상 파일을 쓰기 위해 생성할 수 없습니다"
+msgstr "설치 파일을 만들 수 없습니다. 쓰기 권한을 확인해 주세요."
 
 #: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
 msgid "Audacity update"
@@ -19863,13 +19858,12 @@ msgid "Downloading %s"
 msgstr "%s 다운로드 중"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Download Error"
-msgstr "다운로드"
+msgstr "다운로드 오류"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Failed to download Audacity 4 installer. Please try again later."
-msgstr ""
+msgstr "Audacity 4 설치 프로그램을 다운로드하는 데 실패했습니다. 잠시 후 다시 시도해 주세요."
 
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp

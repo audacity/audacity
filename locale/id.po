@@ -5,16 +5,16 @@
 #
 # Translators:
 # Link Winterberg, 2024
-# Catarina Anabela, 2025
+# Catarina Anabela, 2026
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-05-26 16:41+0300\n"
+"POT-Creation-Date: 2026-06-10 15:30+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: Catarina Anabela, 2025\n"
+"Last-Translator: Catarina Anabela, 2026\n"
 "Language-Team: Indonesian (https://app.transifex.com/audacity/teams/164520/id/)\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
@@ -1354,10 +1354,9 @@ msgid "Rapid tone quality variations, like that guitar sound so popular in the 1
 msgstr "Variasi kualitas nada yang cepat, seperti suara gitar yang begitu populer pada tahun 1970-an"
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
-#, fuzzy
 msgctxt "cloud sync"
 msgid "Error importing cloud audio"
-msgstr "Kesalahan Mengimpor"
+msgstr ""
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
 msgctxt "update dialog"
@@ -7203,16 +7202,15 @@ msgid "Open from audio.com"
 msgstr "Buka dari audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
-#, fuzzy
 msgid "Downloading audio"
-msgstr "Mengunduh %s"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to download audio from cloud.\n"
 "%s"
-msgstr "Gagal melakukan encoding preset dari \"%s\""
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
 msgid "Downloaded audio file does not exist."
@@ -7238,19 +7236,16 @@ msgid "Previews can be updated only for Cloud projects"
 msgstr "Pratinjau hanya bisa diperbarui untuk proyek Awan"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open &From Cloud"
-msgstr "Buka dari Awan"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Cloud &Project..."
-msgstr "Buka Proyek..."
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Cloud &Audio File..."
-msgstr "&Perbarui Pratinjau Audio Awan"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Save &To Cloud..."
@@ -7393,9 +7388,8 @@ msgid "Don't show this again"
 msgstr "Jangan tampilkan lagi"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Open cloud audio file"
-msgstr "&Perbarui Pratinjau Audio Awan"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7403,10 +7397,10 @@ msgid "less than 1 minute"
 msgstr "kurang dari 1 menit"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "one minute ago"
 msgid_plural "%d minutes ago"
-msgstr[0] "%d menit yang lalu"
+msgstr[0] ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7416,9 +7410,8 @@ msgid_plural "%d hours ago"
 msgstr[0] "%d jam yang lalu"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Title"
-msgstr "Judul Trek"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Author"
@@ -7438,14 +7431,12 @@ msgid "Failed to authorize account"
 msgstr "Gagal mengotorisasi akun"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Loading audio list..."
-msgstr "Mengunggah audio..."
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Failed to get audio list"
-msgstr "Gagal mendapatkan daftar proyek"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7646,7 +7637,7 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Create a free cloud storage account to access your projects and audio from any device"
-msgstr "Buat Akun Awan baru dan akses proyek dan audio Anda dari perangkat apa pun"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to save to the cloud"
@@ -8251,9 +8242,9 @@ msgstr "situs web %s: "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s software is copyright %s 1999-2026 %s Team."
-msgstr "Perangkat lunak %s adalah hak cipta %s 1999-2024 Tim %s."
+msgstr ""
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -11681,9 +11672,8 @@ msgid "Explore free plugins for sculpting your audio"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "View free plugins"
-msgstr "Dapatkan plugin & suara gratis"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Help us decide the future of Audacity"
@@ -14321,23 +14311,20 @@ msgid "Trunc&ate tracks independently"
 msgstr "Pang&kas trek secara mandiri"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Truncate Location"
-msgstr "Pa&ngkas ke:"
+msgstr ""
 
 #: src/effects/TruncSilence.cpp
 msgid "Remove silence from &beginning"
 msgstr ""
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Remove silence from &middle"
-msgstr "Membuang %s dari %s"
+msgstr ""
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Remove silence from &end"
-msgstr "Membuang %s dari %s"
+msgstr ""
 
 #: src/effects/TruncSilence.cpp
 msgid ""
@@ -15080,18 +15067,16 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr "Batas Klip Sebelum Sebelumnya ke Kursor"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Previous Clip Boundary to Cursor"
-msgstr "Batas Klip Sebelum Sebelumnya ke Kursor"
+msgstr ""
 
 #: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "Kursor ke Batas Klip be&rikutnya"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Cursor to Next Clip Boundary"
-msgstr "Kursor ke Batas Klip Berikutnya"
+msgstr ""
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -19812,9 +19797,8 @@ msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "Kiri=Perbesar, Kanan=Perkecil, Tengah=Normal"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Install Audacity 4"
-msgstr "&Pasang pembaruan"
+msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid ""
@@ -19851,9 +19835,8 @@ msgid "No Audacity 4 installer available for your platform."
 msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Unable to create installer file. Please check write permissions."
-msgstr "Tidak dapat membuat berkas target untuk ditulis"
+msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
 msgid "Audacity update"
@@ -19865,9 +19848,8 @@ msgid "Downloading %s"
 msgstr "Mengunduh %s"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Download Error"
-msgstr "Unduh"
+msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Failed to download Audacity 4 installer. Please try again later."
@@ -21822,92 +21804,3 @@ msgstr "Alat Spektral"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Terdahulu"
-
-#~ msgid "25th Anniversary Merchandise!"
-#~ msgstr "Merchandise Hari Jadi ke-25!"
-
-#~ msgid "Visit now"
-#~ msgstr "Kunjungi sekarang"
-
-#~ msgid "Visit our new Audacity merch store"
-#~ msgstr "Kunjungi toko merchandise Audacity baru kami"
-
-#~ msgid "Open Fro&m Cloud..."
-#~ msgstr "Buka dar&i Awan..."
-
-#~ msgid "<font color=\"#000000\">"
-#~ msgstr "<font color=\"#000000\">"
-
-#~ msgid "Sign up to Audacity's cloud saving platform"
-#~ msgstr "Daftarkan diri Anda ke platform penyimpanan awan Audacity"
-
-#~ msgid "and access your projects from anywhere!"
-#~ msgstr "dan akses proyek Anda dari mana saja!"
-
-#~ msgid "</font>"
-#~ msgstr "</font>"
-
-#, c-format
-#~ msgid "What's new in Audacity %s"
-#~ msgstr "Apa yang baru di Audacity %s"
-
-#, c-format
-#~ msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
-#~ msgstr "Tonton [[%s|video rilisan]] atau baca [[%s|catatan perubahan]] untuk mengetahui lebih lanjut apa saja yang telah kami sertakan dalam rilisan terbaru!</p>"
-
-#, c-format
-#~ msgid "You can also read the [[%s|changelog]]</p>"
-#~ msgstr "Anda juga dapat membaca [[%s|changelog]]</p>"
-
-#, c-format
-#~ msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
-#~ msgstr "<p>Cek [[%s|Aplikasi Muse Hub]] kami untuk berbagai macam plugin audio untuk pengguna Audacity</p>"
-
-#~ msgid "A vocal processing effect that enhances vocal clarity and depth."
-#~ msgstr "Efek pemrosesan vokal yang meningkatkan kejernihan dan kedalaman vokal."
-
-#~ msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
-#~ msgstr "Plugin reverb serbaguna untuk efek suara yang terdengar luas dan alami."
-
-#~ msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
-#~ msgstr "Plugin pemodelan amp dan efek gitar untuk nada yang realistis dan suara yang dapat disesuaikan."
-
-#~ msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
-#~ msgstr "Plugin reverb responsif yang beradaptasi untuk melacak dinamika untuk lanskap suara yang imersif."
-
-#~ msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
-#~ msgstr "Plugin multi-efek vokal yang menyempurnakan trek vokal untuk hasil yang profesional."
-
-#~ msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
-#~ msgstr "Plugin efek bass yang didesain untuk menghasilkan suara low-end yang jernih dan tajam."
-
-#~ msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
-#~ msgstr "Plugin untuk kesempurnaan suara akustik, meningkatkan kehangatan dan kejernihan."
-
-#~ msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
-#~ msgstr "Plugin penyempurnaan suara yang mengagumkan untuk efek vokal yang jernih dan profesional."
-
-#~ msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
-#~ msgstr "Alat pemisah stem real-time untuk mengisolasi vokal, drum, dan instrumen."
-
-#, c-format
-#~ msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
-#~ msgstr "Lihat berbagai plugin dari pengembang terkenal yang tersedia di [[%s|MuseHub]]."
-
-#~ msgid "A multiband compressor offering precise control over frequencies."
-#~ msgstr "Kompresor multiband yang menawarkan kontrol yang tepat atas frekuensi."
-
-#~ msgid "Ace Studio - The World's No.1 AI Singing Voice Generator."
-#~ msgstr "Ace Studio - Penghasil Suara Bernyanyi AI No.1 di Dunia."
-
-#~ msgid "Continue for Cloud Storage"
-#~ msgstr "Lanjutkan untuk Penyimpanan Awan"
-
-#~ msgid "What's new in Audacity"
-#~ msgstr "Apa yang baru di Audacity"
-
-#~ msgid "Watch the release video"
-#~ msgstr "Tonton video rilis"
-
-#~ msgid "Audacity feature survey"
-#~ msgstr "Survei fitur Audacity"

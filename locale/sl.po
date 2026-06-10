@@ -1,20 +1,21 @@
-# Slovenian translation for Audacity.
-# Copyright (C) 2025 Audacity Team
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Audacity Team
 # This file is distributed under the same license as the audacity package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
-# David <popotnikpp@gmail.com>, 2023
-# Martin Srebotnjak <miles@filmsi.net>, 2024-2025
+# Link Winterberg, 2024
+# Dmitry Makarenko, 2025
+# Martin Srebotnjak <miles@filmsi.net>, 2026
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-05-26 16:41+0300\n"
+"POT-Creation-Date: 2026-06-10 15:30+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: Dmitry Makarenko, 2025\n"
+"Last-Translator: Martin Srebotnjak <miles@filmsi.net>, 2026\n"
 "Language-Team: Slovenian (https://app.transifex.com/audacity/teams/164520/sl/)\n"
 "Language: sl\n"
 "MIME-Version: 1.0\n"
@@ -2079,7 +2080,7 @@ msgstr "Datoteka WebVTT"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Podcast Chapters"
-msgstr ""
+msgstr "Poglavja podkasta"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Supported label file"
@@ -6826,7 +6827,7 @@ msgstr "Ciljne datoteke za pisanje ni mogoče ustvariti"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Unsupported bytes-per-sample value for WavPack export"
-msgstr ""
+msgstr "Nepodprta rednost bitov na vzorec za izvoz WavPack"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Exporting selected audio as WavPack"
@@ -8253,9 +8254,9 @@ msgstr "Spletišče %s: "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s software is copyright %s 1999-2026 %s Team."
-msgstr "Programje %s je avtorsko zaščitilo %s 1999-2024 ekipa %s."
+msgstr "Programje %s je avtorsko zaščitilo: %s 1999-2026 ekipa %s."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -11668,11 +11669,11 @@ msgstr "Dobrodošli v Audacity!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Try the new Audacity 4 Beta release"
-msgstr ""
+msgstr "Poskusite novo beta izdajo Audacity 4"
 
 #: src/WhatsNewDialog.cpp
 msgid "Test the Beta release"
-msgstr ""
+msgstr "Preizkusi izdajo beta"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
@@ -11684,7 +11685,7 @@ msgstr "Prosta orodja OpenVino AI"
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-msgstr ""
+msgstr "Čistilnik glasu z milom: zvok pripovedovalcev v studijski kakovosti"
 
 #: src/WhatsNewDialog.cpp
 msgid "Explore free plugins for sculpting your audio"
@@ -11696,11 +11697,11 @@ msgstr "Pokaži proste vstavke"
 
 #: src/WhatsNewDialog.cpp
 msgid "Help us decide the future of Audacity"
-msgstr ""
+msgstr "Pomagajte se nam odločiti o prihodnosti Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "Take part in survey"
-msgstr ""
+msgstr "Udeležite se ankete"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -14330,23 +14331,20 @@ msgid "Trunc&ate tracks independently"
 msgstr "Porež&i steze neodvisno"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Truncate Location"
-msgstr "Pore&ži na:"
+msgstr "Poreži mesto"
 
 #: src/effects/TruncSilence.cpp
 msgid "Remove silence from &beginning"
-msgstr ""
+msgstr "Odstrani tišino od &začetka"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Remove silence from &middle"
-msgstr "Odstranjeno: %s iz %s"
+msgstr "Odstrani tišino iz &sredine"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Remove silence from &end"
-msgstr "Odstranjeno: %s iz %s"
+msgstr "Odstrani tišino s &konca"
 
 #: src/effects/TruncSilence.cpp
 msgid ""
@@ -14357,6 +14355,12 @@ msgid ""
 "* Remove silence from middle\n"
 "* Remove silence from end"
 msgstr ""
+"Najmanj ena možnost položaja mora biti izbrana.\n"
+"\n"
+"Izberite najmanj eno od naslednjih možnosti:\n"
+"* Odstrani tišino od začetka\n"
+"* Odstrani tišino iz sredine\n"
+"* Odstrani tišino s konca"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Save VST Preset As:"
@@ -15098,18 +15102,16 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr "Meja pre&dhodnega posnetka do kazalke"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Previous Clip Boundary to Cursor"
-msgstr "Meja pre&dhodnega posnetka do kazalke"
+msgstr "Izberi od meje prejšnjega posnetka do kazalke"
 
 #: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "Kazalka do meje nas&lednjega posnetka"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Cursor to Next Clip Boundary"
-msgstr "Kazalka do meje naslednjega posnetka"
+msgstr "Izberi od kazalke do meje naslednjega posnetka"
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -19862,20 +19864,19 @@ msgstr "Spomni me kasneje"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Unable to fetch Audacity 4 release information. Please try again later."
-msgstr ""
+msgstr "Podatkov o izdaji Audacity 4 ni možno pridobiti. Poskusite znova kasneje."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Unable to parse Audacity 4 release information. Please try again later."
-msgstr ""
+msgstr "Podatkov o izdaji Audacity 4 ni možno razčleniti. Poskusite znova kasneje."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "No Audacity 4 installer available for your platform."
-msgstr ""
+msgstr "Namestilnik Audacity 4 za vašo platformo ni na voljo."
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Unable to create installer file. Please check write permissions."
-msgstr "Ciljne datoteke za pisanje ni mogoče ustvariti"
+msgstr "Namestitvene datoteke ni možno ustvariti. Preverite pravice za pisanje."
 
 #: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
 msgid "Audacity update"
@@ -19887,13 +19888,12 @@ msgid "Downloading %s"
 msgstr "Prenašanje %s"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Download Error"
-msgstr "Prenesi"
+msgstr "Napaka pri prejemu"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Failed to download Audacity 4 installer. Please try again later."
-msgstr ""
+msgstr "Prejemanje namestilnika Audacity 4 je spodletelo. Poskusite znova kasneje."
 
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
@@ -21843,15 +21843,3 @@ msgstr "Spektralna orodja"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Opuščeno"
-
-#~ msgid "Video: how we're redesigning Audacity for the future"
-#~ msgstr "Video: kako preoblikujemo Audacity za prihodnost"
-
-#~ msgid "25th Anniversary Merchandise!"
-#~ msgstr "Blago z logotipom ob 25. obletnici"
-
-#~ msgid "Visit now"
-#~ msgstr "Obišči zdaj"
-
-#~ msgid "Visit our new Audacity merch store"
-#~ msgstr "Obiščite našo novo trgovino z blagom Audacity"

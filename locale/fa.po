@@ -4,17 +4,18 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
-# Link Winterberg, 2024
 # Hesamodin Mohtashami, 2024
+# Chuck Johnson, 2025
+# Link Winterberg, 2025
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-05-26 16:41+0300\n"
+"POT-Creation-Date: 2026-06-10 15:30+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: Hesamodin Mohtashami, 2024\n"
+"Last-Translator: Link Winterberg, 2025\n"
 "Language-Team: Persian (https://app.transifex.com/audacity/teams/164520/fa/)\n"
 "Language: fa\n"
 "MIME-Version: 1.0\n"
@@ -39,7 +40,7 @@ msgstr "خطای افزونه"
 #: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
 #, c-format
 msgid "Applied effect: %s"
-msgstr "جلوه‌های اعمال‌شده: %s"
+msgstr "جلوه‌ اعمال‌شده: %s"
 
 #. i18n-hint: %s will be the name of the effect which will be
 #. * repeated if this menu item is chosen
@@ -162,41 +163,41 @@ msgstr "نرخ‌های قابل پشتیبانی:\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Cannot check mutual sample rates without both devices.\n"
-msgstr ""
+msgstr "نمی توان نرخ نمونه متقابل را بدون هر دو دستگاه بررسی کرد.\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
 msgid "Received %d while opening devices\n"
-msgstr ""
+msgstr "هنگام اتصال به دستگاه ها این موارد دریافت شد %d\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Unable to open Portmixer\n"
-msgstr ""
+msgstr "نتونستم پورت میکسر رو بازکنم\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Available mixers:\n"
-msgstr ""
+msgstr "میکسر های در دسترس:\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
 msgid "%d - %s\n"
-msgstr ""
+msgstr "%d - %s\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Available recording sources:\n"
-msgstr ""
+msgstr "منابع ضبط موجود:\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Available playback volumes:\n"
-msgstr ""
+msgstr "منابع پخش موجود:\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Recording volume is emulated\n"
-msgstr ""
+msgstr "میزان صدای ضبط شبیه سازی شده است\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Recording volume is native\n"
-msgstr ""
+msgstr "میزان صدای ضبط واقعی است\n"
 
 #: libraries/lib-audio-io/AudioIO.cpp
 msgid "Could not find any audio devices.\n"
@@ -214,7 +215,7 @@ msgstr ""
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 #, c-format
 msgid "Error: %s"
-msgstr ""
+msgstr "خطا: %s"
 
 #: libraries/lib-audio-io/AudioIO.cpp
 msgid "Error Initializing Audio"
@@ -222,7 +223,7 @@ msgstr "خطا در راه‌اندازی صدا"
 
 #: libraries/lib-audio-io/AudioIO.cpp
 msgid "Audacity Audio"
-msgstr ""
+msgstr "صوت آداسیتی"
 
 #: libraries/lib-audio-io/AudioIO.cpp src/ProjectAudioManager.cpp
 #, c-format
@@ -230,6 +231,8 @@ msgid ""
 "Error opening recording device.\n"
 "Error code: %s"
 msgstr ""
+"خطایی در بازکردن دستگاه ضبط پیش آمد.\n"
+"کد خطا: %s"
 
 #: libraries/lib-audio-io/AudioIO.cpp
 #: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
@@ -248,47 +251,47 @@ msgstr "خطا"
 
 #: libraries/lib-audio-io/AudioIO.cpp
 msgid "Out of memory!"
-msgstr ""
+msgstr "تو حافظه جا نیست!"
 
 #: libraries/lib-audio-io/AudioIO.cpp
 msgid "Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too high."
-msgstr ""
+msgstr "تنظیم سطح ضبط خودکار متوقف شد. بهینه‌سازی بیشتر آن امکان‌پذیر نبود. هنوز خیلی بالاست."
 
 #: libraries/lib-audio-io/AudioIO.cpp
 #, c-format
 msgid "Automated Recording Level Adjustment decreased the volume to %f."
-msgstr ""
+msgstr "تنظیم سطح ضبط خودکار صدا را به%f کم کرد."
 
 #: libraries/lib-audio-io/AudioIO.cpp
 msgid "Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too low."
-msgstr ""
+msgstr "تنظیم سطح ضبط خودکار متوقف شد. بهینه‌سازی بیشتر آن امکان‌پذیر نبود. هنوز خیلی کمه."
 
 #: libraries/lib-audio-io/AudioIO.cpp
 #, c-format
 msgid "Automated Recording Level Adjustment increased the volume to %.2f."
-msgstr ""
+msgstr "تنظیم سطح ضبط خودکار صدا را به%.2f  افزایش داد."
 
 #: libraries/lib-audio-io/AudioIO.cpp
 msgid "Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too high."
-msgstr ""
+msgstr "تنظیم سطح ضبط خودکار متوقف شد. تعداد کل آنالیزها بدون یافتن میزان قابل قبول، از حد مجاز فراتر رفته است. هنوز خیلی زیاده."
 
 #: libraries/lib-audio-io/AudioIO.cpp
 msgid "Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too low."
-msgstr ""
+msgstr "تنظیم سطح ضبط خودکار متوقف شد. تعداد کل آنالیزها بدون یافتن میزان قابل قبول، از حد مجاز فراتر رفته است. هنوز خیلی کمه."
 
 #: libraries/lib-audio-io/AudioIO.cpp
 #, c-format
 msgid "Automated Recording Level Adjustment stopped. %.2f seems an acceptable volume."
-msgstr ""
+msgstr "تنظیم سطح ضبط خودکار متوقف شد. %.2fمیزان قابل قبولی به نظر میاد."
 
 #: libraries/lib-audio-unit/AudioUnitEffectBase.cpp
 #, c-format
 msgid "Failed to encode preset from \"%s\""
-msgstr ""
+msgstr "نتونستم پیش تنظیم %sرو رمزگذاری کنم"
 
 #: libraries/lib-audio-unit/AudioUnitEffectBase.cpp
 msgid "Unable to store preset in config file"
-msgstr ""
+msgstr "امکان دخیره پیش تنظیم در فایل کانفیگ وجود نداشت"
 
 #. i18n-hint: Can mean "not available," "not applicable," "no answer"
 #. i18n-hint: n/a is an English abbreviation meaning "not applicable".
@@ -302,27 +305,27 @@ msgstr "مربوط نیست"
 #: libraries/lib-audio-unit/AudioUnitEffectBase.cpp
 #, c-format
 msgid "Couldn't open \"%s\""
-msgstr ""
+msgstr "نتوستم فایل \"%s\" رو باز کنم"
 
 #: libraries/lib-audio-unit/AudioUnitEffectBase.cpp
 #, c-format
 msgid "Failed to write XML preset to \"%s\""
-msgstr ""
+msgstr "نوشتن پیش‌تنظیم XML روی «%s» انجام نشد"
 
 #: libraries/lib-audio-unit/AudioUnitEffectBase.cpp
 #, c-format
 msgid "Unable to read the preset from \"%s\""
-msgstr ""
+msgstr "امکان خواندن پیش تنظیم از %sوجود نداشت"
 
 #. i18n-hint: the name of an Apple audio software protocol
 #: libraries/lib-audio-unit/AudioUnitEffectBase.h
 msgid "Audio Unit"
-msgstr ""
+msgstr "واحد صوتی"
 
 #. i18n-hint: Audio Unit is the name of an Apple audio software protocol
 #: libraries/lib-audio-unit/AudioUnitEffectsModule.cpp
 msgid "Audio Unit Effects"
-msgstr ""
+msgstr "جلوه های واحد صوتی"
 
 #: libraries/lib-audio-unit/AudioUnitEffectsModule.cpp
 #: libraries/lib-effects/LoadEffects.cpp
@@ -332,61 +335,61 @@ msgstr ""
 #: libraries/lib-vst3/VST3EffectsModule.cpp src/commands/LoadCommands.cpp
 #: src/effects/vamp/LoadVamp.cpp
 msgid "The Audacity Team"
-msgstr ""
+msgstr "گروه آداسیتی"
 
 #: libraries/lib-audio-unit/AudioUnitEffectsModule.cpp
 msgid "Provides Audio Unit Effects support to Audacity"
-msgstr ""
+msgstr "پشتیبانی جلوه های صوتی رو برای آداسیتی رو فراهم میکنه"
 
 #: libraries/lib-audio-unit/AudioUnitEffectsModule.cpp
 msgid "Could not find component"
-msgstr ""
+msgstr "نتونستم مولفه ای پیدا کنم"
 
 #: libraries/lib-audio-unit/AudioUnitEffectsModule.cpp
 msgid "Could not initialize component"
-msgstr ""
+msgstr "مقدار دهی اولیه مولفه شکست خورد"
 
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
 #, c-format
 msgid "Failed to decode \"%s\" preset"
-msgstr ""
+msgstr "نتونستم پیش تنظیم %s رو رمزگشایی کنم"
 
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
 #, c-format
 msgid "Failed to convert \"%s\" preset to internal format"
-msgstr ""
+msgstr "نتونستم پیش تنظیم %sرو به فرمت داخلی تبدیل کنم"
 
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
 #, c-format
 msgid "Failed to create property list for \"%s\" preset"
-msgstr ""
+msgstr "ایجاد لیست ویژگی برای پیش تنظیم \"%s\" ناموفق بود"
 
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
 #, c-format
 msgid "Failed to set class info for \"%s\" preset"
-msgstr ""
+msgstr "تنظیم اطلاعات کلاس برای پیش تنظیم \"%s\" ناموفق بود"
 
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
 msgid "Failed to set preset name"
-msgstr ""
+msgstr "نامگذاری پیش تنظیم ناموفق بود"
 
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
 msgid "Failed to retrieve preset content"
-msgstr ""
+msgstr "بازخوانی محتوای پیش تنظیم ناموفق بود"
 
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
 msgid "Failed to convert property list to XML data"
-msgstr ""
+msgstr "تبدیل لیست ویژگی به داده XML ناموفق بود"
 
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
 msgid "XML data is empty after conversion"
-msgstr ""
+msgstr "داده XML پس از تبدیل خالی بود"
 
 #: libraries/lib-basic-ui/BasicUI.cpp
 #: libraries/lib-exceptions/AudacityException.h
 #: libraries/lib-wx-init/AudacityMessageBox.h src/commands/MessageCommand.cpp
 msgid "Message"
-msgstr ""
+msgstr "پیام"
 
 #: libraries/lib-builtin-effects/AmplifyBase.cpp
 #: resources/EffectsMenuDefaults.xml
@@ -400,7 +403,7 @@ msgstr "مخفی‌سازی خودکار"
 
 #: libraries/lib-builtin-effects/AutoDuckBase.cpp
 msgid "Reduces (ducks) the volume of one or more tracks whenever the volume of a specified \"control\" track reaches a particular level"
-msgstr ""
+msgstr "هر زمان که صدای یک شیار \"کنترل\" مشخص به سطح خاصی برسد، صدای یک یا چند شیار را (موقتا) کاهش می‌دهد "
 
 #. i18n-hint: Auto duck is the name of an effect that 'ducks'
 #. (reduces the volume) of the audio automatically when there is
@@ -414,20 +417,20 @@ msgstr "شما شیاری را انتخاب کرده‌اید که حاوی صو
 #. track.  Not as in 'Donald-Duck'!
 #: libraries/lib-builtin-effects/AutoDuckBase.cpp
 msgid "Auto Duck needs a control track which must be placed below the selected track(s)."
-msgstr "مخفی‌سازی خودکار به یک شیار کنترلی نیاز دارد که باید زیر شیار انتخاب‌شده قرار داده شود."
+msgstr "مخفی‌سازی خودکار به یک شیار کنترلی نیاز دارد که باید زیر شیار(های) انتخاب‌شده قرار داده شود."
 
 #: libraries/lib-builtin-effects/AutoDuckBase.cpp
 msgid "Rendering Control-Track Time-Stretched Audio"
-msgstr ""
+msgstr "Rendering Control-Track Time-Stretched Audio"
 
 #: libraries/lib-builtin-effects/BassTrebleBase.cpp
 #: resources/EffectsMenuDefaults.xml
 msgid "Bass and Treble"
-msgstr ""
+msgstr "زیر و بم کردن صدا"
 
 #: libraries/lib-builtin-effects/BassTrebleBase.cpp
 msgid "Simple tone control effect"
-msgstr ""
+msgstr "افکت کنترل تن ساده"
 
 #: libraries/lib-builtin-effects/ChangePitchBase.cpp
 #: resources/EffectsMenuDefaults.xml
@@ -436,20 +439,20 @@ msgstr "تغییر کوک"
 
 #: libraries/lib-builtin-effects/ChangePitchBase.cpp
 msgid "Changes the pitch of a track without changing its tempo"
-msgstr ""
+msgstr "دانگ صدای شیار رو بدون تغییر سرعتش تغییر میده"
 
 #: libraries/lib-builtin-effects/ChangePitchBase.cpp
 msgid "High Quality Pitch Change"
-msgstr ""
+msgstr "تغییر با کیفیت دانگ صدا"
 
 #: libraries/lib-builtin-effects/ChangeSpeedBase.cpp
 #: resources/EffectsMenuDefaults.xml
 msgid "Change Speed and Pitch"
-msgstr ""
+msgstr "تغییر سرعت و دانگ صدا"
 
 #: libraries/lib-builtin-effects/ChangeSpeedBase.cpp
 msgid "Changes the speed of a track, also changing its pitch"
-msgstr ""
+msgstr "سرعت یک شیار رو همراه با دانگ صدا تغییر میده"
 
 #: libraries/lib-builtin-effects/ChangeTempoBase.cpp
 #: resources/EffectsMenuDefaults.xml
@@ -458,199 +461,205 @@ msgstr "تغییر ضرباهنگ"
 
 #: libraries/lib-builtin-effects/ChangeTempoBase.cpp
 msgid "Changes the tempo of a selection without changing its pitch"
-msgstr ""
+msgstr "ضرب آهنگ بخش مشخصی رو بدون تعییر دنگ صدا تغییر میده"
 
 #: libraries/lib-builtin-effects/ChangeTempoBase.cpp
 msgid "High Quality Tempo Change"
-msgstr ""
+msgstr "تغییر با کیفیت ضرب آهنگ"
 
 #: libraries/lib-builtin-effects/ClickRemovalBase.cpp
 #: resources/EffectsMenuDefaults.xml
 msgid "Click Removal"
-msgstr ""
+msgstr "حذف کلیک"
 
 #: libraries/lib-builtin-effects/ClickRemovalBase.cpp
 msgid "Click Removal is designed to remove clicks on audio tracks"
-msgstr ""
+msgstr "حذف کلیک طراحی شده تا صدای کلیک رو از شیار صوتی حذف کنه"
 
 #: libraries/lib-builtin-effects/ClickRemovalBase.cpp
 msgid "Algorithm not effective on this audio. Nothing changed."
-msgstr ""
+msgstr "الگوریتم روی این صوت کارساز نبود. چیزی عوض نشد."
 
 #: libraries/lib-builtin-effects/ClickRemovalBase.cpp
 #, c-format
 msgid "Selection must be larger than %d samples."
-msgstr ""
+msgstr "انتخاب شما باید از بیشتر از %dنمونه باشه."
 
 #: libraries/lib-builtin-effects/ContrastBase.cpp
 msgid "You can only measure one track at a time."
-msgstr ""
+msgstr "هر بار فقط می تونید یک شیار رو اندازه گیری کنید."
 
 #: libraries/lib-builtin-effects/ContrastBase.cpp
 msgid "Please select an audio track."
-msgstr ""
+msgstr "لطفا یه شیار صوتی رو انتخاب کنید"
 
 #: libraries/lib-builtin-effects/ContrastBase.cpp
 msgid ""
 "Invalid audio selection.\n"
 "Please ensure that audio is selected."
 msgstr ""
+"انتخاب صوتی نامعتبر\n"
+"لطفا مطمئن بشید که صوت مدنظر انتخاب شده"
 
 #: libraries/lib-builtin-effects/ContrastBase.cpp
 msgid ""
 "Nothing to measure.\n"
 "Please select a section of a track."
 msgstr ""
+"چیزی برای اندازه گیری نیست\n"
+"لطفا یه قسمت از یه شیار رو انتخاب کنید"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Hard Clipping"
-msgstr ""
+msgstr "کلیپ کردن سخت"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Soft Clipping"
-msgstr ""
+msgstr "کلیپ کردن نرم"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Soft Overdrive"
-msgstr ""
+msgstr "اوردرایو نرم"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Medium Overdrive"
-msgstr ""
+msgstr "اوردرایو متوسط"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Hard Overdrive"
-msgstr ""
+msgstr "اوردرایو سخت"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Cubic Curve (odd harmonics)"
-msgstr ""
+msgstr "محنی مکعبی (هارمونیک فرد)"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Even Harmonics"
-msgstr ""
+msgstr "هارمونیک زوج"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Expand and Compress"
-msgstr ""
+msgstr "گسترش و فشرده سازی"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Leveller"
-msgstr ""
+msgstr "تراز"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Rectifier Distortion"
-msgstr ""
+msgstr "تحریف یکسو کننده"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Hard Limiter 1413"
-msgstr ""
+msgstr "لیمیتر سخت 1413"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 #, no-c-format
 msgid "Hard clip -12dB, 80% make-up gain"
-msgstr ""
+msgstr "کلیپ سخت 12- دسیبل، 80% بهره جبرانی"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 #, no-c-format
 msgid "Soft clip -12dB, 80% make-up gain"
-msgstr ""
+msgstr "کلیپ نرم 12- دسیبل، 80% بهره جبرانی"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Fuzz Box"
-msgstr ""
+msgstr "فاز باکس"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
 msgid "Walkie-talkie"
-msgstr ""
+msgstr "صدای بیسیم"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Blues drive sustain"
-msgstr ""
+msgstr "Blues drive sustain"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Light Crunch Overdrive"
-msgstr ""
+msgstr "اوردرایو کرانچ سبک"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Heavy Overdrive"
-msgstr ""
+msgstr "اوردرایو سنگین"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "3rd Harmonic (Perfect Fifth)"
-msgstr ""
+msgstr "هارمونیک سوم (پنجم مکمل)"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Valve Overdrive"
-msgstr ""
+msgstr "اوردرایو پیچیدنی"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "2nd Harmonic (Octave)"
-msgstr ""
+msgstr "هارمونیک دوم (اکتاو)"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Gated Expansion Distortion"
-msgstr ""
+msgstr "تحریف انبساطی دریچه‌ای"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Leveller, Light, -70dB noise floor"
-msgstr ""
+msgstr "تراز، سبک، 70- دسیبل طبقه نویز"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Leveller, Moderate, -70dB noise floor"
-msgstr ""
+msgstr "تراز، متوسط، 70- دسیبل طبقه نویز"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Leveller, Heavy, -70dB noise floor"
-msgstr ""
+msgstr "تراز، سنگین، 70- دسیبل طبقه نویز"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Leveller, Heavier, -70dB noise floor"
-msgstr ""
+msgstr "تراز، سنگین تر، 70- دسیبل طبقه نویز"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Leveller, Heaviest, -70dB noise floor"
-msgstr ""
+msgstr "تراز، سنگین ترین، 70- دسیبل طبقه نویز"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Half-wave Rectifier"
-msgstr ""
+msgstr "یکسان‌ساز نیم-موج"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Full-wave Rectifier"
-msgstr ""
+msgstr "یکسان‌ساز تمام-موج"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Full-wave Rectifier (DC blocked)"
-msgstr ""
+msgstr "یکسان‌ساز تمام-موج (دی‌سی مسدود)"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Percussion Limiter"
-msgstr ""
+msgstr "لیمیتر ضربی"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 #: resources/EffectsMenuDefaults.xml
 msgid "Distortion"
-msgstr ""
+msgstr "تحریف صوت"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Waveshaping distortion effect"
-msgstr ""
+msgstr "افکت تحریف موج ساز"
 
 #: libraries/lib-builtin-effects/DtmfBase.cpp
 msgid "DTMF Tones"
-msgstr ""
+msgstr "تون های DTMF"
 
 #: libraries/lib-builtin-effects/DtmfBase.cpp
 msgid "Generates dual-tone multi-frequency (DTMF) tones like those produced by the keypad on telephones"
-msgstr ""
+msgstr "صداهای چند فرکانسی دوگانه (DTMF) مانند صداهای تولید شده توسط صفحه کلید تلفن تولید می‌کند."
 
 #: libraries/lib-builtin-effects/DtmfBase.cpp
 msgid ""
 "DTMF sequence empty.\n"
 "Check ALL settings for this effect."
 msgstr ""
+"توالی DTMF خالی بود\n"
+"تمامی تنظیمات این افکت را چک کنید."
 
 #: libraries/lib-builtin-effects/EchoBase.cpp resources/EffectsMenuDefaults.xml
 msgid "Echo"
@@ -658,13 +667,13 @@ msgstr "پژواک"
 
 #: libraries/lib-builtin-effects/EchoBase.cpp
 msgid "Repeats the selected audio again and again"
-msgstr ""
+msgstr "صوت انتخاب‌شده را دوباره و دوباره تکرار میکند"
 
 #: libraries/lib-builtin-effects/EchoBase.cpp
 #: libraries/lib-builtin-effects/FindClippingBase.cpp
 #: libraries/lib-builtin-effects/PaulstretchBase.cpp
 msgid "Requested value exceeds memory capacity."
-msgstr ""
+msgstr "مقدار درخواستی از طرفیت حافظه فراتر است."
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
 msgid "Equalization"
@@ -672,56 +681,56 @@ msgstr "اِعمال اکولایزر"
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
 msgid "Adjusts the volume levels of particular frequencies"
-msgstr ""
+msgstr "میزان صدای فرکانس‌های خاص را تنظیم می‌کند."
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
 msgid "100Hz Rumble"
-msgstr ""
+msgstr "سروصدای 100هرتزی"
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
 msgid "AM Radio"
-msgstr ""
+msgstr "رادیو AM"
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
 msgid "Bass Boost"
-msgstr ""
+msgstr "تقویت بیس"
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
 msgid "Bass Cut"
-msgstr ""
+msgstr "برش بیس"
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
 msgid "Low rolloff for speech"
-msgstr ""
+msgstr "افت کم برای گفتار"
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
 msgid "RIAA"
-msgstr ""
+msgstr "انجمن صنعت ضبط آمریکا"
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
 msgid "Telephone"
-msgstr ""
+msgstr "تلفن"
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
 msgid "Treble Boost"
-msgstr ""
+msgstr "تقویت تریبل"
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
 msgid "Treble Cut"
-msgstr ""
+msgstr "برش تریبل"
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
 msgid "To apply Equalization, all selected tracks must have the same sample rate."
-msgstr ""
+msgstr "برای اعمال تساوی، همه شیار های انتخاب شده باید نرخ نمونه یکسانی داشته باشند."
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
 msgid "Track sample rate is too low for this effect."
-msgstr ""
+msgstr "نرخ نمونه شیار برای این افکت خیلی کم است."
 
 #. i18n-hint: name of the 'unnamed' custom curve
 #: libraries/lib-builtin-effects/EqualizationCurves.cpp
 msgid "unnamed"
-msgstr ""
+msgstr "بی‌نام"
 
 #. i18n-hint: EQ stands for 'Equalization'.
 #: libraries/lib-builtin-effects/EqualizationCurves.cpp
@@ -732,14 +741,18 @@ msgid ""
 "Error message says:\n"
 "%s"
 msgstr ""
+"خطا در بارگیری منحنی‌های EQ از فایل:\n"
+"%s\n"
+"پیام خطا می‌گوید:\n"
+"%s"
 
 #: libraries/lib-builtin-effects/EqualizationCurves.cpp
 msgid "Error Saving Equalization Curves"
-msgstr ""
+msgstr "خطا در ذخیره منحنی های یکسان سازی"
 
 #: libraries/lib-builtin-effects/EqualizationCurvesList.cpp
 msgid "Requested curve not found, using 'unnamed'"
-msgstr ""
+msgstr "منحنی درخواستی یافت نشد، از «بی نام» استفاده میکنم"
 
 #. i18n-hint: Technical term for a kind of curve.
 #: libraries/lib-builtin-effects/EqualizationParameters.cpp
@@ -760,7 +773,7 @@ msgstr "آشکار شدن تدریجی"
 
 #: libraries/lib-builtin-effects/Fade.cpp
 msgid "Applies a linear fade-in to the selected audio"
-msgstr ""
+msgstr "یک ورود محو خطی را به صدای انتخاب شده اعمال می‌کند"
 
 #: libraries/lib-builtin-effects/Fade.cpp resources/EffectsMenuDefaults.xml
 msgid "Fade Out"
@@ -768,19 +781,19 @@ msgstr "محو شدن تدریجی"
 
 #: libraries/lib-builtin-effects/Fade.cpp
 msgid "Applies a linear fade-out to the selected audio"
-msgstr ""
+msgstr "یک خروج محو خطی را به صدای انتخاب شده اعمال می‌کند"
 
 #: libraries/lib-builtin-effects/FindClippingBase.cpp
 msgid "Find Clipping"
-msgstr ""
+msgstr "بررسی کلیپینگ"
 
 #: libraries/lib-builtin-effects/FindClippingBase.cpp
 msgid "Creates labels where clipping is detected"
-msgstr ""
+msgstr "یک برچسب به جاهایی که کلیپینگ رخ داده اضافه میکند"
 
 #: libraries/lib-builtin-effects/FindClippingBase.cpp
 msgid "Clipping"
-msgstr ""
+msgstr "کلیپینگ"
 
 #. i18n-hint: Two numbers are substituted; the second is the
 #. size of a set, the first is the size of a subset, and not
@@ -791,11 +804,11 @@ msgstr ""
 #, c-format
 msgctxt "find clipping"
 msgid "%lld of %lld"
-msgstr ""
+msgstr "%lld از %lld"
 
 #: libraries/lib-builtin-effects/Generator.cpp
 msgid "There is not enough room available to generate the audio"
-msgstr ""
+msgstr "فضای کافی برای ساخت صدا موجود نیست"
 
 #: libraries/lib-builtin-effects/Invert.cpp resources/EffectsMenuDefaults.xml
 msgid "Invert"
@@ -803,122 +816,122 @@ msgstr "معکوس کردن"
 
 #: libraries/lib-builtin-effects/Invert.cpp
 msgid "Flips the audio samples upside-down, reversing their polarity"
-msgstr ""
+msgstr "نمونه‌های صوتی را وارونه می‌کند و قطبیت آنها را معکوس می‌کند"
 
 #: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy Compressor"
-msgstr ""
+msgstr "کمپرسور قدیمی"
 
 #: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
 msgid "Compresses the dynamic range of audio"
-msgstr ""
+msgstr "محدوده دینامیکی صدا را فشرده می کند"
 
 #: libraries/lib-builtin-effects/LoudnessBase.cpp
 #: resources/EffectsMenuDefaults.xml
 msgid "Loudness Normalization"
-msgstr ""
+msgstr "عادی سازی بلندی صدا"
 
 #: libraries/lib-builtin-effects/LoudnessBase.cpp
 msgid "Sets the loudness of one or more tracks"
-msgstr ""
+msgstr "بلندی صدای یک یا چند شیار را تنظیم میکند"
 
 #: libraries/lib-builtin-effects/LoudnessBase.cpp
 msgid "Normalizing Loudness...\n"
-msgstr ""
+msgstr "انجام عادی سازی بلندی صدا...\n"
 
 #: libraries/lib-builtin-effects/LoudnessBase.cpp
 #: libraries/lib-builtin-effects/NormalizeBase.cpp
 #, c-format
 msgid "Analyzing: %s"
-msgstr ""
+msgstr "در حال تحلیل: %s"
 
 #: libraries/lib-builtin-effects/LoudnessBase.cpp
 #: libraries/lib-builtin-effects/NormalizeBase.cpp
 #, c-format
 msgid "Processing: %s"
-msgstr ""
+msgstr "درجال پردازش: %s"
 
 #. i18n-hint: not a color, but "white noise" having a uniform spectrum
 #: libraries/lib-builtin-effects/NoiseBase.cpp
 msgctxt "noise"
 msgid "White"
-msgstr ""
+msgstr "سفید"
 
 #. i18n-hint: not a color, but "pink noise" having a spectrum with more power
 #. in low frequencies
 #: libraries/lib-builtin-effects/NoiseBase.cpp
 msgctxt "noise"
 msgid "Pink"
-msgstr ""
+msgstr "صورتی"
 
 #. i18n-hint: a kind of noise spectrum also known as "red" or "brown"
 #: libraries/lib-builtin-effects/NoiseBase.cpp
 msgctxt "noise"
 msgid "Brownian"
-msgstr ""
+msgstr "قرمز-قهوه‌ای"
 
 #: libraries/lib-builtin-effects/NoiseBase.cpp
 msgid "Noise"
-msgstr ""
+msgstr "نویز"
 
 #: libraries/lib-builtin-effects/NoiseBase.cpp
 msgid "Generates one of three different types of noise"
-msgstr ""
+msgstr "یکی از سه نوع نویز مختلف را تولید می‌کند"
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "Median"
-msgstr ""
+msgstr "میانگین"
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "Second greatest"
-msgstr ""
+msgstr "بزرگنرین دوم"
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "Old"
-msgstr ""
+msgstr "قدیمی"
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 #: src/effects/NoiseReduction.cpp src/menus/MenuHelper.cpp
 #: resources/EffectsMenuDefaults.xml
 msgid "Noise Reduction"
-msgstr ""
+msgstr "کاستن نویز"
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "Removes background noise such as fans, tape noise, or hums"
-msgstr ""
+msgstr "حذف نویزهای پس‌زمینه مانند صدای فن، نوار یا صدای همهمه"
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "Steps per block are too few for the window types."
-msgstr ""
+msgstr "تعداد مراحل در هر بلوک برای این نوع پنجره‌ها خیلی کم است."
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "Steps per block cannot exceed the window size."
-msgstr ""
+msgstr "تعداد مراحل در هر بلوک نمیتواند از اندازه پنجره فراتر رود"
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "Median method is not implemented for more than four steps per window."
-msgstr ""
+msgstr "روش میانگین برای بیشتر از 4 مرحله در هر بلوک تعبیه نشده است."
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "You must specify the same window size for steps 1 and 2."
-msgstr ""
+msgstr "شما باید اندازه پنجره یکسانی را برای مراحل 1 و 2 مشخص کنید."
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "Warning: window types are not the same as for profiling."
-msgstr ""
+msgstr "هشدار: انواع پنجره‌ها مانند پروفایل کردن نیستند."
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "All noise profile data must have the same sample rate."
-msgstr ""
+msgstr "همه داده های پروفایل نویز باید نرخ نمونه یکسانی داشته باشند."
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "The sample rate of the noise profile must match that of the sound to be processed."
-msgstr ""
+msgstr "نرخ نمونه پروفایل نویز باید با صدای مورد پردازش مطابقت داشته باشد."
 
 #: libraries/lib-builtin-effects/NoiseReductionBase.cpp
 msgid "Selected noise profile is too short."
-msgstr ""
+msgstr "مشخصات نویز منتخب خیلی کوتاه است."
 
 #: libraries/lib-builtin-effects/NormalizeBase.cpp
 #: resources/EffectsMenuDefaults.xml
@@ -927,57 +940,57 @@ msgstr "نرمال‌سازی"
 
 #: libraries/lib-builtin-effects/NormalizeBase.cpp
 msgid "Sets the peak amplitude of one or more tracks"
-msgstr ""
+msgstr "دامنه اوج یک یا چند شیار را تنظیم می‌کند."
 
 #: libraries/lib-builtin-effects/NormalizeBase.cpp
 msgid "Removing DC offset and Normalizing...\n"
-msgstr ""
+msgstr "انجام حذف انحراف دی‌سی و عادی سازی...\n"
 
 #: libraries/lib-builtin-effects/NormalizeBase.cpp
 msgid "Removing DC offset...\n"
-msgstr ""
+msgstr "انجام حذف دی‌سی..\n"
 
 #: libraries/lib-builtin-effects/NormalizeBase.cpp
 msgid "Normalizing without removing DC offset...\n"
-msgstr ""
+msgstr "عادی سازی بدون حذف انحراف دی‌سی...\n"
 
 #: libraries/lib-builtin-effects/NormalizeBase.cpp
 msgid "Not doing anything...\n"
-msgstr ""
+msgstr "کاری نمیکنم...\n"
 
 #: libraries/lib-builtin-effects/NormalizeBase.cpp
 #, c-format
 msgid "Analyzing first track of stereo pair: %s"
-msgstr ""
+msgstr "تحلیل اولین شیار از جفت استریو: %s"
 
 #: libraries/lib-builtin-effects/NormalizeBase.cpp
 #, c-format
 msgid "Analyzing second track of stereo pair: %s"
-msgstr ""
+msgstr "تحلیل دومین شیار از جفت استریو:%s"
 
 #: libraries/lib-builtin-effects/NormalizeBase.cpp
 #, c-format
 msgid "Processing stereo channels independently: %s"
-msgstr ""
+msgstr "پردازش کانال‌های استریو به صورت مستقل: %s"
 
 #: libraries/lib-builtin-effects/NormalizeBase.cpp
 #, c-format
 msgid "Processing first track of stereo pair: %s"
-msgstr ""
+msgstr "پردازش اولین شیار از جفت استریو: %s"
 
 #: libraries/lib-builtin-effects/NormalizeBase.cpp
 #, c-format
 msgid "Processing second track of stereo pair: %s"
-msgstr ""
+msgstr "پردازش دومین شیار از جفت استریو:%s"
 
 #: libraries/lib-builtin-effects/PaulstretchBase.cpp
 #: resources/EffectsMenuDefaults.xml
 msgid "Paulstretch"
-msgstr ""
+msgstr "کندی شدید"
 
 #: libraries/lib-builtin-effects/PaulstretchBase.cpp
 msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
-msgstr ""
+msgstr "پاول استرچ یا کندی شدید فقط برای یک کشش زمانی شدید یا اثر \"ایستایی\" است"
 
 #. i18n-hint: 'Time Resolution' is the name of a control in the
 #. Paulstretch effect.
@@ -989,6 +1002,10 @@ msgid ""
 "Try increasing the audio selection to at least %.1f seconds,\n"
 "or reducing the 'Time Resolution' to less than %.1f seconds."
 msgstr ""
+" صدای منتخب برای پیش‌نمایش خیلی کوتاه است.\n"
+"\n"
+"سعی کنید صدای منتخب را حداقل به%.1f  ثانیه افزایش دهید،\n"
+" یا «وضوح زمان» را به کمتر از%.1f ثانیه کاهش دهید."
 
 #. i18n-hint: 'Time Resolution' is the name of a control in the
 #. Paulstretch effect.
@@ -1000,6 +1017,10 @@ msgid ""
 "For the current audio selection, the maximum\n"
 "'Time Resolution' is %.1f seconds."
 msgstr ""
+"پیش‌نمایش امکان‌پذیر نیست.\n"
+"\n"
+"برای صدای منتخب فعلی، حداکثر\n"
+"«وضوح زمان» %.1f ثانیه است"
 
 #. i18n-hint: 'Time Resolution' is the name of a control in the
 #. Paulstretch effect.
@@ -1011,30 +1032,36 @@ msgid ""
 "Try increasing the audio selection to at least %.1f seconds,\n"
 "or reducing the 'Time Resolution' to less than %.1f seconds."
 msgstr ""
+"«وضوح زمانی» برای انتخاب شما خیلی طولانی است.\n"
+"\n"
+"سعی کنید صدای انتخاب شده را حداقل به%.1f ثانیه افزایش دهید،\n"
+" یا «وضوح زمانی» را به کمتر از %.1f ثانیه کاهش دهید."
 
 #: libraries/lib-builtin-effects/PhaserBase.cpp
 #: resources/EffectsMenuDefaults.xml
 msgid "Phaser"
-msgstr "فاز"
+msgstr "ترکیب فاز"
 
 #: libraries/lib-builtin-effects/PhaserBase.cpp
 msgid "Combines phase-shifted signals with the original signal"
-msgstr ""
+msgstr "سیگنال‌های تغییر فاز یافته را با سیگنال اصلی ترکیب می‌کند"
 
 #: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
 msgid "To plot the spectrum, all selected tracks must have the same sample rate."
-msgstr ""
+msgstr "برای رسم طیف، همهٔ شیارهای انتخاب‌شده باید نرخ نمونه‌برداری یکسان داشته باشند."
 
 #: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
 msgid ""
 "Audio could not be analyzed. This may be due to a stretched or pitch-shifted clip.\n"
 "Try resetting any stretched clips, or mixing and rendering the tracks before analyzing"
 msgstr ""
+"صدا قابل آنالیز نبود. این ممکن است به دلیل کشیده شدن یا تغییر گام کلیپ باشد.\n"
+"قبل از آنالیز، سعی کنید کلیپ‌های کشیده شده را دوباره تنظیم کنید، یا آهنگ‌ها را میکس و رندر کنید."
 
 #: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
 #, c-format
 msgid "Too much audio was selected. Only the first %.1f seconds of audio will be analyzed."
-msgstr ""
+msgstr "صدای برگزیده خیلی زیاد بود. فقط %.1fثانیه اول صدا آنالیز خواهد شد"
 
 #: libraries/lib-builtin-effects/Repair.cpp resources/EffectsMenuDefaults.xml
 msgid "Repair"
@@ -1042,11 +1069,11 @@ msgstr "تعمیر"
 
 #: libraries/lib-builtin-effects/Repair.cpp
 msgid "Sets the peak amplitude of a one or more tracks"
-msgstr ""
+msgstr "دامنه اوج یک یا چند شیار را تنظیم می‌کند."
 
 #: libraries/lib-builtin-effects/Repair.cpp
 msgid "The Repair effect cannot be applied within stretched or shrunk clips"
-msgstr ""
+msgstr "افکت تعمیر را نمی‌توان در کلیپ‌های کشیده یا کوچک شده اعمال کرد."
 
 #: libraries/lib-builtin-effects/Repair.cpp
 msgid ""
@@ -1066,6 +1093,11 @@ msgid ""
 "\n"
 "The more surrounding audio, the better it performs."
 msgstr ""
+"تعمیر با استفاده از داده های صوتی در خارج از منطقه انتخابی کار می کند.\n"
+"\n"
+"لطفاً ناحیه‌ای را انتخاب کنید که صدا حداقل در یک طرف آن قرار داشته باشد.\n"
+"\n"
+"هرچه صدای اطراف بیشتر باشد، عملکرد بهتری دارد."
 
 #: libraries/lib-builtin-effects/RepeatBase.cpp
 #: resources/EffectsMenuDefaults.xml
@@ -1074,151 +1106,151 @@ msgstr "تکرار"
 
 #: libraries/lib-builtin-effects/RepeatBase.cpp
 msgid "Repeats the selection the specified number of times"
-msgstr ""
+msgstr "محل انتخابی را به تعداد دفعات مشخص شده تکرار می‌کند"
 
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 msgid "Acoustic"
-msgstr ""
+msgstr "آکوستیک"
 
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 msgid "Ambience"
-msgstr ""
+msgstr "منظره"
 
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 msgid "Artificial"
-msgstr ""
+msgstr "مصنوعی"
 
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 msgid "Clean"
-msgstr ""
+msgstr "تمیز"
 
 #. i18n-hint: This is the name of an effect preset
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Modern"
-msgstr ""
+msgstr "مدرن"
 
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 msgid "Vocal I"
-msgstr ""
+msgstr "آواز یک"
 
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 msgid "Vocal II"
-msgstr ""
+msgstr "آواز دو"
 
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 msgid "Dance Vocal"
-msgstr ""
+msgstr "آواز رقص"
 
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 msgid "Modern Vocal"
-msgstr ""
+msgstr "آواز مدرن"
 
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 msgid "Voice Tail"
-msgstr ""
+msgstr "دم صدا"
 
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 msgid "Bathroom"
-msgstr ""
+msgstr "حمام"
 
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 msgid "Small Room Bright"
-msgstr ""
+msgstr "اتاقک روشن"
 
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 msgid "Small Room Dark"
-msgstr ""
+msgstr "اتاقک تاریک"
 
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 msgid "Medium Room"
-msgstr ""
+msgstr "اتاق متوسط"
 
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 msgid "Large Room"
-msgstr ""
+msgstr "اتاق بزرگ"
 
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 msgid "Church Hall"
-msgstr ""
+msgstr "سالن مسجد"
 
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 msgid "Cathedral"
-msgstr ""
+msgstr "مصلی اعظم"
 
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 msgid "Big Cave"
-msgstr ""
+msgstr "غار بزرگ"
 
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 #: resources/EffectsMenuDefaults.xml
 msgid "Reverb"
-msgstr ""
+msgstr "گردش صدا"
 
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 msgid "Adds ambience or a \"hall effect\""
-msgstr ""
+msgstr "صدای محیطی یا «افکت سالنی» را اضافه می‌کند"
 
 #: libraries/lib-builtin-effects/Reverse.cpp resources/EffectsMenuDefaults.xml
 msgid "Reverse"
-msgstr "برعکس"
+msgstr "برعکس کردن"
 
 #: libraries/lib-builtin-effects/Reverse.cpp
 msgid "Reverses the selected audio"
-msgstr ""
+msgstr "صدای مورد نظر را معکوس میکند"
 
 #: libraries/lib-builtin-effects/SBSMSBase.h
 msgid "SBSMS Time / Pitch Stretch"
-msgstr ""
+msgstr "زمان SBSMS / کشیدن گام"
 
 #. i18n-hint: Butterworth is the name of the person after whom the filter type
 #. is named.
 #: libraries/lib-builtin-effects/ScienFilterBase.cpp
 msgid "Butterworth"
-msgstr ""
+msgstr "باتِر-وورف"
 
 #. i18n-hint: Chebyshev is the name of the person after whom the filter type
 #. is named.
 #: libraries/lib-builtin-effects/ScienFilterBase.cpp
 msgid "Chebyshev Type I"
-msgstr ""
+msgstr "چِبی‌شوف نوع 1"
 
 #. i18n-hint: Chebyshev is the name of the person after whom the filter type
 #. is named.
 #: libraries/lib-builtin-effects/ScienFilterBase.cpp
 msgid "Chebyshev Type II"
-msgstr ""
+msgstr "چِبی‌شوف نوع 2"
 
 #: libraries/lib-builtin-effects/ScienFilterBase.cpp
 msgid "Lowpass"
-msgstr ""
+msgstr "فیلتر دسته پایین"
 
 #: libraries/lib-builtin-effects/ScienFilterBase.cpp
 msgid "Highpass"
-msgstr ""
+msgstr "فیلتر دسته بالا"
 
 #: libraries/lib-builtin-effects/ScienFilterBase.cpp
 #: resources/EffectsMenuDefaults.xml
 msgid "Classic Filters"
-msgstr ""
+msgstr "فیلترهای کلاسیک"
 
 #. i18n-hint: "infinite impulse response"
 #: libraries/lib-builtin-effects/ScienFilterBase.cpp
@@ -1323,10 +1355,9 @@ msgid "Rapid tone quality variations, like that guitar sound so popular in the 1
 msgstr ""
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
-#, fuzzy
 msgctxt "cloud sync"
 msgid "Error importing cloud audio"
-msgstr "خطا در راه‌اندازی صدا"
+msgstr ""
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
 msgctxt "update dialog"
@@ -6913,9 +6944,8 @@ msgid "Open &From Cloud"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Cloud &Project..."
-msgstr "در حال باز کردن پروژهٔ اوداسیتی"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Open Cloud &Audio File..."
@@ -7062,9 +7092,8 @@ msgid "Don't show this again"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Open cloud audio file"
-msgstr "گنجاندن صوت قبل از برچسب اول"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -16314,7 +16343,7 @@ msgstr ""
 #: src/prefs/RecordingPrefs.h
 msgctxt "preference"
 msgid "Recording"
-msgstr ""
+msgstr "در حال ضبط"
 
 #: src/prefs/DevicePrefs.cpp src/prefs/MidiIOPrefs.cpp
 msgid "De&vice:"

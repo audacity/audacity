@@ -5,17 +5,17 @@
 #
 # Translators:
 # Link Winterberg, 2024
-# Balázs Meskó <meskobalazs@mailbox.org>, 2025
-# Kiss-Kálmán Dániel <kisskalmandaniel@gmail.com>, 2025
+# Balázs Meskó <meskobalazs@mailbox.org>, 2026
+# Kiss-Kálmán Dániel <kisskalmandaniel@gmail.com>, 2026
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-05-26 16:41+0300\n"
+"POT-Creation-Date: 2026-06-10 15:30+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: Kiss-Kálmán Dániel <kisskalmandaniel@gmail.com>, 2025\n"
+"Last-Translator: Kiss-Kálmán Dániel <kisskalmandaniel@gmail.com>, 2026\n"
 "Language-Team: Hungarian (https://app.transifex.com/audacity/teams/164520/hu/)\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
@@ -1355,15 +1355,14 @@ msgid "Rapid tone quality variations, like that guitar sound so popular in the 1
 msgstr "Gyors hangminőség-variációk, az 1970-es években oly népszerű gitárhanghoz hasonló"
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
-#, fuzzy
 msgctxt "cloud sync"
 msgid "Error importing cloud audio"
-msgstr "Hiba az importáláskor"
+msgstr "Hiba a felhős hang importálásakor"
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
 msgctxt "update dialog"
 msgid "Can't download cloud audio"
-msgstr ""
+msgstr "A felhős hang nem tölthető le"
 
 #: libraries/lib-cloud-audiocom/UploadService.cpp
 msgid "Cannot proceed to upload."
@@ -4250,7 +4249,7 @@ msgstr "Hangmagasság (EAC)"
 
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgid "Wavelet (1/6 Octave Hann)"
-msgstr ""
+msgstr "Wavelet (1/6 oktávos Hann)"
 
 #: libraries/lib-wave-track-settings/SpectrogramSettings.cpp
 msgid "Maximum frequency must be 100 Hz or above"
@@ -7206,20 +7205,21 @@ msgid "Open from audio.com"
 msgstr "Megnyitás az audio.com oldalról"
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
-#, fuzzy
 msgid "Downloading audio"
-msgstr "%s letöltése"
+msgstr "Hang letöltése"
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to download audio from cloud.\n"
 "%s"
-msgstr "Nem sikerült az előbeállítás kódolása innen: „%s”"
+msgstr ""
+"Nem sikerült a hang letöltése a felhőből.\n"
+"%s"
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
 msgid "Downloaded audio file does not exist."
-msgstr ""
+msgstr "A letöltött hangfájl nem létezik"
 
 #: modules/sharing/mod-cloud-audiocom/CloudProjectMixdownUtils.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
@@ -7241,19 +7241,16 @@ msgid "Previews can be updated only for Cloud projects"
 msgstr "Az előnézet csak felhős projekteknél frissíthető"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open &From Cloud"
-msgstr "Megnyitás a felhőből"
+msgstr "Megnyitás a &felhőből"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Cloud &Project..."
-msgstr "Projekt megnyitása..."
+msgstr "Felhős &projekt megnyitása…"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Cloud &Audio File..."
-msgstr "Felhős hang előnézetének &frissítése"
+msgstr "Felhős &hangfájl megnyitása…"
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Save &To Cloud..."
@@ -7396,9 +7393,8 @@ msgid "Don't show this again"
 msgstr "Ne jelenítse meg többször"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Open cloud audio file"
-msgstr "Felhős hang előnézetének &frissítése"
+msgstr "Felhős hangfájl megnyitása"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7406,11 +7402,11 @@ msgid "less than 1 minute"
 msgstr "kevesebb, mint 1 perce"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "one minute ago"
 msgid_plural "%d minutes ago"
-msgstr[0] "egy perccel ezelőtt"
-msgstr[1] "%d perccel ezelőtt"
+msgstr[0] "egy perce"
+msgstr[1] "%d perce"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7421,21 +7417,20 @@ msgstr[0] "egy órával ezelőtt"
 msgstr[1] "%d órával ezelőtt"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Title"
-msgstr "Szám címe"
+msgstr "Cí"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Author"
-msgstr ""
+msgstr "Szerző"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Tags"
-msgstr ""
+msgstr "Címkék"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Created"
-msgstr ""
+msgstr "Létrehozva"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7443,14 +7438,12 @@ msgid "Failed to authorize account"
 msgstr "Nem sikerült hitelesíteni a fiókot"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Loading audio list..."
-msgstr "Hang feltölése…"
+msgstr "Hanglista betöltése…"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Failed to get audio list"
-msgstr "Nem sikerült a projektlista lekérése"
+msgstr "A hanglista lekérése sikertelen"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7651,7 +7644,7 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Create a free cloud storage account to access your projects and audio from any device"
-msgstr ""
+msgstr "Hozzon létre egy ingyenes felhőtárhelyfiókot, hogy bármely eszközről elérje a projektjeit és hangjait"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to save to the cloud"
@@ -7667,7 +7660,7 @@ msgstr "Folytatás a Facebookkal"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Or use email and password"
-msgstr ""
+msgstr "Vagy használjon e-mail-címet és jelszót"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Email"
@@ -8264,9 +8257,9 @@ msgstr "Az %s weboldala: "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s software is copyright %s 1999-2026 %s Team."
-msgstr "Az %s szoftverre a következő vonatkozik: copyright %s 1999-2024 Az %s csapata."
+msgstr ""
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -11695,7 +11688,7 @@ msgstr "Audacity felhős beállításának befejezése audio.com-mal"
 
 #: src/WhatsNewDialog.cpp
 msgid "Get our free OpenVino AI tools"
-msgstr ""
+msgstr "Szerezze be az ingyenes OpenVino MI-eszközeinket"
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
@@ -11703,12 +11696,11 @@ msgstr "SOAP Voice Cleaner: stúdióminőségű beszédhang"
 
 #: src/WhatsNewDialog.cpp
 msgid "Explore free plugins for sculpting your audio"
-msgstr ""
+msgstr "Fedezze fel az ingyenes hangformázó bővítményeinket"
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "View free plugins"
-msgstr "Szerezz be ingyenes bővítményeket és hangokat"
+msgstr "Ingyenes bővítmények megtekintése"
 
 #: src/WhatsNewDialog.cpp
 msgid "Help us decide the future of Audacity"
@@ -14346,23 +14338,20 @@ msgid "Trunc&ate tracks independently"
 msgstr "Sávok önálló &csonkítása"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Truncate Location"
-msgstr "&Csonkítás eddig:"
+msgstr ""
 
 #: src/effects/TruncSilence.cpp
 msgid "Remove silence from &beginning"
 msgstr ""
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Remove silence from &middle"
-msgstr "%s eltávolítása innen: %s"
+msgstr ""
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Remove silence from &end"
-msgstr "%s eltávolítása innen: %s"
+msgstr ""
 
 #: src/effects/TruncSilence.cpp
 msgid ""
@@ -15108,18 +15097,16 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr "&Előző kliphatárok a kurzorhoz"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Previous Clip Boundary to Cursor"
-msgstr "&Előző kliphatárok a kurzorhoz"
+msgstr ""
 
 #: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "Kurzor a &következő kliphatárhoz"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Cursor to Next Clip Boundary"
-msgstr "Kurzor a következő kliphatárhoz"
+msgstr ""
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -19838,31 +19825,32 @@ msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "Bal=nagyítás, jobb=kicsinyítés, középső=normál"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Install Audacity 4"
-msgstr "&Frissítés telepítése"
+msgstr "Az Audacity 4 telepítése"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid ""
 "Audacity 4 is here! Packed with hundreds of upgrades that make it faster and\n"
 "easier to use than ever."
 msgstr ""
+"Megérkezett az Audacity 4! Fejlesztések százaival érkezik, melyek\n"
+"minden eddiginél könnyebben használhatóvá teszik."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Installation does not affect Audacity 3, so your existing setup remains untouched."
-msgstr ""
+msgstr "A telepítés nincs hatással az Audacity 3-ra, így a meglévő beállításai érintetlenek maradnak."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Discover what's new in our full feature breakdown."
-msgstr ""
+msgstr "Fedezze fel az újdonságokat a teljes funkcióbemutatónkkal."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "No thanks"
-msgstr ""
+msgstr "Köszönöm nem"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Remind me later"
-msgstr ""
+msgstr "Emlékeztessen később"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Unable to fetch Audacity 4 release information. Please try again later."
@@ -19877,9 +19865,8 @@ msgid "No Audacity 4 installer available for your platform."
 msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Unable to create installer file. Please check write permissions."
-msgstr "A célfájlt nem sikerült íráshoz létrehozni"
+msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
 msgid "Audacity update"
@@ -19891,9 +19878,8 @@ msgid "Downloading %s"
 msgstr "%s letöltése"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Download Error"
-msgstr "Letöltés"
+msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Failed to download Audacity 4 installer. Please try again later."
@@ -19991,11 +19977,11 @@ msgstr "Elfogadás && folytatás"
 
 #: src/update/UpdateNotificationDialog.cpp
 msgid "&Remind me later"
-msgstr ""
+msgstr "&Emlékeztessen később"
 
 #: src/update/UpdateNotificationDialog.cpp
 msgid "&Dismiss"
-msgstr ""
+msgstr "El&tüntetés"
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
@@ -21849,92 +21835,3 @@ msgstr "Spektrális eszközök"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Örökölt"
-
-#~ msgid "25th Anniversary Merchandise!"
-#~ msgstr "25. évfordulós ajándéktárgyak!"
-
-#~ msgid "Visit now"
-#~ msgstr "Meglátogatás most"
-
-#~ msgid "Visit our new Audacity merch store"
-#~ msgstr "Látogasd meg új Audacity áruházunkat"
-
-#~ msgid "Open Fro&m Cloud..."
-#~ msgstr "Megnyitás a &felhőből…"
-
-#~ msgid "<font color=\"#000000\">"
-#~ msgstr "<font color=\"#000000\">"
-
-#~ msgid "Sign up to Audacity's cloud saving platform"
-#~ msgstr "Regisztrálj az Audacity felhős mentési platformjára"
-
-#~ msgid "and access your projects from anywhere!"
-#~ msgstr "és érd el bárhonnan a projektedet!"
-
-#~ msgid "</font>"
-#~ msgstr "</font>"
-
-#, c-format
-#~ msgid "What's new in Audacity %s"
-#~ msgstr "Audacity %s újdonságai"
-
-#, c-format
-#~ msgid "Watch the [[%s|release video]] or read the [[%s|changelog]] to learn more about what we have included in the latest release!</p>"
-#~ msgstr "Nézd meg a  [[%s|kiadási videót]] vagy olvasd el a [[%s|változásnaplót]], hogy többet tudj meg arról, mi mindent raktunk bele a legújabb kiadásba!</p>"
-
-#, c-format
-#~ msgid "You can also read the [[%s|changelog]]</p>"
-#~ msgstr "El is olvashatod a [[%s|módosítási naplót]]</p>"
-
-#, c-format
-#~ msgid "<p>Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users</p>"
-#~ msgstr "Tekintsd meg [[%s|Muse Hub alkalmazást]] az Audacity felhasználók számára készült hangbővítmények széles választékáért</p>"
-
-#~ msgid "A vocal processing effect that enhances vocal clarity and depth."
-#~ msgstr "Egy énekfeldolgozási hatás, amely javítja a hang tisztaságát és mélységét."
-
-#~ msgid "A multipurpose reverb plugin for spacious, natural-sounding effects."
-#~ msgstr "Többcélú visszhang bővítmény tágas, természetes hangzású hatásokhoz."
-
-#~ msgid "A guitar amp and effects modelling plugin for realistic tones and customizable sounds."
-#~ msgstr "Gitárerősítő és effektus modellező bővítmény a valósághű hangokhoz és testreszabható hangzásokhoz."
-
-#~ msgid "A responsive reverb plugin that adapts to track dynamics for immersive soundscapes."
-#~ msgstr "Egy reszponzív visszhang bővítmény, amely alkalmazkodik a nyomkövetési dinamikához a magával ragadó hangzásvilág érdekében."
-
-#~ msgid "A vocal multi-effect plugin that enhances vocal tracks for professional results."
-#~ msgstr "Egy vokális több effektus bővítmény, amely javítja az éneksávokat a professzionális eredmények érdekében."
-
-#~ msgid "A bass effect plugin designed to deliver punchy, clear low-end sound."
-#~ msgstr "A basszus effektus beépülő modul ütős, tiszta, alsó kategóriás hangzást biztosít."
-
-#~ msgid "A plugin for acoustic sound perfection, enhancing warmth and clarity."
-#~ msgstr "Beépülő modul az akusztikus hangzás tökéletesítéséhez, fokozva a melegséget és a tisztaságot."
-
-#~ msgid "An amazing voice enhancement plugin for crystal-clear, professional vocal effects."
-#~ msgstr "Csodálatos hangjavító bővítmény a kristálytiszta, professzionális énekhatásokhoz."
-
-#~ msgid "A real-time stem separation tool to isolate vocals, drums, and instruments."
-#~ msgstr "Valós idejű tőleválasztó eszköz az ének, a dob és a hangszerek elkülönítésére."
-
-#, c-format
-#~ msgid "Check out a variety of plugins by well known developers available on [[%s|MuseHub]]."
-#~ msgstr "Válogass jól ismert fejlesztők számos bővítményéből a [[%s|MuseHub weboldalon]] ."
-
-#~ msgid "A multiband compressor offering precise control over frequencies."
-#~ msgstr "Többsávos tömörítő, amely precíz frekvenciaszabályozást kínál."
-
-#~ msgid "Ace Studio - The World's No.1 AI Singing Voice Generator."
-#~ msgstr "Ace Studio – A világ első számú AI énekhanggenerátora."
-
-#~ msgid "Continue for Cloud Storage"
-#~ msgstr "Folytatás a Felhő Tárolóval"
-
-#~ msgid "What's new in Audacity"
-#~ msgstr "Audacity újdonságai"
-
-#~ msgid "Watch the release video"
-#~ msgstr "Nézd meg a videót"
-
-#~ msgid "Audacity feature survey"
-#~ msgstr "Audacity tulajdonságok felmérő"

@@ -1,26 +1,26 @@
-# Georgian translation for Audacity.
-# Copyright (C) 2022 Audacity Team
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Audacity Team
 # This file is distributed under the same license as the audacity package.
-# Temuri Doghonadze <temuri.doghonadze@gmail.com>, 2025.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
-# Link Winterberg, 2024
 # Temuri Doghonadze <temuri.doghonadze@gmail.com>, 2025
+# Link Winterberg, 2025
 #
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-05-26 16:41+0300\n"
-"PO-Revision-Date: 2025-11-29 10:56+0100\n"
-"Last-Translator: Temuri Doghonadze <temuri.doghonadze@gmail.com>\n"
+"POT-Creation-Date: 2026-06-10 15:30+0300\n"
+"PO-Revision-Date: 2024-09-20 19:15+0000\n"
+"Last-Translator: Link Winterberg, 2025\n"
 "Language-Team: Georgian (https://app.transifex.com/audacity/teams/164520/ka/)\n"
 "Language: ka\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n!=1);\n"
-"X-Generator: Poedit 3.8\n"
 
 #: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
 #: src/RealtimeEffectPanel.cpp
@@ -127,12 +127,12 @@ msgstr "დაკვრის მაღალი დაყოვნება: %g
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Supported Playback Rates:\n"
-msgstr "მხარდაჭერილი დაკვრის სიხშირეები:\n"
+msgstr ""
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Supported Capture Rates:\n"
-msgstr "მხარდაჭერილი ჩაწერის სიხშირეები:\n"
+msgstr ""
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -816,7 +816,7 @@ msgstr ""
 #: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy Compressor"
-msgstr "მოძველებული შემკუმშავი"
+msgstr ""
 
 #: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
 msgid "Compresses the dynamic range of audio"
@@ -1129,17 +1129,17 @@ msgstr "ვოკალი II"
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 msgid "Dance Vocal"
-msgstr "საცეკვაო ვოკალი"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 msgid "Modern Vocal"
-msgstr "თანამედროვე ვოკალი"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 msgid "Voice Tail"
-msgstr "ხმის კუდი"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
@@ -1179,7 +1179,7 @@ msgstr "კათედრალი"
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 msgid "Big Cave"
-msgstr "დიდი გამოქვაბული"
+msgstr ""
 
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 #: resources/EffectsMenuDefaults.xml
@@ -1338,12 +1338,12 @@ msgstr ""
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
 msgctxt "cloud sync"
 msgid "Error importing cloud audio"
-msgstr "ღრუბლიდან აუდიოს შემოტანის შეცდომა"
+msgstr ""
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
 msgctxt "update dialog"
 msgid "Can't download cloud audio"
-msgstr "ღრუბლოვანი აუდიოს ჩამოტვირთვა შეუძლებელია"
+msgstr ""
 
 #: libraries/lib-cloud-audiocom/UploadService.cpp
 msgid "Cannot proceed to upload."
@@ -1409,22 +1409,22 @@ msgstr "დარტყმების გამაძლიერებელ�
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Deep Dive Master"
-msgstr "Deep Dive Master"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Beefy Master"
-msgstr "ხორციანი მთავარი"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Make It Right Master"
-msgstr "Make It Right Master"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Brick Wall Master"
-msgstr "Brick Wall Master"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
@@ -1449,12 +1449,12 @@ msgstr "ვოკალის კონტროლი"
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Vocal Touch-Up"
-msgstr "ვოკალის კორექცია"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Voice Memos Balancer"
-msgstr "Voice Memos Balancer"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
@@ -1484,72 +1484,72 @@ msgstr "სტრიქონები"
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Kick Drums"
-msgstr "ბას-ბარაბანი"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Drums Control"
-msgstr "დასარტყმელი საკრავების კონტროლი"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Climax Impulser SFX"
-msgstr "Climax Impulser SFX"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Engine Breathing SFX"
-msgstr "Engine Breathing SFX"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Great Impact SFX"
-msgstr "Great Impact SFX"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Great Body SFX"
-msgstr "Great Body SFX"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Great Tail SFX"
-msgstr "Great Tail SFX"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Smack Explosion SFX"
-msgstr "Smack Explosion SFX"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Master Limiter"
-msgstr "მთავარი შემზღუდველი"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "SFX Limiter"
-msgstr "SFX-ის შემზღუდველი"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset. VO means Voiceover.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "VO Limiter"
-msgstr "VO-ის შემზღუდველი"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Modern Punch"
-msgstr "Modern Punch"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Modern Punch 2"
-msgstr "Modern Punch 2"
+msgstr ""
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Play it Loud"
-msgstr "დაკვრა ხმამაღლა"
+msgstr ""
 
 #: libraries/lib-effects/Effect.cpp
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
@@ -1850,7 +1850,7 @@ msgstr "შემოტანა - %s..."
 
 #: libraries/lib-import-export/Import.cpp
 msgid "Operation was canceled by user"
-msgstr "ოპერაცია გაუქმდა მომხმარებლის მიერ"
+msgstr ""
 
 #: libraries/lib-import-export/Import.cpp
 #, c-format
@@ -2063,7 +2063,7 @@ msgstr ""
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Supported label file"
-msgstr "მხარდაჭერილი ჭდის ფაილი"
+msgstr ""
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "S&tandard"
@@ -4624,11 +4624,11 @@ msgstr "ფაილის ტიპი:"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
 msgid "Previous slide"
-msgstr "წინა სლაიდი"
+msgstr ""
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
 msgid "Next slide"
-msgstr "შემდეგი სლაიდი"
+msgstr ""
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
 #, c-format
@@ -4759,7 +4759,7 @@ msgstr "შეუძლებელია პროექტის მონა�
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "Invalid project 'rate' attribute."
-msgstr "პროექტის არასწორი ატრიბუტი 'rate'."
+msgstr ""
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid "MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track."
@@ -6043,7 +6043,7 @@ msgstr "45-85 კბწმ (პატარა ფაილები)"
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Excessive, 320 kbps"
-msgstr "სიგიჟე, 320 კბწმ"
+msgstr ""
 
 #: modules/import-export/mod-mp3/ExportMP3.cpp
 msgid "Extreme, 220-260 kbps"
@@ -7142,7 +7142,7 @@ msgstr "გახსნა audio.com-დან"
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
 msgid "Downloading audio"
-msgstr "აუდიოს გადმოწერა"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
 #, c-format
@@ -7150,8 +7150,6 @@ msgid ""
 "Failed to download audio from cloud.\n"
 "%s"
 msgstr ""
-"აუდიოს ღრუბლიდან გადმოწერა ჩავარდა.\n"
-"%s"
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
 msgid "Downloaded audio file does not exist."
@@ -7178,15 +7176,15 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Open &From Cloud"
-msgstr "გახსნა ღ&რუბლიდან"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Open Cloud &Project..."
-msgstr "ღრუბლოვანი &პროექტის გახსნა..."
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Open Cloud &Audio File..."
-msgstr "&აუდიოფაილის გახსნა ღრუბლიდან..."
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Save &To Cloud..."
@@ -7302,7 +7300,7 @@ msgstr "აუდიოს გაზიარება"
 #: modules/sharing/mod-cloud-audiocom/ui/ShareAudioToolbar.cpp
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Get Effects"
-msgstr "ეფექტების მიღება"
+msgstr ""
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. that opens Share Audio dialog
@@ -7322,7 +7320,7 @@ msgstr "შესვლა"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 msgid "&Sign Out"
-msgstr "გა&სვლა"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioComDialogBase.cpp
 msgid "Don't show this again"
@@ -7330,7 +7328,7 @@ msgstr "ეს აღარ მაჩვენო"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Open cloud audio file"
-msgstr "აუდიოფაილის გახსნა ღრუბლიდან"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7341,8 +7339,8 @@ msgstr "წუთზე ნაკლები"
 #, c-format
 msgid "one minute ago"
 msgid_plural "%d minutes ago"
-msgstr[0] "1 წუთის წინ"
-msgstr[1] "%d წუთის წინ"
+msgstr[0] ""
+msgstr[1] ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7354,19 +7352,19 @@ msgstr[1] "%d საათის წინ"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Title"
-msgstr "სათაური"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Author"
-msgstr "ავტორი"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Tags"
-msgstr "ჭდეები"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Created"
-msgstr "შექმნის თარიღი"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7375,11 +7373,11 @@ msgstr "ანგარიშის ავტორიზაცია ჩავ�
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Loading audio list..."
-msgstr "აუდიოს სიის ჩატვირთვა..."
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Failed to get audio list"
-msgstr "აუდიოს სიის მიღება ჩავარდა"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7410,7 +7408,7 @@ msgstr "როგორ გნებავთ შენახვა?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "Save to the Cloud (free)"
-msgstr "შენახვა ღრუბელში (უფასო)"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "Your project is backed up privately on audio.com. You can access your work from any device and collaborate on your project with others. Cloud saving is free for a limited number of projects."
@@ -7558,7 +7556,7 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to cloud"
-msgstr "შესვლა ღრუბლოვან სერვისში"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid ""
@@ -7578,19 +7576,19 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to save to the cloud"
-msgstr "ღრუბლოვან სერვისში შესანახად, ჯერ, შედით"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Google"
-msgstr "გაგრძელება Google-ით"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Facebook"
-msgstr "Facebook-ით გაგრძელება"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Or use email and password"
-msgstr "ან გამოიყენეთ ელფოსტა და პაროლი"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Email"
@@ -7602,19 +7600,19 @@ msgstr "პაროლი"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Forgot your password?"
-msgstr "დაგავიწყდათ პაროლი?"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Already have an account? "
-msgstr "უკვე გაქვთ ანგარიში? "
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in here"
-msgstr "შესვლა"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Need an account? "
-msgstr "ანგარიში გჭირდებათ? "
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
@@ -7879,11 +7877,11 @@ msgstr "იტვირთება..."
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Please wait..."
-msgstr "გთხოვთ, მოითმინეთ..."
+msgstr ""
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Connection error"
-msgstr "დაკავშირების შეცდომა"
+msgstr ""
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Audacity is unable to connect to MuseHub.com. Please check your connection and try again."
@@ -7891,7 +7889,7 @@ msgstr ""
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Try again"
-msgstr "კიდევ სცადეთ"
+msgstr ""
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp src/WhatsNewDialog.cpp
 msgid "Get it on MuseHub"
@@ -8097,7 +8095,7 @@ msgstr "%s, გრაფიკა"
 #: src/AboutDialog.cpp
 #, c-format
 msgid "%s, effects presets"
-msgstr "%s, ეფექტის პრესეტები"
+msgstr ""
 
 #: src/AboutDialog.cpp
 #, c-format
@@ -8180,9 +8178,9 @@ msgstr "%s ვებსაიტი: "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s software is copyright %s 1999-2026 %s Team."
-msgstr "%s პროგრამულ უზრუნველყოფაზე ყველა უფლება გააჩნია %s-ს 1999-2024 %s-ის გუნდი."
+msgstr ""
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -9996,7 +9994,7 @@ msgstr "სიგნალის დონის მზომი"
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Moved volume slider"
-msgstr "გადაადგილებული ხმის ჩოჩია"
+msgstr ""
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
@@ -10641,7 +10639,7 @@ msgstr ""
 #: src/RealtimeEffectPanel.cpp src/effects/RealtimeEffectStateUI.cpp
 #, c-format
 msgid "Change realtime effect %s on %s"
-msgstr "რეალური დროის ეფექტის %s შეცვლა %s-ზე"
+msgstr ""
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Replace effect"
@@ -10753,11 +10751,11 @@ msgstr "რეალური დროის ეფექტები არა
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Master Effects"
-msgstr "ძირითადი ეფექტები"
+msgstr ""
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Applies to all tracks"
-msgstr "ვრცელდება ყველა ტრეკზე"
+msgstr ""
 
 #: src/SelectUtilities.cpp
 msgid "Position"
@@ -11464,7 +11462,7 @@ msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Get our free OpenVino AI tools"
-msgstr "გადმოწერეთ ჩვენი უფასო OpenVino-ის ხი-ის ხელსაწყოები"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
@@ -11472,11 +11470,11 @@ msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Explore free plugins for sculpting your audio"
-msgstr "დაათვალიერეთ უფასო დამატებები თქვენი აუდიოს გამოსაძერწად"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "View free plugins"
-msgstr "უფასო დამატებების ნახვა"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Help us decide the future of Audacity"
@@ -12943,7 +12941,7 @@ msgstr "შეყვ&ანა"
 #. i18n-hint: show input on a graph
 #: src/effects/DynamicRangeProcessorEditor.cpp
 msgid "Show input"
-msgstr "შეყვანის ჩვენება"
+msgstr ""
 
 #: src/effects/DynamicRangeProcessorEditor.cpp
 msgid "O&utput"
@@ -12951,21 +12949,21 @@ msgstr "გამო&ტანა"
 
 #: src/effects/DynamicRangeProcessorEditor.cpp
 msgid "A&ctual compression"
-msgstr "&მიმდინარე შეკუმშვა"
+msgstr ""
 
 #. i18n-hint: show actual compression on a graph
 #: src/effects/DynamicRangeProcessorEditor.cpp
 msgid "Show actual compression"
-msgstr "მიმდინარე შეკუმშვის ჩვენება"
+msgstr ""
 
 #: src/effects/DynamicRangeProcessorEditor.cpp
 msgid "Tar&get compression"
-msgstr "სამი&ზნე შეკუმშვა"
+msgstr ""
 
 #. i18n-hint: show target compression on a graph
 #: src/effects/DynamicRangeProcessorEditor.cpp
 msgid "Show target compression"
-msgstr "სამიზნე შეკუმშვის ჩვენება"
+msgstr ""
 
 #: src/effects/DynamicRangeProcessorEditor.cpp
 msgid "Compression curve"
@@ -13013,11 +13011,11 @@ msgstr "შეყვანა"
 
 #: src/effects/DynamicRangeProcessorHistoryPanel.cpp
 msgid "Actual Compression"
-msgstr "მიმდინარე შეკუმშვა"
+msgstr ""
 
 #: src/effects/DynamicRangeProcessorHistoryPanel.cpp
 msgid "Target Compression"
-msgstr "სამიზნე შეკუმშვა"
+msgstr ""
 
 #: src/effects/DynamicRangeProcessorHistoryPanel.cpp
 msgid "awaiting playback"
@@ -14106,23 +14104,20 @@ msgid "Trunc&ate tracks independently"
 msgstr "ტრეკების ცალცალკე მოჭრა"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Truncate Location"
-msgstr "მოჭრა:"
+msgstr ""
 
 #: src/effects/TruncSilence.cpp
 msgid "Remove silence from &beginning"
 msgstr ""
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Remove silence from &middle"
-msgstr "%s წაიშალა %s-დან"
+msgstr ""
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Remove silence from &end"
-msgstr "%s წაიშალა %s-დან"
+msgstr ""
 
 #: src/effects/TruncSilence.cpp
 msgid ""
@@ -14866,18 +14861,16 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr ""
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Previous Clip Boundary to Cursor"
-msgstr "აირჩიეთ წინა კლიპი"
+msgstr ""
 
 #: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr ""
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Cursor to Next Clip Boundary"
-msgstr "კურსორის არჩევა დამახსოვრებულზე"
+msgstr ""
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -14970,7 +14963,7 @@ msgstr "დუბლიკაცია"
 
 #: src/menus/EditMenus.cpp
 msgid "Cut to clipboard and leave gap"
-msgstr "ამოჭრა გაცვლის ბუფერში და ადგილის დატოვება"
+msgstr ""
 
 #: src/menus/EditMenus.cpp
 msgid "Cut and leave gap"
@@ -15209,7 +15202,7 @@ msgstr "&RAW..."
 
 #: src/menus/FileMenus.cpp
 msgid "&Close Project"
-msgstr "პროექტის &დახურვა"
+msgstr ""
 
 #: src/menus/FileMenus.cpp
 msgid "Export as MP&3"
@@ -15273,7 +15266,7 @@ msgstr "ინფორმაცია აუდიომოწყობილ�
 
 #: src/menus/HelpMenus.cpp
 msgid "&Quick Help"
-msgstr "სწრაფი და&ხმარება"
+msgstr ""
 
 #: src/menus/HelpMenus.cpp
 msgid "&Manual"
@@ -15281,7 +15274,7 @@ msgstr "სახელ&მძღვანელო"
 
 #: src/menus/HelpMenus.cpp
 msgid "Audacity &Support"
-msgstr "Audacity-ის მხარდაჭერა"
+msgstr ""
 
 #: src/menus/HelpMenus.cpp
 msgid "&Diagnostics"
@@ -15335,11 +15328,11 @@ msgstr "ჭდიანი აუდიოს წაშლა"
 
 #: src/menus/LabelMenus.cpp
 msgid "Cut labeled audio regions to clipboard and leave gap"
-msgstr "ჭდის მქონე ხმის რეგიონების ამოჭრა და ადგილის დატოვება"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
 msgid "Cut labeled audio and leave gap"
-msgstr "მონიშნული აუდიოს ამოჭრა და ადგილის დატოვება"
+msgstr ""
 
 #. i18n-hint: (verb) Audacity has just done a special kind of DELETE on
 #. the labeled audio regions
@@ -15451,11 +15444,11 @@ msgstr "&ამოჭრა"
 
 #: src/menus/LabelMenus.cpp
 msgid "Cut by label"
-msgstr "ამოჭრა ჭდით"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
 msgid "Delete by label"
-msgstr "წაშლა ჭდის მიხედვით"
+msgstr ""
 
 #. i18n-hint: (verb) A special way to cut out a piece of audio
 #: src/menus/LabelMenus.cpp
@@ -15472,7 +15465,7 @@ msgstr ""
 
 #: src/menus/LabelMenus.cpp
 msgid "Delete by labels and leave gap"
-msgstr "წაშლა ჭდის მიხედვით და ადგილის დატოვება"
+msgstr ""
 
 #: src/menus/LabelMenus.cpp
 msgid "Silence &Audio"
@@ -16300,7 +16293,7 @@ msgstr "სოლო/არასოლო ფოკუსირებული 
 
 #: src/menus/TrackMenus.cpp
 msgid "Delete Fo&cused Track"
-msgstr "ფოკუსირებული ტრე&კის წაშლა"
+msgstr ""
 
 #: src/menus/TrackMenus.cpp
 msgid "Move Focused Track U&p"
@@ -16580,7 +16573,7 @@ msgstr "მონიშნულის დასასრულზე გად�
 
 #: src/menus/ViewMenus.cpp
 msgid "E&xtra Menus"
-msgstr "&დამატებითი მენიუების ჩართვა"
+msgstr ""
 
 #: src/menus/ViewMenus.cpp
 msgid "&Show Clipping in Waveform"
@@ -16588,7 +16581,7 @@ msgstr "&კლიპინგის ჩვენება ტალღის �
 
 #: src/menus/ViewMenus.cpp
 msgid "Sho&w RMS in Waveform"
-msgstr "&RPM-ის ჩვენება ტალღის ფორმაში"
+msgstr ""
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Preferences for Application"
@@ -17126,7 +17119,7 @@ msgstr ""
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "&Do nothing"
-msgstr "&არაფრის გაკეთება"
+msgstr ""
 
 #: src/prefs/ImportExportPrefs.cpp
 msgid "Music Imports"
@@ -17578,7 +17571,7 @@ msgstr ""
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Pre-ro&ll:"
-msgstr "პრერო&ლი:"
+msgstr "პრერო&ლი"
 
 #: src/prefs/RecordingPrefs.cpp
 msgid "Cross&fade:"
@@ -18214,7 +18207,7 @@ msgstr " პიკი %.2f "
 
 #: src/toolbars/MeterToolBar.cpp
 msgid " Clipped "
-msgstr " წაკვეთილი "
+msgstr "წაკვეთილი"
 
 #: src/toolbars/MeterToolBar.cpp
 msgid "Record Meter"
@@ -18389,11 +18382,11 @@ msgstr "ტემპი"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
 msgid "Upper Time Signature"
-msgstr "ზედა ტაქტური ზომა"
+msgstr ""
 
 #: src/toolbars/TimeSignatureToolBar.cpp
 msgid "Lower Time Signature"
-msgstr "ქვედა ტაქტური ზომა"
+msgstr ""
 
 #: src/toolbars/TimeSignatureToolBar.cpp
 msgid "Tempo Changed"
@@ -18401,11 +18394,11 @@ msgstr "ტემპი შეიცვალა"
 
 #: src/toolbars/TimeSignatureToolBar.cpp
 msgid "Upper Time Signature Changed"
-msgstr "ზედა ტაქტური ზომა შეიცვალა"
+msgstr ""
 
 #: src/toolbars/TimeSignatureToolBar.cpp
 msgid "Lower Time Signature Changed"
-msgstr "ქვედა ტაქტური ზომა შეიცვალა"
+msgstr ""
 
 #. i18n-hint: Clicking this menu item shows the toolbar
 #. for selecting a time range of audio
@@ -18656,7 +18649,7 @@ msgstr "მონიშნული რეგიონის გასაწე�
 #. dragged to change their duration.
 #: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp
 msgid "Stretch Note Track"
-msgstr "ნოტების ტრეკის გაწელვა"
+msgstr ""
 
 #. i18n-hint: In the history list, indicates a MIDI note has
 #. been dragged to change its duration (stretch it). Using either past
@@ -18672,7 +18665,7 @@ msgstr "დააწკაპუნეთ კლიპის კონტექ�
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
 msgid "Reset Clip Pitch"
-msgstr "კლიპის ტონის ჩამოყრა"
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/ClipPitchAndSpeedButtonHandle.cpp
 msgid "Not enough space"
@@ -18915,14 +18908,14 @@ msgstr "ტონი და სიჩქარე..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 msgid "Render Pitch and Speed"
-msgstr "რენდერის ტონი და სიჩქარე"
+msgstr ""
 
 #. i18n-hint: This is about changing the clip playback speed, speed is in
 #. percent
 #: src/tracks/playabletrack/wavetrack/ui/WaveClipUIUtilities.cpp
 #, c-format
 msgid "Changed Clip Speed to %.01f%%"
-msgstr "კლიპის სიჩქარე შეიცვალა მნიშვნელობაზე %.01f%%"
+msgstr ""
 
 #. i18n-hint: This is about changing the clip playback speed, speed is in
 #. percent
@@ -18969,7 +18962,7 @@ msgstr "&ტონი და სიჩქარე..."
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Render Pitch and &Speed"
-msgstr "რენდერის ტონი და &სიჩქარე"
+msgstr ""
 
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Pitch &Up"
@@ -19207,19 +19200,19 @@ msgstr "ტალღის ფორმის შეცვლა"
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Change Speed Limits"
-msgstr "სიჩქარის შეზღუდვების შეცვლა"
+msgstr ""
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Change speed limit (%) to:"
-msgstr "დაბალი სიჩქარის ლიმიტის შეცვლა (%):"
+msgstr ""
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Lower Speed Limit"
-msgstr "სიჩქარის ქვედა ზღვარი"
+msgstr ""
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Upper Speed Limit"
-msgstr "მაღალი სიჩქარის ლიმიტი"
+msgstr ""
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Upper Speed Limit must be greater than the Lower Speed Limit"
@@ -19227,7 +19220,7 @@ msgstr ""
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 msgid "Invalid Limits"
-msgstr "არასწორი შეზღუდვები"
+msgstr ""
 
 #: src/tracks/timetrack/ui/TimeTrackControls.cpp
 #, c-format
@@ -19559,7 +19552,7 @@ msgstr "მარცხენა=გადიდება, მარჯვენ
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Install Audacity 4"
-msgstr "Audacity 4-ის დაყენება"
+msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid ""
@@ -19577,11 +19570,11 @@ msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "No thanks"
-msgstr "არა, მადლობა"
+msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Remind me later"
-msgstr "მოგვიანებით შემახსენე"
+msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Unable to fetch Audacity 4 release information. Please try again later."
@@ -19596,9 +19589,8 @@ msgid "No Audacity 4 installer available for your platform."
 msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Unable to create installer file. Please check write permissions."
-msgstr "სამიზნე ფაილის ჩასაწერად შექმნა შეუძლებელია"
+msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
 msgid "Audacity update"
@@ -19610,9 +19602,8 @@ msgid "Downloading %s"
 msgstr "გადმოწერა - %s"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Download Error"
-msgstr "გადმოწერა"
+msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Failed to download Audacity 4 installer. Please try again later."
@@ -19682,39 +19673,39 @@ msgstr ""
 #. i18n-hint: Subtitle of the app update notice dialog.
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Usage info"
-msgstr "გამოყენების ინფორმაცია"
+msgstr ""
 
 #. i18n-hint:  %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
 #, c-format
 msgid "You can turn this off anytime in %s."
-msgstr "შეგიძლიათ, გათიშოთ ეს ნებისმიერ დროს %s-ში."
+msgstr ""
 
 #. i18n-hint:  %s is replaced with "Preferences > Application" link
 #: src/update/UpdateNoticeDialog.cpp
 #, c-format
 msgid "You can disable this anytime in %s."
-msgstr "შეგიძლიათ, გათიშოთ ნებისმიერ დროს %s-ში."
+msgstr ""
 
 #: src/update/UpdateNoticeDialog.cpp
 msgid "View privacy policy"
-msgstr "პირადულობის პოლიტიკის დათვალიერება"
+msgstr ""
 
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Disable UUID"
-msgstr "UUID-ის გამორთვა"
+msgstr ""
 
 #: src/update/UpdateNoticeDialog.cpp
 msgid "Accept && continue"
-msgstr "დათანხმება და გაგრძელება"
+msgstr ""
 
 #: src/update/UpdateNotificationDialog.cpp
 msgid "&Remind me later"
-msgstr "&მოგვიანებით შემახსენე"
+msgstr ""
 
 #: src/update/UpdateNotificationDialog.cpp
 msgid "&Dismiss"
-msgstr "&მოცილება"
+msgstr ""
 
 #: src/update/UpdatePopupDialog.cpp
 msgctxt "update dialog"
@@ -20374,7 +20365,7 @@ msgstr "დაყოვნების დრო (წამი):"
 
 #: plug-ins/delay.ny
 msgid "Pitch change effect"
-msgstr "ტონის შეცვლის ეფექტი"
+msgstr ""
 
 #: plug-ins/delay.ny
 msgid "Pitch/Tempo"
@@ -20657,7 +20648,7 @@ msgstr ""
 
 #: plug-ins/legacy-limiter.ny resources/EffectsMenuDefaults.xml
 msgid "Legacy Limiter"
-msgstr "მოძველებული შემზღუდველი"
+msgstr ""
 
 #: plug-ins/legacy-limiter.ny
 msgid "Soft Limit"
@@ -21516,16 +21507,3 @@ msgstr "სპექტრალური ხელსაწყობი"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "მოძველებული"
-
-#~ msgid "Visit now"
-#~ msgstr "ეწვიეთ ახლა"
-
-#~ msgid "Open Fro&m Cloud..."
-#~ msgstr "&გახსნა ღრუბლიდან..."
-
-#~ msgid "</font>"
-#~ msgstr "</font>"
-
-#, c-format
-#~ msgid "What's new in Audacity %s"
-#~ msgstr "რა არის ახალი Audacity-ის ვერსიაში %s"

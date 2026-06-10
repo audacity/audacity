@@ -1,14 +1,14 @@
 # Danish translation for Audacity | Traduction danese de Audacity | Dansk oversættelse af Audacity
-# Copyright (C) 2015-2025 Audacity Team
+# Copyright (C) 2015-2026 Audacity Team
 # This file is distributed under the same license as the Audacity package. Denne fil distribueres under samme licens som Audacity-pakken.
-# Thomas Breinstrup <info@interlingua.dk>, 2012-2015 + 2022-2025.
+# Thomas Breinstrup <info@interlingua.dk>, 2012-2015 + 2022-2026.
 # scootergrisen, 2015-2020.
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-05-26 16:41+0300\n"
-"PO-Revision-Date: 2025-11-25 18:37+0100\n"
+"POT-Creation-Date: 2026-06-10 15:30+0300\n"
+"PO-Revision-Date: 2026-06-08 21:28+0200\n"
 "Last-Translator: Thomas Breinstrup\n"
 "Language-Team: Danish\n"
 "Language: da\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 3.6\n"
+"X-Generator: Poedit 3.9\n"
 
 #: libraries/lib-audacity-application-logic/AudacityApplicationLogic.cpp
 #: src/RealtimeEffectPanel.cpp
@@ -158,7 +158,7 @@ msgstr "Understøttede hastigheder:\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Cannot check mutual sample rates without both devices.\n"
-msgstr "Kan ikke tjekke fælles samplingshastigheder uden begge enheder.\n"
+msgstr "Kan ikke kontrollere fælles samplingshastigheder uden begge enheder.\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -2076,7 +2076,7 @@ msgstr "WebVTT-fil"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Podcast Chapters"
-msgstr ""
+msgstr "Podcastkapitler"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Supported label file"
@@ -6821,7 +6821,7 @@ msgstr "Kan ikke åbne den ønskede fil til skrivning"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Unsupported bytes-per-sample value for WavPack export"
-msgstr ""
+msgstr "Værdi for bytes pr. datapunkt til WavPack-eksport er ikke understøttet"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Exporting selected audio as WavPack"
@@ -8243,9 +8243,9 @@ msgstr "%s-websted: "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s software is copyright %s 1999-2026 %s Team."
-msgstr "%s-software er copyright %s 1999-2024 %s-teamet."
+msgstr "%s-software er copyright %s 1999-2026 %s-teamet."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -11658,11 +11658,11 @@ msgstr "Velkommen til Audacity!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Try the new Audacity 4 Beta release"
-msgstr ""
+msgstr "Afprøv den nye Audacity 4 i betaudgave"
 
 #: src/WhatsNewDialog.cpp
 msgid "Test the Beta release"
-msgstr ""
+msgstr "Afprøv betaudgaven"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
@@ -14320,23 +14320,20 @@ msgid "Trunc&ate tracks independently"
 msgstr "&Afkort spor hver for sig"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Truncate Location"
-msgstr "&Afkort til:"
+msgstr "Afkort placering:"
 
 #: src/effects/TruncSilence.cpp
 msgid "Remove silence from &beginning"
-msgstr ""
+msgstr "Fjern stilhed i &begyndelsen"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Remove silence from &middle"
-msgstr "Fjernede %s fra %s"
+msgstr "Fjern stilhed i &midten"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Remove silence from &end"
-msgstr "Fjernede %s fra %s"
+msgstr "Fjern stilhed i slutning&en"
 
 #: src/effects/TruncSilence.cpp
 msgid ""
@@ -14347,6 +14344,12 @@ msgid ""
 "* Remove silence from middle\n"
 "* Remove silence from end"
 msgstr ""
+"Der skal vælges mindst én placering.\n"
+"\n"
+"Vælg mindst en af disse muligheder:\n"
+"* Fjern stilhed i begyndelsen\n"
+"* Fjern stilhed i midten\n"
+"* Fjern stilhed i slutningen"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Save VST Preset As:"
@@ -15082,18 +15085,16 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr "&Forrige klipgrænse til markør"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Previous Clip Boundary to Cursor"
-msgstr "&Forrige klipgrænse til markør"
+msgstr "Vælg tidligere klipgrænse til markør"
 
 #: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "Markør til &næste klipgrænse"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Cursor to Next Clip Boundary"
-msgstr "Markør til næste klipgrænse"
+msgstr "Vælg markør til næste klipgrænse"
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -19847,20 +19848,19 @@ msgstr "Påmind mig senere"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Unable to fetch Audacity 4 release information. Please try again later."
-msgstr ""
+msgstr "Det er ikke muligt at hente oplysninger om Audacity 4-udgivelsen. Forsøg igen senere."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Unable to parse Audacity 4 release information. Please try again later."
-msgstr ""
+msgstr "Det er ikke muligt at hente oplysninger om Audacity 4-udgivelsen. Forsøg igen senere."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "No Audacity 4 installer available for your platform."
-msgstr ""
+msgstr "Der er intet Audacity 4-installationsfil tilgængelig til dit styresystem."
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Unable to create installer file. Please check write permissions."
-msgstr "Kan ikke åbne den ønskede fil til skrivning"
+msgstr "Det er ikke muligt at oprette installationsfilen. Kontrollér venligst skriverettighederne."
 
 #: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
 msgid "Audacity update"
@@ -19872,13 +19872,12 @@ msgid "Downloading %s"
 msgstr "Henter %s"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Download Error"
-msgstr "Download"
+msgstr "Fejl ved download"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Failed to download Audacity 4 installer. Please try again later."
-msgstr ""
+msgstr "Download af Audacity 4-installationsfilen mislykkedes. Forsøg igen senere."
 
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp

@@ -6,16 +6,16 @@
 # Translators:
 # Link Winterberg, 2024
 # Brad Freedom, 2024
-# , fuzzy
+# brad freedom <brad.freedom@gmail.com>, 2026
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-05-26 16:41+0300\n"
+"POT-Creation-Date: 2026-06-10 15:30+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: brad freedom <brad.freedom@gmail.com>, 2025\n"
+"Last-Translator: brad freedom <brad.freedom@gmail.com>, 2026\n"
 "Language-Team: Vietnamese (https://app.transifex.com/audacity/teams/164520/vi/)\n"
 "Language: vi\n"
 "MIME-Version: 1.0\n"
@@ -392,7 +392,7 @@ msgstr "Tin nhắn"
 #: libraries/lib-builtin-effects/AmplifyBase.cpp
 #: resources/EffectsMenuDefaults.xml
 msgid "Amplify"
-msgstr "Amplify - Khuếch đại"
+msgstr "Amplify - Khuếch Đại"
 
 #: libraries/lib-builtin-effects/AutoDuckBase.cpp
 #: resources/EffectsMenuDefaults.xml
@@ -549,7 +549,7 @@ msgstr "Biến thể bộ chỉnh lưu"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Hard Limiter 1413"
-msgstr "Bộ hạn chế cứng 1413"
+msgstr "Hard Limiter 1413 - Bộ giới hạn cứng"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 #, no-c-format
@@ -632,7 +632,7 @@ msgstr "Full-wave Rectifier - Bộ chỉnh lưu toàn sóng (DC bị chặn)"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 msgid "Percussion Limiter"
-msgstr "Bộ hạn chế âm gõ"
+msgstr "Percussion Limiter - Bộ giới hạn nhạc cụ gõ"
 
 #: libraries/lib-builtin-effects/DistortionBase.cpp
 #: resources/EffectsMenuDefaults.xml
@@ -984,11 +984,11 @@ msgstr "Xử lý track thứ hai trong chuỗi stereo: %s"
 #: libraries/lib-builtin-effects/PaulstretchBase.cpp
 #: resources/EffectsMenuDefaults.xml
 msgid "Paulstretch"
-msgstr "Paulstretch - Kéo dài âm tối đa"
+msgstr "Paulstretch - Kéo dài âm cực hạn"
 
 #: libraries/lib-builtin-effects/PaulstretchBase.cpp
 msgid "Paulstretch is only for an extreme time-stretch or \"stasis\" effect"
-msgstr "Paulstretch chỉ dùng được cho hiệu ứng vọng thời gian hoặc \"hiệu ứng hiệu ứng đóng băng\""
+msgstr "Paulstretch chỉ dùng được cho hiệu ứng vọng thời gian hoặc \"hiệu ứng đóng băng\""
 
 #. i18n-hint: 'Time Resolution' is the name of a control in the
 #. Paulstretch effect.
@@ -1282,7 +1282,7 @@ msgstr "Trộn xuống thành đơn âm mono"
 #: libraries/lib-builtin-effects/TimeScaleBase.cpp
 #: resources/EffectsMenuDefaults.xml
 msgid "Sliding Stretch"
-msgstr "Sliding Stretch - Khoảng trượt"
+msgstr "Sliding Stretch - Kéo giãn thay đổi dần "
 
 #: libraries/lib-builtin-effects/TimeScaleBase.cpp
 msgid "Allows continuous changes to the tempo and/or pitch"
@@ -1539,17 +1539,17 @@ msgstr "Smack Explosion SFX"
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Master Limiter"
-msgstr "Bộ giới hạn chính"
+msgstr "Master Limiter - Bộ giới hạn Master"
 
 #. i18n-hint: This is the name of an effect preset. SFX means sound effects.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "SFX Limiter"
-msgstr "Bộ hạn chế SFX - Hiệu ứng âm thanh"
+msgstr "SFX Limiter - Bộ giới hạn hiệu ứng âm thanh"
 
 #. i18n-hint: This is the name of an effect preset. VO means Voiceover.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "VO Limiter"
-msgstr "Bộ hạn chế VO - Thuyết minh"
+msgstr "VO Limiter - Bộ giới hạn giọng đọc"
 
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
@@ -2074,7 +2074,7 @@ msgstr "Tập tin WebVTT"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Podcast Chapters"
-msgstr ""
+msgstr "Các Chương Podcast"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Supported label file"
@@ -2517,7 +2517,7 @@ msgstr "Lỗi khởi chạy MIDI"
 #. this is a Note track.
 #: libraries/lib-note-track/NoteTrack.cpp src/TrackPanelAx.cpp
 msgid "Note Track"
-msgstr "Đặt ghi chú cho track"
+msgstr "Track Ghi Chú"
 
 #: libraries/lib-note-track/NoteTrack.cpp
 msgid "&Seconds"
@@ -3103,15 +3103,15 @@ msgstr "Chưa có tiêu đề"
 
 #: libraries/lib-playable-track/PlayableTrack.cpp
 msgid "Audio Track"
-msgstr "Track Âm thanh"
+msgstr "Track Audio"
 
 #: libraries/lib-playable-track/PlayableTrack.cpp
 msgid "Playable Track"
-msgstr "Track có thể phát"
+msgstr "Track Có Thể Phát"
 
 #: libraries/lib-playable-track/PlayableTrack.cpp
 msgid "Multi-track"
-msgstr "Nhiều track"
+msgstr "Multi-track - Đa track"
 
 #: libraries/lib-playable-track/PlayableTrack.cpp
 msgid "Simple"
@@ -3570,7 +3570,7 @@ msgstr "Mục tin Plugin thêm vào ở %s xác định các sắp xếp gây xu
 
 #: libraries/lib-sample-track/SampleTrack.cpp
 msgid "Sample Track"
-msgstr "Track lấy mẫu"
+msgstr "Sample Track -  Track Dữ Liệu Mẫu Audio"
 
 #: libraries/lib-sample-track/SampleTrack.cpp
 msgid "Writable Sample Track"
@@ -6813,7 +6813,7 @@ msgstr "Không thể tạo tập tin như định dạng để xuất dữ liệ
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Unsupported bytes-per-sample value for WavPack export"
-msgstr ""
+msgstr "Giá trị bytes-per-sample (số byte trên mỗi mẫu) không được hỗ trợ cho xuất WavPack"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Exporting selected audio as WavPack"
@@ -7817,7 +7817,7 @@ msgstr "Đang hoàn thiện tải lên ..."
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 #: src/TagsEditor.cpp
 msgid "Track Title"
-msgstr "Tiêu đề của track"
+msgstr "Tiêu đề Của Track"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Preparing audio..."
@@ -8231,9 +8231,9 @@ msgstr "%s trang mạng:"
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s software is copyright %s 1999-2026 %s Team."
-msgstr "%s phần mềm có bản quyền %s 1999-2024 %s Đội."
+msgstr " %s phần mềm này thuộc bản quyền %s 1999-2026 %s  Team."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -8985,7 +8985,7 @@ msgstr "Chuyển đổi định dạng MP3"
 
 #: src/BatchCommands.cpp
 msgid "Fade Ends"
-msgstr "Hiệu ứng phai dần khi kết thúc"
+msgstr "Hiệu ứng phai dần kết thúc"
 
 #: src/BatchCommands.cpp
 msgid "Import Macro"
@@ -9986,7 +9986,7 @@ msgstr "Xuất nhãn thành:"
 
 #: src/LabelDialog.cpp
 msgid "New Label Track"
-msgstr "Nhãn mới cho track"
+msgstr "Nhãn Track Mới "
 
 #: src/LabelDialog.cpp
 msgid "Enter track name"
@@ -11457,7 +11457,7 @@ msgstr "Thẻ đã xuất"
 
 #: src/TrackPanel.cpp
 msgid "Track Panel"
-msgstr "Bảng điều khiển track"
+msgstr "Bảng Điều Khiển Track"
 
 #. i18n-hint Esc is a key on the keyboard
 #: src/TrackPanel.cpp
@@ -11466,7 +11466,7 @@ msgstr "('Esc' để hủy bỏ)"
 
 #: src/TrackPanelAx.cpp
 msgid "TrackView"
-msgstr "Đồ thị track"
+msgstr "TrackView - Đồ Thị Track"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is muted. (The mute button is on.)
@@ -11631,11 +11631,11 @@ msgstr "Xin chào!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Try the new Audacity 4 Beta release"
-msgstr ""
+msgstr "Hãy thử phiên bản Beta mới của Audacity 4!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Test the Beta release"
-msgstr ""
+msgstr "Thử nghiệm phiên bản Beta"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
@@ -11647,7 +11647,7 @@ msgstr "Tải xuống công cụ AI OpenVino miễn phí của chúng tôi"
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-msgstr ""
+msgstr "Soap Voice Cleaner: âm thanh lồng tiếng chất lượng phòng thu"
 
 #: src/WhatsNewDialog.cpp
 msgid "Explore free plugins for sculpting your audio"
@@ -11659,11 +11659,11 @@ msgstr "Xem plugin miễn phí"
 
 #: src/WhatsNewDialog.cpp
 msgid "Help us decide the future of Audacity"
-msgstr ""
+msgstr "Hãy giúp chúng tôi quyết định tương lai của Audacity"
 
 #: src/WhatsNewDialog.cpp
 msgid "Take part in survey"
-msgstr ""
+msgstr "Tham gia khảo sát Survey"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -12568,7 +12568,7 @@ msgstr "Phần trăm thay đổi"
 
 #: src/effects/ChangePitch.cpp src/effects/ChangeTempo.cpp
 msgid "&Use high quality stretching (slow)"
-msgstr "&Dùng chế độ kéo âm chất lượng cao (thấp)"
+msgstr "&Dùng hiệu ứng kéo giãn chất lượng cao (chậm) "
 
 #: src/effects/ChangeSpeed.cpp
 msgid "33⅓"
@@ -13701,7 +13701,7 @@ msgstr "Thời gian phát hành%.1f giây "
 
 #: src/effects/Limiter.cpp resources/EffectsMenuDefaults.xml
 msgid "Limiter"
-msgstr "Limiter - Bộ định giới hạn"
+msgstr "Limiter - Bộ giới hạn"
 
 #: src/effects/Limiter.cpp
 msgid "Augments loudness while minimizing distortion."
@@ -13936,7 +13936,7 @@ msgstr "Chuẩn h&oá kênh stereo riêng biệt"
 #.
 #: src/effects/Paulstretch.cpp
 msgid "&Stretch Factor:"
-msgstr "&Hiệu số vọng:"
+msgstr "&Hệ số kéo giãn:"
 
 #: src/effects/Paulstretch.cpp
 msgid "&Time Resolution (seconds):"
@@ -14293,23 +14293,20 @@ msgid "Trunc&ate tracks independently"
 msgstr "Cắ&t các track độc lập"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Truncate Location"
-msgstr "&Cắt đến"
+msgstr "Vị trí cắt cụt"
 
 #: src/effects/TruncSilence.cpp
 msgid "Remove silence from &beginning"
-msgstr ""
+msgstr "Loại bỏ phần im lặng ở đầu"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Remove silence from &middle"
-msgstr "Loại bỏ %s từ %s"
+msgstr "Loại bỏ phần im lặng ở giữa"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Remove silence from &end"
-msgstr "Loại bỏ %s từ %s"
+msgstr "Loại bỏ phần im lặng ở cuối"
 
 #: src/effects/TruncSilence.cpp
 msgid ""
@@ -14320,6 +14317,12 @@ msgid ""
 "* Remove silence from middle\n"
 "* Remove silence from end"
 msgstr ""
+"Bạn phải chọn ít nhất một tùy chọn vị trí.\n"
+"\n"
+"Vui lòng chọn ít nhất một trong các tùy chọn sau:\n"
+"* Loại bỏ khoảng lặng ở đầu\n"
+"* Loại bỏ khoảng lặng ở giữa\n"
+"* Loại bỏ khoảng lặng ở cuối"
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Save VST Preset As:"
@@ -15049,21 +15052,19 @@ msgstr "Cắt/ghép âm thanh"
 
 #: src/menus/ClipMenus.cpp
 msgid "Pre&vious Clip Boundary to Cursor"
-msgstr "Đường biên độ clip &trước đó đến con trỏ"
+msgstr "Ranh giới clip t&rước đến con trỏ"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Previous Clip Boundary to Cursor"
-msgstr "Đường biên độ clip &trước đó đến con trỏ"
+msgstr "Chọn ranh giới clip trước đến con trỏ"
 
 #: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
-msgstr "Con trỏ chuyển đến biên độ clip tiếp &theo"
+msgstr "Con trỏ đến ranh giới clip t&iếp theo"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Cursor to Next Clip Boundary"
-msgstr "Con trỏ chuyển đến biên độ clip tiếp theo"
+msgstr "Chọn con trỏ đến ranh giới clip tiếp theo"
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -15083,19 +15084,19 @@ msgstr "Chọn clip tiếp theo"
 
 #: src/menus/ClipMenus.cpp
 msgid "Pre&vious Clip Boundary"
-msgstr "Đường biên độ clip &trước đó"
+msgstr "Ranh giới clip t&rước đó"
 
 #: src/menus/ClipMenus.cpp
 msgid "Cursor to Prev Clip Boundary"
-msgstr "Con trỏ chuyển đến biên độ clip trước đó"
+msgstr "Con trỏ đến ranh giới clip trước đó"
 
 #: src/menus/ClipMenus.cpp
 msgid "Ne&xt Clip Boundary"
-msgstr "Biên độ clip tiếp theo"
+msgstr "Ranh giới clip t&iếp theo"
 
 #: src/menus/ClipMenus.cpp
 msgid "Cursor to Next Clip Boundary"
-msgstr "Con trỏ chuyển đến biên độ clip tiếp theo"
+msgstr "Con trỏ đến ranh giới clip tiếp theo"
 
 #: src/menus/ClipMenus.cpp
 msgid "Time Shift &Left"
@@ -15822,11 +15823,11 @@ msgstr "Viết nhật ký"
 
 #: src/menus/SelectMenus.cpp
 msgid "Set Left Selection Boundary"
-msgstr "Đặt vùng chọn bên trái"
+msgstr "Đặt ranh giới vùng chọn bên trái"
 
 #: src/menus/SelectMenus.cpp
 msgid "Set Right Selection Boundary"
-msgstr "Đặt vùng chọn bên phải"
+msgstr "Đặt ranh giới vùng chọn bên phải"
 
 #: src/menus/SelectMenus.cpp
 msgid "Zero-crossing search regions intersect stretched clip(s)."
@@ -17626,7 +17627,7 @@ msgstr "Chu kỳ &dài:"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Micro-fades"
-msgstr "&Micro-fades - chuyển dần micro "
+msgstr "&Micro-fades - chuyển dần siêu nhỏ"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "Always scrub un&pinned"
@@ -18761,7 +18762,7 @@ msgstr "Rê một hoặc nhiều vùng nhãn"
 
 #: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
 msgid "Drag label boundary."
-msgstr "Rê vùng nhãn"
+msgstr "Rê ranh giới vùng nhãn"
 
 #: src/tracks/labeltrack/ui/LabelGlyphHandle.cpp
 #: src/tracks/labeltrack/ui/LabelTrackView.cpp
@@ -18870,7 +18871,7 @@ msgstr "Click và kéo chuột để chọn vùng"
 #. dragged to change their duration.
 #: src/tracks/playabletrack/notetrack/ui/StretchHandle.cpp
 msgid "Stretch Note Track"
-msgstr "Kéo giản vùng ghi chú của track"
+msgstr "Kéo giản vùng track ghi chú"
 
 #. i18n-hint: In the history list, indicates a MIDI note has
 #. been dragged to change its duration (stretch it). Using either past
@@ -19640,11 +19641,11 @@ msgstr "Quét tới trước"
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move left selection boundary."
-msgstr "Nhấn và rê chuột để di chuyển giới hạn trái của vùng chọn."
+msgstr "Nhấn và kéo để di chuyển ranh giới trái của vùng chọn."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move right selection boundary."
-msgstr "Nhấn và rê chuột để di chuyển giới hạn phải của vùng chọn."
+msgstr "Nhấn và kéo để di chuyển ranh giới phải của vùng chọn."
 
 #: src/tracks/ui/SelectHandle.cpp
 msgid "Click and drag to move bottom selection frequency."
@@ -19807,20 +19808,19 @@ msgstr "Nhắc tôi sau nhé"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Unable to fetch Audacity 4 release information. Please try again later."
-msgstr ""
+msgstr "Không thể tải thông tin phiên bản Audacity 4. Vui lòng thử lại sau."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Unable to parse Audacity 4 release information. Please try again later."
-msgstr ""
+msgstr "Không thể phân tích thông tin phiên bản Audacity 4. Vui lòng thử lại sau."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "No Audacity 4 installer available for your platform."
-msgstr ""
+msgstr "Không có trình cài đặt Audacity 4 nào khả dụng cho nền tảng của bạn."
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Unable to create installer file. Please check write permissions."
-msgstr "Không thể tạo tập tin như định dạng để xuất dữ liệu"
+msgstr "Không thể tạo tập tin cài đặt. Vui lòng kiểm tra quyền ghi."
 
 #: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
 msgid "Audacity update"
@@ -19832,13 +19832,12 @@ msgid "Downloading %s"
 msgstr "Đang tải về %s"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Download Error"
-msgstr "Tải về"
+msgstr "Tải xuống bị lỗi"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Failed to download Audacity 4 installer. Please try again later."
-msgstr ""
+msgstr "Không thể tải xuống trình cài đặt Audacity 4. Vui lòng thử lại sau."
 
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
@@ -20256,7 +20255,7 @@ msgstr "Lỗi.~%FTần số được đặt quá cao cho track đã chọn."
 
 #: plug-ins/SpectralEditMulti.ny resources/EffectsMenuDefaults.xml
 msgid "Spectral Edit Multi Tool"
-msgstr "Spectral Edit Multi Tool-Công cụ chỉnh sửa đa âm phổ"
+msgstr "Spectral Edit Multi Tool - Công cụ chỉnh sửa đa âm phổ"
 
 #: plug-ins/SpectralEditMulti.ny plug-ins/SpectralEditParametricEQ.ny
 #: plug-ins/SpectralEditShelves.ny
@@ -20505,7 +20504,7 @@ msgstr "Mức tỷ lệ"
 
 #: plug-ins/clipfix.ny resources/EffectsMenuDefaults.xml
 msgid "Clip Fix"
-msgstr "Clip Fix - Sửa điểm ghim"
+msgstr "Clip Fix - Khôi phục đoạn âm bị sén ngọn"
 
 #: plug-ins/clipfix.ny
 msgid "Benjamin Schwartz and Steve Daulton"
@@ -20904,7 +20903,7 @@ msgstr ""
 
 #: plug-ins/legacy-limiter.ny resources/EffectsMenuDefaults.xml
 msgid "Legacy Limiter"
-msgstr "Bộ định giới hạn phiên bản cũ"
+msgstr "Legacy Limiter - Bộ định giới hạn phiên bản cũ"
 
 #: plug-ins/legacy-limiter.ny
 msgid "Soft Limit"
@@ -21658,7 +21657,7 @@ msgstr "Lỗi.~% Không thể mở tập tin"
 
 #: plug-ins/spectral-delete.ny resources/EffectsMenuDefaults.xml
 msgid "Spectral Delete"
-msgstr "Spectral Delete-Xóa âm phổ"
+msgstr "Spectral Delete - Xóa âm phổ"
 
 #: plug-ins/spectral-delete.ny
 #, lisp-format
@@ -21667,7 +21666,7 @@ msgstr "Lỗi. ~% Tốc độ lấy mẫu của track dưới 100 Hz không đư
 
 #: plug-ins/tremolo.ny resources/EffectsMenuDefaults.xml
 msgid "Tremolo"
-msgstr "Tremolo - Độ rung"
+msgstr "Tremolo - Hiệu ứng độ rung"
 
 #: plug-ins/tremolo.ny
 msgid "Waveform type"
@@ -21741,16 +21740,16 @@ msgstr "Lỗi.~% Không có biến điệu sóng mang."
 #. Effects menu group name; audio dynamics compression, not data compression
 #: resources/EffectsMenuDefaults.xml
 msgid "Volume and Compression"
-msgstr "Âm lượng và nén"
+msgstr "Volume and Compression - Âm lượng và nén"
 
 #. Effects menu group name
 #: resources/EffectsMenuDefaults.xml
 msgid "Fading"
-msgstr "Hiệu ứng làm mờ"
+msgstr "Fading - Hiệu ứng mờ dần"
 
 #: resources/EffectsMenuDefaults.xml
 msgid "Pitch and Tempo"
-msgstr "Cao độ và Nhịp Độ"
+msgstr "Pitch and Tempo - Cao độ và Nhịp Độ"
 
 #: resources/EffectsMenuDefaults.xml
 msgid "EQ and Filters"
@@ -21758,28 +21757,28 @@ msgstr "EQ và Bộ lọc"
 
 #: resources/EffectsMenuDefaults.xml
 msgid "Noise Removal and Repair"
-msgstr "Lọc nhiễu và chỉnh âm"
+msgstr "Noise Removal and Repair - Lọc nhiễu và chỉnh âm"
 
 #: resources/EffectsMenuDefaults.xml
 msgid "Delay and Reverb"
-msgstr "Độ Trễ và Âm Vang"
+msgstr "Delay and Reverb - Độ Trễ và Âm Vang"
 
 #: resources/EffectsMenuDefaults.xml
 msgid "Distortion and Modulation"
-msgstr "Độ méo và Độ điều biên"
+msgstr "Distortion and Modulation - Độ méo và Độ điều biên"
 
 #. Effects menu group name
 #: resources/EffectsMenuDefaults.xml
 msgid "Special"
-msgstr "Đặc biẹt"
+msgstr "Special - Đặc biẹt"
 
 #: resources/EffectsMenuDefaults.xml
 msgid "Vocal Reduction and Isolation"
-msgstr "Giảm và lọc tiếng"
+msgstr "Vocal Reduction and Isolation - Giảm và lọc tiếng"
 
 #: resources/EffectsMenuDefaults.xml
 msgid "Vocal Remover"
-msgstr "Trình xoá giọng nói"
+msgstr "Vocal Remover - Trình Xoá Giọng Nói"
 
 #: resources/EffectsMenuDefaults.xml
 msgid "Spectral Tools"
@@ -21787,16 +21786,4 @@ msgstr "Spectral Tools-Công cụ âm phổ"
 
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
-msgstr "Phiên bản cũ"
-
-#~ msgid "Video: how we're redesigning Audacity for the future"
-#~ msgstr "Video: cách chúng tôi thiết kế lại Audacity cho tương lai"
-
-#~ msgid "25th Anniversary Merchandise!"
-#~ msgstr "Sản phẩm kỷ niệm 25 năm!"
-
-#~ msgid "Visit now"
-#~ msgstr "Truy cập ngay"
-
-#~ msgid "Visit our new Audacity merch store"
-#~ msgstr "Ghé thăm Merch Store Audacity mới của chúng tôi"
+msgstr "Legacy - Phiên bản cũ"

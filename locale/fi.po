@@ -6,18 +6,17 @@
 # Translators:
 # Link Winterberg, 2024
 # Dmitry Makarenko, 2025
-# Heino Keränen, 2025
-# , fuzzy
 # Kimmo Kujansuu <mrkujansuu@gmail.com>, 2025
+# Heino Keränen, 2026
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-05-26 16:41+0300\n"
+"POT-Creation-Date: 2026-06-10 15:30+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: Kimmo Kujansuu <mrkujansuu@gmail.com>, 2025\n"
+"Last-Translator: Heino Keränen, 2026\n"
 "Language-Team: Finnish (https://app.transifex.com/audacity/teams/164520/fi/)\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
@@ -1598,7 +1597,7 @@ msgstr ""
 #: libraries/lib-effects/EffectBase.cpp src/commands/AudacityCommand.cpp
 #, c-format
 msgid "Applying %s..."
-msgstr "Käytetään %s..."
+msgstr "Suoritetaan %s..."
 
 #. i18n-hint: "Nyquist" is an embedded interpreted programming language in
 #. Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist).
@@ -2083,7 +2082,7 @@ msgstr "WebVTT -tiedosto"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Podcast Chapters"
-msgstr ""
+msgstr "Podcastin luvut"
 
 #: libraries/lib-label-track/LabelTrack.cpp
 msgid "Supported label file"
@@ -5671,7 +5670,7 @@ msgstr ""
 #. it has a hard to predict effect on the degree of compression
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 msgid "Mux Rate:"
-msgstr "Mux-arvo:"
+msgstr "Mux-nopeus:"
 
 #. i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
 #. compression.  It measures how big a chunk of audio is compressed in one piece.
@@ -6830,7 +6829,7 @@ msgstr "Kohdetiedostoa ei voi luoda kirjoittamista varten"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Unsupported bytes-per-sample value for WavPack export"
-msgstr ""
+msgstr "Ei-tuettu näytekoon arvo WavPack-vientiä varten"
 
 #: modules/import-export/mod-wavpack/ExportWavPack.cpp
 msgid "Exporting selected audio as WavPack"
@@ -7275,7 +7274,7 @@ msgstr "Tili"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Export behavior"
-msgstr "Vientikäyttäytyminen"
+msgstr "Viennin toiminta"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "S&how 'How would you like to export?' dialog"
@@ -7283,7 +7282,7 @@ msgstr "Näytä 'Miten haluat viedä?' -valintaikkuna"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Save behavior"
-msgstr "Tallennuskäyttäytyminen"
+msgstr "Tallennuksen toiminta"
 
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 msgid "Always &ask"
@@ -8251,9 +8250,9 @@ msgstr "%s-verkkosivusto: "
 #. i18n-hint Audacity's name substitutes for first and third %s,
 #. and a "copyright" symbol for the second
 #: src/AboutDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "%s software is copyright %s 1999-2026 %s Team."
-msgstr "%s software is copyright %s 1999-2024 %s Team."
+msgstr "%s ohjelmiston tekijänoikeudet %s 1999–2026 %s Team."
 
 #. i18n-hint Audacity's name substitutes for %s
 #: src/AboutDialog.cpp
@@ -9152,7 +9151,7 @@ msgstr "Valitse tiedostot eräajoon..."
 #: src/BatchProcessDialog.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackAffordanceControls.cpp
 msgid "Applying..."
-msgstr "Käytetään..."
+msgstr "Suoritetaan..."
 
 #: src/BatchProcessDialog.cpp
 msgid "File"
@@ -9929,7 +9928,7 @@ msgstr "&Historia"
 
 #: src/IncompatiblePluginsDialog.cpp
 msgid "New Plugins"
-msgstr "Uusia laajennuksia"
+msgstr "Uusia lisäosia"
 
 #: src/IncompatiblePluginsDialog.cpp
 msgid "Incompatible plugin(s) found"
@@ -9937,17 +9936,17 @@ msgstr "Yhteensopimattomia laajennuksia löytyi"
 
 #: src/IncompatiblePluginsDialog.cpp
 msgid "&Manage Plugins"
-msgstr "&Hallitse laajennuksia"
+msgstr "&Hallitse lisäosia"
 
 #: src/IncompatiblePluginsDialog.cpp
 #, c-format
 msgid "Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes. If you would still like to attempt to use these plugins, you can enable them using \"Manage Plugins\". Otherwise, select \"Continue\"."
-msgstr "Audacity on löytänyt %d yhteensopimatonta laajennusta, joita ei voitu ladata. Olemme poistaneet nämä laajennukset käytöstä estääksemme jumiutumiset tai kaatumiset. Jos haluat silti yrittää käyttää näitä laajennuksia, voit ottaa ne käyttöön \"Hallitse laajennuksia\" -toiminnolla. Muussa tapauksessa valitse \"Jatka\"."
+msgstr "Audacity on löytänyt %d yhteensopimatonta lisäosaa, joita ei voitu ladata. Olemme poistaneet nämä lisäosat käytöstä estääksemme jumiutumiset tai kaatumiset. Jos haluat silti yrittää käyttää näitä lisäosia, voit ottaa ne käyttöön \"Hallitse lisäosia\" -toiminnolla. Muussa tapauksessa valitse \"Jatka\"."
 
 #: src/IncompatiblePluginsDialog.cpp
 #, c-format
 msgid "Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes."
-msgstr "Audacity on löytänyt %d yhteensopimatonta laajennusta, joita ei voitu ladata. Olemme poistaneet nämä laajennukset käytöstä estääksemme jumiutumiset tai kaatumiset."
+msgstr "Audacity on löytänyt %d yhteensopimatonta lisäosaa, joita ei voitu ladata. Olemme poistaneet nämä lisäosat käytöstä estääksemme jumiutumiset tai kaatumiset."
 
 #: src/JournalEvents.cpp
 msgid "Journal recording failed"
@@ -10176,7 +10175,7 @@ msgstr "Työkalu"
 
 #: src/PluginRegistrationDialog.cpp
 msgid "Manage Plugins"
-msgstr "Hallitse laajennuksia"
+msgstr "Hallitse lisäosia"
 
 #: src/PluginRegistrationDialog.cpp
 msgid "Native Audacity"
@@ -10212,7 +10211,7 @@ msgstr "&Hanki lisää tehosteita..."
 
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
-msgstr "Haetaan laajennuksia"
+msgstr "Haetaan lisäosia"
 
 #: src/ProjectAudioManager.cpp
 #, c-format
@@ -11668,11 +11667,11 @@ msgstr "Tervetuloa käyttämään Audacityä!"
 
 #: src/WhatsNewDialog.cpp
 msgid "Try the new Audacity 4 Beta release"
-msgstr ""
+msgstr "Kokeile uutta Audacity 4 Beta -julkaisua"
 
 #: src/WhatsNewDialog.cpp
 msgid "Test the Beta release"
-msgstr ""
+msgstr "Testaa beta-julkaisua"
 
 #: src/WhatsNewDialog.cpp
 msgid "Complete your Audacity cloud setup with audio.com"
@@ -11684,23 +11683,23 @@ msgstr "Hanki ilmaiset OpenVino AI-työkalut"
 
 #: src/WhatsNewDialog.cpp
 msgid "Soap Voice Cleaner: studio-quality voice-over sound"
-msgstr ""
+msgstr "Soap Voice Cleaner: studiolaatuinen äänitys"
 
 #: src/WhatsNewDialog.cpp
 msgid "Explore free plugins for sculpting your audio"
-msgstr "Selaa ilmaisia liitännäisiä äänen muokkaamista varten"
+msgstr "Selaa ilmaisia lisäosia äänen muokkaamista varten"
 
 #: src/WhatsNewDialog.cpp
 msgid "View free plugins"
-msgstr "Näytä ilmaiset laajennukset"
+msgstr "Näytä ilmaiset lisäosat"
 
 #: src/WhatsNewDialog.cpp
 msgid "Help us decide the future of Audacity"
-msgstr ""
+msgstr "Auta meitä päättämään Audacityn tulevaisuudesta"
 
 #: src/WhatsNewDialog.cpp
 msgid "Take part in survey"
-msgstr ""
+msgstr "Osallistu kyselyyn"
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
@@ -14105,7 +14104,7 @@ msgstr "S&tereon leveys (%):"
 
 #: src/effects/Reverb.cpp
 msgid "Wet O&nly"
-msgstr "Pelkkä märkä (&kaiku)"
+msgstr "Vain märkä (&kaiku)"
 
 #: src/effects/ScienFilter.cpp
 msgid "&Filter Type:"
@@ -14330,23 +14329,20 @@ msgid "Trunc&ate tracks independently"
 msgstr "Lyhennä r&aidat itsenäisesti"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Truncate Location"
-msgstr "Ly&hennä:"
+msgstr "Katkaisukohta"
 
 #: src/effects/TruncSilence.cpp
 msgid "Remove silence from &beginning"
-msgstr ""
+msgstr "Poista hiljaisuus &alusta"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Remove silence from &middle"
-msgstr "%s poistettiin kohteesta %s"
+msgstr "Poista hiljaisuus &keskeltä"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Remove silence from &end"
-msgstr "%s poistettiin kohteesta %s"
+msgstr "Poista hiljaisuus &lopusta"
 
 #: src/effects/TruncSilence.cpp
 msgid ""
@@ -14357,6 +14353,12 @@ msgid ""
 "* Remove silence from middle\n"
 "* Remove silence from end"
 msgstr ""
+"Vähintään yksi sijaintivaihtoehto on valittava.\n"
+"\n"
+"Valitse vähintään yksi seuraavista: \n"
+"* Poista hiljaisuus alusta \n"
+"* Poista hiljaisuus keskeltä \n"
+"* Poista hiljaisuus lopusta "
 
 #: src/effects/VST/VSTEffect.cpp
 msgid "Save VST Preset As:"
@@ -15092,18 +15094,16 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr "E&dellisen leikkeen reunasta kohdistimeen"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Previous Clip Boundary to Cursor"
-msgstr "E&dellisen leikkeen reunasta kohdistimeen"
+msgstr "Valitse kohdistimesta edelliseen leikkeen rajaan"
 
 #: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "Kohdistimesta &seuraavan leikkeen reunaan"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Cursor to Next Clip Boundary"
-msgstr "Kohdistimesta seuraavan leikkeen reunaan"
+msgstr "Valitse kohdistimesta seuraavaan leikkeen rajaan"
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -17636,7 +17636,7 @@ msgstr "Tehosteiden esikuuntelu"
 
 #: src/prefs/PlaybackPrefs.cpp
 msgid "&Length:"
-msgstr "&Kesto:"
+msgstr "&Pituus:"
 
 #. i18n-hint: (noun) this is a preview of the cut
 #: src/prefs/PlaybackPrefs.cpp
@@ -19850,20 +19850,19 @@ msgstr "Muistuta myöhemmin"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Unable to fetch Audacity 4 release information. Please try again later."
-msgstr ""
+msgstr "Audacity 4:n julkaisutietojen hakeminen epäonnistui. Yritä myöhemmin uudelleen."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Unable to parse Audacity 4 release information. Please try again later."
-msgstr ""
+msgstr "Audacity 4:n julkaisutietojen jäsentäminen epäonnistui. Yritä myöhemmin uudelleen."
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "No Audacity 4 installer available for your platform."
-msgstr ""
+msgstr "Alustallesi ei ole saatavilla Audacity 4 -asennusohjelmaa."
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Unable to create installer file. Please check write permissions."
-msgstr "Kohdetiedostoa ei voi luoda kirjoittamista varten"
+msgstr "Asennustiedoston luominen epäonnistui. Tarkista kirjoitusoikeudet."
 
 #: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
 msgid "Audacity update"
@@ -19875,13 +19874,12 @@ msgid "Downloading %s"
 msgstr "Ladataan %s"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Download Error"
-msgstr "Lataa"
+msgstr "Latausvirhe"
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Failed to download Audacity 4 installer. Please try again later."
-msgstr ""
+msgstr "Audacity 4 -asennusohjelman lataus epäonnistui. Yritä myöhemmin uudelleen."
 
 #. i18n-hint: Title of the dialog no updates available.
 #: src/update/NoUpdatesAvailableDialog.cpp
@@ -20149,7 +20147,7 @@ msgstr "Pystysuora"
 
 #: src/widgets/MissingPluginsErrorDialog.cpp
 msgid "Missing Plugins"
-msgstr "Puuttuvat laajennukset"
+msgstr "Puuttuvat lisäosat"
 
 #: src/widgets/MissingPluginsErrorDialog.cpp
 msgid "This project contains some realtime effect plugins that cannot be found on this system."
@@ -21832,15 +21830,3 @@ msgstr "Spektrityökalut"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr "Perinteinen"
-
-#~ msgid "Video: how we're redesigning Audacity for the future"
-#~ msgstr "Video: suunnittelemme Audacityn uudelleen tulevaisuutta varten"
-
-#~ msgid "25th Anniversary Merchandise!"
-#~ msgstr "25-vuotisjuhlatuotteita!"
-
-#~ msgid "Visit now"
-#~ msgstr "Käy nyt"
-
-#~ msgid "Visit our new Audacity merch store"
-#~ msgstr "Käy uudessa Audacity-tuotekaupassamme"

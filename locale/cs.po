@@ -4,17 +4,20 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
-# Link Winterberg, 2024
 # Jan Vimr, 2025
+# Martin Olsovsky, 2025
+# Jaromír Talák, 2025
+# Link Winterberg, 2025
+# Danny Macho, 2026
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-05-26 16:41+0300\n"
+"POT-Creation-Date: 2026-06-10 15:30+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: Jan Vimr, 2025\n"
+"Last-Translator: Danny Macho, 2026\n"
 "Language-Team: Czech (https://app.transifex.com/audacity/teams/164520/cs/)\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
@@ -53,7 +56,7 @@ msgstr "Zopakovat %s"
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
 msgid "Stream is active ... unable to gather information.\n"
-msgstr "Proud je činný ... nelze posbírat informace.\n"
+msgstr "Stream je aktivní ... nelze získat informace.\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #: libraries/lib-note-track/NoteTrack.cpp
@@ -129,12 +132,12 @@ msgstr "Vysoká prodleva při přehrávání: %g\n"
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Supported Playback Rates:\n"
-msgstr ""
+msgstr "Podporované rychlosti přehrávání\n"
 
 #. i18n-hint: Supported, meaning made available by the system
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 msgid "Supported Capture Rates:\n"
-msgstr ""
+msgstr "Podporované rychlosti záznamu\n"
 
 #: libraries/lib-audio-devices/AudioIOBase.cpp
 #, c-format
@@ -230,7 +233,7 @@ msgid ""
 "Error opening recording device.\n"
 "Error code: %s"
 msgstr ""
-"Chyba při otevírání nahrávacího (zvukového) zařízení.\n"
+"Chyba při otevírání nahrávacího zvukového zařízení.\n"
 "Kód chyby: %s"
 
 #: libraries/lib-audio-io/AudioIO.cpp
@@ -447,7 +450,7 @@ msgstr "Vysoce jakostní změna výšky tónu"
 #: libraries/lib-builtin-effects/ChangeSpeedBase.cpp
 #: resources/EffectsMenuDefaults.xml
 msgid "Change Speed and Pitch"
-msgstr ""
+msgstr "Změnit rychlost a výšky tónu"
 
 #: libraries/lib-builtin-effects/ChangeSpeedBase.cpp
 msgid "Changes the speed of a track, also changing its pitch"
@@ -803,7 +806,7 @@ msgstr "Přebuzení"
 #, c-format
 msgctxt "find clipping"
 msgid "%lld of %lld"
-msgstr ""
+msgstr "%lld z %lld"
 
 #: libraries/lib-builtin-effects/Generator.cpp
 msgid "There is not enough room available to generate the audio"
@@ -1054,6 +1057,8 @@ msgid ""
 "Audio could not be analyzed. This may be due to a stretched or pitch-shifted clip.\n"
 "Try resetting any stretched clips, or mixing and rendering the tracks before analyzing"
 msgstr ""
+"Zvuk se nepodařilo analyzovat. Může to být způsobeno nataženým nebo výškově posunutým klipem.\n"
+"Zkus resetovat jakékoli natažené klipy, nebo před analýzou smíchej a vyrenderuj stopy."
 
 #: libraries/lib-builtin-effects/PlotSpectrumBase.cpp
 #, c-format
@@ -1070,7 +1075,7 @@ msgstr "Nastaví vrcholový rozkmit jedné nebo více stop"
 
 #: libraries/lib-builtin-effects/Repair.cpp
 msgid "The Repair effect cannot be applied within stretched or shrunk clips"
-msgstr ""
+msgstr "Efekt Oprava nelze použít u natažených nebo zkrácených klipů"
 
 #: libraries/lib-builtin-effects/Repair.cpp
 msgid ""
@@ -1113,7 +1118,7 @@ msgstr ""
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 msgid "Ambience"
-msgstr ""
+msgstr "Ambience"
 
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
@@ -1130,7 +1135,7 @@ msgstr ""
 #: libraries/lib-builtin-effects/ReverbBase.cpp
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Modern"
-msgstr ""
+msgstr "Moderní"
 
 #. i18n-hint: This is the name of an effect preset
 #: libraries/lib-builtin-effects/ReverbBase.cpp
@@ -1352,10 +1357,9 @@ msgid "Rapid tone quality variations, like that guitar sound so popular in the 1
 msgstr "Rychlé rozdíly v jakosti tónu, jako u v 70. letech 20. století tolik oblíbeného kytarového zvuku"
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
-#, fuzzy
 msgctxt "cloud sync"
 msgid "Error importing cloud audio"
-msgstr "Chyba při nahrávání"
+msgstr ""
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
 msgctxt "update dialog"
@@ -1722,6 +1726,9 @@ msgid ""
 "Audacity failed to write to a file.\n"
 "Perhaps %s is not writable or the disk is full."
 msgstr ""
+"Audacity se nepodařilo provést zápis do souboru.\n"
+"Možná není %s zapisovatelný, nebo je disk plný.\n"
+"Rady, jak uvolnit místo, zobrazíte klepnutím na tlačítko nápovědy."
 
 #: libraries/lib-files/FileException.h
 msgid "File Error"
@@ -3002,6 +3009,9 @@ msgid ""
 "in the track Spectrogram settings and select the\n"
 "frequency range for the effect to act on."
 msgstr ""
+"Pro použití spektrálních efektů povolte výběr spektra\n"
+"ve nastavení spektrogramu stopy a vyberte kmitočtový rozsah,\n"
+"na němž se má efekt vykonávat."
 
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
 #, c-format
@@ -4334,11 +4344,11 @@ msgstr "Varování - zkracuje se příliš dlouhý blokový soubor"
 
 #: libraries/lib-wave-track/TimeStretching.cpp
 msgid "Pre-processing"
-msgstr ""
+msgstr "Před-úprava"
 
 #: libraries/lib-wave-track/TimeStretching.cpp
 msgid "Rendering Clip"
-msgstr ""
+msgstr "Renderování  klipu"
 
 #: libraries/lib-wave-track/WaveChannelViewConstants.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
@@ -4373,7 +4383,7 @@ msgstr "K vložení výběru není dost místa"
 
 #: libraries/lib-wave-track/WaveTrack.cpp
 msgid "A track has a corrupted sample sequence."
-msgstr ""
+msgstr "Skladba obsahuje poškozenou sekvenci vzorků."
 
 #: libraries/lib-wave-track/WaveTrackUtilities.cpp
 msgid "There is not enough room available to expand the cut line"
@@ -4521,7 +4531,7 @@ msgstr "Není místní nápověda"
 
 #: libraries/lib-wx-init/HelpText.cpp
 msgid "Audacity can import unprotected files in many other formats (such as M4A and WMA, compressed WAV files from portable recorders and audio from video files) if you download and install the optional [[https://support.audacityteam.org/basics/installing-ffmpeg| FFmpeg library]] to your computer."
-msgstr ""
+msgstr "Program Audacity dokáže importovat nechráněné soubory v mnoha dalších formátech (například M4A a WMA, komprimované soubory WAV z přenosných záznamových zařízení a zvuk ze video souborů), pokud si do počítače stáhnete a nainstalujete volitelnou [[https://support.audacityteam.org/basics/installing-ffmpeg| knihovnu FFmpeg]]."
 
 #: libraries/lib-wx-init/HelpText.cpp
 msgid "You can also read our help on importing [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio CDs]]."
@@ -4634,7 +4644,7 @@ msgstr "Zadejte nový název souboru:"
 
 #: libraries/lib-wx-wrappers/AudacityDontAskAgainMessageDialog.cpp
 msgid "Don't ask me again"
-msgstr ""
+msgstr "Znovu se neptat"
 
 #: libraries/lib-wx-wrappers/FileDialog/gtk/FileDialogPrivate.cpp
 #, c-format
@@ -4651,21 +4661,21 @@ msgstr "Typ souboru:"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
 msgid "Previous slide"
-msgstr ""
+msgstr "Předchozí snímek"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
 msgid "Next slide"
-msgstr ""
+msgstr "Další snímek"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
 #, c-format
 msgid "Slide %d of %d, %s. %s"
-msgstr ""
+msgstr "Snímek %d z %d,%s.%s"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
 #, c-format
 msgid "Slide %d of %d, %s, %s. %s"
-msgstr ""
+msgstr "Snímek %d z %d, %s, %s.%s"
 
 #: libraries/lib-wx-wrappers/wxPanelWrapper.cpp
 #: libraries/lib-wx-wrappers/wxPanelWrapper.h
@@ -4737,6 +4747,10 @@ msgid ""
 "These stereo tracks have been split into mono tracks.\n"
 "Please verify that everything works as intended before saving."
 msgstr ""
+"%s\n"
+"Tato funkce není podporována ve verzích programu Audacity starších než 3.3.3.\n"
+"Tyto stereofonní stopy byly rozděleny na monofonní stopy.\n"
+"Před uložením prosím zkontrolujte, zda vše funguje tak, jak má."
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 msgid ""
@@ -7190,16 +7204,15 @@ msgid "Open from audio.com"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
-#, fuzzy
 msgid "Downloading audio"
-msgstr "Stahuje se %s"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to download audio from cloud.\n"
 "%s"
-msgstr "Nepodařilo se zakódovat přednastavení z \"%s\""
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
 msgid "Downloaded audio file does not exist."
@@ -7229,14 +7242,12 @@ msgid "Open &From Cloud"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Cloud &Project..."
-msgstr "Otevřít projekt..."
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Cloud &Audio File..."
-msgstr "CAF (Apple Core zvukový soubor)"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Save &To Cloud..."
@@ -7379,9 +7390,8 @@ msgid "Don't show this again"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Open cloud audio file"
-msgstr "Včetně zvukových dat před prvním štítkem"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7389,13 +7399,13 @@ msgid "less than 1 minute"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "one minute ago"
 msgid_plural "%d minutes ago"
-msgstr[0] "%d minuta"
-msgstr[1] "%d minuty"
-msgstr[2] "%d minut"
-msgstr[3] "%d"
+msgstr[0] ""
+msgstr[1] ""
+msgstr[2] ""
+msgstr[3] ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7408,9 +7418,8 @@ msgstr[2] ""
 msgstr[3] ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Title"
-msgstr "Název stopy"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Author"
@@ -7430,14 +7439,12 @@ msgid "Failed to authorize account"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Loading audio list..."
-msgstr "Nahrává se zvuk..."
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Failed to get audio list"
-msgstr "Nepodařilo se uhádnout formát"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -10226,7 +10233,7 @@ msgstr "Vybráno příliš málo kompatibilních stop"
 #, c-format
 msgctxt "clip name template"
 msgid "%s.%d"
-msgstr ""
+msgstr "%s.%d"
 
 #: src/ProjectAudioManager.cpp
 msgid "Recorded Audio"
@@ -11660,9 +11667,8 @@ msgid "Explore free plugins for sculpting your audio"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "View free plugins"
-msgstr "Nové přídavné moduly"
+msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "Help us decide the future of Audacity"
@@ -14298,23 +14304,20 @@ msgid "Trunc&ate tracks independently"
 msgstr "&Zkrátit stopy nezávisle"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Truncate Location"
-msgstr "&Zkrátit na:"
+msgstr ""
 
 #: src/effects/TruncSilence.cpp
 msgid "Remove silence from &beginning"
 msgstr ""
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Remove silence from &middle"
-msgstr "Odstraněno %s z %s"
+msgstr ""
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Remove silence from &end"
-msgstr "Odstraněno %s z %s"
+msgstr ""
 
 #: src/effects/TruncSilence.cpp
 msgid ""
@@ -15066,18 +15069,16 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr "Hranici &předchozího klipu na ukazatel"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Previous Clip Boundary to Cursor"
-msgstr "Hranici &předchozího klipu na ukazatel"
+msgstr ""
 
 #: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "Ukazatel na hranici &dalšího klipu"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Cursor to Next Clip Boundary"
-msgstr "Ukazatel na hranici dalšího klipu"
+msgstr ""
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -16797,7 +16798,7 @@ msgstr "Nastavení pro program"
 #. i18n-hint: Title for the panel in the application preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Update notifications"
-msgstr ""
+msgstr "Aktualizovat oznámení"
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
@@ -16807,7 +16808,7 @@ msgstr "&Zkontrolovat aktualizace"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr ""
+msgstr "Kontrola aktualizací aplikace vyžaduje přístup k síti. Za účelem ochrany vašehosoukromí Audacity neukládá žádné osobní údaje."
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "UUID"
@@ -19789,9 +19790,8 @@ msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "Levé = přiblížit, Pravé = oddálit, Střední = normální velikost"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Install Audacity 4"
-msgstr "&Instalovat aktualizaci"
+msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid ""
@@ -19828,9 +19828,8 @@ msgid "No Audacity 4 installer available for your platform."
 msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Unable to create installer file. Please check write permissions."
-msgstr "Nelze vytvořit cílový soubor pro zápis"
+msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp src/update/UpdateManager.cpp
 msgid "Audacity update"
@@ -19842,9 +19841,8 @@ msgid "Downloading %s"
 msgstr "Stahuje se %s"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Download Error"
-msgstr "Stáhnout"
+msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Failed to download Audacity 4 installer. Please try again later."
@@ -21661,7 +21659,7 @@ msgstr "Typ křivky"
 
 #: plug-ins/tremolo.ny
 msgid "Triangle"
-msgstr ""
+msgstr "Trojúhelník"
 
 #: plug-ins/tremolo.ny
 msgid "Inverse Sawtooth"
@@ -21774,7 +21772,3 @@ msgstr "Spektrální nástroje"
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr ""
-
-#, c-format
-#~ msgid "What's new in Audacity %s"
-#~ msgstr "Co je nového v Audacity %s"

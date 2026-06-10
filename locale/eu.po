@@ -4,17 +4,17 @@
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 # Translators:
-# Link Winterberg, 2024
-# Alexander Gabilondo <alexgabi@disroot.org>, 2025
+# Link Winterberg, 2025
+# Alexander Gabilondo <alexgabi@disroot.org>, 2026
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: audacity 3.7.8\n"
 "Report-Msgid-Bugs-To: audacity-translation@lists.sourceforge.net\n"
-"POT-Creation-Date: 2026-05-26 16:41+0300\n"
+"POT-Creation-Date: 2026-06-10 15:30+0300\n"
 "PO-Revision-Date: 2024-09-20 19:15+0000\n"
-"Last-Translator: Alexander Gabilondo <alexgabi@disroot.org>, 2025\n"
+"Last-Translator: Alexander Gabilondo <alexgabi@disroot.org>, 2026\n"
 "Language-Team: Basque (https://app.transifex.com/audacity/teams/164520/eu/)\n"
 "Language: eu\n"
 "MIME-Version: 1.0\n"
@@ -382,7 +382,7 @@ msgstr ""
 
 #: libraries/lib-audio-unit/AudioUnitWrapper.cpp
 msgid "XML data is empty after conversion"
-msgstr ""
+msgstr "Bihurtu ondoren XML datuak hutsik daude"
 
 #: libraries/lib-basic-ui/BasicUI.cpp
 #: libraries/lib-exceptions/AudacityException.h
@@ -700,7 +700,7 @@ msgstr ""
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
 msgid "Low rolloff for speech"
-msgstr ""
+msgstr "Hizketaren bolumena poliki ahuldu"
 
 #: libraries/lib-builtin-effects/EqualizationBase.cpp
 msgid "RIAA"
@@ -820,7 +820,7 @@ msgstr "Alderantziz jartzen ditu audio ereduak, haien polaritatea alderantzikatu
 #: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy Compressor"
-msgstr ""
+msgstr "Konpresore zaharra"
 
 #: libraries/lib-builtin-effects/LegacyCompressorBase.cpp
 msgid "Compresses the dynamic range of audio"
@@ -1279,7 +1279,7 @@ msgstr "Pista estereoak mono bihurtzen ditu"
 
 #: libraries/lib-builtin-effects/StereoToMono.cpp
 msgid "Mixing down to mono"
-msgstr ""
+msgstr "Monora nahastuz"
 
 #: libraries/lib-builtin-effects/TimeScaleBase.cpp
 #: resources/EffectsMenuDefaults.xml
@@ -1353,10 +1353,9 @@ msgid "Rapid tone quality variations, like that guitar sound so popular in the 1
 msgstr "Tonu-kalitatearen aldaketa azkarrak, 1970. hamarkadan hain entzuna zen gitarra-soinu haren antzera "
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
-#, fuzzy
 msgctxt "cloud sync"
 msgid "Error importing cloud audio"
-msgstr "Errorea inportatzean"
+msgstr ""
 
 #: libraries/lib-cloud-audiocom/CloudSyncService.cpp
 msgctxt "update dialog"
@@ -1403,7 +1402,7 @@ msgstr ""
 
 #: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
 msgid "Local project data was removed before the sync has completed"
-msgstr ""
+msgstr "Tokiko proiektuaren datuak sinkronizazioa amaitu baino lehen kendu dira"
 
 #: libraries/lib-cloud-audiocom/sync/ResumedSnaphotUploadOperation.cpp
 msgid "Failed to deserialize the response"
@@ -1567,7 +1566,7 @@ msgstr ""
 #. i18n-hint: This is the name of an effect preset.
 #: libraries/lib-dynamic-range-processor/DynamicRangeProcessorUtils.h
 msgid "Play it Loud"
-msgstr ""
+msgstr "Erreproduzitu ozen"
 
 #: libraries/lib-effects/Effect.cpp
 #: libraries/lib-nyquist-effects/NyquistBase.cpp
@@ -2975,7 +2974,7 @@ msgstr ""
 #. i18n-hint: a decade is a tenfold increase of frequency
 #: libraries/lib-numeric-formats/formatters/ParsedNumericConverterFormatter.cpp
 msgid "thousandths of decades"
-msgstr ""
+msgstr "milaka hamarkada"
 
 #: libraries/lib-nyquist-effects/LoadNyquist.cpp
 msgid "Nyquist Effects"
@@ -3515,6 +3514,10 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Proiektua ez zen ireki, ziurrenik leku mugatua zelako\n"
+"biltegiratze gailuan\n"
+"\n"
+"%s"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 #, c-format
@@ -3524,6 +3527,10 @@ msgid ""
 "\n"
 "%s"
 msgstr ""
+"Ezin da kendu automatikoki gordetako informazioa, beharbada leku mugatua dagoelako\n"
+"biltegiratze gailuan.\n"
+"\n"
+"%s"
 
 #: libraries/lib-project-file-io/ProjectFileIO.cpp
 msgid "Backing up project"
@@ -3747,7 +3754,7 @@ msgstr "Errore generikoa"
 #. i18n-hint: database operation has failed due to the internal error
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Internal logic error in SQLite"
-msgstr ""
+msgstr "Barne errore logikoa SQLiten"
 
 #. i18n-hint: database operation has failed due to the permission error
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
@@ -3787,7 +3794,7 @@ msgstr "Eragiketa bukatu da"
 #. i18n-hint: database operation has failed due to the I/O failure
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "I/O error occurred"
-msgstr ""
+msgstr "Sarrera/Irteera errorea"
 
 #. i18n-hint: database operation has failed due to the database corruption
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
@@ -3802,7 +3809,7 @@ msgstr ""
 #. i18n-hint: database operation has failed because the file cannot be opened
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Unable to open the database file"
-msgstr ""
+msgstr "Ezin izan da ireki datu-basearen fitxategia"
 
 #. i18n-hint: database operation has failed because the lock protocol has failed
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
@@ -3847,7 +3854,7 @@ msgstr "Baimena ukatu egin da"
 #. i18n-hint: database operation has failed due to the format error
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "Not used"
-msgstr ""
+msgstr "Erabili gabea"
 
 #. i18n-hint: database operation has failed because the parameter is out of range
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
@@ -3857,7 +3864,7 @@ msgstr ""
 #. i18n-hint: database operation has failed because the file opened is not a database file
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
 msgid "File opened that is not a database file "
-msgstr ""
+msgstr "Irekitako fitxategia ez da datu-base fitxategia"
 
 #. i18n-hint: database operation has failed due to the unknown error
 #: libraries/lib-sqlite-helpers/sqlite/Error.cpp
@@ -4650,11 +4657,11 @@ msgstr "Fitxategi mota:"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
 msgid "Previous slide"
-msgstr ""
+msgstr "Aurreko diapositiba"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
 msgid "Next slide"
-msgstr ""
+msgstr "Hurrengo diapositiba"
 
 #: libraries/lib-wx-wrappers/ImageCarousel.cpp
 #, c-format
@@ -4863,7 +4870,7 @@ msgstr ""
 #: modules/import-export/mod-aup/ImportAUP.cpp
 #, c-format
 msgid "Failed to open %s"
-msgstr ""
+msgstr "Ezin izan da %s ireki"
 
 #: modules/import-export/mod-aup/ImportAUP.cpp
 #, c-format
@@ -4904,12 +4911,12 @@ msgstr "Datu estandarrera bideratuko da. \"%f\"-k izen bera erabiltzen du esport
 
 #: modules/import-export/mod-cl/ExportCL.cpp
 msgid "Program name appears to be missing."
-msgstr ""
+msgstr "Ematen du programaren izena falta dela."
 
 #: modules/import-export/mod-cl/ExportCL.cpp
 #, c-format
 msgid "\"%s\" couldn't be found."
-msgstr ""
+msgstr "\"%s\" ezin izan da aurkitu."
 
 #: modules/import-export/mod-cl/ExportCL.cpp
 #, c-format
@@ -5699,7 +5706,7 @@ msgstr "Hautatu xml fitxategi bat bertara aurre-ezarpenak esportatzeko"
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
 #, c-format
 msgid "Format %s is not compatible with codec %s."
-msgstr ""
+msgstr " %s formatua ez da bateragarria %s kodekarekin."
 
 #. i18n-hint: "codec" is short for a "coder-decoder" algorithm
 #: modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp
@@ -6376,21 +6383,21 @@ msgstr "buffer txikiegia"
 #: modules/import-export/mod-opus/ExportOpus.cpp
 #: modules/import-export/mod-opus/ImportOpus.cpp
 msgid "internal error"
-msgstr ""
+msgstr "Barne errorea"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 #: modules/import-export/mod-opus/ImportOpus.cpp
 msgid "invalid packet"
-msgstr ""
+msgstr "Baliogabeko paketea"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 #: modules/import-export/mod-opus/ImportOpus.cpp
 msgid "not implemented"
-msgstr ""
+msgstr "ez-inplementatua"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "invalid state"
-msgstr ""
+msgstr "egoera baliogabea"
 
 #: modules/import-export/mod-opus/ExportOpus.cpp
 msgid "memory allocation has failed"
@@ -6494,7 +6501,7 @@ msgstr ""
 
 #: modules/import-export/mod-opus/ImportOpus.cpp
 msgid "not an Opus file"
-msgstr ""
+msgstr "ez da Opus fitxategia"
 
 #: modules/import-export/mod-opus/ImportOpus.cpp
 msgid "invalid header"
@@ -7178,16 +7185,15 @@ msgid "Open from audio.com"
 msgstr "Ireki audio.com-etik"
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
-#, fuzzy
 msgid "Downloading audio"
-msgstr "Deskargatzen %s"
+msgstr "Audioa deskargatzen"
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
-#, fuzzy, c-format
+#, c-format
 msgid ""
 "Failed to download audio from cloud.\n"
 "%s"
-msgstr "Ezin izan da kodetu aurrez ezarritako \"%s\""
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/CloudAudioOpenUtils.cpp
 msgid "Downloaded audio file does not exist."
@@ -7213,19 +7219,16 @@ msgid "Previews can be updated only for Cloud projects"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open &From Cloud"
-msgstr "Ireki hodeitik"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Cloud &Project..."
-msgstr "Ireki proiektua..."
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
-#, fuzzy
 msgid "Open Cloud &Audio File..."
-msgstr "CAF (Apple Core Audio File)"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/menus/AudioComMenus.cpp
 msgid "Save &To Cloud..."
@@ -7310,7 +7313,7 @@ msgstr ""
 #: modules/sharing/mod-cloud-audiocom/ui/AudioComPrefsPanel.cpp
 #: src/prefs/DirectoriesPrefs.cpp
 msgid "Cannot set the preference."
-msgstr ""
+msgstr "Ezin izan da lehentasuna ezarri"
 
 #: modules/sharing/mod-cloud-audiocom/ui/CloudSyncStatusField.cpp
 msgid "Failed."
@@ -7323,11 +7326,11 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
 msgid "Project is syncing with audio.com. Do you want to stop the sync process?"
-msgstr ""
+msgstr "Proiektua audio.com-ekin sinkronizatzen ari da. Sinkronizazio prozesua gelditu nahi duzu?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
 msgid "Waiting for space to free up"
-msgstr ""
+msgstr "Lekua noiz libratuko zain"
 
 #: modules/sharing/mod-cloud-audiocom/ui/ProjectCloudUIExtension.cpp
 msgid "Once you have made storage space available on audio.com, click Retry."
@@ -7352,7 +7355,7 @@ msgstr "&Partekatu audio tresna-barra"
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
 msgid "You are not signed in"
-msgstr ""
+msgstr "Ez duzu saioa hasita"
 
 #: modules/sharing/mod-cloud-audiocom/ui/UserPanel.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
@@ -7368,9 +7371,8 @@ msgid "Don't show this again"
 msgstr "Ez erakutsi berriro"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Open cloud audio file"
-msgstr "Gehitu audioa lehen etiketaren aurretik"
+msgstr "Ireki hodeiko audio fitxategia"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7378,10 +7380,10 @@ msgid "less than 1 minute"
 msgstr "minutu 1 baino gutxiago"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy, c-format
+#, c-format
 msgid "one minute ago"
 msgid_plural "%d minutes ago"
-msgstr[0] "duela minutu bat"
+msgstr[0] "Duela minutu bat"
 msgstr[1] "Duela %d minutu"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
@@ -7393,21 +7395,20 @@ msgstr[0] "duela ordu bat"
 msgstr[1] "Duela %d ordu"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Title"
-msgstr "Pistaren titulua"
+msgstr "Izenburua"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Author"
-msgstr ""
+msgstr "Egilea"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Tags"
-msgstr ""
+msgstr "Etiketak"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 msgid "Created"
-msgstr ""
+msgstr "Sortua"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7415,14 +7416,12 @@ msgid "Failed to authorize account"
 msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Loading audio list..."
-msgstr "Audioa igotzen..."
+msgstr "Audio zerrenda deskargatzen..."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
-#, fuzzy
 msgid "Failed to get audio list"
-msgstr "Huts egin du formatua antzemateak"
+msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7432,7 +7431,7 @@ msgstr "Bilatu:"
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Prev"
-msgstr ""
+msgstr "Aurrikusi"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/AudioListDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
@@ -7461,11 +7460,11 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "&Save to Cloud"
-msgstr ""
+msgstr "&Gorde hodeian"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "On your computer"
-msgstr ""
+msgstr "Zure ordenagailuan"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid ""
@@ -7477,11 +7476,11 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "Save to &computer"
-msgstr ""
+msgstr "Gorde &ordenagailuan"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "&Remember my choice and don't show again"
-msgstr ""
+msgstr "&Gogoratu nire aukera eta ez erakutsi berriro"
 
 #. i18n-hint: A title that is shown on export that allows the user to select
 #. Cloud or local export.
@@ -7491,7 +7490,7 @@ msgstr "Nola esportatu nahiko zenuke?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "Share to audio.com"
-msgstr ""
+msgstr "Partekatu audio.com-en bidez"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "Uploads an uncompressed audio file and generates a shareable link. This link allows others to download the file in either .wav or .mp3 format."
@@ -7499,7 +7498,7 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "&Share to audio.com"
-msgstr ""
+msgstr " &Partekatu audio.com-en bidez"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "Export MP3s, WAVs, FLACs and other formats to your computer."
@@ -7511,30 +7510,30 @@ msgstr "Esportatu &ordenagailura"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudLocationDialog.cpp
 msgid "&Don't show again"
-msgstr ""
+msgstr "&Ez erakutsi berriro"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectsListDialog.cpp
 msgid "Project Name"
-msgstr ""
+msgstr "Proiektuaren izena"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 msgid "Private"
-msgstr ""
+msgstr "Pribatua"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Unlisted"
-msgstr ""
+msgstr "Zerrendatu gabea"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 msgid "Public"
-msgstr ""
+msgstr "Publikoa"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/CloudProjectPropertiesDialog.cpp
 msgid "Save to computer..."
-msgstr ""
+msgstr "Gorde ordenagailuan..."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
 msgid "We encountered an issue syncing your file"
@@ -7542,17 +7541,17 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ConnectionIssuesDialog.cpp
 msgid "Don't worry, your changes will be saved to a temporary location and will be synchronized to your cloud copy when your internet connection resumes."
-msgstr ""
+msgstr "Ez kezkatu, egindako aldaketak behin behineko toki batean gordeko dira eta interneteko konexioa berreskuratzean sinkronizatuko da zure hodeiaren kopiarekin."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkAccountDialog.cpp
 msgid "Log in to audio.com to proceed."
-msgstr ""
+msgstr "Irekin saioa audio.com gunean ekiteko."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "Link account"
-msgstr ""
+msgstr "Estekatu kontua"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
 msgid "We were unable to link your account. Please try again."
@@ -7569,11 +7568,11 @@ msgstr "&Utzi"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkFailedDialog.cpp
 msgid "&Try again"
-msgstr ""
+msgstr "&Saiatu berriro"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkSucceededDialog.cpp
 msgid "Account linked successfully!"
-msgstr ""
+msgstr "Kontua behar bezala estekatu da!"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "Enter token to link your account"
@@ -7585,13 +7584,13 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "Token"
-msgstr ""
+msgstr "Tokena"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ShareAudioDialog.cpp
 #: src/IncompatiblePluginsDialog.cpp
 msgid "C&ontinue"
-msgstr ""
+msgstr "&Jarraitu"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LinkWithTokenDialog.cpp
 msgid "L&ink audio.com account..."
@@ -7599,11 +7598,11 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Create cloud account"
-msgstr ""
+msgstr "Sortu hodeiko kontua"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to cloud"
-msgstr ""
+msgstr "Hasi saioa hodeian"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid ""
@@ -7623,43 +7622,43 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in to save to the cloud"
-msgstr ""
+msgstr "Hasi saioa hodeian gordetzeko"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Google"
-msgstr ""
+msgstr "Jarraitu Googlekin"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Continue with Facebook"
-msgstr ""
+msgstr "jarraitu Facebookekin"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Or use email and password"
-msgstr ""
+msgstr "Edo erabili posta elektronikoa eta pasahitza"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Email"
-msgstr ""
+msgstr "Posta elektronikoa"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Password"
-msgstr ""
+msgstr "Pasahitza"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Forgot your password?"
-msgstr ""
+msgstr "Ahaztu duzu pasahitza?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Already have an account? "
-msgstr ""
+msgstr "Dagoeneko ba al duzu kontua?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Sign in here"
-msgstr ""
+msgstr "Hasi saioa hemen"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 msgid "Need an account? "
-msgstr ""
+msgstr "Kontu bat behar duzu?"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/LoginDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
@@ -7669,28 +7668,28 @@ msgstr "Jarraitu"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
 msgid "This project is no longer saved to the Cloud"
-msgstr ""
+msgstr "Proiektu hau ez da jada hodeian gordetzen"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
 msgid "This project was removed from audio.com and therefore cannot be saved at this time. "
-msgstr ""
+msgstr "Proiektu hau audio.com-etik kendu da eta, beraz, ezin da une honetan gorde."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
 msgid "You can either save it to the Cloud as a new project, or save it to your computer."
-msgstr ""
+msgstr "Hodeian proiektu berri gisa gorde dezakezu, edo ordenagailuan gorde."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
 msgid "Save to computer"
-msgstr ""
+msgstr "Gorde ordenagailuan"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/NotCloudProjectDialog.cpp
 msgid "Save to Cloud"
-msgstr ""
+msgstr "Gorde hodeian"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
 msgid "Your project storage limit has been reached."
-msgstr ""
+msgstr "Zure proiektuaren biltegiratze muga iritsi da."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
 msgid "You may need to remove older projects to make space available. For more options, visit audio.com"
@@ -7703,7 +7702,7 @@ msgstr ""
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectLimitDialog.cpp
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 msgid "Visit audio.com"
-msgstr ""
+msgstr "Bisitatu audio.com"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Project version conflict detected"
@@ -7739,7 +7738,7 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Keep currently open version"
-msgstr ""
+msgstr "Mantendu une honetan aktiboa dagoen bertsioa"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/ProjectVersionConflictDialog.cpp
 msgid "Open new version"
@@ -7827,7 +7826,7 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 msgid "Audacity had trouble connecting to the server."
-msgstr ""
+msgstr "Audacityk arazoak ditu zerbitzariarekin konektatzeko."
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 msgid "The project is too large to upload. Please save it to your computer instead."
@@ -7859,7 +7858,7 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 msgid "Sync failed"
-msgstr ""
+msgstr "Sinkronizazioak huts egin du"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncFailedDialog.cpp
 #, c-format
@@ -7867,10 +7866,12 @@ msgid ""
 "Error details:\n"
 "%s"
 msgstr ""
+"Errorearen xehetasunak:\n"
+"%s"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
 msgid "Syncing your project"
-msgstr ""
+msgstr "Zure proiektua sinkronizatzen"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncInBackroundDialog.cpp
 msgid "The project will sync in background while you work. You can check the sync status on the bottom right corner of Audacity at any time"
@@ -7878,7 +7879,7 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
 msgid "Success!"
-msgstr ""
+msgstr "Behar bezala burutu da!"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
 msgid "All saved changes will now update to the cloud. You can manage this file from your uploaded projects page on audio.com"
@@ -7886,7 +7887,7 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/SyncSucceededDialog.cpp
 msgid "Done"
-msgstr ""
+msgstr "Egina"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 msgid "Cloud project incomplete"
@@ -7898,7 +7899,7 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 msgid "Load latest"
-msgstr ""
+msgstr "Igo azkena"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/UnsyncedProjectDialog.cpp
 msgid "No version of this project has been fully uploaded to audio.com. It cannot be loaded."
@@ -7910,7 +7911,7 @@ msgstr ""
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.cpp
 msgid "Retry"
-msgstr ""
+msgstr "Saiatu berriro"
 
 #: modules/sharing/mod-cloud-audiocom/ui/dialogs/WaitForActionDialog.h
 msgid "An action on audio.com is required before you can continue. Once you are done with it, click Retry"
@@ -7918,15 +7919,15 @@ msgstr ""
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Loading..."
-msgstr ""
+msgstr "Igotzen..."
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Please wait..."
-msgstr ""
+msgstr "Itxaron..."
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Connection error"
-msgstr ""
+msgstr "Konexio errorea"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Audacity is unable to connect to MuseHub.com. Please check your connection and try again."
@@ -7934,7 +7935,7 @@ msgstr ""
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Try again"
-msgstr ""
+msgstr "Saiatu berriro"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp src/WhatsNewDialog.cpp
 msgid "Get it on MuseHub"
@@ -7942,7 +7943,7 @@ msgstr ""
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Become a partner"
-msgstr ""
+msgstr "Egin zaitez bazkide"
 
 #: modules/sharing/mod-musehub-ui/GetEffectsDialog.cpp
 msgid "Become a MuseHub partner"
@@ -8544,7 +8545,7 @@ msgstr "Joan erreprodukzio-bururaino"
 
 #: src/AdornedRulerPanel.cpp
 msgid "Continuous scrolling"
-msgstr ""
+msgstr "Korritze jarraia"
 
 #: src/AudacityApp.cpp
 #, c-format
@@ -8808,7 +8809,7 @@ msgstr ""
 
 #: src/AudacityMirProject.cpp
 msgid "Automatic Music Configuration"
-msgstr ""
+msgstr "Musikaren ezarpen automatikoak"
 
 #: src/AudacityMirProject.cpp
 #, c-format
@@ -8826,7 +8827,7 @@ msgstr ""
 
 #: src/AudacityMirProject.cpp
 msgid "Music Import"
-msgstr ""
+msgstr "Musika inportatzea"
 
 #: src/AudioPasteDialog.cpp src/prefs/TracksBehaviorsPrefs.cpp
 msgid ""
@@ -8859,7 +8860,7 @@ msgstr ""
 
 #: src/AudioPasteDialog.cpp
 msgid "Remember my choice and don't ask again"
-msgstr ""
+msgstr "Gogoratu nire aukera eta ez galdetu berriro"
 
 #: src/AutoRecoveryDialog.cpp
 msgid "Automatic Crash Recovery"
@@ -8935,11 +8936,11 @@ msgstr "&Parametroak"
 
 #: src/BatchCommandDialog.cpp
 msgid "&Details"
-msgstr ""
+msgstr "&Xehetasunak"
 
 #: src/BatchCommandDialog.cpp
 msgid "Choose command"
-msgstr ""
+msgstr "Aukeratu komandoa"
 
 #: src/BatchCommands.cpp
 msgid "MP3 Conversion"
@@ -8964,7 +8965,7 @@ msgstr "Esportatu makroa"
 
 #: src/BatchCommands.cpp src/PluginRegistrationDialog.cpp
 msgid "Effect"
-msgstr ""
+msgstr "Efektua"
 
 #: src/BatchCommands.cpp
 msgid "Menu Command (With Parameters)"
@@ -9054,7 +9055,7 @@ msgstr "Aplikatu makroa proiektuari"
 
 #: src/BatchProcessDialog.cpp
 msgid "&Project"
-msgstr ""
+msgstr "&Proiektua"
 
 #: src/BatchProcessDialog.cpp
 msgid "Apply macro to files..."
@@ -9067,7 +9068,7 @@ msgstr "&Fitxategiak..."
 #. i18n-hint: The Expand button makes the dialog bigger, with more in it
 #: src/BatchProcessDialog.cpp
 msgid "&Expand"
-msgstr ""
+msgstr "&Zabaldu"
 
 #: src/BatchProcessDialog.cpp
 msgid "No macro selected"
@@ -9097,7 +9098,7 @@ msgstr "Fitxategia"
 
 #: src/BatchProcessDialog.cpp
 msgid "Remo&ve"
-msgstr ""
+msgstr "E&zabatu"
 
 #: src/BatchProcessDialog.cpp src/effects/EqualizationCurvesDialog.cpp
 msgid "&Rename..."
@@ -9105,7 +9106,7 @@ msgstr "Be&rrizendatu..."
 
 #: src/BatchProcessDialog.cpp
 msgid "Re&store"
-msgstr ""
+msgstr "&Leheneratu"
 
 #: src/BatchProcessDialog.cpp src/LabelDialog.cpp
 #: src/effects/EqualizationCurvesDialog.cpp
@@ -9119,7 +9120,7 @@ msgstr "E&sportatu..."
 
 #: src/BatchProcessDialog.cpp
 msgid "Edit Steps"
-msgstr ""
+msgstr "Editatu urratsak"
 
 #. i18n-hint: This is the number of the command in the list
 #: src/BatchProcessDialog.cpp
@@ -9205,11 +9206,11 @@ msgstr "Ziur %s ezabatu nahi duzula?"
 #: src/BatchProcessDialog.cpp
 #, c-format
 msgid "&Repeat %s"
-msgstr ""
+msgstr "&Errepikatu %s"
 
 #: src/BatchProcessDialog.cpp
 msgid "Repeat Last Tool"
-msgstr ""
+msgstr "Errepikatu azken tresna"
 
 #: src/BatchProcessDialog.cpp
 msgid "&Macro Manager"
@@ -9221,7 +9222,7 @@ msgstr "&Aplikatu makroa"
 
 #: src/BatchProcessDialog.cpp
 msgid "Palette..."
-msgstr ""
+msgstr "Paleta..."
 
 #. i18n-hint: Scriptables are commands normally used from Python, Perl etc.
 #: src/BatchProcessDialog.cpp
@@ -9573,7 +9574,7 @@ msgstr ""
 
 #: src/Dependencies.cpp
 msgid "Missing"
-msgstr ""
+msgstr "Falta da"
 
 #: src/Dependencies.cpp
 msgid "If you proceed, your project will not be saved to disk. Is this what you want?"
@@ -9802,12 +9803,12 @@ msgstr "Marraztu espektroa..."
 #: src/HelpUtilities.cpp
 #, c-format
 msgid "Save %s"
-msgstr ""
+msgstr "Gorde %s"
 
 #: src/HelpUtilities.cpp
 #, c-format
 msgid "Unable to save %s"
-msgstr ""
+msgstr "Ezin izan da %s gorde"
 
 #: src/HistoryWindow.cpp
 msgid "History"
@@ -9823,7 +9824,7 @@ msgstr "Ekintza"
 
 #: src/HistoryWindow.cpp
 msgid "Used Space"
-msgstr ""
+msgstr "Erabilitako tokia"
 
 #: src/HistoryWindow.cpp
 msgid "&Total space used"
@@ -9848,11 +9849,11 @@ msgstr "Arbelean erabilitako tokia"
 
 #: src/HistoryWindow.cpp
 msgid "D&iscard"
-msgstr ""
+msgstr "&Baztertu"
 
 #: src/HistoryWindow.cpp
 msgid "&Compact"
-msgstr ""
+msgstr "&Trinkotu"
 
 #: src/HistoryWindow.cpp src/ProjectFileManager.cpp
 #, c-format
@@ -9867,15 +9868,15 @@ msgstr "&Historia"
 
 #: src/IncompatiblePluginsDialog.cpp
 msgid "New Plugins"
-msgstr ""
+msgstr "Plugin berriak"
 
 #: src/IncompatiblePluginsDialog.cpp
 msgid "Incompatible plugin(s) found"
-msgstr ""
+msgstr "Plugin ez bateragarria(k) topatu d(ir)a"
 
 #: src/IncompatiblePluginsDialog.cpp
 msgid "&Manage Plugins"
-msgstr ""
+msgstr "&Kudeatu pluginak"
 
 #: src/IncompatiblePluginsDialog.cpp
 #, c-format
@@ -10013,7 +10014,7 @@ msgstr "Audacity Nahasgailua%s"
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackControls.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Volume"
-msgstr ""
+msgstr "Bolumena"
 
 #. i18n-hint: title of the MIDI Velocity slider
 #. i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks
@@ -10055,7 +10056,7 @@ msgstr "Seinale mailaren neurgailua"
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/wavetrack/ui/WaveTrackSliderHandles.cpp
 msgid "Moved volume slider"
-msgstr ""
+msgstr "Bolumen-graduatzaile mugitua"
 
 #: src/MixerBoard.cpp
 #: src/tracks/playabletrack/notetrack/ui/NoteTrackSliderHandles.cpp
@@ -10080,7 +10081,7 @@ msgstr ""
 
 #: src/PluginDataViewCtrl.cpp
 msgid "Disable"
-msgstr ""
+msgstr "Desgaitu"
 
 #: src/PluginDataViewCtrl.cpp
 msgid "Enable"
@@ -10112,7 +10113,7 @@ msgstr "Tresna"
 
 #: src/PluginRegistrationDialog.cpp
 msgid "Manage Plugins"
-msgstr ""
+msgstr "Kudeatu pluginak"
 
 #: src/PluginRegistrationDialog.cpp
 msgid "Native Audacity"
@@ -10120,11 +10121,11 @@ msgstr ""
 
 #: src/PluginRegistrationDialog.cpp
 msgid "&Show:"
-msgstr ""
+msgstr "&Erakutsi:"
 
 #: src/PluginRegistrationDialog.cpp
 msgid "&Type:"
-msgstr ""
+msgstr "&Mota:"
 
 #: src/PluginRegistrationDialog.cpp
 msgid "C&ategory:"
@@ -10136,19 +10137,19 @@ msgstr "&Bilatu:"
 
 #: src/PluginRegistrationDialog.cpp
 msgid "Plugin"
-msgstr ""
+msgstr "Plugina"
 
 #: src/PluginRegistrationDialog.cpp
 msgid "&Rescan"
-msgstr ""
+msgstr "&Eskaneatu berriro"
 
 #: src/PluginRegistrationDialog.cpp
 msgid "&Get more effects..."
-msgstr ""
+msgstr "&Lortu efektu gehiago..."
 
 #: src/PluginStartupRegistration.cpp
 msgid "Searching for plugins"
-msgstr ""
+msgstr "Pluginak bilatzen"
 
 #: src/ProjectAudioManager.cpp
 #, c-format
@@ -10192,7 +10193,7 @@ msgstr "Pista bateragarri gutxi hautatu dira"
 #, c-format
 msgctxt "clip name template"
 msgid "%s.%d"
-msgstr ""
+msgstr "%s.%d"
 
 #: src/ProjectAudioManager.cpp
 msgid "Recorded Audio"
@@ -10419,7 +10420,7 @@ msgstr ""
 
 #: src/ProjectFileManager.cpp
 msgid "Project Recovered"
-msgstr ""
+msgstr "Berreskuratu da proiektua"
 
 #: src/ProjectFileManager.cpp src/prefs/DirectoriesPrefs.cpp
 msgid "Projects cannot be saved to FAT drives."
@@ -10627,7 +10628,7 @@ msgstr ""
 
 #: src/ProjectFileManager.cpp
 msgid "Compact Project"
-msgstr ""
+msgstr "Trinkotu proiektua"
 
 #: src/ProjectFileManager.cpp
 #, c-format
@@ -10650,16 +10651,16 @@ msgstr ""
 
 #: src/ProjectFileManager.cpp
 msgid "Compacted project file"
-msgstr ""
+msgstr "Proiektu trinkotuaren fitxategia"
 
 #: src/ProjectFileManager.cpp
 msgid "Compact"
-msgstr ""
+msgstr "Trinkotu"
 
 #: src/ProjectFileManager.cpp
 #, c-format
 msgid "[Project %02i] "
-msgstr ""
+msgstr "[%02iproiektua] "
 
 #: src/ProjectManager.cpp
 #, c-format
@@ -10689,15 +10690,15 @@ msgstr "Minutu 1 baino gutxiago"
 #, c-format
 msgid "%d hour"
 msgid_plural "%d hours"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "ordu %d"
+msgstr[1] "%d ordu"
 
 #: src/ProjectManager.cpp
 #, c-format
 msgid "%d minute"
 msgid_plural "%d minutes"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "minutu %d"
+msgstr[1] "%d minutu"
 
 #. i18n-hint: A time in hours and minutes. Only translate the "and".
 #: src/ProjectManager.cpp
@@ -10715,11 +10716,11 @@ msgstr "Desplazamendu-barra bertikala"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "No Effect"
-msgstr ""
+msgstr "Efekturik ez"
 
 #: src/RealtimeEffectPanel.cpp src/menus/PluginMenus.cpp
 msgid "Get more effects..."
-msgstr ""
+msgstr "Eskuratu efektu gehiago..."
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Analyze"
@@ -10728,13 +10729,13 @@ msgstr "Aztertu"
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "%s (missing)"
-msgstr ""
+msgstr "%s (falta da)"
 
 #. i18n-hint: argument - position of the effect in the effect stack
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "Effect %d"
-msgstr ""
+msgstr "%d efektua"
 
 #: src/RealtimeEffectPanel.cpp src/effects/EffectUI.cpp
 msgid "Power"
@@ -10758,7 +10759,7 @@ msgstr ""
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Replace effect"
-msgstr ""
+msgstr "Ordeztu efektua"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
@@ -10774,7 +10775,7 @@ msgstr ""
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "Remove %s"
-msgstr ""
+msgstr "Kendu %s"
 
 #. i18n-hint: undo history,
 #. first and second parameters - realtime effect names
@@ -10782,14 +10783,14 @@ msgstr ""
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "Replaced %s with %s"
-msgstr ""
+msgstr "Ordeztu %s %s-rekin"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "Replace %s"
-msgstr ""
+msgstr "Ordeztu %s"
 
 #: src/RealtimeEffectPanel.cpp src/menus/MenuHelper.cpp
 #: src/toolbars/SnappingToolBar.cpp
@@ -10803,7 +10804,7 @@ msgstr ""
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Add effect"
-msgstr ""
+msgstr "Gehitu efektua"
 
 #. i18n-hint: undo history record
 #. first parameter - realtime effect name
@@ -10834,31 +10835,31 @@ msgstr "Aldatu efektuen ordena"
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "Added %s to %s"
-msgstr ""
+msgstr "Gehitu %s %s-ra"
 
 #. i18n-hint: undo history record
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "Add %s"
-msgstr ""
+msgstr "Gehitu %s"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Realtime effects"
-msgstr ""
+msgstr "Denbora errealeko efektuak"
 
 #. i18n-hint: argument - track name
 #: src/RealtimeEffectPanel.cpp
 #, c-format
 msgid "Realtime effects for %s"
-msgstr ""
+msgstr "Denbora errealeko efektuak %s-rako"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Realtime Effects"
-msgstr ""
+msgstr "Denbora errealeko efektuak"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Watch video"
-msgstr ""
+msgstr "Ikusi bideoa"
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Realtime effects are non-destructive and can be changed at any time."
@@ -10870,7 +10871,7 @@ msgstr ""
 
 #: src/RealtimeEffectPanel.cpp
 msgid "Applies to all tracks"
-msgstr ""
+msgstr "Aplikatu pista guztiei"
 
 #: src/SelectUtilities.cpp
 msgid "Position"
@@ -11421,7 +11422,7 @@ msgstr "Pista-ikuspegia"
 #. this track is muted. (The mute button is on.)
 #: src/TrackPanelAx.cpp
 msgid " Muted"
-msgstr ""
+msgstr "Ixildua"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is soloed. (The Solo button is on.)
@@ -11433,7 +11434,7 @@ msgstr ""
 #. this track is selected.
 #: src/TrackPanelAx.cpp
 msgid " Selected"
-msgstr ""
+msgstr "Hautatua"
 
 #. i18n-hint: This is for screen reader software and indicates that
 #. this track is shown with a sync-locked icon.
@@ -11603,9 +11604,8 @@ msgid "Explore free plugins for sculpting your audio"
 msgstr ""
 
 #: src/WhatsNewDialog.cpp
-#, fuzzy
 msgid "View free plugins"
-msgstr "Gaitu plugin berriak"
+msgstr "Ikusi doako pluginak"
 
 #: src/WhatsNewDialog.cpp
 msgid "Help us decide the future of Audacity"
@@ -11617,7 +11617,7 @@ msgstr ""
 
 #: src/WhatsNewDialog.cpp
 msgid "View tutorials"
-msgstr ""
+msgstr "Ikusi tutorialak"
 
 #: src/WhatsNewDialog.cpp
 msgid "Visit our forum"
@@ -11707,7 +11707,7 @@ msgstr ""
 
 #: src/commands/DragCommand.cpp
 msgid "Window Name:"
-msgstr ""
+msgstr "Leihoaren izena:"
 
 #: src/commands/DragCommand.cpp
 msgid "From X:"
@@ -14243,9 +14243,8 @@ msgid "Trunc&ate tracks independently"
 msgstr "Moztu pistak modu independientean"
 
 #: src/effects/TruncSilence.cpp
-#, fuzzy
 msgid "Truncate Location"
-msgstr "Moztu isiltasuna"
+msgstr ""
 
 #: src/effects/TruncSilence.cpp
 msgid "Remove silence from &beginning"
@@ -14998,18 +14997,16 @@ msgid "Pre&vious Clip Boundary to Cursor"
 msgstr "Kurtsorea &aurreko kliparen mugara"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Previous Clip Boundary to Cursor"
-msgstr "Kurtsorea &aurreko kliparen mugara"
+msgstr ""
 
 #: src/menus/ClipMenus.cpp
 msgid "Cursor to Ne&xt Clip Boundary"
 msgstr "Kurtsorea &hurrengo kliparen mugara"
 
 #: src/menus/ClipMenus.cpp
-#, fuzzy
 msgid "Select Cursor to Next Clip Boundary"
-msgstr "Kurtsorea hurrengo kliparen mugara"
+msgstr ""
 
 #: src/menus/ClipMenus.cpp
 msgid "Previo&us Clip"
@@ -16729,7 +16726,7 @@ msgstr "Aplikaziorako hobespenak"
 #. i18n-hint: Title for the panel in the application preferences dialog.
 #: src/prefs/ApplicationPrefs.cpp
 msgid "Update notifications"
-msgstr ""
+msgstr "Eguneratu jakinarazpenak"
 
 #. i18n-hint: Check-box title that configures periodic updates checking.
 #: src/prefs/ApplicationPrefs.cpp
@@ -16739,7 +16736,7 @@ msgstr "&Bilatu eguneratzeak"
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information."
-msgstr ""
+msgstr "Aplikazioen eguneratzeak egiaztatzeak sarerako sarbidea behar du. Zure pribatutasuna babesteko, Audacity-k ez du informazio pertsonalik gordetzen."
 
 #: src/prefs/ApplicationPrefs.cpp
 msgid "UUID"
@@ -19725,9 +19722,8 @@ msgid "Left=Zoom In, Right=Zoom Out, Middle=Normal"
 msgstr "Ezkerra=Handiagotu, Eskuina=Txikiagotu, Erdia=Normala"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Install Audacity 4"
-msgstr "&Instalatu eguneratzea"
+msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid ""
@@ -19777,9 +19773,8 @@ msgid "Downloading %s"
 msgstr "Deskargatzen %s"
 
 #: src/update/Audacity40PromoDialog.cpp
-#, fuzzy
 msgid "Download Error"
-msgstr "Deskargatu"
+msgstr ""
 
 #: src/update/Audacity40PromoDialog.cpp
 msgid "Failed to download Audacity 4 installer. Please try again later."
@@ -21685,6 +21680,3 @@ msgstr ""
 #: resources/EffectsMenuDefaults.xml
 msgid "Legacy"
 msgstr ""
-
-#~ msgid "Open Fro&m Cloud..."
-#~ msgstr "Ireki hodeitik..."
