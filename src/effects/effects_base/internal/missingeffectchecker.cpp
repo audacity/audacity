@@ -39,17 +39,9 @@ void MissingEffectChecker::warnIfEffectsMissing()
         return;
     }
 
-    // Two scenarios feed this list:
-    //  - The plugin was Validated at some point but is now non-Validated
-    //    (typically Missing; possibly Error if a once-good plugin re-failed
-    //    validation). The cached EffectMeta still carries the metadata read at
-    //    validation time — prefer it.
-    //  - The plugin was never validated (no cache entry, Discovered placeholder,
-    //    or first-scan Error). The meta is empty or placeholder-only; fall back
-    //    to parsing the id string.
-    // The discriminator is whether `title` is populated, which only happens when
-    // EFFECT_TITLE_ATTRIBUTE was read from a successful validation. Version isn't
-    // part of the id and stays unrecoverable on the fallback path.
+    // Prefer cached metadata (a populated title means it was read at validation
+    // time); otherwise fall back to parsing the id. Version isn't in the id and
+    // stays unrecoverable on the fallback path.
     muse::ValList missingPluginInfos;
     missingPluginInfos.reserve(missingEffectIds.size());
     for (const auto& id : missingEffectIds) {
