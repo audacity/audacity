@@ -245,9 +245,23 @@ QVector<QVector<muse::uicomponents::TableViewCell*> > PluginManagerTableViewMode
 
     for (const auto& meta : effects) {
         auto title = meta.title.toQString();
-        if (!meta.isLoadable()) {
+        switch (meta.state) {
+        case muse::audioplugins::AudioPluginState::Validated:
+            break;                                                          // loadable — no marker
+        case muse::audioplugins::AudioPluginState::Missing:
+            //: %1 is the name of the plugin that is missing
+            title = muse::qtrc("effects", "“%1” (missing)").arg(title);
+            break;
+        case muse::audioplugins::AudioPluginState::Discovered:
+            //: %1 is the name of the plugin that hasn't yet be validated
+            title = muse::qtrc("effects", "“%1” (not validated)").arg(title); // user chose "validate later"
+            break;
+        case muse::audioplugins::AudioPluginState::Error:
+        case muse::audioplugins::AudioPluginState::Undefined:
+        default:
             //: %1 is the name of the plugin that failed to load
             title = muse::qtrc("effects", "“%1” (broken)").arg(title);
+            break;
         }
 
         QVector<muse::uicomponents::TableViewCell*> row;
