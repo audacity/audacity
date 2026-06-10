@@ -15,6 +15,8 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/iexportconfiguration.h
     ${CMAKE_CURRENT_LIST_DIR}/exportutils.cpp
     ${CMAKE_CURRENT_LIST_DIR}/exportutils.h
+    ${CMAKE_CURRENT_LIST_DIR}/OriginalFileInfo.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/OriginalFileInfo.h
 
     #internals
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3/au3exporter.cpp
@@ -50,3 +52,7 @@ set(MODULE_LINK au3wrap)
 set(MODULE_USE_UNITY OFF)
 
 setup_module()
+
+if (AU_BUILD_PROJECT_TESTS)
+    add_subdirectory(tests)
+endif()
