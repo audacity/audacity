@@ -7,7 +7,7 @@
 #include <QtQml/qqmlregistration.h>
 
 #include "framework/global/modularity/ioc.h"
-#include "au3cloud/iusageinfo.h"
+#include "usageinfo/iusageinfo.h"
 
 namespace au::appshell {
 class AppUpdateUsageInfoPageModel : public QObject, public muse::Contextable
@@ -15,7 +15,7 @@ class AppUpdateUsageInfoPageModel : public QObject, public muse::Contextable
     Q_OBJECT
     QML_ELEMENT
 
-    muse::GlobalInject<au::au3cloud::IUsageInfo> usageInfo;
+    muse::GlobalInject<au::usageinfo::IUsageInfo> usageInfo;
 
 public:
     explicit AppUpdateUsageInfoPageModel(QObject* parent = nullptr);

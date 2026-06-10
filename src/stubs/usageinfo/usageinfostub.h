@@ -3,14 +3,17 @@
 */
 #pragma once
 
-#include "au3cloud/iusageinfo.h"
-#include "framework/global/modularity/ioc.h"
+#include "usageinfo/iusageinfo.h"
 
-namespace au::au3cloud {
+namespace au::usageinfo {
 class UsageInfoStub : public IUsageInfo
 {
 public:
     void setSendAnonymousUsageInfo(bool allow) override;
     bool getSendAnonymousUsageInfo() const override;
+
+    std::string instanceId() const override;
+
+    muse::async::Notification usageInfoChanged() const override;
 };
 }

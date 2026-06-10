@@ -35,6 +35,10 @@ add_subdirectory(context)
 add_subdirectory(project)
 add_subdirectory(preferences)
 
+if (AU_BUILD_USAGEINFO_MODULE)
+    add_subdirectory(usageinfo)
+endif()
+
 if (AU_BUILD_PROJECTSCENE_MODULE)
    add_subdirectory(projectscene)
 endif()

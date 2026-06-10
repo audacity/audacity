@@ -22,6 +22,11 @@ using namespace au::au3cloud;
 
 void Au3CloudService::init()
 {
+    syncUsageInfoPrefs();
+    usageInfo()->usageInfoChanged().onNotify(this, [this]() {
+        syncUsageInfoPrefs();
+    });
+
     auto& serviceConfig = audacity::cloud::audiocom::GetServiceConfig();
     m_replyHandler = new OAuthHttpServerReplyHandler(this);
     m_replyHandler->setRedirectUrl(QUrl(serviceConfig.GetTourPage().c_str()));
@@ -176,14 +181,12 @@ muse::async::Notification Au3CloudService::accountInfoChanged() const
     return m_accountInfoChanged;
 }
 
-void Au3CloudService::setSendAnonymousUsageInfo(bool allow)
+//! The AU3 cloud code reads these prefs to fill anonymous usage request headers
+void Au3CloudService::syncUsageInfoPrefs()
 {
-    SendAnonymousUsageInfo->Write(allow);
-}
-
-bool Au3CloudService::getSendAnonymousUsageInfo() const
-{
-    return SendAnonymousUsageInfo->Read();
+    SendAnonymousUsageInfo->Write(usageInfo()->getSendAnonymousUsageInfo());
+    InstanceId->Write(wxString::FromUTF8(usageInfo()->instanceId()));
+    gPrefs->Flush();
 }
 
 std::string Au3CloudService::buildOAuthRequestURL(const std::string& provider)

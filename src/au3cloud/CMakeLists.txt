@@ -12,7 +12,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/iauthorization.h
     ${CMAKE_CURRENT_LIST_DIR}/iau3audiocomservice.h
     ${CMAKE_CURRENT_LIST_DIR}/iau3cloudconfiguration.h
-    ${CMAKE_CURRENT_LIST_DIR}/iusageinfo.h
 
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiocomservice.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/au3audiocomservice.h
