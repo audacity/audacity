@@ -13,10 +13,8 @@ namespace au::effects {
 // (before the cache is loaded in the audioplugins context onInit).
 class KnownAudioPluginsConfigurator
 {
+    muse::GlobalInject<muse::audioplugins::IKnownAudioPluginsMigrationRegister> m_migrations;
 public:
     void init();
-
-private:
-    muse::GlobalInject<muse::audioplugins::IKnownAudioPluginsMigrationRegister> m_migrations;
 };
 }
