@@ -246,7 +246,9 @@ struct EffectMeta {
 
     // Framework cache lifecycle state. Carried verbatim so a user-driven
     // save() round-trips Discovered/Missing/Error instead of collapsing them.
-    muse::audioplugins::AudioPluginState state = muse::audioplugins::AudioPluginState::Validated;
+    // Defaults to Undefined: a default-constructed meta (e.g. a not-found
+    // lookup) is not a real cache entry and must not read as loadable.
+    muse::audioplugins::AudioPluginState state = muse::audioplugins::AudioPluginState::Undefined;
 
     bool isValid() const { return !id.empty(); }
     bool isLoadable() const { return state == muse::audioplugins::AudioPluginState::Validated; }
