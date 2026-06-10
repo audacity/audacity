@@ -3,7 +3,6 @@
 */
 #include "nyquisteffectsrepository.h"
 
-#include "effects/effects_base/internal/effectsbridge.h"
 #include "effects/effects_base/internal/effectsutils.h"
 #include "effects/effects_base/effectstypes.h"
 #include "au3wrap/internal/wxtypes_convert.h"
@@ -76,7 +75,7 @@ au::effects::EffectMetaList au::effects::NyquistEffectsRepository::effectMetaLis
     const std::vector<AudioPluginInfo> allEffects = knownPlugins()->pluginInfoList();
 
     for (const AudioPluginInfo& info : allEffects) {
-        if (!isFamilyType(info.meta, EffectFamily::Nyquist)) {
+        if (!utils::isFamilyType(info.meta, EffectFamily::Nyquist)) {
             continue;
         }
 

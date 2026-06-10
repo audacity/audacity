@@ -3,8 +3,13 @@
  */
 
 #include "effectsutils.h"
-#include "effectsbridge.h"
 #include "effectstypes.h"
+
+#include "effects/vst/internal/vsttypes.h"
+#include "effects/audio_unit/internal/audiounittypes.h"
+#include "effects/lv2/internal/lv2types.h"
+#include "effects/nyquist/internal/nyquisttypes.h"
+#include "effects/builtin/internal/builtintypes.h"
 
 #include "au3-components/EffectInterface.h"
 
@@ -53,6 +58,54 @@ EffectFamily utils::effectFamilyFromString(const muse::String& family)
     }
     assert(false);
     return EffectFamily::Unknown;
+}
+
+std::string utils::effectFamilyToCacheType(EffectFamily family)
+{
+    switch (family) {
+    case EffectFamily::VST3:      return std::string(vst::AUDIO_RESOURCE_TYPE_NAME);
+#ifdef Q_OS_MACOS
+    case EffectFamily::AudioUnit: return std::string(audio_unit::AUDIO_RESOURCE_TYPE_NAME);
+#endif
+#ifdef Q_OS_LINUX
+    case EffectFamily::LV2:       return std::string(lv2::AUDIO_RESOURCE_TYPE_NAME);
+#endif
+    case EffectFamily::Nyquist:   return std::string(nyquist::AUDIO_RESOURCE_TYPE_NAME);
+    case EffectFamily::Builtin:   return std::string(builtin::AUDIO_RESOURCE_TYPE_NAME);
+    case EffectFamily::Unknown:
+    case EffectFamily::_count:
+        break;
+    }
+    return {};
+}
+
+EffectFamily utils::effectFamilyFromCacheType(const std::string& cacheType)
+{
+    if (cacheType == vst::AUDIO_RESOURCE_TYPE_NAME) {
+        return EffectFamily::VST3;
+    }
+#ifdef Q_OS_MACOS
+    if (cacheType == audio_unit::AUDIO_RESOURCE_TYPE_NAME) {
+        return EffectFamily::AudioUnit;
+    }
+#endif
+#ifdef Q_OS_LINUX
+    if (cacheType == lv2::AUDIO_RESOURCE_TYPE_NAME) {
+        return EffectFamily::LV2;
+    }
+#endif
+    if (cacheType == nyquist::AUDIO_RESOURCE_TYPE_NAME) {
+        return EffectFamily::Nyquist;
+    }
+    if (cacheType == builtin::AUDIO_RESOURCE_TYPE_NAME) {
+        return EffectFamily::Builtin;
+    }
+    return EffectFamily::Unknown;
+}
+
+bool utils::isFamilyType(const muse::audioplugins::PluginMeta& meta, EffectFamily family)
+{
+    return utils::effectFamilyFromCacheType(meta.type) == family;
 }
 
 namespace {
@@ -227,7 +280,7 @@ muse::audioplugins::PluginMeta utils::auToMuseEffectMeta(const EffectMeta& meta)
     // Use the AU3 plugin ID (same as Audio Unit does)
     // This is necessary for looking up the plugin in PluginManager later
     museMeta.id = meta.id.toStdString();
-    museMeta.type = toWireString(meta.family);
+    museMeta.type = utils::effectFamilyToCacheType(meta.family);
     museMeta.vendor = meta.vendor.toStdString();
 
     // Add attributes using the map interface
@@ -279,7 +332,7 @@ EffectMeta utils::museToAuEffectMeta(const muse::io::path_t& path, const muse::a
     EffectMeta effectMeta;
     effectMeta.path = path;
     effectMeta.id = muse::String::fromStdString(meta.id);
-    effectMeta.family = fromWireString(meta.type);
+    effectMeta.family = utils::effectFamilyFromCacheType(meta.type);
     effectMeta.vendor = muse::String::fromStdString(meta.vendor);
     effectMeta.type = utils::effectTypeFromString(attributeValue(meta, EFFECT_TYPE_ATTRIBUTE, isLoadable));
     effectMeta.title = attributeValue(meta, EFFECT_TITLE_ATTRIBUTE, isLoadable);

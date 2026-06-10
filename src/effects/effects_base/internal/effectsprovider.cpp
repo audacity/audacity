@@ -2,7 +2,6 @@
 * Audacity: A Digital Audio Editor
 */
 #include "effectsprovider.h"
-#include "effectsbridge.h"
 #include "effectsutils.h"
 
 #include "au3-basic-ui/BasicUI.h"
@@ -144,7 +143,7 @@ EffectsProvider::NewPluginsRegistered EffectsProvider::doScanPlugins(
         const auto& reader = pathToMetaReader.at(*it);
         const auto metaType = reader->metaType();
 
-        const EffectFamily family = fromWireString(metaType);
+        const EffectFamily family = utils::effectFamilyFromCacheType(metaType);
         const bool isAudacityPlugin = family == EffectFamily::Nyquist || family == EffectFamily::Builtin;
         if (isAudacityPlugin) {
             audacityPluginPaths.push_back(*it);

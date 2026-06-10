@@ -45,8 +45,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsactionscontroller.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsuiactions.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsuiactions.h
-    ${CMAKE_CURRENT_LIST_DIR}/internal/effectsbridge.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/internal/effectsbridge.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsprovider.cpp
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsprovider.h
     ${CMAKE_CURRENT_LIST_DIR}/internal/effectsproviderinitializer.cpp

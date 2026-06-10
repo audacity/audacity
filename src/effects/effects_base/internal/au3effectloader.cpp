@@ -3,7 +3,6 @@
  */
 #include "au3effectloader.h"
 #include "au3-module-manager/PluginDescriptor.h"
-#include "effectsbridge.h"
 #include "effectsutils.h"
 #include "au3/au3effectsutils.h"
 
@@ -58,8 +57,8 @@ bool Au3EffectLoader::ensurePluginIsLoaded(const EffectId& effectId)
         LOGW() << "plugin not validated: " << effectId;
         return false;
     }
-    if (!isFamilyType(it->meta, m_family)) {
-        LOGE() << "Effect families don't match: expected " << toWireString(m_family)
+    if (!utils::isFamilyType(it->meta, m_family)) {
+        LOGE() << "Effect families don't match: expected " << utils::effectFamilyToCacheType(m_family)
                << ", got " << it->meta.type;
         return false;
     }
