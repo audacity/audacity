@@ -239,7 +239,8 @@ void TrackLabelsListModel::selectLabel(const LabelKey& key)
 
     if (modifiers.testFlag(Qt::ShiftModifier)) {
         if (muse::contains(selectionController()->selectedLabels(), key.key)) {
-            selectionController()->removeLabelSelection(key.key);
+            //! NOTE Deselection is deferred until the release
+            m_pendingShiftDeselect = key.key;
         } else {
             selectionController()->addSelectedLabel(key.key);
         }
@@ -277,6 +278,14 @@ void TrackLabelsListModel::toggleTracksDataSelectionByLabel(const LabelKey& key)
         return;
     }
 
+    //! NOTE Released without moving: the Shift+press turned out to be a click, so apply
+    //! the deferred deselection
+    if (m_pendingShiftDeselect.isValid() && m_pendingShiftDeselect == key.key) {
+        selectionController()->removeLabelSelection(key.key);
+        m_pendingShiftDeselect = {};
+        return;
+    }
+
     if (!m_needToSelectTracksData) {
         m_needToSelectTracksData = true;
         return;
@@ -303,6 +312,10 @@ bool TrackLabelsListModel::moveSelectedLabels(const LabelKey& key, bool complete
     if (!item) {
         return false;
     }
+
+    //! NOTE The gesture is a drag, not a click: the pressed label stays selected
+    //! and moves along with the rest of the group.
+    m_pendingShiftDeselect = {};
 
     auto project = globalContext()->currentProject();
     IF_ASSERT_FAILED(project) {
@@ -425,6 +438,8 @@ void TrackLabelsListModel::endEditItem(const TrackItemKey& key)
     TrackItemsListModel::endEditItem(key);
 
     trackeditInteraction()->resetLabelStretchState();
+
+    m_pendingShiftDeselect = {};
 }
 
 TrackLabelItem* TrackLabelsListModel::labelItemByKey(const trackedit::LabelKey& k) const

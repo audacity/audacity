@@ -47,5 +47,12 @@ private:
 
     muse::async::NotifyList<au::trackedit::Label> m_allLabelList;
     bool m_needToSelectTracksData = false;
+
+    //! Shift+press on an already selected label must not deselect it right away: the press
+    //! may be the start of a group drag, and the move offset is anchored to the pressed
+    //! label, so dropping it from the selection makes the rest of the group run away.
+    //! The deselection is deferred here and applied only when the gesture turns out to be
+    //! a click (release without movement).
+    trackedit::TrackItemKey m_pendingShiftDeselect;
 };
 }
