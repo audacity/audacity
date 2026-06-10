@@ -167,6 +167,8 @@ class CurlDependency(AudacityDependency):
             package.with_ssl = "schannel"
         else:
             package.with_ssl = "openssl"
+            if conanfile.settings.os == "Macos":
+                package.with_ca_bundle = "/etc/ssl/cert.pem"
 
 
 
