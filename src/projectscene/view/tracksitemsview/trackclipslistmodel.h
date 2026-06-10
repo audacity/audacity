@@ -39,12 +39,15 @@ public:
     ClipStyles::Style clipStyle() const;
 
     Q_INVOKABLE bool moveSelectedClips(const ClipKey& key, bool completed);
+
+    void endEditItem(const TrackItemKey& key) override;
     Q_INVOKABLE bool trimLeftClip(const ClipKey& key, bool completed, ClipBoundary::Action action = ClipBoundary::Action::Shrink);
     Q_INVOKABLE bool trimRightClip(const ClipKey& key, bool completed, ClipBoundary::Action action = ClipBoundary::Action::Shrink);
     Q_INVOKABLE bool stretchLeftClip(const ClipKey& key, bool completed, ClipBoundary::Action action = ClipBoundary::Action::Shrink);
     Q_INVOKABLE bool stretchRightClip(const ClipKey& key, bool completed, ClipBoundary::Action action = ClipBoundary::Action::Shrink);
 
     Q_INVOKABLE void selectClip(const ClipKey& key);
+    Q_INVOKABLE void handleClipRelease(const ClipKey& key);
     Q_INVOKABLE void resetSelectedClips();
     Q_INVOKABLE bool changeClipTitle(const ClipKey& key, const QString& newTitle);
 
@@ -87,5 +90,12 @@ private:
     muse::async::NotifyList<au::trackedit::Clip> m_allClipList;
     ClipStyles::Style m_clipStyle = ClipStyles::Style::COLORFUL;
     bool m_isStereo = false;
+
+    //! Shift+press on an already selected clip (or fully selected group) must not deselect
+    //! it right away: the press may be the start of a group drag, and the move offset is
+    //! anchored to the pressed clip, so dropping it from the selection makes the rest of
+    //! the group run away. The deselection is deferred here and applied only when the
+    //! gesture turns out to be a click (release without movement).
+    trackedit::ClipKeyList m_pendingShiftDeselect;
 };
 }
