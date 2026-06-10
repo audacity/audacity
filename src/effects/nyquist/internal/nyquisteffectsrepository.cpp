@@ -76,7 +76,7 @@ au::effects::EffectMetaList au::effects::NyquistEffectsRepository::effectMetaLis
     const std::vector<AudioPluginInfo> allEffects = knownPlugins()->pluginInfoList();
 
     for (const AudioPluginInfo& info : allEffects) {
-        if (!isResourceType(info.meta, EffectFamily::Nyquist)) {
+        if (!isFamilyType(info.meta, EffectFamily::Nyquist)) {
             continue;
         }
 

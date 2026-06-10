@@ -58,7 +58,7 @@ bool Au3EffectLoader::ensurePluginIsLoaded(const EffectId& effectId)
         LOGW() << "plugin not validated: " << effectId;
         return false;
     }
-    if (!isResourceType(it->meta, m_family)) {
+    if (!isFamilyType(it->meta, m_family)) {
         LOGE() << "Effect families don't match: expected " << toWireString(m_family)
                << ", got " << it->meta.type;
         return false;
