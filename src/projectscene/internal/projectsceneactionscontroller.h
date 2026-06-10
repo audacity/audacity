@@ -14,6 +14,7 @@
 #include "context/iglobalcontext.h"
 #include "../iprojectsceneactionscontroller.h"
 #include "../iprojectsceneconfiguration.h"
+#include "../types/trackviewtype.h"
 
 namespace au::projectscene {
 class ProjectSceneActionsController : public IProjectSceneActionsController, public muse::actions::Actionable,
@@ -48,7 +49,13 @@ private:
     void togglePinnedPlayHead();
     void togglePlaybackOnRulerClickEnabled();
     void toggleAutomation();
+    void toggleGlobalSpectrogramView();
     void toggleTrackHalfWave(const muse::actions::ActionQuery& q);
+
+    void changeTrackViewToWaveform(const muse::actions::ActionQuery& q);
+    void changeTrackViewToSpectrogram(const muse::actions::ActionQuery& q);
+    void changeTrackViewToWaveformAndSpectrogram(const muse::actions::ActionQuery& q);
+    void changeTrackView(const muse::actions::ActionQuery& q, TrackViewType trackView);
 
     void changeFontForLabels();
 

@@ -93,9 +93,9 @@ void ClipContextMenuModel::load()
 
     const auto project = globalContext()->currentProject();
     if (project && project->viewState()) {
-        muse::ValCh<trackedit::TrackViewType> valCh = project->viewState()->trackViewType(m_clipKey.trackId());
+        muse::ValCh<TrackViewType> valCh = project->viewState()->trackViewType(m_clipKey.trackId());
 
-        if (valCh.val == trackedit::TrackViewType::Spectrogram || valCh.val == trackedit::TrackViewType::WaveformAndSpectrogram) {
+        if (valCh.val == TrackViewType::Spectrogram || valCh.val == TrackViewType::WaveformAndSpectrogram) {
             items.push_back(makeSeparator());
             items.push_back(makeMenuItem(spectrogram::TRACK_SPECTROGRAM_SETTINGS_ACTION));
         }

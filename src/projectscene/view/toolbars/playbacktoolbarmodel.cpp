@@ -42,7 +42,7 @@ static const ActionCode LOOP_ACTION_CODE("toggle-loop-region");
 static const ActionCode CLIP_GAIN_AUTOMATION_CODE("clip-gain");
 static const ActionCode SPLIT_TOOL_ACTION_CODE("split-tool");
 
-static const ActionCode TOGGLE_GLOBAL_SPECTROGRAM_VIEW_ACTION_CODE("action://trackedit/global-view-spectrogram");
+static const ActionCode TOGGLE_GLOBAL_SPECTROGRAM_VIEW_ACTION_CODE("action://projectscene/global-view-spectrogram");
 
 static const ActionQuery PLAYBACK_LEVEL_QUERY("action://playback/level");
 static const ActionCode PLAYBACK_TIME("playback-time");

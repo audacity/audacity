@@ -20,6 +20,7 @@
 
 #include "au3/waveformscale.h"
 #include "au3/viewinfo.h"
+#include "au3/trackhalfwaveattachment.h"
 #include "au3/trackheightattachment.h"
 #include "au3/trackrulertypeattachment.h"
 #include "au3/trackviewtypeattachment.h"
@@ -137,19 +138,19 @@ void setVerticalDisplayBounds(const std::shared_ptr<au::project::IAudacityProjec
     cache.SetDisplayBounds(bounds.first, bounds.second);
 }
 
-au::trackedit::TrackViewType getTrackViewType(const std::shared_ptr<au::project::IAudacityProject>& project,
-                                              const au::trackedit::TrackId& trackId)
+TrackViewType getTrackViewType(const std::shared_ptr<au::project::IAudacityProject>& project,
+                               const au::trackedit::TrackId& trackId)
 {
     const au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
 
     const au::au3::Au3WaveTrack* waveTrack = au::au3::DomAccessor::findWaveTrack(*au3Project, au::au3::Au3TrackId(trackId));
     if (waveTrack == nullptr) {
-        return au::trackedit::TrackViewType::Undefined;
+        return TrackViewType::Undefined;
     }
 
     const auto& cache = au::au3::TrackViewTypeAttachment::Get(waveTrack);
     const auto viewType = cache.GetTrackViewType();
-    return viewType == au::trackedit::TrackViewType::Undefined ? au::trackedit::TrackViewType::Waveform : viewType;
+    return viewType == TrackViewType::Undefined ? TrackViewType::Waveform : viewType;
 }
 
 int getTrackRulerType(const std::shared_ptr<au::project::IAudacityProject>& project, const au::trackedit::TrackId& trackId)
@@ -238,8 +239,8 @@ void ProjectViewState::init(const std::shared_ptr<au3::IAu3Project>& project)
         for (const auto& trackId : prj->trackIdList()) {
             const auto prj = globalContext()->currentProject();
             const auto viewType = getTrackViewType(prj, trackId);
-            const auto hasSpectrogram = viewType == au::trackedit::TrackViewType::Spectrogram
-                                        || viewType == au::trackedit::TrackViewType::WaveformAndSpectrogram;
+            const auto hasSpectrogram = viewType == TrackViewType::Spectrogram
+                                        || viewType == TrackViewType::WaveformAndSpectrogram;
             frequencySelectionController()->setShowsSpectrogram(trackId, hasSpectrogram);
         }
     });
@@ -315,7 +316,7 @@ ProjectViewState::TrackData& ProjectViewState::makeTrackData(const trackedit::Tr
 
     const std::pair<float, float> defaultBounds = getVerticalDisplayBounds(prj, trackId);
     const int defaultRulerType = getTrackRulerType(prj, trackId);
-    const trackedit::TrackViewType defaultViewType = getTrackViewType(prj, trackId);
+    const TrackViewType defaultViewType = getTrackViewType(prj, trackId);
 
     TrackData d;
     d.collapsed.val = false;
@@ -376,7 +377,7 @@ void ProjectViewState::recomputeTotalTrackHeight()
     m_totalTracksHeight.set(total);
 }
 
-bool ProjectViewState::doSetTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType)
+bool ProjectViewState::doSetTrackViewType(const trackedit::TrackId& trackId, TrackViewType viewType)
 {
     const auto it = m_tracks.find(trackId);
     if (it == m_tracks.end()) {
@@ -398,8 +399,8 @@ bool ProjectViewState::doSetTrackViewType(const trackedit::TrackId& trackId, tra
     auto& cache = au::au3::TrackViewTypeAttachment::Get(waveTrack);
     cache.SetTrackViewType(viewType);
 
-    const auto hasSpectrogram = viewType == au::trackedit::TrackViewType::Spectrogram
-                                || viewType == au::trackedit::TrackViewType::WaveformAndSpectrogram;
+    const auto hasSpectrogram = viewType == TrackViewType::Spectrogram
+                                || viewType == TrackViewType::WaveformAndSpectrogram;
     frequencySelectionController()->setShowsSpectrogram(trackId, hasSpectrogram);
 
     it->second.viewType.set(viewType);
@@ -845,16 +846,25 @@ void ProjectViewState::toggleHalfWave(const trackedit::TrackId& trackId)
     auto it = m_tracks.find(trackId);
     if (it != m_tracks.end()) {
         bool isHalfWave = (verticalMin == 0.0f);
+        const bool newHalfWave = !isHalfWave;
         setVerticalDisplayBounds(project, trackId,
                                  { isHalfWave ? -verticalMax : 0.0f, verticalMax });
         it->second.verticalDisplayBounds.set(
             { isHalfWave ? -verticalMax : 0.0f, verticalMax });
-        it->second.isHalfWave.set(!isHalfWave);
+        it->second.isHalfWave.set(newHalfWave);
+
+        au::au3::Au3Project* au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
+        if (au::au3::Au3WaveTrack* waveTrack = au::au3::DomAccessor::findWaveTrack(*au3Project, au::au3::Au3TrackId(trackId))) {
+            au::au3::TrackHalfWaveAttachment::Get(waveTrack).SetHalfWave(newHalfWave);
+            projectHistory()->modifyState();
+            projectHistory()->markUnsaved();
+        }
+
         m_verticalRulerWidth.set(calculateVerticalRulerWidth());
     }
 }
 
-muse::ValCh<au::trackedit::TrackViewType> ProjectViewState::trackViewType(const au::trackedit::TrackId& trackId) const
+muse::ValCh<TrackViewType> ProjectViewState::trackViewType(const au::trackedit::TrackId& trackId) const
 {
     auto it = m_tracks.find(trackId);
     if (it != m_tracks.end()) {
@@ -870,7 +880,7 @@ muse::ValCh<au::trackedit::TrackViewType> ProjectViewState::trackViewType(const 
     return d.viewType;
 }
 
-void ProjectViewState::setTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType)
+void ProjectViewState::setTrackViewType(const trackedit::TrackId& trackId, TrackViewType viewType)
 {
     if (trackViewType(trackId).val == viewType) {
         return;

@@ -111,11 +111,6 @@ static const ActionQuery TRACK_CHANGE_COLOR_QUERY("action://trackedit/track/chan
 static const ActionQuery TRACK_CHANGE_FORMAT_QUERY("action://trackedit/track/change-format");
 static const ActionQuery TRACK_CHANGE_RATE_QUERY("action://trackedit/track/change-rate");
 
-static const ActionQuery TOGGLE_GLOBAL_VIEW_SPECTROGRAM("action://trackedit/global-view-spectrogram");
-static const ActionQuery SET_TRACK_VIEW_WAVEFORM("action://trackedit/track-view-waveform");
-static const ActionQuery SET_TRACK_VIEW_SPECTROGRAM("action://trackedit/track-view-spectrogram");
-static const ActionQuery SET_TRACK_VIEW_MULTI("action://trackedit/track-view-multi");
-
 static const ActionCode LABEL_ADD_CODE("label-add");
 
 static const ActionCode LABEL_DELETE_MULTI_CODE("label-delete-multi");
@@ -296,11 +291,6 @@ void TrackeditActionsController::init()
     dispatcher()->reg(this, TRACK_CHANGE_COLOR_QUERY, this, &TrackeditActionsController::setTrackColor);
     dispatcher()->reg(this, TRACK_CHANGE_FORMAT_QUERY, this, &TrackeditActionsController::setTrackFormat);
     dispatcher()->reg(this, TRACK_CHANGE_RATE_QUERY, this, &TrackeditActionsController::setTrackRate);
-
-    dispatcher()->reg(this, TOGGLE_GLOBAL_VIEW_SPECTROGRAM, this, &TrackeditActionsController::toggleGlobalSpectrogramView);
-    dispatcher()->reg(this, SET_TRACK_VIEW_WAVEFORM, this, &TrackeditActionsController::changeTrackViewToWaveform);
-    dispatcher()->reg(this, SET_TRACK_VIEW_SPECTROGRAM, this, &TrackeditActionsController::changeTrackViewToSpectrogram);
-    dispatcher()->reg(this, SET_TRACK_VIEW_MULTI, this, &TrackeditActionsController::changeTrackViewToWaveformAndSpectrogram);
 
     dispatcher()->reg(this, LABEL_ADD_CODE, this, &TrackeditActionsController::addLabel);
 
@@ -1928,67 +1918,6 @@ void TrackeditActionsController::setTrackRate(const muse::actions::ActionQuery& 
     const int rate = q.param("rate").toInt();
     if (trackeditInteraction()->changeTracksRate(tracks, rate)) {
         notifyActionCheckedChanged(q.toString());
-    }
-}
-
-void TrackeditActionsController::toggleGlobalSpectrogramView()
-{
-    const auto project = globalContext()->currentProject();
-    IF_ASSERT_FAILED(project) {
-        return;
-    }
-
-    const auto viewState = project->viewState();
-    IF_ASSERT_FAILED(viewState) {
-        return;
-    }
-
-    const bool enablingGlobalSpectrogram = !viewState->globalSpectrogramToggleIsOn();
-    if (enablingGlobalSpectrogram && viewState->clipGainAutomationEnabled().val) {
-        viewState->setClipGainAutomationEnabled(false);
-    }
-
-    viewState->toggleGlobalSpectrogramView();
-}
-
-void TrackeditActionsController::changeTrackViewToWaveform(const muse::actions::ActionQuery& q)
-{
-    changeTrackView(q, TrackViewType::Waveform);
-}
-
-void TrackeditActionsController::changeTrackViewToSpectrogram(const muse::actions::ActionQuery& q)
-{
-    changeTrackView(q, TrackViewType::Spectrogram);
-}
-
-void TrackeditActionsController::changeTrackViewToWaveformAndSpectrogram(const muse::actions::ActionQuery& q)
-{
-    changeTrackView(q, TrackViewType::WaveformAndSpectrogram);
-}
-
-void TrackeditActionsController::changeTrackView(const muse::actions::ActionQuery& q, TrackViewType trackView)
-{
-    IF_ASSERT_FAILED(q.params().size() >= 1) {
-        return;
-    }
-    const auto trackId = q.param("trackId").toInt();
-    const auto prj = globalContext()->currentProject();
-    IF_ASSERT_FAILED(prj) {
-        return;
-    }
-    prj->viewState()->setTrackViewType(trackId, trackView);
-    switch (trackView) {
-    case TrackViewType::Waveform:
-        notifyActionCheckedChanged(SET_TRACK_VIEW_WAVEFORM.toString());
-        break;
-    case TrackViewType::Spectrogram:
-        notifyActionCheckedChanged(SET_TRACK_VIEW_SPECTROGRAM.toString());
-        break;
-    case TrackViewType::WaveformAndSpectrogram:
-        notifyActionCheckedChanged(SET_TRACK_VIEW_MULTI.toString());
-        break;
-    default:
-        assert(false);
     }
 }
 

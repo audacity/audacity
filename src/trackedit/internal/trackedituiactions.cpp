@@ -226,30 +226,6 @@ UiActionList STATIC_ACTIONS = {
              TranslatableString("action", "Resample track…"),
              TranslatableString("action", "Resample track…")
              ),
-    UiAction("action://trackedit/track-view-waveform",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Waveform"),
-             TranslatableString("action", "Waveform"),
-             IconCode::Code::WAVEFORM,
-             Checkable::Yes
-             ),
-    UiAction("action://trackedit/track-view-spectrogram",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Spectrogram"),
-             TranslatableString("action", "Spectrogram"),
-             IconCode::Code::SPECTROGRAM,
-             Checkable::Yes
-             ),
-    UiAction("action://trackedit/track-view-multi",
-             au::context::UiCtxAny,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Multi-view"),
-             TranslatableString("action", "Multi-view"),
-             IconCode::Code::SPECTROGRAM_BOX_SELECTION, // TODO need proper icon
-             Checkable::Yes
-             ),
     UiAction("action://trackedit/paste-default",
              au::context::UiCtxProjectOpened,
              au::context::CTX_DISABLED,

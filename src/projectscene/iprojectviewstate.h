@@ -8,6 +8,7 @@
 #include "trackedit/trackedittypes.h"
 #include "types/projectscenetypes.h"
 #include "types/secs.h"
+#include "types/trackviewtype.h"
 
 namespace au::projectscene {
 class IProjectViewState
@@ -60,8 +61,8 @@ public:
     virtual muse::ValCh<bool> isHalfWave(const trackedit::TrackId& trackId) const = 0;
     virtual void toggleHalfWave(const trackedit::TrackId& trackId) = 0;
 
-    virtual muse::ValCh<trackedit::TrackViewType> trackViewType(const trackedit::TrackId& trackId) const = 0;
-    virtual void setTrackViewType(const trackedit::TrackId& trackId, trackedit::TrackViewType viewType) = 0;
+    virtual muse::ValCh<TrackViewType> trackViewType(const trackedit::TrackId& trackId) const = 0;
+    virtual void setTrackViewType(const trackedit::TrackId& trackId, TrackViewType viewType) = 0;
     virtual void toggleGlobalSpectrogramView() = 0;
     virtual bool globalSpectrogramToggleIsOn() const = 0;
     virtual muse::async::Notification globalSpectrogramToggleIsOnChanged() const = 0;
