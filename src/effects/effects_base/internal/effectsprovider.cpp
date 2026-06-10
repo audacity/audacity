@@ -332,10 +332,11 @@ void EffectsProvider::doSave(EffectFilter removeFromConfig)
         // Remove the cache so the register starts clean.
         fileSystem()->remove(filePath);
     }
-    // Always (re)load: on first launch the cache may not exist yet, but the
-    // register still needs to be in the loaded state for registerPlugins
-    // (it asserts m_loaded). load() handles the no-file case by initializing
-    // an empty register.
+    // registerPlugins() merges into the in-memory register rather than replacing
+    // it, so reload first: with the file just removed, load() clears the register
+    // to empty, and registerPlugins() then re-persists exactly newPlugins with no
+    // stale entries. (load() also leaves the register in the m_loaded state it
+    // requires.)
     knownPluginsRegister()->load();
 
     knownPluginsRegister()->registerPlugins(newPlugins);
