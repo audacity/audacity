@@ -1,5 +1,5 @@
 #[[
-An audio engine, implemented with the cross-platform portaudio library.
+An audio engine, implemented on top of RtAudio.
 
 Allows playback and recording and monitoring.
 
@@ -25,7 +25,7 @@ set( SOURCES
 )
 set( LIBRARIES
    PRIVATE
-   portaudio::portaudio
+   rtaudio::rtaudio
    au3-mixer-interface
    au3-project-rate-interface
    au3-realtime-effects

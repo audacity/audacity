@@ -183,6 +183,10 @@ include(SetupBuildEnvironment)
 include(GetPlatformInfo)
 include(SetupDevEnvironment)
 
+# Pulled here (after SetupBuildEnvironment) so RtAudio inherits the project's
+# CMAKE_OSX_DEPLOYMENT_TARGET rather than its own default.
+include(SetupRtAudio)
+
 if (MUSE_COMPILE_USE_CCACHE)
     include(SetupCompilerCache)
 endif(MUSE_COMPILE_USE_CCACHE)

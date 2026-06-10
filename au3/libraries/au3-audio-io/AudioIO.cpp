@@ -18,26 +18,25 @@
 ********************************************************************//**
 
 \class AudioIoCallback
-\brief AudioIoCallback is a class that implements the callback required
-by PortAudio.  The callback needs to be responsive, has no GUI, and
-copies data into and out of the sound card buffers.  It also sends data
-to the meters.
+\brief AudioIoCallback implements the audio backend's realtime callback.
+The callback needs to be responsive, has no GUI, and copies data into and
+out of the sound card buffers.  It also sends data to the meters.
 
 
 *//*****************************************************************//**
 
 \class AudioIO
-\brief AudioIO uses the PortAudio library to play and record sound.
+\brief AudioIO plays and records sound through the system audio backend.
 
   Great care and attention to detail are necessary for understanding and
   modifying this system.  The code in this file is run from three
   different thread contexts: the UI thread, the disk thread (which
   this file creates and maintains; in the code, this is called the
-  Audio Thread), and the PortAudio callback thread.
+  Audio Thread), and the audio backend's callback thread.
   To highlight this deliniation, the file is divided into three parts
   based on what thread context each function is intended to run in.
 
-  \todo run through all functions called from audio and portaudio threads
+  \todo run through all functions called from audio threads
   to verify they are thread-safe. Note that synchronization of the style:
   "A sets flag to signal B, B clears flag to acknowledge completion"
   is not thread safe in a general multiple-CPU context. For example,
@@ -84,14 +83,7 @@ time warp info and AudioIOListener and whether the playback is looped.
 #include <alloca.h>
 #endif
 
-#include "portaudio.h"
-#ifdef __WXMSW__
-#include "pa_win_wasapi.h"
-#endif
-
-#if USE_PORTMIXER
-#include "portmixer.h"
-#endif
+#include "au3-audio-devices/RtAudioBackend.h"
 
 #include <wx/wxcrtvararg.h>
 #include <wx/log.h>
@@ -193,13 +185,6 @@ bool AudioIoCallback::mCachedBestRateCapturing;
    #undef REALTIME_ALSA_THREAD
 #endif
 
-#ifdef REALTIME_ALSA_THREAD
-#include "pa_linux_alsa.h"
-#endif
-
-int audacityAudioCallback(const void* inputBuffer, void* outputBuffer, unsigned long framesPerBuffer,
-                          const PaStreamCallbackTimeInfo* timeInfo, PaStreamCallbackFlags statusFlags, void* userData);
-
 //////////////////////////////////////////////////////////////////////
 //
 //     UI Thread Context
@@ -220,11 +205,15 @@ void AudioIO::Deinit()
 
 bool AudioIO::ValidateDeviceNames(const wxString& play, const wxString& rec)
 {
-    const PaDeviceInfo* pInfo = Pa_GetDeviceInfo(getPlayDevIndex(play));
-    const PaDeviceInfo* rInfo = Pa_GetDeviceInfo(getRecordDevIndex(rec));
-
-    // Valid iff both defined and the same api.
-    return pInfo != nullptr && rInfo != nullptr && pInfo->hostApi == rInfo->hostApi;
+    const int p = getPlayDevIndex(play);
+    const int r = getRecordDevIndex(rec);
+    if (p < 0 || r < 0) {
+        return false;
+    }
+    // Both devices must live under the same compiled api — RtAudio does not
+    // mix apis in a single stream.
+    return audacity::rta::apiIndexFromEncoded(p)
+        == audacity::rta::apiIndexFromEncoded(r);
 }
 
 AudioIO::AudioIO()
@@ -251,50 +240,15 @@ AudioIO::AudioIO()
 
     mAudioThreadAcknowledge.store(Acknowledge::eNone, std::memory_order_relaxed);
 
-    mPortStreamV19 = NULL;
-
     mNumPauseFrames = 0;
-
-    mLastPaError = paNoError;
-
     mLastRecordingOffset = 0.0;
     mNumCaptureChannels = 0;
     mSilenceLevel = 0.0;
 
     ResetMeters();
 
-    PaError err = Pa_Initialize();
-
-    if (err != paNoError) {
-        auto errStr = XO("Could not find any audio devices.\n");
-        errStr += XO("You will not be able to play or record audio.\n\n");
-        wxString paErrStr = LAT1CTOWX(Pa_GetErrorText(err));
-        if (!paErrStr.empty()) {
-            errStr += XO("Error: %s").Format(paErrStr);
-        }
-        // XXX: we are in libaudacity, popping up dialogs not allowed!  A
-        // long-term solution will probably involve exceptions
-        using namespace BasicUI;
-        ShowMessageBox(
-            errStr,
-            MessageBoxOptions {}
-            .Caption(XO("Error Initializing Audio"))
-            .IconStyle(Icon::Error)
-            .ButtonStyle(Button::Ok));
-
-        // Since PortAudio is not initialized, all calls to PortAudio
-        // functions will fail.  This will give reasonable behavior, since
-        // the user will be able to do things not relating to audio i/o,
-        // but any attempt to play or record will simply fail.
-    }
-
-#if defined(USE_PORTMIXER)
-    mPortMixer = NULL;
-    mPreviousHWPlaythrough = -1.0;
-    HandleDeviceChange();
-#else
-    mInputMixerWorks = false;
-#endif
+    // RtAudio doesn't need a global init — instances do their own setup.
+    // Device enumeration availability is checked on first DeviceManager use.
 
     SetMixerOutputVol(AudioIOPlaybackVolume.Read());
 
@@ -314,21 +268,7 @@ AudioIO::~AudioIO()
         ResetOwningProject();
     }
 
-#if defined(USE_PORTMIXER)
-    if (mPortMixer) {
-      #if __WXMAC__
-        if (Px_SupportsPlaythrough(mPortMixer) && mPreviousHWPlaythrough >= 0.0) {
-            Px_SetPlaythrough(mPortMixer, mPreviousHWPlaythrough);
-        }
-        mPreviousHWPlaythrough = -1.0;
-      #endif
-        Px_CloseMixer(mPortMixer);
-        mPortMixer = NULL;
-    }
-#endif
-
-    // FIXME: ? TRAP_ERR.  Pa_Terminate probably OK if err without reporting.
-    Pa_Terminate();
+    mStream.close();
 
     /* Delete is a "graceful" way to stop the thread.
        (Kill is the not-graceful way.) */
@@ -380,51 +320,21 @@ void AudioIO::RemoveState(AudacityProject& project,
     RealtimeEffectManager::Get(project).RemoveState(pInit, pGroup, pState);
 }
 
-void AudioIO::SetMixer(int inputSource, float recordVolume,
+void AudioIO::SetMixer(int /*inputSource*/, float /*recordVolume*/,
                        float playbackVolume)
 {
     SetMixerOutputVol(playbackVolume);
     AudioIOPlaybackVolume.Write(playbackVolume);
 
-#if defined(USE_PORTMIXER)
-    PxMixer* mixer = mPortMixer;
-    if (!mixer) {
-        return;
-    }
-
-    float oldRecordVolume = Px_GetInputVolume(mixer);
-
-    AudioIoCallback::SetMixer(inputSource);
-    if (oldRecordVolume != recordVolume) {
-        Px_SetInputVolume(mixer, recordVolume);
-    }
-
-#endif
+    // Input source/volume are not surfaced under the RtAudio backend (no
+    // hardware-mixer equivalent). Record-side gain is applied in software in
+    // the audio callback if needed.
 }
 
 void AudioIO::GetMixer(int* recordDevice, float* recordVolume,
                        float* playbackVolume)
 {
     *playbackVolume = GetMixerOutputVol();
-
-#if defined(USE_PORTMIXER)
-
-    PxMixer* mixer = mPortMixer;
-
-    if (mixer) {
-        *recordDevice = Px_GetCurrentInputSource(mixer);
-
-        if (mInputMixerWorks) {
-            *recordVolume = Px_GetInputVolume(mixer);
-        } else {
-            *recordVolume = 1.0f;
-        }
-
-        return;
-    }
-
-#endif
-
     *recordDevice = 0;
     *recordVolume = 1.0f;
 }
@@ -436,46 +346,14 @@ bool AudioIO::InputMixerWorks()
 
 wxArrayString AudioIO::GetInputSourceNames()
 {
-#if defined(USE_PORTMIXER)
-
-    wxArrayString deviceNames;
-
-    if (mPortMixer) {
-        int numSources = Px_GetNumInputSources(mPortMixer);
-        for ( int source = 0; source < numSources; source++ ) {
-            deviceNames.push_back(wxString(wxSafeConvertMB2WX(Px_GetInputSourceName(mPortMixer, source))));
-        }
-    } else {
-        wxLogDebug(wxT("AudioIO::GetInputSourceNames(): PortMixer not initialised!"));
-    }
-
-    return deviceNames;
-
-#else
-
-    wxArrayString blank;
-
-    return blank;
-
-#endif
+    return {};
 }
 
-static PaSampleFormat AudacityToPortAudioSampleFormat(sampleFormat format)
-{
-    switch (format) {
-    case int16Sample:
-        return paInt16;
-    case int24Sample:
-        return paInt24;
-    case floatSample:
-    default:
-        return paFloat32;
-    }
-}
-
-bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
+bool AudioIO::StartAudioStream(const AudioIOStartStreamOptions& options,
                                    unsigned int numPlaybackChannels, unsigned int numCaptureChannels)
 {
+    namespace rta = audacity::rta;
+
     auto sampleRate = options.rate;
     mNumPauseFrames = 0;
     SetOwningProject(options.pProject);
@@ -486,188 +364,76 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
         }
     });
 
-    // PRL:  Protection from crash reported by David Bailes, involving starting
-    // and stopping with frequent changes of active window, hard to reproduce
     if (mOwningProject.expired()) {
         return false;
     }
 
     ResetMeters();
 
-    mLastPaError = paNoError;
-    // pick a rate to do the audio I/O at, from those available. The project
-    // rate is suggested, but we may get something else if it isn't supported
+    // Pick a rate that both devices support; 0.0 means no common rate.
     mRate = GetBestRate(numCaptureChannels > 0, numPlaybackChannels > 0, sampleRate);
 
-    // GetBestRate() will return 0.0 for bidirectional streams when there is no
-    // common sample rate supported by both the input and output devices.
-    // Bidirectional streams are used when recording while overdub or
-    // software playthrough options are enabled.
-
-    // Pa_OpenStream() will return paInvalidSampleRate when trying to create the
-    // bidirectional stream with a sampleRate of 0.0
-    bool isStreamBidirectional = (numCaptureChannels > 0) && (numPlaybackChannels > 0);
-    bool isUnsupportedSampleRate = isStreamBidirectional && (mRate == 0.0);
-
-    // July 2016 (Carsten and Uwe)
-    // BUG 193: Tell PortAudio sound card will handle 24 bit (under DirectSound) using
-    // userData.
-    auto captureFormat = mCaptureFormat;
-    auto captureFormat_saved = captureFormat;
-    // Special case: Our 24-bit sample format is different from PortAudio's
-    // 3-byte packed format. So just make PortAudio return float samples,
-    // since we need float values anyway to apply the volume.
-    // ANSWER-ME: So we *never* actually handle 24-bit?! This causes mCapture to
-    // be set to floatSample below.
-    // JKC: YES that's right.  Internally Audacity uses float, and float has space for
-    // 24 bits as well as exponent.  Actual 24 bit would require packing and
-    // unpacking unaligned bytes and would be inefficient.
-    // ANSWER ME: is floatSample 64 bit on 64 bit machines?
-    if (captureFormat == int24Sample) {
-        captureFormat = floatSample;
-        // mCaptureFormat is overwritten before the call to
-        // StartPortAudioStream. So the hack with captureFormat_saved is
-        // still working (assuming it worked before).
-        mCaptureFormat = captureFormat;
+    // RtAudio cannot mix apis in a single stream and uses float32 throughout
+    // — match what AudioIO mixes into. Internal int24 conversion is preserved.
+    if (mCaptureFormat == int24Sample) {
+        mCaptureFormat = floatSample;
     }
 
     mNumPlaybackChannels = numPlaybackChannels;
-    mNumCaptureChannels = numCaptureChannels;
+    mNumCaptureChannels  = numCaptureChannels;
 
-    bool usePlayback = false, useCapture = false;
-    PaStreamParameters playbackParameters{};
-    PaStreamParameters captureParameters{};
+    const int playEncoded = (numPlaybackChannels > 0) ? getPlayDevIndex()   : -1;
+    const int recEncoded  = (numCaptureChannels  > 0) ? getRecordDevIndex() : -1;
 
-   #ifdef __WXMSW__
-    PaWasapiStreamInfo wasapiStreamInfo{};
-   #endif
+    int apiIndex = -1;
+    if (playEncoded >= 0) {
+        apiIndex = rta::apiIndexFromEncoded(playEncoded);
+    } else if (recEncoded >= 0) {
+        apiIndex = rta::apiIndexFromEncoded(recEncoded);
+    }
+    if (apiIndex < 0) {
+        return false;
+    }
 
-    auto latencyDuration = AudioIOLatencyDuration.Read();
+    const RtAudio::Api api = rta::apiFromIndex(apiIndex);
+    if (api == RtAudio::UNSPECIFIED) {
+        return false;
+    }
+
+    // Track ALSA/JACK so downstream code can still branch on it for known
+    // quirks (latency-trust, real-time scheduling intent).
+    mUsingAlsa = (api == RtAudio::LINUX_ALSA);
+    mUsingJack = (api == RtAudio::UNIX_JACK);
 
     if (numPlaybackChannels > 0) {
-        usePlayback = true;
-
-        // this sets the device index to whatever is "right" based on preferences,
-        // then defaults
-        playbackParameters.device = getPlayDevIndex();
-
-        const PaDeviceInfo* playbackDeviceInfo;
-        playbackDeviceInfo = Pa_GetDeviceInfo(playbackParameters.device);
-
-        if (playbackDeviceInfo == NULL) {
-            return false;
-        }
-
-        // regardless of source formats, we always mix to float
-        playbackParameters.sampleFormat = paFloat32;
-        playbackParameters.hostApiSpecificStreamInfo = NULL;
-        playbackParameters.channelCount = mNumPlaybackChannels;
-
-        const PaHostApiInfo* hostInfo = Pa_GetHostApiInfo(playbackDeviceInfo->hostApi);
-        bool isWASAPI = (hostInfo && hostInfo->type == paWASAPI);
-        bool isMME = (hostInfo && hostInfo->type == paMME);
-
-      #ifdef __WXMSW__
-        // If the host API is WASAPI, the stream is bidirectional and there is no
-        // supported sample rate enable the WASAPI Sample Rate Conversion
-        // for the playback device.
-        if (isWASAPI && isUnsupportedSampleRate) {
-            wasapiStreamInfo.size = sizeof(PaWasapiStreamInfo);
-            wasapiStreamInfo.hostApiType = paWASAPI;
-            wasapiStreamInfo.version = 1;
-            wasapiStreamInfo.flags = paWinWasapiAutoConvert;
-
-            playbackParameters.hostApiSpecificStreamInfo = &wasapiStreamInfo;
-        }
-      #endif
-
-        if (mSoftwarePlaythrough && !isMME) {
-            playbackParameters.suggestedLatency
-                =playbackDeviceInfo->defaultLowOutputLatency;
-        } else {
-            // When using WASAPI, the suggested latency does not affect
-            // the latency of the playback, but the position of playback is given as if
-            // there was the suggested latency. This results in the last "suggested latency"
-            // of a selection not being played. So for WASAPI use 0.0 for the suggested
-            // latency regardless of user setting. See bug 1949.
-            playbackParameters.suggestedLatency = isWASAPI ? 0.0 : latencyDuration / 1000.0;
-        }
-
         mOutputMeter = options.playbackMeter;
     }
-
     if (numCaptureChannels > 0) {
-        useCapture = true;
-
-        const PaDeviceInfo* captureDeviceInfo;
-        // retrieve the index of the device set in the prefs, or a sensible
-        // default if it isn't set/valid
-        captureParameters.device = getRecordDevIndex();
-
-        captureDeviceInfo = Pa_GetDeviceInfo(captureParameters.device);
-
-        if (captureDeviceInfo == NULL) {
-            return false;
-        }
-
-        const PaHostApiInfo* hostInfo = Pa_GetHostApiInfo(captureDeviceInfo->hostApi);
-        bool isWASAPI = (hostInfo && hostInfo->type == paWASAPI);
-        bool isMME = (hostInfo && hostInfo->type == paMME);
-
-        // If the stream is bidirectional and there is no supported sample rate
-        // set mRate to the value supported by the capture device.
-        if (isWASAPI && isUnsupportedSampleRate) {
-            mRate = captureDeviceInfo->defaultSampleRate;
-        }
-
-        captureParameters.sampleFormat
-            =AudacityToPortAudioSampleFormat(mCaptureFormat);
-
-        captureParameters.hostApiSpecificStreamInfo = NULL;
-        captureParameters.channelCount = mNumCaptureChannels;
-
-        if (mSoftwarePlaythrough && !isMME) {
-            captureParameters.suggestedLatency
-                =captureDeviceInfo->defaultHighInputLatency;
-        } else {
-            captureParameters.suggestedLatency = latencyDuration / 1000.0;
-        }
-
         SetCaptureMeter(mOwningProject.lock(), options.captureMeter);
-    }
-
-    const auto deviceInfo = usePlayback
-                            ? Pa_GetDeviceInfo(playbackParameters.device)
-                            : Pa_GetDeviceInfo(captureParameters.device);
-
-    if (deviceInfo != nullptr) {
-        const auto hostApiInfo = Pa_GetHostApiInfo(deviceInfo->hostApi);
-
-        if (hostApiInfo) {
-            mUsingAlsa = hostApiInfo->type == paALSA;
-            mUsingJack = hostApiInfo->type == paJACK;
-        }
     }
 
     StartMeters();
 
-#ifdef USE_PORTMIXER
-#ifdef __WXMSW__
-    //mchinen nov 30 2010.  For some reason Pa_OpenStream resets the input volume on windows.
-    //so cache and restore after it.
-    //The actual problem is likely in portaudio's pa_win_wmme.c OpenStream().
-    float oldRecordVolume = Px_GetInputVolume(mPortMixer);
-#endif
-#endif
+    const auto latencyDuration = AudioIOLatencyDuration.Read();
 
-    // July 2016 (Carsten and Uwe)
-    // BUG 193: Possibly tell portAudio to use 24 bit with DirectSound.
-    int userData = 24;
-    int* lpUserData = (captureFormat_saved == int24Sample) ? &userData : NULL;
+    rta::DuplexStream::Config cfg;
+    cfg.api             = api;
+    cfg.inputDeviceId   = (recEncoded  >= 0) ? rta::deviceIdFromEncoded(recEncoded)  : rta::DuplexStream::kNoDevice;
+    cfg.outputDeviceId  = (playEncoded >= 0) ? rta::deviceIdFromEncoded(playEncoded) : rta::DuplexStream::kNoDevice;
+    cfg.inputChannels   = numCaptureChannels;
+    cfg.outputChannels  = numPlaybackChannels;
+    cfg.sampleRate      = static_cast<unsigned int>(mRate);
+    // Translate the user's latency-ms preference to a buffer size in frames,
+    // clamped to a power-of-two-ish range RtAudio's hosts negotiate well.
+    {
+        unsigned int frames = static_cast<unsigned int>((latencyDuration / 1000.0) * mRate);
+        if (frames < 64)   frames = 64;
+        if (frames > 8192) frames = 8192;
+        cfg.bufferFrames = frames;
+    }
 
-    // (Linux, bug 1885) After scanning devices it takes a little time for the
-    // ALSA device to be available, so allow retries.
-    // On my test machine, no more than 3 attempts are required.
+    // (Linux, bug 1885) ALSA devices can take a moment to settle after a
+    // rescan; allow a few retries before giving up.
     unsigned int maxTries = 1;
 #ifdef __WXGTK__
     {
@@ -678,93 +444,61 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions& options,
     }
 #endif
 
+    rta::DuplexStream::Result openRes = rta::DuplexStream::Result::OpenFailed;
     for (unsigned int tries = 0; tries < maxTries; tries++) {
-        mLastPaError = Pa_OpenStream(&mPortStreamV19,
-                                     useCapture ? &captureParameters : NULL,
-                                     usePlayback ? &playbackParameters : NULL,
-                                     mRate, paFramesPerBufferUnspecified,
-                                     paNoFlag,
-                                     audacityAudioCallback, lpUserData);
-        if (mLastPaError == paNoError) {
-            const auto stream = Pa_GetStreamInfo(mPortStreamV19);
-            // Use the reported latency as a hint about the hardware buffer size
-            // required for uninterrupted playback.
-            const auto outputLatency
-                =mUsingJack
-                  ? // When using Jack as a host, PA calculates the wrong latency
-                    // if a non system port is used. Assume, that Jack provides a very
-                    // low latency, lower than user requested
-                    // (https://github.com/audacity/audacity/issues/4646)
-                  (latencyDuration / 1000.0)
-                  : // Otherwise, use the (likely incorrect) latency reported by PA
-                  stream->outputLatency;
-
-            if (AudioIOAutomaticLatencyCompensation.Read()) {
-                mRecordingSchedule.mLatencyCompensation = -stream->inputLatency - outputLatency;
-            }
-
-            mHardwarePlaybackLatencyMs = outputLatency * 1000.0;
-            mHardwareCaptureLatencyMs = stream->inputLatency * 1000.0;
-            mHardwarePlaybackLatencyFrames = lrint(outputLatency * stream->sampleRate);
-#ifdef __WXGTK__
-            // DV: When using ALSA PortAudio does not report the buffer size.
-            // Instead, it reports periodSize * (periodsCount - 1). It is impossible
-            // to retrieve periodSize or periodsCount either. By default PA sets
-            // periodsCount to 4. However it was observed, that PA reports back ~100msec
-            // latency and expects a buffer of ~200msecs on Audacity default settings
-            // which suggests that ALSA changes the periodsCount to suit its needs.
-            //
-            // Why 3? 2 doesn't work for me, 3 does :-) So similar to PA - this
-            // is the value that works for author setup.
-            if (mUsingAlsa) {
-                mHardwarePlaybackLatencyFrames *= 3;
-            }
-#endif
+        openRes = mStream.open(cfg, [this](const float* in, float* out,
+                                           unsigned int frames, double t,
+                                           RtAudioStreamStatus s) {
+            audacityAudioCallback(in, out, frames, t, s, nullptr);
+        });
+        if (openRes == rta::DuplexStream::Result::Ok) {
             break;
         }
-        wxLogDebug("Attempt %u to open capture stream failed with: %d", 1 + tries, mLastPaError);
+        wxLogDebug("Attempt %u to open audio stream failed: %s",
+                   1 + tries, mStream.lastErrorText().c_str());
         using namespace std::chrono;
         std::this_thread::sleep_for(1s);
     }
 
-#if USE_PORTMIXER
-#ifdef __WXMSW__
-    Px_SetInputVolume(mPortMixer, oldRecordVolume);
-#endif
-    if (mPortStreamV19 != NULL && mLastPaError == paNoError) {
-      #ifdef __WXMAC__
-        if (mPortMixer) {
-            if (Px_SupportsPlaythrough(mPortMixer)) {
-                bool playthrough = false;
+    if (openRes != rta::DuplexStream::Result::Ok) {
+        return false;
+    }
 
-                mPreviousHWPlaythrough = Px_GetPlaythrough(mPortMixer);
+    const double outputLatency = mUsingJack
+        // JACK: PA used to mis-report latency for non-system ports; trust the
+        // user's preference as it's typically far closer than the driver's
+        // estimate. RtAudio shares this caveat.
+        ? (latencyDuration / 1000.0)
+        : mStream.outputLatencySeconds();
+    const double inputLatency  = mStream.inputLatencySeconds();
 
-                // Bug 388.  Feature not supported.
-                //gPrefs->Read(wxT("/AudioIO/Playthrough"), &playthrough, false);
-                if (playthrough) {
-                    Px_SetPlaythrough(mPortMixer, 1.0);
-                } else {
-                    Px_SetPlaythrough(mPortMixer, 0.0);
-                }
-            }
-        }
-      #endif
+    if (AudioIOAutomaticLatencyCompensation.Read()) {
+        mRecordingSchedule.mLatencyCompensation = -inputLatency - outputLatency;
+    }
+
+    mHardwarePlaybackLatencyMs    = outputLatency * 1000.0;
+    mHardwareCaptureLatencyMs     = inputLatency  * 1000.0;
+    mHardwarePlaybackLatencyFrames = lrint(outputLatency * mRate);
+#ifdef __WXGTK__
+    // ALSA's reported latency tends to be one period short; triple the frame
+    // count empirically — same value the previous implementation used.
+    if (mUsingAlsa) {
+        mHardwarePlaybackLatencyFrames *= 3;
     }
 #endif
 
 #if (defined(__WXMAC__) || defined(__WXMSW__)) && wxCHECK_VERSION(3, 1, 0)
-    // Don't want the system to sleep while audio I/O is active
-    if (mPortStreamV19 != NULL && mLastPaError == paNoError) {
+    if (mStream.isOpen()) {
         wxPowerResource::Acquire(wxPOWER_RESOURCE_SCREEN, _("Audacity Audio"));
     }
 #endif
 
-    return success = (mLastPaError == paNoError);
+    return success = true;
 }
 
-wxString AudioIO::LastPaErrorString()
+wxString AudioIO::LastStreamErrorText()
 {
-    return wxString::Format(wxT("%d %s."), (int)mLastPaError, Pa_GetErrorText(mLastPaError));
+    return wxString::FromUTF8(mStream.lastErrorText().c_str());
 }
 
 void AudioIO::SetOwningProject(
@@ -860,12 +594,12 @@ void AudioIO::StartMonitoring(const AudioIOStartStreamOptions& options)
         playbackChannels = 2;
     }
 
-    // FIXME: TRAP_ERR StartPortAudioStream (a PaError may be present)
-    // but StartPortAudioStream function only returns true or false.
+    // FIXME: TRAP_ERR StartAudioStream (a PaError may be present)
+    // but StartAudioStream function only returns true or false.
     mUsingAlsa = false;
     mCaptureFormat = captureFormat;
     mCaptureRate = 44100.0; // Shouldn't matter
-    const bool success = StartPortAudioStream(options,
+    const bool success = StartAudioStream(options,
                                               static_cast<unsigned int>(playbackChannels),
                                               static_cast<unsigned int>(captureChannels));
 
@@ -873,7 +607,7 @@ void AudioIO::StartMonitoring(const AudioIOStartStreamOptions& options)
     if (!success) {
         using namespace BasicUI;
         const auto msg = XO("Error opening recording device.\nError code: %s")
-                         .Format(Get()->LastPaErrorString());
+                         .Format(Get()->LastStreamErrorText());
         ShowErrorDialog(*ProjectFramePlacement(pOwningProject.get()),
                         XO("Error"), msg, wxT("Error_opening_sound_device"),
                         ErrorDialogOptions { ErrorDialogType::ModalErrorReport });
@@ -882,16 +616,11 @@ void AudioIO::StartMonitoring(const AudioIOStartStreamOptions& options)
 
     Publish({ pOwningProject.get(), AudioIOEvent::MONITOR, true });
 
-    // FIXME: TRAP_ERR PaErrorCode 'noted' but not reported in StartMonitoring.
-    // Now start the PortAudio stream!
-    // TODO: ? Factor out and reuse error reporting code from end of
-    // AudioIO::StartStream?
-    mLastPaError = Pa_StartStream(mPortStreamV19);
+    const auto sres = mStream.start();
+    mLastStreamError = (sres == audacity::rta::DuplexStream::Result::Ok) ? 0 : 1;
 
-    // Update UI display only now, after all possibilities for error are past.
     auto pListener = GetListener();
-    if ((mLastPaError == paNoError) && pListener) {
-        // advertise the chosen I/O sample rate to the UI
+    if ((mLastStreamError == 0) && pListener) {
         pListener->OnAudioIORate((int)mRate);
     }
 }
@@ -1074,20 +803,26 @@ int AudioIO::StartStream(const TransportSequences& sequences,
     mCaptureFormat = captureFormat;
     mCaptureRate = captureRate;
     successAudio
-        =StartPortAudioStream(options, playbackChannels, numCaptureChannels);
+        =StartAudioStream(options, playbackChannels, numCaptureChannels);
 
     // Call this only after reassignment of mRate that might happen in the
     // previous call.
     mPlaybackSchedule.GetPolicy().Initialize(mPlaybackSchedule, mRate);
 
+    AudioStreamInfo streamInfoForExt {};
+    const AudioStreamInfo* pStreamInfoForExt = nullptr;
+    if (mStream.isOpen()) {
+        streamInfoForExt.structVersion = 1;
+        streamInfoForExt.inputLatency  = mStream.inputLatencySeconds();
+        streamInfoForExt.outputLatency = mStream.outputLatencySeconds();
+        streamInfoForExt.sampleRate    = mRate;
+        pStreamInfoForExt = &streamInfoForExt;
+    }
     auto range = Extensions();
     successAudio = successAudio
                    && std::all_of(range.begin(), range.end(),
-                                  [this, &sequences, t0](auto& ext){
-        return ext.StartOtherStream(sequences,
-                                    (mPortStreamV19 != NULL && mLastPaError == paNoError)
-                                    ? Pa_GetStreamInfo(mPortStreamV19) : nullptr,
-                                    t0, mRate);
+                                  [&, this, t0](auto& ext){
+        return ext.StartOtherStream(sequences, pStreamInfoForExt, t0, mRate);
     });
 
     if (!successAudio) {
@@ -1149,57 +884,37 @@ int AudioIO::StartStream(const TransportSequences& sequences,
     }
 
     if (mNumPlaybackChannels > 0 || mNumCaptureChannels > 0) {
-#ifdef REALTIME_ALSA_THREAD
-        // PRL: Do this in hope of less thread scheduling jitter in calls to
-        // audacityAudioCallback.
-        // Not needed to make audio playback work smoothly.
-        // But needed in case we also play MIDI, so that the variable "offset"
-        // in AudioIO::MidiTime() is a better approximation of the duration
-        // between the call of audacityAudioCallback and the actual output of
-        // the first audio sample.
-        // (Which we should be able to determine from fields of
-        // PaStreamCallbackTimeInfo, but that seems not to work as documented with
-        // ALSA.)
-        if (mUsingAlsa) {
-            // Perhaps we should do this only if also playing MIDI ?
-            PaAlsa_EnableRealtimeScheduling(mPortStreamV19, 1);
-        }
-#endif
+        // ALSA realtime scheduling is handled internally by the audio
+        // backend; no explicit hook required here.
 
         //
         // Generate a unique value each time, to be returned to
         // clients accessing the AudioIO API, so they can query if they
         // are the ones who have reserved AudioIO or not.
         //
-        // It is important to set this before setting the portaudio stream in
+        // It is important to set this before setting the audio stream in
         // motion -- otherwise it may play an unspecified number of leading
         // zeroes.
         mStreamToken = (++mNextStreamToken);
 
-        // This affects AudioThread (not the portaudio callback).
-        // Probably not needed so urgently before portaudio thread start for usual
+        // This affects AudioThread (not the audio callback).
+        // Probably not needed so urgently before audio thread start for usual
         // playback, since our ring buffers have been primed already with 4 sec
         // of audio, but then we might be scrubbing, so do it.
         StartAudioThread();
 
         mForceFadeOut.store(false, std::memory_order_relaxed);
 
-        // Now start the PortAudio stream!
-        PaError err;
-        err = Pa_StartStream(mPortStreamV19);
-
-        if (err != paNoError) {
+        const auto startRes = mStream.start();
+        if (startRes != audacity::rta::DuplexStream::Result::Ok) {
             mStreamToken = 0;
-
             StopAudioThread();
-
             if (pListener && mNumCaptureChannels > 0) {
                 pListener->OnAudioIOStopRecording();
             }
             StartStreamCleanup();
-            // PRL: PortAudio error messages are sadly not internationalized
             BasicUI::ShowMessageBox(
-                Verbatim(LAT1CTOWX(Pa_GetErrorText(err))));
+                Verbatim(wxString::FromUTF8(mStream.lastErrorText().c_str())));
             return 0;
         }
     }
@@ -1232,7 +947,7 @@ void AudioIO::DelayActions(bool recording)
 
 bool AudioIO::DelayingActions() const
 {
-    return mDelayingActions || (mPortStreamV19 && mNumCaptureChannels > 0);
+    return mDelayingActions || (mStream.isOpen() && mNumCaptureChannels > 0);
 }
 
 void AudioIO::CallAfterRecording(PostRecordingAction action)
@@ -1293,7 +1008,7 @@ bool AudioIO::AllocateBuffers(
     // real playback time to produce with each filling of the buffers
     // by the Audio thread (except at the end of playback):
     // usually, make fillings fewer and longer for less CPU usage.
-    // What Audio thread produces for playback is then consumed by the PortAudio
+    // What Audio thread produces for playback is then consumed by the audio
     // thread, in many smaller pieces.
     double playbackTime = lrint(times.batchSize.count() * mRate) / mRate;
 
@@ -1516,9 +1231,8 @@ void AudioIO::StartStreamCleanup(bool bOnlyBuffers)
     mPlaybackSchedule.mTimeQueue.Clear();
 
     if (!bOnlyBuffers) {
-        Pa_AbortStream(mPortStreamV19);
-        Pa_CloseStream(mPortStreamV19);
-        mPortStreamV19 = NULL;
+        mStream.stop();
+        mStream.close();
         mStreamToken = 0;
     }
 
@@ -1541,7 +1255,7 @@ void AudioIO::StopStream()
         mRecordingSchedule.mCrossfadeData.clear(); // free arrays
     });
 
-    if (mPortStreamV19 == NULL) {
+    if (!mStream.isOpen()) {
         mStreamToken = 0;
         return;
     }
@@ -1551,13 +1265,8 @@ void AudioIO::StopStream()
     // state. (Do we?)
     // This breaks WASAPI backend, as it sets the `running`
     // flag to `false` asynchronously.
-    // Previously we have patched PortAudio and the patch
-    // was breaking IsStreamStopped() == !IsStreamActive()
-    // invariant.
-    /*
-    if ( Pa_IsStreamStopped(mPortStreamV19) )
-       return;
-    */
+    // (Historically a backend patch broke the
+    // IsStreamStopped() == !IsStreamActive() invariant; no longer relevant.)
 
 #if (defined(__WXMAC__) || defined(__WXMSW__)) && wxCHECK_VERSION(3, 1, 0)
     // Re-enable system sleep
@@ -1566,8 +1275,8 @@ void AudioIO::StopStream()
 
     if (mAudioThreadSequenceBufferExchangeLoopRunning
         .load(std::memory_order_relaxed)) {
-        // PortAudio callback can use the information that we are stopping to fade
-        // out the audio.  Give PortAudio callback a chance to do so.
+        // audio callback can use the information that we are stopping to fade
+        // out the audio.  Give audio callback a chance to do so.
         mForceFadeOut.store(true, std::memory_order_relaxed);
         auto latency = static_cast<long>(AudioIOLatencyDuration.Read());
         // If we can gracefully fade out in 200ms, with the faded-out play buffers making it through
@@ -1586,16 +1295,16 @@ void AudioIO::StopStream()
     //
     // 1. The user clicked the stop button and we therefore want to stop
     //    as quickly as possible.  So we use AbortStream().  If this is
-    //    the case the portaudio stream is still in the Running state
-    //    (see PortAudio state machine docs).
+    //    the case the audio stream is still in the Running state
+    //    (see audio backend state machine).
     //
-    // 2. The callback told PortAudio to stop the stream since it had
+    // 2. The callback told the backend to stop the stream since it had
     //    reached the end of the selection.  The UI thread discovered
     //    this by noticing that AudioIO::IsActive() returned false.
     //    IsActive() (which calls Pa_GetStreamActive()) will not return
     //    false until all buffers have finished playing, so we can call
     //    AbortStream without losing any samples.  If this is the case
-    //    we are in the "callback finished state" (see PortAudio state
+    //    we are in the "callback finished state" (see audio backend state
     //    machine docs).
     //
     // The moral of the story: We can call AbortStream safely, without
@@ -1605,35 +1314,11 @@ void AudioIO::StopStream()
     // call StopStream if the callback brought us here, and AbortStream
     // if the user brought us here.
     //
-    // DV: Seems that Pa_CloseStream calls Pa_AbortStream internally,
-    // at least for PortAudio 19.7.0+
-
     StopAudioThread();
 
-    // Turn off HW playthrough if PortMixer is being used
-
-  #if defined(USE_PORTMIXER)
-    if (mPortMixer) {
-      #if __WXMAC__
-        if (Px_SupportsPlaythrough(mPortMixer) && mPreviousHWPlaythrough >= 0.0) {
-            Px_SetPlaythrough(mPortMixer, mPreviousHWPlaythrough);
-        }
-        mPreviousHWPlaythrough = -1.0;
-      #endif
-    }
-  #endif
-
-    if (mPortStreamV19) {
-        // DV: Pa_CloseStream will close Pa_AbortStream internally,
-        // but it doesn't hurt to do it ourselves.
-        // PA_AbortStream will silently fail if stream is stopped.
-        if (!Pa_IsStreamStopped(mPortStreamV19)) {
-            Pa_AbortStream(mPortStreamV19);
-        }
-
-        Pa_CloseStream(mPortStreamV19);
-
-        mPortStreamV19 = NULL;
+    if (mStream.isOpen()) {
+        mStream.stop();
+        mStream.close();
     }
 
     // We previously told AudioThread to stop processing, now let's
@@ -1650,7 +1335,7 @@ void AudioIO::StopStream()
     // skip this next part...
     if (mStreamToken > 0) {
         // In either of the above cases, we want to make sure that any
-        // capture data that made it into the PortAudio callback makes it
+        // capture data that made it into the audio callback makes it
         // to the target RecordableSequence.  To do this, we ask the audio thread
         // to call SequenceBufferExchange one last time (it normally would not do
         // so since Pa_GetStreamActive() would now return false
@@ -1740,7 +1425,7 @@ void AudioIO::StopStream()
     }
 
     BasicUI::CallAfter([this]{
-        if (mPortStreamV19 && mNumCaptureChannels > 0) {
+        if (mStream.isOpen() && mNumCaptureChannels > 0) {
             // Recording was restarted between StopStream and idle time
             // So the actions can keep waiting
             return;
@@ -1971,7 +1656,7 @@ size_t AudioIO::GetCommonlyAvailCapture()
 }
 
 // This method is the data gateway between the audio thread (which
-// communicates with the disk) and the PortAudio callback thread
+// communicates with the disk) and the audio callback thread
 // (which communicates with the audio device).
 void AudioIO::SequenceBufferExchange()
 {
@@ -1992,7 +1677,7 @@ void AudioIO::FillPlayBuffers()
     }
 
     // It is possible that some buffers will have more samples available than
-    // others. This could happen if we hit this code during the PortAudio
+    // others. This could happen if we hit this code during the audio backend's
     // callback. Also, if in a previous pass, unequal numbers of samples were
     // discarded from ring buffers for differing latencies.
 
@@ -2100,7 +1785,7 @@ bool AudioIO::ProcessPlaybackSlices(
 
         // Update the time queue.  This must be done before writing to the
         // ring buffers of samples, for proper synchronization with the
-        // consumer side in the PortAudio thread, which reads the time
+        // consumer side in the audio thread, which reads the time
         // queue after reading the sample queues.  The sample queues use
         // atomic variables, the time queue doesn't.
         mPlaybackSchedule.mTimeQueue.Producer(mPlaybackSchedule, slice);
@@ -2693,16 +2378,32 @@ static void DoSoftwarePlaythrough(constSamplePtr inputBuffer,
     }
 }
 
-int audacityAudioCallback(const void* inputBuffer, void* outputBuffer,
-                          unsigned long framesPerBuffer,
-                          const PaStreamCallbackTimeInfo* timeInfo,
-                          const PaStreamCallbackFlags statusFlags, void* userData)
+void audacityAudioCallback(const float* inputBuffer, float* outputBuffer,
+                           unsigned int framesPerBuffer, double streamTime,
+                           unsigned int statusFlags, void* userData)
 {
+    // Translate rta's single streamTime into PA's tri-field struct. We share
+    // the value across input and output buffer times so the
+    // (inputBufferAdcTime - outputBufferDacTime) offset comes out to zero —
+    // the actual duplex latency is already baked into
+    // mRecordingSchedule.mLatencyCompensation at StartAudioStream time.
+    AudioStreamCallbackTimeInfo timeInfo;
+    timeInfo.inputBufferAdcTime  = streamTime;
+    timeInfo.currentTime         = streamTime;
+    timeInfo.outputBufferDacTime = streamTime;
+
+    // RtAudioStreamStatus is a 32-bit bitmask; map RTAUDIO_INPUT_OVERFLOW to
+    // AudioStream* flags so the inner callback can read them uniformly.
+    AudioStreamCallbackFlags paStatus = 0;
+    if (statusFlags & RTAUDIO_INPUT_OVERFLOW) {
+        paStatus |= AudioStreamInputOverflow;
+    }
+
     auto gAudioIO = AudioIO::Get();
-    return gAudioIO->AudioCallback(
-        static_cast<constSamplePtr>(inputBuffer),
-        static_cast<float*>(outputBuffer), framesPerBuffer,
-        timeInfo, statusFlags, userData);
+    (void)gAudioIO->AudioCallback(
+        reinterpret_cast<constSamplePtr>(inputBuffer),
+        outputBuffer, framesPerBuffer,
+        &timeInfo, paStatus, userData);
 }
 
 // Stop recording if 'silence' is detected
@@ -2748,7 +2449,7 @@ void ClampBuffer(float* pBuffer, unsigned long len)
 
 // return true, IFF we have fully handled the callback.
 //
-// Mix and copy to PortAudio's output buffer
+// Mix and copy to the output buffer
 // from our intermediate playback buffers
 //
 bool AudioIoCallback::FillOutputBuffers(
@@ -2921,12 +2622,12 @@ void AudioIoCallback::UpdateTimePosition(unsigned long framesPerBuffer)
 
 // return true, IFF we have fully handled the callback.
 //
-// Copy from PortAudio input buffers to our intermediate recording buffers.
+// Copy from the input buffers to our intermediate recording buffers.
 //
 void AudioIoCallback::DrainInputBuffers(
     constSamplePtr inputBuffer,
     unsigned long framesPerBuffer,
-    const PaStreamCallbackFlags statusFlags,
+    const AudioStreamCallbackFlags statusFlags,
     float* tempFloats)
 {
     const auto numPlaybackChannels = mNumPlaybackChannels;
@@ -2946,14 +2647,14 @@ void AudioIoCallback::DrainInputBuffers(
     // If there are no playback sequences, and we are recording, then the
     // earlier checks for being past the end won't happen, so do it here.
     if (mPlaybackSchedule.GetPolicy().Done(mPlaybackSchedule, 0)) {
-        mCallbackReturn = paComplete;
+        mCallbackReturn = AudioCallbackComplete;
     }
 
     // The error likely from a too-busy CPU falling behind real-time data
-    // is paInputOverflow
+    // is AudioStreamInputOverflow
     bool inputError
-        =(statusFlags & (paInputOverflow))
-          && !(statusFlags & paPrimingOutput);
+        =(statusFlags & (AudioStreamInputOverflow))
+          && !(statusFlags & AudioStreamPrimingOutput);
 
     // But it seems it's easy to get false positives, at least on Mac
     // So we have not decided to enable this extra detection yet in
@@ -3023,8 +2724,8 @@ void AudioIoCallback::DrainInputBuffers(
         } break;
         case int24Sample:
             // We should never get here. Audacity's int24Sample format
-            // is different from PortAudio's sample format and so we
-            // make PortAudio return float samples when recording in
+            // is different from the backend's sample format and so we
+            // request float samples when recording in
             // 24-bit samples.
             wxASSERT(false);
             break;
@@ -3051,35 +2752,6 @@ void AudioIoCallback::DrainInputBuffers(
         mCaptureBuffers[t]->Flush();
     }
 }
-
-#if 0
-// Record the reported latency from PortAudio.
-// TODO: Don't recalculate this with every callback?
-// 01/21/2009:  Disabled until a better solution presents itself.
-void OldCodeToCalculateLatency()
-{
-    // As of 06/17/2006, portaudio v19 returns inputBufferAdcTime set to
-    // zero.  It is being worked on, but for now we just can't do much
-    // but follow the leader.
-    //
-    // 08/27/2006: too inconsistent for now...just leave it a zero.
-    //
-    // 04/16/2008: Looks like si->inputLatency comes back with something useful though.
-    // This rearranged logic uses si->inputLatency, but if PortAudio fixes inputBufferAdcTime,
-    // this code won't have to be modified to use it.
-    // Also avoids setting mLastRecordingOffset except when simultaneously playing and recording.
-    //
-    if (numCaptureChannels > 0 && numPlaybackChannels > 0) { // simultaneously playing and recording
-        if (timeInfo->inputBufferAdcTime > 0) {
-            mLastRecordingOffset = timeInfo->inputBufferAdcTime - timeInfo->outputBufferDacTime;
-        } else if (mLastRecordingOffset == 0.0) {
-            const PaStreamInfo* si = Pa_GetStreamInfo(mPortStreamV19);
-            mLastRecordingOffset = -si->inputLatency;
-        }
-    }
-}
-
-#endif
 
 // return true, IFF we have fully handled the callback.
 // Prime the output buffer with 0's, optionally adding in the playthrough.
@@ -3286,13 +2958,13 @@ AudioIoCallback::~AudioIoCallback()
 int AudioIoCallback::AudioCallback(
     constSamplePtr inputBuffer, float* outputBuffer,
     unsigned long framesPerBuffer,
-    const PaStreamCallbackTimeInfo* timeInfo,
-    const PaStreamCallbackFlags statusFlags, void* WXUNUSED(userData))
+    const AudioStreamCallbackTimeInfo* timeInfo,
+    const AudioStreamCallbackFlags statusFlags, void* WXUNUSED(userData))
 {
     // Poll sequences for change of state.
     // (User might click mute and solo buttons.)
     mbHasSoloSequences = CountSoloingSequences() > 0;
-    mCallbackReturn = paContinue;
+    mCallbackReturn = AudioCallbackContinue;
 
     if (IsPaused()
         // PRL:  Why was this added?  Was it only because of the mysterious
@@ -3400,7 +3072,7 @@ int AudioIoCallback::CallbackDoSeek()
     wxMutexLocker locker(mSuspendAudioThread);
     if (token != mStreamToken) {
         // This stream got destroyed while we waited for it
-        return paAbort;
+        return AudioCallbackAbort;
     }
 
     // Pause audio thread and wait for it to finish
@@ -3424,7 +3096,7 @@ int AudioIoCallback::CallbackDoSeek()
         std::this_thread::sleep_for(50ms);
     }
 
-    // Calculate the NEW time position, in the PortAudio callback
+    // Calculate the NEW time position, in the audio callback
     const auto time
         =mPlaybackSchedule.GetPolicy().OffsetSequenceTime(mPlaybackSchedule, mSeek);
 
@@ -3458,7 +3130,7 @@ int AudioIoCallback::CallbackDoSeek()
     mAudioThreadSequenceBufferExchangeLoopRunning
     .store(true, std::memory_order_relaxed);
 
-    return paContinue;
+    return AudioCallbackContinue;
 }
 
 void AudioIoCallback::CallbackCheckCompletion(
@@ -3477,7 +3149,7 @@ void AudioIoCallback::CallbackCheckCompletion(
     for ( auto& ext : Extensions()) {
         ext.SignalOtherCompletion();
     }
-    callbackReturn = paComplete;
+    callbackReturn = AudioCallbackComplete;
 }
 
 auto AudioIoCallback::AudioIOExtIterator::operator *() const -> AudioIOExt

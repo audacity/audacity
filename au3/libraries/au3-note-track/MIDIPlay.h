@@ -161,11 +161,11 @@ struct MIDIPlay : AudioIOExt
     static bool IsActive();
     bool IsOtherStreamActive() const override;
 
-    void ComputeOtherTimings(double rate, bool paused, const PaStreamCallbackTimeInfo* timeInfo, unsigned long framesPerBuffer) override;
+    void ComputeOtherTimings(double rate, bool paused, const AudioStreamCallbackTimeInfo* timeInfo, unsigned long framesPerBuffer) override;
     void SignalOtherCompletion() override;
     unsigned CountOtherSolo() const override;
 
-    bool StartOtherStream(const TransportSequences& tracks, const PaStreamInfo* info, double startTime, double rate) override;
+    bool StartOtherStream(const TransportSequences& tracks, const AudioStreamInfo* info, double startTime, double rate) override;
     void AbortOtherStream() override;
     void FillOtherBuffers(double rate, unsigned long pauseFrames, bool paused, bool hasSolo) override;
     void StopOtherStream() override;

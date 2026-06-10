@@ -18,8 +18,17 @@
 
 #include "au3-audio-devices/AudioIOBase.h"
 
-struct PaStreamCallbackTimeInfo;
-struct PaStreamInfo;
+struct AudioStreamCallbackTimeInfo;
+
+// Information about an active audio stream — built by AudioIO and surfaced to
+// extensions (e.g. MIDIPlay) that need to align their timing with audio.
+struct AudioStreamInfo {
+    int    structVersion;
+    double inputLatency;
+    double outputLatency;
+    double sampleRate;
+};
+
 struct PlaybackSchedule;
 struct TransportSequences;
 
@@ -40,12 +49,12 @@ public:
     virtual ~AudioIOExt();
 
     // Formerly in AudioIoCallback
-    virtual void ComputeOtherTimings(double rate, bool paused, const PaStreamCallbackTimeInfo* timeInfo, unsigned long framesPerBuffer) = 0;
+    virtual void ComputeOtherTimings(double rate, bool paused, const AudioStreamCallbackTimeInfo* timeInfo, unsigned long framesPerBuffer) = 0;
     virtual void SignalOtherCompletion() = 0;
     virtual unsigned CountOtherSolo() const = 0;
 
     // Formerly in AudioIO
-    virtual bool StartOtherStream(const TransportSequences& tracks, const PaStreamInfo* info, double startTime, double rate) = 0;
+    virtual bool StartOtherStream(const TransportSequences& tracks, const AudioStreamInfo* info, double startTime, double rate) = 0;
     virtual void AbortOtherStream() = 0;
     virtual void FillOtherBuffers(
         double rate, unsigned long pauseFrames, bool paused, bool hasSolo) = 0;

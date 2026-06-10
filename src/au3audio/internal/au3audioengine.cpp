@@ -165,7 +165,7 @@ void Au3AudioEngine::handleDeviceChange()
 
 muse::String Au3AudioEngine::lastErrorString() const
 {
-    return au::au3::wxToString(AudioIO::Get()->LastPaErrorString());
+    return au::au3::wxToString(AudioIO::Get()->LastStreamErrorText());
 }
 
 double Au3AudioEngine::getPlaybackSampleRate() const

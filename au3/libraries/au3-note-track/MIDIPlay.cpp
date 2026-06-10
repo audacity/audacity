@@ -358,7 +358,6 @@ Time (in seconds, = total_sample_count / sample_rate)
 
 #include "au3-basic-ui/BasicUI.h"
 #include "au3-preferences/Prefs.h"
-#include "portaudio.h"
 #include <portmidi.h>
 #include <porttime.h>
 #include <thread>
@@ -369,10 +368,7 @@ class NoteTrack;
 using NoteTrackConstArray = std::vector < std::shared_ptr< const NoteTrack > >;
 
 namespace {
-/*
- Adapt and rename the implementation of PaUtil_GetTime from commit
- c5d2c51bd6fe354d0ee1119ba932bfebd3ebfacc of portaudio
- */
+// Monotonic high-resolution stream-clock helper used by the MIDI scheduler.
 #if defined(__APPLE__)
 
 #include <mach/mach_time.h>
@@ -392,7 +388,7 @@ static struct InitializeTime {
     }
 } initializeTime;
 
-static PaTime util_GetTime(void)
+static double util_GetTime(void)
 {
     return mach_absolute_time() * machSecondsConversionScaler_;
 }
@@ -453,22 +449,22 @@ static double util_GetTime(void)
 
 #include <time.h>
 
-static PaTime util_GetTime(void)
+static double util_GetTime(void)
 {
     struct timespec tp;
     clock_gettime(CLOCK_REALTIME, &tp);
-    return (PaTime)(tp.tv_sec + tp.tv_nsec * 1e-9);
+    return (double)(tp.tv_sec + tp.tv_nsec * 1e-9);
 }
 
 #else
 
 #include <sys/time.h>
 
-static PaTime util_GetTime(void)
+static double util_GetTime(void)
 {
     struct timeval tv;
     gettimeofday(&tv, NULL);
-    return (PaTime)tv.tv_usec * 1e-6 + tv.tv_sec;
+    return (double)tv.tv_usec * 1e-6 + tv.tv_sec;
 }
 
 #endif
@@ -552,7 +548,7 @@ MIDIPlay::~MIDIPlay()
 }
 
 bool MIDIPlay::StartOtherStream(const TransportSequences& tracks,
-                                const PaStreamInfo* info, double, double rate)
+                                const AudioStreamInfo* info, double, double rate)
 {
     mMidiPlaybackTracks.clear();
     for (const auto& pSequence : tracks.otherPlayableSequences) {
@@ -1133,7 +1129,7 @@ void MIDIPlay::AllNotesOff(bool looping)
 }
 
 void MIDIPlay::ComputeOtherTimings(double rate, bool paused,
-                                   const PaStreamCallbackTimeInfo* timeInfo,
+                                   const AudioStreamCallbackTimeInfo* timeInfo,
                                    unsigned long framesPerBuffer)
 {
     if (mCallbackCount++ == 0) {
