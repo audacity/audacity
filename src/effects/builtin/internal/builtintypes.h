@@ -6,8 +6,5 @@
 #include <string_view>
 
 namespace au::effects::builtin {
-// Canonical wire-format identifier for BuiltIn plugin entries in the
-// muse_framework plugin cache. Owned by this module; bridged to the typed
-// EffectFamily enum by au::effects::toWireString / fromWireString.
 inline constexpr std::string_view AUDIO_RESOURCE_TYPE_NAME = "BuiltIn";
 }
