@@ -21,6 +21,10 @@ void UsageInfoService::init()
 {
     settings()->setDefaultValue(SEND_ANONYMOUS_USAGE_INFO_KEY, Val(false));
     settings()->setDefaultValue(INSTANCE_ID_KEY, Val(std::string()));
+
+    if (getSendAnonymousUsageInfo()) {
+        ensureInstanceIdCreated();
+    }
 }
 
 void UsageInfoService::setSendAnonymousUsageInfo(bool allow)
@@ -50,6 +54,11 @@ std::string UsageInfoService::instanceId() const
     return settings()->value(INSTANCE_ID_KEY).toString();
 }
 
+void UsageInfoService::setUserId(const std::string& userId)
+{
+    m_userId = userId;
+}
+
 muse::async::Notification UsageInfoService::usageInfoChanged() const
 {
     return m_usageInfoChanged;
@@ -63,13 +72,15 @@ std::vector<std::pair<std::string, std::string> > UsageInfoService::updateReques
         return params;
     }
 
-    params.emplace_back("audacity-instance-id", instanceId());
+    const std::string id = instanceId();
+    if (id.empty()) {
+        return params;
+    }
 
-    if (authorization()) {
-        const std::string userId = authorization()->accountInfo().id;
-        if (!userId.empty()) {
-            params.emplace_back("user_id", userId);
-        }
+    params.emplace_back("audacity-instance-id", id);
+
+    if (!m_userId.empty()) {
+        params.emplace_back("user_id", m_userId);
     }
 
     return params;

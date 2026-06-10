@@ -20,6 +20,8 @@ public:
 
     virtual std::string instanceId() const = 0;
 
+    virtual void setUserId(const std::string& userId) = 0;
+
     virtual muse::async::Notification usageInfoChanged() const = 0;
 };
 }

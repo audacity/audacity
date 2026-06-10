@@ -14,6 +14,8 @@ public:
 
     std::string instanceId() const override;
 
+    void setUserId(const std::string& userId) override;
+
     muse::async::Notification usageInfoChanged() const override;
 };
 }

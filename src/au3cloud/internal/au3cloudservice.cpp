@@ -83,6 +83,8 @@ void Au3CloudService::init()
     oauthService.ValidateAuth(nullptr, AudiocomTrace::ignore, true);
 
     auto& userService = audacity::cloud::audiocom::GetUserService();
+    usageInfo()->setUserId(userService.GetUserId().ToStdString());
+
     m_userDataSubscription
         = userService.Subscribe(
               [this](const audacity::cloud::audiocom::UserDataChanged&) {
@@ -104,6 +106,7 @@ void Au3CloudService::init()
                 m_authState.set(AuthState(NotAuthorized(NOT_AUTHORIZED.toStdString())));
             }
         }
+        usageInfo()->setUserId(m_accountInfo.id);
         m_accountInfoChanged.notify();
     });
 }

@@ -19,6 +19,10 @@ std::string UsageInfoStub::instanceId() const
     return std::string();
 }
 
+void UsageInfoStub::setUserId(const std::string&)
+{
+}
+
 muse::async::Notification UsageInfoStub::usageInfoChanged() const
 {
     return muse::async::Notification();
