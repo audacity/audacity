@@ -9,10 +9,12 @@ set( SOURCES
    WaveformSettings.h
 )
 set( LIBRARIES
-   PUBLIC
-      au3-fft-interface
-      au3-wave-track-interface
-      wxBase
+PUBLIC
+    au3-fft-interface
+    au3-wave-track-interface
+PRIVATE
+    au3-strings-interface
+    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"
    "" ""

@@ -7,7 +7,7 @@
 #include <QtQml/qqmlregistration.h>
 
 #include "modularity/ioc.h"
-#include "au3cloud/iusageinfo.h"
+#include "usageinfo/iusageinfo.h"
 
 namespace au::appshell {
 class UsageInfoPreferencesModel : public QObject
@@ -15,7 +15,7 @@ class UsageInfoPreferencesModel : public QObject
     Q_OBJECT
     QML_ELEMENT
 
-    muse::GlobalInject<au::au3cloud::IUsageInfo> usageInfo;
+    muse::GlobalInject<au::usageinfo::IUsageInfo> usageInfo;
 
     Q_PROPERTY(bool sendAnonymousUsageInfo READ sendAnonymousUsageInfo WRITE setSendAnonymousUsageInfo NOTIFY sendAnonymousUsageInfoChanged)
 

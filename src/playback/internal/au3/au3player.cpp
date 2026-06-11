@@ -303,6 +303,10 @@ void Au3Player::stop()
     //Make sure to unpause
     audioEngine()->pauseStream(false);
 
+    // Stop the timer once the stream is down; otherwise it ticks past project
+    // close, causing a use-after-free in updatePlaybackPosition().
+    m_timer.stop();
+
     // So that we continue monitoring after playing or recording.
     // also clean the MeterQueues
     Au3Project& project = projectRef();
@@ -544,6 +548,12 @@ muse::secs_t Au3Player::playbackPosition() const
 void Au3Player::updatePlaybackPosition()
 {
     using namespace std::chrono;
+
+    if (!globalContext()->currentProject()) {
+        // Project closed but timer still firing; projectRef() would deref null.
+        m_timer.stop();
+        return;
+    }
 
     const double sampleRate = audioEngine()->getPlaybackSampleRate();
 

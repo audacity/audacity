@@ -259,7 +259,7 @@ void DataUploader::Upload(
         if (callback) {
             callback(ResponseResult {
                     SyncResultCode::UnknownError,
-                    audacity::ToUTF8(XO("File not found").Translation()) });
+                    TranslatableString("cloud-audiocom", "File not found").translated().toStdString() });
         }
 
         return;

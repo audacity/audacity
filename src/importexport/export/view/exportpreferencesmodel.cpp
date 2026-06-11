@@ -34,17 +34,27 @@ QString prepareExtensionsString(const QStringList& extensionList)
 }
 }
 
-std::map<ExportProcessType, std::string> EXPORT_PROCESS_MAPPING {
-    { ExportProcessType::FULL_PROJECT_AUDIO, muse::trc("export", "Export full project audio") },
-    { ExportProcessType::SELECTED_AUDIO, muse::trc("export", "Export selected audio") },
-    { ExportProcessType::AUDIO_IN_LOOP_REGION, muse::trc("export", "Export audio in loop region") },
+const std::map<ExportProcessType, const char*> EXPORT_PROCESS_MAPPING {
+    { ExportProcessType::FULL_PROJECT_AUDIO, QT_TRANSLATE_NOOP("export", "Export full project audio") },
+    { ExportProcessType::SELECTED_AUDIO, QT_TRANSLATE_NOOP("export", "Export selected audio") },
+    { ExportProcessType::AUDIO_IN_LOOP_REGION, QT_TRANSLATE_NOOP("export", "Export audio in loop region") },
     //! NOTE: not implemented yet
     // { ExportProcessType::TRACKS_AS_SEPARATE_AUDIO_FILES,
-    //   muse::trc("export", "Export tracks as a separate audio files (Stems)") },
-    // { ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE, muse::trc("export",
-    //                                                                                  "Export each label as a separate audio file (Chapters)") },
-    // { ExportProcessType::ALL_LABELS_AS_SUBTITLE_FILE, muse::trc("export", "Export all labels as a subtitle file") }
+    //   QT_TRANSLATE_NOOP("export", "Export tracks as a separate audio files (Stems)") },
+    // { ExportProcessType::EACH_LABEL_AS_SEPARATE_AUDIO_FILE,
+    //   QT_TRANSLATE_NOOP("export", "Export each label as a separate audio file (Chapters)") },
+    // { ExportProcessType::ALL_LABELS_AS_SUBTITLE_FILE,
+    //   QT_TRANSLATE_NOOP("export", "Export all labels as a subtitle file") }
 };
+
+QString processName(ExportProcessType type)
+{
+    auto it = EXPORT_PROCESS_MAPPING.find(type);
+    if (it == EXPORT_PROCESS_MAPPING.end()) {
+        return {};
+    }
+    return QString::fromStdString(muse::trc("export", it->second));
+}
 
 const std::vector<int> DEFAULT_SAMPLE_RATE_LIST {
     8000,
@@ -88,7 +98,7 @@ void ExportPreferencesModel::init()
          && !playbackController()->loopRegion().isValid())
         || (exportConfiguration()->processType() == ExportProcessType::SELECTED_AUDIO
             && selectionController()->timeSelectionIsEmpty())) {
-        setCurrentProcess(QString::fromStdString(EXPORT_PROCESS_MAPPING[ExportProcessType::FULL_PROJECT_AUDIO]));
+        setCurrentProcess(processName(ExportProcessType::FULL_PROJECT_AUDIO));
     }
 
     muse::io::path_t displayName = globalContext()->currentProject()->displayName();
@@ -151,14 +161,14 @@ void ExportPreferencesModel::cancel()
 
 QString ExportPreferencesModel::currentProcess() const
 {
-    return QString::fromStdString(EXPORT_PROCESS_MAPPING[exportConfiguration()->processType()]);
+    return processName(exportConfiguration()->processType());
 }
 
 void ExportPreferencesModel::setCurrentProcess(const QString& newProcess)
 {
     ExportProcessType type;
-    for (auto process : EXPORT_PROCESS_MAPPING) {
-        if (newProcess == QString::fromStdString(process.second)) {
+    for (const auto& process : EXPORT_PROCESS_MAPPING) {
+        if (newProcess == processName(process.first)) {
             type = process.first;
         }
     }
@@ -193,7 +203,7 @@ QVariantList ExportPreferencesModel::processList() const
 {
     QVariantList result;
     for (const auto& process : EXPORT_PROCESS_MAPPING) {
-        result << QString::fromStdString(process.second);
+        result << processName(process.first);
     }
 
     return result;

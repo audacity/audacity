@@ -107,7 +107,7 @@ wxString LadspaEffectBase::GetVersion() const
     return "n/a";
 }
 
-TranslatableString LadspaEffectBase::GetDescription() const
+::TranslatableString LadspaEffectBase::GetDescription() const
 {
     return Verbatim(LAT1CTOWX(mData->Copyright));
 }

@@ -27,8 +27,8 @@ TransactionScope::TransactionScope(
     if (!mInTrans) {
         // To do, improve the message
         throw SimpleMessageBoxException(ExceptionType::Internal,
-                                        XO("Database error.  Sorry, but we don't have more details."),
-                                        XO("Warning"),
+                                        TranslatableString("transactions", "Database error.  Sorry, but we don’t have more details."),
+                                        TranslatableString("transactions", "Warning"),
                                         "Error:_Disk_full_or_not_writable"
                                         );
     }

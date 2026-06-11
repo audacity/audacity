@@ -41,7 +41,7 @@ const EffectParameterMethods& PhaserBase::Parameters() const
 // PhaserBase
 //
 
-const ComponentInterfaceSymbol PhaserBase::Symbol { XO("Phaser") };
+const ComponentInterfaceSymbol PhaserBase::Symbol { TranslatableString("builtin-effects", "Phaser") };
 
 std::shared_ptr<EffectInstance> PhaserBase::MakeInstance() const
 {
@@ -66,7 +66,7 @@ ComponentInterfaceSymbol PhaserBase::GetSymbol() const
 
 TranslatableString PhaserBase::GetDescription() const
 {
-    return XO("Combines phase-shifted signals with the original signal");
+    return TranslatableString("builtin-effects", "Combines phase-shifted signals with the original signal");
 }
 
 ManualPageID PhaserBase::ManualPage() const

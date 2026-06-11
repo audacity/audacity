@@ -15,8 +15,8 @@ $copyright (_ "GNU General Public License v2.0 or later")
 ;; https://wiki.audacityteam.org/wiki/Nyquist_Plug-ins_Reference
 
 
-;i18n-hint: "Browse..." is text on a button that launches a file browser.
-$control FILES (_ "Select file(s) to install") file (_ "Browse...") "~/Desktop/" (((_ "Plug-in") (ny NY))
+;i18n-hint: "Browse…" is text on a button that launches a file browser.
+$control FILES (_ "Select file(s) to install") file (_ "Browse…") "~/Desktop/" (((_ "Plug-in") (ny NY))
                       ((_ "Lisp file") (lsp LSP))
                       ((_ "HTML file") (htm HTM html HTML))
                       ((_ "Text file") (txt TXT))
@@ -235,7 +235,7 @@ $control OVERWRITE (_ "Allow overwriting") choice ((_ "Disallow") (_ "Allow")) 0
     ;; Fail
     (3 (_ "Not found or cannot be read:"))
     (4 (_ "Unsupported file type:"))
-    (5 (_ "Files already installed ('Allow Overwriting' disabled):"))
+    (5 (_ "Files already installed (‘Allow Overwriting’ disabled):"))
     (6 (_ "Cannot be written to plug-ins folder:"))))
 
 

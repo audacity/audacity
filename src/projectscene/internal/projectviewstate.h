@@ -110,6 +110,8 @@ public:
     void setLastEditedClip(const trackedit::ClipKey& clipKey) override;
     trackedit::ClipKey lastEditedClip() const override;
 
+    void setEditedItem(const trackedit::TrackItemKey& key) override;
+
     void setItemsBoundaries(const std::set<muse::secs_t>& boundaries) override;
     std::set<muse::secs_t> itemsBoundaries() const override;
     void updateItemsBoundaries(bool excludeCurrentSelection,
@@ -174,6 +176,10 @@ private:
     bool m_moveInitiated = false;
 
     trackedit::ClipKey m_lastEditedClip = trackedit::ClipKey{};
+
+    //! Item currently being moved/trimmed/stretched. Always omitted from m_itemsBoundaries
+    //! while valid, so a drag never snaps the item onto its own edges.
+    trackedit::TrackItemKey m_editedItemKey = trackedit::TrackItemKey{};
 
     //! start/end times the currently moved/trimmed/stretched item can snap to
     std::set<muse::secs_t> m_itemsBoundaries;

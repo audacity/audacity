@@ -92,6 +92,7 @@ set( LIBRARIES
    PRIVATE
    $<$<BOOL:${AU_USE_SBSMS}>:libsbsms>
    $<$<BOOL:${AU_USE_SOUNDTOUCH}>:soundtouch>
+   au3-strings-interface
    wxBase
 )
 set( DEFINES

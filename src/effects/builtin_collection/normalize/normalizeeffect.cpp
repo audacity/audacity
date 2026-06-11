@@ -10,11 +10,15 @@
 ***********************************************************************/
 #include "normalizeeffect.h"
 
+#include <cmath>
+
+#include "framework/global/types/translatablestring.h"
+
 #include "au3-effects/EffectOutputTracks.h"
 #include "au3-command-parameters/ShuttleAutomation.h"
+#include "au3-strings/TranslatableString.h"
 #include "au3-wave-track/WaveChannelUtilities.h"
 #include "au3-wave-track/WaveTrack.h"
-#include <cmath>
 
 namespace au::effects {
 const EffectParameterMethods& NormalizeEffect::Parameters() const
@@ -25,7 +29,7 @@ const EffectParameterMethods& NormalizeEffect::Parameters() const
     return parameters;
 }
 
-const ComponentInterfaceSymbol NormalizeEffect::Symbol { XO("Normalize") };
+const ComponentInterfaceSymbol NormalizeEffect::Symbol { TranslatableString("effects-normalize", "Normalize") };
 
 NormalizeEffect::NormalizeEffect()
 {
@@ -44,9 +48,9 @@ ComponentInterfaceSymbol NormalizeEffect::GetSymbol() const
     return Symbol;
 }
 
-TranslatableString NormalizeEffect::GetDescription() const
+::TranslatableString NormalizeEffect::GetDescription() const
 {
-    return XO("Sets the peak amplitude of one or more tracks");
+    return ::TranslatableString("effects-normalize", "Sets the peak amplitude of one or more tracks");
 }
 
 ManualPageID NormalizeEffect::ManualPage() const
@@ -89,13 +93,13 @@ bool NormalizeEffect::Process(EffectInstance&, EffectSettings&)
     double progress = 0;
     TranslatableString topMsg;
     if (mDC && mGain) {
-        topMsg = XO("Removing DC offset and Normalizing...\n");
+        topMsg = TranslatableString("effects-normalize", "Removing DC offset and Normalizing…\n");
     } else if (mDC && !mGain) {
-        topMsg = XO("Removing DC offset...\n");
+        topMsg = TranslatableString("effects-normalize", "Removing DC offset…\n");
     } else if (!mDC && mGain) {
-        topMsg = XO("Normalizing without removing DC offset...\n");
+        topMsg = TranslatableString("effects-normalize", "Normalizing without removing DC offset…\n");
     } else if (!mDC && !mGain) {
-        topMsg = XO("Not doing anything...\n"); // shouldn't get here
+        topMsg = TranslatableString("effects-normalize", "Not doing anything…\n"); // shouldn't get here
     }
     for (auto track : outputs.Get().Selected<WaveTrack>()) {
         // Get start and end times from track
@@ -119,11 +123,14 @@ bool NormalizeEffect::Process(EffectInstance&, EffectSettings&)
             // mono or 'stereo tracks independently'
             const bool oneChannel = (channels.size() == 1 || mStereoInd);
             auto msg = oneChannel
-                       ? topMsg + XO("Analyzing: %s").Format(trackName)
-                       : topMsg
-                       +  // TODO: more-than-two-channels-message
-                       XO("Analyzing first track of stereo pair: %s")
-                       .Format(trackName);
+                       ? ::TranslatableString::untranslatable(
+                //: %1 is the name of the track being analyzed
+                topMsg.translated() + TranslatableString("effects-normalize", "Analyzing: %1").arg(trackName).translated())
+                       // TODO: more-than-two-channels-message
+                       : ::TranslatableString::untranslatable(
+                //: %1 is the name of the track being analyzed
+                topMsg.translated() + TranslatableString("effects-normalize", "Analyzing first track of stereo pair: %1").arg(
+                    trackName).translated());
 
             const auto progressReport = [&](double fraction) {
                 return !TotalProgress(
@@ -146,26 +153,34 @@ bool NormalizeEffect::Process(EffectInstance&, EffectSettings&)
                 offsets.push_back(offset);
                 // TODO: more-than-two-channels-message
                 if (!oneChannel) {
-                    msg = topMsg + XO("Analyzing second track of stereo pair: %s")
-                          .Format(trackName);
+                    msg = ::TranslatableString::untranslatable(
+                        topMsg.translated()
+                        //: %1 is the name of the track being analyzed
+                        + TranslatableString("effects-normalize", "Analyzing second track of stereo pair: %1").arg(trackName).translated());
                 }
             }
 
             if (oneChannel) {
                 if (track->NChannels() == 1) {
                     // really mono
-                    msg = topMsg + XO("Processing: %s").Format(trackName);
+                    msg = ::TranslatableString::untranslatable(
+                        //: %1 is the name of the track being processed
+                        topMsg.translated() + TranslatableString("effects-normalize", "Processing: %1").arg(trackName).translated());
                 } else {
                     //'stereo tracks independently'
                     // TODO: more-than-two-channels-message
-                    msg = topMsg + XO("Processing stereo channels independently: %s")
-                          .Format(trackName);
+                    msg = ::TranslatableString::untranslatable(
+                        topMsg.translated()
+                        //: %1 is the name of the track being processed
+                        + TranslatableString("effects-normalize", "Processing stereo channels independently: %1").arg(
+                            trackName).translated());
                 }
             } else {
-                msg = topMsg
-                      +// TODO: more-than-two-channels-message
-                      XO("Processing first track of stereo pair: %s")
-                      .Format(trackName);
+                // TODO: more-than-two-channels-message
+                msg = ::TranslatableString::untranslatable(
+                    //: %1 is the name of the track being processed
+                    topMsg.translated() + TranslatableString("effects-normalize", "Processing first track of stereo pair: %1").arg(
+                        trackName).translated());
             }
 
             // Use multiplier in the second, processing loop over channels
@@ -184,8 +199,10 @@ bool NormalizeEffect::Process(EffectInstance&, EffectSettings&)
                     goto break2;
                 }
                 // TODO: more-than-two-channels-message
-                msg = topMsg + XO("Processing second track of stereo pair: %s")
-                      .Format(trackName);
+                msg = ::TranslatableString::untranslatable(
+                    topMsg.translated()
+                    //: %1 is the name of the track being processed
+                    + TranslatableString("effects-normalize", "Processing second track of stereo pair: %1").arg(trackName).translated());
             }
         }
     }
@@ -300,7 +317,7 @@ bool NormalizeEffect::AnalyseTrackData(
 // uses mMult and offset to normalize a track.
 // mMult must be set before this is called
 bool NormalizeEffect::ProcessOne(
-    WaveChannel& track, const TranslatableString& msg, double& progress,
+    WaveChannel& track, const ::TranslatableString& msg, double& progress,
     float offset)
 {
     bool rc = true;

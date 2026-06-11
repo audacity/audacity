@@ -30,30 +30,30 @@ TranslatableString GetOpusEncErrorString(int error)
 {
     switch (error) {
     case OPUS_OK:
-        return XO("no error");
+        return TranslatableString("import-export", "no error");
     case OPUS_BAD_ARG:
-        return XO("invalid argument");
+        return TranslatableString("import-export", "invalid argument");
     case OPUS_BUFFER_TOO_SMALL:
-        return XO("buffer too small");
+        return TranslatableString("import-export", "buffer too small");
     case OPUS_INTERNAL_ERROR:
-        return XO("internal error");
+        return TranslatableString("import-export", "internal error");
     case OPUS_INVALID_PACKET:
-        return XO("invalid packet");
+        return TranslatableString("import-export", "invalid packet");
     case OPUS_UNIMPLEMENTED:
-        return XO("not implemented");
+        return TranslatableString("import-export", "not implemented");
     case OPUS_INVALID_STATE:
-        return XO("invalid state");
+        return TranslatableString("import-export", "invalid state");
     case OPUS_ALLOC_FAIL:
-        return XO("memory allocation has failed");
+        return TranslatableString("import-export", "memory allocation has failed");
     default:
-        return XO("Unknown error");
+        return TranslatableString("import-export", "Unknown error");
     }
 }
 
 [[noreturn]] void FailExport(const TranslatableString& title, int errorCode = 0)
 {
     if (errorCode != 0) {
-        throw ExportException(Verbatim("%s: %s")
+        throw ExportException(TranslatableString::untranslatable("%1: %2")
                                   .Format(title, GetOpusEncErrorString(errorCode))
                                   .Translation());
     }
@@ -116,7 +116,7 @@ class OpusExportProcessor final : public ExportProcessor
                     Resize(std::max<size_t>(1024, buffer.size() * 2));
                 } else {
                     FailExport(
-                        XO("Buffer overflow in OGG packet"), OPUS_BUFFER_TOO_SMALL);
+                        TranslatableString("import-export", "Buffer overflow in OGG packet"), OPUS_BUFFER_TOO_SMALL);
                 }
             }
 
@@ -246,11 +246,11 @@ class OpusExportProcessor final : public ExportProcessor
                 if (
                     outputStream.Write(page.header, page.header_len)
                     != page.header_len) {
-                    FailExport(XO("Unable to write OGG page header"));
+                    FailExport(TranslatableString("import-export", "Unable to write OGG page header"));
                 }
 
                 if (outputStream.Write(page.body, page.body_len) != page.body_len) {
-                    FailExport(XO("Unable to write OGG page"));
+                    FailExport(TranslatableString("import-export", "Unable to write OGG page"));
                 }
             }
         } ogg;

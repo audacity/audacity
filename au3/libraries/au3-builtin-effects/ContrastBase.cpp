@@ -26,13 +26,13 @@ bool ContrastBase::GetDB(float& dB)
     using namespace BasicUI;
     if (numberSelectedTracks > 1) {
         ShowMessageBox(
-            XO("You can only measure one track at a time."),
+            TranslatableString("builtin-effects", "You can only measure one track at a time."),
             MessageBoxOptions {}.IconStyle(Icon::Error));
         return false;
     }
     if (numberSelectedTracks == 0) {
         ShowMessageBox(
-            XO("Please select an audio track."),
+            TranslatableString("builtin-effects", "Please select an audio track."),
             MessageBoxOptions {}.IconStyle(Icon::Error));
         return false;
     }
@@ -49,14 +49,14 @@ bool ContrastBase::GetDB(float& dB)
 
         if (SelT0 > SelT1) {
             ShowMessageBox(
-                XO("Invalid audio selection.\nPlease ensure that audio is selected."),
+                TranslatableString("builtin-effects", "Invalid audio selection.\nPlease ensure that audio is selected."),
                 MessageBoxOptions {}.IconStyle(Icon::Error));
             return false;
         }
 
         if (SelT0 == SelT1) {
             ShowMessageBox(
-                XO("Nothing to measure.\nPlease select a section of a track."),
+                TranslatableString("builtin-effects", "Nothing to measure.\nPlease select a section of a track."),
                 MessageBoxOptions {}.IconStyle(Icon::Error));
             return false;
         }

@@ -135,7 +135,8 @@ void CustomFFmpegPreferencesModel::setFFmpegLibraryPath(const QString& path)
     if (!path.contains("avformat")) {
         interactive()->error(
             muse::trc("preferences", "Error"),
-            muse::qtrc("preferences", "Please select a path that contains %1").arg(avformatString()).toStdString()
+            //: %1 is the FFmpeg avformat library file name (e.g. libavformat.dylib)
+            muse::qtrc("preferences", "Please select a path that contains “%1”").arg(avformatString()).toStdString()
             );
         return;
     }

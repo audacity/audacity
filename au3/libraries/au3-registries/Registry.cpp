@@ -172,9 +172,9 @@ void BadPath(
     // Warn, but not more than once in a session for each bad path
     auto badPath = key + '/' + name.GET();
     if (sBadPaths.insert(badPath).second) {
-        auto msg = TranslatableString{ format }.Format(badPath);
+        auto msg = format.Format(badPath);
         // debug message
-        wxLogDebug(msg.Translation());
+        wxLogDebug("%s", msg.Translation());
 #ifdef IS_ALPHA
         // user-visible message
         BasicUI::ShowMessageBox(msg);
@@ -185,21 +185,24 @@ void BadPath(
 void ReportGroupGroupCollision(const wxString& key, const Identifier& name)
 {
     BadPath(
-        XO("Plug-in group at %s was merged with a previously defined group"),
+        //: %1 is the registry path of the merged plug-in group
+        TranslatableString("registries", "Plug-in group at %1 was merged with a previously defined group"),
         key, name);
 }
 
 void ReportItemItemCollision(const wxString& key, const Identifier& name)
 {
     BadPath(
-        XO("Plug-in item at %s conflicts with a previously defined item and was discarded"),
+        //: %1 is the registry path of the conflicting plug-in item
+        TranslatableString("registries", "Plug-in item at %1 conflicts with a previously defined item and was discarded"),
         key, name);
 }
 
 void ReportConflictingPlacements(const wxString& key, const Identifier& name)
 {
     BadPath(
-        XO("Plug-in items at %s specify conflicting placements"),
+        //: %1 is the registry path of the conflicting plug-in items
+        TranslatableString("registries", "Plug-in items at %1 specify conflicting placements"),
         key, name);
 }
 

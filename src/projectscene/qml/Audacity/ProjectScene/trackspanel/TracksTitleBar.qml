@@ -113,7 +113,7 @@ Item {
         Rectangle {
             id: buttonContainer
 
-            color: ui.theme.backgroundPrimaryColor
+            color: ui.theme.backgroundSecondaryColor
 
             width: root.verticalPanelDefaultWidth
             Layout.fillWidth: true

@@ -102,7 +102,7 @@ void SelectionViewController::onPressed(double x, double y, spectrogram::Spectro
     }
     emit pressedSpectrogramChanged();
 
-    viewState()->updateItemsBoundaries(true);
+    viewState()->updateItemsBoundaries(false);
 
     m_autoScrollConnection = connect(m_context, &TimelineContext::frameTimeChanged, [this]() {
         doOnPositionChanged(m_lastPoint.x(), m_lastPoint.y());

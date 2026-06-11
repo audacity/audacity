@@ -13,6 +13,7 @@ set( LIBRARIES
       PRIVATE
       SndFile::sndfile
       au3-math-interface
+      au3-strings-interface
       wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

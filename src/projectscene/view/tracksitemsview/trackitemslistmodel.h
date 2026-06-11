@@ -66,7 +66,8 @@ public:
     Q_INVOKABLE QVariant next(const TrackItemKey& key) const;
     Q_INVOKABLE QVariant prev(const TrackItemKey& key) const;
 
-    Q_INVOKABLE QVariant findGuideline(const TrackItemKey& key, DirectionType::Direction direction) const;
+    Q_INVOKABLE bool containsItem(const TrackItemKey& key) const;
+    Q_INVOKABLE double findGuideline(const TrackItemKey& key, DirectionType::Direction direction) const;
 
     Q_INVOKABLE void setFocusedItem(const TrackItemKey& key);
     Q_INVOKABLE void resetFocusedItem();
@@ -120,8 +121,9 @@ protected:
         int trackOffset = 0;
     };
     MoveOffset calculateMoveOffset(const ViewTrackItem* item, const TrackItemKey& key,
-                                   const std::vector<trackedit::TrackType>& trackTypesAllowedToMove, bool completed) const;
-    trackedit::secs_t calculateTimePositionOffset(const ViewTrackItem* item) const;
+                                   const std::vector<trackedit::TrackType>& trackTypesAllowedToMove, bool completed,
+                                   bool applySnap = true) const;
+    trackedit::secs_t calculateTimePositionOffset(const ViewTrackItem* item, bool applySnap = true) const;
 
     int calculateTrackPositionOffset(const TrackItemKey& key, const std::vector<trackedit::TrackType>& trackTypesAllowedToMove) const;
     bool isAllowedToMoveToTracks(const std::vector<trackedit::TrackType>& allowedTrackTypes, const trackedit::TrackId& movedTrackId) const;
@@ -130,6 +132,7 @@ protected:
 
     friend class TrackClipsSelectionTests;
     friend class TrackLabelsSelectionTests;
+    friend class TrackItemsFindGuidelineTests;
 
     TimelineContext* m_context = nullptr;
     trackedit::TrackId m_trackId = -1;

@@ -36,7 +36,7 @@ public:
     ComponentInterfaceSymbol GetSymbol() const override;
     VendorSymbol GetVendor() const override;
     wxString GetVersion() const override;
-    TranslatableString GetDescription() const override;
+    ::TranslatableString GetDescription() const override;
 
     // EffectDefinitionInterface implementation
 

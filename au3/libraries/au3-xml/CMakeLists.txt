@@ -25,6 +25,7 @@ set( LIBRARIES
    au3-string-utils-interface
    PRIVATE
    expat::expat
+   au3-strings-interface
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

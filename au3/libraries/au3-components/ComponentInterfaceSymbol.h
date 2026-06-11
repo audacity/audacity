@@ -29,32 +29,32 @@ public:
     ComponentInterfaceSymbol() = default;
 
     // Allows implicit construction from a msgid re-used as an internal string
-    ComponentInterfaceSymbol(const TranslatableString& msgid)
-        : mInternal{msgid.MSGID().GET(), }, mMsgid{msgid}
+    ComponentInterfaceSymbol(const ::TranslatableString& msgid)
+        : mInternal{au3::qtToWx(msgid.msgid())}, mMsgid{msgid}
     {}
 
     // Allows implicit construction from an internal string re-used as a msgid
     ComponentInterfaceSymbol(const wxString& internal)
-        : mInternal{internal}, mMsgid{internal, {}}
+        : mInternal{internal}, mMsgid{::TranslatableString::untranslatable(internal)}
     {}
 
     // Allows implicit construction from an internal string re-used as a msgid
     ComponentInterfaceSymbol(const wxChar* msgid)
-        : mInternal{msgid}, mMsgid{msgid, {}}
+        : mInternal{msgid}, mMsgid{::TranslatableString::untranslatable(wxString(msgid))}
     {}
 
     // Two-argument version distinguishes internal from translatable string
     // such as when the first squeezes spaces out
     ComponentInterfaceSymbol(const Identifier& internal,
-                             const TranslatableString& msgid)
+                             const ::TranslatableString& msgid)
         : mInternal{internal.GET()}
         // Do not permit non-empty msgid with empty internal
-        , mMsgid{internal.empty() ? TranslatableString {} : msgid}
+        , mMsgid{internal.empty() ? ::TranslatableString {} : msgid}
     {}
 
     const wxString& Internal() const { return mInternal; }
-    const TranslatableString& Msgid() const { return mMsgid; }
-    const TranslatableString Stripped() const { return mMsgid.Stripped(); }
+    const ::TranslatableString& Msgid() const { return mMsgid; }
+    const ::TranslatableString Stripped() const { return mMsgid.stripped(); }
     const wxString Translation() const { return mMsgid.Translation(); }
     const wxString StrippedTranslation() const
     { return Stripped().Translation(); }
@@ -77,7 +77,7 @@ public:
 
 private:
     wxString mInternal;
-    TranslatableString mMsgid;
+    ::TranslatableString mMsgid;
 };
 
 // TODO: real type distinctions for these aliases, and move them elsewhere

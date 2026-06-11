@@ -61,10 +61,7 @@ void PlayCursorController::seekToX(double x, bool triggerPlay)
         return;
     }
 
-    const IProjectViewStatePtr viewState = projectViewState();
-    const bool snapEnabled = viewState ? viewState->isSnapEnabled() : false;
-
-    const double secs = m_context->positionToTime(x, snapEnabled);
+    const double secs = m_context->positionToTime(x, /*withSnap*/ true);
     muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
     q.addParam("triggerPlay", muse::Val(triggerPlay));
     if (muse::RealIsEqualOrMore(secs, 0.0)) {
@@ -78,11 +75,8 @@ void PlayCursorController::seekToX(double x, bool triggerPlay)
 
 void PlayCursorController::setPlaybackRegion(double x1, double x2)
 {
-    const IProjectViewStatePtr viewState = projectViewState();
-    const bool snapEnabled = viewState ? viewState->isSnapEnabled() : false;
-
-    const double start = std::max(0.0, m_context->positionToTime(x1, snapEnabled));
-    const double end = std::max(0.0, m_context->positionToTime(x2, snapEnabled));
+    const double start = std::max(0.0, m_context->positionToTime(x1, /*withSnap*/ true));
+    const double end = std::max(0.0, m_context->positionToTime(x2, /*withSnap*/ true));
 
     muse::actions::ActionQuery q(PLAYBACK_CHANGE_PLAY_REGION_QUERY);
     q.addParam("start", muse::Val(start));
@@ -93,12 +87,6 @@ void PlayCursorController::setPlaybackRegion(double x1, double x2)
 au::context::IPlaybackStatePtr PlayCursorController::playbackState() const
 {
     return globalContext()->playbackState();
-}
-
-IProjectViewStatePtr PlayCursorController::projectViewState() const
-{
-    project::IAudacityProjectPtr project = globalContext()->currentProject();
-    return project ? project->viewState() : nullptr;
 }
 
 void PlayCursorController::updatePositionX(muse::secs_t secs)
@@ -139,6 +127,8 @@ void PlayCursorController::updatePositionX(muse::secs_t secs)
                 }
             }
         }
+    } else {
+        m_context->insureVisible(secs);
     }
 
     m_positionX = m_context->timeToPosition(secs);

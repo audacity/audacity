@@ -26,49 +26,34 @@ extern STRINGS_API const wxString& GetCustomSubstitution(const wxString& str1);
 // Marks string for substitution only.
 #define _TS(s) GetCustomSubstitution(s)
 
-// Marks strings for extraction only... use .Translate() to translate.
-// '&', preceding menu accelerators, should NOT occur in the argument.
-#define XO(s)  (::TranslatableString{ wxT(s), {} })
+// Legacy XO/XC/XXO/XP family. The macros wrap an untranslatable string, so
+// any surviving call site is NOT translated. Two kinds of code still use them:
+//   - effect-host libs not yet migrated (vst, lv2, ladspa, ...) -- these
+//     should be rewritten to explicit ::TranslatableString("ctx", s) so
+//     lupdate can extract the catalogue key;
+//   - legacy wx-based UI (wx dialogs, ShuttleGui, ...) that au4 no longer
+//     uses and will not be migrated.
+#define XO(s)        ::TranslatableString::untranslatable(s)
+#define XC(s, c)     ::TranslatableString::untranslatable(s)
+#define XXO(s)       XO(s)
+#define XXC(s, c)    XC(s, c)
+#define XP(sing, plur, n)        ::TranslatableString::untranslatable(sing)
+#define XPC(sing, plur, n, c)    ::TranslatableString::untranslatable(sing)
 
-// Alternative taking a second context argument.  A context is a string literal,
-// which is not translated, but serves to disambiguate uses of the first string
-// that might need differing translations, such as "Light" meaning not-heavy in
-// one place but not-dark elsewhere.
-#define XC(s, c)  (::TranslatableString{ wxT(s), {} }.Context(c))
-
-// Marks strings for extraction only, where '&', preceding menu accelerators, MAY
-// occur.
-// For now, expands exactly as macro XO does, but in future there will be a
-// type distinction - for example XXO should be used for menu item names that
-// might use the & character for shortcuts.
-#define XXO(s)  XO(s)
-
-// Corresponds to XC as XXO does to XO
-#define XXC(s, c) XC(s, c)
-
-#ifdef XP
-   #undef XP
-#endif
-
-// The two string arguments will go to the .pot file, as
-// msgid sing
-// msgid_plural plural
-//
-// (You must use plain string literals.  Do not use _() or wxT() or L prefix,
-//  which (intentionally) will fail to compile.  The macro inserts wxT).
-//
-// Note too:  The i18n-hint comment must be on the line preceding the first
-// string.  That might be inside the parentheses of the macro call.
-//
-// The macro call is then followed by a sequence of format arguments in
-// parentheses.  The third argument of the macro call is the zero-based index
-// of the format argument that selects singular or plural
-#define XP(sing, plur, n) \
-    ::TranslatableString{ wxT(sing), {} }.Plural<(n)>(wxT(plur))
-
-// Like XP but with an additional context argument, as for XC
-#define XPC(sing, plur, n, c) \
-    ::TranslatableString{ wxT(sing), {} }.Context(c).Plural<(n)>(wxT(plur))
+// Legacy Verbatim() free function. Wraps a string as a no-context
+// TranslatableString. Overloaded for the actual call-site types.
+inline ::TranslatableString Verbatim(const char* s)
+{
+    return ::TranslatableString::untranslatable(s);
+}
+inline ::TranslatableString Verbatim(const wxString& s)
+{
+    return au3::untranslatable(s);
+}
+inline ::TranslatableString Verbatim(const std::string& s)
+{
+    return ::TranslatableString::untranslatable(QString::fromStdString(s));
+}
 
 class STRINGS_API Internat
 {

@@ -124,7 +124,7 @@ public:
         Refresh();
     }
 
-    void SetValue(const TranslatableString& value)
+    void SetValue(const ::TranslatableString& value)
     {
         SetValue(value.Translation());
     }

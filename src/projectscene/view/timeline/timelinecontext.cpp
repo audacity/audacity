@@ -860,12 +860,29 @@ double TimelineContext::findGuideline(double time) const
             return time;
         }
     } else {
-        if (muse::contains(vs->itemsBoundaries(), static_cast<muse::secs_t>(time))) {
-            return time;
+        // A clip can snap to a label whose boundary is not sample-aligned, but the snapped
+        // clip edge is quantized to a sample, so the two land a fraction of a sample apart.
+        // Match the nearest boundary within a sample (like the snap-enabled branch above)
+        // and return the boundary itself so the guideline draws precisely on its edge.
+        const std::set<muse::secs_t> boundaries = vs->itemsBoundaries();
+        const auto upper = boundaries.lower_bound(time);
+        if (upper != boundaries.end() && muse::RealIsEqualOrLess(std::abs(*upper - time), LIMIT)) {
+            return *upper;
+        }
+        if (upper != boundaries.begin()) {
+            const auto lower = std::prev(upper);
+            if (muse::RealIsEqualOrLess(std::abs(*lower - time), LIMIT)) {
+                return *lower;
+            }
         }
     }
 
-    return -1.0;
+    return INVALID_GUIDELINE_TIME;
+}
+
+bool TimelineContext::isGuidelineValid(double guidelineTime) const
+{
+    return !muse::RealIsEqual(guidelineTime, INVALID_GUIDELINE_TIME);
 }
 
 void TimelineContext::updateMousePositionTime(double mouseX)

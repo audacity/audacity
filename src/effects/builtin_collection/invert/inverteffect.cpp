@@ -1,5 +1,7 @@
 #include "inverteffect.h"
+
 #include "au3-effects/LoadEffects.h"
+#include "au3-strings/TranslatableString.h"
 
 namespace au::effects {
 InvertEffect::InvertEffect()
@@ -10,7 +12,7 @@ InvertEffect::~InvertEffect()
 {
 }
 
-const ComponentInterfaceSymbol InvertEffect::Symbol { XO("Invert") };
+const ComponentInterfaceSymbol InvertEffect::Symbol { TranslatableString("effects-invert", "Invert") };
 
 // ComponentInterface implementation
 
@@ -19,9 +21,9 @@ ComponentInterfaceSymbol InvertEffect::GetSymbol() const
     return Symbol;
 }
 
-TranslatableString InvertEffect::GetDescription() const
+::TranslatableString InvertEffect::GetDescription() const
 {
-    return XO("Flips the audio samples upside-down, reversing their polarity");
+    return ::TranslatableString("effects-invert", "Flips the audio samples upside-down, reversing their polarity");
 }
 
 // EffectDefinitionInterface implementation

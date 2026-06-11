@@ -147,8 +147,10 @@ MenuItemList AudioSetupContextMenuModel::makeInputChannelsItems()
 
     auto channelName = [](int channelNumber) -> QString {
         return channelNumber == 1
+               //: %1 is the recording channel number
                ? muse::qtrc("projectscene/toolbars", "%1 (Mono) Recording channel").arg(channelNumber)
                : channelNumber == 2
+               //: %1 is the recording channel number
                ? muse::qtrc("projectscene/toolbars", "%1 (Stereo) Recording channels").arg(channelNumber)
                : QString::number(channelNumber);
     };

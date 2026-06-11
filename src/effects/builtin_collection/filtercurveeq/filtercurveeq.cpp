@@ -3,8 +3,10 @@
  */
 #include "filtercurveeq.h"
 
+#include "au3-strings/TranslatableString.h"
+
 namespace au::effects {
-const ComponentInterfaceSymbol FilterCurveEq::Symbol{ wxT("Filter Curve"), XO("Filter Curve EQ") };
+const ComponentInterfaceSymbol FilterCurveEq::Symbol{ wxT("Filter Curve"), TranslatableString("effects-filtercurveeq", "Filter Curve EQ") };
 
 FilterCurveEq::FilterCurveEq()
     : EqualizationBase{kEqOptionCurve}

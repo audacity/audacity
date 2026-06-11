@@ -74,7 +74,7 @@ wxString VSTEffectBase::GetVersion() const
     return version;
 }
 
-TranslatableString VSTEffectBase::GetDescription() const
+::TranslatableString VSTEffectBase::GetDescription() const
 {
     // VST does have a product string opcode and some effects return a short
     // description, but most do not or they just return the name again.  So,

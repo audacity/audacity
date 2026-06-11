@@ -71,7 +71,7 @@ DeduceUploadError(audacity::network_manager::IResponse& response)
 CloudSyncError MakeClientFailure(const TranslatableString& message)
 {
     return { CloudSyncError::ClientFailure,
-             audacity::ToUTF8(message.Translation()) };
+             message.translated().toStdString() };
 }
 
 CloudSyncError MakeClientFailure(const std::string& message)

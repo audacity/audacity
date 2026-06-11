@@ -37,6 +37,7 @@ class VolumePressureMeterItemBase : public QQuickPaintedItem
     Q_PROPERTY(QColor gradientColorYellow READ gradientColorYellow WRITE setGradientColorYellow NOTIFY gradientColorYellowChanged)
     Q_PROPERTY(QColor gradientColorRed READ gradientColorRed WRITE setGradientColorRed NOTIFY gradientColorRedChanged)
     Q_PROPERTY(QColor meterBackgroundColor READ meterBackgroundColor WRITE setMeterBackgroundColor NOTIFY meterBackgroundColorChanged)
+    Q_PROPERTY(QColor meterStrokeColor READ meterStrokeColor WRITE setMeterStrokeColor NOTIFY meterStrokeColorChanged)
     Q_PROPERTY(QColor maxPeakMarkerColor READ maxPeakMarkerColor WRITE setMaxPeakMarkerColor NOTIFY maxPeakMarkerColorChanged)
 
 public:
@@ -92,6 +93,9 @@ public:
     QColor meterBackgroundColor() const { return m_meterBackgroundColor; }
     void setMeterBackgroundColor(const QColor& c);
 
+    QColor meterStrokeColor() const { return m_meterStrokeColor; }
+    void setMeterStrokeColor(const QColor& c);
+
     QColor maxPeakMarkerColor() const { return m_maxPeakMarkerColor; }
     void setMaxPeakMarkerColor(const QColor& c);
 
@@ -111,6 +115,7 @@ signals:
     void gradientColorYellowChanged();
     void gradientColorRedChanged();
     void meterBackgroundColorChanged();
+    void meterStrokeColorChanged();
     void maxPeakMarkerColorChanged();
 
 protected:
@@ -155,6 +160,7 @@ private:
     QColor m_gradientColorYellow;
     QColor m_gradientColorRed;
     QColor m_meterBackgroundColor;
+    QColor m_meterStrokeColor;
     QColor m_maxPeakMarkerColor;
 };
 }

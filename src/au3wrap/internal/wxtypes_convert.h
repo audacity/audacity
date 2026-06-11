@@ -29,14 +29,6 @@ inline wxString wxFromStdString(const std::string& s)
 {
     return wxString::FromUTF8(s);
 }
-
-#ifndef NO_QT_SUPPORT
-inline QString wxToQString(const wxString& s)
-{
-    return QString::fromStdWString(s.ToStdWstring());
-}
-
-#endif
 }
 
 #endif // AU_AU3WRAP_WXTYPES_CONVERT_H

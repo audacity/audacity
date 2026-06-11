@@ -15,7 +15,7 @@
 
 #include <vorbis/vorbisfile.h>
 
-#define DESC XO("Ogg Vorbis files")
+#define DESC TranslatableString("import-export", "Ogg Vorbis files")
 
 class OggImportPlugin final : public ImportPlugin
 {

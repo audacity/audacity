@@ -58,7 +58,7 @@ void Discover(detail::PluginValidationResult& result, const wxString& providerId
                 return id;
             });
             if (!errorMessage.empty()) {
-                result.SetError(errorMessage.Debug());
+                result.SetError(au3::qtToWx(errorMessage.debugStr()));
             } else if (numPlugins == 0) {
                 result.SetError("no plugins found");
             }

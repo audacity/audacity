@@ -87,6 +87,7 @@ void EffectPresetsScenario::deletePreset(const EffectId& effectId, const PresetI
 {
     IInteractive::Result res = interactive()->questionSync(
         muse::trc("effects", "Delete preset"),
+        //: %1 is the name of the preset to delete
         muse::mtrc("effects", "Are you sure you want to delete “%1”?")
         .arg(au3::wxToString(presetId)).toStdString(),
         { IInteractive::Button::No, IInteractive::Button::Yes });
@@ -130,8 +131,10 @@ void EffectPresetsScenario::importPreset(const EffectInstanceId& effectInstanceI
     if (!ret) {
         std::string msg;
         if (ret.code() == (int)Err::PresetNotValid) {
+            //: %1 is the path of the preset file being imported
             msg = muse::mtrc("effects", "%1: is not a valid presets file.").arg(path.toString()).toStdString();
         } else if (ret.code() == (int)Err::PresetMismatch) {
+            //: %1 is the path of the preset file being imported
             msg = muse::mtrc("effects", "%1: is for a different Effect, Generator or Analyzer.").arg(path.toString()).toStdString();
         }
 

@@ -31,10 +31,10 @@ constexpr size_t Get10Pow(size_t pow)
     return pow > 0 ? 10 * Get10Pow(pow - 1) : 1;
 }
 
-/* i18n-hint: The music theory "bar" */
-const auto BarString = XO("bar");
-/* i18n-hint: The music theory "beat" */
-const auto BeatString = XO("beat");
+/*: The music theory "bar" */
+const auto BarString = TranslatableString("numeric-formats", "bar");
+/*: The music theory "beat" */
+const auto BeatString = TranslatableString("numeric-formats", "beat");
 
 class BeatsFormatter final : public NumericConverterFormatter, public PrefsListener
 {
@@ -389,13 +389,13 @@ auto BuildBeatsGroup(bool timeFormat)
         timeFormat ? "beatsTime" : "beatsDuration",
         timeFormat ? NumericConverterType_TIME() : NumericConverterType_DURATION(),
         NumericConverterFormatterItem(
-            /* i18n-hint: "bar" and "beat" are musical notation elements. */
-            "beats", XO("bar:beat"),
+            /*: "bar" and "beat" are musical notation elements. */
+            "beats", TranslatableString("numeric-formats", "bar:beat"),
             std::make_unique<BeatsNumericConverterFormatterFactory>(0, timeFormat)),
         NumericConverterFormatterItem(
-            /* i18n-hint: "bar" and "beat" are musical notation elements. "tick"
+            /*: "bar" and "beat" are musical notation elements. "tick"
                corresponds to a 16th note.  */
-            "beats16", XO("bar:beat:tick"),
+            "beats16", TranslatableString("numeric-formats", "bar:beat:tick"),
             std::make_unique<BeatsNumericConverterFormatterFactory>(16, timeFormat)));
 }
 

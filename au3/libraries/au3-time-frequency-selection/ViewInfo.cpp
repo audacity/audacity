@@ -228,7 +228,7 @@ void PlayRegion::Notify()
     Publish({});
 }
 
-const TranslatableString LoopToggleText = XXO("Enable &Looping");
+const TranslatableString LoopToggleText = TranslatableString("time-frequency-selection", "Enable &Looping");
 
 static const AudacityProject::AttachedObjects::RegisteredFactory key{
     []( AudacityProject& project ) {

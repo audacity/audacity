@@ -42,6 +42,7 @@ set( LIBRARIES
    au3-utility
    au3-preferences-interface
    au3-exceptions
+   au3-strings-interface
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

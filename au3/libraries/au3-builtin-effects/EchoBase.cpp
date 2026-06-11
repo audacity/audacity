@@ -18,7 +18,7 @@ const EffectParameterMethods& EchoBase::Parameters() const
     return parameters;
 }
 
-const ComponentInterfaceSymbol EchoBase::Symbol { XO("Echo") };
+const ComponentInterfaceSymbol EchoBase::Symbol { TranslatableString("builtin-effects", "Echo") };
 
 EchoBase::EchoBase()
 {
@@ -38,7 +38,7 @@ ComponentInterfaceSymbol EchoBase::GetSymbol() const
 
 TranslatableString EchoBase::GetDescription() const
 {
-    return XO("Repeats the selected audio again and again");
+    return TranslatableString("builtin-effects", "Repeats the selected audio again and again");
 }
 
 ManualPageID EchoBase::ManualPage() const
@@ -78,7 +78,7 @@ bool EchoBase::Instance::ProcessInitialize(
     }
     catch (const std::bad_alloc&)
     {
-        BasicUI::ShowMessageBox(XO("Requested value exceeds memory capacity."));
+        BasicUI::ShowMessageBox(TranslatableString("builtin-effects", "Requested value exceeds memory capacity."));
         return false;
     }
 

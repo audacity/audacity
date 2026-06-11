@@ -101,12 +101,12 @@ PluginPath NyquistEffectsModule::GetPath() const
 
 ComponentInterfaceSymbol NyquistEffectsModule::GetSymbol() const
 {
-    return XO("Nyquist Effects");
+    return TranslatableString("effects-nyquist", "Nyquist Effects");
 }
 
 VendorSymbol NyquistEffectsModule::GetVendor() const
 {
-    return XO("The Audacity Team");
+    return TranslatableString("effects-nyquist", "The Audacity Team");
 }
 
 wxString NyquistEffectsModule::GetVersion() const
@@ -117,7 +117,7 @@ wxString NyquistEffectsModule::GetVersion() const
 
 TranslatableString NyquistEffectsModule::GetDescription() const
 {
-    return XO("Provides Nyquist Effects support to Audacity");
+    return TranslatableString("effects-nyquist", "Provides Nyquist Effects support to Audacity");
 }
 
 // ============================================================================
@@ -268,7 +268,7 @@ unsigned NyquistEffectsModule::DiscoverPluginsAtPath(
     }
 
     errMsg = effect.InitializationError();
-    wxLogDebug("effect NOT OK, error: %s", errMsg.Debug());
+    wxLogDebug("effect NOT OK, error: %s", au3::qtToWx(errMsg.debugStr()));
     return 0;
 }
 

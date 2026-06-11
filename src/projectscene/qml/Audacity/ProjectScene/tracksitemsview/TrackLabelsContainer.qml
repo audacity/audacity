@@ -203,8 +203,14 @@ TrackItemsContainer {
 
                                     trackItemMousePositionChanged(xWithinTrack, yWithinTrack, itemData.key)
 
-                                    let time = root.context.findGuideline(root.context.positionToTime(xWithinTrack, true))
-                                    root.triggerItemGuideline(time, false)
+                                    // While a label is being moved or stretched the guideline follows the
+                                    // dragged label edge (driven by handleLabelGuideline), not the cursor —
+                                    // so only snap the guideline to the cursor when no such edit is in progress.
+                                    const editInProgress = root.moveActive || itemData.isEditing
+                                    if (!editInProgress) {
+                                        let time = root.context.findGuideline(root.context.positionToTime(xWithinTrack, true))
+                                        root.updateItemGuideline(time)
+                                    }
                                 }
 
                                 onRequestSelected: {
@@ -384,9 +390,16 @@ TrackItemsContainer {
     }
 
     function handleLabelGuideline(labelKey, direction, completed) {
-        let guidelinePos = labelsModel.findGuideline(labelKey, direction)
-        if (guidelinePos) {
-            triggerItemGuideline(guidelinePos, completed)
+        // itemMoveRequested is broadcast to every track's container, but the guideline is
+        // shared across all of them. Only the container that owns the dragged label may touch
+        // it, otherwise non-owners clobber the owning track's guideline.
+        if (labelsModel.containsItem(labelKey)) {
+            if (completed) {
+                root.clearItemGuideline()
+            } else {
+                let time = labelsModel.findGuideline(labelKey, direction)
+                updateItemGuideline(time)
+            }
         }
     }
 }

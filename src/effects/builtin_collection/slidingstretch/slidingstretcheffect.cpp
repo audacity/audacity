@@ -19,8 +19,11 @@
 #if USE_SBSMS
 
 #include "slidingstretcheffect.h"
-#include "au3-utility/MemoryX.h"
+
 #include <cmath>
+
+#include "au3-strings/TranslatableString.h"
+#include "au3-utility/MemoryX.h"
 
 namespace au::effects {
 const EffectParameterMethods& SlidingStretchEffect::Parameters() const
@@ -37,7 +40,7 @@ const EffectParameterMethods& SlidingStretchEffect::Parameters() const
 //
 
 const ComponentInterfaceSymbol SlidingStretchEffect::Symbol { wxT("Sliding stretch"),
-                                                              XO("Sliding stretch") };
+                                                              TranslatableString("effects-slidingstretch", "Sliding stretch") };
 
 SlidingStretchEffect::SlidingStretchEffect()
 {
@@ -60,9 +63,9 @@ ComponentInterfaceSymbol SlidingStretchEffect::GetSymbol() const
     return Symbol;
 }
 
-TranslatableString SlidingStretchEffect::GetDescription() const
+::TranslatableString SlidingStretchEffect::GetDescription() const
 {
-    return XO("Allows continuous changes to the tempo and/or pitch");
+    return ::TranslatableString("effects-slidingstretch", "Allows continuous changes to the tempo and/or pitch");
 }
 
 ManualPageID SlidingStretchEffect::ManualPage() const

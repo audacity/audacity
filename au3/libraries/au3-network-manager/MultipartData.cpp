@@ -99,14 +99,14 @@ public:
     {
         if (!fileName.FileExists()) {
             throw SimpleMessageBoxException(ExceptionType::BadUserAction,
-                                            XO("Failed to open the file for upload: %s")
+                                            TranslatableString("network-manager", "Failed to open the file for upload: %1")
                                             .Format(fileName.GetFullPath()));
         }
 
         if (!mFile.Open(fileName.GetFullPath())) {
             throw SimpleMessageBoxException(
                       ExceptionType::BadUserAction,
-                      XO("Failed to open the file for upload: %s")
+                      TranslatableString("network-manager", "Failed to open the file for upload: %1")
                       .Format(fileName.GetFullPath()));
         }
     }

@@ -39,7 +39,7 @@ public:
     static std::shared_ptr<WaveTrack>
     NewWaveTrack(WaveTrackFactory& trackFactory, unsigned nChannels, sampleFormat effectiveFormat, double rate);
 
-    static void ShowMessageBox(const TranslatableString& message, const TranslatableString& caption = XO("Import Project"));
+    static void ShowMessageBox(const TranslatableString& message, const TranslatableString& caption = TranslatableString("import-export", "Import Project"));
 
     static int RequiredTrackCountFromChannels(int channels) noexcept;
 

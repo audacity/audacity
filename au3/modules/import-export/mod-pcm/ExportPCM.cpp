@@ -54,11 +54,11 @@ const kFormats[] =
 {
 #if defined(__WXMAC__)
     {
-        SF_FORMAT_AIFF | SF_FORMAT_PCM_16, wxT("AIFF"),   XO("AIFF (Apple/SGI)")
+        SF_FORMAT_AIFF | SF_FORMAT_PCM_16, wxT("AIFF"),   TranslatableString("import-export", "AIFF (Apple/SGI)")
     },
 #endif
     {
-        SF_FORMAT_WAV | SF_FORMAT_PCM_16,  wxT("WAV"),    XO("WAV (Microsoft)")
+        SF_FORMAT_WAV | SF_FORMAT_PCM_16,  wxT("WAV"),    TranslatableString("import-export", "WAV (Microsoft)")
     },
 };
 
@@ -110,7 +110,7 @@ void GetEncodings(int type, std::vector<ExportValue>& values, TranslatableString
         if (sf_format_check(&info)) {
             // Store subtype and name
             values.emplace_back(sub);
-            names.push_back(Verbatim(sf_encoding_index_name(i)));
+            names.push_back(TranslatableString::untranslatable(sf_encoding_index_name(i)));
         }
     }
 }
@@ -126,7 +126,7 @@ ExportOptionsSFTypedEditor::ExportOptionsSFTypedEditor(int type)
     GetEncodings(type, mEncodingOption.values, mEncodingOption.names);
 
     mEncodingOption.id = type;
-    mEncodingOption.title = XO("Encoding");
+    mEncodingOption.title = TranslatableString("import-export", "Encoding");
     mEncodingOption.flags = ExportOption::TypeEnum;
     mEncodingOption.defaultValue = mEncodingOption.values[0];
 
@@ -195,7 +195,7 @@ ExportOptionsSFEditor::ExportOptionsSFEditor(Listener* listener)
     : mListener(listener)
 {
     ExportOption typeOption {
-        OptionIDSFType, XO("Header"),
+        OptionIDSFType, TranslatableString("import-export", "Header"),
         0,
         ExportOption::TypeEnum
     };
@@ -213,10 +213,10 @@ ExportOptionsSFEditor::ExportOptionsSFEditor(Listener* listener)
         default:
         {
             typeOption.values.emplace_back(type);
-            typeOption.names.push_back(Verbatim(sf_header_index_name(i)));
+            typeOption.names.push_back(TranslatableString::untranslatable(sf_header_index_name(i)));
             ExportOption encodingOption {
                 type,
-                XO("Encoding"),
+                TranslatableString("import-export", "Encoding"),
                 0,
                 ExportOption::TypeEnum
             };
@@ -395,7 +395,7 @@ FormatInfo ExportPCM::GetFormatInfo(int index) const
 
         return {
             sf_header_shortname(si.format),
-            XO("Other uncompressed files"),
+            TranslatableString("import-export", "Other uncompressed files"),
             { sf_header_extension(si.format) },
             static_cast<unsigned>(si.channels),
             true
@@ -514,11 +514,11 @@ bool PCMExportProcessor::Initialize(AudacityProject& project,
 
         // Bug 46.  Trap here, as sndfile.c does not trap it properly.
         if ((numChannels != 1) && ((sf_format & SF_FORMAT_SUBMASK) == SF_FORMAT_GSM610)) {
-            throw ExportException(_("GSM 6.10 requires mono"));
+            throw ExportException(wxString::FromUTF8(au3::trc("import-export", "GSM 6.10 requires mono").c_str()));
         }
 
         if (sf_format == SF_FORMAT_WAVEX + SF_FORMAT_GSM610) {
-            throw ExportException(_("WAVEX and GSM 6.10 formats are not compatible"));
+            throw ExportException(wxString::FromUTF8(au3::trc("import-export", "WAVEX and GSM 6.10 formats are not compatible").c_str()));
         }
 
         // If we can't export exactly the format they requested,
@@ -531,7 +531,7 @@ bool PCMExportProcessor::Initialize(AudacityProject& project,
             info.format = (info.format & SF_FORMAT_TYPEMASK);
         }
         if (!sf_format_check(&info)) {
-            throw ExportException(_("Cannot export audio in this format."));
+            throw ExportException(wxString::FromUTF8(au3::trc("import-export", "Cannot export audio in this format.").c_str()));
         }
         const auto path = fName.GetFullPath();
         if (f.Open(path, wxFile::write)) {
@@ -544,7 +544,8 @@ bool PCMExportProcessor::Initialize(AudacityProject& project,
         }
 
         if (!sf) {
-            throw ExportException(_("Cannot export audio to %s").Format(path));
+            //: %1 is the file path
+            throw ExportException(au3::qtToWx(TranslatableString("import-export", "Cannot export audio to %1").arg(path).translated()));
         }
         // Retrieve tags if not given a set
         if (metadata == NULL) {
@@ -577,16 +578,18 @@ bool PCMExportProcessor::Initialize(AudacityProject& project,
             if (byteCount > 4.295e9) {
                 //Temporary translation hack, to say 'WAV or AIFF' rather than 'WAV'
                 const auto message
-                    =XO("You have attempted to Export a WAV or AIFF file which would be greater than 4GB.\n"
-                        "Audacity cannot do this, the Export was abandoned.");
+                    =TranslatableString("import-export",
+                                        "You have attempted to Export a WAV or AIFF file which would be greater than 4GB.\nAudacity cannot do this, the Export was abandoned.");
                 throw ExportErrorException(message,
                                            wxT("Size_limits_for_WAV_and_AIFF_files"));
             }
         }
 
         context.status = (selectionOnly
-                          ? XO("Exporting the selected audio as %s")
-                          : XO("Exporting the audio as %s")).Format(formatStr);
+                          //: %1 is a format description
+                          ? TranslatableString("import-export", "Exporting the selected audio as %1")
+                          //: %1 is a format description
+                          : TranslatableString("import-export", "Exporting the audio as %1")).arg(formatStr);
 
         wxASSERT(info.channels >= 0);
         context.mixer = ExportPluginHelpers::CreateMixer(
@@ -647,11 +650,10 @@ ExportResult PCMExportProcessor::Process(ExportProcessorDelegate& delegate)
                 //Used to give this error message
 #if 0
                 AudacityMessageBox(
-                    XO(
-                        /* i18n-hint: %s will be the error message from libsndfile, which
-                         * is usually something unhelpful (and untranslated) like "system
-                         * error" */
-                        "Error while writing %s file (disk full?).\nLibsndfile says \"%s\"")
+                    /*: %s will be the error message from libsndfile, which
+                     * is usually something unhelpful (and untranslated) like "system
+                     * error" */
+                    TranslatableString("import-export", "Error while writing %1 file (disk full?).\nLibsndfile says “%2”")
                     .Format(formatStr, wxString::FromAscii(buffer2)));
 #else
                 // But better to give the same error message as for

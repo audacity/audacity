@@ -6,3 +6,4 @@ file_filter = share/locale/audacity_<lang>.ts
 source_file = share/locale/audacity_en.ts
 source_lang = en
 type        = QT
+lang_map    = gl_ES: gl, sr_BA@latin: sr

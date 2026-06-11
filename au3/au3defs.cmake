@@ -274,7 +274,7 @@ macro(audacity_library NAME SOURCES IMPORT_TARGETS ADDITIONAL_DEFINES ADDITIONAL
     if(WXPLATFORM_DEFS)
         target_compile_definitions(${au3_target_name} PUBLIC ${WXPLATFORM_DEFS})
     endif()
-    
+
     # Disable warnings for AU3 code
     target_no_warning(${au3_target_name} -w)
 

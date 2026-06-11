@@ -81,49 +81,49 @@ NUMERIC_FORMATS_API NumericFormatSymbol DefaultSelectionFormat()
 
 NUMERIC_FORMATS_API NumericFormatSymbol TimeAndSampleFormat()
 {
-    /* i18n-hint: Name of time display format that shows time in hours,
+    /*: Name of time display format that shows time in hours,
      * minutes, seconds and samples (at the current project sample rate) */
-    return { XO("hh:mm:ss + samples") };
+    return { TranslatableString("numeric-formats", "hh:mm:ss + samples") };
 }
 
 NUMERIC_FORMATS_API NumericFormatSymbol SecondsFormat()
 {
-    /* i18n-hint: Name of time display format that shows time in seconds */
-    return { XO("seconds") };
+    /*: Name of time display format that shows time in seconds */
+    return { TranslatableString("numeric-formats", "seconds") };
 }
 
 NUMERIC_FORMATS_API NumericFormatSymbol HoursMinsSecondsFormat()
 {
-    /* i18n-hint: Name of time display format that shows time in hours, minutes
+    /*: Name of time display format that shows time in hours, minutes
      * and seconds */
-    return { XO("hh:mm:ss") };
+    return { TranslatableString("numeric-formats", "hh:mm:ss") };
 }
 
 NUMERIC_FORMATS_API NumericFormatSymbol MillisecondsFormat()
 {
-    /* i18n-hint: Name of time display format that shows time in hours,
+    /*: Name of time display format that shows time in hours,
      * minutes, seconds and milliseconds (1/1000 second) */
-    return { XO("hh:mm:ss + milliseconds") };
+    return { TranslatableString("numeric-formats", "hh:mm:ss + milliseconds") };
 }
 
 NUMERIC_FORMATS_API NumericFormatSymbol HundredthsFormat()
 {
-    /* i18n-hint: Name of time display format that shows time in hours,
+    /*: Name of time display format that shows time in hours,
      * minutes, seconds and hundredths of a second (1/100 second) */
-    return { XO("hh:mm:ss + hundredths") };
+    return { TranslatableString("numeric-formats", "hh:mm:ss + hundredths") };
 }
 
 NUMERIC_FORMATS_API NumericFormatSymbol HertzFormat()
 {
-    /* i18n-hint: Name of display format that shows frequency in hertz */
-    return { XO("Hz") };
+    /*: Name of display format that shows frequency in hertz */
+    return { TranslatableString("numeric-formats", "Hz") };
 }
 
 NUMERIC_FORMATS_API NumericFormatSymbol OctavesFormat()
 {
-    /* i18n-hint: Name of display format that shows log of frequency
+    /*: Name of display format that shows log of frequency
      * in octaves */
-    return { XO("octaves") };
+    return { TranslatableString("numeric-formats", "octaves") };
 }
 
 NUMERIC_FORMATS_API NumericFormatID

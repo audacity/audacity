@@ -34,7 +34,12 @@ else
 fi
 
 LUPDATE=lupdate
-SRC_DIR=src
+SRC_DIRS=(
+    src
+    au3/libraries
+    au3/modules
+    tools/translations/nyquist_strings.cpp.generated
+)
 TS_FILE=share/locale/audacity_${1:-en}.ts
 DEFAULT_LUPDATE_ARGS=(
     -recursive
@@ -51,12 +56,17 @@ run_indented() {
     "$@" > >(sed 's/^/    /') 2> >(sed 's/^/    /' >&2)
 }
 
+# Regenerate the Nyquist stub so new .ny strings are picked up by lupdate.
+echo "Extracting Nyquist plug-in strings:"
+run_indented python3 tools/translations/extract_nyquist_strings.py \
+    --output tools/translations/nyquist_strings.cpp.generated
+
 # We only need to update one ts file per "resource", that will be sent to Transifex.
 # We get .ts files for other languages from Transifex.
 
 echo "Audacity:"
-echo "Running" "${LUPDATE}" "${DEFAULT_LUPDATE_ARGS[@]}" ${LUPDATE_ARGS} "${SRC_DIR}" -ts "${TS_FILE}"
-run_indented "${LUPDATE}" "${DEFAULT_LUPDATE_ARGS[@]}" ${LUPDATE_ARGS} "${SRC_DIR}" -ts "${TS_FILE}"
+echo "Running" "${LUPDATE}" "${DEFAULT_LUPDATE_ARGS[@]}" ${LUPDATE_ARGS} "${SRC_DIRS[@]}" -ts "${TS_FILE}"
+run_indented "${LUPDATE}" "${DEFAULT_LUPDATE_ARGS[@]}" ${LUPDATE_ARGS} "${SRC_DIRS[@]}" -ts "${TS_FILE}"
 
 echo ""
 

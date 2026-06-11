@@ -62,7 +62,7 @@ wxString LV2EffectBase::GetVersion() const
     return wxT("1.0");
 }
 
-TranslatableString LV2EffectBase::GetDescription() const
+::TranslatableString LV2EffectBase::GetDescription() const
 {
     return XO("n/a");
 }

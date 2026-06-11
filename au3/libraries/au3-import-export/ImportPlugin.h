@@ -56,7 +56,7 @@ class AudacityProject;
 class WaveTrackFactory;
 class Track;
 class TrackList;
-class TranslatableString;
+#include "au3-strings/TranslatableString.h"
 class Tags;
 
 class ImportFileHandle;

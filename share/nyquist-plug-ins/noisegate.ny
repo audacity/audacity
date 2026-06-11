@@ -18,7 +18,7 @@ $copyright (_ "GNU General Public License v2.0 or later")
 $control MODE (_ "Select Function") choice (("Gate" (_ "Gate"))
                                             ("Analyze" (_ "Analyze Noise Level"))) 0
 $control STEREO-LINK (_ "Stereo Linking") choice (("LinkStereo" (_ "Link Stereo Tracks"))
-                                                  ("DoNotLink" (_ "Don't Link Stereo"))) 0
+                                                  ("DoNotLink" (_ "Don’t Link Stereo"))) 0
 ;; Work around bug 2336 - Text after control is not read by screen reader.
 $control THRESHOLD (_ "Gate threshold (dB)") float "" -40 -96 -6
 $control GATE-FREQ (_ "Gate frequencies above (kHz)") float "" 0 0 10

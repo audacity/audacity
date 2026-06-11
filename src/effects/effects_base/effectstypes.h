@@ -124,6 +124,10 @@ struct ParameterInfo {
     // for cases where display precision and stepSize differ (e.g. sliding-stretch).
     int numDecimalsOverride = -1;
 
+    //! Upper bound on displayed fractional digits, applied by the auto-derive
+    //! path in numDecimals(). Overrides set elsewhere should clamp to this too.
+    static constexpr int maxNumDecimals = 6;
+
     bool isValid() const { return !id.empty(); }
 
     //! Number of decimals to display for numeric input.
@@ -141,7 +145,7 @@ struct ParameterInfo {
         }
         int n = 0;
         double s = stepSize;
-        while (n < 6 && std::abs(s - std::round(s)) > 1e-9 * std::max(1.0, std::abs(s))) {
+        while (n < maxNumDecimals && std::abs(s - std::round(s)) > 1e-9 * std::max(1.0, std::abs(s))) {
             s *= 10.0;
             ++n;
         }

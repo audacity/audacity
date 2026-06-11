@@ -711,8 +711,8 @@ void VST3Wrapper::LoadPreset(const wxString& presetId)
     if (!LoadPresetFromStream(fileStream)) {
         throw SimpleMessageBoxException(
                   ExceptionType::BadEnvironment,
-                  XO("Unable to apply VST3 preset file %s").Format(presetId),
-                  XO("Error"));
+                  TranslatableString("vst3", "Unable to apply VST3 preset file %1").arg(presetId),
+                  TranslatableString("vst3", "Error"));
     }
 }
 
@@ -728,8 +728,8 @@ void VST3Wrapper::SavePresetToFile(const wxString& filepath) const
     if (!SavePresetToStream(fileStream)) {
         throw SimpleMessageBoxException(
                   ExceptionType::BadEnvironment,
-                  XO("Failed to save VST3 preset to file"),
-                  XO("Error"));
+                  TranslatableString("vst3", "Failed to save VST3 preset to file"),
+                  TranslatableString("vst3", "Error"));
     }
 }
 

@@ -18,8 +18,7 @@ const EffectParameterMethods& ChangeSpeedBase::Parameters() const
     return parameters;
 }
 
-const ComponentInterfaceSymbol ChangeSpeedBase::Symbol { XO(
-                                                             "Change Speed and Pitch") };
+const ComponentInterfaceSymbol ChangeSpeedBase::Symbol { TranslatableString("builtin-effects", "Change Speed and Pitch") };
 
 ChangeSpeedBase::ChangeSpeedBase()
 {
@@ -46,7 +45,7 @@ ComponentInterfaceSymbol ChangeSpeedBase::GetSymbol() const
 
 TranslatableString ChangeSpeedBase::GetDescription() const
 {
-    return XO("Changes the speed of a track, also changing its pitch");
+    return TranslatableString("builtin-effects", "Changes the speed of a track, also changing its pitch");
 }
 
 ManualPageID ChangeSpeedBase::ManualPage() const

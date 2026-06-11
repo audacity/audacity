@@ -174,7 +174,7 @@ bool PlayableTrack::HandleXMLAttribute(const std::string_view& attr, const XMLAt
 auto AudioTrack::ClassTypeInfo() -> const TypeInfo&
 {
     static Track::TypeInfo info{
-        { "audio", "audio", XO("Audio Track") },
+        { "audio", "audio", TranslatableString("playable-track", "Audio Track") },
         false, &Track::ClassTypeInfo() };
     return info;
 }
@@ -182,7 +182,7 @@ auto AudioTrack::ClassTypeInfo() -> const TypeInfo&
 auto PlayableTrack::ClassTypeInfo() -> const TypeInfo&
 {
     static Track::TypeInfo info{
-        { "playable", "playable", XO("Playable Track") },
+        { "playable", "playable", TranslatableString("playable-track", "Playable Track") },
         false, &AudioTrack::ClassTypeInfo() };
     return info;
 }
@@ -191,7 +191,7 @@ EnumSetting<SoloBehavior> TracksBehaviorsSolo{
     wxT("/GUI/Solo"),
     {
         ByColumns,
-        { XO("Multi-track"), XO("Simple") },
+        { TranslatableString("playable-track", "Multi-track"), TranslatableString("playable-track", "Simple") },
         { wxT("Multi"),     wxT("Simple") }
     },
     0, // "Multi-track"

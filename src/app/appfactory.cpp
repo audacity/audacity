@@ -56,6 +56,11 @@
 #else
 #include "stubs/au3cloud/au3cloudstubmodule.h"
 #endif
+#ifdef AU_BUILD_USAGEINFO_MODULE
+#include "usageinfo/usageinfomodule.h"
+#else
+#include "stubs/usageinfo/usageinfostubmodule.h"
+#endif
 #include "automation/automationmodule.h"
 
 #if AU_MODULE_EFFECTS_NYQUIST
@@ -146,6 +151,7 @@ std::shared_ptr<muse::IApplication> AppFactory::newGuiApp(const std::shared_ptr<
 
     // Audacity modules
     app->addModule(new au::appshell::AppShellModule());
+    app->addModule(new au::usageinfo::UsageInfoModule());
     app->addModule(new au::preferences::PreferencesModule());
     app->addModule(new au::uicomponents::UiComponentsModule());
     app->addModule(new au::effects::AudioUnitEffectsModule());

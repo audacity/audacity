@@ -345,34 +345,34 @@ const TranslatableString WindowFuncName(int whichFunction)
     switch (whichFunction) {
     default:
     case eWinFuncRectangular:
-        return XO("Rectangular");
+        return TranslatableString("fft", "Rectangular");
     case eWinFuncBartlett:
-        /* i18n-hint a proper name */
-        return XO("Bartlett");
+        /*: a proper name */
+        return TranslatableString("fft", "Bartlett");
     case eWinFuncHamming:
-        /* i18n-hint a proper name */
-        return XO("Hamming");
+        /*: a proper name */
+        return TranslatableString("fft", "Hamming");
     case eWinFuncHann:
-        /* i18n-hint a proper name */
-        return XO("Hann");
+        /*: a proper name */
+        return TranslatableString("fft", "Hann");
     case eWinFuncBlackman:
-        /* i18n-hint a proper name */
-        return XO("Blackman");
+        /*: a proper name */
+        return TranslatableString("fft", "Blackman");
     case eWinFuncBlackmanHarris:
-        /* i18n-hint two proper names */
-        return XO("Blackman-Harris");
+        /*: two proper names */
+        return TranslatableString("fft", "Blackman-Harris");
     case eWinFuncWelch:
-        /* i18n-hint a proper name */
-        return XO("Welch");
+        /*: a proper name */
+        return TranslatableString("fft", "Welch");
     case eWinFuncGaussian25:
-        /* i18n-hint a mathematical function named for C. F. Gauss */
-        return XO("Gaussian(a=2.5)");
+        /*: a mathematical function named for C. F. Gauss */
+        return TranslatableString("fft", "Gaussian(a=2.5)");
     case eWinFuncGaussian35:
-        /* i18n-hint a mathematical function named for C. F. Gauss */
-        return XO("Gaussian(a=3.5)");
+        /*: a mathematical function named for C. F. Gauss */
+        return TranslatableString("fft", "Gaussian(a=3.5)");
     case eWinFuncGaussian45:
-        /* i18n-hint a mathematical function named for C. F. Gauss */
-        return XO("Gaussian(a=4.5)");
+        /*: a mathematical function named for C. F. Gauss */
+        return TranslatableString("fft", "Gaussian(a=4.5)");
     }
 }
 

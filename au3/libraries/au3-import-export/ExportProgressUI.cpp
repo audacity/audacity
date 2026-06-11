@@ -53,7 +53,7 @@ public:
         constexpr long long ProgressSteps = 1000ul;
 
         if (!mProgressDialog) {
-            mProgressDialog = BasicUI::MakeProgress(XO("Export"), mStatus);
+            mProgressDialog = BasicUI::MakeProgress(TranslatableString("import-export", "Export"), mStatus);
         } else {
             mProgressDialog->SetMessage(mStatus);
         }
@@ -89,8 +89,8 @@ ExportResult ExportProgressUI::Show(ExportTask exportTask)
 
     if (result == ExportResult::Error) {
         BasicUI::ShowErrorDialog(
-            {}, XO("Export error"),
-            XO("Export completed with error."), {},
+            {}, TranslatableString("import-export", "Export error"),
+            TranslatableString("import-export", "Export completed with error."), {},
             BasicUI::ErrorDialogOptions { BasicUI::ErrorDialogType::ModalError });
     }
 

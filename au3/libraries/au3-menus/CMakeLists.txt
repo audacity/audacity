@@ -29,6 +29,7 @@ set(SOURCES
 
 set( LIBRARIES
    au3-project-history-interface
+   au3-strings-interface
    wxBase
 )
 

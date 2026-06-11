@@ -19,7 +19,7 @@
 
 #include <stdlib.h>
 
-#define DESC XO("Opus files")
+#define DESC TranslatableString("import-export", "Opus files")
 
 static const auto exts = { L"opus", L"ogg" };
 
@@ -149,7 +149,7 @@ void OpusImportFileHandle::Import(
         auto linkChannels = op_head(mOpusFile, linkIndex)->channel_count;
 
         if (linkChannels != mNumChannels) {
-            NotifyImportFailed(progressListener, XO("File has changed the number of channels in the middle."));
+            NotifyImportFailed(progressListener, TranslatableString("import-export", "File has changed the number of channels in the middle."));
             return;
         }
 
@@ -284,27 +284,27 @@ TranslatableString OpusImportFileHandle::GetOpusErrorString(int error)
 {
     switch (error) {
     case OP_EREAD:
-        return XO("IO error reading from file");
+        return TranslatableString("import-export", "IO error reading from file");
     case OP_EFAULT:
-        return XO("internal error");
+        return TranslatableString("import-export", "internal error");
     case OP_EIMPL:
-        return XO("not implemented");
+        return TranslatableString("import-export", "not implemented");
     case OP_EINVAL:
-        return XO("invalid argument");
+        return TranslatableString("import-export", "invalid argument");
     case OP_ENOTFORMAT:
-        return XO("not an Opus file");
+        return TranslatableString("import-export", "not an Opus file");
     case OP_EBADHEADER:
-        return XO("invalid header");
+        return TranslatableString("import-export", "invalid header");
     case OP_EVERSION:
-        return XO("unsupported version");
+        return TranslatableString("import-export", "unsupported version");
     case OP_EBADPACKET:
-        return XO("invalid packet");
+        return TranslatableString("import-export", "invalid packet");
     case OP_EBADLINK:
-        return XO("invalid stream structure");
+        return TranslatableString("import-export", "invalid stream structure");
     case OP_ENOSEEK:
-        return XO("stream is not seekable");
+        return TranslatableString("import-export", "stream is not seekable");
     case OP_EBADTIMESTAMP:
-        return XO("invalid timestamp");
+        return TranslatableString("import-export", "invalid timestamp");
     default:
         return {};
     }
@@ -333,7 +333,8 @@ void OpusImportFileHandle::NotifyImportFailed(
     ImportProgressListener& progressListener, const TranslatableString& error)
 {
     ImportUtils::ShowMessageBox(
-        XO("Failed to decode Opus file: %s").Format(error));
+        //: %1 is the error message
+        TranslatableString("import-export", "Failed to decode Opus file: %1").arg(error));
 
     if (IsCancelled()) {
         progressListener.OnImportResult(

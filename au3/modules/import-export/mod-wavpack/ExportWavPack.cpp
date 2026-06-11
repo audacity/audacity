@@ -160,7 +160,7 @@ int ExportWavPack::GetFormatCount() const
 FormatInfo ExportWavPack::GetFormatInfo(int) const
 {
     return {
-        wxT("WavPack"), XO("WavPack Files"), { wxT("wv") }, 255, true
+        wxT("WavPack"), TranslatableString("import-export", "WavPack Files"), { wxT("wv") }, 255, true
     };
 }
 
@@ -251,7 +251,7 @@ bool WavPackExportProcessor::Initialize(AudacityProject& project,
     outWvFile.file = std::make_unique< wxFile >();
 
     if (!outWvFile.file->Create(fName.GetFullPath(), true) || !outWvFile.file->IsOpened()) {
-        throw ExportException(_("Unable to open target file for writing"));
+        throw ExportException(wxString::FromUTF8(au3::trc("import-export", "Unable to open target file for writing").c_str()));
     }
 
     const auto quality = ExportPluginHelpers::GetParameterValue<int>(
@@ -313,7 +313,7 @@ bool WavPackExportProcessor::Initialize(AudacityProject& project,
 
             outWvcFile.file = std::make_unique< wxFile >();
             if (!outWvcFile.file->Create(fName.GetFullPath().Append("c"), true)) {
-                throw ExportException(_("Unable to create target file for writing"));
+                throw ExportException(wxString::FromUTF8(au3::trc("import-export", "Unable to create target file for writing").c_str()));
             }
         }
     }
@@ -331,8 +331,8 @@ bool WavPackExportProcessor::Initialize(AudacityProject& project,
     }
 
     context.status = selectionOnly
-                     ? XO("Exporting selected audio as WavPack")
-                     : XO("Exporting the audio as WavPack");
+                     ? TranslatableString("import-export", "Exporting selected audio as WavPack")
+                     : TranslatableString("import-export", "Exporting the audio as WavPack");
 
     context.metadata = std::make_unique<Tags>(
         metadata == nullptr

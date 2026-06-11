@@ -23,9 +23,9 @@ $copyright (_ "GNU General Public License v2.0")
 $control TEMPO (_ "Tempo (bpm)") real (_ "30 - 300 beats/minute") 120 30 300
 $control TIMESIG (_ "Beats per bar") int (_ "1 - 20 beats/measure") 4 1 20
 $control SWING (_ "Swing amount") float (_ "+/- 1") 0 -1 1
-$control text (_ "Set 'Number of bars' to zero to enable the 'Rhythm track duration'.")
+$control text (_ "Set ‘Number of bars’ to zero to enable the ‘Rhythm track duration’.")
 $control BARS (_ "Number of bars") int (_ "1 - 1000 bars") 16 0 1000
-$control CLICK-TRACK-DUR (_ "Rhythm track duration") time (_ "Used if 'Number of bars' = 0") 0 0 nil  
+$control CLICK-TRACK-DUR (_ "Rhythm track duration") time (_ "Used if ‘Number of bars’ = 0") 0 0 nil  
 $control OFFSET (_ "Start time offset") time (_ "Silence before first beat") 0 0 nil
 $control CLICK-TYPE (_ "Beat sound") choice (("Metronome" (_ "Metronome Tick"))
                                              (_ "Ping (short)")
@@ -238,8 +238,8 @@ $control LOW (_ "MIDI pitch of weak beat") int (_ "18 - 116") 80 18 116
 (setf addsamples (samplecount 0))
 
 (if (< barcount 1)
-    (format nil (_ "Set either 'Number of bars' or~%~
-                    'Rhythm track duration' to greater than zero."))
+    (format nil (_ "Set either ‘Number of bars’ or~%~
+                    ‘Rhythm track duration’ to greater than zero."))
     (if *previewp*
         ;; Don't preview the offset (silence).
         (make-click-track barcount (* TIMESIG beatlen))

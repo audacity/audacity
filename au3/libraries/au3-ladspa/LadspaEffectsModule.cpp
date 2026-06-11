@@ -98,7 +98,7 @@ wxString LadspaEffectsModule::GetVersion() const
     return LADSPAEFFECTS_VERSION;
 }
 
-TranslatableString LadspaEffectsModule::GetDescription() const
+::TranslatableString LadspaEffectsModule::GetDescription() const
 {
     return XO("Provides LADSPA Effects");
 }
@@ -162,7 +162,7 @@ void LadspaEffectsModule::AutoRegisterPlugins(PluginManagerInterface& pm)
     // Audacity.  A little simplistic, but it should suffice for now.
     auto pathList = GetSearchPaths(pm);
     FilePaths files;
-    TranslatableString ignoredErrMsg;
+    ::TranslatableString ignoredErrMsg;
 
     for (int i = 0; i < (int)WXSIZEOF(kShippedEffects); i++) {
         files.clear();
@@ -203,7 +203,7 @@ PluginPaths LadspaEffectsModule::FindModulePaths(PluginManagerInterface& pm, Bas
 }
 
 unsigned LadspaEffectsModule::DiscoverPluginsAtPath(
-    const PluginPath& path, TranslatableString& errMsg,
+    const PluginPath& path, ::TranslatableString& errMsg,
     const RegistrationCallback& callback)
 {
     errMsg = {};

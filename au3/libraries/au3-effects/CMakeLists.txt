@@ -34,6 +34,7 @@ set( LIBRARIES
    au3-realtime-effects
    au3-stretching-sequence-interface
    au3-wave-track-interface
+   au3-strings-interface
    wxBase
 )
 audacity_library( ${TARGET} "${SOURCES}" "${LIBRARIES}"

@@ -182,34 +182,32 @@ QVariant TrackItemsListModel::prev(const TrackItemKey& key) const
     return neighbor(key, -1);
 }
 
-QVariant TrackItemsListModel::findGuideline(const TrackItemKey& key, DirectionType::Direction direction) const
+bool TrackItemsListModel::containsItem(const TrackItemKey& key) const
 {
-    auto vs = globalContext()->currentProject()->viewState();
-    if (!vs) {
-        return QVariant();
-    }
+    return itemByKey(key.key) != nullptr;
+}
 
+double TrackItemsListModel::findGuideline(const TrackItemKey& key, DirectionType::Direction direction) const
+{
     ViewTrackItem* item = itemByKey(key.key);
     if (!item) {
-        return QVariant();
+        return TimelineContext::INVALID_GUIDELINE_TIME;
     }
 
     if (direction != DirectionType::Direction::Right) {
-        double itemStartTime = item->time().startTime;
-        double guidelineTime = m_context->findGuideline(itemStartTime);
-        if (!muse::RealIsEqual(guidelineTime, -1.0)) {
-            return QVariant(guidelineTime);
+        double guidelineTime = m_context->findGuideline(item->time().startTime);
+        if (m_context->isGuidelineValid(guidelineTime)) {
+            return guidelineTime;
         }
     }
     if (direction != DirectionType::Direction::Left) {
-        double itemEndTime = item->time().endTime;
-        double guidelineTime = m_context->findGuideline(itemEndTime);
-        if (!muse::RealIsEqual(guidelineTime, -1.0)) {
-            return QVariant(guidelineTime);
+        double guidelineTime = m_context->findGuideline(item->time().endTime);
+        if (m_context->isGuidelineValid(guidelineTime)) {
+            return guidelineTime;
         }
     }
 
-    return QVariant(-1.0);
+    return TimelineContext::INVALID_GUIDELINE_TIME;
 }
 
 void TrackItemsListModel::setFocusedItem(const TrackItemKey& key)
@@ -243,7 +241,8 @@ QVariant TrackItemsListModel::neighbor(const TrackItemKey& key, int offset) cons
 TrackItemsListModel::MoveOffset TrackItemsListModel::calculateMoveOffset(const ViewTrackItem* item,
                                                                          const TrackItemKey& key,
                                                                          const std::vector<trackedit::TrackType>& trackTypesAllowedToMove,
-                                                                         bool completed) const
+                                                                         bool completed,
+                                                                         bool applySnap) const
 {
     project::IAudacityProjectPtr prj = globalContext()->currentProject();
     if (!prj) {
@@ -253,7 +252,7 @@ TrackItemsListModel::MoveOffset TrackItemsListModel::calculateMoveOffset(const V
     auto vs = prj->viewState();
 
     MoveOffset moveOffset {
-        calculateTimePositionOffset(item),
+        calculateTimePositionOffset(item, applySnap),
         completed ? 0 : calculateTrackPositionOffset(key, trackTypesAllowedToMove)
     };
 
@@ -368,7 +367,7 @@ bool TrackItemsListModel::isAllowedToMoveToTracks(const std::vector<trackedit::T
     return track.has_value() ? muse::contains(allowedTrackTypes, track->type) : false;
 }
 
-secs_t TrackItemsListModel::calculateTimePositionOffset(const ViewTrackItem* item) const
+secs_t TrackItemsListModel::calculateTimePositionOffset(const ViewTrackItem* item, bool applySnap) const
 {
     auto vs = globalContext()->currentProject()->viewState();
     if (!vs) {
@@ -376,25 +375,28 @@ secs_t TrackItemsListModel::calculateTimePositionOffset(const ViewTrackItem* ite
     }
 
     double newStartTime = m_context->mousePositionTime() - vs->itemEditStartTimeOffset();
-    double duration = item->time().endTime - item->time().startTime;
-    double newEndTime = newStartTime + duration;
 
-    double snappedEndTime = newEndTime;
-    double snappedStartTime = newStartTime;
-    if (vs->isSnapEnabled()) {
-        snappedStartTime = m_context->applySnapToTime(newStartTime);
-    } else {
-        snappedEndTime = m_context->applySnapToItem(newEndTime);
-        snappedStartTime = m_context->applySnapToItem(newStartTime);
-    }
-    if (muse::RealIsEqual(snappedEndTime, newEndTime)) {
-        newStartTime = snappedStartTime;
-    } else if (muse::RealIsEqual(snappedStartTime, newStartTime)) {
-        newStartTime = snappedEndTime - duration;
-    } else {
-        newStartTime
-            = (!muse::RealIsEqualOrMore(std::abs(snappedStartTime - newStartTime), std::abs(snappedEndTime - newEndTime))
-               ? snappedStartTime : snappedEndTime - duration);
+    if (applySnap) {
+        double duration = item->time().endTime - item->time().startTime;
+        double newEndTime = newStartTime + duration;
+
+        double snappedEndTime = newEndTime;
+        double snappedStartTime = newStartTime;
+        if (vs->isSnapEnabled()) {
+            snappedStartTime = m_context->applySnapToTime(newStartTime);
+        } else {
+            snappedEndTime = m_context->applySnapToItem(newEndTime);
+            snappedStartTime = m_context->applySnapToItem(newStartTime);
+        }
+        if (muse::RealIsEqual(snappedEndTime, newEndTime)) {
+            newStartTime = snappedStartTime;
+        } else if (muse::RealIsEqual(snappedStartTime, newStartTime)) {
+            newStartTime = snappedEndTime - duration;
+        } else {
+            newStartTime
+                = (!muse::RealIsEqualOrMore(std::abs(snappedStartTime - newStartTime), std::abs(snappedEndTime - newEndTime))
+                   ? snappedStartTime : snappedEndTime - duration);
+        }
     }
 
     secs_t timePositionOffset = newStartTime - item->time().startTime;
@@ -610,6 +612,7 @@ void TrackItemsListModel::startEditItem(const TrackItemKey& key)
     vs->setItemEditEndTimeOffset(item->time().endTime - mousePositionTime);
 
     if (vs) {
+        vs->setEditedItem(key.key);
         vs->updateItemsBoundaries(true, key.key);
     }
 
@@ -631,6 +634,8 @@ void TrackItemsListModel::endEditItem(const TrackItemKey& key)
     vs->setItemEditStartTimeOffset(-1.0);
     vs->setItemEditEndTimeOffset(-1.0);
     vs->setMoveInitiated(false);
+    vs->setEditedItem(trackedit::TrackItemKey {});
+    vs->updateItemsBoundaries(false);
 
     disconnectAutoScroll();
 
@@ -658,7 +663,8 @@ bool TrackItemsListModel::cancelItemDragEdit(const TrackItemKey& key)
 
     trackeditInteraction()->cancelItemDragEdit();
 
-    vs->updateItemsBoundaries(true);
+    vs->setEditedItem(trackedit::TrackItemKey {});
+    vs->updateItemsBoundaries(false);
 
     constexpr auto modifyState = false;
     projectHistory()->endUserInteraction(modifyState);

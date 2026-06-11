@@ -88,7 +88,8 @@ void DBConnection::SetError(
     mpErrors->mLastError = msg;
 
     mpErrors->mLibraryError = errorCode && libraryError.empty()
-                              ? XO("(%d): %s").Format(errorCode, sqlite3_errstr(errorCode))
+                              //: %1 is the SQLite error code, %2 is the error message
+                              ? TranslatableString("project-file-io", "(%1): %2").arg(errorCode).arg(sqlite3_errstr(errorCode))
                               : libraryError;
 
     wxLogMessage("DBConnection SetError\n"
@@ -96,8 +97,8 @@ void DBConnection::SetError(
                  "\tLastError: %s\n"
                  "\tLibraryError: %s",
                  mpErrors->mErrorCode,
-                 mpErrors->mLastError.Debug(),
-                 mpErrors->mLibraryError.Debug());
+                 au3::qtToWx(mpErrors->mLastError.debugStr()),
+                 au3::qtToWx(mpErrors->mLibraryError.debugStr()));
 
     auto logger = AudacityLogger::Get();
     if (logger) {
@@ -115,11 +116,12 @@ void DBConnection::SetDBError(
                            : errorCode;
 
     mpErrors->mLastError = msg.empty()
-                           ? XO("(%d): %s").Format(mpErrors->mErrorCode, sqlite3_errstr(mpErrors->mErrorCode))
+                           //: %1 is the SQLite error code, %2 is the error message
+                           ? TranslatableString("project-file-io", "(%1): %2").arg(mpErrors->mErrorCode).arg(sqlite3_errstr(mpErrors->mErrorCode))
                            : msg;
 
     mpErrors->mLibraryError = libraryError.empty() && db
-                              ? Verbatim(sqlite3_errmsg(db))
+                              ? TranslatableString::untranslatable(sqlite3_errmsg(db))
                               : libraryError;
 
     wxLogMessage("DBConnection SetDBError\n"
@@ -127,8 +129,8 @@ void DBConnection::SetDBError(
                  "\tLastError: %s\n"
                  "\tLibraryError: %s",
                  mpErrors->mErrorCode,
-                 mpErrors->mLastError.Debug(),
-                 mpErrors->mLibraryError.Debug());
+                 au3::qtToWx(mpErrors->mLastError.debugStr()),
+                 au3::qtToWx(mpErrors->mLibraryError.debugStr()));
 
     auto logger = AudacityLogger::Get();
     if (logger) {
@@ -181,7 +183,7 @@ int DBConnection::OpenStepByStep(const FilePath fileName)
     rc = SetPageSize();
 
     if (rc != SQLITE_OK) {
-        SetDBError(XO("Failed to set page size for database %s")
+        SetDBError(TranslatableString("project-file-io", "Failed to set page size for database %1")
                    .Format(fileName));
         return rc;
     }
@@ -190,7 +192,7 @@ int DBConnection::OpenStepByStep(const FilePath fileName)
     // (See comments in ProjectFileIO::SaveProject() about threading
     rc = SafeMode();
     if (rc != SQLITE_OK) {
-        SetDBError(XO("Failed to set safe mode on primary connection to %s").Format(fileName));
+        SetDBError(TranslatableString("project-file-io", "Failed to set safe mode on primary connection to %1").arg(fileName));
         return rc;
     }
 
@@ -208,7 +210,7 @@ int DBConnection::OpenStepByStep(const FilePath fileName)
 
     rc = ModeConfig(mCheckpointDB, "main", SafeConfig);
     if (rc != SQLITE_OK) {
-        SetDBError(XO("Failed to set safe mode on checkpoint connection to %s").Format(fileName));
+        SetDBError(TranslatableString("project-file-io", "Failed to set safe mode on checkpoint connection to %1").arg(fileName));
         return rc;
     }
 
@@ -237,18 +239,19 @@ bool DBConnection::Close()
 
     // Display a progress dialog if there's active or pending checkpoints
     if (mCheckpointPending || mCheckpointActive) {
-        TranslatableString title = XO("Checkpointing project");
+        TranslatableString title = TranslatableString("project-file-io", "Checkpointing project");
 
         // Get access to the active project
         auto project = mpProject.lock();
         if (project) {
-            title = XO("Checkpointing %s").Format(project->GetProjectName());
+            //: %1 is the name of the project being checkpointed
+            title = TranslatableString("project-file-io", "Checkpointing %1").arg(project->GetProjectName());
         }
 
         // Provides a progress dialog with indeterminate mode
         using namespace BasicUI;
         auto pd = MakeGenericProgress({},
-                                      title, XO("This may take several seconds"));
+                                      title, TranslatableString("project-file-io", "This may take several seconds"));
         wxASSERT(pd);
 
         // Wait for the checkpoints to end
@@ -530,12 +533,11 @@ void DBConnection::CheckpointThread(sqlite3* db, const FilePath& fileName)
             // TODO: Should we return the actual error message if it's not a
             // disk full condition?
             auto message1 = rc == SQLITE_FULL
-                            ? XO("Could not write to %s.\n").Format(path)
+                            //: %1 is the file path
+                            ? TranslatableString("project-file-io", "Could not write to %1.\n").arg(path)
                             : TranslatableString{};
-            auto message = XO(
-                "Disk is full.\n"
-                "%s"
-                ).Format(message1);
+            //: %1 is an additional detail message, possibly empty
+            auto message = TranslatableString("project-file-io", "Disk is full.\n%1").arg(message1);
 
             // Stop trying to checkpoint
             giveUp = true;
@@ -544,7 +546,7 @@ void DBConnection::CheckpointThread(sqlite3* db, const FilePath& fileName)
             GuardedCall(
                 [&message, rc] {
                 throw SimpleMessageBoxException { rc != SQLITE_FULL ? ExceptionType::Internal : ExceptionType::BadEnvironment,
-                                                  message, XO("Warning"), "Error:_Disk_full_or_not_writable" };
+                                                  message, TranslatableString("project-file-io", "Warning"), "Error:_Disk_full_or_not_writable" };
             },
                 SimpleGuard<void> {},
                 [this](AudacityException* e) {
@@ -618,7 +620,8 @@ bool DBConnectionTransactionScopeImpl::TransactionStart(const wxString& name)
         ADD_EXCEPTION_CONTEXT("sqlite3.context", "TransactionScope::TransactionStart");
 
         mConnection.SetDBError(
-            XO("Failed to create savepoint:\n\n%s").Format(name)
+            //: %1 is the name of the savepoint
+            TranslatableString("project-file-io", "Failed to create savepoint:\n\n%1").arg(name)
             );
         sqlite3_free(errmsg);
     }
@@ -641,7 +644,8 @@ bool DBConnectionTransactionScopeImpl::TransactionCommit(const wxString& name)
         ADD_EXCEPTION_CONTEXT("sqlite3.context", "TransactionScope::TransactionCommit");
 
         mConnection.SetDBError(
-            XO("Failed to release savepoint:\n\n%s").Format(name)
+            //: %1 is the name of the savepoint
+            TranslatableString("project-file-io", "Failed to release savepoint:\n\n%1").arg(name)
             );
         sqlite3_free(errmsg);
     }
@@ -663,7 +667,8 @@ bool DBConnectionTransactionScopeImpl::TransactionRollback(const wxString& name)
         ADD_EXCEPTION_CONTEXT("sqlite3.rc", std::to_string(rc));
         ADD_EXCEPTION_CONTEXT("sqlite3.context", "TransactionScope::TransactionRollback");
         mConnection.SetDBError(
-            XO("Failed to release savepoint:\n\n%s").Format(name)
+            //: %1 is the name of the savepoint
+            TranslatableString("project-file-io", "Failed to release savepoint:\n\n%1").arg(name)
             );
         sqlite3_free(errmsg);
     }

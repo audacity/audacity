@@ -17,10 +17,10 @@ const EnumValueSymbol EqualizationParameters::kInterpStrings[nInterpolations] =
 {
     // These are acceptable dual purpose internal/visible names
 
-    /* i18n-hint: Technical term for a kind of curve.*/
-    { XO("B-spline") },
-    { XO("Cosine") },
-    { XO("Cubic") }
+    /*: Technical term for a kind of curve.*/
+    { TranslatableString("builtin-effects", "B-spline") },
+    { TranslatableString("builtin-effects", "Cosine") },
+    { TranslatableString("builtin-effects", "Cubic") }
 };
 
 EqualizationParameters::EqualizationParameters(

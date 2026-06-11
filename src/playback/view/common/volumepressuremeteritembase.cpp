@@ -204,6 +204,16 @@ void VolumePressureMeterItemBase::setMeterBackgroundColor(const QColor& c)
     update();
 }
 
+void VolumePressureMeterItemBase::setMeterStrokeColor(const QColor& c)
+{
+    if (m_meterStrokeColor == c) {
+        return;
+    }
+    m_meterStrokeColor = c;
+    emit meterStrokeColorChanged();
+    update();
+}
+
 void VolumePressureMeterItemBase::setMaxPeakMarkerColor(const QColor& c)
 {
     if (m_maxPeakMarkerColor == c) {

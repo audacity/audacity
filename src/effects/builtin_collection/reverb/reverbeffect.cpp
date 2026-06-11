@@ -5,6 +5,7 @@
 
 #include "au3-command-parameters/ShuttleAutomation.h"
 #include "au3-math/Reverb_libSoX.h"
+#include "au3-strings/TranslatableString.h"
 
 namespace au::effects {
 struct Reverb_priv_t
@@ -55,7 +56,7 @@ const EffectParameterMethods& ReverbEffect::Parameters() const
 
 static const struct
 {
-    const TranslatableString name;
+    const ::TranslatableString name;
     ReverbSettings preset;
 } FactoryPresets[] = {
     //                         Room  Pre            Hf       Tone Tone  Wet   Dry
@@ -63,60 +64,60 @@ static const struct
     // Name                    Size, Delay, Reverb, Damping, Low, High, Gain,
     // Gain, Width, Only
     // general purpose
-    /*i18n-hint: This is the name of an effect preset */
-    { XO("Acoustic"), { 50, 10, 75, 100, 21, 100, -14, 0, 80, false } },
-    /*i18n-hint: This is the name of an effect preset */
-    { XO("Ambience"), { 100, 55, 100, 50, 53, 38, 0, -10, 100, false } },
-    /*i18n-hint: This is the name of an effect preset */
-    { XO("Artificial"), { 81, 99, 23, 62, 16, 19, -4, 0, 100, false } },
-    /*i18n-hint: This is the name of an effect preset */
-    { XO("Clean"), { 50, 10, 75, 100, 55, 100, -18, 0, 75, false } },
-    /*i18n-hint: This is the name of an effect preset */
-    { XO("Modern"), { 50, 10, 75, 100, 55, 100, -15, 0, 75, false } },
+    /*: This is the name of an effect preset */
+    { TranslatableString("effects-reverb", "Acoustic"), { 50, 10, 75, 100, 21, 100, -14, 0, 80, false } },
+    /*: This is the name of an effect preset */
+    { TranslatableString("effects-reverb", "Ambience"), { 100, 55, 100, 50, 53, 38, 0, -10, 100, false } },
+    /*: This is the name of an effect preset */
+    { TranslatableString("effects-reverb", "Artificial"), { 81, 99, 23, 62, 16, 19, -4, 0, 100, false } },
+    /*: This is the name of an effect preset */
+    { TranslatableString("effects-reverb", "Clean"), { 50, 10, 75, 100, 55, 100, -18, 0, 75, false } },
+    /*: This is the name of an effect preset */
+    { TranslatableString("effects-reverb", "Modern"), { 50, 10, 75, 100, 55, 100, -15, 0, 75, false } },
     // vocals
-    /*i18n-hint: This is the name of an effect preset */
-    { XO("Vocal I"), { 70, 20, 40, 99, 100, 50, -12, 0, 70, false } },
-    /*i18n-hint: This is the name of an effect preset */
-    { XO("Vocal II"), { 50, 0, 50, 99, 50, 100, -1, -1, 70, false } },
-    /*i18n-hint: This is the name of an effect preset */
-    { XO("Dance Vocal"), { 90, 2, 60, 77, 30, 51, -10, 0, 100, false } },
-    /*i18n-hint: This is the name of an effect preset */
-    { XO("Modern Vocal"), { 66, 27, 77, 8, 0, 51, -10, 0, 68, false } },
-    /*i18n-hint: This is the name of an effect preset */
-    { XO("Voice Tail"), { 66, 27, 100, 8, 0, 51, -6, 0, 68, false } },
+    /*: This is the name of an effect preset */
+    { TranslatableString("effects-reverb", "Vocal I"), { 70, 20, 40, 99, 100, 50, -12, 0, 70, false } },
+    /*: This is the name of an effect preset */
+    { TranslatableString("effects-reverb", "Vocal II"), { 50, 0, 50, 99, 50, 100, -1, -1, 70, false } },
+    /*: This is the name of an effect preset */
+    { TranslatableString("effects-reverb", "Dance Vocal"), { 90, 2, 60, 77, 30, 51, -10, 0, 100, false } },
+    /*: This is the name of an effect preset */
+    { TranslatableString("effects-reverb", "Modern Vocal"), { 66, 27, 77, 8, 0, 51, -10, 0, 68, false } },
+    /*: This is the name of an effect preset */
+    { TranslatableString("effects-reverb", "Voice Tail"), { 66, 27, 100, 8, 0, 51, -6, 0, 68, false } },
     // room sizes
-    /*i18n-hint: This is the name of an effect preset */
-    { XO("Bathroom"), { 16, 8, 80, 0, 0, 100, -6, 0, 100, false } },
-    /*i18n-hint: This is the name of an effect preset */
-    { XO("Small Room Bright"), { 30, 10, 50, 50, 50, 100, -1, -1, 100, false } },
-    /*i18n-hint: This is the name of an effect preset */
-    { XO("Small Room Dark"), { 30, 10, 50, 50, 100, 0, -1, -1, 100, false } },
-    /*i18n-hint: This is the name of an effect preset */
-    { XO("Medium Room"), { 75, 10, 40, 50, 100, 70, -1, -1, 70, false } },
-    /*i18n-hint: This is the name of an effect preset */
-    { XO("Large Room"), { 85, 10, 40, 50, 100, 80, 0, -6, 90, false } },
-    /*i18n-hint: This is the name of an effect preset */
-    { XO("Church Hall"), { 90, 32, 60, 50, 100, 50, 0, -12, 100, false } },
-    /*i18n-hint: This is the name of an effect preset */
-    { XO("Cathedral"), { 90, 16, 90, 50, 100, 0, 0, -20, 100, false } },
-    /*i18n-hint: This is the name of an effect preset */
-    { XO("Big Cave"), { 100, 55, 100, 50, 53, 38, 5, -3, 100, false } },
+    /*: This is the name of an effect preset */
+    { TranslatableString("effects-reverb", "Bathroom"), { 16, 8, 80, 0, 0, 100, -6, 0, 100, false } },
+    /*: This is the name of an effect preset */
+    { TranslatableString("effects-reverb", "Small Room Bright"), { 30, 10, 50, 50, 50, 100, -1, -1, 100, false } },
+    /*: This is the name of an effect preset */
+    { TranslatableString("effects-reverb", "Small Room Dark"), { 30, 10, 50, 50, 100, 0, -1, -1, 100, false } },
+    /*: This is the name of an effect preset */
+    { TranslatableString("effects-reverb", "Medium Room"), { 75, 10, 40, 50, 100, 70, -1, -1, 70, false } },
+    /*: This is the name of an effect preset */
+    { TranslatableString("effects-reverb", "Large Room"), { 85, 10, 40, 50, 100, 80, 0, -6, 90, false } },
+    /*: This is the name of an effect preset */
+    { TranslatableString("effects-reverb", "Church Hall"), { 90, 32, 60, 50, 100, 50, 0, -12, 100, false } },
+    /*: This is the name of an effect preset */
+    { TranslatableString("effects-reverb", "Cathedral"), { 90, 16, 90, 50, 100, 0, 0, -20, 100, false } },
+    /*: This is the name of an effect preset */
+    { TranslatableString("effects-reverb", "Big Cave"), { 100, 55, 100, 50, 53, 38, 5, -3, 100, false } },
 };
 
 //
 // ReverbEffect
 //
 
-const ComponentInterfaceSymbol ReverbEffect::Symbol { XO("Reverb") };
+const ComponentInterfaceSymbol ReverbEffect::Symbol { TranslatableString("effects-reverb", "Reverb") };
 
 ComponentInterfaceSymbol ReverbEffect::GetSymbol() const
 {
     return Symbol;
 }
 
-TranslatableString ReverbEffect::GetDescription() const
+::TranslatableString ReverbEffect::GetDescription() const
 {
-    return XO("Adds ambience or a \"hall effect\"");
+    return ::TranslatableString("effects-reverb", "Adds ambience or a “hall effect”");
 }
 
 ManualPageID ReverbEffect::ManualPage() const
@@ -351,7 +352,7 @@ RegistryPaths ReverbEffect::GetFactoryPresets() const
     RegistryPaths names;
 
     for (size_t i = 0; i < WXSIZEOF(FactoryPresets); i++) {
-        names.push_back(FactoryPresets[i].name.Translation());
+        names.push_back(FactoryPresets[i].name.translated().toStdString());
     }
 
     return names;

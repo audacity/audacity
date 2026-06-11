@@ -8,7 +8,6 @@
 namespace au::au3cloud {
 class Au3AudioComServiceStub;
 class AuthorizationStub;
-class UsageInfoStub;
 
 class Au3CloudModule : public muse::modularity::IModuleSetup
 {

@@ -3,9 +3,11 @@
  */
 #include "nyquistparameterextractorservice.h"
 
+#include <algorithm>
 #include <cmath>
 
 #include "au3wrap/internal/wxtypes_convert.h"
+#include "translation.h"
 
 // AU3 Nyquist effect base class
 #include "au3-nyquist-effects/NyquistBase.h"
@@ -15,18 +17,72 @@ using namespace au::effects;
 using namespace muse;
 
 namespace {
+//! Round a raw step to the nearest "nice" 1/2/5 x power-of-ten value.
+//!
+//! `range / ticks` often lands on an ugly value (e.g. 999.999/1000 = 0.999999),
+//! which then drives both the spinbox increment and the derived decimal count.
+//! Snapping it to a nice number makes the arrows step by +1, +0.5, +2, etc.
+double niceStep(double raw)
+{
+    if (!(raw > 0.0) || !std::isfinite(raw)) {
+        return 1.0;
+    }
+    const double exponent = std::floor(std::log10(raw));
+    const double mag = std::pow(10.0, exponent);
+    const double frac = raw / mag; // in [1, 10)
+    double niceFrac;
+    if (frac < 1.5) {
+        niceFrac = 1.0;
+    } else if (frac < 3.0) {
+        niceFrac = 2.0;
+    } else if (frac < 7.0) {
+        niceFrac = 5.0;
+    } else {
+        niceFrac = 10.0;
+    }
+    return niceFrac * mag;
+}
+
+//! Number of digits after the decimal point in a numeric token (0 for integers
+//! or non-numeric tokens such as "nil").
+int fractionalDigits(const wxString& str)
+{
+    const int dot = str.Find(wxT('.'));
+    if (dot == wxNOT_FOUND) {
+        return 0;
+    }
+    int digits = 0;
+    for (size_t i = dot + 1; i < str.length(); ++i) {
+        if (!wxIsdigit(str[i])) {
+            break;
+        }
+        ++digits;
+    }
+    return digits;
+}
+
+//! Display precision for a float control: the most precise of its declared
+//! default/min/max values, clamped to ParameterInfo::maxNumDecimals so a
+//! numDecimalsOverride set from here never exceeds the auto-derive path's cap.
+int maxFractionalDigits(const wxString& a, const wxString& b, const wxString& c)
+{
+    const int n = std::max({ fractionalDigits(a), fractionalDigits(b), fractionalDigits(c) });
+    return std::min(n, ParameterInfo::maxNumDecimals);
+}
+
 //! Convert NyqControlType to AU4 ParameterType
 ParameterType convertControlType(int nyqType)
 {
     switch (nyqType) {
-    case NYQ_CTRL_INT:
     case NYQ_CTRL_INT_TEXT:
     case NYQ_CTRL_FLOAT_TEXT:
-        // `float-text` renders as a plain numeric input (no slider) to match
-        // legacy AU3 semantics (au3/src/effects/nyquist/Nyquist.cpp:487-522)
-        // and to avoid creating an unusable slider when the high bound is
-        // `nil` (parsed as FLT_MAX in NyquistBase.cpp).
+        // `int-text` and `float-text` render as a plain numeric input (no slider)
+        // to match legacy AU3 semantics (au3/src/effects/nyquist/Nyquist.cpp:487-522):
+        // authors pick the `-text` variants when a slider is unwanted (e.g.
+        // open-ended ranges, where a `nil` bound is parsed as +/-FLT_MAX in
+        // NyquistBase.cpp).
         return ParameterType::Numeric;
+    case NYQ_CTRL_INT:
     case NYQ_CTRL_FLOAT:
         return ParameterType::Slider;
     case NYQ_CTRL_CHOICE:
@@ -51,10 +107,22 @@ ParameterInfo convertControl(const NyqControl& ctrl)
 
     // Use variable name as ID
     info.id = String::fromStdString(au::au3::wxToStdString(ctrl.var));
-    info.name = String::fromStdString(au::au3::wxToStdString(ctrl.name));
+
+    // ctrl.name / ctrl.label hold the SOURCE strings as parsed from the .ny
+    // script (UnQuoteMsgid in NyquistBase.cpp returns untranslatable so that
+    // mName / mAuthor / ... stay locale-stable for plugin identifier composition).
+    // Translate the display strings here instead
+    const auto translateNyquist = [](const wxString& s) -> String {
+        if (s.empty()) {
+            return {};
+        }
+        const auto utf8 = s.utf8_str();
+        return mtrc("effects-nyquist", utf8.data());
+    };
+    info.name = translateNyquist(ctrl.name);
     // Nyquist's ctrl.label is a freeform descriptor (e.g. "30 - 300 beats/minute"),
     // not a unit symbol. Map it to `description`; leave `units` empty.
-    info.description = String::fromStdString(au::au3::wxToStdString(ctrl.label));
+    info.description = translateNyquist(ctrl.label);
 
     info.type = convertControlType(ctrl.type);
 
@@ -68,18 +136,22 @@ ParameterInfo convertControl(const NyqControl& ctrl)
     if (ctrl.type == NYQ_CTRL_INT || ctrl.type == NYQ_CTRL_INT_TEXT) {
         info.isInteger = true;
         info.stepSize = 1.0;
-    } else if (ctrl.ticks > 0) {
-        // Calculate step size from ticks.
-        // Nyquist `float-text` / `time` controls with a `nil` bound are parsed
-        // as ±FLT_MAX in NyquistBase.cpp, and ticks is hard-coded to 1000
-        // there. Refuse to synthesise a stepSize from a non-finite or
-        // absurdly wide range: leave stepSize=0 so the QML fallback
-        // (step=0.01 in GeneratedIncrementalPropertyControl.qml) kicks in.
+    } else if (ctrl.type == NYQ_CTRL_FLOAT || ctrl.type == NYQ_CTRL_FLOAT_TEXT) {
+        // Derive a step from the range (ticks is hard-coded to 1000 in
+        // NyquistBase.cpp), snapped to a nice 1/2/5 value so the spinbox arrows
+        // step by e.g. +1 instead of +0.999999. A `nil` bound is parsed as
+        // ±FLT_MAX there, leaving no usable range: fall back to a step of 1.
         const double range = ctrl.high - ctrl.low;
-        if (std::isfinite(range) && range > 0 && range < 1e15) {
-            info.stepSize = range / ctrl.ticks;
+        if (ctrl.ticks > 0 && std::isfinite(range) && range > 0 && range < 1e15) {
+            info.stepSize = niceStep(range / ctrl.ticks);
             info.stepCount = ctrl.ticks;
+        } else {
+            info.stepSize = 1.0;
         }
+        // Keep the precision declared in the .ny values, decoupled from the
+        // rounded step, so e.g. Frequency still accepts 4.5 even though the
+        // arrows move by 1.
+        info.numDecimalsOverride = maxFractionalDigits(ctrl.valStr, ctrl.lowStr, ctrl.highStr);
     }
 
     // For choice controls, extract enum values
@@ -89,7 +161,7 @@ ParameterInfo convertControl(const NyqControl& ctrl)
 
         for (size_t i = 0; i < ctrl.choices.size(); ++i) {
             const auto& choice = ctrl.choices[i];
-            info.enumValues.push_back(String::fromStdString(choice.Msgid().Translation().ToStdString()));
+            info.enumValues.push_back(String::fromQString(choice.Msgid().translated()));
             info.enumIndices.push_back(static_cast<double>(i));
         }
 
@@ -106,7 +178,7 @@ ParameterInfo convertControl(const NyqControl& ctrl)
 
         for (const auto& fileType : ctrl.fileTypes) {
             // Convert FileType to filter string format: "Description (*.ext1 *.ext2)"
-            wxString filterStr = fileType.description.Translation();
+            wxString filterStr = fileType.description.translated().toStdString();
 
             if (!fileType.extensions.empty()) {
                 wxString extList;
@@ -142,11 +214,10 @@ ParameterInfo convertControl(const NyqControl& ctrl)
     }
 
     // For float/slider controls, format the current value as string
-    // This is needed for the formattedValue display next to the slider in the UI
+    // This is needed for the formattedValue display next to the slider in the UI.
+    // Match the precision derived above so the display agrees with the text box.
     if (ctrl.type == NYQ_CTRL_FLOAT || ctrl.type == NYQ_CTRL_FLOAT_TEXT) {
-        // Use reasonable precision: 2 decimal places for most cases
-        // Could be made more sophisticated based on the range/stepSize in the future
-        info.currentValueString = String::number(ctrl.val, 2);
+        info.currentValueString = String::number(ctrl.val, info.numDecimalsOverride);
     }
 
     return info;
@@ -334,7 +405,7 @@ muse::String NyquistParameterExtractorService::getParameterValueString(EffectIns
         // Return the choice label for the given index
         int index = static_cast<int>(value);
         if (index >= 0 && index < static_cast<int>(ctrl->choices.size())) {
-            return String::fromStdString(ctrl->choices[index].Msgid().Translation().ToStdString());
+            return String::fromQString(ctrl->choices[index].Msgid().translated());
         }
         return String::number(index);
     }

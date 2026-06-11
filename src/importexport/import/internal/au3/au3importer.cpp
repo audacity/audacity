@@ -13,6 +13,7 @@
 #include "au3-project/Project.h"
 #include "au3-project-file-io/ProjectFileIO.h"
 #include "au3-tags/Tags.h"
+#include "au3-strings/TranslatableString.h"
 
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/wxtypes_convert.h"
@@ -22,7 +23,6 @@
 #include "trackedit/internal/au3/au3trackdata.h"
 
 #include "tempodetection.h"
-
 using au::trackedit::ITrackDataPtr;
 using au::trackedit::Au3TrackData;
 using Au3TrackDataPtr = std::shared_ptr<Au3TrackData>;
@@ -62,8 +62,9 @@ public:
         constexpr double ProgressSteps { 1000.0 };
         if (!mProgressDialog) {
             wxFileName ff(mImportFileHandle->GetFilename());
-            auto title = XO("Importing %s").Format(mImportFileHandle->GetFileDescription());
-            mProgressDialog = BasicUI::MakeProgress(title, Verbatim(ff.GetFullName()));
+            //: %1 is the description of the file format being imported
+            auto title = TranslatableString("import-export", "Importing %1").arg(mImportFileHandle->GetFileDescription());
+            mProgressDialog = BasicUI::MakeProgress(title, ::au3::untranslatable(ff.GetFullName()));
         }
         auto result = mProgressDialog->Poll(progress * ProgressSteps, ProgressSteps);
         if (result == BasicUI::ProgressResult::Cancelled) {
@@ -391,9 +392,9 @@ void au::importexport::Au3Importer::addImportedTracks(const muse::io::path_t& fi
         ++i;
         newTrack->SetSelected(true);
         if (useSuffix) {
-            //i18n-hint Name default name assigned to a clip on track import
-            newTrack->SetName(XC("%s %d", "clip name template")
-                              .Format(trackNameBase, i + 1).Translation());
+            //: Name default name assigned to a clip on track import
+            newTrack->SetName(::TranslatableString("import-export", "%1 %2", "clip name template")
+                              .arg(trackNameBase).arg(i + 1).translated().toStdString());
         } else {
             newTrack->SetName(trackNameBase);
         }

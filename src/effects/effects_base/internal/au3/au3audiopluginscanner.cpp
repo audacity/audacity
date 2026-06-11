@@ -30,14 +30,14 @@ public:
         : m_inner{inner} {}
 
     BasicUI::ProgressResult Poll(unsigned long long numerator, unsigned long long denominator,
-                                 const TranslatableString& message) override
+                                 const ::TranslatableString& message) override
     {
         if (!m_inner) {
             return BasicUI::ProgressResult::Success;
         }
 
         m_inner->progress(static_cast<int64_t>(numerator), static_cast<int64_t>(denominator),
-                          au3::wxToStdString(message.Translation()));
+                          message.translated().toStdString());
 
         // The scan runs synchronously on the main thread, so we must pump the
         // event loop periodically to let the host's progress dialog repaint and
@@ -53,8 +53,8 @@ public:
         return m_inner->isCanceled() ? BasicUI::ProgressResult::Cancelled : BasicUI::ProgressResult::Success;
     }
 
-    void SetMessage(const TranslatableString&) override {}
-    void SetDialogTitle(const TranslatableString&) override {}
+    void SetMessage(const ::TranslatableString&) override {}
+    void SetDialogTitle(const ::TranslatableString&) override {}
     void Reinit() override {}
 
 private:
