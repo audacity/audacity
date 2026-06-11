@@ -460,6 +460,12 @@ void ExportAudioDialog::OnEditMetadata(wxCommandEvent& event)
     if (mRangeSplit->GetValue()) {
         UpdateExportSettings();
 
+        std::vector<Tags> originalTags;
+        originalTags.reserve(mExportSettings.size());
+        for (const auto& spec : mExportSettings) {
+            originalTags.push_back(spec.tags);
+        }
+
         std::vector<Tags*> tags;
         std::vector<wxString> names;
         tags.reserve(mExportSettings.size());
@@ -470,6 +476,23 @@ void ExportAudioDialog::OnEditMetadata(wxCommandEvent& event)
         }
         TagsEditorDialog dialog(this, XO("Edit Metadata Tags"), tags, names, true, true);
         dialog.ShowModal();
+
+        if (mExportSettings.size() > 1) {
+            Tags* lastEditedTags = nullptr;
+            for (size_t i = 0; i < mExportSettings.size(); ++i) {
+                if (!(mExportSettings[i].tags == originalTags[i])) {
+                    lastEditedTags = &mExportSettings[i].tags;
+                } else if (lastEditedTags != nullptr) {
+                    auto title = mExportSettings[i].tags.GetTag(TAG_TITLE);
+                    auto track = mExportSettings[i].tags.GetTag(TAG_TRACK);
+                    
+                    mExportSettings[i].tags = *lastEditedTags;
+                    
+                    mExportSettings[i].tags.SetTag(TAG_TITLE, title);
+                    mExportSettings[i].tags.SetTag(TAG_TRACK, track);
+                }
+            }
+        }
     } else {
         TagsEditorDialog::EditProjectMetadata(mProject,
                                               XO("Edit Metadata Tags"), XO("Exported Tags"));
