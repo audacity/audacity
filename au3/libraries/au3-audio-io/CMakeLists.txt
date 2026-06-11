@@ -26,6 +26,7 @@ set( SOURCES
 set( LIBRARIES
    PRIVATE
    portaudio::portaudio
+   $<$<BOOL:${USE_PORTMIXER}>:portmixer>
    au3-mixer-interface
    au3-project-rate-interface
    au3-realtime-effects
