@@ -13,6 +13,8 @@ import Audacity.ProjectScene
 ListItemBlank {
     id: root
 
+    keyboardRemovable: true
+
     property var item: null
     property var container: null
     property bool dragged: false
