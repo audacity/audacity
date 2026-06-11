@@ -6,7 +6,6 @@
 #include "au3audiocomservicestub.h"
 #include "au3cloudconfigurationstub.h"
 #include "authorizationstub.h"
-#include "usageinfostub.h"
 
 using namespace au::au3cloud;
 
@@ -21,7 +20,6 @@ void Au3CloudModule::registerExports()
 {
     globalIoc()->registerExport<IAu3CloudConfiguration>(mname, new Au3CloudConfigurationStub());
     globalIoc()->registerExport<IAuthorization>(mname, new AuthorizationStub());
-    globalIoc()->registerExport<IUsageInfo>(mname, new UsageInfoStub());
 }
 
 muse::modularity::IContextSetup* Au3CloudModule::newContext(const muse::modularity::ContextPtr& ctx) const

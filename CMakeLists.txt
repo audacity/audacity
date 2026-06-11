@@ -119,8 +119,9 @@ option(AU_BUILD_PROJECTSCENE_TESTS "Build projectscene tests" ON)
 option(AU_BUILD_RECORD_MODULE "Build record module" ON)
 option(AU_BUILD_RECORD_TESTS "Build record tests" ON)
 option(AU_BUILD_SHARED_TESTS "Build shared tests" ON)
-option(AU_BUILD_UICOMPONENTS_TESTS "Build uicomponents tests" ON)
 option(AU_BUILD_TRACKEDIT_TESTS "Build trackedit tests" ON)
+option(AU_BUILD_UICOMPONENTS_TESTS "Build uicomponents tests" ON)
+option(AU_BUILD_USAGEINFO_MODULE "Build usage info module" ON)
 
 option(AU_MODULE_EFFECTS_VST "Build audacity vst module" ON)
 

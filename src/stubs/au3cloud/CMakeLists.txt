@@ -10,8 +10,6 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/au3cloudconfigurationstub.h
     ${CMAKE_CURRENT_LIST_DIR}/authorizationstub.cpp
     ${CMAKE_CURRENT_LIST_DIR}/authorizationstub.h
-    ${CMAKE_CURRENT_LIST_DIR}/usageinfostub.cpp
-    ${CMAKE_CURRENT_LIST_DIR}/usageinfostub.h
 )
 
 setup_module()
