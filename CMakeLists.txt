@@ -147,6 +147,10 @@ option(AU_USE_LIBCURL "Use libcurl for HTTP requests" OFF)
 # Time track
 option(AU_LOAD_TIMETRACK "Load time track from Audacity 3 projects" OFF)
 
+# Port mixer
+option(AU_USE_PORTMIXER "Use PortMixer for audio device management" OFF)
+set(USE_PORTMIXER ${AU_USE_PORTMIXER})
+
 # === Setup ===
 
 # === Pack ===

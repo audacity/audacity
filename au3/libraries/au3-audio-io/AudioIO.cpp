@@ -399,7 +399,12 @@ void AudioIO::SetMixer(int inputSource, float recordVolume,
         Px_SetInputVolume(mixer, recordVolume);
     }
 
+    return;
 #endif
+
+    // No working hardware input mixer
+    // Emulate the recording level by scaling captured samples in software
+    SetSoftwareRecordGain(recordVolume);
 }
 
 void AudioIO::GetMixer(int* recordDevice, float* recordVolume,
@@ -425,8 +430,9 @@ void AudioIO::GetMixer(int* recordDevice, float* recordVolume,
 
 #endif
 
+    // Recording level is emulated in software
     *recordDevice = 0;
-    *recordVolume = 1.0f;
+    *recordVolume = GetSoftwareRecordGain();
 }
 
 bool AudioIO::InputMixerWorks()
@@ -2919,6 +2925,33 @@ void AudioIoCallback::UpdateTimePosition(unsigned long framesPerBuffer)
         mPlaybackSchedule.mTimeQueue.Consumer(framesPerBuffer, mRate));
 }
 
+constSamplePtr AudioIoCallback::ApplyRecordGain(
+    constSamplePtr inputBuffer, float gain, size_t numSamples, samplePtr scratch)
+{
+    switch (mCaptureFormat) {
+    case floatSample: {
+        auto src = reinterpret_cast<const float*>(inputBuffer);
+        auto dst = reinterpret_cast<float*>(scratch);
+        for (size_t i = 0; i < numSamples; ++i) {
+            dst[i] = src[i] * gain;
+        }
+        return scratch;
+    }
+    case int16Sample: {
+        auto src = reinterpret_cast<const short*>(inputBuffer);
+        auto dst = reinterpret_cast<short*>(scratch);
+        for (size_t i = 0; i < numSamples; ++i) {
+            dst[i] = static_cast<short>(std::clamp(src[i] * gain, -32768.0f, 32767.0f));
+        }
+        return scratch;
+    }
+    case int24Sample:
+        break;
+    }
+
+    return inputBuffer;
+}
+
 // return true, IFF we have fully handled the callback.
 //
 // Copy from PortAudio input buffers to our intermediate recording buffers.
@@ -3335,6 +3368,15 @@ int AudioIoCallback::AudioCallback(
 
     if (inputBuffer && numCaptureChannels) {
         float* inputSamples;
+
+#ifndef USE_PORTMIXER
+        const float gain = GetSoftwareRecordGain();
+        if (gain != 1.0f) {
+            const size_t numSamples = framesPerBuffer * numCaptureChannels;
+            const auto scratch = stackAllocate(char, numSamples * SAMPLE_SIZE(mCaptureFormat));
+            inputBuffer = ApplyRecordGain(inputBuffer, gain, numSamples, scratch);
+        }
+#endif
 
         if (mCaptureFormat == floatSample) {
             inputSamples = (float*)inputBuffer;

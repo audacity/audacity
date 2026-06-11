@@ -132,7 +132,8 @@ static int open_mixer(PxDev *dev, int card, int playback)
             }
          }
          else {
-            if (snd_mixer_selem_get_capture_group(elem) >= 0) {
+            if (snd_mixer_selem_has_capture_volume(elem) ||
+                snd_mixer_selem_has_capture_switch(elem)) {
                dev->numselems++;
             }
             else if (snd_mixer_selem_is_enum_capture(elem)) {
@@ -182,14 +183,15 @@ static int open_mixer(PxDev *dev, int card, int playback)
          snd_mixer_selem_id_set_index(sid, snd_mixer_selem_get_index(elem));
          vol = snd_mixer_find_selem(dev->handle, sid);
 
-         if (snd_mixer_selem_get_capture_group(elem) >= 0) {
+         if (snd_mixer_selem_has_capture_volume(elem) ||
+             snd_mixer_selem_has_capture_switch(elem)) {
             snprintf(name,
                      sizeof(name),
                      "%s:%d",
                      snd_mixer_selem_get_name(elem),
                      snd_mixer_selem_get_index(elem));
 
-            dev->selems[i].vol = vol;
+            dev->selems[i].vol = vol ? vol : elem;
             dev->selems[i].elem = elem;
             dev->selems[i].index = snd_mixer_selem_get_index(elem);
             dev->selems[i].name = strdup(name);
@@ -237,13 +239,13 @@ static int open_mixer(PxDev *dev, int card, int playback)
 
       for (i = 0; i < dev->numselems; i++) {
          elem = dev->selems[i].elem;
-         if (snd_mixer_selem_get_capture_group(elem) >= 0) {
+         if (snd_mixer_selem_has_capture_volume(elem) ||
+             snd_mixer_selem_has_capture_switch(elem)) {
             int sw = 0;
-            if (snd_mixer_selem_get_capture_switch(elem, SND_MIXER_SCHN_FRONT_LEFT, &sw) < 0) {
-               continue;
-            }
-            if (!sw) {
-               continue;
+            if (snd_mixer_selem_has_capture_switch(elem)) {
+               if (snd_mixer_selem_get_capture_switch(elem, SND_MIXER_SCHN_FRONT_LEFT, &sw) < 0 || !sw) {
+                  continue;
+               }
             }
             dev->source = i;
             break;
