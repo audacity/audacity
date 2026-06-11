@@ -1931,7 +1931,14 @@ bool NyquistBase::Parse(
     }
 
     if (len >= 2 && tokens[0] == wxT("type")) {
+        const auto isEffectTypeToken = [](const wxString& token) {
+            return token == wxT("process")
+                   || token == wxT("generate")
+                   || token == wxT("analyze");
+        };
+
         wxString tok = tokens[1];
+        int groupIndex = 2;
         mIsTool = false;
         if (tok == wxT("tool")) {
             mIsTool = true;
@@ -1943,8 +1950,9 @@ bool NyquistBase::Parse(
             // ;type tool analyze
             // The last three are placed in the tool menu, but are processed as
             // process, generate or analyze.
-            if (len >= 3) {
+            if (len >= 3 && isEffectTypeToken(tokens[2])) {
                 tok = tokens[2];
+                groupIndex = 3;
             }
         }
 
@@ -1956,8 +1964,8 @@ bool NyquistBase::Parse(
             mType = EffectTypeAnalyze;
         }
 
-        if (len >= 3) {
-            const auto& tok = tokens[2];
+        if (len > groupIndex) {
+            const auto& tok = tokens[groupIndex];
             if (tok == wxT("nogroup")) {
                 mGroup = EffectGroup::None;
             } else if (tok == wxT("volumeandcompression")) {
