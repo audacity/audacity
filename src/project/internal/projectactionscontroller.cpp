@@ -42,6 +42,22 @@ static const muse::actions::ActionCode OPEN_METADATA_DIALOG("open-metadata-dialo
 static const muse::actions::ActionCode OPEN_CUSTOM_MAPPING("open-custom-mapping");
 static const muse::actions::ActionQuery OPEN_CLOUD_AUDIO_FILE_URI("audacity://cloud/open-audio-file");
 
+namespace {
+au::au3cloud::UploadMode toUploadMode(CloudSaveMode mode)
+{
+    switch (mode) {
+    case CloudSaveMode::CreateNew:
+        return au::au3cloud::UploadMode::CreateNew;
+    case CloudSaveMode::ForceOverwrite:
+        return au::au3cloud::UploadMode::ForceOverwrite;
+    case CloudSaveMode::NormalUpdate:
+        return au::au3cloud::UploadMode::NormalUpdate;
+    }
+
+    return au::au3cloud::UploadMode::NormalUpdate;
+}
+}
+
 ProjectActionsController::ProjectActionsController(muse::modularity::ContextPtr ctx)
     : muse::Contextable(ctx)
 {
@@ -530,42 +546,39 @@ bool ProjectActionsController::saveProject(const muse::io::path_t& path)
     return saveProject(SaveMode::Save);
 }
 
-bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudInfo, SaveMode saveMode, bool forceOverwrite)
+muse::Ret ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudInfo, CloudSaveMode cloudSaveMode)
 {
     if (!audioComService()->enabled()) {
-        LOGE() << "Cloud support is not available";
-        return false;
+        return make_ret(Ret::Code::NotSupported, std::string { "Cloud support is not available" });
     }
 
-    if (!ensureAuthorization()) {
-        return false;
+    if (const Ret ret = ensureAuthorization(); !ret) {
+        return ret;
     }
 
     io::path_t cloudProjectsPath = configuration()->cloudProjectsPath();
     if (cloudProjectsPath.empty()) {
-        LOGE() << "Cloud projects path is not set";
-        return false;
+        return make_ret(Ret::Code::UnknownError, std::string { "Cloud projects path is not set" });
     }
 
     io::path_t projectFilePath = cloudProjectsPath.appendingComponent(cloudInfo.name).appendingSuffix(au::project::AUP4);
 
     IAudacityProjectPtr project = currentProject();
     if (!project) {
-        LOGE() << "No project opened";
-        return false;
+        return make_ret(Ret::Code::UnknownError, std::string { "No project opened" });
     }
 
     auto [uploadRet, progress] = audioComService()->uploadProject(project, cloudInfo.name.toStdString(), [this, projectFilePath]() {
         return saveProjectLocally(projectFilePath, SaveMode::Save);
-    }, forceOverwrite);
+    }, toUploadMode(cloudSaveMode));
 
     if (!uploadRet) {
         handleCloudSaveError(uploadRet);
-        return false;
+        return uploadRet;
     }
 
     if (!progress) {
-        return true;
+        return make_ok();
     }
 
     progress->finished().onReceive(this, [this, projectFilePath](const ProgressResult& result) {
@@ -611,7 +624,7 @@ bool ProjectActionsController::saveProjectToCloud(const CloudProjectInfo& cloudI
         }
     });
 
-    return true;
+    return make_ok();
 }
 
 bool ProjectActionsController::saveProjectLocally(const muse::io::path_t& filePath, SaveMode saveMode)
@@ -821,7 +834,11 @@ bool ProjectActionsController::saveProjectAt(const SaveLocation& location, SaveM
     }
 
     if (location.isCloud()) {
-        return saveProjectToCloud(location.cloudInfo(), saveMode);
+        const Ret ret = saveProjectToCloud(location.cloudInfo());
+        if (!ret) {
+            LOGE() << ret.toString();
+        }
+        return ret;
     }
 
     return false;
@@ -877,7 +894,7 @@ muse::Ret ProjectActionsController::openProject(const muse::io::path_t& path, co
     }
 
     //! Step 5. If it's a cloud project, download the latest version
-    if (configuration()->isCloudProject(actualPath)) {
+    if (audioComService()->isCloudProject(actualPath)) {
         return openCloudProject(actualPath, projectId);
     }
 
@@ -1352,13 +1369,6 @@ muse::Ret ProjectActionsController::ensureAuthorization()
 void ProjectActionsController::handleCloudOpenError(const muse::Ret& error, const io::path_t& localPath,
                                                     const std::string& cloudProjectId)
 {
-    using Err = au::au3cloud::Err;
-    const auto err = static_cast<Err>(error.code());
-
-    if (err == Err::SyncResultNotFound && fileSystem()->exists(localPath)) {
-        doOpenProject(localPath);
-    }
-
     const auto ret = openSaveProjectScenario()->showCloudOpenError(error, localPath);
 
     switch (ret.code()) {
@@ -1366,24 +1376,60 @@ void ProjectActionsController::handleCloudOpenError(const muse::Ret& error, cons
         doOpenProject(localPath);
         break;
     case IOpenSaveProjectScenario::RET_CODE_SAVE_LOCALLY_AND_REMOVE_CACHE: {
+        const auto openRet = doOpenProject(localPath);
+        if (!openRet) {
+            LOGE() << openRet.toString();
+            break;
+        }
+
         IAudacityProjectPtr project = currentProject();
         if (!project) {
             break;
         }
+
         const auto askRet = openSaveProjectScenario()->askLocalPath(project, SaveMode::Save);
         if (!askRet.ret || askRet.val.empty()) {
             break;
         }
-        saveProjectLocally(askRet.val, SaveMode::Save);
-        fileSystem()->remove(localPath);
+
+        const auto deleteRet = audioComService()->deleteCloudProject(localPath);
+        if (!deleteRet) {
+            LOGW() << deleteRet.toString();
+        }
+
+        const auto newPath = askRet.val;
+        if (!saveProjectLocally(newPath, SaveMode::Save)) {
+            break;
+        }
+
+        if (newPath != localPath) {
+            const auto removeRet = fileSystem()->remove(localPath);
+            if (!removeRet) {
+                LOGW() << removeRet.toString();
+            }
+        }
         break;
     }
     case IOpenSaveProjectScenario::RET_CODE_SAVE_TO_CLOUD: {
+        const auto openRet = doOpenProject(localPath);
+        if (!openRet) {
+            LOGE() << openRet.toString();
+            break;
+        }
+
         IAudacityProjectPtr project = currentProject();
         if (!project) {
             break;
         }
-        saveProjectToCloud(CloudProjectInfo { QUrl {}, {}, project->displayName() }, SaveMode::Save);
+
+        const auto deleteRet = audioComService()->deleteCloudProject(localPath);
+        if (!deleteRet) {
+            LOGW() << deleteRet.toString();
+        }
+        const auto saveRet = saveProjectToCloud(CloudProjectInfo { QUrl {}, {}, project->displayName() }, CloudSaveMode::CreateNew);
+        if (!saveRet) {
+            LOGE() << saveRet.toString();
+        }
         break;
     }
     case IOpenSaveProjectScenario::RET_CODE_OPEN_CLOUD_FORCE:
@@ -1426,16 +1472,43 @@ void ProjectActionsController::handleCloudSaveError(const muse::Ret& error)
         if (!askRet.ret || askRet.val.empty()) {
             break;
         }
-        saveProjectLocally(askRet.val, SaveMode::Save);
-        fileSystem()->remove(oldPath);
+
+        const auto deleteRet = audioComService()->deleteCloudProject(oldPath);
+        if (!deleteRet) {
+            LOGW() << deleteRet.toString();
+        }
+
+        const auto newPath = askRet.val;
+        if (!saveProjectLocally(newPath, SaveMode::Save)) {
+            break;
+        }
+
+        if (newPath != oldPath) {
+            const auto removeRet = fileSystem()->remove(oldPath);
+            if (!removeRet) {
+                LOGW() << removeRet.toString();
+            }
+        }
         break;
     }
-    case IOpenSaveProjectScenario::RET_CODE_SAVE_TO_CLOUD:
-        saveProjectToCloud(CloudProjectInfo { QUrl {}, {}, project->displayName() }, SaveMode::Save);
+    case IOpenSaveProjectScenario::RET_CODE_SAVE_TO_CLOUD: {
+        const auto deleteRet = audioComService()->deleteCloudProject(project->path());
+        if (!deleteRet) {
+            LOGW() << deleteRet.toString();
+        }
+        const auto saveRet = saveProjectToCloud(CloudProjectInfo { QUrl {}, {}, project->displayName() }, CloudSaveMode::CreateNew);
+        if (!saveRet) {
+            LOGE() << saveRet.toString();
+        }
+    }
+    break;
+    case IOpenSaveProjectScenario::RET_CODE_SAVE_TO_CLOUD_FORCE: {
+        const auto saveRet = saveProjectToCloud(CloudProjectInfo { QUrl {}, {}, project->displayName() }, CloudSaveMode::ForceOverwrite);
+        if (!saveRet) {
+            LOGE() << saveRet.toString();
+        }
         break;
-    case IOpenSaveProjectScenario::RET_CODE_SAVE_TO_CLOUD_FORCE:
-        saveProjectToCloud(CloudProjectInfo { QUrl {}, {}, project->displayName() }, SaveMode::Save, true);
-        break;
+    }
     case IOpenSaveProjectScenario::RET_CODE_CLOSE_AND_OPEN_CLOUD_FORCE: {
         const io::path_t localPath = project->path();
         closeOpenedProject(false);

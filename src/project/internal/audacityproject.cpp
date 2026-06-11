@@ -270,7 +270,7 @@ bool Audacity4Project::isImported() const
 
 bool Audacity4Project::isCloudProject() const
 {
-    return configuration()->isCloudProject(m_path);
+    return audioComService()->isCloudProject(m_path);
 }
 
 String Audacity4Project::title() const

@@ -61,7 +61,7 @@ public:
     muse::async::Channel<std::string, muse::io::path_t> audioThumbnailFileUpdated() const override;
 
     muse::RetVal<muse::ProgressPtr> uploadProject(au::project::IAudacityProjectPtr project, const std::string& name,
-                                                  std::function<bool()> projectSaveCallback, bool forceOverwrite = false) override;
+                                                  std::function<bool()> projectSaveCallback, UploadMode uploadMode) override;
 
     muse::RetVal<muse::ProgressPtr> openCloudProject(const muse::io::path_t& localPath, const std::string& projectId = {},
                                                      const std::string& snapshotId = {}, bool forceOverwrite = false) override;
@@ -77,10 +77,13 @@ public:
     std::string getCloudProjectPage(const muse::io::path_t& projectPath) const override;
     std::string getCloudAudioPage(const std::string& slug) const override;
 
+    bool isCloudProject(const muse::io::path_t& projectPath) const override;
+
+    muse::Ret deleteCloudProject(const muse::io::path_t& localPath) override;
+
     void deinit() override;
 
 private:
-    static void removeProjectFromDatabase(const muse::io::path_t& localPath);
     muse::ProgressPtr createSyncProgress();
     bool isSnapshotUpToDate(
         const std::optional<audacity::cloud::audiocom::sync::DBProjectData>& dbProjectData,

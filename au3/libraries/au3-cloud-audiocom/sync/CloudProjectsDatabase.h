@@ -95,7 +95,7 @@ public:
 
     std::vector<DBProjectData> GetCloudProjects() const;
 
-    void DeleteProject(std::string_view projectId);
+    bool DeleteProject(std::string_view projectId);
 
     bool
     MarkProjectAsSynced(std::string_view projectId, std::string_view snapshotId);

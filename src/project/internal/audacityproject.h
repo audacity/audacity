@@ -13,6 +13,7 @@
 #include "trackedit/itrackeditclipboard.h"
 #include "trackedit/itrackeditproject.h"
 #include "importexport/import/iimporter.h"
+#include "au3cloud/iau3audiocomservice.h"
 
 namespace au::au3 {
 class Au3ProjectAccessor;
@@ -54,6 +55,7 @@ class Audacity4Project : public IAudacityProject, public muse::async::Asyncable,
     muse::ContextInject<au::trackedit::ITrackeditClipboard> clipboard { this };
     muse::ContextInject<IThumbnailCreator> thumbnailCreator { this };
     muse::ContextInject<importexport::IImporter> importer { this };
+    muse::ContextInject<au3cloud::IAu3AudioComService> audioComService { this };
 
 public:
     Audacity4Project(const muse::modularity::ContextPtr& ctx)
