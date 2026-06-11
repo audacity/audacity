@@ -7,6 +7,14 @@ Changes in version 4.0.0 beta 2
    * #11040 Fixed missing clipping indication on gradient meters
    * #10987 Disabled "Add effect" for label tracks
    * #9171 Allow deselecting tracks with Cmd/Ctrl+click
+   * #10874, #10275 Added translations, migrated from Audacity 3
+   * #10354 Dropping audio files onto the Projects page now opens them in a new project
+   * #8625, #8626 Visual updates to the track headers
+   * #11051, #11028, #9921, #8865, #9354, #8928, #9661, #8926 Fixed numerous snapping and snap guideline issues
+   * #10478 Fixed broken frequency parameter in some Nyquist effects
+   * #11061 Fixed crash when closing a project while playback is paused
+   * #10438 Fixed rewind not scrolling the view to the playhead
+   * #10990 Fixed effect dialogs going behind the main window on macOS
 
 Changes in version 4.0.0 beta 1
 
