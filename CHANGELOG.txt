@@ -16,6 +16,7 @@ This is a patch release. It contains the following changes:
    * #10099 Fixed MixerBoard Mute and Solo button display (Thanks, Ivan A. Melnikov (@iv-m)!)
    * #10681 Fixed multichannel FLAC import
    * #10999 Fixed envelope being broken after joining clips
+   * #11095 Fixed TAGs leaking into other files during macro processing
 
 Changes in version 3.7.7
 
