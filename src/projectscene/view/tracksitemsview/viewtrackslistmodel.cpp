@@ -125,6 +125,7 @@ void ViewTracksListModel::load()
         // TODO: only dataChanged affected tracks, not the whole thing
         const int lastIndex = static_cast<int>(m_trackList.size()) - 1;
         emit dataChanged(index(0), index(lastIndex), { IsTrackSelectedRole });
+        emit dataChanged(index(0), index(lastIndex), { IsDataSelectedRole });
     }, muse::async::Asyncable::Mode::SetReplace);
 
     selectionController()->dataSelectedStartTimeChanged().onReceive(this, [this](trackedit::secs_t begin) {

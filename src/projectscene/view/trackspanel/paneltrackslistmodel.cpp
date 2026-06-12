@@ -166,10 +166,30 @@ void PanelTracksListModel::selectRow(int row, bool exclusive)
         m_selectionModel->select(index(row));
     }
 
-    //! NOTE: Selecting a track unselects all clips
+    //! NOTE: Selecting a track unselects all clips and clears any frequency selection
     selectionController()->resetSelectedClips();
+    frequencySelectionController()->resetFrequencySelection();
 
     projectHistory()->modifyState();
+}
+
+void PanelTracksListModel::selectAudioData(int row)
+{
+    if (row >= rowCount()) {
+        return;
+    }
+
+    if (TrackItem* item = modelIndexToItem(index(row))) {
+        const trackedit::TrackType type = item->trackType();
+        if (type == trackedit::TrackType::Mono || type == trackedit::TrackType::Stereo) {
+            selectionController()->setSelectedTrackAudioData(item->trackId());
+
+            muse::actions::ActionQuery seek("action://playback/seek");
+            seek.addParam("seekTime", muse::Val(selectionController()->dataSelectedStartTime()));
+            seek.addParam("triggerPlay", muse::Val(false));
+            dispatcher()->dispatch(seek);
+        }
+    }
 }
 
 void PanelTracksListModel::clearSelection()
