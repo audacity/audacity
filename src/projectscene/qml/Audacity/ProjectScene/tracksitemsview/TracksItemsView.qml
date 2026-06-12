@@ -1080,6 +1080,7 @@ Rectangle {
                             context: timeline.context
                             container: tracksItemsView
                             canvas: content
+                            canvasIndentWidth: content.anchors.leftMargin
 
                             trackId: itemData.trackId
                             trackTitle: itemData.trackTitle
