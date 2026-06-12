@@ -28,7 +28,9 @@ void TrackLabelsListModel::onInit()
     });
 
     dispatcher()->reg(this, "rename-item", [this]() {
-        requestItemTitleChange();
+        QTimer::singleShot(100, this, [this]() {
+            requestItemTitleChange();
+        });
     });
 }
 
@@ -83,10 +85,6 @@ void TrackLabelsListModel::onReload()
             m_allLabelList.insert(m_allLabelList.begin() + i, label);
 
             update();
-
-            QTimer::singleShot(100, [this](){
-                dispatcher()->dispatch("rename-item");
-            });
 
             break;
         }

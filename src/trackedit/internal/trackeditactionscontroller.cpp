@@ -1998,7 +1998,13 @@ void TrackeditActionsController::changeTrackView(const muse::actions::ActionQuer
 
 void TrackeditActionsController::addLabel()
 {
-    trackeditInteraction()->addLabelToSelection();
+    if (trackeditInteraction()->addLabelToSelection()) {
+        //! NOTE The title editor is opened only on the explicit user action. It must not be
+        //! inferred from model insertions: labels restored by undo/redo arrive both inserted
+        //! and selected (selection is part of the history state), and popping the editor for
+        //! them would let the focused text field capture Ctrl+Z, blocking further undo.
+        dispatcher()->dispatch("rename-item");
+    }
 }
 
 void TrackeditActionsController::makeStereoTrack(const muse::actions::ActionData&)
