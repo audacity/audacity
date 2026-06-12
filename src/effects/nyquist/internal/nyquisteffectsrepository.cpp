@@ -11,7 +11,7 @@
 #include "spectrogram/spectrogramtypes.h"
 
 au::effects::NyquistEffectsRepository::NyquistEffectsRepository()
-    : m_loader{m_module, muse::audio::AudioResourceType::NyquistPlugin}
+    : m_loader{m_module, EffectFamily::Nyquist}
 {
 }
 
@@ -69,18 +69,17 @@ void au::effects::NyquistEffectsRepository::registerSpectralEffects()
 au::effects::EffectMetaList au::effects::NyquistEffectsRepository::effectMetaList() const
 {
     using namespace muse::audioplugins;
-    using namespace muse::audio;
 
     EffectMetaList effects;
 
     const std::vector<AudioPluginInfo> allEffects = knownPlugins()->pluginInfoList();
 
     for (const AudioPluginInfo& info : allEffects) {
-        if (info.meta.type != AudioResourceType::NyquistPlugin) {
+        if (!utils::isFamilyType(info.meta, EffectFamily::Nyquist)) {
             continue;
         }
 
-        EffectMeta meta = utils::museToAuEffectMeta(info.path, info.meta);
+        EffectMeta meta = utils::museToAuEffectMeta(info.path, info.meta, info.state);
         effects.push_back(std::move(meta));
     }
 

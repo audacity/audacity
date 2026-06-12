@@ -114,7 +114,7 @@ EffectsProvider::NewPluginsRegistered EffectsProvider::doScanPlugins(
         auto it = thirdPartyPluginPaths.begin();
         while (it != thirdPartyPluginPaths.end()) {
             const auto& reader = pathToMetaReader.at(*it);
-            const muse::RetVal<muse::audio::AudioResourceMetaList> ret = reader->readMeta(*it);
+            const muse::RetVal<muse::audioplugins::PluginMetaList> ret = reader->readMeta(*it);
             IF_ASSERT_FAILED(ret.ret) {
                 it = thirdPartyPluginPaths.erase(it);
                 continue;
@@ -143,8 +143,8 @@ EffectsProvider::NewPluginsRegistered EffectsProvider::doScanPlugins(
         const auto& reader = pathToMetaReader.at(*it);
         const auto metaType = reader->metaType();
 
-        using namespace muse::audio;
-        const auto isAudacityPlugin = metaType == AudioResourceType::NyquistPlugin || metaType == AudioResourceType::NativeEffect;
+        const EffectFamily family = utils::effectFamilyFromCacheType(metaType);
+        const bool isAudacityPlugin = family == EffectFamily::Nyquist || family == EffectFamily::Builtin;
         if (isAudacityPlugin) {
             audacityPluginPaths.push_back(*it);
             it = thirdPartyPluginPaths.erase(it);
@@ -153,14 +153,27 @@ EffectsProvider::NewPluginsRegistered EffectsProvider::doScanPlugins(
         }
     }
 
-    registerAudioPluginsScenario.unregisterRemovedPlugins(scanResult.missingPluginIds);
+    // Mark missing plugins without deleting cache entries — the framework wants
+    // to preserve the meta so the user can still see "the plugin I had is gone".
+    // Rediscovered (formerly Missing, found again) paths come back in
+    // scanResult.newPluginPaths and are re-validated below, not trusted.
+    // Mirrors RegisterAudioPluginsScenario::updatePluginsRegistry().
+    knownPluginsRegister()->setPluginsState(scanResult.missingPluginIds,
+                                            muse::audioplugins::AudioPluginState::Missing);
 
     for (const io::path_t& path : audacityPluginPaths) {
         registerAudioPluginsScenario.registerPlugin(path);
     }
 
-    if (!thirdPartyPluginPaths.empty() && (doScanThirdPartyPlugins == nullptr || doScanThirdPartyPlugins())) {
-        registerAudioPluginsScenario.registerNewPlugins(thirdPartyPluginPaths);
+    if (!thirdPartyPluginPaths.empty()) {
+        // Skip ("validate later") still records the plugins as Discovered so
+        // scanPlugins() can re-offer them on the next launch. Validate runs
+        // the full out-of-process scan.
+        const bool validate = (doScanThirdPartyPlugins == nullptr || doScanThirdPartyPlugins());
+        const muse::Ret ret = registerAudioPluginsScenario.registerNewPlugins(thirdPartyPluginPaths, validate);
+        if (!ret) {
+            LOGE() << "Failed to register new plugins: " << ret.toString();
+        }
     }
 
     reloadEffects();
@@ -179,7 +192,7 @@ void EffectsProvider::reloadEffects()
     const auto knownPlugins = knownPluginsRegister()->pluginInfoList();
     std::transform(knownPlugins.begin(), knownPlugins.end(), std::back_inserter(m_effects),
                    [](const muse::audioplugins::AudioPluginInfo& info) {
-        return utils::museToAuEffectMeta(info.path, info.meta, info.enabled);
+        return utils::museToAuEffectMeta(info.path, info.meta, info.state);
     });
 
     m_effectsChanged.notify();
@@ -306,20 +319,24 @@ void EffectsProvider::doSave(EffectFilter removeFromConfig)
         }
 
         muse::audioplugins::AudioPluginInfo info;
-        info.type = muse::audioplugins::AudioPluginType::Fx;
         info.meta = utils::auToMuseEffectMeta(meta);
         info.path = meta.path;
-        info.enabled = meta.isLoadable;
+        info.state = meta.state;
 
         newPlugins.push_back(std::move(info));
     }
 
     const auto filePath = audioPluginsConfiguration()->knownAudioPluginsFilePath();
     if (fileSystem()->exists(filePath)) {
-        // Remove the file and reload the register.
+        // Remove the cache so the register starts clean.
         fileSystem()->remove(filePath);
-        knownPluginsRegister()->load();
     }
+    // registerPlugins() merges into the in-memory register rather than replacing
+    // it, so reload first: with the file just removed, load() clears the register
+    // to empty, and registerPlugins() then re-persists exactly newPlugins with no
+    // stale entries. (load() also leaves the register in the m_loaded state it
+    // requires.)
+    knownPluginsRegister()->load();
 
     knownPluginsRegister()->registerPlugins(newPlugins);
 }

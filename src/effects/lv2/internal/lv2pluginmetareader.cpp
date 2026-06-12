@@ -2,15 +2,18 @@
  * Audacity: A Digital Audio Editor
  */
 #include "lv2pluginmetareader.h"
+
 #include "au3-module-manager/PluginManager.h"
+
+#include "lv2types.h"
 
 namespace au::effects {
 Lv2PluginMetaReader::Lv2PluginMetaReader()
     : Au3AudioPluginMetaReader{m_module} {}
 
-muse::audio::AudioResourceType Lv2PluginMetaReader::metaType() const
+muse::audioplugins::PluginType Lv2PluginMetaReader::metaType() const
 {
-    return muse::audio::AudioResourceType::Lv2Plugin;
+    return std::string(lv2::AUDIO_RESOURCE_TYPE_NAME);
 }
 
 void Lv2PluginMetaReader::doInit()

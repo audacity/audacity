@@ -3,8 +3,8 @@
 */
 #include "audiouniteffectsmodule.h"
 
-#include "audioplugins/iaudiopluginsscannerregister.h"
-#include "audioplugins/iaudiopluginmetareaderregister.h"
+#include "framework/audioplugins/iaudiopluginsscannerregister.h"
+#include "framework/audioplugins/iaudiopluginmetareaderregister.h"
 
 #include "effects/effects_base/ieffectloadersregister.h"
 #include "effects/effects_base/ieffectviewlaunchregister.h"
