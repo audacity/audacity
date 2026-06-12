@@ -12,6 +12,9 @@
 using namespace au::projectscene;
 using namespace au::trackedit;
 
+//! Snap window for collapsing a range label into a point label (and vice versa)
+static constexpr double EDGE_COLLAPSE_SNAP_PX = 4.0;
+
 TrackLabelsListModel::TrackLabelsListModel(QObject* parent)
     : TrackItemsListModel(parent)
 {
@@ -371,6 +374,12 @@ bool TrackLabelsListModel::stretchLabelLeft(const LabelKey& key, const LabelKey&
         newStartTime = m_context->applySnapToItem(newStartTime);
     }
 
+    //! NOTE Snap the dragged edge to the opposite one, so a range label can be collapsed
+    // into a point label without pixel-perfect aim
+    if (std::abs(newStartTime - m_editedLabelEndTime) * m_context->zoom() < EDGE_COLLAPSE_SNAP_PX) {
+        newStartTime = m_editedLabelEndTime;
+    }
+
     bool ok = trackeditInteraction()->stretchLabelLeft(key.key, newStartTime, completed);
 
     if (ok && !unlink && leftLinkedLabel.isValid()) {
@@ -407,6 +416,12 @@ bool TrackLabelsListModel::stretchLabelRight(const LabelKey& key, const LabelKey
         newEndTime = m_context->applySnapToItem(newEndTime);
     }
 
+    //! NOTE Snap the dragged edge to the opposite one, so a range label can be collapsed
+    // into a point label without pixel-perfect aim
+    if (std::abs(newEndTime - m_editedLabelStartTime) * m_context->zoom() < EDGE_COLLAPSE_SNAP_PX) {
+        newEndTime = m_editedLabelStartTime;
+    }
+
     bool ok = trackeditInteraction()->stretchLabelRight(key.key, newEndTime, completed);
 
     if (ok && !unlink && rightLinkedLabel.isValid()) {
@@ -427,6 +442,11 @@ bool TrackLabelsListModel::stretchLabelRight(const LabelKey& key, const LabelKey
 void TrackLabelsListModel::startEditItem(const TrackItemKey& key)
 {
     trackeditInteraction()->resetLabelStretchState();
+
+    if (const ViewTrackItem* item = itemByKey(key.key)) {
+        m_editedLabelStartTime = item->time().startTime;
+        m_editedLabelEndTime = item->time().endTime;
+    }
 
     TrackItemsListModel::startEditItem(key);
 }

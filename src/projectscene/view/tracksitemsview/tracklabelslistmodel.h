@@ -54,5 +54,13 @@ private:
     //! The deselection is deferred here and applied only when the gesture turns out to be
     //! a click (release without movement).
     trackedit::TrackItemKey m_pendingShiftDeselect;
+
+    //! The edited label's edges as they were when the edit session started. A stretched
+    //! edge snaps to the opposite one of these, so a range label can be collapsed into a
+    //! point label without pixel-perfect aim. The label's current edges cannot be used as
+    //! the snap target: once the dragged edge crosses the opposite one, the dragged edge
+    //! itself becomes the label's start/end and snapping to it would make the drag sticky.
+    double m_editedLabelStartTime = 0.0;
+    double m_editedLabelEndTime = 0.0;
 };
 }
