@@ -19,6 +19,8 @@ Item {
     required property bool selectionEditInProgress
     required property bool verticalSelectionEditInProgress
 
+    property real leftVisibleMargin: 0
+
     property bool isLeftLinked: false
     property bool isRightLinked: false
     property bool isLinkedActive: false
@@ -277,6 +279,8 @@ Item {
         backgroundColor: prv.backgroundColor
 
         earWidth: prv.earWidth
+
+        leftVisibleMargin: root.leftVisibleMargin
 
         enableCursorInteraction: root.enableCursorInteraction
 
