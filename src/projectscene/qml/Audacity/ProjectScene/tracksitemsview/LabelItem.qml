@@ -345,16 +345,8 @@ Item {
             root.requestSingleSelected()
         }
 
-        onStretchMousePositionChanged: function (x, y) {
+        onMousePositionChanged: function (x, y) {
             root.labelItemMousePositionChanged(x - root.parent.x, y)
-        }
-
-        onStretchRequested: function (completed) {
-            root.labelLeftStretchRequested(false /*without unlink*/, completed)
-        }
-
-        onStretchEndRequested: {
-            root.labelEndEditRequested()
         }
     }
 
@@ -377,7 +369,7 @@ Item {
         backgroundColor: prv.leftEarBackgroundColor
         isSelected: root.isSelected
 
-        visible: !prv.isPoint || isStretchInProgress
+        visible: !prv.isPoint
 
         onHeaderHoveredChanged: function (value) {
             root.headerHovered = value
@@ -391,25 +383,12 @@ Item {
             }
         }
 
-        onStretchStartRequested: {
+        onRequestSelected: {
             root.requestSingleSelected()
-            root.labelStartEditRequested()
         }
 
-        onStretchMousePositionChanged: function (x, y) {
+        onMousePositionChanged: function (x, y) {
             root.labelItemMousePositionChanged(x - root.parent.x, y)
-        }
-
-        onStretchRequested: function (completed) {
-            root.labelLeftStretchRequested(false /*without unlink*/, completed)
-        }
-
-        onStretchEndRequested: {
-            root.labelEndEditRequested()
-        }
-
-        onStretchCanceled: {
-            root.labelCancelDragEditRequested()
         }
     }
 
@@ -432,7 +411,7 @@ Item {
         backgroundColor: prv.rightEarBackgroundColor
         isSelected: root.isSelected
 
-        visible: !prv.isPoint || isStretchInProgress
+        visible: !prv.isPoint
 
         onHeaderHoveredChanged: function (value) {
             root.headerHovered = value
@@ -446,25 +425,12 @@ Item {
             }
         }
 
-        onStretchStartRequested: {
+        onRequestSelected: {
             root.requestSingleSelected()
-            root.labelStartEditRequested()
         }
 
-        onStretchMousePositionChanged: function (x, y) {
+        onMousePositionChanged: function (x, y) {
             root.labelItemMousePositionChanged(x - root.parent.x, y)
-        }
-
-        onStretchRequested: function (completed) {
-            root.labelRightStretchRequested(false /*without unlink*/, completed)
-        }
-
-        onStretchEndRequested: {
-            root.labelEndEditRequested()
-        }
-
-        onStretchCanceled: {
-            root.labelCancelDragEditRequested()
         }
     }
 

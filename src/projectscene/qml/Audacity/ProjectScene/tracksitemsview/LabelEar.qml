@@ -57,7 +57,7 @@ Canvas {
 
         acceptedButtons: Qt.LeftButton
         hoverEnabled: true
-        cursorShape: !root.isLinked ? Qt.SizeHorCursor : Qt.SplitHCursor
+        cursorShape: Qt.SizeHorCursor
 
         visible: root.enableCursorInteraction
 
