@@ -253,6 +253,10 @@ Item {
                                 tracksModel.selectRow(index, exclusive)
                             }
 
+                            onDataSelectionRequested: {
+                                tracksModel.selectAudioData(index)
+                            }
+
                             onOpenEffectsRequested: {
                                 effectSectionModel.showEffectsSection = true
                                 root.openEffectsRequested()
@@ -308,6 +312,10 @@ Item {
 
                             onSelectionRequested: function (exclusive) {
                                 tracksModel.selectRow(index, exclusive)
+                            }
+
+                            onDataSelectionRequested: {
+                                tracksModel.selectAudioData(index)
                             }
 
                             onRemoveSelectionRequested: {
