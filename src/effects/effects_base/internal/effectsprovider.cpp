@@ -153,14 +153,13 @@ EffectsProvider::NewPluginsRegistered EffectsProvider::doScanPlugins(
         }
     }
 
-    // Mark missing/rediscovered without deleting cache entries — the framework
-    // wants to preserve the meta so the user can still see "the plugin I had
-    // is gone". Mirrors RegisterAudioPluginsScenario::updatePluginsRegistry()
-    // which MuseScore uses for the same purpose.
+    // Mark missing plugins without deleting cache entries — the framework wants
+    // to preserve the meta so the user can still see "the plugin I had is gone".
+    // Rediscovered (formerly Missing, found again) paths come back in
+    // scanResult.newPluginPaths and are re-validated below, not trusted.
+    // Mirrors RegisterAudioPluginsScenario::updatePluginsRegistry().
     knownPluginsRegister()->setPluginsState(scanResult.missingPluginIds,
                                             muse::audioplugins::AudioPluginState::Missing);
-    knownPluginsRegister()->setPluginsState(scanResult.rediscoveredPluginIds,
-                                            muse::audioplugins::AudioPluginState::Validated);
 
     for (const io::path_t& path : audacityPluginPaths) {
         registerAudioPluginsScenario.registerPlugin(path);
