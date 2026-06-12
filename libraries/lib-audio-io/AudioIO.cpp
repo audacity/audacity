@@ -558,10 +558,21 @@ bool AudioIO::StartPortAudioStream(const AudioIOStartStreamOptions &options,
       // regardless of source formats, we always mix to float
       playbackParameters.sampleFormat = paFloat32;
       playbackParameters.hostApiSpecificStreamInfo = NULL;
-      playbackParameters.channelCount = mNumPlaybackChannels;
-
+      // Open with the device's native channel count to bypass PortAudio's
+      // ALSA backend DoChannelAdaption which duplicates the last channel
+      // of odd-count streams when numHostChannels is even.
+      // Other backends (CoreAudio, WASAPI, ASIO, MME) do not have this
+      // behavior and should open with the requested count.
       const PaHostApiInfo* hostInfo = Pa_GetHostApiInfo(playbackDeviceInfo->hostApi);
       bool isWASAPI = (hostInfo && hostInfo->type == paWASAPI);
+      bool isALSA = (hostInfo && hostInfo->type == paALSA);
+
+      if (isALSA) {
+         mDevicePlaybackChannels = playbackDeviceInfo->maxOutputChannels;
+      } else {
+         mDevicePlaybackChannels = mNumPlaybackChannels;
+      }
+      playbackParameters.channelCount = mDevicePlaybackChannels;
 
       #ifdef __WXMSW__
       // If the host API is WASAPI, the stream is bidirectional and there is no
@@ -1673,6 +1684,7 @@ void AudioIO::StopStream()
 
    mNumCaptureChannels = 0;
    mNumPlaybackChannels = 0;
+   mDevicePlaybackChannels = 0;
 
    mPlaybackSequences.clear();
    mCaptureSequences.clear();
@@ -2597,21 +2609,30 @@ void AudioIO::AILAProcess(double maxPeak) {
 
 static void DoSoftwarePlaythrough(constSamplePtr inputBuffer,
                                   sampleFormat inputFormat,
-                                  unsigned inputChannels,
+                                  size_t inputChannels,
                                   float *outputBuffer,
-                                  unsigned long len)
+                                  unsigned long len,
+                                  size_t outputStride)
 {
-   for (unsigned int i=0; i < inputChannels; i++) {
+   // Output buffer is interleaved with stride @p outputStride floats
+   // per frame.  Place each input channel at offset 0..min(inputChannels,
+   // outputStride)-1 within the frame.  Frames beyond input-channel
+   // count stay zeroed by the caller.
+   const size_t channelsToWrite = std::min(inputChannels, outputStride);
+   for (size_t i = 0; i < channelsToWrite; i++) {
       auto inputPtr = inputBuffer + (i * SAMPLE_SIZE(inputFormat));
 
       SamplesToFloats(inputPtr, inputFormat,
-         outputBuffer + i, len, inputChannels, 2);
+         outputBuffer + i, len, inputChannels, outputStride);
    }
 
-   // One mono input channel goes to both output channels...
-   if (inputChannels == 1)
-      for (int i=0; i < len; i++)
-         outputBuffer[2*i + 1] = outputBuffer[2*i];
+   // One mono input channel duplicates into the second output slot
+   // (legacy stereo playthrough behavior) when there's room.
+   if (inputChannels == 1 && outputStride >= 2) {
+      for (unsigned long i = 0; i < len; i++) {
+         outputBuffer[outputStride * i + 1] = outputBuffer[outputStride * i];
+      }
+   }
 }
 
 int audacityAudioCallback(const void *inputBuffer, void *outputBuffer,
@@ -2780,7 +2801,11 @@ bool AudioIoCallback::FillOutputBuffers(
       if (len > 0)
       {
          // Output volume emulation: possibly copy meter samples, then
-         // apply volume, then copy to the output buffer
+         // apply volume, then copy to the output buffer.  The meter
+         // scratch buffer is sized to numPlaybackChannels (logical
+         // stride) by audacityAudioCallback, so we must keep the
+         // logical stride here -- only the PortAudio output buffer
+         // (outputFloats) uses the device-wide stride.
          if(outputMeterFloats != outputFloats)
          {
             for ( unsigned i = 0; i < len; ++i)
@@ -2800,7 +2825,7 @@ bool AudioIoCallback::FillOutputBuffers(
          const float deltaVolume = (playbackVolume - oldVolume) / len;
          for (unsigned i = 0; i < len; i++)
          {
-            outputFloats[numPlaybackChannels * i + n] +=
+            outputFloats[mDevicePlaybackChannels * i + n] +=
                (oldVolume + deltaVolume * i) * tempBufs[n][i];
          }
       }
@@ -2813,9 +2838,9 @@ bool AudioIoCallback::FillOutputBuffers(
 
    mLastPlaybackTimeMillis = ::wxGetUTCTimeMillis();
 
-   ClampBuffer( outputFloats, framesPerBuffer*numPlaybackChannels );
+   ClampBuffer( outputFloats, framesPerBuffer * mDevicePlaybackChannels );
    if (outputMeterFloats != outputFloats)
-      ClampBuffer( outputMeterFloats, framesPerBuffer*numPlaybackChannels );
+      ClampBuffer( outputMeterFloats, framesPerBuffer * numPlaybackChannels );
 
    return false;
 }
@@ -3010,19 +3035,33 @@ void AudioIoCallback::DoPlaythrough(
       return;
 
    float *outputFloats = outputBuffer;
-   for(unsigned i = 0; i < framesPerBuffer*numPlaybackChannels; i++)
+   // Zero the full device-width buffer (may be wider than
+   // numPlaybackChannels if opened with native channel count).
+   // Zero the full device-width buffer (may be wider than
+   // numPlaybackChannels if opened with native channel count on ALSA).
+   // Invariant: mDevicePlaybackChannels is set in StartPortAudioStream
+   // before the audio callback fires, and reset in StopStream after
+   // the callback stops, so it's always non-zero here.
+   const auto deviceChannels = mDevicePlaybackChannels;
+   for(unsigned i = 0; i < framesPerBuffer * deviceChannels; i++)
       outputFloats[i] = 0.0;
 
    if (inputBuffer && mSoftwarePlaythrough) {
       DoSoftwarePlaythrough(inputBuffer, mCaptureFormat,
                               numCaptureChannels,
-                              outputBuffer, framesPerBuffer);
+                              outputBuffer, framesPerBuffer,
+                              deviceChannels);
    }
 
-   // Copy the results to outputMeterFloats if necessary
+   // Copy the results to outputMeterFloats if necessary.  The meter
+   // buffer is sized to the logical channel count, so extract just the
+   // first numPlaybackChannels samples from each device-strided frame.
    if (outputMeterFloats != outputFloats) {
-      for (unsigned i = 0; i < framesPerBuffer*numPlaybackChannels; ++i) {
-         outputMeterFloats[i] = outputFloats[i];
+      for (unsigned f = 0; f < framesPerBuffer; ++f) {
+         for (unsigned c = 0; c < numPlaybackChannels; ++c) {
+            outputMeterFloats[numPlaybackChannels * f + c]
+               = outputFloats[deviceChannels * f + c];
+         }
       }
    }
 }
@@ -3158,8 +3197,16 @@ int AudioIoCallback::AudioCallback(
       (outputBuffer && GetMixerOutputVol() != 1.0);
    // outputMeterFloats is the scratch pad for the output meter.
    // we can often reuse the existing outputBuffer and save on allocating
-   // something new.
-   const auto outputMeterFloats = bVolEmulationActive
+   // something new -- but only when the device-side stride matches the
+   // logical (meter) stride.  On ALSA-widened streams the PortAudio
+   // output buffer has a device-wide stride; sharing it with the meter
+   // would feed garbled data downstream (SendVuOutputMeterData uses the
+   // logical stride).  In that case, allocate a separate logical-stride
+   // scratch pad regardless of the volume setting.
+   const bool needsSeparateMeterBuffer =
+      bVolEmulationActive
+      || mDevicePlaybackChannels != numPlaybackChannels;
+   const auto outputMeterFloats = needsSeparateMeterBuffer
       ? stackAllocate(float, framesPerBuffer * numPlaybackChannels)
       : outputBuffer;
    // ----- END of MEMORY ALLOCATIONS ------------------------------------------
