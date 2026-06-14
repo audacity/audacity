@@ -1,5 +1,72 @@
 <?xml version="1.0" ?><!DOCTYPE TS><TS version="2.1" language="fi">
 <context>
+    <name>KDDockWidgets::Debug::DebugWindow</name>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/DebugWindow.cpp" line="123"/>
+        <source>DockWidget unique name</source>
+        <translation>DockWidgetin yksilöllinen nimi</translation>
+    </message>
+</context>
+<context>
+    <name>KDDockWidgets::DockWidgetBase</name>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/DockWidgetBase.cpp" line="608"/>
+        <source>Dock</source>
+        <translation>Telakoi</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/DockWidgetBase.cpp" line="612"/>
+        <source>Detach</source>
+        <translation>Detach</translation>
+    </message>
+</context>
+<context>
+    <name>KDDockWidgets::TitleBar</name>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/TitleBar.cpp" line="469"/>
+        <source>Dock window</source>
+        <translation>Dock window</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/TitleBar.cpp" line="469"/>
+        <source>Undock window</source>
+        <translation>Undock window</translation>
+    </message>
+</context>
+<context>
+    <name>KDDockWidgets::TitleBarWidget</name>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="143"/>
+        <source>Minimize</source>
+        <translation>Minimoi</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="144"/>
+        <source>Close</source>
+        <translation>Sulje</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="265"/>
+        <source>Auto-hide</source>
+        <translation>Auto-hide</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="268"/>
+        <source>Disable auto-hide</source>
+        <translation>Disable auto-hide</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="285"/>
+        <source>Restore</source>
+        <translation>Palauta</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/thirdparty/KDDockWidgets/src/private/widgets/TitleBarWidget.cpp" line="285"/>
+        <source>Maximize</source>
+        <translation>Maksimoi</translation>
+    </message>
+</context>
+<context>
     <name>Playback</name>
     <message>
         <location filename="../../src/playback/qml/Audacity/Playback/toolbars/PlaybackMeterCustomisePopup.qml" line="65"/>
@@ -23,6 +90,14 @@
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerTableView.qml" line="48"/>
         <source>Disabled</source>
         <translation>Ei käytössä</translation>
+    </message>
+</context>
+<context>
+    <name>accessibility</name>
+    <message>
+        <location filename="../../muse/framework/accessibility/internal/accessibleiteminterface.cpp" line="338"/>
+        <source>%1 panel</source>
+        <translation>%1 paneeli</translation>
     </message>
 </context>
 <context>
@@ -225,12 +300,12 @@
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="168"/>
         <source>Undo ‘%1’</source>
-        <translation>Kumoa "%1"</translation>
+        <translation>Kumoa &quot;%1&quot;</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/appmenumodel.cpp" line="174"/>
         <source>Redo ‘%1’</source>
-        <translation>Uudelleen "%1"</translation>
+        <translation>Uudelleen &quot;%1&quot;</translation>
     </message>
     <message>
         <location filename="../../src/au3cloud/internal/clouduiactions.cpp" line="15"/>
@@ -340,7 +415,7 @@
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="71"/>
         <source>Toggle ‘Loop playback’</source>
-        <translation>Vaihda "Jatkuvaan toistoon"</translation>
+        <translation>Vaihda &quot;Jatkuvaan toistoon&quot;</translation>
     </message>
     <message>
         <location filename="../../src/playback/internal/playbackuiactions.cpp" line="78"/>
@@ -527,7 +602,7 @@
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="49"/>
         <source>Open recent</source>
-        <translation type="unfinished">Avaa viimeisin</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/project/internal/projectuiactions.cpp" line="50"/>
@@ -1829,6 +1904,186 @@
         <source>Change track sample rate</source>
         <translation>Muuta raidan näytetaajuutta</translation>
     </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="37"/>
+        <source>Save diagnostic files</source>
+        <translation>Tallenna diagnostiikkatiedostot</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="42"/>
+        <source>Show p&amp;aths…</source>
+        <translation>Näytä &amp;polut…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="43"/>
+        <source>Show paths</source>
+        <translation>Näytä polut</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="48"/>
+        <source>Show pr&amp;ofiler…</source>
+        <translation>Näytä p&amp;rofiloija…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="49"/>
+        <source>Show profiler</source>
+        <translation>Näytä profilointityökalu</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="54"/>
+        <source>Show g&amp;raphics info…</source>
+        <translation>Näytä g&amp;rafiikkatiedot…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="55"/>
+        <source>Show graphics info</source>
+        <translation>Näytä grafiikkatiedot</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="60"/>
+        <source>Show &amp;navigation tree…</source>
+        <translation>Näytä &amp;navigointipuu…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="61"/>
+        <source>Show navigation tree</source>
+        <translation>Näytä navigointipuu</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="66"/>
+        <source>Show &amp;accessibility tree…</source>
+        <translation>Näytä &amp;saavutettavuuspuu...</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="67"/>
+        <source>Show accessibility tree</source>
+        <translation>Näytä esteettömyyspuu</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="72"/>
+        <source>&amp;Dump accessibility tree to console</source>
+        <translation>&amp;Tyhjennä saavutettavuuspuu konsoliin</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="73"/>
+        <source>Dump accessibility tree to console</source>
+        <translation>Esteettömyyspuun poistaminen konsolista</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="78"/>
+        <source>Show engraving &amp;elements</source>
+        <translation>Näytä graafiset &amp;elementit</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="79"/>
+        <source>Show engraving elements</source>
+        <translation>Näytä taittoelementit</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="84"/>
+        <source>Show engraving &amp;undo stack</source>
+        <translation>Näytä taiton &amp;kumoamispino</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="85"/>
+        <source>Show engraving undo stack</source>
+        <translation>Näytä taiton kumoamispino</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="90"/>
+        <source>Show engraving &amp;style options list</source>
+        <translation>Näytä taitto&amp;tyylien vaihtoehtoluettelo</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="91"/>
+        <source>Show engraving style options list</source>
+        <translation>Näytä taittotyylien vaihtoehtoluettelo</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="96"/>
+        <source>Show &amp;actions list</source>
+        <translation>Näytä &amp;toimintoluettelo</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/diagnosticsactions.cpp" line="97"/>
+        <source>Show actions list</source>
+        <translation>Näytä toimintoluettelo</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="39"/>
+        <source>&amp;Manage plugins…</source>
+        <translation>&amp;Hallitse lisäosia…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="40"/>
+        <source>Manage plugins…</source>
+        <translation>Hallitse lisäosia…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="45"/>
+        <source>Show API dump</source>
+        <translation>Näytä API-vedos</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/multiwindows/internal/multiwindowsuiactions.cpp" line="37"/>
+        <source>&amp;Multiinstances</source>
+        <translation>&amp;Moni-instanssit</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/musesampler/internal/musesampleruiactions.cpp" line="37"/>
+        <source>Check MuseSampler</source>
+        <translation>Tarkista MuseSampler</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/musesampler/internal/musesampleruiactions.cpp" line="42"/>
+        <source>Reload MuseSampler</source>
+        <translation>Lataa MuseSampler uudelleen</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/testflow/internal/testflowactions.cpp" line="37"/>
+        <source>Show &amp;scripts…</source>
+        <translation>Näytä skriptit…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/testflow/internal/testflowactions.cpp" line="38"/>
+        <source>Show scripts</source>
+        <translation>Näytä skriptit</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/updateuiactions.cpp" line="36"/>
+        <source>Check for &amp;update</source>
+        <translation>Tarkista &amp;päivitykset</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/vst/internal/vstuiactions.cpp" line="38"/>
+        <source>Use old view</source>
+        <translation>Käytä vanhaa näkymää</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/vst/internal/vstuiactions.cpp" line="44"/>
+        <source>Use new view</source>
+        <translation>Käytä uutta näkymää</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="37"/>
+        <source>Select workspace</source>
+        <translation>Valitse työtila</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="42"/>
+        <source>Edit workspaces…</source>
+        <translation>Muokkaa työtiloja…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="43"/>
+        <source>Edit workspaces</source>
+        <translation>Muokkaa työtiloja</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/internal/workspaceuiactions.cpp" line="49"/>
+        <source>Create new workspace</source>
+        <translation>Luo uusi työtila</translation>
+    </message>
 </context>
 <context>
     <name>appshell</name>
@@ -1928,12 +2183,12 @@
         <translation>Tuota MIDI 2.0 -lähtöä, jos vastaanottaja tukee sitä</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="382"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="396"/>
         <source>Are you sure you want to revert to factory settings?</source>
         <translation>Haluatko varmasti palauttaa tehdasasetukset?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="383"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="397"/>
         <source>This action will reset all your app preferences and custom UI configurations. It also deletes your custom workspaces and shortcuts. You will also need to scan all third party plugins again.
 
 This action will not delete any of your projects.</source>
@@ -1942,27 +2197,27 @@ This action will not delete any of your projects.</source>
 Tämä toiminto ei poista projektejasi.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="395"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="409"/>
         <source>Revert</source>
         <translation>Palauta</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="397"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="411"/>
         <source>Revert to factory settings</source>
         <translation>Palauta tehdasasetukset</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="409"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="423"/>
         <source>Would you like to restart Audacity now?</source>
         <translation>Haluatko käynnistää Audacityn uudelleen nyt?</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="410"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="424"/>
         <source>Audacity needs to be restarted for these changes to take effect.</source>
         <translation>Audacity on käynnistettävä uudelleen, jotta nämä muutokset tulevat voimaan.</translation>
     </message>
     <message>
-        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="416"/>
+        <location filename="../../src/appshell/internal/applicationactioncontroller.cpp" line="430"/>
         <source>Restart</source>
         <translation>Käynnistä uudelleen</translation>
     </message>
@@ -2064,6 +2319,11 @@ Tämä toiminto ei poista projektejasi.</translation>
         <location filename="../../src/appshell/qml/Audacity/AppShell/mainwindowtitleprovider.cpp" line="123"/>
         <source>*</source>
         <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/AccountPage.qml" line="76"/>
+        <source>Accounts</source>
+        <translation>Tilit</translation>
     </message>
 </context>
 <context>
@@ -2531,6 +2791,27 @@ Tämä toiminto ei poista projektejasi.</translation>
     </message>
 </context>
 <context>
+    <name>appshell/dock</name>
+    <message>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="64"/>
+        <location filename="../../muse/framework/dockwindow_v2/qml/Muse/Dock/dockpanelview.cpp" line="66"/>
+        <source>Close</source>
+        <translation>Sulje</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="117"/>
+        <location filename="../../muse/framework/dockwindow_v2/qml/Muse/Dock/dockpanelview.cpp" line="119"/>
+        <source>Dock</source>
+        <translation>Telakoi</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/dockwindow/qml/Muse/Dock/dockpanelview.cpp" line="117"/>
+        <location filename="../../muse/framework/dockwindow_v2/qml/Muse/Dock/dockpanelview.cpp" line="119"/>
+        <source>Undock</source>
+        <translation>Irrota telakasta</translation>
+    </message>
+</context>
+<context>
     <name>appshell/gettingstarted</name>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="35"/>
@@ -2580,7 +2861,7 @@ Tämä toiminto ei poista projektejasi.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/AppUpdatesAndUsageInfoPage.qml" line="82"/>
         <source>UpdatesUsage. %1</source>
-        <extracomment>%1 is the page title, %2 is the active button title (e.g. "Next" or "Done")</extracomment>
+        <extracomment>%1 is the page title, %2 is the active button title (e.g. &quot;Next&quot; or &quot;Done&quot;)</extracomment>
         <translation>Päivitysten käyttö. %1</translation>
     </message>
     <message>
@@ -2591,15 +2872,15 @@ Tämä toiminto ei poista projektejasi.</translation>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="176"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="183"/>
         <source>%1. %2</source>
-        <extracomment>%1 is the page title, %2 is the active button title (e.g. "Next" or "Done")
+        <extracomment>%1 is the page title, %2 is the active button title (e.g. &quot;Next&quot; or &quot;Done&quot;)
 ----------
-%1 is the clip style description (e.g. "Each track gets a new color"), %2 is the selection status (e.g. "Currently selected" or "Click to select this style")
+%1 is the clip style description (e.g. &quot;Each track gets a new color&quot;), %2 is the selection status (e.g. &quot;Currently selected&quot; or &quot;Click to select this style&quot;)
 ----------
-%1 is the clip style description (e.g. "Each track gets a new color"), %2 is the availability status (e.g. "Currently selected" or "Available option")
+%1 is the clip style description (e.g. &quot;Each track gets a new color&quot;), %2 is the availability status (e.g. &quot;Currently selected&quot; or &quot;Available option&quot;)
 ----------
-%1 is the workspace description, %2 is the selection status (e.g. "Currently selected" or "Click to select this workspace")
+%1 is the workspace description, %2 is the selection status (e.g. &quot;Currently selected&quot; or &quot;Click to select this workspace&quot;)
 ----------
-%1 is the workspace description, %2 is the availability status (e.g. "Currently selected" or "Available workspace")</extracomment>
+%1 is the workspace description, %2 is the availability status (e.g. &quot;Currently selected&quot; or &quot;Available workspace&quot;)</extracomment>
         <translation>%1. %2</translation>
     </message>
     <message>
@@ -2644,8 +2925,8 @@ Tämä toiminto ei poista projektejasi.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="40"/>
-        <source>&lt;a href="%1"&gt;Forgot your password?&lt;/a&gt;</source>
-        <translation>&lt;a href="%1"&gt;Unohditko salasanasi?&lt;/a&gt;</translation>
+        <source>&lt;a href=&quot;%1&quot;&gt;Forgot your password?&lt;/a&gt;</source>
+        <translation>&lt;a href=&quot;%1&quot;&gt;Unohditko salasanasi?&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/SigninAudiocomPage.qml" line="42"/>
@@ -2723,7 +3004,7 @@ Tämä toiminto ei poista projektejasi.</translation>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/TutorialsPage.qml" line="32"/>
         <source>Behind this dialog is the ‘Learn’ section, where you’ll find tutorials to get you started
 (Video tutorials require an internet connection)</source>
-        <translation>Tämän ikkunan takana on 'Opastus'-osio, josta löydät aloitusoppaita 
+        <translation>Tämän ikkunan takana on &apos;Opastus&apos;-osio, josta löydät aloitusoppaita 
 (Video-oppaat vaativat internetyhteyden)</translation>
     </message>
     <message>
@@ -2739,13 +3020,13 @@ Tämä toiminto ei poista projektejasi.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/shared/ThemeSamplesList.qml" line="91"/>
         <source>%1 theme</source>
-        <extracomment>%1 is the theme name (e.g. "Light", "Dark")</extracomment>
+        <extracomment>%1 is the theme name (e.g. &quot;Light&quot;, &quot;Dark&quot;)</extracomment>
         <translation>%1 teema</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/shared/ThemeSamplesList.qml" line="94"/>
         <source>Select %1 theme</source>
-        <extracomment>%1 is the theme name (e.g. "Light", "Dark")</extracomment>
+        <extracomment>%1 is the theme name (e.g. &quot;Light&quot;, &quot;Dark&quot;)</extracomment>
         <translation>Valitse %1 teema</translation>
     </message>
     <message>
@@ -2885,7 +3166,7 @@ Tämä toiminto ei poista projektejasi.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/themespagemodel.cpp" line="210"/>
         <source>Enable high contrast mode for better visibility. %1</source>
-        <extracomment>here %1 represent the written text for the high contrast preferences hint "Further options for high contrast mode can be found in Preferences"</extracomment>
+        <extracomment>here %1 represent the written text for the high contrast preferences hint &quot;Further options for high contrast mode can be found in Preferences&quot;</extracomment>
         <translation>Käytä suurta kontrastia parempaan näkyvyyteen. %1 </translation>
     </message>
     <message>
@@ -2990,7 +3271,7 @@ Tämä toiminto ei poista projektejasi.</translation>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="154"/>
         <source>You can change between these layouts at any time using our new ‘workspaces’ feature.</source>
-        <translation>Voit vaihtaa näiden asettelujen välillä milloin tahansa uuden 'työtilat'-ominaisuuden avulla.</translation>
+        <translation>Voit vaihtaa näiden asettelujen välillä milloin tahansa uuden &apos;työtilat&apos;-ominaisuuden avulla.</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/FirstLaunchSetup/workspacelayoutpagemodel.cpp" line="159"/>
@@ -3402,8 +3683,8 @@ Tämä toiminto ei poista projektejasi.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutomaticUpdateSection.qml" line="60"/>
-        <source>Update checking requires network access. In order to protect your privacy, Audacity does not store any personal information. See our &lt;a href="%1"&gt;privacy policy&lt;/a&gt; for more info.</source>
-        <translation>Päivitysten tarkistaminen vaatii verkkoyhteyden. Yksityisyytesi suojaamiseksi Audacity ei tallenna henkilötietoja. Katso lisätietoja &lt;a href="%1"&gt;tietosuojaselosteestamme&lt;/a&gt;.</translation>
+        <source>Update checking requires network access. In order to protect your privacy, Audacity does not store any personal information. See our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt; for more info.</source>
+        <translation>Päivitysten tarkistaminen vaatii verkkoyhteyden. Yksityisyytesi suojaamiseksi Audacity ei tallenna henkilötietoja. Katso lisätietoja &lt;a href=&quot;%1&quot;&gt;tietosuojaselosteestamme&lt;/a&gt;.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/AutoSaveSection.qml" line="32"/>
@@ -3674,8 +3955,8 @@ Tämä toiminto ei poista projektejasi.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UsageInfoSection.qml" line="39"/>
-        <source>To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This ID does not contain any personally identifiable information. Want to know more? Check out our &lt;a href="%1"&gt;privacy policy&lt;/a&gt;.</source>
-        <translation>Jotta ymmärtäisimme paremmin, kuinka usein Audacityä käytetään, luomme jokaiselle asennukselle satunnaisen tunnisteen (UUID). Tämä tunniste ei sisällä mitään henkilökohtaisesti tunnistettavia tietoja. Haluatko tietää lisää? Lue lisää &lt;a href="%1"&gt;tietosuojaselosteestamme&lt;/a&gt;.</translation>
+        <source>To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This ID does not contain any personally identifiable information. Want to know more? Check out our &lt;a href=&quot;%1&quot;&gt;privacy policy&lt;/a&gt;.</source>
+        <translation>Jotta ymmärtäisimme paremmin, kuinka usein Audacityä käytetään, luomme jokaiselle asennukselle satunnaisen tunnisteen (UUID). Tämä tunniste ei sisällä mitään henkilökohtaisesti tunnistettavia tietoja. Haluatko tietää lisää? Lue lisää &lt;a href=&quot;%1&quot;&gt;tietosuojaselosteestamme&lt;/a&gt;.</translation>
     </message>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/ZoomToggleSection.qml" line="14"/>
@@ -3916,8 +4197,46 @@ Tämä toiminto ei poista projektejasi.</translation>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/internal/effectsprovider.cpp" line="80"/>
+        <location filename="../../muse/framework/audioplugins/internal/registeraudiopluginsscenario.cpp" line="123"/>
+        <location filename="../../muse/framework/audioplugins/tests/registeraudiopluginsscenariotest.cpp" line="162"/>
         <source>Scanning audio plugins</source>
         <translation>Haetaan äänilisäosia</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/audio/driver/platform/jack/jackaudiodriver.cpp" line="246"/>
+        <location filename="../../muse/framework/audio/driver/platform/lin/alsaaudiodriver.cpp" line="239"/>
+        <location filename="../../muse/framework/audio/driver/platform/lin/pwaudiodriver.cpp" line="223"/>
+        <location filename="../../muse/framework/audio/driver/platform/osx/osxaudiodriver.mm" line="211"/>
+        <location filename="../../muse/framework/audio/driver/platform/win/wasapiaudiodriver.cpp" line="341"/>
+        <source>System default</source>
+        <translation>Järjestelmän oletus</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="33"/>
+        <source>Do you want to add SoundFont %1?</source>
+        <translation>Haluatko lisätä SoundFontin %1?</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="53"/>
+        <source>File already exists. Do you want to overwrite it?</source>
+        <translation>Tiedosto on jo olemassa.  Haluatko korvata sen?</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="55"/>
+        <source>File path: %1</source>
+        <translation>Tiedostopolku: %1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="70"/>
+        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="80"/>
+        <source>SoundFont installed</source>
+        <translation>SoundFont asennettu</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="71"/>
+        <location filename="../../muse/framework/audio/main/platform/general/generalsoundfontinstallscenario.cpp" line="81"/>
+        <source>You can assign soundfonts to instruments using the mixer panel.</source>
+        <translation>Voit määrittää äänifontteja soittimiin mikseripaneelin avulla.</translation>
     </message>
 </context>
 <context>
@@ -4234,7 +4553,7 @@ Virhekoodi: %1</translation>
     <message>
         <location filename="../../au3/libraries/au3-audio-unit/AudioUnitEffectBase.cpp" line="118"/>
         <source>n/a</source>
-        <extracomment>Can mean "not available," "not applicable," "no answer"</extracomment>
+        <extracomment>Can mean &quot;not available,&quot; &quot;not applicable,&quot; &quot;no answer&quot;</extracomment>
         <translation>--</translation>
     </message>
     <message>
@@ -4890,7 +5209,7 @@ Kokeile nollata venyneet leikkeet tai miksata ja renderöidä raidat ennen analy
     <message>
         <location filename="../../au3/libraries/au3-builtin-effects/ScienFilterBase.cpp" line="108"/>
         <source>Performs IIR filtering that emulates analog filters</source>
-        <extracomment>"infinite impulse response"</extracomment>
+        <extracomment>&quot;infinite impulse response&quot;</extracomment>
         <translation>Suorittaa IIR-suodatuksen, joka emuloi analogisia suodattimia</translation>
     </message>
     <message>
@@ -5075,11 +5394,14 @@ Kokeile nollata venyneet leikkeet tai miksata ja renderöidä raidat ennen analy
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="55"/>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="111"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="73"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="129"/>
         <source>Not signed in</source>
         <translation>Ei kirjaudu sisään</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="141"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="159"/>
         <source>My profile</source>
         <translation>Profiilini</translation>
     </message>
@@ -5087,12 +5409,14 @@ Kokeile nollata venyneet leikkeet tai miksata ja renderöidä raidat ennen analy
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="141"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="538"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="253"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="159"/>
         <source>Sign in</source>
         <translation>Kirjaudu sisään</translation>
     </message>
     <message>
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="169"/>
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="29"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="187"/>
         <source>Sign out</source>
         <translation>Kirjaudu ulos</translation>
     </message>
@@ -5100,6 +5424,8 @@ Kokeile nollata venyneet leikkeet tai miksata ja renderöidä raidat ennen analy
         <location filename="../../src/appshell/qml/Audacity/AppShell/HomePage/CloudItem.qml" line="169"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="548"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="263"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/internal/CloudItem.qml" line="187"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="75"/>
         <source>Create account</source>
         <translation>Luo tili</translation>
     </message>
@@ -5117,6 +5443,7 @@ Kokeile nollata venyneet leikkeet tai miksata ja renderöidä raidat ennen analy
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="36"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="69"/>
         <source>You are not signed in</source>
         <translation>Et ole kirjautunut sisään</translation>
     </message>
@@ -5223,6 +5550,21 @@ Kokeile nollata venyneet leikkeet tai miksata ja renderöidä raidat ennen analy
         <source>Sign in buttons</source>
         <translation type="unfinished"/>
     </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/AccountInfoButton.qml" line="45"/>
+        <source>My accounts</source>
+        <translation>Omat tilit</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="78"/>
+        <source>Log in</source>
+        <translation>Kirjaudu sisään</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/internal/oauthhttpserverreplyhandler.cpp" line="184"/>
+        <source>Sign in successful! You’re good to go back to MuseScore Studio.</source>
+        <translation>Kirjautuminen onnistui! Voit palata takaisin MuseScore Studioon.</translation>
+    </message>
 </context>
 <context>
     <name>cloud-audiocom</name>
@@ -5285,6 +5627,24 @@ Kokeile nollata venyneet leikkeet tai miksata ja renderöidä raidat ennen analy
         <location filename="../../src/project/qml/Audacity/Project/SaveToCloudDialog.qml" line="16"/>
         <source>Save to audio.com</source>
         <translation>Tallenna sivustolle audio.com</translation>
+    </message>
+</context>
+<context>
+    <name>diagnostics</name>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="38"/>
+        <source>Save diagnostic files?</source>
+        <translation>Tallennetaanko diagnostiikkatiedostot?</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="39"/>
+        <source>This will create a .zip file with information about your MuseScore Studio setup to help developers diagnose any problems you are having. You can inspect the contents of this file before sending it to anyone.</source>
+        <translation>Tämä luo .zip-tiedoston, joka sisältää tietoja MuseScore Studio -asennuksestasi, jotta kehittäjät voivat auttaa sinua diagnosoimaan mahdolliset ongelmasi. Voit tarkastaa tämän tiedoston sisällön ennen kuin lähetät sen kenellekään.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/diagnostics/internal/savediagnosticfilesscenario.cpp" line="53"/>
+        <source>Save diagnostic files</source>
+        <translation>Tallenna diagnostiikkatiedostot</translation>
     </message>
 </context>
 <context>
@@ -5823,7 +6183,7 @@ Kokeile nollata venyneet leikkeet tai miksata ja renderöidä raidat ennen analy
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="15"/>
         <source>Manage plugins</source>
-        <translation type="unfinished">Hallitse laajennuksia</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PluginManagerDialog.qml" line="90"/>
@@ -5839,7 +6199,7 @@ Kokeile nollata venyneet leikkeet tai miksata ja renderöidä raidat ennen analy
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="13"/>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="95"/>
         <source>Missing plugins</source>
-        <translation type="unfinished">Puuttuvat laajennukset</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="103"/>
@@ -5870,7 +6230,7 @@ Kokeile nollata venyneet leikkeet tai miksata ja renderöidä raidat ennen analy
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="211"/>
         <source>Path:</source>
-        <translation type="unfinished">Polku</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/MissingPluginsDialog.qml" line="241"/>
@@ -5900,18 +6260,18 @@ Kokeile nollata venyneet leikkeet tai miksata ja renderöidä raidat ennen analy
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="12"/>
         <source>Initial tempo change</source>
-        <translation type="unfinished">Tempon alkumuutos (%)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="13"/>
         <source>Final tempo change</source>
-        <translation type="unfinished">Tempon loppumuutos (%)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="14"/>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="16"/>
         <source>Initial pitch shift</source>
-        <translation type="unfinished">Sävelkorkeuden alkumuutos</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="14"/>
@@ -5923,7 +6283,7 @@ Kokeile nollata venyneet leikkeet tai miksata ja renderöidä raidat ennen analy
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="15"/>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretchsettingmodel.cpp" line="17"/>
         <source>Final pitch shift</source>
-        <translation type="unfinished">Sävelkorkeuden loppumuutos</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/effects_base/view/pluginmanagertableviewmodel.cpp" line="95"/>
@@ -6008,7 +6368,7 @@ Kokeile nollata venyneet leikkeet tai miksata ja renderöidä raidat ennen analy
     <message>
         <location filename="../../au3/libraries/au3-effects/EffectBase.h" line="148"/>
         <source>Nyquist</source>
-        <extracomment>"Nyquist" is an embedded interpreted programming language in Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist). In the translations of this and other strings, you may transliterate the name into another alphabet.</extracomment>
+        <extracomment>&quot;Nyquist&quot; is an embedded interpreted programming language in Audacity, named in honor of the Swedish-American Harry Nyquist (or Nyqvist). In the translations of this and other strings, you may transliterate the name into another alphabet.</extracomment>
         <translation>Nyquist</translation>
     </message>
     <message>
@@ -6251,7 +6611,7 @@ Kokeile nollata venyneet leikkeet tai miksata ja renderöidä raidat ennen analy
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="289"/>
         <source>No audio selected.</source>
-        <translation type="unfinished">Ääntä ei ole valittu</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/noisereductioneffect.cpp" line="303"/>
@@ -6392,7 +6752,7 @@ Kokeile nollata venyneet leikkeet tai miksata ja renderöidä raidat ennen analy
     <message>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="99"/>
         <source>Nyquist Worker</source>
-        <extracomment>It is acceptable to translate this the same as for "Nyquist * Prompt"</extracomment>
+        <extracomment>It is acceptable to translate this the same as for &quot;Nyquist * Prompt&quot;</extracomment>
         <translation>Nyquist-kehote</translation>
     </message>
     <message>
@@ -6448,7 +6808,7 @@ frequency range for the effect to act on.</source>
         <location filename="../../au3/libraries/au3-nyquist-effects/NyquistBase.cpp" line="1408"/>
         <source>nyx_error returned from %1.
 </source>
-        <extracomment>"%s" is replaced by name of plug-in.</extracomment>
+        <extracomment>&quot;%s&quot; is replaced by name of plug-in.</extracomment>
         <translation>nyx_error palautettiin kohteesta %1.
 </translation>
     </message>
@@ -6529,7 +6889,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="8"/>
         <source>Shelf filter</source>
-        <translation type="unfinished">Hyllysuodatin</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="9"/>
@@ -6663,7 +7023,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="32"/>
         <source>Studio fade out</source>
-        <translation type="unfinished">Studiohäivytys ulos</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="33"/>
@@ -6673,7 +7033,7 @@ frequency range for the effect to act on.</source>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="34"/>
         <source>Adjustable fade</source>
-        <translation type="unfinished">Säädettävä häivytys</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="35"/>
@@ -6827,7 +7187,7 @@ Vihje: 6 dB kaksinkertaistaa amplitudin~%~
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="64"/>
         <source>Beat finder</source>
-        <translation type="unfinished">Tahtihaku</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="66"/>
@@ -6837,7 +7197,7 @@ Vihje: 6 dB kaksinkertaistaa amplitudin~%~
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="67"/>
         <source>Clip fix</source>
-        <translation type="unfinished">Leikkeen korjaus</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="68"/>
@@ -6857,7 +7217,7 @@ Vihje: 6 dB kaksinkertaistaa amplitudin~%~
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="71"/>
         <source>Crossfade clips</source>
-        <translation type="unfinished">Ristihäivytä leikkeet</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="72"/>
@@ -6877,7 +7237,7 @@ Vihje: 6 dB kaksinkertaistaa amplitudin~%~
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="75"/>
         <source>Crossfade tracks</source>
-        <translation type="unfinished">Ristihäivytä raitoja</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="76"/>
@@ -7162,7 +7522,7 @@ Vihje: 6 dB kaksinkertaistaa amplitudin~%~
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="132"/>
         <source>High-pass filter</source>
-        <translation type="unfinished">Ylipäästösuodatin</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="133"/>
@@ -7216,7 +7576,7 @@ Taajuuden on oltava alle ~a Hz.</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="142"/>
         <source>Label sounds</source>
-        <translation type="unfinished">Merkitse äänet</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="143"/>
@@ -7321,7 +7681,7 @@ Vain yksi ääni havaittu.</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="162"/>
         <source>Legacy limiter</source>
-        <translation type="unfinished">Rajoitin</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="163"/>
@@ -7380,12 +7740,12 @@ Oikea kanava</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="173"/>
         <source>Low-pass filter</source>
-        <translation type="unfinished">Alipäästösuodatin</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="174"/>
         <source>Noise gate</source>
-        <translation type="unfinished">Kohinaportti</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="175"/>
@@ -7477,7 +7837,7 @@ Ehdotettu kynnysasetus ~a dB.</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="190"/>
         <source>Notch filter</source>
-        <translation type="unfinished">Vaimennussuodatin</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="191"/>
@@ -7646,7 +8006,7 @@ Taajuuden on oltava alle ~a Hz.</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="223"/>
         <source>Rhythm track</source>
-        <translation type="unfinished">Rytmiraita</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="224"/>
@@ -7787,7 +8147,7 @@ Taajuuden on oltava alle ~a Hz.</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="251"/>
         <source>Risset drum</source>
-        <translation type="unfinished">Risset'n rumpu</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="252"/>
@@ -7822,7 +8182,7 @@ Taajuuden on oltava alle ~a Hz.</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="258"/>
         <source>Left</source>
-        <translation type="unfinished">Vasen</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="259"/>
@@ -7832,7 +8192,7 @@ Taajuuden on oltava alle ~a Hz.</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="260"/>
         <source>Right</source>
-        <translation type="unfinished">Oikea</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="261"/>
@@ -8118,9 +8478,9 @@ Taajuuden on oltava alle ~a Hz.</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="316"/>
         <source>Produced with &lt;span&gt;Sample Data Export&lt;/span&gt; for
-&lt;a href="~a"&gt;Audacity&lt;/a&gt; by Steve
+&lt;a href=&quot;~a&quot;&gt;Audacity&lt;/a&gt; by Steve
 Daulton</source>
-        <translation>Tehty &lt;a href="~a"&gt;Audacitylle&lt;/a&gt;-ohjelman
+        <translation>Tehty &lt;a href=&quot;~a&quot;&gt;Audacitylle&lt;/a&gt;-ohjelman
 &lt;span&gt;Sample Data Exportilla&lt;/span&gt;, tekijänä Steve
 Daulton</translation>
     </message>
@@ -8177,7 +8537,7 @@ Daulton</translation>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="327"/>
         <source>Sample data Import</source>
-        <translation type="unfinished">Näytetietojen tuonti</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../tools/translations/nyquist_strings.cpp.generated" line="328"/>
@@ -8590,7 +8950,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretcheffect.cpp" line="43"/>
         <source>Sliding stretch</source>
-        <translation type="unfinished">Liukuva venytys</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/slidingstretcheffect.cpp" line="68"/>
@@ -8859,7 +9219,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="70"/>
         <source>Linear frequency scale</source>
-        <translation type="unfinished">Lineaarinen asteikko</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/filtercurveeq/FilterCurveEqView.qml" line="85"/>
@@ -8997,7 +9357,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="78"/>
         <source>Select a few seconds of isolated noise so Audacity knows what to filter out, then click Get noise profile.</source>
-        <translation>Valitse muutama sekunti pelkkää kohinaa, jotta Audacity tietää, mitä pitää suodattaa pois ja paina sitten "Luo kohinaprofiili".</translation>
+        <translation>Valitse muutama sekunti pelkkää kohinaa, jotta Audacity tietää, mitä pitää suodattaa pois ja paina sitten &quot;Luo kohinaprofiili&quot;.</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="92"/>
@@ -9012,7 +9372,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="131"/>
         <source>Select all of the audio you want filtered, choose how much noise you want filtered out, and then click “Apply” to reduce noise.</source>
-        <translation>Valitse kaikki suodatettavat äänet, valitse poistettavan kohinamäärän ja napsauta sitten "Käytä" vähentääksesi kohinaa.</translation>
+        <translation>Valitse kaikki suodatettavat äänet, valitse poistettavan kohinamäärän ja napsauta sitten &quot;Käytä&quot; vähentääksesi kohinaa.</translation>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/noisereduction/NoiseReductionView.qml" line="13"/>
@@ -9187,27 +9547,27 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="10"/>
         <source>Sliding stretch</source>
-        <translation type="unfinished">Liukuva venytys</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="45"/>
         <source>Initial tempo change</source>
-        <translation type="unfinished">Tempon alkumuutos (%)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="58"/>
         <source>Final tempo change</source>
-        <translation type="unfinished">Tempon loppumuutos (%)</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="72"/>
         <source>Initial pitch shift</source>
-        <translation type="unfinished">Sävelkorkeuden alkumuutos</translation>
+        <translation type="unfinished"/>
     </message>
     <message>
         <location filename="../../src/effects/builtin_collection/slidingstretch/SlidingStretchView.qml" line="86"/>
         <source>Final pitch shift</source>
-        <translation type="unfinished">Sävelkorkeuden loppumuutos</translation>
+        <translation type="unfinished"/>
     </message>
 </context>
 <context>
@@ -9326,7 +9686,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="36"/>
         <source>s</source>
-        <extracomment>Abbreviation of "seconds"</extracomment>
+        <extracomment>Abbreviation of &quot;seconds&quot;</extracomment>
         <translation>s</translation>
     </message>
     <message>
@@ -9337,7 +9697,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="45"/>
         <source>ms</source>
-        <extracomment>Abbreviation of "milliseconds"</extracomment>
+        <extracomment>Abbreviation of &quot;milliseconds&quot;</extracomment>
         <translation>ms</translation>
     </message>
     <message>
@@ -9354,7 +9714,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="63"/>
         <source>Hz</source>
-        <extracomment>Abbreviation of "hertz"</extracomment>
+        <extracomment>Abbreviation of &quot;hertz&quot;</extracomment>
         <translation>Hz</translation>
     </message>
     <message>
@@ -9365,7 +9725,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="72"/>
         <source>kHz</source>
-        <extracomment>Abbreviation of "kilohertz"</extracomment>
+        <extracomment>Abbreviation of &quot;kilohertz&quot;</extracomment>
         <translation>kHz</translation>
     </message>
     <message>
@@ -9376,7 +9736,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="82"/>
         <source>dB</source>
-        <extracomment>Abbreviation of "decibels"</extracomment>
+        <extracomment>Abbreviation of &quot;decibels&quot;</extracomment>
         <translation>dB</translation>
     </message>
     <message>
@@ -9387,7 +9747,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="92"/>
         <source>%</source>
-        <extracomment>Symbol of "percent"</extracomment>
+        <extracomment>Symbol of &quot;percent&quot;</extracomment>
         <translation>%</translation>
     </message>
     <message>
@@ -9404,7 +9764,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="111"/>
         <source>bpm</source>
-        <extracomment>Abbreviation of "beats per minute"</extracomment>
+        <extracomment>Abbreviation of &quot;beats per minute&quot;</extracomment>
         <translation>bpm</translation>
     </message>
     <message>
@@ -9415,7 +9775,7 @@ Please select an area to repair with some audio on at least one side (the more t
     <message>
         <location filename="../../src/effects/builtin_collection/common/measureunits.h" line="121"/>
         <source>°</source>
-        <extracomment>Symbol of "degrees"</extracomment>
+        <extracomment>Symbol of &quot;degrees&quot;</extracomment>
         <translation>°</translation>
     </message>
     <message>
@@ -9833,6 +10193,160 @@ Master-efektit palautetaan käyttöön viennin jälkeen.</translation>
         <source>Reload plugins</source>
         <translation>Lataa lisäosat uudelleen</translation>
     </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="112"/>
+        <source>Enabled</source>
+        <translation>Käytössä</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="141"/>
+        <location filename="../../muse/framework/extensions/extensionsmodule.cpp" line="69"/>
+        <source>Disabled</source>
+        <translation>Poistettu käytöstä</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="189"/>
+        <source>Version:</source>
+        <translation>Versio: </translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsListPanel.qml" line="191"/>
+        <source>Shortcut:</source>
+        <extracomment>Keyboard shortcut</extracomment>
+        <translation>Pikanäppäin:</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="83"/>
+        <source>Edit shortcut</source>
+        <extracomment>Edit the keyboard shortcut assigned to a plug-in</extracomment>
+        <translation>Muokkaa pikanäppäintä</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="128"/>
+        <source>Enable</source>
+        <translation>Käytössä</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="128"/>
+        <source>Disable</source>
+        <translation>Poistettu</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/extensionserrors.h" line="46"/>
+        <source>Plugin not found</source>
+        <translation>Lisäosaa ei löydy</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/extensionserrors.h" line="47"/>
+        <source>Could not load plugin</source>
+        <translation>Lisäosaa ei voida ladata</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/extensionserrors.h" line="48"/>
+        <source>Plugin is not in the correct format</source>
+        <translation>Lisäosa ei ole oikeassa muodossa</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/extensionsmodule.cpp" line="70"/>
+        <source>Manually</source>
+        <translation>Manuaalisesti</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="34"/>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="100"/>
+        <source>Failed to install extension</source>
+        <translation>Laajennuksen asentaminen epäonnistui</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="35"/>
+        <source>The extension does not contain a valid manifest file.</source>
+        <translation>Laajennus ei sisällä kelvollista manifest-tiedostoa.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="59"/>
+        <source>The extension is already installed.</source>
+        <translation>Laajennus on jo asennettu.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="66"/>
+        <source>This extension cannot be updated.</source>
+        <translation>Tätä laajennusta ei voi päivittää.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="67"/>
+        <source>The currently installed version cannot be uninstalled.</source>
+        <translation>Asennettua versiota ei voi poistaa.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="73"/>
+        <source>Another version of the extension “%1” is already installed (version %2). Do you want to replace it with version %3?</source>
+        <translation>Laajennuksesta ”%1” on jo asennettu toinen versio (versio %2). Haluatko korvata sen versiolla %3?</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="77"/>
+        <source>Update extension</source>
+        <translation>Päivitä laajennus</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="102"/>
+        <location filename="../../muse/framework/extensions/internal/extensioninstaller.cpp" line="104"/>
+        <source>Error code: %1</source>
+        <translation>Virhekoodi: %1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="79"/>
+        <source>The plugin “%1” is currently disabled. Do you want to enable it now?</source>
+        <translation>Lisäosa “%1” on tällä hetkellä poissa käytöstä. Haluatko ottaa sen käyttöön nyt?</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsactioncontroller.cpp" line="80"/>
+        <source>Alternatively, you can enable it at any time from Home &gt; Plugins.</source>
+        <translation>Vaihtoehtoisesti voit ottaa sen käyttöön milloin tahansa kohdasta Koti &gt; Lisäosat.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="43"/>
+        <source>Composing/arranging tools</source>
+        <translation>Sävellys/sovitus -työkalut</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="44"/>
+        <source>Color notes</source>
+        <translation>Värinuotit</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="45"/>
+        <source>Playback</source>
+        <translation>Toisto</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsprovider.cpp" line="46"/>
+        <source>Lyrics</source>
+        <translation>Sanoitus</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="63"/>
+        <source>Run plugin %1</source>
+        <extracomment>%1 is replaced with the name of the plugin</extracomment>
+        <translation>Suorita lisäosa %1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/internal/extensionsuiactions.cpp" line="65"/>
+        <source>Run plugin %1: %2</source>
+        <extracomment>%1 is replaced with the name of the plugin; %2 is replaced with the name of the action</extracomment>
+        <translation>Suorita lisäosa %1: %2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="115"/>
+        <source>Not specified</source>
+        <extracomment>No version is specified for this plugin.</extracomment>
+        <translation>Ei määritelty</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/extensionslistmodel.cpp" line="131"/>
+        <source>Not defined</source>
+        <extracomment>No keyboard shortcut is assigned to this plugin.</extracomment>
+        <translation>Ei määritelty</translation>
+    </message>
 </context>
 <context>
     <name>fft</name>
@@ -9978,13 +10492,13 @@ Ehkä %1 ei ole kirjoituskelpoinen tai levy on täynnä.</translation>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="113"/>
         <source>%1 files</source>
-        <extracomment>a type or types such as "txt" or "txt, xml" will be substituted for %s</extracomment>
+        <extracomment>a type or types such as &quot;txt&quot; or &quot;txt, xml&quot; will be substituted for %s</extracomment>
         <translation>%1-tiedostot</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-files/FileNames.cpp" line="138"/>
         <source>(%1)</source>
-        <extracomment>%1 is the list of file extension glob patterns, such as "*.txt;*.xml"</extracomment>
+        <extracomment>%1 is the list of file extension glob patterns, such as &quot;*.txt;*.xml&quot;</extracomment>
         <translation>(%1)</translation>
     </message>
     <message>
@@ -10034,6 +10548,7 @@ Ohjenapista saat vihjeitä sopivista asemista.</translation>
         <location filename="../../src/effects/effects_base/qml/Audacity/Effects/PresetNameDialog.qml" line="113"/>
         <location filename="../../src/importexport/export/qml/Export/CustomFFmpegDialog.qml" line="143"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingFollowupDialog.qml" line="100"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="119"/>
         <source>OK</source>
         <translation>OK</translation>
     </message>
@@ -10066,9 +10581,12 @@ Ohjenapista saat vihjeitä sopivista asemista.</translation>
         <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="159"/>
         <location filename="../../src/project/qml/Audacity/Project/NewProjectDialog.qml" line="117"/>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/tracksitemsview/labeleditor/AddNewLabelTrackDialog.qml" line="98"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="72"/>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/ProgressDialog.qml" line="98"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="527"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="549"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="648"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="132"/>
         <source>Cancel</source>
         <translation>Peruuta</translation>
     </message>
@@ -10078,6 +10596,7 @@ Ohjenapista saat vihjeitä sopivista asemista.</translation>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="127"/>
         <location filename="../../src/playback/qml/Audacity/Playback/dialogs/LoopRegionInOut.qml" line="171"/>
         <location filename="../../src/trackedit/qml/Audacity/TrackEdit/DeleteBehaviorOnboardingDialog.qml" line="93"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="135"/>
         <source>Apply</source>
         <translation>Käytä</translation>
     </message>
@@ -10091,6 +10610,8 @@ Ohjenapista saat vihjeitä sopivista asemista.</translation>
         <location filename="../../src/appshell/qml/Audacity/AppShell/AboutDialog.qml" line="80"/>
         <location filename="../../src/importexport/export/qml/Export/MetadataDialog.qml" line="115"/>
         <location filename="../../src/project/qml/Audacity/Project/ProjectUploadedDialog.qml" line="266"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/PopupPanel.qml" line="160"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="131"/>
         <source>Close</source>
         <translation>Sulje</translation>
     </message>
@@ -10101,6 +10622,10 @@ Ohjenapista saat vihjeitä sopivista asemista.</translation>
     </message>
     <message>
         <location filename="../../src/importexport/labels/qml/Export/internal/LabelTracksSelectionView.qml" line="128"/>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingBottomPanel.qml" line="69"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/EditShortcutDialogContent.qml" line="143"/>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsTopPanel.qml" line="80"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TextInputField.qml" line="284"/>
         <source>Clear</source>
         <translation>Tyhjennä</translation>
     </message>
@@ -10117,7 +10642,7 @@ Ohjenapista saat vihjeitä sopivista asemista.</translation>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputPlaySection.qml" line="69"/>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/NoteInputSection.qml" line="98"/>
         <source>ms</source>
-        <extracomment>Abbreviation of "milliseconds"</extracomment>
+        <extracomment>Abbreviation of &quot;milliseconds&quot;</extracomment>
         <translation>ms</translation>
     </message>
     <message>
@@ -10130,7 +10655,7 @@ Ohjenapista saat vihjeitä sopivista asemista.</translation>
     <message>
         <location filename="../../src/preferences/qml/Audacity/Preferences/internal/UiFontSection.qml" line="67"/>
         <source>pt</source>
-        <extracomment>Abbreviation of "points", used to specify a font size</extracomment>
+        <extracomment>Abbreviation of &quot;points&quot;, used to specify a font size</extracomment>
         <translation>pt</translation>
     </message>
     <message>
@@ -10143,6 +10668,7 @@ Ohjenapista saat vihjeitä sopivista asemista.</translation>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/ProjectGridItem.qml" line="297"/>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsGridView.qml" line="212"/>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsListView.qml" line="364"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/filteredflyoutmodel.cpp" line="130"/>
         <source>No results found</source>
         <translation>Tuloksia ei löytynyt</translation>
     </message>
@@ -10156,6 +10682,7 @@ Ohjenapista saat vihjeitä sopivista asemista.</translation>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="328"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="365"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/DefaultProjectListView.qml" line="296"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/filteredflyoutmodel.cpp" line="63"/>
         <source>Unknown</source>
         <translation>Tuntematon</translation>
     </message>
@@ -10169,6 +10696,7 @@ Ohjenapista saat vihjeitä sopivista asemista.</translation>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudAudioFilesView.qml" line="472"/>
         <location filename="../../src/project/qml/Audacity/Project/internal/ProjectsPage/CloudProjectsView.qml" line="187"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="142"/>
         <source>Please check your internet connection or try again later.</source>
         <translation>Tarkista internetyhteytesi tai yritä myöhemmin uudelleen.</translation>
     </message>
@@ -10228,11 +10756,13 @@ Ohjenapista saat vihjeitä sopivista asemista.</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="621"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="120"/>
         <source>Save</source>
         <translation>Tallenna</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/view/tracksitemsview/labeleditor/labelstableviewmodel.cpp" line="635"/>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="123"/>
         <source>Open</source>
         <translation>Avaa</translation>
     </message>
@@ -10247,6 +10777,1506 @@ Ohjenapista saat vihjeitä sopivista asemista.</translation>
         <location filename="../../src/project/internal/projectactionscontroller.cpp" line="983"/>
         <source>Stop</source>
         <translation>Pysäytä</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/ErrorDetailsView.qml" line="129"/>
+        <source>Copy</source>
+        <translation>Kopioi</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/ErrorDetailsView.qml" line="173"/>
+        <source>Error details have been copied to the clipboard.</source>
+        <translation>Virheen tiedot on kopioitu leikepöydälle.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialog.qml" line="52"/>
+        <source>Hide details</source>
+        <translation>Piilota tiedot</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialog.qml" line="52"/>
+        <source>Show details</source>
+        <translation>Näytä yksityiskohdat</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="92"/>
+        <source>Question</source>
+        <translation>Kysymys</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="93"/>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="98"/>
+        <source>Information</source>
+        <translation>Tiedot/Informaatio</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="94"/>
+        <source>Warning</source>
+        <translation>Varoitus</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="95"/>
+        <source>Error</source>
+        <translation>Virhe</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/qml/Muse/Interactive/StandardDialogPanel.qml" line="204"/>
+        <source>Don’t show this message again</source>
+        <translation>Älä näytä tätä viestiä uudelleen</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/EditMidiMappingDialog.qml" line="118"/>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/editmidimappingmodel.cpp" line="63"/>
+        <source>Waiting…</source>
+        <extracomment>The app is waiting for the user to trigger a valid MIDI remote event</extracomment>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/EditMidiMappingDialog.qml" line="134"/>
+        <source>Add</source>
+        <translation>Lisää</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingBottomPanel.qml" line="83"/>
+        <source>Clear all</source>
+        <translation>Tyhjennä kaikki</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/MidiDeviceMappingPage.qml" line="93"/>
+        <source>action</source>
+        <translation>toiminto</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/MidiDeviceMappingPage.qml" line="95"/>
+        <source>status</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="89"/>
+        <source>Delete</source>
+        <translation>Poista</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/StyledToolBarItem.qml" line="66"/>
+        <source>On</source>
+        <translation>Päällä</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/StyledToolBarItem.qml" line="66"/>
+        <source>Off</source>
+        <translation>Pois</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TimeInputField.qml" line="56"/>
+        <source>Hours</source>
+        <translation>Tuntia</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TimeInputField.qml" line="83"/>
+        <source>Minutes</source>
+        <translation>minuuttia</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TimeInputField.qml" line="110"/>
+        <source>Seconds</source>
+        <translation>Sekuntia</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/TimeInputField.qml" line="139"/>
+        <source>Milliseconds</source>
+        <translation>Millisekuntia</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="33"/>
+        <source>percent</source>
+        <translation>prosenttia</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/VisibilityControls.qml" line="106"/>
+        <source>Collapse</source>
+        <extracomment>Collapse a tree item</extracomment>
+        <translation>Supista</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/VisibilityControls.qml" line="108"/>
+        <source>Expand</source>
+        <extracomment>Expand a tree item</extracomment>
+        <translation>Laajenna</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="116"/>
+        <source>Create</source>
+        <translation>Luo</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/WorkspacesDialog.qml" line="113"/>
+        <source>Select</source>
+        <translation>Valitse</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="45"/>
+        <source>Today</source>
+        <translation>Tänään</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="49"/>
+        <source>Yesterday</source>
+        <translation>Eilen</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="53"/>
+        <source>%n day(s) ago</source>
+        <translation><numerusform>%n päivä sitten</numerusform><numerusform>%n päivää sitten</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="59"/>
+        <source>Last week</source>
+        <translation>Viime viikolla</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="63"/>
+        <source>%n week(s) ago</source>
+        <translation><numerusform>%n viikko sitten</numerusform><numerusform>%n viikkoa sitten</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="71"/>
+        <source>Last month</source>
+        <translation>Viime kuussa</translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="75"/>
+        <source>%n month(s) ago</source>
+        <translation><numerusform>%n kuukausi sitten</numerusform><numerusform>%n kuukautta sitten</numerusform></translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="80"/>
+        <source>%n year(s) ago</source>
+        <translation><numerusform>%n vuosi sitten</numerusform><numerusform>%n vuotta sitten</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="88"/>
+        <source>%1 GB</source>
+        <comment>gigabyte</comment>
+        <extracomment>Abbreviation of &quot;gigabyte&quot;, used to indicate file size</extracomment>
+        <translation>%1 GB</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="94"/>
+        <source>%1 MB</source>
+        <comment>megabyte</comment>
+        <extracomment>Abbreviation of &quot;megabyte&quot;, used to indicate file size</extracomment>
+        <translation>%1 MB</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="100"/>
+        <source>%1 KB</source>
+        <comment>kilobyte</comment>
+        <extracomment>Abbreviation of &quot;kilobyte&quot;, used to indicate file size</extracomment>
+        <translation>%1 kB </translation>
+    </message>
+    <message numerus="yes">
+        <location filename="../../muse/framework/global/dataformatter.cpp" line="104"/>
+        <source>%Ln byte(s)</source>
+        <extracomment>Used to indicate file size. Ideally, keep the translation short; feel free to use an abbreviation.</extracomment>
+        <translation><numerusform>%Ln tavua</numerusform><numerusform>%Ln tavu(a)</numerusform></translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="121"/>
+        <source>Save all</source>
+        <translation>Tallenna kaikki</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="122"/>
+        <source>Don’t save</source>
+        <translation>Älä tallenna</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="124"/>
+        <source>Yes</source>
+        <translation>Kyllä</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="125"/>
+        <source>Yes to all</source>
+        <translation>Kyllä kaikkiin</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="126"/>
+        <source>No</source>
+        <translation>Ei</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="127"/>
+        <source>No to all</source>
+        <translation>Ei kaikkiin</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="128"/>
+        <source>Abort</source>
+        <translation>Keskeytetty</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="129"/>
+        <source>Retry</source>
+        <translation>Yritä uudelleen</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="130"/>
+        <source>Ignore</source>
+        <translation>Sivuuta</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="133"/>
+        <source>Discard</source>
+        <translation>Hylkää</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="134"/>
+        <source>Help</source>
+        <translation>Apua</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="136"/>
+        <source>Reset</source>
+        <translation>Palauta</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/interactive/internal/interactive.cpp" line="137"/>
+        <source>Continue</source>
+        <translation>Jatka</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="367"/>
+        <source>Checking for updates…</source>
+        <translation>Tarkistetaan päivityksiä…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="520"/>
+        <source>Downloading %1…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/internal/languagesservice.cpp" line="535"/>
+        <source>Unpacking %1…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/mididevicemappingmodel.cpp" line="101"/>
+        <source>Inactive</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
+    <name>global/noteName</name>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="267"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="282"/>
+        <source>C</source>
+        <translation>C</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="268"/>
+        <source>C♯</source>
+        <translation>C♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="269"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="284"/>
+        <source>D</source>
+        <translation>D</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="270"/>
+        <source>D♯</source>
+        <translation>D♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="271"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="286"/>
+        <source>E</source>
+        <translation>E</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="272"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="287"/>
+        <source>F</source>
+        <translation>F</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="273"/>
+        <source>F♯</source>
+        <translation>F♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="274"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="289"/>
+        <source>G</source>
+        <translation>G</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="275"/>
+        <source>G♯</source>
+        <translation>G♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="276"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="291"/>
+        <source>A</source>
+        <translation>A</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="277"/>
+        <source>A♯</source>
+        <translation>A♯</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="278"/>
+        <location filename="../../muse/framework/global/utils.cpp" line="293"/>
+        <source>B</source>
+        <translation>H</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="283"/>
+        <source>D♭</source>
+        <translation>D♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="285"/>
+        <source>E♭</source>
+        <translation>E♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="288"/>
+        <source>G♭</source>
+        <translation>G♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="290"/>
+        <source>A♭</source>
+        <translation>A♭</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="292"/>
+        <source>B♭</source>
+        <translation>B</translation>
+    </message>
+</context>
+<context>
+    <name>global/pitchName</name>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="31"/>
+        <source>C-1</source>
+        <translation>C-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="32"/>
+        <source>C♯-1</source>
+        <translation>C♯-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="33"/>
+        <source>D♭-1</source>
+        <translation>D♭-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="34"/>
+        <source>D-1</source>
+        <translation>D-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="35"/>
+        <source>D♯-1</source>
+        <translation>D♯-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="36"/>
+        <source>E♭-1</source>
+        <translation>E♭-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="37"/>
+        <source>E-1</source>
+        <translation>E-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="38"/>
+        <source>E♯-1</source>
+        <translation>E♯-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="39"/>
+        <source>F♭-1</source>
+        <translation>F♭-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="40"/>
+        <source>F-1</source>
+        <translation>F-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="41"/>
+        <source>F♯-1</source>
+        <translation>F♯-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="42"/>
+        <source>G♭-1</source>
+        <translation>G♭-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="43"/>
+        <source>G-1</source>
+        <translation>G-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="44"/>
+        <source>G♯-1</source>
+        <translation>G♯-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="45"/>
+        <source>A♭-1</source>
+        <translation>A♭-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="46"/>
+        <source>A-1</source>
+        <translation>A-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="47"/>
+        <source>A♯-1</source>
+        <translation>A♯-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="48"/>
+        <source>B♭-1</source>
+        <translation>B♭-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="49"/>
+        <source>B-1</source>
+        <translation>B-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="50"/>
+        <source>B♯-1</source>
+        <translation>B♯-1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="52"/>
+        <source>C♭0</source>
+        <translation>C♭0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="53"/>
+        <source>C0</source>
+        <translation>C0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="54"/>
+        <source>C♯0</source>
+        <translation>C♯0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="55"/>
+        <source>D♭0</source>
+        <translation>D♭0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="56"/>
+        <source>D0</source>
+        <translation>D0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="57"/>
+        <source>D♯0</source>
+        <translation>D♯0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="58"/>
+        <source>E♭0</source>
+        <translation>E♭0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="59"/>
+        <source>E0</source>
+        <translation>E0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="60"/>
+        <source>E♯0</source>
+        <translation>E♯0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="61"/>
+        <source>F♭0</source>
+        <translation>F♭0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="62"/>
+        <source>F0</source>
+        <translation>F0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="63"/>
+        <source>F♯0</source>
+        <translation>F♯0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="64"/>
+        <source>G♭0</source>
+        <translation>G♭0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="65"/>
+        <source>G0</source>
+        <translation>G0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="66"/>
+        <source>G♯0</source>
+        <translation>G♯0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="67"/>
+        <source>A♭0</source>
+        <translation>A♭0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="68"/>
+        <source>A0</source>
+        <translation>A0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="69"/>
+        <source>A♯0</source>
+        <translation>A♯0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="70"/>
+        <source>B♭0</source>
+        <translation>B♭0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="71"/>
+        <source>B0</source>
+        <translation>B0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="72"/>
+        <source>B♯0</source>
+        <translation>B♯0</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="74"/>
+        <source>C♭1</source>
+        <translation>C♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="75"/>
+        <source>C1</source>
+        <translation>C1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="76"/>
+        <source>C♯1</source>
+        <translation>C♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="77"/>
+        <source>D♭1</source>
+        <translation>D♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="78"/>
+        <source>D1</source>
+        <translation>D1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="79"/>
+        <source>D♯1</source>
+        <translation>D♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="80"/>
+        <source>E♭1</source>
+        <translation>E♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="81"/>
+        <source>E1</source>
+        <translation>E1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="82"/>
+        <source>E♯1</source>
+        <translation>E♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="83"/>
+        <source>F♭1</source>
+        <translation>F♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="84"/>
+        <source>F1</source>
+        <translation>F1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="85"/>
+        <source>F♯1</source>
+        <translation>F♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="86"/>
+        <source>G♭1</source>
+        <translation>G♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="87"/>
+        <source>G1</source>
+        <translation>G1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="88"/>
+        <source>G♯1</source>
+        <translation>G♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="89"/>
+        <source>A♭1</source>
+        <translation>A♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="90"/>
+        <source>A1</source>
+        <translation>A1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="91"/>
+        <source>A♯1</source>
+        <translation>A♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="92"/>
+        <source>B♭1</source>
+        <translation>B♭1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="93"/>
+        <source>B1</source>
+        <translation>B1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="94"/>
+        <source>B♯1</source>
+        <translation>B♯1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="96"/>
+        <source>C♭2</source>
+        <translation>C♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="97"/>
+        <source>C2</source>
+        <translation>C2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="98"/>
+        <source>C♯2</source>
+        <translation>C♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="99"/>
+        <source>D♭2</source>
+        <translation>D♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="100"/>
+        <source>D2</source>
+        <translation>D2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="101"/>
+        <source>D♯2</source>
+        <translation>D♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="102"/>
+        <source>E♭2</source>
+        <translation>E♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="103"/>
+        <source>E2</source>
+        <translation>E2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="104"/>
+        <source>E♯2</source>
+        <translation>E♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="105"/>
+        <source>F♭2</source>
+        <translation>F♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="106"/>
+        <source>F2</source>
+        <translation>F2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="107"/>
+        <source>F♯2</source>
+        <translation>F♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="108"/>
+        <source>G♭2</source>
+        <translation>G♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="109"/>
+        <source>G2</source>
+        <translation>G2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="110"/>
+        <source>G♯2</source>
+        <translation>G♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="111"/>
+        <source>A♭2</source>
+        <translation>A♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="112"/>
+        <source>A2</source>
+        <translation>A2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="113"/>
+        <source>A♯2</source>
+        <translation>A♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="114"/>
+        <source>B♭2</source>
+        <translation>B♭2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="115"/>
+        <source>B2</source>
+        <translation>B2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="116"/>
+        <source>B♯2</source>
+        <translation>B♯2</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="118"/>
+        <source>C♭3</source>
+        <translation>C♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="119"/>
+        <source>C3</source>
+        <translation>C3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="120"/>
+        <source>C♯3</source>
+        <translation>C♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="121"/>
+        <source>D♭3</source>
+        <translation>D♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="122"/>
+        <source>D3</source>
+        <translation>D3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="123"/>
+        <source>D♯3</source>
+        <translation>D♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="124"/>
+        <source>E♭3</source>
+        <translation>E♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="125"/>
+        <source>E3</source>
+        <translation>E3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="126"/>
+        <source>E♯3</source>
+        <translation>E♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="127"/>
+        <source>F♭3</source>
+        <translation>F♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="128"/>
+        <source>F3</source>
+        <translation>F3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="129"/>
+        <source>F♯3</source>
+        <translation>F♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="130"/>
+        <source>G♭3</source>
+        <translation>G♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="131"/>
+        <source>G3</source>
+        <translation>G3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="132"/>
+        <source>G♯3</source>
+        <translation>G♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="133"/>
+        <source>A♭3</source>
+        <translation>A♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="134"/>
+        <source>A3</source>
+        <translation>A3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="135"/>
+        <source>A♯3</source>
+        <translation>A♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="136"/>
+        <source>B♭3</source>
+        <translation>B♭3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="137"/>
+        <source>B3</source>
+        <translation>B3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="138"/>
+        <source>B♯3</source>
+        <translation>B♯3</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="140"/>
+        <source>C♭4</source>
+        <translation>C♭4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="141"/>
+        <source>C4</source>
+        <translation>C4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="142"/>
+        <source>C♯4</source>
+        <translation>C♯4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="143"/>
+        <source>D♭4</source>
+        <translation>D♭4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="144"/>
+        <source>D4</source>
+        <translation>D4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="145"/>
+        <source>D♯4</source>
+        <translation>D♯4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="146"/>
+        <source>E♭4</source>
+        <translation>E♭4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="147"/>
+        <source>E4</source>
+        <translation>E4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="148"/>
+        <source>E♯4</source>
+        <translation>E♯4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="149"/>
+        <source>F♭4</source>
+        <translation>F♭4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="150"/>
+        <source>F4</source>
+        <translation>F4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="151"/>
+        <source>F♯4</source>
+        <translation>F♯4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="152"/>
+        <source>G♭4</source>
+        <translation>G♭4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="153"/>
+        <source>G4</source>
+        <translation>G4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="154"/>
+        <source>G♯4</source>
+        <translation>G♯4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="155"/>
+        <source>A♭4</source>
+        <translation>A♭4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="156"/>
+        <source>A4</source>
+        <translation>A4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="157"/>
+        <source>A♯4</source>
+        <translation>A♯4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="158"/>
+        <source>B♭4</source>
+        <translation>B♭4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="159"/>
+        <source>B4</source>
+        <translation>B4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="160"/>
+        <source>B♯4</source>
+        <translation>B♯4</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="162"/>
+        <source>C♭5</source>
+        <translation>C♭5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="163"/>
+        <source>C5</source>
+        <translation>C5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="164"/>
+        <source>C♯5</source>
+        <translation>C♯5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="165"/>
+        <source>D♭5</source>
+        <translation>D♭5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="166"/>
+        <source>D5</source>
+        <translation>D5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="167"/>
+        <source>D♯5</source>
+        <translation>D♯5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="168"/>
+        <source>E♭5</source>
+        <translation>E♭5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="169"/>
+        <source>E5</source>
+        <translation>E5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="170"/>
+        <source>E♯5</source>
+        <translation>E♯5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="171"/>
+        <source>F♭5</source>
+        <translation>F♭5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="172"/>
+        <source>F5</source>
+        <translation>F5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="173"/>
+        <source>F♯5</source>
+        <translation>F♯5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="174"/>
+        <source>G♭5</source>
+        <translation>G♭5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="175"/>
+        <source>G5</source>
+        <translation>G5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="176"/>
+        <source>G♯5</source>
+        <translation>G♯5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="177"/>
+        <source>A♭5</source>
+        <translation>A♭5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="178"/>
+        <source>A5</source>
+        <translation>A5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="179"/>
+        <source>A♯5</source>
+        <translation>A♯5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="180"/>
+        <source>B♭5</source>
+        <translation>B♭5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="181"/>
+        <source>B5</source>
+        <translation>B5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="182"/>
+        <source>B♯5</source>
+        <translation>B♯5</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="184"/>
+        <source>C♭6</source>
+        <translation>C♭6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="185"/>
+        <source>C6</source>
+        <translation>C6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="186"/>
+        <source>C♯6</source>
+        <translation>C♯6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="187"/>
+        <source>D♭6</source>
+        <translation>D♭6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="188"/>
+        <source>D6</source>
+        <translation>D6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="189"/>
+        <source>D♯6</source>
+        <translation>D♯6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="190"/>
+        <source>E♭6</source>
+        <translation>E♭6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="191"/>
+        <source>E6</source>
+        <translation>E6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="192"/>
+        <source>E♯6</source>
+        <translation>E♯6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="193"/>
+        <source>F♭6</source>
+        <translation>F♭6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="194"/>
+        <source>F6</source>
+        <translation>F6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="195"/>
+        <source>F♯6</source>
+        <translation>F♯6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="196"/>
+        <source>G♭6</source>
+        <translation>G♭6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="197"/>
+        <source>G6</source>
+        <translation>G6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="198"/>
+        <source>G♯6</source>
+        <translation>G♯6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="199"/>
+        <source>A♭6</source>
+        <translation>A♭6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="200"/>
+        <source>A6</source>
+        <translation>A6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="201"/>
+        <source>A♯6</source>
+        <translation>A♯6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="202"/>
+        <source>B♭6</source>
+        <translation>B♭6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="203"/>
+        <source>B6</source>
+        <translation>B6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="204"/>
+        <source>B♯6</source>
+        <translation>B♯6</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="206"/>
+        <source>C♭7</source>
+        <translation>C♭7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="207"/>
+        <source>C7</source>
+        <translation>C7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="208"/>
+        <source>C♯7</source>
+        <translation>C♯7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="209"/>
+        <source>D♭7</source>
+        <translation>D♭7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="210"/>
+        <source>D7</source>
+        <translation>D7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="211"/>
+        <source>D♯7</source>
+        <translation>D♯7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="212"/>
+        <source>E♭7</source>
+        <translation>E♭7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="213"/>
+        <source>E7</source>
+        <translation>E7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="214"/>
+        <source>E♯7</source>
+        <translation>E♯7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="215"/>
+        <source>F♭7</source>
+        <translation>F♭7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="216"/>
+        <source>F7</source>
+        <translation>F7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="217"/>
+        <source>F♯7</source>
+        <translation>F♯7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="218"/>
+        <source>G♭7</source>
+        <translation>G♭7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="219"/>
+        <source>G7</source>
+        <translation>G7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="220"/>
+        <source>G♯7</source>
+        <translation>G♯7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="221"/>
+        <source>A♭7</source>
+        <translation>A♭7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="222"/>
+        <source>A7</source>
+        <translation>A7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="223"/>
+        <source>A♯7</source>
+        <translation>A♯7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="224"/>
+        <source>B♭7</source>
+        <translation>B♭7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="225"/>
+        <source>B7</source>
+        <translation>H7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="226"/>
+        <source>B♯7</source>
+        <translation>B♯7</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="228"/>
+        <source>C♭8</source>
+        <translation>C♭8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="229"/>
+        <source>C8</source>
+        <translation>C8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="230"/>
+        <source>C♯8</source>
+        <translation>C♯8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="231"/>
+        <source>D♭8</source>
+        <translation>D♭8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="232"/>
+        <source>D8</source>
+        <translation>D8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="233"/>
+        <source>D♯8</source>
+        <translation>D♯8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="234"/>
+        <source>E♭8</source>
+        <translation>E♭8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="235"/>
+        <source>E8</source>
+        <translation>E8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="236"/>
+        <source>E♯8</source>
+        <translation>E♯8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="237"/>
+        <source>F♭8</source>
+        <translation>F♭8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="238"/>
+        <source>F8</source>
+        <translation>F8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="239"/>
+        <source>F♯8</source>
+        <translation>F♯8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="240"/>
+        <source>G♭8</source>
+        <translation>G♭8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="241"/>
+        <source>G8</source>
+        <translation>G8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="242"/>
+        <source>G♯8</source>
+        <translation>G♯8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="243"/>
+        <source>A♭8</source>
+        <translation>A♭8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="244"/>
+        <source>A8</source>
+        <translation>A8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="245"/>
+        <source>A♯8</source>
+        <translation>A♯8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="246"/>
+        <source>B♭8</source>
+        <translation>B♭8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="247"/>
+        <source>B8</source>
+        <translation>B8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="248"/>
+        <source>B♯8</source>
+        <translation>B♯8</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="250"/>
+        <source>C♭9</source>
+        <translation>C♭9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="251"/>
+        <source>C9</source>
+        <translation>C9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="252"/>
+        <source>C♯9</source>
+        <translation>C♯9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="253"/>
+        <source>D♭9</source>
+        <translation>D♭9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="254"/>
+        <source>D9</source>
+        <translation>D9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="255"/>
+        <source>D♯9</source>
+        <translation>D♯9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="256"/>
+        <source>E♭9</source>
+        <translation>E♭9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="257"/>
+        <source>E9</source>
+        <translation>E9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="258"/>
+        <source>E♯9</source>
+        <translation>E♯9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="259"/>
+        <source>F♭9</source>
+        <translation>F♭9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="260"/>
+        <source>F9</source>
+        <translation>F9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="261"/>
+        <source>F♯9</source>
+        <translation>F♯9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="262"/>
+        <source>G♭9</source>
+        <translation>G♭9</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/utils.cpp" line="263"/>
+        <source>G9</source>
+        <translation>G9</translation>
     </message>
 </context>
 <context>
@@ -10362,7 +12392,7 @@ Audacity cannot open this type of file.</source>
     <message>
         <location filename="../../au3/libraries/au3-import-export/Import.cpp" line="685"/>
         <source>This version of Audacity was not compiled with %1 support.</source>
-        <extracomment>%1 is the name of an audio file format, such as "MP3"</extracomment>
+        <extracomment>%1 is the name of an audio file format, such as &quot;MP3&quot;</extracomment>
         <translation>Tähän Audacityn versioon ei ole käännetty tukea muodolle %1.</translation>
     </message>
     <message>
@@ -10503,7 +12533,7 @@ but none of them understood this file format.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="349"/>
         <source>LC</source>
-        <extracomment>LC is the AAC "Low Complexity" profile</extracomment>
+        <extracomment>LC is the AAC &quot;Low Complexity&quot; profile</extracomment>
         <translation>LC</translation>
     </message>
     <message>
@@ -10574,7 +12604,7 @@ but none of them understood this file format.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpegOptions.cpp" line="474"/>
         <source>Log search</source>
-        <extracomment>"Log" is short for "logarithmic"</extracomment>
+        <extracomment>&quot;Log&quot; is short for &quot;logarithmic&quot;</extracomment>
         <translation>Lokihaku</translation>
     </message>
     <message>
@@ -10592,7 +12622,7 @@ but none of them understood this file format.</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ImportFFmpeg.cpp" line="401"/>
         <source>Index[%1] Codec[%2], Language[%3], Bitrate[%4], Channels[%5], Duration[%6]</source>
-        <extracomment>"codec" is short for a "coder-decoder" algorithm</extracomment>
+        <extracomment>&quot;codec&quot; is short for a &quot;coder-decoder&quot; algorithm</extracomment>
         <translation>Indeksi[%1] Koodekki[%2], Kieli[%3], Bittinopeus[%4], Kanavat[%5], Kesto[%6]</translation>
     </message>
     <message>
@@ -10601,7 +12631,7 @@ but none of them understood this file format.</source>
         <location filename="../../au3/modules/import-export/mod-mp2/ExportMP2.h" line="23"/>
         <location filename="../../au3/modules/import-export/mod-mp3/ExportMP3.cpp" line="119"/>
         <source>%1 kbps</source>
-        <extracomment>kbps abbreviates "thousands of bits per second"
+        <extracomment>kbps abbreviates &quot;thousands of bits per second&quot;
 ----------
 kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
         <translation>%1 kbps</translation>
@@ -10672,7 +12702,7 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="294"/>
         <source>Vbr Mode</source>
-        <extracomment>VBR is "variable bit rate"</extracomment>
+        <extracomment>VBR is &quot;variable bit rate&quot;</extracomment>
         <translation>Vbr-tila</translation>
     </message>
     <message>
@@ -10701,7 +12731,7 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="309"/>
         <source>VOIP</source>
-        <extracomment>VOIP is "voice over IP"</extracomment>
+        <extracomment>VOIP is &quot;voice over IP&quot;</extracomment>
         <translation>VOIP</translation>
     </message>
     <message>
@@ -10790,7 +12820,7 @@ kbps is the bitrate of the MP3 file, kilobits per second</extracomment>
         <location filename="../../au3/modules/import-export/mod-ffmpeg/ExportFFmpeg.cpp" line="1000"/>
         <source>FFmpeg cannot find audio codec 0x%1.
 Support for this codec is probably not compiled in.</source>
-        <extracomment>"codec" is short for a "coder-decoder" algorithm</extracomment>
+        <extracomment>&quot;codec&quot; is short for a &quot;coder-decoder&quot; algorithm</extracomment>
         <translation>FFmpeg ei löydä äänikoodekkia 0x%1.
 Tämän koodekin tukea ei todennäköisesti ole käännetty.</translation>
     </message>
@@ -10809,7 +12839,7 @@ Tämän koodekin tukea ei todennäköisesti ole käännetty.</translation>
         <source>Can’t open audio codec “%1” (0x%2)
 
 %3</source>
-        <extracomment>"codec" is short for a "coder-decoder" algorithm %1 is the codec name, %2 is the codec id (hex), %3 is the error message</extracomment>
+        <extracomment>&quot;codec&quot; is short for a &quot;coder-decoder&quot; algorithm %1 is the codec name, %2 is the codec id (hex), %3 is the error message</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -11327,9 +13357,9 @@ Please download the latest version of ‘LAME for Audacity’.</source>
         <location filename="../../au3/modules/import-export/mod-ogg/ExportOGG.cpp" line="23"/>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="22"/>
         <source>%1 kbit/s</source>
-        <extracomment>kbit/s abbreviates "thousands of bits per second"
+        <extracomment>kbit/s abbreviates &quot;thousands of bits per second&quot;
 ----------
-kbit/s abbreviates "kilobits per second"</extracomment>
+kbit/s abbreviates &quot;kilobits per second&quot;</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -11491,7 +13521,7 @@ kbit/s abbreviates "kilobits per second"</extracomment>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="431"/>
         <source>Failed to calculate correct preskip</source>
-        <translation>Oikean 'preskipin' laskeminen epäonnistui</translation>
+        <translation>Oikean &apos;preskipin&apos; laskeminen epäonnistui</translation>
     </message>
     <message>
         <location filename="../../au3/modules/import-export/mod-opus/ExportOpus.cpp" line="521"/>
@@ -11678,7 +13708,7 @@ Audacity ei pysty tähän, joten vienti hylättiin.</translation>
         <location filename="../../au3/modules/import-export/mod-pcm/ExportPCM.cpp" line="656"/>
         <source>Error while writing %1 file (disk full?).
 Libsndfile says “%2”</source>
-        <extracomment>%s will be the error message from libsndfile, which * is usually something unhelpful (and untranslated) like "system * error"</extracomment>
+        <extracomment>%s will be the error message from libsndfile, which * is usually something unhelpful (and untranslated) like &quot;system * error&quot;</extracomment>
         <translation type="unfinished"/>
     </message>
     <message>
@@ -11734,7 +13764,7 @@ Libsndfile says “%2”</source>
     <message>
         <location filename="../../au3/modules/import-export/mod-wavpack/ExportWavPack.h" line="34"/>
         <source>%1 bps</source>
-        <extracomment>bps abbreviates "bits per sample"</extracomment>
+        <extracomment>bps abbreviates &quot;bits per sample&quot;</extracomment>
         <translation>%1 bps</translation>
     </message>
     <message>
@@ -11756,10 +13786,7 @@ Libsndfile says “%2”</source>
         <location filename="../../au3/modules/import-export/mod-wavpack/ImportWavPack.cpp" line="229"/>
         <source>Encountered %1 errors decoding WavPack file!</source>
         <extracomment>%1 is the number of errors</extracomment>
-        <translation type="unfinished">
-            <numerusform/>
-            <numerusform/>
-        </translation>
+        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
     </message>
 </context>
 <context>
@@ -11889,6 +13916,122 @@ Libsndfile says “%2”</source>
         <location filename="../../au3/libraries/au3-label-track/LabelTrack.cpp" line="781"/>
         <source>One or more saved labels could not be read.</source>
         <translation>Vähintään yhtä tallennettua merkkiä ei voitu lukea.</translation>
+    </message>
+</context>
+<context>
+    <name>languages</name>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="50"/>
+        <source>Up to date</source>
+        <translation>Päivitetty</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="51"/>
+        <source>Error while parsing response from server</source>
+        <translation>Virhe jäsennettäessä vastausta palvelimelta</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="52"/>
+        <source>Error while downloading language</source>
+        <translation>Virhe ladattaessa kieltä</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="53"/>
+        <source>Error while writing language files</source>
+        <translation>Virhe kirjoitettaessa kielitiedostoja</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="54"/>
+        <source>Language not found</source>
+        <translation>Kieltä ei löydy</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="55"/>
+        <source>Error while removing language directory</source>
+        <translation>Virhe poistettaessa kielihakemistoa</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/languages/languageserrors.h" line="57"/>
+        <source>Another operation on this language has already been started</source>
+        <translation>Toinen toimenpide tällä kielellä on jo aloitettu</translation>
+    </message>
+</context>
+<context>
+    <name>learn</name>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/ClassesPage.qml" line="199"/>
+        <source>Open %1</source>
+        <translation>Avaa %1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/internal/Playlist.qml" line="137"/>
+        <source>Sorry, we are unable to load these videos right now</source>
+        <translation>Anteeksi, emme pysty lataamaan näitä videoita juuri nyt</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="96"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="103"/>
+        <source>Learn</source>
+        <translation>Opettelu</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="156"/>
+        <source>Learn tab bar</source>
+        <translation>Tutustu välilehtipalkkiin</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="167"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="213"/>
+        <source>Get started</source>
+        <translation>Aloitus</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="186"/>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/LearnPage.qml" line="257"/>
+        <source>Classes</source>
+        <translation>Luokat</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/learnerrors.h" line="45"/>
+        <source>The received playlist is empty.</source>
+        <translation>Vastaanotettu soittolista on tyhjä.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="78"/>
+        <source>Marc Sabatella</source>
+        <translation>Marc Sabatella</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="79"/>
+        <source>Instructor</source>
+        <translation>Ohjaaja</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="82"/>
+        <source>Creator, Mastering MuseScore</source>
+        <translation>Creator, Mastering MuseScore</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="83"/>
+        <source>Welcome to Mastering MuseScore – the most comprehensive resource for learning the world’s most popular music notation software! My name is Marc Sabatella, and I have been helping develop, support, and promote MuseScore since its initial release over ten years ago.
+
+Whether you are just getting started with music notation software, or are a power user eager to explore advanced engraving and playback techniques, my flagship online course Mastering MuseScore covers everything you need to know to get the most out of MuseScore.
+
+In addition, Mastering MuseScore features a supportive community of musicians, with discussion spaces, live streams, and other related courses and services to help you create your best music. Take advantage of this opportunity to learn MuseScore from one of its most recognized experts!
+
+(Note: Mastering MuseScore is available in English only)</source>
+        <translation>Tervetuloa Mastering MuseScoreen – kattavimpaan resurssiin maailman suosituimman nuotinkirjoitusohjelmiston oppimiseen! Nimeni on Marc Sabatella, ja olen auttanut kehittämään, tukemaan ja mainostamaan MuseScorea sen ensimmäisestä julkaisusta lähtien yli kymmenen vuotta sitten.
+
+Oletpa vasta aloittamassa nuotinkirjoitusohjelmistoa tai kokenut käyttäjä, joka haluaa tutkia edistyneitä grafiikka- ja toistotekniikoita, lippulaivaverkkokurssini Mastering MuseScore kattaa kaiken, mitä sinun tarvitsee tietää saadaksesi eniten irti MuseScoresta.
+
+Lisäksi Mastering MuseScore sisältää tukevan muusikkoyhteisön, jossa on keskustelutiloja, livelähetyksiä ja muita aiheeseen liittyviä kursseja ja palveluita, jotka auttavat sinua luomaan parasta musiikkiasi. Hyödynnä tämä tilaisuus oppia MuseScore yhdeltä sen tunnetuimmista asiantuntijoista!
+
+(Huomaa: Mastering MuseScore on saatavilla vain englanniksi)</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/learn/qml/Muse/Learn/learnpagemodel.cpp" line="97"/>
+        <source>Mastering MuseScore</source>
+        <translation>MuseScoren hallinta</translation>
     </message>
 </context>
 <context>
@@ -12218,6 +14361,53 @@ Libsndfile says “%2”</source>
     </message>
 </context>
 <context>
+    <name>midi</name>
+    <message>
+        <location filename="../../muse/framework/midi/internal/platform/lin/alsamidiinport.cpp" line="84"/>
+        <location filename="../../muse/framework/midi/internal/platform/lin/alsamidioutport.cpp" line="84"/>
+        <location filename="../../muse/framework/midi/internal/platform/osx/coremidiinport.cpp" line="85"/>
+        <location filename="../../muse/framework/midi/internal/platform/osx/coremidioutport.cpp" line="162"/>
+        <location filename="../../muse/framework/midi/internal/platform/win/winmidiinport.cpp" line="99"/>
+        <location filename="../../muse/framework/midi/internal/platform/win/winmidioutport.cpp" line="91"/>
+        <source>No device</source>
+        <translation>Ei laitetta</translation>
+    </message>
+</context>
+<context>
+    <name>midiremote</name>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/EditMidiMappingDialog.qml" line="32"/>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingTopPanel.qml" line="51"/>
+        <source>MIDI remote control</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/EditMidiMappingDialog.qml" line="94"/>
+        <source>Press a key or adjust a control on your MIDI device to assign it to this action.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/EditMidiMappingDialog.qml" line="103"/>
+        <source>MIDI mapping:</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingBottomPanel.qml" line="43"/>
+        <source>MIDI mapping bottom panel</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingBottomPanel.qml" line="55"/>
+        <source>Assign MIDI mapping…</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/qml/Muse/MidiRemote/internal/MidiMappingTopPanel.qml" line="40"/>
+        <source>MIDI mapping top panel</source>
+        <translation type="unfinished"/>
+    </message>
+</context>
+<context>
     <name>module-manager</name>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/ModuleManager.cpp" line="69"/>
@@ -12323,11 +14513,8 @@ It will not be loaded.</source>
         <source>Enable this plug-in?
 </source>
         <comment>plug-ins</comment>
-        <extracomment>A plug-in is an optional added program for a sound effect, or generator, or analyzer. Plural form of "Enable this plug-in?": "Enable these plug-ins?"</extracomment>
-        <translation type="unfinished">
-            <numerusform/>
-            <numerusform/>
-        </translation>
+        <extracomment>A plug-in is an optional added program for a sound effect, or generator, or analyzer. Plural form of &quot;Enable this plug-in?&quot;: &quot;Enable these plug-ins?&quot;</extracomment>
+        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-module-manager/PluginManager.cpp" line="486"/>
@@ -12379,6 +14566,52 @@ It will not be loaded.</source>
     </message>
 </context>
 <context>
+    <name>musesampler</name>
+    <message>
+        <location filename="../../muse/framework/musesampler/internal/musesampleractioncontroller.cpp" line="54"/>
+        <source>MuseSampler library is detected, version %1</source>
+        <translation>MuseSampler-kirjaston versio %1 on havaittu</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/musesampler/internal/musesampleractioncontroller.cpp" line="57"/>
+        <source>Installed MuseSampler library is not supported, version %1</source>
+        <translation>Asennettua MuseSampler-kirjastoa ei tueta, versio %1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/musesampler/internal/musesampleractioncontroller.cpp" line="60"/>
+        <source>MuseSampler library is not found</source>
+        <translation>MuseSampler-kirjastoa ei löydy</translation>
+    </message>
+</context>
+<context>
+    <name>network</name>
+    <message>
+        <location filename="../../muse/framework/network/networkerrors.h" line="49"/>
+        <source>The request was aborted</source>
+        <translation>Pyyntö keskeytettiin</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/network/networkerrors.h" line="50"/>
+        <source>The connection to the remote server timed out</source>
+        <translation>Yhteys etäpalvelimeen aikakatkaistiin</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/network/networkerrors.h" line="51"/>
+        <source>An unknown network-related error occurred</source>
+        <translation>Tapahtui tuntematon verkkoon liittyvä virhe</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/network/networkerrors.h" line="52"/>
+        <source>The I/O device was not opened for reading</source>
+        <translation>I/O-laitetta ei avattu lukemista varten</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/network/networkerrors.h" line="53"/>
+        <source>The I/O device was not opened for writing</source>
+        <translation>I/O-laitetta ei avattu kirjoittamista varten</translation>
+    </message>
+</context>
+<context>
     <name>network-manager</name>
     <message>
         <location filename="../../au3/libraries/au3-network-manager/MultipartData.cpp" line="102"/>
@@ -12388,29 +14621,37 @@ It will not be loaded.</source>
     </message>
 </context>
 <context>
+    <name>notation</name>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/ExtensionsToolBar.qml" line="32"/>
+        <source>Extensions toolbar</source>
+        <translation>Laajennusten työkalupalkki</translation>
+    </message>
+</context>
+<context>
     <name>numeric-formats</name>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp" line="35"/>
         <source>bar</source>
-        <extracomment>The music theory "bar"</extracomment>
+        <extracomment>The music theory &quot;bar&quot;</extracomment>
         <translation>tahti</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp" line="37"/>
         <source>beat</source>
-        <extracomment>The music theory "beat"</extracomment>
+        <extracomment>The music theory &quot;beat&quot;</extracomment>
         <translation>isku</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp" line="393"/>
         <source>bar:beat</source>
-        <extracomment>"bar" and "beat" are musical notation elements.</extracomment>
+        <extracomment>&quot;bar&quot; and &quot;beat&quot; are musical notation elements.</extracomment>
         <translation>tahti:isku</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-numeric-formats/formatters/BeatsNumericConverterFormatter.cpp" line="398"/>
         <source>bar:beat:tick</source>
-        <extracomment>"bar" and "beat" are musical notation elements. "tick" corresponds to a 16th note.</extracomment>
+        <extracomment>&quot;bar&quot; and &quot;beat&quot; are musical notation elements. &quot;tick&quot; corresponds to a 16th note.</extracomment>
         <translation>tahti:isku:sivuisku</translation>
     </message>
     <message>
@@ -13724,7 +15965,7 @@ It will not be loaded.</source>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/ProjectsPage.qml" line="401"/>
         <source>Projects actions</source>
-        <extracomment>accessibility name for the panel at the bottom of the "Projects" page</extracomment>
+        <extracomment>accessibility name for the panel at the bottom of the &quot;Projects&quot; page</extracomment>
         <translation>Projektitoiminnot</translation>
     </message>
     <message>
@@ -14680,6 +16921,7 @@ Sinun on suoritettava kyseinen Audacity-versio projektin palauttamiseksi.</trans
     </message>
     <message>
         <location filename="../../src/project/qml/Audacity/Project/AskSaveLocationTypeDialog.qml" line="97"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/RequireAuthorizationDialog.qml" line="75"/>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="550"/>
         <source>Save to computer</source>
         <translation>Tallenna tietokoneelle</translation>
@@ -14698,13 +16940,13 @@ Sinun on suoritettava kyseinen Audacity-versio projektin palauttamiseksi.</trans
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="172"/>
         <source>copy</source>
         <comment>a copy of a file</comment>
-        <extracomment>used to form a filename suggestion, like "originalFile - copy"</extracomment>
+        <extracomment>used to form a filename suggestion, like &quot;originalFile - copy&quot;</extracomment>
         <translation>kopio</translation>
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="175"/>
         <source>selection</source>
-        <extracomment>used to form a filename suggestion, like "originalFile - selection"</extracomment>
+        <extracomment>used to form a filename suggestion, like &quot;originalFile - selection&quot;</extracomment>
         <translation>valinta</translation>
     </message>
     <message>
@@ -14714,6 +16956,7 @@ Sinun on suoritettava kyseinen Audacity-versio projektin palauttamiseksi.</trans
     </message>
     <message>
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="528"/>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="195"/>
         <source>Publish</source>
         <translation>Julkaise</translation>
     </message>
@@ -14744,6 +16987,58 @@ Sinun on suoritettava kyseinen Audacity-versio projektin palauttamiseksi.</trans
         <location filename="../../src/project/internal/opensaveprojectscenario.cpp" line="567"/>
         <source>Unable to connect to Audio.com</source>
         <translation>Yhteyden muodostaminen sivustoon Audio.com ei onnistu</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="162"/>
+        <source>Public</source>
+        <translation>Julkinen</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="167"/>
+        <source>Unlisted</source>
+        <translation>Listaamaton</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="173"/>
+        <source>Private</source>
+        <translation>Yksityinen</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="185"/>
+        <source>Publish to MuseScore.com</source>
+        <translation>Julkaise palveluun MuseScore.com</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="189"/>
+        <source>Replace the existing &lt;a href=&quot;%1&quot;&gt;online score&lt;/a&gt;</source>
+        <extracomment>The text between `&lt;a href=&quot;%1&quot;&gt;` and `&lt;/a&gt;` will be a clickable link to the online score in question</extracomment>
+        <translation>Korvaa nykyinen &lt;a href=&quot;%1&quot;&gt;online-partituuri&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="192"/>
+        <source>Publish as new online score</source>
+        <translation>Julkaise uutena online-partituurina</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="199"/>
+        <source>Share on Audio.com</source>
+        <translation>Jaa palvelussa Audio.com</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="203"/>
+        <source>Replace the &lt;a href=&quot;%1&quot;&gt;existing audio&lt;/a&gt;</source>
+        <extracomment>The text between `&lt;a href=&quot;%1&quot;&gt;` and `&lt;/a&gt;` will be a clickable link to the online audio in question</extracomment>
+        <translation>Korvaa &lt;a href=&quot;%1&quot;&gt;nykyinen audio&lt;/a&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="206"/>
+        <source>Upload as new audio file</source>
+        <translation>Lataa uutena äänitiedostona</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/cloud/qml/Muse/Cloud/cloudsmodel.cpp" line="209"/>
+        <source>Share</source>
+        <translation>Jaa</translation>
     </message>
 </context>
 <context>
@@ -15012,8 +17307,8 @@ Sinun on suoritettava kyseinen Audacity-versio projektin palauttamiseksi.</trans
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TrackEffectsSection.qml" line="154"/>
-        <source>&lt;a href="https://www.audacityteam.org/realtime-video"&gt;Watch video&lt;/a&gt;</source>
-        <translation>&lt;a href="https://www.audacityteam.org/realtime-video"&gt;Katso video&lt;/a&gt;</translation>
+        <source>&lt;a href=&quot;https://www.audacityteam.org/realtime-video&quot;&gt;Watch video&lt;/a&gt;</source>
+        <translation>&lt;a href=&quot;https://www.audacityteam.org/realtime-video&quot;&gt;Katso video&lt;/a&gt;</translation>
     </message>
     <message>
         <location filename="../../src/projectscene/qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml" line="57"/>
@@ -15404,17 +17699,138 @@ stereoraitaa kohden)</translation>
     </message>
 </context>
 <context>
+    <name>shortcuts</name>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/EditShortcutDialogContent.qml" line="98"/>
+        <source>Old shortcut:</source>
+        <translation>Vanha pikänäppäin:</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/EditShortcutDialogContent.qml" line="109"/>
+        <source>New shortcut:</source>
+        <translation>Uusi pikanäppäin:</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/EditShortcutDialogContent.qml" line="122"/>
+        <source>Type to set shortcut</source>
+        <translation>Aseta pikakuvake kirjoittamalla</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="45"/>
+        <source>Shortcuts bottom panel</source>
+        <translation>Pikakuvakkeet alapaneeli</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="57"/>
+        <source>Import</source>
+        <translation>Tuonti</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="71"/>
+        <source>Export</source>
+        <translation>Vienti</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsBottomPanel.qml" line="89"/>
+        <source>Reset to default</source>
+        <translation>Palauta oletukseksi</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsList.qml" line="32"/>
+        <source>action</source>
+        <translation>toiminto</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsList.qml" line="34"/>
+        <source>shortcut</source>
+        <translation>pikanäppäin</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsTopPanel.qml" line="46"/>
+        <source>Shortcuts top panel</source>
+        <translation>Pikakuvakkeet yläpaneeli</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsTopPanel.qml" line="64"/>
+        <source>Define…</source>
+        <translation>Määritä…</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/internal/ShortcutsTopPanel.qml" line="98"/>
+        <source>Search shortcut</source>
+        <translation>Hae pikanäppäintä</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/StandardEditShortcutDialog.qml" line="31"/>
+        <source>Enter shortcut sequence</source>
+        <translation>Syötä pikanäppäinyhdistelmä</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/StandardEditShortcutDialog.qml" line="62"/>
+        <source>Define keyboard shortcut</source>
+        <translation>Määritä pikanäppäimet</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/midiremotetypes.h" line="58"/>
+        <source>Note %1</source>
+        <extracomment>A MIDI remote event, namely a note event</extracomment>
+        <translation>Nuotti %1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/midiremotetypes.h" line="62"/>
+        <source>CC %1</source>
+        <extracomment>A MIDI remote event, namely a MIDI controller event</extracomment>
+        <translation>CC %1</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/midiremote/midiremotetypes.h" line="66"/>
+        <source>None</source>
+        <extracomment>No MIDI remote event</extracomment>
+        <translation>Ei mitään</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/editshortcutmodel.cpp" line="223"/>
+        <source>This shortcut is already assigned to: &lt;b&gt;%1&lt;/b&gt;</source>
+        <translation>Tämä pikakuvake on jo määritetty: &lt;b&gt;%1&lt;/b&gt;</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/editshortcutmodel.cpp" line="243"/>
+        <source>Are you sure you want to assign it to &lt;b&gt;%1&lt;/b&gt; instead?</source>
+        <translation>Haluatko varmasti määrittää sen sen sijaan kohteelle &lt;b&gt;%1&lt;/b&gt;?</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/editshortcutmodel.cpp" line="248"/>
+        <source>Reassign shortcut</source>
+        <translation>Määritä pikakuvake uudelleen</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="37"/>
+        <source>MuseScore Studio shortcuts file</source>
+        <translation>MuseScore Studion pikanäppäintiedosto</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="192"/>
+        <source>Import shortcuts</source>
+        <translation>Tuo pikanäppäimet</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/shortcuts/qml/Muse/Shortcuts/shortcutsmodel.cpp" line="204"/>
+        <source>Export shortcuts</source>
+        <translation>Vie pikanäppäimet</translation>
+    </message>
+</context>
+<context>
     <name>snapping</name>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="68"/>
         <source>Beats</source>
-        <extracomment>The music theory "beat"</extracomment>
+        <extracomment>The music theory &quot;beat&quot;</extracomment>
         <translation>Iskua</translation>
     </message>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="70"/>
         <source>Bar</source>
-        <extracomment>The music theory "bar"</extracomment>
+        <extracomment>The music theory &quot;bar&quot;</extracomment>
         <translation>Tahti</translation>
     </message>
     <message>
@@ -15455,7 +17871,7 @@ stereoraitaa kohden)</translation>
     <message>
         <location filename="../../au3/libraries/au3-snapping/details/BeatsSnapFunctions.cpp" line="80"/>
         <source>Triplets</source>
-        <extracomment>The music theory "triplet"</extracomment>
+        <extracomment>The music theory &quot;triplet&quot;</extracomment>
         <translation>Triolit</translation>
     </message>
     <message>
@@ -15973,7 +18389,7 @@ stereoraitaa kohden)</translation>
     <message>
         <location filename="../../au3/libraries/au3-strings/FutureStrings.h" line="98"/>
         <source>Cut/Copy/Paste</source>
-        <extracomment>to lower oneself An example of a longer special comment that can wrap lines. These comments must begin with the special word i18n-hint and immediately precede the source code line with the opening quotation mark. The translators will see this comment text in the generated .po files, which they edit and complete. This comment can give hints about unusual words, or the grammatical form of an English word (such as whether it's meant as noun or verb) when that is not clear from context. one more example of alternative correct placement of an internationalization comment. All comments on different occurrences of the same string are collected in the template file. Have fun and dance Obtain the underfeathers of a goose //XP("Got down one time", "Got down %d times", 0), Obtained underfeathers of geese on one or more occasions</extracomment>
+        <extracomment>to lower oneself An example of a longer special comment that can wrap lines. These comments must begin with the special word i18n-hint and immediately precede the source code line with the opening quotation mark. The translators will see this comment text in the generated .po files, which they edit and complete. This comment can give hints about unusual words, or the grammatical form of an English word (such as whether it's meant as noun or verb) when that is not clear from context. one more example of alternative correct placement of an internationalization comment. All comments on different occurrences of the same string are collected in the template file. Have fun and dance Obtain the underfeathers of a goose //XP(&quot;Got down one time&quot;, &quot;Got down %d times&quot;, 0), Obtained underfeathers of geese on one or more occasions</extracomment>
         <translation>Leikkaa/Kopioi/Liitä</translation>
     </message>
     <message>
@@ -16021,6 +18437,59 @@ stereoraitaa kohden)</translation>
     </message>
 </context>
 <context>
+    <name>system</name>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="54"/>
+        <source>The file does not exist</source>
+        <translation>Tiedostoa ei ole</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="55"/>
+        <source>The file already exists</source>
+        <translation>Tiedosto on jo olemasa</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="56"/>
+        <source>The file could not be removed</source>
+        <translation>Tiedostoa ei voitu poistaa</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="57"/>
+        <source>The directory is not empty</source>
+        <translation>Hakemisto ei ole tyhjä</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="58"/>
+        <source>The directory could not be cleared</source>
+        <translation>Hakemistoa ei voitu tyhjentää</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="59"/>
+        <source>An error occurred when reading from the file</source>
+        <translation>Virhe luettaessa tiedostoa</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="60"/>
+        <source>An error occurred when writing to the file</source>
+        <translation>Virhe kirjoitettaessa tiedostoon</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="61"/>
+        <source>An error occurred when making a path</source>
+        <translation>Virhe polun luonnissa</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="62"/>
+        <source>An error occurred when copying the file</source>
+        <translation>Virhe tiedoston kopioinnissa</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/global/io/ioretcodes.h" line="63"/>
+        <source>An error occurred when moving the file</source>
+        <translation>Virhe tiedoston siirrossa</translation>
+    </message>
+</context>
+<context>
     <name>time-frequency-selection</name>
     <message>
         <location filename="../../au3/libraries/au3-time-frequency-selection/ViewInfo.cpp" line="231"/>
@@ -16043,28 +18512,37 @@ stereoraitaa kohden)</translation>
         <location filename="../../src/toast/qml/Audacity/Toast/ToastProgressBar.qml" line="51"/>
         <source>%n hour(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation type="unfinished">
-            <numerusform/>
-            <numerusform/>
-        </translation>
+        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../../src/toast/qml/Audacity/Toast/ToastProgressBar.qml" line="54"/>
         <source>%n minute(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation type="unfinished">
-            <numerusform/>
-            <numerusform/>
-        </translation>
+        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
     </message>
     <message numerus="yes">
         <location filename="../../src/toast/qml/Audacity/Toast/ToastProgressBar.qml" line="57"/>
         <source>%n second(s) remaining</source>
         <comment>amount of time left until the requested operation is finished</comment>
-        <translation type="unfinished">
-            <numerusform/>
-            <numerusform/>
-        </translation>
+        <translation type="unfinished"><numerusform></numerusform><numerusform></numerusform></translation>
+    </message>
+</context>
+<context>
+    <name>tours</name>
+    <message>
+        <location filename="../../muse/framework/tours/qml/Muse/Tours/internal/TourStepPopup.qml" line="142"/>
+        <source>Watch video</source>
+        <translation>Katso video</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/tours/qml/Muse/Tours/internal/TourStepPopup.qml" line="162"/>
+        <source>Got it</source>
+        <translation>Selvä</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/tours/qml/Muse/Tours/internal/TourStepPopup.qml" line="162"/>
+        <source>Next</source>
+        <translation>Seuraava</translation>
     </message>
 </context>
 <context>
@@ -16350,6 +18828,203 @@ Haluatko jatkaa?</translation>
     </message>
 </context>
 <context>
+    <name>ui</name>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="46"/>
+        <source>Browse</source>
+        <translation>Selaa</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="55"/>
+        <source>Current path:</source>
+        <translation>Nykyinen polku</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="131"/>
+        <source>Choose file</source>
+        <translation>Valitse tiedosto</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/FilePicker.qml" line="132"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/selectmultipledirectoriesmodel.cpp" line="127"/>
+        <source>Choose directory</source>
+        <translation>Valitse hakemisto</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="44"/>
+        <source>Directories actions</source>
+        <extracomment>Accessibility description of the button group at the top of the &quot;Choose Directories&quot; dialog</extracomment>
+        <translation>kansioiden toiminnot</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="57"/>
+        <source>Directories</source>
+        <translation>Kansiot</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesTopPanel.qml" line="62"/>
+        <source>Add directory</source>
+        <translation>Lisää hakemisto</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesView.qml" line="77"/>
+        <source>Path</source>
+        <translation>Polku</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/DirectoriesView.qml" line="103"/>
+        <source>Directories list</source>
+        <translation>Kansioluettelo</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="76"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledTableViewCell.qml" line="358"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="523"/>
+        <source>checked</source>
+        <comment>checkstate</comment>
+        <extracomment>Describes the 'on' state of a toggle-able ui item.</extracomment>
+        <translation>tarkistettu</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="78"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledTableViewCell.qml" line="358"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListItem.qml" line="523"/>
+        <source>unchecked</source>
+        <comment>checkstate</comment>
+        <extracomment>Describes the 'off' state of a toggle-able ui item.</extracomment>
+        <translation>ei tarkistettu</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="82"/>
+        <source>selected</source>
+        <comment>selectedState</comment>
+        <extracomment>Describes the state of a ui item that is the chosen option in a list of options</extracomment>
+        <translation>valittu</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="84"/>
+        <source>not selected</source>
+        <comment>selectedState</comment>
+        <extracomment>Describes the state of a ui item that is not the chosen option in a list of options</extracomment>
+        <translation>ei  valittu</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/StyledMenuItem.qml" line="93"/>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/MenuButton.qml" line="50"/>
+        <source>Menu</source>
+        <extracomment>a type of ui item</extracomment>
+        <translation>Valikko</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListHeaderItem.qml" line="54"/>
+        <source>sorted ascending</source>
+        <translation>nouseva lajittelu</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListHeaderItem.qml" line="54"/>
+        <source>sorted descending</source>
+        <translation>aleneva lajittelu</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/internal/ValueListHeaderItem.qml" line="56"/>
+        <source>not sorted</source>
+        <translation>ei lajiteltu</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/SearchField.qml" line="37"/>
+        <source>Search</source>
+        <translation>Hae</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="39"/>
+        <source>Red</source>
+        <translation>Punainen</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="40"/>
+        <source>Green</source>
+        <translation>Vihreä</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/Utils.mjs" line="41"/>
+        <source>Blue</source>
+        <translation>Sininen</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="42"/>
+        <source>Key</source>
+        <comment>key/value</comment>
+        <extracomment>As in a &quot;key/value&quot; pair: for example, the &quot;key&quot; could be the name of a setting and the &quot;value&quot; the value of that setting.</extracomment>
+        <translation>Avain</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="44"/>
+        <source>Value</source>
+        <translation>Arvo</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="159"/>
+        <source>Value list header panel</source>
+        <extracomment>Accessibility description of the header of a value list (table)</extracomment>
+        <translation>Arvoluettelon otsikkopaneeli</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/ValueList.qml" line="253"/>
+        <source>Value list panel</source>
+        <extracomment>Accessibility description of the body of a value list (table)</extracomment>
+        <translation>Arvoluettelopaneeli</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/VisibilityBox.qml" line="65"/>
+        <source>Visible</source>
+        <translation>Näkyvä</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/VisibilityBox.qml" line="65"/>
+        <source>Hidden</source>
+        <translation>Piilotettu</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/themeconverter.cpp" line="76"/>
+        <source>Light</source>
+        <extracomment>The name of the light ui theme</extracomment>
+        <translation>Vaalea</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/themeconverter.cpp" line="79"/>
+        <source>Dark</source>
+        <extracomment>The name of the dark ui theme</extracomment>
+        <translation>Tumma</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/themeconverter.cpp" line="82"/>
+        <source>White</source>
+        <extracomment>The name of the high contrast light ui theme</extracomment>
+        <translation>Valkoinen</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/internal/themeconverter.cpp" line="85"/>
+        <source>Black</source>
+        <extracomment>The name of the high contrast dark ui theme</extracomment>
+        <translation>Musta</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/qml/Muse/Ui/navigationpanel.cpp" line="149"/>
+        <source>direction is horizontal</source>
+        <translation>suunta on vaakasuora</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/qml/Muse/Ui/navigationpanel.cpp" line="150"/>
+        <source>direction is vertical</source>
+        <translation>suunta on vertikaalinen</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/ui/qml/Muse/Ui/navigationpanel.cpp" line="151"/>
+        <source>direction is both</source>
+        <translation>suunta on molempia</translation>
+    </message>
+</context>
+<context>
     <name>uicomponents</name>
     <message>
         <location filename="../../src/uicomponents/components/frequencymodel.cpp" line="17"/>
@@ -16465,6 +19140,210 @@ Haluatko jatkaa?</translation>
         <location filename="../../src/uicomponents/components/timecodemodel.cpp" line="74"/>
         <source>bar:beat:tick</source>
         <translation>tahti:isku:sivuisku</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="136"/>
+        <source>No button</source>
+        <translation>Ei</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="137"/>
+        <source>OK</source>
+        <translation>OK</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="138"/>
+        <source>Save</source>
+        <translation>Tallenna</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="139"/>
+        <source>Save all</source>
+        <translation>Tallenna kaikki</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="140"/>
+        <source>Don’t save</source>
+        <translation>Älä tallenna</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="141"/>
+        <source>Open</source>
+        <translation>Avoin</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="142"/>
+        <source>Yes</source>
+        <translation>Kyllä</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="143"/>
+        <source>Yes to all</source>
+        <translation>Kyllä kaikkiin</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="144"/>
+        <source>No</source>
+        <translation>Ei</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="145"/>
+        <source>No to all</source>
+        <translation>Ei kaikkiin</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="146"/>
+        <source>Abort</source>
+        <translation>Keskeytetty</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="147"/>
+        <source>Retry</source>
+        <translation>Yritä uudelleen</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="148"/>
+        <source>Ignore</source>
+        <translation>Sivuuta</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="149"/>
+        <source>Close</source>
+        <translation>Sulje</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="150"/>
+        <source>Cancel</source>
+        <translation>Peruuta</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="151"/>
+        <source>Discard</source>
+        <translation>Hylkää</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="152"/>
+        <source>Help</source>
+        <translation>Apua</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="153"/>
+        <source>Apply</source>
+        <translation>Käytä</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="154"/>
+        <source>Reset</source>
+        <translation>Palauta alkutilaan</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="155"/>
+        <source>Restore defaults</source>
+        <translation>Palauta oletukset</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="156"/>
+        <source>Continue</source>
+        <translation>Jatka</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="157"/>
+        <source>Next</source>
+        <translation>Seuraava</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="158"/>
+        <source>Back</source>
+        <translation>Takaisin</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="159"/>
+        <source>Select</source>
+        <translation>Valitse</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="160"/>
+        <source>Clear</source>
+        <translation>Tyhjennä</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/uicomponents/qml/Muse/UiComponents/buttonboxmodel.h" line="161"/>
+        <source>Done</source>
+        <translation>Valmis</translation>
+    </message>
+</context>
+<context>
+    <name>update</name>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="82"/>
+        <source>A new version of %1 is available!</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/AppReleaseInfoDialog.qml" line="89"/>
+        <source>Release notes</source>
+        <translation>Julkaisutiedot</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="51"/>
+        <source>Skip this version</source>
+        <translation>Ohita tämä versio</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="70"/>
+        <source>Remind me later</source>
+        <translation>Muistuta minua myöhemmin</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/AppReleaseInfoBottomPanel.qml" line="86"/>
+        <source>Install update</source>
+        <translation>Asenna päivitys</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/internal/ReleaseNotesView.qml" line="80"/>
+        <source>Read the %1 release notes</source>
+        <translation>Lue %1 julkaisutiedot</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="139"/>
+        <source>You already have the latest version of %1. Please visit &lt;a href=&quot;%2&quot;&gt;%3&lt;/a&gt; for news on what’s coming next.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="146"/>
+        <source>You’re up to date!</source>
+        <translation>Olet ajan tasalla!</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="181"/>
+        <source>Cannot connect to server</source>
+        <translation>Palvelimeen ei saada yhteyttä</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="182"/>
+        <source>Sorry - please try again later</source>
+        <translation>Harmi - yritä myöhemmin uudelleen</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="196"/>
+        <source>%1 needs to close to complete the installation. If you have any unsaved changes, you will be prompted to save them before %1 closes.</source>
+        <translation type="unfinished"/>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/internal/appupdatescenario.cpp" line="202"/>
+        <source>Close</source>
+        <translation>Sulje</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/appupdatemodel.cpp" line="33"/>
+        <source>Updating MuseScore Studio</source>
+        <translation>MuseScore Studion päivittäminen</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/update/qml/Muse/Update/appupdatemodel.cpp" line="63"/>
+        <source>Downloading MuseScore Studio %1</source>
+        <extracomment>Means that the download is currently in progress. %1 will be replaced by the version number of the version that is being downloaded.</extracomment>
+        <translation>MuseScore Studion lataaminen %1</translation>
     </message>
 </context>
 <context>
@@ -16660,6 +19539,80 @@ Template for clip name generation on inserting new empty clip</extracomment>
     </message>
 </context>
 <context>
+    <name>workspace</name>
+    <message>
+        <location filename="../../muse/framework/extensions/qml/Muse/Extensions/internal/EnablePanel.qml" line="108"/>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="103"/>
+        <source>Remove</source>
+        <translation>Poista</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="69"/>
+        <source>Workspaces</source>
+        <translation>Työtilat</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="80"/>
+        <source>Save layout as new workspace</source>
+        <translation>Tallenna asettelu uutena työtilana</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesTopPanel.qml" line="117"/>
+        <source>Workspaces allow you to choose different configurations of the %1 interface. You can also save your own unique configurations as new workspaces.</source>
+        <translation>Työtilojen avulla voit valita %1-käyttöliittymän eri asetuksia. Voit myös tallentaa omat yksilölliset määrityksesi uusiksi työtiloiksi.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/internal/WorkspacesView.qml" line="170"/>
+        <source>Reset</source>
+        <translation>Palauta</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/NewWorkspaceDialog.qml" line="68"/>
+        <source>Workspace name:</source>
+        <translation>Työtilan nimi:</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/newworkspacemodel.cpp" line="41"/>
+        <source>New</source>
+        <translation>Uusi</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/newworkspacemodel.cpp" line="75"/>
+        <source>A workspace with the name “%1” already exists. Please choose a different name.</source>
+        <translation>Työtila nimeltään &quot;%1&quot; on jo olemassa. Valitse toinen nimi.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/newworkspacemodel.cpp" line="82"/>
+        <source>“%1” cannot be used as a workspace name. Please choose a different name.</source>
+        <translation>&quot;%1&quot; ei voida käyttää työtilan nimenä. Valitse toinen nimi.</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="225"/>
+        <source>This action will reset your workspace to its factory default layout and cannot be undone. Do you want to continue?</source>
+        <translation>Tämä toiminto palauttaa työtilasi tehdasasetteluun, eikä sitä voida perua. Haluatko jatkaa?</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="228"/>
+        <source>Resetting workspaces</source>
+        <translation>Työtilojen resetointi</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="229"/>
+        <source>Reset workspace</source>
+        <translation>Palauta työtila</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="262"/>
+        <source>Name cannot be empty</source>
+        <translation>Nimi ei voi olla tyhjä</translation>
+    </message>
+    <message>
+        <location filename="../../muse/framework/workspace/qml/Muse/Workspace/workspacelistmodel.cpp" line="273"/>
+        <source>Name already exists</source>
+        <translation>Nimi on jo olemassa</translation>
+    </message>
+</context>
+<context>
     <name>xml</name>
     <message>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="46"/>
@@ -16684,14319 +19637,6 @@ Template for clip name generation on inserting new empty clip</extracomment>
         <location filename="../../au3/libraries/au3-xml/XMLFileReader.cpp" line="173"/>
         <source>Could not parse XML</source>
         <translation>XML:ää ei voitu jäsentää</translation>
-    </message>
-</context>
-<context>
-    <name>_au3_legacy_vanished</name>
-    <message>
-        <source>Stream is active ... unable to gather information.
-</source>
-        <translation type="vanished">Suoraäänitys on aktiivinen ... tietoja ei pystytä keräämään.
-</translation>
-    </message>
-    <message>
-        <source>No recording device found for '%s'.
-</source>
-        <translation type="vanished">Kohteelle '%1' ei löytynyt äänityslaitetta.
-</translation>
-    </message>
-    <message>
-        <source>No playback device found for '%s'.
-</source>
-        <translation type="vanished">Kohteelle ei löytynyt '%1' toistolaitetta.
-</translation>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too high.</source>
-        <translation type="vanished">Automaattinen äänitystason säätö on pysäytetty. Sitä ei ollut mahdollista optimoida enempää. Edelleen liian korkea.</translation>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment decreased the volume to %f.</source>
-        <translation type="vanished">Automaattinen äänitystason säätö laski voimakkuuden arvoon %1.</translation>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment stopped. It was not possible to optimize it more. Still too low.</source>
-        <translation type="vanished">Automaattinen äänitystason säätö on pysäytetty. Sitä ei ollut mahdollista optimoida enempää. On edelleen liian matala.</translation>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment increased the volume to %.2f.</source>
-        <translation type="vanished">Automaattinen äänitystason säätö nosti voimakkuuden arvoon %1.</translation>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too high.</source>
-        <translation type="vanished">Automaattinen äänitystason säätö on pysäytetty. Analyysien kokonaismäärä on ylitetty löytämättä hyväksyttävää äänenvoimakkuutta. On edelleen liian korkea.</translation>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment stopped. The total number of analyses has been exceeded without finding an acceptable volume. Still too low.</source>
-        <translation type="vanished">Automaattinen äänitystason säätö on pysäytetty. Analyysien kokonaismäärä on ylitetty löytämättä hyväksyttävää äänenvoimakkuutta. On edelleen liian matala.</translation>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment stopped. %.2f seems an acceptable volume.</source>
-        <translation type="vanished">Automaattinen äänitystason säätö on pysäytetty. %1 tuntuu hyväksyttävältä arvolta.</translation>
-    </message>
-    <message>
-        <source>Failed to encode preset from "%s"</source>
-        <translation type="vanished">Esimäärityksen koodaaminen kohteesta "%1" epäonnistui</translation>
-    </message>
-    <message>
-        <source>Couldn't open "%s"</source>
-        <translation type="vanished">Kohdetta "%1" ei voi avata</translation>
-    </message>
-    <message>
-        <source>Failed to write XML preset to "%s"</source>
-        <translation type="vanished">XML-esiasetuksen kirjoittaminen kohteeseen "%1" epäonnistui</translation>
-    </message>
-    <message>
-        <source>Unable to read the preset from "%s"</source>
-        <translation type="vanished">Esiasetusta ei voi lukea kohteesta "%1"</translation>
-    </message>
-    <message>
-        <source>Failed to decode "%s" preset</source>
-        <translation type="vanished">Esiasetuksen "%1" purkaminen epäonnistui</translation>
-    </message>
-    <message>
-        <source>Failed to convert "%s" preset to internal format</source>
-        <translation type="vanished">Esiasetuksen "%1" muuntaminen sisäiseen muotoon epäonnistui</translation>
-    </message>
-    <message>
-        <source>Failed to create property list for "%s" preset</source>
-        <translation type="vanished">Ominaisuusluettelon luominen esiasetukselle "%1" epäonnistui</translation>
-    </message>
-    <message>
-        <source>Failed to set class info for "%s" preset</source>
-        <translation type="vanished">Luokkatietojen asettaminen %1 esiasetukselle epäonnistui</translation>
-    </message>
-    <message>
-        <source>Applying %s...</source>
-        <translation type="vanished">Käytetään %1...</translation>
-    </message>
-    <message>
-        <source>"%s" 
-is a not an audio file. 
-Audacity cannot open this type of file.</source>
-        <translation type="vanished">"%1" 
-ei ole äänitiedosto. 
-Audacity ei voi avata tällaista tiedostoa.</translation>
-    </message>
-    <message>
-        <source>Importing %s...</source>
-        <translation type="vanished">Tuodaan %1...</translation>
-    </message>
-    <message>
-        <source>"%s" is an audio CD track. 
-Audacity cannot open audio CDs directly. 
-Extract (rip) the CD tracks to an audio format that 
-Audacity can import, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1" on CD-ääniraita. 
-Audacity ei voi avata ääni-CD:tä suoraan. 
-Pura (rippaa) CD-raidat Audacityn tukemaan
-äänimuotoon, kuten WAV tai AIFF.</translation>
-    </message>
-    <message>
-        <source>"%s" is a playlist file. 
-Audacity cannot open this file because it only contains links to other files. 
-You may be able to open it in a text editor and download the actual audio files.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1" on soittolistatiedosto. 
-Audacity ei voi avata tätä tiedostoa, koska se sisältää vain linkkejä muihin tiedostoihin.
-Voit ehkä avata sen tekstieditorissa ja ladata todelliset äänitiedostot.</translation>
-    </message>
-    <message>
-        <source>"%s" is a Windows Media Audio file. 
-Audacity cannot open this type of file due to patent restrictions. 
-You need to convert it to a supported audio format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1" on Windows Media Audio -tiedosto. 
-Audacity ei voi avata tällaista tiedostoa patenttirajoitusten vuoksi. 
-Sinun täytyy muuntaa se tuettuun formaattiin, kuten WAV tai AIFF.</translation>
-    </message>
-    <message>
-        <source>"%s" is an Advanced Audio Coding file.
-Without the optional FFmpeg library, Audacity cannot open this type of file.
-Otherwise, you need to convert it to a supported audio format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1" on Advanced Audio Coding -tiedosto. 
-Ilman valinnaista FFmpeg-kirjastoa Audacity ei voi avata tämäntyyppistä tiedostoa.
-Joten sinun tarvitsee muuntaa se tuetuksi äänimuodoksi, kuten WAV tai AIFF.</translation>
-    </message>
-    <message>
-        <source>"%s" is an encrypted audio file. 
-These typically are from an online music store. 
-Audacity cannot open this type of file due to the encryption. 
-Try recording the file into Audacity, or burn it to audio CD then 
-extract the CD track to a supported audio format such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1" on salattu äänitiedosto. 
-Nämä ovat tyypillisesti peräisin verkkomusiikkikaupasta. 
-Audacity ei voi avata salattuja tiedostoja. 
-Yritä äänittää tiedosto Audacityllä, tai polttaa se CD-äänilevylle
-ja pura sitten CD-raita tuettuun äänimuotoon, kuten WAV tai AIFF.</translation>
-    </message>
-    <message>
-        <source>"%s" is a RealPlayer media file. 
-Audacity cannot open this proprietary format. 
-You need to convert it to a supported audio format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1" on RealPlayer-mediatiedosto. 
-Audacity ei voi avata tätä patentoitua formaattia. 
-Sinun täytyy muuntaa se tuettuun äänimuotoon, kuten WAV tai AIFF.</translation>
-    </message>
-    <message>
-        <source>"%s" is a notes-based file, not an audio file. 
-Audacity cannot open this type of file. 
-Try converting it to an audio file such as WAV or AIFF and 
-then import it, or record it into Audacity.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1" on nuottipohjainen tiedosto, ei äänitiedosto. 
-Audacity ei voi avata tällaista tiedostoa.  
-Yritä muuttaa se äänitiedostoksi, kuten WAV tai AIFF ja 
-sitten tuoda se, tai äänittää se Audacityllä.</translation>
-    </message>
-    <message>
-        <source>"%s" is a Musepack audio file. 
-Audacity cannot open this type of file. 
-If you think it might be an mp3 file, rename it to end with ".mp3" 
-and try importing it again. Otherwise you need to convert it to a supported audio 
-format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1" on Musepack-äänitiedosto. 
-Audacity ei voi avata tällaista tiedostoa. 
-Jos luulet sen olevan MP3-tiedosto, vaihda sen päätteeksi ".mp3"
-ja yritä tuoda se uudelleen. Muussa tapauksessa sinun tulee muuntaa se 
-tuettuun äänimuotoon, kuten WAV tai AIFF.</translation>
-    </message>
-    <message>
-        <source>"%s" is a Wavpack audio file. 
-Audacity cannot open this type of file. 
-You need to convert it to a supported audio format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1" on Wavpack-äänitiedosto. 
-Audacity ei voi avata tällaista tiedostoa. 
-Sinun täytyy muuntaa se tuettuun äänimuotoon, kuten WAV tai AIFF.</translation>
-    </message>
-    <message>
-        <source>"%s" is a Dolby Digital audio file. 
-Audacity cannot currently open this type of file. 
-You need to convert it to a supported audio format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1" on Dolby Digital -äänitiedosto. 
-Audacity ei voi tällä hetkellä avata tällaista tiedostoa. 
-Sinun täytyy muuntaa se tuettuun äänimuotoon, kuten WAV tai AIFF.</translation>
-    </message>
-    <message>
-        <source>"%s" is an Ogg Speex audio file. 
-Audacity cannot currently open this type of file. 
-You need to convert it to a supported audio format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1" on Ogg Speex -äänitiedosto. 
-Audacity ei voi tällä hetkellä avata tällaista tiedostoa. 
-Sinun täytyy muuntaa se tuettuun formaattiin, kuten WAV tai AIFF.</translation>
-    </message>
-    <message>
-        <source>"%s" is a video file. 
-Audacity cannot currently open this type of file. 
-You need to extract the audio to a supported format, such as WAV or AIFF.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">"%1" on videotiedosto. 
-Audacity ei voi tällä hetkellä avata tällaista tiedostoa. 
-Sinun täytyy purkaa ääni tuettuun muotoon, kuten WAV tai AIFF.</translation>
-    </message>
-    <message>
-        <source>File "%s" not found.</source>
-        <translation type="vanished">Tiedostoa %1 ei löydy.</translation>
-    </message>
-    <message>
-        <source>Audacity did not recognize the type of the file '%s'.
-
-%sFor uncompressed files, also try File &gt; Import &gt; Raw Data.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">Audacity ei tunnistanut tiedoston '%1' tyyppiä.
-
-%2 Pakkaamattomille tiedostoille voit myös kokeilla Tiedosto &gt; Tuo &gt; Raakadata.</translation>
-    </message>
-    <message>
-        <source>Audacity recognized the type of the file '%s'.
-Importers supposedly supporting such files are:
-%s,
-but none of them understood this file format.</source>
-        <extracomment>i18n-hint: %s will be the filename</extracomment>
-        <translation type="vanished">Audacity tunnisti tiedoston '%1' tyypin.
-Tällaisia tiedostoja oletettavasti tukevat:
-%2,
-mutta kukaan heistä ei ymmärtänyt tätä tiedostomuotoa.</translation>
-    </message>
-    <message>
-        <source>LADSPA</source>
-        <extracomment>i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
-(Application programming interface)</extracomment>
-        <translation type="vanished">LADSPA</translation>
-    </message>
-    <message>
-        <source>LADSPA Effects</source>
-        <extracomment>i18n-hint: abbreviates "Linux Audio Developer's Simple Plugin API"
-(Application programming interface)</extracomment>
-        <translation type="vanished">LADSPA-tehosteet</translation>
-    </message>
-    <message>
-        <source>Provides LADSPA Effects</source>
-        <translation type="vanished">Tarjoaa LADSPA-tehosteita</translation>
-    </message>
-    <message>
-        <source>Audacity no longer uses vst-bridge</source>
-        <translation type="vanished">Audacity ei käytä enää vst-bridgeä</translation>
-    </message>
-    <message>
-        <source>Could not load the library</source>
-        <translation type="vanished">Kirjastoa ei voitu ladata</translation>
-    </message>
-    <message>
-        <source>LV2</source>
-        <extracomment>i18n-hint: abbreviates
-"Linux Audio Developer's Simple Plugin API (LADSPA) version 2"</extracomment>
-        <translation type="vanished">LV2</translation>
-    </message>
-    <message>
-        <source>Effect Settings</source>
-        <translation type="vanished">Tehosteasetukset</translation>
-    </message>
-    <message>
-        <source>LV2 Effects</source>
-        <translation type="vanished">LV2-tehosteet</translation>
-    </message>
-    <message>
-        <source>Provides LV2 Effects support to Audacity</source>
-        <translation type="vanished">Tarjoaa LV2 tehostetuen Audacitylle</translation>
-    </message>
-    <message>
-        <source>Triangle</source>
-        <comment>dither</comment>
-        <translation type="vanished">Kolmio</translation>
-    </message>
-    <message>
-        <source>Command</source>
-        <translation type="vanished">Komento</translation>
-    </message>
-    <message>
-        <source>Repeat %s</source>
-        <extracomment>i18n-hint: %s will be the name of the effect which will be
-* repeated if this menu item is chosen</extracomment>
-        <translation type="vanished">Toista - %1</translation>
-    </message>
-    <message>
-        <source>
-* %s, because you have assigned the shortcut %s to %s</source>
-        <translation type="vanished">
-* %1, koska olet määrittänyt pikanäppäimen %2 kohteelle %3</translation>
-    </message>
-    <message>
-        <source>There was a problem with your last action. If you think
-this is a bug, please tell us exactly where it occurred.</source>
-        <translation type="vanished">Edellisessä toiminnossasi tapahtui ongelma. Jos epäilet, että
-tämä on vika, kerro meille tarkalleen, missä se tapahtui.</translation>
-    </message>
-    <message>
-        <source>Disallowed</source>
-        <translation type="vanished">Estetty</translation>
-    </message>
-    <message>
-        <source>&amp;Undo %s</source>
-        <translation type="vanished">K&amp;umoa %1</translation>
-    </message>
-    <message>
-        <source>&amp;Redo %s</source>
-        <translation type="vanished">Tee &amp;uudelleen - %1</translation>
-    </message>
-    <message>
-        <source>Unable to load the "%s" module.
-
-Error: %s</source>
-        <translation type="vanished">Moduulia "%1" ei voi ladata.
-
-Virhe: %2</translation>
-    </message>
-    <message>
-        <source>The module "%s" does not provide a version string.
-
-It will not be loaded.</source>
-        <translation type="vanished">Moduuli "%1" ei tarjoa versiomerkkijonoa.
-
-Sitä ei ladata.</translation>
-    </message>
-    <message>
-        <source>The module "%s" is matched with Audacity version "%s".
-
-It will not be loaded.</source>
-        <translation type="vanished">Moduuli "%1" on yhteensopiva Audacity-version "%2" kanssa.
-
-Sitä ei ladata.</translation>
-    </message>
-    <message>
-        <source>The module "%s" failed to initialize.
-
-It will not be loaded.</source>
-        <translation type="vanished">Moduulin "%1" alustaminen epäonnistui.
-
-Sitä ei ladata.</translation>
-    </message>
-    <message>
-        <source>Module "%s" found.</source>
-        <translation type="vanished">Moduuli "%1" löytyi.</translation>
-    </message>
-    <message>
-        <source>The module "%s" does not provide any of the required functions.
-
-It will not be loaded.</source>
-        <translation type="vanished">Moduulissa "%1" ei ole tarvittavia funktioita.
-
-Sitä ei ladata.</translation>
-    </message>
-    <message numerus="yes">
-        <source>Enable this plug-in?
-</source>
-        <oldsource>Enable these plug-ins?
-</oldsource>
-        <comment>plug-ins</comment>
-        <extracomment>i18n-hint A plug-in is an optional added program for a sound
-effect, or generator, or analyzer</extracomment>
-        <translation type="vanished">
-            <numerusform>Otetaanko tämä laajennus käyttöön?
-</numerusform>
-            <numerusform>Otetaanko nämä laajennukset käyttöön?
-</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Nyquist Prompt</source>
-        <translation type="vanished">Nyquist-kehote</translation>
-    </message>
-    <message>
-        <source>There was an error initializing the midi i/o layer.
-</source>
-        <translation type="vanished">Virhe MIDI-siirrännän alustuksessa.
-</translation>
-    </message>
-    <message>
-        <source>You will not be able to play midi.
-
-</source>
-        <translation type="vanished">Et voi toistaa MIDIä.
-
-</translation>
-    </message>
-    <message>
-        <source>Error Initializing Midi</source>
-        <translation type="vanished">Virhe MIDIn alustuksessa</translation>
-    </message>
-    <message>
-        <source>Note Track</source>
-        <extracomment>i18n-hint: This is for screen reader software and indicates that
-this is a Note track.</extracomment>
-        <translation type="vanished">Nuottiraita</translation>
-    </message>
-    <message>
-        <source>&amp;Seconds</source>
-        <translation type="vanished">&amp;Sekunnit</translation>
-    </message>
-    <message>
-        <source>&amp;Beats</source>
-        <extracomment>i18n-hint: The music theory "beat"</extracomment>
-        <translation type="vanished">&amp;Iskut</translation>
-    </message>
-    <message>
-        <source>Supports output: %d
-</source>
-        <extracomment>i18n-hint: Supported, meaning made available by the system</extracomment>
-        <translation type="vanished">Tukee lähtöä: %1
-</translation>
-    </message>
-    <message>
-        <source>Supports input: %d
-</source>
-        <extracomment>i18n-hint: Supported, meaning made available by the system</extracomment>
-        <translation type="vanished">Tukee syöttöä: %1
-</translation>
-    </message>
-    <message>
-        <source>Opened: %d
-</source>
-        <translation type="vanished">Avattu: %1
-</translation>
-    </message>
-    <message>
-        <source>Selected MIDI recording device: %d - %s
-</source>
-        <translation type="vanished">Valittu MIDI-äänityslaite: %1 - %2
-</translation>
-    </message>
-    <message>
-        <source>No MIDI recording device found for '%s'.
-</source>
-        <translation type="vanished">Kohteelle '%1' ei löytynyt MIDI-tallennuslaitetta.
-</translation>
-    </message>
-    <message>
-        <source>Selected MIDI playback device: %d - %s
-</source>
-        <translation type="vanished">Valittu MIDI-toistolaite: %1 - %2
-</translation>
-    </message>
-    <message>
-        <source>No MIDI playback device found for '%s'.
-</source>
-        <translation type="vanished">Kohteelle '%1' ei löytynyt MIDI-toistolaitetta.
-</translation>
-    </message>
-    <message>
-        <source>Libraries</source>
-        <extracomment>i18n-hint: refers to optional plug-in software libraries</extracomment>
-        <translation type="vanished">Kirjastot</translation>
-    </message>
-    <message>
-        <source>Preferences for Library</source>
-        <translation type="vanished">Kirjaston asetukset</translation>
-    </message>
-    <message>
-        <source>Library</source>
-        <translation type="vanished">Kirjasto</translation>
-    </message>
-    <message>
-        <source>Failed to open the project's database</source>
-        <translation type="vanished">Projektin tietokantaa ei voitu avata</translation>
-    </message>
-    <message>
-        <source>Unable to add 'inset' function (can't verify blockids)</source>
-        <extracomment>i18n-hint: An error message.  Don't translate inset or blockids.</extracomment>
-        <translation type="vanished">Ei voi lisätä 'inset'-funktiota (lohkojen tunnuksia ei voi tarkistaa)</translation>
-    </message>
-    <message>
-        <source>[Project %02i] Audacity "%s"</source>
-        <extracomment>i18n-hint: The %02i is the project number, the %s is the project name.</extracomment>
-        <translation type="vanished">[Projekti %1] Audacity "%2"</translation>
-    </message>
-    <message>
-        <source>Can't open project file</source>
-        <translation type="vanished">Projektitiedostoa ei voi avata</translation>
-    </message>
-    <message>
-        <source>The project's database failed to reopen, possibly because of limited space on the storage device.</source>
-        <translation type="vanished">Projektin tietokanta ei avautunut uudelleen, mahdollisesti tallennuslaitteen rajallisen tilan vuoksi.</translation>
-    </message>
-    <message>
-        <source>&amp;Close</source>
-        <translation type="vanished">&amp;Sulje</translation>
-    </message>
-    <message>
-        <source>Help</source>
-        <translation type="vanished">Ohje</translation>
-    </message>
-    <message>
-        <source>&amp;Preview</source>
-        <translation type="vanished">&amp;Esikuuntelu</translation>
-    </message>
-    <message>
-        <source>Dry Previe&amp;w</source>
-        <translation type="vanished">Kuiva esikuuntelu</translation>
-    </message>
-    <message>
-        <source>&amp;Settings</source>
-        <translation type="vanished">&amp;Asetukset</translation>
-    </message>
-    <message>
-        <source>Debu&amp;g</source>
-        <translation type="vanished">Virheen&amp;korjaus</translation>
-    </message>
-    <message>
-        <source>High Contrast</source>
-        <extracomment>i18n-hint: greater difference between foreground and
-background colors</extracomment>
-        <translation type="vanished">Suuri kontrasti</translation>
-    </message>
-    <message>
-        <source>Themes written to:
-  %s/*/%s.</source>
-        <extracomment>i18n-hint: A theme is a consistent visual style across an application's
-graphical user interface, including choices of colors, and similarity of images
-such as those on button controls.  Audacity can load and save alternative
-themes.</extracomment>
-        <translation type="vanished">Teemat kirjoitettu osoitteeseen:
-%1/*/%2.</translation>
-    </message>
-    <message>
-        <source>Audacity could not write file:
-  %s.</source>
-        <translation type="vanished">Audacity ei voinut kirjoittaa tiedostoa:
-  %1.</translation>
-    </message>
-    <message>
-        <source>Audacity could not open file:
-  %s
-for writing.</source>
-        <translation type="vanished">Audacity ei voinut avata tiedostoa:
-  %1
-kirjoitusta varten.</translation>
-    </message>
-    <message>
-        <source>Audacity could not write images to file:
-  %s.</source>
-        <translation type="vanished">Audacity ei voinut kirjoittaa kuvia tiedostoon:
-  %1.</translation>
-    </message>
-    <message>
-        <source>Audacity could not find file:
-  %s.
-Theme not loaded.</source>
-        <translation type="vanished">Audacity ei löytänyt tiedostoa:
-  %1.
-Teemaa ei ole ladattu.</translation>
-    </message>
-    <message>
-        <source>Audacity could not load file:
-  %s.
-Bad png format perhaps?</source>
-        <extracomment>i18n-hint: Do not translate png.  It is the name of a file format.</extracomment>
-        <translation type="vanished">Audacity ei voinut ladata tiedostoa:
-  %1.
-Ehkä virheellinen png-muoto?</translation>
-    </message>
-    <message>
-        <source>Audacity could not read its default theme.
-Please report the problem.</source>
-        <translation type="vanished">Audacity ei voinut lukea sen oletusteemaa.
-Ilmoita tästä virheestä.</translation>
-    </message>
-    <message>
-        <source>Couldn't read from file: %s</source>
-        <translation type="vanished">Ei voitu lukea tiedostosta: %1</translation>
-    </message>
-    <message>
-        <source>None of the expected theme component files
- were found in:
-  %s.</source>
-        <translation type="vanished">Yhtään odotetuista teeman komponenttitiedostoista 
-ei löytynyt:
-  %1.</translation>
-    </message>
-    <message>
-        <source>Themes written to:
-  %s/*/Components/.</source>
-        <translation type="vanished">Teemat kirjoitettu osoitteeseen:
-  %1/*/Components/.</translation>
-    </message>
-    <message>
-        <source>Could not create directory:
-  %s</source>
-        <translation type="vanished">Ei voitu luoda hakemistoa:
-  %1</translation>
-    </message>
-    <message>
-        <source>Some required files in:
-  %s
-were already present. Overwrite?</source>
-        <translation type="vanished">Jotkin tarvittavat tiedostot kohteessa:
-  %1
-olivat jo mukana. Korvataanko?</translation>
-    </message>
-    <message>
-        <source>Audacity could not save file:
-  %s</source>
-        <translation type="vanished">Audacity ei voinut tallentaa tiedostoa:
-  %1</translation>
-    </message>
-    <message>
-        <source>Couldn't write to file: %s</source>
-        <translation type="vanished">Ei voitu kirjoittaa tiedostoon: %1</translation>
-    </message>
-    <message>
-        <source>Themes as Cee code written to:
-  %s/*%s.</source>
-        <extracomment>i18n-hint "Cee" means the C computer programming language</extracomment>
-        <translation type="vanished">Teemat Cee-koodina kirjoitettu:
-  %1/*%2.</translation>
-    </message>
-    <message>
-        <source>Custom</source>
-        <extracomment>i18n-hint: user defined</extracomment>
-        <translation type="vanished">Mukautettu</translation>
-    </message>
-    <message>
-        <source>Database error.  Sorry, but we don't have more details.</source>
-        <translation type="vanished">Tietokantavirhe.  Valitettavasti emme tiedä siitä enempää.</translation>
-    </message>
-    <message>
-        <source>Audio In: %d, Audio Out: %d</source>
-        <translation type="vanished">Äänitulo: %1, Äänilähtö: %2</translation>
-    </message>
-    <message>
-        <source>VST</source>
-        <extracomment>i18n-hint: Abbreviates Virtual Studio Technology, an audio software protocol
-developed by Steinberg GmbH</extracomment>
-        <translation type="vanished">VST</translation>
-    </message>
-    <message>
-        <source>VST Effects</source>
-        <translation type="vanished">VST-tehosteet</translation>
-    </message>
-    <message>
-        <source>Adds the ability to use VST effects in Audacity.</source>
-        <translation type="vanished">Mahdollistaa VST-tehosteiden käytön Audacityssä.</translation>
-    </message>
-    <message>
-        <source>Unable to allocate memory when loading presets file.</source>
-        <translation type="vanished">Muistia ei voi varata ladattaessa esiasetustiedostoa.</translation>
-    </message>
-    <message>
-        <source>Error Loading VST Presets</source>
-        <translation type="vanished">VST-esiasetuksen latausvirhe</translation>
-    </message>
-    <message>
-        <source>Unable to read presets file.</source>
-        <translation type="vanished">Esiasetustiedostoa ei voi lukea.</translation>
-    </message>
-    <message>
-        <source>Could not open file: "%s"</source>
-        <translation type="vanished">Ei voitu avata tiedostoa:  "%1"</translation>
-    </message>
-    <message>
-        <source>Error Saving VST Presets</source>
-        <translation type="vanished">Virhe VST-esiasetusten tallennuksessa</translation>
-    </message>
-    <message>
-        <source>Error writing to file: "%s"</source>
-        <translation type="vanished">Virhe kirjoitettaessa tiedostoon: "%1"</translation>
-    </message>
-    <message>
-        <source>Error Saving Effect Presets</source>
-        <translation type="vanished">Virhe tehosteen esiasetusten tallennuksessa</translation>
-    </message>
-    <message>
-        <source>This parameter file was saved from %s. Continue?</source>
-        <translation type="vanished">Tämä parametritiedosto tallennettiin kohteesta %1. Jatketaanko?</translation>
-    </message>
-    <message>
-        <source>%s.%i</source>
-        <comment>clip name template</comment>
-        <extracomment>i18n-hint Template for clip name generation on copy-paste
-i18n-hint Template for clip name generation on inserting new empty clip</extracomment>
-        <translation type="vanished">%1.%2</translation>
-    </message>
-    <message>
-        <source>There is not enough room available to paste the selection</source>
-        <translation type="vanished">Valinnan liittämiseen ei ole tarpeeksi tilaa</translation>
-    </message>
-    <message>
-        <source>Show &amp;Log...</source>
-        <translation type="vanished">Näytä &amp;loki...</translation>
-    </message>
-    <message>
-        <source>More information about this error may be available %s.</source>
-        <translation type="vanished">Lisätietoja tästä virheestä voi olla saatavissa %1.</translation>
-    </message>
-    <message>
-        <source>here</source>
-        <translation type="vanished">tässä</translation>
-    </message>
-    <message>
-        <source>Would you like to send a report to help us fix this issue?</source>
-        <translation type="vanished">Haluatko lähettää raportin, joka auttaa meitä korjaamaan tämän ongelman?</translation>
-    </message>
-    <message>
-        <source>All reports are anonymous. See %s for more info.</source>
-        <translation type="vanished">Kaikki raportit ovat anonyymejä. Katso lisätietoja %1 .</translation>
-    </message>
-    <message>
-        <source>our Privacy Policy</source>
-        <extracomment>i18n-hint: Title of hyperlink to the privacy policy. This is an object of "See".</extracomment>
-        <translation type="vanished">tietosuojakäytäntömme</translation>
-    </message>
-    <message>
-        <source>Problem details</source>
-        <translation type="vanished">Ongelman tiedot</translation>
-    </message>
-    <message>
-        <source>&amp;Don't send</source>
-        <comment>crash reporter button</comment>
-        <translation type="vanished">&amp;Älä lähetä</translation>
-    </message>
-    <message>
-        <source>&amp;Send</source>
-        <comment>crash reporter button</comment>
-        <translation type="vanished">&amp;Lähetä</translation>
-    </message>
-    <message>
-        <source>Backwards</source>
-        <translation type="vanished">Taaksepäin</translation>
-    </message>
-    <message>
-        <source>&lt;</source>
-        <extracomment>i18n-hint arrowhead meaning backward movement</extracomment>
-        <translation type="vanished">&lt;</translation>
-    </message>
-    <message>
-        <source>Forwards</source>
-        <translation type="vanished">Eteenpäin</translation>
-    </message>
-    <message>
-        <source>&gt;</source>
-        <extracomment>i18n-hint arrowhead meaning forward movement</extracomment>
-        <translation type="vanished">&gt;</translation>
-    </message>
-    <message>
-        <source>Help on the Internet</source>
-        <translation type="vanished">Ohjeita verkossa</translation>
-    </message>
-    <message>
-        <source>Local</source>
-        <translation type="vanished">Paikallinen</translation>
-    </message>
-    <message>
-        <source>From Internet</source>
-        <translation type="vanished">Verkosta</translation>
-    </message>
-    <message>
-        <source>Welcome!</source>
-        <translation type="vanished">Tervetuloa!</translation>
-    </message>
-    <message>
-        <source>Playing Audio</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">Toistetaan ääntä</translation>
-    </message>
-    <message>
-        <source>Recording Audio</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">Äänitetään ääntä</translation>
-    </message>
-    <message>
-        <source>Recording - Choosing the Recording Device</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">Äänitys - Äänityslaitteen valinta</translation>
-    </message>
-    <message>
-        <source>Recording - Choosing the Recording Source</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">Äänitys - Äänityslähteen valinta</translation>
-    </message>
-    <message>
-        <source>Recording - Setting the Recording Level</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">Äänitys - Äänitystason määritys</translation>
-    </message>
-    <message>
-        <source>Editing and greyed out Menus</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">Muokataan ja harmaannutetaan valikkoja</translation>
-    </message>
-    <message>
-        <source>Exporting an Audio File</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">Viedään äänitiedostoa</translation>
-    </message>
-    <message>
-        <source>Saving an Audacity Project</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">Tallennetaan Audacity-projektia</translation>
-    </message>
-    <message>
-        <source>Support for Other Formats</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">Muiden tiedostomuotojen tuki</translation>
-    </message>
-    <message>
-        <source>Burn to CD</source>
-        <extracomment>i18n-hint: Title for a topic.</extracomment>
-        <translation type="vanished">Polta CD:lle</translation>
-    </message>
-    <message>
-        <source>No Local Help</source>
-        <translation type="vanished">Ei paikallista ohjetta</translation>
-    </message>
-    <message>
-        <source>Audacity can import unprotected files in many other formats (such as M4A and WMA, compressed WAV files from portable recorders and audio from video files) if you download and install the optional [[https://support.audacityteam.org/basics/installing-ffmpeg| FFmpeg library]] to your computer.</source>
-        <translation type="vanished">Audacity voi tuoda suojaamattomia tiedostoja monissa muissa muodoissa (kuten M4A ja WMA, pakattuja WAV-tiedostoja kannettavista tallentimista ja ääntä videotiedostoista), jos lataat ja asennat valinnaisen [[https://support.audacityteam.org/basics/installing -ffmpeg| FFmpeg library]] tietokoneellesi.</translation>
-    </message>
-    <message>
-        <source>You can also read our help on importing [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI files]] and tracks from [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| audio CDs]].</source>
-        <translation type="vanished">Voit myös lukea ohjeemme [[https://manual.audacityteam.org/man/playing_and_recording.html#midi|MIDI-tiedostojen]] ja [[https://manual.audacityteam.org/man/faq_opening_and_saving_files.html#fromcd| ääni-CD:eiden raitojen]] tuonnista.</translation>
-    </message>
-    <message>
-        <source>The Manual does not appear to be installed. Please [[*URL*|view the Manual online]] or [[https://manual.audacityteam.org/man/unzipping_the_manual.html| download the Manual]].&lt;br&gt;&lt;br&gt;To always view the Manual online, change "Location of Manual" in Interface Preferences to "From Internet".</source>
-        <translation type="vanished">Käyttöohjetta ei näytä olevan asennettu. Ole hyvä ja [[*URL*|katso sitä  verkossa]] tai [[https://manual.audacityteam.org/man/unzipping_the_manual.html| lataa se]].&lt;br&gt;&lt;br&gt;Jos haluat aina tarkastella sitä verkossa, vaihda "Manuaalin sijainti" käyttöliittymän asetuksista -&gt; "Verkosta".</translation>
-    </message>
-    <message>
-        <source>Audacity Log</source>
-        <translation type="vanished">Audacityn loki</translation>
-    </message>
-    <message>
-        <source>&amp;Save...</source>
-        <translation type="vanished">&amp;Tallenna...</translation>
-    </message>
-    <message>
-        <source>Cl&amp;ear</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Tyhj&amp;ennä</translation>
-    </message>
-    <message>
-        <source>log.txt</source>
-        <translation type="vanished">log.txt</translation>
-    </message>
-    <message>
-        <source>Save log to:</source>
-        <translation type="vanished">Tallenna loki kansioon:</translation>
-    </message>
-    <message>
-        <source>Couldn't save log to file: %s</source>
-        <translation type="vanished">Lokia ei voitu tallentaa tiedostoon: %1</translation>
-    </message>
-    <message>
-        <source>Show Log for Details</source>
-        <translation type="vanished">Näytä lisätiedot lokissa</translation>
-    </message>
-    <message>
-        <source>Elapsed Time:</source>
-        <translation type="vanished">Kulunut aika:</translation>
-    </message>
-    <message>
-        <source>Remaining Time:</source>
-        <translation type="vanished">Jäljellä oleva aika:</translation>
-    </message>
-    <message>
-        <source>Are you sure you wish to cancel?</source>
-        <translation type="vanished">Haluatko varmasti peruuttaa?</translation>
-    </message>
-    <message>
-        <source>Confirm Cancel</source>
-        <translation type="vanished">Vahvista peruutus</translation>
-    </message>
-    <message>
-        <source>Are you sure you wish to stop?</source>
-        <translation type="vanished">Haluatko varmasti lopettaa?</translation>
-    </message>
-    <message>
-        <source>Confirm Stop</source>
-        <translation type="vanished">Vahvista pysäytys</translation>
-    </message>
-    <message>
-        <source>Are you sure you wish to close?</source>
-        <translation type="vanished">Haluatko varmasti sulkea?</translation>
-    </message>
-    <message>
-        <source>Confirm Close</source>
-        <translation type="vanished">Vahvista sulkeminen</translation>
-    </message>
-    <message>
-        <source>The specified filename could not be converted due to Unicode character use.</source>
-        <translation type="vanished">Määritettyä tiedostonimeä ei voitu muuntaa Unicode-merkkien takia.</translation>
-    </message>
-    <message>
-        <source>Specify New Filename:</source>
-        <translation type="vanished">Määritä uusi tiedostonimi:</translation>
-    </message>
-    <message>
-        <source>Don't ask me again</source>
-        <translation type="vanished">Älä kysy uudestaan</translation>
-    </message>
-    <message>
-        <source>File '%s' already exists, do you really want to overwrite it?</source>
-        <translation type="vanished">Tiedosto '%1' on jo olemassa, haluatko todella korvata sen?</translation>
-    </message>
-    <message>
-        <source>Please choose an existing file.</source>
-        <translation type="vanished">Valitse olemassa oleva tiedosto.</translation>
-    </message>
-    <message>
-        <source>File type:</source>
-        <translation type="vanished">Tiedostotyyppi:</translation>
-    </message>
-    <message>
-        <source>Select a directory</source>
-        <translation type="vanished">Valitse hakemisto</translation>
-    </message>
-    <message>
-        <source>Panel</source>
-        <translation type="vanished">Paneeli</translation>
-    </message>
-    <message>
-        <source>Dialog</source>
-        <translation type="vanished">Valintaikkuna</translation>
-    </message>
-    <message>
-        <source>Directory Dialog</source>
-        <translation type="vanished">Hakemiston valintaikkuna</translation>
-    </message>
-    <message>
-        <source>File Dialog</source>
-        <translation type="vanished">Tiedoston valintaikkuna</translation>
-    </message>
-    <message>
-        <source>Could not load file: "%s"</source>
-        <translation type="vanished">Ei voitu ladata tiedostoa: "%1"</translation>
-    </message>
-    <message>
-        <source>1st Experimental Command...</source>
-        <translation type="vanished">1. kokeellinen komento...</translation>
-    </message>
-    <message>
-        <source>2nd Experimental Command</source>
-        <translation type="vanished">2. kokeellinen komento</translation>
-    </message>
-    <message>
-        <source>AUP project files (*.aup)</source>
-        <translation type="vanished">AUP-projektitiedostot (*.aup)</translation>
-    </message>
-    <message>
-        <source>Couldn't import the project:
-
-%s</source>
-        <translation type="vanished">Projektia ei voitu tuoda:
-
-%1</translation>
-    </message>
-    <message>
-        <source>%s
-This feature is not supported in Audacity versions past 3.3.3.
-These stereo tracks have been split into mono tracks.
-Please verify that everything works as intended before saving.</source>
-        <extracomment>i18n-hint: Text of the message dialog that may appear on attempt
-to import an AUP project.
-%s will be replaced with an explanation of the actual reason of
-project modification.</extracomment>
-        <translation type="vanished">%1
-Tätä ominaisuutta ei tueta Audacityn 3.3.3 varsiota vanhemmissa versioissa.
-Nämä stereoraidat on jaettu monoraitoihin.
-Varmista ennen tallentamista, että kaikki toimii tarkoitetulla tavalla.</translation>
-    </message>
-    <message>
-        <source>This project was saved by Audacity version 1.0 or earlier. The format has
-changed and this version of Audacity is unable to import the project.
-
-Use a version of Audacity prior to v3.0.0 to upgrade the project and then
-you may import it with this version of Audacity.</source>
-        <translation type="vanished">Projekti tallennettiin Audacityn versiolla 1.0 tai vanhemmalla. Tiedostomuoto on 
-muuttunut ja tämä Audacityn versio ei voi tuoda sitä.
-
-Päivitä projekti Audacityn versiota 3.0.0 vanhemmalla versiolla ja sen jälkeen voit tuoda sen tällä Audacityn versiolla.</translation>
-    </message>
-    <message>
-        <source>Internal error in importer...tag not recognized</source>
-        <translation type="vanished">Sisäinen tuontivirhe... tunnistetta ei tunnistettu</translation>
-    </message>
-    <message>
-        <source>Invalid project 'vpos' attribute.</source>
-        <translation type="vanished">Projektin määre 'vpos' virheellinen.</translation>
-    </message>
-    <message>
-        <source>Invalid project 'h' attribute.</source>
-        <translation type="vanished">Projektin määre 'h' virheellinen.</translation>
-    </message>
-    <message>
-        <source>Invalid project 'zoom' attribute.</source>
-        <translation type="vanished">Projektin määre 'zoom' virheellinen.</translation>
-    </message>
-    <message>
-        <source>Invalid project 'sel0' attribute.</source>
-        <translation type="vanished">Projektin määre 'sel0' virheellinen.</translation>
-    </message>
-    <message>
-        <source>Invalid project 'sel1' attribute.</source>
-        <translation type="vanished">Projektin määre 'sel1' virheellinen.</translation>
-    </message>
-    <message>
-        <source>Invalid project 'selLow' attribute.</source>
-        <translation type="vanished">Projektin määre 'selLow' virheellinen.</translation>
-    </message>
-    <message>
-        <source>Invalid project 'selHigh' attribute.</source>
-        <translation type="vanished">Projektin määre 'selHigh' virheellinen.</translation>
-    </message>
-    <message>
-        <source>Couldn't find the project data folder: "%s"</source>
-        <translation type="vanished">Projektin datakansiota "%1" ei löytynyt.</translation>
-    </message>
-    <message>
-        <source>MIDI tracks found in project file, but this build of Audacity does not include MIDI support, bypassing track.</source>
-        <translation type="vanished">Projektitiedostossa on MIDI-raitoja, mutta tämä koontiversio Audacitysta ei tue niitä, joten ne ohitetaan.</translation>
-    </message>
-    <message>
-        <source>The active project already has a time track and one was encountered in the project being imported, bypassing imported time track.</source>
-        <translation type="vanished">Projektissa on jo aikaraita ja tuotavasta projektista löytyi sellainen; tuotava aikaraita ohitetaan.</translation>
-    </message>
-    <message>
-        <source>Invalid sequence 'maxsamples' attribute.</source>
-        <translation type="vanished">Jakson määre 'maxsamples' virheellinen.</translation>
-    </message>
-    <message>
-        <source>Invalid sequence 'sampleformat' attribute.</source>
-        <translation type="vanished">Jakson määre 'sampleformat' virheellinen.</translation>
-    </message>
-    <message>
-        <source>Invalid sequence 'numsamples' attribute.</source>
-        <translation type="vanished">Jakson määre 'numsamples' virheellinen.</translation>
-    </message>
-    <message>
-        <source>Unable to parse the waveblock 'start' attribute</source>
-        <translation type="vanished">Aaltolohkon määrettä 'start' ei voitu jäsentää</translation>
-    </message>
-    <message>
-        <source>Missing project file %s
-
-Inserting silence instead.</source>
-        <translation type="vanished">Projektitiedosto %1 puuttuu
-
-Tilalle pannaan hiljaisuutta.</translation>
-    </message>
-    <message>
-        <source>Missing or invalid simpleblockfile 'len' attribute.</source>
-        <translation type="vanished">Simple-lohkotiedoston määre 'len' virheellinen tai puuttuu.</translation>
-    </message>
-    <message>
-        <source>Missing or invalid silentblockfile 'len' attribute.</source>
-        <translation type="vanished">Silent-lohkotiedoston määre 'len' virheellinen tai puuttuu.</translation>
-    </message>
-    <message>
-        <source>Missing alias file %s
-
-Inserting silence instead.</source>
-        <translation type="vanished">Aliastiedosto %1 puuttuu
-
-Tilalle pannaan hiljaisuutta.</translation>
-    </message>
-    <message>
-        <source>Missing or invalid pcmaliasblockfile 'aliasstart' attribute.</source>
-        <translation type="vanished">Pcmalias-lohkotiedoston määre 'aliasstart' virheellinen tai puuttuu.</translation>
-    </message>
-    <message>
-        <source>Missing or invalid pcmaliasblockfile 'aliaslen' attribute.</source>
-        <translation type="vanished">Pcmalias-lohkotiedoston määre 'aliaslen' virheellinen tai puuttuu.</translation>
-    </message>
-    <message>
-        <source>Error while processing %s
-
-Inserting silence.</source>
-        <translation type="vanished">Virhe tiedoston %1 käsittelyssä
-
-Tilalle pannaan hiljaisuutta.</translation>
-    </message>
-    <message>
-        <source>Failed to open %s</source>
-        <translation type="vanished">Ei voitu avata %1</translation>
-    </message>
-    <message>
-        <source>Failed to seek to position %lld in %s</source>
-        <translation type="vanished">Ei voitu siirtyä sijaintiin %1 tiedostossa %2</translation>
-    </message>
-    <message>
-        <source>Unable to read %lld samples from %s</source>
-        <translation type="vanished">Ei voitu lukea %1 näytettä tiedostosta %2</translation>
-    </message>
-    <message>
-        <source>Command:</source>
-        <translation type="vanished">Komento:</translation>
-    </message>
-    <message>
-        <source>Browse...</source>
-        <translation type="vanished">Selaa...</translation>
-    </message>
-    <message>
-        <source>Show output</source>
-        <extracomment>i18n-hint: show output on a graph</extracomment>
-        <translation type="vanished">Näytä tulos</translation>
-    </message>
-    <message>
-        <source>Data will be piped to standard in. "%f" uses the file name in the export window.</source>
-        <extracomment>i18n-hint: Some programmer-oriented terminology here:
-"Data" refers to the sound to be exported, "piped" means sent,
-and "standard in" means the default input stream that the external program,
-named by %f, will read.  And yes, it's %f, not %s -- this isn't actually used
-in the program as a format string.  Keep %f unchanged.</extracomment>
-        <translation type="vanished">Tiedot johdetaan vakiomuotoon. %1 käyttää tiedostonimeä vientiikkunassa.</translation>
-    </message>
-    <message>
-        <source>Program name appears to be missing.</source>
-        <translation type="vanished">Ohjelman nimi näyttää puuttuvan.</translation>
-    </message>
-    <message>
-        <source>"%s" couldn't be found.</source>
-        <translation type="vanished">"%1" ei löytynyt.</translation>
-    </message>
-    <message>
-        <source>Unable to locate "%s" in your path.</source>
-        <translation type="vanished">Kohdetta "%1" ei löydy polulta.</translation>
-    </message>
-    <message>
-        <source>Executables</source>
-        <extracomment>i18n-hint files that can be run as programs</extracomment>
-        <translation type="vanished">Suoritettavat</translation>
-    </message>
-    <message>
-        <source>Find path to command</source>
-        <translation type="vanished">Etsi polku komennolle</translation>
-    </message>
-    <message>
-        <source>(external program)</source>
-        <translation type="vanished">(ulkoinen ohjelma)</translation>
-    </message>
-    <message>
-        <source>Exporting the selected audio using command-line encoder</source>
-        <translation type="vanished">Valittua ääntä viedään komentorivin enkooderilla</translation>
-    </message>
-    <message>
-        <source>Exporting the audio using command-line encoder</source>
-        <translation type="vanished">Ääntä viedään komentorivin enkooderilla</translation>
-    </message>
-    <message>
-        <source>Command Output</source>
-        <translation type="vanished">Komentolähtö</translation>
-    </message>
-    <message>
-        <source>&amp;OK</source>
-        <translation type="vanished">&amp;OK</translation>
-    </message>
-    <message>
-        <source>%.2f kbps</source>
-        <translation type="vanished">%1 kbps</translation>
-    </message>
-    <message>
-        <source>Current Format:</source>
-        <translation type="vanished">Nykyinen muoto:</translation>
-    </message>
-    <message>
-        <source>Current Codec:</source>
-        <translation type="vanished">Nykyinen koodekki:</translation>
-    </message>
-    <message>
-        <source>FFmpeg : ERROR - Can't determine format description for file "%s".</source>
-        <translation type="vanished">FFmpeg : VIRHE - Tiedostolle "%1" ei voi määritellä muotokuvausta.</translation>
-    </message>
-    <message>
-        <source>FFmpeg : ERROR - Can't allocate output format context.</source>
-        <translation type="vanished">FFmpeg : VIRHE - Tulosmuodon kontekstia ei voi varata.</translation>
-    </message>
-    <message>
-        <source>FFmpeg : ERROR - Can't add audio stream to output file "%s".</source>
-        <translation type="vanished">FFmpeg : VIRHE - Ei voitu lisätä äänivirtaa tulostiedostoon "%1".</translation>
-    </message>
-    <message>
-        <source>FFmpeg : ERROR - Can't open output file "%s" to write. Error code is %d.</source>
-        <translation type="vanished">FFmpeg : VIRHE - Tulostiedostoa "%1" ei voi avata. Virhekoodi on %2.</translation>
-    </message>
-    <message>
-        <source>FFmpeg : ERROR - Can't write headers to output file "%s". Error code is %d.</source>
-        <translation type="vanished">FFmpeg : VIRHE - Otsikoita ei voi kirjoittaa lähtötiedostoon "%1". Virhekoodi on %2.</translation>
-    </message>
-    <message>
-        <source>Can't open audio codec "%s" (0x%x)
-
-%s</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="vanished">Äänikoodekin "%1" (0x%2) 
-avaaminen ei onnistu
-
-%3</translation>
-    </message>
-    <message>
-        <source>FFmpeg : ERROR - Can't allocate buffer to read into from audio FIFO.</source>
-        <translation type="vanished">FFmpeg: VIRHE - Ei voitu varata puskuria äänen lukemiseen virrasta.</translation>
-    </message>
-    <message>
-        <source>FFmpeg : ERROR - Couldn't write audio frame to output file.</source>
-        <translation type="vanished">FFmpeg : VIRHE - Äänikehystä ei voitu kirjoittaa lähtötiedostoon.</translation>
-    </message>
-    <message>
-        <source>Properly configured FFmpeg is required to proceed.
-You can configure it at Preferences &gt; Libraries.</source>
-        <translation type="vanished">Jatkamiseen tarvitaan oikein määritetty FFmpeg.
-Voit määrittää sen kohdassa Asetukset &gt; Kirjastot.</translation>
-    </message>
-    <message>
-        <source>Configure custom FFmpeg options</source>
-        <translation type="vanished">Määritä mukautetut FFmpeg-asetukset</translation>
-    </message>
-    <message>
-        <source>Preset:</source>
-        <translation type="vanished">Esiasetus:</translation>
-    </message>
-    <message>
-        <source>Load Preset</source>
-        <translation type="vanished">Lataa esiasetus</translation>
-    </message>
-    <message>
-        <source>Save Preset</source>
-        <translation type="vanished">Tallenna esiasetus</translation>
-    </message>
-    <message>
-        <source>Delete Preset</source>
-        <translation type="vanished">Poista esiasetus</translation>
-    </message>
-    <message>
-        <source>Import Presets</source>
-        <translation type="vanished">Tuo esiasetukset</translation>
-    </message>
-    <message>
-        <source>Export Presets</source>
-        <translation type="vanished">Vie esiasetukset</translation>
-    </message>
-    <message>
-        <source>Not all formats and codecs are compatible. Nor are all option combinations compatible with all codecs.</source>
-        <translation type="vanished">Kaikki muodot ja koodekit eivät ole yhteensopivia, eivätkä kaikki valintayhdistelmät ole yhteensopivia kaikkien koodekkien kanssa.</translation>
-    </message>
-    <message>
-        <source>Show All Formats</source>
-        <translation type="vanished">Näytä kaikki muodot</translation>
-    </message>
-    <message>
-        <source>Show All Codecs</source>
-        <translation type="vanished">Näytä kaikki koodekit</translation>
-    </message>
-    <message>
-        <source>General Options</source>
-        <translation type="vanished">Yleiset valinnat</translation>
-    </message>
-    <message>
-        <source>ISO 639 3-letter language code
-Optional
-empty - automatic</source>
-        <translation type="vanished">ISO 639 3-kielikoodi
-Valinnainen
-tyhjä - automaattinen</translation>
-    </message>
-    <message>
-        <source>Language:</source>
-        <translation type="vanished">Kieli:</translation>
-    </message>
-    <message>
-        <source>Bit Reservoir</source>
-        <translation type="vanished">Bittisäilö</translation>
-    </message>
-    <message>
-        <source>Codec tag (FOURCC)
-Optional
-empty - automatic</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="vanished">Koodekin tunniste (FOURCC)
-Valinnainen
-tyhjä - automaattinen</translation>
-    </message>
-    <message>
-        <source>Tag:</source>
-        <translation type="vanished">Tunniste:</translation>
-    </message>
-    <message>
-        <source>Bit Rate (bits/second) - influences the resulting file size and quality
-Some codecs may only accept specific values (128k, 192k, 256k etc)
-0 - automatic
-Recommended - 192000</source>
-        <translation type="vanished">Bittinopeus (bittiä sekunnissa) - vaikuttaa tuloksen tiedostokokoon ja laatuun
-Jotkin koodekit saattavat hyväksyä vain tiettyjä arvoja (128k, 192k, 256k jne.)
-0 - automaattinen
-Suositus - 192000</translation>
-    </message>
-    <message>
-        <source>Bit Rate:</source>
-        <translation type="vanished">Bittinopeus:</translation>
-    </message>
-    <message>
-        <source>Overall quality, used differently by different codecs
-Required for vorbis
-0 - automatic
--1 - off (use bitrate instead)</source>
-        <translation type="vanished">Yleinen laatu; tarkka merkitys riippuu koodekista
-Tarvitaan Vorbisille
-0 - automaattinen
--1 - pois päältä (käytä sen sijaan bittinopeutta)</translation>
-    </message>
-    <message>
-        <source>Quality:</source>
-        <translation type="vanished">Laatu:</translation>
-    </message>
-    <message>
-        <source>Sample rate (Hz)
-0 - don't change sample rate</source>
-        <translation type="vanished">Näytteenottotaajuus (Hz)
-0 - älä muuta näytteenottonopeutta</translation>
-    </message>
-    <message>
-        <source>Sample Rate:</source>
-        <translation type="vanished">Näytteenottotaajuus:</translation>
-    </message>
-    <message>
-        <source>Audio cutoff bandwidth (Hz)
-Optional
-0 - automatic</source>
-        <translation type="vanished">Äänen katkaisun kaistanleveys (Hz)
-Valinnainen
-0 - automaattinen</translation>
-    </message>
-    <message>
-        <source>Cutoff:</source>
-        <translation type="vanished">Leikkaus:</translation>
-    </message>
-    <message>
-        <source>AAC Profile
-Low Complexity - default
-Most players won't play anything other than LC</source>
-        <translation type="vanished">AAC-profiili
-LC (alhainen moninaisuus) - oletus
-Useimmat soittimet eivät toista mitään muuta kuin LC</translation>
-    </message>
-    <message>
-        <source>Profile:</source>
-        <translation type="vanished">Profiili:</translation>
-    </message>
-    <message>
-        <source>Compression level
-Required for FLAC
--1 - automatic
-min - 0 (fast encoding, large output file)
-max - 10 (slow encoding, small output file)</source>
-        <translation type="vanished">Pakkaustaso
-Pakollinen FLAC:lle
--1 - automaattinen
-min - 0 (nopea koodaus, suuri tulostiedosto)
-max - 10 (hidas koodaus, pieni tulostiedosto)</translation>
-    </message>
-    <message>
-        <source>Compression:</source>
-        <translation type="vanished">Pakkaus:</translation>
-    </message>
-    <message>
-        <source>Frame size
-Optional
-0 - default
-min - 16
-max - 65535</source>
-        <translation type="vanished">Kehyskoko
-Valinnainen
-0 - oletus
-min - 16
-max - 65535</translation>
-    </message>
-    <message>
-        <source>Frame:</source>
-        <translation type="vanished">Kehys:</translation>
-    </message>
-    <message>
-        <source>LPC coefficients precision
-Optional
-0 - default
-min - 1
-max - 15</source>
-        <translation type="vanished">LPC-kertoimien tarkkuus
-Valinnainen
-0 - oletus
-min - 1
-max - 15</translation>
-    </message>
-    <message>
-        <source>Prediction Order Method
-Estimate - fastest, lower compression
-Log search - slowest, best compression
-Full search - default</source>
-        <translation type="vanished">Ennustusjärjestysmenetelmä
-Arvio - nopein, pienempi pakkaus
-Lokihaku - hitain, paras pakkaus
-Täysi haku - oletus</translation>
-    </message>
-    <message>
-        <source>PdO Method:</source>
-        <translation type="vanished">PdO-menetelmä:</translation>
-    </message>
-    <message>
-        <source>Minimal prediction order
-Optional
--1 - default
-min - 0
-max - 32 (with LPC) or 4 (without LPC)</source>
-        <translation type="vanished">Pienin ennustusjärjestys
-Valinnainen
--1 - oletus
-min - 0
-max - 32 (LPC) tai 4 (ilman LPC)</translation>
-    </message>
-    <message>
-        <source>Maximal prediction order
-Optional
--1 - default
-min - 0
-max - 32 (with LPC) or 4 (without LPC)</source>
-        <translation type="vanished">Suurin ennustusjärjestys
-Valinnainen
--1 - oletus
-min - 0
-max - 32 (LPC) tai 4 (ilman LPC)</translation>
-    </message>
-    <message>
-        <source>Minimal partition order
-Optional
--1 - default
-min - 0
-max - 8</source>
-        <translation type="vanished">Pienin osiointijärjestys
-Valinnainen
--1 - oletus
-minimi - 0
-maksimi - 8</translation>
-    </message>
-    <message>
-        <source>Maximal partition order
-Optional
--1 - default
-min - 0
-max - 8</source>
-        <translation type="vanished">Suurin osiointijärjestys
-Valinnainen
--1 - oletus
-min - 0
-max - 8</translation>
-    </message>
-    <message>
-        <source>Maximum bit rate of the multiplexed stream
-Optional
-0 - default</source>
-        <translation type="vanished">Multipleksoitun virran enimmäisbittinopeus
-Valinnainen
-0 - oletus</translation>
-    </message>
-    <message>
-        <source>Mux Rate:</source>
-        <extracomment>i18n-hint: 'mux' is short for multiplexor, a device that selects between several inputs
-'Mux Rate' is a parameter that has some bearing on compression ratio for MPEG
-it has a hard to predict effect on the degree of compression</extracomment>
-        <translation type="vanished">Mux-arvo:</translation>
-    </message>
-    <message>
-        <source>Packet size
-Optional
-0 - default</source>
-        <extracomment>i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
-compression.  It measures how big a chunk of audio is compressed in one piece.</extracomment>
-        <translation type="vanished">Pakettikoko
-Valinnainen
-0 - oletus</translation>
-    </message>
-    <message>
-        <source>Packet Size:</source>
-        <extracomment>i18n-hint: 'Packet Size' is a parameter that has some bearing on compression ratio for MPEG
-compression.  It measures how big a chunk of audio is compressed in one piece.</extracomment>
-        <translation type="vanished">Pakettikoko:</translation>
-    </message>
-    <message>
-        <source>You can't delete a preset without name</source>
-        <translation type="vanished">Et voi poistaa nimetöntä esiasetusta</translation>
-    </message>
-    <message>
-        <source>Delete preset '%s'?</source>
-        <translation type="vanished">Poistetaanko esiasetus '%1'?</translation>
-    </message>
-    <message>
-        <source>Confirm Deletion</source>
-        <translation type="vanished">Vahvista poisto</translation>
-    </message>
-    <message>
-        <source>You can't save a preset without a name</source>
-        <translation type="vanished">Nimetöntä esiasetusta ei voi tallentaa</translation>
-    </message>
-    <message>
-        <source>Select xml file with presets to import</source>
-        <translation type="vanished">Valitse XML-tiedosto, josta esivalinnat tuodaan</translation>
-    </message>
-    <message>
-        <source>No presets to export</source>
-        <translation type="vanished">Esimäärityksiä ei ole vietäväksi</translation>
-    </message>
-    <message>
-        <source>Select xml file to export presets into</source>
-        <translation type="vanished">Valitse XML-tiedosto, johon esiasetukset viedään</translation>
-    </message>
-    <message>
-        <source>Format %s is not compatible with codec %s.</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="vanished">Muoto %1 ei ole yhteensopiva koodekin %2 kanssa.</translation>
-    </message>
-    <message>
-        <source>Incompatible format and codec</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="vanished">Yhteensopimaton muoto ja koodekki</translation>
-    </message>
-    <message>
-        <source>Failed to guess format</source>
-        <translation type="vanished">Muodon arvaus epäonnistui</translation>
-    </message>
-    <message>
-        <source>Failed to find the codec</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="vanished">Koodekkia ei löytynyt</translation>
-    </message>
-    <message>
-        <source>FFmpeg was configured in Preferences and successfully loaded before, 
-but this time Audacity failed to load it at startup. 
-
-You may want to go back to Preferences &gt; Libraries and re-configure it.</source>
-        <translation type="vanished">FFmpeg määritettiin asetuksissa ja ladattiin onnistuneesti aiemmin, 
-mutta tällä kertaa Audacity ei voinut ladata sitä käynnistyksen yhteydessä. 
-
-Haluat ehkä palata kohtaan Asetukset &gt; Kirjastot ja määrittää sen uudelleen.</translation>
-    </message>
-    <message>
-        <source>FFmpeg startup failed</source>
-        <translation type="vanished">FFmpeg-käynnistys epäonnistui</translation>
-    </message>
-    <message>
-        <source>Locate FFmpeg</source>
-        <translation type="vanished">Etsi FFmpeg</translation>
-    </message>
-    <message>
-        <source>Audacity needs the file '%s' to import and export audio via FFmpeg.</source>
-        <translation type="vanished">Audacity tarvitsee tiedoston '%1' äänen tuontiin ja vientiin FFmpeg:llä.</translation>
-    </message>
-    <message>
-        <source>Location of '%s':</source>
-        <translation type="vanished">Tiedoston '%1' sijainti:</translation>
-    </message>
-    <message>
-        <source>To find '%s', click here --&gt;</source>
-        <translation type="vanished">Etsi '%1' klikkaa tästä --&gt;</translation>
-    </message>
-    <message>
-        <source>To get a free copy of FFmpeg, click here --&gt;</source>
-        <translation type="vanished">Lataa ilmainen kopio FFmpeg:stä täältä --&gt;</translation>
-    </message>
-    <message>
-        <source>Download</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Lataa</translation>
-    </message>
-    <message>
-        <source>Only avformat.dll</source>
-        <translation type="vanished">Vain avformat.dll</translation>
-    </message>
-    <message>
-        <source>Only libavformat.dylib</source>
-        <translation type="vanished">Vain libavformat.dylib</translation>
-    </message>
-    <message>
-        <source>Only libavformat.so</source>
-        <translation type="vanished">Vain libavformat.so</translation>
-    </message>
-    <message>
-        <source>Where is '%s'?</source>
-        <extracomment>i18n-hint: It's asking for the location of a file, for
-example, "Where is lame_enc.dll?" - you could translate
-"Where would I find the file '%s'?" instead if you want.</extracomment>
-        <translation type="vanished">Missä '%1' on?</translation>
-    </message>
-    <message>
-        <source>FFmpeg not found</source>
-        <translation type="vanished">FFmpegiä ei löytynyt</translation>
-    </message>
-    <message>
-        <source>Audacity attempted to use FFmpeg to import an audio file,
-but the libraries were not found.
-
-To use FFmpeg import, go to Edit &gt; Preferences &gt; Libraries
-to download or locate the FFmpeg libraries.</source>
-        <translation type="vanished">Audacity yritti käyttää FFmpegiä äänitiedoston tuontiin,
-mutta vaadittuja kirjastoja ei löytynyt.
-
-Jos haluat tuoda FFmpeg:llä, avaa Muokkaa &gt; Asetukset &gt;
-Kirjastot ladataksesi tai määritelläksesi FFmpeg-kirjastot.</translation>
-    </message>
-    <message>
-        <source>Do not show this warning again</source>
-        <translation type="vanished">Älä näytä tätä varoitusta uudelleen</translation>
-    </message>
-    <message>
-        <source>FFmpeg Import/Export Library</source>
-        <translation type="vanished">FFmpeg-tuonti-/vientikirjasto</translation>
-    </message>
-    <message>
-        <source>No compatible FFmpeg library was found</source>
-        <translation type="vanished">Yhteensopivaa FFmpeg-kirjastoa ei löytynyt</translation>
-    </message>
-    <message>
-        <source>FFmpeg Library Version:</source>
-        <translation type="vanished">FFmpeg-kirjaston versio:</translation>
-    </message>
-    <message>
-        <source>FFmpeg Library:</source>
-        <translation type="vanished">FFmpeg-kirjasto:</translation>
-    </message>
-    <message>
-        <source>Loca&amp;te...</source>
-        <translation type="vanished">Ets&amp;i...</translation>
-    </message>
-    <message>
-        <source>Dow&amp;nload</source>
-        <translation type="vanished">Lataa</translation>
-    </message>
-    <message>
-        <source>Audacity has automatically detected valid FFmpeg libraries.
-Do you still want to locate them manually?</source>
-        <translation type="vanished">Audacity on tunnistanut automaattisesti kelvolliset FFmpeg-kirjastot.
-Haluatko silti paikantaa ne manuaalisesti?</translation>
-    </message>
-    <message>
-        <source>Error Saving FFmpeg Presets</source>
-        <translation type="vanished">Virhe tallennettaessa FFmpeg-esimäärityksiä</translation>
-    </message>
-    <message>
-        <source>Overwrite preset '%s'?</source>
-        <translation type="vanished">Korvataanko esiasetus "%1"?</translation>
-    </message>
-    <message>
-        <source>Confirm Overwrite</source>
-        <translation type="vanished">Vahvista korvaus</translation>
-    </message>
-    <message>
-        <source>Please select format before saving a profile</source>
-        <translation type="vanished">Valitse muoto ennen profiilin tallennusta</translation>
-    </message>
-    <message>
-        <source>Please select codec before saving a profile</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="vanished">Valitse koodekki ennen profiilin tallennusta</translation>
-    </message>
-    <message>
-        <source>Preset '%s' does not exist.</source>
-        <translation type="vanished">Esiasetusta %1 ei ole olemassa.</translation>
-    </message>
-    <message>
-        <source>Replace preset '%s'?</source>
-        <translation type="vanished">Korvaa esiasetus '%1'?</translation>
-    </message>
-    <message>
-        <source>FLAC export couldn't open %s</source>
-        <translation type="vanished">FLAC-vienti ei voinut avata tiedostoa %1</translation>
-    </message>
-    <message>
-        <source>List of Files in basic text format</source>
-        <translation type="vanished">Lista tiedostoista perustekstimuodossa</translation>
-    </message>
-    <message>
-        <source>Invalid window offset in LOF file.</source>
-        <extracomment>i18n-hint: You do not need to translate "LOF"</extracomment>
-        <translation type="vanished">Virheellinen ikkunan siirtymä LOF-tiedostossa.</translation>
-    </message>
-    <message>
-        <source>Invalid duration in LOF file.</source>
-        <extracomment>i18n-hint: You do not need to translate "LOF"</extracomment>
-        <translation type="vanished">Virheellinen kesto LOF-tiedostossa.</translation>
-    </message>
-    <message>
-        <source>MIDI tracks cannot be offset individually, only audio files can be.</source>
-        <translation type="vanished">MIDI-raitoja ei voi kompensoida erikseen, vain äänitiedostoja voi.</translation>
-    </message>
-    <message>
-        <source>Invalid track offset in LOF file.</source>
-        <extracomment>i18n-hint: You do not need to translate "LOF"</extracomment>
-        <translation type="vanished">Virheellinen raidan siirtymä LOF-tiedostossa.</translation>
-    </message>
-    <message>
-        <source>Insane, 320 kbps</source>
-        <extracomment>i18n-hint: Slightly humorous - as in use an insane precision with MP3.</extracomment>
-        <translation type="vanished">Maksimi, 320 kbps</translation>
-    </message>
-    <message>
-        <source>Insane</source>
-        <extracomment>i18n-hint: Slightly humorous - as in use an insane precision with MP3.</extracomment>
-        <translation type="vanished">Älytön</translation>
-    </message>
-    <message>
-        <source>Locate LAME</source>
-        <extracomment>i18n-hint: LAME is the name of an MP3 converter and should not be translated</extracomment>
-        <translation type="vanished">Etsi LAME</translation>
-    </message>
-    <message>
-        <source>Audacity needs the file %s to create MP3s.</source>
-        <translation type="vanished">Audacity tarvitsee %1 -tiedostoa MP3:n luomiseen.</translation>
-    </message>
-    <message>
-        <source>Location of %s:</source>
-        <translation type="vanished">Tiedoston %1 sijainti:</translation>
-    </message>
-    <message>
-        <source>To find %s, click here --&gt;</source>
-        <extracomment>i18n-hint: There is a  button to the right of the arrow.</extracomment>
-        <translation type="vanished">Etsi %1, klikkaa tästä --&gt;</translation>
-    </message>
-    <message>
-        <source>To get a free copy of LAME, click here --&gt;</source>
-        <extracomment>i18n-hint: There is a  button to the right of the arrow.</extracomment>
-        <translation type="vanished">Saat ilmaisen kopion LAMEsta klikkaamalla tästä --&gt;</translation>
-    </message>
-    <message>
-        <source>Where is %s?</source>
-        <extracomment>i18n-hint: It's asking for the location of a file, for
-* example, "Where is lame_enc.dll?" - you could translate
-* "Where would I find the file %s" instead if you want.</extracomment>
-        <translation type="vanished">Missä on %1?</translation>
-    </message>
-    <message>
-        <source>You are linking to lame_enc.dll v%d.%d. This version is not compatible with Audacity %d.%d.%d.
-Please download the latest version of 'LAME for Audacity'.</source>
-        <translation type="vanished">Olet linkittämässä kohteeseen lame_enc.dll v%1.%2. Tämä versio ei ole yhteensopiva Audacityn %3.%4.%5 kanssa.
-Lataa uusin versio "LAME for Audacity".</translation>
-    </message>
-    <message>
-        <source>The project sample rate (%d) is not supported by the MP3
-file format. </source>
-        <translation type="vanished">Projektin näytteenottotaajuutta (%1) ei tueta
-MP3-tiedostomuodossa. </translation>
-    </message>
-    <message>
-        <source>The project sample rate (%d) and bit rate (%d kbps) combination is not
-supported by the MP3 file format. </source>
-        <translation type="vanished">Projektin näytteenottotaajuuden (%1) ja bittinopeuden (%2 kbps) yhdistelmää
-ei tueta MP3-tiedostomuodossa. </translation>
-    </message>
-    <message>
-        <source>LAME MP3 Export Library</source>
-        <translation type="vanished">LAME MP3 -vientikirjasto</translation>
-    </message>
-    <message>
-        <source>MP3 Library Version:</source>
-        <translation type="vanished">MP3-kirjaston versio:</translation>
-    </message>
-    <message>
-        <source>Error while writing %s file (disk full?).
-Libsndfile says "%s"</source>
-        <extracomment>i18n-hint: %s will be the error message from libsndfile, which
-* is usually something unhelpful (and untranslated) like "system
-* error"</extracomment>
-        <translation type="vanished">Virhe tiedoston %1 kirjoituksessa (levy täysi?).
-Libsndfile ilmoittaa "%2"</translation>
-    </message>
-    <message>
-        <source>AU (Sun/NeXT)</source>
-        <translation type="vanished">AU (Sun/NeXT)</translation>
-    </message>
-    <message>
-        <source>AVR (Audio Visual Research)</source>
-        <translation type="vanished">AVR (Audio Visual Research)</translation>
-    </message>
-    <message>
-        <source>CAF (Apple Core Audio File)</source>
-        <translation type="vanished">CAF (Apple Core Audio File)</translation>
-    </message>
-    <message>
-        <source>FLAC (FLAC Lossless Audio Codec)</source>
-        <extracomment>i18n-hint: "codec" is short for a "coder-decoder" algorithm</extracomment>
-        <translation type="vanished">FLAC (FLAC, häviötön äänikoodekki)</translation>
-    </message>
-    <message>
-        <source>HTK (HMM Tool Kit)</source>
-        <translation type="vanished">HTK (HMM Tool Kit)</translation>
-    </message>
-    <message>
-        <source>IFF (Amiga IFF/SVX8/SV16)</source>
-        <translation type="vanished">IFF (Amiga IFF/SVX8/SV16)</translation>
-    </message>
-    <message>
-        <source>MAT4 (GNU Octave 2.0 / Matlab 4.2)</source>
-        <translation type="vanished">MAT4 (GNU Octave 2.0 / Matlab 4.2)</translation>
-    </message>
-    <message>
-        <source>MAT5 (GNU Octave 2.1 / Matlab 5.0)</source>
-        <translation type="vanished">MAT5 (GNU Octave 2.1 / Matlab 5.0)</translation>
-    </message>
-    <message>
-        <source>MPC (Akai MPC 2k)</source>
-        <translation type="vanished">MPC (Akai MPC 2k)</translation>
-    </message>
-    <message>
-        <source>OGG (OGG Container format)</source>
-        <translation type="vanished">OGG (OGG-säiliömuoto)</translation>
-    </message>
-    <message>
-        <source>PAF (Ensoniq PARIS)</source>
-        <translation type="vanished">PAF (Ensoniq PARIS)</translation>
-    </message>
-    <message>
-        <source>PVF (Portable Voice Format)</source>
-        <translation type="vanished">PVF (Portable Voice Format)</translation>
-    </message>
-    <message>
-        <source>RAW (header-less)</source>
-        <translation type="vanished">RAW (otsikoton)</translation>
-    </message>
-    <message>
-        <source>RF64 (RIFF 64)</source>
-        <translation type="vanished">RF64 (RIFF 64)</translation>
-    </message>
-    <message>
-        <source>SD2 (Sound Designer II)</source>
-        <translation type="vanished">SD2 (Sound Designer II)</translation>
-    </message>
-    <message>
-        <source>SDS (Midi Sample Dump Standard)</source>
-        <translation type="vanished">SDS (Midi Sample Dump Standard)</translation>
-    </message>
-    <message>
-        <source>SF (Berkeley/IRCAM/CARL)</source>
-        <translation type="vanished">SF (Berkeley/IRCAM/CARL)</translation>
-    </message>
-    <message>
-        <source>VOC (Creative Labs)</source>
-        <translation type="vanished">VOC (Creative Labs)</translation>
-    </message>
-    <message>
-        <source>W64 (SoundFoundry WAVE 64)</source>
-        <translation type="vanished">W64 (SoundFoundry WAVE 64)</translation>
-    </message>
-    <message>
-        <source>WAV (NIST Sphere)</source>
-        <translation type="vanished">WAV (NIST Sphere)</translation>
-    </message>
-    <message>
-        <source>WAVEX (Microsoft)</source>
-        <translation type="vanished">WAVEX (Microsoft)</translation>
-    </message>
-    <message>
-        <source>WVE (Psion Series 3)</source>
-        <translation type="vanished">WVE (Psion Series 3)</translation>
-    </message>
-    <message>
-        <source>XI (FastTracker 2)</source>
-        <translation type="vanished">XI (FastTracker 2)</translation>
-    </message>
-    <message>
-        <source>Signed 8 bit PCM</source>
-        <translation type="vanished">Etumerkillinen 8-bittinen PCM</translation>
-    </message>
-    <message>
-        <source>Signed 16 bit PCM</source>
-        <translation type="vanished">Etumerkillinen 16-bittinen PCM</translation>
-    </message>
-    <message>
-        <source>Signed 24 bit PCM</source>
-        <translation type="vanished">Etumerkillinen 24-bittinen PCM</translation>
-    </message>
-    <message>
-        <source>Signed 32 bit PCM</source>
-        <translation type="vanished">Etumerkillinen 32-bittinen PCM</translation>
-    </message>
-    <message>
-        <source>Unsigned 8 bit PCM</source>
-        <translation type="vanished">Etumerkitön 8-bittinen PCM</translation>
-    </message>
-    <message>
-        <source>64 bit float</source>
-        <translation type="vanished">64-bittinen liukuluku</translation>
-    </message>
-    <message>
-        <source>U-Law</source>
-        <translation type="vanished">U-Law</translation>
-    </message>
-    <message>
-        <source>A-Law</source>
-        <translation type="vanished">A-Law</translation>
-    </message>
-    <message>
-        <source>IMA ADPCM</source>
-        <translation type="vanished">IMA ADPCM</translation>
-    </message>
-    <message>
-        <source>Microsoft ADPCM</source>
-        <translation type="vanished">Microsoft ADPCM</translation>
-    </message>
-    <message>
-        <source>GSM 6.10</source>
-        <translation type="vanished">GSM 6.10</translation>
-    </message>
-    <message>
-        <source>32kbs G721 ADPCM</source>
-        <translation type="vanished">32kbs G721 ADPCM</translation>
-    </message>
-    <message>
-        <source>24kbs G723 ADPCM</source>
-        <translation type="vanished">24kbs G723 ADPCM</translation>
-    </message>
-    <message>
-        <source>12 bit DWVW</source>
-        <translation type="vanished">12-bittinen DWVW</translation>
-    </message>
-    <message>
-        <source>16 bit DWVW</source>
-        <translation type="vanished">16-bittinen DWVW</translation>
-    </message>
-    <message>
-        <source>24 bit DWVW</source>
-        <translation type="vanished">24-bittinen DWVW</translation>
-    </message>
-    <message>
-        <source>VOX ADPCM</source>
-        <translation type="vanished">VOX ADPCM</translation>
-    </message>
-    <message>
-        <source>16 bit DPCM</source>
-        <translation type="vanished">16-bittinen DPCM</translation>
-    </message>
-    <message>
-        <source>8 bit DPCM</source>
-        <translation type="vanished">8-bittinen DPCM</translation>
-    </message>
-    <message>
-        <source>Vorbis</source>
-        <translation type="vanished">Vorbis</translation>
-    </message>
-    <message>
-        <source>&amp;Nyquist Workbench...</source>
-        <translation type="vanished">Nyquist-työpöytä...</translation>
-    </message>
-    <message>
-        <source>&amp;Undo	Ctrl+Z</source>
-        <translation type="vanished">K&amp;umoa	Ctrl+Z</translation>
-    </message>
-    <message>
-        <source>&amp;Redo	Ctrl+Y</source>
-        <translation type="vanished">Tee uu&amp;delleen	Ctrl+Y</translation>
-    </message>
-    <message>
-        <source>Cu&amp;t	Ctrl+X</source>
-        <translation type="vanished">Lei&amp;kkaa	Ctrl+X</translation>
-    </message>
-    <message>
-        <source>&amp;Copy	Ctrl+C</source>
-        <translation type="vanished">&amp;Kopioi	Ctrl+C</translation>
-    </message>
-    <message>
-        <source>&amp;Paste	Ctrl+V</source>
-        <translation type="vanished">&amp;Liitä	Ctrl+V</translation>
-    </message>
-    <message>
-        <source>Cle&amp;ar	Ctrl+L</source>
-        <translation type="vanished">Tyh&amp;jennä	Ctrl+L</translation>
-    </message>
-    <message>
-        <source>Select A&amp;ll	Ctrl+A</source>
-        <translation type="vanished">Va&amp;litse kaikki	Ctrl+A</translation>
-    </message>
-    <message>
-        <source>&amp;Find...	Ctrl+F</source>
-        <translation type="vanished">&amp;Etsi...	Ctrl+F</translation>
-    </message>
-    <message>
-        <source>&amp;Matching Paren	F8</source>
-        <translation type="vanished">&amp;Vastaava sulku	F8</translation>
-    </message>
-    <message>
-        <source>&amp;Top S-expr	F9</source>
-        <translation type="vanished">&amp;Ylätason S-lauseke	F9</translation>
-    </message>
-    <message>
-        <source>&amp;Higher S-expr	F10</source>
-        <translation type="vanished">&amp;Korkeampi S-lauseke	F10</translation>
-    </message>
-    <message>
-        <source>&amp;Previous S-expr	F11</source>
-        <translation type="vanished">&amp;Edellinen S-lauseke	F11</translation>
-    </message>
-    <message>
-        <source>&amp;Next S-expr	F12</source>
-        <translation type="vanished">&amp;Seuraava S-lauseke	F12</translation>
-    </message>
-    <message>
-        <source>&amp;Go to</source>
-        <translation type="vanished">&amp;Mene</translation>
-    </message>
-    <message>
-        <source>Select &amp;Font...</source>
-        <translation type="vanished">Valitse &amp;fontti...</translation>
-    </message>
-    <message>
-        <source>Split &amp;Vertically</source>
-        <translation type="vanished">Jaa &amp;pystysuunnassa</translation>
-    </message>
-    <message>
-        <source>Split &amp;Horizontally</source>
-        <translation type="vanished">Jaa &amp;vaakasuunnassa</translation>
-    </message>
-    <message>
-        <source>Show S&amp;cript</source>
-        <translation type="vanished">Näytä &amp;skripti</translation>
-    </message>
-    <message>
-        <source>Show &amp;Output</source>
-        <translation type="vanished">Näytä &amp;tuloste</translation>
-    </message>
-    <message>
-        <source>&amp;Large Icons</source>
-        <translation type="vanished">&amp;Suuret kuvakkeet</translation>
-    </message>
-    <message>
-        <source>&amp;Small Icons</source>
-        <translation type="vanished">&amp;Pienet kuvakkeet</translation>
-    </message>
-    <message>
-        <source>Toolbar</source>
-        <translation type="vanished">Työkalupalkki</translation>
-    </message>
-    <message>
-        <source>&amp;Go	F5</source>
-        <translation type="vanished">&amp;Mene	F5</translation>
-    </message>
-    <message>
-        <source>&amp;Stop	F6</source>
-        <translation type="vanished">Py&amp;säytä	F6</translation>
-    </message>
-    <message>
-        <source>&amp;About</source>
-        <translation type="vanished">&amp;Tietoja</translation>
-    </message>
-    <message>
-        <source>Script</source>
-        <translation type="vanished">Skripti</translation>
-    </message>
-    <message>
-        <source>Nyquist scripts (*.ny)|*.ny|Lisp scripts (*.lsp)|*.lsp|All files|*</source>
-        <translation type="vanished">Nyquist-skriptit (*.ny)|*.ny|Lisp-skriptit (*.lsp)|*.lsp|Kaikki tiedostot|*</translation>
-    </message>
-    <message>
-        <source>Script was not saved.</source>
-        <translation type="vanished">Skriptiä ei ole tallennettu.</translation>
-    </message>
-    <message>
-        <source>Find dialog</source>
-        <translation type="vanished">Hakudialogi</translation>
-    </message>
-    <message>
-        <source>Harvey Lubin (logo)</source>
-        <translation type="vanished">Harvey Lubin (logo)</translation>
-    </message>
-    <message>
-        <source>Tango Icon Gallery (toolbar icons)</source>
-        <translation type="vanished">Tango Icon Gallery (työkalurivin kuvakkeet)</translation>
-    </message>
-    <message>
-        <source>Leland Lucius</source>
-        <translation type="vanished">Leland Lucius</translation>
-    </message>
-    <message>
-        <source>(C) 2009 by Leland Lucius</source>
-        <translation type="vanished">(C) 2009 Leland Lucius</translation>
-    </message>
-    <message>
-        <source>External Audacity module which provides a simple IDE for writing effects.</source>
-        <translation type="vanished">Ulkoinen Audacity-moduuli, joka tarjoaa yksinkertaisen integroidun kehitysympäristön tehosteiden kirjoitukseen.</translation>
-    </message>
-    <message>
-        <source>Nyquist Effect Workbench</source>
-        <translation type="vanished">Nyquist-tehostetyöpöytä</translation>
-    </message>
-    <message>
-        <source>No matches found</source>
-        <translation type="vanished">Ei hakutuloksia</translation>
-    </message>
-    <message>
-        <source>Code has been modified. Are you sure?</source>
-        <translation type="vanished">Koodia on muokattu. Oletko varma?</translation>
-    </message>
-    <message>
-        <source>Nyquist Effect Workbench - </source>
-        <translation type="vanished">Nyquist-tehostetyöpöytä - </translation>
-    </message>
-    <message>
-        <source>New script</source>
-        <translation type="vanished">Uusi skripti</translation>
-    </message>
-    <message>
-        <source>Open script</source>
-        <translation type="vanished">Avaa skripti</translation>
-    </message>
-    <message>
-        <source>Save script</source>
-        <translation type="vanished">Tallenna skripti</translation>
-    </message>
-    <message>
-        <source>Save As</source>
-        <translation type="vanished">Tallenna nimellä</translation>
-    </message>
-    <message>
-        <source>Save script as...</source>
-        <translation type="vanished">Tallenna skripti nimellä...</translation>
-    </message>
-    <message>
-        <source>Copy to clipboard</source>
-        <translation type="vanished">Kopioi leikepöydälle</translation>
-    </message>
-    <message>
-        <source>Cut to clipboard</source>
-        <translation type="vanished">Leikkaa leikepöydälle</translation>
-    </message>
-    <message>
-        <source>Paste from clipboard</source>
-        <translation type="vanished">Liitä leikepöydältä</translation>
-    </message>
-    <message>
-        <source>Select All</source>
-        <translation type="vanished">Valitse kaikki</translation>
-    </message>
-    <message>
-        <source>Select all text</source>
-        <translation type="vanished">Valitse kaikki teksti</translation>
-    </message>
-    <message>
-        <source>Undo last change</source>
-        <translation type="vanished">Kumoa viimeinen muutos</translation>
-    </message>
-    <message>
-        <source>Redo previous change</source>
-        <translation type="vanished">Tee edellinen muutos uudelleen</translation>
-    </message>
-    <message>
-        <source>Find</source>
-        <translation type="vanished">Etsi</translation>
-    </message>
-    <message>
-        <source>Find text</source>
-        <translation type="vanished">Etsi tekstiä</translation>
-    </message>
-    <message>
-        <source>Match</source>
-        <translation type="vanished">Täsmää</translation>
-    </message>
-    <message>
-        <source>Go to matching paren</source>
-        <translation type="vanished">Mene vastaavaan sulkeeseen</translation>
-    </message>
-    <message>
-        <source>Top</source>
-        <translation type="vanished">Ylin</translation>
-    </message>
-    <message>
-        <source>Go to top S-expr</source>
-        <translation type="vanished">Mene ylös S-lausekkeeseen</translation>
-    </message>
-    <message>
-        <source>Go to higher S-expr</source>
-        <translation type="vanished">Mene ylempään S-lausekkeeseen</translation>
-    </message>
-    <message>
-        <source>Previous</source>
-        <translation type="vanished">Edellinen</translation>
-    </message>
-    <message>
-        <source>Go to previous S-expr</source>
-        <translation type="vanished">Mene edelliseen S-lausekkeeseen</translation>
-    </message>
-    <message>
-        <source>Go to next S-expr</source>
-        <translation type="vanished">Mene seuraavaan S-lausekkeeseen</translation>
-    </message>
-    <message>
-        <source>Start</source>
-        <extracomment>i18n-hint noun</extracomment>
-        <translation type="vanished">Alku</translation>
-    </message>
-    <message>
-        <source>Start script</source>
-        <translation type="vanished">Aloita skripti</translation>
-    </message>
-    <message>
-        <source>Stop script</source>
-        <translation type="vanished">Pysäytä skripiti</translation>
-    </message>
-    <message>
-        <source>Waiting for audio.com</source>
-        <translation type="vanished">Odotetaan audio.com-sivustoa</translation>
-    </message>
-    <message>
-        <source>An action on audio.com is required before you can continue. You can cancel this operation.</source>
-        <translation type="vanished">Sinun on suoritettava toiminto osoitteessa audio.com, ennen kuin voit jatkaa. Voit peruuttaa tämän toiminnon.</translation>
-    </message>
-    <message>
-        <source>Generating audio preview...</source>
-        <translation type="vanished">Luodaan äänen esikuuntelua...</translation>
-    </message>
-    <message>
-        <source>Open trace audio.com</source>
-        <translation type="vanished">Avaa osoitteesta audio.com</translation>
-    </message>
-    <message>
-        <source>Synchronizing project</source>
-        <translation type="vanished">Synkronoidaan projektia</translation>
-    </message>
-    <message>
-        <source>Previews can be updated only for Cloud projects</source>
-        <translation type="vanished">Esikatselut voidaan päivittää vain pilviprojekteille</translation>
-    </message>
-    <message>
-        <source>Save &amp;To Cloud...</source>
-        <translation type="vanished">Tallenna &amp;pilveen...</translation>
-    </message>
-    <message>
-        <source>&amp;Update Cloud Audio Preview</source>
-        <translation type="vanished">&amp;Päivitä Cloud Audio esikatselu</translation>
-    </message>
-    <message>
-        <source>Open Fro&amp;m Cloud...</source>
-        <translation type="vanished">A&amp;vaa pilvestä...</translation>
-    </message>
-    <message>
-        <source>S&amp;hare Audio...</source>
-        <translation type="vanished">Jaa &amp;ääni...</translation>
-    </message>
-    <message>
-        <source>Account</source>
-        <translation type="vanished">Tili</translation>
-    </message>
-    <message>
-        <source>Export behavior</source>
-        <translation type="vanished">Vientikäyttäytyminen</translation>
-    </message>
-    <message>
-        <source>S&amp;how 'How would you like to export?' dialog</source>
-        <translation type="vanished">Näytä 'Miten haluat viedä?' -valintaikkuna</translation>
-    </message>
-    <message>
-        <source>Save behavior</source>
-        <translation type="vanished">Tallennuskäyttäytyminen</translation>
-    </message>
-    <message>
-        <source>Always &amp;ask</source>
-        <translation type="vanished">Kysy &amp;aina</translation>
-    </message>
-    <message>
-        <source>Always &amp;save to cloud</source>
-        <translation type="vanished">Tallenna aina &amp;pilveen</translation>
-    </message>
-    <message>
-        <source>Always save to the co&amp;mputer</source>
-        <translation type="vanished">Tallenna aina tieto&amp;koneelle</translation>
-    </message>
-    <message>
-        <source>Temporary Cloud files directory</source>
-        <translation type="vanished">Väliaikainen pilvitiedostohakemisto</translation>
-    </message>
-    <message>
-        <source>&amp;Location:</source>
-        <translation type="vanished">&amp;Sijainti:</translation>
-    </message>
-    <message>
-        <source>&amp;Browse...</source>
-        <translation type="vanished">&amp;Selaa...</translation>
-    </message>
-    <message>
-        <source>days</source>
-        <translation type="vanished">päivää</translation>
-    </message>
-    <message>
-        <source>&amp;Remove temporary files after:</source>
-        <translation type="vanished">&amp;Poista väliaikaiset tiedostot tämän jälkeen:</translation>
-    </message>
-    <message>
-        <source>Preferences for Cloud</source>
-        <translation type="vanished">Pilviasetukset</translation>
-    </message>
-    <message>
-        <source>Choose a location to place the temporary directory</source>
-        <translation type="vanished">Valitse väliaikaisen kansion sijainti</translation>
-    </message>
-    <message>
-        <source>Temporary files directory cannot be on a FAT drive.</source>
-        <translation type="vanished">Väliaikaistiedostojen hakemisto ei voi olla FAT-levyllä.</translation>
-    </message>
-    <message>
-        <source>Cannot set the preference.</source>
-        <translation type="vanished">Asetusta ei voi asettaa.</translation>
-    </message>
-    <message>
-        <source>Failed.</source>
-        <translation type="vanished">Epäonnistui.</translation>
-    </message>
-    <message>
-        <source>Syncing to audio.com... (%d%%)</source>
-        <translation type="vanished">Synkronoidaan audio.comiin... (%1%%)</translation>
-    </message>
-    <message>
-        <source>Waiting for space to free up</source>
-        <translation type="vanished">Odotetaan tilan vapautumista</translation>
-    </message>
-    <message>
-        <source>Once you have made storage space available on audio.com, click Retry.</source>
-        <translation type="vanished">Kun olet vapauttanut tallennustilaa osoitteessa audio.com, klikkaa Yritä uudelleen.</translation>
-    </message>
-    <message>
-        <source>Share Audio</source>
-        <extracomment>i18n-hint: Share audio button text, keep as short as possible</extracomment>
-        <translation type="vanished">Jaa ääni</translation>
-    </message>
-    <message>
-        <source>&amp;Share Audio Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-that opens Share Audio dialog</extracomment>
-        <translation type="vanished">&amp;Jaa ääni -työkalupalkki</translation>
-    </message>
-    <message>
-        <source>Account not linked</source>
-        <translation type="vanished">Tiliä ei ole linkitetty</translation>
-    </message>
-    <message>
-        <source>&amp;Link Account</source>
-        <translation type="vanished">&amp;Linkitä tili</translation>
-    </message>
-    <message>
-        <source>&amp;Unlink Account</source>
-        <translation type="vanished">&amp;Poista tilin linkitys</translation>
-    </message>
-    <message>
-        <source>Open from audio.com</source>
-        <translation type="vanished">Avaa osoitteesta audio.com</translation>
-    </message>
-    <message>
-        <source>Don't show this again</source>
-        <translation type="vanished">Älä näytä tätä uudelleen</translation>
-    </message>
-    <message>
-        <source>Save to the Cloud (free)</source>
-        <translation type="vanished">Tallenna pilveen</translation>
-    </message>
-    <message>
-        <source>&amp;Save to Cloud</source>
-        <translation type="vanished">&amp;Tallenna pilveen</translation>
-    </message>
-    <message>
-        <source>Files are saved on your device.
-Note: To export MP3 and WAV files, use File &gt; Export Audio instead.</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Save to &amp;computer</source>
-        <translation type="vanished">Tallenna &amp;tietokoneelle</translation>
-    </message>
-    <message>
-        <source>&amp;Remember my choice and don't show again</source>
-        <translation type="vanished">&amp;Muista valintani äläkä näytä uudelleen</translation>
-    </message>
-    <message>
-        <source>How would you like to export?</source>
-        <extracomment>i18n-hint: A title that is shown on export that allows the user to select
-Cloud or local export.</extracomment>
-        <translation type="vanished">Miten haluaisit viedä?</translation>
-    </message>
-    <message>
-        <source>Share to audio.com</source>
-        <translation type="vanished">Jaa osoitteessa audio.com</translation>
-    </message>
-    <message>
-        <source>Uploads an uncompressed audio file and generates a shareable link. This link allows others to download the file in either .wav or .mp3 format.</source>
-        <translation type="vanished">Lataa pakkaamattoman äänitiedoston ja luo jaettavan linkin. Tämän linkin avulla muut voivat ladata tiedoston joko .wav- tai .mp3-muodossa.</translation>
-    </message>
-    <message>
-        <source>&amp;Share to audio.com</source>
-        <translation type="vanished">&amp;Jaa audio.com-sivustolle</translation>
-    </message>
-    <message>
-        <source>Export MP3s, WAVs, FLACs and other formats to your computer.</source>
-        <translation type="vanished">Vie MP3-, WAV-, FLAC- ja muita formaatteja tietokoneellesi.</translation>
-    </message>
-    <message>
-        <source>Export to &amp;computer</source>
-        <translation type="vanished">Vie &amp;tietokoneelle</translation>
-    </message>
-    <message>
-        <source>&amp;Don't show again</source>
-        <translation type="vanished">&amp;Älä näytä uudelleen</translation>
-    </message>
-    <message>
-        <source>Project Name</source>
-        <translation type="vanished">Projektin nimi</translation>
-    </message>
-    <message>
-        <source>Cloud saving requires a free audio.com account linked to Audacity. Press "Link account" above to proceed.</source>
-        <translation type="vanished">Pilvitallennus vaatii ilmaisen audio.com-tilin, joka on linkitetty Audacityyn. Jatka klikkaamalla "Yhdistä tili" yllä.</translation>
-    </message>
-    <message>
-        <source>Private</source>
-        <translation type="vanished">Yksityinen</translation>
-    </message>
-    <message>
-        <source>Unlisted</source>
-        <translation type="vanished">Listaamaton</translation>
-    </message>
-    <message>
-        <source>Public</source>
-        <translation type="vanished">Julkinen</translation>
-    </message>
-    <message>
-        <source>Save to computer...</source>
-        <translation type="vanished">Tallenna tietokoneelle...</translation>
-    </message>
-    <message>
-        <source>We encountered an issue syncing your file</source>
-        <translation type="vanished">Havaitsimme ongelman tiedostosi synkronoinnissa</translation>
-    </message>
-    <message>
-        <source>Don't worry, your changes will be saved to a temporary location and will be synchronized to your cloud copy when your internet connection resumes.</source>
-        <translation type="vanished">Älä huoli, tekemäsi muutokset tallennetaan väliaikaiseen sijaintiin ja synkronoidaan pilvikopioosi, kun internetyhteytesi palautuu.</translation>
-    </message>
-    <message>
-        <source>Log in to audio.com to proceed.</source>
-        <translation type="vanished">Jatka kirjautumalla sisään audio.com-sivustoon.</translation>
-    </message>
-    <message>
-        <source>We were unable to link your account. Please try again.</source>
-        <translation type="vanished">Emme voineet yhdistää tiliäsi. Yritä uudelleen.</translation>
-    </message>
-    <message>
-        <source>&amp;Try again</source>
-        <translation type="vanished">&amp;Yritä uudelleen</translation>
-    </message>
-    <message>
-        <source>Account linked successfully!</source>
-        <translation type="vanished">Tilin linkitys onnistui!</translation>
-    </message>
-    <message>
-        <source>Enter token to link your account</source>
-        <translation type="vanished">Liitä tilisi antamalla tunnus</translation>
-    </message>
-    <message>
-        <source>Token</source>
-        <translation type="vanished">Tunnus</translation>
-    </message>
-    <message>
-        <source>C&amp;ontinue</source>
-        <translation type="vanished">&amp;Jatka</translation>
-    </message>
-    <message>
-        <source>L&amp;ink audio.com account...</source>
-        <translation type="vanished">L&amp;inkitä audio.com-tili...</translation>
-    </message>
-    <message>
-        <source>This project is no longer saved to the Cloud</source>
-        <translation type="vanished">Tätä projektia ei enää tallenneta pilveen</translation>
-    </message>
-    <message>
-        <source>This project was removed from audio.com and therefore cannot be saved at this time. </source>
-        <translation type="vanished">Tämä projekti poistettiin osoitteesta audio.com, joten sitä ei voi tallentaa tällä hetkellä. </translation>
-    </message>
-    <message>
-        <source>You can either save it to the Cloud as a new project, or save it to your computer.</source>
-        <translation type="vanished">Voit joko tallentaa sen pilveen uutena projektina tai tallentaa sen tietokoneellesi.</translation>
-    </message>
-    <message>
-        <source>Save to Cloud</source>
-        <translation type="vanished">Tallenna pilveen</translation>
-    </message>
-    <message>
-        <source>Your project storage limit has been reached.</source>
-        <translation type="vanished">Projektisi tallennusraja on saavutettu.</translation>
-    </message>
-    <message>
-        <source>You may need to remove older projects to make space available. For more options, visit audio.com</source>
-        <translation type="vanished">Saatat joutua poistamaan vanhemmat projektit vapauttaaksesi tilaa. Lisää vaihtoehtoja löytyy osoitteesta audio.com</translation>
-    </message>
-    <message>
-        <source>You can also save this project locally to avoid losing changes.</source>
-        <translation type="vanished">Voit myös tallentaa tämän projektin paikallisesti välttääksesi muutosten menettämisen.</translation>
-    </message>
-    <message>
-        <source>Project version conflict detected</source>
-        <translation type="vanished">Projektin versioristiriita havaittu</translation>
-    </message>
-    <message>
-        <source>There's a newer version of this Audacity project on Audio.com. Saving this project will replace it as the newest version instead.</source>
-        <translation type="vanished">Tästä Audacity-projektista on uudempi versio osoitteessa Audio.com. Tämän projektin tallentaminen korvaa sen uusimpana versiona.</translation>
-    </message>
-    <message>
-        <source>Save this project</source>
-        <translation type="vanished">Tallenna tämä projekti</translation>
-    </message>
-    <message>
-        <source>Discard and open latest version</source>
-        <translation type="vanished">Hylkää ja avaa uusin versio</translation>
-    </message>
-    <message>
-        <source>Project contains unsaved changes. There's a newer version of this Audacity project on Audio.com. Discarding changes will open the latest version instead.</source>
-        <translation type="vanished">Projekti sisältää tallentamattomia muutoksia. Tästä Audacity-projektista on uudempi versio osoitteessa Audio.com. Muutosten hylkääminen avaa sen sijaan uusimman version.</translation>
-    </message>
-    <message>
-        <source>Open local project</source>
-        <translation type="vanished">Avoin paikallinen projekti</translation>
-    </message>
-    <message>
-        <source>Cloud project conflict</source>
-        <translation type="vanished">Pilviprojektin ristiriita</translation>
-    </message>
-    <message>
-        <source>You are attempting to open a new active version of this project when there is already one open. Please select which version you wish to remain open.</source>
-        <translation type="vanished">Yrität avata uutta aktiivista versiota tästä projektista, jollainen on jo auki. Valitse, minkä version haluat jättää auki.</translation>
-    </message>
-    <message>
-        <source>Keep currently open version</source>
-        <translation type="vanished">Säilytä nykyinen avoin versio</translation>
-    </message>
-    <message>
-        <source>Open new version</source>
-        <translation type="vanished">Avaa uusi versio</translation>
-    </message>
-    <message>
-        <source>Open from Cloud</source>
-        <translation type="vanished">Avaa pilvestä</translation>
-    </message>
-    <message>
-        <source>less than 1 minute</source>
-        <translation type="vanished">alle 1 minuutti</translation>
-    </message>
-    <message numerus="yes">
-        <source>one minutes ago</source>
-        <oldsource>%d minutes ago</oldsource>
-        <translation type="vanished">
-            <numerusform>minutes ago</numerusform>
-            <numerusform>%1 minuuttia sitten</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>one hour ago</source>
-        <oldsource>%d hours ago</oldsource>
-        <translation type="vanished">
-            <numerusform>one hour ago</numerusform>
-            <numerusform>%1 tuntia sitten</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Failed to authorize account</source>
-        <translation type="vanished">Tilin valtuuttaminen epäonnistui</translation>
-    </message>
-    <message>
-        <source>Loading projects list...</source>
-        <translation type="vanished">Ladataan projektiluetteloa...</translation>
-    </message>
-    <message>
-        <source>Failed to get projects list</source>
-        <translation type="vanished">Projektiluettelon hakeminen epäonnistui</translation>
-    </message>
-    <message>
-        <source>Cloud saved projects</source>
-        <translation type="vanished">Pilveen tallennetut projektit</translation>
-    </message>
-    <message>
-        <source>Search:</source>
-        <translation type="vanished">Hae:</translation>
-    </message>
-    <message>
-        <source>Prev</source>
-        <translation type="vanished">Ed</translation>
-    </message>
-    <message>
-        <source>View in audio.com</source>
-        <translation type="vanished">Katso osoitteessa audio.com</translation>
-    </message>
-    <message>
-        <source>Page %d of %d</source>
-        <translation type="vanished">Sivu %1 / %2</translation>
-    </message>
-    <message>
-        <source>Anyone will be able to listen to this audio.</source>
-        <translation type="vanished">Kuka tahansa voi kuunnella tätä ääntä.</translation>
-    </message>
-    <message>
-        <source>Only you and people you share a link with will be able to listen to this audio.</source>
-        <translation type="vanished">Vain sinä ja ihmiset, joille jaat linkin, voitte kuunnella tätä ääntä.</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to cancel?</source>
-        <translation type="vanished">Oletko varma, että haluat peruuttaa?</translation>
-    </message>
-    <message>
-        <source>Cancel upload to Audio.com</source>
-        <translation type="vanished">Peruuta lataus kohteeseen Audio.com</translation>
-    </message>
-    <message>
-        <source>Uploading audio...</source>
-        <translation type="vanished">Ladataan ääntä...</translation>
-    </message>
-    <message>
-        <source>We are unable to upload this file. Please try again and make sure to link to your audio.com account before uploading.</source>
-        <translation type="vanished">Emme pysty lähettämään tätä tiedostoa. Yritä uudelleen ja varmista, että linkität audio.com-tilisi ennen lataamista.</translation>
-    </message>
-    <message>
-        <source>Upload error</source>
-        <translation type="vanished">Latausvirhe</translation>
-    </message>
-    <message>
-        <source>We are unable to prepare this file for uploading.</source>
-        <translation type="vanished">Emme voi valmistella tätä tiedostoa latausta varten.</translation>
-    </message>
-    <message>
-        <source>Finalizing upload...</source>
-        <translation type="vanished">Viimeistetään latausta...</translation>
-    </message>
-    <message>
-        <source>Track Title</source>
-        <translation type="vanished">Raidan otsikko</translation>
-    </message>
-    <message>
-        <source>Sharing audio requires a free %s account linked to Audacity. %%Press "Link account" above to proceed.</source>
-        <extracomment>i18n-hint: %s substitutes for audio.com. %% creates a linebreak in this context.</extracomment>
-        <translation type="vanished">Äänen jakamiseen tarvitaan ilmainen %1-tili, joka on linkitetty Audacityyn. %%Jatka painamalla "Yhdistä tili" -painiketta yllä.</translation>
-    </message>
-    <message>
-        <source>audio.com</source>
-        <translation type="vanished">audio.com</translation>
-    </message>
-    <message>
-        <source>Press "Continue" to upload to audio.com</source>
-        <translation type="vanished">Paina "Jatka" ladataksesi osoitteeseen audio.com</translation>
-    </message>
-    <message>
-        <source>Preparing audio...</source>
-        <translation type="vanished">Valmistellaan ääntä...</translation>
-    </message>
-    <message>
-        <source>You are not authorized to access this project.</source>
-        <translation type="vanished">Sinulla ei ole lupaa käyttää tätä projektia.</translation>
-    </message>
-    <message>
-        <source>You tried to access a project that has expired.</source>
-        <translation type="vanished">Yritit käyttää projektia, joka on vanhentunut.</translation>
-    </message>
-    <message>
-        <source>Audacity had trouble connecting to the server.</source>
-        <translation type="vanished">Audacityllä oli ongelmia yhteyden muodostamisessa palvelimeen.</translation>
-    </message>
-    <message>
-        <source>The project is too large to upload. Please save it to your computer instead.</source>
-        <translation type="vanished">Projekti on liian suuri ladattavaksi. Tallenna se sen sijaan tietokoneellesi.</translation>
-    </message>
-    <message>
-        <source>You don't have access to this project.</source>
-        <translation type="vanished">Sinulla ei ole pääsyä tähän projektiin.</translation>
-    </message>
-    <message>
-        <source>The project could not be found.</source>
-        <translation type="vanished">Projektia ei löytynyt.</translation>
-    </message>
-    <message>
-        <source>The server responded with something Audacity could not understand.</source>
-        <translation type="vanished">Palvelin vastasi jotain, jota Audacity ei ymmärtänyt.</translation>
-    </message>
-    <message>
-        <source>Audacity encountered an internal error.</source>
-        <translation type="vanished">Audacity havaitsi sisäisen virheen.</translation>
-    </message>
-    <message>
-        <source>Audio.com encountered an internal error.</source>
-        <translation type="vanished">Audio.com havaitsi sisäisen virheen.</translation>
-    </message>
-    <message>
-        <source>Audacity encountered an unknown error.</source>
-        <translation type="vanished">Audacity havaitsi tuntemattoman virheen.</translation>
-    </message>
-    <message>
-        <source>Sync failed</source>
-        <translation type="vanished">Synkronointi epäonnistui</translation>
-    </message>
-    <message>
-        <source>Error details:
-%s</source>
-        <translation type="vanished">Virheen tiedot:
-%1</translation>
-    </message>
-    <message>
-        <source>Syncing your project</source>
-        <translation type="vanished">Synkronoidaan projektia</translation>
-    </message>
-    <message>
-        <source>The project will sync in background while you work. You can check the sync status on the bottom right corner of Audacity at any time</source>
-        <translation type="vanished">Projekti synkronoituu taustalla, kun työskentelet. Voit tarkistaa synkronoinnin tilan Audacityn oikeasta alakulmasta milloin tahansa</translation>
-    </message>
-    <message>
-        <source>All saved changes will now update to the cloud. You can manage this file from your uploaded projects page on audio.com</source>
-        <translation type="vanished">Kaikki tallennetut muutokset päivitetään nyt pilveen. Voit hallita tätä tiedostoa lataamiesi projektien sivulta osoitteessa audio.com</translation>
-    </message>
-    <message>
-        <source>Cloud project incomplete</source>
-        <translation type="vanished">Pilviprojekti on keskeneräinen</translation>
-    </message>
-    <message>
-        <source>The latest version of this project was not fully uploaded to audio.com. You can load the last complete version instead.</source>
-        <translation type="vanished">Tämän projektin uusinta versiota ei ladattu kokonaan audio.com-sivustolle. Voit ladata sen sijaan viimeisen täydellisen version.</translation>
-    </message>
-    <message>
-        <source>No version of this project has been fully uploaded to audio.com. It cannot be loaded.</source>
-        <translation type="vanished">Tämän projektin versiota ei ole ladattu kokonaisuudessaan audio.com-sivustolle. Sitä ei voi ladata.</translation>
-    </message>
-    <message>
-        <source>You have canceled this upload to audio.com</source>
-        <translation type="vanished">Olet peruuttanut tämän latauksen audio.com-sivustolle</translation>
-    </message>
-    <message>
-        <source>Retry</source>
-        <translation type="vanished">Yritä uudelleen</translation>
-    </message>
-    <message>
-        <source>An action on audio.com is required before you can continue. Once you are done with it, click Retry</source>
-        <translation type="vanished">Sinun on suoritettava toiminto osoitteessa audio.com, ennen kuin voit jatkaa. Kun olet valmis, klikkaa Yritä uudelleen</translation>
-    </message>
-    <message>
-        <source>Exported Allegro (.gro) files save time as:</source>
-        <translation type="vanished">Vietyjen Allegro (.gro) -tiedostojen aikamuotona on:</translation>
-    </message>
-    <message>
-        <source>Please select only one Note Track at a time.</source>
-        <translation type="vanished">Valitse vain yksi nuottiraita kerrallaan.</translation>
-    </message>
-    <message>
-        <source>Please select a Note Track.</source>
-        <translation type="vanished">Valitse nuottiraita.</translation>
-    </message>
-    <message>
-        <source>Export MIDI As:</source>
-        <translation type="vanished">Vie MIDI nimellä:</translation>
-    </message>
-    <message>
-        <source>MIDI file</source>
-        <translation type="vanished">MIDI-tiedosto</translation>
-    </message>
-    <message>
-        <source>Allegro file</source>
-        <translation type="vanished">Allegro-tiedosto</translation>
-    </message>
-    <message>
-        <source>You have selected a filename with an unrecognized file extension.
-Do you want to continue?</source>
-        <translation type="vanished">Olet valinnut tiedostonimen jolla on tunnistamaton tiedostopääte.
-Haluatko jatkaa?</translation>
-    </message>
-    <message>
-        <source>Export MI&amp;DI...</source>
-        <translation type="vanished">Vie MI&amp;DI...</translation>
-    </message>
-    <message>
-        <source>Imported MIDI from '%s'</source>
-        <translation type="vanished">Tuotiin MIDI tiedostosta '%1'</translation>
-    </message>
-    <message>
-        <source>Import MIDI</source>
-        <translation type="vanished">Tuo MIDI</translation>
-    </message>
-    <message>
-        <source>Could not open file %s: Filename too short.</source>
-        <translation type="vanished">Tiedostoa %1 ei voitu avata: Tiedostonimi on liian lyhyt.</translation>
-    </message>
-    <message>
-        <source>Could not open file %s: Incorrect filetype.</source>
-        <translation type="vanished">Tiedostoa %1 ei voitu avata: Virheellinen tiedostotyyppi.</translation>
-    </message>
-    <message>
-        <source>Could not open file %s.</source>
-        <translation type="vanished">Tiedostoa %1 ei voitu avata.</translation>
-    </message>
-    <message>
-        <source>Select a MIDI file</source>
-        <translation type="vanished">Valitse MIDI-tiedosto</translation>
-    </message>
-    <message>
-        <source>MIDI and Allegro files</source>
-        <translation type="vanished">MIDI- ja Allegro-tiedostot</translation>
-    </message>
-    <message>
-        <source>MIDI files</source>
-        <translation type="vanished">MIDI-tiedostot</translation>
-    </message>
-    <message>
-        <source>Allegro files</source>
-        <translation type="vanished">Allegro-tiedostot</translation>
-    </message>
-    <message>
-        <source>&amp;MIDI...</source>
-        <translation type="vanished">&amp;MIDI...</translation>
-    </message>
-    <message>
-        <source>No revision identifier was provided</source>
-        <translation type="vanished">Versiotunnusta ei annettu</translation>
-    </message>
-    <message>
-        <source>%s, system administration</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, järjestelmänhallinta</translation>
-    </message>
-    <message>
-        <source>%s, co-founder and developer</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, perustaja ja kehittäjä</translation>
-    </message>
-    <message>
-        <source>%s, designer</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, suunnittelija</translation>
-    </message>
-    <message>
-        <source>%s, developer</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, kehittäjä</translation>
-    </message>
-    <message>
-        <source>%s, developer and support</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, kehitys ja tuki</translation>
-    </message>
-    <message>
-        <source>%s, documentation and support</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, dokumentaatio ja tuki</translation>
-    </message>
-    <message>
-        <source>%s, QA tester, documentation and support</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, laatutarkistus, kehitys ja tuki</translation>
-    </message>
-    <message>
-        <source>%s, documentation and support, French</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, dokumentaatio ja tuki, ranska</translation>
-    </message>
-    <message>
-        <source>%s, quality assurance</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, laadunvarmistus</translation>
-    </message>
-    <message>
-        <source>%s, accessibility advisor</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, esteettömyysneuvoja</translation>
-    </message>
-    <message>
-        <source>%s, graphic artist</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, graafikko</translation>
-    </message>
-    <message>
-        <source>%s, composer</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, säveltäjä</translation>
-    </message>
-    <message>
-        <source>%s, tester</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, testaaja</translation>
-    </message>
-    <message>
-        <source>%s, Nyquist plug-ins</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, Nyquist-laajennukset</translation>
-    </message>
-    <message>
-        <source>%s, web developer</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, www-kehittäjä</translation>
-    </message>
-    <message>
-        <source>%s, graphics</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">%1, grafiikka</translation>
-    </message>
-    <message>
-        <source>%s, effects presets</source>
-        <extracomment>i18n-hint: For "About Audacity..." credits, substituting a person's proper name</extracomment>
-        <translation type="vanished">Valitse esiasetus</translation>
-    </message>
-    <message>
-        <source>%s (incorporating %s, %s, %s, %s and %s)</source>
-        <translation type="vanished">%1 (sisältää %2, %3, %4, %5 ja %6)</translation>
-    </message>
-    <message>
-        <source>About %s</source>
-        <extracomment>i18n-hint: information about the program</extracomment>
-        <translation type="vanished">%1-tiedot</translation>
-    </message>
-    <message>
-        <source>&lt;h3&gt;</source>
-        <translation type="vanished">&lt;h3&gt;</translation>
-    </message>
-    <message>
-        <source>%s the free, open source, cross-platform software for recording and editing sounds.</source>
-        <extracomment>i18n-hint: The program's name substitutes for %s</extracomment>
-        <translation type="vanished">%1 on ilmainen, avoimen lähdekoodin, järjestelmäriippumaton ohjelmisto äänen nauhoitukseen ja editointiin.</translation>
-    </message>
-    <message>
-        <source>%s Team Members</source>
-        <extracomment>i18n-hint: The program's name substitutes for %s</extracomment>
-        <translation type="vanished">%1-tiimijäsenet</translation>
-    </message>
-    <message>
-        <source>Emeritus:</source>
-        <translation type="vanished">Emeritus:</translation>
-    </message>
-    <message>
-        <source>Distinguished %s Team members, not currently active</source>
-        <extracomment>i18n-hint: The program's name substitutes for %s</extracomment>
-        <translation type="vanished">Arvostetut %1-tiimin jäsenet, jotka eivät ole tällä hetkellä aktiivisia</translation>
-    </message>
-    <message>
-        <source>Contributors</source>
-        <translation type="vanished">Avustajat</translation>
-    </message>
-    <message>
-        <source>Website and Graphics</source>
-        <translation type="vanished">Verkkosivusto ja grafiikka</translation>
-    </message>
-    <message>
-        <source>Translators</source>
-        <translation type="vanished">Kääntäjät</translation>
-    </message>
-    <message>
-        <source>%s includes code from the following projects:</source>
-        <extracomment>i18n-hint: The program's name substitutes for %s</extracomment>
-        <translation type="vanished">%1 sisältää koodia seuraavista projekteista:</translation>
-    </message>
-    <message>
-        <source>Special thanks:</source>
-        <translation type="vanished">Erityiskiitokset:</translation>
-    </message>
-    <message>
-        <source>%s website: </source>
-        <extracomment>i18n-hint: The program's name substitutes for %s</extracomment>
-        <translation type="vanished">%1-verkkosivusto: </translation>
-    </message>
-    <message>
-        <source>%s software is copyright %s 1999-2024 %s Team.</source>
-        <extracomment>i18n-hint Audacity's name substitutes for first and third %s,
-and a "copyright" symbol for the second</extracomment>
-        <translation type="vanished">%1 software is copyright %2 1999-2024 %3 Team.</translation>
-    </message>
-    <message>
-        <source>The name %s is a registered trademark.</source>
-        <extracomment>i18n-hint Audacity's name substitutes for %s</extracomment>
-        <translation type="vanished">%1-nimi on rekisteröity tavaramerkki.</translation>
-    </message>
-    <message>
-        <source>Build Information</source>
-        <translation type="vanished">Koosteen tiedot</translation>
-    </message>
-    <message>
-        <source>The Build</source>
-        <extracomment>i18n-hint: Information about when audacity was compiled follows</extracomment>
-        <translation type="vanished">Koontiversio</translation>
-    </message>
-    <message>
-        <source>Program build date:</source>
-        <translation type="vanished">Ohjelman koontipäivä:</translation>
-    </message>
-    <message>
-        <source>Commit Id:</source>
-        <translation type="vanished">Koontitunnus:</translation>
-    </message>
-    <message>
-        <source>Debug build (debug level %d)</source>
-        <translation type="vanished">Virheenkorjausversio (taso %1)</translation>
-    </message>
-    <message>
-        <source>Release build (debug level %d)</source>
-        <translation type="vanished">Julkaisuversio (virheenkorjaustaso %1)</translation>
-    </message>
-    <message>
-        <source>%s, 64 bits</source>
-        <translation type="vanished">%1, 64-bittinen</translation>
-    </message>
-    <message>
-        <source>%s, 32 bits</source>
-        <translation type="vanished">%1, 32 bittinen</translation>
-    </message>
-    <message>
-        <source>Build type:</source>
-        <translation type="vanished">Koostetyyppi:</translation>
-    </message>
-    <message>
-        <source>Compiler:</source>
-        <translation type="vanished">Kääntäjä:</translation>
-    </message>
-    <message>
-        <source>Installation Prefix:</source>
-        <extracomment>i18n-hint: The directory audacity is installed into (on *nix systems)</extracomment>
-        <translation type="vanished">Asennuksen etuliite:</translation>
-    </message>
-    <message>
-        <source>Cache folder:</source>
-        <translation type="vanished">Välimuistikansio:</translation>
-    </message>
-    <message>
-        <source>Settings folder:</source>
-        <translation type="vanished">Asetuskansio:</translation>
-    </message>
-    <message>
-        <source>Data folder:</source>
-        <translation type="vanished">Datakansio:</translation>
-    </message>
-    <message>
-        <source>State folder:</source>
-        <translation type="vanished">Tilakansio:</translation>
-    </message>
-    <message>
-        <source>Core Libraries</source>
-        <extracomment>i18n-hint: Libraries that are essential to audacity</extracomment>
-        <translation type="vanished">Ydinkirjastot</translation>
-    </message>
-    <message>
-        <source>Cross-platform GUI library</source>
-        <translation type="vanished">Alustariippumaton käyttöliittymäkirjasto</translation>
-    </message>
-    <message>
-        <source>Audio playback and recording</source>
-        <translation type="vanished">Äänen toisto ja nauhoitus</translation>
-    </message>
-    <message>
-        <source>Sample rate conversion</source>
-        <translation type="vanished">Näytetaajuuden muuttaminen</translation>
-    </message>
-    <message>
-        <source>File Format Support</source>
-        <translation type="vanished">Tiedostomuototuki</translation>
-    </message>
-    <message>
-        <source>MP3 Import</source>
-        <translation type="vanished">MP3 tuonti</translation>
-    </message>
-    <message>
-        <source>MP3 Export</source>
-        <extracomment>i18n-hint: LAME is the codec name. This name should not be translated</extracomment>
-        <translation type="vanished">MP3 vienti</translation>
-    </message>
-    <message>
-        <source>Opus Import and Export</source>
-        <extracomment>i18n-hint: Opus is the codec name. This name should not be translated
-i18n-hint: Opus is the codec name. This name should not be translated
-i18n-hint: Opus is the codec name. This name should not be translated</extracomment>
-        <translation type="vanished">Opus tuonti ja vienti</translation>
-    </message>
-    <message>
-        <source>Ogg Vorbis Import and Export</source>
-        <extracomment>i18n-hint: Ogg is the container format. Vorbis is the compression codec.
-* Both are proper nouns and shouldn't be translated</extracomment>
-        <translation type="vanished">Ogg Vorbis -tuonti ja -vienti</translation>
-    </message>
-    <message>
-        <source>ID3 tag support</source>
-        <translation type="vanished">ID3-tunnistetuki</translation>
-    </message>
-    <message>
-        <source>FLAC import and export</source>
-        <extracomment>i18n-hint: FLAC stands for Free Lossless Audio Codec, but is effectively
-* a proper noun and so shouldn't be translated</extracomment>
-        <translation type="vanished">FLAC-vienti ja -tuonti</translation>
-    </message>
-    <message>
-        <source>MP2 export</source>
-        <translation type="vanished">MP2-vienti</translation>
-    </message>
-    <message>
-        <source>FFmpeg Import/Export</source>
-        <translation type="vanished">FFmpeg-tuonti/vienti</translation>
-    </message>
-    <message>
-        <source>Features</source>
-        <translation type="vanished">Ominaisuudet</translation>
-    </message>
-    <message>
-        <source>Plug-in support</source>
-        <translation type="vanished">Liitännäistuki</translation>
-    </message>
-    <message>
-        <source>Sound card mixer support</source>
-        <translation type="vanished">Äänikortin mikserituki</translation>
-    </message>
-    <message>
-        <source>Pitch and Tempo Change support</source>
-        <translation type="vanished">Sävelkorkeuden ja tempomuutoksen tuki</translation>
-    </message>
-    <message>
-        <source>Extreme Pitch and Tempo Change support</source>
-        <translation type="vanished">Erityisen sävelkorkeuden ja tempomuutoksen tuki</translation>
-    </message>
-    <message>
-        <source>Legal</source>
-        <comment>about dialog</comment>
-        <translation type="vanished">Laillisuus</translation>
-    </message>
-    <message>
-        <source>GPL License</source>
-        <translation type="vanished">GPL-lisenssi</translation>
-    </message>
-    <message>
-        <source>PRIVACY POLICY</source>
-        <comment>about dialog</comment>
-        <extracomment>i18n-hint: For "About Audacity...": Title for Privacy Policy section</extracomment>
-        <translation type="vanished">TIETOSUOJAKÄYTÄNTÖ</translation>
-    </message>
-    <message>
-        <source>App update checking and error reporting require network access. These features are optional.</source>
-        <translation type="vanished">Sovelluspäivitysten tarkistus ja virheraportointi edellyttävät verkkoyhteyttä. Nämä ominaisuudet ovat valinnaisia.</translation>
-    </message>
-    <message>
-        <source>See %s for more info.</source>
-        <extracomment>i18n-hint: %s will be replaced with "our Privacy Policy"</extracomment>
-        <translation type="vanished">Katso lisätietoa %1 .</translation>
-    </message>
-    <message>
-        <source>Click and drag to define a looping region.</source>
-        <translation type="vanished">Määritä silmukka-alue klikkaamalla ja vetämällä.</translation>
-    </message>
-    <message>
-        <source>Timeline actions disabled during recording</source>
-        <translation type="vanished">Aikajanan ominaisuudet ei käytössä tallennuksen aikana</translation>
-    </message>
-    <message>
-        <source>Click and drag to adjust, double-click to reset</source>
-        <translation type="vanished">Klikkaa ja vedä säätääksesi, kaksoisklikkaa nollataksesi</translation>
-    </message>
-    <message>
-        <source>Record/Playhead</source>
-        <extracomment>i18n-hint: This text is a tooltip on the icon (of a pin) representing
-the temporal position in the audio.</extracomment>
-        <translation type="vanished">Äänitys/Toistopää</translation>
-    </message>
-    <message>
-        <source>Timeline</source>
-        <translation type="vanished">Aikajana</translation>
-    </message>
-    <message>
-        <source>Click or drag to begin Seek</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips</extracomment>
-        <translation type="vanished">Aloita haku klikkaamalla tai vetämällä</translation>
-    </message>
-    <message>
-        <source>Click or drag to begin Scrub</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips</extracomment>
-        <translation type="vanished">Aloita rullaus klikkaamalla tai vetämällä</translation>
-    </message>
-    <message>
-        <source>Click &amp; move to Scrub. Click &amp; drag to Seek.</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips</extracomment>
-        <translation type="vanished">Rullaa: Klikkaa ja siirrä. Hae: Klikkaa ja vedä.</translation>
-    </message>
-    <message>
-        <source>Move to Seek</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips</extracomment>
-        <translation type="vanished">Hae liikuttamalla</translation>
-    </message>
-    <message>
-        <source>Move to Scrub</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips</extracomment>
-        <translation type="vanished">Rullaa liikuttamalla</translation>
-    </message>
-    <message>
-        <source>Drag to Seek. Release to stop seeking.</source>
-        <translation type="vanished">Hae vetämällä. Irrotus lopettaa hakemisen.</translation>
-    </message>
-    <message>
-        <source>Drag to Seek. Release and move to Scrub.</source>
-        <translation type="vanished">Hae vetämällä. Rullaa irrottamalla ja siirtämällä.</translation>
-    </message>
-    <message>
-        <source>Move to Scrub. Drag to Seek.</source>
-        <translation type="vanished">Rullaa liikuttamalla. Hae vetämällä.</translation>
-    </message>
-    <message>
-        <source>Quick-Play disabled</source>
-        <translation type="vanished">Pikatoisto ei käytössä</translation>
-    </message>
-    <message>
-        <source>Quick-Play enabled</source>
-        <translation type="vanished">Pikatoisto käytössä</translation>
-    </message>
-    <message>
-        <source>Timeline Options</source>
-        <translation type="vanished">Aikajanan asetukset</translation>
-    </message>
-    <message>
-        <source>Minutes and Seconds</source>
-        <translation type="vanished">Minuutit ja sekunnit</translation>
-    </message>
-    <message>
-        <source>Beats and Measures</source>
-        <translation type="vanished">Iskut ja tahdit</translation>
-    </message>
-    <message>
-        <source>Setting a loop region also makes an audio selection</source>
-        <translation type="vanished">Silmukka-alueen asettaminen tekee myös äänen valinnan</translation>
-    </message>
-    <message>
-        <source>Clear Loop</source>
-        <extracomment>i18n-hint Clear is a verb</extracomment>
-        <translation type="vanished">Tyhjennä silmukka</translation>
-    </message>
-    <message>
-        <source>Set Loop To Selection</source>
-        <translation type="vanished">Aseta silmukka valintaan</translation>
-    </message>
-    <message>
-        <source>Scroll view to playhead</source>
-        <translation type="vanished">Vieritä näkymää toistopaikkaan</translation>
-    </message>
-    <message>
-        <source>Continuous scrolling</source>
-        <translation type="vanished">Jatkuva vieritys</translation>
-    </message>
-    <message>
-        <source>Failed to remove %s</source>
-        <translation type="vanished">Kohteen %1 poisto epäonnistui</translation>
-    </message>
-    <message>
-        <source>Failed!</source>
-        <translation type="vanished">Epäonnistui!</translation>
-    </message>
-    <message>
-        <source>%s could not be found.
-
-It has been removed from the list of recent files.</source>
-        <translation type="vanished">Tiedostoa %1 ei löytynyt.
-
-Se on poistettu luettelosta 'Viimeksi avatut tiedostot'.</translation>
-    </message>
-    <message>
-        <source>SQLite library failed to initialize.  Audacity cannot continue.</source>
-        <translation type="vanished">SQLite-kirjastoa ei voitu alustaa.  Audacity ei voi käynnistyä.</translation>
-    </message>
-    <message>
-        <source>Block size must be within 256 to 100000000
-</source>
-        <translation type="vanished">Lohkon koko täytyy olla välillä 256 - 100000000
-</translation>
-    </message>
-    <message>
-        <source>Audacity is starting up...</source>
-        <translation type="vanished">Audacity käynnistyy...</translation>
-    </message>
-    <message>
-        <source>&amp;New</source>
-        <extracomment>i18n-hint: "New" is an action (verb) to create a NEW project</extracomment>
-        <translation type="vanished">&amp;Uusi</translation>
-    </message>
-    <message>
-        <source>&amp;Open...</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">&amp;Avaa...</translation>
-    </message>
-    <message>
-        <source>Open &amp;Recent...</source>
-        <translation type="vanished">Avaa &amp;viimeisin...</translation>
-    </message>
-    <message>
-        <source>&amp;About Audacity...</source>
-        <translation type="vanished">&amp;Tietoja Audacitystä...</translation>
-    </message>
-    <message>
-        <source>&amp;Preferences...</source>
-        <translation type="vanished">&amp;Asetukset...</translation>
-    </message>
-    <message>
-        <source>Audacity could not find a safe place to store temporary files.
-Audacity needs a place where automatic cleanup programs won't delete the temporary files.
-Please enter an appropriate directory in the preferences dialog.</source>
-        <translation type="vanished">Audacity ei löytänyt turvallista paikkaa väliaikaisten tiedostojen tallentamiseen.
-Audacity tarvitsee paikan, josta automaattiset puhdistusohjelmat eivät poista väliaikaisia tiedostoja.
-Anna sopiva hakemisto asetusikkunassa.</translation>
-    </message>
-    <message>
-        <source>Audacity could not find a place to store temporary files.
-Please enter an appropriate directory in the preferences dialog.</source>
-        <translation type="vanished">Audacity ei löytänyt paikkaa väliaikaisille tiedostoille.
-Anna sopiva hakemisto asetusten valintaikkunaan.</translation>
-    </message>
-    <message>
-        <source>Audacity is now going to exit. Please launch Audacity again to use the new temporary directory.</source>
-        <translation type="vanished">Audacity on nyt sulkeutumassa. Audacityn uudelleenkäynnistys ottaa uuden tilapäishakemiston käyttöön.</translation>
-    </message>
-    <message>
-        <source>Running two copies of Audacity simultaneously may cause
-data loss or cause your system to crash.
-
-</source>
-        <translation type="vanished">Kahden Audacityn samanaikaisesta käytöstä voi seurata
-datan menetys tai järjestelmän kaatuminen.
-</translation>
-    </message>
-    <message>
-        <source>Audacity was not able to lock the temporary files directory.
-This folder may be in use by another copy of Audacity.
-</source>
-        <translation type="vanished">Audacity ei voinut lukita väliaikaistiedostojen hakemistoa.
-Se saattaa olla toisen Audacity-kopion käytössä.
-</translation>
-    </message>
-    <message>
-        <source>Do you still want to start Audacity?</source>
-        <translation type="vanished">Haluatko silti käynnistää Audacityn?</translation>
-    </message>
-    <message>
-        <source>Error Locking Temporary Folder</source>
-        <translation type="vanished">Virhe tilapäiskansion lukitsemisessa</translation>
-    </message>
-    <message>
-        <source>The system has detected that another copy of Audacity is running.
-</source>
-        <translation type="vanished">Järjestelmä on havainnut toisen käynnissä olevan Audacityn.
-</translation>
-    </message>
-    <message>
-        <source>Use the New or Open commands in the currently running Audacity
-process to open multiple projects simultaneously.
-</source>
-        <translation type="vanished">Jos tarvitset avata useamman projektin Audacityyn, 
-käytä käynnissä olevan Audacityn Uusi tai Avaa -komentoa.
-</translation>
-    </message>
-    <message>
-        <source>Audacity is already running</source>
-        <translation type="vanished">Audacity on jo käynnissä</translation>
-    </message>
-    <message>
-        <source>Unable to create shared memory segment.
-
-error code=%d : "%s".</source>
-        <translation type="vanished">Jaetun muistisegmentin luominen epäonnistui.
-
-virhekoodi=%1 : "%2".</translation>
-    </message>
-    <message>
-        <source>Audacity Startup Failure</source>
-        <translation type="vanished">Audacity-käynnistysvirhe</translation>
-    </message>
-    <message>
-        <source>Unable to acquire semaphores.
-
-This is likely due to a resource shortage
-and a reboot may be required.</source>
-        <translation type="vanished">Semaforeja ei voitu lukita.
-
-Resurssit saattavat olla vähissä.
-Järjestelmä tulee ehkä käynnistää
-uudelleen.</translation>
-    </message>
-    <message>
-        <source>Unable to create semaphores.
-
-This is likely due to a resource shortage
-and a reboot may be required.</source>
-        <translation type="vanished">Semaforeja ei voitu luoda.
-
-Resurssit saattavat olla vähissä.
-Järjestelmä tulee ehkä käynnistää
-uudelleen.</translation>
-    </message>
-    <message>
-        <source>Unable to acquire lock semaphore.
-
-This is likely due to a resource shortage
-and a reboot may be required.</source>
-        <translation type="vanished">Lukkosemaforia ei voitu lukita.
-
-Resurssit saattavat olla vähissä.
-Järjestelmä tulee ehkä käynnistää
-uudelleen.</translation>
-    </message>
-    <message>
-        <source>Unable to acquire server semaphore.
-
-This is likely due to a resource shortage
-and a reboot may be required.</source>
-        <translation type="vanished">Palvelinsemaforia ei voitu lukita.
-
-Resurssit saattavat olla vähissä.
-Järjestelmä tulee ehkä käynnistää
-uudelleen.</translation>
-    </message>
-    <message>
-        <source>The Audacity IPC server failed to initialize.
-
-This is likely due to a resource shortage
-and a reboot may be required.</source>
-        <translation type="vanished">Audacityn IPC-palvelin ei käynnistynyt.
-
-Resurssit saattavat olla vähissä.
-Järjestelmä tulee ehkä käynnistää
-uudelleen.</translation>
-    </message>
-    <message>
-        <source>An unrecoverable error has occurred during startup</source>
-        <translation type="vanished">Käynnistyksen aikana tapahtui korjaamaton virhe</translation>
-    </message>
-    <message>
-        <source>set max disk block size in bytes</source>
-        <extracomment>i18n-hint: This controls the number of bytes that Audacity will
-*           use when writing files to the disk</extracomment>
-        <translation type="vanished">aseta levylohkon enimmäiskoko tavuina</translation>
-    </message>
-    <message>
-        <source>replay a journal file</source>
-        <extracomment>i18n-hint: brief help message for Audacity's command-line options
-A journal contains a sequence of user interface interactions to be repeated
-"log," "trail," "trace" have somewhat similar meanings</extracomment>
-        <translation type="vanished">toista lokikirjatiedosto</translation>
-    </message>
-    <message>
-        <source>this help message</source>
-        <extracomment>i18n-hint: This displays a list of available options</extracomment>
-        <translation type="vanished">tämä ohje</translation>
-    </message>
-    <message>
-        <source>run self diagnostics</source>
-        <extracomment>i18n-hint: This runs a set of automatic tests on Audacity itself</extracomment>
-        <translation type="vanished">suorita itsediagnostiikka</translation>
-    </message>
-    <message>
-        <source>display Audacity version</source>
-        <extracomment>i18n-hint: This displays the Audacity version</extracomment>
-        <translation type="vanished">näytä Audacityn versio</translation>
-    </message>
-    <message>
-        <source>audio or project file name</source>
-        <extracomment>i18n-hint: This is a list of one or more files that Audacity
-*           should open upon startup</extracomment>
-        <translation type="vanished">ääni- tai projektitiedoston nimi</translation>
-    </message>
-    <message>
-        <source>Handle 'audacity://' url</source>
-        <extracomment>i18n-hint: This option is used to handle custom URLs in Audacity</extracomment>
-        <translation type="vanished">Käsittele 'audacity://' url</translation>
-    </message>
-    <message>
-        <source>Audacity project (.aup3) files are not currently 
-associated with Audacity. 
-
-Associate them, so they open on double-click?</source>
-        <translation type="vanished">Audacity-projektitiedostoja (.aup3) ei ole tällä hetkellä 
-liitetty Audacityyn. 
-
-Liitetäänkö ne, jotta ne avautuvat kaksoisklikkauksella?</translation>
-    </message>
-    <message>
-        <source>Audacity Project Files</source>
-        <translation type="vanished">Audacityn projektitiedostot</translation>
-    </message>
-    <message>
-        <source>Audacity Configuration Error</source>
-        <translation type="vanished">Audacityn määritysvirhe</translation>
-    </message>
-    <message>
-        <source>The following configuration file could not be accessed:
-
-	%s
-
-This could be caused by many reasons, but the most likely are that the disk is full or you do not have write permissions to the file. 
-
-You can attempt to correct the issue and then click "Retry" to continue.
-
-If you choose to "Quit Audacity", your project may be left in an unsaved state which will be recovered the next time you open it.</source>
-        <translation type="vanished">Seuraavaa asetustiedostoa ei voitu käyttää:
-
-	%1
-
-Tämä voi johtua monista syistä, mutta todennäköisimmin levy on täynnä tai sinulla ei ole kirjoitusoikeuksia tiedostoon.
-
-Voit yrittää korjata ongelman ja jatkaa klikkaamalla "Yritä uudelleen".
-
-Jos valitset "Lopeta Audacity", projektisi saatetaan jättää tallentamattomaan tilaan, joka palautetaan, kun avaat sen seuraavan kerran.</translation>
-    </message>
-    <message>
-        <source>&amp;Quit Audacity</source>
-        <translation type="vanished">&amp;Lopeta Audacity</translation>
-    </message>
-    <message>
-        <source>&amp;Retry</source>
-        <translation type="vanished">&amp;Yritä uudelleen</translation>
-    </message>
-    <message>
-        <source>Configure Project from Music File</source>
-        <translation type="vanished">Määritä projekti musiikkitiedostosta</translation>
-    </message>
-    <message>
-        <source>Automatic Music Configuration</source>
-        <translation type="vanished">Automaattinen musiikin konfigurointi</translation>
-    </message>
-    <message>
-        <source>Audacity detected this file to be %s bpm.
-Would you like to enable music view and set the project tempo to %s?</source>
-        <translation type="vanished">Audacity havaitsi tämän tiedoston olevan %1 bpm.
-Haluatko ottaa musiikkinäkymän käyttöön ja asettaa projektin tempoksi %2?</translation>
-    </message>
-    <message>
-        <source>Audacity detected one or more files to be %s bpm.
-Would you like to enable music view and set the project tempo to %s?</source>
-        <translation type="vanished">Audacity havaitsi yhden tai useamman tiedoston olevan %1 bpm.
-Haluatko ottaa musiikkinäkymän käyttöön ja asettaa projektin tempoksi %2?</translation>
-    </message>
-    <message>
-        <source>Music Import</source>
-        <translation type="vanished">Musiikin tuonti</translation>
-    </message>
-    <message>
-        <source>Smart clip.
-The entire source clip will be pasted into your project, allowing you to access
-trimmed audio data anytime.</source>
-        <translation type="vanished">Älykäs leike.
-Koko lähdeleike liitetään projektiisi, jolloin voit käyttää
-leikattua äänidataa milloin tahansa.</translation>
-    </message>
-    <message>
-        <source>Selected audio only.
-Only the selected portion of the source clip will be pasted.</source>
-        <translation type="vanished">Vain valittu ääni.
-Vain lähdeleikkeen valittu osa liitetään.</translation>
-    </message>
-    <message>
-        <source>Paste audio</source>
-        <translation type="vanished">Liitä ääni</translation>
-    </message>
-    <message>
-        <source>How would you like to paste your audio?</source>
-        <translation type="vanished">Miten haluaisit liittää äänen?</translation>
-    </message>
-    <message>
-        <source>The full smart clip is %s. Larger sizes will take longer to paste.</source>
-        <extracomment>i18n-hint: %s substitutes for a file size, e.g. "345 MB". A "smart clip" is an audio clip containing hidden trimmed data.</extracomment>
-        <translation type="vanished">Täysi älykäs leike on %1. Suurempien kokojen liittäminen kestää kauemmin.</translation>
-    </message>
-    <message>
-        <source>Remember my choice and don't ask again</source>
-        <translation type="vanished">Muista valintani äläkä kysy uudelleen</translation>
-    </message>
-    <message>
-        <source>Automatic Crash Recovery</source>
-        <translation type="vanished">Automaattinen kaatumispalautus</translation>
-    </message>
-    <message>
-        <source>The following projects were not saved properly the last time Audacity was run and can be automatically recovered.
-
-After recovery, save the projects to ensure changes are written to disk.</source>
-        <translation type="vanished">Seuraavia projekteja ei tallennettu oikein, kun Audacityä käytettiin viimeksi, mutta ne voidaan palauttaa automaattisesti.
-
-Tallenna projektit palautuksen jälkeen varmistaaksesi, että muutokset kirjoitetaan levylle.</translation>
-    </message>
-    <message>
-        <source>Recoverable &amp;projects</source>
-        <translation type="vanished">Palautettavissa olevat &amp;projektit</translation>
-    </message>
-    <message>
-        <source>&amp;Discard Selected</source>
-        <translation type="vanished">&amp;Hylkää valitut</translation>
-    </message>
-    <message>
-        <source>&amp;Recover Selected</source>
-        <translation type="vanished">&amp;Palauta valitut</translation>
-    </message>
-    <message>
-        <source>&amp;Skip</source>
-        <translation type="vanished">&amp;Ohita</translation>
-    </message>
-    <message>
-        <source>No projects selected</source>
-        <translation type="vanished">Projekteja ei valittu</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to discard the selected projects?
-
-Choosing "Yes" permanently deletes the selected projects immediately.</source>
-        <translation type="vanished">Haluatko varmasti hylätä kaikki valitut projektit?
-
-Jos valitset "Kyllä", kaikki valitut projektit poistetaan pysyvästi.</translation>
-    </message>
-    <message>
-        <source>Select Command</source>
-        <translation type="vanished">Valitse komento</translation>
-    </message>
-    <message>
-        <source>&amp;Command</source>
-        <translation type="vanished">&amp;Komento</translation>
-    </message>
-    <message>
-        <source>&amp;Edit Parameters</source>
-        <translation type="vanished">Muokkaa param&amp;etreja</translation>
-    </message>
-    <message>
-        <source>&amp;Use Preset</source>
-        <translation type="vanished">Käytä esiaset&amp;usta</translation>
-    </message>
-    <message>
-        <source>&amp;Parameters</source>
-        <translation type="vanished">&amp;Parametrit</translation>
-    </message>
-    <message>
-        <source>&amp;Details</source>
-        <translation type="vanished">Yk&amp;sityiskohdat</translation>
-    </message>
-    <message>
-        <source>Choose command</source>
-        <translation type="vanished">Valitse komento</translation>
-    </message>
-    <message>
-        <source>MP3 Conversion</source>
-        <translation type="vanished">MP3-muunnos</translation>
-    </message>
-    <message>
-        <source>Fade Ends</source>
-        <translation type="vanished">Häivytä päät</translation>
-    </message>
-    <message>
-        <source>Import Macro</source>
-        <translation type="vanished">Tuo makro</translation>
-    </message>
-    <message>
-        <source>Macro %s already exists. Would you like to replace it?</source>
-        <translation type="vanished">Makro %1 on jo olemassa. Korvataanko se?</translation>
-    </message>
-    <message>
-        <source>Export Macro</source>
-        <translation type="vanished">Vie makro</translation>
-    </message>
-    <message>
-        <source>Effect</source>
-        <translation type="vanished">Tehoste</translation>
-    </message>
-    <message>
-        <source>Menu Command (With Parameters)</source>
-        <translation type="vanished">Valikkokomento (parametrien kanssa)</translation>
-    </message>
-    <message>
-        <source>Menu Command (No Parameters)</source>
-        <translation type="vanished">Valikkokomento (ei parametreja)</translation>
-    </message>
-    <message>
-        <source>"%s" requires one or more tracks to be selected.</source>
-        <extracomment>i18n-hint: %s will be replaced by the name of an action, such as "Remove Tracks".</extracomment>
-        <translation type="vanished">"%1" edellyttää yhden tai useamman raidan valitsemista.</translation>
-    </message>
-    <message>
-        <source>Your batch command of %s was not recognized.</source>
-        <translation type="vanished">Eräkomentoa %1 ei tunnistettu.</translation>
-    </message>
-    <message>
-        <source>Applied Macro</source>
-        <extracomment>i18n-hint: active verb in past tense</extracomment>
-        <translation type="vanished">Käytetty makro</translation>
-    </message>
-    <message>
-        <source>Apply Macro</source>
-        <translation type="vanished">Käytä makroa</translation>
-    </message>
-    <message>
-        <source>Applied Macro '%s'</source>
-        <extracomment>i18n-hint: active verb in past tense</extracomment>
-        <translation type="vanished">Käytetty makroa '%1'</translation>
-    </message>
-    <message>
-        <source>Apply '%s'</source>
-        <translation type="vanished">Käytä '%1'</translation>
-    </message>
-    <message>
-        <source>Apply %s with parameter(s)
-
-%s</source>
-        <translation type="vanished">Käytä %1 parametreilla
-
-%2</translation>
-    </message>
-    <message>
-        <source>Test Mode</source>
-        <translation type="vanished">Kokeilutila</translation>
-    </message>
-    <message>
-        <source>Apply %s</source>
-        <translation type="vanished">Käytä %1</translation>
-    </message>
-    <message>
-        <source>Macros Palette</source>
-        <translation type="vanished">Makropaletti</translation>
-    </message>
-    <message>
-        <source>Manage Macros</source>
-        <translation type="vanished">Makrojen hallinta</translation>
-    </message>
-    <message>
-        <source>Select Macro</source>
-        <extracomment>i18n-hint: A macro is a sequence of commands that can be applied
-* to one or more audio files.</extracomment>
-        <translation type="vanished">Valitse makro</translation>
-    </message>
-    <message>
-        <source>Macro</source>
-        <extracomment>i18n-hint: This is the heading for a column in the edit macros dialog</extracomment>
-        <translation type="vanished">Makro</translation>
-    </message>
-    <message>
-        <source>Apply Macro to:</source>
-        <translation type="vanished">Käytä makroa kohteessa:</translation>
-    </message>
-    <message>
-        <source>Apply macro to project</source>
-        <translation type="vanished">Käytä makroa projektissa</translation>
-    </message>
-    <message>
-        <source>&amp;Project</source>
-        <translation type="vanished">&amp;Projekti</translation>
-    </message>
-    <message>
-        <source>Apply macro to files...</source>
-        <translation type="vanished">Käytä makroa tiedostoissa...</translation>
-    </message>
-    <message>
-        <source>&amp;Files...</source>
-        <translation type="vanished">&amp;Tiedostot...</translation>
-    </message>
-    <message>
-        <source>&amp;Expand</source>
-        <extracomment>i18n-hint: The Expand button makes the dialog bigger, with more in it</extracomment>
-        <translation type="vanished">Laaj&amp;enna</translation>
-    </message>
-    <message>
-        <source>No macro selected</source>
-        <translation type="vanished">Makroa ei ole valittu</translation>
-    </message>
-    <message>
-        <source>Applying '%s' to current project</source>
-        <translation type="vanished">Käytä '%1' nykyiseen projektiin</translation>
-    </message>
-    <message>
-        <source>Please save and close the current project first.</source>
-        <translation type="vanished">Tallenna ja sulje nykyinen projekti ensin.</translation>
-    </message>
-    <message>
-        <source>Select file(s) for batch processing...</source>
-        <translation type="vanished">Valitse tiedostot eräajoon...</translation>
-    </message>
-    <message>
-        <source>Applying...</source>
-        <translation type="vanished">Käytetään...</translation>
-    </message>
-    <message>
-        <source>Remo&amp;ve</source>
-        <translation type="vanished">Pois&amp;ta</translation>
-    </message>
-    <message>
-        <source>&amp;Rename...</source>
-        <translation type="vanished">&amp;Nimeä uudelleen...</translation>
-    </message>
-    <message>
-        <source>Re&amp;store</source>
-        <translation type="vanished">Pa&amp;lauta</translation>
-    </message>
-    <message>
-        <source>I&amp;mport...</source>
-        <translation type="vanished">&amp;Tuo...</translation>
-    </message>
-    <message>
-        <source>E&amp;xport...</source>
-        <translation type="vanished">Vi&amp;e...</translation>
-    </message>
-    <message>
-        <source>Edit Steps</source>
-        <translation type="vanished">Muokkaa vaiheita</translation>
-    </message>
-    <message>
-        <source>Num</source>
-        <extracomment>i18n-hint: This is the number of the command in the list</extracomment>
-        <translation type="vanished">Numero</translation>
-    </message>
-    <message>
-        <source>Command  </source>
-        <translation type="vanished">Komento </translation>
-    </message>
-    <message>
-        <source>Parameters</source>
-        <translation type="vanished">Parametrit</translation>
-    </message>
-    <message>
-        <source>&amp;Insert</source>
-        <translation type="vanished">&amp;Lisää</translation>
-    </message>
-    <message>
-        <source>&amp;Edit...</source>
-        <translation type="vanished">&amp;Muokkaa...</translation>
-    </message>
-    <message>
-        <source>Move &amp;Up</source>
-        <translation type="vanished">Siirrä &amp;ylös</translation>
-    </message>
-    <message>
-        <source>Move &amp;Down</source>
-        <translation type="vanished">Siirrä &amp;alas</translation>
-    </message>
-    <message>
-        <source>Shrin&amp;k</source>
-        <extracomment>i18n-hint: The Shrink button makes the dialog smaller, with less in it</extracomment>
-        <translation type="vanished">&amp;Kutista</translation>
-    </message>
-    <message>
-        <source>- END -</source>
-        <extracomment>i18n-hint: This is the last item in a list.</extracomment>
-        <translation type="vanished">- LOPPU -</translation>
-    </message>
-    <message>
-        <source>%s changed</source>
-        <translation type="vanished">%1 muutettu</translation>
-    </message>
-    <message>
-        <source>Do you want to save the changes?</source>
-        <translation type="vanished">Haluatko tallentaa muutokset?</translation>
-    </message>
-    <message>
-        <source>Enter name of new macro</source>
-        <translation type="vanished">Kirjoita uuden makron nimi</translation>
-    </message>
-    <message>
-        <source>Name of new macro</source>
-        <translation type="vanished">Uuden makron nimi</translation>
-    </message>
-    <message>
-        <source>Name must not be blank</source>
-        <translation type="vanished">Nimi ei voi olla tyhjä</translation>
-    </message>
-    <message>
-        <source>Names may not contain '%c' and '%c'</source>
-        <extracomment>i18n-hint: The %c will be replaced with 'forbidden characters', like '/' and '\'.</extracomment>
-        <translation type="vanished">Nimet eivät saa sisältää '%1' ja '%2'</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to delete %s?</source>
-        <extracomment>i18n-hint: %s will be replaced by the name of a file.</extracomment>
-        <translation type="vanished">Haluatko varmasti poistaa kohteen %1?</translation>
-    </message>
-    <message>
-        <source>&amp;Repeat %s</source>
-        <translation type="vanished">&amp;Toista - %1</translation>
-    </message>
-    <message>
-        <source>Repeat Last Tool</source>
-        <translation type="vanished">Toista viimeisin työkalu</translation>
-    </message>
-    <message>
-        <source>&amp;Macro Manager</source>
-        <translation type="vanished">&amp;Makron hallinta</translation>
-    </message>
-    <message>
-        <source>&amp;Apply Macro</source>
-        <translation type="vanished">Käytä m&amp;akroa</translation>
-    </message>
-    <message>
-        <source>Palette...</source>
-        <translation type="vanished">Paletti...</translation>
-    </message>
-    <message>
-        <source>Script&amp;ables I</source>
-        <extracomment>i18n-hint: Scriptables are commands normally used from Python, Perl etc.</extracomment>
-        <translation type="vanished">Skriptattavat I</translation>
-    </message>
-    <message>
-        <source>Scripta&amp;bles II</source>
-        <extracomment>i18n-hint: Scriptables are commands normally used from Python, Perl etc.</extracomment>
-        <translation type="vanished">Skriptattavat II</translation>
-    </message>
-    <message>
-        <source>Disk Block Size (KB):</source>
-        <translation type="vanished">Levylohkon koko (kt):</translation>
-    </message>
-    <message>
-        <source>Number of Edits:</source>
-        <translation type="vanished">Muokkausten määrä:</translation>
-    </message>
-    <message>
-        <source>Test Data Size (MB):</source>
-        <translation type="vanished">Testitietojen koko (Mt):</translation>
-    </message>
-    <message>
-        <source>Random Seed:</source>
-        <extracomment>i18n-hint: A "seed" is a number that initializes a
-pseudorandom number generating algorithm</extracomment>
-        <translation type="vanished">Satunnainen alkuarvo:</translation>
-    </message>
-    <message>
-        <source>Show detailed info about each block file</source>
-        <translation type="vanished">Näytä yksityiskohtaiset tiedot kustakin lohkotiedostosta</translation>
-    </message>
-    <message>
-        <source>Show detailed info about each editing operation</source>
-        <translation type="vanished">Näytä yksityiskohtaiset tiedot kustakin muokkaustoiminnosta</translation>
-    </message>
-    <message>
-        <source>Run</source>
-        <translation type="vanished">Suorita</translation>
-    </message>
-    <message>
-        <source>benchmark.txt</source>
-        <extracomment>i18n-hint: Benchmark means a software speed test;
-leave untranslated file extension .txt</extracomment>
-        <translation type="vanished">benchmark.txt</translation>
-    </message>
-    <message>
-        <source>Export Benchmark Data as:</source>
-        <translation type="vanished">Vie vertailutiedot seuraavasti:</translation>
-    </message>
-    <message>
-        <source>Block size should be in the range 1 - 1024 KB.</source>
-        <translation type="vanished">Lohkon koon tulee olla 1 - 1024 Kt väliltä.</translation>
-    </message>
-    <message>
-        <source>Number of edits should be in the range 1 - 10000.</source>
-        <translation type="vanished">Muokkausten määrän tulisi olla 1 - 10000 väliltä.</translation>
-    </message>
-    <message>
-        <source>Test data size should be in the range 1 - 2000 MB.</source>
-        <translation type="vanished">Testitietojen koon on oltava 1 - 2000 Mt väliltä.</translation>
-    </message>
-    <message>
-        <source>Using %lld chunks of %lld samples each, for a total of %.1f MB.
-</source>
-        <translation type="vanished">Käytetään %1 palaa, jokaisessa %2 näytettä, yhteensä %3 Mt.
-</translation>
-    </message>
-    <message>
-        <source>Preparing...
-</source>
-        <translation type="vanished">Valmistellaan...
-</translation>
-    </message>
-    <message>
-        <source>Expected len %lld, track len %lld.
-</source>
-        <translation type="vanished">Odotettu pituus %1, raidan pituus %2.
-</translation>
-    </message>
-    <message>
-        <source>Performing %d edits...
-</source>
-        <translation type="vanished">Suoritetaan %1 muokkausta...
-</translation>
-    </message>
-    <message>
-        <source>Cut: %lld - %lld 
-</source>
-        <translation type="vanished">Leikkaus: %1 - %2
-</translation>
-    </message>
-    <message>
-        <source>Trial %d
-</source>
-        <translation type="vanished">Kokeilu %1
-</translation>
-    </message>
-    <message>
-        <source>Cut (%lld, %lld) failed.
-</source>
-        <translation type="vanished">Leikkaus (%1, %2) epäonnistui.
-</translation>
-    </message>
-    <message>
-        <source>Paste: %lld
-</source>
-        <translation type="vanished">Liitä: %1
-</translation>
-    </message>
-    <message>
-        <source>Trial %d
-Failed on Paste.
-</source>
-        <translation type="vanished">Kokeilu %1
-Epäonnistui liittämisessä.
-</translation>
-    </message>
-    <message>
-        <source>Time to perform %d edits: %ld ms
-</source>
-        <translation type="vanished">Aika suorittaa %1 muokkausta: %2 ms
-</translation>
-    </message>
-    <message>
-        <source>Checking file pointer leaks:
-</source>
-        <translation type="vanished">Tarkistetaan tiedosto-osoittimen vuodot:
-</translation>
-    </message>
-    <message>
-        <source>Track # blocks: %ld
-</source>
-        <translation type="vanished">Raidan # lohkot: %1
-</translation>
-    </message>
-    <message>
-        <source>Disk # blocks: 
-</source>
-        <translation type="vanished">Levyn # lohkot:
-</translation>
-    </message>
-    <message>
-        <source>Doing correctness check...
-</source>
-        <translation type="vanished">Suoritetaan virheettömyystarkistusta...
-</translation>
-    </message>
-    <message>
-        <source>Bad: chunk %lld sample %lld
-</source>
-        <translation type="vanished">Virheellinen: pala %1 näyte %2
-</translation>
-    </message>
-    <message>
-        <source>Passed correctness check!
-</source>
-        <translation type="vanished">Läpäissyt oikeellisuustarkistuksen!
-</translation>
-    </message>
-    <message>
-        <source>Errors in %d/%lld chunks
-</source>
-        <translation type="vanished">Virheitä %1/%2 palassa
-</translation>
-    </message>
-    <message>
-        <source>Time to check all data: %ld ms
-</source>
-        <translation type="vanished">Aika tarkistaa kaikki tiedot: %1 ms
-</translation>
-    </message>
-    <message>
-        <source>Reading data again...
-</source>
-        <translation type="vanished">Luetaan tietoja uudelleen...
-</translation>
-    </message>
-    <message>
-        <source>Time to check all data (2): %ld ms
-</source>
-        <translation type="vanished">Aika tarkistaa kaikki tiedot (2): %1 ms
-</translation>
-    </message>
-    <message>
-        <source>At 44100 Hz, %d bytes per sample, the estimated number of
- simultaneous tracks that could be played at once: %.1f
-</source>
-        <translation type="vanished">Jos näytteet ovat %1 tavun kokoisia ja näytetaajuus 44100 Hz,
-raitoja voi toistaa kerralla arviolta enintään: %2
-</translation>
-    </message>
-    <message>
-        <source>TEST FAILED!!!
-</source>
-        <translation type="vanished">TESTI EPÄONNISTUI!!!
-</translation>
-    </message>
-    <message>
-        <source>Benchmark completed successfully.
-</source>
-        <translation type="vanished">Vertailutesti onnistui.
-</translation>
-    </message>
-    <message>
-        <source>Select the audio for %s to use (for example, Cmd + A to Select All) then try again.</source>
-        <extracomment>i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.</extracomment>
-        <translation type="vanished">Valitse käytettävä ääni toiminnolle  %1 (esimerkiksi Komento + A, valitse kaikki) ja yritä sitten uudelleen.</translation>
-    </message>
-    <message>
-        <source>Select the audio for %s to use (for example, Ctrl + A to Select All) then try again.</source>
-        <extracomment>i18n-hint: %s will be replaced by the name of an action, such as Normalize, Cut, Fade.</extracomment>
-        <translation type="vanished">Valitse käytettävä ääni toiminnolle %1 (esimerkiksi Ctrl + A, valitse kaikki) ja yritä sitten uudelleen.</translation>
-    </message>
-    <message>
-        <source>No Audio Selected</source>
-        <translation type="vanished">Ääntä ei ole valittu</translation>
-    </message>
-    <message>
-        <source>Select the audio for %s to use.
-
-1. Select audio that represents noise and use %s to get your 'noise profile'.
-
-2. When you have got your noise profile, select the audio you want to change
-and use %s to change that audio.</source>
-        <extracomment>i18n-hint: %s will be replaced by the name of an effect, usually 'Noise Reduction'.</extracomment>
-        <translation type="vanished">Valitse ääni, jota %1 käyttää.
-
-1. Valitse ääni, joka edustaa kohinaa ja käytä %2 saadaksesi 'kohinaprofiilisi'.
-
-2. Kun olet saanut kohinaprofiilisi, valitse muutettava ääni ja käytä %3 sen muuttamiseen.</translation>
-    </message>
-    <message>
-        <source>You can only do this when playing and recording are
-stopped. (Pausing is not sufficient.)</source>
-        <translation type="vanished">Voit tehdä tämän vain, kun toisto ja äänitys on
-pysäytetty. (Tauko ei riitä.)</translation>
-    </message>
-    <message>
-        <source>You must first select some stereo audio to perform this
-action. (You cannot use this with mono.)</source>
-        <translation type="vanished">Sinun tulee valita ensin jotain stereoääntä tämän
-suorittamiseen. (Monoääni ei kelpaa.)</translation>
-    </message>
-    <message>
-        <source>You must first select some audio to perform this action.
-(Selecting other kinds of track won't work.)</source>
-        <translation type="vanished">Sinun on ensin valittava jotain ääntä tämän suorittamiseen.
-(Muuntyyppiset raidat eivät kelpaa.)</translation>
-    </message>
-    <message>
-        <source>Audacity Support Data</source>
-        <translation type="vanished">Audacityn tukidata</translation>
-    </message>
-    <message>
-        <source>Report generated to:</source>
-        <translation type="vanished">Raportti luotu paikkaan:</translation>
-    </message>
-    <message>
-        <source>Removing Dependencies</source>
-        <translation type="vanished">Poistetaan riippuvuuksia</translation>
-    </message>
-    <message>
-        <source>Copying audio data into project...</source>
-        <translation type="vanished">Kopioidaan äänitietoja projektiin...</translation>
-    </message>
-    <message>
-        <source>Project Depends on Other Audio Files</source>
-        <translation type="vanished">Projekti riippuu muista äänitiedostoista</translation>
-    </message>
-    <message>
-        <source>Copying these files into your project will remove this dependency.
-This is safer, but needs more disk space.</source>
-        <translation type="vanished">Näiden tiedostojen kopioiminen projektiin poistaa tämän riippuvuuden.
-Tämä on turvallisempaa mutta vaatii enemmän levytilaa.</translation>
-    </message>
-    <message>
-        <source>
-
-Files shown as MISSING have been moved or deleted and cannot be copied.
-Restore them to their original location to be able to copy into project.</source>
-        <translation type="vanished">
-
-Puuttuviksi merkittyjä tiedostoja on siirretty tai poistettu, eikä niitä voi kopioida.
-Palauta ne alkuperäiseen sijaintiinsa, jotta ne voidaan kopioida projektiin.</translation>
-    </message>
-    <message>
-        <source>Project Dependencies</source>
-        <translation type="vanished">Projektin riippuvuudet</translation>
-    </message>
-    <message>
-        <source>Audio File</source>
-        <translation type="vanished">Äänitiedosto</translation>
-    </message>
-    <message>
-        <source>Disk Space</source>
-        <translation type="vanished">Levytila</translation>
-    </message>
-    <message>
-        <source>Copy Selected Files</source>
-        <translation type="vanished">Kopioi valitut tiedostot</translation>
-    </message>
-    <message>
-        <source>Cancel Save</source>
-        <translation type="vanished">Peruuta tallennus</translation>
-    </message>
-    <message>
-        <source>Save Without Copying</source>
-        <translation type="vanished">Tallenna kopioimatta</translation>
-    </message>
-    <message>
-        <source>Do Not Copy</source>
-        <translation type="vanished">Älä kopioi</translation>
-    </message>
-    <message>
-        <source>Copy All Files (Safer)</source>
-        <translation type="vanished">Kopioi kaikki tiedostot (turvallisempi)</translation>
-    </message>
-    <message>
-        <source>Whenever a project depends on other files:</source>
-        <translation type="vanished">Aina kun projekti riippuu muista tiedostoista:</translation>
-    </message>
-    <message>
-        <source>Ask me</source>
-        <extracomment>i18n-hint: One of the choices of what you want Audacity to do when
-* Audacity finds a project depends on another file.</extracomment>
-        <translation type="vanished">Kysy minulta</translation>
-    </message>
-    <message>
-        <source>Always copy all files (safest)</source>
-        <extracomment>i18n-hint: One of the choices of what you want Audacity to do when
-* Audacity finds a project depends on another file.</extracomment>
-        <translation type="vanished">Kopioi aina kaikki tiedostot (turvallisin)</translation>
-    </message>
-    <message>
-        <source>Never copy any files</source>
-        <extracomment>i18n-hint: One of the choices of what you want Audacity to do when
-* Audacity finds a project depends on another file.</extracomment>
-        <translation type="vanished">Älä koskaan kopioi mitään tiedostoja</translation>
-    </message>
-    <message>
-        <source>MISSING %s</source>
-        <translation type="vanished">PUUTTUU %1</translation>
-    </message>
-    <message>
-        <source>&amp;Copy Names to Clipboard</source>
-        <translation type="vanished">&amp;Kopioi nimet leikepöydälle</translation>
-    </message>
-    <message>
-        <source>"%s", "%s", "%s"
-</source>
-        <translation type="vanished">"%1", "%2", "%3"
-</translation>
-    </message>
-    <message>
-        <source>Missing</source>
-        <translation type="vanished">Puuttuu</translation>
-    </message>
-    <message>
-        <source>If you proceed, your project will not be saved to disk. Is this what you want?</source>
-        <translation type="vanished">Jos jatkat, projektia ei tallenneta levylle. Tätäkö haluat?</translation>
-    </message>
-    <message>
-        <source>Your project is self-contained; it does not depend on any external audio files. 
-
-Some older Audacity projects may not be self-contained, and care 
-is needed to keep their external dependencies in the right place.
-New projects will be self-contained and are less risky.</source>
-        <translation type="vanished">Projektisi on itsenäinen; se ei riipu ulkoisista äänitiedostoista. 
-
-Jotkin vanhemmat Audacity-projektit eivät ehkä ole itsenäisiä, ja 
-on tarpeen pitää ulkoiset riippuvuutensa oikeassa paikassa.
-Uudet projektit ovat itsenäisiä ja vähemmän riskialttiita.</translation>
-    </message>
-    <message>
-        <source>Dependency Check</source>
-        <translation type="vanished">Riippuvuustarkistus</translation>
-    </message>
-    <message>
-        <source>Dropouts</source>
-        <extracomment>i18n-hint:  A name given to a track, appearing as its menu button.
-The translation should be short or else it will not display well.
-At most, about 11 Latin characters.
-Dropout is a loss of a short sequence of audio sample data from the
-recording</extracomment>
-        <translation type="vanished">Katkokset</translation>
-    </message>
-    <message>
-        <source>Recorded audio was lost at the labeled locations. Possible causes:
-
-Other applications are competing with Audacity for processor time
-
-You are saving directly to a slow external storage device
-</source>
-        <translation type="vanished">Äänitetty ääni menetettiin merkityissä paikoissa. Mahdolliset syyt:
-
-Muut sovellukset kilpailevat Audacityn kanssa suoritinajasta
-
-Tallennat suoraan hitaaseen ulkoiseen tallennuslaitteeseen
-</translation>
-    </message>
-    <message>
-        <source>Turn off dropout detection</source>
-        <translation type="vanished">Sammuta katkosten tunnistus</translation>
-    </message>
-    <message>
-        <source>Frequency Analysis</source>
-        <translation type="vanished">Taajuusanalyysi</translation>
-    </message>
-    <message>
-        <source>Spectrum</source>
-        <translation type="vanished">Spektri</translation>
-    </message>
-    <message>
-        <source>Standard Autocorrelation</source>
-        <translation type="vanished">Normaali autokorrelaatio</translation>
-    </message>
-    <message>
-        <source>Cuberoot Autocorrelation</source>
-        <translation type="vanished">Kuutiojuuriautokorrelaatio</translation>
-    </message>
-    <message>
-        <source>Enhanced Autocorrelation</source>
-        <translation type="vanished">Paranneltu autokorrelaatio</translation>
-    </message>
-    <message>
-        <source>Cepstrum</source>
-        <extracomment>i18n-hint: This is a technical term, derived from the word
-* "spectrum".  Do not translate it unless you are sure you
-* know the correct technical word in your language.</extracomment>
-        <translation type="vanished">Kepstri</translation>
-    </message>
-    <message>
-        <source>%s window</source>
-        <extracomment>i18n-hint: This refers to a "window function",
-* such as Hann or Rectangular, used in the
-* Frequency analyze dialog box.</extracomment>
-        <translation type="vanished">%1-ikkuna</translation>
-    </message>
-    <message>
-        <source>Linear frequency</source>
-        <translation type="vanished">Lineaarinen taajuus</translation>
-    </message>
-    <message>
-        <source>Log frequency</source>
-        <translation type="vanished">Logaritminen taajuus</translation>
-    </message>
-    <message>
-        <source>Scroll</source>
-        <translation type="vanished">Vieritys</translation>
-    </message>
-    <message>
-        <source>Cursor:</source>
-        <translation type="vanished">Kursori:</translation>
-    </message>
-    <message>
-        <source>Peak:</source>
-        <translation type="vanished">Huippu:</translation>
-    </message>
-    <message>
-        <source>&amp;Grids</source>
-        <translation type="vanished">&amp;Ruudukot</translation>
-    </message>
-    <message>
-        <source>&amp;Algorithm:</source>
-        <translation type="vanished">&amp;Algoritmi:</translation>
-    </message>
-    <message>
-        <source>&amp;Size:</source>
-        <translation type="vanished">&amp;Koko:</translation>
-    </message>
-    <message>
-        <source>&amp;Export...</source>
-        <translation type="vanished">&amp;Vie...</translation>
-    </message>
-    <message>
-        <source>&amp;Function:</source>
-        <translation type="vanished">&amp;Funktio:</translation>
-    </message>
-    <message>
-        <source>&amp;Axis:</source>
-        <translation type="vanished">Aks&amp;eli:</translation>
-    </message>
-    <message>
-        <source>&amp;Replot...</source>
-        <translation type="vanished">&amp;Päivitä...</translation>
-    </message>
-    <message>
-        <source>Not enough data selected.</source>
-        <translation type="vanished">Dataa ei ole valittu riittävästi.</translation>
-    </message>
-    <message>
-        <source>%d Hz (%s) = %d dB</source>
-        <extracomment>i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#</extracomment>
-        <translation type="vanished">%1 Hz (%2) = %3 dB</translation>
-    </message>
-    <message>
-        <source>%d Hz (%s) = %.1f dB</source>
-        <extracomment>i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#</extracomment>
-        <translation type="vanished">%1 Hz (%2) = %3 dB</translation>
-    </message>
-    <message>
-        <source>%.4f sec (%d Hz) (%s) = %f</source>
-        <extracomment>i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
-* the %.4f are numbers, and 'sec' should be an abbreviation for seconds</extracomment>
-        <translation type="vanished">%1 sek (%2 Hz) (%3) = %4</translation>
-    </message>
-    <message>
-        <source>%.4f sec (%d Hz) (%s) = %.3f</source>
-        <extracomment>i18n-hint: The %d's are replaced by numbers, the %s by musical notes, e.g. A#
-* the %.4f are numbers, and 'sec' should be an abbreviation for seconds</extracomment>
-        <translation type="vanished">%1 sek (%2 Hz) (%3) = %4</translation>
-    </message>
-    <message>
-        <source>spectrum.txt</source>
-        <translation type="vanished">spektri.txt</translation>
-    </message>
-    <message>
-        <source>Export Spectral Data As:</source>
-        <translation type="vanished">Vie spektridata nimellä:</translation>
-    </message>
-    <message>
-        <source>Frequency (Hz)	Level (dB)</source>
-        <translation type="vanished">Taajuus (Hz)	Taso (dB)</translation>
-    </message>
-    <message>
-        <source>Lag (seconds)	Frequency (Hz)	Level</source>
-        <translation type="vanished">Viive (sekuntia)	Taajuus (Hz)	Taso</translation>
-    </message>
-    <message>
-        <source>Plot Spectrum...</source>
-        <translation type="vanished">Spektrikaavio...</translation>
-    </message>
-    <message>
-        <source>Save %s</source>
-        <translation type="vanished">Tallenna %1</translation>
-    </message>
-    <message>
-        <source>Unable to save %s</source>
-        <translation type="vanished">Kohdetta %1 ei voi tallentaa</translation>
-    </message>
-    <message>
-        <source>&amp;Manage History</source>
-        <translation type="vanished">Historian &amp;hallinta</translation>
-    </message>
-    <message>
-        <source>Used Space</source>
-        <translation type="vanished">Käytetty levytila</translation>
-    </message>
-    <message>
-        <source>&amp;Total space used</source>
-        <translation type="vanished">Käyte&amp;tty kokonaistila</translation>
-    </message>
-    <message>
-        <source>&amp;Undo levels available</source>
-        <translation type="vanished">K&amp;umoamistasoja saatavilla</translation>
-    </message>
-    <message>
-        <source>&amp;Levels to discard</source>
-        <translation type="vanished">Hy&amp;lättävät tasot</translation>
-    </message>
-    <message>
-        <source>&amp;Discard</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">&amp;Hylkää</translation>
-    </message>
-    <message>
-        <source>Clip&amp;board space used</source>
-        <translation type="vanished">Käytetty l&amp;eikepöytätila</translation>
-    </message>
-    <message>
-        <source>D&amp;iscard</source>
-        <translation type="vanished">H&amp;ylkää</translation>
-    </message>
-    <message>
-        <source>&amp;Compact</source>
-        <translation type="vanished">Tii&amp;vistä</translation>
-    </message>
-    <message>
-        <source>Compacting actually freed %s of disk space.</source>
-        <translation type="vanished">Tiivistys vapautti %1 verran levytilaa.</translation>
-    </message>
-    <message>
-        <source>&amp;History</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the various editing steps
-that have been taken.</extracomment>
-        <translation type="vanished">&amp;Historia</translation>
-    </message>
-    <message>
-        <source>New Plugins</source>
-        <translation type="vanished">Uusia laajennuksia</translation>
-    </message>
-    <message>
-        <source>Incompatible plugin(s) found</source>
-        <translation type="vanished">Yhteensopimattomia laajennuksia löytyi</translation>
-    </message>
-    <message>
-        <source>&amp;Manage Plugins</source>
-        <translation type="vanished">&amp;Hallitse laajennuksia</translation>
-    </message>
-    <message>
-        <source>Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes. If you would still like to attempt to use these plugins, you can enable them using "Manage Plugins". Otherwise, select "Continue".</source>
-        <translation type="vanished">Audacity on löytänyt %1 yhteensopimatonta laajennusta, joita ei voitu ladata. Olemme poistaneet nämä laajennukset käytöstä estääksemme jumiutumiset tai kaatumiset. Jos haluat silti yrittää käyttää näitä laajennuksia, voit ottaa ne käyttöön "Hallitse laajennuksia" -toiminnolla. Muussa tapauksessa valitse "Jatka".</translation>
-    </message>
-    <message>
-        <source>Audacity has found %d incompatible plugins which could not be loaded. We have disabled these plugins to avoid any stalling or crashes.</source>
-        <translation type="vanished">Audacity on löytänyt %1 yhteensopimatonta laajennusta, joita ei voitu ladata. Olemme poistaneet nämä laajennukset käytöstä estääksemme jumiutumiset tai kaatumiset.</translation>
-    </message>
-    <message>
-        <source>Journal recording failed</source>
-        <translation type="vanished">Lokikirjan tallennus epäonnistui</translation>
-    </message>
-    <message>
-        <source>Edit Labels</source>
-        <translation type="vanished">Muokkaa merkkejä</translation>
-    </message>
-    <message>
-        <source>Start Time</source>
-        <extracomment>i18n-hint: (noun) of a label</extracomment>
-        <translation type="vanished">Alkuaika</translation>
-    </message>
-    <message>
-        <source>End Time</source>
-        <extracomment>i18n-hint: (noun) of a label</extracomment>
-        <translation type="vanished">Loppuaika</translation>
-    </message>
-    <message>
-        <source>Low Frequency</source>
-        <extracomment>i18n-hint: (noun) of a label</extracomment>
-        <translation type="vanished">Matala taajuus</translation>
-    </message>
-    <message>
-        <source>High Frequency</source>
-        <extracomment>i18n-hint: (noun) of a label</extracomment>
-        <translation type="vanished">Korkea taajuus</translation>
-    </message>
-    <message>
-        <source>New...</source>
-        <translation type="vanished">Uusi...</translation>
-    </message>
-    <message>
-        <source>Press F2 or double click to edit cell contents.</source>
-        <translation type="vanished">Paina F2 tai kaksoisklikkaa kun haluat muokata solun sisältöä.</translation>
-    </message>
-    <message>
-        <source>Select a text file containing labels</source>
-        <translation type="vanished">Valitse merkkejä sisältävä tekstitiedosto</translation>
-    </message>
-    <message>
-        <source>No labels to export.</source>
-        <translation type="vanished">Ei merkkejä vietäväksi.</translation>
-    </message>
-    <message>
-        <source>Export Labels As:</source>
-        <translation type="vanished">Vie merkit nimellä:</translation>
-    </message>
-    <message>
-        <source>New Label Track</source>
-        <translation type="vanished">Uusi merkkiraita</translation>
-    </message>
-    <message>
-        <source>Enter track name</source>
-        <translation type="vanished">Kirjoita raidan nimi</translation>
-    </message>
-    <message>
-        <source>Exported Label Style:</source>
-        <translation type="vanished">Vietyjen merkkien tyyli:</translation>
-    </message>
-    <message>
-        <source>Audacity First Run</source>
-        <extracomment>i18n-hint: Title on a dialog indicating that this is the first
-* time Audacity has been run.</extracomment>
-        <translation type="vanished">Audacityn ensimmäinen käynnistys</translation>
-    </message>
-    <message>
-        <source>Choose Language for Audacity to use:</source>
-        <translation type="vanished">Valitse Audacityn kieli:</translation>
-    </message>
-    <message>
-        <source>The language you have chosen, %s (%s), is not the same as the system language, %s (%s).</source>
-        <extracomment>i18n-hint: The %s's are replaced by translated and untranslated
-* versions of language names.</extracomment>
-        <translation type="vanished">Valitsemasi kieli, %1 (%2), ei ole sama kuin järjestelmän kieli, %3 (%4).</translation>
-    </message>
-    <message>
-        <source>Error Converting Legacy Project File</source>
-        <translation type="vanished">Virhe vanhan projektitiedoston muunnossa</translation>
-    </message>
-    <message>
-        <source>Converted a 1.0 project file to the new format.
-The old file has been saved as '%s'</source>
-        <translation type="vanished">1.0-projektitiedosto muunnettiin uuteen tiedostomuotoon.
-Vanha tiedosto on tallennettu nimellä '%1'</translation>
-    </message>
-    <message>
-        <source>Opening Audacity Project</source>
-        <translation type="vanished">Avataan Audacity-projektia</translation>
-    </message>
-    <message>
-        <source>The following commands have had their shortcuts removed, because their default shortcut is new or changed, and is the same shortcut that you have assigned to another command.</source>
-        <translation type="vanished">Seuraavat komennot ovat poistaneet pikanäppäimensä, koska niiden oletuspikanäppäin on uusi tai muuttunut ja on sama, jonka olet määrittänyt toiselle komennolle.</translation>
-    </message>
-    <message>
-        <source>Shortcuts have been removed</source>
-        <translation type="vanished">Pikanäppäimet on poistettu</translation>
-    </message>
-    <message>
-        <source>Audacity Mixer%s</source>
-        <translation type="vanished">Audacity mikseri %1</translation>
-    </message>
-    <message>
-        <source>Velocity</source>
-        <extracomment>i18n-hint: title of the MIDI Velocity slider
-i18n-hint: Title of the Velocity slider, used to adjust the volume of note tracks</extracomment>
-        <translation type="vanished">Nopeus</translation>
-    </message>
-    <message>
-        <source>Musical Instrument</source>
-        <translation type="vanished">Musiikkisoitin</translation>
-    </message>
-    <message>
-        <source>Mute</source>
-        <extracomment>i18n-hint: This is on a button that will silence this track.</extracomment>
-        <translation type="vanished">Mykistä</translation>
-    </message>
-    <message>
-        <source>Solo</source>
-        <extracomment>i18n-hint: This is on a button that will silence all the other tracks.</extracomment>
-        <translation type="vanished">Soolo</translation>
-    </message>
-    <message>
-        <source>Signal Level Meter</source>
-        <translation type="vanished">Signaalin tason mittari</translation>
-    </message>
-    <message>
-        <source>Moved gain slider</source>
-        <translation type="vanished">Siirretty vahvistussäädintä</translation>
-    </message>
-    <message>
-        <source>Moved velocity slider</source>
-        <translation type="vanished">Siirretty nopeussäädintä</translation>
-    </message>
-    <message>
-        <source>Moved pan slider</source>
-        <translation type="vanished">Siirretty panorointisäädintä</translation>
-    </message>
-    <message>
-        <source>&amp;Mixer</source>
-        <translation type="vanished">&amp;Mikseri</translation>
-    </message>
-    <message>
-        <source>Effect or Command at %s failed to register:
-%s</source>
-        <translation type="vanished">Tehoste tai komento kohteessa %1 ei rekisteröitynyt:
-%2</translation>
-    </message>
-    <message>
-        <source>Disable</source>
-        <translation type="vanished">Poista käytöstä</translation>
-    </message>
-    <message>
-        <source>Enable</source>
-        <translation type="vanished">Ota käyttöön</translation>
-    </message>
-    <message>
-        <source>Generator</source>
-        <translation type="vanished">Generaattori</translation>
-    </message>
-    <message>
-        <source>Analyzer</source>
-        <translation type="vanished">Analysaattori</translation>
-    </message>
-    <message>
-        <source>Tool</source>
-        <translation type="vanished">Työkalu</translation>
-    </message>
-    <message>
-        <source>Manage Plugins</source>
-        <translation type="vanished">Hallitse laajennuksia</translation>
-    </message>
-    <message>
-        <source>Native Audacity</source>
-        <translation type="vanished">Alkuperäinen Audacity</translation>
-    </message>
-    <message>
-        <source>&amp;Show:</source>
-        <translation type="vanished">&amp;Näytä:</translation>
-    </message>
-    <message>
-        <source>&amp;Type:</source>
-        <translation type="vanished">&amp;Tyyppi:</translation>
-    </message>
-    <message>
-        <source>C&amp;ategory:</source>
-        <translation type="vanished">K&amp;ategoria:</translation>
-    </message>
-    <message>
-        <source>Searc&amp;h:</source>
-        <translation type="vanished">Et&amp;si:</translation>
-    </message>
-    <message>
-        <source>Plugin</source>
-        <translation type="vanished">Laajennus</translation>
-    </message>
-    <message>
-        <source>&amp;Rescan</source>
-        <translation type="vanished">&amp;Skannaa uudelleen</translation>
-    </message>
-    <message>
-        <source>&amp;Get more effects...</source>
-        <translation type="vanished">&amp;Hanki lisää tehosteita...</translation>
-    </message>
-    <message>
-        <source>Searching for plugins</source>
-        <translation type="vanished">Haetaan laajennuksia</translation>
-    </message>
-    <message>
-        <source>Actual Rate: %d</source>
-        <translation type="vanished">Todellinen näytetaajuus: %1</translation>
-    </message>
-    <message>
-        <source>Error opening sound device.
-Try changing the audio host, playback device and the project sample rate.</source>
-        <translation type="vanished">Virhe avattaessa äänilaitetta.
-Yritä muuttaa äänirajapintaa, toistolaitetta ja projektin näytenopeutta.</translation>
-    </message>
-    <message>
-        <source>Mismatched Sampling Rates</source>
-        <translation type="vanished">Näytteenottotaajuudet eivät täsmää</translation>
-    </message>
-    <message>
-        <source>Too few tracks are selected for recording at this sample rate.
-(Audacity requires two channels at the same sample rate for
-each stereo track)</source>
-        <translation type="vanished">Raitoja ei ole valittu tarpeeksi tällä näytteenottotaajuudella
-nauhoittamiseen. (Vaaditaan kaksi kanavaa jokaista stereo-
-raitaa kohden, näytteenottotaajuuksien on oltava samat)</translation>
-    </message>
-    <message>
-        <source>Too Few Compatible Tracks Selected</source>
-        <translation type="vanished">Ei tarpeeksi yhteensopivia raitoja valittu</translation>
-    </message>
-    <message>
-        <source>%s.%d</source>
-        <comment>clip name template</comment>
-        <extracomment>i18n-hint a numerical suffix added to distinguish otherwise like-named clips when new record started</extracomment>
-        <translation type="vanished">%1.%2</translation>
-    </message>
-    <message>
-        <source>Recorded Audio</source>
-        <translation type="vanished">Äänitetty ääni</translation>
-    </message>
-    <message>
-        <source>Project check read faulty Sequence tags.</source>
-        <extracomment>i18n-hint: The audacity project file is XML and has 'tags' in it,
-rather like html tags &lt;something&gt;some stuff&lt;/something&gt;.
-This error message is about the tags that hold the sequence information.
-The error message is confusing to users in English, and could just say
-"Found problems with &lt;sequence&gt; when checking project file."</extracomment>
-        <translation type="vanished">Projektin tarkistus luki viallisia jaksotunnisteita.</translation>
-    </message>
-    <message>
-        <source>Close project immediately with no changes</source>
-        <translation type="vanished">Sulje projekti välittömästi ilman muutoksia</translation>
-    </message>
-    <message>
-        <source>Continue with repairs noted in log, and check for more errors. This will save the project in its current state, unless you "Close project immediately" on further error alerts.</source>
-        <translation type="vanished">Jatkaa lokissa todettuja korjauksia ja tarkistaa, löytyykö muita virheitä. Tämä tallentaa projektin sen nykyisessä tilassaan, paitsi jos valitset "Sulje projekti välittömästi" tulevissa virheilmoituksissa.</translation>
-    </message>
-    <message>
-        <source>Warning - Problems Reading Sequence Tags</source>
-        <translation type="vanished">Varoitus - Ongelmia luettaessa jaksotunnisteita</translation>
-    </message>
-    <message>
-        <source>Inspecting project file data</source>
-        <translation type="vanished">Tarkistetaan projektitiedoston tietoja</translation>
-    </message>
-    <message>
-        <source>Project check of "%s" folder 
-detected %lld missing external audio file(s) 
-('aliased files'). There is no way for Audacity 
-to recover these files automatically. 
-
-If you choose the first or second option below, 
-you can try to find and restore the missing files 
-to their previous location. 
-
-Note that for the second option, the waveform 
-may not show silence. 
-
-If you choose the third option, this will save the 
-project in its current state, unless you "Close 
-project immediately" on further error alerts.</source>
-        <translation type="vanished">Projektin tarkistus havaitsi kansiossa "%1" 
-%2 puuttuvaa ulkoista äänitiedostoa 
-('alias-tiedostoa'). Audacity ei voi palauttaa 
-näitä tiedostoja automaattisesti. 
-
-Jos valitset alta ensimmäisen tai toisen vaihtoehdon, 
-voit yrittää löytää ja palauttaa puuttuvat tiedostot 
-niiden aiempaan sijaintiin. 
-
-Huomaa, että toisessa vaihtoehdossa, aaltomuoto 
-ei ehkä näytä hiljaisuutta. 
-
-Jos valitset kolmannen vaihtoehdon, tämä tallentaa 
-projektin sen nykyisessä tilassaan, paitsi jos valitset 
-"Sulje projekti välittömästi" tulevissa virheilmoituksissa.</translation>
-    </message>
-    <message>
-        <source>Treat missing audio as silence (this session only)</source>
-        <translation type="vanished">Kohtele puuttuvaa ääntä hiljaisuutena (vain tässä istunnossa)</translation>
-    </message>
-    <message>
-        <source>Replace missing audio with silence (permanent immediately).</source>
-        <translation type="vanished">Korvaa puuttuva ääni hiljaisuudella (heti pysyvästi).</translation>
-    </message>
-    <message>
-        <source>Warning - Missing Aliased File(s)</source>
-        <translation type="vanished">Varoitus - Puuttuvia alias-tiedostoja</translation>
-    </message>
-    <message>
-        <source>Project check of "%s" folder 
-detected %lld missing alias (.auf) blockfile(s). 
-Audacity can fully regenerate these files 
-from the current audio in the project.</source>
-        <translation type="vanished">Projektin tarkistus havaitsi kansiossa "%1" 
-%2 puuttuvaa alias. (.auf) lohkotiedostoa. 
-Audacity voi täysin luoda  nämä tiedostot 
-uudelleen nykyisen projektin äänestä.</translation>
-    </message>
-    <message>
-        <source>Regenerate alias summary files (safe and recommended)</source>
-        <translation type="vanished">Luo alias-yhteenvetotiedostot uudelleen (turvallinen ja suositeltava)</translation>
-    </message>
-    <message>
-        <source>Fill in silence for missing display data (this session only)</source>
-        <translation type="vanished">Täytä hiljaisuudella puuttuva näyttödata (vain tässä istunnossa)</translation>
-    </message>
-    <message>
-        <source>Close project immediately with no further changes</source>
-        <translation type="vanished">Sulje projekti välittömästi ilman muita muutoksia</translation>
-    </message>
-    <message>
-        <source>Warning - Missing Alias Summary File(s)</source>
-        <translation type="vanished">Varoitus - Puuttuvia alias-tiivistelmätiedostoja</translation>
-    </message>
-    <message>
-        <source>Project check of "%s" folder 
-detected %lld missing audio data (.au) blockfile(s), 
-probably due to a bug, system crash, or accidental 
-deletion. There is no way for Audacity to recover 
-these missing files automatically. 
-
-If you choose the first or second option below, 
-you can try to find and restore the missing files 
-to their previous location. 
-
-Note that for the second option, the waveform 
-may not show silence.</source>
-        <translation type="vanished">Projektin tarkistus havaitsi kansiossa "%1"  
-%2 puuttuvaa äänen (.au) lohkotiedostoa, 
-mikä johtunee viasta, kaatumisesta, tai vahingossa 
-poistamisesta. Audacity ei voi palauttaa näitä 
-puuttuvia tiedostoja automaattisesti. 
-
-Jos valitset alta ensimmäisen tai toisen vaihtoehdon, 
-voit yrittää löytää ja palauttaa puuttuvat tiedostot 
-niiden aiempaan sijaintiin. 
-
-Huomaa, että toisessa vaihtoehdossa, aaltomuoto 
-ei ehkä näytä hiljaisuutta.</translation>
-    </message>
-    <message>
-        <source>Replace missing audio with silence (permanent immediately)</source>
-        <translation type="vanished">Korvaa puuttuva ääni hiljaisuudella (heti pysyvästi).</translation>
-    </message>
-    <message>
-        <source>Warning - Missing Audio Data Block File(s)</source>
-        <translation type="vanished">Varoitus - Puuttuvia äänen lohkotiedostoja</translation>
-    </message>
-    <message>
-        <source>Project check of "%s" folder 
-found %d orphan block file(s). These files are 
-unused by this project, but might belong to other projects. 
-They are doing no harm and are small.</source>
-        <translation type="vanished">Projektin tarkistus havaitsi kansiossa "%1" 
-%2 orpoa lohkotiedostoa. Nämä tiedostot eivät ole 
-käytössä tässä projektissa, mutta voivat kuulua toisiin projekteihin. 
-Ne ovat pieniä eikä niistä ole mitään haittaa.</translation>
-    </message>
-    <message>
-        <source>Continue without deleting; ignore the extra files this session</source>
-        <translation type="vanished">Jatka poistamatta; ohita tämän istunnon ylimääräiset tiedostot</translation>
-    </message>
-    <message>
-        <source>Delete orphan files (permanent immediately)</source>
-        <translation type="vanished">Poista orpotiedostot (heti, pysyvästi)</translation>
-    </message>
-    <message>
-        <source>Warning - Orphan Block File(s)</source>
-        <translation type="vanished">Varoitus - Orpoja lohkotiedostoja</translation>
-    </message>
-    <message>
-        <source>Cleaning up unused directories in project data</source>
-        <translation type="vanished">Siivotaan projektin käyttämättömät hakemistot</translation>
-    </message>
-    <message>
-        <source>Project check found file inconsistencies during automatic recovery.
-
-Select 'Help &gt; Diagnostics &gt; Show Log...' to see details.</source>
-        <translation type="vanished">Projektin tarkistus löysi tiedoston epäjohdonmukaisuuksia automaattisen palautuksen aikana.
-
-Valitse 'Ohje &gt; Diagnostiikka &gt; Näytä loki...' yksityiskohdat.</translation>
-    </message>
-    <message>
-        <source>Warning: Problems in Automatic Recovery</source>
-        <translation type="vanished">Varoitus - Ongelmia automaattisessa palautuksessa</translation>
-    </message>
-    <message>
-        <source>%s
-This feature is not supported in Audacity versions past 3.3.3.
-These stereo tracks have been split into mono tracks.
-As a result, some realtime effects may be missing.
-Please verify that everything works as intended before saving.</source>
-        <extracomment>i18n-hint: Text of the message dialog that may appear on attempt
-to open a project created by Audacity version prior to 3.4.
-%s will be replaced with an explanation of the actual reason of
-project modification.</extracomment>
-        <translation type="vanished">%1
-Tätä ominaisuutta ei tueta Audacityn 3.3.3 versiota vanhemmissa versioissa.
-Nämä stereoraidat on jaettu monoraitoihin.
-Tämän seurauksena joitain reaaliaikaisia tehosteita saattaa puuttua.
-Varmista ennen tallentamista, että kaikki toimii tarkoitetulla tavalla.</translation>
-    </message>
-    <message>
-        <source>This project was not saved properly the last time Audacity ran.
-
-It has been recovered to the last snapshot.</source>
-        <translation type="vanished">Tätä projektia ei tallennettu oikein Audacityn viimeisen käyttökerran aikana.
-
-Se on palautettu viimeisimpään vedokseen.</translation>
-    </message>
-    <message>
-        <source>This project was not saved properly the last time Audacity ran.
-
-It has been recovered to the last snapshot, but you must save it
-to preserve its contents.</source>
-        <translation type="vanished">Projekti ei tallentunut oikein viime Audacityn käyttökerralla.
-
-Se on palautettu viimeisimpään vedokseen, mutta sinun
-pitää tallentaa se säilyttääksesi sen sisällön.</translation>
-    </message>
-    <message>
-        <source>Project Recovered</source>
-        <translation type="vanished">Projekti palautettu</translation>
-    </message>
-    <message>
-        <source>Projects cannot be saved to FAT drives.</source>
-        <translation type="vanished">Projekteja ei voi tallentaa FAT-asemille.</translation>
-    </message>
-    <message>
-        <source>Insufficient Disk Space</source>
-        <translation type="vanished">Levytila ei riitä</translation>
-    </message>
-    <message>
-        <source>The project size exceeds the available free space on the target disk.
-
-Please select a different disk with more free space.</source>
-        <translation type="vanished">Projektin koko ylittää kohdelevyn vapaan tilan määrän.
-
-Valitse toinen levy, jolla on enemmän vapaata tilaa.</translation>
-    </message>
-    <message>
-        <source>The project exceeds the maximum size of 4GB when writing to a FAT32 formatted filesystem.</source>
-        <translation type="vanished">Projektin koko ylittää 4 Gt:n rajan, joten sitä ei voi tallentaa FAT32-tiedostojärjestelmille.</translation>
-    </message>
-    <message>
-        <source>Saved %s</source>
-        <translation type="vanished">%1 tallennettu</translation>
-    </message>
-    <message>
-        <source>The project was not saved because the file name provided would overwrite another project.
-Please try again and select an original name.</source>
-        <translation type="vanished">Projektia ei tallennettu, koska tiedostonimi voisi päällekirjoittaa toisen projektin.
-Yritä uudelleen ja valitse alkuperäinen nimi.</translation>
-    </message>
-    <message>
-        <source>%sSave Project "%s" As...</source>
-        <translation type="vanished">%1Tallenna projekti "%2" nimellä...</translation>
-    </message>
-    <message>
-        <source>   Do you want to overwrite the project:
-"%s"?
-
-   If you select "Yes" the project
-"%s"
-   will be irreversibly overwritten.</source>
-        <extracomment>i18n-hint: In each case, %s is the name
-of the file being overwritten.</extracomment>
-        <translation type="vanished">   Haluatko korvata projektin:
-"%1"?
-
-   Jos valitset "Kyllä", projekti
-"%2"
-   korvataan peruuttamattomasti.</translation>
-    </message>
-    <message>
-        <source>Overwrite Project Warning</source>
-        <extracomment>i18n-hint: Heading: A warning that a project is about to be overwritten.</extracomment>
-        <translation type="vanished">Projektin päällekirjoitusvaroitus</translation>
-    </message>
-    <message>
-        <source>The project was not saved because the selected project is open in another window.
-Please try again and select an original name.</source>
-        <translation type="vanished">Projektia ei tallennettu, koska valittu projekti on avoinna toisessa ikkunassa.
-Yritä uudelleen ja valitse jokin toinen nimi.</translation>
-    </message>
-    <message>
-        <source>%sSave Copy of Project "%s" As...</source>
-        <translation type="vanished">%1Tallenna projektin "%2" kopio nimellä...</translation>
-    </message>
-    <message>
-        <source>Saving a copy must not overwrite an existing saved project.
-Please try again and select an original name.</source>
-        <translation type="vanished">Kopion tallentaminen ei saa korvata aiemmin tallennettua projektia.
-Yritä uudelleen ja valitse alkuperäinen nimi.</translation>
-    </message>
-    <message>
-        <source>Error Saving Copy of Project</source>
-        <translation type="vanished">Virhe tallennettaessa projektin kopiota</translation>
-    </message>
-    <message>
-        <source>Select one or more files</source>
-        <translation type="vanished">Valitse yksi tai useampi tiedosto</translation>
-    </message>
-    <message>
-        <source>%s is already open in another window.</source>
-        <translation type="vanished">%1 on jo avoinna toisessa ikkunassa.</translation>
-    </message>
-    <message>
-        <source>Error Opening Project</source>
-        <translation type="vanished">Virhe projektia avatessa</translation>
-    </message>
-    <message>
-        <source>You are trying to open an automatically created backup file.
-Doing this may result in severe data loss.
-
-Please open the actual Audacity project file instead.</source>
-        <translation type="vanished">Yrität avata automaattisesti luotua varmuuskopiota.
-Tämä voi aiheuttaa vakavaa tietojen häviämistä.
-
-Avaa sen sijaan varsinainen Audacityn projektitiedosto.</translation>
-    </message>
-    <message>
-        <source>Warning - Backup File Detected</source>
-        <translation type="vanished">Varoitus - Havaittu varmuuskopiotiedosto</translation>
-    </message>
-    <message>
-        <source>Error Opening File</source>
-        <translation type="vanished">Virhe tiedoston avauksessa</translation>
-    </message>
-    <message>
-        <source>File may be invalid or corrupted: 
-%s</source>
-        <translation type="vanished">Tiedosto voi olla virheellinen tai vioittunut: 
-%1</translation>
-    </message>
-    <message>
-        <source>Error Opening File or Project</source>
-        <translation type="vanished">Virhe tiedoston tai projektin avauksessa</translation>
-    </message>
-    <message>
-        <source>Project resides on FAT formatted drive.
-Copy it to another drive to open it.</source>
-        <translation type="vanished">Projekti on FAT-levyllä.
-Kopioi se toiselle levylle avataksesi.</translation>
-    </message>
-    <message>
-        <source>A channel of a stereo track was missing.</source>
-        <translation type="vanished">Stereoraidan kanava puuttui.</translation>
-    </message>
-    <message>
-        <source>This project contained stereo tracks with different sample rates per channel.</source>
-        <extracomment>i18n-hint: explains why opened project was auto-modified</extracomment>
-        <translation type="vanished">Tämä projekti sisälsi stereoraitoja eri näytteenottotaajuuksilla kanavaa kohti.</translation>
-    </message>
-    <message>
-        <source>This project contained stereo tracks with different sample formats in channels.</source>
-        <extracomment>i18n-hint: explains why opened project was auto-modified</extracomment>
-        <translation type="vanished">Tämä projekti sisälsi stereoraitoja eri näyteformaateissa kanavissa.</translation>
-    </message>
-    <message>
-        <source>This project contained stereo tracks with non-aligned content.</source>
-        <extracomment>i18n-hint: explains why opened project was auto-modified</extracomment>
-        <translation type="vanished">Tämä projekti sisälsi stereoraitoja, joiden sisältöä ei ole kohdistettu.</translation>
-    </message>
-    <message>
-        <source>Project was recovered</source>
-        <translation type="vanished">Projekti palautettiin</translation>
-    </message>
-    <message>
-        <source>Recover</source>
-        <translation type="vanished">Palauta</translation>
-    </message>
-    <message>
-        <source>%s %d</source>
-        <comment>clip name template</comment>
-        <extracomment>i18n-hint Name default name assigned to a clip on track import</extracomment>
-        <translation type="vanished">%1 %2</translation>
-    </message>
-    <message>
-        <source>Imported '%s'</source>
-        <translation type="vanished">Tuotiin '%1'</translation>
-    </message>
-    <message>
-        <source>Select stream(s) to import</source>
-        <translation type="vanished">Valitse tuotavat virrat</translation>
-    </message>
-    <message>
-        <source>Music Information Retrieval</source>
-        <translation type="vanished">Musiikin tietojen haku</translation>
-    </message>
-    <message>
-        <source>Analyzing imported audio</source>
-        <translation type="vanished">Analysoidaan tuotua ääntä</translation>
-    </message>
-    <message>
-        <source>Failed to import project</source>
-        <translation type="vanished">Projektia ei voitu tuoda</translation>
-    </message>
-    <message>
-        <source>Error Importing</source>
-        <translation type="vanished">Tuontivirhe</translation>
-    </message>
-    <message>
-        <source>Cannot import AUP3 format.  Use File &gt; Open instead</source>
-        <translation type="vanished">Ei voi tuoda AUP3-muotoa.  Käytä Tiedosto &gt; Avaa</translation>
-    </message>
-    <message>
-        <source>Compact Project</source>
-        <translation type="vanished">Tiivistä projekti</translation>
-    </message>
-    <message>
-        <source>Compacting this project will free up disk space by removing unused bytes within the file.
-
-There is %s of free disk space and this project is currently using %s.
-
-If you proceed, the current Undo/Redo History and clipboard contents will be discarded and you will recover approximately %s of disk space.
-
-Do you want to continue?</source>
-        <translation type="vanished">Projektin tiivistäminen vapauttaa levytilaa poistamalla siitä käyttämättömiä tavuja.
-
-Vapaata levytilaa on tällä hetkellä %1 ja projekti vie tilaa %2 verran.
-
-Jos jatkat, kumoamishistoria ja leikepöydän sisältö menetetään, ja vapaata tilaa tulee noin %3 verran lisää.
-
-Haluatko jatkaa?</translation>
-    </message>
-    <message>
-        <source>Compacted project file</source>
-        <translation type="vanished">Tiivistetty projektitiedosto</translation>
-    </message>
-    <message>
-        <source>Compact</source>
-        <translation type="vanished">Tiivistä</translation>
-    </message>
-    <message>
-        <source>[Project %02i] </source>
-        <translation type="vanished">[Projekti %1] </translation>
-    </message>
-    <message>
-        <source>Welcome to Audacity version %s</source>
-        <translation type="vanished">Tervetuloa käyttämään Audacityn versiota %1</translation>
-    </message>
-    <message>
-        <source>%sSave changes to %s?</source>
-        <extracomment>i18n-hint: The first %s numbers the project, the second %s is the project name.</extracomment>
-        <translation type="vanished">%1Tallennetaanko muutokset kohteeseen %2?</translation>
-    </message>
-    <message>
-        <source>Save project before closing?</source>
-        <translation type="vanished">Tallennetaanko projekti ennen sulkemista?</translation>
-    </message>
-    <message>
-        <source>Disk space remaining for recording: %s</source>
-        <translation type="vanished">Tallennustilaa jäljellä äänitykseen: %1</translation>
-    </message>
-    <message>
-        <source>Less than 1 minute</source>
-        <translation type="vanished">Alle 1 minuutti</translation>
-    </message>
-    <message numerus="yes">
-        <source>%d hour</source>
-        <oldsource>%d hours</oldsource>
-        <translation type="vanished">
-            <numerusform>%1 tunti</numerusform>
-            <numerusform>%1 tuntia</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%d minute</source>
-        <oldsource>%d minutes</oldsource>
-        <translation type="vanished">
-            <numerusform>%1 minuutti</numerusform>
-            <numerusform>%1 minuuttia</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>%s and %s.</source>
-        <extracomment>i18n-hint: A time in hours and minutes. Only translate the "and".</extracomment>
-        <translation type="vanished">%1 ja %2.</translation>
-    </message>
-    <message>
-        <source>Horizontal Scrollbar</source>
-        <translation type="vanished">Vaakavierityspalkki</translation>
-    </message>
-    <message>
-        <source>Vertical Scrollbar</source>
-        <translation type="vanished">Pystyvierityspalkki</translation>
-    </message>
-    <message>
-        <source>No Effect</source>
-        <translation type="vanished">Ei tehostetta</translation>
-    </message>
-    <message>
-        <source>Get more effects...</source>
-        <translation type="vanished">Hanki lisää tehosteita...</translation>
-    </message>
-    <message>
-        <source>Analyze</source>
-        <translation type="vanished">Analysoi</translation>
-    </message>
-    <message>
-        <source>%s (missing)</source>
-        <translation type="vanished">%1 (puuttuu)</translation>
-    </message>
-    <message>
-        <source>Effect %d</source>
-        <extracomment>i18n-hint: argument - position of the effect in the effect stack</extracomment>
-        <translation type="vanished">Tehoste %1</translation>
-    </message>
-    <message>
-        <source>Power</source>
-        <translation type="vanished">Power</translation>
-    </message>
-    <message>
-        <source>Replace effect</source>
-        <translation type="vanished">Korvaa tehoste</translation>
-    </message>
-    <message>
-        <source>Removed %s from %s</source>
-        <extracomment>i18n-hint: undo history record
-first parameter - realtime effect name
-second parameter - track name</extracomment>
-        <translation type="vanished">%1 poistettiin kohteesta %2</translation>
-    </message>
-    <message>
-        <source>Remove %s</source>
-        <extracomment>i18n-hint: undo history record
-first parameter - realtime effect name</extracomment>
-        <translation type="vanished">Poista %1</translation>
-    </message>
-    <message>
-        <source>Replaced %s with %s</source>
-        <extracomment>i18n-hint: undo history,
-first and second parameters - realtime effect names</extracomment>
-        <translation type="vanished">%1 korvattiin kohteella %2</translation>
-    </message>
-    <message>
-        <source>Replace %s</source>
-        <extracomment>i18n-hint: undo history record
-first parameter - realtime effect name</extracomment>
-        <translation type="vanished">Korvaa %1</translation>
-    </message>
-    <message>
-        <source>Moved %s up in %s</source>
-        <extracomment>i18n-hint: undo history record
-first parameter - realtime effect name
-second parameter - track name</extracomment>
-        <translation type="vanished">Siirretty %1 ylös kohteessa %2</translation>
-    </message>
-    <message>
-        <source>Moved %s down in %s</source>
-        <extracomment>i18n-hint: undo history record
-first parameter - realtime effect name
-second parameter - track name</extracomment>
-        <translation type="vanished">Siirretty %1 alas kohteessa %2</translation>
-    </message>
-    <message>
-        <source>Change effect order</source>
-        <translation type="vanished">Muuta efektijärjestystä</translation>
-    </message>
-    <message>
-        <source>This plugin could not be loaded.
-It may have been deleted.</source>
-        <translation type="vanished">Tätä laajennusta ei voitu ladata.
-Se on saatettu poistaa.</translation>
-    </message>
-    <message>
-        <source>Plugin Error</source>
-        <translation type="vanished">Laajennuksen virhe</translation>
-    </message>
-    <message>
-        <source>Added %s to %s</source>
-        <extracomment>i18n-hint: undo history record
-first parameter - realtime effect name
-second parameter - track name</extracomment>
-        <translation type="vanished">%1 lisättiin kohteeseen %2</translation>
-    </message>
-    <message>
-        <source>Add %s</source>
-        <extracomment>i18n-hint: undo history record</extracomment>
-        <translation type="vanished">Lisää %1</translation>
-    </message>
-    <message>
-        <source>Realtime effects for %s</source>
-        <extracomment>i18n-hint: argument - track name</extracomment>
-        <translation type="vanished">Reaaliaikaiset tehosteet kohteelle %1</translation>
-    </message>
-    <message>
-        <source>Realtime Effects</source>
-        <translation type="vanished">Reaaliaikaiset tehosteet</translation>
-    </message>
-    <message>
-        <source>Master Effects</source>
-        <translation type="vanished">Pääefektit</translation>
-    </message>
-    <message>
-        <source>Applies to all tracks</source>
-        <translation type="vanished">Käytä kaikkiin raitoihin</translation>
-    </message>
-    <message>
-        <source>Sound Activated Record</source>
-        <translation type="vanished">Ääniaktivoitu nauhoitus</translation>
-    </message>
-    <message>
-        <source>Activation level (dB):</source>
-        <translation type="vanished">Aktivointitaso (dB):</translation>
-    </message>
-    <message>
-        <source>Spectral Data Control Panel</source>
-        <translation type="vanished">Spektridatan ohjauspaneeli</translation>
-    </message>
-    <message>
-        <source>Brush Tool</source>
-        <translation type="vanished">Sivellintyökalu</translation>
-    </message>
-    <message>
-        <source>Spectral Brush</source>
-        <translation type="vanished">Spektrisivellin</translation>
-    </message>
-    <message>
-        <source>Brush radius</source>
-        <translation type="vanished">Siveltimen säde</translation>
-    </message>
-    <message>
-        <source>Custom brush size</source>
-        <translation type="vanished">Mukautettu siveltimen koko</translation>
-    </message>
-    <message>
-        <source>Auto-select overtones (beta)</source>
-        <translation type="vanished">Automaattinen yläsävyjen valinta (beeta)</translation>
-    </message>
-    <message>
-        <source>Enable smart selection</source>
-        <translation type="vanished">Ota älykäs valinta käyttöön</translation>
-    </message>
-    <message>
-        <source>Select the fundamental frequency
-and release the mouse</source>
-        <translation type="vanished">Valitse perustaajuus
-ja vapauta hiiri</translation>
-    </message>
-    <message>
-        <source>Spectra&amp;l Selection Panel</source>
-        <translation type="vanished">Spektrivalintapaneeli</translation>
-    </message>
-    <message>
-        <source>Applied effect to selection</source>
-        <translation type="vanished">Tehoste sovellettiin valintaan</translation>
-    </message>
-    <message>
-        <source>Artist Name</source>
-        <translation type="vanished">Esittäjän nimi</translation>
-    </message>
-    <message>
-        <source>Album Title</source>
-        <translation type="vanished">Albumin nimi</translation>
-    </message>
-    <message>
-        <source>Track Number</source>
-        <translation type="vanished">Raidan numero</translation>
-    </message>
-    <message>
-        <source>Genre</source>
-        <translation type="vanished">Tyylilaji</translation>
-    </message>
-    <message>
-        <source>Use arrow keys (or ENTER key after editing) to navigate fields.</source>
-        <translation type="vanished">Liiku kenttien välillä nuolinäppäimillä (tai ENTER tallentaaksesi muokkauksen).</translation>
-    </message>
-    <message>
-        <source>&amp;Add</source>
-        <translation type="vanished">&amp;Lisää</translation>
-    </message>
-    <message>
-        <source>&amp;Remove</source>
-        <translation type="vanished">&amp;Poista</translation>
-    </message>
-    <message>
-        <source>Genres</source>
-        <translation type="vanished">Tyylilajit</translation>
-    </message>
-    <message>
-        <source>E&amp;dit...</source>
-        <translation type="vanished">&amp;Muokkaa...</translation>
-    </message>
-    <message>
-        <source>Rese&amp;t...</source>
-        <translation type="vanished">Palau&amp;ta...</translation>
-    </message>
-    <message>
-        <source>Template</source>
-        <translation type="vanished">Mallipohja</translation>
-    </message>
-    <message>
-        <source>&amp;Load...</source>
-        <translation type="vanished">&amp;Lataa...</translation>
-    </message>
-    <message>
-        <source>Set De&amp;fault</source>
-        <translation type="vanished">Aseta &amp;oletukseksi</translation>
-    </message>
-    <message>
-        <source>Edit Genres</source>
-        <translation type="vanished">Muokkaa tyylilajeja</translation>
-    </message>
-    <message>
-        <source>Unable to save genre file.</source>
-        <translation type="vanished">Tyylilajitiedostoa ei voi tallentaa.</translation>
-    </message>
-    <message>
-        <source>Reset Genres</source>
-        <translation type="vanished">Palauta tyylilajit</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to reset the genre list to defaults?</source>
-        <translation type="vanished">Haluatko varmasti palauttaa tyylilajilistan oletusarvoihin?</translation>
-    </message>
-    <message>
-        <source>Unable to open genre file.</source>
-        <translation type="vanished">Tyylilajitiedostoa ei voi avata.</translation>
-    </message>
-    <message>
-        <source>Load Metadata As:</source>
-        <translation type="vanished">Lataa metatiedot nimellä:</translation>
-    </message>
-    <message>
-        <source>Error Loading Metadata</source>
-        <translation type="vanished">Metatietojen latausvirhe</translation>
-    </message>
-    <message>
-        <source>Save Metadata As:</source>
-        <translation type="vanished">Tallenna metatiedot nimellä:</translation>
-    </message>
-    <message>
-        <source>Error Saving Tags File</source>
-        <translation type="vanished">Virhe tunnistetiedoston tallennuksessa</translation>
-    </message>
-    <message>
-        <source>Edit Metadata Tags</source>
-        <translation type="vanished">Muokkaa metatietotunnisteita</translation>
-    </message>
-    <message>
-        <source>Metadata Tags</source>
-        <translation type="vanished">Metatietotunnisteet</translation>
-    </message>
-    <message>
-        <source>&amp;Metadata Editor</source>
-        <translation type="vanished">&amp;Metatietoeditori</translation>
-    </message>
-    <message>
-        <source>Audacity Timer Record</source>
-        <translation type="vanished">Audacityn ajastettu äänitys</translation>
-    </message>
-    <message>
-        <source>Save Timer Recording As</source>
-        <translation type="vanished">Tallenna ajastettu äänite nimellä</translation>
-    </message>
-    <message>
-        <source>The selected file name could not be used
-for Timer Recording because it would overwrite another project.
-Please try again and select an original name.</source>
-        <translation type="vanished">Valittua tiedostonimeä ei voitu käyttää
-ajastetussa tallennuksessa, koska se korvaisi toisen projektin.
-Yritä uudelleen ja valitse alkuperäinen nimi.</translation>
-    </message>
-    <message>
-        <source>Error Saving Timer Recording Project</source>
-        <translation type="vanished">Virhe tallennettaessa ajastetun tallennuksen projektia</translation>
-    </message>
-    <message>
-        <source>Duration is zero. Nothing will be recorded.</source>
-        <translation type="vanished">Kesto on nolla. Mitään ei äänitetä.</translation>
-    </message>
-    <message>
-        <source>Error in Duration</source>
-        <translation type="vanished">Virhe kestossa</translation>
-    </message>
-    <message>
-        <source>Automatic Save path is invalid.</source>
-        <translation type="vanished">Automaattisen tallennuspolku ei kelpaa.</translation>
-    </message>
-    <message>
-        <source>Error in Automatic Save</source>
-        <translation type="vanished">Virhe automaattisessa tallennuksessa</translation>
-    </message>
-    <message>
-        <source>Automatic Export path is invalid.</source>
-        <translation type="vanished">Automaattinen vientipolku ei kelpaa.</translation>
-    </message>
-    <message>
-        <source>Error in Automatic Export</source>
-        <translation type="vanished">Virhe automaattisessa viennissä</translation>
-    </message>
-    <message>
-        <source>You may not have enough free disk space to complete this Timer Recording, based on your current settings.
-
-Do you wish to continue?
-
-Planned recording duration:   %s
-Recording time remaining on disk:   %s</source>
-        <translation type="vanished">Levytila ei ehkä riitä tämän ajastetun tallennuksen suorittamiseen nykyisten asetusten perusteella.
-
-Haluatko jatkaa?
-
-Suunnitellun tallennuksen kesto: %1
-Levyllä jäljellä oleva tallennusaika: %2</translation>
-    </message>
-    <message>
-        <source>Timer Recording Disk Space Warning</source>
-        <translation type="vanished">Ajastetun tallennuksen levytilavaroitus</translation>
-    </message>
-    <message>
-        <source>Current Project</source>
-        <translation type="vanished">Nykyinen projekti</translation>
-    </message>
-    <message>
-        <source>Recording start:</source>
-        <translation type="vanished">Äänityksen alku:</translation>
-    </message>
-    <message>
-        <source>Recording end:</source>
-        <translation type="vanished">Äänityksen loppu:</translation>
-    </message>
-    <message>
-        <source>Automatic Save enabled:</source>
-        <translation type="vanished">Automaattinen tallennus käytössä:</translation>
-    </message>
-    <message>
-        <source>Automatic Export enabled:</source>
-        <translation type="vanished">Automaattinen vienti käytössä:</translation>
-    </message>
-    <message>
-        <source>Action after Timer Recording:</source>
-        <translation type="vanished">Toiminto ajastetun tallennuksen jälkeen:</translation>
-    </message>
-    <message>
-        <source>Audacity Timer Record Progress</source>
-        <translation type="vanished">Audacityn ajastettu äänitys käynnissä</translation>
-    </message>
-    <message>
-        <source>All audio is muted.</source>
-        <translation type="vanished">Kaikki äänet mykistetty.</translation>
-    </message>
-    <message>
-        <source>Timer Recording stopped.</source>
-        <translation type="vanished">Ajastettu äänitys pysäytetty.</translation>
-    </message>
-    <message>
-        <source>Timer Recording completed.</source>
-        <translation type="vanished">Ajastettu äänitys valmis.</translation>
-    </message>
-    <message>
-        <source>%s
-
-Recording saved: %s</source>
-        <translation type="vanished">%1
-
-Äänite tallennettu: %2</translation>
-    </message>
-    <message>
-        <source>%s
-
-Error saving recording.</source>
-        <translation type="vanished">%1
-
-Virhe tallennettaessa äänitettä.</translation>
-    </message>
-    <message>
-        <source>%s
-
-Recording exported: %s</source>
-        <translation type="vanished">%1
-
-Äänite viety: %2</translation>
-    </message>
-    <message>
-        <source>%s
-
-Error exporting recording.</source>
-        <translation type="vanished">%1
-
-Virhe vietäessä äänitettä.</translation>
-    </message>
-    <message>
-        <source>%s
-
-'%s' has been canceled due to the error(s) noted above.</source>
-        <translation type="vanished">%1
-
-'%2' on peruutettu yllä mainittujen virheiden vuoksi.</translation>
-    </message>
-    <message>
-        <source>%s
-
-'%s' has been canceled as the recording was stopped.</source>
-        <translation type="vanished">%1
-
-'%2' on peruutettu, kun äänitys pysäytettiin.</translation>
-    </message>
-    <message>
-        <source>Timer Recording</source>
-        <translation type="vanished">Ajastettu äänitys</translation>
-    </message>
-    <message>
-        <source>099 h 060 m 060 s</source>
-        <extracomment>i18n-hint a format string for hours, minutes, and seconds</extracomment>
-        <translation type="vanished">099 h 060 m 060 s</translation>
-    </message>
-    <message>
-        <source>099 days 024 h 060 m 060 s</source>
-        <extracomment>i18n-hint a format string for days, hours, minutes, and seconds</extracomment>
-        <translation type="vanished">099 päivää 024 h 060 m 060 s</translation>
-    </message>
-    <message>
-        <source>Start Date and Time</source>
-        <extracomment>i18n-hint: This string is used to configure the controls for times when the recording is
-* started and stopped. As such it is important that only the alphabetic parts of the string
-* are translated, with the numbers left exactly as they are.
-* The 'h' indicates the first number displayed is hours, the 'm' indicates the second number
-* displayed is minutes, and the 's' indicates that the third number displayed is seconds.</extracomment>
-        <translation type="vanished">Alkupäivämäärä ja -aika</translation>
-    </message>
-    <message>
-        <source>Start Date</source>
-        <translation type="vanished">Alkupäivämäärä</translation>
-    </message>
-    <message>
-        <source>End Date and Time</source>
-        <translation type="vanished">Loppupäivämäärä ja -aika</translation>
-    </message>
-    <message>
-        <source>End Date</source>
-        <translation type="vanished">Loppupäivämäärä</translation>
-    </message>
-    <message>
-        <source>Automatic Save</source>
-        <translation type="vanished">Automaattinen tallennus</translation>
-    </message>
-    <message>
-        <source>Enable &amp;Automatic Save?</source>
-        <translation type="vanished">Otetaanko &amp;automaattinen tallennus käyttöön?</translation>
-    </message>
-    <message>
-        <source>Save Project As:</source>
-        <translation type="vanished">Tallenna projekti nimellä:</translation>
-    </message>
-    <message>
-        <source>Select...</source>
-        <translation type="vanished">Valitse...</translation>
-    </message>
-    <message>
-        <source>Automatic Export</source>
-        <translation type="vanished">Automaattinen vienti</translation>
-    </message>
-    <message>
-        <source>Enable Automatic &amp;Export?</source>
-        <translation type="vanished">Otetaanko automaattinen vi&amp;enti käyttöön?</translation>
-    </message>
-    <message>
-        <source>Export Project As:</source>
-        <translation type="vanished">Vie projekti nimellä:</translation>
-    </message>
-    <message>
-        <source>Options</source>
-        <translation type="vanished">Asetukset</translation>
-    </message>
-    <message>
-        <source>After Recording completes:</source>
-        <translation type="vanished">Nauhoituksen valmistuttua:</translation>
-    </message>
-    <message>
-        <source>Exit Audacity</source>
-        <translation type="vanished">Poistu Audacitystä</translation>
-    </message>
-    <message>
-        <source>Restart system</source>
-        <translation type="vanished">Käynnistä järjestelmä uudelleen</translation>
-    </message>
-    <message>
-        <source>Shutdown system</source>
-        <translation type="vanished">Sammuta järjestelmä</translation>
-    </message>
-    <message>
-        <source>Waiting to start recording at:</source>
-        <translation type="vanished">Odotetaan äänityksen aloitusta:</translation>
-    </message>
-    <message>
-        <source>Recording duration:</source>
-        <translation type="vanished">Äänityksen kesto:</translation>
-    </message>
-    <message>
-        <source>Scheduled to stop at:</source>
-        <translation type="vanished">Ajoitettu pysähtymään:</translation>
-    </message>
-    <message>
-        <source>Audacity Timer Record - Waiting for Start</source>
-        <translation type="vanished">Audacityn ajastettu äänitys - odottaa aloitusta</translation>
-    </message>
-    <message>
-        <source>Recording will commence in:</source>
-        <extracomment>i18n-hint: "in" means after a duration of time,
-which is shown below this string</extracomment>
-        <translation type="vanished">Äänitys alkaa:</translation>
-    </message>
-    <message>
-        <source>%s in:</source>
-        <extracomment>i18n-hint: %s is one of "Do nothing", "Exit Audacity", "Restart system",
-or "Shutdown system", and
-"in" means after a duration of time, shown below this string</extracomment>
-        <translation type="vanished">%1 ajassa:</translation>
-    </message>
-    <message>
-        <source>Recording Saved:</source>
-        <translation type="vanished">Äänite tallennettu:</translation>
-    </message>
-    <message>
-        <source>Recording Exported:</source>
-        <translation type="vanished">Äänite viety:</translation>
-    </message>
-    <message>
-        <source>Audacity Timer Record - Waiting</source>
-        <translation type="vanished">Audacity ajoitettu äänitys - Odotetaan</translation>
-    </message>
-    <message>
-        <source>Timer Recording cannot be used with more than one open project.
-
-Please close any additional projects and try again.</source>
-        <translation type="vanished">Ajastettua äänitystä ei voi käyttää useamman kuin yhden avoimen projektin kanssa.
-
-Sulje mahdolliset lisäprojektit ja yritä uudelleen.</translation>
-    </message>
-    <message>
-        <source>Timer Recording cannot be used while you have unsaved changes.
-
-Please save or close this project and try again.</source>
-        <translation type="vanished">Ajastettua äänitystä ei voi käyttää, kun sinulla on tallentamattomia muutoksia.
-
-Tallenna tai sulje tämä projekti ja yritä uudelleen.</translation>
-    </message>
-    <message>
-        <source>&amp;Timer Record...</source>
-        <translation type="vanished">Ajastettu äänitys...</translation>
-    </message>
-    <message>
-        <source>Export Audio</source>
-        <translation type="vanished">Vie ääni</translation>
-    </message>
-    <message>
-        <source>Edit &amp;Metadata...</source>
-        <translation type="vanished">Muokkaa Meta&amp;dataa...</translation>
-    </message>
-    <message>
-        <source>O&amp;K</source>
-        <translation type="vanished">O&amp;K</translation>
-    </message>
-    <message>
-        <source>Exported Tags</source>
-        <translation type="vanished">Viedyt tunnisteet</translation>
-    </message>
-    <message>
-        <source>Track Panel</source>
-        <translation type="vanished">Raitapaneeli</translation>
-    </message>
-    <message>
-        <source>(Esc to cancel)</source>
-        <extracomment>i18n-hint Esc is a key on the keyboard</extracomment>
-        <translation type="vanished">(Esc peruuttaa)</translation>
-    </message>
-    <message>
-        <source>TrackView</source>
-        <translation type="vanished">Raitanäkymä</translation>
-    </message>
-    <message>
-        <source> Muted</source>
-        <extracomment>i18n-hint: This is for screen reader software and indicates that
-this track is muted. (The mute button is on.)</extracomment>
-        <translation type="vanished"> Mykistetty</translation>
-    </message>
-    <message>
-        <source> Soloed</source>
-        <extracomment>i18n-hint: This is for screen reader software and indicates that
-this track is soloed. (The Solo button is on.)</extracomment>
-        <translation type="vanished"> Soolona</translation>
-    </message>
-    <message>
-        <source> Selected</source>
-        <extracomment>i18n-hint: This is for screen reader software and indicates that
-this track is selected.</extracomment>
-        <translation type="vanished"> Valittu</translation>
-    </message>
-    <message>
-        <source> Sync Locked</source>
-        <extracomment>i18n-hint: This is for screen reader software and indicates that
-this track is shown with a sync-locked icon.
-The absence of a dash between Sync and Locked is deliberate -
-if present, Jaws reads it as "dash".</extracomment>
-        <translation type="vanished"> Tahtilukittu</translation>
-    </message>
-    <message>
-        <source>Track %d</source>
-        <extracomment>i18n-hint: The %d is replaced by the number of the track.</extracomment>
-        <translation type="vanished">Raita %1</translation>
-    </message>
-    <message>
-        <source> Mute On</source>
-        <translation type="vanished"> Mykistys päällä</translation>
-    </message>
-    <message>
-        <source> Solo On</source>
-        <translation type="vanished"> Soolo päällä</translation>
-    </message>
-    <message>
-        <source> Select On</source>
-        <translation type="vanished"> Valinta päällä</translation>
-    </message>
-    <message>
-        <source>Click and drag to adjust relative size of stereo tracks, double-click to make heights equal</source>
-        <translation type="vanished">Säädä stereoraitojen suhteellista kokoa klikkaamalla ja vetämällä, kaksoisklikkaus asettaa yhtä suuret korkeudet</translation>
-    </message>
-    <message>
-        <source>Click and drag to resize the track.</source>
-        <translation type="vanished">Klikkaus ja vetäminen muokkaa raidan kokoa.</translation>
-    </message>
-    <message>
-        <source>Removed audio track(s)</source>
-        <translation type="vanished">Poistettu äänirait(oj)a</translation>
-    </message>
-    <message>
-        <source>Remove Track</source>
-        <translation type="vanished">Poista raita</translation>
-    </message>
-    <message>
-        <source>Removed track '%s'.</source>
-        <translation type="vanished">Poistettu raita '%1'.</translation>
-    </message>
-    <message>
-        <source>Track Remove</source>
-        <translation type="vanished">Raidan poisto</translation>
-    </message>
-    <message>
-        <source>Moved '%s' to Top</source>
-        <extracomment>i18n-hint: Past tense of 'to move', as in 'moved audio track up'.</extracomment>
-        <translation type="vanished">Siirrettiin '%1' ylimmäksi</translation>
-    </message>
-    <message>
-        <source>Move Track to Top</source>
-        <translation type="vanished">Siirrä raita ylimmäksi</translation>
-    </message>
-    <message>
-        <source>Moved '%s' to Bottom</source>
-        <extracomment>i18n-hint: Past tense of 'to move', as in 'moved audio track up'.</extracomment>
-        <translation type="vanished">Siirrettiin '%1' alimmaksi</translation>
-    </message>
-    <message>
-        <source>Move Track to Bottom</source>
-        <translation type="vanished">Siirrä raita alimmaksi</translation>
-    </message>
-    <message>
-        <source>Moved '%s' Up</source>
-        <extracomment>i18n-hint: Past tense of 'to move', as in 'moved audio track up'.</extracomment>
-        <translation type="vanished">Siirrettiin '%1' ylös</translation>
-    </message>
-    <message>
-        <source>Moved '%s' Down</source>
-        <translation type="vanished">Siirrettiin '%1' alas</translation>
-    </message>
-    <message>
-        <source>Move Track Up</source>
-        <extracomment>i18n-hint: Past tense of 'to move', as in 'moved audio track up'.</extracomment>
-        <translation type="vanished">Siirrä raitaa ylös</translation>
-    </message>
-    <message>
-        <source>Move Track Down</source>
-        <translation type="vanished">Siirrä raitaa alas</translation>
-    </message>
-    <message>
-        <source>Playing</source>
-        <extracomment>i18n-hint: These are strings for the status bar, and indicate whether Audacity
-is playing or recording or stopped, and whether it is paused;
-progressive verb form</extracomment>
-        <translation type="vanished">Toistetaan</translation>
-    </message>
-    <message>
-        <source>Recording</source>
-        <extracomment>i18n-hint: These are strings for the status bar, and indicate whether Audacity
-is playing or recording or stopped, and whether it is paused;
-progressive verb form</extracomment>
-        <translation type="vanished">Äänitetään</translation>
-    </message>
-    <message>
-        <source>Selection is too small to use voice key.</source>
-        <extracomment>i18n-hint: Voice key is an experimental/incomplete feature that
-is used to navigate in vocal recordings, to move forwards and
-backwards by words.  So 'key' is being used in the sense of an index.
-This error message means that you've selected too short
-a region of audio to be able to use this feature.</extracomment>
-        <translation type="vanished">Valinta on liian pieni ääninäppäimen käyttöön.</translation>
-    </message>
-    <message>
-        <source>Calibration Results
-</source>
-        <translation type="vanished">Kalibrointitulokset
-</translation>
-    </message>
-    <message>
-        <source>Energy                  -- mean: %1.4f  sd: (%1.4f)
-</source>
-        <extracomment>i18n-hint: %1.4f is replaced by a number.  sd stands for 'Standard Deviations'</extracomment>
-        <translation type="vanished">Energia                 -- keskiarvo: %1.4f  sd: (%1.4f)
-</translation>
-    </message>
-    <message>
-        <source>Sign Changes        -- mean: %1.4f  sd: (%1.4f)
-</source>
-        <translation type="vanished">Etumerkin muutokset -- keskiarvo: %1.4f sd: (%1.4f)
-</translation>
-    </message>
-    <message>
-        <source>Direction Changes  -- mean: %1.4f  sd: (%1.4f)
-</source>
-        <translation type="vanished">Suunnan muutokset  -- keskiarvo: %1.4f  sd: (%1.4f)
-</translation>
-    </message>
-    <message>
-        <source>Calibration Complete</source>
-        <translation type="vanished">Kalibrointi valmis</translation>
-    </message>
-    <message>
-        <source>What's new in Audacity %s</source>
-        <translation type="vanished">Mitä uutta Audacityssä %1</translation>
-    </message>
-    <message>
-        <source>Watch the [[%s|release video]] or read the [[https://support.audacityteam.org/additional-resources/changelog|changelog]] to learn more!&lt;/p&gt;</source>
-        <translation type="vanished">Katso [[%1|julkaise video]] tai lue [[https://support.audacityteam.org/additional-resources/changelog|changelog]] saadaksesi lisätietoja!&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>Get free plugins &amp; sounds</source>
-        <translation type="vanished">Hanki ilmaisia ​​laajennuksia ja ääniä</translation>
-    </message>
-    <message>
-        <source>&lt;p&gt;Check out our [[%s|Muse Hub app]] for a wide range of audio plugins for Audacity users&lt;/p&gt;</source>
-        <translation type="vanished">&lt;p&gt;Tutustu [[%1|Muse Hub -sovellukseen]], josta löydät laajan valikoiman äänilaajennuksia Audacityn käyttäjille&lt;/p&gt;</translation>
-    </message>
-    <message>
-        <source>Welcome to Audacity!</source>
-        <translation type="vanished">Tervetuloa käyttämään Audacityä!</translation>
-    </message>
-    <message>
-        <source>View tutorials</source>
-        <translation type="vanished">Näytä opetusohjelmia</translation>
-    </message>
-    <message>
-        <source>Visit our forum</source>
-        <translation type="vanished">Käy osoitteessa</translation>
-    </message>
-    <message>
-        <source>Don't show this again at start up</source>
-        <translation type="vanished">Älä näytä tätä käynnistyksessä</translation>
-    </message>
-    <message>
-        <source>%s: %s</source>
-        <extracomment>i18n-hint: An item name followed by a value, with appropriate separating punctuation</extracomment>
-        <translation type="vanished">%1: %2</translation>
-    </message>
-    <message>
-        <source>FAIL</source>
-        <translation type="vanished">EPÄONNI</translation>
-    </message>
-    <message>
-        <source>Batch Command</source>
-        <translation type="vanished">Komentojono</translation>
-    </message>
-    <message>
-        <source>%s is not a parameter accepted by %s</source>
-        <translation type="vanished">%1 ei ole parametri jonka %2 hyväksyisi</translation>
-    </message>
-    <message>
-        <source>Invalid value for parameter '%s': should be %s</source>
-        <translation type="vanished">Parametrin '%1' arvo ei kelpaa: pitäisi olla %2</translation>
-    </message>
-    <message>
-        <source>Compare Audio</source>
-        <translation type="vanished">Vertaa ääntä</translation>
-    </message>
-    <message>
-        <source>Threshold:</source>
-        <translation type="vanished">Kynnysarvo:</translation>
-    </message>
-    <message>
-        <source>Compare Audio...</source>
-        <translation type="vanished">Vertaa ääntä...</translation>
-    </message>
-    <message>
-        <source>Compares a range on two tracks.</source>
-        <translation type="vanished">Vertaa kahden raidan aluetta.</translation>
-    </message>
-    <message>
-        <source>Demo</source>
-        <translation type="vanished">Demo</translation>
-    </message>
-    <message>
-        <source>Delay time (seconds):</source>
-        <translation type="vanished">Viiveen kesto (sek.):</translation>
-    </message>
-    <message>
-        <source>Decay factor:</source>
-        <translation type="vanished">Vaimennuskerroin:</translation>
-    </message>
-    <message>
-        <source>Does the demo action.</source>
-        <translation type="vanished">Tekee demotoiminnon.</translation>
-    </message>
-    <message>
-        <source>Drag</source>
-        <translation type="vanished">Vetäminen</translation>
-    </message>
-    <message>
-        <source>Track 0</source>
-        <translation type="vanished">Raita 0</translation>
-    </message>
-    <message>
-        <source>Track 1</source>
-        <translation type="vanished">Raita 1</translation>
-    </message>
-    <message>
-        <source>Id:</source>
-        <extracomment>i18n-hint abbreviates "Identity" or "Identifier"</extracomment>
-        <translation type="vanished">Tunnus:</translation>
-    </message>
-    <message>
-        <source>Window Name:</source>
-        <translation type="vanished">Ikkunan nimi:</translation>
-    </message>
-    <message>
-        <source>From X:</source>
-        <translation type="vanished">Alku-X:</translation>
-    </message>
-    <message>
-        <source>From Y:</source>
-        <translation type="vanished">Alku-Y:</translation>
-    </message>
-    <message>
-        <source>To X:</source>
-        <translation type="vanished">Loppu-X:</translation>
-    </message>
-    <message>
-        <source>To Y:</source>
-        <translation type="vanished">Loppu-Y:</translation>
-    </message>
-    <message>
-        <source>Relative To:</source>
-        <translation type="vanished">Suhteessa:</translation>
-    </message>
-    <message>
-        <source>Move Mouse...</source>
-        <translation type="vanished">Siirrä hiirtä...</translation>
-    </message>
-    <message>
-        <source>Drags mouse from one place to another.</source>
-        <translation type="vanished">Vetää hiirtä paikasta toiseen.</translation>
-    </message>
-    <message>
-        <source>Get Info</source>
-        <translation type="vanished">Hae tietoja</translation>
-    </message>
-    <message>
-        <source>Commands</source>
-        <translation type="vanished">Komennot</translation>
-    </message>
-    <message>
-        <source>Menus</source>
-        <translation type="vanished">Valikot</translation>
-    </message>
-    <message>
-        <source>Clips</source>
-        <translation type="vanished">Leikkeet</translation>
-    </message>
-    <message>
-        <source>Envelopes</source>
-        <translation type="vanished">Verhokäyrät</translation>
-    </message>
-    <message>
-        <source>Boxes</source>
-        <translation type="vanished">Laatikot</translation>
-    </message>
-    <message>
-        <source>JSON</source>
-        <extracomment>i18n-hint JavaScript Object Notation</extracomment>
-        <translation type="vanished">JSON</translation>
-    </message>
-    <message>
-        <source>LISP</source>
-        <extracomment>i18n-hint name of a computer programming language</extracomment>
-        <translation type="vanished">LISP</translation>
-    </message>
-    <message>
-        <source>Brief</source>
-        <translation type="vanished">Lyhyt</translation>
-    </message>
-    <message>
-        <source>Get Info...</source>
-        <translation type="vanished">Hae tietoja...</translation>
-    </message>
-    <message>
-        <source>Gets information in JSON format.</source>
-        <translation type="vanished">Hakee tietoja JSON-muodossa.</translation>
-    </message>
-    <message>
-        <source>Get Track Info</source>
-        <translation type="vanished">Hae raidan tiedot</translation>
-    </message>
-    <message>
-        <source>Types:</source>
-        <translation type="vanished">Tyypit:</translation>
-    </message>
-    <message>
-        <source>Gets track values as JSON.</source>
-        <translation type="vanished">Hakee raidan arvot JSON-muodossa.</translation>
-    </message>
-    <message>
-        <source>Comment</source>
-        <translation type="vanished">Kommentti</translation>
-    </message>
-    <message>
-        <source>_</source>
-        <translation type="vanished">_</translation>
-    </message>
-    <message>
-        <source>Help...</source>
-        <translation type="vanished">Ohje...</translation>
-    </message>
-    <message>
-        <source>Gives help on a command.</source>
-        <translation type="vanished">Antaa apua komennolle.</translation>
-    </message>
-    <message>
-        <source>For comments in a macro.</source>
-        <translation type="vanished">Kommenteille makroissa.</translation>
-    </message>
-    <message>
-        <source>Import2</source>
-        <translation type="vanished">Tuonti2</translation>
-    </message>
-    <message>
-        <source>File Name:</source>
-        <translation type="vanished">Tiedostonimi:</translation>
-    </message>
-    <message>
-        <source>Export2</source>
-        <translation type="vanished">Vienti2</translation>
-    </message>
-    <message>
-        <source>Number of Channels:</source>
-        <translation type="vanished">Kanavien määrä:</translation>
-    </message>
-    <message>
-        <source>Import...</source>
-        <translation type="vanished">Tuo...</translation>
-    </message>
-    <message>
-        <source>Export...</source>
-        <translation type="vanished">Vie...</translation>
-    </message>
-    <message>
-        <source>Imports from a file.</source>
-        <translation type="vanished">Tuo tiedostosta.</translation>
-    </message>
-    <message>
-        <source>Exports to a file.</source>
-        <translation type="vanished">Vie tiedostoon.</translation>
-    </message>
-    <message>
-        <source>Builtin Commands</source>
-        <translation type="vanished">Sisäänrakennetut komennot</translation>
-    </message>
-    <message>
-        <source>Provides builtin commands to Audacity</source>
-        <translation type="vanished">Tarjoaa sisäänrakennettuja komentoja Audacitylle</translation>
-    </message>
-    <message>
-        <source>Unknown built-in command name</source>
-        <translation type="vanished">Tuntematon sisäisen komennon nimi</translation>
-    </message>
-    <message>
-        <source>Text:</source>
-        <translation type="vanished">Teksti:</translation>
-    </message>
-    <message>
-        <source>Message...</source>
-        <translation type="vanished">Viesti...</translation>
-    </message>
-    <message>
-        <source>Echos a message.</source>
-        <translation type="vanished">Kaiuttaa viestin.</translation>
-    </message>
-    <message>
-        <source>Open Project2</source>
-        <translation type="vanished">Avaa projekti2</translation>
-    </message>
-    <message>
-        <source>Add to History</source>
-        <translation type="vanished">Lisää historiaan</translation>
-    </message>
-    <message>
-        <source>Save Project2</source>
-        <translation type="vanished">Tallenna projekti2</translation>
-    </message>
-    <message>
-        <source>Save Copy</source>
-        <translation type="vanished">Tallenna kopio</translation>
-    </message>
-    <message>
-        <source>Save Log</source>
-        <translation type="vanished">Tallenna loki</translation>
-    </message>
-    <message>
-        <source>Clear Log</source>
-        <translation type="vanished">Tyhjennä loki</translation>
-    </message>
-    <message>
-        <source>Open Project...</source>
-        <translation type="vanished">Avaa projekti...</translation>
-    </message>
-    <message>
-        <source>Save Project...</source>
-        <translation type="vanished">Tallenna projekti...</translation>
-    </message>
-    <message>
-        <source>Opens a project.</source>
-        <translation type="vanished">Avaa projektin.</translation>
-    </message>
-    <message>
-        <source>Saves a project.</source>
-        <translation type="vanished">Tallenna projektina.</translation>
-    </message>
-    <message>
-        <source>Saves a copy of current project.</source>
-        <translation type="vanished">Tallentaa nykyisestä projektista kopion.</translation>
-    </message>
-    <message>
-        <source>Saves the log contents.</source>
-        <translation type="vanished">Tallentaa lokin sisällön.</translation>
-    </message>
-    <message>
-        <source>Clears the log contents.</source>
-        <translation type="vanished">Tyhjentää lokin sisällön.</translation>
-    </message>
-    <message>
-        <source>Get Preference</source>
-        <translation type="vanished">Hae asetus</translation>
-    </message>
-    <message>
-        <source>Name:</source>
-        <translation type="vanished">Nimi:</translation>
-    </message>
-    <message>
-        <source>Set Preference</source>
-        <translation type="vanished">Määritä asetus</translation>
-    </message>
-    <message>
-        <source>Value:</source>
-        <translation type="vanished">Arvo:</translation>
-    </message>
-    <message>
-        <source>Reload</source>
-        <translation type="vanished">Lataa uudelleen</translation>
-    </message>
-    <message>
-        <source>Get Preference...</source>
-        <translation type="vanished">Hae asetus...</translation>
-    </message>
-    <message>
-        <source>Set Preference...</source>
-        <translation type="vanished">Määritä asetus...</translation>
-    </message>
-    <message>
-        <source>Gets the value of a single preference.</source>
-        <translation type="vanished">Saa yksittäisen preferenssiarvon.</translation>
-    </message>
-    <message>
-        <source>Sets the value of a single preference.</source>
-        <translation type="vanished">Määrittää yksittäisen asetuksen arvon.</translation>
-    </message>
-    <message>
-        <source>Select Time</source>
-        <translation type="vanished">Valitse aika</translation>
-    </message>
-    <message>
-        <source>Project Start</source>
-        <translation type="vanished">Projektin alku</translation>
-    </message>
-    <message>
-        <source>Project End</source>
-        <translation type="vanished">Projektin loppu</translation>
-    </message>
-    <message>
-        <source>Selection Start</source>
-        <translation type="vanished">Valinnan alku</translation>
-    </message>
-    <message>
-        <source>Selection End</source>
-        <translation type="vanished">Valinnan loppu</translation>
-    </message>
-    <message>
-        <source>Start Time:</source>
-        <translation type="vanished">Alkuaika:</translation>
-    </message>
-    <message>
-        <source>End Time:</source>
-        <translation type="vanished">Loppuaika:</translation>
-    </message>
-    <message>
-        <source>Select Frequencies</source>
-        <translation type="vanished">Valitse taajuudet</translation>
-    </message>
-    <message>
-        <source>High:</source>
-        <translation type="vanished">Korkea:</translation>
-    </message>
-    <message>
-        <source>Low:</source>
-        <translation type="vanished">Matala:</translation>
-    </message>
-    <message>
-        <source>Select Tracks</source>
-        <translation type="vanished">Valitse raidat</translation>
-    </message>
-    <message>
-        <source>Set</source>
-        <extracomment>i18n-hint verb, imperative</extracomment>
-        <translation type="vanished">Aseta</translation>
-    </message>
-    <message>
-        <source>Add</source>
-        <translation type="vanished">Lisää</translation>
-    </message>
-    <message>
-        <source>First Track:</source>
-        <translation type="vanished">Raita 1:</translation>
-    </message>
-    <message>
-        <source>Track Count:</source>
-        <translation type="vanished">Raitojen määrä:</translation>
-    </message>
-    <message>
-        <source>Mode:</source>
-        <translation type="vanished">Tila:</translation>
-    </message>
-    <message>
-        <source>Select Time...</source>
-        <translation type="vanished">Valitse aika...</translation>
-    </message>
-    <message>
-        <source>Select Frequencies...</source>
-        <translation type="vanished">Valitse taajuudet...</translation>
-    </message>
-    <message>
-        <source>Select Tracks...</source>
-        <translation type="vanished">Valitse raidat...</translation>
-    </message>
-    <message>
-        <source>Selects a time range.</source>
-        <translation type="vanished">Valitsee aika-alueen.</translation>
-    </message>
-    <message>
-        <source>Selects a frequency range.</source>
-        <translation type="vanished">Valitsee taajuusalueen.</translation>
-    </message>
-    <message>
-        <source>Selects a range of tracks.</source>
-        <translation type="vanished">Valitsee raita-alueen.</translation>
-    </message>
-    <message>
-        <source>Selects Audio.</source>
-        <translation type="vanished">Valitsee ääntä.</translation>
-    </message>
-    <message>
-        <source>Set Clip</source>
-        <translation type="vanished">Aseta leike</translation>
-    </message>
-    <message>
-        <source>Color 0</source>
-        <translation type="vanished">Väri 0</translation>
-    </message>
-    <message>
-        <source>Color 1</source>
-        <translation type="vanished">Väri 1</translation>
-    </message>
-    <message>
-        <source>Color 2</source>
-        <translation type="vanished">Väri 2</translation>
-    </message>
-    <message>
-        <source>Color 3</source>
-        <translation type="vanished">Väri 3</translation>
-    </message>
-    <message>
-        <source>At:</source>
-        <translation type="vanished">Kohta:</translation>
-    </message>
-    <message>
-        <source>Start:</source>
-        <translation type="vanished">Alku:</translation>
-    </message>
-    <message>
-        <source>Set Clip...</source>
-        <translation type="vanished">Aseta leikkeen...</translation>
-    </message>
-    <message>
-        <source>Sets various values for a clip.</source>
-        <translation type="vanished">Määrittää leikkeelle eri arvoja.</translation>
-    </message>
-    <message>
-        <source>Set Envelope</source>
-        <translation type="vanished">Määritä verhokäyrä</translation>
-    </message>
-    <message>
-        <source>Time:</source>
-        <translation type="vanished">Aika:</translation>
-    </message>
-    <message>
-        <source>Edited Envelope</source>
-        <translation type="vanished">Muokattu verhokäyrä</translation>
-    </message>
-    <message>
-        <source>Envelope</source>
-        <extracomment>i18n-hint: The envelope is a curve that controls the audio loudness.</extracomment>
-        <translation type="vanished">Verhokäyrä</translation>
-    </message>
-    <message>
-        <source>Set Envelope...</source>
-        <translation type="vanished">Aseta verhokäyrän...</translation>
-    </message>
-    <message>
-        <source>Sets an envelope point position.</source>
-        <translation type="vanished">Määrittää verhokäyrän pisteen sijainnin.</translation>
-    </message>
-    <message>
-        <source>Set Label</source>
-        <translation type="vanished">Aseta merkki</translation>
-    </message>
-    <message>
-        <source>Label Index</source>
-        <translation type="vanished">Merkki-indeksi</translation>
-    </message>
-    <message>
-        <source>End:</source>
-        <translation type="vanished">Loppu:</translation>
-    </message>
-    <message>
-        <source>Selected</source>
-        <translation type="vanished">Valittu</translation>
-    </message>
-    <message>
-        <source>Edited Label</source>
-        <translation type="vanished">Muokattu merkki</translation>
-    </message>
-    <message>
-        <source>Set Label...</source>
-        <translation type="vanished">Aseta merkin...</translation>
-    </message>
-    <message>
-        <source>Sets various values for a label.</source>
-        <translation type="vanished">Määrittää merkille eri arvoja.</translation>
-    </message>
-    <message>
-        <source>Set Project</source>
-        <translation type="vanished">Aseta projekti</translation>
-    </message>
-    <message>
-        <source>Rate:</source>
-        <translation type="vanished">Taajuus:</translation>
-    </message>
-    <message>
-        <source>Resize:</source>
-        <translation type="vanished">Muuta kokoa:</translation>
-    </message>
-    <message>
-        <source>X:</source>
-        <translation type="vanished">X:</translation>
-    </message>
-    <message>
-        <source>Y:</source>
-        <translation type="vanished">Y:</translation>
-    </message>
-    <message>
-        <source>Width:</source>
-        <translation type="vanished">Leveys:</translation>
-    </message>
-    <message>
-        <source>Height:</source>
-        <translation type="vanished">Korkeus:</translation>
-    </message>
-    <message>
-        <source>Set Project...</source>
-        <translation type="vanished">Aseta projektin...</translation>
-    </message>
-    <message>
-        <source>Sets various values for a project.</source>
-        <translation type="vanished">Määrittää projektille eri arvoja.</translation>
-    </message>
-    <message>
-        <source>Set Track Status</source>
-        <translation type="vanished">Aseta raidan tila</translation>
-    </message>
-    <message>
-        <source>Unnamed</source>
-        <translation type="vanished">Nimetön</translation>
-    </message>
-    <message>
-        <source>Focused</source>
-        <translation type="vanished">Kohdistettu</translation>
-    </message>
-    <message>
-        <source>Set Track Audio</source>
-        <translation type="vanished">Aseta raidan ääni</translation>
-    </message>
-    <message>
-        <source>Gain:</source>
-        <translation type="vanished">Vahvistus:</translation>
-    </message>
-    <message>
-        <source>Set Track Visuals</source>
-        <translation type="vanished">Määritä raidan visualisoinnit</translation>
-    </message>
-    <message>
-        <source>Times 2</source>
-        <translation type="vanished">Kertaa2</translation>
-    </message>
-    <message>
-        <source>HalfWave</source>
-        <translation type="vanished">Puoliaalto</translation>
-    </message>
-    <message>
-        <source>Display:</source>
-        <translation type="vanished">Näyttö:</translation>
-    </message>
-    <message>
-        <source>Scale:</source>
-        <translation type="vanished">Skaalaus:</translation>
-    </message>
-    <message>
-        <source>VZoom:</source>
-        <translation type="vanished">Pystysuurennos:</translation>
-    </message>
-    <message>
-        <source>VZoom Top:</source>
-        <translation type="vanished">Pystysuurennoksen yläosa:</translation>
-    </message>
-    <message>
-        <source>VZoom Bottom:</source>
-        <translation type="vanished">Pystysuurennoksen alaosa:</translation>
-    </message>
-    <message>
-        <source>Use Spectral Prefs</source>
-        <translation type="vanished">Käytä spektrisiä asetuksia</translation>
-    </message>
-    <message>
-        <source>Spectral Select</source>
-        <translation type="vanished">Spektrivalinta</translation>
-    </message>
-    <message>
-        <source>Sche&amp;me:</source>
-        <comment>spectrum prefs</comment>
-        <extracomment>i18n-hint Scheme refers to a color scheme for spectrogram colors</extracomment>
-        <translation type="vanished">Suunnitelma:</translation>
-    </message>
-    <message>
-        <source>Set Track</source>
-        <translation type="vanished">Aseta raita</translation>
-    </message>
-    <message>
-        <source>Set Track Status...</source>
-        <translation type="vanished">Aseta raidan tila...</translation>
-    </message>
-    <message>
-        <source>Set Track Audio...</source>
-        <translation type="vanished">Aseta raidan ääni...</translation>
-    </message>
-    <message>
-        <source>Set Track Visuals...</source>
-        <translation type="vanished">Aseta raidan ulkoasu...</translation>
-    </message>
-    <message>
-        <source>Set Track...</source>
-        <translation type="vanished">Aseta raidan...</translation>
-    </message>
-    <message>
-        <source>Sets various values for a track.</source>
-        <translation type="vanished">Määrittää raidalle erilaisia arvoja.</translation>
-    </message>
-    <message>
-        <source>Long Message</source>
-        <translation type="vanished">Pitkä viesti</translation>
-    </message>
-    <message>
-        <source>Increases or decreases the volume of the audio you have selected</source>
-        <translation type="vanished">Kasvattaa tai vähentää valitsemaasi äänen voimakkuutta</translation>
-    </message>
-    <message>
-        <source>&amp;Amplification (dB):</source>
-        <translation type="vanished">&amp;Vahvistus (dB):</translation>
-    </message>
-    <message>
-        <source>Amplification dB</source>
-        <translation type="vanished">Vahvistus dB</translation>
-    </message>
-    <message>
-        <source>&amp;New Peak Amplitude (dB):</source>
-        <translation type="vanished">&amp;Uusi huippuamplitudi (dB):</translation>
-    </message>
-    <message>
-        <source>Allo&amp;w clipping</source>
-        <translation type="vanished">&amp;Salli leikkautuminen</translation>
-    </message>
-    <message>
-        <source>Reduces (ducks) the volume of one or more tracks whenever the volume of a specified "control" track reaches a particular level</source>
-        <translation type="vanished">Vähentää (hiljentää) yhden tai useamman raidan äänenvoimakkuutta aina, kun tietyn "ohjausraidan" äänenvoimakkuus saavuttaa tietyn tason</translation>
-    </message>
-    <message>
-        <source>db</source>
-        <translation type="vanished">dB</translation>
-    </message>
-    <message>
-        <source>Duck &amp;amount:</source>
-        <translation type="vanished">Vähennysmäärä:</translation>
-    </message>
-    <message>
-        <source>Ma&amp;ximum pause:</source>
-        <translation type="vanished">Enimmäistau&amp;ko:</translation>
-    </message>
-    <message>
-        <source>Outer fade &amp;down length:</source>
-        <translation type="vanished">Ulomman &amp;laskun pituus:</translation>
-    </message>
-    <message>
-        <source>Outer fade &amp;up length:</source>
-        <translation type="vanished">&amp;Ulomman noston pituus:</translation>
-    </message>
-    <message>
-        <source>Inner fade d&amp;own length:</source>
-        <translation type="vanished">&amp;Sisemmän laskun pituus:</translation>
-    </message>
-    <message>
-        <source>Inner &amp;fade up length:</source>
-        <translation type="vanished">Sisemmän n&amp;oston pituus:</translation>
-    </message>
-    <message>
-        <source>&amp;Threshold:</source>
-        <translation type="vanished">&amp;Kynnysarvo:</translation>
-    </message>
-    <message>
-        <source>Preview not available</source>
-        <translation type="vanished">Esikuuntelu ei ole käytössä</translation>
-    </message>
-    <message>
-        <source>Export Effect Parameters</source>
-        <translation type="vanished">Vie tehosteen parametrit</translation>
-    </message>
-    <message>
-        <source>Import Effect Parameters</source>
-        <translation type="vanished">Tuo tehosteen parametrit</translation>
-    </message>
-    <message>
-        <source>%s: is not a valid presets file.
-</source>
-        <extracomment>i18n-hint %s will be replaced by a file name</extracomment>
-        <translation type="vanished">%1: ei ole kelvollinen esiasetustiedosto.
-</translation>
-    </message>
-    <message>
-        <source>%s: is for a different Effect, Generator or Analyzer.
-</source>
-        <extracomment>i18n-hint %s will be replaced by a file name</extracomment>
-        <translation type="vanished">%1: on tarkoitettu eri tehosteille, generaattorille tai analysaattorille.
-</translation>
-    </message>
-    <message>
-        <source>Tone controls</source>
-        <translation type="vanished">Ääniohjaukset</translation>
-    </message>
-    <message>
-        <source>Bass (dB):</source>
-        <translation type="vanished">Basso (dB):</translation>
-    </message>
-    <message>
-        <source>Ba&amp;ss (dB):</source>
-        <translation type="vanished">Ba&amp;sso (dB):</translation>
-    </message>
-    <message>
-        <source>Bass</source>
-        <translation type="vanished">Basso</translation>
-    </message>
-    <message>
-        <source>&amp;Treble (dB):</source>
-        <translation type="vanished">&amp;Diskantti (dB):</translation>
-    </message>
-    <message>
-        <source>Treble</source>
-        <translation type="vanished">&amp;Diskantti</translation>
-    </message>
-    <message>
-        <source>&amp;Volume (dB):</source>
-        <translation type="vanished">Äänenvoimakkuus (dB):</translation>
-    </message>
-    <message>
-        <source>&amp;Link Volume control to Tone controls</source>
-        <translation type="vanished">&amp;Yhdistä äänenvoimakkuuden säätö äänisäätimiin</translation>
-    </message>
-    <message>
-        <source>Change Pitch</source>
-        <translation type="vanished">Muuta sävelkorkeutta</translation>
-    </message>
-    <message>
-        <source>Estimated Start Pitch: %s%d (%.3f Hz)</source>
-        <translation type="vanished">Arvioitu sävelkorkeus alussa: %1%2 (%3 Hz)</translation>
-    </message>
-    <message>
-        <source>from</source>
-        <comment>change pitch</comment>
-        <extracomment>i18n-hint: changing musical pitch "from" one value "to" another</extracomment>
-        <translation type="vanished">vanha</translation>
-    </message>
-    <message>
-        <source>&amp;from</source>
-        <comment>change pitch</comment>
-        <extracomment>i18n-hint: changing musical pitch "from" one value "to" another</extracomment>
-        <translation type="vanished">&amp;vanha</translation>
-    </message>
-    <message>
-        <source>from Octave</source>
-        <translation type="vanished">oktaavista</translation>
-    </message>
-    <message>
-        <source>to</source>
-        <comment>change pitch</comment>
-        <extracomment>i18n-hint: changing musical pitch "from" one value "to" another</extracomment>
-        <translation type="vanished">uusi</translation>
-    </message>
-    <message>
-        <source>&amp;to</source>
-        <comment>change pitch</comment>
-        <extracomment>i18n-hint: changing musical pitch "from" one value "to" another</extracomment>
-        <translation type="vanished">&amp;uusi</translation>
-    </message>
-    <message>
-        <source>to Octave</source>
-        <translation type="vanished">oktaaviin</translation>
-    </message>
-    <message>
-        <source>Semitones (half-steps)</source>
-        <translation type="vanished">Puolisävelaskel (puoliaskeleet)</translation>
-    </message>
-    <message>
-        <source>&amp;Semitones (half-steps):</source>
-        <translation type="vanished">Puoli&amp;sävelaskeleet (puoliaskeleet):</translation>
-    </message>
-    <message>
-        <source>from (Hz)</source>
-        <translation type="vanished">vanha (Hz)</translation>
-    </message>
-    <message>
-        <source>f&amp;rom</source>
-        <translation type="vanished">&amp;vanha</translation>
-    </message>
-    <message>
-        <source>to (Hz)</source>
-        <translation type="vanished">uusi (Hz)</translation>
-    </message>
-    <message>
-        <source>t&amp;o</source>
-        <translation type="vanished">&amp;uusi</translation>
-    </message>
-    <message>
-        <source>Percent C&amp;hange:</source>
-        <translation type="vanished">Muutosprosentti:</translation>
-    </message>
-    <message>
-        <source>Percent Change</source>
-        <translation type="vanished">Muutosprosentti</translation>
-    </message>
-    <message>
-        <source>&amp;Use high quality stretching (slow)</source>
-        <translation type="vanished">Käytä korkealaat&amp;uista venytystä (hidas)</translation>
-    </message>
-    <message>
-        <source>33⅓</source>
-        <translation type="vanished">33⅓</translation>
-    </message>
-    <message>
-        <source>45</source>
-        <translation type="vanished">45</translation>
-    </message>
-    <message>
-        <source>78</source>
-        <translation type="vanished">78</translation>
-    </message>
-    <message>
-        <source>&amp;Speed Multiplier:</source>
-        <translation type="vanished">Nopeu&amp;skerroin:</translation>
-    </message>
-    <message>
-        <source>Standard Vinyl rpm:</source>
-        <extracomment>i18n-hint: "rpm" is an English abbreviation meaning "revolutions per minute".
-"vinyl" refers to old-fashioned phonograph records</extracomment>
-        <translation type="vanished">Vinyylinopeus:</translation>
-    </message>
-    <message>
-        <source>From rpm</source>
-        <extracomment>i18n-hint: changing speed of audio "from" one value "to" another
-"rpm" means "revolutions per minute" as on a vinyl record turntable</extracomment>
-        <translation type="vanished">Nopeudesta</translation>
-    </message>
-    <message>
-        <source>&amp;from</source>
-        <comment>change speed</comment>
-        <extracomment>i18n-hint: changing speed of audio "from" one value "to" another</extracomment>
-        <translation type="vanished">&amp;vanha</translation>
-    </message>
-    <message>
-        <source>To rpm</source>
-        <extracomment>i18n-hint: changing speed of audio "from" one value "to" another
-"rpm" means "revolutions per minute" as on a vinyl record turntable</extracomment>
-        <translation type="vanished">Nopeuteen</translation>
-    </message>
-    <message>
-        <source>&amp;to</source>
-        <comment>change speed</comment>
-        <extracomment>i18n-hint: changing speed of audio "from" one value "to" another</extracomment>
-        <translation type="vanished">&amp;uusi</translation>
-    </message>
-    <message>
-        <source>Selection Length</source>
-        <translation type="vanished">Valinnan pituus</translation>
-    </message>
-    <message>
-        <source>C&amp;urrent Length:</source>
-        <translation type="vanished">Nykyinen pit&amp;uus:</translation>
-    </message>
-    <message>
-        <source>Current length of selection.</source>
-        <translation type="vanished">Valinnan nykyinen pituus.</translation>
-    </message>
-    <message>
-        <source>from</source>
-        <comment>change speed</comment>
-        <extracomment>i18n-hint: changing speed of audio "from" one value "to" another</extracomment>
-        <translation type="vanished">vanha</translation>
-    </message>
-    <message>
-        <source>&amp;New Length:</source>
-        <translation type="vanished">&amp;Uusi pituus:</translation>
-    </message>
-    <message>
-        <source>to</source>
-        <comment>change speed</comment>
-        <extracomment>i18n-hint: changing speed of audio "from" one value "to" another</extracomment>
-        <translation type="vanished">uusi</translation>
-    </message>
-    <message>
-        <source>Beats per minute</source>
-        <translation type="vanished">Iskua minuutissa</translation>
-    </message>
-    <message>
-        <source>Beats per minute, from</source>
-        <extracomment>i18n-hint: changing tempo "from" one value "to" another</extracomment>
-        <translation type="vanished">Tahtinopeus, vanha</translation>
-    </message>
-    <message>
-        <source>&amp;from</source>
-        <comment>change tempo</comment>
-        <extracomment>i18n-hint: changing tempo "from" one value "to" another</extracomment>
-        <translation type="vanished">&amp;vanha</translation>
-    </message>
-    <message>
-        <source>Beats per minute, to</source>
-        <extracomment>i18n-hint: changing tempo "from" one value "to" another</extracomment>
-        <translation type="vanished">Tahtinopeus, uusi</translation>
-    </message>
-    <message>
-        <source>&amp;to</source>
-        <comment>change tempo</comment>
-        <extracomment>i18n-hint: changing tempo "from" one value "to" another</extracomment>
-        <translation type="vanished">&amp;uusi</translation>
-    </message>
-    <message>
-        <source>Length (seconds)</source>
-        <translation type="vanished">Pituus (sekunteina)</translation>
-    </message>
-    <message>
-        <source>from</source>
-        <comment>change tempo</comment>
-        <extracomment>i18n-hint: changing tempo "from" one value "to" another</extracomment>
-        <translation type="vanished">vanha</translation>
-    </message>
-    <message>
-        <source>t&amp;o</source>
-        <comment>change tempo</comment>
-        <extracomment>i18n-hint: changing tempo "from" one value "to" another</extracomment>
-        <translation type="vanished">uus&amp;i</translation>
-    </message>
-    <message>
-        <source>Length in seconds from %s, to</source>
-        <translation type="vanished">Pituus sekunteina %1 -&gt;</translation>
-    </message>
-    <message>
-        <source>Click Removal</source>
-        <translation type="vanished">Naksausten poisto</translation>
-    </message>
-    <message>
-        <source>Click Removal is designed to remove clicks on audio tracks</source>
-        <translation type="vanished">Naksauksen poistaminen on suunniteltu poistamaan ääniraitojen naksaukset</translation>
-    </message>
-    <message>
-        <source>Selection must be larger than %d samples.</source>
-        <translation type="vanished">Valinnan tulee olla vähintään %1 näytettä.</translation>
-    </message>
-    <message>
-        <source>&amp;Threshold (lower is more sensitive):</source>
-        <translation type="vanished">Kynnysarvo (ma&amp;talampi on herkempi):</translation>
-    </message>
-    <message>
-        <source>Max &amp;Spike Width (higher is more sensitive):</source>
-        <translation type="vanished">Naksauksen enimmäislevey&amp;s (korkeampi on herkempi):</translation>
-    </message>
-    <message>
-        <source>Max Spike Width</source>
-        <translation type="vanished">Naksauksen enimmäisleveys</translation>
-    </message>
-    <message>
-        <source>Reduces "dynamic range", or differences between loud and quiet parts.</source>
-        <translation type="vanished">Vähentää "dynaamista aluetta" eli äänekkäiden ja hiljaisten osien välisiä eroja.</translation>
-    </message>
-    <message>
-        <source>Contrast Analyzer, for measuring RMS volume differences between two selections of audio.</source>
-        <extracomment>i18n-hint: RMS abbreviates root mean square, a certain averaging method</extracomment>
-        <translation type="vanished">Kontrastianalysaattori RMS-äänenvoimakkuuden erojen mittaamiseksi kahden äänivalinnan välillä.</translation>
-    </message>
-    <message>
-        <source>End</source>
-        <extracomment>i18n-hint noun</extracomment>
-        <translation type="vanished">Loppu</translation>
-    </message>
-    <message>
-        <source>Volume    </source>
-        <translation type="vanished">Voimakkuus    </translation>
-    </message>
-    <message>
-        <source>&amp;Foreground:</source>
-        <translation type="vanished">&amp;Edusta:</translation>
-    </message>
-    <message>
-        <source>Foreground start time</source>
-        <translation type="vanished">Edustan alkuaika</translation>
-    </message>
-    <message>
-        <source>Foreground end time</source>
-        <translation type="vanished">Edustan loppuaika</translation>
-    </message>
-    <message>
-        <source>&amp;Measure selection</source>
-        <translation type="vanished">Mittaa va&amp;linta</translation>
-    </message>
-    <message>
-        <source>&amp;Background:</source>
-        <translation type="vanished">&amp;Tausta:</translation>
-    </message>
-    <message>
-        <source>Background start time</source>
-        <translation type="vanished">Taustan alkuaika</translation>
-    </message>
-    <message>
-        <source>Background end time</source>
-        <translation type="vanished">Taustan loppuaika</translation>
-    </message>
-    <message>
-        <source>Mea&amp;sure selection</source>
-        <translation type="vanished">Mi&amp;ttaa valinta</translation>
-    </message>
-    <message>
-        <source>Result</source>
-        <translation type="vanished">Tulos</translation>
-    </message>
-    <message>
-        <source>Co&amp;ntrast Result:</source>
-        <translation type="vanished">Ko&amp;ntrastin tulos:</translation>
-    </message>
-    <message>
-        <source>R&amp;eset</source>
-        <translation type="vanished">&amp;Palauta</translation>
-    </message>
-    <message>
-        <source>&amp;Difference:</source>
-        <translation type="vanished">&amp;Erotus:</translation>
-    </message>
-    <message>
-        <source>RMS = %s.</source>
-        <extracomment>i18n-hint: RMS abbreviates root mean square, a certain averaging method</extracomment>
-        <translation type="vanished">RMS = %1.</translation>
-    </message>
-    <message>
-        <source>%s dB</source>
-        <extracomment>i18n-hint: dB abbreviates decibels</extracomment>
-        <translation type="vanished">%1 dB</translation>
-    </message>
-    <message>
-        <source>zero</source>
-        <translation type="vanished">nolla</translation>
-    </message>
-    <message>
-        <source>indeterminate</source>
-        <translation type="vanished">määrittelemätön</translation>
-    </message>
-    <message>
-        <source>%.2f dB RMS</source>
-        <extracomment>i18n-hint: dB abbreviates decibels
-* RMS abbreviates root mean square, a certain averaging method</extracomment>
-        <translation type="vanished">%1 dB RMS</translation>
-    </message>
-    <message>
-        <source>Infinite dB difference</source>
-        <extracomment>i18n-hint: dB abbreviates decibels</extracomment>
-        <translation type="vanished">Äärettömän dB erotus</translation>
-    </message>
-    <message>
-        <source>Difference is indeterminate.</source>
-        <translation type="vanished">Erotus on määrittelemätön.</translation>
-    </message>
-    <message>
-        <source>Difference = %.2f RMS dB.</source>
-        <extracomment>i18n-hint: dB abbreviates decibels
-RMS abbreviates root mean square, a certain averaging method</extracomment>
-        <translation type="vanished">Erotus = %1 RMS dB.</translation>
-    </message>
-    <message>
-        <source>Difference = infinite RMS dB.</source>
-        <extracomment>i18n-hint: dB abbreviates decibels
-RMS abbreviates root mean square, a certain averaging method</extracomment>
-        <translation type="vanished">Erotus = ääretön RMS dB.</translation>
-    </message>
-    <message>
-        <source>Foreground level too high</source>
-        <translation type="vanished">Edustataso liian korkea</translation>
-    </message>
-    <message>
-        <source>Background level too high</source>
-        <translation type="vanished">Taustataso liian korkea</translation>
-    </message>
-    <message>
-        <source>Background higher than foreground</source>
-        <translation type="vanished">Tausta korkeampi kuin edusta</translation>
-    </message>
-    <message>
-        <source>WCAG2 Pass</source>
-        <extracomment>i18n-hint: WCAG2 is the 'Web Content Accessibility Guidelines (WCAG) 2.0', see http://www.w3.org/TR/WCAG20/</extracomment>
-        <translation type="vanished">WCAG2 onnistui</translation>
-    </message>
-    <message>
-        <source>WCAG2 Fail</source>
-        <extracomment>i18n-hint: WCAG abbreviates Web Content Accessibility Guidelines</extracomment>
-        <translation type="vanished">WCAG2 epäonnistui</translation>
-    </message>
-    <message>
-        <source>Current difference</source>
-        <extracomment>i18n-hint: i.e. difference in loudness at the moment.</extracomment>
-        <translation type="vanished">Nykyinen erotus</translation>
-    </message>
-    <message>
-        <source>Measured foreground level</source>
-        <translation type="vanished">Mitattu edustataso</translation>
-    </message>
-    <message>
-        <source>%.2f dB</source>
-        <extracomment>i18n-hint: short form of 'decibels'</extracomment>
-        <translation type="vanished">%1 dB</translation>
-    </message>
-    <message>
-        <source>No foreground measured</source>
-        <translation type="vanished">Edustaa ei mitattu</translation>
-    </message>
-    <message>
-        <source>Foreground not yet measured</source>
-        <translation type="vanished">Edustaa ei ole vielä mitattu</translation>
-    </message>
-    <message>
-        <source>Measured background level</source>
-        <translation type="vanished">Mitattu taustataso</translation>
-    </message>
-    <message>
-        <source>No background measured</source>
-        <translation type="vanished">Taustaa ei mitattu</translation>
-    </message>
-    <message>
-        <source>Background not yet measured</source>
-        <translation type="vanished">Taustaa ei ole vielä mitattu</translation>
-    </message>
-    <message>
-        <source>Export Contrast Result As:</source>
-        <translation type="vanished">Vie kontrastitulos nimellä:</translation>
-    </message>
-    <message>
-        <source>WCAG 2.0 Success Criteria 1.4.7 Contrast Results</source>
-        <extracomment>i18n-hint: WCAG abbreviates Web Content Accessibility Guidelines</extracomment>
-        <translation type="vanished">WCAG 2.0 Onnistumiskriteerit 1.4.7 Kontrastitulokset</translation>
-    </message>
-    <message>
-        <source>Filename = %s.</source>
-        <translation type="vanished">Tiedostonimi = %1.</translation>
-    </message>
-    <message>
-        <source>Foreground</source>
-        <translation type="vanished">Edusta</translation>
-    </message>
-    <message>
-        <source>Time started = %2d hour(s), %2d minute(s), %.2f seconds.</source>
-        <translation type="vanished">Alkuaika = %1 tunti(a), %2 minuutti(a), %3 sekuntia.</translation>
-    </message>
-    <message>
-        <source>Time ended = %2d hour(s), %2d minute(s), %.2f seconds.</source>
-        <translation type="vanished">Loppuaika = %1 tunti(a), %2 minuutti(a), %3 sekuntia.</translation>
-    </message>
-    <message>
-        <source>Background</source>
-        <translation type="vanished">Tausta</translation>
-    </message>
-    <message>
-        <source>Results</source>
-        <translation type="vanished">Tulokset</translation>
-    </message>
-    <message>
-        <source>Success Criteria 1.4.7 of WCAG 2.0: Pass</source>
-        <translation type="vanished">Onnistumiskriteeri 1.4.7 / WCAG 2.0: Onnistui</translation>
-    </message>
-    <message>
-        <source>Success Criteria 1.4.7 of WCAG 2.0: Fail</source>
-        <translation type="vanished">Onnistumiskriteeri 1.4.7 / WCAG 2.0: Epäonnistui</translation>
-    </message>
-    <message>
-        <source>Data gathered</source>
-        <translation type="vanished">Kerätyt tiedot</translation>
-    </message>
-    <message>
-        <source>%d %s %02d %02dh %02dm %02ds</source>
-        <extracomment>i18n-hint: day of month, month, year, hour, minute, second</extracomment>
-        <translation type="vanished">%1 %2 %3 %4t %5m %6s</translation>
-    </message>
-    <message>
-        <source>Contrast Analysis (WCAG 2 compliance)</source>
-        <translation type="vanished">Kontrastianalyysi (WCAG 2:n mukainen)</translation>
-    </message>
-    <message>
-        <source>Contrast...</source>
-        <translation type="vanished">Kontrasti...</translation>
-    </message>
-    <message>
-        <source>Upper Threshold</source>
-        <translation type="vanished">Ylempi kynnys</translation>
-    </message>
-    <message>
-        <source>Noise Floor</source>
-        <translation type="vanished">Kohinataso</translation>
-    </message>
-    <message>
-        <source>Parameter 1</source>
-        <translation type="vanished">Parametri 1</translation>
-    </message>
-    <message>
-        <source>Parameter 2</source>
-        <translation type="vanished">Parametri 2</translation>
-    </message>
-    <message>
-        <source>Number of repeats</source>
-        <translation type="vanished">Toistojen määrä</translation>
-    </message>
-    <message>
-        <source>Distortion type:</source>
-        <translation type="vanished">Särötyyppi:</translation>
-    </message>
-    <message>
-        <source>DC blocking filter</source>
-        <translation type="vanished">Tasavirran estosuodatin</translation>
-    </message>
-    <message>
-        <source>Threshold controls</source>
-        <translation type="vanished">Kynnysarvon säätimet</translation>
-    </message>
-    <message>
-        <source>Parameter controls</source>
-        <translation type="vanished">Parametrien ohjaimet</translation>
-    </message>
-    <message>
-        <source>Clipping level</source>
-        <translation type="vanished">Leikkaustaso</translation>
-    </message>
-    <message>
-        <source>Drive</source>
-        <translation type="vanished">Asema</translation>
-    </message>
-    <message>
-        <source>Make-up Gain</source>
-        <translation type="vanished">Korvaava vahvistus</translation>
-    </message>
-    <message>
-        <source>Clipping threshold</source>
-        <translation type="vanished">Leikkauskynnys</translation>
-    </message>
-    <message>
-        <source>Hardness</source>
-        <translation type="vanished">Kovuus</translation>
-    </message>
-    <message>
-        <source>Distortion amount</source>
-        <translation type="vanished">Särön määrä</translation>
-    </message>
-    <message>
-        <source>Output level</source>
-        <translation type="vanished">Lähtötaso</translation>
-    </message>
-    <message>
-        <source>Repeat processing</source>
-        <translation type="vanished">Toista käsittely</translation>
-    </message>
-    <message>
-        <source>Harmonic brightness</source>
-        <translation type="vanished">Harmoninen kirkkaus</translation>
-    </message>
-    <message>
-        <source>Levelling fine adjustment</source>
-        <translation type="vanished">Tasoituksen hienosäätö</translation>
-    </message>
-    <message>
-        <source>Degree of Levelling</source>
-        <translation type="vanished">Tasoitusaste</translation>
-    </message>
-    <message>
-        <source>dB Limit</source>
-        <translation type="vanished">dB-raja</translation>
-    </message>
-    <message>
-        <source>Wet level</source>
-        <translation type="vanished">Märkätaso</translation>
-    </message>
-    <message>
-        <source>Residual level</source>
-        <translation type="vanished">Jäännöstaso</translation>
-    </message>
-    <message>
-        <source>(Not Used):</source>
-        <translation type="vanished">(Ei käytössä):</translation>
-    </message>
-    <message>
-        <source>(-100 to 0 dB):</source>
-        <extracomment>i18n-hint: Control range.</extracomment>
-        <translation type="vanished">(-100 -&gt; 0 dB):</translation>
-    </message>
-    <message>
-        <source>(-80 to -20 dB):</source>
-        <extracomment>i18n-hint: Control range.</extracomment>
-        <translation type="vanished">(-80 -&gt; -20 dB):</translation>
-    </message>
-    <message>
-        <source>(0 to 100):</source>
-        <extracomment>i18n-hint: Control range.</extracomment>
-        <translation type="vanished">(0 -&gt; 100):</translation>
-    </message>
-    <message>
-        <source>(0 to 5):</source>
-        <extracomment>i18n-hint: Control range.</extracomment>
-        <translation type="vanished">(0 -&gt; 5):</translation>
-    </message>
-    <message>
-        <source>DTMF sequence empty.
-Check ALL settings for this effect.</source>
-        <translation type="vanished">DTMF-sarja  on tyhjä.
-Tarkista KAIKKI tämän tehosteen asetukset.</translation>
-    </message>
-    <message>
-        <source>DTMF &amp;sequence:</source>
-        <translation type="vanished">DTMF-&amp;sarja:</translation>
-    </message>
-    <message>
-        <source>&amp;Amplitude (0-1):</source>
-        <translation type="vanished">&amp;Amplitudi (0-1):</translation>
-    </message>
-    <message>
-        <source>&amp;Duration:</source>
-        <translation type="vanished">&amp;Kesto:</translation>
-    </message>
-    <message>
-        <source>&amp;Tone/silence ratio:</source>
-        <translation type="vanished">Ääni/hiljaisuus-suhde:</translation>
-    </message>
-    <message>
-        <source>Duty cycle:</source>
-        <translation type="vanished">Pulssisuhde:</translation>
-    </message>
-    <message>
-        <source>%.1f %%</source>
-        <translation type="vanished">%1 %%</translation>
-    </message>
-    <message>
-        <source>Tone duration:</source>
-        <translation type="vanished">Äänen kesto:</translation>
-    </message>
-    <message>
-        <source>Silence duration:</source>
-        <translation type="vanished">Hiljaisuuden kesto:</translation>
-    </message>
-    <message>
-        <source>%0.f ms</source>
-        <extracomment>i18n-hint milliseconds</extracomment>
-        <translation type="vanished">%0.f ms</translation>
-    </message>
-    <message>
-        <source>I&amp;nput</source>
-        <translation type="vanished">Syöte</translation>
-    </message>
-    <message>
-        <source>Show input</source>
-        <extracomment>i18n-hint: show input on a graph</extracomment>
-        <translation type="vanished">Näytä tulos</translation>
-    </message>
-    <message>
-        <source>O&amp;utput</source>
-        <translation type="vanished">Tuloste</translation>
-    </message>
-    <message>
-        <source>A&amp;ctual compression</source>
-        <translation type="vanished">Pakkaus</translation>
-    </message>
-    <message>
-        <source>Show actual compression</source>
-        <extracomment>i18n-hint: show actual compression on a graph</extracomment>
-        <translation type="vanished">Äänenvoimakkuus ja pakkaus</translation>
-    </message>
-    <message>
-        <source>Tar&amp;get compression</source>
-        <translation type="vanished">Pakkaus</translation>
-    </message>
-    <message>
-        <source>Show target compression</source>
-        <extracomment>i18n-hint: show target compression on a graph</extracomment>
-        <translation type="vanished">Äänenvoimakkuus ja pakkaus</translation>
-    </message>
-    <message>
-        <source>Compression curve</source>
-        <translation type="vanished">Pakkauskäyrä</translation>
-    </message>
-    <message>
-        <source>Smoothing</source>
-        <translation type="vanished">Tasoitus</translation>
-    </message>
-    <message>
-        <source>&amp;Threshold (dB)</source>
-        <translation type="vanished">&amp;Kynnysarvo (dB)</translation>
-    </message>
-    <message>
-        <source>&amp;Make-up gain (dB)</source>
-        <translation type="vanished">&amp;Lisävahvistus (dB)</translation>
-    </message>
-    <message>
-        <source>&amp;Make-up target (dB)</source>
-        <translation type="vanished">&amp;Korjauskohde (dB)</translation>
-    </message>
-    <message>
-        <source>Knee &amp;width (dB)</source>
-        <translation type="vanished">Polven leveys (dB)</translation>
-    </message>
-    <message>
-        <source>Rati&amp;o:</source>
-        <translation type="vanished">&amp;Suhde:</translation>
-    </message>
-    <message>
-        <source>&amp;Lookahead (ms)</source>
-        <translation type="vanished">&amp;Eteenpäin (ms)</translation>
-    </message>
-    <message>
-        <source>Attac&amp;k (ms)</source>
-        <translation type="vanished">&amp;Nousu (ms)</translation>
-    </message>
-    <message>
-        <source>&amp;Release (ms)</source>
-        <translation type="vanished">&amp;Vapautusaika (ms)</translation>
-    </message>
-    <message>
-        <source>Actual Compression</source>
-        <translation type="vanished">Pakkaus</translation>
-    </message>
-    <message>
-        <source>Target Compression</source>
-        <translation type="vanished">Pakkaus</translation>
-    </message>
-    <message>
-        <source>awaiting playback</source>
-        <translation type="vanished">odottaa toistoa</translation>
-    </message>
-    <message>
-        <source>&amp;Delay time (seconds):</source>
-        <translation type="vanished">&amp;Viiveen kesto (sek.):</translation>
-    </message>
-    <message>
-        <source>D&amp;ecay factor:</source>
-        <translation type="vanished">Vaim&amp;ennuskerroin:</translation>
-    </message>
-    <message>
-        <source>Applied command: %s</source>
-        <translation type="vanished">Käytetty tehoste: %1</translation>
-    </message>
-    <message>
-        <source>Select Preset</source>
-        <translation type="vanished">Valitse esiasetus</translation>
-    </message>
-    <message>
-        <source>&amp;Preset:</source>
-        <translation type="vanished">&amp;Esiasetus:</translation>
-    </message>
-    <message>
-        <source>User Presets</source>
-        <translation type="vanished">Esiasetukset</translation>
-    </message>
-    <message>
-        <source>Factory Presets</source>
-        <translation type="vanished">Tehdasesiasetukset</translation>
-    </message>
-    <message>
-        <source>Current Settings</source>
-        <translation type="vanished">Nykyiset asetukset</translation>
-    </message>
-    <message>
-        <source>Factory Defaults</source>
-        <translation type="vanished">Tehdasoletukset</translation>
-    </message>
-    <message>
-        <source>Attempting to initialize the following effect failed:
-
-%s
-
-More information may be available in 'Help &gt; Diagnostics &gt; Show Log'</source>
-        <translation type="vanished">Seuraavan tehosteen alustaminen epäonnistui:
-
-%1
-
-Lisätietoja voi olla kohdassa 'Ohje &gt; Diagnostiikka &gt; Näytä loki'</translation>
-    </message>
-    <message>
-        <source>Effect failed to initialize</source>
-        <translation type="vanished">Tehosteen alustus epäonnistui</translation>
-    </message>
-    <message>
-        <source>Attempting to initialize the following command failed:
-
-%s
-
-More information may be available in 'Help &gt; Diagnostics &gt; Show Log'</source>
-        <translation type="vanished">Seuraavan komennon alustaminen epäonnistui:
-
-%1
-
-Lisätietoja voi olla kohdassa 'Ohje &gt; Diagnostiikka &gt; Näytä loki'</translation>
-    </message>
-    <message>
-        <source>Command failed to initialize</source>
-        <translation type="vanished">Komennon alustaminen epäonnistui</translation>
-    </message>
-    <message>
-        <source>Previewing</source>
-        <translation type="vanished">Esikuunnellaan</translation>
-    </message>
-    <message>
-        <source>Manage presets and options</source>
-        <translation type="vanished">Esiasetuksien ja valintojen hallinta</translation>
-    </message>
-    <message>
-        <source>Presets &amp;&amp; settings</source>
-        <translation type="vanished">Esiasetus &amp;&amp; asetukset</translation>
-    </message>
-    <message>
-        <source>Preview effect</source>
-        <translation type="vanished">Tehosteen esikuuntelu</translation>
-    </message>
-    <message>
-        <source>&amp;Apply</source>
-        <translation type="vanished">&amp;Käytä</translation>
-    </message>
-    <message>
-        <source>Save Preset...</source>
-        <translation type="vanished">Tallenna esiasetus...</translation>
-    </message>
-    <message>
-        <source>Defaults</source>
-        <translation type="vanished">Oletukset</translation>
-    </message>
-    <message>
-        <source>Options...</source>
-        <translation type="vanished">Valinnat...</translation>
-    </message>
-    <message>
-        <source>Type: %s</source>
-        <translation type="vanished">Tyyppi: %1</translation>
-    </message>
-    <message>
-        <source>Name: %s</source>
-        <translation type="vanished">Nimi: %1</translation>
-    </message>
-    <message>
-        <source>Version: %s</source>
-        <translation type="vanished">Versio: %1</translation>
-    </message>
-    <message>
-        <source>Vendor: %s</source>
-        <translation type="vanished">Toimittaja: %1</translation>
-    </message>
-    <message>
-        <source>Description: %s</source>
-        <translation type="vanished">Kuvaus: %1</translation>
-    </message>
-    <message>
-        <source>About</source>
-        <translation type="vanished">Tietoja</translation>
-    </message>
-    <message>
-        <source>Are you sure you want to delete "%s"?</source>
-        <translation type="vanished">Haluatko varmasti poistaa kohteen "%1"?</translation>
-    </message>
-    <message>
-        <source>Preset name:</source>
-        <translation type="vanished">Esiasetusnimi:</translation>
-    </message>
-    <message>
-        <source>You must specify a name</source>
-        <translation type="vanished">Sinun on määritettävä nimi</translation>
-    </message>
-    <message>
-        <source>Preset already exists.
-
-Replace?</source>
-        <translation type="vanished">Esiasetus on jo olemassa.
-
-Korvataanko?</translation>
-    </message>
-    <message>
-        <source>Effect Unavailable</source>
-        <translation type="vanished">Tehoste ei ole käytettävissä</translation>
-    </message>
-    <message>
-        <source>Benchmark times:
-Original: %s
-Default Segmented: %s
-Default Threaded: %s
-SSE: %s
-SSE Threaded: %s
-</source>
-        <translation type="vanished">Vertailuajat:
-Alkuperäinen: %1
-Oletussegmentoitu: %2
-Oletussäikeinen: %3
-SSE: %4
-SSE-säikeistetty: %5
-</translation>
-    </message>
-    <message>
-        <source>%d Hz</source>
-        <translation type="vanished">%1 Hz</translation>
-    </message>
-    <message>
-        <source>%g kHz</source>
-        <translation type="vanished">%1 kHz</translation>
-    </message>
-    <message>
-        <source>%gk</source>
-        <extracomment>i18n-hint k is SI abbreviation for x1,000.  Usually unchanged in translation.</extracomment>
-        <translation type="vanished">%1k</translation>
-    </message>
-    <message>
-        <source>%d dB</source>
-        <translation type="vanished">%1 dB</translation>
-    </message>
-    <message>
-        <source>Error Loading EQ Curves</source>
-        <translation type="vanished">Virhe taajuuskorjauskäyrien latauksessa</translation>
-    </message>
-    <message>
-        <source>Manage Curves List</source>
-        <translation type="vanished">Käyräluettelon hallinta</translation>
-    </message>
-    <message>
-        <source>Manage Curves</source>
-        <translation type="vanished">Käyrien hallinta</translation>
-    </message>
-    <message>
-        <source>&amp;Curves</source>
-        <translation type="vanished">&amp;Käyrät</translation>
-    </message>
-    <message>
-        <source>Curve Name</source>
-        <translation type="vanished">Käyrän nimi</translation>
-    </message>
-    <message>
-        <source>D&amp;elete...</source>
-        <translation type="vanished">&amp;Poista...</translation>
-    </message>
-    <message>
-        <source>&amp;Get More...</source>
-        <translation type="vanished">&amp;Hanki lisää...</translation>
-    </message>
-    <message>
-        <source>De&amp;faults</source>
-        <translation type="vanished">Ol&amp;etukset</translation>
-    </message>
-    <message>
-        <source>Rename 'unnamed' to save a new entry.
-'OK' saves all changes, 'Cancel' doesn't.</source>
-        <translation type="vanished">Nimeä 'nimetön' uudelleen, jos haluat tallentaa uuden merkinnän.
-'OK' tallentaa kaikki muutokset, 'Peruuta' ei.</translation>
-    </message>
-    <message>
-        <source>'unnamed' always stays at the bottom of the list</source>
-        <translation type="vanished">'nimetön' pysyy aina luettelon lopussa</translation>
-    </message>
-    <message>
-        <source>'unnamed' is special</source>
-        <translation type="vanished">'nimetön' on erityinen</translation>
-    </message>
-    <message>
-        <source>Rename '%s' to...</source>
-        <translation type="vanished">Nimeä '%1' uudelleen nimelle...</translation>
-    </message>
-    <message>
-        <source>Rename...</source>
-        <translation type="vanished">Nimeä uudelleen...</translation>
-    </message>
-    <message>
-        <source>Rename '%s'</source>
-        <translation type="vanished">Nimeä uudelleen '%1'</translation>
-    </message>
-    <message>
-        <source>Name is the same as the original one</source>
-        <translation type="vanished">Nimi on sama kuin alkuperäisen</translation>
-    </message>
-    <message>
-        <source>Same name</source>
-        <translation type="vanished">Sama nimi</translation>
-    </message>
-    <message>
-        <source>Overwrite existing curve '%s'?</source>
-        <translation type="vanished">Korvataanko olemassa oleva käyrä '%1'?</translation>
-    </message>
-    <message>
-        <source>Curve exists</source>
-        <translation type="vanished">Käyrä on olemassa</translation>
-    </message>
-    <message>
-        <source>You cannot delete the 'unnamed' curve.</source>
-        <translation type="vanished">Et voi poistaa 'nimetöntä' käyrää.</translation>
-    </message>
-    <message>
-        <source>Can't delete 'unnamed'</source>
-        <translation type="vanished">Et voi poistaa 'nimetöntä'</translation>
-    </message>
-    <message>
-        <source>Delete '%s'?</source>
-        <translation type="vanished">Poistetaanko '%1'?</translation>
-    </message>
-    <message>
-        <source>Delete %d items?</source>
-        <translation type="vanished">Poistetaanko %1 kohdetta?</translation>
-    </message>
-    <message>
-        <source>You cannot delete the 'unnamed' curve, it is special.</source>
-        <translation type="vanished">Et voi poistaa 'nimetöntä' käyrää, se on erityinen.</translation>
-    </message>
-    <message>
-        <source>Choose an EQ curve file</source>
-        <translation type="vanished">Valitse korjauskäyrätiedosto</translation>
-    </message>
-    <message>
-        <source>Export EQ curves as...</source>
-        <translation type="vanished">Vie korjauskäyrät nimellä...</translation>
-    </message>
-    <message>
-        <source>You cannot export 'unnamed' curve, it is special.</source>
-        <translation type="vanished">Et voi viedä 'nimetöntä' käyrää, se on erityinen.</translation>
-    </message>
-    <message>
-        <source>Cannot Export 'unnamed'</source>
-        <translation type="vanished">Et voi viedä 'nimetöntä'</translation>
-    </message>
-    <message>
-        <source>%d curves exported to %s</source>
-        <translation type="vanished">%1 käyrää vietiin kohteeseen %2</translation>
-    </message>
-    <message>
-        <source>Curves exported</source>
-        <translation type="vanished">Käyrät viety</translation>
-    </message>
-    <message>
-        <source>No curves exported</source>
-        <translation type="vanished">Käyriä ei viety</translation>
-    </message>
-    <message>
-        <source>To use this filter curve in a macro, please choose a new name for it.
-Choose the 'Save/Manage Curves...' button and rename the 'unnamed' curve, then use that one.</source>
-        <translation type="vanished">Jos haluat käyttää tätä korjauskäyrää makrossa, valitse sille uusi nimi.
-Valitse 'Tallenna/hallitse käyriä...' -painiketta ja nimeä uudelleen "nimetön" käyrä, sitten käytä sitä.</translation>
-    </message>
-    <message>
-        <source>Filter Curve EQ needs a different name</source>
-        <translation type="vanished">Käyrätaajuuskorjain tarvitsee eri nimen</translation>
-    </message>
-    <message>
-        <source>+ dB</source>
-        <translation type="vanished">+ dB</translation>
-    </message>
-    <message>
-        <source>Max dB</source>
-        <translation type="vanished">Maksimi-dB</translation>
-    </message>
-    <message>
-        <source>Min dB</source>
-        <translation type="vanished">Minimi-dB</translation>
-    </message>
-    <message>
-        <source>- dB</source>
-        <translation type="vanished">- dB</translation>
-    </message>
-    <message>
-        <source>&amp;EQ Type:</source>
-        <translation type="vanished">&amp;EQ-tyyppi:</translation>
-    </message>
-    <message>
-        <source>Draw Curves</source>
-        <translation type="vanished">Piirrä käyriä</translation>
-    </message>
-    <message>
-        <source>&amp;Draw</source>
-        <translation type="vanished">&amp;Piirrä</translation>
-    </message>
-    <message>
-        <source>&amp;Graphic</source>
-        <translation type="vanished">&amp;Graafinen</translation>
-    </message>
-    <message>
-        <source>Interpolation type</source>
-        <translation type="vanished">Interpolointityyppi</translation>
-    </message>
-    <message>
-        <source>Linear Frequency Scale</source>
-        <translation type="vanished">Lineaarinen asteikko</translation>
-    </message>
-    <message>
-        <source>Li&amp;near Frequency Scale</source>
-        <translation type="vanished">&amp;Lineaarinen asteikko</translation>
-    </message>
-    <message>
-        <source>Length of &amp;Filter:</source>
-        <translation type="vanished">&amp;Suodatinpituus:</translation>
-    </message>
-    <message>
-        <source>Length of Filter</source>
-        <translation type="vanished">Suodatinpituus</translation>
-    </message>
-    <message>
-        <source>&amp;Select Curve:</source>
-        <translation type="vanished">Valit&amp;se käyrä:</translation>
-    </message>
-    <message>
-        <source>Select Curve</source>
-        <translation type="vanished">Valitse käyrä</translation>
-    </message>
-    <message>
-        <source>S&amp;ave/Manage Curves...</source>
-        <translation type="vanished">&amp;Tallenna/hallitse käyriä...</translation>
-    </message>
-    <message>
-        <source>Fla&amp;tten</source>
-        <translation type="vanished">Tasoi&amp;ta</translation>
-    </message>
-    <message>
-        <source>&amp;Invert</source>
-        <translation type="vanished">Käänteinen</translation>
-    </message>
-    <message>
-        <source>Show grid lines</source>
-        <translation type="vanished">Näytä apuviivat</translation>
-    </message>
-    <message>
-        <source>Show g&amp;rid lines</source>
-        <translation type="vanished">Näytä &amp;apuviivat</translation>
-    </message>
-    <message>
-        <source>Requested curve not found, using 'unnamed'</source>
-        <translation type="vanished">Pyydettyä käyrää ei löydy, käytetään 'nimetöntä'</translation>
-    </message>
-    <message>
-        <source>Curve not found</source>
-        <translation type="vanished">Käyrää ei löydy</translation>
-    </message>
-    <message>
-        <source>%lld of %lld</source>
-        <comment>find clipping</comment>
-        <extracomment>i18n-hint: Two numbers are substituted; the second is the
-size of a set, the first is the size of a subset, and not
-understood as an ordinal (i.e., not meaning "first", or
-"second", etc.)</extracomment>
-        <translation type="vanished">%1 / %2</translation>
-    </message>
-    <message>
-        <source>&amp;Start threshold (samples):</source>
-        <translation type="vanished">Al&amp;kukynnys (näytteinä):</translation>
-    </message>
-    <message>
-        <source>St&amp;op threshold (samples):</source>
-        <translation type="vanished">Loppukynny&amp;s (näytteinä):</translation>
-    </message>
-    <message>
-        <source>%3d dB</source>
-        <extracomment>i18n-hint: usually leave this as is as dB doesn't get translated</extracomment>
-        <translation type="vanished">%1 dB</translation>
-    </message>
-    <message>
-        <source>%.2f secs</source>
-        <translation type="vanished">%1 sek</translation>
-    </message>
-    <message>
-        <source>%.1f secs</source>
-        <translation type="vanished">%1 sek</translation>
-    </message>
-    <message>
-        <source>%.0f:1</source>
-        <extracomment>i18n-hint: Unless your language has a different convention for ratios,
-* like 8:1, leave as is.</extracomment>
-        <translation type="vanished">%1:1</translation>
-    </message>
-    <message>
-        <source>%.1f:1</source>
-        <extracomment>i18n-hint: Unless your language has a different convention for ratios,
-* like 8:1, leave as is.</extracomment>
-        <translation type="vanished">%1:1</translation>
-    </message>
-    <message>
-        <source>Ratio %.0f to 1</source>
-        <translation type="vanished">Suhde %1 -&gt; 1</translation>
-    </message>
-    <message>
-        <source>Ratio %.1f to 1</source>
-        <translation type="vanished">Suhde %1 -&gt; 1</translation>
-    </message>
-    <message>
-        <source>&amp;Noise Floor:</source>
-        <translation type="vanished">Kohi&amp;nataso:</translation>
-    </message>
-    <message>
-        <source>&amp;Ratio:</source>
-        <translation type="vanished">&amp;Suhde:</translation>
-    </message>
-    <message>
-        <source>&amp;Attack Time:</source>
-        <extracomment>i18n-hint: Particularly in percussion, sounds can be regarded as having
-* an 'attack' phase where the sound builds up and a 'decay' where the
-* sound dies away.  So this means 'onset duration'.</extracomment>
-        <translation type="vanished">Nousu&amp;aika:</translation>
-    </message>
-    <message>
-        <source>Attack Time</source>
-        <extracomment>i18n-hint: Particularly in percussion, sounds can be regarded as having
-* an 'attack' phase where the sound builds up and a 'decay' where the
-* sound dies away.  So this means 'onset duration'.</extracomment>
-        <translation type="vanished">Nousuaika</translation>
-    </message>
-    <message>
-        <source>R&amp;elease Time:</source>
-        <extracomment>i18n-hint: Particularly in percussion, sounds can be regarded as having
-* an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
-* sound dies away.</extracomment>
-        <translation type="vanished">Vapautu&amp;saika:</translation>
-    </message>
-    <message>
-        <source>Release Time</source>
-        <extracomment>i18n-hint: Particularly in percussion, sounds can be regarded as having
-* an 'attack' phase where the sound builds up and a 'decay' or 'release' where the
-* sound dies away.</extracomment>
-        <translation type="vanished">Vapautusaika</translation>
-    </message>
-    <message>
-        <source>Ma&amp;ke-up gain for 0 dB after compressing</source>
-        <extracomment>i18n-hint: Make-up, i.e. correct for any reduction, rather than fabricate it.</extracomment>
-        <translation type="vanished">Vahvista ääni 0 dB:n tasolle &amp;kompressoinnin jälkeen</translation>
-    </message>
-    <message>
-        <source>C&amp;ompress based on Peaks</source>
-        <extracomment>i18n-hint: "Compress" here means reduce variations of sound volume,
-NOT related to file-size compression; Peaks means extremes in volume</extracomment>
-        <translation type="vanished">Kompressoi h&amp;uippujen perusteella</translation>
-    </message>
-    <message>
-        <source>Threshold %d dB</source>
-        <translation type="vanished">Kynnysarvo %1 dB</translation>
-    </message>
-    <message>
-        <source>Noise Floor %d dB</source>
-        <translation type="vanished">Kohinataso %1 dB</translation>
-    </message>
-    <message>
-        <source>Attack Time %.2f secs</source>
-        <translation type="vanished">Nousuaika %1 sek</translation>
-    </message>
-    <message>
-        <source>Release Time %.1f secs</source>
-        <translation type="vanished">Vapautusaika %1 sek</translation>
-    </message>
-    <message>
-        <source>perceived loudness</source>
-        <translation type="vanished">havaittu äänekkyys</translation>
-    </message>
-    <message>
-        <source>Normalizing Loudness...
-</source>
-        <translation type="vanished">Normalisoidaan äänekkyyttä...
-</translation>
-    </message>
-    <message>
-        <source>&amp;Normalize</source>
-        <translation type="vanished">Normalisoi</translation>
-    </message>
-    <message>
-        <source>Loudness LUFS</source>
-        <extracomment>i18n-hint: LUFS is a particular method for measuring loudnesss</extracomment>
-        <translation type="vanished">Äänekkyys (LUFS)</translation>
-    </message>
-    <message>
-        <source>LUFS</source>
-        <translation type="vanished">LUFS</translation>
-    </message>
-    <message>
-        <source>RMS dB</source>
-        <translation type="vanished">RMS dB</translation>
-    </message>
-    <message>
-        <source>Normalize &amp;stereo channels independently</source>
-        <translation type="vanished">Normalisoi &amp;stereokanavat itsenäisesti</translation>
-    </message>
-    <message>
-        <source>&amp;Treat mono as dual-mono (recommended)</source>
-        <translation type="vanished">&amp;Käsittele monoa kaksoismonona (suositus)</translation>
-    </message>
-    <message>
-        <source>(Maximum 0dB)</source>
-        <translation type="vanished">(Enintään 0 dB)</translation>
-    </message>
-    <message>
-        <source>White</source>
-        <comment>noise</comment>
-        <extracomment>i18n-hint: not a color, but "white noise" having a uniform spectrum</extracomment>
-        <translation type="vanished">Valkoinen</translation>
-    </message>
-    <message>
-        <source>Pink</source>
-        <comment>noise</comment>
-        <extracomment>i18n-hint: not a color, but "pink noise" having a spectrum with more power
-in low frequencies</extracomment>
-        <translation type="vanished">Pinkki</translation>
-    </message>
-    <message>
-        <source>Brownian</source>
-        <comment>noise</comment>
-        <extracomment>i18n-hint: a kind of noise spectrum also known as "red" or "brown"</extracomment>
-        <translation type="vanished">Brownin kohina</translation>
-    </message>
-    <message>
-        <source>&amp;Noise type:</source>
-        <translation type="vanished">Kohi&amp;natyyppi:</translation>
-    </message>
-    <message>
-        <source>Old</source>
-        <translation type="vanished">Vanha</translation>
-    </message>
-    <message>
-        <source>Noise Reduction</source>
-        <translation type="vanished">Kohinan vaimennus</translation>
-    </message>
-    <message>
-        <source>Steps per block are too few for the window types.</source>
-        <translation type="vanished">Askeleiden määrä lohkoa kohden on liian alhainen ikkunatyypeille.</translation>
-    </message>
-    <message>
-        <source>Steps per block cannot exceed the window size.</source>
-        <translation type="vanished">Askeleiden määrä lohkoa kohden ei voi ylittää ikkunan kokoa.</translation>
-    </message>
-    <message>
-        <source>Median method is not implemented for more than four steps per window.</source>
-        <translation type="vanished">Mediaanimenetelmää ei ole toteutettu enemmässä kuin neljässä askeleessa per ikkuna.</translation>
-    </message>
-    <message>
-        <source>Warning: window types are not the same as for profiling.</source>
-        <translation type="vanished">Varoitus: Ikkunatyypit eivät ole samoja kuin profiloinnissa.</translation>
-    </message>
-    <message>
-        <source>&amp;Noise reduction (dB):</source>
-        <translation type="vanished">Kohinan &amp;vaimennus (dB):</translation>
-    </message>
-    <message>
-        <source>&amp;Sensitivity:</source>
-        <translation type="vanished">&amp;Herkkyys:</translation>
-    </message>
-    <message>
-        <source>Attac&amp;k time (secs):</source>
-        <translation type="vanished">Nousuai&amp;ka (sek.):</translation>
-    </message>
-    <message>
-        <source>Attack time</source>
-        <translation type="vanished">Nousuaika</translation>
-    </message>
-    <message>
-        <source>R&amp;elease time (secs):</source>
-        <translation type="vanished">Vapautus&amp;aika (sek.):</translation>
-    </message>
-    <message>
-        <source>Release time</source>
-        <translation type="vanished">Vapautusaika</translation>
-    </message>
-    <message>
-        <source>&amp;Frequency smoothing (bands):</source>
-        <translation type="vanished">&amp;Taajuuden pehmennys (kaistat):</translation>
-    </message>
-    <message>
-        <source>Sensiti&amp;vity (dB):</source>
-        <translation type="vanished">Herkkyys (dB):</translation>
-    </message>
-    <message>
-        <source>Old Sensitivity</source>
-        <translation type="vanished">Vanha herkkyys</translation>
-    </message>
-    <message>
-        <source>Select a few seconds of just noise so Audacity knows what to filter out,
-then click Get Noise Profile:</source>
-        <translation type="vanished">Valitse muutama sekunti pelkkää kohinaa, jotta Audacity tietää, mitä pitää
-suodattaa pois. Kun valinta on tehty, paina "Luo kohinaprofiili":</translation>
-    </message>
-    <message>
-        <source>&amp;Get Noise Profile</source>
-        <translation type="vanished">Luo kohinaprofiili</translation>
-    </message>
-    <message>
-        <source>Select all of the audio you want filtered, choose how much noise you want
-filtered out, and then click 'OK' to reduce noise.
-</source>
-        <translation type="vanished">Valitse kaikki äänet, jotka haluat suodattaa, valitse kuinka paljon kohinaa haluat 
-suodattaa pois, ja klikkaa sitten 'OK' vähentääksesi kohinaa.
-</translation>
-    </message>
-    <message>
-        <source>Noise:</source>
-        <translation type="vanished">Kohina:</translation>
-    </message>
-    <message>
-        <source>Re&amp;duce</source>
-        <extracomment>i18n-hint: Translate differently from "Residue" !</extracomment>
-        <translation type="vanished">&amp;Vähennä</translation>
-    </message>
-    <message>
-        <source>&amp;Isolate</source>
-        <translation type="vanished">&amp;Eristä</translation>
-    </message>
-    <message>
-        <source>Resid&amp;ue</source>
-        <extracomment>i18n-hint: Means the difference between effect and original sound.  Translate differently from "Reduce" !</extracomment>
-        <translation type="vanished">&amp;Jäännös</translation>
-    </message>
-    <message>
-        <source>Advanced Settings</source>
-        <translation type="vanished">Lisäasetukset</translation>
-    </message>
-    <message>
-        <source>&amp;Window types:</source>
-        <translation type="vanished">&amp;Ikkunatyypit:</translation>
-    </message>
-    <message>
-        <source>Window si&amp;ze:</source>
-        <translation type="vanished">Ikkunan &amp;koko:</translation>
-    </message>
-    <message>
-        <source>8</source>
-        <translation type="vanished">8</translation>
-    </message>
-    <message>
-        <source>16</source>
-        <translation type="vanished">16</translation>
-    </message>
-    <message>
-        <source>32</source>
-        <translation type="vanished">32</translation>
-    </message>
-    <message>
-        <source>64</source>
-        <translation type="vanished">64</translation>
-    </message>
-    <message>
-        <source>128</source>
-        <translation type="vanished">128</translation>
-    </message>
-    <message>
-        <source>256</source>
-        <translation type="vanished">256</translation>
-    </message>
-    <message>
-        <source>512</source>
-        <translation type="vanished">512</translation>
-    </message>
-    <message>
-        <source>1024</source>
-        <translation type="vanished">1024</translation>
-    </message>
-    <message>
-        <source>2048 (default)</source>
-        <translation type="vanished">2048 (oletus)</translation>
-    </message>
-    <message>
-        <source>4096</source>
-        <translation type="vanished">4096</translation>
-    </message>
-    <message>
-        <source>8192</source>
-        <translation type="vanished">8192</translation>
-    </message>
-    <message>
-        <source>16384</source>
-        <translation type="vanished">16384</translation>
-    </message>
-    <message>
-        <source>S&amp;teps per window:</source>
-        <translation type="vanished">&amp;Vaiheita ikkunassa:</translation>
-    </message>
-    <message>
-        <source>4 (default)</source>
-        <translation type="vanished">4 (oletus)</translation>
-    </message>
-    <message>
-        <source>Discrimination &amp;method:</source>
-        <translation type="vanished">Erottelu&amp;menetelmä:</translation>
-    </message>
-    <message>
-        <source>Removing DC offset and Normalizing...
-</source>
-        <translation type="vanished">Nollataan tasajännitetaso ja normalisoidaan...
-</translation>
-    </message>
-    <message>
-        <source>Removing DC offset...
-</source>
-        <translation type="vanished">Nollataan tasajännitetaso...
-</translation>
-    </message>
-    <message>
-        <source>Normalizing without removing DC offset...
-</source>
-        <translation type="vanished">Normalisoidaan nollaamatta tasajännitetasoa...
-</translation>
-    </message>
-    <message>
-        <source>Not doing anything...
-</source>
-        <translation type="vanished">Ei tee mitään...
-</translation>
-    </message>
-    <message>
-        <source>&amp;Remove DC offset (center on 0.0 vertically)</source>
-        <translation type="vanished">&amp;Poista tasavirtasiirtymä (keskipiste 0.0 pystysuoraan)</translation>
-    </message>
-    <message>
-        <source>&amp;Normalize peak amplitude to   </source>
-        <translation type="vanished">&amp;Normalisoi huippukohta arvoon   </translation>
-    </message>
-    <message>
-        <source>Peak amplitude dB</source>
-        <translation type="vanished">Huippuamplitudi dB</translation>
-    </message>
-    <message>
-        <source>N&amp;ormalize stereo channels independently</source>
-        <translation type="vanished">N&amp;ormalisoi stereokanavat itsenäisesti</translation>
-    </message>
-    <message>
-        <source>Paulstretch is only for an extreme time-stretch or "stasis" effect</source>
-        <translation type="vanished">Paulstretch on vain äärimmäiselle aikavenytykselle tai pysäytystehosteelle</translation>
-    </message>
-    <message>
-        <source>&amp;Stretch Factor:</source>
-        <extracomment>i18n-hint: This is how many times longer the sound will be, e.g. applying
-* the effect to a 1-second sample, with the default Stretch Factor of 10.0
-* will give an (approximately) 10 second sound</extracomment>
-        <translation type="vanished">Venytyskerroin:</translation>
-    </message>
-    <message>
-        <source>&amp;Time Resolution (seconds):</source>
-        <translation type="vanished">Aikaresoluu&amp;tio (sekuntia):</translation>
-    </message>
-    <message>
-        <source>Audio selection too short to preview.
-
-Try increasing the audio selection to at least %.1f seconds,
-or reducing the 'Time Resolution' to less than %.1f seconds.</source>
-        <extracomment>i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
-        <translation type="vanished">Valittu ääni on liian lyhyt esikuunteluun.
-
-Yritä pidentää valintaa vähintään %1 sekuntiin
-tai vähentää aikaresoluutiota alle %2 sekuntiin.</translation>
-    </message>
-    <message>
-        <source>Unable to Preview.
-
-For the current audio selection, the maximum
-'Time Resolution' is %.1f seconds.</source>
-        <extracomment>i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
-        <translation type="vanished">Esikuuntelua ei voitu suorittaa.
-
-Enimmäisaikaresoluutio nykyiselle
-äänivalinnalle on %1 sekuntia.</translation>
-    </message>
-    <message>
-        <source>The 'Time Resolution' is too long for the selection.
-
-Try increasing the audio selection to at least %.1f seconds,
-or reducing the 'Time Resolution' to less than %.1f seconds.</source>
-        <extracomment>i18n-hint: 'Time Resolution' is the name of a control in the Paulstretch effect.</extracomment>
-        <translation type="vanished">Aikaresoluutio on liian pitkä valinnalle.
-
-Yritä pidentää valintaa vähintään %1 sekuntiin
-tai vähentää aikaresoluutiota alle %2 sekuntiin.</translation>
-    </message>
-    <message>
-        <source>&amp;Stages:</source>
-        <translation type="vanished">&amp;Vaiheet:</translation>
-    </message>
-    <message>
-        <source>Stages</source>
-        <translation type="vanished">Vaiheet</translation>
-    </message>
-    <message>
-        <source>&amp;Dry/Wet:</source>
-        <translation type="vanished">&amp;Kuiva/märkä (kaiku):</translation>
-    </message>
-    <message>
-        <source>Dry Wet</source>
-        <translation type="vanished">Kuiva märkä (kaiku)</translation>
-    </message>
-    <message>
-        <source>LFO Freq&amp;uency (Hz):</source>
-        <translation type="vanished">LFO-taaj&amp;uus (Hz):</translation>
-    </message>
-    <message>
-        <source>LFO frequency in hertz</source>
-        <translation type="vanished">LFO-taajuus hertseinä</translation>
-    </message>
-    <message>
-        <source>LFO Sta&amp;rt Phase (deg.):</source>
-        <translation type="vanished">LFO-aloitus&amp;vaihe (asteina):</translation>
-    </message>
-    <message>
-        <source>LFO start phase in degrees</source>
-        <translation type="vanished">LFO-aloitusvaihe asteina</translation>
-    </message>
-    <message>
-        <source>Dept&amp;h:</source>
-        <translation type="vanished">Syvyy&amp;s:</translation>
-    </message>
-    <message>
-        <source>Depth in percent</source>
-        <translation type="vanished">Syvyys prosentteina</translation>
-    </message>
-    <message>
-        <source>Feedbac&amp;k (%):</source>
-        <translation type="vanished">Ta&amp;kaisinsyöttö (%):</translation>
-    </message>
-    <message>
-        <source>Feedback in percent</source>
-        <translation type="vanished">Takaisinsyöttö prosentteina</translation>
-    </message>
-    <message>
-        <source>&amp;Output gain (dB):</source>
-        <translation type="vanished">&amp;Lähtövahvistus (dB):</translation>
-    </message>
-    <message>
-        <source>Output gain (dB)</source>
-        <translation type="vanished">Lähtövahvistus (dB)</translation>
-    </message>
-    <message>
-        <source>%s - %s</source>
-        <extracomment>i18n-hint: First %s is an effect name, second is a track name</extracomment>
-        <translation type="vanished">%1 - %2</translation>
-    </message>
-    <message>
-        <source>Repair works by using audio data outside the selection region.
-
-Please select a region that has audio touching at least one side of it.
-
-The more surrounding audio, the better it performs.</source>
-        <translation type="vanished">Korjaus toimii käyttämällä valinta-alueen ulkopuolista ääntä.
-
-Valitse alue, jossa ääni koskettaa vähintään toista sen puolta.
-
-Mitä enemmän ympäröivää ääntä, sitä paremmin se toimii.</translation>
-    </message>
-    <message>
-        <source>&amp;Number of repeats to add:</source>
-        <translation type="vanished">Lisättävie&amp;n toistojen määrä:</translation>
-    </message>
-    <message>
-        <source>Current selection length: dd:hh:mm:ss</source>
-        <translation type="vanished">Nykyinen valinnan pituus: pp:tt:mm:ss</translation>
-    </message>
-    <message>
-        <source>New selection length: dd:hh:mm:ss</source>
-        <translation type="vanished">Uusi valinnan pituus: pp:tt:mm:ss</translation>
-    </message>
-    <message>
-        <source>Current selection length: %s</source>
-        <translation type="vanished">Nykyisen valinnan pituus: %1</translation>
-    </message>
-    <message>
-        <source>New selection length: %s</source>
-        <translation type="vanished">Uusi valinnan pituus: %1</translation>
-    </message>
-    <message>
-        <source>Warning: No repeats.</source>
-        <translation type="vanished">Varoitus: Ei toistoa.</translation>
-    </message>
-    <message>
-        <source>Adds ambience or a "hall effect"</source>
-        <translation type="vanished">Lisää tunnelmaa tai "hallitehostetta"</translation>
-    </message>
-    <message>
-        <source>&amp;Room Size (%):</source>
-        <translation type="vanished">&amp;Tilan koko (%):</translation>
-    </message>
-    <message>
-        <source>&amp;Pre-delay (ms):</source>
-        <translation type="vanished">&amp;Esiviive (ms):</translation>
-    </message>
-    <message>
-        <source>Rever&amp;berance (%):</source>
-        <translation type="vanished">&amp;Jälkikaiku (%):</translation>
-    </message>
-    <message>
-        <source>Da&amp;mping (%):</source>
-        <translation type="vanished">&amp;Vaimennus (%):</translation>
-    </message>
-    <message>
-        <source>Tone &amp;Low (%):</source>
-        <translation type="vanished">Äänen &amp;tummuus (%):</translation>
-    </message>
-    <message>
-        <source>Tone &amp;High (%):</source>
-        <translation type="vanished">Äänen &amp;kirkkaus (%):</translation>
-    </message>
-    <message>
-        <source>Wet &amp;Gain (dB):</source>
-        <translation type="vanished">&amp;Märkävahvistus (dB):</translation>
-    </message>
-    <message>
-        <source>Dr&amp;y Gain (dB):</source>
-        <translation type="vanished">&amp;Kuivavahvistus (dB):</translation>
-    </message>
-    <message>
-        <source>Stereo Wid&amp;th (%):</source>
-        <translation type="vanished">S&amp;tereon leveys (%):</translation>
-    </message>
-    <message>
-        <source>Wet O&amp;nly</source>
-        <translation type="vanished">Pelkkä märkä (&amp;kaiku)</translation>
-    </message>
-    <message>
-        <source>&amp;Filter Type:</source>
-        <translation type="vanished">&amp;Suodatintyyppi:</translation>
-    </message>
-    <message>
-        <source>O&amp;rder:</source>
-        <extracomment>i18n-hint: 'Order' means the complexity of the filter, and is a number between 1 and 10.</extracomment>
-        <translation type="vanished">&amp;Järjestys:</translation>
-    </message>
-    <message>
-        <source>&amp;Passband Ripple:</source>
-        <translation type="vanished">&amp;Siirtokaistan sykintä:</translation>
-    </message>
-    <message>
-        <source>Passband Ripple (dB)</source>
-        <translation type="vanished">Siirtokaistan sykintä (dB)</translation>
-    </message>
-    <message>
-        <source>&amp;Subtype:</source>
-        <translation type="vanished">&amp;Alatyyppi:</translation>
-    </message>
-    <message>
-        <source>Cutoff (Hz)</source>
-        <translation type="vanished">Leikkaus (Hz)</translation>
-    </message>
-    <message>
-        <source>C&amp;utoff:</source>
-        <translation type="vanished">&amp;Leikkaus:</translation>
-    </message>
-    <message>
-        <source>Minimum S&amp;topband Attenuation:</source>
-        <translation type="vanished">Pienin es&amp;tokaistan vaimennus:</translation>
-    </message>
-    <message>
-        <source>Minimum S&amp;topband Attenuation (dB)</source>
-        <translation type="vanished">Pienin es&amp;tokaistan vaimennus (dB)</translation>
-    </message>
-    <message>
-        <source>Align MIDI to Audio</source>
-        <translation type="vanished">Tasaa MIDI ääneen</translation>
-    </message>
-    <message>
-        <source>Frame Period:</source>
-        <translation type="vanished">Kehyksen aikaväli:</translation>
-    </message>
-    <message>
-        <source>Frame Period</source>
-        <translation type="vanished">Kehyksen aikaväli</translation>
-    </message>
-    <message>
-        <source>Window Size:</source>
-        <translation type="vanished">Ikkunan koko:</translation>
-    </message>
-    <message>
-        <source>Window Size</source>
-        <translation type="vanished">Ikkunan koko</translation>
-    </message>
-    <message>
-        <source>Force Final Alignment</source>
-        <translation type="vanished">Pakota lopullinen tasaus</translation>
-    </message>
-    <message>
-        <source>Ignore Silence at Beginnings and Endings</source>
-        <translation type="vanished">Ohita hiljaisuus alussa ja lopussa</translation>
-    </message>
-    <message>
-        <source>Silence Threshold:</source>
-        <translation type="vanished">Hiljaisuuskynnys:</translation>
-    </message>
-    <message>
-        <source>Silence Threshold</source>
-        <translation type="vanished">Hiljaisuuskynnys</translation>
-    </message>
-    <message>
-        <source>Presmooth Time:</source>
-        <extracomment>i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-This is a NEW experimental effect, and until we have it documented in the user
-manual we don't have a clear description of what this parameter does.
-It is OK to leave it in English.</extracomment>
-        <translation type="vanished">Esipehmennysaika:</translation>
-    </message>
-    <message>
-        <source>Presmooth Time</source>
-        <extracomment>i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-This is a NEW experimental effect, and until we have it documented in the user
-manual we don't have a clear description of what this parameter does.
-It is OK to leave it in English.</extracomment>
-        <translation type="vanished">Esipehmennysaika</translation>
-    </message>
-    <message>
-        <source>Line Time:</source>
-        <extracomment>i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-This is a NEW experimental effect, and until we have it documented in the user
-manual we don't have a clear description of what this parameter does.
-It is OK to leave it in English.</extracomment>
-        <translation type="vanished">Linja-aika:</translation>
-    </message>
-    <message>
-        <source>Line Time</source>
-        <extracomment>i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-This is a NEW experimental effect, and until we have it documented in the user
-manual we don't have a clear description of what this parameter does.
-It is OK to leave it in English.</extracomment>
-        <translation type="vanished">Linja-aika</translation>
-    </message>
-    <message>
-        <source>Smooth Time:</source>
-        <translation type="vanished">Pehmennysaika:</translation>
-    </message>
-    <message>
-        <source>Smooth Time</source>
-        <extracomment>i18n-hint: The English would be clearer if it had 'Duration' rather than 'Time'
-This is a NEW experimental effect, and until we have it documented in the user
-manual we don't have a clear description of what this parameter does.
-It is OK to leave it in English.</extracomment>
-        <translation type="vanished">Pehmennysaika</translation>
-    </message>
-    <message>
-        <source>Use Defaults</source>
-        <translation type="vanished">Käytä oletuksia</translation>
-    </message>
-    <message>
-        <source>Restore Defaults</source>
-        <translation type="vanished">Palauta oletukset</translation>
-    </message>
-    <message>
-        <source>%.3f</source>
-        <translation type="vanished">%1</translation>
-    </message>
-    <message>
-        <source>Silence</source>
-        <comment>generator</comment>
-        <extracomment>i18n-hint: noun</extracomment>
-        <translation type="vanished">Hiljaisuus</translation>
-    </message>
-    <message>
-        <source>Stereo To Mono</source>
-        <translation type="vanished">Stereo monoksi</translation>
-    </message>
-    <message>
-        <source>Converts stereo tracks to mono</source>
-        <translation type="vanished">Muuntaa stereoraidan monoksi</translation>
-    </message>
-    <message>
-        <source>Mixing down to mono</source>
-        <translation type="vanished">Miksataan monoksi</translation>
-    </message>
-    <message>
-        <source>Sliding Stretch</source>
-        <translation type="vanished">Liukuva venytys</translation>
-    </message>
-    <message>
-        <source>Initial Tempo Change (%)</source>
-        <translation type="vanished">Tempon alkumuutos (%)</translation>
-    </message>
-    <message>
-        <source>Final Tempo Change (%)</source>
-        <translation type="vanished">Tempon loppumuutos (%)</translation>
-    </message>
-    <message>
-        <source>Initial Pitch Shift</source>
-        <translation type="vanished">Sävelkorkeuden alkumuutos</translation>
-    </message>
-    <message>
-        <source>(&amp;semitones) [-12 to 12]:</source>
-        <translation type="vanished">(puoli&amp;sävelaskeleet) [-12 -&gt; 12]:</translation>
-    </message>
-    <message>
-        <source>(%) [-50 to 100]:</source>
-        <translation type="vanished">(%) [-50 -&gt; 100]:</translation>
-    </message>
-    <message>
-        <source>Final Pitch Shift</source>
-        <translation type="vanished">Sävelkorkeuden loppumuutos</translation>
-    </message>
-    <message>
-        <source>(s&amp;emitones) [-12 to 12]:</source>
-        <translation type="vanished">(puolisäv&amp;elaskeleet) [-12 -&gt; 12]:</translation>
-    </message>
-    <message>
-        <source>Triangle</source>
-        <comment>waveform</comment>
-        <translation type="vanished">Kolmio</translation>
-    </message>
-    <message>
-        <source>Generates an ascending or descending tone of one of four types</source>
-        <translation type="vanished">Luo nousevan tai laskevan äänen, jonka tyyppi on yksi neljästä</translation>
-    </message>
-    <message>
-        <source>Generates a constant frequency tone of one of four types</source>
-        <translation type="vanished">Luo tasaisen äänen, jonka tyyppi on yksi neljästä</translation>
-    </message>
-    <message>
-        <source>&amp;Waveform:</source>
-        <translation type="vanished">&amp;Aaltomuoto:</translation>
-    </message>
-    <message>
-        <source>&amp;Frequency (Hz):</source>
-        <translation type="vanished">T&amp;aajuus (Hz):</translation>
-    </message>
-    <message>
-        <source>Frequency Hertz Start</source>
-        <translation type="vanished">Taajuus (Hz) alussa</translation>
-    </message>
-    <message>
-        <source>Frequency Hertz End</source>
-        <translation type="vanished">Taajuus (Hz) lopussa</translation>
-    </message>
-    <message>
-        <source>Amplitude Start</source>
-        <translation type="vanished">Amplitudi alussa</translation>
-    </message>
-    <message>
-        <source>Amplitude End</source>
-        <translation type="vanished">Amplitudi lopussa</translation>
-    </message>
-    <message>
-        <source>I&amp;nterpolation:</source>
-        <translation type="vanished">I&amp;nterpolointi:</translation>
-    </message>
-    <message>
-        <source>Truncate Silence</source>
-        <translation type="vanished">Lyhennä hiljaisuus</translation>
-    </message>
-    <message>
-        <source>When truncating independently, there may only be one selected audio track in each Sync-Locked Track Group.</source>
-        <translation type="vanished">Kun katkaistaan itsenäisesti, kussakin tahtilukitussa raitaryhmässä voi olla vain yksi valittu ääniraita.</translation>
-    </message>
-    <message>
-        <source>Detect Silence</source>
-        <translation type="vanished">Tunnista hiljaisuus</translation>
-    </message>
-    <message>
-        <source>Tr&amp;uncate to:</source>
-        <translation type="vanished">Ly&amp;hennä:</translation>
-    </message>
-    <message>
-        <source>C&amp;ompress to:</source>
-        <translation type="vanished">&amp;Pakkaa:</translation>
-    </message>
-    <message>
-        <source>Trunc&amp;ate tracks independently</source>
-        <translation type="vanished">Lyhennä r&amp;aidat itsenäisesti</translation>
-    </message>
-    <message>
-        <source>Save VST Preset As:</source>
-        <translation type="vanished">Tallenna VST-esiasetus nimellä:</translation>
-    </message>
-    <message>
-        <source>Standard VST bank file</source>
-        <translation type="vanished">Tavallinen VST-pankkitiedosto</translation>
-    </message>
-    <message>
-        <source>Standard VST program file</source>
-        <translation type="vanished">Tavallinen VST-ohjelmatiedosto</translation>
-    </message>
-    <message>
-        <source>Audacity VST preset file</source>
-        <translation type="vanished">Audacityn VST-esiasetustiedosto</translation>
-    </message>
-    <message>
-        <source>Unrecognized file extension.</source>
-        <translation type="vanished">Tunnistamaton tiedostopääte.</translation>
-    </message>
-    <message>
-        <source>Load VST Preset:</source>
-        <translation type="vanished">Lataa VST-esiasetus:</translation>
-    </message>
-    <message>
-        <source>VST preset files</source>
-        <translation type="vanished">VST-esiasetustiedostot</translation>
-    </message>
-    <message>
-        <source>Unable to load presets file.</source>
-        <translation type="vanished">Esiasetustiedostoa ei voi ladata.</translation>
-    </message>
-    <message>
-        <source>VST Effect Options</source>
-        <translation type="vanished">VST-tehosteasetukset</translation>
-    </message>
-    <message>
-        <source>Buffer Size</source>
-        <translation type="vanished">Puskurin koko</translation>
-    </message>
-    <message>
-        <source>The buffer size controls the number of samples sent to the effect on each iteration. Smaller values will cause slower processing and some effects require 8192 samples or less to work properly. However most effects can accept large buffers and using them will greatly reduce processing time.</source>
-        <translation type="vanished">Puskurin koko määrittää kuhunkin iterointiin lähetettyjen näytteiden määrän. Pienemmät arvot johtavat hitaampaan käsittelyyn ja jotkut vaikutukset vaativat 8192 tai vähemmän näytteitä toimiakseen kunnolla. Useimmat tehosteet voivat kuitenkin hyväksyä suuria puskureita ja niiden käyttäminen vähentää huomattavasti käsittelyaikaa.</translation>
-    </message>
-    <message>
-        <source>&amp;Buffer Size (8 to 1048576 samples):</source>
-        <translation type="vanished">&amp;Puskurin koko (8 -&gt; 1048576 näytettä)</translation>
-    </message>
-    <message>
-        <source>Latency Compensation</source>
-        <translation type="vanished">Viiveenkorjaus</translation>
-    </message>
-    <message>
-        <source>As part of their processing, some VST effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST effects.</source>
-        <translation type="vanished">Joidenkin VST-tehosteiden pitää käsittelyn takia viivästää äänen palauttamista Audacityyn. Jos tätä viivettä ei korjaa, äänen väliin voi tulla lyhyitä hiljaisia kohtia. Tämän vaihtoehdon käyttäminen pyrkii korjaamaan viiveet, mutta se ei välttämättä toimi kaikille VST-tehosteille.</translation>
-    </message>
-    <message>
-        <source>Enable &amp;compensation</source>
-        <translation type="vanished">Käytä &amp;korjausta</translation>
-    </message>
-    <message>
-        <source>Graphical Mode</source>
-        <translation type="vanished">Graafinen tila</translation>
-    </message>
-    <message>
-        <source>Most VST effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect.</source>
-        <translation type="vanished">Useimmilla VST-tehosteilla on graafinen käyttöliittymä parametriarvojen asettamiseen. Käytettävissä on myös vain teksti perusmenetelmä.  Avaa tehoste uudelleen, jotta tämä tulee voimaan.</translation>
-    </message>
-    <message>
-        <source>Enable &amp;graphical interface</source>
-        <translation type="vanished">Ota käyttöön &amp;graafinen käyttöliittymä</translation>
-    </message>
-    <message>
-        <source>Save VST3 Preset As:</source>
-        <translation type="vanished">Tallenna VST3-esiasetus nimellä:</translation>
-    </message>
-    <message>
-        <source>VST3 preset file</source>
-        <translation type="vanished">VST3-esiasetustiedosto</translation>
-    </message>
-    <message>
-        <source>Load VST3 preset:</source>
-        <translation type="vanished">Lataa VST3-esiasetus:</translation>
-    </message>
-    <message>
-        <source>As part of their processing, some VST3 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all VST3 effects.</source>
-        <translation type="vanished">Joidenkin VST3-tehosteiden on viivästettävä äänen palauttamista Audacityyn. Jos et korjaa tätä viivettä, huomaat, että ääneen on lisätty pieniä hiljaisia kohtia. Tämän vaihtoehdon käyttöönotto pyrkii korjaamaan näitä viiveitä, mutta se ei välttämättä toimi kaikissa VST3-tehosteissa.</translation>
-    </message>
-    <message>
-        <source>Most VST3 effects have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect.</source>
-        <translation type="vanished">Useimmissa VST3-tehosteissa on graafinen käyttöliittymä parametriarvojen asettamista varten. Saatavilla on myös pelkkä teksti -perusmenetelmä. Avaa tehoste uudelleen, jotta tämä tulee voimaan.</translation>
-    </message>
-    <message>
-        <source>Rapid tone quality variations, like that guitar sound so popular in the 1970's</source>
-        <translation type="vanished">Nopeat äänenlaadun vaihtelut, kuten 1970-luvulla suositussa kitaratehosteessa</translation>
-    </message>
-    <message>
-        <source>Dept&amp;h (%):</source>
-        <translation type="vanished">Syvyy&amp;s (%):</translation>
-    </message>
-    <message>
-        <source>Reso&amp;nance:</source>
-        <translation type="vanished">Reso&amp;nanssi:</translation>
-    </message>
-    <message>
-        <source>Resonance</source>
-        <translation type="vanished">Resonanssi</translation>
-    </message>
-    <message>
-        <source>Wah Frequency Offse&amp;t (%):</source>
-        <translation type="vanished">Wah-taajuussiirtymä (%):</translation>
-    </message>
-    <message>
-        <source>Wah frequency offset in percent</source>
-        <translation type="vanished">Wah-taajuussiirtymä prosentteina</translation>
-    </message>
-    <message>
-        <source>Export Audio Unit Preset As %s:</source>
-        <translation type="vanished">Vie ääniyksikön esiasetus nimellä %1:</translation>
-    </message>
-    <message>
-        <source>Standard Audio Unit preset file</source>
-        <translation type="vanished">Vakioääniyksikön esiasetustiedosto</translation>
-    </message>
-    <message>
-        <source>Could not export "%s" preset
-
-%s</source>
-        <translation type="vanished">Esiasetusta "%1" ei voitu viedä
-
-%2</translation>
-    </message>
-    <message>
-        <source>Export Audio Unit Presets</source>
-        <translation type="vanished">Vie ääniyksikön esiasetukset</translation>
-    </message>
-    <message>
-        <source>Import Audio Unit Preset As %s:</source>
-        <translation type="vanished">Tuo ääniyksikkö esiasetettuna nimellä %1:</translation>
-    </message>
-    <message>
-        <source>Could not import "%s" preset
-
-%s</source>
-        <translation type="vanished">Esiasetusta %1 ei voitu tuoda
-
-%2</translation>
-    </message>
-    <message>
-        <source>Import Audio Unit Presets</source>
-        <translation type="vanished">Tuo ääniyksiköiden esiasetukset</translation>
-    </message>
-    <message>
-        <source>Audio Unit Effect Options</source>
-        <translation type="vanished">Ääniyksikön tehosteasetukset</translation>
-    </message>
-    <message>
-        <source>As part of their processing, some Audio Unit effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all Audio Unit effects.</source>
-        <translation type="vanished">Joidenkin ääniyksikkötehosteiden pitää käsittelyn takia viivästää äänen palauttamista Audacityyn. Jos tätä viivettä ei korjata, äänen väliin voi tulla lyhyitä hiljaisia kohtia. Tämän vaihtoehdon käyttäminen pyrkii korjaamaan viiveet, mutta se ei välttämättä toimi kaikissa ääniyksikön tehosteissa.</translation>
-    </message>
-    <message>
-        <source>User Interface</source>
-        <translation type="vanished">Käyttöliittymä</translation>
-    </message>
-    <message>
-        <source>Select "Full" to use the graphical interface if supplied by the Audio Unit. Select "Generic" to use the system supplied generic interface. Select "Basic" for a basic text-only interface. Reopen the effect for this to take effect.</source>
-        <translation type="vanished">Valitse "Täysi" käyttääksesi graafista käyttöliittymää, jos se on toimitettu ääniyksiköstä. Valitse "Yleinen" käyttääksesi järjestelmän toimittamaa yleistä käyttöliittymää. Valitse "Perus", jos haluat käyttää vain tekstiä sisältävää peruskäyttöliittymää. Avaa tehoste uudelleen, jotta tämä tulee voimaan.</translation>
-    </message>
-    <message>
-        <source>Select &amp;interface</source>
-        <translation type="vanished">Valitse k&amp;äyttöliittymä</translation>
-    </message>
-    <message>
-        <source>Full</source>
-        <translation type="vanished">Täysi</translation>
-    </message>
-    <message>
-        <source>Generic</source>
-        <translation type="vanished">Yleinen</translation>
-    </message>
-    <message>
-        <source>Basic</source>
-        <translation type="vanished">Perus</translation>
-    </message>
-    <message>
-        <source>%s:</source>
-        <extracomment>i18n-hint: An item name introducing a value, which is not part of the string but
-appears in a following text box window; translate with appropriate punctuation</extracomment>
-        <translation type="vanished">%1:</translation>
-    </message>
-    <message>
-        <source>Effect Output</source>
-        <translation type="vanished">Tehostelähtö</translation>
-    </message>
-    <message>
-        <source>LADSPA Effect Options</source>
-        <translation type="vanished">LADSPA-tehostevalinnat</translation>
-    </message>
-    <message>
-        <source>As part of their processing, some LADSPA effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this option will provide that compensation, but it may not work for all LADSPA effects.</source>
-        <translation type="vanished">Joidenkin LADSPA-tehosteiden pitää käsittelyn takia viivästää äänen palauttamista Audacityyn. Jos tätä viivettä ei korjata, äänen väliin voi tulla lyhyitä hiljaisia kohtia. Tämän vaihtoehdon käyttäminen pyrkii korjaamaan viiveet, mutta se ei välttämättä toimi kaikille LADSPA-tehosteille.</translation>
-    </message>
-    <message>
-        <source>Couldn't instantiate effect</source>
-        <translation type="vanished">Tehosteita ei voitu toteuttaa</translation>
-    </message>
-    <message>
-        <source>LV2 Effect Settings</source>
-        <translation type="vanished">LV2-tehosteasetukset</translation>
-    </message>
-    <message>
-        <source>&amp;Buffer Size (8 to %d) samples:</source>
-        <translation type="vanished">&amp;Puskurin koko (8 – %1) näytettä:</translation>
-    </message>
-    <message>
-        <source>As part of their processing, some LV2 effects must delay returning audio to Audacity. When not compensating for this delay, you will notice that small silences have been inserted into the audio. Enabling this setting will provide that compensation, but it may not work for all LV2 effects.</source>
-        <translation type="vanished">Joidenkin LV2-tehosteiden pitää käsittelyn takia viivästää äänen palauttamista Audacityyn. Jos tätä viivettä ei korjaa, äänen väliin voi tulla lyhyitä hiljaisia kohtia. Tämän vaihtoehdon käyttäminen pyrkii korjaamaan viiveet, mutta se ei välttämättä toimi kaikille LV2-tehosteille.</translation>
-    </message>
-    <message>
-        <source>LV2 effects can have a graphical interface for setting parameter values. A basic text-only method is also available.  Reopen the effect for this to take effect.</source>
-        <translation type="vanished">LV2-tehosteilla voi olla graafinen käyttöliittymä parametriarvojen asettamiseen. Käytettävissä on myös perustekstimenetelmä.  Avaa tehoste uudelleen, jotta tämä tulee voimaan.</translation>
-    </message>
-    <message>
-        <source>Applying Nyquist Effect...</source>
-        <translation type="vanished">Suoritetaan Nyquist-tehostetta...</translation>
-    </message>
-    <message>
-        <source>Enable track spectrogram view before
-applying 'Spectral' effects.</source>
-        <translation type="vanished">Ota raidan spektrogrammi käyttöön
-käyttääksesi spektritehosteita.</translation>
-    </message>
-    <message>
-        <source>To use 'Spectral effects', enable 'Spectral Selection'
-in the track Spectrogram settings and select the
-frequency range for the effect to act on.</source>
-        <translation type="vanished">Jos haluat käyttää spektritehosteita, ota 'Spektrivalinta'
-spektrogrammin asetuksista käyttöön ja valitse
-taajuusalue, jolle tehoste suoritetaan.</translation>
-    </message>
-    <message>
-        <source>error: File "%s" specified in header but not found in plug-in path.
-</source>
-        <translation type="vanished">virhe: Otsikossa määritetty tiedosto %1, mutta sitä ei löydy laajennuspolusta.
-</translation>
-    </message>
-    <message>
-        <source>Nyquist Error</source>
-        <translation type="vanished">Nyquist-virhe</translation>
-    </message>
-    <message>
-        <source>Debug Output: </source>
-        <translation type="vanished">Virheenkorjaustulos: </translation>
-    </message>
-    <message>
-        <source>';type tool' effects cannot return audio from Nyquist.
-</source>
-        <extracomment>i18n-hint: Don't translate ';type tool'.</extracomment>
-        <translation type="vanished">';type tool' -tehosteet eivät voi palauttaa ääntä Nyquististä.
-</translation>
-    </message>
-    <message>
-        <source>';type tool' effects cannot return labels from Nyquist.
-</source>
-        <extracomment>i18n-hint: Don't translate ';type tool'.</extracomment>
-        <translation type="vanished">';type tool' -tehosteet eivät voi palauttaa merkkejä Nyquististä.
-</translation>
-    </message>
-    <message>
-        <source>Nyquist returned the value: %d</source>
-        <translation type="vanished">Nyquist palautti arvon: %1</translation>
-    </message>
-    <message>
-        <source>Your code looks like SAL syntax, but there is no 'return' statement.
-For SAL, use a return statement such as:
-	return *track* * 0.1
-or for LISP, begin with an open parenthesis such as:
-	(mult *track* 0.1)
- .</source>
-        <translation type="vanished">Koodi näyttää SAL-syntaksilta, mutta palautuslausetta ei ole.
-Käytä SAL:ssa palautuslausetta, kuten:
-	return *track* * 0.1
-tai LISPin tapauksessa aloita avoimella sulkeella, kuten:
-	(mult *track* 0.1)
- .</translation>
-    </message>
-    <message>
-        <source>Error in Nyquist code</source>
-        <translation type="vanished">Virhe Nyquist-koodissa</translation>
-    </message>
-    <message>
-        <source>Could not determine language</source>
-        <extracomment>i18n-hint: refers to programming "languages"</extracomment>
-        <translation type="vanished">Kieltä ei voitu määrittää</translation>
-    </message>
-    <message>
-        <source>"%s" is not a valid file path.</source>
-        <translation type="vanished">"%1" ei ole kelvollinen tiedostopolku.</translation>
-    </message>
-    <message>
-        <source>Mismatched quotes in
-%s</source>
-        <extracomment>i18n-hint: Warning that there is one quotation mark rather than a pair.</extracomment>
-        <translation type="vanished">Ristiriitaiset lainausmerkit
-%1</translation>
-    </message>
-    <message>
-        <source>Enter Nyquist Command: </source>
-        <translation type="vanished">Syötä Nyquist-komento: </translation>
-    </message>
-    <message>
-        <source>&amp;Load</source>
-        <translation type="vanished">&amp;Lataa</translation>
-    </message>
-    <message>
-        <source>Current program has been modified.
-Discard changes?</source>
-        <translation type="vanished">Nykyistä ohjelmaa on muutettu.
-Hylkäätkö muutokset?</translation>
-    </message>
-    <message>
-        <source>File could not be loaded</source>
-        <translation type="vanished">Tiedostoa ei voitu ladata</translation>
-    </message>
-    <message>
-        <source>File could not be saved</source>
-        <translation type="vanished">Tiedostoa ei voitu tallentaa</translation>
-    </message>
-    <message>
-        <source>Value range:
-%s to %s</source>
-        <translation type="vanished">Arvoalue:
-%1 -&gt; %2</translation>
-    </message>
-    <message>
-        <source>Value Error</source>
-        <translation type="vanished">Arvovirhe</translation>
-    </message>
-    <message>
-        <source>Save file as</source>
-        <translation type="vanished">Tallenna tiedosto nimellä</translation>
-    </message>
-    <message>
-        <source>Vamp Effects</source>
-        <translation type="vanished">Vamp-tehosteet</translation>
-    </message>
-    <message>
-        <source>Provides Vamp Effects support to Audacity</source>
-        <translation type="vanished">Tarjoaa Vamp-tehostetuen Audacitylle</translation>
-    </message>
-    <message>
-        <source>Sorry, failed to load Vamp Plug-in.</source>
-        <translation type="vanished">Vamp-laajennuksen lataaminen epäonnistui.</translation>
-    </message>
-    <message>
-        <source>Sorry, Vamp Plug-in failed to initialize.</source>
-        <translation type="vanished">Vamp-laajennuksen alustus epäonnistui.</translation>
-    </message>
-    <message>
-        <source>Plugin Settings</source>
-        <translation type="vanished">Laajennusasetukset</translation>
-    </message>
-    <message>
-        <source>Program</source>
-        <translation type="vanished">Sovellus</translation>
-    </message>
-    <message>
-        <source>Vamp</source>
-        <extracomment>i18n-hint: Vamp is the proper name of a software protocol for sound analysis.
-It is not an abbreviation for anything.  See http://vamp-plugins.org</extracomment>
-        <translation type="vanished">Vamp</translation>
-    </message>
-    <message>
-        <source>Entire &amp;Project</source>
-        <translation type="vanished">Koko &amp;projekti</translation>
-    </message>
-    <message>
-        <source>M&amp;ultiple Files</source>
-        <translation type="vanished">&amp;Useita tiedostoja</translation>
-    </message>
-    <message>
-        <source>Curren&amp;t Selection</source>
-        <translation type="vanished">Nykyinen &amp;valinta</translation>
-    </message>
-    <message>
-        <source>Using Label/Track Name</source>
-        <translation type="vanished">Käytetään merkin/raidan nimeä</translation>
-    </message>
-    <message>
-        <source>Numbering before Label/Track Name</source>
-        <translation type="vanished">Numerointi ennen merkin/raidan nimeä</translation>
-    </message>
-    <message>
-        <source>Numbering after File name prefix</source>
-        <translation type="vanished">Numerointi tiedostonimen alkuosan jälkeen</translation>
-    </message>
-    <message>
-        <source>Export Range:</source>
-        <translation type="vanished">Vientialue:</translation>
-    </message>
-    <message>
-        <source>Export entire project</source>
-        <translation type="vanished">Vie koko projekti</translation>
-    </message>
-    <message>
-        <source>Export multiple files</source>
-        <translation type="vanished">Vie useita tiedostoja</translation>
-    </message>
-    <message>
-        <source>Export current selection</source>
-        <translation type="vanished">Vie nykyinen valinta</translation>
-    </message>
-    <message>
-        <source>Split files based on:</source>
-        <translation type="vanished">Jaa tiedostoja perustuen:</translation>
-    </message>
-    <message>
-        <source>Include audio before first label</source>
-        <translation type="vanished">Sisällytä ääni ennen ensimmäistä merkkiä</translation>
-    </message>
-    <message>
-        <source>Name files:</source>
-        <translation type="vanished">Nimeä tiedostot:</translation>
-    </message>
-    <message>
-        <source>File name prefix:</source>
-        <translation type="vanished">Tiedostonimen alkuosa:</translation>
-    </message>
-    <message>
-        <source>Overwrite existing files</source>
-        <translation type="vanished">Korvaa olemassa olevat tiedostot</translation>
-    </message>
-    <message>
-        <source>&amp;Export</source>
-        <translation type="vanished">Vi&amp;e</translation>
-    </message>
-    <message>
-        <source>Successfully exported the following %lld file(s).</source>
-        <translation type="vanished">Seuraavien %1 tiedostojen vienti onnistui.</translation>
-    </message>
-    <message>
-        <source>Something went wrong after exporting the following %lld file(s).</source>
-        <translation type="vanished">Jotain meni pieleen seuraavien %1 tiedostojen viennin jälkeen.</translation>
-    </message>
-    <message>
-        <source>Export canceled after exporting the following %lld file(s).</source>
-        <translation type="vanished">Vienti peruutettiin seuraavien %1 tiedostojen viennin jälkeen.</translation>
-    </message>
-    <message>
-        <source>Export stopped after exporting the following %lld file(s).</source>
-        <translation type="vanished">Vienti pysäytettiin seuraavien %1 tiedostojen viennin jälkeen.</translation>
-    </message>
-    <message>
-        <source>Something went really wrong after exporting the following %lld file(s).</source>
-        <translation type="vanished">Jotain meni pahasti pieleen seuraavien %1 tiedostojen viennin jälkeen.</translation>
-    </message>
-    <message>
-        <source>A file named "%s" already exists. Replace?</source>
-        <translation type="vanished">Tiedosto "%1" on jo olemassa. Korvataanko?</translation>
-    </message>
-    <message>
-        <source>All selected audio is muted.</source>
-        <translation type="vanished">Kaikki valitut äänet on mykistetty.</translation>
-    </message>
-    <message>
-        <source>Continue to export remaining files?</source>
-        <translation type="vanished">Jatketaanko jäljellä olevien tiedostojen vientiä?</translation>
-    </message>
-    <message>
-        <source>Custom Sample Rate</source>
-        <translation type="vanished">Mukautettu näytetaajuus</translation>
-    </message>
-    <message>
-        <source>File &amp;Name:</source>
-        <translation type="vanished">Tiedosto&amp;nimi:</translation>
-    </message>
-    <message>
-        <source>Fo&amp;lder:</source>
-        <translation type="vanished">&amp;Kansio:</translation>
-    </message>
-    <message>
-        <source>&amp;Format:</source>
-        <translation type="vanished">&amp;Muoto:</translation>
-    </message>
-    <message>
-        <source>M&amp;ono</source>
-        <translation type="vanished">M&amp;ono</translation>
-    </message>
-    <message>
-        <source>&amp;Stereo</source>
-        <translation type="vanished">&amp;Stereo</translation>
-    </message>
-    <message>
-        <source>Custom mappin&amp;g</source>
-        <extracomment>i18n-hint refers to custom channel mapping configuration</extracomment>
-        <translation type="vanished">Mukautettu &amp;kartoitus</translation>
-    </message>
-    <message>
-        <source>Configure custom mapping</source>
-        <extracomment>i18n-hint accessibility hint, refers to export channel configuration</extracomment>
-        <translation type="vanished">Määritä mukautettu kartoitus</translation>
-    </message>
-    <message>
-        <source>Configure</source>
-        <translation type="vanished">Määritä</translation>
-    </message>
-    <message>
-        <source>Sample &amp;Rate</source>
-        <translation type="vanished">Näytteenotto&amp;taajuus</translation>
-    </message>
-    <message>
-        <source>Choose a location to save the exported files</source>
-        <translation type="vanished">Valitse vietävien tiedostojen tallennuspaikka</translation>
-    </message>
-    <message>
-        <source>Advanced Mixing Options</source>
-        <translation type="vanished">Edistyneet miksausvalinnat</translation>
-    </message>
-    <message>
-        <source>%d Hz (custom)</source>
-        <translation type="vanished">%1 Hz (muokattu)</translation>
-    </message>
-    <message>
-        <source>Other...</source>
-        <translation type="vanished">Muut...</translation>
-    </message>
-    <message>
-        <source>%s - L</source>
-        <extracomment>i18n-hint: track name and L abbreviating Left channel</extracomment>
-        <translation type="vanished">%1 - V</translation>
-    </message>
-    <message>
-        <source>%s - R</source>
-        <extracomment>i18n-hint: track name and R abbreviating Right channel</extracomment>
-        <translation type="vanished">%1 - O</translation>
-    </message>
-    <message>
-        <source>Output Channels: %2d</source>
-        <translation type="vanished">Ulostulokanavat: %1</translation>
-    </message>
-    <message>
-        <source>Mixer Panel</source>
-        <translation type="vanished">Mikseripaneeli</translation>
-    </message>
-    <message>
-        <source>Channel: %2d</source>
-        <translation type="vanished">Kanava: %1</translation>
-    </message>
-    <message>
-        <source>No format specific options</source>
-        <translation type="vanished">Ei erityisiä muotovalintoja</translation>
-    </message>
-    <message>
-        <source>Import Raw</source>
-        <extracomment>i18n-hint: 'Raw' means 'unprocessed' here and should usually be translated.</extracomment>
-        <translation type="vanished">Tuo raaka</translation>
-    </message>
-    <message>
-        <source>Import Raw Data</source>
-        <translation type="vanished">Tuo raakadataa</translation>
-    </message>
-    <message>
-        <source>No endianness</source>
-        <extracomment>i18n-hint: Refers to byte-order.  Don't translate "endianness" if you don't
-know the correct technical word.</extracomment>
-        <translation type="vanished">Ei tavujärjestystä</translation>
-    </message>
-    <message>
-        <source>Little-endian</source>
-        <extracomment>i18n-hint: Refers to byte-order.  Don't translate this if you don't
-know the correct technical word.</extracomment>
-        <translation type="vanished">Pienin ensin (little-endian)</translation>
-    </message>
-    <message>
-        <source>Big-endian</source>
-        <extracomment>i18n-hint: Refers to byte-order.  Don't translate this if you don't
-know the correct technical word.</extracomment>
-        <translation type="vanished">Suurin ensin (big-endian)</translation>
-    </message>
-    <message>
-        <source>Default endianness</source>
-        <extracomment>i18n-hint: Refers to byte-order.  Don't translate "endianness" if you don't
-know the correct technical word.</extracomment>
-        <translation type="vanished">Oletustavujärjestys</translation>
-    </message>
-    <message>
-        <source>1 Channel (Mono)</source>
-        <translation type="vanished">1 kanava (mono)</translation>
-    </message>
-    <message>
-        <source>2 Channels (Stereo)</source>
-        <translation type="vanished">2 kanavaa (stereo)</translation>
-    </message>
-    <message>
-        <source>%d Channels</source>
-        <translation type="vanished">%1 kanavaa</translation>
-    </message>
-    <message>
-        <source>Encoding:</source>
-        <translation type="vanished">Koodaus:</translation>
-    </message>
-    <message>
-        <source>Byte order:</source>
-        <translation type="vanished">Tavujärjestys:</translation>
-    </message>
-    <message>
-        <source>Channels:</source>
-        <translation type="vanished">Kanavat:</translation>
-    </message>
-    <message>
-        <source>Start offset:</source>
-        <extracomment>i18n-hint: (noun)</extracomment>
-        <translation type="vanished">Aloituskohta:</translation>
-    </message>
-    <message>
-        <source>bytes</source>
-        <translation type="vanished">tavua</translation>
-    </message>
-    <message>
-        <source>Amount to import:</source>
-        <translation type="vanished">Tuotava määrä:</translation>
-    </message>
-    <message>
-        <source>Sample rate:</source>
-        <extracomment>i18n-hint: (noun)</extracomment>
-        <translation type="vanished">Näytteenottotaajuus:</translation>
-    </message>
-    <message>
-        <source>Detect</source>
-        <extracomment>i18n-hint: Guess format of raw file</extracomment>
-        <translation type="vanished">Huomaa</translation>
-    </message>
-    <message>
-        <source>&amp;Import</source>
-        <translation type="vanished">&amp;Tuo</translation>
-    </message>
-    <message>
-        <source>Bad data size. Could not import audio</source>
-        <translation type="vanished">Tiedon koko virheellinen. Ääntä ei voi tuoda</translation>
-    </message>
-    <message numerus="yes">
-        <source>%s %s, %d of %d clip %s</source>
-        <oldsource>%s %s, %d of %d clips %s</oldsource>
-        <extracomment>i18n-hint:
-First %s is replaced with the noun "start" or "end"
-identifying one end of a clip,
-second string is the name of that clip,
-first number gives the position of that clip in a sequence
-of clips,
-last number counts all clips,
-and the last string is the name of the track containing the
-clips.</extracomment>
-        <translation type="vanished">
-            <numerusform>%1 %2, %3 / %4 leikkeestä %5</numerusform>
-            <numerusform>%1 %2, %3 / %4 leikkeestä %5</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>start</source>
-        <translation type="vanished">alku</translation>
-    </message>
-    <message>
-        <source>end</source>
-        <translation type="vanished">loppu</translation>
-    </message>
-    <message numerus="yes">
-        <source>%s %s and %s %s, %d and %d of %d clip %s</source>
-        <oldsource>%s %s and %s %s, %d and %d of %d clips %s</oldsource>
-        <extracomment>i18n-hint:
-First and third %s are each replaced with the noun "start"
-or with "end", identifying and end of a clip,
-second and fourth strings are the names of those clips,
-first and second numbers give the position of those clips in
-a sequence of clips,
-last number counts all clips,
-and the last string is the name of the track containing the
-clips.</extracomment>
-        <translation type="vanished">
-            <numerusform>%1 %2 ja %3 %4, %5 ja %6 / %7 leike %8</numerusform>
-            <numerusform>%1 %2 ja %3 %4, %5 ja %6 / %7 leikkeestä %8</numerusform>
-        </translation>
-    </message>
-    <message numerus="yes">
-        <source>%s, %d of %d clip %s</source>
-        <oldsource>%s, %d of %d clips %s</oldsource>
-        <extracomment>i18n-hint:
-first string is the name of a clip,
-first number gives the position of that clip
-in a sequence of clips,
-last number counts all clips,
-last string names a track</extracomment>
-        <translation type="vanished">
-            <numerusform>%1, %2 / %3 leike %4</numerusform>
-            <numerusform>%1, %2 / %3 leikkeestä %4</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Moved clips to the right</source>
-        <translation type="vanished">Leikkeet siirretty oikealle</translation>
-    </message>
-    <message>
-        <source>Moved clips to the left</source>
-        <translation type="vanished">Leikkeet siirretty vasemmalle</translation>
-    </message>
-    <message>
-        <source>Move audio clips</source>
-        <translation type="vanished">Siirrä äänileikkeitä</translation>
-    </message>
-    <message>
-        <source>clip not moved</source>
-        <translation type="vanished">leikettä ei siirretty</translation>
-    </message>
-    <message>
-        <source>Audi&amp;o Clips</source>
-        <translation type="vanished">Ä&amp;änileike</translation>
-    </message>
-    <message>
-        <source>Pre&amp;vious Clip Boundary to Cursor</source>
-        <translation type="vanished">E&amp;dellisen leikkeen reunasta kohdistimeen</translation>
-    </message>
-    <message>
-        <source>Cursor to Ne&amp;xt Clip Boundary</source>
-        <translation type="vanished">Kohdistimesta &amp;seuraavan leikkeen reunaan</translation>
-    </message>
-    <message>
-        <source>Previo&amp;us Clip</source>
-        <translation type="vanished">Edellin&amp;en leike</translation>
-    </message>
-    <message>
-        <source>Select Previous Clip</source>
-        <translation type="vanished">Valitse edellinen leike</translation>
-    </message>
-    <message>
-        <source>N&amp;ext Clip</source>
-        <translation type="vanished">Seuraava leike</translation>
-    </message>
-    <message>
-        <source>Select Next Clip</source>
-        <translation type="vanished">Valitse seuraava leike</translation>
-    </message>
-    <message>
-        <source>Pre&amp;vious Clip Boundary</source>
-        <translation type="vanished">E&amp;delliseen leikerajaan</translation>
-    </message>
-    <message>
-        <source>Cursor to Prev Clip Boundary</source>
-        <translation type="vanished">Kohdistimesta edellisen leikkeen reunaan</translation>
-    </message>
-    <message>
-        <source>Ne&amp;xt Clip Boundary</source>
-        <translation type="vanished">Seuraavaan &amp;leikerajaan</translation>
-    </message>
-    <message>
-        <source>Cursor to Next Clip Boundary</source>
-        <translation type="vanished">Kohdistimesta seuraavan leikkeen reunaan</translation>
-    </message>
-    <message>
-        <source>Time Shift &amp;Left</source>
-        <translation type="vanished">Aikasiirto &amp;vasemmalle</translation>
-    </message>
-    <message>
-        <source>Time Shift &amp;Right</source>
-        <translation type="vanished">Aikasiirto &amp;oikealle</translation>
-    </message>
-    <message>
-        <source>Pasted text from the clipboard</source>
-        <translation type="vanished">Liitetty teksti leikepöydältä</translation>
-    </message>
-    <message>
-        <source>Pasted from the clipboard</source>
-        <translation type="vanished">Liitetty leikepöydältä</translation>
-    </message>
-    <message>
-        <source>Nothing to undo</source>
-        <translation type="vanished">Ei kumottavaa</translation>
-    </message>
-    <message>
-        <source>Nothing to redo</source>
-        <translation type="vanished">Ei uudelleen tehtävää</translation>
-    </message>
-    <message>
-        <source>Cut to the clipboard</source>
-        <translation type="vanished">Leikkaus leikepöydälle</translation>
-    </message>
-    <message>
-        <source>Deleted %.2f seconds at t=%.2f</source>
-        <translation type="vanished">Poistettu %1 sekuntia kohdasta t=%2</translation>
-    </message>
-    <message>
-        <source>Paste clip</source>
-        <translation type="vanished">Liitä leike</translation>
-    </message>
-    <message>
-        <source>Pasting clip contents, please wait</source>
-        <translation type="vanished">Liitetään leikkeen sisältöä, odota</translation>
-    </message>
-    <message>
-        <source>The content you are trying to paste will span across more tracks than you currently have available. Add more tracks and try again.</source>
-        <translation type="vanished">Sisältö, jota yrität liittää, kattaa useamman raidan kuin sinulla on tällä hetkellä saatavilla. Lisää raitoja ja yritä uudelleen.</translation>
-    </message>
-    <message>
-        <source>There are not enough tracks selected to accommodate your copied content. Select additional tracks and try again.</source>
-        <translation type="vanished">Raitoja ei ole valittu tarpeeksi kopioitua sisältöä varten. Valitse lisää raitoja ja yritä uudelleen.</translation>
-    </message>
-    <message>
-        <source>Duplicated</source>
-        <translation type="vanished">Kahdennettu</translation>
-    </message>
-    <message>
-        <source>Split-cut to the clipboard</source>
-        <translation type="vanished">Halkaise ja leikkaa leikepöydälle</translation>
-    </message>
-    <message>
-        <source>Split Cut</source>
-        <translation type="vanished">Halkaise ja leikkaa</translation>
-    </message>
-    <message>
-        <source>Split-deleted %.2f seconds at t=%.2f</source>
-        <translation type="vanished">Halkaistiin ja poistettiin %1 sekuntia kohdasta t=%2</translation>
-    </message>
-    <message>
-        <source>Split Delete</source>
-        <translation type="vanished">Halkaise ja poista</translation>
-    </message>
-    <message>
-        <source>Silenced selected tracks for %.2f seconds at %.2f</source>
-        <translation type="vanished">Hiljennettiin valitut raidat %1 sekunniksi kohdassa %2</translation>
-    </message>
-    <message>
-        <source>Silence</source>
-        <comment>command</comment>
-        <extracomment>i18n-hint: verb</extracomment>
-        <translation type="vanished">Hiljennä</translation>
-    </message>
-    <message>
-        <source>Trim selected audio tracks from %.2f seconds to %.2f seconds</source>
-        <translation type="vanished">Rajattiin valitut ääniraidat %1 sekunnista %2 sekunniksi</translation>
-    </message>
-    <message>
-        <source>Trim Audio</source>
-        <translation type="vanished">Rajaa ääni</translation>
-    </message>
-    <message>
-        <source>Split to new track</source>
-        <translation type="vanished">Halkaise uuteen raitaan</translation>
-    </message>
-    <message>
-        <source>Split New</source>
-        <translation type="vanished">Halkaise uuteen</translation>
-    </message>
-    <message>
-        <source>Joined %.2f seconds at t=%.2f</source>
-        <translation type="vanished">Liitetty %1 sekuntia yhteen kohdassa t=%2</translation>
-    </message>
-    <message>
-        <source>Join</source>
-        <translation type="vanished">Liitä yhteen</translation>
-    </message>
-    <message>
-        <source>Detached %.2f seconds at t=%.2f</source>
-        <translation type="vanished">Irrotettu %1 sekuntia kohdasta t=%2</translation>
-    </message>
-    <message>
-        <source>Detach</source>
-        <translation type="vanished">Irrota</translation>
-    </message>
-    <message>
-        <source>Cu&amp;t</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Leikkaa</translation>
-    </message>
-    <message>
-        <source>&amp;Delete</source>
-        <translation type="vanished">&amp;Poista</translation>
-    </message>
-    <message>
-        <source>&amp;Copy</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">&amp;Kopioi</translation>
-    </message>
-    <message>
-        <source>Duplic&amp;ate</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">K&amp;ahdenna</translation>
-    </message>
-    <message>
-        <source>R&amp;emove Special</source>
-        <translation type="vanished">Erityispoisto</translation>
-    </message>
-    <message>
-        <source>Spl&amp;it Cut</source>
-        <extracomment>i18n-hint: (verb) Do a special kind of cut</extracomment>
-        <translation type="vanished">Halkaise ja le&amp;ikkaa</translation>
-    </message>
-    <message>
-        <source>Split D&amp;elete</source>
-        <extracomment>i18n-hint: (verb) Do a special kind of DELETE</extracomment>
-        <translation type="vanished">Halkaise ja p&amp;oista</translation>
-    </message>
-    <message>
-        <source>Silence Audi&amp;o</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Hiljennä &amp;ääni</translation>
-    </message>
-    <message>
-        <source>Tri&amp;m Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Rajaa ääni</translation>
-    </message>
-    <message>
-        <source>Sp&amp;lit</source>
-        <extracomment>i18n-hint: (verb) It's an item on a menu.</extracomment>
-        <translation type="vanished">&amp;Halkaise</translation>
-    </message>
-    <message>
-        <source>Split Ne&amp;w</source>
-        <translation type="vanished">Halkaise &amp;uuteen</translation>
-    </message>
-    <message>
-        <source>&amp;Join</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Liitä &amp;yhteen</translation>
-    </message>
-    <message>
-        <source>Detac&amp;h at Silences</source>
-        <translation type="vanished">Ir&amp;rota hiljaisissa kohdissa</translation>
-    </message>
-    <message>
-        <source>Pre&amp;ferences</source>
-        <translation type="vanished">&amp;Asetukset</translation>
-    </message>
-    <message>
-        <source>&amp;Delete Key</source>
-        <translation type="vanished">&amp;Poistonäppäin</translation>
-    </message>
-    <message>
-        <source>Delete Key&amp;2</source>
-        <translation type="vanished">Poistonäppäin &amp;2</translation>
-    </message>
-    <message>
-        <source>Ext&amp;ra</source>
-        <translation type="vanished">E&amp;kstrat</translation>
-    </message>
-    <message>
-        <source>Enable &amp;Full Screen</source>
-        <translation type="vanished">Ota &amp;koko näyttö käyttöön</translation>
-    </message>
-    <message>
-        <source>Cannot proceed to export.</source>
-        <translation type="vanished">Vientiä ei voi jatkaa.</translation>
-    </message>
-    <message>
-        <source>Cannot create directory '%s'. 
-File already exists that is not a directory</source>
-        <translation type="vanished">Kansiota '%1' ei voi luoda. 
-Tiedosto on jo olemassa, joka ei ole kansio</translation>
-    </message>
-    <message>
-        <source>labels.txt</source>
-        <extracomment>i18n-hint: filename containing exported text from label tracks</extracomment>
-        <translation type="vanished">labels.txt</translation>
-    </message>
-    <message>
-        <source>There are no label tracks to export.</source>
-        <translation type="vanished">Merkkiraitoja ei ole vietäväksi.</translation>
-    </message>
-    <message>
-        <source>Imported labels from '%s'</source>
-        <translation type="vanished">Tuotiin merkit lähteestä '%1'</translation>
-    </message>
-    <message>
-        <source>Import Labels</source>
-        <translation type="vanished">Tuo merkkejä</translation>
-    </message>
-    <message>
-        <source>&amp;Dangerous Reset...</source>
-        <translation type="vanished">&amp;Vaarallinen nollaus...</translation>
-    </message>
-    <message>
-        <source>Open Recent</source>
-        <extracomment>i18n-hint: This is the name of the menu item on Mac OS X only</extracomment>
-        <translation type="vanished">Avaa viimeisin</translation>
-    </message>
-    <message>
-        <source>Recent &amp;Files</source>
-        <extracomment>i18n-hint: This is the name of the menu item on Windows and Linux</extracomment>
-        <translation type="vanished">V&amp;iimeksi avatut tiedostot</translation>
-    </message>
-    <message>
-        <source>&amp;Save Project</source>
-        <translation type="vanished">&amp;Tallenna projekti</translation>
-    </message>
-    <message>
-        <source>Save Project &amp;As...</source>
-        <translation type="vanished">Tallenna projekti &amp;nimellä...</translation>
-    </message>
-    <message>
-        <source>&amp;Backup Project...</source>
-        <translation type="vanished">T&amp;ee projektista varmuuskopio...</translation>
-    </message>
-    <message>
-        <source>&amp;Export Audio...</source>
-        <translation type="vanished">Vi&amp;e ääni...</translation>
-    </message>
-    <message>
-        <source>Expo&amp;rt Other</source>
-        <translation type="vanished">Vie &amp;muut</translation>
-    </message>
-    <message>
-        <source>Export &amp;Labels...</source>
-        <translation type="vanished">Vie mer&amp;kit...</translation>
-    </message>
-    <message>
-        <source>&amp;Audio...</source>
-        <translation type="vanished">&amp;Ääni...</translation>
-    </message>
-    <message>
-        <source>&amp;Labels...</source>
-        <translation type="vanished">&amp;Merkkejä...</translation>
-    </message>
-    <message>
-        <source>&amp;Raw Data...</source>
-        <translation type="vanished">&amp;Raakadata...</translation>
-    </message>
-    <message>
-        <source>E&amp;xit</source>
-        <extracomment>i18n-hint: (verb) It's item on a menu.</extracomment>
-        <translation type="vanished">&amp;Lopeta</translation>
-    </message>
-    <message>
-        <source>Export as MP&amp;3</source>
-        <translation type="vanished">Vie MP&amp;3-tiedostona</translation>
-    </message>
-    <message>
-        <source>Export as &amp;WAV</source>
-        <translation type="vanished">Vie &amp;WAV-tiedostona</translation>
-    </message>
-    <message>
-        <source>Export as &amp;OGG</source>
-        <translation type="vanished">Vie &amp;OGG-tiedostona</translation>
-    </message>
-    <message>
-        <source>Export as FLAC</source>
-        <translation type="vanished">Vie FLAC-tiedostona</translation>
-    </message>
-    <message>
-        <source>Expo&amp;rt Selected Audio...</source>
-        <translation type="vanished">Vie v&amp;alittu ääni...</translation>
-    </message>
-    <message>
-        <source>Do you have these problems?</source>
-        <translation type="vanished">Onko sinulla näitä ongelmia?</translation>
-    </message>
-    <message>
-        <source>Fix</source>
-        <translation type="vanished">Korjaus</translation>
-    </message>
-    <message>
-        <source>Quick Fixes</source>
-        <translation type="vanished">Pikakorjaukset</translation>
-    </message>
-    <message>
-        <source>Nothing to do</source>
-        <translation type="vanished">Ei mitään tekemistä</translation>
-    </message>
-    <message>
-        <source>No quick, easily fixed problems were found</source>
-        <translation type="vanished">Helposti ja nopeasti korjattavia ongelmia ei löytynyt</translation>
-    </message>
-    <message>
-        <source>Clocks on the Tracks</source>
-        <translation type="vanished">Kellot raidoilla</translation>
-    </message>
-    <message>
-        <source>Can't select precisely</source>
-        <translation type="vanished">Ei voi valita tarkasti</translation>
-    </message>
-    <message>
-        <source>Recording stops and starts</source>
-        <translation type="vanished">Äänitys pysähtyy ja käynnistyy</translation>
-    </message>
-    <message>
-        <source>Fixed</source>
-        <translation type="vanished">Korjattu</translation>
-    </message>
-    <message>
-        <source>Audio Device Info</source>
-        <translation type="vanished">Äänilaitteen tiedot</translation>
-    </message>
-    <message>
-        <source>&amp;Quick Help...</source>
-        <translation type="vanished">&amp;Pikaohje...</translation>
-    </message>
-    <message>
-        <source>&amp;Manual...</source>
-        <translation type="vanished">&amp;Käyttöohje...</translation>
-    </message>
-    <message>
-        <source>Au&amp;dio Device Info...</source>
-        <translation type="vanished">Ääni&amp;laitteen tiedot...</translation>
-    </message>
-    <message>
-        <source>&amp;Generate Support Data...</source>
-        <translation type="vanished">&amp;Luo tukitiedot...</translation>
-    </message>
-    <message>
-        <source>&amp;Check for Updates...</source>
-        <translation type="vanished">&amp;Tarkista päivitykset...</translation>
-    </message>
-    <message>
-        <source>&amp;About Audacity</source>
-        <translation type="vanished">Tietoja &amp;Audacitystä</translation>
-    </message>
-    <message>
-        <source>Added label</source>
-        <translation type="vanished">Lisättiin merkki</translation>
-    </message>
-    <message>
-        <source>Paste Text to New Label</source>
-        <translation type="vanished">Liitä tekstiä uuteen merkkiin</translation>
-    </message>
-    <message>
-        <source>Cut labeled audio regions to clipboard</source>
-        <extracomment>i18n-hint: (verb) past tense.  Audacity has just cut the labeled audio
-regions.</extracomment>
-        <translation type="vanished">Leikkaa merkityt äänialueet leikepöydälle</translation>
-    </message>
-    <message>
-        <source>Cut Labeled Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Leikkaa merkitty ääni</translation>
-    </message>
-    <message>
-        <source>Deleted labeled audio regions</source>
-        <extracomment>i18n-hint: (verb) Audacity has just deleted the labeled audio regions</extracomment>
-        <translation type="vanished">Poistettiin merkityt äänialueet</translation>
-    </message>
-    <message>
-        <source>Delete Labeled Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Poista merkitty ääni</translation>
-    </message>
-    <message>
-        <source>Split Cut labeled audio regions to clipboard</source>
-        <extracomment>i18n-hint: (verb) Audacity has just split cut the labeled audio
-regions</extracomment>
-        <translation type="vanished">Halkaistiin ja leikattiin merkityt äänialueet</translation>
-    </message>
-    <message>
-        <source>Split Cut Labeled Audio</source>
-        <extracomment>i18n-hint: (verb) Do a special kind of cut on the labels</extracomment>
-        <translation type="vanished">Halkaise ja leikkaa merkitty ääni</translation>
-    </message>
-    <message>
-        <source>Split Deleted labeled audio regions</source>
-        <extracomment>i18n-hint: (verb) Audacity has just done a special kind of DELETE on
-the labeled audio regions</extracomment>
-        <translation type="vanished">Halkaistiin ja poistettiin merkityt äänialueet</translation>
-    </message>
-    <message>
-        <source>Split Delete Labeled Audio</source>
-        <extracomment>i18n-hint: (verb) Do a special kind of DELETE on labeled audio
-regions</extracomment>
-        <translation type="vanished">Halkaise ja poista merkitty ääni</translation>
-    </message>
-    <message>
-        <source>Silenced labeled audio regions</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Hiljennettiin merkityt äänialueet</translation>
-    </message>
-    <message>
-        <source>Silence Labeled Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Hiljennä merkitty ääni</translation>
-    </message>
-    <message>
-        <source>Copied labeled audio regions to clipboard</source>
-        <translation type="vanished">Kopioitiin merkityt äänialueet leikepöydälle</translation>
-    </message>
-    <message>
-        <source>Copy Labeled Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Kopioi merkitty ääni</translation>
-    </message>
-    <message>
-        <source>Split labeled audio (points or regions)</source>
-        <extracomment>i18n-hint: (verb) past tense.  Audacity has just split the labeled
-audio (a point or a region)</extracomment>
-        <translation type="vanished">Halkaistiin merkityt äänialueet (kohdat tai alueet)</translation>
-    </message>
-    <message>
-        <source>Split Labeled Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Halkaise merkitty ääni</translation>
-    </message>
-    <message>
-        <source>Joined labeled audio (points or regions)</source>
-        <extracomment>i18n-hint: (verb) Audacity has just joined the labeled audio (points or
-regions)</extracomment>
-        <translation type="vanished">Liitettiin merkityt äänialueet yhteen (kohdat tai alueet)</translation>
-    </message>
-    <message>
-        <source>Join Labeled Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Liitä merkitty ääni yhteen</translation>
-    </message>
-    <message>
-        <source>Detached labeled audio regions</source>
-        <extracomment>i18n-hint: (verb) Audacity has just detached the labeled audio regions.
-This message appears in history and tells you about something
-Audacity has done.</extracomment>
-        <translation type="vanished">Irrotettiin merkityt äänialueet</translation>
-    </message>
-    <message>
-        <source>Detach Labeled Audio</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Irrota merkitty ääni</translation>
-    </message>
-    <message>
-        <source>Created new label track</source>
-        <translation type="vanished">Luotiin uusi merkkiraita</translation>
-    </message>
-    <message>
-        <source>New Track</source>
-        <translation type="vanished">Uusi raita</translation>
-    </message>
-    <message>
-        <source>&amp;Labels</source>
-        <translation type="vanished">&amp;Merkit</translation>
-    </message>
-    <message>
-        <source>Label &amp;Editor</source>
-        <translation type="vanished">Tunniste-&amp;editori</translation>
-    </message>
-    <message>
-        <source>Add Label at &amp;Selection</source>
-        <translation type="vanished">Lisää merkki &amp;valintaan</translation>
-    </message>
-    <message>
-        <source>Add Label at &amp;Playback Position</source>
-        <translation type="vanished">Lisää merkki &amp;toistokohtaan</translation>
-    </message>
-    <message>
-        <source>Paste Te&amp;xt to New Label</source>
-        <translation type="vanished">Liitä &amp;tekstiä uuteen merkkiin</translation>
-    </message>
-    <message>
-        <source>&amp;Typing Creates New Labels</source>
-        <translation type="vanished">&amp;Kirjoittaminen luo uusia merkkejä</translation>
-    </message>
-    <message>
-        <source>La&amp;beled Audio</source>
-        <translation type="vanished">M&amp;erkitty ääni</translation>
-    </message>
-    <message>
-        <source>&amp;Cut</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">&amp;Leikkaa</translation>
-    </message>
-    <message>
-        <source>Label Cut</source>
-        <translation type="vanished">Leikkaa merkillä</translation>
-    </message>
-    <message>
-        <source>Label Delete</source>
-        <translation type="vanished">Poista merkillä</translation>
-    </message>
-    <message>
-        <source>&amp;Split Cut</source>
-        <extracomment>i18n-hint: (verb) A special way to cut out a piece of audio</extracomment>
-        <translation type="vanished">&amp;Halkaise ja leikkaa</translation>
-    </message>
-    <message>
-        <source>Label Split Cut</source>
-        <translation type="vanished">Halkaise ja leikkaa merkillä</translation>
-    </message>
-    <message>
-        <source>Sp&amp;lit Delete</source>
-        <translation type="vanished">Ha&amp;lkaise ja poista</translation>
-    </message>
-    <message>
-        <source>Label Split Delete</source>
-        <translation type="vanished">Halkaise ja poista merkillä</translation>
-    </message>
-    <message>
-        <source>Silence &amp;Audio</source>
-        <translation type="vanished">Hiljennä ä&amp;äni</translation>
-    </message>
-    <message>
-        <source>Label Silence</source>
-        <translation type="vanished">Hiljennä merkillä</translation>
-    </message>
-    <message>
-        <source>Co&amp;py</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Ko&amp;pioi</translation>
-    </message>
-    <message>
-        <source>Label Copy</source>
-        <translation type="vanished">Kopioi merkillä</translation>
-    </message>
-    <message>
-        <source>Spli&amp;t</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Ja&amp;a</translation>
-    </message>
-    <message>
-        <source>Label Split</source>
-        <translation type="vanished">Halkaise merkillä</translation>
-    </message>
-    <message>
-        <source>Label Join</source>
-        <translation type="vanished">Liitä yhteen merkillä</translation>
-    </message>
-    <message>
-        <source>&amp;Label Track</source>
-        <translation type="vanished">&amp;Merkkiraita</translation>
-    </message>
-    <message>
-        <source>...</source>
-        <translation type="vanished">...</translation>
-    </message>
-    <message>
-        <source>Uncategorized</source>
-        <translation type="vanished">Luokittelematon</translation>
-    </message>
-    <message>
-        <source>Move Backward Through Active Windows</source>
-        <translation type="vanished">Siirry taaksepäin aktiivisten ikkunoiden kautta</translation>
-    </message>
-    <message>
-        <source>Move Forward Through Active Windows</source>
-        <translation type="vanished">Siirry eteenpäin aktiivisten ikkunoiden kautta</translation>
-    </message>
-    <message>
-        <source>Foc&amp;us</source>
-        <translation type="vanished">Kohdist&amp;us</translation>
-    </message>
-    <message>
-        <source>Move &amp;Backward from Toolbars to Tracks</source>
-        <translation type="vanished">Siirry &amp;taaksepäin työkalupalkeista raitoihin</translation>
-    </message>
-    <message>
-        <source>Move F&amp;orward from Toolbars to Tracks</source>
-        <translation type="vanished">Siirry eteenpäin työkalupalkista rait&amp;oihin</translation>
-    </message>
-    <message>
-        <source>Move Focus to &amp;Previous Track</source>
-        <translation type="vanished">Siirrä kohdistus &amp;edelliseen raitaan</translation>
-    </message>
-    <message>
-        <source>Move Focus to &amp;Next Track</source>
-        <translation type="vanished">Siirrä kohdistus seuraavaa&amp;n raitaan</translation>
-    </message>
-    <message>
-        <source>Move Focus to &amp;First Track</source>
-        <translation type="vanished">Siirrä kohdistus &amp;ensimmäiseen raitaan</translation>
-    </message>
-    <message>
-        <source>Move Focus to &amp;Last Track</source>
-        <translation type="vanished">Siirrä kohdistus &amp;viimeiseen raitaan</translation>
-    </message>
-    <message>
-        <source>Move Focus to P&amp;revious and Select</source>
-        <translation type="vanished">Siirrä kohdistus &amp;edelliseen ja valitse</translation>
-    </message>
-    <message>
-        <source>Move Focus to N&amp;ext and Select</source>
-        <translation type="vanished">Siirrä kohdistus s&amp;euraavaan ja valitse</translation>
-    </message>
-    <message>
-        <source>&amp;Toggle Focused Track</source>
-        <translation type="vanished">Vaihda raidan k&amp;ohdistuksen tilaa (on/ei)</translation>
-    </message>
-    <message>
-        <source>Toggle Focuse&amp;d Track</source>
-        <translation type="vanished">Vaihda raidan koh&amp;distuksen tilaa (on/ei)</translation>
-    </message>
-    <message>
-        <source>A journal will be recorded after Audacity restarts.</source>
-        <extracomment>i18n-hint a "journal" is a text file that records
-the user's interactions with the application</extracomment>
-        <translation type="vanished">Lokikirja kirjataan Audacityn uudelleenkäynnistyksen jälkeen.</translation>
-    </message>
-    <message>
-        <source>No journal will be recorded after Audacity restarts.</source>
-        <extracomment>i18n-hint a "journal" is a text file that records
-the user's interactions with the application</extracomment>
-        <translation type="vanished">Lokikirjaa ei kirjata Audacityn uudelleenkäynnistyksen jälkeen.</translation>
-    </message>
-    <message>
-        <source>Plugin Manager</source>
-        <translation type="vanished">Laajennusten hallinta</translation>
-    </message>
-    <message>
-        <source>Repeat Last Generator</source>
-        <translation type="vanished">Toista viimeisin generaattori</translation>
-    </message>
-    <message>
-        <source>Effe&amp;ct</source>
-        <translation type="vanished">T&amp;ehosteet</translation>
-    </message>
-    <message>
-        <source>Add Realtime Effects</source>
-        <translation type="vanished">Lisää reaaliaikaisia tehosteita</translation>
-    </message>
-    <message>
-        <source>Get AI effects...</source>
-        <translation type="vanished">Hanki lisää tehosteita...</translation>
-    </message>
-    <message>
-        <source>Repeat Last Effect</source>
-        <translation type="vanished">Toista viimeisin tehoste</translation>
-    </message>
-    <message>
-        <source>Repeat Last Analyzer</source>
-        <translation type="vanished">Toista viimeisin analyysi</translation>
-    </message>
-    <message>
-        <source>T&amp;ools</source>
-        <translation type="vanished">Työ&amp;kalut</translation>
-    </message>
-    <message>
-        <source>Reset &amp;Configuration</source>
-        <translation type="vanished">Palauta &amp;oletusasetukset</translation>
-    </message>
-    <message>
-        <source>&amp;Run Benchmark...</source>
-        <translation type="vanished">&amp;Suorita mittauskoe...</translation>
-    </message>
-    <message>
-        <source>Simulate Recording Errors</source>
-        <translation type="vanished">Simuloi äänitysvirheitä</translation>
-    </message>
-    <message>
-        <source>Detect Upstream Dropouts</source>
-        <translation type="vanished">Tunnista alkupään katkokset</translation>
-    </message>
-    <message>
-        <source>Write Journal</source>
-        <extracomment>i18n-hint a "journal" is a text file that records
-the user's interactions with the application</extracomment>
-        <translation type="vanished">Kirjoita lokikirja</translation>
-    </message>
-    <message>
-        <source>Set Left Selection Boundary</source>
-        <translation type="vanished">Aseta valinnan vasen reuna</translation>
-    </message>
-    <message>
-        <source>Set Right Selection Boundary</source>
-        <translation type="vanished">Aseta valinnan oikea reuna</translation>
-    </message>
-    <message>
-        <source>Zero-crossing search regions intersect stretched clip(s).</source>
-        <translation type="vanished">Nollan ylittävät hakualueet leikkaavat venytetyt leikkeet.</translation>
-    </message>
-    <message>
-        <source>&amp;All</source>
-        <translation type="vanished">&amp;Kaikki</translation>
-    </message>
-    <message>
-        <source>&amp;None</source>
-        <translation type="vanished">&amp;Ei mitään</translation>
-    </message>
-    <message>
-        <source>Select None</source>
-        <translation type="vanished">Älä valitse mitään</translation>
-    </message>
-    <message>
-        <source>In All &amp;Tracks</source>
-        <translation type="vanished">&amp;Kaikissa raidoissa</translation>
-    </message>
-    <message>
-        <source>In All &amp;Sync-Locked Tracks</source>
-        <translation type="vanished">Kaikissa &amp;tahtilukituissa raidoissa</translation>
-    </message>
-    <message>
-        <source>Select Sync-Locked</source>
-        <translation type="vanished">Valitse tahtilukittu</translation>
-    </message>
-    <message>
-        <source>R&amp;egion</source>
-        <translation type="vanished">Alu&amp;e</translation>
-    </message>
-    <message>
-        <source>&amp;Left at Playback Position</source>
-        <translation type="vanished">&amp;Vasen pää toistokohtaan</translation>
-    </message>
-    <message>
-        <source>Set Selection Left at Play Position</source>
-        <translation type="vanished">Aseta valinnan vasen pää  toistokohtaan</translation>
-    </message>
-    <message>
-        <source>&amp;Right at Playback Position</source>
-        <translation type="vanished">&amp;Oikea pää toistokohtaan</translation>
-    </message>
-    <message>
-        <source>Set Selection Right at Play Position</source>
-        <translation type="vanished">Aseta valinnan oikea pää toistokohtaan</translation>
-    </message>
-    <message>
-        <source>Track &amp;Start to Cursor</source>
-        <translation type="vanished">&amp;Raidan alusta kohdistimeen</translation>
-    </message>
-    <message>
-        <source>Select Track Start to Cursor</source>
-        <translation type="vanished">Valitse raidan alusta kohdistimeen</translation>
-    </message>
-    <message>
-        <source>Cursor to Track &amp;End</source>
-        <translation type="vanished">&amp;Kohdistimesta raidan loppuun</translation>
-    </message>
-    <message>
-        <source>Select Cursor to Track End</source>
-        <translation type="vanished">Valitse kohdistimesta raidan loppuun</translation>
-    </message>
-    <message>
-        <source>Track Start to En&amp;d</source>
-        <translation type="vanished">Rai&amp;dan alusta loppuun</translation>
-    </message>
-    <message>
-        <source>Select Track Start to End</source>
-        <translation type="vanished">Valitse raidan alusta loppuun</translation>
-    </message>
-    <message>
-        <source>S&amp;tore Selection</source>
-        <translation type="vanished">&amp;Tallenna valinta</translation>
-    </message>
-    <message>
-        <source>Retrieve Selectio&amp;n</source>
-        <translation type="vanished">Palauta tallennettu vali&amp;nta</translation>
-    </message>
-    <message>
-        <source>Cursor to Stored &amp;Cursor Position</source>
-        <translation type="vanished">Kohdistin &amp;tallennettuun sijaintiin</translation>
-    </message>
-    <message>
-        <source>Select Cursor to Stored</source>
-        <translation type="vanished">Siirrä kohdistin tallennukseen</translation>
-    </message>
-    <message>
-        <source>Store Cursor Pos&amp;ition</source>
-        <translation type="vanished">Tallenna kohd&amp;istimen paikka</translation>
-    </message>
-    <message>
-        <source>At &amp;Zero Crossings</source>
-        <translation type="vanished">Kohdistin &amp;nollakohtaan</translation>
-    </message>
-    <message>
-        <source>Select Zero Crossing</source>
-        <translation type="vanished">Valitse nollakohta</translation>
-    </message>
-    <message>
-        <source>&amp;Selection</source>
-        <translation type="vanished">&amp;Valinnat</translation>
-    </message>
-    <message>
-        <source>Snap-To &amp;Off</source>
-        <translation type="vanished">Valinnan tarraus p&amp;ois</translation>
-    </message>
-    <message>
-        <source>Snap-To &amp;Nearest</source>
-        <translation type="vanished">Valinnan tarraus lähimpää&amp;n</translation>
-    </message>
-    <message>
-        <source>Snap-To &amp;Prior</source>
-        <translation type="vanished">Valinnan tarraus &amp;edelliseen</translation>
-    </message>
-    <message>
-        <source>Selection to &amp;Start</source>
-        <translation type="vanished">Valinta al&amp;kuun</translation>
-    </message>
-    <message>
-        <source>Selection to En&amp;d</source>
-        <translation type="vanished">Valinta lopp&amp;uun</translation>
-    </message>
-    <message>
-        <source>Selection Extend &amp;Left</source>
-        <translation type="vanished">Valinnan &amp;pidennys vasemmalle</translation>
-    </message>
-    <message>
-        <source>Selection Extend &amp;Right</source>
-        <translation type="vanished">Valinnan pidennys &amp;oikealle</translation>
-    </message>
-    <message>
-        <source>Set (or Extend) Le&amp;ft Selection</source>
-        <translation type="vanished">Aseta (tai laajenna) vas&amp;en valinta</translation>
-    </message>
-    <message>
-        <source>Set (or Extend) Rig&amp;ht Selection</source>
-        <translation type="vanished">Aseta (tai laajenna) &amp;oikea valinta</translation>
-    </message>
-    <message>
-        <source>Selection Contract L&amp;eft</source>
-        <translation type="vanished">Valinnan kutistus vas&amp;emmalta</translation>
-    </message>
-    <message>
-        <source>Selection Contract R&amp;ight</source>
-        <translation type="vanished">Valinnan kutistus o&amp;ikealta</translation>
-    </message>
-    <message>
-        <source>&amp;Cursor to</source>
-        <translation type="vanished">Siirrä &amp;kohdistin</translation>
-    </message>
-    <message>
-        <source>Selection Star&amp;t</source>
-        <translation type="vanished">Valinnan &amp;alkuun</translation>
-    </message>
-    <message>
-        <source>Cursor to Selection Start</source>
-        <translation type="vanished">Kohdistin valinnan alkuun</translation>
-    </message>
-    <message>
-        <source>Selection En&amp;d</source>
-        <translation type="vanished">Valinnan lo&amp;ppuun</translation>
-    </message>
-    <message>
-        <source>Cursor to Selection End</source>
-        <translation type="vanished">Kohdistin valinnan loppuun</translation>
-    </message>
-    <message>
-        <source>Track &amp;Start</source>
-        <translation type="vanished">Raidan &amp;alkuun</translation>
-    </message>
-    <message>
-        <source>Cursor to Track Start</source>
-        <translation type="vanished">Kohdistin raidan alkuun</translation>
-    </message>
-    <message>
-        <source>Track &amp;End</source>
-        <translation type="vanished">Raidan &amp;loppuun</translation>
-    </message>
-    <message>
-        <source>Cursor to Track End</source>
-        <translation type="vanished">Kohdistin raidan loppuun</translation>
-    </message>
-    <message>
-        <source>&amp;Project Start</source>
-        <translation type="vanished">&amp;Projektin alkuun</translation>
-    </message>
-    <message>
-        <source>Cursor to Project Start</source>
-        <translation type="vanished">Kohdistin projektin alkuun</translation>
-    </message>
-    <message>
-        <source>Project E&amp;nd</source>
-        <translation type="vanished">Projekti&amp;n loppuun</translation>
-    </message>
-    <message>
-        <source>Cursor to Project End</source>
-        <translation type="vanished">Kohdistin projektin loppuun</translation>
-    </message>
-    <message>
-        <source>&amp;Cursor</source>
-        <translation type="vanished">&amp;Kohdistin</translation>
-    </message>
-    <message>
-        <source>Cursor &amp;Left</source>
-        <translation type="vanished">Kohdistin &amp;vasemmalle</translation>
-    </message>
-    <message>
-        <source>Cursor &amp;Right</source>
-        <translation type="vanished">Kohdistin &amp;oikealle</translation>
-    </message>
-    <message>
-        <source>Cursor Sh&amp;ort Jump Left</source>
-        <translation type="vanished">K&amp;ohdistimen lyhyt hyppy vasemmalle</translation>
-    </message>
-    <message>
-        <source>Cursor Shor&amp;t Jump Right</source>
-        <translation type="vanished">Kohdistimen lyhy&amp;t hyppy oikealle</translation>
-    </message>
-    <message>
-        <source>Cursor Long J&amp;ump Left</source>
-        <translation type="vanished">Ko&amp;hdistimenpitkä hyppy vasemmalle</translation>
-    </message>
-    <message>
-        <source>Cursor Long Ju&amp;mp Right</source>
-        <translation type="vanished">Kohdistimen pitkä h&amp;yppy oikealle</translation>
-    </message>
-    <message>
-        <source>See&amp;k</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips, ...</extracomment>
-        <translation type="vanished">&amp;Hae</translation>
-    </message>
-    <message>
-        <source>Short Seek &amp;Left During Playback</source>
-        <translation type="vanished">Lyhyt haku &amp;vasemmalle toiston aikana</translation>
-    </message>
-    <message>
-        <source>Short Seek &amp;Right During Playback</source>
-        <translation type="vanished">Lyhyt haku &amp;oikealle toiston aikana</translation>
-    </message>
-    <message>
-        <source>Long Seek Le&amp;ft During Playback</source>
-        <translation type="vanished">Pitkä haku &amp;vasemmalle toiston aikana</translation>
-    </message>
-    <message>
-        <source>Long Seek Rig&amp;ht During Playback</source>
-        <translation type="vanished">Pitkä haku &amp;oikealle toiston aikana</translation>
-    </message>
-    <message>
-        <source>Tim&amp;eline</source>
-        <translation type="vanished">Aika&amp;jana</translation>
-    </message>
-    <message>
-        <source>&amp;Toolbars</source>
-        <translation type="vanished">&amp;Työkalupalkit</translation>
-    </message>
-    <message>
-        <source>Reset Toolb&amp;ars</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Palauta työkalu&amp;palkit</translation>
-    </message>
-    <message>
-        <source>Mix</source>
-        <translation type="vanished">Miksaus</translation>
-    </message>
-    <message>
-        <source>Rendered all audio in track '%s'</source>
-        <translation type="vanished">Renderöitiin kaikki ääni raidassa '%1'</translation>
-    </message>
-    <message>
-        <source>Render</source>
-        <extracomment>i18n-hint: Convert the audio into a more usable form, so apply
-* panning and amplification and write to some external file.</extracomment>
-        <translation type="vanished">Renderöi</translation>
-    </message>
-    <message>
-        <source>Mixed and rendered %d tracks into one new stereo track</source>
-        <translation type="vanished">Miksattiin ja renderöitiin %1 raidat yhdeksi stereoraidaksi</translation>
-    </message>
-    <message>
-        <source>Mixed and rendered %d tracks into one new mono track</source>
-        <translation type="vanished">Miksattiin ja renderöitiin %1 raidat yhdeksi uudeksi monoraidaksi</translation>
-    </message>
-    <message>
-        <source>Panned audio track(s)</source>
-        <extracomment>i18n-hint: One or more audio tracks have been panned</extracomment>
-        <translation type="vanished">Panoroidut ääniraidat</translation>
-    </message>
-    <message>
-        <source>Pan Track</source>
-        <translation type="vanished">Panoroi raitaa</translation>
-    </message>
-    <message>
-        <source>Start to &amp;Zero</source>
-        <translation type="vanished">Alku &amp;nollaan</translation>
-    </message>
-    <message>
-        <source>Start to &amp;Cursor/Selection Start</source>
-        <translation type="vanished">Alku k&amp;ohdistimeen/valinnan alkuun</translation>
-    </message>
-    <message>
-        <source>Start to Selection &amp;End</source>
-        <translation type="vanished">Alku &amp;valinnan loppuun</translation>
-    </message>
-    <message>
-        <source>End to Cu&amp;rsor/Selection Start</source>
-        <translation type="vanished">Loppu kohdi&amp;stimeen/valinnan alkuun</translation>
-    </message>
-    <message>
-        <source>End to Selection En&amp;d</source>
-        <translation type="vanished">Loppu valinnan l&amp;oppuun</translation>
-    </message>
-    <message>
-        <source>Aligned/Moved start to zero</source>
-        <extracomment>i18n-hint: In this and similar messages describing editing actions,
-the starting or ending points of tracks are re-"aligned" to other
-times, and the time selection may be "moved" too.  The first
-noun -- "start" in this example -- is the object of a verb (not of
-an implied preposition "from").</extracomment>
-        <translation type="vanished">Tasattiin/siirrettiin alku nollaan</translation>
-    </message>
-    <message>
-        <source>Aligned start to zero</source>
-        <translation type="vanished">Tasattiin alku nollaan</translation>
-    </message>
-    <message>
-        <source>Align/Move Start</source>
-        <extracomment>i18n-hint: This and similar messages give shorter descriptions of
-the aligning and moving editing actions</extracomment>
-        <translation type="vanished">Tasaa/siirrä alkua</translation>
-    </message>
-    <message>
-        <source>Align Start</source>
-        <translation type="vanished">Tasaa alku</translation>
-    </message>
-    <message>
-        <source>Aligned/Moved start to cursor/selection start</source>
-        <translation type="vanished">Tasattiin/siirrettiin alku kohdistimeen/valinnan alkuun</translation>
-    </message>
-    <message>
-        <source>Aligned start to cursor/selection start</source>
-        <translation type="vanished">Tasattiin alku kohdistimeen/valinnan alkuun</translation>
-    </message>
-    <message>
-        <source>Aligned/Moved start to selection end</source>
-        <translation type="vanished">Tasattiin/siirrettiin alku valinnan loppuun</translation>
-    </message>
-    <message>
-        <source>Aligned start to selection end</source>
-        <translation type="vanished">Tasattiin alku valinnan loppuun</translation>
-    </message>
-    <message>
-        <source>Aligned/Moved end to cursor/selection start</source>
-        <translation type="vanished">Tasattiin/siirrettiin loppu kohdistimeen/valinnan alkuun</translation>
-    </message>
-    <message>
-        <source>Aligned end to cursor/selection start</source>
-        <translation type="vanished">Tasattiin loppu kohdistimeen/valinnan alkuun</translation>
-    </message>
-    <message>
-        <source>Align/Move End</source>
-        <translation type="vanished">Tasaa/siirrä loppua</translation>
-    </message>
-    <message>
-        <source>Align End</source>
-        <translation type="vanished">Tasaa loppu</translation>
-    </message>
-    <message>
-        <source>Aligned/Moved end to selection end</source>
-        <translation type="vanished">Tasattiin/siirrettiin loppu valinnan loppuun</translation>
-    </message>
-    <message>
-        <source>Aligned end to selection end</source>
-        <translation type="vanished">Tasattiin loppu valinnan loppuun</translation>
-    </message>
-    <message>
-        <source>Aligned/Moved end to end</source>
-        <translation type="vanished">Aseteltiin/siirrettiin peräjälkeen</translation>
-    </message>
-    <message>
-        <source>Aligned end to end</source>
-        <translation type="vanished">Aseteltiin peräjälkeen</translation>
-    </message>
-    <message>
-        <source>Align/Move End to End</source>
-        <translation type="vanished">Asettele/siirrä peräjälkeen</translation>
-    </message>
-    <message>
-        <source>Align End to End</source>
-        <translation type="vanished">Asettele peräjälkeen</translation>
-    </message>
-    <message>
-        <source>Aligned/Moved together</source>
-        <translation type="vanished">Kohdistettu/siirretty yhteen</translation>
-    </message>
-    <message>
-        <source>Aligned together</source>
-        <translation type="vanished">Kohdistettu yhteen</translation>
-    </message>
-    <message>
-        <source>Align/Move Together</source>
-        <translation type="vanished">Kohdista/siirrä yhteen</translation>
-    </message>
-    <message>
-        <source>Align Together</source>
-        <translation type="vanished">Kohdista yhteen</translation>
-    </message>
-    <message>
-        <source>Synchronize MIDI with Audio</source>
-        <translation type="vanished">Tahdista MIDI äänen kanssa</translation>
-    </message>
-    <message>
-        <source>Synchronizing MIDI and Audio Tracks</source>
-        <translation type="vanished">Tahdistetaan MIDI- ja ääniraitoja</translation>
-    </message>
-    <message>
-        <source>Adjusted gain</source>
-        <translation type="vanished">Muokattiin vahvistusta</translation>
-    </message>
-    <message>
-        <source>Adjusted Pan</source>
-        <translation type="vanished">Muokattiin panorointia</translation>
-    </message>
-    <message>
-        <source>The entered value is invalid</source>
-        <translation type="vanished">Annettu arvo on virheellinen</translation>
-    </message>
-    <message>
-        <source>Resampling track %d</source>
-        <translation type="vanished">Muutetaan raidan %1 näytetaajuutta</translation>
-    </message>
-    <message>
-        <source>Resampled audio track(s)</source>
-        <translation type="vanished">Muutettiin raitojen näytetaajuutta</translation>
-    </message>
-    <message>
-        <source>Resample Track</source>
-        <translation type="vanished">Muuta raidan näytetaajuutta</translation>
-    </message>
-    <message>
-        <source>Please select at least one audio track and one MIDI track.</source>
-        <translation type="vanished">Valitse vähintään yksi ääniraita ja yksi MIDI-raita.</translation>
-    </message>
-    <message>
-        <source>Alignment completed: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs.</source>
-        <translation type="vanished">Tasaus valmistui: MIDI %1 -&gt; %2 sek, Ääni %3 -&gt; %4 sek.</translation>
-    </message>
-    <message>
-        <source>Sync MIDI with Audio</source>
-        <translation type="vanished">Tahdista MIDI äänen kanssa</translation>
-    </message>
-    <message>
-        <source>Alignment error: input too short: MIDI from %.2f to %.2f secs, Audio from %.2f to %.2f secs.</source>
-        <translation type="vanished">Tasausvirhe: tuonti liian lyhyt: MIDI kohdasta %1 -&gt; %2 sek, Ääni kohdasta %3 -&gt; %4 sek.</translation>
-    </message>
-    <message>
-        <source>Internal error reported by alignment process.</source>
-        <translation type="vanished">Tasausprosessi ilmoitti sisäisestä virheestä.</translation>
-    </message>
-    <message>
-        <source>Tracks sorted by time</source>
-        <translation type="vanished">Raidat järjestettiin ajan mukaan</translation>
-    </message>
-    <message>
-        <source>Sort by Time</source>
-        <translation type="vanished">Ajan mukaan</translation>
-    </message>
-    <message>
-        <source>Tracks sorted by name</source>
-        <translation type="vanished">Raidat järjestettiin nimen mukaan</translation>
-    </message>
-    <message>
-        <source>Sort by Name</source>
-        <translation type="vanished">Nimen mukaan</translation>
-    </message>
-    <message>
-        <source>Can't delete track with active audio</source>
-        <translation type="vanished">Et voi poistaa raitaa, jossa on aktiivista ääntä</translation>
-    </message>
-    <message>
-        <source>Add &amp;New</source>
-        <translation type="vanished">Lisää &amp;uusi</translation>
-    </message>
-    <message>
-        <source>Mi&amp;x</source>
-        <translation type="vanished">Mi&amp;ksaus</translation>
-    </message>
-    <message>
-        <source>Mix Stereo Down to &amp;Mono</source>
-        <translation type="vanished">Miksaa stereo &amp;monoksi</translation>
-    </message>
-    <message>
-        <source>Mi&amp;x and Render</source>
-        <translation type="vanished">Mi&amp;ksaa ja renderöi</translation>
-    </message>
-    <message>
-        <source>Mix and Render to Ne&amp;w Track</source>
-        <translation type="vanished">Miksaa ja renderöi u&amp;udelle raidalle</translation>
-    </message>
-    <message>
-        <source>&amp;Resample...</source>
-        <translation type="vanished">&amp;Muuta näytetaajuutta...</translation>
-    </message>
-    <message>
-        <source>Remo&amp;ve Tracks</source>
-        <translation type="vanished">P&amp;oista raidat</translation>
-    </message>
-    <message>
-        <source>M&amp;ute/Unmute</source>
-        <translation type="vanished">My&amp;kistä/poista mykistys</translation>
-    </message>
-    <message>
-        <source>&amp;Mute All Tracks</source>
-        <translation type="vanished">&amp;Mykistä kaikki raidat</translation>
-    </message>
-    <message>
-        <source>&amp;Unmute All Tracks</source>
-        <translation type="vanished">&amp;Poista kaikkien raitojen mykistykset</translation>
-    </message>
-    <message>
-        <source>Mut&amp;e Tracks</source>
-        <translation type="vanished">Mykistä valitut &amp;raidat</translation>
-    </message>
-    <message>
-        <source>U&amp;nmute Tracks</source>
-        <translation type="vanished">&amp;Poista valittujen raitojen mykistykset</translation>
-    </message>
-    <message>
-        <source>&amp;Pan</source>
-        <translation type="vanished">&amp;Panorointi</translation>
-    </message>
-    <message>
-        <source>&amp;Left</source>
-        <translation type="vanished">&amp;Vasen</translation>
-    </message>
-    <message>
-        <source>Pan Left</source>
-        <translation type="vanished">Panorointi vasemmalle</translation>
-    </message>
-    <message>
-        <source>&amp;Right</source>
-        <translation type="vanished">&amp;Oikea</translation>
-    </message>
-    <message>
-        <source>Pan Right</source>
-        <translation type="vanished">Panorointi oikealle</translation>
-    </message>
-    <message>
-        <source>&amp;Center</source>
-        <translation type="vanished">&amp;Keskelle</translation>
-    </message>
-    <message>
-        <source>Pan Center</source>
-        <translation type="vanished">Panorointi keskelle</translation>
-    </message>
-    <message>
-        <source>&amp;Align Tracks</source>
-        <translation type="vanished">Tasa&amp;a raidat</translation>
-    </message>
-    <message>
-        <source>&amp;Align End to End</source>
-        <translation type="vanished">T&amp;asaa loppu loppuun</translation>
-    </message>
-    <message>
-        <source>Align &amp;Together</source>
-        <translation type="vanished">Tasaa &amp;toisiinsa</translation>
-    </message>
-    <message>
-        <source>&amp;Move Selection with Tracks</source>
-        <translation type="vanished">&amp;Siirrä valinta raitojen kanssa</translation>
-    </message>
-    <message>
-        <source>Move Sele&amp;ction and Tracks</source>
-        <translation type="vanished">Siirrä &amp;valintaa raitojen kanssa</translation>
-    </message>
-    <message>
-        <source>S&amp;ort Tracks</source>
-        <translation type="vanished">L&amp;ajittele raidat</translation>
-    </message>
-    <message>
-        <source>By &amp;Start Time</source>
-        <translation type="vanished">Aloitu&amp;sajan mukaan</translation>
-    </message>
-    <message>
-        <source>By &amp;Name</source>
-        <translation type="vanished">&amp;Nimen mukaan</translation>
-    </message>
-    <message>
-        <source>Keep tracks synchronized (Sync-&amp;Lock)</source>
-        <translation type="vanished">Pidä raidat synkronoituina (synkronointi ja lukitus)</translation>
-    </message>
-    <message>
-        <source>&amp;Track</source>
-        <translation type="vanished">Rai&amp;ta</translation>
-    </message>
-    <message>
-        <source>Change P&amp;an on Focused Track...</source>
-        <translation type="vanished">Vaihda p&amp;anorointia kohdistetussa raidassa...</translation>
-    </message>
-    <message>
-        <source>Pan &amp;Left on Focused Track</source>
-        <translation type="vanished">Panoroi kohdistettua raitaa &amp;vasemmalle</translation>
-    </message>
-    <message>
-        <source>Pan &amp;Right on Focused Track</source>
-        <translation type="vanished">Panoroi kohdistettua raitaa &amp;oikealle</translation>
-    </message>
-    <message>
-        <source>Change Gai&amp;n on Focused Track...</source>
-        <translation type="vanished">Vaihda va&amp;hvistusta kohdistetussa raidassa...</translation>
-    </message>
-    <message>
-        <source>&amp;Increase Gain on Focused Track</source>
-        <translation type="vanished">&amp;Nosta kohdistetun raidan vahvistusta</translation>
-    </message>
-    <message>
-        <source>&amp;Decrease Gain on Focused Track</source>
-        <translation type="vanished">&amp;Laske kohdistetun raidan vahvistusta</translation>
-    </message>
-    <message>
-        <source>Op&amp;en Menu on Focused Track...</source>
-        <translation type="vanished">Avaa k&amp;ohdistetun raidan valikko...</translation>
-    </message>
-    <message>
-        <source>M&amp;ute/Unmute Focused Track</source>
-        <translation type="vanished">Mykistä/poista mykistys kohdistet&amp;ulta raidalta</translation>
-    </message>
-    <message>
-        <source>&amp;Solo/Unsolo Focused Track</source>
-        <translation type="vanished">Kohdistetun raidan &amp;soolo päälle/pois</translation>
-    </message>
-    <message>
-        <source>Delete Fo&amp;cused Track</source>
-        <translation type="vanished">&amp;Sulje kohdistettu raita</translation>
-    </message>
-    <message>
-        <source>Move Focused Track U&amp;p</source>
-        <translation type="vanished">Siirrä kohdistett&amp;ua raitaa ylös</translation>
-    </message>
-    <message>
-        <source>Move Focused Track Do&amp;wn</source>
-        <translation type="vanished">Siirrä kohdistettua raitaa &amp;alas</translation>
-    </message>
-    <message>
-        <source>Move Focused Track to T&amp;op</source>
-        <translation type="vanished">Siirrä kohdistettu rai&amp;ta ylimmäksi</translation>
-    </message>
-    <message>
-        <source>Move Focused Track to &amp;Bottom</source>
-        <translation type="vanished">Siirrä kohdistettu raita &amp;alimmaksi</translation>
-    </message>
-    <message>
-        <source>no label track</source>
-        <translation type="vanished">ei merkkiraitaa</translation>
-    </message>
-    <message>
-        <source>no label track at or below focused track</source>
-        <translation type="vanished">ei merkkiraitaa kohdistetussa raidassa tai sen alapuolella</translation>
-    </message>
-    <message>
-        <source>%s %d of %d</source>
-        <extracomment>i18n-hint:
-String is replaced by the name of a label,
-first number gives the position of that label in a sequence
-of labels,
-and the last number is the total number of labels in the sequence.</extracomment>
-        <translation type="vanished">%1 %2 / %3</translation>
-    </message>
-    <message>
-        <source>no labels in label track</source>
-        <translation type="vanished">ei merkkejä merkkiraidalla</translation>
-    </message>
-    <message>
-        <source>Set Loop &amp;In</source>
-        <extracomment>i18n-hint Sets a starting point for looping play</extracomment>
-        <translation type="vanished">Aseta silmukan &amp;aloituskohta</translation>
-    </message>
-    <message>
-        <source>Set Loop &amp;Out</source>
-        <extracomment>i18n-hint Sets an ending point for looping play</extracomment>
-        <translation type="vanished">Aseta silmukan &amp;lopetuskohta</translation>
-    </message>
-    <message>
-        <source>Please select in a mono track.</source>
-        <translation type="vanished">Valitse monoraidalta.</translation>
-    </message>
-    <message>
-        <source>Please select in a stereo track or two mono tracks.</source>
-        <translation type="vanished">Valitse stereoraidalta tai kahdelta monoraidalta.</translation>
-    </message>
-    <message>
-        <source>Please select at least %d channels.</source>
-        <translation type="vanished">Valitse vähintään %1 kanavaa.</translation>
-    </message>
-    <message>
-        <source>Tra&amp;nsport</source>
-        <extracomment>i18n-hint: 'Transport' is the name given to the set of controls that
-play, record, pause etc.</extracomment>
-        <translation type="vanished">&amp;Siirtyminen</translation>
-    </message>
-    <message>
-        <source>Pl&amp;aying</source>
-        <translation type="vanished">&amp;Toisto</translation>
-    </message>
-    <message>
-        <source>Pl&amp;ay/Stop</source>
-        <extracomment>i18n-hint: (verb) Start or Stop audio playback</extracomment>
-        <translation type="vanished">&amp;Toista/Pysäytä</translation>
-    </message>
-    <message>
-        <source>Play/Stop and &amp;Set Cursor</source>
-        <translation type="vanished">Toista/Pysäytä ja aseta &amp;kohdistin</translation>
-    </message>
-    <message>
-        <source>Play &amp;Once/Stop</source>
-        <translation type="vanished">Toista &amp;kerran/pysäytä</translation>
-    </message>
-    <message>
-        <source>&amp;Pause</source>
-        <translation type="vanished">Tau&amp;ko</translation>
-    </message>
-    <message>
-        <source>&amp;Recording</source>
-        <translation type="vanished">&amp;Äänitys</translation>
-    </message>
-    <message>
-        <source>&amp;Append Record</source>
-        <translation type="vanished">Äänitä l&amp;oppuun</translation>
-    </message>
-    <message>
-        <source>Record &amp;New Track</source>
-        <translation type="vanished">Äänitä &amp;uusi raita</translation>
-    </message>
-    <message>
-        <source>Punch and Rol&amp;l Record</source>
-        <translation type="vanished">Korjaa &amp;lennossa</translation>
-    </message>
-    <message>
-        <source>&amp;Looping</source>
-        <translation type="vanished">Jatkuva &amp;toisto</translation>
-    </message>
-    <message>
-        <source>&amp;Clear Loop</source>
-        <translation type="vanished">&amp;Tyhjennä silmukka</translation>
-    </message>
-    <message>
-        <source>&amp;Set Loop to Selection</source>
-        <translation type="vanished">Aseta silmukka &amp;valintaan</translation>
-    </message>
-    <message>
-        <source>R&amp;escan Audio Devices</source>
-        <translation type="vanished">&amp;Skannaa äänilaitteet uudelleen</translation>
-    </message>
-    <message>
-        <source>Transport &amp;Options</source>
-        <translation type="vanished">Siirtymis&amp;asetukset</translation>
-    </message>
-    <message>
-        <source>Set sound activation le&amp;vel...</source>
-        <translation type="vanished">Aseta äänen aktivointi&amp;taso...</translation>
-    </message>
-    <message>
-        <source>Enable sound a&amp;ctivated recording</source>
-        <translation type="vanished">Ota ääni&amp;aktivoitu tallennus käyttöön</translation>
-    </message>
-    <message>
-        <source>Hear &amp;other tracks during recording</source>
-        <translation type="vanished">Kuuntele &amp;muita raitoja tallennuksen aikana</translation>
-    </message>
-    <message>
-        <source>Enable audible input &amp;monitoring</source>
-        <translation type="vanished">Ota äänitulon &amp;valvonta käyttöön</translation>
-    </message>
-    <message>
-        <source>A&amp;utomated Recording Level Adjustment (on/off)</source>
-        <translation type="vanished">Automatisoitu äänitystason säätö (päällä/pois)</translation>
-    </message>
-    <message>
-        <source>T&amp;ransport</source>
-        <translation type="vanished">Sii&amp;rtyminen</translation>
-    </message>
-    <message>
-        <source>Pl&amp;ay Once</source>
-        <extracomment>i18n-hint: (verb) Start playing audio</extracomment>
-        <translation type="vanished">Toista &amp;kerran</translation>
-    </message>
-    <message>
-        <source>Sto&amp;p</source>
-        <extracomment>i18n-hint: (verb) Stop playing audio</extracomment>
-        <translation type="vanished">&amp;Pysäytä</translation>
-    </message>
-    <message>
-        <source>Play &amp;One Second</source>
-        <translation type="vanished">Toista &amp;1 sekunti</translation>
-    </message>
-    <message>
-        <source>Play to &amp;Selection</source>
-        <translation type="vanished">Toista &amp;valinta</translation>
-    </message>
-    <message>
-        <source>Play &amp;Before Selection Start</source>
-        <translation type="vanished">Toista &amp;ennen valinnan alkua</translation>
-    </message>
-    <message>
-        <source>Play Af&amp;ter Selection Start</source>
-        <translation type="vanished">&amp;Toista valinnan alun jälkeen</translation>
-    </message>
-    <message>
-        <source>Play Be&amp;fore Selection End</source>
-        <translation type="vanished">Toista &amp;ennen valinnan loppua</translation>
-    </message>
-    <message>
-        <source>Play Aft&amp;er Selection End</source>
-        <translation type="vanished">Toista valinnan lopun jälk&amp;een</translation>
-    </message>
-    <message>
-        <source>Play Before a&amp;nd After Selection Start</source>
-        <translation type="vanished">Toista e&amp;nnen ja jälkeen valinnan alkua</translation>
-    </message>
-    <message>
-        <source>Play Before an&amp;d After Selection End</source>
-        <translation type="vanished">Toista ennen &amp;ja jälkeen valinnan loppua</translation>
-    </message>
-    <message>
-        <source>Play C&amp;ut Preview</source>
-        <translation type="vanished">Leikka&amp;uksen esikuuntelu</translation>
-    </message>
-    <message>
-        <source>Move to Pre&amp;vious Label</source>
-        <translation type="vanished">Siirrä &amp;edelliseen merkkiin</translation>
-    </message>
-    <message>
-        <source>Move to Ne&amp;xt Label</source>
-        <translation type="vanished">Siirrä seuraavaa&amp;n merkkiin</translation>
-    </message>
-    <message>
-        <source>&amp;Zoom</source>
-        <translation type="vanished">&amp;Zoomaus</translation>
-    </message>
-    <message>
-        <source>Zoom &amp;In</source>
-        <translation type="vanished">&amp;Lähennä</translation>
-    </message>
-    <message>
-        <source>Zoom &amp;Normal</source>
-        <translation type="vanished">&amp;Normaali zoom</translation>
-    </message>
-    <message>
-        <source>Zoom &amp;Out</source>
-        <translation type="vanished">L&amp;oitonna</translation>
-    </message>
-    <message>
-        <source>&amp;Zoom to Selection</source>
-        <translation type="vanished">Zoomaa valin&amp;taan</translation>
-    </message>
-    <message>
-        <source>Zoom &amp;Toggle</source>
-        <translation type="vanished">Zoomauksen &amp;vaihto</translation>
-    </message>
-    <message>
-        <source>T&amp;rack Size</source>
-        <translation type="vanished">&amp;Raidan koko</translation>
-    </message>
-    <message>
-        <source>&amp;Fit to Width</source>
-        <translation type="vanished">&amp;Sovita leveyteen</translation>
-    </message>
-    <message>
-        <source>Fit to &amp;Height</source>
-        <translation type="vanished">Sovita &amp;korkeuteen</translation>
-    </message>
-    <message>
-        <source>&amp;Collapse All Tracks</source>
-        <translation type="vanished">&amp;Kutista kaikki raidat</translation>
-    </message>
-    <message>
-        <source>E&amp;xpand Collapsed Tracks</source>
-        <translation type="vanished">Laaj&amp;enna kutistetut raidat</translation>
-    </message>
-    <message>
-        <source>Sk&amp;ip to</source>
-        <translation type="vanished">&amp;Hyppää</translation>
-    </message>
-    <message>
-        <source>Selection Sta&amp;rt</source>
-        <translation type="vanished">Valinnan a&amp;lkuun</translation>
-    </message>
-    <message>
-        <source>Skip to Selection Start</source>
-        <translation type="vanished">Hyppää valinnan alkuun</translation>
-    </message>
-    <message>
-        <source>Skip to Selection End</source>
-        <translation type="vanished">Hyppää valinnan loppuun</translation>
-    </message>
-    <message>
-        <source>Enable E&amp;xtra Menus</source>
-        <translation type="vanished">Ota lisä&amp;valikot käyttöön</translation>
-    </message>
-    <message>
-        <source>&amp;Show Clipping in Waveform</source>
-        <translation type="vanished">&amp;Näytä leike aaltomuodossa</translation>
-    </message>
-    <message>
-        <source>Show &amp;RMS in Waveform</source>
-        <translation type="vanished">&amp;Näytä leike aaltomuodossa</translation>
-    </message>
-    <message>
-        <source>Preferences for Application</source>
-        <translation type="vanished">Sovelluksen asetukset</translation>
-    </message>
-    <message>
-        <source>Update notifications</source>
-        <extracomment>i18n-hint: Title for the update notifications panel in the preferences dialog.</extracomment>
-        <translation type="vanished">Päivitä ilmoitukset</translation>
-    </message>
-    <message>
-        <source>&amp;Check for updates</source>
-        <comment>application preferences</comment>
-        <extracomment>i18n-hint: Check-box title that configures periodic updates checking.</extracomment>
-        <translation type="vanished">Tarkista &amp;päivitykset</translation>
-    </message>
-    <message>
-        <source>App update checking requires network access. In order to protect your privacy, Audacity does not store any personal information.</source>
-        <translation type="vanished">Sovelluspäivitysten tarkistus vaatii verkkoyhteyden. Yksityisyytesi suojaamiseksi Audacity ei tallenna henkilökohtaisia tietoja.</translation>
-    </message>
-    <message>
-        <source>Batch</source>
-        <translation type="vanished">Erä</translation>
-    </message>
-    <message>
-        <source>Preferences for Batch</source>
-        <translation type="vanished">Eräajon asetukset</translation>
-    </message>
-    <message>
-        <source>Behaviors</source>
-        <translation type="vanished">Valinnat</translation>
-    </message>
-    <message>
-        <source>&amp;Don't apply effects in batch mode</source>
-        <translation type="vanished">&amp;Älä käytä tehosteita eräajotilassa</translation>
-    </message>
-    <message>
-        <source>Audio Settings</source>
-        <translation type="vanished">Ääniasetukset</translation>
-    </message>
-    <message>
-        <source>%i Hz</source>
-        <translation type="vanished">%1 Hz</translation>
-    </message>
-    <message>
-        <source>Interface</source>
-        <comment>device</comment>
-        <extracomment>i18n-hint Software interface to audio devices</extracomment>
-        <translation type="vanished">Rajapinta</translation>
-    </message>
-    <message>
-        <source>&amp;Host:</source>
-        <extracomment>i18n-hint: (noun)</extracomment>
-        <translation type="vanished">&amp;Isäntä:</translation>
-    </message>
-    <message>
-        <source>Using:</source>
-        <translation type="vanished">Käyttää:</translation>
-    </message>
-    <message>
-        <source>&amp;Device:</source>
-        <translation type="vanished">&amp;Laite:</translation>
-    </message>
-    <message>
-        <source>Recording</source>
-        <comment>preference</comment>
-        <extracomment>i18n-hint: modifier as in "Recording preferences", not progressive verb</extracomment>
-        <translation type="vanished">Äänitetään</translation>
-    </message>
-    <message>
-        <source>De&amp;vice:</source>
-        <translation type="vanished">L&amp;aite:</translation>
-    </message>
-    <message>
-        <source>Cha&amp;nnels:</source>
-        <translation type="vanished">Ka&amp;navat:</translation>
-    </message>
-    <message>
-        <source>&amp;Project Sample Rate:</source>
-        <translation type="vanished">&amp;Projektin näytetaajuus:</translation>
-    </message>
-    <message>
-        <source>Sample Rate used when recording new tracks, mixing down tracks and for playback in this project.</source>
-        <translation type="vanished">Näytetaajuus, jota käytetään äänitettäessä uusia raitoja, miksattaessa raitoja ja toistettaessa tässä projektissa.</translation>
-    </message>
-    <message>
-        <source>D&amp;efault Sample Rate:</source>
-        <translation type="vanished">&amp;Oletusnäytetaajuus:</translation>
-    </message>
-    <message>
-        <source>Default Sample &amp;Format:</source>
-        <translation type="vanished">Oletusnäytemu&amp;oto:</translation>
-    </message>
-    <message>
-        <source>Latency</source>
-        <translation type="vanished">Viive</translation>
-    </message>
-    <message>
-        <source>&amp;Buffer length:</source>
-        <translation type="vanished">&amp;Puskurin pituus:</translation>
-    </message>
-    <message>
-        <source>&amp;Latency compensation:</source>
-        <translation type="vanished">&amp;Viiveenkorjaus:</translation>
-    </message>
-    <message>
-        <source>No audio interfaces</source>
-        <translation type="vanished">Ei ääniliitäntöjä</translation>
-    </message>
-    <message>
-        <source>No devices found</source>
-        <translation type="vanished">Ei äänilaitetta</translation>
-    </message>
-    <message>
-        <source>1 (Mono)</source>
-        <translation type="vanished">1 (mono)</translation>
-    </message>
-    <message>
-        <source>2 (Stereo)</source>
-        <translation type="vanished">2 (stereo)</translation>
-    </message>
-    <message>
-        <source>Directories</source>
-        <extracomment>i18n-hint:  Directories, also called directories, in computer file systems</extracomment>
-        <translation type="vanished">Hakemistot</translation>
-    </message>
-    <message>
-        <source>Preferences for Directories</source>
-        <translation type="vanished">Hakemistojen asetukset</translation>
-    </message>
-    <message>
-        <source>Default directories</source>
-        <translation type="vanished">Oletushakemistot</translation>
-    </message>
-    <message>
-        <source>Leave a field empty to go to the last directory used for that operation.
-Fill in a field to always go to that directory for that operation.</source>
-        <translation type="vanished">Jätä kenttä tyhjäksi, jos siirrytään viime toiminnon käyttämään kansioon.
-Täytä kenttä, jos siirrytään aina samaan kansioon toimintoa varten.</translation>
-    </message>
-    <message>
-        <source>O&amp;pen:</source>
-        <translation type="vanished">A&amp;vaa:</translation>
-    </message>
-    <message>
-        <source>S&amp;ave:</source>
-        <translation type="vanished">&amp;Tallenna:</translation>
-    </message>
-    <message>
-        <source>B&amp;rowse...</source>
-        <translation type="vanished">S&amp;elaa...</translation>
-    </message>
-    <message>
-        <source>&amp;Import:</source>
-        <translation type="vanished">&amp;Tuo:</translation>
-    </message>
-    <message>
-        <source>Br&amp;owse...</source>
-        <translation type="vanished">Se&amp;laa...</translation>
-    </message>
-    <message>
-        <source>&amp;Export:</source>
-        <translation type="vanished">&amp;Vie:</translation>
-    </message>
-    <message>
-        <source>Bro&amp;wse...</source>
-        <translation type="vanished">Sel&amp;aa...</translation>
-    </message>
-    <message>
-        <source>&amp;Macro output:</source>
-        <translation type="vanished">&amp;Makron tuloste:</translation>
-    </message>
-    <message>
-        <source>Temporary files directory</source>
-        <translation type="vanished">Väliaikaistiedostojen hakemisto</translation>
-    </message>
-    <message>
-        <source>Brow&amp;se...</source>
-        <translation type="vanished">Sela&amp;a...</translation>
-    </message>
-    <message>
-        <source>&amp;Free Space:</source>
-        <translation type="vanished">Va&amp;paa tila:</translation>
-    </message>
-    <message>
-        <source>unavailable - above location doesn't exist</source>
-        <translation type="vanished">ei saatavilla - yllä olevaa sijaintia ei ole olemassa</translation>
-    </message>
-    <message>
-        <source>Choose a location</source>
-        <translation type="vanished">Valitse sijainti</translation>
-    </message>
-    <message>
-        <source>
-Directory %s does not exist. Create it?</source>
-        <translation type="vanished">
-Hakemistoa %1 ei ole olemassa. Luotko sen?</translation>
-    </message>
-    <message>
-        <source>Directory creation failed.</source>
-        <translation type="vanished">Hakemiston luominen epäonnistui.</translation>
-    </message>
-    <message>
-        <source>
-%s</source>
-        <translation type="vanished">
-%1</translation>
-    </message>
-    <message>
-        <source>Directory %s is not suitable (at risk of being cleaned out)</source>
-        <translation type="vanished">Hakemisto %1 ei sovellu (vaarana, että se siivotaan)</translation>
-    </message>
-    <message>
-        <source>'Temporary Directory' cannot be set.</source>
-        <translation type="vanished">'Väliaikainen hakemisto' ei voi asettaa.</translation>
-    </message>
-    <message>
-        <source>'Temporary files' directory cannot be set.</source>
-        <translation type="vanished">'Väliaikaiset tiedostot' hakemistoa ei voi asettaa.</translation>
-    </message>
-    <message>
-        <source>Directory %s is not writable</source>
-        <translation type="vanished">Hakemistoon %1 ei voi kirjoittaa</translation>
-    </message>
-    <message>
-        <source>Temp Directory Update</source>
-        <translation type="vanished">Väliaikaishakemiston päivitys</translation>
-    </message>
-    <message>
-        <source>'Open' directory cannot be set.</source>
-        <translation type="vanished">'Avaa' hakemistoa ei voi asettaa.</translation>
-    </message>
-    <message>
-        <source>'Save' directory cannot be set.</source>
-        <translation type="vanished">'Tallenna' hakemistoa ei voi asettaa.</translation>
-    </message>
-    <message>
-        <source>'Import' directory cannot be set.</source>
-        <translation type="vanished">'Tuo' hakemistoa ei voi asettaa.</translation>
-    </message>
-    <message>
-        <source>'Export' directory cannot be set.</source>
-        <translation type="vanished">'Vie' hakemistoa ei voi asettaa.</translation>
-    </message>
-    <message>
-        <source>'Macro Output' directory cannot be set.</source>
-        <translation type="vanished">'Makrolähtö' hakemistoa ei voi asettaa.</translation>
-    </message>
-    <message>
-        <source>Preferences for Effects</source>
-        <translation type="vanished">Tehosteiden asetukset</translation>
-    </message>
-    <message>
-        <source>Sort by effect name</source>
-        <translation type="vanished">Lajittele tehosteen nimen mukaan</translation>
-    </message>
-    <message>
-        <source>Sort by publisher and effect name</source>
-        <translation type="vanished">Lajittele julkaisijan ja tehosteen nimen mukaan</translation>
-    </message>
-    <message>
-        <source>Sort by type and effect name</source>
-        <translation type="vanished">Lajittele tyypin ja tehosteen nimen mukaan</translation>
-    </message>
-    <message>
-        <source>Group by publisher</source>
-        <translation type="vanished">Ryhmittele julkaisijan mukaan</translation>
-    </message>
-    <message>
-        <source>Group by type</source>
-        <translation type="vanished">Ryhmittele tyypin mukaan</translation>
-    </message>
-    <message>
-        <source>Group by category</source>
-        <translation type="vanished">Ryhmittele luokan mukaan</translation>
-    </message>
-    <message>
-        <source>Group by type and publisher</source>
-        <translation type="vanished">Ryhmittele tyypin ja julkaisijan mukaan</translation>
-    </message>
-    <message>
-        <source>Effect Options</source>
-        <translation type="vanished">Tehostevalinnat</translation>
-    </message>
-    <message>
-        <source>Effect menu &amp;organization:</source>
-        <translation type="vanished">&amp;Tehostevalikon järjestäminen:</translation>
-    </message>
-    <message>
-        <source>Realtime effect o&amp;rganization:</source>
-        <translation type="vanished">&amp;Reaaliaikainen tehosteen järjestäminen:</translation>
-    </message>
-    <message>
-        <source>Instruction Set</source>
-        <translation type="vanished">Käskykanta</translation>
-    </message>
-    <message>
-        <source>&amp;Use SSE/SSE2/.../AVX</source>
-        <translation type="vanished">&amp;Käytä SSE/SSE2/.../AVX</translation>
-    </message>
-    <message>
-        <source>%s plugin locations</source>
-        <extracomment>i18n-hint: Title of the panel containing user-defined paths where plugins could be found
-* First argument is replaced with plugin type (e.g. "LV2 plugin locations")</extracomment>
-        <translation type="vanished">%1 laajennuspaikkaa</translation>
-    </message>
-    <message>
-        <source>&amp;Skip effects scanning at startup</source>
-        <translation type="vanished">&amp;Ohita tehosteiden skannaus käynnistettäessä</translation>
-    </message>
-    <message>
-        <source>Open Plugin &amp;Manager</source>
-        <translation type="vanished">Avaa laajennusten &amp;hallinta</translation>
-    </message>
-    <message>
-        <source>Extended Import</source>
-        <extracomment>i18n-hint:  Title of dialog governing "Extended", or "advanced,"
-* audio file import options</extracomment>
-        <translation type="vanished">Laajennettu tuonti</translation>
-    </message>
-    <message>
-        <source>Preferences for ExtImport</source>
-        <translation type="vanished">Laajennetun tuonnin asetukset</translation>
-    </message>
-    <message>
-        <source>A&amp;ttempt to use filter in OpenFile dialog first</source>
-        <translation type="vanished">Yritä ensin käyttää suodatinta Avaa tiedosto -valintaikkunassa</translation>
-    </message>
-    <message>
-        <source>Rules to choose import filters</source>
-        <translation type="vanished">Säännöt tuontisuodattimien valintaan</translation>
-    </message>
-    <message>
-        <source>File extensions</source>
-        <translation type="vanished">Tiedostopäätteet</translation>
-    </message>
-    <message>
-        <source>Mime-types</source>
-        <translation type="vanished">MIME-tyypit</translation>
-    </message>
-    <message>
-        <source>Importer order</source>
-        <translation type="vanished">Tuontijärjestys</translation>
-    </message>
-    <message>
-        <source>Move rule &amp;up</source>
-        <translation type="vanished">Siirrä viivainta &amp;ylös</translation>
-    </message>
-    <message>
-        <source>Move rule &amp;down</source>
-        <translation type="vanished">Siirrä viivainta &amp;alas</translation>
-    </message>
-    <message>
-        <source>Move f&amp;ilter up</source>
-        <translation type="vanished">Siirrä &amp;suodatinta ylös</translation>
-    </message>
-    <message>
-        <source>Move &amp;filter down</source>
-        <translation type="vanished">Siirrä &amp;suodatinta alas</translation>
-    </message>
-    <message>
-        <source>&amp;Add new rule</source>
-        <translation type="vanished">&amp;Lisää uusi viivain</translation>
-    </message>
-    <message>
-        <source>De&amp;lete selected rule</source>
-        <translation type="vanished">Poista va&amp;littu viivain</translation>
-    </message>
-    <message>
-        <source>Unused filters:</source>
-        <translation type="vanished">Käyttämättömät suodattimet:</translation>
-    </message>
-    <message>
-        <source>There are space characters (spaces, newlines, tabs or linefeeds) in one of the items. They are likely to break the pattern matching. Unless you know what you are doing, it is recommended to trim spaces. Do you want Audacity to trim spaces for you?</source>
-        <translation type="vanished">Jossakin kohteista on välilyöntejä (välilyönti, rivinvaihto, sarkainmerkki tai rivinsiirto), jotka aiheuttavat ongelmia hahmontunnistuksessa. Jos et ole varma, niiden poistamista suositellaan. Haluatko Audacityn tekevän niin puolestasi?</translation>
-    </message>
-    <message>
-        <source>Spaces detected</source>
-        <translation type="vanished">Havaitut välilyönnit</translation>
-    </message>
-    <message>
-        <source>Do you really want to delete selected rule?</source>
-        <translation type="vanished">Haluatko varmasti poistaa valitun säännön?</translation>
-    </message>
-    <message>
-        <source>Rule deletion confirmation</source>
-        <translation type="vanished">Viivaimen poiston vahvistus</translation>
-    </message>
-    <message>
-        <source>Ext Import</source>
-        <translation type="vanished">Ulkoinen tuonti</translation>
-    </message>
-    <message>
-        <source>Interface</source>
-        <comment>GUI</comment>
-        <extracomment>i18n-hint: refers to Audacity's user interface settings</extracomment>
-        <translation type="vanished">Käyttöliittymä</translation>
-    </message>
-    <message>
-        <source>Preferences for GUI</source>
-        <translation type="vanished">Käyttöliittymäasetukset</translation>
-    </message>
-    <message>
-        <source>Display</source>
-        <translation type="vanished">Näyttö</translation>
-    </message>
-    <message>
-        <source>&amp;Language:</source>
-        <translation type="vanished">&amp;Kieli:</translation>
-    </message>
-    <message>
-        <source>Th&amp;eme:</source>
-        <translation type="vanished">T&amp;eema:</translation>
-    </message>
-    <message>
-        <source>Meter dB &amp;range:</source>
-        <translation type="vanished">Mittarin dB-&amp;alue:</translation>
-    </message>
-    <message>
-        <source>Show 'How to Get &amp;Help' at launch</source>
-        <translation type="vanished">Näytä "Miten saada o&amp;hjeita" käynnistettäessä</translation>
-    </message>
-    <message>
-        <source>Show e&amp;xtra menus</source>
-        <translation type="vanished">Näytä e&amp;kstravalikot</translation>
-    </message>
-    <message>
-        <source>Show alternative &amp;styling (Mac vs PC)</source>
-        <translation type="vanished">Näytä vaihtoehtoinen muotoilu (Mac v&amp;s PC)</translation>
-    </message>
-    <message>
-        <source>&amp;Beep on completion of longer activities</source>
-        <translation type="vanished">&amp;Äänimerkki pitkän toiminnon päätyttyä</translation>
-    </message>
-    <message>
-        <source>Re&amp;tain labels if selection snaps to a label</source>
-        <translation type="vanished">Pidä merkki vaikka valinta tarraisi siihen</translation>
-    </message>
-    <message>
-        <source>Use mostly Left-to-Right layouts in RTL languages</source>
-        <extracomment>i18n-hint: RTL stands for 'Right to Left'</extracomment>
-        <translation type="vanished">Käytä enimmäkseen vasemmalta oikealle -asetteluja RTL-kielissä</translation>
-    </message>
-    <message>
-        <source>Never use comma as decimal point</source>
-        <translation type="vanished">Älä käytä pilkkua desimaaliluvuissa</translation>
-    </message>
-    <message>
-        <source>GUI</source>
-        <translation type="vanished">Käyttöliittymä</translation>
-    </message>
-    <message>
-        <source>Language "%s" is unknown</source>
-        <translation type="vanished">Kieli "%1" on tuntematon</translation>
-    </message>
-    <message>
-        <source>Import / Export</source>
-        <translation type="vanished">Tuonti/vienti</translation>
-    </message>
-    <message>
-        <source>Preferences for ImportExport</source>
-        <translation type="vanished">Tuonti/vienti -asetukset</translation>
-    </message>
-    <message>
-        <source>S&amp;witch view to Beats and Measures and align with musical grid</source>
-        <translation type="vanished">&amp;Vaihda näkymä Iskut ja tahdit -tilaan ja kohdista se musiikilliseen ruudukkoon</translation>
-    </message>
-    <message>
-        <source>&amp;Ask me each time</source>
-        <translation type="vanished">&amp;Kysy joka kerta</translation>
-    </message>
-    <message>
-        <source>Do &amp;nothing</source>
-        <translation type="vanished">Älä tee &amp;mitään</translation>
-    </message>
-    <message>
-        <source>Music Imports</source>
-        <translation type="vanished">Musiikin tuonnit</translation>
-    </message>
-    <message>
-        <source>When Audacity detects music in file imported on empty project</source>
-        <translation type="vanished">Kun Audacity havaitsee musiikin tyhjään projektiin tuodusta tiedostosta</translation>
-    </message>
-    <message>
-        <source>IMPORT EXPORT</source>
-        <translation type="vanished">TUO VIE</translation>
-    </message>
-    <message>
-        <source>Preferences for KeyConfig</source>
-        <translation type="vanished">KeyConfigin asetukset</translation>
-    </message>
-    <message>
-        <source>Keyboard preferences currently unavailable.</source>
-        <translation type="vanished">Näppäimistöasetukset eivät ole tällä hetkellä käytettävissä.</translation>
-    </message>
-    <message>
-        <source>Open a new project to modify keyboard shortcuts.</source>
-        <translation type="vanished">Avaa uusi projekti pikanäppäimien muuttamiseksi.</translation>
-    </message>
-    <message>
-        <source>&amp;Hotkey:</source>
-        <translation type="vanished">&amp;Pikanäppäin:</translation>
-    </message>
-    <message>
-        <source>&amp;Tree</source>
-        <translation type="vanished">&amp;Puu</translation>
-    </message>
-    <message>
-        <source>&amp;Name</source>
-        <translation type="vanished">&amp;Nimi</translation>
-    </message>
-    <message>
-        <source>&amp;Key</source>
-        <translation type="vanished">&amp;Avain</translation>
-    </message>
-    <message>
-        <source>Key Bindings</source>
-        <translation type="vanished">Näppäinyhdistelmät</translation>
-    </message>
-    <message>
-        <source>View by:</source>
-        <translation type="vanished">Näkymä:</translation>
-    </message>
-    <message>
-        <source>View by tree</source>
-        <translation type="vanished">Näytä puun mukaan</translation>
-    </message>
-    <message>
-        <source>View by name</source>
-        <translation type="vanished">Näytä nimen mukaan</translation>
-    </message>
-    <message>
-        <source>View by key</source>
-        <translation type="vanished">Näytä avaimen mukaan</translation>
-    </message>
-    <message>
-        <source>Bindings</source>
-        <translation type="vanished">Yhdistelmät</translation>
-    </message>
-    <message>
-        <source>Short cut</source>
-        <translation type="vanished">Pikanäppäin</translation>
-    </message>
-    <message>
-        <source>&amp;Set</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">&amp;Aseta</translation>
-    </message>
-    <message>
-        <source>Note: Pressing Cmd+Q will quit. All other keys are valid.</source>
-        <translation type="vanished">Huom: Näppäinyhdistelmä Cmd+Q lopettaa. Muut näppäimet ovat kelvollisia.</translation>
-    </message>
-    <message>
-        <source>&amp;Import...</source>
-        <translation type="vanished">&amp;Tuo...</translation>
-    </message>
-    <message>
-        <source>&amp;Defaults</source>
-        <translation type="vanished">&amp;Oletukset</translation>
-    </message>
-    <message>
-        <source>
-   *   "%s"  (because the shortcut '%s' is used by "%s")
-</source>
-        <translation type="vanished">
-   *   "%1"  (koska pikanäppäin '%2' on annettu toiminnolle "%3")
-</translation>
-    </message>
-    <message>
-        <source>Select an XML file containing Audacity keyboard shortcuts...</source>
-        <translation type="vanished">Valitse Audacityn pikanäppäimet sisältävä XML-tiedosto...</translation>
-    </message>
-    <message>
-        <source>Error Importing Keyboard Shortcuts</source>
-        <translation type="vanished">Virhe tuotaessa pikanäppäimiä</translation>
-    </message>
-    <message>
-        <source>The file with the shortcuts contains illegal shortcut duplicates for "%s" and "%s".
-Nothing is imported.</source>
-        <translation type="vanished">Pikanäppäintiedosto sisältää samat pikanäppäimet toiminnoille "%1" ja "%2",
-mitä ei sallita. Mitään ei tuoda.</translation>
-    </message>
-    <message>
-        <source>Loaded %d keyboard shortcuts
-</source>
-        <translation type="vanished">Ladattiin %1 pikanäppäintä
-</translation>
-    </message>
-    <message>
-        <source>
-The following commands are not mentioned in the imported file, but have their shortcuts removed because of the conflict with other new shortcuts:
-</source>
-        <translation type="vanished">
-Seuraavia komentoja ei mainita tuodussa tiedostossa. Niiden pikanäppäimet on poistettu, koska ne ovat ristiriidassa muiden uusien pikanäppäinten kanssa:
-</translation>
-    </message>
-    <message>
-        <source>Loading Keyboard Shortcuts</source>
-        <translation type="vanished">Ladataan pikanäppäimiä</translation>
-    </message>
-    <message>
-        <source>Export Keyboard Shortcuts As:</source>
-        <translation type="vanished">Vie pikanäppäimet nimellä:</translation>
-    </message>
-    <message>
-        <source>Error Exporting Keyboard Shortcuts</source>
-        <translation type="vanished">Virhe vietäessä pikanäppäimiä</translation>
-    </message>
-    <message>
-        <source>You may not assign a key to this entry</source>
-        <translation type="vanished">Ei voi määrittää avainta tälle kohdalle</translation>
-    </message>
-    <message>
-        <source>You must select a binding before assigning a shortcut</source>
-        <translation type="vanished">Sinun tulee valita ensin yhdistelmä pikanäppäimen määrittämiseksi</translation>
-    </message>
-    <message>
-        <source>
-
-	 and
-
-	</source>
-        <translation type="vanished">
-
-	 ja
-
-	</translation>
-    </message>
-    <message>
-        <source>The keyboard shortcut '%s' is already assigned to:
-
-	%s
-
-
-Click OK to assign the shortcut to
-
-	%s
-
-instead. Otherwise, click Cancel.</source>
-        <translation type="vanished">Pikanäppäin '%1' on jo määritetty komennolle:
-
-	'%2'
-
-Valitse OK, jos haluat määrittää pikanäppäimen komennolle
-
-	'%3'
-
-sen sijaan. Muussa tapauksessa valitse Peruuta.</translation>
-    </message>
-    <message>
-        <source>Key Config</source>
-        <translation type="vanished">Näppäimistömääritys</translation>
-    </message>
-    <message>
-        <source>MIDI Devices</source>
-        <extracomment>i18n-hint: untranslatable acronym for "Musical Instrument Device Interface"</extracomment>
-        <translation type="vanished">MIDI-laitteet</translation>
-    </message>
-    <message>
-        <source>Preferences for MidiIO</source>
-        <translation type="vanished">MidiIO:n asetukset</translation>
-    </message>
-    <message>
-        <source>No MIDI interfaces</source>
-        <translation type="vanished">Ei MIDI-rajapintoja</translation>
-    </message>
-    <message>
-        <source>Interface</source>
-        <comment>MIDI</comment>
-        <extracomment>i18n-hint Software interface to MIDI</extracomment>
-        <translation type="vanished">Rajapinta</translation>
-    </message>
-    <message>
-        <source>Using: PortMidi</source>
-        <translation type="vanished">Käyttää: PortMidi</translation>
-    </message>
-    <message>
-        <source>MIDI Synth L&amp;atency (ms):</source>
-        <translation type="vanished">MIDI-syntetisaattori&amp;viive (ms):</translation>
-    </message>
-    <message>
-        <source>The MIDI Synthesizer Latency must be an integer</source>
-        <translation type="vanished">MIDI-syntetisaattorin viive tulee olla kokonaisluku</translation>
-    </message>
-    <message>
-        <source>Midi IO</source>
-        <translation type="vanished">Midi IO</translation>
-    </message>
-    <message>
-        <source>Modules</source>
-        <extracomment>i18n-hint: Modules are optional extensions to Audacity that add NEW features.</extracomment>
-        <translation type="vanished">Moduulit</translation>
-    </message>
-    <message>
-        <source>Preferences for Module</source>
-        <translation type="vanished">Moduulin asetukset</translation>
-    </message>
-    <message>
-        <source>Modules are optional components of Audacity that enable some functionality, such as importing and exporting. 
-It is generally not necessary to change these settings.</source>
-        <translation type="vanished">Moduulit ovat valinnaisia Audacityn osia, jotka mahdollistavat joitain toimintoja, kuten tuonnin ja viennin. 
-Näitä asetuksia ei yleensä tarvitse muuttaa.</translation>
-    </message>
-    <message>
-        <source>Changes to these settings only take effect when restarting Audacity.
-</source>
-        <translation type="vanished">Muutokset näihin asetuksiin tulevat voimaan vain, kun Audacity käynnistetään uudelleen.
-</translation>
-    </message>
-    <message>
-        <source>Always ask</source>
-        <translation type="vanished">Kysy aina</translation>
-    </message>
-    <message>
-        <source>Failed</source>
-        <translation type="vanished">Virhe</translation>
-    </message>
-    <message>
-        <source>No choice made</source>
-        <translation type="vanished">Valintaa ei tehty</translation>
-    </message>
-    <message>
-        <source>Error: No modules were found. This may indicate a faulty installation.</source>
-        <translation type="vanished">Virhe: Moduulia ei löytynyt. Tämä voi olla merkki viallisesta asennuksesta.</translation>
-    </message>
-    <message>
-        <source>Module</source>
-        <translation type="vanished">Moduuli</translation>
-    </message>
-    <message>
-        <source>Preferences for Playback</source>
-        <translation type="vanished">Toistoasetukset</translation>
-    </message>
-    <message>
-        <source>Effects Preview</source>
-        <translation type="vanished">Tehosteiden esikuuntelu</translation>
-    </message>
-    <message>
-        <source>&amp;Length:</source>
-        <translation type="vanished">&amp;Kesto:</translation>
-    </message>
-    <message>
-        <source>Cut Preview</source>
-        <extracomment>i18n-hint: (noun) this is a preview of the cut</extracomment>
-        <translation type="vanished">Leikkauksen esikuuntelu</translation>
-    </message>
-    <message>
-        <source>&amp;Before cut region:</source>
-        <translation type="vanished">&amp;Ennen alueen leikkausta:</translation>
-    </message>
-    <message>
-        <source>&amp;After cut region:</source>
-        <translation type="vanished">&amp;Alueleikkauksen jälkeen:</translation>
-    </message>
-    <message>
-        <source>Seek Time when playing</source>
-        <translation type="vanished">Kelausaika toistettaessa</translation>
-    </message>
-    <message>
-        <source>&amp;Short period:</source>
-        <translation type="vanished">&amp;Lyhyt aikaväli:</translation>
-    </message>
-    <message>
-        <source>Lo&amp;ng period:</source>
-        <translation type="vanished">Pi&amp;tkä aikaväli:</translation>
-    </message>
-    <message>
-        <source>&amp;Micro-fades</source>
-        <translation type="vanished">&amp;Mikrohäivytykset</translation>
-    </message>
-    <message>
-        <source>Always scrub un&amp;pinned</source>
-        <translation type="vanished">&amp;Rullaus jättää toistopään kiinnityksen huomiotta</translation>
-    </message>
-    <message>
-        <source>Audacity Preferences</source>
-        <translation type="vanished">Audacityn asetukset</translation>
-    </message>
-    <message>
-        <source>Category</source>
-        <translation type="vanished">Luokka</translation>
-    </message>
-    <message>
-        <source>Preferences:</source>
-        <translation type="vanished">Asetukset:</translation>
-    </message>
-    <message>
-        <source>Preferences for Quality</source>
-        <translation type="vanished">Laatuasetukset</translation>
-    </message>
-    <message>
-        <source>Real-time Conversion</source>
-        <translation type="vanished">Reaaliaikainen muunnos</translation>
-    </message>
-    <message>
-        <source>Sample Rate Con&amp;verter:</source>
-        <translation type="vanished">Näytetaajuuden &amp;muunnin:</translation>
-    </message>
-    <message>
-        <source>&amp;Dither:</source>
-        <extracomment>i18n-hint: technical term for randomization to reduce undesirable resampling artifacts</extracomment>
-        <translation type="vanished">&amp;Sirottelu:</translation>
-    </message>
-    <message>
-        <source>High-quality Conversion</source>
-        <translation type="vanished">Korkealaatuinen muunnos</translation>
-    </message>
-    <message>
-        <source>Sample Rate Conver&amp;ter:</source>
-        <translation type="vanished">Näytetaajuuden muun&amp;nin:</translation>
-    </message>
-    <message>
-        <source>Dit&amp;her:</source>
-        <extracomment>i18n-hint: technical term for randomization to reduce undesirable resampling artifacts</extracomment>
-        <translation type="vanished">Si&amp;rottelu:</translation>
-    </message>
-    <message>
-        <source>Preferences for Recording</source>
-        <translation type="vanished">Äänitysasetukset</translation>
-    </message>
-    <message>
-        <source>Hear &amp;other tracks while recording (overdub)</source>
-        <translation type="vanished">Kuuntele &amp;muita kappaleita tallennuksen aikana (overdub)</translation>
-    </message>
-    <message>
-        <source>Use &amp;hardware to play other tracks</source>
-        <translation type="vanished">Käytä &amp;laitteistoa muiden raitojen toistamiseen</translation>
-    </message>
-    <message>
-        <source>Audible input &amp;monitoring</source>
-        <translation type="vanished">Äänitulon &amp;valvonta</translation>
-    </message>
-    <message>
-        <source>Record on a new track</source>
-        <translation type="vanished">Nauhoita uudelle raidalle</translation>
-    </message>
-    <message>
-        <source>Detect dropouts</source>
-        <extracomment>i18n-hint: Dropout is a loss of a short sequence audio sample data from the recording</extracomment>
-        <translation type="vanished">Tunnista katkokset</translation>
-    </message>
-    <message>
-        <source>Sound Activated Recording</source>
-        <translation type="vanished">Ääniaktivoitu nauhoitus</translation>
-    </message>
-    <message>
-        <source>&amp;Enable</source>
-        <translation type="vanished">&amp;Ota käyttöön</translation>
-    </message>
-    <message>
-        <source>Le&amp;vel (dB):</source>
-        <translation type="vanished">&amp;Taso (dB):</translation>
-    </message>
-    <message>
-        <source>Name newly recorded tracks</source>
-        <extracomment>i18n-hint: start of two-part phrase, "Name newly recorded tracks with:"</extracomment>
-        <translation type="vanished">Nimeä äskettäin äänitetyt raidat</translation>
-    </message>
-    <message>
-        <source>With:</source>
-        <extracomment>i18n-hint: end of two-part phrase, "Name newly recorded tracks with:"</extracomment>
-        <translation type="vanished">näin:</translation>
-    </message>
-    <message>
-        <source>Custom Track &amp;Name</source>
-        <translation type="vanished">Mukautettu raidan &amp;nimi</translation>
-    </message>
-    <message>
-        <source>Custom name text</source>
-        <translation type="vanished">Mukautetun nimen teksti</translation>
-    </message>
-    <message>
-        <source>Recorded_Audio</source>
-        <translation type="vanished">Äänite</translation>
-    </message>
-    <message>
-        <source>&amp;Track Number</source>
-        <translation type="vanished">&amp;Raidan numero</translation>
-    </message>
-    <message>
-        <source>System &amp;Date</source>
-        <translation type="vanished">Järjestelmän &amp;päivämäärä</translation>
-    </message>
-    <message>
-        <source>System T&amp;ime</source>
-        <translation type="vanished">Järjestelmän a&amp;ika</translation>
-    </message>
-    <message>
-        <source>Automated Recording Level Adjustment</source>
-        <translation type="vanished">Automaattinen äänitystason säätö</translation>
-    </message>
-    <message>
-        <source>Enable Automated Recording Level Adjustment.</source>
-        <translation type="vanished">Käytä automaattista äänitystason säätöä.</translation>
-    </message>
-    <message>
-        <source>Target Peak:</source>
-        <extracomment>i18n-hint: Desired maximum (peak) volume for sound</extracomment>
-        <translation type="vanished">Kohdehuippu:</translation>
-    </message>
-    <message>
-        <source>Within:</source>
-        <translation type="vanished">Aikana:</translation>
-    </message>
-    <message>
-        <source>Analysis Time:</source>
-        <translation type="vanished">Analysointiaika:</translation>
-    </message>
-    <message>
-        <source>milliseconds (time of one analysis)</source>
-        <translation type="vanished">millisekuntia (yhden analyysin aika)</translation>
-    </message>
-    <message>
-        <source>Number of consecutive analysis:</source>
-        <translation type="vanished">Peräkkäisten analyysien määrä:</translation>
-    </message>
-    <message>
-        <source>0 means endless</source>
-        <translation type="vanished">0 tarkoittaa rajatonta</translation>
-    </message>
-    <message>
-        <source>Punch and Roll Recording</source>
-        <translation type="vanished">Korjaaminen lennossa</translation>
-    </message>
-    <message>
-        <source>Pre-ro&amp;ll:</source>
-        <translation type="vanished">Esike&amp;laus:</translation>
-    </message>
-    <message>
-        <source>Cross&amp;fade:</source>
-        <translation type="vanished">Risti&amp;häivytys:</translation>
-    </message>
-    <message>
-        <source>Color (Roseus)</source>
-        <comment>spectrum prefs</comment>
-        <extracomment>i18n-hint: New color scheme for spectrograms, Roseus is proper name of the color scheme</extracomment>
-        <translation type="vanished">Väri (Roseus)</translation>
-    </message>
-    <message>
-        <source>Color (classic)</source>
-        <comment>spectrum prefs</comment>
-        <extracomment>i18n-hint: Classic color scheme(from theme) for spectrograms</extracomment>
-        <translation type="vanished">Väri (klassinen)</translation>
-    </message>
-    <message>
-        <source>Grayscale</source>
-        <comment>spectrum prefs</comment>
-        <extracomment>i18n-hint: Grayscale color scheme for spectrograms</extracomment>
-        <translation type="vanished">Harmaasävy</translation>
-    </message>
-    <message>
-        <source>Inverse grayscale</source>
-        <comment>spectrum prefs</comment>
-        <extracomment>i18n-hint: Inverse grayscale color scheme for spectrograms</extracomment>
-        <translation type="vanished">Käänteinen harmaasävy</translation>
-    </message>
-    <message>
-        <source>Pitch (EAC)</source>
-        <extracomment>i18n-hint: EAC abbreviates "Enhanced Autocorrelation"</extracomment>
-        <translation type="vanished">Sävelkorkeus (EAC)</translation>
-    </message>
-    <message>
-        <source>Maximum frequency must be 100 Hz or above</source>
-        <translation type="vanished">Ylimmän taajuuden täytyy olla vähintään 100 Hz</translation>
-    </message>
-    <message>
-        <source>Minimum frequency must be at least 0 Hz</source>
-        <translation type="vanished">Alimman taajuuden täytyy olla vähintään 0 Hz</translation>
-    </message>
-    <message>
-        <source>Minimum frequency must be less than maximum frequency</source>
-        <translation type="vanished">Alimman taajuuden on oltava ylintä taajuutta pienempi</translation>
-    </message>
-    <message>
-        <source>The range must be at least 1 dB</source>
-        <translation type="vanished">Alueen on oltava vähintään 1 dB</translation>
-    </message>
-    <message>
-        <source>The frequency gain cannot be negative</source>
-        <translation type="vanished">Taajuusvahvistus ei voi olla negatiivinen</translation>
-    </message>
-    <message>
-        <source>The frequency gain must be no more than 60 dB/dec</source>
-        <translation type="vanished">Taajuusvahvistus ei saa olla yli 60 dB/dek</translation>
-    </message>
-    <message>
-        <source>Spectrogram Settings</source>
-        <translation type="vanished">Spektrogrammin asetukset</translation>
-    </message>
-    <message>
-        <source>Spectrograms</source>
-        <translation type="vanished">Spektrogrammit</translation>
-    </message>
-    <message>
-        <source>Preferences for Spectrum</source>
-        <translation type="vanished">Taajuusasetukset</translation>
-    </message>
-    <message>
-        <source>&amp;Use Preferences</source>
-        <extracomment>i18n-hint: use is a verb</extracomment>
-        <translation type="vanished">Käytä aset&amp;uksia</translation>
-    </message>
-    <message>
-        <source>S&amp;cale:</source>
-        <translation type="vanished">Astei&amp;kko:</translation>
-    </message>
-    <message>
-        <source>Mi&amp;n Frequency (Hz):</source>
-        <translation type="vanished">&amp;Alin taajuus (Hz):</translation>
-    </message>
-    <message>
-        <source>Ma&amp;x Frequency (Hz):</source>
-        <translation type="vanished">&amp;Ylin taajuus (Hz):</translation>
-    </message>
-    <message>
-        <source>&amp;Gain (dB):</source>
-        <translation type="vanished">&amp;Vahvistus (dB):</translation>
-    </message>
-    <message>
-        <source>&amp;Range (dB):</source>
-        <translation type="vanished">&amp;Määrä (dB):</translation>
-    </message>
-    <message>
-        <source>High &amp;boost (dB/dec):</source>
-        <translation type="vanished">Korkea&amp;tehostus (dB/dek):</translation>
-    </message>
-    <message>
-        <source>A&amp;lgorithm:</source>
-        <translation type="vanished">A&amp;lgoritmi:</translation>
-    </message>
-    <message>
-        <source>Window &amp;size:</source>
-        <translation type="vanished">Ikkunan &amp;koko:</translation>
-    </message>
-    <message>
-        <source>2048</source>
-        <translation type="vanished">2048</translation>
-    </message>
-    <message>
-        <source>Window &amp;type:</source>
-        <translation type="vanished">Ikkuna&amp;tyyppi:</translation>
-    </message>
-    <message>
-        <source>&amp;Zero padding factor:</source>
-        <translation type="vanished">&amp;Nollien täytekerroin:</translation>
-    </message>
-    <message>
-        <source>Ena&amp;ble Spectral Selection</source>
-        <translation type="vanished">Ota käyttöön &amp;spektrivalinta</translation>
-    </message>
-    <message>
-        <source>Show a grid along the &amp;Y-axis</source>
-        <translation type="vanished">Näytä ruudukko &amp;Y-akselilla</translation>
-    </message>
-    <message>
-        <source>FFT Find Notes</source>
-        <extracomment>i18n-hint: FFT stands for Fast Fourier Transform and probably shouldn't be translated</extracomment>
-        <translation type="vanished">FFT-nuotinhaku</translation>
-    </message>
-    <message>
-        <source>Minimum Amplitude (dB):</source>
-        <translation type="vanished">Minimiamplitudi (dB):</translation>
-    </message>
-    <message>
-        <source>Max. Number of Notes (1..128):</source>
-        <translation type="vanished">Suurin määrä nuotteja (1..128):</translation>
-    </message>
-    <message>
-        <source>&amp;Find Notes</source>
-        <translation type="vanished">&amp;Hakuhuomautukset</translation>
-    </message>
-    <message>
-        <source>&amp;Quantize Notes</source>
-        <translation type="vanished">&amp;Kvantisoi nuotit</translation>
-    </message>
-    <message>
-        <source>Global settings</source>
-        <translation type="vanished">Yleiset asetukset</translation>
-    </message>
-    <message>
-        <source>Ena&amp;ble spectral selection</source>
-        <translation type="vanished">&amp;Ota käyttöön spektrivalinta</translation>
-    </message>
-    <message>
-        <source>The maximum frequency must be an integer</source>
-        <translation type="vanished">Ylimmän taajuuden täytyy olla kokonaisluku</translation>
-    </message>
-    <message>
-        <source>The minimum frequency must be an integer</source>
-        <translation type="vanished">Alimman taajuuden täytyy olla kokonaisluku</translation>
-    </message>
-    <message>
-        <source>The gain must be an integer</source>
-        <translation type="vanished">Vahvistuksen täytyy olla kokonaisluku</translation>
-    </message>
-    <message>
-        <source>The range must be a positive integer</source>
-        <translation type="vanished">Alueen tulee olla positiivinen kokonaisluku</translation>
-    </message>
-    <message>
-        <source>The frequency gain must be an integer</source>
-        <translation type="vanished">Vahvistustaajuuden täytyy olla kokonaisluku</translation>
-    </message>
-    <message>
-        <source>The minimum amplitude (dB) must be an integer</source>
-        <translation type="vanished">Minimiamplitudin (dB) täytyy olla kokonaisluku</translation>
-    </message>
-    <message>
-        <source>The maximum number of notes must be an integer</source>
-        <translation type="vanished">Merkintöjen maksimimäärä täytyy olla kokonaisluku</translation>
-    </message>
-    <message>
-        <source>The maximum number of notes must be in the range 1..128</source>
-        <translation type="vanished">Merkintöjen maksimimäärä täytyy olla väliltä 1...128</translation>
-    </message>
-    <message>
-        <source>Preferences for Theme</source>
-        <translation type="vanished">Teema-asetukset</translation>
-    </message>
-    <message>
-        <source>Info</source>
-        <translation type="vanished">Tiedot</translation>
-    </message>
-    <message>
-        <source>Themability is an experimental feature.
-
-To try it out, click "Save Theme Cache" then find and modify the images and colors in
-ImageCacheVxx.png using an image editor such as the Gimp.
-
-Click "Load Theme Cache" to load the changed images and colors back into Audacity.</source>
-        <translation type="vanished">Teemanmukaisuus on kokeellinen ominaisuus.
-
-Kokeile sitä klikkaamalla "Tallenna teemavälimuisti" ja etsi ja muokkaa kuvia ja värejä tiedostosta
-ImageCacheVxx.png käyttämällä kuvankäsittelyohjelmaa, kuten Gimp.
-
-Klikkaamall "Lataa teemavälimuisti" voit ladata muuttuneet kuvat ja värit takaisin Audacityyn.</translation>
-    </message>
-    <message>
-        <source>Saving and loading individual theme files uses a separate file for each image, but is
-otherwise the same idea.</source>
-        <translation type="vanished">Yksittäisten teematiedostojen tallentaminen ja lataaminen käyttää erillistä tiedostoa kullekin kuvalle, mutta
-muuten sama ajatus.</translation>
-    </message>
-    <message>
-        <source>Theme Cache - Images &amp;&amp; Color</source>
-        <extracomment>i18n-hint: &amp;&amp; in here is an escape character to get a single &amp; on screen,
-* so keep it as is</extracomment>
-        <translation type="vanished">Teeman välimuisti - Kuvat &amp;&amp; väri</translation>
-    </message>
-    <message>
-        <source>Save Theme Cache</source>
-        <translation type="vanished">Tallenna teemavälimuisti</translation>
-    </message>
-    <message>
-        <source>Load Theme Cache</source>
-        <translation type="vanished">Lataa teemavälimuisti</translation>
-    </message>
-    <message>
-        <source>Individual Theme Files</source>
-        <translation type="vanished">Virheellisiä teematiedostoja</translation>
-    </message>
-    <message>
-        <source>Save Files</source>
-        <translation type="vanished">Tallenna tiedostot</translation>
-    </message>
-    <message>
-        <source>Load Files</source>
-        <translation type="vanished">Lataa tiedostot</translation>
-    </message>
-    <message>
-        <source>Tracks Behaviors</source>
-        <extracomment>i18n-hint: i.e. the behaviors of tracks</extracomment>
-        <translation type="vanished">Raitavalinnat</translation>
-    </message>
-    <message>
-        <source>Preferences for TracksBehaviors</source>
-        <translation type="vanished">Raitavalinta-asetukset</translation>
-    </message>
-    <message>
-        <source>Ask me each time.
-Show dialog each time audio is pasted.</source>
-        <translation type="vanished">Kysy joka kerta.
-Näytä valintaikkuna aina, kun ääni liitetään.</translation>
-    </message>
-    <message>
-        <source>&amp;Select all audio, if selection required</source>
-        <translation type="vanished">Valit&amp;se kaikki ääni, jos valintaa vaaditaan</translation>
-    </message>
-    <message>
-        <source>Enable cut &amp;lines</source>
-        <extracomment>i18n-hint: Cut-lines are lines that can expand to show the cut audio.</extracomment>
-        <translation type="vanished">Ota käyttöön &amp;leikeviivat</translation>
-    </message>
-    <message>
-        <source>Editing a clip can &amp;move other clips</source>
-        <translation type="vanished">&amp;Muut leikkeet voivat siirtyä, jos leikettä muokataan</translation>
-    </message>
-    <message>
-        <source>&amp;Always paste audio as new clips</source>
-        <translation type="vanished">Liitä ääni &amp;aina uusina leikkeinä</translation>
-    </message>
-    <message>
-        <source>"Move track focus" c&amp;ycles repeatedly through tracks</source>
-        <translation type="vanished">Raitakohdistuksen siirtäminen toimii s&amp;yklisesti</translation>
-    </message>
-    <message>
-        <source>&amp;Type to create a label</source>
-        <translation type="vanished">Luo merkki kirjoi&amp;ttamalla</translation>
-    </message>
-    <message>
-        <source>Use dialog for the &amp;name of a new label</source>
-        <translation type="vanished">Käytä valintaikkunaa uuden merkin &amp;nimeämiseen</translation>
-    </message>
-    <message>
-        <source>Solo &amp;Button:</source>
-        <translation type="vanished">&amp;Soolopainike:</translation>
-    </message>
-    <message>
-        <source>Pasted audio</source>
-        <translation type="vanished">Liitetty ääni</translation>
-    </message>
-    <message>
-        <source>Paste audio from other Audacity project as</source>
-        <translation type="vanished">Liitä ääni toisesta Audacity-projektista nimellä</translation>
-    </message>
-    <message>
-        <source>Connect dots</source>
-        <translation type="vanished">Yhdistä pisteitä</translation>
-    </message>
-    <message>
-        <source>Stem plot</source>
-        <translation type="vanished">Varsimuotoinen kuvaaja</translation>
-    </message>
-    <message>
-        <source>Preferences for Tracks</source>
-        <translation type="vanished">Raitojen asetukset</translation>
-    </message>
-    <message>
-        <source>Auto-&amp;fit track height</source>
-        <translation type="vanished">&amp;Sovita raidan korkeus automaattisesti</translation>
-    </message>
-    <message>
-        <source>Use &amp;half-wave display when collapsed</source>
-        <translation type="vanished">Näytä vain &amp;puolet kutistetun raidan verhokäyrästä</translation>
-    </message>
-    <message>
-        <source>&amp;Pinned Recording/Playback head</source>
-        <translation type="vanished">Kiinnitetty äänitys-/toisto&amp;pää</translation>
-    </message>
-    <message>
-        <source>A&amp;uto-scroll if head unpinned</source>
-        <translation type="vanished">&amp;Automaattinen vieritys, jos pää ei ole kiinnitetty</translation>
-    </message>
-    <message>
-        <source>Pinned &amp;head position</source>
-        <translation type="vanished">Kiinnitetyn &amp;pään paikka</translation>
-    </message>
-    <message>
-        <source>Default &amp;view mode:</source>
-        <translation type="vanished">Oletus&amp;näkymä:</translation>
-    </message>
-    <message>
-        <source>Default Waveform scale:</source>
-        <translation type="vanished">Aaltomuodon oletusskaalaus:</translation>
-    </message>
-    <message>
-        <source>Display &amp;samples:</source>
-        <translation type="vanished">Näytteiden ulkoa&amp;su:</translation>
-    </message>
-    <message>
-        <source>Default audio track &amp;name:</source>
-        <translation type="vanished">Ääniraidan oletus&amp;nimi:</translation>
-    </message>
-    <message>
-        <source>Zoom Toggle</source>
-        <translation type="vanished">Zoomauksen vaihto</translation>
-    </message>
-    <message>
-        <source>Preset 1:</source>
-        <translation type="vanished">Esiasetus 1:</translation>
-    </message>
-    <message>
-        <source>Preset 2:</source>
-        <translation type="vanished">Esiasetus 2:</translation>
-    </message>
-    <message>
-        <source>Waveforms</source>
-        <extracomment>i18n-hint: A waveform is a visual representation of vibration</extracomment>
-        <translation type="vanished">Aaltomuodot</translation>
-    </message>
-    <message>
-        <source>Preferences for Waveforms</source>
-        <translation type="vanished">Aaltomuotoasetukset</translation>
-    </message>
-    <message>
-        <source>Waveform dB &amp;range:</source>
-        <translation type="vanished">Aaltomuodon dB-&amp;alue:</translation>
-    </message>
-    <message>
-        <source>Audio Setup</source>
-        <extracomment>i18n-hint: Audio setup button text, keep as short as possible</extracomment>
-        <translation type="vanished">Ääniasetukset</translation>
-    </message>
-    <message>
-        <source>&amp;Host</source>
-        <extracomment>i18n-hint: Audio setup menu</extracomment>
-        <translation type="vanished">&amp;Isäntä</translation>
-    </message>
-    <message>
-        <source>&amp;Playback Device</source>
-        <translation type="vanished">&amp;Toistolaite</translation>
-    </message>
-    <message>
-        <source>&amp;Recording Device</source>
-        <translation type="vanished">&amp;Äänityslaite</translation>
-    </message>
-    <message>
-        <source>Recording &amp;Channels</source>
-        <translation type="vanished">Äänitys&amp;kanavat</translation>
-    </message>
-    <message>
-        <source>&amp;Audio Settings...</source>
-        <translation type="vanished">&amp;Ääniasetukset...</translation>
-    </message>
-    <message>
-        <source>1 (Mono) Recording Channel</source>
-        <translation type="vanished">1 äänityskanava (mono)</translation>
-    </message>
-    <message>
-        <source>2 (Stereo) Recording Channels</source>
-        <translation type="vanished">2 äänityskanavaa (stereo)</translation>
-    </message>
-    <message>
-        <source>&amp;Audio Setup Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-that manages the audio devices</extracomment>
-        <translation type="vanished">Ä&amp;äniasetukset työkalupalkki</translation>
-    </message>
-    <message>
-        <source>Stopped</source>
-        <extracomment>i18n-hint: These are strings for the status bar, and indicate whether Audacity
-is playing or recording or stopped, and whether it is paused;
-progressive verb form</extracomment>
-        <translation type="vanished">Pysäytetty</translation>
-    </message>
-    <message>
-        <source>Transport</source>
-        <translation type="vanished">Siirto</translation>
-    </message>
-    <message>
-        <source>Skip to Start</source>
-        <translation type="vanished">Hyppää alkuun</translation>
-    </message>
-    <message>
-        <source>Skip to End</source>
-        <translation type="vanished">Hyppää loppuun</translation>
-    </message>
-    <message>
-        <source>Play Once</source>
-        <translation type="vanished">Toista kerran</translation>
-    </message>
-    <message>
-        <source>Record New Track</source>
-        <translation type="vanished">Äänitä uusi raita</translation>
-    </message>
-    <message>
-        <source>Append Record</source>
-        <translation type="vanished">Äänitä loppuun</translation>
-    </message>
-    <message>
-        <source>Select to End</source>
-        <translation type="vanished">Valitse loppuun</translation>
-    </message>
-    <message>
-        <source>Select to Start</source>
-        <translation type="vanished">Valitse alkuun</translation>
-    </message>
-    <message>
-        <source>%s Paused.</source>
-        <extracomment>i18n-hint: These are strings for the status bar, and indicate whether Audacity
-is playing or recording or stopped, and whether it is paused.</extracomment>
-        <translation type="vanished">%1 keskeytetty.</translation>
-    </message>
-    <message>
-        <source>%s.</source>
-        <translation type="vanished">%1.</translation>
-    </message>
-    <message>
-        <source>&amp;Transport Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-with the big buttons on it (play record etc)</extracomment>
-        <translation type="vanished">Siir&amp;totyökalut</translation>
-    </message>
-    <message>
-        <source>Playback Device</source>
-        <extracomment>i18n-hint: (noun) It's the device used for playback.</extracomment>
-        <translation type="vanished">Toistolaite</translation>
-    </message>
-    <message>
-        <source>Recording Device</source>
-        <extracomment>i18n-hint: (noun) It's the device used for recording.</extracomment>
-        <translation type="vanished">Äänityslaite</translation>
-    </message>
-    <message>
-        <source>Audio Host</source>
-        <translation type="vanished">Äänirajapinta</translation>
-    </message>
-    <message>
-        <source>Recording Channels</source>
-        <translation type="vanished">Äänityskanavat</translation>
-    </message>
-    <message>
-        <source>Select Recording Device</source>
-        <translation type="vanished">Valitse äänityslaite</translation>
-    </message>
-    <message>
-        <source>Select Playback Device</source>
-        <translation type="vanished">Valitse toistolaite</translation>
-    </message>
-    <message>
-        <source>Select Audio Host</source>
-        <translation type="vanished">Valitse äänirajapinta</translation>
-    </message>
-    <message>
-        <source>Select Recording Channels</source>
-        <translation type="vanished">Valitse äänityskanavat</translation>
-    </message>
-    <message>
-        <source>Device information is not available.</source>
-        <translation type="vanished">Laitteen tietoja ei ole saatavilla.</translation>
-    </message>
-    <message>
-        <source>&amp;Device Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-that manages devices</extracomment>
-        <translation type="vanished">&amp;Laitetyökalut</translation>
-    </message>
-    <message>
-        <source>De&amp;vice</source>
-        <translation type="vanished">Lai&amp;tteet</translation>
-    </message>
-    <message>
-        <source>Change &amp;Recording Device...</source>
-        <translation type="vanished">&amp;Vaihda äänityslaite...</translation>
-    </message>
-    <message>
-        <source>Change &amp;Playback Device...</source>
-        <translation type="vanished">Vaihda &amp;toistolaite...</translation>
-    </message>
-    <message>
-        <source>Change Audio &amp;Host...</source>
-        <translation type="vanished">Vaihda ääni&amp;rajapintaa...</translation>
-    </message>
-    <message>
-        <source>Change Recording Cha&amp;nnels...</source>
-        <translation type="vanished">Vaihda äänityska&amp;navia...</translation>
-    </message>
-    <message>
-        <source>Zoom In</source>
-        <translation type="vanished">Lähennä</translation>
-    </message>
-    <message>
-        <source>Zoom Out</source>
-        <translation type="vanished">Loitonna</translation>
-    </message>
-    <message>
-        <source>Fit selection to width</source>
-        <translation type="vanished">Sovita valinta ruudun levyiseksi</translation>
-    </message>
-    <message>
-        <source>Fit project to width</source>
-        <translation type="vanished">Sovita projekti ruudun levyiseksi</translation>
-    </message>
-    <message>
-        <source>Trim audio outside selection</source>
-        <translation type="vanished">Rajaa valinnan ulkopuolinen ääni pois</translation>
-    </message>
-    <message>
-        <source>Silence audio selection</source>
-        <translation type="vanished">Hiljennä valittu ääni</translation>
-    </message>
-    <message>
-        <source>Sync-Lock Tracks</source>
-        <translation type="vanished">Synkrolukitse raitoja</translation>
-    </message>
-    <message>
-        <source>&amp;Edit Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar for editing</extracomment>
-        <translation type="vanished">&amp;Muokkaustyökalut</translation>
-    </message>
-    <message>
-        <source> Monitoring </source>
-        <translation type="vanished"> Tarkkailu </translation>
-    </message>
-    <message>
-        <source> Active </source>
-        <translation type="vanished"> Aktiivinen </translation>
-    </message>
-    <message>
-        <source> Peak %2.f dB</source>
-        <translation type="vanished"> Huippu: %2.f dB</translation>
-    </message>
-    <message>
-        <source> Peak %.2f </source>
-        <translation type="vanished"> Huippu: %1 </translation>
-    </message>
-    <message>
-        <source> Clipped </source>
-        <translation type="vanished"> Leikkattu </translation>
-    </message>
-    <message>
-        <source>Record Meter</source>
-        <translation type="vanished">Äänitystasomittari</translation>
-    </message>
-    <message>
-        <source>Recording Level</source>
-        <extracomment>i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.</extracomment>
-        <translation type="vanished">Äänitystaso</translation>
-    </message>
-    <message>
-        <source>Meter-Record</source>
-        <extracomment>i18n-hint: (noun) The meter that shows the loudness of the audio being recorded.
-This is the name used in screen reader software, where having 'Meter' first
-apparently is helpful to partially sighted people.</extracomment>
-        <translation type="vanished">Äänitysmittari</translation>
-    </message>
-    <message>
-        <source>Playback Meter</source>
-        <translation type="vanished">Toiston tasomittari</translation>
-    </message>
-    <message>
-        <source>Playback Level</source>
-        <extracomment>i18n-hint: (noun) The meter that shows the loudness of the audio playing.</extracomment>
-        <translation type="vanished">Toistotaso</translation>
-    </message>
-    <message>
-        <source>Meter-Play</source>
-        <extracomment>i18n-hint: (noun) The meter that shows the loudness of the audio playing.
-This is the name used in screen reader software, where having 'Meter' first
-apparently is helpful to partially sighted people.</extracomment>
-        <translation type="vanished">Toistomittari</translation>
-    </message>
-    <message>
-        <source>Recording Meter</source>
-        <translation type="vanished">Äänityksen tasomittari</translation>
-    </message>
-    <message>
-        <source>Combined Meter</source>
-        <translation type="vanished">Yhdistetty mittari</translation>
-    </message>
-    <message>
-        <source>&amp;Recording Meter Toolbar</source>
-        <translation type="vanished">Äänityksen &amp;mittaripalkki</translation>
-    </message>
-    <message>
-        <source>&amp;Playback Meter Toolbar</source>
-        <translation type="vanished">&amp;Toiston mittaripalkki</translation>
-    </message>
-    <message>
-        <source>Mi&amp;xer</source>
-        <translation type="vanished">Mi&amp;kseri</translation>
-    </message>
-    <message>
-        <source>Ad&amp;just Playback Volume...</source>
-        <translation type="vanished">Sää&amp;dä toiston voimakkuutta...</translation>
-    </message>
-    <message>
-        <source>&amp;Increase Playback Volume</source>
-        <translation type="vanished">&amp;Nosta toiston äänenvoimakkuutta</translation>
-    </message>
-    <message>
-        <source>&amp;Decrease Playback Volume</source>
-        <translation type="vanished">&amp;Laske toiston äänenvoimakkuutta</translation>
-    </message>
-    <message>
-        <source>Adj&amp;ust Recording Volume...</source>
-        <translation type="vanished">Sää&amp;dä äänitysvoimakkuutta...</translation>
-    </message>
-    <message>
-        <source>I&amp;ncrease Recording Volume</source>
-        <translation type="vanished">Nosta ää&amp;nitysvoimakkuutta</translation>
-    </message>
-    <message>
-        <source>D&amp;ecrease Recording Volume</source>
-        <translation type="vanished">L&amp;aske äänitysvoimakkuutta</translation>
-    </message>
-    <message>
-        <source>Length</source>
-        <extracomment>i18n-hint noun</extracomment>
-        <translation type="vanished">Pituus</translation>
-    </message>
-    <message>
-        <source>Center</source>
-        <extracomment>i18n-hint noun</extracomment>
-        <translation type="vanished">Keskellä</translation>
-    </message>
-    <message>
-        <source>Selection Toolbar Setup</source>
-        <translation type="vanished">Valintatyökalujen asetukset</translation>
-    </message>
-    <message>
-        <source>Start and End of Selection</source>
-        <translation type="vanished">Valinnan alku ja loppu</translation>
-    </message>
-    <message>
-        <source>Start and Length of Selection</source>
-        <translation type="vanished">Valinnan alku ja pituus</translation>
-    </message>
-    <message>
-        <source>Length and End of Selection</source>
-        <translation type="vanished">Valinnan pituus ja loppu</translation>
-    </message>
-    <message>
-        <source>Length and Center of Selection</source>
-        <translation type="vanished">Valinnan pituus ja keskikohta</translation>
-    </message>
-    <message>
-        <source>&amp;Selection Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-for selecting a time range of audio</extracomment>
-        <translation type="vanished">&amp;Valintatyökalut</translation>
-    </message>
-    <message>
-        <source>Snap to combo box</source>
-        <extracomment>i18n-hint: combo box is the type of the control/widget</extracomment>
-        <translation type="vanished">Kiinnitä pudotusvalikkoon</translation>
-    </message>
-    <message>
-        <source>&amp;Snapping Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-for selecting a time range of audio</extracomment>
-        <translation type="vanished">&amp;Nappaustyökalut</translation>
-    </message>
-    <message>
-        <source>Spectral Selection</source>
-        <translation type="vanished">Spektrivalinta</translation>
-    </message>
-    <message>
-        <source>Center frequency and Width</source>
-        <translation type="vanished">Keskitaajuus ja -leveys</translation>
-    </message>
-    <message>
-        <source>Low and High Frequencies</source>
-        <translation type="vanished">Matalat ja korkeat taajuudet</translation>
-    </message>
-    <message>
-        <source>Show</source>
-        <translation type="vanished">Näytä</translation>
-    </message>
-    <message>
-        <source>Center Frequency</source>
-        <translation type="vanished">Keskitaajuus</translation>
-    </message>
-    <message>
-        <source>Bandwidth</source>
-        <translation type="vanished">Kaistanleveys</translation>
-    </message>
-    <message>
-        <source>Spe&amp;ctral Selection Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-for selecting a frequency range of audio</extracomment>
-        <translation type="vanished">&amp;Spektrivalintapalkki</translation>
-    </message>
-    <message>
-        <source>Time Signature</source>
-        <translation type="vanished">Tahtiosoitus</translation>
-    </message>
-    <message>
-        <source>Upper Time Signature</source>
-        <translation type="vanished">Ylempi tahtiosoitus</translation>
-    </message>
-    <message>
-        <source>Lower Time Signature</source>
-        <translation type="vanished">Alempi tahtiosoitus</translation>
-    </message>
-    <message>
-        <source>Tempo Changed</source>
-        <translation type="vanished">Tempo muuttunut</translation>
-    </message>
-    <message>
-        <source>Upper Time Signature Changed</source>
-        <translation type="vanished">Ylempi tahtiosoitus muuttunut</translation>
-    </message>
-    <message>
-        <source>Lower Time Signature Changed</source>
-        <translation type="vanished">Alempi tahtiosoitus muuttunut</translation>
-    </message>
-    <message>
-        <source>Time Signature Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-for selecting a time range of audio</extracomment>
-        <translation type="vanished">Tahtilajin työkalut</translation>
-    </message>
-    <message>
-        <source>Time</source>
-        <translation type="vanished">Aika</translation>
-    </message>
-    <message>
-        <source>Audio Position</source>
-        <translation type="vanished">Äänen sijainti</translation>
-    </message>
-    <message>
-        <source>&amp;Time Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows the toolbar
-for viewing actual time of the cursor</extracomment>
-        <translation type="vanished">Aika&amp;työkalut</translation>
-    </message>
-    <message>
-        <source>Audacity %s Toolbar</source>
-        <extracomment>i18n-hint: %s will be replaced by the name of the kind of toolbar.</extracomment>
-        <translation type="vanished">Audacityn %1-palkki</translation>
-    </message>
-    <message>
-        <source>Click and drag to resize toolbar</source>
-        <translation type="vanished">Klikkaus ja veto muokkaa palkin kokoa</translation>
-    </message>
-    <message>
-        <source>ToolDock</source>
-        <translation type="vanished">Työkalutelakka</translation>
-    </message>
-    <message>
-        <source>Selection Tool</source>
-        <translation type="vanished">Valintatyökalu</translation>
-    </message>
-    <message>
-        <source>Envelope Tool</source>
-        <translation type="vanished">Verhokäyrätyökalu</translation>
-    </message>
-    <message>
-        <source>Draw Tool</source>
-        <translation type="vanished">Piirtotyökalu</translation>
-    </message>
-    <message>
-        <source>Multi-Tool</source>
-        <translation type="vanished">Monitoimityökalu</translation>
-    </message>
-    <message>
-        <source>T&amp;ools Toolbar</source>
-        <extracomment>i18n-hint: Clicking this menu item shows a toolbar
-that has some tools in it</extracomment>
-        <translation type="vanished">T&amp;yökalupalkki</translation>
-    </message>
-    <message>
-        <source>&amp;Selection Tool</source>
-        <translation type="vanished">&amp;Valintatyökalu</translation>
-    </message>
-    <message>
-        <source>&amp;Envelope Tool</source>
-        <translation type="vanished">V&amp;erhokäyrätyökalu</translation>
-    </message>
-    <message>
-        <source>&amp;Draw Tool</source>
-        <translation type="vanished">&amp;Piirtotyökalu</translation>
-    </message>
-    <message>
-        <source>&amp;Multi Tool</source>
-        <translation type="vanished">&amp;Monitoimityökalu</translation>
-    </message>
-    <message>
-        <source>&amp;Previous Tool</source>
-        <translation type="vanished">&amp;Edellinen työkalu</translation>
-    </message>
-    <message>
-        <source>&amp;Next Tool</source>
-        <translation type="vanished">&amp;Seuraava työkalu</translation>
-    </message>
-    <message>
-        <source>Play-at-Speed</source>
-        <translation type="vanished">Toista nopeudella</translation>
-    </message>
-    <message>
-        <source>Play at selected speed</source>
-        <translation type="vanished">Toista valitulla nopeudella</translation>
-    </message>
-    <message>
-        <source>Playback Speed</source>
-        <translation type="vanished">Toistonopeus</translation>
-    </message>
-    <message>
-        <source>Play-at-Speed Once</source>
-        <translation type="vanished">Toista kerran nopeudella</translation>
-    </message>
-    <message>
-        <source>Pla&amp;y-at-Speed Toolbar</source>
-        <translation type="vanished">Toista nopeudella -palkki</translation>
-    </message>
-    <message>
-        <source>&amp;Play-at-Speed</source>
-        <extracomment>i18n-hint: 'Normal Play-at-Speed' doesn't loop or cut preview.</extracomment>
-        <translation type="vanished">Toista n&amp;opeudella</translation>
-    </message>
-    <message>
-        <source>Play-at-Speed &amp;Once</source>
-        <translation type="vanished">Toista &amp;kerran nopeudella</translation>
-    </message>
-    <message>
-        <source>Play C&amp;ut Preview-at-Speed</source>
-        <translation type="vanished">Leikka&amp;uksen esikuuntelu nopeudella</translation>
-    </message>
-    <message>
-        <source>Ad&amp;just Playback Speed...</source>
-        <translation type="vanished">Sää&amp;dä toistonopeutta...</translation>
-    </message>
-    <message>
-        <source>&amp;Increase Playback Speed</source>
-        <translation type="vanished">&amp;Nosta toistonopeutta</translation>
-    </message>
-    <message>
-        <source>&amp;Decrease Playback Speed</source>
-        <translation type="vanished">&amp;Laske toistonopeutta</translation>
-    </message>
-    <message>
-        <source>Drag label. Hold shift and drag to move all labels on the same track.</source>
-        <translation type="vanished">Vedä merkkiä. Pidä vaihtonäppäintä painettuna ja vedä siirtääksesi kaikki tunnisteet samalla raidalla.</translation>
-    </message>
-    <message>
-        <source>Drag one or more label boundaries.</source>
-        <translation type="vanished">Vedä yhtä tai useampaa merkin rajaa.</translation>
-    </message>
-    <message>
-        <source>Drag label boundary.</source>
-        <translation type="vanished">Vedä merkin rajaa.</translation>
-    </message>
-    <message>
-        <source>Modified Label</source>
-        <translation type="vanished">Muokattu merkki</translation>
-    </message>
-    <message>
-        <source>Label Edit</source>
-        <translation type="vanished">Merkin muokkaus</translation>
-    </message>
-    <message>
-        <source>Click to edit label text</source>
-        <translation type="vanished">Muokkaa merkin tekstiä klikkaamalla</translation>
-    </message>
-    <message>
-        <source>&amp;Font...</source>
-        <translation type="vanished">&amp;Fontti...</translation>
-    </message>
-    <message>
-        <source>Label Track Font</source>
-        <extracomment>i18n-hint: (noun) This is the font for the label track.</extracomment>
-        <translation type="vanished">Merkkiraidan fontti</translation>
-    </message>
-    <message>
-        <source>Face name</source>
-        <extracomment>i18n-hint: (noun) The name of the typeface</extracomment>
-        <translation type="vanished">Nimi</translation>
-    </message>
-    <message>
-        <source>Face size</source>
-        <extracomment>i18n-hint: (noun) The size of the typeface</extracomment>
-        <translation type="vanished">Koko</translation>
-    </message>
-    <message>
-        <source>Cu&amp;t Label text</source>
-        <translation type="vanished">Leikkaa merkin &amp;teksti</translation>
-    </message>
-    <message>
-        <source>&amp;Copy Label text</source>
-        <translation type="vanished">&amp;Kopioi merkin teksti</translation>
-    </message>
-    <message>
-        <source>&amp;Delete Label</source>
-        <translation type="vanished">&amp;Poista merkki</translation>
-    </message>
-    <message>
-        <source>&amp;Edit Label...</source>
-        <translation type="vanished">Muokkaa m&amp;erkkiä...</translation>
-    </message>
-    <message>
-        <source>Deleted Label</source>
-        <translation type="vanished">Poistettiin merkki</translation>
-    </message>
-    <message>
-        <source>Edited labels</source>
-        <translation type="vanished">Muokattiin merkkejä</translation>
-    </message>
-    <message>
-        <source>New label</source>
-        <translation type="vanished">Uusi merkki</translation>
-    </message>
-    <message>
-        <source>Up &amp;Octave</source>
-        <translation type="vanished">Oktaavi &amp;ylös</translation>
-    </message>
-    <message>
-        <source>Down Octa&amp;ve</source>
-        <translation type="vanished">Oktaa&amp;vi alas</translation>
-    </message>
-    <message>
-        <source>MIDI Device Info</source>
-        <translation type="vanished">MIDI-laitteen tiedot</translation>
-    </message>
-    <message>
-        <source>&amp;MIDI Device Info...</source>
-        <translation type="vanished">&amp;MIDI-laitteen tiedot...</translation>
-    </message>
-    <message>
-        <source>Click to vertically zoom in. Shift-click to zoom out. Drag to specify a zoom region.</source>
-        <translation type="vanished">Klikkaus lähentää pystysuunnassa. Vaihto + klikkaus loitontaa. Vetäminen määrittää zoomausalueen.</translation>
-    </message>
-    <message>
-        <source>Zoom Reset</source>
-        <translation type="vanished">Zoomin nollaus</translation>
-    </message>
-    <message>
-        <source>Shift-Right-Click</source>
-        <translation type="vanished">Vaihto + oikea klikkaus</translation>
-    </message>
-    <message>
-        <source>Left-Click/Left-Drag</source>
-        <translation type="vanished">Vasen klikkaus tai veto</translation>
-    </message>
-    <message>
-        <source>Shift-Left-Click</source>
-        <translation type="vanished">Vaihto + vasen klikkaus</translation>
-    </message>
-    <message>
-        <source>Click and drag to stretch selected region.</source>
-        <translation type="vanished">Klikkaus ja veto venyttää valittua aluetta.</translation>
-    </message>
-    <message>
-        <source>Stretch Note Track</source>
-        <extracomment>i18n-hint: (noun) The track that is used for MIDI notes which can be
-dragged to change their duration.</extracomment>
-        <translation type="vanished">Venytä nuottiraitaa</translation>
-    </message>
-    <message>
-        <source>Stretch</source>
-        <extracomment>i18n-hint: In the history list, indicates a MIDI note has
-been dragged to change its duration (stretch it). Using either past
-or present tense is fine here.  If unsure, go for whichever is
-shorter.</extracomment>
-        <translation type="vanished">Venytys</translation>
-    </message>
-    <message>
-        <source>Click to open clip context menu.</source>
-        <translation type="vanished">Avaa leikkeen kontekstivalikko klikkaamalla.</translation>
-    </message>
-    <message>
-        <source>Reset Clip Pitch</source>
-        <translation type="vanished">Nollaan leikkeen sävelkorkeus</translation>
-    </message>
-    <message>
-        <source>Not enough space</source>
-        <translation type="vanished">Tilaa ei ole tarpeeksi</translation>
-    </message>
-    <message>
-        <source>There is not enough space to expand the clip to its original speed.</source>
-        <translation type="vanished">Tila ei riitä leikkeen laajentamiseen alkuperäiseen nopeuteen.</translation>
-    </message>
-    <message>
-        <source>Reset Clip Speed</source>
-        <translation type="vanished">Palauta leikenopeus</translation>
-    </message>
-    <message>
-        <source>Click to reset clip pitch.</source>
-        <translation type="vanished">Nollaa leikkeen sävelkorkeus klikkaamalla.</translation>
-    </message>
-    <message>
-        <source>Click to change clip pitch, Cmd + click to reset.</source>
-        <translation type="vanished">Muutta leikkeen sävelkorkeutta, Cmd + klikkaus nollaa.</translation>
-    </message>
-    <message>
-        <source>Click to change clip pitch, Ctrl + click to reset.</source>
-        <translation type="vanished">Muutta leikkeen sävelkorkeutta, Ctrl + klikkaus nollaa.</translation>
-    </message>
-    <message>
-        <source>Click to reset clip speed.</source>
-        <translation type="vanished">Nollaa leikenopeus klikkaamalla.</translation>
-    </message>
-    <message>
-        <source>Click to change clip speed, Cmd + click to reset.</source>
-        <translation type="vanished">Muuta leikenopeutta, Cmd + klikkaus nollaa.</translation>
-    </message>
-    <message>
-        <source>Click to change clip speed, Ctrl + click to reset.</source>
-        <translation type="vanished">Muuta leikenopeutta, Ctrl + klikkaus nollaa.</translation>
-    </message>
-    <message>
-        <source>Left-Click to expand, Right-Click to remove</source>
-        <translation type="vanished">Vasen klikkaus laajentaa, oikea klikkaus poistaa</translation>
-    </message>
-    <message>
-        <source>Expanded Cut Line</source>
-        <translation type="vanished">Laajennettiin leikeviiva</translation>
-    </message>
-    <message>
-        <source>Expand</source>
-        <translation type="vanished">Laajenna</translation>
-    </message>
-    <message>
-        <source>Removed Cut Line</source>
-        <translation type="vanished">Poistettiin leikeviiva</translation>
-    </message>
-    <message>
-        <source>Pitch and Speed</source>
-        <translation type="vanished">Sävelkorkeus ja Nopeus</translation>
-    </message>
-    <message>
-        <source>Clip Pitch</source>
-        <translation type="vanished">Leikkeen sävelkorkeus</translation>
-    </message>
-    <message>
-        <source>se&amp;mitones:</source>
-        <translation type="vanished">&amp;puolisävelet:</translation>
-    </message>
-    <message>
-        <source>&amp;cents:</source>
-        <translation type="vanished">&amp;senttiä:</translation>
-    </message>
-    <message>
-        <source>Clip Speed</source>
-        <translation type="vanished">Leikkeen nopeus</translation>
-    </message>
-    <message>
-        <source>&amp;speed %: </source>
-        <translation type="vanished">&amp;nopeus %: </translation>
-    </message>
-    <message>
-        <source>&amp;Optimize for Voice</source>
-        <translation type="vanished">&amp;Optimoi äänelle</translation>
-    </message>
-    <message>
-        <source>Changed Speed</source>
-        <translation type="vanished">Vaihtunut nopeus</translation>
-    </message>
-    <message>
-        <source>Changed Pitch</source>
-        <translation type="vanished">Vaihdettu sävelkorkeus</translation>
-    </message>
-    <message>
-        <source>Click and drag to edit the samples</source>
-        <translation type="vanished">Klikkaus ja veto muokkaa näytteitä</translation>
-    </message>
-    <message>
-        <source>To use Draw, zoom in further until you can see the individual samples.</source>
-        <translation type="vanished">Jos haluat käyttää piirtotyökalua, sinun tulee lähentää näkymää kunnes näet yksittäiset näytteet.</translation>
-    </message>
-    <message>
-        <source>Moved Samples</source>
-        <translation type="vanished">Siirrettiin näytteitä</translation>
-    </message>
-    <message>
-        <source>Sample Edit</source>
-        <translation type="vanished">Näytteen muokkaus</translation>
-    </message>
-    <message>
-        <source>Zoom to Fit</source>
-        <translation type="vanished">Zoomaa sopivaksi</translation>
-    </message>
-    <message>
-        <source>Reset Zoom</source>
-        <translation type="vanished">Palauta zoomaus</translation>
-    </message>
-    <message>
-        <source>&amp;Spectrogram</source>
-        <translation type="vanished">&amp;Spektrogrammi</translation>
-    </message>
-    <message>
-        <source>To change Spectrogram Settings, stop any
- playing or recording first.</source>
-        <translation type="vanished">Jos haluat muuttaa spektrogrammiasetuksia, 
-lopeta ensin toisto tai tallennus.</translation>
-    </message>
-    <message>
-        <source>Stop the Audio First</source>
-        <translation type="vanished">Pysäytä ääni ensin</translation>
-    </message>
-    <message>
-        <source>S&amp;pectrogram Settings...</source>
-        <translation type="vanished">S&amp;pektrogrammin asetukset...</translation>
-    </message>
-    <message>
-        <source>S&amp;pectral</source>
-        <translation type="vanished">S&amp;pektri</translation>
-    </message>
-    <message>
-        <source>To&amp;ggle Spectral Selection</source>
-        <translation type="vanished">Vai&amp;hda spektrivalinnan tilaa</translation>
-    </message>
-    <message>
-        <source>Next &amp;Higher Peak Frequency</source>
-        <translation type="vanished">Seuraava &amp;korkeampi huipputaajuus</translation>
-    </message>
-    <message>
-        <source>Next &amp;Lower Peak Frequency</source>
-        <translation type="vanished">Seuraava mata&amp;lampi huipputaajuus</translation>
-    </message>
-    <message>
-        <source>Drag to specify a zoom region. Right-click for menu. Ctrl+scroll to zoom.</source>
-        <translation type="vanished">Määritä zoomausalue vetämällä. Avaa valikko hiiren oikealla. Zoomaa Ctrl+rulla.</translation>
-    </message>
-    <message>
-        <source>Right-click for menu. Ctrl+scroll to zoom.</source>
-        <translation type="vanished">Avaa valikko hiiren oikealla. Zoomaa Ctrl+rulla.</translation>
-    </message>
-    <message>
-        <source>Click and drag to adjust sizes of sub-views, double-click to split evenly</source>
-        <translation type="vanished">Säädä alinäkymien kokoa klikkaamalla ja vetämällä, jaa ne tasaisesti kaksoisklikkaamalla</translation>
-    </message>
-    <message>
-        <source>Click and drag to rearrange sub-views</source>
-        <translation type="vanished">Järjestä alinäkymät uudelleen klikkaamalla ja vetämällä</translation>
-    </message>
-    <message>
-        <source>Rearrange sub-views</source>
-        <translation type="vanished">Järjestä alinäkymät uudelleen</translation>
-    </message>
-    <message>
-        <source>Close sub-view</source>
-        <translation type="vanished">Sulje alinäkymä</translation>
-    </message>
-    <message>
-        <source>Mute/Unmute Track</source>
-        <translation type="vanished">Mykistä/poista raidan mykistys</translation>
-    </message>
-    <message numerus="yes">
-        <source>%s, %d of %d clip</source>
-        <oldsource>%s, %d of %d clips</oldsource>
-        <extracomment>i18n-hint:
-string is the name of a clip
-first number is the position of that clip in a sequence of clips,
-second number counts the clips</extracomment>
-        <translation type="vanished">
-            <numerusform>%1, %2 / %3 leikkeestä</numerusform>
-            <numerusform>%1, %2 / %3 leikkeestä</numerusform>
-        </translation>
-    </message>
-    <message>
-        <source>Adjust left trim by %.02f seconds</source>
-        <extracomment>i18n-hint: This is about trimming a clip, a length in seconds like "2.4 seconds" is shown</extracomment>
-        <translation type="vanished">Säädä vasenta rajausta %1 sekuntia</translation>
-    </message>
-    <message>
-        <source>Trim by %.02fs</source>
-        <extracomment>i18n-hint: This is about trimming a clip, a length in seconds like "2.4s" is shown</extracomment>
-        <translation type="vanished">Rajaa %1sekunnilla</translation>
-    </message>
-    <message>
-        <source>Adjust right trim by %.02f seconds</source>
-        <extracomment>i18n-hint: This is about trimming a clip, a length in seconds like "2.4 seconds" is shown</extracomment>
-        <translation type="vanished">Säädä oikeaa rajausta %1 sekuntia</translation>
-    </message>
-    <message>
-        <source>Click and drag to move clip boundary in time</source>
-        <translation type="vanished">Siirrä leikkeen rajaa ajassa klikkaamalla ja vetämällä</translation>
-    </message>
-    <message>
-        <source>Click and drag to stretch clip</source>
-        <translation type="vanished">Venytä leikettä klikkaamalla ja vetämällä</translation>
-    </message>
-    <message>
-        <source>Split Clip</source>
-        <translation type="vanished">Jaettu leike</translation>
-    </message>
-    <message>
-        <source>Join Clips</source>
-        <translation type="vanished">Yhdistä leikkeet</translation>
-    </message>
-    <message>
-        <source>Rename Clip...</source>
-        <translation type="vanished">Nimeä leike uudelleen...</translation>
-    </message>
-    <message>
-        <source>Pitch and Speed...</source>
-        <translation type="vanished">Sävelkorkeus ja Nopeus...</translation>
-    </message>
-    <message>
-        <source>Render Pitch and Speed</source>
-        <translation type="vanished">Renderöi sävelkorkeus ja nopeus</translation>
-    </message>
-    <message>
-        <source>Changed Clip Speed to %.01f%%</source>
-        <extracomment>i18n-hint: This is about changing the clip playback speed, speed is in
-percent</extracomment>
-        <translation type="vanished">Leikenopeudeksi muutettu %1%%</translation>
-    </message>
-    <message>
-        <source>Changed Speed to %.01f%%</source>
-        <extracomment>i18n-hint: This is about changing the clip playback speed, speed is in
-percent</extracomment>
-        <translation type="vanished">Nopeudeksi muutettu %1%%</translation>
-    </message>
-    <message>
-        <source>Set Wave Clip Name</source>
-        <translation type="vanished">Anna aaltoleikkeen nimi</translation>
-    </message>
-    <message>
-        <source>Click and drag to select text</source>
-        <translation type="vanished">Valitse teksti klikkaamalla ja vetämällä</translation>
-    </message>
-    <message>
-        <source>Modified Clip Name</source>
-        <translation type="vanished">Muokattu leikkeen nimi</translation>
-    </message>
-    <message>
-        <source>Clip Name Edit</source>
-        <translation type="vanished">Leikkeen nimen muokkaaminen</translation>
-    </message>
-    <message>
-        <source>Rendered time-stretched audio</source>
-        <translation type="vanished">Renderöity aikavenytetty ääni</translation>
-    </message>
-    <message>
-        <source>Pitch Shift</source>
-        <translation type="vanished">Sävelkorkeuden siirto</translation>
-    </message>
-    <message>
-        <source>Changed Pitch Shift</source>
-        <translation type="vanished">Muuttunut sävelkorkeuden siirto</translation>
-    </message>
-    <message>
-        <source>&amp;Rename Clip...</source>
-        <translation type="vanished">&amp;Nimeä leike uudelleen...</translation>
-    </message>
-    <message>
-        <source>&amp;Pitch and Speed...</source>
-        <translation type="vanished">&amp;Sävelkorkeus ja Nopeus...</translation>
-    </message>
-    <message>
-        <source>Render Pitch and &amp;Speed</source>
-        <translation type="vanished">Renderöi sävelkorkeus ja &amp;nopeus</translation>
-    </message>
-    <message>
-        <source>Pitch &amp;Up</source>
-        <translation type="vanished">Sävelkorkeus &amp;ylös</translation>
-    </message>
-    <message>
-        <source>Pitch &amp;Down</source>
-        <translation type="vanished">Sävelkorkeus &amp;alas</translation>
-    </message>
-    <message>
-        <source>&amp;Format</source>
-        <translation type="vanished">&amp;Muoto</translation>
-    </message>
-    <message>
-        <source>Changing sample format</source>
-        <translation type="vanished">Muutetaan näytemuotoa</translation>
-    </message>
-    <message>
-        <source>Processing...   0%%</source>
-        <translation type="vanished">Käsitellään...  0%%</translation>
-    </message>
-    <message>
-        <source>Processing...   %i%%</source>
-        <translation type="vanished">Käsitellään...  %1%%</translation>
-    </message>
-    <message>
-        <source>Changed '%s' to %s</source>
-        <extracomment>i18n-hint: The strings name a track and a format</extracomment>
-        <translation type="vanished">Muutettu '%1' -&gt; %2</translation>
-    </message>
-    <message>
-        <source>Format Change</source>
-        <translation type="vanished">Muodonmuutos</translation>
-    </message>
-    <message>
-        <source>Rat&amp;e</source>
-        <translation type="vanished">Taajuus</translation>
-    </message>
-    <message>
-        <source>8000 Hz</source>
-        <translation type="vanished">8000 Hz</translation>
-    </message>
-    <message>
-        <source>11025 Hz</source>
-        <translation type="vanished">11025 Hz</translation>
-    </message>
-    <message>
-        <source>16000 Hz</source>
-        <translation type="vanished">16000 Hz</translation>
-    </message>
-    <message>
-        <source>22050 Hz</source>
-        <translation type="vanished">22050 Hz</translation>
-    </message>
-    <message>
-        <source>44100 Hz</source>
-        <translation type="vanished">44100 Hz</translation>
-    </message>
-    <message>
-        <source>48000 Hz</source>
-        <translation type="vanished">48000 Hz</translation>
-    </message>
-    <message>
-        <source>88200 Hz</source>
-        <translation type="vanished">88200 Hz</translation>
-    </message>
-    <message>
-        <source>96000 Hz</source>
-        <translation type="vanished">96000 Hz</translation>
-    </message>
-    <message>
-        <source>176400 Hz</source>
-        <translation type="vanished">176400 Hz</translation>
-    </message>
-    <message>
-        <source>192000 Hz</source>
-        <translation type="vanished">192000 Hz</translation>
-    </message>
-    <message>
-        <source>352800 Hz</source>
-        <translation type="vanished">352800 Hz</translation>
-    </message>
-    <message>
-        <source>384000 Hz</source>
-        <translation type="vanished">384000 Hz</translation>
-    </message>
-    <message>
-        <source>&amp;Other...</source>
-        <translation type="vanished">&amp;Muut...</translation>
-    </message>
-    <message>
-        <source>Changed '%s' to %s Hz</source>
-        <extracomment>i18n-hint: The string names a track</extracomment>
-        <translation type="vanished">Muutettu '%1' -&gt; %2 Hz</translation>
-    </message>
-    <message>
-        <source>Rate Change</source>
-        <translation type="vanished">Näytetaajuuden vaihto</translation>
-    </message>
-    <message>
-        <source>Set Rate</source>
-        <translation type="vanished">Aseta näytetaajuus</translation>
-    </message>
-    <message>
-        <source>Ma&amp;ke Stereo Track</source>
-        <translation type="vanished">Tee &amp;stereoraidaksi</translation>
-    </message>
-    <message>
-        <source>Swap Stereo &amp;Channels</source>
-        <translation type="vanished">Vaihda stereo&amp;kanavat</translation>
-    </message>
-    <message>
-        <source>Spl&amp;it Stereo Track</source>
-        <translation type="vanished">Erota stereora&amp;ita</translation>
-    </message>
-    <message>
-        <source>Split Stereo to Mo&amp;no</source>
-        <translation type="vanished">Erota stereo mo&amp;noksi</translation>
-    </message>
-    <message>
-        <source>The tracks you are attempting to merge to stereo contain clips at
-different positions, or otherwise mismatching clips. Merging them
-will render the tracks.
-
-This causes any realtime effects to be applied to the waveform and
-hidden data to be removed. Additionally, the entire track will
-become one large clip.
-
-Do you wish to continue?</source>
-        <translation type="vanished">Raidat, joita yrität yhdistää stereoihin, sisältävät leikkeitä eri
-paikoissa tai muuten yhteensopimattomia leikkeitä. Niiden yhdistäminen tuottaa jäljet.
-Tämä saa aikaan reaaliaikaisten tehosteiden soveltamisen aaltomuotoon ja
-piilotetun tiedon poistamisen. Lisäksi koko kappaleesta tulee yksi suuri leike.
-
-Haluatko jatkaa?</translation>
-    </message>
-    <message>
-        <source>Combine mono to stereo</source>
-        <translation type="vanished">Yhdistä mono ja stereoon</translation>
-    </message>
-    <message>
-        <source>Made '%s' a stereo track</source>
-        <extracomment>i18n-hint: The string names a track</extracomment>
-        <translation type="vanished">Tehtiin raidasta '%1' stereoraita</translation>
-    </message>
-    <message>
-        <source>Make Stereo</source>
-        <translation type="vanished">Tee stereoksi</translation>
-    </message>
-    <message>
-        <source>Swapped Channels in '%s'</source>
-        <extracomment>i18n-hint: The string names a track</extracomment>
-        <translation type="vanished">Vaihdettiin raidan '%1' stereokanavat</translation>
-    </message>
-    <message>
-        <source>Swap Channels</source>
-        <translation type="vanished">Vaihda kanavat</translation>
-    </message>
-    <message>
-        <source>Split stereo track '%s'</source>
-        <extracomment>i18n-hint: The string names a track</extracomment>
-        <translation type="vanished">Erotettiin stereoraita '%1'</translation>
-    </message>
-    <message>
-        <source>Split Stereo to Mono '%s'</source>
-        <extracomment>i18n-hint: The string names a track</extracomment>
-        <translation type="vanished">Erotettiin stereoraita '%1' monoksi</translation>
-    </message>
-    <message>
-        <source>Split to Mono</source>
-        <translation type="vanished">Erota monoksi</translation>
-    </message>
-    <message>
-        <source>Created new audio track</source>
-        <translation type="vanished">Luotiin uusi ääniraita</translation>
-    </message>
-    <message>
-        <source>Created new stereo audio track</source>
-        <translation type="vanished">Luotiin uusi stereoääniraita</translation>
-    </message>
-    <message>
-        <source>&amp;Mono Track</source>
-        <translation type="vanished">&amp;Monoraita</translation>
-    </message>
-    <message>
-        <source>&amp;Stereo Track</source>
-        <translation type="vanished">&amp;Stereoraita</translation>
-    </message>
-    <message>
-        <source>%+.1f dB</source>
-        <extracomment>i18n-hint dB abbreviates decibels</extracomment>
-        <translation type="vanished">%1 dB</translation>
-    </message>
-    <message>
-        <source>%.0f%% Left</source>
-        <extracomment>i18n-hint: Stereo pan setting</extracomment>
-        <translation type="vanished">%1%% vasen</translation>
-    </message>
-    <message>
-        <source>%.0f%% Right</source>
-        <extracomment>i18n-hint: Stereo pan setting</extracomment>
-        <translation type="vanished">%1%% oikea</translation>
-    </message>
-    <message>
-        <source>Half Wave</source>
-        <translation type="vanished">Puoliaalto</translation>
-    </message>
-    <message>
-        <source>Wa&amp;veform</source>
-        <translation type="vanished">Aa&amp;ltomuoto</translation>
-    </message>
-    <message>
-        <source>&amp;Wave Color</source>
-        <translation type="vanished">Aallon &amp;väri</translation>
-    </message>
-    <message>
-        <source>Instrument %i</source>
-        <translation type="vanished">Soitin %1</translation>
-    </message>
-    <message>
-        <source>WaveColor Change</source>
-        <translation type="vanished">Aaltovärin muutos</translation>
-    </message>
-    <message>
-        <source>Change Speed Limits</source>
-        <translation type="vanished">Vaihtunut nopeus</translation>
-    </message>
-    <message>
-        <source>Change speed limit (%) to:</source>
-        <translation type="vanished">Muuta alempi nopeusrajoitus (%) olemaan:</translation>
-    </message>
-    <message>
-        <source>Lower Speed Limit</source>
-        <translation type="vanished">Alempi nopeusrajoitus</translation>
-    </message>
-    <message>
-        <source>Upper Speed Limit</source>
-        <translation type="vanished">Ylempi nopeusrajoitus</translation>
-    </message>
-    <message>
-        <source>Upper Speed Limit must be greater than the Lower Speed Limit</source>
-        <translation type="vanished"/>
-    </message>
-    <message>
-        <source>Invalid Limits</source>
-        <translation type="vanished">Kova rajoitus</translation>
-    </message>
-    <message>
-        <source>Set range to '%ld' - '%ld'</source>
-        <translation type="vanished">Aseta alue välille '%1' - '%2'</translation>
-    </message>
-    <message>
-        <source>Set Range</source>
-        <extracomment>i18n-hint: (verb)</extracomment>
-        <translation type="vanished">Aseta alue</translation>
-    </message>
-    <message>
-        <source>Set time track display to linear</source>
-        <translation type="vanished">Aseta aikaraidan näyttö lineaariseksi</translation>
-    </message>
-    <message>
-        <source>Set Display</source>
-        <translation type="vanished">Aseta näyttö</translation>
-    </message>
-    <message>
-        <source>Set time track display to logarithmic</source>
-        <translation type="vanished">Aseta aikaraidan näyttö logaritmiseksi</translation>
-    </message>
-    <message>
-        <source>Set time track interpolation to linear</source>
-        <translation type="vanished">Aseta aikaraidan interpolointi lineaariseksi</translation>
-    </message>
-    <message>
-        <source>Set Interpolation</source>
-        <translation type="vanished">Aseta interpolointi</translation>
-    </message>
-    <message>
-        <source>Set time track interpolation to logarithmic</source>
-        <translation type="vanished">Aseta aikaraidan interpolointi logaritmiseksi</translation>
-    </message>
-    <message>
-        <source>&amp;Linear scale</source>
-        <translation type="vanished">&amp;Lineaarinen asteikko</translation>
-    </message>
-    <message>
-        <source>L&amp;ogarithmic scale</source>
-        <translation type="vanished">L&amp;ogaritminen asteikko</translation>
-    </message>
-    <message>
-        <source>&amp;Range...</source>
-        <translation type="vanished">&amp;Alue...</translation>
-    </message>
-    <message>
-        <source>Logarithmic &amp;Interpolation</source>
-        <translation type="vanished">Logaritminen &amp;interpolointi</translation>
-    </message>
-    <message>
-        <source>Created new time track</source>
-        <translation type="vanished">Luotiin uusi aikaraita</translation>
-    </message>
-    <message>
-        <source>&amp;Time Track</source>
-        <translation type="vanished">&amp;Aikaraita</translation>
-    </message>
-    <message>
-        <source>Right-click for menu.</source>
-        <translation type="vanished">Oikea klikkaus avaa valikon.</translation>
-    </message>
-    <message>
-        <source>Drag clips to reposition them. Hold Shift and drag to move all clips on the same track.</source>
-        <extracomment>i18n-hint Appears on hovering mouse over clip affordance</extracomment>
-        <translation type="vanished">Sijoita leikkeet uudelleen vetämällä. Pidä Shift-näppäin painettuna ja siirrä kaikki leikkeet samalle raidalle vetämällä.</translation>
-    </message>
-    <message>
-        <source>Add Mono Track</source>
-        <translation type="vanished">Lisää monoraita</translation>
-    </message>
-    <message>
-        <source>Add Stereo Track</source>
-        <translation type="vanished">Lisää stereoraita</translation>
-    </message>
-    <message>
-        <source>Add Label Track</source>
-        <translation type="vanished">Lisää merkkiraita</translation>
-    </message>
-    <message>
-        <source>Export Audio...</source>
-        <translation type="vanished">Vie ääni...</translation>
-    </message>
-    <message>
-        <source>Erased selected area</source>
-        <translation type="vanished">Valittu alue poistettu</translation>
-    </message>
-    <message>
-        <source>Selected area using Brush Tool</source>
-        <translation type="vanished">Sivellintyökalulla valittu alue</translation>
-    </message>
-    <message>
-        <source>Brush tool selection</source>
-        <translation type="vanished">Sivellintyökalun valinta</translation>
-    </message>
-    <message>
-        <source>Re&amp;name Track...</source>
-        <translation type="vanished">&amp;Nimeä raita uudelleen...</translation>
-    </message>
-    <message>
-        <source>Move Track &amp;Up</source>
-        <translation type="vanished">Siirrä raitaa &amp;ylös</translation>
-    </message>
-    <message>
-        <source>Move Track &amp;Down</source>
-        <translation type="vanished">Siirrä raitaa &amp;alas</translation>
-    </message>
-    <message>
-        <source>Move Track to &amp;Top</source>
-        <translation type="vanished">Siirrä raita &amp;ylimmäksi</translation>
-    </message>
-    <message>
-        <source>Move Track to &amp;Bottom</source>
-        <translation type="vanished">Siirrä raita ali&amp;mmaksi</translation>
-    </message>
-    <message>
-        <source>Set Track Name</source>
-        <translation type="vanished">Aseta raidan nimi</translation>
-    </message>
-    <message>
-        <source>Renamed '%s' to '%s'</source>
-        <translation type="vanished">Nimetty '%1' uudelleen -&gt; '%2'</translation>
-    </message>
-    <message>
-        <source>Name Change</source>
-        <translation type="vanished">Nimen muutos</translation>
-    </message>
-    <message>
-        <source>Click and drag to warp playback time</source>
-        <translation type="vanished">Vääristä toistoaikaa klikkaamalla ja vetämällä</translation>
-    </message>
-    <message>
-        <source>Click and drag to edit the amplitude envelope</source>
-        <translation type="vanished">Muokkaa amplitudikäyrää klikkaamalla ja vetämällä</translation>
-    </message>
-    <message>
-        <source>Adjusted envelope.</source>
-        <extracomment>i18n-hint: (verb) Audacity has just adjusted the envelope .</extracomment>
-        <translation type="vanished">Muokattu verhokäyrä.</translation>
-    </message>
-    <message>
-        <source>&amp;Scrub</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips, ...</extracomment>
-        <translation type="vanished">&amp;Rullaa</translation>
-    </message>
-    <message>
-        <source>Seeking</source>
-        <translation type="vanished">Hakeminen</translation>
-    </message>
-    <message>
-        <source>Scrub &amp;Ruler</source>
-        <extracomment>i18n-hint: These commands assist the user in finding a sound by ear. ...
-"Scrubbing" is variable-speed playback, ...
-"Seeking" is normal speed playback but with skips, ...</extracomment>
-        <translation type="vanished">Haku&amp;viivain</translation>
-    </message>
-    <message>
-        <source>Playing at Speed</source>
-        <translation type="vanished">Soitetaan nopeudella</translation>
-    </message>
-    <message>
-        <source>Move mouse pointer to Seek</source>
-        <translation type="vanished">Hae siirtämällä hiiren osoitinta</translation>
-    </message>
-    <message>
-        <source>Move mouse pointer to Scrub</source>
-        <translation type="vanished">Rullaa siirtämällä hiiren osoitinta</translation>
-    </message>
-    <message>
-        <source>Scru&amp;bbing</source>
-        <translation type="vanished">&amp;Hakeminen</translation>
-    </message>
-    <message>
-        <source>Scrub Bac&amp;kwards</source>
-        <translation type="vanished">Rullaa taa&amp;ksepäin</translation>
-    </message>
-    <message>
-        <source>Scrub For&amp;wards</source>
-        <translation type="vanished">Rullaa &amp;eteenpäin</translation>
-    </message>
-    <message>
-        <source>Click and drag to move left selection boundary.</source>
-        <translation type="vanished">Klikkaus ja veto siirtää valinnan vasenta reunaa.</translation>
-    </message>
-    <message>
-        <source>Click and drag to move right selection boundary.</source>
-        <translation type="vanished">Klikkaus ja veto siirtää valinnan oikeaa reunaa.</translation>
-    </message>
-    <message>
-        <source>Click and drag to move bottom selection frequency.</source>
-        <translation type="vanished">Klikkaus ja veto siirtää valinnan alataajuutta.</translation>
-    </message>
-    <message>
-        <source>Click and drag to move top selection frequency.</source>
-        <translation type="vanished">Klikkaus ja veto siirtää valinnan ylätaajuutta.</translation>
-    </message>
-    <message>
-        <source>Click and drag to move center selection frequency to a spectral peak.</source>
-        <translation type="vanished">Klikkaus ja veto siirtää valinnan keskitaajuuden huippuun spektrissä.</translation>
-    </message>
-    <message>
-        <source>Click and drag to move center selection frequency.</source>
-        <translation type="vanished">Klikkaus ja veto siirtää valinnan kesksitaajuutta.</translation>
-    </message>
-    <message>
-        <source>Click and drag to adjust frequency bandwidth.</source>
-        <translation type="vanished">Klikkaus ja veto siirtää taajuuskaistaa.</translation>
-    </message>
-    <message>
-        <source>Edit, Preferences...</source>
-        <extracomment>i18n-hint: These are the names of a menu and a command in that menu</extracomment>
-        <translation type="vanished">Muokkaa, Asetukset...</translation>
-    </message>
-    <message>
-        <source>Multi-Tool Mode: %s for Mouse and Keyboard Preferences.</source>
-        <extracomment>i18n-hint: %s is usually replaced by "Ctrl+P" for Windows/Linux, "Command+," for Mac</extracomment>
-        <translation type="vanished">Monitoimitila: %1 hiirelle ja näppäimistöasetuksille.</translation>
-    </message>
-    <message>
-        <source>Click and drag to set frequency bandwidth.</source>
-        <translation type="vanished">Klikkaus ja veto asettaa taajuuskaistan.</translation>
-    </message>
-    <message>
-        <source>Click and drag to select audio</source>
-        <translation type="vanished">Klikkaus ja veto valitsee ääntä</translation>
-    </message>
-    <message>
-        <source>(snapping)</source>
-        <extracomment>i18n-hint: "Snapping" means automatic alignment of selection edges to any nearby label or clip boundaries</extracomment>
-        <translation type="vanished">(kiinnittyminen)</translation>
-    </message>
-    <message>
-        <source>Click and drag to move a track in time</source>
-        <translation type="vanished">Klikkaus ja veto siirtää raitaa aikajanalla</translation>
-    </message>
-    <message>
-        <source>Could not shift between tracks</source>
-        <translation type="vanished">Ei voitu siirtää raitojen välillä</translation>
-    </message>
-    <message>
-        <source>Moved clips to another track</source>
-        <translation type="vanished">Siirrettiin leikkeet toiselle raidalle</translation>
-    </message>
-    <message>
-        <source>Time shifted tracks/clips right %.02f seconds</source>
-        <translation type="vanished">Siirrettiin raitoja/leikkeitä ajassa oikealle %1 sekunnilla</translation>
-    </message>
-    <message>
-        <source>Time shifted tracks/clips left %.02f seconds</source>
-        <translation type="vanished">Siirrettiin raitoja/leikkeitä ajassa vasemmalle %1 sekunnilla</translation>
-    </message>
-    <message>
-        <source>Move Clip</source>
-        <translation type="vanished">Siirrä leike</translation>
-    </message>
-    <message>
-        <source>Collapse</source>
-        <translation type="vanished">Kutista</translation>
-    </message>
-    <message>
-        <source>Delete Track</source>
-        <translation type="vanished">Poista raita</translation>
-    </message>
-    <message>
-        <source>Open menu...</source>
-        <translation type="vanished">Avaa valikko...</translation>
-    </message>
-    <message>
-        <source>Command+Click</source>
-        <extracomment>i18n-hint: Command names a modifier key on Macintosh keyboards</extracomment>
-        <translation type="vanished">Komento + klikkaus</translation>
-    </message>
-    <message>
-        <source>Ctrl+Click</source>
-        <extracomment>i18n-hint: Ctrl names a modifier key on Windows or Linux keyboards</extracomment>
-        <translation type="vanished">Ctrl + klikkaus</translation>
-    </message>
-    <message>
-        <source>%s to select or deselect track. Drag up or down to change track order.</source>
-        <extracomment>i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac</extracomment>
-        <translation type="vanished">%1 valitsee raidan tai poistaa valinnan. Muuta raitojen järjestystä vetämällä ylös- tai alaspäin.</translation>
-    </message>
-    <message>
-        <source>%s to select or deselect track.</source>
-        <extracomment>i18n-hint: %s is replaced by (translation of) 'Ctrl+Click' on windows, 'Command+Click' on Mac</extracomment>
-        <translation type="vanished">%1 valitsee raidan tai poistaa valinnan.</translation>
-    </message>
-    <message>
-        <source>Moved '%s' up</source>
-        <extracomment>i18n-hint: will substitute name of track for %s</extracomment>
-        <translation type="vanished">Siirrettiin '%1' ylös</translation>
-    </message>
-    <message>
-        <source>Moved '%s' down</source>
-        <translation type="vanished">Siirrettiin '%1' alas</translation>
-    </message>
-    <message>
-        <source>Move Track</source>
-        <translation type="vanished">Siirrä raitaa</translation>
-    </message>
-    <message>
-        <source>Click to Zoom In, Shift-Click to Zoom Out</source>
-        <translation type="vanished">Klikkaus lähentää. Vaihto + klikkaus loitontaa</translation>
-    </message>
-    <message>
-        <source>Drag to Zoom Into Region, Right-Click to Zoom Out</source>
-        <translation type="vanished">Vetäminen lähentää alueeseen, oikea klikkaus loitontaa</translation>
-    </message>
-    <message>
-        <source>Left=Zoom In, Right=Zoom Out, Middle=Normal</source>
-        <translation type="vanished">Vasen=lähennä, oikea=loitonna, keskipainike=normaaliksi</translation>
-    </message>
-    <message>
-        <source>No Updates Available</source>
-        <extracomment>i18n-hint: Title of the dialog no updates available.</extracomment>
-        <translation type="vanished">Päivityksiä ei ole saatavilla</translation>
-    </message>
-    <message>
-        <source>Check for Updates</source>
-        <translation type="vanished">Tarkista päivitykset</translation>
-    </message>
-    <message>
-        <source>If you want to change your preference for automatic updates checking, you can find it in %s.</source>
-        <extracomment>i18n-hint: %s is replaced with 'Preferences &gt; Application'.</extracomment>
-        <translation type="vanished">Jos haluat muuttaa automaattista päivitysten tarkistusta, löydät sen kohdasta %1.</translation>
-    </message>
-    <message>
-        <source>Preferences &gt; Application</source>
-        <extracomment>i18n-hint: Hyperlink title that opens Preferences dialog on Application page and is substituted into "... you can find it in %s." string.
-i18n-hint: a page in the Preferences dialog; use same name</extracomment>
-        <translation type="vanished">Asetukset &gt; Sovellus</translation>
-    </message>
-    <message>
-        <source>Error checking for update</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">Päivitysten tarkistus epäonnistui</translation>
-    </message>
-    <message>
-        <source>Unable to connect to Audacity update server.</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">Ei voitu yhdistää Audacity-päivityspalvelimelle.</translation>
-    </message>
-    <message>
-        <source>Update data was corrupted.</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">Päivitys on vioittunut.</translation>
-    </message>
-    <message>
-        <source>Error downloading update</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">Virhe päivityksen lataamisessa</translation>
-    </message>
-    <message>
-        <source>Can't open the Audacity download link.</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">Audacityn latauslinkkiä ei voitu avata.</translation>
-    </message>
-    <message>
-        <source>Audacity update</source>
-        <translation type="vanished">Audacityn päivitys</translation>
-    </message>
-    <message>
-        <source>Downloading %s</source>
-        <translation type="vanished">Ladataan %1</translation>
-    </message>
-    <message>
-        <source>App update checking</source>
-        <extracomment>i18n-hint: Title of the app update notice dialog.</extracomment>
-        <translation type="vanished">Sovelluspäivitysten tarkistus</translation>
-    </message>
-    <message>
-        <source>To stay up to date, you will receive an in-app notification whenever there is a new version of Audacity available to download.</source>
-        <extracomment>i18n-hint: The first paragraph of app update notice dialog.</extracomment>
-        <translation type="vanished">Pysyäksesi ajan tasalla saat sovelluksen sisäisen ilmoituksen aina, kun Audacityn uusi versio on ladattavissa.</translation>
-    </message>
-    <message>
-        <source>In order to protect your privacy, Audacity does not collect any personal information. However, app update checking does require network access.</source>
-        <extracomment>i18n-hint: The second paragraph of app update notice dialog</extracomment>
-        <translation type="vanished">Yksityisyytesi suojaamiseksi Audacity ei kerää henkilötietoja. Sovelluspäivitysten tarkistaminen vaatii kuitenkin pääsyn verkkoon.</translation>
-    </message>
-    <message>
-        <source>You can turn off app update checking at any time in %s.</source>
-        <extracomment>i18n-hint: Hint to the user about how to turn the app update off. %s is replaced with "Preferences &gt; Application" link</extracomment>
-        <translation type="vanished">Voit poistaa sovellusten päivitysten tarkistuksen käytöstä milloin tahansa kohteessa %1.</translation>
-    </message>
-    <message>
-        <source>App updates</source>
-        <extracomment>i18n-hint: Title of the app update notice dialog.</extracomment>
-        <translation type="vanished">Sovelluspäivitykset</translation>
-    </message>
-    <message>
-        <source>Update Audacity</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">Päivitä Audacity</translation>
-    </message>
-    <message>
-        <source>&amp;Skip</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">&amp;Ohita</translation>
-    </message>
-    <message>
-        <source>&amp;Install update</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">&amp;Asenna päivitys</translation>
-    </message>
-    <message>
-        <source>Audacity %s is available!</source>
-        <comment>update dialog</comment>
-        <extracomment>i18n-hint Substitution of version number for %s.</extracomment>
-        <translation type="vanished">Audacity %1 on saatavilla!</translation>
-    </message>
-    <message>
-        <source>Changelog</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">Muokkausloki</translation>
-    </message>
-    <message>
-        <source>Read more on GitHub</source>
-        <comment>update dialog</comment>
-        <translation type="vanished">Lue lisää GitHubissa</translation>
-    </message>
-    <message>
-        <source>(disabled)</source>
-        <translation type="vanished">(ei käytössä)</translation>
-    </message>
-    <message>
-        <source>Press</source>
-        <translation type="vanished">Paina</translation>
-    </message>
-    <message>
-        <source>Button</source>
-        <translation type="vanished">Painike</translation>
-    </message>
-    <message>
-        <source>pressed</source>
-        <extracomment>i18n-hint: whether a button is pressed or not pressed</extracomment>
-        <translation type="vanished">painettu</translation>
-    </message>
-    <message>
-        <source>not pressed</source>
-        <translation type="vanished">ei painettu</translation>
-    </message>
-    <message>
-        <source>L</source>
-        <extracomment>i18n-hint: One-letter abbreviation for Left, in the Pan slider
-i18n-hint: One-letter abbreviation for Left, in VU Meter</extracomment>
-        <translation type="vanished">V</translation>
-    </message>
-    <message>
-        <source>R</source>
-        <extracomment>i18n-hint: One-letter abbreviation for Right, in the Pan slider
-i18n-hint: One-letter abbreviation for Right, in VU Meter</extracomment>
-        <translation type="vanished">O</translation>
-    </message>
-    <message>
-        <source>%.3fx</source>
-        <extracomment>i18n-hint: "x" suggests a multiplicative factor</extracomment>
-        <translation type="vanished">%1x</translation>
-    </message>
-    <message>
-        <source>&amp;Clear</source>
-        <translation type="vanished">&amp;Tyhjennä</translation>
-    </message>
-    <message>
-        <source>Grabber</source>
-        <extracomment>i18n-hint: A 'Grabber' is a region you can click and drag on
-It's used to drag a track around (when in multi-tool mode) rather
-than requiring that you use the drag tool.  It's shown as a series
-of horizontal bumps</extracomment>
-        <translation type="vanished">Kaappari</translation>
-    </message>
-    <message>
-        <source>Empty</source>
-        <translation type="vanished">Tyhjä</translation>
-    </message>
-    <message>
-        <source>Menu</source>
-        <translation type="vanished">Valikko</translation>
-    </message>
-    <message>
-        <source>Meter</source>
-        <extracomment>i18n-hint: Noun (the meter is used for playback or record level monitoring)</extracomment>
-        <translation type="vanished">Mittari</translation>
-    </message>
-    <message>
-        <source>Disable Silent Monitoring</source>
-        <translation type="vanished">Poista hiljainen valvonta käytöstä</translation>
-    </message>
-    <message>
-        <source>Enable Silent Monitoring</source>
-        <translation type="vanished">Ota hiljainen valvonta käyttöön</translation>
-    </message>
-    <message>
-        <source>Recording Meter Options</source>
-        <translation type="vanished">Äänitysmittarin asetukset</translation>
-    </message>
-    <message>
-        <source>Playback Meter Options</source>
-        <translation type="vanished">Toistomittarin asetukset</translation>
-    </message>
-    <message>
-        <source>Refresh Rate</source>
-        <translation type="vanished">Virkistystaajuus</translation>
-    </message>
-    <message>
-        <source>Higher refresh rates make the meter show more frequent
-changes. A rate of 30 per second or less should prevent
-the meter affecting audio quality on slower machines.</source>
-        <translation type="vanished">Korkeammat virkistystaajuudet saavat mittarin näyttämään useammin
-muutoksia. Taajuuden, joka on 30 tai vähemmän sekunnissa, pitäisi estää 
-mittarin vaikutus äänenlaatuun hitaammilla koneilla.</translation>
-    </message>
-    <message>
-        <source>Meter refresh rate per second [1-100]</source>
-        <translation type="vanished">Mittarin virkistystaajuus sekunnissa [1-100]</translation>
-    </message>
-    <message>
-        <source>Meter refresh rate per second [1-100]: </source>
-        <translation type="vanished">Mittarin virkistystaajuus sekunnissa [1-100]: </translation>
-    </message>
-    <message>
-        <source>Meter Style</source>
-        <translation type="vanished">Mittarin tyyli</translation>
-    </message>
-    <message>
-        <source>Meter Type</source>
-        <translation type="vanished">Mittarin tyyppi</translation>
-    </message>
-    <message>
-        <source>Orientation</source>
-        <translation type="vanished">Suunta</translation>
-    </message>
-    <message>
-        <source>Missing Plugins</source>
-        <translation type="vanished">Puuttuvat laajennukset</translation>
-    </message>
-    <message>
-        <source>This project contains some realtime effect plugins that cannot be found on this system.</source>
-        <translation type="vanished">Tämä projekti sisältää joitain reaaliaikaisia tehostelaajennuksia, joita ei löydy tästä järjestelmästä.</translation>
-    </message>
-    <message>
-        <source>The project may sound different than intended. %s</source>
-        <extracomment>i18n-hint: %s will be replaced with "Learn more"</extracomment>
-        <translation type="vanished">Projekti saattaa kuulostaa erilaiselta kuin on suunniteltu. %1</translation>
-    </message>
-    <message>
-        <source>Learn more</source>
-        <translation type="vanished">Lue lisää</translation>
-    </message>
-    <message>
-        <source>(Use context menu to change format.)</source>
-        <translation type="vanished">(Käytä kontekstivalikkoa muodon muuttamiseen.)</translation>
-    </message>
-    <message>
-        <source>%s (%s)</source>
-        <translation type="vanished">%1 (%2)</translation>
-    </message>
-    <message>
-        <source>Unable to write files to directory: %s.</source>
-        <extracomment>i18n-hint: %s is replaced with a directory path.</extracomment>
-        <translation type="vanished">Ei voi kirjoittaa tiedostoja hakemistoon: %1.</translation>
-    </message>
-    <message>
-        <source>Please check that the directory exists, has the necessary permissions, and the drive isn't full.</source>
-        <extracomment>i18n-hint: This message describes the error in the Error dialog.</extracomment>
-        <translation type="vanished">Tarkista, että hakemisto on olemassa, sillä on tarvittavat käyttöoikeudet ja että asema ei ole täynnä.</translation>
-    </message>
-    <message>
-        <source>You can change the directory in %s.</source>
-        <extracomment>i18n-hint: %s is replaced with 'Preferences &gt; Directories'.</extracomment>
-        <translation type="vanished">Voit vaihtaa hakemistoa kohteessa %1.</translation>
-    </message>
-    <message>
-        <source>Preferences &gt; Directories</source>
-        <extracomment>i18n-hint: Hyperlink title that opens Preferences dialog on Directories page.</extracomment>
-        <translation type="vanished">Asetukset &gt; Hakemistot</translation>
-    </message>
-    <message>
-        <source>Don't show this warning again</source>
-        <translation type="vanished">Älä näytä tätä varoitusta uudelleen</translation>
-    </message>
-    <message>
-        <source>NaN</source>
-        <translation type="vanished">NaN</translation>
-    </message>
-    <message>
-        <source>Infinity</source>
-        <translation type="vanished">Ääretön</translation>
-    </message>
-    <message>
-        <source>-Infinity</source>
-        <translation type="vanished">-Ääretön</translation>
-    </message>
-    <message>
-        <source>Validation error</source>
-        <translation type="vanished">Tarkistusvirhe</translation>
-    </message>
-    <message>
-        <source>Empty value</source>
-        <translation type="vanished">Tyhjä arvo</translation>
-    </message>
-    <message>
-        <source>Malformed number</source>
-        <translation type="vanished">Väärin muotoiltu luku</translation>
-    </message>
-    <message>
-        <source>Not in range %d to %d</source>
-        <translation type="vanished">Ei alueella %1 - %2</translation>
-    </message>
-    <message>
-        <source>Value overflow</source>
-        <translation type="vanished">Arvon ylivuoto</translation>
-    </message>
-    <message>
-        <source>Too many decimal digits</source>
-        <translation type="vanished">Liian monta desimaalia</translation>
-    </message>
-    <message>
-        <source>Value not in range: %s to %s</source>
-        <translation type="vanished">Arvo ei ole alueella: %1 - %2</translation>
-    </message>
-    <message>
-        <source>Value must not be less than %s</source>
-        <translation type="vanished">Arvo ei saa olla alle %1</translation>
-    </message>
-    <message>
-        <source>Value must not be greater than %s</source>
-        <translation type="vanished">Arvo ei saa olla yli %1</translation>
-    </message>
-    <message>
-        <source>Shelf Filter</source>
-        <translation type="vanished">Hyllysuodatin</translation>
-    </message>
-    <message>
-        <source>Spectral Edit Multi Tool</source>
-        <translation type="vanished">Spektrin muokkauksen monitoimityökalu</translation>
-    </message>
-    <message>
-        <source>~aNotch filter parameters cannot be applied.~%~
-                      Try increasing the low frequency bound~%~
-                      or reduce the filter 'Width'.</source>
-        <translation type="vanished">~aKaistanestosuodattimen parametreja ei voi käyttää.~%~
-                      Yritä kasvattaa taajuuden alarajaa~%~
-                      tai laskea suodattimen "leveyttä".</translation>
-    </message>
-    <message>
-        <source>Spectral Edit Parametric EQ</source>
-        <translation type="vanished">Spektrin parametrinen EQ muokkaus</translation>
-    </message>
-    <message>
-        <source>Spectral Edit Shelves</source>
-        <translation type="vanished">Spektrin hyllyjen muokkaus</translation>
-    </message>
-    <message>
-        <source>Studio Fade Out</source>
-        <translation type="vanished">Studiohäivytys ulos</translation>
-    </message>
-    <message>
-        <source>Adjustable Fade</source>
-        <translation type="vanished">Säädettävä häivytys</translation>
-    </message>
-    <message>
-        <source>Beat Finder</source>
-        <translation type="vanished">Tahtihaku</translation>
-    </message>
-    <message>
-        <source>Clip Fix</source>
-        <translation type="vanished">Leikkeen korjaus</translation>
-    </message>
-    <message>
-        <source>Crossfade Clips</source>
-        <translation type="vanished">Ristihäivytä leikkeet</translation>
-    </message>
-    <message>
-        <source>Crossfade Tracks</source>
-        <translation type="vanished">Ristihäivytä raitoja</translation>
-    </message>
-    <message>
-        <source>Regular Interval Labels</source>
-        <translation type="vanished">Säännölliset välimerkit</translation>
-    </message>
-    <message>
-        <source>Error: There is insufficient space to create labels.~%</source>
-        <translation type="vanished">Virhe: Tila ei riitä merkkien luomiseen.~%</translation>
-    </message>
-    <message>
-        <source>High-Pass Filter</source>
-        <translation type="vanished">Ylipäästösuodatin</translation>
-    </message>
-    <message>
-        <source>Label Sounds</source>
-        <extracomment>i18n-hint: Name of effect that labels sounds</extracomment>
-        <translation type="vanished">Merkitse äänet</translation>
-    </message>
-    <message>
-        <source>No sounds found.~%~
-                 Try lowering 'Threshold level (dB)'.</source>
-        <translation type="vanished">Ääniä ei löytynyt.~%~
-Yritä laskea 'Kynnystasoa (dB)'.</translation>
-    </message>
-    <message>
-        <source>Legacy Limiter</source>
-        <translation type="vanished">Rajoitin</translation>
-    </message>
-    <message>
-        <source>Low-Pass Filter</source>
-        <translation type="vanished">Alipäästösuodatin</translation>
-    </message>
-    <message>
-        <source>Noise Gate</source>
-        <translation type="vanished">Kohinaportti</translation>
-    </message>
-    <message>
-        <source>Don't Link Stereo</source>
-        <translation type="vanished">Älä linkitä stereota</translation>
-    </message>
-    <message>
-        <source>Notch Filter</source>
-        <translation type="vanished">Vaimennussuodatin</translation>
-    </message>
-    <message>
-        <source>Nyquist Plugin Installer</source>
-        <translation type="vanished">Nyquist laajennuksen asentaja</translation>
-    </message>
-    <message>
-        <source>Files already installed ('Allow Overwriting' disabled):</source>
-        <translation type="vanished">Jo asennetut tiedostot ('Salli korvaaminen' poistettu käytöstä):</translation>
-    </message>
-    <message>
-        <source>Rhythm Track</source>
-        <translation type="vanished">Rytmiraita</translation>
-    </message>
-    <message>
-        <source>Set 'Number of bars' to zero to enable the 'Rhythm track duration'.</source>
-        <translation type="vanished">Aseta 'Palkkien määrä' -arvoksi nolla, jos haluat ottaa rytmiraidan keston käyttöön.</translation>
-    </message>
-    <message>
-        <source>Used if 'Number of bars' = 0</source>
-        <translation type="vanished">Käytetään, jos 'Palkkien määrä' = 0</translation>
-    </message>
-    <message>
-        <source>Set either 'Number of bars' or~%~
-                    'Rhythm track duration' to greater than zero.</source>
-        <translation type="vanished">Aseta joko 'Tahtien määrä' tai ~%~
-'Rytmiraidan kesto' suuremmaksi kuin nolla.</translation>
-    </message>
-    <message>
-        <source>Risset Drum</source>
-        <translation type="vanished">Risset'n rumpu</translation>
-    </message>
-    <message>
-        <source>Error.~%"~a" cannot be written.</source>
-        <translation type="vanished">Virhe.~%"~a" ei voi kirjoittaa.</translation>
-    </message>
-    <message>
-        <source>Sample Data Import</source>
-        <translation type="vanished">Näytetietojen tuonti</translation>
-    </message>
-    <message>
-        <source>Error~%~
-                        '~a' could not be opened.~%~
-                        Check that file exists.</source>
-        <translation type="vanished">Virhe~%~
-                        '~a' ei voitu avata.~%~
-                        Tarkista, että tiedosto on olemassa.</translation>
-    </message>
-    <message>
-        <source>Error:~%~
-              The file must contain only plain ASCII text.~%~
-              (Invalid byte '~a' at byte number: ~a)</source>
-        <translation type="vanished">Virhe:~%~
-              Tiedostossa saa olla vain pelkkää ASCII-tekstiä.~%~
-              (Virheellinen tavu '~a' tavunumerossa: ~a)</translation>
-    </message>
-    <message>
-        <source>Error~%~
-              Data must be numbers in plain ASCII text.~%~
-              '~a' is not a numeric value.</source>
-        <translation type="vanished">Virhe~%~
-              Tietojen on oltava numeroita tavallisessa ASCII-tekstissä.~%~
-              '~a' ei ole numeerinen arvo.</translation>
-    </message>
-    <message>
-        <source>Spectral Delete</source>
-        <translation type="vanished">Spektrialueen poisto</translation>
-    </message>
-    <message>
-        <source>Volume and Compression</source>
-        <extracomment>Effects menu group name; audio dynamics compression, not data compression</extracomment>
-        <translation type="vanished">Äänenvoimakkuus ja pakkaus</translation>
-    </message>
-    <message>
-        <source>Fading</source>
-        <extracomment>Effects menu group name</extracomment>
-        <translation type="vanished">Häivitys</translation>
-    </message>
-    <message>
-        <source>Pitch and Tempo</source>
-        <translation type="vanished">Sävelkorkeus ja tempo</translation>
-    </message>
-    <message>
-        <source>EQ and Filters</source>
-        <translation type="vanished">EQ ja suodattimet</translation>
-    </message>
-    <message>
-        <source>Noise Removal and Repair</source>
-        <translation type="vanished">Melunpoisto ja korjaus</translation>
-    </message>
-    <message>
-        <source>Delay and Reverb</source>
-        <translation type="vanished">Viive ja kaiku</translation>
-    </message>
-    <message>
-        <source>Distortion and Modulation</source>
-        <translation type="vanished">Vääristymä ja modulaatio</translation>
-    </message>
-    <message>
-        <source>Special</source>
-        <extracomment>Effects menu group name</extracomment>
-        <translation type="vanished">Erityinen</translation>
-    </message>
-    <message>
-        <source>Vocal Reduction and Isolation</source>
-        <translation type="vanished">Lauluäänen vaimennus ja -eristys</translation>
-    </message>
-    <message>
-        <source>Vocal Remover</source>
-        <translation type="vanished">Lauluäänen poistaja</translation>
-    </message>
-    <message>
-        <source>Spectral Tools</source>
-        <translation type="vanished">Spektrityökalut</translation>
-    </message>
-    <message>
-        <source>Legacy</source>
-        <translation type="vanished">Laillisuus</translation>
     </message>
 </context>
 </TS>
