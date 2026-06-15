@@ -8,41 +8,34 @@ if(NOT SCAN_DIR)
     message(FATAL_ERROR "Usage: cmake -P check_qml_codestyle.cmake <scan_dir>")
 endif()
 
-if(CMAKE_HOST_SYSTEM_NAME STREQUAL "Windows")
-    set(LIB_OS "windows")
-    set(EXE_SUFFIX ".exe")
-elseif(CMAKE_HOST_SYSTEM_NAME STREQUAL "Darwin")
-    set(LIB_OS "macos")
-    set(EXE_SUFFIX "")
-else()
-    set(LIB_OS "linux")
-    set(EXE_SUFFIX "")
+# Use the qmlformat bundled with Qt (>= 6.10, which carries the formatting
+# fixes we rely on) rather than a separately downloaded prebuilt binary.
+# It is found via PATH or the Qt install pointed to by QT_ROOT_DIR.
+find_program(QMLFORMAT_BIN
+    NAMES qmlformat
+    HINTS ENV QT_ROOT_DIR
+    PATH_SUFFIXES bin
+)
+
+if(NOT QMLFORMAT_BIN)
+    message(FATAL_ERROR
+        "qmlformat not found. Install Qt 6.10+ and ensure its bin/ is on PATH.")
 endif()
 
-# Same qmlformat package as SetupDevEnvironment.cmake
-set(REMOTE_URL https://raw.githubusercontent.com/musescore/muse_deps/main/qmlformat/6.10)
-set(LOCAL_PATH ${CMAKE_CURRENT_LIST_DIR}/../../../.tools/qmlformat)
-
-if(NOT EXISTS ${LOCAL_PATH}/qmlformat.cmake)
-    file(MAKE_DIRECTORY ${LOCAL_PATH})
-    file(DOWNLOAD ${REMOTE_URL}/qmlformat.cmake ${LOCAL_PATH}/qmlformat.cmake
-        HTTPHEADER "Cache-Control: no-cache"
-    )
-endif()
-
-include(${LOCAL_PATH}/qmlformat.cmake)
-qmlformat_Populate(${REMOTE_URL} ${LOCAL_PATH} ${LIB_OS})
-
-set(QMLFORMAT_BIN ${LOCAL_PATH}/bin/qmlformat${EXE_SUFFIX})
-if(NOT EXISTS ${QMLFORMAT_BIN})
-    message(FATAL_ERROR "qmlformat executable not found: ${QMLFORMAT_BIN}")
-endif()
+execute_process(
+    COMMAND ${QMLFORMAT_BIN} --version
+    OUTPUT_VARIABLE QMLFORMAT_VERSION
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+message(STATUS "Using ${QMLFORMAT_BIN} (${QMLFORMAT_VERSION})")
 
 file(GLOB_RECURSE QML_FILES ${SCAN_DIR}/*.qml)
 list(LENGTH QML_FILES QML_FILES_COUNT)
 message(STATUS "Checking QML code style of ${QML_FILES_COUNT} files in ${SCAN_DIR}")
 
-set(FILES_LIST ${LOCAL_PATH}/qml_files_list.txt)
+# qmlformat reads the file list (one path per line) so we stay well clear of
+# command-line length limits on large trees.
+set(FILES_LIST ${CMAKE_CURRENT_LIST_DIR}/qml_files_list.txt)
 string(REPLACE ";" "\n" QML_FILES_LINES "${QML_FILES}")
 file(WRITE ${FILES_LIST} "${QML_FILES_LINES}\n")
 
@@ -50,6 +43,8 @@ execute_process(
     COMMAND ${QMLFORMAT_BIN} -F ${FILES_LIST} --semicolon-rule=essential -l unix
     RESULT_VARIABLE QMLFORMAT_RESULT
 )
+
+file(REMOVE ${FILES_LIST})
 
 if(NOT QMLFORMAT_RESULT EQUAL 0)
     message(FATAL_ERROR "qmlformat failed, please check log for details")
@@ -75,7 +70,7 @@ if(GIT_DIFF_OUT)
 
         Or format a single file:
 
-        $ .tools/qmlformat/bin/qmlformat -i --semicolon-rule=essential -l unix <file.qml>
+        $ qmlformat -i --semicolon-rule=essential -l unix <file.qml>
 
         The required changes are...
     ")
