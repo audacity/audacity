@@ -275,13 +275,13 @@ const UiActionList ProjectUiActions::m_actions = {
 
     // record menu
     UiAction("record-on-current-track",
-             au::context::UiCtxUnknown,
+             au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Record on current track"),
              TranslatableString("action", "Record on current track")
              ),
     UiAction("record-on-new-track",
-             au::context::UiCtxUnknown,
+             au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Record on new track"),
              TranslatableString("action", "Record on new track")
