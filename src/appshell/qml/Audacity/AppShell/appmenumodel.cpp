@@ -324,11 +324,10 @@ MenuItem* AppMenuModel::makeRecordMenu()
     MenuItemList recordItems {
         makeMenuItem("record-on-current-track"),
         makeMenuItem("record-on-new-track"),
-        makeMenuItem("set-up-timed-recording"),
+        //! makeMenuItem("set-up-timed-recording"),
         makeMenuItem("action://record/lead-in-recording"),
-        makeSeparator(),
-        makeMenuItem("toggle-sound-activated-recording"),
-        makeMenuItem("set-sound-activation-level"),
+        //! makeMenuItem("toggle-sound-activated-recording"),
+        //! makeMenuItem("set-sound-activation-level"),
     };
 
     return makeMenu(TranslatableString("appshell-menu-record", "&Record"), recordItems, "menu-record");
