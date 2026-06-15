@@ -150,7 +150,10 @@ Dial {
             ctx.lineWidth = prv.outerArcLineWidth + 0.5
             ctx.strokeStyle = prv.valueArcColor
             ctx.beginPath()
-            ctx.arc(width / 2, height / 2, root.radius - prv.outerArcLineWidth / 2 - 0.25, prv.startValueArcAngle * (Math.PI / 180) - Math.PI / 2, root.angle * (Math.PI / 180) - Math.PI / 2, prv.reversed)
+            const valueArcRadius = root.radius - prv.outerArcLineWidth / 2 - 0.25
+            const valueArcStart = prv.startValueArcAngle * (Math.PI / 180) - Math.PI / 2
+            const valueArcEnd = root.angle * (Math.PI / 180) - Math.PI / 2
+            ctx.arc(width / 2, height / 2, valueArcRadius, valueArcStart, valueArcEnd, prv.reversed)
             ctx.stroke()
 
             ctx.lineWidth = prv.innerArcLineWidth
