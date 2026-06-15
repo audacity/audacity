@@ -76,7 +76,6 @@ void AppMenuModel::load()
         makeEffectMenu(),
         makeAnalyzeMenu(),
         makeToolsMenu(),
-        makeExtraMenu(),
         makeHelpMenu()
     };
 
