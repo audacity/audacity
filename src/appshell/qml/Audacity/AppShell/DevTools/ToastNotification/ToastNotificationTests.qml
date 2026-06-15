@@ -144,7 +144,9 @@ Rectangle {
                         text: "Show Toast with Timeout"
                         width: parent.width
                         onClicked: {
-                            toastModel.showToastWithTimeout(timeoutTitle.currentText, timeoutMessage.currentText, parseInt(timeoutIconCode.currentText), parseInt(timeoutSeconds.currentText), timeoutDismissible.checked)
+                            const iconCode = parseInt(timeoutIconCode.currentText)
+                            const seconds = parseInt(timeoutSeconds.currentText)
+                            toastModel.showToastWithTimeout(timeoutTitle.currentText, timeoutMessage.currentText, iconCode, seconds, timeoutDismissible.checked)
                         }
                     }
                 }
@@ -424,7 +426,8 @@ Rectangle {
                         text: "Show Progress Toast"
                         width: parent.width
                         onClicked: {
-                            toastModel.showWithProgress(progressTitle.currentText, progressMessage.currentText, parseInt(progressIconCode.currentText), progressDismissible.checked, progressShowInfo.checked)
+                            const iconCode = parseInt(progressIconCode.currentText)
+                            toastModel.showWithProgress(progressTitle.currentText, progressMessage.currentText, iconCode, progressDismissible.checked, progressShowInfo.checked)
                             toastModel.updateProgress(progressSlider.value)
                         }
                     }
