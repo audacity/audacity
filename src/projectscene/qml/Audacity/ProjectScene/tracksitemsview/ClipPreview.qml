@@ -18,8 +18,13 @@ Rectangle {
     property color classicThemeBackground: ui.theme.extra["classic_clip_background_color"]
     property color classicThemeHeader: ui.theme.extra["classic_clip_header_color"]
 
-    property color classicThemeGradient: ui.blendColors(ui.blendColors("transparent", ui.theme.extra["white_color"], 0.3), ui.blendColors("transparent", root.classicThemeBackground, 0.4), 0.5)
-    property color colorfulThemeGradient: ui.blendColors(ui.blendColors("transparent", ui.theme.extra["white_color"], 0.3), ui.blendColors("transparent", root.clipColor, 0.4), 0.5)
+    readonly property color whiteOverlay: ui.blendColors("transparent", ui.theme.extra["white_color"], 0.3)
+    property color classicThemeGradient: ui.blendColors(root.whiteOverlay, ui.blendColors("transparent", root.classicThemeBackground, 0.4), 0.5)
+    property color colorfulThemeGradient: ui.blendColors(root.whiteOverlay, ui.blendColors("transparent", root.clipColor, 0.4), 0.5)
+
+    readonly property color colorfulHeaderColor: ui.blendColors(ui.theme.extra["white_color"], root.clipColor, 0.3)
+    readonly property color classicHeaderColor: ui.blendColors(ui.theme.extra["white_color"], root.classicThemeHeader, 0.3)
+    readonly property color headerColor: root.currentClipStyle == ClipStyle.COLORFUL ? root.colorfulHeaderColor : root.classicHeaderColor
 
     width: desiredWidth <= 0 ? titleLabel.implicitWidth + 20 : desiredWidth
 
@@ -133,7 +138,7 @@ Rectangle {
 
         height: 20
 
-        color: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors(ui.theme.extra["white_color"], root.clipColor, 0.3) : ui.blendColors(ui.theme.extra["white_color"], root.classicThemeHeader, 0.3)
+        color: root.headerColor
 
         visible: !root.collapsed
 
@@ -167,7 +172,7 @@ Rectangle {
                 }
                 GradientStop {
                     position: 0.4
-                    color: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors(ui.theme.extra["white_color"], root.clipColor, 0.3) : ui.blendColors(ui.theme.extra["white_color"], root.classicThemeHeader, 0.3)
+                    color: root.headerColor
                 }
                 GradientStop {
                     position: 1.0
