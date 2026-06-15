@@ -16,19 +16,9 @@ BaseSection {
 
     property var playbackPreferencesModel: null
 
-    property var playbackQualityLabels: [
-        qsTrc("playback", "Low quality"),
-        qsTrc("playback", "Medium quality"),
-        qsTrc("playback", "High quality"),
-        qsTrc("playback", "Best quality")
-    ]
+    property var playbackQualityLabels: [qsTrc("playback", "Low quality"), qsTrc("playback", "Medium quality"), qsTrc("playback", "High quality"), qsTrc("playback", "Best quality")]
 
-    property var ditheringTypeLabels: [
-        qsTrc("playback", "None"),
-        qsTrc("playback", "Rectangle"),
-        qsTrc("playback", "Triangle"),
-        qsTrc("playback", "Shaped")
-    ]
+    property var ditheringTypeLabels: [qsTrc("playback", "None"), qsTrc("playback", "Rectangle"), qsTrc("playback", "Triangle"), qsTrc("playback", "Shaped")]
 
     ComboBoxWithTitle {
         title: qsTrc("preferences", "Playback quality")
@@ -41,7 +31,7 @@ BaseSection {
         navigation.panel: root.navigation
         navigation.row: 0
 
-        onValueEdited: function(newIndex, newValue) {
+        onValueEdited: function (newIndex, newValue) {
             playbackPreferencesModel.setPlaybackQuality(newIndex)
         }
     }
@@ -57,7 +47,7 @@ BaseSection {
         navigation.panel: root.navigation
         navigation.row: 1
 
-        onValueEdited: function(newIndex, newValue) {
+        onValueEdited: function (newIndex, newValue) {
             playbackPreferencesModel.setDithering(newIndex)
         }
     }

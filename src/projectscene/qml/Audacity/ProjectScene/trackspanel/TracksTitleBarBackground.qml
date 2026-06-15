@@ -68,7 +68,6 @@ Rectangle {
                 opacity: ui.theme.buttonOpacityHit
             }
         },
-
         State {
             name: "HOVERED"
             when: root.mouseArea.containsMouse && !root.mouseArea.pressed

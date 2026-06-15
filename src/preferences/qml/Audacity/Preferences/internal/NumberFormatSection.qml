@@ -60,7 +60,7 @@ BaseSection {
 
             indeterminateText: ""
 
-            onActivated: function(index, value) {
+            onActivated: function (index, value) {
                 root.numberFormatSelected(value)
             }
         }

@@ -64,7 +64,7 @@ StyledPopupView {
                 navigation.order: 1
                 navigation.accessible.name: titleLabel.text + " : " + currentValue
 
-                onValueEdited: function(newValue) {
+                onValueEdited: function (newValue) {
                     root.upperChangeRequested(newValue)
                 }
             }
@@ -85,18 +85,36 @@ StyledPopupView {
                 currentIndex: timeComboBox.indexOfValue(root.lower)
 
                 model: [
-                    { "text": "2", "value": 2 },
-                    { "text": "4", "value": 4 },
-                    { "text": "8", "value": 8 },
-                    { "text": "16", "value": 16 },
-                    { "text": "32", "value": 32 },
-                    { "text": "64", "value": 64 }
+                    {
+                        "text": "2",
+                        "value": 2
+                    },
+                    {
+                        "text": "4",
+                        "value": 4
+                    },
+                    {
+                        "text": "8",
+                        "value": 8
+                    },
+                    {
+                        "text": "16",
+                        "value": 16
+                    },
+                    {
+                        "text": "32",
+                        "value": 32
+                    },
+                    {
+                        "text": "64",
+                        "value": 64
+                    }
                 ]
 
                 navigation.panel: navPanel
                 navigation.order: 2
 
-                onActivated: function(index, value) {
+                onActivated: function (index, value) {
                     root.lowerChangeRequested(value)
                 }
             }

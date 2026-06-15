@@ -46,7 +46,7 @@ NumericView {
             navigation.column: root.navigationColumnEnd + 1
             navigation.accessible.name: qsTrc("au/uicomponents", "Up")
 
-            onClicked: function(mouse) {
+            onClicked: function (mouse) {
                 bpmModel.upValue()
             }
         }
@@ -65,7 +65,7 @@ NumericView {
             navigation.column: upButton.navigation.column + 1
             navigation.accessible.name: qsTrc("au/uicomponents", "Down")
 
-            onClicked: function(mouse) {
+            onClicked: function (mouse) {
                 bpmModel.downValue()
             }
         }

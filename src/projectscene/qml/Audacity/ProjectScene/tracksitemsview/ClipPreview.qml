@@ -5,9 +5,7 @@ import Muse.UiComponents
 import Audacity.UiComponents
 import Audacity.ProjectScene
 
-
 Rectangle {
-
     id: root
 
     property color clipColor: null
@@ -20,10 +18,8 @@ Rectangle {
     property color classicThemeBackground: ui.theme.extra["classic_clip_background_color"]
     property color classicThemeHeader: ui.theme.extra["classic_clip_header_color"]
 
-    property color classicThemeGradient: ui.blendColors(ui.blendColors("transparent", ui.theme.extra["white_color"], 0.3),
-                                                        ui.blendColors("transparent", root.classicThemeBackground, 0.4), 0.5)
-    property color colorfulThemeGradient: ui.blendColors(ui.blendColors("transparent", ui.theme.extra["white_color"], 0.3),
-                                                         ui.blendColors("transparent", root.clipColor, 0.4), 0.5)
+    property color classicThemeGradient: ui.blendColors(ui.blendColors("transparent", ui.theme.extra["white_color"], 0.3), ui.blendColors("transparent", root.classicThemeBackground, 0.4), 0.5)
+    property color colorfulThemeGradient: ui.blendColors(ui.blendColors("transparent", ui.theme.extra["white_color"], 0.3), ui.blendColors("transparent", root.clipColor, 0.4), 0.5)
 
     width: desiredWidth <= 0 ? titleLabel.implicitWidth + 20 : desiredWidth
 
@@ -40,7 +36,7 @@ Rectangle {
         anchors.margins: 1
         color: "transparent"
 
-        border.width:  1
+        border.width: 1
         border.color: ui.theme.extra["white_color"]
         radius: 4
 
@@ -79,9 +75,18 @@ Rectangle {
 
             gradient: Gradient {
                 orientation: Qt.Horizontal
-                GradientStop { position: 0.0; color: "#00FFFFFF" }
-                GradientStop { position: 0.4; color: root.currentClipStyle == ClipStyle.COLORFUL ? colorfulThemeGradient : classicThemeGradient}
-                GradientStop { position: 1.0; color: "#00FFFFFF" }
+                GradientStop {
+                    position: 0.0
+                    color: "#00FFFFFF"
+                }
+                GradientStop {
+                    position: 0.4
+                    color: root.currentClipStyle == ClipStyle.COLORFUL ? colorfulThemeGradient : classicThemeGradient
+                }
+                GradientStop {
+                    position: 1.0
+                    color: "#00FFFFFF"
+                }
             }
         }
 
@@ -98,12 +103,20 @@ Rectangle {
 
             gradient: Gradient {
                 orientation: Qt.Horizontal
-                GradientStop { position: 0.0; color: "#00FFFFFF" }
-                GradientStop { position: 0.4; color: "#FFFFFFFF" }
-                GradientStop { position: 1.0; color: "#00FFFFFF" }
+                GradientStop {
+                    position: 0.0
+                    color: "#00FFFFFF"
+                }
+                GradientStop {
+                    position: 0.4
+                    color: "#FFFFFFFF"
+                }
+                GradientStop {
+                    position: 1.0
+                    color: "#00FFFFFF"
+                }
             }
         }
-
     }
 
     RoundedRectangle {
@@ -120,8 +133,7 @@ Rectangle {
 
         height: 20
 
-        color: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors(ui.theme.extra["white_color"], root.clipColor, 0.3)
-                                                           : ui.blendColors(ui.theme.extra["white_color"], root.classicThemeHeader, 0.3)
+        color: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors(ui.theme.extra["white_color"], root.clipColor, 0.3) : ui.blendColors(ui.theme.extra["white_color"], root.classicThemeHeader, 0.3)
 
         visible: !root.collapsed
 
@@ -149,10 +161,18 @@ Rectangle {
 
             gradient: Gradient {
                 orientation: Qt.Horizontal
-                GradientStop { position: 0.0; color: "#00FFFFFF" }
-                GradientStop { position: 0.4; color: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors(ui.theme.extra["white_color"], root.clipColor, 0.3)
-                                                                                                 : ui.blendColors(ui.theme.extra["white_color"], root.classicThemeHeader, 0.3)}
-                GradientStop { position: 1.0; color: "#00FFFFFF" }
+                GradientStop {
+                    position: 0.0
+                    color: "#00FFFFFF"
+                }
+                GradientStop {
+                    position: 0.4
+                    color: root.currentClipStyle == ClipStyle.COLORFUL ? ui.blendColors(ui.theme.extra["white_color"], root.clipColor, 0.3) : ui.blendColors(ui.theme.extra["white_color"], root.classicThemeHeader, 0.3)
+                }
+                GradientStop {
+                    position: 1.0
+                    color: "#00FFFFFF"
+                }
             }
         }
     }

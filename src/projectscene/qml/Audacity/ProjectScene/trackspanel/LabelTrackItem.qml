@@ -10,7 +10,7 @@ import Audacity.ProjectScene
 TrackItem {
     id: root
 
-    signal addLabelToSelectionRequested()
+    signal addLabelToSelectionRequested
 
     extraControlsComponent: Component {
         FlatButton {
@@ -21,7 +21,11 @@ TrackItem {
 
             opacity: root.collapsed ? 0 : 1
             visible: opacity !== 0
-            Behavior on opacity { OpacityAnimator { duration: 100 } }
+            Behavior on opacity {
+                OpacityAnimator {
+                    duration: 100
+                }
+            }
 
             navigation.panel: root.navigation.panel
             navigation.order: root.extraControlsNavigationStart

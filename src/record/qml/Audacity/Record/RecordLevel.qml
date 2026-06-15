@@ -59,7 +59,7 @@ FlatButton {
         }
     }
 
-    onClicked: function(mouse) {
+    onClicked: function (mouse) {
         togglePopupOpened()
     }
 
@@ -84,15 +84,15 @@ FlatButton {
         isInputMonitoringOn: root.isInputMonitoringOn
         isMicMeteringOn: root.isMicMeteringOn
 
-        onVolumeLevelChangeRequested: function(level) {
+        onVolumeLevelChangeRequested: function (level) {
             root.volumeLevelChangeRequested(level)
         }
 
-        onIsInputMonitoringOnChangeRequested: function(enable) {
+        onIsInputMonitoringOnChangeRequested: function (enable) {
             root.isInputMonitoringOnChangeRequested(enable)
         }
 
-        onIsMicMeteringOnChangeRequested: function(enable) {
+        onIsMicMeteringOnChangeRequested: function (enable) {
             root.isMicMeteringOnChangeRequested(enable)
         }
 

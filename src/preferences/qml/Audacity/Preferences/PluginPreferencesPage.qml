@@ -52,14 +52,20 @@ PreferencesPage {
             dialogTitle: qsTrc("preferences", "Choose custom LV2 plugins location")
 
             paths: pluginPreferencesModel.lv2CustomPaths
-            pathValidator: function(p) { return pluginPreferencesModel.pathExists(p) }
+            pathValidator: function (p) {
+                return pluginPreferencesModel.pathExists(p)
+            }
 
             navigation.section: root.navigationSection
             navigation.order: effectBehaviorSection.navigation.order + 1
 
             onAddPathRequested: pluginPreferencesModel.addLv2Path()
-            onPathChanged: function(index, newPath) { pluginPreferencesModel.setLv2Path(index, newPath) }
-            onRemovePathRequested: function(index) { pluginPreferencesModel.removeLv2Path(index) }
+            onPathChanged: function (index, newPath) {
+                pluginPreferencesModel.setLv2Path(index, newPath)
+            }
+            onRemovePathRequested: function (index) {
+                pluginPreferencesModel.removeLv2Path(index)
+            }
 
             onFocusChanged: {
                 if (activeFocus) {
@@ -81,14 +87,20 @@ PreferencesPage {
             dialogTitle: qsTrc("preferences", "Choose custom VST3 plugins location")
 
             paths: pluginPreferencesModel.vst3CustomPaths
-            pathValidator: function(p) { return pluginPreferencesModel.pathExists(p) }
+            pathValidator: function (p) {
+                return pluginPreferencesModel.pathExists(p)
+            }
 
             navigation.section: root.navigationSection
             navigation.order: lv2Section.navigation.order + 1
 
             onAddPathRequested: pluginPreferencesModel.addVst3Path()
-            onPathChanged: function(index, newPath) { pluginPreferencesModel.setVst3Path(index, newPath) }
-            onRemovePathRequested: function(index) { pluginPreferencesModel.removeVst3Path(index) }
+            onPathChanged: function (index, newPath) {
+                pluginPreferencesModel.setVst3Path(index, newPath)
+            }
+            onRemovePathRequested: function (index) {
+                pluginPreferencesModel.removeVst3Path(index)
+            }
 
             onFocusChanged: {
                 if (activeFocus) {

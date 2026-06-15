@@ -86,7 +86,9 @@ StyledDialogView {
 
         text: root.invalidReason
         color: ui.theme.extra["error_text_color"]
-        font: Qt.font(Object.assign({}, ui.theme.bodyFont, { pointSize: ui.theme.bodyFont.pointSize - 1 }))
+        font: Qt.font(Object.assign({}, ui.theme.bodyFont, {
+            pointSize: ui.theme.bodyFont.pointSize - 1
+        }))
     }
 
     ButtonBox {

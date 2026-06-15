@@ -21,7 +21,7 @@ Item {
         name: root.cloudTitle + "Item"
         direction: NavigationPanel.Both
 
-        onActiveChanged: function(active) {
+        onActiveChanged: function (active) {
             if (active) {
                 firstButton.navigation.requestActive()
                 accessibleInfo.ignored = false
@@ -34,9 +34,9 @@ Item {
         }
     }
 
-    signal signInRequested()
-    signal signOutRequested()
-    signal createAccountRequested()
+    signal signInRequested
+    signal signOutRequested
+    signal createAccountRequested
 
     AccessibleItem {
         id: accessibleInfo
@@ -46,14 +46,9 @@ Item {
         name: {
             var msg = ""
             if (Boolean(root.userIsAuthorized)) {
-                msg = "%1. %2. %3. %4".arg(root.cloudTitle)
-                .arg(root.userName)
-                .arg(root.userCollectionUrl)
-                .arg(firstButton.text)
+                msg = "%1. %2. %3. %4".arg(root.cloudTitle).arg(root.userName).arg(root.userCollectionUrl).arg(firstButton.text)
             } else {
-                msg = "%1. %2. %3".arg(root.cloudTitle)
-                .arg(qsTrc("cloud", "Not signed in"))
-                .arg(firstButton.text)
+                msg = "%1. %2. %3".arg(root.cloudTitle).arg(qsTrc("cloud", "Not signed in")).arg(firstButton.text)
             }
 
             return msg

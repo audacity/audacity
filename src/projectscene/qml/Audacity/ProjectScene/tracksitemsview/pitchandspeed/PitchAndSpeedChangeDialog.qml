@@ -25,7 +25,7 @@ StyledDialogView {
     PitchAndSpeedChangeModel {
         id: changeModel
 
-        onCloseDialogRequested: function(){
+        onCloseDialogRequested: function () {
             root.close()
         }
     }
@@ -63,7 +63,7 @@ StyledDialogView {
                 navigationPanel.section: root.navigationSection
                 navigationPanel.order: 1
 
-                onValueChanged: function(newValue){
+                onValueChanged: function (newValue) {
                     changeModel.pitch = newValue
                 }
             }
@@ -79,7 +79,7 @@ StyledDialogView {
                 navigationPanel.section: root.navigationSection
                 navigationPanel.order: 2
 
-                onValueChanged: function(newValue){
+                onValueChanged: function (newValue) {
                     changeModel.speedPercentage = newValue
                 }
             }
@@ -92,7 +92,7 @@ StyledDialogView {
                 navigationPanel.section: root.navigationSection
                 navigationPanel.order: 3
 
-                onValueChanged: function(newValue){
+                onValueChanged: function (newValue) {
                     changeModel.optimizeForVoice = newValue
                 }
             }
@@ -106,14 +106,16 @@ StyledDialogView {
             Layout.fillWidth: true
             Layout.margins: 12
 
-            buttons: [ ButtonBoxModel.Done ]
+            buttons: [ButtonBoxModel.Done]
 
             navigationPanel.section: root.navigationSection
             navigationPanel.order: 4
 
-            onStandardButtonClicked: function(buttonId) {
-                switch(buttonId) {
-                case ButtonBoxModel.Done: root.accept(); break;
+            onStandardButtonClicked: function (buttonId) {
+                switch (buttonId) {
+                case ButtonBoxModel.Done:
+                    root.accept()
+                    break
                 }
             }
         }

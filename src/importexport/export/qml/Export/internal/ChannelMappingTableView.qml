@@ -21,9 +21,10 @@ StyledTableView {
     horizontalHeaderNavigationEnabled: false
     showVerticalHeader: true
 
-    sourceComponentCallback: function(type) {
+    sourceComponentCallback: function (type) {
         switch (type) {
-        case ChannelMappingTableViewCellType.Mapping: return mappingCellComp
+        case ChannelMappingTableViewCellType.Mapping:
+            return mappingCellComp
         }
         return null
     }
@@ -61,7 +62,7 @@ StyledTableView {
             property string accessibleName: val
 
             signal changed(var value)
-            signal editingFinished()
+            signal editingFinished
 
             navigation.panel: navigationPanel
             navigation.enabled: root.currentEditedCell === item

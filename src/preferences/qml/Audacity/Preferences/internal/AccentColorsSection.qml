@@ -40,7 +40,7 @@ Row {
         direction: NavigationPanel.Horizontal
         accessible.name: titleLabel.text
 
-        onActiveChanged: function(active) {
+        onActiveChanged: function (active) {
             if (active) {
                 root.forceActiveFocus()
             }
@@ -71,7 +71,7 @@ Row {
 
         sampleSize: 30
 
-        onAccentColorChangeRequested: function(newColorIndex) {
+        onAccentColorChangeRequested: function (newColorIndex) {
             root.accentColorChangeRequested(newColorIndex)
         }
     }

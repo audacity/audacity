@@ -29,7 +29,6 @@ Rectangle {
                 opacity: 0.4
             }
         },
-
         State {
             name: "PRESSED"
             when: mouseArea.pressed

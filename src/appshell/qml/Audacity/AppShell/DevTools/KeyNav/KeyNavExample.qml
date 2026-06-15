@@ -13,7 +13,7 @@ Rectangle {
 
     property string lastClickedInfo: ""
 
-    signal activeFocusRequested()
+    signal activeFocusRequested
 
     Rectangle {
         id: infoPanel
@@ -64,7 +64,7 @@ Rectangle {
                     subsectionName: "subsec" + model.index
                     subsectionOrder: model.index
                     color: mainMenu.color
-                    onClicked: function(info) {
+                    onClicked: function (info) {
                         root.lastClickedInfo = "sec: " + mainMenu.sectionName + ", " + info
                     }
                 }
@@ -97,7 +97,7 @@ Rectangle {
                     subsectionName: "subsec" + model.index
                     subsectionOrder: model.index
                     color: topTools.color
-                    onClicked: function(info) {
+                    onClicked: function (info) {
                         root.lastClickedInfo = "sec: " + topTools.sectionName + ", " + info
                     }
                 }
@@ -129,7 +129,7 @@ Rectangle {
                     subsectionName: "subsec" + model.index
                     subsectionOrder: model.index
                     color: leftPanel.color
-                    onClicked: function(info) {
+                    onClicked: function (info) {
                         root.lastClickedInfo = "sec: " + leftPanel.sectionName + ", " + info
                     }
                 }
@@ -161,7 +161,7 @@ Rectangle {
                     subsectionName: "subsec" + model.index
                     subsectionOrder: model.index
                     color: rightPanel.color
-                    onClicked: function(info) {
+                    onClicked: function (info) {
                         root.lastClickedInfo = "sec: " + rightPanel.sectionName + ", " + info
                     }
                 }
@@ -187,7 +187,7 @@ Rectangle {
             subsectionName: "subsec0"
             subsectionOrder: 0
             color: centerPanel.color
-            onClicked: function(info) {
+            onClicked: function (info) {
                 root.lastClickedInfo = "sec: " + centerPanel.sectionName + ", " + info
             }
         }

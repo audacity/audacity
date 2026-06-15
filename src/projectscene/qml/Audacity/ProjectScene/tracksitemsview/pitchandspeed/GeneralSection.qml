@@ -13,7 +13,7 @@ Column {
         name: "GeneralSection"
         accessible.name: sectionTitle.text
 
-        onActiveChanged: function(active) {
+        onActiveChanged: function (active) {
             if (active) {
                 optimizeCheckBox.requestActiveFocus()
             }

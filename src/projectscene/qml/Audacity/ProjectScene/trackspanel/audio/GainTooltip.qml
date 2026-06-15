@@ -37,11 +37,11 @@ StyledPopupView {
                 const g = Number(root.gain)
 
                 if (!isFinite(g)) {
-                    return `${root.gain}${root.unitText}`;
+                    return `${root.gain}${root.unitText}`
                 }
 
-                let value = g.toFixed(root.decimalPlaces);
-                return `${value}${root.unitText}`;
+                let value = g.toFixed(root.decimalPlaces)
+                return `${value}${root.unitText}`
             }
         }
     }

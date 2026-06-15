@@ -34,12 +34,12 @@ Dial {
     value: 0
 
     signal newValueRequested(real newValue)
-    signal increaseRequested()
-    signal decreaseRequested()
-    signal mouseEntered()
-    signal mouseExited()
-    signal mousePressed()
-    signal mouseReleased()
+    signal increaseRequested
+    signal decreaseRequested
+    signal mouseEntered
+    signal mouseExited
+    signal mousePressed
+    signal mouseReleased
 
     QtObject {
         id: prv
@@ -52,8 +52,8 @@ Dial {
         readonly property real outerArcLineWidth: radius / 5
         readonly property real innerArcLineWidth: radius / 8
 
-        readonly property real startAngle: -140 * (Math.PI/180) - Math.PI/2
-        readonly property real endAngle: 140 * (Math.PI/180) - Math.PI/2
+        readonly property real startAngle: -140 * (Math.PI / 180) - Math.PI / 2
+        readonly property real endAngle: 140 * (Math.PI / 180) - Math.PI / 2
 
         readonly property color valueArcColor: accentControl ? ui.theme.accentColor : Utils.colorWithAlpha(ui.theme.fontPrimaryColor, 0.3)
         readonly property color outerArcColor: Utils.colorWithAlpha(ui.theme.buttonColor, 0.7)
@@ -78,9 +78,15 @@ Dial {
             root.newValueRequested(newValue)
         }
 
-        onValueArcColorChanged: { backgroundCanvas.requestPaint() }
-        onOuterArcColorChanged: { backgroundCanvas.requestPaint() }
-        onInnerArcColorChanged: { backgroundCanvas.requestPaint() }
+        onValueArcColorChanged: {
+            backgroundCanvas.requestPaint()
+        }
+        onOuterArcColorChanged: {
+            backgroundCanvas.requestPaint()
+        }
+        onInnerArcColorChanged: {
+            backgroundCanvas.requestPaint()
+        }
     }
 
     NavigationControl {
@@ -96,13 +102,13 @@ Dial {
         accessible.maximumValue: root.to
         accessible.stepSize: root.stepSize
 
-        onNavigationEvent: function(event) {
-            const handle = (stepSize) => {
+        onNavigationEvent: function (event) {
+            const handle = stepSize => {
                 prv.requestNewValue(root.value + stepSize)
                 event.accepted = true
             }
 
-            switch(event.type) {
+            switch (event.type) {
             case NavigationEvent.Up:
                 handle(root.stepSize)
                 break
@@ -138,19 +144,19 @@ Dial {
 
             ctx.strokeStyle = prv.outerArcColor
             ctx.beginPath()
-            ctx.arc(width/2, height/2, root.radius - prv.outerArcLineWidth/2, prv.startAngle, prv.endAngle, false)
+            ctx.arc(width / 2, height / 2, root.radius - prv.outerArcLineWidth / 2, prv.startAngle, prv.endAngle, false)
             ctx.stroke()
 
             ctx.lineWidth = prv.outerArcLineWidth + 0.5
             ctx.strokeStyle = prv.valueArcColor
             ctx.beginPath()
-            ctx.arc(width/2, height/2, root.radius - prv.outerArcLineWidth/2 - 0.25, prv.startValueArcAngle * (Math.PI/180) - Math.PI/2, root.angle * (Math.PI/180) - Math.PI/2, prv.reversed)
+            ctx.arc(width / 2, height / 2, root.radius - prv.outerArcLineWidth / 2 - 0.25, prv.startValueArcAngle * (Math.PI / 180) - Math.PI / 2, root.angle * (Math.PI / 180) - Math.PI / 2, prv.reversed)
             ctx.stroke()
 
             ctx.lineWidth = prv.innerArcLineWidth
             ctx.strokeStyle = prv.innerArcColor
             ctx.beginPath()
-            ctx.arc(width/2, height/2, root.radius - (prv.outerArcLineWidth + prv.innerArcLineWidth/2), 0, Math.PI * 2, false)
+            ctx.arc(width / 2, height / 2, root.radius - (prv.outerArcLineWidth + prv.innerArcLineWidth / 2), 0, Math.PI * 2, false)
             ctx.stroke()
         }
     }
@@ -202,7 +208,7 @@ Dial {
 
         preventStealing: true // Don't let a Flickable steal the mouse
 
-        onPressed: function(mouse) {
+        onPressed: function (mouse) {
             prv.prevX = mouse.x
             prv.prevY = mouse.y
             prv.dragActive = true
@@ -230,9 +236,8 @@ Dial {
             mouseReleased()
         }
 
-        onPositionChanged: function(mouse)  {
+        onPositionChanged: function (mouse) {
             if (prv.dragActive) {
-
                 if ((mouse.modifiers & (Qt.ShiftModifier))) {
                     if (!prv.shiftPressed) {
                         prv.shiftPressed = true
@@ -266,9 +271,11 @@ Dial {
         // We also listen for wheel events here, but for a different reason:
         // Qml Dial has a bug that it doesn't emit moved() when the value is changed through a wheel event.
         // So when we see a wheel event, we let the dial handle it, but we will account for emitting the signal.
-        onWheel: function(wheel) {
+        onWheel: function (wheel) {
             wheel.accepted = false
-            Qt.callLater(function() { root.newValueRequested(Math.round(value)) })
+            Qt.callLater(function () {
+                root.newValueRequested(Math.round(value))
+            })
         }
     }
 }

@@ -153,7 +153,6 @@ RowLayout {
                     }
                 }
             }
-
         }
 
         NavigationFocusBorder {

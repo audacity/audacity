@@ -23,8 +23,7 @@ RowLayout {
         enabled: root.enabled && root.visible
 
         accessible.role: MUAccessible.Information
-        accessible.name: qsTrc("au/uicomponents", "Time Signature" + ": "
-                               + upperLabel.text + "/" + lowerLabel.text)
+        accessible.name: qsTrc("au/uicomponents", "Time Signature" + ": " + upperLabel.text + "/" + lowerLabel.text)
     }
 
     signal upperChangeRequested(var newValue)
@@ -88,7 +87,9 @@ RowLayout {
                 }
             }
 
-            NavigationFocusBorder { navigationCtrl: root.navigation }
+            NavigationFocusBorder {
+                navigationCtrl: root.navigation
+            }
         }
     }
 
@@ -110,7 +111,7 @@ RowLayout {
         navigation.row: root.navigation.row
         navigation.column: root.navigation.column + 1
 
-        onClicked: function(mouse) {
+        onClicked: function (mouse) {
             togglePopupOpened()
         }
 
@@ -120,11 +121,11 @@ RowLayout {
             upper: root.upper
             lower: root.lower
 
-            onUpperChangeRequested: function(newValue){
+            onUpperChangeRequested: function (newValue) {
                 root.upperChangeRequested(newValue)
             }
 
-            onLowerChangeRequested: function(newValue){
+            onLowerChangeRequested: function (newValue) {
                 root.lowerChangeRequested(newValue)
             }
         }

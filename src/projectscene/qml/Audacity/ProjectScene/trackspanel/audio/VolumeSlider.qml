@@ -90,7 +90,7 @@ StyledSlider {
             }
         }
 
-        onPositionChanged: function(e) {
+        onPositionChanged: function (e) {
             if (!prv.dragActive) {
                 return
             }

@@ -16,8 +16,8 @@ StyledListView {
     scrollBarPolicy: ScrollBar.AlwaysOn
 
     signal selectRowRequested(int index)
-    signal clearSelectionRequested()
-    signal removeSelectionRequested()
+    signal clearSelectionRequested
+    signal removeSelectionRequested
 
     function positionViewAtSelectedItems() {
         var selectedIndexes = root.model.selectionModel.selectedIndexes
@@ -41,13 +41,13 @@ StyledListView {
         name: "CustomiseView"
         enabled: root.enabled && root.visible
         direction: NavigationPanel.Both
-        onActiveChanged: function(active) {
+        onActiveChanged: function (active) {
             if (active) {
                 root.forceActiveFocus()
             }
         }
 
-        onNavigationEvent: function(event) {
+        onNavigationEvent: function (event) {
             if (event.type === NavigationEvent.AboutActive) {
                 event.setData("controlName", prv.currentItemNavigationName)
             }

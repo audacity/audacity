@@ -20,7 +20,7 @@ Item {
     property int buttonRightMargin: 8
     property int textLeftMargin: 12
 
-    signal effectsSectionCloseRequested()
+    signal effectsSectionCloseRequested
     signal addRequested(type: int)
 
     Component.onCompleted: {
@@ -108,7 +108,7 @@ Item {
             }
         }
 
-        SeparatorLine { }
+        SeparatorLine {}
 
         Rectangle {
             id: buttonContainer
@@ -171,12 +171,11 @@ Item {
                 AddNewTrackPopup {
                     id: addNewTrack
 
-                    onCreateTrack: (type) => {
+                    onCreateTrack: type => {
                         root.addRequested(type)
                     }
                 }
             }
-
         }
     }
 }

@@ -5,7 +5,6 @@ import Muse.UiComponents
 import Audacity.ProjectScene
 
 Rectangle {
-
     id: root
 
     property alias context: timelineContext
@@ -50,7 +49,7 @@ Rectangle {
     ContextMenuLoader {
         id: contextMenuLoader
 
-        onHandleMenuItem: function(itemId) {
+        onHandleMenuItem: function (itemId) {
             contextMenuModel.handleMenuItem(itemId)
         }
     }
@@ -80,11 +79,13 @@ Rectangle {
         // MouseArea defaults cursorShape to ArrowCursor even with acceptedButtons: Qt.RightButton.
         // Setting undefined lets the underlying PlayRegion cursors through.
         cursorShape: undefined
-        onClicked: function(e) {
+        onClicked: function (e) {
             contextMenuModel.load()
             contextMenuLoader.show(Qt.point(e.x, e.y), contextMenuModel.items)
         }
     }
 
-    SeparatorLine { anchors.bottom: parent.bottom }
+    SeparatorLine {
+        anchors.bottom: parent.bottom
+    }
 }

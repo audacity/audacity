@@ -72,7 +72,7 @@ Item {
 
         hoverEnabled: true
 
-        onPressed: function(mouse) {
+        onPressed: function (mouse) {
             if (mouse.button !== Qt.LeftButton) {
                 return
             }
@@ -86,7 +86,7 @@ Item {
             }
         }
 
-        onPositionChanged: function(mouse) {
+        onPositionChanged: function (mouse) {
             if (!(mouse.buttons & Qt.LeftButton)) {
                 return
             }
@@ -100,7 +100,6 @@ Item {
                 }
             }
 
-
             if (!prv.isPainting) {
                 prv.updateFader(prv.pressedFader)
             } else {
@@ -112,7 +111,7 @@ Item {
             }
         }
 
-        onDoubleClicked: function(mouse) {
+        onDoubleClicked: function (mouse) {
             if (mouse.button !== Qt.LeftButton) {
                 return
             }

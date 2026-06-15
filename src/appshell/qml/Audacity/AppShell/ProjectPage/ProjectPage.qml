@@ -42,7 +42,7 @@ DockPage {
     property ProjectPageModel pageModel: ProjectPageModel {}
 
     signal externalDropAreaEntered(var drop)
-    signal externalDropAreaExited()
+    signal externalDropAreaExited
     signal externalDropAreaDropped(var drop)
 
     TrackNavigationModel {
@@ -355,7 +355,7 @@ DockPage {
                     DropArea {
                         anchors.fill: parent
 
-                        onEntered: function(drop) {
+                        onEntered: function (drop) {
                             root.externalDropAreaEntered(drop)
                         }
 
@@ -363,7 +363,7 @@ DockPage {
                             root.externalDropAreaExited()
                         }
 
-                        onDropped: function(drop) {
+                        onDropped: function (drop) {
                             root.externalDropAreaDropped(drop)
                         }
                     }

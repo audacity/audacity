@@ -30,9 +30,7 @@ Rectangle {
                 anchors.rightMargin: 8
                 anchors.verticalCenter: parent.verticalCenter
                 horizontalAlignment: Text.AlignLeft
-                text: (model.index + 1) + ": " + modelData.title
-                + "\n uri: " + modelData.uri
-                + "\n type: " + modelData.type
+                text: (model.index + 1) + ": " + modelData.title + "\n uri: " + modelData.uri + "\n type: " + modelData.type
             }
 
             onClicked: devModel.clicked(modelData.uri)

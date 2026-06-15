@@ -58,19 +58,19 @@ PreferencesPage {
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart
 
-            onThemeChangeRequested: function(newThemeCode) {
+            onThemeChangeRequested: function (newThemeCode) {
                 appearanceModel.currentThemeCode = newThemeCode
             }
 
-            onHighContrastChangeRequested: function(enabled) {
+            onHighContrastChangeRequested: function (enabled) {
                 appearanceModel.highContrastEnabled = enabled
             }
 
-            onSetFollowSystemThemeRequested: function(enabled) {
+            onSetFollowSystemThemeRequested: function (enabled) {
                 appearanceModel.isFollowSystemTheme = enabled
             }
 
-            onAccentColorChangeRequested: function(newColorIndex) {
+            onAccentColorChangeRequested: function (newColorIndex) {
                 appearanceModel.currentAccentColorIndex = newColorIndex
             }
 
@@ -80,7 +80,7 @@ PreferencesPage {
                 }
             }
 
-            onEnsureContentVisibleRequested: function(contentRect) {
+            onEnsureContentVisibleRequested: function (contentRect) {
                 root.ensureContentVisibleRequested(contentRect)
             }
         }
@@ -99,7 +99,7 @@ PreferencesPage {
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart + 1
 
-            onColorChangeRequested: function(newColor, propertyType) {
+            onColorChangeRequested: function (newColor, propertyType) {
                 appearanceModel.setNewColor(newColor, propertyType)
             }
 
@@ -118,7 +118,7 @@ PreferencesPage {
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart + 2
 
-            onClipStyleChangeRequested: function(clipStyle) {
+            onClipStyleChangeRequested: function (clipStyle) {
                 appearanceModel.setClipStyle(clipStyle)
             }
 
@@ -139,11 +139,11 @@ PreferencesPage {
             navigation.section: root.navigationSection
             navigation.order: root.navigationOrderStart + 4
 
-            onFontChangeRequested: function(newFontIndex) {
+            onFontChangeRequested: function (newFontIndex) {
                 appearanceModel.currentFontIndex = newFontIndex
             }
 
-            onBodyTextSizeChangeRequested: function(newBodyTextSize) {
+            onBodyTextSizeChangeRequested: function (newBodyTextSize) {
                 appearanceModel.bodyTextSize = newBodyTextSize
             }
 

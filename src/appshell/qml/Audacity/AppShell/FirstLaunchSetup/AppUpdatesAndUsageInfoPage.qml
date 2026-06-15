@@ -35,17 +35,13 @@ Page {
         readonly property string preferencesLink: "<a href=\"preferences\">%1</a>".arg(qsTrc("appshell/gettingstarted", "Preferences → Application"))
         readonly property string preferencesUrl: "audacity://preferences"
         readonly property string updatesTitleText: qsTrc("appshell/gettingstarted", "App Updates")
-        readonly property string updatesBodyText1: qsTrc("appshell/gettingstarted", 
-                                                        "Audacity notifies you in-app when a new version is available to download.")
-        readonly property string updatesBodyText2: qsTrc("appshell/gettingstarted", "You can turn this off anytime in %1.")
-                                                     .arg(prv.preferencesLink)
+        readonly property string updatesBodyText1: qsTrc("appshell/gettingstarted", "Audacity notifies you in-app when a new version is available to download.")
+        readonly property string updatesBodyText2: qsTrc("appshell/gettingstarted", "You can turn this off anytime in %1.").arg(prv.preferencesLink)
         readonly property string usageInfoTitleText: qsTrc("appshell/gettingstarted", "Usage Info")
         readonly property string privacyPolicyUrl: "https://www.audacityteam.org/legal/privacy-notice/"
         readonly property string privacyPolicyLink: "<a href=\"%1\">%2</a>".arg(prv.privacyPolicyUrl).arg(qsTrc("appshell/gettingstarted", "privacy policy"))
-        readonly property string usageInfoBodyText1: qsTrc("appshell/gettingstarted", 
-                                                        "To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This ID does not contain any personally identifiable information. Want to know more? Check out our %1.").arg(prv.privacyPolicyLink)
-        readonly property string usageInfoBodyText2: qsTrc("appshell/gettingstarted", "You can disable this anytime in %1.")
-                                                     .arg(prv.preferencesLink)
+        readonly property string usageInfoBodyText1: qsTrc("appshell/gettingstarted", "To help us understand how often people use Audacity, we generate a random ID (UUID) for each installation. This ID does not contain any personally identifiable information. Want to know more? Check out our %1.").arg(prv.privacyPolicyLink)
+        readonly property string usageInfoBodyText2: qsTrc("appshell/gettingstarted", "You can disable this anytime in %1.").arg(prv.preferencesLink)
         readonly property string disableUUIDBtnText: qsTrc("appshell/gettingstarted", "Disable UUID")
     }
 
@@ -54,12 +50,12 @@ Page {
     }
 
     onExtraButtonClicked: {
-        const disableUUID = false;
+        const disableUUID = false
         model.setSendAnonymousUsageInfo(disableUUID)
     }
 
     onNextButtonClicked: {
-        const enableUUID = true;
+        const enableUUID = true
         model.setSendAnonymousUsageInfo(enableUUID)
     }
 
@@ -134,7 +130,7 @@ Page {
 
                     text: prv.updatesBodyText2
 
-                    onLinkActivated: function(link) {
+                    onLinkActivated: function (link) {
                         api.launcher.open(prv.preferencesUrl)
                     }
 
@@ -182,7 +178,7 @@ Page {
 
                     text: prv.usageInfoBodyText2
 
-                    onLinkActivated: function(link) {
+                    onLinkActivated: function (link) {
                         api.launcher.open(prv.preferencesUrl)
                     }
 

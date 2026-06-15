@@ -37,7 +37,7 @@ DockWindow {
     property var interactiveProvider: InteractiveProvider {
         topParent: root
 
-        onRequestedDockPage: function(uri, params) {
+        onRequestedDockPage: function (uri, params) {
             root.loadPage(uri, params)
         }
     }
@@ -76,7 +76,7 @@ DockWindow {
                     }
                 }
 
-                onSelected: function(uri) {
+                onSelected: function (uri) {
                     api.launcher.open(uri)
                 }
 
@@ -91,15 +91,12 @@ DockWindow {
         HomePage {
             window: root.window
         },
-
         ProjectPage {
             topToolKeyNavSec: root.topToolKeyNavSec
         },
-
         PublishPage {
             topToolKeyNavSec: root.topToolKeyNavSec
         },
-
         DevToolsPage {}
     ]
 }

@@ -72,7 +72,7 @@ BaseSection {
         navigation.panel: root.navigation
         navigation.row: 1
 
-        onValueEdited: function(newValue) {
+        onValueEdited: function (newValue) {
             root.notePlayDurationChangeRequested(newValue)
         }
     }

@@ -18,8 +18,7 @@ Item {
     property int headerHeight: 20
     readonly property int handleMinH: 22
     readonly property int handleMaxH: 32
-    readonly property int handleHeight: Math.min(handleMaxH,
-                    Math.max(handleMinH, collapsed ? Math.round(clipHeight / 2) : Math.round((clipHeight - headerHeight) / 2)))
+    readonly property int handleHeight: Math.min(handleMaxH, Math.max(handleMinH, collapsed ? Math.round(clipHeight / 2) : Math.round((clipHeight - headerHeight) / 2)))
 
     property int animationDuration: 100
 
@@ -48,7 +47,7 @@ Item {
     signal stretchRightRequested(bool completed, int action)
 
     //! NOTE: auto-scroll for trimming is triggered from trackclipslistmodel
-    signal stopAutoScroll()
+    signal stopAutoScroll
 
     Item {
         id: leftTrimHandle
@@ -159,9 +158,7 @@ Item {
             cursorShape: Qt.BlankCursor
 
             function updateCustomCursor() {
-                var src = root.altPressed
-                    ? ":/images/customCursorShapes/ClipStretchLeft.png"
-                    : ":/images/customCursorShapes/ClipTrimLeft.png"
+                var src = root.altPressed ? ":/images/customCursorShapes/ClipStretchLeft.png" : ":/images/customCursorShapes/ClipTrimLeft.png"
                 CustomCursorProvider.setCursorShape(leftTrimMa, src)
             }
 
@@ -169,7 +166,9 @@ Item {
 
             Connections {
                 target: root
-                function onAltPressedChanged() { leftTrimMa.updateCustomCursor() }
+                function onAltPressedChanged() {
+                    leftTrimMa.updateCustomCursor()
+                }
             }
 
             onPressed: function (e) {
@@ -317,9 +316,7 @@ Item {
             cursorShape: Qt.BlankCursor
 
             function updateCustomCursor() {
-                var src = root.altPressed
-                    ? ":/images/customCursorShapes/ClipStretchRight.png"
-                    : ":/images/customCursorShapes/ClipTrimRight.png"
+                var src = root.altPressed ? ":/images/customCursorShapes/ClipStretchRight.png" : ":/images/customCursorShapes/ClipTrimRight.png"
                 CustomCursorProvider.setCursorShape(rightTrimMa, src)
             }
 
@@ -327,7 +324,9 @@ Item {
 
             Connections {
                 target: root
-                function onAltPressedChanged() { rightTrimMa.updateCustomCursor() }
+                function onAltPressedChanged() {
+                    rightTrimMa.updateCustomCursor()
+                }
             }
 
             onPressed: function (e) {

@@ -34,7 +34,7 @@ Item {
             leftVolumePressure.reset()
             leftVolumePressure.resetClipped()
             rightVolumePressure.reset()
-            rightVolumePressure.resetClipped();
+            rightVolumePressure.resetClipped()
         }
     }
 
@@ -43,7 +43,7 @@ Item {
     }
 
     Component.onCompleted: {
-        playbackMeterModel.init();
+        playbackMeterModel.init()
     }
 
     RowLayout {
@@ -97,7 +97,7 @@ Item {
                     id: rightVolumePressure
 
                     x: playbackMeterRuler.x + playbackMeterRuler.leftTextMargin
-                    width: playbackMeterRuler.effectiveWidth +  leftVolumePressure.overloadTotalSpace
+                    width: playbackMeterRuler.effectiveWidth + leftVolumePressure.overloadTotalSpace
 
                     meterModel: playbackMeterModel
                     enabled: root.enabled
@@ -132,7 +132,7 @@ Item {
                 navigation.row: root.navigation.row
                 navigation.column: root.navigation.column + 1
 
-                onVolumeLevelMoved: function(level) {
+                onVolumeLevelMoved: function (level) {
                     leftVolumePressure.reset()
                     leftVolumePressure.resetClipped()
                     rightVolumePressure.reset()
@@ -141,7 +141,7 @@ Item {
                     root.volumeLevelChangeRequested(Math.round(level * 100) / 100)
                 }
 
-                onHandlePressed: function() {
+                onHandlePressed: function () {
                     leftVolumePressure.reset()
                     leftVolumePressure.resetClipped()
                     rightVolumePressure.reset()
@@ -174,7 +174,7 @@ Item {
 
                 z: 10
 
-                enabled:  volumeSlider.handleX < (volumeSlider.width - volumeSlider.handleWidth - leftVolumePressure.overloadWidth)
+                enabled: volumeSlider.handleX < (volumeSlider.width - volumeSlider.handleWidth - leftVolumePressure.overloadWidth)
 
                 onClicked: {
                     leftVolumePressure.reset()
@@ -195,21 +195,21 @@ Item {
             property bool isDragging: false
 
             mouseArea.cursorShape: Qt.OpenHandCursor
-            mouseArea.onPressed: function(e) {
-                mouseArea.cursorShape = Qt.ClosedHandCursor;
-                resizeGrip.isDragging = true;
+            mouseArea.onPressed: function (e) {
+                mouseArea.cursorShape = Qt.ClosedHandCursor
+                resizeGrip.isDragging = true
             }
 
-            mouseArea.onPositionChanged: function(e) {
+            mouseArea.onPositionChanged: function (e) {
                 if (resizeGrip.isDragging) {
                     let newPosition = mapToItem(root, e.x, e.y)
                     root.widthChangeRequested(newPosition.x, newPosition.y)
                 }
             }
 
-            mouseArea.onReleased: function(e) {
-                mouseArea.cursorShape = Qt.OpenHandCursor;
-                resizeGrip.isDragging = false;
+            mouseArea.onReleased: function (e) {
+                mouseArea.cursorShape = Qt.OpenHandCursor
+                resizeGrip.isDragging = false
             }
 
             transparent: true

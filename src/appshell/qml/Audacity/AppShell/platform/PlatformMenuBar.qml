@@ -47,7 +47,7 @@ Item {
 
             menu.load()
 
-            item.subitemsChanged.connect(function(subitems, menuId) {
+            item.subitemsChanged.connect(function (subitems, menuId) {
                 for (var l in menuBar.menus) {
                     var menu = menuBar.menus[l]
                     if (menu.id === menuId) {
@@ -58,7 +58,7 @@ Item {
             })
         }
 
-        menuModel.itemsChanged.connect(function() {
+        menuModel.itemsChanged.connect(function () {
             for (var i in menuModel.items) {
                 var menu = menuBar.menus[i]
                 menu.subitems = menuModel.items[i].subitems
@@ -83,11 +83,11 @@ Item {
     }
 
     function makeMenuItem(parentMenu, itemInfo) {
-            var menuItem = menuItemComponent.createObject(parentMenu)
+        var menuItem = menuItemComponent.createObject(parentMenu)
 
-            setUpMenuItem(menuItem, itemInfo)
+        setUpMenuItem(menuItem, itemInfo)
 
-            return menuItem
+        return menuItem
     }
 
     function setUpMenuItem(menuItem, itemInfo) {

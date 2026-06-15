@@ -28,7 +28,7 @@ import Audacity.UiComponents 1.0
 BaseSection {
     id: root
 
-    signal restartAudioAndMidiDevicesRequested()
+    signal restartAudioAndMidiDevicesRequested
 
     title: qsTrc("appshell/preferences", "Audio engine")
 

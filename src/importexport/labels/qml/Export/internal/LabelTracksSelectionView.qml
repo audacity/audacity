@@ -20,8 +20,8 @@ Item {
     property alias navigationPanelEndOrder: buttonsNavPanel.order
 
     signal setSelectedRequested(var itemCode, bool selected)
-    signal selectAllRequested()
-    signal deselectAllRequested()
+    signal selectAllRequested
+    signal deselectAllRequested
 
     RoundedRectangle {
         id: content

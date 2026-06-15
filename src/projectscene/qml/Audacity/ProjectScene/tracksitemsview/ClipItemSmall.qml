@@ -1,7 +1,6 @@
 import QtQuick
 
 Rectangle {
-
     id: root
 
     required property color clipColor
@@ -27,5 +26,4 @@ Rectangle {
 
         visible: !root.collapsed
     }
-
 }

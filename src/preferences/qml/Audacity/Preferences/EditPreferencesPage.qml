@@ -126,11 +126,11 @@ PreferencesPage {
             navigation.section: root.navigationSection
             navigation.order: monoStereoConversionSection.navigationOrderEnd + 1
 
-            onZoomPreset1ChangeRequested: function(preset) {
+            onZoomPreset1ChangeRequested: function (preset) {
                 editPreferencesModel.setZoomPreset1(preset)
             }
 
-            onZoomPreset2ChangeRequested: function(preset) {
+            onZoomPreset2ChangeRequested: function (preset) {
                 editPreferencesModel.setZoomPreset2(preset)
             }
 

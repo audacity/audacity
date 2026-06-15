@@ -201,7 +201,7 @@ TrackItemsContainer {
                                     var yWithinTrack = yWithinLabel
                                     var xWithinTrack = xWithinLabel + itemData.x
 
-                                    trackItemMousePositionChanged(xWithinTrack, yWithinTrack, itemData.key)
+                                    trackItemMousePositionChanged(xWithinTrack, yWithinTrack, itemData.key);
 
                                     // While a label is being moved or stretched the guideline follows the
                                     // dragged label edge (driven by handleLabelGuideline), not the cursor —

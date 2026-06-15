@@ -39,8 +39,8 @@ RowLayout {
     property bool isFileInfoPanelProperty: false
     property bool valueFillWidth: false
 
-    signal scrollIntoViewRequested()
-    signal deletePropertyRequested()
+    signal scrollIntoViewRequested
+    signal deletePropertyRequested
 
     spacing: 8
 
@@ -75,7 +75,7 @@ RowLayout {
             }
         }
 
-        onTextChanged: function(newValue) {
+        onTextChanged: function (newValue) {
             root.propertyName = newValue
         }
     }
@@ -97,7 +97,7 @@ RowLayout {
             }
         }
 
-        onTextChanged: function(newValue) {
+        onTextChanged: function (newValue) {
             root.propertyValue = newValue
         }
     }
