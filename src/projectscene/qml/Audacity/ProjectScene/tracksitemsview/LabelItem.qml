@@ -95,7 +95,7 @@ Item {
         enabled: root.enabled && root.visible
 
         accessible.role: MUAccessible.Button
-        accessible.name: root.title
+        accessible.name: qsTrc("accessibility", "Label: %1").arg(root.title)
 
         onActiveChanged: function (active) {
             if (active) {

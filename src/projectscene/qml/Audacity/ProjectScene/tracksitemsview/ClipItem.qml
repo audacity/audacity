@@ -155,7 +155,7 @@ Rectangle {
         enabled: root.enabled && root.visible
 
         accessible.role: MUAccessible.Button
-        accessible.name: root.name
+        accessible.name: qsTrc("accessibility", "Clip: %1").arg(root.title)
 
         onActiveChanged: function (active) {
             // Make sure the focus navigation border is visible on top of other clips
@@ -678,6 +678,8 @@ Rectangle {
                     panel: root.clipNavigationPanel
                     column: 3
 
+                    accessible.role: MUAccessible.EditableText
+                    accessible.name: qsTrc("accessibility", "Clip name: %1").arg(root.title)
                     accessible.enabled: titleEditNavCtrl.enabled
 
                     onTriggered: {
@@ -816,6 +818,7 @@ Rectangle {
                     navigation.name: "ClipMenuBtn"
                     navigation.panel: root.clipNavigationPanel
                     navigation.column: 4
+                    navigation.accessible.name: qsTrc("accessibility", "Clip menu")
 
                     onHandleMenuItem: function (itemId) {
                         Qt.callLater(menuModel.handleMenuItem, itemId)

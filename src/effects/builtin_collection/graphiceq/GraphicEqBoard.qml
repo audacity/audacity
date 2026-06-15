@@ -163,6 +163,7 @@ Item {
 
                     navigation.panel: root.navigationPanel
                     navigation.order: root.navigationOrderStart + index
+                    navigation.accessible.name: model.centerFreq + " Hz"
 
                     value: model.dbGain
 

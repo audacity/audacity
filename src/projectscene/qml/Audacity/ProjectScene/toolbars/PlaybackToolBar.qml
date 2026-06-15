@@ -41,7 +41,7 @@ Item {
         id: view
 
         navigationPanel.name: "PlaybackToolBar"
-        navigationPanel.accessible.name: qsTrc("projectscene", "Playback toolbar")
+        navigationPanel.accessible.name: qsTrc("projectscene", "Playback toolbar") + ", " + view.navigationPanel.directionInfo
 
         anchors.verticalCenter: parent.verticalCenter
 
@@ -160,6 +160,8 @@ Item {
 
             Timecode {
                 property var itemData: null
+
+                accessibleName: qsTrc("accessibility", "Playback position: ")
 
                 value: Boolean(itemData) ? itemData.currentValue : 0
 

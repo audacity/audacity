@@ -179,6 +179,7 @@ ListItemBlank {
 
                     navigation.panel: root.navigation.panel
                     navigation.order: root.collapsed ? root.headerTrailingControlsNavigationEnd + 1 : title.navigation.order + 1
+                    navigation.accessible.name: qsTrc("accessibility", "Track menu")
 
                     onClicked: {
                         root.selectionRequested(true)
