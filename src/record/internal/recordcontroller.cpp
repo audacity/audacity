@@ -18,9 +18,12 @@ static const ActionQuery RECORD_TOGGLE_MIC_METERING("action://record/toggle-mic-
 static const ActionQuery RECORD_TOGGLE_INPUT_MONITORING("action://record/toggle-input-monitoring");
 static const ActionQuery RECORD_LEAD_IN_RECORDING_QUERY("action://record/lead-in-recording");
 
+static const ActionCode RECORD_ON_CURRENT_TRACK_CODE("record-on-current-track");
+
 void RecordController::init()
 {
     dispatcher()->reg(this, RECORD_START_QUERY, this, &RecordController::toggleRecord);
+    dispatcher()->reg(this, RECORD_ON_CURRENT_TRACK_CODE, this, &RecordController::toggleRecord);
     dispatcher()->reg(this, RECORD_PAUSE_QUERY, this, &RecordController::pause);
     dispatcher()->reg(this, RECORD_STOP_QUERY, this, &RecordController::stop);
     dispatcher()->reg(this, RECORD_TOGGLE_MIC_METERING, this, &RecordController::toggleMicMetering);
