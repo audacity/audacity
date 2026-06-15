@@ -14,6 +14,10 @@
 #include "context/iglobalcontext.h"
 #include "playback/iplaybackcontroller.h"
 #include "trackedit/iselectioncontroller.h"
+#include "trackedit/itracksinteraction.h"
+#include "trackedit/itrackeditinteraction.h"
+#include "trackedit/internal/itracknavigationcontroller.h"
+#include "audio/iaudiodevicesprovider.h"
 #include "record/irecordconfiguration.h"
 
 #include "record/irecord.h"
@@ -30,6 +34,10 @@ class RecordController : public IRecordController, public muse::actions::Actiona
     muse::ContextInject<IRecord> record{ this };
     muse::ContextInject<playback::IPlaybackController> playbackController{ this };
     muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
+    muse::ContextInject<trackedit::ITracksInteraction> tracksInteraction{ this };
+    muse::ContextInject<trackedit::ITrackeditInteraction> trackeditInteraction{ this };
+    muse::ContextInject<trackedit::ITrackNavigationController> trackNavigationController{ this };
+    muse::ContextInject<audio::IAudioDevicesProvider> audioDevicesProvider{ this };
 
 public:
     RecordController(const muse::modularity::ContextPtr& ctx)
@@ -70,7 +78,9 @@ private:
     void onProjectChanged();
 
     void toggleRecord();
+    void recordOnNewTrack();
     void start();
+    void startWithNewTrack();
     void pause();
     void stop();
     void leadInRecording();

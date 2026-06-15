@@ -19,11 +19,13 @@ static const ActionQuery RECORD_TOGGLE_INPUT_MONITORING("action://record/toggle-
 static const ActionQuery RECORD_LEAD_IN_RECORDING_QUERY("action://record/lead-in-recording");
 
 static const ActionCode RECORD_ON_CURRENT_TRACK_CODE("record-on-current-track");
+static const ActionCode RECORD_ON_NEW_TRACK_CODE("record-on-new-track");
 
 void RecordController::init()
 {
     dispatcher()->reg(this, RECORD_START_QUERY, this, &RecordController::toggleRecord);
     dispatcher()->reg(this, RECORD_ON_CURRENT_TRACK_CODE, this, &RecordController::toggleRecord);
+    dispatcher()->reg(this, RECORD_ON_NEW_TRACK_CODE, this, &RecordController::recordOnNewTrack);
     dispatcher()->reg(this, RECORD_PAUSE_QUERY, this, &RecordController::pause);
     dispatcher()->reg(this, RECORD_STOP_QUERY, this, &RecordController::stop);
     dispatcher()->reg(this, RECORD_TOGGLE_MIC_METERING, this, &RecordController::toggleMicMetering);
@@ -91,6 +93,15 @@ void RecordController::toggleRecord()
     }
 }
 
+void RecordController::recordOnNewTrack()
+{
+    if (isRecording()) {
+        stop();
+    } else {
+        startWithNewTrack();
+    }
+}
+
 void RecordController::start()
 {
     IF_ASSERT_FAILED(record()) {
@@ -99,6 +110,36 @@ void RecordController::start()
 
     Ret ret = record()->start();
     if (!ret) {
+        interactive()->error(muse::trc("record", "Recording error"), ret.text());
+        return;
+    }
+
+    setCurrentRecordStatus(RecordStatus::Running);
+}
+
+void RecordController::startWithNewTrack()
+{
+    IF_ASSERT_FAILED(record()) {
+        return;
+    }
+
+    const int recordingChannels = std::max(1, audioDevicesProvider()->inputChannelsSelected());
+
+    au::trackedit::TrackIdList newTracks;
+    if (recordingChannels == 2) {
+        newTracks.push_back(tracksInteraction()->addWaveTrack(2));
+    } else {
+        for (int i = 0; i < recordingChannels; ++i) {
+            newTracks.push_back(tracksInteraction()->addWaveTrack(1));
+        }
+    }
+
+    selectionController()->setSelectedTracks(newTracks);
+    trackNavigationController()->setFocusedTrack(newTracks.front());
+
+    Ret ret = record()->start();
+    if (!ret) {
+        trackeditInteraction()->deleteTracks(newTracks);
         interactive()->error(muse::trc("record", "Recording error"), ret.text());
         return;
     }
