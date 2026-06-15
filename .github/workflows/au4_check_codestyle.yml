@@ -16,3 +16,7 @@ jobs:
     - name: Test coding style
       run: |
         cmake -P ./muse/buildscripts/ci/checkcodestyle/checkcodestyle.cmake ./src/
+
+    - name: Test QML coding style
+      run: |
+        cmake -P ./buildscripts/ci/checkcodestyle/check_qml_codestyle.cmake ./src/
