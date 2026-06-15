@@ -257,7 +257,12 @@ StyledDialogView {
                 buttonId: ButtonBoxModel.Apply
                 minWidth: 80
                 accentButton: true
-                enabled: (exportModel.selectedTracks && exportModel.selectedTracks.length > 0) && (exportModel.fileName && exportModel.fileName.trim() !== "") && (exportModel.directoryPath && exportModel.directoryPath.trim() !== "")
+
+                readonly property bool hasSelectedTracks: exportModel.selectedTracks && exportModel.selectedTracks.length > 0
+                readonly property bool hasFileName: exportModel.fileName && exportModel.fileName.trim() !== ""
+                readonly property bool hasDirectory: exportModel.directoryPath && exportModel.directoryPath.trim() !== ""
+
+                enabled: hasSelectedTracks && hasFileName && hasDirectory
 
                 navigation.panel: buttonBox.navigationPanel
                 navigation.order: 2
