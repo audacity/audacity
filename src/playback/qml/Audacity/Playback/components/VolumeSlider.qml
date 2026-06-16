@@ -24,7 +24,7 @@ Slider {
     readonly property real handleHeight: handleWidth
 
     signal volumeLevelMoved(var level)
-    signal handlePressed()
+    signal handlePressed
 
     from: meterModel ? meterModel.dbRange : 0
     to: 0
@@ -41,8 +41,8 @@ Slider {
     property alias handleX: handleItem.x
     property alias handleY: handleItem.y
 
-    signal increaseRequested()
-    signal decreaseRequested()
+    signal increaseRequested
+    signal decreaseRequested
 
     QtObject {
         id: prv
@@ -91,8 +91,8 @@ Slider {
         accessible.maximumValue: root.to
         accessible.stepSize: root.stepSize
 
-        onNavigationEvent: function(event) {
-            switch(event.type) {
+        onNavigationEvent: function (event) {
+            switch (event.type) {
             case NavigationEvent.Down:
                 root.decreaseRequested()
                 event.accepted = true
@@ -142,14 +142,14 @@ Slider {
 
             preventStealing: true // Don't let a Flickable steal the mouse
 
-            onPressed: function(mouse) {
+            onPressed: function (mouse) {
                 prv.dragActive = true
                 prv.dragStartOffset = mouse.x
                 root.handlePressed()
                 tooltip.show(true)
             }
 
-            onPositionChanged: function(mouse)  {
+            onPositionChanged: function (mouse) {
                 if (!prv.dragActive) {
                     return
                 }
@@ -161,18 +161,18 @@ Slider {
                 root.volumeLevelMoved(root.meterModel.positionToSample(newPosClamped))
             }
 
-            onReleased: function() {
+            onReleased: function () {
                 prv.dragActive = false
                 if (!containsMouse) {
                     tooltip.hide(true)
                 }
             }
 
-            onEntered: function() {
+            onEntered: function () {
                 tooltip.show()
             }
 
-            onExited: function() {
+            onExited: function () {
                 if (!prv.dragActive) {
                     tooltip.hide(true)
                 }
@@ -193,7 +193,6 @@ Slider {
                 color: ui.theme.backgroundPrimaryColor
                 opacity: 0.7
             }
-
         }
     }
 

@@ -48,7 +48,7 @@ Item {
         accessible.maximumValue: root.max
         accessible.stepSize: root.stepSize
 
-        onNavigationEvent: function(event) {
+        onNavigationEvent: function (event) {
             switch (event.type) {
             case NavigationEvent.Up:
                 root.requestNewValue(Math.min(root.max, root.value + root.stepSize))
@@ -97,7 +97,7 @@ Item {
                 anchors.fill: parent
                 hoverEnabled: true
 
-                onPressed: function(mouse) {
+                onPressed: function (mouse) {
                     mouse.accepted = false
                 }
 

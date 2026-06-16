@@ -40,7 +40,7 @@ Text {
         pixelSize: ui.theme.bodyFont.pixelSize
     }
 
-    onLinkActivated: function(link) {
+    onLinkActivated: function (link) {
         if (root.autoOpenLinks) {
             Qt.openUrlExternally(link)
         }

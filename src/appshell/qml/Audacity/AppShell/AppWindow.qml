@@ -67,10 +67,10 @@ ApplicationWindow {
         fileModified: titleProvider.fileModified
     }
 
-    ToolTipProvider { }
+    ToolTipProvider {}
 
     //! NOTE Need only create
-    Shortcuts { }
+    Shortcuts {}
 
     Item {
         id: windowContentItem
@@ -81,7 +81,7 @@ ApplicationWindow {
         anchors.fill: parent
     }
 
-    ToastProvider { }
+    ToastProvider {}
 
     function showMinimizedWithSavePreviousState() {
         bridge.showMinimizedWithSavePreviousState()

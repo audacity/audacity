@@ -38,7 +38,7 @@ StyledDialogView {
         }
 
         spacing: 16
-        
+
         StyledTextLabel {
             id: label
 
@@ -49,7 +49,7 @@ StyledDialogView {
 
         Item {
             id: dropdown
-            width: parent.width *.5
+            width: parent.width * .5
             height: 30
 
             TextInputField {
@@ -59,13 +59,14 @@ StyledDialogView {
 
                 currentText: root.rate > 0 ? root.rate.toString() : ""
 
-                validator: IntValidator { bottom: 1 }
+                validator: IntValidator {
+                    bottom: 1
+                }
 
-                onTextChanged: function(newValue) {
+                onTextChanged: function (newValue) {
                     var val = parseInt(newValue)
                     root.rate = (val > 0) ? val : 1
                 }
-
             }
 
             StyledIconLabel {
@@ -83,8 +84,11 @@ StyledDialogView {
                     anchors.fill: parent
 
                     onClicked: {
-                        menuLoader.toggleOpened(availableRates.map(function(rate) {
-                            return {"title": rate.toString(), "id": rate.toString()}
+                        menuLoader.toggleOpened(availableRates.map(function (rate) {
+                            return {
+                                "title": rate.toString(),
+                                "id": rate.toString()
+                            }
                         }))
                     }
 
@@ -110,7 +114,7 @@ StyledDialogView {
                 id: menuLoader
                 width: parent.width
 
-                onHandleMenuItem: function(itemId) {
+                onHandleMenuItem: function (itemId) {
                     if (itemId === null) {
                         return
                     }
@@ -119,7 +123,6 @@ StyledDialogView {
                 }
             }
         }
-
     }
 
     ButtonBox {
@@ -127,9 +130,9 @@ StyledDialogView {
         width: parent.width
         anchors.bottom: parent.bottom
 
-        buttons: [ ButtonBoxModel.Cancel, ButtonBoxModel.Ok]
+        buttons: [ButtonBoxModel.Cancel, ButtonBoxModel.Ok]
 
-        onStandardButtonClicked: function(buttonId) {
+        onStandardButtonClicked: function (buttonId) {
             switch (buttonId) {
             case ButtonBoxModel.Cancel:
                 root.reject()
@@ -141,7 +144,6 @@ StyledDialogView {
                 }
                 root.hide()
                 return
-
             }
         }
     }

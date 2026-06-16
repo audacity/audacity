@@ -60,7 +60,6 @@ Rectangle {
                 opacity: 1
             }
         },
-
         State {
             name: "HOVERED"
             when: root.mouseArea.containsMouse && !root.mouseArea.pressed

@@ -22,7 +22,7 @@ Item {
                 leftVolumePressure.reset()
                 leftVolumePressure.resetClipped()
                 rightVolumePressure.reset()
-                rightVolumePressure.resetClipped();
+                rightVolumePressure.resetClipped()
             }
         }
     }
@@ -98,7 +98,6 @@ Item {
                 VolumePressureMeter {
                     id: rightVolumePressure
 
-
                     anchors.top: parent.top
                     height: parent.height - ruler.bottomTextMargin
 
@@ -133,14 +132,14 @@ Item {
                 volumeLevel: model.level
 
                 anchors.top: parent.top
-                anchors.topMargin: 2  + leftVolumePressure.overloadHeight - (handleWidth / 2)
+                anchors.topMargin: 2 + leftVolumePressure.overloadHeight - (handleWidth / 2)
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
                 anchors.leftMargin: 3
 
                 handleWidth: 24
 
-                onVolumeLevelMoved: function(level) {
+                onVolumeLevelMoved: function (level) {
                     leftVolumePressure.reset()
                     leftVolumePressure.resetClipped()
                     rightVolumePressure.reset()
@@ -149,7 +148,7 @@ Item {
                     model.volumeLevelChangeRequested(level)
                 }
 
-                onHandlePressed: function() {
+                onHandlePressed: function () {
                     leftVolumePressure.reset()
                     leftVolumePressure.resetClipped()
                     rightVolumePressure.reset()
@@ -171,7 +170,7 @@ Item {
                 // This will avoid to reset the volume levels when clicking on the overload area
                 enabled: (volumeSlider.handleY >= leftVolumePressure.overloadHeight)
 
-                onClicked: function(mouse) {
+                onClicked: function (mouse) {
                     leftVolumePressure.reset()
                     leftVolumePressure.resetClipped()
                     rightVolumePressure.reset()

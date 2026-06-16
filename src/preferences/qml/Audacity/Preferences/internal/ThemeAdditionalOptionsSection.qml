@@ -30,7 +30,7 @@ BaseSection {
 
     property alias scoreInversionEnabled: scoreInversionEnable.checked
 
-    signal resetThemeToDefaultRequested()
+    signal resetThemeToDefaultRequested
     signal scoreInversionEnableChangeRequested(bool enable)
 
     CheckBox {

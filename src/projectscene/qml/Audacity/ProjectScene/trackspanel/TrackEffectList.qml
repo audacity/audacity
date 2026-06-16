@@ -83,7 +83,7 @@ Rectangle {
             navigationPanel: root.navigationPanel
             navigationOrder: root.navigationOrderStart + model.index
 
-            onGripReorderCommitted: function(targetIndex, focusGripHandle) {
+            onGripReorderCommitted: function (targetIndex, focusGripHandle) {
                 root.pendingGripFocusIndex = targetIndex
                 root.pendingGripFocusHandle = focusGripHandle
             }
@@ -123,7 +123,7 @@ Rectangle {
             root.pendingGripFocusIndex = -1
             root.pendingGripFocusHandle = false
 
-            Qt.callLater(function() {
+            Qt.callLater(function () {
                 root.focusGripAtIndex(targetIndex, focusGripHandle)
             })
         }
@@ -140,7 +140,7 @@ Rectangle {
             const targetIndex = root.pendingDialogRestoreIndex
             root.pendingDialogRestoreIndex = -1
 
-            Qt.callLater(function() {
+            Qt.callLater(function () {
                 const delegate = trackEffectList.itemAtIndex(targetIndex)
                 if (delegate) {
                     delegate.navigation.requestActive()

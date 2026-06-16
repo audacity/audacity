@@ -15,7 +15,7 @@ Item {
     readonly property real effectiveHeight: height - topTextMargin - bottomTextMargin
 
     onEffectiveHeightChanged: {
-        root.meterModel.meterSize = root.effectiveHeight;
+        root.meterModel.meterSize = root.effectiveHeight
     }
 
     // Draw small steps
@@ -52,7 +52,7 @@ Item {
             y: root.topTextMargin + (1.0 - root.meterModel.stepToPosition(modelData)) * root.effectiveHeight
             width: parent.width
             height: 1
-            
+
             Row {
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
@@ -78,7 +78,17 @@ Item {
             }
         }
     }
-    
-    Text { id: topText; text: "0"; font.pixelSize: 10; visible: false }
-    Text { id: bottomText; text: "-60"; font.pixelSize: 10; visible: false }
+
+    Text {
+        id: topText
+        text: "0"
+        font.pixelSize: 10
+        visible: false
+    }
+    Text {
+        id: bottomText
+        text: "-60"
+        font.pixelSize: 10
+        visible: false
+    }
 }

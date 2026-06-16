@@ -20,7 +20,11 @@ TrackItem {
             opacity: root.collapsed ? 1 : 0
             visible: opacity !== 0
 
-            Behavior on opacity { OpacityAnimator { duration: 100 } }
+            Behavior on opacity {
+                OpacityAnimator {
+                    duration: 100
+                }
+            }
 
             Loader {
                 sourceComponent: trackControlButtons
@@ -41,7 +45,11 @@ TrackItem {
 
                 opacity: root.collapsed ? 0 : 1
                 visible: opacity !== 0
-                Behavior on opacity { OpacityAnimator { duration: 100 } }
+                Behavior on opacity {
+                    OpacityAnimator {
+                        duration: 100
+                    }
+                }
 
                 PanKnob {
                     id: panKnob
@@ -52,7 +60,7 @@ TrackItem {
                     navigation.order: root.extraControlsNavigationStart
                     navigation.enabled: !root.collapsed
 
-                    onNewPanRequested: function(newValue, completed) {
+                    onNewPanRequested: function (newValue, completed) {
                         if (Boolean(root.item)) {
                             root.item.setPan(newValue, completed)
                         }
@@ -68,14 +76,16 @@ TrackItem {
                     navigation.order: panKnob.navigation.order + 1
                     navigation.enabled: !root.collapsed
 
-                    onNewVolumeRequested: function(newValue, completed) {
+                    onNewVolumeRequested: function (newValue, completed) {
                         if (Boolean(root.item)) {
                             root.item.setVolumeLevel(newValue, completed)
                         }
                     }
 
                     Component.onCompleted: {
-                        root.extraControlsNavigationEnd = Qt.binding(function() { return volumeSlider.navigation.order })
+                        root.extraControlsNavigationEnd = Qt.binding(function () {
+                            return volumeSlider.navigation.order
+                        })
                     }
                 }
 
@@ -92,7 +102,11 @@ TrackItem {
 
                 opacity: topRow.visible && root.height > root.mapFromItem(this, 0, height + bottomSeparatorHeight).y ? 1 : 0
                 visible: opacity !== 0
-                Behavior on opacity { OpacityAnimator { duration: 100 } }
+                Behavior on opacity {
+                    OpacityAnimator {
+                        duration: 100
+                    }
+                }
 
                 navigation.panel: root.navigation.panel
                 navigation.order: root.headerTrailingControlsNavigationEnd + 1
@@ -129,7 +143,9 @@ TrackItem {
                     rightVolumePressureMeter.resetClipped()
                 }
 
-                TapHandler { onTapped: volumePressureContainer.clearMeters() }
+                TapHandler {
+                    onTapped: volumePressureContainer.clearMeters()
+                }
 
                 VolumePressureMeter {
                     id: leftOrMonoVolumePressureMeter
@@ -186,14 +202,26 @@ TrackItem {
                 State {
                     when: Boolean(root.item) && root.item.channelCount === 1
                     name: "mono"
-                    PropertyChanges { target: volumePressureContainer; indicatorWidth: 8 }
-                    PropertyChanges { target: rightVolumePressureMeter; visible: false }
+                    PropertyChanges {
+                        target: volumePressureContainer
+                        indicatorWidth: 8
+                    }
+                    PropertyChanges {
+                        target: rightVolumePressureMeter
+                        visible: false
+                    }
                 },
                 State {
                     when: Boolean(root.item) && root.item.channelCount === 2
                     name: "stereo"
-                    PropertyChanges { target: volumePressureContainer; indicatorWidth: 7 }
-                    PropertyChanges { target: rightVolumePressureMeter; visible: true }
+                    PropertyChanges {
+                        target: volumePressureContainer
+                        indicatorWidth: 7
+                    }
+                    PropertyChanges {
+                        target: rightVolumePressureMeter
+                        visible: true
+                    }
                 }
             ]
         }
@@ -243,7 +271,9 @@ TrackItem {
                 }
 
                 Component.onCompleted: {
-                    root.headerTrailingControlsNavigationEnd = Qt.binding(function() { return soloButton.navigation.order })
+                    root.headerTrailingControlsNavigationEnd = Qt.binding(function () {
+                        return soloButton.navigation.order
+                    })
                 }
             }
         }

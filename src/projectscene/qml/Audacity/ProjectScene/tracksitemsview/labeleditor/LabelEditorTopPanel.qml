@@ -21,10 +21,10 @@ Item {
 
     implicitHeight: 48
 
-    signal importRequested()
-    signal exportRequested()
-    signal removeSelectedLabelsRequested()
-    signal addLabelRequested()
+    signal importRequested
+    signal exportRequested
+    signal removeSelectedLabelsRequested
+    signal addLabelRequested
 
     function focusOnFirst() {
         importButton.navigation.requestActive()
@@ -79,7 +79,6 @@ Item {
                 root.importRequested()
             }
         }
-
 
         FlatButton {
             id: exportButton

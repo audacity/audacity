@@ -31,11 +31,14 @@ StyledDialogView {
         id: prv
 
         function createNewLabelTrackAndClose() {
-            var trackName = model.createLabelTrack(trackNameInput.inputField.text);
+            var trackName = model.createLabelTrack(trackNameInput.inputField.text)
             if (trackName !== "") {
-                root.ret = {errcode: 0, value: trackName}
+                root.ret = {
+                    errcode: 0,
+                    value: trackName
+                }
             }
-            root.hide();
+            root.hide()
         }
     }
 

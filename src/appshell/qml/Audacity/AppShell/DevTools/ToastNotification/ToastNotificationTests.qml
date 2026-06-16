@@ -10,14 +10,14 @@ import Audacity.Toast 1.0
 
 Rectangle {
     id: root
-    
+
     clip: true
     color: ui.theme.backgroundPrimaryColor
-    
+
     ToastTestsModel {
         id: toastModel
     }
-    
+
     Flickable {
         id: flickable
 
@@ -31,184 +31,180 @@ Rectangle {
 
             width: parent.width
             spacing: 36
-            
+
             StyledTextLabel {
                 text: "Toast Notification Tests"
                 font: ui.theme.largeBodyFont
             }
-    
+
             StyledGroupBox {
                 width: Math.min(parent.width, 480)
                 title: "Toast with Timeout"
-                
+
                 Column {
                     width: parent.width
                     spacing: 12
-                    
+
                     Row {
                         spacing: 12
                         width: parent.width
-                        
+
                         Column {
                             width: parent.width / 2 - 6
                             spacing: 8
-                            
+
                             StyledTextLabel {
                                 text: "Title:"
                             }
-                            
+
                             TextInputField {
                                 id: timeoutTitle
                                 width: parent.width
                                 currentText: "Timeout Toast"
-                                onTextChanged: function(newTextValue) {
+                                onTextChanged: function (newTextValue) {
                                     currentText = newTextValue
                                 }
                             }
                         }
-                        
+
                         Column {
                             width: parent.width / 2 - 6
                             spacing: 8
-                            
+
                             StyledTextLabel {
                                 text: "Message:"
                             }
-                            
+
                             TextInputField {
                                 id: timeoutMessage
                                 width: parent.width
                                 currentText: "This will disappear automatically"
 
-                                onTextChanged: function(newTextValue) {
+                                onTextChanged: function (newTextValue) {
                                     currentText = newTextValue
                                 }
                             }
                         }
                     }
-                    
+
                     Row {
                         spacing: 12
                         width: parent.width
-                        
+
                         Column {
                             width: (parent.width - 36) / 4
                             spacing: 8
-                            
+
                             StyledTextLabel {
                                 text: "Icon Code:"
                             }
-                            
+
                             TextInputField {
                                 id: timeoutIconCode
                                 width: parent.width
                                 currentText: "0xEF4E"
 
-                                onTextChanged: function(newTextValue) {
+                                onTextChanged: function (newTextValue) {
                                     currentText = newTextValue
                                 }
                             }
                         }
-                        
+
                         Column {
                             width: (parent.width - 36) / 4
                             spacing: 8
-                            
+
                             StyledTextLabel {
                                 text: "Timeout (seconds):"
                             }
-                            
+
                             TextInputField {
                                 id: timeoutSeconds
                                 width: parent.width
                                 currentText: "5"
 
-                                onTextChanged: function(newTextValue) {
+                                onTextChanged: function (newTextValue) {
                                     currentText = newTextValue
                                 }
                             }
                         }
-                        
+
                         CheckBox {
                             id: timeoutDismissible
                             text: "Dismissible"
                             checked: true
 
-                            onClicked: function() {
+                            onClicked: function () {
                                 timeoutDismissible.checked = !timeoutDismissible.checked
                             }
                         }
                     }
-                    
+
                     FlatButton {
                         text: "Show Toast with Timeout"
                         width: parent.width
                         onClicked: {
-                            toastModel.showToastWithTimeout(
-                                timeoutTitle.currentText,
-                                timeoutMessage.currentText,
-                                parseInt(timeoutIconCode.currentText),
-                                parseInt(timeoutSeconds.currentText),
-                                timeoutDismissible.checked
-                            )
+                            const iconCode = parseInt(timeoutIconCode.currentText)
+                            const seconds = parseInt(timeoutSeconds.currentText)
+                            toastModel.showToastWithTimeout(timeoutTitle.currentText, timeoutMessage.currentText, iconCode, seconds, timeoutDismissible.checked)
                         }
                     }
                 }
             }
-            
+
             StyledGroupBox {
                 width: Math.min(parent.width, 480)
                 title: "Simple toast types"
-    
+
                 Column {
                     width: parent.width
                     spacing: 12
-                    
+
                     Row {
                         spacing: 12
                         width: parent.width
-                        
+
                         Column {
                             width: parent.width / 2 - 6
                             spacing: 8
-                            
+
                             StyledTextLabel {
                                 text: "Title:"
                             }
-                            
+
                             TextInputField {
                                 id: simpleTitle
                                 width: parent.width
                                 currentText: "Simple Test"
-                                onTextChanged: function(newTextValue) {
+                                onTextChanged: function (newTextValue) {
                                     currentText = newTextValue
                                 }
                             }
                         }
-                        
+
                         Column {
                             width: parent.width / 2 - 6
                             spacing: 8
-                            
+
                             StyledTextLabel {
                                 text: "Message:"
                             }
-                            
+
                             TextInputField {
                                 id: simpleMessage
                                 width: parent.width
                                 currentText: "Simple toast message"
-                                onTextChanged: function(newTextValue) {
+                                onTextChanged: function (newTextValue) {
                                     currentText = newTextValue
                                 }
                             }
                         }
                     }
-                    
+
                     Row {
                         spacing: 12
                         width: parent.width
-                        
+
                         FlatButton {
                             text: "Success"
                             width: (parent.width - 36) / 4
@@ -216,7 +212,7 @@ Rectangle {
                                 toastModel.showSuccess(simpleTitle.currentText, simpleMessage.currentText)
                             }
                         }
-                        
+
                         FlatButton {
                             text: "Error"
                             width: (parent.width - 36) / 4
@@ -224,7 +220,7 @@ Rectangle {
                                 toastModel.showError(simpleTitle.currentText, simpleMessage.currentText)
                             }
                         }
-                        
+
                         FlatButton {
                             text: "Info"
                             width: (parent.width - 36) / 4
@@ -232,7 +228,7 @@ Rectangle {
                                 toastModel.showInfo(simpleTitle.currentText, simpleMessage.currentText)
                             }
                         }
-                        
+
                         FlatButton {
                             text: "Warning"
                             width: (parent.width - 36) / 4
@@ -247,146 +243,142 @@ Rectangle {
             StyledGroupBox {
                 width: Math.min(parent.width, 480)
                 title: "Toast executing code on button press"
-    
+
                 Column {
                     width: parent.width
                     spacing: 12
-                    
+
                     Row {
                         spacing: 12
                         width: parent.width
-                        
+
                         Column {
                             width: parent.width / 2 - 6
                             spacing: 8
-                            
+
                             StyledTextLabel {
                                 text: "Title:"
                             }
-                            
+
                             TextInputField {
                                 id: asyncTitle
                                 width: parent.width
                                 currentText: "Title"
-                                onTextChanged: function(newTextValue) {
+                                onTextChanged: function (newTextValue) {
                                     currentText = newTextValue
                                 }
                             }
                         }
-                        
+
                         Column {
                             width: parent.width / 2 - 6
                             spacing: 8
-                            
+
                             StyledTextLabel {
                                 text: "Message:"
                             }
-                            
+
                             TextInputField {
-                                id:  asyncMessage
+                                id: asyncMessage
                                 width: parent.width
                                 currentText: "Message"
-                                onTextChanged: function(newTextValue) {
+                                onTextChanged: function (newTextValue) {
                                     currentText = newTextValue
                                 }
                             }
                         }
                     }
-                        
+
                     FlatButton {
                         text: "Throw info dialog when clicked"
                         width: parent.width
                         onClicked: {
-                            toastModel.showToastWithAction(
-                                asyncTitle.currentText,
-                                asyncMessage.currentText,
-                                IconCode.INFO,
-                            )
+                            toastModel.showToastWithAction(asyncTitle.currentText, asyncMessage.currentText, IconCode.INFO)
                         }
                     }
                 }
             }
-            
+
             StyledGroupBox {
                 width: Math.min(parent.width, 480)
                 title: "Toast with Progress"
-                
+
                 Column {
                     width: parent.width
                     spacing: 12
-                    
+
                     Row {
                         spacing: 12
                         width: parent.width
-                        
+
                         Column {
                             width: parent.width / 2 - 6
                             spacing: 8
-                            
+
                             StyledTextLabel {
                                 text: "Title:"
                             }
-                            
+
                             TextInputField {
                                 id: progressTitle
                                 width: parent.width
                                 currentText: "Progress Toast"
 
-                                onTextChanged: function(newTextValue) {
+                                onTextChanged: function (newTextValue) {
                                     currentText = newTextValue
                                 }
                             }
                         }
-                        
+
                         Column {
                             width: parent.width / 2 - 6
                             spacing: 8
-                            
+
                             StyledTextLabel {
                                 text: "Message:"
                             }
-                            
+
                             TextInputField {
                                 id: progressMessage
                                 width: parent.width
                                 currentText: "Processing..."
 
-                                onTextChanged: function(newTextValue) {
+                                onTextChanged: function (newTextValue) {
                                     currentText = newTextValue
                                 }
                             }
                         }
                     }
-                    
+
                     Row {
                         spacing: 12
                         width: parent.width
-                        
+
                         Column {
                             width: parent.width / 2 - 6
                             spacing: 8
-                            
+
                             StyledTextLabel {
                                 text: "Icon Code:"
                             }
-                            
+
                             TextInputField {
                                 id: progressIconCode
                                 width: parent.width
                                 currentText: "0xF3C9"
 
-                                onTextChanged: function(newTextValue) {
+                                onTextChanged: function (newTextValue) {
                                     currentText = newTextValue
                                 }
                             }
                         }
-                        
+
                         CheckBox {
                             id: progressShowInfo
                             text: "Show progress info"
                             checked: false
 
-                            onClicked: function() {
+                            onClicked: function () {
                                 progressShowInfo.checked = !progressShowInfo.checked
                             }
                         }
@@ -396,22 +388,22 @@ Rectangle {
                             text: "Dismissible"
                             checked: false
 
-                            onClicked: function() {
+                            onClicked: function () {
                                 progressDismissible.checked = !progressDismissible.checked
                             }
                         }
                     }
-                    
+
                     Row {
                         width: parent.width
                         spacing: 12
-                        
+
                         StyledTextLabel {
                             text: "Progress:"
                             width: 80
                             anchors.verticalCenter: parent.verticalCenter
                         }
-                        
+
                         StyledSlider {
                             id: progressSlider
                             width: parent.width - 140
@@ -419,7 +411,7 @@ Rectangle {
                             to: 100
                             value: 0
                             stepSize: 1
-                            
+
                             onMoved: {
                                 toastModel.updateProgress(value)
 
@@ -434,17 +426,11 @@ Rectangle {
                         text: "Show Progress Toast"
                         width: parent.width
                         onClicked: {
-                            toastModel.showWithProgress(
-                                progressTitle.currentText,
-                                progressMessage.currentText,
-                                parseInt(progressIconCode.currentText),
-                                progressDismissible.checked,
-                                progressShowInfo.checked
-                            )
+                            const iconCode = parseInt(progressIconCode.currentText)
+                            toastModel.showWithProgress(progressTitle.currentText, progressMessage.currentText, iconCode, progressDismissible.checked, progressShowInfo.checked)
                             toastModel.updateProgress(progressSlider.value)
                         }
                     }
-                    
                 }
             }
         }

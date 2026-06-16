@@ -49,7 +49,7 @@ BaseSection {
         navigation.panel: root.navigation
         navigation.order: 1
 
-        onActivated: function(index, value) {
+        onActivated: function (index, value) {
             root.keyboardLayoutSelected(dropdown.value)
         }
     }

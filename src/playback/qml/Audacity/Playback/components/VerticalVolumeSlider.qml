@@ -1,4 +1,3 @@
-
 /*
 * Audacity: A Digital Audio Editor
 */
@@ -25,7 +24,7 @@ Slider {
     readonly property real handleHeight: handleWidth
 
     signal volumeLevelMoved(var level)
-    signal handlePressed()
+    signal handlePressed
 
     from: meterModel ? meterModel.dbRange : 0
     to: 0
@@ -42,8 +41,8 @@ Slider {
     property alias handleX: handleItem.x
     property alias handleY: handleItem.y
 
-    signal increaseRequested()
-    signal decreaseRequested()
+    signal increaseRequested
+    signal decreaseRequested
 
     QtObject {
         id: prv
@@ -67,7 +66,7 @@ Slider {
         decimalPlaces: root.meterModel ? (root.meterModel.meterType == PlaybackMeterType.Linear ? 2 : 1) : 1
         minValue: root.meterModel ? (root.meterModel.meterType == PlaybackMeterType.Linear ? 1.0 : meterModel.dbRange) : 0
         unitText: root.meterModel ? (root.meterModel.meterType == PlaybackMeterType.Linear ? "" : "dB") : ""
-        volume: root.meterModel ? (root.meterModel.meterType ==  PlaybackMeterType.Linear ? root.meterModel.position : root.volumeLevel) : 0
+        volume: root.meterModel ? (root.meterModel.meterType == PlaybackMeterType.Linear ? root.meterModel.position : root.volumeLevel) : 0
     }
 
     NavigationControl {
@@ -83,8 +82,8 @@ Slider {
         accessible.maximumValue: root.to
         accessible.stepSize: root.stepSize
 
-        onNavigationEvent: function(event) {
-            switch(event.type) {
+        onNavigationEvent: function (event) {
+            switch (event.type) {
             case NavigationEvent.Down:
                 root.decreaseRequested()
                 event.accepted = true
@@ -134,37 +133,37 @@ Slider {
 
             preventStealing: true // Don't let a Flickable steal the mouse
 
-            onPressed: function(mouse) {
+            onPressed: function (mouse) {
                 prv.dragActive = true
                 prv.dragStartOffset = mouse.y
                 root.handlePressed()
                 tooltip.show(true)
             }
 
-            onPositionChanged: function(mouse)  {
+            onPositionChanged: function (mouse) {
                 if (!prv.dragActive) {
-                    return;
+                    return
                 }
 
                 let mousePosInRoot = mapToItem(root, 0, mouse.y - prv.dragStartOffset).y
                 if (prv.rulerLineHeight === 0) {
-                    return;
+                    return
                 }
                 let proportionFromTop = mousePosInRoot / prv.rulerLineHeight
                 let clampedProportion = Math.max(0.0, Math.min(proportionFromTop, 1.0))
                 root.volumeLevelMoved(root.meterModel.positionToSample(1.0 - clampedProportion))
             }
 
-            onReleased: function(mouse) {
+            onReleased: function (mouse) {
                 prv.dragActive = false
                 tooltip.hide(true)
             }
 
-            onEntered: function() {
+            onEntered: function () {
                 tooltip.show()
             }
 
-            onExited: function() {
+            onExited: function () {
                 if (!prv.dragActive) {
                     tooltip.hide(true)
                 }
@@ -185,7 +184,6 @@ Slider {
                 color: ui.theme.backgroundPrimaryColor
                 opacity: 0.7
             }
-
         }
     }
 

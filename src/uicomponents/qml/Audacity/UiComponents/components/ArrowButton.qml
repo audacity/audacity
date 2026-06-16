@@ -40,7 +40,6 @@ FlatButton {
                     opacity: ui.theme.buttonOpacityHit
                 }
             },
-
             State {
                 name: "HOVERED"
                 when: root.mouseArea.containsMouse && !root.mouseArea.pressed
@@ -53,8 +52,12 @@ FlatButton {
         ]
     }
 
-    mouseArea.onPressAndHold: { continuousTimer.running = true }
-    mouseArea.onReleased: { continuousTimer.running = false }
+    mouseArea.onPressAndHold: {
+        continuousTimer.running = true
+    }
+    mouseArea.onReleased: {
+        continuousTimer.running = false
+    }
 
     Timer {
         id: continuousTimer

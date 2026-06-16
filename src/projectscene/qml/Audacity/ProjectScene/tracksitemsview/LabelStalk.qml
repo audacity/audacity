@@ -14,11 +14,11 @@ Rectangle {
     property bool isStretchInProgress: false
 
     signal headerHoveredChanged(bool value)
-    signal requestSelected()
+    signal requestSelected
 
     signal stretchRequested(bool completed)
-    signal stretchStartRequested()
-    signal stretchEndRequested()
+    signal stretchStartRequested
+    signal stretchEndRequested
     signal stretchMousePositionChanged(real x, real y)
 
     width: 1

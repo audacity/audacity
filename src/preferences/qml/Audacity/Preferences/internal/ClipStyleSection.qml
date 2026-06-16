@@ -32,7 +32,6 @@ import Audacity.Preferences
 import Audacity.ProjectScene
 import Audacity.TrackEdit
 
-
 BaseSection {
     id: root
 
@@ -113,4 +112,3 @@ BaseSection {
         }
     }
 }
-

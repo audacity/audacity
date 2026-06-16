@@ -47,8 +47,14 @@ BaseSection {
         orientation: ListView.Vertical
 
         model: [
-            { title: qsTrc("appshell/preferences", "Horizontal"), value: Qt.Horizontal },
-            { title: qsTrc("appshell/preferences", "Vertical"), value: Qt.Vertical }
+            {
+                title: qsTrc("appshell/preferences", "Horizontal"),
+                value: Qt.Horizontal
+            },
+            {
+                title: qsTrc("appshell/preferences", "Vertical"),
+                value: Qt.Vertical
+            }
         ]
 
         delegate: RoundedRadioButton {

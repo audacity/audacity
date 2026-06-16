@@ -109,7 +109,9 @@ StyledDialogView {
             }
         }
 
-        SeparatorLine { Layout.margins: -24 }
+        SeparatorLine {
+            Layout.margins: -24
+        }
 
         NavigationPanel {
             id: dontAskAgainPanel

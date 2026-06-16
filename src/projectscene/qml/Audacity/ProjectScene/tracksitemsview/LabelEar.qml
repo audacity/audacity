@@ -13,8 +13,8 @@ Canvas {
     property alias hovered: dragArea.containsMouse
 
     signal stretchRequested(bool completed)
-    signal stretchStartRequested()
-    signal stretchEndRequested()
+    signal stretchStartRequested
+    signal stretchEndRequested
     signal stretchMousePositionChanged(real x, real y)
 
     width: 7
@@ -60,7 +60,7 @@ Canvas {
 
         visible: root.enableCursorInteraction
 
-        onPressed: function(e) {
+        onPressed: function (e) {
             let mousePos = mapToItem(root.parent, e.x, e.y)
             root.stretchMousePositionChanged(mousePos.x, mousePos.y)
             root.stretchStartRequested()
@@ -68,7 +68,7 @@ Canvas {
             e.accepted = true
         }
 
-        onPositionChanged: function(e) {
+        onPositionChanged: function (e) {
             if (pressed) {
                 let mousePos = mapToItem(root.parent, e.x, e.y)
                 root.stretchMousePositionChanged(mousePos.x, mousePos.y)
@@ -79,7 +79,7 @@ Canvas {
             }
         }
 
-        onReleased: function(e) {
+        onReleased: function (e) {
             root.stretchRequested(true)
             root.stretchEndRequested()
             e.accepted = true

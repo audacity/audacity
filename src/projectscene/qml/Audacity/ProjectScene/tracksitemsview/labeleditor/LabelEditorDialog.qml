@@ -78,14 +78,16 @@ StyledDialogView {
             Layout.fillWidth: true
             Layout.margins: 12
 
-            buttons: [ ButtonBoxModel.Close ]
+            buttons: [ButtonBoxModel.Close]
 
             navigationPanel.section: root.navigationSection
             navigationPanel.order: labelsTableView.navigationPanel.order + 1
 
-            onStandardButtonClicked: function(buttonId) {
-                switch(buttonId) {
-                case ButtonBoxModel.Close: root.accept(); break;
+            onStandardButtonClicked: function (buttonId) {
+                switch (buttonId) {
+                case ButtonBoxModel.Close:
+                    root.accept()
+                    break
                 }
             }
         }

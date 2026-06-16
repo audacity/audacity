@@ -57,9 +57,7 @@ BaseSection {
     StyledTextLabel {
         width: parent.width
 
-        text: qsTrc("appshell/preferences", "Update checking requires network access. In order to protect your privacy, Audacity does not store any personal information. See our <a href=\"%1\">privacy policy</a> for more info.")
-              .arg(root.privacyPolicyUrl)
-              .replace("\n", "<br>")
+        text: qsTrc("appshell/preferences", "Update checking requires network access. In order to protect your privacy, Audacity does not store any personal information. See our <a href=\"%1\">privacy policy</a> for more info.").arg(root.privacyPolicyUrl).replace("\n", "<br>")
 
         horizontalAlignment: Qt.AlignLeft
         wrapMode: Text.WordWrap

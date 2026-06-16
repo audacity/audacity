@@ -14,9 +14,11 @@ BaseSection {
 
     property var paths: []
     property string dialogTitle: qsTrc("preferences", "Choose plugin location")
-    property var pathValidator: function(path) { return true }
+    property var pathValidator: function (path) {
+        return true
+    }
 
-    signal addPathRequested()
+    signal addPathRequested
     signal pathChanged(int index, string newPath)
     signal removePathRequested(int index)
 
@@ -62,7 +64,7 @@ BaseSection {
                         navigationColumnOrderStart: 0
                         pathFieldTitle: root.title
 
-                        onPathEdited: function(newPath) {
+                        onPathEdited: function (newPath) {
                             currentPath = newPath
                             root.pathChanged(rowIndex, newPath)
                         }
@@ -98,7 +100,9 @@ BaseSection {
                     text: qsTrc("preferences", "The directory does not exist")
                     color: ui.theme.extra["error_text_color"]
 
-                    font: Qt.font(Object.assign({}, ui.theme.bodyFont, { pointSize: ui.theme.bodyFont.pointSize - 1 }))
+                    font: Qt.font(Object.assign({}, ui.theme.bodyFont, {
+                        pointSize: ui.theme.bodyFont.pointSize - 1
+                    }))
                 }
             }
         }

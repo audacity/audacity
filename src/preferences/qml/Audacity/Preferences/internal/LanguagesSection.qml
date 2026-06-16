@@ -37,7 +37,7 @@ BaseSection {
     property bool isNeedRestart: false
 
     signal languageSelected(string languageCode)
-    signal checkForUpdateRequested()
+    signal checkForUpdateRequested
 
     function setUpdateProgress(current, total, status) {
         progressBtn.to = total
@@ -69,7 +69,7 @@ BaseSection {
 
             indeterminateText: ""
 
-            onActivated: function(index, value) {
+            onActivated: function (index, value) {
                 root.languageSelected(value)
             }
         }

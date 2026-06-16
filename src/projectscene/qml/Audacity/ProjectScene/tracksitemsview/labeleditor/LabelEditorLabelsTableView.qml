@@ -43,11 +43,14 @@ StyledTableView {
 
     model: tableViewModel
 
-    sourceComponentCallback: function(type) {
-        switch(type) {
-        case LabelsTableViewCellType.Track: return trackComp
-        case LabelsTableViewCellType.Timecode: return timecodeComp
-        case LabelsTableViewCellType.Frequency: return frequencyComp
+    sourceComponentCallback: function (type) {
+        switch (type) {
+        case LabelsTableViewCellType.Track:
+            return trackComp
+        case LabelsTableViewCellType.Timecode:
+            return timecodeComp
+        case LabelsTableViewCellType.Frequency:
+            return frequencyComp
         }
 
         return null
@@ -71,7 +74,7 @@ StyledTableView {
             property string accessibleName: current
 
             signal changed(string stub)
-            signal editingFinished()
+            signal editingFinished
 
             model: Boolean(itemData) ? itemData.availableTracks : null
             current: val
@@ -82,7 +85,7 @@ StyledTableView {
             navigation.order: navigationRow
             navigation.column: navigationColumnStart
 
-            onHandleMenuItem: function(itemId) {
+            onHandleMenuItem: function (itemId) {
                 Qt.callLater(tableViewModel.handleTrackMenuItem, row, column, itemId)
             }
 
@@ -112,7 +115,7 @@ StyledTableView {
             property string accessibleName: val
 
             signal changed(double value)
-            signal editingFinished()
+            signal editingFinished
 
             height: 24
 
@@ -131,13 +134,13 @@ StyledTableView {
             navigation.row: navigationRow
             navigation.column: navigationColumnStart
 
-            navigation.onActiveChanged: function(active) {
+            navigation.onActiveChanged: function (active) {
                 if (active) {
                     navigation.triggered()
                 }
             }
 
-            onValueChangeRequested: function(newValue) {
+            onValueChangeRequested: function (newValue) {
                 item.changed(newValue)
             }
 
@@ -165,7 +168,7 @@ StyledTableView {
             property string accessibleName: val
 
             signal changed(double value)
-            signal editingFinished()
+            signal editingFinished
 
             height: 24
 
@@ -184,13 +187,13 @@ StyledTableView {
             navigation.row: navigationRow
             navigation.column: navigationColumnStart
 
-            navigation.onActiveChanged: function(active) {
+            navigation.onActiveChanged: function (active) {
                 if (active) {
                     navigation.triggered()
                 }
             }
 
-            onValueChangeRequested: function(newValue) {
+            onValueChangeRequested: function (newValue) {
                 item.changed(newValue)
             }
 

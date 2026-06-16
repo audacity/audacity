@@ -48,7 +48,7 @@ ColumnLayout {
 
                     currentText: ffmpegPrefModel.language
 
-                    onTextChanged: function(newTextValue) {
+                    onTextChanged: function (newTextValue) {
                         ffmpegPrefModel.setLanguage(newTextValue)
                     }
                 }
@@ -71,7 +71,7 @@ ColumnLayout {
 
                     currentText: ffmpegPrefModel.tag
 
-                    onTextChanged: function(newTextValue) {
+                    onTextChanged: function (newTextValue) {
                         ffmpegPrefModel.setTag(newTextValue)
                     }
                 }
@@ -98,7 +98,7 @@ ColumnLayout {
 
                     currentValue: ffmpegPrefModel.quality
 
-                    onValueEdited: function(newValue) {
+                    onValueEdited: function (newValue) {
                         ffmpegPrefModel.setQuality(newValue)
                     }
                 }
@@ -126,7 +126,7 @@ ColumnLayout {
 
                     currentValue: ffmpegPrefModel.cutoff
 
-                    onValueEdited: function(newValue) {
+                    onValueEdited: function (newValue) {
                         ffmpegPrefModel.setCutoff(newValue)
                     }
                 }
@@ -165,7 +165,7 @@ ColumnLayout {
 
                     currentValue: ffmpegPrefModel.bitrate
 
-                    onValueEdited: function(newValue) {
+                    onValueEdited: function (newValue) {
                         ffmpegPrefModel.setBitrate(newValue)
                     }
 
@@ -197,7 +197,7 @@ ColumnLayout {
 
                     currentValue: ffmpegPrefModel.sampleRate
 
-                    onValueEdited: function(newValue) {
+                    onValueEdited: function (newValue) {
                         ffmpegPrefModel.setSampleRate(newValue)
                     }
                 }
@@ -219,7 +219,7 @@ ColumnLayout {
 
                     currentIndex: indexOfValue(ffmpegPrefModel.profile)
 
-                    onActivated: function(index, value) {
+                    onActivated: function (index, value) {
                         ffmpegPrefModel.setProfile(value)
                     }
                 }

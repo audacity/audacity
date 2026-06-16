@@ -71,19 +71,19 @@ StyledListView {
 
         navigationPanel: root.navigationPanel
 
-        onPropertyNameChanged: function() {
+        onPropertyNameChanged: function () {
             model.propertyName = propertyName
         }
 
-        onPropertyValueChanged: function() {
+        onPropertyValueChanged: function () {
             model.propertyValue = propertyValue
         }
 
-        onScrollIntoViewRequested: function() {
+        onScrollIntoViewRequested: function () {
             root.positionViewAtIndex(model.index, ListView.Contain)
         }
 
-        onDeletePropertyRequested: function() {
+        onDeletePropertyRequested: function () {
             root.propertiesModel.deleteProperty(model.index)
         }
     }

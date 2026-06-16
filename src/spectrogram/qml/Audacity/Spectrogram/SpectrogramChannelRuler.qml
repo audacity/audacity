@@ -91,10 +91,9 @@ Item {
         anchors.left: parent.left
         anchors.right: parent.right
         height: 1
-        // color: ui.theme.fontPrimaryColor
-        // Hack for now: as opposed to the time rulers, the track rulers are dark in both dark and light themes.
-        // TODO https://github.com/audacity/audacity/issues/10561
-        color: rulerModel.isHighContrast || ui.theme.isDark ? ui.theme.fontPrimaryColor : "#F0F5FA"
+        // The guide sits over the (always dark) spectrogram image, so it uses a
+        // dedicated light guide color per theme rather than the app foreground.
+        color: ui.theme.extra["spectrogram_ruler_guide_color"]
         y: rulerModel.rulerGuideYPos - height / 2
 
         SpectrogramRulerCustomizePopup {

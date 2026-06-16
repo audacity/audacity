@@ -46,7 +46,7 @@ BaseSection {
         navigation.panel: root.navigation
         navigation.row: 1
 
-        onValueEdited: function(newIndex, newValue) {
+        onValueEdited: function (newIndex, newValue) {
             root.overtureCharsetChangeRequested(newValue)
         }
     }

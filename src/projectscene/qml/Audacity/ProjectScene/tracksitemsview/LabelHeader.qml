@@ -21,10 +21,10 @@ Rectangle {
 
     signal titleEditAccepted(var newTitle)
 
-    signal editStarted()
-    signal editFinished()
+    signal editStarted
+    signal editFinished
 
-    signal requestSingleSelected()
+    signal requestSingleSelected
 
     signal contextMenuOpenRequested(real x, real y)
     signal mousePositionChanged(real x, real y)
@@ -82,7 +82,7 @@ Rectangle {
             e.accepted = false
         }
 
-        onClicked: function(e) {
+        onClicked: function (e) {
             if (e.button === Qt.RightButton) {
                 root.contextMenuOpenRequested(e.x, e.y)
             }
@@ -92,9 +92,7 @@ Rectangle {
         onPositionChanged: function (e) {
             // Reset double click timer if the mouse has moved,
             // to prevent rapid clip movement activate title editing
-            if (Math.abs(e.x - doubleClickStartPosition.x) > prv.doubleClickMaxDistance ||
-                Math.abs(e.y - doubleClickStartPosition.y) > prv.doubleClickMaxDistance) {
-
+            if (Math.abs(e.x - doubleClickStartPosition.x) > prv.doubleClickMaxDistance || Math.abs(e.y - doubleClickStartPosition.y) > prv.doubleClickMaxDistance) {
                 lastClickTime = 0
             }
 
@@ -191,7 +189,7 @@ Rectangle {
                 onFocusChanged: {
                     if (!titleEdit.focus) {
                         titleEdit.visible = false
-                        Qt.callLater(function() {
+                        Qt.callLater(function () {
                             var escaped = titleEdit._editEscaped
                             titleEdit._editEscaped = false
                             if (!escaped) {

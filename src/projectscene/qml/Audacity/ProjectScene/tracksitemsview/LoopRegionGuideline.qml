@@ -23,8 +23,12 @@ Rectangle {
 
     Connections {
         target: root.context
-        function onFrameStartTimeChanged() { root.updatePosition() }
-        function onFrameEndTimeChanged() { root.updatePosition() }
+        function onFrameStartTimeChanged() {
+            root.updatePosition()
+        }
+        function onFrameEndTimeChanged() {
+            root.updatePosition()
+        }
     }
 
     onTimeChanged: updatePosition()

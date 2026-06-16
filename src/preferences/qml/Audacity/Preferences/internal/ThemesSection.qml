@@ -64,7 +64,7 @@ BaseSection {
             navigationPanel: root.navigation
             navigationRow: 0
 
-            onThemeChangeRequested: function(newThemeCode) {
+            onThemeChangeRequested: function (newThemeCode) {
                 root.themeChangeRequested(newThemeCode)
             }
         }
@@ -119,7 +119,7 @@ BaseSection {
         navigation.section: root.navigation.section
         navigation.order: root.navigation.order + 1
 
-        onAccentColorChangeRequested: function(newColorIndex) {
+        onAccentColorChangeRequested: function (newColorIndex) {
             root.accentColorChangeRequested(newColorIndex)
         }
 
