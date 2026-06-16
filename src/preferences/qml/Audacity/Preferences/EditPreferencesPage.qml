@@ -124,7 +124,7 @@ PreferencesPage {
             navigation.section: root.navigationSection
             navigation.order: monoStereoConversionSection.navigationOrderEnd + 1
 
-            onMouseZoomPrecisionChangeRequested: function(zoomPrecision) {
+            onMouseZoomPrecisionChangeRequested: function (zoomPrecision) {
                 editPreferencesModel.setMouseZoomPrecision(zoomPrecision)
             }
 
