@@ -42,6 +42,8 @@ BaseSection {
     signal mouseZoomPrecisionChangeRequested(int zoomPrecision)
 
     Row {
+        visible: root.defaultZoom !== null
+
         spacing: root.columnSpacing
 
         ComboBoxWithTitle {
@@ -53,7 +55,7 @@ BaseSection {
             control.textRole: "title"
             control.valueRole: "value"
 
-            currentIndex: control.indexOfValue(root.defaultZoom.type)
+            currentIndex: root.defaultZoom ? control.indexOfValue(root.defaultZoom.type) : -1
 
             navigation.name: "DefaultZoomBox"
             navigation.panel: root.navigation
@@ -76,8 +78,8 @@ BaseSection {
 
             measureUnitsSymbol: "%"
 
-            currentValue: root.defaultZoom.level
-            enabled: root.defaultZoom.isPercentage
+            currentValue: root.defaultZoom ? root.defaultZoom.level : 100
+            enabled: root.defaultZoom ? root.defaultZoom.isPercentage : false
 
             navigation.name: "DefaultZoomControl"
             navigation.panel: root.navigation
