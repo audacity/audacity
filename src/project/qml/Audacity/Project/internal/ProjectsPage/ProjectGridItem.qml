@@ -180,7 +180,7 @@ FocusScope {
                     z: -1
 
                     glowRadius: 20
-                    color: "#08000000"
+                    color: ui.colorWithAlphaF(ui.theme.extra["black_color"], 8 / 255)
                     cornerRadius: thumbnail.radius + glowRadius
                 }
             }
