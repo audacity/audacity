@@ -19,6 +19,7 @@ Rectangle {
     property color classicThemeHeader: ui.theme.extra["classic_clip_header_color"]
 
     readonly property color whiteOverlay: ui.blendColors("transparent", ui.theme.extra["white_color"], 0.3)
+    readonly property color transparentWhite: ui.colorWithAlphaF(ui.theme.extra["white_color"], 0)
     property color classicThemeGradient: ui.blendColors(root.whiteOverlay, ui.blendColors("transparent", root.classicThemeBackground, 0.4), 0.5)
     property color colorfulThemeGradient: ui.blendColors(root.whiteOverlay, ui.blendColors("transparent", root.clipColor, 0.4), 0.5)
 
@@ -82,7 +83,7 @@ Rectangle {
                 orientation: Qt.Horizontal
                 GradientStop {
                     position: 0.0
-                    color: "#00FFFFFF"
+                    color: root.transparentWhite
                 }
                 GradientStop {
                     position: 0.4
@@ -90,7 +91,7 @@ Rectangle {
                 }
                 GradientStop {
                     position: 1.0
-                    color: "#00FFFFFF"
+                    color: root.transparentWhite
                 }
             }
         }
@@ -110,15 +111,15 @@ Rectangle {
                 orientation: Qt.Horizontal
                 GradientStop {
                     position: 0.0
-                    color: "#00FFFFFF"
+                    color: root.transparentWhite
                 }
                 GradientStop {
                     position: 0.4
-                    color: "#FFFFFFFF"
+                    color: ui.theme.extra["white_color"]
                 }
                 GradientStop {
                     position: 1.0
-                    color: "#00FFFFFF"
+                    color: root.transparentWhite
                 }
             }
         }
@@ -168,7 +169,7 @@ Rectangle {
                 orientation: Qt.Horizontal
                 GradientStop {
                     position: 0.0
-                    color: "#00FFFFFF"
+                    color: root.transparentWhite
                 }
                 GradientStop {
                     position: 0.4
@@ -176,7 +177,7 @@ Rectangle {
                 }
                 GradientStop {
                     position: 1.0
-                    color: "#00FFFFFF"
+                    color: root.transparentWhite
                 }
             }
         }
