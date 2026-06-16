@@ -268,7 +268,9 @@ bool RecordController::canReceiveAction(const ActionCode& code) const
         return false;
     }
 
-    if (code == RECORD_START_QUERY.toString()) {
+    if (code == RECORD_START_QUERY.toString()
+        || code == RECORD_ON_CURRENT_TRACK_CODE
+        || code == RECORD_ON_NEW_TRACK_CODE) {
         return !playbackController()->isPlaying() && m_currentRecordStatus != RecordStatus::LeadIn;
     }
 
