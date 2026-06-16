@@ -20,6 +20,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 import QtQuick 2.15
+import QtQuick.Controls 2.15
 
 import Muse.Ui 1.0
 import Muse.UiComponents
@@ -35,7 +36,7 @@ BaseSection {
 
     property var defaultZoom: null
     property alias zoomTypes: defaultZoomTypesBox.model
-    property alias mouseZoomPrecision: mouseZoomPrecisionControl.currentValue
+    property alias mouseZoomPrecision: precisionSlider.value
 
     signal defaultZoomTypeChangeRequested(int zoomType)
     signal defaultZoomLevelChangeRequested(int zoomLevel)
@@ -92,24 +93,53 @@ BaseSection {
         }
     }
 
-    IncrementalPropertyControlWithTitle {
+    Column {
         id: mouseZoomPrecisionControl
 
-        title: qsTrc("appshell/preferences", "Mouse zoom precision:")
+        spacing: 6
 
-        columnWidth: root.columnWidth
-        control.width: 60
+        StyledTextLabel {
+            text: qsTrc("appshell/preferences", "Mouse zoom precision")
+            width: root.columnWidth
+            horizontalAlignment: Qt.AlignLeft
+            wrapMode: Text.WordWrap
+            maximumLineCount: 2
+        }
 
-        minValue: 1
-        maxValue: 16
+        Row {
+            spacing: 8
 
-        navigation.name: "MouseZoomPrecisionControl"
-        navigation.panel: root.navigation
-        navigation.row: 1
-        navigation.column: 0
+            StyledTextLabel {
+                text: qsTrc("appshell/preferences", "Fast")
+                width: 40
+                horizontalAlignment: Qt.AlignLeft
+            }
 
-        onValueEdited: function (newValue) {
-            root.mouseZoomPrecisionChangeRequested(newValue)
+            StyledSlider {
+                id: precisionSlider
+
+                width: 220
+                from: 1
+                to: 16
+                stepSize: 1
+                snapMode: Slider.SnapAlways
+
+                navigation.name: "MouseZoomPrecisionControl"
+                navigation.panel: root.navigation
+                navigation.row: 1
+                navigation.column: 0
+                navigation.accessible.name: qsTrc("appshell/preferences", "Mouse zoom precision")
+
+                onMoved: {
+                    root.mouseZoomPrecisionChangeRequested(Math.round(value))
+                }
+            }
+
+            StyledTextLabel {
+                text: qsTrc("appshell/preferences", "Slow")
+                width: 40
+                horizontalAlignment: Qt.AlignRight
+            }
         }
     }
 }
