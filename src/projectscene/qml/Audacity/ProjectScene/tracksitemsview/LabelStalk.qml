@@ -39,9 +39,6 @@ Rectangle {
             root.headerHoveredChanged(containsMouse)
         }
 
-        //! NOTE Like the label header, the stalk is a move handle: the press is only used
-        // to select the label and is then passed through to the items view, which handles
-        // the actual move (and switches the cursor to the closed hand).
         onPressed: function (e) {
             root.requestSelected()
             e.accepted = false

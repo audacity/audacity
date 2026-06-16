@@ -91,11 +91,6 @@ private:
     ClipStyles::Style m_clipStyle = ClipStyles::Style::COLORFUL;
     bool m_isStereo = false;
 
-    //! Shift+press on an already selected clip (or fully selected group) must not deselect
-    //! it right away: the press may be the start of a group drag, and the move offset is
-    //! anchored to the pressed clip, so dropping it from the selection makes the rest of
-    //! the group run away. The deselection is deferred here and applied only when the
-    //! gesture turns out to be a click (release without movement).
     trackedit::ClipKeyList m_pendingShiftDeselect;
 };
 }

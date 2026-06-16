@@ -12,7 +12,6 @@
 using namespace au::projectscene;
 using namespace au::trackedit;
 
-//! Snap window for collapsing a range label into a point label (and vice versa)
 static constexpr double EDGE_COLLAPSE_SNAP_PX = 4.0;
 
 TrackLabelsListModel::TrackLabelsListModel(QObject* parent)
@@ -240,7 +239,6 @@ void TrackLabelsListModel::selectLabel(const LabelKey& key)
 
     if (modifiers.testFlag(Qt::ShiftModifier)) {
         if (muse::contains(selectionController()->selectedLabels(), key.key)) {
-            //! NOTE Deselection is deferred until the release
             m_pendingShiftDeselect = key.key;
         } else {
             selectionController()->addSelectedLabel(key.key);
@@ -279,8 +277,6 @@ void TrackLabelsListModel::toggleTracksDataSelectionByLabel(const LabelKey& key)
         return;
     }
 
-    //! NOTE Released without moving: the Shift+press turned out to be a click, so apply
-    //! the deferred deselection
     if (m_pendingShiftDeselect.isValid() && m_pendingShiftDeselect == key.key) {
         selectionController()->removeLabelSelection(key.key);
         m_pendingShiftDeselect = {};
@@ -314,8 +310,6 @@ bool TrackLabelsListModel::moveSelectedLabels(const LabelKey& key, bool complete
         return false;
     }
 
-    //! NOTE The gesture is a drag, not a click: the pressed label stays selected
-    //! and moves along with the rest of the group.
     m_pendingShiftDeselect = {};
 
     auto project = globalContext()->currentProject();
@@ -374,8 +368,6 @@ bool TrackLabelsListModel::stretchLabelLeft(const LabelKey& key, const LabelKey&
         newStartTime = m_context->applySnapToItem(newStartTime);
     }
 
-    //! NOTE Snap the dragged edge to the opposite one, so a range label can be collapsed
-    // into a point label without pixel-perfect aim
     if (std::abs(newStartTime - m_editedLabelEndTime) * m_context->zoom() < EDGE_COLLAPSE_SNAP_PX) {
         newStartTime = m_editedLabelEndTime;
     }
@@ -416,8 +408,6 @@ bool TrackLabelsListModel::stretchLabelRight(const LabelKey& key, const LabelKey
         newEndTime = m_context->applySnapToItem(newEndTime);
     }
 
-    //! NOTE Snap the dragged edge to the opposite one, so a range label can be collapsed
-    // into a point label without pixel-perfect aim
     if (std::abs(newEndTime - m_editedLabelStartTime) * m_context->zoom() < EDGE_COLLAPSE_SNAP_PX) {
         newEndTime = m_editedLabelStartTime;
     }

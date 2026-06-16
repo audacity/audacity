@@ -132,11 +132,6 @@ Rectangle {
             property real contentWidth: item ? (isEditState ? item.contentWidth + 1 : item.implicitWidth + 1) : 0
             property real contentHeight: item ? (isEditState ? item.contentHeight : item.implicitHeight) : 0
 
-            //! NOTE Like a clip header title, the text follows a horizontal scroll while its
-            // label is partially hidden past the left edge of the view: it is pushed to the
-            // right by the hidden amount, and whatever no longer fits is clipped at the
-            // viewport edge. The text is translated, not resized, so wrapped (multiline)
-            // text keeps its layout and never re-wraps or flickers while scrolling.
             x: Math.max(0, root.leftVisibleMargin - root.x)
             width: parent.width
             height: parent.height

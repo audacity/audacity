@@ -30,9 +30,6 @@ TrackItemsContainer {
                 id: labelsClipArea
 
                 anchors.fill: parent
-                //! NOTE Extend the clipped area to the left over the canvas indent,
-                // so labels, just like clips, can show up in the small area
-                // before the t=0 boundary.
                 anchors.leftMargin: -root.canvasIndentWidth
                 anchors.bottomMargin: root.bottomSeparatorHeight
                 z: 1
@@ -215,9 +212,8 @@ TrackItemsContainer {
 
                                         trackItemMousePositionChanged(xWithinTrack, yWithinTrack, itemData.key)
 
-                                        // While a label is being moved or stretched the guideline follows the
-                                        // dragged label edge (driven by handleLabelGuideline), not the cursor —
-                                        // so only snap the guideline to the cursor when no such edit is in progress.
+                                        // During a move/stretch the guideline follows the dragged edge
+                                        // (handleLabelGuideline), not the cursor.
                                         const editInProgress = root.moveActive || itemData.isEditing
                                         if (!editInProgress) {
                                             let time = root.context.findGuideline(root.context.positionToTime(xWithinTrack, true))
@@ -265,9 +261,6 @@ TrackItemsContainer {
                                         itemData.isEditing = false
                                     }
 
-                                    //! NOTE A stretch handle can lose its mouse grab without ever
-                                    // receiving a release (a popup opens, the handle gets hidden, ...).
-                                    // Cancel the drag edit so no half-finished stretch state survives.
                                     onLabelCancelDragEditRequested: function () {
                                         if (labelsModel.cancelItemDragEdit(itemData.key)) {
                                             root.itemDragEditCanceled()
@@ -414,9 +407,6 @@ TrackItemsContainer {
     }
 
     function handleLabelGuideline(labelKey, direction, completed) {
-        // itemMoveRequested is broadcast to every track's container, but the guideline is
-        // shared across all of them. Only the container that owns the dragged label may touch
-        // it, otherwise non-owners clobber the owning track's guideline.
         if (labelsModel.containsItem(labelKey)) {
             if (completed) {
                 root.clearItemGuideline()
