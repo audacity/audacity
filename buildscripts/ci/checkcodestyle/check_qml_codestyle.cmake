@@ -8,9 +8,7 @@ if(NOT SCAN_DIR)
     message(FATAL_ERROR "Usage: cmake -P check_qml_codestyle.cmake <scan_dir>")
 endif()
 
-# Use the qmlformat bundled with Qt (>= 6.10, which carries the formatting
-# fixes we rely on) rather than a separately downloaded prebuilt binary.
-# It is found via PATH or the Qt install pointed to by QT_ROOT_DIR.
+# Use the qmlformat bundled with Qt, located via PATH or QT_ROOT_DIR.
 find_program(QMLFORMAT_BIN
     NAMES qmlformat
     HINTS ENV QT_ROOT_DIR
