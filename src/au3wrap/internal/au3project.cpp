@@ -188,12 +188,9 @@ bool Au3ProjectAccessor::save(const muse::io::path_t& filePath)
 
     auto& projectFileIO = ProjectFileIO::Get(project);
 
-    // WriteXML serializes the master realtime-effect list from a snapshot
-    // (SavedMasterEffectList), not the live list, so that closing without saving
-    // discards unsaved master-effect changes. Refresh the snapshot here so an
-    // explicit save persists the *current* master effects. The track snapshot in
-    // updateSavedState() is intentionally refreshed only AFTER the save to keep
-    // "Save As" correct (see commit 86c2f8f7).
+    // Refresh the saved master-effect snapshot before serializing so this save persists
+    // the current master effects. (updateSavedState() refreshes it only AFTER the save,
+    // intentionally, to keep "Save As" correct — see commit 86c2f8f7.)
     SavedMasterEffectList::Get(project).UpdateCopy();
 
     auto result = projectFileIO.SaveProject(wxFromString(filePath.toString()), m_lastSavedTracks.get());

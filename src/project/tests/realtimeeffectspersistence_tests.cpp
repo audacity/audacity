@@ -1,24 +1,6 @@
 /*
-* SPDX-License-Identifier: GPL-3.0-only
- * Audacity-CLA-applies
- *
- * Audacity
- * A Digital Audio Editor
- *
- * Copyright (C) 2025 Audacity Limited
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License version 3 as
- * published by the Free Software Foundation.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <https://www.gnu.org/licenses/>.
- */
+* Audacity: A Digital Audio Editor
+*/
 
 // Regression test for: master-track realtime effects lost on save/reload.
 //
@@ -39,6 +21,7 @@
 
 #include "project/tests/mocks/trackeditprojectcreatormock.h"
 #include "project/tests/mocks/projectviewstatecreatormock.h"
+#include "project/tests/mocks/dummyeffectinstancefactory.h"
 #include "trackedit/tests/mocks/clipboardmock.h"
 
 #include "testtools.h"
@@ -49,53 +32,8 @@
 #include "au3-project/Project.h"
 #include "au3-realtime-effects/RealtimeEffectList.h"
 #include "au3-realtime-effects/RealtimeEffectState.h"
-#include "au3-components/EffectInterface.h"
 
 namespace au::project {
-namespace {
-// Minimal EffectInstanceFactory so that RealtimeEffectList::AddState succeeds
-// (it requires state->GetEffect() != nullptr). No real plugin / PluginManager is
-// needed: serialization only writes the plugin id, and the state is retained on
-// reload regardless. All methods return trivial/empty values; MakeInstance() is
-// never called in this no-playback test.
-class DummyEffectInstanceFactory final : public EffectInstanceFactory
-{
-public:
-    // ComponentInterface
-    PluginPath GetPath() const override { return {}; }
-    ComponentInterfaceSymbol GetSymbol() const override { return {}; }
-    VendorSymbol GetVendor() const override { return {}; }
-    wxString GetVersion() const override { return {}; }
-    TranslatableString GetDescription() const override { return {}; }
-
-    // EffectDefinitionInterface
-    EffectType GetType() const override { return EffectTypeProcess; }
-    EffectFamilySymbol GetFamily() const override { return {}; }
-    bool IsInteractive() const override { return false; }
-    bool IsDefault() const override { return false; }
-    RealtimeSince RealtimeSupport() const override { return RealtimeSince::Always; }
-    bool SupportsAutomation() const override { return false; }
-
-    // EffectSettingsManager
-    bool SaveSettings(const EffectSettings&, CommandParameters&) const override { return true; }
-    bool LoadSettings(const CommandParameters&, EffectSettings&) const override { return true; }
-    RegistryPaths GetFactoryPresets() const override { return {}; }
-    OptionalMessage LoadUserPreset(const RegistryPath&, EffectSettings&) const override { return {}; }
-    bool SaveUserPreset(const RegistryPath&, const EffectSettings&) const override { return true; }
-    OptionalMessage LoadFactoryPreset(int, EffectSettings&) const override { return {}; }
-    OptionalMessage LoadFactoryDefaults(EffectSettings&) const override { return {}; }
-
-    // EffectInstanceFactory
-    std::shared_ptr<EffectInstance> MakeInstance() const override { return nullptr; }
-};
-
-const EffectInstanceFactory& dummyFactory()
-{
-    static DummyEffectInstanceFactory instance;
-    return instance;
-}
-}
-
 class Project_RealtimeEffectsPersistenceTests : public ::testing::Test
 {
 protected:
@@ -150,7 +88,7 @@ TEST_F(Project_RealtimeEffectsPersistenceTests, MasterEffectList_SurvivesSaveRel
         = (muse::String::fromUtf8(au_project_tests_DATA_ROOT) + "/data/master_effect_roundtrip.aup3").toStdString();
 
     // Writable working copy of the (empty) project.
-    testtools::removeIfExists(dstPath);
+    testtools::removeProjectIfExists(dstPath);
     ASSERT_TRUE(testtools::copyFile(srcPath, dstPath));
 
     const muse::io::path_t projectPath(dstPath);
@@ -175,8 +113,9 @@ TEST_F(Project_RealtimeEffectsPersistenceTests, MasterEffectList_SurvivesSaveRel
         ASSERT_EQ(live.GetStatesCount(), 1u);
     }
 
-    // 3) Save through the same path that had the bug (Au3ProjectAccessor::save ->
-    //    SaveProject -> WriteXML), bypassing the facade's thumbnail creation.
+    // 3) Save through the path that had the #9790 bug (Au3ProjectAccessor::save ->
+    //    SaveProject -> WriteXML serializing a stale master-effect snapshot),
+    //    bypassing the facade's thumbnail creation.
     ASSERT_TRUE(saveDirect(m_currentProject, projectPath));
 
     // 4) Close and reload into a fresh project instance.
@@ -193,8 +132,6 @@ TEST_F(Project_RealtimeEffectsPersistenceTests, MasterEffectList_SurvivesSaveRel
 
     m_currentProject->close();
 
-    testtools::removeIfExists(dstPath);
-    testtools::removeIfExists(dstPath + "-wal");
-    testtools::removeIfExists(dstPath + "-shm");
+    testtools::removeProjectIfExists(dstPath);
 }
 }
