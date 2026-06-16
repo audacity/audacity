@@ -93,7 +93,7 @@ void MainToolBarModel::load()
     m_items.clear();
     m_items << buildItem(muse::qtrc("appshell", "Home"), HOME_PAGE, true);
     m_items << buildItem(muse::qtrc("appshell", "Project"), PROJECT_PAGE, false);
-    m_items << buildItem(muse::qtrc("appshell", "Publish"), PUBLISH_PAGE, false);
+    // m_items << buildItem(muse::qtrc("appshell", "Publish"), PUBLISH_PAGE, false);
 
     if (globalConfiguration()->devModeEnabled()) {
         m_items << buildItem(muse::qtrc("appshell", "DevTools"), DEVTOOLS_PAGE, true);

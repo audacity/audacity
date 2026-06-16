@@ -72,6 +72,18 @@ const UiActionList RecordUiActions::m_mainActions = {
              TranslatableString("action", "Start lead-in recording"),
              IconCode::Code::RECORD_FILL
              ),
+    UiAction("record-on-current-track",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Record on current track"),
+             TranslatableString("action", "Record on current track")
+             ),
+    UiAction("record-on-new-track",
+             au::context::UiCtxProjectOpened,
+             au::context::CTX_PROJECT_OPENED,
+             TranslatableString("action", "Record on new track"),
+             TranslatableString("action", "Record on new track")
+             ),
 };
 
 RecordUiActions::RecordUiActions(const muse::modularity::ContextPtr& ctx, std::shared_ptr<RecordController> controller)
