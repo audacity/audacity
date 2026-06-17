@@ -108,10 +108,10 @@ void ProjectActionsController::listenTrackeditProjectChanges()
     }
 
     prj->hasAudioContent().ch.onReceive(this, [this](bool) {
-        m_actionEnabledChanged.send({ "file-share-audio" });
+        m_actionEnabledChanged.send({ "file-share-audio", "file-save-to-cloud", "export-audio" });
     }, muse::async::Asyncable::Mode::SetReplace);
 
-    m_actionEnabledChanged.send({ "file-share-audio" });
+    m_actionEnabledChanged.send({ "file-share-audio", "file-save-to-cloud", "export-audio" });
 }
 
 muse::async::Channel<muse::actions::ActionCodeList> ProjectActionsController::actionEnabledChanged() const
@@ -157,7 +157,7 @@ bool ProjectActionsController::canReceiveAction(const muse::actions::ActionCode&
 
     const bool recording = recordController()->isRecording();
 
-    if (code == "file-share-audio") {
+    if (code == "file-share-audio" || code == "file-save-to-cloud" || code == "export-audio") {
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         if (!prj) {
             return false;

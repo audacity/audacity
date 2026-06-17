@@ -4,6 +4,7 @@
 #include "modularity/ioc.h"
 #include "types/translatablestring.h"
 #include "context/shortcutcontext.h"
+#include "ui/view/iconcodes.h"
 
 using namespace muse;
 using namespace muse::ui;
@@ -27,7 +28,8 @@ const UiActionList ProjectUiActions::m_actions = {
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "&Open…"),
-             TranslatableString("action", "Open…")
+             TranslatableString("action", "Open…"),
+             IconCode::Code::OPEN_FILE
              ),
     UiAction("project-show-in-folder",
              au::context::UiCtxAny,
@@ -71,13 +73,15 @@ const UiActionList ProjectUiActions::m_actions = {
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "Import…"),
-             TranslatableString("action", "Import…")
+             TranslatableString("action", "Import…"),
+             IconCode::Code::IMPORT
              ),
     UiAction("file-save",
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "&Save"),
-             TranslatableString("action", "Save")
+             TranslatableString("action", "Save"),
+             IconCode::Code::SAVE
              ),
     UiAction("file-save-as",
              au::context::UiCtxAny,
@@ -89,7 +93,8 @@ const UiActionList ProjectUiActions::m_actions = {
              au::context::UiCtxAny,
              au::context::CTX_ANY,
              TranslatableString("action", "&Export audio…"),
-             TranslatableString("action", "Export audio…")
+             TranslatableString("action", "Export audio…"),
+             IconCode::Code::SHARE_FILE
              ),
     UiAction("export-labels",
              au::context::UiCtxAny,
