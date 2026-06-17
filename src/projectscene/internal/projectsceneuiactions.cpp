@@ -383,6 +383,8 @@ const ToolConfig& ProjectSceneUiActions::defaultPlaybackToolBarConfig()
             { "silence-audio-selection", true },
             { FADE_IN_EFFECT_ACTION, true },
             { FADE_OUT_EFFECT_ACTION, true },
+            { INVERT_EFFECT_ACTION, true },
+            { REVERSE_EFFECT_ACTION, true },
             { "", true },
             // { "metronome", false },
             // { "", true },

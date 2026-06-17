@@ -19,6 +19,8 @@ static const TranslatableString REPEAT_LAST_EFFECT_DEF_TITLE("action", "Repeat l
 static const TranslatableString REPEAT_LAST_EFFECT_TITLE("action", "Repeat %1");
 static const ActionCode FADE_IN_EFFECT_ACTION("action://effects/open?effectId=FadeIn");
 static const ActionCode FADE_OUT_EFFECT_ACTION("action://effects/open?effectId=FadeOut");
+static const ActionCode INVERT_EFFECT_ACTION("action://effects/open?effectId=Invert");
+static const ActionCode REVERSE_EFFECT_ACTION("action://effects/open?effectId=Reverse");
 
 static UiActionList STATIC_ACTIONS = {
     UiAction("repeat-last-effect",
@@ -109,6 +111,10 @@ UiAction makeUiAction(const std::string& uri, const EffectMeta& meta)
         action.iconCode = IconCode::Code::CHEVRON_LEFT;
     } else if (toolbarActionCode == FADE_OUT_EFFECT_ACTION) {
         action.iconCode = IconCode::Code::CHEVRON_RIGHT;
+    } else if (toolbarActionCode == INVERT_EFFECT_ACTION) {
+        action.iconCode = IconCode::Code::NOTE_FLIP;
+    } else if (toolbarActionCode == REVERSE_EFFECT_ACTION) {
+        action.iconCode = IconCode::Code::REWIND;
     }
     return action;
 }
