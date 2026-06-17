@@ -228,18 +228,6 @@ const UiActionList ProjectUiActions::m_actions = {
              ),
 
     // view menu (zoom actions are in projectsceneuiactions.cpp)
-    UiAction("collapse-all-tracks",
-             au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Collapse all tracks"),
-             TranslatableString("action", "Collapse all tracks")
-             ),
-    UiAction("expand-all-tracks",
-             au::context::UiCtxUnknown,
-             au::context::CTX_ANY,
-             TranslatableString("action", "Expand all tracks"),
-             TranslatableString("action", "Expand all tracks")
-             ),
     UiAction("skip-to-selection-start",
              au::context::UiCtxAny,
              au::context::CTX_ANY,

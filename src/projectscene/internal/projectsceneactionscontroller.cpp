@@ -10,6 +10,7 @@ using namespace muse;
 using namespace au::projectscene;
 using namespace muse::async;
 using namespace muse::actions;
+namespace trackedit = au::trackedit;
 
 static const ActionCode VERTICAL_RULERS_CODE("toggle-vertical-rulers");
 static const ActionCode RMS_IN_WAVEFORM_CODE("toggle-rms-in-waveform");
@@ -23,6 +24,11 @@ static const ActionCode TOGGLE_PLAYBACK_ON_RULER_CLICK_ENABLED_CODE("toggle-play
 static const ActionQuery TOGGLE_TRACK_HALF_WAVE("action://projectscene/track-view-half-wave");
 static const ActionCode LABEL_OPEN_EDITOR_CODE("open-label-editor");
 static const ActionCode CLIP_GAIN_CODE("clip-gain");
+static const ActionCode COLLAPSE_ALL_TRACKS_CODE("collapse-all-tracks");
+static const ActionCode EXPAND_ALL_TRACKS_CODE("expand-all-tracks");
+static const ActionCode COLLAPSE_THIS_TRACK_CODE("collapse-this-track");
+static const ActionCode EXPAND_THIS_TRACK_CODE("expand-this-track");
+static const ActionCode FIT_VERTICALLY_CODE("fit-v");
 
 static const muse::Uri EDIT_PITCH_AND_SPEED_URI("audacity://projectscene/editpitchandspeed");
 
@@ -42,6 +48,11 @@ void ProjectSceneActionsController::init()
     dispatcher()->reg(this, TOGGLE_TRACK_HALF_WAVE, this, &ProjectSceneActionsController::toggleTrackHalfWave);
     dispatcher()->reg(this, LABEL_OPEN_EDITOR_CODE, this, &ProjectSceneActionsController::openLabelEditor);
     dispatcher()->reg(this, CLIP_GAIN_CODE, this, &ProjectSceneActionsController::toggleAutomation);
+    dispatcher()->reg(this, COLLAPSE_ALL_TRACKS_CODE, this, &ProjectSceneActionsController::collapseAllTrackHeights);
+    dispatcher()->reg(this, EXPAND_ALL_TRACKS_CODE, this, &ProjectSceneActionsController::expandAllTrackHeights);
+    dispatcher()->reg(this, COLLAPSE_THIS_TRACK_CODE, this, &ProjectSceneActionsController::collapseTrackHeight);
+    dispatcher()->reg(this, EXPAND_THIS_TRACK_CODE, this, &ProjectSceneActionsController::expandTrackHeight);
+    dispatcher()->reg(this, FIT_VERTICALLY_CODE, this, &ProjectSceneActionsController::autoFitTrackHeights);
 }
 
 void ProjectSceneActionsController::notifyActionCheckedChanged(const ActionCode& actionCode)
@@ -174,6 +185,75 @@ void ProjectSceneActionsController::toggleTrackHalfWave(const muse::actions::Act
     }
     viewState->toggleHalfWave(trackId);
     notifyActionCheckedChanged(TOGGLE_TRACK_HALF_WAVE.toString());
+}
+
+void ProjectSceneActionsController::collapseAllTrackHeights()
+{
+    project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    if (!prj || !prj->viewState()) {
+        return;
+    }
+
+    prj->viewState()->collapseAllTrackHeights();
+}
+
+void ProjectSceneActionsController::expandAllTrackHeights()
+{
+    project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    if (!prj || !prj->viewState()) {
+        return;
+    }
+
+    prj->viewState()->expandAllTrackHeights();
+}
+
+void ProjectSceneActionsController::autoFitTrackHeights()
+{
+    project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    if (!prj || !prj->viewState()) {
+        return;
+    }
+
+    prj->viewState()->autoFitTrackHeights();
+}
+
+void ProjectSceneActionsController::collapseTrackHeight(const muse::actions::ActionData& args)
+{
+    project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    if (!prj || !prj->viewState()) {
+        return;
+    }
+
+    const trackedit::TrackId trackId = trackIdFromArgsOrFocus(args);
+    if (!prj->trackeditProject() || !prj->trackeditProject()->track(trackId)) {
+        return;
+    }
+
+    prj->viewState()->collapseTrackHeight(trackId);
+}
+
+void ProjectSceneActionsController::expandTrackHeight(const muse::actions::ActionData& args)
+{
+    project::IAudacityProjectPtr prj = globalContext()->currentProject();
+    if (!prj || !prj->viewState()) {
+        return;
+    }
+
+    const trackedit::TrackId trackId = trackIdFromArgsOrFocus(args);
+    if (!prj->trackeditProject() || !prj->trackeditProject()->track(trackId)) {
+        return;
+    }
+
+    prj->viewState()->expandTrackHeight(trackId);
+}
+
+trackedit::TrackId ProjectSceneActionsController::trackIdFromArgsOrFocus(const muse::actions::ActionData& args) const
+{
+    if (args.count() >= 1) {
+        return args.arg<trackedit::TrackId>(0);
+    }
+
+    return trackNavigationController()->focusedTrack();
 }
 
 bool ProjectSceneActionsController::actionChecked(const ActionCode& actionCode) const
