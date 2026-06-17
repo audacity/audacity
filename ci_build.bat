@@ -6,7 +6,11 @@ FOR /f "usebackq tokens=*" %%i in (`%VSWHERE% -latest -products * -requires Micr
   SET VS_INSTALL_DIR=%%i
 )
 ECHO "VS_INSTALL_DIR: %VS_INSTALL_DIR%"
-CALL "%VS_INSTALL_DIR%\VC\Auxiliary\Build\vcvars64.bat"
+IF "%PROCESSOR_ARCHITECTURE%"=="ARM64" (
+  CALL "%VS_INSTALL_DIR%\VC\Auxiliary\Build\vcvarsarm64.bat"
+) ELSE (
+  CALL "%VS_INSTALL_DIR%\VC\Auxiliary\Build\vcvars64.bat"
+)
 
 SET "QT_DIR=C:\build_tools\6.2.4"
 SET "PATH=%QT_DIR%\msvc2019_64\bin;%PATH%"
