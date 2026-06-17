@@ -10,7 +10,6 @@ set(BUILD_NUMBER "" CACHE STRING "Build number")
 set(BUILD_MODE "" CACHE STRING "Build mode")
 set(BUILD_REVISION "" CACHE STRING "Build revision")
 set(CRASH_REPORT_URL "" CACHE STRING "Crash report url")
-set(VST3_SDK_PATH "" CACHE STRING "Vst3 SDK path")
 
 if (NOT BUILD_NUMBER)
     file (STRINGS "${ARTIFACTS_DIR}/env/build_number.env" BUILD_NUMBER)
@@ -41,12 +40,6 @@ elseif(BUILD_MODE STREQUAL "stable_build")
 endif()
 
 
-set(BUILD_VST ON)
-if (NOT VST3_SDK_PATH)
-    message(WARNING "not set VST3_SDK_PATH, build VST module disabled")
-    set(BUILD_VST OFF)
-endif()
-
 # Build
 set(CONFIG
     -DBUILD_TYPE=release_install
@@ -55,10 +48,6 @@ set(CONFIG
     -DBUILD_REVISION=${BUILD_REVISION}
     -DCRASH_REPORT_URL=${CRASH_REPORT_URL}
 )
-
-#$CRASH_REPORT_URL
-#$BUILD_VST
-#$VST3_SDK_PATH
 
 execute_process(
     COMMAND cmake ${CONFIG} -P ${ROOT_DIR}/ci_build.cmake

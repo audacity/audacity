@@ -36,7 +36,7 @@ set(CONFIG
 )
 
 execute_process(
-    COMMAND cmake ${CONFIG} -P ${CI_DIR}/../crashdumps/ci_generate_dumpsyms.cmake
+    COMMAND cmake ${CONFIG} -P ${CI_DIR}/../../../muse/buildscripts/ci/crashdumps/ci_generate_dumpsyms.cmake
 )
 
 message(STATUS "~~Package~~")

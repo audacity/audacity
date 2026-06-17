@@ -9,6 +9,7 @@ set(ROOT_DIR ${CMAKE_CURRENT_LIST_DIR}/../../..)
 
 # Options
 set(BUILD_MODE "" CACHE STRING "Build mode")
+set(PACKARCH "universal" CACHE STRING "Package architecture")
 set(BUILD_VERSION "" CACHE STRING "Build mode")
 
 if (NOT BUILD_MODE)
@@ -65,22 +66,18 @@ else()
 endif()
 
 if (BUILD_MODE STREQUAL "nightly_build")
-    #   BUILD_NUMBER=$(cat $ARTIFACTS_DIR/env/build_number.env)
-    #   BUILD_BRANCH=$(cat $ARTIFACTS_DIR/env/build_branch.env)
-    #   BUILD_REVISION=$(cat $ARTIFACTS_DIR/env/build_revision.env)
-    #   ARTIFACT_NAME=AudacityNightly-${BUILD_NUMBER}-${BUILD_BRANCH}-${BUILD_REVISION}-${PACKARCH}
     set(LONG_NAME "AudacityNightly")
-    set(ARTIFACT_NAME ${LONG_NAME}-${BUILD_VERSION}.dmg)
 else()
     set(LONG_NAME "Audacity")
-    set(ARTIFACT_NAME ${LONG_NAME}-${BUILD_VERSION}.dmg)
 endif()
+set(DMG_NAME ${LONG_NAME}-${BUILD_VERSION}.dmg)
+set(ARTIFACT_NAME ${LONG_NAME}-${BUILD_VERSION}-${PACKARCH}.dmg)
 
 execute_process(
     COMMAND bash ${PACKAGING_DIR}/make_dmg.sh --long_name "${LONG_NAME}" --version ${BUILD_VERSION}
 )
 
-file(COPY_FILE ${INSTALL_DIR}/${ARTIFACT_NAME} ${ARTIFACTS_DIR}/${ARTIFACT_NAME})
+file(COPY_FILE ${INSTALL_DIR}/${DMG_NAME} ${ARTIFACTS_DIR}/${ARTIFACT_NAME})
 
 file(MAKE_DIRECTORY ${ARTIFACTS_DIR}/env)
 
