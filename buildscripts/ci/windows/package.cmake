@@ -8,6 +8,7 @@ set(INSTALL_DIR "build.install")
 
 # Options
 set(BUILD_MODE "" CACHE STRING "Build mode")
+set(PACKARCH "x86_64" CACHE STRING "Package architecture")
 set(BUILD_VERSION "" CACHE STRING "Build mode")
 set(BUILD_NUMBER   "" CACHE STRING "Nightly build number")
 set(BUILD_BRANCH   "" CACHE STRING "Nightly branch")
@@ -61,7 +62,7 @@ file(MAKE_DIRECTORY "${ARTIFACTS_DIR}")
 # PACK 7z
 if(PACK_TYPE STREQUAL "7z")
   message(STATUS "Start 7z packing...")
-  set(ARTIFACT_NAME "Audacity-${BUILD_VERSION}-x86_64")
+  set(ARTIFACT_NAME "Audacity-${BUILD_VERSION}-${PACKARCH}")
 
   file(RENAME ${INSTALL_DIR} ${ARTIFACT_NAME})
   file(ARCHIVE_CREATE OUTPUT ${ARTIFACTS_DIR}/${ARTIFACT_NAME}.7z PATHS ${ARTIFACT_NAME} FORMAT 7zip)
@@ -179,12 +180,12 @@ if(PACK_TYPE STREQUAL "msi")
 
   if(BUILD_MODE STREQUAL "nightly_build")
     if(BUILD_NUMBER AND BUILD_BRANCH AND BUILD_REVISION)
-      set(ARTIFACT_NAME "Audacity-Nightly-${BUILD_NUMBER}-${BUILD_BRANCH}-${BUILD_REVISION}-x86_64.msi")
+      set(ARTIFACT_NAME "Audacity-Nightly-${BUILD_NUMBER}-${BUILD_BRANCH}-${BUILD_REVISION}-${PACKARCH}.msi")
     else()
-      set(ARTIFACT_NAME "Audacity-${BUILD_VERSION}-x86_64.msi")
+      set(ARTIFACT_NAME "Audacity-${BUILD_VERSION}-${PACKARCH}.msi")
     endif()
   else()
-    set(ARTIFACT_NAME "Audacity-${BUILD_VERSION}-x86_64.msi")
+    set(ARTIFACT_NAME "Audacity-${BUILD_VERSION}-${PACKARCH}.msi")
   endif()
 
   set(ARTIFACT_PATH "${ARTIFACTS_DIR}/${ARTIFACT_NAME}")

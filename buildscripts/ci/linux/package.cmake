@@ -69,6 +69,14 @@ if(PACKTYPE STREQUAL "appimage")
     # *) unset UPDATE_INFORMATION;; # disable updates for other build modes
     # esac
 
+    set(LOCAL_ROOT_PATH "${CMAKE_CURRENT_LIST_DIR}/_deps")
+    get_filename_component(_repo_root "${CMAKE_CURRENT_LIST_DIR}/../../.." ABSOLUTE)
+    include("${_repo_root}/muse_deps/buildtools/manifest.cmake")
+    require_tool(appimagetool)
+    require_tool(linuxdeploy)
+    require_tool(linuxdeploy-plugin-qt)
+    require_tool(appimageupdatetool)
+
     execute_process(
         COMMAND bash ${CMAKE_CURRENT_LIST_DIR}/make_appimage.sh "${INSTALL_DIR}" "${ARTIFACT_NAME}.AppImage" "${PACKARCH}" "${BUILD_TOOLS}/environment.sh"
     )
@@ -85,4 +93,3 @@ if(PACKTYPE STREQUAL "appimage")
 endif()
 
 message(STATUS "Package has finished!")
-
