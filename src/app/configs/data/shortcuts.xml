@@ -958,7 +958,11 @@
     </SC>
     <SC>
         <key>collapse-all-tracks</key>
-        <seq>Ctrl+Shift+C</seq>
+        <seq>Ctrl+Alt+Down</seq>
+    </SC>
+    <SC>
+        <key>expand-all-tracks</key>
+        <seq>Ctrl+Alt+Up</seq>
     </SC>
     <SC>
         <key>skip-sel-start</key>
