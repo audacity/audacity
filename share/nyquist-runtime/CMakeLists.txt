@@ -84,10 +84,10 @@ foreach( source ${RUNTIME_FILES} )
    set( src "${CMAKE_CURRENT_SOURCE_DIR}/${source}" )
    set( dst "${NYQUIST_BUILD_DEST}${TARGET}/${source}" )
 
-   # Fix this when reorganizing the Nyquist sources
    if( source STREQUAL "system.lsp" )
       if( CMAKE_SYSTEM_NAME MATCHES "Windows" )
-         set( src "${CMAKE_SOURCE_DIR}/thirdparty/libnyquist/nyquist/sys/win/msvc/system.lsp" )
+         get_property( _nyq GLOBAL PROPERTY nyquist_SOURCE_DIR )
+         set( src "${_nyq}/nyquist/nyquist/sys/win/msvc/system.lsp" )
       endif()
    endif()
 

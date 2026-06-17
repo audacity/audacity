@@ -1,2 +1,0 @@
-graph < points.dat | plot -Ttek
-
