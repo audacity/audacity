@@ -192,6 +192,95 @@ TEST_F(ProjectViewStateTests, tracksInRange_InputIntervalIsClosedOpen)
     EXPECT_EQ(TrackIdList({ }), m_projectViewState->tracksInRange(tracksBottom, tracksBottom + 1));
 }
 
+TEST_F(ProjectViewStateTests, AutoFitTrackHeights_UsesViewportHeightWithinBounds)
+{
+    const trackedit::TrackIdList tracks = getAllTracks();
+    ASSERT_EQ(tracks.size(), 2) << "Expecting 2 tracks in test.aup4";
+
+    m_projectViewState->setTracksViewportHeight(500);
+
+    EXPECT_EQ(m_projectViewState->trackHeight(tracks[0]).val, 250);
+    EXPECT_EQ(m_projectViewState->trackHeight(tracks[1]).val, 250);
+    EXPECT_EQ(m_projectViewState->totalTrackHeight().val, 500);
+}
+
+TEST_F(ProjectViewStateTests, AutoFitTrackHeights_ClampsToMinAndMax)
+{
+    const trackedit::TrackIdList tracks = getAllTracks();
+    ASSERT_EQ(tracks.size(), 2) << "Expecting 2 tracks in test.aup4";
+
+    m_projectViewState->setTracksViewportHeight(1000);
+    EXPECT_EQ(m_projectViewState->trackHeight(tracks[0]).val, 300);
+    EXPECT_EQ(m_projectViewState->trackHeight(tracks[1]).val, 300);
+
+    m_projectViewState->setTracksViewportHeight(100);
+    EXPECT_EQ(m_projectViewState->trackHeight(tracks[0]).val, 110);
+    EXPECT_EQ(m_projectViewState->trackHeight(tracks[1]).val, 110);
+}
+
+TEST_F(ProjectViewStateTests, ManualTrackHeightChangeDisengagesAutoFit)
+{
+    const trackedit::TrackIdList tracks = getAllTracks();
+    ASSERT_EQ(tracks.size(), 2) << "Expecting 2 tracks in test.aup4";
+
+    m_projectViewState->setTracksViewportHeight(400);
+    m_projectViewState->changeTrackHeight(tracks[0], 20);
+    m_projectViewState->setTracksViewportHeight(600);
+
+    EXPECT_EQ(m_projectViewState->trackHeight(tracks[0]).val, 220);
+    EXPECT_EQ(m_projectViewState->trackHeight(tracks[1]).val, 200);
+
+    m_projectViewState->autoFitTrackHeights();
+    EXPECT_EQ(m_projectViewState->trackHeight(tracks[0]).val, 300);
+    EXPECT_EQ(m_projectViewState->trackHeight(tracks[1]).val, 300);
+
+    m_projectViewState->setTrackHeight(tracks[0], 150);
+    m_projectViewState->setTracksViewportHeight(400);
+
+    EXPECT_EQ(m_projectViewState->trackHeight(tracks[0]).val, 150);
+    EXPECT_EQ(m_projectViewState->trackHeight(tracks[1]).val, 300);
+
+    m_projectViewState->autoFitTrackHeights();
+    EXPECT_EQ(m_projectViewState->trackHeight(tracks[0]).val, 200);
+    EXPECT_EQ(m_projectViewState->trackHeight(tracks[1]).val, 200);
+
+    m_projectViewState->setTracksViewportHeight(500);
+    EXPECT_EQ(m_projectViewState->trackHeight(tracks[0]).val, 250);
+    EXPECT_EQ(m_projectViewState->trackHeight(tracks[1]).val, 250);
+}
+
+TEST_F(ProjectViewStateTests, ShrinkAndExpandTrackHeights)
+{
+    const trackedit::TrackIdList tracks = getAllTracks();
+    ASSERT_EQ(tracks.size(), 2) << "Expecting 2 tracks in test.aup4";
+
+    m_projectViewState->setTracksViewportHeight(180);
+    m_projectViewState->setTrackHeight(tracks[0], 100);
+    m_projectViewState->setTrackHeight(tracks[1], 120);
+
+    m_projectViewState->collapseAllTrackHeights();
+    EXPECT_EQ(m_projectViewState->trackHeight(tracks[0]).val, 92);
+    EXPECT_EQ(m_projectViewState->trackHeight(tracks[1]).val, 112);
+
+    m_projectViewState->collapseTrackHeight(tracks[0]);
+    EXPECT_EQ(m_projectViewState->trackHeight(tracks[0]).val, 84);
+
+    m_projectViewState->expandAllTrackHeights();
+    EXPECT_EQ(m_projectViewState->trackHeight(tracks[0]).val, 92);
+    EXPECT_EQ(m_projectViewState->trackHeight(tracks[1]).val, 120);
+
+    m_projectViewState->expandTrackHeight(tracks[1]);
+    EXPECT_EQ(m_projectViewState->trackHeight(tracks[1]).val, 128);
+
+    m_projectViewState->setTrackHeight(tracks[0], 48);
+    m_projectViewState->collapseTrackHeight(tracks[0]);
+    EXPECT_EQ(m_projectViewState->trackHeight(tracks[0]).val, 44);
+
+    m_projectViewState->setTrackHeight(tracks[1], 176);
+    m_projectViewState->expandTrackHeight(tracks[1]);
+    EXPECT_EQ(m_projectViewState->trackHeight(tracks[1]).val, 180);
+}
+
 TEST_F(ProjectViewStateTests, UpdateItemsBoundaries_IncludesAllClipsWhenNothingSelected)
 {
     using namespace trackedit;

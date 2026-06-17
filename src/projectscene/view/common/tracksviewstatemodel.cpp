@@ -89,6 +89,14 @@ void TracksViewStateModel::changeTracksVerticalOffset(int deltaY)
     }
 }
 
+void TracksViewStateModel::setTracksViewportHeight(int height)
+{
+    IProjectViewStatePtr vs = viewState();
+    if (vs) {
+        vs->setTracksViewportHeight(height);
+    }
+}
+
 void TracksViewStateModel::setMouseY(double y)
 {
     IProjectViewStatePtr vs = viewState();

@@ -214,6 +214,7 @@ Rectangle {
         playCursorController.init()
         playPositionActionController.init()
         tracksViewState.init()
+        tracksViewState.setTracksViewportHeight(tracksItemsView.height)
         project.init();
 
         //! NOTE Loading tracks, or rather clips, is the most havy operation.
@@ -821,6 +822,7 @@ Rectangle {
 
                 onHeightChanged: {
                     timeline.context.onResizeFrameHeight(tracksItemsView.height)
+                    tracksViewState.setTracksViewportHeight(tracksItemsView.height)
                 }
 
                 Connections {

@@ -24,6 +24,12 @@ public:
     virtual int trackVerticalPosition(const trackedit::TrackId& trackId) const = 0;
     virtual void changeTrackHeight(const trackedit::TrackId& trackId, int deltaY) = 0;
     virtual void setTrackHeight(const trackedit::TrackId& trackId, int height) = 0;
+    virtual void collapseAllTrackHeights() = 0;
+    virtual void expandAllTrackHeights() = 0;
+    virtual void collapseTrackHeight(const trackedit::TrackId& trackId) = 0;
+    virtual void expandTrackHeight(const trackedit::TrackId& trackId) = 0;
+    virtual void autoFitTrackHeights() = 0;
+    virtual void setTracksViewportHeight(int height) = 0;
     virtual void setChannelHeightRatio(const trackedit::TrackId& trackId, double ratio) = 0;
     virtual trackedit::TrackId trackAtPosition(double y) const = 0;
     virtual trackedit::TrackIdList tracksInRange(double y1, double y2) const = 0;
