@@ -2,7 +2,7 @@ set(TARGET portmixer)
 
 add_library( ${TARGET} STATIC )
 
-set(TARGET_ROOT ${AUDACITY_ROOT}/lib-src/portmixer)
+set(TARGET_ROOT ${CMAKE_CURRENT_LIST_DIR})
 
 if (UNIX AND NOT APPLE)
    include(CheckIncludeFile)
