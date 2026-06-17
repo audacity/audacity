@@ -67,7 +67,7 @@ add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/soxr au3-soxr)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/pffft au3-pffft)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/portmixer au3-portmixer)
 add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/twolame au3-twolame)
-add_subdirectory(${CMAKE_CURRENT_LIST_DIR}/thirdparty/tft)
+tft_add_to_build()
 list(APPEND AU3_LINK twolame)
 
 # Conditional time-stretching and pitch-shifting libraries
@@ -89,7 +89,7 @@ if(AU_MODULE_EFFECTS_VST)
 endif()
 
 # RapidJSON (header-only, used by au3-musehub, au3-cloud-audiocom, au3-import-export, au3-sentry-reporting)
-add_subdirectory(${CMAKE_SOURCE_DIR}/thirdparty/rapidjson rapidjson)
+rapidjson_add_to_build()
 
 # Include AU3 libraries - this will add all library subdirectories
 # and set AU3_LIBRARIES_LIST in this scope

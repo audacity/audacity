@@ -1414,12 +1414,6 @@ else()
       install( FILES "${_SRCDIR}/audacity.xml"
                DESTINATION "${_DATADIR}/mime/packages" )
 
-      if( ${_OPT}has_crashreports )
-         if( ${_OPT}crashreport_backend STREQUAL "crashpad" )
-            install( PROGRAMS  "${_DESTDIR}/${_EXEDIR}/crashpad_handler"
-                     DESTINATION "${CMAKE_INSTALL_BINDIR}" )
-         endif()
-      endif()
    endif()
 endif()
 
