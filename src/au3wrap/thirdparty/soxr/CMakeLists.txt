@@ -2,7 +2,8 @@
 set(TARGET soxr)
 add_library( ${TARGET} STATIC )
 
-set(TARGET_ROOT ${AUDACITY_ROOT}/lib-src/libsoxr)
+get_property(_src GLOBAL PROPERTY soxr_SOURCE_DIR)
+set(TARGET_ROOT ${_src}/soxr)
 list( APPEND SOURCES
    PRIVATE
       ${TARGET_ROOT}/src/cr.c
