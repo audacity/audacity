@@ -41,7 +41,20 @@ void PlaybackToolBarCustomiseModel::load()
 
     bool lastWasSeparator = false;
     for (const auto& configItem : toolConfig.items) {
+        if (configItem.action.empty()) {
+            if (lastWasSeparator) {
+                continue;
+            }
+            lastWasSeparator = true;
+
+            items << makeSeparatorItem();
+            continue;
+        }
+
         UiAction action = actionsRegister()->action(configItem.action);
+        if (action.code.empty()) {
+            continue;
+        }
 
         if (isSeparator(action) && lastWasSeparator) {
             continue;

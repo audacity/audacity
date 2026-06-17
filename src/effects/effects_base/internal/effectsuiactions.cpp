@@ -7,6 +7,7 @@
 #include "context/shortcutcontext.h"
 #include "types/translatablestring.h"
 #include "log.h"
+#include "effects/effects_base/internal/effectsutils.h"
 
 using namespace au::effects;
 using namespace muse;
@@ -138,6 +139,13 @@ void EffectsUiActions::makeActions(EffectMetaList effects)
 
     for (const EffectMeta& e : effects) {
         m_actions.push_back(makeUiAction(EFFECT_OPEN_ACTION, e));
+        const ActionCode toolbarActionCode = utils::toolbarEffectActionCode(e.id);
+        if (!toolbarActionCode.empty()) {
+            UiAction action = makeUiAction(EFFECT_OPEN_ACTION, e);
+            action.code = toolbarActionCode;
+            m_actions.push_back(std::move(action));
+        }
+
         if (e.isRealtimeCapable) {
             for (const auto& uri : { REALTIME_EFFECT_ADD_ACTION, REALTIME_EFFECT_REPLACE_ACTION }) {
                 UiAction action = makeUiAction(uri, e);

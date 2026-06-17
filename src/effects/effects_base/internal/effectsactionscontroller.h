@@ -52,6 +52,7 @@ private:
     void notifyAboutSpectralEffectsAvailability();
 
     void onEffectTriggered(const muse::actions::ActionQuery& q);
+    void triggerEffect(const EffectId& effectId);
     void applyEffect(const muse::actions::ActionQuery& q);
     void repeatLastEffect();
 

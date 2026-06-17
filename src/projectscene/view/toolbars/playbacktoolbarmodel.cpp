@@ -86,6 +86,10 @@ void PlaybackToolBarModel::load()
             reload();
         });
 
+        uiActionsRegister()->actionsChanged().onReceive(this, [this](const UiActionList&) {
+            reload();
+        });
+
         uiConfiguration()->currentThemeChanged().onNotify(this, [this]() {
             reload();
         });
@@ -349,16 +353,20 @@ void PlaybackToolBarModel::updateActions()
             continue;
         }
 
+        if (citem.action.empty()) {
+            items << AbstractToolBarModel::makeSeparator();
+            continue;
+        }
+
+        if (uiActionsRegister()->action(citem.action).code.empty()) {
+            continue;
+        }
+
         if (citem.action == PLAYBACK_LEVEL_QUERY.toString()) {
             if (configuration()->playbackMeterPosition() == playback::PlaybackMeterPosition::MeterPosition::SideBar) {
                 // Skip playback meter item if it is set to be displayed in the sidebar
                 continue;
             }
-        }
-
-        if (citem.action == AbstractToolBarModel::SEPARATOR_ID) {
-            items << AbstractToolBarModel::makeSeparator();
-            continue;
         }
 
         ToolBarItem* item = makeLocalItem(citem.action);
@@ -388,6 +396,9 @@ ToolBarItem* PlaybackToolBarModel::makeLocalItem(const ActionCode& actionCode)
 
     if (type == PlaybackToolBarModel::PROJECT_CONTROL) {
         ToolBarItem* item = AbstractToolBarModel::makeItem(actionCode);
+        if (!item) {
+            return nullptr;
+        }
         item->setType(static_cast<ToolBarItemType::Type>(type));
         return item;
     }

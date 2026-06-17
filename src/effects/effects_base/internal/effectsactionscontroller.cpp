@@ -56,6 +56,13 @@ void EffectsActionsController::registerActions()
         dispatcher()->reg(this, ActionQuery(makeEffectAction(EFFECT_OPEN_ACTION, e.id)), [this](const ActionQuery& q) {
             onEffectTriggered(q);
         });
+
+        const ActionCode toolbarActionCode = utils::toolbarEffectActionCode(e.id);
+        if (!toolbarActionCode.empty()) {
+            dispatcher()->reg(this, ActionQuery(toolbarActionCode), [this, effectId = e.id](const ActionQuery&) {
+                triggerEffect(effectId);
+            });
+        }
     }
 
     dispatcher()->reg(this, "repeat-last-effect", this, &EffectsActionsController::repeatLastEffect);
@@ -83,6 +90,12 @@ void EffectsActionsController::onEffectTriggered(const muse::actions::ActionQuer
     IF_ASSERT_FAILED(!effectId.empty()) {
         return;
     }
+
+    triggerEffect(effectId);
+}
+
+void EffectsActionsController::triggerEffect(const EffectId& effectId)
+{
     playbackController()->stop();
 
     effectExecutionScenario()->performEffect(effectId);
