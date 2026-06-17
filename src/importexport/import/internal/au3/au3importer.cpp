@@ -1,6 +1,10 @@
 #include "au3importer.h"
 
 #include "framework/global/io/path.h"
+#include "global/log.h"
+#include "global/types/string.h"
+
+#include "../legacyaupimporter.h"
 
 #include "au3-basic-ui/BasicUI.h"
 #include "au3-stretching-sequence/TempoChange.h"
@@ -96,6 +100,13 @@ au::importexport::Au3Importer::~Au3Importer() = default;
 
 au::importexport::FileInfo au::importexport::Au3Importer::fileInfo(const muse::io::path_t& filePath)
 {
+    if (LegacyAupImporter::isLegacyAupFile(filePath)) {
+        FileInfo fileInfo;
+        fileInfo.path = filePath;
+        fileInfo.trackCount = 1;
+        return fileInfo;
+    }
+
     Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
     auto importPlugins = Importer::sImportPluginList();
 
@@ -125,6 +136,10 @@ bool au::importexport::Au3Importer::import(const muse::io::path_t& filePath)
         if (labelExt == ext) {
             return labelsImporter()->importData(filePath).success();
         }
+    }
+
+    if (LegacyAupImporter::isLegacyAupFile(filePath)) {
+        return importLegacyAup(filePath);
     }
 
     const bool projectWasEmpty = isProjectEmpty();
@@ -176,9 +191,52 @@ bool au::importexport::Au3Importer::import(const muse::io::path_t& filePath)
     return true;
 }
 
+bool au::importexport::Au3Importer::importLegacyAup(const muse::io::path_t& filePath)
+{
+    LegacyAupImporter legacyImporter;
+    LegacyAupImporter::Result legacyProject = legacyImporter.resolve(filePath);
+    if (!legacyProject.success) {
+        LOGE() << "Failed to import legacy .aup project: " << filePath << ", error: " << legacyProject.error;
+        return false;
+    }
+
+    for (const std::string& warning : legacyProject.warnings) {
+        LOGW() << "Legacy .aup import warning: " << warning;
+    }
+
+    for (const LegacyAupImporter::Track& track : legacyProject.tracks) {
+        const trackedit::TrackId trackId = tracksInteraction()->addWaveTrack(track.channels);
+        if (trackId < 0) {
+            return false;
+        }
+
+        if (!track.title.empty()) {
+            tracksInteraction()->changeTrackTitle(trackId, muse::String::fromUtf8(track.title));
+        }
+
+        for (const LegacyAupImporter::Clip& clip : track.clips) {
+            if (!importIntoTrackInternal(clip.filePath, trackId, clip.startTime, false, false)) {
+                return false;
+            }
+        }
+    }
+
+    applyImportedProjectTitleIfNeeded(filePath);
+    return true;
+}
+
 bool au::importexport::Au3Importer::importIntoTrack(const muse::io::path_t& filePath,
                                                     trackedit::TrackId dstTrackId,
                                                     muse::secs_t startTime)
+{
+    return importIntoTrackInternal(filePath, dstTrackId, startTime, true, true);
+}
+
+bool au::importexport::Au3Importer::importIntoTrackInternal(const muse::io::path_t& filePath,
+                                                            trackedit::TrackId dstTrackId,
+                                                            muse::secs_t startTime,
+                                                            bool applyProjectTitle,
+                                                            bool runTempoDetection)
 {
     const bool projectWasEmpty = isProjectEmpty();
 
@@ -239,10 +297,14 @@ bool au::importexport::Au3Importer::importIntoTrack(const muse::io::path_t& file
         return false;
     }
 
-    applyImportedProjectTitleIfNeeded(filePath);
+    if (applyProjectTitle) {
+        applyImportedProjectTitleIfNeeded(filePath);
+    }
 
     std::vector<trackedit::TrackId> dstTrackIds(importedWaveTracks.size(), dstTrackId);
-    m_tempoDetection->onFilesImported({ filePath }, importedWaveTracks, dstTrackIds, acidTags, projectWasEmpty);
+    if (runTempoDetection) {
+        m_tempoDetection->onFilesImported({ filePath }, importedWaveTracks, dstTrackIds, acidTags, projectWasEmpty);
+    }
 
     return true;
 }
@@ -314,6 +376,7 @@ std::vector<std::string> au::importexport::Au3Importer::supportedExtensions() co
 
     // Audio formats (from au3) plus whatever the labels importer handles.
     std::vector<std::string> out = audioExtensions;
+    out.push_back("aup");
     const std::vector<std::string> labelExtensions = labelsImporter()->supportedExtensions();
     out.insert(out.end(), labelExtensions.cbegin(), labelExtensions.cend());
     return out;
