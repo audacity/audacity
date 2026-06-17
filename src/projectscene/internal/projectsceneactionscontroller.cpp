@@ -16,6 +16,21 @@ static const muse::Uri EDIT_PITCH_AND_SPEED_URI("audacity://projectscene/editpit
 void ProjectSceneActionsController::init()
 {
     auto cd = commandDispatcher();
+    cd->onRequest(this, PROJECTSCENE_FIT_VERTICALLY_COMMAND, [this]() {
+        return changeTrackHeight(&IProjectViewState::autoFitTrackHeights);
+    });
+    cd->onRequest(this, PROJECTSCENE_COLLAPSE_ALL_TRACKS_COMMAND, [this]() {
+        return changeTrackHeight(&IProjectViewState::collapseAllTrackHeights);
+    });
+    cd->onRequest(this, PROJECTSCENE_EXPAND_ALL_TRACKS_COMMAND, [this]() {
+        return changeTrackHeight(&IProjectViewState::expandAllTrackHeights);
+    });
+    cd->onRequest(this, PROJECTSCENE_COLLAPSE_THIS_TRACK_COMMAND, [this](const Params& params) {
+        return changeTrackHeight(params, &IProjectViewState::collapseTrackHeight);
+    });
+    cd->onRequest(this, PROJECTSCENE_EXPAND_THIS_TRACK_COMMAND, [this](const Params& params) {
+        return changeTrackHeight(params, &IProjectViewState::expandTrackHeight);
+    });
     registerViewCommand(PROJECTSCENE_ZOOM_IN_COMMAND, &ProjectSceneActionsController::m_timelineViewController,
                         &ITimelineViewController::zoomIn);
     registerViewCommand(PROJECTSCENE_ZOOM_OUT_COMMAND, &ProjectSceneActionsController::m_timelineViewController,
@@ -86,6 +101,36 @@ void ProjectSceneActionsController::init()
         return openClipPitchAndSpeedEdit(params);
     });
     cd->onRequest(this, PROJECTSCENE_OPEN_LABEL_EDITOR_COMMAND, [this]() { return openLabelEditor(); });
+}
+
+muse::Ret ProjectSceneActionsController::changeTrackHeight(void (IProjectViewState::*change)())
+{
+    const auto project = globalContext()->currentProject();
+    if (!project || !project->viewState()) {
+        return make_ret(Ret::Code::NotSupported);
+    }
+
+    (project->viewState().get()->*change)();
+    return make_ok();
+}
+
+muse::Ret ProjectSceneActionsController::changeTrackHeight(const Params& params, void (IProjectViewState::*change)(
+                                                               const trackedit::TrackId&))
+{
+    const auto project = globalContext()->currentProject();
+    if (!project || !project->viewState() || !project->trackeditProject()) {
+        return make_ret(Ret::Code::NotSupported);
+    }
+
+    const auto trackId = params.contains(PROJECTSCENE_TRACK_HEIGHT_TRACK_ID_PARAM)
+                         ? params.at(PROJECTSCENE_TRACK_HEIGHT_TRACK_ID_PARAM).toInt64()
+                         : trackNavigationController()->focusedTrack();
+    if (!project->trackeditProject()->track(trackId)) {
+        return make_ret(Ret::Code::NotSupported);
+    }
+
+    (project->viewState().get()->*change)(trackId);
+    return make_ok();
 }
 
 void ProjectSceneActionsController::setTimelineViewController(ITimelineViewController* controller)

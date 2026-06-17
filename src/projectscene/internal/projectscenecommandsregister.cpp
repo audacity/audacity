@@ -186,6 +186,47 @@ const std::vector<CommandInfo> s_commandInfos = {
         Decoration(IconCode::Code::ZOOM_TOGGLE)
     },
     CommandInfo{
+        PROJECTSCENE_FIT_VERTICALLY_COMMAND,
+        TranslatableString("command", "Auto-fit height"),
+        TranslatableString("command_description", "Auto-fit height"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
+        PROJECTSCENE_COLLAPSE_ALL_TRACKS_COMMAND,
+        TranslatableString("command", "Shrink all tracks"),
+        TranslatableString("command_description", "Shrink all tracks"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
+        PROJECTSCENE_EXPAND_ALL_TRACKS_COMMAND,
+        TranslatableString("command", "Expand all tracks"),
+        TranslatableString("command_description", "Expand all tracks"),
+        InputSchema(),
+        Decoration()
+    },
+    CommandInfo{
+        PROJECTSCENE_COLLAPSE_THIS_TRACK_COMMAND,
+        TranslatableString("command", "Shrink this track"),
+        TranslatableString("command_description", "Shrink this track"),
+        InputSchema({
+                { PROJECTSCENE_TRACK_HEIGHT_TRACK_ID_PARAM, Arg(DataType::Int64, "Track identifier", Presence::Optional) },
+            }),
+        Decoration(),
+        Availability::Internal | Availability::API
+    },
+    CommandInfo{
+        PROJECTSCENE_EXPAND_THIS_TRACK_COMMAND,
+        TranslatableString("command", "Expand this track"),
+        TranslatableString("command_description", "Expand this track"),
+        InputSchema({
+                { PROJECTSCENE_TRACK_HEIGHT_TRACK_ID_PARAM, Arg(DataType::Int64, "Track identifier", Presence::Optional) },
+            }),
+        Decoration(),
+        Availability::Internal | Availability::API
+    },
+    CommandInfo{
         PROJECTSCENE_TIMELINE_PAGE_LEFT_COMMAND,
         //: Command title: shown as a menu item or a button label; keep it short
         TranslatableString("command", "Scroll timeline left one page"),
