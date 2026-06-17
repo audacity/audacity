@@ -1,92 +1,26 @@
 
-
 message(STATUS "Setup dependencies")
 
-# Config
 include(GetPlatformInfo)
-include(GetBuildType)
 
-set(LIB_OS )
-if (OS_IS_WIN)
-    set(LIB_OS "windows")
-elseif(OS_IS_LIN)
-    set(LIB_OS "linux")
-elseif(OS_IS_FBSD)
-    set(LIB_OS "linux")
-elseif(OS_IS_MAC)
-    set(LIB_OS "macos")
-    list(LENGTH CMAKE_OSX_ARCHITECTURES arch_count)
-    if(arch_count GREATER 1)
-        set(ARCH "universal")
-    endif()
+
+set(EXTDEPS_DIR "${CMAKE_SOURCE_DIR}/muse_deps")
+if (NOT EXISTS "${EXTDEPS_DIR}/buildtools/manifest.cmake")
+    message(FATAL_ERROR "muse_deps submodule missing. Run: git submodule update --init muse_deps")
 endif()
 
-set(LIB_ARCH ${ARCH})
-
-if (BUILD_IS_RELEASE)
-    set(LIB_BUILD_TYPE "release")
-else()
-    set(LIB_BUILD_TYPE "debug")
-endif()
-
-set(REMOTE_ROOT_URL https://raw.githubusercontent.com/musescore/muse_deps/main)
 set(LOCAL_ROOT_PATH ${FETCHCONTENT_BASE_DIR})
+include(${EXTDEPS_DIR}/buildtools/manifest.cmake)
 
-function(populate name remote_suffix)
-    set(remote_url ${REMOTE_ROOT_URL}/${remote_suffix})
-    set(local_path ${LOCAL_ROOT_PATH}/${name})
+include(${CMAKE_CURRENT_LIST_DIR}/DependencyManifest.cmake)
+include(${MUSE_FRAMEWORK_PATH}/buildscripts/cmake/ExtDepsManifest.cmake)
 
-    if (NOT EXISTS ${local_path}/${name}.cmake)
-        file(MAKE_DIRECTORY ${local_path})
-        file(DOWNLOAD ${remote_url}/${name}.cmake ${local_path}/${name}.cmake
-            HTTPHEADER "Cache-Control: no-cache"
-        )
-    endif()
+# bundle each consumed dep's runtime libs + licenses into the app.
+extdeps_install_consumed(MACOS_BUNDLE audacity.app)
 
-    include(${local_path}/${name}.cmake)
-
-    # func from ${name}.cmake)
-    cmake_language(CALL ${name}_Populate ${remote_url} ${local_path} ${LIB_OS} ${LIB_ARCH} ${LIB_BUILD_TYPE})
-
-    get_property(include_dirs GLOBAL PROPERTY ${name}_INCLUDE_DIRS)
-    get_property(libraries GLOBAL PROPERTY ${name}_LIBRARIES)
-    get_property(instal_libraries GLOBAL PROPERTY ${name}_INSTALL_LIBRARIES)
-
-    set(${name}_INCLUDE_DIRS ${include_dirs} PARENT_SCOPE)
-    set(${name}_LIBRARIES ${libraries} PARENT_SCOPE)
-    set(${name}_INSTALL_LIBRARIES ${instal_libraries} PARENT_SCOPE)
-
-    if (OS_IS_MAC)
-        install(FILES ${instal_libraries} DESTINATION "audacity.app/Contents/Frameworks")
-    elseif(OS_IS_WIN)
-        install(FILES ${instal_libraries} TYPE BIN)
-    else()
-        install(FILES ${instal_libraries} TYPE LIB)
-    endif()
-
-endfunction()
-
-populate(wxwidgets "wxwidgets/3.1.3.9")
-populate(expat "expat/2.0.5")
-populate(portaudio "portaudio/19.7.0")
-populate(libmp3lame "libmp3lame/3.100")
-populate(wavpack "wavpack/5.7.0")
-populate(mpg123 "mpg123/1.31.2")
-populate(libsndfile "libsndfile/1.0.31")
-populate(vorbis "vorbis/1.3.7")
-populate(flac "flac/1.4.2")
-populate(ogg "ogg/1.3.5")
-populate(opus "opus/1.5.2")
-populate(opusfile "opusfile/0.12")
-
-if (NOT OS_IS_WIN)
-    populate(openssl "openssl/1.1.1t")
-endif()
-
-if (AU_USE_LIBCURL)
-    populate(libcurl "libcurl/8.17.0")
-endif()
-
-if (NOT OS_IS_LIN)
-    populate(zlib "zlib/1.2.13")
-endif()
+# Pre-fetch dep sources into the cache so source/REBUILD builds can run offline.
+add_custom_target(prepare_deps_sources
+    COMMAND ${CMAKE_COMMAND} -P "${CMAKE_CURRENT_LIST_DIR}/PrepareDepsSources.cmake"
+    COMMENT "Pre-fetching dependency sources into the cache"
+    VERBATIM
+)
