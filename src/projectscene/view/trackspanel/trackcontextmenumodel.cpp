@@ -60,6 +60,13 @@ MenuItemList TrackContextMenuModel::makeStereoTrackItems()
         makeMenuItem(trackedit::TRACKEDIT_TRACK_DUPLICATE_COMMAND),
         makeMenuItem(trackedit::TRACKEDIT_TRACK_DELETE_COMMAND),
         makeSeparator(),
+        makeMenuItem(make_query(PROJECTSCENE_COLLAPSE_THIS_TRACK_COMMAND, {
+            { PROJECTSCENE_TRACK_HEIGHT_TRACK_ID_PARAM, Val(static_cast<int64_t>(m_trackId)) }
+        })),
+        makeMenuItem(make_query(PROJECTSCENE_EXPAND_THIS_TRACK_COMMAND, {
+            { PROJECTSCENE_TRACK_HEIGHT_TRACK_ID_PARAM, Val(static_cast<int64_t>(m_trackId)) }
+        })),
+        makeSeparator(),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Move track"), makeTrackMoveItems()),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Track visualization"), makeTrackVisualizationItems()),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Track color"), makeTrackColorItems(), TRACK_COLOR_MENU_ID),
@@ -85,6 +92,13 @@ MenuItemList TrackContextMenuModel::makeMonoTrackItems()
         makeMenuItem(trackedit::TRACKEDIT_TRACK_DUPLICATE_COMMAND),
         makeMenuItem(trackedit::TRACKEDIT_TRACK_DELETE_COMMAND),
         makeSeparator(),
+        makeMenuItem(make_query(PROJECTSCENE_COLLAPSE_THIS_TRACK_COMMAND, {
+            { PROJECTSCENE_TRACK_HEIGHT_TRACK_ID_PARAM, Val(static_cast<int64_t>(m_trackId)) }
+        })),
+        makeMenuItem(make_query(PROJECTSCENE_EXPAND_THIS_TRACK_COMMAND, {
+            { PROJECTSCENE_TRACK_HEIGHT_TRACK_ID_PARAM, Val(static_cast<int64_t>(m_trackId)) }
+        })),
+        makeSeparator(),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Move track"), makeTrackMoveItems()),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Track visualization"), makeTrackVisualizationItems()),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Track color"), makeTrackColorItems(), TRACK_COLOR_MENU_ID),
@@ -107,6 +121,13 @@ MenuItemList TrackContextMenuModel::makeLabelTrackItems()
         makeRenameItem(),
         makeMenuItem(trackedit::TRACKEDIT_TRACK_DUPLICATE_COMMAND),
         makeMenuItem(trackedit::TRACKEDIT_TRACK_DELETE_COMMAND),
+        makeSeparator(),
+        makeMenuItem(make_query(PROJECTSCENE_COLLAPSE_THIS_TRACK_COMMAND, {
+            { PROJECTSCENE_TRACK_HEIGHT_TRACK_ID_PARAM, Val(static_cast<int64_t>(m_trackId)) }
+        })),
+        makeMenuItem(make_query(PROJECTSCENE_EXPAND_THIS_TRACK_COMMAND, {
+            { PROJECTSCENE_TRACK_HEIGHT_TRACK_ID_PARAM, Val(static_cast<int64_t>(m_trackId)) }
+        })),
         makeSeparator(),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Move track"), makeTrackMoveItems()),
         makeMenu(muse::TranslatableString("trackcontextmenu", "Track color"), makeTrackColorItems(), TRACK_COLOR_MENU_ID),
