@@ -103,8 +103,8 @@ Item {
             id: projectControlComp
 
             StyledToolBarItem {
-                width: 28
-                height: width
+                width: Boolean(itemData) && itemData.showTitle ? implicitWidth : 28
+                height: 28
 
                 backgroundRadius: 2
 

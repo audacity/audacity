@@ -50,6 +50,22 @@ static const ActionCode PLAYBACK_BPM("playback-bpm");
 static const ActionCode PLAYBACK_TIME_SIGNATURE("playback-time-signature");
 
 static const ActionCode SNAP_ACTION_CODE("snap");
+static const ActionCode FILE_SAVE_ACTION_CODE("file-save");
+static const ActionCode EXPORT_AUDIO_ACTION_CODE("export-audio");
+static const ActionCode FILE_SAVE_TO_CLOUD_ACTION_CODE("file-save-to-cloud");
+static const ActionCode FILE_SHARE_AUDIO_ACTION_CODE("file-share-audio");
+static const ActionCode FILE_OPEN_ACTION_CODE("file-open");
+static const ActionCode PROJECT_IMPORT_ACTION_CODE("project-import");
+
+static bool isFileAction(const ActionCode& actionCode)
+{
+    return actionCode == FILE_SAVE_ACTION_CODE
+           || actionCode == EXPORT_AUDIO_ACTION_CODE
+           || actionCode == FILE_SAVE_TO_CLOUD_ACTION_CODE
+           || actionCode == FILE_SHARE_AUDIO_ACTION_CODE
+           || actionCode == FILE_OPEN_ACTION_CODE
+           || actionCode == PROJECT_IMPORT_ACTION_CODE;
+}
 
 static PlaybackToolBarModel::ItemType itemType(const ActionCode& actionCode)
 {
@@ -400,6 +416,7 @@ ToolBarItem* PlaybackToolBarModel::makeLocalItem(const ActionCode& actionCode)
             return nullptr;
         }
         item->setType(static_cast<ToolBarItemType::Type>(type));
+        item->setShowTitle(isFileAction(actionCode));
         return item;
     }
 
