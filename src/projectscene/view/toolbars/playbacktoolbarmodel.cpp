@@ -24,6 +24,7 @@ using namespace au::playback;
 static const QString TOOLBAR_NAME("playbackToolBar");
 
 static const QString PLAY_PAUSE_ITEM_ID("play-pause-id");
+static const QString RECORD_ITEM_ID("record-id");
 static const QString STOP_ITEM_ID("stop-id");
 
 static const ActionQuery PLAYBACK_PLAY_QUERY("action://playback/play");
@@ -31,7 +32,6 @@ static const ActionQuery PLAYBACK_PAUSE_QUERY("action://playback/pause");
 static const ActionQuery PLAYBACK_STOP_QUERY("action://playback/stop");
 
 static const ActionQuery RECORD_START_QUERY("action://record/start");
-static const ActionQuery RECORD_PAUSE_QUERY("action://record/pause");
 static const ActionQuery RECORD_STOP_QUERY("action://record/stop");
 static const ActionQuery RECORD_LEVEL_QUERY("action://record/level");
 
@@ -129,8 +129,7 @@ void PlaybackToolBarModel::setupProjectConnections(project::IAudacityProject& pr
 
 void PlaybackToolBarModel::onActionsStateChanges(const muse::actions::ActionCodeList& codes)
 {
-    if (containsAction(codes, PLAYBACK_PLAY_QUERY.toString()) || containsAction(codes, PLAYBACK_PAUSE_QUERY.toString())
-        || containsAction(codes, RECORD_PAUSE_QUERY.toString())) {
+    if (containsAction(codes, PLAYBACK_PLAY_QUERY.toString()) || containsAction(codes, PLAYBACK_PAUSE_QUERY.toString())) {
         updatePlayState();
     }
 
@@ -169,16 +168,14 @@ void PlaybackToolBarModel::updatePlayState()
     }
 
     bool isPlaying = playbackController()->isPlaying();
-    bool isRecording = recordController()->isRecording();
     bool isLeadIn = recordController()->isLeadInRecording();
 
     ActionCode code = (isPlaying || isLeadIn) ? PLAYBACK_PAUSE_QUERY.toString() : PLAYBACK_PLAY_QUERY.toString();
-    if (isRecording && !isLeadIn) {
-        code = RECORD_PAUSE_QUERY.toString();
-    }
 
     UiAction action = uiActionsRegister()->action(code);
     item->setAction(action);
+    item->setState(uiActionsRegister()->actionState(code));
+    item->setShortcuts(shortcutsRegister()->shortcut(code).sequences);
 
     // During lead-in, show as playing (green background) since audio is playing back
     bool showAsPlaying = isPlaying || isLeadIn;
@@ -189,8 +186,6 @@ void PlaybackToolBarModel::updatePlayState()
     if (showAsPlaying) {
         iconColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::FONT_PRIMARY_COLOR).toString());
         backgroundColor = uiConfiguration()->currentTheme().values.value(muse::ui::PLAY_COLOR).value<QColor>();
-    } else if (isRecording) {
-        iconColor = QColor(uiConfiguration()->currentTheme().values.value(muse::ui::FONT_PRIMARY_COLOR).toString());
     }
 
     item->setIconColor(iconColor);
@@ -215,7 +210,7 @@ void PlaybackToolBarModel::updateStopState()
 
 void PlaybackToolBarModel::updateRecordState()
 {
-    PlaybackToolBarControlItem* item = dynamic_cast<PlaybackToolBarControlItem*>(findItemPtr(RECORD_START_QUERY.toString()));
+    PlaybackToolBarControlItem* item = dynamic_cast<PlaybackToolBarControlItem*>(findItemPtr(RECORD_ITEM_ID));
 
     if (item == nullptr) {
         return;
@@ -223,6 +218,18 @@ void PlaybackToolBarModel::updateRecordState()
 
     bool isRecording = recordController()->isRecording();
     bool isLeadIn = recordController()->isLeadInRecording();
+    ActionCode code = RECORD_START_QUERY.toString();
+    if (isRecording && !isLeadIn) {
+        code = RECORD_STOP_QUERY.toString();
+    }
+
+    UiAction action = uiActionsRegister()->action(code);
+    if (isRecording && !isLeadIn) {
+        action.iconCode = muse::ui::IconCode::Code::PAUSE_FILL;
+    }
+    item->setAction(action);
+    item->setState(uiActionsRegister()->actionState(code));
+    item->setShortcuts(shortcutsRegister()->shortcut(code).sequences);
 
     // During lead-in pre-roll, the button should not appear as actively recording
     item->setSelected(isRecording && !isLeadIn);
@@ -368,6 +375,10 @@ void PlaybackToolBarModel::updateActions()
 
         if (citem.action == PLAYBACK_PLAY_QUERY.toString()) {
             item->setId(PLAY_PAUSE_ITEM_ID); // for quick finding
+        }
+
+        if (citem.action == RECORD_START_QUERY.toString()) {
+            item->setId(RECORD_ITEM_ID); // for quick finding
         }
 
         if (citem.action == PLAYBACK_STOP_QUERY.toString()) {
