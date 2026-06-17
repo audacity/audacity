@@ -29,18 +29,7 @@ set(MODULE_SRC
     ${CMAKE_CURRENT_LIST_DIR}/types/importtypes.h
 )
 
-# Loop Tempo Estimator (fetched automatically during configure)
-if(NOT TARGET loop-tempo-estimator)
-    set(LTE_VERSION "v0.0.4")
-
-    include(FetchContent)
-    FetchContent_Declare(
-        loop-tempo-estimator
-        URL https://github.com/saintmatthieu/loop-tempo-estimator/releases/download/${LTE_VERSION}/loop-tempo-estimator-${LTE_VERSION}.tar.gz
-        SOURCE_SUBDIR source
-    )
-    FetchContent_MakeAvailable(loop-tempo-estimator)
-endif()
+loop_tempo_estimator_add_to_build()
 
 # AU3
 include(${CMAKE_CURRENT_LIST_DIR}/../../au3wrap/au3wrapDefs.cmake)
