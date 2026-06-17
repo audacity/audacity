@@ -6,8 +6,9 @@
 #include "context/uicontext.h"
 #include "context/shortcutcontext.h"
 #include "types/translatablestring.h"
-#include "log.h"
+#include "ui/view/iconcodes.h"
 #include "effects/effects_base/internal/effectsutils.h"
+#include "log.h"
 
 using namespace au::effects;
 using namespace muse;
@@ -16,6 +17,8 @@ using namespace muse::actions;
 
 static const TranslatableString REPEAT_LAST_EFFECT_DEF_TITLE("action", "Repeat last effect");
 static const TranslatableString REPEAT_LAST_EFFECT_TITLE("action", "Repeat %1");
+static const ActionCode FADE_IN_EFFECT_ACTION("action://effects/open?effectId=FadeIn");
+static const ActionCode FADE_OUT_EFFECT_ACTION("action://effects/open?effectId=FadeOut");
 
 static UiActionList STATIC_ACTIONS = {
     UiAction("repeat-last-effect",
@@ -101,6 +104,12 @@ UiAction makeUiAction(const std::string& uri, const EffectMeta& meta)
     action.scCtx = au::context::CTX_PROJECT_FOCUSED;
     action.description = TranslatableString::untranslatable(meta.description);
     action.title = TranslatableString::untranslatable(meta.title);
+    const ActionCode toolbarActionCode = utils::toolbarEffectActionCode(meta.id);
+    if (toolbarActionCode == FADE_IN_EFFECT_ACTION) {
+        action.iconCode = IconCode::Code::CHEVRON_LEFT;
+    } else if (toolbarActionCode == FADE_OUT_EFFECT_ACTION) {
+        action.iconCode = IconCode::Code::CHEVRON_RIGHT;
+    }
     return action;
 }
 

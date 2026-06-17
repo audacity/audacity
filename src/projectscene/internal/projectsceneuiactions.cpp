@@ -381,6 +381,8 @@ const ToolConfig& ProjectSceneUiActions::defaultPlaybackToolBarConfig()
             { "", true },
             { "trim-audio-outside-selection", true },
             { "silence-audio-selection", true },
+            { FADE_IN_EFFECT_ACTION, true },
+            { FADE_OUT_EFFECT_ACTION, true },
             { "", true },
             // { "metronome", false },
             // { "", true },
