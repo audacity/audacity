@@ -15,6 +15,9 @@ using namespace muse;
 using namespace muse::ui;
 using namespace muse::actions;
 
+static const ActionCode FADE_IN_EFFECT_ACTION("action://effects/open?effectId=FadeIn");
+static const ActionCode FADE_OUT_EFFECT_ACTION("action://effects/open?effectId=FadeOut");
+
 static UiActionList STATIC_ACTIONS = {
     UiAction("clip-gain",
              au::context::UiCtxProjectOpened,

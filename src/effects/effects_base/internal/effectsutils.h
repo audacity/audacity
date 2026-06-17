@@ -30,6 +30,8 @@ std::string parseEffectVendor(const EffectId& effectId);
 std::string parseEffectFamily(const EffectId& effectId);
 std::string parseEffectPath(const EffectId& effectId);
 
+muse::actions::ActionCode toolbarEffectActionCode(const EffectId& effectId);
+
 muse::String effectTypeToString(EffectType type);
 EffectType effectTypeFromString(const muse::String& type);
 

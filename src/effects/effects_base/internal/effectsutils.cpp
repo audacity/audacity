@@ -125,6 +125,36 @@ std::string utils::parseEffectPath(const EffectId& effectId)
     return parseEffectIdPart(effectId, 4);
 }
 
+namespace {
+static const std::string EFFECT_NAME_FADE_IN("FadeIn");
+static const std::string EFFECT_NAME_FADE_OUT("FadeOut");
+
+std::string normalizedEffectName(std::string name)
+{
+    name.erase(std::remove_if(name.begin(), name.end(), [](char c) {
+        return c == ' ' || c == '-' || c == '_';
+    }), name.end());
+    return name;
+}
+
+bool effectIdMatchesName(const effects::EffectId& effectId, const std::string& name)
+{
+    return normalizedEffectName(utils::parseEffectName(effectId)) == normalizedEffectName(name);
+}
+}
+
+muse::actions::ActionCode utils::toolbarEffectActionCode(const EffectId& effectId)
+{
+    if (effectIdMatchesName(effectId, EFFECT_NAME_FADE_IN)) {
+        return makeEffectAction(EFFECT_OPEN_ACTION, EffectId::fromStdString(EFFECT_NAME_FADE_IN));
+    }
+    if (effectIdMatchesName(effectId, EFFECT_NAME_FADE_OUT)) {
+        return makeEffectAction(EFFECT_OPEN_ACTION, EffectId::fromStdString(EFFECT_NAME_FADE_OUT));
+    }
+
+    return {};
+}
+
 muse::String utils::effectCategoryToString(EffectCategory category)
 {
     switch (category) {
