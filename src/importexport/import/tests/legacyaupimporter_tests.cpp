@@ -157,6 +157,23 @@ QString aliasBlockXml(const QString& fileName, int start, int aliasStart, int al
         "        </waveblock>\n").arg(start).arg(fileName).arg(aliasStart).arg(aliasLen).arg(channel);
 }
 
+QString labelTrackXml(const QString& labelsXml, const QString& name = "Label Track", int labelCount = 1)
+{
+    return QString(
+        "  <labeltrack name=\"%1\" numlabels=\"%2\">\n"
+        "%3"
+        "  </labeltrack>\n").arg(name).arg(labelCount).arg(labelsXml);
+}
+
+QString labelXml(const QString& title, const QString& start, const QString& end = QString())
+{
+    if (end.isEmpty()) {
+        return QString("    <label t=\"%1\" title=\"%2\"/>\n").arg(start, title);
+    }
+
+    return QString("    <label t=\"%1\" t1=\"%2\" title=\"%3\"/>\n").arg(start, end, title);
+}
+
 LegacyAupImporter::Result resolve(LegacyAupImporter& importer, const QString& path)
 {
     return importer.resolve(muse::io::path_t(path));
@@ -393,4 +410,67 @@ TEST(LegacyAupImporter, failsWhenProjectDataDirectoryIsMissing)
     EXPECT_FALSE(result.success);
     EXPECT_NE(result.error.find("_data directory"), std::string::npos);
     EXPECT_TRUE(result.tracks.empty());
+}
+
+TEST(LegacyAupImporter, importsLabelOnlyProjects)
+{
+    QTemporaryDir dir;
+    ASSERT_TRUE(dir.isValid());
+    makeDataSubdir(dataDirPath(dir, "labels"));
+
+    writeTextFile(projectPath(dir, "labels"), projectXml(
+                      "labels_data",
+                      labelTrackXml(
+                          labelXml("Intro &amp; Verse", "1.5", "2.25")
+                          + labelXml("Marker", "3.0")
+                          + labelXml("Inverted", "5.0", "4.0"),
+                          "Markers",
+                          3)));
+
+    LegacyAupImporter importer;
+    const auto result = resolve(importer, projectPath(dir, "labels"));
+
+    ASSERT_TRUE(result.success) << result.error;
+    EXPECT_TRUE(result.tracks.empty());
+    ASSERT_EQ(result.labelTracks.size(), 1u);
+    EXPECT_EQ(result.labelTracks[0].title, "Markers");
+    ASSERT_EQ(result.labelTracks[0].labels.size(), 3u);
+
+    EXPECT_DOUBLE_EQ(result.labelTracks[0].labels[0].startTime, 1.5);
+    EXPECT_DOUBLE_EQ(result.labelTracks[0].labels[0].endTime, 2.25);
+    EXPECT_EQ(result.labelTracks[0].labels[0].title, "Intro & Verse");
+
+    EXPECT_DOUBLE_EQ(result.labelTracks[0].labels[1].startTime, 3.0);
+    EXPECT_DOUBLE_EQ(result.labelTracks[0].labels[1].endTime, 3.0);
+    EXPECT_EQ(result.labelTracks[0].labels[1].title, "Marker");
+
+    EXPECT_DOUBLE_EQ(result.labelTracks[0].labels[2].startTime, 4.0);
+    EXPECT_DOUBLE_EQ(result.labelTracks[0].labels[2].endTime, 5.0);
+    EXPECT_EQ(result.labelTracks[0].labels[2].title, "Inverted");
+}
+
+TEST(LegacyAupImporter, importsWaveAndLabelTracksTogether)
+{
+    QTemporaryDir dir;
+    ASSERT_TRUE(dir.isValid());
+    const QString dataDir = dataDirPath(dir, "mixed");
+    makeDataSubdir(dataDir);
+
+    writeAudioFile(blockPath(dataDir, "audio.au"), 44100, 1, SF_FORMAT_AU | SF_FORMAT_FLOAT, { 0.2f });
+    writeTextFile(projectPath(dir, "mixed"), projectXml(
+                      "mixed_data",
+                      monoTrackXml(waveClipXml(simpleBlockXml("audio.au", 1, 0), "0.5"))
+                      + labelTrackXml(labelXml("Cue", "0.5", "0.75"), "Cues")));
+
+    LegacyAupImporter importer;
+    const auto result = resolve(importer, projectPath(dir, "mixed"));
+
+    ASSERT_TRUE(result.success) << result.error;
+    ASSERT_EQ(result.tracks.size(), 1u);
+    ASSERT_EQ(result.labelTracks.size(), 1u);
+    EXPECT_EQ(result.labelTracks[0].title, "Cues");
+    ASSERT_EQ(result.labelTracks[0].labels.size(), 1u);
+    EXPECT_DOUBLE_EQ(result.labelTracks[0].labels[0].startTime, 0.5);
+    EXPECT_DOUBLE_EQ(result.labelTracks[0].labels[0].endTime, 0.75);
+    EXPECT_EQ(result.labelTracks[0].labels[0].title, "Cue");
 }

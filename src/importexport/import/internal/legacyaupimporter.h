@@ -29,12 +29,26 @@ public:
         std::vector<Clip> clips;
     };
 
+    struct Label
+    {
+        double startTime = 0.0;
+        double endTime = 0.0;
+        std::string title;
+    };
+
+    struct LabelTrack
+    {
+        std::string title;
+        std::vector<Label> labels;
+    };
+
     struct Result
     {
         bool success = false;
         std::string error;
         std::vector<std::string> warnings;
         std::vector<Track> tracks;
+        std::vector<LabelTrack> labelTracks;
     };
 
     LegacyAupImporter();
