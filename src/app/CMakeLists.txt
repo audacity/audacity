@@ -209,6 +209,12 @@ if (APP_OUTPUT_NAME)
   set_target_properties(${EXECUTABLE_NAME} PROPERTIES OUTPUT_NAME ${APP_OUTPUT_NAME})
 endif (APP_OUTPUT_NAME)
 
+if (OS_IS_WIN)
+    set_target_properties(${EXECUTABLE_NAME} PROPERTIES
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_INSTALL_PREFIX}/bin
+    )
+endif()
+
 if (MUSE_ENABLE_UNIT_TESTS_CODE_COVERAGE)
     set(COVERAGE_FLAGS -fprofile-arcs -ftest-coverage --coverage)
     set(COVERAGE_LINK_FLAGS -lgcov --coverage)
