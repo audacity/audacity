@@ -48,7 +48,7 @@ BuiltinEffectBase {
             decimals: 0
             step: 1
 
-            onNewValueRequested: function(newValue) {
+            onNewValueRequested: function (newValue) {
                 deepFilterNet.attenuationLimit = newValue
             }
         }
@@ -66,7 +66,7 @@ BuiltinEffectBase {
             decimals: 2
             step: 0.01
 
-            onNewValueRequested: function(newValue) {
+            onNewValueRequested: function (newValue) {
                 deepFilterNet.mix = newValue
             }
         }
