@@ -65,6 +65,6 @@ public:
 
 private:
     bool ProcessOne(
-        WaveChannel& channel, double t0, double t1, const DeepFilterNetSettings& settings, int count);
+        WaveChannel& channel, double trackRate, double t0, double t1, const DeepFilterNetSettings& settings, int count);
 };
 }

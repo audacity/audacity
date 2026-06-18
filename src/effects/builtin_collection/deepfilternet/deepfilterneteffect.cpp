@@ -14,6 +14,7 @@
 
 #include "au3-effects/EffectOutputTracks.h"
 #include "au3-command-parameters/ShuttleAutomation.h"
+#include "au3-math/Resample.h"
 #include "au3-strings/TranslatableString.h"
 #include "au3-wave-track/WaveTrack.h"
 
@@ -128,6 +129,61 @@ private:
     size_t mOutputCount = 0;
     std::string mError;
 };
+
+std::vector<float> ResampleMono(
+    const std::vector<float>& input, double inputRate, double outputRate, size_t expectedOutputSamples)
+{
+    if (input.empty()) {
+        return {};
+    }
+
+    if (std::abs(inputRate - outputRate) < 0.5) {
+        auto output = input;
+        output.resize(expectedOutputSamples, 0.0f);
+        return output;
+    }
+
+    const double factor = outputRate / inputRate;
+    Resample resampler { true, factor, factor };
+
+    std::vector<float> output(expectedOutputSamples + 4096);
+    size_t consumed = 0;
+    size_t produced = 0;
+
+    while (consumed < input.size()) {
+        if (produced == output.size()) {
+            output.resize(output.size() + 4096);
+        }
+
+        const auto [used, created] = resampler.Process(
+            factor,
+            input.data() + consumed,
+            input.size() - consumed,
+            true,
+            output.data() + produced,
+            output.size() - produced);
+
+        consumed += used;
+        produced += created;
+
+        if (used == 0 && created == 0) {
+            output.resize(output.size() + 4096);
+        }
+    }
+
+    output.resize(produced);
+    output.resize(expectedOutputSamples, 0.0f);
+    return output;
+}
+
+void AppendPending(std::deque<float>& pending, std::vector<float>& output)
+{
+    output.reserve(output.size() + pending.size());
+    while (!pending.empty()) {
+        output.push_back(pending.front());
+        pending.pop_front();
+    }
+}
 }
 
 const ComponentInterfaceSymbol DeepFilterNetEffect::Symbol {
@@ -178,13 +234,6 @@ bool DeepFilterNetEffect::Process(EffectInstance&, EffectSettings& s)
 
     int count = 0;
     for (auto track : outputs.Get().Selected<WaveTrack>()) {
-        if (std::abs(track->GetRate() - DeepFilterNetSampleRate) > 0.5) {
-            mLastError = TranslatableString(
-                "effects-deepfilternet",
-                "DeepFilterNet noise reduction currently requires 48000 Hz audio.").translated().toStdString();
-            return false;
-        }
-
         const double t0 = std::max(mT0, track->GetStartTime());
         const double t1 = std::min(mT1, track->GetEndTime());
         if (t1 <= t0) {
@@ -193,7 +242,7 @@ bool DeepFilterNetEffect::Process(EffectInstance&, EffectSettings& s)
         }
 
         for (const auto channel : track->Channels()) {
-            if (!ProcessOne(*channel, t0, t1, settings, count++)) {
+            if (!ProcessOne(*channel, track->GetRate(), t0, t1, settings, count++)) {
                 success = false;
                 break;
             }
@@ -212,7 +261,7 @@ bool DeepFilterNetEffect::Process(EffectInstance&, EffectSettings& s)
 }
 
 bool DeepFilterNetEffect::ProcessOne(
-    WaveChannel& channel, double t0, double t1, const DeepFilterNetSettings& settings, int count)
+    WaveChannel& channel, double trackRate, double t0, double t1, const DeepFilterNetSettings& settings, int count)
 {
     const auto start = channel.TimeToLongSamples(t0);
     const auto end = channel.TimeToLongSamples(t1);
@@ -221,6 +270,17 @@ bool DeepFilterNetEffect::ProcessOne(
 
     if (totalSamples == 0) {
         return true;
+    }
+
+    std::vector<float> original(totalSamples);
+    channel.GetFloats(original.data(), start, totalSamples);
+
+    const auto dfnSampleCount = static_cast<size_t>(
+        std::max(1.0, std::round(double(totalSamples) * DeepFilterNetSampleRate / trackRate)));
+    auto input48 = ResampleMono(original, trackRate, DeepFilterNetSampleRate, dfnSampleCount);
+
+    if (TrackProgress(count, 0.05)) {
+        return false;
     }
 
     DfnProcessor processor { static_cast<float>(settings.mAttenuationLimitDb) };
@@ -233,69 +293,60 @@ bool DeepFilterNetEffect::ProcessOne(
 
     const auto wetMix = static_cast<float>(std::clamp(settings.mMix, 0.0, 1.0));
     std::deque<float> pending;
-    std::vector<float> inputBuffer(channel.GetMaxBlockSize());
-    std::vector<float> dryBuffer;
-    std::vector<float> outputBuffer;
-    size_t readSamples = 0;
-    size_t writtenSamples = 0;
+    std::vector<float> enhanced48;
+    enhanced48.reserve(input48.size());
 
-    const auto flushPending = [&](bool force) {
-        while (!pending.empty() && (force || pending.size() >= channel.GetMaxBlockSize())) {
-            const size_t writeLen = force
-                                    ? std::min(pending.size(), totalSamples - writtenSamples)
-                                    : std::min(channel.GetMaxBlockSize(), totalSamples - writtenSamples);
-            if (writeLen == 0) {
-                break;
-            }
-
-            outputBuffer.resize(writeLen);
-            for (size_t i = 0; i < writeLen; ++i) {
-                outputBuffer[i] = pending.front();
-                pending.pop_front();
-            }
-
-            if (wetMix < 1.0f) {
-                dryBuffer.resize(writeLen);
-                channel.GetFloats(dryBuffer.data(), start + sampleCount(writtenSamples), writeLen);
-                for (size_t i = 0; i < writeLen; ++i) {
-                    outputBuffer[i] = dryBuffer[i] * (1.0f - wetMix) + outputBuffer[i] * wetMix;
-                }
-            }
-
-            if (!channel.SetFloats(outputBuffer.data(), start + sampleCount(writtenSamples), writeLen)) {
-                return false;
-            }
-
-            writtenSamples += writeLen;
-            if (TrackProgress(count, double(writtenSamples) / double(totalSamples))) {
-                return false;
-            }
-        }
-        return true;
-    };
-
-    while (readSamples < totalSamples) {
-        const auto pos = start + sampleCount(readSamples);
-        const size_t block = limitSampleBufferSize(
-            channel.GetBestBlockSize(pos), sampleCount(totalSamples - readSamples));
-
-        channel.GetFloats(inputBuffer.data(), pos, block);
-        if (!processor.processSamples(inputBuffer.data(), block, totalSamples, pending)) {
+    size_t processed48 = 0;
+    while (processed48 < input48.size()) {
+        const size_t block = std::min<size_t>(8192, input48.size() - processed48);
+        if (!processor.processSamples(input48.data() + processed48, block, input48.size(), pending)) {
             mLastError = processor.error();
             return false;
         }
 
-        readSamples += block;
-        if (!flushPending(false)) {
+        processed48 += block;
+        AppendPending(pending, enhanced48);
+
+        if (TrackProgress(count, 0.05 + 0.75 * double(processed48) / double(input48.size()))) {
             return false;
         }
     }
 
-    if (!processor.finish(totalSamples, pending)) {
+    if (!processor.finish(input48.size(), pending)) {
         mLastError = processor.error();
         return false;
     }
+    AppendPending(pending, enhanced48);
+    enhanced48.resize(input48.size(), 0.0f);
 
-    return flushPending(true);
+    auto processed = ResampleMono(enhanced48, DeepFilterNetSampleRate, trackRate, totalSamples);
+
+    if (TrackProgress(count, 0.9)) {
+        return false;
+    }
+
+    if (wetMix < 1.0f) {
+        for (size_t i = 0; i < processed.size(); ++i) {
+            processed[i] = original[i] * (1.0f - wetMix) + processed[i] * wetMix;
+        }
+    }
+
+    size_t writtenSamples = 0;
+    while (writtenSamples < totalSamples) {
+        const auto pos = start + sampleCount(writtenSamples);
+        const size_t block = limitSampleBufferSize(
+            channel.GetBestBlockSize(pos), sampleCount(totalSamples - writtenSamples));
+
+        if (!channel.SetFloats(processed.data() + writtenSamples, pos, block)) {
+            return false;
+        }
+
+        writtenSamples += block;
+        if (TrackProgress(count, 0.9 + 0.1 * double(writtenSamples) / double(totalSamples))) {
+            return false;
+        }
+    }
+
+    return true;
 }
 }

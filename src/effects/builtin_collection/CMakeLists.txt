@@ -231,7 +231,7 @@ if (AUDACITY_USE_DEEPFILTERNET)
         ${CMAKE_CURRENT_LIST_DIR}/deepfilternet/deepfilternetviewmodel.h
     )
 
-    list(APPEND MODULE_LINK audacity_deepfilternet_backend Threads::Threads ${CMAKE_DL_LIBS})
+    list(APPEND MODULE_LINK audacity_deepfilternet_backend au3-math Threads::Threads ${CMAKE_DL_LIBS})
     if (WIN32)
         list(APPEND MODULE_LINK advapi32 bcrypt ntdll userenv ws2_32)
     elseif (UNIX AND NOT APPLE)
