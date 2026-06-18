@@ -27,7 +27,7 @@ FocusScope {
         enabled: root.enabled && root.visible && !loader.isEditState
 
         accessible.role: MUAccessible.EditableText
-        accessible.name: qsTrc("accessibility", "Track name: %1").arg(root.text)
+        accessible.name: qsTrc("projectscene", "Track name: %1").arg(root.text)
         accessible.description: ""
         accessible.visualItem: root
 

@@ -40,7 +40,7 @@ Item {
         id: navPanel
         name: "ProjectStatusBar"
         enabled: root.enabled && root.visible
-        accessible.name: qsTrc("accessibility", "Selection status") + ", " + navPanel.directionInfo
+        accessible.name: qsTrc("appshell", "Selection status") + ", " + navPanel.directionInfo
         order: 0
         direction: NavigationPanel.Horizontal
         section: navSec

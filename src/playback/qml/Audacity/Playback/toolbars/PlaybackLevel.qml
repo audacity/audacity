@@ -58,7 +58,7 @@ Item {
             Layout.rightMargin: 6
 
             icon: IconCode.AUDIO
-            toolTipTitle: qsTrc("accessibility", "Playback meter settings")
+            toolTipTitle: qsTrc("playback", "Playback meter settings")
             accentButton: popup.isOpened
 
             onClicked: {

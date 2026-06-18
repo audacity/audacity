@@ -232,9 +232,8 @@ Item {
                             navigation.name: Boolean(item) ? item.title + item.index : ""
                             navigation.panel: root.navPanels && root.navPanels[index] ? root.navPanels[index] : null
                             navigation.order: 0
-                            navigation.accessible.name: Boolean(item) ? qsTrc("accessibility", "Track %1: %2, audio track").arg(index + 1).arg(item.title)
-                                                                        + (isSelected ? ", " + qsTrc("accessibility", "selected") : "") : ""
-                            navigation.accessible.description: qsTrc("accessibility", "Press Enter to select or deselect")
+                            navigation.accessible.name: Boolean(item) ? qsTrc("projectscene", "Track %1: %2, audio track").arg(index + 1).arg(item.title) + (isSelected ? ", " + qsTrc("projectscene", "selected") : "") : ""
+                            navigation.accessible.description: qsTrc("projectscene", "Press Enter to select or deselect")
                             navigation.accessible.role: MUAccessible.Group
                             navigation.onActiveChanged: {
                                 if (navigation.active) {
@@ -292,9 +291,8 @@ Item {
                             navigation.name: Boolean(item) ? item.title + item.index : ""
                             navigation.panel: root.navPanels && root.navPanels[index] ? root.navPanels[index] : null
                             navigation.order: 0
-                            navigation.accessible.name: Boolean(item) ? qsTrc("accessibility", "Track %1: %2, label track").arg(index + 1).arg(item.title)
-                                                                        + (isSelected ? ", " + qsTrc("accessibility", "selected") : "") : ""
-                            navigation.accessible.description: qsTrc("accessibility", "Press Enter to select or deselect")
+                            navigation.accessible.name: Boolean(item) ? qsTrc("projectscene", "Track %1: %2, label track").arg(index + 1).arg(item.title) + (isSelected ? ", " + qsTrc("projectscene", "selected") : "") : ""
+                            navigation.accessible.description: qsTrc("projectscene", "Press Enter to select or deselect")
                             navigation.accessible.role: MUAccessible.Group
                             navigation.onActiveChanged: {
                                 if (navigation.active) {
