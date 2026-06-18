@@ -22,6 +22,8 @@
 
 #include "playpositionactioncontroller.h"
 
+#include <algorithm>
+
 #include "global/realfn.h"
 
 using namespace au::projectscene;
@@ -33,6 +35,10 @@ static const ActionCode SEL_EXT_LEFT("sel-ext-left");
 static const ActionCode SEL_EXT_RIGHT("sel-ext-right");
 static const ActionCode SEL_CNTR_LEFT("sel-cntr-left");
 static const ActionCode SEL_CNTR_RIGHT("sel-cntr-right");
+static const ActionCode CURSOR_PROJECT_START("curs-project-start");
+static const ActionCode CURSOR_PROJECT_END("curs-project-end");
+static const ActionCode CURSOR_PAGE_UP("curs-page-up");
+static const ActionCode CURSOR_PAGE_DOWN("curs-page-down");
 static const ActionQuery PLAYBACK_SEEK_QUERY("action://playback/seek");
 
 au::projectscene::PlayPositionActionController::PlayPositionActionController(QObject* parent)
@@ -48,6 +54,10 @@ void PlayPositionActionController::init()
     dispatcher()->reg(this, SEL_EXT_RIGHT, this, &PlayPositionActionController::selectionExtendRight);
     dispatcher()->reg(this, SEL_CNTR_LEFT, this, &PlayPositionActionController::selectionContractLeft);
     dispatcher()->reg(this, SEL_CNTR_RIGHT, this, &PlayPositionActionController::selectionContractRight);
+    dispatcher()->reg(this, CURSOR_PROJECT_START, this, &PlayPositionActionController::cursorToProjectStart);
+    dispatcher()->reg(this, CURSOR_PROJECT_END, this, &PlayPositionActionController::cursorToProjectEnd);
+    dispatcher()->reg(this, CURSOR_PAGE_UP, this, &PlayPositionActionController::cursorPageUp);
+    dispatcher()->reg(this, CURSOR_PAGE_DOWN, this, &PlayPositionActionController::cursorPageDown);
 
     globalContext()->currentProjectChanged().onNotify(this, [this](){
         onProjectChanged();
@@ -126,6 +136,60 @@ muse::secs_t PlayPositionActionController::stepFromTime(muse::secs_t from, Direc
 
     const double newXPosition = m_context->timeToPosition(from) + (direction == Direction::Left ? -1 : 1);
     return m_context->positionToTime(newXPosition);
+}
+
+void PlayPositionActionController::seekTo(muse::secs_t pos)
+{
+    muse::actions::ActionQuery q(PLAYBACK_SEEK_QUERY);
+    q.addParam("seekTime", muse::Val(pos));
+    q.addParam("triggerPlay", muse::Val(false));
+    dispatcher()->dispatch(q);
+
+    m_context->insureVisible(pos);
+}
+
+void PlayPositionActionController::cursorToProjectStart()
+{
+    seekTo(0.0);
+}
+
+void PlayPositionActionController::cursorToProjectEnd()
+{
+    auto currentProject = globalContext()->currentProject();
+    if (!currentProject) {
+        return;
+    }
+
+    const muse::secs_t totalTime = currentProject->trackeditProject()->totalTime();
+    seekTo(totalTime);
+}
+
+void PlayPositionActionController::cursorPageUp()
+{
+    const muse::secs_t pageDuration = m_context->frameEndTime() - m_context->frameStartTime();
+    const muse::secs_t currentPos = playbackState()->playbackPosition();
+    const muse::secs_t newPos = std::max(0.0, (currentPos - pageDuration).raw());
+
+    seekTo(newPos);
+}
+
+void PlayPositionActionController::cursorPageDown()
+{
+    auto currentProject = globalContext()->currentProject();
+    if (!currentProject) {
+        return;
+    }
+
+    // Clamp to the project end so we never seek past it: the seek action is
+    // validated against PlaybackController::totalPlayTime(), which returns the
+    // same trackeditProject()->totalTime(). Exceeding it would mark the seek
+    // invalid and abruptly stop playback instead of just moving the cursor.
+    const muse::secs_t totalTime = currentProject->trackeditProject()->totalTime();
+    const muse::secs_t pageDuration = m_context->frameEndTime() - m_context->frameStartTime();
+    const muse::secs_t currentPos = playbackState()->playbackPosition();
+    const muse::secs_t newPos = std::min((currentPos + pageDuration).raw(), totalTime.raw());
+
+    seekTo(newPos);
 }
 
 void PlayPositionActionController::selectionExtendLeft()
