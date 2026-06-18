@@ -1,0 +1,13 @@
+[package]
+name = "audacity-deepfilternet"
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+
+[lib]
+name = "audacity_deepfilternet"
+crate-type = ["staticlib"]
+
+[dependencies]
+df = { git = "https://github.com/Rikorose/DeepFilterNet.git", tag = "v0.5.6", package = "deep_filter", default-features = false, features = ["tract", "default-model", "transforms"] }
+ndarray = "0.15"

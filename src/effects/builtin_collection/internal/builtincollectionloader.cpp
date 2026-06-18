@@ -55,6 +55,10 @@
 #include "noisegen/noiseviewmodel.h"
 #include "noisereduction/noisereductioneffect.h"
 #include "noisereduction/noisereductionviewmodel.h"
+#ifdef AUDACITY_USE_DEEPFILTERNET
+#include "deepfilternet/deepfilterneteffect.h"
+#include "deepfilternet/deepfilternetviewmodel.h"
+#endif
 #include "fade/fadeeffect.h"
 #include "graphiceq/graphiceq.h"
 #include "graphiceq/graphiceqbandsmodel.h"
@@ -101,6 +105,9 @@ void BuiltinCollectionLoader::preInit()
     static BuiltinEffectsModule::Registration< SlidingStretchEffect > regSlidingStretch;
     static BuiltinEffectsModule::Registration< NoiseGenerator > regNoise;
     static BuiltinEffectsModule::Registration< NoiseReductionEffect > regNoiseReduction;
+#ifdef AUDACITY_USE_DEEPFILTERNET
+    static BuiltinEffectsModule::Registration< DeepFilterNetEffect > regDeepFilterNet;
+#endif
     static BuiltinEffectsModule::Registration< DtmfGenerator > regDtmf;
     static BuiltinEffectsModule::Registration< CompressorEffect > regCompressor;
     static BuiltinEffectsModule::Registration< LimiterEffect > regLimiter;
@@ -165,6 +172,11 @@ void BuiltinCollectionLoader::init()
 
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(NoiseReductionViewModelFactory);
     regView(NoiseReductionEffect::Symbol, u"qrc:/noisereduction/NoiseReductionView.qml");
+
+#ifdef AUDACITY_USE_DEEPFILTERNET
+    REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(DeepFilterNetViewModelFactory);
+    regView(DeepFilterNetEffect::Symbol, u"qrc:/deepfilternet/DeepFilterNetView.qml");
+#endif
 
     REGISTER_AUDACITY_EFFECTS_SINGLETON_TYPE(DtmfViewModelFactory);
     regView(DtmfGenerator::Symbol, u"qrc:/dtmfgen/DtmfView.qml");

@@ -36,6 +36,40 @@ Ninja should be able to handle the other dependencies; if it doesn't, the list m
 
 NB: At the moment, the list is rather long due to MuseScore dependencies that have not yet been cleaned up.
 
+#### Optional: DeepFilterNet effect dependencies
+
+The native DeepFilterNet noise reduction effect is disabled by default. To build it, configure CMake with `-DAUDACITY_USE_DEEPFILTERNET=ON`.
+
+This option requires Rust/Cargo, but does not require any `pip` packages. On Windows, install Rust with:
+
+```
+winget install Rustlang.Rustup
+```
+
+Open a new terminal after installation and verify:
+
+```
+rustc --version
+cargo --version
+```
+
+Audacity builds with MSVC on Windows, so use the MSVC Rust toolchain:
+
+```
+rustup default stable-x86_64-pc-windows-msvc
+```
+
+If these tools are missing on a fresh Windows machine, install them with:
+
+```
+winget install Git.Git
+winget install Kitware.CMake
+winget install Ninja-build.Ninja
+winget install Microsoft.VisualStudio.2022.BuildTools
+```
+
+For Visual Studio Build Tools, install the "Desktop development with C++" workload in the Visual Studio Installer.
+
 ### Add relevant tools to PATH
 
 Git, CMake, Ninja, Package manager, Compiler and Qt should all be added to the PATH variable in your OS. Otherwise, you'll need to specify them in the CMakeCache later on.
@@ -84,4 +118,3 @@ Execute Ctrl+Shift+P and choose "CMake: Configure".
 #### Build and run Audacity
 
 Just **press F5**. It will build and install everything the first time, but afterwards it should be very fast, especially if you're using Ninja `:)`.
-

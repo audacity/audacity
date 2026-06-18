@@ -42,5 +42,6 @@
         <file>noisegen/NoiseView.qml</file>
         <file>noisereduction/NoiseReductionSlider.qml</file>
         <file>noisereduction/NoiseReductionView.qml</file>
+        <file>deepfilternet/DeepFilterNetView.qml</file>
     </qresource>
 </RCC>

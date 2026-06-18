@@ -189,6 +189,57 @@ set(MODULE_DEF ${MODULE_DEF}
 set(MODULE_LINK au3wrap libsbsms shared)
 set(MODULE_LINK_PUBLIC au3-effects au3-builtin-effects)
 
+if (AUDACITY_USE_DEEPFILTERNET)
+    find_package(Threads REQUIRED)
+    find_program(CARGO_EXECUTABLE cargo)
+    if (NOT CARGO_EXECUTABLE)
+        message(FATAL_ERROR "AUDACITY_USE_DEEPFILTERNET requires Cargo/Rust, but cargo was not found.")
+    endif()
+
+    set(DEEPFILTERNET_RUST_MANIFEST ${CMAKE_CURRENT_LIST_DIR}/deepfilternet/rust/Cargo.toml)
+    set(DEEPFILTERNET_RUST_LOCK ${CMAKE_CURRENT_LIST_DIR}/deepfilternet/rust/Cargo.lock)
+    set(DEEPFILTERNET_RUST_TARGET_DIR ${CMAKE_CURRENT_BINARY_DIR}/deepfilternet-rust)
+    set(DEEPFILTERNET_RUST_LIB
+        ${DEEPFILTERNET_RUST_TARGET_DIR}/release/${CMAKE_STATIC_LIBRARY_PREFIX}audacity_deepfilternet${CMAKE_STATIC_LIBRARY_SUFFIX}
+    )
+
+    add_custom_command(
+        OUTPUT ${DEEPFILTERNET_RUST_LIB}
+        COMMAND ${CMAKE_COMMAND} -E env CARGO_TARGET_DIR=${DEEPFILTERNET_RUST_TARGET_DIR}
+            ${CARGO_EXECUTABLE} build --manifest-path ${DEEPFILTERNET_RUST_MANIFEST} --release
+        DEPENDS
+            ${DEEPFILTERNET_RUST_MANIFEST}
+            ${DEEPFILTERNET_RUST_LOCK}
+            ${CMAKE_CURRENT_LIST_DIR}/deepfilternet/rust/src/lib.rs
+        WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}/deepfilternet/rust
+        COMMENT "Building DeepFilterNet Rust backend"
+        VERBATIM
+    )
+
+    add_custom_target(audacity_deepfilternet_rust DEPENDS ${DEEPFILTERNET_RUST_LIB})
+    add_library(audacity_deepfilternet_backend STATIC IMPORTED GLOBAL)
+    add_dependencies(audacity_deepfilternet_backend audacity_deepfilternet_rust)
+    set_target_properties(audacity_deepfilternet_backend PROPERTIES
+        IMPORTED_LOCATION ${DEEPFILTERNET_RUST_LIB}
+    )
+
+    list(APPEND MODULE_SRC
+        ${CMAKE_CURRENT_LIST_DIR}/deepfilternet/deepfilternet_backend.h
+        ${CMAKE_CURRENT_LIST_DIR}/deepfilternet/deepfilterneteffect.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/deepfilternet/deepfilterneteffect.h
+        ${CMAKE_CURRENT_LIST_DIR}/deepfilternet/deepfilternetviewmodel.cpp
+        ${CMAKE_CURRENT_LIST_DIR}/deepfilternet/deepfilternetviewmodel.h
+    )
+
+    list(APPEND MODULE_LINK audacity_deepfilternet_backend Threads::Threads ${CMAKE_DL_LIBS})
+    if (WIN32)
+        list(APPEND MODULE_LINK advapi32 bcrypt ntdll userenv ws2_32)
+    elseif (UNIX AND NOT APPLE)
+        list(APPEND MODULE_LINK m)
+    endif()
+    list(APPEND MODULE_DEF -DAUDACITY_USE_DEEPFILTERNET=1)
+endif()
+
 set(MODULE_USE_UNITY OFF)
 
 setup_module()
