@@ -28,7 +28,6 @@ FocusScope {
 
         accessible.role: MUAccessible.EditableText
         accessible.name: qsTrc("projectscene", "Track name: %1").arg(root.text)
-        accessible.description: ""
         accessible.visualItem: root
 
         onTriggered: {
