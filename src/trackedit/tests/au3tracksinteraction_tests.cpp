@@ -518,6 +518,38 @@ TEST_F(Au3TracksInteractionTests, SplitTracksOnClipData)
     removeTrack(trackTwoClipsId);
 }
 
+TEST_F(Au3TracksInteractionTests, SplitTracksOnClipDataSelectsAndFocusesSplitClip)
+{
+    //! [GIVEN] There is a project with a track and two clips
+    const TrackId trackTwoClipsId = createTrack(TestTrackID::TRACK_TWO_CLIPS);
+    ASSERT_NE(trackTwoClipsId, INVALID_TRACK) << "Failed to create track";
+
+    Au3WaveTrack* track = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackTwoClipsId));
+    ASSERT_NE(track, nullptr) << "The track is not found";
+
+    ClipKey selectedClipKey;
+    EXPECT_CALL(*m_selectionController, resetDataSelection()).Times(1);
+    EXPECT_CALL(*m_selectionController, setSelectedClips(Truly([&](const ClipKeyList& clipKeys) {
+        if (clipKeys.size() != 1) {
+            return false;
+        }
+
+        selectedClipKey = clipKeys.front();
+        return selectedClipKey == DomConverter::clip(track, track->GetSortedClipByIndex(0).get()).key;
+    }), true)).Times(1);
+
+    EXPECT_CALL(*m_trackNavigationController, setFocusedItem(Truly([&](const TrackItemKey& key) {
+        return key == selectedClipKey;
+    }), true)).Times(1);
+
+    //! [WHEN] Split the track in the middle of the first clip
+    const secs_t pivot = TRACK_TWO_CLIPS_CLIP1_START + 2 * SAMPLE_INTERVAL;
+    m_tracksInteraction->splitTracksAt({ trackTwoClipsId }, { pivot });
+
+    // Cleanup
+    removeTrack(trackTwoClipsId);
+}
+
 TEST_F(Au3TracksInteractionTests, RangeSplitTracks)
 {
     //! [GIVEN] There is a project with a track and two clips
