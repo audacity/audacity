@@ -251,6 +251,7 @@ LegacyAupImporter::Result LegacyAupImporter::parse(const muse::io::path_t& fileP
     const QString projectDir = QFileInfo(filePath.toQString()).absolutePath();
     SourceTrack* currentTrack = nullptr;
     SourceClip* currentClip = nullptr;
+    LabelTrack* currentLabelTrack = nullptr;
     int nestedWaveClipDepth = 0;
     qint64 currentWaveBlockStart = -1;
     QVector<QString> stack;
@@ -295,6 +296,7 @@ LegacyAupImporter::Result LegacyAupImporter::parse(const muse::io::path_t& fileP
                 }
                 currentTrack->offset = doubleAttr(attrs, "offset", 0.0);
                 currentClip = nullptr;
+                currentLabelTrack = nullptr;
             } else if (name == "waveclip" && currentTrack) {
                 if (parent == "waveclip") {
                     ++nestedWaveClipDepth;
@@ -338,6 +340,20 @@ LegacyAupImporter::Result LegacyAupImporter::parse(const muse::io::path_t& fileP
                     block.type = Block::Type::Silence;
                 }
                 currentClip->blocks.push_back(block);
+            } else if (name == "labeltrack") {
+                result.labelTracks.push_back(LabelTrack {});
+                currentLabelTrack = &result.labelTracks.back();
+                currentLabelTrack->title = attr(attrs, "name", "Label Track").toStdString();
+                currentTrack = nullptr;
+                currentClip = nullptr;
+            } else if (name == "label" && currentLabelTrack) {
+                const double startTime = doubleAttr(attrs, "t", 0.0);
+                const double endTime = doubleAttr(attrs, "t1", startTime);
+                currentLabelTrack->labels.push_back(Label {
+                    std::min(startTime, endTime),
+                    std::max(startTime, endTime),
+                    attr(attrs, "title").toStdString()
+                });
             }
 
             stack.push_back(name);
@@ -355,6 +371,8 @@ LegacyAupImporter::Result LegacyAupImporter::parse(const muse::io::path_t& fileP
                 currentClip = nullptr;
             } else if (name == "waveblock") {
                 currentWaveBlockStart = -1;
+            } else if (name == "labeltrack") {
+                currentLabelTrack = nullptr;
             }
 
             if (!stack.empty()) {
@@ -371,6 +389,9 @@ LegacyAupImporter::Result LegacyAupImporter::parse(const muse::io::path_t& fileP
     sourceTracks.erase(std::remove_if(sourceTracks.begin(), sourceTracks.end(), [](const SourceTrack& track) {
         return track.clips.empty();
     }), sourceTracks.end());
+    result.labelTracks.erase(std::remove_if(result.labelTracks.begin(), result.labelTracks.end(), [](const LabelTrack& track) {
+        return track.labels.empty();
+    }), result.labelTracks.end());
 
     result.success = true;
     return result;
@@ -445,8 +466,8 @@ bool LegacyAupImporter::render(Result& result, const std::vector<SourceTrack>& s
         }
     }
 
-    if (result.tracks.empty()) {
-        result.error = "No importable wave clips were found in the legacy project.";
+    if (result.tracks.empty() && result.labelTracks.empty()) {
+        result.error = "No importable wave clips or labels were found in the legacy project.";
         return false;
     }
 

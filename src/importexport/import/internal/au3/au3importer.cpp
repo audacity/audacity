@@ -7,6 +7,7 @@
 #include "../legacyaupimporter.h"
 
 #include "au3-basic-ui/BasicUI.h"
+#include "au3-label-track/LabelTrack.h"
 #include "au3-stretching-sequence/TempoChange.h"
 #include "au3-track/Track.h"
 #include "au3-wave-track/WaveClip.h"
@@ -21,7 +22,6 @@
 
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/wxtypes_convert.h"
-#include "au3wrap/internal/domaccessor.h"
 #include "au3wrap/internal/domconverter.h"
 #include "projectscene/view/tracksitemsview/dropcontroller.h"
 #include "trackedit/internal/au3/au3trackdata.h"
@@ -217,6 +217,30 @@ bool au::importexport::Au3Importer::importLegacyAup(const muse::io::path_t& file
         for (const LegacyAupImporter::Clip& clip : track.clips) {
             if (!importIntoTrackInternal(clip.filePath, trackId, clip.startTime, false, false)) {
                 return false;
+            }
+        }
+    }
+
+    Au3Project* project = reinterpret_cast<Au3Project*>(globalContext()->currentProject()->au3ProjectPtr());
+    auto& tracks = Au3TrackList::Get(*project);
+    const auto trackeditProject = globalContext()->currentTrackeditProject();
+
+    for (const LegacyAupImporter::LabelTrack& track : legacyProject.labelTracks) {
+        Au3LabelTrack* labelTrack = !track.title.empty()
+                                    ? ::LabelTrack::Create(tracks, wxFromString(muse::String::fromUtf8(track.title)))
+                                    : ::LabelTrack::Create(tracks);
+
+        for (const LegacyAupImporter::Label& label : track.labels) {
+            labelTrack->AddLabel(SelectedRegion(label.startTime, label.endTime),
+                                 wxFromString(muse::String::fromUtf8(label.title)));
+        }
+
+        if (trackeditProject) {
+            trackeditProject->notifyAboutTrackAdded(DomConverter::labelTrack(labelTrack));
+
+            const auto& labels = labelTrack->GetLabels();
+            for (size_t i = 0; i < labels.size(); ++i) {
+                trackeditProject->notifyAboutLabelAdded(DomConverter::label(labelTrack, &labels[i]));
             }
         }
     }
