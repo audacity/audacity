@@ -232,7 +232,7 @@ Item {
                             navigation.name: Boolean(item) ? item.title + item.index : ""
                             navigation.panel: root.navPanels && root.navPanels[index] ? root.navPanels[index] : null
                             navigation.order: 0
-                            navigation.accessible.name: Boolean(item) ? qsTrc("projectscene", "Track %1: %2, audio track").arg(index + 1).arg(item.title) + (isSelected ? ", " + qsTrc("projectscene", "selected") : "") : ""
+                            navigation.accessible.name: Boolean(item) ? (isSelected ? qsTrc("projectscene", "Track %1: %2, audio track, selected").arg(index + 1).arg(item.title) : qsTrc("projectscene", "Track %1: %2, audio track").arg(index + 1).arg(item.title)) : ""
                             navigation.accessible.description: qsTrc("projectscene", "Press Enter to select or deselect")
                             navigation.accessible.role: MUAccessible.Group
                             navigation.onActiveChanged: {
@@ -291,7 +291,7 @@ Item {
                             navigation.name: Boolean(item) ? item.title + item.index : ""
                             navigation.panel: root.navPanels && root.navPanels[index] ? root.navPanels[index] : null
                             navigation.order: 0
-                            navigation.accessible.name: Boolean(item) ? qsTrc("projectscene", "Track %1: %2, label track").arg(index + 1).arg(item.title) + (isSelected ? ", " + qsTrc("projectscene", "selected") : "") : ""
+                            navigation.accessible.name: Boolean(item) ? (isSelected ? qsTrc("projectscene", "Track %1: %2, label track, selected").arg(index + 1).arg(item.title) : qsTrc("projectscene", "Track %1: %2, label track").arg(index + 1).arg(item.title)) : ""
                             navigation.accessible.description: qsTrc("projectscene", "Press Enter to select or deselect")
                             navigation.accessible.role: MUAccessible.Group
                             navigation.onActiveChanged: {
