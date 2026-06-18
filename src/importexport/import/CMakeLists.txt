@@ -43,3 +43,7 @@ set(MODULE_LINK au3wrap loop-tempo-estimator SndFile::sndfile)
 set(MODULE_USE_UNITY OFF)
 
 setup_module()
+
+if (AU_BUILD_IMPORT_TESTS)
+    add_subdirectory(tests)
+endif()
