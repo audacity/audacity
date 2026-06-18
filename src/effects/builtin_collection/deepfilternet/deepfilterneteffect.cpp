@@ -16,6 +16,7 @@
 #include "au3-command-parameters/ShuttleAutomation.h"
 #include "au3-math/Resample.h"
 #include "au3-strings/TranslatableString.h"
+#include "au3-wave-track/WaveClip.h"
 #include "au3-wave-track/WaveTrack.h"
 
 namespace au::effects {
@@ -242,8 +243,18 @@ bool DeepFilterNetEffect::Process(EffectInstance&, EffectSettings& s)
         }
 
         for (const auto channel : track->Channels()) {
-            if (!ProcessOne(*channel, track->GetRate(), t0, t1, settings, count++)) {
-                success = false;
+            for (const auto clip : channel->Intervals()) {
+                if (!clip->Intersects(t0, t1)) {
+                    continue;
+                }
+
+                if (!ProcessOne(*clip, t0, t1, settings, count++)) {
+                    success = false;
+                    break;
+                }
+            }
+
+            if (!success) {
                 break;
             }
         }
@@ -261,10 +272,19 @@ bool DeepFilterNetEffect::Process(EffectInstance&, EffectSettings& s)
 }
 
 bool DeepFilterNetEffect::ProcessOne(
-    WaveChannel& channel, double trackRate, double t0, double t1, const DeepFilterNetSettings& settings, int count)
+    WaveClipChannel& clip, double t0, double t1, const DeepFilterNetSettings& settings, int count)
 {
-    const auto start = channel.TimeToLongSamples(t0);
-    const auto end = channel.TimeToLongSamples(t1);
+    const auto clipStartTime = clip.GetPlayStartTime();
+    const auto clipT0 = std::max(t0, clipStartTime);
+    const auto clipT1 = std::min(t1, clip.GetPlayEndTime());
+    if (clipT1 <= clipT0) {
+        return true;
+    }
+
+    auto start = clip.TimeToSamples(clipT0 - clipStartTime);
+    auto end = clip.TimeToSamples(clipT1 - clipStartTime);
+    start = std::clamp(start, sampleCount { 0 }, clip.GetVisibleSampleCount());
+    end = std::clamp(end, sampleCount { 0 }, clip.GetVisibleSampleCount());
     const auto len = end - start;
     const size_t totalSamples = len.as_size_t();
 
@@ -273,8 +293,9 @@ bool DeepFilterNetEffect::ProcessOne(
     }
 
     std::vector<float> original(totalSamples);
-    channel.GetFloats(original.data(), start, totalSamples);
+    clip.GetSamples(reinterpret_cast<samplePtr>(original.data()), floatSample, start, totalSamples);
 
+    const auto trackRate = static_cast<double>(clip.GetRate());
     const auto dfnSampleCount = static_cast<size_t>(
         std::max(1.0, std::round(double(totalSamples) * DeepFilterNetSampleRate / trackRate)));
     auto input48 = ResampleMono(original, trackRate, DeepFilterNetSampleRate, dfnSampleCount);
@@ -332,14 +353,16 @@ bool DeepFilterNetEffect::ProcessOne(
     }
 
     size_t writtenSamples = 0;
+    const auto effectiveFormat = clip.GetClip().GetSampleFormats().Effective();
     while (writtenSamples < totalSamples) {
-        const auto pos = start + sampleCount(writtenSamples);
-        const size_t block = limitSampleBufferSize(
-            channel.GetBestBlockSize(pos), sampleCount(totalSamples - writtenSamples));
+        const size_t block = std::min<size_t>(8192, totalSamples - writtenSamples);
 
-        if (!channel.SetFloats(processed.data() + writtenSamples, pos, block)) {
-            return false;
-        }
+        clip.SetSamples(
+            reinterpret_cast<constSamplePtr>(processed.data() + writtenSamples),
+            floatSample,
+            start + sampleCount(writtenSamples),
+            block,
+            effectiveFormat);
 
         writtenSamples += block;
         if (TrackProgress(count, 0.9 + 0.1 * double(writtenSamples) / double(totalSamples))) {

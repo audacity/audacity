@@ -7,6 +7,7 @@
 #include "au3-effects/StatefulEffect.h"
 
 class WaveChannel;
+class WaveClipChannel;
 
 namespace au::effects {
 struct DeepFilterNetSettings
@@ -65,6 +66,6 @@ public:
 
 private:
     bool ProcessOne(
-        WaveChannel& channel, double trackRate, double t0, double t1, const DeepFilterNetSettings& settings, int count);
+        WaveClipChannel& clip, double t0, double t1, const DeepFilterNetSettings& settings, int count);
 };
 }
