@@ -57,7 +57,7 @@ Rectangle {
                 id: trackEffectsPowerButton
                 navigation.panel: root.navigationPanel
                 navigation.order: root.navigationOrderStart
-                navigation.name: "ToggleAllTrackEffects"
+                navigation.name: "Toggle all track effects"
                 toolTipTitle: qsTrc("projectscene", "Toggle all track effects")
 
                 Layout.alignment: Qt.AlignVCenter | Qt.AlignLeft
@@ -125,7 +125,7 @@ Rectangle {
 
             navigation.panel: root.navigationPanel
             navigation.order: root.navigationOrderEnd
-            navigation.name: "AddEffect"
+            navigation.name: "Add effect"
 
             text: qsTrc("projectscene", "Add effect")
 
