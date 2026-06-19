@@ -49,10 +49,12 @@ endfunction()
 # Resolve a dep's version (metadata DEP_VERSION) and include its spec. Sets
 # <out_spec> to the spec path, "" if there is no recipe.
 function(_pds_spec name out_spec out_version)
-    include("${EXTDEPS_DIR}/${name}/${name}.cmake")
-    set(_version "${DEP_VERSION}")
-    set(_spec "${EXTDEPS_DIR}/${name}/${_version}/recipe/spec.cmake")
-    if (NOT EXISTS "${_spec}")
+    set(_spec "${EXTDEPS_DIR}/recipes/${name}/spec.cmake")
+    set(_version "")
+    if (EXISTS "${_spec}")
+        include("${_spec}")            # the recipe defines DEP_VERSION
+        set(_version "${DEP_VERSION}")
+    else()
         set(_spec "")
     endif()
     set(${out_spec} "${_spec}" PARENT_SCOPE)
