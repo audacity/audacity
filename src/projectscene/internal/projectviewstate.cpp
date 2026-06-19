@@ -242,6 +242,10 @@ void ProjectViewState::init(const std::shared_ptr<au3::IAu3Project>& project)
                                         || viewType == au::trackedit::TrackViewType::WaveformAndSpectrogram;
             frequencySelectionController()->setShowsSpectrogram(trackId, hasSpectrogram);
         }
+
+        // Tracks already present on open don't trigger trackAdded / trackInserted
+        // So the total height must be computed here
+        recomputeTotalTrackHeight();
     });
 
     projectHistory()->historyChanged().onReceive(this, [this](auto) {
