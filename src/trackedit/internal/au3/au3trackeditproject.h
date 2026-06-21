@@ -80,6 +80,8 @@ private:
 
     au::trackedit::Clips getClips(const TrackId& trackId) const;
     au::trackedit::Labels getLabels(const TrackId& trackId) const;
+    int auxiliaryTrackCount() const;
+    int displayTrackPosition(const Track& track, int pos) const;
     void updateHasAudioContent();
 
     struct Au3Impl;

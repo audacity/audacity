@@ -1,5 +1,7 @@
 #include "au3trackeditproject.h"
 
+#include <algorithm>
+
 #include "au3-track/Track.h"
 #include "au3-time-track/TimeTrack.h"
 #include "au3-numeric-formats/ProjectTimeSignature.h"
@@ -97,13 +99,13 @@ std::vector<au::trackedit::TrackId> Au3TrackeditProject::trackIdList() const
 {
     std::vector<au::trackedit::TrackId> au4trackIds;
 
-    for (const Au3Track* t : *m_impl->trackList) {
-        au4trackIds.push_back(t->GetId());
-    }
-
     if (auxiliaryTrackProvider()) {
         const TrackIdList auxiliaryIds = auxiliaryTrackProvider()->trackIdList();
         au4trackIds.insert(au4trackIds.end(), auxiliaryIds.begin(), auxiliaryIds.end());
+    }
+
+    for (const Au3Track* t : *m_impl->trackList) {
+        au4trackIds.push_back(t->GetId());
     }
 
     return au4trackIds;
@@ -134,14 +136,14 @@ au::trackedit::TrackList Au3TrackeditProject::trackList() const
 {
     au::trackedit::TrackList au4tracks;
 
-    for (const Au3Track* t : *m_impl->trackList) {
-        Track au4t = DomConverter::track(t);
-        au4tracks.push_back(std::move(au4t));
-    }
-
     if (auxiliaryTrackProvider()) {
         const TrackList auxiliaryTracks = auxiliaryTrackProvider()->trackList();
         au4tracks.insert(au4tracks.end(), auxiliaryTracks.begin(), auxiliaryTracks.end());
+    }
+
+    for (const Au3Track* t : *m_impl->trackList) {
+        Track au4t = DomConverter::track(t);
+        au4tracks.push_back(std::move(au4t));
     }
 
     return au4tracks;
@@ -335,12 +337,35 @@ void Au3TrackeditProject::notifyAboutTrackRemoved(const Track& track)
 
 void Au3TrackeditProject::notifyAboutTrackInserted(const Track& track, int pos)
 {
-    m_trackInserted.send(track, pos);
+    m_trackInserted.send(track, displayTrackPosition(track, pos));
 }
 
 void Au3TrackeditProject::notifyAboutTrackMoved(const Track& track, int pos)
 {
-    return m_trackMoved.send(track, pos);
+    return m_trackMoved.send(track, displayTrackPosition(track, pos));
+}
+
+int Au3TrackeditProject::auxiliaryTrackCount() const
+{
+    if (!auxiliaryTrackProvider()) {
+        return 0;
+    }
+
+    return static_cast<int>(auxiliaryTrackProvider()->trackIdList().size());
+}
+
+int Au3TrackeditProject::displayTrackPosition(const Track& track, int pos) const
+{
+    if (pos < 0) {
+        return pos;
+    }
+
+    const int displayPos = (auxiliaryTrackProvider() && auxiliaryTrackProvider()->hasTrack(track.id))
+                           ? pos
+                           : pos + auxiliaryTrackCount();
+    const int maxPos = std::max(0, static_cast<int>(trackIdList().size()) - 1);
+
+    return std::clamp(displayPos, 0, maxPos);
 }
 
 au::trackedit::Clip Au3TrackeditProject::clip(const ClipKey& key) const

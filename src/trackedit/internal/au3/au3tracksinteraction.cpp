@@ -878,7 +878,15 @@ bool Au3TracksInteraction::moveTracks(const TrackIdList& trackIds, const TrackMo
         return false;
     }
 
-    TrackIdList sortedTrackIds = trackIds;
+    TrackIdList sortedTrackIds;
+    std::copy_if(trackIds.begin(), trackIds.end(), std::back_inserter(sortedTrackIds), [this](TrackId trackId) {
+        return !(auxiliaryTrackProvider() && auxiliaryTrackProvider()->hasTrack(trackId));
+    });
+
+    if (sortedTrackIds.empty()) {
+        return false;
+    }
+
     auto isAscending = (direction == TrackMoveDirection::Up || direction == TrackMoveDirection::Bottom);
     std::sort(sortedTrackIds.begin(), sortedTrackIds.end(), [this, isAscending](const TrackId& a, const TrackId& b) {
         return isAscending ? trackPosition(a) < trackPosition(b) : trackPosition(a) > trackPosition(b);
@@ -911,8 +919,16 @@ bool Au3TracksInteraction::moveTracksTo(const TrackIdList& trackIds, int to)
         return false;
     }
 
-    TrackIdList sortedTrackIds = trackIds;
-    auto isAscending = (to > trackPosition(trackIds.front()));
+    TrackIdList sortedTrackIds;
+    std::copy_if(trackIds.begin(), trackIds.end(), std::back_inserter(sortedTrackIds), [this](TrackId trackId) {
+        return !(auxiliaryTrackProvider() && auxiliaryTrackProvider()->hasTrack(trackId));
+    });
+
+    if (sortedTrackIds.empty()) {
+        return false;
+    }
+
+    auto isAscending = (to > trackPosition(sortedTrackIds.front()));
     std::sort(sortedTrackIds.begin(), sortedTrackIds.end(), [this, isAscending](const TrackId& a, const TrackId& b) {
         return isAscending ? trackPosition(a) < trackPosition(b) : trackPosition(a) > trackPosition(b);
     });
@@ -1854,6 +1870,10 @@ bool Au3TracksInteraction::canMoveTrack(const TrackId trackId, const TrackMoveDi
     auto& tracks = ::TrackList::Get(project);
     Au3Track* au3Track = DomAccessor::findTrack(project, Au3TrackId(trackId));
 
+    if (!au3Track) {
+        return false;
+    }
+
     switch (direction) {
     case TrackMoveDirection::Up:
     case TrackMoveDirection::Top:
@@ -1979,7 +1999,7 @@ int Au3TracksInteraction::trackPosition(const TrackId trackId)
 {
     auto& project = projectRef();
     auto track = DomAccessor::findTrack(project, Au3TrackId(trackId));
-    IF_ASSERT_FAILED(track) {
+    if (!track) {
         return -1;
     }
 

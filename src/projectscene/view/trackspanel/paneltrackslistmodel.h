@@ -131,6 +131,9 @@ private:
     void setItemsSelected(const QModelIndexList& indexes, bool selected);
 
     TrackItem* modelIndexToItem(const QModelIndex& index) const;
+    int fixedVideoTrackCount() const;
+    int projectOrderIndex(const trackedit::TrackId& trackId) const;
+    bool selectionContainsVideoTrack(const QModelIndexList& indexes) const;
 
     bool m_isMovingUpAvailable = false;
     bool m_isMovingDownAvailable = false;

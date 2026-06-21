@@ -4,6 +4,9 @@
 
 #include "paneltrackslistmodel.h"
 
+#include <algorithm>
+#include <iterator>
+
 #include "global/async/async.h"
 #include "global/containers.h"
 
@@ -248,9 +251,25 @@ void PanelTracksListModel::requestTracksMove(QVariantList trackIndexes, int to)
     std::vector<TrackId> tracksToMove;
     for (auto index : trackIndexes) {
         int row = index.toInt();
-        tracksToMove.push_back(m_trackList.at(row)->trackId());
+        TrackItem* item = row >= 0 && row < m_trackList.size() ? m_trackList.at(row) : nullptr;
+        if (!item) {
+            continue;
+        }
+
+        if (item->trackType() == TrackType::Video) {
+            return;
+        }
+
+        tracksToMove.push_back(item->trackId());
     }
-    trackeditInteraction()->moveTracksTo(tracksToMove, to);
+
+    if (tracksToMove.empty()) {
+        return;
+    }
+
+    const int audioTrackCount = rowCount() - fixedVideoTrackCount();
+    const int legacyTarget = std::clamp(to - fixedVideoTrackCount(), 0, audioTrackCount);
+    trackeditInteraction()->moveTracksTo(tracksToMove, legacyTarget);
 }
 
 bool PanelTracksListModel::moveRows(const QModelIndex& sourceParent, int sourceRow, int count, const QModelIndex& destinationParent,
@@ -450,6 +469,12 @@ void PanelTracksListModel::updateRearrangementAvailability()
         return;
     }
 
+    if (selectionContainsVideoTrack(selectedIndexList)) {
+        updateMovingUpAvailability(false);
+        updateMovingDownAvailability(false);
+        return;
+    }
+
     std::sort(selectedIndexList.begin(), selectedIndexList.end(), [](const QModelIndex& f, const QModelIndex& s) -> bool {
         return f.row() < s.row();
     });
@@ -477,7 +502,7 @@ void PanelTracksListModel::updateRearrangementAvailability()
 
 void PanelTracksListModel::updateMovingUpAvailability(bool isSelectionMovable, const QModelIndex& firstSelectedRowIndex)
 {
-    bool isRowInBoundaries = firstSelectedRowIndex.isValid() ? firstSelectedRowIndex.row() > 0 : false;
+    bool isRowInBoundaries = firstSelectedRowIndex.isValid() ? firstSelectedRowIndex.row() > fixedVideoTrackCount() : false;
 
     setIsMovingUpAvailable(isSelectionMovable && isRowInBoundaries);
 }
@@ -604,6 +629,47 @@ TrackItem* PanelTracksListModel::modelIndexToItem(const QModelIndex& index) cons
     return m_trackList.at(index.row());
 }
 
+int PanelTracksListModel::fixedVideoTrackCount() const
+{
+    int count = 0;
+    for (const TrackItem* item : m_trackList) {
+        if (!item || item->trackType() != TrackType::Video) {
+            break;
+        }
+        ++count;
+    }
+
+    return count;
+}
+
+int PanelTracksListModel::projectOrderIndex(const trackedit::TrackId& trackId) const
+{
+    const ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    if (!prj) {
+        return static_cast<int>(m_trackList.size());
+    }
+
+    const TrackIdList tracks = prj->trackIdList();
+    const auto it = std::find(tracks.begin(), tracks.end(), trackId);
+    if (it == tracks.end()) {
+        return static_cast<int>(m_trackList.size());
+    }
+
+    return std::clamp(static_cast<int>(std::distance(tracks.begin(), it)), 0, static_cast<int>(m_trackList.size()));
+}
+
+bool PanelTracksListModel::selectionContainsVideoTrack(const QModelIndexList& indexes) const
+{
+    for (const QModelIndex& index : indexes) {
+        const TrackItem* item = modelIndexToItem(index);
+        if (item && item->trackType() == TrackType::Video) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 void PanelTracksListModel::onSelectedTracks(const TrackIdList& trackIds)
 {
     QItemSelection selection;
@@ -646,9 +712,9 @@ void PanelTracksListModel::onTracksChanged(const std::vector<au::trackedit::Trac
 
 void PanelTracksListModel::onTrackAdded(const trackedit::Track& track)
 {
-    const int size = static_cast<int>(m_trackList.size());
-    beginInsertRows(QModelIndex(), size, size);
-    m_trackList.push_back(buildTrackItem(track));
+    const int insertIndex = projectOrderIndex(track.id);
+    beginInsertRows(QModelIndex(), insertIndex, insertIndex);
+    m_trackList.insert(insertIndex, buildTrackItem(track));
     onTrackChanged(track);
     endInsertRows();
 }

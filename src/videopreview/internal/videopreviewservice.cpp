@@ -160,6 +160,7 @@ void VideoPreviewService::detachTrackeditProject()
     }
 
     m_trackeditProject->trackAdded().disconnect(this);
+    m_trackeditProject->trackInserted().disconnect(this);
     m_trackeditProject->trackRemoved().disconnect(this);
     m_trackeditProject->trackClipListChanged().disconnect(this);
 
@@ -183,6 +184,11 @@ void VideoPreviewService::attachTrackeditProject()
     }
 
     m_trackeditProject->trackAdded().onReceive(this, [this](const trackedit::Track& track) {
+        subscribeToTrack(track.id);
+        updateSegmentMapFromProject(true);
+    });
+
+    m_trackeditProject->trackInserted().onReceive(this, [this](const trackedit::Track& track, int) {
         subscribeToTrack(track.id);
         updateSegmentMapFromProject(true);
     });
@@ -334,7 +340,7 @@ void VideoPreviewService::linkImportedVideo(const muse::io::path_t& sourcePath,
     }
 
     VideoLinks links = m_links;
-    links.push_back(std::move(link));
+    links.insert(links.begin(), std::move(link));
     commitLinks(std::move(links), false);
 }
 
@@ -529,7 +535,15 @@ void VideoPreviewService::notifyTrackeditAboutLinkChange(const VideoLink& oldLin
     }
 
     if (!hadTrack && hasTrackNow) {
-        project->notifyAboutTrackAdded(newTrack);
+        int pos = 0;
+        const auto it = std::find_if(m_links.begin(), m_links.end(), [&newLink](const VideoLink& link) {
+            return link.trackId == newLink.trackId;
+        });
+        if (it != m_links.end()) {
+            pos = static_cast<int>(std::distance(m_links.begin(), it));
+        }
+
+        project->notifyAboutTrackInserted(newTrack, pos);
         for (const au::trackedit::Clip& clip : newClips) {
             project->notifyAboutClipAdded(clip);
         }
