@@ -141,6 +141,30 @@ public:
       return {};
    }
 
+   void SetPresentationTimestamp(int64_t timestamp) noexcept override
+   {
+      if (mAVPacket != nullptr)
+         mAVPacket->pts = timestamp;
+   }
+
+   void SetDecompressionTimestamp(int64_t timestamp) noexcept override
+   {
+      if (mAVPacket != nullptr)
+         mAVPacket->dts = timestamp;
+   }
+
+   void SetDuration(int duration) noexcept override
+   {
+      if (mAVPacket != nullptr)
+         mAVPacket->duration = duration;
+   }
+
+   void SetPos(int64_t pos) noexcept override
+   {
+      if (mAVPacket != nullptr)
+         mAVPacket->pos = pos;
+   }
+
    int64_t GetPos() const noexcept override
    {
       if (mAVPacket != nullptr)

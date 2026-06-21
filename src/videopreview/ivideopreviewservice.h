@@ -33,6 +33,7 @@ public:
 
     virtual VideoPreviewState state() const = 0;
     virtual muse::String stateText() const = 0;
+    virtual VideoLink link() const = 0;
     virtual muse::io::path_t sourcePath() const = 0;
     virtual double aspectRatio() const = 0;
     virtual QImage currentFrame() const = 0;

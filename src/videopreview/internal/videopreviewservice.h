@@ -54,6 +54,7 @@ public:
 
     VideoPreviewState state() const override;
     muse::String stateText() const override;
+    VideoLink link() const override;
     muse::io::path_t sourcePath() const override;
     double aspectRatio() const override;
     QImage currentFrame() const override;

@@ -7,6 +7,8 @@
 #include <algorithm>
 #include <array>
 #include <cctype>
+#include <cmath>
+#include <optional>
 
 #include <wx/filefn.h>
 
@@ -32,6 +34,8 @@
 
 using namespace au::au3;
 using namespace au::importexport;
+using au::videopreview::VideoLink;
+using au::videopreview::VideoSegment;
 
 #if defined(__WXMSW__)
 #define OSINPUT(X) ((X).mb_str() ? (char*)(const char*)(X).mb_str() : "")
@@ -44,6 +48,8 @@ using namespace au::importexport;
 #endif
 
 namespace {
+constexpr double EPS = 1e-7;
+
 ExportPlugin* formatPlugin(const std::string& format)
 {
     for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
@@ -138,6 +144,112 @@ const AVStreamWrapper* firstStreamOfType(const AVFormatContextWrapper& context, 
     return nullptr;
 }
 
+const AVStreamWrapper* videoStreamForLink(const AVFormatContextWrapper& context, const VideoLink& link)
+{
+    const AVStreamWrapper* firstVideoStream = nullptr;
+
+    for (unsigned int i = 0; i < context.GetStreamsCount(); ++i) {
+        const AVStreamWrapper* stream = context.GetStream(static_cast<int>(i));
+        if (!stream || !stream->IsVideo()) {
+            continue;
+        }
+
+        if (!firstVideoStream) {
+            firstVideoStream = stream;
+        }
+
+        const bool streamIndexMatches = link.streamIndex >= 0 && stream->GetIndex() == link.streamIndex;
+        const bool streamIdMatches = link.streamId >= 0 && stream->GetId() == link.streamId;
+
+        if (link.streamIndex >= 0 && link.streamId >= 0) {
+            if (streamIndexMatches && streamIdMatches) {
+                return stream;
+            }
+            continue;
+        }
+
+        if ((link.streamIndex >= 0 && streamIndexMatches) || (link.streamId >= 0 && streamIdMatches)) {
+            return stream;
+        }
+    }
+
+    return firstVideoStream;
+}
+
+double secondsFromTimestamp(int64_t timestamp, AudacityAVRational timeBase)
+{
+    if (timestamp == AUDACITY_AV_NOPTS_VALUE || timeBase.den == 0) {
+        return 0.0;
+    }
+
+    return static_cast<double>(timestamp) * static_cast<double>(timeBase.num) / static_cast<double>(timeBase.den);
+}
+
+int64_t timestampFromSeconds(double seconds, AudacityAVRational timeBase)
+{
+    if (timeBase.num == 0) {
+        return 0;
+    }
+
+    return static_cast<int64_t>(std::llround(seconds * static_cast<double>(timeBase.den) / static_cast<double>(timeBase.num)));
+}
+
+int64_t streamStartTimestamp(const AVStreamWrapper& stream)
+{
+    const int64_t startTime = stream.GetStartTime();
+    return startTime == AUDACITY_AV_NOPTS_VALUE ? 0 : startTime;
+}
+
+double sourceSecondsFromTimestamp(int64_t timestamp, const AVStreamWrapper& stream)
+{
+    return secondsFromTimestamp(timestamp - streamStartTimestamp(stream), stream.GetTimeBase());
+}
+
+double duration(double start, double end)
+{
+    return std::max(0.0, end - start);
+}
+
+double segmentScale(const VideoSegment& segment)
+{
+    const double sourceDuration = duration(segment.sourceStart, segment.sourceEnd);
+    if (sourceDuration <= EPS) {
+        return 1.0;
+    }
+
+    return duration(segment.projectStart, segment.projectEnd) / sourceDuration;
+}
+
+double projectSecondsFromSourceSeconds(const VideoSegment& segment, double sourceSeconds)
+{
+    return segment.projectStart + ((sourceSeconds - segment.sourceStart) * segmentScale(segment));
+}
+
+std::vector<VideoSegment> sortedValidSegments(const VideoLink& link)
+{
+    std::vector<VideoSegment> segments;
+    segments.reserve(link.segments.size());
+    for (const VideoSegment& segment : link.segments) {
+        if (segment.isValid()) {
+            segments.push_back(segment);
+        }
+    }
+
+    std::sort(segments.begin(), segments.end(), [](const VideoSegment& left, const VideoSegment& right) {
+        return left.projectStart < right.projectStart;
+    });
+    return segments;
+}
+
+double videoEndTime(const std::vector<VideoSegment>& segments)
+{
+    double endTime = 0.0;
+    for (const VideoSegment& segment : segments) {
+        endTime = std::max(endTime, segment.projectEnd);
+    }
+    return endTime;
+}
+
 bool copyStream(const AVStreamWrapper& source, AVStreamWrapper& destination)
 {
     if (destination.CopyParametersFrom(source) < 0) {
@@ -154,8 +266,8 @@ bool copyStream(const AVStreamWrapper& source, AVStreamWrapper& destination)
     return true;
 }
 
-bool writePackets(FFmpegFunctions& ffmpeg, AVFormatContextWrapper& inputContext, const AVStreamWrapper& inputStream,
-                  AVFormatContextWrapper& outputContext, const AVStreamWrapper& outputStream)
+bool writeAllPackets(FFmpegFunctions& ffmpeg, AVFormatContextWrapper& inputContext, const AVStreamWrapper& inputStream,
+                     AVFormatContextWrapper& outputContext, const AVStreamWrapper& outputStream)
 {
     const int inputStreamIndex = inputStream.GetIndex();
     const int outputStreamIndex = outputStream.GetIndex();
@@ -171,6 +283,7 @@ bool writePackets(FFmpegFunctions& ffmpeg, AVFormatContextWrapper& inputContext,
         packet->RescalePresentationTimestamp(inputTimeBase, outputTimeBase);
         packet->RescaleDecompressionTimestamp(inputTimeBase, outputTimeBase);
         packet->RescaleDuration(inputTimeBase, outputTimeBase);
+        packet->SetPos(-1);
 
         if (ffmpeg.av_interleaved_write_frame(outputContext.GetWrappedValue(), packet->GetWrappedValue()) < 0) {
             return false;
@@ -180,7 +293,110 @@ bool writePackets(FFmpegFunctions& ffmpeg, AVFormatContextWrapper& inputContext,
     return true;
 }
 
-std::string remuxLinkedVideo(const wxFileName& sourceVideoFilename, const wxFileName& audioFilename, const wxFileName& targetFilename)
+std::optional<double> packetSourceSeconds(const AVPacketWrapper& packet, const AVStreamWrapper& inputStream)
+{
+    int64_t timestamp = packet.GetPresentationTimestamp();
+    if (timestamp == AUDACITY_AV_NOPTS_VALUE) {
+        timestamp = packet.GetDecompressionTimestamp();
+    }
+
+    if (timestamp == AUDACITY_AV_NOPTS_VALUE) {
+        return std::nullopt;
+    }
+
+    return sourceSecondsFromTimestamp(timestamp, inputStream);
+}
+
+int64_t mappedTimestamp(const VideoSegment& segment, const AVStreamWrapper& inputStream, const AVStreamWrapper& outputStream,
+                        int64_t inputTimestamp)
+{
+    if (inputTimestamp == AUDACITY_AV_NOPTS_VALUE) {
+        return AUDACITY_AV_NOPTS_VALUE;
+    }
+
+    double projectSeconds = projectSecondsFromSourceSeconds(segment, sourceSecondsFromTimestamp(inputTimestamp, inputStream));
+    if (projectSeconds < 0.0) {
+        projectSeconds = 0.0;
+    }
+
+    return timestampFromSeconds(projectSeconds, outputStream.GetTimeBase());
+}
+
+int mappedDuration(const VideoSegment& segment, const AVStreamWrapper& inputStream, const AVStreamWrapper& outputStream, int inputDuration)
+{
+    if (inputDuration <= 0) {
+        return inputDuration;
+    }
+
+    const double sourceDurationSeconds = secondsFromTimestamp(inputDuration, inputStream.GetTimeBase());
+    const double projectDurationSeconds = sourceDurationSeconds * segmentScale(segment);
+    return static_cast<int>(std::max<int64_t>(0, timestampFromSeconds(projectDurationSeconds, outputStream.GetTimeBase())));
+}
+
+bool writeVideoSegmentPackets(FFmpegFunctions& ffmpeg, AVFormatContextWrapper& inputContext, const AVStreamWrapper& inputStream,
+                              AVFormatContextWrapper& outputContext, const AVStreamWrapper& outputStream,
+                              const VideoSegment& segment)
+{
+    const int inputStreamIndex = inputStream.GetIndex();
+    const int outputStreamIndex = outputStream.GetIndex();
+
+    while (std::unique_ptr<AVPacketWrapper> packet = inputContext.ReadNextPacket()) {
+        if (packet->GetStreamIndex() != inputStreamIndex) {
+            continue;
+        }
+
+        const std::optional<double> packetSeconds = packetSourceSeconds(*packet, inputStream);
+        if (!packetSeconds.has_value()) {
+            continue;
+        }
+
+        if (*packetSeconds < segment.sourceStart - EPS || *packetSeconds >= segment.sourceEnd - EPS) {
+            continue;
+        }
+
+        packet->SetStreamIndex(outputStreamIndex);
+        packet->SetPresentationTimestamp(mappedTimestamp(segment, inputStream, outputStream, packet->GetPresentationTimestamp()));
+        packet->SetDecompressionTimestamp(mappedTimestamp(segment, inputStream, outputStream, packet->GetDecompressionTimestamp()));
+        packet->SetDuration(mappedDuration(segment, inputStream, outputStream, packet->GetDuration()));
+        packet->SetPos(-1);
+
+        if (ffmpeg.av_interleaved_write_frame(outputContext.GetWrappedValue(), packet->GetWrappedValue()) < 0) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool writeVideoPackets(FFmpegFunctions& ffmpeg, const wxFileName& sourceVideoFilename, const VideoLink& link,
+                       AVFormatContextWrapper& outputContext, const AVStreamWrapper& outputStream)
+{
+    const std::vector<VideoSegment> segments = sortedValidSegments(link);
+    if (segments.empty()) {
+        return false;
+    }
+
+    for (const VideoSegment& segment : segments) {
+        std::unique_ptr<AVFormatContextWrapper> inputContext = openInputContext(ffmpeg, sourceVideoFilename.GetFullPath());
+        if (!inputContext) {
+            return false;
+        }
+
+        const AVStreamWrapper* inputStream = videoStreamForLink(*inputContext, link);
+        if (!inputStream) {
+            return false;
+        }
+
+        if (!writeVideoSegmentPackets(ffmpeg, *inputContext, *inputStream, outputContext, outputStream, segment)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+std::string remuxLinkedVideo(const VideoLink& link, const wxFileName& sourceVideoFilename, const wxFileName& audioFilename,
+                             const wxFileName& targetFilename)
 {
     std::shared_ptr<FFmpegFunctions> ffmpeg = FFmpegFunctions::Load();
     if (!ffmpeg || ffmpeg->AVFormatVersion.Major < 59) {
@@ -197,7 +413,12 @@ std::string remuxLinkedVideo(const wxFileName& sourceVideoFilename, const wxFile
         return muse::trc("export", "Could not open exported audio for video muxing.");
     }
 
-    const AVStreamWrapper* videoInputStream = firstStreamOfType(*videoInput, true);
+    const std::vector<VideoSegment> segments = sortedValidSegments(link);
+    if (segments.empty()) {
+        return muse::trc("export", "Could not find video segments to export.");
+    }
+
+    const AVStreamWrapper* videoInputStream = videoStreamForLink(*videoInput, link);
     const AVStreamWrapper* audioInputStream = firstStreamOfType(*audioInput, false);
     if (!videoInputStream || !audioInputStream) {
         return muse::trc("export", "Could not find video and audio streams for export.");
@@ -226,6 +447,8 @@ std::string remuxLinkedVideo(const wxFileName& sourceVideoFilename, const wxFile
     if (!copyStream(*videoInputStream, *videoOutputStream) || !copyStream(*audioInputStream, *audioOutputStream)) {
         return muse::trc("export", "Could not copy stream parameters for video export.");
     }
+    videoOutputStream->SetStartTime(0);
+    videoOutputStream->SetDuration(timestampFromSeconds(videoEndTime(segments), videoOutputStream->GetTimeBase()));
 
     if (!(outputFormatFlags & AUDACITY_AVFMT_NOFILE)) {
         const auto openResult = outputContext->OpenOutputContext(targetPath);
@@ -238,8 +461,8 @@ std::string remuxLinkedVideo(const wxFileName& sourceVideoFilename, const wxFile
         return muse::trc("export", "Could not write the video export header.");
     }
 
-    if (!writePackets(*ffmpeg, *videoInput, *videoInputStream, *outputContext, *videoOutputStream)
-        || !writePackets(*ffmpeg, *audioInput, *audioInputStream, *outputContext, *audioOutputStream)) {
+    if (!writeVideoPackets(*ffmpeg, sourceVideoFilename, link, *outputContext, *videoOutputStream)
+        || !writeAllPackets(*ffmpeg, *audioInput, *audioInputStream, *outputContext, *audioOutputStream)) {
         return muse::trc("export", "Could not write video export packets.");
     }
 
@@ -253,6 +476,7 @@ std::string remuxLinkedVideo(const wxFileName& sourceVideoFilename, const wxFile
 struct LinkedVideoExport
 {
     bool enabled = false;
+    VideoLink link;
     wxFileName sourceVideoFilename;
     wxFileName audioFilename;
     wxFileName targetFilename;
@@ -268,17 +492,18 @@ LinkedVideoExport linkedVideoExport(const au::videopreview::IVideoPreviewService
         return result;
     }
 
-    const muse::io::path_t sourcePath = videoPreviewService->sourcePath();
-    if (sourcePath.empty()) {
+    const VideoLink link = videoPreviewService->link();
+    if (!link.isValid()) {
         return result;
     }
 
-    wxFileName sourceVideoFilename = wxFromString(sourcePath.toString());
+    wxFileName sourceVideoFilename = wxFromString(link.sourcePath.toString());
     if (!sourceVideoFilename.FileExists()) {
         return result;
     }
 
     result.enabled = true;
+    result.link = link;
     result.sourceVideoFilename = std::move(sourceVideoFilename);
     result.audioFilename = makeTemporaryAudioFilename(targetFilename, plugin, format);
     result.targetFilename = targetFilename;
@@ -581,7 +806,7 @@ muse::Ret Au3Exporter::exportData(const muse::io::path_t& path, const Options& o
         }
 
         if (videoExport.enabled) {
-            const std::string remuxError = remuxLinkedVideo(videoExport.sourceVideoFilename, videoExport.audioFilename,
+            const std::string remuxError = remuxLinkedVideo(videoExport.link, videoExport.sourceVideoFilename, videoExport.audioFilename,
                                                             videoExport.targetFilename);
             ::wxRemoveFile(videoExport.audioFilename.GetFullPath());
             if (!remuxError.empty()) {

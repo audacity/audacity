@@ -1368,6 +1368,11 @@ muse::String VideoPreviewService::stateText() const
     return {};
 }
 
+VideoLink VideoPreviewService::link() const
+{
+    return m_link;
+}
+
 muse::io::path_t VideoPreviewService::sourcePath() const
 {
     return m_link.sourcePath;
