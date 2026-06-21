@@ -6,6 +6,7 @@
 #include <QtQml>
 
 #include "modularity/ioc.h"
+#include "trackedit/iauxiliarytrackprovider.h"
 
 #include "internal/videopreviewservice.h"
 #include "view/videopreviewitem.h"
@@ -45,6 +46,7 @@ void VideoPreviewContext::registerExports()
 {
     m_service = std::make_shared<VideoPreviewService>(iocContext());
     ioc()->registerExport<IVideoPreviewService>(mname, m_service);
+    ioc()->registerExport<au::trackedit::IAuxiliaryTrackProvider>(mname, m_service);
 }
 
 void VideoPreviewContext::onInit(const muse::IApplication::RunMode& mode)

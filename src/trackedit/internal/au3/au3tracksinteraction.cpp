@@ -5,6 +5,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <iterator>
 
 #include "au3-track/Track.h"
 #include "au3-track/TimeWarper.h"
@@ -84,6 +85,10 @@ bool Au3TracksInteraction::trimTracksData(const std::vector<TrackId>& tracksIds,
 bool Au3TracksInteraction::silenceTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end)
 {
     for (TrackId trackId : tracksIds) {
+        if (auxiliaryTrackProvider() && auxiliaryTrackProvider()->hasTrack(trackId)) {
+            continue;
+        }
+
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
         IF_ASSERT_FAILED(waveTrack) {
             return false;
@@ -99,6 +104,10 @@ bool Au3TracksInteraction::silenceTracksData(const std::vector<trackedit::TrackI
 
 bool Au3TracksInteraction::changeTrackTitle(const TrackId trackId, const muse::String& title)
 {
+    if (auxiliaryTrackProvider() && auxiliaryTrackProvider()->hasTrack(trackId)) {
+        return auxiliaryTrackProvider()->changeTrackTitle(trackId, title);
+    }
+
     Au3Track* track = DomAccessor::findTrack(projectRef(), Au3TrackId(trackId));
     IF_ASSERT_FAILED(track) {
         return false;
@@ -116,6 +125,10 @@ bool Au3TracksInteraction::changeTrackTitle(const TrackId trackId, const muse::S
 bool Au3TracksInteraction::changeTracksColor(const TrackIdList& tracksIds, ClipColorIndex colorIndex)
 {
     for (const TrackId& trackId : tracksIds) {
+        if (auxiliaryTrackProvider() && auxiliaryTrackProvider()->hasTrack(trackId)) {
+            continue;
+        }
+
         Au3Track* track = DomAccessor::findTrack(projectRef(), ::TrackId(trackId));
         IF_ASSERT_FAILED(track) {
             return false;
@@ -502,7 +515,23 @@ ITrackDataPtr Au3TracksInteraction::copyContinuousTrackData(const TrackId trackI
 
 bool Au3TracksInteraction::removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips)
 {
+    TrackIdList auxiliaryTrackIds;
+    if (auxiliaryTrackProvider()) {
+        std::copy_if(tracksIds.begin(), tracksIds.end(), std::back_inserter(auxiliaryTrackIds), [this](TrackId trackId) {
+            return auxiliaryTrackProvider()->hasTrack(trackId);
+        });
+    }
+
+    bool ok = true;
+    if (!auxiliaryTrackIds.empty()) {
+        ok = auxiliaryTrackProvider()->removeTracksData(auxiliaryTrackIds, begin, end, moveClips);
+    }
+
     for (const TrackId& trackId : tracksIds) {
+        if (muse::contains(auxiliaryTrackIds, trackId)) {
+            continue;
+        }
+
         Au3Track* track = nullptr;
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
@@ -517,10 +546,14 @@ bool Au3TracksInteraction::removeTracksData(const TrackIdList& tracksIds, secs_t
             track = labelTrack;
         }
 
+        if (!track) {
+            continue;
+        }
+
         prj->notifyAboutTrackChanged(DomConverter::track(track));
     }
 
-    return true;
+    return ok;
 }
 
 bool Au3TracksInteraction::splitTracksAt(const TrackIdList& tracksIds, std::vector<secs_t> pivots)
@@ -530,11 +563,27 @@ bool Au3TracksInteraction::splitTracksAt(const TrackIdList& tracksIds, std::vect
     trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     std::vector<trackedit::Track> changedTracks;
     ClipKeyList splitClipKeys;
+    bool ok = true;
+
+    TrackIdList auxiliaryTrackIds;
+    if (auxiliaryTrackProvider()) {
+        std::copy_if(tracksIds.begin(), tracksIds.end(), std::back_inserter(auxiliaryTrackIds), [this](TrackId trackId) {
+            return auxiliaryTrackProvider()->hasTrack(trackId);
+        });
+    }
+
+    if (!auxiliaryTrackIds.empty()) {
+        ok = auxiliaryTrackProvider()->splitTracksAt(auxiliaryTrackIds, pivots) && ok;
+    }
 
     for (const auto& trackId : tracksIds) {
+        if (auxiliaryTrackProvider() && auxiliaryTrackProvider()->hasTrack(trackId)) {
+            continue;
+        }
+
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
         IF_ASSERT_FAILED(waveTrack) {
-            return false;
+            continue;
         }
 
         bool didAnySplitOccur = false;
@@ -571,7 +620,7 @@ bool Au3TracksInteraction::splitTracksAt(const TrackIdList& tracksIds, std::vect
         selectionController()->setSelectedClips(splitClipKeys, true);
     }
 
-    return true;
+    return ok;
 }
 
 bool Au3TracksInteraction::splitRangeSelectionAtSilences(const TrackIdList& tracksIds, secs_t begin, secs_t end)
@@ -728,7 +777,23 @@ bool Au3TracksInteraction::deleteTracks(const TrackIdList& trackIds)
     TrackId focusedTrack = trackNavigationController()->focusedTrack();
 
     const auto prj = globalContext()->currentTrackeditProject();
+    TrackIdList auxiliaryTrackIds;
+    if (auxiliaryTrackProvider()) {
+        std::copy_if(trackIds.begin(), trackIds.end(), std::back_inserter(auxiliaryTrackIds), [this](TrackId trackId) {
+            return auxiliaryTrackProvider()->hasTrack(trackId);
+        });
+    }
+
+    bool ok = true;
+    if (!auxiliaryTrackIds.empty()) {
+        ok = auxiliaryTrackProvider()->deleteTracks(auxiliaryTrackIds) && ok;
+    }
+
     for (const auto& trackId : trackIds) {
+        if (muse::contains(auxiliaryTrackIds, trackId)) {
+            continue;
+        }
+
         Au3Track* au3Track = DomAccessor::findTrack(project, Au3TrackId(trackId));
         IF_ASSERT_FAILED(au3Track) {
             continue;
@@ -748,7 +813,7 @@ bool Au3TracksInteraction::deleteTracks(const TrackIdList& trackIds)
         trackNavigationController()->setFocusedTrack(notRemovedTracks.empty() ? -1 : notRemovedTracks.front());
     }
 
-    return true;
+    return ok;
 }
 
 bool Au3TracksInteraction::duplicateTracks(const TrackIdList& trackIds)

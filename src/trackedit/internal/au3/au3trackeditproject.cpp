@@ -82,6 +82,14 @@ std::vector<int64_t> Au3TrackeditProject::groupsIdsList() const
         }
     }
 
+    if (auxiliaryTrackProvider()) {
+        for (int64_t groupId : auxiliaryTrackProvider()->groupsIdsList()) {
+            if (!muse::contains(groupsList, groupId)) {
+                groupsList.push_back(groupId);
+            }
+        }
+    }
+
     return groupsList;
 }
 
@@ -91,6 +99,11 @@ std::vector<au::trackedit::TrackId> Au3TrackeditProject::trackIdList() const
 
     for (const Au3Track* t : *m_impl->trackList) {
         au4trackIds.push_back(t->GetId());
+    }
+
+    if (auxiliaryTrackProvider()) {
+        const TrackIdList auxiliaryIds = auxiliaryTrackProvider()->trackIdList();
+        au4trackIds.insert(au4trackIds.end(), auxiliaryIds.begin(), auxiliaryIds.end());
     }
 
     return au4trackIds;
@@ -104,8 +117,9 @@ muse::ValCh<bool> Au3TrackeditProject::hasAudioContent() const
 void Au3TrackeditProject::updateHasAudioContent()
 {
     bool has = false;
-    for (const TrackId& trackId : trackIdList()) {
-        if (!getClips(trackId).empty()) {
+    for (const Au3Track* track : *m_impl->trackList) {
+        if (const Au3WaveTrack* waveTrack = dynamic_cast<const Au3WaveTrack*>(track);
+            waveTrack && !waveTrack->Intervals().empty()) {
             has = true;
             break;
         }
@@ -125,6 +139,11 @@ au::trackedit::TrackList Au3TrackeditProject::trackList() const
         au4tracks.push_back(std::move(au4t));
     }
 
+    if (auxiliaryTrackProvider()) {
+        const TrackList auxiliaryTracks = auxiliaryTrackProvider()->trackList();
+        au4tracks.insert(au4tracks.end(), auxiliaryTracks.begin(), auxiliaryTracks.end());
+    }
+
     return au4tracks;
 }
 
@@ -136,6 +155,10 @@ std::optional<au::trackedit::Track> Au3TrackeditProject::track(TrackId trackId) 
         if (t->GetId() == trackId) {
             toReturn = DomConverter::track(t);
         }
+    }
+
+    if (!toReturn && auxiliaryTrackProvider()) {
+        toReturn = auxiliaryTrackProvider()->track(trackId);
     }
 
     return toReturn;
@@ -206,6 +229,12 @@ au::trackedit::Clips Au3TrackeditProject::getClips(const TrackId& trackId) const
 {
     au::trackedit::Clips clips;
 
+    if (auxiliaryTrackProvider() && auxiliaryTrackProvider()->hasTrack(trackId)) {
+        const auto auxiliaryClips = auxiliaryTrackProvider()->clipList(trackId);
+        clips.insert(clips.end(), auxiliaryClips.begin(), auxiliaryClips.end());
+        return clips;
+    }
+
     const Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(*m_impl->prj, Au3TrackId(trackId));
     if (!waveTrack) {
         return clips;
@@ -273,6 +302,12 @@ std::optional<std::string> Au3TrackeditProject::trackName(const TrackId& trackId
 {
     const Au3Track* au3Track = au::au3::DomAccessor::findTrack(*m_impl->prj, au::au3::Au3TrackId { trackId });
     if (au3Track == nullptr) {
+        if (auxiliaryTrackProvider()) {
+            const std::optional<Track> auxiliaryTrack = auxiliaryTrackProvider()->track(trackId);
+            if (auxiliaryTrack) {
+                return auxiliaryTrack->title.toStdString();
+            }
+        }
         return std::nullopt;
     }
     return au::au3::DomConverter::track(au3Track).title.toStdString();
@@ -310,6 +345,10 @@ void Au3TrackeditProject::notifyAboutTrackMoved(const Track& track, int pos)
 
 au::trackedit::Clip Au3TrackeditProject::clip(const ClipKey& key) const
 {
+    if (auxiliaryTrackProvider() && auxiliaryTrackProvider()->hasClip(key)) {
+        return auxiliaryTrackProvider()->clip(key);
+    }
+
     Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(*m_impl->prj, Au3TrackId(key.trackId));
     if (!waveTrack) {
         return Clip();
@@ -460,7 +499,12 @@ muse::async::Channel<au::trackedit::Track, int> Au3TrackeditProject::trackMoved(
 
 secs_t Au3TrackeditProject::totalTime() const
 {
-    return m_impl->trackList->GetEndTime();
+    secs_t endTime = m_impl->trackList->GetEndTime();
+    if (auxiliaryTrackProvider()) {
+        endTime = std::max(endTime, auxiliaryTrackProvider()->totalTime());
+    }
+
+    return endTime;
 }
 
 int64_t Au3TrackeditProject::createNewGroupID(int64_t startingID) const

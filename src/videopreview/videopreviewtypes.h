@@ -8,6 +8,7 @@
 #include "global/io/path.h"
 #include "global/types/string.h"
 #include "trackedit/dom/clip.h"
+#include "trackedit/dom/track.h"
 
 namespace au::videopreview {
 
@@ -25,6 +26,8 @@ struct VideoSegment
 {
     trackedit::ClipKey clipKey;
     muse::String title;
+    int groupId = -1;
+    trackedit::ClipColorIndex colorIndex = 4;
     double projectStart = 0.0;
     double projectEnd = 0.0;
     double sourceStart = 0.0;
@@ -39,6 +42,7 @@ struct VideoSegment
 struct VideoLink
 {
     muse::io::path_t sourcePath;
+    muse::String trackTitle;
     int streamIndex = -1;
     int streamId = -1;
     std::vector<VideoSegment> segments;

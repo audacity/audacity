@@ -3,6 +3,8 @@
 */
 #include "clipcontextmenumodel.h"
 
+#include <optional>
+
 #include "spectrogram/spectrogramtypes.h"
 #include "trackedit/dom/track.h"
 #include "framework/global/translation.h"
@@ -39,6 +41,29 @@ void ClipContextMenuModel::load()
         }
         return item;
     };
+
+    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+    std::optional<trackedit::Track> track;
+    if (prj) {
+        track = prj->track(m_clipKey.trackId());
+    }
+    if (track && track->type == trackedit::TrackType::Video) {
+        MenuItemList items {
+            makeItemWithArg("rename-item", muse::TranslatableString("clip", "Rename clip")),
+            makeItemWithArg("action://trackedit/delete")
+        };
+
+        if (prj) {
+            prj->clipList(m_clipKey.trackId()).onItemChanged(this, [this](const trackedit::Clip& clip) {
+                if (clip.key == m_clipKey.key) {
+                    load();
+                }
+            }, muse::async::Asyncable::Mode::SetReplace);
+        }
+
+        setItems(items);
+        return;
+    }
 
     auto enableStretchItem = makeItemWithArg(ENABLE_STRETCH_CODE);
     updateStretchEnabledState(*enableStretchItem);
@@ -103,7 +128,6 @@ void ClipContextMenuModel::load()
         valCh.ch.onReceive(this, [this](auto) { load(); }, Mode::SetReplace);
     }
 
-    trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
     if (prj) {
         prj->clipList(m_clipKey.trackId()).onItemChanged(this, [this](const trackedit::Clip& clip) {
             if (clip.key == m_clipKey.key) {

@@ -213,6 +213,7 @@ Rectangle {
 
         property bool singleMenuLoaded: false
         property bool multiMenuLoaded: false
+        property bool clipGainModelInitialized: false
 
         function ensureSingleMenuLoaded() {
             if (!singleMenuLoaded) {
@@ -225,6 +226,13 @@ Rectangle {
             if (!multiMenuLoaded) {
                 multiClipContextMenuModel.load()
                 multiMenuLoaded = true
+            }
+        }
+
+        function ensureClipGainModelInitialized() {
+            if (!clipGainModelInitialized && root.isAutomationEnabled) {
+                clipGainModel.init()
+                clipGainModelInitialized = true
             }
         }
     }
@@ -346,7 +354,11 @@ Rectangle {
 
     Component.onCompleted: {
         playbackState.init()
-        clipGainModel.init()
+        prv.ensureClipGainModelInitialized()
+    }
+
+    onIsAutomationEnabledChanged: {
+        prv.ensureClipGainModelInitialized()
     }
 
     Component.onDestruction: {

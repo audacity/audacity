@@ -19,6 +19,7 @@
         <file>qml/Audacity/ProjectScene/trackspanel/TrackItem.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/WaveTrackItem.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/LabelTrackItem.qml</file>
+        <file>qml/Audacity/ProjectScene/trackspanel/VideoTrackItem.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/TrackSelectionBar.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/TracksTitleBar.qml</file>
         <file>qml/Audacity/ProjectScene/trackspanel/TracksTitleBarBackground.qml</file>

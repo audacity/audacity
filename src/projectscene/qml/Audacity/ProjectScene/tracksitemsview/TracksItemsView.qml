@@ -890,7 +890,7 @@ Rectangle {
                             isMultiSelectionActive: itemData.isMultiSelectionActive
                             isTrackAudible: itemData.isTrackAudible
                             dbRange: itemData.dbRange
-                            isAutomationEnabled: itemData.isAutomationEnabled
+                            isAutomationEnabled: itemData.trackType === TrackType.VIDEO ? false : itemData.isAutomationEnabled
                             isWaveformViewVisible: itemData.isWaveformViewVisible
                             isSpectrogramViewVisible: itemData.isSpectrogramViewVisible
 

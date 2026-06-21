@@ -211,7 +211,17 @@ Item {
 
                     width: view.width
 
-                    sourceComponent: (itemData && itemData.trackType === TrackType.LABEL) ? labelItemComp : waveItemComp
+                    sourceComponent: {
+                        if (itemData && itemData.trackType === TrackType.LABEL) {
+                            return labelItemComp
+                        }
+
+                        if (itemData && itemData.trackType === TrackType.VIDEO) {
+                            return videoItemComp
+                        }
+
+                        return waveItemComp
+                    }
 
                     onLoaded: {
                         trackItemLoader.item.init()
@@ -270,6 +280,44 @@ Item {
                                 mousePressed.connect(dragHandler.startDrag)
                                 mouseReleased.connect(dragHandler.endDrag)
                                 mouseMoved.connect(dragHandler.onMouseMove)
+                            }
+                        }
+                    }
+
+                    Component {
+                        id: videoItemComp
+
+                        VideoTrackItem {
+                            property int index: trackItemLoader.index
+
+                            item: trackItemLoader.trackItemData
+
+                            isSelected: Boolean(item) ? item.isSelected : false
+                            isFocused: Boolean(item) ? item.isFocused : false
+                            container: view
+
+                            navigation.name: Boolean(item) ? item.title + item.index : ""
+                            navigation.panel: root.navPanels && root.navPanels[index] ? root.navPanels[index] : null
+                            navigation.order: 0
+                            navigation.accessible.name: Boolean(item) ? item.title : ""
+                            navigation.onActiveChanged: {
+                                if (navigation.active) {
+                                    prv.currentItemNavigationName = navigation.name
+
+                                    view.insureVerticallyVisible(this)
+                                }
+                            }
+
+                            onSelectionRequested: function (exclusive) {
+                                tracksModel.selectRow(index, exclusive)
+                            }
+
+                            onInteractionStarted: {
+                                tracksViewState.requestVerticalScrollLock()
+                            }
+
+                            onInteractionEnded: {
+                                tracksViewState.requestVerticalScrollUnlock()
                             }
                         }
                     }

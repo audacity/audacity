@@ -11,6 +11,7 @@
 
 #include "view/trackspanel/wavetrackitem.h"
 #include "view/trackspanel/labeltrackitem.h"
+#include "view/trackspanel/videotrackitem.h"
 
 #include "log.h"
 
@@ -549,6 +550,9 @@ TrackItem* PanelTracksListModel::buildTrackItem(const Track& track)
         break;
     case trackedit::TrackType::Label:
         item = new LabelTrackItem(this);
+        break;
+    case trackedit::TrackType::Video:
+        item = new VideoTrackItem(this);
         break;
     default:
         break;

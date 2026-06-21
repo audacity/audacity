@@ -3,6 +3,9 @@
 */
 #include "trackclipslistmodel.h"
 
+#include <optional>
+#include <vector>
+
 #include "global/realfn.h"
 #include "global/async/async.h"
 
@@ -405,11 +408,19 @@ bool TrackClipsListModel::moveSelectedClips(const ClipKey& key, bool completed)
     }
 
     bool clipsMovedToOtherTrack = false;
-    // Clips can only be moved to audio tracks (Mono and Stereo)
-    TrackItemsListModel::MoveOffset moveOffset = calculateMoveOffset(item, key, {
+    std::vector<trackedit::TrackType> allowedTrackTypes {
         trackedit::TrackType::Mono,
         trackedit::TrackType::Stereo
-    }, completed);
+    };
+
+    if (const ITrackeditProjectPtr trackeditProject = globalContext()->currentTrackeditProject()) {
+        const std::optional<trackedit::Track> track = trackeditProject->track(m_trackId);
+        if (track && track->type == trackedit::TrackType::Video) {
+            allowedTrackTypes = { trackedit::TrackType::Video };
+        }
+    }
+
+    TrackItemsListModel::MoveOffset moveOffset = calculateMoveOffset(item, key, allowedTrackTypes, completed);
 
     if (vs->moveInitiated()) {
         if (!selectionController()->timeSelectionIsEmpty()) {

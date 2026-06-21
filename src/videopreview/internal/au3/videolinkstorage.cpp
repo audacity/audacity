@@ -130,6 +130,7 @@ void VideoLinkStorage::WriteXML(XMLWriter& xmlFile) const
 
     xmlFile.StartTag(wxT("video_preview"));
     xmlFile.WriteAttr(wxT("source"), wxString::FromUTF8(m_link.sourcePath.toStdString().c_str()));
+    xmlFile.WriteAttr(wxT("track_title"), wxString::FromUTF8(m_link.trackTitle.toStdString().c_str()));
     xmlFile.WriteAttr(wxT("stream_index"), m_link.streamIndex);
     xmlFile.WriteAttr(wxT("stream_id"), m_link.streamId);
 
@@ -142,6 +143,8 @@ void VideoLinkStorage::WriteXML(XMLWriter& xmlFile) const
         xmlFile.WriteAttr(wxT("track_id"), static_cast<long long>(segment.clipKey.trackId));
         xmlFile.WriteAttr(wxT("clip_id"), static_cast<long long>(segment.clipKey.itemId));
         xmlFile.WriteAttr(wxT("title"), wxString::FromUTF8(segment.title.toStdString().c_str()));
+        xmlFile.WriteAttr(wxT("group_id"), static_cast<long long>(segment.groupId));
+        xmlFile.WriteAttr(wxT("color_index"), segment.colorIndex);
         xmlFile.WriteAttr(wxT("project_start"), segment.projectStart, 10);
         xmlFile.WriteAttr(wxT("project_end"), segment.projectEnd, 10);
         xmlFile.WriteAttr(wxT("source_start"), segment.sourceStart, 10);
@@ -157,6 +160,7 @@ bool VideoLinkStorage::HandleXMLTag(const std::string_view& tag, const Attribute
     if (tag == VIDEO_PREVIEW_TAG) {
         m_link = {};
         m_link.sourcePath = muse::io::path_t(attrString(attrs, "source"));
+        m_link.trackTitle = muse::String::fromStdString(attrString(attrs, "track_title", "Video"));
         m_link.streamIndex = attrValue<int>(attrs, "stream_index", -1);
         m_link.streamId = attrValue<int>(attrs, "stream_id", -1);
         return true;
@@ -167,6 +171,8 @@ bool VideoLinkStorage::HandleXMLTag(const std::string_view& tag, const Attribute
         segment.clipKey.trackId = attrValue<long long>(attrs, "track_id", trackedit::INVALID_TRACK);
         segment.clipKey.itemId = attrValue<long long>(attrs, "clip_id", trackedit::INVALID_TRACK_ITEM);
         segment.title = muse::String::fromStdString(attrString(attrs, "title"));
+        segment.groupId = attrValue<int>(attrs, "group_id", -1);
+        segment.colorIndex = attrValue<int>(attrs, "color_index", segment.colorIndex);
         segment.projectStart = attrValue<double>(attrs, "project_start");
         segment.projectEnd = attrValue<double>(attrs, "project_end");
         segment.sourceStart = attrValue<double>(attrs, "source_start");

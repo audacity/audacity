@@ -83,7 +83,7 @@ Rectangle {
             width: root.width
             height: trackViewState.trackHeight
 
-            sourceComponent: model.trackType !== TrackType.LABEL ? waveComp : emptyComp
+            sourceComponent: (model.trackType !== TrackType.LABEL && model.trackType !== TrackType.VIDEO) ? waveComp : emptyComp
 
             TrackViewStateModel {
                 id: trackViewState

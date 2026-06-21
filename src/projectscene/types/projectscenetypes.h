@@ -22,7 +22,8 @@ public:
         UNDEFINED = 0,
         MONO,
         STEREO,
-        LABEL
+        LABEL,
+        VIDEO
     };
     Q_ENUM(Type)
 };
