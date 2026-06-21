@@ -11,6 +11,7 @@
 #include "framework/dockwindow/idockwindowprovider.h"
 #include "framework/ui/iuiconfiguration.h"
 #include "framework/ui/iuistate.h"
+#include "framework/workspace/iworkspacemanager.h"
 
 #include "context/iglobalcontext.h"
 #include "playback/iplaybackconfiguration.h"
@@ -23,6 +24,8 @@ class ProjectPageModel : public QObject, public muse::async::Asyncable, public m
     Q_OBJECT
     QML_ELEMENT
 
+    Q_PROPERTY(bool videoEditingWorkspace READ isVideoEditingWorkspace NOTIFY videoEditingWorkspaceChanged)
+
     muse::GlobalInject<muse::ui::IUiConfiguration> uiConfiguration;
     muse::GlobalInject<playback::IPlaybackConfiguration> playbackConfiguration;
 
@@ -30,6 +33,7 @@ class ProjectPageModel : public QObject, public muse::async::Asyncable, public m
     muse::ContextInject<au::context::IGlobalContext> globalContext { this };
     muse::ContextInject<muse::dock::IDockWindowProvider> dockWindowProvider { this };
     muse::ContextInject<muse::ui::IUiState> uiState { this };
+    muse::ContextInject<muse::workspace::IWorkspaceManager> workspacesManager { this };
 
 public:
     explicit ProjectPageModel(QObject* parent = nullptr);
@@ -47,6 +51,11 @@ public:
     Q_INVOKABLE QString videoPreviewPanelName() const;
 
     Q_INVOKABLE QString statusBarName() const;
+
+    bool isVideoEditingWorkspace() const;
+
+signals:
+    void videoEditingWorkspaceChanged();
 
 private:
     void toggleDock(const QString& name);

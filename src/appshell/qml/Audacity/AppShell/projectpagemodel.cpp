@@ -13,6 +13,7 @@ using namespace au::appshell;
 using namespace muse::actions;
 
 static const ActionQuery PLAYBACK_LEVEL_QUERY("action://playback/level");
+static const std::string VIDEO_EDITING_WORKSPACE("Video Editing");
 
 ProjectPageModel::ProjectPageModel(QObject* parent)
     : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
@@ -35,6 +36,10 @@ void ProjectPageModel::init()
 
         playbackConfiguration()->playbackMeterPositionChanged().onNotify(this, [this]() {
             updatePlaybackMeterVisibility();
+        });
+
+        workspacesManager()->currentWorkspaceChanged().onNotify(this, [this]() {
+            emit videoEditingWorkspaceChanged();
         });
 
         m_inited = true;
@@ -105,6 +110,15 @@ QString ProjectPageModel::videoPreviewPanelName() const
 QString ProjectPageModel::statusBarName() const
 {
     return PROJECT_STATUSBAR_NAME;
+}
+
+bool ProjectPageModel::isVideoEditingWorkspace() const
+{
+    if (!workspacesManager() || !workspacesManager()->currentWorkspace()) {
+        return false;
+    }
+
+    return workspacesManager()->currentWorkspace()->name() == VIDEO_EDITING_WORKSPACE;
 }
 
 void ProjectPageModel::toggleDock(const QString& name)

@@ -8,6 +8,7 @@ set(WORKSPACE_FILES
     Classic.mws
     Music.mws
     Modern.mws
+    "Video Editing.mws"
 )
 
 set(WORKSPACE_INSTALL_LOCATION "${MUSE_APP_INSTALL_RESOURCES_LOCATION}workspaces")
