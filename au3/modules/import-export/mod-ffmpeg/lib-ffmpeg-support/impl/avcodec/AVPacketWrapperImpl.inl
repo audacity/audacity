@@ -184,7 +184,8 @@ public:
       if (mAVPacket == nullptr)
          return;
 
-      mFFmpeg.av_rescale_q(mAVPacket->pts, { bq.num, bq.den }, { cq.num, cq.den });
+      if (mAVPacket->pts != AV_NOPTS_VALUE)
+         mAVPacket->pts = mFFmpeg.av_rescale_q(mAVPacket->pts, { bq.num, bq.den }, { cq.num, cq.den });
    }
    void RescaleDecompressionTimestamp(AudacityAVRational bq, AudacityAVRational cq)
    noexcept override
@@ -192,7 +193,8 @@ public:
       if (mAVPacket == nullptr)
          return;
 
-      mFFmpeg.av_rescale_q(mAVPacket->dts, { bq.num, bq.den }, { cq.num, cq.den });
+      if (mAVPacket->dts != AV_NOPTS_VALUE)
+         mAVPacket->dts = mFFmpeg.av_rescale_q(mAVPacket->dts, { bq.num, bq.den }, { cq.num, cq.den });
    }
    void RescaleDuration(AudacityAVRational bq, AudacityAVRational cq)
    noexcept override
@@ -200,7 +202,8 @@ public:
       if (mAVPacket == nullptr)
          return;
 
-      mFFmpeg.av_rescale_q(mAVPacket->duration, { bq.num, bq.den }, { cq.num, cq.den });
+      if (mAVPacket->duration != 0)
+         mAVPacket->duration = static_cast<int>(mFFmpeg.av_rescale_q(mAVPacket->duration, { bq.num, bq.den }, { cq.num, cq.den }));
    }
 };
 
@@ -210,4 +213,3 @@ std::unique_ptr<AVPacketWrapper> CreateAVPacketWrapper(const FFmpegFunctions& fn
 {
    return std::make_unique<AVPacketWrapperImpl>(fns);
 }
-

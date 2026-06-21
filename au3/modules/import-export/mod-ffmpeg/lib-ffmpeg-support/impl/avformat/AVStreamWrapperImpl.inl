@@ -255,6 +255,22 @@ public:
 #endif
    }
 
+   int CopyParametersFrom(const AVStreamWrapper& source) noexcept override
+   {
+      if (mAVStream == nullptr || source.GetWrappedValue() == nullptr)
+         return -1;
+
+#if LIBAVFORMAT_VERSION_MAJOR <= 58
+      return -1;
+#else
+      if (mFFmpeg.avcodec_parameters_copy == nullptr)
+         return -1;
+
+      return mFFmpeg.avcodec_parameters_copy(
+         mAVStream->codecpar, source.GetWrappedValue()->codecpar);
+#endif
+   }
+
 private:
    const bool mForEncoding;
 };

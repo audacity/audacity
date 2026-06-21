@@ -45,7 +45,7 @@ set(MODULE_SRC
 
 set(MODULE_QML_IMPORT ${CMAKE_CURRENT_LIST_DIR}/qml )
 
-set(MODULE_LINK au3wrap)
+set(MODULE_LINK au3wrap videopreview)
 
 set(MODULE_USE_UNITY OFF)
 
