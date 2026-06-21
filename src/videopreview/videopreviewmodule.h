@@ -9,7 +9,6 @@
 #include "modularity/imodulesetup.h"
 
 namespace au::videopreview {
-
 class VideoPreviewService;
 
 class VideoPreviewModule : public muse::modularity::IModuleSetup

@@ -15,7 +15,6 @@
 #include "videopreviewtypes.h"
 
 namespace au::videopreview {
-
 class IVideoPreviewService : MODULE_EXPORT_INTERFACE
 {
     INTERFACE_ID(IVideoPreviewService)
@@ -25,8 +24,7 @@ public:
 
     virtual void init() = 0;
 
-    virtual void linkImportedVideo(const muse::io::path_t& sourcePath,
-                                   const std::vector<au::trackedit::Clip>& clips,
+    virtual void linkImportedVideo(const muse::io::path_t& sourcePath, const std::vector<au::trackedit::Clip>& clips,
                                    double sourceOriginProjectTime) = 0;
 
     virtual void setProjectTime(double seconds) = 0;

@@ -11,7 +11,6 @@
 #include "../ivideopreviewservice.h"
 
 namespace au::videopreview {
-
 class VideoPreviewModel : public QObject, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT

@@ -513,7 +513,8 @@ void VideoPreviewService::notifyTrackeditAboutLinksChange(const VideoLinks& oldL
 
 void VideoPreviewService::notifyTrackeditAboutLinkChange(const VideoLink& oldLink, const VideoLink& newLink)
 {
-    const au::trackedit::ITrackeditProjectPtr project = m_trackeditProject ? m_trackeditProject : globalContext()->currentTrackeditProject();
+    const au::trackedit::ITrackeditProjectPtr project
+        = m_trackeditProject ? m_trackeditProject : globalContext()->currentTrackeditProject();
     if (!project) {
         return;
     }

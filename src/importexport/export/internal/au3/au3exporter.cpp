@@ -1168,7 +1168,7 @@ muse::Ret Au3Exporter::exportData(const muse::io::path_t& path, const Options& o
 
     const VideoEncodingOptions encodingOptions = videoEncodingOptions(options);
     const LinkedVideoExport videoExport = linkedVideoExport(videoPreviewService().get(), *m_plugin, formatIdx, processType, wxfilename,
-                                                           encodingOptions);
+                                                            encodingOptions);
     if (processType == ExportProcessType::FULL_PROJECT_AUDIO_AND_VIDEO && !videoExport.enabled) {
         return muse::make_ret(muse::Ret::Code::InternalError,
                               muse::trc("export", "No linked video is available for video export."));
@@ -1313,7 +1313,7 @@ muse::Ret Au3Exporter::exportData(const muse::io::path_t& path, const Options& o
                                            ? encodeLinkedVideo(videoExport.link, videoExport.sourceVideoFilename, videoExport.audioFilename,
                                                                videoExport.targetFilename, videoExport.encodingOptions)
                                            : remuxLinkedVideo(videoExport.link, videoExport.sourceVideoFilename, videoExport.audioFilename,
-                                                             videoExport.targetFilename);
+                                                              videoExport.targetFilename);
             ::wxRemoveFile(videoExport.audioFilename.GetFullPath());
             if (!remuxError.empty()) {
                 ::wxRemoveFile(videoExport.targetFilename.GetFullPath());

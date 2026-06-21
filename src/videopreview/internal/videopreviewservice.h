@@ -25,16 +25,11 @@
 class AudacityProject;
 
 namespace au::videopreview {
-
 class VideoLinkStorage;
 struct VideoDecodeResult;
 
-class VideoPreviewService : public QObject,
-                            public IVideoPreviewService,
-                            public trackedit::IAuxiliaryTrackProvider,
-                            public muse::async::Asyncable,
-                            public muse::Contextable,
-                            public std::enable_shared_from_this<VideoPreviewService>
+class VideoPreviewService : public QObject, public IVideoPreviewService, public trackedit::IAuxiliaryTrackProvider,
+    public muse::async::Asyncable, public muse::Contextable, public std::enable_shared_from_this<VideoPreviewService>
 {
     Q_OBJECT
 
@@ -47,8 +42,7 @@ public:
 
     void init() override;
 
-    void linkImportedVideo(const muse::io::path_t& sourcePath,
-                           const std::vector<au::trackedit::Clip>& clips,
+    void linkImportedVideo(const muse::io::path_t& sourcePath, const std::vector<au::trackedit::Clip>& clips,
                            double sourceOriginProjectTime) override;
 
     void setProjectTime(double seconds) override;
@@ -127,8 +121,7 @@ private:
     void updateSegmentMapFromProject(bool refreshUndoState);
 
     std::vector<au::trackedit::Clip> currentClips() const;
-    std::optional<VideoSegment> segmentForClip(const au::trackedit::Clip& clip,
-                                               const std::vector<VideoSegment>& sourceSegments) const;
+    std::optional<VideoSegment> segmentForClip(const au::trackedit::Clip& clip, const std::vector<VideoSegment>& sourceSegments) const;
     const VideoLink* linkForTrack(trackedit::TrackId trackId) const;
     VideoLink* linkForTrack(VideoLinks& links, trackedit::TrackId trackId) const;
     const VideoLink* linkForClip(const trackedit::ClipKey& key) const;

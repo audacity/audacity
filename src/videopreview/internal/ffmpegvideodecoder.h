@@ -10,7 +10,6 @@
 #include "../videopreviewtypes.h"
 
 namespace au::videopreview {
-
 struct VideoProbeResult
 {
     VideoPreviewState state = VideoPreviewState::Empty;

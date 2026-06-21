@@ -16,7 +16,6 @@
 #include "../ivideopreviewservice.h"
 
 namespace au::videopreview {
-
 class VideoClipThumbnailsItem : public QQuickPaintedItem, public muse::async::Asyncable, public muse::Contextable
 {
     Q_OBJECT

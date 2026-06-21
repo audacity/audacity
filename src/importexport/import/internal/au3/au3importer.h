@@ -43,8 +43,7 @@ private:
     void applyImportedProjectTitleIfNeeded(const muse::io::path_t& filePath);
     void addImportedTracks(const muse::io::path_t& fileName, TrackHolders&& newTracks, std::vector<WaveTrack*>* outWaveTracks = nullptr);
     std::vector<trackedit::Clip> importedClipsForTracks(const std::vector<trackedit::TrackId>& trackIds) const;
-    void linkImportedVideoIfPresent(const muse::io::path_t& filePath,
-                                    const std::vector<trackedit::Clip>& clips,
+    void linkImportedVideoIfPresent(const muse::io::path_t& filePath, const std::vector<trackedit::Clip>& clips,
                                     double sourceOriginProjectTime);
 
     const std::unique_ptr<TempoDetection> m_tempoDetection;

@@ -11,7 +11,6 @@
 #include "trackedit/dom/track.h"
 
 namespace au::videopreview {
-
 enum class VideoPreviewState
 {
     Empty,

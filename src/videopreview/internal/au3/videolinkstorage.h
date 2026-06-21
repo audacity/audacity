@@ -13,7 +13,6 @@ class AudacityProject;
 class XMLWriter;
 
 namespace au::videopreview {
-
 class VideoLinkStorage final : public ClientData::Base, public XMLTagHandler
 {
 public:

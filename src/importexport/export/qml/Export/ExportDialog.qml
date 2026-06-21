@@ -16,8 +16,7 @@ import "internal"
 StyledDialogView {
     id: root
 
-    title: exportPreferencesModel.videoExport ? qsTrc("export", "Export audio and video")
-                                              : qsTrc("export", "Export audio")
+    title: exportPreferencesModel.videoExport ? qsTrc("export", "Export audio and video") : qsTrc("export", "Export audio")
 
     contentWidth: 612
     contentHeight: 600
@@ -228,8 +227,7 @@ StyledDialogView {
                         StyledTextLabel {
                             id: formatLabel
 
-                            text: exportPreferencesModel.videoExport ? qsTrc("export", "Audio format")
-                                                                     : qsTrc("export", "Format")
+                            text: exportPreferencesModel.videoExport ? qsTrc("export", "Audio format") : qsTrc("export", "Format")
 
                             anchors.verticalCenter: parent.verticalCenter
                         }
