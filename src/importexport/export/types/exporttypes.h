@@ -5,6 +5,8 @@
 
 #include <qobjectdefs.h>
 #include <string>
+#include <tuple>
+#include <variant>
 #include <vector>
 
 namespace au::importexport {
@@ -50,6 +52,8 @@ using OptionValue = std::variant<
     int,
     double,
     std::string>;
+
+using ExportParameters = std::vector<std::tuple<int, OptionValue> >;
 
 struct ExportOption
 {
