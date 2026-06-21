@@ -22,7 +22,7 @@ class ExportProcessorDelegate;
 class Exporter;
 
 namespace ExportProgressUI {
-IMPORT_EXPORT_API ExportResult Show(ExportTask exportTask);
+IMPORT_EXPORT_API ExportResult Show(ExportTask exportTask, bool honorLateCancellation = false);
 
 template<typename Callable>
 void ExceptionWrappedCall(Callable callable)

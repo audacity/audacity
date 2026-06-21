@@ -144,6 +144,13 @@ endif()
 set(MODULE_LINK
         au3wrap
         au3-tags
+        au3-import-export
+        au3-effects
+        au3-mixer
+        au3-project
+        au3-track
+        au3-wave-track
+        exporter
         Qt::Widgets
         Qt::Quick
 )

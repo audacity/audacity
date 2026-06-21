@@ -29,6 +29,7 @@
 #include "project/iprojectfilescontroller.h"
 #include "project/iaudacityproject.h"
 #include "multiwindows/imultiwindowsprovider.h"
+#include "record/irecordcontroller.h"
 
 namespace au::project {
 class ProjectActionsController : public IProjectFilesController, public muse::rcommand::Commandable, public muse::async::Asyncable,
@@ -52,6 +53,7 @@ class ProjectActionsController : public IProjectFilesController, public muse::rc
     muse::ContextInject<IOpenSaveProjectScenario> openSaveProjectScenario { this };
     muse::ContextInject<trackedit::IProjectHistory> projectHistory { this };
     muse::ContextInject<importexport::IImporter> importer { this };
+    muse::ContextInject<record::IRecordController> recordController { this };
     muse::ContextInject<au3cloud::IAu3AudioComService> audioComService { this };
     muse::ContextInject<effects::IMissingEffectChecker> missingEffectChecker { this };
 
@@ -118,6 +120,7 @@ private:
     muse::Ret clearRecentProjects();
 
     muse::Ret exportAudio();
+    muse::Ret exportOverwriteOriginal();
     muse::Ret exportLabels(const muse::rcommand::Params& params);
     muse::Ret exportMIDI();
 

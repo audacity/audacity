@@ -12,6 +12,7 @@
 
 #include "context/iglobalcontext.h"
 #include "record/irecordcontroller.h"
+#include "trackedit/iprojecthistory.h"
 
 namespace au::project {
 class ProjectCommandsState : public muse::rcommand::IModuleCommandsState, public muse::Contextable, public muse::async::Asyncable
@@ -19,6 +20,7 @@ class ProjectCommandsState : public muse::rcommand::IModuleCommandsState, public
     muse::GlobalInject<muse::rcommand::ICommandsRegister> commandsRegister;
     muse::ContextInject<au::context::IGlobalContext> globalContext{ this };
     muse::ContextInject<record::IRecordController> recordController{ this };
+    muse::ContextInject<trackedit::IProjectHistory> projectHistory{ this };
 
 public:
     ProjectCommandsState(const muse::modularity::ContextPtr& ctx)
