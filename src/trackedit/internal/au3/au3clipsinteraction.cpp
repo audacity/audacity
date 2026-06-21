@@ -1391,8 +1391,8 @@ bool Au3ClipsInteraction::trimClipsLeft(const ClipKeyList& clipKeys, secs_t delt
         }
 
         if (completed) {
-            auto ok = makeRoomForClip(selectedClip);
-            if (!ok) {
+            auto roomOk = makeRoomForClip(selectedClip);
+            if (!roomOk) {
                 return false;
             }
         }
@@ -1429,8 +1429,8 @@ bool Au3ClipsInteraction::trimClipsRight(const ClipKeyList& clipKeys, secs_t del
         }
 
         if (completed) {
-            auto ok = makeRoomForClip(selectedClip);
-            if (!ok) {
+            auto roomOk = makeRoomForClip(selectedClip);
+            if (!roomOk) {
                 make_ret(trackedit::Err::FailedToMakeRoomForClip);
             }
         }
@@ -1452,8 +1452,9 @@ bool Au3ClipsInteraction::stretchClipsLeft(const ClipKeyList& clipKeys, secs_t d
     const ClipKeyList auxiliaryKeys = filterAuxiliaryClips(auxiliaryTrackProvider(), clipKeys, true);
     const ClipKeyList audioKeys = filterAuxiliaryClips(auxiliaryTrackProvider(), clipKeys, false);
 
+    bool ok = false;
     if (!auxiliaryKeys.empty()) {
-        auxiliaryTrackProvider()->trimClipsLeft(auxiliaryKeys, adjustedDelta, minClipDuration, completed);
+        ok = auxiliaryTrackProvider()->stretchClipsLeft(auxiliaryKeys, adjustedDelta, minClipDuration, completed);
     }
 
     for (const auto& selectedClip : audioKeys) {
@@ -1468,8 +1469,8 @@ bool Au3ClipsInteraction::stretchClipsLeft(const ClipKeyList& clipKeys, secs_t d
         }
 
         if (completed) {
-            auto ok = makeRoomForClip(selectedClip);
-            if (!ok) {
+            auto roomOk = makeRoomForClip(selectedClip);
+            if (!roomOk) {
                 return false;
             }
         }
@@ -1480,9 +1481,10 @@ bool Au3ClipsInteraction::stretchClipsLeft(const ClipKeyList& clipKeys, secs_t d
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
         clipGainInteraction()->clipGainChanged().send(selectedClip, completed);
+        ok = true;
     }
 
-    return true;
+    return ok;
 }
 
 bool Au3ClipsInteraction::stretchClipsRight(const ClipKeyList& clipKeys, secs_t deltaSec, secs_t minClipDuration, bool completed)
@@ -1492,8 +1494,9 @@ bool Au3ClipsInteraction::stretchClipsRight(const ClipKeyList& clipKeys, secs_t 
     const ClipKeyList auxiliaryKeys = filterAuxiliaryClips(auxiliaryTrackProvider(), clipKeys, true);
     const ClipKeyList audioKeys = filterAuxiliaryClips(auxiliaryTrackProvider(), clipKeys, false);
 
+    bool ok = false;
     if (!auxiliaryKeys.empty()) {
-        auxiliaryTrackProvider()->trimClipsRight(auxiliaryKeys, adjustedDelta, minClipDuration, completed);
+        ok = auxiliaryTrackProvider()->stretchClipsRight(auxiliaryKeys, adjustedDelta, minClipDuration, completed);
     }
 
     for (const auto& selectedClip : audioKeys) {
@@ -1508,8 +1511,8 @@ bool Au3ClipsInteraction::stretchClipsRight(const ClipKeyList& clipKeys, secs_t 
         }
 
         if (completed) {
-            auto ok = makeRoomForClip(selectedClip);
-            if (!ok) {
+            auto roomOk = makeRoomForClip(selectedClip);
+            if (!roomOk) {
                 make_ret(trackedit::Err::FailedToMakeRoomForClip);
             }
         }
@@ -1520,9 +1523,10 @@ bool Au3ClipsInteraction::stretchClipsRight(const ClipKeyList& clipKeys, secs_t 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         prj->notifyAboutClipChanged(DomConverter::clip(waveTrack, clip.get()));
         clipGainInteraction()->clipGainChanged().send(selectedClip, completed);
+        ok = true;
     }
 
-    return true;
+    return ok;
 }
 
 bool Au3ClipsInteraction::doChangeClipSpeed(const ClipKey& clipKey, double speed)

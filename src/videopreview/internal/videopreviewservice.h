@@ -93,8 +93,13 @@ public:
                        bool completed) override;
     bool trimClipsRight(const trackedit::ClipKeyList& clipKeyList, trackedit::secs_t deltaSec, trackedit::secs_t minClipDuration,
                         bool completed) override;
+    bool stretchClipsLeft(const trackedit::ClipKeyList& clipKeyList, trackedit::secs_t deltaSec, trackedit::secs_t minClipDuration,
+                          bool completed) override;
+    bool stretchClipsRight(const trackedit::ClipKeyList& clipKeyList, trackedit::secs_t deltaSec, trackedit::secs_t minClipDuration,
+                           bool completed) override;
     bool singleClipOnTrack(trackedit::TrackId trackId) const override;
 
+    bool trimTracksData(const trackedit::TrackIdList& tracksIds, trackedit::secs_t begin, trackedit::secs_t end) override;
     bool removeTracksData(const trackedit::TrackIdList& tracksIds, trackedit::secs_t begin, trackedit::secs_t end, bool moveClips) override;
     bool splitTracksAt(const trackedit::TrackIdList& tracksIds, std::vector<trackedit::secs_t> pivots) override;
     bool deleteTracks(const trackedit::TrackIdList& trackIds) override;

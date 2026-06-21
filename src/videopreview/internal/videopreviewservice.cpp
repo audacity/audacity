@@ -381,7 +381,9 @@ au::trackedit::Clips VideoPreviewService::videoClips(const VideoLink& link) cons
         clip.startTime = segment.projectStart;
         clip.endTime = segment.projectEnd;
         clip.stereo = false;
-        clip.speed = 1.0;
+        const double sourceDuration = duration(segment.sourceStart, segment.sourceEnd);
+        const double projectDuration = duration(segment.projectStart, segment.projectEnd);
+        clip.speed = sourceDuration > EPS ? projectDuration / sourceDuration : 1.0;
         clips.push_back(std::move(clip));
     }
 
@@ -980,9 +982,122 @@ bool VideoPreviewService::trimClipsRight(const au::trackedit::ClipKeyList& clipK
     return changed;
 }
 
+bool VideoPreviewService::stretchClipsLeft(const au::trackedit::ClipKeyList& clipKeyList, au::trackedit::secs_t deltaSec,
+                                           au::trackedit::secs_t minClipDuration, bool completed)
+{
+    if (clipKeyList.empty() || !m_link.isValid()) {
+        return false;
+    }
+
+    VideoLink link = m_link;
+    bool changed = false;
+    const double minimumDuration = std::max(EPS, minClipDuration.to_double());
+
+    for (VideoSegment& segment : link.segments) {
+        if (std::find(clipKeyList.begin(), clipKeyList.end(), segment.clipKey) == clipKeyList.end()) {
+            continue;
+        }
+
+        double delta = deltaSec.to_double();
+        const double maxShrink = std::max(0.0, duration(segment.projectStart, segment.projectEnd) - minimumDuration);
+        delta = std::min(delta, maxShrink);
+        if (segment.projectStart + delta < 0.0) {
+            delta = -segment.projectStart;
+        }
+
+        if (std::abs(delta) <= EPS) {
+            continue;
+        }
+
+        segment.projectStart += delta;
+        changed = true;
+    }
+
+    if (changed) {
+        commitLink(std::move(link), completed);
+    }
+    return changed;
+}
+
+bool VideoPreviewService::stretchClipsRight(const au::trackedit::ClipKeyList& clipKeyList, au::trackedit::secs_t deltaSec,
+                                            au::trackedit::secs_t minClipDuration, bool completed)
+{
+    if (clipKeyList.empty() || !m_link.isValid()) {
+        return false;
+    }
+
+    VideoLink link = m_link;
+    bool changed = false;
+    const double minimumDuration = std::max(EPS, minClipDuration.to_double());
+
+    for (VideoSegment& segment : link.segments) {
+        if (std::find(clipKeyList.begin(), clipKeyList.end(), segment.clipKey) == clipKeyList.end()) {
+            continue;
+        }
+
+        double delta = deltaSec.to_double();
+        const double maxShrink = std::max(0.0, duration(segment.projectStart, segment.projectEnd) - minimumDuration);
+        delta = std::min(delta, maxShrink);
+
+        if (std::abs(delta) <= EPS) {
+            continue;
+        }
+
+        segment.projectEnd -= delta;
+        changed = true;
+    }
+
+    if (changed) {
+        commitLink(std::move(link), completed);
+    }
+    return changed;
+}
+
 bool VideoPreviewService::singleClipOnTrack(au::trackedit::TrackId trackId) const
 {
     return hasTrack(trackId) && videoClips(m_link).size() == 1;
+}
+
+bool VideoPreviewService::trimTracksData(const au::trackedit::TrackIdList& tracksIds, au::trackedit::secs_t begin,
+                                         au::trackedit::secs_t end)
+{
+    if (std::find(tracksIds.begin(), tracksIds.end(), VIDEO_TRACK_ID) == tracksIds.end() || !m_link.isValid()) {
+        return false;
+    }
+
+    const double beginTime = begin.to_double();
+    const double endTime = end.to_double();
+    if (duration(beginTime, endTime) <= EPS) {
+        return false;
+    }
+
+    VideoLink link = m_link;
+    std::vector<VideoSegment> nextSegments;
+    nextSegments.reserve(link.segments.size());
+
+    for (const VideoSegment& segment : link.segments) {
+        if (segment.projectEnd <= beginTime + EPS || segment.projectStart >= endTime - EPS) {
+            continue;
+        }
+
+        VideoSegment trimmed = segment;
+        if (trimmed.projectStart < beginTime) {
+            trimmed.sourceStart = sourceAtProjectTime(segment, beginTime);
+            trimmed.projectStart = beginTime;
+        }
+        if (trimmed.projectEnd > endTime) {
+            trimmed.sourceEnd = sourceAtProjectTime(segment, endTime);
+            trimmed.projectEnd = endTime;
+        }
+
+        if (trimmed.isValid()) {
+            nextSegments.push_back(std::move(trimmed));
+        }
+    }
+
+    link.segments = std::move(nextSegments);
+    commitLink(std::move(link), true);
+    return true;
 }
 
 bool VideoPreviewService::removeTracksData(const au::trackedit::TrackIdList& tracksIds, au::trackedit::secs_t begin,

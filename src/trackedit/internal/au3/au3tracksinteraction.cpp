@@ -67,7 +67,23 @@ au::context::IPlaybackStatePtr Au3TracksInteraction::playbackState() const
 
 bool Au3TracksInteraction::trimTracksData(const std::vector<TrackId>& tracksIds, secs_t begin, secs_t end)
 {
+    TrackIdList auxiliaryTrackIds;
+    if (auxiliaryTrackProvider()) {
+        std::copy_if(tracksIds.begin(), tracksIds.end(), std::back_inserter(auxiliaryTrackIds), [this](TrackId trackId) {
+            return auxiliaryTrackProvider()->hasTrack(trackId);
+        });
+    }
+
+    bool ok = auxiliaryTrackIds.empty();
+    if (!auxiliaryTrackIds.empty()) {
+        ok = auxiliaryTrackProvider()->trimTracksData(auxiliaryTrackIds, begin, end);
+    }
+
     for (TrackId trackId : tracksIds) {
+        if (muse::contains(auxiliaryTrackIds, trackId)) {
+            continue;
+        }
+
         Au3WaveTrack* waveTrack = DomAccessor::findWaveTrack(projectRef(), Au3TrackId(trackId));
         IF_ASSERT_FAILED(waveTrack) {
             continue;
@@ -77,9 +93,10 @@ bool Au3TracksInteraction::trimTracksData(const std::vector<TrackId>& tracksIds,
 
         trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
         prj->notifyAboutTrackChanged(DomConverter::track(waveTrack));
+        ok = true;
     }
 
-    return true;
+    return ok;
 }
 
 bool Au3TracksInteraction::silenceTracksData(const std::vector<trackedit::TrackId>& tracksIds, secs_t begin, secs_t end)

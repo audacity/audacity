@@ -51,8 +51,11 @@ public:
                                                 bool completed, bool& clipsMovedToOtherTracks) = 0;
     virtual bool trimClipsLeft(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed) = 0;
     virtual bool trimClipsRight(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed) = 0;
+    virtual bool stretchClipsLeft(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed) = 0;
+    virtual bool stretchClipsRight(const ClipKeyList& clipKeyList, secs_t deltaSec, secs_t minClipDuration, bool completed) = 0;
     virtual bool singleClipOnTrack(TrackId trackId) const = 0;
 
+    virtual bool trimTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end) = 0;
     virtual bool removeTracksData(const TrackIdList& tracksIds, secs_t begin, secs_t end, bool moveClips) = 0;
     virtual bool splitTracksAt(const TrackIdList& tracksIds, std::vector<secs_t> pivots) = 0;
     virtual bool deleteTracks(const TrackIdList& trackIds) = 0;
