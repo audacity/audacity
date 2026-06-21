@@ -41,6 +41,10 @@ public:
     TranslatableString GetFileDescription() override;
     double GetDuration() const override;
     int GetRequiredTrackCount() const override;
+    ImportSourceFormat GetSourceFormat() const override
+    {
+        return op_link_count(mOpusFile) == 1 ? ImportSourceFormat { wxT("Opus") } : ImportSourceFormat {};
+    }
     ByteCount GetFileUncompressedBytes() override;
     void Import(
         ImportProgressListener& progressListener, WaveTrackFactory* trackFactory, TrackHolders& outTracks, Tags* tags,

@@ -3,9 +3,11 @@
  */
 #include <gtest/gtest.h>
 
+#include <QFile>
 #include <QTemporaryDir>
 
 #include <algorithm>
+#include <array>
 #include <cstdint>
 #include <cstdlib>
 #include <fstream>
@@ -26,14 +28,18 @@
 #include "au3-import-export/ExportUtils.h"
 #include "au3-import-export/Import.h"
 #include "au3-import-export/ImportPlugin.h"
+#include "au3-import-export/ImportProgressListener.h"
+#include "au3-mixer/MixerOptions.h"
 #include "au3-tags/Tags.h"
 #include "au3-wave-track/WaveTrack.h"
+#include "mod-pcm/ExportPCM.h"
 #include "mod-ffmpeg/FFmpegDefines.h"
 #include "mod-ffmpeg/lib-ffmpeg-support/FFmpegFunctions.h"
 
 #include "au3wrap/au3types.h"
 #include "au3wrap/internal/au3project.h"
 #include "au3wrap/tests/tracktemplatefactory.h"
+#include "importexport/export/OriginalFileInfo.h"
 #include "project/tests/testtools.h"
 
 //! Exports a track with metadata to every format whose exporter writes tags,
@@ -92,6 +98,30 @@ public:
     void OnProgress(double) override {}
 };
 
+class SourceFormatListener final : public ImportProgressListener
+{
+public:
+    bool OnImportFileOpened(ImportFileHandle& file) override
+    {
+        m_handle = &file;
+        format = {};
+        return true;
+    }
+
+    void OnImportProgress(double) override {}
+    void OnImportResult(ImportResult result) override
+    {
+        if (result == ImportResult::Success) {
+            format = m_handle->GetSourceFormat();
+        }
+    }
+
+    ImportSourceFormat format;
+
+private:
+    ImportFileHandle* m_handle = nullptr;
+};
+
 std::vector<uint8_t> readFile(const std::string& path)
 {
     std::ifstream file(path, std::ios::binary);
@@ -141,7 +171,7 @@ std::optional<std::vector<uint8_t> > id3TagStart(const std::string& path, Id3Loc
 }
 }
 
-class MetadataRoundTripTests : public ::testing::TestWithParam<MetadataFormat>
+class ExportTestProject : public ::testing::Test
 {
 public:
     void SetUp() override
@@ -157,6 +187,7 @@ public:
 
         constexpr auto discardAutosave = false;
         ASSERT_TRUE(m_projectAccessor->load(muse::io::path_t(projectPath), discardAutosave));
+        m_projectLoaded = true;
 
         au3::TrackTemplateFactory factory(project(), SAMPLE_RATE);
         factory.addTrackFromTemplate("track", {
@@ -166,6 +197,9 @@ public:
 
     void TearDown() override
     {
+        if (!m_projectLoaded) {
+            return;
+        }
         au3::Au3TrackList::Get(project()).Clear();
         m_projectAccessor->clearSavedState();
         m_projectAccessor->close();
@@ -178,6 +212,231 @@ protected:
         return *reinterpret_cast<au3::Au3Project*>(m_projectAccessor->au3ProjectPtr());
     }
 
+    bool decodeFile(const std::string& path, SourceFormatListener& listener, TrackHolders& tracks)
+    {
+        Tags tags;
+        std::optional<LibFileFormats::AcidizerTags> acidTags;
+        TranslatableString error;
+        return Importer::Get().Import(project(), wxString::FromUTF8(path), &listener, &WaveTrackFactory::Get(project()),
+                                      tracks, &tags, acidTags, error);
+    }
+
+    QTemporaryDir m_dir;
+    std::shared_ptr<au3::Au3ProjectAccessor> m_projectAccessor;
+    bool m_projectLoaded = false;
+};
+
+TEST_F(ExportTestProject, DetectsAndPreservesTheEncodingAndChannelsOfAMislabeledWav)
+{
+    constexpr int channels = 6;
+    constexpr int frames = 256;
+    constexpr int sampleRate = 48000;
+    constexpr int encoding = SF_FORMAT_WAVEX | SF_FORMAT_PCM_24;
+    const auto sourcePath = m_dir.filePath("surround.flac").toStdString();
+    SF_INFO source {};
+    source.channels = channels;
+    source.samplerate = sampleRate;
+    source.format = encoding;
+    auto* sndFile = sf_open(sourcePath.c_str(), SFM_WRITE, &source);
+    ASSERT_NE(sndFile, nullptr);
+    std::array<int, channels> positions {
+        SF_CHANNEL_MAP_LEFT, SF_CHANNEL_MAP_RIGHT, SF_CHANNEL_MAP_CENTER,
+        SF_CHANNEL_MAP_LFE, SF_CHANNEL_MAP_SIDE_LEFT, SF_CHANNEL_MAP_SIDE_RIGHT
+    };
+    const auto layoutStored = sf_command(sndFile, SFC_SET_CHANNEL_MAP_INFO, positions.data(), sizeof(positions));
+    std::array<float, frames* channels> samples;
+    for (size_t i = 0; i < samples.size(); ++i) {
+        samples[i] = (1 + i % channels) / 16.0f + (1 + (i / channels) % 127) / 65536.0f;
+    }
+    const auto written = sf_writef_float(sndFile, samples.data(), frames);
+    ASSERT_EQ(sf_close(sndFile), 0);
+    ASSERT_EQ(layoutStored, SF_TRUE);
+    ASSERT_EQ(written, frames);
+
+    SourceFormatListener listener;
+    auto& projectTracks = TrackList::Get(project());
+    projectTracks.Clear();
+    TrackHolders tracks;
+    ASSERT_TRUE(decodeFile(sourcePath, listener, tracks));
+    EXPECT_EQ(listener.format.exportFormat, wxT("WAV"));
+    EXPECT_EQ(listener.format.pcmFormat, encoding);
+    ASSERT_EQ(listener.format.channelMap.size(), channels);
+    EXPECT_TRUE(std::equal(positions.begin(), positions.end(), listener.format.channelMap.begin()));
+    ASSERT_EQ(tracks.size(), channels);
+    std::vector<int64_t> sourceTrackIds;
+    for (auto& track : tracks) {
+        projectTracks.Add(track);
+        sourceTrackIds.push_back(track->GetId().raw());
+    }
+    OriginalFileInfo original;
+    original.SetSourceChannelTracks(std::move(sourceTrackIds));
+    const auto path = QString::fromStdString(sourcePath);
+    original.SetOriginalFile(path, "surround.flac", OriginalFileInfo::ReadFileVersion(path));
+    original.SetExportFormatID("WAV");
+    original.IncrementImportedFileCount();
+    EXPECT_TRUE(original.CanOverwriteOriginalFile(projectTracks));
+    for (const auto& track : tracks) {
+        static_cast<WaveTrack&>(*track).SetMute(true);
+    }
+    EXPECT_FALSE(original.CanOverwriteOriginalFile(projectTracks));
+    for (const auto& track : tracks) {
+        static_cast<WaveTrack&>(*track).SetMute(false);
+    }
+    ASSERT_TRUE(projectTracks.MoveUp(*tracks.back()));
+    const auto channelMapping = original.MakeChannelMapping(projectTracks);
+    ASSERT_NE(channelMapping, nullptr);
+
+    const auto [plugin, index] = ExportPluginRegistry::Get().FindFormat(listener.format.exportFormat);
+    ASSERT_NE(plugin, nullptr);
+    const auto outputPath = m_dir.filePath("staged.flac").toStdString();
+    auto processor = plugin->CreateProcessor(index);
+    const ExportProcessor::Parameters parameters {
+        { PcmExport::SourceFormat, listener.format.pcmFormat },
+        { PcmExport::SourceChannelMap, std::string(listener.format.channelMap.begin(), listener.format.channelMap.end()) }
+    };
+    ASSERT_TRUE(processor->Initialize(project(), parameters, wxFileNameWrapper { wxFileName(wxString::FromUTF8(outputPath)) }, 0.0,
+                                      static_cast<double>(frames) / sampleRate, false, sampleRate, channels, channelMapping.get(),
+                                      nullptr));
+    NullExportDelegate delegate;
+    ASSERT_EQ(processor->Process(delegate), ExportResult::Success);
+    processor.reset();
+
+    SF_INFO output {};
+    sndFile = sf_open(outputPath.c_str(), SFM_READ, &output);
+    ASSERT_NE(sndFile, nullptr);
+    std::array<int, channels> outputPositions {};
+    const auto layoutRead = sf_command(sndFile, SFC_GET_CHANNEL_MAP_INFO, outputPositions.data(), sizeof(outputPositions));
+    std::array<float, frames* channels> outputSamples {};
+    const auto read = sf_readf_float(sndFile, outputSamples.data(), frames);
+    ASSERT_EQ(sf_close(sndFile), 0);
+    EXPECT_EQ(output.format, encoding);
+    EXPECT_EQ(output.channels, channels);
+    EXPECT_EQ(output.frames, frames);
+    EXPECT_EQ(layoutRead, SF_TRUE);
+    EXPECT_EQ(outputPositions, positions);
+    ASSERT_EQ(read, frames);
+    for (size_t i = 0; i < samples.size(); ++i) {
+        EXPECT_NEAR(outputSamples[i], samples[i], 0.000002) << "sample " << i;
+    }
+}
+
+TEST_F(ExportTestProject, DeclinesOverwriteForPrecisionTheMixerCannotPreserve)
+{
+    const auto sourcePath = m_dir.filePath("double.wav").toStdString();
+    SF_INFO source {};
+    source.channels = 1;
+    source.samplerate = 48000;
+    source.format = SF_FORMAT_WAV | SF_FORMAT_DOUBLE;
+    auto* sndFile = sf_open(sourcePath.c_str(), SFM_WRITE, &source);
+    ASSERT_NE(sndFile, nullptr);
+    constexpr double sample = 0.2500000000001;
+    const auto written = sf_writef_double(sndFile, &sample, 1);
+    ASSERT_EQ(sf_close(sndFile), 0);
+    ASSERT_EQ(written, 1);
+
+    SourceFormatListener listener;
+    TrackHolders tracks;
+    ASSERT_TRUE(decodeFile(sourcePath, listener, tracks));
+    EXPECT_FALSE(tracks.empty());
+    EXPECT_TRUE(listener.format.exportFormat.empty());
+}
+
+TEST_F(ExportTestProject, DeclinesOverwriteForBroadcastWave)
+{
+    const auto path = m_dir.filePath("timestamp.wav").toStdString();
+    SF_INFO source {};
+    source.channels = 1;
+    source.samplerate = 48000;
+    source.format = SF_FORMAT_WAV | SF_FORMAT_PCM_24;
+    auto* file = sf_open(path.c_str(), SFM_WRITE, &source);
+    ASSERT_NE(file, nullptr);
+    SF_BROADCAST_INFO broadcast {};
+    broadcast.time_reference_low = 48000;
+    const auto metadataWritten = sf_command(file, SFC_SET_BROADCAST_INFO, &broadcast, sizeof(broadcast));
+    constexpr float sample = 0.25f;
+    const auto written = sf_writef_float(file, &sample, 1);
+    ASSERT_EQ(sf_close(file), 0);
+    ASSERT_EQ(metadataWritten, SF_TRUE);
+    ASSERT_EQ(written, 1);
+
+    SourceFormatListener listener;
+    TrackHolders tracks;
+    ASSERT_TRUE(decodeFile(path, listener, tracks));
+    EXPECT_FALSE(tracks.empty());
+    EXPECT_TRUE(listener.format.exportFormat.empty());
+}
+
+TEST_F(ExportTestProject, DeclinesOverwriteForWavexWithoutSpeakerAssignments)
+{
+    const auto path = m_dir.filePath("unassigned.wav");
+    SF_INFO source {};
+    source.channels = 2;
+    source.samplerate = 48000;
+    source.format = SF_FORMAT_WAVEX | SF_FORMAT_PCM_24;
+    auto* file = sf_open(path.toStdString().c_str(), SFM_WRITE, &source);
+    ASSERT_NE(file, nullptr);
+    constexpr std::array<float, 2> stereoFrame { 0.25f, 0.5f };
+    const auto written = sf_writef_float(file, stereoFrame.data(), 1);
+    ASSERT_EQ(sf_close(file), 0);
+    ASSERT_EQ(written, 1);
+
+    // libsndfile writes a default speaker mask. Clear dwChannelMask in WAVEFORMATEXTENSIBLE.
+    QFile wav(path);
+    ASSERT_TRUE(wav.open(QIODevice::ReadWrite));
+    const auto formatChunk = wav.readAll().indexOf("fmt ", 12);
+    ASSERT_GE(formatChunk, 12);
+    ASSERT_TRUE(wav.seek(formatChunk + 8 + 20));
+    ASSERT_EQ(wav.write(QByteArray(4, '\0')), 4);
+    wav.close();
+
+    SourceFormatListener listener;
+    TrackHolders tracks;
+    ASSERT_TRUE(decodeFile(path.toStdString(), listener, tracks));
+    EXPECT_FALSE(tracks.empty());
+    EXPECT_TRUE(listener.format.exportFormat.empty());
+}
+
+TEST_F(ExportTestProject, OffersOverwriteOnlyAfterACleanFlacDecode)
+{
+    const auto path = m_dir.filePath("source.flac");
+    SF_INFO source {};
+    source.channels = 1;
+    source.samplerate = 48000;
+    source.format = SF_FORMAT_FLAC | SF_FORMAT_PCM_16;
+    auto* file = sf_open(path.toStdString().c_str(), SFM_WRITE, &source);
+    ASSERT_NE(file, nullptr);
+    const std::vector<short> samples(8192, 4096);
+    const auto written = sf_writef_short(file, samples.data(), samples.size());
+    ASSERT_EQ(sf_close(file), 0);
+    ASSERT_EQ(written, samples.size());
+
+    SourceFormatListener listener;
+    TrackHolders tracks;
+    ASSERT_TRUE(decodeFile(path.toStdString(), listener, tracks));
+    EXPECT_EQ(listener.format.exportFormat, wxT("FLAC"));
+    EXPECT_EQ(listener.format.bitDepth, 16);
+
+    QFile flac(path);
+    ASSERT_TRUE(flac.open(QIODevice::ReadWrite));
+    const auto lastByte = flac.size() - 1;
+    ASSERT_TRUE(flac.seek(lastByte));
+    char crc = 0;
+    ASSERT_EQ(flac.read(&crc, 1), 1);
+    crc ^= 1;
+    ASSERT_TRUE(flac.seek(lastByte));
+    ASSERT_EQ(flac.write(&crc, 1), 1);
+    flac.close();
+
+    tracks.clear();
+    SourceFormatListener damaged;
+    ASSERT_TRUE(decodeFile(path.toStdString(), damaged, tracks));
+    EXPECT_FALSE(tracks.empty());
+    EXPECT_TRUE(damaged.format.exportFormat.empty());
+}
+
+class MetadataRoundTripTests : public ExportTestProject, public ::testing::WithParamInterface<MetadataFormat>
+{
+protected:
     std::string exportPath(const MetadataFormat& format) const
     {
         return m_dir.filePath(QString("metadata.") + format.extension).toStdString();
@@ -275,9 +534,6 @@ protected:
             << errorMessage.Translation().ToStdString();
         EXPECT_FALSE(tracks.empty());
     }
-
-    QTemporaryDir m_dir;
-    std::shared_ptr<au3::Au3ProjectAccessor> m_projectAccessor;
 };
 
 TEST_P(MetadataRoundTripTests, TagsSurviveExportAndImport)

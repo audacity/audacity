@@ -422,13 +422,7 @@ bool WavPackExportProcessor::Initialize(AudacityProject& project,
     config.bytes_per_sample = bitDepth / 8;
     config.float_norm_exp = context.format == floatSample ? 127 : 0;
 
-    if (config.num_channels <= 2) {
-        config.channel_mask = 0x5 - config.num_channels;
-    } else if (config.num_channels <= 18) {
-        config.channel_mask = (1U << config.num_channels) - 1;
-    } else {
-        config.channel_mask = 0x3FFFF;
-    }
+    config.channel_mask = DefaultWavPackChannelMask(config.num_channels);
 
     if (quality == 0) {
         config.flags |= CONFIG_FAST_FLAG;

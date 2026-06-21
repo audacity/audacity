@@ -51,6 +51,8 @@ set(MODULE_LINK
         au3-wave-track
         loop-tempo-estimator
         SndFile::sndfile
+        au3-preferences
+        exporter
 )
 
 set(MODULE_USE_UNITY OFF)

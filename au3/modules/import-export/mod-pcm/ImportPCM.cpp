@@ -63,6 +63,7 @@ public:
     TranslatableString GetFileDescription() override;
     double GetDuration() const override;
     int GetRequiredTrackCount() const override;
+    ImportSourceFormat GetSourceFormat() const override;
     ByteCount GetFileUncompressedBytes() override;
     void Import(
         ImportProgressListener& progressListener, WaveTrackFactory* trackFactory, TrackHolders& outTracks, Tags* tags,
@@ -76,6 +77,7 @@ public:
 
 private:
     SFFile mFile;
+    bool mDecodeComplete = false;
     const SF_INFO mInfo;
     sampleFormat mEffectiveFormat;
     sampleFormat mFormat;
@@ -278,6 +280,50 @@ int PCMImportFileHandle::GetRequiredTrackCount() const
     return ImportUtils::RequiredTrackCountFromChannels(mInfo.channels);
 }
 
+ImportSourceFormat PCMImportFileHandle::GetSourceFormat() const
+{
+    if (!mDecodeComplete) {
+        return {};
+    }
+    const int container = mInfo.format & SF_FORMAT_TYPEMASK;
+    const int encoding = mInfo.format & SF_FORMAT_SUBMASK;
+    if (container == SF_FORMAT_FLAC) {
+        if (encoding == SF_FORMAT_PCM_16) {
+            return { wxT("FLAC"), 0, 16 };
+        }
+        if (encoding == SF_FORMAT_PCM_24) {
+            return { wxT("FLAC"), 0, 24 };
+        }
+        return {};
+    }
+    // The project and mixer use 32-bit float, which cannot keep these encodings' full precision.
+    if (encoding == SF_FORMAT_PCM_32 || encoding == SF_FORMAT_DOUBLE) {
+        return {};
+    }
+    if (container == SF_FORMAT_WAV || container == SF_FORMAT_WAVEX) {
+        SF_BROADCAST_INFO broadcastInfo {};
+        if (SFCall<int>(sf_command, mFile.get(), SFC_GET_BROADCAST_INFO, &broadcastInfo, sizeof(broadcastInfo))) {
+            return {};
+        }
+        std::vector<int> channelMap;
+        if (container == SF_FORMAT_WAVEX) {
+            if (SFCall<int>(sf_command, mFile.get(), SFC_WAVEX_GET_AMBISONIC, nullptr, 0) == SF_AMBISONIC_B_FORMAT) {
+                return {};
+            }
+            channelMap.resize(mInfo.channels);
+            if (!SFCall<int>(sf_command, mFile.get(), SFC_GET_CHANNEL_MAP_INFO, channelMap.data(),
+                             static_cast<int>(channelMap.size() * sizeof(int)))) {
+                return {};
+            }
+        }
+        return { wxT("WAV"), mInfo.format, 0, std::move(channelMap) };
+    }
+    if (container == SF_FORMAT_AIFF) {
+        return { wxT("AIFF"), mInfo.format };
+    }
+    return {};
+}
+
 auto PCMImportFileHandle::GetFileUncompressedBytes() -> ByteCount
 {
     return mInfo.frames * mInfo.channels * SAMPLE_SIZE(mFormat);
@@ -301,6 +347,7 @@ void PCMImportFileHandle::Import(
     std::optional<LibFileFormats::AcidizerTags>& outAcidTags)
 {
     BeginImport();
+    mDecodeComplete = false;
 
     outTracks.clear();
 
@@ -346,6 +393,7 @@ void PCMImportFileHandle::Import(
         }
 
         decltype(fileTotalFrames) framescompleted = 0;
+        bool decodeError = false;
 
         long block;
         do {
@@ -358,10 +406,12 @@ void PCMImportFileHandle::Import(
             else {
                 block = SFCall<sf_count_t>(sf_readf_float, mFile.get(), (float*)srcbuffer.ptr(), block);
             }
+            decodeError = decodeError || SFCall<int>(sf_error, mFile.get()) != SF_ERR_NO_ERROR;
 
             if (block < 0 || block > (long)maxBlock) {
                 wxASSERT(false);
-                block = maxBlock;
+                progressListener.OnImportResult(ImportProgressListener::ImportResult::Error);
+                return;
             }
 
             if (block) {
@@ -393,6 +443,8 @@ void PCMImportFileHandle::Import(
                 progressListener.OnImportProgress(framescompleted.as_double() / fileTotalFrames.as_double());
             }
         } while (block > 0 && !IsCancelled() && !IsStopped());
+
+        mDecodeComplete = !IsCancelled() && !IsStopped() && !decodeError && framescompleted == fileTotalFrames;
     }
 
     if (IsCancelled()) {

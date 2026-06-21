@@ -21,6 +21,7 @@ set(MODULE_TEST_LINK
     au3wrap
     au3-import-export
     au3-import-export-modules
+    au3-mixer
     au3-mod-ffmpeg
     au3-project
     au3-project-history

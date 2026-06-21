@@ -70,6 +70,10 @@ public:
     TranslatableString GetFileDescription() override;
     double GetDuration() const override;
     int GetRequiredTrackCount() const override;
+    ImportSourceFormat GetSourceFormat() const override
+    {
+        return mDecodeComplete ? ImportSourceFormat { wxT("FLAC"), 0, static_cast<int>(mBitsPerSample) } : ImportSourceFormat {};
+    }
     ByteCount GetFileUncompressedBytes() override;
     void Import(
         ImportProgressListener& progressListener, WaveTrackFactory* trackFactory, TrackHolders& outTracks, Tags* tags,
@@ -96,6 +100,7 @@ private:
     FLAC__uint64 mNumSamples;
     FLAC__uint64 mSamplesDone;
     bool mStreamInfoDone;
+    bool mDecodeComplete = false;
     TrackListHolder mTracks;
 };
 
@@ -399,6 +404,7 @@ void FLACImportFileHandle::Import(
     std::optional<LibFileFormats::AcidizerTags>&)
 {
     BeginImport();
+    mDecodeComplete = false;
 
     outTracks.clear();
 
@@ -410,13 +416,13 @@ void FLACImportFileHandle::Import(
 
     mFile->mImportProgressListener = &progressListener;
 
-    // TODO: Vigilant Sentry: Variable res unused after assignment (error code DA1)
-    //    Should check the result.
    #ifdef LEGACY_FLAC
-    bool res = (mFile->process_until_end_of_file() != 0);
+    const bool decoded = mFile->process_until_end_of_file() != 0;
    #else
-    bool res = (mFile->process_until_end_of_stream() != 0);
+    const bool decoded = mFile->process_until_end_of_stream() != 0;
    #endif
+    mDecodeComplete = decoded && !mFile->get_was_error() && !IsStopped() && !IsCancelled()
+                      && (mNumSamples == 0 || mSamplesDone == mNumSamples);
 
     if (IsCancelled()) {
         progressListener.OnImportResult(ImportProgressListener::ImportResult::Cancelled);
