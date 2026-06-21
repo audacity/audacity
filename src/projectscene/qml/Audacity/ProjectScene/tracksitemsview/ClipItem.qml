@@ -10,6 +10,7 @@ import Audacity.Playback
 import Audacity.Spectrogram
 import Audacity.UiComponents
 import Audacity.Automation
+import Audacity.VideoPreview
 
 Rectangle {
     id: root
@@ -73,6 +74,7 @@ Rectangle {
     property real rightVisibleMargin: 0
 
     property bool collapsed: false
+    property bool isVideoClip: false
 
     property bool multiSampleEdit: false
 
@@ -849,6 +851,25 @@ Rectangle {
                     }
                 }
             }
+        }
+
+        VideoClipThumbnailsItem {
+            id: videoThumbnails
+
+            anchors.top: (!root.collapsed && header.visible) ? header.bottom : parent.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+
+            visible: root.isVideoClip
+            clip: true
+
+            trackId: root.clipKey ? root.clipKey.trackId() : -1
+            itemId: root.clipKey ? root.clipKey.itemId() : -1
+            projectStart: root.clipTime ? root.clipTime.startTime : 0
+            projectEnd: root.clipTime ? root.clipTime.endTime : 0
+
+            Component.onCompleted: init()
         }
 
         ColumnLayout {

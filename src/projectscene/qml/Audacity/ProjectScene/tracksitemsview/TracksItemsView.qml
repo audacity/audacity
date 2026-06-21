@@ -895,6 +895,7 @@ Rectangle {
                             canvas: content
 
                             trackId: itemData.trackId
+                            trackType: itemData.trackType
                             trackTitle: itemData.trackTitle
                             trackColor: itemData.color
                             headerHeight: prv.headerHeight

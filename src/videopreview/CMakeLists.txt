@@ -21,6 +21,8 @@ set(MODULE_SRC
 
     ${CMAKE_CURRENT_LIST_DIR}/view/videopreviewitem.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/videopreviewitem.h
+    ${CMAKE_CURRENT_LIST_DIR}/view/videoclipthumbnailsitem.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/view/videoclipthumbnailsitem.h
     ${CMAKE_CURRENT_LIST_DIR}/view/videopreviewmodel.cpp
     ${CMAKE_CURRENT_LIST_DIR}/view/videopreviewmodel.h
 )

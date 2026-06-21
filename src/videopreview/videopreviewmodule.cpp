@@ -9,6 +9,7 @@
 #include "trackedit/iauxiliarytrackprovider.h"
 
 #include "internal/videopreviewservice.h"
+#include "view/videoclipthumbnailsitem.h"
 #include "view/videopreviewitem.h"
 #include "view/videopreviewmodel.h"
 
@@ -35,6 +36,7 @@ void VideoPreviewModule::registerUiTypes()
 {
     qmlRegisterType<VideoPreviewModel>("Audacity.VideoPreview", 1, 0, "VideoPreviewModel");
     qmlRegisterType<VideoPreviewItem>("Audacity.VideoPreview", 1, 0, "VideoPreviewItem");
+    qmlRegisterType<VideoClipThumbnailsItem>("Audacity.VideoPreview", 1, 0, "VideoClipThumbnailsItem");
 }
 
 muse::modularity::IContextSetup* VideoPreviewModule::newContext(const muse::modularity::ContextPtr& ctx) const
