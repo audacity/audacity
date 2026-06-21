@@ -3,12 +3,18 @@
 #include "framework/global/io/path.h"
 
 #include "au3-basic-ui/BasicUI.h"
+#include "importexport/export/OriginalFileInfo.h"
+#include "importexport/export/overwriteoriginalsettings.h"
 #include "au3-stretching-sequence/TempoChange.h"
 #include "au3-track/Track.h"
 #include "au3-wave-track/WaveClip.h"
 #include "au3-wave-track/WaveTrack.h"
 #include "au3-import-export/ImportPlugin.h"
 #include "au3-import-export/ImportProgressListener.h"
+#include "au3-import-export/ExportPlugin.h"
+#include "au3-import-export/ExportPluginRegistry.h"
+#include "au3-import-export/ExportUtils.h"
+#include "au3-preferences/Prefs.h"
 #include "au3-numeric-formats/ProjectTimeSignature.h"
 #include "au3-project/Project.h"
 #include "au3-project-file-io/ProjectFileIO.h"
@@ -23,11 +29,151 @@
 #include "trackedit/internal/au3/au3trackdata.h"
 
 #include "tempodetection.h"
+
+#include <QFileInfo>
+#include <QVariantMap>
+
+#include <algorithm>
+#include <tuple>
+#include <variant>
+
 using au::trackedit::ITrackDataPtr;
 using au::trackedit::Au3TrackData;
 using Au3TrackDataPtr = std::shared_ptr<Au3TrackData>;
 
 using namespace au::au3;
+
+namespace {
+int bitDepthFromSampleFormat(sampleFormat format)
+{
+    if (format == int16Sample) {
+        return 16;
+    }
+    if (format == int24Sample) {
+        return 24;
+    }
+    if (format == floatSample) {
+        return 32;
+    }
+    return 0;
+}
+
+std::tuple<ExportPlugin*, int> findExportFormat(const wxString& formatID, const wxString& extension)
+{
+    if (!formatID.empty()) {
+        auto [plugin, formatIndex] = ExportPluginRegistry::Get().FindFormat(formatID);
+        if (plugin) {
+            return { plugin, formatIndex };
+        }
+    }
+
+    for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
+        const FormatInfo formatInfo = plugin->GetFormatInfo(formatIndex);
+        if (formatInfo.extensions.Index(extension, false) != wxNOT_FOUND) {
+            return { plugin, formatIndex };
+        }
+    }
+
+    return { nullptr, -1 };
+}
+
+au::importexport::ExportParameters exportParametersFor(ExportPlugin& plugin, int formatIndex,
+                                                       const QVariantMap& codecSettings)
+{
+    au::importexport::ExportParameters parameters;
+
+    auto editor = plugin.CreateOptionsEditor(formatIndex, nullptr);
+    if (!editor) {
+        return parameters;
+    }
+
+    if (gPrefs) {
+        editor->Load(*gPrefs);
+    }
+
+    au::importexport::ApplyCodecSettingsToExportOptions(*editor, codecSettings);
+
+    for (const auto& [id, value] : ExportUtils::ParametersFromEditor(*editor)) {
+        parameters.emplace_back(id, std::visit([](const auto& v) -> au::importexport::OptionValue {
+            return v;
+        }, value));
+    }
+
+    return parameters;
+}
+
+void recordOriginalFileImport(AudacityProject& project, const muse::io::path_t& fileName,
+                              const std::vector<WaveTrack*>& importedTracks)
+{
+    auto& fileInfo = OriginalFileInfo::Get(project);
+    const bool captureOriginalFileInfo = fileInfo.GetImportedFileCount() == 0;
+
+    wxFileName fn(wxFromString(fileName.toString()));
+    if (captureOriginalFileInfo) {
+        const QString filePath = QString::fromStdString(fileName.toString().toStdString());
+        const QString displayName = QString::fromStdString(fn.GetFullName().ToStdString());
+        const wxString extension = fn.GetExt();
+        const wxString formatID = extension.Upper();
+        auto [plugin, formatIndex] = findExportFormat(formatID, extension);
+
+        fileInfo.SetOriginalFile(filePath, displayName);
+        fileInfo.SetExportFormatID(QString::fromStdString(plugin
+                                                          ? plugin->GetFormatInfo(formatIndex).format.ToStdString()
+                                                          : formatID.ToStdString()));
+    }
+
+    fileInfo.IncrementImportedFileCount();
+
+    if (!captureOriginalFileInfo) {
+        return;
+    }
+
+    QVariantMap codecSettings;
+    codecSettings.insert("format", fileInfo.GetExportFormatID());
+    codecSettings.insert("fileExtension", QString::fromStdString(fn.GetExt().Lower().ToStdString()));
+
+    int channels = 0;
+    int bitDepth = 0;
+    double sampleRate = 0.0;
+    double importedDuration = 0.0;
+    for (const auto* wt : importedTracks) {
+        if (!wt) {
+            continue;
+        }
+
+        channels = std::max(channels, static_cast<int>(wt->NChannels()));
+        if (sampleRate <= 0.0) {
+            sampleRate = wt->GetRate();
+        }
+        if (bitDepth == 0) {
+            bitDepth = bitDepthFromSampleFormat(wt->GetSampleFormat());
+        }
+        importedDuration = std::max(importedDuration, wt->GetEndTime());
+    }
+
+    if (sampleRate > 0.0) {
+        codecSettings.insert("sampleRate", static_cast<int>(std::lround(sampleRate)));
+    }
+    if (channels > 0) {
+        codecSettings.insert("channels", channels);
+    }
+    if (bitDepth > 0) {
+        codecSettings.insert("bitDepth", bitDepth);
+    }
+
+    const QFileInfo originalFile(fileInfo.GetOriginalFilePath());
+    if (originalFile.exists() && originalFile.size() > 0 && importedDuration > 0.0) {
+        codecSettings.insert("bitRate", static_cast<qlonglong>((originalFile.size() * 8.0) / importedDuration));
+    }
+
+    fileInfo.SetCodecSettings(codecSettings);
+
+    auto [plugin, formatIndex] = findExportFormat(wxString(fileInfo.GetExportFormatID().toStdString()), fn.GetExt());
+    if (plugin) {
+        fileInfo.SetExportParameters(exportParametersFor(*plugin, formatIndex, codecSettings));
+    }
+}
+}
 
 class ImportProgress final : public ImportProgressListener
 {
@@ -239,6 +385,8 @@ bool au::importexport::Au3Importer::importIntoTrack(const muse::io::path_t& file
         return false;
     }
 
+    recordOriginalFileImport(*project, filePath, importedWaveTracks);
+
     applyImportedProjectTitleIfNeeded(filePath);
 
     std::vector<trackedit::TrackId> dstTrackIds(importedWaveTracks.size(), dstTrackId);
@@ -350,7 +498,7 @@ void au::importexport::Au3Importer::addImportedTracks(const muse::io::path_t& fi
     auto& tracks = TrackList::Get(*project);
     auto& projectFileIO = ProjectFileIO::Get(*project);
 
-    std::vector<Track*> results;
+    std::vector<WaveTrack*> results;
 
     wxFileName fn(wxFromString(fileName.toString()));
 
@@ -409,6 +557,8 @@ void au::importexport::Au3Importer::addImportedTracks(const muse::io::path_t& fi
             }
         });
     }
+
+    recordOriginalFileImport(*project, fileName, results);
 
     applyImportedProjectTitleIfNeeded(fileName);
 
