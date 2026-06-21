@@ -30,7 +30,9 @@ public:
         ExportChannels,
         ExportCustomChannelMapping,
         ExportSampleRate,
-        Parameters
+        Parameters,
+        VideoFormat,
+        VideoQuality
     };
 
     using Options = std::map<OptionKey, muse::Val>;

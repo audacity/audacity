@@ -59,12 +59,24 @@ public:
       return {};
    }
 
+   void SetWidth(int width) noexcept override
+   {
+      if (mAVFrame != nullptr)
+         mAVFrame->width = width;
+   }
+
    int GetHeight() const noexcept override
    {
       if (mAVFrame != nullptr)
          return mAVFrame->height;
 
       return {};
+   }
+
+   void SetHeight(int height) noexcept override
+   {
+      if (mAVFrame != nullptr)
+         mAVFrame->height = height;
    }
 
    int GetSamplesCount() const noexcept override
@@ -123,6 +135,12 @@ public:
          return mAVFrame->pts;
 
       return {};
+   }
+
+   void SetPresentationTimestamp(int64_t timestamp) noexcept override
+   {
+      if (mAVFrame != nullptr)
+         mAVFrame->pts = timestamp;
    }
 
    int64_t GetPacketPresentationTimestamp() const noexcept override
@@ -290,6 +308,14 @@ public:
       return {};
    }
 
+   int GetBuffer(int align) noexcept override
+   {
+      if (mAVFrame == nullptr || mFFmpeg.av_frame_get_buffer == nullptr)
+         return -1;
+
+      return mFFmpeg.av_frame_get_buffer(mAVFrame, align);
+   }
+
 private:
    const AVChannelLayoutWrapper* GetChannelLayoutSafe() const noexcept
    {
@@ -322,4 +348,9 @@ CreateAVFrameWrapper(const FFmpegFunctions& ffmpeg)
 AVPixelFormatFwd GetBGRAPixelFormat()
 {
    return AV_PIX_FMT_BGRA;
+}
+
+AVPixelFormatFwd GetYUV420PPixelFormat()
+{
+   return AV_PIX_FMT_YUV420P;
 }

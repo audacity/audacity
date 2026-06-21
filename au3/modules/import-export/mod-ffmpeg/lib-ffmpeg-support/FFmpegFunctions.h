@@ -120,6 +120,7 @@ struct FFMPEG_SUPPORT_API FFmpegFunctions : AVCodecFunctions, AVFormatFunctions,
 
     bool SupportsVideoDecode() const noexcept;
     AVPixelFormatFwd GetBGRAPixelFormat() const noexcept;
+    AVPixelFormatFwd GetYUV420PPixelFormat() const noexcept;
 
     SwsContext* (*sws_getCachedContext)(SwsContext* context, int srcW, int srcH, AVPixelFormatFwd srcFormat,
                                         int dstW, int dstH, AVPixelFormatFwd dstFormat, int flags,

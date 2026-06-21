@@ -506,6 +506,13 @@ AVPixelFormatFwd FFmpegFunctions::GetBGRAPixelFormat() const noexcept
            : 0;
 }
 
+AVPixelFormatFwd FFmpegFunctions::GetYUV420PPixelFormat() const noexcept
+{
+    return mPrivate && mPrivate->UtilFactories.GetYUV420PPixelFormat
+           ? mPrivate->UtilFactories.GetYUV420PPixelFormat()
+           : 0;
+}
+
 std::unique_ptr<AVOutputFormatWrapper>
 FFmpegFunctions::CreateAVOutputFormatWrapper(
     const AVOutputFormat* outputFormat) const

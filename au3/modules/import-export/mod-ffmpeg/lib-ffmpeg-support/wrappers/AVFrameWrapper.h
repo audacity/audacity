@@ -46,7 +46,9 @@ public:
     virtual uint8_t* GetExtendedData(int index) const noexcept = 0;
 
     virtual int GetWidth() const noexcept = 0;
+    virtual void SetWidth(int width) noexcept = 0;
     virtual int GetHeight() const noexcept = 0;
+    virtual void SetHeight(int height) noexcept = 0;
 
     virtual int GetSamplesCount() const noexcept = 0;
     virtual void SetSamplesCount(int count) noexcept = 0;
@@ -58,6 +60,7 @@ public:
 
     virtual AudacityAVRational GetSampleAspectRatio() const noexcept = 0;
     virtual int64_t GetPresentationTimestamp() const noexcept = 0;
+    virtual void SetPresentationTimestamp(int64_t timestamp) noexcept = 0;
     virtual int64_t GetPacketPresentationTimestamp() const noexcept = 0;
     virtual int64_t GetPacketDecompressionTimestamp() const noexcept = 0;
 
@@ -81,6 +84,7 @@ public:
     virtual AVDictionaryWrapper GetMetadata() const noexcept = 0;
     virtual int GetDecodeErrorFlags() const noexcept = 0;
     virtual int GetChannels() const noexcept = 0;
+    virtual int GetBuffer(int align) noexcept = 0;
 protected:
     const FFmpegFunctions& mFFmpeg;
     AVFrame* mAVFrame { nullptr };

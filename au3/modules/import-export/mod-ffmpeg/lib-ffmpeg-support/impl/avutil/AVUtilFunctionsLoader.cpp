@@ -32,6 +32,7 @@ bool LoadAVUtilFunctions(
     RESOLVE(av_rescale_q);
     RESOLVE(av_frame_alloc);
     RESOLVE(av_frame_free);
+    GET_SYMBOL(av_frame_get_buffer);
     RESOLVE(av_samples_get_buffer_size);
     RESOLVE(av_strerror);
 

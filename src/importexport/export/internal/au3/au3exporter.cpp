@@ -9,7 +9,9 @@
 #include <cctype>
 #include <cmath>
 #include <optional>
+#include <string>
 #include <string_view>
+#include <vector>
 
 #include <wx/filefn.h>
 
@@ -50,6 +52,7 @@ using au::videopreview::VideoSegment;
 
 namespace {
 constexpr double EPS = 1e-7;
+constexpr int VIDEO_TIME_BASE = 90000;
 
 struct ExportFormatRef
 {
@@ -59,6 +62,25 @@ struct ExportFormatRef
     bool isValid() const
     {
         return plugin && formatIndex >= 0;
+    }
+};
+
+enum class VideoOutputFormat
+{
+    SameAsOriginal,
+    Mp4,
+    WebM,
+    Av1
+};
+
+struct VideoEncodingOptions
+{
+    VideoOutputFormat format = VideoOutputFormat::SameAsOriginal;
+    int targetBitRate = 6000000;
+
+    bool encodeVideo() const
+    {
+        return format != VideoOutputFormat::SameAsOriginal;
     }
 };
 
@@ -96,6 +118,83 @@ bool isVideoContainerExtension(const wxString& extension)
 
     const std::string ext = lowerAscii(extension.ToStdString());
     return std::find(videoExtensions.begin(), videoExtensions.end(), ext) != videoExtensions.end();
+}
+
+VideoOutputFormat videoOutputFormatFromCode(const std::string& code)
+{
+    if (code == "mp4") {
+        return VideoOutputFormat::Mp4;
+    }
+
+    if (code == "webm") {
+        return VideoOutputFormat::WebM;
+    }
+
+    if (code == "av1") {
+        return VideoOutputFormat::Av1;
+    }
+
+    return VideoOutputFormat::SameAsOriginal;
+}
+
+int videoTargetBitRateFromQualityCode(const std::string& code)
+{
+    if (code == "low") {
+        return 2500000;
+    }
+
+    if (code == "high") {
+        return 12000000;
+    }
+
+    return 6000000;
+}
+
+VideoEncodingOptions videoEncodingOptions(const IExporter::Options& options)
+{
+    VideoEncodingOptions result;
+
+    if (options.count(IExporter::OptionKey::VideoFormat)) {
+        result.format = videoOutputFormatFromCode(options.at(IExporter::OptionKey::VideoFormat).toString());
+    }
+
+    if (options.count(IExporter::OptionKey::VideoQuality)) {
+        result.targetBitRate = videoTargetBitRateFromQualityCode(options.at(IExporter::OptionKey::VideoQuality).toString());
+    }
+
+    return result;
+}
+
+std::vector<const char*> videoEncoderCandidates(VideoOutputFormat format)
+{
+    switch (format) {
+    case VideoOutputFormat::Mp4:
+        return { "libx264", "h264" };
+    case VideoOutputFormat::WebM:
+        return { "libvpx-vp9", "vp9", "libvpx" };
+    case VideoOutputFormat::Av1:
+        return { "libaom-av1", "libsvtav1", "av1" };
+    case VideoOutputFormat::SameAsOriginal:
+        break;
+    }
+
+    return {};
+}
+
+std::unique_ptr<AVCodecWrapper> createVideoEncoder(FFmpegFunctions& ffmpeg, VideoOutputFormat format)
+{
+    if (!ffmpeg.av_codec_is_encoder) {
+        return {};
+    }
+
+    for (const char* name : videoEncoderCandidates(format)) {
+        std::unique_ptr<AVCodecWrapper> encoder = ffmpeg.CreateEncoder(name);
+        if (encoder && !encoder->IsAudio() && ffmpeg.av_codec_is_encoder(encoder->GetWrappedValue())) {
+            return encoder;
+        }
+    }
+
+    return {};
 }
 
 wxString defaultAudioExtension(const ExportPlugin& plugin, int format)
@@ -145,6 +244,35 @@ std::unique_ptr<AVFormatContextWrapper> openInputContext(const FFmpegFunctions& 
     }
 
     return context;
+}
+
+void releaseCodecContext(const FFmpegFunctions& ffmpeg, std::unique_ptr<AVCodecContextWrapper>& codecContext)
+{
+    AVCodecContext* rawContext = codecContext ? codecContext->GetWrappedValue() : nullptr;
+    codecContext.reset();
+    if (rawContext && ffmpeg.avcodec_free_context) {
+        ffmpeg.avcodec_free_context(&rawContext);
+    }
+}
+
+std::unique_ptr<AVCodecContextWrapper> openVideoDecoderContext(const FFmpegFunctions& ffmpeg, const AVStreamWrapper& stream)
+{
+    std::unique_ptr<AVCodecWrapper> decoder = ffmpeg.CreateDecoder(stream.GetAVCodecID());
+    if (!decoder) {
+        return {};
+    }
+
+    std::unique_ptr<AVCodecContextWrapper> codecContext = stream.GetAVCodecContext();
+    if (!codecContext) {
+        return {};
+    }
+
+    if (codecContext->Open(decoder.get()) < 0) {
+        releaseCodecContext(ffmpeg, codecContext);
+        return {};
+    }
+
+    return codecContext;
 }
 
 const AVStreamWrapper* firstStreamOfType(const AVFormatContextWrapper& context, bool video)
@@ -414,6 +542,224 @@ bool writeVideoPackets(FFmpegFunctions& ffmpeg, const wxFileName& sourceVideoFil
     return true;
 }
 
+bool receiveEncodedPackets(FFmpegFunctions& ffmpeg, AVCodecContextWrapper& encoderContext,
+                           AVFormatContextWrapper& outputContext, const AVStreamWrapper& outputStream)
+{
+    while (true) {
+        std::unique_ptr<AVPacketWrapper> packet = ffmpeg.CreateAVPacketWrapper();
+        if (!packet) {
+            return false;
+        }
+
+        const int ret = ffmpeg.avcodec_receive_packet(encoderContext.GetWrappedValue(), packet->GetWrappedValue());
+        if (ret == AUDACITY_AVERROR(EAGAIN) || ret == AUDACITY_AVERROR_EOF) {
+            return true;
+        }
+
+        if (ret < 0) {
+            return false;
+        }
+
+        packet->SetStreamIndex(outputStream.GetIndex());
+        packet->RescalePresentationTimestamp(encoderContext.GetTimeBase(), outputStream.GetTimeBase());
+        packet->RescaleDecompressionTimestamp(encoderContext.GetTimeBase(), outputStream.GetTimeBase());
+        packet->RescaleDuration(encoderContext.GetTimeBase(), outputStream.GetTimeBase());
+        packet->SetPos(-1);
+
+        if (ffmpeg.av_interleaved_write_frame(outputContext.GetWrappedValue(), packet->GetWrappedValue()) < 0) {
+            return false;
+        }
+    }
+}
+
+bool sendFrameToEncoder(FFmpegFunctions& ffmpeg, AVCodecContextWrapper& encoderContext,
+                        AVFormatContextWrapper& outputContext, const AVStreamWrapper& outputStream,
+                        AVFrameWrapper* frame)
+{
+    const int ret = ffmpeg.avcodec_send_frame(encoderContext.GetWrappedValue(), frame ? frame->GetWrappedValue() : nullptr);
+    return ret >= 0 && receiveEncodedPackets(ffmpeg, encoderContext, outputContext, outputStream);
+}
+
+bool encodeDecodedFrame(FFmpegFunctions& ffmpeg, const AVStreamWrapper& inputStream, AVCodecContextWrapper& encoderContext,
+                        AVFormatContextWrapper& outputContext, const AVStreamWrapper& outputStream,
+                        const VideoSegment& segment, const AVFrameWrapper& decodedFrame)
+{
+    const double sourceSeconds = sourceSecondsFromTimestamp(decodedFrame.GetBestEffortTimestamp(), inputStream);
+    if (sourceSeconds < segment.sourceStart - EPS || sourceSeconds >= segment.sourceEnd - EPS) {
+        return true;
+    }
+
+    const int width = encoderContext.GetWidth();
+    const int height = encoderContext.GetHeight();
+    if (width <= 0 || height <= 0) {
+        return false;
+    }
+
+    std::unique_ptr<AVFrameWrapper> encodedFrame = ffmpeg.CreateAVFrameWrapper();
+    if (!encodedFrame) {
+        return false;
+    }
+
+    encodedFrame->SetFormat(encoderContext.GetPixelFormat());
+    encodedFrame->SetWidth(width);
+    encodedFrame->SetHeight(height);
+    encodedFrame->SetPresentationTimestamp(timestampFromSeconds(projectSecondsFromSourceSeconds(segment, sourceSeconds),
+                                                                encoderContext.GetTimeBase()));
+
+    if (encodedFrame->GetBuffer(32) < 0) {
+        return false;
+    }
+
+    std::array<const uint8_t*, 8> srcData {};
+    std::array<int, 8> srcStride {};
+    const int dataPointers = std::min<int>(decodedFrame.GetNumDataPointers(), static_cast<int>(srcData.size()));
+    for (int i = 0; i < dataPointers; ++i) {
+        srcData[i] = decodedFrame.GetData(i);
+        srcStride[i] = decodedFrame.GetLineSize(i);
+    }
+
+    std::array<uint8_t*, 8> dstData {};
+    std::array<int, 8> dstStride {};
+    const int dstPointers = std::min<int>(encodedFrame->GetNumDataPointers(), static_cast<int>(dstData.size()));
+    for (int i = 0; i < dstPointers; ++i) {
+        dstData[i] = encodedFrame->GetData(i);
+        dstStride[i] = encodedFrame->GetLineSize(i);
+    }
+
+    SwsContext* swsContext = ffmpeg.sws_getCachedContext(
+        nullptr,
+        decodedFrame.GetWidth(),
+        decodedFrame.GetHeight(),
+        static_cast<AVPixelFormatFwd>(decodedFrame.GetFormat()),
+        width,
+        height,
+        encoderContext.GetPixelFormat(),
+        AUDACITY_SWS_BILINEAR,
+        nullptr,
+        nullptr,
+        nullptr);
+    if (!swsContext) {
+        return false;
+    }
+
+    const int scaledHeight = ffmpeg.sws_scale(
+        swsContext,
+        srcData.data(),
+        srcStride.data(),
+        0,
+        decodedFrame.GetHeight(),
+        dstData.data(),
+        dstStride.data());
+
+    ffmpeg.sws_freeContext(swsContext);
+
+    if (scaledHeight != height) {
+        return false;
+    }
+
+    return sendFrameToEncoder(ffmpeg, encoderContext, outputContext, outputStream, encodedFrame.get());
+}
+
+bool receiveDecodedFrames(FFmpegFunctions& ffmpeg, AVCodecContextWrapper& decoderContext, const AVStreamWrapper& inputStream,
+                          AVCodecContextWrapper& encoderContext, AVFormatContextWrapper& outputContext,
+                          const AVStreamWrapper& outputStream, const VideoSegment& segment)
+{
+    while (true) {
+        std::unique_ptr<AVFrameWrapper> frame = ffmpeg.CreateAVFrameWrapper();
+        if (!frame) {
+            return false;
+        }
+
+        const int ret = ffmpeg.avcodec_receive_frame(decoderContext.GetWrappedValue(), frame->GetWrappedValue());
+        if (ret == AUDACITY_AVERROR(EAGAIN) || ret == AUDACITY_AVERROR_EOF) {
+            return true;
+        }
+
+        if (ret < 0) {
+            return false;
+        }
+
+        if (!encodeDecodedFrame(ffmpeg, inputStream, encoderContext, outputContext, outputStream, segment, *frame)) {
+            return false;
+        }
+    }
+}
+
+bool writeEncodedVideoSegment(FFmpegFunctions& ffmpeg, const wxFileName& sourceVideoFilename, const VideoLink& link,
+                              AVCodecContextWrapper& encoderContext, AVFormatContextWrapper& outputContext,
+                              const AVStreamWrapper& outputStream, const VideoSegment& segment)
+{
+    std::unique_ptr<AVFormatContextWrapper> inputContext = openInputContext(ffmpeg, sourceVideoFilename.GetFullPath());
+    if (!inputContext) {
+        return false;
+    }
+
+    const AVStreamWrapper* inputStream = videoStreamForLink(*inputContext, link);
+    if (!inputStream) {
+        return false;
+    }
+
+    std::unique_ptr<AVCodecContextWrapper> decoderContext = openVideoDecoderContext(ffmpeg, *inputStream);
+    if (!decoderContext) {
+        return false;
+    }
+
+    const int64_t seekTimestamp = streamStartTimestamp(*inputStream)
+                                  + timestampFromSeconds(std::max(0.0, segment.sourceStart), inputStream->GetTimeBase());
+    ffmpeg.av_seek_frame(inputContext->GetWrappedValue(), inputStream->GetIndex(), seekTimestamp, AUDACITY_AVSEEK_FLAG_BACKWARD);
+
+    bool ok = true;
+    while (ok) {
+        std::unique_ptr<AVPacketWrapper> packet = inputContext->ReadNextPacket();
+        if (!packet) {
+            break;
+        }
+
+        if (packet->GetStreamIndex() != inputStream->GetIndex()) {
+            continue;
+        }
+
+        const std::optional<double> packetSeconds = packetSourceSeconds(*packet, *inputStream);
+        if (packetSeconds.has_value() && *packetSeconds > segment.sourceEnd + 1.0) {
+            break;
+        }
+
+        int ret = ffmpeg.avcodec_send_packet(decoderContext->GetWrappedValue(), packet->GetWrappedValue());
+        if (ret < 0) {
+            ok = false;
+            break;
+        }
+
+        ok = receiveDecodedFrames(ffmpeg, *decoderContext, *inputStream, encoderContext, outputContext, outputStream, segment);
+    }
+
+    if (ok) {
+        ok = ffmpeg.avcodec_send_packet(decoderContext->GetWrappedValue(), nullptr) >= 0
+             && receiveDecodedFrames(ffmpeg, *decoderContext, *inputStream, encoderContext, outputContext, outputStream, segment);
+    }
+
+    releaseCodecContext(ffmpeg, decoderContext);
+    return ok;
+}
+
+bool writeEncodedVideoPackets(FFmpegFunctions& ffmpeg, const wxFileName& sourceVideoFilename, const VideoLink& link,
+                              AVCodecContextWrapper& encoderContext, AVFormatContextWrapper& outputContext,
+                              const AVStreamWrapper& outputStream)
+{
+    const std::vector<VideoSegment> segments = sortedValidSegments(link);
+    if (segments.empty()) {
+        return false;
+    }
+
+    for (const VideoSegment& segment : segments) {
+        if (!writeEncodedVideoSegment(ffmpeg, sourceVideoFilename, link, encoderContext, outputContext, outputStream, segment)) {
+            return false;
+        }
+    }
+
+    return sendFrameToEncoder(ffmpeg, encoderContext, outputContext, outputStream, nullptr);
+}
+
 std::string remuxLinkedVideo(const VideoLink& link, const wxFileName& sourceVideoFilename, const wxFileName& audioFilename,
                              const wxFileName& targetFilename)
 {
@@ -492,6 +838,126 @@ std::string remuxLinkedVideo(const VideoLink& link, const wxFileName& sourceVide
     return {};
 }
 
+std::string encodeLinkedVideo(const VideoLink& link, const wxFileName& sourceVideoFilename, const wxFileName& audioFilename,
+                              const wxFileName& targetFilename, const VideoEncodingOptions& options)
+{
+    std::shared_ptr<FFmpegFunctions> ffmpeg = FFmpegFunctions::Load();
+    if (!ffmpeg || ffmpeg->AVFormatVersion.Major < 59 || !ffmpeg->avcodec_send_packet || !ffmpeg->avcodec_receive_frame
+        || !ffmpeg->avcodec_send_frame || !ffmpeg->avcodec_receive_packet || !ffmpeg->av_frame_get_buffer
+        || !ffmpeg->sws_getCachedContext || !ffmpeg->sws_scale || !ffmpeg->sws_freeContext) {
+        return muse::trc("export", "FFmpeg 5 or newer with video encoding support is required to export encoded video.");
+    }
+
+    std::unique_ptr<AVFormatContextWrapper> videoInput = openInputContext(*ffmpeg, sourceVideoFilename.GetFullPath());
+    if (!videoInput) {
+        return muse::trc("export", "Could not open linked video source for export.");
+    }
+
+    std::unique_ptr<AVFormatContextWrapper> audioInput = openInputContext(*ffmpeg, audioFilename.GetFullPath());
+    if (!audioInput) {
+        return muse::trc("export", "Could not open exported audio for video muxing.");
+    }
+
+    const std::vector<VideoSegment> segments = sortedValidSegments(link);
+    if (segments.empty()) {
+        return muse::trc("export", "Could not find video segments to export.");
+    }
+
+    const AVStreamWrapper* videoInputStream = videoStreamForLink(*videoInput, link);
+    const AVStreamWrapper* audioInputStream = firstStreamOfType(*audioInput, false);
+    if (!videoInputStream || !audioInputStream) {
+        return muse::trc("export", "Could not find video and audio streams for export.");
+    }
+
+    std::unique_ptr<AVCodecContextWrapper> decoderContext = openVideoDecoderContext(*ffmpeg, *videoInputStream);
+    if (!decoderContext) {
+        return muse::trc("export", "Could not open linked video decoder for export.");
+    }
+
+    const int sourceWidth = decoderContext->GetWidth();
+    const int sourceHeight = decoderContext->GetHeight();
+    releaseCodecContext(*ffmpeg, decoderContext);
+    if (sourceWidth <= 0 || sourceHeight <= 0) {
+        return muse::trc("export", "Could not determine linked video dimensions.");
+    }
+
+    std::unique_ptr<AVCodecWrapper> encoder = createVideoEncoder(*ffmpeg, options.format);
+    if (!encoder) {
+        return muse::trc("export", "Could not find a video encoder for the selected video format.");
+    }
+
+    std::unique_ptr<AVCodecContextWrapper> encoderContext = ffmpeg->CreateAVCodecContextWrapperFromCodec(std::move(encoder));
+    if (!encoderContext || !encoderContext->GetCodec()) {
+        return muse::trc("export", "Could not allocate the video encoder context.");
+    }
+
+    const int outputWidth = std::max(2, sourceWidth - (sourceWidth % 2));
+    const int outputHeight = std::max(2, sourceHeight - (sourceHeight % 2));
+    encoderContext->SetWidth(outputWidth);
+    encoderContext->SetHeight(outputHeight);
+    encoderContext->SetPixelFormat(ffmpeg->GetYUV420PPixelFormat());
+    encoderContext->SetTimeBase({ 1, VIDEO_TIME_BASE });
+    encoderContext->SetFrameRate({ 30, 1 });
+    encoderContext->SetBitRate(options.targetBitRate);
+    encoderContext->SetCodecTag(0);
+
+    const wxString targetPath = targetFilename.GetFullPath();
+    std::unique_ptr<AVOutputFormatWrapper> outputFormat = ffmpeg->GuessOutputFormat(nullptr, OSINPUT(targetPath), nullptr);
+    if (!outputFormat) {
+        return muse::trc("export", "Could not determine the video export container.");
+    }
+    const int outputFormatFlags = outputFormat->GetFlags();
+    if (outputFormatFlags & AUDACITY_AVFMT_GLOBALHEADER) {
+        encoderContext->SetFlags(encoderContext->GetFlags() | AUDACITY_AV_CODEC_FLAG_GLOBAL_HEADER);
+    }
+
+    if (encoderContext->Open(encoderContext->GetCodec()) < 0) {
+        return muse::trc("export", "Could not open the selected video encoder.");
+    }
+
+    std::unique_ptr<AVFormatContextWrapper> outputContext = ffmpeg->CreateAVFormatContext();
+    if (!outputContext) {
+        return muse::trc("export", "Could not allocate the video export context.");
+    }
+    outputContext->SetOutputFormat(std::move(outputFormat));
+    outputContext->SetFilename(OSINPUT(targetPath));
+
+    std::unique_ptr<AVStreamWrapper> videoOutputStream = outputContext->CreateStream();
+    std::unique_ptr<AVStreamWrapper> audioOutputStream = outputContext->CreateStream();
+    if (!videoOutputStream || !audioOutputStream) {
+        return muse::trc("export", "Could not create video export streams.");
+    }
+
+    videoOutputStream->SetTimeBase(encoderContext->GetTimeBase());
+    videoOutputStream->SetStartTime(0);
+    videoOutputStream->SetDuration(timestampFromSeconds(videoEndTime(segments), videoOutputStream->GetTimeBase()));
+    if (videoOutputStream->SetParametersFromContext(*encoderContext) < 0 || !copyStream(*audioInputStream, *audioOutputStream)) {
+        return muse::trc("export", "Could not copy stream parameters for video export.");
+    }
+
+    if (!(outputFormatFlags & AUDACITY_AVFMT_NOFILE)) {
+        const auto openResult = outputContext->OpenOutputContext(targetPath);
+        if (openResult != AVIOContextWrapper::OpenResult::Success) {
+            return muse::trc("export", "Could not open video export file for writing.");
+        }
+    }
+
+    if (ffmpeg->avformat_write_header(outputContext->GetWrappedValue(), nullptr) < 0) {
+        return muse::trc("export", "Could not write the video export header.");
+    }
+
+    if (!writeEncodedVideoPackets(*ffmpeg, sourceVideoFilename, link, *encoderContext, *outputContext, *videoOutputStream)
+        || !writeAllPackets(*ffmpeg, *audioInput, *audioInputStream, *outputContext, *audioOutputStream)) {
+        return muse::trc("export", "Could not write video export packets.");
+    }
+
+    if (ffmpeg->av_write_trailer(outputContext->GetWrappedValue()) < 0) {
+        return muse::trc("export", "Could not finalize the video export file.");
+    }
+
+    return {};
+}
+
 struct LinkedVideoExport
 {
     bool enabled = false;
@@ -499,11 +965,12 @@ struct LinkedVideoExport
     wxFileName sourceVideoFilename;
     wxFileName audioFilename;
     wxFileName targetFilename;
+    VideoEncodingOptions encodingOptions;
 };
 
 LinkedVideoExport linkedVideoExport(const au::videopreview::IVideoPreviewService* videoPreviewService,
                                     const ExportPlugin& plugin, int format, ExportProcessType processType,
-                                    const wxFileName& targetFilename)
+                                    const wxFileName& targetFilename, VideoEncodingOptions encodingOptions)
 {
     LinkedVideoExport result;
     if (!videoPreviewService || processType != ExportProcessType::FULL_PROJECT_AUDIO_AND_VIDEO
@@ -533,6 +1000,7 @@ LinkedVideoExport linkedVideoExport(const au::videopreview::IVideoPreviewService
     result.sourceVideoFilename = std::move(sourceVideoFilename);
     result.audioFilename = makeTemporaryAudioFilename(targetFilename, plugin, format);
     result.targetFilename = targetFilename;
+    result.encodingOptions = encodingOptions;
     return result;
 }
 }
@@ -698,7 +1166,9 @@ muse::Ret Au3Exporter::exportData(const muse::io::path_t& path, const Options& o
         return muse::make_ret(muse::Ret::Code::InternalError);
     }
 
-    const LinkedVideoExport videoExport = linkedVideoExport(videoPreviewService().get(), *m_plugin, formatIdx, processType, wxfilename);
+    const VideoEncodingOptions encodingOptions = videoEncodingOptions(options);
+    const LinkedVideoExport videoExport = linkedVideoExport(videoPreviewService().get(), *m_plugin, formatIdx, processType, wxfilename,
+                                                           encodingOptions);
     if (processType == ExportProcessType::FULL_PROJECT_AUDIO_AND_VIDEO && !videoExport.enabled) {
         return muse::make_ret(muse::Ret::Code::InternalError,
                               muse::trc("export", "No linked video is available for video export."));
@@ -839,8 +1309,11 @@ muse::Ret Au3Exporter::exportData(const muse::io::path_t& path, const Options& o
         }
 
         if (videoExport.enabled) {
-            const std::string remuxError = remuxLinkedVideo(videoExport.link, videoExport.sourceVideoFilename, videoExport.audioFilename,
-                                                            videoExport.targetFilename);
+            const std::string remuxError = videoExport.encodingOptions.encodeVideo()
+                                           ? encodeLinkedVideo(videoExport.link, videoExport.sourceVideoFilename, videoExport.audioFilename,
+                                                               videoExport.targetFilename, videoExport.encodingOptions)
+                                           : remuxLinkedVideo(videoExport.link, videoExport.sourceVideoFilename, videoExport.audioFilename,
+                                                             videoExport.targetFilename);
             ::wxRemoveFile(videoExport.audioFilename.GetFullPath());
             if (!remuxError.empty()) {
                 ::wxRemoveFile(videoExport.targetFilename.GetFullPath());

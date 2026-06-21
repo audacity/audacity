@@ -58,6 +58,36 @@ QString mediumQuality()
     return muse::qtrc("export", "Medium");
 }
 
+std::string videoFormatCode(const QString& format)
+{
+    if (format == mp4VideoFormat()) {
+        return "mp4";
+    }
+
+    if (format == webmVideoFormat()) {
+        return "webm";
+    }
+
+    if (format == av1VideoFormat()) {
+        return "av1";
+    }
+
+    return "same";
+}
+
+std::string videoQualityCode(const QString& quality)
+{
+    if (quality == muse::qtrc("export", "Low")) {
+        return "low";
+    }
+
+    if (quality == muse::qtrc("export", "High")) {
+        return "high";
+    }
+
+    return "medium";
+}
+
 QString sourceVideoExtension(const au::videopreview::IVideoPreviewService* videoPreviewService)
 {
     if (!videoPreviewService) {
@@ -689,7 +719,14 @@ void ExportPreferencesModel::exportData()
         }
     }
 
-    muse::Ret result = exporter()->exportData(filePath);
+    IExporter::Options options;
+    if (videoExport()) {
+        options[IExporter::OptionKey::ProcessType] = muse::Val(ExportProcessType::FULL_PROJECT_AUDIO_AND_VIDEO);
+        options[IExporter::OptionKey::VideoFormat] = muse::Val(videoFormatCode(currentVideoFormat()));
+        options[IExporter::OptionKey::VideoQuality] = muse::Val(videoQualityCode(currentVideoQuality()));
+    }
+
+    muse::Ret result = exporter()->exportData(filePath, options);
     if (!result.success() && !result.text().empty()) {
         interactive()->error(muse::trc("export", "Export error"), result.text());
         return;

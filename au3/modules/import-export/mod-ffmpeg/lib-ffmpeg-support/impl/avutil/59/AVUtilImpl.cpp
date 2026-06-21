@@ -37,7 +37,8 @@ void Register()
             &CreateDefaultChannelLayout,
             &CreateLegacyChannelLayout,
             &CreateAVChannelLayout,
-            &GetBGRAPixelFormat
+            &GetBGRAPixelFormat,
+            &GetYUV420PPixelFormat
         });
 }
 
@@ -48,7 +49,8 @@ const bool registered = ([]() {
             &CreateDefaultChannelLayout,
             &CreateLegacyChannelLayout,
             &CreateAVChannelLayout,
-            &GetBGRAPixelFormat
+            &GetBGRAPixelFormat,
+            &GetYUV420PPixelFormat
         });
 
     return true;
