@@ -863,6 +863,7 @@ Rectangle {
 
             visible: root.isVideoClip
             clip: true
+            z: 1
 
             trackId: root.clipKey ? root.clipKey.trackId() : -1
             itemId: root.clipKey ? root.clipKey.itemId() : -1
@@ -884,7 +885,7 @@ Rectangle {
 
             WaveView {
                 id: waveView
-                visible: root.isWaveformViewVisible
+                visible: !root.isVideoClip && root.isWaveformViewVisible
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true
@@ -1055,7 +1056,7 @@ Rectangle {
             Loader {
                 id: spectrogramViewLoader
 
-                active: root.isSpectrogramViewVisible
+                active: !root.isVideoClip && root.isSpectrogramViewVisible
                 visible: active
 
                 Layout.fillWidth: true

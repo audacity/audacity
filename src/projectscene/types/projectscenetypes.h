@@ -57,6 +57,11 @@ class TrackItemTime
     Q_GADGET
 
     Q_PROPERTY(double startTime MEMBER startTime CONSTANT)
+    Q_PROPERTY(double endTime MEMBER endTime CONSTANT)
+    Q_PROPERTY(double itemStartTime MEMBER itemStartTime CONSTANT)
+    Q_PROPERTY(double itemEndTime MEMBER itemEndTime CONSTANT)
+    Q_PROPERTY(double selectionStartTime MEMBER selectionStartTime CONSTANT)
+    Q_PROPERTY(double selectionEndTime MEMBER selectionEndTime CONSTANT)
 
 public:
 
