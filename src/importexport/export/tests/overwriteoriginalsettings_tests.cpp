@@ -59,6 +59,9 @@ public:
 
     bool SetValue(ExportOptionID id, const ExportValue& value) override
     {
+        if (id == m_rejectedOptionID) {
+            return false;
+        }
         if (m_values.find(id) == m_values.end()) {
             return false;
         }
@@ -89,6 +92,11 @@ public:
         return std::get<T>(m_values.at(id));
     }
 
+    void rejectSetValueFor(ExportOptionID id)
+    {
+        m_rejectedOptionID = id;
+    }
+
 private:
     void setHidden(ExportOptionID id, bool hidden)
     {
@@ -108,6 +116,7 @@ private:
     std::string m_name;
     std::vector<ExportOption> m_options;
     std::map<ExportOptionID, ExportValue> m_values;
+    ExportOptionID m_rejectedOptionID = -1;
 };
 
 ExportOption option(
@@ -203,6 +212,23 @@ TEST(OverwriteOriginalSettingsTests, AppliesMp3BitRateAsVbrModeAndPreset)
 
     EXPECT_EQ(editor.value<std::string>(0), "VBR");
     EXPECT_EQ(editor.value<int>(2), 3);
+}
+
+TEST(OverwriteOriginalSettingsTests, ContinuesWhenMp3OptionWriteFails)
+{
+    FakeExportOptionsEditor editor("mp3", {
+        option(0, "Profondeur de bits", std::string("16"), ExportOption::TypeEnum,
+               { std::string("16"), std::string("24") }),
+        option(2, "Quality", 2, ExportOption::TypeEnum, { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }),
+    });
+    editor.rejectSetValueFor(2);
+
+    QVariantMap codecSettings = codecSettingsWithBitRate(179000.0, "FLAC");
+    codecSettings.insert("bitDepth", 24);
+    au::importexport::ApplyCodecSettingsToExportOptions(editor, codecSettings);
+
+    EXPECT_EQ(editor.value<std::string>(0), "24");
+    EXPECT_EQ(editor.value<int>(2), 2);
 }
 
 TEST(OverwriteOriginalSettingsTests, AppliesFlacStringBitDepthValues)

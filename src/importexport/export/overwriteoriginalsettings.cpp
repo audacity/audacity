@@ -107,8 +107,12 @@ bool applyMp3CodecSettings(::ExportOptionsEditor& editor, const QVariantMap& cod
         return false;
     }
 
-    editor.SetValue(MP3OptionIDMode, std::string("VBR"));
-    editor.SetValue(MP3OptionIDQualityVBR, *vbrPreset);
+    if (!editor.SetValue(MP3OptionIDMode, std::string("VBR"))) {
+        return false;
+    }
+    if (!editor.SetValue(MP3OptionIDQualityVBR, *vbrPreset)) {
+        return false;
+    }
     return true;
 }
 
