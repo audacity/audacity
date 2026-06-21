@@ -126,37 +126,37 @@ ExportOption option(
 FakeExportOptionsEditor makeMp3Editor()
 {
     return FakeExportOptionsEditor("mp3", {
-        option(0, "Bit Rate Mode", std::string("SET"), ExportOption::TypeEnum,
-               { std::string("SET"), std::string("VBR"), std::string("ABR"), std::string("CBR") }),
-        option(1, "Quality", 2, ExportOption::TypeEnum, { 0, 1, 2, 3 }),
-        option(2, "Quality", 2, ExportOption::TypeEnum | ExportOption::Hidden, { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }),
-        option(3, "Quality", 192, ExportOption::TypeEnum | ExportOption::Hidden, { 320, 256, 224, 192, 160, 144, 128 }),
-        option(4, "Quality", 192, ExportOption::TypeEnum | ExportOption::Hidden, { 320, 256, 224, 192, 160, 144, 128 }),
-    });
+            option(0, "Bit Rate Mode", std::string("SET"), ExportOption::TypeEnum,
+                   { std::string("SET"), std::string("VBR"), std::string("ABR"), std::string("CBR") }),
+            option(1, "Quality", 2, ExportOption::TypeEnum, { 0, 1, 2, 3 }),
+            option(2, "Quality", 2, ExportOption::TypeEnum | ExportOption::Hidden, { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 }),
+            option(3, "Quality", 192, ExportOption::TypeEnum | ExportOption::Hidden, { 320, 256, 224, 192, 160, 144, 128 }),
+            option(4, "Quality", 192, ExportOption::TypeEnum | ExportOption::Hidden, { 320, 256, 224, 192, 160, 144, 128 }),
+        });
 }
 
 FakeExportOptionsEditor makeFlacEditor()
 {
     return FakeExportOptionsEditor("plain", {
-        option(0, "Bit Depth", std::string("16"), ExportOption::TypeEnum, { std::string("16"), std::string("24") }),
-        option(1, "Level", std::string("5"), ExportOption::TypeEnum,
-               { std::string("0"), std::string("1"), std::string("2"), std::string("3"), std::string("4"),
-                 std::string("5"), std::string("6"), std::string("7"), std::string("8") }),
-    });
+            option(0, "Bit Depth", std::string("16"), ExportOption::TypeEnum, { std::string("16"), std::string("24") }),
+            option(1, "Level", std::string("5"), ExportOption::TypeEnum,
+                   { std::string("0"), std::string("1"), std::string("2"), std::string("3"), std::string("4"),
+                     std::string("5"), std::string("6"), std::string("7"), std::string("8") }),
+        });
 }
 
 FakeExportOptionsEditor makePcmEditor()
 {
     return FakeExportOptionsEditor("plain", {
-        option(0, "Bit Depth", 16, ExportOption::TypeEnum, { 16, 24, 32 }),
-    });
+            option(0, "Bit Depth", 16, ExportOption::TypeEnum, { 16, 24, 32 }),
+        });
 }
 
 FakeExportOptionsEditor makeBitRateEditor()
 {
     return FakeExportOptionsEditor("plain", {
-        option(0, "Bit Rate", 128, ExportOption::TypeEnum, { 96, 128, 160, 192, 224, 256, 320 }),
-    });
+            option(0, "Bit Rate", 128, ExportOption::TypeEnum, { 96, 128, 160, 192, 224, 256, 320 }),
+        });
 }
 
 QVariantMap codecSettingsWithBitRate(double bitRate)
