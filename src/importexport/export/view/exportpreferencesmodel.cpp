@@ -32,10 +32,56 @@ QString prepareExtensionsString(const QStringList& extensionList)
 
     return result;
 }
+
+QString sameAsOriginalVideoFormat()
+{
+    return muse::qtrc("export", "Same as original");
 }
 
-const std::map<ExportProcessType, const char*> EXPORT_PROCESS_MAPPING {
+QString mp4VideoFormat()
+{
+    return muse::qtrc("export", "MP4");
+}
+
+QString webmVideoFormat()
+{
+    return muse::qtrc("export", "WebM");
+}
+
+QString av1VideoFormat()
+{
+    return muse::qtrc("export", "AV1");
+}
+
+QString mediumQuality()
+{
+    return muse::qtrc("export", "Medium");
+}
+
+QString sourceVideoExtension(const au::videopreview::IVideoPreviewService* videoPreviewService)
+{
+    if (!videoPreviewService) {
+        return {};
+    }
+
+    for (const au::videopreview::VideoLink& link : videoPreviewService->links()) {
+        if (!link.isValid()) {
+            continue;
+        }
+
+        const std::string suffix = muse::io::suffix(link.sourcePath);
+        if (!suffix.empty()) {
+            return QString::fromStdString(suffix).toLower();
+        }
+    }
+
+    return {};
+}
+}
+
+const std::vector<std::pair<ExportProcessType, const char*> > EXPORT_PROCESS_MAPPING {
     { ExportProcessType::FULL_PROJECT_AUDIO, QT_TRANSLATE_NOOP("export", "Export full project audio") },
+    { ExportProcessType::FULL_PROJECT_AUDIO_AND_VIDEO, QT_TRANSLATE_NOOP("export", "Export full project audio and video") },
     { ExportProcessType::SELECTED_AUDIO, QT_TRANSLATE_NOOP("export", "Export selected audio") },
     { ExportProcessType::AUDIO_IN_LOOP_REGION, QT_TRANSLATE_NOOP("export", "Export audio in loop region") },
     //! NOTE: not implemented yet
@@ -49,11 +95,13 @@ const std::map<ExportProcessType, const char*> EXPORT_PROCESS_MAPPING {
 
 QString processName(ExportProcessType type)
 {
-    auto it = EXPORT_PROCESS_MAPPING.find(type);
-    if (it == EXPORT_PROCESS_MAPPING.end()) {
-        return {};
+    for (const auto& process : EXPORT_PROCESS_MAPPING) {
+        if (process.first == type) {
+            return QString::fromStdString(muse::trc("export", process.second));
+        }
     }
-    return QString::fromStdString(muse::trc("export", it->second));
+
+    return {};
 }
 
 const std::vector<int> DEFAULT_SAMPLE_RATE_LIST {
@@ -75,6 +123,8 @@ const std::vector<int> DEFAULT_SAMPLE_RATE_LIST {
 ExportPreferencesModel::ExportPreferencesModel(QObject* parent)
     : QObject(parent), muse::Contextable(muse::iocCtxForQmlObject(this))
 {
+    m_videoFormat = sameAsOriginalVideoFormat();
+    m_videoQuality = mediumQuality();
 }
 
 ExportPreferencesModel::~ExportPreferencesModel()
@@ -93,6 +143,8 @@ void ExportPreferencesModel::init()
 
     exportConfiguration()->processTypeChanged().onNotify(this, [this] {
         emit currentProcessChanged();
+        emit fileExtensionChanged();
+        emit videoOptionsChanged();
     });
     if ((exportConfiguration()->processType() == ExportProcessType::AUDIO_IN_LOOP_REGION
          && !playbackController()->loopRegion().isValid())
@@ -166,10 +218,11 @@ QString ExportPreferencesModel::currentProcess() const
 
 void ExportPreferencesModel::setCurrentProcess(const QString& newProcess)
 {
-    ExportProcessType type;
+    ExportProcessType type = exportConfiguration()->processType();
     for (const auto& process : EXPORT_PROCESS_MAPPING) {
         if (newProcess == processName(process.first)) {
             type = process.first;
+            break;
         }
     }
 
@@ -235,6 +288,19 @@ QStringList ExportPreferencesModel::formatExtensions(const QString& format) cons
 
 QStringList ExportPreferencesModel::supportedExtensionsList() const
 {
+    if (videoExport()) {
+        QStringList extensions;
+        for (const QString& format : videoFormatsList()) {
+            for (const QString& ext : videoFormatExtensions(format)) {
+                if (!extensions.contains(ext)) {
+                    extensions.push_back(ext);
+                }
+            }
+        }
+
+        return extensions;
+    }
+
     QStringList extensions;
     for (const std::string& format : exporter()->formatsList()) {
         for (const QString& ext : formatExtensions(QString::fromStdString(format))) {
@@ -294,6 +360,75 @@ QStringList ExportPreferencesModel::formatsList() const
     }
 
     return result;
+}
+
+bool ExportPreferencesModel::videoExport() const
+{
+    return exportConfiguration()->processType() == ExportProcessType::FULL_PROJECT_AUDIO_AND_VIDEO;
+}
+
+QString ExportPreferencesModel::currentVideoFormat() const
+{
+    return m_videoFormat;
+}
+
+void ExportPreferencesModel::setCurrentVideoFormat(const QString& format)
+{
+    if (m_videoFormat == format) {
+        return;
+    }
+
+    m_videoFormat = format;
+    emit videoOptionsChanged();
+    emit fileExtensionChanged();
+}
+
+QStringList ExportPreferencesModel::videoFormatsList() const
+{
+    return { sameAsOriginalVideoFormat(), mp4VideoFormat(), webmVideoFormat(), av1VideoFormat() };
+}
+
+bool ExportPreferencesModel::videoQualityVisible() const
+{
+    return videoExport() && m_videoFormat != sameAsOriginalVideoFormat();
+}
+
+QString ExportPreferencesModel::currentVideoQuality() const
+{
+    return m_videoQuality;
+}
+
+void ExportPreferencesModel::setCurrentVideoQuality(const QString& quality)
+{
+    if (m_videoQuality == quality) {
+        return;
+    }
+
+    m_videoQuality = quality;
+    emit videoOptionsChanged();
+}
+
+QStringList ExportPreferencesModel::videoQualityList() const
+{
+    return { muse::qtrc("export", "Low"), mediumQuality(), muse::qtrc("export", "High") };
+}
+
+QStringList ExportPreferencesModel::videoFormatExtensions(const QString& format) const
+{
+    if (format == mp4VideoFormat()) {
+        return { "mp4" };
+    }
+
+    if (format == webmVideoFormat()) {
+        return { "webm" };
+    }
+
+    if (format == av1VideoFormat()) {
+        return { "mkv" };
+    }
+
+    const QString sourceExtension = sourceVideoExtension(videoPreviewService().get());
+    return sourceExtension.isEmpty() ? QStringList { "mp4" } : QStringList { sourceExtension };
 }
 
 void ExportPreferencesModel::setExportChannelsType(ExportChannelsPref::ExportChannels type)
@@ -484,6 +619,19 @@ QStringList ExportPreferencesModel::fileFilter()
     QString allExt = prepareExtensionsString(supportedExtensionsList());
     QStringList filter { muse::qtrc("project", "All supported files") + " (" + allExt + ")" };
 
+    if (videoExport()) {
+        for (const QString& format : videoFormatsList()) {
+            const QString extensionString = prepareExtensionsString(videoFormatExtensions(format));
+            if (extensionString.isEmpty()) {
+                filter.append(muse::qtrc("project", format));
+            } else {
+                filter.append(muse::qtrc("project", format + " (" + extensionString + ")"));
+            }
+        }
+
+        return filter;
+    }
+
     for (const auto& format : formatsList()) {
         QString extensionString = prepareExtensionsString(formatExtensions(format));
         if (extensionString.isEmpty()) {
@@ -517,13 +665,15 @@ void ExportPreferencesModel::exportData()
     muse::io::path_t filePath = directoryPath.appendingComponent(filename());
 
     if (suffix(filePath).empty()) {
-        auto extensions = exporter()->formatExtensions(exportConfiguration()->currentFormat());
-        std::string defaultExtension;
+        const QStringList extensions = videoExport()
+                                       ? videoFormatExtensions(currentVideoFormat())
+                                       : formatExtensions(currentFormat());
+        QString defaultExtension;
         if (!extensions.empty()) {
             defaultExtension = extensions.front();
         }
 
-        filePath = filePath.appendingSuffix(defaultExtension);
+        filePath = filePath.appendingSuffix(defaultExtension.toStdString());
     }
 
     if (fileSystem()->exists(filePath)) {

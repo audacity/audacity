@@ -18,6 +18,7 @@
 #include "effects/effects_base/irealtimeeffectservice.h"
 #include "playback/iplaybackcontroller.h"
 #include "trackedit/iselectioncontroller.h"
+#include "videopreview/ivideopreviewservice.h"
 
 namespace au::importexport {
 class ExportPreferencesModel : public QObject, public muse::async::Asyncable, public muse::Contextable
@@ -35,6 +36,7 @@ class ExportPreferencesModel : public QObject, public muse::async::Asyncable, pu
     muse::ContextInject<effects::IRealtimeEffectService> realtimeEffectService{ this };
     muse::ContextInject<au::playback::IPlaybackController> playbackController{ this };
     muse::ContextInject<trackedit::ISelectionController> selectionController{ this };
+    muse::ContextInject<au::videopreview::IVideoPreviewService> videoPreviewService{ this };
 
     Q_PROPERTY(QString currentProcess READ currentProcess NOTIFY currentProcessChanged)
     Q_PROPERTY(QVariantList processList READ processList NOTIFY processListChanged)
@@ -45,6 +47,12 @@ class ExportPreferencesModel : public QObject, public muse::async::Asyncable, pu
 
     Q_PROPERTY(QString currentFormat READ currentFormat NOTIFY currentFormatChanged)
     Q_PROPERTY(QStringList formatsList READ formatsList NOTIFY formatsListChanged)
+    Q_PROPERTY(bool videoExport READ videoExport NOTIFY currentProcessChanged)
+    Q_PROPERTY(QString currentVideoFormat READ currentVideoFormat NOTIFY videoOptionsChanged)
+    Q_PROPERTY(QStringList videoFormatsList READ videoFormatsList NOTIFY videoOptionsChanged)
+    Q_PROPERTY(bool videoQualityVisible READ videoQualityVisible NOTIFY videoOptionsChanged)
+    Q_PROPERTY(QString currentVideoQuality READ currentVideoQuality NOTIFY videoOptionsChanged)
+    Q_PROPERTY(QStringList videoQualityList READ videoQualityList NOTIFY videoOptionsChanged)
 
     Q_PROPERTY(importexport::ExportChannelsPref::ExportChannels exportChannelsType READ exportChannelsType NOTIFY exportChannelsTypeChanged)
     Q_PROPERTY(int maxExportChannels READ maxExportChannels NOTIFY maxExportChannelsChanged)
@@ -79,6 +87,14 @@ public:
     QString currentFormat() const;
     Q_INVOKABLE void setCurrentFormat(const QString& format);
     QStringList formatsList() const;
+    bool videoExport() const;
+    QString currentVideoFormat() const;
+    Q_INVOKABLE void setCurrentVideoFormat(const QString& format);
+    QStringList videoFormatsList() const;
+    bool videoQualityVisible() const;
+    QString currentVideoQuality() const;
+    Q_INVOKABLE void setCurrentVideoQuality(const QString& quality);
+    QStringList videoQualityList() const;
 
     importexport::ExportChannelsPref::ExportChannels exportChannelsType() const;
     Q_INVOKABLE void setExportChannelsType(importexport::ExportChannelsPref::ExportChannels type);
@@ -95,6 +111,7 @@ public:
     Q_INVOKABLE bool verifyExportPossible();
     Q_INVOKABLE QStringList fileFilter();
     QStringList formatExtensions(const QString& format) const;
+    QStringList videoFormatExtensions(const QString& format) const;
     QStringList supportedExtensionsList() const;
     Q_INVOKABLE void exportData();
 
@@ -128,6 +145,7 @@ signals:
     void hasMetadataChanged();
     void optionsCountChanged();
     void optionTitleListChanged();
+    void videoOptionsChanged();
 
     void exportCompleted();
 
@@ -138,5 +156,7 @@ private:
     QString m_filename;
     std::vector<std::pair<int, QString> > m_sampleRateMapping;
     bool m_resetSampleRate = true;
+    QString m_videoFormat;
+    QString m_videoQuality;
 };
 }

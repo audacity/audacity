@@ -8,7 +8,6 @@
 #include <array>
 #include <cctype>
 #include <cmath>
-#include <iterator>
 #include <optional>
 #include <string_view>
 
@@ -51,7 +50,6 @@ using au::videopreview::VideoSegment;
 
 namespace {
 constexpr double EPS = 1e-7;
-constexpr std::string_view VIDEO_EXPORT_FORMAT = "Video";
 
 struct ExportFormatRef
 {
@@ -63,11 +61,6 @@ struct ExportFormatRef
         return plugin && formatIndex >= 0;
     }
 };
-
-bool isVideoExportFormat(const std::string& format)
-{
-    return format == VIDEO_EXPORT_FORMAT;
-}
 
 std::string lowerAscii(std::string value);
 
@@ -87,27 +80,6 @@ ExportFormatRef findFormatByName(const std::string& format)
     return {};
 }
 
-ExportFormatRef findFormatByExtension(std::initializer_list<std::string_view> preferredExtensions)
-{
-    for (std::string_view preferredExtension : preferredExtensions) {
-        const std::string preferred = std::string(preferredExtension);
-        for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
-            for (const wxString& extension : plugin->GetFormatInfo(formatIndex).extensions) {
-                if (lowerAscii(extension.ToStdString()) == preferred) {
-                    return { plugin, formatIndex };
-                }
-            }
-        }
-    }
-
-    return {};
-}
-
-ExportFormatRef videoAudioFormat()
-{
-    return findFormatByExtension({ "m4a", "mp4", "aac" });
-}
-
 std::string lowerAscii(std::string value)
 {
     std::transform(value.begin(), value.end(), value.begin(), [](unsigned char c) {
@@ -124,11 +96,6 @@ bool isVideoContainerExtension(const wxString& extension)
 
     const std::string ext = lowerAscii(extension.ToStdString());
     return std::find(videoExtensions.begin(), videoExtensions.end(), ext) != videoExtensions.end();
-}
-
-std::vector<std::string> videoExportExtensions()
-{
-    return { "mp4", "mov", "mkv", "m4v" };
 }
 
 wxString defaultAudioExtension(const ExportPlugin& plugin, int format)
@@ -539,12 +506,19 @@ LinkedVideoExport linkedVideoExport(const au::videopreview::IVideoPreviewService
                                     const wxFileName& targetFilename)
 {
     LinkedVideoExport result;
-    if (!videoPreviewService || processType != ExportProcessType::FULL_PROJECT_AUDIO
+    if (!videoPreviewService || processType != ExportProcessType::FULL_PROJECT_AUDIO_AND_VIDEO
         || !isVideoContainerExtension(targetFilename.GetExt())) {
         return result;
     }
 
-    const VideoLink link = videoPreviewService->link();
+    VideoLink link;
+    for (const VideoLink& candidate : videoPreviewService->links()) {
+        if (candidate.isValid()) {
+            link = candidate;
+            break;
+        }
+    }
+
     if (!link.isValid()) {
         return result;
     }
@@ -646,13 +620,10 @@ muse::Ret Au3Exporter::exportData(const muse::io::path_t& path, const Options& o
     const std::string requestedFormatName = options.count(OptionKey::Format)
                                             ? options.at(OptionKey::Format).toString()
                                             : exportConfiguration()->currentFormat();
-    const bool videoFormatRequested = isVideoExportFormat(requestedFormatName);
-    const ExportFormatRef requestedFormat = videoFormatRequested ? videoAudioFormat() : findFormatByName(requestedFormatName);
+    const ExportFormatRef requestedFormat = findFormatByName(requestedFormatName);
     if (!requestedFormat.isValid()) {
         return muse::make_ret(muse::Ret::Code::InternalError,
-                              videoFormatRequested
-                              ? muse::trc("export", "FFmpeg AAC audio export is required for video export.")
-                              : muse::trc("export", "Could not find the requested export format."));
+                              muse::trc("export", "Could not find the requested export format."));
     }
 
     const ExportProcessType processType = options.count(OptionKey::ProcessType)
@@ -728,7 +699,7 @@ muse::Ret Au3Exporter::exportData(const muse::io::path_t& path, const Options& o
     }
 
     const LinkedVideoExport videoExport = linkedVideoExport(videoPreviewService().get(), *m_plugin, formatIdx, processType, wxfilename);
-    if (videoFormatRequested && !videoExport.enabled) {
+    if (processType == ExportProcessType::FULL_PROJECT_AUDIO_AND_VIDEO && !videoExport.enabled) {
         return muse::make_ret(muse::Ret::Code::InternalError,
                               muse::trc("export", "No linked video is available for video export."));
     }
@@ -890,30 +861,16 @@ std::vector<std::string> Au3Exporter::formatsList() const
         formatsList.push_back(formatDescription(*plugin, formatIndex));
     }
 
-    const std::string videoFormat(VIDEO_EXPORT_FORMAT);
-    if (std::find(formatsList.begin(), formatsList.end(), videoFormat) == formatsList.end()) {
-        const auto insertIt = formatsList.empty() ? formatsList.end() : std::next(formatsList.begin());
-        formatsList.insert(insertIt, videoFormat);
-    }
-
     return formatsList;
 }
 
 int Au3Exporter::formatIndex(const std::string& format) const
 {
-    if (isVideoExportFormat(format)) {
-        return videoAudioFormat().formatIndex;
-    }
-
     return findFormatByName(format).formatIndex;
 }
 
 std::vector<std::string> Au3Exporter::formatExtensions(const std::string& format) const
 {
-    if (isVideoExportFormat(format)) {
-        return videoExportExtensions();
-    }
-
     for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
         if (formatDescription(*plugin, formatIndex) == format) {
             auto extensions = plugin->GetFormatInfo(formatIndex).extensions;
@@ -1011,9 +968,6 @@ bool Au3Exporter::isOggExportFormat() const
 bool Au3Exporter::hasMetadata() const
 {
     std::string format = exportConfiguration()->currentFormat();
-    if (isVideoExportFormat(format)) {
-        return false;
-    }
 
     for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
         if (formatDescription(*plugin, formatIndex) == format) {
@@ -1027,10 +981,6 @@ bool Au3Exporter::hasMetadata() const
 int Au3Exporter::maxChannels() const
 {
     std::string format = exportConfiguration()->currentFormat();
-    if (isVideoExportFormat(format)) {
-        const ExportFormatRef ref = videoAudioFormat();
-        return ref.isValid() ? ref.plugin->GetFormatInfo(ref.formatIndex).maxChannels : 2;
-    }
 
     for (auto [plugin, formatIndex] : ExportPluginRegistry::Get()) {
         if (formatDescription(*plugin, formatIndex) == format) {
@@ -1119,7 +1069,7 @@ void Au3Exporter::setValue(int id, const OptionValue& value)
 OptionsEditorUPtr Au3Exporter::optionsEditor() const
 {
     std::string format = exportConfiguration()->currentFormat();
-    ExportFormatRef ref = isVideoExportFormat(format) ? videoAudioFormat() : findFormatByName(format);
+    ExportFormatRef ref = findFormatByName(format);
 
     if (!ref.isValid()) {
         return nullptr;
