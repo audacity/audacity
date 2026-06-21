@@ -218,6 +218,11 @@ bool ProjectActionsController::canReceiveAction(const muse::actions::ActionCode&
             return false;
         }
 
+        trackedit::ITrackeditProjectPtr prj = globalContext()->currentTrackeditProject();
+        if (!prj || !prj->hasAudioContent().val) {
+            return false;
+        }
+
         auto& fileInfo = OriginalFileInfo::Get(*au3Project);
         if (fileInfo.HasOriginalFile()) {
             QString path = fileInfo.GetOriginalFilePath();
@@ -1399,6 +1404,11 @@ void ProjectActionsController::exportOverwriteOriginal()
         return;
     }
 
+    auto trackeditProject = globalContext()->currentTrackeditProject();
+    if (!trackeditProject || !trackeditProject->hasAudioContent().val) {
+        return;
+    }
+
     // Get the Au3Project for export operations
     auto au3Project = reinterpret_cast<au::au3::Au3Project*>(project->au3ProjectPtr());
     if (!au3Project) {
@@ -1424,6 +1434,9 @@ void ProjectActionsController::exportOverwriteOriginal()
 
     // Get audio duration
     double endTime = tracks.GetEndTime();
+    if (endTime <= 0.0) {
+        return;
+    }
 
     // Prefer the source file's remembered audio properties. If they are not
     // available, fall back to the current project tracks.
@@ -1478,8 +1491,8 @@ void ProjectActionsController::exportOverwriteOriginal()
 
     // Show result message
     if (exportResult == ExportResult::Success) {
-        std::string fileName = QFileInfo(originalFilePath).fileName().toStdString();
-        toastService()->showSuccess("Overwrite Original", "Overwrote " + fileName);
+        std::string displayFileName = QFileInfo(originalFilePath).fileName().toStdString();
+        toastService()->showSuccess("Overwrite Original", "Overwrote " + displayFileName);
     } else if (exportResult == ExportResult::Stopped) {
         // User stopped the export - this is normal, don't show error
     } else {

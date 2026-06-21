@@ -109,17 +109,19 @@ void recordOriginalFileImport(AudacityProject& project, const muse::io::path_t& 
     const bool captureOriginalFileInfo = fileInfo.GetImportedFileCount() == 0;
 
     wxFileName fn(wxFromString(fileName.toString()));
+    ExportPlugin* plugin = nullptr;
+    int formatIndex = -1;
     if (captureOriginalFileInfo) {
         const QString filePath = QString::fromStdString(fileName.toString().toStdString());
         const QString displayName = QString::fromStdString(fn.GetFullName().ToStdString());
         const wxString extension = fn.GetExt();
         const wxString formatID = extension.Upper();
-        auto [plugin, formatIndex] = findExportFormat(formatID, extension);
+        std::tie(plugin, formatIndex) = findExportFormat(formatID, extension);
 
         fileInfo.SetOriginalFile(filePath, displayName);
-        fileInfo.SetExportFormatID(QString::fromStdString(plugin
-                                                          ? plugin->GetFormatInfo(formatIndex).format.ToStdString()
-                                                          : formatID.ToStdString()));
+        if (plugin) {
+            fileInfo.SetExportFormatID(QString::fromStdString(plugin->GetFormatInfo(formatIndex).format.ToStdString()));
+        }
     }
 
     fileInfo.IncrementImportedFileCount();
@@ -168,7 +170,6 @@ void recordOriginalFileImport(AudacityProject& project, const muse::io::path_t& 
 
     fileInfo.SetCodecSettings(codecSettings);
 
-    auto [plugin, formatIndex] = findExportFormat(wxString(fileInfo.GetExportFormatID().toStdString()), fn.GetExt());
     if (plugin) {
         fileInfo.SetExportParameters(exportParametersFor(*plugin, formatIndex, codecSettings));
     }

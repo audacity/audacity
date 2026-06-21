@@ -138,51 +138,32 @@ FakeExportOptionsEditor makeMp3Editor()
 FakeExportOptionsEditor makeFlacEditor()
 {
     return FakeExportOptionsEditor("plain", {
-            option(0, "Bit Depth", std::string("16"), ExportOption::TypeEnum, { std::string("16"), std::string("24") }),
+            option(0, "Profondeur de bits", std::string("16"), ExportOption::TypeEnum,
+                   { std::string("16"), std::string("24") }),
             option(1, "Level", std::string("5"), ExportOption::TypeEnum,
                    { std::string("0"), std::string("1"), std::string("2"), std::string("3"), std::string("4"),
                      std::string("5"), std::string("6"), std::string("7"), std::string("8") }),
         });
 }
 
-FakeExportOptionsEditor makePcmEditor()
-{
-    return FakeExportOptionsEditor("plain", {
-            option(0, "Bit Depth", 16, ExportOption::TypeEnum, { 16, 24, 32 }),
-        });
-}
-
-FakeExportOptionsEditor makeBitRateEditor()
-{
-    return FakeExportOptionsEditor("plain", {
-            option(0, "Bit Rate", 128, ExportOption::TypeEnum, { 96, 128, 160, 192, 224, 256, 320 }),
-        });
-}
-
-QVariantMap codecSettingsWithBitRate(double bitRate)
+QVariantMap codecSettingsWithBitRate(double bitRate, const char* format = "MP3")
 {
     QVariantMap settings;
+    settings.insert("format", format);
     settings.insert("bitRate", bitRate);
     return settings;
 }
 
-QVariantMap codecSettingsWithBitDepth(int bitDepth)
+QVariantMap codecSettingsWithBitDepth(int bitDepth, const char* format = "FLAC")
 {
     QVariantMap settings;
+    settings.insert("format", format);
     settings.insert("bitDepth", bitDepth);
     return settings;
 }
 }
 
 class Mp3VbrPresetTests : public ::testing::TestWithParam<std::tuple<double, int> >
-{
-};
-
-class PcmBitDepthTests : public ::testing::TestWithParam<int>
-{
-};
-
-class GenericBitRateTests : public ::testing::TestWithParam<std::tuple<double, int> >
 {
 };
 
@@ -244,49 +225,13 @@ TEST(OverwriteOriginalSettingsTests, AppliesFlacSixteenBitDepth)
     EXPECT_EQ(editor.value<std::string>(0), "16");
 }
 
-TEST_P(PcmBitDepthTests, AppliesNumericPcmBitDepthValues)
-{
-    const auto bitDepth = GetParam();
-    auto editor = makePcmEditor();
-    editor.SetValue(0, 16);
-
-    au::importexport::ApplyCodecSettingsToExportOptions(editor, codecSettingsWithBitDepth(bitDepth));
-
-    EXPECT_EQ(editor.value<int>(0), bitDepth);
-}
-
-INSTANTIATE_TEST_SUITE_P(
-    OverwriteOriginalSettingsTests,
-    PcmBitDepthTests,
-    ::testing::Values(16, 24, 32));
-
-TEST_P(GenericBitRateTests, AppliesGenericBitRateToClosestKbpsOption)
-{
-    const auto [sourceBitRate, expectedOptionValue] = GetParam();
-    auto editor = makeBitRateEditor();
-
-    au::importexport::ApplyCodecSettingsToExportOptions(editor, codecSettingsWithBitRate(sourceBitRate));
-
-    EXPECT_EQ(editor.value<int>(0), expectedOptionValue);
-}
-
-INSTANTIATE_TEST_SUITE_P(
-    OverwriteOriginalSettingsTests,
-    GenericBitRateTests,
-    ::testing::Values(
-        std::make_tuple(96000.0, 96),
-        std::make_tuple(128.0, 128),
-        std::make_tuple(179000.0, 192),
-        std::make_tuple(229000.0, 224),
-        std::make_tuple(320000.0, 320)));
-
 TEST(OverwriteOriginalSettingsTests, DoesNotTreatLowOggStyleQualityValuesAsBitRateTargets)
 {
-    FakeExportOptionsEditor editor("plain", {
-        option(0, "Quality", 5, ExportOption::TypeEnum, { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }),
+    FakeExportOptionsEditor editor("ogg", {
+        option(1, "Qualite", 5, ExportOption::TypeEnum, { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }),
     });
 
-    au::importexport::ApplyCodecSettingsToExportOptions(editor, codecSettingsWithBitRate(96000.0));
+    au::importexport::ApplyCodecSettingsToExportOptions(editor, codecSettingsWithBitRate(96000.0, "OGG"));
 
-    EXPECT_EQ(editor.value<int>(0), 5);
+    EXPECT_EQ(editor.value<int>(1), 5);
 }

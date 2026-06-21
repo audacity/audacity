@@ -202,40 +202,39 @@ void AppMenuModel::updateUndoRedoItems()
 
 void AppMenuModel::updateOverwriteOriginalTitle()
 {
-    try {
-        MenuItem& item = findItem(ActionCode("export-overwrite-original"));
+    MenuItem& item = findItem(ActionCode("export-overwrite-original"));
+    if (!item.isValid()) {
+        return;
+    }
 
-        // Try to get the current project and its original file info
-        auto currentProj = globalContext()->currentProject();
-        if (currentProj) {
-            auto au3Project = reinterpret_cast<AudacityProject*>(currentProj->au3ProjectPtr());
-            if (au3Project) {
-                auto& fileInfo = OriginalFileInfo::Get(*au3Project);
-                if (fileInfo.HasOriginalFile()) {
-                    // Get the display name (filename without path)
-                    QString displayName = fileInfo.GetOriginalFileName();
-                    if (displayName.isEmpty()) {
-                        displayName = fileInfo.GetOriginalFilePath();
-                    }
-
-                    // Extract just the filename if it's a full path
-                    QFileInfo fi(displayName);
-                    QString fileName = fi.fileName();
-                    if (fileName.isEmpty()) {
-                        fileName = displayName;
-                    }
-
-                    item.setTitle(TranslatableString("action", "Overwrite %1").arg(fileName));
-                    return;
+    // Try to get the current project and its original file info
+    auto currentProj = globalContext()->currentProject();
+    if (currentProj) {
+        auto au3Project = reinterpret_cast<AudacityProject*>(currentProj->au3ProjectPtr());
+        if (au3Project) {
+            auto& fileInfo = OriginalFileInfo::Get(*au3Project);
+            if (fileInfo.HasOriginalFile()) {
+                // Get the display name (filename without path)
+                QString displayName = fileInfo.GetOriginalFileName();
+                if (displayName.isEmpty()) {
+                    displayName = fileInfo.GetOriginalFilePath();
                 }
+
+                // Extract just the filename if it's a full path
+                QFileInfo fi(displayName);
+                QString fileName = fi.fileName();
+                if (fileName.isEmpty()) {
+                    fileName = displayName;
+                }
+
+                item.setTitle(TranslatableString("action", "Overwrite %1").arg(fileName));
+                return;
             }
         }
-
-        // Fallback: use default title if no original file
-        item.setTitle(TranslatableString("action", "Overwrite original"));
-    } catch (...) {
-        // Item not found - this is okay, menu might not be fully initialized yet
     }
+
+    // Fallback: use default title if no original file
+    item.setTitle(TranslatableString("action", "Overwrite original"));
 }
 
 MenuItem* AppMenuModel::makeMenuItem(const actions::ActionCode& actionCode, MenuItemRole menuRole)

@@ -1,6 +1,7 @@
 #include "overwriteoriginalsettings.h"
 
 #include <algorithm>
+#include <cctype>
 #include <cmath>
 #include <limits>
 #include <string>
@@ -8,7 +9,6 @@
 #include <variant>
 
 #include "au3-import-export/ExportOptionsEditor.h"
-#include "au3-strings/TranslatableString.h"
 
 namespace au::importexport {
 std::optional<double> NumericExportValue(const ::ExportValue& value)
@@ -32,6 +32,11 @@ std::optional<double> NumericExportValue(const ::ExportValue& value)
 }
 
 namespace {
+constexpr auto FLACFormatID = "FLAC";
+constexpr auto FLACOptionIDBitDepth = 0;
+constexpr auto MP3OptionIDMode = 0;
+constexpr auto MP3OptionIDQualityVBR = 2;
+
 std::optional<::ExportValue> closestNumericOptionValue(const ::ExportOption& option, double target)
 {
     std::optional<::ExportValue> closest;
@@ -53,8 +58,46 @@ std::optional<::ExportValue> closestNumericOptionValue(const ::ExportOption& opt
     return closest;
 }
 
+std::string normalizedFormatID(const QVariantMap& codecSettings)
+{
+    auto format = codecSettings.value("format").toString().toStdString();
+    std::transform(format.begin(), format.end(), format.begin(), [](unsigned char c) {
+        return static_cast<char>(std::toupper(c));
+    });
+    return format;
+}
+
+std::optional<::ExportOption> optionByID(::ExportOptionsEditor& editor, ::ExportOptionID optionID)
+{
+    for (int index = 0; index < editor.GetOptionsCount(); ++index) {
+        ::ExportOption option;
+        if (editor.GetOption(index, option) && option.id == optionID) {
+            return option;
+        }
+    }
+
+    return std::nullopt;
+}
+
+bool setClosestNumericOptionValue(::ExportOptionsEditor& editor, ::ExportOptionID optionID, double target)
+{
+    const auto option = optionByID(editor, optionID);
+    if (!option) {
+        return false;
+    }
+
+    const auto value = closestNumericOptionValue(*option, target);
+    if (!value) {
+        return false;
+    }
+
+    return editor.SetValue(option->id, *value);
+}
+
 bool applyMp3CodecSettings(::ExportOptionsEditor& editor, const QVariantMap& codecSettings)
 {
+    // MP3ExportOptionsEditor::GetName() returns "mp3"; its option ids are
+    // MP3OptionIDMode == 0 and MP3OptionIDQualityVBR == 2 in ExportMP3.cpp.
     if (editor.GetName() != "mp3" || !codecSettings.contains("bitRate")) {
         return false;
     }
@@ -64,44 +107,19 @@ bool applyMp3CodecSettings(::ExportOptionsEditor& editor, const QVariantMap& cod
         return false;
     }
 
-    for (int index = 0; index < editor.GetOptionsCount(); ++index) {
-        ::ExportOption option;
-        if (!editor.GetOption(index, option)) {
-            continue;
-        }
-
-        const bool isModeOption = std::any_of(option.values.cbegin(), option.values.cend(), [](const ::ExportValue& value) {
-            const auto str = std::get_if<std::string>(&value);
-            return str && *str == "VBR";
-        });
-
-        if (isModeOption) {
-            editor.SetValue(option.id, std::string("VBR"));
-            break;
-        }
-    }
-
-    for (int index = 0; index < editor.GetOptionsCount(); ++index) {
-        ::ExportOption option;
-        if (!editor.GetOption(index, option)) {
-            continue;
-        }
-
-        const bool isVisibleVbrQualityOption = (option.flags & ::ExportOption::Hidden) == 0
-                                               && option.values.size() == 10
-                                               && std::all_of(
-            option.values.cbegin(), option.values.cend(), [](const ::ExportValue& value) {
-            const auto numeric = std::get_if<int>(&value);
-            return numeric && *numeric >= 0 && *numeric <= 9;
-        });
-
-        if (isVisibleVbrQualityOption) {
-            editor.SetValue(option.id, *vbrPreset);
-            return true;
-        }
-    }
-
+    editor.SetValue(MP3OptionIDMode, std::string("VBR"));
+    editor.SetValue(MP3OptionIDQualityVBR, *vbrPreset);
     return true;
+}
+
+bool applyFlacCodecSettings(::ExportOptionsEditor& editor, const QVariantMap& codecSettings)
+{
+    if (normalizedFormatID(codecSettings) != FLACFormatID || !codecSettings.contains("bitDepth")) {
+        return false;
+    }
+
+    // ExportFLAC exposes FlacOptionIDBitDepth as option id 0.
+    return setClosestNumericOptionValue(editor, FLACOptionIDBitDepth, codecSettings.value("bitDepth").toDouble());
 }
 }
 
@@ -139,37 +157,6 @@ void ApplyCodecSettingsToExportOptions(::ExportOptionsEditor& editor, const QVar
         return;
     }
 
-    const bool hasBitDepth = codecSettings.contains("bitDepth");
-    const bool hasBitRate = codecSettings.contains("bitRate");
-    const double bitDepth = codecSettings.value("bitDepth").toDouble();
-    double bitRate = codecSettings.value("bitRate").toDouble();
-    if (bitRate > 1000.0) {
-        bitRate /= 1000.0;
-    }
-
-    for (int index = 0; index < editor.GetOptionsCount(); ++index) {
-        ::ExportOption option;
-        if (!editor.GetOption(index, option)) {
-            continue;
-        }
-
-        const std::string title = option.title.Translation().Lower().ToStdString();
-        const bool isBitDepth = title.find("bit depth") != std::string::npos;
-        const bool isBitRate = title.find("bit rate") != std::string::npos
-                               || title.find("bitrate") != std::string::npos
-                               || title.find("quality") != std::string::npos;
-
-        if (hasBitDepth && isBitDepth) {
-            if (auto value = closestNumericOptionValue(option, bitDepth)) {
-                editor.SetValue(option.id, *value);
-            }
-        } else if (hasBitRate && isBitRate) {
-            const auto value = closestNumericOptionValue(option, bitRate);
-            const auto numeric = value ? NumericExportValue(*value) : std::nullopt;
-            if (value && numeric && *numeric >= 32.0) {
-                editor.SetValue(option.id, *value);
-            }
-        }
-    }
+    applyFlacCodecSettings(editor, codecSettings);
 }
 }
