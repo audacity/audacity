@@ -232,7 +232,6 @@ DockPage {
             minimumWidth: 300
             thickness: root.videoPreviewToolBarDefaultHeight
             resizable: true
-            floatable: false
             separatorsVisible: false
 
             visible: pageModel.videoEditingWorkspace

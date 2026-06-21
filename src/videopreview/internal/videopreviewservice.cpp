@@ -1254,7 +1254,6 @@ void VideoPreviewService::setProjectTime(double seconds)
 
     const std::optional<double> sourceSeconds = sourceTimeForProjectTime(seconds);
     if (!sourceSeconds.has_value()) {
-        clearFrame();
         return;
     }
 
