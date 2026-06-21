@@ -581,6 +581,7 @@ bool Au3TracksInteraction::splitTracksAt(const TrackIdList& tracksIds, std::vect
     std::vector<trackedit::Track> changedTracks;
     ClipKeyList splitClipKeys;
     bool ok = true;
+    bool didAnyTrackSplit = false;
 
     TrackIdList auxiliaryTrackIds;
     if (auxiliaryTrackProvider()) {
@@ -590,7 +591,7 @@ bool Au3TracksInteraction::splitTracksAt(const TrackIdList& tracksIds, std::vect
     }
 
     if (!auxiliaryTrackIds.empty()) {
-        ok = auxiliaryTrackProvider()->splitTracksAt(auxiliaryTrackIds, pivots) && ok;
+        didAnyTrackSplit = auxiliaryTrackProvider()->splitTracksAt(auxiliaryTrackIds, pivots) || didAnyTrackSplit;
     }
 
     for (const auto& trackId : tracksIds) {
@@ -615,6 +616,7 @@ bool Au3TracksInteraction::splitTracksAt(const TrackIdList& tracksIds, std::vect
         });
 
         if (didAnySplitOccur) {
+            didAnyTrackSplit = true;
             secs_t time = pivots.front();
             const auto sampleLength = 1. / waveTrack->GetRate();
             time -= sampleLength;
@@ -637,7 +639,7 @@ bool Au3TracksInteraction::splitTracksAt(const TrackIdList& tracksIds, std::vect
         selectionController()->setSelectedClips(splitClipKeys, true);
     }
 
-    return ok;
+    return ok && didAnyTrackSplit;
 }
 
 bool Au3TracksInteraction::splitRangeSelectionAtSilences(const TrackIdList& tracksIds, secs_t begin, secs_t end)

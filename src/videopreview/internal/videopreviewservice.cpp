@@ -1174,6 +1174,7 @@ bool VideoPreviewService::splitTracksAt(const au::trackedit::TrackIdList& tracks
     std::vector<VideoSegment> nextSegments;
     nextSegments.reserve(link.segments.size() + splitTimes.size());
     au::trackedit::TrackItemId nextId = nextSegmentId(link.segments);
+    bool didSplit = false;
 
     for (const VideoSegment& segment : link.segments) {
         std::vector<double> inside;
@@ -1187,6 +1188,7 @@ bool VideoPreviewService::splitTracksAt(const au::trackedit::TrackIdList& tracks
             nextSegments.push_back(segment);
             continue;
         }
+        didSplit = true;
 
         double partProjectStart = segment.projectStart;
         double partSourceStart = segment.sourceStart;
@@ -1212,6 +1214,10 @@ bool VideoPreviewService::splitTracksAt(const au::trackedit::TrackIdList& tracks
         finalPart.projectStart = partProjectStart;
         finalPart.sourceStart = partSourceStart;
         nextSegments.push_back(std::move(finalPart));
+    }
+
+    if (!didSplit) {
+        return false;
     }
 
     link.segments = std::move(nextSegments);
