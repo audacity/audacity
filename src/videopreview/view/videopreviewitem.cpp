@@ -36,12 +36,12 @@ void VideoPreviewItem::paint(QPainter* painter)
         return;
     }
 
+    painter->fillRect(boundingRect(), QColor(10, 10, 10));
+
     const QImage frame = service()->currentFrame();
     if (frame.isNull()) {
         return;
     }
-
-    painter->fillRect(boundingRect(), QColor(10, 10, 10));
 
     const QSizeF targetSize = frame.size().scaled(boundingRect().size().toSize(), Qt::KeepAspectRatio);
     const QRectF targetRect(

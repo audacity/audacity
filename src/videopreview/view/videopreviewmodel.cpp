@@ -43,6 +43,16 @@ bool VideoPreviewModel::hasFrame() const
     return service() && !service()->currentFrame().isNull();
 }
 
+bool VideoPreviewModel::showStateText() const
+{
+    if (!service() || hasFrame()) {
+        return false;
+    }
+
+    const VideoPreviewState state = service()->state();
+    return state != VideoPreviewState::Empty && state != VideoPreviewState::Ready;
+}
+
 QString VideoPreviewModel::sourcePath() const
 {
     return service() ? service()->sourcePath().toQString() : QString();

@@ -41,6 +41,7 @@ struct VideoSegment
 
 struct VideoLink
 {
+    trackedit::TrackId trackId = trackedit::INVALID_TRACK;
     muse::io::path_t sourcePath;
     muse::String trackTitle;
     int streamIndex = -1;
@@ -49,7 +50,9 @@ struct VideoLink
 
     bool isValid() const
     {
-        return !sourcePath.empty() && streamIndex >= 0 && !segments.empty();
+        return trackId != trackedit::INVALID_TRACK && !sourcePath.empty() && streamIndex >= 0 && !segments.empty();
     }
 };
+
+using VideoLinks = std::vector<VideoLink>;
 }

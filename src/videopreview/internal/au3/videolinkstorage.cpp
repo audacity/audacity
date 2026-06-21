@@ -3,6 +3,7 @@
 */
 #include "videolinkstorage.h"
 
+#include <algorithm>
 #include <typeindex>
 #include <utility>
 
@@ -18,6 +19,7 @@ using namespace au::videopreview;
 
 namespace {
 constexpr std::string_view VIDEO_PREVIEW_TAG = "video_preview";
+constexpr std::string_view VIDEO_LINK_TAG = "video_link";
 constexpr std::string_view SEGMENT_TAG = "segment";
 
 const XMLAttributeValueView* attr(const AttributesList& attrs, std::string_view name)
@@ -72,16 +74,16 @@ static ProjectFileIORegistry::ObjectReaderEntry readerEntry {
 struct VideoLinkRestorer final : UndoStateExtension
 {
     explicit VideoLinkRestorer(AudacityProject& project)
-        : link(VideoLinkStorage::Get(project).link())
+        : links(VideoLinkStorage::Get(project).links())
     {
     }
 
     void RestoreUndoRedoState(AudacityProject& project) override
     {
-        VideoLinkStorage::Get(project).setLink(link);
+        VideoLinkStorage::Get(project).setLinks(links);
     }
 
-    VideoLink link;
+    VideoLinks links;
 };
 
 static UndoRedoExtensionRegistry::Entry<VideoLinkRestorer> undoEntry {
@@ -101,20 +103,20 @@ const VideoLinkStorage& VideoLinkStorage::Get(const AudacityProject& project)
     return Get(const_cast<AudacityProject&>(project));
 }
 
-const VideoLink& VideoLinkStorage::link() const
+const VideoLinks& VideoLinkStorage::links() const
 {
-    return m_link;
+    return m_links;
 }
 
-void VideoLinkStorage::setLink(VideoLink link)
+void VideoLinkStorage::setLinks(VideoLinks links)
 {
-    m_link = std::move(link);
+    m_links = std::move(links);
     m_linkChanged.notify();
 }
 
 void VideoLinkStorage::clear()
 {
-    setLink({});
+    setLinks({});
 }
 
 muse::async::Notification VideoLinkStorage::linkChanged() const
@@ -124,32 +126,46 @@ muse::async::Notification VideoLinkStorage::linkChanged() const
 
 void VideoLinkStorage::WriteXML(XMLWriter& xmlFile) const
 {
-    if (!m_link.isValid()) {
+    const bool hasLinks = std::any_of(m_links.begin(), m_links.end(), [](const VideoLink& link) {
+        return link.isValid();
+    });
+    if (!hasLinks) {
         return;
     }
 
     xmlFile.StartTag(wxT("video_preview"));
-    xmlFile.WriteAttr(wxT("source"), wxString::FromUTF8(m_link.sourcePath.toStdString().c_str()));
-    xmlFile.WriteAttr(wxT("track_title"), wxString::FromUTF8(m_link.trackTitle.toStdString().c_str()));
-    xmlFile.WriteAttr(wxT("stream_index"), m_link.streamIndex);
-    xmlFile.WriteAttr(wxT("stream_id"), m_link.streamId);
 
-    for (const VideoSegment& segment : m_link.segments) {
-        if (!segment.isValid()) {
+    for (const VideoLink& link : m_links) {
+        if (!link.isValid()) {
             continue;
         }
 
-        xmlFile.StartTag(wxT("segment"));
-        xmlFile.WriteAttr(wxT("track_id"), static_cast<long long>(segment.clipKey.trackId));
-        xmlFile.WriteAttr(wxT("clip_id"), static_cast<long long>(segment.clipKey.itemId));
-        xmlFile.WriteAttr(wxT("title"), wxString::FromUTF8(segment.title.toStdString().c_str()));
-        xmlFile.WriteAttr(wxT("group_id"), static_cast<long long>(segment.groupId));
-        xmlFile.WriteAttr(wxT("color_index"), segment.colorIndex);
-        xmlFile.WriteAttr(wxT("project_start"), segment.projectStart, 10);
-        xmlFile.WriteAttr(wxT("project_end"), segment.projectEnd, 10);
-        xmlFile.WriteAttr(wxT("source_start"), segment.sourceStart, 10);
-        xmlFile.WriteAttr(wxT("source_end"), segment.sourceEnd, 10);
-        xmlFile.EndTag(wxT("segment"));
+        xmlFile.StartTag(wxT("video_link"));
+        xmlFile.WriteAttr(wxT("track_id"), static_cast<long long>(link.trackId));
+        xmlFile.WriteAttr(wxT("source"), wxString::FromUTF8(link.sourcePath.toStdString().c_str()));
+        xmlFile.WriteAttr(wxT("track_title"), wxString::FromUTF8(link.trackTitle.toStdString().c_str()));
+        xmlFile.WriteAttr(wxT("stream_index"), link.streamIndex);
+        xmlFile.WriteAttr(wxT("stream_id"), link.streamId);
+
+        for (const VideoSegment& segment : link.segments) {
+            if (!segment.isValid()) {
+                continue;
+            }
+
+            xmlFile.StartTag(wxT("segment"));
+            xmlFile.WriteAttr(wxT("track_id"), static_cast<long long>(segment.clipKey.trackId));
+            xmlFile.WriteAttr(wxT("clip_id"), static_cast<long long>(segment.clipKey.itemId));
+            xmlFile.WriteAttr(wxT("title"), wxString::FromUTF8(segment.title.toStdString().c_str()));
+            xmlFile.WriteAttr(wxT("group_id"), static_cast<long long>(segment.groupId));
+            xmlFile.WriteAttr(wxT("color_index"), segment.colorIndex);
+            xmlFile.WriteAttr(wxT("project_start"), segment.projectStart, 10);
+            xmlFile.WriteAttr(wxT("project_end"), segment.projectEnd, 10);
+            xmlFile.WriteAttr(wxT("source_start"), segment.sourceStart, 10);
+            xmlFile.WriteAttr(wxT("source_end"), segment.sourceEnd, 10);
+            xmlFile.EndTag(wxT("segment"));
+        }
+
+        xmlFile.EndTag(wxT("video_link"));
     }
 
     xmlFile.EndTag(wxT("video_preview"));
@@ -158,15 +174,40 @@ void VideoLinkStorage::WriteXML(XMLWriter& xmlFile) const
 bool VideoLinkStorage::HandleXMLTag(const std::string_view& tag, const AttributesList& attrs)
 {
     if (tag == VIDEO_PREVIEW_TAG) {
-        m_link = {};
-        m_link.sourcePath = muse::io::path_t(attrString(attrs, "source"));
-        m_link.trackTitle = muse::String::fromStdString(attrString(attrs, "track_title", "Video"));
-        m_link.streamIndex = attrValue<int>(attrs, "stream_index", -1);
-        m_link.streamId = attrValue<int>(attrs, "stream_id", -1);
+        m_links.clear();
+        m_currentReadLink = -1;
+
+        const std::string source = attrString(attrs, "source");
+        if (!source.empty()) {
+            VideoLink link;
+            link.trackId = attrValue<long long>(attrs, "track_id", trackedit::INVALID_TRACK);
+            link.sourcePath = muse::io::path_t(source);
+            link.trackTitle = muse::String::fromStdString(attrString(attrs, "track_title", "Video"));
+            link.streamIndex = attrValue<int>(attrs, "stream_index", -1);
+            link.streamId = attrValue<int>(attrs, "stream_id", -1);
+            m_links.push_back(std::move(link));
+            m_currentReadLink = static_cast<int>(m_links.size()) - 1;
+        }
+        return true;
+    }
+
+    if (tag == VIDEO_LINK_TAG) {
+        VideoLink link;
+        link.trackId = attrValue<long long>(attrs, "track_id", trackedit::INVALID_TRACK);
+        link.sourcePath = muse::io::path_t(attrString(attrs, "source"));
+        link.trackTitle = muse::String::fromStdString(attrString(attrs, "track_title", "Video"));
+        link.streamIndex = attrValue<int>(attrs, "stream_index", -1);
+        link.streamId = attrValue<int>(attrs, "stream_id", -1);
+        m_links.push_back(std::move(link));
+        m_currentReadLink = static_cast<int>(m_links.size()) - 1;
         return true;
     }
 
     if (tag == SEGMENT_TAG) {
+        if (m_currentReadLink < 0 || m_currentReadLink >= static_cast<int>(m_links.size())) {
+            return true;
+        }
+
         VideoSegment segment;
         segment.clipKey.trackId = attrValue<long long>(attrs, "track_id", trackedit::INVALID_TRACK);
         segment.clipKey.itemId = attrValue<long long>(attrs, "clip_id", trackedit::INVALID_TRACK_ITEM);
@@ -179,7 +220,7 @@ bool VideoLinkStorage::HandleXMLTag(const std::string_view& tag, const Attribute
         segment.sourceEnd = attrValue<double>(attrs, "source_end");
 
         if (segment.isValid()) {
-            m_link.segments.push_back(std::move(segment));
+            m_links[m_currentReadLink].segments.push_back(std::move(segment));
         }
 
         return true;
@@ -190,7 +231,7 @@ bool VideoLinkStorage::HandleXMLTag(const std::string_view& tag, const Attribute
 
 XMLTagHandler* VideoLinkStorage::HandleXMLChild(const std::string_view& tag)
 {
-    if (tag == SEGMENT_TAG) {
+    if (tag == VIDEO_LINK_TAG || tag == SEGMENT_TAG) {
         return this;
     }
 

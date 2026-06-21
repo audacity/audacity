@@ -8,6 +8,7 @@
 #include <iterator>
 #include <limits>
 #include <thread>
+#include <utility>
 #include <vector>
 
 #include <QFileInfo>
@@ -23,7 +24,7 @@ using namespace au::videopreview;
 
 namespace {
 constexpr double EPS = 1e-7;
-constexpr au::trackedit::TrackId VIDEO_TRACK_ID = -1000000;
+constexpr au::trackedit::TrackId FIRST_VIDEO_TRACK_ID = -1000000;
 constexpr au::trackedit::TrackItemId FIRST_VIDEO_SEGMENT_ID = 1;
 constexpr au::trackedit::ClipColorIndex VIDEO_CLIP_COLOR = 4;
 
@@ -60,6 +61,25 @@ au::trackedit::TrackItemId nextSegmentId(const std::vector<VideoSegment>& segmen
     for (const VideoSegment& segment : segments) {
         next = std::max(next, segment.clipKey.itemId + 1);
     }
+    return next;
+}
+
+bool hasValidSegment(const VideoLink& link)
+{
+    return std::any_of(link.segments.begin(), link.segments.end(), [](const VideoSegment& segment) {
+        return segment.isValid();
+    });
+}
+
+au::trackedit::TrackId nextVideoTrackId(const VideoLinks& links)
+{
+    au::trackedit::TrackId next = FIRST_VIDEO_TRACK_ID;
+    for (const VideoLink& link : links) {
+        if (link.trackId <= next) {
+            next = link.trackId - 1;
+        }
+    }
+
     return next;
 }
 }
@@ -102,7 +122,7 @@ void VideoPreviewService::onCurrentProjectChanged()
 
     m_au3Project = nullptr;
     m_storage = nullptr;
-    m_link = {};
+    m_links.clear();
     m_recentSegments.clear();
     m_decodeGeneration++;
     m_decodeInFlight = false;
@@ -202,35 +222,38 @@ void VideoPreviewService::onStorageLinkChanged(bool probe)
         return;
     }
 
-    const VideoLink oldLink = m_link;
-    m_link = normalizedLink(m_storage->link());
-    m_recentSegments = m_link.segments;
+    const VideoLinks oldLinks = m_links;
+    m_links = normalizedLinks(m_storage->links());
+    m_recentSegments.clear();
+    for (const VideoLink& link : m_links) {
+        m_recentSegments.insert(m_recentSegments.end(), link.segments.begin(), link.segments.end());
+    }
 
     m_ignoreStorageNotification = true;
-    m_storage->setLink(m_link);
+    m_storage->setLinks(m_links);
     m_ignoreStorageNotification = false;
 
-    notifyTrackeditAboutLinkChange(oldLink, m_link);
+    notifyTrackeditAboutLinksChange(oldLinks, m_links);
     m_linkChanged.notify();
 
-    if (!m_link.isValid()) {
+    if (m_links.empty()) {
         clearFrame();
         setState(VideoPreviewState::Empty);
         return;
     }
 
-    if (!QFileInfo::exists(m_link.sourcePath.toQString())) {
-        clearFrame();
-        setState(VideoPreviewState::MissingFile);
-        return;
-    }
-
     if (probe) {
-        const VideoProbeResult probeResult = FFmpegVideoDecoder::probe(m_link.sourcePath, m_link.streamIndex, m_link.streamId);
-        if (!probeResult.isUsable()) {
-            clearFrame();
-            setState(probeResult.state == VideoPreviewState::Empty ? VideoPreviewState::UnsupportedCodec : probeResult.state);
-            return;
+        for (const VideoLink& link : m_links) {
+            if (!QFileInfo::exists(link.sourcePath.toQString())) {
+                continue;
+            }
+
+            const VideoProbeResult probeResult = FFmpegVideoDecoder::probe(link.sourcePath, link.streamIndex, link.streamId);
+            if (!probeResult.isUsable()) {
+                clearFrame();
+                setState(probeResult.state == VideoPreviewState::Empty ? VideoPreviewState::UnsupportedCodec : probeResult.state);
+                return;
+            }
         }
     }
 
@@ -258,6 +281,7 @@ void VideoPreviewService::linkImportedVideo(const muse::io::path_t& sourcePath,
     }
 
     VideoLink link;
+    link.trackId = nextVideoTrackId(m_links);
     link.sourcePath = sourcePath;
     link.trackTitle = muse::String::fromAscii("Video");
     link.streamIndex = probeResult.streamIndex;
@@ -295,7 +319,7 @@ void VideoPreviewService::linkImportedVideo(const muse::io::path_t& sourcePath,
     }
 
     VideoSegment segment;
-    segment.clipKey = au::trackedit::ClipKey(VIDEO_TRACK_ID, FIRST_VIDEO_SEGMENT_ID);
+    segment.clipKey = au::trackedit::ClipKey(link.trackId, FIRST_VIDEO_SEGMENT_ID);
     segment.title = title.empty() ? muse::String::fromAscii("Video") : title;
     segment.groupId = groupId;
     segment.colorIndex = VIDEO_CLIP_COLOR;
@@ -309,40 +333,39 @@ void VideoPreviewService::linkImportedVideo(const muse::io::path_t& sourcePath,
         return;
     }
 
-    commitLink(std::move(link), false);
+    VideoLinks links = m_links;
+    links.push_back(std::move(link));
+    commitLinks(std::move(links), false);
 }
 
-void VideoPreviewService::commitLink(VideoLink link, bool refreshUndoState)
+void VideoPreviewService::commitLinks(VideoLinks links, bool refreshUndoState)
 {
     if (!m_storage) {
         return;
     }
 
-    link = normalizedLink(std::move(link));
-    const VideoLink oldLink = m_link;
-    m_recentSegments = m_link.segments;
-    m_link = std::move(link);
+    links = normalizedLinks(std::move(links));
+    const VideoLinks oldLinks = m_links;
+    m_recentSegments.clear();
+    for (const VideoLink& link : m_links) {
+        m_recentSegments.insert(m_recentSegments.end(), link.segments.begin(), link.segments.end());
+    }
+    m_links = std::move(links);
 
     m_ignoreStorageNotification = true;
-    m_storage->setLink(m_link);
+    m_storage->setLinks(m_links);
     m_ignoreStorageNotification = false;
 
     if (refreshUndoState && m_au3Project) {
         modifyVideoLinkUndoState(*m_au3Project);
     }
 
-    notifyTrackeditAboutLinkChange(oldLink, m_link);
+    notifyTrackeditAboutLinksChange(oldLinks, m_links);
     m_linkChanged.notify();
 
-    if (!m_link.isValid()) {
+    if (m_links.empty()) {
         clearFrame();
         setState(VideoPreviewState::Empty);
-        return;
-    }
-
-    if (!QFileInfo::exists(m_link.sourcePath.toQString())) {
-        clearFrame();
-        setState(VideoPreviewState::MissingFile);
         return;
     }
 
@@ -353,7 +376,7 @@ void VideoPreviewService::commitLink(VideoLink link, bool refreshUndoState)
 au::trackedit::Track VideoPreviewService::videoTrack(const VideoLink& link) const
 {
     au::trackedit::Track track;
-    track.id = VIDEO_TRACK_ID;
+    track.id = link.trackId;
     track.title = link.trackTitle.empty() ? muse::String::fromAscii("Video") : link.trackTitle;
     track.type = au::trackedit::TrackType::Video;
     track.colorIndex = VIDEO_CLIP_COLOR;
@@ -399,7 +422,7 @@ VideoLink VideoPreviewService::normalizedLink(VideoLink link) const
     au::trackedit::TrackItemId nextId = FIRST_VIDEO_SEGMENT_ID;
     std::set<au::trackedit::TrackItemId> usedIds;
     for (VideoSegment& segment : link.segments) {
-        segment.clipKey.trackId = VIDEO_TRACK_ID;
+        segment.clipKey.trackId = link.trackId;
         if (segment.clipKey.itemId == au::trackedit::INVALID_TRACK_ITEM || usedIds.count(segment.clipKey.itemId) != 0) {
             while (usedIds.count(nextId) != 0) {
                 ++nextId;
@@ -417,6 +440,69 @@ VideoLink VideoPreviewService::normalizedLink(VideoLink link) const
     }
 
     return link;
+}
+
+VideoLinks VideoPreviewService::normalizedLinks(VideoLinks links) const
+{
+    VideoLinks result;
+    result.reserve(links.size());
+
+    std::set<au::trackedit::TrackId> usedTrackIds;
+    au::trackedit::TrackId nextTrackId = FIRST_VIDEO_TRACK_ID;
+
+    for (VideoLink link : links) {
+        if (link.trackId == au::trackedit::INVALID_TRACK || usedTrackIds.count(link.trackId) != 0) {
+            while (usedTrackIds.count(nextTrackId) != 0) {
+                --nextTrackId;
+            }
+            link.trackId = nextTrackId--;
+        }
+
+        usedTrackIds.insert(link.trackId);
+        nextTrackId = std::min(nextTrackId, link.trackId - 1);
+        link = normalizedLink(std::move(link));
+        if (link.isValid() && hasValidSegment(link)) {
+            result.push_back(std::move(link));
+        }
+    }
+
+    return result;
+}
+
+void VideoPreviewService::notifyTrackeditAboutLinksChange(const VideoLinks& oldLinks, const VideoLinks& newLinks)
+{
+    std::set<au::trackedit::TrackId> trackIds;
+    for (const VideoLink& link : oldLinks) {
+        if (link.isValid()) {
+            trackIds.insert(link.trackId);
+        }
+    }
+    for (const VideoLink& link : newLinks) {
+        if (link.isValid()) {
+            trackIds.insert(link.trackId);
+        }
+    }
+
+    for (au::trackedit::TrackId trackId : trackIds) {
+        const VideoLink* oldLink = nullptr;
+        const VideoLink* newLink = nullptr;
+
+        auto oldIt = std::find_if(oldLinks.begin(), oldLinks.end(), [trackId](const VideoLink& link) {
+            return link.trackId == trackId;
+        });
+        if (oldIt != oldLinks.end()) {
+            oldLink = &*oldIt;
+        }
+
+        auto newIt = std::find_if(newLinks.begin(), newLinks.end(), [trackId](const VideoLink& link) {
+            return link.trackId == trackId;
+        });
+        if (newIt != newLinks.end()) {
+            newLink = &*newIt;
+        }
+
+        notifyTrackeditAboutLinkChange(oldLink ? *oldLink : VideoLink {}, newLink ? *newLink : VideoLink {});
+    }
 }
 
 void VideoPreviewService::notifyTrackeditAboutLinkChange(const VideoLink& oldLink, const VideoLink& newLink)
@@ -582,21 +668,60 @@ void VideoPreviewService::updateSegmentMapFromProject(bool refreshUndoState)
     Q_UNUSED(refreshUndoState);
 }
 
-std::optional<double> VideoPreviewService::sourceTimeForProjectTime(double projectSeconds) const
+const VideoLink* VideoPreviewService::linkForTrack(au::trackedit::TrackId trackId) const
 {
-    for (const VideoSegment& segment : m_link.segments) {
-        if (projectSeconds + EPS < segment.projectStart || projectSeconds > segment.projectEnd + EPS) {
-            continue;
-        }
+    const auto it = std::find_if(m_links.begin(), m_links.end(), [trackId](const VideoLink& link) {
+        return link.trackId == trackId;
+    });
 
-        const double projectDuration = duration(segment.projectStart, segment.projectEnd);
-        const double sourceDuration = duration(segment.sourceStart, segment.sourceEnd);
-        if (projectDuration <= EPS || sourceDuration <= EPS) {
-            continue;
-        }
+    return it == m_links.end() ? nullptr : &*it;
+}
 
-        const double normalized = std::clamp((projectSeconds - segment.projectStart) / projectDuration, 0.0, 1.0);
-        return segment.sourceStart + normalized * sourceDuration;
+VideoLink* VideoPreviewService::linkForTrack(VideoLinks& links, au::trackedit::TrackId trackId) const
+{
+    const auto it = std::find_if(links.begin(), links.end(), [trackId](const VideoLink& link) {
+        return link.trackId == trackId;
+    });
+
+    return it == links.end() ? nullptr : &*it;
+}
+
+const VideoLink* VideoPreviewService::linkForClip(const au::trackedit::ClipKey& key) const
+{
+    return linkForTrack(key.trackId);
+}
+
+VideoLink* VideoPreviewService::linkForClip(VideoLinks& links, const au::trackedit::ClipKey& key) const
+{
+    return linkForTrack(links, key.trackId);
+}
+
+VideoLink VideoPreviewService::activeLink() const
+{
+    if (auto active = sourceTimeForProjectTime(m_lastProjectTime)) {
+        return active->first;
+    }
+
+    return m_links.empty() ? VideoLink {} : m_links.front();
+}
+
+std::optional<std::pair<VideoLink, double> > VideoPreviewService::sourceTimeForProjectTime(double projectSeconds) const
+{
+    for (const VideoLink& link : m_links) {
+        for (const VideoSegment& segment : link.segments) {
+            if (projectSeconds + EPS < segment.projectStart || projectSeconds > segment.projectEnd + EPS) {
+                continue;
+            }
+
+            const double projectDuration = duration(segment.projectStart, segment.projectEnd);
+            const double sourceDuration = duration(segment.sourceStart, segment.sourceEnd);
+            if (projectDuration <= EPS || sourceDuration <= EPS) {
+                continue;
+            }
+
+            const double normalized = std::clamp((projectSeconds - segment.projectStart) / projectDuration, 0.0, 1.0);
+            return std::make_pair(link, segment.sourceStart + normalized * sourceDuration);
+        }
     }
 
     return std::nullopt;
@@ -604,12 +729,26 @@ std::optional<double> VideoPreviewService::sourceTimeForProjectTime(double proje
 
 au::trackedit::TrackIdList VideoPreviewService::trackIdList() const
 {
-    return m_link.isValid() ? au::trackedit::TrackIdList { VIDEO_TRACK_ID } : au::trackedit::TrackIdList {};
+    au::trackedit::TrackIdList ids;
+    ids.reserve(m_links.size());
+    for (const VideoLink& link : m_links) {
+        if (link.isValid()) {
+            ids.push_back(link.trackId);
+        }
+    }
+    return ids;
 }
 
 au::trackedit::TrackList VideoPreviewService::trackList() const
 {
-    return m_link.isValid() ? au::trackedit::TrackList { videoTrack(m_link) } : au::trackedit::TrackList {};
+    au::trackedit::TrackList tracks;
+    tracks.reserve(m_links.size());
+    for (const VideoLink& link : m_links) {
+        if (link.isValid()) {
+            tracks.push_back(videoTrack(link));
+        }
+    }
+    return tracks;
 }
 
 std::optional<au::trackedit::Track> VideoPreviewService::track(au::trackedit::TrackId trackId) const
@@ -618,17 +757,19 @@ std::optional<au::trackedit::Track> VideoPreviewService::track(au::trackedit::Tr
         return std::nullopt;
     }
 
-    return videoTrack(m_link);
+    return videoTrack(*linkForTrack(trackId));
 }
 
 bool VideoPreviewService::hasTrack(au::trackedit::TrackId trackId) const
 {
-    return trackId == VIDEO_TRACK_ID && m_link.isValid();
+    const VideoLink* link = linkForTrack(trackId);
+    return link && link->isValid();
 }
 
 au::trackedit::Clip VideoPreviewService::clip(const au::trackedit::ClipKey& key) const
 {
-    const au::trackedit::Clips clips = videoClips(m_link);
+    const VideoLink* link = linkForClip(key);
+    const au::trackedit::Clips clips = link ? videoClips(*link) : au::trackedit::Clips {};
     const auto it = std::find_if(clips.begin(), clips.end(), [&key](const au::trackedit::Clip& clip) {
         return clip.key == key;
     });
@@ -639,7 +780,8 @@ au::trackedit::Clip VideoPreviewService::clip(const au::trackedit::ClipKey& key)
 muse::async::NotifyList<au::trackedit::Clip> VideoPreviewService::clipList(au::trackedit::TrackId trackId) const
 {
     muse::async::NotifyList<au::trackedit::Clip> notifyList;
-    const au::trackedit::Clips clips = hasTrack(trackId) ? videoClips(m_link) : au::trackedit::Clips {};
+    const VideoLink* link = linkForTrack(trackId);
+    const au::trackedit::Clips clips = link ? videoClips(*link) : au::trackedit::Clips {};
 
     notifyList.reserve(clips.size());
     for (const au::trackedit::Clip& clip : clips) {
@@ -652,8 +794,8 @@ muse::async::NotifyList<au::trackedit::Clip> VideoPreviewService::clipList(au::t
 
 bool VideoPreviewService::hasClip(const au::trackedit::ClipKey& key) const
 {
-    return key.trackId == VIDEO_TRACK_ID
-           && std::any_of(m_link.segments.begin(), m_link.segments.end(), [&key](const VideoSegment& segment) {
+    const VideoLink* link = linkForClip(key);
+    return link && std::any_of(link->segments.begin(), link->segments.end(), [&key](const VideoSegment& segment) {
         return segment.clipKey == key;
     });
 }
@@ -665,8 +807,13 @@ au::trackedit::ClipKeyList VideoPreviewService::clipsOnTrack(au::trackedit::Trac
         return result;
     }
 
-    result.reserve(m_link.segments.size());
-    for (const VideoSegment& segment : m_link.segments) {
+    const VideoLink* link = linkForTrack(trackId);
+    if (!link) {
+        return result;
+    }
+
+    result.reserve(link->segments.size());
+    for (const VideoSegment& segment : link->segments) {
         if (segment.isValid()) {
             result.push_back(segment.clipKey);
         }
@@ -678,9 +825,11 @@ au::trackedit::ClipKeyList VideoPreviewService::clipsOnTrack(au::trackedit::Trac
 std::vector<int64_t> VideoPreviewService::groupsIdsList() const
 {
     std::vector<int64_t> groups;
-    for (const VideoSegment& segment : m_link.segments) {
-        if (segment.groupId != -1 && std::find(groups.begin(), groups.end(), segment.groupId) == groups.end()) {
-            groups.push_back(segment.groupId);
+    for (const VideoLink& link : m_links) {
+        for (const VideoSegment& segment : link.segments) {
+            if (segment.groupId != -1 && std::find(groups.begin(), groups.end(), segment.groupId) == groups.end()) {
+                groups.push_back(segment.groupId);
+            }
         }
     }
 
@@ -689,26 +838,36 @@ std::vector<int64_t> VideoPreviewService::groupsIdsList() const
 
 int64_t VideoPreviewService::clipGroupId(const au::trackedit::ClipKey& clipKey) const
 {
-    const auto it = std::find_if(m_link.segments.begin(), m_link.segments.end(), [&clipKey](const VideoSegment& segment) {
+    const VideoLink* link = linkForClip(clipKey);
+    if (!link) {
+        return -1;
+    }
+
+    const auto it = std::find_if(link->segments.begin(), link->segments.end(), [&clipKey](const VideoSegment& segment) {
         return segment.clipKey == clipKey;
     });
 
-    return it == m_link.segments.end() ? -1 : it->groupId;
+    return it == link->segments.end() ? -1 : it->groupId;
 }
 
 void VideoPreviewService::setClipGroupId(const au::trackedit::ClipKey& clipKey, int64_t id)
 {
-    VideoLink link = m_link;
-    auto it = std::find_if(link.segments.begin(), link.segments.end(), [&clipKey](const VideoSegment& segment) {
+    VideoLinks links = m_links;
+    VideoLink* link = linkForClip(links, clipKey);
+    if (!link) {
+        return;
+    }
+
+    auto it = std::find_if(link->segments.begin(), link->segments.end(), [&clipKey](const VideoSegment& segment) {
         return segment.clipKey == clipKey;
     });
 
-    if (it == link.segments.end()) {
+    if (it == link->segments.end()) {
         return;
     }
 
     it->groupId = static_cast<int>(id);
-    commitLink(std::move(link), true);
+    commitLinks(std::move(links), true);
 }
 
 au::trackedit::ClipKeyList VideoPreviewService::clipsInGroup(int64_t id) const
@@ -718,9 +877,11 @@ au::trackedit::ClipKeyList VideoPreviewService::clipsInGroup(int64_t id) const
         return result;
     }
 
-    for (const VideoSegment& segment : m_link.segments) {
-        if (segment.groupId == id) {
-            result.push_back(segment.clipKey);
+    for (const VideoLink& link : m_links) {
+        for (const VideoSegment& segment : link.segments) {
+            if (segment.groupId == id) {
+                result.push_back(segment.clipKey);
+            }
         }
     }
 
@@ -730,8 +891,10 @@ au::trackedit::ClipKeyList VideoPreviewService::clipsInGroup(int64_t id) const
 au::trackedit::secs_t VideoPreviewService::totalTime() const
 {
     double endTime = 0.0;
-    for (const VideoSegment& segment : m_link.segments) {
-        endTime = std::max(endTime, segment.projectEnd);
+    for (const VideoLink& link : m_links) {
+        for (const VideoSegment& segment : link.segments) {
+            endTime = std::max(endTime, segment.projectEnd);
+        }
     }
 
     return endTime;
@@ -757,51 +920,66 @@ au::trackedit::secs_t VideoPreviewService::clipDuration(const au::trackedit::Cli
 
 bool VideoPreviewService::changeClipStartTime(const au::trackedit::ClipKey& clipKey, au::trackedit::secs_t newStartTime, bool completed)
 {
-    VideoLink link = m_link;
-    auto it = std::find_if(link.segments.begin(), link.segments.end(), [&clipKey](const VideoSegment& segment) {
+    VideoLinks links = m_links;
+    VideoLink* link = linkForClip(links, clipKey);
+    if (!link) {
+        return false;
+    }
+
+    auto it = std::find_if(link->segments.begin(), link->segments.end(), [&clipKey](const VideoSegment& segment) {
         return segment.clipKey == clipKey;
     });
 
-    if (it == link.segments.end()) {
+    if (it == link->segments.end()) {
         return false;
     }
 
     const double segmentDuration = duration(it->projectStart, it->projectEnd);
     it->projectStart = std::max(0.0, newStartTime.to_double());
     it->projectEnd = it->projectStart + segmentDuration;
-    commitLink(std::move(link), completed);
+    commitLinks(std::move(links), completed);
     return true;
 }
 
 bool VideoPreviewService::changeClipTitle(const au::trackedit::ClipKey& clipKey, const muse::String& newTitle)
 {
-    VideoLink link = m_link;
-    auto it = std::find_if(link.segments.begin(), link.segments.end(), [&clipKey](const VideoSegment& segment) {
+    VideoLinks links = m_links;
+    VideoLink* link = linkForClip(links, clipKey);
+    if (!link) {
+        return false;
+    }
+
+    auto it = std::find_if(link->segments.begin(), link->segments.end(), [&clipKey](const VideoSegment& segment) {
         return segment.clipKey == clipKey;
     });
 
-    if (it == link.segments.end()) {
+    if (it == link->segments.end()) {
         return false;
     }
 
     it->title = newTitle;
-    commitLink(std::move(link), true);
+    commitLinks(std::move(links), true);
     return true;
 }
 
 bool VideoPreviewService::changeClipColor(const au::trackedit::ClipKey& clipKey, au::trackedit::ClipColorIndex colorIndex)
 {
-    VideoLink link = m_link;
-    auto it = std::find_if(link.segments.begin(), link.segments.end(), [&clipKey](const VideoSegment& segment) {
+    VideoLinks links = m_links;
+    VideoLink* link = linkForClip(links, clipKey);
+    if (!link) {
+        return false;
+    }
+
+    auto it = std::find_if(link->segments.begin(), link->segments.end(), [&clipKey](const VideoSegment& segment) {
         return segment.clipKey == clipKey;
     });
 
-    if (it == link.segments.end()) {
+    if (it == link->segments.end()) {
         return false;
     }
 
     it->colorIndex = colorIndex == au::trackedit::CLIP_COLOR_INDEX_NONE ? VIDEO_CLIP_COLOR : colorIndex;
-    commitLink(std::move(link), true);
+    commitLinks(std::move(links), true);
     return true;
 }
 
@@ -821,25 +999,32 @@ std::optional<au::trackedit::TimeSpan> VideoPreviewService::removeClip(const au:
 
 bool VideoPreviewService::removeClips(const au::trackedit::ClipKeyList& clipKeyList, bool moveClips)
 {
-    if (clipKeyList.empty() || !m_link.isValid()) {
+    if (clipKeyList.empty() || m_links.empty()) {
         return false;
     }
 
-    VideoLink link = m_link;
+    VideoLinks links = m_links;
     std::vector<std::pair<double, double> > removedRanges;
-    std::vector<VideoSegment> keptSegments;
-    keptSegments.reserve(link.segments.size());
+    bool changed = false;
 
-    for (const VideoSegment& segment : link.segments) {
-        const bool remove = std::find(clipKeyList.begin(), clipKeyList.end(), segment.clipKey) != clipKeyList.end();
-        if (remove) {
-            removedRanges.emplace_back(segment.projectStart, segment.projectEnd);
-        } else {
-            keptSegments.push_back(segment);
+    for (VideoLink& link : links) {
+        std::vector<VideoSegment> keptSegments;
+        keptSegments.reserve(link.segments.size());
+
+        for (const VideoSegment& segment : link.segments) {
+            const bool remove = std::find(clipKeyList.begin(), clipKeyList.end(), segment.clipKey) != clipKeyList.end();
+            if (remove) {
+                removedRanges.emplace_back(segment.projectStart, segment.projectEnd);
+                changed = true;
+            } else {
+                keptSegments.push_back(segment);
+            }
         }
+
+        link.segments = std::move(keptSegments);
     }
 
-    if (removedRanges.empty()) {
+    if (!changed) {
         return false;
     }
 
@@ -847,17 +1032,18 @@ bool VideoPreviewService::removeClips(const au::trackedit::ClipKeyList& clipKeyL
         std::sort(removedRanges.begin(), removedRanges.end());
         for (const auto& [start, end] : removedRanges) {
             const double removedDuration = duration(start, end);
-            for (VideoSegment& segment : keptSegments) {
-                if (segment.projectStart >= end - EPS) {
-                    segment.projectStart = std::max(0.0, segment.projectStart - removedDuration);
-                    segment.projectEnd = std::max(segment.projectStart, segment.projectEnd - removedDuration);
+            for (VideoLink& link : links) {
+                for (VideoSegment& segment : link.segments) {
+                    if (segment.projectStart >= end - EPS) {
+                        segment.projectStart = std::max(0.0, segment.projectStart - removedDuration);
+                        segment.projectEnd = std::max(segment.projectStart, segment.projectEnd - removedDuration);
+                    }
                 }
             }
         }
     }
 
-    link.segments = std::move(keptSegments);
-    commitLink(std::move(link), true);
+    commitLinks(std::move(links), true);
     return true;
 }
 
@@ -866,18 +1052,19 @@ muse::RetVal<au::trackedit::ClipKeyList> VideoPreviewService::moveClips(const au
                                                                         int trackPositionOffset, bool completed,
                                                                         bool& clipsMovedToOtherTracks)
 {
-    Q_UNUSED(trackPositionOffset);
     clipsMovedToOtherTracks = false;
 
-    if (clipKeyList.empty() || !m_link.isValid()) {
+    if (clipKeyList.empty() || m_links.empty()) {
         return muse::RetVal<au::trackedit::ClipKeyList>::make_ok(clipKeyList);
     }
 
     double offset = timePositionOffset.to_double();
     double leftmost = std::numeric_limits<double>::max();
-    for (const VideoSegment& segment : m_link.segments) {
-        if (std::find(clipKeyList.begin(), clipKeyList.end(), segment.clipKey) != clipKeyList.end()) {
-            leftmost = std::min(leftmost, segment.projectStart);
+    for (const VideoLink& link : m_links) {
+        for (const VideoSegment& segment : link.segments) {
+            if (std::find(clipKeyList.begin(), clipKeyList.end(), segment.clipKey) != clipKeyList.end()) {
+                leftmost = std::min(leftmost, segment.projectStart);
+            }
         }
     }
 
@@ -889,57 +1076,87 @@ muse::RetVal<au::trackedit::ClipKeyList> VideoPreviewService::moveClips(const au
         offset = -leftmost;
     }
 
-    VideoLink link = m_link;
-    for (VideoSegment& segment : link.segments) {
-        if (std::find(clipKeyList.begin(), clipKeyList.end(), segment.clipKey) == clipKeyList.end()) {
-            continue;
-        }
+    VideoLinks links = m_links;
+    au::trackedit::ClipKeyList movedKeys;
 
-        segment.projectStart += offset;
-        segment.projectEnd += offset;
+    for (size_t linkIndex = 0; linkIndex < links.size(); ++linkIndex) {
+        VideoLink& link = links[linkIndex];
+        for (auto segmentIt = link.segments.begin(); segmentIt != link.segments.end();) {
+            VideoSegment& segment = *segmentIt;
+            if (std::find(clipKeyList.begin(), clipKeyList.end(), segment.clipKey) == clipKeyList.end()) {
+                ++segmentIt;
+                continue;
+            }
+
+            segment.projectStart += offset;
+            segment.projectEnd += offset;
+
+            if (trackPositionOffset == 0 || links.size() < 2) {
+                movedKeys.push_back(segment.clipKey);
+                ++segmentIt;
+                continue;
+            }
+
+            const int targetIndex = std::clamp(static_cast<int>(linkIndex) + trackPositionOffset, 0, static_cast<int>(links.size()) - 1);
+            if (targetIndex == static_cast<int>(linkIndex)) {
+                movedKeys.push_back(segment.clipKey);
+                ++segmentIt;
+                continue;
+            }
+
+            VideoSegment moved = segment;
+            moved.clipKey.trackId = links[targetIndex].trackId;
+            moved.clipKey.itemId = nextSegmentId(links[targetIndex].segments);
+            movedKeys.push_back(moved.clipKey);
+            links[targetIndex].segments.push_back(std::move(moved));
+            segmentIt = link.segments.erase(segmentIt);
+            clipsMovedToOtherTracks = true;
+        }
     }
 
-    commitLink(std::move(link), completed);
-    return muse::RetVal<au::trackedit::ClipKeyList>::make_ok(clipKeyList);
+    commitLinks(std::move(links), completed);
+    return muse::RetVal<au::trackedit::ClipKeyList>::make_ok(movedKeys.empty() ? clipKeyList : movedKeys);
 }
 
 bool VideoPreviewService::trimClipsLeft(const au::trackedit::ClipKeyList& clipKeyList, au::trackedit::secs_t deltaSec,
                                         au::trackedit::secs_t minClipDuration, bool completed)
 {
-    if (clipKeyList.empty() || !m_link.isValid()) {
+    if (clipKeyList.empty() || m_links.empty()) {
         return false;
     }
 
-    VideoLink link = m_link;
+    VideoLinks links = m_links;
     bool changed = false;
     const double minimumDuration = std::max(EPS, minClipDuration.to_double());
 
-    for (VideoSegment& segment : link.segments) {
-        if (std::find(clipKeyList.begin(), clipKeyList.end(), segment.clipKey) == clipKeyList.end()) {
-            continue;
-        }
+    for (VideoLink& link : links) {
+        for (VideoSegment& segment : link.segments) {
+            if (std::find(clipKeyList.begin(), clipKeyList.end(), segment.clipKey) == clipKeyList.end()) {
+                continue;
+            }
 
-        double delta = deltaSec.to_double();
-        const double maxShrink = std::max(0.0, duration(segment.projectStart, segment.projectEnd) - minimumDuration);
-        delta = std::min(delta, maxShrink);
-        if (segment.projectStart + delta < 0.0) {
-            delta = -segment.projectStart;
-        }
-        if (segment.sourceStart + delta < 0.0) {
-            delta = -segment.sourceStart;
-        }
+            double delta = deltaSec.to_double();
+            const double maxShrink = std::max(0.0, duration(segment.projectStart, segment.projectEnd) - minimumDuration);
+            delta = std::min(delta, maxShrink);
+            if (segment.projectStart + delta < 0.0) {
+                delta = -segment.projectStart;
+            }
+            if (segment.sourceStart + delta < 0.0) {
+                delta = -segment.sourceStart;
+            }
 
-        if (std::abs(delta) <= EPS) {
-            continue;
-        }
+            if (std::abs(delta) <= EPS) {
+                continue;
+            }
 
-        segment.projectStart += delta;
-        segment.sourceStart += delta;
-        changed = true;
+            segment.projectStart += delta;
+            segment.sourceStart += delta;
+            changed = true;
+        }
     }
 
     if (changed) {
-        commitLink(std::move(link), completed);
+        commitLinks(std::move(links), completed);
     }
     return changed;
 }
@@ -947,37 +1164,39 @@ bool VideoPreviewService::trimClipsLeft(const au::trackedit::ClipKeyList& clipKe
 bool VideoPreviewService::trimClipsRight(const au::trackedit::ClipKeyList& clipKeyList, au::trackedit::secs_t deltaSec,
                                          au::trackedit::secs_t minClipDuration, bool completed)
 {
-    if (clipKeyList.empty() || !m_link.isValid()) {
+    if (clipKeyList.empty() || m_links.empty()) {
         return false;
     }
 
-    VideoLink link = m_link;
+    VideoLinks links = m_links;
     bool changed = false;
     const double minimumDuration = std::max(EPS, minClipDuration.to_double());
 
-    for (VideoSegment& segment : link.segments) {
-        if (std::find(clipKeyList.begin(), clipKeyList.end(), segment.clipKey) == clipKeyList.end()) {
-            continue;
-        }
+    for (VideoLink& link : links) {
+        for (VideoSegment& segment : link.segments) {
+            if (std::find(clipKeyList.begin(), clipKeyList.end(), segment.clipKey) == clipKeyList.end()) {
+                continue;
+            }
 
-        double delta = deltaSec.to_double();
-        const double maxShrink = std::max(0.0, duration(segment.projectStart, segment.projectEnd) - minimumDuration);
-        delta = std::min(delta, maxShrink);
+            double delta = deltaSec.to_double();
+            const double maxShrink = std::max(0.0, duration(segment.projectStart, segment.projectEnd) - minimumDuration);
+            delta = std::min(delta, maxShrink);
 
-        if (std::abs(delta) <= EPS) {
-            continue;
-        }
+            if (std::abs(delta) <= EPS) {
+                continue;
+            }
 
-        segment.projectEnd -= delta;
-        segment.sourceEnd -= delta;
-        if (segment.sourceEnd <= segment.sourceStart + EPS) {
-            segment.sourceEnd = segment.sourceStart + minimumDuration;
+            segment.projectEnd -= delta;
+            segment.sourceEnd -= delta;
+            if (segment.sourceEnd <= segment.sourceStart + EPS) {
+                segment.sourceEnd = segment.sourceStart + minimumDuration;
+            }
+            changed = true;
         }
-        changed = true;
     }
 
     if (changed) {
-        commitLink(std::move(link), completed);
+        commitLinks(std::move(links), completed);
     }
     return changed;
 }
@@ -985,36 +1204,38 @@ bool VideoPreviewService::trimClipsRight(const au::trackedit::ClipKeyList& clipK
 bool VideoPreviewService::stretchClipsLeft(const au::trackedit::ClipKeyList& clipKeyList, au::trackedit::secs_t deltaSec,
                                            au::trackedit::secs_t minClipDuration, bool completed)
 {
-    if (clipKeyList.empty() || !m_link.isValid()) {
+    if (clipKeyList.empty() || m_links.empty()) {
         return false;
     }
 
-    VideoLink link = m_link;
+    VideoLinks links = m_links;
     bool changed = false;
     const double minimumDuration = std::max(EPS, minClipDuration.to_double());
 
-    for (VideoSegment& segment : link.segments) {
-        if (std::find(clipKeyList.begin(), clipKeyList.end(), segment.clipKey) == clipKeyList.end()) {
-            continue;
-        }
+    for (VideoLink& link : links) {
+        for (VideoSegment& segment : link.segments) {
+            if (std::find(clipKeyList.begin(), clipKeyList.end(), segment.clipKey) == clipKeyList.end()) {
+                continue;
+            }
 
-        double delta = deltaSec.to_double();
-        const double maxShrink = std::max(0.0, duration(segment.projectStart, segment.projectEnd) - minimumDuration);
-        delta = std::min(delta, maxShrink);
-        if (segment.projectStart + delta < 0.0) {
-            delta = -segment.projectStart;
-        }
+            double delta = deltaSec.to_double();
+            const double maxShrink = std::max(0.0, duration(segment.projectStart, segment.projectEnd) - minimumDuration);
+            delta = std::min(delta, maxShrink);
+            if (segment.projectStart + delta < 0.0) {
+                delta = -segment.projectStart;
+            }
 
-        if (std::abs(delta) <= EPS) {
-            continue;
-        }
+            if (std::abs(delta) <= EPS) {
+                continue;
+            }
 
-        segment.projectStart += delta;
-        changed = true;
+            segment.projectStart += delta;
+            changed = true;
+        }
     }
 
     if (changed) {
-        commitLink(std::move(link), completed);
+        commitLinks(std::move(links), completed);
     }
     return changed;
 }
@@ -1022,91 +1243,100 @@ bool VideoPreviewService::stretchClipsLeft(const au::trackedit::ClipKeyList& cli
 bool VideoPreviewService::stretchClipsRight(const au::trackedit::ClipKeyList& clipKeyList, au::trackedit::secs_t deltaSec,
                                             au::trackedit::secs_t minClipDuration, bool completed)
 {
-    if (clipKeyList.empty() || !m_link.isValid()) {
+    if (clipKeyList.empty() || m_links.empty()) {
         return false;
     }
 
-    VideoLink link = m_link;
+    VideoLinks links = m_links;
     bool changed = false;
     const double minimumDuration = std::max(EPS, minClipDuration.to_double());
 
-    for (VideoSegment& segment : link.segments) {
-        if (std::find(clipKeyList.begin(), clipKeyList.end(), segment.clipKey) == clipKeyList.end()) {
-            continue;
+    for (VideoLink& link : links) {
+        for (VideoSegment& segment : link.segments) {
+            if (std::find(clipKeyList.begin(), clipKeyList.end(), segment.clipKey) == clipKeyList.end()) {
+                continue;
+            }
+
+            double delta = deltaSec.to_double();
+            const double maxShrink = std::max(0.0, duration(segment.projectStart, segment.projectEnd) - minimumDuration);
+            delta = std::min(delta, maxShrink);
+
+            if (std::abs(delta) <= EPS) {
+                continue;
+            }
+
+            segment.projectEnd -= delta;
+            changed = true;
         }
-
-        double delta = deltaSec.to_double();
-        const double maxShrink = std::max(0.0, duration(segment.projectStart, segment.projectEnd) - minimumDuration);
-        delta = std::min(delta, maxShrink);
-
-        if (std::abs(delta) <= EPS) {
-            continue;
-        }
-
-        segment.projectEnd -= delta;
-        changed = true;
     }
 
     if (changed) {
-        commitLink(std::move(link), completed);
+        commitLinks(std::move(links), completed);
     }
     return changed;
 }
 
 bool VideoPreviewService::singleClipOnTrack(au::trackedit::TrackId trackId) const
 {
-    return hasTrack(trackId) && videoClips(m_link).size() == 1;
+    const VideoLink* link = linkForTrack(trackId);
+    return link && videoClips(*link).size() == 1;
 }
 
 bool VideoPreviewService::trimTracksData(const au::trackedit::TrackIdList& tracksIds, au::trackedit::secs_t begin,
                                          au::trackedit::secs_t end)
 {
-    if (std::find(tracksIds.begin(), tracksIds.end(), VIDEO_TRACK_ID) == tracksIds.end() || !m_link.isValid()) {
-        return false;
-    }
-
     const double beginTime = begin.to_double();
     const double endTime = end.to_double();
     if (duration(beginTime, endTime) <= EPS) {
         return false;
     }
 
-    VideoLink link = m_link;
-    std::vector<VideoSegment> nextSegments;
-    nextSegments.reserve(link.segments.size());
+    VideoLinks links = m_links;
+    bool changed = false;
 
-    for (const VideoSegment& segment : link.segments) {
-        if (segment.projectEnd <= beginTime + EPS || segment.projectStart >= endTime - EPS) {
+    for (VideoLink& link : links) {
+        if (std::find(tracksIds.begin(), tracksIds.end(), link.trackId) == tracksIds.end()) {
             continue;
         }
 
-        VideoSegment trimmed = segment;
-        if (trimmed.projectStart < beginTime) {
-            trimmed.sourceStart = sourceAtProjectTime(segment, beginTime);
-            trimmed.projectStart = beginTime;
-        }
-        if (trimmed.projectEnd > endTime) {
-            trimmed.sourceEnd = sourceAtProjectTime(segment, endTime);
-            trimmed.projectEnd = endTime;
+        std::vector<VideoSegment> nextSegments;
+        nextSegments.reserve(link.segments.size());
+        bool linkChanged = false;
+
+        for (const VideoSegment& segment : link.segments) {
+            if (segment.projectEnd <= beginTime + EPS || segment.projectStart >= endTime - EPS) {
+                continue;
+            }
+            linkChanged = true;
+
+            VideoSegment trimmed = segment;
+            if (trimmed.projectStart < beginTime) {
+                trimmed.sourceStart = sourceAtProjectTime(segment, beginTime);
+                trimmed.projectStart = beginTime;
+            }
+            if (trimmed.projectEnd > endTime) {
+                trimmed.sourceEnd = sourceAtProjectTime(segment, endTime);
+                trimmed.projectEnd = endTime;
+            }
+
+            if (trimmed.isValid()) {
+                nextSegments.push_back(std::move(trimmed));
+            }
         }
 
-        if (trimmed.isValid()) {
-            nextSegments.push_back(std::move(trimmed));
-        }
+        changed = changed || linkChanged || nextSegments.size() != link.segments.size();
+        link.segments = std::move(nextSegments);
     }
 
-    link.segments = std::move(nextSegments);
-    commitLink(std::move(link), true);
-    return true;
+    if (changed) {
+        commitLinks(std::move(links), true);
+    }
+    return changed;
 }
 
 bool VideoPreviewService::removeTracksData(const au::trackedit::TrackIdList& tracksIds, au::trackedit::secs_t begin,
                                            au::trackedit::secs_t end, bool moveClips)
 {
-    if (std::find(tracksIds.begin(), tracksIds.end(), VIDEO_TRACK_ID) == tracksIds.end() || !m_link.isValid()) {
-        return false;
-    }
-
     const double beginTime = begin.to_double();
     const double endTime = end.to_double();
     const double removedDuration = duration(beginTime, endTime);
@@ -1114,55 +1344,64 @@ bool VideoPreviewService::removeTracksData(const au::trackedit::TrackIdList& tra
         return false;
     }
 
-    VideoLink link = m_link;
-    std::vector<VideoSegment> nextSegments;
-    nextSegments.reserve(link.segments.size() + 1);
-    au::trackedit::TrackItemId nextId = nextSegmentId(link.segments);
+    VideoLinks links = m_links;
+    bool changed = false;
 
-    for (const VideoSegment& segment : link.segments) {
-        if (segment.projectEnd <= beginTime + EPS) {
-            nextSegments.push_back(segment);
+    for (VideoLink& link : links) {
+        if (std::find(tracksIds.begin(), tracksIds.end(), link.trackId) == tracksIds.end()) {
             continue;
         }
 
-        if (segment.projectStart >= endTime - EPS) {
-            VideoSegment shifted = segment;
-            if (moveClips) {
-                shifted.projectStart = std::max(0.0, shifted.projectStart - removedDuration);
-                shifted.projectEnd = std::max(shifted.projectStart, shifted.projectEnd - removedDuration);
+        std::vector<VideoSegment> nextSegments;
+        nextSegments.reserve(link.segments.size() + 1);
+        au::trackedit::TrackItemId nextId = nextSegmentId(link.segments);
+
+        for (const VideoSegment& segment : link.segments) {
+            if (segment.projectEnd <= beginTime + EPS) {
+                nextSegments.push_back(segment);
+                continue;
             }
-            nextSegments.push_back(std::move(shifted));
-            continue;
+
+            if (segment.projectStart >= endTime - EPS) {
+                VideoSegment shifted = segment;
+                if (moveClips) {
+                    shifted.projectStart = std::max(0.0, shifted.projectStart - removedDuration);
+                    shifted.projectEnd = std::max(shifted.projectStart, shifted.projectEnd - removedDuration);
+                }
+                nextSegments.push_back(std::move(shifted));
+                continue;
+            }
+
+            changed = true;
+
+            if (segment.projectStart < beginTime - EPS) {
+                VideoSegment left = segment;
+                left.projectEnd = beginTime;
+                left.sourceEnd = sourceAtProjectTime(segment, beginTime);
+                nextSegments.push_back(std::move(left));
+            }
+
+            if (segment.projectEnd > endTime + EPS) {
+                VideoSegment right = segment;
+                right.clipKey.itemId = nextId++;
+                right.sourceStart = sourceAtProjectTime(segment, endTime);
+                right.projectStart = moveClips ? beginTime : endTime;
+                right.projectEnd = right.projectStart + duration(endTime, segment.projectEnd);
+                nextSegments.push_back(std::move(right));
+            }
         }
 
-        if (segment.projectStart < beginTime - EPS) {
-            VideoSegment left = segment;
-            left.projectEnd = beginTime;
-            left.sourceEnd = sourceAtProjectTime(segment, beginTime);
-            nextSegments.push_back(std::move(left));
-        }
-
-        if (segment.projectEnd > endTime + EPS) {
-            VideoSegment right = segment;
-            right.clipKey.itemId = nextId++;
-            right.sourceStart = sourceAtProjectTime(segment, endTime);
-            right.projectStart = moveClips ? beginTime : endTime;
-            right.projectEnd = right.projectStart + duration(endTime, segment.projectEnd);
-            nextSegments.push_back(std::move(right));
-        }
+        link.segments = std::move(nextSegments);
     }
 
-    link.segments = std::move(nextSegments);
-    commitLink(std::move(link), true);
-    return true;
+    if (changed) {
+        commitLinks(std::move(links), true);
+    }
+    return changed;
 }
 
 bool VideoPreviewService::splitTracksAt(const au::trackedit::TrackIdList& tracksIds, std::vector<au::trackedit::secs_t> pivots)
 {
-    if (std::find(tracksIds.begin(), tracksIds.end(), VIDEO_TRACK_ID) == tracksIds.end() || !m_link.isValid()) {
-        return false;
-    }
-
     std::vector<double> splitTimes;
     splitTimes.reserve(pivots.size());
     for (const au::trackedit::secs_t& pivot : pivots) {
@@ -1170,71 +1409,94 @@ bool VideoPreviewService::splitTracksAt(const au::trackedit::TrackIdList& tracks
     }
     std::sort(splitTimes.begin(), splitTimes.end());
 
-    VideoLink link = m_link;
-    std::vector<VideoSegment> nextSegments;
-    nextSegments.reserve(link.segments.size() + splitTimes.size());
-    au::trackedit::TrackItemId nextId = nextSegmentId(link.segments);
+    VideoLinks links = m_links;
     bool didSplit = false;
 
-    for (const VideoSegment& segment : link.segments) {
-        std::vector<double> inside;
-        for (double splitTime : splitTimes) {
-            if (splitTime > segment.projectStart + EPS && splitTime < segment.projectEnd - EPS) {
-                inside.push_back(splitTime);
-            }
-        }
-
-        if (inside.empty()) {
-            nextSegments.push_back(segment);
+    for (VideoLink& link : links) {
+        if (std::find(tracksIds.begin(), tracksIds.end(), link.trackId) == tracksIds.end()) {
             continue;
         }
-        didSplit = true;
 
-        double partProjectStart = segment.projectStart;
-        double partSourceStart = segment.sourceStart;
-        bool first = true;
-        for (double splitTime : inside) {
-            VideoSegment part = segment;
-            if (!first) {
-                part.clipKey.itemId = nextId++;
+        std::vector<VideoSegment> nextSegments;
+        nextSegments.reserve(link.segments.size() + splitTimes.size());
+        au::trackedit::TrackItemId nextId = nextSegmentId(link.segments);
+
+        for (const VideoSegment& segment : link.segments) {
+            std::vector<double> inside;
+            for (double splitTime : splitTimes) {
+                if (splitTime > segment.projectStart + EPS && splitTime < segment.projectEnd - EPS) {
+                    inside.push_back(splitTime);
+                }
             }
-            part.projectStart = partProjectStart;
-            part.projectEnd = splitTime;
-            part.sourceStart = partSourceStart;
-            part.sourceEnd = sourceAtProjectTime(segment, splitTime);
-            nextSegments.push_back(std::move(part));
 
-            partProjectStart = splitTime;
-            partSourceStart = sourceAtProjectTime(segment, splitTime);
-            first = false;
+            if (inside.empty()) {
+                nextSegments.push_back(segment);
+                continue;
+            }
+            didSplit = true;
+
+            double partProjectStart = segment.projectStart;
+            double partSourceStart = segment.sourceStart;
+            bool first = true;
+            for (double splitTime : inside) {
+                VideoSegment part = segment;
+                if (!first) {
+                    part.clipKey.itemId = nextId++;
+                }
+                part.projectStart = partProjectStart;
+                part.projectEnd = splitTime;
+                part.sourceStart = partSourceStart;
+                part.sourceEnd = sourceAtProjectTime(segment, splitTime);
+                nextSegments.push_back(std::move(part));
+
+                partProjectStart = splitTime;
+                partSourceStart = sourceAtProjectTime(segment, splitTime);
+                first = false;
+            }
+
+            VideoSegment finalPart = segment;
+            finalPart.clipKey.itemId = nextId++;
+            finalPart.projectStart = partProjectStart;
+            finalPart.sourceStart = partSourceStart;
+            nextSegments.push_back(std::move(finalPart));
         }
 
-        VideoSegment finalPart = segment;
-        finalPart.clipKey.itemId = nextId++;
-        finalPart.projectStart = partProjectStart;
-        finalPart.sourceStart = partSourceStart;
-        nextSegments.push_back(std::move(finalPart));
+        link.segments = std::move(nextSegments);
     }
 
     if (!didSplit) {
         return false;
     }
 
-    link.segments = std::move(nextSegments);
-    commitLink(std::move(link), true);
+    commitLinks(std::move(links), true);
     return true;
 }
 
 bool VideoPreviewService::deleteTracks(const au::trackedit::TrackIdList& trackIds)
 {
-    if (std::find(trackIds.begin(), trackIds.end(), VIDEO_TRACK_ID) == trackIds.end() || !m_link.isValid()) {
+    if (trackIds.empty() || m_links.empty()) {
+        return false;
+    }
+
+    VideoLinks links;
+    links.reserve(m_links.size());
+    bool changed = false;
+    for (const VideoLink& link : m_links) {
+        if (std::find(trackIds.begin(), trackIds.end(), link.trackId) != trackIds.end()) {
+            changed = true;
+            continue;
+        }
+        links.push_back(link);
+    }
+
+    if (!changed) {
         return false;
     }
 
     // Track deletion is followed by TrackeditOperationController::pushHistoryState().
     // Let that new state capture the deleted link; updating the current state here
     // would make the pre-delete undo state lose the video link too.
-    commitLink({}, false);
+    commitLinks(std::move(links), false);
     return true;
 }
 
@@ -1244,9 +1506,14 @@ bool VideoPreviewService::changeTrackTitle(au::trackedit::TrackId trackId, const
         return false;
     }
 
-    VideoLink link = m_link;
-    link.trackTitle = title.empty() ? muse::String::fromAscii("Video") : title;
-    commitLink(std::move(link), true);
+    VideoLinks links = m_links;
+    VideoLink* link = linkForTrack(links, trackId);
+    if (!link) {
+        return false;
+    }
+
+    link->trackTitle = title.empty() ? muse::String::fromAscii("Video") : title;
+    commitLinks(std::move(links), true);
     return true;
 }
 
@@ -1254,12 +1521,32 @@ void VideoPreviewService::setProjectTime(double seconds)
 {
     m_lastProjectTime = seconds;
 
-    if (m_state != VideoPreviewState::Ready || !m_link.isValid()) {
+    if (m_links.empty()) {
+        ++m_decodeGeneration;
+        m_decodeInFlight = false;
+        m_pendingProjectTime.reset();
+        clearFrame();
+        setState(VideoPreviewState::Empty);
         return;
     }
 
-    const std::optional<double> sourceSeconds = sourceTimeForProjectTime(seconds);
-    if (!sourceSeconds.has_value()) {
+    const auto source = sourceTimeForProjectTime(seconds);
+    if (!source.has_value()) {
+        ++m_decodeGeneration;
+        m_decodeInFlight = false;
+        m_pendingProjectTime.reset();
+        clearFrame();
+        setState(VideoPreviewState::Ready);
+        return;
+    }
+
+    const VideoLink& link = source->first;
+    if (!QFileInfo::exists(link.sourcePath.toQString())) {
+        ++m_decodeGeneration;
+        m_decodeInFlight = false;
+        m_pendingProjectTime.reset();
+        clearFrame();
+        setState(VideoPreviewState::MissingFile);
         return;
     }
 
@@ -1268,20 +1555,21 @@ void VideoPreviewService::setProjectTime(double seconds)
         return;
     }
 
-    requestDecode(*sourceSeconds);
+    setState(VideoPreviewState::Ready);
+    requestDecode(link, source->second);
 }
 
-void VideoPreviewService::requestDecode(double sourceSeconds)
+void VideoPreviewService::requestDecode(VideoLink link, double sourceSeconds)
 {
-    if (!m_link.isValid()) {
+    if (!link.isValid()) {
         return;
     }
 
     m_decodeInFlight = true;
     const uint64_t generation = ++m_decodeGeneration;
-    const muse::io::path_t path = m_link.sourcePath;
-    const int streamIndex = m_link.streamIndex;
-    const int streamId = m_link.streamId;
+    const muse::io::path_t path = link.sourcePath;
+    const int streamIndex = link.streamIndex;
+    const int streamId = link.streamId;
     std::weak_ptr<VideoPreviewService> weakSelf = weak_from_this();
 
     std::thread([weakSelf, generation, path, streamIndex, streamId, sourceSeconds]() {
@@ -1375,12 +1663,17 @@ muse::String VideoPreviewService::stateText() const
 
 VideoLink VideoPreviewService::link() const
 {
-    return m_link;
+    return activeLink();
+}
+
+VideoLinks VideoPreviewService::links() const
+{
+    return m_links;
 }
 
 muse::io::path_t VideoPreviewService::sourcePath() const
 {
-    return m_link.sourcePath;
+    return activeLink().sourcePath;
 }
 
 double VideoPreviewService::aspectRatio() const

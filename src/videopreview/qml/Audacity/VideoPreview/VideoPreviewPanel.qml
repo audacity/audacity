@@ -32,19 +32,18 @@ Item {
 
     Rectangle {
         anchors.fill: parent
-        color: ui.theme.backgroundPrimaryColor
+        color: "#0a0a0a"
     }
 
     VideoPreviewItem {
         id: previewFrame
         anchors.fill: parent
-        visible: previewModel.hasFrame
     }
 
     StyledTextLabel {
         anchors.centerIn: parent
         width: Math.min(parent.width - 24, 260)
-        visible: !previewModel.hasFrame
+        visible: previewModel.showStateText
 
         text: previewModel.stateText
         horizontalAlignment: Text.AlignHCenter

@@ -18,6 +18,7 @@ class VideoPreviewModel : public QObject, public muse::async::Asyncable, public 
 
     Q_PROPERTY(QString stateText READ stateText NOTIFY stateChanged)
     Q_PROPERTY(bool hasFrame READ hasFrame NOTIFY frameChanged)
+    Q_PROPERTY(bool showStateText READ showStateText NOTIFY stateChanged)
     Q_PROPERTY(QString sourcePath READ sourcePath NOTIFY linkChanged)
     Q_PROPERTY(double aspectRatio READ aspectRatio NOTIFY aspectRatioChanged)
     Q_PROPERTY(bool available READ available NOTIFY stateChanged)
@@ -31,6 +32,7 @@ public:
 
     QString stateText() const;
     bool hasFrame() const;
+    bool showStateText() const;
     QString sourcePath() const;
     double aspectRatio() const;
     bool available() const;

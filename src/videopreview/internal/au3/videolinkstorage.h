@@ -20,8 +20,8 @@ public:
     static VideoLinkStorage& Get(AudacityProject& project);
     static const VideoLinkStorage& Get(const AudacityProject& project);
 
-    const VideoLink& link() const;
-    void setLink(VideoLink link);
+    const VideoLinks& links() const;
+    void setLinks(VideoLinks links);
     void clear();
 
     muse::async::Notification linkChanged() const;
@@ -32,7 +32,8 @@ public:
     XMLTagHandler* HandleXMLChild(const std::string_view& tag) override;
 
 private:
-    VideoLink m_link;
+    VideoLinks m_links;
+    int m_currentReadLink = -1;
     muse::async::Notification m_linkChanged;
 };
 

@@ -8,6 +8,7 @@
 #include <optional>
 #include <set>
 #include <cstdint>
+#include <utility>
 #include <vector>
 
 #include <QObject>
@@ -55,6 +56,7 @@ public:
     VideoPreviewState state() const override;
     muse::String stateText() const override;
     VideoLink link() const override;
+    VideoLinks links() const override;
     muse::io::path_t sourcePath() const override;
     double aspectRatio() const override;
     QImage currentFrame() const override;
@@ -115,19 +117,26 @@ private:
 
     void setState(VideoPreviewState state);
     void clearFrame();
-    void commitLink(VideoLink link, bool refreshUndoState);
+    void commitLinks(VideoLinks links, bool refreshUndoState);
+    void notifyTrackeditAboutLinksChange(const VideoLinks& oldLinks, const VideoLinks& newLinks);
     void notifyTrackeditAboutLinkChange(const VideoLink& oldLink, const VideoLink& newLink);
     trackedit::Track videoTrack(const VideoLink& link) const;
     trackedit::Clips videoClips(const VideoLink& link) const;
     VideoLink normalizedLink(VideoLink link) const;
+    VideoLinks normalizedLinks(VideoLinks links) const;
     void updateSegmentMapFromProject(bool refreshUndoState);
 
     std::vector<au::trackedit::Clip> currentClips() const;
     std::optional<VideoSegment> segmentForClip(const au::trackedit::Clip& clip,
                                                const std::vector<VideoSegment>& sourceSegments) const;
-    std::optional<double> sourceTimeForProjectTime(double projectSeconds) const;
+    const VideoLink* linkForTrack(trackedit::TrackId trackId) const;
+    VideoLink* linkForTrack(VideoLinks& links, trackedit::TrackId trackId) const;
+    const VideoLink* linkForClip(const trackedit::ClipKey& key) const;
+    VideoLink* linkForClip(VideoLinks& links, const trackedit::ClipKey& key) const;
+    VideoLink activeLink() const;
+    std::optional<std::pair<VideoLink, double> > sourceTimeForProjectTime(double projectSeconds) const;
 
-    void requestDecode(double sourceSeconds);
+    void requestDecode(VideoLink link, double sourceSeconds);
     void onDecodeFinished(uint64_t generation, VideoDecodeResult result);
 
     AudacityProject* m_au3Project = nullptr;
@@ -135,7 +144,7 @@ private:
     au::trackedit::ITrackeditProjectPtr m_trackeditProject;
     std::set<au::trackedit::TrackId> m_subscribedTrackIds;
 
-    VideoLink m_link;
+    VideoLinks m_links;
     std::vector<VideoSegment> m_recentSegments;
     VideoPreviewState m_state = VideoPreviewState::Empty;
 
